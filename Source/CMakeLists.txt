@@ -22,6 +22,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Scripting/Math/MatrixTypes.cpp
     Scripting/SensorModel.cpp
     Scripting/ArrayTypes.cpp
+    Scripting/ScriptedSensorDevice.cpp
 
     Cuda/MultiTensor.cu
     Cuda/MemoryPool.cu

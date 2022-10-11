@@ -57,10 +57,15 @@ namespace LTSE::Core
 
     void OpenTensorLibrary( sol::table &aScriptingState )
     {
-        auto lTensorShapeType = aScriptingState.new_usertype<Cuda::sTensorShape>( "TensorShape" );
+        auto lTensorShapeType = aScriptingState.new_usertype<Cuda::sTensorShape>( "sTensorShape" );
 
         // clang-format off
         lTensorShapeType[call_constructor] = factories(
+            []( U32Array aInitializer, int32_t aElementSize )
+            {
+                return Cuda::sTensorShape( aInitializer.mArray, aElementSize );
+            }
+            ,
             []( sol::table aInitializer, int32_t aElementSize )
             {
                 std::vector<std::vector<uint32_t>> lShape{};
@@ -79,9 +84,11 @@ namespace LTSE::Core
                 }
 
                 return Cuda::sTensorShape( lShape, aElementSize );
-            } );
+            }
+        );
         // clang-format on
 
+        lTensorShapeType["count_layers"] = []( Cuda::sTensorShape &aSelf ) { return aSelf.CountLayers( ); };
         lTensorShapeType["get_dimension"] = []( Cuda::sTensorShape &aSelf, int32_t i ) { return aSelf.GetDimension( i ); };
         lTensorShapeType["trim"]          = []( Cuda::sTensorShape &aSelf, int32_t i ) { aSelf.Trim( i ); };
         lTensorShapeType["flatten"]       = []( Cuda::sTensorShape &aSelf, int32_t i ) { aSelf.Flatten( i ); };
@@ -93,6 +100,7 @@ namespace LTSE::Core
         auto lMultiTensorType =
             aScriptingState.new_usertype<Cuda::MultiTensor>( "MultiTensor", constructors<Cuda::MultiTensor( Cuda::MemoryPool & aMemoryPool, const Cuda::sTensorShape &aShape )>() );
         lMultiTensorType["size"]    = []( Cuda::MultiTensor &aSelf ) { return aSelf.Size(); };
+        lMultiTensorType["shape"]   = []( Cuda::MultiTensor &aSelf ) { return aSelf.Shape(); };
         lMultiTensorType["size_as"] = []( Cuda::MultiTensor &aSelf, const sol::object &aTypeOrID )
         {
             const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "SizeAs"_hs, aSelf );
@@ -156,8 +164,9 @@ namespace LTSE::Core
         lMultiTensorType["fetch_mat3"] = MakeFetchFunction<math::mat3>();
         lMultiTensorType["fetch_mat4"] = MakeFetchFunction<math::mat4>();
 
-        auto lScopeType     = aScriptingState.new_usertype<TensorOps::Scope>( "Scope", constructors<TensorOps::Scope( uint32_t aMemorySize )>() );
-        lScopeType["reset"] = []( TensorOps::Scope &aSelf ) { aSelf.Reset(); };
+        auto lScopeType       = aScriptingState.new_usertype<TensorOps::Scope>( "Scope", constructors<TensorOps::Scope( uint32_t aMemorySize )>() );
+        lScopeType["ref_new"] = []( uint32_t aMemorySize ) { return New<TensorOps::Scope>( aMemorySize ); };
+        lScopeType["reset"]   = []( TensorOps::Scope &aSelf ) { aSelf.Reset(); };
 
         // clang-format off
         lScopeType["run"] = overload(
@@ -195,7 +204,10 @@ namespace LTSE::Core
             "UNKNOWN", eScalarType::UNKNOWN  );
         // clang-format on
 
-        DeclarePrimitiveType<sMultiTensorComponent>( lOpsModule, "sMultiTensorComponent" );
+        lOpsModule["size_of"] = []( eScalarType t ) { return static_cast<int32_t>( SizeOf( t ) ); };
+
+        auto lMultiensorComponentType     = DeclarePrimitiveType<sMultiTensorComponent>( lOpsModule, "sMultiTensorComponent" );
+        lMultiensorComponentType["value"] = &sMultiTensorComponent::mValue;
 
         // clang-format off
         auto lConstantInitializerComponent = lOpsModule.new_usertype<sConstantValueInitializerComponent>("sConstantValueInitializerComponent");
@@ -232,6 +244,16 @@ namespace LTSE::Core
 
         // clang-format off
         lVectorInitializerComponent[call_constructor] = factories(
+            []( F32Array value) { return sVectorInitializerComponent{ value.mArray }; },
+            []( F64Array value) { return sVectorInitializerComponent{ value.mArray }; },
+            []( U8Array value)  { return sVectorInitializerComponent{ value.mArray }; },
+            []( U16Array value) { return sVectorInitializerComponent{ value.mArray }; },
+            []( U32Array value) { return sVectorInitializerComponent{ value.mArray }; },
+            []( U64Array value) { return sVectorInitializerComponent{ value.mArray }; },
+            []( I8Array value)  { return sVectorInitializerComponent{ value.mArray }; },
+            []( I16Array value) { return sVectorInitializerComponent{ value.mArray }; },
+            []( I32Array value) { return sVectorInitializerComponent{ value.mArray }; },
+            []( I64Array value) { return sVectorInitializerComponent{ value.mArray }; },
             []( std::vector<float> value)    { return sVectorInitializerComponent{ value }; },
             []( std::vector<double> value)   { return sVectorInitializerComponent{ value }; },
             []( std::vector<uint8_t> value)  { return sVectorInitializerComponent{ value }; },
@@ -248,6 +270,16 @@ namespace LTSE::Core
         auto lDataInitializerComponent = lOpsModule.new_usertype<sDataInitializerComponent>( "sDataInitializerComponent" );
         // clang-format off
         lDataInitializerComponent[call_constructor] = factories(
+            []( F32Array value) { return sDataInitializerComponent{ value.mArray }; },
+            []( F64Array value) { return sDataInitializerComponent{ value.mArray }; },
+            []( U8Array value)  { return sDataInitializerComponent{ value.mArray }; },
+            []( U16Array value) { return sDataInitializerComponent{ value.mArray }; },
+            []( U32Array value) { return sDataInitializerComponent{ value.mArray }; },
+            []( U64Array value) { return sDataInitializerComponent{ value.mArray }; },
+            []( I8Array value)  { return sDataInitializerComponent{ value.mArray }; },
+            []( I16Array value) { return sDataInitializerComponent{ value.mArray }; },
+            []( I32Array value) { return sDataInitializerComponent{ value.mArray }; },
+            []( I64Array value) { return sDataInitializerComponent{ value.mArray }; },
             []( std::vector<float> value)    { return sDataInitializerComponent{ value }; },
             []( std::vector<double> value)   { return sDataInitializerComponent{ value }; },
             []( std::vector<uint8_t> value)  { return sDataInitializerComponent{ value }; },
@@ -275,6 +307,172 @@ namespace LTSE::Core
                 return sRandomNormalInitializerComponent{ value, static_cast<float>( mean ), static_cast<float>( std ) };
             }
         };
+
+        // clang-format off
+        lOpsModule["ScalarVectorValue"] = overload(
+            []( Scope &aScope, eScalarType aType, F32Array const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue.mArray );
+            },
+            []( Scope &aScope, eScalarType aType, F64Array const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue.mArray );
+            },
+            []( Scope &aScope, eScalarType aType, U8Array const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue.mArray );
+            },
+            []( Scope &aScope, eScalarType aType, U16Array const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue.mArray );
+            },
+            []( Scope &aScope, eScalarType aType, U32Array const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue.mArray );
+            },
+            []( Scope &aScope, eScalarType aType, U64Array const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue.mArray );
+            },
+            []( Scope &aScope, eScalarType aType, I8Array const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue.mArray );
+            },
+            []( Scope &aScope, eScalarType aType, I16Array const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue.mArray );
+            },
+            []( Scope &aScope, eScalarType aType, I32Array const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue.mArray );
+            },
+            []( Scope &aScope, eScalarType aType, I64Array const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue.mArray );
+            },
+            []( Scope &aScope, eScalarType aType, std::vector<float> const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue );
+            },
+            []( Scope &aScope, eScalarType aType, std::vector<double> const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue );
+            },
+            []( Scope &aScope, eScalarType aType, std::vector<uint8_t> const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue );
+            },
+            []( Scope &aScope, eScalarType aType, std::vector<uint16_t> const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue );
+            },
+            []( Scope &aScope, eScalarType aType, std::vector<uint32_t> const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue );
+            },
+            []( Scope &aScope, eScalarType aType, std::vector<uint64_t> const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue );
+            },
+            []( Scope &aScope, eScalarType aType, std::vector<int8_t> const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue );
+            },
+            []( Scope &aScope, eScalarType aType, std::vector<int16_t> const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue );
+            },
+            []( Scope &aScope, eScalarType aType, std::vector<int32_t> const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue );
+            },
+            []( Scope &aScope, eScalarType aType, std::vector<int64_t> const &aValue ) {
+                return ScalarVectorValue( aScope, aType, aValue );
+            }
+        );
+        // clang-format on
+
+        // clang-format off
+        lOpsModule["VectorValue"] = overload(
+            []( Scope &aScope, F32Array const &aValue ) {
+                return VectorValue( aScope, aValue.mArray );
+            },
+            []( Scope &aScope, F64Array const &aValue ) {
+                return VectorValue( aScope, aValue.mArray );
+            },
+            []( Scope &aScope, U8Array const &aValue ) {
+                return VectorValue( aScope, aValue.mArray );
+            },
+            []( Scope &aScope, U16Array const &aValue ) {
+                return VectorValue( aScope, aValue.mArray );
+            },
+            []( Scope &aScope, U32Array const &aValue ) {
+                return VectorValue( aScope, aValue.mArray );
+            },
+            []( Scope &aScope, U64Array const &aValue ) {
+                return VectorValue( aScope, aValue.mArray );
+            },
+            []( Scope &aScope, I8Array const &aValue ) {
+                return VectorValue( aScope, aValue.mArray );
+            },
+            []( Scope &aScope, I16Array const &aValue ) {
+                return VectorValue( aScope, aValue.mArray );
+            },
+            []( Scope &aScope, I32Array const &aValue ) {
+                return VectorValue( aScope, aValue.mArray );
+            },
+            []( Scope &aScope, I64Array const &aValue ) {
+                return VectorValue( aScope, aValue.mArray );
+            },
+            []( Scope &aScope, TextureSamplerArray const &aValue ) {
+                return VectorValue( aScope, aValue.mArray );
+            },
+            []( Scope &aScope, CudaTextureSamplerArray const &aValue ) {
+                return VectorValue( aScope, aValue.mArray );
+            },
+            []( Scope &aScope, std::vector<float> const &aValue ) {
+                return VectorValue( aScope, aValue );
+            },
+            []( Scope &aScope, std::vector<double> const &aValue ) {
+                return VectorValue( aScope, aValue );
+            },
+            []( Scope &aScope, std::vector<uint8_t> const &aValue ) {
+                return VectorValue( aScope, aValue );
+            },
+            []( Scope &aScope, std::vector<uint16_t> const &aValue ) {
+                return VectorValue( aScope, aValue );
+            },
+            []( Scope &aScope, std::vector<uint32_t> const &aValue ) {
+                return VectorValue( aScope, aValue );
+            },
+            []( Scope &aScope, std::vector<uint64_t> const &aValue ) {
+                return VectorValue( aScope, aValue );
+            },
+            []( Scope &aScope, std::vector<int8_t> const &aValue ) {
+                return VectorValue( aScope, aValue );
+            },
+            []( Scope &aScope, std::vector<int16_t> const &aValue ) {
+                return VectorValue( aScope, aValue );
+            },
+            []( Scope &aScope, std::vector<int32_t> const &aValue ) {
+                return VectorValue( aScope, aValue );
+            },
+            []( Scope &aScope, std::vector<int64_t> const &aValue ) {
+                return VectorValue( aScope, aValue );
+            }
+        );
+        // clang-format on
+
+        // clang-format off
+        lOpsModule["ConstantScalarValue"] = []( Scope &aScope, eScalarType aType, double aValue ) {
+            switch(aType)
+            {
+            case eScalarType::FLOAT32:
+                return ConstantScalarValue( aScope, static_cast<float>(aValue) );
+            case eScalarType::FLOAT64:
+                return ConstantScalarValue( aScope, static_cast<double>(aValue) );
+            case eScalarType::UINT8:
+                return ConstantScalarValue( aScope, static_cast<uint8_t>(aValue) );
+            case eScalarType::UINT16:
+                return ConstantScalarValue( aScope, static_cast<uint16_t>(aValue) );
+            case eScalarType::UINT32:
+                return ConstantScalarValue( aScope, static_cast<uint32_t>(aValue) );
+            case eScalarType::UINT64:
+                return ConstantScalarValue( aScope, static_cast<uint64_t>(aValue) );
+            case eScalarType::INT8:
+                return ConstantScalarValue( aScope, static_cast<int8_t>(aValue) );
+            case eScalarType::INT16:
+                return ConstantScalarValue( aScope, static_cast<int16_t>(aValue) );
+            case eScalarType::INT32:
+                return ConstantScalarValue( aScope, static_cast<int32_t>(aValue) );
+            case eScalarType::INT64:
+                return ConstantScalarValue( aScope, static_cast<int64_t>(aValue) );
+            case eScalarType::UNKNOWN:
+                break;
+            }
+        };
+        // clang-format on
 
         // clang-format off
         lOpsModule["MultiTensorValue"] = overload(
@@ -327,7 +525,7 @@ namespace LTSE::Core
         lOpsModule["Where"] = TensorOps::Where;
 
         lOpsModule["Mix"]    = TensorOps::Mix;
-        lOpsModule["Affine"] = TensorOps::AffineTransform;
+        lOpsModule["AffineTransform"] = TensorOps::AffineTransform;
 
         lOpsModule["ARange"]      = TensorOps::ARange;
         lOpsModule["LinearSpace"] = TensorOps::LinearSpace;

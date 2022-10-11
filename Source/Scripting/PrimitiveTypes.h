@@ -9,10 +9,15 @@
 
 #include "Cuda/MultiTensor.h"
 
+#include "LidarSensorModel/SensorModelBase.h"
+
+
 namespace LTSE::Core
 {
     namespace
     {
+
+        using namespace LTSE::SensorModel;
 
         template <typename _Ty> auto RandomVector( size_t aSize, double aMin, double aMax, sol::this_state aScriptState )
         {
@@ -91,6 +96,7 @@ namespace LTSE::Core
         template <typename _Ty> auto Add( Entity &aEntity, const sol::table &aInstance, sol::this_state aScriptState )
         {
             auto &lNewComponent = aEntity.Add<_Ty>( aInstance.valid() ? aInstance.as<_Ty>() : _Ty{} );
+
             return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
         }
 
@@ -118,18 +124,49 @@ namespace LTSE::Core
         template <typename _Ty> auto Get( Entity &aEntity, sol::this_state aScriptState )
         {
             auto &lNewComponent = aEntity.Get<_Ty>();
+
             return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
         }
 
         template <typename _Ty> auto TryGet( Entity &aEntity, sol::this_state aScriptState )
         {
             auto &lNewComponent = aEntity.TryGet<_Ty>( _Ty{} );
+
+            return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
+        }
+
+        template <typename _Ty> auto GetJoined( Entity &aEntity, sol::this_state aScriptState )
+        {
+            auto &lNewComponent = aEntity.Get<sJoinComponent<_Ty>>().JoinedComponent();
+
             return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
         }
 
         template <typename _Ty> auto Has( Entity &aEntity ) { return aEntity.Has<_Ty>(); }
         template <typename _Ty> auto Remove( Entity &aEntity ) { aEntity.Remove<_Ty>(); }
         template <typename _Ty> auto TryRemove( Entity &aEntity ) { aEntity.TryRemove<_Ty>(); }
+
+        template <typename _Ty> auto Adjoin( Entity &aEntity, Entity &aOther ) { aEntity.Adjoin<_Ty>(aOther); }
+
+        template <typename _Ty> auto CreateSensorEntity0( SensorModelBase &aSelf, std::string const &aName, const sol::table &aComponent, sol::this_state aScriptState )
+        {
+            auto &lNewComponent = aSelf.CreateEntity<_Ty>( aName, aComponent.valid() ? aComponent.as<_Ty>() : _Ty{} );
+            return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
+        }
+
+        template <typename _Ty> auto CreateSensorEntity1( SensorModelBase &aSelf, std::string const &aName, Entity const &aParent, const sol::table &aComponent, sol::this_state aScriptState )
+        {
+            auto &lNewComponent = aSelf.CreateEntity<_Ty>( aName, aParent, aComponent.valid() ? aComponent.as<_Ty>() : _Ty{} );
+            return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
+        }
+
+        template <typename _Ty> auto CreateSensorEntity2( SensorModelBase &aSelf, Entity const &aParent, const sol::table &aComponent, sol::this_state aScriptState )
+        {
+            auto &lNewComponent = aSelf.CreateEntity<_Ty>( aParent, aComponent.valid() ? aComponent.as<_Ty>() : _Ty{} );
+            return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
+        }
+
+
     } // namespace
 
     [[nodiscard]] entt::id_type GetTypeID( const sol::table &aObject );
@@ -208,9 +245,16 @@ namespace LTSE::Core
             lNewType.template func<&TryAdd<_Ty>>( "TryAdd"_hs );
             lNewType.template func<&Get<_Ty>>( "Get"_hs );
             lNewType.template func<&TryGet<_Ty>>( "TryGet"_hs );
+            lNewType.template func<&GetJoined<_Ty>>( "GetJoined"_hs );
             lNewType.template func<&Has<_Ty>>( "Has"_hs );
             lNewType.template func<&Remove<_Ty>>( "Remove"_hs );
             lNewType.template func<&TryRemove<_Ty>>( "TryRemove"_hs );
+            lNewType.template func<&Adjoin<_Ty>>( "Adjoin"_hs );
+
+            lNewType.template func<&CreateSensorEntity0<_Ty>>( "CreateSensorEntity0"_hs );
+            lNewType.template func<&CreateSensorEntity1<_Ty>>( "CreateSensorEntity1"_hs );
+            lNewType.template func<&CreateSensorEntity2<_Ty>>( "CreateSensorEntity2"_hs );
+
         }
 
         return lNewLuaType;

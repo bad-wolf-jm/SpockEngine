@@ -193,12 +193,21 @@ namespace LTSE::Core
             return lDataTable;
         };
 
-        auto lTextureSampler2DType = aScriptingState.new_usertype<TextureSampler2D>( "TextureSampler2D" );
+        auto lTextureSamplerInfoType              = aScriptingState.new_usertype<sTextureSamplingInfo>( "sTextureSamplingInfo" );
+        lTextureSamplerInfoType[call_constructor] = factories( []( sol::table aCreateInfo ) { return ParseSamplerInfo( aCreateInfo ); } );
+        lTextureSamplerInfoType["minification"] = &sTextureSamplingInfo::mMinification;
+        lTextureSamplerInfoType["magnification"] = &sTextureSamplingInfo::mMagnification;
+        lTextureSamplerInfoType["mip"] = &sTextureSamplingInfo::mMip;
+        lTextureSamplerInfoType["wrapping"] = &sTextureSamplingInfo::mWrapping;
+        lTextureSamplerInfoType["scaling"] = &sTextureSamplingInfo::mScaling;
+        lTextureSamplerInfoType["offset"] = &sTextureSamplingInfo::mOffset;
+        lTextureSamplerInfoType["border_color"] = &sTextureSamplingInfo::mBorderColor;
 
+        auto lTextureSampler2DType = aScriptingState.new_usertype<TextureSampler2D>( "TextureSampler2D" );
         lTextureSampler2DType[call_constructor] =
             factories( []( TextureData2D const &aTexture, sol::table aCreateInfo ) { return TextureSampler2D( aTexture, ParseSamplerInfo( aCreateInfo ) ); } );
-
         lTextureSampler2DType["fetch"] = []( TextureSampler2D &aSelf, float x, float y ) { return aSelf.Fetch( x, y ); };
+        lTextureSampler2DType["spec"] = &TextureSampler2D::mSamplingSpec;
     }
 
     void OpenCoreLibrary( sol::table &aScriptingState )

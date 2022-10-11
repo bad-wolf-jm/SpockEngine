@@ -54,8 +54,11 @@ namespace LTSE::Core
 
             // &NumericArray<_Ty>::Append;
             lNewType["length"] = &NumericArray<_Ty>::Length;
+            lNewType["array"] = &NumericArray<_Ty>::mArray;
 
-            lNewType[sol::meta_method::length] = &NumericArray<_Ty>::Length;
+            lNewType[sol::meta_method::length]    = &NumericArray<_Ty>::Length;
+            lNewType[sol::meta_method::index]     = []( NumericArray<_Ty> &aSelf, int i ) { return aSelf.mArray[i - 1]; };
+            lNewType[sol::meta_method::new_index] = []( NumericArray<_Ty> &aSelf, int i, _Ty v ) { aSelf.mArray[i - 1] = v; };
         }
     } // namespace
 
@@ -88,6 +91,9 @@ namespace LTSE::Core
 
         NewArrayType<math::mat3>( aModule, "Mat3Array" );
         NewArrayType<math::mat4>( aModule, "Mat4Array" );
+
+        NewArrayType<Cuda::TextureSampler2D>( aModule, "TextureSamplerArray" );
+        NewArrayType<Cuda::TextureSampler2D::DeviceData>( aModule, "CudaTextureSamplerArray" );
     }
 
 } // namespace LTSE::Core

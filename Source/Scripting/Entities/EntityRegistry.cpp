@@ -36,15 +36,15 @@ namespace LTSE::Core
             return lMaybeAny ? lMaybeAny.cast<bool>() : false;
         };
 
-        lEntityType["get"] = []( Entity &aSelf, const sol::object &aTypeOrID )
+        lEntityType["get"] = []( Entity &aSelf, const sol::object &aTypeOrID, sol::this_state s )
         {
-            const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "Get"_hs, &aSelf );
+            const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "Get"_hs, aSelf, s );
             return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
-        lEntityType["try_get"] = []( Entity &aSelf, const sol::object &aTypeOrID )
+        lEntityType["try_get"] = []( Entity &aSelf, const sol::object &aTypeOrID, sol::this_state s  )
         {
-            const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "TryGet"_hs, &aSelf );
+            const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "TryGet"_hs, aSelf, s );
             return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
 
@@ -95,6 +95,20 @@ namespace LTSE::Core
             const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "TryRemove"_hs, aSelf );
             return sol::lua_nil_t{};
         };
+
+        lEntityType["adjoin"] = []( Entity &aSelf, const sol::object &aTypeOrID, Entity &aOther )
+        {
+            const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "Adjoin"_hs, aSelf, aOther );
+
+            return sol::lua_nil_t{};
+        };
+
+        lEntityType["get_joined"] = []( Entity &aSelf, const sol::object &aTypeOrID, sol::this_state s  )
+        {
+            const auto lMaybeAny = InvokeMetaFunction( DeduceType( aTypeOrID ), "GetJoined"_hs, aSelf, s );
+
+            return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
+        };
     }
 
     void RequireEntityRegistry( sol::table &aScriptingState )
@@ -115,12 +129,11 @@ namespace LTSE::Core
         lRegistryType["clear"] = []( EntityRegistry &aSelf ) { aSelf.Clear(); };
     }
 
-    void OpenEntityRegistry( sol::state &aScriptingState )
+    void OpenEntityRegistry( sol::table &aScriptingState )
     {
-        auto lEntityRegistryModule = aScriptingState["EntityRegistry"].get_or_create<sol::table>();
+        RequireEntityType( aScriptingState );
+        RequireEntityRegistry( aScriptingState );
 
-        RequireEntityType( lEntityRegistryModule );
-        RequireEntityRegistry( lEntityRegistryModule );
     }
 
 } // namespace LTSE::Core

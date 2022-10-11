@@ -39,10 +39,16 @@ namespace LTSE::Core
 
         template <typename _Ty> _Ty Get( std::string aName ) { return ScriptState.get<_Ty>( aName ); }
         template <typename _Ty> _Ty &GetRef( std::string aName ) { return ScriptState.get<_Ty>( aName ); }
+        template <typename _Ty> Ref<_Ty> GetSharedPtr( std::string aName ) { return ScriptState.get<Ref<_Ty>>( aName ); }
 
         template <typename _Ty> sol::usertype<_Ty> RegisterPrimitiveType( std::string const &aName )
         {
             return DeclarePrimitiveType<_Ty>( mTypesModule, aName );
+        }
+
+        template <typename _Ty> sol::usertype<_Ty> RegisterType( std::string const &aName )
+        {
+            return ScriptState.new_usertype<_Ty>( aName );
         }
 
       private:

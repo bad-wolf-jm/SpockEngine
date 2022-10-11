@@ -36,8 +36,9 @@ namespace LTSE::Core
         }
 
         // clang-format off
-        lNewType["__add"] = [&]( _VecType aSelf, _VecType aOther ) { return aSelf + aOther; };
-        lNewType["__mul"] = overload(
+        lNewType[sol::meta_method::addition] = [&]( _VecType aSelf, _VecType aOther ) { return aSelf + aOther; };
+        lNewType[sol::meta_method::subtraction] = [&]( _VecType aSelf, _VecType aOther ) { return aSelf - aOther; };
+        lNewType[sol::meta_method::multiplication] = overload(
             []( const _VecType &v1, const _VecType &v2 ) -> _VecType { return v1 * v2; },
             []( const _VecType &v1, _VecType::value_type f ) -> _VecType { return v1 * f; },
             []( _VecType::value_type f, const _VecType &v1 ) -> _VecType { return f * v1; } );

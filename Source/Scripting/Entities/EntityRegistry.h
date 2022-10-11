@@ -6,5 +6,5 @@
 
 namespace LTSE::Core
 {
-    void OpenEntityRegistry( sol::state &aScriptingState );
+    void OpenEntityRegistry( sol::table &aScriptingState );
 }; // namespace LTSE::Core

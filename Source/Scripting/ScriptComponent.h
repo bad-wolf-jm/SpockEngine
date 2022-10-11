@@ -2,8 +2,8 @@
 
 #include "ScriptingEngine.h"
 
-#include "Core/EntityRegistry/Registry.h"
 #include "Core/Memory.h"
+#include "Core/EntityRegistry/Registry.h"
 
 namespace LTSE::Core
 {
@@ -18,8 +18,6 @@ namespace LTSE::Core
         }
 
         ~sLuaScriptComponent() = default;
-
-        sLuaScriptComponent( sLuaScriptComponent const & ) = default;
 
         template <typename T> T &Get() { return mEntity.Get<T>(); }
 

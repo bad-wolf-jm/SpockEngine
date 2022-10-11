@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "Core/Math/Types.h"
+#include "Cuda/Texture2D.h"
 
 namespace LTSE::Core
 {
@@ -44,13 +45,15 @@ namespace LTSE::Core
 
     using Mat3Array = NumericArray<math::mat3>;
     using Mat4Array = NumericArray<math::mat4>;
+    using TextureSamplerArray = NumericArray<Cuda::TextureSampler2D>;
+    using CudaTextureSamplerArray = NumericArray<Cuda::TextureSampler2D::DeviceData>;
 
     template <typename _Ty> struct StructureArray
     {
         std::vector<_Ty> mArray = {};
     };
 
-    using TextureArray = StructureArray<math::mat3>;
+    using TextureArray = NumericArray<math::mat3>;
 
     void DefineArrayTypes( sol::table &aModule );
 

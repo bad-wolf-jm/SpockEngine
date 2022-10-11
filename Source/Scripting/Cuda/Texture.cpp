@@ -47,5 +47,59 @@ namespace LTSE::Core
 
         lTextureSampler2DType[call_constructor] =
             factories( []( Ref<Cuda::Texture2D> &aTexture, sol::table aCreateInfo ) { return Cuda::TextureSampler2D( aTexture, ParseSamplerInfo( aCreateInfo ) ); } );
+        lTextureSampler2DType["spec"] = &Cuda::TextureSampler2D::mSamplingSpec;
+        lTextureSampler2DType["device_data"] = &Cuda::TextureSampler2D::mDeviceData;
+
+        aScriptingState["load_texture_sampler"] = overload(
+            []( sol::table aCreateInfo, std::string const &aTexturePath )
+            {
+                TextureData2D::sCreateInfo lCreateInfo{};
+                TextureData2D lTextureData( lCreateInfo, aTexturePath );
+
+                LTSE::Cuda::sTextureCreateInfo lTextureCreateInfo = ParseCudaCreateInfo( aCreateInfo );
+
+                switch( lTextureData.mSpec.mFormat )
+                {
+                case LTSE::Core::eColorFormat::R32_FLOAT:
+                    lTextureCreateInfo.mNormalizedValues = false;
+                    break;
+                default:
+                    lTextureCreateInfo.mNormalizedValues = true;
+                    break;
+                }
+
+                Ref<LTSE::Cuda::Texture2D> lTexture = New<LTSE::Cuda::Texture2D>( lTextureCreateInfo, lTextureData.GetImageData() );
+
+                sTextureSamplingInfo lSamplingInfo{};
+                lSamplingInfo.mScaling       = std::array<float, 2>{ 1.0f, 1.0f };
+                lSamplingInfo.mMinification  = LTSE::Core::eSamplerFilter::LINEAR;
+                lSamplingInfo.mMagnification = LTSE::Core::eSamplerFilter::LINEAR;
+                lSamplingInfo.mWrapping      = LTSE::Core::eSamplerWrapping::CLAMP_TO_EDGE;
+
+                return New<LTSE::Cuda::TextureSampler2D>( lTexture, lSamplingInfo );
+            },
+            []( Core::TextureData2D &aTexture, Core::TextureSampler2D &aSampler )
+            {
+                TextureData2D::sCreateInfo lCreateInfo{};
+
+                LTSE::Cuda::sTextureCreateInfo lTextureCreateInfo{};
+                lTextureCreateInfo.mFilterMode            = LTSE::Core::eSamplerFilter::LINEAR;
+                lTextureCreateInfo.mWrappingMode          = LTSE::Core::eSamplerWrapping::CLAMP_TO_EDGE;
+                lTextureCreateInfo.mNormalizedCoordinates = true;
+
+                switch( aTexture.mSpec.mFormat )
+                {
+                case LTSE::Core::eColorFormat::R32_FLOAT:
+                    lTextureCreateInfo.mNormalizedValues = false;
+                    break;
+                default:
+                    lTextureCreateInfo.mNormalizedValues = true;
+                    break;
+                }
+
+                Ref<LTSE::Cuda::Texture2D> lTexture = New<LTSE::Cuda::Texture2D>( lTextureCreateInfo, aTexture.GetImageData() );
+
+                return New<LTSE::Cuda::TextureSampler2D>( lTexture, aSampler.mSamplingSpec );
+            } );
     }
 }; // namespace LTSE::Core

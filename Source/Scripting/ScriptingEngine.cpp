@@ -4,15 +4,17 @@
 #include "Core/Math/Types.h"
 #include "Cuda/Tensor.h"
 // #include "Math/Module.h"
-#include "Math/VectorTypes.h"
 #include "Math/MatrixTypes.h"
+#include "Math/VectorTypes.h"
 #include <type_traits>
 
+
+#include "ArrayTypes.h"
 #include "Scripting/Core/Texture.h"
 #include "Scripting/Cuda/Texture.h"
-#include "TensorOps/ScalarTypes.h"
 #include "SensorModel.h"
-#include "ArrayTypes.h"
+#include "TensorOps/ScalarTypes.h"
+
 
 namespace LTSE::Core
 {
@@ -22,6 +24,7 @@ namespace LTSE::Core
     ScriptingEngine::ScriptingEngine()
     {
         ScriptState.open_libraries( lib::base );
+
         Initialize();
     }
 
@@ -63,7 +66,13 @@ namespace LTSE::Core
         DefineVectorTypes( lMathModule );
         DefineMatrixTypes( lMathModule );
 
-        OpenEntityRegistry( ScriptState );
+        auto lEntityRegistryModule = ScriptState["EntityRegistry"].get_or_create<sol::table>();
+        OpenEntityRegistry( lEntityRegistryModule );
+        auto lRelationshipComponent = DeclarePrimitiveType<sRelationshipComponent>( lEntityRegistryModule, "sRelationshipComponent" );
+        lRelationshipComponent["children"] = readonly(&sRelationshipComponent::mChildren);
+        lRelationshipComponent["parent"] = readonly(&sRelationshipComponent::mParent);
+        auto lTagComponent = DeclarePrimitiveType<sTag>( lEntityRegistryModule, "sTag" );
+        lTagComponent["value"] = readonly(&sTag::mValue);
 
         auto lCudaModule = ScriptState["Cuda"].get_or_create<sol::table>();
         OpenTensorLibrary( lCudaModule );
@@ -71,10 +80,10 @@ namespace LTSE::Core
 
         auto lCoreModule = ScriptState["Core"].get_or_create<sol::table>();
         OpenCoreLibrary( lCoreModule );
-        DefineArrayTypes(lCoreModule);
+        DefineArrayTypes( lCoreModule );
 
         auto lSensorModule = ScriptState["Sensor"].get_or_create<sol::table>();
-        OpenSensorModelLibrary( lCoreModule );
+        OpenSensorModelLibrary( lSensorModule );
     }
 
     ScriptEnvironment ScriptingEngine::LoadFile( fs::path aPath )
