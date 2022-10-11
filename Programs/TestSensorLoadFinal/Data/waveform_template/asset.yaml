@@ -1,0 +1,7 @@
+asset:
+  name: laser_led_0
+  type: pulse_template
+  data:
+    file_path: WaveformTemplateData.bin
+    peak_position: 0.23214285714285715
+    time_scale: 0.00000007

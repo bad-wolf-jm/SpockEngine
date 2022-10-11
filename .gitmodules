@@ -1,0 +1,36 @@
+[submodule "ThirdParty/imgui-node-editor"]
+	path = ThirdParty/imgui-node-editor
+	url = https://github.com/thedmd/imgui-node-editor.git
+[submodule "ThirdParty/ImGuizmo"]
+	path = ThirdParty/ImGuizmo
+	url = https://github.com/CedricGuillemet/ImGuizmo.git
+[submodule "ThirdParty/implot"]
+	path = ThirdParty/implot
+	url = https://github.com/epezent/implot.git
+[submodule "ThirdParty/fmt"]
+	path = ThirdParty/fmt
+	url = https://github.com/fmtlib/fmt.git
+[submodule "ThirdParty/glfw"]
+	path = ThirdParty/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "ThirdParty/glm"]
+	path = ThirdParty/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "ThirdParty/entt"]
+	path = ThirdParty/entt
+	url = https://github.com/skypjack/entt.git
+[submodule "ThirdParty/stb"]
+	path = ThirdParty/stb
+	url = https://github.com/nothings/stb.git
+[submodule "ThirdParty/gli"]
+	path = ThirdParty/gli
+	url = https://github.com/g-truc/gli.git
+[submodule "ThirdParty/stb"]
+	path = ThirdParty/stb
+	url = https://github.com/nothings/stb.git
+[submodule "ThirdParty/yaml-cpp"]
+  path = ThirdParty/yaml-cpp
+  url = https://github.com/jbeder/yaml-cpp.git
+[submodule "ThirdParty/zep"]
+	path = ThirdParty/zep
+	url = https://github.com/Rezonality/zep.git

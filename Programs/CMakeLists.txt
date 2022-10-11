@@ -1,0 +1,14 @@
+cmake_minimum_required(VERSION 3.20)
+project(LTSimulationEngineExamples LANGUAGES CUDA CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+
+# add_subdirectory(AssetImporter)
+# add_subdirectory(Demo_2)
+# add_subdirectory(RayTracing)
+add_subdirectory(TestLua)
+# add_subdirectory(TestFPGA)
+# add_subdirectory(TestComputeGraph)
+# add_subdirectory(TestSensorLoadFinal)
+# add_subdirectory(TestComputeGraph)
+# add_subdirectory(DelauneyTest)

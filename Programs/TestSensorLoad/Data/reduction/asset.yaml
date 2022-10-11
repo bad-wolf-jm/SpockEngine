@@ -1,0 +1,10 @@
+asset:
+  name: tile_1_reduction
+  type: reduction_map
+  data:
+    texture:
+    reduction_map_data:
+      - ID: 0
+        texture: KernelData.bin
+        size: { x: 10.0, y: 10.0 }
+        peak_position: { x: 0.5, y: 0.5 }

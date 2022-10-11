@@ -1,0 +1,8 @@
+asset:
+  name: tile_1_attenuation
+  type: attenuation_pattern
+  data:
+    attenuation_data:
+      - ID: 0
+        texture: AttenuationData.bin
+        size: { x: 1.1458773953669719, y: 11.694302386365617}

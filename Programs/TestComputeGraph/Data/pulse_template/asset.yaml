@@ -1,0 +1,7 @@
+asset:
+  name: laser_led_pulse_template_0
+  type: pulse_template
+  data:
+    file_path: pulse_template.ktx
+    peak_position: 16.250
+    time_scale: 70

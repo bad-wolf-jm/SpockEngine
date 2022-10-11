@@ -1,0 +1,53 @@
+{
+  "config_info": {
+    "date": "2022-04-25",
+    "fpga_version": "0xB0400400",
+    "identifier": "Cyclops"
+  },
+  "statistics": {
+    "cfg": { "win_size": 3 }
+  },
+  "sn_rem": {
+    "pd_mapping": [
+      0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 11, 0,
+      12, 0, 13, 0, 14, 0, 15, 0, 16, 0, 17, 0, 18, 0, 19, 0, 20, 0, 21, 0, 22,
+      0, 23, 0, 24, 0, 25, 0, 26, 0, 27, 0, 28, 0, 29, 0, 30, 0, 31, 0
+    ],
+    "template_offset": [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    ]
+  },
+  "blinder": {
+    "blind_cfg": { "th_blind_on": 8050, "clip_period": 1 },
+    "baseline_cfg": {
+      "bl_af_delay": 0,
+      "guardlen_win_before": 3,
+      "guardlen_win_after": 25,
+      "win_size": 3
+    }
+  },
+  "mfilter": {
+    "ctrl": { "precharge_en": 1, "delay_sideinfo": 2 },
+    "coefficients": [-113, 2121, 6579, 14854, 10966, 520, -2161, 0, 0, 0, 0, 0]
+  },
+  "cfar": {
+    "cfg": {
+      "guard_len": 2,
+      "ref_len": 3,
+      "th_factor": 96,
+      "min_std": 7,
+      "n_skip": 1
+    }
+  },
+  "peak_detect": {
+    "detection_ctrl": {
+      "qint_en": 1,
+      "cfar_ignore": 0,
+      "mask_length": 2,
+      "margin_start": 21,
+      "margin_end": 8
+    }
+  }
+}

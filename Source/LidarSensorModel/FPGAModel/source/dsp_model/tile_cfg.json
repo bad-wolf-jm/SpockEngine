@@ -1,0 +1,23 @@
+{ 
+  "tile": {
+    "pen": [1,0,1,0],
+    "nangbk": 1,
+    "nap": 32
+  },
+  "sn_rem" : {
+      "block_enable" : 1,
+      "set_sel" : 0,
+      "global_offset" : 0,
+      "template": "sn_rem.bin"
+    },  
+  "blinder" : {
+      "block_enable" : 1
+    },
+  "mfilter": {
+      "block_enable": 1
+    },
+  "peak_detect": {
+      "sample_select_ctrl":   
+          {"select_mode": 1, "n_detections": 5, "n_neighbors": 5, "all_samples": 0, "all_aux": 0, "aux_select" : 3, "header" : 1}
+  }
+}
