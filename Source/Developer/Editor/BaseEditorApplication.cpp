@@ -173,30 +173,30 @@ namespace LTSE::Editor
 
             LTSE::Logging::Info( "Current working directory is: '{}'", lCwd.string() );
 
-            ConfigurationRoot = lCwd;
-            if( fs::exists( lCwd / "SensorConfiguration.yaml" ) )
-            {
-                LTSE::Logging::Info( "Current working directory set to: '{}'", ConfigurationRoot.string() );
-            }
-            else
-            {
-                while( !ConfigurationRoot.empty() && ( ConfigurationRoot != ConfigurationRoot.root_path() ) && !fs::exists( ConfigurationRoot / "SensorConfiguration.yaml" ) )
-                {
-                    ConfigurationRoot = ConfigurationRoot.parent_path();
-                    LTSE::Logging::Info( "Looking for sensor configuration in: '{}'", ConfigurationRoot.string() );
-                }
+            // ConfigurationRoot = lCwd;
+            // if( fs::exists( lCwd / "SensorConfiguration.yaml" ) )
+            // {
+            //     LTSE::Logging::Info( "Current working directory set to: '{}'", ConfigurationRoot.string() );
+            // }
+            // else
+            // {
+            //     while( !ConfigurationRoot.empty() && ( ConfigurationRoot != ConfigurationRoot.root_path() ) && !fs::exists( ConfigurationRoot / "SensorConfiguration.yaml" ) )
+            //     {
+            //         ConfigurationRoot = ConfigurationRoot.parent_path();
+            //         LTSE::Logging::Info( "Looking for sensor configuration in: '{}'", ConfigurationRoot.string() );
+            //     }
 
-                if( fs::exists( ConfigurationRoot / "SensorConfiguration.yaml" ) )
-                {
-                    LTSE::Logging::Info( "Current working directory set to: '{}'", ConfigurationRoot.string() );
-                }
-                else
-                {
-                    ConfigurationRoot = lCwd;
-                    LTSE::Logging::Error( "The file 'SensorConfiguration.yaml' was not found in this folder or any of its parents." );
-                    exit( 2 );
-                }
-            }
+            //     if( fs::exists( ConfigurationRoot / "SensorConfiguration.yaml" ) )
+            //     {
+            //         LTSE::Logging::Info( "Current working directory set to: '{}'", ConfigurationRoot.string() );
+            //     }
+            //     else
+            //     {
+            //         ConfigurationRoot = lCwd;
+            //         LTSE::Logging::Error( "The file 'SensorConfiguration.yaml' was not found in this folder or any of its parents." );
+            //         exit( 2 );
+            //     }
+            // }
         }
 
         // Create Saved, Saved/Logs
@@ -213,16 +213,16 @@ namespace LTSE::Editor
         else
             SaveConfiguration();
 
-        SensorConfigurationFile = ConfigurationRoot / "SensorConfiguration.yaml";
-        if( fs::exists( SensorConfigurationFile ) )
-        {
-            LTSE::Logging::Info( "Loading sensor configuration from '{}'", SensorConfigurationFile.string() );
-        }
-        else
-        {
-            LTSE::Logging::Info( "Sensor configuration not found.", SensorConfigurationFile.string() );
-        }
-        LoadSensorConfiguration();
+        // SensorConfigurationFile = ConfigurationRoot / "SensorConfiguration.yaml";
+        // if( fs::exists( SensorConfigurationFile ) )
+        // {
+        //     LTSE::Logging::Info( "Loading sensor configuration from '{}'", SensorConfigurationFile.string() );
+        // }
+        // else
+        // {
+        //     LTSE::Logging::Info( "Sensor configuration not found.", SensorConfigurationFile.string() );
+        // }
+        // LoadSensorConfiguration();
 
         mEngineLoop->SetInitialWindowSize( WindowSize );
         mEngineLoop->SetInitialWindowPosition( WindowPosition );

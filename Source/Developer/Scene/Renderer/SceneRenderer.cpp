@@ -74,7 +74,7 @@ namespace LTSE::Core
         l_EmptyTextureDescription.WrappingMode        = SamplerWrapping::REPEAT;
         l_EmptyTextureDescription.Sampled             = true;
         gli::texture2d l_EmptyTextureImage( gli::load_ktx( GetResourcePath( "textures\\empty.ktx" ).string() ) );
-        m_EmptyTexture = New<Texture2D>( mGraphicContext, l_EmptyTextureDescription, l_EmptyTextureImage );
+        m_EmptyTexture = New<Graphics::Texture2D>( mGraphicContext, l_EmptyTextureDescription, l_EmptyTextureImage );
 
         CoordinateGridRendererCreateInfo l_CoordinateGridRendererCreateInfo{};
         l_CoordinateGridRendererCreateInfo.RenderPass = m_RenderPass;

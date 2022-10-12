@@ -296,11 +296,11 @@ namespace LTSE::Editor
         }
         ImGui::End();
 
-        if( ImGui::Begin( "TILE EXPLORER", &p_open, ImGuiWindowFlags_None ) )
-        {
-            DisplayShortWaveforms( *mUIOverlay, mTestTile );
-        }
-        ImGui::End();
+        // if( ImGui::Begin( "TILE EXPLORER", &p_open, ImGuiWindowFlags_None ) )
+        // {
+        //     DisplayShortWaveforms( *mUIOverlay, mTestTile );
+        // }
+        // ImGui::End();
 
         if( ImGui::Begin( "MATERIAL", &p_open, ImGuiWindowFlags_None ) )
         {
@@ -554,443 +554,443 @@ namespace LTSE::Editor
         }
         ImGui::End();
 
-        if( ImGui::Begin( "SENSOR CONFIGURATION EDITOR", &p_open, ImGuiWindowFlags_None ) )
-        {
-            static Entity ElementInFocus{};
+        // if( ImGui::Begin( "SENSOR CONFIGURATION EDITOR", &p_open, ImGuiWindowFlags_None ) )
+        // {
+        //     static Entity ElementInFocus{};
 
-            auto l_DrawList   = ImGui::GetWindowDrawList();
-            auto l_WindowSize = UI::GetAvailableContentSpace();
+        //     auto l_DrawList   = ImGui::GetWindowDrawList();
+        //     auto l_WindowSize = UI::GetAvailableContentSpace();
 
-            auto l_TopLeft     = ImGui::GetCursorScreenPos() + ImVec2{ -10.0f, -10.0f };
-            auto l_BottomRight = ImGui::GetCursorScreenPos() + ImVec2{ static_cast<float>( l_WindowSize.x ), 25.0f };
-            l_DrawList->AddRectFilled( l_TopLeft, l_BottomRight, IM_COL32( 5, 5, 5, 255 ) );
-            if( !( SensorModel->mSensorDefinition->mName.empty() ) )
-                UI::Text( "{}", SensorModel->mSensorDefinition->mName );
-            else
-                UI::Text( "SENSOR_001" );
+        //     auto l_TopLeft     = ImGui::GetCursorScreenPos() + ImVec2{ -10.0f, -10.0f };
+        //     auto l_BottomRight = ImGui::GetCursorScreenPos() + ImVec2{ static_cast<float>( l_WindowSize.x ), 25.0f };
+        //     l_DrawList->AddRectFilled( l_TopLeft, l_BottomRight, IM_COL32( 5, 5, 5, 255 ) );
+        //     // if( !( SensorModel->mSensorDefinition->mName.empty() ) )
+        //     //     UI::Text( "{}", SensorModel->mSensorDefinition->mName );
+        //     // else
+        //     UI::Text( "SENSOR_001" );
 
-            UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( 0.0f, 10.0f ) );
-            ImGuiTreeNodeFlags l_Flags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_DefaultOpen;
-            ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2( 3, 2 ) );
+        //     UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( 0.0f, 10.0f ) );
+        //     ImGuiTreeNodeFlags l_Flags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_DefaultOpen;
+        //     // ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2( 3, 2 ) );
 
-            if( ImGui::TreeNodeEx( "ASSETS", l_Flags ) )
-            {
-                for( auto &l_Tile : SensorModel->mSensorDefinition->mRootAsset.Get<sRelationshipComponent>().mChildren )
-                {
-                    ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.5f, 0.2f, 0.7f, 1.0f } );
-                    UI::Text( "{}", ICON_FA_CIRCLE_O );
-                    UI::SameLine();
-                    ImGui::PopStyleColor();
+        //     // if( ImGui::TreeNodeEx( "ASSETS", l_Flags ) )
+        //     // {
+        //     //     for( auto &l_Tile : SensorModel->mSensorDefinition->mRootAsset.Get<sRelationshipComponent>().mChildren )
+        //     //     {
+        //     //         ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.5f, 0.2f, 0.7f, 1.0f } );
+        //     //         UI::Text( "{}", ICON_FA_CIRCLE_O );
+        //     //         UI::SameLine();
+        //     //         ImGui::PopStyleColor();
 
-                    UI::Text( l_Tile.Get<sTag>().mValue );
-                    UI::SameLine();
-                    UI::SetCursorPosition( math::vec2( l_WindowSize.x - 30.0f, UI::GetCurrentCursorPosition().y - 3.0f ) );
-                    if( EditButton( l_Tile, math::vec2{ 20.0, 22.0 } ) )
-                    {
-                        ElementInFocus = l_Tile;
-                    }
-                }
-                ImGui::TreePop();
-            }
-            ImGui::PopStyleVar();
+        //     //         UI::Text( l_Tile.Get<sTag>().mValue );
+        //     //         UI::SameLine();
+        //     //         UI::SetCursorPosition( math::vec2( l_WindowSize.x - 30.0f, UI::GetCurrentCursorPosition().y - 3.0f ) );
+        //     //         if( EditButton( l_Tile, math::vec2{ 20.0, 22.0 } ) )
+        //     //         {
+        //     //             ElementInFocus = l_Tile;
+        //     //         }
+        //     //     }
+        //     //     ImGui::TreePop();
+        //     // }
+        //     // ImGui::PopStyleVar();
 
-            UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( 0.0f, 15.0f ) );
-            ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2( 3, 2 ) );
-            if( ImGui::TreeNodeEx( "COMPONENTS", l_Flags ) )
-            {
-                for( auto &l_Tile : SensorModel->mSensorDefinition->mRootComponent.Get<sRelationshipComponent>().mChildren )
-                {
-                    ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.5f, 0.2f, 0.7f, 1.0f } );
-                    UI::Text( "{}", ICON_FA_CIRCLE_O );
-                    UI::SameLine();
-                    ImGui::PopStyleColor();
+        //     UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( 0.0f, 15.0f ) );
+        //     // ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2( 3, 2 ) );
+        //     // if( ImGui::TreeNodeEx( "COMPONENTS", l_Flags ) )
+        //     // {
+        //     //     for( auto &l_Tile : SensorModel->mSensorDefinition->mRootComponent.Get<sRelationshipComponent>().mChildren )
+        //     //     {
+        //     //         ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.5f, 0.2f, 0.7f, 1.0f } );
+        //     //         UI::Text( "{}", ICON_FA_CIRCLE_O );
+        //     //         UI::SameLine();
+        //     //         ImGui::PopStyleColor();
 
-                    UI::Text( l_Tile.Get<sTag>().mValue );
-                    UI::SameLine();
-                    UI::SetCursorPosition( math::vec2( l_WindowSize.x - 30.0f, UI::GetCurrentCursorPosition().y - 3.0f ) );
-                    if( EditButton( l_Tile, math::vec2{ 20.0, 22.0 } ) )
-                    {
-                        ElementInFocus = l_Tile;
-                    }
-                }
-                ImGui::TreePop();
-            }
-            ImGui::PopStyleVar();
+        //     //         UI::Text( l_Tile.Get<sTag>().mValue );
+        //     //         UI::SameLine();
+        //     //         UI::SetCursorPosition( math::vec2( l_WindowSize.x - 30.0f, UI::GetCurrentCursorPosition().y - 3.0f ) );
+        //     //         if( EditButton( l_Tile, math::vec2{ 20.0, 22.0 } ) )
+        //     //         {
+        //     //             ElementInFocus = l_Tile;
+        //     //         }
+        //     //     }
+        //     //     ImGui::TreePop();
+        //     // }
+        //     // ImGui::PopStyleVar();
 
-            UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( 0.0f, 15.0f ) );
-            ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2( 3, 2 ) );
-            if( ImGui::TreeNodeEx( "TILE CONFIGURATIONS", l_Flags ) )
-            {
-                for( auto &l_Tile : SensorModel->mSensorDefinition->mRootTile.Get<sRelationshipComponent>().mChildren )
-                {
-                    ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.5f, 0.2f, 0.7f, 1.0f } );
-                    UI::Text( "{}", ICON_FA_CIRCLE_O );
-                    UI::SameLine();
-                    ImGui::PopStyleColor();
-                    UI::Text( "Tile ID: {} ({} flashes)", l_Tile.Get<sTileSpecificationComponent>().mID, l_Tile.Get<sRelationshipComponent>().mChildren.size() );
-                    UI::SameLine();
-                    UI::SetCursorPosition( math::vec2( l_WindowSize.x - 30.0f, UI::GetCurrentCursorPosition().y - 3.0f ) );
-                    if( EditButton( l_Tile, math::vec2{ 20.0, 22.0 } ) )
-                    {
-                        ElementInFocus = l_Tile;
-                    }
-                }
-                ImGui::TreePop();
-            }
-            ImGui::PopStyleVar();
+        //     // UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( 0.0f, 15.0f ) );
+        //     // ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2( 3, 2 ) );
+        //     // if( ImGui::TreeNodeEx( "TILE CONFIGURATIONS", l_Flags ) )
+        //     // {
+        //     //     for( auto &l_Tile : SensorModel->mSensorDefinition->mRootTile.Get<sRelationshipComponent>().mChildren )
+        //     //     {
+        //     //         ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.5f, 0.2f, 0.7f, 1.0f } );
+        //     //         UI::Text( "{}", ICON_FA_CIRCLE_O );
+        //     //         UI::SameLine();
+        //     //         ImGui::PopStyleColor();
+        //     //         UI::Text( "Tile ID: {} ({} flashes)", l_Tile.Get<sTileSpecificationComponent>().mID, l_Tile.Get<sRelationshipComponent>().mChildren.size() );
+        //     //         UI::SameLine();
+        //     //         UI::SetCursorPosition( math::vec2( l_WindowSize.x - 30.0f, UI::GetCurrentCursorPosition().y - 3.0f ) );
+        //     //         if( EditButton( l_Tile, math::vec2{ 20.0, 22.0 } ) )
+        //     //         {
+        //     //             ElementInFocus = l_Tile;
+        //     //         }
+        //     //     }
+        //     //     ImGui::TreePop();
+        //     // }
+        //     // ImGui::PopStyleVar();
 
-            UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( 0.0f, 15.0f ) );
-            ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2( 3, 2 ) );
-            if( ImGui::TreeNodeEx( "TILE LAYOUTS", l_Flags ) )
-            {
-                for( auto &l_TileLayout : SensorModel->mSensorDefinition->mRootLayout.Get<sRelationshipComponent>().mChildren )
-                {
-                    ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.5f, 0.2f, 0.7f, 1.0f } );
-                    UI::Text( "{}", ICON_FA_CIRCLE_O );
-                    UI::SameLine();
-                    ImGui::PopStyleColor();
-                    UI::Text( "{}", l_TileLayout.Get<sTag>().mValue );
-                    UI::SameLine();
-                    UI::SetCursorPosition( math::vec2( l_WindowSize.x - 30.0f, UI::GetCurrentCursorPosition().y - 3.0f ) );
-                    if( EditButton( l_TileLayout, math::vec2{ 20.0, 22.0 } ) )
-                    {
-                        ElementInFocus = l_TileLayout;
-                    }
-                }
-                ImGui::TreePop();
-            }
-            ImGui::PopStyleVar();
+        //     // UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( 0.0f, 15.0f ) );
+        //     // ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2( 3, 2 ) );
+        //     // if( ImGui::TreeNodeEx( "TILE LAYOUTS", l_Flags ) )
+        //     // {
+        //     //     for( auto &l_TileLayout : SensorModel->mSensorDefinition->mRootLayout.Get<sRelationshipComponent>().mChildren )
+        //     //     {
+        //     //         ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.5f, 0.2f, 0.7f, 1.0f } );
+        //     //         UI::Text( "{}", ICON_FA_CIRCLE_O );
+        //     //         UI::SameLine();
+        //     //         ImGui::PopStyleColor();
+        //     //         UI::Text( "{}", l_TileLayout.Get<sTag>().mValue );
+        //     //         UI::SameLine();
+        //     //         UI::SetCursorPosition( math::vec2( l_WindowSize.x - 30.0f, UI::GetCurrentCursorPosition().y - 3.0f ) );
+        //     //         if( EditButton( l_TileLayout, math::vec2{ 20.0, 22.0 } ) )
+        //     //         {
+        //     //             ElementInFocus = l_TileLayout;
+        //     //         }
+        //     //     }
+        //     //     ImGui::TreePop();
+        //     // }
+        //     // ImGui::PopStyleVar();
 
-            if( ElementInFocus )
-            {
-                if( ElementInFocus.Has<sPhotoDetector>() )
-                {
-                    auto l_WindowSize = UI::GetAvailableContentSpace();
-                    auto l_TextSize0  = ImGui::CalcTextSize( "Cell positions:" );
+        //     if( ElementInFocus )
+        //     {
+        //         if( ElementInFocus.Has<sPhotoDetector>() )
+        //         {
+        //             auto l_WindowSize = UI::GetAvailableContentSpace();
+        //             auto l_TextSize0  = ImGui::CalcTextSize( "Cell positions:" );
 
-                    auto l_TextSize1 = ImGui::CalcTextSize( "ID:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "ID:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize1.x ) + 10.0f, 0.0f ) );
-                    UI::Text( "XXXX" );
+        //             auto l_TextSize1 = ImGui::CalcTextSize( "ID:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "ID:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize1.x ) + 10.0f, 0.0f ) );
+        //             UI::Text( "XXXX" );
 
-                    auto l_TextSize2 = ImGui::CalcTextSize( "Name:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "Name:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize2.x ) + 10.0f, 0.0f ) );
-                    char buf[128] = { 0 };
-                    std::strncpy( buf, ElementInFocus.Get<sTag>().mValue.c_str(), std::min( ElementInFocus.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
-                    if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
-                    {
-                        ElementInFocus.Get<sTag>().mValue = std::string( buf );
-                    }
+        //             auto l_TextSize2 = ImGui::CalcTextSize( "Name:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "Name:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize2.x ) + 10.0f, 0.0f ) );
+        //             char buf[128] = { 0 };
+        //             std::strncpy( buf, ElementInFocus.Get<sTag>().mValue.c_str(), std::min( ElementInFocus.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
+        //             if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
+        //             {
+        //                 ElementInFocus.Get<sTag>().mValue = std::string( buf );
+        //             }
 
-                    auto l_TextSize3 = ImGui::CalcTextSize( "Cell positions:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "Cell positions:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize3.x ) + 10.0f, 0.0f ) );
-                    UI::Text( "XXXX" );
+        //             auto l_TextSize3 = ImGui::CalcTextSize( "Cell positions:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "Cell positions:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize3.x ) + 10.0f, 0.0f ) );
+        //             UI::Text( "XXXX" );
 
-                    auto l_TextSize4 = ImGui::CalcTextSize( "Baseline:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "Baseline:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize4.x ) + 10.0f, 0.0f ) );
-                    UI::Text( "XXXX" );
+        //             auto l_TextSize4 = ImGui::CalcTextSize( "Baseline:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "Baseline:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize4.x ) + 10.0f, 0.0f ) );
+        //             UI::Text( "XXXX" );
 
-                    auto l_TextSize5 = ImGui::CalcTextSize( "Static Noise:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "Static Noise:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize5.x ) + 10.0f, 0.0f ) );
-                    UI::Text( "XXXX" );
+        //             auto l_TextSize5 = ImGui::CalcTextSize( "Static Noise:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "Static Noise:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize5.x ) + 10.0f, 0.0f ) );
+        //             UI::Text( "XXXX" );
 
-                    if( UI::Button( "Edit layout", { 100.0f, 35.0f } ) )
-                    {
-                        PhotodetectorEditor.PhotodetectorToEdit = ElementInFocus;
-                        PhotodetectorEditor.SensorModel         = SensorModel;
-                        PhotodetectorEditor.Visible             = true;
-                    }
+        //             if( UI::Button( "Edit layout", { 100.0f, 35.0f } ) )
+        //             {
+        //                 PhotodetectorEditor.PhotodetectorToEdit = ElementInFocus;
+        //                 PhotodetectorEditor.SensorModel         = SensorModel;
+        //                 PhotodetectorEditor.Visible             = true;
+        //             }
 
-                    if( PhotodetectorEditor.Visible )
-                        ImGui::OpenPopup( "EDIT PHOTODETECTOR..." );
-                    PhotodetectorEditor.Display();
-                }
-                else if( ElementInFocus.Has<sLaserAssembly>() )
-                {
-                    auto l_WindowSize = UI::GetAvailableContentSpace();
-                    auto l_TextSize0  = ImGui::CalcTextSize( "Timebase delay:" );
+        //             if( PhotodetectorEditor.Visible )
+        //                 ImGui::OpenPopup( "EDIT PHOTODETECTOR..." );
+        //             PhotodetectorEditor.Display();
+        //         }
+        //         else if( ElementInFocus.Has<sLaserAssembly>() )
+        //         {
+        //             auto l_WindowSize = UI::GetAvailableContentSpace();
+        //             auto l_TextSize0  = ImGui::CalcTextSize( "Timebase delay:" );
 
-                    auto l_TextSize1 = ImGui::CalcTextSize( "ID:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "ID:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize1.x ) + 10.0f, 0.0f ) );
-                    UI::Text( "XXXX" );
+        //             auto l_TextSize1 = ImGui::CalcTextSize( "ID:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "ID:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize1.x ) + 10.0f, 0.0f ) );
+        //             UI::Text( "XXXX" );
 
-                    auto l_TextSize2 = ImGui::CalcTextSize( "Name:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "Name:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize2.x ) + 10.0f, 0.0f ) );
-                    char buf[128] = { 0 };
-                    std::strncpy( buf, ElementInFocus.Get<sTag>().mValue.c_str(), std::min( ElementInFocus.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
-                    if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
-                    {
-                        ElementInFocus.Get<sTag>().mValue = std::string( buf );
-                    }
+        //             auto l_TextSize2 = ImGui::CalcTextSize( "Name:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "Name:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize2.x ) + 10.0f, 0.0f ) );
+        //             char buf[128] = { 0 };
+        //             std::strncpy( buf, ElementInFocus.Get<sTag>().mValue.c_str(), std::min( ElementInFocus.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
+        //             if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
+        //             {
+        //                 ElementInFocus.Get<sTag>().mValue = std::string( buf );
+        //             }
 
-                    auto l_TextSize3 = ImGui::CalcTextSize( "Pulse template:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "Pulse template:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize3.x ) + 10.0f, 0.0f ) );
-                    UI::Text( "XXXX" );
+        //             auto l_TextSize3 = ImGui::CalcTextSize( "Pulse template:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "Pulse template:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize3.x ) + 10.0f, 0.0f ) );
+        //             UI::Text( "XXXX" );
 
-                    auto l_TextSize3a = ImGui::CalcTextSize( "Diffusion:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "Diffusion:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize3a.x ) + 10.0f, 0.0f ) );
-                    UI::Text( "XXXX" );
+        //             auto l_TextSize3a = ImGui::CalcTextSize( "Diffusion:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "Diffusion:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize3a.x ) + 10.0f, 0.0f ) );
+        //             UI::Text( "XXXX" );
 
-                    auto l_TextSize4 = ImGui::CalcTextSize( "Timebase delay:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::VectorComponentEditor( "Timebase delay:", ElementInFocus.Get<sLaserAssembly>().mTimebaseDelay, 0.0, l_TextSize0.x );
+        //             auto l_TextSize4 = ImGui::CalcTextSize( "Timebase delay:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::VectorComponentEditor( "Timebase delay:", ElementInFocus.Get<sLaserAssembly>().mTimebaseDelay, 0.0, l_TextSize0.x );
 
-                    auto l_TextSize5 = ImGui::CalcTextSize( "Flash time:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::VectorComponentEditor( "Flash time:", ElementInFocus.Get<sLaserAssembly>().mFlashTime, 0.0, l_TextSize0.x );
-                }
-                else if( ElementInFocus.Has<sSampler>() )
-                {
-                    auto l_WindowSize = UI::GetAvailableContentSpace();
-                    auto l_TextSize0  = ImGui::CalcTextSize( "Timebase delay:" );
+        //             auto l_TextSize5 = ImGui::CalcTextSize( "Flash time:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::VectorComponentEditor( "Flash time:", ElementInFocus.Get<sLaserAssembly>().mFlashTime, 0.0, l_TextSize0.x );
+        //         }
+        //         else if( ElementInFocus.Has<sSampler>() )
+        //         {
+        //             auto l_WindowSize = UI::GetAvailableContentSpace();
+        //             auto l_TextSize0  = ImGui::CalcTextSize( "Timebase delay:" );
 
-                    auto l_TextSize1 = ImGui::CalcTextSize( "ID:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "ID:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize1.x ) + 10.0f, 0.0f ) );
-                    UI::Text( "XXXX" );
+        //             auto l_TextSize1 = ImGui::CalcTextSize( "ID:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "ID:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize1.x ) + 10.0f, 0.0f ) );
+        //             UI::Text( "XXXX" );
 
-                    auto l_TextSize2 = ImGui::CalcTextSize( "Name:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "Name:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize2.x ) + 10.0f, 0.0f ) );
-                    char buf[128] = { 0 };
-                    std::strncpy( buf, ElementInFocus.Get<sTag>().mValue.c_str(), std::min( ElementInFocus.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
-                    if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
-                    {
-                        ElementInFocus.Get<sTag>().mValue = std::string( buf );
-                    }
+        //             auto l_TextSize2 = ImGui::CalcTextSize( "Name:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "Name:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize2.x ) + 10.0f, 0.0f ) );
+        //             char buf[128] = { 0 };
+        //             std::strncpy( buf, ElementInFocus.Get<sTag>().mValue.c_str(), std::min( ElementInFocus.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
+        //             if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
+        //             {
+        //                 ElementInFocus.Get<sTag>().mValue = std::string( buf );
+        //             }
 
-                    auto l_TextSize3 = ImGui::CalcTextSize( "Basepoints:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "Basepoints:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize3.x ) + 10.0f, 0.0f ) );
-                    UI::Text( "{}", ElementInFocus.Get<sSampler>().mLength );
+        //             auto l_TextSize3 = ImGui::CalcTextSize( "Basepoints:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "Basepoints:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize3.x ) + 10.0f, 0.0f ) );
+        //             UI::Text( "{}", ElementInFocus.Get<sSampler>().mLength );
 
-                    auto l_TextSize4 = ImGui::CalcTextSize( "Frequency:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "Frequency:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize4.x ) + 10.0f, 0.0f ) );
-                    UI::Text( "{}", ElementInFocus.Get<sSampler>().mFrequency );
-                }
-                else if( ElementInFocus.Has<sDiffusionAssetTag>() )
-                {
-                    auto l_TextSize0 = ImGui::CalcTextSize( "Cell positions:" );
-                    auto l_TextSize1 = ImGui::CalcTextSize( "ID:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "ID:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize1.x ) + 10.0f, 0.0f ) );
-                    UI::Text( ElementInFocus.Get<sAssetMetadata>().mID );
+        //             auto l_TextSize4 = ImGui::CalcTextSize( "Frequency:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "Frequency:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize4.x ) + 10.0f, 0.0f ) );
+        //             UI::Text( "{}", ElementInFocus.Get<sSampler>().mFrequency );
+        //         }
+        //         else if( ElementInFocus.Has<sDiffusionAssetTag>() )
+        //         {
+        //             auto l_TextSize0 = ImGui::CalcTextSize( "Cell positions:" );
+        //             auto l_TextSize1 = ImGui::CalcTextSize( "ID:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "ID:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize1.x ) + 10.0f, 0.0f ) );
+        //             UI::Text( ElementInFocus.Get<sAssetMetadata>().mID );
 
-                    auto l_TextSize2 = ImGui::CalcTextSize( "Name:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "Name:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize2.x ) + 10.0f, 0.0f ) );
-                    char buf[128] = { 0 };
-                    std::strncpy( buf, ElementInFocus.Get<sTag>().mValue.c_str(), std::min( ElementInFocus.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
-                    if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
-                    {
-                        ElementInFocus.Get<sTag>().mValue = std::string( buf );
-                    }
+        //             auto l_TextSize2 = ImGui::CalcTextSize( "Name:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "Name:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize2.x ) + 10.0f, 0.0f ) );
+        //             char buf[128] = { 0 };
+        //             std::strncpy( buf, ElementInFocus.Get<sTag>().mValue.c_str(), std::min( ElementInFocus.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
+        //             if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
+        //             {
+        //                 ElementInFocus.Get<sTag>().mValue = std::string( buf );
+        //             }
 
-                    auto l_TextSize3 = ImGui::CalcTextSize( "Type:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "Type:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize3.x ) + 10.0f, 0.0f ) );
-                    UI::Text( "DIFFUSION" );
-                }
-                else if( ElementInFocus.Has<sPulseTemplateAssetTag>() )
-                {
-                    auto l_TextSize0 = ImGui::CalcTextSize( "Cell positions:" );
-                    auto l_TextSize1 = ImGui::CalcTextSize( "ID:" );
+        //             auto l_TextSize3 = ImGui::CalcTextSize( "Type:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "Type:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize3.x ) + 10.0f, 0.0f ) );
+        //             UI::Text( "DIFFUSION" );
+        //         }
+        //         else if( ElementInFocus.Has<sPulseTemplateAssetTag>() )
+        //         {
+        //             auto l_TextSize0 = ImGui::CalcTextSize( "Cell positions:" );
+        //             auto l_TextSize1 = ImGui::CalcTextSize( "ID:" );
 
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "ID:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize1.x ) + 10.0f, 0.0f ) );
-                    UI::Text( ElementInFocus.Get<sAssetMetadata>().mID );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "ID:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize1.x ) + 10.0f, 0.0f ) );
+        //             UI::Text( ElementInFocus.Get<sAssetMetadata>().mID );
 
-                    auto l_TextSize2 = ImGui::CalcTextSize( "Name:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "Name:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize2.x ) + 10.0f, 0.0f ) );
-                    char buf[128] = { 0 };
-                    std::strncpy( buf, ElementInFocus.Get<sTag>().mValue.c_str(), std::min( ElementInFocus.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
-                    if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
-                    {
-                        ElementInFocus.Get<sTag>().mValue = std::string( buf );
-                    }
+        //             auto l_TextSize2 = ImGui::CalcTextSize( "Name:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "Name:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize2.x ) + 10.0f, 0.0f ) );
+        //             char buf[128] = { 0 };
+        //             std::strncpy( buf, ElementInFocus.Get<sTag>().mValue.c_str(), std::min( ElementInFocus.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
+        //             if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
+        //             {
+        //                 ElementInFocus.Get<sTag>().mValue = std::string( buf );
+        //             }
 
-                    auto l_TextSize3 = ImGui::CalcTextSize( "Type:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "Type:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize3.x ) + 10.0f, 0.0f ) );
-                    UI::Text( "PULSE TEMPLATE" );
-                }
-                else if( ElementInFocus.Has<sStaticNoiseAssetTag>() )
-                {
-                    auto l_TextSize0 = ImGui::CalcTextSize( "Cell positions:" );
-                    auto l_TextSize1 = ImGui::CalcTextSize( "ID:" );
+        //             auto l_TextSize3 = ImGui::CalcTextSize( "Type:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "Type:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize3.x ) + 10.0f, 0.0f ) );
+        //             UI::Text( "PULSE TEMPLATE" );
+        //         }
+        //         else if( ElementInFocus.Has<sStaticNoiseAssetTag>() )
+        //         {
+        //             auto l_TextSize0 = ImGui::CalcTextSize( "Cell positions:" );
+        //             auto l_TextSize1 = ImGui::CalcTextSize( "ID:" );
 
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "ID:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize1.x ) + 10.0f, 0.0f ) );
-                    UI::Text( ElementInFocus.Get<sAssetMetadata>().mID );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "ID:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize1.x ) + 10.0f, 0.0f ) );
+        //             UI::Text( ElementInFocus.Get<sAssetMetadata>().mID );
 
-                    auto l_TextSize2 = ImGui::CalcTextSize( "Name:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "Name:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize2.x ) + 10.0f, 0.0f ) );
-                    char buf[128] = { 0 };
-                    std::strncpy( buf, ElementInFocus.Get<sTag>().mValue.c_str(), std::min( ElementInFocus.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
-                    if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
-                    {
-                        ElementInFocus.Get<sTag>().mValue = std::string( buf );
-                    }
+        //             auto l_TextSize2 = ImGui::CalcTextSize( "Name:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "Name:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize2.x ) + 10.0f, 0.0f ) );
+        //             char buf[128] = { 0 };
+        //             std::strncpy( buf, ElementInFocus.Get<sTag>().mValue.c_str(), std::min( ElementInFocus.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
+        //             if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
+        //             {
+        //                 ElementInFocus.Get<sTag>().mValue = std::string( buf );
+        //             }
 
-                    auto l_TextSize3 = ImGui::CalcTextSize( "Type:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "Type:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize3.x ) + 10.0f, 0.0f ) );
-                    UI::Text( "STATIC NOISE" );
-                }
-                else if( ElementInFocus.Has<sTileSpecificationComponent>() )
-                {
-                    auto &l_TileSpecificationComponent = ElementInFocus.Get<sTileSpecificationComponent>();
+        //             auto l_TextSize3 = ImGui::CalcTextSize( "Type:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "Type:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize3.x ) + 10.0f, 0.0f ) );
+        //             UI::Text( "STATIC NOISE" );
+        //         }
+        //         else if( ElementInFocus.Has<sTileSpecificationComponent>() )
+        //         {
+        //             auto &l_TileSpecificationComponent = ElementInFocus.Get<sTileSpecificationComponent>();
 
-                    auto l_WindowSize  = UI::GetAvailableContentSpace();
-                    auto l_TextSize0   = ImGui::CalcTextSize( "Field of view hint:" );
-                    auto l_SliderSize0 = static_cast<float>( l_WindowSize.x ) - l_TextSize0.x - 35.0f;
+        //             auto l_WindowSize  = UI::GetAvailableContentSpace();
+        //             auto l_TextSize0   = ImGui::CalcTextSize( "Field of view hint:" );
+        //             auto l_SliderSize0 = static_cast<float>( l_WindowSize.x ) - l_TextSize0.x - 35.0f;
 
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 5.0f ) );
-                    UI::Text( "ID: {}", ElementInFocus.Get<sTileSpecificationComponent>().mID );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 5.0f ) );
+        //             UI::Text( "ID: {}", ElementInFocus.Get<sTileSpecificationComponent>().mID );
 
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 5.0f ) );
-                    UI::VectorComponentEditor( "Field of view hint:", 0, ElementInFocus.Get<sTileSpecificationComponent>().mPosition, -10.0f, 10.0f, 0.01f, -10.0f, 10.0f, 0.01f,
-                                               0.0f, l_TextSize0.x );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 5.0f ) );
+        //             UI::VectorComponentEditor( "Field of view hint:", 0, ElementInFocus.Get<sTileSpecificationComponent>().mPosition, -10.0f, 10.0f, 0.01f, -10.0f, 10.0f, 0.01f,
+        //                                        0.0f, l_TextSize0.x );
 
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    auto l_TextSize5 = ImGui::CalcTextSize( "Sampler:" );
-                    UI::Text( "Sampler:" );
-                    UI::SameLine();
-                    SamplerChooser lSamplerChooser( "##FOO" );
-                    lSamplerChooser.SensorModel = SensorModel;
-                    ImGui::SetNextItemWidth( l_SliderSize0 );
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize5.x ) + 10.0f, -5.0f ) );
-                    lSamplerChooser.Display( Entity{} );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             auto l_TextSize5 = ImGui::CalcTextSize( "Sampler:" );
+        //             UI::Text( "Sampler:" );
+        //             UI::SameLine();
+        //             SamplerChooser lSamplerChooser( "##FOO" );
+        //             lSamplerChooser.SensorModel = SensorModel;
+        //             ImGui::SetNextItemWidth( l_SliderSize0 );
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize5.x ) + 10.0f, -5.0f ) );
+        //             lSamplerChooser.Display( Entity{} );
 
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 25.0f ) );
-                    auto l_TopLeft     = ImGui::GetCursorScreenPos() + ImVec2{ -10.0f, -10.0f };
-                    auto l_BottomRight = ImGui::GetCursorScreenPos() + ImVec2{ static_cast<float>( l_WindowSize.x ), 25.0f };
-                    l_DrawList->AddRectFilled( l_TopLeft, l_BottomRight, IM_COL32( 5, 5, 5, 255 ) );
-                    UI::Text( "FLASHES" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 0.0f, 10.0f ) );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 25.0f ) );
+        //             auto l_TopLeft     = ImGui::GetCursorScreenPos() + ImVec2{ -10.0f, -10.0f };
+        //             auto l_BottomRight = ImGui::GetCursorScreenPos() + ImVec2{ static_cast<float>( l_WindowSize.x ), 25.0f };
+        //             l_DrawList->AddRectFilled( l_TopLeft, l_BottomRight, IM_COL32( 5, 5, 5, 255 ) );
+        //             UI::Text( "FLASHES" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 0.0f, 10.0f ) );
 
-                    auto &lFlashes                = ElementInFocus.Get<sRelationshipComponent>().mChildren;
-                    constexpr float lFlashTagSize = 40.0f;
-                    constexpr float lFlashPadding = 3.0f;
+        //             auto &lFlashes                = ElementInFocus.Get<sRelationshipComponent>().mChildren;
+        //             constexpr float lFlashTagSize = 40.0f;
+        //             constexpr float lFlashPadding = 3.0f;
 
-                    uint32_t lFlasherPerRow = static_cast<uint32_t>( std::floor( ( l_WindowSize.x - 20.0f - ( lFlashes.size() - 1 ) * lFlashPadding ) / lFlashTagSize ) );
+        //             uint32_t lFlasherPerRow = static_cast<uint32_t>( std::floor( ( l_WindowSize.x - 20.0f - ( lFlashes.size() - 1 ) * lFlashPadding ) / lFlashTagSize ) );
 
-                    math::vec2 lFlashGroupCursorPosition = UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f );
-                    float lLeftMargin                    = lFlashGroupCursorPosition.x;
-                    uint32_t lCurrentHPosition           = 0;
-                    math::vec2 lCursorPosition           = lFlashGroupCursorPosition;
+        //             math::vec2 lFlashGroupCursorPosition = UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f );
+        //             float lLeftMargin                    = lFlashGroupCursorPosition.x;
+        //             uint32_t lCurrentHPosition           = 0;
+        //             math::vec2 lCursorPosition           = lFlashGroupCursorPosition;
 
-                    if( UI::Button( "View flashes", { 100.0f, 35.0f } ) )
-                    {
-                        FlashEditor.TileToEdit  = ElementInFocus;
-                        FlashEditor.SensorModel = SensorModel;
-                        FlashEditor.Visible     = true;
-                    }
+        //             if( UI::Button( "View flashes", { 100.0f, 35.0f } ) )
+        //             {
+        //                 FlashEditor.TileToEdit  = ElementInFocus;
+        //                 FlashEditor.SensorModel = SensorModel;
+        //                 FlashEditor.Visible     = true;
+        //             }
 
-                    if( FlashEditor.Visible )
-                        ImGui::OpenPopup( "EDIT FLASHES..." );
-                    FlashEditor.Display();
-                }
-                else if( ElementInFocus.Has<sTileLayoutComponent>() )
-                {
-                    auto l_WindowSize = UI::GetAvailableContentSpace();
-                    auto l_TextSize0  = ImGui::CalcTextSize( "Field of view:" );
+        //             if( FlashEditor.Visible )
+        //                 ImGui::OpenPopup( "EDIT FLASHES..." );
+        //             FlashEditor.Display();
+        //         }
+        //         else if( ElementInFocus.Has<sTileLayoutComponent>() )
+        //         {
+        //             auto l_WindowSize = UI::GetAvailableContentSpace();
+        //             auto l_TextSize0  = ImGui::CalcTextSize( "Field of view:" );
 
-                    auto l_TextSize1 = ImGui::CalcTextSize( "ID:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "ID:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize1.x ) + 10.0f, 0.0f ) );
-                    UI::Text( "layout_id_goes_here" );
+        //             auto l_TextSize1 = ImGui::CalcTextSize( "ID:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "ID:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize1.x ) + 10.0f, 0.0f ) );
+        //             UI::Text( "layout_id_goes_here" );
 
-                    auto l_TextSize2 = ImGui::CalcTextSize( "Name:" );
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    UI::Text( "Name:" );
-                    UI::SameLine();
-                    UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize2.x ) + 10.0f, 0.0f ) );
-                    char buf[128] = { 0 };
-                    std::strncpy( buf, ElementInFocus.Get<sTag>().mValue.c_str(), std::min( ElementInFocus.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
-                    if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
-                    {
-                        ElementInFocus.Get<sTag>().mValue = std::string( buf );
-                    }
+        //             auto l_TextSize2 = ImGui::CalcTextSize( "Name:" );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             UI::Text( "Name:" );
+        //             UI::SameLine();
+        //             UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize2.x ) + 10.0f, 0.0f ) );
+        //             char buf[128] = { 0 };
+        //             std::strncpy( buf, ElementInFocus.Get<sTag>().mValue.c_str(), std::min( ElementInFocus.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
+        //             if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
+        //             {
+        //                 ElementInFocus.Get<sTag>().mValue = std::string( buf );
+        //             }
 
-                    UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                    math::vec2 x{ 0.0f, 0.0f };
-                    UI::VectorComponentEditor( "Field of view:", 0, x, 0.0, 2.0, 0.01, 0.1, 2.0, 0.01, 0.0, l_TextSize0.x );
+        //             UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //             math::vec2 x{ 0.0f, 0.0f };
+        //             UI::VectorComponentEditor( "Field of view:", 0, x, 0.0, 2.0, 0.01, 0.1, 2.0, 0.01, 0.0, l_TextSize0.x );
 
-                    if( UI::Button( "Edit layout", { 100.0f, 35.0f } ) )
-                    {
-                        LayoutEditor.LayoutToEdit = ElementInFocus;
-                        LayoutEditor.SensorModel  = SensorModel;
-                        LayoutEditor.Visible      = true;
-                    }
+        //             if( UI::Button( "Edit layout", { 100.0f, 35.0f } ) )
+        //             {
+        //                 LayoutEditor.LayoutToEdit = ElementInFocus;
+        //                 LayoutEditor.SensorModel  = SensorModel;
+        //                 LayoutEditor.Visible      = true;
+        //             }
 
-                    if( LayoutEditor.Visible )
-                        ImGui::OpenPopup( "EDIT TILE LAYOUT..." );
-                    LayoutEditor.Display();
-                }
-                else
-                {
-                }
-            }
-        }
-        ImGui::End();
+        //             if( LayoutEditor.Visible )
+        //                 ImGui::OpenPopup( "EDIT TILE LAYOUT..." );
+        //             LayoutEditor.Display();
+        //         }
+        //         else
+        //         {
+        //         }
+        //     }
+        // }
+        // ImGui::End();
 
         if( ( ImGui::Begin( "SCENE HIERARCHY", &p_open, ImGuiWindowFlags_None ) ) )
         {
@@ -1006,66 +1006,66 @@ namespace LTSE::Editor
         }
         ImGui::End();
 
-        if( ImGui::Begin( "ENVIRONMENT", &p_open, ImGuiWindowFlags_None ) )
-        {
-            auto l_DrawList   = ImGui::GetWindowDrawList();
-            auto l_WindowSize = UI::GetAvailableContentSpace();
+        // if( ImGui::Begin( "ENVIRONMENT", &p_open, ImGuiWindowFlags_None ) )
+        // {
+        //     auto l_DrawList   = ImGui::GetWindowDrawList();
+        //     auto l_WindowSize = UI::GetAvailableContentSpace();
 
-            auto l_TextSize0   = ImGui::CalcTextSize( "Sampling resolution:" );
-            auto l_SliderSize0 = static_cast<float>( l_WindowSize.x ) - l_TextSize0.x - 35.0f;
+        //     auto l_TextSize0   = ImGui::CalcTextSize( "Sampling resolution:" );
+        //     auto l_SliderSize0 = static_cast<float>( l_WindowSize.x ) - l_TextSize0.x - 35.0f;
 
-            if( Sensor )
-            {
-                auto &lSensorTransform = Sensor.Get<LocalTransformComponent>();
-                math::vec3 lRotation   = lSensorTransform.GetEulerRotation();
-                math::vec3 lPosition   = lSensorTransform.GetTranslation();
-                bool lPositionChanged  = false;
-                bool lRotationChanged  = false;
+        //     if( Sensor )
+        //     {
+        //         auto &lSensorTransform = Sensor.Get<LocalTransformComponent>();
+        //         math::vec3 lRotation   = lSensorTransform.GetEulerRotation();
+        //         math::vec3 lPosition   = lSensorTransform.GetTranslation();
+        //         bool lPositionChanged  = false;
+        //         bool lRotationChanged  = false;
 
-                UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                auto l_TopLeft0     = ImGui::GetCursorScreenPos() + ImVec2{ -10.0f, -10.0f };
-                auto l_BottomRight0 = ImGui::GetCursorScreenPos() + ImVec2{ static_cast<float>( l_WindowSize.x ), 25.0f };
-                l_DrawList->AddRectFilled( l_TopLeft0, l_BottomRight0, IM_COL32( 5, 5, 5, 255 ) );
-                Text( "Sensor position:" );
-                UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 0.0f, 15.0f ) );
+        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //         auto l_TopLeft0     = ImGui::GetCursorScreenPos() + ImVec2{ -10.0f, -10.0f };
+        //         auto l_BottomRight0 = ImGui::GetCursorScreenPos() + ImVec2{ static_cast<float>( l_WindowSize.x ), 25.0f };
+        //         l_DrawList->AddRectFilled( l_TopLeft0, l_BottomRight0, IM_COL32( 5, 5, 5, 255 ) );
+        //         Text( "Sensor position:" );
+        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 0.0f, 15.0f ) );
 
-                UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 5.0f ) );
-                lPositionChanged = UI::VectorComponentEditor( "Position:", lPosition, 0.0, l_TextSize0.x );
-                UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 0.0f, 5.0f ) );
+        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 5.0f ) );
+        //         lPositionChanged = UI::VectorComponentEditor( "Position:", lPosition, 0.0, l_TextSize0.x );
+        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 0.0f, 5.0f ) );
 
-                UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 5.0f ) );
-                lRotationChanged = UI::VectorComponentEditor( "Orientation:", lRotation, 0.0, l_TextSize0.x );
-                UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 0.0f, 5.0f ) );
+        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 5.0f ) );
+        //         lRotationChanged = UI::VectorComponentEditor( "Orientation:", lRotation, 0.0, l_TextSize0.x );
+        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 0.0f, 5.0f ) );
 
-                if( lPositionChanged || lRotationChanged )
-                    Sensor.Replace<LocalTransformComponent>( lPosition, lRotation, math::vec3{ 1.0f } );
+        //         if( lPositionChanged || lRotationChanged )
+        //             Sensor.Replace<LocalTransformComponent>( lPosition, lRotation, math::vec3{ 1.0f } );
 
-                UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 15.0f ) );
-                auto l_TopLeft     = ImGui::GetCursorScreenPos() + ImVec2{ -10.0f, -10.0f };
-                auto l_BottomRight = ImGui::GetCursorScreenPos() + ImVec2{ static_cast<float>( l_WindowSize.x ), 25.0f };
-                l_DrawList->AddRectFilled( l_TopLeft, l_BottomRight, IM_COL32( 5, 5, 5, 255 ) );
-                Text( "Environment sampling:" );
-                UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 15.0f ) );
+        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 15.0f ) );
+        //         auto l_TopLeft     = ImGui::GetCursorScreenPos() + ImVec2{ -10.0f, -10.0f };
+        //         auto l_BottomRight = ImGui::GetCursorScreenPos() + ImVec2{ static_cast<float>( l_WindowSize.x ), 25.0f };
+        //         l_DrawList->AddRectFilled( l_TopLeft, l_BottomRight, IM_COL32( 5, 5, 5, 255 ) );
+        //         Text( "Environment sampling:" );
+        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 15.0f ) );
 
-                UI::VectorComponentEditor( "Sampling resolution:", 0, Sensor.Get<EnvironmentSampler::sCreateInfo>().mSamplingResolution, 0.1, 2.0, 0.01, 0.1, 2.0, 0.01, 0.2,
-                                           l_TextSize0.x );
+        //         UI::VectorComponentEditor( "Sampling resolution:", 0, Sensor.Get<EnvironmentSampler::sCreateInfo>().mSamplingResolution, 0.1, 2.0, 0.01, 0.1, 2.0, 0.01, 0.2,
+        //                                    l_TextSize0.x );
 
-                auto l_TextSize1 = ImGui::CalcTextSize( "Multisampling:" );
-                UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                Text( "Multisampling:" );
-                UI::SameLine();
-                UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize1.x ) + 10.0f, -5.0f ) );
-                ImGui::SetNextItemWidth( l_SliderSize0 );
-                UI::Slider( "##multisampling", "%d", 1, 128, &Sensor.Get<EnvironmentSampler::sCreateInfo>().mMultiSamplingFactor );
+        //         auto l_TextSize1 = ImGui::CalcTextSize( "Multisampling:" );
+        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //         Text( "Multisampling:" );
+        //         UI::SameLine();
+        //         UI::SetCursorPosition( ImGui::GetCursorPos() + ImVec2( ( l_TextSize0.x - l_TextSize1.x ) + 10.0f, -5.0f ) );
+        //         ImGui::SetNextItemWidth( l_SliderSize0 );
+        //         UI::Slider( "##multisampling", "%d", 1, 128, &Sensor.Get<EnvironmentSampler::sCreateInfo>().mMultiSamplingFactor );
 
-                UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
-                Text( "Use regular multisampling" );
-                ImGui::SameLine();
-                UI::SetCursorPosition( ImVec2( static_cast<float>( l_WindowSize.x ) - 32.0f, ImGui::GetCursorPos().y - 5.0f ) );
-                UI::Checkbox( "##use_regular_multisampling", &Sensor.Get<EnvironmentSampler::sCreateInfo>().mUseRegularMultiSampling );
-            }
-        }
-        ImGui::End();
+        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 10.0f ) );
+        //         Text( "Use regular multisampling" );
+        //         ImGui::SameLine();
+        //         UI::SetCursorPosition( ImVec2( static_cast<float>( l_WindowSize.x ) - 32.0f, ImGui::GetCursorPos().y - 5.0f ) );
+        //         UI::Checkbox( "##use_regular_multisampling", &Sensor.Get<EnvironmentSampler::sCreateInfo>().mUseRegularMultiSampling );
+        //     }
+        // }
+        // ImGui::End();
 
         if( ImGui::Begin( "PROPERTIES", &p_open, ImGuiWindowFlags_None ) )
         {
