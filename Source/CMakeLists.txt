@@ -80,10 +80,10 @@ add_library(LTSimulationEngineRuntime STATIC
     Developer/Editor/BaseEditorApplication.cpp
     Developer/Editor/SceneHierarchyPanel.cpp
     Developer/Editor/SceneElementEditor.cpp
-    Developer/Editor/TileFlashEditor.cpp
-    Developer/Editor/TileLayoutEditor.cpp
-    Developer/Editor/PhotodetectorCellEditor.cpp
-    Developer/Editor/ShortWaveformDisplay.cpp
+    # Developer/Editor/TileFlashEditor.cpp
+    # Developer/Editor/TileLayoutEditor.cpp
+    # Developer/Editor/PhotodetectorCellEditor.cpp
+    # Developer/Editor/ShortWaveformDisplay.cpp
 
     LidarSensorModel/SensorModelBase.cpp
     LidarSensorModel/EnvironmentSampler.cpp

@@ -7,6 +7,8 @@
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 
+#include "LidarSensorModel/SensorDeviceBase.h"
+
 #include "Developer/GraphicContext/GraphicContext.h"
 #include "Developer/GraphicContext/Texture2D.h"
 #include "Developer/Scene/Renderer/SceneRenderer.h"
@@ -18,12 +20,11 @@
 #include "Developer/EnvironmentSampler/PointCloudVisualizer.h"
 
 #include "ContentBrowser.h"
-
 #include "SceneElementEditor.h"
 #include "SceneHierarchyPanel.h"
-#include "TileFlashEditor.h"
-#include "TileLayoutEditor.h"
-#include "PhotodetectorCellEditor.h"
+// #include "TileFlashEditor.h"
+// #include "TileLayoutEditor.h"
+// #include "PhotodetectorCellEditor.h"
 
 namespace LTSE::Editor
 {
@@ -82,9 +83,9 @@ namespace LTSE::Editor
 
         PropertyPanelID CurrentPropertyPanel = PropertyPanelID::NONE;
 
-        TileLayoutEditor LayoutEditor;
-        FlashAttenuationBindingPopup FlashEditor;
-        PhotodetectorCellEditor PhotodetectorEditor{};
+        // TileLayoutEditor LayoutEditor;
+        // FlashAttenuationBindingPopup FlashEditor;
+        // PhotodetectorCellEditor PhotodetectorEditor{};
 
       public:
         float HeaderHeight       = 31.0f;

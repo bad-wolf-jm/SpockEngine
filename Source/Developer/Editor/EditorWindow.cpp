@@ -18,7 +18,7 @@
 
 #include "Developer/Scene/Components.h"
 
-#include "ShortWaveformDisplay.h"
+// #include "ShortWaveformDisplay.h"
 
 namespace LTSE::Editor
 {
@@ -226,9 +226,9 @@ namespace LTSE::Editor
     {
         ConfigureUI();
 
-        LayoutEditor        = TileLayoutEditor( "EDIT TILE LAYOUT...", { 1800.0f, 1000.0f } );
-        FlashEditor         = FlashAttenuationBindingPopup( "EDIT FLASHES...", { 1600.0f, 1200.0f } );
-        PhotodetectorEditor = PhotodetectorCellEditor( "EDIT PHOTODETECTOR...", { 1600.0f, 1200.0f } );
+        // LayoutEditor        = TileLayoutEditor( "EDIT TILE LAYOUT...", { 1800.0f, 1000.0f } );
+        // FlashEditor         = FlashAttenuationBindingPopup( "EDIT FLASHES...", { 1600.0f, 1200.0f } );
+        // PhotodetectorEditor = PhotodetectorCellEditor( "EDIT PHOTODETECTOR...", { 1600.0f, 1200.0f } );
 
         std::ifstream mFileStream{};
         mFileStream.open( fs::path( "C:\\GitLab\\EchoDS_FLM\\Saved\\tile.bin" ), std::ios::binary );
