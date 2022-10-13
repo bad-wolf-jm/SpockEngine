@@ -9,7 +9,7 @@
 
 #include "Cuda/MultiTensor.h"
 
-#include "LidarSensorModel/SensorModelBase.h"
+// #include "LidarSensorModel/SensorModelBase.h"
 
 
 namespace LTSE::Core
@@ -17,7 +17,7 @@ namespace LTSE::Core
     namespace
     {
 
-        using namespace LTSE::SensorModel;
+        // using namespace LTSE::SensorModel;
 
         template <typename _Ty> auto RandomVector( size_t aSize, double aMin, double aMax, sol::this_state aScriptState )
         {
@@ -148,23 +148,23 @@ namespace LTSE::Core
 
         template <typename _Ty> auto Adjoin( Entity &aEntity, Entity &aOther ) { aEntity.Adjoin<_Ty>(aOther); }
 
-        template <typename _Ty> auto CreateSensorEntity0( SensorModelBase &aSelf, std::string const &aName, const sol::table &aComponent, sol::this_state aScriptState )
-        {
-            auto &lNewComponent = aSelf.CreateEntity<_Ty>( aName, aComponent.valid() ? aComponent.as<_Ty>() : _Ty{} );
-            return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
-        }
+        // template <typename _Ty> auto CreateSensorEntity0( SensorModelBase &aSelf, std::string const &aName, const sol::table &aComponent, sol::this_state aScriptState )
+        // {
+        //     auto &lNewComponent = aSelf.CreateEntity<_Ty>( aName, aComponent.valid() ? aComponent.as<_Ty>() : _Ty{} );
+        //     return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
+        // }
 
-        template <typename _Ty> auto CreateSensorEntity1( SensorModelBase &aSelf, std::string const &aName, Entity const &aParent, const sol::table &aComponent, sol::this_state aScriptState )
-        {
-            auto &lNewComponent = aSelf.CreateEntity<_Ty>( aName, aParent, aComponent.valid() ? aComponent.as<_Ty>() : _Ty{} );
-            return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
-        }
+        // template <typename _Ty> auto CreateSensorEntity1( SensorModelBase &aSelf, std::string const &aName, Entity const &aParent, const sol::table &aComponent, sol::this_state aScriptState )
+        // {
+        //     auto &lNewComponent = aSelf.CreateEntity<_Ty>( aName, aParent, aComponent.valid() ? aComponent.as<_Ty>() : _Ty{} );
+        //     return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
+        // }
 
-        template <typename _Ty> auto CreateSensorEntity2( SensorModelBase &aSelf, Entity const &aParent, const sol::table &aComponent, sol::this_state aScriptState )
-        {
-            auto &lNewComponent = aSelf.CreateEntity<_Ty>( aParent, aComponent.valid() ? aComponent.as<_Ty>() : _Ty{} );
-            return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
-        }
+        // template <typename _Ty> auto CreateSensorEntity2( SensorModelBase &aSelf, Entity const &aParent, const sol::table &aComponent, sol::this_state aScriptState )
+        // {
+        //     auto &lNewComponent = aSelf.CreateEntity<_Ty>( aParent, aComponent.valid() ? aComponent.as<_Ty>() : _Ty{} );
+        //     return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
+        // }
 
 
     } // namespace
@@ -251,9 +251,9 @@ namespace LTSE::Core
             lNewType.template func<&TryRemove<_Ty>>( "TryRemove"_hs );
             lNewType.template func<&Adjoin<_Ty>>( "Adjoin"_hs );
 
-            lNewType.template func<&CreateSensorEntity0<_Ty>>( "CreateSensorEntity0"_hs );
-            lNewType.template func<&CreateSensorEntity1<_Ty>>( "CreateSensorEntity1"_hs );
-            lNewType.template func<&CreateSensorEntity2<_Ty>>( "CreateSensorEntity2"_hs );
+            // lNewType.template func<&CreateSensorEntity0<_Ty>>( "CreateSensorEntity0"_hs );
+            // lNewType.template func<&CreateSensorEntity1<_Ty>>( "CreateSensorEntity1"_hs );
+            // lNewType.template func<&CreateSensorEntity2<_Ty>>( "CreateSensorEntity2"_hs );
 
         }
 

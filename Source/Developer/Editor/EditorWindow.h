@@ -7,7 +7,7 @@
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 
-#include "LidarSensorModel/SensorDeviceBase.h"
+// #include "LidarSensorModel/SensorDeviceBase.h"
 
 #include "Developer/GraphicContext/GraphicContext.h"
 #include "Developer/GraphicContext/Texture2D.h"
@@ -72,13 +72,13 @@ namespace LTSE::Editor
         std::string DocumentName    = "";
 
         Ref<EngineLoop> mEngineLoop       = nullptr;
-        Ref<SensorDeviceBase> SensorModel = nullptr;
+        // Ref<SensorDeviceBase> SensorModel = nullptr;
         Ref<Scene> World                  = nullptr;
         Ref<Scene> ActiveWorld            = nullptr;
         Ref<SceneRenderer> WorldRenderer  = nullptr;
 
-        Entity Sensor{};
-        Entity ActiveSensor{};
+        // Entity Sensor{};
+        // Entity ActiveSensor{};
         GraphicContext GraphicContext{};
 
         PropertyPanelID CurrentPropertyPanel = PropertyPanelID::NONE;

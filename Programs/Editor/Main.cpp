@@ -40,7 +40,6 @@ using namespace LTSE::Core::UI;
 using namespace LTSE::Core::UI;
 using namespace LTSE::SensorModel;
 
-
 // class TileLayoutCombo
 // {
 //   public:
@@ -531,10 +530,11 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //         // PhotoDetector 15 gets an aggressor
         //         auto lPhotodetectorData = lSamples->GetScheduledFlashes().mPulseSampling.mPhotoDetectorData;
 
-        //         auto lPhotoDetectorCellWorldElevationMin = ConstantScalarValue( *m_Sensor->mComputationScope, lPhotodetectorData.mCellWorldElevationBounds.mMin[lAggressorPosition] );
-        //         auto lPhotoDetectorCellWorldElevationMax = ConstantScalarValue( *m_Sensor->mComputationScope, lPhotodetectorData.mCellWorldElevationBounds.mMax[lAggressorPosition] );
-        //         auto lHorizontallyAlignedDetections =
-        //             InInterval( *m_Sensor->mComputationScope, ( *lSamples )["Elevation"], lPhotoDetectorCellWorldElevationMin, lPhotoDetectorCellWorldElevationMax, false, false );
+        //         auto lPhotoDetectorCellWorldElevationMin = ConstantScalarValue( *m_Sensor->mComputationScope,
+        //         lPhotodetectorData.mCellWorldElevationBounds.mMin[lAggressorPosition] ); auto lPhotoDetectorCellWorldElevationMax = ConstantScalarValue(
+        //         *m_Sensor->mComputationScope, lPhotodetectorData.mCellWorldElevationBounds.mMax[lAggressorPosition] ); auto lHorizontallyAlignedDetections =
+        //             InInterval( *m_Sensor->mComputationScope, ( *lSamples )["Elevation"], lPhotoDetectorCellWorldElevationMin, lPhotoDetectorCellWorldElevationMax, false, false
+        //             );
         //         auto lZero = ConstantScalarValue( *m_Sensor->mComputationScope, 0.0f );
         //         auto lOne  = ConstantScalarValue( *m_Sensor->mComputationScope, 1.0f );
 
@@ -901,9 +901,9 @@ class EchoDSMVPEditor : public BaseEditorApplication
         // ImGui::End();
     }
 
-    void Init( Ref<SensorDeviceBase> a_SensorToControl )
+    void Init()
     {
-        BaseEditorApplication::Init( a_SensorToControl );
+        BaseEditorApplication::Init();
         // m_Sensor = a_SensorToControl;
         // mEditorWindow.OnBeginScenario.connect<&EchoDSMVPEditor::OnBeginScenario>( *this );
     }
@@ -929,7 +929,8 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //         lTileTimes.push_back( 0.0f );
         //     }
 
-        //     lEnvSamples = m_Sensor->Sample( mEditorWindow.ActiveSensor.Get<EnvironmentSampler::sCreateInfo>(), mEditorWindow.ActiveSensor.Get<AcquisitionSpecification>(), lTileIds,
+        //     lEnvSamples = m_Sensor->Sample( mEditorWindow.ActiveSensor.Get<EnvironmentSampler::sCreateInfo>(), mEditorWindow.ActiveSensor.Get<AcquisitionSpecification>(),
+        //     lTileIds,
         //                                     lTilePositions, lTileTimes );
         // }
         // else
@@ -964,7 +965,7 @@ int main( int argc, char **argv )
     // Ref<SensorModelBase> lSensorModel = Build<SensorModelBase>( "C:\\GitLab\\EchoDS_FLM\\SensorData", "TestSensor0.yaml" );
     // lSensorDevice->mSensorDefinition  = lSensorModel;
 
-    g_EditorWindow.Init( nullptr );
+    g_EditorWindow.Init();
 
     return g_EditorWindow.Run();
 }

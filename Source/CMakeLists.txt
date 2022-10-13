@@ -20,9 +20,9 @@ add_library(LTSimulationEngineRuntime STATIC
     Scripting/Cuda/Texture.cpp
     Scripting/Math/VectorTypes.cpp
     Scripting/Math/MatrixTypes.cpp
-    Scripting/SensorModel.cpp
+    # Scripting/SensorModel.cpp
     Scripting/ArrayTypes.cpp
-    Scripting/ScriptedSensorDevice.cpp
+    # Scripting/ScriptedSensorDevice.cpp
 
     Cuda/MultiTensor.cu
     Cuda/MemoryPool.cu
@@ -81,20 +81,20 @@ add_library(LTSimulationEngineRuntime STATIC
     Developer/Editor/SceneHierarchyPanel.cpp
     Developer/Editor/SceneElementEditor.cpp
 
-    LidarSensorModel/SensorModelBase.cpp
-    LidarSensorModel/EnvironmentSampler.cpp
-    LidarSensorModel/SensorControllerBase.cpp
-    LidarSensorModel/SensorDevicebase.cpp
-    LidarSensorModel/ModelArchive.cpp
-    LidarSensorModel/AcquisitionContext/AcquisitionContext.cpp
+    # LidarSensorModel/SensorModelBase.cpp
+    # LidarSensorModel/EnvironmentSampler.cpp
+    # LidarSensorModel/SensorControllerBase.cpp
+    # LidarSensorModel/SensorDevicebase.cpp
+    # LidarSensorModel/ModelArchive.cpp
+    # LidarSensorModel/AcquisitionContext/AcquisitionContext.cpp
 
     ProcessingNodes/HitRecordProcessorKernels.cu
     ProcessingNodes/HitRecordProcessor.cpp
 
     Serialize/FileIO.cpp
-    Serialize/SensorAsset.cpp
-    Serialize/SensorComponents.cpp
-    Serialize/SensorDefinition.cpp
+    # Serialize/SensorAsset.cpp
+    # Serialize/SensorComponents.cpp
+    # Serialize/SensorDefinition.cpp
 
     Developer/EnvironmentSampler/PointCloudVisualizer.cu
     Developer/EnvironmentSampler/EnvironmentSampler.cpp

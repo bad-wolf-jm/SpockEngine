@@ -7,16 +7,18 @@
 
 #include "Developer/UI/UI.h"
 
-#include "Developer/Platform/EngineLoop.h"
 #include "Developer/GraphicContext/UI/UIContext.h"
+#include "Developer/Platform/EngineLoop.h"
 
+
+#include "Developer/EnvironmentSampler/EnvironmentSampler.h"
+#include "Developer/EnvironmentSampler/PointCloudVisualizer.h"
 #include "Developer/GraphicContext/GraphicContext.h"
 #include "Developer/Scene/Renderer/SceneRenderer.h"
 #include "Developer/Scene/Scene.h"
-#include "Developer/EnvironmentSampler/EnvironmentSampler.h"
-#include "Developer/EnvironmentSampler/PointCloudVisualizer.h"
 
-#include "LidarSensorModel/SensorDeviceBase.h"
+
+// #include "LidarSensorModel/SensorDeviceBase.h"
 #include "TensorOps/Scope.h"
 
 #include "EditorWindow.h"
@@ -27,8 +29,8 @@ namespace LTSE::Editor
 
     using namespace LTSE::Core;
     using namespace LTSE::Graphics;
-    using namespace LTSE::SensorModel;
-    using namespace LTSE::SensorModel::Dev;
+    // using namespace LTSE::SensorModel;
+    // using namespace LTSE::SensorModel::Dev;
     using namespace LTSE::TensorOps;
 
     class BaseEditorApplication
@@ -48,7 +50,7 @@ namespace LTSE::Editor
         BaseEditorApplication();
         ~BaseEditorApplication() = default;
 
-        void Init( Ref<SensorDeviceBase> a_SensorToControl );
+        void Init();
 
         void RenderScene();
         virtual void Update( Timestep ts ) = 0;
@@ -68,16 +70,16 @@ namespace LTSE::Editor
         void RebuildOutputFramebuffer();
 
       protected:
-        uint32_t m_ViewportHeight                               = 1;
-        uint32_t m_ViewportWidth                                = 1;
-        bool m_ShouldRebuildViewport                            = true;
-        Ref<Scene> m_World                                      = nullptr;
-        Ref<SceneRenderer> m_WorldRenderer                      = nullptr;
+        uint32_t m_ViewportHeight          = 1;
+        uint32_t m_ViewportWidth           = 1;
+        bool m_ShouldRebuildViewport       = true;
+        Ref<Scene> m_World                 = nullptr;
+        Ref<SceneRenderer> m_WorldRenderer = nullptr;
 
         RenderContext m_ViewportRenderContext{};
         Ref<OffscreenRenderTarget> m_OffscreenRenderTarget      = nullptr;
         Ref<Graphics::Texture2D> m_OffscreenRenderTargetTexture = nullptr;
-        Ref<SensorDeviceBase> m_SensorController                = nullptr;
+        // Ref<SensorDeviceBase> m_SensorController                = nullptr;
 
         ImageHandle m_OffscreenRenderTargetDisplayHandle{};
         Entity m_SensorEntity{};

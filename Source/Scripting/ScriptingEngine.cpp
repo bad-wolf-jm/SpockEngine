@@ -12,7 +12,7 @@
 #include "ArrayTypes.h"
 #include "Scripting/Core/Texture.h"
 #include "Scripting/Cuda/Texture.h"
-#include "SensorModel.h"
+// #include "SensorModel.h"
 #include "TensorOps/ScalarTypes.h"
 
 
@@ -82,8 +82,8 @@ namespace LTSE::Core
         OpenCoreLibrary( lCoreModule );
         DefineArrayTypes( lCoreModule );
 
-        auto lSensorModule = ScriptState["Sensor"].get_or_create<sol::table>();
-        OpenSensorModelLibrary( lSensorModule );
+        // auto lSensorModule = ScriptState["Sensor"].get_or_create<sol::table>();
+        // OpenSensorModelLibrary( lSensorModule );
     }
 
     ScriptEnvironment ScriptingEngine::LoadFile( fs::path aPath )

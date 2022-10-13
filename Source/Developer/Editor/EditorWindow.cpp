@@ -26,54 +26,54 @@ namespace LTSE::Editor
     using namespace LTSE::Core;
     using namespace LTSE::Core::EntityComponentSystem::Components;
 
-    class SamplerChooser
-    {
-      public:
-        Ref<SensorDeviceBase> SensorModel = nullptr;
-        std::string ID                    = "";
-        UI::ComboBox<Entity> Dropdown;
+    // class SamplerChooser
+    // {
+    //   public:
+    //     // Ref<SensorDeviceBase> SensorModel = nullptr;
+    //     std::string ID                    = "";
+    //     UI::ComboBox<Entity> Dropdown;
 
-      public:
-        SamplerChooser() = default;
-        SamplerChooser( std::string a_ID )
-            : ID{ a_ID }
-            , Dropdown{ UI::ComboBox<Entity>( a_ID ) } {};
+    //   public:
+    //     SamplerChooser() = default;
+    //     SamplerChooser( std::string a_ID )
+    //         : ID{ a_ID }
+    //         , Dropdown{ UI::ComboBox<Entity>( a_ID ) } {};
 
-        ~SamplerChooser() = default;
+    //     ~SamplerChooser() = default;
 
-        Entity GetValue()
-        {
-            if( Dropdown.Values.size() > 0 )
-                return Dropdown.Values[Dropdown.CurrentItem];
-            return Entity{};
-        }
+    //     Entity GetValue()
+    //     {
+    //         if( Dropdown.Values.size() > 0 )
+    //             return Dropdown.Values[Dropdown.CurrentItem];
+    //         return Entity{};
+    //     }
 
-        void Display( Entity &a_TargetEntity )
-        {
-            Dropdown.Labels = { "None" };
-            Dropdown.Values = { Entity{} };
+    //     void Display( Entity &a_TargetEntity )
+    //     {
+    //         Dropdown.Labels = { "None" };
+    //         Dropdown.Values = { Entity{} };
 
-            uint32_t n = 1;
+    //         uint32_t n = 1;
 
-            SensorModel->mSensorDefinition->ForEach<sSampler>(
-                [&]( auto aEntity, auto &aComponent )
-                {
-                    Dropdown.Labels.push_back( aEntity.Get<sTag>().mValue );
-                    Dropdown.Values.push_back( aEntity );
+    //         SensorModel->mSensorDefinition->ForEach<sSampler>(
+    //             [&]( auto aEntity, auto &aComponent )
+    //             {
+    //                 Dropdown.Labels.push_back( aEntity.Get<sTag>().mValue );
+    //                 Dropdown.Values.push_back( aEntity );
 
-                    if( (uint32_t)aEntity == (uint32_t)a_TargetEntity )
-                        Dropdown.CurrentItem = n;
-                    n++;
-                } );
+    //                 if( (uint32_t)aEntity == (uint32_t)a_TargetEntity )
+    //                     Dropdown.CurrentItem = n;
+    //                 n++;
+    //             } );
 
-            Dropdown.Display();
+    //         Dropdown.Display();
 
-            if( Dropdown.Changed )
-            {
-                a_TargetEntity = Dropdown.GetValue();
-            }
-        }
-    };
+    //         if( Dropdown.Changed )
+    //         {
+    //             a_TargetEntity = Dropdown.GetValue();
+    //         }
+    //     }
+    // };
 
     template <typename _SliderType> class Slider
     {
@@ -1164,31 +1164,31 @@ namespace LTSE::Editor
 
     void EditorWindow::ClearScene()
     {
-        auto lSensorTransform    = Sensor.TryGet<LocalTransformComponent>( LocalTransformComponent{ math::mat4( 1.0f ) } );
-        auto lEnvironmentSampler = Sensor.TryGet<EnvironmentSampler::sCreateInfo>( EnvironmentSampler::sCreateInfo{} );
-        AcquisitionSpecification lAcqCreateInfo{};
-        lAcqCreateInfo.mBasePoints     = 100;
-        lAcqCreateInfo.mOversampling   = 1;
-        auto lAcquisitionSpecification = Sensor.TryGet<AcquisitionSpecification>( lAcqCreateInfo );
+        // auto lSensorTransform    = Sensor.TryGet<LocalTransformComponent>( LocalTransformComponent{ math::mat4( 1.0f ) } );
+        // auto lEnvironmentSampler = Sensor.TryGet<EnvironmentSampler::sCreateInfo>( EnvironmentSampler::sCreateInfo{} );
+        // AcquisitionSpecification lAcqCreateInfo{};
+        // lAcqCreateInfo.mBasePoints     = 100;
+        // lAcqCreateInfo.mOversampling   = 1;
+        // auto lAcquisitionSpecification = Sensor.TryGet<AcquisitionSpecification>( lAcqCreateInfo );
 
-        World->ClearScene();
-        m_SceneHierarchyPanel.SelectedElement             = Entity{};
-        m_SceneHierarchyPanel.ElementEditor.ElementToEdit = Entity{};
+        // World->ClearScene();
+        // m_SceneHierarchyPanel.SelectedElement             = Entity{};
+        // m_SceneHierarchyPanel.ElementEditor.ElementToEdit = Entity{};
 
-        // Add sensor entity to the scene
-        Sensor = World->Create( "Sensor", World->Root );
-        Sensor.Add<LocalTransformComponent>( lSensorTransform );
-        Sensor.Add<EnvironmentSampler::sCreateInfo>( lEnvironmentSampler );
-        Sensor.Add<AcquisitionSpecification>( lAcquisitionSpecification );
-        Sensor.Add<sBehaviourComponent>();
+        // // Add sensor entity to the scene
+        // Sensor = World->Create( "Sensor", World->Root );
+        // Sensor.Add<LocalTransformComponent>( lSensorTransform );
+        // Sensor.Add<EnvironmentSampler::sCreateInfo>( lEnvironmentSampler );
+        // Sensor.Add<AcquisitionSpecification>( lAcquisitionSpecification );
+        // Sensor.Add<sBehaviourComponent>();
 
-        // Add a particle system to the sensor to display the point cloud
-        auto &l_SensorPointCloud = Sensor.Add<ParticleSystemComponent>();
+        // // Add a particle system to the sensor to display the point cloud
+        // auto &l_SensorPointCloud = Sensor.Add<ParticleSystemComponent>();
 
-        // Create particle renderer for the point cloud
-        auto &l_SensorPointCloudRenderer    = Sensor.Add<RendererComponent>();
-        l_SensorPointCloudRenderer.Material = World->CreateEntity( "ParticleSystemMaterial" );
-        l_SensorPointCloudRenderer.Material.Add<ParticleShaderComponent>();
+        // // Create particle renderer for the point cloud
+        // auto &l_SensorPointCloudRenderer    = Sensor.Add<RendererComponent>();
+        // l_SensorPointCloudRenderer.Material = World->CreateEntity( "ParticleSystemMaterial" );
+        // l_SensorPointCloudRenderer.Material.Add<ParticleShaderComponent>();
     }
 
     void EditorWindow::LoadScenario( fs::path aPath )
@@ -1263,7 +1263,7 @@ namespace LTSE::Editor
 
                 ActiveWorld->EndScenario();
                 ActiveWorld  = World;
-                ActiveSensor = Sensor;
+                // ActiveSensor = Sensor;
 
                 WorldRenderer->m_World = ActiveWorld;
             }

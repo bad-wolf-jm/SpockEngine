@@ -24,8 +24,8 @@
 #include "Scripting/ScriptComponent.h"
 
 #include "Developer/Scene/Components/VisualHelpers.h"
-#include "LidarSensorModel/AcquisitionContext/AcquisitionContext.h"
-#include "LidarSensorModel/EnvironmentSampler.h"
+// #include "LidarSensorModel/AcquisitionContext/AcquisitionContext.h"
+// #include "LidarSensorModel/EnvironmentSampler.h"
 
 namespace LTSE::Core
 {
@@ -33,7 +33,7 @@ namespace LTSE::Core
     namespace fs = std::filesystem;
     using namespace LTSE::Graphics;
     using namespace LTSE::Cuda;
-    using namespace LTSE::SensorModel;
+    // using namespace LTSE::SensorModel;
     using namespace LTSE::Core::EntityComponentSystem;
     using namespace LTSE::Core::EntityComponentSystem::Components;
 
@@ -139,8 +139,8 @@ namespace LTSE::Core
             CopyComponent<CameraHelperComponent>( lEntity, lClonedEntity );
 
             // Move somewhere else
-            CopyComponent<EnvironmentSampler::sCreateInfo>( lEntity, lClonedEntity );
-            CopyComponent<AcquisitionSpecification>( lEntity, lClonedEntity );
+            // CopyComponent<EnvironmentSampler::sCreateInfo>( lEntity, lClonedEntity );
+            // CopyComponent<AcquisitionSpecification>( lEntity, lClonedEntity );
 
             CopyComponent<SkeletonComponent>( lEntity, lClonedEntity );
             if( lClonedEntity.Has<SkeletonComponent>() )

@@ -136,8 +136,8 @@ namespace LTSE::Editor
             m_ShouldRebuildViewport = false;
         }
 
-        mEditorWindow.mEngineLoop    = mEngineLoop;
-        mEditorWindow.SensorModel    = m_SensorController;
+        mEditorWindow.mEngineLoop = mEngineLoop;
+        // mEditorWindow.SensorModel    = m_SensorController;
         mEditorWindow.WorldRenderer  = m_WorldRenderer;
         mEditorWindow.GraphicContext = mEngineLoop->GetGraphicContext();
 
@@ -158,9 +158,9 @@ namespace LTSE::Editor
         return false;
     }
 
-    void BaseEditorApplication::Init( Ref<SensorDeviceBase> a_SensorToControl )
+    void BaseEditorApplication::Init()
     {
-        m_SensorController = a_SensorToControl;
+        // m_SensorController = a_SensorToControl;
 
         mEngineLoop->SetApplicationName( ApplicationName );
         mEngineLoop->PreInit( 0, nullptr );
@@ -243,28 +243,28 @@ namespace LTSE::Editor
         mEditorWindow.World       = m_World;
         mEditorWindow.ActiveWorld = m_World;
 
-        {
-            // Add sensor entity to the scene
-            mEditorWindow.Sensor = m_World->Create( "Sensor", m_World->Root );
-            mEditorWindow.Sensor.Add<LocalTransformComponent>();
-            mEditorWindow.Sensor.Add<EnvironmentSampler::sCreateInfo>();
+        // {
+        //     // Add sensor entity to the scene
+        //     mEditorWindow.Sensor = m_World->Create( "Sensor", m_World->Root );
+        //     mEditorWindow.Sensor.Add<LocalTransformComponent>();
+        //     mEditorWindow.Sensor.Add<EnvironmentSampler::sCreateInfo>();
 
-            AcquisitionSpecification lAcqCreateInfo{};
-            lAcqCreateInfo.mBasePoints   = 100;
-            lAcqCreateInfo.mOversampling = 1;
-            mEditorWindow.Sensor.Add<AcquisitionSpecification>( lAcqCreateInfo );
-            mEditorWindow.Sensor.Add<sBehaviourComponent>();
+        //     AcquisitionSpecification lAcqCreateInfo{};
+        //     lAcqCreateInfo.mBasePoints   = 100;
+        //     lAcqCreateInfo.mOversampling = 1;
+        //     mEditorWindow.Sensor.Add<AcquisitionSpecification>( lAcqCreateInfo );
+        //     mEditorWindow.Sensor.Add<sBehaviourComponent>();
 
-            // Add a particle system to the sensor to display the point cloud
-            auto &l_SensorPointCloud = mEditorWindow.Sensor.Add<ParticleSystemComponent>();
+        //     // Add a particle system to the sensor to display the point cloud
+        //     auto &l_SensorPointCloud = mEditorWindow.Sensor.Add<ParticleSystemComponent>();
 
-            // Create particle renderer for the point cloud
-            auto &l_SensorPointCloudRenderer    = mEditorWindow.Sensor.Add<RendererComponent>();
-            l_SensorPointCloudRenderer.Material = m_World->CreateEntity( "ParticleSystemMaterial" );
-            l_SensorPointCloudRenderer.Material.Add<ParticleShaderComponent>();
+        //     // Create particle renderer for the point cloud
+        //     auto &l_SensorPointCloudRenderer    = mEditorWindow.Sensor.Add<RendererComponent>();
+        //     l_SensorPointCloudRenderer.Material = m_World->CreateEntity( "ParticleSystemMaterial" );
+        //     l_SensorPointCloudRenderer.Material.Add<ParticleShaderComponent>();
 
-            mEditorWindow.ActiveSensor = mEditorWindow.Sensor;
-        }
+        //     mEditorWindow.ActiveSensor = mEditorWindow.Sensor;
+        // }
 
         m_WorldRenderer->RenderCoordinateGrid = true;
         m_WorldRenderer->View.CameraPosition  = math::vec3( 0.0f, 1.0f, 7.5f );
