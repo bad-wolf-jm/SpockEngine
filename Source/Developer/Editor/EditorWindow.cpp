@@ -296,6 +296,13 @@ namespace LTSE::Editor
         }
         ImGui::End();
 
+        if( ImGui::Begin( "TRACKS", &p_open, ImGuiWindowFlags_None ) )
+        {
+            auto lWorkspaceAreaSize = UI::GetAvailableContentSpace();
+            // Workspace( lWorkspaceAreaSize.x, lWorkspaceAreaSize.y );
+        }
+        ImGui::End();
+
         // if( ImGui::Begin( "TILE EXPLORER", &p_open, ImGuiWindowFlags_None ) )
         // {
         //     DisplayShortWaveforms( *mUIOverlay, mTestTile );
