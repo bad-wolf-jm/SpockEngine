@@ -80,10 +80,6 @@ add_library(LTSimulationEngineRuntime STATIC
     Developer/Editor/BaseEditorApplication.cpp
     Developer/Editor/SceneHierarchyPanel.cpp
     Developer/Editor/SceneElementEditor.cpp
-    # Developer/Editor/TileFlashEditor.cpp
-    # Developer/Editor/TileLayoutEditor.cpp
-    # Developer/Editor/PhotodetectorCellEditor.cpp
-    # Developer/Editor/ShortWaveformDisplay.cpp
 
     LidarSensorModel/SensorModelBase.cpp
     LidarSensorModel/EnvironmentSampler.cpp
@@ -91,16 +87,7 @@ add_library(LTSimulationEngineRuntime STATIC
     LidarSensorModel/SensorDevicebase.cpp
     LidarSensorModel/ModelArchive.cpp
     LidarSensorModel/AcquisitionContext/AcquisitionContext.cpp
-    LidarSensorModel/FPGAModel/Configuration.cpp
-    LidarSensorModel/FPGAModel/FPGAModel.cpp
-    LidarSensorModel/FPGAModel/FPGAModelKernels.cu
 
-    ProcessingNodes/WaveformGeneratorKernels.cu
-    ProcessingNodes/WaveformGenerator.cpp
-    ProcessingNodes/ElectronicCrosstalkWaveformKernels.cu
-    ProcessingNodes/ElectronicCrosstalkWaveforms.cpp
-    ProcessingNodes/FPGAKernels.cu
-    ProcessingNodes/FPGA.cpp
     ProcessingNodes/HitRecordProcessorKernels.cu
     ProcessingNodes/HitRecordProcessor.cpp
 

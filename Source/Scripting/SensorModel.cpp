@@ -9,8 +9,8 @@
 #include "LidarSensorModel/AcquisitionContext/AcquisitionContext.h"
 #include "LidarSensorModel/EnvironmentSampler.h"
 #include "LidarSensorModel/SensorModelBase.h"
-#include "ProcessingNodes/ElectronicCrosstalkWaveforms.h"
-#include "ProcessingNodes/WaveformGenerator.h"
+// #include "ProcessingNodes/ElectronicCrosstalkWaveforms.h"
+// #include "ProcessingNodes/WaveformGenerator.h"
 
 namespace LTSE::Core
 {
@@ -47,8 +47,8 @@ namespace LTSE::Core
     void OpenSensorModelLibrary( sol::table &aModule )
     {
 
-        aModule["ResolveWaveforms"] = SensorModel::ResolveWaveforms;
-        aModule["ResolveElectronicCrosstalkWaveforms"] = SensorModel::ResolveElectronicCrosstalkWaveforms;
+        // aModule["ResolveWaveforms"] = SensorModel::ResolveWaveforms;
+        // aModule["ResolveElectronicCrosstalkWaveforms"] = SensorModel::ResolveElectronicCrosstalkWaveforms;
 
         auto lTileSpecType = DeclarePrimitiveType<sTileSpecificationComponent>( aModule, "sTileSpecificationComponent" );
 
