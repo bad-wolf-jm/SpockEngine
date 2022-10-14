@@ -1,11 +1,11 @@
-#include "Developer/Platform/EngineLoop.h"
-#include "Developer/GraphicContext/UI/UIContext.h"
+#include "Core/Platform/EngineLoop.h"
+#include "Core/GraphicContext//UI/UIContext.h"
 
-#include "Developer/UI/UI.h"
-#include "Developer/UI/Widgets.h"
+#include "UI/UI.h"
+#include "UI/Widgets.h"
 
-#include "Cuda/CudaBuffer.h"
-#include "Developer/Core/Cuda/ExternalMemory.h"
+#include "Core/Cuda/CudaBuffer.h"
+#include "Core/Cuda/ExternalMemory.h"
 
 #include "Core/Logging.h"
 #include "Core/Memory.h"

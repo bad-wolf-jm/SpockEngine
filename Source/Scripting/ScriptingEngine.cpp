@@ -2,6 +2,7 @@
 
 #include "Core/Logging.h"
 #include "Core/Math/Types.h"
+
 #include "Cuda/Tensor.h"
 // #include "Math/Module.h"
 #include "Math/MatrixTypes.h"

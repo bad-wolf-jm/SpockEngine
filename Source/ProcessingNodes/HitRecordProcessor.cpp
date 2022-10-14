@@ -9,7 +9,7 @@
 #include "HitRecordProcessor.h"
 #include "HitRecordProcessorKernels.h"
 
-#include "Cuda/MultiTensor.h"
+#include "Core/Cuda/MultiTensor.h"
 
 #include "TensorOps/ScalarTypes.h"
 

@@ -19,13 +19,22 @@ namespace fs = std::filesystem;
 namespace LTSE::Core::Internal
 {
 
-    template <typename ParentType> class BehaviourController
+    template <typename ParentType>
+    class BehaviourController
     {
       public:
         virtual ~BehaviourController() = default;
 
-        template <typename T> T &Get() { return mEntity.Get<T>(); }
-        template <typename T> bool Has() { return mEntity.Has<T>(); }
+        template <typename T>
+        T &Get()
+        {
+            return mEntity.Get<T>();
+        }
+        template <typename T>
+        bool Has()
+        {
+            return mEntity.Has<T>();
+        }
 
         virtual void Initialize( Entity<ParentType> aEntity ) { mEntity = aEntity; }
 
@@ -39,16 +48,19 @@ namespace LTSE::Core::Internal
         Entity<ParentType> mEntity;
     };
 
-    template <typename ParentType> struct sBehaviourComponent
+    template <typename ParentType>
+    struct sBehaviourComponent
     {
         BehaviourController<ParentType> *ControllerInstance = nullptr;
 
-        std::function<BehaviourController<ParentType> *()> InstantiateController;
+        std::function<BehaviourController<ParentType> *()>       InstantiateController;
         std::function<void( sBehaviourComponent<ParentType> * )> DestroyController;
 
-        template <typename T, typename... Args> void Bind( Args &&...args )
+        template <typename T, typename... Args>
+        void Bind( Args &&...args )
         {
-            InstantiateController = [&]() { return reinterpret_cast<BehaviourController<ParentType> *>( new T( std::forward<Args>( args )... ) ); };
+            InstantiateController = [&]()
+            { return reinterpret_cast<BehaviourController<ParentType> *>( new T( std::forward<Args>( args )... ) ); };
 
             DestroyController = [&]( sBehaviourComponent<ParentType> *aNsc )
             {

@@ -14,7 +14,7 @@
 #include "NodeComponents.h"
 #include "NodeControllers.h"
 
-#include "Cuda/Texture2D.h"
+#include "Core/Cuda/Texture2D.h"
 
 namespace LTSE::TensorOps
 {

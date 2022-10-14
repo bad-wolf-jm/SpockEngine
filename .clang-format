@@ -1,12 +1,14 @@
 ---
 BasedOnStyle: LLVM
 IndentWidth: '4'
-AlignConsecutiveAssignments: 'true'
-AlignConsecutiveDeclarations: 'false'
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: 'true'
+AlignAfterOpenBracket: DontAlign
 AlignOperands: 'true'
 AlignTrailingComments: 'true'
+AlignEscapedNewlines: Left
 BreakBeforeBraces: Allman
-ColumnLimit: '180'
+ColumnLimit: '125'
 Language: Cpp
 IndentPPDirectives: AfterHash
 NamespaceIndentation: All
@@ -21,4 +23,10 @@ SpaceInEmptyParentheses: 'false'
 SpacesInParentheses: 'true'
 BreakConstructorInitializers: BeforeComma
 BreakInheritanceList: AfterColon
+AlwaysBreakTemplateDeclarations: Yes
+BinPackArguments: true
+BinPackParameters: true
+AllowShortLambdasOnASingleLine: All
+AllowShortLoopsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: WithoutElse
 ...

@@ -1,37 +1,37 @@
 
 #include "Core/TextureData.h"
 
-// #include "Developer/GraphicContext/OffscreenRenderTarget.h"
+// #include "Core/GraphicContext//OffscreenRenderTarget.h"
 
-#include "Developer/Platform/EngineLoop.h"
-#include "Developer/GraphicContext/UI/UIContext.h"
+#include "Core/Platform/EngineLoop.h"
+#include "Core/GraphicContext//UI/UIContext.h"
 
 // #include "SensorModelDev/Base/Components.h"
 // #include "SensorModelDev/Base/KernelComponents.h"
-// #include "SensorModelDev/Developer/Editor/EditorComponents.h"
-// #include "SensorModelDev/Developer/Editor/PointCloudVisualizer.h"
-// #include "SensorModelDev/Developer/Editor/SensorModelEditor.h"
+// #include "SensorModelDev/Editor/EditorComponents.h"
+// #include "SensorModelDev/Editor/PointCloudVisualizer.h"
+// #include "SensorModelDev/Editor/SensorModelEditor.h"
 // #include "SensorModelDev/EnvironmentSampler/EnvironmentSampler.h"
 
-#include "Developer/Scene/Animation.h"
-// #include "Developer/Scene/Assetloader.h"
-#include "Developer/Scene/Primitives/Primitives.h"
-#include "Developer/Scene/Scene.h"
+#include "Scene/Animation.h"
+// #include "Scene/Assetloader.h"
+#include "Scene/Primitives/Primitives.h"
+#include "Scene/Scene.h"
 
-#include "Developer/Scene/Visualizers/Wall2D.h"
+#include "Scene/Visualizers/Wall2D.h"
 
-#include "Developer/Scene/Renderer/ParticleSystemRenderer.h"
-#include "Developer/Scene/Renderer/SceneRenderer.h"
-#include "Developer/Scene/Renderer/VisualHelperLineRenderer.h"
+#include "Scene/Renderer/ParticleSystemRenderer.h"
+#include "Scene/Renderer/SceneRenderer.h"
+#include "Scene/Renderer/VisualHelperLineRenderer.h"
 
-#include "Developer/GraphicContext/Buffer.h"
-#include "Developer/Scene/ParticleData.h"
+#include "Core/GraphicContext//Buffer.h"
+#include "Scene/ParticleData.h"
 
-#include "Developer/UI/UI.h"
-#include "Developer/UI/Widgets.h"
+#include "UI/UI.h"
+#include "UI/Widgets.h"
 
-#include "Cuda/CudaBuffer.h"
-#include "Developer/Core/Cuda/ExternalMemory.h"
+#include "Core/Cuda/CudaBuffer.h"
+#include "Core/Cuda/ExternalMemory.h"
 
 #include <fmt/core.h>
 

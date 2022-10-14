@@ -13,8 +13,8 @@
 #include "Core/Memory.h"
 
 #include "Core/EntityRegistry/Registry.h"
-#include "Cuda/MemoryPool.h"
-#include "Cuda/MultiTensor.h"
+#include "Core/Cuda/MemoryPool.h"
+#include "Core/Cuda/MultiTensor.h"
 
 #include "ScalarTypes.h"
 

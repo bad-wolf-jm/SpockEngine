@@ -1,6 +1,6 @@
 
-#include "Developer/GraphicContext/UI/UIContext.h"
-#include "Developer/Platform/EngineLoop.h"
+#include "Core/GraphicContext//UI/UIContext.h"
+#include "Core/Platform/EngineLoop.h"
 
 #include <fmt/core.h>
 #include <fstream>
@@ -8,11 +8,11 @@
 #include "Core/EntityRegistry/ScriptableEntity.h"
 #include "Core/Logging.h"
 
-#include "Developer/UI/UI.h"
-#include "Developer/UI/Widgets.h"
+#include "UI/UI.h"
+#include "UI/Widgets.h"
 
-#include "Developer/Editor/BaseEditorApplication.h"
-#include "Developer/Editor/EditorWindow.h"
+#include "Editor/BaseEditorApplication.h"
+#include "Editor/EditorWindow.h"
 
 // #include "LidarSensorModel/ModelArchive.h"
 // #include "LidarSensorModel/ModelBuilder.h"

@@ -9,7 +9,7 @@
 #include "StartRayStructBuilderKernels.h"
 
 #include "LidarSensorConfig.h"
-#include "Cuda/CudaAssert.h"
+#include "Core/Cuda/CudaAssert.h"
 #include "TensorOps/Implementation/HelperMacros.h"
 
 namespace LTSE::dSpaceCompatibility

@@ -7,7 +7,7 @@
 #include "Core/EntityRegistry/Registry.h"
 #include "Core/TextureData.h"
 
-#include "Cuda/MultiTensor.h"
+#include "Core/Cuda/MultiTensor.h"
 
 // #include "LidarSensorModel/SensorModelBase.h"
 

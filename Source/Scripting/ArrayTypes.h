@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "Core/Math/Types.h"
-#include "Cuda/Texture2D.h"
+#include "Core/Cuda/Texture2D.h"
 
 namespace LTSE::Core
 {

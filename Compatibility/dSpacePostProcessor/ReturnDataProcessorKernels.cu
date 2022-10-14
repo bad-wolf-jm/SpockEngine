@@ -8,7 +8,7 @@
 
 #include "ReturnDataProcessorKernels.h"
 
-#include "Cuda/CudaAssert.h"
+#include "Core/Cuda/CudaAssert.h"
 #include "LidarRaytracingPoint.h"
 #include "LidarSensorConfig.h"
 #include "TensorOps/Implementation/HelperMacros.h"

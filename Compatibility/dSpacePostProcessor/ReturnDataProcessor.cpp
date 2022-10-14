@@ -9,7 +9,7 @@
 #include "ReturnDataProcessor.h"
 #include "ReturnDataProcessorKernels.h"
 
-#include "Cuda/MultiTensor.h"
+#include "Core/Cuda/MultiTensor.h"
 
 #include "LidarSensorConfig.h"
 #include "TensorOps/ScalarTypes.h"

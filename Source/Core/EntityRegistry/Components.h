@@ -51,9 +51,10 @@ namespace LTSE::Core
         }
     };
 
-    template <typename ParentType> struct sRelationship
+    template <typename ParentType>
+    struct sRelationship
     {
-        Internal::Entity<ParentType> mParent{ entt::null, nullptr };
+        Internal::Entity<ParentType>              mParent{ entt::null, nullptr };
         std::vector<Internal::Entity<ParentType>> mChildren = {};
 
         sRelationship()                        = default;

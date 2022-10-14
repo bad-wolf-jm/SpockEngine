@@ -22,7 +22,8 @@ namespace LTSE::Core::Internal
     ///
     /// @tparam ParentType Always set to `LTSE::Core::EntityRegistry`
     ///
-    template <typename ParentType> class Entity
+    template <typename ParentType>
+    class Entity
     {
       public:
         /// @struct sJoin
@@ -34,7 +35,8 @@ namespace LTSE::Core::Internal
         /// allows to have  multiple components of the same type accessible to an entity (the joined component
         /// has to be  unique though).
         ///
-        template <typename _Ty> struct sJoin
+        template <typename _Ty>
+        struct sJoin
         {
             Entity mJoinEntity{}; //!< Handle to the joined entity
 
@@ -75,11 +77,11 @@ namespace LTSE::Core::Internal
         ///
         ///  @tparam T Component type
         ///
-        template <typename T> void Tag()
+        template <typename T>
+        void Tag()
         {
             static_assert( std::is_empty<T>::value, "sTag components should be empty." );
-            if( Has<T>() )
-                return;
+            if( Has<T>() ) return;
             mParentRegistry->mRegistry.emplace<T>( mEntityHandle );
         }
 
@@ -92,11 +94,11 @@ namespace LTSE::Core::Internal
         ///
         /// @tparam T Component type
         ///
-        template <typename T> void Untag()
+        template <typename T>
+        void Untag()
         {
             static_assert( std::is_empty<T>::value, "sTag components should be empty." );
-            if( !Has<T>() )
-                return;
+            if( !Has<T>() ) return;
             mParentRegistry->mRegistry.remove<T>( mEntityHandle );
         }
 
@@ -113,7 +115,8 @@ namespace LTSE::Core::Internal
         ///
         /// @since
         ///
-        template <typename T, typename... Args> T &Add( Args &&...aArgs ) const
+        template <typename T, typename... Args>
+        T &Add( Args &&...aArgs ) const
         {
             static_assert( !std::is_empty<T>::value, "Components should not be empty types." );
             if( mParentRegistry->mRegistry.all_of<T>( mEntityHandle ) )
@@ -135,7 +138,8 @@ namespace LTSE::Core::Internal
         ///
         /// @since
         ///
-        template <typename T, typename... Args> T &TryAdd( Args &&...aArgs ) const
+        template <typename T, typename... Args>
+        T &TryAdd( Args &&...aArgs ) const
         {
             static_assert( !std::is_empty<T>::value, "Components should not be empty types." );
             if( mParentRegistry->mRegistry.all_of<T>( mEntityHandle ) )
@@ -155,7 +159,8 @@ namespace LTSE::Core::Internal
         ///
         /// @since
         ///
-        template <typename T, typename... Args> T &Replace( Args &&...aArgs ) const
+        template <typename T, typename... Args>
+        T &Replace( Args &&...aArgs ) const
         {
             static_assert( !std::is_empty<T>::value, "Components should not be empty types." );
             T &lComponent = mParentRegistry->mRegistry.replace<T>( mEntityHandle, std::forward<Args>( aArgs )... );
@@ -174,10 +179,12 @@ namespace LTSE::Core::Internal
         ///
         /// @since
         ///
-        template <typename T, typename... Args> T &AddOrReplace( Args &&...aArgs ) const
+        template <typename T, typename... Args>
+        T &AddOrReplace( Args &&...aArgs ) const
         {
             static_assert( !std::is_empty<T>::value, "Components should not be empty types." );
-            T &lComponent = mParentRegistry->mRegistry.emplace_or_replace<T>( mEntityHandle, std::forward<Args>( aArgs )... );
+            T &lComponent =
+                mParentRegistry->mRegistry.emplace_or_replace<T>( mEntityHandle, std::forward<Args>( aArgs )... );
             return lComponent;
         }
 
@@ -191,7 +198,11 @@ namespace LTSE::Core::Internal
         /// @returns A reference to the retrieved component.
         ///
         ///
-        template <typename T> T &Get() const { return mParentRegistry->mRegistry.get<T>( mEntityHandle ); }
+        template <typename T>
+        T &Get() const
+        {
+            return mParentRegistry->mRegistry.get<T>( mEntityHandle );
+        }
 
         /// @brief Retrieve the component with type `T`, or a default value
         ///
@@ -200,10 +211,10 @@ namespace LTSE::Core::Internal
         /// @returns A reference to the retrieved component, or the passed in default value if the component
         /// does not exist.
         ///
-        template <typename T> T &TryGet( T &aDefault ) const
+        template <typename T>
+        T &TryGet( T &aDefault ) const
         {
-            if( !Has<T>() )
-                return aDefault;
+            if( !Has<T>() ) return aDefault;
             return mParentRegistry->mRegistry.get<T>( mEntityHandle );
         }
 
@@ -214,10 +225,10 @@ namespace LTSE::Core::Internal
         ///
         /// @tparam T Component type
         ///
-        template <typename T> void IfExists( std::function<void( T & )> aApplyFunction )
+        template <typename T>
+        void IfExists( std::function<void( T & )> aApplyFunction )
         {
-            if( !Has<T>() )
-                return;
+            if( !Has<T>() ) return;
             aApplyFunction( Get<T>() );
         }
 
@@ -227,12 +238,11 @@ namespace LTSE::Core::Internal
         ///
         /// @returns `true` if the entity has a component of type `T`, and `false` otherwise.
         ///
-        template <typename T> bool Has() const
+        template <typename T>
+        bool Has() const
         {
-            if( mParentRegistry == nullptr )
-                return false;
-            if( mEntityHandle == entt::null )
-                return false;
+            if( mParentRegistry == nullptr ) return false;
+            if( mEntityHandle == entt::null ) return false;
             return mParentRegistry->mRegistry.all_of<T>( mEntityHandle );
         }
 
@@ -242,12 +252,11 @@ namespace LTSE::Core::Internal
         ///
         /// @returns `true` if the entity has a component of type `T` for every `T` in `Components`, and `false` otherwise.
         ///
-        template <typename... Component> bool HasAll() const
+        template <typename... Component>
+        bool HasAll() const
         {
-            if( mParentRegistry == nullptr )
-                return false;
-            if( mEntityHandle == entt::null )
-                return false;
+            if( mParentRegistry == nullptr ) return false;
+            if( mEntityHandle == entt::null ) return false;
             return mParentRegistry->mRegistry.all_of<Component...>( mEntityHandle );
         }
 
@@ -257,13 +266,12 @@ namespace LTSE::Core::Internal
         ///
         /// @returns `true` if the entity has a component of type `T` for some `T` in `Components`, and `false` otherwise.
         ///
-        template <typename... Component> bool HasAny() const
+        template <typename... Component>
+        bool HasAny() const
         {
-            if( mParentRegistry == nullptr )
-                return false;
+            if( mParentRegistry == nullptr ) return false;
 
-            if( mEntityHandle == entt::null )
-                return false;
+            if( mEntityHandle == entt::null ) return false;
 
             return mParentRegistry->mRegistry.any_of<Component...>( mEntityHandle );
         }
@@ -277,7 +285,8 @@ namespace LTSE::Core::Internal
         ///
         /// @since
         ///
-        template <typename T> void Remove() const
+        template <typename T>
+        void Remove() const
         {
             if( !( mParentRegistry->mRegistry.all_of<T>( mEntityHandle ) ) )
                 throw std::runtime_error( "Component does not exists" );
@@ -293,10 +302,10 @@ namespace LTSE::Core::Internal
         ///
         /// @since
         ///
-        template <typename T> void TryRemove() const
+        template <typename T>
+        void TryRemove() const
         {
-            if( !( mParentRegistry->mRegistry.all_of<T>( mEntityHandle ) ) )
-                return;
+            if( !( mParentRegistry->mRegistry.all_of<T>( mEntityHandle ) ) ) return;
             mParentRegistry->mRegistry.remove<T>( mEntityHandle );
         }
 
@@ -312,13 +321,12 @@ namespace LTSE::Core::Internal
         ///
         /// @since
         ///
-        template <typename _ComponentType> void Adjoin( Entity aEntityToBind ) const
+        template <typename _ComponentType>
+        void Adjoin( Entity aEntityToBind ) const
         {
-            if( !aEntityToBind )
-                return;
+            if( !aEntityToBind ) return;
 
-            if( !( aEntityToBind.Has<_ComponentType>() ) )
-                return;
+            if( !( aEntityToBind.Has<_ComponentType>() ) ) return;
 
             AddOrReplace<sJoin<_ComponentType>>( aEntityToBind );
         }
@@ -339,13 +347,16 @@ namespace LTSE::Core::Internal
         ParentType GetRegistry() const { return mParentRegistry; };
 
         /// @brief Test for equality of two `Entity` instance.
-        bool operator==( const Entity &aOther ) const { return ( mEntityHandle == aOther.mEntityHandle ) && ( mParentRegistry == aOther.mParentRegistry ); }
+        bool operator==( const Entity &aOther ) const
+        {
+            return ( mEntityHandle == aOther.mEntityHandle ) && ( mParentRegistry == aOther.mParentRegistry );
+        }
 
         /// @brief Test for difference between two `Entity` instance.
         bool operator!=( const Entity &aOther ) const { return !( *this == aOther ); }
 
       private:
         entt::entity mEntityHandle{ entt::null };
-        ParentType mParentRegistry = nullptr;
+        ParentType   mParentRegistry = nullptr;
     };
 } // namespace LTSE::Core::Internal

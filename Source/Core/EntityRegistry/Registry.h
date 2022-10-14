@@ -30,7 +30,8 @@ namespace LTSE::Core
       public:
         friend class Internal::Entity<EntityRegistry *>;
 
-        template <typename _ComponentType> struct SignalHandler
+        template <typename _ComponentType>
+        struct SignalHandler
         {
             // entt::sigh<void( Internal::Entity<EntityRegistry *>, _ComponentType & )> Signal;
             std::vector<std::function<void( Internal::Entity<EntityRegistry *>, _ComponentType & )>> mHandlers;
@@ -113,7 +114,8 @@ namespace LTSE::Core
         /// @param aParentEntity The parent entity.
         /// @param aName The name tag to add to the entity.
         ///
-        Internal::Entity<EntityRegistry *> CreateEntity( Internal::Entity<EntityRegistry *> const &aParentEntity, std::string const &aName )
+        Internal::Entity<EntityRegistry *> CreateEntity(
+            Internal::Entity<EntityRegistry *> const &aParentEntity, std::string const &aName )
         {
             Internal::Entity<EntityRegistry *> l_NewEntity = CreateEntityWithRelationship( aName );
             SetParent( l_NewEntity, aParentEntity );
@@ -130,17 +132,19 @@ namespace LTSE::Core
         ///
         /// @param aApplyFunction Function to apply to each of the listed elements.
         ///
-        template <typename... Args> void ForEach( std::function<void( Internal::Entity<EntityRegistry *>, Args &... )> aApplyFunction )
+        template <typename... Args>
+        void ForEach( std::function<void( Internal::Entity<EntityRegistry *>, Args &... )> aApplyFunction )
         {
             mRegistry.view<Args...>().each( [this, &aApplyFunction]( const entt::entity entity, Args &...args )
-                                            { aApplyFunction( WrapEntity( entity ), std::forward<Args>( args )... ); } );
+                { aApplyFunction( WrapEntity( entity ), std::forward<Args>( args )... ); } );
         }
 
         /// @brief Sort the entities with the given components according to the provided sort function.
         ///
         /// @param aCompareFunction Comparison function.
         ///
-        template <typename Component> void Sort( std::function<bool( Component const &c1, Component const &c2 )> aCompareFunction )
+        template <typename Component>
+        void Sort( std::function<bool( Component const &c1, Component const &c2 )> aCompareFunction )
         {
             mRegistry.sort<Component>( aCompareFunction );
         }
@@ -150,9 +154,12 @@ namespace LTSE::Core
         /// @param aCompareFunction Comparison function.
         ///
         template <typename Component>
-        void Sort( std::function<bool( Internal::Entity<EntityRegistry *> const &c1, Internal::Entity<EntityRegistry *> const &c2 )> aCompareFunction )
+        void Sort(
+            std::function<bool( Internal::Entity<EntityRegistry *> const &c1, Internal::Entity<EntityRegistry *> const &c2 )>
+                aCompareFunction )
         {
-            mRegistry.sort<Component>( [&]( entt::entity const lhs, entt::entity const rhs ) { return aCompareFunction( WrapEntity( lhs ), WrapEntity( rhs ) ); } );
+            mRegistry.sort<Component>( [&]( entt::entity const lhs, entt::entity const rhs )
+                { return aCompareFunction( WrapEntity( lhs ), WrapEntity( rhs ) ); } );
         }
 
         /// @brief Set the given entity's parent.
@@ -162,10 +169,10 @@ namespace LTSE::Core
         /// @param aEntity The entity.
         /// @param aParentEntity The parent entity.
         ///
-        void SetParent( Internal::Entity<EntityRegistry *> const &aEntity, Internal::Entity<EntityRegistry *> const &aParentEntity )
+        void SetParent(
+            Internal::Entity<EntityRegistry *> const &aEntity, Internal::Entity<EntityRegistry *> const &aParentEntity )
         {
-            if( !aEntity )
-                return;
+            if( !aEntity ) return;
 
             if( aEntity.Has<sRelationship<EntityRegistry *>>() )
             {
@@ -173,14 +180,12 @@ namespace LTSE::Core
 
                 if( lMyRelationship.mParent )
                 {
-                    if( lMyRelationship.mParent == aParentEntity )
-                        return;
+                    if( lMyRelationship.mParent == aParentEntity ) return;
 
                     auto &lSiblings = lMyRelationship.mParent.Get<sRelationship<EntityRegistry *>>().mChildren;
 
                     auto &lPositionInSibling = std::find( lSiblings.begin(), lSiblings.end(), aEntity );
-                    if( lPositionInSibling != lSiblings.end() )
-                        lSiblings.erase( lPositionInSibling );
+                    if( lPositionInSibling != lSiblings.end() ) lSiblings.erase( lPositionInSibling );
                 }
 
                 lMyRelationship.mParent = aParentEntity;
@@ -212,12 +217,15 @@ namespace LTSE::Core
         ///
         /// @param aHandler Function to call when a new component is added.
         ///
-        template <typename Component> void OnComponentAdded( std::function<void( Internal::Entity<EntityRegistry *> const &, Component const & )> aHandler )
+        template <typename Component>
+        void OnComponentAdded(
+            std::function<void( Internal::Entity<EntityRegistry *> const &, Component const & )> aHandler )
         {
             if( !mAddSignalHandlers.Has<SignalHandler<Component>>() )
             {
                 mAddSignalHandlers.Add<SignalHandler<Component>>();
-                mRegistry.on_construct<Component>().connect<&EntityRegistry::OnComponentAdded_Implementation<Component>>( *this );
+                mRegistry.on_construct<Component>().connect<&EntityRegistry::OnComponentAdded_Implementation<Component>>(
+                    *this );
             }
 
             mAddSignalHandlers.Get<SignalHandler<Component>>().mHandlers.push_back( aHandler );
@@ -232,12 +240,15 @@ namespace LTSE::Core
         ///
         /// @param aHandler Function to call when a new component is updated.
         ///
-        template <typename Component> void OnComponentUpdated( std::function<void( Internal::Entity<EntityRegistry *> const &, Component const & )> aHandler )
+        template <typename Component>
+        void OnComponentUpdated(
+            std::function<void( Internal::Entity<EntityRegistry *> const &, Component const & )> aHandler )
         {
             if( !mUpdateSignalHandlers.Has<SignalHandler<Component>>() )
             {
                 mUpdateSignalHandlers.Add<SignalHandler<Component>>();
-                mRegistry.on_update<Component>().connect<&EntityRegistry::OnComponentUpdated_Implementation<Component>>( *this );
+                mRegistry.on_update<Component>().connect<&EntityRegistry::OnComponentUpdated_Implementation<Component>>(
+                    *this );
             }
 
             mUpdateSignalHandlers.Get<SignalHandler<Component>>().mHandlers.push_back( aHandler );
@@ -252,12 +263,15 @@ namespace LTSE::Core
         ///
         /// @param aHandler Function to call when a new component is destroyed.
         ///
-        template <typename Component> void OnComponentDestroyed( std::function<void( Internal::Entity<EntityRegistry *> const &, Component const & )> aHandler )
+        template <typename Component>
+        void OnComponentDestroyed(
+            std::function<void( Internal::Entity<EntityRegistry *> const &, Component const & )> aHandler )
         {
             if( !mDestroySignalHandlers.Has<SignalHandler<Component>>() )
             {
                 mDestroySignalHandlers.Add<SignalHandler<Component>>();
-                mRegistry.on_destroy<Component>().connect<&EntityRegistry::OnComponentDestroyed_Implementation<Component>>( *this );
+                mRegistry.on_destroy<Component>().connect<&EntityRegistry::OnComponentDestroyed_Implementation<Component>>(
+                    *this );
             }
 
             mDestroySignalHandlers.Get<SignalHandler<Component>>().mHandlers.push_back( aHandler );
@@ -290,32 +304,35 @@ namespace LTSE::Core
 
       private:
         template <typename Component>
-        void OnSignal_Implementation( entt::registry const &aRegistry, Internal::Entity<EntityRegistry *> const &aHandlers, entt::entity const aEntity )
+        void OnSignal_Implementation( entt::registry const &aRegistry, Internal::Entity<EntityRegistry *> const &aHandlers,
+            entt::entity const aEntity )
         {
             if( aHandlers.Has<SignalHandler<Component>>() )
             {
-                auto l_Entity     = WrapEntity( aEntity );
+                auto  l_Entity    = WrapEntity( aEntity );
                 auto &l_Component = l_Entity.Get<Component>();
 
                 for( auto &lHandler : aHandlers.Get<SignalHandler<Component>>().mHandlers )
                 {
-                    if( lHandler )
-                        lHandler( l_Entity, l_Component );
+                    if( lHandler ) lHandler( l_Entity, l_Component );
                 }
             }
         }
 
-        template <typename Component> void OnComponentAdded_Implementation( entt::registry const &aRegistry, entt::entity const aEntity )
+        template <typename Component>
+        void OnComponentAdded_Implementation( entt::registry const &aRegistry, entt::entity const aEntity )
         {
             OnSignal_Implementation<Component>( aRegistry, mAddSignalHandlers, aEntity );
         }
 
-        template <typename Component> void OnComponentUpdated_Implementation( entt::registry const &aRegistry, entt::entity const aEntity )
+        template <typename Component>
+        void OnComponentUpdated_Implementation( entt::registry const &aRegistry, entt::entity const aEntity )
         {
             OnSignal_Implementation<Component>( aRegistry, mUpdateSignalHandlers, aEntity );
         }
 
-        template <typename Component> void OnComponentDestroyed_Implementation( entt::registry const &aRegistry, entt::entity const aEntity )
+        template <typename Component>
+        void OnComponentDestroyed_Implementation( entt::registry const &aRegistry, entt::entity const aEntity )
         {
             OnSignal_Implementation<Component>( aRegistry, mDestroySignalHandlers, aEntity );
         }
@@ -334,12 +351,17 @@ namespace LTSE::Core
     using sRelationshipComponent = sRelationship<EntityRegistry *>;
 
     /// @brief
-    template <typename _Ty> using sJoinComponent = Internal::Entity<EntityRegistry *>::sJoin<_Ty>;
+    template <typename _Ty>
+    using sJoinComponent = Internal::Entity<EntityRegistry *>::sJoin<_Ty>;
 
 } // namespace LTSE::Core
 
 /// @brief Hash entities so they can be used in unordered maps and sets
-template <> struct std::hash<LTSE::Core::Entity>
+template <>
+struct std::hash<LTSE::Core::Entity>
 {
-    std::size_t operator()( LTSE::Core::Entity const &k ) const { return std::hash<uint32_t>()( static_cast<uint32_t>( k ) ); }
+    std::size_t operator()( LTSE::Core::Entity const &k ) const
+    {
+        return std::hash<uint32_t>()( static_cast<uint32_t>( k ) );
+    }
 };

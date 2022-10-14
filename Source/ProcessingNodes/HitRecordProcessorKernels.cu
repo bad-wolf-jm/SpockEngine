@@ -8,9 +8,9 @@
 
 #include "HitRecordProcessorKernels.h"
 
-#include "Developer/EnvironmentSampler/LaunchParams.h"
+#include "EnvironmentSampler/LaunchParams.h"
 
-#include "Cuda/CudaAssert.h"
+#include "Core/Cuda/CudaAssert.h"
 #include "TensorOps/Implementation/HelperMacros.h"
 
 namespace LTSE::SensorModel

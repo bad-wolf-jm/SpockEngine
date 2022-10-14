@@ -1,18 +1,18 @@
-#include "Developer/Platform/EngineLoop.h"
-#include "Developer/GraphicContext/UI/UIContext.h"
+#include "Core/Platform/EngineLoop.h"
+#include "Core/GraphicContext//UI/UIContext.h"
 
-#include "Developer/UI/UI.h"
-#include "Developer/UI/Widgets.h"
+#include "UI/UI.h"
+#include "UI/Widgets.h"
 
 #include "AssetManager/SensorModelLoader.h"
 
 #include "SensorModelDev/Base/Components.h"
 #include "SensorModelDev/Base/KernelComponents.h"
-#include "SensorModelDev/Developer/Editor/EditorComponents.h"
-#include "SensorModelDev/Developer/Editor/SensorModelEditor.h"
+#include "SensorModelDev/Editor/EditorComponents.h"
+#include "SensorModelDev/Editor/SensorModelEditor.h"
 
-#include "Cuda/CudaBuffer.h"
-#include "Developer/Core/Cuda/ExternalMemory.h"
+#include "Core/Cuda/CudaBuffer.h"
+#include "Core/Cuda/ExternalMemory.h"
 
 #include "Core/Logging.h"
 

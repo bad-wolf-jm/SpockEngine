@@ -9,7 +9,7 @@
 #include "StartRayStructBuilder.h"
 #include "StartRayStructBuilderKernels.h"
 
-#include "Cuda/MultiTensor.h"
+#include "Core/Cuda/MultiTensor.h"
 
 #include "LidarSensorConfig.h"
 #include "TensorOps/ScalarTypes.h"

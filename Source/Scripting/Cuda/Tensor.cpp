@@ -1,7 +1,7 @@
 #include "Tensor.h"
 
 #include "Core/Memory.h"
-#include "Cuda/MultiTensor.h"
+#include "Core/Cuda/MultiTensor.h"
 
 #include "TensorOps/ScalarTypes.h"
 #include "TensorOps/Scope.h"

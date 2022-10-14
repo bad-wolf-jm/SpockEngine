@@ -4,7 +4,7 @@
 
 #include "Core/Memory.h"
 
-#include "Cuda/MultiTensor.h"
+#include "Core/Cuda/MultiTensor.h"
 
 #include "LidarSensorModel/AcquisitionContext/AcquisitionContext.h"
 #include "LidarSensorModel/Components.h"

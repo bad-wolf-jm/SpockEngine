@@ -11,7 +11,7 @@
 #include "Core/TextureData.h"
 #include "Core/TextureTypes.h"
 
-#include "Cuda/Texture2D.h"
+#include "Core/Cuda/Texture2D.h"
 
 namespace fs = std::filesystem;
 

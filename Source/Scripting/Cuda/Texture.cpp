@@ -2,7 +2,7 @@
 
 #include "Core/Memory.h"
 #include "Core/TextureData.h"
-#include "Cuda/Texture2D.h"
+#include "Core/Cuda/Texture2D.h"
 
 #include "TensorOps/Scope.h"
 

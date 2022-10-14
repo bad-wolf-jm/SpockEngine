@@ -10,7 +10,7 @@
 #include <assimp/scene.h>
 
 #include "Core/Math/Types.h"
-// #include "Graphic/Engine/GraphicContext/Texture2D.h"
+// #include "Graphic/Engine/Core/GraphicContext/Texture2D.h"
 
 enum TextureType
 {

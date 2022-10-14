@@ -10,7 +10,7 @@
 #include <assimp/scene.h>
 
 #include "Core/Math/Types.h"
-#include "Developer/GraphicContext/Texture2D.h"
+#include "Core/GraphicContext//Texture2D.h"
 
 #include "SceneNode.h"
 

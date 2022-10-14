@@ -8,7 +8,7 @@
 namespace fs = std::filesystem;
 
 #include <argparse/argparse.hpp>
-#include "Developer/Scene/Importer/glTFImporter.h"
+#include "Scene/Importer/glTFImporter.h"
 
 int main( int argc, char **argv )
 {

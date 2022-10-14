@@ -14,9 +14,9 @@
 #include "TestUtils.h"
 
 #include "Core/Math/Types.h"
-#include "Cuda/MemoryPool.h"
-#include "Cuda/MultiTensor.h"
-#include "Cuda/PointerView.h"
+#include "Core/Cuda/MemoryPool.h"
+#include "Core/Cuda/MultiTensor.h"
+#include "Core/Cuda/PointerView.h"
 
 using namespace LTSE::Cuda;
 using namespace TestUtils;

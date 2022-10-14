@@ -1,16 +1,16 @@
 
-#include "Developer/Platform/EngineLoop.h"
-#include "Developer/GraphicContext/UI/UIContext.h"
+#include "Core/Platform/EngineLoop.h"
+#include "Core/GraphicContext//UI/UIContext.h"
 
-#include "Developer/UI/Widgets.h"
+#include "UI/Widgets.h"
 
 #include <fmt/core.h>
 
 #include "Core/Logging.h"
 
-#include "Developer/UI/CanvasView.h"
-#include "Developer/UI/UI.h"
-#include "Developer/UI/Widgets.h"
+#include "UI/CanvasView.h"
+#include "UI/UI.h"
+#include "UI/Widgets.h"
 
 #include "blueprints-example.h"s
 

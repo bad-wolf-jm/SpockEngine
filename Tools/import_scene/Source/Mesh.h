@@ -2,10 +2,10 @@
 
 #include "Core/Math/Types.h"
 
-#include "Developer/GraphicContext/Buffer.h"
-#include "Developer/GraphicContext/GraphicsPipeline.h"
+#include "Core/GraphicContext//Buffer.h"
+#include "Core/GraphicContext//GraphicsPipeline.h"
 
-#include "Developer/Scene/VertexData.h"
+#include "Scene/VertexData.h"
 
 #include "Material.h"
 

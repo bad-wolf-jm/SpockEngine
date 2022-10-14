@@ -4,7 +4,7 @@
 
 #include "Core/EntityRegistry/Registry.h"
 
-#include "Cuda/MultiTensor.h"
+#include "Core/Cuda/MultiTensor.h"
 
 namespace LTSE::Core
 {

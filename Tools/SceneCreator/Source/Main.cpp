@@ -1,19 +1,19 @@
 #include "Core/EntityRegistry/Registry.h"
 
-#include "Developer/Platform/EngineLoop.h"
-#include "Developer/GraphicContext/UI/UIContext.h"
+#include "Core/Platform/EngineLoop.h"
+#include "Core/GraphicContext//UI/UIContext.h"
 
-#include "Developer/Editor/MaterialEditor.h"
-#include "Developer/Scene/Primitives/Primitives.h"
-#include "Developer/Scene/Scene.h"
+#include "Editor/MaterialEditor.h"
+#include "Scene/Primitives/Primitives.h"
+#include "Scene/Scene.h"
 
-#include "Developer/Scene/Renderer/MeshRenderer.h"
-#include "Developer/Scene/Renderer/SceneRenderer.h"
+#include "Scene/Renderer/MeshRenderer.h"
+#include "Scene/Renderer/SceneRenderer.h"
 
-#include "Developer/Scene/Importer/glTFImporter.h"
+#include "Scene/Importer/glTFImporter.h"
 
-#include "Developer/UI/UI.h"
-#include "Developer/UI/Widgets.h"
+#include "UI/UI.h"
+#include "UI/Widgets.h"
 
 #include <fmt/core.h>
 

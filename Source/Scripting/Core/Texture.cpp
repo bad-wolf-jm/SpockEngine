@@ -3,7 +3,7 @@
 
 #include "Core/Memory.h"
 #include "Core/TextureData.h"
-#include "Cuda/MultiTensor.h"
+#include "Core/Cuda/MultiTensor.h"
 
 #include "TensorOps/Scope.h"
 

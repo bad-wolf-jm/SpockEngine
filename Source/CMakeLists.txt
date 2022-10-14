@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 project(LTSimulationEngine LANGUAGES CUDA CXX C)
 
-cuda_compile_and_embed(g_SensorModelEnvironmentSampler Developer/EnvironmentSampler/DevicePrograms.cu)
+cuda_compile_and_embed(g_SensorModelEnvironmentSampler EnvironmentSampler/DevicePrograms.cu)
 
 add_library(LTSimulationEngineRuntime STATIC
     Core/File.cpp
@@ -24,62 +24,62 @@ add_library(LTSimulationEngineRuntime STATIC
     Scripting/ArrayTypes.cpp
     # Scripting/ScriptedSensorDevice.cpp
 
-    Cuda/MultiTensor.cu
-    Cuda/MemoryPool.cu
-    Cuda/Texture2D.cu
+    Core/Cuda/MultiTensor.cu
+    Core/Cuda/MemoryPool.cu
+    Core/Cuda/Texture2D.cu
 
-    Developer/Platform/ViewportClient.cpp
-    Developer/Platform/EngineLoop.cpp
+    Core/Platform/ViewportClient.cpp
+    Core/Platform/EngineLoop.cpp
 
-    Developer/UI/Widgets.cpp
-    Developer/UI/UI.cpp
-    Developer/UI/CanvasView.cpp
+    UI/Widgets.cpp
+    UI/UI.cpp
+    UI/CanvasView.cpp
 
-    Developer/Core/Optix/OptixContext.cpp
-    Developer/Core/Optix/OptixModule.cpp
-    Developer/Core/Optix/OptixPipeline.cpp
-    Developer/Core/Optix/OptixProgramGroup.cpp
-    Developer/Core/Optix/OptixAccelerationStructure.cpp
+    Core/Optix/OptixContext.cpp
+    Core/Optix/OptixModule.cpp
+    Core/Optix/OptixPipeline.cpp
+    Core/Optix/OptixProgramGroup.cpp
+    Core/Optix/OptixAccelerationStructure.cpp
 
-    Developer/Core/Vulkan/VkContext.cpp
-    Developer/Core/Vulkan/VkRenderPass.cpp
-    Developer/Core/Vulkan/VkPipeline.cpp
-    Developer/Core/Vulkan/VkImage.cpp
-    Developer/Core/Vulkan/VkCommand.cpp
+    Core/Vulkan/VkContext.cpp
+    Core/Vulkan/VkRenderPass.cpp
+    Core/Vulkan/VkPipeline.cpp
+    Core/Vulkan/VkImage.cpp
+    Core/Vulkan/VkCommand.cpp
 
-    Developer/GraphicContext/Buffer.cpp
-    Developer/GraphicContext/Texture2D.cpp
-    Developer/GraphicContext/TextureCubeMap.cpp
-    Developer/GraphicContext/GraphicContext.cpp
-    Developer/GraphicContext/DescriptorSet.cpp
-    Developer/GraphicContext/GraphicsPipeline.cpp
-    Developer/GraphicContext/RenderContext.cpp
-    Developer/GraphicContext/RenderTarget.cpp
-    Developer/GraphicContext/UI/UIContext.cpp
+    Core/GraphicContext//Buffer.cpp
+    Core/GraphicContext//Texture2D.cpp
+    Core/GraphicContext//TextureCubeMap.cpp
+    Core/GraphicContext//GraphicContext.cpp
+    Core/GraphicContext//DescriptorSet.cpp
+    Core/GraphicContext//GraphicsPipeline.cpp
+    Core/GraphicContext//RenderContext.cpp
+    Core/GraphicContext//RenderTarget.cpp
+    Core/GraphicContext//UI/UIContext.cpp
 
-    Developer/Scene/Primitives/Primitives.cpp
-    Developer/Scene/Primitives/Arrow.cpp
-    Developer/Scene/Visualizers/Wall2D.cpp
-    Developer/Scene/Scene.cpp
-    Developer/Scene/VertexTransform.cu
-    Developer/Scene/MaterialSystem/MaterialSystem.cpp
-    Developer/Scene/Components/VisualHelpers.cpp
-    Developer/Scene/Renderer/MeshRenderer.cpp
-    Developer/Scene/Renderer/CoordinateGridRenderer.cpp
-    Developer/Scene/Renderer/ParticleSystemRenderer.cpp
-    Developer/Scene/Renderer/VisualHelperLineRenderer.cpp
-    Developer/Scene/Renderer/SceneRenderer.cpp
-    Developer/Scene/Renderer/VisualHelperRenderer.cpp
-    Developer/Scene/Renderer/VisualHelperMeshRenderer.cpp
+    Scene/Primitives/Primitives.cpp
+    Scene/Primitives/Arrow.cpp
+    Scene/Visualizers/Wall2D.cpp
+    Scene/Scene.cpp
+    Scene/VertexTransform.cu
+    Scene/MaterialSystem/MaterialSystem.cpp
+    Scene/Components/VisualHelpers.cpp
+    Scene/Renderer/MeshRenderer.cpp
+    Scene/Renderer/CoordinateGridRenderer.cpp
+    Scene/Renderer/ParticleSystemRenderer.cpp
+    Scene/Renderer/VisualHelperLineRenderer.cpp
+    Scene/Renderer/SceneRenderer.cpp
+    Scene/Renderer/VisualHelperRenderer.cpp
+    Scene/Renderer/VisualHelperMeshRenderer.cpp
 
-    Developer/Scene/Importer/glTFImporter.cpp
+    Scene/Importer/glTFImporter.cpp
 
-    Developer/Editor/PopupWindow.cpp
-    Developer/Editor/EditorWindow.cpp
-    Developer/Editor/ContentBrowser.cpp
-    Developer/Editor/BaseEditorApplication.cpp
-    Developer/Editor/SceneHierarchyPanel.cpp
-    Developer/Editor/SceneElementEditor.cpp
+    Editor/PopupWindow.cpp
+    Editor/EditorWindow.cpp
+    Editor/ContentBrowser.cpp
+    Editor/BaseEditorApplication.cpp
+    Editor/SceneHierarchyPanel.cpp
+    Editor/SceneElementEditor.cpp
 
     # LidarSensorModel/SensorModelBase.cpp
     # LidarSensorModel/EnvironmentSampler.cpp
@@ -96,8 +96,8 @@ add_library(LTSimulationEngineRuntime STATIC
     # Serialize/SensorComponents.cpp
     # Serialize/SensorDefinition.cpp
 
-    Developer/EnvironmentSampler/PointCloudVisualizer.cu
-    Developer/EnvironmentSampler/EnvironmentSampler.cpp
+    EnvironmentSampler/PointCloudVisualizer.cu
+    EnvironmentSampler/EnvironmentSampler.cpp
     ${g_SensorModelEnvironmentSampler}
 
     TensorOps/Implementation/KernelLaunchers.cu
@@ -109,7 +109,7 @@ add_library(LTSimulationEngineRuntime STATIC
 function(add_shader TARGET SHADER)
     find_program(GLSLC glslc)
 
-    set(CURRENT_SHADER_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Developer/Scene/Renderer/Shaders/${SHADER})
+    set(CURRENT_SHADER_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Scene/Renderer/Shaders/${SHADER})
     set(CURRENT_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../Resources/Shaders/${SHADER}.spv)
 
     # Add a custom command to compile GLSL to SPIR-V.
