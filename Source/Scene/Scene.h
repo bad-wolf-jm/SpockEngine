@@ -55,7 +55,7 @@ namespace LTSE::Core
         typedef Entity Element;
 
         Scene( GraphicContext &a_GraphicContext, Ref<LTSE::Core::UIContext> a_UI );
-        Scene( Ref<Scene> aSource  );
+        Scene( Ref<Scene> aSource );
         Scene( Scene & ) = delete;
         ~Scene();
 
@@ -66,6 +66,8 @@ namespace LTSE::Core
 
         Element LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform );
         Element LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name );
+
+        void SaveAs( fs::path aPath );
 
         void BeginScenario();
         void EndScenario();
@@ -88,19 +90,22 @@ namespace LTSE::Core
 
         GraphicContext &GetGraphicContext() { return mGraphicContext; }
 
-        template <typename... Args> void ForEach( std::function<void( Element, Args &... )> a_ApplyFunction ) { m_Registry.ForEach<Args...>( a_ApplyFunction ); }
+        template <typename... Args>
+        void ForEach( std::function<void( Element, Args &... )> a_ApplyFunction )
+        {
+            m_Registry.ForEach<Args...>( a_ApplyFunction );
+        }
 
-        void UpdateRayTracingComponents();
+        void                   UpdateRayTracingComponents();
         OptixTraversableHandle GetRayTracingRoot()
         {
-            if( m_AccelerationStructure )
-                return m_AccelerationStructure->RTObject;
+            if( m_AccelerationStructure ) return m_AccelerationStructure->RTObject;
             return 0;
         }
 
         Ref<LTSE::Graphics::OptixDeviceContextObject> GetRayTracingContext() { return m_RayTracingContext; }
 
-        eSceneState GetState() { return mState; }
+        eSceneState         GetState() { return mState; }
         Ref<MaterialSystem> GetMaterialSystem() { return mMaterialSystem; }
 
         void ClearScene();
@@ -117,22 +122,22 @@ namespace LTSE::Core
         Cuda::GPUExternalMemory mIndexBufferMemoryHandle{};
 
       private:
-        eSceneState mState = eSceneState::EDITING;
-        GraphicContext mGraphicContext;
+        eSceneState         mState = eSceneState::EDITING;
+        GraphicContext      mGraphicContext;
         Ref<MaterialSystem> mMaterialSystem;
 
         Ref<ScriptingEngine> mSceneScripting = nullptr;
 
-        Ref<UIContext> m_UI                                 = nullptr;
-        Ref<OptixDeviceContextObject> m_RayTracingContext   = nullptr;
-        Ref<OptixTraversableObject> m_AccelerationStructure = nullptr;
+        Ref<UIContext>                m_UI                    = nullptr;
+        Ref<OptixDeviceContextObject> m_RayTracingContext     = nullptr;
+        Ref<OptixTraversableObject>   m_AccelerationStructure = nullptr;
 
         Ref<Graphics::Texture2D> m_EmptyTexturePreview = nullptr;
-        UI::ImageHandle m_EmptyTexturePreviewImageHandle;
+        UI::ImageHandle          m_EmptyTexturePreviewImageHandle;
 
-        void UpdateParent(Entity const &aEntity, sRelationshipComponent const &aComponent);
-        void UpdateLocalTransform(Entity const &aEntity, LocalTransformComponent const &aComponent);
-        void UpdateTransformMatrix(Entity const &aEntity, TransformMatrixComponent const &aComponent);
+        void UpdateParent( Entity const &aEntity, sRelationshipComponent const &aComponent );
+        void UpdateLocalTransform( Entity const &aEntity, LocalTransformComponent const &aComponent );
+        void UpdateTransformMatrix( Entity const &aEntity, TransformMatrixComponent const &aComponent );
 
       protected:
         LTSE::Core::EntityRegistry m_Registry;

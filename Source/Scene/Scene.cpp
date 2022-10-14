@@ -9,8 +9,9 @@
 
 #include "Core/Logging.h"
 #include "Core/Memory.h"
-#include "Core/Resource.h"
 #include "Core/Profiling/BlockTimer.h"
+#include "Core/Resource.h"
+
 
 #include "Core/Vulkan/VkPipeline.h"
 
@@ -69,10 +70,10 @@ namespace LTSE::Core
         ConnectSignalHandlers();
     }
 
-    template <typename _Component> static void CopyComponent( Entity &aSource, Entity &aDestination )
+    template <typename _Component>
+    static void CopyComponent( Entity &aSource, Entity &aDestination )
     {
-        if( ( aSource.Has<_Component>() ) )
-            aDestination.AddOrReplace<_Component>( aSource.Get<_Component>() );
+        if( ( aSource.Has<_Component>() ) ) aDestination.AddOrReplace<_Component>( aSource.Get<_Component>() );
     }
 
     Scene::Scene( Ref<Scene> aSource )
@@ -201,8 +202,10 @@ namespace LTSE::Core
         mIndexBufferMemoryHandle = aSource->mIndexBufferMemoryHandle;
 
         // Create the transformed vertex buffer and its CUDA handle
-        mTransformedVertexBuffer             = New<Buffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, true, true, true, mVertexBuffer->SizeAs<uint8_t>() );
-        mTransformedVertexBufferMemoryHandle = Cuda::GPUExternalMemory( *mTransformedVertexBuffer, mTransformedVertexBuffer->SizeAs<uint8_t>() );
+        mTransformedVertexBuffer = New<Buffer>(
+            mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, true, true, true, mVertexBuffer->SizeAs<uint8_t>() );
+        mTransformedVertexBufferMemoryHandle =
+            Cuda::GPUExternalMemory( *mTransformedVertexBuffer, mTransformedVertexBuffer->SizeAs<uint8_t>() );
 
         uint32_t lTransformCount = 0;
         aSource->ForEach<LocalTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
@@ -236,14 +239,14 @@ namespace LTSE::Core
     {
         auto &lParent = aComponent.mParent;
 
-        if( !( aEntity.Has<LocalTransformComponent>() ) )
-            return;
+        if( !( aEntity.Has<LocalTransformComponent>() ) ) return;
 
         auto &lLocalTransform = aEntity.Get<LocalTransformComponent>();
 
         if( lParent && lParent.Has<TransformMatrixComponent>() )
         {
-            aEntity.AddOrReplace<TransformMatrixComponent>( lParent.Get<TransformMatrixComponent>().Matrix * lLocalTransform.mMatrix );
+            aEntity.AddOrReplace<TransformMatrixComponent>(
+                lParent.Get<TransformMatrixComponent>().Matrix * lLocalTransform.mMatrix );
 
             UpdateTransformMatrix( aEntity, aEntity.Get<TransformMatrixComponent>() );
         }
@@ -254,7 +257,8 @@ namespace LTSE::Core
         auto &lParent = aEntity.Get<sRelationshipComponent>().mParent;
 
         if( lParent && lParent.Has<TransformMatrixComponent>() )
-            aEntity.AddOrReplace<TransformMatrixComponent>( lParent.Get<TransformMatrixComponent>().Matrix * aComponent.mMatrix );
+            aEntity.AddOrReplace<TransformMatrixComponent>(
+                lParent.Get<TransformMatrixComponent>().Matrix * aComponent.mMatrix );
         else
             aEntity.AddOrReplace<TransformMatrixComponent>( aComponent.mMatrix );
 
@@ -263,14 +267,14 @@ namespace LTSE::Core
 
     void Scene::UpdateTransformMatrix( Entity const &aEntity, TransformMatrixComponent const &aComponent )
     {
-        if( !aEntity.Has<sRelationshipComponent>() )
-            return;
+        if( !aEntity.Has<sRelationshipComponent>() ) return;
 
         for( auto lChild : aEntity.Get<sRelationshipComponent>().mChildren )
         {
             if( lChild.Has<LocalTransformComponent>() )
             {
-                lChild.AddOrReplace<TransformMatrixComponent>( aComponent.Matrix * lChild.Get<LocalTransformComponent>().mMatrix );
+                lChild.AddOrReplace<TransformMatrixComponent>(
+                    aComponent.Matrix * lChild.Get<LocalTransformComponent>().mMatrix );
 
                 UpdateTransformMatrix( lChild, lChild.Get<TransformMatrixComponent>() );
             }
@@ -314,7 +318,8 @@ namespace LTSE::Core
         if( CurrentCamera.Has<CameraComponent>() )
         {
             auto &l_Component  = CurrentCamera.Get<CameraComponent>();
-            l_CameraProjection = math::Perspective( math::radians( l_Component.FieldOfView ), l_Component.AspectRatio, l_Component.Near, l_Component.Far );
+            l_CameraProjection = math::Perspective(
+                math::radians( l_Component.FieldOfView ), l_Component.AspectRatio, l_Component.Near, l_Component.Far );
             l_CameraProjection[1][1] *= -1.0f;
         }
         return l_CameraProjection;
@@ -331,7 +336,10 @@ namespace LTSE::Core
         return l_CameraPosition;
     }
 
-    Scene::Element Scene::Create( std::string a_Name, Element a_Parent ) { return m_Registry.CreateEntity( a_Parent, a_Name ); }
+    Scene::Element Scene::Create( std::string a_Name, Element a_Parent )
+    {
+        return m_Registry.CreateEntity( a_Parent, a_Name );
+    }
 
     Scene::Element Scene::CreateEntity() { return m_Registry.CreateEntity(); }
 
@@ -365,7 +373,10 @@ namespace LTSE::Core
         Root.Add<LocalTransformComponent>();
     }
 
-    Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform ) { return LoadModel( aModelData, aTransform, "MODEL" ); }
+    Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform )
+    {
+        return LoadModel( aModelData, aTransform, "MODEL" );
+    }
 
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name )
     {
@@ -378,7 +389,7 @@ namespace LTSE::Core
             lTextureIds.push_back( mMaterialSystem->CreateTexture( lTexture.mTexture, lTexture.mSampler ) );
         }
 
-        std::vector<uint32_t> lMaterialIds                       = {};
+        std::vector<uint32_t>                lMaterialIds        = {};
         std::vector<MaterialShaderComponent> lMaterialCreateInfo = {};
         for( auto &lMaterial : aModelData->mMaterials )
         {
@@ -392,7 +403,8 @@ namespace LTSE::Core
             lNewMaterial.mUseAlphaMask   = false;
             lNewMaterial.mAlphaThreshold = 0.5;
 
-            auto lGetTexID = [&]( uint32_t aID, uint32_t aDefault ) { return aID == std::numeric_limits<uint32_t>::max() ? aDefault : lTextureIds[aID]; };
+            auto lGetTexID = [&]( uint32_t aID, uint32_t aDefault )
+            { return aID == std::numeric_limits<uint32_t>::max() ? aDefault : lTextureIds[aID]; };
 
             lNewMaterial.mBaseColorFactor             = lMaterial.mConstants.mBaseColorFactor;
             lNewMaterial.mBaseColorTexture.mTextureID = lGetTexID( lMaterial.mTextures.mBaseColorTexture.TextureID, 1 );
@@ -402,9 +414,10 @@ namespace LTSE::Core
             lNewMaterial.mEmissiveTexture.mTextureID = lGetTexID( lMaterial.mTextures.mEmissiveTexture.TextureID, 0 );
             lNewMaterial.mEmissiveTexture.mUVChannel = lMaterial.mTextures.mEmissiveTexture.UVChannel;
 
-            lNewMaterial.mRoughnessFactor              = lMaterial.mConstants.mRoughnessFactor;
-            lNewMaterial.mMetallicFactor               = lMaterial.mConstants.mMetallicFactor;
-            lNewMaterial.mMetalRoughTexture.mTextureID = lGetTexID( lMaterial.mTextures.mMetallicRoughnessTexture.TextureID, 0 );
+            lNewMaterial.mRoughnessFactor = lMaterial.mConstants.mRoughnessFactor;
+            lNewMaterial.mMetallicFactor  = lMaterial.mConstants.mMetallicFactor;
+            lNewMaterial.mMetalRoughTexture.mTextureID =
+                lGetTexID( lMaterial.mTextures.mMetallicRoughnessTexture.TextureID, 0 );
             lNewMaterial.mMetalRoughTexture.mUVChannel = lMaterial.mTextures.mMetallicRoughnessTexture.UVChannel;
 
             lNewMaterial.mOcclusionStrength           = 0.0f;
@@ -425,11 +438,11 @@ namespace LTSE::Core
             lMaterialCreateInfo.push_back( lMaterialShader );
         }
 
-        std::vector<Element> lMeshes        = {};
-        uint32_t lVertexBufferSize          = 0;
-        uint32_t lIndexBufferSize           = 0;
-        std::vector<VertexData> lVertexData = {};
-        std::vector<uint32_t> lIndexData    = {};
+        std::vector<Element>    lMeshes           = {};
+        uint32_t                lVertexBufferSize = 0;
+        uint32_t                lIndexBufferSize  = 0;
+        std::vector<VertexData> lVertexData       = {};
+        std::vector<uint32_t>   lIndexData        = {};
         for( auto &lMesh : aModelData->mMeshes )
         {
             StaticMeshComponent l_MeshComponent{};
@@ -447,8 +460,10 @@ namespace LTSE::Core
                 lVertices[i].Weights     = lMesh.mWeights[i];
             }
 
-            l_MeshComponent.Vertices      = New<Buffer>( mGraphicContext, lVertices, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
-            l_MeshComponent.Indices       = New<Buffer>( mGraphicContext, lMesh.mIndices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
+            l_MeshComponent.Vertices =
+                New<Buffer>( mGraphicContext, lVertices, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
+            l_MeshComponent.Indices =
+                New<Buffer>( mGraphicContext, lMesh.mIndices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
             l_MeshComponent.mVertexOffset = lVertexData.size();
             l_MeshComponent.mVertexCount  = lVertices.size();
             l_MeshComponent.mIndexOffset  = lIndexData.size();
@@ -473,9 +488,11 @@ namespace LTSE::Core
         mIndexBufferMemoryHandle.Dispose();
         mIndexBufferMemoryHandle = Cuda::GPUExternalMemory( *mIndexBuffer, mIndexBuffer->SizeAs<uint8_t>() );
 
-        mTransformedVertexBuffer = New<Buffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, true, true, true, lVertexData.size() * sizeof( VertexData ) );
+        mTransformedVertexBuffer = New<Buffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, true, true, true,
+            lVertexData.size() * sizeof( VertexData ) );
         mTransformedVertexBufferMemoryHandle.Dispose();
-        mTransformedVertexBufferMemoryHandle = Cuda::GPUExternalMemory( *mTransformedVertexBuffer, mTransformedVertexBuffer->SizeAs<uint8_t>() );
+        mTransformedVertexBufferMemoryHandle =
+            Cuda::GPUExternalMemory( *mTransformedVertexBuffer, mTransformedVertexBuffer->SizeAs<uint8_t>() );
 
         mTransforms    = GPUMemory::Create<math::mat4>( static_cast<uint32_t>( lMeshes.size() ) );
         mVertexOffsets = GPUMemory::Create<uint32_t>( static_cast<uint32_t>( lMeshes.size() ) );
@@ -504,8 +521,7 @@ namespace LTSE::Core
         {
             auto &lNode = aModelData->mNodes[lNodeID];
 
-            if( lNode.mMeshes.size() == 0 )
-                continue;
+            if( lNode.mMeshes.size() == 0 ) continue;
 
             for( uint32_t lNodeMeshID = 0; lNodeMeshID < lNode.mMeshes.size(); lNodeMeshID++ )
                 m_Registry.SetParent( lMeshes[lNodeMeshID], lNodes[lNodeID] );
@@ -533,25 +549,26 @@ namespace LTSE::Core
             }
         }
 
-        if( aModelData->mAnimations.size() > 0 )
-            l_AssetEntity.Add<AnimationChooser>();
+        if( aModelData->mAnimations.size() > 0 ) l_AssetEntity.Add<AnimationChooser>();
 
         for( auto &lAnimation : aModelData->mAnimations )
         {
             auto &l_AnimationChooser = l_AssetEntity.Get<AnimationChooser>();
 
-            auto l_AnimationEntity     = m_Registry.CreateEntity( l_AssetEntity, lAnimation.mName );
+            auto  l_AnimationEntity    = m_Registry.CreateEntity( l_AssetEntity, lAnimation.mName );
             auto &l_AnimationComponent = l_AnimationEntity.Add<AnimationComponent>();
 
             l_AnimationChooser.Animations.push_back( l_AnimationEntity );
             l_AnimationComponent.Duration = lAnimation.mEnd - lAnimation.mStart;
 
-            for( uint32_t lAnimationChannelIndex = 0; lAnimationChannelIndex < lAnimation.mChannels.size(); lAnimationChannelIndex++ )
+            for( uint32_t lAnimationChannelIndex = 0; lAnimationChannelIndex < lAnimation.mChannels.size();
+                 lAnimationChannelIndex++ )
             {
                 AnimationChannel lAnimationChannel{};
-                lAnimationChannel.mChannelID     = lAnimation.mChannels[lAnimationChannelIndex].mComponent;
-                lAnimationChannel.mInterpolation = lAnimation.mSamplers[lAnimation.mChannels[lAnimationChannelIndex].mSamplerIndex];
-                lAnimationChannel.mTargetNode    = lNodes[lAnimation.mChannels[lAnimationChannelIndex].mNodeID];
+                lAnimationChannel.mChannelID = lAnimation.mChannels[lAnimationChannelIndex].mComponent;
+                lAnimationChannel.mInterpolation =
+                    lAnimation.mSamplers[lAnimation.mChannels[lAnimationChannelIndex].mSamplerIndex];
+                lAnimationChannel.mTargetNode = lNodes[lAnimation.mChannels[lAnimationChannelIndex].mNodeID];
 
                 l_AnimationComponent.mChannels.push_back( lAnimationChannel );
             }
@@ -562,11 +579,9 @@ namespace LTSE::Core
 
     void Scene::MarkAsRayTracingTarget( Scene::Element a_Element )
     {
-        if( !a_Element.Has<StaticMeshComponent>() )
-            return;
+        if( !a_Element.Has<StaticMeshComponent>() ) return;
 
-        if( a_Element.Has<RayTracingTargetComponent>() )
-            return;
+        if( a_Element.Has<RayTracingTargetComponent>() ) return;
 
         auto &lRTComponent = a_Element.Add<RayTracingTargetComponent>();
     }
@@ -579,8 +594,7 @@ namespace LTSE::Core
 
     void Scene::BeginScenario()
     {
-        if( mState != eSceneState::EDITING )
-            return;
+        if( mState != eSceneState::EDITING ) return;
 
         // Initialize native scripts
         ForEach<sBehaviourComponent>(
@@ -602,8 +616,7 @@ namespace LTSE::Core
 
     void Scene::EndScenario()
     {
-        if( mState != eSceneState::RUNNING )
-            return;
+        if( mState != eSceneState::RUNNING ) return;
 
         // Destroy scripts
         ForEach<sBehaviourComponent>(
@@ -632,8 +645,7 @@ namespace LTSE::Core
             ForEach<sBehaviourComponent>(
                 [=]( auto l_Entity, auto &l_Component )
                 {
-                    if( l_Component.ControllerInstance )
-                        l_Component.ControllerInstance->OnUpdate( ts );
+                    if( l_Component.ControllerInstance ) l_Component.ControllerInstance->OnUpdate( ts );
                 } );
 
             ForEach<sLuaScriptComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnUpdate( ts ); } );
@@ -646,10 +658,11 @@ namespace LTSE::Core
 
                 for( uint32_t lJointID = 0; lJointID < l_ElementToProcess.Get<SkeletonComponent>().Bones.size(); lJointID++ )
                 {
-                    Element lJoint                = l_ElementToProcess.Get<SkeletonComponent>().Bones[lJointID];
-                    math::mat4 lInverseBindMatrix = l_ElementToProcess.Get<SkeletonComponent>().InverseBindMatrices[lJointID];
-                    math::mat4 lJointMatrix       = lJoint.TryGet<TransformMatrixComponent>( TransformMatrixComponent{} ).Matrix;
-                    lJointMatrix                  = lInverseTransform * lJointMatrix * lInverseBindMatrix;
+                    Element    lJoint = l_ElementToProcess.Get<SkeletonComponent>().Bones[lJointID];
+                    math::mat4 lInverseBindMatrix =
+                        l_ElementToProcess.Get<SkeletonComponent>().InverseBindMatrices[lJointID];
+                    math::mat4 lJointMatrix = lJoint.TryGet<TransformMatrixComponent>( TransformMatrixComponent{} ).Matrix;
+                    lJointMatrix            = lInverseTransform * lJointMatrix * lInverseBindMatrix;
 
                     l_ElementToProcess.Get<SkeletonComponent>().JointMatrices[lJointID] = lJointMatrix;
                 }
@@ -660,10 +673,10 @@ namespace LTSE::Core
             LTSE_PROFILE_SCOPE( "Transform Vertices" );
 
             // Update the transformed vertex buffer
-            std::vector<uint32_t> lVertexOffsets{};
-            std::vector<uint32_t> lVertexCounts{};
+            std::vector<uint32_t>   lVertexOffsets{};
+            std::vector<uint32_t>   lVertexCounts{};
             std::vector<math::mat4> lObjectToWorldTransforms{};
-            uint32_t lMaxVertexCount = 0;
+            uint32_t                lMaxVertexCount = 0;
             ForEach<StaticMeshComponent, TransformMatrixComponent>(
                 [&]( auto aEntiy, auto &aMesh, auto &aTransform )
                 {
@@ -677,8 +690,9 @@ namespace LTSE::Core
             mVertexOffsets.Upload( lVertexOffsets );
             mVertexCounts.Upload( lVertexCounts );
 
-            StaticVertexTransform( mTransformedVertexBufferMemoryHandle.DataAs<VertexData>(), mVertexBufferMemoryHandle.DataAs<VertexData>(), mTransforms.DataAs<math::mat4>(),
-                                   lVertexOffsets.size(), mVertexOffsets.DataAs<uint32_t>(), mVertexCounts.DataAs<uint32_t>(), lMaxVertexCount );
+            StaticVertexTransform( mTransformedVertexBufferMemoryHandle.DataAs<VertexData>(),
+                mVertexBufferMemoryHandle.DataAs<VertexData>(), mTransforms.DataAs<math::mat4>(), lVertexOffsets.size(),
+                mVertexOffsets.DataAs<uint32_t>(), mVertexCounts.DataAs<uint32_t>(), lMaxVertexCount );
 
             CUDA_SYNC_CHECK();
         }
@@ -701,8 +715,7 @@ namespace LTSE::Core
                 }
             } );
 
-        if( l_RebuildAS )
-            RebuildAccelerationStructure();
+        if( l_RebuildAS ) RebuildAccelerationStructure();
     }
 
     void Scene::RebuildAccelerationStructure()
@@ -714,8 +727,9 @@ namespace LTSE::Core
         ForEach<RayTracingTargetComponent, StaticMeshComponent>(
             [&]( auto a_Entity, auto &a_RTComponent, auto &a_MeshComponent )
             {
-                m_AccelerationStructure->AddGeometry( mTransformedVertexBufferMemoryHandle, mIndexBufferMemoryHandle, a_MeshComponent.mVertexOffset, a_MeshComponent.mVertexCount,
-                                                      a_MeshComponent.mIndexOffset, a_MeshComponent.mIndexCount );
+                m_AccelerationStructure->AddGeometry( mTransformedVertexBufferMemoryHandle, mIndexBufferMemoryHandle,
+                    a_MeshComponent.mVertexOffset, a_MeshComponent.mVertexCount, a_MeshComponent.mIndexOffset,
+                    a_MeshComponent.mIndexCount );
             } );
 
         m_AccelerationStructure->Build();
@@ -728,5 +742,7 @@ namespace LTSE::Core
     }
 
     void Scene::Render() {}
+
+    void SaveAs( fs::path aPath ) {}
 
 } // namespace LTSE::Core
