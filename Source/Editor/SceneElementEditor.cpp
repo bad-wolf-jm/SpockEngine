@@ -383,17 +383,17 @@ namespace LTSE::Editor
             static MaterialCombo l_MaterialChooser( "##material_chooser" );
             l_MaterialChooser.World = World;
 
-            if( ElementToEdit.Has<RendererComponent>() )
-            {
-                l_MaterialChooser.Display( ElementToEdit.Get<RendererComponent>().Material );
-            }
-            else
-            {
-                auto l_NewRenderer = Entity{};
-                l_MaterialChooser.Display( l_NewRenderer );
-                if( l_NewRenderer )
-                    ElementToEdit.Add<RendererComponent>( l_NewRenderer );
-            }
+            // if( ElementToEdit.Has<RendererComponent>() )
+            // {
+            //     l_MaterialChooser.Display( ElementToEdit.Get<RendererComponent>().Material );
+            // }
+            // else
+            // {
+            //     auto l_NewRenderer = Entity{};
+            //     l_MaterialChooser.Display( l_NewRenderer );
+            //     if( l_NewRenderer )
+            //         ElementToEdit.Add<RendererComponent>( l_NewRenderer );
+            // }
         }
 
         if( ImGui::CollapsingHeader( "Light", l_Flags ) )

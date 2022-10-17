@@ -15,15 +15,15 @@
 
 using namespace std;
 
-namespace LTSE::SensorModel
+namespace LTSE::Core
 {
     namespace
     {
         static std::vector<std::string> SplitString( const std::string &aString, char aDelimiter )
         {
             vector<std::string> result;
-            std::stringstream ss( aString );
-            std::string item;
+            std::stringstream   ss( aString );
+            std::string         item;
 
             while( std::getline( ss, item, aDelimiter ) )
             {
@@ -33,6 +33,7 @@ namespace LTSE::SensorModel
             return result;
         }
     } // namespace
+
     ConfigurationWriter::ConfigurationWriter( fs::path const &aFileName )
         : mFileName{ aFileName }
     {
@@ -43,6 +44,7 @@ namespace LTSE::SensorModel
         if( !mFileName.empty() )
         {
             std::ofstream lOutputFile( mFileName );
+
             lOutputFile << mOut.c_str();
         }
     }
@@ -53,8 +55,7 @@ namespace LTSE::SensorModel
 
     void ConfigurationWriter::BeginMap( bool aInline )
     {
-        if( aInline )
-            InlineRepresentation();
+        if( aInline ) InlineRepresentation();
         mOut << YAML::BeginMap;
     }
 
@@ -64,8 +65,7 @@ namespace LTSE::SensorModel
 
     void ConfigurationWriter::BeginSequence( bool aInline )
     {
-        if( aInline )
-            InlineRepresentation();
+        if( aInline ) InlineRepresentation();
         mOut << YAML::BeginSeq;
     }
     void ConfigurationWriter::BeginSequence() { BeginSequence( false ); }
@@ -99,6 +99,7 @@ namespace LTSE::SensorModel
         EndMap();
     }
 
+
     void ConfigurationWriter::WriteNull() { mOut << YAML::Null; }
 
     ConfigurationReader::ConfigurationReader( fs::path const &aFileName )
@@ -128,69 +129,62 @@ namespace LTSE::SensorModel
     {
         for( auto &lKey : aKeys )
         {
-            if( ( ( *this )[lKey] ).IsNull() )
-                return false;
+            if( ( ( *this )[lKey] ).IsNull() ) return false;
         }
         return true;
     }
 
     ConfigurationNode ConfigurationNode::operator[]( const std::string &aKey )
     {
-        if( mNode.IsNull() )
-            return ConfigurationNode( YAML::Clone( mNode ) );
+        if( mNode.IsNull() ) return ConfigurationNode( YAML::Clone( mNode ) );
 
         std::vector<std::string> lComponents = SplitString( aKey, '.' );
 
         YAML::Node lCurrentNode = YAML::Clone( mNode );
-        for( auto &i : lComponents )
-            lCurrentNode = lCurrentNode[i];
+        for( auto &i : lComponents ) lCurrentNode = lCurrentNode[i];
 
         return ConfigurationNode( lCurrentNode );
     }
 
     ConfigurationNode ConfigurationNode::operator[]( const std::string &aKey ) const
     {
-        if( mNode.IsNull() )
-            return ConfigurationNode( YAML::Clone( mNode ) );
+        if( mNode.IsNull() ) return ConfigurationNode( YAML::Clone( mNode ) );
 
         std::vector<std::string> lComponents = SplitString( aKey, '.' );
 
         YAML::Node lCurrentNode = YAML::Clone( mNode );
-        for( auto &i : lComponents )
-            lCurrentNode = lCurrentNode[i];
+        for( auto &i : lComponents ) lCurrentNode = lCurrentNode[i];
 
         return ConfigurationNode( lCurrentNode );
     }
 
     math::vec2 ConfigurationNode::Vec( std::array<std::string, 2> const &aKeys, math::vec2 const &aDefault )
     {
-        if( !HasAll( aKeys ) )
-            return aDefault;
+        if( !HasAll( aKeys ) ) return aDefault;
 
-        return math::vec2{ ( ( *this )[aKeys[0]] ).As<float>( aDefault.x ), ( ( *this )[aKeys[1]] ).As<float>( aDefault.y ) };
+        return math::vec2{
+            ( ( *this )[aKeys[0]] ).As<float>( aDefault.x ), ( ( *this )[aKeys[1]] ).As<float>( aDefault.y ) };
     }
 
     math::vec3 ConfigurationNode::Vec( std::array<std::string, 3> const &aKeys, math::vec3 const &aDefault )
     {
-        if( !HasAll( aKeys ) )
-            return aDefault;
+        if( !HasAll( aKeys ) ) return aDefault;
 
-        return math::vec3{ ( *this )[aKeys[0]].As<float>( aDefault.x ), ( *this )[aKeys[1]].As<float>( aDefault.y ), ( *this )[aKeys[2]].As<float>( aDefault.z ) };
+        return math::vec3{ ( *this )[aKeys[0]].As<float>( aDefault.x ), ( *this )[aKeys[1]].As<float>( aDefault.y ),
+            ( *this )[aKeys[2]].As<float>( aDefault.z ) };
     }
 
     math::vec4 ConfigurationNode::Vec( std::array<std::string, 4> const &aKeys, math::vec4 const &aDefault )
     {
-        if( !HasAll( aKeys ) )
-            return aDefault;
+        if( !HasAll( aKeys ) ) return aDefault;
 
-        return math::vec4{ ( *this )[aKeys[0]].As<float>( aDefault.x ), ( *this )[aKeys[1]].As<float>( aDefault.y ), ( *this )[aKeys[2]].As<float>( aDefault.z ),
-                           ( *this )[aKeys[3]].As<float>( aDefault.w ) };
+        return math::vec4{ ( *this )[aKeys[0]].As<float>( aDefault.x ), ( *this )[aKeys[1]].As<float>( aDefault.y ),
+            ( *this )[aKeys[2]].As<float>( aDefault.z ), ( *this )[aKeys[3]].As<float>( aDefault.w ) };
     }
 
     void ConfigurationNode::ForEach( std::function<void( ConfigurationNode & )> aFunc )
     {
-        for( YAML::iterator it = mNode.begin(); it != mNode.end(); ++it )
-            aFunc( ConfigurationNode( *it ) );
+        for( YAML::iterator it = mNode.begin(); it != mNode.end(); ++it ) aFunc( ConfigurationNode( *it ) );
     }
 
-} // namespace LTSE::SensorModel
+} // namespace LTSE::Core

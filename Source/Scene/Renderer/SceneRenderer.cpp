@@ -227,30 +227,30 @@ namespace LTSE::Core
             }
         }
 
-        std::unordered_map<ParticleRendererCreateInfo, std::vector<ParticleSystemComponent>, ParticleSystemRendererCreateInfoHash> lParticleSystemQueue{};
-        m_World->ForEach<ParticleSystemComponent>(
-            [&]( auto a_Entity, auto &a_ParticleSystemComponent )
-            {
-                if( !a_Entity.Has<RendererComponent>() )
-                    return;
+        // std::unordered_map<ParticleRendererCreateInfo, std::vector<ParticleSystemComponent>, ParticleSystemRendererCreateInfoHash> lParticleSystemQueue{};
+        // m_World->ForEach<ParticleSystemComponent>(
+        //     [&]( auto a_Entity, auto &a_ParticleSystemComponent )
+        //     {
+        //         if( !a_Entity.Has<RendererComponent>() )
+        //             return;
 
-                auto &l_RendererComponent = a_Entity.Get<RendererComponent>();
-                if( !l_RendererComponent.Material )
-                    return;
+        //         auto &l_RendererComponent = a_Entity.Get<RendererComponent>();
+        //         if( !l_RendererComponent.Material )
+        //             return;
 
-                if( l_RendererComponent.Material.Has<ParticleShaderComponent>() )
-                {
-                    auto &l_ParticleShaderComponent = l_RendererComponent.Material.Get<ParticleShaderComponent>();
-                    auto &a_Pipeline                = GetRenderPipeline( aRenderContext, l_ParticleShaderComponent );
+        //         if( l_RendererComponent.Material.Has<ParticleShaderComponent>() )
+        //         {
+        //             auto &l_ParticleShaderComponent = l_RendererComponent.Material.Get<ParticleShaderComponent>();
+        //             auto &a_Pipeline                = GetRenderPipeline( aRenderContext, l_ParticleShaderComponent );
 
-                    ParticleSystemRenderer::ParticleData l_ParticleData{};
-                    l_ParticleData.Model         = math::mat4( 1.0f );
-                    l_ParticleData.ParticleCount = a_ParticleSystemComponent.ParticleCount;
-                    l_ParticleData.ParticleSize  = a_ParticleSystemComponent.ParticleSize;
-                    l_ParticleData.Particles     = a_ParticleSystemComponent.Particles;
-                    a_Pipeline.Render( View.Projection, View.View, aRenderContext, l_ParticleData );
-                }
-            } );
+        //             ParticleSystemRenderer::ParticleData l_ParticleData{};
+        //             l_ParticleData.Model         = math::mat4( 1.0f );
+        //             l_ParticleData.ParticleCount = a_ParticleSystemComponent.ParticleCount;
+        //             l_ParticleData.ParticleSize  = a_ParticleSystemComponent.ParticleSize;
+        //             l_ParticleData.Particles     = a_ParticleSystemComponent.Particles;
+        //             a_Pipeline.Render( View.Projection, View.View, aRenderContext, l_ParticleData );
+        //         }
+        //     } );
 
         if( RenderGizmos )
         {

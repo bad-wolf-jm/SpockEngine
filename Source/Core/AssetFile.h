@@ -23,14 +23,17 @@ namespace LTSE::Core
     enum class eAssetType : uint32_t
     {
         UNKNOWN        = 0,
-        KTX_TEXTURE_2D = 1
+        KTX_TEXTURE_2D = 1,
+        VERTEX_BUFFER  = 2,
+        INDEX_BUFFER   = 3,
+        MATERIAL_DATA  = 4
     };
 
     struct sAssetIndex
     {
-        eAssetType mType    = eAssetType::UNKNOWN;
-        uint32_t mByteStart = 0;
-        uint32_t mByteEnd   = 0;
+        eAssetType mType      = eAssetType::UNKNOWN;
+        uint32_t   mByteStart = 0;
+        uint32_t   mByteEnd   = 0;
     };
 
     class BinaryAsset
@@ -57,7 +60,8 @@ namespace LTSE::Core
         bool Eof();
 
         /// @brief Read an element of type _Ty from the file
-        template <typename _Ty> _Ty Read()
+        template <typename _Ty>
+        _Ty Read()
         {
             _Ty lBuffer;
             mFileStream.read( (char *)&lBuffer, sizeof( _Ty ) );
@@ -66,7 +70,8 @@ namespace LTSE::Core
         }
 
         /// @brief Read `aCount` elements of type _Ty from the file, and return a vector containing them
-        template <typename _Ty> std::vector<_Ty> Read( size_t aCount )
+        template <typename _Ty>
+        std::vector<_Ty> Read( size_t aCount )
         {
             std::vector<_Ty> lBuffer( aCount );
             mFileStream.read( (char *)lBuffer.data(), aCount * sizeof( _Ty ) );
@@ -78,12 +83,12 @@ namespace LTSE::Core
         std::tuple<TextureData2D, TextureSampler2D> Retrieve( uint32_t aIndex );
 
       private:
-        fs::path mFilePath = "";
-        bool mFileExists   = false;
+        fs::path      mFilePath   = "";
+        bool          mFileExists = false;
         std::ifstream mFileStream{};
-        size_t mFileSize = 0;
+        size_t        mFileSize = 0;
 
-        uint32_t mAssetCount = 0;
+        uint32_t                 mAssetCount = 0;
         std::vector<sAssetIndex> mAssetIndex{};
     };
 

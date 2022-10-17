@@ -71,6 +71,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/Renderer/SceneRenderer.cpp
     Scene/Renderer/VisualHelperRenderer.cpp
     Scene/Renderer/VisualHelperMeshRenderer.cpp
+    Scene/Serialize/FileIO.cpp
 
     Scene/Importer/glTFImporter.cpp
 
@@ -91,7 +92,6 @@ add_library(LTSimulationEngineRuntime STATIC
     ProcessingNodes/HitRecordProcessorKernels.cu
     ProcessingNodes/HitRecordProcessor.cpp
 
-    Serialize/FileIO.cpp
     # Serialize/SensorAsset.cpp
     # Serialize/SensorComponents.cpp
     # Serialize/SensorDefinition.cpp

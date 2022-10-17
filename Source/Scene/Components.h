@@ -94,24 +94,9 @@ namespace LTSE::Core::EntityComponentSystem::Components
         math::vec3 Scaling;
         math::quat Rotation;
 
-        math::mat4 mMatrix;
-
         AnimatedTransformComponent()                                     = default;
         AnimatedTransformComponent( const AnimatedTransformComponent & ) = default;
     };
-
-    // struct TransformComponent
-    // {
-    //     Ref<transform_t> T = nullptr;
-
-    //     TransformComponent()
-    //         : T( New<transform_t>() )
-    //     {
-    //     }
-    //     TransformComponent( const TransformComponent & ) = default;
-    //     TransformComponent( Ref<transform_t> a_T ) { T = a_T; };
-    //     TransformComponent( math::mat4 a_Matrix ) { T = New<transform_t>( a_Matrix ); };
-    // };
 
     struct NodeTransformComponent
     {
@@ -200,12 +185,12 @@ namespace LTSE::Core::EntityComponentSystem::Components
         ePrimitiveTopology Primitive      = ePrimitiveTopology::TRIANGLES;
         uint32_t           VertexCount    = 0;
         uint32_t           PrimitiveCount = 0;
-        Ref<Buffer>        Vertices       = nullptr;
-        Ref<Buffer>        Indices        = nullptr;
-        uint32_t           mVertexOffset  = 0;
-        uint32_t           mVertexCount   = 0;
-        uint32_t           mIndexOffset   = 0;
-        uint32_t           mIndexCount    = 0;
+        // Ref<Buffer>        Vertices       = nullptr;
+        // Ref<Buffer>        Indices        = nullptr;
+        uint32_t mVertexOffset = 0;
+        uint32_t mVertexCount  = 0;
+        uint32_t mIndexOffset  = 0;
+        uint32_t mIndexCount   = 0;
 
         StaticMeshComponent()                              = default;
         StaticMeshComponent( const StaticMeshComponent & ) = default;
@@ -254,9 +239,9 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
     struct WireframeMeshComponent
     {
-        uint32_t    VertexCount  = 0;
-        Ref<Buffer> VertexBuffer = nullptr;
-        Ref<Buffer> IndexBuffer  = nullptr;
+        uint32_t VertexCount = 0;
+        // Ref<Buffer> VertexBuffer = nullptr;
+        // Ref<Buffer> IndexBuffer  = nullptr;
 
         WireframeMeshComponent()                                 = default;
         WireframeMeshComponent( const WireframeMeshComponent & ) = default;
@@ -264,12 +249,12 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
     struct BoundingBoxComponent
     {
-        bool        IsVisible    = false;
-        bool        Solid        = false;
-        vec4        Color        = 0xffffffff_rgbaf;
-        uint32_t    VertexCount  = 0;
-        Ref<Buffer> VertexBuffer = nullptr;
-        Ref<Buffer> IndexBuffer  = nullptr;
+        bool     IsVisible   = false;
+        bool     Solid       = false;
+        vec4     Color       = 0xffffffff_rgbaf;
+        uint32_t VertexCount = 0;
+        // Ref<Buffer> VertexBuffer = nullptr;
+        // Ref<Buffer> IndexBuffer  = nullptr;
 
         BoundingBoxComponent()                               = default;
         BoundingBoxComponent( const BoundingBoxComponent & ) = default;
@@ -278,8 +263,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
     struct RayTracingTargetComponent
     {
         math::mat4 Transform;
-        GPUMemory  Vertices;
-        GPUMemory  Indices;
+        // GPUMemory  Vertices;
+        // GPUMemory  Indices;
 
         RayTracingTargetComponent()                                    = default;
         RayTracingTargetComponent( const RayTracingTargetComponent & ) = default;
@@ -300,13 +285,13 @@ namespace LTSE::Core::EntityComponentSystem::Components
         Blend
     };
 
-    struct RendererComponent
-    {
-        Entity Material;
+    // struct RendererComponent
+    // {
+    //     Entity Material;
 
-        RendererComponent()                            = default;
-        RendererComponent( const RendererComponent & ) = default;
-    };
+    //     RendererComponent()                            = default;
+    //     RendererComponent( const RendererComponent & ) = default;
+    // };
 
     struct MaterialShaderComponent
     {

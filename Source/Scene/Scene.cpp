@@ -24,6 +24,7 @@
 #include "Scripting/ScriptComponent.h"
 
 #include "Scene/Components/VisualHelpers.h"
+#include "Serialize/FileIO.h"
 // #include "LidarSensorModel/AcquisitionContext/AcquisitionContext.h"
 // #include "LidarSensorModel/EnvironmentSampler.h"
 
@@ -120,7 +121,7 @@ namespace LTSE::Core
             CopyComponent<RayTracingTargetComponent>( lEntity, lClonedEntity );
 
             CopyComponent<MaterialComponent>( lEntity, lClonedEntity );
-            CopyComponent<RendererComponent>( lEntity, lClonedEntity );
+            // CopyComponent<RendererComponent>( lEntity, lClonedEntity );
             CopyComponent<MaterialShaderComponent>( lEntity, lClonedEntity );
 
             CopyComponent<BackgroundComponent>( lEntity, lClonedEntity );
@@ -468,11 +469,10 @@ namespace LTSE::Core
                 lVertices[i].Weights     = lMesh.mWeights[i];
             }
 
-            l_MeshComponent.Vertices =
-                New<Buffer>( mGraphicContext, lVertices, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
-            l_MeshComponent.Indices =
-                New<Buffer>( mGraphicContext, lMesh.mIndices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
-
+            // l_MeshComponent.Vertices =
+            //     New<Buffer>( mGraphicContext, lVertices, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
+            // l_MeshComponent.Indices =
+            //     New<Buffer>( mGraphicContext, lMesh.mIndices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
             l_MeshComponent.mVertexOffset = lVertexData.size();
             l_MeshComponent.mIndexOffset  = lIndexData.size();
             
@@ -964,6 +964,327 @@ namespace LTSE::Core
 
     void Scene::Render() {}
 
-    void SaveAs( fs::path aPath ) {}
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sTag const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.BeginMap( true );
+        aOut.WriteKey( "mValue", aComponent.mValue );
+        aOut.EndMap();
+    }
 
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sRelationshipComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.BeginMap( true );
+        if( aComponent.mParent )
+        {
+            aOut.WriteKey( "mParent", aComponent.mParent.Get<sUUID>().mValue.str() );
+        }
+        else
+        {
+            aOut.WriteKey( "mParent" );
+            aOut.WriteNull();
+        }
+
+        aOut.EndMap();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, CameraComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.WriteNull();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, AnimationComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.WriteNull();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, AnimatedTransformComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.WriteNull();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, LocalTransformComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.BeginMap( true );
+        aOut.WriteKey( "mMatrix" );
+        aOut.Write( aComponent.mMatrix );
+        aOut.EndMap();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, TransformMatrixComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.BeginMap( true );
+        aOut.WriteKey( "mMatrix" );
+        aOut.Write( aComponent.Matrix );
+        aOut.EndMap();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, StaticMeshComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.BeginMap( true );
+        aOut.WriteKey( "mVertexOffset" );
+        aOut.Write( aComponent.mVertexOffset );
+        aOut.WriteKey( "mVertexCount" );
+        aOut.Write( aComponent.mVertexCount );
+        aOut.WriteKey( "mIndexOffset" );
+        aOut.Write( aComponent.mIndexOffset );
+        aOut.WriteKey( "mIndexCount" );
+        aOut.Write( aComponent.mIndexCount );
+        aOut.EndMap();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, ParticleSystemComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.WriteNull();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, ParticleShaderComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.WriteNull();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, SkeletonComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.BeginMap();
+        aOut.WriteKey( "BoneCount" );
+        aOut.Write( (uint32_t)aComponent.BoneCount );
+        aOut.WriteKey( "Bones" );
+        aOut.BeginSequence( true );
+        for( auto &x : aComponent.Bones ) aOut.Write( x.Get<sUUID>().mValue.str() );
+        aOut.EndSequence();
+        aOut.WriteKey( "InverseBindMatrices" );
+        aOut.BeginSequence( true );
+        for( auto &x : aComponent.InverseBindMatrices ) aOut.Write( x );
+        aOut.EndSequence();
+        aOut.WriteKey( "JointMatrices" );
+        aOut.BeginSequence( true );
+        for( auto &x : aComponent.JointMatrices ) aOut.Write( x );
+        aOut.EndSequence();
+        aOut.EndMap();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, WireframeComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.WriteNull();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, WireframeMeshComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.WriteNull();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, BoundingBoxComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.WriteNull();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, RayTracingTargetComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.BeginMap( true );
+        aOut.WriteKey( "Transform" );
+        aOut.Write( aComponent.Transform );
+        aOut.EndMap();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, MaterialComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.BeginMap( true );
+        aOut.WriteKey( "mMaterialID" );
+        aOut.Write( aComponent.mMaterialID );
+        aOut.EndMap();
+    }
+
+    // void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, RendererComponent const &aComponent )
+    // {
+    //     aOut.WriteKey( aName );
+    //     aOut.WriteNull();
+    // }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, MaterialShaderComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.BeginMap( true );
+        aOut.WriteKey( "Type" );
+        aOut.Write( (uint32_t)aComponent.Type );
+        aOut.WriteKey( "IsTwoSided" );
+        aOut.Write( aComponent.IsTwoSided );
+        aOut.WriteKey( "UseAlphaMask" );
+        aOut.Write( aComponent.UseAlphaMask );
+        aOut.WriteKey( "LineWidth" );
+        aOut.Write( aComponent.LineWidth );
+        aOut.WriteKey( "AlphaMaskTheshold" );
+        aOut.Write( aComponent.AlphaMaskTheshold );
+        aOut.EndMap();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, BackgroundComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.BeginMap( true );
+        aOut.WriteKey( "Color" );
+        aOut.Write( aComponent.Color, { "r", "g", "b"} );
+        aOut.EndMap();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, AmbientLightingComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.BeginMap( true );
+        aOut.WriteKey( "Intensity" );
+        aOut.Write( aComponent.Intensity );
+        aOut.WriteKey( "Color" );
+        aOut.Write( aComponent.Color, { "r", "g", "b"} );
+        aOut.EndMap();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, DirectionalLightComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.BeginMap( true );
+        aOut.WriteKey( "Azimuth" );
+        aOut.Write( aComponent.Azimuth );
+        aOut.WriteKey( "Elevation" );
+        aOut.Write( aComponent.Elevation );
+        aOut.WriteKey( "Intensity" );
+        aOut.Write( aComponent.Intensity );
+        aOut.WriteKey( "Color" );
+        aOut.Write( aComponent.Color, { "r", "g", "b"} );
+        aOut.EndMap();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, PointLightComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.BeginMap( true );
+        aOut.WriteKey( "Intensity" );
+        aOut.Write( aComponent.Intensity );
+        aOut.WriteKey( "Position" );
+        aOut.Write( aComponent.Position, { "x", "y", "z"} );
+        aOut.WriteKey( "Color" );
+        aOut.Write( aComponent.Color, { "r", "g", "b"} );
+        aOut.EndMap();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, SpotlightComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.BeginMap( true );
+        aOut.WriteKey( "Position" );
+        aOut.Write( aComponent.Position, { "x", "y", "z"} );
+        aOut.WriteKey( "Azimuth" );
+        aOut.Write( aComponent.Azimuth );
+        aOut.WriteKey( "Elevation" );
+        aOut.Write( aComponent.Elevation );
+        aOut.WriteKey( "Color" );
+        aOut.Write( aComponent.Color, { "r", "g", "b"} );
+        aOut.WriteKey( "Intensity" );
+        aOut.Write( aComponent.Intensity );
+        aOut.WriteKey( "Cone" );
+        aOut.Write( aComponent.Cone );
+        aOut.EndMap();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, LightComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.BeginMap( true );
+        if( aComponent.Light )
+        {
+            aOut.WriteKey( "Light", aComponent.Light.Get<sUUID>().mValue.str() );
+        }
+        else
+        {
+            aOut.WriteKey( "Light" );
+            aOut.WriteNull();
+        }
+
+        aOut.EndMap();
+    }
+
+    template <typename ComponentType>
+    void WriteComponent( ConfigurationWriter &aOut, std::string aName, Entity const &aEntity )
+    {
+        if( aEntity.Has<ComponentType>() ) DoWriteComponent( aOut, aName, aEntity.Get<ComponentType>() );
+    }
+
+    void Scene::SaveAs( fs::path aPath )
+    {
+        // Check that path does not exist, or exists and is a folder
+        // Create Saved, Saved/Logs
+        if( !fs::exists( aPath ) ) fs::create_directories( aPath );
+
+        if( !fs::is_directory( aPath ) ) return;
+
+        auto lOut = ConfigurationWriter( aPath / "Scene.yaml" );
+
+        lOut.BeginMap();
+        lOut.WriteKey( "scene" );
+        {
+            lOut.BeginMap();
+            lOut.WriteKey( "name", "FOO" );
+            lOut.WriteKey( "version", "1" );
+            lOut.WriteKey( "vertices", "1" );
+            lOut.WriteKey( "indices", "1" );
+            lOut.WriteKey( "materials", "1" );
+            lOut.WriteKey( "textures", "1" );
+            lOut.WriteKey( "nodes" );
+            {
+                lOut.BeginMap();
+                ForEach<sUUID>(
+                    [&]( auto aEntity, auto &aUUID )
+                    {
+                        lOut.WriteKey( aUUID.mValue.str() );
+                        lOut.BeginMap();
+                        WriteComponent<sTag>( lOut, "sTag", aEntity );
+                        WriteComponent<sRelationshipComponent>( lOut, "sRelationshipComponent", aEntity );
+                        WriteComponent<CameraComponent>( lOut, "CameraComponent", aEntity );
+                        WriteComponent<AnimationComponent>( lOut, "AnimationComponent", aEntity );
+                        WriteComponent<AnimatedTransformComponent>( lOut, "AnimatedTransformComponent", aEntity );
+                        WriteComponent<LocalTransformComponent>( lOut, "LocalTransformComponent", aEntity );
+                        WriteComponent<TransformMatrixComponent>( lOut, "TransformMatrixComponent", aEntity );
+                        WriteComponent<StaticMeshComponent>( lOut, "StaticMeshComponent", aEntity );
+                        WriteComponent<ParticleSystemComponent>( lOut, "ParticleSystemComponent", aEntity );
+                        WriteComponent<ParticleShaderComponent>( lOut, "ParticleShaderComponent", aEntity );
+                        WriteComponent<SkeletonComponent>( lOut, "SkeletonComponent", aEntity );
+                        WriteComponent<WireframeComponent>( lOut, "WireframeComponent", aEntity );
+                        WriteComponent<WireframeMeshComponent>( lOut, "WireframeMeshComponent", aEntity );
+                        WriteComponent<BoundingBoxComponent>( lOut, "BoundingBoxComponent", aEntity );
+                        WriteComponent<RayTracingTargetComponent>( lOut, "RayTracingTargetComponent", aEntity );
+                        WriteComponent<MaterialComponent>( lOut, "MaterialComponent", aEntity );
+                        // WriteComponent<RendererComponent>( lOut, "RendererComponent", aEntity );
+                        WriteComponent<MaterialShaderComponent>( lOut, "MaterialShaderComponent", aEntity );
+                        WriteComponent<BackgroundComponent>( lOut, "BackgroundComponent", aEntity );
+                        WriteComponent<DirectionalLightComponent>( lOut, "DirectionalLightComponent", aEntity );
+                        WriteComponent<AmbientLightingComponent>( lOut, "AmbientLightingComponent", aEntity );
+                        WriteComponent<PointLightComponent>( lOut, "PointLightComponent", aEntity );
+                        WriteComponent<SpotlightComponent>( lOut, "SpotlightComponent", aEntity );
+                        WriteComponent<LightComponent>( lOut, "LightComponent", aEntity );
+                        lOut.EndMap();
+                    } );
+
+                lOut.EndMap();
+            }
+            lOut.EndMap();
+        }
+
+        lOut.EndMap();
+        // Write vertex and index buffer to   aPath / Mesh.dat
+        // Write material system to           aPath / Materials.dat
+        // Write entity registry to yaml file aPath / Scene.yaml
+    }
 } // namespace LTSE::Core

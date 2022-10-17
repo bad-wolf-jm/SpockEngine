@@ -15,7 +15,7 @@
 
 namespace fs = std::filesystem;
 
-namespace LTSE::SensorModel
+namespace LTSE::Core
 {
     /// @brief Abstraction around an entry in the configuration file.
     class ConfigurationNode
@@ -64,21 +64,21 @@ namespace LTSE::SensorModel
         /// @brief Test whether the underlying node has a given set of keys
         bool HasAll( std::vector<std::string> const &aKeys );
 
-        template <uint32_t N> bool HasAll( std::array<std::string, N> const &aKeys )
+        template <uint32_t N>
+        bool HasAll( std::array<std::string, N> const &aKeys )
         {
             for( auto &lKey : aKeys )
             {
-                if( ( ( *this )[lKey] ).IsNull() )
-                    return false;
+                if( ( ( *this )[lKey] ).IsNull() ) return false;
             }
             return true;
         }
 
         /// @brief Interpret the value of the node as the provided type
-        template <typename _Ty> _Ty As( _Ty aDefault )
+        template <typename _Ty>
+        _Ty As( _Ty aDefault )
         {
-            if( mNode.IsNull() )
-                return aDefault;
+            if( mNode.IsNull() ) return aDefault;
 
             return mNode.as<_Ty>();
         }
@@ -106,7 +106,8 @@ namespace LTSE::SensorModel
         ConfigurationNode operator[]( std::string const &aKey ) const;
 
         /// @brief Iterate over a mapping
-        template <typename _KeyType> void ForEach( std::function<void( _KeyType const &, ConfigurationNode & )> aFunc ) const
+        template <typename _KeyType>
+        void ForEach( std::function<void( _KeyType const &, ConfigurationNode & )> aFunc ) const
         {
             for( YAML::const_iterator it = mNode.begin(); it != mNode.end(); ++it )
             {
@@ -116,7 +117,8 @@ namespace LTSE::SensorModel
         }
 
         /// @brief Iterate over a mapping
-        template <typename _KeyType> void ForEach( std::function<void( _KeyType const &, ConfigurationNode const & )> aFunc ) const
+        template <typename _KeyType>
+        void ForEach( std::function<void( _KeyType const &, ConfigurationNode const & )> aFunc ) const
         {
             for( YAML::const_iterator it = mNode.begin(); it != mNode.end(); ++it )
             {
@@ -158,7 +160,7 @@ namespace LTSE::SensorModel
         ConfigurationNode GetRoot();
 
       private:
-        fs::path mFileName = "";
+        fs::path   mFileName = "";
         YAML::Node mRootNode{};
     };
 
@@ -193,10 +195,18 @@ namespace LTSE::SensorModel
         void WriteKey( std::string const &aKey ) { mOut << YAML::Key << aKey << YAML::Value; }
 
         /// @brief Write the value part of a key/value pair
-        template <typename _Ty> void WriteValue( _Ty const &aValue ) { mOut << aValue; }
+        template <typename _Ty>
+        void WriteValue( _Ty const &aValue )
+        {
+            mOut << aValue;
+        }
 
         /// @brief Write the key part of a key/value pair
-        template <typename _Ty> void WriteKey( std::string const &aKey, _Ty const &aValue ) { mOut << YAML::Key << aKey << YAML::Value << aValue; }
+        template <typename _Ty>
+        void WriteKey( std::string const &aKey, _Ty const &aValue )
+        {
+            mOut << YAML::Key << aKey << YAML::Value << aValue;
+        }
 
         /// @brief End of mapping definition
         void EndMap();
@@ -237,12 +247,29 @@ namespace LTSE::SensorModel
         ///
         void Write( math::vec4 const &aVector, std::array<std::string, 4> const &aKeys );
 
+        template <typename _Ty>
+        void Write( _Ty const &aElement )
+        {
+            mOut << aElement;
+        }
+
+
+        template <>
+        void Write( math::mat4 const &aVector )
+        {
+            BeginSequence( true );
+            for( uint32_t c = 0; c < 4; c++ )
+                for( uint32_t r = 0; r < 4; r++ ) mOut << aVector[c][r];
+            EndSequence();
+        }
+
+
         /// @brief Write Null
         void WriteNull();
 
       private:
-        fs::path mFileName = "";
+        fs::path      mFileName = "";
         YAML::Emitter mOut{};
     };
 
-} // namespace LTSE::SensorModel
+} // namespace LTSE::Core
