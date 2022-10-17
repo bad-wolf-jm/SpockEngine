@@ -345,7 +345,7 @@ int main( int argc, char **argv )
     // g_World->LoadModel(  "C:\\GitLab\\LTSimulationEngine\\Saved\\City\\asset.yaml", "City", lTransform);
 
     // g_World->LoadModel("C:\\work\\asset_import_test\\DefaultScene\\asset.yaml", "Default_Scene", math::Scale(math::mat4(1.0f), {1.0f, 1.0f, 1.0f}));
-    g_World->ForEach<StaticMeshComponent>( [&]( auto aEntity, auto &aComponent ) { g_World->MarkAsRayTracingTarget( aEntity ); } );
+    g_World->ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aComponent ) { g_World->MarkAsRayTracingTarget( aEntity ); } );
     // g_World->LoadModel("C:\\work\\asset_import_test\\BrainStem\\asset.yaml", "Sponza");
     // g_World->LoadModel("C:\\work\\asset_import_test\\Damaged_Helmet\\asset.yaml", "Sponza");
     // g_World->LoadModel("C:\\work\\asset_import_test\\Traffic_Cone\\asset.yaml", "Sponza", lTransform);

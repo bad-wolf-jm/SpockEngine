@@ -37,7 +37,7 @@ namespace LTSE::Core
         ~DirectionalLightData() = default;
 
         DirectionalLightData( const DirectionalLightData & ) = default;
-        DirectionalLightData( const DirectionalLightComponent &a_Spec, math::mat4 a_Transform );
+        DirectionalLightData( const sDirectionalLightComponent &a_Spec, math::mat4 a_Transform );
     };
 
     struct PointLightData
@@ -50,7 +50,7 @@ namespace LTSE::Core
         ~PointLightData() = default;
 
         PointLightData( const PointLightData & ) = default;
-        PointLightData( const PointLightComponent &a_Spec, math::mat4 a_Transform );
+        PointLightData( const sPointLightComponent &a_Spec, math::mat4 a_Transform );
     };
 
     struct SpotlightData
@@ -65,7 +65,7 @@ namespace LTSE::Core
         ~SpotlightData() = default;
 
         SpotlightData( const SpotlightData & ) = default;
-        SpotlightData( const SpotlightComponent &a_Spec, math::mat4 a_Transform );
+        SpotlightData( const sSpotlightComponent &a_Spec, math::mat4 a_Transform );
     };
 
     struct WorldMatrices
@@ -145,13 +145,13 @@ namespace LTSE::Core
         Ref<Scene> m_World = nullptr;
 
       protected:
-        MeshRendererCreateInfo GetRenderPipelineCreateInfo( RenderContext &aRenderContext, MaterialShaderComponent &a_PipelineSpecification );
-        ParticleRendererCreateInfo GetRenderPipelineCreateInfo( RenderContext &aRenderContext, ParticleShaderComponent &a_PipelineSpecification );
+        MeshRendererCreateInfo GetRenderPipelineCreateInfo( RenderContext &aRenderContext, sMaterialShaderComponent &a_PipelineSpecification );
+        ParticleRendererCreateInfo GetRenderPipelineCreateInfo( RenderContext &aRenderContext, sParticleShaderComponent &a_PipelineSpecification );
 
-        MeshRenderer &GetRenderPipeline( RenderContext &aRenderContext, MaterialShaderComponent &a_PipelineSpecification );
+        MeshRenderer &GetRenderPipeline( RenderContext &aRenderContext, sMaterialShaderComponent &a_PipelineSpecification );
         MeshRenderer &GetRenderPipeline( RenderContext &aRenderContext, MeshRendererCreateInfo const &a_PipelineSpecification );
 
-        ParticleSystemRenderer &GetRenderPipeline( RenderContext &aRenderContext, ParticleShaderComponent &a_PipelineSpecification );
+        ParticleSystemRenderer &GetRenderPipeline( RenderContext &aRenderContext, sParticleShaderComponent &a_PipelineSpecification );
 
       protected:
         GraphicContext mGraphicContext;

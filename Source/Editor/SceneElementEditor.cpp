@@ -42,7 +42,7 @@ namespace LTSE::Editor
             Dropdown.Values = { Entity{} };
 
             uint32_t n = 1;
-            World->ForEach<MaterialShaderComponent>(
+            World->ForEach<sMaterialShaderComponent>(
                 [&]( auto a_Entity, auto &a_Component )
                 {
                     Dropdown.Labels.push_back( a_Entity.Get<sTag>().mValue );
@@ -105,14 +105,14 @@ namespace LTSE::Editor
         }
     };
 
-    static bool EditComponent( StaticMeshComponent &a_Component )
+    static bool EditComponent( sStaticMeshComponent &a_Component )
     {
         UI::Text( "Static mesh" );
         UI::Text( "{}", a_Component.Name );
         return false;
     }
 
-    static bool EditComponent( LocalTransformComponent &a_Component )
+    static bool EditComponent( sLocalTransformComponent &a_Component )
     {
         math::vec3 l_Position = a_Component.GetTranslation();
         math::vec3 l_Rotation = a_Component.GetEulerRotation();
@@ -122,11 +122,11 @@ namespace LTSE::Editor
         UI::VectorComponentEditor( "Rotation:", l_Rotation, 0.0, 100 );
         UI::VectorComponentEditor( "Scale:", l_Scale, 1.0, 100 );
 
-        a_Component.mMatrix = LocalTransformComponent( l_Position, l_Rotation, l_Scale ).mMatrix;
+        a_Component.mMatrix = sLocalTransformComponent( l_Position, l_Rotation, l_Scale ).mMatrix;
         return false;
     }
 
-    static bool EditComponent( DirectionalLightComponent &a_Component )
+    static bool EditComponent( sDirectionalLightComponent &a_Component )
     {
         float l_LabelSize = 175.0f;
         static PropertyEditor<Slider<float>> l_AzimuthEditor( "##azimuth" );
@@ -160,7 +160,7 @@ namespace LTSE::Editor
         return false;
     }
 
-    static bool EditComponent( PointLightComponent &a_Component )
+    static bool EditComponent( sPointLightComponent &a_Component )
     {
         float l_LabelSize = 175.0f;
 
@@ -178,7 +178,7 @@ namespace LTSE::Editor
         return false;
     }
 
-    static bool EditComponent( SpotlightComponent &a_Component )
+    static bool EditComponent( sSpotlightComponent &a_Component )
     {
         float l_LabelSize = 175.0f;
 
@@ -223,7 +223,7 @@ namespace LTSE::Editor
         return false;
     }
 
-    static bool EditComponent( LTSE::Graphics::GraphicContext aGraphicContext, LightComponent &a_Component )
+    static bool EditComponent( LTSE::Graphics::GraphicContext aGraphicContext, sLightComponent &a_Component )
     {
         static UI::ComboBox<LightType> l_PrimitiveChooser( "##combo_light_type_chooser" );
         l_PrimitiveChooser.Labels = { "Directional light", "Point light", "Spotlight" };
@@ -237,42 +237,42 @@ namespace LTSE::Editor
         {
             if( l_PrimitiveChooser.Changed )
             {
-                a_Component.Light.TryRemove<SpotlightComponent>();
+                a_Component.Light.TryRemove<sSpotlightComponent>();
                 a_Component.Light.TryRemove<SpotlightHelperComponent>();
-                a_Component.Light.TryRemove<DirectionalLightComponent>();
+                a_Component.Light.TryRemove<sDirectionalLightComponent>();
                 a_Component.Light.TryRemove<DirectionalLightHelperComponent>();
             }
-            if( !a_Component.Light.Has<PointLightComponent>() )
+            if( !a_Component.Light.Has<sPointLightComponent>() )
             {
-                a_Component.Light.Add<PointLightComponent>();
+                a_Component.Light.Add<sPointLightComponent>();
 
                 PointLightHelperComponent &l_VisualizerComponent = a_Component.Light.Add<PointLightHelperComponent>();
-                l_VisualizerComponent.LightData                  = a_Component.Light.Get<PointLightComponent>();
+                l_VisualizerComponent.LightData                  = a_Component.Light.Get<sPointLightComponent>();
                 l_VisualizerComponent.UpdateMesh( aGraphicContext );
             }
-            a_Component.Light.Get<PointLightHelperComponent>().LightData = a_Component.Light.Get<PointLightComponent>();
-            EditComponent( a_Component.Light.Get<PointLightComponent>() );
+            a_Component.Light.Get<PointLightHelperComponent>().LightData = a_Component.Light.Get<sPointLightComponent>();
+            EditComponent( a_Component.Light.Get<sPointLightComponent>() );
         }
         break;
         case LightType::SPOTLIGHT:
         {
             if( l_PrimitiveChooser.Changed )
             {
-                a_Component.Light.TryRemove<PointLightComponent>();
+                a_Component.Light.TryRemove<sPointLightComponent>();
                 a_Component.Light.TryRemove<PointLightHelperComponent>();
-                a_Component.Light.TryRemove<DirectionalLightComponent>();
+                a_Component.Light.TryRemove<sDirectionalLightComponent>();
                 a_Component.Light.TryRemove<DirectionalLightHelperComponent>();
             }
-            if( !a_Component.Light.Has<SpotlightComponent>() )
+            if( !a_Component.Light.Has<sSpotlightComponent>() )
             {
-                a_Component.Light.Add<SpotlightComponent>();
+                a_Component.Light.Add<sSpotlightComponent>();
 
                 SpotlightHelperComponent &l_VisualizerComponent = a_Component.Light.Add<SpotlightHelperComponent>();
-                l_VisualizerComponent.LightData                 = a_Component.Light.Get<SpotlightComponent>();
+                l_VisualizerComponent.LightData                 = a_Component.Light.Get<sSpotlightComponent>();
                 l_VisualizerComponent.UpdateMesh( aGraphicContext );
             }
-            a_Component.Light.Get<SpotlightHelperComponent>().LightData = a_Component.Light.Get<SpotlightComponent>();
-            EditComponent( a_Component.Light.Get<SpotlightComponent>() );
+            a_Component.Light.Get<SpotlightHelperComponent>().LightData = a_Component.Light.Get<sSpotlightComponent>();
+            EditComponent( a_Component.Light.Get<sSpotlightComponent>() );
         }
         break;
         case LightType::DIRECTIONAL:
@@ -280,21 +280,21 @@ namespace LTSE::Editor
         {
             if( l_PrimitiveChooser.Changed )
             {
-                a_Component.Light.TryRemove<PointLightComponent>();
+                a_Component.Light.TryRemove<sPointLightComponent>();
                 a_Component.Light.TryRemove<PointLightHelperComponent>();
-                a_Component.Light.TryRemove<SpotlightComponent>();
+                a_Component.Light.TryRemove<sSpotlightComponent>();
                 a_Component.Light.TryRemove<SpotlightHelperComponent>();
             }
-            if( !a_Component.Light.Has<DirectionalLightComponent>() )
+            if( !a_Component.Light.Has<sDirectionalLightComponent>() )
             {
-                a_Component.Light.Add<DirectionalLightComponent>();
+                a_Component.Light.Add<sDirectionalLightComponent>();
 
                 DirectionalLightHelperComponent &l_VisualizerComponent = a_Component.Light.Add<DirectionalLightHelperComponent>();
-                l_VisualizerComponent.LightData                        = a_Component.Light.Get<DirectionalLightComponent>();
+                l_VisualizerComponent.LightData                        = a_Component.Light.Get<sDirectionalLightComponent>();
                 l_VisualizerComponent.UpdateMesh( aGraphicContext );
             }
-            a_Component.Light.Get<DirectionalLightHelperComponent>().LightData = a_Component.Light.Get<DirectionalLightComponent>();
-            EditComponent( a_Component.Light.Get<DirectionalLightComponent>() );
+            a_Component.Light.Get<DirectionalLightHelperComponent>().LightData = a_Component.Light.Get<sDirectionalLightComponent>();
+            EditComponent( a_Component.Light.Get<sDirectionalLightComponent>() );
         }
         break;
         };
@@ -328,27 +328,27 @@ namespace LTSE::Editor
 
         if( ImGui::BeginPopup( "##add_component" ) )
         {
-            if( ImGui::MenuItem( "Transform component", NULL, false, !ElementToEdit.Has<LocalTransformComponent>() ) )
+            if( ImGui::MenuItem( "Transform component", NULL, false, !ElementToEdit.Has<sLocalTransformComponent>() ) )
             {
-                ElementToEdit.Add<LocalTransformComponent>();
+                ElementToEdit.Add<sLocalTransformComponent>();
             }
             ImGui::Separator();
-            if( ImGui::MenuItem( "Static mesh component", NULL, false, !ElementToEdit.Has<StaticMeshComponent>() ) )
+            if( ImGui::MenuItem( "Static mesh component", NULL, false, !ElementToEdit.Has<sStaticMeshComponent>() ) )
             {
-                ElementToEdit.Add<StaticMeshComponent>();
+                ElementToEdit.Add<sStaticMeshComponent>();
             }
             ImGui::Separator();
-            if( ImGui::MenuItem( "Light component", NULL, false, !ElementToEdit.Has<LightComponent>() ) )
+            if( ImGui::MenuItem( "Light component", NULL, false, !ElementToEdit.Has<sLightComponent>() ) )
             {
-                auto &l_Component = ElementToEdit.Add<LightComponent>();
+                auto &l_Component = ElementToEdit.Add<sLightComponent>();
                 l_Component.Light = World->Create( "Light", ElementToEdit );
             }
             ImGui::Separator();
-            if( ImGui::MenuItem( "Particle system", NULL, false, !ElementToEdit.Has<ParticleSystemComponent>() ) )
+            if( ImGui::MenuItem( "Particle system", NULL, false, !ElementToEdit.Has<sParticleSystemComponent>() ) )
             {
-                ElementToEdit.Add<ParticleSystemComponent>();
+                ElementToEdit.Add<sParticleSystemComponent>();
 
-                auto &l_ParticleShaderConfiguration     = ElementToEdit.Add<ParticleShaderComponent>();
+                auto &l_ParticleShaderConfiguration     = ElementToEdit.Add<sParticleShaderComponent>();
                 l_ParticleShaderConfiguration.LineWidth = 1.0f;
 
                 ParticleRendererCreateInfo l_RendererCreateInfo{};
@@ -359,22 +359,22 @@ namespace LTSE::Editor
 
         if( ImGui::CollapsingHeader( "Ray tracing", l_Flags ) )
         {
-            bool l_RT = ElementToEdit.Has<RayTracingTargetComponent>();
+            bool l_RT = ElementToEdit.Has<sRayTracingTargetComponent>();
             ImGui::Checkbox( "Mark as ray tracing target", &l_RT );
             if( l_RT )
                 World->MarkAsRayTracingTarget( ElementToEdit );
             else
-                ElementToEdit.TryRemove<RayTracingTargetComponent>();
+                ElementToEdit.TryRemove<sRayTracingTargetComponent>();
         }
 
         if( ImGui::CollapsingHeader( "Transform", l_Flags ) )
         {
-            ElementToEdit.IfExists<LocalTransformComponent>( [&]( auto &l_Component ) { EditComponent( l_Component ); } );
+            ElementToEdit.IfExists<sLocalTransformComponent>( [&]( auto &l_Component ) { EditComponent( l_Component ); } );
         }
 
         if( ImGui::CollapsingHeader( "Mesh", l_Flags ) )
         {
-            ElementToEdit.IfExists<StaticMeshComponent>( [&]( auto &l_Component ) { EditComponent( l_Component ); } );
+            ElementToEdit.IfExists<sStaticMeshComponent>( [&]( auto &l_Component ) { EditComponent( l_Component ); } );
 
         }
 
@@ -398,7 +398,7 @@ namespace LTSE::Editor
 
         if( ImGui::CollapsingHeader( "Light", l_Flags ) )
         {
-            ElementToEdit.IfExists<LightComponent>( [&]( auto &l_LightComponent ) { EditComponent( mGraphicContext, l_LightComponent ); } );
+            ElementToEdit.IfExists<sLightComponent>( [&]( auto &l_LightComponent ) { EditComponent( mGraphicContext, l_LightComponent ); } );
         }
     }
 

@@ -24,7 +24,7 @@ namespace LTSE::Core
     using namespace LTSE::Core::EntityComponentSystem::Components;
     using namespace LTSE::Core::Primitives;
 
-    DirectionalLightData::DirectionalLightData( const DirectionalLightComponent &a_Spec, math::mat4 a_Transform )
+    DirectionalLightData::DirectionalLightData( const sDirectionalLightComponent &a_Spec, math::mat4 a_Transform )
     {
         float l_Azimuth   = math::radians( a_Spec.Azimuth );
         float l_Elevation = math::radians( a_Spec.Elevation );
@@ -34,14 +34,14 @@ namespace LTSE::Core
         Intensity = a_Spec.Intensity;
     }
 
-    PointLightData::PointLightData( const PointLightComponent &a_Spec, math::mat4 a_Transform )
+    PointLightData::PointLightData( const sPointLightComponent &a_Spec, math::mat4 a_Transform )
     {
         WorldPosition = a_Transform * math::vec4( a_Spec.Position, 1.0f );
         Color         = a_Spec.Color;
         Intensity     = a_Spec.Intensity;
     }
 
-    SpotlightData::SpotlightData( const SpotlightComponent &a_Spec, math::mat4 a_Transform )
+    SpotlightData::SpotlightData( const sSpotlightComponent &a_Spec, math::mat4 a_Transform )
     {
         float l_Azimuth   = math::radians( a_Spec.Azimuth );
         float l_Elevation = math::radians( a_Spec.Elevation );
@@ -82,7 +82,7 @@ namespace LTSE::Core
         m_VisualHelperRenderer                        = New<VisualHelperRenderer>( mGraphicContext, m_RenderPass );
     }
 
-    MeshRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo( RenderContext &aRenderContext, MaterialShaderComponent &a_PipelineSpecification )
+    MeshRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo( RenderContext &aRenderContext, sMaterialShaderComponent &a_PipelineSpecification )
     {
         MeshRendererCreateInfo l_CreateInfo;
 
@@ -104,14 +104,14 @@ namespace LTSE::Core
         return m_MeshRenderers[a_PipelineSpecification];
     }
 
-    MeshRenderer &SceneRenderer::GetRenderPipeline( RenderContext &aRenderContext, MaterialShaderComponent &a_PipelineSpecification )
+    MeshRenderer &SceneRenderer::GetRenderPipeline( RenderContext &aRenderContext, sMaterialShaderComponent &a_PipelineSpecification )
     {
         MeshRendererCreateInfo l_CreateInfo = GetRenderPipelineCreateInfo( aRenderContext, a_PipelineSpecification );
 
         return GetRenderPipeline( aRenderContext, l_CreateInfo );
     }
 
-    ParticleSystemRenderer &SceneRenderer::GetRenderPipeline( RenderContext &aRenderContext, ParticleShaderComponent &a_PipelineSpecification )
+    ParticleSystemRenderer &SceneRenderer::GetRenderPipeline( RenderContext &aRenderContext, sParticleShaderComponent &a_PipelineSpecification )
     {
         ParticleRendererCreateInfo l_CreateInfo = GetRenderPipelineCreateInfo( aRenderContext, a_PipelineSpecification );
 
@@ -121,7 +121,7 @@ namespace LTSE::Core
         return m_ParticleRenderers[l_CreateInfo];
     }
 
-    ParticleRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo( RenderContext &aRenderContext, ParticleShaderComponent &a_PipelineSpecification )
+    ParticleRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo( RenderContext &aRenderContext, sParticleShaderComponent &a_PipelineSpecification )
     {
         ParticleRendererCreateInfo l_CreateInfo;
         l_CreateInfo.LineWidth      = a_PipelineSpecification.LineWidth;
@@ -143,30 +143,30 @@ namespace LTSE::Core
         int l_SpotlightCount        = 0;
         int l_PointLightCount       = 0;
 
-        m_World->ForEach<DirectionalLightComponent>(
+        m_World->ForEach<sDirectionalLightComponent>(
             [&]( auto a_Entity, auto &a_Component )
             {
                 View.DirectionalLights[l_DirectionalLightCount] = DirectionalLightData( a_Component, math::mat4( 1.0f ) );
                 l_DirectionalLightCount++;
             } );
 
-        m_World->ForEach<PointLightComponent>(
+        m_World->ForEach<sPointLightComponent>(
             [&]( auto a_Entity, auto &a_Component )
             {
                 math::mat4 l_TransformMatrix = math::mat4( 1.0f );
-                if( a_Entity.Has<TransformMatrixComponent>() )
-                    l_TransformMatrix = a_Entity.Get<TransformMatrixComponent>().Matrix;
+                if( a_Entity.Has<sTransformMatrixComponent>() )
+                    l_TransformMatrix = a_Entity.Get<sTransformMatrixComponent>().Matrix;
 
                 View.PointLights[l_PointLightCount] = PointLightData( a_Component, l_TransformMatrix );
                 l_PointLightCount++;
             } );
 
-        m_World->ForEach<SpotlightComponent>(
+        m_World->ForEach<sSpotlightComponent>(
             [&]( auto a_Entity, auto &a_Component )
             {
                 math::mat4 l_TransformMatrix = math::mat4( 1.0f );
-                if( a_Entity.Has<TransformMatrixComponent>() )
-                    l_TransformMatrix = a_Entity.Get<TransformMatrixComponent>().Matrix;
+                if( a_Entity.Has<sTransformMatrixComponent>() )
+                    l_TransformMatrix = a_Entity.Get<sTransformMatrixComponent>().Matrix;
 
                 View.Spotlights[l_SpotlightCount] = SpotlightData( a_Component, l_TransformMatrix );
                 l_SpotlightCount++;
@@ -176,9 +176,9 @@ namespace LTSE::Core
         View.DirectionalLightCount = l_DirectionalLightCount;
         View.SpotlightCount        = l_SpotlightCount;
 
-        if( m_World->Environment.Has<AmbientLightingComponent>() )
+        if( m_World->Environment.Has<sAmbientLightingComponent>() )
         {
-            auto &l_Component = m_World->Environment.Get<AmbientLightingComponent>();
+            auto &l_Component = m_World->Environment.Get<sAmbientLightingComponent>();
 
             Settings.AmbientLightIntensity = l_Component.Intensity;
             Settings.AmbientLightColor     = math::vec4( l_Component.Color, 0.0 );
@@ -188,7 +188,7 @@ namespace LTSE::Core
         m_ShaderParametersBuffer->Write( Settings );
 
         std::unordered_map<MeshRendererCreateInfo, std::vector<Entity>, MeshRendererCreateInfoHash> lOpaqueMeshQueue{};
-        m_World->ForEach<StaticMeshComponent, MaterialShaderComponent>(
+        m_World->ForEach<sStaticMeshComponent, sMaterialShaderComponent>(
             [&]( auto a_Entity, auto &a_StaticMeshComponent, auto &a_MaterialData )
             {
                 auto &l_PipelineCreateInfo = GetRenderPipelineCreateInfo( aRenderContext, a_MaterialData );
@@ -217,18 +217,18 @@ namespace LTSE::Core
                         aRenderContext.Bind( lMeshInformation.Get<NodeDescriptorComponent>().Descriptors, 2, -1 );
 
                     MeshRenderer::MaterialPushConstants l_MaterialPushConstants{};
-                    l_MaterialPushConstants.mMaterialID = lMeshInformation.Get<MaterialComponent>().mMaterialID;
+                    l_MaterialPushConstants.mMaterialID = lMeshInformation.Get<sMaterialComponent>().mMaterialID;
 
                     aRenderContext.PushConstants( { Graphics::Internal::eShaderStageTypeFlags::FRAGMENT }, 0, l_MaterialPushConstants );
 
-                    auto &l_StaticMeshComponent = lMeshInformation.Get<StaticMeshComponent>();
+                    auto &l_StaticMeshComponent = lMeshInformation.Get<sStaticMeshComponent>();
                     aRenderContext.Draw( l_StaticMeshComponent.mIndexCount, l_StaticMeshComponent.mIndexOffset, l_StaticMeshComponent.mVertexOffset, 1, 0 );
                 }
             }
         }
 
-        // std::unordered_map<ParticleRendererCreateInfo, std::vector<ParticleSystemComponent>, ParticleSystemRendererCreateInfoHash> lParticleSystemQueue{};
-        // m_World->ForEach<ParticleSystemComponent>(
+        // std::unordered_map<ParticleRendererCreateInfo, std::vector<sParticleSystemComponent>, ParticleSystemRendererCreateInfoHash> lParticleSystemQueue{};
+        // m_World->ForEach<sParticleSystemComponent>(
         //     [&]( auto a_Entity, auto &a_ParticleSystemComponent )
         //     {
         //         if( !a_Entity.Has<RendererComponent>() )
@@ -238,9 +238,9 @@ namespace LTSE::Core
         //         if( !l_RendererComponent.Material )
         //             return;
 
-        //         if( l_RendererComponent.Material.Has<ParticleShaderComponent>() )
+        //         if( l_RendererComponent.Material.Has<sParticleShaderComponent>() )
         //         {
-        //             auto &l_ParticleShaderComponent = l_RendererComponent.Material.Get<ParticleShaderComponent>();
+        //             auto &l_ParticleShaderComponent = l_RendererComponent.Material.Get<sParticleShaderComponent>();
         //             auto &a_Pipeline                = GetRenderPipeline( aRenderContext, l_ParticleShaderComponent );
 
         //             ParticleSystemRenderer::ParticleData l_ParticleData{};
@@ -260,8 +260,8 @@ namespace LTSE::Core
                 [&]( auto a_Entity, auto &a_DirectionalLightHelperComponent )
                 {
                     math::mat4 l_Transform = math::mat4( 1.0f );
-                    if( a_Entity.Has<TransformMatrixComponent>() )
-                        l_Transform = a_Entity.Get<TransformMatrixComponent>().Matrix;
+                    if( a_Entity.Has<sTransformMatrixComponent>() )
+                        l_Transform = a_Entity.Get<sTransformMatrixComponent>().Matrix;
                     m_VisualHelperRenderer->Render( l_Transform, a_DirectionalLightHelperComponent, aRenderContext );
                 } );
 
@@ -269,8 +269,8 @@ namespace LTSE::Core
                 [&]( auto a_Entity, auto &a_SpotlightHelperComponent )
                 {
                     math::mat4 l_Transform = math::mat4( 1.0f );
-                    if( a_Entity.Has<TransformMatrixComponent>() )
-                        l_Transform = a_Entity.Get<TransformMatrixComponent>().Matrix;
+                    if( a_Entity.Has<sTransformMatrixComponent>() )
+                        l_Transform = a_Entity.Get<sTransformMatrixComponent>().Matrix;
                     m_VisualHelperRenderer->Render( l_Transform, a_SpotlightHelperComponent, aRenderContext );
                 } );
 
@@ -278,8 +278,8 @@ namespace LTSE::Core
                 [&]( auto a_Entity, auto &a_PointLightHelperComponent )
                 {
                     math::mat4 l_Transform = math::mat4( 1.0f );
-                    if( a_Entity.Has<TransformMatrixComponent>() )
-                        l_Transform = a_Entity.Get<TransformMatrixComponent>().Matrix;
+                    if( a_Entity.Has<sTransformMatrixComponent>() )
+                        l_Transform = a_Entity.Get<sTransformMatrixComponent>().Matrix;
                     m_VisualHelperRenderer->Render( l_Transform, a_PointLightHelperComponent, aRenderContext );
                 } );
         }
@@ -292,7 +292,7 @@ namespace LTSE::Core
     {
         LTSE_PROFILE_FUNCTION();
 
-        m_World->ForEach<TransformMatrixComponent>(
+        m_World->ForEach<sTransformMatrixComponent>(
             [&]( auto a_Entity, auto &a_Component )
             {
                 if( !( a_Entity.Has<NodeDescriptorComponent>() ) )
@@ -307,7 +307,7 @@ namespace LTSE::Core
                 auto &l_NodeDescriptor = a_Entity.Get<NodeDescriptorComponent>();
                 NodeMatrixDataComponent l_NodeTransform{};
                 l_NodeTransform.Transform = a_Component.Matrix;
-                a_Entity.IfExists<SkeletonComponent>(
+                a_Entity.IfExists<sSkeletonComponent>(
                     [&]( auto &l_SkeletonComponent )
                     {
                         l_NodeTransform.JointCount = l_SkeletonComponent.BoneCount;

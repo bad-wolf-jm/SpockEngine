@@ -136,8 +136,8 @@ namespace LTSE::Core
         UI::ImageHandle          m_EmptyTexturePreviewImageHandle;
 
         void UpdateParent( Entity const &aEntity, sRelationshipComponent const &aComponent );
-        void UpdateLocalTransform( Entity const &aEntity, LocalTransformComponent const &aComponent );
-        void UpdateTransformMatrix( Entity const &aEntity, TransformMatrixComponent const &aComponent );
+        void UpdateLocalTransform( Entity const &aEntity, sLocalTransformComponent const &aComponent );
+        void UpdateTransformMatrix( Entity const &aEntity, sTransformMatrixComponent const &aComponent );
 
       protected:
         LTSE::Core::EntityRegistry m_Registry;

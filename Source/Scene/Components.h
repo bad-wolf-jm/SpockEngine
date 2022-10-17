@@ -43,7 +43,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
     {
     };
 
-    struct CameraComponent
+    struct sCameraComponent
     {
         math::vec3 Position = math::vec3{ 0.0f, 0.0f, 0.0f };
         float      Pitch    = 0.0f;
@@ -55,58 +55,58 @@ namespace LTSE::Core::EntityComponentSystem::Components
         float FieldOfView = 90.0f;
         float AspectRatio = 16.0f / 9.0f;
 
-        CameraComponent()                          = default;
-        CameraComponent( const CameraComponent & ) = default;
+        sCameraComponent()                          = default;
+        sCameraComponent( const sCameraComponent & ) = default;
     };
 
-    struct AnimationChannel
+    struct sAnimationChannel
     {
         sImportedAnimationChannel::Channel mChannelID;
         sImportedAnimationSampler          mInterpolation;
         Entity                             mTargetNode;
     };
 
-    struct AnimationComponent
+    struct sAnimationComponent
     {
         float Duration       = 0.0f;
         float TickCount      = 0.0f;
         float TicksPerSecond = 0.0f;
         float CurrentTick    = 0.0f;
 
-        std::vector<AnimationChannel> mChannels = {};
+        std::vector<sAnimationChannel> mChannels = {};
 
-        AnimationComponent()                             = default;
-        AnimationComponent( const AnimationComponent & ) = default;
+        sAnimationComponent()                             = default;
+        sAnimationComponent( const sAnimationComponent & ) = default;
     };
 
-    struct AnimationChooser
+    struct sAnimationChooser
     {
         std::vector<Entity> Animations = {};
 
-        AnimationChooser()                           = default;
-        AnimationChooser( const AnimationChooser & ) = default;
+        sAnimationChooser()                           = default;
+        sAnimationChooser( const sAnimationChooser & ) = default;
     };
 
-    struct AnimatedTransformComponent
+    struct sAnimatedTransformComponent
     {
         math::vec3 Translation;
         math::vec3 Scaling;
         math::quat Rotation;
 
-        AnimatedTransformComponent()                                     = default;
-        AnimatedTransformComponent( const AnimatedTransformComponent & ) = default;
+        sAnimatedTransformComponent()                                     = default;
+        sAnimatedTransformComponent( const sAnimatedTransformComponent & ) = default;
     };
 
-    struct LocalTransformComponent
+    struct sLocalTransformComponent
     {
         math::mat4 mMatrix;
 
-        LocalTransformComponent()
+        sLocalTransformComponent()
             : mMatrix( math::mat4( 1.0f ) )
         {
         }
-        LocalTransformComponent( const LocalTransformComponent & ) = default;
-        LocalTransformComponent( math::mat4 a_Matrix )
+        sLocalTransformComponent( const sLocalTransformComponent & ) = default;
+        sLocalTransformComponent( math::mat4 a_Matrix )
             : mMatrix{ a_Matrix }
         {
         }
@@ -122,7 +122,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
                 math::degrees( atan2f( lMatrix[0][1], lMatrix[0][0] ) ) };
         }
 
-        LocalTransformComponent( math::vec3 a_Position, math::vec3 a_Rotation, math::vec3 a_Scaling )
+        sLocalTransformComponent( math::vec3 a_Position, math::vec3 a_Rotation, math::vec3 a_Scaling )
         {
             math::mat4 rot = math::Rotation( math::radians( a_Rotation.z ), math::z_axis() ) *
                              math::Rotation( math::radians( a_Rotation.y ), math::y_axis() ) *
@@ -141,16 +141,16 @@ namespace LTSE::Core::EntityComponentSystem::Components
         }
     };
 
-    struct TransformMatrixComponent
+    struct sTransformMatrixComponent
     {
         math::mat4 Matrix = math::mat4( 1.0f );
 
-        TransformMatrixComponent()                                   = default;
-        TransformMatrixComponent( const TransformMatrixComponent & ) = default;
-        TransformMatrixComponent( math::mat4 a_Matrix ) { Matrix = a_Matrix; };
+        sTransformMatrixComponent()                                   = default;
+        sTransformMatrixComponent( const sTransformMatrixComponent & ) = default;
+        sTransformMatrixComponent( math::mat4 a_Matrix ) { Matrix = a_Matrix; };
     };
 
-    struct StaticMeshComponent
+    struct sStaticMeshComponent
     {
         std::string Name = "";
 
@@ -164,11 +164,11 @@ namespace LTSE::Core::EntityComponentSystem::Components
         uint32_t mIndexOffset  = 0;
         uint32_t mIndexCount   = 0;
 
-        StaticMeshComponent()                              = default;
-        StaticMeshComponent( const StaticMeshComponent & ) = default;
+        sStaticMeshComponent()                              = default;
+        sStaticMeshComponent( const sStaticMeshComponent & ) = default;
     };
 
-    struct ParticleSystemComponent
+    struct sParticleSystemComponent
     {
         std::string Name = "";
 
@@ -176,50 +176,50 @@ namespace LTSE::Core::EntityComponentSystem::Components
         float       ParticleSize  = 0.0f;
         Ref<Buffer> Particles;
 
-        ParticleSystemComponent()                                  = default;
-        ParticleSystemComponent( const ParticleSystemComponent & ) = default;
+        sParticleSystemComponent()                                  = default;
+        sParticleSystemComponent( const sParticleSystemComponent & ) = default;
     };
 
-    struct ParticleShaderComponent
+    struct sParticleShaderComponent
     {
         float                  LineWidth = 1.0f;
         ParticleSystemRenderer Renderer{};
 
-        ParticleShaderComponent()                                  = default;
-        ParticleShaderComponent( const ParticleShaderComponent & ) = default;
+        sParticleShaderComponent()                                  = default;
+        sParticleShaderComponent( const sParticleShaderComponent & ) = default;
     };
 
-    struct SkeletonComponent
+    struct sSkeletonComponent
     {
         uint32_t                BoneCount;
         std::vector<Entity>     Bones;
         std::vector<math::mat4> InverseBindMatrices;
         std::vector<math::mat4> JointMatrices;
 
-        SkeletonComponent()                            = default;
-        SkeletonComponent( const SkeletonComponent & ) = default;
+        sSkeletonComponent()                            = default;
+        sSkeletonComponent( const sSkeletonComponent & ) = default;
     };
 
-    struct WireframeComponent
+    struct sWireframeComponent
     {
         bool IsVisible = false;
         vec3 Color     = 0xffffff_rgbf;
 
-        WireframeComponent()                             = default;
-        WireframeComponent( const WireframeComponent & ) = default;
+        sWireframeComponent()                             = default;
+        sWireframeComponent( const sWireframeComponent & ) = default;
     };
 
-    struct WireframeMeshComponent
+    struct sWireframeMeshComponent
     {
         uint32_t VertexCount = 0;
         // Ref<Buffer> VertexBuffer = nullptr;
         // Ref<Buffer> IndexBuffer  = nullptr;
 
-        WireframeMeshComponent()                                 = default;
-        WireframeMeshComponent( const WireframeMeshComponent & ) = default;
+        sWireframeMeshComponent()                                 = default;
+        sWireframeMeshComponent( const sWireframeMeshComponent & ) = default;
     };
 
-    struct BoundingBoxComponent
+    struct sBoundingBoxComponent
     {
         bool     IsVisible   = false;
         bool     Solid       = false;
@@ -228,26 +228,26 @@ namespace LTSE::Core::EntityComponentSystem::Components
         // Ref<Buffer> VertexBuffer = nullptr;
         // Ref<Buffer> IndexBuffer  = nullptr;
 
-        BoundingBoxComponent()                               = default;
-        BoundingBoxComponent( const BoundingBoxComponent & ) = default;
+        sBoundingBoxComponent()                               = default;
+        sBoundingBoxComponent( const sBoundingBoxComponent & ) = default;
     };
 
-    struct RayTracingTargetComponent
+    struct sRayTracingTargetComponent
     {
         math::mat4 Transform;
         // GPUMemory  Vertices;
         // GPUMemory  Indices;
 
-        RayTracingTargetComponent()                                    = default;
-        RayTracingTargetComponent( const RayTracingTargetComponent & ) = default;
+        sRayTracingTargetComponent()                                    = default;
+        sRayTracingTargetComponent( const sRayTracingTargetComponent & ) = default;
     };
 
-    struct MaterialComponent
+    struct sMaterialComponent
     {
         uint32_t mMaterialID;
 
-        MaterialComponent()                            = default;
-        MaterialComponent( const MaterialComponent & ) = default;
+        sMaterialComponent()                            = default;
+        sMaterialComponent( const sMaterialComponent & ) = default;
     };
 
     enum class MaterialType : uint8_t
@@ -265,7 +265,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
     //     RendererComponent( const RendererComponent & ) = default;
     // };
 
-    struct MaterialShaderComponent
+    struct sMaterialShaderComponent
     {
         MaterialType Type              = MaterialType::Opaque;
         bool         IsTwoSided        = false;
@@ -273,25 +273,25 @@ namespace LTSE::Core::EntityComponentSystem::Components
         float        LineWidth         = 1.0f;
         float        AlphaMaskTheshold = 0.5;
 
-        MaterialShaderComponent()                                  = default;
-        MaterialShaderComponent( const MaterialShaderComponent & ) = default;
+        sMaterialShaderComponent()                                  = default;
+        sMaterialShaderComponent( const sMaterialShaderComponent & ) = default;
     };
 
-    struct BackgroundComponent
+    struct sBackgroundComponent
     {
         vec3 Color = { 1.0f, 1.0f, 1.0f };
 
-        BackgroundComponent()                              = default;
-        BackgroundComponent( const BackgroundComponent & ) = default;
+        sBackgroundComponent()                              = default;
+        sBackgroundComponent( const sBackgroundComponent & ) = default;
     };
 
-    struct AmbientLightingComponent
+    struct sAmbientLightingComponent
     {
         vec3  Color     = { 1.0f, 1.0f, 1.0f };
         float Intensity = 0.0005f;
 
-        AmbientLightingComponent()                                   = default;
-        AmbientLightingComponent( const AmbientLightingComponent & ) = default;
+        sAmbientLightingComponent()                                   = default;
+        sAmbientLightingComponent( const sAmbientLightingComponent & ) = default;
     };
 
     enum class LightType : uint32_t
@@ -301,33 +301,33 @@ namespace LTSE::Core::EntityComponentSystem::Components
         POINT_LIGHT = 2
     };
 
-    struct DirectionalLightComponent
+    struct sDirectionalLightComponent
     {
         float Azimuth   = 0.0f;
         float Elevation = 0.0f;
         float Intensity = 0.0f;
         vec3  Color     = { 0.0f, 0.0f, 0.0f };
 
-        bool operator==( const DirectionalLightComponent &a_Other )
+        bool operator==( const sDirectionalLightComponent &a_Other )
         {
             return ( Azimuth == a_Other.Azimuth ) && ( Elevation == a_Other.Elevation ) &&
                    ( Intensity == a_Other.Intensity ) && ( Color == a_Other.Color );
         }
     };
 
-    struct PointLightComponent
+    struct sPointLightComponent
     {
         vec3  Position  = { 0.0f, 0.0f, 0.0f };
         vec3  Color     = { 0.0f, 0.0f, 0.0f };
         float Intensity = 0.0f;
 
-        bool operator==( const PointLightComponent &a_Other )
+        bool operator==( const sPointLightComponent &a_Other )
         {
             return ( Position == a_Other.Position ) && ( Color == a_Other.Color ) && ( Intensity == a_Other.Intensity );
         }
     };
 
-    struct SpotlightComponent
+    struct sSpotlightComponent
     {
         vec3  Position  = { 0.0f, 0.0f, 0.0f };
         float Azimuth   = 0.0f;
@@ -337,7 +337,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         float Intensity = 0.0f;
         float Cone      = 0.0;
 
-        bool operator==( const SpotlightComponent &a_Other )
+        bool operator==( const sSpotlightComponent &a_Other )
         {
             return ( Position == a_Other.Position ) && ( Azimuth == a_Other.Azimuth ) &&
                    ( Elevation == a_Other.Elevation ) && ( Intensity == a_Other.Intensity ) && ( Color == a_Other.Color ) &&
@@ -345,12 +345,12 @@ namespace LTSE::Core::EntityComponentSystem::Components
         }
     };
 
-    struct LightComponent
+    struct sLightComponent
     {
         Entity Light;
 
-        LightComponent()                         = default;
-        LightComponent( const LightComponent & ) = default;
+        sLightComponent()                         = default;
+        sLightComponent( const sLightComponent & ) = default;
     };
 
 } // namespace LTSE::Core::EntityComponentSystem::Components

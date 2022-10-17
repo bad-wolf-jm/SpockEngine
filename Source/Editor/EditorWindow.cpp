@@ -1044,7 +1044,7 @@ namespace LTSE::Editor
 
         //     if( Sensor )
         //     {
-        //         auto &lSensorTransform = Sensor.Get<LocalTransformComponent>();
+        //         auto &lSensorTransform = Sensor.Get<sLocalTransformComponent>();
         //         math::vec3 lRotation   = lSensorTransform.GetEulerRotation();
         //         math::vec3 lPosition   = lSensorTransform.GetTranslation();
         //         bool lPositionChanged  = false;
@@ -1066,7 +1066,7 @@ namespace LTSE::Editor
         //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 0.0f, 5.0f ) );
 
         //         if( lPositionChanged || lRotationChanged )
-        //             Sensor.Replace<LocalTransformComponent>( lPosition, lRotation, math::vec3{ 1.0f } );
+        //             Sensor.Replace<sLocalTransformComponent>( lPosition, lRotation, math::vec3{ 1.0f } );
 
         //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( 10.0f, 15.0f ) );
         //         auto l_TopLeft     = ImGui::GetCursorScreenPos() + ImVec2{ -10.0f, -10.0f };
@@ -1196,7 +1196,7 @@ namespace LTSE::Editor
 
     void EditorWindow::ClearScene()
     {
-        // auto lSensorTransform    = Sensor.TryGet<LocalTransformComponent>( LocalTransformComponent{ math::mat4( 1.0f ) }
+        // auto lSensorTransform    = Sensor.TryGet<sLocalTransformComponent>( sLocalTransformComponent{ math::mat4( 1.0f ) }
         // ); auto lEnvironmentSampler = Sensor.TryGet<EnvironmentSampler::sCreateInfo>( EnvironmentSampler::sCreateInfo{} );
         // AcquisitionSpecification lAcqCreateInfo{};
         // lAcqCreateInfo.mBasePoints     = 100;
@@ -1209,18 +1209,18 @@ namespace LTSE::Editor
 
         // // Add sensor entity to the scene
         // Sensor = World->Create( "Sensor", World->Root );
-        // Sensor.Add<LocalTransformComponent>( lSensorTransform );
+        // Sensor.Add<sLocalTransformComponent>( lSensorTransform );
         // Sensor.Add<EnvironmentSampler::sCreateInfo>( lEnvironmentSampler );
         // Sensor.Add<AcquisitionSpecification>( lAcquisitionSpecification );
         // Sensor.Add<sBehaviourComponent>();
 
         // // Add a particle system to the sensor to display the point cloud
-        // auto &l_SensorPointCloud = Sensor.Add<ParticleSystemComponent>();
+        // auto &l_SensorPointCloud = Sensor.Add<sParticleSystemComponent>();
 
         // // Create particle renderer for the point cloud
         // auto &l_SensorPointCloudRenderer    = Sensor.Add<RendererComponent>();
         // l_SensorPointCloudRenderer.Material = World->CreateEntity( "ParticleSystemMaterial" );
-        // l_SensorPointCloudRenderer.Material.Add<ParticleShaderComponent>();
+        // l_SensorPointCloudRenderer.Material.Add<sParticleShaderComponent>();
     }
 
     void EditorWindow::LoadScenario( fs::path aPath )
@@ -1232,7 +1232,7 @@ namespace LTSE::Editor
 
         auto lNewModel = World->LoadModel( lImporter, math::mat4( 1.0f ), lName );
         // lNewModel.Add<LockComponent>();
-        World->ForEach<StaticMeshComponent>(
+        World->ForEach<sStaticMeshComponent>(
             [&]( auto aEntity, auto& aComponent ) { World->MarkAsRayTracingTarget( aEntity ); } );
     }
 
@@ -1374,11 +1374,11 @@ namespace LTSE::Editor
             l_Manipulator.ViewportSize     = l3DViewSize;
 
             if( m_SceneHierarchyPanel.SelectedElement &&
-                m_SceneHierarchyPanel.SelectedElement.Has<LocalTransformComponent>() )
+                m_SceneHierarchyPanel.SelectedElement.Has<sLocalTransformComponent>() )
             {
-                auto& lSensorTransform = m_SceneHierarchyPanel.SelectedElement.Get<LocalTransformComponent>();
+                auto& lSensorTransform = m_SceneHierarchyPanel.SelectedElement.Get<sLocalTransformComponent>();
                 Manipulate( l_Manipulator, lSensorTransform.mMatrix );
-                m_SceneHierarchyPanel.SelectedElement.Replace<LocalTransformComponent>( lSensorTransform );
+                m_SceneHierarchyPanel.SelectedElement.Replace<sLocalTransformComponent>( lSensorTransform );
             }
 
             if( !ImGui::GetDragDropPayload() && ImGui::IsItemHovered() && !ImGuizmo::IsUsing() && !lViewLanipulate )
@@ -1531,9 +1531,9 @@ namespace LTSE::Editor
                     float              l_LabelSize  = 175.0f;
                     if( ImGui::CollapsingHeader( "Environment", l_Flags ) )
                     {
-                        if( World->Environment.Has<AmbientLightingComponent>() )
+                        if( World->Environment.Has<sAmbientLightingComponent>() )
                         {
-                            auto& l_AmbientLightComponent = World->Environment.Get<AmbientLightingComponent>();
+                            auto& l_AmbientLightComponent = World->Environment.Get<sAmbientLightingComponent>();
                             UI::ColorChooser( "Ambient light color:", 175, l_AmbientLightComponent.Color );
                             Text( "Ambient intensity:" );
                             UI::SameLine();
@@ -1543,9 +1543,9 @@ namespace LTSE::Editor
                             UI::Slider( "##ambient_intensity", "%.3f", 0.0f, 0.1f, &l_AmbientLightComponent.Intensity );
                         }
 
-                        if( World->Environment.Has<BackgroundComponent>() )
+                        if( World->Environment.Has<sBackgroundComponent>() )
                         {
-                            auto& l_BackgroundComponent = World->Environment.Get<BackgroundComponent>();
+                            auto& l_BackgroundComponent = World->Environment.Get<sBackgroundComponent>();
                             UI::ColorChooser( "Background color:", 175, l_BackgroundComponent.Color );
                         }
                     }

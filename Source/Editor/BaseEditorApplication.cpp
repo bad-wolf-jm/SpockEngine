@@ -246,7 +246,7 @@ namespace LTSE::Editor
         // {
         //     // Add sensor entity to the scene
         //     mEditorWindow.Sensor = m_World->Create( "Sensor", m_World->Root );
-        //     mEditorWindow.Sensor.Add<LocalTransformComponent>();
+        //     mEditorWindow.Sensor.Add<sLocalTransformComponent>();
         //     mEditorWindow.Sensor.Add<EnvironmentSampler::sCreateInfo>();
 
         //     AcquisitionSpecification lAcqCreateInfo{};
@@ -256,12 +256,12 @@ namespace LTSE::Editor
         //     mEditorWindow.Sensor.Add<sBehaviourComponent>();
 
         //     // Add a particle system to the sensor to display the point cloud
-        //     auto &l_SensorPointCloud = mEditorWindow.Sensor.Add<ParticleSystemComponent>();
+        //     auto &l_SensorPointCloud = mEditorWindow.Sensor.Add<sParticleSystemComponent>();
 
         //     // Create particle renderer for the point cloud
         //     auto &l_SensorPointCloudRenderer    = mEditorWindow.Sensor.Add<RendererComponent>();
         //     l_SensorPointCloudRenderer.Material = m_World->CreateEntity( "ParticleSystemMaterial" );
-        //     l_SensorPointCloudRenderer.Material.Add<ParticleShaderComponent>();
+        //     l_SensorPointCloudRenderer.Material.Add<sParticleShaderComponent>();
 
         //     mEditorWindow.ActiveSensor = mEditorWindow.Sensor;
         // }
