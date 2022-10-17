@@ -17,8 +17,8 @@ sImageData LoadBinData( fs::path const &aPath )
     constexpr size_t lComponentCount = 4;
 
     sImageData lImageData{};
-    int32_t lActualComponentCount = 0;
-    size_t lChannelSize           = 0;
+    int32_t    lActualComponentCount = 0;
+    size_t     lChannelSize          = 0;
 
     std::ifstream lInputFile;
     lInputFile.open( aPath, std::ios::in | std::ios::binary );
@@ -47,25 +47,25 @@ std::vector<char> ConvertToKTX( fs::path const &aPath )
     {
         lBinaryData = LoadBinData( aPath );
 
-        TextureData::sCreateInfo lTextureCreateInfo{};
+        LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mMipLevels = 1;
-        TextureData2D lTexture( lTextureCreateInfo, lBinaryData );
+        LTSE::Core::TextureData2D lTexture( lTextureCreateInfo, lBinaryData );
 
         return lTexture.Serialize();
     }
     else if( aPath.extension().string() == ".ktx" )
     {
-        TextureData::sCreateInfo lTextureCreateInfo{};
-        TextureData2D lTexture( lTextureCreateInfo, aPath );
+        LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+        LTSE::Core::TextureData2D            lTexture( lTextureCreateInfo, aPath );
 
         return lTexture.Serialize();
     }
     else
     {
         lBinaryData = LoadImageData( aPath );
-        TextureData::sCreateInfo lTextureCreateInfo{};
+        LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mMipLevels = 1;
-        TextureData2D lTexture( lTextureCreateInfo, lBinaryData );
+        LTSE::Core::TextureData2D lTexture( lTextureCreateInfo, lBinaryData );
 
         return lTexture.Serialize();
     }
@@ -73,30 +73,32 @@ std::vector<char> ConvertToKTX( fs::path const &aPath )
 
 eSamplerFilter GetFilter( std::string const &aKey )
 {
-    std::unordered_map<std::string, eSamplerFilter> lValues = { { "nearest", eSamplerFilter::NEAREST }, { "linear", eSamplerFilter::LINEAR } };
+    std::unordered_map<std::string, eSamplerFilter> lValues = {
+        { "nearest", eSamplerFilter::NEAREST }, { "linear", eSamplerFilter::LINEAR } };
     return lValues[aKey];
 }
 
 eSamplerMipmap GetMipFilter( std::string const &aKey )
 {
-    std::unordered_map<std::string, eSamplerMipmap> lValues = { { "nearest", eSamplerMipmap::NEAREST }, { "linear", eSamplerMipmap::LINEAR } };
+    std::unordered_map<std::string, eSamplerMipmap> lValues = {
+        { "nearest", eSamplerMipmap::NEAREST }, { "linear", eSamplerMipmap::LINEAR } };
     return lValues[aKey];
 }
 
 eSamplerWrapping GetWrapping( std::string const &aKey )
 {
     std::unordered_map<std::string, eSamplerWrapping> lValues = { { "repeat", eSamplerWrapping::REPEAT },
-                                                                  { "mirrored_repeat", eSamplerWrapping::MIRRORED_REPEAT },
-                                                                  { "clamp_to_edge", eSamplerWrapping::CLAMP_TO_EDGE },
-                                                                  { "clamp_to_border", eSamplerWrapping::CLAMP_TO_BORDER },
-                                                                  { "mirror_clamnp_to_border", eSamplerWrapping::MIRROR_CLAMP_TO_BORDER } };
+        { "mirrored_repeat", eSamplerWrapping::MIRRORED_REPEAT }, { "clamp_to_edge", eSamplerWrapping::CLAMP_TO_EDGE },
+        { "clamp_to_border", eSamplerWrapping::CLAMP_TO_BORDER },
+        { "mirror_clamnp_to_border", eSamplerWrapping::MIRROR_CLAMP_TO_BORDER } };
     return lValues[aKey];
 }
 
 std::vector<char> MakePacket( sTextureSamplingInfo aSampling, std::vector<char> aKTXData )
 {
     uint32_t lHeaderSize = 0;
-    lHeaderSize += sizeof( eSamplerFilter ) + sizeof( eSamplerFilter ) + sizeof( eSamplerMipmap ) + sizeof( eSamplerWrapping );
+    lHeaderSize +=
+        sizeof( eSamplerFilter ) + sizeof( eSamplerFilter ) + sizeof( eSamplerMipmap ) + sizeof( eSamplerWrapping );
     lHeaderSize += 2 * sizeof( float );
     lHeaderSize += 2 * sizeof( float );
     lHeaderSize += 4 * sizeof( float );
@@ -104,7 +106,7 @@ std::vector<char> MakePacket( sTextureSamplingInfo aSampling, std::vector<char> 
     uint32_t lPacketSize = aKTXData.size() + lHeaderSize;
 
     std::vector<char> lPacket( lPacketSize );
-    auto *lPtr = lPacket.data();
+    auto             *lPtr = lPacket.data();
     std::memcpy( lPtr, &aSampling.mMinification, sizeof( eSamplerFilter ) );
     lPtr += sizeof( eSamplerFilter );
     std::memcpy( lPtr, &aSampling.mMagnification, sizeof( eSamplerFilter ) );
@@ -168,17 +170,17 @@ int main( int argc, char **argv )
         std::exit( 1 );
     }
 
-    auto *lMagic      = BinaryAsset::GetMagic();
-    auto lMagicLength = BinaryAsset::GetMagicLength();
+    auto *lMagic       = BinaryAsset::GetMagic();
+    auto  lMagicLength = BinaryAsset::GetMagicLength();
 
     auto lOutFile = std::ofstream( lOutput.string(), std::ofstream::binary );
     lOutFile.write( (const char *)lMagic, lMagicLength );
 
-    std::vector<sAssetIndex> lAssetIndex{};
+    std::vector<sAssetIndex>       lAssetIndex{};
     std::vector<std::vector<char>> lPackets{};
 
     ConfigurationReader lConfigFile( lInput );
-    ConfigurationNode lRootNode = lConfigFile.GetRoot();
+    ConfigurationNode   lRootNode = lConfigFile.GetRoot();
     lRootNode["assets"].ForEach(
         [&]( ConfigurationNode &aValue )
         {
@@ -189,7 +191,7 @@ int main( int argc, char **argv )
 
             if( lAssetType == "texture_2d" )
             {
-                auto lProperties = aValue["properties"];
+                auto                 lProperties = aValue["properties"];
                 sTextureSamplingInfo lSamplingInfo{};
                 lSamplingInfo.mMinification  = GetFilter( lProperties["filttering.min"].As<std::string>( "linear" ) );
                 lSamplingInfo.mMagnification = GetFilter( lProperties["filttering.max"].As<std::string>( "linear" ) );
@@ -202,7 +204,8 @@ int main( int argc, char **argv )
                 auto lScaling          = lProperties["scaling"].Vec( { "x", "y" }, math::vec2{ 1.0f, 1.0f } );
                 lSamplingInfo.mScaling = { lScaling.x, lScaling.y };
 
-                auto lBorderColor          = lProperties["border_color"].Vec( { "x", "y", "z", "w" }, math::vec4{ 0.0f, 0.0f, 0.0f, 0.0f } );
+                auto lBorderColor =
+                    lProperties["border_color"].Vec( { "x", "y", "z", "w" }, math::vec4{ 0.0f, 0.0f, 0.0f, 0.0f } );
                 lSamplingInfo.mBorderColor = { lBorderColor.x, lBorderColor.y, lBorderColor.z, lBorderColor.w };
 
                 sAssetIndex lAssetIndexEntry{};
@@ -221,7 +224,7 @@ int main( int argc, char **argv )
     uint32_t lAssetCount = static_cast<uint32_t>( lAssetIndex.size() );
     lOutFile.write( (const char *)&lAssetCount, sizeof( uint32_t ) );
 
-    uint32_t lCurrentByte = BinaryAsset::GetMagicLength() + sizeof( uint32_t ) + lAssetIndex.size() * sizeof(sAssetIndex);
+    uint32_t lCurrentByte = BinaryAsset::GetMagicLength() + sizeof( uint32_t ) + lAssetIndex.size() * sizeof( sAssetIndex );
     for( uint32_t i = 0; i < lAssetCount; i++ )
     {
         lAssetIndex[i].mByteStart = lCurrentByte;
@@ -231,8 +234,7 @@ int main( int argc, char **argv )
 
     lOutFile.write( (const char *)lAssetIndex.data(), lAssetIndex.size() * sizeof( sAssetIndex ) );
 
-    for( auto &lPacket : lPackets )
-        lOutFile.write( (const char *)lPacket.data(), lPacket.size() );
+    for( auto &lPacket : lPackets ) lOutFile.write( (const char *)lPacket.data(), lPacket.size() );
 
     return 0;
 }
