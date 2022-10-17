@@ -229,7 +229,7 @@ namespace LTSE::Editor
 
         math::ivec2 l_WindowSize = UI::GetAvailableContentSpace();
 
-        auto &l_MaterialShaderConfiguration = ElementToEdit.Get<MaterialShaderComponent>();
+        auto &l_MaterialShaderConfiguration = ElementToEdit.Get<sMaterialShaderComponent>();
         ImGui::Checkbox( "Two sided", &l_MaterialShaderConfiguration.IsTwoSided );
         {
             ImVec2 l_CursorPosition = ImGui::GetCursorPos();

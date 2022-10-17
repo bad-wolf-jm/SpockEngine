@@ -173,11 +173,11 @@ using namespace LTSE::SensorModel;
 //         sTensorShape lOutputShape( lIntensities.Shape().mShape, sizeof( HitRecord ) );
 //         MultiTensor lHitRecords = MultiTensor( m_ComputeScope->mPool, lOutputShape );
 
-//         if( Has<TransformMatrixComponent>() )
+//         if( Has<sTransformMatrixComponent>() )
 //         {
-//             auto &lParticles = Get<ParticleSystemComponent>();
+//             auto &lParticles = Get<sParticleSystemComponent>();
 
-//             m_WorldSampler->Sample( Get<TransformMatrixComponent>().Matrix, m_World, lAzimuths, lElevations, lIntensities, lHitRecords );
+//             m_WorldSampler->Sample( Get<sTransformMatrixComponent>().Matrix, m_World, lAzimuths, lElevations, lIntensities, lHitRecords );
 
 //             if( !( lParticles.Particles ) || lParticles.ParticleCount != lAzimuths.SizeAs<float>() )
 //             {
@@ -189,7 +189,7 @@ using namespace LTSE::SensorModel;
 //             GPUExternalMemory l_PointCloudMappedBuffer( *( lParticles.Particles ), lParticles.ParticleCount * sizeof( Particle ) );
 //             m_PointCloudVisualizer.InvertZAxis = false;
 //             m_PointCloudVisualizer.Resolution  = 0.2;
-//             m_PointCloudVisualizer.Visualize( Get<TransformMatrixComponent>().Matrix, lHitRecords, l_PointCloudMappedBuffer );
+//             m_PointCloudVisualizer.Visualize( Get<sTransformMatrixComponent>().Matrix, lHitRecords, l_PointCloudMappedBuffer );
 //             l_PointCloudMappedBuffer.Dispose();
 //         }
 //         auto &lDistancesNode   = RetrieveDistance( *( SensorController->ControlledSensor()->mComputationScope ), lHitRecords );

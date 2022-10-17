@@ -47,7 +47,7 @@ namespace LTSE::Core
         mMaterialSystem = New<MaterialSystem>( a_GraphicContext );
 
         DefaultCamera                 = m_Registry.CreateEntity( "DefaultCamera" );
-        auto &l_CameraComponent       = DefaultCamera.Add<CameraComponent>();
+        auto &l_CameraComponent       = DefaultCamera.Add<sCameraComponent>();
         l_CameraComponent.Position    = math::vec3{ 0.0f, 0.0f, 0.0f };
         l_CameraComponent.Pitch       = 0.0f;
         l_CameraComponent.Yaw         = 0.0f;
@@ -60,8 +60,8 @@ namespace LTSE::Core
         CurrentCamera = DefaultCamera;
 
         Environment = m_Registry.CreateEntity( "Environment" );
-        Environment.Add<AmbientLightingComponent>();
-        Environment.Add<BackgroundComponent>();
+        Environment.Add<sAmbientLightingComponent>();
+        Environment.Add<sBackgroundComponent>();
 
         Root = m_Registry.CreateEntityWithRelationship( "WorldRoot" );
         Root.Add<NodeTransformComponent>();
@@ -107,30 +107,30 @@ namespace LTSE::Core
             auto lClonedEntity = lClonedEntities[lUUID];
 
             CopyComponent<NodeTransformComponent>( lEntity, lClonedEntity );
-            CopyComponent<TransformMatrixComponent>( lEntity, lClonedEntity );
+            CopyComponent<sTransformMatrixComponent>( lEntity, lClonedEntity );
             CopyComponent<AnimatedTransformComponent>( lEntity, lClonedEntity );
 
-            CopyComponent<StaticMeshComponent>( lEntity, lClonedEntity );
-            CopyComponent<WireframeComponent>( lEntity, lClonedEntity );
-            CopyComponent<WireframeMeshComponent>( lEntity, lClonedEntity );
-            CopyComponent<BoundingBoxComponent>( lEntity, lClonedEntity );
+            CopyComponent<sStaticMeshComponent>( lEntity, lClonedEntity );
+            CopyComponent<sWireframeComponent>( lEntity, lClonedEntity );
+            CopyComponent<sWireframeMeshComponent>( lEntity, lClonedEntity );
+            CopyComponent<sBoundingBoxComponent>( lEntity, lClonedEntity );
 
-            CopyComponent<ParticleSystemComponent>( lEntity, lClonedEntity );
-            CopyComponent<ParticleShaderComponent>( lEntity, lClonedEntity );
+            CopyComponent<sParticleSystemComponent>( lEntity, lClonedEntity );
+            CopyComponent<sParticleShaderComponent>( lEntity, lClonedEntity );
 
-            CopyComponent<RayTracingTargetComponent>( lEntity, lClonedEntity );
+            CopyComponent<sRayTracingTargetComponent>( lEntity, lClonedEntity );
 
-            CopyComponent<MaterialComponent>( lEntity, lClonedEntity );
+            CopyComponent<sMaterialComponent>( lEntity, lClonedEntity );
             // CopyComponent<RendererComponent>( lEntity, lClonedEntity );
-            CopyComponent<MaterialShaderComponent>( lEntity, lClonedEntity );
+            CopyComponent<sMaterialShaderComponent>( lEntity, lClonedEntity );
 
-            CopyComponent<BackgroundComponent>( lEntity, lClonedEntity );
+            CopyComponent<sBackgroundComponent>( lEntity, lClonedEntity );
 
-            CopyComponent<AmbientLightingComponent>( lEntity, lClonedEntity );
-            CopyComponent<DirectionalLightComponent>( lEntity, lClonedEntity );
-            CopyComponent<PointLightComponent>( lEntity, lClonedEntity );
-            CopyComponent<SpotlightComponent>( lEntity, lClonedEntity );
-            CopyComponent<LightComponent>( lEntity, lClonedEntity );
+            CopyComponent<sAmbientLightingComponent>( lEntity, lClonedEntity );
+            CopyComponent<sDirectionalLightComponent>( lEntity, lClonedEntity );
+            CopyComponent<sPointLightComponent>( lEntity, lClonedEntity );
+            CopyComponent<sSpotlightComponent>( lEntity, lClonedEntity );
+            CopyComponent<sLightComponent>( lEntity, lClonedEntity );
 
             CopyComponent<sBehaviourComponent>( lEntity, lClonedEntity );
             CopyComponent<sLuaScriptComponent>( lEntity, lClonedEntity );
@@ -143,23 +143,23 @@ namespace LTSE::Core
             CopyComponent<SkeletonComponent>( lEntity, lClonedEntity );
             if( lClonedEntity.Has<SkeletonComponent>() )
             {
-                auto &lSkeletonComponent = lClonedEntity.Get<SkeletonComponent>();
+                auto &lSkeletonComponent = lClonedEntity.Get<sSkeletonComponent>();
                 for( uint32_t i = 0; i < lSkeletonComponent.BoneCount; i++ )
                     lSkeletonComponent.Bones[i] = lClonedEntities[lSkeletonComponent.Bones[i].Get<sUUID>().mValue];
             }
 
-            CopyComponent<AnimationComponent>( lEntity, lClonedEntity );
-            if( lClonedEntity.Has<AnimationComponent>() )
+            CopyComponent<sAnimationComponent>( lEntity, lClonedEntity );
+            if( lClonedEntity.Has<sAnimationComponent>() )
             {
-                auto &lAnimationComponent = lClonedEntity.Get<AnimationComponent>();
+                auto &lAnimationComponent = lClonedEntity.Get<sAnimationComponent>();
                 for( auto &lChannel : lAnimationComponent.mChannels )
                     lChannel.mTargetNode = lClonedEntities[lChannel.mTargetNode.Get<sUUID>().mValue];
             }
 
-            CopyComponent<AnimationChooser>( lEntity, lClonedEntity );
-            if( lClonedEntity.Has<AnimationChooser>() )
+            CopyComponent<sAnimationChooser>( lEntity, lClonedEntity );
+            if( lClonedEntity.Has<sAnimationChooser>() )
             {
-                auto &lAnimationChooser = lClonedEntity.Get<AnimationChooser>();
+                auto &lAnimationChooser = lClonedEntity.Get<sAnimationChooser>();
                 for( uint32_t i = 0; i < lAnimationChooser.Animations.size(); i++ )
                     lAnimationChooser.Animations[i] = lClonedEntities[lAnimationChooser.Animations[i].Get<sUUID>().mValue];
             }
@@ -208,7 +208,7 @@ namespace LTSE::Core
         aSource->ForEach<NodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
 
         uint32_t lStaticMeshCount = 0;
-        aSource->ForEach<StaticMeshComponent>( [&]( auto aEntity, auto &aUUID ) { lStaticMeshCount++; } );
+        aSource->ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aUUID ) { lStaticMeshCount++; } );
 
         uint32_t lJointMatrixCount = 0;
         uint32_t lJointOffsetCount = 0;
@@ -251,40 +251,40 @@ namespace LTSE::Core
 
         auto &lLocalTransform = aEntity.Get<NodeTransformComponent>();
 
-        if( lParent && lParent.Has<TransformMatrixComponent>() )
+        if( lParent && lParent.Has<sTransformMatrixComponent>() )
         {
-            aEntity.AddOrReplace<TransformMatrixComponent>(
-                lParent.Get<TransformMatrixComponent>().Matrix * lLocalTransform.mMatrix );
+            aEntity.AddOrReplace<sTransformMatrixComponent>(
+                lParent.Get<sTransformMatrixComponent>().Matrix * lLocalTransform.mMatrix );
 
-            UpdateTransformMatrix( aEntity, aEntity.Get<TransformMatrixComponent>() );
+            UpdateTransformMatrix( aEntity, aEntity.Get<sTransformMatrixComponent>() );
         }
     }
 
-    void Scene::UpdateLocalTransform( Entity const &aEntity, LocalTransformComponent const &aComponent )
+    void Scene::UpdateLocalTransform( Entity const &aEntity, sLocalTransformComponent const &aComponent )
     {
         auto &lParent = aEntity.Get<sRelationshipComponent>().mParent;
 
-        if( lParent && lParent.Has<TransformMatrixComponent>() )
-            aEntity.AddOrReplace<TransformMatrixComponent>(
-                lParent.Get<TransformMatrixComponent>().Matrix * aComponent.mMatrix );
+        if( lParent && lParent.Has<sTransformMatrixComponent>() )
+            aEntity.AddOrReplace<sTransformMatrixComponent>(
+                lParent.Get<sTransformMatrixComponent>().Matrix * aComponent.mMatrix );
         else
-            aEntity.AddOrReplace<TransformMatrixComponent>( aComponent.mMatrix );
+            aEntity.AddOrReplace<sTransformMatrixComponent>( aComponent.mMatrix );
 
-        UpdateTransformMatrix( aEntity, aEntity.Get<TransformMatrixComponent>() );
+        UpdateTransformMatrix( aEntity, aEntity.Get<sTransformMatrixComponent>() );
     }
 
-    void Scene::UpdateTransformMatrix( Entity const &aEntity, TransformMatrixComponent const &aComponent )
+    void Scene::UpdateTransformMatrix( Entity const &aEntity, sTransformMatrixComponent const &aComponent )
     {
         if( !aEntity.Has<sRelationshipComponent>() ) return;
 
         for( auto lChild : aEntity.Get<sRelationshipComponent>().mChildren )
         {
-            if( lChild.Has<LocalTransformComponent>() )
+            if( lChild.Has<sLocalTransformComponent>() )
             {
-                lChild.AddOrReplace<TransformMatrixComponent>(
-                    aComponent.Matrix * lChild.Get<LocalTransformComponent>().mMatrix );
+                lChild.AddOrReplace<sTransformMatrixComponent>(
+                    aComponent.Matrix * lChild.Get<sLocalTransformComponent>().mMatrix );
 
-                UpdateTransformMatrix( lChild, lChild.Get<TransformMatrixComponent>() );
+                UpdateTransformMatrix( lChild, lChild.Get<sTransformMatrixComponent>() );
             }
         }
     }
@@ -307,9 +307,9 @@ namespace LTSE::Core
     math::mat4 Scene::GetView()
     {
         math::mat4 l_CameraView( 1.0f );
-        if( CurrentCamera.Has<CameraComponent>() )
+        if( CurrentCamera.Has<sCameraComponent>() )
         {
-            auto &l_Component = CurrentCamera.Get<CameraComponent>();
+            auto &l_Component = CurrentCamera.Get<sCameraComponent>();
 
             math::mat4 l_Rx = math::Rotation( l_Component.Pitch, math::vec3( 1.0f, 0.0f, 0.0f ) );
             math::mat4 l_Ry = math::Rotation( l_Component.Yaw, math::vec3( 0.0f, 1.0f, 0.0f ) );
@@ -324,9 +324,9 @@ namespace LTSE::Core
     math::mat4 Scene::GetProjection()
     {
         math::mat4 l_CameraProjection( 1.0f );
-        if( CurrentCamera.Has<CameraComponent>() )
+        if( CurrentCamera.Has<sCameraComponent>() )
         {
-            auto &l_Component  = CurrentCamera.Get<CameraComponent>();
+            auto &l_Component  = CurrentCamera.Get<sCameraComponent>();
             l_CameraProjection = math::Perspective(
                 math::radians( l_Component.FieldOfView ), l_Component.AspectRatio, l_Component.Near, l_Component.Far );
             l_CameraProjection[1][1] *= -1.0f;
@@ -337,9 +337,9 @@ namespace LTSE::Core
     math::vec3 Scene::GetCameraPosition()
     {
         math::vec3 l_CameraPosition( 0.0f );
-        if( CurrentCamera.Has<CameraComponent>() )
+        if( CurrentCamera.Has<sCameraComponent>() )
         {
-            auto &l_Component = CurrentCamera.Get<CameraComponent>();
+            auto &l_Component = CurrentCamera.Get<sCameraComponent>();
             l_CameraPosition  = l_Component.Position;
         }
         return l_CameraPosition;
@@ -362,7 +362,7 @@ namespace LTSE::Core
         mMaterialSystem->Clear();
 
         DefaultCamera                 = m_Registry.CreateEntity( "DefaultCamera" );
-        auto &l_CameraComponent       = DefaultCamera.Add<CameraComponent>();
+        auto &l_CameraComponent       = DefaultCamera.Add<sCameraComponent>();
         l_CameraComponent.Position    = math::vec3{ 0.0f, 0.0f, 0.0f };
         l_CameraComponent.Pitch       = 0.0f;
         l_CameraComponent.Yaw         = 0.0f;
@@ -375,8 +375,8 @@ namespace LTSE::Core
         CurrentCamera = DefaultCamera;
 
         Environment = m_Registry.CreateEntity( "Environment" );
-        Environment.Add<AmbientLightingComponent>();
-        Environment.Add<BackgroundComponent>();
+        Environment.Add<sAmbientLightingComponent>();
+        Environment.Add<sBackgroundComponent>();
 
         Root = m_Registry.CreateEntityWithRelationship( "WorldRoot" );
         Root.Add<NodeTransformComponent>();
@@ -399,7 +399,7 @@ namespace LTSE::Core
         }
 
         std::vector<uint32_t>                lMaterialIds        = {};
-        std::vector<MaterialShaderComponent> lMaterialCreateInfo = {};
+        std::vector<sMaterialShaderComponent> lMaterialCreateInfo = {};
         for( auto &lMaterial : aModelData->mMaterials )
         {
             auto &lNewMaterial = mMaterialSystem->CreateMaterial();
@@ -437,7 +437,7 @@ namespace LTSE::Core
             lNewMaterial.mNormalsTexture.mUVChannel = lMaterial.mTextures.mNormalTexture.UVChannel;
             lMaterialIds.push_back( lNewMaterial.mID );
 
-            MaterialShaderComponent lMaterialShader{};
+            sMaterialShaderComponent lMaterialShader{};
             lMaterialShader.Type              = MaterialType::Opaque;
             lMaterialShader.IsTwoSided        = lMaterial.mConstants.mIsTwoSided;
             lMaterialShader.UseAlphaMask      = true;
@@ -454,7 +454,7 @@ namespace LTSE::Core
         std::vector<uint32_t>   lIndexData        = {};
         for( auto &lMesh : aModelData->mMeshes )
         {
-            StaticMeshComponent l_MeshComponent{};
+            sStaticMeshComponent l_MeshComponent{};
             l_MeshComponent.Name      = lMesh.mName;
             l_MeshComponent.Primitive = lMesh.mPrimitive;
 
@@ -486,9 +486,9 @@ namespace LTSE::Core
             l_MeshComponent.mIndexCount  = lMesh.mIndices.size();
 
             auto l_MeshEntity = Create( lMesh.mName, l_AssetEntity );
-            l_MeshEntity.Add<StaticMeshComponent>( l_MeshComponent );
-            l_MeshEntity.Add<MaterialComponent>( lMaterialIds[lMesh.mMaterialID] );
-            l_MeshEntity.Add<MaterialShaderComponent>( lMaterialCreateInfo[lMesh.mMaterialID] );
+            l_MeshEntity.Add<sStaticMeshComponent>( l_MeshComponent );
+            l_MeshEntity.Add<sMaterialComponent>( lMaterialIds[lMesh.mMaterialID] );
+            l_MeshEntity.Add<sMaterialShaderComponent>( lMaterialCreateInfo[lMesh.mMaterialID] );
             l_MeshEntity.Add<NodeTransformComponent>( math::mat4( 1.0f ) );
 
             lVertexData.insert( lVertexData.end(), lVertices.begin(), lVertices.end() );
@@ -574,7 +574,7 @@ namespace LTSE::Core
             {
                 auto &lSkin = aModelData->mSkins[lNode.mSkinID];
 
-                SkeletonComponent lNodeSkeleton{};
+                sSkeletonComponent lNodeSkeleton{};
 
                 std::vector<Element> lJointNodes = {};
                 for( uint32_t i = 0; i < lSkin.mJointNodeID.size(); i++ )
@@ -588,7 +588,7 @@ namespace LTSE::Core
                 for( uint32_t i = 0; i < lNode.mMeshes.size(); i++ )
                 {
                     auto &lMesh = lMeshes[lNode.mMeshes[i]];
-                    lMesh.Add<SkeletonComponent>( lNodeSkeleton );
+                    lMesh.Add<sSkeletonComponent>( lNodeSkeleton );
                 }
             }
         }
@@ -609,10 +609,10 @@ namespace LTSE::Core
 
         for( auto &lAnimation : aModelData->mAnimations )
         {
-            auto &l_AnimationChooser = l_AssetEntity.Get<AnimationChooser>();
+            auto &l_AnimationChooser = l_AssetEntity.Get<sAnimationChooser>();
 
             auto  l_AnimationEntity    = m_Registry.CreateEntity( l_AssetEntity, lAnimation.mName );
-            auto &l_AnimationComponent = l_AnimationEntity.Add<AnimationComponent>();
+            auto &l_AnimationComponent = l_AnimationEntity.Add<sAnimationComponent>();
 
             l_AnimationChooser.Animations.push_back( l_AnimationEntity );
             l_AnimationComponent.Duration = lAnimation.mEnd - lAnimation.mStart;
@@ -620,7 +620,7 @@ namespace LTSE::Core
             for( uint32_t lAnimationChannelIndex = 0; lAnimationChannelIndex < lAnimation.mChannels.size();
                  lAnimationChannelIndex++ )
             {
-                AnimationChannel lAnimationChannel{};
+                sAnimationChannel lAnimationChannel{};
                 lAnimationChannel.mChannelID = lAnimation.mChannels[lAnimationChannelIndex].mComponent;
                 lAnimationChannel.mInterpolation =
                     lAnimation.mSamplers[lAnimation.mChannels[lAnimationChannelIndex].mSamplerIndex];
@@ -642,11 +642,11 @@ namespace LTSE::Core
 
     void Scene::MarkAsRayTracingTarget( Scene::Element a_Element )
     {
-        if( !a_Element.Has<StaticMeshComponent>() ) return;
+        if( !a_Element.Has<sStaticMeshComponent>() ) return;
 
-        if( a_Element.Has<RayTracingTargetComponent>() ) return;
+        if( a_Element.Has<sRayTracingTargetComponent>() ) return;
 
-        auto &lRTComponent = a_Element.Add<RayTracingTargetComponent>();
+        auto &lRTComponent = a_Element.Add<sRayTracingTargetComponent>();
     }
 
     void Scene::AttachScript( Element aElement, fs::path aScriptPath )
@@ -836,20 +836,20 @@ namespace LTSE::Core
             }
         }
 
-        ForEach<SkeletonComponent, TransformMatrixComponent>(
+        ForEach<sSkeletonComponent, sTransformMatrixComponent>(
             [&]( auto l_ElementToProcess, auto &s, auto &t )
             {
-                math::mat4 lInverseTransform = math::Inverse( l_ElementToProcess.Get<TransformMatrixComponent>().Matrix );
+                math::mat4 lInverseTransform = math::Inverse( l_ElementToProcess.Get<sTransformMatrixComponent>().Matrix );
 
-                for( uint32_t lJointID = 0; lJointID < l_ElementToProcess.Get<SkeletonComponent>().Bones.size(); lJointID++ )
+                for( uint32_t lJointID = 0; lJointID < l_ElementToProcess.Get<sSkeletonComponent>().Bones.size(); lJointID++ )
                 {
-                    Element    lJoint = l_ElementToProcess.Get<SkeletonComponent>().Bones[lJointID];
+                    Element    lJoint = l_ElementToProcess.Get<sSkeletonComponent>().Bones[lJointID];
                     math::mat4 lInverseBindMatrix =
-                        l_ElementToProcess.Get<SkeletonComponent>().InverseBindMatrices[lJointID];
-                    math::mat4 lJointMatrix = lJoint.TryGet<TransformMatrixComponent>( TransformMatrixComponent{} ).Matrix;
+                        l_ElementToProcess.Get<sSkeletonComponent>().InverseBindMatrices[lJointID];
+                    math::mat4 lJointMatrix = lJoint.TryGet<sTransformMatrixComponent>( sTransformMatrixComponent{} ).Matrix;
                     lJointMatrix            = lInverseTransform * lJointMatrix * lInverseBindMatrix;
 
-                    l_ElementToProcess.Get<SkeletonComponent>().JointMatrices[lJointID] = lJointMatrix;
+                    l_ElementToProcess.Get<sSkeletonComponent>().JointMatrices[lJointID] = lJointMatrix;
                 }
             } );
 
@@ -863,7 +863,7 @@ namespace LTSE::Core
                 std::vector<uint32_t>   lVertexCounts{};
                 std::vector<math::mat4> lObjectToWorldTransforms{};
                 uint32_t                lMaxVertexCount = 0;
-                ForEach<StaticMeshComponent, TransformMatrixComponent>(
+                ForEach<sStaticMeshComponent, sTransformMatrixComponent>(
                     [&]( auto aEntiy, auto &aMesh, auto &aTransform )
                     {
                         if( aEntiy.Has<SkeletonComponent>() ) return;
@@ -926,7 +926,7 @@ namespace LTSE::Core
         LTSE_PROFILE_FUNCTION();
 
         bool l_RebuildAS = false;
-        ForEach<TransformMatrixComponent, StaticMeshComponent, RayTracingTargetComponent>(
+        ForEach<sTransformMatrixComponent, sStaticMeshComponent, sRayTracingTargetComponent>(
             [&]( auto a_Entity, auto &a_TransformComponent, auto &a_MeshComponent, auto &a_RTComponent )
             {
                 if( !glm::all( glm::equal( a_TransformComponent.Matrix, a_RTComponent.Transform, 0.0001 ) ) )
@@ -945,7 +945,7 @@ namespace LTSE::Core
 
         m_AccelerationStructure = LTSE::Core::New<OptixTraversableObject>( m_RayTracingContext );
 
-        ForEach<RayTracingTargetComponent, StaticMeshComponent>(
+        ForEach<sRayTracingTargetComponent, sStaticMeshComponent>(
             [&]( auto a_Entity, auto &a_RTComponent, auto &a_MeshComponent )
             {
                 m_AccelerationStructure->AddGeometry( mTransformedVertexBufferMemoryHandle, mIndexBufferMemoryHandle,
@@ -989,7 +989,7 @@ namespace LTSE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, CameraComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sCameraComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
@@ -1012,7 +1012,7 @@ namespace LTSE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, AnimationChooser const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sAnimationChooser const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginSequence( true );
@@ -1024,7 +1024,7 @@ namespace LTSE::Core
         aOut.EndSequence();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, AnimationComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sAnimationComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap();
@@ -1073,7 +1073,7 @@ namespace LTSE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, AnimatedTransformComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sAnimatedTransformComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap();
@@ -1086,7 +1086,7 @@ namespace LTSE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, LocalTransformComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sLocalTransformComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
@@ -1095,7 +1095,7 @@ namespace LTSE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, TransformMatrixComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sTransformMatrixComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
@@ -1104,7 +1104,7 @@ namespace LTSE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, StaticMeshComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sStaticMeshComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
@@ -1119,19 +1119,19 @@ namespace LTSE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, ParticleSystemComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sParticleSystemComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.WriteNull();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, ParticleShaderComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sParticleShaderComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.WriteNull();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, SkeletonComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sSkeletonComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap();
@@ -1152,25 +1152,25 @@ namespace LTSE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, WireframeComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sWireframeComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.WriteNull();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, WireframeMeshComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sWireframeMeshComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.WriteNull();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, BoundingBoxComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sBoundingBoxComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.WriteNull();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, RayTracingTargetComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sRayTracingTargetComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
@@ -1179,7 +1179,7 @@ namespace LTSE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, MaterialComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sMaterialComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
@@ -1194,7 +1194,7 @@ namespace LTSE::Core
     //     aOut.WriteNull();
     // }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, MaterialShaderComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sMaterialShaderComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
@@ -1211,7 +1211,7 @@ namespace LTSE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, BackgroundComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sBackgroundComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
@@ -1220,7 +1220,7 @@ namespace LTSE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, AmbientLightingComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sAmbientLightingComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
@@ -1231,7 +1231,7 @@ namespace LTSE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, DirectionalLightComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sDirectionalLightComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
@@ -1246,7 +1246,7 @@ namespace LTSE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, PointLightComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sPointLightComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
@@ -1259,7 +1259,7 @@ namespace LTSE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, SpotlightComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sSpotlightComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
@@ -1278,7 +1278,7 @@ namespace LTSE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, LightComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sLightComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
@@ -1321,6 +1321,7 @@ namespace LTSE::Core
             lOut.WriteKey( "indices", "1" );
             lOut.WriteKey( "materials", "1" );
             lOut.WriteKey( "textures", "1" );
+            lOut.WriteKey( "animations", "1" );
             lOut.WriteKey( "nodes" );
             {
                 lOut.BeginMap();
@@ -1331,29 +1332,29 @@ namespace LTSE::Core
                         lOut.BeginMap();
                         WriteComponent<sTag>( lOut, "sTag", aEntity );
                         WriteComponent<sRelationshipComponent>( lOut, "sRelationshipComponent", aEntity );
-                        WriteComponent<CameraComponent>( lOut, "CameraComponent", aEntity );
-                        WriteComponent<AnimationChooser>( lOut, "AnimationChooser", aEntity );
-                        WriteComponent<AnimationComponent>( lOut, "AnimationComponent", aEntity );
-                        WriteComponent<AnimatedTransformComponent>( lOut, "AnimatedTransformComponent", aEntity );
-                        WriteComponent<LocalTransformComponent>( lOut, "LocalTransformComponent", aEntity );
-                        WriteComponent<TransformMatrixComponent>( lOut, "TransformMatrixComponent", aEntity );
-                        WriteComponent<StaticMeshComponent>( lOut, "StaticMeshComponent", aEntity );
-                        WriteComponent<ParticleSystemComponent>( lOut, "ParticleSystemComponent", aEntity );
-                        WriteComponent<ParticleShaderComponent>( lOut, "ParticleShaderComponent", aEntity );
-                        WriteComponent<SkeletonComponent>( lOut, "SkeletonComponent", aEntity );
-                        WriteComponent<WireframeComponent>( lOut, "WireframeComponent", aEntity );
-                        WriteComponent<WireframeMeshComponent>( lOut, "WireframeMeshComponent", aEntity );
-                        WriteComponent<BoundingBoxComponent>( lOut, "BoundingBoxComponent", aEntity );
-                        WriteComponent<RayTracingTargetComponent>( lOut, "RayTracingTargetComponent", aEntity );
-                        WriteComponent<MaterialComponent>( lOut, "MaterialComponent", aEntity );
+                        WriteComponent<sCameraComponent>( lOut, "sCameraComponent", aEntity );
+                        WriteComponent<sAnimationChooser>( lOut, "sAnimationChooser", aEntity );
+                        WriteComponent<sAnimationComponent>( lOut, "sAnimationComponent", aEntity );
+                        WriteComponent<sAnimatedTransformComponent>( lOut, "sAnimatedTransformComponent", aEntity );
+                        WriteComponent<sLocalTransformComponent>( lOut, "LocalTransformComponent", aEntity );
+                        WriteComponent<sTransformMatrixComponent>( lOut, "TransformMatrixComponent", aEntity );
+                        WriteComponent<sStaticMeshComponent>( lOut, "sStaticMeshComponent", aEntity );
+                        WriteComponent<sParticleSystemComponent>( lOut, "sParticleSystemComponent", aEntity );
+                        WriteComponent<sParticleShaderComponent>( lOut, "sParticleShaderComponent", aEntity );
+                        WriteComponent<sSkeletonComponent>( lOut, "sSkeletonComponent", aEntity );
+                        WriteComponent<sWireframeComponent>( lOut, "sWireframeComponent", aEntity );
+                        WriteComponent<sWireframeMeshComponent>( lOut, "sWireframeMeshComponent", aEntity );
+                        WriteComponent<sBoundingBoxComponent>( lOut, "sBoundingBoxComponent", aEntity );
+                        WriteComponent<sRayTracingTargetComponent>( lOut, "sRayTracingTargetComponent", aEntity );
+                        WriteComponent<sMaterialComponent>( lOut, "sMaterialComponent", aEntity );
                         // WriteComponent<RendererComponent>( lOut, "RendererComponent", aEntity );
-                        WriteComponent<MaterialShaderComponent>( lOut, "MaterialShaderComponent", aEntity );
-                        WriteComponent<BackgroundComponent>( lOut, "BackgroundComponent", aEntity );
-                        WriteComponent<DirectionalLightComponent>( lOut, "DirectionalLightComponent", aEntity );
-                        WriteComponent<AmbientLightingComponent>( lOut, "AmbientLightingComponent", aEntity );
-                        WriteComponent<PointLightComponent>( lOut, "PointLightComponent", aEntity );
-                        WriteComponent<SpotlightComponent>( lOut, "SpotlightComponent", aEntity );
-                        WriteComponent<LightComponent>( lOut, "LightComponent", aEntity );
+                        WriteComponent<sMaterialShaderComponent>( lOut, "sMaterialShaderComponent", aEntity );
+                        WriteComponent<sBackgroundComponent>( lOut, "sBackgroundComponent", aEntity );
+                        WriteComponent<sDirectionalLightComponent>( lOut, "sDirectionalLightComponent", aEntity );
+                        WriteComponent<sAmbientLightingComponent>( lOut, "sAmbientLightingComponent", aEntity );
+                        WriteComponent<sPointLightComponent>( lOut, "sPointLightComponent", aEntity );
+                        WriteComponent<sSpotlightComponent>( lOut, "sSpotlightComponent", aEntity );
+                        WriteComponent<sLightComponent>( lOut, "sLightComponent", aEntity );
                         lOut.EndMap();
                     } );
 

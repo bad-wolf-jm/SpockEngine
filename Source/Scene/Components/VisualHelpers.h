@@ -119,7 +119,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
     struct PointLightHelperComponent
     {
-        PointLightComponent LightData;
+        sPointLightComponent LightData;
 
         CubeMeshData Origin;
         CircleMeshData AxisCircle;
@@ -136,7 +136,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
     struct DirectionalLightHelperComponent
     {
-        DirectionalLightComponent LightData;
+        sDirectionalLightComponent LightData;
 
         ArrowMeshData Direction;
         CubeMeshData Origin;
@@ -153,7 +153,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
     struct SpotlightHelperComponent
     {
-        SpotlightComponent LightData;
+        sSpotlightComponent LightData;
 
         CubeMeshData Origin;
         ConeMeshData Spot;
@@ -182,7 +182,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
     struct CameraHelperComponent
     {
-        CameraComponent CameraData;
+        sCameraComponent CameraData;
 
         CubeMeshData Origin;
         FieldOfViewHelperComponent FieldOfView;

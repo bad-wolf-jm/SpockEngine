@@ -38,8 +38,8 @@ namespace LTSE::SensorModel::Dev
             m_MissRecordsBuffer.RawDevicePtr(), m_MissRecordsBuffer.SizeAs<MissRecord>() );
 
         std::vector<HitgroupRecord> hitgroupRecords;
-        a_Scene->ForEach<LTSE::Core::EntityComponentSystem::Components::RayTracingTargetComponent,
-            LTSE::Core::EntityComponentSystem::Components::StaticMeshComponent>(
+        a_Scene->ForEach<LTSE::Core::EntityComponentSystem::Components::sRayTracingTargetComponent,
+            LTSE::Core::EntityComponentSystem::Components::sStaticMeshComponent>(
             [&]( auto l_Entity, auto& l_Component, auto& aMeshComponent )
             {
                 HitgroupRecord rec     = m_SBT->NewRecordType<HitgroupRecord>( m_RayTracingModule->m_HitProgramGroups[0] );

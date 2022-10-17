@@ -76,7 +76,7 @@ void Update( Timestep ts )
 
     if( g_Animate )
     {
-        auto &l_AnimationComponent = g_Animation.Get<AnimationComponent>();
+        auto &l_AnimationComponent = g_Animation.Get<sAnimationComponent>();
 
         atime += ( (float)ts / 1000.0f );
 
@@ -85,10 +85,10 @@ void Update( Timestep ts )
             sImportedAnimationSampler &sampler = channel.mInterpolation;
 
             Scene::Element lChannelTargetNode = channel.mTargetNode;
-            if( !lChannelTargetNode.Has<AnimatedTransformComponent>() )
-                lChannelTargetNode.Add<AnimatedTransformComponent>();
+            if( !lChannelTargetNode.Has<sAnimatedTransformComponent>() )
+                lChannelTargetNode.Add<sAnimatedTransformComponent>();
 
-            auto &aT = lChannelTargetNode.Get<AnimatedTransformComponent>();
+            auto &aT = lChannelTargetNode.Get<sAnimatedTransformComponent>();
 
             if( sampler.mInputs.size() > sampler.mOutputsVec4.size() )
                 continue;
@@ -274,7 +274,7 @@ class MaterialCombo
         Dropdown.Values = { Entity{} };
 
         uint32_t n = 1;
-        g_World->ForEach<MaterialShaderComponent>(
+        g_World->ForEach<sMaterialShaderComponent>(
             [&]( auto a_Entity, auto &a_Component )
             {
                 Dropdown.Labels.push_back( a_Entity.Get<sTag>().mValue );
@@ -414,9 +414,9 @@ bool RenderUI( ImGuiIO &io )
 
         if( ImGui::CollapsingHeader( "Environment", l_Flags ) )
         {
-            if( g_World->Environment.Has<AmbientLightingComponent>() )
+            if( g_World->Environment.Has<sAmbientLightingComponent>() )
             {
-                auto &l_AmbientLightComponent = g_World->Environment.Get<AmbientLightingComponent>();
+                auto &l_AmbientLightComponent = g_World->Environment.Get<sAmbientLightingComponent>();
                 UI::ColorChooser( "Ambient light color:", 175, l_AmbientLightComponent.Color );
 
                 Text( "Ambient intensity:" );
@@ -427,9 +427,9 @@ bool RenderUI( ImGuiIO &io )
                 UI::Slider( "##ambient_intensity", "%.5f", 0.0f, 0.01f, &l_AmbientLightComponent.Intensity );
             }
 
-            if( g_World->Environment.Has<BackgroundComponent>() )
+            if( g_World->Environment.Has<sBackgroundComponent>() )
             {
-                auto &l_BackgroundComponent = g_World->Environment.Get<BackgroundComponent>();
+                auto &l_BackgroundComponent = g_World->Environment.Get<sBackgroundComponent>();
                 UI::ColorChooser( "Background color:", 175, l_BackgroundComponent.Color );
             }
         }
@@ -482,29 +482,29 @@ bool RenderUI( ImGuiIO &io )
                     l_NewPrimitiveComponent.Dirty = true;
                     l_NewPrimitiveComponent.UpdateBuffers( g_EngineLoop->GetGraphicContext() );
                 }
-                if( ImGui::MenuItem( "Static mesh component", NULL, false, !g_SelectedElement.Has<StaticMeshComponent>() ) )
+                if( ImGui::MenuItem( "Static mesh component", NULL, false, !g_SelectedElement.Has<sStaticMeshComponent>() ) )
                 {
-                    g_SelectedElement.Add<StaticMeshComponent>();
+                    g_SelectedElement.Add<sStaticMeshComponent>();
                 }
                 ImGui::Separator();
-                if( ImGui::MenuItem( "Directional light component", NULL, false, !g_SelectedElement.Has<DirectionalLightComponent>() ) )
+                if( ImGui::MenuItem( "Directional light component", NULL, false, !g_SelectedElement.Has<sDirectionalLightComponent>() ) )
                 {
-                    g_SelectedElement.Add<DirectionalLightComponent>();
+                    g_SelectedElement.Add<sDirectionalLightComponent>();
                 }
-                if( ImGui::MenuItem( "Point light component", NULL, false, !g_SelectedElement.Has<PointLightComponent>() ) )
+                if( ImGui::MenuItem( "Point light component", NULL, false, !g_SelectedElement.Has<sPointLightComponent>() ) )
                 {
-                    g_SelectedElement.Add<PointLightComponent>();
+                    g_SelectedElement.Add<sPointLightComponent>();
                 }
-                if( ImGui::MenuItem( "spotlight component", NULL, false, !g_SelectedElement.Has<SpotlightComponent>() ) )
+                if( ImGui::MenuItem( "spotlight component", NULL, false, !g_SelectedElement.Has<sSpotlightComponent>() ) )
                 {
-                    g_SelectedElement.Add<SpotlightComponent>();
+                    g_SelectedElement.Add<sSpotlightComponent>();
                 }
                 ImGui::Separator();
-                if( ImGui::MenuItem( "Particle system", NULL, false, !g_SelectedElement.Has<ParticleSystemComponent>() ) )
+                if( ImGui::MenuItem( "Particle system", NULL, false, !g_SelectedElement.Has<sParticleSystemComponent>() ) )
                 {
-                    g_SelectedElement.Add<ParticleSystemComponent>();
+                    g_SelectedElement.Add<sParticleSystemComponent>();
 
-                    auto &l_ParticleShaderConfiguration     = g_SelectedElement.Add<ParticleShaderComponent>();
+                    auto &l_ParticleShaderConfiguration     = g_SelectedElement.Add<sParticleShaderComponent>();
                     l_ParticleShaderConfiguration.LineWidth = 1.0f;
 
                     ParticleRendererCreateInfo l_RendererCreateInfo{};
@@ -515,12 +515,12 @@ bool RenderUI( ImGuiIO &io )
 
             if( ImGui::CollapsingHeader( "Ray tracing", l_Flags ) )
             {
-                bool l_RT = g_SelectedElement.Has<RayTracingTargetComponent>();
+                bool l_RT = g_SelectedElement.Has<sRayTracingTargetComponent>();
                 ImGui::Checkbox( "Mark as ray tracing target", &l_RT );
                 if( l_RT )
                     g_World->MarkAsRayTracingTarget( g_SelectedElement );
                 else
-                    g_SelectedElement.TryRemove<RayTracingTargetComponent>();
+                    g_SelectedElement.TryRemove<sRayTracingTargetComponent>();
             }
 
             if( ImGui::CollapsingHeader( "Hierarchy", l_Flags ) )
@@ -586,7 +586,7 @@ bool RenderUI( ImGuiIO &io )
                 l_Segments.ValueChooser.MaxValue = 128;
                 l_Segments.ValueChooser.Format   = "%d";
 
-                g_SelectedElement.IfExists<StaticMeshComponent>(
+                g_SelectedElement.IfExists<sStaticMeshComponent>(
                     [&]( auto &l_Component )
                     {
                         Text( "Static mesh" );
@@ -765,9 +765,9 @@ bool RenderUI( ImGuiIO &io )
                 l_IntensityEditor.ValueChooser.MaxValue = 50.0f;
                 l_IntensityEditor.ValueChooser.Format   = "%.2f";
 
-                if( g_SelectedElement.Has<DirectionalLightComponent>() )
+                if( g_SelectedElement.Has<sDirectionalLightComponent>() )
                 {
-                    auto &l_LightComponent = g_SelectedElement.Get<DirectionalLightComponent>();
+                    auto &l_LightComponent = g_SelectedElement.Get<sDirectionalLightComponent>();
 
                     l_AzimuthEditor.Display( &l_LightComponent.Azimuth );
 
@@ -780,18 +780,18 @@ bool RenderUI( ImGuiIO &io )
                     l_IntensityEditor.Display( &l_LightComponent.Intensity );
                 }
 
-                if( g_SelectedElement.Has<PointLightComponent>() )
+                if( g_SelectedElement.Has<sPointLightComponent>() )
                 {
-                    auto &l_LightComponent = g_SelectedElement.Get<PointLightComponent>();
+                    auto &l_LightComponent = g_SelectedElement.Get<sPointLightComponent>();
                     UI::VectorComponentEditor( "Position:", l_LightComponent.Position, 0.0, 100 );
                     UI::ColorChooser( "Color:", 125, l_LightComponent.Color );
 
                     l_IntensityEditor.Display( &l_LightComponent.Intensity );
                 }
 
-                if( g_SelectedElement.Has<SpotlightComponent>() )
+                if( g_SelectedElement.Has<sSpotlightComponent>() )
                 {
-                    auto &l_LightComponent = g_SelectedElement.Get<SpotlightComponent>();
+                    auto &l_LightComponent = g_SelectedElement.Get<sSpotlightComponent>();
 
                     UI::VectorComponentEditor( "Position:", l_LightComponent.Position, 0.0, 100 );
 
@@ -810,7 +810,7 @@ bool RenderUI( ImGuiIO &io )
 
             if( ImGui::CollapsingHeader( "Skeleton", l_Flags ) )
             {
-                g_SelectedElement.IfExists<SkeletonComponent>(
+                g_SelectedElement.IfExists<sSkeletonComponent>(
                     [&]( auto &l_Component ) {
 
                     } );
@@ -818,7 +818,7 @@ bool RenderUI( ImGuiIO &io )
 
             if( ImGui::CollapsingHeader( "Animation", l_Flags ) )
             {
-                g_SelectedElement.IfExists<AnimationComponent>( [&]( auto &l_Component ) { Text( "AnimationComponent" ); } );
+                g_SelectedElement.IfExists<sAnimationComponent>( [&]( auto &l_Component ) { Text( "sAnimationComponent" ); } );
 
                 g_SelectedElement.IfExists<AnimationChooser>( [&]( auto &l_Component ) { Text( "AnimationChooser" ); } );
             }
@@ -835,7 +835,7 @@ bool RenderUI( ImGuiIO &io )
     {
         Text( "Materials" );
         static bool IsSelected = false;
-        g_World->ForEach<MaterialShaderComponent>(
+        g_World->ForEach<sMaterialShaderComponent>(
             [&]( auto a_Entity, auto &a_Component )
             {
                 if( ImGui ::Selectable( a_Entity.Get<sTag>().mValue.c_str() ) )
@@ -956,7 +956,7 @@ int main( int argc, char **argv )
 
     math::vec2 l_ViewportSize = g_EngineLoop->GetViewportSize();
 
-    CameraComponent l_CameraConfiguration;
+    sCameraComponent l_CameraConfiguration;
     l_CameraConfiguration.Position    = math::vec3( 0.0f, 1.5f, 3.5f );
     l_CameraConfiguration.Near        = 0.01f;
     l_CameraConfiguration.Far         = 1000.0f;
@@ -964,7 +964,7 @@ int main( int argc, char **argv )
     l_CameraConfiguration.FieldOfView = 90.0f;
 
     auto l_Camera = g_World->CreateEntity( "Camera" );
-    l_Camera.Add<CameraComponent>( l_CameraConfiguration );
+    l_Camera.Add<sCameraComponent>( l_CameraConfiguration );
     g_World->CurrentCamera = l_Camera;
 
     g_WorldRenderer->View.Projection     = g_World->GetProjection();
@@ -986,7 +986,7 @@ int main( int argc, char **argv )
     // math::mat4 l_Transform = math::Rotation( 0.0_degf, math::vec3( 1.0f, 0.0f, 0.0f ) );
     // g_World->LoadModel( lImporter, l_Transform );
 
-    g_World->ForEach<AnimationComponent>( [&]( auto e, auto &c ) { lAnimations.push_back( e ); } );
+    g_World->ForEach<sAnimationComponent>( [&]( auto e, auto &c ) { lAnimations.push_back( e ); } );
 
     if( lAnimations.size() > 0 )
     {
