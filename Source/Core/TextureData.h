@@ -94,7 +94,7 @@ namespace LTSE::Core
 
         void SaveTo( fs::path const &aImagePath );
 
-        std::vector<char> Serialize(  );
+        std::vector<char> Serialize(  ) const;
 
       private:
         // Common initialization for all constructor versions.

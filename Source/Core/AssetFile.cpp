@@ -72,4 +72,116 @@ namespace LTSE::Core
         return { lTextureData, lSampler };
     }
 
+    std::vector<char> BinaryAsset::Package( TextureData2D const &aData, TextureSampler2D const &aSampler )
+    {
+
+        uint32_t lHeaderSize = 0;
+        lHeaderSize +=
+            sizeof( eSamplerFilter ) + sizeof( eSamplerFilter ) + sizeof( eSamplerMipmap ) + sizeof( eSamplerWrapping );
+        lHeaderSize += 2 * sizeof( float );
+        lHeaderSize += 2 * sizeof( float );
+        lHeaderSize += 4 * sizeof( float );
+
+        auto     lKTXData    = aData.Serialize();
+        uint32_t lPacketSize = lKTXData.size() + lHeaderSize;
+
+        std::vector<char> lPacket( lPacketSize );
+
+        auto *lPtr = lPacket.data();
+        std::memcpy( lPtr, &aSampler.mSamplingSpec.mMinification, sizeof( eSamplerFilter ) );
+        lPtr += sizeof( eSamplerFilter );
+        std::memcpy( lPtr, &aSampler.mSamplingSpec.mMagnification, sizeof( eSamplerFilter ) );
+        lPtr += sizeof( eSamplerFilter );
+        std::memcpy( lPtr, &aSampler.mSamplingSpec.mMip, sizeof( eSamplerMipmap ) );
+        lPtr += sizeof( eSamplerMipmap );
+        std::memcpy( lPtr, &aSampler.mSamplingSpec.mWrapping, sizeof( eSamplerWrapping ) );
+        lPtr += sizeof( eSamplerWrapping );
+
+        std::memcpy( lPtr, &aSampler.mSamplingSpec.mScaling[0], sizeof( float ) );
+        lPtr += sizeof( float );
+        std::memcpy( lPtr, &aSampler.mSamplingSpec.mScaling[1], sizeof( float ) );
+        lPtr += sizeof( float );
+
+        std::memcpy( lPtr, &aSampler.mSamplingSpec.mOffset[0], sizeof( float ) );
+        lPtr += sizeof( float );
+        std::memcpy( lPtr, &aSampler.mSamplingSpec.mOffset[1], sizeof( float ) );
+        lPtr += sizeof( float );
+
+        std::memcpy( lPtr, &aSampler.mSamplingSpec.mBorderColor[0], sizeof( float ) );
+        lPtr += sizeof( float );
+        std::memcpy( lPtr, &aSampler.mSamplingSpec.mBorderColor[1], sizeof( float ) );
+        lPtr += sizeof( float );
+        std::memcpy( lPtr, &aSampler.mSamplingSpec.mBorderColor[2], sizeof( float ) );
+        lPtr += sizeof( float );
+        std::memcpy( lPtr, &aSampler.mSamplingSpec.mBorderColor[3], sizeof( float ) );
+        lPtr += sizeof( float );
+
+        std::memcpy( lPtr, lKTXData.data(), lKTXData.size() );
+
+        return lPacket;
+    }
+
+    std::vector<char> BinaryAsset::Package(
+        std::vector<VertexData> const &aVertexData, std::vector<uint32_t> const &aIndexData )
+    {
+        return {};
+    }
+
+    std::vector<char> BinaryAsset::Package( sMaterial const &aMaterialData ) { return {}; }
+
+    std::vector<char> BinaryAsset::Package( sImportedAnimationSampler const &aMaterialData ) { return {}; }
+
+    void BinaryAsset::Retrieve( uint32_t aIndex, Core::TextureData2D &aData, Core::TextureSampler2D &aSampler )
+    {
+        auto lAssetIndex = mAssetIndex[aIndex];
+        if( lAssetIndex.mType != eAssetType::KTX_TEXTURE_2D ) throw std::runtime_error( "Binary data type mismatch" );
+
+        Seek( lAssetIndex.mByteStart );
+
+        sTextureSamplingInfo lSamplerCreateInfo{};
+        lSamplerCreateInfo.mMinification   = Read<eSamplerFilter>();
+        lSamplerCreateInfo.mMagnification  = Read<eSamplerFilter>();
+        lSamplerCreateInfo.mMip            = Read<eSamplerMipmap>();
+        lSamplerCreateInfo.mWrapping       = Read<eSamplerWrapping>();
+        lSamplerCreateInfo.mScaling[0]     = Read<float>();
+        lSamplerCreateInfo.mScaling[1]     = Read<float>();
+        lSamplerCreateInfo.mOffset[0]      = Read<float>();
+        lSamplerCreateInfo.mOffset[1]      = Read<float>();
+        lSamplerCreateInfo.mBorderColor[0] = Read<float>();
+        lSamplerCreateInfo.mBorderColor[1] = Read<float>();
+        lSamplerCreateInfo.mBorderColor[2] = Read<float>();
+        lSamplerCreateInfo.mBorderColor[3] = Read<float>();
+
+        uint32_t lKTXDataSize = lAssetIndex.mByteEnd - static_cast<uint32_t>( CurrentPosition() );
+
+        auto lData = Read<char>( lKTXDataSize );
+
+        aData    = TextureData2D( lData.data(), lData.size() );
+        aSampler = TextureSampler2D( aData, lSamplerCreateInfo );
+    }
+
+    void BinaryAsset::Retrieve( uint32_t aIndex, std::vector<VertexData> &aVertexData, std::vector<uint32_t> &aIndexData )
+    {
+        auto lAssetIndex = mAssetIndex[aIndex];
+        if( lAssetIndex.mType != eAssetType::MESH_DATA ) throw std::runtime_error( "Binary data type mismatch" );
+
+        Seek( lAssetIndex.mByteStart );
+    }
+
+    void BinaryAsset::Retrieve( uint32_t aIndex, sMaterial &aMaterialData )
+    {
+        auto lAssetIndex = mAssetIndex[aIndex];
+        if( lAssetIndex.mType != eAssetType::MATERIAL_DATA ) throw std::runtime_error( "Binary data type mismatch" );
+
+        Seek( lAssetIndex.mByteStart );
+    }
+
+    void BinaryAsset::Retrieve( uint32_t aIndex, sImportedAnimationSampler &aMaterialData )
+    {
+        auto lAssetIndex = mAssetIndex[aIndex];
+        if( lAssetIndex.mType != eAssetType::ANIMATION_DATA ) throw std::runtime_error( "Binary data type mismatch" );
+
+        Seek( lAssetIndex.mByteStart );
+    }
+
 } // namespace LTSE::Core

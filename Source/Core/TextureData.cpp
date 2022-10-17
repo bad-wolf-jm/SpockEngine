@@ -388,7 +388,7 @@ namespace LTSE::Core
         }
     }
 
-    std::vector<char> TextureData::Serialize()
+    std::vector<char> TextureData::Serialize() const
     {
         std::vector<char> lData;
         gli::save_ktx( mInternalTexture, lData );

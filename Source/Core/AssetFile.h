@@ -14,6 +14,8 @@
 #include <string>
 
 #include "TextureData.h"
+#include "Scene/VertexData.h"
+#include "Scene/Importer/ImporterData.h"
 
 namespace fs = std::filesystem;
 
@@ -24,8 +26,7 @@ namespace LTSE::Core
     {
         UNKNOWN        = 0,
         KTX_TEXTURE_2D = 1,
-        VERTEX_BUFFER  = 2,
-        INDEX_BUFFER   = 3,
+        MESH_DATA      = 2,
         MATERIAL_DATA  = 4,
         ANIMATION_DATA = 5
     };
@@ -82,6 +83,15 @@ namespace LTSE::Core
 
         /// @brief Retrieve the texture stored in the file at index `aIndex`
         std::tuple<TextureData2D, TextureSampler2D> Retrieve( uint32_t aIndex );
+        void Retrieve( uint32_t aIndex, TextureData2D &aData, TextureSampler2D &aSampler );
+        void Retrieve( uint32_t aIndex, std::vector<VertexData> &aVertexData, std::vector<uint32_t> &aIndexData );
+        void Retrieve( uint32_t aIndex, sMaterial &aMaterialData );
+        void Retrieve( uint32_t aIndex, sImportedAnimationSampler &aMaterialData );
+
+        std::vector<char> Package( Core::TextureData2D const &aData, Core::TextureSampler2D const &aSampler );
+        std::vector<char> Package( std::vector<VertexData> const &aVertexData, std::vector<uint32_t> const &aIndexData );
+        std::vector<char> Package( sMaterial const &aMaterialData );
+        std::vector<char> Package( sImportedAnimationSampler const &aMaterialData );
 
       private:
         fs::path      mFilePath   = "";
