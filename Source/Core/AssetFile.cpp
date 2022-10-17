@@ -2,7 +2,8 @@
 
 namespace LTSE::Core
 {
-    static constexpr uint8_t sFileMagic[] = { '@', '%', 'L', 'E', 'D', 'D', 'A', 'R', '_', 'E', 'C', 'H', 'O', '_', 'A', 'S', 'S', 'E', 'T', '@', '%' };
+    static constexpr uint8_t sFileMagic[] = { '@', '%', 'S', 'P', 'O', 'C', 'K', 'E', 'N', 'G', 'I', 'N', 'E', '_', 'S', 'C',
+        'E', 'N', 'E', '_', 'A', 'S', 'S', 'E', 'T', '@', '%' };
 
     BinaryAsset::BinaryAsset( fs::path const &aPath )
         : mFilePath{ aPath }
@@ -13,18 +14,16 @@ namespace LTSE::Core
         mFileExists = mFileStream.good();
         mFileSize   = 0;
 
-        if( !mFileExists )
-            throw std::runtime_error( "Specified file does not exist" );
+        if( !mFileExists ) throw std::runtime_error( "Specified file does not exist" );
 
         mFileStream.seekg( 0, mFileStream.end );
         mFileSize = mFileStream.tellg();
         mFileStream.seekg( 0, mFileStream.beg );
 
-        if( mFileSize < sizeof( sFileMagic ) )
-            throw std::runtime_error( "Wrong file type!!!" );
+        if( mFileSize < sizeof( sFileMagic ) ) throw std::runtime_error( "Wrong file type!!!" );
 
         std::vector<uint8_t> lMagic = Read<uint8_t>( sizeof( sFileMagic ) );
-        if( memcmp( lMagic.data(), sFileMagic, sizeof( sFileMagic ) != 0) )
+        if( memcmp( lMagic.data(), sFileMagic, sizeof( sFileMagic ) != 0 ) )
             throw std::runtime_error( "Magic value does not match!!!" );
 
         mAssetCount = Read<uint32_t>();
@@ -45,8 +44,7 @@ namespace LTSE::Core
     std::tuple<TextureData2D, TextureSampler2D> BinaryAsset::Retrieve( uint32_t aIndex )
     {
         auto lAssetIndex = mAssetIndex[aIndex];
-        if( lAssetIndex.mType != eAssetType::KTX_TEXTURE_2D )
-            throw std::runtime_error( "Binary data type mismatch" );
+        if( lAssetIndex.mType != eAssetType::KTX_TEXTURE_2D ) throw std::runtime_error( "Binary data type mismatch" );
 
         Seek( lAssetIndex.mByteStart );
 
@@ -68,7 +66,7 @@ namespace LTSE::Core
 
         auto lData = Read<char>( lKTXDataSize );
 
-        TextureData2D lTextureData( lData.data(), lData.size() );
+        TextureData2D    lTextureData( lData.data(), lData.size() );
         TextureSampler2D lSampler( lTextureData, lSamplerCreateInfo );
 
         return { lTextureData, lSampler };

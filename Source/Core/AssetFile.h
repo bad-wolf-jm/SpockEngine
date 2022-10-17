@@ -26,7 +26,8 @@ namespace LTSE::Core
         KTX_TEXTURE_2D = 1,
         VERTEX_BUFFER  = 2,
         INDEX_BUFFER   = 3,
-        MATERIAL_DATA  = 4
+        MATERIAL_DATA  = 4,
+        ANIMATION_DATA = 5
     };
 
     struct sAssetIndex
