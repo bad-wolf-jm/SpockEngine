@@ -1154,6 +1154,12 @@ namespace LTSE::Editor
             {
                 // m_NewMaterial.Visible = true;
             }
+            if( UI::MenuItem( fmt::format( "{} Save Scene", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
+            {
+                // m_NewMaterial.Visible = true;
+                World->SaveAs(fs::path("C:\\GitLab\\SpockEngine\\Saved") / "TEST" / "SCENE");
+
+            }
 
             l_RequestQuit = UI::MenuItem( fmt::format( "{} Exit", ICON_FA_WINDOW_CLOSE_O ).c_str(), NULL );
             ImGui::EndMenu();

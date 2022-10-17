@@ -8,10 +8,9 @@
 #include <fstream>
 
 #include "Core/AssetFile.h"
-#include "Serialize/FileIO.h"
+#include "Scene/Serialize/FileIO.h"
 
 using namespace LTSE::Core;
-using namespace LTSE::SensorModel;
 
 sImageData LoadBinData( fs::path const &aPath )
 {
