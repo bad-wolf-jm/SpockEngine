@@ -771,7 +771,24 @@ namespace LTSE::Core
     void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, CameraComponent const &aComponent )
     {
         aOut.WriteKey( aName );
-        aOut.WriteNull();
+        aOut.BeginMap( true );
+        aOut.WriteKey( "Position" );
+        aOut.Write( aComponent.Position, { "x", "y", "z" } );
+        aOut.WriteKey( "Pitch" );
+        aOut.Write( aComponent.Pitch );
+        aOut.WriteKey( "Yaw" );
+        aOut.Write( aComponent.Yaw );
+        aOut.WriteKey( "Roll" );
+        aOut.Write( aComponent.Roll );
+        aOut.WriteKey( "Near" );
+        aOut.Write( aComponent.Near );
+        aOut.WriteKey( "Far" );
+        aOut.Write( aComponent.Far );
+        aOut.WriteKey( "FieldOfView" );
+        aOut.Write( aComponent.FieldOfView );
+        aOut.WriteKey( "AspectRatio" );
+        aOut.Write( aComponent.AspectRatio );
+        aOut.EndMap();
     }
 
     void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, AnimationChooser const &aComponent )
@@ -803,23 +820,31 @@ namespace LTSE::Core
         for( auto &lAnimationChannel : aComponent.mChannels )
         {
             aOut.BeginMap();
-            aOut.WriteKey( "mChannelID" );
-            aOut.Write( (uint32_t)lAnimationChannel.mChannelID );
-            aOut.WriteKey( "mTargetNode" );
-            aOut.Write( lAnimationChannel.mTargetNode.Get<sUUID>().mValue.str() );
-            aOut.WriteKey( "mInterpolation" );
-            aOut.BeginMap();
-            aOut.WriteKey( "mInterpolation", (uint32_t)lAnimationChannel.mInterpolation.mInterpolation );
-            aOut.WriteKey( "mInputs" );
-            aOut.BeginSequence( true );
-            for( auto &x : lAnimationChannel.mInterpolation.mInputs ) aOut.Write( x );
-            aOut.EndSequence();
-            aOut.WriteKey( "mOutputsVec4" );
-            aOut.BeginSequence( true );
-            for( auto &x : lAnimationChannel.mInterpolation.mOutputsVec4 ) aOut.Write( x, { "x", "y", "z", "w" } );
-            aOut.EndSequence();
-
-            aOut.EndMap();
+            {
+                aOut.WriteKey( "mChannelID" );
+                aOut.Write( (uint32_t)lAnimationChannel.mChannelID );
+                aOut.WriteKey( "mTargetNode" );
+                aOut.Write( lAnimationChannel.mTargetNode.Get<sUUID>().mValue.str() );
+                aOut.WriteKey( "mInterpolation" );
+                aOut.BeginMap();
+                {
+                    aOut.WriteKey( "mInterpolation", (uint32_t)lAnimationChannel.mInterpolation.mInterpolation );
+                    aOut.WriteKey( "mInputs" );
+                    aOut.BeginSequence( true );
+                    {
+                        for( auto &x : lAnimationChannel.mInterpolation.mInputs ) aOut.Write( x );
+                    }
+                    aOut.EndSequence();
+                    aOut.WriteKey( "mOutputsVec4" );
+                    aOut.BeginSequence( true );
+                    {
+                        for( auto &x : lAnimationChannel.mInterpolation.mOutputsVec4 )
+                            aOut.Write( x, { "x", "y", "z", "w" } );
+                    }
+                    aOut.EndSequence();
+                }
+                aOut.EndMap();
+            }
             aOut.EndMap();
         }
         aOut.EndSequence();
@@ -830,12 +855,14 @@ namespace LTSE::Core
     void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, AnimatedTransformComponent const &aComponent )
     {
         aOut.WriteKey( aName );
+        aOut.BeginMap();
         aOut.WriteKey( "Translation" );
         aOut.Write( aComponent.Translation, { "x", "y", "z" } );
         aOut.WriteKey( "Scaling" );
         aOut.Write( aComponent.Scaling, { "x", "y", "z" } );
         aOut.WriteKey( "Rotation" );
         aOut.Write( aComponent.Rotation, { "x", "y", "z", "w" } );
+        aOut.EndMap();
     }
 
     void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, LocalTransformComponent const &aComponent )
