@@ -192,6 +192,9 @@ namespace LTSE::Core
         void BeginMap();
 
         /// @brief Write a key/value pair
+        void WriteKey( uint32_t const &aKey ) { mOut << YAML::Key << aKey << YAML::Value; }
+
+        /// @brief Write a key/value pair
         void WriteKey( std::string const &aKey ) { mOut << YAML::Key << aKey << YAML::Value; }
 
         /// @brief Write the value part of a key/value pair
@@ -246,13 +249,13 @@ namespace LTSE::Core
         /// @param aKeys Keys to use for the individual vector components
         ///
         void Write( math::vec4 const &aVector, std::array<std::string, 4> const &aKeys );
+        void Write( math::quat const &aVector, std::array<std::string, 4> const &aKeys );
 
         template <typename _Ty>
         void Write( _Ty const &aElement )
         {
             mOut << aElement;
         }
-
 
         template <>
         void Write( math::mat4 const &aVector )
@@ -262,7 +265,6 @@ namespace LTSE::Core
                 for( uint32_t r = 0; r < 4; r++ ) mOut << aVector[c][r];
             EndSequence();
         }
-
 
         /// @brief Write Null
         void WriteNull();

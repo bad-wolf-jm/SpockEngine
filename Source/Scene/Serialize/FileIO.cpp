@@ -99,6 +99,15 @@ namespace LTSE::Core
         EndMap();
     }
 
+    void ConfigurationWriter::Write( math::quat const &aVector, std::array<std::string, 4> const &aKeys )
+    {
+        BeginMap( true );
+        WriteKey( aKeys[0], aVector.x );
+        WriteKey( aKeys[1], aVector.y );
+        WriteKey( aKeys[2], aVector.z );
+        WriteKey( aKeys[3], aVector.w );
+        EndMap();
+    }
 
     void ConfigurationWriter::WriteNull() { mOut << YAML::Null; }
 

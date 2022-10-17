@@ -774,16 +774,68 @@ namespace LTSE::Core
         aOut.WriteNull();
     }
 
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, AnimationChooser const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.BeginSequence( true );
+        for( auto &lAnimationEntity : aComponent.Animations )
+        {
+            if( lAnimationEntity ) aOut.Write( lAnimationEntity.Get<sUUID>().mValue.str() );
+        }
+
+        aOut.EndSequence();
+    }
+
     void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, AnimationComponent const &aComponent )
     {
         aOut.WriteKey( aName );
-        aOut.WriteNull();
+        aOut.BeginMap();
+        aOut.WriteKey( "Duration" );
+        aOut.Write( aComponent.Duration );
+        aOut.WriteKey( "TickCount" );
+        aOut.Write( aComponent.TickCount );
+        aOut.WriteKey( "TicksPerSecond" );
+        aOut.Write( aComponent.TicksPerSecond );
+        aOut.WriteKey( "CurrentTick" );
+        aOut.Write( aComponent.CurrentTick );
+        aOut.WriteKey( "mChannels" );
+        aOut.BeginSequence();
+        for( auto &lAnimationChannel : aComponent.mChannels )
+        {
+            aOut.BeginMap();
+            aOut.WriteKey( "mChannelID" );
+            aOut.Write( (uint32_t)lAnimationChannel.mChannelID );
+            aOut.WriteKey( "mTargetNode" );
+            aOut.Write( lAnimationChannel.mTargetNode.Get<sUUID>().mValue.str() );
+            aOut.WriteKey( "mInterpolation" );
+            aOut.BeginMap();
+            aOut.WriteKey( "mInterpolation", (uint32_t)lAnimationChannel.mInterpolation.mInterpolation );
+            aOut.WriteKey( "mInputs" );
+            aOut.BeginSequence( true );
+            for( auto &x : lAnimationChannel.mInterpolation.mInputs ) aOut.Write( x );
+            aOut.EndSequence();
+            aOut.WriteKey( "mOutputsVec4" );
+            aOut.BeginSequence( true );
+            for( auto &x : lAnimationChannel.mInterpolation.mOutputsVec4 ) aOut.Write( x, { "x", "y", "z", "w" } );
+            aOut.EndSequence();
+
+            aOut.EndMap();
+            aOut.EndMap();
+        }
+        aOut.EndSequence();
+
+        aOut.EndMap();
     }
 
     void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, AnimatedTransformComponent const &aComponent )
     {
         aOut.WriteKey( aName );
-        aOut.WriteNull();
+        aOut.WriteKey( "Translation" );
+        aOut.Write( aComponent.Translation, { "x", "y", "z" } );
+        aOut.WriteKey( "Scaling" );
+        aOut.Write( aComponent.Scaling, { "x", "y", "z" } );
+        aOut.WriteKey( "Rotation" );
+        aOut.Write( aComponent.Rotation, { "x", "y", "z", "w" } );
     }
 
     void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, LocalTransformComponent const &aComponent )
@@ -916,7 +968,7 @@ namespace LTSE::Core
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
         aOut.WriteKey( "Color" );
-        aOut.Write( aComponent.Color, { "r", "g", "b"} );
+        aOut.Write( aComponent.Color, { "r", "g", "b" } );
         aOut.EndMap();
     }
 
@@ -927,7 +979,7 @@ namespace LTSE::Core
         aOut.WriteKey( "Intensity" );
         aOut.Write( aComponent.Intensity );
         aOut.WriteKey( "Color" );
-        aOut.Write( aComponent.Color, { "r", "g", "b"} );
+        aOut.Write( aComponent.Color, { "r", "g", "b" } );
         aOut.EndMap();
     }
 
@@ -942,7 +994,7 @@ namespace LTSE::Core
         aOut.WriteKey( "Intensity" );
         aOut.Write( aComponent.Intensity );
         aOut.WriteKey( "Color" );
-        aOut.Write( aComponent.Color, { "r", "g", "b"} );
+        aOut.Write( aComponent.Color, { "r", "g", "b" } );
         aOut.EndMap();
     }
 
@@ -953,9 +1005,9 @@ namespace LTSE::Core
         aOut.WriteKey( "Intensity" );
         aOut.Write( aComponent.Intensity );
         aOut.WriteKey( "Position" );
-        aOut.Write( aComponent.Position, { "x", "y", "z"} );
+        aOut.Write( aComponent.Position, { "x", "y", "z" } );
         aOut.WriteKey( "Color" );
-        aOut.Write( aComponent.Color, { "r", "g", "b"} );
+        aOut.Write( aComponent.Color, { "r", "g", "b" } );
         aOut.EndMap();
     }
 
@@ -964,13 +1016,13 @@ namespace LTSE::Core
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
         aOut.WriteKey( "Position" );
-        aOut.Write( aComponent.Position, { "x", "y", "z"} );
+        aOut.Write( aComponent.Position, { "x", "y", "z" } );
         aOut.WriteKey( "Azimuth" );
         aOut.Write( aComponent.Azimuth );
         aOut.WriteKey( "Elevation" );
         aOut.Write( aComponent.Elevation );
         aOut.WriteKey( "Color" );
-        aOut.Write( aComponent.Color, { "r", "g", "b"} );
+        aOut.Write( aComponent.Color, { "r", "g", "b" } );
         aOut.WriteKey( "Intensity" );
         aOut.Write( aComponent.Intensity );
         aOut.WriteKey( "Cone" );
@@ -1032,6 +1084,7 @@ namespace LTSE::Core
                         WriteComponent<sTag>( lOut, "sTag", aEntity );
                         WriteComponent<sRelationshipComponent>( lOut, "sRelationshipComponent", aEntity );
                         WriteComponent<CameraComponent>( lOut, "CameraComponent", aEntity );
+                        WriteComponent<AnimationChooser>( lOut, "AnimationChooser", aEntity );
                         WriteComponent<AnimationComponent>( lOut, "AnimationComponent", aEntity );
                         WriteComponent<AnimatedTransformComponent>( lOut, "AnimatedTransformComponent", aEntity );
                         WriteComponent<LocalTransformComponent>( lOut, "LocalTransformComponent", aEntity );
