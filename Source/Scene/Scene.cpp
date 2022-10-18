@@ -1385,13 +1385,13 @@ namespace LTSE::Core
             lPackets.push_back( lMaterialData );
         }
 
-        uint32_t i=0;
+        uint32_t i = 0;
         for( auto &lTexture : mMaterialSystem->GetTextures() )
         {
             TextureData2D lTextureData;
             lTexture->GetTextureData( lTextureData );
 
-            auto n = fmt::format("foo_{}.ktx", i++);
+            auto n = fmt::format( "foo_{}.ktx", i++ );
 
             lTextureData.SaveTo( aPath / n );
         }

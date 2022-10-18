@@ -28,20 +28,15 @@ namespace LTSE::Graphics
             math::mat4 lSkinTransform = lVertex.Weights.x * aJointMatrices[int( lVertex.Bones.x ) + lObjectJointOffset] +
                                         lVertex.Weights.y * aJointMatrices[int( lVertex.Bones.y ) + lObjectJointOffset] +
                                         lVertex.Weights.z * aJointMatrices[int( lVertex.Bones.z ) + lObjectJointOffset] +
-                                        lVertex.Weights.w * aJointMatrices[int( lVertex.Bones.w ) + lObjectJointOffset];
 
-            math::mat4 lFinalTransform = lTransform * lSkinTransform;
-
-            aOutTransformedVertices[lObjectOffset + lVertexID] = lVertex;
-
-            aOutTransformedVertices[lObjectOffset + lVertexID].Position = lFinalTransform * lVertex.Position;
+                                        aOutTransformedVertices[lObjectOffset + lVertexID].Position =
+                                            lFinalTransform * lVertex.Position;
             aOutTransformedVertices[lObjectOffset + lVertexID].Normal =
                 normalize( transpose( inverse( mat3( lFinalTransform ) ) ) * lVertex.Normal );
         }
 
         CUDA_KERNEL_DEFINITION void StaticVertexTransform( VertexData *aOutTransformedVertices, VertexData *aVertices,
-            math::mat4 *aObjectToWorldTransform, uint32_t aObjectCount, uint32_t *aObjectOffsets,
-            uint32_t *aObjectVertexCount )
+            math::mat4 *aObjectToWorldTransform, uint32_t aObjectCount, uint32_t *aObjectOffsets, uint32_t *aObjectVertexCount )
         {
             uint32_t lObjectOffset      = aObjectOffsets[blockIdx.x];
             uint32_t lObjectVertexCount = aObjectVertexCount[blockIdx.x];
@@ -61,9 +56,8 @@ namespace LTSE::Graphics
         }
     } // namespace Kernels
 
-    void StaticVertexTransform( VertexData *aOutTransformedVertices, VertexData *aVertices,
-        math::mat4 *aObjectToWorldTransform, uint32_t aObjectCount, uint32_t *aObjectOffsets, uint32_t *aObjectVertexCount,
-        uint32_t aMaxVertexCount )
+    void StaticVertexTransform( VertexData *aOutTransformedVertices, VertexData *aVertices, math::mat4 *aObjectToWorldTransform,
+        uint32_t aObjectCount, uint32_t *aObjectOffsets, uint32_t *aObjectVertexCount, uint32_t aMaxVertexCount )
     {
         int  lBlockCount = ( aMaxVertexCount / LTSE::TensorOps::Private::ThreadsPerBlock ) + 1;
         dim3 lGridDim( aObjectCount, lBlockCount, 1 );
@@ -73,16 +67,16 @@ namespace LTSE::Graphics
             aOutTransformedVertices, aVertices, aObjectToWorldTransform, aObjectCount, aObjectOffsets, aObjectVertexCount );
     }
 
-    void SkinnedVertexTransform( VertexData *aOutTransformedVertices, VertexData *aVertices,
-        math::mat4 *aObjectToWorldTransform, math::mat4 *aJointMatrices, uint32_t *aJointOffsets, uint32_t aObjectCount,
-        uint32_t *aObjectOffsets, uint32_t *aObjectVertexCount, uint32_t aMaxVertexCount )
+    void SkinnedVertexTransform( VertexData *aOutTransformedVertices, VertexData *aVertices, math::mat4 *aObjectToWorldTransform,
+        math::mat4 *aJointMatrices, uint32_t *aJointOffsets, uint32_t aObjectCount, uint32_t *aObjectOffsets,
+        uint32_t *aObjectVertexCount, uint32_t aMaxVertexCount )
     {
         int  lBlockCount = ( aMaxVertexCount / LTSE::TensorOps::Private::ThreadsPerBlock ) + 1;
         dim3 lGridDim( aObjectCount, lBlockCount, 1 );
         dim3 lBlockDim( LTSE::TensorOps::Private::ThreadsPerBlock );
 
-        Kernels::SkinnedVertexTransform<<<lGridDim, lBlockDim>>>( aOutTransformedVertices, aVertices,
-            aObjectToWorldTransform, aJointMatrices, aJointOffsets, aObjectCount, aObjectOffsets, aObjectVertexCount );
+        Kernels::SkinnedVertexTransform<<<lGridDim, lBlockDim>>>( aOutTransformedVertices, aVertices, aObjectToWorldTransform,
+            aJointMatrices, aJointOffsets, aObjectCount, aObjectOffsets, aObjectVertexCount );
     }
 
 } // namespace LTSE::Graphics
