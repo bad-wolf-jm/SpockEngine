@@ -7,6 +7,7 @@
 #include <stack>
 #include <unordered_map>
 
+#include "Core/AssetFile.h"
 #include "Core/Logging.h"
 #include "Core/Memory.h"
 #include "Core/Profiling/BlockTimer.h"
@@ -389,7 +390,7 @@ namespace LTSE::Core
             lTextureIds.push_back( mMaterialSystem->CreateTexture( lTexture.mTexture, lTexture.mSampler ) );
         }
 
-        std::vector<uint32_t>                lMaterialIds        = {};
+        std::vector<uint32_t>                 lMaterialIds        = {};
         std::vector<sMaterialShaderComponent> lMaterialCreateInfo = {};
         for( auto &lMaterial : aModelData->mMaterials )
         {
@@ -656,7 +657,8 @@ namespace LTSE::Core
             {
                 math::mat4 lInverseTransform = math::Inverse( l_ElementToProcess.Get<sTransformMatrixComponent>().Matrix );
 
-                for( uint32_t lJointID = 0; lJointID < l_ElementToProcess.Get<sSkeletonComponent>().Bones.size(); lJointID++ )
+                for( uint32_t lJointID = 0; lJointID < l_ElementToProcess.Get<sSkeletonComponent>().Bones.size();
+                     lJointID++ )
                 {
                     Element    lJoint = l_ElementToProcess.Get<sSkeletonComponent>().Bones[lJointID];
                     math::mat4 lInverseBindMatrix =
@@ -1126,7 +1128,6 @@ namespace LTSE::Core
                         WriteComponent<sBoundingBoxComponent>( lOut, "sBoundingBoxComponent", aEntity );
                         WriteComponent<sRayTracingTargetComponent>( lOut, "sRayTracingTargetComponent", aEntity );
                         WriteComponent<sMaterialComponent>( lOut, "sMaterialComponent", aEntity );
-                        // WriteComponent<RendererComponent>( lOut, "RendererComponent", aEntity );
                         WriteComponent<sMaterialShaderComponent>( lOut, "sMaterialShaderComponent", aEntity );
                         WriteComponent<sBackgroundComponent>( lOut, "sBackgroundComponent", aEntity );
                         WriteComponent<sDirectionalLightComponent>( lOut, "sDirectionalLightComponent", aEntity );
@@ -1141,10 +1142,57 @@ namespace LTSE::Core
             }
             lOut.EndMap();
         }
-
         lOut.EndMap();
-        // Write vertex and index buffer to   aPath / Mesh.dat
+
+        fs::path                       lOutput = aPath / "BinaryData.bin";
+        BinaryAsset                    lBinaryDataFile;
+        std::vector<sAssetIndex>       lAssetIndex{};
+        std::vector<std::vector<char>> lPackets{};
+
+        // Meshes
+        sAssetIndex lMeshAssetIndexEntry{};
+        lMeshAssetIndexEntry.mType      = eAssetType::MESH_DATA;
+        lMeshAssetIndexEntry.mByteStart = 0;
+        lMeshAssetIndexEntry.mByteEnd   = 1;
+        lAssetIndex.push_back( lMeshAssetIndexEntry );
+
+        auto lVertexData = mVertexBufferMemoryHandle.Fetch<VertexData>();
+        auto lIndexData  = mIndexBufferMemoryHandle.Fetch<uint32_t>();
+        auto lMeshData   = lBinaryDataFile.Package( lVertexData, lIndexData );
+        lPackets.push_back( lMeshData );
+
+        // Materials
+        for( auto &lMaterial : mMaterialSystem->GetMaterialData() )
+        {
+            sAssetIndex lMaterialAssetIndexEntry{};
+            lMaterialAssetIndexEntry.mType      = eAssetType::MATERIAL_DATA;
+            lMaterialAssetIndexEntry.mByteStart = 0;
+            lMaterialAssetIndexEntry.mByteEnd   = 1;
+            lAssetIndex.push_back( lMaterialAssetIndexEntry );
+
+            auto lMaterialData = lBinaryDataFile.Package( lMaterial );
+            lPackets.push_back( lMaterialData );
+        }
+
+        uint32_t lAssetCount = static_cast<uint32_t>( lAssetIndex.size() );
+
+        uint32_t lCurrentByte =
+            BinaryAsset::GetMagicLength() + sizeof( uint32_t ) + lAssetIndex.size() * sizeof( sAssetIndex );
+        for( uint32_t i = 0; i < lAssetCount; i++ )
+        {
+            lAssetIndex[i].mByteStart = lCurrentByte;
+            lCurrentByte = lAssetIndex[i].mByteEnd = lAssetIndex[i].mByteStart + static_cast<uint32_t>( lPackets[i].size() );
+        }
+
+        auto *lMagic       = BinaryAsset::GetMagic();
+        auto  lMagicLength = BinaryAsset::GetMagicLength();
+        auto  lOutFile     = std::ofstream( lOutput.string(), std::ofstream::binary );
+        lOutFile.write( (const char *)lMagic, lMagicLength );
+        lOutFile.write( (const char *)&lAssetCount, sizeof( uint32_t ) );
+        lOutFile.write( (const char *)lAssetIndex.data(), lAssetIndex.size() * sizeof( sAssetIndex ) );
+
+        for( auto &lPacket : lPackets ) lOutFile.write( (const char *)lPacket.data(), lPacket.size() );
+
         // Write material system to           aPath / Materials.dat
-        // Write entity registry to yaml file aPath / Scene.yaml
     }
 } // namespace LTSE::Core

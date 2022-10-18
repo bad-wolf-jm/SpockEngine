@@ -74,7 +74,6 @@ namespace LTSE::Core
 
     std::vector<char> BinaryAsset::Package( TextureData2D const &aData, TextureSampler2D const &aSampler )
     {
-
         uint32_t lHeaderSize = 0;
         lHeaderSize +=
             sizeof( eSamplerFilter ) + sizeof( eSamplerFilter ) + sizeof( eSamplerMipmap ) + sizeof( eSamplerWrapping );
@@ -121,16 +120,6 @@ namespace LTSE::Core
         return lPacket;
     }
 
-    std::vector<char> BinaryAsset::Package(
-        std::vector<VertexData> const &aVertexData, std::vector<uint32_t> const &aIndexData )
-    {
-        return {};
-    }
-
-    std::vector<char> BinaryAsset::Package( sMaterial const &aMaterialData ) { return {}; }
-
-    std::vector<char> BinaryAsset::Package( sImportedAnimationSampler const &aMaterialData ) { return {}; }
-
     void BinaryAsset::Retrieve( uint32_t aIndex, Core::TextureData2D &aData, Core::TextureSampler2D &aSampler )
     {
         auto lAssetIndex = mAssetIndex[aIndex];
@@ -160,12 +149,99 @@ namespace LTSE::Core
         aSampler = TextureSampler2D( aData, lSamplerCreateInfo );
     }
 
+    std::vector<char> BinaryAsset::Package(
+        std::vector<VertexData> const &aVertexData, std::vector<uint32_t> const &aIndexData )
+    {
+        uint32_t lHeaderSize = 2 * sizeof( uint32_t );
+        uint32_t lPacketSize =
+            aVertexData.size() * sizeof( VertexData ) + aIndexData.size() * sizeof( uint32_t ) + lHeaderSize;
+
+        std::vector<char> lPacket( lPacketSize );
+
+        uint32_t lVertexByteSize = aVertexData.size() * sizeof( VertexData );
+        uint32_t lIndexByteSize  = aIndexData.size() * sizeof( uint32_t );
+
+        auto *lPtr = lPacket.data();
+        std::memcpy( lPtr, &lVertexByteSize, sizeof( uint32_t ) );
+        lPtr += sizeof( uint32_t );
+        std::memcpy( lPtr, &lIndexByteSize, sizeof( uint32_t ) );
+        lPtr += sizeof( uint32_t );
+        std::memcpy( lPtr, aVertexData.data(), aVertexData.size() * sizeof( VertexData ) );
+        lPtr += aVertexData.size() * sizeof( VertexData );
+        std::memcpy( lPtr, aIndexData.data(), aIndexData.size() * sizeof( uint32_t ) );
+
+        return lPacket;
+    }
+
     void BinaryAsset::Retrieve( uint32_t aIndex, std::vector<VertexData> &aVertexData, std::vector<uint32_t> &aIndexData )
     {
         auto lAssetIndex = mAssetIndex[aIndex];
         if( lAssetIndex.mType != eAssetType::MESH_DATA ) throw std::runtime_error( "Binary data type mismatch" );
 
         Seek( lAssetIndex.mByteStart );
+    }
+
+    std::vector<char> BinaryAsset::Package( sMaterial const &aMaterialData )
+    {
+        uint32_t lHeaderSize = sizeof( uint32_t );
+        uint32_t lPacketSize = sizeof( sMaterial ) - sizeof(std::string) + (sizeof(uint32_t) + aMaterialData.mName.size());
+
+        std::vector<char> lPacket( lPacketSize );
+        auto *lPtr = lPacket.data();
+        uint32_t lNameByteSize = aMaterialData.mName.size();
+
+        std::memcpy( lPtr, &lNameByteSize, sizeof( uint32_t ) );
+        lPtr += sizeof( uint32_t );
+
+        std::memcpy( lPtr, aMaterialData.mName.c_str(), lNameByteSize );
+        lPtr += lNameByteSize;
+
+        std::memcpy( lPtr, &aMaterialData.mID, sizeof(uint32_t) );
+        lPtr += sizeof(uint32_t);
+
+        std::memcpy( lPtr, &aMaterialData.mType, sizeof(uint8_t) );
+        lPtr += sizeof(uint32_t);
+
+        std::memcpy( lPtr, &aMaterialData.mLineWidth, sizeof(float) );
+        lPtr += sizeof(float);
+        std::memcpy( lPtr, &aMaterialData.mIsTwoSided, sizeof(bool) );
+        lPtr += sizeof(bool);
+        std::memcpy( lPtr, &aMaterialData.mUseAlphaMask, sizeof(bool) );
+        lPtr += sizeof(bool);
+        std::memcpy( lPtr, &aMaterialData.mAlphaThreshold, sizeof(float) );
+        lPtr += sizeof(float);
+
+        std::memcpy( lPtr, &aMaterialData.mBaseColorFactor, sizeof(math::vec4) );
+        lPtr += sizeof(float);
+
+        std::memcpy( lPtr, &aMaterialData.mBaseColorTexture, sizeof(sTextureReference) );
+        lPtr += sizeof(float);
+
+        std::memcpy( lPtr, &aMaterialData.mEmissiveFactor, sizeof(math::vec4) );
+        lPtr += sizeof(float);
+
+        std::memcpy( lPtr, &aMaterialData.mEmissiveTexture, sizeof(sTextureReference) );
+        lPtr += sizeof(float);
+
+        std::memcpy( lPtr, &aMaterialData.mRoughnessFactor, sizeof(float) );
+        lPtr += sizeof(float);
+
+        std::memcpy( lPtr, &aMaterialData.mMetallicFactor, sizeof(float) );
+        lPtr += sizeof(float);
+
+        std::memcpy( lPtr, &aMaterialData.mMetalRoughTexture, sizeof(sTextureReference) );
+        lPtr += sizeof(float);
+
+        std::memcpy( lPtr, &aMaterialData.mOcclusionStrength, sizeof(float) );
+        lPtr += sizeof(float);
+
+        std::memcpy( lPtr, &aMaterialData.mOcclusionTexture, sizeof(sTextureReference) );
+        lPtr += sizeof(float);
+
+        std::memcpy( lPtr, &aMaterialData.mNormalsTexture, sizeof(sTextureReference) );
+        lPtr += sizeof(float);
+
+        return lPacket;
     }
 
     void BinaryAsset::Retrieve( uint32_t aIndex, sMaterial &aMaterialData )
@@ -175,6 +251,8 @@ namespace LTSE::Core
 
         Seek( lAssetIndex.mByteStart );
     }
+
+    std::vector<char> BinaryAsset::Package( sImportedAnimationSampler const &aMaterialData ) { return {}; }
 
     void BinaryAsset::Retrieve( uint32_t aIndex, sImportedAnimationSampler &aMaterialData )
     {
