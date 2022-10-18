@@ -8,7 +8,7 @@ AlignOperands: 'true'
 AlignTrailingComments: 'true'
 AlignEscapedNewlines: Left
 BreakBeforeBraces: Allman
-ColumnLimit: '125'
+ColumnLimit: '135'
 Language: Cpp
 IndentPPDirectives: AfterHash
 NamespaceIndentation: All

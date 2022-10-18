@@ -89,25 +89,26 @@ namespace LTSE::Graphics
         uint32_t Width    = 0;
         uint32_t Height   = 0;
         uint32_t MipLevel = 1;
-        size_t Size       = 0;
+        size_t   Size     = 0;
     };
 
     /** @brief */
     struct TextureDescription
     {
-        bool ExternalImage                      = false; /**!< */
-        bool IsHostVisible                      = false;
-        TextureUsage Usage                      = { TextureUsageFlags::SAMPLED };
-        TextureAspectMask AspectMask            = { TextureAspectMaskBits::COLOR };
-        SamplerFilter MinificationFilter        = SamplerFilter::LINEAR;
-        SamplerFilter MagnificationFilter       = SamplerFilter::LINEAR;
-        SamplerMipmap MipmapMode                = SamplerMipmap::LINEAR;
-        SamplerWrapping WrappingMode            = SamplerWrapping::CLAMP_TO_BORDER;
-        eColorFormat Format                     = eColorFormat::RGBA8_UNORM;
-        std::vector<Mip> MipLevels              = {};
-        bool Sampled                            = false;
-        uint8_t SampleCount                     = 1;
-        std::array<Swizzle, 4> ComponentSwizzle = { Swizzle::IDENTITY, Swizzle::IDENTITY, Swizzle::IDENTITY, Swizzle::IDENTITY }; /**!< */
+        bool                   ExternalImage       = false; /**!< */
+        bool                   IsHostVisible       = false;
+        TextureUsage           Usage               = { TextureUsageFlags::SAMPLED };
+        TextureAspectMask      AspectMask          = { TextureAspectMaskBits::COLOR };
+        SamplerFilter          MinificationFilter  = SamplerFilter::LINEAR;
+        SamplerFilter          MagnificationFilter = SamplerFilter::LINEAR;
+        SamplerMipmap          MipmapMode          = SamplerMipmap::LINEAR;
+        SamplerWrapping        WrappingMode        = SamplerWrapping::CLAMP_TO_BORDER;
+        eColorFormat           Format              = eColorFormat::RGBA8_UNORM;
+        std::vector<Mip>       MipLevels           = {};
+        bool                   Sampled             = false;
+        uint8_t                SampleCount         = 1;
+        std::array<Swizzle, 4> ComponentSwizzle    = {
+            Swizzle::IDENTITY, Swizzle::IDENTITY, Swizzle::IDENTITY, Swizzle::IDENTITY }; /**!< */
 
         TextureDescription()                       = default;
         TextureDescription( TextureDescription & ) = default;
@@ -117,7 +118,7 @@ namespace LTSE::Graphics
     struct TextureData
     {
         size_t ByteSize; /**!< */
-        void *Data;      /**!< */
+        void  *Data;     /**!< */
 
         TextureData()                = default;
         TextureData( TextureData & ) = default;
@@ -139,7 +140,8 @@ namespace LTSE::Graphics
         Texture2D( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription, sImageData &a_ImageData );
 
         /** @brief */
-        Texture2D( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription, gli::texture2d &a_CubeMapData );
+        Texture2D(
+            GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription, gli::texture2d &a_CubeMapData );
 
         /** @brief */
         Texture2D( GraphicContext &a_GraphicContext, TextureData2D &a_CubeMapData, TextureSampler2D &aSamplingInfo );
@@ -148,7 +150,8 @@ namespace LTSE::Graphics
         Texture2D( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription );
 
         /** @brief */
-        Texture2D( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription, Ref<Internal::sVkFramebufferImage> a_FramebufferImage );
+        Texture2D( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription,
+            Ref<Internal::sVkFramebufferImage> a_FramebufferImage );
 
         /** @brief */
         ~Texture2D() = default;
@@ -167,6 +170,8 @@ namespace LTSE::Graphics
         /** @brief */
         inline VkSampler GetSampler() { return m_TextureSamplerObject->mVkObject; }
 
+        void GetTextureData( TextureData2D &aTextureData );
+
       private:
         void TransitionImageLayout( VkImageLayout oldLayout, VkImageLayout newLayout );
         void CopyBufferToImage( Buffer &a_Buffer );
@@ -176,8 +181,8 @@ namespace LTSE::Graphics
       private:
         GraphicContext mGraphicContext{};
 
-        Ref<Internal::sVkImageObject> m_TextureImageObject          = nullptr;
+        Ref<Internal::sVkImageObject>        m_TextureImageObject   = nullptr;
         Ref<Internal::sVkImageSamplerObject> m_TextureSamplerObject = nullptr;
-        Ref<Internal::sVkImageViewObject> m_TextureView             = nullptr;
+        Ref<Internal::sVkImageViewObject>    m_TextureView          = nullptr;
     };
 } // namespace LTSE::Graphics

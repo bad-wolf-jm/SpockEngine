@@ -18,8 +18,8 @@ namespace LTSE::Graphics::Internal
     {
         VkCommandBuffer mVkObject = VK_NULL_HANDLE;
 
-        sVkCommandBufferObject()                          = default;
-        sVkCommandBufferObject( sVkCommandBufferObject& ) = default;
+        sVkCommandBufferObject()                           = default;
+        sVkCommandBufferObject( sVkCommandBufferObject & ) = default;
         sVkCommandBufferObject( Ref<VkContext> aContext );
         sVkCommandBufferObject( Ref<VkContext> aContext, VkCommandBuffer aCommandBuffer );
 
@@ -49,19 +49,23 @@ namespace LTSE::Graphics::Internal
 
         void CopyBuffer( VkBuffer aSource, VkBuffer aDest );
         void CopyBuffer( VkBuffer aSource, uint32_t aSourceOffset, uint32_t aSize, VkBuffer aDest, uint32_t aDestOffset );
-        void CopyBuffer( VkBuffer aSource, Ref<sVkImageObject> aDestination, sImageRegion const& aBufferRegion,
-            sImageRegion const& aImageRegion );
+        void CopyBuffer( VkBuffer aSource, Ref<sVkImageObject> aDestination, sImageRegion const &aBufferRegion,
+            sImageRegion const &aImageRegion );
         void CopyBuffer( VkBuffer aSource, Ref<sVkImageObject> aDestination, std::vector<sImageRegion> aBufferRegions,
-            sImageRegion const& aImageRegion );
+            sImageRegion const &aImageRegion );
 
-        void CopyImage( Ref<sVkImageObject> aSource, sImageRegion const& aSourceRegion, Ref<sVkImageObject> aDestination,
-            sImageRegion const& aDestRegion );
+        void CopyImage( Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion, Ref<sVkImageObject> aDestination,
+            sImageRegion const &aDestRegion );
+
+        void CopyImage( Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion, VkBuffer aDestination,
+            sImageRegion const &aDestRegion );
 
         template <typename T>
-        void PushConstants( VkShaderStageFlags aShaderStages, uint32_t aOffset, const T& aValue,
+        void PushConstants( VkShaderStageFlags aShaderStages, uint32_t aOffset, const T &aValue,
             Ref<sVkPipelineLayoutObject> aPipelineLayout )
         {
-            vkCmdPushConstants( mVkObject, aPipelineLayout->mVkObject, aShaderStages, aOffset, sizeof( T ), (void*)&aValue );
+            vkCmdPushConstants(
+                mVkObject, aPipelineLayout->mVkObject, aShaderStages, aOffset, sizeof( T ), (void *)&aValue );
         }
 
         void End();

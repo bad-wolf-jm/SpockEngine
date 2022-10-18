@@ -200,8 +200,8 @@ namespace LTSE::Core
         mIndexBufferMemoryHandle = aSource->mIndexBufferMemoryHandle;
 
         // Create the transformed vertex buffer and its CUDA handle
-        mTransformedVertexBuffer = New<Buffer>(
-            mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, true, true, true, mVertexBuffer->SizeAs<uint8_t>() );
+        mTransformedVertexBuffer =
+            New<Buffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, true, true, true, mVertexBuffer->SizeAs<uint8_t>() );
         mTransformedVertexBufferMemoryHandle =
             Cuda::GPUExternalMemory( *mTransformedVertexBuffer, mTransformedVertexBuffer->SizeAs<uint8_t>() );
 
@@ -266,8 +266,7 @@ namespace LTSE::Core
         auto &lParent = aEntity.Get<sRelationshipComponent>().mParent;
 
         if( lParent && lParent.Has<sTransformMatrixComponent>() )
-            aEntity.AddOrReplace<sTransformMatrixComponent>(
-                lParent.Get<sTransformMatrixComponent>().Matrix * aComponent.mMatrix );
+            aEntity.AddOrReplace<sTransformMatrixComponent>( lParent.Get<sTransformMatrixComponent>().Matrix * aComponent.mMatrix );
         else
             aEntity.AddOrReplace<sTransformMatrixComponent>( aComponent.mMatrix );
 
@@ -282,8 +281,7 @@ namespace LTSE::Core
         {
             if( lChild.Has<sLocalTransformComponent>() )
             {
-                lChild.AddOrReplace<sTransformMatrixComponent>(
-                    aComponent.Matrix * lChild.Get<sLocalTransformComponent>().mMatrix );
+                lChild.AddOrReplace<sTransformMatrixComponent>( aComponent.Matrix * lChild.Get<sLocalTransformComponent>().mMatrix );
 
                 UpdateTransformMatrix( lChild, lChild.Get<sTransformMatrixComponent>() );
             }
@@ -346,10 +344,7 @@ namespace LTSE::Core
         return l_CameraPosition;
     }
 
-    Scene::Element Scene::Create( std::string a_Name, Element a_Parent )
-    {
-        return m_Registry.CreateEntity( a_Parent, a_Name );
-    }
+    Scene::Element Scene::Create( std::string a_Name, Element a_Parent ) { return m_Registry.CreateEntity( a_Parent, a_Name ); }
 
     Scene::Element Scene::CreateEntity() { return m_Registry.CreateEntity(); }
 
@@ -424,10 +419,9 @@ namespace LTSE::Core
             lNewMaterial.mEmissiveTexture.mTextureID = lGetTexID( lMaterial.mTextures.mEmissiveTexture.TextureID, 0 );
             lNewMaterial.mEmissiveTexture.mUVChannel = lMaterial.mTextures.mEmissiveTexture.UVChannel;
 
-            lNewMaterial.mRoughnessFactor = lMaterial.mConstants.mRoughnessFactor;
-            lNewMaterial.mMetallicFactor  = lMaterial.mConstants.mMetallicFactor;
-            lNewMaterial.mMetalRoughTexture.mTextureID =
-                lGetTexID( lMaterial.mTextures.mMetallicRoughnessTexture.TextureID, 0 );
+            lNewMaterial.mRoughnessFactor              = lMaterial.mConstants.mRoughnessFactor;
+            lNewMaterial.mMetallicFactor               = lMaterial.mConstants.mMetallicFactor;
+            lNewMaterial.mMetalRoughTexture.mTextureID = lGetTexID( lMaterial.mTextures.mMetallicRoughnessTexture.TextureID, 0 );
             lNewMaterial.mMetalRoughTexture.mUVChannel = lMaterial.mTextures.mMetallicRoughnessTexture.UVChannel;
 
             lNewMaterial.mOcclusionStrength           = 0.0f;
@@ -618,8 +612,7 @@ namespace LTSE::Core
             l_AnimationChooser.Animations.push_back( l_AnimationEntity );
             l_AnimationComponent.Duration = lAnimation.mEnd - lAnimation.mStart;
 
-            for( uint32_t lAnimationChannelIndex = 0; lAnimationChannelIndex < lAnimation.mChannels.size();
-                 lAnimationChannelIndex++ )
+            for( uint32_t lAnimationChannelIndex = 0; lAnimationChannelIndex < lAnimation.mChannels.size(); lAnimationChannelIndex++ )
             {
                 sAnimationChannel lAnimationChannel{};
                 lAnimationChannel.mChannelID = lAnimation.mChannels[lAnimationChannelIndex].mComponent;
@@ -842,14 +835,12 @@ namespace LTSE::Core
             {
                 math::mat4 lInverseTransform = math::Inverse( l_ElementToProcess.Get<sTransformMatrixComponent>().Matrix );
 
-                for( uint32_t lJointID = 0; lJointID < l_ElementToProcess.Get<sSkeletonComponent>().Bones.size();
-                     lJointID++ )
+                for( uint32_t lJointID = 0; lJointID < l_ElementToProcess.Get<sSkeletonComponent>().Bones.size(); lJointID++ )
                 {
-                    Element    lJoint = l_ElementToProcess.Get<sSkeletonComponent>().Bones[lJointID];
-                    math::mat4 lInverseBindMatrix =
-                        l_ElementToProcess.Get<sSkeletonComponent>().InverseBindMatrices[lJointID];
-                    math::mat4 lJointMatrix = lJoint.TryGet<sTransformMatrixComponent>( sTransformMatrixComponent{} ).Matrix;
-                    lJointMatrix            = lInverseTransform * lJointMatrix * lInverseBindMatrix;
+                    Element    lJoint             = l_ElementToProcess.Get<sSkeletonComponent>().Bones[lJointID];
+                    math::mat4 lInverseBindMatrix = l_ElementToProcess.Get<sSkeletonComponent>().InverseBindMatrices[lJointID];
+                    math::mat4 lJointMatrix       = lJoint.TryGet<sTransformMatrixComponent>( sTransformMatrixComponent{} ).Matrix;
+                    lJointMatrix                  = lInverseTransform * lJointMatrix * lInverseBindMatrix;
 
                     l_ElementToProcess.Get<sSkeletonComponent>().JointMatrices[lJointID] = lJointMatrix;
                 }
@@ -1061,8 +1052,7 @@ namespace LTSE::Core
                     aOut.WriteKey( "mOutputsVec4" );
                     aOut.BeginSequence( true );
                     {
-                        for( auto &x : lAnimationChannel.mInterpolation.mOutputsVec4 )
-                            aOut.Write( x, { "x", "y", "z", "w" } );
+                        for( auto &x : lAnimationChannel.mInterpolation.mOutputsVec4 ) aOut.Write( x, { "x", "y", "z", "w" } );
                     }
                     aOut.EndSequence();
                 }
@@ -1395,10 +1385,20 @@ namespace LTSE::Core
             lPackets.push_back( lMaterialData );
         }
 
+        uint32_t i=0;
+        for( auto &lTexture : mMaterialSystem->GetTextures() )
+        {
+            TextureData2D lTextureData;
+            lTexture->GetTextureData( lTextureData );
+
+            auto n = fmt::format("foo_{}.ktx", i++);
+
+            lTextureData.SaveTo( aPath / n );
+        }
+
         uint32_t lAssetCount = static_cast<uint32_t>( lAssetIndex.size() );
 
-        uint32_t lCurrentByte =
-            BinaryAsset::GetMagicLength() + sizeof( uint32_t ) + lAssetIndex.size() * sizeof( sAssetIndex );
+        uint32_t lCurrentByte = BinaryAsset::GetMagicLength() + sizeof( uint32_t ) + lAssetIndex.size() * sizeof( sAssetIndex );
         for( uint32_t i = 0; i < lAssetCount; i++ )
         {
             lAssetIndex[i].mByteStart = lCurrentByte;

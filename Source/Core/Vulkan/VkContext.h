@@ -78,7 +78,7 @@ namespace LTSE::Graphics::Internal
         VkDescriptorSet  AllocateDescriptorSet(
              VkDescriptorPool aDescriptorPool, VkDescriptorSetLayout aLayout, uint32_t aDescriptorCount = 0 );
         void FreeDescriptorSet(
-            VkDescriptorPool aDescriptorPool, VkDescriptorSet* aDescriptorSet, uint32_t aDescriptorCount = 0 );
+            VkDescriptorPool aDescriptorPool, VkDescriptorSet *aDescriptorSet, uint32_t aDescriptorCount = 0 );
 
         VkDescriptorSetLayout CreateDescriptorSetLayout(
             std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded );
@@ -105,14 +105,14 @@ namespace LTSE::Graphics::Internal
         void           FreeMemory( VkDeviceMemory aMemory );
 
         template <typename _MapType>
-        _MapType* MapMemory( VkDeviceMemory aMemory, size_t aSize, size_t aOffset )
+        _MapType *MapMemory( VkDeviceMemory aMemory, size_t aSize, size_t aOffset )
         {
             if( aMemory == VK_NULL_HANDLE ) return nullptr;
 
-            void* lMappedData;
+            void *lMappedData;
             vkMapMemory(
                 mVkLogicalDevice, aMemory, aOffset * sizeof( _MapType ), aSize * sizeof( _MapType ), 0, &lMappedData );
-            return reinterpret_cast<_MapType*>( lMappedData );
+            return reinterpret_cast<_MapType *>( lMappedData );
         }
         void UnmapMemory( VkDeviceMemory aMemory ) { vkUnmapMemory( mVkLogicalDevice, aMemory ); }
 
@@ -122,7 +122,7 @@ namespace LTSE::Graphics::Internal
         void BindMemory( VkBuffer aVkBufferObject, VkDeviceMemory aMemory );
         void BindMemory( VkImage aVkBufferObject, VkDeviceMemory aMemory );
 
-        void* GetSharedMemoryHandle( VkDeviceMemory aVkMemory );
+        void *GetSharedMemoryHandle( VkDeviceMemory aVkMemory );
 
         VkQueue GetGraphicsQueue() { return mVkGraphicsQueue; }
         VkQueue GetPresentQueue() { return mVkPresentQueue; }
@@ -132,7 +132,7 @@ namespace LTSE::Graphics::Internal
         void UpdateDescriptorSets( VkWriteDescriptorSet aWriteOps );
 
         VkResult AcquireNextImage(
-            VkSwapchainKHR aSwapChain, uint64_t aTimeout, VkSemaphore aWaitSemaphore, uint32_t* aNewImageIndex );
+            VkSwapchainKHR aSwapChain, uint64_t aTimeout, VkSemaphore aWaitSemaphore, uint32_t *aNewImageIndex );
         VkResult Present( VkSwapchainKHR aSwapChain, uint32_t aImageIndex, VkSemaphore aWaitSemaphore );
 
         void WaitIdle();
