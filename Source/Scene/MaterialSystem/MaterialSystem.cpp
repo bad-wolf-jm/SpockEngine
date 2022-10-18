@@ -13,10 +13,13 @@ namespace LTSE::Core
         // layout( set = X, binding = 1 ) readonly buffer sShaderMaterials Materials[];
         // layout( set = X, binding = 0 ) uniform sampler2D Textures[];
         DescriptorSetLayoutCreateInfo lTextureBindLayout{};
-        lTextureBindLayout.Bindings = { DescriptorBindingInfo{ 0, Internal::eDescriptorType::STORAGE_BUFFER, { Internal::eShaderStageTypeFlags::FRAGMENT } },
-                                        DescriptorBindingInfo{ 1, Internal::eDescriptorType::COMBINED_IMAGE_SAMPLER, { Internal::eShaderStageTypeFlags::FRAGMENT } } };
+        lTextureBindLayout.Bindings = {
+            DescriptorBindingInfo{ 0, Internal::eDescriptorType::STORAGE_BUFFER, { Internal::eShaderStageTypeFlags::FRAGMENT } },
+            DescriptorBindingInfo{
+                1, Internal::eDescriptorType::COMBINED_IMAGE_SAMPLER, { Internal::eShaderStageTypeFlags::FRAGMENT } } };
 
-        mShaderMaterials = New<Buffer>( mGraphicContext, eBufferBindType::STORAGE_BUFFER, true, false, true, true, sizeof( sShaderMaterial ) );
+        mShaderMaterials =
+            New<Buffer>( mGraphicContext, eBufferBindType::STORAGE_BUFFER, true, false, true, true, sizeof( sShaderMaterial ) );
 
         mTextureDescriptorLayout = New<DescriptorSetLayout>( mGraphicContext, lTextureBindLayout, true );
         mTextureDescriptorSet    = New<DescriptorSet>( mGraphicContext, mTextureDescriptorLayout, 1024 );
@@ -45,15 +48,15 @@ namespace LTSE::Core
         uint32_t lBlackImageData[1] = { 0x00000000 };
         lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lBlackImageData );
 
-        TextureData2D lBlackTexture( lTextureCreateInfo, lImageDataStruct );
+        TextureData2D    lBlackTexture( lTextureCreateInfo, lImageDataStruct );
         TextureSampler2D lBlackTextureSampler = TextureSampler2D( lBlackTexture, lSamplingInfo );
         CreateTexture( lBlackTexture, lBlackTextureSampler );
 
         // Create default 1x1 white texture ( tex_index: 1 )
         uint32_t lWhiteImageData[1] = { 0xFFFFFFFF };
-        lImageDataStruct.mPixelData  = reinterpret_cast<uint8_t *>( lWhiteImageData );
+        lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lWhiteImageData );
 
-        TextureData2D lWhiteTexture( lTextureCreateInfo, lImageDataStruct );
+        TextureData2D    lWhiteTexture( lTextureCreateInfo, lImageDataStruct );
         TextureSampler2D lWhiteTextureSampler = TextureSampler2D( lWhiteTexture, lSamplingInfo );
         CreateTexture( lWhiteTexture, lWhiteTextureSampler );
 
@@ -74,7 +77,7 @@ namespace LTSE::Core
     {
         TextureData::sCreateInfo lTextureCreateInfo{};
 
-        TextureData2D lTextureImage( lTextureCreateInfo, aFilePath );
+        TextureData2D    lTextureImage( lTextureCreateInfo, aFilePath );
         TextureSampler2D lTextureSampler( lTextureImage, aSamplingInfo );
 
         return CreateTexture( lTextureImage, lTextureSampler );
@@ -82,8 +85,7 @@ namespace LTSE::Core
 
     uint32_t MaterialSystem::CreateTexture( Ref<TextureData2D> aTexture, Ref<TextureSampler2D> aTextureSampler )
     {
-        if( !aTexture || !aTextureSampler )
-            return 0;
+        if( !aTexture || !aTextureSampler ) return 0;
 
         return CreateTexture( *aTexture, *aTextureSampler );
     }
@@ -125,8 +127,7 @@ namespace LTSE::Core
 
     void MaterialSystem::UpdateDescriptors()
     {
-        if( !mDirty )
-            return;
+        if( !mDirty ) return;
 
         if( mShaderMaterials->SizeAs<sShaderMaterial>() < mMaterials.size() )
         {
@@ -142,11 +143,13 @@ namespace LTSE::Core
             {
                 sShaderMaterial lShaderMaterial{};
 
-                lShaderMaterial.mBaseColorFactor = lMat.mBaseColorFactor;
-                lShaderMaterial.mBaseColorUVChannel =
-                    ( lMat.mBaseColorTexture.mUVChannel == std::numeric_limits<uint32_t>::max() ) ? -1 : static_cast<int32_t>( lMat.mBaseColorTexture.mUVChannel );
-                lShaderMaterial.mBaseColorTextureID =
-                    ( lMat.mBaseColorTexture.mTextureID == std::numeric_limits<uint32_t>::max() ) ? -1 : static_cast<int32_t>( lMat.mBaseColorTexture.mTextureID );
+                lShaderMaterial.mBaseColorFactor    = lMat.mBaseColorFactor;
+                lShaderMaterial.mBaseColorUVChannel = ( lMat.mBaseColorTexture.mUVChannel == std::numeric_limits<uint32_t>::max() )
+                                                          ? -1
+                                                          : static_cast<int32_t>( lMat.mBaseColorTexture.mUVChannel );
+                lShaderMaterial.mBaseColorTextureID = ( lMat.mBaseColorTexture.mTextureID == std::numeric_limits<uint32_t>::max() )
+                                                          ? -1
+                                                          : static_cast<int32_t>( lMat.mBaseColorTexture.mTextureID );
 
                 lShaderMaterial.mMetallicFactor  = lMat.mMetallicFactor;
                 lShaderMaterial.mRoughnessFactor = lMat.mRoughnessFactor;
