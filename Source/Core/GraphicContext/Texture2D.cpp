@@ -24,12 +24,13 @@ namespace LTSE::Graphics
         : mGraphicContext( a_GraphicContext )
         , Spec( a_BufferDescription )
     {
-        Buffer l_StagingBuffer( mGraphicContext, reinterpret_cast<uint8_t *>( a_BufferData.Data ), a_BufferData.ByteSize, eBufferBindType::UNKNOWN, true, false, true, false );
+        Buffer l_StagingBuffer( mGraphicContext, reinterpret_cast<uint8_t *>( a_BufferData.Data ), a_BufferData.ByteSize,
+            eBufferBindType::UNKNOWN, true, false, true, false );
 
-        m_TextureImageObject =
-            New<Internal::sVkImageObject>( mGraphicContext.mContext, static_cast<uint32_t>( Spec.MipLevels[0].Width ), static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1,
-                                           static_cast<uint32_t>( Spec.MipLevels.size() ), 1, VK_SAMPLE_COUNT_VALUE( a_BufferDescription.SampleCount ), false,
-                                           ToVkFormat( Spec.Format ), ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
+        m_TextureImageObject = New<Internal::sVkImageObject>( mGraphicContext.mContext,
+            static_cast<uint32_t>( Spec.MipLevels[0].Width ), static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1,
+            static_cast<uint32_t>( Spec.MipLevels.size() ), 1, VK_SAMPLE_COUNT_VALUE( a_BufferDescription.SampleCount ), false,
+            ToVkFormat( Spec.Format ), ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
 
         TransitionImageLayout( VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
         CopyBufferToImage( l_StagingBuffer );
@@ -43,15 +44,16 @@ namespace LTSE::Graphics
         : mGraphicContext( a_GraphicContext )
         , Spec( a_BufferDescription )
     {
-        Buffer l_StagingBuffer( mGraphicContext, a_ImageData.mPixelData, a_ImageData.mByteSize, eBufferBindType::UNKNOWN, true, false, true, false );
+        Buffer l_StagingBuffer(
+            mGraphicContext, a_ImageData.mPixelData, a_ImageData.mByteSize, eBufferBindType::UNKNOWN, true, false, true, false );
 
         Spec.MipLevels = { { static_cast<uint32_t>( a_ImageData.mWidth ), static_cast<uint32_t>( a_ImageData.mHeight ), 0, 0 } };
         Spec.Format    = a_ImageData.mFormat;
 
-        m_TextureImageObject =
-            New<Internal::sVkImageObject>( mGraphicContext.mContext, static_cast<uint32_t>( Spec.MipLevels[0].Width ), static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1,
-                                           static_cast<uint32_t>( Spec.MipLevels.size() ), 1, VK_SAMPLE_COUNT_VALUE( a_BufferDescription.SampleCount ), false,
-                                           ToVkFormat( Spec.Format ), ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
+        m_TextureImageObject = New<Internal::sVkImageObject>( mGraphicContext.mContext,
+            static_cast<uint32_t>( Spec.MipLevels[0].Width ), static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1,
+            static_cast<uint32_t>( Spec.MipLevels.size() ), 1, VK_SAMPLE_COUNT_VALUE( a_BufferDescription.SampleCount ), false,
+            ToVkFormat( Spec.Format ), ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
 
         TransitionImageLayout( VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
         CopyBufferToImage( l_StagingBuffer );
@@ -65,20 +67,21 @@ namespace LTSE::Graphics
         : mGraphicContext( a_GraphicContext )
         , Spec( a_BufferDescription )
     {
-        Buffer l_StagingBuffer( mGraphicContext, reinterpret_cast<uint8_t *>( a_ImageData.data() ), a_ImageData.size(), eBufferBindType::UNKNOWN, true, false, true, false );
+        Buffer l_StagingBuffer( mGraphicContext, reinterpret_cast<uint8_t *>( a_ImageData.data() ), a_ImageData.size(),
+            eBufferBindType::UNKNOWN, true, false, true, false );
 
         for( uint32_t l_MipLevel = 0; l_MipLevel < a_ImageData.levels(); l_MipLevel++ )
         {
-            Spec.MipLevels.push_back( { static_cast<uint32_t>( a_ImageData[l_MipLevel].extent().x ), static_cast<uint32_t>( a_ImageData[l_MipLevel].extent().x ), l_MipLevel,
-                                        a_ImageData[l_MipLevel].size() } );
+            Spec.MipLevels.push_back( { static_cast<uint32_t>( a_ImageData[l_MipLevel].extent().x ),
+                static_cast<uint32_t>( a_ImageData[l_MipLevel].extent().x ), l_MipLevel, a_ImageData[l_MipLevel].size() } );
         }
 
         Spec.Format = a_BufferDescription.Format;
 
-        m_TextureImageObject =
-            New<Internal::sVkImageObject>( mGraphicContext.mContext, static_cast<uint32_t>( Spec.MipLevels[0].Width ), static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1,
-                                           static_cast<uint32_t>( Spec.MipLevels.size() ), 1, VK_SAMPLE_COUNT_VALUE( a_BufferDescription.SampleCount ), false,
-                                           ToVkFormat( Spec.Format ), ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
+        m_TextureImageObject = New<Internal::sVkImageObject>( mGraphicContext.mContext,
+            static_cast<uint32_t>( Spec.MipLevels[0].Width ), static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1,
+            static_cast<uint32_t>( Spec.MipLevels.size() ), 1, VK_SAMPLE_COUNT_VALUE( a_BufferDescription.SampleCount ), false,
+            ToVkFormat( Spec.Format ), ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
 
         TransitionImageLayout( VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
         CopyBufferToImage( l_StagingBuffer );
@@ -142,18 +145,19 @@ namespace LTSE::Graphics
         Spec.Format              = a_CubeMapData.mSpec.mFormat;
         Spec.Sampled             = true;
         Spec.SampleCount         = 1;
-        Spec.Usage               = { TextureUsageFlags::SAMPLED, TextureUsageFlags::TRANSFER_DESTINATION };
+        Spec.Usage = { TextureUsageFlags::SAMPLED, TextureUsageFlags::TRANSFER_SOURCE, TextureUsageFlags::TRANSFER_DESTINATION };
 
         sImageData &a_ImageData = a_CubeMapData.GetImageData();
-        Buffer l_StagingBuffer( mGraphicContext, a_ImageData.mPixelData, a_ImageData.mByteSize, eBufferBindType::UNKNOWN, true, false, true, false );
+        Buffer      l_StagingBuffer(
+                 mGraphicContext, a_ImageData.mPixelData, a_ImageData.mByteSize, eBufferBindType::UNKNOWN, true, false, true, false );
 
         Spec.MipLevels = { { static_cast<uint32_t>( a_ImageData.mWidth ), static_cast<uint32_t>( a_ImageData.mHeight ), 0, 0 } };
         Spec.Format    = a_ImageData.mFormat;
 
-        m_TextureImageObject =
-            New<Internal::sVkImageObject>( mGraphicContext.mContext, static_cast<uint32_t>( Spec.MipLevels[0].Width ), static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1,
-                                           static_cast<uint32_t>( Spec.MipLevels.size() ), 1, VK_SAMPLE_COUNT_VALUE( Spec.SampleCount ), false, ToVkFormat( Spec.Format ),
-                                           ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
+        m_TextureImageObject = New<Internal::sVkImageObject>( mGraphicContext.mContext,
+            static_cast<uint32_t>( Spec.MipLevels[0].Width ), static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1,
+            static_cast<uint32_t>( Spec.MipLevels.size() ), 1, VK_SAMPLE_COUNT_VALUE( Spec.SampleCount ), false,
+            ToVkFormat( Spec.Format ), ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
 
         TransitionImageLayout( VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
         CopyBufferToImage( l_StagingBuffer );
@@ -167,10 +171,10 @@ namespace LTSE::Graphics
         : mGraphicContext( a_GraphicContext )
         , Spec( a_BufferDescription )
     {
-        m_TextureImageObject =
-            New<Internal::sVkImageObject>( mGraphicContext.mContext, static_cast<uint32_t>( Spec.MipLevels[0].Width ), static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1,
-                                           static_cast<uint32_t>( Spec.MipLevels.size() ), 1, VK_SAMPLE_COUNT_VALUE( a_BufferDescription.SampleCount ), false,
-                                           ToVkFormat( Spec.Format ), ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
+        m_TextureImageObject = New<Internal::sVkImageObject>( mGraphicContext.mContext,
+            static_cast<uint32_t>( Spec.MipLevels[0].Width ), static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1,
+            static_cast<uint32_t>( Spec.MipLevels.size() ), 1, VK_SAMPLE_COUNT_VALUE( a_BufferDescription.SampleCount ), false,
+            ToVkFormat( Spec.Format ), ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
 
         CreateImageView();
         CreateImageSampler();
@@ -185,7 +189,8 @@ namespace LTSE::Graphics
         CreateImageSampler();
     }
 
-    Texture2D::Texture2D( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription, Ref<Internal::sVkFramebufferImage> a_FramebufferImage )
+    Texture2D::Texture2D( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription,
+        Ref<Internal::sVkFramebufferImage> a_FramebufferImage )
         : Spec( a_BufferDescription )
         , mGraphicContext( a_GraphicContext )
     {
@@ -199,7 +204,7 @@ namespace LTSE::Graphics
         Ref<Internal::sVkCommandBufferObject> l_CommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
 
         std::vector<Internal::sImageRegion> l_BufferCopyRegions;
-        uint32_t offset = 0;
+        uint32_t                            offset = 0;
 
         for( uint32_t i = 0; i < Spec.MipLevels.size(); i++ )
         {
@@ -238,18 +243,55 @@ namespace LTSE::Graphics
 
     void Texture2D::CreateImageView()
     {
-        m_TextureView = New<Internal::sVkImageViewObject>( mGraphicContext.mContext, m_TextureImageObject, 1, VK_IMAGE_VIEW_TYPE_2D, ToVkFormat( Spec.Format ),
-                                                           (VkImageAspectFlags)Spec.AspectMask,
-                                                           VkComponentMapping{ (VkComponentSwizzle)Spec.ComponentSwizzle[0], (VkComponentSwizzle)Spec.ComponentSwizzle[1],
-                                                                               (VkComponentSwizzle)Spec.ComponentSwizzle[2], (VkComponentSwizzle)Spec.ComponentSwizzle[3] } );
+        m_TextureView = New<Internal::sVkImageViewObject>( mGraphicContext.mContext, m_TextureImageObject, 1, VK_IMAGE_VIEW_TYPE_2D,
+            ToVkFormat( Spec.Format ), (VkImageAspectFlags)Spec.AspectMask,
+            VkComponentMapping{ (VkComponentSwizzle)Spec.ComponentSwizzle[0], (VkComponentSwizzle)Spec.ComponentSwizzle[1],
+                (VkComponentSwizzle)Spec.ComponentSwizzle[2], (VkComponentSwizzle)Spec.ComponentSwizzle[3] } );
     }
 
     void Texture2D::CreateImageSampler()
     {
-        if( !Spec.Sampled )
-            return;
-        m_TextureSamplerObject = New<Internal::sVkImageSamplerObject>( mGraphicContext.mContext, (VkFilter)Spec.MinificationFilter, (VkFilter)Spec.MagnificationFilter,
-                                                                       (VkSamplerAddressMode)Spec.WrappingMode, (VkSamplerMipmapMode)Spec.MipmapMode );
+        if( !Spec.Sampled ) return;
+        m_TextureSamplerObject = New<Internal::sVkImageSamplerObject>( mGraphicContext.mContext, (VkFilter)Spec.MinificationFilter,
+            (VkFilter)Spec.MagnificationFilter, (VkSamplerAddressMode)Spec.WrappingMode, (VkSamplerMipmapMode)Spec.MipmapMode );
+    }
+
+    void Texture2D::GetTextureData( TextureData2D &aTextureData )
+    {
+        uint32_t lByteSize = Spec.MipLevels[0].Width * Spec.MipLevels[0].Height * sizeof( uint32_t );
+        Buffer   lStagingBuffer( mGraphicContext, eBufferBindType::UNKNOWN, true, false, false, true, lByteSize );
+
+        Internal::sImageRegion lImageCopySrcRegion{};
+        lImageCopySrcRegion.mBaseLayer     = 0;
+        lImageCopySrcRegion.mLayerCount    = 1;
+        lImageCopySrcRegion.mBaseMipLevel  = 0;
+        lImageCopySrcRegion.mMipLevelCount = 1;
+        lImageCopySrcRegion.mWidth         = Spec.MipLevels[0].Width;
+        lImageCopySrcRegion.mHeight        = Spec.MipLevels[0].Height;
+        lImageCopySrcRegion.mDepth         = 1;
+        lImageCopySrcRegion.mOffset        = 0;
+
+        Internal::sImageRegion lBufferCopyRegion{};
+        lBufferCopyRegion.mOffset = 0;
+
+        TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL );
+        Ref<Internal::sVkCommandBufferObject> l_CommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
+        l_CommandBufferObject->CopyImage( m_TextureImageObject, lImageCopySrcRegion, lStagingBuffer.mVkObject, lBufferCopyRegion );
+        mGraphicContext.EndSingleTimeCommands( l_CommandBufferObject );
+        TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
+
+        uint8_t *lPixelData = lStagingBuffer.Map<uint8_t>( lByteSize, 0 );
+
+        sImageData lImageDataStruct{};
+        lImageDataStruct.mFormat    = eColorFormat::RGBA8_UNORM;
+        lImageDataStruct.mWidth     = Spec.MipLevels[0].Width;
+        lImageDataStruct.mHeight    = Spec.MipLevels[0].Height;
+        lImageDataStruct.mByteSize  = lByteSize;
+        lImageDataStruct.mPixelData = lPixelData;
+
+        Core::TextureData::sCreateInfo lTextureCreateInfo{};
+        lTextureCreateInfo.mMipLevels = 1;
+        aTextureData                  = TextureData2D( lTextureCreateInfo, lImageDataStruct );
     }
 
 } // namespace LTSE::Graphics

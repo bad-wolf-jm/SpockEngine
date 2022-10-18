@@ -152,6 +152,22 @@ namespace LTSE::Graphics::Internal
             lSourceStage      = VK_PIPELINE_STAGE_TRANSFER_BIT;
             lDestinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
         }
+        else if( ( aOldLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL ) && ( aNewLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL ) )
+        {
+            lBarrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+            lBarrier.dstAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+
+            lSourceStage      = VK_PIPELINE_STAGE_TRANSFER_BIT;
+            lDestinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+        }
+        else if( ( aOldLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL ) && ( aNewLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL ) )
+        {
+            lBarrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+            lBarrier.dstAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+
+            lSourceStage      = VK_PIPELINE_STAGE_TRANSFER_BIT;
+            lDestinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+        }
         else
         {
             lSourceStage      = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
@@ -231,6 +247,22 @@ namespace LTSE::Graphics::Internal
 
         vkCmdCopyImage( mVkObject, aSource->mVkObject, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, aDestination->mVkObject, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &lCopyRegion );
         ImageMemoryBarrier( aDestination, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1, 1 );
+    }
+
+    void sVkCommandBufferObject::CopyImage( Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion, VkBuffer aDestination, sImageRegion const &aDestRegion )
+    {
+        VkBufferImageCopy lCopyRegion{};
+
+        lCopyRegion.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+        lCopyRegion.imageSubresource.mipLevel       = aSourceRegion.mBaseMipLevel;
+        lCopyRegion.imageSubresource.baseArrayLayer = aSourceRegion.mBaseLayer;
+        lCopyRegion.imageSubresource.layerCount     = aSourceRegion.mLayerCount;
+        lCopyRegion.imageExtent.width               = aSourceRegion.mWidth;
+        lCopyRegion.imageExtent.height              = aSourceRegion.mHeight;
+        lCopyRegion.imageExtent.depth               = aSourceRegion.mDepth;
+        lCopyRegion.bufferOffset                    = aDestRegion.mOffset;
+
+        vkCmdCopyImageToBuffer( mVkObject, aSource->mVkObject, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, aDestination, 1, &lCopyRegion );
     }
 
     void sVkCommandBufferObject::End() { VK_CHECK_RESULT( vkEndCommandBuffer( mVkObject ) ); }

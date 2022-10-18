@@ -29,8 +29,8 @@ namespace LTSE::Graphics::Internal
         VkImage        mVkObject = VK_NULL_HANDLE;
         VkDeviceMemory mVkMemory = VK_NULL_HANDLE;
 
-        sVkImageObject()                  = default;
-        sVkImageObject( sVkImageObject& ) = default;
+        sVkImageObject()                   = default;
+        sVkImageObject( sVkImageObject & ) = default;
         sVkImageObject( Ref<VkContext> aContext, VkImage aExternalImage );
         sVkImageObject( Ref<VkContext> aContext, uint32_t aWidth, uint32_t aHeight, uint32_t aDepth, uint32_t aMipLevels,
             uint32_t aLayers, uint8_t aSampleCount, bool aCubeCompatible, VkFormat aFormat,
@@ -47,8 +47,8 @@ namespace LTSE::Graphics::Internal
     {
         VkSampler mVkObject = VK_NULL_HANDLE;
 
-        sVkImageSamplerObject()                         = default;
-        sVkImageSamplerObject( sVkImageSamplerObject& ) = default;
+        sVkImageSamplerObject()                          = default;
+        sVkImageSamplerObject( sVkImageSamplerObject & ) = default;
         sVkImageSamplerObject( Ref<VkContext> aContext, VkFilter aMinificationFilter, VkFilter aMagnificationFilter,
             VkSamplerAddressMode aWrappingMode, VkSamplerMipmapMode aMipmapMode );
 
@@ -62,8 +62,8 @@ namespace LTSE::Graphics::Internal
     {
         VkImageView mVkObject = VK_NULL_HANDLE;
 
-        sVkImageViewObject()                      = default;
-        sVkImageViewObject( sVkImageViewObject& ) = default;
+        sVkImageViewObject()                       = default;
+        sVkImageViewObject( sVkImageViewObject & ) = default;
         sVkImageViewObject( Ref<VkContext> aContext, Ref<sVkImageObject> aImageObject, uint32_t aLayerCount,
             VkImageViewType aViewType, VkFormat aImageFormat, VkImageAspectFlags aAspectMask,
             VkComponentMapping aComponentSwizzle );
@@ -96,8 +96,8 @@ namespace LTSE::Graphics::Internal
     {
         VkFramebuffer mVkObject = VK_NULL_HANDLE;
 
-        sVkFramebufferObject()                        = default;
-        sVkFramebufferObject( sVkFramebufferObject& ) = default;
+        sVkFramebufferObject()                         = default;
+        sVkFramebufferObject( sVkFramebufferObject & ) = default;
         sVkFramebufferObject( Ref<VkContext> aContext, uint32_t aWidth, uint32_t aHeight, uint32_t aLayers,
             VkRenderPass aRenderPass, std::vector<Ref<sVkFramebufferImage>> aAttachments );
 
