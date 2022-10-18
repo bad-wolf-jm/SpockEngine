@@ -104,6 +104,8 @@ namespace LTSE::Core
 
         void Clear();
 
+        std::vector<sMaterial> const &GetMaterialData() const { return mMaterials; }
+
       private:
         GraphicContext mGraphicContext;
 
