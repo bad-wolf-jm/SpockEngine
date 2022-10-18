@@ -261,22 +261,27 @@ namespace LTSE::Graphics
         uint32_t lByteSize = Spec.MipLevels[0].Width * Spec.MipLevels[0].Height * sizeof( uint32_t );
         Buffer   lStagingBuffer( mGraphicContext, eBufferBindType::UNKNOWN, true, false, false, true, lByteSize );
 
-        Internal::sImageRegion lImageCopySrcRegion{};
-        lImageCopySrcRegion.mBaseLayer     = 0;
-        lImageCopySrcRegion.mLayerCount    = 1;
-        lImageCopySrcRegion.mBaseMipLevel  = 0;
-        lImageCopySrcRegion.mMipLevelCount = 1;
-        lImageCopySrcRegion.mWidth         = Spec.MipLevels[0].Width;
-        lImageCopySrcRegion.mHeight        = Spec.MipLevels[0].Height;
-        lImageCopySrcRegion.mDepth         = 1;
-        lImageCopySrcRegion.mOffset        = 0;
+        std::vector<Internal::sImageRegion> l_BufferCopyRegions;
+        uint32_t                            lBufferByteOffset = 0;
+        for( uint32_t i = 0; i < Spec.MipLevels.size(); i++ )
+        {
+            Internal::sImageRegion bufferCopyRegion{};
+            bufferCopyRegion.mBaseLayer     = 0;
+            bufferCopyRegion.mLayerCount    = 1;
+            bufferCopyRegion.mBaseMipLevel  = i;
+            bufferCopyRegion.mMipLevelCount = 1;
+            bufferCopyRegion.mWidth         = Spec.MipLevels[i].Width;
+            bufferCopyRegion.mHeight        = Spec.MipLevels[i].Height;
+            bufferCopyRegion.mDepth         = 1;
+            bufferCopyRegion.mOffset        = lBufferByteOffset;
 
-        Internal::sImageRegion lBufferCopyRegion{};
-        lBufferCopyRegion.mOffset = 0;
+            l_BufferCopyRegions.push_back( bufferCopyRegion );
+            lBufferByteOffset += static_cast<uint32_t>( Spec.MipLevels[i].Size );
+        }
 
         TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL );
         Ref<Internal::sVkCommandBufferObject> l_CommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
-        l_CommandBufferObject->CopyImage( m_TextureImageObject, lImageCopySrcRegion, lStagingBuffer.mVkObject, lBufferCopyRegion );
+        l_CommandBufferObject->CopyImage( m_TextureImageObject, lStagingBuffer.mVkObject, l_BufferCopyRegions, 0 );
         mGraphicContext.EndSingleTimeCommands( l_CommandBufferObject );
         TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
 

@@ -39,8 +39,8 @@ namespace LTSE::Graphics::Internal
         VK_CHECK_RESULT( vkBeginCommandBuffer( mVkObject, &lCommandBufferBeginInfo ) );
     }
 
-    void sVkCommandBufferObject::BeginRenderPass( Ref<sVkRenderPassObject> aRenderPass, Ref<sVkFramebufferObject> aFrameBuffer, math::uvec2 aExtent,
-                                                  std::vector<VkClearValue> aClearValues )
+    void sVkCommandBufferObject::BeginRenderPass( Ref<sVkRenderPassObject> aRenderPass, Ref<sVkFramebufferObject> aFrameBuffer,
+        math::uvec2 aExtent, std::vector<VkClearValue> aClearValues )
     {
         VkRenderPassBeginInfo lRenderPassInfo{};
         lRenderPassInfo.sType             = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -78,17 +78,22 @@ namespace LTSE::Graphics::Internal
         vkCmdSetScissor( mVkObject, 0, 1, &lScissorDescription );
     }
 
-    void sVkCommandBufferObject::Draw( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset, uint32_t aInstanceCount, uint32_t aFirstInstance )
+    void sVkCommandBufferObject::Draw(
+        uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset, uint32_t aInstanceCount, uint32_t aFirstInstance )
     {
         vkCmdDraw( mVkObject, aVertexCount, aInstanceCount, aVertexOffset, aFirstInstance );
     }
 
-    void sVkCommandBufferObject::DrawIndexed( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset, uint32_t aInstanceCount, uint32_t aFirstInstance )
+    void sVkCommandBufferObject::DrawIndexed(
+        uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset, uint32_t aInstanceCount, uint32_t aFirstInstance )
     {
         vkCmdDrawIndexed( mVkObject, aVertexCount, aInstanceCount, aVertexOffset, aVertexBufferOffset, aFirstInstance );
     }
 
-    void sVkCommandBufferObject::Bind( Ref<sVkPipelineObject> aPipeline, VkPipelineBindPoint aBindPoint ) { vkCmdBindPipeline( mVkObject, aBindPoint, aPipeline->mVkObject ); }
+    void sVkCommandBufferObject::Bind( Ref<sVkPipelineObject> aPipeline, VkPipelineBindPoint aBindPoint )
+    {
+        vkCmdBindPipeline( mVkObject, aBindPoint, aPipeline->mVkObject );
+    }
 
     void sVkCommandBufferObject::Bind( VkBuffer aVertexBuffer, uint32_t aBindPoint )
     {
@@ -103,22 +108,25 @@ namespace LTSE::Graphics::Internal
         vkCmdBindIndexBuffer( mVkObject, a_IndexBuffer, 0, VK_INDEX_TYPE_UINT32 );
     }
 
-    void sVkCommandBufferObject::Bind( Ref<sVkDescriptorSetObject> aDescriptorSet, VkPipelineBindPoint aBindPoint, Ref<sVkPipelineLayoutObject> aPipelineLayout, uint32_t aSetIndex,
-                                       int32_t aDynamicOffset )
+    void sVkCommandBufferObject::Bind( Ref<sVkDescriptorSetObject> aDescriptorSet, VkPipelineBindPoint aBindPoint,
+        Ref<sVkPipelineLayoutObject> aPipelineLayout, uint32_t aSetIndex, int32_t aDynamicOffset )
     {
         VkDescriptorSet lDescriptorSetArray[1] = { aDescriptorSet->mVkObject };
         if( aDynamicOffset == -1 )
         {
-            vkCmdBindDescriptorSets( mVkObject, aBindPoint, aPipelineLayout->mVkObject, aSetIndex, 1, lDescriptorSetArray, 0, nullptr );
+            vkCmdBindDescriptorSets(
+                mVkObject, aBindPoint, aPipelineLayout->mVkObject, aSetIndex, 1, lDescriptorSetArray, 0, nullptr );
         }
         else
         {
             const uint32_t l_DynOffset = static_cast<uint32_t>( aDynamicOffset );
-            vkCmdBindDescriptorSets( mVkObject, aBindPoint, aPipelineLayout->mVkObject, aSetIndex, 1, lDescriptorSetArray, 1, &l_DynOffset );
+            vkCmdBindDescriptorSets(
+                mVkObject, aBindPoint, aPipelineLayout->mVkObject, aSetIndex, 1, lDescriptorSetArray, 1, &l_DynOffset );
         }
     }
 
-    void sVkCommandBufferObject::ImageMemoryBarrier( Ref<sVkImageObject> aImage, VkImageLayout aOldLayout, VkImageLayout aNewLayout, uint32_t aMipCount, uint32_t aLayerCount )
+    void sVkCommandBufferObject::ImageMemoryBarrier(
+        Ref<sVkImageObject> aImage, VkImageLayout aOldLayout, VkImageLayout aNewLayout, uint32_t aMipCount, uint32_t aLayerCount )
     {
         VkImageMemoryBarrier lBarrier{};
         lBarrier.sType                           = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -177,7 +185,8 @@ namespace LTSE::Graphics::Internal
         vkCmdPipelineBarrier( mVkObject, lSourceStage, lDestinationStage, 0, 0, nullptr, 0, nullptr, 1, &lBarrier );
     }
 
-    void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, uint32_t aSourceOffset, uint32_t aSize, VkBuffer aDest, uint32_t aDestOffset )
+    void sVkCommandBufferObject::CopyBuffer(
+        VkBuffer aSource, uint32_t aSourceOffset, uint32_t aSize, VkBuffer aDest, uint32_t aDestOffset )
     {
         VkBufferCopy lCopyRegion{};
         lCopyRegion.srcOffset = aSourceOffset;
@@ -186,12 +195,14 @@ namespace LTSE::Graphics::Internal
         vkCmdCopyBuffer( mVkObject, aSource, aDest, 1, &lCopyRegion );
     }
 
-    void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, Ref<sVkImageObject> aDestination, sImageRegion const &aBufferRegion, sImageRegion const &aImageRegion )
+    void sVkCommandBufferObject::CopyBuffer(
+        VkBuffer aSource, Ref<sVkImageObject> aDestination, sImageRegion const &aBufferRegion, sImageRegion const &aImageRegion )
     {
         CopyBuffer( aSource, aDestination, { aBufferRegion }, aImageRegion );
     }
 
-    void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, Ref<sVkImageObject> aDestination, std::vector<sImageRegion> aBufferRegions, sImageRegion const &aImageRegion )
+    void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, Ref<sVkImageObject> aDestination,
+        std::vector<sImageRegion> aBufferRegions, sImageRegion const &aImageRegion )
     {
         std::vector<VkBufferImageCopy> lBufferCopyRegions;
 
@@ -217,13 +228,15 @@ namespace LTSE::Graphics::Internal
         lSubresourceRange.levelCount   = aImageRegion.mMipLevelCount;
         lSubresourceRange.layerCount   = aImageRegion.mLayerCount;
 
-        ImageMemoryBarrier( aDestination, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, aImageRegion.mMipLevelCount, aImageRegion.mLayerCount );
+        ImageMemoryBarrier( aDestination, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, aImageRegion.mMipLevelCount,
+            aImageRegion.mLayerCount );
 
-        vkCmdCopyBufferToImage( mVkObject, aSource, aDestination->mVkObject, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, static_cast<uint32_t>( lBufferCopyRegions.size() ),
-                                lBufferCopyRegions.data() );
+        vkCmdCopyBufferToImage( mVkObject, aSource, aDestination->mVkObject, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            static_cast<uint32_t>( lBufferCopyRegions.size() ), lBufferCopyRegions.data() );
     }
 
-    void sVkCommandBufferObject::CopyImage( Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion, Ref<sVkImageObject> aDestination, sImageRegion const &aDestRegion )
+    void sVkCommandBufferObject::CopyImage( Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion,
+        Ref<sVkImageObject> aDestination, sImageRegion const &aDestRegion )
     {
         ImageMemoryBarrier( aDestination, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, 1, 1 );
 
@@ -245,11 +258,13 @@ namespace LTSE::Graphics::Internal
         lCopyRegion.extent.height = aSourceRegion.mHeight;
         lCopyRegion.extent.depth  = aSourceRegion.mDepth;
 
-        vkCmdCopyImage( mVkObject, aSource->mVkObject, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, aDestination->mVkObject, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &lCopyRegion );
+        vkCmdCopyImage( mVkObject, aSource->mVkObject, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, aDestination->mVkObject,
+            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &lCopyRegion );
         ImageMemoryBarrier( aDestination, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1, 1 );
     }
 
-    void sVkCommandBufferObject::CopyImage( Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion, VkBuffer aDestination, sImageRegion const &aDestRegion )
+    void sVkCommandBufferObject::CopyImage(
+        Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion, VkBuffer aDestination, sImageRegion const &aDestRegion )
     {
         VkBufferImageCopy lCopyRegion{};
 
@@ -263,6 +278,40 @@ namespace LTSE::Graphics::Internal
         lCopyRegion.bufferOffset                    = aDestRegion.mOffset;
 
         vkCmdCopyImageToBuffer( mVkObject, aSource->mVkObject, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, aDestination, 1, &lCopyRegion );
+    }
+
+    void sVkCommandBufferObject::CopyImage(
+        Ref<sVkImageObject> aSource, VkBuffer aDestination, std::vector<sImageRegion> aImageRegions, uint32_t aBufferOffset )
+    {
+        std::vector<VkBufferImageCopy> lBufferCopyRegions;
+
+        for( auto const &lRegion : aImageRegions )
+        {
+            VkBufferImageCopy lBufferCopyRegion{};
+
+            lBufferCopyRegion.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+            lBufferCopyRegion.imageSubresource.mipLevel       = lRegion.mBaseMipLevel;
+            lBufferCopyRegion.imageSubresource.baseArrayLayer = lRegion.mBaseLayer;
+            lBufferCopyRegion.imageSubresource.layerCount     = lRegion.mLayerCount;
+            lBufferCopyRegion.imageExtent.width               = lRegion.mWidth;
+            lBufferCopyRegion.imageExtent.height              = lRegion.mHeight;
+            lBufferCopyRegion.imageExtent.depth               = lRegion.mDepth;
+            lBufferCopyRegion.bufferOffset                    = lRegion.mOffset + aBufferOffset;
+
+            lBufferCopyRegions.push_back( lBufferCopyRegion );
+        }
+
+        // VkImageSubresourceRange lSubresourceRange{};
+        // lSubresourceRange.aspectMask   = VK_IMAGE_ASPECT_COLOR_BIT;
+        // lSubresourceRange.baseMipLevel = aImageRegion.mBaseMipLevel;
+        // lSubresourceRange.levelCount   = aImageRegion.mMipLevelCount;
+        // lSubresourceRange.layerCount   = aImageRegion.mLayerCount;
+
+        vkCmdCopyImageToBuffer( mVkObject, aSource->mVkObject, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, aDestination,
+            static_cast<uint32_t>( lBufferCopyRegions.size() ), lBufferCopyRegions.data() );
+        // vkCmdCopyBufferToImage( mVkObject, aSource, aDestination->mVkObject, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        // static_cast<uint32_t>( lBufferCopyRegions.size() ),
+        //                         lBufferCopyRegions.data() );
     }
 
     void sVkCommandBufferObject::End() { VK_CHECK_RESULT( vkEndCommandBuffer( mVkObject ) ); }

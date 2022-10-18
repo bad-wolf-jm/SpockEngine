@@ -28,44 +28,46 @@ namespace LTSE::Graphics::Internal
         void Begin();
         void Begin( VkCommandBufferUsageFlags aUsage );
 
-        void BeginRenderPass( Ref<sVkRenderPassObject> aRenderPass, Ref<sVkFramebufferObject> aFrameBuffer,
-            math::uvec2 aExtent, std::vector<VkClearValue> aClearValues );
+        void BeginRenderPass( Ref<sVkRenderPassObject> aRenderPass, Ref<sVkFramebufferObject> aFrameBuffer, math::uvec2 aExtent,
+            std::vector<VkClearValue> aClearValues );
         void EndRenderPass();
 
         void SetViewport( math::ivec2 aOffset, math::uvec2 aSize );
         void SetScissor( math::ivec2 aOffset, math::uvec2 aSize );
         void Draw( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset, uint32_t aInstanceCount,
             uint32_t aFirstInstance );
-        void DrawIndexed( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset,
-            uint32_t aInstanceCount, uint32_t aFirstInstance );
+        void DrawIndexed( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset, uint32_t aInstanceCount,
+            uint32_t aFirstInstance );
         void Bind( Ref<sVkPipelineObject> aGraphicPipeline, VkPipelineBindPoint aBindPoint );
         void Bind( VkBuffer aVertexBuffer, uint32_t aBindPoint );
         void Bind( VkBuffer aVertexBuffer, VkBuffer aIndexBuffer, uint32_t aBindPoint );
         void Bind( Ref<sVkDescriptorSetObject> aDescriptorSet, VkPipelineBindPoint aBindPoint,
             Ref<sVkPipelineLayoutObject> aPipelineLayout, uint32_t aSetIndex, int32_t aDynamicOffset );
 
-        void ImageMemoryBarrier( Ref<sVkImageObject> aImage, VkImageLayout aOldLayout, VkImageLayout aNewLayout,
-            uint32_t aMipCount, uint32_t aLayerCount );
+        void ImageMemoryBarrier(
+            Ref<sVkImageObject> aImage, VkImageLayout aOldLayout, VkImageLayout aNewLayout, uint32_t aMipCount, uint32_t aLayerCount );
 
         void CopyBuffer( VkBuffer aSource, VkBuffer aDest );
         void CopyBuffer( VkBuffer aSource, uint32_t aSourceOffset, uint32_t aSize, VkBuffer aDest, uint32_t aDestOffset );
-        void CopyBuffer( VkBuffer aSource, Ref<sVkImageObject> aDestination, sImageRegion const &aBufferRegion,
-            sImageRegion const &aImageRegion );
+        void CopyBuffer(
+            VkBuffer aSource, Ref<sVkImageObject> aDestination, sImageRegion const &aBufferRegion, sImageRegion const &aImageRegion );
         void CopyBuffer( VkBuffer aSource, Ref<sVkImageObject> aDestination, std::vector<sImageRegion> aBufferRegions,
             sImageRegion const &aImageRegion );
 
         void CopyImage( Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion, Ref<sVkImageObject> aDestination,
             sImageRegion const &aDestRegion );
 
-        void CopyImage( Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion, VkBuffer aDestination,
-            sImageRegion const &aDestRegion );
+        void CopyImage(
+            Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion, VkBuffer aDestination, sImageRegion const &aDestRegion );
+
+        void sVkCommandBufferObject::CopyImage(
+            Ref<sVkImageObject> aSource, VkBuffer aDestination, std::vector<sImageRegion> aImageRegions, uint32_t aBufferOffset );
 
         template <typename T>
-        void PushConstants( VkShaderStageFlags aShaderStages, uint32_t aOffset, const T &aValue,
-            Ref<sVkPipelineLayoutObject> aPipelineLayout )
+        void PushConstants(
+            VkShaderStageFlags aShaderStages, uint32_t aOffset, const T &aValue, Ref<sVkPipelineLayoutObject> aPipelineLayout )
         {
-            vkCmdPushConstants(
-                mVkObject, aPipelineLayout->mVkObject, aShaderStages, aOffset, sizeof( T ), (void *)&aValue );
+            vkCmdPushConstants( mVkObject, aPipelineLayout->mVkObject, aShaderStages, aOffset, sizeof( T ), (void *)&aValue );
         }
 
         void End();
