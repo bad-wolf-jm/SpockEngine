@@ -1169,9 +1169,8 @@ namespace LTSE::Core
             TextureData2D lTextureData;
             lTexture->GetTextureData( lTextureData );
 
-            auto n = fmt::format( "foo_{}.ktx", i++ );
-
-            lTextureData.SaveTo( aPath / n );
+            // auto n = fmt::format( "BAR__{}.ktx", i++ );
+            // lTextureData.SaveTo( aPath / n );
         }
 
         uint32_t lAssetCount = static_cast<uint32_t>( lAssetIndex.size() );
