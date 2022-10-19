@@ -739,7 +739,9 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "mValue", aComponent.mValue );
+        {
+            aOut.WriteKey( "mValue", aComponent.mValue );
+        }
         aOut.EndMap();
     }
 
@@ -747,16 +749,17 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        if( aComponent.mParent )
         {
-            aOut.WriteKey( "mParent", aComponent.mParent.Get<sUUID>().mValue.str() );
+            if( aComponent.mParent )
+            {
+                aOut.WriteKey( "mParent", aComponent.mParent.Get<sUUID>().mValue.str() );
+            }
+            else
+            {
+                aOut.WriteKey( "mParent" );
+                aOut.WriteNull();
+            }
         }
-        else
-        {
-            aOut.WriteKey( "mParent" );
-            aOut.WriteNull();
-        }
-
         aOut.EndMap();
     }
 
@@ -766,20 +769,13 @@ namespace LTSE::Core
         aOut.BeginMap( true );
         aOut.WriteKey( "Position" );
         aOut.Write( aComponent.Position, { "x", "y", "z" } );
-        aOut.WriteKey( "Pitch" );
-        aOut.Write( aComponent.Pitch );
-        aOut.WriteKey( "Yaw" );
-        aOut.Write( aComponent.Yaw );
-        aOut.WriteKey( "Roll" );
-        aOut.Write( aComponent.Roll );
-        aOut.WriteKey( "Near" );
-        aOut.Write( aComponent.Near );
-        aOut.WriteKey( "Far" );
-        aOut.Write( aComponent.Far );
-        aOut.WriteKey( "FieldOfView" );
-        aOut.Write( aComponent.FieldOfView );
-        aOut.WriteKey( "AspectRatio" );
-        aOut.Write( aComponent.AspectRatio );
+        aOut.WriteKey( "Pitch", aComponent.Pitch );
+        aOut.WriteKey( "Yaw", aComponent.Yaw );
+        aOut.WriteKey( "Roll", aComponent.Roll );
+        aOut.WriteKey( "Near", aComponent.Near );
+        aOut.WriteKey( "Far", aComponent.Far );
+        aOut.WriteKey( "FieldOfView", aComponent.FieldOfView );
+        aOut.WriteKey( "AspectRatio", aComponent.AspectRatio );
         aOut.EndMap();
     }
 
@@ -793,38 +789,6 @@ namespace LTSE::Core
         }
 
         aOut.EndSequence();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sAnimationComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap();
-        aOut.WriteKey( "Duration" );
-        aOut.Write( aComponent.Duration );
-        aOut.WriteKey( "TickCount" );
-        aOut.Write( aComponent.TickCount );
-        aOut.WriteKey( "TicksPerSecond" );
-        aOut.Write( aComponent.TicksPerSecond );
-        aOut.WriteKey( "CurrentTick" );
-        aOut.Write( aComponent.CurrentTick );
-        aOut.WriteKey( "mChannels" );
-        aOut.BeginSequence();
-        for( auto &lAnimationChannel : aComponent.mChannels )
-        {
-            aOut.BeginMap( true );
-            {
-                aOut.WriteKey( "mTargetNode" );
-                aOut.Write( lAnimationChannel.mTargetNode.Get<sUUID>().mValue.str() );
-                aOut.WriteKey( "mChannelID" );
-                aOut.Write( (uint32_t)lAnimationChannel.mChannelID );
-                aOut.WriteKey( "mInterpolationDataIndex" );
-                aOut.WriteNull();
-            }
-            aOut.EndMap();
-        }
-        aOut.EndSequence();
-
-        aOut.EndMap();
     }
 
     void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sAnimatedTransformComponent const &aComponent )
@@ -862,14 +826,10 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "mVertexOffset" );
-        aOut.Write( aComponent.mVertexOffset );
-        aOut.WriteKey( "mVertexCount" );
-        aOut.Write( aComponent.mVertexCount );
-        aOut.WriteKey( "mIndexOffset" );
-        aOut.Write( aComponent.mIndexOffset );
-        aOut.WriteKey( "mIndexCount" );
-        aOut.Write( aComponent.mIndexCount );
+        aOut.WriteKey( "mVertexOffset", aComponent.mVertexOffset );
+        aOut.WriteKey( "mVertexCount", aComponent.mVertexCount );
+        aOut.WriteKey( "mIndexOffset", aComponent.mIndexOffset );
+        aOut.WriteKey( "mIndexCount", aComponent.mIndexCount );
         aOut.EndMap();
     }
 
@@ -889,19 +849,24 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap();
-        aOut.WriteKey( "BoneCount" );
-        aOut.Write( (uint32_t)aComponent.BoneCount );
+        aOut.WriteKey( "BoneCount", (uint32_t)aComponent.BoneCount );
         aOut.WriteKey( "Bones" );
         aOut.BeginSequence( true );
-        for( auto &x : aComponent.Bones ) aOut.Write( x.Get<sUUID>().mValue.str() );
+        {
+            for( auto &x : aComponent.Bones ) aOut.Write( x.Get<sUUID>().mValue.str() );
+        }
         aOut.EndSequence();
         aOut.WriteKey( "InverseBindMatrices" );
         aOut.BeginSequence( true );
-        for( auto &x : aComponent.InverseBindMatrices ) aOut.Write( x );
+        {
+            for( auto &x : aComponent.InverseBindMatrices ) aOut.Write( x );
+        }
         aOut.EndSequence();
         aOut.WriteKey( "JointMatrices" );
         aOut.BeginSequence( true );
-        for( auto &x : aComponent.JointMatrices ) aOut.Write( x );
+        {
+            for( auto &x : aComponent.JointMatrices ) aOut.Write( x );
+        }
         aOut.EndSequence();
         aOut.EndMap();
     }
@@ -937,8 +902,7 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "mMaterialID" );
-        aOut.Write( aComponent.mMaterialID );
+        aOut.WriteKey( "mMaterialID", aComponent.mMaterialID );
         aOut.EndMap();
     }
 
@@ -946,16 +910,11 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "Type" );
-        aOut.Write( (uint32_t)aComponent.Type );
-        aOut.WriteKey( "IsTwoSided" );
-        aOut.Write( aComponent.IsTwoSided );
-        aOut.WriteKey( "UseAlphaMask" );
-        aOut.Write( aComponent.UseAlphaMask );
-        aOut.WriteKey( "LineWidth" );
-        aOut.Write( aComponent.LineWidth );
-        aOut.WriteKey( "AlphaMaskTheshold" );
-        aOut.Write( aComponent.AlphaMaskTheshold );
+        aOut.WriteKey( "Type", (uint32_t)aComponent.Type );
+        aOut.WriteKey( "IsTwoSided", aComponent.IsTwoSided );
+        aOut.WriteKey( "UseAlphaMask", aComponent.UseAlphaMask );
+        aOut.WriteKey( "LineWidth", aComponent.LineWidth );
+        aOut.WriteKey( "AlphaMaskTheshold", aComponent.AlphaMaskTheshold );
         aOut.EndMap();
     }
 
@@ -972,8 +931,7 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "Intensity" );
-        aOut.Write( aComponent.Intensity );
+        aOut.WriteKey( "Intensity", aComponent.Intensity );
         aOut.WriteKey( "Color" );
         aOut.Write( aComponent.Color, { "r", "g", "b" } );
         aOut.EndMap();
@@ -983,12 +941,9 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "Azimuth" );
-        aOut.Write( aComponent.Azimuth );
-        aOut.WriteKey( "Elevation" );
-        aOut.Write( aComponent.Elevation );
-        aOut.WriteKey( "Intensity" );
-        aOut.Write( aComponent.Intensity );
+        aOut.WriteKey( "Azimuth", aComponent.Azimuth );
+        aOut.WriteKey( "Elevation", aComponent.Elevation );
+        aOut.WriteKey( "Intensity", aComponent.Intensity );
         aOut.WriteKey( "Color" );
         aOut.Write( aComponent.Color, { "r", "g", "b" } );
         aOut.EndMap();
@@ -998,8 +953,7 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "Intensity" );
-        aOut.Write( aComponent.Intensity );
+        aOut.WriteKey( "Intensity", aComponent.Intensity );
         aOut.WriteKey( "Position" );
         aOut.Write( aComponent.Position, { "x", "y", "z" } );
         aOut.WriteKey( "Color" );
@@ -1013,16 +967,12 @@ namespace LTSE::Core
         aOut.BeginMap( true );
         aOut.WriteKey( "Position" );
         aOut.Write( aComponent.Position, { "x", "y", "z" } );
-        aOut.WriteKey( "Azimuth" );
-        aOut.Write( aComponent.Azimuth );
-        aOut.WriteKey( "Elevation" );
-        aOut.Write( aComponent.Elevation );
+        aOut.WriteKey( "Azimuth", aComponent.Azimuth );
+        aOut.WriteKey( "Elevation", aComponent.Elevation );
         aOut.WriteKey( "Color" );
         aOut.Write( aComponent.Color, { "r", "g", "b" } );
-        aOut.WriteKey( "Intensity" );
-        aOut.Write( aComponent.Intensity );
-        aOut.WriteKey( "Cone" );
-        aOut.Write( aComponent.Cone );
+        aOut.WriteKey( "Intensity", aComponent.Intensity );
+        aOut.WriteKey( "Cone", aComponent.Cone );
         aOut.EndMap();
     }
 
@@ -1066,11 +1016,6 @@ namespace LTSE::Core
             lOut.BeginMap();
             lOut.WriteKey( "name", "FOO" );
             lOut.WriteKey( "version", "1" );
-            lOut.WriteKey( "vertices", "1" );
-            lOut.WriteKey( "indices", "1" );
-            lOut.WriteKey( "materials", "1" );
-            lOut.WriteKey( "textures", "1" );
-            lOut.WriteKey( "animations", "1" );
             lOut.WriteKey( "nodes" );
             {
                 lOut.BeginMap();
@@ -1090,26 +1035,26 @@ namespace LTSE::Core
                                 auto &lComponent = aEntity.Get<sAnimationComponent>();
                                 lOut.WriteKey( "sAnimationComponent" );
                                 lOut.BeginMap();
-                                lOut.WriteKey( "Duration" );
-                                lOut.Write( lComponent.Duration );
-                                lOut.WriteKey( "mChannels" );
-                                lOut.BeginSequence();
-                                for( auto &lAnimationChannel : lComponent.mChannels )
                                 {
-                                    lOut.BeginMap( true );
+                                    lOut.WriteKey( "Duration", lComponent.Duration );
+                                    lOut.WriteKey( "mChannels" );
+                                    lOut.BeginSequence();
                                     {
-                                        lOut.WriteKey( "mTargetNode" );
-                                        lOut.Write( lAnimationChannel.mTargetNode.Get<sUUID>().mValue.str() );
-                                        lOut.WriteKey( "mChannelID" );
-                                        lOut.Write( (uint32_t)lAnimationChannel.mChannelID );
-                                        lOut.WriteKey( "mInterpolationDataIndex" );
-                                        lInterpolationData.push_back( lAnimationChannel.mInterpolation );
-                                        lOut.Write( lInterpolationData.size() - 1 );
+                                        for( auto &lAnimationChannel : lComponent.mChannels )
+                                        {
+                                            lOut.BeginMap( true );
+                                            {
+                                                lOut.WriteKey(
+                                                    "mTargetNode", lAnimationChannel.mTargetNode.Get<sUUID>().mValue.str() );
+                                                lOut.WriteKey( "mChannelID", (uint32_t)lAnimationChannel.mChannelID );
+                                                lOut.WriteKey( "mInterpolationDataIndex", lInterpolationData.size() );
+                                                lInterpolationData.push_back( lAnimationChannel.mInterpolation );
+                                            }
+                                            lOut.EndMap();
+                                        }
                                     }
-                                    lOut.EndMap();
+                                    lOut.EndSequence();
                                 }
-                                lOut.EndSequence();
-
                                 lOut.EndMap();
                             }
 
