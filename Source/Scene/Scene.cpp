@@ -942,12 +942,6 @@ namespace LTSE::Core
         aOut.EndMap();
     }
 
-    // void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, RendererComponent const &aComponent )
-    // {
-    //     aOut.WriteKey( aName );
-    //     aOut.WriteNull();
-    // }
-
     void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sMaterialShaderComponent const &aComponent )
     {
         aOut.WriteKey( aName );
@@ -1065,6 +1059,7 @@ namespace LTSE::Core
 
         auto lOut = ConfigurationWriter( aPath / "Scene.yaml" );
 
+        std::vector<sImportedAnimationSampler> lInterpolationData;
         lOut.BeginMap();
         lOut.WriteKey( "scene" );
         {
@@ -1089,7 +1084,35 @@ namespace LTSE::Core
                             WriteComponent<sRelationshipComponent>( lOut, "sRelationshipComponent", aEntity );
                             WriteComponent<sCameraComponent>( lOut, "sCameraComponent", aEntity );
                             WriteComponent<sAnimationChooser>( lOut, "sAnimationChooser", aEntity );
-                            WriteComponent<sAnimationComponent>( lOut, "sAnimationComponent", aEntity );
+
+                            if( aEntity.Has<sAnimationComponent>() )
+                            {
+                                auto &lComponent = aEntity.Get<sAnimationComponent>();
+                                lOut.WriteKey( "sAnimationComponent" );
+                                lOut.BeginMap();
+                                lOut.WriteKey( "Duration" );
+                                lOut.Write( lComponent.Duration );
+                                lOut.WriteKey( "mChannels" );
+                                lOut.BeginSequence();
+                                for( auto &lAnimationChannel : lComponent.mChannels )
+                                {
+                                    lOut.BeginMap( true );
+                                    {
+                                        lOut.WriteKey( "mTargetNode" );
+                                        lOut.Write( lAnimationChannel.mTargetNode.Get<sUUID>().mValue.str() );
+                                        lOut.WriteKey( "mChannelID" );
+                                        lOut.Write( (uint32_t)lAnimationChannel.mChannelID );
+                                        lOut.WriteKey( "mInterpolationDataIndex" );
+                                        lInterpolationData.push_back( lAnimationChannel.mInterpolation );
+                                        lOut.Write( lInterpolationData.size() - 1 );
+                                    }
+                                    lOut.EndMap();
+                                }
+                                lOut.EndSequence();
+
+                                lOut.EndMap();
+                            }
+
                             WriteComponent<sAnimatedTransformComponent>( lOut, "sAnimatedTransformComponent", aEntity );
                             WriteComponent<sLocalTransformComponent>( lOut, "LocalTransformComponent", aEntity );
                             WriteComponent<sTransformMatrixComponent>( lOut, "TransformMatrixComponent", aEntity );
@@ -1167,21 +1190,17 @@ namespace LTSE::Core
             lPackets.push_back( lTexturePacket );
         }
 
-        ForEach<sAnimationComponent>(
-            [&]( auto aEntity, auto &aComponent )
-            {
-                for( auto &lAnimationChannel : aComponent.mChannels )
-                {
-                    sAssetIndex lMaterialAssetIndexEntry{};
-                    lMaterialAssetIndexEntry.mType      = eAssetType::ANIMATION_DATA;
-                    lMaterialAssetIndexEntry.mByteStart = 0;
-                    lMaterialAssetIndexEntry.mByteEnd   = 1;
-                    lAssetIndex.push_back( lMaterialAssetIndexEntry );
+        for( auto &lInterpolation : lInterpolationData )
+        {
+            sAssetIndex lAnimationAssetIndexEntry{};
+            lAnimationAssetIndexEntry.mType      = eAssetType::ANIMATION_DATA;
+            lAnimationAssetIndexEntry.mByteStart = 0;
+            lAnimationAssetIndexEntry.mByteEnd   = 1;
+            lAssetIndex.push_back( lAnimationAssetIndexEntry );
 
-                    auto lAnimationPacket = lBinaryDataFile.Package( lAnimationChannel.mInterpolation );
-                    lPackets.push_back( lAnimationPacket );
-                }
-            } );
+            auto lAnimationPacket = lBinaryDataFile.Package( lInterpolation );
+            lPackets.push_back( lAnimationPacket );
+        }
 
         uint32_t lAssetCount = static_cast<uint32_t>( lAssetIndex.size() );
 
