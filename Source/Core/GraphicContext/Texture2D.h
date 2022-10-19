@@ -140,8 +140,7 @@ namespace LTSE::Graphics
         Texture2D( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription, sImageData &a_ImageData );
 
         /** @brief */
-        Texture2D(
-            GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription, gli::texture2d &a_CubeMapData );
+        Texture2D( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription, gli::texture2d &a_CubeMapData );
 
         /** @brief */
         Texture2D( GraphicContext &a_GraphicContext, TextureData2D &a_CubeMapData, TextureSampler2D &aSamplingInfo );
@@ -170,7 +169,8 @@ namespace LTSE::Graphics
         /** @brief */
         inline VkSampler GetSampler() { return m_TextureSamplerObject->mVkObject; }
 
-        void GetTextureData( TextureData2D &aTextureData );
+        void                 GetTextureData( TextureData2D &aTextureData );
+        sTextureSamplingInfo GetTextureSampling();
 
       private:
         void TransitionImageLayout( VkImageLayout oldLayout, VkImageLayout newLayout );

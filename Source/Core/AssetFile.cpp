@@ -2,8 +2,8 @@
 
 namespace LTSE::Core
 {
-    static constexpr uint8_t sFileMagic[] = { '@', '%', 'S', 'P', 'O', 'C', 'K', 'E', 'N', 'G', 'I', 'N', 'E', '_', 'S', 'C',
-        'E', 'N', 'E', '_', 'A', 'S', 'S', 'E', 'T', '@', '%' };
+    static constexpr uint8_t sFileMagic[] = { '@', '%', 'S', 'P', 'O', 'C', 'K', 'E', 'N', 'G', 'I', 'N', 'E', '_', 'S', 'C', 'E', 'N',
+        'E', '_', 'A', 'S', 'S', 'E', 'T', '@', '%' };
 
     BinaryAsset::BinaryAsset( fs::path const &aPath )
         : mFilePath{ aPath }
@@ -72,11 +72,10 @@ namespace LTSE::Core
         return { lTextureData, lSampler };
     }
 
-    std::vector<char> BinaryAsset::Package( TextureData2D const &aData, TextureSampler2D const &aSampler )
+    std::vector<char> BinaryAsset::Package( TextureData2D const &aData, sTextureSamplingInfo const &aSampler )
     {
         uint32_t lHeaderSize = 0;
-        lHeaderSize +=
-            sizeof( eSamplerFilter ) + sizeof( eSamplerFilter ) + sizeof( eSamplerMipmap ) + sizeof( eSamplerWrapping );
+        lHeaderSize += sizeof( eSamplerFilter ) + sizeof( eSamplerFilter ) + sizeof( eSamplerMipmap ) + sizeof( eSamplerWrapping );
         lHeaderSize += 2 * sizeof( float );
         lHeaderSize += 2 * sizeof( float );
         lHeaderSize += 4 * sizeof( float );
@@ -87,32 +86,32 @@ namespace LTSE::Core
         std::vector<char> lPacket( lPacketSize );
 
         auto *lPtr = lPacket.data();
-        std::memcpy( lPtr, &aSampler.mSamplingSpec.mMinification, sizeof( eSamplerFilter ) );
+        std::memcpy( lPtr, &aSampler.mMinification, sizeof( eSamplerFilter ) );
         lPtr += sizeof( eSamplerFilter );
-        std::memcpy( lPtr, &aSampler.mSamplingSpec.mMagnification, sizeof( eSamplerFilter ) );
+        std::memcpy( lPtr, &aSampler.mMagnification, sizeof( eSamplerFilter ) );
         lPtr += sizeof( eSamplerFilter );
-        std::memcpy( lPtr, &aSampler.mSamplingSpec.mMip, sizeof( eSamplerMipmap ) );
+        std::memcpy( lPtr, &aSampler.mMip, sizeof( eSamplerMipmap ) );
         lPtr += sizeof( eSamplerMipmap );
-        std::memcpy( lPtr, &aSampler.mSamplingSpec.mWrapping, sizeof( eSamplerWrapping ) );
+        std::memcpy( lPtr, &aSampler.mWrapping, sizeof( eSamplerWrapping ) );
         lPtr += sizeof( eSamplerWrapping );
 
-        std::memcpy( lPtr, &aSampler.mSamplingSpec.mScaling[0], sizeof( float ) );
+        std::memcpy( lPtr, &aSampler.mScaling[0], sizeof( float ) );
         lPtr += sizeof( float );
-        std::memcpy( lPtr, &aSampler.mSamplingSpec.mScaling[1], sizeof( float ) );
-        lPtr += sizeof( float );
-
-        std::memcpy( lPtr, &aSampler.mSamplingSpec.mOffset[0], sizeof( float ) );
-        lPtr += sizeof( float );
-        std::memcpy( lPtr, &aSampler.mSamplingSpec.mOffset[1], sizeof( float ) );
+        std::memcpy( lPtr, &aSampler.mScaling[1], sizeof( float ) );
         lPtr += sizeof( float );
 
-        std::memcpy( lPtr, &aSampler.mSamplingSpec.mBorderColor[0], sizeof( float ) );
+        std::memcpy( lPtr, &aSampler.mOffset[0], sizeof( float ) );
         lPtr += sizeof( float );
-        std::memcpy( lPtr, &aSampler.mSamplingSpec.mBorderColor[1], sizeof( float ) );
+        std::memcpy( lPtr, &aSampler.mOffset[1], sizeof( float ) );
         lPtr += sizeof( float );
-        std::memcpy( lPtr, &aSampler.mSamplingSpec.mBorderColor[2], sizeof( float ) );
+
+        std::memcpy( lPtr, &aSampler.mBorderColor[0], sizeof( float ) );
         lPtr += sizeof( float );
-        std::memcpy( lPtr, &aSampler.mSamplingSpec.mBorderColor[3], sizeof( float ) );
+        std::memcpy( lPtr, &aSampler.mBorderColor[1], sizeof( float ) );
+        lPtr += sizeof( float );
+        std::memcpy( lPtr, &aSampler.mBorderColor[2], sizeof( float ) );
+        lPtr += sizeof( float );
+        std::memcpy( lPtr, &aSampler.mBorderColor[3], sizeof( float ) );
         lPtr += sizeof( float );
 
         std::memcpy( lPtr, lKTXData.data(), lKTXData.size() );
@@ -149,12 +148,10 @@ namespace LTSE::Core
         aSampler = TextureSampler2D( aData, lSamplerCreateInfo );
     }
 
-    std::vector<char> BinaryAsset::Package(
-        std::vector<VertexData> const &aVertexData, std::vector<uint32_t> const &aIndexData )
+    std::vector<char> BinaryAsset::Package( std::vector<VertexData> const &aVertexData, std::vector<uint32_t> const &aIndexData )
     {
         uint32_t lHeaderSize = 2 * sizeof( uint32_t );
-        uint32_t lPacketSize =
-            aVertexData.size() * sizeof( VertexData ) + aIndexData.size() * sizeof( uint32_t ) + lHeaderSize;
+        uint32_t lPacketSize = aVertexData.size() * sizeof( VertexData ) + aIndexData.size() * sizeof( uint32_t ) + lHeaderSize;
 
         std::vector<char> lPacket( lPacketSize );
 
@@ -184,11 +181,11 @@ namespace LTSE::Core
     std::vector<char> BinaryAsset::Package( sMaterial const &aMaterialData )
     {
         uint32_t lHeaderSize = sizeof( uint32_t );
-        uint32_t lPacketSize = sizeof( sMaterial ) - sizeof(std::string) + (sizeof(uint32_t) + aMaterialData.mName.size());
+        uint32_t lPacketSize = sizeof( sMaterial ) - sizeof( std::string ) + ( sizeof( uint32_t ) + aMaterialData.mName.size() );
 
         std::vector<char> lPacket( lPacketSize );
-        auto *lPtr = lPacket.data();
-        uint32_t lNameByteSize = aMaterialData.mName.size();
+        auto             *lPtr          = lPacket.data();
+        uint32_t          lNameByteSize = aMaterialData.mName.size();
 
         std::memcpy( lPtr, &lNameByteSize, sizeof( uint32_t ) );
         lPtr += sizeof( uint32_t );
@@ -196,50 +193,50 @@ namespace LTSE::Core
         std::memcpy( lPtr, aMaterialData.mName.c_str(), lNameByteSize );
         lPtr += lNameByteSize;
 
-        std::memcpy( lPtr, &aMaterialData.mID, sizeof(uint32_t) );
-        lPtr += sizeof(uint32_t);
+        std::memcpy( lPtr, &aMaterialData.mID, sizeof( uint32_t ) );
+        lPtr += sizeof( uint32_t );
 
-        std::memcpy( lPtr, &aMaterialData.mType, sizeof(uint8_t) );
-        lPtr += sizeof(uint32_t);
+        std::memcpy( lPtr, &aMaterialData.mType, sizeof( uint8_t ) );
+        lPtr += sizeof( uint32_t );
 
-        std::memcpy( lPtr, &aMaterialData.mLineWidth, sizeof(float) );
-        lPtr += sizeof(float);
-        std::memcpy( lPtr, &aMaterialData.mIsTwoSided, sizeof(bool) );
-        lPtr += sizeof(bool);
-        std::memcpy( lPtr, &aMaterialData.mUseAlphaMask, sizeof(bool) );
-        lPtr += sizeof(bool);
-        std::memcpy( lPtr, &aMaterialData.mAlphaThreshold, sizeof(float) );
-        lPtr += sizeof(float);
+        std::memcpy( lPtr, &aMaterialData.mLineWidth, sizeof( float ) );
+        lPtr += sizeof( float );
+        std::memcpy( lPtr, &aMaterialData.mIsTwoSided, sizeof( bool ) );
+        lPtr += sizeof( bool );
+        std::memcpy( lPtr, &aMaterialData.mUseAlphaMask, sizeof( bool ) );
+        lPtr += sizeof( bool );
+        std::memcpy( lPtr, &aMaterialData.mAlphaThreshold, sizeof( float ) );
+        lPtr += sizeof( float );
 
-        std::memcpy( lPtr, &aMaterialData.mBaseColorFactor, sizeof(math::vec4) );
-        lPtr += sizeof(float);
+        std::memcpy( lPtr, &aMaterialData.mBaseColorFactor, sizeof( math::vec4 ) );
+        lPtr += sizeof( float );
 
-        std::memcpy( lPtr, &aMaterialData.mBaseColorTexture, sizeof(sTextureReference) );
-        lPtr += sizeof(float);
+        std::memcpy( lPtr, &aMaterialData.mBaseColorTexture, sizeof( sTextureReference ) );
+        lPtr += sizeof( float );
 
-        std::memcpy( lPtr, &aMaterialData.mEmissiveFactor, sizeof(math::vec4) );
-        lPtr += sizeof(float);
+        std::memcpy( lPtr, &aMaterialData.mEmissiveFactor, sizeof( math::vec4 ) );
+        lPtr += sizeof( float );
 
-        std::memcpy( lPtr, &aMaterialData.mEmissiveTexture, sizeof(sTextureReference) );
-        lPtr += sizeof(float);
+        std::memcpy( lPtr, &aMaterialData.mEmissiveTexture, sizeof( sTextureReference ) );
+        lPtr += sizeof( float );
 
-        std::memcpy( lPtr, &aMaterialData.mRoughnessFactor, sizeof(float) );
-        lPtr += sizeof(float);
+        std::memcpy( lPtr, &aMaterialData.mRoughnessFactor, sizeof( float ) );
+        lPtr += sizeof( float );
 
-        std::memcpy( lPtr, &aMaterialData.mMetallicFactor, sizeof(float) );
-        lPtr += sizeof(float);
+        std::memcpy( lPtr, &aMaterialData.mMetallicFactor, sizeof( float ) );
+        lPtr += sizeof( float );
 
-        std::memcpy( lPtr, &aMaterialData.mMetalRoughTexture, sizeof(sTextureReference) );
-        lPtr += sizeof(float);
+        std::memcpy( lPtr, &aMaterialData.mMetalRoughTexture, sizeof( sTextureReference ) );
+        lPtr += sizeof( float );
 
-        std::memcpy( lPtr, &aMaterialData.mOcclusionStrength, sizeof(float) );
-        lPtr += sizeof(float);
+        std::memcpy( lPtr, &aMaterialData.mOcclusionStrength, sizeof( float ) );
+        lPtr += sizeof( float );
 
-        std::memcpy( lPtr, &aMaterialData.mOcclusionTexture, sizeof(sTextureReference) );
-        lPtr += sizeof(float);
+        std::memcpy( lPtr, &aMaterialData.mOcclusionTexture, sizeof( sTextureReference ) );
+        lPtr += sizeof( float );
 
-        std::memcpy( lPtr, &aMaterialData.mNormalsTexture, sizeof(sTextureReference) );
-        lPtr += sizeof(float);
+        std::memcpy( lPtr, &aMaterialData.mNormalsTexture, sizeof( sTextureReference ) );
+        lPtr += sizeof( float );
 
         return lPacket;
     }
