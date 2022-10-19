@@ -1322,30 +1322,32 @@ namespace LTSE::Core
                     {
                         lOut.WriteKey( aUUID.mValue.str() );
                         lOut.BeginMap();
-                        WriteComponent<sTag>( lOut, "sTag", aEntity );
-                        WriteComponent<sRelationshipComponent>( lOut, "sRelationshipComponent", aEntity );
-                        WriteComponent<sCameraComponent>( lOut, "sCameraComponent", aEntity );
-                        WriteComponent<sAnimationChooser>( lOut, "sAnimationChooser", aEntity );
-                        WriteComponent<sAnimationComponent>( lOut, "sAnimationComponent", aEntity );
-                        WriteComponent<sAnimatedTransformComponent>( lOut, "sAnimatedTransformComponent", aEntity );
-                        WriteComponent<sLocalTransformComponent>( lOut, "LocalTransformComponent", aEntity );
-                        WriteComponent<sTransformMatrixComponent>( lOut, "TransformMatrixComponent", aEntity );
-                        WriteComponent<sStaticMeshComponent>( lOut, "sStaticMeshComponent", aEntity );
-                        WriteComponent<sParticleSystemComponent>( lOut, "sParticleSystemComponent", aEntity );
-                        WriteComponent<sParticleShaderComponent>( lOut, "sParticleShaderComponent", aEntity );
-                        WriteComponent<sSkeletonComponent>( lOut, "sSkeletonComponent", aEntity );
-                        WriteComponent<sWireframeComponent>( lOut, "sWireframeComponent", aEntity );
-                        WriteComponent<sWireframeMeshComponent>( lOut, "sWireframeMeshComponent", aEntity );
-                        WriteComponent<sBoundingBoxComponent>( lOut, "sBoundingBoxComponent", aEntity );
-                        WriteComponent<sRayTracingTargetComponent>( lOut, "sRayTracingTargetComponent", aEntity );
-                        WriteComponent<sMaterialComponent>( lOut, "sMaterialComponent", aEntity );
-                        WriteComponent<sMaterialShaderComponent>( lOut, "sMaterialShaderComponent", aEntity );
-                        WriteComponent<sBackgroundComponent>( lOut, "sBackgroundComponent", aEntity );
-                        WriteComponent<sDirectionalLightComponent>( lOut, "sDirectionalLightComponent", aEntity );
-                        WriteComponent<sAmbientLightingComponent>( lOut, "sAmbientLightingComponent", aEntity );
-                        WriteComponent<sPointLightComponent>( lOut, "sPointLightComponent", aEntity );
-                        WriteComponent<sSpotlightComponent>( lOut, "sSpotlightComponent", aEntity );
-                        WriteComponent<sLightComponent>( lOut, "sLightComponent", aEntity );
+                        {
+                            WriteComponent<sTag>( lOut, "sTag", aEntity );
+                            WriteComponent<sRelationshipComponent>( lOut, "sRelationshipComponent", aEntity );
+                            WriteComponent<sCameraComponent>( lOut, "sCameraComponent", aEntity );
+                            WriteComponent<sAnimationChooser>( lOut, "sAnimationChooser", aEntity );
+                            WriteComponent<sAnimationComponent>( lOut, "sAnimationComponent", aEntity );
+                            WriteComponent<sAnimatedTransformComponent>( lOut, "sAnimatedTransformComponent", aEntity );
+                            WriteComponent<sLocalTransformComponent>( lOut, "LocalTransformComponent", aEntity );
+                            WriteComponent<sTransformMatrixComponent>( lOut, "TransformMatrixComponent", aEntity );
+                            WriteComponent<sStaticMeshComponent>( lOut, "sStaticMeshComponent", aEntity );
+                            WriteComponent<sParticleSystemComponent>( lOut, "sParticleSystemComponent", aEntity );
+                            WriteComponent<sParticleShaderComponent>( lOut, "sParticleShaderComponent", aEntity );
+                            WriteComponent<sSkeletonComponent>( lOut, "sSkeletonComponent", aEntity );
+                            WriteComponent<sWireframeComponent>( lOut, "sWireframeComponent", aEntity );
+                            WriteComponent<sWireframeMeshComponent>( lOut, "sWireframeMeshComponent", aEntity );
+                            WriteComponent<sBoundingBoxComponent>( lOut, "sBoundingBoxComponent", aEntity );
+                            WriteComponent<sRayTracingTargetComponent>( lOut, "sRayTracingTargetComponent", aEntity );
+                            WriteComponent<sMaterialComponent>( lOut, "sMaterialComponent", aEntity );
+                            WriteComponent<sMaterialShaderComponent>( lOut, "sMaterialShaderComponent", aEntity );
+                            WriteComponent<sBackgroundComponent>( lOut, "sBackgroundComponent", aEntity );
+                            WriteComponent<sDirectionalLightComponent>( lOut, "sDirectionalLightComponent", aEntity );
+                            WriteComponent<sAmbientLightingComponent>( lOut, "sAmbientLightingComponent", aEntity );
+                            WriteComponent<sPointLightComponent>( lOut, "sPointLightComponent", aEntity );
+                            WriteComponent<sSpotlightComponent>( lOut, "sSpotlightComponent", aEntity );
+                            WriteComponent<sLightComponent>( lOut, "sLightComponent", aEntity );
+                        }
                         lOut.EndMap();
                     } );
 
