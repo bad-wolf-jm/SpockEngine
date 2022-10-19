@@ -13,9 +13,10 @@
 #include <functional>
 #include <string>
 
-#include "TextureData.h"
-#include "Scene/VertexData.h"
 #include "Scene/Importer/ImporterData.h"
+#include "Scene/VertexData.h"
+#include "TextureData.h"
+
 
 namespace fs = std::filesystem;
 
@@ -83,12 +84,12 @@ namespace LTSE::Core
 
         /// @brief Retrieve the texture stored in the file at index `aIndex`
         std::tuple<TextureData2D, TextureSampler2D> Retrieve( uint32_t aIndex );
-        void Retrieve( uint32_t aIndex, TextureData2D &aData, TextureSampler2D &aSampler );
+        void                                        Retrieve( uint32_t aIndex, TextureData2D &aData, TextureSampler2D &aSampler );
         void Retrieve( uint32_t aIndex, std::vector<VertexData> &aVertexData, std::vector<uint32_t> &aIndexData );
         void Retrieve( uint32_t aIndex, sMaterial &aMaterialData );
         void Retrieve( uint32_t aIndex, sImportedAnimationSampler &aMaterialData );
 
-        std::vector<char> Package( Core::TextureData2D const &aData, Core::TextureSampler2D const &aSampler );
+        std::vector<char> Package( Core::TextureData2D const &aData, sTextureSamplingInfo const &aSampler );
         std::vector<char> Package( std::vector<VertexData> const &aVertexData, std::vector<uint32_t> const &aIndexData );
         std::vector<char> Package( sMaterial const &aMaterialData );
         std::vector<char> Package( sImportedAnimationSampler const &aMaterialData );

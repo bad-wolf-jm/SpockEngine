@@ -1391,8 +1391,16 @@ namespace LTSE::Core
             TextureData2D lTextureData;
             lTexture->GetTextureData( lTextureData );
 
-            // auto n = fmt::format( "BAR__{}.ktx", i++ );
-            // lTextureData.SaveTo( aPath / n );
+            sTextureSamplingInfo lSamplingInfo = lTexture->GetTextureSampling();
+
+            sAssetIndex lAssetIndexEntry{};
+            lAssetIndexEntry.mType      = eAssetType::KTX_TEXTURE_2D;
+            lAssetIndexEntry.mByteStart = 0;
+            lAssetIndexEntry.mByteEnd   = 1;
+            lAssetIndex.push_back( lAssetIndexEntry );
+
+            auto lTexturePacket = lBinaryDataFile.Package( lTextureData, lSamplingInfo );
+            lPackets.push_back( lTexturePacket );
         }
 
         uint32_t lAssetCount = static_cast<uint32_t>( lAssetIndex.size() );

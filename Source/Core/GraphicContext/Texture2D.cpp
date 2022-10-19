@@ -91,6 +91,18 @@ namespace LTSE::Graphics
         CreateImageSampler();
     }
 
+    static eSamplerFilter Convert( SamplerFilter aValue )
+    {
+        switch( aValue )
+        {
+        case SamplerFilter::NEAREST:
+            return eSamplerFilter::NEAREST;
+        case SamplerFilter::LINEAR:
+        default:
+            return eSamplerFilter::LINEAR;
+        }
+    }
+
     static SamplerFilter Convert( eSamplerFilter aValue )
     {
         switch( aValue )
@@ -103,6 +115,18 @@ namespace LTSE::Graphics
         }
     }
 
+    static eSamplerMipmap Convert( SamplerMipmap aValue )
+    {
+        switch( aValue )
+        {
+        case SamplerMipmap::NEAREST:
+            return eSamplerMipmap::NEAREST;
+        case SamplerMipmap::LINEAR:
+        default:
+            return eSamplerMipmap::LINEAR;
+        }
+    }
+
     static SamplerMipmap Convert( eSamplerMipmap aValue )
     {
         switch( aValue )
@@ -112,6 +136,25 @@ namespace LTSE::Graphics
         case eSamplerMipmap::LINEAR:
         default:
             return SamplerMipmap::LINEAR;
+        }
+    }
+
+    static eSamplerWrapping Convert( SamplerWrapping aValue )
+    {
+        switch( aValue )
+        {
+        case SamplerWrapping::REPEAT:
+            return eSamplerWrapping::REPEAT;
+        case SamplerWrapping::MIRRORED_REPEAT:
+            return eSamplerWrapping::MIRRORED_REPEAT;
+        case SamplerWrapping::CLAMP_TO_EDGE:
+            return eSamplerWrapping::CLAMP_TO_EDGE;
+        case SamplerWrapping::CLAMP_TO_BORDER:
+            return eSamplerWrapping::CLAMP_TO_BORDER;
+        case SamplerWrapping::MIRROR_CLAMP_TO_BORDER:
+            return eSamplerWrapping::MIRROR_CLAMP_TO_BORDER;
+        default:
+            return eSamplerWrapping::REPEAT;
         }
     }
 
@@ -288,7 +331,7 @@ namespace LTSE::Graphics
         uint8_t *lPixelData = lStagingBuffer.Map<uint8_t>( lByteSize, 0 );
 
         sImageData lImageDataStruct{};
-        lImageDataStruct.mFormat    = eColorFormat::RGBA8_UNORM;
+        lImageDataStruct.mFormat    = Spec.Format;
         lImageDataStruct.mWidth     = Spec.MipLevels[0].Width;
         lImageDataStruct.mHeight    = Spec.MipLevels[0].Height;
         lImageDataStruct.mByteSize  = lByteSize;
@@ -297,6 +340,18 @@ namespace LTSE::Graphics
         Core::TextureData::sCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mMipLevels = 1;
         aTextureData                  = TextureData2D( lTextureCreateInfo, lImageDataStruct );
+    }
+
+    sTextureSamplingInfo Texture2D::GetTextureSampling()
+    {
+        sTextureSamplingInfo lSamplingInfo{};
+
+        lSamplingInfo.mMinification  = Convert( Spec.MinificationFilter );
+        lSamplingInfo.mMagnification = Convert( Spec.MagnificationFilter );
+        lSamplingInfo.mMip           = Convert( Spec.MipmapMode );
+        lSamplingInfo.mWrapping      = Convert( Spec.WrappingMode );
+
+        return lSamplingInfo;
     }
 
 } // namespace LTSE::Graphics
