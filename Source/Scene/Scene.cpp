@@ -767,15 +767,17 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "Position" );
-        aOut.Write( aComponent.Position, { "x", "y", "z" } );
-        aOut.WriteKey( "Pitch", aComponent.Pitch );
-        aOut.WriteKey( "Yaw", aComponent.Yaw );
-        aOut.WriteKey( "Roll", aComponent.Roll );
-        aOut.WriteKey( "Near", aComponent.Near );
-        aOut.WriteKey( "Far", aComponent.Far );
-        aOut.WriteKey( "FieldOfView", aComponent.FieldOfView );
-        aOut.WriteKey( "AspectRatio", aComponent.AspectRatio );
+        {
+            aOut.WriteKey( "Position" );
+            aOut.Write( aComponent.Position, { "x", "y", "z" } );
+            aOut.WriteKey( "Pitch", aComponent.Pitch );
+            aOut.WriteKey( "Yaw", aComponent.Yaw );
+            aOut.WriteKey( "Roll", aComponent.Roll );
+            aOut.WriteKey( "Near", aComponent.Near );
+            aOut.WriteKey( "Far", aComponent.Far );
+            aOut.WriteKey( "FieldOfView", aComponent.FieldOfView );
+            aOut.WriteKey( "AspectRatio", aComponent.AspectRatio );
+        }
         aOut.EndMap();
     }
 
@@ -783,11 +785,12 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginSequence( true );
-        for( auto &lAnimationEntity : aComponent.Animations )
         {
-            if( lAnimationEntity ) aOut.Write( lAnimationEntity.Get<sUUID>().mValue.str() );
+            for( auto &lAnimationEntity : aComponent.Animations )
+            {
+                if( lAnimationEntity ) aOut.Write( lAnimationEntity.Get<sUUID>().mValue.str() );
+            }
         }
-
         aOut.EndSequence();
     }
 
@@ -795,12 +798,14 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap();
-        aOut.WriteKey( "Translation" );
-        aOut.Write( aComponent.Translation, { "x", "y", "z" } );
-        aOut.WriteKey( "Scaling" );
-        aOut.Write( aComponent.Scaling, { "x", "y", "z" } );
-        aOut.WriteKey( "Rotation" );
-        aOut.Write( aComponent.Rotation, { "x", "y", "z", "w" } );
+        {
+            aOut.WriteKey( "Translation" );
+            aOut.Write( aComponent.Translation, { "x", "y", "z" } );
+            aOut.WriteKey( "Scaling" );
+            aOut.Write( aComponent.Scaling, { "x", "y", "z" } );
+            aOut.WriteKey( "Rotation" );
+            aOut.Write( aComponent.Rotation, { "x", "y", "z", "w" } );
+        }
         aOut.EndMap();
     }
 
@@ -808,17 +813,21 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "mMatrix" );
-        aOut.Write( aComponent.mMatrix );
+        {
+            aOut.WriteKey( "mMatrix" );
+            aOut.Write( aComponent.mMatrix );
+        }
         aOut.EndMap();
     }
 
     void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sTransformMatrixComponent const &aComponent )
     {
         aOut.WriteKey( aName );
-        aOut.BeginMap( true );
-        aOut.WriteKey( "mMatrix" );
-        aOut.Write( aComponent.Matrix );
+        {
+            aOut.BeginMap( true );
+            aOut.WriteKey( "mMatrix" );
+            aOut.Write( aComponent.Matrix );
+        }
         aOut.EndMap();
     }
 
@@ -826,10 +835,12 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "mVertexOffset", aComponent.mVertexOffset );
-        aOut.WriteKey( "mVertexCount", aComponent.mVertexCount );
-        aOut.WriteKey( "mIndexOffset", aComponent.mIndexOffset );
-        aOut.WriteKey( "mIndexCount", aComponent.mIndexCount );
+        {
+            aOut.WriteKey( "mVertexOffset", aComponent.mVertexOffset );
+            aOut.WriteKey( "mVertexCount", aComponent.mVertexCount );
+            aOut.WriteKey( "mIndexOffset", aComponent.mIndexOffset );
+            aOut.WriteKey( "mIndexCount", aComponent.mIndexCount );
+        }
         aOut.EndMap();
     }
 
@@ -849,25 +860,27 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap();
-        aOut.WriteKey( "BoneCount", (uint32_t)aComponent.BoneCount );
-        aOut.WriteKey( "Bones" );
-        aOut.BeginSequence( true );
         {
-            for( auto &x : aComponent.Bones ) aOut.Write( x.Get<sUUID>().mValue.str() );
+            aOut.WriteKey( "BoneCount", (uint32_t)aComponent.BoneCount );
+            aOut.WriteKey( "Bones" );
+            aOut.BeginSequence( true );
+            {
+                for( auto &x : aComponent.Bones ) aOut.Write( x.Get<sUUID>().mValue.str() );
+            }
+            aOut.EndSequence();
+            aOut.WriteKey( "InverseBindMatrices" );
+            aOut.BeginSequence( true );
+            {
+                for( auto &x : aComponent.InverseBindMatrices ) aOut.Write( x );
+            }
+            aOut.EndSequence();
+            aOut.WriteKey( "JointMatrices" );
+            aOut.BeginSequence( true );
+            {
+                for( auto &x : aComponent.JointMatrices ) aOut.Write( x );
+            }
+            aOut.EndSequence();
         }
-        aOut.EndSequence();
-        aOut.WriteKey( "InverseBindMatrices" );
-        aOut.BeginSequence( true );
-        {
-            for( auto &x : aComponent.InverseBindMatrices ) aOut.Write( x );
-        }
-        aOut.EndSequence();
-        aOut.WriteKey( "JointMatrices" );
-        aOut.BeginSequence( true );
-        {
-            for( auto &x : aComponent.JointMatrices ) aOut.Write( x );
-        }
-        aOut.EndSequence();
         aOut.EndMap();
     }
 
@@ -893,8 +906,10 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "Transform" );
-        aOut.Write( aComponent.Transform );
+        {
+            aOut.WriteKey( "Transform" );
+            aOut.Write( aComponent.Transform );
+        }
         aOut.EndMap();
     }
 
@@ -902,7 +917,9 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "mMaterialID", aComponent.mMaterialID );
+        {
+            aOut.WriteKey( "mMaterialID", aComponent.mMaterialID );
+        }
         aOut.EndMap();
     }
 
@@ -910,11 +927,13 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "Type", (uint32_t)aComponent.Type );
-        aOut.WriteKey( "IsTwoSided", aComponent.IsTwoSided );
-        aOut.WriteKey( "UseAlphaMask", aComponent.UseAlphaMask );
-        aOut.WriteKey( "LineWidth", aComponent.LineWidth );
-        aOut.WriteKey( "AlphaMaskTheshold", aComponent.AlphaMaskTheshold );
+        {
+            aOut.WriteKey( "Type", (uint32_t)aComponent.Type );
+            aOut.WriteKey( "IsTwoSided", aComponent.IsTwoSided );
+            aOut.WriteKey( "UseAlphaMask", aComponent.UseAlphaMask );
+            aOut.WriteKey( "LineWidth", aComponent.LineWidth );
+            aOut.WriteKey( "AlphaMaskTheshold", aComponent.AlphaMaskTheshold );
+        }
         aOut.EndMap();
     }
 
@@ -922,8 +941,10 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "Color" );
-        aOut.Write( aComponent.Color, { "r", "g", "b" } );
+        {
+            aOut.WriteKey( "Color" );
+            aOut.Write( aComponent.Color, { "r", "g", "b" } );
+        }
         aOut.EndMap();
     }
 
@@ -931,9 +952,11 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "Intensity", aComponent.Intensity );
-        aOut.WriteKey( "Color" );
-        aOut.Write( aComponent.Color, { "r", "g", "b" } );
+        {
+            aOut.WriteKey( "Intensity", aComponent.Intensity );
+            aOut.WriteKey( "Color" );
+            aOut.Write( aComponent.Color, { "r", "g", "b" } );
+        }
         aOut.EndMap();
     }
 
@@ -941,11 +964,13 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "Azimuth", aComponent.Azimuth );
-        aOut.WriteKey( "Elevation", aComponent.Elevation );
-        aOut.WriteKey( "Intensity", aComponent.Intensity );
-        aOut.WriteKey( "Color" );
-        aOut.Write( aComponent.Color, { "r", "g", "b" } );
+        {
+            aOut.WriteKey( "Azimuth", aComponent.Azimuth );
+            aOut.WriteKey( "Elevation", aComponent.Elevation );
+            aOut.WriteKey( "Intensity", aComponent.Intensity );
+            aOut.WriteKey( "Color" );
+            aOut.Write( aComponent.Color, { "r", "g", "b" } );
+        }
         aOut.EndMap();
     }
 
@@ -953,11 +978,13 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "Intensity", aComponent.Intensity );
-        aOut.WriteKey( "Position" );
-        aOut.Write( aComponent.Position, { "x", "y", "z" } );
-        aOut.WriteKey( "Color" );
-        aOut.Write( aComponent.Color, { "r", "g", "b" } );
+        {
+            aOut.WriteKey( "Intensity", aComponent.Intensity );
+            aOut.WriteKey( "Position" );
+            aOut.Write( aComponent.Position, { "x", "y", "z" } );
+            aOut.WriteKey( "Color" );
+            aOut.Write( aComponent.Color, { "r", "g", "b" } );
+        }
         aOut.EndMap();
     }
 
@@ -965,14 +992,16 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        aOut.WriteKey( "Position" );
-        aOut.Write( aComponent.Position, { "x", "y", "z" } );
-        aOut.WriteKey( "Azimuth", aComponent.Azimuth );
-        aOut.WriteKey( "Elevation", aComponent.Elevation );
-        aOut.WriteKey( "Color" );
-        aOut.Write( aComponent.Color, { "r", "g", "b" } );
-        aOut.WriteKey( "Intensity", aComponent.Intensity );
-        aOut.WriteKey( "Cone", aComponent.Cone );
+        {
+            aOut.WriteKey( "Position" );
+            aOut.Write( aComponent.Position, { "x", "y", "z" } );
+            aOut.WriteKey( "Azimuth", aComponent.Azimuth );
+            aOut.WriteKey( "Elevation", aComponent.Elevation );
+            aOut.WriteKey( "Color" );
+            aOut.Write( aComponent.Color, { "r", "g", "b" } );
+            aOut.WriteKey( "Intensity", aComponent.Intensity );
+            aOut.WriteKey( "Cone", aComponent.Cone );
+        }
         aOut.EndMap();
     }
 
@@ -980,16 +1009,17 @@ namespace LTSE::Core
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
-        if( aComponent.Light )
         {
-            aOut.WriteKey( "Light", aComponent.Light.Get<sUUID>().mValue.str() );
+            if( aComponent.Light )
+            {
+                aOut.WriteKey( "Light", aComponent.Light.Get<sUUID>().mValue.str() );
+            }
+            else
+            {
+                aOut.WriteKey( "Light" );
+                aOut.WriteNull();
+            }
         }
-        else
-        {
-            aOut.WriteKey( "Light" );
-            aOut.WriteNull();
-        }
-
         aOut.EndMap();
     }
 
