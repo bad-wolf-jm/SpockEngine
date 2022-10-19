@@ -1033,30 +1033,14 @@ namespace LTSE::Core
         aOut.BeginSequence();
         for( auto &lAnimationChannel : aComponent.mChannels )
         {
-            aOut.BeginMap();
+            aOut.BeginMap( true );
             {
-                aOut.WriteKey( "mChannelID" );
-                aOut.Write( (uint32_t)lAnimationChannel.mChannelID );
                 aOut.WriteKey( "mTargetNode" );
                 aOut.Write( lAnimationChannel.mTargetNode.Get<sUUID>().mValue.str() );
-                aOut.WriteKey( "mInterpolation" );
-                aOut.BeginMap();
-                {
-                    aOut.WriteKey( "mInterpolation", (uint32_t)lAnimationChannel.mInterpolation.mInterpolation );
-                    aOut.WriteKey( "mInputs" );
-                    aOut.BeginSequence( true );
-                    {
-                        for( auto &x : lAnimationChannel.mInterpolation.mInputs ) aOut.Write( x );
-                    }
-                    aOut.EndSequence();
-                    aOut.WriteKey( "mOutputsVec4" );
-                    aOut.BeginSequence( true );
-                    {
-                        for( auto &x : lAnimationChannel.mInterpolation.mOutputsVec4 ) aOut.Write( x, { "x", "y", "z", "w" } );
-                    }
-                    aOut.EndSequence();
-                }
-                aOut.EndMap();
+                aOut.WriteKey( "mChannelID" );
+                aOut.Write( (uint32_t)lAnimationChannel.mChannelID );
+                aOut.WriteKey( "mInterpolationDataIndex" );
+                aOut.WriteNull();
             }
             aOut.EndMap();
         }
@@ -1404,6 +1388,22 @@ namespace LTSE::Core
             auto lTexturePacket = lBinaryDataFile.Package( lTextureData, lSamplingInfo );
             lPackets.push_back( lTexturePacket );
         }
+
+        ForEach<sAnimationComponent>(
+            [&]( auto aEntity, auto &aComponent )
+            {
+                for( auto &lAnimationChannel : aComponent.mChannels )
+                {
+                    sAssetIndex lMaterialAssetIndexEntry{};
+                    lMaterialAssetIndexEntry.mType      = eAssetType::ANIMATION_DATA;
+                    lMaterialAssetIndexEntry.mByteStart = 0;
+                    lMaterialAssetIndexEntry.mByteEnd   = 1;
+                    lAssetIndex.push_back( lMaterialAssetIndexEntry );
+
+                    auto lAnimationPacket = lBinaryDataFile.Package( lAnimationChannel.mInterpolation );
+                    lPackets.push_back( lAnimationPacket );
+                }
+            } );
 
         uint32_t lAssetCount = static_cast<uint32_t>( lAssetIndex.size() );
 
