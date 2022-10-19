@@ -249,7 +249,30 @@ namespace LTSE::Core
         Seek( lAssetIndex.mByteStart );
     }
 
-    std::vector<char> BinaryAsset::Package( sImportedAnimationSampler const &aMaterialData ) { return {}; }
+    std::vector<char> BinaryAsset::Package( sImportedAnimationSampler const &aMaterialData )
+    {
+        uint32_t lHeaderSize = sizeof( uint32_t ) + sizeof( uint8_t );
+        uint32_t lPacketSize =
+            lHeaderSize + aMaterialData.mInputs.size() * sizeof( float ) + aMaterialData.mOutputsVec4.size() * sizeof( math::vec4 );
+
+        std::vector<char> lPacket( lPacketSize );
+        auto             *lPtr = lPacket.data();
+
+        std::memcpy( lPtr, &aMaterialData.mInterpolation, sizeof( uint8_t ) );
+        lPtr += sizeof( uint8_t );
+
+        uint32_t lInterpolationLength = aMaterialData.mInputs.size();
+        std::memcpy( lPtr, &lInterpolationLength, sizeof( uint32_t ) );
+        lPtr += sizeof( uint32_t );
+
+        std::memcpy( lPtr, aMaterialData.mInputs.data(), aMaterialData.mInputs.size() * sizeof( float ) );
+        lPtr += aMaterialData.mInputs.size() * sizeof( float );
+
+        std::memcpy( lPtr, aMaterialData.mInputs.data(), aMaterialData.mOutputsVec4.size() * sizeof( math::vec4 ) );
+        lPtr += aMaterialData.mOutputsVec4.size() * sizeof( float );
+
+        return lPacket;
+    }
 
     void BinaryAsset::Retrieve( uint32_t aIndex, sImportedAnimationSampler &aMaterialData )
     {
