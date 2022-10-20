@@ -740,27 +740,56 @@ namespace LTSE::Core
         {
             LTSE_PROFILE_SCOPE( "Transform Vertices" );
 
-            // Update the transformed vertex buffer
-            std::vector<uint32_t>   lVertexOffsets{};
-            std::vector<uint32_t>   lVertexCounts{};
-            std::vector<math::mat4> lObjectToWorldTransforms{};
-            uint32_t                lMaxVertexCount = 0;
-            ForEach<StaticMeshComponent, TransformMatrixComponent>(
-                [&]( auto aEntiy, auto &aMesh, auto &aTransform )
-                {
-                    lObjectToWorldTransforms.push_back( aTransform.Matrix );
-                    lVertexOffsets.push_back( aMesh.mVertexOffset );
-                    lVertexCounts.push_back( aMesh.mVertexCount );
-                    lMaxVertexCount = std::max( lMaxVertexCount, static_cast<uint32_t>( aMesh.mVertexCount ) );
-                } );
+            // Update the transformed vertex buffer for static meshies
+            {
+                std::vector<uint32_t>   lVertexOffsets{};
+                std::vector<uint32_t>   lVertexCounts{};
+                std::vector<math::mat4> lObjectToWorldTransforms{};
+                uint32_t                lMaxVertexCount = 0;
+                ForEach<StaticMeshComponent, TransformMatrixComponent>(
+                    [&]( auto aEntiy, auto &aMesh, auto &aTransform )
+                    {
+                        if( aEntiy.Has<SkeletonComponent>() ) return;
 
-            mTransforms.Upload( lObjectToWorldTransforms );
-            mVertexOffsets.Upload( lVertexOffsets );
-            mVertexCounts.Upload( lVertexCounts );
+                        lObjectToWorldTransforms.push_back( aTransform.Matrix );
+                        lVertexOffsets.push_back( aMesh.mVertexOffset );
+                        lVertexCounts.push_back( aMesh.mVertexCount );
+                        lMaxVertexCount = std::max( lMaxVertexCount, static_cast<uint32_t>( aMesh.mVertexCount ) );
+                    } );
 
-            StaticVertexTransform( mTransformedVertexBufferMemoryHandle.DataAs<VertexData>(),
-                mVertexBufferMemoryHandle.DataAs<VertexData>(), mTransforms.DataAs<math::mat4>(), lVertexOffsets.size(),
-                mVertexOffsets.DataAs<uint32_t>(), mVertexCounts.DataAs<uint32_t>(), lMaxVertexCount );
+                mTransforms.Upload( lObjectToWorldTransforms );
+                mVertexOffsets.Upload( lVertexOffsets );
+                mVertexCounts.Upload( lVertexCounts );
+
+                StaticVertexTransform( mTransformedVertexBufferMemoryHandle.DataAs<VertexData>(),
+                    mVertexBufferMemoryHandle.DataAs<VertexData>(), mTransforms.DataAs<math::mat4>(), lVertexOffsets.size(),
+                    mVertexOffsets.DataAs<uint32_t>(), mVertexCounts.DataAs<uint32_t>(), lMaxVertexCount );
+            }
+
+            // Update the transformed vertex buffer for animated meshies
+            {
+                std::vector<uint32_t>   lVertexOffsets{};
+                std::vector<uint32_t>   lVertexCounts{};
+                std::vector<math::mat4> lObjectToWorldTransforms{};
+                std::vector<math::mat4> lJointTransforms{};
+                uint32_t                lMaxVertexCount = 0;
+                ForEach<StaticMeshComponent, TransformMatrixComponent, SkeletonComponent>(
+                    [&]( auto aEntiy, auto &aMesh, auto &aTransform, auto &aSkeleton )
+                    {
+                        lObjectToWorldTransforms.push_back( aTransform.Matrix );
+                        lVertexOffsets.push_back( aMesh.mVertexOffset );
+                        lVertexCounts.push_back( aMesh.mVertexCount );
+                        lMaxVertexCount = std::max( lMaxVertexCount, static_cast<uint32_t>( aMesh.mVertexCount ) );
+                    } );
+
+                mTransforms.Upload( lObjectToWorldTransforms );
+                mVertexOffsets.Upload( lVertexOffsets );
+                mVertexCounts.Upload( lVertexCounts );
+
+                StaticVertexTransform( mTransformedVertexBufferMemoryHandle.DataAs<VertexData>(),
+                    mVertexBufferMemoryHandle.DataAs<VertexData>(), mTransforms.DataAs<math::mat4>(), lVertexOffsets.size(),
+                    mVertexOffsets.DataAs<uint32_t>(), mVertexCounts.DataAs<uint32_t>(), lMaxVertexCount );
+            }
 
             CUDA_SYNC_CHECK();
         }
