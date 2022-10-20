@@ -94,6 +94,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
         math::vec3 Scaling;
         math::quat Rotation;
 
+        math::mat4 mMatrix;
+
         AnimatedTransformComponent()                                     = default;
         AnimatedTransformComponent( const AnimatedTransformComponent & ) = default;
     };
