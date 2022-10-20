@@ -55,8 +55,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
         float FieldOfView = 90.0f;
         float AspectRatio = 16.0f / 9.0f;
 
-        CameraComponent()                         = default;
-        CameraComponent( const CameraComponent& ) = default;
+        CameraComponent()                          = default;
+        CameraComponent( const CameraComponent & ) = default;
     };
 
     struct AnimationChannel
@@ -68,23 +68,24 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
     struct AnimationComponent
     {
-        float Duration       = 0.0f;
-        float TickCount      = 0.0f;
-        float TicksPerSecond = 0.0f;
-        float CurrentTick    = 0.0f;
+        float    Duration       = 0.0f;
+        float    TickCount      = 0.0f;
+        float    TicksPerSecond = 0.0f;
+        uint32_t CurrentTick    = 0;
+        float    CurrentTime    = 0.0f;
 
         std::vector<AnimationChannel> mChannels = {};
 
-        AnimationComponent()                            = default;
-        AnimationComponent( const AnimationComponent& ) = default;
+        AnimationComponent()                             = default;
+        AnimationComponent( const AnimationComponent & ) = default;
     };
 
     struct AnimationChooser
     {
         std::vector<Entity> Animations = {};
 
-        AnimationChooser()                          = default;
-        AnimationChooser( const AnimationChooser& ) = default;
+        AnimationChooser()                           = default;
+        AnimationChooser( const AnimationChooser & ) = default;
     };
 
     struct AnimatedTransformComponent
@@ -93,8 +94,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
         math::vec3 Scaling;
         math::quat Rotation;
 
-        AnimatedTransformComponent()                                    = default;
-        AnimatedTransformComponent( const AnimatedTransformComponent& ) = default;
+        AnimatedTransformComponent()                                     = default;
+        AnimatedTransformComponent( const AnimatedTransformComponent & ) = default;
     };
 
     // struct TransformComponent
@@ -118,7 +119,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
             : mMatrix( math::mat4( 1.0f ) )
         {
         }
-        LocalTransformComponent( const LocalTransformComponent& ) = default;
+        LocalTransformComponent( const LocalTransformComponent & ) = default;
         LocalTransformComponent( math::mat4 a_Matrix )
             : mMatrix{ a_Matrix }
         {
@@ -158,8 +159,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
     {
         math::mat4 Matrix = math::mat4( 1.0f );
 
-        TransformMatrixComponent()                                  = default;
-        TransformMatrixComponent( const TransformMatrixComponent& ) = default;
+        TransformMatrixComponent()                                   = default;
+        TransformMatrixComponent( const TransformMatrixComponent & ) = default;
         TransformMatrixComponent( math::mat4 a_Matrix ) { Matrix = a_Matrix; };
     };
 
@@ -177,8 +178,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
         uint32_t           mIndexOffset   = 0;
         uint32_t           mIndexCount    = 0;
 
-        StaticMeshComponent()                             = default;
-        StaticMeshComponent( const StaticMeshComponent& ) = default;
+        StaticMeshComponent()                              = default;
+        StaticMeshComponent( const StaticMeshComponent & ) = default;
     };
 
     struct ParticleSystemComponent
@@ -189,8 +190,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
         float       ParticleSize  = 0.0f;
         Ref<Buffer> Particles;
 
-        ParticleSystemComponent()                                 = default;
-        ParticleSystemComponent( const ParticleSystemComponent& ) = default;
+        ParticleSystemComponent()                                  = default;
+        ParticleSystemComponent( const ParticleSystemComponent & ) = default;
     };
 
     struct ParticleShaderComponent
@@ -198,8 +199,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
         float                  LineWidth = 1.0f;
         ParticleSystemRenderer Renderer{};
 
-        ParticleShaderComponent()                                 = default;
-        ParticleShaderComponent( const ParticleShaderComponent& ) = default;
+        ParticleShaderComponent()                                  = default;
+        ParticleShaderComponent( const ParticleShaderComponent & ) = default;
     };
 
     struct SkeletonComponent
@@ -209,8 +210,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
         std::vector<math::mat4> InverseBindMatrices;
         std::vector<math::mat4> JointMatrices;
 
-        SkeletonComponent()                           = default;
-        SkeletonComponent( const SkeletonComponent& ) = default;
+        SkeletonComponent()                            = default;
+        SkeletonComponent( const SkeletonComponent & ) = default;
     };
 
     struct WireframeComponent
@@ -218,8 +219,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
         bool IsVisible = false;
         vec3 Color     = 0xffffff_rgbf;
 
-        WireframeComponent()                            = default;
-        WireframeComponent( const WireframeComponent& ) = default;
+        WireframeComponent()                             = default;
+        WireframeComponent( const WireframeComponent & ) = default;
     };
 
     struct WireframeMeshComponent
@@ -228,8 +229,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
         Ref<Buffer> VertexBuffer = nullptr;
         Ref<Buffer> IndexBuffer  = nullptr;
 
-        WireframeMeshComponent()                                = default;
-        WireframeMeshComponent( const WireframeMeshComponent& ) = default;
+        WireframeMeshComponent()                                 = default;
+        WireframeMeshComponent( const WireframeMeshComponent & ) = default;
     };
 
     struct BoundingBoxComponent
@@ -241,8 +242,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
         Ref<Buffer> VertexBuffer = nullptr;
         Ref<Buffer> IndexBuffer  = nullptr;
 
-        BoundingBoxComponent()                              = default;
-        BoundingBoxComponent( const BoundingBoxComponent& ) = default;
+        BoundingBoxComponent()                               = default;
+        BoundingBoxComponent( const BoundingBoxComponent & ) = default;
     };
 
     struct RayTracingTargetComponent
@@ -251,16 +252,16 @@ namespace LTSE::Core::EntityComponentSystem::Components
         GPUMemory  Vertices;
         GPUMemory  Indices;
 
-        RayTracingTargetComponent()                                   = default;
-        RayTracingTargetComponent( const RayTracingTargetComponent& ) = default;
+        RayTracingTargetComponent()                                    = default;
+        RayTracingTargetComponent( const RayTracingTargetComponent & ) = default;
     };
 
     struct MaterialComponent
     {
         uint32_t mMaterialID;
 
-        MaterialComponent()                           = default;
-        MaterialComponent( const MaterialComponent& ) = default;
+        MaterialComponent()                            = default;
+        MaterialComponent( const MaterialComponent & ) = default;
     };
 
     enum class MaterialType : uint8_t
@@ -274,8 +275,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
     {
         Entity Material;
 
-        RendererComponent()                           = default;
-        RendererComponent( const RendererComponent& ) = default;
+        RendererComponent()                            = default;
+        RendererComponent( const RendererComponent & ) = default;
     };
 
     struct MaterialShaderComponent
@@ -286,16 +287,16 @@ namespace LTSE::Core::EntityComponentSystem::Components
         float        LineWidth         = 1.0f;
         float        AlphaMaskTheshold = 0.5;
 
-        MaterialShaderComponent()                                 = default;
-        MaterialShaderComponent( const MaterialShaderComponent& ) = default;
+        MaterialShaderComponent()                                  = default;
+        MaterialShaderComponent( const MaterialShaderComponent & ) = default;
     };
 
     struct BackgroundComponent
     {
         vec3 Color = { 1.0f, 1.0f, 1.0f };
 
-        BackgroundComponent()                             = default;
-        BackgroundComponent( const BackgroundComponent& ) = default;
+        BackgroundComponent()                              = default;
+        BackgroundComponent( const BackgroundComponent & ) = default;
     };
 
     struct AmbientLightingComponent
@@ -303,8 +304,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
         vec3  Color     = { 1.0f, 1.0f, 1.0f };
         float Intensity = 0.0005f;
 
-        AmbientLightingComponent()                                  = default;
-        AmbientLightingComponent( const AmbientLightingComponent& ) = default;
+        AmbientLightingComponent()                                   = default;
+        AmbientLightingComponent( const AmbientLightingComponent & ) = default;
     };
 
     enum class LightType : uint32_t
@@ -321,7 +322,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         float Intensity = 0.0f;
         vec3  Color     = { 0.0f, 0.0f, 0.0f };
 
-        bool operator==( const DirectionalLightComponent& a_Other )
+        bool operator==( const DirectionalLightComponent &a_Other )
         {
             return ( Azimuth == a_Other.Azimuth ) && ( Elevation == a_Other.Elevation ) &&
                    ( Intensity == a_Other.Intensity ) && ( Color == a_Other.Color );
@@ -334,7 +335,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         vec3  Color     = { 0.0f, 0.0f, 0.0f };
         float Intensity = 0.0f;
 
-        bool operator==( const PointLightComponent& a_Other )
+        bool operator==( const PointLightComponent &a_Other )
         {
             return ( Position == a_Other.Position ) && ( Color == a_Other.Color ) && ( Intensity == a_Other.Intensity );
         }
@@ -350,7 +351,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         float Intensity = 0.0f;
         float Cone      = 0.0;
 
-        bool operator==( const SpotlightComponent& a_Other )
+        bool operator==( const SpotlightComponent &a_Other )
         {
             return ( Position == a_Other.Position ) && ( Azimuth == a_Other.Azimuth ) &&
                    ( Elevation == a_Other.Elevation ) && ( Intensity == a_Other.Intensity ) && ( Color == a_Other.Color ) &&
@@ -362,8 +363,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
     {
         Entity Light;
 
-        LightComponent()                        = default;
-        LightComponent( const LightComponent& ) = default;
+        LightComponent()                         = default;
+        LightComponent( const LightComponent & ) = default;
     };
 
 } // namespace LTSE::Core::EntityComponentSystem::Components
