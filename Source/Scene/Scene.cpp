@@ -12,7 +12,6 @@
 #include "Core/Profiling/BlockTimer.h"
 #include "Core/Resource.h"
 
-
 #include "Core/Vulkan/VkPipeline.h"
 
 #include "Components.h"
@@ -569,6 +568,7 @@ namespace LTSE::Core
                 lAnimationChannel.mInterpolation =
                     lAnimation.mSamplers[lAnimation.mChannels[lAnimationChannelIndex].mSamplerIndex];
                 lAnimationChannel.mTargetNode = lNodes[lAnimation.mChannels[lAnimationChannelIndex].mNodeID];
+                lAnimationChannel.mTargetNode.TryAdd<AnimatedTransformComponent>();
 
                 l_AnimationComponent.mChannels.push_back( lAnimationChannel );
             }
@@ -649,6 +649,63 @@ namespace LTSE::Core
                 } );
 
             ForEach<sLuaScriptComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnUpdate( ts ); } );
+
+            // Update animations
+            ForEach<AnimationChooser>(
+                [=]( auto l_Entity, auto &l_Component )
+                {
+                    auto &lAnimation = l_Component.Animations[0].Get<AnimationComponent>();
+                    lAnimation.CurrentTime += ts;
+                    if( lAnimation.CurrentTime > lAnimation.Duration ) lAnimation.CurrentTime -= lAnimation.Duration;
+
+                    for( auto &lChannel : lAnimation.mChannels )
+                    {
+                        // auto &lAnimatedTransform = lChannel.mTargetNode.Get<AnimatedTransformComponent>();
+
+                        float dt = lAnimation.CurrentTime - lChannel.mInterpolation.mInputs[lAnimation.CurrentTick];
+                        if( lAnimation.CurrentTime >
+                            lChannel.mInterpolation
+                                .mInputs[( lAnimation.CurrentTick + 1 ) % lChannel.mInterpolation.mInputs.size()] )
+                        {
+                            lAnimation.CurrentTick += 1;
+                            lAnimation.CurrentTick %= lChannel.mInterpolation.mInputs.size();
+                            dt = lAnimation.CurrentTime - lChannel.mInterpolation.mInputs[lAnimation.CurrentTick];
+                        }
+
+                        switch( lChannel.mChannelID )
+                        {
+                        case sImportedAnimationChannel::Channel::ROTATION:
+                        {
+                            glm::quat q1;
+                            q1.x = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick].x;
+                            q1.y = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick].y;
+                            q1.z = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick].z;
+                            q1.w = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick].w;
+
+                            glm::quat q2;
+                            q2.x = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1].x;
+                            q2.y = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1].y;
+                            q2.z = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1].z;
+                            q2.w = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1].w;
+
+                            auto lQ = glm::normalize( glm::slerp( q1, q2, dt ) );
+                            break;
+                        }
+                        case sImportedAnimationChannel::Channel::TRANSLATION:
+                        {
+                            auto lS = glm::mix( lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick],
+                                lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1], dt );
+                            break;
+                        }
+                        case sImportedAnimationChannel::Channel::SCALE:
+                        {
+                            auto lT = glm::mix( lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick],
+                                lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1], dt );
+                            break;
+                        }
+                        }
+                    }
+                } );
         }
 
         ForEach<SkeletonComponent, TransformMatrixComponent>(
