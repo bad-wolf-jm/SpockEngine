@@ -107,6 +107,7 @@ namespace LTSE::Core
 
             CopyComponent<LocalTransformComponent>( lEntity, lClonedEntity );
             CopyComponent<TransformMatrixComponent>( lEntity, lClonedEntity );
+            CopyComponent<AnimatedTransformComponent>( lEntity, lClonedEntity );
 
             CopyComponent<StaticMeshComponent>( lEntity, lClonedEntity );
             CopyComponent<WireframeComponent>( lEntity, lClonedEntity );
@@ -660,7 +661,7 @@ namespace LTSE::Core
 
                     for( auto &lChannel : lAnimation.mChannels )
                     {
-                        // auto &lAnimatedTransform = lChannel.mTargetNode.Get<AnimatedTransformComponent>();
+                        auto &lAnimatedTransform = lChannel.mTargetNode.Get<AnimatedTransformComponent>();
 
                         float dt = lAnimation.CurrentTime - lChannel.mInterpolation.mInputs[lAnimation.CurrentTick];
                         if( lAnimation.CurrentTime >
@@ -688,23 +689,33 @@ namespace LTSE::Core
                             q2.z = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1].z;
                             q2.w = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1].w;
 
-                            auto lQ = glm::normalize( glm::slerp( q1, q2, dt ) );
+                            lAnimatedTransform.Rotation = glm::normalize( glm::slerp( q1, q2, dt ) );
                             break;
                         }
                         case sImportedAnimationChannel::Channel::TRANSLATION:
                         {
-                            auto lS = glm::mix( lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick],
-                                lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1], dt );
+                            lAnimatedTransform.Translation =
+                                math::vec3( glm::mix( lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick],
+                                    lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1], dt ) );
                             break;
                         }
                         case sImportedAnimationChannel::Channel::SCALE:
                         {
-                            auto lT = glm::mix( lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick],
-                                lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1], dt );
+                            lAnimatedTransform.Scaling =
+                                math::vec3( glm::mix( lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick],
+                                    lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1], dt ) );
                             break;
                         }
                         }
                     }
+                } );
+
+            ForEach<AnimatedTransformComponent>(
+                [&]( auto l_ElementToProcess, auto &lAnimatedTransform )
+                {
+                    lAnimatedTransform.mMatrix = glm::translate( glm::mat4( 1.0f ), lAnimatedTransform.Translation ) *
+                                                 glm::mat4( lAnimatedTransform.Rotation ) *
+                                                 glm::scale( glm::mat4( 1.0f ), lAnimatedTransform.Scaling );
                 } );
         }
 
