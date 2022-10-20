@@ -151,6 +151,8 @@ namespace LTSE::Core
         GPUMemory mTransforms{};
         GPUMemory mVertexOffsets{};
         GPUMemory mVertexCounts{};
+        GPUMemory mJointTransforms{};
+        GPUMemory mJointOffsets{};
 
         bool mIsClone = false;
 

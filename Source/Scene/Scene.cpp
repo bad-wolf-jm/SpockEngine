@@ -213,9 +213,20 @@ namespace LTSE::Core
         uint32_t lStaticMeshCount = 0;
         aSource->ForEach<StaticMeshComponent>( [&]( auto aEntity, auto &aUUID ) { lStaticMeshCount++; } );
 
-        mTransforms    = GPUMemory::Create<math::mat4>( lTransformCount );
-        mVertexOffsets = GPUMemory::Create<uint32_t>( lStaticMeshCount );
-        mVertexCounts  = GPUMemory::Create<uint32_t>( lStaticMeshCount );
+        uint32_t lJointMatrixCount = 0;
+        uint32_t lJointOffsetCount = 0;
+        ForEach<SkeletonComponent>(
+            [&]( auto l_ElementToProcess, auto &s )
+            {
+                lJointMatrixCount += s.JointMatrices.size();
+                lJointOffsetCount += 1;
+            } );
+
+        mTransforms      = GPUMemory::Create<math::mat4>( lTransformCount );
+        mVertexOffsets   = GPUMemory::Create<uint32_t>( lStaticMeshCount );
+        mVertexCounts    = GPUMemory::Create<uint32_t>( lStaticMeshCount );
+        mJointTransforms = GPUMemory::Create<math::mat4>( lJointMatrixCount );
+        mJointOffsets    = GPUMemory::Create<uint32_t>( lJointOffsetCount );
 
         ConnectSignalHandlers();
         mIsClone = true;
@@ -549,6 +560,18 @@ namespace LTSE::Core
             }
         }
 
+        uint32_t lJointMatrixCount = 0;
+        uint32_t lJointOffsetCount = 0;
+        ForEach<SkeletonComponent>(
+            [&]( auto l_ElementToProcess, auto &s )
+            {
+                lJointMatrixCount += s.JointMatrices.size();
+                lJointOffsetCount += 1;
+            } );
+
+        mJointTransforms = GPUMemory::Create<math::mat4>( lJointMatrixCount );
+        mJointOffsets    = GPUMemory::Create<uint32_t>( lJointOffsetCount );
+
         if( aModelData->mAnimations.size() > 0 ) l_AssetEntity.Add<AnimationChooser>();
 
         for( auto &lAnimation : aModelData->mAnimations )
@@ -772,6 +795,7 @@ namespace LTSE::Core
                 std::vector<uint32_t>   lVertexCounts{};
                 std::vector<math::mat4> lObjectToWorldTransforms{};
                 std::vector<math::mat4> lJointTransforms{};
+                std::vector<uint32_t>   lJointOffsets{};
                 uint32_t                lMaxVertexCount = 0;
                 ForEach<StaticMeshComponent, TransformMatrixComponent, SkeletonComponent>(
                     [&]( auto aEntiy, auto &aMesh, auto &aTransform, auto &aSkeleton )
@@ -780,14 +804,20 @@ namespace LTSE::Core
                         lVertexOffsets.push_back( aMesh.mVertexOffset );
                         lVertexCounts.push_back( aMesh.mVertexCount );
                         lMaxVertexCount = std::max( lMaxVertexCount, static_cast<uint32_t>( aMesh.mVertexCount ) );
+
+                        lJointOffsets.push_back( lJointTransforms.size() );
+                        for( auto &lJoint : aSkeleton.JointMatrices ) lJointTransforms.push_back( lJoint );
                     } );
 
                 mTransforms.Upload( lObjectToWorldTransforms );
                 mVertexOffsets.Upload( lVertexOffsets );
                 mVertexCounts.Upload( lVertexCounts );
+                mJointOffsets.Upload( lJointOffsets );
+                mJointTransforms.Upload( lJointTransforms );
 
-                StaticVertexTransform( mTransformedVertexBufferMemoryHandle.DataAs<VertexData>(),
-                    mVertexBufferMemoryHandle.DataAs<VertexData>(), mTransforms.DataAs<math::mat4>(), lVertexOffsets.size(),
+                SkinnedVertexTransform( mTransformedVertexBufferMemoryHandle.DataAs<VertexData>(),
+                    mVertexBufferMemoryHandle.DataAs<VertexData>(), mTransforms.DataAs<math::mat4>(),
+                    mJointTransforms.DataAs<math::mat4>(), mJointOffsets.DataAs<uint32_t>(), lVertexOffsets.size(),
                     mVertexOffsets.DataAs<uint32_t>(), mVertexCounts.DataAs<uint32_t>(), lMaxVertexCount );
             }
 
