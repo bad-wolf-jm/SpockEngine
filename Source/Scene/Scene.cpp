@@ -736,9 +736,10 @@ namespace LTSE::Core
             ForEach<AnimatedTransformComponent>(
                 [&]( auto l_ElementToProcess, auto &lAnimatedTransform )
                 {
-                    lAnimatedTransform.mMatrix = glm::translate( glm::mat4( 1.0f ), lAnimatedTransform.Translation ) *
-                                                 glm::mat4( lAnimatedTransform.Rotation ) *
-                                                 glm::scale( glm::mat4( 1.0f ), lAnimatedTransform.Scaling );
+                    auto lMatrix = glm::translate( glm::mat4( 1.0f ), lAnimatedTransform.Translation ) *
+                                   glm::mat4( lAnimatedTransform.Rotation ) *
+                                   glm::scale( glm::mat4( 1.0f ), lAnimatedTransform.Scaling );
+                    l_ElementToProcess.AddOrReplace<LocalTransformComponent>( lMatrix );
                 } );
         }
 
