@@ -112,7 +112,7 @@ namespace LTSE::Editor
         return false;
     }
 
-    static bool EditComponent( LocalTransformComponent &a_Component )
+    static bool EditComponent( NodeTransformComponent &a_Component )
     {
         math::vec3 l_Position = a_Component.GetTranslation();
         math::vec3 l_Rotation = a_Component.GetEulerRotation();
@@ -122,7 +122,7 @@ namespace LTSE::Editor
         UI::VectorComponentEditor( "Rotation:", l_Rotation, 0.0, 100 );
         UI::VectorComponentEditor( "Scale:", l_Scale, 1.0, 100 );
 
-        a_Component.mMatrix = LocalTransformComponent( l_Position, l_Rotation, l_Scale ).mMatrix;
+        a_Component.mMatrix = NodeTransformComponent( l_Position, l_Rotation, l_Scale ).mMatrix;
         return false;
     }
 
@@ -328,9 +328,9 @@ namespace LTSE::Editor
 
         if( ImGui::BeginPopup( "##add_component" ) )
         {
-            if( ImGui::MenuItem( "Transform component", NULL, false, !ElementToEdit.Has<LocalTransformComponent>() ) )
+            if( ImGui::MenuItem( "Transform component", NULL, false, !ElementToEdit.Has<NodeTransformComponent>() ) )
             {
-                ElementToEdit.Add<LocalTransformComponent>();
+                ElementToEdit.Add<NodeTransformComponent>();
             }
             ImGui::Separator();
             if( ImGui::MenuItem( "Static mesh component", NULL, false, !ElementToEdit.Has<StaticMeshComponent>() ) )
@@ -369,7 +369,7 @@ namespace LTSE::Editor
 
         if( ImGui::CollapsingHeader( "Transform", l_Flags ) )
         {
-            ElementToEdit.IfExists<LocalTransformComponent>( [&]( auto &l_Component ) { EditComponent( l_Component ); } );
+            ElementToEdit.IfExists<NodeTransformComponent>( [&]( auto &l_Component ) { EditComponent( l_Component ); } );
         }
 
         if( ImGui::CollapsingHeader( "Mesh", l_Flags ) )

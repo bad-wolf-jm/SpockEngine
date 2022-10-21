@@ -63,7 +63,7 @@ namespace LTSE::Core
         Environment.Add<BackgroundComponent>();
 
         Root = m_Registry.CreateEntityWithRelationship( "WorldRoot" );
-        Root.Add<LocalTransformComponent>();
+        Root.Add<NodeTransformComponent>();
 
         InitializeRayTracing();
         ConnectSignalHandlers();
@@ -105,7 +105,7 @@ namespace LTSE::Core
         {
             auto lClonedEntity = lClonedEntities[lUUID];
 
-            CopyComponent<LocalTransformComponent>( lEntity, lClonedEntity );
+            CopyComponent<NodeTransformComponent>( lEntity, lClonedEntity );
             CopyComponent<TransformMatrixComponent>( lEntity, lClonedEntity );
             CopyComponent<AnimatedTransformComponent>( lEntity, lClonedEntity );
 
@@ -208,7 +208,7 @@ namespace LTSE::Core
             Cuda::GPUExternalMemory( *mTransformedVertexBuffer, mTransformedVertexBuffer->SizeAs<uint8_t>() );
 
         uint32_t lTransformCount = 0;
-        aSource->ForEach<LocalTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
+        aSource->ForEach<NodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
 
         uint32_t lStaticMeshCount = 0;
         aSource->ForEach<StaticMeshComponent>( [&]( auto aEntity, auto &aUUID ) { lStaticMeshCount++; } );
@@ -250,9 +250,9 @@ namespace LTSE::Core
     {
         auto &lParent = aComponent.mParent;
 
-        if( !( aEntity.Has<LocalTransformComponent>() ) ) return;
+        if( !( aEntity.Has<NodeTransformComponent>() ) ) return;
 
-        auto &lLocalTransform = aEntity.Get<LocalTransformComponent>();
+        auto &lLocalTransform = aEntity.Get<NodeTransformComponent>();
 
         if( lParent && lParent.Has<TransformMatrixComponent>() )
         {
@@ -299,11 +299,12 @@ namespace LTSE::Core
         m_Registry.OnComponentAdded<sRelationshipComponent>( std::bind( &Scene::UpdateParent, this, _1, _2 ) );
         m_Registry.OnComponentUpdated<sRelationshipComponent>( std::bind( &Scene::UpdateParent, this, _1, _2 ) );
 
-        m_Registry.OnComponentAdded<LocalTransformComponent>( std::bind( &Scene::UpdateLocalTransform, this, _1, _2 ) );
-        m_Registry.OnComponentUpdated<LocalTransformComponent>( std::bind( &Scene::UpdateLocalTransform, this, _1, _2 ) );
+        // m_Registry.OnComponentAdded<LocalTransformComponent>( std::bind( &Scene::UpdateLocalTransform, this, _1, _2 ) );
+        // m_Registry.OnComponentUpdated<LocalTransformComponent>( std::bind( &Scene::UpdateLocalTransform, this, _1, _2 ) );
 
-        m_Registry.OnComponentAdded<TransformMatrixComponent>( std::bind( &Scene::UpdateTransformMatrix, this, _1, _2 ) );
-        m_Registry.OnComponentUpdated<TransformMatrixComponent>( std::bind( &Scene::UpdateTransformMatrix, this, _1, _2 ) );
+        // m_Registry.OnComponentAdded<TransformMatrixComponent>( std::bind( &Scene::UpdateTransformMatrix, this, _1, _2 ) );
+        // m_Registry.OnComponentUpdated<TransformMatrixComponent>( std::bind( &Scene::UpdateTransformMatrix, this, _1, _2 )
+        // );
     }
 
     math::mat4 Scene::GetView()
@@ -381,7 +382,7 @@ namespace LTSE::Core
         Environment.Add<BackgroundComponent>();
 
         Root = m_Registry.CreateEntityWithRelationship( "WorldRoot" );
-        Root.Add<LocalTransformComponent>();
+        Root.Add<NodeTransformComponent>();
     }
 
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform )
@@ -392,7 +393,7 @@ namespace LTSE::Core
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name )
     {
         auto l_AssetEntity = m_Registry.CreateEntity( Root, a_Name );
-        l_AssetEntity.Add<LocalTransformComponent>( aTransform );
+        l_AssetEntity.Add<NodeTransformComponent>( aTransform );
 
         std::vector<uint32_t> lTextureIds = {};
         for( auto &lTexture : aModelData->mTextures )
@@ -484,7 +485,7 @@ namespace LTSE::Core
             l_MeshEntity.Add<StaticMeshComponent>( l_MeshComponent );
             l_MeshEntity.Add<MaterialComponent>( lMaterialIds[lMesh.mMaterialID] );
             l_MeshEntity.Add<MaterialShaderComponent>( lMaterialCreateInfo[lMesh.mMaterialID] );
-            l_MeshEntity.Add<LocalTransformComponent>( math::mat4( 1.0f ) );
+            l_MeshEntity.Add<NodeTransformComponent>( math::mat4( 1.0f ) );
 
             lVertexData.insert( lVertexData.end(), lVertices.begin(), lVertices.end() );
             lIndexData.insert( lIndexData.end(), lMesh.mIndices.begin(), lMesh.mIndices.end() );
@@ -513,7 +514,7 @@ namespace LTSE::Core
         for( auto &lNode : aModelData->mNodes )
         {
             auto l_NodeEntity = m_Registry.CreateEntityWithRelationship( lNode.mName );
-            l_NodeEntity.Add<LocalTransformComponent>( lNode.mTransform );
+            l_NodeEntity.Add<NodeTransformComponent>( lNode.mTransform );
 
             lNodes.push_back( l_NodeEntity );
         }
@@ -598,6 +599,10 @@ namespace LTSE::Core
             }
         }
 
+        // ForEach<NodeTransformComponent>(
+        //     [&]( auto aEntity, auto &aComponent ) { aEntity.AddOrReplace<LocalTransformComponent>( aComponent.mMatrix ); }
+        //     );
+
         return l_AssetEntity;
     }
 
@@ -679,8 +684,12 @@ namespace LTSE::Core
                 [=]( auto l_Entity, auto &l_Component )
                 {
                     auto &lAnimation = l_Component.Animations[0].Get<AnimationComponent>();
-                    lAnimation.CurrentTime += ts;
-                    if( lAnimation.CurrentTime > lAnimation.Duration ) lAnimation.CurrentTime -= lAnimation.Duration;
+                    lAnimation.CurrentTime += ( ts / 1000.0f );
+                    if( lAnimation.CurrentTime > lAnimation.Duration )
+                    {
+                        lAnimation.CurrentTime -= lAnimation.Duration;
+                        lAnimation.CurrentTick = 0;
+                    }
 
                     for( auto &lChannel : lAnimation.mChannels )
                     {
@@ -692,7 +701,7 @@ namespace LTSE::Core
                                 .mInputs[( lAnimation.CurrentTick + 1 ) % lChannel.mInterpolation.mInputs.size()] )
                         {
                             lAnimation.CurrentTick += 1;
-                            lAnimation.CurrentTick %= lChannel.mInterpolation.mInputs.size();
+                            lAnimation.CurrentTick %= ( lChannel.mInterpolation.mInputs.size() - 1 );
                             dt = lAnimation.CurrentTime - lChannel.mInterpolation.mInputs[lAnimation.CurrentTick];
                         }
 
@@ -733,14 +742,62 @@ namespace LTSE::Core
                     }
                 } );
 
-            ForEach<AnimatedTransformComponent>(
-                [&]( auto l_ElementToProcess, auto &lAnimatedTransform )
-                {
-                    auto lMatrix = glm::translate( glm::mat4( 1.0f ), lAnimatedTransform.Translation ) *
-                                   glm::mat4( lAnimatedTransform.Rotation ) *
-                                   glm::scale( glm::mat4( 1.0f ), lAnimatedTransform.Scaling );
-                    l_ElementToProcess.AddOrReplace<LocalTransformComponent>( lMatrix );
-                } );
+            // ForEach<NodeTransformComponent>( [&]( auto l_ElementToProcess, auto &lAnimatedTransform )
+            //     { l_ElementToProcess.AddOrReplace<LocalTransformComponent>( lAnimatedTransform.mMatrix ); } );
+
+            // ForEach<AnimatedTransformComponent>(
+            //     [&]( auto l_ElementToProcess, auto &lAnimatedTransform )
+            //     {
+            //         auto lMatrix = glm::translate( glm::mat4( 1.0f ), lAnimatedTransform.Translation ) *
+            //                        glm::mat4( lAnimatedTransform.Rotation ) *
+            //                        glm::scale( glm::mat4( 1.0f ), lAnimatedTransform.Scaling );
+            //         // l_ElementToProcess.AddOrReplace<LocalTransformComponent>(
+            //         //     lMatrix * l_ElementToProcess.Get<LocalTransformComponent>().mMatrix );
+            //         l_ElementToProcess.AddOrReplace<LocalTransformComponent>( lMatrix );
+            //     } );
+        }
+
+        std::queue<Entity> l_UpdateQueue{};
+        l_UpdateQueue.push( Root );
+        while( !l_UpdateQueue.empty() )
+        {
+            auto l_ElementToProcess = l_UpdateQueue.front();
+            l_UpdateQueue.pop();
+
+            for( auto l_Child : l_ElementToProcess.Get<sRelationshipComponent>().mChildren ) l_UpdateQueue.push( l_Child );
+
+            if( l_ElementToProcess.Has<AnimatedTransformComponent>() )
+            {
+                auto &l_Component = l_ElementToProcess.Get<AnimatedTransformComponent>();
+
+                math::mat4 lRotation    = math::mat4( l_Component.Rotation );
+                math::mat4 lTranslation = math::Translation( l_Component.Translation );
+                math::mat4 lScale       = math::Scaling( l_Component.Scaling );
+
+                l_ElementToProcess.AddOrReplace<TransformMatrixComponent>( lTranslation * lRotation * lScale );
+            }
+            else if( l_ElementToProcess.Has<NodeTransformComponent>() )
+            {
+                l_ElementToProcess.AddOrReplace<TransformMatrixComponent>(
+                    l_ElementToProcess.Get<NodeTransformComponent>().mMatrix );
+            }
+
+            if( !( l_ElementToProcess.Get<sRelationshipComponent>().mParent ) ) continue;
+
+            if( !( l_ElementToProcess.Get<sRelationshipComponent>().mParent.Has<TransformMatrixComponent>() ) ) continue;
+
+            auto l_Parent = l_ElementToProcess.Get<sRelationshipComponent>().mParent;
+            if( !( l_ElementToProcess.Has<NodeTransformComponent>() ) &&
+                !( l_ElementToProcess.Has<AnimatedTransformComponent>() ) )
+            {
+                l_ElementToProcess.AddOrReplace<TransformMatrixComponent>( l_Parent.Get<TransformMatrixComponent>().Matrix );
+            }
+            else
+            {
+                l_ElementToProcess.AddOrReplace<TransformMatrixComponent>(
+                    l_Parent.Get<TransformMatrixComponent>().Matrix *
+                    l_ElementToProcess.Get<TransformMatrixComponent>().Matrix );
+            }
         }
 
         ForEach<SkeletonComponent, TransformMatrixComponent>(

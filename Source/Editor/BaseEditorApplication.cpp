@@ -246,7 +246,7 @@ namespace LTSE::Editor
         // {
         //     // Add sensor entity to the scene
         //     mEditorWindow.Sensor = m_World->Create( "Sensor", m_World->Root );
-        //     mEditorWindow.Sensor.Add<LocalTransformComponent>();
+        //     mEditorWindow.Sensor.Add<NodeTransformComponent>();
         //     mEditorWindow.Sensor.Add<EnvironmentSampler::sCreateInfo>();
 
         //     AcquisitionSpecification lAcqCreateInfo{};
