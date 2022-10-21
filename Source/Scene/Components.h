@@ -113,16 +113,16 @@ namespace LTSE::Core::EntityComponentSystem::Components
     //     TransformComponent( math::mat4 a_Matrix ) { T = New<transform_t>( a_Matrix ); };
     // };
 
-    struct LocalTransformComponent
+    struct NodeTransformComponent
     {
         math::mat4 mMatrix;
 
-        LocalTransformComponent()
+        NodeTransformComponent()
             : mMatrix( math::mat4( 1.0f ) )
         {
         }
-        LocalTransformComponent( const LocalTransformComponent & ) = default;
-        LocalTransformComponent( math::mat4 a_Matrix )
+        NodeTransformComponent( const NodeTransformComponent & ) = default;
+        NodeTransformComponent( math::mat4 a_Matrix )
             : mMatrix{ a_Matrix }
         {
         }
@@ -138,7 +138,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
                 math::degrees( atan2f( lMatrix[0][1], lMatrix[0][0] ) ) };
         }
 
-        LocalTransformComponent( math::vec3 a_Position, math::vec3 a_Rotation, math::vec3 a_Scaling )
+        NodeTransformComponent( math::vec3 a_Position, math::vec3 a_Rotation, math::vec3 a_Scaling )
         {
             math::mat4 rot = math::Rotation( math::radians( a_Rotation.z ), math::z_axis() ) *
                              math::Rotation( math::radians( a_Rotation.y ), math::y_axis() ) *
@@ -157,6 +157,15 @@ namespace LTSE::Core::EntityComponentSystem::Components
         }
     };
 
+    struct LocalTransformComponent
+    {
+        math::mat4 mMatrix = math::mat4( 1.0f );
+
+        LocalTransformComponent()                                   = default;
+        LocalTransformComponent( const LocalTransformComponent & ) = default;
+        LocalTransformComponent( math::mat4 a_Matrix ) { mMatrix = a_Matrix; };
+    };
+
     struct TransformMatrixComponent
     {
         math::mat4 Matrix = math::mat4( 1.0f );
@@ -165,6 +174,15 @@ namespace LTSE::Core::EntityComponentSystem::Components
         TransformMatrixComponent( const TransformMatrixComponent & ) = default;
         TransformMatrixComponent( math::mat4 a_Matrix ) { Matrix = a_Matrix; };
     };
+
+    // struct NodeTransformComponent
+    // {
+    //     math::mat4 Matrix = math::mat4( 1.0f );
+
+    //     NodeTransformComponent()                                   = default;
+    //     NodeTransformComponent( const NodeTransformComponent & ) = default;
+    //     NodeTransformComponent( math::mat4 a_Matrix ) { Matrix = a_Matrix; };
+    // };
 
     struct StaticMeshComponent
     {
