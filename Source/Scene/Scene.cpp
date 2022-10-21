@@ -7,7 +7,6 @@
 #include <stack>
 #include <unordered_map>
 
-#include "Core/AssetFile.h"
 #include "Core/Logging.h"
 #include "Core/Memory.h"
 #include "Core/Profiling/BlockTimer.h"
@@ -26,8 +25,7 @@
 
 #include "Scene/Components/VisualHelpers.h"
 #include "Serialize/FileIO.h"
-// #include "LidarSensorModel/AcquisitionContext/AcquisitionContext.h"
-// #include "LidarSensorModel/EnvironmentSampler.h"
+#include "Serialize/AssetFile.h"
 
 namespace LTSE::Core
 {
@@ -1045,8 +1043,8 @@ namespace LTSE::Core
     void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sTransformMatrixComponent const &aComponent )
     {
         aOut.WriteKey( aName );
+        aOut.BeginMap( true );
         {
-            aOut.BeginMap( true );
             aOut.WriteKey( "mMatrix" );
             aOut.Write( aComponent.Matrix );
         }
@@ -1344,6 +1342,32 @@ namespace LTSE::Core
         std::vector<sAssetIndex>       lAssetIndex{};
         std::vector<std::vector<char>> lPackets{};
 
+        sAssetIndex lOffsetsIndexEntry{};
+        lOffsetsIndexEntry.mType      = eAssetType::OFFSET_DATA;
+        lOffsetsIndexEntry.mByteStart = 0;
+        lOffsetsIndexEntry.mByteEnd   = 1;
+        lAssetIndex.push_back( lOffsetsIndexEntry );
+
+        uint32_t lMaterialOffset  = 2;
+        uint32_t lMaterialCount   = mMaterialSystem->GetMaterialData().size();
+        uint32_t lTextureOffset   = lMaterialOffset + lMaterialCount;
+        uint32_t lTextureCount    = mMaterialSystem->GetTextures().size();
+        uint32_t lAnimationOffset = lTextureOffset + lTextureCount;
+
+        std::vector<char> lOffsetData( 5 * sizeof( uint32_t ) );
+        auto             *lPtr = lOffsetData.data();
+        std::memcpy( lPtr, &lMaterialOffset, sizeof( uint32_t ) );
+        lPtr += sizeof( uint32_t );
+        std::memcpy( lPtr, &lMaterialCount, sizeof( uint32_t ) );
+        lPtr += sizeof( uint32_t );
+        std::memcpy( lPtr, &lTextureOffset, sizeof( uint32_t ) );
+        lPtr += sizeof( uint32_t );
+        std::memcpy( lPtr, &lTextureCount, sizeof( uint32_t ) );
+        lPtr += sizeof( uint32_t );
+        std::memcpy( lPtr, &lAnimationOffset, sizeof( uint32_t ) );
+        lPtr += sizeof( uint32_t );
+        lPackets.push_back( lOffsetData );
+
         // Meshes
         sAssetIndex lMeshAssetIndexEntry{};
         lMeshAssetIndexEntry.mType      = eAssetType::MESH_DATA;
@@ -1369,7 +1393,6 @@ namespace LTSE::Core
             lPackets.push_back( lMaterialData );
         }
 
-        uint32_t i = 0;
         for( auto &lTexture : mMaterialSystem->GetTextures() )
         {
             TextureData2D lTextureData;
