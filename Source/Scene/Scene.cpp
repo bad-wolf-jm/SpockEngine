@@ -139,10 +139,6 @@ namespace LTSE::Core
             CopyComponent<FieldOfViewHelperComponent>( lEntity, lClonedEntity );
             CopyComponent<CameraHelperComponent>( lEntity, lClonedEntity );
 
-            // Move somewhere else
-            // CopyComponent<EnvironmentSampler::sCreateInfo>( lEntity, lClonedEntity );
-            // CopyComponent<AcquisitionSpecification>( lEntity, lClonedEntity );
-
             CopyComponent<SkeletonComponent>( lEntity, lClonedEntity );
             if( lClonedEntity.Has<SkeletonComponent>() )
             {
@@ -476,10 +472,18 @@ namespace LTSE::Core
                 New<Buffer>( mGraphicContext, lVertices, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
             l_MeshComponent.Indices =
                 New<Buffer>( mGraphicContext, lMesh.mIndices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
+
             l_MeshComponent.mVertexOffset = lVertexData.size();
-            l_MeshComponent.mVertexCount  = lVertices.size();
             l_MeshComponent.mIndexOffset  = lIndexData.size();
-            l_MeshComponent.mIndexCount   = lMesh.mIndices.size();
+            
+            if( mVertexBuffer )
+            {
+                l_MeshComponent.mVertexOffset += mVertexBuffer->SizeAs<VertexData>();
+                l_MeshComponent.mIndexOffset  += mIndexBuffer->SizeAs<uint32_t>();
+            }
+
+            l_MeshComponent.mVertexCount = lVertices.size();
+            l_MeshComponent.mIndexCount  = lMesh.mIndices.size();
 
             auto l_MeshEntity = Create( lMesh.mName, l_AssetEntity );
             l_MeshEntity.Add<StaticMeshComponent>( l_MeshComponent );
@@ -492,23 +496,51 @@ namespace LTSE::Core
             lMeshes.push_back( l_MeshEntity );
         }
 
-        mVertexBuffer = New<Buffer>( mGraphicContext, lVertexData, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
+        if( mVertexBuffer )
+        {
+            auto lOldVertexBuffer = mVertexBuffer;
+
+            mVertexBuffer = New<Buffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, true, true, true,
+                lOldVertexBuffer->SizeAs<uint8_t>() + lVertexData.size() * sizeof( VertexData ) );
+            mVertexBuffer->Copy( lOldVertexBuffer, 0 );
+            mVertexBuffer->Upload( lVertexData, lOldVertexBuffer->SizeAs<uint8_t>() );
+
+            auto lOldIndexBuffer = mIndexBuffer;
+
+            mIndexBuffer = New<Buffer>( mGraphicContext, eBufferBindType::INDEX_BUFFER, false, true, true, true,
+                lOldIndexBuffer->SizeAs<uint8_t>() + lIndexData.size() * sizeof( uint32_t ) );
+            mIndexBuffer->Copy( lOldIndexBuffer, 0 );
+            mIndexBuffer->Upload( lIndexData, lOldIndexBuffer->SizeAs<uint8_t>() );
+        }
+        else
+        {
+            mVertexBuffer =
+                New<Buffer>( mGraphicContext, lVertexData, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
+            mIndexBuffer =
+                New<Buffer>( mGraphicContext, lIndexData, eBufferBindType::INDEX_BUFFER, false, true, true, true );
+        }
+
         mVertexBufferMemoryHandle.Dispose();
         mVertexBufferMemoryHandle = Cuda::GPUExternalMemory( *mVertexBuffer, mVertexBuffer->SizeAs<uint8_t>() );
 
-        mIndexBuffer = New<Buffer>( mGraphicContext, lIndexData, eBufferBindType::INDEX_BUFFER, false, true, true, true );
         mIndexBufferMemoryHandle.Dispose();
         mIndexBufferMemoryHandle = Cuda::GPUExternalMemory( *mIndexBuffer, mIndexBuffer->SizeAs<uint8_t>() );
 
-        mTransformedVertexBuffer = New<Buffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, true, true, true,
-            lVertexData.size() * sizeof( VertexData ) );
+        mTransformedVertexBuffer = New<Buffer>(
+            mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, true, true, true, mVertexBuffer->SizeAs<uint8_t>() );
         mTransformedVertexBufferMemoryHandle.Dispose();
         mTransformedVertexBufferMemoryHandle =
             Cuda::GPUExternalMemory( *mTransformedVertexBuffer, mTransformedVertexBuffer->SizeAs<uint8_t>() );
 
-        mTransforms    = GPUMemory::Create<math::mat4>( static_cast<uint32_t>( lMeshes.size() ) );
-        mVertexOffsets = GPUMemory::Create<uint32_t>( static_cast<uint32_t>( lMeshes.size() ) );
-        mVertexCounts  = GPUMemory::Create<uint32_t>( static_cast<uint32_t>( lMeshes.size() ) );
+        uint32_t lTransformCount = 0;
+        ForEach<LocalTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
+
+        uint32_t lStaticMeshCount = 0;
+        ForEach<StaticMeshComponent>( [&]( auto aEntity, auto &aUUID ) { lStaticMeshCount++; } );
+
+        mTransforms    = GPUMemory::Create<math::mat4>( lTransformCount );
+        mVertexOffsets = GPUMemory::Create<uint32_t>( lStaticMeshCount );
+        mVertexCounts  = GPUMemory::Create<uint32_t>( lStaticMeshCount );
 
         std::vector<Element> lNodes = {};
         for( auto &lNode : aModelData->mNodes )

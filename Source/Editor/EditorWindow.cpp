@@ -1219,8 +1219,6 @@ namespace LTSE::Editor
 
     void EditorWindow::LoadScenario( fs::path aPath )
     {
-        ClearScene();
-
         auto lImporter = New<GlTFImporter>( aPath );
         auto lName     = aPath.filename().string();
 
