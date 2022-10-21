@@ -110,8 +110,6 @@ namespace LTSE::Core
 
         void ClearScene();
 
-        // Ref<Scene> Clone();
-
         Ref<Buffer> mVertexBuffer = nullptr;
         Ref<Buffer> mIndexBuffer  = nullptr;
 
