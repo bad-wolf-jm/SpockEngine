@@ -15,8 +15,7 @@
 
 #include "Scene/Importer/ImporterData.h"
 #include "Scene/VertexData.h"
-#include "TextureData.h"
-
+#include "Core/TextureData.h"
 
 namespace fs = std::filesystem;
 
@@ -29,7 +28,8 @@ namespace LTSE::Core
         KTX_TEXTURE_2D = 1,
         MESH_DATA      = 2,
         MATERIAL_DATA  = 4,
-        ANIMATION_DATA = 5
+        ANIMATION_DATA = 5,
+        OFFSET_DATA    = 6
     };
 
     struct sAssetIndex

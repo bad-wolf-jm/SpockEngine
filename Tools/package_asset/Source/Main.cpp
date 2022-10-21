@@ -7,7 +7,7 @@
 #include <filesystem>
 #include <fstream>
 
-#include "Core/AssetFile.h"
+#include "Scene/Serialize/AssetFile.h"
 #include "Scene/Serialize/FileIO.h"
 
 using namespace LTSE::Core;

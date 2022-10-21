@@ -10,8 +10,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/ColorFormat.cpp
     Core/Logging.cpp
     Core/TextureData.cpp
-    Core/AssetFile.cpp
-
+    
     Scripting/ScriptingEngine.cpp
     Scripting/Core/Texture.cpp
     Scripting/Core/Vector.cpp
@@ -23,30 +22,30 @@ add_library(LTSimulationEngineRuntime STATIC
     # Scripting/SensorModel.cpp
     Scripting/ArrayTypes.cpp
     # Scripting/ScriptedSensorDevice.cpp
-
+    
     Core/Cuda/MultiTensor.cu
     Core/Cuda/MemoryPool.cu
     Core/Cuda/Texture2D.cu
-
+    
     Core/Platform/ViewportClient.cpp
     Core/Platform/EngineLoop.cpp
-
+    
     UI/Widgets.cpp
     UI/UI.cpp
     UI/CanvasView.cpp
-
+    
     Core/Optix/OptixContext.cpp
     Core/Optix/OptixModule.cpp
     Core/Optix/OptixPipeline.cpp
     Core/Optix/OptixProgramGroup.cpp
     Core/Optix/OptixAccelerationStructure.cpp
-
+    
     Core/Vulkan/VkContext.cpp
     Core/Vulkan/VkRenderPass.cpp
     Core/Vulkan/VkPipeline.cpp
     Core/Vulkan/VkImage.cpp
     Core/Vulkan/VkCommand.cpp
-
+    
     Core/GraphicContext//Buffer.cpp
     Core/GraphicContext//Texture2D.cpp
     Core/GraphicContext//TextureCubeMap.cpp
@@ -72,7 +71,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/Renderer/VisualHelperRenderer.cpp
     Scene/Renderer/VisualHelperMeshRenderer.cpp
     Scene/Serialize/FileIO.cpp
-
+    Scene/Serialize/AssetFile.cpp
+    
     Scene/Importer/glTFImporter.cpp
 
     Editor/PopupWindow.cpp
