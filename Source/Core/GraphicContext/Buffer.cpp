@@ -73,6 +73,14 @@ namespace LTSE::Graphics
         }
     }
 
+    void Buffer::Copy( Ref<Buffer> aSource, size_t aOffset )
+    {
+        Ref<Internal::sVkCommandBufferObject> l_CommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
+        l_CommandBufferObject->CopyBuffer( aSource->mVkObject, 0, aSource->mSize, mVkObject, aOffset );
+        mGraphicContext.EndSingleTimeCommands( l_CommandBufferObject );
+    }
+
+
     static VkDeviceSize g_BufferMemoryAlignment = 256;
     void Buffer::Resize( size_t a_NewSizeInBytes )
     {

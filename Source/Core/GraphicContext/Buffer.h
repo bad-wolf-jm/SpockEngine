@@ -67,6 +67,7 @@ namespace LTSE::Graphics
         }
 
         void Upload( void *aData, size_t aSize, size_t aOffset );
+        void Copy( Ref<Buffer> aSource, size_t aOffset );
 
         template <typename _Ty> void Write( _Ty a_Value, size_t offset = 0 ) { Upload( reinterpret_cast<void *>( &a_Value ), sizeof( _Ty ), offset ); }
 
