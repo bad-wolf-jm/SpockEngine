@@ -41,37 +41,6 @@ namespace LTSE::Core
 
     bool BinaryAsset::Eof() { return mFileStream.eof(); }
 
-    std::tuple<TextureData2D, TextureSampler2D> BinaryAsset::Retrieve( uint32_t aIndex )
-    {
-        auto lAssetIndex = mAssetIndex[aIndex];
-        if( lAssetIndex.mType != eAssetType::KTX_TEXTURE_2D ) throw std::runtime_error( "Binary data type mismatch" );
-
-        Seek( lAssetIndex.mByteStart );
-
-        sTextureSamplingInfo lSamplerCreateInfo{};
-        lSamplerCreateInfo.mMinification   = Read<eSamplerFilter>();
-        lSamplerCreateInfo.mMagnification  = Read<eSamplerFilter>();
-        lSamplerCreateInfo.mMip            = Read<eSamplerMipmap>();
-        lSamplerCreateInfo.mWrapping       = Read<eSamplerWrapping>();
-        lSamplerCreateInfo.mScaling[0]     = Read<float>();
-        lSamplerCreateInfo.mScaling[1]     = Read<float>();
-        lSamplerCreateInfo.mOffset[0]      = Read<float>();
-        lSamplerCreateInfo.mOffset[1]      = Read<float>();
-        lSamplerCreateInfo.mBorderColor[0] = Read<float>();
-        lSamplerCreateInfo.mBorderColor[1] = Read<float>();
-        lSamplerCreateInfo.mBorderColor[2] = Read<float>();
-        lSamplerCreateInfo.mBorderColor[3] = Read<float>();
-
-        uint32_t lKTXDataSize = lAssetIndex.mByteEnd - static_cast<uint32_t>( CurrentPosition() );
-
-        auto lData = Read<char>( lKTXDataSize );
-
-        TextureData2D    lTextureData( lData.data(), lData.size() );
-        TextureSampler2D lSampler( lTextureData, lSamplerCreateInfo );
-
-        return { lTextureData, lSampler };
-    }
-
     std::vector<char> BinaryAsset::Package( TextureData2D const &aData, sTextureSamplingInfo const &aSampler )
     {
         uint32_t lHeaderSize = 0;
@@ -155,8 +124,8 @@ namespace LTSE::Core
 
         std::vector<char> lPacket( lPacketSize );
 
-        uint32_t lVertexByteSize = aVertexData.size() * sizeof( VertexData );
-        uint32_t lIndexByteSize  = aIndexData.size() * sizeof( uint32_t );
+        uint32_t lVertexByteSize = aVertexData.size();
+        uint32_t lIndexByteSize  = aIndexData.size();
 
         auto *lPtr = lPacket.data();
         std::memcpy( lPtr, &lVertexByteSize, sizeof( uint32_t ) );
@@ -176,6 +145,12 @@ namespace LTSE::Core
         if( lAssetIndex.mType != eAssetType::MESH_DATA ) throw std::runtime_error( "Binary data type mismatch" );
 
         Seek( lAssetIndex.mByteStart );
+
+        auto lVertexBufferSize = Read<uint32_t>();
+        auto lIndexBufferSize  = Read<uint32_t>();
+
+        aVertexData = Read<VertexData>( lVertexBufferSize );
+        aIndexData  = Read<uint32_t>( lIndexBufferSize );
     }
 
     std::vector<char> BinaryAsset::Package( sMaterial const &aMaterialData )
@@ -247,6 +222,24 @@ namespace LTSE::Core
         if( lAssetIndex.mType != eAssetType::MATERIAL_DATA ) throw std::runtime_error( "Binary data type mismatch" );
 
         Seek( lAssetIndex.mByteStart );
+
+        aMaterialData.mName              = Read<std::string>();
+        aMaterialData.mID                = Read<uint32_t>();
+        aMaterialData.mType              = Read<eMaterialType>();
+        aMaterialData.mLineWidth         = Read<float>();
+        aMaterialData.mIsTwoSided        = Read<bool>();
+        aMaterialData.mUseAlphaMask      = Read<bool>();
+        aMaterialData.mAlphaThreshold    = Read<float>();
+        aMaterialData.mBaseColorFactor   = Read<math::vec4>();
+        aMaterialData.mBaseColorTexture  = Read<sTextureReference>();
+        aMaterialData.mEmissiveFactor    = Read<math::vec4>();
+        aMaterialData.mEmissiveTexture   = Read<sTextureReference>();
+        aMaterialData.mRoughnessFactor   = Read<float>();
+        aMaterialData.mMetallicFactor    = Read<float>();
+        aMaterialData.mMetalRoughTexture = Read<sTextureReference>();
+        aMaterialData.mOcclusionStrength = Read<float>();
+        aMaterialData.mOcclusionTexture  = Read<sTextureReference>();
+        aMaterialData.mNormalsTexture    = Read<sTextureReference>();
     }
 
     std::vector<char> BinaryAsset::Package( sImportedAnimationSampler const &aMaterialData )
@@ -280,6 +273,14 @@ namespace LTSE::Core
         if( lAssetIndex.mType != eAssetType::ANIMATION_DATA ) throw std::runtime_error( "Binary data type mismatch" );
 
         Seek( lAssetIndex.mByteStart );
+
+        aMaterialData.mInterpolation = Read<sImportedAnimationSampler::Interpolation>();
+
+        auto lInputSize       = Read<uint32_t>();
+        aMaterialData.mInputs = Read<float>( lInputSize );
+
+        auto lOutputSize           = Read<uint32_t>();
+        aMaterialData.mOutputsVec4 = Read<math::vec4>( lOutputSize );
     }
 
 } // namespace LTSE::Core

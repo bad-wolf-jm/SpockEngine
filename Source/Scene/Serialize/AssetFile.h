@@ -72,6 +72,15 @@ namespace LTSE::Core
             return lBuffer;
         }
 
+        template <>
+        std::string Read()
+        {
+            auto lStrLen = Read<uint32_t>();
+            auto lBuffer = Read<char>(lStrLen);
+
+            return std::string(lBuffer.data(), lStrLen);
+        }
+
         /// @brief Read `aCount` elements of type _Ty from the file, and return a vector containing them
         template <typename _Ty>
         std::vector<_Ty> Read( size_t aCount )
