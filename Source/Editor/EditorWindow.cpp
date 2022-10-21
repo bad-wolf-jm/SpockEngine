@@ -182,11 +182,11 @@ namespace LTSE::Editor
         m_SceneElementEditor                = SceneElementEditor( mGraphicContext );
         m_SceneHierarchyPanel.ElementEditor = m_SceneElementEditor;
         m_CurrentPanel                      = SidePanelID::SENSOR_CONFIGURATION;
-        mContentBrowser                     = ContentBrowser( mGraphicContext, mUIOverlay, "C:\\GitLab\\EchoDS_FLM\\Saved" );
+        mContentBrowser                     = ContentBrowser( mGraphicContext, mUIOverlay, "C:\\GitLab\\SpockEngine\\Saved" );
 
         {
             LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\EchoDS_FLM\\Saved\\Resources\\Icons\\Play.png" );
+            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Play.png" );
             sTextureSamplingInfo         lSamplingInfo{};
             LTSE::Core::TextureSampler2D lTextureSampler = LTSE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
@@ -196,7 +196,7 @@ namespace LTSE::Editor
 
         {
             LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\EchoDS_FLM\\Saved\\Resources\\Icons\\Pause.png" );
+            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Pause.png" );
             sTextureSamplingInfo         lSamplingInfo{};
             LTSE::Core::TextureSampler2D lTextureSampler = LTSE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
@@ -206,7 +206,7 @@ namespace LTSE::Editor
 
         {
             LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\EchoDS_FLM\\Saved\\Resources\\Icons\\Play.png" );
+            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Play.png" );
             sTextureSamplingInfo         lSamplingInfo{};
             LTSE::Core::TextureSampler2D lTextureSampler = LTSE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
@@ -216,7 +216,7 @@ namespace LTSE::Editor
 
         {
             LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\EchoDS_FLM\\Saved\\Resources\\Icons\\Camera.png" );
+            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Camera.png" );
             sTextureSamplingInfo         lSamplingInfo{};
             LTSE::Core::TextureSampler2D lTextureSampler = LTSE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
@@ -236,7 +236,7 @@ namespace LTSE::Editor
         // PhotodetectorEditor = PhotodetectorCellEditor( "EDIT PHOTODETECTOR...", { 1600.0f, 1200.0f } );
 
         std::ifstream mFileStream{};
-        mFileStream.open( fs::path( "C:\\GitLab\\EchoDS_FLM\\Saved\\tile.bin" ), std::ios::binary );
+        mFileStream.open( fs::path( "C:\\GitLab\\SpockEngine\\Saved\\tile.bin" ), std::ios::binary );
         if( mFileStream.good() )
         {
             mFileStream.seekg( 0, mFileStream.end );

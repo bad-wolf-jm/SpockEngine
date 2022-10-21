@@ -16,7 +16,7 @@ namespace LTSE::Editor
     {
         {
             LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\EchoDS_FLM\\Saved\\Resources\\Icons\\Folder.png" );
+            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Folder.png" );
             sTextureSamplingInfo lSamplingInfo{};
             TextureSampler2D lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
 
@@ -26,7 +26,7 @@ namespace LTSE::Editor
 
         {
             LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\EchoDS_FLM\\Saved\\Resources\\Icons\\File.png" );
+            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\File.png" );
             sTextureSamplingInfo lSamplingInfo{};
             TextureSampler2D lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
 
@@ -36,7 +36,7 @@ namespace LTSE::Editor
 
         {
             LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\EchoDS_FLM\\Saved\\Resources\\Icons\\Back.png" );
+            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Back.png" );
             sTextureSamplingInfo lSamplingInfo{};
             TextureSampler2D lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
 

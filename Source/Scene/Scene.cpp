@@ -694,6 +694,7 @@ namespace LTSE::Core
                     for( auto &lChannel : lAnimation.mChannels )
                     {
                         auto &lAnimatedTransform = lChannel.mTargetNode.Get<AnimatedTransformComponent>();
+                        if( lAnimation.CurrentTick >= lChannel.mInterpolation.mInputs.size() ) continue;
 
                         float dt = lAnimation.CurrentTime - lChannel.mInterpolation.mInputs[lAnimation.CurrentTick];
                         if( lAnimation.CurrentTime >
@@ -741,20 +742,6 @@ namespace LTSE::Core
                         }
                     }
                 } );
-
-            // ForEach<NodeTransformComponent>( [&]( auto l_ElementToProcess, auto &lAnimatedTransform )
-            //     { l_ElementToProcess.AddOrReplace<LocalTransformComponent>( lAnimatedTransform.mMatrix ); } );
-
-            // ForEach<AnimatedTransformComponent>(
-            //     [&]( auto l_ElementToProcess, auto &lAnimatedTransform )
-            //     {
-            //         auto lMatrix = glm::translate( glm::mat4( 1.0f ), lAnimatedTransform.Translation ) *
-            //                        glm::mat4( lAnimatedTransform.Rotation ) *
-            //                        glm::scale( glm::mat4( 1.0f ), lAnimatedTransform.Scaling );
-            //         // l_ElementToProcess.AddOrReplace<LocalTransformComponent>(
-            //         //     lMatrix * l_ElementToProcess.Get<LocalTransformComponent>().mMatrix );
-            //         l_ElementToProcess.AddOrReplace<LocalTransformComponent>( lMatrix );
-            //     } );
         }
 
         std::queue<Entity> l_UpdateQueue{};
