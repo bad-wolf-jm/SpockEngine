@@ -388,7 +388,7 @@ namespace LTSE::Core
     }
 
     template <typename _Ty>
-    void ReadComponent( Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<UUIDv4::UUID, Entity> aEntities )
+    void ReadComponent( Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<UUIDv4::UUID, Entity> &aEntities )
     {
         //
     }
@@ -418,7 +418,7 @@ namespace LTSE::Core
 
     template <>
     void ReadComponent<sAnimationChooser>(
-        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<UUIDv4::UUID, Entity> aEntities )
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<UUIDv4::UUID, Entity> &aEntities )
     {
         if( !aNode["sAnimationChooser"].IsNull() )
         {
@@ -436,7 +436,7 @@ namespace LTSE::Core
 
     template <>
     void ReadComponent<sAnimationComponent>(
-        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<UUIDv4::UUID, Entity> aEntities )
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<UUIDv4::UUID, Entity> &aEntities )
     {
         if( !aNode["sAnimationComponent"].IsNull() )
         {
@@ -608,7 +608,7 @@ namespace LTSE::Core
             auto &lComponent = aEntity.Add<sRayTracingTargetComponent>();
 
             std::vector<float> lMatrixEntries{};
-            aNode["sTransformMatrixComponent"]["mMatrix"].ForEach(
+            aNode["sRayTracingTargetComponent"]["Transform"].ForEach(
                 [&]( ConfigurationNode &aNode ) { lMatrixEntries.push_back( aNode.As<float>( 0.0f ) ); } );
 
             lComponent.Transform[0][0] = lMatrixEntries[0];
@@ -719,7 +719,7 @@ namespace LTSE::Core
 
     template <>
     void ReadComponent<sLightComponent>(
-        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<UUIDv4::UUID, Entity> aEntities )
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<UUIDv4::UUID, Entity> &aEntities )
     {
         if( !aNode["sLightComponent"].IsNull() )
         {
@@ -783,7 +783,7 @@ namespace LTSE::Core
         std::unordered_map<UUIDv4::UUID, Entity>            lEntities{};
         std::unordered_map<UUIDv4::UUID, ConfigurationNode> lComponents{};
 
-        lScenarioDescription.GetRoot()["nodes"].ForEach<std::string>(
+        lScenarioDescription.GetRoot()["scene"]["nodes"].ForEach<std::string>(
             [&]( auto const &aKey, auto const &aValue )
             {
                 auto lEntity = m_Registry.CreateEntity( sUUID( aKey ) );
@@ -792,16 +792,21 @@ namespace LTSE::Core
                 lComponents[lEntity.Get<sUUID>().mValue] = aValue;
             } );
 
-        for( auto &[lUUID, lEntity] : lEntities )
+        for( auto [lUUID, lEntity] : lEntities )
         {
+            LTSE::Logging::Info( "** {}", lUUID.str() );
+
             auto &lEntityConfiguration = lComponents[lUUID];
 
             if( !lEntityConfiguration["sRelationshipComponent"].IsNull() )
             {
-                auto lParentUUID   = lEntityConfiguration["sRelationshipComponent"]["mParent"].As<std::string>( "" );
-                auto lParentEntity = lEntities[UUIDv4::UUID::fromStrFactory( lParentUUID )];
+                if( !( lEntityConfiguration["sRelationshipComponent"]["mParent"].IsNull() ) )
+                {
+                    auto lParentUUID   = lEntityConfiguration["sRelationshipComponent"]["mParent"].As<std::string>( "" );
+                    auto lParentEntity = lEntities[UUIDv4::UUID::fromStrFactory( lParentUUID )];
 
-                m_Registry.SetParent( lEntity, lParentEntity );
+                    m_Registry.SetParent( lEntity, lParentEntity );
+                }
             }
 
             ReadComponent<sTag>( lEntity, lEntityConfiguration );
@@ -823,6 +828,22 @@ namespace LTSE::Core
             ReadComponent<sSpotlightComponent>( lEntity, lEntityConfiguration );
             ReadComponent<sLightComponent>( lEntity, lEntityConfiguration, lEntities );
         }
+
+        auto lRootNodeUUIDStr = lScenarioDescription.GetRoot()["scene"]["root"].As<std::string>( "" );
+        auto lRootNodeUUID    = UUIDv4::UUID::fromStrFactory( lRootNodeUUIDStr );
+        Root                  = lEntities[lRootNodeUUID];
+
+        auto lEnvironmentNodeUUID =
+            UUIDv4::UUID::fromStrFactory( lScenarioDescription.GetRoot()["scene"]["environment"].As<std::string>( "" ) );
+        Environment = lEntities[lEnvironmentNodeUUID];
+
+        auto lCurrentCameraUUID =
+            UUIDv4::UUID::fromStrFactory( lScenarioDescription.GetRoot()["scene"]["current_camera"].As<std::string>( "" ) );
+        CurrentCamera = lEntities[lCurrentCameraUUID];
+
+        auto lDefaultCameraUUID =
+            UUIDv4::UUID::fromStrFactory( lScenarioDescription.GetRoot()["scene"]["default_camera"].As<std::string>( "" ) );
+        DefaultCamera = lEntities[lDefaultCameraUUID];
     }
 
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name )
@@ -1706,6 +1727,10 @@ namespace LTSE::Core
             lOut.BeginMap();
             lOut.WriteKey( "name", "FOO" );
             lOut.WriteKey( "version", "1" );
+            lOut.WriteKey( "root", Root.Get<sUUID>().mValue.str() );
+            lOut.WriteKey( "environment", Environment.Get<sUUID>().mValue.str() );
+            lOut.WriteKey( "default_camera", DefaultCamera.Get<sUUID>().mValue.str() );
+            lOut.WriteKey( "current_camera", CurrentCamera.Get<sUUID>().mValue.str() );
             lOut.WriteKey( "nodes" );
             {
                 lOut.BeginMap();
