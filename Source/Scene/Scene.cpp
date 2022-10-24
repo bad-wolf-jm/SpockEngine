@@ -383,7 +383,6 @@ namespace LTSE::Core
 
     void Scene::LoadScenario( fs::path aScenarioPath )
     {
-        auto lScenarioDescription = ConfigurationReader( aScenarioPath );
         auto lScenarioRoot        = aScenarioPath.parent_path();
         auto lScenarioData        = BinaryAsset( lScenarioRoot / "BinaryData.bin" );
 
@@ -422,6 +421,9 @@ namespace LTSE::Core
 
             auto lNewTexture = mMaterialSystem->CreateTexture( aData, aSampler );
         }
+
+        auto lScenarioDescription = ConfigurationReader( aScenarioPath );
+       
     }
 
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name )
