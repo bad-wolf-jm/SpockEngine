@@ -91,6 +91,7 @@ namespace LTSE::Core
         MaterialSystem( GraphicContext &aGraphicContext );
 
         sMaterial               &CreateMaterial();
+        sMaterial               &CreateMaterial( sMaterial const &aMaterialData );
         sMaterial               &GetMaterialByID( uint32_t aID );
         Ref<Graphics::Texture2D> GetTextureByID( uint32_t aID );
 

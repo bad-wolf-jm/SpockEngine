@@ -13,9 +13,10 @@
 #include <functional>
 #include <string>
 
+#include "Core/TextureData.h"
 #include "Scene/Importer/ImporterData.h"
 #include "Scene/VertexData.h"
-#include "Core/TextureData.h"
+
 
 namespace fs = std::filesystem;
 
@@ -76,9 +77,9 @@ namespace LTSE::Core
         std::string Read()
         {
             auto lStrLen = Read<uint32_t>();
-            auto lBuffer = Read<char>(lStrLen);
+            auto lBuffer = Read<char>( lStrLen );
 
-            return std::string(lBuffer.data(), lStrLen);
+            return std::string( lBuffer.data(), lStrLen );
         }
 
         /// @brief Read `aCount` elements of type _Ty from the file, and return a vector containing them
@@ -90,6 +91,8 @@ namespace LTSE::Core
 
             return lBuffer;
         }
+
+        sAssetIndex const &GetIndex( uint32_t aIndex ) const;
 
         /// @brief Retrieve the texture stored in the file at index `aIndex`
         std::tuple<TextureData2D, TextureSampler2D> Retrieve( uint32_t aIndex );

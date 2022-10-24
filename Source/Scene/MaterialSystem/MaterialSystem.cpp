@@ -123,6 +123,15 @@ namespace LTSE::Core
         return mMaterials.back();
     }
 
+    sMaterial &MaterialSystem::CreateMaterial( sMaterial const &aMaterial )
+    {
+        mMaterials.push_back( aMaterial );
+
+        mDirty = true;
+
+        return mMaterials.back();
+    }
+
     sMaterial &MaterialSystem::GetMaterialByID( uint32_t aID ) { return mMaterials[aID]; }
 
     void MaterialSystem::UpdateDescriptors()

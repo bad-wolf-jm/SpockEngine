@@ -64,6 +64,8 @@ namespace LTSE::Core
         Element CreateEntity();
         Element CreateEntity( std::string a_Name );
 
+        void LoadScenario( fs::path aScenarioPath );
+
         Element LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform );
         Element LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name );
 

@@ -24,8 +24,8 @@
 #include "Scripting/ScriptComponent.h"
 
 #include "Scene/Components/VisualHelpers.h"
-#include "Serialize/FileIO.h"
 #include "Serialize/AssetFile.h"
+#include "Serialize/FileIO.h"
 
 namespace LTSE::Core
 {
@@ -381,6 +381,49 @@ namespace LTSE::Core
         return LoadModel( aModelData, aTransform, "MODEL" );
     }
 
+    void Scene::LoadScenario( fs::path aScenarioPath )
+    {
+        auto lScenarioDescription = ConfigurationReader( aScenarioPath );
+        auto lScenarioRoot        = aScenarioPath.parent_path();
+        auto lScenarioData        = BinaryAsset( lScenarioRoot / "BinaryData.bin" );
+
+        auto lOffseIndex = lScenarioData.GetIndex( 0 );
+        if( lOffseIndex.mType != eAssetType::OFFSET_DATA ) throw std::runtime_error( "Binary data type mismatch" );
+        lScenarioData.Seek( lOffseIndex.mByteStart );
+        auto lMaterialOffset  = lScenarioData.Read<uint32_t>();
+        auto lMaterialCount   = lScenarioData.Read<uint32_t>();
+        auto lTextureOffset   = lScenarioData.Read<uint32_t>();
+        auto lTextureCount    = lScenarioData.Read<uint32_t>();
+        auto lAnimationOffset = lScenarioData.Read<uint32_t>();
+
+        std::vector<VertexData> lVertexBuffer;
+        std::vector<uint32_t>   lIndexBuffer;
+        lScenarioData.Retrieve( 1, lVertexBuffer, lIndexBuffer );
+
+        mVertexBuffer = New<Buffer>( mGraphicContext, lVertexBuffer, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
+        mVertexBufferMemoryHandle.Dispose();
+        mVertexBufferMemoryHandle = Cuda::GPUExternalMemory( *mVertexBuffer, mVertexBuffer->SizeAs<uint8_t>() );
+
+        mIndexBuffer = New<Buffer>( mGraphicContext, lIndexBuffer, eBufferBindType::INDEX_BUFFER, false, true, true, true );
+        mIndexBufferMemoryHandle.Dispose();
+        mIndexBufferMemoryHandle = Cuda::GPUExternalMemory( *mIndexBuffer, mIndexBuffer->SizeAs<uint8_t>() );
+
+        for( uint32_t lMaterialIndex = 0; lMaterialIndex < lMaterialCount; lMaterialIndex++ )
+        {
+            sMaterial lMaterialData;
+            lScenarioData.Retrieve( lMaterialIndex + lMaterialOffset, lMaterialData );
+
+            auto &lNewMaterial = mMaterialSystem->CreateMaterial( lMaterialData );
+        }
+
+        for( uint32_t lTextureIndex = 0; lTextureIndex < lTextureCount; lTextureIndex++ )
+        {
+            auto [aData, aSampler] = lScenarioData.Retrieve( lTextureIndex + lTextureOffset );
+
+            auto lNewTexture = mMaterialSystem->CreateTexture( aData, aSampler );
+        }
+    }
+
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name )
     {
         auto l_AssetEntity = m_Registry.CreateEntity( Root, a_Name );
@@ -462,10 +505,6 @@ namespace LTSE::Core
                 lVertices[i].Weights     = lMesh.mWeights[i];
             }
 
-            // l_MeshComponent.Vertices =
-            //     New<Buffer>( mGraphicContext, lVertices, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
-            // l_MeshComponent.Indices =
-            //     New<Buffer>( mGraphicContext, lMesh.mIndices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
             l_MeshComponent.mVertexOffset = lVertexData.size();
             l_MeshComponent.mIndexOffset  = lIndexData.size();
             

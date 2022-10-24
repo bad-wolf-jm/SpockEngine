@@ -96,7 +96,7 @@ namespace LTSE::Editor
         }
         ~Slider() = default;
 
-        void Display( _SliderType* mValue ) { Changed = UI::Slider( ID, Format.c_str(), MinValue, MaxValue, mValue ); }
+        void Display( _SliderType *mValue ) { Changed = UI::Slider( ID, Format.c_str(), MinValue, MaxValue, mValue ); }
     };
 
     template <typename _ValueChooserType>
@@ -122,25 +122,23 @@ namespace LTSE::Editor
         }
     };
 
-    static std::string UTF16ToAscii( const char* aPayloadData, size_t aSize )
+    static std::string UTF16ToAscii( const char *aPayloadData, size_t aSize )
     {
         size_t      lPayloadSize = static_cast<size_t>( aSize / 2 );
         std::string lItemPathStr( lPayloadSize - 1, '\0' );
-        for( uint32_t i = 0; i < lPayloadSize - 1; i++ )
-            lItemPathStr[i] = aPayloadData[2 * i];
+        for( uint32_t i = 0; i < lPayloadSize - 1; i++ ) lItemPathStr[i] = aPayloadData[2 * i];
 
         return lItemPathStr;
     }
 
-    static Ref<LTSE::Graphics::Texture2D> LoadImagePreview(
-        LTSE::Graphics::GraphicContext& aGraphicContext, fs::path aImagePath )
+    static Ref<LTSE::Graphics::Texture2D> LoadImagePreview( LTSE::Graphics::GraphicContext &aGraphicContext, fs::path aImagePath )
     {
         if( aImagePath.extension() == ".png" )
         {
             LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
             TextureData2D                        lTextureData( lTextureCreateInfo, aImagePath );
             sTextureSamplingInfo                 lSamplingInfo{};
-            LTSE::Core::TextureSampler2D lTextureSampler = LTSE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
+            LTSE::Core::TextureSampler2D         lTextureSampler = LTSE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
             return New<LTSE::Graphics::Texture2D>( aGraphicContext, lTextureData, lTextureSampler );
         }
@@ -148,10 +146,9 @@ namespace LTSE::Editor
     }
 
     static void UpdateImageHandle(
-        Ref<LTSE::Core::UIContext> aUIOverlay, ImageHandle& aImageHandle, Ref<LTSE::Graphics::Texture2D> aTexture )
+        Ref<LTSE::Core::UIContext> aUIOverlay, ImageHandle &aImageHandle, Ref<LTSE::Graphics::Texture2D> aTexture )
     {
-        if( !aTexture )
-            return;
+        if( !aTexture ) return;
 
         if( !aImageHandle.Handle )
             aImageHandle = aUIOverlay->CreateTextureHandle( aTexture );
@@ -225,7 +222,7 @@ namespace LTSE::Editor
         }
     }
 
-    EditorWindow::EditorWindow( LTSE::Graphics::GraphicContext& aGraphicContext, Ref<UIContext> aUIOverlay )
+    EditorWindow::EditorWindow( LTSE::Graphics::GraphicContext &aGraphicContext, Ref<UIContext> aUIOverlay )
         : mGraphicContext{ aGraphicContext }
         , mUIOverlay{ aUIOverlay }
     {
@@ -246,11 +243,22 @@ namespace LTSE::Editor
             mFileStream.read( (char*)mTestTile.data(), mFileSize );
             LTSE::Logging::Info( "FOO - {}", mFileSize );
         }
+        // std::ifstream mFileStream{};
+        // mFileStream.open( fs::path( "C:\\GitLab\\EchoDS_FLM\\Saved\\tile.bin" ), std::ios::binary );
+        // if( mFileStream.good() )
+        // {
+        //     mFileStream.seekg( 0, mFileStream.end );
+        //     uint32_t mFileSize = mFileStream.tellg();
+        //     mFileStream.seekg( 0, mFileStream.beg );
+        //     mTestTile = std::vector<uint8_t>( mFileSize );
+        //     mFileStream.read( (char*)mTestTile.data(), mFileSize );
+        //     LTSE::Logging::Info( "FOO - {}", mFileSize );
+        // }
     }
 
     void EditorWindow::UpdateSceneViewport( ImageHandle a_SceneViewport ) { m_SceneViewport = a_SceneViewport; }
 
-    EditorWindow& EditorWindow::AddMenuItem( std::string l_Icon, std::string l_Title, std::function<bool()> l_Action )
+    EditorWindow &EditorWindow::AddMenuItem( std::string l_Icon, std::string l_Title, std::function<bool()> l_Action )
     {
         m_MainMenuItems.push_back( { l_Icon, l_Title, l_Action } );
         return *this;
@@ -259,14 +267,13 @@ namespace LTSE::Editor
     bool EditorWindow::Display()
     {
         ImGuizmo::SetOrthographic( false );
-        static bool                  p_open           = true;
-        constexpr ImGuiDockNodeFlags lDockSpaceFlags  = ImGuiDockNodeFlags_PassthruCentralNode;
-        constexpr ImGuiWindowFlags   lMainwindowFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoBackground |
-                                                      ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
-                                                      ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
-                                                      ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+        static bool                  p_open          = true;
+        constexpr ImGuiDockNodeFlags lDockSpaceFlags = ImGuiDockNodeFlags_PassthruCentralNode;
+        constexpr ImGuiWindowFlags   lMainwindowFlags =
+            ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
+            ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
-        ImGuiViewport* viewport = ImGui::GetMainViewport();
+        ImGuiViewport *viewport = ImGui::GetMainViewport();
         ImGui::SetNextWindowPos( viewport->WorkPos );
         ImGui::SetNextWindowSize( viewport->WorkSize - ImVec2( 0.0f, StatusBarHeight ) );
         ImGui::SetNextWindowViewport( viewport->ID );
@@ -369,9 +376,9 @@ namespace LTSE::Editor
 
                 if( ImGui::BeginDragDropTarget() )
                 {
-                    if( const ImGuiPayload* payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
+                    if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
                     {
-                        fs::path lItemPath( UTF16ToAscii( (const char*)payload->Data, payload->DataSize ) );
+                        fs::path lItemPath( UTF16ToAscii( (const char *)payload->Data, payload->DataSize ) );
                         lBaseColorTexture = LoadImagePreview( mGraphicContext, lItemPath );
                         UpdateImageHandle( mUIOverlay, lBaseColorTextureHandle, lBaseColorTexture );
                     }
@@ -399,9 +406,9 @@ namespace LTSE::Editor
                     UI::Image( m_DefaultTextureImageHandle, math::vec2{ 128, 128 } );
                 if( ImGui::BeginDragDropTarget() )
                 {
-                    if( const ImGuiPayload* payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
+                    if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
                     {
-                        fs::path lItemPath( UTF16ToAscii( (const char*)payload->Data, payload->DataSize ) );
+                        fs::path lItemPath( UTF16ToAscii( (const char *)payload->Data, payload->DataSize ) );
                         lEmissiveTexture = LoadImagePreview( mGraphicContext, lItemPath );
                         UpdateImageHandle( mUIOverlay, lEmissiveTextureHandle, lEmissiveTexture );
                     }
@@ -427,9 +434,9 @@ namespace LTSE::Editor
                     UI::Image( m_DefaultTextureImageHandle, math::vec2{ 128, 128 } );
                 if( ImGui::BeginDragDropTarget() )
                 {
-                    if( const ImGuiPayload* payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
+                    if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
                     {
-                        fs::path lItemPath( UTF16ToAscii( (const char*)payload->Data, payload->DataSize ) );
+                        fs::path lItemPath( UTF16ToAscii( (const char *)payload->Data, payload->DataSize ) );
                         lNormalsTexture = LoadImagePreview( mGraphicContext, lItemPath );
                         UpdateImageHandle( mUIOverlay, lNormalsTextureHandle, lNormalsTexture );
                     }
@@ -452,9 +459,9 @@ namespace LTSE::Editor
                     UI::Image( m_DefaultTextureImageHandle, math::vec2{ 128, 128 } );
                 if( ImGui::BeginDragDropTarget() )
                 {
-                    if( const ImGuiPayload* payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
+                    if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
                     {
-                        fs::path lItemPath( UTF16ToAscii( (const char*)payload->Data, payload->DataSize ) );
+                        fs::path lItemPath( UTF16ToAscii( (const char *)payload->Data, payload->DataSize ) );
                         lOcclusionTexture = LoadImagePreview( mGraphicContext, lItemPath );
                         UpdateImageHandle( mUIOverlay, lOcclusionTextureHandle, lOcclusionTexture );
                     }
@@ -482,9 +489,9 @@ namespace LTSE::Editor
                     UI::Image( m_DefaultTextureImageHandle, math::vec2{ 128, 128 } );
                 if( ImGui::BeginDragDropTarget() )
                 {
-                    if( const ImGuiPayload* payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
+                    if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
                     {
-                        fs::path lItemPath( UTF16ToAscii( (const char*)payload->Data, payload->DataSize ) );
+                        fs::path lItemPath( UTF16ToAscii( (const char *)payload->Data, payload->DataSize ) );
                         lPhysicalTexture = LoadImagePreview( mGraphicContext, lItemPath );
                         UpdateImageHandle( mUIOverlay, lPhysicalTextureHandle, lPhysicalTexture );
                     }
@@ -529,7 +536,7 @@ namespace LTSE::Editor
                     lIsProfiling            = false;
                     lProfilingDataAvailable = true;
                     lProfilingResults       = {};
-                    for( auto& lEvent : lResults->mEvents )
+                    for( auto &lEvent : lResults->mEvents )
                     {
                         if( lProfilingResults.find( lEvent.mName ) == lProfilingResults.end() )
                         {
@@ -543,7 +550,7 @@ namespace LTSE::Editor
                         }
                     }
 
-                    for( auto& lEntry : lProfilingResults )
+                    for( auto &lEntry : lProfilingResults )
                     {
                         lProfilingResults[lEntry.first] /= lProfilingCount[lEntry.first];
                     }
@@ -559,7 +566,7 @@ namespace LTSE::Editor
 
             if( lProfilingDataAvailable )
             {
-                for( auto& lEntry : lProfilingResults )
+                for( auto &lEntry : lProfilingResults )
                 {
                     UI::Text( "{} ----> {} us", lEntry.first, lEntry.second );
                 }
@@ -1103,8 +1110,7 @@ namespace LTSE::Editor
         }
         ImGui::End();
 
-        if( o_RequestQuit )
-            return true;
+        if( o_RequestQuit ) return true;
 
         ImGui::PushStyleColor( ImGuiCol_WindowBg, ImVec4{ 102.0f / 255.0f, 0.0f, 204.0f / 255.0f, 1.0f } );
         ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, 0.0f );
@@ -1112,10 +1118,9 @@ namespace LTSE::Editor
         ImGui::PushStyleVar( ImGuiStyleVar_WindowPadding, ImVec2( 5.0f, 7.0f ) );
         ImGui::SetNextWindowSize( ImVec2{ viewport->WorkSize.x, StatusBarHeight } );
         ImGui::SetNextWindowPos( ImVec2{ 0.0f, viewport->WorkSize.y } );
-        constexpr ImGuiWindowFlags lStatusBarFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
-                                                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-                                                     ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus |
-                                                     ImGuiWindowFlags_NoNavFocus;
+        constexpr ImGuiWindowFlags lStatusBarFlags =
+            ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+            ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
         ImGui::Begin( "##STATUS_BAR", &p_open, lStatusBarFlags );
         ImGui::PopStyleVar( 3 );
@@ -1146,8 +1151,7 @@ namespace LTSE::Editor
             {
                 auto lFilePath = FileDialogs::OpenFile(
                     mEngineLoop->GetMainApplicationWindow(), "glTf Files (*.gltf)\0*.gltf\0All Files (*.*)\0*.*\0" );
-                if( lFilePath.has_value() )
-                    LoadScenario( lFilePath.value() );
+                if( lFilePath.has_value() ) LoadScenario( lFilePath.value() );
             }
             if( UI::MenuItem( fmt::format( "{} New material", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
             {
@@ -1156,8 +1160,13 @@ namespace LTSE::Editor
             if( UI::MenuItem( fmt::format( "{} Save Scene", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
             {
                 // m_NewMaterial.Visible = true;
-                World->SaveAs(fs::path("C:\\GitLab\\SpockEngine\\Saved") / "TEST" / "SCENE");
+                World->SaveAs( fs::path( "C:\\GitLab\\SpockEngine\\Saved" ) / "TEST" / "SCENE" );
+            }
 
+            if( UI::MenuItem( fmt::format( "{} Load Scenario Scene", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
+            {
+                // m_NewMaterial.Visible = true;
+                World->LoadScenario( fs::path( "C:\\GitLab\\SpockEngine\\Saved" ) / "TEST" / "SCENE" / "Scene.yaml" );
             }
 
             l_RequestQuit = UI::MenuItem( fmt::format( "{} Exit", ICON_FA_WINDOW_CLOSE_O ).c_str(), NULL );
@@ -1183,11 +1192,10 @@ namespace LTSE::Editor
 
         ~ManipulationTypeChooser() = default;
 
-        void Display( ManipulationType& Current )
+        void Display( ManipulationType &Current )
         {
             auto it = std::find( Dropdown.Values.begin(), Dropdown.Values.end(), Current );
-            if( it != Dropdown.Values.end() )
-                Dropdown.CurrentItem = std::distance( Dropdown.Values.begin(), it );
+            if( it != Dropdown.Values.end() ) Dropdown.CurrentItem = std::distance( Dropdown.Values.begin(), it );
 
             Dropdown.Display();
         }
@@ -1227,15 +1235,14 @@ namespace LTSE::Editor
 
         auto lNewModel = World->LoadModel( lImporter, math::mat4( 1.0f ), lName );
         // lNewModel.Add<LockComponent>();
-        World->ForEach<sStaticMeshComponent>(
-            [&]( auto aEntity, auto& aComponent ) { World->MarkAsRayTracingTarget( aEntity ); } );
+        World->ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aComponent ) { World->MarkAsRayTracingTarget( aEntity ); } );
     }
 
     void EditorWindow::Workspace( int32_t width, int32_t height )
     {
         static bool s_DisplayCameraSettings = false;
 
-        auto& lIO = ImGui::GetIO();
+        auto &lIO = ImGui::GetIO();
 
         math::vec2 l_WorkspacePosition = UI::GetCurrentCursorScreenPosition();
         math::vec2 l_CursorPosition    = UI::GetCurrentCursorPosition();
@@ -1246,8 +1253,7 @@ namespace LTSE::Editor
 
         UI::SetCursorPosition( l_CursorPosition );
         if( ImGui::ImageButton( (ImTextureID)m_CameraIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
-                ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
-                ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f } ) )
+                ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f }, ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f } ) )
         {
             s_DisplayCameraSettings = !s_DisplayCameraSettings;
         }
@@ -1260,8 +1266,7 @@ namespace LTSE::Editor
         lManipulationTypeChooser.Dropdown.Values = {
             ManipulationType::ROTATION, ManipulationType::TRANSLATION, ManipulationType::SCALE };
         lManipulationTypeChooser.Display( lCurrentManipulationType );
-        if( lManipulationTypeChooser.Dropdown.Changed )
-            lCurrentManipulationType = lManipulationTypeChooser.Dropdown.GetValue();
+        if( lManipulationTypeChooser.Dropdown.Changed ) lCurrentManipulationType = lManipulationTypeChooser.Dropdown.GetValue();
 
         math::vec2  l3DViewPosition = UI::GetCurrentCursorScreenPosition();
         math::ivec2 l3DViewSize     = UI::GetAvailableContentSpace();
@@ -1276,8 +1281,7 @@ namespace LTSE::Editor
                     ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
                     ImVec4{ 0.0f, 1.0f, 0.0f, 0.8f } ) )
             {
-                if( OnBeginScenario )
-                    OnBeginScenario();
+                if( OnBeginScenario ) OnBeginScenario();
 
                 ActiveWorld = New<Scene>( World );
                 ActiveWorld->BeginScenario();
@@ -1290,8 +1294,7 @@ namespace LTSE::Editor
                     ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
                     ImVec4{ 1.0f, .2f, 0.0f, 0.8f } ) )
             {
-                if( OnEndScenario )
-                    OnEndScenario();
+                if( OnEndScenario ) OnEndScenario();
 
                 ActiveWorld->EndScenario();
                 ActiveWorld = World;
@@ -1302,16 +1305,16 @@ namespace LTSE::Editor
         }
         UI::SameLine();
 
-        ImGui::PushStyleColor( ImGuiCol_Text,
-            WorldRenderer->RenderGizmos ? ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f } : ImVec4{ 1.0f, 1.0f, 1.0f, .2f } );
+        ImGui::PushStyleColor(
+            ImGuiCol_Text, WorldRenderer->RenderGizmos ? ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f } : ImVec4{ 1.0f, 1.0f, 1.0f, .2f } );
         if( UI::Button( "Gizmos", math::vec2{ 65.0f, 24.0f } ) )
         {
             WorldRenderer->RenderGizmos = !WorldRenderer->RenderGizmos;
         }
         ImGui::PopStyleColor();
         UI::SameLine();
-        ImGui::PushStyleColor( ImGuiCol_Text,
-            WorldRenderer->RenderCoordinateGrid ? ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f } : ImVec4{ 1.0f, 1.0f, 1.0f, .2f } );
+        ImGui::PushStyleColor(
+            ImGuiCol_Text, WorldRenderer->RenderCoordinateGrid ? ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f } : ImVec4{ 1.0f, 1.0f, 1.0f, .2f } );
         if( UI::Button( "Grid", math::vec2{ 65.0f, 24.0f } ) )
         {
             WorldRenderer->RenderCoordinateGrid = !WorldRenderer->RenderCoordinateGrid;
@@ -1319,8 +1322,8 @@ namespace LTSE::Editor
         ImGui::PopStyleColor();
         UI::SameLine();
 
-        ImGui::PushStyleColor( ImGuiCol_Text,
-            WorldRenderer->GrayscaleRendering ? ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f } : ImVec4{ 1.0f, 1.0f, 1.0f, .2f } );
+        ImGui::PushStyleColor(
+            ImGuiCol_Text, WorldRenderer->GrayscaleRendering ? ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f } : ImVec4{ 1.0f, 1.0f, 1.0f, .2f } );
         if( UI::Button( "Grayscale", math::vec2{ 65.0f, 24.0f } ) )
         {
             WorldRenderer->GrayscaleRendering = !WorldRenderer->GrayscaleRendering;
@@ -1335,9 +1338,9 @@ namespace LTSE::Editor
             UI::Image( m_SceneViewport, l3DViewSize );
             if( ImGui::BeginDragDropTarget() )
             {
-                if( const ImGuiPayload* payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
+                if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
                 {
-                    const char* lPayloadData = (const char*)payload->Data;
+                    const char *lPayloadData = (const char *)payload->Data;
                     size_t      lPayloadSize = static_cast<size_t>( payload->DataSize / 2 );
                     std::string lItemPath( lPayloadSize - 1, '\0' );
                     for( uint32_t i = 0; i < lPayloadSize - 1; i++ )
@@ -1357,8 +1360,8 @@ namespace LTSE::Editor
             float lRotationSpeed = 2.5_degf;
             float lPanningSpeed  = 0.25f;
 
-            bool lViewLanipulate = ViewManipulate( WorldRenderer->View.CameraPosition, WorldRenderer->View.View,
-                l3DViewPosition + math::vec2{ l3DViewSize.x - 125.0f, 35.0f } );
+            bool lViewLanipulate               = ViewManipulate( WorldRenderer->View.CameraPosition, WorldRenderer->View.View,
+                              l3DViewPosition + math::vec2{ l3DViewSize.x - 125.0f, 35.0f } );
             WorldRenderer->View.CameraPosition = math::vec3( math::Inverse( WorldRenderer->View.View )[3] );
 
             ManipulationConfig l_Manipulator{};
@@ -1409,8 +1412,8 @@ namespace LTSE::Editor
                             math::mat3( math::Rotation( -lDragDelta.x, lRotationMatrix * math::vec3{ 0.0f, 1.0f, 0.0f } ) );
                         math::mat3 lNewRotationY =
                             math::mat3( math::Rotation( -lDragDelta.y, lRotationMatrix * math::vec3{ 1.0f, 0.0f, 0.0f } ) );
-                        WorldRenderer->View.View = math::Inverse(
-                            math::FromComponents( lNewRotationX * lNewRotationY * lRotationMatrix, lCameraPosition ) );
+                        WorldRenderer->View.View =
+                            math::Inverse( math::FromComponents( lNewRotationX * lNewRotationY * lRotationMatrix, lCameraPosition ) );
                     }
                     ImGui::ResetMouseDragDelta( ImGuiMouseButton_Left );
                 }
@@ -1528,7 +1531,7 @@ namespace LTSE::Editor
                     {
                         if( World->Environment.Has<sAmbientLightingComponent>() )
                         {
-                            auto& l_AmbientLightComponent = World->Environment.Get<sAmbientLightingComponent>();
+                            auto &l_AmbientLightComponent = World->Environment.Get<sAmbientLightingComponent>();
                             UI::ColorChooser( "Ambient light color:", 175, l_AmbientLightComponent.Color );
                             Text( "Ambient intensity:" );
                             UI::SameLine();
@@ -1540,7 +1543,7 @@ namespace LTSE::Editor
 
                         if( World->Environment.Has<sBackgroundComponent>() )
                         {
-                            auto& l_BackgroundComponent = World->Environment.Get<sBackgroundComponent>();
+                            auto &l_BackgroundComponent = World->Environment.Get<sBackgroundComponent>();
                             UI::ColorChooser( "Background color:", 175, l_BackgroundComponent.Color );
                         }
                     }
@@ -1561,11 +1564,11 @@ namespace LTSE::Editor
     void EditorWindow::Console( int32_t width, int32_t height )
     {
         const float           TEXT_BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
-        const ImGuiTableFlags flags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY |
+        const ImGuiTableFlags flags            = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY |
                                       ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_Resizable |
                                       ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
 
-        auto&  l_Logs     = LTSE::Logging::GetLogMessages();
+        auto  &l_Logs     = LTSE::Logging::GetLogMessages();
         ImVec2 outer_size = ImVec2( 0.0f, height );
         if( ImGui::BeginTable( "table_scrolly", 3, flags, outer_size ) )
         {

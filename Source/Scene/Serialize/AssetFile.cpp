@@ -41,6 +41,8 @@ namespace LTSE::Core
 
     bool BinaryAsset::Eof() { return mFileStream.eof(); }
 
+    sAssetIndex const &BinaryAsset::GetIndex( uint32_t aIndex ) const { return mAssetIndex[aIndex]; }
+
     std::vector<char> BinaryAsset::Package( TextureData2D const &aData, sTextureSamplingInfo const &aSampler )
     {
         uint32_t lHeaderSize = 0;
@@ -88,7 +90,7 @@ namespace LTSE::Core
         return lPacket;
     }
 
-    void BinaryAsset::Retrieve( uint32_t aIndex, Core::TextureData2D &aData, Core::TextureSampler2D &aSampler )
+    std::tuple<TextureData2D, TextureSampler2D> BinaryAsset::Retrieve( uint32_t aIndex )
     {
         auto lAssetIndex = mAssetIndex[aIndex];
         if( lAssetIndex.mType != eAssetType::KTX_TEXTURE_2D ) throw std::runtime_error( "Binary data type mismatch" );
@@ -113,8 +115,10 @@ namespace LTSE::Core
 
         auto lData = Read<char>( lKTXDataSize );
 
-        aData    = TextureData2D( lData.data(), lData.size() );
-        aSampler = TextureSampler2D( aData, lSamplerCreateInfo );
+        TextureData2D    lTextureData( lData.data(), lData.size() );
+        TextureSampler2D lSampler( lTextureData, lSamplerCreateInfo );
+
+        return { lTextureData, lSampler };
     }
 
     std::vector<char> BinaryAsset::Package( std::vector<VertexData> const &aVertexData, std::vector<uint32_t> const &aIndexData )
