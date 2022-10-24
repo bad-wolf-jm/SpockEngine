@@ -383,8 +383,8 @@ namespace LTSE::Core
 
     void Scene::LoadScenario( fs::path aScenarioPath )
     {
-        auto lScenarioRoot        = aScenarioPath.parent_path();
-        auto lScenarioData        = BinaryAsset( lScenarioRoot / "BinaryData.bin" );
+        auto lScenarioRoot = aScenarioPath.parent_path();
+        auto lScenarioData = BinaryAsset( lScenarioRoot / "BinaryData.bin" );
 
         auto lOffseIndex = lScenarioData.GetIndex( 0 );
         if( lOffseIndex.mType != eAssetType::OFFSET_DATA ) throw std::runtime_error( "Binary data type mismatch" );
@@ -423,7 +423,16 @@ namespace LTSE::Core
         }
 
         auto lScenarioDescription = ConfigurationReader( aScenarioPath );
-       
+
+        std::unordered_map<UUIDv4::UUID, Entity> lEntities{};
+
+        lScenarioDescription["nodes"].ForEach<std::string>(
+            [&]( auto aKey, auto const &aValue )
+            {
+                auto lEntity = CreateEntity();
+
+                lEntities[lEntity.Get<sUUID>().mValue] = lEntity;
+            } );
     }
 
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name )
