@@ -757,6 +757,12 @@ namespace LTSE::Core
         mIndexBufferMemoryHandle.Dispose();
         mIndexBufferMemoryHandle = Cuda::GPUExternalMemory( *mIndexBuffer, mIndexBuffer->SizeAs<uint8_t>() );
 
+        // Create the transformed vertex buffer and its CUDA handle
+        mTransformedVertexBuffer =
+            New<Buffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, true, true, true, mVertexBuffer->SizeAs<uint8_t>() );
+        mTransformedVertexBufferMemoryHandle =
+            Cuda::GPUExternalMemory( *mTransformedVertexBuffer, mTransformedVertexBuffer->SizeAs<uint8_t>() );
+
         for( uint32_t lMaterialIndex = 0; lMaterialIndex < lMaterialCount; lMaterialIndex++ )
         {
             sMaterial lMaterialData;
