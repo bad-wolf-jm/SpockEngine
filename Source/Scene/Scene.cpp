@@ -387,11 +387,16 @@ namespace LTSE::Core
         //
     }
 
+    template <typename _Ty>
+    void ReadComponent( Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<UUIDv4::UUID, Entity> aEntities )
+    {
+        //
+    }
+
     template <>
     void ReadComponent<sTag>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        if( !aNode["sTag"].IsNull() )
-            aEntity.Add<sTag>(aNode["sTag"]["mValue"].As<std::string>(""));
+        if( !aNode["sTag"].IsNull() ) aEntity.Add<sTag>( aNode["sTag"]["mValue"].As<std::string>( "" ) );
     }
 
     template <>
@@ -412,129 +417,318 @@ namespace LTSE::Core
     }
 
     template <>
-    void ReadComponent<sAnimationChooser>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sAnimationChooser>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<UUIDv4::UUID, Entity> aEntities )
     {
-        //
+        if( !aNode["sAnimationChooser"].IsNull() )
+        {
+            auto &lComponent = aEntity.Add<sAnimationChooser>();
+            aNode["sAnimationComponent"]["mChannels"].ForEach(
+                [&]( ConfigurationNode &aNode )
+                {
+                    std::string lAnimationUUID = aNode.As<std::string>( "" );
+                    Entity      lAnimationNode = aEntities[UUIDv4::UUID::fromStrFactory( lAnimationUUID )];
+
+                    lComponent.Animations.push_back( lAnimationNode );
+                } );
+        }
     }
 
     template <>
-    void ReadComponent<sAnimationComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sAnimationComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<UUIDv4::UUID, Entity> aEntities )
     {
-        //
+        if( !aNode["sAnimationComponent"].IsNull() )
+        {
+            auto &lComponent     = aEntity.Add<sAnimationComponent>();
+            lComponent.Duration  = aNode["Duration"]["Pitch"].As<float>( 0.0f );
+            lComponent.mChannels = std::vector<sAnimationChannel>{};
+
+            aNode["sAnimationComponent"]["mChannels"].ForEach(
+                [&]( ConfigurationNode &aNode )
+                {
+                    sAnimationChannel lNewChannel{};
+                    std::string       lTargetNodeUUID = aNode["mTargetNode"].As<std::string>( "" );
+
+                    lNewChannel.mTargetNode = aEntities[UUIDv4::UUID::fromStrFactory( lTargetNodeUUID )];
+                    lNewChannel.mChannelID  = static_cast<sImportedAnimationChannel::Channel>( aNode["mChannelID"].As<uint32_t>( 0 ) );
+                    lNewChannel.mInterpolation = {};
+                } );
+        }
     }
 
     template <>
     void ReadComponent<sAnimatedTransformComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+        if( !aNode["sAnimatedTransformComponent"].IsNull() )
+        {
+            auto &lComponent = aEntity.Add<sAnimatedTransformComponent>();
+
+            lComponent.Translation =
+                aNode["sAnimatedTransformComponent"]["Translation"].Vec( { "x", "y", "z" }, math::vec3{ 0.0f, 0.0f, 0.0f } );
+            lComponent.Scaling =
+                aNode["sAnimatedTransformComponent"]["Scaling"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+
+            auto lCoefficients =
+                aNode["sAnimatedTransformComponent"]["Rotation"].Vec( { "x", "y", "z", "w" }, math::vec4{ 0.0f, 0.0f, 0.0f, 0.0f } );
+            lComponent.Rotation.x = lCoefficients.x;
+            lComponent.Rotation.y = lCoefficients.y;
+            lComponent.Rotation.z = lCoefficients.z;
+            lComponent.Rotation.w = lCoefficients.w;
+        }
     }
 
     template <>
     void ReadComponent<sLocalTransformComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+        if( !aNode["sLocalTransformComponent"].IsNull() )
+        {
+            auto &lComponent = aEntity.Add<sLocalTransformComponent>();
+
+            std::vector<float> lMatrixEntries{};
+            aNode["sLocalTransformComponent"]["mMatrix"].ForEach(
+                [&]( ConfigurationNode &aNode ) { lMatrixEntries.push_back( aNode.As<float>( 0.0f ) ); } );
+
+            lComponent.mMatrix[0][0] = lMatrixEntries[0];
+            lComponent.mMatrix[0][1] = lMatrixEntries[1];
+            lComponent.mMatrix[0][2] = lMatrixEntries[2];
+            lComponent.mMatrix[0][3] = lMatrixEntries[3];
+            lComponent.mMatrix[1][0] = lMatrixEntries[4];
+            lComponent.mMatrix[1][1] = lMatrixEntries[5];
+            lComponent.mMatrix[1][2] = lMatrixEntries[6];
+            lComponent.mMatrix[1][3] = lMatrixEntries[7];
+            lComponent.mMatrix[2][0] = lMatrixEntries[8];
+            lComponent.mMatrix[2][1] = lMatrixEntries[9];
+            lComponent.mMatrix[2][2] = lMatrixEntries[10];
+            lComponent.mMatrix[2][3] = lMatrixEntries[11];
+            lComponent.mMatrix[3][0] = lMatrixEntries[12];
+            lComponent.mMatrix[3][1] = lMatrixEntries[13];
+            lComponent.mMatrix[3][2] = lMatrixEntries[14];
+            lComponent.mMatrix[3][3] = lMatrixEntries[15];
+        }
     }
 
     template <>
     void ReadComponent<sTransformMatrixComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+        if( !aNode["sTransformMatrixComponent"].IsNull() )
+        {
+            auto &lComponent = aEntity.Add<sTransformMatrixComponent>();
+
+            std::vector<float> lMatrixEntries{};
+            aNode["sTransformMatrixComponent"]["mMatrix"].ForEach(
+                [&]( ConfigurationNode &aNode ) { lMatrixEntries.push_back( aNode.As<float>( 0.0f ) ); } );
+
+            lComponent.Matrix[0][0] = lMatrixEntries[0];
+            lComponent.Matrix[0][1] = lMatrixEntries[1];
+            lComponent.Matrix[0][2] = lMatrixEntries[2];
+            lComponent.Matrix[0][3] = lMatrixEntries[3];
+            lComponent.Matrix[1][0] = lMatrixEntries[4];
+            lComponent.Matrix[1][1] = lMatrixEntries[5];
+            lComponent.Matrix[1][2] = lMatrixEntries[6];
+            lComponent.Matrix[1][3] = lMatrixEntries[7];
+            lComponent.Matrix[2][0] = lMatrixEntries[8];
+            lComponent.Matrix[2][1] = lMatrixEntries[9];
+            lComponent.Matrix[2][2] = lMatrixEntries[10];
+            lComponent.Matrix[2][3] = lMatrixEntries[11];
+            lComponent.Matrix[3][0] = lMatrixEntries[12];
+            lComponent.Matrix[3][1] = lMatrixEntries[13];
+            lComponent.Matrix[3][2] = lMatrixEntries[14];
+            lComponent.Matrix[3][3] = lMatrixEntries[15];
+        }
     }
 
     template <>
     void ReadComponent<sStaticMeshComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+        if( !aNode["sStaticMeshComponent"].IsNull() )
+        {
+            auto &lComponent = aEntity.Add<sStaticMeshComponent>();
+
+            lComponent.mVertexOffset = aNode["sStaticMeshComponent"]["mVertexOffset"].As<uint32_t>( 0 );
+            lComponent.mVertexCount  = aNode["sStaticMeshComponent"]["mVertexCount"].As<uint32_t>( 0 );
+            lComponent.mIndexOffset  = aNode["sStaticMeshComponent"]["mIndexOffset"].As<uint32_t>( 0 );
+            lComponent.mIndexCount   = aNode["sStaticMeshComponent"]["mIndexCount"].As<uint32_t>( 0 );
+        }
     }
 
     template <>
     void ReadComponent<sParticleSystemComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+        if( !aNode["sParticleSystemComponent"].IsNull() )
+        {
+        }
     }
 
     template <>
     void ReadComponent<sParticleShaderComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
-    }
-
-    template <>
-    void ReadComponent<sSkeletonComponent>( Entity aEntity, ConfigurationNode const &aNode )
-    {
-        //
+        if( !aNode["sParticleShaderComponent"].IsNull() )
+        {
+        }
     }
 
     template <>
     void ReadComponent<sWireframeComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+        if( !aNode["sWireframeComponent"].IsNull() )
+        {
+        }
     }
 
     template <>
     void ReadComponent<sWireframeMeshComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+        if( !aNode["sWireframeMeshComponent"].IsNull() )
+        {
+        }
     }
 
     template <>
     void ReadComponent<sBoundingBoxComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+        if( !aNode["sBoundingBoxComponent"].IsNull() )
+        {
+        }
+    }
+
+    template <>
+    void ReadComponent<sSkeletonComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        if( !aNode["sSkeletonComponent"].IsNull() )
+        {
+        }
     }
 
     template <>
     void ReadComponent<sRayTracingTargetComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+        if( !aNode["sRayTracingTargetComponent"].IsNull() )
+        {
+            auto &lComponent = aEntity.Add<sRayTracingTargetComponent>();
+
+            std::vector<float> lMatrixEntries{};
+            aNode["sTransformMatrixComponent"]["mMatrix"].ForEach(
+                [&]( ConfigurationNode &aNode ) { lMatrixEntries.push_back( aNode.As<float>( 0.0f ) ); } );
+
+            lComponent.Transform[0][0] = lMatrixEntries[0];
+            lComponent.Transform[0][1] = lMatrixEntries[1];
+            lComponent.Transform[0][2] = lMatrixEntries[2];
+            lComponent.Transform[0][3] = lMatrixEntries[3];
+            lComponent.Transform[1][0] = lMatrixEntries[4];
+            lComponent.Transform[1][1] = lMatrixEntries[5];
+            lComponent.Transform[1][2] = lMatrixEntries[6];
+            lComponent.Transform[1][3] = lMatrixEntries[7];
+            lComponent.Transform[2][0] = lMatrixEntries[8];
+            lComponent.Transform[2][1] = lMatrixEntries[9];
+            lComponent.Transform[2][2] = lMatrixEntries[10];
+            lComponent.Transform[2][3] = lMatrixEntries[11];
+            lComponent.Transform[3][0] = lMatrixEntries[12];
+            lComponent.Transform[3][1] = lMatrixEntries[13];
+            lComponent.Transform[3][2] = lMatrixEntries[14];
+            lComponent.Transform[3][3] = lMatrixEntries[15];
+        }
     }
 
     template <>
     void ReadComponent<sMaterialComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+
+        if( !aNode["sMaterialComponent"].IsNull() )
+        {
+            auto &lComponent = aEntity.Add<sMaterialComponent>();
+
+            lComponent.mMaterialID = aNode["sTransformMatrixComponent"]["mMatrix"].As<uint32_t>( 0 );
+        }
     }
 
     template <>
     void ReadComponent<sMaterialShaderComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+        if( !aNode["sMaterialShaderComponent"].IsNull() )
+        {
+            auto &lComponent = aEntity.Add<sMaterialShaderComponent>();
+
+            lComponent.Type              = static_cast<MaterialType>( aNode["sMaterialShaderComponent"]["Type"].As<uint8_t>( 0 ) );
+            lComponent.IsTwoSided        = aNode["sMaterialShaderComponent"]["IsTwoSided"].As<bool>( true );
+            lComponent.UseAlphaMask      = aNode["sMaterialShaderComponent"]["UseAlphaMask"].As<bool>( true );
+            lComponent.LineWidth         = aNode["sMaterialShaderComponent"]["LineWidth"].As<float>( 1.0f );
+            lComponent.AlphaMaskTheshold = aNode["sMaterialShaderComponent"]["AlphaMaskTheshold"].As<float>( .5f );
+        }
     }
 
     template <>
     void ReadComponent<sBackgroundComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+        if( !aNode["sBackgroundComponent"].IsNull() )
+        {
+            auto &lComponent = aEntity.Add<sBackgroundComponent>();
+
+            lComponent.Color = aNode["sBackgroundComponent"]["Color"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+        }
     }
 
     template <>
     void ReadComponent<sDirectionalLightComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+        if( !aNode["sDirectionalLightComponent"].IsNull() )
+        {
+        }
     }
 
     template <>
     void ReadComponent<sAmbientLightingComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+        if( !aNode["sAmbientLightingComponent"].IsNull() )
+        {
+            auto &lComponent = aEntity.Add<sAmbientLightingComponent>();
+
+            lComponent.Color = aNode["sAmbientLightingComponent"]["Color"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+            lComponent.Intensity = aNode["sAmbientLightingComponent"]["Intensity"].As<float>( .0005f );
+        }
     }
 
     template <>
     void ReadComponent<sPointLightComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+        if( !aNode["sPointLightComponent"].IsNull() )
+        {
+            auto &lComponent = aEntity.Add<sPointLightComponent>();
+
+            lComponent.Position  = aNode["sPointLightComponent"]["Position"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+            lComponent.Color     = aNode["sPointLightComponent"]["Color"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+            lComponent.Intensity = aNode["sPointLightComponent"]["Intensity"].As<float>( .0005f );
+        }
     }
 
     template <>
     void ReadComponent<sSpotlightComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+        if( !aNode["sSpotlightComponent"].IsNull() )
+        {
+            auto &lComponent = aEntity.Add<sSpotlightComponent>();
+
+            lComponent.Position  = aNode["sSpotlightComponent"]["Position"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+            lComponent.Azimuth   = aNode["sSpotlightComponent"]["Azimuth"].As<float>( .0f );
+            lComponent.Elevation = aNode["sSpotlightComponent"]["Elevation"].As<float>( .0f );
+            lComponent.Color     = aNode["sSpotlightComponent"]["Color"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+            lComponent.Intensity = aNode["sSpotlightComponent"]["Intensity"].As<float>( .0005f );
+            lComponent.Cone      = aNode["sSpotlightComponent"]["Cone"].As<float>( .0005f );
+        }
     }
 
     template <>
-    void ReadComponent<sLightComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sLightComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<UUIDv4::UUID, Entity> aEntities )
     {
-        //
+        if( !aNode["sLightComponent"].IsNull() )
+        {
+            auto &lComponent = aEntity.Add<sLightComponent>();
+
+            std::string lTargetNodeUUID = aNode["Light"].As<std::string>( "" );
+
+            lComponent.Light = aEntities[UUIDv4::UUID::fromStrFactory( lTargetNodeUUID )];
+        }
     }
 
     void Scene::LoadScenario( fs::path aScenarioPath )
@@ -591,6 +785,38 @@ namespace LTSE::Core
                 lEntities[lEntity.Get<sUUID>().mValue]   = lEntity;
                 lComponents[lEntity.Get<sUUID>().mValue] = aValue;
             } );
+
+        for( auto &[lUUID, lEntity] : lEntities )
+        {
+            auto &lEntityConfiguration = lComponents[lUUID];
+
+            if( !lEntityConfiguration["sRelationshipComponent"].IsNull() )
+            {
+                auto lParentUUID   = lEntityConfiguration["sRelationshipComponent"]["mParent"].As<std::string>( "" );
+                auto lParentEntity = lEntities[UUIDv4::UUID::fromStrFactory( lParentUUID )];
+
+                m_Registry.SetParent( lEntity, lParentEntity );
+            }
+
+            ReadComponent<sTag>( lEntity, lEntityConfiguration );
+            ReadComponent<sCameraComponent>( lEntity, lEntityConfiguration );
+            ReadComponent<sAnimationChooser>( lEntity, lEntityConfiguration, lEntities );
+            ReadComponent<sAnimationComponent>( lEntity, lEntityConfiguration, lEntities );
+            ReadComponent<sAnimatedTransformComponent>( lEntity, lEntityConfiguration );
+            ReadComponent<sLocalTransformComponent>( lEntity, lEntityConfiguration );
+            ReadComponent<sTransformMatrixComponent>( lEntity, lEntityConfiguration );
+            ReadComponent<sStaticMeshComponent>( lEntity, lEntityConfiguration );
+            ReadComponent<sSkeletonComponent>( lEntity, lEntityConfiguration );
+            ReadComponent<sRayTracingTargetComponent>( lEntity, lEntityConfiguration );
+            ReadComponent<sMaterialComponent>( lEntity, lEntityConfiguration );
+            ReadComponent<sMaterialShaderComponent>( lEntity, lEntityConfiguration );
+            ReadComponent<sBackgroundComponent>( lEntity, lEntityConfiguration );
+            ReadComponent<sDirectionalLightComponent>( lEntity, lEntityConfiguration );
+            ReadComponent<sAmbientLightingComponent>( lEntity, lEntityConfiguration );
+            ReadComponent<sPointLightComponent>( lEntity, lEntityConfiguration );
+            ReadComponent<sSpotlightComponent>( lEntity, lEntityConfiguration );
+            ReadComponent<sLightComponent>( lEntity, lEntityConfiguration, lEntities );
+        }
     }
 
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name )

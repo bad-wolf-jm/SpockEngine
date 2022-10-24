@@ -55,7 +55,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         float FieldOfView = 90.0f;
         float AspectRatio = 16.0f / 9.0f;
 
-        sCameraComponent()                          = default;
+        sCameraComponent()                           = default;
         sCameraComponent( const sCameraComponent & ) = default;
     };
 
@@ -76,7 +76,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
         std::vector<sAnimationChannel> mChannels = {};
 
-        sAnimationComponent()                             = default;
+        sAnimationComponent()                              = default;
         sAnimationComponent( const sAnimationComponent & ) = default;
     };
 
@@ -84,7 +84,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
     {
         std::vector<Entity> Animations = {};
 
-        sAnimationChooser()                           = default;
+        sAnimationChooser()                            = default;
         sAnimationChooser( const sAnimationChooser & ) = default;
     };
 
@@ -94,7 +94,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         math::vec3 Scaling;
         math::quat Rotation;
 
-        sAnimatedTransformComponent()                                     = default;
+        sAnimatedTransformComponent()                                      = default;
         sAnimatedTransformComponent( const sAnimatedTransformComponent & ) = default;
     };
 
@@ -118,8 +118,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         {
             math::mat3 lMatrix = math::Rotation( mMatrix );
             return math::vec3{ math::degrees( atan2f( lMatrix[1][2], lMatrix[2][2] ) ),
-                math::degrees(
-                    atan2f( -lMatrix[0][2], sqrtf( lMatrix[1][2] * lMatrix[1][2] + lMatrix[2][2] * lMatrix[2][2] ) ) ),
+                math::degrees( atan2f( -lMatrix[0][2], sqrtf( lMatrix[1][2] * lMatrix[1][2] + lMatrix[2][2] * lMatrix[2][2] ) ) ),
                 math::degrees( atan2f( lMatrix[0][1], lMatrix[0][0] ) ) };
         }
 
@@ -155,7 +154,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
     {
         math::mat4 Matrix = math::mat4( 1.0f );
 
-        sTransformMatrixComponent()                                   = default;
+        sTransformMatrixComponent()                                    = default;
         sTransformMatrixComponent( const sTransformMatrixComponent & ) = default;
         sTransformMatrixComponent( math::mat4 a_Matrix ) { Matrix = a_Matrix; };
     };
@@ -182,17 +181,13 @@ namespace LTSE::Core::EntityComponentSystem::Components
     {
         std::string Name = "";
 
-        ePrimitiveTopology Primitive      = ePrimitiveTopology::TRIANGLES;
-        uint32_t           VertexCount    = 0;
-        uint32_t           PrimitiveCount = 0;
-        // Ref<Buffer>        Vertices       = nullptr;
-        // Ref<Buffer>        Indices        = nullptr;
-        uint32_t mVertexOffset = 0;
-        uint32_t mVertexCount  = 0;
-        uint32_t mIndexOffset  = 0;
-        uint32_t mIndexCount   = 0;
+        ePrimitiveTopology Primitive     = ePrimitiveTopology::TRIANGLES;
+        uint32_t           mVertexOffset = 0;
+        uint32_t           mVertexCount  = 0;
+        uint32_t           mIndexOffset  = 0;
+        uint32_t           mIndexCount   = 0;
 
-        sStaticMeshComponent()                              = default;
+        sStaticMeshComponent()                               = default;
         sStaticMeshComponent( const sStaticMeshComponent & ) = default;
     };
 
@@ -204,7 +199,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         float       ParticleSize  = 0.0f;
         Ref<Buffer> Particles;
 
-        sParticleSystemComponent()                                  = default;
+        sParticleSystemComponent()                                   = default;
         sParticleSystemComponent( const sParticleSystemComponent & ) = default;
     };
 
@@ -213,7 +208,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         float                  LineWidth = 1.0f;
         ParticleSystemRenderer Renderer{};
 
-        sParticleShaderComponent()                                  = default;
+        sParticleShaderComponent()                                   = default;
         sParticleShaderComponent( const sParticleShaderComponent & ) = default;
     };
 
@@ -224,7 +219,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         std::vector<math::mat4> InverseBindMatrices;
         std::vector<math::mat4> JointMatrices;
 
-        sSkeletonComponent()                            = default;
+        sSkeletonComponent()                             = default;
         sSkeletonComponent( const sSkeletonComponent & ) = default;
     };
 
@@ -233,7 +228,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         bool IsVisible = false;
         vec3 Color     = 0xffffff_rgbf;
 
-        sWireframeComponent()                             = default;
+        sWireframeComponent()                              = default;
         sWireframeComponent( const sWireframeComponent & ) = default;
     };
 
@@ -243,7 +238,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         // Ref<Buffer> VertexBuffer = nullptr;
         // Ref<Buffer> IndexBuffer  = nullptr;
 
-        sWireframeMeshComponent()                                 = default;
+        sWireframeMeshComponent()                                  = default;
         sWireframeMeshComponent( const sWireframeMeshComponent & ) = default;
     };
 
@@ -256,7 +251,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         // Ref<Buffer> VertexBuffer = nullptr;
         // Ref<Buffer> IndexBuffer  = nullptr;
 
-        sBoundingBoxComponent()                               = default;
+        sBoundingBoxComponent()                                = default;
         sBoundingBoxComponent( const sBoundingBoxComponent & ) = default;
     };
 
@@ -266,7 +261,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         // GPUMemory  Vertices;
         // GPUMemory  Indices;
 
-        sRayTracingTargetComponent()                                    = default;
+        sRayTracingTargetComponent()                                     = default;
         sRayTracingTargetComponent( const sRayTracingTargetComponent & ) = default;
     };
 
@@ -274,7 +269,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
     {
         uint32_t mMaterialID;
 
-        sMaterialComponent()                            = default;
+        sMaterialComponent()                             = default;
         sMaterialComponent( const sMaterialComponent & ) = default;
     };
 
@@ -301,7 +296,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         float        LineWidth         = 1.0f;
         float        AlphaMaskTheshold = 0.5;
 
-        sMaterialShaderComponent()                                  = default;
+        sMaterialShaderComponent()                                   = default;
         sMaterialShaderComponent( const sMaterialShaderComponent & ) = default;
     };
 
@@ -309,7 +304,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
     {
         vec3 Color = { 1.0f, 1.0f, 1.0f };
 
-        sBackgroundComponent()                              = default;
+        sBackgroundComponent()                               = default;
         sBackgroundComponent( const sBackgroundComponent & ) = default;
     };
 
@@ -318,7 +313,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         vec3  Color     = { 1.0f, 1.0f, 1.0f };
         float Intensity = 0.0005f;
 
-        sAmbientLightingComponent()                                   = default;
+        sAmbientLightingComponent()                                    = default;
         sAmbientLightingComponent( const sAmbientLightingComponent & ) = default;
     };
 
@@ -338,8 +333,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
         bool operator==( const sDirectionalLightComponent &a_Other )
         {
-            return ( Azimuth == a_Other.Azimuth ) && ( Elevation == a_Other.Elevation ) &&
-                   ( Intensity == a_Other.Intensity ) && ( Color == a_Other.Color );
+            return ( Azimuth == a_Other.Azimuth ) && ( Elevation == a_Other.Elevation ) && ( Intensity == a_Other.Intensity ) &&
+                   ( Color == a_Other.Color );
         }
     };
 
@@ -367,9 +362,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
         bool operator==( const sSpotlightComponent &a_Other )
         {
-            return ( Position == a_Other.Position ) && ( Azimuth == a_Other.Azimuth ) &&
-                   ( Elevation == a_Other.Elevation ) && ( Intensity == a_Other.Intensity ) && ( Color == a_Other.Color ) &&
-                   ( Cone == a_Other.Cone );
+            return ( Position == a_Other.Position ) && ( Azimuth == a_Other.Azimuth ) && ( Elevation == a_Other.Elevation ) &&
+                   ( Intensity == a_Other.Intensity ) && ( Color == a_Other.Color ) && ( Cone == a_Other.Cone );
         }
     };
 
@@ -377,7 +371,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
     {
         Entity Light;
 
-        sLightComponent()                         = default;
+        sLightComponent()                          = default;
         sLightComponent( const sLightComponent & ) = default;
     };
 
