@@ -22,6 +22,9 @@ namespace LTSE::Core
     {
       public:
         /// @brief Constructs a configuration from a YAML node
+        ConfigurationNode() = default;
+
+        /// @brief Constructs a configuration from a YAML node
         ConfigurationNode( YAML::Node const &aNode );
 
         /// @brief Default destructor
@@ -105,16 +108,16 @@ namespace LTSE::Core
         ///
         ConfigurationNode operator[]( std::string const &aKey ) const;
 
-        /// @brief Iterate over a mapping
-        template <typename _KeyType>
-        void ForEach( std::function<void( _KeyType const &, ConfigurationNode & )> aFunc ) const
-        {
-            for( YAML::const_iterator it = mNode.begin(); it != mNode.end(); ++it )
-            {
-                YAML::Node const &lCurrentTexture = it->second;
-                aFunc( it->first.as<_KeyType>(), ConfigurationNode( it->second ) );
-            }
-        }
+        // /// @brief Iterate over a mapping
+        // template <typename _KeyType>
+        // void ForEach( std::function<void( _KeyType const &, ConfigurationNode & )> aFunc ) const
+        // {
+        //     for( YAML::const_iterator it = mNode.begin(); it != mNode.end(); ++it )
+        //     {
+        //         YAML::Node const &lCurrentTexture = it->second;
+        //         aFunc( it->first.as<_KeyType>(), ConfigurationNode( it->second ) );
+        //     }
+        // }
 
         /// @brief Iterate over a mapping
         template <typename _KeyType>

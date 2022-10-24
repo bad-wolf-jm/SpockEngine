@@ -390,13 +390,25 @@ namespace LTSE::Core
     template <>
     void ReadComponent<sTag>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+        if( !aNode["sTag"].IsNull() )
+            aEntity.Add<sTag>(aNode["sTag"]["mValue"].As<std::string>(""));
     }
 
     template <>
     void ReadComponent<sCameraComponent>( Entity aEntity, ConfigurationNode const &aNode )
     {
-        //
+        if( !aNode["sCameraComponent"].IsNull() )
+        {
+            auto &lComponent       = aEntity.Add<sCameraComponent>();
+            lComponent.Position    = aNode["sCameraComponent"]["Position"].Vec( { "x", "y", "z" }, math::vec3{ 0.0f, 0.0f, 0.0f } );
+            lComponent.Pitch       = aNode["sCameraComponent"]["Pitch"].As<float>( 0.0f );
+            lComponent.Yaw         = aNode["sCameraComponent"]["Yaw"].As<float>( 0.0f );
+            lComponent.Roll        = aNode["sCameraComponent"]["Roll"].As<float>( 0.0f );
+            lComponent.Near        = aNode["sCameraComponent"]["Near"].As<float>( 0.0f );
+            lComponent.Far         = aNode["sCameraComponent"]["Far"].As<float>( 0.0f );
+            lComponent.FieldOfView = aNode["sCameraComponent"]["FieldOfView"].As<float>( 0.0f );
+            lComponent.AspectRatio = aNode["sCameraComponent"]["AspectRatio"].As<float>( 0.0f );
+        }
     }
 
     template <>
@@ -568,14 +580,16 @@ namespace LTSE::Core
 
         auto lScenarioDescription = ConfigurationReader( aScenarioPath );
 
-        std::unordered_map<UUIDv4::UUID, Entity> lEntities{};
+        std::unordered_map<UUIDv4::UUID, Entity>            lEntities{};
+        std::unordered_map<UUIDv4::UUID, ConfigurationNode> lComponents{};
 
-        lScenarioDescription["nodes"].ForEach<std::string>(
-            [&]( auto aKey, auto const &aValue )
+        lScenarioDescription.GetRoot()["nodes"].ForEach<std::string>(
+            [&]( auto const &aKey, auto const &aValue )
             {
-                auto lEntity = CreateEntity();
+                auto lEntity = m_Registry.CreateEntity( sUUID( aKey ) );
 
-                lEntities[lEntity.Get<sUUID>().mValue] = lEntity;
+                lEntities[lEntity.Get<sUUID>().mValue]   = lEntity;
+                lComponents[lEntity.Get<sUUID>().mValue] = aValue;
             } );
     }
 

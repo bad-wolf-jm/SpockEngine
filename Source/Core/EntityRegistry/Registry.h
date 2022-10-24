@@ -74,6 +74,18 @@ namespace LTSE::Core
             return l_NewEntity;
         };
 
+        /// @brief Create a new entity in the registry.
+        ///
+        /// The new entity initially has no components.
+        ///
+        Internal::Entity<EntityRegistry *> CreateEntity(sUUID &aUUID)
+        {
+            Internal::Entity<EntityRegistry *> l_NewEntity = CreateRawEntity();
+            l_NewEntity.Add<sUUID>(aUUID);
+
+            return l_NewEntity;
+        };
+
         /// @brief Wrap en existing `entt` ID into our registry class.
         Internal::Entity<EntityRegistry *> WrapEntity( entt::entity const aEntity ) { return { aEntity, this }; };
 
