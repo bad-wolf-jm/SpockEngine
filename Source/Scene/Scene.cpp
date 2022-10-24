@@ -381,6 +381,150 @@ namespace LTSE::Core
         return LoadModel( aModelData, aTransform, "MODEL" );
     }
 
+    template <typename _Ty>
+    void ReadComponent( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sTag>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sCameraComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sAnimationChooser>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sAnimationComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sAnimatedTransformComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sLocalTransformComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sTransformMatrixComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sStaticMeshComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sParticleSystemComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sParticleShaderComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sSkeletonComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sWireframeComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sWireframeMeshComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sBoundingBoxComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sRayTracingTargetComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sMaterialComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sMaterialShaderComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sBackgroundComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sDirectionalLightComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sAmbientLightingComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sPointLightComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sSpotlightComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
+    template <>
+    void ReadComponent<sLightComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    {
+        //
+    }
+
     void Scene::LoadScenario( fs::path aScenarioPath )
     {
         auto lScenarioRoot = aScenarioPath.parent_path();
