@@ -261,6 +261,8 @@ namespace LTSE::Core
 
     void Scene::UpdateLocalTransform( Entity const &aEntity, sLocalTransformComponent const &aComponent )
     {
+        if( !aEntity.Has<sRelationshipComponent>() ) return;
+
         auto &lParent = aEntity.Get<sRelationshipComponent>().mParent;
 
         if( lParent && lParent.Has<sTransformMatrixComponent>() )
@@ -350,6 +352,7 @@ namespace LTSE::Core
 
     void Scene::ClearScene()
     {
+        mMaterialSystem->Wipe();
         m_Registry.Clear();
         ConnectSignalHandlers();
 
@@ -381,26 +384,30 @@ namespace LTSE::Core
         return LoadModel( aModelData, aTransform, "MODEL" );
     }
 
-    template <typename _Ty>
-    void ReadComponent( Entity aEntity, ConfigurationNode const &aNode )
-    {
-        //
-    }
+    // template <typename _Ty>
+    // void ReadComponent( Entity aEntity, ConfigurationNode const &aNode )
+    // {
+    //     //
+    // }
 
     template <typename _Ty>
-    void ReadComponent( Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<UUIDv4::UUID, Entity> &aEntities )
+    void ReadComponent( Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         //
     }
 
     template <>
-    void ReadComponent<sTag>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sTag>( Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
-        if( !aNode["sTag"].IsNull() ) aEntity.Add<sTag>( aNode["sTag"]["mValue"].As<std::string>( "" ) );
+        if( !aNode["sTag"].IsNull() )
+        {
+            aEntity.Add<sTag>( aNode["sTag"]["mValue"].As<std::string>( "" ) );
+        }
     }
 
     template <>
-    void ReadComponent<sCameraComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sCameraComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sCameraComponent"].IsNull() )
         {
@@ -418,7 +425,7 @@ namespace LTSE::Core
 
     template <>
     void ReadComponent<sAnimationChooser>(
-        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<UUIDv4::UUID, Entity> &aEntities )
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sAnimationChooser"].IsNull() )
         {
@@ -427,7 +434,7 @@ namespace LTSE::Core
                 [&]( ConfigurationNode &aNode )
                 {
                     std::string lAnimationUUID = aNode.As<std::string>( "" );
-                    Entity      lAnimationNode = aEntities[UUIDv4::UUID::fromStrFactory( lAnimationUUID )];
+                    Entity      lAnimationNode = aEntities[lAnimationUUID];
 
                     lComponent.Animations.push_back( lAnimationNode );
                 } );
@@ -436,7 +443,7 @@ namespace LTSE::Core
 
     template <>
     void ReadComponent<sAnimationComponent>(
-        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<UUIDv4::UUID, Entity> &aEntities )
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sAnimationComponent"].IsNull() )
         {
@@ -450,7 +457,7 @@ namespace LTSE::Core
                     sAnimationChannel lNewChannel{};
                     std::string       lTargetNodeUUID = aNode["mTargetNode"].As<std::string>( "" );
 
-                    lNewChannel.mTargetNode = aEntities[UUIDv4::UUID::fromStrFactory( lTargetNodeUUID )];
+                    lNewChannel.mTargetNode = aEntities[lTargetNodeUUID];
                     lNewChannel.mChannelID  = static_cast<sImportedAnimationChannel::Channel>( aNode["mChannelID"].As<uint32_t>( 0 ) );
                     lNewChannel.mInterpolation = {};
                 } );
@@ -458,7 +465,8 @@ namespace LTSE::Core
     }
 
     template <>
-    void ReadComponent<sAnimatedTransformComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sAnimatedTransformComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sAnimatedTransformComponent"].IsNull() )
         {
@@ -478,68 +486,43 @@ namespace LTSE::Core
         }
     }
 
-    template <>
-    void ReadComponent<sLocalTransformComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadMatrix( math::mat4 &aMatrix, ConfigurationNode &aNode )
     {
-        if( !aNode["sLocalTransformComponent"].IsNull() )
+
+        std::vector<float> lMatrixEntries{};
+        aNode.ForEach( [&]( ConfigurationNode &aNode ) { lMatrixEntries.push_back( aNode.As<float>( 0.0f ) ); } );
+
+        for( uint32_t c = 0; c < 4; c++ )
+            for( uint32_t r = 0; r < 4; r++ ) aMatrix[c][r] = lMatrixEntries[4 * c + r];
+    }
+
+    template <>
+    void ReadComponent<sLocalTransformComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
+    {
+        if( !aNode["LocalTransformComponent"].IsNull() )
         {
             auto &lComponent = aEntity.Add<sLocalTransformComponent>();
 
-            std::vector<float> lMatrixEntries{};
-            aNode["sLocalTransformComponent"]["mMatrix"].ForEach(
-                [&]( ConfigurationNode &aNode ) { lMatrixEntries.push_back( aNode.As<float>( 0.0f ) ); } );
-
-            lComponent.mMatrix[0][0] = lMatrixEntries[0];
-            lComponent.mMatrix[0][1] = lMatrixEntries[1];
-            lComponent.mMatrix[0][2] = lMatrixEntries[2];
-            lComponent.mMatrix[0][3] = lMatrixEntries[3];
-            lComponent.mMatrix[1][0] = lMatrixEntries[4];
-            lComponent.mMatrix[1][1] = lMatrixEntries[5];
-            lComponent.mMatrix[1][2] = lMatrixEntries[6];
-            lComponent.mMatrix[1][3] = lMatrixEntries[7];
-            lComponent.mMatrix[2][0] = lMatrixEntries[8];
-            lComponent.mMatrix[2][1] = lMatrixEntries[9];
-            lComponent.mMatrix[2][2] = lMatrixEntries[10];
-            lComponent.mMatrix[2][3] = lMatrixEntries[11];
-            lComponent.mMatrix[3][0] = lMatrixEntries[12];
-            lComponent.mMatrix[3][1] = lMatrixEntries[13];
-            lComponent.mMatrix[3][2] = lMatrixEntries[14];
-            lComponent.mMatrix[3][3] = lMatrixEntries[15];
+            ReadMatrix( lComponent.mMatrix, aNode["LocalTransformComponent"]["mMatrix"] );
         }
     }
 
     template <>
-    void ReadComponent<sTransformMatrixComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sTransformMatrixComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
-        if( !aNode["sTransformMatrixComponent"].IsNull() )
+        if( !aNode["TransformMatrixComponent"].IsNull() )
         {
-            auto &lComponent = aEntity.Add<sTransformMatrixComponent>();
+            auto &lComponent = aEntity.AddOrReplace<sTransformMatrixComponent>();
 
-            std::vector<float> lMatrixEntries{};
-            aNode["sTransformMatrixComponent"]["mMatrix"].ForEach(
-                [&]( ConfigurationNode &aNode ) { lMatrixEntries.push_back( aNode.As<float>( 0.0f ) ); } );
-
-            lComponent.Matrix[0][0] = lMatrixEntries[0];
-            lComponent.Matrix[0][1] = lMatrixEntries[1];
-            lComponent.Matrix[0][2] = lMatrixEntries[2];
-            lComponent.Matrix[0][3] = lMatrixEntries[3];
-            lComponent.Matrix[1][0] = lMatrixEntries[4];
-            lComponent.Matrix[1][1] = lMatrixEntries[5];
-            lComponent.Matrix[1][2] = lMatrixEntries[6];
-            lComponent.Matrix[1][3] = lMatrixEntries[7];
-            lComponent.Matrix[2][0] = lMatrixEntries[8];
-            lComponent.Matrix[2][1] = lMatrixEntries[9];
-            lComponent.Matrix[2][2] = lMatrixEntries[10];
-            lComponent.Matrix[2][3] = lMatrixEntries[11];
-            lComponent.Matrix[3][0] = lMatrixEntries[12];
-            lComponent.Matrix[3][1] = lMatrixEntries[13];
-            lComponent.Matrix[3][2] = lMatrixEntries[14];
-            lComponent.Matrix[3][3] = lMatrixEntries[15];
+            ReadMatrix( lComponent.Matrix, aNode["TransformMatrixComponent"]["mMatrix"] );
         }
     }
 
     template <>
-    void ReadComponent<sStaticMeshComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sStaticMeshComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sStaticMeshComponent"].IsNull() )
         {
@@ -553,7 +536,8 @@ namespace LTSE::Core
     }
 
     template <>
-    void ReadComponent<sParticleSystemComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sParticleSystemComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sParticleSystemComponent"].IsNull() )
         {
@@ -561,7 +545,8 @@ namespace LTSE::Core
     }
 
     template <>
-    void ReadComponent<sParticleShaderComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sParticleShaderComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sParticleShaderComponent"].IsNull() )
         {
@@ -569,7 +554,8 @@ namespace LTSE::Core
     }
 
     template <>
-    void ReadComponent<sWireframeComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sWireframeComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sWireframeComponent"].IsNull() )
         {
@@ -577,7 +563,8 @@ namespace LTSE::Core
     }
 
     template <>
-    void ReadComponent<sWireframeMeshComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sWireframeMeshComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sWireframeMeshComponent"].IsNull() )
         {
@@ -585,7 +572,8 @@ namespace LTSE::Core
     }
 
     template <>
-    void ReadComponent<sBoundingBoxComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sBoundingBoxComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sBoundingBoxComponent"].IsNull() )
         {
@@ -593,7 +581,8 @@ namespace LTSE::Core
     }
 
     template <>
-    void ReadComponent<sSkeletonComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sSkeletonComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sSkeletonComponent"].IsNull() )
         {
@@ -601,49 +590,34 @@ namespace LTSE::Core
     }
 
     template <>
-    void ReadComponent<sRayTracingTargetComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sRayTracingTargetComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sRayTracingTargetComponent"].IsNull() )
         {
             auto &lComponent = aEntity.Add<sRayTracingTargetComponent>();
 
-            std::vector<float> lMatrixEntries{};
-            aNode["sRayTracingTargetComponent"]["Transform"].ForEach(
-                [&]( ConfigurationNode &aNode ) { lMatrixEntries.push_back( aNode.As<float>( 0.0f ) ); } );
-
-            lComponent.Transform[0][0] = lMatrixEntries[0];
-            lComponent.Transform[0][1] = lMatrixEntries[1];
-            lComponent.Transform[0][2] = lMatrixEntries[2];
-            lComponent.Transform[0][3] = lMatrixEntries[3];
-            lComponent.Transform[1][0] = lMatrixEntries[4];
-            lComponent.Transform[1][1] = lMatrixEntries[5];
-            lComponent.Transform[1][2] = lMatrixEntries[6];
-            lComponent.Transform[1][3] = lMatrixEntries[7];
-            lComponent.Transform[2][0] = lMatrixEntries[8];
-            lComponent.Transform[2][1] = lMatrixEntries[9];
-            lComponent.Transform[2][2] = lMatrixEntries[10];
-            lComponent.Transform[2][3] = lMatrixEntries[11];
-            lComponent.Transform[3][0] = lMatrixEntries[12];
-            lComponent.Transform[3][1] = lMatrixEntries[13];
-            lComponent.Transform[3][2] = lMatrixEntries[14];
-            lComponent.Transform[3][3] = lMatrixEntries[15];
+            ReadMatrix( lComponent.Transform, aNode["sRayTracingTargetComponent"]["Transform"] );
         }
     }
 
     template <>
-    void ReadComponent<sMaterialComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sMaterialComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
 
         if( !aNode["sMaterialComponent"].IsNull() )
         {
             auto &lComponent = aEntity.Add<sMaterialComponent>();
 
-            lComponent.mMaterialID = aNode["sTransformMatrixComponent"]["mMatrix"].As<uint32_t>( 0 );
+            lComponent.mMaterialID = aNode["sMaterialComponent"]["mMaterialID"].As<uint32_t>( 0 );
+            LTSE::Logging::Info( "{}", lComponent.mMaterialID );
         }
     }
 
     template <>
-    void ReadComponent<sMaterialShaderComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sMaterialShaderComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sMaterialShaderComponent"].IsNull() )
         {
@@ -658,7 +632,8 @@ namespace LTSE::Core
     }
 
     template <>
-    void ReadComponent<sBackgroundComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sBackgroundComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sBackgroundComponent"].IsNull() )
         {
@@ -669,7 +644,8 @@ namespace LTSE::Core
     }
 
     template <>
-    void ReadComponent<sDirectionalLightComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sDirectionalLightComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sDirectionalLightComponent"].IsNull() )
         {
@@ -677,7 +653,8 @@ namespace LTSE::Core
     }
 
     template <>
-    void ReadComponent<sAmbientLightingComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sAmbientLightingComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sAmbientLightingComponent"].IsNull() )
         {
@@ -689,7 +666,8 @@ namespace LTSE::Core
     }
 
     template <>
-    void ReadComponent<sPointLightComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sPointLightComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sPointLightComponent"].IsNull() )
         {
@@ -702,7 +680,8 @@ namespace LTSE::Core
     }
 
     template <>
-    void ReadComponent<sSpotlightComponent>( Entity aEntity, ConfigurationNode const &aNode )
+    void ReadComponent<sSpotlightComponent>(
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sSpotlightComponent"].IsNull() )
         {
@@ -719,7 +698,7 @@ namespace LTSE::Core
 
     template <>
     void ReadComponent<sLightComponent>(
-        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<UUIDv4::UUID, Entity> &aEntities )
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
         if( !aNode["sLightComponent"].IsNull() )
         {
@@ -727,12 +706,15 @@ namespace LTSE::Core
 
             std::string lTargetNodeUUID = aNode["Light"].As<std::string>( "" );
 
-            lComponent.Light = aEntities[UUIDv4::UUID::fromStrFactory( lTargetNodeUUID )];
+            lComponent.Light = aEntities[lTargetNodeUUID];
         }
     }
 
     void Scene::LoadScenario( fs::path aScenarioPath )
     {
+        m_Registry.Clear();
+        mMaterialSystem->Wipe();
+
         auto lScenarioRoot = aScenarioPath.parent_path();
         auto lScenarioData = BinaryAsset( lScenarioRoot / "BinaryData.bin" );
 
@@ -780,8 +762,8 @@ namespace LTSE::Core
 
         auto lScenarioDescription = ConfigurationReader( aScenarioPath );
 
-        std::unordered_map<UUIDv4::UUID, Entity>            lEntities{};
-        std::unordered_map<UUIDv4::UUID, ConfigurationNode> lComponents{};
+        std::unordered_map<std::string, Entity>      lEntities{};
+        std::unordered_map<std::string, std::string> lParentEntityLUT{};
 
         lScenarioDescription.GetRoot()["scene"]["nodes"].ForEach<std::string>(
             [&]( auto const &aKey, auto const &aValue )
@@ -789,67 +771,74 @@ namespace LTSE::Core
                 auto lEntity = m_Registry.CreateEntity( sUUID( aKey ) );
                 auto lUUID   = lEntity.Get<sUUID>().mValue;
 
-                lEntities[lUUID]   = lEntity;
-                lComponents[lUUID] = aValue;
+                lEntities[aKey] = lEntity;
+
+                if( !aValue["sRelationshipComponent"].IsNull() )
+                {
+                    if( !( aValue["sRelationshipComponent"]["mParent"].IsNull() ) )
+                    {
+                        auto lParentUUIDStr    = aValue["sRelationshipComponent"]["mParent"].As<std::string>( "" );
+                        auto lParentUUID       = UUIDv4::UUID::fromStrFactory( lParentUUIDStr );
+                        lParentEntityLUT[aKey] = lParentUUIDStr;
+                    }
+                }
             } );
 
-        for( auto lKeyValue : lEntities )
-        {
-            auto lUUID   = lKeyValue.first;
-            auto lEntity = lKeyValue.second;
-
-            if( !lEntity ) continue;
-
-            LTSE::Logging::Info( "** {}", lUUID.str() );
-
-            auto lEntityConfiguration = lComponents[lUUID];
-
-            if( !lEntityConfiguration["sRelationshipComponent"].IsNull() )
+        lScenarioDescription.GetRoot()["scene"]["nodes"].ForEach<std::string>(
+            [&]( auto const &aKey, auto const &lEntityConfiguration )
             {
-                if( !( lEntityConfiguration["sRelationshipComponent"]["mParent"].IsNull() ) )
-                {
-                    auto lParentUUID   = lEntityConfiguration["sRelationshipComponent"]["mParent"].As<std::string>( "" );
-                    auto &lParentEntity = lEntities[UUIDv4::UUID::fromStrFactory( lParentUUID )];
+                auto  lUUID   = UUIDv4::UUID::fromStrFactory( aKey );
+                auto &lEntity = lEntities[aKey];
 
-                    m_Registry.SetParent( lEntity, lParentEntity );
-                }
-            }
+                if( !lEntity ) return;
 
-            ReadComponent<sTag>( lEntity, lEntityConfiguration );
-            ReadComponent<sCameraComponent>( lEntity, lEntityConfiguration );
-            ReadComponent<sAnimationChooser>( lEntity, lEntityConfiguration, lEntities );
-            ReadComponent<sAnimationComponent>( lEntity, lEntityConfiguration, lEntities );
-            ReadComponent<sAnimatedTransformComponent>( lEntity, lEntityConfiguration );
-            ReadComponent<sLocalTransformComponent>( lEntity, lEntityConfiguration );
-            ReadComponent<sTransformMatrixComponent>( lEntity, lEntityConfiguration );
-            ReadComponent<sStaticMeshComponent>( lEntity, lEntityConfiguration );
-            ReadComponent<sSkeletonComponent>( lEntity, lEntityConfiguration );
-            ReadComponent<sRayTracingTargetComponent>( lEntity, lEntityConfiguration );
-            ReadComponent<sMaterialComponent>( lEntity, lEntityConfiguration );
-            ReadComponent<sMaterialShaderComponent>( lEntity, lEntityConfiguration );
-            ReadComponent<sBackgroundComponent>( lEntity, lEntityConfiguration );
-            ReadComponent<sDirectionalLightComponent>( lEntity, lEntityConfiguration );
-            ReadComponent<sAmbientLightingComponent>( lEntity, lEntityConfiguration );
-            ReadComponent<sPointLightComponent>( lEntity, lEntityConfiguration );
-            ReadComponent<sSpotlightComponent>( lEntity, lEntityConfiguration );
-            ReadComponent<sLightComponent>( lEntity, lEntityConfiguration, lEntities );
-        }
+                if( lParentEntityLUT.find( aKey ) != lParentEntityLUT.end() )
+                    m_Registry.SetParent( lEntity, lEntities[lParentEntityLUT[aKey]] );
+
+                ReadComponent<sTag>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sCameraComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sAnimationChooser>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sAnimationComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sAnimatedTransformComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sLocalTransformComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sTransformMatrixComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sStaticMeshComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sSkeletonComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sRayTracingTargetComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sMaterialComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sMaterialShaderComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sBackgroundComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sDirectionalLightComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sAmbientLightingComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sPointLightComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sSpotlightComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sLightComponent>( lEntity, lEntityConfiguration, lEntities );
+            } );
 
         auto lRootNodeUUIDStr = lScenarioDescription.GetRoot()["scene"]["root"].As<std::string>( "" );
         auto lRootNodeUUID    = UUIDv4::UUID::fromStrFactory( lRootNodeUUIDStr );
-        Root                  = lEntities[lRootNodeUUID];
+        Root                  = lEntities[lRootNodeUUIDStr];
 
-        auto lEnvironmentNodeUUID =
-            UUIDv4::UUID::fromStrFactory( lScenarioDescription.GetRoot()["scene"]["environment"].As<std::string>( "" ) );
-        Environment = lEntities[lEnvironmentNodeUUID];
+        auto lEnvironmentNodeUUID = lScenarioDescription.GetRoot()["scene"]["environment"].As<std::string>( "" );
+        Environment               = lEntities[lEnvironmentNodeUUID];
 
-        auto lCurrentCameraUUID =
-            UUIDv4::UUID::fromStrFactory( lScenarioDescription.GetRoot()["scene"]["current_camera"].As<std::string>( "" ) );
-        CurrentCamera = lEntities[lCurrentCameraUUID];
+        auto lCurrentCameraUUID = lScenarioDescription.GetRoot()["scene"]["current_camera"].As<std::string>( "" );
+        CurrentCamera           = lEntities[lCurrentCameraUUID];
 
-        auto lDefaultCameraUUID =
-            UUIDv4::UUID::fromStrFactory( lScenarioDescription.GetRoot()["scene"]["default_camera"].As<std::string>( "" ) );
-        DefaultCamera = lEntities[lDefaultCameraUUID];
+        auto lDefaultCameraUUID = lScenarioDescription.GetRoot()["scene"]["default_camera"].As<std::string>( "" );
+        DefaultCamera           = lEntities[lDefaultCameraUUID];
+
+        uint32_t lTransformCount = 0;
+        ForEach<sLocalTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
+
+        uint32_t lStaticMeshCount = 0;
+        ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aUUID ) { lStaticMeshCount++; } );
+
+        mTransforms    = GPUMemory::Create<math::mat4>( static_cast<uint32_t>( lTransformCount ) );
+        mVertexOffsets = GPUMemory::Create<uint32_t>( static_cast<uint32_t>( lStaticMeshCount ) );
+        mVertexCounts  = GPUMemory::Create<uint32_t>( static_cast<uint32_t>( lStaticMeshCount ) );
+
+        ConnectSignalHandlers();
     }
 
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name )

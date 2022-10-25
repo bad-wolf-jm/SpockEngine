@@ -355,6 +355,15 @@ namespace LTSE::Core::Internal
         /// @brief Test for difference between two `Entity` instance.
         bool operator!=( const Entity &aOther ) const { return !( *this == aOther ); }
 
+        /// @brief Test for difference between two `Entity` instance.
+        Entity & operator=( Entity const &aOther ) 
+        { 
+            mEntityHandle = aOther.mEntityHandle;
+            mParentRegistry = aOther.mParentRegistry;
+
+            return *this; 
+        }
+
       private:
         entt::entity mEntityHandle{ entt::null };
         ParentType   mParentRegistry = nullptr;

@@ -104,6 +104,7 @@ namespace LTSE::Core
         Ref<DescriptorSet> GetDescriptorSet() { return mTextureDescriptorSet; }
 
         void Clear();
+        void Wipe();
 
         std::vector<sMaterial> const                &GetMaterialData() const { return mMaterials; }
         std::vector<Ref<Graphics::Texture2D>> const &GetTextures() const { return mTextures; }

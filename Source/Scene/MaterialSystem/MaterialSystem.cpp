@@ -27,6 +27,12 @@ namespace LTSE::Core
         mTextureDescriptorSet->Write( mShaderMaterials, false, 0, sizeof( sShaderMaterial ), 0 );
     }
 
+    void MaterialSystem::Wipe()
+    {
+        mTextures.clear();
+        mMaterials.clear();
+    }
+
     void MaterialSystem::Clear()
     {
         mTextures.clear();

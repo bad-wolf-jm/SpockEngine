@@ -176,7 +176,7 @@ namespace LTSE::Core
         lPtr += sizeof( uint32_t );
 
         std::memcpy( lPtr, &aMaterialData.mType, sizeof( uint8_t ) );
-        lPtr += sizeof( uint32_t );
+        lPtr += sizeof( uint8_t );
 
         std::memcpy( lPtr, &aMaterialData.mLineWidth, sizeof( float ) );
         lPtr += sizeof( float );
@@ -188,16 +188,16 @@ namespace LTSE::Core
         lPtr += sizeof( float );
 
         std::memcpy( lPtr, &aMaterialData.mBaseColorFactor, sizeof( math::vec4 ) );
-        lPtr += sizeof( float );
+        lPtr += sizeof( math::vec4 );
 
         std::memcpy( lPtr, &aMaterialData.mBaseColorTexture, sizeof( sTextureReference ) );
-        lPtr += sizeof( float );
+        lPtr += sizeof( sTextureReference );
 
         std::memcpy( lPtr, &aMaterialData.mEmissiveFactor, sizeof( math::vec4 ) );
-        lPtr += sizeof( float );
+        lPtr += sizeof( math::vec4 );
 
         std::memcpy( lPtr, &aMaterialData.mEmissiveTexture, sizeof( sTextureReference ) );
-        lPtr += sizeof( float );
+        lPtr += sizeof( sTextureReference );
 
         std::memcpy( lPtr, &aMaterialData.mRoughnessFactor, sizeof( float ) );
         lPtr += sizeof( float );
@@ -206,16 +206,16 @@ namespace LTSE::Core
         lPtr += sizeof( float );
 
         std::memcpy( lPtr, &aMaterialData.mMetalRoughTexture, sizeof( sTextureReference ) );
-        lPtr += sizeof( float );
+        lPtr += sizeof( sTextureReference );
 
         std::memcpy( lPtr, &aMaterialData.mOcclusionStrength, sizeof( float ) );
         lPtr += sizeof( float );
 
         std::memcpy( lPtr, &aMaterialData.mOcclusionTexture, sizeof( sTextureReference ) );
-        lPtr += sizeof( float );
+        lPtr += sizeof( sTextureReference );
 
         std::memcpy( lPtr, &aMaterialData.mNormalsTexture, sizeof( sTextureReference ) );
-        lPtr += sizeof( float );
+        lPtr += sizeof( sTextureReference );
 
         return lPacket;
     }
