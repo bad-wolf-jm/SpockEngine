@@ -787,29 +787,29 @@ namespace LTSE::Core
             [&]( auto const &aKey, auto const &aValue )
             {
                 auto lEntity = m_Registry.CreateEntity( sUUID( aKey ) );
+                auto lUUID   = lEntity.Get<sUUID>().mValue;
 
-                lEntities[lEntity.Get<sUUID>().mValue]   = lEntity;
-                lComponents[lEntity.Get<sUUID>().mValue] = aValue;
+                lEntities[lUUID]   = lEntity;
+                lComponents[lUUID] = aValue;
             } );
 
-        for( auto &lKeyValue : lEntities )
+        for( auto lKeyValue : lEntities )
         {
-            auto lUUID = lKeyValue.first;
+            auto lUUID   = lKeyValue.first;
             auto lEntity = lKeyValue.second;
 
-            auto c = lEntity.Get<sUUID>().mValue.str();
-            auto d = lUUID.str();
+            if( !lEntity ) continue;
 
             LTSE::Logging::Info( "** {}", lUUID.str() );
 
-            auto &lEntityConfiguration = lComponents[lUUID];
+            auto lEntityConfiguration = lComponents[lUUID];
 
             if( !lEntityConfiguration["sRelationshipComponent"].IsNull() )
             {
                 if( !( lEntityConfiguration["sRelationshipComponent"]["mParent"].IsNull() ) )
                 {
                     auto lParentUUID   = lEntityConfiguration["sRelationshipComponent"]["mParent"].As<std::string>( "" );
-                    auto lParentEntity = lEntities[UUIDv4::UUID::fromStrFactory( lParentUUID )];
+                    auto &lParentEntity = lEntities[UUIDv4::UUID::fromStrFactory( lParentUUID )];
 
                     m_Registry.SetParent( lEntity, lParentEntity );
                 }
