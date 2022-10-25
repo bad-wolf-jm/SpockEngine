@@ -594,6 +594,8 @@ namespace LTSE::Core
                     lAnimation.mSamplers[lAnimation.mChannels[lAnimationChannelIndex].mSamplerIndex];
                 lAnimationChannel.mTargetNode = lNodes[lAnimation.mChannels[lAnimationChannelIndex].mNodeID];
                 lAnimationChannel.mTargetNode.TryAdd<AnimatedTransformComponent>();
+                lAnimationChannel.mTargetNode.TryAdd<StaticTransformComponent>(
+                    lAnimationChannel.mTargetNode.Get<NodeTransformComponent>().mMatrix );
 
                 l_AnimationComponent.mChannels.push_back( lAnimationChannel );
             }
@@ -625,6 +627,9 @@ namespace LTSE::Core
     {
         if( mState != eSceneState::EDITING ) return;
 
+        ForEach<AnimatedTransformComponent>( [=]( auto l_Entity, auto &l_Component )
+            { l_Entity.AddOrReplace<StaticTransformComponent>( l_Entity.Get<NodeTransformComponent>().mMatrix ); } );
+
         // Initialize native scripts
         ForEach<sBehaviourComponent>(
             [=]( auto l_Entity, auto &l_Component )
@@ -646,6 +651,9 @@ namespace LTSE::Core
     void Scene::EndScenario()
     {
         if( mState != eSceneState::RUNNING ) return;
+
+        ForEach<AnimatedTransformComponent>( [=]( auto l_Entity, auto &l_Component )
+            { l_Entity.AddOrReplace<NodeTransformComponent>( l_Entity.Get<StaticTransformComponent>().Matrix ); } );
 
         // Destroy scripts
         ForEach<sBehaviourComponent>(
@@ -742,6 +750,15 @@ namespace LTSE::Core
                         }
                     }
                 } );
+            ForEach<AnimatedTransformComponent>(
+                [&]( auto l_ElementToProcess, auto &l_Component )
+                {
+                    math::mat4 lRotation    = math::mat4( l_Component.Rotation );
+                    math::mat4 lTranslation = math::Translation( l_Component.Translation );
+                    math::mat4 lScale       = math::Scaling( l_Component.Scaling );
+
+                    l_ElementToProcess.AddOrReplace<NodeTransformComponent>( lTranslation * lRotation * lScale );
+                } );
         }
 
         std::queue<Entity> l_UpdateQueue{};
@@ -753,17 +770,17 @@ namespace LTSE::Core
 
             for( auto l_Child : l_ElementToProcess.Get<sRelationshipComponent>().mChildren ) l_UpdateQueue.push( l_Child );
 
-            if( l_ElementToProcess.Has<AnimatedTransformComponent>() )
-            {
-                auto &l_Component = l_ElementToProcess.Get<AnimatedTransformComponent>();
+            // if( l_ElementToProcess.Has<AnimatedTransformComponent>() )
+            // {
+            //     auto &l_Component = l_ElementToProcess.Get<AnimatedTransformComponent>();
 
-                math::mat4 lRotation    = math::mat4( l_Component.Rotation );
-                math::mat4 lTranslation = math::Translation( l_Component.Translation );
-                math::mat4 lScale       = math::Scaling( l_Component.Scaling );
+            //     math::mat4 lRotation    = math::mat4( l_Component.Rotation );
+            //     math::mat4 lTranslation = math::Translation( l_Component.Translation );
+            //     math::mat4 lScale       = math::Scaling( l_Component.Scaling );
 
-                l_ElementToProcess.AddOrReplace<TransformMatrixComponent>( lTranslation * lRotation * lScale );
-            }
-            else if( l_ElementToProcess.Has<NodeTransformComponent>() )
+            //     l_ElementToProcess.AddOrReplace<TransformMatrixComponent>( lTranslation * lRotation * lScale );
+            // }
+            if( l_ElementToProcess.Has<NodeTransformComponent>() )
             {
                 l_ElementToProcess.AddOrReplace<TransformMatrixComponent>(
                     l_ElementToProcess.Get<NodeTransformComponent>().mMatrix );

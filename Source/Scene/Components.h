@@ -161,7 +161,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
     {
         math::mat4 mMatrix = math::mat4( 1.0f );
 
-        LocalTransformComponent()                                   = default;
+        LocalTransformComponent()                                  = default;
         LocalTransformComponent( const LocalTransformComponent & ) = default;
         LocalTransformComponent( math::mat4 a_Matrix ) { mMatrix = a_Matrix; };
     };
@@ -173,6 +173,15 @@ namespace LTSE::Core::EntityComponentSystem::Components
         TransformMatrixComponent()                                   = default;
         TransformMatrixComponent( const TransformMatrixComponent & ) = default;
         TransformMatrixComponent( math::mat4 a_Matrix ) { Matrix = a_Matrix; };
+    };
+
+    struct StaticTransformComponent
+    {
+        math::mat4 Matrix = math::mat4( 1.0f );
+
+        StaticTransformComponent()                                   = default;
+        StaticTransformComponent( const StaticTransformComponent & ) = default;
+        StaticTransformComponent( math::mat4 a_Matrix ) { Matrix = a_Matrix; };
     };
 
     // struct NodeTransformComponent
