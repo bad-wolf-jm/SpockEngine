@@ -167,12 +167,18 @@ namespace LTSE::Core
         return ConfigurationNode( lCurrentNode );
     }
 
+    ConfigurationNode &ConfigurationNode::operator=( ConfigurationNode const &aKey ) 
+    {
+        mNode = YAML::Clone( aKey.mNode );
+
+        return *this;
+    }
+
     math::vec2 ConfigurationNode::Vec( std::array<std::string, 2> const &aKeys, math::vec2 const &aDefault )
     {
         if( !HasAll( aKeys ) ) return aDefault;
 
-        return math::vec2{
-            ( ( *this )[aKeys[0]] ).As<float>( aDefault.x ), ( ( *this )[aKeys[1]] ).As<float>( aDefault.y ) };
+        return math::vec2{ ( ( *this )[aKeys[0]] ).As<float>( aDefault.x ), ( ( *this )[aKeys[1]] ).As<float>( aDefault.y ) };
     }
 
     math::vec3 ConfigurationNode::Vec( std::array<std::string, 3> const &aKeys, math::vec3 const &aDefault )

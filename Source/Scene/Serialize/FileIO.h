@@ -108,6 +108,8 @@ namespace LTSE::Core
         ///
         ConfigurationNode operator[]( std::string const &aKey ) const;
 
+        ConfigurationNode &operator=( ConfigurationNode const &aKey );
+
         // /// @brief Iterate over a mapping
         // template <typename _KeyType>
         // void ForEach( std::function<void( _KeyType const &, ConfigurationNode & )> aFunc ) const

@@ -49,6 +49,10 @@ namespace LTSE::Core
             : mValue{ UUIDv4::UUID::fromStrFactory( aStringUUID ) }
         {
         }
+        sUUID( const UUIDv4::UUID &aValue )
+            : mValue{ aValue }
+        {
+        }
     };
 
     template <typename ParentType>

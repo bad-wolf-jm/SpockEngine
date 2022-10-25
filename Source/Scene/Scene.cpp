@@ -792,8 +792,14 @@ namespace LTSE::Core
                 lComponents[lEntity.Get<sUUID>().mValue] = aValue;
             } );
 
-        for( auto [lUUID, lEntity] : lEntities )
+        for( auto &lKeyValue : lEntities )
         {
+            auto lUUID = lKeyValue.first;
+            auto lEntity = lKeyValue.second;
+
+            auto c = lEntity.Get<sUUID>().mValue.str();
+            auto d = lUUID.str();
+
             LTSE::Logging::Info( "** {}", lUUID.str() );
 
             auto &lEntityConfiguration = lComponents[lUUID];
