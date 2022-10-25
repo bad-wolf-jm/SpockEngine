@@ -396,6 +396,12 @@ namespace LTSE::Core
         //
     }
 
+    template <typename _Ty>
+    void ReadComponent( Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities, std::vector<sImportedAnimationSampler> &aInterpolationData )
+    {
+        //
+    }
+
     template <>
     void ReadComponent<sTag>( Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
@@ -443,7 +449,7 @@ namespace LTSE::Core
 
     template <>
     void ReadComponent<sAnimationComponent>(
-        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
+        Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities, std::vector<sImportedAnimationSampler> &aInterpolationData )
     {
         if( !aNode["sAnimationComponent"].IsNull() )
         {
@@ -459,7 +465,7 @@ namespace LTSE::Core
 
                     lNewChannel.mTargetNode = aEntities[lTargetNodeUUID];
                     lNewChannel.mChannelID  = static_cast<sImportedAnimationChannel::Channel>( aNode["mChannelID"].As<uint32_t>( 0 ) );
-                    lNewChannel.mInterpolation = {};
+                    lNewChannel.mInterpolation = aInterpolationData[aNode["mInterpolationDataIndex"].As<uint32_t>( 0 )];
                 } );
         }
     }
@@ -484,6 +490,19 @@ namespace LTSE::Core
             lComponent.Rotation.z = lCoefficients.z;
             lComponent.Rotation.w = lCoefficients.w;
         }
+    }
+
+    math::mat4 ReadMatrix( ConfigurationNode &aNode )
+    {
+
+        std::vector<float> lMatrixEntries{};
+        aNode.ForEach( [&]( ConfigurationNode &aNode ) { lMatrixEntries.push_back( aNode.As<float>( 0.0f ) ); } );
+
+        math::mat4 lMatrix;
+        for( uint32_t c = 0; c < 4; c++ )
+            for( uint32_t r = 0; r < 4; r++ ) lMatrix[c][r] = lMatrixEntries[4 * c + r];
+
+        return lMatrix;
     }
 
     void ReadMatrix( math::mat4 &aMatrix, ConfigurationNode &aNode )
@@ -586,6 +605,28 @@ namespace LTSE::Core
     {
         if( !aNode["sSkeletonComponent"].IsNull() )
         {
+            std::vector<Entity> lBones{};
+            aNode["Bones"].ForEach(
+                [&]( ConfigurationNode &aNode )
+                {
+                    auto lUUID = aNode.As<std::string>( "" );
+                    if( lUUID.empty() ) return;
+
+                    lBones.push_back( aEntities[lUUID] );
+                } );
+
+            std::vector<math::mat4> lInverseBindMatrices{};
+            aNode["InverseBindMatrices"].ForEach(
+                [&]( ConfigurationNode &aNode ) { lInverseBindMatrices.push_back( ReadMatrix( aNode ) ); } );
+
+            std::vector<math::mat4> lJointMatrices{};
+            aNode["JointMatrices"].ForEach( [&]( ConfigurationNode &aNode ) { lJointMatrices.push_back( ReadMatrix( aNode ) ); } );
+
+            auto &lComponent               = aEntity.Add<sSkeletonComponent>();
+            lComponent.BoneCount           = lBones.size();
+            lComponent.Bones               = lBones;
+            lComponent.InverseBindMatrices = lInverseBindMatrices;
+            lComponent.JointMatrices       = lJointMatrices;
         }
     }
 
@@ -726,6 +767,7 @@ namespace LTSE::Core
         auto lTextureOffset   = lScenarioData.Read<uint32_t>();
         auto lTextureCount    = lScenarioData.Read<uint32_t>();
         auto lAnimationOffset = lScenarioData.Read<uint32_t>();
+        auto lAnimationCount  = lScenarioData.Read<uint32_t>();
 
         std::vector<VertexData> lVertexBuffer;
         std::vector<uint32_t>   lIndexBuffer;
@@ -758,6 +800,14 @@ namespace LTSE::Core
             auto [aData, aSampler] = lScenarioData.Retrieve( lTextureIndex + lTextureOffset );
 
             auto lNewTexture = mMaterialSystem->CreateTexture( aData, aSampler );
+        }
+
+        std::vector<sImportedAnimationSampler> lInterpolationData;
+        for( uint32_t lInterpolationIndex = 0; lInterpolationIndex < lAnimationCount; lInterpolationIndex++ )
+        {
+            auto &lAnimationData = lInterpolationData.emplace_back();
+
+            lScenarioData.Retrieve( lInterpolationIndex + lAnimationOffset, lAnimationData );
         }
 
         auto lScenarioDescription = ConfigurationReader( aScenarioPath );
@@ -798,7 +848,7 @@ namespace LTSE::Core
                 ReadComponent<sTag>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sCameraComponent>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sAnimationChooser>( lEntity, lEntityConfiguration, lEntities );
-                ReadComponent<sAnimationComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sAnimationComponent>( lEntity, lEntityConfiguration, lEntities, lInterpolationData );
                 ReadComponent<sAnimatedTransformComponent>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sLocalTransformComponent>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sTransformMatrixComponent>( lEntity, lEntityConfiguration, lEntities );
@@ -813,20 +863,26 @@ namespace LTSE::Core
                 ReadComponent<sPointLightComponent>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sSpotlightComponent>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sLightComponent>( lEntity, lEntityConfiguration, lEntities );
+
+                LTSE::Logging::Info("Components added to entity {}", aKey);
             } );
 
         auto lRootNodeUUIDStr = lScenarioDescription.GetRoot()["scene"]["root"].As<std::string>( "" );
         auto lRootNodeUUID    = UUIDv4::UUID::fromStrFactory( lRootNodeUUIDStr );
         Root                  = lEntities[lRootNodeUUIDStr];
+        LTSE::Logging::Info("Created root", lRootNodeUUIDStr);
 
         auto lEnvironmentNodeUUID = lScenarioDescription.GetRoot()["scene"]["environment"].As<std::string>( "" );
         Environment               = lEntities[lEnvironmentNodeUUID];
+        LTSE::Logging::Info("Created environment", lEnvironmentNodeUUID);
 
         auto lCurrentCameraUUID = lScenarioDescription.GetRoot()["scene"]["current_camera"].As<std::string>( "" );
         CurrentCamera           = lEntities[lCurrentCameraUUID];
+        LTSE::Logging::Info("Created camera", lCurrentCameraUUID);
 
         auto lDefaultCameraUUID = lScenarioDescription.GetRoot()["scene"]["default_camera"].As<std::string>( "" );
         DefaultCamera           = lEntities[lDefaultCameraUUID];
+        LTSE::Logging::Info("Created camera", lDefaultCameraUUID);
 
         uint32_t lTransformCount = 0;
         ForEach<sLocalTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
@@ -1813,8 +1869,9 @@ namespace LTSE::Core
         uint32_t lTextureOffset   = lMaterialOffset + lMaterialCount;
         uint32_t lTextureCount    = mMaterialSystem->GetTextures().size();
         uint32_t lAnimationOffset = lTextureOffset + lTextureCount;
+        uint32_t lAnimationCount  = lInterpolationData.size();
 
-        std::vector<char> lOffsetData( 5 * sizeof( uint32_t ) );
+        std::vector<char> lOffsetData( 6 * sizeof( uint32_t ) );
         auto             *lPtr = lOffsetData.data();
         std::memcpy( lPtr, &lMaterialOffset, sizeof( uint32_t ) );
         lPtr += sizeof( uint32_t );
@@ -1826,6 +1883,7 @@ namespace LTSE::Core
         lPtr += sizeof( uint32_t );
         std::memcpy( lPtr, &lAnimationOffset, sizeof( uint32_t ) );
         lPtr += sizeof( uint32_t );
+        std::memcpy( lPtr, &lAnimationCount, sizeof( uint32_t ) );
         lPackets.push_back( lOffsetData );
 
         // Meshes
