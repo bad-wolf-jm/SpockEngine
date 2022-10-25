@@ -25,12 +25,16 @@ namespace LTSE::Graphics
 
             VertexData lVertex = aVertices[lObjectOffset + lVertexID];
 
-            math::mat4 lSkinTransform = lVertex.Weights.x * aJointMatrices[int( lVertex.Bones.x ) + lObjectJointOffset] +
-                                        lVertex.Weights.y * aJointMatrices[int( lVertex.Bones.y ) + lObjectJointOffset] +
-                                        lVertex.Weights.z * aJointMatrices[int( lVertex.Bones.z ) + lObjectJointOffset] +
+            math::mat4 lSkinTransform = lVertex.Weights.x * aJointMatrices[int( lVertex.Bones.x )] +
+                                        lVertex.Weights.y * aJointMatrices[int( lVertex.Bones.y )] +
+                                        lVertex.Weights.z * aJointMatrices[int( lVertex.Bones.z )] +
+                                        lVertex.Weights.w * aJointMatrices[int( lVertex.Bones.w )];
 
-                                        aOutTransformedVertices[lObjectOffset + lVertexID].Position =
-                                            lFinalTransform * lVertex.Position;
+            math::mat4 lFinalTransform = lTransform * lSkinTransform;
+
+            aOutTransformedVertices[lObjectOffset + lVertexID] = lVertex;
+
+            aOutTransformedVertices[lObjectOffset + lVertexID].Position = lFinalTransform * lVertex.Position;
             aOutTransformedVertices[lObjectOffset + lVertexID].Normal =
                 normalize( transpose( inverse( mat3( lFinalTransform ) ) ) * lVertex.Normal );
         }

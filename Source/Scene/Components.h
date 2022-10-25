@@ -177,7 +177,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
     //     NodeTransformComponent( math::mat4 a_Matrix ) { Matrix = a_Matrix; };
     // };
 
-    struct StaticMeshComponent
+    struct sStaticMeshComponent
     {
         std::string Name = "";
 
