@@ -7,10 +7,11 @@
 #include "imgui_internal.h"
 #include "implot.h"
 
-#include "Core/Memory.h"
-#include "Core/Types.h"
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//UI/FontAwesome.h"
+#include "Core/Memory.h"
+#include "Core/Types.h"
+
 
 namespace LTSE::Core::UI
 {
@@ -35,14 +36,18 @@ namespace LTSE::Core::UI
     void Text( const char *a_Text );
     void Text( std::string a_Text );
 
-    template <typename... ArgTypes> void Text( std::string a_String, ArgTypes &&...a_ArgList ) { Text( fmt::format( a_String, std::forward<ArgTypes>( a_ArgList )... ) ); }
+    template <typename... ArgTypes>
+    void Text( std::string a_String, ArgTypes &&...a_ArgList )
+    {
+        Text( fmt::format( a_String, std::forward<ArgTypes>( a_ArgList )... ) );
+    }
 
     void SameLine();
     void SameLine( float spacing );
 
     math::ivec2 GetRootWindowSize();
-    math::vec2 GetCurrentCursorPosition();
-    math::vec2 GetCurrentCursorScreenPosition();
+    math::vec2  GetCurrentCursorPosition();
+    math::vec2  GetCurrentCursorScreenPosition();
     math::ivec2 GetAvailableContentSpace();
     math::ivec2 GetCurrentWindowPosition();
 

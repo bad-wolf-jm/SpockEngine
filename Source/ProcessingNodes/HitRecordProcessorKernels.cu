@@ -8,7 +8,7 @@
 
 #include "HitRecordProcessorKernels.h"
 
-#include "EnvironmentSampler/LaunchParams.h"
+#include "Scene/EnvironmentSampler/LaunchParams.h"
 
 #include "Core/Cuda/CudaAssert.h"
 #include "TensorOps/Implementation/HelperMacros.h"

@@ -11,8 +11,8 @@
 #include "Core/Platform/EngineLoop.h"
 
 
-#include "EnvironmentSampler/EnvironmentSampler.h"
-#include "EnvironmentSampler/PointCloudVisualizer.h"
+#include "Scene/EnvironmentSampler/EnvironmentSampler.h"
+#include "Scene/EnvironmentSampler/PointCloudVisualizer.h"
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Scene/Renderer/SceneRenderer.h"
 #include "Scene/Scene.h"

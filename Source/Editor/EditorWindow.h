@@ -16,8 +16,8 @@
 
 #include "UI/UI.h"
 
-#include "EnvironmentSampler/EnvironmentSampler.h"
-#include "EnvironmentSampler/PointCloudVisualizer.h"
+#include "Scene/EnvironmentSampler/EnvironmentSampler.h"
+#include "Scene/EnvironmentSampler/PointCloudVisualizer.h"
 
 #include "ContentBrowser.h"
 #include "SceneElementEditor.h"

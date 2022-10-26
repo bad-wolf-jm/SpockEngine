@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 project(LTSimulationEngine LANGUAGES CUDA CXX C)
 
-cuda_compile_and_embed(g_SensorModelEnvironmentSampler EnvironmentSampler/DevicePrograms.cu)
+cuda_compile_and_embed(g_SensorModelEnvironmentSampler Scene/EnvironmentSampler/DevicePrograms.cu)
 
 add_library(LTSimulationEngineRuntime STATIC
     Core/File.cpp
@@ -97,8 +97,8 @@ add_library(LTSimulationEngineRuntime STATIC
     # Serialize/SensorComponents.cpp
     # Serialize/SensorDefinition.cpp
 
-    EnvironmentSampler/PointCloudVisualizer.cu
-    EnvironmentSampler/EnvironmentSampler.cpp
+    Scene/EnvironmentSampler/PointCloudVisualizer.cu
+    Scene/EnvironmentSampler/EnvironmentSampler.cpp
     ${g_SensorModelEnvironmentSampler}
 
     TensorOps/Implementation/KernelLaunchers.cu

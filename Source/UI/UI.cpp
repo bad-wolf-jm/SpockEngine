@@ -7,8 +7,8 @@ namespace LTSE::Core::UI
     {
         // UNUSED( x );
 
-        ImGuiStyle &style = ImGui::GetStyle();
-        ImVec4 *colors    = style.Colors;
+        ImGuiStyle &style  = ImGui::GetStyle();
+        ImVec4     *colors = style.Colors;
 
         colors[ImGuiCol_Text]           = ImVec4( .7f, .7f, .7f, 1.0f );
         colors[ImGuiCol_TextDisabled]   = ImVec4( 0.3f, 0.3f, 0.3f, 1.0f );
@@ -126,8 +126,8 @@ namespace LTSE::Core::UI
 
     math::ivec2 GetRootWindowSize()
     {
-        ImGuiViewport *viewport    = ImGui::GetMainViewport();
-        ImVec2 l_ViewportPanelSize = viewport->WorkSize;
+        ImGuiViewport *viewport            = ImGui::GetMainViewport();
+        ImVec2         l_ViewportPanelSize = viewport->WorkSize;
 
         return math::ivec2{ (int32_t)l_ViewportPanelSize.x, (int32_t)l_ViewportPanelSize.y };
     }
