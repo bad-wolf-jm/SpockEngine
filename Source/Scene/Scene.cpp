@@ -471,7 +471,7 @@ namespace LTSE::Core
                     lNewChannel.mInterpolation =
                         aInterpolationData[aInterpolationDataNode["mInterpolationDataIndex"].As<uint32_t>( 0 )];
 
-                    lComponent.mChannels.push_back(lNewChannel);
+                    lComponent.mChannels.push_back( lNewChannel );
                 } );
         }
     }
@@ -553,10 +553,11 @@ namespace LTSE::Core
         {
             auto &lComponent = aEntity.Add<sStaticMeshComponent>();
 
-            lComponent.mVertexOffset = aNode["sStaticMeshComponent"]["mVertexOffset"].As<uint32_t>( 0 );
-            lComponent.mVertexCount  = aNode["sStaticMeshComponent"]["mVertexCount"].As<uint32_t>( 0 );
-            lComponent.mIndexOffset  = aNode["sStaticMeshComponent"]["mIndexOffset"].As<uint32_t>( 0 );
-            lComponent.mIndexCount   = aNode["sStaticMeshComponent"]["mIndexCount"].As<uint32_t>( 0 );
+            auto &lMeshData          = aNode["sStaticMeshComponent"];
+            lComponent.mVertexOffset = lMeshData["mVertexOffset"].As<uint32_t>( 0 );
+            lComponent.mVertexCount  = lMeshData["mVertexCount"].As<uint32_t>( 0 );
+            lComponent.mIndexOffset  = lMeshData["mIndexOffset"].As<uint32_t>( 0 );
+            lComponent.mIndexCount   = lMeshData["mIndexCount"].As<uint32_t>( 0 );
         }
     }
 
@@ -611,8 +612,10 @@ namespace LTSE::Core
     {
         if( !aNode["sSkeletonComponent"].IsNull() )
         {
+            auto &lData = aNode["sSkeletonComponent"];
+
             std::vector<Entity> lBones{};
-            aNode["sSkeletonComponent"]["Bones"].ForEach(
+            lData["Bones"].ForEach(
                 [&]( ConfigurationNode &aNode )
                 {
                     auto lUUID = aNode.As<std::string>( "" );
@@ -622,11 +625,11 @@ namespace LTSE::Core
                 } );
 
             std::vector<math::mat4> lInverseBindMatrices{};
-            aNode["sSkeletonComponent"]["InverseBindMatrices"].ForEach(
+            lData["InverseBindMatrices"].ForEach(
                 [&]( ConfigurationNode &aNode ) { lInverseBindMatrices.push_back( ReadMatrix( aNode ) ); } );
 
             std::vector<math::mat4> lJointMatrices{};
-            aNode["sSkeletonComponent"]["JointMatrices"].ForEach(
+            lData["JointMatrices"].ForEach(
                 [&]( ConfigurationNode &aNode ) { lJointMatrices.push_back( ReadMatrix( aNode ) ); } );
 
             auto &lComponent               = aEntity.Add<sSkeletonComponent>();
@@ -670,12 +673,13 @@ namespace LTSE::Core
         if( !aNode["sMaterialShaderComponent"].IsNull() )
         {
             auto &lComponent = aEntity.Add<sMaterialShaderComponent>();
+            auto &lData = aNode["sMaterialShaderComponent"];
 
-            lComponent.Type              = static_cast<MaterialType>( aNode["sMaterialShaderComponent"]["Type"].As<uint8_t>( 0 ) );
-            lComponent.IsTwoSided        = aNode["sMaterialShaderComponent"]["IsTwoSided"].As<bool>( true );
-            lComponent.UseAlphaMask      = aNode["sMaterialShaderComponent"]["UseAlphaMask"].As<bool>( true );
-            lComponent.LineWidth         = aNode["sMaterialShaderComponent"]["LineWidth"].As<float>( 1.0f );
-            lComponent.AlphaMaskTheshold = aNode["sMaterialShaderComponent"]["AlphaMaskTheshold"].As<float>( .5f );
+            lComponent.Type              = static_cast<MaterialType>( lData["Type"].As<uint8_t>( 0 ) );
+            lComponent.IsTwoSided        = lData["IsTwoSided"].As<bool>( true );
+            lComponent.UseAlphaMask      = lData["UseAlphaMask"].As<bool>( true );
+            lComponent.LineWidth         = lData["LineWidth"].As<float>( 1.0f );
+            lComponent.AlphaMaskTheshold = lData["AlphaMaskTheshold"].As<float>( .5f );
         }
     }
 
@@ -822,7 +826,9 @@ namespace LTSE::Core
         std::unordered_map<std::string, Entity>      lEntities{};
         std::unordered_map<std::string, std::string> lParentEntityLUT{};
 
-        lScenarioDescription.GetRoot()["scene"]["nodes"].ForEach<std::string>(
+        auto &lSceneRoot = lScenarioDescription.GetRoot()["scene"];
+
+        lSceneRoot["nodes"].ForEach<std::string>(
             [&]( auto const &aKey, auto const &aValue )
             {
                 auto lEntity = m_Registry.CreateEntity( sUUID( aKey ) );
@@ -841,7 +847,7 @@ namespace LTSE::Core
                 }
             } );
 
-        lScenarioDescription.GetRoot()["scene"]["nodes"].ForEach<std::string>(
+        lSceneRoot["nodes"].ForEach<std::string>(
             [&]( auto const &aKey, auto const &lEntityConfiguration )
             {
                 auto  lUUID   = UUIDv4::UUID::fromStrFactory( aKey );
@@ -874,20 +880,20 @@ namespace LTSE::Core
                 LTSE::Logging::Info( "Components added to entity {}", aKey );
             } );
 
-        auto lRootNodeUUIDStr = lScenarioDescription.GetRoot()["scene"]["root"].As<std::string>( "" );
+        auto lRootNodeUUIDStr = lSceneRoot["root"].As<std::string>( "" );
         auto lRootNodeUUID    = UUIDv4::UUID::fromStrFactory( lRootNodeUUIDStr );
         Root                  = lEntities[lRootNodeUUIDStr];
         LTSE::Logging::Info( "Created root", lRootNodeUUIDStr );
 
-        auto lEnvironmentNodeUUID = lScenarioDescription.GetRoot()["scene"]["environment"].As<std::string>( "" );
+        auto lEnvironmentNodeUUID = lSceneRoot["environment"].As<std::string>( "" );
         Environment               = lEntities[lEnvironmentNodeUUID];
         LTSE::Logging::Info( "Created environment", lEnvironmentNodeUUID );
 
-        auto lCurrentCameraUUID = lScenarioDescription.GetRoot()["scene"]["current_camera"].As<std::string>( "" );
+        auto lCurrentCameraUUID = lSceneRoot["current_camera"].As<std::string>( "" );
         CurrentCamera           = lEntities[lCurrentCameraUUID];
         LTSE::Logging::Info( "Created camera", lCurrentCameraUUID );
 
-        auto lDefaultCameraUUID = lScenarioDescription.GetRoot()["scene"]["default_camera"].As<std::string>( "" );
+        auto lDefaultCameraUUID = lSceneRoot["default_camera"].As<std::string>( "" );
         DefaultCamera           = lEntities[lDefaultCameraUUID];
         LTSE::Logging::Info( "Created camera", lDefaultCameraUUID );
 
