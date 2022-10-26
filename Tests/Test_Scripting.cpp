@@ -483,11 +483,15 @@ TEST_CASE( "LUA Mat4 type", "[CORE_SCRIPTING]" )
     lScriptingEngine.Execute( "value = Math.mat4(Math.vec4(1, 2, 3, 4))" );
     REQUIRE( lScriptingEngine.Get<mat4>( "value" ) == FromDiagonal( vec4{ 1, 2, 3, 4 } ) );
 
-    lScriptingEngine.Execute( "value = Math.mat4(Math.vec4(1, 2, 3, 1),Math.vec4(4, 5, 6, 2), Math.vec4(7, 8, 9, 3), Math.vec4(10, 11, 12, 4))" );
-    REQUIRE( lScriptingEngine.Get<mat4>( "value" ) == mat4( vec4{ 1, 2, 3, 1 }, vec4{ 4, 5, 6, 2 }, vec4{ 7, 8, 9, 3 }, vec4{ 10, 11, 12, 4 } ) );
+    lScriptingEngine.Execute(
+        "value = Math.mat4(Math.vec4(1, 2, 3, 1),Math.vec4(4, 5, 6, 2), Math.vec4(7, 8, 9, 3), Math.vec4(10, 11, 12, 4))" );
+    REQUIRE( lScriptingEngine.Get<mat4>( "value" ) ==
+             mat4( vec4{ 1, 2, 3, 1 }, vec4{ 4, 5, 6, 2 }, vec4{ 7, 8, 9, 3 }, vec4{ 10, 11, 12, 4 } ) );
 
-    lScriptingEngine.Execute( "value = Math.mat3(Math.mat4(Math.vec4(1, 2, 3, 1),Math.vec4(4, 5, 6, 2), Math.vec4(7, 8, 9, 3), Math.vec4(10, 11, 12, 4)))" );
-    REQUIRE( lScriptingEngine.Get<mat3>( "value" ) == mat3( mat4( vec4{ 1, 2, 3, 1 }, vec4{ 4, 5, 6, 2 }, vec4{ 7, 8, 9, 3 }, vec4{ 10, 11, 12, 4 } ) ) );
+    lScriptingEngine.Execute(
+        "value = Math.mat3(Math.mat4(Math.vec4(1, 2, 3, 1),Math.vec4(4, 5, 6, 2), Math.vec4(7, 8, 9, 3), Math.vec4(10, 11, 12, 4)))" );
+    REQUIRE( lScriptingEngine.Get<mat3>( "value" ) ==
+             mat3( mat4( vec4{ 1, 2, 3, 1 }, vec4{ 4, 5, 6, 2 }, vec4{ 7, 8, 9, 3 }, vec4{ 10, 11, 12, 4 } ) ) );
 }
 
 TEST_CASE( "LUA Create registry", "[CORE_SCRIPTING]" )
@@ -694,7 +698,7 @@ entity1:add(dtypes.ComponentA(4.0))
 TEST_CASE( "LUA remove component", "[CORE_SCRIPTING]" )
 {
     ScriptingEngine lScriptingEngine{};
-    auto x                   = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
+    auto            x        = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
 
@@ -714,7 +718,7 @@ entity0 = registry:create_entity()
 TEST_CASE( "LUA replace component", "[CORE_SCRIPTING]" )
 {
     ScriptingEngine lScriptingEngine{};
-    auto x                   = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
+    auto            x        = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
 
@@ -733,7 +737,7 @@ entity0 = registry:create_entity()
 
 TEST_CASE( "LUA test external registry", "[CORE_SCRIPTING]" )
 {
-    EntityRegistry lRegistry{};
+    EntityRegistry  lRegistry{};
     ScriptingEngine lScriptingEngine{};
 
     lScriptingEngine.Define( "registry0", &lRegistry );
@@ -746,10 +750,10 @@ TEST_CASE( "LUA test external registry", "[CORE_SCRIPTING]" )
 TEST_CASE( "LUA test external entity", "[CORE_SCRIPTING]" )
 {
     EntityRegistry lRegistry{};
-    auto lEntity0 = lRegistry.CreateEntity();
+    auto           lEntity0 = lRegistry.CreateEntity();
 
     ScriptingEngine lScriptingEngine{};
-    auto x                   = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
+    auto            x        = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
 
@@ -783,9 +787,9 @@ TEST_CASE( "LUA test external entity", "[CORE_SCRIPTING]" )
 
 TEST_CASE( "LUA OnComponentAdded event", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityRegistry  lRegistry{};
     ScriptingEngine lScriptingEngine{};
-    auto x                   = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
+    auto            x        = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
     lScriptingEngine.Define( "registry", &lRegistry );
@@ -802,9 +806,9 @@ TEST_CASE( "LUA OnComponentAdded event", "[CORE_ENTITIES]" )
 
 TEST_CASE( "LUA OnComponentUpdated event", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityRegistry  lRegistry{};
     ScriptingEngine lScriptingEngine{};
-    auto x                   = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
+    auto            x        = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
     lScriptingEngine.Define( "registry", &lRegistry );
@@ -824,9 +828,9 @@ entity0:add(dtypes.ComponentA())
 
 TEST_CASE( "LUA OnComponentDestroyed event", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityRegistry  lRegistry{};
     ScriptingEngine lScriptingEngine{};
-    auto x                   = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
+    auto            x        = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
     lScriptingEngine.Define( "registry", &lRegistry );
@@ -997,10 +1001,11 @@ value = tensor:size_as(dtypes.float32)
     REQUIRE( lTensorValues == ( ( ( 1 * 2 * 9 ) + ( 3 * 4 * 8 ) + ( 5 * 6 * 7 ) ) ) );
 }
 
-template <typename _Ty> std::vector<std::vector<_Ty>> RandomVector2( std::vector<uint32_t> aDim, _Ty aMin, _Ty aMax )
+template <typename _Ty>
+std::vector<std::vector<_Ty>> RandomVector2( std::vector<uint32_t> aDim, _Ty aMin, _Ty aMax )
 {
-    uint32_t lSize   = std::accumulate( aDim.begin(), aDim.end() - 1, 1, std::multiplies<uint32_t>() );
-    uint32_t lLength = aDim.back();
+    uint32_t                      lSize   = std::accumulate( aDim.begin(), aDim.end() - 1, 1, std::multiplies<uint32_t>() );
+    uint32_t                      lLength = aDim.back();
     std::vector<std::vector<_Ty>> lResult{};
 
     for( uint32_t j = 0; j < lSize; j++ )
@@ -1015,8 +1020,8 @@ template <typename _Ty> std::vector<std::vector<_Ty>> RandomVector2( std::vector
 TEST_CASE( "LUA MultiTensor fetch_at", "[CORE_SCRIPTING]" )
 {
     ScriptingEngine lScriptingEngine{};
-    size_t lPoolSize = 128 * 1024;
-    MemoryPool lPool( lPoolSize );
+    size_t          lPoolSize = 128 * 1024;
+    MemoryPool      lPool( lPoolSize );
 
     auto lShape  = sTensorShape( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
     auto lTensor = MultiTensor( lPool, lShape );
@@ -1056,8 +1061,8 @@ value2 = tensor:fetch_f32(2)
 TEST_CASE( "LUA MultiTensor fetch_flattened", "[CORE_SCRIPTING]" )
 {
     ScriptingEngine lScriptingEngine{};
-    size_t lPoolSize = 128 * 1024;
-    MemoryPool lPool( lPoolSize );
+    size_t          lPoolSize = 128 * 1024;
+    MemoryPool      lPool( lPoolSize );
 
     auto lShape  = sTensorShape( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
     auto lTensor = MultiTensor( lPool, lShape );
@@ -1081,8 +1086,8 @@ value = tensor:fetch_f32()
 TEST_CASE( "LUA MultiTensor upload", "[CORE_SCRIPTING]" )
 {
     ScriptingEngine lScriptingEngine{};
-    size_t lPoolSize = 128 * 1024;
-    MemoryPool lPool( lPoolSize );
+    size_t          lPoolSize = 128 * 1024;
+    MemoryPool      lPool( lPoolSize );
 
     auto lShape = sTensorShape( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
 
@@ -1109,8 +1114,8 @@ tensor:upload_f32(tensor_data)
 TEST_CASE( "LUA MultiTensor upload layers", "[CORE_SCRIPTING]" )
 {
     ScriptingEngine lScriptingEngine{};
-    size_t lPoolSize = 128 * 1024;
-    MemoryPool lPool( lPoolSize );
+    size_t          lPoolSize = 128 * 1024;
+    MemoryPool      lPool( lPoolSize );
 
     auto lShape = sTensorShape( std::vector<std::vector<uint32_t>>{ { 1, 2, 9 }, { 3, 4, 8 }, { 5, 6, 7 } }, sizeof( float ) );
 

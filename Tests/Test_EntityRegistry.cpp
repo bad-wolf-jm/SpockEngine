@@ -131,14 +131,14 @@ TEST_CASE( "Destroy entities", "[CORE_ENTITIES]" )
     auto lEntity0 = lRegistry.CreateEntity();
     lRegistry.DestroyEntity( lEntity0 );
 
-    REQUIRE(!lEntity0.IsValid());
+    REQUIRE( !lEntity0.IsValid() );
 }
 
 TEST_CASE( "Adding components twice throws exception", "[CORE_ENTITIES]" )
 {
     EntityRegistry lRegistry{};
 
-    auto lEntity0     = lRegistry.CreateEntity();
+    auto  lEntity0    = lRegistry.CreateEntity();
     auto &lComponentA = lEntity0.Add<ComponentA>();
     REQUIRE_THROWS( ( lEntity0.Add<ComponentA>() ) );
 }
@@ -165,61 +165,54 @@ TEST_CASE( "TryRemove", "[CORE_ENTITIES]" )
     REQUIRE_NOTHROW( ( lEntity0.TryRemove<ComponentA>() ) );
 }
 
-
-TEST_CASE("OnComponentAdded event", "[CORE_ENTITIES]" )
+TEST_CASE( "OnComponentAdded event", "[CORE_ENTITIES]" )
 {
     EntityRegistry lRegistry{};
 
     bool lComponentAddedCalled = false;
-    lRegistry.OnComponentAdded<ComponentA>([&](auto lEntity, auto& lComponent) {
-        lComponentAddedCalled = true;
-    });
+    lRegistry.OnComponentAdded<ComponentA>( [&]( auto lEntity, auto &lComponent ) { lComponentAddedCalled = true; } );
 
     auto lEntity0 = lRegistry.CreateEntity();
 
-    REQUIRE(!lComponentAddedCalled);
+    REQUIRE( !lComponentAddedCalled );
 
     lEntity0.Add<ComponentA>();
 
-    REQUIRE(lComponentAddedCalled);
+    REQUIRE( lComponentAddedCalled );
 }
 
-TEST_CASE("OnComponentUpdated event", "[CORE_ENTITIES]" )
+TEST_CASE( "OnComponentUpdated event", "[CORE_ENTITIES]" )
 {
     EntityRegistry lRegistry{};
 
     bool lComponentUpdatedCalled = false;
-    lRegistry.OnComponentUpdated<ComponentA>([&](auto lEntity, auto& lComponent) {
-        lComponentUpdatedCalled = true;
-    });
+    lRegistry.OnComponentUpdated<ComponentA>( [&]( auto lEntity, auto &lComponent ) { lComponentUpdatedCalled = true; } );
 
     auto lEntity0 = lRegistry.CreateEntity();
     lEntity0.Add<ComponentA>();
 
-    REQUIRE(!lComponentUpdatedCalled);
+    REQUIRE( !lComponentUpdatedCalled );
 
-    lEntity0.Replace<ComponentA>(ComponentA{3.0});
+    lEntity0.Replace<ComponentA>( ComponentA{ 3.0 } );
 
-    REQUIRE(lComponentUpdatedCalled);
+    REQUIRE( lComponentUpdatedCalled );
 }
 
-TEST_CASE("OnComponentDestroyed event", "[CORE_ENTITIES]" )
+TEST_CASE( "OnComponentDestroyed event", "[CORE_ENTITIES]" )
 {
     EntityRegistry lRegistry{};
 
     bool lComponentDestroyedCalled = false;
-    lRegistry.OnComponentDestroyed<ComponentA>([&](auto lEntity, auto& lComponent) {
-        lComponentDestroyedCalled = true;
-    });
+    lRegistry.OnComponentDestroyed<ComponentA>( [&]( auto lEntity, auto &lComponent ) { lComponentDestroyedCalled = true; } );
 
     auto lEntity0 = lRegistry.CreateEntity();
     lEntity0.Add<ComponentA>();
 
-    REQUIRE(!lComponentDestroyedCalled);
+    REQUIRE( !lComponentDestroyedCalled );
 
     lEntity0.Remove<ComponentA>();
 
-    REQUIRE(lComponentDestroyedCalled);
+    REQUIRE( lComponentDestroyedCalled );
 }
 
 struct sTagComponent

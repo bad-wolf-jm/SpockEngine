@@ -14,22 +14,15 @@ file(GLOB TEST_DATA_FILES "Include/*.cpp")
 add_executable(lste_cuda_test WIN32
   TestUtils.cpp
 
-  # Test_AbstractTexture.cpp
-  # Test_CudaTexture.cpp
-  # Test_CudaBuffer.cpp
-  # Test_EntityRegistry.cpp
-  # Test_ComputationScope.cpp
+  Test_AbstractTexture.cpp
+  Test_CudaTexture.cpp
+  Test_CudaBuffer.cpp
+  Test_EntityRegistry.cpp
+  Test_ComputationScope.cpp
   # Test_ConfigurationReader.cpp
-  # Test_SensorConfiguration.cpp
-  # Test_SensorAcquisitionData.cpp
-  # Test_EnvironmentSampler.cpp
-  # Test_SensorAssetParsing.cpp
-  # Test_SensorComponentParsing.cpp
-  # Test_SensorDefinitionParsing.cpp
-  # Test_SensorModel.cpp
   # ${TEST_DATA_FILES}
   # Test_FPGA_Model.cpp
-  Test_Scripting.cpp
+  # Test_Scripting.cpp
 )
 
 target_include_directories(lste_cuda_test PRIVATE Source C:/vcpkg/installed/x64-windows/include ${CUDA_INCLUDE_DIRS})

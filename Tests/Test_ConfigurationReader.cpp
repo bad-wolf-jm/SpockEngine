@@ -43,7 +43,7 @@ TEST_CASE( "Read YAML configuration", "[CORE_SENSOR_MODEL]" )
 
     SECTION( "Retrieving root node value" )
     {
-        ConfigurationNode lRoot      = lTestReader.GetRoot();
+        ConfigurationNode lRoot     = lTestReader.GetRoot();
         ConfigurationNode lRootNode = lRoot["root"];
         REQUIRE( true );
     }
@@ -72,8 +72,10 @@ TEST_CASE( "Read YAML configuration", "[CORE_SENSOR_MODEL]" )
         ConfigurationNode lRoot = lTestReader.GetRoot();
 
         REQUIRE( ( lRoot["root.fourth"].Vec( { "r", "g" }, math::vec2{ -1.0f, -1.0f } ) == math::vec2{ 12.0f, 13.0f } ) );
-        REQUIRE( ( lRoot["root.fourth"].Vec( { "r", "g", "b" }, math::vec3{ -1.0f, -1.0f, -1.0f } ) == math::vec3{ 12.0f, 13.0f, 14.0f } ) );
-        REQUIRE( ( lRoot["root.fourth"].Vec( { "r", "g", "b", "a" }, math::vec4{ -1.0f, -1.0f, -1.0f, -1.0f } ) == math::vec4{ 12.0f, 13.0f, 14.0f, 15.0f } ) );
+        REQUIRE( (
+            lRoot["root.fourth"].Vec( { "r", "g", "b" }, math::vec3{ -1.0f, -1.0f, -1.0f } ) == math::vec3{ 12.0f, 13.0f, 14.0f } ) );
+        REQUIRE( ( lRoot["root.fourth"].Vec( { "r", "g", "b", "a" }, math::vec4{ -1.0f, -1.0f, -1.0f, -1.0f } ) ==
+                   math::vec4{ 12.0f, 13.0f, 14.0f, 15.0f } ) );
     }
 
     SECTION( "Retrieving vectors with missing keys" )
@@ -81,8 +83,8 @@ TEST_CASE( "Read YAML configuration", "[CORE_SENSOR_MODEL]" )
         ConfigurationNode lRoot = lTestReader.GetRoot();
 
         constexpr math::vec2 lValue0 = math::vec2{ -1.0f, -1.0f };
-        REQUIRE( ( lRoot["root.fourth"].Vec( { "r", "foo" }, lValue0 ) ==  lValue0 ) );
-        REQUIRE( ( lRoot["root.fourth"].Vec( { "foo", "g" }, lValue0 ) ==  lValue0 ) );
+        REQUIRE( ( lRoot["root.fourth"].Vec( { "r", "foo" }, lValue0 ) == lValue0 ) );
+        REQUIRE( ( lRoot["root.fourth"].Vec( { "foo", "g" }, lValue0 ) == lValue0 ) );
 
         constexpr math::vec3 lValue1 = math::vec3{ -1.0f, -1.0f, -1.0f };
         REQUIRE( ( lRoot["root.fourth"].Vec( { "foo", "g", "b" }, lValue1 ) == lValue1 ) );
@@ -111,9 +113,10 @@ TEST_CASE( "Read YAML configuration", "[CORE_SENSOR_MODEL]" )
         ConfigurationNode lRoot = lTestReader.GetRoot();
 
         REQUIRE( ( lRoot.Vec( { "root.fourth.r", "root.fourth.g" }, math::vec2{ -1.0f, -1.0f } ) == math::vec2{ 12.0f, 13.0f } ) );
-        REQUIRE( ( lRoot.Vec( { "root.fourth.r", "root.fourth.g", "root.fourth.b" }, math::vec3{ -1.0f, -1.0f, -1.0f } ) == math::vec3{ 12.0f, 13.0f, 14.0f } ) );
-        REQUIRE( ( lRoot.Vec( { "root.fourth.r", "root.fourth.g", "root.fourth.b", "root.fourth.a" }, math::vec4{ -1.0f, -1.0f, -1.0f, -1.0f } ) ==
-                   math::vec4{ 12.0f, 13.0f, 14.0f, 15.0f } ) );
+        REQUIRE( ( lRoot.Vec( { "root.fourth.r", "root.fourth.g", "root.fourth.b" }, math::vec3{ -1.0f, -1.0f, -1.0f } ) ==
+                   math::vec3{ 12.0f, 13.0f, 14.0f } ) );
+        REQUIRE( ( lRoot.Vec( { "root.fourth.r", "root.fourth.g", "root.fourth.b", "root.fourth.a" },
+                       math::vec4{ -1.0f, -1.0f, -1.0f, -1.0f } ) == math::vec4{ 12.0f, 13.0f, 14.0f, 15.0f } ) );
     }
 
     SECTION( "Retrieving vectors with paths and missing elements" )
@@ -121,8 +124,8 @@ TEST_CASE( "Read YAML configuration", "[CORE_SENSOR_MODEL]" )
         ConfigurationNode lRoot = lTestReader.GetRoot();
 
         constexpr math::vec2 lValue0 = math::vec2{ -1.0f, -1.0f };
-        REQUIRE( ( lRoot["root.fourth"].Vec( { "root.fourth.r", "root.foo.r" }, lValue0 ) ==  lValue0 ) );
-        REQUIRE( ( lRoot["root.fourth"].Vec( { "root.foo.r", "root.fourth.g" }, lValue0 ) ==  lValue0 ) );
+        REQUIRE( ( lRoot["root.fourth"].Vec( { "root.fourth.r", "root.foo.r" }, lValue0 ) == lValue0 ) );
+        REQUIRE( ( lRoot["root.fourth"].Vec( { "root.foo.r", "root.fourth.g" }, lValue0 ) == lValue0 ) );
 
         constexpr math::vec3 lValue1 = math::vec3{ -1.0f, -1.0f, -1.0f };
         REQUIRE( ( lRoot["root.fourth"].Vec( { "root.foo.r", "root.fourth.g", "root.fourth.b" }, lValue1 ) == lValue1 ) );
@@ -134,23 +137,29 @@ TEST_CASE( "Read YAML configuration", "[CORE_SENSOR_MODEL]" )
         REQUIRE( ( lRoot["root.fourth"].Vec( { "root.foo.r", "root.foo.r", "root.foo.r" }, lValue1 ) == lValue1 ) );
 
         constexpr math::vec4 lValue2 = math::vec4{ -1.0f, -1.0f, -1.0f, -1.0f };
-        REQUIRE( ( lRoot["root.fourth"].Vec( { "root.foo.r", "root.fourth.g", "root.fourth.b", "root.fourth.a" }, lValue2 ) == lValue2 ) );
-        REQUIRE( ( lRoot["root.fourth"].Vec( { "root.fourth.r", "root.foo.r", "root.fourth.b", "root.fourth.a" }, lValue2 ) == lValue2 ) );
-        REQUIRE( ( lRoot["root.fourth"].Vec( { "root.fourth.r", "root.fourth.g", "root.foo.r", "root.fourth.a" }, lValue2 ) == lValue2 ) );
-        REQUIRE( ( lRoot["root.fourth"].Vec( { "root.fourth.r", "root.fourth.g", "root.fourth.b", "root.foo.r" }, lValue2 ) == lValue2 ) );
-        REQUIRE( ( lRoot["root.fourth"].Vec( { "root.foo.r", "root.foo.r", "root.fourth.b", "root.fourth.a" }, lValue2 ) == lValue2 ) );
-        REQUIRE( ( lRoot["root.fourth"].Vec( { "root.foo.r", "root.fourth.g", "root.foo.r", "root.fourth.a" }, lValue2 ) == lValue2 ) );
-        REQUIRE( ( lRoot["root.fourth"].Vec( { "root.foo.r", "root.fourth.g", "root.fourth.b", "root.foo.r" }, lValue2 ) == lValue2 ) );
+        REQUIRE(
+            ( lRoot["root.fourth"].Vec( { "root.foo.r", "root.fourth.g", "root.fourth.b", "root.fourth.a" }, lValue2 ) == lValue2 ) );
+        REQUIRE(
+            ( lRoot["root.fourth"].Vec( { "root.fourth.r", "root.foo.r", "root.fourth.b", "root.fourth.a" }, lValue2 ) == lValue2 ) );
+        REQUIRE(
+            ( lRoot["root.fourth"].Vec( { "root.fourth.r", "root.fourth.g", "root.foo.r", "root.fourth.a" }, lValue2 ) == lValue2 ) );
+        REQUIRE(
+            ( lRoot["root.fourth"].Vec( { "root.fourth.r", "root.fourth.g", "root.fourth.b", "root.foo.r" }, lValue2 ) == lValue2 ) );
+        REQUIRE(
+            ( lRoot["root.fourth"].Vec( { "root.foo.r", "root.foo.r", "root.fourth.b", "root.fourth.a" }, lValue2 ) == lValue2 ) );
+        REQUIRE(
+            ( lRoot["root.fourth"].Vec( { "root.foo.r", "root.fourth.g", "root.foo.r", "root.fourth.a" }, lValue2 ) == lValue2 ) );
+        REQUIRE(
+            ( lRoot["root.fourth"].Vec( { "root.foo.r", "root.fourth.g", "root.fourth.b", "root.foo.r" }, lValue2 ) == lValue2 ) );
         REQUIRE( ( lRoot["root.fourth"].Vec( { "root.foo.r", "root.foo.r", "root.foo.r", "root.fourth.a" }, lValue2 ) == lValue2 ) );
         REQUIRE( ( lRoot["root.fourth"].Vec( { "root.foo.r", "root.foo.r", "root.fourth.b", "root.foo.r" }, lValue2 ) == lValue2 ) );
         REQUIRE( ( lRoot["root.fourth"].Vec( { "root.foo.r", "root.foo.r", "root.foo.r", "root.foo.r" }, lValue2 ) == lValue2 ) );
     }
 
-
     SECTION( "Iterating over mappings" )
     {
-        ConfigurationNode lRoot                = lTestReader.GetRoot();
-        std::vector<std::string> lKeys              = {};
+        ConfigurationNode              lRoot   = lTestReader.GetRoot();
+        std::vector<std::string>       lKeys   = {};
         std::vector<ConfigurationNode> lValues = {};
 
         lRoot["root"].ForEach<std::string>(
@@ -166,10 +175,11 @@ TEST_CASE( "Read YAML configuration", "[CORE_SENSOR_MODEL]" )
 
     SECTION( "Iterating over sequences" )
     {
-        ConfigurationNode lRoot  = lTestReader.GetRoot();
+        ConfigurationNode     lRoot   = lTestReader.GetRoot();
         std::vector<uint32_t> lValues = {};
 
-        lRoot["root.second.seq"].ForEach( [&]( ConfigurationNode &aValue ) { lValues.push_back( aValue.As<uint32_t>( 100000000 ) ); } );
+        lRoot["root.second.seq"].ForEach(
+            [&]( ConfigurationNode &aValue ) { lValues.push_back( aValue.As<uint32_t>( 100000000 ) ); } );
 
         REQUIRE( lValues == std::vector<uint32_t>{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 } );
     }
