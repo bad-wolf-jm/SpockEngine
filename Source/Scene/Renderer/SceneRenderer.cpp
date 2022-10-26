@@ -92,7 +92,7 @@ namespace LTSE::Core
     {
         MeshRendererCreateInfo l_CreateInfo;
 
-        l_CreateInfo.Opaque         = ( a_PipelineSpecification.Type == MaterialType::Opaque );
+        l_CreateInfo.Opaque         = ( a_PipelineSpecification.Type == eCMaterialType::Opaque );
         l_CreateInfo.IsTwoSided     = a_PipelineSpecification.IsTwoSided;
         l_CreateInfo.LineWidth      = a_PipelineSpecification.LineWidth;
         l_CreateInfo.VertexShader   = "Shaders\\PBRMeshShader.vert.spv";

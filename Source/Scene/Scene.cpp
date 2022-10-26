@@ -63,7 +63,7 @@ namespace LTSE::Core
         Environment.Add<sBackgroundComponent>();
 
         Root = m_Registry.CreateEntityWithRelationship( "WorldRoot" );
-        Root.Add<NodeTransformComponent>();
+        Root.Add<sNodeTransformComponent>();
 
         InitializeRayTracing();
         ConnectSignalHandlers();
@@ -105,7 +105,7 @@ namespace LTSE::Core
         {
             auto lClonedEntity = lClonedEntities[lUUID];
 
-            CopyComponent<NodeTransformComponent>( lEntity, lClonedEntity );
+            CopyComponent<sNodeTransformComponent>( lEntity, lClonedEntity );
             CopyComponent<sTransformMatrixComponent>( lEntity, lClonedEntity );
             CopyComponent<sAnimatedTransformComponent>( lEntity, lClonedEntity );
 
@@ -204,7 +204,7 @@ namespace LTSE::Core
             Cuda::GPUExternalMemory( *mTransformedVertexBuffer, mTransformedVertexBuffer->SizeAs<uint8_t>() );
 
         uint32_t lTransformCount = 0;
-        aSource->ForEach<NodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
+        aSource->ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
 
         uint32_t lStaticMeshCount = 0;
         aSource->ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aUUID ) { lStaticMeshCount++; } );
@@ -246,9 +246,9 @@ namespace LTSE::Core
     {
         auto &lParent = aComponent.mParent;
 
-        if( !( aEntity.Has<NodeTransformComponent>() ) ) return;
+        if( !( aEntity.Has<sNodeTransformComponent>() ) ) return;
 
-        auto &lLocalTransform = aEntity.Get<NodeTransformComponent>();
+        auto &lLocalTransform = aEntity.Get<sNodeTransformComponent>();
 
         if( lParent && lParent.Has<sTransformMatrixComponent>() )
         {
@@ -259,7 +259,7 @@ namespace LTSE::Core
         }
     }
 
-    void Scene::UpdateLocalTransform( Entity const &aEntity, NodeTransformComponent const &aComponent )
+    void Scene::UpdateLocalTransform( Entity const &aEntity, sNodeTransformComponent const &aComponent )
     {
         if( !aEntity.Has<sRelationshipComponent>() ) return;
 
@@ -279,9 +279,9 @@ namespace LTSE::Core
 
         for( auto lChild : aEntity.Get<sRelationshipComponent>().mChildren )
         {
-            if( lChild.Has<NodeTransformComponent>() )
+            if( lChild.Has<sNodeTransformComponent>() )
             {
-                lChild.AddOrReplace<sTransformMatrixComponent>( aComponent.Matrix * lChild.Get<NodeTransformComponent>().mMatrix );
+                lChild.AddOrReplace<sTransformMatrixComponent>( aComponent.Matrix * lChild.Get<sNodeTransformComponent>().mMatrix );
 
                 UpdateTransformMatrix( lChild, lChild.Get<sTransformMatrixComponent>() );
             }
@@ -369,7 +369,7 @@ namespace LTSE::Core
         Environment.Add<sBackgroundComponent>();
 
         Root = m_Registry.CreateEntityWithRelationship( "WorldRoot" );
-        Root.Add<NodeTransformComponent>();
+        Root.Add<sNodeTransformComponent>();
     }
 
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform )
@@ -509,14 +509,14 @@ namespace LTSE::Core
     }
 
     template <>
-    void ReadComponent<NodeTransformComponent>(
+    void ReadComponent<sNodeTransformComponent>(
         Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
-        if( !aNode["LocalTransformComponent"].IsNull() )
+        if( !aNode["sLocalTransformComponent"].IsNull() )
         {
-            auto &lComponent = aEntity.Add<NodeTransformComponent>();
+            auto &lComponent = aEntity.Add<sNodeTransformComponent>();
 
-            ReadMatrix( lComponent.mMatrix, aNode["LocalTransformComponent"]["mMatrix"] );
+            ReadMatrix( lComponent.mMatrix, aNode["sLocalTransformComponent"]["mMatrix"] );
         }
     }
 
@@ -661,7 +661,7 @@ namespace LTSE::Core
             auto &lComponent = aEntity.Add<sMaterialShaderComponent>();
             auto &lData      = aNode["sMaterialShaderComponent"];
 
-            lComponent.Type              = static_cast<MaterialType>( lData["Type"].As<uint8_t>( 0 ) );
+            lComponent.Type              = static_cast<eCMaterialType>( lData["Type"].As<uint8_t>( 0 ) );
             lComponent.IsTwoSided        = lData["IsTwoSided"].As<bool>( true );
             lComponent.UseAlphaMask      = lData["UseAlphaMask"].As<bool>( true );
             lComponent.LineWidth         = lData["LineWidth"].As<float>( 1.0f );
@@ -849,7 +849,7 @@ namespace LTSE::Core
                 ReadComponent<sAnimationChooser>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sAnimationComponent>( lEntity, lEntityConfiguration, lEntities, lInterpolationData );
                 ReadComponent<sAnimatedTransformComponent>( lEntity, lEntityConfiguration, lEntities );
-                ReadComponent<NodeTransformComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sNodeTransformComponent>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sTransformMatrixComponent>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sStaticMeshComponent>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sSkeletonComponent>( lEntity, lEntityConfiguration, lEntities );
@@ -884,7 +884,7 @@ namespace LTSE::Core
         LTSE::Logging::Info( "Created camera", lDefaultCameraUUID );
 
         uint32_t lTransformCount = 0;
-        ForEach<NodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
+        ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
 
         uint32_t lStaticMeshCount = 0;
         ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aUUID ) { lStaticMeshCount++; } );
@@ -910,7 +910,7 @@ namespace LTSE::Core
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name )
     {
         auto l_AssetEntity = m_Registry.CreateEntity( Root, a_Name );
-        l_AssetEntity.Add<NodeTransformComponent>( aTransform );
+        l_AssetEntity.Add<sNodeTransformComponent>( aTransform );
 
         std::vector<uint32_t> lTextureIds = {};
         for( auto &lTexture : aModelData->mTextures )
@@ -957,7 +957,7 @@ namespace LTSE::Core
             lMaterialIds.push_back( lNewMaterial.mID );
 
             sMaterialShaderComponent lMaterialShader{};
-            lMaterialShader.Type              = MaterialType::Opaque;
+            lMaterialShader.Type              = eCMaterialType::Opaque;
             lMaterialShader.IsTwoSided        = lMaterial.mConstants.mIsTwoSided;
             lMaterialShader.UseAlphaMask      = true;
             lMaterialShader.LineWidth         = 1.0f;
@@ -1004,7 +1004,7 @@ namespace LTSE::Core
             l_MeshEntity.Add<sStaticMeshComponent>( l_MeshComponent );
             l_MeshEntity.Add<sMaterialComponent>( lMaterialIds[lMesh.mMaterialID] );
             l_MeshEntity.Add<sMaterialShaderComponent>( lMaterialCreateInfo[lMesh.mMaterialID] );
-            l_MeshEntity.Add<NodeTransformComponent>( math::mat4( 1.0f ) );
+            l_MeshEntity.Add<sNodeTransformComponent>( math::mat4( 1.0f ) );
 
             lVertexData.insert( lVertexData.end(), lVertices.begin(), lVertices.end() );
             lIndexData.insert( lIndexData.end(), lMesh.mIndices.begin(), lMesh.mIndices.end() );
@@ -1046,7 +1046,7 @@ namespace LTSE::Core
             Cuda::GPUExternalMemory( *mTransformedVertexBuffer, mTransformedVertexBuffer->SizeAs<uint8_t>() );
 
         uint32_t lTransformCount = 0;
-        ForEach<NodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
+        ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
 
         uint32_t lStaticMeshCount = 0;
         ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aUUID ) { lStaticMeshCount++; } );
@@ -1059,7 +1059,7 @@ namespace LTSE::Core
         for( auto &lNode : aModelData->mNodes )
         {
             auto l_NodeEntity = m_Registry.CreateEntityWithRelationship( lNode.mName );
-            l_NodeEntity.Add<NodeTransformComponent>( lNode.mTransform );
+            l_NodeEntity.Add<sNodeTransformComponent>( lNode.mTransform );
 
             lNodes.push_back( l_NodeEntity );
         }
@@ -1137,15 +1137,15 @@ namespace LTSE::Core
                 lAnimationChannel.mInterpolation = lAnimation.mSamplers[lAnimation.mChannels[lAnimationChannelIndex].mSamplerIndex];
                 lAnimationChannel.mTargetNode    = lNodes[lAnimation.mChannels[lAnimationChannelIndex].mNodeID];
                 lAnimationChannel.mTargetNode.TryAdd<sAnimatedTransformComponent>();
-                lAnimationChannel.mTargetNode.TryAdd<StaticTransformComponent>(
-                    lAnimationChannel.mTargetNode.Get<NodeTransformComponent>().mMatrix );
+                lAnimationChannel.mTargetNode.TryAdd<sStaticTransformComponent>(
+                    lAnimationChannel.mTargetNode.Get<sNodeTransformComponent>().mMatrix );
 
                 l_AnimationComponent.mChannels.push_back( lAnimationChannel );
             }
         }
 
-        // ForEach<NodeTransformComponent>(
-        //     [&]( auto aEntity, auto &aComponent ) { aEntity.AddOrReplace<LocalTransformComponent>( aComponent.mMatrix ); }
+        // ForEach<sNodeTransformComponent>(
+        //     [&]( auto aEntity, auto &aComponent ) { aEntity.AddOrReplace<sLocalTransformComponent>( aComponent.mMatrix ); }
         //     );
 
         return l_AssetEntity;
@@ -1171,7 +1171,7 @@ namespace LTSE::Core
         if( mState != eSceneState::EDITING ) return;
 
         ForEach<sAnimatedTransformComponent>( [=]( auto l_Entity, auto &l_Component )
-            { l_Entity.AddOrReplace<StaticTransformComponent>( l_Entity.Get<NodeTransformComponent>().mMatrix ); } );
+            { l_Entity.AddOrReplace<sStaticTransformComponent>( l_Entity.Get<sNodeTransformComponent>().mMatrix ); } );
 
         // Initialize native scripts
         ForEach<sBehaviourComponent>(
@@ -1196,7 +1196,7 @@ namespace LTSE::Core
         if( mState != eSceneState::RUNNING ) return;
 
         ForEach<sAnimatedTransformComponent>( [=]( auto l_Entity, auto &l_Component )
-            { l_Entity.AddOrReplace<NodeTransformComponent>( l_Entity.Get<StaticTransformComponent>().Matrix ); } );
+            { l_Entity.AddOrReplace<sNodeTransformComponent>( l_Entity.Get<sStaticTransformComponent>().Matrix ); } );
 
         // Destroy scripts
         ForEach<sBehaviourComponent>(
@@ -1299,7 +1299,7 @@ namespace LTSE::Core
                     math::mat4 lTranslation = math::Translation( l_Component.Translation );
                     math::mat4 lScale       = math::Scaling( l_Component.Scaling );
 
-                    l_ElementToProcess.AddOrReplace<NodeTransformComponent>( lTranslation * lRotation * lScale );
+                    l_ElementToProcess.AddOrReplace<sNodeTransformComponent>( lTranslation * lRotation * lScale );
                 } );
         }
 
@@ -1312,15 +1312,15 @@ namespace LTSE::Core
 
             for( auto l_Child : l_ElementToProcess.Get<sRelationshipComponent>().mChildren ) l_UpdateQueue.push( l_Child );
 
-            if( l_ElementToProcess.Has<NodeTransformComponent>() )
-                l_ElementToProcess.AddOrReplace<sTransformMatrixComponent>( l_ElementToProcess.Get<NodeTransformComponent>().mMatrix );
+            if( l_ElementToProcess.Has<sNodeTransformComponent>() )
+                l_ElementToProcess.AddOrReplace<sTransformMatrixComponent>( l_ElementToProcess.Get<sNodeTransformComponent>().mMatrix );
 
             if( !( l_ElementToProcess.Get<sRelationshipComponent>().mParent ) ) continue;
 
             if( !( l_ElementToProcess.Get<sRelationshipComponent>().mParent.Has<sTransformMatrixComponent>() ) ) continue;
 
             auto l_Parent = l_ElementToProcess.Get<sRelationshipComponent>().mParent;
-            if( !( l_ElementToProcess.Has<NodeTransformComponent>() ) && !( l_ElementToProcess.Has<sAnimatedTransformComponent>() ) )
+            if( !( l_ElementToProcess.Has<sNodeTransformComponent>() ) && !( l_ElementToProcess.Has<sAnimatedTransformComponent>() ) )
             {
                 l_ElementToProcess.AddOrReplace<sTransformMatrixComponent>( l_Parent.Get<sTransformMatrixComponent>().Matrix );
             }
@@ -1532,7 +1532,7 @@ namespace LTSE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, NodeTransformComponent const &aComponent )
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sNodeTransformComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
@@ -1816,7 +1816,7 @@ namespace LTSE::Core
                             }
 
                             WriteComponent<sAnimatedTransformComponent>( lOut, "sAnimatedTransformComponent", aEntity );
-                            WriteComponent<NodeTransformComponent>( lOut, "LocalTransformComponent", aEntity );
+                            WriteComponent<sNodeTransformComponent>( lOut, "sLocalTransformComponent", aEntity );
                             WriteComponent<sTransformMatrixComponent>( lOut, "sTransformMatrixComponent", aEntity );
                             WriteComponent<sStaticMeshComponent>( lOut, "sStaticMeshComponent", aEntity );
                             WriteComponent<sParticleSystemComponent>( lOut, "sParticleSystemComponent", aEntity );

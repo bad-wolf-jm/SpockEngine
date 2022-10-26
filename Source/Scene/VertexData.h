@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Math/Types.h"
-#include "Core/Types.h"
+// #include "Core/Types.h"
 
 #ifndef __CUDACC__
 #    include "Core/GraphicContext//GraphicsPipeline.h"

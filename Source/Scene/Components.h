@@ -98,16 +98,16 @@ namespace LTSE::Core::EntityComponentSystem::Components
         sAnimatedTransformComponent( const sAnimatedTransformComponent & ) = default;
     };
 
-    struct NodeTransformComponent
+    struct sNodeTransformComponent
     {
         math::mat4 mMatrix;
 
-        NodeTransformComponent()
+        sNodeTransformComponent()
             : mMatrix( math::mat4( 1.0f ) )
         {
         }
-        NodeTransformComponent( const NodeTransformComponent & ) = default;
-        NodeTransformComponent( math::mat4 a_Matrix )
+        sNodeTransformComponent( const sNodeTransformComponent & ) = default;
+        sNodeTransformComponent( math::mat4 a_Matrix )
             : mMatrix{ a_Matrix }
         {
         }
@@ -122,7 +122,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
                 math::degrees( atan2f( lMatrix[0][1], lMatrix[0][0] ) ) };
         }
 
-        NodeTransformComponent( math::vec3 a_Position, math::vec3 a_Rotation, math::vec3 a_Scaling )
+        sNodeTransformComponent( math::vec3 a_Position, math::vec3 a_Rotation, math::vec3 a_Scaling )
         {
             math::mat4 rot = math::Rotation( math::radians( a_Rotation.z ), math::z_axis() ) *
                              math::Rotation( math::radians( a_Rotation.y ), math::y_axis() ) *
@@ -141,13 +141,13 @@ namespace LTSE::Core::EntityComponentSystem::Components
         }
     };
 
-    struct LocalTransformComponent
+    struct sLocalTransformComponent
     {
         math::mat4 mMatrix = math::mat4( 1.0f );
 
-        LocalTransformComponent()                                  = default;
-        LocalTransformComponent( const LocalTransformComponent & ) = default;
-        LocalTransformComponent( math::mat4 a_Matrix ) { mMatrix = a_Matrix; };
+        sLocalTransformComponent()                                   = default;
+        sLocalTransformComponent( const sLocalTransformComponent & ) = default;
+        sLocalTransformComponent( math::mat4 a_Matrix ) { mMatrix = a_Matrix; };
     };
 
     struct sTransformMatrixComponent
@@ -159,23 +159,14 @@ namespace LTSE::Core::EntityComponentSystem::Components
         sTransformMatrixComponent( math::mat4 a_Matrix ) { Matrix = a_Matrix; };
     };
 
-    struct StaticTransformComponent
+    struct sStaticTransformComponent
     {
         math::mat4 Matrix = math::mat4( 1.0f );
 
-        StaticTransformComponent()                                   = default;
-        StaticTransformComponent( const StaticTransformComponent & ) = default;
-        StaticTransformComponent( math::mat4 a_Matrix ) { Matrix = a_Matrix; };
+        sStaticTransformComponent()                                    = default;
+        sStaticTransformComponent( const sStaticTransformComponent & ) = default;
+        sStaticTransformComponent( math::mat4 a_Matrix ) { Matrix = a_Matrix; };
     };
-
-    // struct NodeTransformComponent
-    // {
-    //     math::mat4 Matrix = math::mat4( 1.0f );
-
-    //     NodeTransformComponent()                                   = default;
-    //     NodeTransformComponent( const NodeTransformComponent & ) = default;
-    //     NodeTransformComponent( math::mat4 a_Matrix ) { Matrix = a_Matrix; };
-    // };
 
     struct sStaticMeshComponent
     {
@@ -235,8 +226,6 @@ namespace LTSE::Core::EntityComponentSystem::Components
     struct sWireframeMeshComponent
     {
         uint32_t VertexCount = 0;
-        // Ref<Buffer> VertexBuffer = nullptr;
-        // Ref<Buffer> IndexBuffer  = nullptr;
 
         sWireframeMeshComponent()                                  = default;
         sWireframeMeshComponent( const sWireframeMeshComponent & ) = default;
@@ -248,8 +237,6 @@ namespace LTSE::Core::EntityComponentSystem::Components
         bool     Solid       = false;
         vec4     Color       = 0xffffffff_rgbaf;
         uint32_t VertexCount = 0;
-        // Ref<Buffer> VertexBuffer = nullptr;
-        // Ref<Buffer> IndexBuffer  = nullptr;
 
         sBoundingBoxComponent()                                = default;
         sBoundingBoxComponent( const sBoundingBoxComponent & ) = default;
@@ -258,8 +245,6 @@ namespace LTSE::Core::EntityComponentSystem::Components
     struct sRayTracingTargetComponent
     {
         math::mat4 Transform;
-        // GPUMemory  Vertices;
-        // GPUMemory  Indices;
 
         sRayTracingTargetComponent()                                     = default;
         sRayTracingTargetComponent( const sRayTracingTargetComponent & ) = default;
@@ -273,28 +258,20 @@ namespace LTSE::Core::EntityComponentSystem::Components
         sMaterialComponent( const sMaterialComponent & ) = default;
     };
 
-    enum class MaterialType : uint8_t
+    enum class eCMaterialType : uint8_t
     {
         Opaque,
         Mask,
         Blend
     };
 
-    // struct RendererComponent
-    // {
-    //     Entity Material;
-
-    //     RendererComponent()                            = default;
-    //     RendererComponent( const RendererComponent & ) = default;
-    // };
-
     struct sMaterialShaderComponent
     {
-        MaterialType Type              = MaterialType::Opaque;
-        bool         IsTwoSided        = false;
-        bool         UseAlphaMask      = true;
-        float        LineWidth         = 1.0f;
-        float        AlphaMaskTheshold = 0.5;
+        eCMaterialType Type              = eCMaterialType::Opaque;
+        bool          IsTwoSided        = false;
+        bool          UseAlphaMask      = true;
+        float         LineWidth         = 1.0f;
+        float         AlphaMaskTheshold = 0.5;
 
         sMaterialShaderComponent()                                   = default;
         sMaterialShaderComponent( const sMaterialShaderComponent & ) = default;
@@ -317,7 +294,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         sAmbientLightingComponent( const sAmbientLightingComponent & ) = default;
     };
 
-    enum class LightType : uint32_t
+    enum class eLightType : uint32_t
     {
         DIRECTIONAL = 0,
         SPOTLIGHT   = 1,

@@ -112,7 +112,7 @@ namespace LTSE::Editor
         return false;
     }
 
-    static bool EditComponent( NodeTransformComponent &a_Component )
+    static bool EditComponent( sNodeTransformComponent &a_Component )
     {
         math::vec3 l_Position = a_Component.GetTranslation();
         math::vec3 l_Rotation = a_Component.GetEulerRotation();
@@ -122,7 +122,7 @@ namespace LTSE::Editor
         UI::VectorComponentEditor( "Rotation:", l_Rotation, 0.0, 100 );
         UI::VectorComponentEditor( "Scale:", l_Scale, 1.0, 100 );
 
-        a_Component.mMatrix = NodeTransformComponent( l_Position, l_Rotation, l_Scale ).mMatrix;
+        a_Component.mMatrix = sNodeTransformComponent( l_Position, l_Rotation, l_Scale ).mMatrix;
         return false;
     }
 
@@ -225,15 +225,15 @@ namespace LTSE::Editor
 
     static bool EditComponent( LTSE::Graphics::GraphicContext aGraphicContext, sLightComponent &a_Component )
     {
-        static UI::ComboBox<LightType> l_PrimitiveChooser( "##combo_light_type_chooser" );
+        static UI::ComboBox<eLightType> l_PrimitiveChooser( "##combo_light_type_chooser" );
         l_PrimitiveChooser.Labels = { "Directional light", "Point light", "Spotlight" };
-        l_PrimitiveChooser.Values = { LightType::DIRECTIONAL, LightType::POINT_LIGHT, LightType::SPOTLIGHT };
+        l_PrimitiveChooser.Values = { eLightType::DIRECTIONAL, eLightType::POINT_LIGHT, eLightType::SPOTLIGHT };
 
         l_PrimitiveChooser.Display();
 
         switch( l_PrimitiveChooser.GetValue() )
         {
-        case LightType::POINT_LIGHT:
+        case eLightType::POINT_LIGHT:
         {
             if( l_PrimitiveChooser.Changed )
             {
@@ -254,7 +254,7 @@ namespace LTSE::Editor
             EditComponent( a_Component.Light.Get<sPointLightComponent>() );
         }
         break;
-        case LightType::SPOTLIGHT:
+        case eLightType::SPOTLIGHT:
         {
             if( l_PrimitiveChooser.Changed )
             {
@@ -275,7 +275,7 @@ namespace LTSE::Editor
             EditComponent( a_Component.Light.Get<sSpotlightComponent>() );
         }
         break;
-        case LightType::DIRECTIONAL:
+        case eLightType::DIRECTIONAL:
         default:
         {
             if( l_PrimitiveChooser.Changed )
@@ -328,9 +328,9 @@ namespace LTSE::Editor
 
         if( ImGui::BeginPopup( "##add_component" ) )
         {
-            if( ImGui::MenuItem( "Transform component", NULL, false, !ElementToEdit.Has<NodeTransformComponent>() ) )
+            if( ImGui::MenuItem( "Transform component", NULL, false, !ElementToEdit.Has<sNodeTransformComponent>() ) )
             {
-                ElementToEdit.Add<NodeTransformComponent>();
+                ElementToEdit.Add<sNodeTransformComponent>();
             }
             ImGui::Separator();
             if( ImGui::MenuItem( "Static mesh component", NULL, false, !ElementToEdit.Has<sStaticMeshComponent>() ) )
@@ -369,7 +369,7 @@ namespace LTSE::Editor
 
         if( ImGui::CollapsingHeader( "Transform", l_Flags ) )
         {
-            ElementToEdit.IfExists<NodeTransformComponent>( [&]( auto &l_Component ) { EditComponent( l_Component ); } );
+            ElementToEdit.IfExists<sNodeTransformComponent>( [&]( auto &l_Component ) { EditComponent( l_Component ); } );
         }
 
         if( ImGui::CollapsingHeader( "Mesh", l_Flags ) )

@@ -1051,7 +1051,7 @@ namespace LTSE::Editor
 
         //     if( Sensor )
         //     {
-        //         auto &lSensorTransform = Sensor.Get<NodeTransformComponent>();
+        //         auto &lSensorTransform = Sensor.Get<sNodeTransformComponent>();
         //         math::vec3 lRotation   = lSensorTransform.GetEulerRotation();
         //         math::vec3 lPosition   = lSensorTransform.GetTranslation();
         //         bool lPositionChanged  = false;
@@ -1074,7 +1074,7 @@ namespace LTSE::Editor
 
         //         if( lPositionChanged || lRotationChanged )
 
-        //             Sensor.Replace<NodeTransformComponent>( lPosition, lRotation, math::vec3{ 1.0f } );
+        //             Sensor.Replace<sNodeTransformComponent>( lPosition, lRotation, math::vec3{ 1.0f } );
 
         //             Sensor.Replace<sLocalTransformComponent>( lPosition, lRotation, math::vec3{ 1.0f } );
         //         l_DrawList->AddRectFilled( l_TopLeft, l_BottomRight, IM_COL32( 5, 5, 5, 255 ) );
@@ -1203,7 +1203,7 @@ namespace LTSE::Editor
 
     void EditorWindow::ClearScene()
     {
-        // auto lSensorTransform    = Sensor.TryGet<NodeTransformComponent>( NodeTransformComponent{ math::mat4( 1.0f ) }
+        // auto lSensorTransform    = Sensor.TryGet<sNodeTransformComponent>( sNodeTransformComponent{ math::mat4( 1.0f ) }
         // ); auto lEnvironmentSampler = Sensor.TryGet<EnvironmentSampler::sCreateInfo>( EnvironmentSampler::sCreateInfo{} );
         // AcquisitionSpecification lAcqCreateInfo{};
         // lAcqCreateInfo.mBasePoints     = 100;
@@ -1216,7 +1216,7 @@ namespace LTSE::Editor
 
         // // Add sensor entity to the scene
         // Sensor = World->Create( "Sensor", World->Root );
-        // Sensor.Add<NodeTransformComponent>( lSensorTransform );
+        // Sensor.Add<sNodeTransformComponent>( lSensorTransform );
         // Sensor.Add<sLocalTransformComponent>( lSensorTransform );
         // Sensor.Add<EnvironmentSampler::sCreateInfo>( lEnvironmentSampler );
         // // Add a particle system to the sensor to display the point cloud
@@ -1372,11 +1372,11 @@ namespace LTSE::Editor
             l_Manipulator.ViewportSize     = l3DViewSize;
 
             if( m_SceneHierarchyPanel.SelectedElement &&
-                m_SceneHierarchyPanel.SelectedElement.Has<NodeTransformComponent>() )
+                m_SceneHierarchyPanel.SelectedElement.Has<sNodeTransformComponent>() )
             {
-                auto& lSensorTransform = m_SceneHierarchyPanel.SelectedElement.Get<NodeTransformComponent>();
+                auto& lSensorTransform = m_SceneHierarchyPanel.SelectedElement.Get<sNodeTransformComponent>();
                 Manipulate( l_Manipulator, lSensorTransform.mMatrix );
-                m_SceneHierarchyPanel.SelectedElement.Replace<NodeTransformComponent>( lSensorTransform );
+                m_SceneHierarchyPanel.SelectedElement.Replace<sNodeTransformComponent>( lSensorTransform );
             }
 
             if( !ImGui::GetDragDropPayload() && ImGui::IsItemHovered() && !ImGuizmo::IsUsing() && !lViewLanipulate )

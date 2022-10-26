@@ -7,17 +7,17 @@
 #include <string>
 #include <vector>
 
-
 // #include <glm/glm.hpp>
 // #include <glm/gtx/dual_quaternion.hpp>
 // #include <glm/gtc/type_ptr.hpp>
 
-template <class T, typename std::underlying_type<T>::type fullValue> class EnumSet
+template <class T, typename std::underlying_type<T>::type fullValue>
+class EnumSet
 {
     static_assert( std::is_enum<T>::value, "EnumSet type must be strongly typed enum" );
 
   public:
-    typedef T Type; /**< @brief Enum type */
+    typedef T                                      Type; /**< @brief Enum type */
     typedef typename std::underlying_type<T>::type UnderlyingType;
 
     enum : UnderlyingType
@@ -37,8 +37,7 @@ template <class T, typename std::underlying_type<T>::type fullValue> class EnumS
             return;
         }
         UnderlyingType l_Value{};
-        for( auto i : a_Init )
-            l_Value |= ( (UnderlyingType)i );
+        for( auto i : a_Init ) l_Value |= ( (UnderlyingType)i );
         value = l_Value;
     }
     constexpr EnumSet( T value )
@@ -58,7 +57,10 @@ template <class T, typename std::underlying_type<T>::type fullValue> class EnumS
 
     constexpr bool operator<=( EnumSet<T, fullValue> other ) const { return ( *this & other ) == *this; }
 
-    constexpr EnumSet<T, fullValue> operator|( EnumSet<T, fullValue> other ) const { return EnumSet<T, fullValue>( value | other.value ); }
+    constexpr EnumSet<T, fullValue> operator|( EnumSet<T, fullValue> other ) const
+    {
+        return EnumSet<T, fullValue>( value | other.value );
+    }
 
     constexpr EnumSet<T, fullValue> operator|( T other ) const { return EnumSet<T, fullValue>( value | other ); }
 
@@ -68,7 +70,10 @@ template <class T, typename std::underlying_type<T>::type fullValue> class EnumS
         return *this;
     }
 
-    constexpr EnumSet<T, fullValue> operator&( EnumSet<T, fullValue> other ) const { return EnumSet<T, fullValue>( value & other.value ); }
+    constexpr EnumSet<T, fullValue> operator&( EnumSet<T, fullValue> other ) const
+    {
+        return EnumSet<T, fullValue>( value & other.value );
+    }
 
     EnumSet<T, fullValue> &operator&=( EnumSet<T, fullValue> other )
     {
@@ -76,7 +81,10 @@ template <class T, typename std::underlying_type<T>::type fullValue> class EnumS
         return *this;
     }
 
-    constexpr EnumSet<T, fullValue> operator^( EnumSet<T, fullValue> other ) const { return EnumSet<T, fullValue>( value ^ other.value ); }
+    constexpr EnumSet<T, fullValue> operator^( EnumSet<T, fullValue> other ) const
+    {
+        return EnumSet<T, fullValue>( value ^ other.value );
+    }
 
     EnumSet<T, fullValue> &operator^=( EnumSet<T, fullValue> other )
     {
