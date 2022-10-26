@@ -1,5 +1,5 @@
 #include "AssetFile.h"
-
+#include "Core/Logging.h"
 namespace LTSE::Core
 {
     static constexpr uint8_t sFileMagic[] = { '@', '%', 'S', 'P', 'O', 'C', 'K', 'E', 'N', 'G', 'I', 'N', 'E', '_', 'S', 'C', 'E', 'N',
@@ -265,8 +265,12 @@ namespace LTSE::Core
         std::memcpy( lPtr, aMaterialData.mInputs.data(), aMaterialData.mInputs.size() * sizeof( float ) );
         lPtr += aMaterialData.mInputs.size() * sizeof( float );
 
-        std::memcpy( lPtr, aMaterialData.mInputs.data(), aMaterialData.mOutputsVec4.size() * sizeof( math::vec4 ) );
-        lPtr += aMaterialData.mOutputsVec4.size() * sizeof( float );
+        uint32_t lOutputLength = aMaterialData.mOutputsVec4.size();
+        std::memcpy( lPtr, &lOutputLength, sizeof( uint32_t ) );
+        lPtr += sizeof( uint32_t );
+
+        std::memcpy( lPtr, aMaterialData.mOutputsVec4.data(), aMaterialData.mOutputsVec4.size() * sizeof( math::vec4 ) );
+        lPtr += aMaterialData.mOutputsVec4.size() * sizeof( math::vec4 );
 
         return lPacket;
     }
@@ -285,6 +289,8 @@ namespace LTSE::Core
 
         auto lOutputSize           = Read<uint32_t>();
         aMaterialData.mOutputsVec4 = Read<math::vec4>( lOutputSize );
+
+        LTSE::Logging::Info("{}", aIndex);
     }
 
 } // namespace LTSE::Core

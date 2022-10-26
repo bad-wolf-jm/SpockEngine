@@ -444,6 +444,7 @@ namespace LTSE::Core
                     Entity      lAnimationNode = aEntities[lAnimationUUID];
 
                     lComponent.Animations.push_back( lAnimationNode );
+                    LTSE::Logging::Info( "ANIMATION {}", lAnimationUUID );
                 } );
         }
     }
@@ -455,18 +456,22 @@ namespace LTSE::Core
         if( !aNode["sAnimationComponent"].IsNull() )
         {
             auto &lComponent     = aEntity.Add<sAnimationComponent>();
-            lComponent.Duration  = aNode["Duration"]["Pitch"].As<float>( 0.0f );
+            lComponent.Duration  = aNode["sAnimationComponent"]["Duration"].As<float>( 0.0f );
             lComponent.mChannels = std::vector<sAnimationChannel>{};
 
             aNode["sAnimationComponent"]["mChannels"].ForEach(
-                [&]( ConfigurationNode &aNode )
+                [&]( ConfigurationNode &aInterpolationDataNode )
                 {
                     sAnimationChannel lNewChannel{};
-                    std::string       lTargetNodeUUID = aNode["mTargetNode"].As<std::string>( "" );
+                    std::string       lTargetNodeUUID = aInterpolationDataNode["mTargetNode"].As<std::string>( "" );
 
                     lNewChannel.mTargetNode = aEntities[lTargetNodeUUID];
-                    lNewChannel.mChannelID  = static_cast<sImportedAnimationChannel::Channel>( aNode["mChannelID"].As<uint32_t>( 0 ) );
-                    lNewChannel.mInterpolation = aInterpolationData[aNode["mInterpolationDataIndex"].As<uint32_t>( 0 )];
+                    lNewChannel.mChannelID =
+                        static_cast<sImportedAnimationChannel::Channel>( aInterpolationDataNode["mChannelID"].As<uint32_t>( 0 ) );
+                    lNewChannel.mInterpolation =
+                        aInterpolationData[aInterpolationDataNode["mInterpolationDataIndex"].As<uint32_t>( 0 )];
+
+                    lComponent.mChannels.push_back(lNewChannel);
                 } );
         }
     }
@@ -621,7 +626,8 @@ namespace LTSE::Core
                 [&]( ConfigurationNode &aNode ) { lInverseBindMatrices.push_back( ReadMatrix( aNode ) ); } );
 
             std::vector<math::mat4> lJointMatrices{};
-            aNode["sSkeletonComponent"]["JointMatrices"].ForEach( [&]( ConfigurationNode &aNode ) { lJointMatrices.push_back( ReadMatrix( aNode ) ); } );
+            aNode["sSkeletonComponent"]["JointMatrices"].ForEach(
+                [&]( ConfigurationNode &aNode ) { lJointMatrices.push_back( ReadMatrix( aNode ) ); } );
 
             auto &lComponent               = aEntity.Add<sSkeletonComponent>();
             lComponent.BoneCount           = lBones.size();
