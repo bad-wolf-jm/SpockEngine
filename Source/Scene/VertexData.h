@@ -24,7 +24,7 @@ namespace LTSE::Core
 
     struct VertexData
     {
-        vec4 Position    = { 0.0f, 0.0f, 0.0f, 1.0f };
+        vec3 Position    = { 0.0f, 0.0f, 0.0f };
         vec3 Normal      = { 0.0f, 0.0f, 0.0f };
         vec2 TexCoords_0 = { 0.0f, 0.0f };
         vec2 TexCoords_1 = { 0.0f, 0.0f };
@@ -36,7 +36,7 @@ namespace LTSE::Core
         static LTSE::Graphics::sBufferLayout GetDefaultLayout()
         {
             return {
-                { "Position",   eBufferDataType::VEC4, 0, 0 },
+                { "Position",   eBufferDataType::VEC3, 0, 0 },
                 { "Normal",     eBufferDataType::VEC3, 0, 1 },
                 { "TexCoord_0", eBufferDataType::VEC2, 0, 2 },
                 { "TexCoord_1", eBufferDataType::VEC2, 0, 3 },
@@ -49,7 +49,7 @@ namespace LTSE::Core
 
     struct SimpleVertexData
     {
-        vec4 Position = { 0.0f, 0.0f, 0.0f, 1.0f };
+        vec3 Position = { 0.0f, 0.0f, 0.0f };
         vec3 Normal   = { 0.0f, 0.0f, 0.0f };
 
 #ifndef __CUDACC__
@@ -57,7 +57,7 @@ namespace LTSE::Core
         static LTSE::Graphics::sBufferLayout GetDefaultLayout()
         {
             return {
-                { "Position", eBufferDataType::VEC4, 0, 0 },
+                { "Position", eBufferDataType::VEC3, 0, 0 },
                 { "Normal",   eBufferDataType::VEC3, 0, 1 }
             };
         }
@@ -67,14 +67,14 @@ namespace LTSE::Core
 
     struct PositionData
     {
-        vec4 Position = { 0.0f, 0.0f, 0.0f, 1.0f };
+        vec3 Position = { 0.0f, 0.0f, 0.0f };
 
 #ifndef __CUDACC__
         // clang-format off
         static LTSE::Graphics::sBufferLayout GetDefaultLayout()
         {
             return {
-                { "Position", eBufferDataType::VEC4, 0, 0 }
+                { "Position", eBufferDataType::VEC3, 0, 0 }
             };
         }
         // clang-format on
@@ -83,7 +83,7 @@ namespace LTSE::Core
 
     struct PositionAndColorData
     {
-        vec4 Position = { 0.0f, 0.0f, 0.0f, 0.0f };
+        vec3 Position = { 0.0f, 0.0f, 0.0f };
         vec4 Color    = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 #ifndef __CUDACC__
@@ -91,7 +91,7 @@ namespace LTSE::Core
         static LTSE::Graphics::sBufferLayout GetDefaultLayout()
         {
             return {
-                { "Position", eBufferDataType::VEC4, 0, 0 },
+                { "Position", eBufferDataType::VEC3, 0, 0 },
                 { "Color", eBufferDataType::VEC4, 0, 1 }
             };
         }

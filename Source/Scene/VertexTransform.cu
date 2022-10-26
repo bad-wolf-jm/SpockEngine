@@ -34,7 +34,8 @@ namespace LTSE::Graphics
 
             aOutTransformedVertices[lObjectOffset + lVertexID] = lVertex;
 
-            aOutTransformedVertices[lObjectOffset + lVertexID].Position = lFinalTransform * lVertex.Position;
+            aOutTransformedVertices[lObjectOffset + lVertexID].Position =
+                math::vec3( lFinalTransform * math::vec4( lVertex.Position, 1.0 ) );
             aOutTransformedVertices[lObjectOffset + lVertexID].Normal =
                 normalize( transpose( inverse( mat3( lFinalTransform ) ) ) * lVertex.Normal );
         }
@@ -54,7 +55,8 @@ namespace LTSE::Graphics
 
             aOutTransformedVertices[lObjectOffset + lVertexID] = lVertex;
 
-            aOutTransformedVertices[lObjectOffset + lVertexID].Position = lTransform * lVertex.Position;
+            aOutTransformedVertices[lObjectOffset + lVertexID].Position =
+                math::vec3( lTransform * math::vec4( lVertex.Position, 1.0 ) );
             aOutTransformedVertices[lObjectOffset + lVertexID].Normal =
                 normalize( transpose( inverse( mat3( lTransform ) ) ) * lVertex.Normal );
         }

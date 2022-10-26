@@ -1,7 +1,7 @@
 #version 460
 #extension GL_EXT_nonuniform_qualifier : enable
 
-layout( location = 0 ) in vec4 inPos;
+layout( location = 0 ) in vec3 inPos;
 layout( location = 1 ) in vec3 inNormal;
 layout( location = 2 ) in vec2 inUV0;
 layout( location = 3 ) in vec2 inUV1;
@@ -75,5 +75,5 @@ void main()
     outUV0      = inUV0;
     outUV1      = inUV1;
 
-    gl_Position = ubo.projection * ubo.view * inPos;
+    gl_Position = ubo.projection * ubo.view * vec4(inPos, 1.0);
 }

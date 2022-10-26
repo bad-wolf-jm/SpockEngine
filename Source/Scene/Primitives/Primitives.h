@@ -21,7 +21,7 @@ namespace LTSE::Core::Primitives
 
     struct WireframeVertexBufferData
     {
-        std::vector<math::vec4> Vertices = {};
+        std::vector<math::vec3> Vertices = {};
         std::vector<uint32_t> Indices    = {};
 
         WireframeVertexBufferData()  = default;

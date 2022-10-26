@@ -13,7 +13,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         std::vector<SimpleVertexData> l_Result( a_Source.size() );
         for( uint32_t i = 0; i < a_Source.size(); i++ )
         {
-            l_Result[i].Position = a_Transform * a_Source[i].Position;
+            l_Result[i].Position = math::vec3( a_Transform * math::vec4( a_Source[i].Position, 1.0f ) );
             l_Result[i].Normal   = a_Source[i].Normal;
         }
 
@@ -24,15 +24,15 @@ namespace LTSE::Core::EntityComponentSystem::Components
     {
         for( uint32_t i = 0; i < a_Source.size(); i++ )
         {
-            a_Source[i].Position = a_Transform * a_Source[i].Position;
+            a_Source[i].Position = math::vec3( a_Transform * math::vec4( a_Source[i].Position, 1.0f ) );
         }
     }
 
-    static void ApplyTransform( std::vector<math::vec4> &a_Source, math::mat4 a_Transform )
+    static void ApplyTransform( std::vector<math::vec3> &a_Source, math::mat4 a_Transform )
     {
         for( uint32_t i = 0; i < a_Source.size(); i++ )
         {
-            a_Source[i] = a_Transform * a_Source[i];
+            a_Source[i] = math::vec3( a_Transform * math::vec4( a_Source[i], 1.0f ) );
         }
     }
 

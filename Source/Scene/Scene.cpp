@@ -980,7 +980,7 @@ namespace LTSE::Core
             std::vector<VertexData> lVertices( lMesh.mPositions.size() );
             for( uint32_t i = 0; i < lMesh.mPositions.size(); i++ )
             {
-                lVertices[i].Position    = math::vec4( lMesh.mPositions[i], 1.0f );
+                lVertices[i].Position    = lMesh.mPositions[i];
                 lVertices[i].Normal      = lMesh.mNormals[i];
                 lVertices[i].TexCoords_0 = lMesh.mUV0[i];
                 lVertices[i].TexCoords_1 = lMesh.mUV1[i];
