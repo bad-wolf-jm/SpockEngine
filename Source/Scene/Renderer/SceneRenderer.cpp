@@ -29,7 +29,8 @@ namespace LTSE::Core
         float l_Azimuth   = math::radians( a_Spec.Azimuth );
         float l_Elevation = math::radians( a_Spec.Elevation );
 
-        Direction = math::vec3{ math::sin( l_Elevation ) * math::cos( l_Azimuth ), math::cos( l_Elevation ), math::sin( l_Elevation ) * math::sin( l_Azimuth ) };
+        Direction = math::vec3{ math::sin( l_Elevation ) * math::cos( l_Azimuth ), math::cos( l_Elevation ),
+            math::sin( l_Elevation ) * math::sin( l_Azimuth ) };
         Color     = a_Spec.Color;
         Intensity = a_Spec.Intensity;
     }
@@ -47,21 +48,25 @@ namespace LTSE::Core
         float l_Elevation = math::radians( a_Spec.Elevation );
 
         WorldPosition   = a_Transform * math::vec4( a_Spec.Position, 1.0f );
-        LookAtDirection = math::vec3{ math::sin( l_Elevation ) * math::cos( l_Azimuth ), math::cos( l_Elevation ), math::sin( l_Elevation ) * math::sin( l_Azimuth ) };
+        LookAtDirection = math::vec3{ math::sin( l_Elevation ) * math::cos( l_Azimuth ), math::cos( l_Elevation ),
+            math::sin( l_Elevation ) * math::sin( l_Azimuth ) };
         Color           = a_Spec.Color;
         Intensity       = a_Spec.Intensity;
         Cone            = math::cos( math::radians( a_Spec.Cone / 2 ) );
     }
 
-    SceneRenderer::SceneRenderer( Ref<Scene> a_World, RenderContext &a_RenderContext, Ref<LTSE::Graphics::Internal::sVkRenderPassObject> a_RenderPass )
+    SceneRenderer::SceneRenderer(
+        Ref<Scene> a_World, RenderContext &a_RenderContext, Ref<LTSE::Graphics::Internal::sVkRenderPassObject> a_RenderPass )
         : mGraphicContext{ a_World->GetGraphicContext() }
         , m_World{ a_World }
         , m_RenderPass{ a_RenderPass }
     {
         m_SceneDescriptors = New<DescriptorSet>( mGraphicContext, MeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
-        m_CameraUniformBuffer    = New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( WorldMatrices ) );
-        m_ShaderParametersBuffer = New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( CameraSettings ) );
+        m_CameraUniformBuffer =
+            New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( WorldMatrices ) );
+        m_ShaderParametersBuffer =
+            New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( CameraSettings ) );
         m_SceneDescriptors->Write( m_CameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
         m_SceneDescriptors->Write( m_ShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
 
@@ -78,11 +83,12 @@ namespace LTSE::Core
 
         CoordinateGridRendererCreateInfo l_CoordinateGridRendererCreateInfo{};
         l_CoordinateGridRendererCreateInfo.RenderPass = m_RenderPass;
-        m_CoordinateGridRenderer                      = New<CoordinateGridRenderer>( mGraphicContext, a_RenderContext, l_CoordinateGridRendererCreateInfo );
-        m_VisualHelperRenderer                        = New<VisualHelperRenderer>( mGraphicContext, m_RenderPass );
+        m_CoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, a_RenderContext, l_CoordinateGridRendererCreateInfo );
+        m_VisualHelperRenderer   = New<VisualHelperRenderer>( mGraphicContext, m_RenderPass );
     }
 
-    MeshRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo( RenderContext &aRenderContext, sMaterialShaderComponent &a_PipelineSpecification )
+    MeshRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo(
+        RenderContext &aRenderContext, sMaterialShaderComponent &a_PipelineSpecification )
     {
         MeshRendererCreateInfo l_CreateInfo;
 
@@ -96,7 +102,8 @@ namespace LTSE::Core
         return l_CreateInfo;
     }
 
-    MeshRenderer &SceneRenderer::GetRenderPipeline( RenderContext &aRenderContext, MeshRendererCreateInfo const &a_PipelineSpecification )
+    MeshRenderer &SceneRenderer::GetRenderPipeline(
+        RenderContext &aRenderContext, MeshRendererCreateInfo const &a_PipelineSpecification )
     {
         if( m_MeshRenderers.find( a_PipelineSpecification ) == m_MeshRenderers.end() )
             m_MeshRenderers[a_PipelineSpecification] = MeshRenderer( mGraphicContext, a_PipelineSpecification );
@@ -111,7 +118,8 @@ namespace LTSE::Core
         return GetRenderPipeline( aRenderContext, l_CreateInfo );
     }
 
-    ParticleSystemRenderer &SceneRenderer::GetRenderPipeline( RenderContext &aRenderContext, sParticleShaderComponent &a_PipelineSpecification )
+    ParticleSystemRenderer &SceneRenderer::GetRenderPipeline(
+        RenderContext &aRenderContext, sParticleShaderComponent &a_PipelineSpecification )
     {
         ParticleRendererCreateInfo l_CreateInfo = GetRenderPipelineCreateInfo( aRenderContext, a_PipelineSpecification );
 
@@ -121,7 +129,8 @@ namespace LTSE::Core
         return m_ParticleRenderers[l_CreateInfo];
     }
 
-    ParticleRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo( RenderContext &aRenderContext, sParticleShaderComponent &a_PipelineSpecification )
+    ParticleRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo(
+        RenderContext &aRenderContext, sParticleShaderComponent &a_PipelineSpecification )
     {
         ParticleRendererCreateInfo l_CreateInfo;
         l_CreateInfo.LineWidth      = a_PipelineSpecification.LineWidth;
@@ -154,8 +163,7 @@ namespace LTSE::Core
             [&]( auto a_Entity, auto &a_Component )
             {
                 math::mat4 l_TransformMatrix = math::mat4( 1.0f );
-                if( a_Entity.Has<sTransformMatrixComponent>() )
-                    l_TransformMatrix = a_Entity.Get<sTransformMatrixComponent>().Matrix;
+                if( a_Entity.Has<sTransformMatrixComponent>() ) l_TransformMatrix = a_Entity.Get<sTransformMatrixComponent>().Matrix;
 
                 View.PointLights[l_PointLightCount] = PointLightData( a_Component, l_TransformMatrix );
                 l_PointLightCount++;
@@ -165,8 +173,7 @@ namespace LTSE::Core
             [&]( auto a_Entity, auto &a_Component )
             {
                 math::mat4 l_TransformMatrix = math::mat4( 1.0f );
-                if( a_Entity.Has<sTransformMatrixComponent>() )
-                    l_TransformMatrix = a_Entity.Get<sTransformMatrixComponent>().Matrix;
+                if( a_Entity.Has<sTransformMatrixComponent>() ) l_TransformMatrix = a_Entity.Get<sTransformMatrixComponent>().Matrix;
 
                 View.Spotlights[l_SpotlightCount] = SpotlightData( a_Component, l_TransformMatrix );
                 l_SpotlightCount++;
@@ -219,16 +226,18 @@ namespace LTSE::Core
                     MeshRenderer::MaterialPushConstants l_MaterialPushConstants{};
                     l_MaterialPushConstants.mMaterialID = lMeshInformation.Get<sMaterialComponent>().mMaterialID;
 
-                    aRenderContext.PushConstants( { Graphics::Internal::eShaderStageTypeFlags::FRAGMENT }, 0, l_MaterialPushConstants );
+                    aRenderContext.PushConstants(
+                        { Graphics::Internal::eShaderStageTypeFlags::FRAGMENT }, 0, l_MaterialPushConstants );
 
                     auto &l_StaticMeshComponent = lMeshInformation.Get<sStaticMeshComponent>();
-                    aRenderContext.Draw( l_StaticMeshComponent.mIndexCount, l_StaticMeshComponent.mIndexOffset, l_StaticMeshComponent.mVertexOffset, 1, 0 );
+                    aRenderContext.Draw( l_StaticMeshComponent.mIndexCount, l_StaticMeshComponent.mIndexOffset,
+                        l_StaticMeshComponent.mVertexOffset, 1, 0 );
                 }
             }
         }
 
-        // std::unordered_map<ParticleRendererCreateInfo, std::vector<sParticleSystemComponent>, ParticleSystemRendererCreateInfoHash> lParticleSystemQueue{};
-        // m_World->ForEach<sParticleSystemComponent>(
+        // std::unordered_map<ParticleRendererCreateInfo, std::vector<sParticleSystemComponent>, ParticleSystemRendererCreateInfoHash>
+        // lParticleSystemQueue{}; m_World->ForEach<sParticleSystemComponent>(
         //     [&]( auto a_Entity, auto &a_ParticleSystemComponent )
         //     {
         //         if( !a_Entity.Has<RendererComponent>() )
@@ -260,8 +269,7 @@ namespace LTSE::Core
                 [&]( auto a_Entity, auto &a_DirectionalLightHelperComponent )
                 {
                     math::mat4 l_Transform = math::mat4( 1.0f );
-                    if( a_Entity.Has<sTransformMatrixComponent>() )
-                        l_Transform = a_Entity.Get<sTransformMatrixComponent>().Matrix;
+                    if( a_Entity.Has<sTransformMatrixComponent>() ) l_Transform = a_Entity.Get<sTransformMatrixComponent>().Matrix;
                     m_VisualHelperRenderer->Render( l_Transform, a_DirectionalLightHelperComponent, aRenderContext );
                 } );
 
@@ -269,8 +277,7 @@ namespace LTSE::Core
                 [&]( auto a_Entity, auto &a_SpotlightHelperComponent )
                 {
                     math::mat4 l_Transform = math::mat4( 1.0f );
-                    if( a_Entity.Has<sTransformMatrixComponent>() )
-                        l_Transform = a_Entity.Get<sTransformMatrixComponent>().Matrix;
+                    if( a_Entity.Has<sTransformMatrixComponent>() ) l_Transform = a_Entity.Get<sTransformMatrixComponent>().Matrix;
                     m_VisualHelperRenderer->Render( l_Transform, a_SpotlightHelperComponent, aRenderContext );
                 } );
 
@@ -278,14 +285,12 @@ namespace LTSE::Core
                 [&]( auto a_Entity, auto &a_PointLightHelperComponent )
                 {
                     math::mat4 l_Transform = math::mat4( 1.0f );
-                    if( a_Entity.Has<sTransformMatrixComponent>() )
-                        l_Transform = a_Entity.Get<sTransformMatrixComponent>().Matrix;
+                    if( a_Entity.Has<sTransformMatrixComponent>() ) l_Transform = a_Entity.Get<sTransformMatrixComponent>().Matrix;
                     m_VisualHelperRenderer->Render( l_Transform, a_PointLightHelperComponent, aRenderContext );
                 } );
         }
 
-        if( RenderCoordinateGrid )
-            m_CoordinateGridRenderer->Render( View.Projection, View.View, aRenderContext );
+        if( RenderCoordinateGrid ) m_CoordinateGridRenderer->Render( View.Projection, View.View, aRenderContext );
     }
 
     void SceneRenderer::UpdateDescriptorSets( RenderContext &aRenderContext )
@@ -297,14 +302,17 @@ namespace LTSE::Core
             {
                 if( !( a_Entity.Has<NodeDescriptorComponent>() ) )
                 {
-                    auto &l_NodeDescriptor         = a_Entity.Add<NodeDescriptorComponent>();
-                    l_NodeDescriptor.Descriptors   = New<DescriptorSet>( mGraphicContext, MeshRenderer::GetNodeSetLayout( mGraphicContext ) );
-                    l_NodeDescriptor.UniformBuffer = New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( NodeMatrixDataComponent ) );
+                    auto &l_NodeDescriptor = a_Entity.Add<NodeDescriptorComponent>();
+                    l_NodeDescriptor.Descriptors =
+                        New<DescriptorSet>( mGraphicContext, MeshRenderer::GetNodeSetLayout( mGraphicContext ) );
+                    l_NodeDescriptor.UniformBuffer = New<Buffer>(
+                        mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( NodeMatrixDataComponent ) );
 
-                    l_NodeDescriptor.Descriptors->Write( l_NodeDescriptor.UniformBuffer, false, 0, sizeof( NodeMatrixDataComponent ), 0 );
+                    l_NodeDescriptor.Descriptors->Write(
+                        l_NodeDescriptor.UniformBuffer, false, 0, sizeof( NodeMatrixDataComponent ), 0 );
                 }
 
-                auto &l_NodeDescriptor = a_Entity.Get<NodeDescriptorComponent>();
+                auto                   &l_NodeDescriptor = a_Entity.Get<NodeDescriptorComponent>();
                 NodeMatrixDataComponent l_NodeTransform{};
                 l_NodeTransform.Transform = a_Component.Matrix;
                 a_Entity.IfExists<sSkeletonComponent>(

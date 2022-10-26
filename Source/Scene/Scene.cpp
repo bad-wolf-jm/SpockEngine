@@ -294,13 +294,6 @@ namespace LTSE::Core
 
         m_Registry.OnComponentAdded<sRelationshipComponent>( std::bind( &Scene::UpdateParent, this, _1, _2 ) );
         m_Registry.OnComponentUpdated<sRelationshipComponent>( std::bind( &Scene::UpdateParent, this, _1, _2 ) );
-
-        // m_Registry.OnComponentAdded<LocalTransformComponent>( std::bind( &Scene::UpdateLocalTransform, this, _1, _2 ) );
-        // m_Registry.OnComponentUpdated<LocalTransformComponent>( std::bind( &Scene::UpdateLocalTransform, this, _1, _2 ) );
-
-        // m_Registry.OnComponentAdded<sTransformMatrixComponent>( std::bind( &Scene::UpdateTransformMatrix, this, _1, _2 ) );
-        // m_Registry.OnComponentUpdated<sTransformMatrixComponent>( std::bind( &Scene::UpdateTransformMatrix, this, _1, _2 )
-        // );
     }
 
     math::mat4 Scene::GetView()
@@ -1319,20 +1312,8 @@ namespace LTSE::Core
 
             for( auto l_Child : l_ElementToProcess.Get<sRelationshipComponent>().mChildren ) l_UpdateQueue.push( l_Child );
 
-            // if( l_ElementToProcess.Has<sAnimatedTransformComponent>() )
-            // {
-            //     auto &l_Component = l_ElementToProcess.Get<sAnimatedTransformComponent>();
-
-            //     math::mat4 lRotation    = math::mat4( l_Component.Rotation );
-            //     math::mat4 lTranslation = math::Translation( l_Component.Translation );
-            //     math::mat4 lScale       = math::Scaling( l_Component.Scaling );
-
-            //     l_ElementToProcess.AddOrReplace<sTransformMatrixComponent>( lTranslation * lRotation * lScale );
-            // }
             if( l_ElementToProcess.Has<NodeTransformComponent>() )
-            {
                 l_ElementToProcess.AddOrReplace<sTransformMatrixComponent>( l_ElementToProcess.Get<NodeTransformComponent>().mMatrix );
-            }
 
             if( !( l_ElementToProcess.Get<sRelationshipComponent>().mParent ) ) continue;
 

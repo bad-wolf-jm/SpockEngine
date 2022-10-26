@@ -40,8 +40,8 @@ namespace LTSE::Core
     GlTFImporter::GlTFImporter( fs::path aPath )
     {
         tinygltf::TinyGLTF lGltfContext;
-        std::string lError;
-        std::string lWarning;
+        std::string        lError;
+        std::string        lWarning;
 
         std::string lExtension = aPath.extension().string();
 
@@ -94,7 +94,8 @@ namespace LTSE::Core
         }
     }
 
-    void GlTFImporter::CreateTexture( uint32_t aTextureIndex, std::string aName, tinygltf::Image const &aGltfimage, sTextureSamplingInfo const &aTextureSamplingInfo )
+    void GlTFImporter::CreateTexture( uint32_t aTextureIndex, std::string aName, tinygltf::Image const &aGltfimage,
+        sTextureSamplingInfo const &aTextureSamplingInfo )
     {
         sImageData lImageData{};
         lImageData.mFormat = eColorFormat::RGBA8_UNORM;
@@ -106,8 +107,8 @@ namespace LTSE::Core
             lImageData.mByteSize  = aGltfimage.width * aGltfimage.height * 4;
             lImageData.mPixelData = new unsigned char[lImageData.mByteSize];
 
-            unsigned char *rgba      = lImageData.mPixelData;
-            unsigned char const *rgb = &aGltfimage.image[0];
+            unsigned char       *rgba = lImageData.mPixelData;
+            unsigned char const *rgb  = &aGltfimage.image[0];
             for( int32_t i = 0; i < aGltfimage.width * aGltfimage.height; ++i )
             {
                 rgba[0] = rgb[0];
@@ -141,11 +142,10 @@ namespace LTSE::Core
         uint32_t lTextureIndex = 0;
         for( tinygltf::Texture &tex : mGltfModel.textures )
         {
-            tinygltf::Image image = mGltfModel.images[tex.source];
+            tinygltf::Image      image = mGltfModel.images[tex.source];
             sTextureSamplingInfo lTextureSampler{};
 
-            if( tex.sampler != -1 )
-                lTextureSampler = mTextureSamplers[tex.sampler];
+            if( tex.sampler != -1 ) lTextureSampler = mTextureSamplers[tex.sampler];
 
             CreateTexture( lTextureIndex++, image.name, image, lTextureSampler );
         }
@@ -164,7 +164,8 @@ namespace LTSE::Core
         return sImportedMaterial::sTextureReference{};
     }
 
-    sImportedMaterial::sTextureReference GlTFImporter::RetrieveAdditionalTextureData( tinygltf::Material &aMaterial, std::string aName )
+    sImportedMaterial::sTextureReference GlTFImporter::RetrieveAdditionalTextureData(
+        tinygltf::Material &aMaterial, std::string aName )
     {
         if( aMaterial.additionalValues.find( aName ) != aMaterial.additionalValues.end() )
         {
@@ -187,18 +188,20 @@ namespace LTSE::Core
         return aDefault;
     }
 
-    std::tuple<uint32_t, uint32_t, uint32_t, uint32_t> GlTFImporter::RetrievePrimitiveCount( const tinygltf::Primitive &aPrimitive, std::string aName )
+    std::tuple<uint32_t, uint32_t, uint32_t, uint32_t> GlTFImporter::RetrievePrimitiveCount(
+        const tinygltf::Primitive &aPrimitive, std::string aName )
     {
         if( aPrimitive.attributes.find( aName ) != aPrimitive.attributes.end() )
         {
-            const tinygltf::Accessor &lAccessor     = mGltfModel.accessors[aPrimitive.attributes.find( aName )->second];
+            const tinygltf::Accessor   &lAccessor   = mGltfModel.accessors[aPrimitive.attributes.find( aName )->second];
             const tinygltf::BufferView &lBufferView = mGltfModel.bufferViews[lAccessor.bufferView];
 
-            auto *lBufferData      = &( mGltfModel.buffers[lBufferView.buffer].data[lAccessor.byteOffset + lBufferView.byteOffset] );
-            auto lBufferCount      = static_cast<uint32_t>( lAccessor.count );
-            auto lBufferByteStride = lAccessor.ByteStride( lBufferView );
+            auto *lBufferData       = &( mGltfModel.buffers[lBufferView.buffer].data[lAccessor.byteOffset + lBufferView.byteOffset] );
+            auto  lBufferCount      = static_cast<uint32_t>( lAccessor.count );
+            auto  lBufferByteStride = lAccessor.ByteStride( lBufferView );
 
-            return { lBufferCount, lBufferByteStride, lAccessor.componentType, tinygltf::GetComponentSizeInBytes( lAccessor.componentType ) };
+            return { lBufferCount, lBufferByteStride, lAccessor.componentType,
+                tinygltf::GetComponentSizeInBytes( lAccessor.componentType ) };
         }
         return { 0, 0, 0, 0 };
     }
@@ -211,7 +214,8 @@ namespace LTSE::Core
         {
             sImportedMaterial lNewImportedMaterial{};
 
-            lNewImportedMaterial.mName = lMaterial.name.empty() ? fmt::format( "UNNAMED_MATERIAL_{}", lMaterialIndex ) : lMaterial.name;
+            lNewImportedMaterial.mName =
+                lMaterial.name.empty() ? fmt::format( "UNNAMED_MATERIAL_{}", lMaterialIndex ) : lMaterial.name;
 
             lNewImportedMaterial.mConstants.mIsTwoSided      = false;
             lNewImportedMaterial.mConstants.mMetallicFactor  = RetrieveValue( lMaterial, "metallicFactor", 0.0f );
@@ -232,11 +236,9 @@ namespace LTSE::Core
             if( lMaterial.additionalValues.find( "alphaMode" ) != lMaterial.additionalValues.end() )
             {
                 tinygltf::Parameter param = lMaterial.additionalValues["alphaMode"];
-                if( param.string_value == "BLEND" )
-                    lNewImportedMaterial.mAlpha.mMode = sImportedMaterial::AlphaMode::BLEND_MODE;
+                if( param.string_value == "BLEND" ) lNewImportedMaterial.mAlpha.mMode = sImportedMaterial::AlphaMode::BLEND_MODE;
 
-                if( param.string_value == "MASK" )
-                    lNewImportedMaterial.mAlpha.mMode = sImportedMaterial::AlphaMode::ALPHA_MASK_MODE;
+                if( param.string_value == "MASK" ) lNewImportedMaterial.mAlpha.mMode = sImportedMaterial::AlphaMode::ALPHA_MASK_MODE;
             }
 
             mMaterials.push_back( lNewImportedMaterial );
@@ -249,8 +251,8 @@ namespace LTSE::Core
     void GlTFImporter::LoadNode( uint32_t aParentID, tinygltf::Node const &aNode, uint32_t aNodeID )
     {
         mNodes.push_back( sImportedNode{} );
-        auto &lNewNode   = mNodes.back();
-        uint32_t lNodeID = static_cast<uint32_t>( mNodes.size() - 1 );
+        auto    &lNewNode = mNodes.back();
+        uint32_t lNodeID  = static_cast<uint32_t>( mNodes.size() - 1 );
 
         mNodeIDLookup[aNodeID] = lNodeID;
 
@@ -289,8 +291,7 @@ namespace LTSE::Core
             for( size_t i = 0; i < aNode.children.size(); i++ )
                 LoadNode( lNodeID, mGltfModel.nodes[aNode.children[i]], aNode.children[i] );
 
-        if( aParentID != std::numeric_limits<uint32_t>::max() )
-            mNodes[aParentID].mChildren.push_back( lNodeID );
+        if( aParentID != std::numeric_limits<uint32_t>::max() ) mNodes[aParentID].mChildren.push_back( lNodeID );
 
         if( aNode.mesh > -1 )
         {
@@ -328,20 +329,20 @@ namespace LTSE::Core
                 RetrievePrimitiveAttribute<math::vec3>( lPrimitive, "POSITION", lNewImportedMesh.mPositions );
 
                 RetrievePrimitiveAttribute<math::vec3>( lPrimitive, "NORMAL", lNewImportedMesh.mNormals );
-                if ( lNewImportedMesh.mNormals.size() == 0)
-                    lNewImportedMesh.mNormals = std::vector<math::vec3>(lNewImportedMesh.mPositions.size());
+                if( lNewImportedMesh.mNormals.size() == 0 )
+                    lNewImportedMesh.mNormals = std::vector<math::vec3>( lNewImportedMesh.mPositions.size() );
 
                 RetrievePrimitiveAttribute<math::vec2>( lPrimitive, "TEXCOORD_0", lNewImportedMesh.mUV0 );
-                if ( lNewImportedMesh.mUV0.size() == 0)
-                    lNewImportedMesh.mUV0 = std::vector<math::vec2>(lNewImportedMesh.mPositions.size());
+                if( lNewImportedMesh.mUV0.size() == 0 )
+                    lNewImportedMesh.mUV0 = std::vector<math::vec2>( lNewImportedMesh.mPositions.size() );
 
                 RetrievePrimitiveAttribute<math::vec2>( lPrimitive, "TEXCOORD_1", lNewImportedMesh.mUV1 );
-                if ( lNewImportedMesh.mUV1.size() == 0)
-                    lNewImportedMesh.mUV1 = std::vector<math::vec2>(lNewImportedMesh.mPositions.size());
+                if( lNewImportedMesh.mUV1.size() == 0 )
+                    lNewImportedMesh.mUV1 = std::vector<math::vec2>( lNewImportedMesh.mPositions.size() );
 
                 RetrievePrimitiveAttribute<math::vec4>( lPrimitive, "WEIGHTS_0", lNewImportedMesh.mWeights );
-                if ( lNewImportedMesh.mWeights.size() == 0)
-                    lNewImportedMesh.mWeights = std::vector<math::vec4>(lNewImportedMesh.mPositions.size());
+                if( lNewImportedMesh.mWeights.size() == 0 )
+                    lNewImportedMesh.mWeights = std::vector<math::vec4>( lNewImportedMesh.mPositions.size() );
 
                 std::vector<uint8_t> lJointData;
                 RetrievePrimitiveAttribute<uint8_t>( lPrimitive, "JOINTS_0", lJointData );
@@ -354,7 +355,7 @@ namespace LTSE::Core
                     {
                     case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
                     {
-                        const uint16_t *buf = reinterpret_cast<const uint16_t *>( lJointData.data() );
+                        const uint16_t       *buf = reinterpret_cast<const uint16_t *>( lJointData.data() );
                         std::vector<uint16_t> lJoints0( lCount * lComponentCount );
                         memcpy( lJoints0.data(), buf, lCount * lStride );
 
@@ -362,13 +363,14 @@ namespace LTSE::Core
                         lNewImportedMesh.mJoints.resize( lCount );
 
                         for( uint32_t i = 0; i < lCount; i++ )
-                            lNewImportedMesh.mJoints[i] = math::uvec4( lJoints1[i * lComponentCount + 0], lJoints1[i * lComponentCount + 1], lJoints1[i * lComponentCount + 2],
-                                                                       lJoints1[i * lComponentCount + 3] );
+                            lNewImportedMesh.mJoints[i] =
+                                math::uvec4( lJoints1[i * lComponentCount + 0], lJoints1[i * lComponentCount + 1],
+                                    lJoints1[i * lComponentCount + 2], lJoints1[i * lComponentCount + 3] );
                         break;
                     }
                     case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
                     {
-                        const uint8_t *buf = reinterpret_cast<const uint8_t *>( lJointData.data() );
+                        const uint8_t       *buf = reinterpret_cast<const uint8_t *>( lJointData.data() );
                         std::vector<uint8_t> lJoints0( lCount * lComponentCount );
                         memcpy( lJoints0.data(), buf, lCount * lStride );
 
@@ -376,8 +378,9 @@ namespace LTSE::Core
                         lNewImportedMesh.mJoints.resize( lCount );
 
                         for( uint32_t i = 0; i < lCount; i++ )
-                            lNewImportedMesh.mJoints[i] = math::uvec4( lJoints1[i * lComponentCount + 0], lJoints1[i * lComponentCount + 1], lJoints1[i * lComponentCount + 2],
-                                                                       lJoints1[i * lComponentCount + 3] );
+                            lNewImportedMesh.mJoints[i] =
+                                math::uvec4( lJoints1[i * lComponentCount + 0], lJoints1[i * lComponentCount + 1],
+                                    lJoints1[i * lComponentCount + 2], lJoints1[i * lComponentCount + 3] );
                         break;
                     }
                     default:
@@ -388,17 +391,17 @@ namespace LTSE::Core
                 }
                 else
                 {
-                    lNewImportedMesh.mJoints = std::vector<math::uvec4>(lNewImportedMesh.mPositions.size());
+                    lNewImportedMesh.mJoints = std::vector<math::uvec4>( lNewImportedMesh.mPositions.size() );
                 }
 
                 if( lPrimitive.indices > -1 )
                 {
-                    const tinygltf::Accessor &accessor     = mGltfModel.accessors[lPrimitive.indices > -1 ? lPrimitive.indices : 0];
+                    const tinygltf::Accessor   &accessor   = mGltfModel.accessors[lPrimitive.indices > -1 ? lPrimitive.indices : 0];
                     const tinygltf::BufferView &bufferView = mGltfModel.bufferViews[accessor.bufferView];
-                    const tinygltf::Buffer &buffer         = mGltfModel.buffers[bufferView.buffer];
+                    const tinygltf::Buffer     &buffer     = mGltfModel.buffers[bufferView.buffer];
 
-                    auto indexCount     = static_cast<uint32_t>( accessor.count );
-                    const void *dataPtr = &( buffer.data[accessor.byteOffset + bufferView.byteOffset] );
+                    auto        indexCount = static_cast<uint32_t>( accessor.count );
+                    const void *dataPtr    = &( buffer.data[accessor.byteOffset + bufferView.byteOffset] );
 
                     lNewImportedMesh.mIndices.resize( indexCount );
 
@@ -462,30 +465,28 @@ namespace LTSE::Core
 
             lNewImportedSkin.mName = source.name.empty() ? fmt::format( "SKIN_{}", mSkins.size() - 1 ) : source.name;
 
-            if( source.skeleton > -1 )
-                lNewImportedSkin.mSkeletonRootNodeID = mNodeIDLookup[source.skeleton];
+            if( source.skeleton > -1 ) lNewImportedSkin.mSkeletonRootNodeID = mNodeIDLookup[source.skeleton];
 
-            for( int jointIndex : source.joints )
-                lNewImportedSkin.mJointNodeID.push_back( mNodeIDLookup[jointIndex] );
+            for( int jointIndex : source.joints ) lNewImportedSkin.mJointNodeID.push_back( mNodeIDLookup[jointIndex] );
 
             // Get inverse bind matrices from buffer
             if( source.inverseBindMatrices > -1 )
             {
-                const tinygltf::Accessor &accessor     = mGltfModel.accessors[source.inverseBindMatrices];
+                const tinygltf::Accessor   &accessor   = mGltfModel.accessors[source.inverseBindMatrices];
                 const tinygltf::BufferView &bufferView = mGltfModel.bufferViews[accessor.bufferView];
-                const tinygltf::Buffer &buffer         = mGltfModel.buffers[bufferView.buffer];
+                const tinygltf::Buffer     &buffer     = mGltfModel.buffers[bufferView.buffer];
                 lNewImportedSkin.mInverseBindMatrices.resize( accessor.count );
-                memcpy( lNewImportedSkin.mInverseBindMatrices.data(), &buffer.data[accessor.byteOffset + bufferView.byteOffset], accessor.count * sizeof( glm::mat4 ) );
+                memcpy( lNewImportedSkin.mInverseBindMatrices.data(), &buffer.data[accessor.byteOffset + bufferView.byteOffset],
+                    accessor.count * sizeof( glm::mat4 ) );
             }
 
             mSkinIDLookup[lSkinID++] = mSkins.size() - 1;
         }
 
         uint32_t lNodeID = 0;
-        for (auto& lNode : mGltfModel.nodes)
+        for( auto &lNode : mGltfModel.nodes )
         {
-            if (lNode.skin > -1)
-                mNodes[mNodeIDLookup[lNodeID]].mSkinID = mSkinIDLookup[lNode.skin];
+            if( lNode.skin > -1 ) mNodes[mNodeIDLookup[lNodeID]].mSkinID = mSkinIDLookup[lNode.skin];
             lNodeID++;
         }
     }
@@ -506,25 +507,23 @@ namespace LTSE::Core
                 lNewImportedAnimation.mSamplers.emplace_back( sImportedAnimationSampler{} );
                 auto &lNewSampler = lNewImportedAnimation.mSamplers.back();
 
-                if( samp.interpolation == "LINEAR" )
-                    lNewSampler.mInterpolation = sImportedAnimationSampler::Interpolation::LINEAR;
+                if( samp.interpolation == "LINEAR" ) lNewSampler.mInterpolation = sImportedAnimationSampler::Interpolation::LINEAR;
 
-                if( samp.interpolation == "STEP" )
-                    lNewSampler.mInterpolation = sImportedAnimationSampler::Interpolation::STEP;
+                if( samp.interpolation == "STEP" ) lNewSampler.mInterpolation = sImportedAnimationSampler::Interpolation::STEP;
 
                 if( samp.interpolation == "CUBICSPLINE" )
                     lNewSampler.mInterpolation = sImportedAnimationSampler::Interpolation::CUBICSPLINE;
 
                 // Read sampler input time values
                 {
-                    const tinygltf::Accessor &accessor     = mGltfModel.accessors[samp.input];
+                    const tinygltf::Accessor   &accessor   = mGltfModel.accessors[samp.input];
                     const tinygltf::BufferView &bufferView = mGltfModel.bufferViews[accessor.bufferView];
-                    const tinygltf::Buffer &buffer         = mGltfModel.buffers[bufferView.buffer];
+                    const tinygltf::Buffer     &buffer     = mGltfModel.buffers[bufferView.buffer];
 
                     assert( accessor.componentType == TINYGLTF_COMPONENT_TYPE_FLOAT );
 
-                    const void *dataPtr = &buffer.data[accessor.byteOffset + bufferView.byteOffset];
-                    const float *buf    = static_cast<const float *>( dataPtr );
+                    const void  *dataPtr = &buffer.data[accessor.byteOffset + bufferView.byteOffset];
+                    const float *buf     = static_cast<const float *>( dataPtr );
                     for( size_t index = 0; index < accessor.count; index++ )
                     {
                         lNewSampler.mInputs.push_back( buf[index] );
@@ -532,19 +531,17 @@ namespace LTSE::Core
 
                     for( auto input : lNewSampler.mInputs )
                     {
-                        if( input < lNewImportedAnimation.mStart )
-                            lNewImportedAnimation.mStart = input;
+                        if( input < lNewImportedAnimation.mStart ) lNewImportedAnimation.mStart = input;
 
-                        if( input > lNewImportedAnimation.mEnd )
-                            lNewImportedAnimation.mEnd = input;
+                        if( input > lNewImportedAnimation.mEnd ) lNewImportedAnimation.mEnd = input;
                     }
                 }
 
                 // Read sampler output T/R/S values
                 {
-                    const tinygltf::Accessor &accessor     = mGltfModel.accessors[samp.output];
+                    const tinygltf::Accessor   &accessor   = mGltfModel.accessors[samp.output];
                     const tinygltf::BufferView &bufferView = mGltfModel.bufferViews[accessor.bufferView];
-                    const tinygltf::Buffer &buffer         = mGltfModel.buffers[bufferView.buffer];
+                    const tinygltf::Buffer     &buffer     = mGltfModel.buffers[bufferView.buffer];
 
                     assert( accessor.componentType == TINYGLTF_COMPONENT_TYPE_FLOAT );
 
@@ -562,8 +559,7 @@ namespace LTSE::Core
                     case TINYGLTF_TYPE_VEC4:
                     {
                         const glm::vec4 *buf = static_cast<const glm::vec4 *>( dataPtr );
-                        for( size_t index = 0; index < accessor.count; index++ )
-                            lNewSampler.mOutputsVec4.push_back( buf[index] );
+                        for( size_t index = 0; index < accessor.count; index++ ) lNewSampler.mOutputsVec4.push_back( buf[index] );
                         break;
                     }
                     default:
@@ -584,17 +580,13 @@ namespace LTSE::Core
 
                 lNewChannels.mSamplerIndex = source.sampler;
                 lNewChannels.mNodeID       = mNodeIDLookup[source.target_node];
-                if( lNewChannels.mNodeID == std::numeric_limits<uint32_t>::max() )
-                    continue;
+                if( lNewChannels.mNodeID == std::numeric_limits<uint32_t>::max() ) continue;
 
-                if( source.target_path == "rotation" )
-                    lNewChannels.mComponent = sImportedAnimationChannel::Channel::ROTATION;
+                if( source.target_path == "rotation" ) lNewChannels.mComponent = sImportedAnimationChannel::Channel::ROTATION;
 
-                if( source.target_path == "translation" )
-                    lNewChannels.mComponent = sImportedAnimationChannel::Channel::TRANSLATION;
+                if( source.target_path == "translation" ) lNewChannels.mComponent = sImportedAnimationChannel::Channel::TRANSLATION;
 
-                if( source.target_path == "scale" )
-                    lNewChannels.mComponent = sImportedAnimationChannel::Channel::SCALE;
+                if( source.target_path == "scale" ) lNewChannels.mComponent = sImportedAnimationChannel::Channel::SCALE;
 
                 if( source.target_path == "weights" )
                 {

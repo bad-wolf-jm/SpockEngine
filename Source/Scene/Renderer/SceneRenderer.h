@@ -5,11 +5,10 @@
 #include "Core/GraphicContext//GraphicsPipeline.h"
 #include "Core/GraphicContext//RenderContext.h"
 
-#include "Core/Vulkan/VkImage.h"
-#include "Core/Vulkan/VkRenderPass.h"
 #include "Core/GraphicContext//Texture2D.h"
 #include "Core/GraphicContext//TextureCubemap.h"
-
+#include "Core/Vulkan/VkImage.h"
+#include "Core/Vulkan/VkRenderPass.h"
 
 #include "Scene/Components.h"
 #include "Scene/Scene.h"
@@ -105,13 +104,13 @@ namespace LTSE::Core
     {
         math::mat4 Transform = math::mat4( 1.0f );
         math::mat4 Joints[MAX_NUM_JOINTS]{};
-        float JointCount = 0;
+        float      JointCount = 0;
     };
 
     struct NodeDescriptorComponent
     {
-        Ref<Buffer> UniformBuffer      = nullptr;
-        Ref<DescriptorSet> Descriptors = nullptr;
+        Ref<Buffer>        UniformBuffer = nullptr;
+        Ref<DescriptorSet> Descriptors   = nullptr;
 
         NodeDescriptorComponent()                                  = default;
         NodeDescriptorComponent( const NodeDescriptorComponent & ) = default;
@@ -128,15 +127,16 @@ namespace LTSE::Core
     class SceneRenderer
     {
       public:
-        WorldMatrices View;
+        WorldMatrices  View;
         CameraSettings Settings;
-        bool RenderCoordinateGrid = true;
-        bool RenderGizmos         = false;
-        bool GrayscaleRendering   = false;
+        bool           RenderCoordinateGrid = true;
+        bool           RenderGizmos         = false;
+        bool           GrayscaleRendering   = false;
 
       public:
         SceneRenderer() = default;
-        SceneRenderer( Ref<Scene> a_World, RenderContext &a_RenderContext, Ref<LTSE::Graphics::Internal::sVkRenderPassObject> a_RenderPass );
+        SceneRenderer(
+            Ref<Scene> a_World, RenderContext &a_RenderContext, Ref<LTSE::Graphics::Internal::sVkRenderPassObject> a_RenderPass );
 
         ~SceneRenderer() = default;
 
@@ -145,8 +145,10 @@ namespace LTSE::Core
         Ref<Scene> m_World = nullptr;
 
       protected:
-        MeshRendererCreateInfo GetRenderPipelineCreateInfo( RenderContext &aRenderContext, sMaterialShaderComponent &a_PipelineSpecification );
-        ParticleRendererCreateInfo GetRenderPipelineCreateInfo( RenderContext &aRenderContext, sParticleShaderComponent &a_PipelineSpecification );
+        MeshRendererCreateInfo GetRenderPipelineCreateInfo(
+            RenderContext &aRenderContext, sMaterialShaderComponent &a_PipelineSpecification );
+        ParticleRendererCreateInfo GetRenderPipelineCreateInfo(
+            RenderContext &aRenderContext, sParticleShaderComponent &a_PipelineSpecification );
 
         MeshRenderer &GetRenderPipeline( RenderContext &aRenderContext, sMaterialShaderComponent &a_PipelineSpecification );
         MeshRenderer &GetRenderPipeline( RenderContext &aRenderContext, MeshRendererCreateInfo const &a_PipelineSpecification );
@@ -157,7 +159,7 @@ namespace LTSE::Core
         GraphicContext mGraphicContext;
 
         Ref<CoordinateGridRenderer> m_CoordinateGridRenderer = nullptr;
-        Ref<VisualHelperRenderer> m_VisualHelperRenderer     = nullptr;
+        Ref<VisualHelperRenderer>   m_VisualHelperRenderer   = nullptr;
 
         Ref<Buffer> m_CameraUniformBuffer    = nullptr;
         Ref<Buffer> m_ShaderParametersBuffer = nullptr;
@@ -173,8 +175,9 @@ namespace LTSE::Core
 
         Ref<Graphics::Texture2D> m_EmptyTexture = nullptr;
 
-        std::unordered_map<MeshRendererCreateInfo, MeshRenderer, MeshRendererCreateInfoHash> m_MeshRenderers                             = {};
-        std::unordered_map<ParticleRendererCreateInfo, ParticleSystemRenderer, ParticleSystemRendererCreateInfoHash> m_ParticleRenderers = {};
+        std::unordered_map<MeshRendererCreateInfo, MeshRenderer, MeshRendererCreateInfoHash> m_MeshRenderers = {};
+        std::unordered_map<ParticleRendererCreateInfo, ParticleSystemRenderer, ParticleSystemRendererCreateInfoHash>
+            m_ParticleRenderers = {};
 
         std::unordered_map<Entity, Ref<DescriptorSet>> m_Materials = {};
 

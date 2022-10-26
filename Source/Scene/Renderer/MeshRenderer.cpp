@@ -17,8 +17,8 @@ namespace LTSE::Core
     Ref<DescriptorSetLayout> MeshRenderer::GetCameraSetLayout( GraphicContext &a_GraphicContext )
     {
         DescriptorSetLayoutCreateInfo l_CameraBindLayout{};
-        l_CameraBindLayout.Bindings = {
-            DescriptorBindingInfo{ 0, Internal::eDescriptorType::UNIFORM_BUFFER, { Internal::eShaderStageTypeFlags::VERTEX, Internal::eShaderStageTypeFlags::FRAGMENT } },
+        l_CameraBindLayout.Bindings = { DescriptorBindingInfo{ 0, Internal::eDescriptorType::UNIFORM_BUFFER,
+                                            { Internal::eShaderStageTypeFlags::VERTEX, Internal::eShaderStageTypeFlags::FRAGMENT } },
             DescriptorBindingInfo{ 1, Internal::eDescriptorType::UNIFORM_BUFFER, { Internal::eShaderStageTypeFlags::FRAGMENT } } };
 
         return New<DescriptorSetLayout>( a_GraphicContext, l_CameraBindLayout );
@@ -27,8 +27,10 @@ namespace LTSE::Core
     Ref<DescriptorSetLayout> MeshRenderer::GetTextureSetLayout( GraphicContext &a_GraphicContext )
     {
         DescriptorSetLayoutCreateInfo lTextureBindLayout{};
-        lTextureBindLayout.Bindings = { DescriptorBindingInfo{ 0, Internal::eDescriptorType::STORAGE_BUFFER, { Internal::eShaderStageTypeFlags::FRAGMENT } },
-                                        DescriptorBindingInfo{ 1, Internal::eDescriptorType::COMBINED_IMAGE_SAMPLER, { Internal::eShaderStageTypeFlags::FRAGMENT } } };
+        lTextureBindLayout.Bindings = {
+            DescriptorBindingInfo{ 0, Internal::eDescriptorType::STORAGE_BUFFER, { Internal::eShaderStageTypeFlags::FRAGMENT } },
+            DescriptorBindingInfo{
+                1, Internal::eDescriptorType::COMBINED_IMAGE_SAMPLER, { Internal::eShaderStageTypeFlags::FRAGMENT } } };
 
         return New<DescriptorSetLayout>( a_GraphicContext, lTextureBindLayout, true );
     }
@@ -36,13 +38,20 @@ namespace LTSE::Core
     Ref<DescriptorSetLayout> MeshRenderer::GetNodeSetLayout( GraphicContext &a_GraphicContext )
     {
         DescriptorSetLayoutCreateInfo l_NodeBindLayout{};
-        l_NodeBindLayout.Bindings = { DescriptorBindingInfo{ 0, Internal::eDescriptorType::UNIFORM_BUFFER, { Internal::eShaderStageTypeFlags::VERTEX } } };
+        l_NodeBindLayout.Bindings = {
+            DescriptorBindingInfo{ 0, Internal::eDescriptorType::UNIFORM_BUFFER, { Internal::eShaderStageTypeFlags::VERTEX } } };
         return New<DescriptorSetLayout>( a_GraphicContext, l_NodeBindLayout );
     }
 
-    std::vector<Ref<DescriptorSetLayout>> MeshRenderer::GetDescriptorSetLayout() { return { CameraSetLayout, TextureSetLayout, NodeSetLayout }; }
+    std::vector<Ref<DescriptorSetLayout>> MeshRenderer::GetDescriptorSetLayout()
+    {
+        return { CameraSetLayout, TextureSetLayout, NodeSetLayout };
+    }
 
-    std::vector<sPushConstantRange> MeshRenderer::GetPushConstantLayout() { return { { { Internal::eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( MaterialPushConstants ) } }; };
+    std::vector<sPushConstantRange> MeshRenderer::GetPushConstantLayout()
+    {
+        return { { { Internal::eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( MaterialPushConstants ) } };
+    };
 
     MeshRenderer::MeshRenderer( GraphicContext &a_GraphicContext, MeshRendererCreateInfo const &a_CreateInfo )
         : SceneRenderPipeline<VertexData>( a_GraphicContext )

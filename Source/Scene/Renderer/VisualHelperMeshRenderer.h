@@ -3,8 +3,9 @@
 #include <filesystem>
 
 #include "Core/Math/Types.h"
-#include "Core/Types.h"
 #include "Core/Memory.h"
+#include "Core/Types.h"
+
 
 #include "Core/GraphicContext//Buffer.h"
 #include "Core/GraphicContext//DescriptorSet.h"
@@ -27,8 +28,8 @@ namespace LTSE::Graphics
 
     struct VisualHelperMeshRendererCreateInfo
     {
-        float LineWidth                        = 1.0f;
-        Ref<LTSE::Graphics::Internal::sVkRenderPassObject>  RenderPass = nullptr;
+        float                                              LineWidth  = 1.0f;
+        Ref<LTSE::Graphics::Internal::sVkRenderPassObject> RenderPass = nullptr;
     };
 
     class VisualHelperMeshRenderer : public LTSE::Core::SceneRenderPipeline<SimpleVertexData>
@@ -50,10 +51,10 @@ namespace LTSE::Graphics
         ~VisualHelperMeshRenderer() = default;
 
         void Render( math::mat4 a_Model, math::mat4 a_View, math::mat4 a_Projection, math::vec3 a_Color, Ref<Buffer> a_VertexBuffer,
-                     Ref<Buffer> a_IndexBuffer, RenderContext &aRenderContext );
+            Ref<Buffer> a_IndexBuffer, RenderContext &aRenderContext );
 
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
-        std::vector<sPushConstantRange> GetPushConstantLayout();
+        std::vector<sPushConstantRange>       GetPushConstantLayout();
     };
 
 } // namespace LTSE::Graphics

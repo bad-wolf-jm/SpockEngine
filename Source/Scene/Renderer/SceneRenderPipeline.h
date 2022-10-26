@@ -4,8 +4,9 @@
 
 #include "Core/Math/Types.h"
 
-#include "Core/Vulkan/VkRenderPass.h"
 #include "Core/GraphicContext//GraphicContext.h"
+#include "Core/Vulkan/VkRenderPass.h"
+
 
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
@@ -20,22 +21,23 @@ namespace LTSE::Core
 
     struct SceneRenderPipelineCreateInfo
     {
-        bool Opaque                                                   = false;
-        bool IsTwoSided                                               = false;
-        float LineWidth                                               = 1.0f;
-        ePrimitiveTopology Topology                                   = ePrimitiveTopology::TRIANGLES;
-        fs::path VertexShader                                         = "";
-        fs::path FragmentShader                                       = "";
-        sBufferLayout InputBufferLayout                               = {};
-        sBufferLayout InstanceBufferLayout                            = {};
-        Ref<LTSE::Graphics::Internal::sVkRenderPassObject> RenderPass = nullptr;
+        bool                                               Opaque               = false;
+        bool                                               IsTwoSided           = false;
+        float                                              LineWidth            = 1.0f;
+        ePrimitiveTopology                                 Topology             = ePrimitiveTopology::TRIANGLES;
+        fs::path                                           VertexShader         = "";
+        fs::path                                           FragmentShader       = "";
+        sBufferLayout                                      InputBufferLayout    = {};
+        sBufferLayout                                      InstanceBufferLayout = {};
+        Ref<LTSE::Graphics::Internal::sVkRenderPassObject> RenderPass           = nullptr;
     };
 
-    template <typename _VertexType> class SceneRenderPipeline
+    template <typename _VertexType>
+    class SceneRenderPipeline
     {
       public:
         SceneRenderPipelineCreateInfo Spec;
-        Ref<GraphicsPipeline> Pipeline = nullptr;
+        Ref<GraphicsPipeline>         Pipeline = nullptr;
 
         SceneRenderPipeline()  = default;
         ~SceneRenderPipeline() = default;
@@ -49,13 +51,13 @@ namespace LTSE::Core
         {
             Spec = a_CreateInfo;
 
-            std::string l_VertexShaderFiles = GetResourcePath( a_CreateInfo.VertexShader ).string();
+            std::string                 l_VertexShaderFiles = GetResourcePath( a_CreateInfo.VertexShader ).string();
             Ref<Internal::ShaderModule> l_VertexShaderModule =
                 New<Internal::ShaderModule>( mGraphicContext.mContext, l_VertexShaderFiles, Internal::eShaderStageTypeFlags::VERTEX );
 
-            std::string l_FragmentShaderFiles = GetResourcePath( a_CreateInfo.FragmentShader ).string();
-            Ref<Internal::ShaderModule> l_FragmentShaderModule =
-                New<Internal::ShaderModule>( mGraphicContext.mContext, l_FragmentShaderFiles, Internal::eShaderStageTypeFlags::FRAGMENT );
+            std::string                 l_FragmentShaderFiles  = GetResourcePath( a_CreateInfo.FragmentShader ).string();
+            Ref<Internal::ShaderModule> l_FragmentShaderModule = New<Internal::ShaderModule>(
+                mGraphicContext.mContext, l_FragmentShaderFiles, Internal::eShaderStageTypeFlags::FRAGMENT );
 
             GraphicsPipelineCreateInfo l_PipelineCreateInfo{};
             l_PipelineCreateInfo.mShaderStages        = { { l_VertexShaderModule, "main" }, { l_FragmentShaderModule, "main" } };
@@ -85,7 +87,7 @@ namespace LTSE::Core
         }
 
         virtual std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout() = 0;
-        virtual std::vector<sPushConstantRange> GetPushConstantLayout()        = 0;
+        virtual std::vector<sPushConstantRange>       GetPushConstantLayout()  = 0;
 
       protected:
         GraphicContext mGraphicContext;

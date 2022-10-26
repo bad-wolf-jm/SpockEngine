@@ -24,9 +24,9 @@ namespace LTSE::Core
 
     struct MeshRendererCreateInfo
     {
-        bool Opaque             = false;
-        bool IsTwoSided         = false;
-        float LineWidth         = 1.0f;
+        bool     Opaque         = false;
+        bool     IsTwoSided     = false;
+        float    LineWidth      = 1.0f;
         fs::path VertexShader   = "";
         fs::path FragmentShader = "";
 
@@ -34,7 +34,8 @@ namespace LTSE::Core
 
         bool operator==( const MeshRendererCreateInfo &p ) const
         {
-            return ( IsTwoSided == p.IsTwoSided ) && ( LineWidth == p.LineWidth ) && ( VertexShader == p.VertexShader ) && ( FragmentShader == p.FragmentShader );
+            return ( IsTwoSided == p.IsTwoSided ) && ( LineWidth == p.LineWidth ) && ( VertexShader == p.VertexShader ) &&
+                   ( FragmentShader == p.FragmentShader );
         }
     };
 
@@ -75,7 +76,7 @@ namespace LTSE::Core
         static Ref<DescriptorSetLayout> GetNodeSetLayout( GraphicContext &a_GraphicContext );
 
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
-        std::vector<sPushConstantRange> GetPushConstantLayout();
+        std::vector<sPushConstantRange>       GetPushConstantLayout();
 
         ~MeshRenderer() = default;
     };

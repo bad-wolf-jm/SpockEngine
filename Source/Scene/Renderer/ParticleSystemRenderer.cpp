@@ -12,11 +12,13 @@ namespace LTSE::Graphics
 
     std::vector<sPushConstantRange> ParticleSystemRenderer::GetPushConstantLayout() { return {}; };
 
-    ParticleSystemRenderer::ParticleSystemRenderer( GraphicContext &a_GraphicContext, RenderContext &a_RenderContext, ParticleRendererCreateInfo a_CreateInfo )
+    ParticleSystemRenderer::ParticleSystemRenderer(
+        GraphicContext &a_GraphicContext, RenderContext &a_RenderContext, ParticleRendererCreateInfo a_CreateInfo )
         : SceneRenderPipeline<PositionData>( a_GraphicContext )
         , Spec{ a_CreateInfo }
     {
-        m_CameraBuffer = New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( CameraViewUniforms ) );
+        m_CameraBuffer =
+            New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( CameraViewUniforms ) );
 
         SceneRenderPipelineCreateInfo l_CreateInfo{};
         l_CreateInfo.IsTwoSided           = true;
@@ -27,25 +29,29 @@ namespace LTSE::Graphics
         l_CreateInfo.InstanceBufferLayout = Particle::GetDefaultLayout();
 
         DescriptorSetLayoutCreateInfo l_PipelineLayoutCI{};
-        l_PipelineLayoutCI.Bindings = { DescriptorBindingInfo{ 0, Internal::eDescriptorType::UNIFORM_BUFFER, { Internal::eShaderStageTypeFlags::VERTEX } } };
-        PipelineLayout              = New<DescriptorSetLayout>( mGraphicContext, l_PipelineLayoutCI );
+        l_PipelineLayoutCI.Bindings = {
+            DescriptorBindingInfo{ 0, Internal::eDescriptorType::UNIFORM_BUFFER, { Internal::eShaderStageTypeFlags::VERTEX } } };
+        PipelineLayout = New<DescriptorSetLayout>( mGraphicContext, l_PipelineLayoutCI );
 
         Initialize( l_CreateInfo );
 
         m_CameraDescriptors = New<DescriptorSet>( mGraphicContext, PipelineLayout );
         m_CameraDescriptors->Write( m_CameraBuffer, false, 0, sizeof( CameraViewUniforms ), 0 );
 
-        std::vector<math::vec3> g_vertex_buffer_data = { { -.5f, -.5f, 0.0f }, { -.5f, .5f, 0.0f }, { .5f, .5f, 0.0f }, { .5f, -.5f, 0.0f } };
-        std::vector<uint32_t> l_IndexBufferData      = { 0, 2, 1, 0, 3, 2 };
+        std::vector<math::vec3> g_vertex_buffer_data = {
+            { -.5f, -.5f, 0.0f }, { -.5f, .5f, 0.0f }, { .5f, .5f, 0.0f }, { .5f, -.5f, 0.0f } };
+        std::vector<uint32_t> l_IndexBufferData = { 0, 2, 1, 0, 3, 2 };
 
-        m_ParticleVertices = New<Buffer>( mGraphicContext, g_vertex_buffer_data, eBufferBindType::VERTEX_BUFFER, false, false, false, true );
-        m_ParticleIndices  = New<Buffer>( mGraphicContext, l_IndexBufferData, eBufferBindType::INDEX_BUFFER, false, false, false, true );
+        m_ParticleVertices =
+            New<Buffer>( mGraphicContext, g_vertex_buffer_data, eBufferBindType::VERTEX_BUFFER, false, false, false, true );
+        m_ParticleIndices =
+            New<Buffer>( mGraphicContext, l_IndexBufferData, eBufferBindType::INDEX_BUFFER, false, false, false, true );
     }
 
-    void ParticleSystemRenderer::Render( math::mat4 a_Projection, math::mat4 a_View, RenderContext &aRenderContext, ParticleData &a_ParticleData )
+    void ParticleSystemRenderer::Render(
+        math::mat4 a_Projection, math::mat4 a_View, RenderContext &aRenderContext, ParticleData &a_ParticleData )
     {
-        if( a_ParticleData.Particles == nullptr )
-            return;
+        if( a_ParticleData.Particles == nullptr ) return;
 
         CameraViewUniforms l_View{ a_ParticleData.Model, a_View, a_Projection, a_ParticleData.ParticleSize };
 

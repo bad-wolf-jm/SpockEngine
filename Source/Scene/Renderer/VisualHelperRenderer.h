@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Core/Math/Types.h"
-#include "Core/Types.h"
 #include "Core/Memory.h"
+#include "Core/Types.h"
+
 
 #include "Core/GraphicContext//Buffer.h"
 #include "Core/GraphicContext//DescriptorSet.h"
@@ -10,8 +11,9 @@
 
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
-#include "Core/Vulkan/VkRenderPass.h"
 #include "Core/GraphicContext//Texture2D.h"
+#include "Core/Vulkan/VkRenderPass.h"
+
 
 #include "Scene/Components/VisualHelpers.h"
 #include "Scene/VertexData.h"
@@ -32,7 +34,7 @@ namespace LTSE::Graphics
         math::mat4 Projection = math::mat4( 1.0f );
 
         VisualHelperRenderer() = default;
-        VisualHelperRenderer( GraphicContext &a_GraphicContext, Ref<LTSE::Graphics::Internal::sVkRenderPassObject>  a_RenderPass );
+        VisualHelperRenderer( GraphicContext &a_GraphicContext, Ref<LTSE::Graphics::Internal::sVkRenderPassObject> a_RenderPass );
 
         ~VisualHelperRenderer() = default;
 
@@ -51,7 +53,7 @@ namespace LTSE::Graphics
         void Render( math::mat4 a_Transform, CameraHelperComponent &a_AxesComponent, RenderContext &aRenderContext );
 
       private:
-        GraphicContext mGraphicContext;
+        GraphicContext        mGraphicContext;
         Ref<GraphicsPipeline> m_RenderPipeline = nullptr;
 
         Ref<VisualHelperMeshRenderer> m_MeshRenderer             = nullptr;

@@ -9,7 +9,8 @@ namespace LTSE::Core
 
     std::vector<sPushConstantRange> CoordinateGridRenderer::GetPushConstantLayout() { return {}; };
 
-    CoordinateGridRenderer::CoordinateGridRenderer( GraphicContext &a_GraphicContext, RenderContext &a_RenderContext, CoordinateGridRendererCreateInfo a_CreateInfo )
+    CoordinateGridRenderer::CoordinateGridRenderer(
+        GraphicContext &a_GraphicContext, RenderContext &a_RenderContext, CoordinateGridRendererCreateInfo a_CreateInfo )
         : SceneRenderPipeline<EmptyVertexData>( a_GraphicContext )
         , Spec{ a_CreateInfo }
     {
@@ -21,12 +22,14 @@ namespace LTSE::Core
         l_CreateInfo.RenderPass     = a_CreateInfo.RenderPass;
 
         DescriptorSetLayoutCreateInfo l_PipelineLayoutCI{};
-        l_PipelineLayoutCI.Bindings = { DescriptorBindingInfo{ 0, Internal::eDescriptorType::UNIFORM_BUFFER, { Internal::eShaderStageTypeFlags::VERTEX } } };
-        PipelineLayout              = New<DescriptorSetLayout>( mGraphicContext, l_PipelineLayoutCI );
+        l_PipelineLayoutCI.Bindings = {
+            DescriptorBindingInfo{ 0, Internal::eDescriptorType::UNIFORM_BUFFER, { Internal::eShaderStageTypeFlags::VERTEX } } };
+        PipelineLayout = New<DescriptorSetLayout>( mGraphicContext, l_PipelineLayoutCI );
 
         Initialize( l_CreateInfo );
 
-        m_CameraBuffer      = New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( CameraViewUniforms ) );
+        m_CameraBuffer =
+            New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( CameraViewUniforms ) );
         m_CameraDescriptors = New<DescriptorSet>( a_GraphicContext, PipelineLayout );
         m_CameraDescriptors->Write( m_CameraBuffer, false, 0, sizeof( CameraViewUniforms ), 0 );
     }

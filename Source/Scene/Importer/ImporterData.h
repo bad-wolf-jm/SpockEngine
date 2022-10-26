@@ -22,7 +22,7 @@ namespace LTSE::Core
     {
         std::string mName = "";
 
-        Ref<TextureData2D> mTexture    = nullptr;
+        Ref<TextureData2D>    mTexture = nullptr;
         Ref<TextureSampler2D> mSampler = nullptr;
     };
 
@@ -51,15 +51,15 @@ namespace LTSE::Core
 
         struct
         {
-            AlphaMode mMode = AlphaMode::OPAQUE_MODE;
-            float mCutOff   = 1.0f;
+            AlphaMode mMode   = AlphaMode::OPAQUE_MODE;
+            float     mCutOff = 1.0f;
         } mAlpha;
 
         struct
         {
-            bool mIsTwoSided            = false;
-            float mMetallicFactor       = 1.0f;
-            float mRoughnessFactor      = 1.0f;
+            bool       mIsTwoSided      = false;
+            float      mMetallicFactor  = 1.0f;
+            float      mRoughnessFactor = 1.0f;
             math::vec4 mBaseColorFactor = math::vec4( 1.0f );
             math::vec4 mEmissiveFactor  = math::vec4( 1.0f );
         } mConstants;
@@ -83,9 +83,9 @@ namespace LTSE::Core
             CUBICSPLINE
         };
 
-        Interpolation mInterpolation        = Interpolation::LINEAR;
-        std::vector<float> mInputs          = {};
-        std::vector<glm::vec4> mOutputsVec4 = {};
+        Interpolation          mInterpolation = Interpolation::LINEAR;
+        std::vector<float>     mInputs        = {};
+        std::vector<glm::vec4> mOutputsVec4   = {};
     };
 
     struct sImportedAnimationChannel
@@ -97,25 +97,25 @@ namespace LTSE::Core
             SCALE
         };
 
-        Channel mComponent     = Channel::TRANSLATION;
+        Channel  mComponent    = Channel::TRANSLATION;
         uint32_t mNodeID       = std::numeric_limits<uint32_t>::max();
         uint32_t mSamplerIndex = std::numeric_limits<uint32_t>::max();
     };
 
     struct sImportedAnimation
     {
-        std::string mName                                = "";
+        std::string                            mName     = "";
         std::vector<sImportedAnimationSampler> mSamplers = {};
         std::vector<sImportedAnimationChannel> mChannels = {};
-        float mStart                                     = std::numeric_limits<float>::max();
-        float mEnd                                       = std::numeric_limits<float>::min();
+        float                                  mStart    = std::numeric_limits<float>::max();
+        float                                  mEnd      = std::numeric_limits<float>::min();
     };
 
     struct sImportedSkin
     {
-        std::string mName                            = "";
-        uint32_t mSkeletonRootNodeID                 = 0;
-        std::vector<uint32_t> mJointNodeID           = {};
+        std::string             mName                = "";
+        uint32_t                mSkeletonRootNodeID  = 0;
+        std::vector<uint32_t>   mJointNodeID         = {};
         std::vector<math::mat4> mInverseBindMatrices = {};
     };
 
@@ -125,33 +125,33 @@ namespace LTSE::Core
 
         Graphics::ePrimitiveTopology mPrimitive = Graphics::ePrimitiveTopology::TRIANGLES;
 
-        uint32_t mMaterialID               = 0;
-        std::vector<uint32_t> mIndices     = {};
-        std::vector<math::vec3> mPositions = {};
-        std::vector<math::vec3> mNormals   = {};
-        std::vector<math::vec2> mUV0       = {};
-        std::vector<math::vec2> mUV1       = {};
-        std::vector<math::uvec4> mJoints   = {};
-        std::vector<math::vec4> mWeights   = {};
+        uint32_t                 mMaterialID = 0;
+        std::vector<uint32_t>    mIndices    = {};
+        std::vector<math::vec3>  mPositions  = {};
+        std::vector<math::vec3>  mNormals    = {};
+        std::vector<math::vec2>  mUV0        = {};
+        std::vector<math::vec2>  mUV1        = {};
+        std::vector<math::uvec4> mJoints     = {};
+        std::vector<math::vec4>  mWeights    = {};
     };
 
     struct sImportedNode
     {
-        std::string mName               = "";
-        uint32_t mParentID              = std::numeric_limits<uint32_t>::max();
-        uint32_t mSkinID                = std::numeric_limits<uint32_t>::max();
-        math::mat4 mTransform           = math::mat4( 1.0f );
-        std::vector<uint32_t> mChildren = {};
-        std::vector<uint32_t> mMeshes   = {};
+        std::string           mName      = "";
+        uint32_t              mParentID  = std::numeric_limits<uint32_t>::max();
+        uint32_t              mSkinID    = std::numeric_limits<uint32_t>::max();
+        math::mat4            mTransform = math::mat4( 1.0f );
+        std::vector<uint32_t> mChildren  = {};
+        std::vector<uint32_t> mMeshes    = {};
     };
 
     struct sImportedModel
     {
-        std::vector<sImportedTexture> mTextures     = {};
-        std::vector<sImportedMaterial> mMaterials   = {};
+        std::vector<sImportedTexture>   mTextures   = {};
+        std::vector<sImportedMaterial>  mMaterials  = {};
         std::vector<sImportedAnimation> mAnimations = {};
-        std::vector<sImportedMesh> mMeshes          = {};
-        std::vector<sImportedNode> mNodes           = {};
-        std::vector<sImportedSkin> mSkins           = {};
+        std::vector<sImportedMesh>      mMeshes     = {};
+        std::vector<sImportedNode>      mNodes      = {};
+        std::vector<sImportedSkin>      mSkins      = {};
     };
 } // namespace LTSE::Core

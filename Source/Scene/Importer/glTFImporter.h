@@ -17,8 +17,8 @@ namespace LTSE::Core
         ~GlTFImporter() = default;
 
       private:
-        tinygltf::Model mGltfModel;
-        std::vector<sTextureSamplingInfo> mTextureSamplers       = {};
+        tinygltf::Model                        mGltfModel;
+        std::vector<sTextureSamplingInfo>      mTextureSamplers  = {};
         std::unordered_map<uint32_t, uint32_t> mTextureIDLookup  = {};
         std::unordered_map<uint32_t, uint32_t> mMaterialIDLookup = {};
         std::unordered_map<uint32_t, uint32_t> mNodeIDLookup     = {};
@@ -27,11 +27,13 @@ namespace LTSE::Core
 
       private:
         void LoadSamplers();
-        void CreateTexture( uint32_t aTextureIndex, std::string aName, tinygltf::Image const &aGltfimage, sTextureSamplingInfo const &aTextureSamplingInfo );
+        void CreateTexture( uint32_t aTextureIndex, std::string aName, tinygltf::Image const &aGltfimage,
+            sTextureSamplingInfo const &aTextureSamplingInfo );
         void LoadTextures();
         sImportedMaterial::sTextureReference RetrieveTextureData( tinygltf::Material &aMaterial, std::string aName );
         sImportedMaterial::sTextureReference RetrieveAdditionalTextureData( tinygltf::Material &aMaterial, std::string aName );
-        template <typename _Ty> _Ty RetrieveValue( tinygltf::Material &aMaterial, std::string aName, _Ty aDefault )
+        template <typename _Ty>
+        _Ty RetrieveValue( tinygltf::Material &aMaterial, std::string aName, _Ty aDefault )
         {
             if( aMaterial.values.find( aName ) != aMaterial.values.end() )
             {
@@ -42,11 +44,12 @@ namespace LTSE::Core
         }
         math::vec4 RetrieveVec4( tinygltf::Material &aMaterial, std::string aName, math::vec4 aDefault );
 
-        template <typename _Ty> void RetrievePrimitiveAttribute( const tinygltf::Primitive &aPrimitive, std::string aName, std::vector<_Ty> &aOutput )
+        template <typename _Ty>
+        void RetrievePrimitiveAttribute( const tinygltf::Primitive &aPrimitive, std::string aName, std::vector<_Ty> &aOutput )
         {
             if( aPrimitive.attributes.find( aName ) != aPrimitive.attributes.end() )
             {
-                const tinygltf::Accessor &lAccessor     = mGltfModel.accessors[aPrimitive.attributes.find( aName )->second];
+                const tinygltf::Accessor   &lAccessor   = mGltfModel.accessors[aPrimitive.attributes.find( aName )->second];
                 const tinygltf::BufferView &lBufferView = mGltfModel.bufferViews[lAccessor.bufferView];
 
                 auto *lBufferData = &( mGltfModel.buffers[lBufferView.buffer].data[lAccessor.byteOffset + lBufferView.byteOffset] );
@@ -59,7 +62,8 @@ namespace LTSE::Core
             }
         }
 
-        std::tuple<uint32_t, uint32_t, uint32_t, uint32_t> RetrievePrimitiveCount( const tinygltf::Primitive &aPrimitive, std::string aName );
+        std::tuple<uint32_t, uint32_t, uint32_t, uint32_t> RetrievePrimitiveCount(
+            const tinygltf::Primitive &aPrimitive, std::string aName );
 
         void LoadMaterials();
 

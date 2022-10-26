@@ -12,10 +12,12 @@ namespace LTSE::Graphics
 
     std::vector<sPushConstantRange> VisualHelperMeshRenderer::GetPushConstantLayout()
     {
-        return { { { Internal::eShaderStageTypeFlags::VERTEX, Internal::eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( CameraViewUniforms ) } };
+        return { { { Internal::eShaderStageTypeFlags::VERTEX, Internal::eShaderStageTypeFlags::FRAGMENT }, 0,
+            sizeof( CameraViewUniforms ) } };
     };
 
-    VisualHelperMeshRenderer::VisualHelperMeshRenderer( GraphicContext &a_GraphicContext, VisualHelperMeshRendererCreateInfo a_CreateInfo )
+    VisualHelperMeshRenderer::VisualHelperMeshRenderer(
+        GraphicContext &a_GraphicContext, VisualHelperMeshRendererCreateInfo a_CreateInfo )
         : SceneRenderPipeline<SimpleVertexData>( a_GraphicContext )
         , Spec{ a_CreateInfo }
     {
@@ -29,12 +31,14 @@ namespace LTSE::Graphics
         Initialize( l_CreateInfo );
     }
 
-    void VisualHelperMeshRenderer::Render( math::mat4 a_Model, math::mat4 a_View, math::mat4 a_Projection, math::vec3 a_Color, Ref<Buffer> a_VertexBuffer,
-                                          Ref<Buffer> a_IndexBuffer, RenderContext &aRenderContext )    {
+    void VisualHelperMeshRenderer::Render( math::mat4 a_Model, math::mat4 a_View, math::mat4 a_Projection, math::vec3 a_Color,
+        Ref<Buffer> a_VertexBuffer, Ref<Buffer> a_IndexBuffer, RenderContext &aRenderContext )
+    {
         CameraViewUniforms l_View{ a_Model, a_View, a_Projection, math::vec4( a_Color, 1.0f ) };
 
         aRenderContext.Bind( Pipeline );
-        aRenderContext.PushConstants( { Internal::eShaderStageTypeFlags::VERTEX, Internal::eShaderStageTypeFlags::FRAGMENT }, 0, l_View );
+        aRenderContext.PushConstants(
+            { Internal::eShaderStageTypeFlags::VERTEX, Internal::eShaderStageTypeFlags::FRAGMENT }, 0, l_View );
         aRenderContext.Bind( a_VertexBuffer, a_IndexBuffer, 0 );
         aRenderContext.Draw( a_IndexBuffer->SizeAs<uint32_t>(), 0, 0, 1, 0 );
     }

@@ -15,10 +15,11 @@ namespace LTSE::Core::EntityComponentSystem::Components
     {
     };
 
-    template <typename _VertexType, typename _IndexType> struct MeshData
+    template <typename _VertexType, typename _IndexType>
+    struct MeshData
     {
         using VertexType = _VertexType;
-        using IndexType = _IndexType;
+        using IndexType  = _IndexType;
 
         Ref<Buffer> Vertices;
         Ref<Buffer> Indices;
@@ -49,7 +50,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
     struct CubeMeshData
     {
-        float SideLength = 1.0f;
+        float                                SideLength = 1.0f;
         MeshData<SimpleVertexData, uint32_t> Mesh;
 
         CubeMeshData()                       = default;
@@ -73,8 +74,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
     struct ArrowMeshData
     {
-        float Length      = 1.0f;
-        uint32_t Segments = 32;
+        float                                Length   = 1.0f;
+        uint32_t                             Segments = 32;
         MeshData<SimpleVertexData, uint32_t> Mesh;
 
         ArrowMeshData()                        = default;
@@ -85,7 +86,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
     struct CircleMeshData
     {
-        float Radius      = 1.0f;
+        float    Radius   = 1.0f;
         uint32_t Segments = 64;
 
         MeshData<math::vec3, uint32_t> Mesh;
@@ -105,7 +106,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         math::vec3 OriginColor = math::vec3{ 0.6f, 0.6f, 0.6f };
 
         ArrowMeshData AxisArrow;
-        CubeMeshData Origin;
+        CubeMeshData  Origin;
 
         AxesComponent()                        = default;
         AxesComponent( const AxesComponent & ) = default;
@@ -121,7 +122,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
     {
         sPointLightComponent LightData;
 
-        CubeMeshData Origin;
+        CubeMeshData   Origin;
         CircleMeshData AxisCircle;
 
         PointLightHelperComponent()                                    = default;
@@ -139,7 +140,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
         sDirectionalLightComponent LightData;
 
         ArrowMeshData Direction;
-        CubeMeshData Origin;
+        CubeMeshData  Origin;
 
         DirectionalLightHelperComponent()                                          = default;
         DirectionalLightHelperComponent( const DirectionalLightHelperComponent & ) = default;
@@ -167,9 +168,9 @@ namespace LTSE::Core::EntityComponentSystem::Components
     struct FieldOfViewHelperComponent
     {
         math::vec3 LookAtDirection;
-        float Rotation;
-        float Width;
-        float Height;
+        float      Rotation;
+        float      Width;
+        float      Height;
 
         PyramidMeshData Outline;
         SurfaceMeshData OuterLimit;
@@ -184,7 +185,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
     {
         sCameraComponent CameraData;
 
-        CubeMeshData Origin;
+        CubeMeshData               Origin;
         FieldOfViewHelperComponent FieldOfView;
 
         CameraHelperComponent()                                = default;
