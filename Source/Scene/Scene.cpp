@@ -384,12 +384,6 @@ namespace LTSE::Core
         return LoadModel( aModelData, aTransform, "MODEL" );
     }
 
-    // template <typename _Ty>
-    // void ReadComponent( Entity aEntity, ConfigurationNode const &aNode )
-    // {
-    //     //
-    // }
-
     template <typename _Ty>
     void ReadComponent( Entity aEntity, ConfigurationNode const &aNode, std::unordered_map<std::string, Entity> &aEntities )
     {
@@ -629,8 +623,7 @@ namespace LTSE::Core
                 [&]( ConfigurationNode &aNode ) { lInverseBindMatrices.push_back( ReadMatrix( aNode ) ); } );
 
             std::vector<math::mat4> lJointMatrices{};
-            lData["JointMatrices"].ForEach(
-                [&]( ConfigurationNode &aNode ) { lJointMatrices.push_back( ReadMatrix( aNode ) ); } );
+            lData["JointMatrices"].ForEach( [&]( ConfigurationNode &aNode ) { lJointMatrices.push_back( ReadMatrix( aNode ) ); } );
 
             auto &lComponent               = aEntity.Add<sSkeletonComponent>();
             lComponent.BoneCount           = lBones.size();
@@ -673,7 +666,7 @@ namespace LTSE::Core
         if( !aNode["sMaterialShaderComponent"].IsNull() )
         {
             auto &lComponent = aEntity.Add<sMaterialShaderComponent>();
-            auto &lData = aNode["sMaterialShaderComponent"];
+            auto &lData      = aNode["sMaterialShaderComponent"];
 
             lComponent.Type              = static_cast<MaterialType>( lData["Type"].As<uint8_t>( 0 ) );
             lComponent.IsTwoSided        = lData["IsTwoSided"].As<bool>( true );
