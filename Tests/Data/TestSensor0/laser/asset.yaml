@@ -1,7 +1,0 @@
-asset:
-  type: laser_assembly
-  data:
-    diffuser_data: "diffuser_data.lta"
-    waveform_template: "waveform_template.lta"
-    timebase_delay: { x: 1.0, y: 2.0, z: 3.0, w: 4.0 }
-    flash_time: { x: 5.0, y: 6.0, z: 7.0, w: 8.0 }
