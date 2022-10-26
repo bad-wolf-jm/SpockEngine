@@ -19,7 +19,7 @@ namespace LTSE::Graphics::Internal
 
     sVkShaderModuleObject::~sVkShaderModuleObject() { mContext->DestroyShaderModule( mVkObject ); }
 
-    static std::vector<char> ReadFile( const std::string& filename )
+    static std::vector<char> ReadFile( const std::string &filename )
     {
         std::ifstream lFileObject( filename, std::ios::ate | std::ios::binary );
 
@@ -43,10 +43,7 @@ namespace LTSE::Graphics::Internal
         return lBytecode;
     }
 
-    static bool IsSPIRV( std::string aFileName )
-    {
-        return ( aFileName.substr( aFileName.find_last_of( "." ) + 1 ) == "spv" );
-    }
+    static bool IsSPIRV( std::string aFileName ) { return ( aFileName.substr( aFileName.find_last_of( "." ) + 1 ) == "spv" ); }
 
     static std::vector<uint32_t> CompileShaderSources( std::string FilePaths, eShaderStageTypeFlags aShaderType )
     {
@@ -136,15 +133,13 @@ namespace LTSE::Graphics::Internal
 
         if( aBuffers.mType == eBufferBindType::STORAGE_BUFFER )
         {
-            lWriteDSOps.descriptorType = aBuffers.mDynamicOffset
-                                             ? VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC
-                                             : static_cast<VkDescriptorType>( eDescriptorType::STORAGE_BUFFER );
+            lWriteDSOps.descriptorType = aBuffers.mDynamicOffset ? VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC
+                                                                 : static_cast<VkDescriptorType>( eDescriptorType::STORAGE_BUFFER );
         }
         else if( aBuffers.mType == eBufferBindType::UNIFORM_BUFFER )
         {
-            lWriteDSOps.descriptorType = aBuffers.mDynamicOffset
-                                             ? VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
-                                             : static_cast<VkDescriptorType>( eDescriptorType::UNIFORM_BUFFER );
+            lWriteDSOps.descriptorType = aBuffers.mDynamicOffset ? VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
+                                                                 : static_cast<VkDescriptorType>( eDescriptorType::UNIFORM_BUFFER );
         }
         else
         {
@@ -199,14 +194,12 @@ namespace LTSE::Graphics::Internal
     }
 
     sVkPipelineLayoutObject::sVkPipelineLayoutObject( Ref<VkContext> aContext,
-        std::vector<Ref<sVkDescriptorSetLayoutObject>>               aDescriptorSetLayout,
-        std::vector<sPushConstantRange>                              aPushConstantRanges )
+        std::vector<Ref<sVkDescriptorSetLayoutObject>> aDescriptorSetLayout, std::vector<sPushConstantRange> aPushConstantRanges )
         : mContext{ aContext }
     {
 
         std::vector<VkDescriptorSetLayout> lDescriptorSetLayouts( aDescriptorSetLayout.size() );
-        for( uint32_t i = 0; i < aDescriptorSetLayout.size(); i++ )
-            lDescriptorSetLayouts[i] = aDescriptorSetLayout[i]->mVkObject;
+        for( uint32_t i = 0; i < aDescriptorSetLayout.size(); i++ ) lDescriptorSetLayouts[i] = aDescriptorSetLayout[i]->mVkObject;
 
         std::vector<VkPushConstantRange> lPushConstantRanges( aPushConstantRanges.size() );
         for( uint32_t i = 0; i < aPushConstantRanges.size(); i++ )
@@ -251,7 +244,7 @@ namespace LTSE::Graphics::Internal
     };
 
     sBufferLayoutElement::sBufferLayoutElement(
-        const std::string& aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation )
+        const std::string &aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation )
         : mName( aName )
         , mType( aType )
         , mBinding( aBinding )
@@ -272,7 +265,7 @@ namespace LTSE::Graphics::Internal
         mStride = 0;
 
         size_t offset = 0;
-        for( auto& lElement : mElements )
+        for( auto &lElement : mElements )
         {
             lElement.mOffset = offset;
             offset += lElement.mSize;
@@ -280,8 +273,8 @@ namespace LTSE::Graphics::Internal
         }
     }
 
-    void sBufferLayout::Compile( uint32_t aBinding, VkVertexInputBindingDescription& aBindingDesc,
-        std::vector<VkVertexInputAttributeDescription>& aAttributes, bool aInstanced )
+    void sBufferLayout::Compile( uint32_t aBinding, VkVertexInputBindingDescription &aBindingDesc,
+        std::vector<VkVertexInputAttributeDescription> &aAttributes, bool aInstanced )
     {
         aBindingDesc.binding   = aBinding;
         aBindingDesc.stride    = mStride;

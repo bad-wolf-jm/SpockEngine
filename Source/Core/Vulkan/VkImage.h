@@ -33,8 +33,8 @@ namespace LTSE::Graphics::Internal
         sVkImageObject( sVkImageObject & ) = default;
         sVkImageObject( Ref<VkContext> aContext, VkImage aExternalImage );
         sVkImageObject( Ref<VkContext> aContext, uint32_t aWidth, uint32_t aHeight, uint32_t aDepth, uint32_t aMipLevels,
-            uint32_t aLayers, uint8_t aSampleCount, bool aCubeCompatible, VkFormat aFormat,
-            VkMemoryPropertyFlags aProperties, VkImageUsageFlags aUsage );
+            uint32_t aLayers, uint8_t aSampleCount, bool aCubeCompatible, VkFormat aFormat, VkMemoryPropertyFlags aProperties,
+            VkImageUsageFlags aUsage );
 
         ~sVkImageObject();
 
@@ -64,9 +64,8 @@ namespace LTSE::Graphics::Internal
 
         sVkImageViewObject()                       = default;
         sVkImageViewObject( sVkImageViewObject & ) = default;
-        sVkImageViewObject( Ref<VkContext> aContext, Ref<sVkImageObject> aImageObject, uint32_t aLayerCount,
-            VkImageViewType aViewType, VkFormat aImageFormat, VkImageAspectFlags aAspectMask,
-            VkComponentMapping aComponentSwizzle );
+        sVkImageViewObject( Ref<VkContext> aContext, Ref<sVkImageObject> aImageObject, uint32_t aLayerCount, VkImageViewType aViewType,
+            VkFormat aImageFormat, VkImageAspectFlags aAspectMask, VkComponentMapping aComponentSwizzle );
 
         ~sVkImageViewObject();
 
@@ -81,8 +80,8 @@ namespace LTSE::Graphics::Internal
         Ref<sVkImageViewObject>    mImageView    = nullptr;
         Ref<sVkImageSamplerObject> mImageSampler = nullptr;
 
-        sVkFramebufferImage( Ref<VkContext> aContext, VkFormat aFormat, uint32_t aWidth, uint32_t aHeight,
-            uint32_t aSampleCount, VkImageUsageFlags aUsage, bool aIsSampled );
+        sVkFramebufferImage( Ref<VkContext> aContext, VkFormat aFormat, uint32_t aWidth, uint32_t aHeight, uint32_t aSampleCount,
+            VkImageUsageFlags aUsage, bool aIsSampled );
         sVkFramebufferImage( Ref<VkContext> aContext, VkImage aImage, VkFormat aFormat, uint32_t aWidth, uint32_t aHeight,
             uint32_t aSampleCount, VkImageUsageFlags aUsage, bool aIsSampled );
 
@@ -98,8 +97,8 @@ namespace LTSE::Graphics::Internal
 
         sVkFramebufferObject()                         = default;
         sVkFramebufferObject( sVkFramebufferObject & ) = default;
-        sVkFramebufferObject( Ref<VkContext> aContext, uint32_t aWidth, uint32_t aHeight, uint32_t aLayers,
-            VkRenderPass aRenderPass, std::vector<Ref<sVkFramebufferImage>> aAttachments );
+        sVkFramebufferObject( Ref<VkContext> aContext, uint32_t aWidth, uint32_t aHeight, uint32_t aLayers, VkRenderPass aRenderPass,
+            std::vector<Ref<sVkFramebufferImage>> aAttachments );
 
         ~sVkFramebufferObject();
 

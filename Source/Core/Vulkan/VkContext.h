@@ -47,21 +47,21 @@ namespace LTSE::Graphics::Internal
             VkImageUsageFlags aUsage );
         void    DestroyImage( VkImage aBuffer );
 
-        VkSampler CreateSampler( VkFilter aMinificationFilter, VkFilter aMagnificationFilter,
-            VkSamplerAddressMode aWrappingMode, VkSamplerMipmapMode aMipmapMode );
+        VkSampler CreateSampler( VkFilter aMinificationFilter, VkFilter aMagnificationFilter, VkSamplerAddressMode aWrappingMode,
+            VkSamplerMipmapMode aMipmapMode );
         void      DestroySampler( VkSampler aImage );
 
-        VkImageView CreateImageView( VkImage aImageObject, uint32_t aLayerCount, VkImageViewType aViewType,
-            VkFormat aImageFormat, VkImageAspectFlags aAspectMask, VkComponentMapping aComponentSwizzle );
+        VkImageView CreateImageView( VkImage aImageObject, uint32_t aLayerCount, VkImageViewType aViewType, VkFormat aImageFormat,
+            VkImageAspectFlags aAspectMask, VkComponentMapping aComponentSwizzle );
         void        DestroyImageView( VkImageView aImage );
 
-        VkRenderPass CreateRenderPass( std::vector<VkAttachmentDescription> aAttachments,
-            std::vector<VkSubpassDescription> aSubpasses, std::vector<VkSubpassDependency> aSubpassDependencies );
+        VkRenderPass CreateRenderPass( std::vector<VkAttachmentDescription> aAttachments, std::vector<VkSubpassDescription> aSubpasses,
+            std::vector<VkSubpassDependency> aSubpassDependencies );
         void         DestroyRenderPass( VkRenderPass aRenderPass );
 
-        VkFramebuffer CreateFramebuffer( std::vector<VkImageView> aImageViews, uint32_t aWidth, uint32_t aHeight,
-            uint32_t aLayers, VkRenderPass aRenderPass );
-        void          DestroyFramebuffer( VkFramebuffer aFramebuffer );
+        VkFramebuffer CreateFramebuffer(
+            std::vector<VkImageView> aImageViews, uint32_t aWidth, uint32_t aHeight, uint32_t aLayers, VkRenderPass aRenderPass );
+        void DestroyFramebuffer( VkFramebuffer aFramebuffer );
 
         VkPipelineLayout CreatePipelineLayout(
             std::vector<VkDescriptorSetLayout> aDescriptorSetLayout, std::vector<VkPushConstantRange> aPushConstants );
@@ -77,12 +77,10 @@ namespace LTSE::Graphics::Internal
         void             DestroyDescriptorPool( VkDescriptorPool aDescriptorPool );
         VkDescriptorSet  AllocateDescriptorSet(
              VkDescriptorPool aDescriptorPool, VkDescriptorSetLayout aLayout, uint32_t aDescriptorCount = 0 );
-        void FreeDescriptorSet(
-            VkDescriptorPool aDescriptorPool, VkDescriptorSet *aDescriptorSet, uint32_t aDescriptorCount = 0 );
+        void FreeDescriptorSet( VkDescriptorPool aDescriptorPool, VkDescriptorSet *aDescriptorSet, uint32_t aDescriptorCount = 0 );
 
-        VkDescriptorSetLayout CreateDescriptorSetLayout(
-            std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded );
-        void DestroyDescriptorSetLayout( VkDescriptorSetLayout aDescriptorSetLayout );
+        VkDescriptorSetLayout CreateDescriptorSetLayout( std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded );
+        void                  DestroyDescriptorSetLayout( VkDescriptorSetLayout aDescriptorSetLayout );
 
         std::tuple<VkFormat, uint32_t, VkExtent2D, VkSwapchainKHR> CreateSwapChain();
         void                                                       DestroySwapChain( VkSwapchainKHR aSwapchain );
@@ -110,8 +108,7 @@ namespace LTSE::Graphics::Internal
             if( aMemory == VK_NULL_HANDLE ) return nullptr;
 
             void *lMappedData;
-            vkMapMemory(
-                mVkLogicalDevice, aMemory, aOffset * sizeof( _MapType ), aSize * sizeof( _MapType ), 0, &lMappedData );
+            vkMapMemory( mVkLogicalDevice, aMemory, aOffset * sizeof( _MapType ), aSize * sizeof( _MapType ), 0, &lMappedData );
             return reinterpret_cast<_MapType *>( lMappedData );
         }
         void UnmapMemory( VkDeviceMemory aMemory ) { vkUnmapMemory( mVkLogicalDevice, aMemory ); }

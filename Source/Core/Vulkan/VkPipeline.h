@@ -16,8 +16,8 @@ namespace LTSE::Graphics::Internal
     {
         VkShaderModule mVkObject = VK_NULL_HANDLE;
 
-        sVkShaderModuleObject()                         = default;
-        sVkShaderModuleObject( sVkShaderModuleObject& ) = default;
+        sVkShaderModuleObject()                          = default;
+        sVkShaderModuleObject( sVkShaderModuleObject & ) = default;
         sVkShaderModuleObject( Ref<VkContext> mContext, std::vector<uint32_t> aByteCode );
 
         ~sVkShaderModuleObject();
@@ -30,10 +30,9 @@ namespace LTSE::Graphics::Internal
     {
         VkDescriptorSetLayout mVkObject = VK_NULL_HANDLE;
 
-        sVkDescriptorSetLayoutObject()                                = default;
-        sVkDescriptorSetLayoutObject( sVkDescriptorSetLayoutObject& ) = default;
-        sVkDescriptorSetLayoutObject(
-            Ref<VkContext> mContext, std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded );
+        sVkDescriptorSetLayoutObject()                                 = default;
+        sVkDescriptorSetLayoutObject( sVkDescriptorSetLayoutObject & ) = default;
+        sVkDescriptorSetLayoutObject( Ref<VkContext> mContext, std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded );
 
         ~sVkDescriptorSetLayoutObject();
 
@@ -126,8 +125,8 @@ namespace LTSE::Graphics::Internal
 
         VkDescriptorSet mVkObject = VK_NULL_HANDLE;
 
-        sVkDescriptorSetObject()                          = default;
-        sVkDescriptorSetObject( sVkDescriptorSetObject& ) = default;
+        sVkDescriptorSetObject()                           = default;
+        sVkDescriptorSetObject( sVkDescriptorSetObject & ) = default;
         sVkDescriptorSetObject( Ref<VkContext> aContext, VkDescriptorPool aDescriptorPool, VkDescriptorSet aDescriporSet );
 
         void Write( sBufferBindInfo aBuffers );
@@ -144,10 +143,9 @@ namespace LTSE::Graphics::Internal
     {
         VkDescriptorPool mVkObject = VK_NULL_HANDLE;
 
-        sVkDescriptorPoolObject()                           = default;
-        sVkDescriptorPoolObject( sVkDescriptorPoolObject& ) = default;
-        sVkDescriptorPoolObject(
-            Ref<VkContext> mContext, uint32_t aDescriptorSetCount, std::vector<VkDescriptorPoolSize> aPoolSizes );
+        sVkDescriptorPoolObject()                            = default;
+        sVkDescriptorPoolObject( sVkDescriptorPoolObject & ) = default;
+        sVkDescriptorPoolObject( Ref<VkContext> mContext, uint32_t aDescriptorSetCount, std::vector<VkDescriptorPoolSize> aPoolSizes );
 
         Ref<sVkDescriptorSetObject> Allocate( Ref<sVkDescriptorSetLayoutObject> aLayout, uint32_t aDescriptorCount = 0 );
 
@@ -168,11 +166,10 @@ namespace LTSE::Graphics::Internal
     {
         VkPipelineLayout mVkObject = VK_NULL_HANDLE;
 
-        sVkPipelineLayoutObject()                           = default;
-        sVkPipelineLayoutObject( sVkPipelineLayoutObject& ) = default;
-        sVkPipelineLayoutObject( Ref<VkContext>            aContext,
-            std::vector<Ref<sVkDescriptorSetLayoutObject>> aDescriptorSetLayout,
-            std::vector<sPushConstantRange>                aPushConstantRanges );
+        sVkPipelineLayoutObject()                            = default;
+        sVkPipelineLayoutObject( sVkPipelineLayoutObject & ) = default;
+        sVkPipelineLayoutObject( Ref<VkContext> aContext, std::vector<Ref<sVkDescriptorSetLayoutObject>> aDescriptorSetLayout,
+            std::vector<sPushConstantRange> aPushConstantRanges );
 
         ~sVkPipelineLayoutObject();
 
@@ -233,7 +230,7 @@ namespace LTSE::Graphics::Internal
         size_t          mOffset;
 
         sBufferLayoutElement() = default;
-        sBufferLayoutElement( const std::string& aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation );
+        sBufferLayoutElement( const std::string &aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation );
     };
 
     /** @brief */
@@ -243,7 +240,7 @@ namespace LTSE::Graphics::Internal
         sBufferLayout() {}
         sBufferLayout( std::initializer_list<sBufferLayoutElement> aElements );
 
-        sBufferLayout& operator=( std::initializer_list<sBufferLayoutElement> aElements )
+        sBufferLayout &operator=( std::initializer_list<sBufferLayoutElement> aElements )
         {
             mElements = aElements;
             CalculateOffsetsAndStride();
@@ -252,7 +249,7 @@ namespace LTSE::Graphics::Internal
 
         uint32_t GetStride() const { return mStride; }
 
-        const std::vector<sBufferLayoutElement>& GetElements() const { return mElements; }
+        const std::vector<sBufferLayoutElement> &GetElements() const { return mElements; }
 
         std::vector<sBufferLayoutElement>::iterator begin() { return mElements.begin(); }
         std::vector<sBufferLayoutElement>::iterator end() { return mElements.end(); }
@@ -260,8 +257,8 @@ namespace LTSE::Graphics::Internal
         std::vector<sBufferLayoutElement>::const_iterator begin() const { return mElements.begin(); }
         std::vector<sBufferLayoutElement>::const_iterator end() const { return mElements.end(); }
 
-        void Compile( uint32_t aBinding, VkVertexInputBindingDescription& o_Binding,
-            std::vector<VkVertexInputAttributeDescription>& o_Attributes, bool aInstanced );
+        void Compile( uint32_t aBinding, VkVertexInputBindingDescription &o_Binding,
+            std::vector<VkVertexInputAttributeDescription> &o_Attributes, bool aInstanced );
 
       private:
         void CalculateOffsetsAndStride();
@@ -338,8 +335,8 @@ namespace LTSE::Graphics::Internal
     {
         VkPipeline mVkObject = VK_NULL_HANDLE;
 
-        sVkPipelineObject()                     = default;
-        sVkPipelineObject( sVkPipelineObject& ) = default;
+        sVkPipelineObject()                      = default;
+        sVkPipelineObject( sVkPipelineObject & ) = default;
         sVkPipelineObject( Ref<VkContext> aContext, uint8_t aSampleCount, sBufferLayout aVertexBufferLayout,
             sBufferLayout aInstanceBufferLayout, ePrimitiveTopology aTopology, eFaceCulling aCullMode, float aLineWidth,
             sDepthTesting aDepthTest, sBlending aBlending, std::vector<sShader> aShaderStages,

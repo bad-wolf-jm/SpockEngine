@@ -16,8 +16,8 @@ namespace LTSE::Graphics::Internal
         mVkObject = mContext->CreateRenderPass( aAttachments, aSubpasses, aSubpassDependencies );
     }
 
-    sVkRenderPassObject::sVkRenderPassObject( Ref<VkContext> aContext, VkFormat aFormat, uint32_t aSampleCount,
-        bool aIsSampled, bool aIsPresented, math::vec4 aClearColor )
+    sVkRenderPassObject::sVkRenderPassObject(
+        Ref<VkContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented, math::vec4 aClearColor )
         : mSampleCount{ aSampleCount }
         , mContext{ aContext }
     {
@@ -96,24 +96,21 @@ namespace LTSE::Graphics::Internal
         std::vector<VkSubpassDependency> lSubpassDependencies( 2 );
         lSubpassDependencies[0].srcSubpass    = VK_SUBPASS_EXTERNAL;
         lSubpassDependencies[0].srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
-        lSubpassDependencies[0].srcStageMask  = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT |
-                                               VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT |
+        lSubpassDependencies[0].srcStageMask  = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT | VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT |
                                                VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
         lSubpassDependencies[0].dstSubpass    = 0;
         lSubpassDependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
         lSubpassDependencies[0].dstStageMask  = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 
-        lSubpassDependencies[1].srcSubpass = 0;
-        lSubpassDependencies[1].srcAccessMask =
-            VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
+        lSubpassDependencies[1].srcSubpass    = 0;
+        lSubpassDependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
         lSubpassDependencies[1].srcStageMask =
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
         lSubpassDependencies[1].dstSubpass    = VK_SUBPASS_EXTERNAL;
         lSubpassDependencies[1].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
         lSubpassDependencies[1].dstStageMask  = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 
-        mVkObject =
-            mContext->CreateRenderPass( lAttachments, std::vector<VkSubpassDescription>{ lSubpass }, lSubpassDependencies );
+        mVkObject = mContext->CreateRenderPass( lAttachments, std::vector<VkSubpassDescription>{ lSubpass }, lSubpassDependencies );
     }
 
     sVkRenderPassObject::~sVkRenderPassObject() { mContext->DestroyRenderPass( mVkObject ); }
