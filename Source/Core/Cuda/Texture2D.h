@@ -12,10 +12,10 @@
 
 #include "CudaAssert.h"
 
-#include "Core/ColorFormat.h"
+#include "Core/Textures/ColorFormat.h"
 #include "Core/Logging.h"
 #include "Core/Memory.h"
-#include "Core/TextureTypes.h"
+#include "Core/Textures/TextureTypes.h"
 
 #include "Core/Math/Types.h"
 

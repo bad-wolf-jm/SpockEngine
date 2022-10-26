@@ -13,11 +13,12 @@
 #define STBI_NO_THREAD_LOCALS
 #include "stb_image.h"
 
-#include "Core.h"
-#include "Memory.h"
+#include "Core/Core.h"
+#include "Core/Memory.h"
+
 #include "TextureData.h"
 
-#include "Logging.h"
+#include "Core/Logging.h"
 
 #include <filesystem>
 #include <fstream>

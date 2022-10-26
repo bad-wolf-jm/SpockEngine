@@ -290,7 +290,7 @@ namespace LTSE::Core
         auto lOutputSize           = Read<uint32_t>();
         aMaterialData.mOutputsVec4 = Read<math::vec4>( lOutputSize );
 
-        LTSE::Logging::Info("{}", aIndex);
+        LTSE::Logging::Info( "{}", aIndex );
     }
 
 } // namespace LTSE::Core

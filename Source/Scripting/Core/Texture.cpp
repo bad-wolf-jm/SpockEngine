@@ -2,7 +2,7 @@
 #include "Vector.h"
 
 #include "Core/Memory.h"
-#include "Core/TextureData.h"
+#include "Core/Textures/TextureData.h"
 #include "Core/Cuda/MultiTensor.h"
 
 #include "TensorOps/Scope.h"

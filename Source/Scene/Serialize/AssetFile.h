@@ -13,7 +13,7 @@
 #include <functional>
 #include <string>
 
-#include "Core/TextureData.h"
+#include "Core/Textures/TextureData.h"
 #include "Scene/Importer/ImporterData.h"
 #include "Scene/VertexData.h"
 

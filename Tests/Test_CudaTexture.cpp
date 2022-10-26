@@ -8,8 +8,8 @@
 #include "TestUtils.h"
 
 #include "Core/Math/Types.h"
-#include "Core/TextureData.h"
-#include "Core/TextureTypes.h"
+#include "Core/Textures/TextureData.h"
+#include "Core/Textures/TextureTypes.h"
 
 #include "Core/Cuda/Texture2D.h"
 

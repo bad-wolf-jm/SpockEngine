@@ -5,7 +5,7 @@
 #include <type_traits>
 
 #include "Core/EntityRegistry/Registry.h"
-#include "Core/TextureData.h"
+#include "Core/Textures/TextureData.h"
 
 #include "Core/Cuda/MultiTensor.h"
 

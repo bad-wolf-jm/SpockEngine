@@ -20,7 +20,7 @@
 #include "VertexData.h"
 
 #include "Core/EntityRegistry/Registry.h"
-#include "Core/TextureTypes.h"
+#include "Core/Textures/TextureTypes.h"
 
 #include "Scripting/ScriptingEngine.h"
 

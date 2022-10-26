@@ -7,9 +7,10 @@ cuda_compile_and_embed(g_SensorModelEnvironmentSampler EnvironmentSampler/Device
 add_library(LTSimulationEngineRuntime STATIC
     Core/File.cpp
     Core/Resource.cpp
-    Core/ColorFormat.cpp
     Core/Logging.cpp
-    Core/TextureData.cpp
+
+    Core/Textures/ColorFormat.cpp
+    Core/Textures/TextureData.cpp
     
     Scripting/ScriptingEngine.cpp
     Scripting/Core/Texture.cpp

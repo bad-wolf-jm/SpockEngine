@@ -4,9 +4,9 @@
 
 #include <vulkan/vulkan.h>
 
-#include "Core/ColorFormat.h"
+#include "Core/Textures/ColorFormat.h"
 #include "Core/Memory.h"
-#include "Core/TextureData.h"
+#include "Core/Textures/TextureData.h"
 
 #include <gli/gli.hpp>
 

@@ -3,7 +3,7 @@
 #include <sol/sol.hpp>
 
 #include "Core/EntityRegistry/Registry.h"
-#include "Core/TextureData.h"
+#include "Core/Textures/TextureData.h"
 
 namespace LTSE::Core
 {
