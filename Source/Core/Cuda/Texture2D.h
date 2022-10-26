@@ -12,9 +12,9 @@
 
 #include "CudaAssert.h"
 
-#include "Core/Textures/ColorFormat.h"
 #include "Core/Logging.h"
 #include "Core/Memory.h"
+#include "Core/Textures/ColorFormat.h"
 #include "Core/Textures/TextureTypes.h"
 
 #include "Core/Math/Types.h"
@@ -33,13 +33,13 @@ namespace LTSE::Cuda
      */
     struct sTextureCreateInfo
     {
-        eSamplerFilter mFilterMode     = eSamplerFilter::LINEAR;
-        eSamplerWrapping mWrappingMode = eSamplerWrapping::CLAMP_TO_BORDER;
-        eColorFormat mFormat           = eColorFormat::R32_FLOAT;
-        int32_t mWidth                 = 0;
-        int32_t mHeight                = 0;
-        bool mNormalizedCoordinates    = false;
-        bool mNormalizedValues         = false;
+        eSamplerFilter   mFilterMode            = eSamplerFilter::LINEAR;
+        eSamplerWrapping mWrappingMode          = eSamplerWrapping::CLAMP_TO_BORDER;
+        eColorFormat     mFormat                = eColorFormat::R32_FLOAT;
+        int32_t          mWidth                 = 0;
+        int32_t          mHeight                = 0;
+        bool             mNormalizedCoordinates = false;
+        bool             mNormalizedValues      = false;
     };
 
     class TextureSampler2D;
@@ -110,8 +110,8 @@ namespace LTSE::Cuda
     class TextureSampler2D
     {
       public:
-        sTextureSamplingInfo mSamplingSpec{}; //!< Copy of the specification structure used to create the texture
-        Ref<Texture2D> mTexture = nullptr;    //!< Reference to the parent texture
+        sTextureSamplingInfo mSamplingSpec{};    //!< Copy of the specification structure used to create the texture
+        Ref<Texture2D>       mTexture = nullptr; //!< Reference to the parent texture
 
         struct DeviceData
         {
@@ -125,7 +125,8 @@ namespace LTSE::Cuda
              * @param x x coordinate of the texel to retrieve.
              * @param y y coordinate of the texel to retrieve
              */
-            template <typename _Ty> LTSE_CUDA_DEVICE_FUNCTION_DEF _Ty Fetch( float x, float y )
+            template <typename _Ty>
+            LTSE_CUDA_DEVICE_FUNCTION_DEF _Ty Fetch( float x, float y )
             {
                 return tex2D<_Ty>( mTextureObject, ( x + mOffset.x ) / mScaling.x, ( y + mOffset.y ) / mScaling.y );
             }

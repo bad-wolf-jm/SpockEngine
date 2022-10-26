@@ -72,8 +72,10 @@ namespace LTSE::Cuda
     {
         cudaChannelFormatDesc lTextureFormat = ToCudaChannelDesc( mSpec.mFormat );
 
-        CUDA_ASSERT( cudaMallocArray( &mInternalCudaArray, &lTextureFormat, static_cast<size_t>( mSpec.mWidth ), static_cast<size_t>( mSpec.mHeight ), cudaArrayDefault ) );
-        CUDA_ASSERT( cudaMemcpyToArray( mInternalCudaArray, 0, 0, reinterpret_cast<void *>( aData.data() ), aData.size(), cudaMemcpyHostToDevice ) );
+        CUDA_ASSERT( cudaMallocArray( &mInternalCudaArray, &lTextureFormat, static_cast<size_t>( mSpec.mWidth ),
+            static_cast<size_t>( mSpec.mHeight ), cudaArrayDefault ) );
+        CUDA_ASSERT( cudaMemcpyToArray(
+            mInternalCudaArray, 0, 0, reinterpret_cast<void *>( aData.data() ), aData.size(), cudaMemcpyHostToDevice ) );
     }
 
     Texture2D::Texture2D( sTextureCreateInfo &aSpec, uint8_t *aData, size_t aSize )
@@ -81,7 +83,8 @@ namespace LTSE::Cuda
     {
         cudaChannelFormatDesc lTextureFormat = ToCudaChannelDesc( mSpec.mFormat );
 
-        CUDA_ASSERT( cudaMallocArray( &mInternalCudaArray, &lTextureFormat, static_cast<size_t>( mSpec.mWidth ), static_cast<size_t>( mSpec.mHeight ), cudaArrayDefault ) );
+        CUDA_ASSERT( cudaMallocArray( &mInternalCudaArray, &lTextureFormat, static_cast<size_t>( mSpec.mWidth ),
+            static_cast<size_t>( mSpec.mHeight ), cudaArrayDefault ) );
         CUDA_ASSERT( cudaMemcpyToArray( mInternalCudaArray, 0, 0, reinterpret_cast<void *>( aData ), aSize, cudaMemcpyHostToDevice ) );
     }
 
@@ -94,14 +97,15 @@ namespace LTSE::Cuda
 
         cudaChannelFormatDesc lTextureFormat = ToCudaChannelDesc( mSpec.mFormat );
 
-        CUDA_ASSERT( cudaMallocArray( &mInternalCudaArray, &lTextureFormat, static_cast<size_t>( mSpec.mWidth ), static_cast<size_t>( mSpec.mHeight ), cudaArrayDefault ) );
-        CUDA_ASSERT( cudaMemcpyToArray( mInternalCudaArray, 0, 0, aImageData.mPixelData, aImageData.mByteSize, cudaMemcpyHostToDevice ) );
+        CUDA_ASSERT( cudaMallocArray( &mInternalCudaArray, &lTextureFormat, static_cast<size_t>( mSpec.mWidth ),
+            static_cast<size_t>( mSpec.mHeight ), cudaArrayDefault ) );
+        CUDA_ASSERT(
+            cudaMemcpyToArray( mInternalCudaArray, 0, 0, aImageData.mPixelData, aImageData.mByteSize, cudaMemcpyHostToDevice ) );
     }
 
     Texture2D::~Texture2D()
     {
-        if( ( nullptr != ( (void *)mInternalCudaArray ) ) )
-            CUDA_ASSERT( cudaFreeArray( mInternalCudaArray ) );
+        if( ( nullptr != ( (void *)mInternalCudaArray ) ) ) CUDA_ASSERT( cudaFreeArray( mInternalCudaArray ) );
     }
 
     TextureSampler2D::TextureSampler2D( Ref<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingSpec )
@@ -118,8 +122,7 @@ namespace LTSE::Cuda
         memset( &lTextureDescription, 0, sizeof( cudaTextureDesc ) );
 
         lTextureDescription.readMode = cudaReadModeElementType;
-        if( mTexture->mSpec.mNormalizedValues )
-            lTextureDescription.readMode = cudaReadModeNormalizedFloat;
+        if( mTexture->mSpec.mNormalizedValues ) lTextureDescription.readMode = cudaReadModeNormalizedFloat;
         lTextureDescription.borderColor[0] = mSamplingSpec.mBorderColor[0];
         lTextureDescription.borderColor[1] = mSamplingSpec.mBorderColor[1];
         lTextureDescription.borderColor[2] = mSamplingSpec.mBorderColor[2];
@@ -132,8 +135,7 @@ namespace LTSE::Cuda
         lTextureDescription.filterMode = ToCudaFilterMode( mSamplingSpec.mMagnification );
 
         lTextureDescription.normalizedCoords = 0;
-        if( mTexture->mSpec.mNormalizedCoordinates )
-            lTextureDescription.normalizedCoords = 1;
+        if( mTexture->mSpec.mNormalizedCoordinates ) lTextureDescription.normalizedCoords = 1;
 
         lTextureDescription.mipmapFilterMode    = cudaFilterModePoint;
         lTextureDescription.mipmapLevelBias     = 0.0f;

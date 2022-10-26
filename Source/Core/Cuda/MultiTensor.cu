@@ -13,13 +13,11 @@ namespace LTSE::Cuda
 {
     sTensorShape::sTensorShape( std::vector<std::vector<uint32_t>> const &aShape, size_t aElementSize )
     {
-        if( aShape.size() == 0 )
-            return;
+        if( aShape.size() == 0 ) return;
 
         for( auto &x : aShape )
         {
-            if( x.size() != aShape[0].size() )
-                throw std::runtime_error( "All shapes must have the same length!" );
+            if( x.size() != aShape[0].size() ) throw std::runtime_error( "All shapes must have the same length!" );
         }
 
         mRank        = aShape[0].size();
@@ -32,14 +30,12 @@ namespace LTSE::Cuda
 
     sTensorShape::sTensorShape( std::vector<uint32_t> const &aShape, size_t aElementSize )
     {
-        if( aShape.size() == 0 )
-            return;
+        if( aShape.size() == 0 ) return;
 
         mRank       = 1;
         mLayerCount = aShape.size();
 
-        for( auto &lValue : aShape )
-            mShape.push_back( { lValue } );
+        for( auto &lValue : aShape ) mShape.push_back( { lValue } );
 
         mElementSize = aElementSize;
 
@@ -68,8 +64,7 @@ namespace LTSE::Cuda
             for( uint32_t i = 0; i < mRank; i++ )
             {
                 mMaxDimensions[i] = std::max( mMaxDimensions[i], lDim[i] );
-                if( i < mRank - 1 )
-                    mStrides[lDimIdx][mRank - i - 2] = mStrides[lDimIdx][mRank - i - 1] * lDim[mRank - i - 1];
+                if( i < mRank - 1 ) mStrides[lDimIdx][mRank - i - 2] = mStrides[lDimIdx][mRank - i - 1] * lDim[mRank - i - 1];
                 lSize *= lDim[i];
             }
 
@@ -89,17 +84,17 @@ namespace LTSE::Cuda
         if( i >= 0 )
         {
             if( i >= mRank )
-                throw std::out_of_range( fmt::format( "Attempted to access layer {}, but the stack only has {} layers", mRank + i, CountLayers() ) );
-            for( auto &lShape : mShape )
-                lDimension.push_back( lShape[i] );
+                throw std::out_of_range(
+                    fmt::format( "Attempted to access layer {}, but the stack only has {} layers", mRank + i, CountLayers() ) );
+            for( auto &lShape : mShape ) lDimension.push_back( lShape[i] );
         }
         else
         {
             if( -i > mRank )
-                throw std::out_of_range( fmt::format( "Attempted to access layer {}, but the stack only has {} layers", mRank + i, CountLayers() ) );
+                throw std::out_of_range(
+                    fmt::format( "Attempted to access layer {}, but the stack only has {} layers", mRank + i, CountLayers() ) );
 
-            for( auto &lShape : mShape )
-                lDimension.push_back( lShape[mRank + i] );
+            for( auto &lShape : mShape ) lDimension.push_back( lShape[mRank + i] );
         }
         return lDimension;
     }
@@ -107,13 +102,12 @@ namespace LTSE::Cuda
     void sTensorShape::InsertDimension( int32_t aPosition, std::vector<uint32_t> aDimension )
     {
         if( aDimension.size() != CountLayers() )
-            throw std::out_of_range( fmt::format( "New dimension array has size {}, but the tensor has {} layers", aDimension.size(), CountLayers() ) );
+            throw std::out_of_range(
+                fmt::format( "New dimension array has size {}, but the tensor has {} layers", aDimension.size(), CountLayers() ) );
 
-        if( aPosition < 0 )
-            aPosition += ( mRank + 1 );
+        if( aPosition < 0 ) aPosition += ( mRank + 1 );
 
-        for( uint32_t i = 0; i < CountLayers(); i++ )
-            mShape[i].insert( mShape[i].begin() + aPosition, aDimension[i] );
+        for( uint32_t i = 0; i < CountLayers(); i++ ) mShape[i].insert( mShape[i].begin() + aPosition, aDimension[i] );
 
         mRank++;
 
@@ -122,14 +116,14 @@ namespace LTSE::Cuda
 
     void sTensorShape::Flatten( int32_t aToDimension )
     {
-        if( aToDimension <= 0 )
-            aToDimension += mRank;
+        if( aToDimension <= 0 ) aToDimension += mRank;
 
         std::vector<std::vector<uint32_t>> lNewShape( CountLayers() );
 
         for( uint32_t i = 0; i < CountLayers(); i++ )
         {
-            lNewShape[i].push_back( std::accumulate( mShape[i].begin(), mShape[i].begin() + aToDimension, 1, std::multiplies<uint32_t>() ) );
+            lNewShape[i].push_back(
+                std::accumulate( mShape[i].begin(), mShape[i].begin() + aToDimension, 1, std::multiplies<uint32_t>() ) );
             lNewShape[i].insert( lNewShape[i].end(), mShape[i].begin() + aToDimension, mShape[i].end() );
         }
 
@@ -141,11 +135,9 @@ namespace LTSE::Cuda
 
     void sTensorShape::Trim( int32_t aToDimension )
     {
-        if( aToDimension == 0 )
-            return;
+        if( aToDimension == 0 ) return;
 
-        if( aToDimension < 0 )
-            aToDimension += mRank;
+        if( aToDimension < 0 ) aToDimension += mRank;
 
         std::vector<std::vector<uint32_t>> lNewShape( CountLayers() );
 
@@ -158,7 +150,10 @@ namespace LTSE::Cuda
         UpdateMetadata();
     }
 
-    bool operator==( const sBufferSizeInfo &lLhs, const sBufferSizeInfo &lRhs ) { return ( lLhs.mSize == lRhs.mSize ) && ( lLhs.mOffset == lRhs.mOffset ); }
+    bool operator==( const sBufferSizeInfo &lLhs, const sBufferSizeInfo &lRhs )
+    {
+        return ( lLhs.mSize == lRhs.mSize ) && ( lLhs.mOffset == lRhs.mOffset );
+    }
 
     bool sTensorShape::operator==( const sTensorShape &lRhs ) { return ( mShape == lRhs.mShape ); }
 
@@ -167,7 +162,7 @@ namespace LTSE::Cuda
     void sTensorShape::SyncDeviceData()
     {
         std::vector<uint32_t> lDimensions( mLayerCount * mRank );
-        uint32_t k = 0;
+        uint32_t              k = 0;
         for( uint32_t i = 0; i < mLayerCount; i++ )
         {
             for( uint32_t j = 0; j < mRank; j++ )

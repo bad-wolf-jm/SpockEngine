@@ -44,15 +44,15 @@ namespace LTSE::Cuda
     ///
     struct sTensorShape
     {
-        std::vector<std::vector<uint32_t>> mShape   = {}; //!< Shape
-        std::vector<std::vector<uint32_t>> mStrides = {}; //!< Strides
-        uint32_t mRank                              = 0;  //!< Dimension of each element in the shape array
-        uint32_t mLayerCount                        = 0;  //!< Number of layers
-        uint32_t mElementSize                       = 0;  //!< Size, in bytes, of each element in the tensor
-        std::vector<uint32_t> mMaxDimensions        = {}; //!< Pointwise maximum of the elements in the shape vector
-        uint32_t mMaxBufferSize                     = 0;  //!< Size, in bytes, of the largest tensor.
-        size_t mByteSize                            = 0;  //!< Size, in bytes, of the entire tensor
-        std::vector<sBufferSizeInfo> mBufferSizes   = {}; //!< Size and offsets information of each layer in the tensor, in bytes.
+        std::vector<std::vector<uint32_t>> mShape         = {}; //!< Shape
+        std::vector<std::vector<uint32_t>> mStrides       = {}; //!< Strides
+        uint32_t                           mRank          = 0;  //!< Dimension of each element in the shape array
+        uint32_t                           mLayerCount    = 0;  //!< Number of layers
+        uint32_t                           mElementSize   = 0;  //!< Size, in bytes, of each element in the tensor
+        std::vector<uint32_t>              mMaxDimensions = {}; //!< Pointwise maximum of the elements in the shape vector
+        uint32_t                           mMaxBufferSize = 0;  //!< Size, in bytes, of the largest tensor.
+        size_t                             mByteSize      = 0;  //!< Size, in bytes, of the entire tensor
+        std::vector<sBufferSizeInfo>       mBufferSizes = {}; //!< Size and offsets information of each layer in the tensor, in bytes.
 
         struct
         {
@@ -91,7 +91,8 @@ namespace LTSE::Cuda
         std::vector<uint32_t> const &GetShapeForLayer( uint32_t i ) const
         {
             if( i >= CountLayers() )
-                throw std::out_of_range( fmt::format( "Attempted to access layer {}, but the stack only has {} layers", i + 1, CountLayers() ) );
+                throw std::out_of_range(
+                    fmt::format( "Attempted to access layer {}, but the stack only has {} layers", i + 1, CountLayers() ) );
 
             return mShape[i];
         }
@@ -100,7 +101,8 @@ namespace LTSE::Cuda
         std::vector<uint32_t> const &GetStridesForLayer( uint32_t i ) const
         {
             if( i >= CountLayers() )
-                throw std::out_of_range( fmt::format( "Attempted to access layer {}, but the stack only has {} layers", i + 1, CountLayers() ) );
+                throw std::out_of_range(
+                    fmt::format( "Attempted to access layer {}, but the stack only has {} layers", i + 1, CountLayers() ) );
 
             return mStrides[i];
         }
@@ -153,31 +155,38 @@ namespace LTSE::Cuda
         sBufferSizeInfo const &GetBufferSize( uint32_t i ) const
         {
             if( i >= CountLayers() )
-                throw std::out_of_range( fmt::format( "Attempted to access layer {}, but the stack only has {} layers", i + 1, CountLayers() ) );
+                throw std::out_of_range(
+                    fmt::format( "Attempted to access layer {}, but the stack only has {} layers", i + 1, CountLayers() ) );
             return mBufferSizes[i];
         }
 
         /// @brief Retrieves the size and offset, of the i-th layer of the sTensorShape
-        template <typename _Ty> LTSE_CUDA_INLINE LTSE_CUDA_DEVICE_FUNCTION_DEF sBufferSizeInfo GetBufferSizeAs( uint32_t i ) const
+        template <typename _Ty>
+        LTSE_CUDA_INLINE LTSE_CUDA_DEVICE_FUNCTION_DEF sBufferSizeInfo GetBufferSizeAs( uint32_t i ) const
         {
 #ifdef __CUDACC__
             auto lData = mDeviceSideData.mBufferSizes.DataAs<sBufferSizeInfo>()[i];
-            return sBufferSizeInfo{ lData.mSize / static_cast<uint32_t>( sizeof( _Ty ) ), lData.mOffset / static_cast<uint32_t>( sizeof( _Ty ) ) };
+            return sBufferSizeInfo{
+                lData.mSize / static_cast<uint32_t>( sizeof( _Ty ) ), lData.mOffset / static_cast<uint32_t>( sizeof( _Ty ) ) };
 #else
             if( i >= CountLayers() )
-                throw std::out_of_range( fmt::format( "Attempted to access layer {}, but the stack only has {} layers", i + 1, CountLayers() ) );
-            return sBufferSizeInfo{ mBufferSizes[i].mSize / static_cast<uint32_t>( sizeof( _Ty ) ), mBufferSizes[i].mOffset / static_cast<uint32_t>( sizeof( _Ty ) ) };
+                throw std::out_of_range(
+                    fmt::format( "Attempted to access layer {}, but the stack only has {} layers", i + 1, CountLayers() ) );
+            return sBufferSizeInfo{ mBufferSizes[i].mSize / static_cast<uint32_t>( sizeof( _Ty ) ),
+                mBufferSizes[i].mOffset / static_cast<uint32_t>( sizeof( _Ty ) ) };
 #endif
         }
 
-        template <typename _AsType> LTSE_CUDA_INLINE LTSE_CUDA_DEVICE_FUNCTION_DEF bool InBounds( uint32_t aLayer, uint32_t i ) const
+        template <typename _AsType>
+        LTSE_CUDA_INLINE LTSE_CUDA_DEVICE_FUNCTION_DEF bool InBounds( uint32_t aLayer, uint32_t i ) const
         {
 #ifdef __CUDACC__
             auto lData = mDeviceSideData.mBufferSizes.DataAs<sBufferSizeInfo>()[aLayer];
             return ( i * sizeof( _AsType ) ) < lData.mSize;
 #else
             if( aLayer >= CountLayers() )
-                throw std::out_of_range( fmt::format( "Attempted to access layer {}, but the stack only has {} layers", i + 1, CountLayers() ) );
+                throw std::out_of_range(
+                    fmt::format( "Attempted to access layer {}, but the stack only has {} layers", i + 1, CountLayers() ) );
             auto lData = mBufferSizes[aLayer];
             return ( i * sizeof( _AsType ) ) < lData.mSize;
 #endif
@@ -267,7 +276,8 @@ namespace LTSE::Cuda
         ///
         /// @return  A MemoryBuffer pointing to the layer
         ///
-        template <typename _Ty> LTSE_CUDA_INLINE LTSE_CUDA_DEVICE_FUNCTION_DEF _Ty *DeviceBufferAt( uint32_t i ) const
+        template <typename _Ty>
+        LTSE_CUDA_INLINE LTSE_CUDA_DEVICE_FUNCTION_DEF _Ty *DeviceBufferAt( uint32_t i ) const
         {
             sBufferSizeInfo lBufferSize = mShape.GetBufferSizeAs<_Ty>( i );
             return DataAs<_Ty>() + lBufferSize.mOffset;
@@ -295,7 +305,8 @@ namespace LTSE::Cuda
         ///
         /// @return New vector of type _Tx containing the data.
         ///
-        template <typename _Tx> std::vector<_Tx> FetchBufferAt( uint32_t i ) const
+        template <typename _Tx>
+        std::vector<_Tx> FetchBufferAt( uint32_t i ) const
         {
             auto &lBufferInfo = mShape.GetBufferSizeAs<_Tx>( i );
             return mMemoryBuffer.Fetch<_Tx>( lBufferInfo.mOffset, lBufferInfo.mSize );
@@ -312,7 +323,11 @@ namespace LTSE::Cuda
         ///
         /// @return New vector of type _Tx containing the data.
         ///
-        template <typename _Tx> std::vector<_Tx> FetchFlattened() const { return mMemoryBuffer.Fetch<_Tx>(); }
+        template <typename _Tx>
+        std::vector<_Tx> FetchFlattened() const
+        {
+            return mMemoryBuffer.Fetch<_Tx>();
+        }
 
         /// @brief Upload the contents of a vector to the tensor
         ///
@@ -322,7 +337,11 @@ namespace LTSE::Cuda
         ///
         /// @param aArray Data to upload
         ///
-        template <typename _Tx> void Upload( std::vector<_Tx> const &aArray ) const { mMemoryBuffer.Upload<_Tx>( aArray ); }
+        template <typename _Tx>
+        void Upload( std::vector<_Tx> const &aArray ) const
+        {
+            mMemoryBuffer.Upload<_Tx>( aArray );
+        }
 
         /// @brief Upload the contents of a vector to the i-thy layer of a tensor
         ///
@@ -334,7 +353,11 @@ namespace LTSE::Cuda
         /// @param aLayer  Layer into which the data should be copied
         /// @param aOffset Offset into the layer, in `_Ty`
         ///
-        template <typename _Tx> void Upload( std::vector<_Tx> const &aArray, uint32_t aLayer, uint32_t aOffset ) const { BufferAt( aLayer ).Upload<_Tx>( aArray, aOffset ); }
+        template <typename _Tx>
+        void Upload( std::vector<_Tx> const &aArray, uint32_t aLayer, uint32_t aOffset ) const
+        {
+            BufferAt( aLayer ).Upload<_Tx>( aArray, aOffset );
+        }
 
         /// @brief Overloaded member provided for convenience.
         ///
@@ -346,16 +369,28 @@ namespace LTSE::Cuda
         /// @param aArray  Data to upload
         /// @param aLayer  Layer into which the data should be copied
         ///
-        template <typename _Tx> void Upload( std::vector<_Tx> const &aArray, uint32_t aLayer ) const { Upload( aArray, aLayer, 0 ); }
+        template <typename _Tx>
+        void Upload( std::vector<_Tx> const &aArray, uint32_t aLayer ) const
+        {
+            Upload( aArray, aLayer, 0 );
+        }
 
         /// @brief Size, in bytes, of the tensor.
         LTSE_CUDA_INLINE LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t Size() const { return mMemoryBuffer.Size(); }
 
         /// @brief Size of the tensor as elements of type `_Ty`.
-        template <typename _Tx> LTSE_CUDA_INLINE LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t SizeAs() const { return mMemoryBuffer.SizeAs<_Tx>(); }
+        template <typename _Tx>
+        LTSE_CUDA_INLINE LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t SizeAs() const
+        {
+            return mMemoryBuffer.SizeAs<_Tx>();
+        }
 
         /// @brief Pointer to the underlying data as type `_Ty`.
-        template <typename _Tx> LTSE_CUDA_INLINE LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF _Tx *DataAs() const { return mMemoryBuffer.DataAs<_Tx>(); }
+        template <typename _Tx>
+        LTSE_CUDA_INLINE LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF _Tx *DataAs() const
+        {
+            return mMemoryBuffer.DataAs<_Tx>();
+        }
 
         MemoryBuffer &GetMemoryBuffer() { return mMemoryBuffer; }
 

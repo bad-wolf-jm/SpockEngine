@@ -14,16 +14,14 @@
 #include <fmt/core.h>
 #include <stdexcept>
 
-
 #ifndef CUDA_ASSERT
 #    define CUDA_ASSERT( err ) __CUDA_ASSERT( (cudaError_t)err, __FILE__, __LINE__ )
 
-inline void __CUDA_ASSERT( cudaError_t aErr, const char* aFile, const int aLine )
+inline void __CUDA_ASSERT( cudaError_t aErr, const char *aFile, const int aLine )
 {
-    if( CUDA_SUCCESS == aErr )
-        return;
+    if( CUDA_SUCCESS == aErr ) return;
 
-    const char* errorStr = cudaGetErrorString( aErr );
+    const char *errorStr = cudaGetErrorString( aErr );
     LTSE::Logging::Error( "CUDA_ASSERT() API error = {} \"{}\" from file <{}>, line {}.\n", aErr, errorStr, aFile, aLine );
     throw std::runtime_error( "CUDA_ASSERT()" );
 }
@@ -43,9 +41,8 @@ inline void __CUDA_ASSERT( cudaError_t aErr, const char* aFile, const int aLine 
 #    define CUDA_KERNEL_DEFINITION
 #endif
 
-#define RETURN_UNLESS( condition ) \
-    do                             \
-    {                              \
-        if( !( condition ) )       \
-            return;                \
+#define RETURN_UNLESS( condition )   \
+    do                               \
+    {                                \
+        if( !( condition ) ) return; \
     } while( 0 )

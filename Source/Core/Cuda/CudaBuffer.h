@@ -22,7 +22,7 @@ namespace LTSE::Cuda
     template <typename _Ty>
     struct GPUArray
     {
-        _Ty*   DevicePointer = 0;
+        _Ty   *DevicePointer = 0;
         size_t ElementCount  = 0;
     };
 
@@ -31,14 +31,14 @@ namespace LTSE::Cuda
       public:
         GPUMemoryView() = default;
 
-        GPUMemoryView( const GPUMemoryView& ) = default;
+        GPUMemoryView( const GPUMemoryView & ) = default;
 
-        GPUMemoryView( size_t a_Size, size_t a_Offset, Internal::sGPUDevicePointerView& a_DevicePointer )
+        GPUMemoryView( size_t a_Size, size_t a_Offset, Internal::sGPUDevicePointerView &a_DevicePointer )
             : Internal::sGPUDevicePointerView( a_Size, a_Offset, a_DevicePointer )
         {
         }
 
-        GPUMemoryView( size_t a_Size, void* a_DevicePointer )
+        GPUMemoryView( size_t a_Size, void *a_DevicePointer )
             : Internal::sGPUDevicePointerView( a_Size, a_DevicePointer )
         {
         }
@@ -72,7 +72,7 @@ namespace LTSE::Cuda
 
         CUdeviceptr RawDevicePtr() { return mDevicePointer; }
 
-        CUdeviceptr* RawDevicePtrP() { return &( mDevicePointer ); }
+        CUdeviceptr *RawDevicePtrP() { return &( mDevicePointer ); }
     };
 
 } // namespace LTSE::Cuda

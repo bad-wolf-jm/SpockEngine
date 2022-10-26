@@ -61,7 +61,8 @@ namespace LTSE::Cuda::Internal
         {
             if( ( aSize + aOffset ) > aParent.Size() )
                 throw std::runtime_error(
-                    fmt::format( "View upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})", aOffset, aSize, aParent.Size() ) );
+                    fmt::format( "View upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})",
+                        aOffset, aSize, aParent.Size() ) );
 
             mDevicePointer = ( aParent.mDevicePointer + aOffset );
         }
@@ -104,24 +105,30 @@ namespace LTSE::Cuda::Internal
         /// @param aArray Array of data to upload to the device
         /// @param aOffset The offset at which to copy the array.
         ///
-        template <typename _Ty> void Upload( std::vector<_Ty> &aArray, uint32_t aOffset ) const
+        template <typename _Ty>
+        void Upload( std::vector<_Ty> &aArray, uint32_t aOffset ) const
         {
             if( ( aArray.size() + aOffset ) * sizeof( _Ty ) > mSize )
-                throw std::runtime_error( fmt::format( "Upload upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})", aOffset, aArray.size(),
-                                                       mSize / sizeof( _Ty ) )
-                                              .c_str() );
+                throw std::runtime_error(
+                    fmt::format( "Upload upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})",
+                        aOffset, aArray.size(), mSize / sizeof( _Ty ) )
+                        .c_str() );
 
-            CUDA_ASSERT( cudaMemcpy( (void *)( DataAs<_Ty>() + aOffset ), (void *)aArray.data(), aArray.size() * sizeof( _Ty ), cudaMemcpyHostToDevice ) );
+            CUDA_ASSERT( cudaMemcpy(
+                (void *)( DataAs<_Ty>() + aOffset ), (void *)aArray.data(), aArray.size() * sizeof( _Ty ), cudaMemcpyHostToDevice ) );
         }
 
-        template <typename _Ty> void Upload( std::vector<_Ty> const &aArray, uint32_t aOffset ) const
+        template <typename _Ty>
+        void Upload( std::vector<_Ty> const &aArray, uint32_t aOffset ) const
         {
             if( ( aArray.size() + aOffset ) * sizeof( _Ty ) > mSize )
-                throw std::runtime_error( fmt::format( "Upload upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})", aOffset, aArray.size(),
-                                                       mSize / sizeof( _Ty ) )
-                                              .c_str() );
+                throw std::runtime_error(
+                    fmt::format( "Upload upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})",
+                        aOffset, aArray.size(), mSize / sizeof( _Ty ) )
+                        .c_str() );
 
-            CUDA_ASSERT( cudaMemcpy( (void *)( DataAs<_Ty>() + aOffset ), (void *)aArray.data(), aArray.size() * sizeof( _Ty ), cudaMemcpyHostToDevice ) );
+            CUDA_ASSERT( cudaMemcpy(
+                (void *)( DataAs<_Ty>() + aOffset ), (void *)aArray.data(), aArray.size() * sizeof( _Ty ), cudaMemcpyHostToDevice ) );
         }
 
         /// @brief Overloaded member provided for convenience
@@ -131,10 +138,26 @@ namespace LTSE::Cuda::Internal
         ///
         /// @param aArray Array of data to upload to the device
         ///
-        template <typename _Ty> void Upload( std::vector<_Ty> &aArray ) { Upload<_Ty>( aArray, 0 ); }
-        template <typename _Ty> void Upload( std::vector<_Ty> &aArray ) const { Upload<_Ty>( aArray, 0 ); }
-        template <typename _Ty> void Upload( std::vector<_Ty> const &aArray ) { Upload<_Ty>( aArray, 0 ); }
-        template <typename _Ty> void Upload( std::vector<_Ty> const &aArray ) const { Upload<_Ty>( aArray, 0 ); }
+        template <typename _Ty>
+        void Upload( std::vector<_Ty> &aArray )
+        {
+            Upload<_Ty>( aArray, 0 );
+        }
+        template <typename _Ty>
+        void Upload( std::vector<_Ty> &aArray ) const
+        {
+            Upload<_Ty>( aArray, 0 );
+        }
+        template <typename _Ty>
+        void Upload( std::vector<_Ty> const &aArray )
+        {
+            Upload<_Ty>( aArray, 0 );
+        }
+        template <typename _Ty>
+        void Upload( std::vector<_Ty> const &aArray ) const
+        {
+            Upload<_Ty>( aArray, 0 );
+        }
 
         /// @brief Upload data to the device.
         ///
@@ -152,7 +175,9 @@ namespace LTSE::Cuda::Internal
         {
             if( aByteSize + aOffset > Size() )
                 throw std::runtime_error(
-                    fmt::format( "Upload upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})", aOffset, aByteSize, Size() ).c_str() );
+                    fmt::format( "Upload upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})",
+                        aOffset, aByteSize, Size() )
+                        .c_str() );
             CUDA_ASSERT( cudaMemcpy( (void *)( DataAs<uint8_t>() + aOffset ), aData, aByteSize, cudaMemcpyHostToDevice ) );
         }
 
@@ -167,14 +192,19 @@ namespace LTSE::Cuda::Internal
         ///
         /// @param aData Element to upload
         ///
-        template <typename _Ty> void Upload( _Ty &aElement ) const { Upload( reinterpret_cast<const uint8_t *>( &aElement ), sizeof( _Ty ) ); }
+        template <typename _Ty>
+        void Upload( _Ty &aElement ) const
+        {
+            Upload( reinterpret_cast<const uint8_t *>( &aElement ), sizeof( _Ty ) );
+        }
 
         /// @brief Overloaded member provided for convenience
         ///
         /// @param aData   Element to upload
         /// @param aOffset Position at which to upload the element
         ///
-        template <typename _Ty> void Upload( _Ty &aElement, uint32_t aOffset ) const
+        template <typename _Ty>
+        void Upload( _Ty &aElement, uint32_t aOffset ) const
         {
             Upload( reinterpret_cast<const uint8_t *>( &aElement ), sizeof( _Ty ), aOffset * sizeof( _Ty ) );
         }
@@ -190,13 +220,15 @@ namespace LTSE::Cuda::Internal
         ///
         /// @return newly allocated `std::vector` containing the data.
         ///
-        template <typename _Ty> std::vector<_Ty> Fetch( size_t aOffset, size_t aSize ) const
+        template <typename _Ty>
+        std::vector<_Ty> Fetch( size_t aOffset, size_t aSize ) const
         {
             if( ( aSize + aOffset ) * sizeof( _Ty ) > Size() )
-                throw std::runtime_error( fmt::format( "Attempted to fetch an array of size {} from a buffer of size {}", aSize, Size() ).c_str() );
+                throw std::runtime_error(
+                    fmt::format( "Attempted to fetch an array of size {} from a buffer of size {}", aSize, Size() ).c_str() );
             std::vector<_Ty> lHostArray( aSize );
-            CUDA_ASSERT(
-                cudaMemcpy( reinterpret_cast<void *>( lHostArray.data() ), reinterpret_cast<void *>( DataAs<_Ty>() + aOffset ), aSize * sizeof( _Ty ), cudaMemcpyDeviceToHost ) );
+            CUDA_ASSERT( cudaMemcpy( reinterpret_cast<void *>( lHostArray.data() ),
+                reinterpret_cast<void *>( DataAs<_Ty>() + aOffset ), aSize * sizeof( _Ty ), cudaMemcpyDeviceToHost ) );
             return lHostArray;
         }
 
@@ -208,7 +240,11 @@ namespace LTSE::Cuda::Internal
         ///
         /// @return newly allocated `std::vector` containing the data.
         ///
-        template <typename _Ty> std::vector<_Ty> Fetch() const { return Fetch<_Ty>( mSize / sizeof( _Ty ) ); }
+        template <typename _Ty>
+        std::vector<_Ty> Fetch() const
+        {
+            return Fetch<_Ty>( mSize / sizeof( _Ty ) );
+        }
 
         /// @brief Overloaded member provided for convenience
         ///
@@ -220,7 +256,11 @@ namespace LTSE::Cuda::Internal
         ///
         /// @return newly allocated `std::vector` containing the data.
         ///
-        template <typename _Ty> std::vector<_Ty> Fetch( size_t aSize ) const { return Fetch<_Ty>( 0, aSize ); }
+        template <typename _Ty>
+        std::vector<_Ty> Fetch( size_t aSize ) const
+        {
+            return Fetch<_Ty>( 0, aSize );
+        }
 
         /// @brief Set the content of the buffer to 0
         ///
@@ -233,10 +273,18 @@ namespace LTSE::Cuda::Internal
         LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t Size() const { return mSize; }
 
         /// @brief Size of the allocated buffer, in elements of type `_Ty`.
-        template <typename _Ty> LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t SizeAs() const { return mSize / sizeof( _Ty ); }
+        template <typename _Ty>
+        LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t SizeAs() const
+        {
+            return mSize / sizeof( _Ty );
+        }
 
         /// @brief Return the underlying device pointer as a pointer to an array of type `_Ty`.
-        template <typename _Ty> LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF _Ty *DataAs() const { return (_Ty *)mDevicePointer; }
+        template <typename _Ty>
+        LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF _Ty *DataAs() const
+        {
+            return (_Ty *)mDevicePointer;
+        }
 
         /// @brief Number of elements in the buffer.
         CUdeviceptr RawDevicePtr() const { return mDevicePointer; }
@@ -271,8 +319,7 @@ namespace LTSE::Cuda::Internal
         /// @brief Free the allocated memory.
         void Dispose()
         {
-            if( mDevicePointer != 0 )
-                CUDA_ASSERT( cudaFree( (void *)mDevicePointer ) );
+            if( mDevicePointer != 0 ) CUDA_ASSERT( cudaFree( (void *)mDevicePointer ) );
             mDevicePointer = 0;
         }
     };

@@ -25,8 +25,7 @@ namespace LTSE::Cuda
     MemoryBuffer MemoryPool::Allocate( size_t aBytes )
     {
         size_t lAlignedBytes = ( ( aBytes >> 3 ) + 1 ) << 3;
-        if( ( mFreePtr + lAlignedBytes ) > mTotalSize )
-            throw std::runtime_error( "MemoryPool is out of space!!" );
+        if( ( mFreePtr + lAlignedBytes ) > mTotalSize ) throw std::runtime_error( "MemoryPool is out of space!!" );
 
         size_t lStart = mFreePtr;
         mFreePtr += lAlignedBytes;

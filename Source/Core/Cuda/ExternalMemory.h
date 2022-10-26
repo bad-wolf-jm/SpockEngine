@@ -59,19 +59,25 @@ namespace LTSE::Cuda
 
         void Dispose()
         {
-            if( mDevicePointer != nullptr )
-                CUDA_ASSERT( cudaFree( mDevicePointer ) );
+            if( mDevicePointer != nullptr ) CUDA_ASSERT( cudaFree( mDevicePointer ) );
             mDevicePointer = nullptr;
 
-            if( mExternalMemoryHandle )
-                CUDA_ASSERT( cudaDestroyExternalMemory( mExternalMemoryHandle ) );
+            if( mExternalMemoryHandle ) CUDA_ASSERT( cudaDestroyExternalMemory( mExternalMemoryHandle ) );
             mExternalMemoryHandle = 0;
         }
 
         /** @brief Retrieve the device pointer */
-        template <typename _Ty> LTSE_CUDA_INLINE LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF _Ty *DataAs() { return (_Ty *)mDevicePointer; }
+        template <typename _Ty>
+        LTSE_CUDA_INLINE LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF _Ty *DataAs()
+        {
+            return (_Ty *)mDevicePointer;
+        }
 
-        template <typename _Ty> LTSE_CUDA_INLINE LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t SizeAs() { return mSize / sizeof( _Ty ); }
+        template <typename _Ty>
+        LTSE_CUDA_INLINE LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t SizeAs()
+        {
+            return mSize / sizeof( _Ty );
+        }
 
         /** @brief Upload data to the device.
          *
@@ -82,10 +88,12 @@ namespace LTSE::Cuda
          *
          * @param aArray Array of data to upload to the device
          */
-        template <typename _Ty> void Upload( std::vector<_Ty> aArray )
+        template <typename _Ty>
+        void Upload( std::vector<_Ty> aArray )
         {
             if( aArray.size() > mSize )
-                std::runtime_error( fmt::format( "Attemp to copy an array of size {} into a buffer if size {}", aArray.size(), mSize ).c_str() );
+                std::runtime_error(
+                    fmt::format( "Attemp to copy an array of size {} into a buffer if size {}", aArray.size(), mSize ).c_str() );
             CUDA_ASSERT( cudaMemcpy( (void *)mDevicePointer, aArray.data(), aArray.size() * sizeof( _Ty ), cudaMemcpyHostToDevice ) );
         }
 
@@ -95,13 +103,15 @@ namespace LTSE::Cuda
         /** @brief Set the content of the buffer to 0 */
         void CopyFrom( GPUMemory aFromBuffer )
         {
-            CUDA_ASSERT( cudaMemcpy( (void *)mDevicePointer, aFromBuffer.DataAs<uint8_t>(), aFromBuffer.SizeAs<uint8_t>(), cudaMemcpyDeviceToDevice ) );
+            CUDA_ASSERT( cudaMemcpy(
+                (void *)mDevicePointer, aFromBuffer.DataAs<uint8_t>(), aFromBuffer.SizeAs<uint8_t>(), cudaMemcpyDeviceToDevice ) );
         }
 
         /** @brief Set the content of the buffer to 0 */
         void CopyTo( GPUMemory aToBuffer )
         {
-            CUDA_ASSERT( cudaMemcpy( (void *)aToBuffer.DataAs<uint8_t>(), (void *)mDevicePointer, SizeAs<uint8_t>(), cudaMemcpyDeviceToDevice ) );
+            CUDA_ASSERT( cudaMemcpy(
+                (void *)aToBuffer.DataAs<uint8_t>(), (void *)mDevicePointer, SizeAs<uint8_t>(), cudaMemcpyDeviceToDevice ) );
         }
 
         /** @brief Downloads data from the device.
@@ -110,20 +120,21 @@ namespace LTSE::Cuda
          *
          * @return newly allocated `std::vector` containing the data.
          */
-        template <typename _Ty> std::vector<_Ty> Fetch()
+        template <typename _Ty>
+        std::vector<_Ty> Fetch()
         {
             std::vector<_Ty> l_HostArray( mSize );
             CUDA_ASSERT( cudaMemcpy( (void *)l_HostArray.data(), (void *)mDevicePointer, mSize, cudaMemcpyDeviceToHost ) );
             return l_HostArray;
         }
 
-        CUdeviceptr RawDevicePtr() { return (CUdeviceptr)mDevicePointer; }
+        CUdeviceptr  RawDevicePtr() { return (CUdeviceptr)mDevicePointer; }
         CUdeviceptr *RawDevicePtrP() { return (CUdeviceptr *)&mDevicePointer; }
 
       private:
-        void *mDevicePointer                       = nullptr;
+        void                *mDevicePointer        = nullptr;
         cudaExternalMemory_t mExternalMemoryHandle = 0;
-        size_t mSize                               = 0;
+        size_t               mSize                 = 0;
     };
 
 } // namespace LTSE::Cuda
