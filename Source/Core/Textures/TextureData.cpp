@@ -32,10 +32,10 @@ namespace LTSE::Core
         constexpr size_t lComponentCount = 4;
 
         sImageData lImageData{};
-        int32_t lActualComponentCount = 0;
-        int32_t lWidth                = 0;
-        int32_t lHeight               = 0;
-        size_t lChannelSize           = 0;
+        int32_t    lActualComponentCount = 0;
+        int32_t    lWidth                = 0;
+        int32_t    lHeight               = 0;
+        size_t     lChannelSize          = 0;
 
         if( aPath.extension().string() == ".bin" )
         {
@@ -64,8 +64,7 @@ namespace LTSE::Core
 
             float *lData = stbi_loadf( aPath.string().c_str(), &lWidth, &lHeight, &lActualComponentCount, lComponentCount );
 
-            if( !lData )
-                return sImageData{};
+            if( !lData ) return sImageData{};
 
             lImageData.mFormat    = eColorFormat::RGBA32_FLOAT;
             lImageData.mPixelData = reinterpret_cast<uint8_t *>( lData );
@@ -76,8 +75,7 @@ namespace LTSE::Core
 
             stbi_uc *lData = stbi_load( aPath.string().c_str(), &lWidth, &lHeight, &lActualComponentCount, lComponentCount );
 
-            if( !lData )
-                return sImageData{};
+            if( !lData ) return sImageData{};
 
             lImageData.mFormat    = eColorFormat::RGBA8_UNORM;
             lImageData.mPixelData = reinterpret_cast<uint8_t *>( lData );
@@ -249,12 +247,14 @@ namespace LTSE::Core
 
     static const gli::swizzles ToGliType( const sSwizzleTransform &aSwizzleTransform )
     {
-        return gli::swizzles( ToGliType( aSwizzleTransform.mR ), ToGliType( aSwizzleTransform.mG ), ToGliType( aSwizzleTransform.mB ), ToGliType( aSwizzleTransform.mA ) );
+        return gli::swizzles( ToGliType( aSwizzleTransform.mR ), ToGliType( aSwizzleTransform.mG ), ToGliType( aSwizzleTransform.mB ),
+            ToGliType( aSwizzleTransform.mA ) );
     }
 
     static const sSwizzleTransform ToLtseType( const gli::swizzles &aSwizzleTransform )
     {
-        return sSwizzleTransform{ ToLtseType( aSwizzleTransform.r ), ToLtseType( aSwizzleTransform.g ), ToLtseType( aSwizzleTransform.b ), ToLtseType( aSwizzleTransform.a ) };
+        return sSwizzleTransform{ ToLtseType( aSwizzleTransform.r ), ToLtseType( aSwizzleTransform.g ),
+            ToLtseType( aSwizzleTransform.b ), ToLtseType( aSwizzleTransform.a ) };
     }
 
     static const gli::filter ToGliType( const eSamplerFilter &aTextureType )
@@ -320,7 +320,7 @@ namespace LTSE::Core
     TextureData::TextureData( TextureData::sCreateInfo const &aTextureCreateInfo, fs::path const &aImagePath )
         : mSpec{ aTextureCreateInfo }
     {
-        std::string lExtension               = aImagePath.extension().string();
+        std::string           lExtension     = aImagePath.extension().string();
         std::set<std::string> lGliExtensions = { ".dds", ".kmg", ".ktx" };
 
         if( lGliExtensions.find( lExtension ) != lGliExtensions.end() )
@@ -366,7 +366,6 @@ namespace LTSE::Core
         mSpec.mSwizzles  = ToLtseType( mInternalTexture.swizzles() );
     }
 
-
     void TextureData::SaveTo( fs::path const &aImagePath )
     {
         std::string lExtension = aImagePath.extension().string();
@@ -399,8 +398,8 @@ namespace LTSE::Core
 
     void TextureData::Initialize()
     {
-        mInternalTexture = gli::texture( ToGliType( mSpec.mType ), ToGliType( mSpec.mFormat ), gli::extent3d{ mSpec.mWidth, mSpec.mHeight, mSpec.mDepth }, 1, 1, mSpec.mMipLevels,
-                                         ToGliType( mSpec.mSwizzles ) );
+        mInternalTexture = gli::texture( ToGliType( mSpec.mType ), ToGliType( mSpec.mFormat ),
+            gli::extent3d{ mSpec.mWidth, mSpec.mHeight, mSpec.mDepth }, 1, 1, mSpec.mMipLevels, ToGliType( mSpec.mSwizzles ) );
     }
 
     TextureData2D::TextureData2D( TextureData::sCreateInfo const &aCreateInfo )
@@ -414,9 +413,9 @@ namespace LTSE::Core
     {
         mInternalTexture2d = gli::texture2d( mInternalTexture );
 
-        if (mSpec.mMipLevels > 1)
+        if( mSpec.mMipLevels > 1 )
         {
-            mInternalTexture2d = gli::generate_mipmaps(mInternalTexture2d, gli::FILTER_LINEAR);
+            mInternalTexture2d = gli::generate_mipmaps( mInternalTexture2d, gli::FILTER_LINEAR );
         }
     }
 
@@ -435,19 +434,22 @@ namespace LTSE::Core
     sImageData TextureData2D::GetImageData()
     {
         return { mSpec.mFormat, static_cast<size_t>( mSpec.mWidth ), static_cast<size_t>( mSpec.mHeight ), mInternalTexture2d.size(),
-                 reinterpret_cast<uint8_t *>( mInternalTexture2d.data() ) };
+            reinterpret_cast<uint8_t *>( mInternalTexture2d.data() ) };
     }
 
     TextureSampler2D::TextureSampler2D( TextureData2D const &aTexture, sTextureSamplingInfo const &aSamplingInfo )
-        : gli::sampler2d<float>( aTexture.mInternalTexture2d, ToGliType( aSamplingInfo.mWrapping ), ToGliType( aSamplingInfo.mMip ), ToGliType( aSamplingInfo.mMinification ),
-                                 gli::vec4{ aSamplingInfo.mBorderColor[0], aSamplingInfo.mBorderColor[1], aSamplingInfo.mBorderColor[2], aSamplingInfo.mBorderColor[3] } )
+        : gli::sampler2d<float>( aTexture.mInternalTexture2d, ToGliType( aSamplingInfo.mWrapping ), ToGliType( aSamplingInfo.mMip ),
+              ToGliType( aSamplingInfo.mMinification ),
+              gli::vec4{ aSamplingInfo.mBorderColor[0], aSamplingInfo.mBorderColor[1], aSamplingInfo.mBorderColor[2],
+                  aSamplingInfo.mBorderColor[3] } )
         , mSamplingSpec{ aSamplingInfo }
     {
     }
 
     std::array<float, 4> TextureSampler2D::Fetch( float x, float y )
     {
-        gli::vec4 lColor = texture_lod( gli::sampler2d<float>::normalized_type( x / mSamplingSpec.mScaling[0], y / mSamplingSpec.mScaling[1] ), 0.0f );
+        gli::vec4 lColor = texture_lod(
+            gli::sampler2d<float>::normalized_type( x / mSamplingSpec.mScaling[0], y / mSamplingSpec.mScaling[1] ), 0.0f );
         return std::array<float, 4>{ lColor.x, lColor.y, lColor.z, lColor.w };
     }
 

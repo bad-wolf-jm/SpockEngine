@@ -301,17 +301,8 @@ namespace LTSE::Graphics::Internal
             lBufferCopyRegions.push_back( lBufferCopyRegion );
         }
 
-        // VkImageSubresourceRange lSubresourceRange{};
-        // lSubresourceRange.aspectMask   = VK_IMAGE_ASPECT_COLOR_BIT;
-        // lSubresourceRange.baseMipLevel = aImageRegion.mBaseMipLevel;
-        // lSubresourceRange.levelCount   = aImageRegion.mMipLevelCount;
-        // lSubresourceRange.layerCount   = aImageRegion.mLayerCount;
-
         vkCmdCopyImageToBuffer( mVkObject, aSource->mVkObject, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, aDestination,
             static_cast<uint32_t>( lBufferCopyRegions.size() ), lBufferCopyRegions.data() );
-        // vkCmdCopyBufferToImage( mVkObject, aSource, aDestination->mVkObject, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-        // static_cast<uint32_t>( lBufferCopyRegions.size() ),
-        //                         lBufferCopyRegions.data() );
     }
 
     void sVkCommandBufferObject::End() { VK_CHECK_RESULT( vkEndCommandBuffer( mVkObject ) ); }
