@@ -146,16 +146,16 @@ struct SensorControllerBehaviour : sBehaviourController
 
     void OnUpdate( Timestep ts )
     {
-        sRandomNormalInitializerComponent lInitializer{};
+        sRandomUniformInitializerComponent lInitializer{};
         lInitializer.mType = eScalarType::FLOAT32;
 
-        std::vector<uint32_t> lDim1{ 2500, 200 };
+        std::vector<uint32_t> lDim1{ 2500, 2000 };
 
         auto lAzimuths    = MultiTensorValue( *m_ComputeScope, lInitializer, sTensorShape( { lDim1 }, sizeof( float ) ) );
         auto lElevations  = MultiTensorValue( *m_ComputeScope, lInitializer, sTensorShape( { lDim1 }, sizeof( float ) ) );
         auto lIntensities = MultiTensorValue( *m_ComputeScope, lInitializer, sTensorShape( { lDim1 }, sizeof( float ) ) );
 
-        auto lRange = ConstantScalarValue( *m_ComputeScope, 9.0f );
+        auto lRange = ConstantScalarValue( *m_ComputeScope, 25.0f );
 
         lAzimuths   = Multiply( *m_ComputeScope, lAzimuths, lRange );
         lElevations = Multiply( *m_ComputeScope, lElevations, lRange );
