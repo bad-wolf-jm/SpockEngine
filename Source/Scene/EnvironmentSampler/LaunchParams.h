@@ -26,36 +26,35 @@ namespace LTSE::SensorModel::Dev
 {
     using namespace LTSE::Core;
 
-    struct HitRecord
+    struct sHitRecord
     {
-        float RayID     = 0.0f;
-        float Azimuth   = 0.0f;
-        float Elevation = 0.0f;
-        float Distance  = 0.0f;
-        float Intensity = 0.0f;
+        float mRayID     = 0.0f;
+        float mAzimuth   = 0.0f;
+        float mElevation = 0.0f;
+        float mDistance  = 0.0f;
+        float mIntensity = 0.0f;
     };
 
     struct TriangleMeshSBTData
     {
-        math::vec3  color;
-        math::vec3* vertex;
-        uint32_t*   index;
+        math::vec3  mColor;
+        math::vec3 *mVertex;
+        uint32_t   *mIndex;
         uint32_t    mVertexOffset;
         uint32_t    mIndexOffset;
     };
 
     struct LaunchParams
     {
-        OptixTraversableHandle traversable;
-        math::vec3             SensorPosition;
-        math::mat3             SensorRotation;
-        float*                 Azimuths;
-        float*                 Elevations;
-        float*                 Intensities;
-        VertexData*            mVertexBuffer;
-        math::uvec3*           mIndexBuffer;
-
-        HitRecord* SamplePoints;
+        OptixTraversableHandle mTraversable;
+        math::vec3             mSensorPosition;
+        math::mat3             mSensorRotation;
+        float                 *mAzimuths;
+        float                 *mElevations;
+        float                 *mIntensities;
+        VertexData            *mVertexBuffer;
+        math::uvec3           *mIndexBuffer;
+        sHitRecord            *mSamplePoints;
     };
 
 } // namespace LTSE::SensorModel::Dev

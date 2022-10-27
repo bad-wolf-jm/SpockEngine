@@ -24,11 +24,11 @@ namespace LTSE::SensorModel::Dev
      */
     struct LidarCartesianSamplePoint
     {
-        uint32_t FlashID     = 0xffffffff;
-        int Type             = -1;
+        uint32_t   FlashID   = 0xffffffff;
+        int        Type      = -1;
         math::vec3 Direction = { 0.0f, 0.0f, 0.0f };
-        float Distance       = 0.0f;
-        float Intensity      = 0.0f;
+        float      Distance  = 0.0f;
+        float      Intensity = 0.0f;
 
         LidarCartesianSamplePoint()                                    = default;
         LidarCartesianSamplePoint( const LidarCartesianSamplePoint & ) = default;
@@ -39,18 +39,18 @@ namespace LTSE::SensorModel::Dev
         math::vec2 FlashPosition = { 0.0f, 0.0f };
         math::vec2 FlashExtent   = { 0.0f, 0.0f };
         math::vec3 Color         = { 1.0f, 0.2f, 0.8f };
-        float MinValue           = 0.0f;
-        float MaxValue           = 1.0f;
+        float      MinValue      = 0.0f;
+        float      MaxValue      = 1.0f;
     };
 
     class PointCloudVisualizer
     {
       public:
-        bool HighlightFlashFOV   = false;
-        bool HeatmapColoring     = true;
+        bool  HighlightFlashFOV  = false;
+        bool  HeatmapColoring    = true;
         float HeatmapColorOffset = 120.0f;
-        bool LogScale            = true;
-        bool InvertZAxis         = false;
+        bool  LogScale           = true;
+        bool  InvertZAxis        = false;
         float PointDensity       = 0.5;
         float Resolution         = 0.1;
 

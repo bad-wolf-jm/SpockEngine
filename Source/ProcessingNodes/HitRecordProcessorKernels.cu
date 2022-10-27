@@ -21,32 +21,32 @@ namespace LTSE::SensorModel
         {
             int32_t i = blockIdx.x * LTSE::TensorOps::Private::ThreadsPerBlock + threadIdx.x;
 
-            RETURN_UNLESS( i < aReturns.SizeAs<Dev::HitRecord>() );
+            RETURN_UNLESS( i < aReturns.SizeAs<Dev::sHitRecord>() );
             RETURN_UNLESS( i < aOut.SizeAs<float>() );
 
-            auto *lData = aReturns.DataAs<Dev::HitRecord>();
+            auto *lData = aReturns.DataAs<Dev::sHitRecord>();
             auto *lOut  = aOut.DataAs<float>();
 
-            lOut[i] = lData[i].Intensity;
+            lOut[i] = lData[i].mIntensity;
         }
 
         CUDA_KERNEL_DEFINITION void ExtractDistance( MultiTensor aOut, MultiTensor aReturns )
         {
             int32_t i = blockIdx.x * LTSE::TensorOps::Private::ThreadsPerBlock + threadIdx.x;
 
-            RETURN_UNLESS( i < aReturns.SizeAs<Dev::HitRecord>() );
+            RETURN_UNLESS( i < aReturns.SizeAs<Dev::sHitRecord>() );
             RETURN_UNLESS( i < aOut.SizeAs<float>() );
 
-            auto *lData = aReturns.DataAs<Dev::HitRecord>();
+            auto *lData = aReturns.DataAs<Dev::sHitRecord>();
             auto *lOut  = aOut.DataAs<float>();
 
-            lOut[i] = lData[i].Distance;
+            lOut[i] = lData[i].mDistance;
         }
     } // namespace Kernel
 
     void ExtractReflectivityOp( MultiTensor &aOut, MultiTensor &aReturns )
     {
-        int lBlockCount = ( aReturns.SizeAs<Dev::HitRecord>() / LTSE::TensorOps::Private::ThreadsPerBlock ) + 1;
+        int lBlockCount = ( aReturns.SizeAs<Dev::sHitRecord>() / LTSE::TensorOps::Private::ThreadsPerBlock ) + 1;
 
         dim3 lGridDim( lBlockCount, 1, 1 );
         dim3 lBlockDim( LTSE::TensorOps::Private::ThreadsPerBlock );
@@ -56,7 +56,7 @@ namespace LTSE::SensorModel
 
     void ExtractDistanceOp( MultiTensor &aOut, MultiTensor &aReturns )
     {
-        int lBlockCount = ( aReturns.SizeAs<Dev::HitRecord>() / LTSE::TensorOps::Private::ThreadsPerBlock ) + 1;
+        int lBlockCount = ( aReturns.SizeAs<Dev::sHitRecord>() / LTSE::TensorOps::Private::ThreadsPerBlock ) + 1;
 
         dim3 lGridDim( lBlockCount, 1, 1 );
         dim3 lBlockDim( LTSE::TensorOps::Private::ThreadsPerBlock );

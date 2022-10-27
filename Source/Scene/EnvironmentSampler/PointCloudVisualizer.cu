@@ -79,16 +79,16 @@ namespace LTSE::SensorModel::Dev
     }
 
     extern "C" __device__ LidarCartesianSamplePoint LidarDataToCartesian(
-        math::mat3 a_PointCloudRotation, HitRecord a_LidarReturnPoints, bool a_InvertZAxis )
+        math::mat3 a_PointCloudRotation, sHitRecord a_LidarReturnPoints, bool a_InvertZAxis )
     {
         LidarCartesianSamplePoint l_CartesianSample{};
 
-        float l_Phi = HALF_PI - a_LidarReturnPoints.Elevation * RADIANS;
+        float l_Phi = HALF_PI - a_LidarReturnPoints.mElevation * RADIANS;
 
         // With -z pointing inside the screen and x to the right,  3.0f * HALF_PI is inside. The azimuth
         // value moves to the right as it increases, but with the flipping of the x-axis due to the 3*HALF_PI
         // rotation, its sign is correct.
-        float l_Theta = 3.0f * HALF_PI + a_LidarReturnPoints.Azimuth * RADIANS;
+        float l_Theta = 3.0f * HALF_PI + a_LidarReturnPoints.mAzimuth * RADIANS;
 
         l_CartesianSample.FlashID = 0; // a_LidarReturnPoints.FlashID;
         l_CartesianSample.Type    = 0; // a_LidarReturnPoints.Type;
@@ -98,8 +98,8 @@ namespace LTSE::SensorModel::Dev
         l_CartesianSample.Direction.y = ::cos( l_Phi );
 
         l_CartesianSample.Direction = a_PointCloudRotation * l_CartesianSample.Direction;
-        l_CartesianSample.Distance  = a_LidarReturnPoints.Distance;
-        l_CartesianSample.Intensity = a_LidarReturnPoints.Intensity;
+        l_CartesianSample.Distance  = a_LidarReturnPoints.mDistance;
+        l_CartesianSample.Intensity = a_LidarReturnPoints.mIntensity;
 
         if( a_InvertZAxis )
         {
@@ -110,19 +110,19 @@ namespace LTSE::SensorModel::Dev
     }
 
     extern "C" __global__ void __kernel__FillParticleBuffer( math::mat3 a_PointCloudRotation, math::vec3 a_PointCloudOrigin,
-        MultiTensor a_LidarReturnPoints, GPUExternalMemory a_LidarParticle, bool a_LogScale, bool a_HighlightFOV,
-        bool a_InvertZAxis, float aResolution )
+        MultiTensor a_LidarReturnPoints, GPUExternalMemory a_LidarParticle, bool a_LogScale, bool a_HighlightFOV, bool a_InvertZAxis,
+        float aResolution )
     {
         int l_InputArrayIdx = blockIdx.x * blockDim.x + threadIdx.x;
-        if( l_InputArrayIdx >= a_LidarReturnPoints.SizeAs<HitRecord>() ) return;
+        if( l_InputArrayIdx >= a_LidarReturnPoints.SizeAs<sHitRecord>() ) return;
 
-        HitRecord* lHitRecords    = a_LidarReturnPoints.DataAs<HitRecord>();
-        Particle*  lLidarParticle = a_LidarParticle.DataAs<Particle>();
+        sHitRecord *lHitRecords    = a_LidarReturnPoints.DataAs<sHitRecord>();
+        Particle   *lLidarParticle = a_LidarParticle.DataAs<Particle>();
 
         LidarCartesianSamplePoint l_CartesianPoint =
             LidarDataToCartesian( a_PointCloudRotation, lHitRecords[l_InputArrayIdx], a_InvertZAxis );
 
-        float I = lHitRecords[l_InputArrayIdx].Intensity;
+        float I = lHitRecords[l_InputArrayIdx].mIntensity;
 
         if( a_LogScale )
         {
@@ -145,17 +145,17 @@ namespace LTSE::SensorModel::Dev
     }
 
     void PointCloudVisualizer::Visualize(
-        math::mat4 a_PointCloudTransform, MultiTensor& a_LidarReturnPoints, GPUExternalMemory& a_Particles )
+        math::mat4 a_PointCloudTransform, MultiTensor &a_LidarReturnPoints, GPUExternalMemory &a_Particles )
     {
-        int l_BlockCount = ( a_LidarReturnPoints.SizeAs<HitRecord>() / THREADS_PER_BLOCK ) + 1;
+        int l_BlockCount = ( a_LidarReturnPoints.SizeAs<sHitRecord>() / THREADS_PER_BLOCK ) + 1;
 
         dim3 l_GridDim( static_cast<int>( l_BlockCount ), 1, 1 );
         dim3 l_BlockDim( THREADS_PER_BLOCK );
 
         a_Particles.Zero();
         __kernel__FillParticleBuffer<<<l_GridDim, l_BlockDim>>>( math::NormalMatrix( a_PointCloudTransform ),
-            math::Translation( a_PointCloudTransform ), a_LidarReturnPoints, a_Particles, LogScale, HighlightFlashFOV,
-            InvertZAxis, Resolution * RADIANS );
+            math::Translation( a_PointCloudTransform ), a_LidarReturnPoints, a_Particles, LogScale, HighlightFlashFOV, InvertZAxis,
+            Resolution * RADIANS );
         cudaDeviceSynchronize();
     }
 

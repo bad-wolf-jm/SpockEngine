@@ -172,7 +172,7 @@ struct SensorControllerBehaviour : sBehaviourController
         // MultiTensor &lElevations  = ( *lEnvSamples )["Elevation"].Get<sMultiTensorComponent>().mValue;
         // MultiTensor &lIntensities = ( *lEnvSamples )["Intensity"].Get<sMultiTensorComponent>().mValue;
 
-        // sTensorShape lOutputShape( lIntensities.Shape().mShape, sizeof( HitRecord ) );
+        // sTensorShape lOutputShape( lIntensities.Shape().mShape, sizeof( sHitRecord ) );
         // MultiTensor lHitRecords = MultiTensor( m_ComputeScope->mPool, lOutputShape );
 
         // if( Has<sTransformMatrixComponent>() )

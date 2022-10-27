@@ -47,7 +47,7 @@ namespace LTSE::SensorModel::Dev
     struct __align__( OPTIX_SBT_RECORD_ALIGNMENT ) HitgroupRecord
     {
         __align__( OPTIX_SBT_RECORD_ALIGNMENT ) char header[OPTIX_SBT_RECORD_HEADER_SIZE];
-        TriangleMeshSBTData data{};
+        TriangleMeshSBTData                          data{};
 
         HitgroupRecord()  = default;
         ~HitgroupRecord() = default;
@@ -64,26 +64,27 @@ namespace LTSE::SensorModel::Dev
         WorldSampler( Ref<OptixDeviceContextObject> a_RayTracingContext );
         ~WorldSampler() = default;
 
-        void Sample( math::mat4 a_SensorTransform, Ref<Scene> a_Scene, MultiTensor &a_Azimuths, MultiTensor &a_Elevations, MultiTensor &a_Intensities, MultiTensor &a_SamplePoints );
+        void Sample( math::mat4 a_SensorTransform, Ref<Scene> a_Scene, MultiTensor &a_Azimuths, MultiTensor &a_Elevations,
+            MultiTensor &a_Intensities, MultiTensor &a_SamplePoints );
 
       private:
         void BuildShaderBindingTable( Ref<Scene> a_Scene );
 
       private:
         CUcontext cudaContext;
-        CUstream stream;
+        CUstream  stream;
 
-        Ref<OptixDeviceContextObject> m_RayTracingContext = nullptr;
-        Ref<OptixModuleObject> m_RayTracingModule         = nullptr;
-        Ref<OptixPipelineObject> m_RayTracingPipeline     = nullptr;
-        Ref<OptixShaderBindingTableObject> m_SBT          = nullptr;
+        Ref<OptixDeviceContextObject>      m_RayTracingContext  = nullptr;
+        Ref<OptixModuleObject>             m_RayTracingModule   = nullptr;
+        Ref<OptixPipelineObject>           m_RayTracingPipeline = nullptr;
+        Ref<OptixShaderBindingTableObject> m_SBT                = nullptr;
 
         GPUMemory m_RaygenRecordsBuffer;
         GPUMemory m_MissRecordsBuffer;
         GPUMemory m_HitgroupRecordsBuffer;
 
         LaunchParams m_LaunchParams;
-        GPUMemory m_LaunchParamsBuffer;
+        GPUMemory    m_LaunchParamsBuffer;
     };
 
 } // namespace LTSE::SensorModel::Dev
