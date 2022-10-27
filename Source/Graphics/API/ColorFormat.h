@@ -41,7 +41,7 @@ namespace LTSE::Core
         BGRA8_SRGB          = 21
     };
 
-    eColorFormat ToLtseFormat( VkFormat C );
-    VkFormat     ToVkFormat( eColorFormat C );
+    // eColorFormat ToLtseFormat( VkFormat C );
+    // VkFormat     ToVkFormat( eColorFormat C );
 
 } // namespace LTSE::Core

@@ -14,7 +14,7 @@
 
 #include <gli/gli.hpp>
 
-#include "ColorFormat.h"
+#include "Graphics/API/ColorFormat.h"
 #include "TextureTypes.h"
 
 namespace fs = std::filesystem;

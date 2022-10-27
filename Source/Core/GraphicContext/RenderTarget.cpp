@@ -1,6 +1,8 @@
 #include "RenderTarget.h"
 #include "Core/Logging.h"
 
+#include "Graphics/Implementation/Vulkan/VkColorFormat.h"
+
 namespace LTSE::Graphics
 {
     AbstractRenderTarget::AbstractRenderTarget( GraphicContext &a_GraphicContext )

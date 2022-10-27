@@ -9,7 +9,7 @@
 #include "Core/Textures/TextureData.h"
 #include "Core/Types.h"
 
-#include "Core/Textures/ColorFormat.h"
+#include "Graphics/API/ColorFormat.h"
 
 #include "Buffer.h"
 #include "GraphicContext.h"

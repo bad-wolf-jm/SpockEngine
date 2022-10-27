@@ -9,7 +9,6 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Resource.cpp
     Core/Logging.cpp
 
-    Core/Textures/ColorFormat.cpp
     Core/Textures/TextureData.cpp
     
     Scripting/ScriptingEngine.cpp
@@ -41,6 +40,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Optix/OptixProgramGroup.cpp
     Core/Optix/OptixAccelerationStructure.cpp
     
+    Graphics/Implementation/Vulkan/VkColorFormat.cpp
     Graphics/Implementation/Vulkan/VkContext.cpp
     Graphics/Implementation/Vulkan/VkRenderPass.cpp
     Graphics/Implementation/Vulkan/VkPipeline.cpp

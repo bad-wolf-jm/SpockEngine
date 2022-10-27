@@ -13,7 +13,7 @@
 #include "Core/Math/Types.h"
 #include "Core/Types.h"
 
-#include "Core/Textures/ColorFormat.h"
+#include "Graphics/API/ColorFormat.h"
 #include "Core/Textures/TextureTypes.h"
 
 #include "yaml-cpp/yaml.h"
