@@ -7,8 +7,8 @@ namespace LTSE::SensorModel::Dev
 
     extern "C" char g_SensorModelEnvironmentSampler[];
 
-    WorldSampler::WorldSampler( Ref<OptixDeviceContextObject> a_RayTracingContext )
-        : mRayTracingContext{ a_RayTracingContext }
+    WorldSampler::WorldSampler( Ref<OptixDeviceContextObject> aRayTracingContext )
+        : mRayTracingContext{ aRayTracingContext }
     {
         mRayTracingModule = New<OptixModuleObject>( "gOptixLaunchParams", g_SensorModelEnvironmentSampler, mRayTracingContext );
 
@@ -25,16 +25,16 @@ namespace LTSE::SensorModel::Dev
         mSBT = New<OptixShaderBindingTableObject>();
 
         // build raygen records
-        std::vector<sRaygenRecord> raygenRecords = mSBT->NewRecordType<sRaygenRecord>( mRayTracingModule->m_RayGenProgramGroups );
-        mRaygenRecordsBuffer                     = GPUMemory::Create( raygenRecords );
+        std::vector<sRaygenRecord> lRaygenRecords = mSBT->NewRecordType<sRaygenRecord>( mRayTracingModule->m_RayGenProgramGroups );
+        mRaygenRecordsBuffer                     = GPUMemory::Create( lRaygenRecords );
         mSBT->BindRayGenRecordTable( mRaygenRecordsBuffer.RawDevicePtr() );
 
         // build miss records
-        std::vector<sMissRecord> missRecords = mSBT->NewRecordType<sMissRecord>( mRayTracingModule->m_MissProgramGroups );
-        mMissRecordsBuffer                   = GPUMemory::Create( missRecords );
+        std::vector<sMissRecord> lMissRecords = mSBT->NewRecordType<sMissRecord>( mRayTracingModule->m_MissProgramGroups );
+        mMissRecordsBuffer                   = GPUMemory::Create( lMissRecords );
         mSBT->BindMissRecordTable<sMissRecord>( mMissRecordsBuffer.RawDevicePtr(), mMissRecordsBuffer.SizeAs<sMissRecord>() );
 
-        std::vector<sHitgroupRecord> hitgroupRecords;
+        std::vector<sHitgroupRecord> lHitgroupRecords;
         a_Scene->ForEach<LTSE::Core::EntityComponentSystem::Components::sRayTracingTargetComponent,
             LTSE::Core::EntityComponentSystem::Components::sStaticMeshComponent>(
             [&]( auto l_Entity, auto &l_Component, auto &aMeshComponent )
@@ -42,9 +42,9 @@ namespace LTSE::SensorModel::Dev
                 sHitgroupRecord rec     = mSBT->NewRecordType<sHitgroupRecord>( mRayTracingModule->m_HitProgramGroups[0] );
                 rec.mData.mVertexOffset = aMeshComponent.mVertexOffset;
                 rec.mData.mIndexOffset  = aMeshComponent.mIndexOffset / 3;
-                hitgroupRecords.push_back( rec );
+                lHitgroupRecords.push_back( rec );
             } );
-        mHitgroupRecordsBuffer = GPUMemory::Create( hitgroupRecords );
+        mHitgroupRecordsBuffer = GPUMemory::Create( lHitgroupRecords );
         mSBT->BindHitRecordTable<sHitgroupRecord>( mHitgroupRecordsBuffer.RawDevicePtr(), mHitgroupRecordsBuffer.Size() );
     }
 
