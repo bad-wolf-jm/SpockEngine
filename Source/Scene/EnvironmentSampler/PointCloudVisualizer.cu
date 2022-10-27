@@ -78,10 +78,10 @@ namespace LTSE::SensorModel::Dev
         return hsv2rgb( math::vec3( I, 1.0f, 1.0f ) );
     }
 
-    extern "C" __device__ LidarCartesianSamplePoint LidarDataToCartesian(
+    extern "C" __device__ sLidarCartesianSamplePoint LidarDataToCartesian(
         math::mat3 a_PointCloudRotation, sHitRecord a_LidarReturnPoints, bool a_InvertZAxis )
     {
-        LidarCartesianSamplePoint l_CartesianSample{};
+        sLidarCartesianSamplePoint l_CartesianSample{};
 
         float l_Phi = HALF_PI - a_LidarReturnPoints.mElevation * RADIANS;
 
@@ -90,20 +90,20 @@ namespace LTSE::SensorModel::Dev
         // rotation, its sign is correct.
         float l_Theta = 3.0f * HALF_PI + a_LidarReturnPoints.mAzimuth * RADIANS;
 
-        l_CartesianSample.FlashID = 0; // a_LidarReturnPoints.FlashID;
-        l_CartesianSample.Type    = 0; // a_LidarReturnPoints.Type;
+        l_CartesianSample.mFlashID = 0; // a_LidarReturnPoints.FlashID;
+        l_CartesianSample.mType    = 0; // a_LidarReturnPoints.Type;
 
-        l_CartesianSample.Direction.x = ::sin( l_Phi ) * ::cos( l_Theta );
-        l_CartesianSample.Direction.z = ::sin( l_Phi ) * ::sin( l_Theta );
-        l_CartesianSample.Direction.y = ::cos( l_Phi );
+        l_CartesianSample.mDirection.x = ::sin( l_Phi ) * ::cos( l_Theta );
+        l_CartesianSample.mDirection.z = ::sin( l_Phi ) * ::sin( l_Theta );
+        l_CartesianSample.mDirection.y = ::cos( l_Phi );
 
-        l_CartesianSample.Direction = a_PointCloudRotation * l_CartesianSample.Direction;
-        l_CartesianSample.Distance  = a_LidarReturnPoints.mDistance;
-        l_CartesianSample.Intensity = a_LidarReturnPoints.mIntensity;
+        l_CartesianSample.mDirection = a_PointCloudRotation * l_CartesianSample.mDirection;
+        l_CartesianSample.mDistance  = a_LidarReturnPoints.mDistance;
+        l_CartesianSample.mIntensity = a_LidarReturnPoints.mIntensity;
 
         if( a_InvertZAxis )
         {
-            l_CartesianSample.Direction.z = -l_CartesianSample.Direction.z;
+            l_CartesianSample.mDirection.z = -l_CartesianSample.mDirection.z;
         }
 
         return l_CartesianSample;
@@ -119,7 +119,7 @@ namespace LTSE::SensorModel::Dev
         sHitRecord *lHitRecords    = a_LidarReturnPoints.DataAs<sHitRecord>();
         Particle   *lLidarParticle = a_LidarParticle.DataAs<Particle>();
 
-        LidarCartesianSamplePoint l_CartesianPoint =
+        sLidarCartesianSamplePoint l_CartesianPoint =
             LidarDataToCartesian( a_PointCloudRotation, lHitRecords[l_InputArrayIdx], a_InvertZAxis );
 
         float I = lHitRecords[l_InputArrayIdx].mIntensity;
@@ -139,12 +139,12 @@ namespace LTSE::SensorModel::Dev
         math::vec3 l_Color = IntensityToRGB( I, 240.0f );
 
         lLidarParticle[l_InputArrayIdx].PositionAndSize =
-            math::vec4( a_PointCloudOrigin + l_CartesianPoint.Direction * l_CartesianPoint.Distance,
-                glm::tan( aResolution / 2.0f ) * l_CartesianPoint.Distance * 2.0f );
+            math::vec4( a_PointCloudOrigin + l_CartesianPoint.mDirection * l_CartesianPoint.mDistance,
+                glm::tan( aResolution / 2.0f ) * l_CartesianPoint.mDistance * 2.0f );
         lLidarParticle[l_InputArrayIdx].Color = math::vec4( l_Color, 0.95 );
     }
 
-    void PointCloudVisualizer::Visualize(
+    void sPointCloudVisualizer::Visualize(
         math::mat4 a_PointCloudTransform, MultiTensor &a_LidarReturnPoints, GPUExternalMemory &a_Particles )
     {
         int l_BlockCount = ( a_LidarReturnPoints.SizeAs<sHitRecord>() / THREADS_PER_BLOCK ) + 1;
@@ -154,8 +154,8 @@ namespace LTSE::SensorModel::Dev
 
         a_Particles.Zero();
         __kernel__FillParticleBuffer<<<l_GridDim, l_BlockDim>>>( math::NormalMatrix( a_PointCloudTransform ),
-            math::Translation( a_PointCloudTransform ), a_LidarReturnPoints, a_Particles, LogScale, HighlightFlashFOV, InvertZAxis,
-            Resolution * RADIANS );
+            math::Translation( a_PointCloudTransform ), a_LidarReturnPoints, a_Particles, mLogScale, mHighlightFlashFOV, mInvertZAxis,
+            mResolution * RADIANS );
         cudaDeviceSynchronize();
     }
 

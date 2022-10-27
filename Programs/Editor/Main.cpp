@@ -120,20 +120,21 @@ using namespace LTSE::SensorModel::Dev;
 struct SensorControllerBehaviour : sBehaviourController
 {
     // Ref<SensorControllerBase> SensorController = nullptr;
-    Ref<Scope> m_ComputeScope                  = nullptr;
-    Ref<WorldSampler> m_WorldSampler           = nullptr;
-    Ref<EngineLoop> mEngineLoop                = nullptr;
-    Ref<Scene> m_World                         = nullptr;
+    Ref<Scope>        m_ComputeScope = nullptr;
+    Ref<WorldSampler> m_WorldSampler = nullptr;
+    Ref<EngineLoop>   mEngineLoop    = nullptr;
+    Ref<Scene>        m_World        = nullptr;
     // Ref<SensorDeviceBase> m_Sensor             = nullptr;
 
-    PointCloudVisualizer m_PointCloudVisualizer{};
+    sPointCloudVisualizer m_PointCloudVisualizer{};
 
-    // SensorControllerBehaviour( Ref<EngineLoop> aEngineLoop, Ref<Scene> aWorld, Ref<SensorControllerBase> aSensorController, Ref<SensorDeviceBase> aSensor )
+    // SensorControllerBehaviour( Ref<EngineLoop> aEngineLoop, Ref<Scene> aWorld, Ref<SensorControllerBase> aSensorController,
+    // Ref<SensorDeviceBase> aSensor )
     SensorControllerBehaviour( Ref<EngineLoop> aEngineLoop, Ref<Scene> aWorld )
         : mEngineLoop{ aEngineLoop }
         , m_World{ aWorld }
-        // , SensorController{ aSensorController }
-        // , m_Sensor{ aSensor }
+    // , SensorController{ aSensorController }
+    // , m_Sensor{ aSensor }
     {
     }
 
@@ -179,25 +180,28 @@ struct SensorControllerBehaviour : sBehaviourController
         // {
         //     auto &lParticles = Get<sParticleSystemComponent>();
 
-        //     m_WorldSampler->Sample( Get<sTransformMatrixComponent>().Matrix, m_World, lAzimuths, lElevations, lIntensities, lHitRecords );
+        //     m_WorldSampler->Sample( Get<sTransformMatrixComponent>().Matrix, m_World, lAzimuths, lElevations, lIntensities,
+        //     lHitRecords );
 
         //     if( !( lParticles.Particles ) || lParticles.ParticleCount != lAzimuths.SizeAs<float>() )
         //     {
         //         lParticles.ParticleCount = lAzimuths.SizeAs<float>();
         //         lParticles.Particles =
-        //             New<Buffer>( mEngineLoop->GetGraphicContext(), eBufferBindType::VERTEX_BUFFER, false, true, true, true, lParticles.ParticleCount * sizeof( Particle ) );
+        //             New<Buffer>( mEngineLoop->GetGraphicContext(), eBufferBindType::VERTEX_BUFFER, false, true, true, true,
+        //             lParticles.ParticleCount * sizeof( Particle ) );
         //     }
 
         //     GPUExternalMemory l_PointCloudMappedBuffer( *( lParticles.Particles ), lParticles.ParticleCount * sizeof( Particle ) );
-        //     m_PointCloudVisualizer.InvertZAxis = false;
-        //     m_PointCloudVisualizer.Resolution  = 0.2;
+        //     m_PointCloudVisualizer.mInvertZAxis = false;
+        //     m_PointCloudVisualizer.mResolution  = 0.2;
         //     m_PointCloudVisualizer.Visualize( Get<sTransformMatrixComponent>().Matrix, lHitRecords, l_PointCloudMappedBuffer );
         //     l_PointCloudMappedBuffer.Dispose();
         // }
         // auto &lDistancesNode   = RetrieveDistance( *( SensorController->ControlledSensor()->mComputationScope ), lHitRecords );
         // auto &lIntensitiesNode = RetrieveIntensities( *( SensorController->ControlledSensor()->mComputationScope ), lHitRecords );
 
-        // SensorController->Receive( ts, *( SensorController->ControlledSensor()->mComputationScope ), lEnvSamples->GetScheduledFlashes(), ( *lEnvSamples )["Azimuth"],
+        // SensorController->Receive( ts, *( SensorController->ControlledSensor()->mComputationScope ),
+        // lEnvSamples->GetScheduledFlashes(), ( *lEnvSamples )["Azimuth"],
         //                            ( *lEnvSamples )["Elevation"], lIntensitiesNode, lDistancesNode );
     }
 };
@@ -220,19 +224,20 @@ class EchoDSMVPEditor : public BaseEditorApplication
 
     std::vector<float> mWaveforms = {};
 
-    float g_TargetDistance     = 2.0f;
-    float g_Intensity          = 1.0f;
-    math::vec4 g_TimebaseDelay = math::vec4{ 0.0f, 0.0f, 0.0f, 0.0f };
-    uint32_t g_Basepoints      = 100;
-    uint32_t g_Oversampling    = 1;
-    uint32_t g_Accumulation    = 1;
-    float g_SystemTemperature  = 25.0f;
-    float g_StaticNoiseFactor  = .001f;
+    float      g_TargetDistance    = 2.0f;
+    float      g_Intensity         = 1.0f;
+    math::vec4 g_TimebaseDelay     = math::vec4{ 0.0f, 0.0f, 0.0f, 0.0f };
+    uint32_t   g_Basepoints        = 100;
+    uint32_t   g_Oversampling      = 1;
+    uint32_t   g_Accumulation      = 1;
+    float      g_SystemTemperature = 25.0f;
+    float      g_StaticNoiseFactor = .001f;
     // std::vector<sWaveformPacket> mShortWaveformBuffer;
 
     // sWaveformPacket mShortWaveformToDisplay{};
 
-    // void Sparkline( const char *id, const float *values, int count, float min_v, float max_v, int offset, const ImVec4 &col, const ImVec2 &size )
+    // void Sparkline( const char *id, const float *values, int count, float min_v, float max_v, int offset, const ImVec4 &col, const
+    // ImVec2 &size )
     // {
     //     ImPlot::PushStyleVar( ImPlotStyleVar_PlotPadding, ImVec2( 0, 0 ) );
     //     if( ImPlot::BeginPlot( id, size, ImPlotFlags_CanvasOnly | ImPlotFlags_NoChild ) )
@@ -277,7 +282,8 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //     break;
         // }
 
-        // mEditorWindow.Sensor.Get<sBehaviourComponent>().Bind<SensorControllerBehaviour>( mEngineLoop, m_World, CurrentController, m_Sensor );
+        // mEditorWindow.Sensor.Get<sBehaviourComponent>().Bind<SensorControllerBehaviour>( mEngineLoop, m_World, CurrentController,
+        // m_Sensor );
     }
 
     void OnUI()
@@ -295,7 +301,8 @@ class EchoDSMVPEditor : public BaseEditorApplication
 
         //     ImVec2 l_PopupSize = ImGui::GetWindowSize();
 
-        //     ImGuiTableFlags flags = ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV |
+        //     ImGuiTableFlags flags = ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg |
+        //     ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV |
         //                             ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
         //     ImGui::PushStyleVar( ImGuiStyleVar_CellPadding, ImVec2( 5, 5 ) );
 
@@ -306,26 +313,33 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //         lAcqCreateInfo.mBasePoints   = 100;
         //         lAcqCreateInfo.mOversampling = 1;
 
-        //         auto lSamples = m_Sensor->Sample( lEnvironmentSamplingParameter, lAcqCreateInfo, std::string( "tile_1" ), math::vec2{ 0.0f, 0.0f }, 0.0f );
+        //         auto lSamples = m_Sensor->Sample( lEnvironmentSamplingParameter, lAcqCreateInfo, std::string( "tile_1" ),
+        //         math::vec2{ 0.0f, 0.0f }, 0.0f );
 
         //         auto lDistance = MultiTensorValue( *m_Sensor->mComputationScope, sConstantValueInitializerComponent( 3.0f ),
         //                                            ( *lSamples )["Azimuth"].Get<sMultiTensorComponent>().mValue.Shape() );
 
-        //         m_Sensor->Process( 0.0f, *m_Sensor->mComputationScope, lSamples->GetScheduledFlashes(), ( *lSamples )["Azimuth"], ( *lSamples )["Elevation"],
+        //         m_Sensor->Process( 0.0f, *m_Sensor->mComputationScope, lSamples->GetScheduledFlashes(), ( *lSamples )["Azimuth"], (
+        //         *lSamples )["Elevation"],
         //                            ( *lSamples )["Intensity"], lDistance );
 
         //         m_Sensor->mComputationScope->Run( ( *m_Sensor->mComputationScope )["FPGAOutput"] );
-        //         mShortWaveformBuffer = ( *m_Sensor->mComputationScope )["FPGAOutput"].Get<sMultiTensorComponent>().mValue.FetchFlattened<sWaveformPacket>();
+        //         mShortWaveformBuffer = ( *m_Sensor->mComputationScope
+        //         )["FPGAOutput"].Get<sMultiTensorComponent>().mValue.FetchFlattened<sWaveformPacket>();
         //     }
 
         //     ImGui::Columns( 2 );
 
         //     if( mShortWaveformBuffer.size() == 1024 )
         //     {
-        //         static const char *xlabels[] = { "1",  "2",  "3",  "4",  "5",  "6",  "7",  "8",  "9",  "10", "11", "12", "13", "14", "15", "16",
-        //                                          "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32" };
-        //         static const char *ylabels[] = { "1",  "2",  "3",  "4",  "5",  "6",  "7",  "8",  "9",  "10", "11", "12", "13", "14", "15", "16",
-        //                                          "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32" };
+        //         static const char *xlabels[] = { "1",  "2",  "3",  "4",  "5",  "6",  "7",  "8",  "9",  "10", "11", "12", "13", "14",
+        //         "15", "16",
+        //                                          "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+        //                                          "31", "32" };
+        //         static const char *ylabels[] = { "1",  "2",  "3",  "4",  "5",  "6",  "7",  "8",  "9",  "10", "11", "12", "13", "14",
+        //         "15", "16",
+        //                                          "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+        //                                          "31", "32" };
 
         //         std::array<float, 32 * 32> lShortWaveformAmplitudes;
         //         uint32_t lSwfIdx          = 0;
@@ -356,12 +370,14 @@ class EchoDSMVPEditor : public BaseEditorApplication
 
         //         ImPlot::PushColormap( ImPlotColormap_Jet );
 
-        //         if( ImPlot::BeginPlot( "##SWF_AMPLITUDES", ImVec2( 512, 512 ), ImPlotFlags_Crosshairs | ImPlotFlags_NoFrame | ImPlotFlags_NoChild ) )
+        //         if( ImPlot::BeginPlot( "##SWF_AMPLITUDES", ImVec2( 512, 512 ), ImPlotFlags_Crosshairs | ImPlotFlags_NoFrame |
+        //         ImPlotFlags_NoChild ) )
         //         {
         //             ImPlot::SetupAxes( NULL, NULL, ImPlotAxisFlags_Lock, ImPlotAxisFlags_Lock );
         //             ImPlot::SetupAxisTicks( ImAxis_X1, 0.0f + 1.0f / 64.0f, 1.0f - 1.0f / 64.0f, 32, xlabels );
         //             ImPlot::SetupAxisTicks( ImAxis_Y1, 0.0f + 1.0f / 64.0f, 1.0f - 1.0f / 64.0f, 32, ylabels );
-        //             ImPlot::PlotHeatmap( "##SWF_AMPLITUDES_T", lShortWaveformAmplitudes.data(), 32, 32, lGlobalMinAmplitude, lGlobalMaxAmplitude, NULL );
+        //             ImPlot::PlotHeatmap( "##SWF_AMPLITUDES_T", lShortWaveformAmplitudes.data(), 32, 32, lGlobalMinAmplitude,
+        //             lGlobalMaxAmplitude, NULL );
 
         //             if( ImPlot::IsPlotHovered() && ImGui::IsMouseClicked( 0 ) && ImGui::GetIO().KeyCtrl )
         //             {
@@ -385,7 +401,8 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //     float lTextHeight         = 0;
         //     float lLabelSizes[8]      = { 0.0f };
         //     const char *lFieldNames[] = {
-        //         "Interpolated distance:", "Amplitude:", "Baseline:", "Max index:", "Last unsaturated sample:", "Baseline after saturation:", "Short trace offset:", "Samples:" };
+        //         "Interpolated distance:", "Amplitude:", "Baseline:", "Max index:", "Last unsaturated sample:", "Baseline after
+        //         saturation:", "Short trace offset:", "Samples:" };
 
         //     for( uint32_t i = 0; i < 8; i++ )
         //     {
@@ -400,38 +417,38 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //         auto lPosition0 = UI::GetCurrentCursorPosition();
         //         Text( "Interpolated distance:" );
         //         UI::SameLine();
-        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2{ ( lMaxLabelSize - lLabelSizes[0] + 10.0f ), 0.0f } );
-        //         UI::Text( "{}", mShortWaveformToDisplay.mWaveform[i].mPulse.mInterpolatedDistance );
+        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2{ ( lMaxLabelSize - lLabelSizes[0] + 10.0f ), 0.0f
+        //         } ); UI::Text( "{}", mShortWaveformToDisplay.mWaveform[i].mPulse.mInterpolatedDistance );
 
         //         Text( "Amplitude:" );
         //         UI::SameLine();
-        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2{ ( lMaxLabelSize - lLabelSizes[1] + 10.0f ), 0.0f } );
-        //         UI::Text( "{}", mShortWaveformToDisplay.mWaveform[i].mPulse.mAmplitude );
+        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2{ ( lMaxLabelSize - lLabelSizes[1] + 10.0f ), 0.0f
+        //         } ); UI::Text( "{}", mShortWaveformToDisplay.mWaveform[i].mPulse.mAmplitude );
 
         //         Text( "Baseline:" );
         //         UI::SameLine();
-        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2{ ( lMaxLabelSize - lLabelSizes[2] + 10.0f ), 0.0f } );
-        //         UI::Text( "{}", mShortWaveformToDisplay.mWaveform[i].mPulse.mPulseBaseLevel );
+        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2{ ( lMaxLabelSize - lLabelSizes[2] + 10.0f ), 0.0f
+        //         } ); UI::Text( "{}", mShortWaveformToDisplay.mWaveform[i].mPulse.mPulseBaseLevel );
 
         //         Text( "Max index:" );
         //         UI::SameLine();
-        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2{ ( lMaxLabelSize - lLabelSizes[3] + 10.0f ), 0.0f } );
-        //         UI::Text( "{}", mShortWaveformToDisplay.mWaveform[i].mPulse.mMaxIndex );
+        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2{ ( lMaxLabelSize - lLabelSizes[3] + 10.0f ), 0.0f
+        //         } ); UI::Text( "{}", mShortWaveformToDisplay.mWaveform[i].mPulse.mMaxIndex );
 
         //         Text( "Last unsaturated sample:" );
         //         UI::SameLine();
-        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2{ ( lMaxLabelSize - lLabelSizes[4] + 10.0f ), 0.0f } );
-        //         UI::Text( "{}", mShortWaveformToDisplay.mWaveform[i].mPulse.mLastUnsaturatedSample );
+        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2{ ( lMaxLabelSize - lLabelSizes[4] + 10.0f ), 0.0f
+        //         } ); UI::Text( "{}", mShortWaveformToDisplay.mWaveform[i].mPulse.mLastUnsaturatedSample );
 
         //         Text( "Baseline after saturation:" );
         //         UI::SameLine();
-        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2{ ( lMaxLabelSize - lLabelSizes[5] + 10.0f ), 0.0f } );
-        //         UI::Text( "{}", mShortWaveformToDisplay.mWaveform[i].mPulse.mBaselineAfterSaturation );
+        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2{ ( lMaxLabelSize - lLabelSizes[5] + 10.0f ), 0.0f
+        //         } ); UI::Text( "{}", mShortWaveformToDisplay.mWaveform[i].mPulse.mBaselineAfterSaturation );
 
         //         Text( "Short trace offset:" );
         //         UI::SameLine();
-        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2{ ( lMaxLabelSize - lLabelSizes[6] + 10.0f ), 0.0f } );
-        //         UI::Text( "{}", mShortWaveformToDisplay.mWaveform[i].mPulse.mOffset );
+        //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2{ ( lMaxLabelSize - lLabelSizes[6] + 10.0f ), 0.0f
+        //         } ); UI::Text( "{}", mShortWaveformToDisplay.mWaveform[i].mPulse.mOffset );
 
         //         auto lPosition1  = UI::GetCurrentCursorPosition();
         //         float lTagHeight = lPosition1.y - lPosition0.y;
@@ -458,7 +475,8 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //             ImGui::PushID( i );
 
         //             ImPlot::PushStyleVar( ImPlotStyleVar_PlotPadding, ImVec2( 0, 0 ) );
-        //             if( ImPlot::BeginPlot( "##spark_0", ImVec2( lTagHeight * 2, lTagHeight ), ImPlotFlags_Crosshairs | ImPlotFlags_NoChild ) )
+        //             if( ImPlot::BeginPlot( "##spark_0", ImVec2( lTagHeight * 2, lTagHeight ), ImPlotFlags_Crosshairs |
+        //             ImPlotFlags_NoChild ) )
         //             {
         //                 ImPlot::SetupAxes( 0, 0, ImPlotAxisFlags_NoDecorations, ImPlotAxisFlags_None );
         //                 ImPlot::SetupAxesLimits( 0, 11 - 1, lMinValue, lMaxValue, ImGuiCond_Always );
@@ -527,15 +545,18 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //         lAcqCreateInfo.mBasePoints   = g_Basepoints;
         //         lAcqCreateInfo.mOversampling = g_Oversampling;
 
-        //         auto lSamples = m_Sensor->Sample( lEnvironmentSamplingParameter, lAcqCreateInfo, std::string( "tile_1" ), math::vec2{ 0.0f, 0.0f }, 0.0f );
+        //         auto lSamples = m_Sensor->Sample( lEnvironmentSamplingParameter, lAcqCreateInfo, std::string( "tile_1" ),
+        //         math::vec2{ 0.0f, 0.0f }, 0.0f );
 
         //         // PhotoDetector 15 gets an aggressor
         //         auto lPhotodetectorData = lSamples->GetScheduledFlashes().mPulseSampling.mPhotoDetectorData;
 
         //         auto lPhotoDetectorCellWorldElevationMin = ConstantScalarValue( *m_Sensor->mComputationScope,
-        //         lPhotodetectorData.mCellWorldElevationBounds.mMin[lAggressorPosition] ); auto lPhotoDetectorCellWorldElevationMax = ConstantScalarValue(
-        //         *m_Sensor->mComputationScope, lPhotodetectorData.mCellWorldElevationBounds.mMax[lAggressorPosition] ); auto lHorizontallyAlignedDetections =
-        //             InInterval( *m_Sensor->mComputationScope, ( *lSamples )["Elevation"], lPhotoDetectorCellWorldElevationMin, lPhotoDetectorCellWorldElevationMax, false, false
+        //         lPhotodetectorData.mCellWorldElevationBounds.mMin[lAggressorPosition] ); auto lPhotoDetectorCellWorldElevationMax =
+        //         ConstantScalarValue( *m_Sensor->mComputationScope,
+        //         lPhotodetectorData.mCellWorldElevationBounds.mMax[lAggressorPosition] ); auto lHorizontallyAlignedDetections =
+        //             InInterval( *m_Sensor->mComputationScope, ( *lSamples )["Elevation"], lPhotoDetectorCellWorldElevationMin,
+        //             lPhotoDetectorCellWorldElevationMax, false, false
         //             );
         //         auto lZero = ConstantScalarValue( *m_Sensor->mComputationScope, 0.0f );
         //         auto lOne  = ConstantScalarValue( *m_Sensor->mComputationScope, 1.0f );
@@ -546,11 +567,13 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //         auto lDistance = MultiTensorValue( *m_Sensor->mComputationScope, sConstantValueInitializerComponent( 25.0f ),
         //                                            ( *lSamples )["Azimuth"].Get<sMultiTensorComponent>().mValue.Shape() );
 
-        //         m_Sensor->Process( 0.0f, *m_Sensor->mComputationScope, lSamples->GetScheduledFlashes(), ( *lSamples )["Azimuth"], ( *lSamples )["Elevation"], lIntensities,
+        //         m_Sensor->Process( 0.0f, *m_Sensor->mComputationScope, lSamples->GetScheduledFlashes(), ( *lSamples )["Azimuth"], (
+        //         *lSamples )["Elevation"], lIntensities,
         //                            lDistance );
 
         //         m_Sensor->mComputationScope->Run( ( *m_Sensor->mComputationScope )["FPGAOutput"] );
-        //         mWaveforms = ( *m_Sensor->mComputationScope )["SaturatedWaveforms"].Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        //         mWaveforms = ( *m_Sensor->mComputationScope
+        //         )["SaturatedWaveforms"].Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
         //     }
 
         //     if( mWaveforms.size() != 0 )
@@ -569,7 +592,8 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //         static ImPlotAxisFlags flags = ImPlotAxisFlags_NoTickLabels;
         //         ImPlot::SetNextAxisLimits( ImAxis_X1, -1, l_WaveformLength + 1, ImPlotCond_Once );
         //         ImPlot::SetNextAxisLimits( ImAxis_Y1, -1.0001f, 1.009f, ImPlotCond_Once );
-        //         if( ImPlot::BeginPlot( "Waveforms", "Sample", "Amplitude", ImVec2{ (float)l_WindowSize.x, 512.0f }, ImPlotFlags_NoFrame | ImPlotFlags_NoChild ) )
+        //         if( ImPlot::BeginPlot( "Waveforms", "Sample", "Amplitude", ImVec2{ (float)l_WindowSize.x, 512.0f },
+        //         ImPlotFlags_NoFrame | ImPlotFlags_NoChild ) )
         //         {
         //             ImPlot::SetupAxes( NULL, NULL, flags, flags );
         //             ImPlot::PlotLine( "##Line", l_X.data(), mWaveforms.data(), l_WaveformLength );
@@ -591,19 +615,23 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //         lAcqCreateInfo.mBasePoints   = 100;
         //         lAcqCreateInfo.mOversampling = 1;
 
-        //         auto lSamples = m_Sensor->Sample( lEnvironmentSamplingParameter, lAcqCreateInfo, std::string( "tile_1" ), math::vec2{ 0.0f, 0.0f }, 0.0f );
+        //         auto lSamples = m_Sensor->Sample( lEnvironmentSamplingParameter, lAcqCreateInfo, std::string( "tile_1" ),
+        //         math::vec2{ 0.0f, 0.0f }, 0.0f );
 
         //         auto lDistance = MultiTensorValue( *m_Sensor->mComputationScope, sConstantValueInitializerComponent( 3.0f ),
         //                                            ( *lSamples )["Azimuth"].Get<sMultiTensorComponent>().mValue.Shape() );
 
-        //         m_Sensor->Process( 0.0f, *m_Sensor->mComputationScope, lSamples->GetScheduledFlashes(), ( *lSamples )["Azimuth"], ( *lSamples )["Elevation"],
+        //         m_Sensor->Process( 0.0f, *m_Sensor->mComputationScope, lSamples->GetScheduledFlashes(), ( *lSamples )["Azimuth"], (
+        //         *lSamples )["Elevation"],
         //                            ( *lSamples )["Intensity"], lDistance );
 
         //         m_Sensor->mComputationScope->Run( ( *m_Sensor->mComputationScope )["FPGAOutput"] );
 
-        //         mSampledAzimuths    = ( *m_Sensor->mComputationScope )["Azimuth"].Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        //         mSampledElevations  = ( *m_Sensor->mComputationScope )["Elevation"].Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
-        //         mSampledIntensities = ( *m_Sensor->mComputationScope )["Intensity"].Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        //         mSampledAzimuths    = ( *m_Sensor->mComputationScope
+        //         )["Azimuth"].Get<sMultiTensorComponent>().mValue.FetchFlattened<float>(); mSampledElevations  = (
+        //         *m_Sensor->mComputationScope )["Elevation"].Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        //         mSampledIntensities = ( *m_Sensor->mComputationScope
+        //         )["Intensity"].Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
 
         //         mAveragedSampledIntensities.resize( 0 );
         //         mSampledIntensitiesDisplayShape.resize( 0 );
@@ -630,7 +658,8 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //                         float lAverage = 0.0f;
         //                         for( uint32_t k = 0; k < lLayerDimension[2]; k++ )
         //                         {
-        //                             lAverage += lDataBuffer[i * lLayerDimension[1] * lLayerDimension[2] + j * lLayerDimension[2] + k];
+        //                             lAverage += lDataBuffer[i * lLayerDimension[1] * lLayerDimension[2] + j * lLayerDimension[2] +
+        //                             k];
         //                         }
         //                         lAveragedValues[i * lLayerDimension[1] + j] = lAverage / static_cast<float>( lLayerDimension[2] );
         //                     }
@@ -644,10 +673,12 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //     {
         //         ImGui::PushID( i );
         //         ImPlot::PushColormap( ImPlotColormap_Jet );
-        //         if( ImPlot::BeginPlot( "##SCATTER", ImVec2( 50, 450 ), ImPlotFlags_CanvasOnly | ImPlotFlags_NoInputs | ImPlotFlags_NoFrame | ImPlotFlags_NoChild ) )
+        //         if( ImPlot::BeginPlot( "##SCATTER", ImVec2( 50, 450 ), ImPlotFlags_CanvasOnly | ImPlotFlags_NoInputs |
+        //         ImPlotFlags_NoFrame | ImPlotFlags_NoChild ) )
         //         {
         //             ImPlot::SetupAxes( NULL, NULL, ImPlotAxisFlags_NoDecorations, ImPlotAxisFlags_NoDecorations );
-        //             ImPlot::PlotHeatmap( "##T", mAveragedSampledIntensities[i].data(), mSampledIntensitiesDisplayShape[i][0], mSampledIntensitiesDisplayShape[i][1], 0.0f,
+        //             ImPlot::PlotHeatmap( "##T", mAveragedSampledIntensities[i].data(), mSampledIntensitiesDisplayShape[i][0],
+        //             mSampledIntensitiesDisplayShape[i][1], 0.0f,
         //                                  0.000001f, NULL );
         //             ImPlot::EndPlot();
         //         }
@@ -673,7 +704,8 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //     float lMaxLabelSize       = 0;
         //     float lTextHeight         = 0;
         //     float lLabelSizes[8]      = { 0.0f };
-        //     const char *lFieldNames[] = { "Target distance:", "Intensity:", "Base points:", "Oversampling:", "Accumulation:", "System temperature:" };
+        //     const char *lFieldNames[] = { "Target distance:", "Intensity:", "Base points:", "Oversampling:", "Accumulation:",
+        //     "System temperature:" };
 
         //     for( uint32_t i = 0; i < 6; i++ )
         //     {
@@ -732,16 +764,20 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //         lAcqCreateInfo.mBasePoints   = g_Basepoints;
         //         lAcqCreateInfo.mOversampling = g_Oversampling;
 
-        //         auto lSamples = m_Sensor->Sample( lEnvironmentSamplingParameter, lAcqCreateInfo, std::string( "tile_1" ), math::vec2{ 0.0f, 0.0f }, 0.0f );
+        //         auto lSamples = m_Sensor->Sample( lEnvironmentSamplingParameter, lAcqCreateInfo, std::string( "tile_1" ),
+        //         math::vec2{ 0.0f, 0.0f }, 0.0f );
 
-        //         auto lDistance = MultiTensorValue( *m_Sensor->mComputationScope, sConstantValueInitializerComponent( g_TargetDistance ),
+        //         auto lDistance = MultiTensorValue( *m_Sensor->mComputationScope, sConstantValueInitializerComponent(
+        //         g_TargetDistance ),
         //                                            ( *lSamples )["Azimuth"].Get<sMultiTensorComponent>().mValue.Shape() );
 
-        //         m_Sensor->Process( 0.0f, *m_Sensor->mComputationScope, lSamples->GetScheduledFlashes(), ( *lSamples )["Azimuth"], ( *lSamples )["Elevation"],
+        //         m_Sensor->Process( 0.0f, *m_Sensor->mComputationScope, lSamples->GetScheduledFlashes(), ( *lSamples )["Azimuth"], (
+        //         *lSamples )["Elevation"],
         //                            ( *lSamples )["Intensity"], lDistance );
 
         //         m_Sensor->mComputationScope->Run( ( *m_Sensor->mComputationScope )["FPGAOutput"] );
-        //         mWaveforms = ( *m_Sensor->mComputationScope )["SaturatedWaveforms"].Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
+        //         mWaveforms = ( *m_Sensor->mComputationScope
+        //         )["SaturatedWaveforms"].Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
         //     }
 
         //     if( mWaveforms.size() != 0 )
@@ -759,13 +795,13 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //         {
         //             ImPlot::PushColormap( ImPlotColormap_Jet );
         //             ImGui::PushID( i );
-        //             if( ImPlot::BeginPlot( "##Perlin", ImVec2( 200.0f, 75.0f ), ImPlotFlags_CanvasOnly | ImPlotFlags_NoInputs | ImPlotFlags_NoFrame | ImPlotFlags_NoChild ) )
+        //             if( ImPlot::BeginPlot( "##Perlin", ImVec2( 200.0f, 75.0f ), ImPlotFlags_CanvasOnly | ImPlotFlags_NoInputs |
+        //             ImPlotFlags_NoFrame | ImPlotFlags_NoChild ) )
         //             {
         //                 ImGui::PushID( i );
         //                 ImPlot::SetupAxes( NULL, NULL, ImPlotAxisFlags_NoDecorations, ImPlotAxisFlags_NoDecorations );
-        //                 ImPlot::PlotHeatmap( "##T", mWaveforms.data() + i * 32 * l_WaveformLength, 32, l_WaveformLength, 0.0f, 1.0005f, NULL );
-        //                 ImGui::PopID();
-        //                 ImPlot::EndPlot();
+        //                 ImPlot::PlotHeatmap( "##T", mWaveforms.data() + i * 32 * l_WaveformLength, 32, l_WaveformLength,
+        //                 0.0f, 1.0005f, NULL ); ImGui::PopID(); ImPlot::EndPlot();
         //             }
         //             ImGui::PopID();
         //             ImPlot::PopColormap();
@@ -775,7 +811,8 @@ class EchoDSMVPEditor : public BaseEditorApplication
 
         //         ImPlot::SetNextAxisLimits( ImAxis_X1, -1, 101, ImPlotCond_Once );
         //         ImPlot::SetNextAxisLimits( ImAxis_Y1, -1.0001f, 2.009f, ImPlotCond_Once );
-        //         if( ImPlot::BeginPlot( "Waveforms", "Sample", "Amplitude", ImVec2{ (float)l_WindowSize.x, (float)l_WindowSize.y } ) )
+        //         if( ImPlot::BeginPlot( "Waveforms", "Sample", "Amplitude", ImVec2{ (float)l_WindowSize.x, (float)l_WindowSize.y } )
+        //         )
         //         {
         //             for( uint32_t i = 0; i < 1024; i++ )
         //             {
@@ -857,7 +894,8 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //         char buf1[128] = { 0 };
         //         std::strncpy( buf1, "168", 3 );
         //         ImGui::SetNextItemWidth( lIPInputWidth );
-        //         if( ImGui::InputText( "##LE_IP_1", buf1, ARRAYSIZE( buf1 ), ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal ) )
+        //         if( ImGui::InputText( "##LE_IP_1", buf1, ARRAYSIZE( buf1 ), ImGuiInputTextFlags_EnterReturnsTrue |
+        //         ImGuiInputTextFlags_CharsDecimal ) )
         //         {
         //         }
         //         UI::SameLine();
@@ -866,7 +904,8 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //         char buf2[128] = { 0 };
         //         std::strncpy( buf2, "204", 3 );
         //         ImGui::SetNextItemWidth( lIPInputWidth );
-        //         if( ImGui::InputText( "##LE_IP_2", buf2, ARRAYSIZE( buf2 ), ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal ) )
+        //         if( ImGui::InputText( "##LE_IP_2", buf2, ARRAYSIZE( buf2 ), ImGuiInputTextFlags_EnterReturnsTrue |
+        //         ImGuiInputTextFlags_CharsDecimal ) )
         //         {
         //         }
         //         UI::SameLine();
@@ -875,7 +914,8 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //         char buf3[128] = { 0 };
         //         std::strncpy( buf3, "130", 3 );
         //         ImGui::SetNextItemWidth( lIPInputWidth );
-        //         if( ImGui::InputText( "##LE_IP_3", buf3, ARRAYSIZE( buf3 ), ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal ) )
+        //         if( ImGui::InputText( "##LE_IP_3", buf3, ARRAYSIZE( buf3 ), ImGuiInputTextFlags_EnterReturnsTrue |
+        //         ImGuiInputTextFlags_CharsDecimal ) )
         //         {
         //         }
 
@@ -888,7 +928,8 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //         std::strncpy( buf4, "27100", 5 );
         //         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2( l_TextSize0.x - l_TextSize3.x + 10.0f, 0.0f ) );
         //         ImGui::SetNextItemWidth( 150 );
-        //         if( ImGui::InputText( "##LE_PORT", buf4, ARRAYSIZE( buf4 ), ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal ) )
+        //         if( ImGui::InputText( "##LE_PORT", buf4, ARRAYSIZE( buf4 ), ImGuiInputTextFlags_EnterReturnsTrue |
+        //         ImGuiInputTextFlags_CharsDecimal ) )
         //         {
         //         }
 
@@ -931,8 +972,8 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //         lTileTimes.push_back( 0.0f );
         //     }
 
-        //     lEnvSamples = m_Sensor->Sample( mEditorWindow.ActiveSensor.Get<EnvironmentSampler::sCreateInfo>(), mEditorWindow.ActiveSensor.Get<AcquisitionSpecification>(),
-        //     lTileIds,
+        //     lEnvSamples = m_Sensor->Sample( mEditorWindow.ActiveSensor.Get<EnvironmentSampler::sCreateInfo>(),
+        //     mEditorWindow.ActiveSensor.Get<AcquisitionSpecification>(), lTileIds,
         //                                     lTilePositions, lTileTimes );
         // }
         // else
