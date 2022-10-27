@@ -28,32 +28,32 @@ namespace LTSE::SensorModel::Dev
     using namespace LTSE::Cuda;
     using namespace LTSE::Graphics;
 
-    struct __align__( OPTIX_SBT_RECORD_ALIGNMENT ) RaygenRecord
+    struct __align__( OPTIX_SBT_RECORD_ALIGNMENT ) sRaygenRecord
     {
-        __align__( OPTIX_SBT_RECORD_ALIGNMENT ) char header[OPTIX_SBT_RECORD_HEADER_SIZE];
+        __align__( OPTIX_SBT_RECORD_ALIGNMENT ) char mHeader[OPTIX_SBT_RECORD_HEADER_SIZE];
 
-        RaygenRecord()  = default;
-        ~RaygenRecord() = default;
+        sRaygenRecord()  = default;
+        ~sRaygenRecord() = default;
     };
 
-    struct __align__( OPTIX_SBT_RECORD_ALIGNMENT ) MissRecord
+    struct __align__( OPTIX_SBT_RECORD_ALIGNMENT ) sMissRecord
     {
-        __align__( OPTIX_SBT_RECORD_ALIGNMENT ) char header[OPTIX_SBT_RECORD_HEADER_SIZE];
+        __align__( OPTIX_SBT_RECORD_ALIGNMENT ) char mHeader[OPTIX_SBT_RECORD_HEADER_SIZE];
 
-        MissRecord()  = default;
-        ~MissRecord() = default;
+        sMissRecord()  = default;
+        ~sMissRecord() = default;
     };
 
-    struct __align__( OPTIX_SBT_RECORD_ALIGNMENT ) HitgroupRecord
+    struct __align__( OPTIX_SBT_RECORD_ALIGNMENT ) sHitgroupRecord
     {
-        __align__( OPTIX_SBT_RECORD_ALIGNMENT ) char header[OPTIX_SBT_RECORD_HEADER_SIZE];
-        TriangleMeshSBTData                          data{};
+        __align__( OPTIX_SBT_RECORD_ALIGNMENT ) char mHeader[OPTIX_SBT_RECORD_HEADER_SIZE];
+        TriangleMeshSBTData                          mData{};
 
-        HitgroupRecord()  = default;
-        ~HitgroupRecord() = default;
+        sHitgroupRecord()  = default;
+        ~sHitgroupRecord() = default;
 
-        HitgroupRecord( TriangleMeshSBTData a_Data )
-            : data{ a_Data }
+        sHitgroupRecord( TriangleMeshSBTData aData )
+            : mData{ aData }
         {
         }
     };
@@ -71,20 +71,20 @@ namespace LTSE::SensorModel::Dev
         void BuildShaderBindingTable( Ref<Scene> a_Scene );
 
       private:
-        CUcontext cudaContext;
-        CUstream  stream;
+        CUcontext mCudaContext;
+        CUstream  mCudaStream;
 
-        Ref<OptixDeviceContextObject>      m_RayTracingContext  = nullptr;
-        Ref<OptixModuleObject>             m_RayTracingModule   = nullptr;
-        Ref<OptixPipelineObject>           m_RayTracingPipeline = nullptr;
-        Ref<OptixShaderBindingTableObject> m_SBT                = nullptr;
+        Ref<OptixDeviceContextObject>      mRayTracingContext  = nullptr;
+        Ref<OptixModuleObject>             mRayTracingModule   = nullptr;
+        Ref<OptixPipelineObject>           mRayTracingPipeline = nullptr;
+        Ref<OptixShaderBindingTableObject> mSBT                = nullptr;
 
-        GPUMemory m_RaygenRecordsBuffer;
-        GPUMemory m_MissRecordsBuffer;
-        GPUMemory m_HitgroupRecordsBuffer;
+        GPUMemory mRaygenRecordsBuffer;
+        GPUMemory mMissRecordsBuffer;
+        GPUMemory mHitgroupRecordsBuffer;
 
-        LaunchParams m_LaunchParams;
-        GPUMemory    m_LaunchParamsBuffer;
+        LaunchParams mLaunchParams;
+        GPUMemory    mLaunchParamsBuffer;
     };
 
 } // namespace LTSE::SensorModel::Dev

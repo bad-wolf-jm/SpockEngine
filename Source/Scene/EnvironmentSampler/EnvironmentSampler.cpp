@@ -8,44 +8,44 @@ namespace LTSE::SensorModel::Dev
     extern "C" char g_SensorModelEnvironmentSampler[];
 
     WorldSampler::WorldSampler( Ref<OptixDeviceContextObject> a_RayTracingContext )
-        : m_RayTracingContext{ a_RayTracingContext }
+        : mRayTracingContext{ a_RayTracingContext }
     {
-        m_RayTracingModule = New<OptixModuleObject>( "gOptixLaunchParams", g_SensorModelEnvironmentSampler, m_RayTracingContext );
+        mRayTracingModule = New<OptixModuleObject>( "gOptixLaunchParams", g_SensorModelEnvironmentSampler, mRayTracingContext );
 
-        m_RayTracingModule->CreateRayGenGroup( "__raygen__renderFrame" );
-        m_RayTracingModule->CreateMissGroup( "__miss__radiance" );
-        m_RayTracingModule->CreateHitGroup( "__closesthit__radiance", "__anyhit__radiance" );
+        mRayTracingModule->CreateRayGenGroup( "__raygen__renderFrame" );
+        mRayTracingModule->CreateMissGroup( "__miss__radiance" );
+        mRayTracingModule->CreateHitGroup( "__closesthit__radiance", "__anyhit__radiance" );
 
-        m_RayTracingPipeline = m_RayTracingModule->CreatePipeline();
-        m_LaunchParamsBuffer = GPUMemory::Create<LaunchParams>( 1 );
+        mRayTracingPipeline = mRayTracingModule->CreatePipeline();
+        mLaunchParamsBuffer = GPUMemory::Create<LaunchParams>( 1 );
     }
 
     void WorldSampler::BuildShaderBindingTable( Ref<Scene> a_Scene )
     {
-        m_SBT = New<OptixShaderBindingTableObject>();
+        mSBT = New<OptixShaderBindingTableObject>();
 
         // build raygen records
-        std::vector<RaygenRecord> raygenRecords = m_SBT->NewRecordType<RaygenRecord>( m_RayTracingModule->m_RayGenProgramGroups );
-        m_RaygenRecordsBuffer                   = GPUMemory::Create( raygenRecords );
-        m_SBT->BindRayGenRecordTable( m_RaygenRecordsBuffer.RawDevicePtr() );
+        std::vector<sRaygenRecord> raygenRecords = mSBT->NewRecordType<sRaygenRecord>( mRayTracingModule->m_RayGenProgramGroups );
+        mRaygenRecordsBuffer                     = GPUMemory::Create( raygenRecords );
+        mSBT->BindRayGenRecordTable( mRaygenRecordsBuffer.RawDevicePtr() );
 
         // build miss records
-        std::vector<MissRecord> missRecords = m_SBT->NewRecordType<MissRecord>( m_RayTracingModule->m_MissProgramGroups );
-        m_MissRecordsBuffer                 = GPUMemory::Create( missRecords );
-        m_SBT->BindMissRecordTable<MissRecord>( m_MissRecordsBuffer.RawDevicePtr(), m_MissRecordsBuffer.SizeAs<MissRecord>() );
+        std::vector<sMissRecord> missRecords = mSBT->NewRecordType<sMissRecord>( mRayTracingModule->m_MissProgramGroups );
+        mMissRecordsBuffer                   = GPUMemory::Create( missRecords );
+        mSBT->BindMissRecordTable<sMissRecord>( mMissRecordsBuffer.RawDevicePtr(), mMissRecordsBuffer.SizeAs<sMissRecord>() );
 
-        std::vector<HitgroupRecord> hitgroupRecords;
+        std::vector<sHitgroupRecord> hitgroupRecords;
         a_Scene->ForEach<LTSE::Core::EntityComponentSystem::Components::sRayTracingTargetComponent,
             LTSE::Core::EntityComponentSystem::Components::sStaticMeshComponent>(
             [&]( auto l_Entity, auto &l_Component, auto &aMeshComponent )
             {
-                HitgroupRecord rec     = m_SBT->NewRecordType<HitgroupRecord>( m_RayTracingModule->m_HitProgramGroups[0] );
-                rec.data.mVertexOffset = aMeshComponent.mVertexOffset;
-                rec.data.mIndexOffset  = aMeshComponent.mIndexOffset / 3;
+                sHitgroupRecord rec     = mSBT->NewRecordType<sHitgroupRecord>( mRayTracingModule->m_HitProgramGroups[0] );
+                rec.mData.mVertexOffset = aMeshComponent.mVertexOffset;
+                rec.mData.mIndexOffset  = aMeshComponent.mIndexOffset / 3;
                 hitgroupRecords.push_back( rec );
             } );
-        m_HitgroupRecordsBuffer = GPUMemory::Create( hitgroupRecords );
-        m_SBT->BindHitRecordTable<HitgroupRecord>( m_HitgroupRecordsBuffer.RawDevicePtr(), m_HitgroupRecordsBuffer.Size() );
+        mHitgroupRecordsBuffer = GPUMemory::Create( hitgroupRecords );
+        mSBT->BindHitRecordTable<sHitgroupRecord>( mHitgroupRecordsBuffer.RawDevicePtr(), mHitgroupRecordsBuffer.Size() );
     }
 
     void WorldSampler::Sample( math::mat4 a_SensorTransform, Ref<Scene> a_Scene, MultiTensor &a_Azimuths, MultiTensor &a_Elevations,
@@ -57,22 +57,22 @@ namespace LTSE::SensorModel::Dev
 
         if( a_Scene->GetRayTracingRoot() )
         {
-            m_LaunchParams.mTraversable    = a_Scene->GetRayTracingRoot();
-            m_LaunchParams.mSensorPosition = math::Translation( a_SensorTransform );
-            m_LaunchParams.mSensorRotation = math::NormalMatrix( a_SensorTransform );
-            m_LaunchParams.mAzimuths       = a_Azimuths.DataAs<float>();
-            m_LaunchParams.mElevations     = a_Elevations.DataAs<float>();
-            m_LaunchParams.mIntensities    = a_Intensities.DataAs<float>();
-            m_LaunchParams.mSamplePoints   = a_SamplePoints.DataAs<sHitRecord>();
+            mLaunchParams.mTraversable    = a_Scene->GetRayTracingRoot();
+            mLaunchParams.mSensorPosition = math::Translation( a_SensorTransform );
+            mLaunchParams.mSensorRotation = math::NormalMatrix( a_SensorTransform );
+            mLaunchParams.mAzimuths       = a_Azimuths.DataAs<float>();
+            mLaunchParams.mElevations     = a_Elevations.DataAs<float>();
+            mLaunchParams.mIntensities    = a_Intensities.DataAs<float>();
+            mLaunchParams.mSamplePoints   = a_SamplePoints.DataAs<sHitRecord>();
 
             LTSE::Cuda::GPUExternalMemory lTransformedVertexBuffer(
                 *a_Scene->mTransformedVertexBuffer, a_Scene->mTransformedVertexBuffer->SizeAs<uint8_t>() );
-            LTSE::Cuda::GPUExternalMemory lIndexBuffer( *a_Scene->mIndexBuffer, a_Scene->mVertexBuffer->SizeAs<uint8_t>() );
-            m_LaunchParams.mIndexBuffer  = lIndexBuffer.DataAs<math::uvec3>();
-            m_LaunchParams.mVertexBuffer = lTransformedVertexBuffer.DataAs<VertexData>();
+            LTSE::Cuda::GPUExternalMemory lIndexBuffer( *a_Scene->mIndexBuffer, a_Scene->mIndexBuffer->SizeAs<uint8_t>() );
+            mLaunchParams.mIndexBuffer  = lIndexBuffer.DataAs<math::uvec3>();
+            mLaunchParams.mVertexBuffer = lTransformedVertexBuffer.DataAs<VertexData>();
 
-            m_LaunchParamsBuffer.Upload( m_LaunchParams );
-            m_RayTracingPipeline->Launch( 0, m_LaunchParamsBuffer.RawDevicePtr(), m_LaunchParamsBuffer.Size(), m_SBT,
+            mLaunchParamsBuffer.Upload( mLaunchParams );
+            mRayTracingPipeline->Launch( 0, mLaunchParamsBuffer.RawDevicePtr(), mLaunchParamsBuffer.Size(), mSBT,
                 math::uvec3{ a_Azimuths.SizeAs<float>(), 1, 1 } );
 
             CUDA_SYNC_CHECK();

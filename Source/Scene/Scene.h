@@ -105,7 +105,7 @@ namespace LTSE::Core
             return 0;
         }
 
-        Ref<LTSE::Graphics::OptixDeviceContextObject> GetRayTracingContext() { return m_RayTracingContext; }
+        Ref<LTSE::Graphics::OptixDeviceContextObject> GetRayTracingContext() { return mRayTracingContext; }
 
         eSceneState         GetState() { return mState; }
         Ref<MaterialSystem> GetMaterialSystem() { return mMaterialSystem; }
@@ -129,7 +129,7 @@ namespace LTSE::Core
         Ref<ScriptingEngine> mSceneScripting = nullptr;
 
         Ref<UIContext>                m_UI                    = nullptr;
-        Ref<OptixDeviceContextObject> m_RayTracingContext     = nullptr;
+        Ref<OptixDeviceContextObject> mRayTracingContext     = nullptr;
         Ref<OptixTraversableObject>   m_AccelerationStructure = nullptr;
 
         Ref<Graphics::Texture2D> m_EmptyTexturePreview = nullptr;

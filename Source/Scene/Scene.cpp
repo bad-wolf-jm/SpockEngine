@@ -1437,7 +1437,7 @@ namespace LTSE::Core
     {
         LTSE_PROFILE_FUNCTION();
 
-        m_AccelerationStructure = LTSE::Core::New<OptixTraversableObject>( m_RayTracingContext );
+        m_AccelerationStructure = LTSE::Core::New<OptixTraversableObject>( mRayTracingContext );
 
         ForEach<sRayTracingTargetComponent, sStaticMeshComponent>(
             [&]( auto a_Entity, auto &a_RTComponent, auto &a_MeshComponent )
@@ -1452,8 +1452,8 @@ namespace LTSE::Core
 
     void Scene::InitializeRayTracing()
     {
-        m_RayTracingContext     = LTSE::Core::New<OptixDeviceContextObject>();
-        m_AccelerationStructure = LTSE::Core::New<OptixTraversableObject>( m_RayTracingContext );
+        mRayTracingContext     = LTSE::Core::New<OptixDeviceContextObject>();
+        m_AccelerationStructure = LTSE::Core::New<OptixTraversableObject>( mRayTracingContext );
     }
 
     void Scene::Render() {}
