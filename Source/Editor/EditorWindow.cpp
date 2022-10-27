@@ -183,8 +183,8 @@ namespace LTSE::Editor
 
         {
             LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Play.png" );
-            sTextureSamplingInfo         lSamplingInfo{};
+            TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Play.png" );
+            sTextureSamplingInfo lSamplingInfo{};
             LTSE::Core::TextureSampler2D lTextureSampler = LTSE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
             m_PlayIcon       = New<LTSE::Graphics::Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
@@ -193,8 +193,8 @@ namespace LTSE::Editor
 
         {
             LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Pause.png" );
-            sTextureSamplingInfo         lSamplingInfo{};
+            TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Pause.png" );
+            sTextureSamplingInfo lSamplingInfo{};
             LTSE::Core::TextureSampler2D lTextureSampler = LTSE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
             m_PauseIcon       = New<LTSE::Graphics::Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
@@ -203,8 +203,8 @@ namespace LTSE::Editor
 
         {
             LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Play.png" );
-            sTextureSamplingInfo         lSamplingInfo{};
+            TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Play.png" );
+            sTextureSamplingInfo lSamplingInfo{};
             LTSE::Core::TextureSampler2D lTextureSampler = LTSE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
             m_DefaultTextureImage       = New<LTSE::Graphics::Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
@@ -213,8 +213,8 @@ namespace LTSE::Editor
 
         {
             LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Camera.png" );
-            sTextureSamplingInfo         lSamplingInfo{};
+            TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Camera.png" );
+            sTextureSamplingInfo lSamplingInfo{};
             LTSE::Core::TextureSampler2D lTextureSampler = LTSE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
             m_CameraIcon       = New<LTSE::Graphics::Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
@@ -240,7 +240,7 @@ namespace LTSE::Editor
             uint32_t mFileSize = mFileStream.tellg();
             mFileStream.seekg( 0, mFileStream.beg );
             mTestTile = std::vector<uint8_t>( mFileSize );
-            mFileStream.read( (char*)mTestTile.data(), mFileSize );
+            mFileStream.read( (char *)mTestTile.data(), mFileSize );
             LTSE::Logging::Info( "FOO - {}", mFileSize );
         }
         // std::ifstream mFileStream{};
@@ -1203,12 +1203,12 @@ namespace LTSE::Editor
 
     void EditorWindow::ClearScene()
     {
-        // auto lSensorTransform    = Sensor.TryGet<sNodeTransformComponent>( sNodeTransformComponent{ math::mat4( 1.0f ) }
-        // ); auto lEnvironmentSampler = Sensor.TryGet<EnvironmentSampler::sCreateInfo>( EnvironmentSampler::sCreateInfo{} );
-        // AcquisitionSpecification lAcqCreateInfo{};
-        // lAcqCreateInfo.mBasePoints     = 100;
-        // lAcqCreateInfo.mOversampling   = 1;
-        // auto lAcquisitionSpecification = Sensor.TryGet<AcquisitionSpecification>( lAcqCreateInfo );
+        // auto lSensorTransform    = Sensor.TryGet<sNodeTransformComponent>( sNodeTransformComponent{ math::mat4( 1.0f ) } );
+        // // auto lEnvironmentSampler = Sensor.TryGet<EnvironmentSampler::sCreateInfo>( EnvironmentSampler::sCreateInfo{} );
+        // // AcquisitionSpecification lAcqCreateInfo{};
+        // // lAcqCreateInfo.mBasePoints     = 100;
+        // // lAcqCreateInfo.mOversampling   = 1;
+        // // auto lAcquisitionSpecification = Sensor.TryGet<AcquisitionSpecification>( lAcqCreateInfo );
 
         // World->ClearScene();
         // m_SceneHierarchyPanel.SelectedElement             = Entity{};
@@ -1218,14 +1218,15 @@ namespace LTSE::Editor
         // Sensor = World->Create( "Sensor", World->Root );
         // Sensor.Add<sNodeTransformComponent>( lSensorTransform );
         // Sensor.Add<sLocalTransformComponent>( lSensorTransform );
-        // Sensor.Add<EnvironmentSampler::sCreateInfo>( lEnvironmentSampler );
+        // // Sensor.Add<EnvironmentSampler::sCreateInfo>( lEnvironmentSampler );
         // // Add a particle system to the sensor to display the point cloud
         // auto &l_SensorPointCloud = Sensor.Add<sParticleSystemComponent>();
+        // auto &l_SensorPointCloud = Sensor.Add<sParticleShaderComponent>();
 
-        // // Create particle renderer for the point cloud
-        // auto &l_SensorPointCloudRenderer    = Sensor.Add<RendererComponent>();
-        // l_SensorPointCloudRenderer.Material = World->CreateEntity( "ParticleSystemMaterial" );
-        // l_SensorPointCloudRenderer.Material.Add<sParticleShaderComponent>();
+        // // // Create particle renderer for the point cloud
+        // // auto &l_SensorPointCloudRenderer    = Sensor.Add<RendererComponent>();
+        // // l_SensorPointCloudRenderer.Material = World->CreateEntity( "ParticleSystemMaterial" );
+        // // l_SensorPointCloudRenderer.Material.Add<sParticleShaderComponent>();
     }
 
     void EditorWindow::LoadScenario( fs::path aPath )
@@ -1297,8 +1298,8 @@ namespace LTSE::Editor
                 if( OnEndScenario ) OnEndScenario();
 
                 ActiveWorld->EndScenario();
-                ActiveWorld = World;
-                // ActiveSensor = Sensor;
+                ActiveWorld  = World;
+                ActiveSensor = Sensor;
 
                 WorldRenderer->m_World = ActiveWorld;
             }
@@ -1371,10 +1372,9 @@ namespace LTSE::Editor
             l_Manipulator.ViewportPosition = l3DViewPosition;
             l_Manipulator.ViewportSize     = l3DViewSize;
 
-            if( m_SceneHierarchyPanel.SelectedElement &&
-                m_SceneHierarchyPanel.SelectedElement.Has<sNodeTransformComponent>() )
+            if( m_SceneHierarchyPanel.SelectedElement && m_SceneHierarchyPanel.SelectedElement.Has<sNodeTransformComponent>() )
             {
-                auto& lSensorTransform = m_SceneHierarchyPanel.SelectedElement.Get<sNodeTransformComponent>();
+                auto &lSensorTransform = m_SceneHierarchyPanel.SelectedElement.Get<sNodeTransformComponent>();
                 Manipulate( l_Manipulator, lSensorTransform.mMatrix );
                 m_SceneHierarchyPanel.SelectedElement.Replace<sNodeTransformComponent>( lSensorTransform );
             }
