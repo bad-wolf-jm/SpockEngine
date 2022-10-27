@@ -28,19 +28,19 @@ namespace LTSE::Core
 
         Initialize( l_CreateInfo );
 
-        m_CameraBuffer =
+        mCameraBuffer =
             New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( CameraViewUniforms ) );
-        m_CameraDescriptors = New<DescriptorSet>( a_GraphicContext, PipelineLayout );
-        m_CameraDescriptors->Write( m_CameraBuffer, false, 0, sizeof( CameraViewUniforms ), 0 );
+        mCameraDescriptors = New<DescriptorSet>( a_GraphicContext, PipelineLayout );
+        mCameraDescriptors->Write( mCameraBuffer, false, 0, sizeof( CameraViewUniforms ), 0 );
     }
 
     void CoordinateGridRenderer::Render( math::mat4 a_Projection, math::mat4 a_View, RenderContext &aRenderContext )
     {
         CameraViewUniforms l_View{ a_View, a_Projection };
 
-        m_CameraBuffer->Write( l_View );
+        mCameraBuffer->Write( l_View );
         aRenderContext.Bind( Pipeline );
-        aRenderContext.Bind( m_CameraDescriptors, 0, -1 );
+        aRenderContext.Bind( mCameraDescriptors, 0, -1 );
         aRenderContext.ResetBuffers();
         aRenderContext.Draw( 6, 0, 0, 1, 0 );
     }

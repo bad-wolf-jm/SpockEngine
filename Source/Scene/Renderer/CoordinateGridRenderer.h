@@ -46,8 +46,8 @@ namespace LTSE::Core
         std::vector<sPushConstantRange>       GetPushConstantLayout();
 
       private:
-        Ref<Buffer>        m_CameraBuffer      = nullptr;
-        Ref<DescriptorSet> m_CameraDescriptors = nullptr;
+        Ref<Buffer>        mCameraBuffer      = nullptr;
+        Ref<DescriptorSet> mCameraDescriptors = nullptr;
     };
 
 } // namespace LTSE::Core

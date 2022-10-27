@@ -88,10 +88,10 @@ namespace LTSE::Graphics
         void Render( math::mat4 a_Projection, math::mat4 a_View, RenderContext &aRenderContext, ParticleData &a_ParticleData );
 
       protected:
-        Ref<Buffer>        m_ParticleVertices  = nullptr;
-        Ref<Buffer>        m_ParticleIndices   = nullptr;
-        Ref<Buffer>        m_CameraBuffer      = nullptr;
-        Ref<DescriptorSet> m_CameraDescriptors = nullptr;
+        Ref<Buffer>        mParticleVertices  = nullptr;
+        Ref<Buffer>        mParticleIndices   = nullptr;
+        Ref<Buffer>        mCameraBuffer      = nullptr;
+        Ref<DescriptorSet> mCameraDescriptors = nullptr;
     };
 
 } // namespace LTSE::Graphics
