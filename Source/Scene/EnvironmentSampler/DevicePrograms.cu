@@ -41,80 +41,81 @@ namespace LTSE::SensorModel::Dev
 
     extern "C" __global__ void __closesthit__radiance()
     {
-        const uint32_t ix  = optixGetLaunchIndex().x;
-        sHitRecord    &prd = *(sHitRecord *)GetPRD<sHitRecord>();
+        const uint32_t lRayID  = optixGetLaunchIndex().x;
+        sHitRecord    &lPerRayData = *(sHitRecord *)GetPRD<sHitRecord>();
 
-        prd.mRayID     = ix;
-        prd.mAzimuth   = gOptixLaunchParams.mAzimuths[ix];
-        prd.mElevation = gOptixLaunchParams.mElevations[ix];
+        lPerRayData.mRayID     = lRayID;
+        lPerRayData.mAzimuth   = gOptixLaunchParams.mAzimuths[lRayID];
+        lPerRayData.mElevation = gOptixLaunchParams.mElevations[lRayID];
 
-        const TriangleMeshSBTData &sbtData = *(const TriangleMeshSBTData *)optixGetSbtDataPointer();
+        const TriangleMeshSBTData &lSbtData = *(const TriangleMeshSBTData *)optixGetSbtDataPointer();
 
-        const int l_PrimitiveID = optixGetPrimitiveIndex();
+        const int lPrimitiveID = optixGetPrimitiveIndex() + lSbtData.mIndexOffset;
 
         const math::vec3 &A =
             gOptixLaunchParams
-                .mVertexBuffer[sbtData.mVertexOffset + gOptixLaunchParams.mIndexBuffer[sbtData.mIndexOffset + l_PrimitiveID].x]
+                .mVertexBuffer[lSbtData.mVertexOffset + gOptixLaunchParams.mIndexBuffer[lPrimitiveID].x]
                 .Position;
         const math::vec3 &B =
             gOptixLaunchParams
-                .mVertexBuffer[sbtData.mVertexOffset + gOptixLaunchParams.mIndexBuffer[sbtData.mIndexOffset + l_PrimitiveID].y]
+                .mVertexBuffer[lSbtData.mVertexOffset + gOptixLaunchParams.mIndexBuffer[lPrimitiveID].y]
                 .Position;
         const math::vec3 &C =
             gOptixLaunchParams
-                .mVertexBuffer[sbtData.mVertexOffset + gOptixLaunchParams.mIndexBuffer[sbtData.mIndexOffset + l_PrimitiveID].z]
+                .mVertexBuffer[lSbtData.mVertexOffset + gOptixLaunchParams.mIndexBuffer[lPrimitiveID].z]
                 .Position;
 
         const float u              = optixGetTriangleBarycentrics().x;
         const float v              = optixGetTriangleBarycentrics().y;
-        math::vec3  l_Intersection = A * ( 1.0f - u - v ) + B * u + C * v;
 
-        prd.mDistance  = glm::length( l_Intersection - gOptixLaunchParams.mSensorPosition );
-        prd.mIntensity = gOptixLaunchParams.mIntensities[ix] / ( 1 + 4.0f * prd.mDistance * prd.mDistance );
+        math::vec3  lIntersection = A * ( 1.0f - u - v ) + B * u + C * v;
+
+        lPerRayData.mDistance  = glm::length( lIntersection - gOptixLaunchParams.mSensorPosition );
+        lPerRayData.mIntensity = gOptixLaunchParams.mIntensities[lRayID] / ( 1 + 4.0f * lPerRayData.mDistance * lPerRayData.mDistance );
     }
 
     extern "C" __global__ void __anyhit__radiance() {}
 
     extern "C" __global__ void __miss__radiance()
     {
-        const uint32_t ix  = optixGetLaunchIndex().x;
-        sHitRecord    &prd = *(sHitRecord *)GetPRD<sHitRecord>();
+        const uint32_t lRayID  = optixGetLaunchIndex().x;
+        sHitRecord    &lPerRayData = *(sHitRecord *)GetPRD<sHitRecord>();
 
-        prd.mRayID     = ix;
-        prd.mAzimuth   = gOptixLaunchParams.mAzimuths[ix];
-        prd.mElevation = gOptixLaunchParams.mElevations[ix];
-        prd.mDistance  = 0.0f;
-        prd.mIntensity = 0.0f;
+        lPerRayData.mRayID     = lRayID;
+        lPerRayData.mAzimuth   = gOptixLaunchParams.mAzimuths[lRayID];
+        lPerRayData.mElevation = gOptixLaunchParams.mElevations[lRayID];
+        lPerRayData.mDistance  = 0.0f;
+        lPerRayData.mIntensity = 0.0f;
     }
 
     extern "C" __global__ void __raygen__renderFrame()
     {
-        const uint32_t ix = optixGetLaunchIndex().x;
+        const uint32_t lRayID = optixGetLaunchIndex().x;
 
-        math::vec3 l_SensorPosition = gOptixLaunchParams.mSensorPosition;
+        math::vec3 lSensorPosition = gOptixLaunchParams.mSensorPosition;
 
-        sHitRecord l_OutputSamplePoint{};
+        sHitRecord lOutputSamplePoint{};
 
         uint32_t u0, u1;
-        PackPointer( &l_OutputSamplePoint, u0, u1 );
+        PackPointer( &lOutputSamplePoint, u0, u1 );
 
-        float l_Phi = HALF_PI - gOptixLaunchParams.mElevations[ix] * RADIANS;
+        float lPhi = HALF_PI - gOptixLaunchParams.mElevations[lRayID] * RADIANS;
 
         // With -z pointing inside the screen and x to the right,  3.0f * HALF_PI is inside. The azimuth
         // value moves to the right as it increases, but with the flipping of the x-axis due to the 3*HALF_PI
         // rotation, its sign is correct.
-        float l_Theta = 3.0f * HALF_PI + gOptixLaunchParams.mAzimuths[ix] * RADIANS;
+        float lTheta = 3.0f * HALF_PI + gOptixLaunchParams.mAzimuths[lRayID] * RADIANS;
 
         // -z points inside the screen
-        math::vec3 l_UnitDirectionVector;
-        l_UnitDirectionVector.x = glm::sin( l_Phi ) * glm::cos( l_Theta );
-        l_UnitDirectionVector.z = glm::sin( l_Phi ) * glm::sin( l_Theta );
-        l_UnitDirectionVector.y = glm::cos( l_Phi );
+        math::vec3 lUnitDirectionVector;
+        lUnitDirectionVector.x = glm::sin( lPhi ) * glm::cos( lTheta );
+        lUnitDirectionVector.z = glm::sin( lPhi ) * glm::sin( lTheta );
+        lUnitDirectionVector.y = glm::cos( lPhi );
 
-        l_UnitDirectionVector = gOptixLaunchParams.mSensorRotation * l_UnitDirectionVector;
+        lUnitDirectionVector = gOptixLaunchParams.mSensorRotation * lUnitDirectionVector;
 
-        optixTrace( gOptixLaunchParams.mTraversable, float3{ l_SensorPosition.x, l_SensorPosition.y, l_SensorPosition.z },
-            float3{ l_UnitDirectionVector.x, l_UnitDirectionVector.y, l_UnitDirectionVector.z },
+        optixTrace( gOptixLaunchParams.mTraversable, float3{ lSensorPosition.x, lSensorPosition.y, lSensorPosition.z },
+            float3{ lUnitDirectionVector.x, lUnitDirectionVector.y, lUnitDirectionVector.z },
             0.f,   // tmin
             1e20f, // tmax
             0.0f,  // rayTime
@@ -125,7 +126,7 @@ namespace LTSE::SensorModel::Dev
             SURFACE_RAY_TYPE,              // missSBTIndex
             u0, u1 );
 
-        gOptixLaunchParams.mSamplePoints[ix] = l_OutputSamplePoint;
+        gOptixLaunchParams.mSamplePoints[lRayID] = lOutputSamplePoint;
     }
 
 } // namespace LTSE::SensorModel::Dev
