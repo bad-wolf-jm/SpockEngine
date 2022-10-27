@@ -196,8 +196,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
     struct sParticleShaderComponent
     {
-        float                  LineWidth = 1.0f;
-        ParticleSystemRenderer Renderer{};
+        float LineWidth = 1.0f;
+        // ParticleSystemRenderer Renderer{};
 
         sParticleShaderComponent()                                   = default;
         sParticleShaderComponent( const sParticleShaderComponent & ) = default;
@@ -268,10 +268,10 @@ namespace LTSE::Core::EntityComponentSystem::Components
     struct sMaterialShaderComponent
     {
         eCMaterialType Type              = eCMaterialType::Opaque;
-        bool          IsTwoSided        = false;
-        bool          UseAlphaMask      = true;
-        float         LineWidth         = 1.0f;
-        float         AlphaMaskTheshold = 0.5;
+        bool           IsTwoSided        = false;
+        bool           UseAlphaMask      = true;
+        float          LineWidth         = 1.0f;
+        float          AlphaMaskTheshold = 0.5;
 
         sMaterialShaderComponent()                                   = default;
         sMaterialShaderComponent( const sMaterialShaderComponent & ) = default;

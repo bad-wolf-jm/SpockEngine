@@ -88,57 +88,57 @@ namespace LTSE::Core
     }
 
     MeshRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo(
-        RenderContext &aRenderContext, sMaterialShaderComponent &a_PipelineSpecification )
+        RenderContext &aRenderContext, sMaterialShaderComponent &aPipelineSpecification )
     {
-        MeshRendererCreateInfo l_CreateInfo;
+        MeshRendererCreateInfo lCreateInfo;
 
-        l_CreateInfo.Opaque         = ( a_PipelineSpecification.Type == eCMaterialType::Opaque );
-        l_CreateInfo.IsTwoSided     = a_PipelineSpecification.IsTwoSided;
-        l_CreateInfo.LineWidth      = a_PipelineSpecification.LineWidth;
-        l_CreateInfo.VertexShader   = "Shaders\\PBRMeshShader.vert.spv";
-        l_CreateInfo.FragmentShader = "Shaders\\PBRMeshShader.frag.spv";
-        l_CreateInfo.RenderPass     = m_RenderPass;
+        lCreateInfo.Opaque         = ( aPipelineSpecification.Type == eCMaterialType::Opaque );
+        lCreateInfo.IsTwoSided     = aPipelineSpecification.IsTwoSided;
+        lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
+        lCreateInfo.VertexShader   = "Shaders\\PBRMeshShader.vert.spv";
+        lCreateInfo.FragmentShader = "Shaders\\PBRMeshShader.frag.spv";
+        lCreateInfo.RenderPass     = m_RenderPass;
 
-        return l_CreateInfo;
+        return lCreateInfo;
     }
 
     MeshRenderer &SceneRenderer::GetRenderPipeline(
-        RenderContext &aRenderContext, MeshRendererCreateInfo const &a_PipelineSpecification )
+        RenderContext &aRenderContext, MeshRendererCreateInfo const &aPipelineSpecification )
     {
-        if( m_MeshRenderers.find( a_PipelineSpecification ) == m_MeshRenderers.end() )
-            m_MeshRenderers[a_PipelineSpecification] = MeshRenderer( mGraphicContext, a_PipelineSpecification );
+        if( m_MeshRenderers.find( aPipelineSpecification ) == m_MeshRenderers.end() )
+            m_MeshRenderers[aPipelineSpecification] = MeshRenderer( mGraphicContext, aPipelineSpecification );
 
-        return m_MeshRenderers[a_PipelineSpecification];
+        return m_MeshRenderers[aPipelineSpecification];
     }
 
-    MeshRenderer &SceneRenderer::GetRenderPipeline( RenderContext &aRenderContext, sMaterialShaderComponent &a_PipelineSpecification )
+    MeshRenderer &SceneRenderer::GetRenderPipeline( RenderContext &aRenderContext, sMaterialShaderComponent &aPipelineSpecification )
     {
-        MeshRendererCreateInfo l_CreateInfo = GetRenderPipelineCreateInfo( aRenderContext, a_PipelineSpecification );
+        MeshRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aRenderContext, aPipelineSpecification );
 
-        return GetRenderPipeline( aRenderContext, l_CreateInfo );
+        return GetRenderPipeline( aRenderContext, lCreateInfo );
     }
 
     ParticleSystemRenderer &SceneRenderer::GetRenderPipeline(
-        RenderContext &aRenderContext, sParticleShaderComponent &a_PipelineSpecification )
+        RenderContext &aRenderContext, sParticleShaderComponent &aPipelineSpecification )
     {
-        ParticleRendererCreateInfo l_CreateInfo = GetRenderPipelineCreateInfo( aRenderContext, a_PipelineSpecification );
+        ParticleRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aRenderContext, aPipelineSpecification );
 
-        if( m_ParticleRenderers.find( l_CreateInfo ) == m_ParticleRenderers.end() )
-            m_ParticleRenderers[l_CreateInfo] = ParticleSystemRenderer( mGraphicContext, aRenderContext, l_CreateInfo );
+        if( m_ParticleRenderers.find( lCreateInfo ) == m_ParticleRenderers.end() )
+            m_ParticleRenderers[lCreateInfo] = ParticleSystemRenderer( mGraphicContext, aRenderContext, lCreateInfo );
 
-        return m_ParticleRenderers[l_CreateInfo];
+        return m_ParticleRenderers[lCreateInfo];
     }
 
     ParticleRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo(
-        RenderContext &aRenderContext, sParticleShaderComponent &a_PipelineSpecification )
+        RenderContext &aRenderContext, sParticleShaderComponent &aPipelineSpecification )
     {
-        ParticleRendererCreateInfo l_CreateInfo;
-        l_CreateInfo.LineWidth      = a_PipelineSpecification.LineWidth;
-        l_CreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
-        l_CreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
-        l_CreateInfo.RenderPass     = m_RenderPass;
+        ParticleRendererCreateInfo lCreateInfo;
+        lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
+        lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
+        lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
+        lCreateInfo.RenderPass     = m_RenderPass;
 
-        return l_CreateInfo;
+        return lCreateInfo;
     }
 
     void SceneRenderer::Render( RenderContext &aRenderContext )
@@ -209,9 +209,9 @@ namespace LTSE::Core
             aRenderContext.Bind( m_World->mTransformedVertexBuffer, m_World->mIndexBuffer );
             for( auto &lPipelineData : lOpaqueMeshQueue )
             {
-                auto &a_Pipeline = GetRenderPipeline( aRenderContext, lPipelineData.first );
-                if( a_Pipeline.Pipeline )
-                    aRenderContext.Bind( a_Pipeline.Pipeline );
+                auto &lPipeline = GetRenderPipeline( aRenderContext, lPipelineData.first );
+                if( lPipeline.Pipeline )
+                    aRenderContext.Bind( lPipeline.Pipeline );
                 else
                     continue;
 
@@ -236,30 +236,19 @@ namespace LTSE::Core
             }
         }
 
-        // std::unordered_map<ParticleRendererCreateInfo, std::vector<sParticleSystemComponent>, ParticleSystemRendererCreateInfoHash>
-        // lParticleSystemQueue{}; m_World->ForEach<sParticleSystemComponent>(
-        //     [&]( auto a_Entity, auto &a_ParticleSystemComponent )
-        //     {
-        //         if( !a_Entity.Has<RendererComponent>() )
-        //             return;
+        m_World->ForEach<sParticleSystemComponent, sParticleShaderComponent>(
+            [&]( auto a_Entity, auto &aParticleSystemComponent, auto &aParticleShaderComponent )
+            {
+                auto &lPipeline = GetRenderPipeline( aRenderContext, aParticleShaderComponent );
 
-        //         auto &l_RendererComponent = a_Entity.Get<RendererComponent>();
-        //         if( !l_RendererComponent.Material )
-        //             return;
+                ParticleSystemRenderer::ParticleData lParticleData{};
+                lParticleData.Model         = math::mat4( 1.0f );
+                lParticleData.ParticleCount = aParticleSystemComponent.ParticleCount;
+                lParticleData.ParticleSize  = aParticleSystemComponent.ParticleSize;
+                lParticleData.Particles     = aParticleSystemComponent.Particles;
 
-        //         if( l_RendererComponent.Material.Has<sParticleShaderComponent>() )
-        //         {
-        //             auto &l_ParticleShaderComponent = l_RendererComponent.Material.Get<sParticleShaderComponent>();
-        //             auto &a_Pipeline                = GetRenderPipeline( aRenderContext, l_ParticleShaderComponent );
-
-        //             ParticleSystemRenderer::ParticleData l_ParticleData{};
-        //             l_ParticleData.Model         = math::mat4( 1.0f );
-        //             l_ParticleData.ParticleCount = a_ParticleSystemComponent.ParticleCount;
-        //             l_ParticleData.ParticleSize  = a_ParticleSystemComponent.ParticleSize;
-        //             l_ParticleData.Particles     = a_ParticleSystemComponent.Particles;
-        //             a_Pipeline.Render( View.Projection, View.View, aRenderContext, l_ParticleData );
-        //         }
-        //     } );
+                lPipeline.Render( View.Projection, View.View, aRenderContext, lParticleData );
+            } );
 
         if( RenderGizmos )
         {
