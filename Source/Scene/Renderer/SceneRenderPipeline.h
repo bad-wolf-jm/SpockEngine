@@ -5,7 +5,7 @@
 #include "Core/Math/Types.h"
 
 #include "Core/GraphicContext//GraphicContext.h"
-#include "Core/Vulkan/VkRenderPass.h"
+#include "Graphics/Implementation/Vulkan/VkRenderPass.h"
 
 
 #include "Core/GraphicContext//DescriptorSet.h"

@@ -5,7 +5,7 @@
 #include "Core/GraphicContext//TextureCubeMap.h"
 
 #include "Core/Memory.h"
-#include "Core/Vulkan/VkPipeline.h"
+#include "Graphics/Implementation/Vulkan/VkPipeline.h"
 
 #include <vector>
 #include <vulkan/vulkan.h>

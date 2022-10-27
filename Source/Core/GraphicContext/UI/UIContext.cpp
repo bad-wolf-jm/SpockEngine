@@ -3,7 +3,7 @@
 #include "Core/Textures/ColorFormat.h"
 #include "Core/Logging.h"
 
-#include "Core/Vulkan/VkPipeline.h"
+#include "Graphics/Implementation/Vulkan/VkPipeline.h"
 
 #include "Core/Platform/ViewportClient.h"
 #include "Core/Profiling/BlockTimer.h"

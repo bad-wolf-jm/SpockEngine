@@ -2,7 +2,7 @@
 
 #include <chrono>
 
-#include "Core/Vulkan/VkPipeline.h"
+#include "Graphics/Implementation/Vulkan/VkPipeline.h"
 #include "Scene/Primitives/Primitives.h"
 #include "Scene/VertexData.h"
 

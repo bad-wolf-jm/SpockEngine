@@ -5,8 +5,8 @@
 #include "Core/Memory.h"
 
 #include "DescriptorSet.h"
-#include "Core/Vulkan/VkPipeline.h"
-#include "Core/Vulkan/VkRenderPass.h"
+#include "Graphics/Implementation/Vulkan/VkPipeline.h"
+#include "Graphics/Implementation/Vulkan/VkRenderPass.h"
 #include "Core/GraphicContext//GraphicContext.h"
 
 namespace LTSE::Graphics

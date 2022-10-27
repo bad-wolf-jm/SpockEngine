@@ -3,7 +3,7 @@
 #include "Core/Memory.h"
 #include "Core/Platform/ViewportClient.h"
 
-#include "Core/Vulkan/VkCoreMacros.h"
+#include "Graphics/Implementation/Vulkan/VkCoreMacros.h"
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicContext.h"
 

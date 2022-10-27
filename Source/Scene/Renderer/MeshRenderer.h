@@ -12,7 +12,7 @@
 
 #include "Scene/VertexData.h"
 
-#include "Core/Vulkan/VkRenderPass.h"
+#include "Graphics/Implementation/Vulkan/VkRenderPass.h"
 #include "SceneRenderPipeline.h"
 
 namespace LTSE::Core

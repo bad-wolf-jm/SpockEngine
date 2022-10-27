@@ -3,7 +3,7 @@
 #include <chrono>
 #include <gli/gli.hpp>
 
-#include "Core/Vulkan/VkPipeline.h"
+#include "Graphics/Implementation/Vulkan/VkPipeline.h"
 
 #include "Scene/Components/VisualHelpers.h"
 #include "Scene/Primitives/Primitives.h"

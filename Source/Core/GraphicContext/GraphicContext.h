@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Core/Memory.h"
-#include "Core/Vulkan/VkCommand.h"
-#include "Core/Vulkan/VkContext.h"
+#include "Graphics/Implementation/Vulkan/VkCommand.h"
+#include "Graphics/Implementation/Vulkan/VkContext.h"
 #include "Core/Platform/ViewportClient.h"
 
 namespace LTSE::Graphics
