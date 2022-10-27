@@ -25,6 +25,7 @@
 // #include "Sensor/WfShortMockData.h"
 // // clang-format on
 
+#include "Scene/EnvironmentSampler/EnvironmentSampler.h"
 // #include "ProcessingNodes/HitRecordProcessor.h"
 // #include "ProcessingNodes/WaveformGenerator.h"
 // #include "ProcessingNodes/WaveformType.h"
@@ -37,8 +38,8 @@ using namespace LTSE::Core;
 using namespace LTSE::Graphics;
 using namespace LTSE::Editor;
 using namespace LTSE::Core::UI;
-using namespace LTSE::Core::UI;
 using namespace LTSE::SensorModel;
+using namespace LTSE::SensorModel::Dev;
 
 // class TileLayoutCombo
 // {
@@ -116,89 +117,90 @@ using namespace LTSE::SensorModel;
 //     }
 // };
 
-// struct SensorControllerBehaviour : sBehaviourController
-// {
-//     Ref<SensorControllerBase> SensorController = nullptr;
-//     Ref<Scope> m_ComputeScope                  = nullptr;
-//     Ref<WorldSampler> m_WorldSampler           = nullptr;
-//     Ref<EngineLoop> mEngineLoop                = nullptr;
-//     Ref<Scene> m_World                         = nullptr;
-//     Ref<SensorDeviceBase> m_Sensor             = nullptr;
+struct SensorControllerBehaviour : sBehaviourController
+{
+    // Ref<SensorControllerBase> SensorController = nullptr;
+    Ref<Scope> m_ComputeScope                  = nullptr;
+    Ref<WorldSampler> m_WorldSampler           = nullptr;
+    Ref<EngineLoop> mEngineLoop                = nullptr;
+    Ref<Scene> m_World                         = nullptr;
+    // Ref<SensorDeviceBase> m_Sensor             = nullptr;
 
-//     PointCloudVisualizer m_PointCloudVisualizer{};
+    PointCloudVisualizer m_PointCloudVisualizer{};
 
-//     SensorControllerBehaviour( Ref<EngineLoop> aEngineLoop, Ref<Scene> aWorld, Ref<SensorControllerBase> aSensorController, Ref<SensorDeviceBase> aSensor )
-//         : mEngineLoop{ aEngineLoop }
-//         , m_World{ aWorld }
-//         , SensorController{ aSensorController }
-//         , m_Sensor{ aSensor }
-//     {
-//     }
+    // SensorControllerBehaviour( Ref<EngineLoop> aEngineLoop, Ref<Scene> aWorld, Ref<SensorControllerBase> aSensorController, Ref<SensorDeviceBase> aSensor )
+    SensorControllerBehaviour( Ref<EngineLoop> aEngineLoop, Ref<Scene> aWorld )
+        : mEngineLoop{ aEngineLoop }
+        , m_World{ aWorld }
+        // , SensorController{ aSensorController }
+        // , m_Sensor{ aSensor }
+    {
+    }
 
-//     void OnCreate()
-//     {
-//         m_ComputeScope = New<Scope>( 512 * 1024 * 1024 );
-//         m_WorldSampler = New<WorldSampler>( m_World->GetRayTracingContext() );
+    void OnCreate()
+    {
+        m_ComputeScope = New<Scope>( 512 * 1024 * 1024 );
+        m_WorldSampler = New<WorldSampler>( m_World->GetRayTracingContext() );
 
-//         if( SensorController )
-//         {
-//             SensorController->Connect( m_Sensor );
-//             SensorController->PowerOn();
-//         }
-//     }
+        // if( SensorController )
+        // {
+        //     SensorController->Connect( m_Sensor );
+        //     SensorController->PowerOn();
+        // }
+    }
 
-//     void OnDestroy()
-//     {
-//         if( SensorController )
-//         {
-//             SensorController->Shutdown();
-//             SensorController->Disconnect();
-//         }
-//     }
+    void OnDestroy()
+    {
+        // if( SensorController )
+        // {
+        //     SensorController->Shutdown();
+        //     SensorController->Disconnect();
+        // }
+    }
 
-//     void OnUpdate( Timestep ts )
-//     {
-//         if( !SensorController )
-//             return;
+    void OnUpdate( Timestep ts )
+    {
+        // if( !SensorController )
+        //     return;
 
-//         Ref<EnvironmentSampler> lEnvSamples = SensorController->Emit( ts );
-//         if( !lEnvSamples )
-//             return;
+        // Ref<EnvironmentSampler> lEnvSamples = SensorController->Emit( ts );
+        // if( !lEnvSamples )
+        //     return;
 
-//         m_ComputeScope->Reset();
-//         MultiTensor &lAzimuths    = ( *lEnvSamples )["Azimuth"].Get<sMultiTensorComponent>().mValue;
-//         MultiTensor &lElevations  = ( *lEnvSamples )["Elevation"].Get<sMultiTensorComponent>().mValue;
-//         MultiTensor &lIntensities = ( *lEnvSamples )["Intensity"].Get<sMultiTensorComponent>().mValue;
+        // m_ComputeScope->Reset();
+        // MultiTensor &lAzimuths    = ( *lEnvSamples )["Azimuth"].Get<sMultiTensorComponent>().mValue;
+        // MultiTensor &lElevations  = ( *lEnvSamples )["Elevation"].Get<sMultiTensorComponent>().mValue;
+        // MultiTensor &lIntensities = ( *lEnvSamples )["Intensity"].Get<sMultiTensorComponent>().mValue;
 
-//         sTensorShape lOutputShape( lIntensities.Shape().mShape, sizeof( HitRecord ) );
-//         MultiTensor lHitRecords = MultiTensor( m_ComputeScope->mPool, lOutputShape );
+        // sTensorShape lOutputShape( lIntensities.Shape().mShape, sizeof( HitRecord ) );
+        // MultiTensor lHitRecords = MultiTensor( m_ComputeScope->mPool, lOutputShape );
 
-//         if( Has<sTransformMatrixComponent>() )
-//         {
-//             auto &lParticles = Get<sParticleSystemComponent>();
+        // if( Has<sTransformMatrixComponent>() )
+        // {
+        //     auto &lParticles = Get<sParticleSystemComponent>();
 
-//             m_WorldSampler->Sample( Get<sTransformMatrixComponent>().Matrix, m_World, lAzimuths, lElevations, lIntensities, lHitRecords );
+        //     m_WorldSampler->Sample( Get<sTransformMatrixComponent>().Matrix, m_World, lAzimuths, lElevations, lIntensities, lHitRecords );
 
-//             if( !( lParticles.Particles ) || lParticles.ParticleCount != lAzimuths.SizeAs<float>() )
-//             {
-//                 lParticles.ParticleCount = lAzimuths.SizeAs<float>();
-//                 lParticles.Particles =
-//                     New<Buffer>( mEngineLoop->GetGraphicContext(), eBufferBindType::VERTEX_BUFFER, false, true, true, true, lParticles.ParticleCount * sizeof( Particle ) );
-//             }
+        //     if( !( lParticles.Particles ) || lParticles.ParticleCount != lAzimuths.SizeAs<float>() )
+        //     {
+        //         lParticles.ParticleCount = lAzimuths.SizeAs<float>();
+        //         lParticles.Particles =
+        //             New<Buffer>( mEngineLoop->GetGraphicContext(), eBufferBindType::VERTEX_BUFFER, false, true, true, true, lParticles.ParticleCount * sizeof( Particle ) );
+        //     }
 
-//             GPUExternalMemory l_PointCloudMappedBuffer( *( lParticles.Particles ), lParticles.ParticleCount * sizeof( Particle ) );
-//             m_PointCloudVisualizer.InvertZAxis = false;
-//             m_PointCloudVisualizer.Resolution  = 0.2;
-//             m_PointCloudVisualizer.Visualize( Get<sTransformMatrixComponent>().Matrix, lHitRecords, l_PointCloudMappedBuffer );
-//             l_PointCloudMappedBuffer.Dispose();
-//         }
-//         auto &lDistancesNode   = RetrieveDistance( *( SensorController->ControlledSensor()->mComputationScope ), lHitRecords );
-//         auto &lIntensitiesNode = RetrieveIntensities( *( SensorController->ControlledSensor()->mComputationScope ), lHitRecords );
+        //     GPUExternalMemory l_PointCloudMappedBuffer( *( lParticles.Particles ), lParticles.ParticleCount * sizeof( Particle ) );
+        //     m_PointCloudVisualizer.InvertZAxis = false;
+        //     m_PointCloudVisualizer.Resolution  = 0.2;
+        //     m_PointCloudVisualizer.Visualize( Get<sTransformMatrixComponent>().Matrix, lHitRecords, l_PointCloudMappedBuffer );
+        //     l_PointCloudMappedBuffer.Dispose();
+        // }
+        // auto &lDistancesNode   = RetrieveDistance( *( SensorController->ControlledSensor()->mComputationScope ), lHitRecords );
+        // auto &lIntensitiesNode = RetrieveIntensities( *( SensorController->ControlledSensor()->mComputationScope ), lHitRecords );
 
-//         SensorController->Receive( ts, *( SensorController->ControlledSensor()->mComputationScope ), lEnvSamples->GetScheduledFlashes(), ( *lEnvSamples )["Azimuth"],
-//                                    ( *lEnvSamples )["Elevation"], lIntensitiesNode, lDistancesNode );
-//     }
-// };
+        // SensorController->Receive( ts, *( SensorController->ControlledSensor()->mComputationScope ), lEnvSamples->GetScheduledFlashes(), ( *lEnvSamples )["Azimuth"],
+        //                            ( *lEnvSamples )["Elevation"], lIntensitiesNode, lDistancesNode );
+    }
+};
 
 class EchoDSMVPEditor : public BaseEditorApplication
 {
@@ -260,23 +262,23 @@ class EchoDSMVPEditor : public BaseEditorApplication
     // std::vector<std::vector<float>> mAveragedSampledIntensities;
     // std::vector<std::vector<uint32_t>> mSampledIntensitiesDisplayShape;
 
-    // void OnBeginScenario()
-    // {
-    //     switch( CurrentControllerID )
-    //     {
-    //     case eControllerID::BASIC:
-    //         CurrentController = New<OptixSensorLidar::BasicSensorController>();
-    //         break;
-    //     case eControllerID::LEDDAR_ENGINE:
-    //         CurrentController = New<OptixSensorLidar::LESensorController>( "192.168.204.130", 27100 );
-    //         break;
-    //     case eControllerID::NONE:
-    //     default:
-    //         break;
-    //     }
+    void OnBeginScenario()
+    {
+        // switch( CurrentControllerID )
+        // {
+        // case eControllerID::BASIC:
+        //     CurrentController = New<OptixSensorLidar::BasicSensorController>();
+        //     break;
+        // case eControllerID::LEDDAR_ENGINE:
+        //     CurrentController = New<OptixSensorLidar::LESensorController>( "192.168.204.130", 27100 );
+        //     break;
+        // case eControllerID::NONE:
+        // default:
+        //     break;
+        // }
 
-    //     mEditorWindow.Sensor.Get<sBehaviourComponent>().Bind<SensorControllerBehaviour>( mEngineLoop, m_World, CurrentController, m_Sensor );
-    // }
+        // mEditorWindow.Sensor.Get<sBehaviourComponent>().Bind<SensorControllerBehaviour>( mEngineLoop, m_World, CurrentController, m_Sensor );
+    }
 
     void OnUI()
     {
