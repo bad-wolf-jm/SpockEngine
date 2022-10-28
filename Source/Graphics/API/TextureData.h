@@ -33,8 +33,7 @@ namespace LTSE::Core
         /** @brief Texture creation metadata */
         struct sCreateInfo
         {
-            eTextureType mType =
-                eTextureType::TEXTURE_2D; /**!< Specifies the type of texture. Possible values are TEXTURE_2D and TEXTURE_3D*/
+            eTextureType      mType      = eTextureType::TEXTURE_2D;
             eColorFormat      mFormat    = eColorFormat::UNDEFINED; /**!< Specifies the color format used for the texture*/
             int32_t           mWidth     = 0;                       /**!< Width of the texture, in pixels*/
             int32_t           mHeight    = 0;                       /**!< Height of the texture, in pixels*/

@@ -22,37 +22,37 @@ namespace LTSE::Core
     /** @brief Minification and magnification filters */
     enum class eSamplerFilter : uint8_t
     {
-        NEAREST = 0, /**!< specifies nearest filtering. */
-        LINEAR  = 1  /**!< specifies linear filtering. */
+        NEAREST = 0,
+        LINEAR  = 1 
     };
 
     /** @brief Mipmap filter*/
     enum class eSamplerMipmap : uint8_t
     {
-        NEAREST = 0, /**!< specifies nearest filtering. */
-        LINEAR  = 1  /**!< specifies linear filtering. */
+        NEAREST = 0,
+        LINEAR  = 1 
     };
 
     /** @brief Wrapping mode for samplers*/
-    enum class eSamplerWrapping : uint32_t
+    enum class eSamplerWrapping : uint8_t
     {
-        REPEAT                 = 0, /**!< specifies that the repeat wrap mode will be used. */
-        MIRRORED_REPEAT        = 1, /**!< specifies that the mirrored repeat wrap mode will be used. */
-        CLAMP_TO_EDGE          = 2, /**!< specifies that the clamp to edge wrap mode will be used. */
-        CLAMP_TO_BORDER        = 3, /**!< specifies that the clamp to border wrap mode will be used. */
-        MIRROR_CLAMP_TO_BORDER = 4  /**!< specifies that the mirror clamp to edge wrap mode will be used.  */
+        REPEAT                 = 0,
+        MIRRORED_REPEAT        = 1,
+        CLAMP_TO_EDGE          = 2,
+        CLAMP_TO_BORDER        = 3,
+        MIRROR_CLAMP_TO_BORDER = 4 
     };
 
     /** @brief Swizzles */
     enum class eSwizzleComponent : uint8_t
     {
-        IDENTITY = 0, /**!< specifies that the component is set to the identity swizzle. */
-        ZERO     = 1, /**!< specifies that the component is set to zero. */
-        ONE      = 2, /**!< specifies that the component is set to one */
-        R        = 3, /**!< specifies that the component is set to the value of the R component of the image. */
-        G        = 4, /**!< specifies that the component is set to the value of the G component of the image. */
-        B        = 5, /**!< specifies that the component is set to the value of the B component of the image. */
-        A        = 6  /**!< specifies that the component is set to the value of the A component of the image. */
+        IDENTITY = 0,
+        ZERO     = 1,
+        ONE      = 2,
+        R        = 3,
+        G        = 4,
+        B        = 5,
+        A        = 6 
     };
 
     /** \struct sTextureSamplingInfo
@@ -62,17 +62,13 @@ namespace LTSE::Core
      */
     struct sTextureSamplingInfo
     {
-        eSamplerFilter mMinification =
-            eSamplerFilter::LINEAR; //!< Specify the filter to use when the texture is being scaled up from its actual size
-        eSamplerFilter mMagnification =
-            eSamplerFilter::LINEAR; //!< Specify the filter to use when the texture is being scaled down from its actual size
-        eSamplerMipmap mMip =
-            eSamplerMipmap::LINEAR; //!< Specify the filter to use when interpolating between two elements of the mip chain
-        eSamplerWrapping mWrapping =
-            eSamplerWrapping::CLAMP_TO_BORDER;              //!< Specify the behaviour of the sampler when sampling out of bounds
-        std::array<float, 2> mScaling     = { 1.0f, 1.0f }; //!< Specified the scaling to be used.
-        std::array<float, 2> mOffset      = { 0.0f, 0.0f }; //!< Specified the offset to be used.
-        std::array<float, 4> mBorderColor = { 0.0f, 0.0f, 0.0f, 0.0f }; //!< Specify the value to return when sampling out of bounds
+        eSamplerFilter       mMinification  = eSamplerFilter::LINEAR;
+        eSamplerFilter       mMagnification = eSamplerFilter::LINEAR;
+        eSamplerMipmap       mMip           = eSamplerMipmap::LINEAR;
+        eSamplerWrapping     mWrapping      = eSamplerWrapping::CLAMP_TO_BORDER;
+        std::array<float, 2> mScaling       = { 1.0f, 1.0f };
+        std::array<float, 2> mOffset        = { 0.0f, 0.0f };
+        std::array<float, 4> mBorderColor   = { 0.0f, 0.0f, 0.0f, 0.0f };
 
         sTextureSamplingInfo()                               = default;
         sTextureSamplingInfo( const sTextureSamplingInfo & ) = default;
@@ -112,11 +108,11 @@ namespace LTSE::Core
      */
     struct sImageData
     {
-        eColorFormat mFormat    = eColorFormat::UNDEFINED; //!< Image format
-        size_t       mWidth     = 0;                       //!< Width of the image, in pixels
-        size_t       mHeight    = 0;                       //!< Height of the image, in pixels
-        size_t       mByteSize  = 0;                       //!< Size of the pixel data pointer, in bytes
-        uint8_t     *mPixelData = nullptr;                 //!< Raw pixel data
+        eColorFormat mFormat    = eColorFormat::UNDEFINED;
+        size_t       mWidth     = 0;                      
+        size_t       mHeight    = 0;                      
+        size_t       mByteSize  = 0;                      
+        uint8_t     *mPixelData = nullptr;                
 
         template <typename PixelType>
         static sImageData Create( eColorFormat aFormat, size_t aWidth, size_t aHeight, uint8_t *aPixelData )
