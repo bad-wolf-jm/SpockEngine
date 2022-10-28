@@ -318,15 +318,15 @@ namespace LTSE::Graphics::Internal
         aVertexBufferLayout.Compile( 0, lBindings, lAttributes, false );
 
         VkVertexInputBindingDescription                lInstanceBindings;
-        std::vector<VkVertexInputAttributeDescription> instance_attributes;
-        aInstanceBufferLayout.Compile( 1, lInstanceBindings, instance_attributes, true );
+        std::vector<VkVertexInputAttributeDescription> lInstancingAttributes;
+        aInstanceBufferLayout.Compile( 1, lInstanceBindings, lInstancingAttributes, true );
 
         if( lAttributes.size() != 0 )
         {
-            if( instance_attributes.size() != 0 )
+            if( lInstancingAttributes.size() != 0 )
             {
                 VkVertexInputBindingDescription lAllBindings[2] = { lBindings, lInstanceBindings };
-                lAttributes.insert( lAttributes.end(), instance_attributes.begin(), instance_attributes.end() );
+                lAttributes.insert( lAttributes.end(), lInstancingAttributes.begin(), lInstancingAttributes.end() );
 
                 lVertexInputInfo.pVertexAttributeDescriptions    = lAttributes.data();
                 lVertexInputInfo.vertexAttributeDescriptionCount = lAttributes.size();
