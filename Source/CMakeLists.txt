@@ -12,17 +12,19 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Textures/ColorFormat.cpp
     Core/Textures/TextureData.cpp
     
-    Scripting/ScriptingEngine.cpp
-    Scripting/Core/Texture.cpp
-    Scripting/Core/Vector.cpp
-    Scripting/Entities/EntityRegistry.cpp
-    Scripting/Cuda/Tensor.cpp
-    Scripting/Cuda/Texture.cpp
-    Scripting/Math/VectorTypes.cpp
-    Scripting/Math/MatrixTypes.cpp
-    # Scripting/SensorModel.cpp
-    Scripting/ArrayTypes.cpp
-    # Scripting/ScriptedSensorDevice.cpp
+    # Scripting/ScriptingEngine.cpp
+    # Scripting/Core/Texture.cpp
+    # Scripting/Core/Vector.cpp
+    # Scripting/Entities/EntityRegistry.cpp
+    # Scripting/Cuda/Tensor.cpp
+    # Scripting/Cuda/Texture.cpp
+    # Scripting/Math/VectorTypes.cpp
+    # Scripting/Math/MatrixTypes.cpp
+    # # Scripting/SensorModel.cpp
+    # Scripting/ArrayTypes.cpp
+    # # Scripting/ScriptedSensorDevice.cpp
+
+    Mono/Manager.cpp
     
     Core/Cuda/MultiTensor.cu
     Core/Cuda/MemoryPool.cu
@@ -167,6 +169,17 @@ target_link_libraries(LTSimulationEngineRuntime PRIVATE
     implot
     imgui-node-editor
     fmt
+    winmm
+    version
+    Bcrypt
+    "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/libmono-static-sgen.lib"
+    "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/libmonoruntime-sgen.lib"
+    "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/mono-2.0-sgen.lib"
+    "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/MonoPosixHelper.lib"
+    "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/libmonoutils.lib"
+    "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/libmini-sgen.lib"
+    "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/libgcmonosgen.lib"
+    "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/eglib.lib"
     ${optix_LIBRARY}
     ${CUDA_LIBRARIES}
     ${CUDA_CUDA_LIBRARY}

@@ -5,6 +5,9 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(PROGRAM_FILES "C:\\Users\\jalbe")
 
+include_directories("ThirdParty/mono/include")
+
+
 include(cmake/configure_optix.cmake)
 include_directories(${OptiX_INCLUDE})
 

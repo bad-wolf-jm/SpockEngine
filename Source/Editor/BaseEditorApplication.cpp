@@ -20,6 +20,8 @@
 #include "Scene/Components.h"
 #include "Scene/Importer/glTFImporter.h"
 
+#include "Mono/Manager.h"
+
 namespace LTSE::Editor
 {
 
@@ -212,6 +214,8 @@ namespace LTSE::Editor
             LoadConfiguration();
         else
             SaveConfiguration();
+
+        ScriptManager::Initialize();
 
         // SensorConfigurationFile = ConfigurationRoot / "SensorConfiguration.yaml";
         // if( fs::exists( SensorConfigurationFile ) )

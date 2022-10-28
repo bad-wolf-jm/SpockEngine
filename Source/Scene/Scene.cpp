@@ -42,7 +42,7 @@ namespace LTSE::Core
         , m_UI{ a_UI }
     {
 
-        mSceneScripting = New<ScriptingEngine>();
+        // mSceneScripting = New<ScriptingEngine>();
         mMaterialSystem = New<MaterialSystem>( a_GraphicContext );
 
         DefaultCamera                 = m_Registry.CreateEntity( "DefaultCamera" );
@@ -132,7 +132,7 @@ namespace LTSE::Core
             CopyComponent<sLightComponent>( lEntity, lClonedEntity );
 
             CopyComponent<sBehaviourComponent>( lEntity, lClonedEntity );
-            CopyComponent<sLuaScriptComponent>( lEntity, lClonedEntity );
+            // CopyComponent<sLuaScriptComponent>( lEntity, lClonedEntity );
 
             CopyComponent<PointLightHelperComponent>( lEntity, lClonedEntity );
             CopyComponent<DirectionalLightHelperComponent>( lEntity, lClonedEntity );
@@ -1162,8 +1162,8 @@ namespace LTSE::Core
 
     void Scene::AttachScript( Element aElement, fs::path aScriptPath )
     {
-        auto &lNewScriptComponent = aElement.Add<sLuaScriptComponent>( mSceneScripting, aScriptPath );
-        lNewScriptComponent.Initialize( aElement );
+        // auto &lNewScriptComponent = aElement.Add<sLuaScriptComponent>( mSceneScripting, aScriptPath );
+        // lNewScriptComponent.Initialize( aElement );
     }
 
     void Scene::BeginScenario()
@@ -1186,7 +1186,7 @@ namespace LTSE::Core
             } );
 
         // Initialize Lua scripts
-        ForEach<sLuaScriptComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnCreate(); } );
+        // ForEach<sLuaScriptComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnCreate(); } );
 
         mState = eSceneState::RUNNING;
     }
@@ -1210,7 +1210,7 @@ namespace LTSE::Core
             } );
 
         // Destroy Lua scripts
-        ForEach<sLuaScriptComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnDestroy(); } );
+        // ForEach<sLuaScriptComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnDestroy(); } );
 
         mState = eSceneState::EDITING;
     }
@@ -1228,7 +1228,7 @@ namespace LTSE::Core
                     if( l_Component.ControllerInstance ) l_Component.ControllerInstance->OnUpdate( ts );
                 } );
 
-            ForEach<sLuaScriptComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnUpdate( ts ); } );
+            // ForEach<sLuaScriptComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnUpdate( ts ); } );
 
             // Update animations
             ForEach<sAnimationChooser>(
