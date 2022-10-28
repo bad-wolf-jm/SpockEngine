@@ -14,6 +14,8 @@
 #include "Editor/BaseEditorApplication.h"
 #include "Editor/EditorWindow.h"
 
+#include "Mono/Manager.h"
+
 // #include "LidarSensorModel/ModelArchive.h"
 // #include "LidarSensorModel/ModelBuilder.h"
 // #include "LidarSensorModel/SensorModelBase.h"
@@ -927,6 +929,8 @@ class EchoDSMVPEditor : public BaseEditorApplication
         BaseEditorApplication::Init();
         // m_Sensor = a_SensorToControl;
         mEditorWindow.OnBeginScenario.connect<&EchoDSMVPEditor::OnBeginScenario>( *this );
+
+        ScriptManager::SetAppAssemblyPath("");
     }
 
     void Update( Timestep ts )

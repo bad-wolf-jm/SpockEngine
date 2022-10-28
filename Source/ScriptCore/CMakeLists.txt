@@ -4,7 +4,7 @@ project(SE_CoreScriping LANGUAGES CSharp)
 set(LIBRARY_NAME SE_Core)
 
 add_library(${LIBRARY_NAME}
-    Source/Test.cs
+    Source/SEApplication.cs
 )
 
 set_property(TARGET ${LIBRARY_NAME} PROPERTY DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1")

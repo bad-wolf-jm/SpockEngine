@@ -217,28 +217,38 @@ namespace LTSE::Core
         }
     }
 
-    void ScriptManager::LoadAppAssembly( const std::filesystem::path &aFilepath )
+    void ScriptManager::SetAppAssemblyPath( const std::filesystem::path &aFilepath )
     {
-        // Move this maybe
         sData->mAppAssemblyFilepath = aFilepath;
-        sData->mAppAssembly         = Utils::LoadMonoAssembly( aFilepath );
-        sData->mAppAssemblyImage    = mono_assembly_get_image( sData->mAppAssembly );
-        Utils::PrintAssemblyTypes( sData->mAppAssembly );
 
-        sData->mAppAssemblyFileWatcher =
-            std::make_unique<filewatch::FileWatch<std::string>>( aFilepath.string(), OnAppAssemblyFileSystemEvent );
         sData->mAssemblyReloadPending = false;
+        
+        if( !sData->mAppAssemblyFilepath.empty() )
+            sData->mAppAssemblyFileWatcher =
+                std::make_unique<filewatch::FileWatch<std::string>>( aFilepath.string(), OnAppAssemblyFileSystemEvent );
+
+        ReloadAssembly();
     }
+
+    // void ScriptManager::LoadAppAssembly( const std::filesystem::path &aFilepath )
+    // {
+    //     // Move this maybe
+    //     sData->mAppAssemblyFilepath = aFilepath;
+    //     sData->mAppAssembly         = Utils::LoadMonoAssembly( aFilepath );
+    //     sData->mAppAssemblyImage    = mono_assembly_get_image( sData->mAppAssembly );
+    //     Utils::PrintAssemblyTypes( sData->mAppAssembly );
+
+    //     sData->mAppAssemblyFileWatcher =
+    //         std::make_unique<filewatch::FileWatch<std::string>>( aFilepath.string(), OnAppAssemblyFileSystemEvent );
+    //     sData->mAssemblyReloadPending = false;
+    // }
 
     void ScriptManager::Initialize()
     {
         sData = new ScriptEngineData();
 
         InitMono();
-
-        LoadCoreAssembly( "Source\\Mono\\ScriptCore\\Build\\Debug\\SE_Core.dll" );
-        // LoadAppAssembly("SandboxProject/Assets/Scripts/Binaries/Sandbox.dll");
-        LoadAssemblyClasses();
+        LoadCoreAssembly( "Source/ScriptCore/Build/Debug/SE_Core.dll" );
     }
 
     void ScriptManager::Shutdown()
@@ -252,7 +262,7 @@ namespace LTSE::Core
     {
         mono_set_assemblies_path( "C:\\GitLab\\SpockEngine\\mono\\lib" );
 
-        MonoDomain *lRootDomain = mono_jit_init( "HazelJITRuntime" );
+        MonoDomain *lRootDomain = mono_jit_init( "SpockEngineRuntime" );
 
         sData->mRootDomain = lRootDomain;
     }
@@ -322,15 +332,17 @@ namespace LTSE::Core
     void ScriptManager::ReloadAssembly()
     {
         mono_domain_set( mono_get_root_domain(), false );
-        mono_domain_unload( sData->mAppDomain );
+        if( sData->mAppDomain != nullptr ) mono_domain_unload( sData->mAppDomain );
 
         LoadCoreAssembly( sData->mCoreAssemblyFilepath );
-        // LoadAppAssembly( sData->mAppAssemblyFilepath );
+
+        if( !sData->mAppAssemblyFilepath.empty() )
+        {
+            sData->mAppAssembly      = Utils::LoadMonoAssembly( sData->mAppAssemblyFilepath );
+            sData->mAppAssemblyImage = mono_assembly_get_image( sData->mAppAssembly );
+            Utils::PrintAssemblyTypes( sData->mAppAssembly );
+        }
+
         LoadAssemblyClasses();
-
-        // ScriptGlue::RegisterComponents();
-
-        // Retrieve and instantiate class
-        // sData->EntityClass = ScriptClass( "Hazel", "Entity", true );
     }
 } // namespace LTSE::Core
