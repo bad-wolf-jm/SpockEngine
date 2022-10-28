@@ -14,27 +14,27 @@ namespace LTSE::Graphics
     {
         Spec = a_Spec;
 
-        m_RenderPassObject =
-            New<Internal::sVkRenderPassObject>( mGraphicContext.mContext, ToVkFormat( a_Spec.Format ), Spec.SampleCount, Spec.Sampled, Spec.Presented, Spec.ClearColor );
+        m_RenderPassObject = New<Internal::sVkRenderPassObject>(
+            mGraphicContext.mContext, ToVkFormat( a_Spec.Format ), Spec.SampleCount, Spec.Sampled, Spec.Presented, Spec.ClearColor );
 
         if( Spec.SampleCount > 1 )
         {
-            m_MSAAOutputTexture = New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, ToVkFormat( a_Spec.Format ), Spec.Width, Spec.Height, Spec.SampleCount,
-                                                                      VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, false );
+            m_MSAAOutputTexture = New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, ToVkFormat( a_Spec.Format ),
+                Spec.Width, Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, false );
         }
 
         if( !Spec.OutputTexture )
         {
-            m_OutputTexture =
-                New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, ToVkFormat( a_Spec.Format ), Spec.Width, Spec.Height, 1, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, true );
+            m_OutputTexture = New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, ToVkFormat( a_Spec.Format ), Spec.Width,
+                Spec.Height, 1, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, true );
         }
         else
         {
             m_OutputTexture = Spec.OutputTexture;
         }
 
-        m_DepthTexture = New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, mGraphicContext.mContext->GetDepthFormat(), Spec.Width, Spec.Height, Spec.SampleCount,
-                                                             VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, false );
+        m_DepthTexture = New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, mGraphicContext.mContext->GetDepthFormat(),
+            Spec.Width, Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, false );
 
         std::vector<Ref<Internal::sVkFramebufferImage>> l_AttachmentViews{};
 
@@ -43,7 +43,8 @@ namespace LTSE::Graphics
         else
             l_AttachmentViews = { m_MSAAOutputTexture, m_OutputTexture, m_DepthTexture };
 
-        m_FramebufferObject = New<Internal::sVkFramebufferObject>( mGraphicContext.mContext, Spec.Width, Spec.Height, 1, m_RenderPassObject->mVkObject, l_AttachmentViews );
+        m_FramebufferObject = New<Internal::sVkFramebufferObject>(
+            mGraphicContext.mContext, Spec.Width, Spec.Height, 1, m_RenderPassObject->mVkObject, l_AttachmentViews );
     }
 
     void AbstractRenderTarget::InitializeCommandBuffers()
@@ -62,25 +63,23 @@ namespace LTSE::Graphics
                 mCommandBufferObject[i]->AddWaitSemaphore( lImageAvailableSemaphore, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT );
 
             auto lRenderFinishedSemaphore = GetRenderFinishedSemaphore( i );
-            if( lRenderFinishedSemaphore )
-                mCommandBufferObject[i]->AddSignalSemaphore( lRenderFinishedSemaphore );
+            if( lRenderFinishedSemaphore ) mCommandBufferObject[i]->AddSignalSemaphore( lRenderFinishedSemaphore );
 
             auto lSubmitFence = GetInFlightFence( i );
-            if( lSubmitFence )
-                mCommandBufferObject[i]->SetSubmitFence( lSubmitFence );
+            if( lSubmitFence ) mCommandBufferObject[i]->SetSubmitFence( lSubmitFence );
         }
     }
 
-    bool AbstractRenderTarget::BeginRender() { return true; }
-    void AbstractRenderTarget::EndRender() {}
-    void AbstractRenderTarget::Present() {}
+    bool     AbstractRenderTarget::BeginRender() { return true; }
+    void     AbstractRenderTarget::EndRender() {}
+    void     AbstractRenderTarget::Present() {}
     uint32_t AbstractRenderTarget::GetCurrentImage() { return 0; };
 
-    Ref<Internal::sVkFramebufferObject> AbstractRenderTarget::GetFramebuffer() { return nullptr; }
+    Ref<Internal::sVkFramebufferObject>   AbstractRenderTarget::GetFramebuffer() { return nullptr; }
     Ref<Internal::sVkCommandBufferObject> AbstractRenderTarget::GetCommandBuffer( uint32_t i ) { return mCommandBufferObject[i]; }
-    VkSemaphore AbstractRenderTarget::GetImageAvailableSemaphore( uint32_t i ) { return VK_NULL_HANDLE; }
-    VkSemaphore AbstractRenderTarget::GetRenderFinishedSemaphore( uint32_t i ) { return VK_NULL_HANDLE; }
-    VkFence AbstractRenderTarget::GetInFlightFence( uint32_t i ) { return VK_NULL_HANDLE; }
+    VkSemaphore                           AbstractRenderTarget::GetImageAvailableSemaphore( uint32_t i ) { return VK_NULL_HANDLE; }
+    VkSemaphore                           AbstractRenderTarget::GetRenderFinishedSemaphore( uint32_t i ) { return VK_NULL_HANDLE; }
+    VkFence                               AbstractRenderTarget::GetInFlightFence( uint32_t i ) { return VK_NULL_HANDLE; }
 
     OffscreenRenderTarget::OffscreenRenderTarget( GraphicContext &a_GraphicContext, OffscreenRenderTargetDescription &a_Spec )
         : AbstractRenderTarget( a_GraphicContext )
@@ -110,14 +109,23 @@ namespace LTSE::Graphics
         InitializeCommandBuffers();
     }
 
-    bool OffscreenRenderTarget::BeginRender() { return true; }
-    void OffscreenRenderTarget::EndRender() {}
-    void OffscreenRenderTarget::Present() {}
-    uint32_t OffscreenRenderTarget::GetCurrentImage() { return 0; };
-    Ref<Internal::sVkFramebufferObject> OffscreenRenderTarget::GetFramebuffer() { return m_FramebufferObject; }
-    Ref<Internal::sVkCommandBufferObject> OffscreenRenderTarget::GetCommandBuffer( uint32_t i ) { return AbstractRenderTarget::GetCommandBuffer( i ); }
-    VkSemaphore OffscreenRenderTarget::GetImageAvailableSemaphore( uint32_t i ) { return AbstractRenderTarget::GetImageAvailableSemaphore( i ); }
-    VkSemaphore OffscreenRenderTarget::GetRenderFinishedSemaphore( uint32_t i ) { return AbstractRenderTarget::GetRenderFinishedSemaphore( i ); }
+    bool                                  OffscreenRenderTarget::BeginRender() { return true; }
+    void                                  OffscreenRenderTarget::EndRender() {}
+    void                                  OffscreenRenderTarget::Present() {}
+    uint32_t                              OffscreenRenderTarget::GetCurrentImage() { return 0; };
+    Ref<Internal::sVkFramebufferObject>   OffscreenRenderTarget::GetFramebuffer() { return m_FramebufferObject; }
+    Ref<Internal::sVkCommandBufferObject> OffscreenRenderTarget::GetCommandBuffer( uint32_t i )
+    {
+        return AbstractRenderTarget::GetCommandBuffer( i );
+    }
+    VkSemaphore OffscreenRenderTarget::GetImageAvailableSemaphore( uint32_t i )
+    {
+        return AbstractRenderTarget::GetImageAvailableSemaphore( i );
+    }
+    VkSemaphore OffscreenRenderTarget::GetRenderFinishedSemaphore( uint32_t i )
+    {
+        return AbstractRenderTarget::GetRenderFinishedSemaphore( i );
+    }
     VkFence OffscreenRenderTarget::GetInFlightFence( uint32_t i ) { return AbstractRenderTarget::GetInFlightFence( i ); }
 
     SwapChainRenderTargetImage::SwapChainRenderTargetImage( GraphicContext &a_GraphicContext, RenderTargetDescription &a_Spec )
@@ -127,14 +135,20 @@ namespace LTSE::Graphics
         Initialize( a_Spec );
     }
 
-    bool SwapChainRenderTargetImage::BeginRender() { return true; }
-    void SwapChainRenderTargetImage::EndRender() {}
-    void SwapChainRenderTargetImage::Present() {}
-    uint32_t SwapChainRenderTargetImage::GetCurrentImage() { return 0; };
-    Ref<Internal::sVkFramebufferObject> SwapChainRenderTargetImage::GetFramebuffer() { return m_FramebufferObject; }
+    bool                                  SwapChainRenderTargetImage::BeginRender() { return true; }
+    void                                  SwapChainRenderTargetImage::EndRender() {}
+    void                                  SwapChainRenderTargetImage::Present() {}
+    uint32_t                              SwapChainRenderTargetImage::GetCurrentImage() { return 0; };
+    Ref<Internal::sVkFramebufferObject>   SwapChainRenderTargetImage::GetFramebuffer() { return m_FramebufferObject; }
     Ref<Internal::sVkCommandBufferObject> SwapChainRenderTargetImage::GetCommandBuffer( uint32_t i ) { return nullptr; }
-    VkSemaphore SwapChainRenderTargetImage::GetImageAvailableSemaphore( uint32_t i ) { return AbstractRenderTarget::GetImageAvailableSemaphore( i ); }
-    VkSemaphore SwapChainRenderTargetImage::GetRenderFinishedSemaphore( uint32_t i ) { return AbstractRenderTarget::GetRenderFinishedSemaphore( i ); }
+    VkSemaphore                           SwapChainRenderTargetImage::GetImageAvailableSemaphore( uint32_t i )
+    {
+        return AbstractRenderTarget::GetImageAvailableSemaphore( i );
+    }
+    VkSemaphore SwapChainRenderTargetImage::GetRenderFinishedSemaphore( uint32_t i )
+    {
+        return AbstractRenderTarget::GetRenderFinishedSemaphore( i );
+    }
     VkFence SwapChainRenderTargetImage::GetInFlightFence( uint32_t i ) { return AbstractRenderTarget::GetInFlightFence( i ); }
 
     SwapChainRenderTarget::SwapChainRenderTarget( GraphicContext &a_GraphicContext, SwapChainRenderTargetDescription &a_Spec )
@@ -150,7 +164,8 @@ namespace LTSE::Graphics
         mGraphicContext.mContext->WaitForFence( InFlightFences[CurrentImage] );
 
         uint64_t l_Timeout = std::numeric_limits<uint64_t>::max();
-        VkResult result    = mGraphicContext.mContext->AcquireNextImage( mVkObject, l_Timeout, ImageAvailableSemaphores[CurrentImage], &CurrentImage );
+        VkResult result =
+            mGraphicContext.mContext->AcquireNextImage( mVkObject, l_Timeout, ImageAvailableSemaphores[CurrentImage], &CurrentImage );
 
         if( result == VK_ERROR_OUT_OF_DATE_KHR )
         {
@@ -166,13 +181,6 @@ namespace LTSE::Graphics
             return FrameIsStarted;
         }
 
-        // if( lFrameIsStarted )
-        // {
-        // }
-        // else
-        // {
-        // }
-
         return FrameIsStarted;
     }
 
@@ -185,9 +193,11 @@ namespace LTSE::Graphics
     void SwapChainRenderTarget::Present()
     {
 
-        VkResult l_PresentResult = mGraphicContext.mContext->Present( mVkObject, CurrentImage, RenderFinishedSemaphores[CurrentImage] );
+        VkResult l_PresentResult =
+            mGraphicContext.mContext->Present( mVkObject, CurrentImage, RenderFinishedSemaphores[CurrentImage] );
 
-        if( ( l_PresentResult == VK_ERROR_OUT_OF_DATE_KHR ) || ( l_PresentResult == VK_SUBOPTIMAL_KHR ) || mGraphicContext.m_ViewportClient->WindowWasResized() )
+        if( ( l_PresentResult == VK_ERROR_OUT_OF_DATE_KHR ) || ( l_PresentResult == VK_SUBOPTIMAL_KHR ) ||
+            mGraphicContext.m_ViewportClient->WindowWasResized() )
         {
             mGraphicContext.m_ViewportClient->ResetWindowResizedFlag();
             RecreateSwapChain();
@@ -198,17 +208,24 @@ namespace LTSE::Graphics
 
     uint32_t SwapChainRenderTarget::GetCurrentImage() { return CurrentImage; };
 
-    Ref<Internal::sVkFramebufferObject> SwapChainRenderTarget::GetFramebuffer() { return m_RenderTargets[CurrentImage]->GetFramebuffer(); }
-    Ref<Internal::sVkCommandBufferObject> SwapChainRenderTarget::GetCommandBuffer( uint32_t i ) { return AbstractRenderTarget::GetCommandBuffer( i ); }
+    Ref<Internal::sVkFramebufferObject> SwapChainRenderTarget::GetFramebuffer()
+    {
+        return m_RenderTargets[CurrentImage]->GetFramebuffer();
+    }
+    Ref<Internal::sVkCommandBufferObject> SwapChainRenderTarget::GetCommandBuffer( uint32_t i )
+    {
+        return AbstractRenderTarget::GetCommandBuffer( i );
+    }
     VkSemaphore SwapChainRenderTarget::GetImageAvailableSemaphore( uint32_t i ) { return ImageAvailableSemaphores[i]; }
     VkSemaphore SwapChainRenderTarget::GetRenderFinishedSemaphore( uint32_t i ) { return RenderFinishedSemaphores[i]; }
-    VkFence SwapChainRenderTarget::GetInFlightFence( uint32_t i ) { return InFlightFences[i]; }
+    VkFence     SwapChainRenderTarget::GetInFlightFence( uint32_t i ) { return InFlightFences[i]; }
 
     void SwapChainRenderTarget::RecreateSwapChain()
     {
         mGraphicContext.mContext->WaitIdle();
 
-        auto [lSwapChainImageFormat, lSwapChainImageCount, lSwapchainExtent, lNewSwapchain] = mGraphicContext.mContext->CreateSwapChain();
+        auto [lSwapChainImageFormat, lSwapChainImageCount, lSwapchainExtent, lNewSwapchain] =
+            mGraphicContext.mContext->CreateSwapChain();
 
         mVkObject   = lNewSwapchain;
         ImageFormat = lSwapChainImageFormat;
@@ -248,8 +265,8 @@ namespace LTSE::Graphics
             l_RTSpec.Height        = lSwapchainExtent.height;
             l_RTSpec.Sampled       = false;
             l_RTSpec.Presented     = true;
-            l_RTSpec.OutputTexture = New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, Images[i], ImageFormat, lSwapchainExtent.width, lSwapchainExtent.height,
-                                                                         Spec.SampleCount, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, false );
+            l_RTSpec.OutputTexture = New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, Images[i], ImageFormat,
+                lSwapchainExtent.width, lSwapchainExtent.height, Spec.SampleCount, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, false );
 
             m_RenderTargets[i] = New<SwapChainRenderTargetImage>( mGraphicContext, l_RTSpec );
         }

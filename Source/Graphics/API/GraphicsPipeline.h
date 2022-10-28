@@ -5,9 +5,10 @@
 #include "Core/Memory.h"
 
 #include "DescriptorSet.h"
+#include "GraphicContext.h"
 #include "Graphics/Implementation/Vulkan/VkPipeline.h"
 #include "Graphics/Implementation/Vulkan/VkRenderPass.h"
-#include "GraphicContext.h"
+
 
 namespace LTSE::Graphics
 {
@@ -25,21 +26,21 @@ namespace LTSE::Graphics
 
     struct GraphicsPipelineCreateInfo
     {
-        std::vector<sShader> mShaderStages     = {};
-        sBufferLayout InputBufferLayout        = {};
-        sBufferLayout InstanceBufferLayout     = {};
-        ePrimitiveTopology Topology            = ePrimitiveTopology::TRIANGLES;
-        eFaceCulling Culling                   = eFaceCulling::BACK;
-        uint8_t SampleCount                    = 1;
-        float LineWidth                        = 1.0f;
-        bool DepthWriteEnable                  = false;
-        bool DepthTestEnable                   = false;
-        bool Opaque                            = false;
-        eDepthCompareOperation DepthComparison = eDepthCompareOperation::ALWAYS;
+        std::vector<sShader>   mShaderStages        = {};
+        sBufferLayout          InputBufferLayout    = {};
+        sBufferLayout          InstanceBufferLayout = {};
+        ePrimitiveTopology     Topology             = ePrimitiveTopology::TRIANGLES;
+        eFaceCulling           Culling              = eFaceCulling::BACK;
+        uint8_t                SampleCount          = 1;
+        float                  LineWidth            = 1.0f;
+        bool                   DepthWriteEnable     = false;
+        bool                   DepthTestEnable      = false;
+        bool                   Opaque               = false;
+        eDepthCompareOperation DepthComparison      = eDepthCompareOperation::ALWAYS;
 
-        std::vector<sPushConstantRange> PushConstants    = {};
-        Ref<Internal::sVkRenderPassObject> RenderPass    = nullptr;
-        std::vector<Ref<DescriptorSetLayout>> SetLayouts = {};
+        std::vector<sPushConstantRange>       PushConstants = {};
+        Ref<Internal::sVkRenderPassObject>    RenderPass    = nullptr;
+        std::vector<Ref<DescriptorSetLayout>> SetLayouts    = {};
     };
 
     class GraphicsPipeline
@@ -48,13 +49,13 @@ namespace LTSE::Graphics
         GraphicsPipeline( GraphicContext &a_GraphicContext, GraphicsPipelineCreateInfo &a_CreateInfo );
         ~GraphicsPipeline() = default;
 
-        Ref<Internal::sVkPipelineObject> GetVkPipelineObject() { return m_PipelineObject; }
+        Ref<Internal::sVkPipelineObject>       GetVkPipelineObject() { return m_PipelineObject; }
         Ref<Internal::sVkPipelineLayoutObject> GetVkPipelineLayoutObject() { return m_PipelineLayoutObject; }
 
       private:
-        GraphicContext mGraphicContext{};
+        GraphicContext                         mGraphicContext{};
         Ref<Internal::sVkPipelineLayoutObject> m_PipelineLayoutObject = nullptr;
-        Ref<Internal::sVkPipelineObject> m_PipelineObject             = nullptr;
+        Ref<Internal::sVkPipelineObject>       m_PipelineObject       = nullptr;
     };
 
 } // namespace LTSE::Graphics

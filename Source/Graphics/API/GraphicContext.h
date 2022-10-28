@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Core/Memory.h"
+#include "Core/Platform/ViewportClient.h"
 #include "Graphics/Implementation/Vulkan/VkCommand.h"
 #include "Graphics/Implementation/Vulkan/VkContext.h"
-#include "Core/Platform/ViewportClient.h"
+
 
 namespace LTSE::Graphics
 {
@@ -13,8 +14,8 @@ namespace LTSE::Graphics
     class GraphicContext
     {
       public:
-        Ref<Internal::VkContext> mContext    = nullptr;
-        Ref<ViewportClient> m_ViewportClient = nullptr;
+        Ref<Internal::VkContext> mContext         = nullptr;
+        Ref<ViewportClient>      m_ViewportClient = nullptr;
 
       public:
         GraphicContext() = default;
@@ -24,7 +25,8 @@ namespace LTSE::Graphics
 
         Ref<ViewportClient> GetViewportClient() { return m_ViewportClient; };
 
-        Ref<Internal::sVkDescriptorSetObject> AllocateDescriptors( Ref<Internal::sVkDescriptorSetLayoutObject> aLayout, uint32_t aDescriptorCount = 0 );
+        Ref<Internal::sVkDescriptorSetObject> AllocateDescriptors(
+            Ref<Internal::sVkDescriptorSetLayoutObject> aLayout, uint32_t aDescriptorCount = 0 );
 
         Ref<Internal::sVkCommandBufferObject> BeginSingleTimeCommands();
 

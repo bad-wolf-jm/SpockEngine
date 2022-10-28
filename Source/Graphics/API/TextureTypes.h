@@ -62,13 +62,17 @@ namespace LTSE::Core
      */
     struct sTextureSamplingInfo
     {
-        eSamplerFilter mMinification      = eSamplerFilter::LINEAR;            //!< Specify the filter to use when the texture is being scaled up from its actual size
-        eSamplerFilter mMagnification     = eSamplerFilter::LINEAR;            //!< Specify the filter to use when the texture is being scaled down from its actual size
-        eSamplerMipmap mMip               = eSamplerMipmap::LINEAR;            //!< Specify the filter to use when interpolating between two elements of the mip chain
-        eSamplerWrapping mWrapping        = eSamplerWrapping::CLAMP_TO_BORDER; //!< Specify the behaviour of the sampler when sampling out of bounds
-        std::array<float, 2> mScaling     = { 1.0f, 1.0f };                    //!< Specified the scaling to be used.
-        std::array<float, 2> mOffset      = { 0.0f, 0.0f };                    //!< Specified the offset to be used.
-        std::array<float, 4> mBorderColor = { 0.0f, 0.0f, 0.0f, 0.0f };        //!< Specify the value to return when sampling out of bounds
+        eSamplerFilter mMinification =
+            eSamplerFilter::LINEAR; //!< Specify the filter to use when the texture is being scaled up from its actual size
+        eSamplerFilter mMagnification =
+            eSamplerFilter::LINEAR; //!< Specify the filter to use when the texture is being scaled down from its actual size
+        eSamplerMipmap mMip =
+            eSamplerMipmap::LINEAR; //!< Specify the filter to use when interpolating between two elements of the mip chain
+        eSamplerWrapping mWrapping =
+            eSamplerWrapping::CLAMP_TO_BORDER;              //!< Specify the behaviour of the sampler when sampling out of bounds
+        std::array<float, 2> mScaling     = { 1.0f, 1.0f }; //!< Specified the scaling to be used.
+        std::array<float, 2> mOffset      = { 0.0f, 0.0f }; //!< Specified the offset to be used.
+        std::array<float, 4> mBorderColor = { 0.0f, 0.0f, 0.0f, 0.0f }; //!< Specify the value to return when sampling out of bounds
 
         sTextureSamplingInfo()                               = default;
         sTextureSamplingInfo( const sTextureSamplingInfo & ) = default;
@@ -88,7 +92,7 @@ namespace LTSE::Core
         eSwizzleComponent mB = eSwizzleComponent::IDENTITY;
         eSwizzleComponent mA = eSwizzleComponent::IDENTITY;
 
-        sSwizzleTransform()                      = default;
+        sSwizzleTransform()                            = default;
         sSwizzleTransform( sSwizzleTransform const & ) = default;
     };
 
@@ -108,13 +112,14 @@ namespace LTSE::Core
      */
     struct sImageData
     {
-        eColorFormat mFormat = eColorFormat::UNDEFINED; //!< Image format
-        size_t mWidth        = 0;                       //!< Width of the image, in pixels
-        size_t mHeight       = 0;                       //!< Height of the image, in pixels
-        size_t mByteSize     = 0;                       //!< Size of the pixel data pointer, in bytes
-        uint8_t *mPixelData  = nullptr;                 //!< Raw pixel data
+        eColorFormat mFormat    = eColorFormat::UNDEFINED; //!< Image format
+        size_t       mWidth     = 0;                       //!< Width of the image, in pixels
+        size_t       mHeight    = 0;                       //!< Height of the image, in pixels
+        size_t       mByteSize  = 0;                       //!< Size of the pixel data pointer, in bytes
+        uint8_t     *mPixelData = nullptr;                 //!< Raw pixel data
 
-        template <typename PixelType> static sImageData Create( eColorFormat aFormat, size_t aWidth, size_t aHeight, uint8_t *aPixelData )
+        template <typename PixelType>
+        static sImageData Create( eColorFormat aFormat, size_t aWidth, size_t aHeight, uint8_t *aPixelData )
         {
             sImageData o_ImageData{};
             o_ImageData.mWidth     = aWidth;

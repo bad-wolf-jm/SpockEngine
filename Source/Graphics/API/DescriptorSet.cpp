@@ -16,7 +16,7 @@ namespace LTSE::Graphics
     void DescriptorSet::Write( Ref<Buffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding )
     {
         Internal::sVkDescriptorSetObject::sBufferBindInfo lBufferBindInfo{};
-        lBufferBindInfo.mBuffer       = aBuffer->mVkObject;
+        lBufferBindInfo.mBuffer        = aBuffer->mVkObject;
         lBufferBindInfo.mType          = aBuffer->mType;
         lBufferBindInfo.mDynamicOffset = false;
         lBufferBindInfo.mBinding       = aBinding;
@@ -28,8 +28,7 @@ namespace LTSE::Graphics
 
     void DescriptorSet::Write( std::vector<Ref<Texture2D>> aWriteOperations, uint32_t aBinding )
     {
-        if( aWriteOperations.size() == 0 )
-            return;
+        if( aWriteOperations.size() == 0 ) return;
 
         Internal::sVkDescriptorSetObject::sImageBindInfo lImages{};
 
@@ -53,17 +52,13 @@ namespace LTSE::Graphics
         lNewBinding.descriptorType               = (VkDescriptorType)Type;
         lNewBinding.pImmutableSamplers           = nullptr;
 
-        if( mShaderStages & Internal::eShaderStageTypeFlags::VERTEX )
-            lNewBinding.stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
+        if( mShaderStages & Internal::eShaderStageTypeFlags::VERTEX ) lNewBinding.stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
 
-        if( mShaderStages & Internal::eShaderStageTypeFlags::COMPUTE )
-            lNewBinding.stageFlags |= VK_SHADER_STAGE_COMPUTE_BIT;
+        if( mShaderStages & Internal::eShaderStageTypeFlags::COMPUTE ) lNewBinding.stageFlags |= VK_SHADER_STAGE_COMPUTE_BIT;
 
-        if( mShaderStages & Internal::eShaderStageTypeFlags::GEOMETRY )
-            lNewBinding.stageFlags |= VK_SHADER_STAGE_GEOMETRY_BIT;
+        if( mShaderStages & Internal::eShaderStageTypeFlags::GEOMETRY ) lNewBinding.stageFlags |= VK_SHADER_STAGE_GEOMETRY_BIT;
 
-        if( mShaderStages & Internal::eShaderStageTypeFlags::FRAGMENT )
-            lNewBinding.stageFlags |= VK_SHADER_STAGE_FRAGMENT_BIT;
+        if( mShaderStages & Internal::eShaderStageTypeFlags::FRAGMENT ) lNewBinding.stageFlags |= VK_SHADER_STAGE_FRAGMENT_BIT;
 
         if( mShaderStages & Internal::eShaderStageTypeFlags::TESSELATION_CONTROL )
             lNewBinding.stageFlags |= VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
@@ -74,21 +69,17 @@ namespace LTSE::Graphics
         return lNewBinding;
     }
 
-    DescriptorSetLayout::DescriptorSetLayout( GraphicContext &aGraphicContext, DescriptorSetLayoutCreateInfo &aCreateInfo, bool aUnbounded )
+    DescriptorSetLayout::DescriptorSetLayout(
+        GraphicContext &aGraphicContext, DescriptorSetLayoutCreateInfo &aCreateInfo, bool aUnbounded )
         : mGraphicContext{ aGraphicContext }
         , Spec( aCreateInfo )
     {
         std::vector<VkDescriptorSetLayoutBinding> lBindings( aCreateInfo.Bindings.size() );
 
         for( uint32_t i = 0; i < aCreateInfo.Bindings.size(); i++ )
-        {
             lBindings[i] = static_cast<VkDescriptorSetLayoutBinding>( aCreateInfo.Bindings[i] );
-        }
 
-        if( aUnbounded )
-        {
-            lBindings[lBindings.size() - 1].descriptorCount = 1024;
-        }
+        if( aUnbounded ) lBindings[lBindings.size() - 1].descriptorCount = 1024;
 
         mDescriptorSetLayoutObject = New<Internal::sVkDescriptorSetLayoutObject>( mGraphicContext.mContext, lBindings, aUnbounded );
     }

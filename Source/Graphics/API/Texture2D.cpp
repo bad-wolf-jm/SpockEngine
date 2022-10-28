@@ -2,8 +2,9 @@
 #include "Buffer.h"
 #include "Core/Core.h"
 #include "Core/Memory.h"
-#include "Graphics/Implementation/Vulkan/VkCoreMacros.h"
 #include "Graphics/Implementation/Vulkan/VkColorFormat.h"
+#include "Graphics/Implementation/Vulkan/VkCoreMacros.h"
+
 
 #include "Core/Logging.h"
 
