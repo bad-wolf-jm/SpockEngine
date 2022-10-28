@@ -15,12 +15,11 @@ namespace LTSE::Core
 {
     struct ScriptEngineData
     {
-        MonoDomain *mRootDomain = nullptr;
-        MonoDomain *mAppDomain  = nullptr;
-
+        MonoDomain   *mRootDomain        = nullptr;
         MonoAssembly *mCoreAssembly      = nullptr;
         MonoImage    *mCoreAssemblyImage = nullptr;
 
+        MonoDomain   *mAppDomain        = nullptr;
         MonoAssembly *mAppAssembly      = nullptr;
         MonoImage    *mAppAssemblyImage = nullptr;
 
@@ -63,15 +62,12 @@ namespace LTSE::Core
             uint32_t lFileSize = 0;
             char    *lFileData = ReadBytes( lAssemblyPath, &lFileSize );
 
-            // NOTE: We can't use this lImage for anything other than loading the aAssembly because this lImage doesn't have a
-            // reference to the aAssembly
             MonoImageOpenStatus lStatus;
             MonoImage          *lImage = mono_image_open_from_data_full( lFileData, lFileSize, 1, &lStatus, 0 );
 
             if( lStatus != MONO_IMAGE_OK )
             {
                 const char *lErrorMessage = mono_image_strerror( lStatus );
-                // Log some error message using the lErrorMessage data
                 return nullptr;
             }
 
@@ -79,7 +75,6 @@ namespace LTSE::Core
             MonoAssembly *lAssembly   = mono_assembly_load_from_full( lImage, lPathString.c_str(), &lStatus, 0 );
             mono_image_close( lImage );
 
-            // Don't forget to free the file data
             delete[] lFileData;
 
             return lAssembly;
@@ -302,8 +297,8 @@ namespace LTSE::Core
             // You must pass a gpointer that points to zero and is treated as an opaque handle
             // to iterate over all of the elements. When no more values are available, the return value is NULL.
 
-            int lFieldCount = mono_class_num_fields( lMonoClass );
-            void *lIterator = nullptr;
+            int   lFieldCount = mono_class_num_fields( lMonoClass );
+            void *lIterator   = nullptr;
             while( MonoClassField *lField = mono_class_get_fields( lMonoClass, &lIterator ) )
             {
                 const char *lFieldName = mono_field_get_name( lField );
