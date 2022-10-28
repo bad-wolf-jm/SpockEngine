@@ -9,6 +9,8 @@
 
 #include <unordered_map>
 
+#include <FileWatch.hpp>
+
 namespace LTSE::Core
 {
     struct ScriptEngineData
@@ -25,19 +27,9 @@ namespace LTSE::Core
         std::filesystem::path mCoreAssemblyFilepath;
         std::filesystem::path mAppAssemblyFilepath;
 
-        // ScriptClass EntityClass;
-
-        // std::unordered_map<std::string, Ref<ScriptClass>> EntityClasses;
-        // std::unordered_map<UUID, Ref<ScriptInstance>>     EntityInstances;
-        // std::unordered_map<UUID, ScriptFieldMap>          EntityScriptFields;
-
-        // std::unique_ptr<filewatch::FileWatch<std::string>> mAppAssemblyFileWatcher;
+        std::unique_ptr<filewatch::FileWatch<std::string>> mAppAssemblyFileWatcher;
 
         bool mAssemblyReloadPending = false;
-
-        // Runtime
-
-        // Scene *SceneContext = nullptr;
     };
 
     static ScriptEngineData *sData = nullptr;
@@ -46,51 +38,51 @@ namespace LTSE::Core
     {
 
         // TODO: move to FileSystem class
-        static char *ReadBytes( const std::filesystem::path &aFilepath, uint32_t *outSize )
+        static char *ReadBytes( const std::filesystem::path &aFilepath, uint32_t *aOutSize )
         {
-            std::ifstream stream( aFilepath, std::ios::binary | std::ios::ate );
+            std::ifstream lStream( aFilepath, std::ios::binary | std::ios::ate );
 
-            if( !stream ) return nullptr;
+            if( !lStream ) return nullptr;
 
-            std::streampos end = stream.tellg();
-            stream.seekg( 0, std::ios::beg );
-            uint64_t size = end - stream.tellg();
+            std::streampos end = lStream.tellg();
+            lStream.seekg( 0, std::ios::beg );
+            uint64_t size = end - lStream.tellg();
 
             if( size == 0 ) return nullptr;
 
             char *buffer = new char[size];
-            stream.read( (char *)buffer, size );
-            stream.close();
+            lStream.read( (char *)buffer, size );
+            lStream.close();
 
-            *outSize = (uint32_t)size;
+            *aOutSize = (uint32_t)size;
             return buffer;
         }
 
-        static MonoAssembly *LoadMonoAssembly( const std::filesystem::path &assemblyPath )
+        static MonoAssembly *LoadMonoAssembly( const std::filesystem::path &lAssemblyPath )
         {
-            uint32_t fileSize = 0;
-            char    *fileData = ReadBytes( assemblyPath, &fileSize );
+            uint32_t lFileSize = 0;
+            char    *lFileData = ReadBytes( lAssemblyPath, &lFileSize );
 
             // NOTE: We can't use this lImage for anything other than loading the aAssembly because this lImage doesn't have a
             // reference to the aAssembly
-            MonoImageOpenStatus status;
-            MonoImage          *lImage = mono_image_open_from_data_full( fileData, fileSize, 1, &status, 0 );
+            MonoImageOpenStatus lStatus;
+            MonoImage          *lImage = mono_image_open_from_data_full( lFileData, lFileSize, 1, &lStatus, 0 );
 
-            if( status != MONO_IMAGE_OK )
+            if( lStatus != MONO_IMAGE_OK )
             {
-                const char *errorMessage = mono_image_strerror( status );
-                // Log some error message using the errorMessage data
+                const char *lErrorMessage = mono_image_strerror( lStatus );
+                // Log some error message using the lErrorMessage data
                 return nullptr;
             }
 
-            std::string   pathString = assemblyPath.string();
-            MonoAssembly *aAssembly  = mono_assembly_load_from_full( lImage, pathString.c_str(), &status, 0 );
+            std::string   lPathString = lAssemblyPath.string();
+            MonoAssembly *lAssembly   = mono_assembly_load_from_full( lImage, lPathString.c_str(), &lStatus, 0 );
             mono_image_close( lImage );
 
             // Don't forget to free the file data
-            delete[] fileData;
+            delete[] lFileData;
 
-            return aAssembly;
+            return lAssembly;
         }
 
         void PrintAssemblyTypes( MonoAssembly *aAssembly )
@@ -101,16 +93,16 @@ namespace LTSE::Core
 
             for( int32_t i = 0; i < lTypesCount; i++ )
             {
-                uint32_t cols[MONO_TYPEDEF_SIZE];
-                mono_metadata_decode_row( lTypeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE );
+                uint32_t lCols[MONO_TYPEDEF_SIZE];
+                mono_metadata_decode_row( lTypeDefinitionsTable, i, lCols, MONO_TYPEDEF_SIZE );
 
-                const char *lNameSpace = mono_metadata_string_heap( lImage, cols[MONO_TYPEDEF_NAMESPACE] );
-                const char *lName      = mono_metadata_string_heap( lImage, cols[MONO_TYPEDEF_NAME] );
+                const char *lNameSpace = mono_metadata_string_heap( lImage, lCols[MONO_TYPEDEF_NAMESPACE] );
+                const char *lName      = mono_metadata_string_heap( lImage, lCols[MONO_TYPEDEF_NAME] );
                 LTSE::Logging::Info( "{}.{}", lNameSpace, lName );
             }
         }
 
-        enum class ScriptFieldType
+        enum class eScriptFieldType
         {
             None = 0,
             Float,
@@ -127,30 +119,26 @@ namespace LTSE::Core
             ULong
         };
 
-        struct ScriptField
+        struct sScriptField
         {
-            ScriptFieldType mType;
-            std::string     mName;
-
-            MonoClassField *mClassField;
+            eScriptFieldType mType;
+            std::string      mName;
+            MonoClassField  *mClassField;
         };
 
-        static std::unordered_map<std::string, ScriptFieldType> s_ScriptFieldTypeMap = { { "System.Single", ScriptFieldType::Float },
-            { "System.Double", ScriptFieldType::Double }, { "System.Boolean", ScriptFieldType::Bool },
-            { "System.Char", ScriptFieldType::Char }, { "System.Int16", ScriptFieldType::Short },
-            { "System.Int32", ScriptFieldType::Int }, { "System.Int64", ScriptFieldType::Long },
-            { "System.Byte", ScriptFieldType::Byte }, { "System.UInt16", ScriptFieldType::UShort },
-            { "System.UInt32", ScriptFieldType::UInt }, { "System.UInt64", ScriptFieldType::ULong } };
+        static std::unordered_map<std::string, eScriptFieldType> sScriptFieldTypeMap = { { "System.Single", eScriptFieldType::Float },
+            { "System.Double", eScriptFieldType::Double }, { "System.Boolean", eScriptFieldType::Bool },
+            { "System.Char", eScriptFieldType::Char }, { "System.Int16", eScriptFieldType::Short },
+            { "System.Int32", eScriptFieldType::Int }, { "System.Int64", eScriptFieldType::Long },
+            { "System.Byte", eScriptFieldType::Byte }, { "System.UInt16", eScriptFieldType::UShort },
+            { "System.UInt32", eScriptFieldType::UInt }, { "System.UInt64", eScriptFieldType::ULong } };
 
-        ScriptFieldType MonoTypeToScriptFieldType( MonoType *monoType )
+        eScriptFieldType MonoTypeToScriptFieldType( MonoType *aMonoType )
         {
-            std::string typeName = mono_type_get_name( monoType );
+            std::string typeName = mono_type_get_name( aMonoType );
 
-            auto it = s_ScriptFieldTypeMap.find( typeName );
-            if( it == s_ScriptFieldTypeMap.end() )
-            {
-                return ScriptFieldType::None;
-            }
+            auto it = sScriptFieldTypeMap.find( typeName );
+            if( it == sScriptFieldTypeMap.end() ) return eScriptFieldType::None;
 
             return it->second;
         }
@@ -161,53 +149,53 @@ namespace LTSE::Core
     {
       public:
         ScriptClass() = default;
-        ScriptClass( const std::string &classNamespace, const std::string &className, bool isCore = false );
+        ScriptClass( const std::string &aClassNamespace, const std::string &aClassName, bool aIsCore = false );
 
         MonoObject *Instantiate();
-        MonoMethod *GetMethod( const std::string &name, int parameterCount );
-        MonoObject *InvokeMethod( MonoObject *instance, MonoMethod *method, void **params = nullptr );
+        MonoMethod *GetMethod( const std::string &aName, int aParameterCount );
+        MonoObject *InvokeMethod( MonoObject *aInstance, MonoMethod *aMethod, void **aParameters = nullptr );
 
-        const std::map<std::string, Utils::ScriptField> &GetFields() const { return m_Fields; }
+        const std::map<std::string, Utils::sScriptField> &GetFields() const { return mFields; }
 
       private:
-        std::string m_ClassNamespace;
-        std::string m_ClassName;
+        std::string mClassNamespace;
+        std::string mClassName;
 
-        std::map<std::string, Utils::ScriptField> m_Fields;
+        std::map<std::string, Utils::sScriptField> mFields;
 
-        MonoClass *m_MonoClass = nullptr;
+        MonoClass *mMonoClass = nullptr;
 
         friend class ScriptManager;
     };
 
-    MonoObject *ScriptManager::InstantiateClass( MonoClass *monoClass )
+    MonoObject *ScriptManager::InstantiateClass( MonoClass *aMonoClass )
     {
-        MonoObject *instance = mono_object_new( sData->mAppDomain, monoClass );
-        mono_runtime_object_init( instance );
-        return instance;
+        MonoObject *aInstance = mono_object_new( sData->mAppDomain, aMonoClass );
+        mono_runtime_object_init( aInstance );
+        return aInstance;
     }
 
-    ScriptClass::ScriptClass( const std::string &classNamespace, const std::string &className, bool isCore )
-        : m_ClassNamespace( classNamespace )
-        , m_ClassName( className )
+    ScriptClass::ScriptClass( const std::string &aClassNamespace, const std::string &aClassName, bool aIsCore )
+        : mClassNamespace( aClassNamespace )
+        , mClassName( aClassName )
     {
-        m_MonoClass = mono_class_from_name(
-            isCore ? sData->mCoreAssemblyImage : sData->mAppAssemblyImage, classNamespace.c_str(), className.c_str() );
+        mMonoClass = mono_class_from_name(
+            aIsCore ? sData->mCoreAssemblyImage : sData->mAppAssemblyImage, aClassNamespace.c_str(), aClassName.c_str() );
     }
 
-    MonoObject *ScriptClass::Instantiate() { return ScriptManager::InstantiateClass( m_MonoClass ); }
+    MonoObject *ScriptClass::Instantiate() { return ScriptManager::InstantiateClass( mMonoClass ); }
 
-    MonoMethod *ScriptClass::GetMethod( const std::string &name, int parameterCount )
+    MonoMethod *ScriptClass::GetMethod( const std::string &aName, int aParameterCount )
     {
-        return mono_class_get_method_from_name( m_MonoClass, name.c_str(), parameterCount );
+        return mono_class_get_method_from_name( mMonoClass, aName.c_str(), aParameterCount );
     }
 
-    MonoObject *ScriptClass::InvokeMethod( MonoObject *instance, MonoMethod *method, void **params )
+    MonoObject *ScriptClass::InvokeMethod( MonoObject *aInstance, MonoMethod *aMethod, void **aParameters )
     {
-        return mono_runtime_invoke( method, instance, params, nullptr );
+        return mono_runtime_invoke( aMethod, aInstance, aParameters, nullptr );
     }
 
-    void ScriptManager::LoadAssembly( const std::filesystem::path &aFilepath )
+    void ScriptManager::LoadCoreAssembly( const std::filesystem::path &aFilepath )
     {
         sData->mAppDomain = mono_domain_create_appdomain( "SE_Runtime", nullptr );
         mono_domain_set( sData->mAppDomain, true );
@@ -219,49 +207,43 @@ namespace LTSE::Core
         Utils::PrintAssemblyTypes( sData->mCoreAssembly );
     }
 
+    static void OnAppAssemblyFileSystemEvent( const std::string &path, const filewatch::Event change_type )
+    {
+        if( !sData->mAssemblyReloadPending && change_type == filewatch::Event::modified )
+        {
+            sData->mAssemblyReloadPending = true;
+
+            // Application::Get().SubmitToMainThread(
+            //     []()
+            //     {
+            //         sData->mAppAssemblyFileWatcher.reset();
+            //         ScriptEngine::ReloadAssembly();
+            //     } );
+        }
+    }
+
+    void ScriptManager::LoadAppAssembly( const std::filesystem::path &aFilepath )
+    {
+        // Move this maybe
+        sData->mAppAssemblyFilepath = aFilepath;
+        sData->mAppAssembly         = Utils::LoadMonoAssembly( aFilepath );
+        sData->mAppAssemblyImage    = mono_assembly_get_image( sData->mAppAssembly );
+        Utils::PrintAssemblyTypes( sData->mAppAssembly );
+
+        sData->mAppAssemblyFileWatcher =
+            std::make_unique<filewatch::FileWatch<std::string>>( aFilepath.string(), OnAppAssemblyFileSystemEvent );
+        sData->mAssemblyReloadPending = false;
+    }
+
     void ScriptManager::Initialize()
     {
         sData = new ScriptEngineData();
 
         InitMono();
-        // ScriptGlue::RegisterFunctions();
 
-        LoadAssembly( "Source\\Mono\\ScriptCore\\Build\\Debug\\SE_Core.dll" );
+        LoadCoreAssembly( "Source\\Mono\\ScriptCore\\Build\\Debug\\SE_Core.dll" );
         // LoadAppAssembly("SandboxProject/Assets/Scripts/Binaries/Sandbox.dll");
         LoadAssemblyClasses();
-
-        // ScriptGlue::RegisterComponents();
-
-        // Retrieve and instantiate class
-        // sData->EntityClass = ScriptClass("Hazel", "Entity", true);
-        // #if 0
-
-        // MonoObject *instance = sData->EntityClass.Instantiate();
-
-        // // Call method
-        // MonoMethod *printMessageFunc = sData->EntityClass.GetMethod( "PrintMessage", 0 );
-        // sData->EntityClass.InvokeMethod( instance, printMessageFunc );
-
-        // // Call method with param
-        // MonoMethod *printIntFunc = sData->EntityClass.GetMethod( "PrintInt", 1 );
-
-        // int   value = 5;
-        // void *param = &value;
-
-        // sData->EntityClass.InvokeMethod( instance, printIntFunc, &param );
-
-        // MonoMethod *printIntsFunc = sData->EntityClass.GetMethod( "PrintInts", 2 );
-        // int         value2        = 508;
-        // void       *params[2]     = { &value, &value2 };
-        // sData->EntityClass.InvokeMethod( instance, printIntsFunc, params );
-
-        // MonoString *monoString             = mono_string_new( sData->mAppDomain, "Hello World from C++!" );
-        // MonoMethod *printCustomMessageFunc = sData->EntityClass.GetMethod( "PrintCustomMessage", 1 );
-        // void       *stringParam            = monoString;
-        // sData->EntityClass.InvokeMethod( instance, printCustomMessageFunc, &stringParam );
-
-        // HZ_CORE_ASSERT(false);
-        // #endif
     }
 
     void ScriptManager::Shutdown()
@@ -293,54 +275,46 @@ namespace LTSE::Core
 
     void ScriptManager::LoadAssemblyClasses()
     {
-        // sData->EntityClasses.clear();
         if( !sData->mAppAssemblyImage ) return;
 
-        const MonoTableInfo *typeDefinitionsTable = mono_image_get_table_info( sData->mAppAssemblyImage, MONO_TABLE_TYPEDEF );
-        int32_t              numTypes             = mono_table_info_get_rows( typeDefinitionsTable );
-        // MonoClass           *entityClass          = mono_class_from_name( sData->mCoreAssemblyImage, "Hazel", "Entity" );
+        const MonoTableInfo *lTypeDefinitionsTable = mono_image_get_table_info( sData->mAppAssemblyImage, MONO_TABLE_TYPEDEF );
+        int32_t              lTypesCount           = mono_table_info_get_rows( lTypeDefinitionsTable );
 
-        for( int32_t i = 0; i < numTypes; i++ )
+        for( int32_t i = 0; i < lTypesCount; i++ )
         {
-            uint32_t cols[MONO_TYPEDEF_SIZE];
-            mono_metadata_decode_row( typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE );
+            uint32_t lCols[MONO_TYPEDEF_SIZE];
+            mono_metadata_decode_row( lTypeDefinitionsTable, i, lCols, MONO_TYPEDEF_SIZE );
 
-            const char *nameSpace = mono_metadata_string_heap( sData->mAppAssemblyImage, cols[MONO_TYPEDEF_NAMESPACE] );
-            const char *className = mono_metadata_string_heap( sData->mAppAssemblyImage, cols[MONO_TYPEDEF_NAME] );
-            std::string fullName;
-            if( strlen( nameSpace ) != 0 )
-                fullName = fmt::format( "{}.{}", nameSpace, className );
+            const char *lNameSpace = mono_metadata_string_heap( sData->mAppAssemblyImage, lCols[MONO_TYPEDEF_NAMESPACE] );
+            const char *lClassName = mono_metadata_string_heap( sData->mAppAssemblyImage, lCols[MONO_TYPEDEF_NAME] );
+
+            std::string lFullName;
+            if( strlen( lNameSpace ) != 0 )
+                lFullName = fmt::format( "{}.{}", lNameSpace, lClassName );
             else
-                fullName = className;
+                lFullName = lClassName;
 
-            MonoClass *monoClass = mono_class_from_name( sData->mAppAssemblyImage, nameSpace, className );
+            MonoClass *lMonoClass = mono_class_from_name( sData->mAppAssemblyImage, lNameSpace, lClassName );
 
-            // if( monoClass == entityClass ) continue;
-
-            // bool isEntity = mono_class_is_subclass_of( monoClass, entityClass, false );
-            // if( !isEntity ) continue;
-
-            Ref<ScriptClass> scriptClass = New<ScriptClass>( nameSpace, className );
-            // sData->EntityClasses[fullName] = scriptClass;
+            Ref<ScriptClass> lScriptClass = New<ScriptClass>( lNameSpace, lClassName );
 
             // This routine is an iterator routine for retrieving the fields in a class.
             // You must pass a gpointer that points to zero and is treated as an opaque handle
             // to iterate over all of the elements. When no more values are available, the return value is NULL.
 
-            int fieldCount = mono_class_num_fields( monoClass );
-            // HZ_CORE_WARN( "{} has {} fields:", className, fieldCount );
-            void *iterator = nullptr;
-            while( MonoClassField *field = mono_class_get_fields( monoClass, &iterator ) )
+            int lFieldCount = mono_class_num_fields( lMonoClass );
+            void *lIterator = nullptr;
+            while( MonoClassField *lField = mono_class_get_fields( lMonoClass, &lIterator ) )
             {
-                const char *fieldName = mono_field_get_name( field );
-                uint32_t    flags     = mono_field_get_flags( field );
-                if( flags & FIELD_ATTRIBUTE_PUBLIC )
-                {
-                    MonoType              *type      = mono_field_get_type( field );
-                    Utils::ScriptFieldType fieldType = Utils::MonoTypeToScriptFieldType( type );
-                    // HZ_CORE_WARN( "  {} ({})", fieldName, Utils::ScriptFieldTypeToString( fieldType ) );
+                const char *lFieldName = mono_field_get_name( lField );
+                uint32_t    lFlags     = mono_field_get_flags( lField );
 
-                    scriptClass->m_Fields[fieldName] = { fieldType, fieldName, field };
+                if( lFlags & FIELD_ATTRIBUTE_PUBLIC )
+                {
+                    MonoType               *lMonoFieldType = mono_field_get_type( lField );
+                    Utils::eScriptFieldType lFieldType     = Utils::MonoTypeToScriptFieldType( lMonoFieldType );
+
+                    lScriptClass->mFields[lFieldName] = { lFieldType, lFieldName, lField };
                 }
             }
         }
@@ -350,28 +324,12 @@ namespace LTSE::Core
         // mono_field_get_value()
     }
 
-    // static void OnAppAssemblyFileSystemEvent( const std::string &path, const filewatch::Event change_type )
-    // {
-    //     if( !sData->mAssemblyReloadPending && change_type == filewatch::Event::modified )
-    //     {
-    //         sData->mAssemblyReloadPending = true;
-
-    //         // Application::Get().SubmitToMainThread(
-    //         //     []()
-    //         //     {
-    //         //         sData->mAppAssemblyFileWatcher.reset();
-    //         //         ScriptEngine::ReloadAssembly();
-    //         //     } );
-    //     }
-    // }
-
     void ScriptManager::ReloadAssembly()
     {
         mono_domain_set( mono_get_root_domain(), false );
-
         mono_domain_unload( sData->mAppDomain );
 
-        LoadAssembly( sData->mCoreAssemblyFilepath );
+        LoadCoreAssembly( sData->mCoreAssemblyFilepath );
         // LoadAppAssembly( sData->mAppAssemblyFilepath );
         LoadAssemblyClasses();
 

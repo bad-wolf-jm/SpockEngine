@@ -25,8 +25,8 @@ namespace LTSE::Core
         static void Initialize();
         static void Shutdown();
 
-        static void LoadAssembly( const std::filesystem::path &filepath );
-        // static void LoadAppAssembly( const std::filesystem::path &filepath );
+        static void LoadCoreAssembly( const std::filesystem::path &aFilepath );
+        static void LoadAppAssembly( const std::filesystem::path &aFilepath );
 
         static void ReloadAssembly();
 
@@ -34,7 +34,7 @@ namespace LTSE::Core
         static void InitMono();
         static void ShutdownMono();
 
-        static MonoObject *InstantiateClass( MonoClass *monoClass );
+        static MonoObject *InstantiateClass( MonoClass *aMonoClass );
         static void        LoadAssemblyClasses();
 
         friend class ScriptClass;
