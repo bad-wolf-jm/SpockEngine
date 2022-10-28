@@ -15,7 +15,7 @@
 #include "Core/Logging.h"
 #include "Core/Memory.h"
 #include "Graphics/API/ColorFormat.h"
-#include "Core/Textures/TextureTypes.h"
+#include "Graphics/API/TextureTypes.h"
 
 #include "Core/Math/Types.h"
 

@@ -2,7 +2,7 @@
 #include "tiny_gltf.h"
 #include <filesystem>
 
-#include "Core/Textures/TextureTypes.h"
+#include "Graphics/API/TextureTypes.h"
 #include "ImporterData.h"
 
 namespace fs = std::filesystem;

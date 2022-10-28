@@ -6,7 +6,7 @@
 
 #include "ColorFormat.h"
 #include "Core/Memory.h"
-#include "Core/Textures/TextureData.h"
+#include "Graphics/API/TextureData.h"
 
 #include <gli/gli.hpp>
 

@@ -14,7 +14,7 @@
 #include "Core/Types.h"
 
 #include "Graphics/API/ColorFormat.h"
-#include "Core/Textures/TextureTypes.h"
+#include "Graphics/API/TextureTypes.h"
 
 #include "yaml-cpp/yaml.h"
 

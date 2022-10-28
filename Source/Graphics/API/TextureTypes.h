@@ -37,7 +37,7 @@ namespace LTSE::Core
     enum class eSamplerWrapping : uint32_t
     {
         REPEAT                 = 0, /**!< specifies that the repeat wrap mode will be used. */
-        MIRRORED_REPEAT        = 1, /**!< specifies that the mirrored repeat  wrap mode will be used. */
+        MIRRORED_REPEAT        = 1, /**!< specifies that the mirrored repeat wrap mode will be used. */
         CLAMP_TO_EDGE          = 2, /**!< specifies that the clamp to edge wrap mode will be used. */
         CLAMP_TO_BORDER        = 3, /**!< specifies that the clamp to border wrap mode will be used. */
         MIRROR_CLAMP_TO_BORDER = 4  /**!< specifies that the mirror clamp to edge wrap mode will be used.  */

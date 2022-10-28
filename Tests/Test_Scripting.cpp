@@ -3,7 +3,7 @@
 #include "TestUtils.h"
 
 #include "Core/Math/Types.h"
-#include "Core/Textures/TextureData.h"
+#include "Graphics/API/TextureData.h"
 
 #include "Core/Cuda/MultiTensor.h"
 #include "Core/Cuda/Texture2D.h"

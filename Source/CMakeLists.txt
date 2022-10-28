@@ -9,7 +9,6 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Resource.cpp
     Core/Logging.cpp
 
-    Core/Textures/TextureData.cpp
     
     Scripting/ScriptingEngine.cpp
     Scripting/Core/Texture.cpp
@@ -47,6 +46,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Implementation/Vulkan/VkImage.cpp
     Graphics/Implementation/Vulkan/VkCommand.cpp
     
+    Graphics/API/TextureData.cpp
     Graphics/API/Buffer.cpp
     Graphics/API/Texture2D.cpp
     Graphics/API/TextureCubeMap.cpp

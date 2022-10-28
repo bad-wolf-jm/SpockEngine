@@ -6,7 +6,7 @@
 #include <vulkan/vulkan.h>
 
 #include "Core/Memory.h"
-#include "Core/Textures/TextureData.h"
+#include "Graphics/API/TextureData.h"
 #include "Core/Types.h"
 
 #include "ColorFormat.h"
