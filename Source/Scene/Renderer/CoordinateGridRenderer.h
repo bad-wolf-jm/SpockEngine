@@ -2,11 +2,11 @@
 
 #include "Core/Memory.h"
 
-#include "Core/GraphicContext//Buffer.h"
-#include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//GraphicContext.h"
-#include "Core/GraphicContext//GraphicsPipeline.h"
-#include "Core/GraphicContext//RenderContext.h"
+#include "Graphics/API/Buffer.h"
+#include "Graphics/API/DescriptorSet.h"
+#include "Graphics/API/GraphicContext.h"
+#include "Graphics/API/GraphicsPipeline.h"
+#include "Graphics/API/RenderContext.h"
 
 #include "Scene/VertexData.h"
 

@@ -16,7 +16,7 @@
 #include "Core/Cuda/CudaAssert.h"
 #include "Core/Cuda/CudaBuffer.h"
 
-#include "Core/GraphicContext//Buffer.h"
+#include "Graphics/API/Buffer.h"
 
 namespace LTSE::Cuda
 {

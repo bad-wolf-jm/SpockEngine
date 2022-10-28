@@ -7,8 +7,8 @@
 #include "imgui_internal.h"
 #include "implot.h"
 
-#include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//UI/FontAwesome.h"
+#include "Graphics/API/DescriptorSet.h"
+#include "Graphics/API/UI/FontAwesome.h"
 #include "Core/Memory.h"
 #include "Core/Types.h"
 

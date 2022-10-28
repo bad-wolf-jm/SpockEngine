@@ -7,7 +7,7 @@
 #include "Core/Types.h"
 #include "UI.h"
 
-#include "Core/GraphicContext//Texture2D.h"
+#include "Graphics/API/Texture2D.h"
 
 namespace LTSE::Core::UI
 {

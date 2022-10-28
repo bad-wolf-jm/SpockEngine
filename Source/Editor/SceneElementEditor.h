@@ -4,7 +4,7 @@
 #include "Core/EntityRegistry/Registry.h"
 #include "Core/Memory.h"
 
-#include "Core/GraphicContext//GraphicContext.h"
+#include "Graphics/API/GraphicContext.h"
 #include "Scene/Scene.h"
 
 #include "Core/Platform/EngineLoop.h"

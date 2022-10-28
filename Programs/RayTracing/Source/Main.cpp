@@ -1,10 +1,10 @@
 
 #include "Core/Textures/TextureData.h"
 
-// #include "Core/GraphicContext//OffscreenRenderTarget.h"
+// #include "Graphics/API/OffscreenRenderTarget.h"
 
 #include "Core/Platform/EngineLoop.h"
-#include "Core/GraphicContext//UI/UIContext.h"
+#include "Graphics/API/UI/UIContext.h"
 
 // #include "SensorModelDev/Base/Components.h"
 // #include "SensorModelDev/Base/KernelComponents.h"
@@ -24,7 +24,7 @@
 #include "Scene/Renderer/SceneRenderer.h"
 #include "Scene/Renderer/VisualHelperLineRenderer.h"
 
-#include "Core/GraphicContext//Buffer.h"
+#include "Graphics/API/Buffer.h"
 #include "Scene/ParticleData.h"
 
 #include "UI/UI.h"

@@ -7,7 +7,7 @@
 #include "Core/Memory.h"
 #include "Core/Textures/TextureData.h"
 
-#include "Core/GraphicContext//GraphicsPipeline.h"
+#include "Graphics/API/GraphicsPipeline.h"
 #include "Scene/MaterialSystem/MaterialSystem.h"
 #include "yaml-cpp/yaml.h"
 

@@ -2,8 +2,8 @@
 
 #include "Core/Math/Types.h"
 
-#include "Core/GraphicContext//Buffer.h"
-#include "Core/GraphicContext//GraphicsPipeline.h"
+#include "Graphics/API/Buffer.h"
+#include "Graphics/API/GraphicsPipeline.h"
 
 #include "Scene/VertexData.h"
 

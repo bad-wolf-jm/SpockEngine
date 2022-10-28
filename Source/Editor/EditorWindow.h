@@ -9,8 +9,8 @@
 
 // #include "LidarSensorModel/SensorDeviceBase.h"
 
-#include "Core/GraphicContext//GraphicContext.h"
-#include "Core/GraphicContext//Texture2D.h"
+#include "Graphics/API/GraphicContext.h"
+#include "Graphics/API/Texture2D.h"
 #include "Scene/Renderer/SceneRenderer.h"
 #include "Scene/Scene.h"
 

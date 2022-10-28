@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/GraphicContext//Texture2D.h"
+#include "Graphics/API/Texture2D.h"
 #include "Core/Platform/EngineLoop.h"
 #include "UI/UI.h"
 

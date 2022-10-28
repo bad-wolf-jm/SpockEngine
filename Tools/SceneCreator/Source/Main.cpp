@@ -1,7 +1,7 @@
 #include "Core/EntityRegistry/Registry.h"
 
 #include "Core/Platform/EngineLoop.h"
-#include "Core/GraphicContext//UI/UIContext.h"
+#include "Graphics/API/UI/UIContext.h"
 
 #include "Editor/MaterialEditor.h"
 #include "Scene/Primitives/Primitives.h"

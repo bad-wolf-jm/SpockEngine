@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/GraphicContext//GraphicContext.h"
+#include "GraphicContext.h"
 
 #include "GraphicsPipeline.h"
 #include "RenderTarget.h"

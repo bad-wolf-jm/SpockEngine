@@ -7,13 +7,13 @@
 
 #include "UI/UI.h"
 
-#include "Core/GraphicContext//UI/UIContext.h"
+#include "Graphics/API/UI/UIContext.h"
 #include "Core/Platform/EngineLoop.h"
 
 
 #include "Scene/EnvironmentSampler/EnvironmentSampler.h"
 #include "Scene/EnvironmentSampler/PointCloudVisualizer.h"
-#include "Core/GraphicContext//GraphicContext.h"
+#include "Graphics/API/GraphicContext.h"
 #include "Scene/Renderer/SceneRenderer.h"
 #include "Scene/Scene.h"
 

@@ -4,8 +4,8 @@
 #include "Core/Platform/ViewportClient.h"
 
 #include "Graphics/Implementation/Vulkan/VkCoreMacros.h"
-#include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//GraphicContext.h"
+#include "DescriptorSet.h"
+#include "GraphicContext.h"
 
 namespace LTSE::Graphics
 {

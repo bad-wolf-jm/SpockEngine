@@ -1,12 +1,12 @@
 #pragma once
 #include "Core/Memory.h"
 
-#include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//GraphicsPipeline.h"
-#include "Core/GraphicContext//RenderContext.h"
+#include "Graphics/API/DescriptorSet.h"
+#include "Graphics/API/GraphicsPipeline.h"
+#include "Graphics/API/RenderContext.h"
 
-#include "Core/GraphicContext//Texture2D.h"
-#include "Core/GraphicContext//TextureCubemap.h"
+#include "Graphics/API/Texture2D.h"
+#include "Graphics/API/TextureCubemap.h"
 #include "Graphics/Implementation/Vulkan/VkImage.h"
 #include "Graphics/Implementation/Vulkan/VkRenderPass.h"
 

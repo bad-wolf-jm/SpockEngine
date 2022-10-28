@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core/GraphicContext//GraphicContext.h"
-#include "Core/GraphicContext//Texture2D.h"
-#include "Core/GraphicContext//TextureCubeMap.h"
+#include "GraphicContext.h"
+#include "Texture2D.h"
+#include "TextureCubeMap.h"
 
 #include "Core/Memory.h"
 #include "Graphics/Implementation/Vulkan/VkPipeline.h"

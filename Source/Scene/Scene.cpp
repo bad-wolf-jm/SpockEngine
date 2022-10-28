@@ -20,7 +20,7 @@
 
 #include "Renderer/MeshRenderer.h"
 
-#include "Core/GraphicContext//Texture2D.h"
+#include "Graphics/API/Texture2D.h"
 #include "Scripting/ScriptComponent.h"
 
 #include "Scene/Components/VisualHelpers.h"
@@ -661,7 +661,7 @@ namespace LTSE::Core
             auto &lComponent = aEntity.Add<sMaterialShaderComponent>();
             auto &lData      = aNode["sMaterialShaderComponent"];
 
-            lComponent.Type              = static_cast<eCMaterialType>( lData["Type"].As<uint8_t>( 0 ) );
+            lComponent.Type              = static_cast<eMaterialType>( lData["Type"].As<uint8_t>( 0 ) );
             lComponent.IsTwoSided        = lData["IsTwoSided"].As<bool>( true );
             lComponent.UseAlphaMask      = lData["UseAlphaMask"].As<bool>( true );
             lComponent.LineWidth         = lData["LineWidth"].As<float>( 1.0f );
@@ -957,7 +957,7 @@ namespace LTSE::Core
             lMaterialIds.push_back( lNewMaterial.mID );
 
             sMaterialShaderComponent lMaterialShader{};
-            lMaterialShader.Type              = eCMaterialType::Opaque;
+            lMaterialShader.Type              = eMaterialType::Opaque;
             lMaterialShader.IsTwoSided        = lMaterial.mConstants.mIsTwoSided;
             lMaterialShader.UseAlphaMask      = true;
             lMaterialShader.LineWidth         = 1.0f;

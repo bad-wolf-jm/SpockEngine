@@ -7,7 +7,7 @@
 #include "Core/Math/Types.h"
 
 #ifndef __CUDACC__
-#    include "Core/GraphicContext//GraphicsPipeline.h"
+#    include "Graphics/API/GraphicsPipeline.h"
 #endif
 
 #ifndef __CUDACC__

@@ -47,15 +47,15 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Implementation/Vulkan/VkImage.cpp
     Graphics/Implementation/Vulkan/VkCommand.cpp
     
-    Core/GraphicContext//Buffer.cpp
-    Core/GraphicContext//Texture2D.cpp
-    Core/GraphicContext//TextureCubeMap.cpp
-    Core/GraphicContext//GraphicContext.cpp
-    Core/GraphicContext//DescriptorSet.cpp
-    Core/GraphicContext//GraphicsPipeline.cpp
-    Core/GraphicContext//RenderContext.cpp
-    Core/GraphicContext//RenderTarget.cpp
-    Core/GraphicContext//UI/UIContext.cpp
+    Graphics/API/Buffer.cpp
+    Graphics/API/Texture2D.cpp
+    Graphics/API/TextureCubeMap.cpp
+    Graphics/API/GraphicContext.cpp
+    Graphics/API/DescriptorSet.cpp
+    Graphics/API/GraphicsPipeline.cpp
+    Graphics/API/RenderContext.cpp
+    Graphics/API/RenderTarget.cpp
+    Graphics/API/UI/UIContext.cpp
 
     Scene/Primitives/Primitives.cpp
     Scene/Primitives/Arrow.cpp

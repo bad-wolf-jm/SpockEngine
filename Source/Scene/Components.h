@@ -12,16 +12,18 @@
 #include "Core/Cuda/CudaBuffer.h"
 #include "Core/Cuda/ExternalMemory.h"
 
-#include "Core/GraphicContext//Buffer.h"
-#include "Core/GraphicContext//GraphicContext.h"
-#include "Core/GraphicContext//Texture2D.h"
-#include "Core/GraphicContext//TextureCubeMap.h"
+#include "Graphics/API/Buffer.h"
+#include "Graphics/API/GraphicContext.h"
+#include "Graphics/API/Texture2D.h"
+#include "Graphics/API/TextureCubeMap.h"
 
 #include "Scene/Importer/ImporterData.h"
 
 #include "Core/EntityRegistry/Registry.h"
 
-#include "Core/GraphicContext//UI/UIContext.h"
+#include "Graphics/API/UI/UIContext.h"
+
+#include "MaterialSystem/MaterialSystem.h"
 
 #include "Renderer/MeshRenderer.h"
 #include "Renderer/ParticleSystemRenderer.h"
@@ -258,16 +260,16 @@ namespace LTSE::Core::EntityComponentSystem::Components
         sMaterialComponent( const sMaterialComponent & ) = default;
     };
 
-    enum class eCMaterialType : uint8_t
-    {
-        Opaque,
-        Mask,
-        Blend
-    };
+    // enum class eMaterialType : uint8_t
+    // {
+    //     Opaque,
+    //     Mask,
+    //     Blend
+    // };
 
     struct sMaterialShaderComponent
     {
-        eCMaterialType Type              = eCMaterialType::Opaque;
+        eMaterialType Type              = eMaterialType::Opaque;
         bool           IsTwoSided        = false;
         bool           UseAlphaMask      = true;
         float          LineWidth         = 1.0f;

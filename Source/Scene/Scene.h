@@ -10,13 +10,13 @@
 
 #include "Core/Cuda/ExternalMemory.h"
 
-#include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//GraphicContext.h"
-#include "Core/GraphicContext//GraphicsPipeline.h"
+#include "Graphics/API/DescriptorSet.h"
+#include "Graphics/API/GraphicContext.h"
+#include "Graphics/API/GraphicsPipeline.h"
 
 #include "UI/UI.h"
 
-#include "Core/GraphicContext//UI/UIContext.h"
+#include "Graphics/API/UI/UIContext.h"
 #include "VertexData.h"
 
 #include "Core/EntityRegistry/Registry.h"

@@ -7,7 +7,7 @@
 #include "DescriptorSet.h"
 #include "Graphics/Implementation/Vulkan/VkPipeline.h"
 #include "Graphics/Implementation/Vulkan/VkRenderPass.h"
-#include "Core/GraphicContext//GraphicContext.h"
+#include "GraphicContext.h"
 
 namespace LTSE::Graphics
 {

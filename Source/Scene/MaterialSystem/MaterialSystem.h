@@ -2,9 +2,9 @@
 
 #include "Core/Math/Types.h"
 
-#include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//GraphicContext.h"
-#include "Core/GraphicContext//Texture2D.h"
+#include "Graphics/API/DescriptorSet.h"
+#include "Graphics/API/GraphicContext.h"
+#include "Graphics/API/Texture2D.h"
 
 using namespace math::literals;
 using namespace LTSE::Graphics;

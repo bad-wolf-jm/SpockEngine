@@ -12,13 +12,13 @@
 
 #include "entt/entt.hpp"
 
-#include "Core/GraphicContext//GraphicContext.h"
-#include "Core/GraphicContext//RenderContext.h"
+#include "Graphics/API/GraphicContext.h"
+#include "Graphics/API/RenderContext.h"
 #include "Core/Optix/OptixContext.h"
 #include "ViewportClient.h"
 
 
-#include "Core/GraphicContext//UI/UIContext.h"
+#include "Graphics/API/UI/UIContext.h"
 
 /** @brief */
 namespace LTSE::Core

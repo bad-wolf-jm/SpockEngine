@@ -3,8 +3,8 @@
 #include "Core/EntityRegistry/Registry.h"
 #include "Core/Memory.h"
 
-#include "Core/GraphicContext//Buffer.h"
-#include "Core/GraphicContext//GraphicContext.h"
+#include "Graphics/API/Buffer.h"
+#include "Graphics/API/GraphicContext.h"
 
 #include "Scene/Components.h"
 
