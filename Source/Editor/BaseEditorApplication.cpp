@@ -281,6 +281,8 @@ namespace LTSE::Editor
         SaveConfiguration();
 
         mEngineLoop->Shutdown();
+    
+        ScriptManager::Shutdown();
 
         return 0;
     }
