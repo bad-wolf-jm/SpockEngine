@@ -125,7 +125,7 @@ namespace LTSE
     void ScriptManager::LoadAssembly( const std::filesystem::path &aFilepath )
     {
         // Create an App Domain
-        sData->mAppDomain = mono_domain_create_appdomain( "HazelScriptRuntime", nullptr );
+        sData->mAppDomain = mono_domain_create_appdomain( "SE_Runtime", nullptr );
         mono_domain_set( sData->mAppDomain, true );
 
         // Move this maybe
@@ -143,7 +143,7 @@ namespace LTSE
         InitMono();
         // ScriptGlue::RegisterFunctions();
 
-        // LoadAssembly("Resources/Scripts/Hazel-ScriptCore.dll");
+        LoadAssembly("Resources/Scripts/ScriptCore.dll");
         // LoadAppAssembly("SandboxProject/Assets/Scripts/Binaries/Sandbox.dll");
         // LoadAssemblyClasses();
 
