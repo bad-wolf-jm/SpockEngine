@@ -225,11 +225,11 @@ TEST_CASE( "Tag Entity", "[CORE_ENTITIES]" )
     EntityRegistry lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
-    lEntity0.Tag<sTagComponent>();
+    lEntity0.Add<sTagComponent>();
 
     REQUIRE( lEntity0.Has<sTagComponent>() );
 
-    lEntity0.Untag<sTagComponent>();
+    lEntity0.Remove<sTagComponent>();
 
     REQUIRE( !( lEntity0.Has<sTagComponent>() ) );
 }

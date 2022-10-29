@@ -6,7 +6,6 @@ namespace SpockEngine
     {
         public SEApplication()
         {
-
         }
 
         public virtual void BeginScenario()
