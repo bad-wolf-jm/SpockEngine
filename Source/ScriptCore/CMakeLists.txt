@@ -5,6 +5,8 @@ set(LIBRARY_NAME SE_Core)
 
 add_library(${LIBRARY_NAME} SHARED
     Source/CppCalls.cs
+    Source/Component.cs
+    Source/Entity.cs
     Source/EntityController.cs
     Source/SEApplication.cs
 )

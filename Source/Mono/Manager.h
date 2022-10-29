@@ -29,7 +29,8 @@ namespace LTSE::Core
         static void SetAppAssemblyPath( const std::filesystem::path &aFilepath );
 
         static void ReloadAssembly();
-
+        static MonoImage* GetCoreAssemblyImage();
+        
       private:
         static void RegisterInternalCppFunctions();
         static void InitMono();

@@ -297,6 +297,11 @@ namespace LTSE::Core
         sData->mRootDomain = nullptr;
     }
 
+    MonoImage* ScriptManager::GetCoreAssemblyImage()
+	{
+		return sData->mCoreAssemblyImage;
+	}
+
     void ScriptManager::LoadAssemblyClasses()
     {
         if( !sData->mAppAssemblyImage ) return;
