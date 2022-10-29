@@ -13,25 +13,6 @@
 
 namespace LTSE::Core
 {
-    struct ScriptEngineData
-    {
-        MonoDomain   *mRootDomain        = nullptr;
-        MonoAssembly *mCoreAssembly      = nullptr;
-        MonoImage    *mCoreAssemblyImage = nullptr;
-
-        MonoDomain   *mAppDomain        = nullptr;
-        MonoAssembly *mAppAssembly      = nullptr;
-        MonoImage    *mAppAssemblyImage = nullptr;
-
-        std::filesystem::path mCoreAssemblyFilepath;
-        std::filesystem::path mAppAssemblyFilepath;
-
-        std::unique_ptr<filewatch::FileWatch<std::string>> mAppAssemblyFileWatcher;
-
-        bool mAssemblyReloadPending = false;
-    };
-
-    static ScriptEngineData *sData = nullptr;
 
     namespace Utils
     {
@@ -163,6 +144,33 @@ namespace LTSE::Core
         friend class ScriptManager;
     };
 
+    struct ScriptEngineData
+    {
+        MonoDomain   *mRootDomain        = nullptr;
+        MonoAssembly *mCoreAssembly      = nullptr;
+        MonoImage    *mCoreAssemblyImage = nullptr;
+
+        MonoDomain   *mAppDomain        = nullptr;
+        MonoAssembly *mAppAssembly      = nullptr;
+        MonoImage    *mAppAssemblyImage = nullptr;
+
+        std::filesystem::path mCoreAssemblyFilepath;
+        std::filesystem::path mAppAssemblyFilepath;
+
+        ScriptClass mBaseApplicationClass;
+        ScriptClass mBaseControllerClass;
+
+        std::unordered_map<std::string, Ref<ScriptClass>> mApplicationClasses;
+
+        std::unordered_map<std::string, Ref<ScriptClass>> mControllerClasses;
+
+        std::unique_ptr<filewatch::FileWatch<std::string>> mAppAssemblyFileWatcher;
+
+        bool mAssemblyReloadPending = false;
+    };
+
+    static ScriptEngineData *sData = nullptr;
+
     MonoObject *ScriptManager::InstantiateClass( MonoClass *aMonoClass )
     {
         MonoObject *aInstance = mono_object_new( sData->mAppDomain, aMonoClass );
@@ -199,7 +207,12 @@ namespace LTSE::Core
         sData->mCoreAssembly         = Utils::LoadMonoAssembly( aFilepath );
         sData->mCoreAssemblyImage    = mono_assembly_get_image( sData->mCoreAssembly );
 
-        Utils::PrintAssemblyTypes( sData->mCoreAssembly );
+        sData->mBaseApplicationClass = ScriptClass( "SpockEngine", "SEApplication", true );
+        sData->mBaseControllerClass  = ScriptClass( "SpockEngine", "EntityController", true );
+
+        // sData->mBaseApplicationClass.Instantiate();
+
+        // Utils::PrintAssemblyTypes( sData->mCoreAssembly );
     }
 
     static void OnAppAssemblyFileSystemEvent( const std::string &path, const filewatch::Event change_type )
@@ -222,7 +235,7 @@ namespace LTSE::Core
         sData->mAppAssemblyFilepath = aFilepath;
 
         sData->mAssemblyReloadPending = false;
-        
+
         if( !sData->mAppAssemblyFilepath.empty() )
             sData->mAppAssemblyFileWatcher =
                 std::make_unique<filewatch::FileWatch<std::string>>( aFilepath.string(), OnAppAssemblyFileSystemEvent );
@@ -230,25 +243,31 @@ namespace LTSE::Core
         ReloadAssembly();
     }
 
-    // void ScriptManager::LoadAppAssembly( const std::filesystem::path &aFilepath )
-    // {
-    //     // Move this maybe
-    //     sData->mAppAssemblyFilepath = aFilepath;
-    //     sData->mAppAssembly         = Utils::LoadMonoAssembly( aFilepath );
-    //     sData->mAppAssemblyImage    = mono_assembly_get_image( sData->mAppAssembly );
-    //     Utils::PrintAssemblyTypes( sData->mAppAssembly );
-
-    //     sData->mAppAssemblyFileWatcher =
-    //         std::make_unique<filewatch::FileWatch<std::string>>( aFilepath.string(), OnAppAssemblyFileSystemEvent );
-    //     sData->mAssemblyReloadPending = false;
-    // }
-
     void ScriptManager::Initialize()
     {
         sData = new ScriptEngineData();
 
         InitMono();
+
+        RegisterInternalCppFunctions();
+
         LoadCoreAssembly( "Source/ScriptCore/Build/Debug/SE_Core.dll" );
+    }
+
+#define SE_ADD_INTERNAL_CALL( Name ) mono_add_internal_call( "SpockEngine.CppCall::" #Name, Name )
+
+    static void NativeLog( MonoString *string, int parameter )
+    {
+        char       *cStr = mono_string_to_utf8( string );
+        std::string str( cStr );
+        mono_free( cStr );
+        std::cout << str << ", " << parameter << std::endl;
+    }
+
+    void ScriptManager::RegisterInternalCppFunctions()
+    {
+        //
+        SE_ADD_INTERNAL_CALL( NativeLog );
     }
 
     void ScriptManager::Shutdown()
@@ -295,13 +314,31 @@ namespace LTSE::Core
 
             std::string lFullName;
             if( strlen( lNameSpace ) != 0 )
+            {
                 lFullName = fmt::format( "{}.{}", lNameSpace, lClassName );
+            }
             else
+            {
+                if( std::strncmp( lClassName, "<Module>", 8 ) ) continue;
+
                 lFullName = lClassName;
+            }
 
             MonoClass *lMonoClass = mono_class_from_name( sData->mAppAssemblyImage, lNameSpace, lClassName );
+            if( lMonoClass == sData->mBaseApplicationClass.mMonoClass ) continue;
+            if( lMonoClass == sData->mBaseControllerClass.mMonoClass ) continue;
 
-            Ref<ScriptClass> lScriptClass = New<ScriptClass>( lNameSpace, lClassName );
+            auto lNewScriptClass = New<ScriptClass>( lNameSpace, lClassName );
+
+            bool lIsApplicationClass =
+                mono_class_is_subclass_of( lNewScriptClass->mMonoClass, sData->mBaseApplicationClass.mMonoClass, false );
+            if( lIsApplicationClass && ( sData->mBaseApplicationClass.mMonoClass == nullptr ) )
+                sData->mApplicationClasses[lFullName] = lNewScriptClass;
+
+            bool lControllerClass =
+                mono_class_is_subclass_of( lNewScriptClass->mMonoClass, sData->mBaseControllerClass.mMonoClass, false );
+            if( lIsApplicationClass && ( sData->mBaseControllerClass.mMonoClass == nullptr ) )
+                sData->mControllerClasses[lFullName] = lNewScriptClass;
 
             // This routine is an iterator routine for retrieving the fields in a class.
             // You must pass a gpointer that points to zero and is treated as an opaque handle
@@ -319,14 +356,10 @@ namespace LTSE::Core
                     MonoType               *lMonoFieldType = mono_field_get_type( lField );
                     Utils::eScriptFieldType lFieldType     = Utils::MonoTypeToScriptFieldType( lMonoFieldType );
 
-                    lScriptClass->mFields[lFieldName] = { lFieldType, lFieldName, lField };
+                    lNewScriptClass->mFields[lFieldName] = { lFieldType, lFieldName, lField };
                 }
             }
         }
-
-        // auto &entityClasses = sData->EntityClasses;
-
-        // mono_field_get_value()
     }
 
     void ScriptManager::ReloadAssembly()
@@ -340,7 +373,8 @@ namespace LTSE::Core
         {
             sData->mAppAssembly      = Utils::LoadMonoAssembly( sData->mAppAssemblyFilepath );
             sData->mAppAssemblyImage = mono_assembly_get_image( sData->mAppAssembly );
-            Utils::PrintAssemblyTypes( sData->mAppAssembly );
+
+            // Utils::PrintAssemblyTypes( sData->mAppAssembly );
         }
 
         LoadAssemblyClasses();

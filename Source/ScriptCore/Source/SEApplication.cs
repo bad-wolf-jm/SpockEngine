@@ -1,14 +1,20 @@
+using SpockEngine;
 
-namespace SE
+namespace SpockEngine
 {
     public class SEApplication
     {
-        public virtual void Initialize()
+        public SEApplication()
         {
 
         }
 
-        public virtual void Shutdown()
+        public virtual void BeginScenario()
+        {
+
+        }
+
+        public virtual void EndScenario()
         {
 
         }

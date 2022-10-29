@@ -31,6 +31,7 @@ namespace LTSE::Core
         static void ReloadAssembly();
 
       private:
+        static void RegisterInternalCppFunctions();
         static void InitMono();
         static void ShutdownMono();
 

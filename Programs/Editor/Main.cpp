@@ -930,7 +930,7 @@ class EchoDSMVPEditor : public BaseEditorApplication
         // m_Sensor = a_SensorToControl;
         mEditorWindow.OnBeginScenario.connect<&EchoDSMVPEditor::OnBeginScenario>( *this );
 
-        ScriptManager::SetAppAssemblyPath("");
+        ScriptManager::SetAppAssemblyPath("C:/GitLab/SpockEngine/Programs/Editor/Script/Build/Debug/Test.dll");
     }
 
     void Update( Timestep ts )
