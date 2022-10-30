@@ -1,6 +1,9 @@
 #include "Manager.h"
+
 #include "Core/Logging.h"
 #include "Core/Memory.h"
+
+#include "Scene/Scene.h"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
@@ -9,7 +12,9 @@
 
 #include <unordered_map>
 
-#include <FileWatch.hpp>
+// #include <FileWatch.hpp>
+
+#include "InternalCalls.h"
 
 namespace LTSE::Core
 {
@@ -117,7 +122,9 @@ namespace LTSE::Core
 
         std::unordered_map<std::string, Ref<ScriptClass>> mControllerClasses;
 
-        std::unique_ptr<filewatch::FileWatch<std::string>> mAppAssemblyFileWatcher;
+        // std::unique_ptr<filewatch::FileWatch<std::string>> mAppAssemblyFileWatcher;
+
+        void *mSceneContext = nullptr;
 
         bool mAssemblyReloadPending = false;
     };
@@ -164,7 +171,7 @@ namespace LTSE::Core
 
     MonoObject *ScriptClassInstance::InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters )
     {
-        return mono_runtime_invoke( GetMethod( aName, aParameterCount ), mInstance, aParameters, nullptr );
+        return InvokeMethod( GetMethod( aName, aParameterCount ), aParameters );
     }
 
     void ScriptManager::LoadCoreAssembly( const std::filesystem::path &aFilepath )
@@ -184,20 +191,20 @@ namespace LTSE::Core
         // Utils::PrintAssemblyTypes( sData->mCoreAssembly );
     }
 
-    static void OnAppAssemblyFileSystemEvent( const std::string &path, const filewatch::Event change_type )
-    {
-        if( !sData->mAssemblyReloadPending && change_type == filewatch::Event::modified )
-        {
-            sData->mAssemblyReloadPending = true;
+    // static void OnAppAssemblyFileSystemEvent( const std::string &path, const filewatch::Event change_type )
+    // {
+    //     if( !sData->mAssemblyReloadPending && change_type == filewatch::Event::modified )
+    //     {
+    //         sData->mAssemblyReloadPending = true;
 
-            // Application::Get().SubmitToMainThread(
-            //     []()
-            //     {
-            //         sData->mAppAssemblyFileWatcher.reset();
-            //         ScriptEngine::ReloadAssembly();
-            //     } );
-        }
-    }
+    //         // Application::Get().SubmitToMainThread(
+    //         //     []()
+    //         //     {
+    //         //         sData->mAppAssemblyFileWatcher.reset();
+    //         //         ScriptEngine::ReloadAssembly();
+    //         //     } );
+    //     }
+    // }
 
     void ScriptManager::SetAppAssemblyPath( const std::filesystem::path &aFilepath )
     {
@@ -205,9 +212,9 @@ namespace LTSE::Core
 
         sData->mAssemblyReloadPending = false;
 
-        if( !sData->mAppAssemblyFilepath.empty() )
-            sData->mAppAssemblyFileWatcher =
-                std::make_unique<filewatch::FileWatch<std::string>>( aFilepath.string(), OnAppAssemblyFileSystemEvent );
+        // if( !sData->mAppAssemblyFilepath.empty() )
+        //     sData->mAppAssemblyFileWatcher =
+        //         std::make_unique<filewatch::FileWatch<std::string>>( aFilepath.string(), OnAppAssemblyFileSystemEvent );
 
         ReloadAssembly();
     }
@@ -223,20 +230,20 @@ namespace LTSE::Core
         LoadCoreAssembly( "Source/ScriptCore/Build/Debug/SE_Core.dll" );
     }
 
-#define SE_ADD_INTERNAL_CALL( Name ) mono_add_internal_call( "SpockEngine.CppCall::" #Name, Name )
+    // #define SE_ADD_INTERNAL_CALL( Name ) mono_add_internal_call( "SpockEngine.CppCall::" #Name, Name )
 
-    static void NativeLog( MonoString *string, int parameter )
-    {
-        char       *cStr = mono_string_to_utf8( string );
-        std::string str( cStr );
-        mono_free( cStr );
-        std::cout << str << ", " << parameter << std::endl;
-    }
+    //     static void NativeLog( MonoString *string, int parameter )
+    //     {
+    //         char       *cStr = mono_string_to_utf8( string );
+    //         std::string str( cStr );
+    //         mono_free( cStr );
+    //         std::cout << str << ", " << parameter << std::endl;
+    //     }
 
     void ScriptManager::RegisterInternalCppFunctions()
     {
         //
-        SE_ADD_INTERNAL_CALL( NativeLog );
+        SE_ADD_INTERNAL_CALL( MonoInternalCalls::NativeLog );
     }
 
     void ScriptManager::Shutdown()
@@ -267,6 +274,8 @@ namespace LTSE::Core
     }
 
     MonoImage *ScriptManager::GetCoreAssemblyImage() { return sData->mCoreAssemblyImage; }
+
+    void *ScriptManager::GetSceneContext() { return sData->mSceneContext; }
 
     void ScriptManager::LoadAssemblyClasses()
     {

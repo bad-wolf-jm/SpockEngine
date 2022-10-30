@@ -25,6 +25,7 @@ add_library(LTSimulationEngineRuntime STATIC
     # # Scripting/ScriptedSensorDevice.cpp
 
     Mono/Manager.cpp
+    Mono/InternalCalls.cpp
     
     Core/Cuda/MultiTensor.cu
     Core/Cuda/MemoryPool.cu

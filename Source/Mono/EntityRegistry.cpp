@@ -96,19 +96,19 @@ namespace LTSE::Core
         if constexpr( std::is_class<_Ty>::value && std::is_empty<_Ty>::value )
         {
             lNewType.template func<&IsValid<_Ty>>( "IsValid"_hs );
-            lNewType.template func<&Tag<_Ty>>( "Tag"_hs );
-            lNewType.template func<&Untag<_Ty>>( "Untag"_hs );
-            lNewType.template func<&Has<_Ty>>( "Has"_hs );
+            // lNewType.template func<&Tag<_Ty>>( "Tag"_hs );
+            // lNewType.template func<&Untag<_Ty>>( "Untag"_hs );
+            // lNewType.template func<&Has<_Ty>>( "Has"_hs );
         }
         else if constexpr( std::is_class<_Ty>::value )
         {
             lNewType.template func<&IsValid<_Ty>>( "IsValid"_hs );
-            lNewType.template func<&Add<_Ty>>( "Add"_hs );
-            lNewType.template func<&AddOrReplace<_Ty>>( "AddOrReplace"_hs );
-            lNewType.template func<&Replace<_Ty>>( "Replace"_hs );
-            lNewType.template func<&Get<_Ty>>( "Get"_hs );
-            lNewType.template func<&Has<_Ty>>( "Has"_hs );
-            lNewType.template func<&Remove<_Ty>>( "Remove"_hs );
+            // lNewType.template func<&Add<_Ty>>( "Add"_hs );
+            // lNewType.template func<&AddOrReplace<_Ty>>( "AddOrReplace"_hs );
+            // lNewType.template func<&Replace<_Ty>>( "Replace"_hs );
+            // lNewType.template func<&Get<_Ty>>( "Get"_hs );
+            // lNewType.template func<&Has<_Ty>>( "Has"_hs );
+            // lNewType.template func<&Remove<_Ty>>( "Remove"_hs );
         }
 
         return lNewLuaType;
