@@ -7,7 +7,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/CppCalls.cs
     Source/Component.cs
     Source/Entity.cs
-    Source/EntityController.cs
+    Source/ActorComponent.cs
     Source/SEApplication.cs
 )
 

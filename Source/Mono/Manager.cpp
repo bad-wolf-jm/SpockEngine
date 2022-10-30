@@ -78,30 +78,6 @@ namespace LTSE::Core
             }
         }
 
-        enum class eScriptFieldType
-        {
-            None = 0,
-            Float,
-            Double,
-            Bool,
-            Char,
-            Byte,
-            Short,
-            Int,
-            Long,
-            UByte,
-            UShort,
-            UInt,
-            ULong
-        };
-
-        struct sScriptField
-        {
-            eScriptFieldType mType;
-            std::string      mName;
-            MonoClassField  *mClassField;
-        };
-
         static std::unordered_map<std::string, eScriptFieldType> sScriptFieldTypeMap = { { "System.Single", eScriptFieldType::Float },
             { "System.Double", eScriptFieldType::Double }, { "System.Boolean", eScriptFieldType::Bool },
             { "System.Char", eScriptFieldType::Char }, { "System.Int16", eScriptFieldType::Short },
@@ -120,29 +96,6 @@ namespace LTSE::Core
         }
 
     } // namespace Utils
-
-    class ScriptClass
-    {
-      public:
-        ScriptClass() = default;
-        ScriptClass( const std::string &aClassNamespace, const std::string &aClassName, bool aIsCore = false );
-
-        MonoObject *Instantiate();
-        MonoMethod *GetMethod( const std::string &aName, int aParameterCount );
-        MonoObject *InvokeMethod( MonoObject *aInstance, MonoMethod *aMethod, void **aParameters = nullptr );
-
-        const std::map<std::string, Utils::sScriptField> &GetFields() const { return mFields; }
-
-      private:
-        std::string mClassNamespace;
-        std::string mClassName;
-
-        std::map<std::string, Utils::sScriptField> mFields;
-
-        MonoClass *mMonoClass = nullptr;
-
-        friend class ScriptManager;
-    };
 
     struct ScriptEngineData
     {
@@ -186,16 +139,32 @@ namespace LTSE::Core
             aIsCore ? sData->mCoreAssemblyImage : sData->mAppAssemblyImage, aClassNamespace.c_str(), aClassName.c_str() );
     }
 
-    MonoObject *ScriptClass::Instantiate() { return ScriptManager::InstantiateClass( mMonoClass ); }
+    ScriptClassInstance ScriptClass::Instantiate()
+    {
+        MonoObject *lInstance = ScriptManager::InstantiateClass( mMonoClass );
 
-    MonoMethod *ScriptClass::GetMethod( const std::string &aName, int aParameterCount )
+        return ScriptClassInstance( mMonoClass, lInstance );
+    }
+
+    ScriptClassInstance::ScriptClassInstance( MonoClass *aMonoClass, MonoObject *aInstance )
+        : mMonoClass{ aMonoClass }
+        , mInstance{ aInstance }
+    {
+    }
+
+    MonoMethod *ScriptClassInstance::GetMethod( const std::string &aName, int aParameterCount )
     {
         return mono_class_get_method_from_name( mMonoClass, aName.c_str(), aParameterCount );
     }
 
-    MonoObject *ScriptClass::InvokeMethod( MonoObject *aInstance, MonoMethod *aMethod, void **aParameters )
+    MonoObject *ScriptClassInstance::InvokeMethod( MonoMethod *aMethod, void **aParameters )
     {
-        return mono_runtime_invoke( aMethod, aInstance, aParameters, nullptr );
+        return mono_runtime_invoke( aMethod, mInstance, aParameters, nullptr );
+    }
+
+    MonoObject *ScriptClassInstance::InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters )
+    {
+        return mono_runtime_invoke( GetMethod( aName, aParameterCount ), mInstance, aParameters, nullptr );
     }
 
     void ScriptManager::LoadCoreAssembly( const std::filesystem::path &aFilepath )
@@ -208,7 +177,7 @@ namespace LTSE::Core
         sData->mCoreAssemblyImage    = mono_assembly_get_image( sData->mCoreAssembly );
 
         sData->mBaseApplicationClass = ScriptClass( "SpockEngine", "SEApplication", true );
-        sData->mBaseControllerClass  = ScriptClass( "SpockEngine", "EntityController", true );
+        sData->mBaseControllerClass  = ScriptClass( "SpockEngine", "ActorComponent", true );
 
         // sData->mBaseApplicationClass.Instantiate();
 
@@ -297,10 +266,7 @@ namespace LTSE::Core
         sData->mRootDomain = nullptr;
     }
 
-    MonoImage* ScriptManager::GetCoreAssemblyImage()
-	{
-		return sData->mCoreAssemblyImage;
-	}
+    MonoImage *ScriptManager::GetCoreAssemblyImage() { return sData->mCoreAssemblyImage; }
 
     void ScriptManager::LoadAssemblyClasses()
     {
@@ -358,8 +324,8 @@ namespace LTSE::Core
 
                 if( lFlags & FIELD_ATTRIBUTE_PUBLIC )
                 {
-                    MonoType               *lMonoFieldType = mono_field_get_type( lField );
-                    Utils::eScriptFieldType lFieldType     = Utils::MonoTypeToScriptFieldType( lMonoFieldType );
+                    MonoType        *lMonoFieldType = mono_field_get_type( lField );
+                    eScriptFieldType lFieldType     = Utils::MonoTypeToScriptFieldType( lMonoFieldType );
 
                     lNewScriptClass->mFields[lFieldName] = { lFieldType, lFieldName, lField };
                 }

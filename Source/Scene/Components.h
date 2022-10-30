@@ -6,6 +6,7 @@
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 #include "Core/Types.h"
+#include "Core/Logging.h"
 
 #include "UI/UI.h"
 
@@ -27,6 +28,8 @@
 #include "Renderer/ParticleSystemRenderer.h"
 
 #include "Primitives/Primitives.h"
+
+#include "Mono/Manager.h"
 
 namespace LTSE::Core::EntityComponentSystem::Components
 {
@@ -57,6 +60,60 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
         sCameraComponent()                           = default;
         sCameraComponent( const sCameraComponent & ) = default;
+    };
+
+    struct sActorComponent
+    {
+        ScriptClass         mClass;
+        ScriptClassInstance mInstance;
+
+        sActorComponent()                          = default;
+        sActorComponent( const sActorComponent & ) = default;
+
+        ~sActorComponent() = default;
+
+        sActorComponent( const std::string &aClassNamespace, std::string const &aClassName )
+            : mClassName{ aClassName }
+            , mClass{ ScriptClass( aClassNamespace, aClassName, false ) }
+
+        {
+            //
+        }
+
+        template <typename T>
+        T &Get()
+        {
+            return mEntity.Get<T>();
+        }
+
+        void Initialize( Entity aEntity ) { mEntity = aEntity; }
+
+        void OnCreate()
+        {
+            mInstance = mClass.Instantiate();
+            LTSE::Logging::Info("INSTANCE CREATED");
+            // mScriptEnvironment = mScriptingEngine->LoadFile( mScriptFile.string() );
+            // mScriptEnvironment["Initialize"]();
+        }
+
+        void OnDestroy()
+        {
+            // mScriptEnvironment["Shutdown"]();
+            LTSE::Logging::Info("INSTANCE DESTROYED");
+        }
+
+        void OnUpdate( Timestep ts )
+        {
+            mInstance.InvokeMethod( "OnUpdate", 0, nullptr );
+            LTSE::Logging::Info("INSTANCE UPDATED");
+            // mScriptEnvironment["Update"]( static_cast<float>( ts ) );
+        }
+
+        Entity GetControlledEntity() const { return mEntity; };
+
+      private:
+        std::string mClassName;
+        Entity      mEntity;
     };
 
     struct sAnimationChannel
