@@ -2,9 +2,9 @@ using SpockEngine;
 
 namespace SpockEngine
 {
-    public class ActorComponent : Component
+    public class ActorComponent
     {   
-        private Entity mEntity;
+        protected Entity mEntity;
 
         public ActorComponent() { mEntity = new Entity(); }
         public ActorComponent( Entity aEntity ) { mEntity = aEntity; }
@@ -13,6 +13,6 @@ namespace SpockEngine
 
         public virtual void OnDestroy() {}
 
-        public virtual void OnUpdate() {}
+        public virtual void OnUpdate( float aTs ) {}
     }
 }
