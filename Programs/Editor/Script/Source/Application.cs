@@ -1,8 +1,33 @@
 using SpockEngine;
+using System;
 
-namespace SpockEngine
+namespace Test
 {
-    public class TestApplication : SpockEngine.SEApplication
+    public class TestActorComponent : ActorComponent
+    {
+        override public void OnCreate() 
+        {
+            base.OnCreate();
+
+            Console.WriteLine("Actor Component Created!!!");
+        }
+
+        override public void OnDestroy()
+        {
+            base.OnDestroy();
+
+            Console.WriteLine("Actor Component Destroyed!!!");
+        }
+
+        override public void OnUpdate()
+        {
+            base.OnUpdate();
+            
+            Console.WriteLine("Actor Component Updated!!!");
+        }
+    }
+
+    public class TestApplication : SEApplication
     {
         override public void BeginScenario() 
         {

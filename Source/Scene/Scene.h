@@ -75,7 +75,7 @@ namespace LTSE::Core
         void EndScenario();
 
         void MarkAsRayTracingTarget( Element a_Element );
-        void AttachScript( Element aElement, fs::path aScriptPath );
+        void AttachScript( Element aElement, std::string aNamespace, std::string aScriptPath );
 
         math::mat4 GetView();
         math::mat4 GetProjection();
