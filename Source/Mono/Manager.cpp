@@ -171,7 +171,8 @@ namespace LTSE::Core
 
     MonoObject *ScriptClassInstance::InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters )
     {
-        return InvokeMethod( GetMethod( aName, aParameterCount ), aParameters );
+        auto lMethod = GetMethod( aName, aParameterCount );
+        return InvokeMethod( lMethod, aParameters );
     }
 
     void ScriptManager::LoadCoreAssembly( const std::filesystem::path &aFilepath )
@@ -185,10 +186,6 @@ namespace LTSE::Core
 
         sData->mBaseApplicationClass = ScriptClass( "SpockEngine", "SEApplication", true );
         sData->mBaseControllerClass  = ScriptClass( "SpockEngine", "ActorComponent", true );
-
-        // sData->mBaseApplicationClass.Instantiate();
-
-        // Utils::PrintAssemblyTypes( sData->mCoreAssembly );
     }
 
     // static void OnAppAssemblyFileSystemEvent( const std::string &path, const filewatch::Event change_type )
@@ -242,8 +239,10 @@ namespace LTSE::Core
 
     void ScriptManager::RegisterInternalCppFunctions()
     {
+        using namespace MonoInternalCalls;
         //
-        SE_ADD_INTERNAL_CALL( MonoInternalCalls::NativeLog );
+        SE_ADD_INTERNAL_CALL( NativeLog );
+        SE_ADD_INTERNAL_CALL( Entity_IsValid );
     }
 
     void ScriptManager::Shutdown()

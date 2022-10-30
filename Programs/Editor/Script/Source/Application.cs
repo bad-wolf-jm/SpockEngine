@@ -5,11 +5,18 @@ namespace Test
 {
     public class TestActorComponent : ActorComponent
     {
+        public TestActorComponent() : base() {}
+        public TestActorComponent(Entity e) : base(e) 
+        {
+            Console.WriteLine($"Actor Component Created entity");
+
+            if (mEntity.IsValid())
+                Console.WriteLine($"Valid entity");
+        }
+
         override public void OnCreate() 
         {
             base.OnCreate();
-
-            Console.WriteLine("Actor Component Created!!!");
         }
 
         override public void OnDestroy()
@@ -19,11 +26,11 @@ namespace Test
             Console.WriteLine("Actor Component Destroyed!!!");
         }
 
-        override public void OnUpdate()
+        override public void OnUpdate(float aTs )
         {
-            base.OnUpdate();
-            
-            Console.WriteLine("Actor Component Updated!!!");
+            base.OnUpdate(aTs);
+
+            Console.WriteLine($"Actor Component Updated {aTs}");
         }
     }
 
