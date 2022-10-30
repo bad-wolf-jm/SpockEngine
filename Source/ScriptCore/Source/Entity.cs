@@ -5,11 +5,12 @@ namespace SpockEngine
         private uint mEntityID;
         private ulong mRegistryID;
 
+        public Entity() { mEntityID=0; mRegistryID=0; }
+        public Entity(uint aEntityID, ulong aRegistryID) { mEntityID=aEntityID; mRegistryID=aRegistryID; }
+
         public bool IsValid()
         {
-            // return CppCall.IsValid( mRegistryID, mEntityID );
-
-            return false;
+            return CppCall.Entity_IsValid( mEntityID, mRegistryID );
         }
 
         public bool Has<_Component>() where _Component : Component, new()

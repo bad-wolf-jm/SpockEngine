@@ -87,6 +87,13 @@ namespace LTSE::Core
         }
     } // namespace
 
+    void IsValid( uint32_t aEntityID, EntityRegistry *aRegistry)
+    {
+        const auto lMaybeAny = InvokeMetaFunction( GetMetaType( aTagType ), "IsValid"_hs, aRegistry->WrapEntity( aEntityID ) );
+
+        return static_cast<bool>( lMaybeAny );
+    }
+
     void Has( uint32_t aEntityID, EntityRegistry *aRegistry, MonoType *aTagType )
     {
         const auto lMaybeAny = InvokeMetaFunction( GetMetaType( aTagType ), "Has"_hs, aRegistry->WrapEntity( aEntityID ) );

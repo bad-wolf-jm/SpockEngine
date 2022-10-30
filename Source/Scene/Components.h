@@ -3,10 +3,10 @@
 #include <optional>
 #include <string>
 
+#include "Core/Logging.h"
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 #include "Core/Types.h"
-#include "Core/Logging.h"
 
 #include "UI/UI.h"
 
@@ -90,8 +90,16 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
         void OnCreate()
         {
-            mInstance = mClass.Instantiate();
-            LTSE::Logging::Info("INSTANCE CREATED");
+            // Create Mono side entity object
+            auto lEntityID       = static_cast<uint32_t>( mEntity );
+            auto lRegistryID     = (size_t)mEntity.GetRegistry();
+            auto lEntityClass    = ScriptClass( "SpockEngine", "Entity", true );
+            auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
+
+            // Instantiate the Mono actor class with the entity object as parameter
+            mInstance = mClass.Instantiate( (size_t)lEntityInstance.GetInstance() );
+
+            // LTSE::Logging::Info("INSTANCE CREATED");
             // mScriptEnvironment = mScriptingEngine->LoadFile( mScriptFile.string() );
             // mScriptEnvironment["Initialize"]();
         }
@@ -99,13 +107,13 @@ namespace LTSE::Core::EntityComponentSystem::Components
         void OnDestroy()
         {
             // mScriptEnvironment["Shutdown"]();
-            LTSE::Logging::Info("INSTANCE DESTROYED");
+            LTSE::Logging::Info( "INSTANCE DESTROYED" );
         }
 
         void OnUpdate( Timestep ts )
         {
             mInstance.InvokeMethod( "OnUpdate", 0, nullptr );
-            LTSE::Logging::Info("INSTANCE UPDATED");
+            LTSE::Logging::Info( "INSTANCE UPDATED" );
             // mScriptEnvironment["Update"]( static_cast<float>( ts ) );
         }
 

@@ -46,6 +46,8 @@ namespace LTSE::Core
         ScriptClassInstance() = default;
         ScriptClassInstance( MonoClass *aMonoClass, MonoObject *aInstance );
 
+        MonoObject *GetInstance() { return mInstance; };
+
         MonoMethod *GetMethod( const std::string &aName, int aParameterCount );
         MonoObject *InvokeMethod( MonoMethod *aMethod, void **aParameters = nullptr );
         MonoObject *InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters = nullptr );
@@ -64,6 +66,17 @@ namespace LTSE::Core
         ScriptClass( const std::string &aClassNamespace, const std::string &aClassName, bool aIsCore = false );
 
         ScriptClassInstance Instantiate();
+
+        template <typename... _ArgTypes>
+        ScriptClassInstance Instantiate( _ArgTypes... aArgs )
+        {
+            void *lParameters[] = { (void *)&aArgs... };
+
+            auto lNewInstance = Instantiate();
+            lNewInstance.InvokeMethod( ".ctor", sizeof...( _ArgTypes ), lParameters );
+
+            return lNewInstance;
+        }
 
         MonoMethod *GetMethod( const std::string &aName, int aParameterCount );
         MonoObject *InvokeMethod( MonoObject *aInstance, MonoMethod *aMethod, void **aParameters = nullptr );
@@ -99,6 +112,8 @@ namespace LTSE::Core
         static MonoImage *GetCoreAssemblyImage();
 
         static ScriptClass GetClassType( const std::string &aClassName );
+
+        static void *GetSceneContext();
 
       private:
         static void RegisterInternalCppFunctions();
