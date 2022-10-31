@@ -42,6 +42,8 @@ namespace LTSE::Core
 
                 return nullptr;
             }
+
+            LTSE::Logging::Info("{} --->> {}", lMonoTypeName, (uint64_t)lMonoType);
             return lMonoType;
         }
 
