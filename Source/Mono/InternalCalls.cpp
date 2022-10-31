@@ -6,7 +6,6 @@
 
 #include "Core/Logging.h"
 
-
 namespace LTSE::MonoInternalCalls
 {
     void NativeLog( MonoString *string, int parameter )
@@ -26,10 +25,8 @@ namespace LTSE::MonoInternalCalls
     {
         MonoType *lMonoType = mono_reflection_type_get_type( aComponentType );
 
-        LTSE::Logging::Info(" TEST_HAS --->> {} (refl: {})", (uint64_t)lMonoType, (uint64_t)aComponentType);
-
-        const auto lMetaType = Core::GetMetaType( lMonoType );
-        const auto lMaybeAny =
+        const entt::meta_type lMetaType = Core::GetMetaType( lMonoType );
+        const entt::meta_any  lMaybeAny =
             Core::InvokeMetaFunction( lMetaType, "Has"_hs, aRegistry->WrapEntity( static_cast<entt::entity>( aEntityID ) ) );
 
         return static_cast<bool>( lMaybeAny );
