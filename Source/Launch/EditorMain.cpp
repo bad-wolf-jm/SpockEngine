@@ -36,46 +36,41 @@ using namespace LTSE::SensorModel::Dev;
 
 namespace fs = std::filesystem;
 
-void LoadConfiguration( fs::path ConfigurationFile )
+void LoadConfiguration( fs::path aConfigurationFile, math::ivec2 &aWindowSize, math::ivec2 &aWindowPosition )
 {
-    YAML::Node l_RootNode = YAML::LoadFile( ConfigurationFile.string() );
+    YAML::Node lRootNode = YAML::LoadFile( aConfigurationFile.string() );
 
-    YAML::Node &l_WindowProperties = l_RootNode["application"]["window_properties"];
-    if( !l_WindowProperties.IsNull() )
+    YAML::Node &lWindowProperties = lRootNode["application"]["window_properties"];
+    if( !lWindowProperties.IsNull() )
     {
-        // WindowPosition = { l_WindowProperties["x"].as<int>(), l_WindowProperties["y"].as<int>() };
-        // WindowSize     = { l_WindowProperties["width"].as<int>(), l_WindowProperties["height"].as<int>() };
+        aWindowSize     = math::ivec2{ lWindowProperties["width"].as<int>(), lWindowProperties["height"].as<int>() };
+        aWindowPosition = math::ivec2{ lWindowProperties["x"].as<int>(), lWindowProperties["y"].as<int>() };
     }
 }
 
-void SaveConfiguration( fs::path ConfigurationFile )
+void SaveConfiguration( fs::path ConfigurationFile, math::ivec2 const &aWindowSize, math::ivec2 const &aWindowPosition )
 {
-    YAML::Emitter out;
-    out << YAML::BeginMap;
+    YAML::Emitter lConfigurationOut;
+    lConfigurationOut << YAML::BeginMap;
     {
-        out << YAML::Key << "application" << YAML::Value;
-        out << YAML::BeginMap;
+        lConfigurationOut << YAML::Key << "application" << YAML::Value;
+        lConfigurationOut << YAML::BeginMap;
         {
-            // if( ImGuiIniFile.empty() )
-            //     out << YAML::Key << "imgui_initialization" << YAML::Value << YAML::Null;
-            // else
-            //     out << YAML::Key << "imgui_initialization" << YAML::Value << ImGuiIniFile;
-
-            out << YAML::Key << "window_properties" << YAML::Value << YAML::Flow;
+            lConfigurationOut << YAML::Key << "window_properties" << YAML::Value << YAML::Flow;
             {
-                out << YAML::BeginMap;
-                // out << YAML::Key << "width" << YAML::Value << WindowSize.x;
-                // out << YAML::Key << "height" << YAML::Value << WindowSize.y;
-                // out << YAML::Key << "x" << YAML::Value << WindowPosition.x;
-                // out << YAML::Key << "y" << YAML::Value << WindowPosition.y;
-                out << YAML::EndMap;
+                lConfigurationOut << YAML::BeginMap;
+                lConfigurationOut << YAML::Key << "width" << YAML::Value << aWindowSize.x;
+                lConfigurationOut << YAML::Key << "height" << YAML::Value << aWindowSize.y;
+                lConfigurationOut << YAML::Key << "x" << YAML::Value << aWindowPosition.x;
+                lConfigurationOut << YAML::Key << "y" << YAML::Value << aWindowPosition.y;
+                lConfigurationOut << YAML::EndMap;
             }
         }
-        out << YAML::EndMap;
+        lConfigurationOut << YAML::EndMap;
     }
-    out << YAML::EndMap;
+    lConfigurationOut << YAML::EndMap;
     std::ofstream fout( ConfigurationFile );
-    fout << out.c_str();
+    fout << lConfigurationOut.c_str();
 }
 
 Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
@@ -84,8 +79,8 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
 
     lProgramArguments->add_argument( "-p", "--project" ).help( "Specify input file" );
     lProgramArguments->add_argument( "-s", "--scenario" ).help( "Specify input file" );
-    lProgramArguments->add_argument( "-x", "--res_x" ).help( "Specify output file" );
-    lProgramArguments->add_argument( "-y", "--res_y" ).help( "Specify output file" );
+    lProgramArguments->add_argument( "-w", "--res_x" ).help( "Specify output file" );
+    lProgramArguments->add_argument( "-h", "--res_y" ).help( "Specify output file" );
     lProgramArguments->add_argument( "-M", "--mono_runtime" ).help( "Specify output file" );
     lProgramArguments->add_argument( "-L", "--log_level" ).help( "Specify output file" );
 
@@ -139,9 +134,9 @@ int main( int argc, char **argv )
 
     fs::path ConfigurationFile = ConfigurationRoot / "EditorConfiguration.yaml";
     if( fs::exists( ConfigurationFile ) )
-        LoadConfiguration( ConfigurationFile );
+        LoadConfiguration( ConfigurationFile, WindowSize, WindowPosition );
     else
-        SaveConfiguration( ConfigurationFile );
+        SaveConfiguration( ConfigurationFile, WindowSize, WindowPosition );
 
     mEngineLoop->SetInitialWindowSize( WindowSize );
     mEngineLoop->SetInitialWindowPosition( WindowPosition );
