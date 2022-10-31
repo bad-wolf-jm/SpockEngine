@@ -7,7 +7,8 @@ namespace SpockEngine
         protected Entity mEntity;
 
         public ActorComponent() { mEntity = new Entity(); }
-        public ActorComponent( Entity aEntity ) { mEntity = aEntity; }
+        
+        public void Initialize( Entity aEntity ) { mEntity = aEntity; }
 
         public virtual void OnCreate() {}
 

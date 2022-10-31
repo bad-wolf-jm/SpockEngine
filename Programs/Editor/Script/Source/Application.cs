@@ -6,17 +6,18 @@ namespace Test
     public class TestActorComponent : ActorComponent
     {
         public TestActorComponent() : base() {}
-        public TestActorComponent(Entity e) : base(e) 
-        {
-            Console.WriteLine($"Actor Component Created entity");
-
-            if (mEntity.IsValid())
-                Console.WriteLine($"Valid entity");
-        }
+        // public TestActorComponent(Entity e) : base(e) 
+        // {
+        // }
 
         override public void OnCreate() 
         {
             base.OnCreate();
+
+            Console.WriteLine($"Actor Component Created entity");
+
+            if (mEntity.IsValid())
+                Console.WriteLine($"Valid entity");
         }
 
         override public void OnDestroy()
@@ -31,7 +32,7 @@ namespace Test
             base.OnUpdate(aTs);
 
             Console.WriteLine($"Actor Component Updated {aTs}");
-        }
+                }
     }
 
     public class TestApplication : SEApplication

@@ -97,7 +97,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
             auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
 
             // Instantiate the Mono actor class with the entity object as parameter
-            mInstance = mClass.Instantiate( (size_t)lEntityInstance.GetInstance() );
+            mInstance = mClass.Instantiate();
+            mInstance.CallMethod( "Initialize", (size_t)lEntityInstance.GetInstance() );
             mInstance.InvokeMethod( "OnCreate", 0, nullptr );
         }
 

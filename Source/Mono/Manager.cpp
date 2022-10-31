@@ -161,7 +161,15 @@ namespace LTSE::Core
 
     MonoMethod *ScriptClassInstance::GetMethod( const std::string &aName, int aParameterCount )
     {
-        return mono_class_get_method_from_name( mMonoClass, aName.c_str(), aParameterCount );
+        MonoClass* lClass = mMonoClass;
+        MonoMethod *lMethod = NULL;
+        while( lClass != NULL && lMethod == NULL )
+        {
+            lMethod = mono_class_get_method_from_name( lClass, aName.c_str(), aParameterCount );
+            if( lMethod == NULL ) lClass = mono_class_get_parent( lClass );
+        }
+
+        return lMethod;
     }
 
     MonoObject *ScriptClassInstance::InvokeMethod( MonoMethod *aMethod, void **aParameters )
