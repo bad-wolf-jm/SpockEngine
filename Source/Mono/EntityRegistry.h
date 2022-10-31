@@ -32,18 +32,16 @@ namespace LTSE::Core
         template <typename _Ty>
         MonoType *RetrieveMonoTypeFromNamespace( std::string const &aNamespace )
         {
-            auto        lStructName   = GetTypeName<_Ty>();
-            std::string lMonoTypeName = fmt::format( "{}.{}", aNamespace, lStructName );
+            std::string_view lStructName   = GetTypeName<_Ty>();
+            std::string      lMonoTypeName = fmt::format( "{}.{}", aNamespace, lStructName );
 
-            auto lMonoType = mono_reflection_type_from_name( lMonoTypeName.data(), ScriptManager::GetCoreAssemblyImage() );
+            MonoType *lMonoType = mono_reflection_type_from_name( lMonoTypeName.data(), ScriptManager::GetCoreAssemblyImage() );
             if( !lMonoType )
             {
                 LTSE::Logging::Info( "Could not find type '{}'", lMonoTypeName );
-
                 return nullptr;
             }
 
-            LTSE::Logging::Info("{} --->> {}", lMonoTypeName, (uint64_t)lMonoType);
             return lMonoType;
         }
 

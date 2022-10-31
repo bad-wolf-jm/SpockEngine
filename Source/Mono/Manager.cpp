@@ -14,8 +14,9 @@
 
 // #include <FileWatch.hpp>
 
-#include "InternalCalls.h"
 #include "EntityRegistry.h"
+#include "InternalCalls.h"
+
 
 namespace LTSE::Core
 {
@@ -196,7 +197,7 @@ namespace LTSE::Core
         sData->mBaseControllerClass  = ScriptClass( "SpockEngine", "ActorComponent", true );
         sData->mBaseComponentClass   = ScriptClass( "SpockEngine", "Component", true );
 
-         Utils::PrintAssemblyTypes( sData->mCoreAssembly );
+        Utils::PrintAssemblyTypes( sData->mCoreAssembly );
     }
 
     // static void OnAppAssemblyFileSystemEvent( const std::string &path, const filewatch::Event change_type )
@@ -236,14 +237,9 @@ namespace LTSE::Core
         RegisterInternalCppFunctions();
 
         LoadCoreAssembly( "Source/ScriptCore/Build/Debug/SE_Core.dll" );
-
-        RegisterComponentTypes();
     }
 
-    void ScriptManager::RegisterComponentTypes()
-    {
-        RegisterComponentType<sNodeTransformComponent>();
-    }
+    void ScriptManager::RegisterComponentTypes() { RegisterComponentType<sNodeTransformComponent>(); }
 
     void ScriptManager::RegisterInternalCppFunctions()
     {
@@ -370,5 +366,6 @@ namespace LTSE::Core
         }
 
         LoadAssemblyClasses();
+        RegisterComponentTypes();
     }
 } // namespace LTSE::Core
