@@ -2,10 +2,16 @@
 #include <filesystem>
 #include <fstream>
 
+#include <direct.h>
+#include <iostream>
+#include <limits.h>
+#include <string>
+
 #include "Core/EntityRegistry/ScriptableEntity.h"
 #include "Core/GraphicContext//UI/UIContext.h"
 #include "Core/Logging.h"
 #include "Core/Math/Types.h"
+#include "Core/Memory.h"
 #include "Core/Platform/EngineLoop.h"
 
 #include "Core/GraphicContext//GraphicContext.h"
@@ -37,8 +43,8 @@ void LoadConfiguration( fs::path ConfigurationFile )
     YAML::Node &l_WindowProperties = l_RootNode["application"]["window_properties"];
     if( !l_WindowProperties.IsNull() )
     {
-        WindowPosition = { l_WindowProperties["x"].as<int>(), l_WindowProperties["y"].as<int>() };
-        WindowSize     = { l_WindowProperties["width"].as<int>(), l_WindowProperties["height"].as<int>() };
+        // WindowPosition = { l_WindowProperties["x"].as<int>(), l_WindowProperties["y"].as<int>() };
+        // WindowSize     = { l_WindowProperties["width"].as<int>(), l_WindowProperties["height"].as<int>() };
     }
 }
 
@@ -50,18 +56,18 @@ void SaveConfiguration( fs::path ConfigurationFile )
         out << YAML::Key << "application" << YAML::Value;
         out << YAML::BeginMap;
         {
-            if( ImGuiIniFile.empty() )
-                out << YAML::Key << "imgui_initialization" << YAML::Value << YAML::Null;
-            else
-                out << YAML::Key << "imgui_initialization" << YAML::Value << ImGuiIniFile;
+            // if( ImGuiIniFile.empty() )
+            //     out << YAML::Key << "imgui_initialization" << YAML::Value << YAML::Null;
+            // else
+            //     out << YAML::Key << "imgui_initialization" << YAML::Value << ImGuiIniFile;
 
             out << YAML::Key << "window_properties" << YAML::Value << YAML::Flow;
             {
                 out << YAML::BeginMap;
-                out << YAML::Key << "width" << YAML::Value << WindowSize.x;
-                out << YAML::Key << "height" << YAML::Value << WindowSize.y;
-                out << YAML::Key << "x" << YAML::Value << WindowPosition.x;
-                out << YAML::Key << "y" << YAML::Value << WindowPosition.y;
+                // out << YAML::Key << "width" << YAML::Value << WindowSize.x;
+                // out << YAML::Key << "height" << YAML::Value << WindowSize.y;
+                // out << YAML::Key << "x" << YAML::Value << WindowPosition.x;
+                // out << YAML::Key << "y" << YAML::Value << WindowPosition.y;
                 out << YAML::EndMap;
             }
         }
@@ -72,9 +78,9 @@ void SaveConfiguration( fs::path ConfigurationFile )
     fout << out.c_str();
 }
 
-Ref<argparse::ArgumentParser> ParseCommandLine()
+Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
 {
-    auto lProgramArguments = New<Ref<argparse::ArgumentParser>>( "bin2ktx" );
+    auto lProgramArguments = New<argparse::ArgumentParser>( "bin2ktx" );
 
     lProgramArguments->add_argument( "-i", "--project" ).help( "Specify input file" );
     lProgramArguments->add_argument( "-i", "--scenario" ).help( "Specify input file" );
@@ -131,9 +137,9 @@ int main( int argc, char **argv )
 
     fs::path ConfigurationFile = ConfigurationRoot / "EditorConfiguration.yaml";
     if( fs::exists( ConfigurationFile ) )
-        LoadConfiguration();
+        LoadConfiguration(ConfigurationFile);
     else
-        SaveConfiguration();
+        SaveConfiguration(ConfigurationFile);
 
     mEngineLoop->SetInitialWindowSize( WindowSize );
     mEngineLoop->SetInitialWindowPosition( WindowPosition );
