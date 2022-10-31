@@ -21,7 +21,7 @@
 #include "Renderer/MeshRenderer.h"
 
 #include "Core/GraphicContext//Texture2D.h"
-#include "Scripting/ScriptComponent.h"
+// #include "Scripting/ScriptComponent.h"
 
 #include "Scene/Components/VisualHelpers.h"
 #include "Serialize/AssetFile.h"
@@ -80,7 +80,7 @@ namespace LTSE::Core
         mGraphicContext = aSource->mGraphicContext;
         m_UI            = aSource->m_UI;
 
-        mSceneScripting = aSource->mSceneScripting;
+        // mSceneScripting = aSource->mSceneScripting;
         mMaterialSystem = aSource->mMaterialSystem;
 
         InitializeRayTracing();

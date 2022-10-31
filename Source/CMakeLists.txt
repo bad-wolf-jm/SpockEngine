@@ -26,6 +26,7 @@ add_library(LTSimulationEngineRuntime STATIC
 
     Mono/Manager.cpp
     Mono/InternalCalls.cpp
+    Mono/EntityRegistry.cpp
     
     Core/Cuda/MultiTensor.cu
     Core/Cuda/MemoryPool.cu

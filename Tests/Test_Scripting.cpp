@@ -10,9 +10,9 @@
 
 #include "TensorOps/Scope.h"
 
-#include "Scripting/ArrayTypes.h"
-#include "Scripting/Core/Vector.h"
-#include "Scripting/ScriptingEngine.h"
+// #include "Scripting/ArrayTypes.h"
+// #include "Scripting/Core/Vector.h"
+// #include "Scripting/ScriptingEngine.h"
 
 #define ENTT_DISABLE_ASSERT
 #include "Core/EntityRegistry/Registry.h"

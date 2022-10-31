@@ -15,8 +15,7 @@ namespace SpockEngine
 
         public bool Has<_Component>() where _Component : Component, new()
         {
-            // return CppCall.HasComponent( mRegistryID, mEntityID, typeof(_Component) );
-            return false;
+            return CppCall.Entity_Has( mEntityID, mRegistryID, typeof(_Component) );
         }
 
         public void Tag<_Component>() where _Component : Component, new()

@@ -124,6 +124,7 @@ namespace LTSE::Core
         static void *GetSceneContext();
 
       private:
+        static void RegisterComponentTypes();
         static void RegisterInternalCppFunctions();
         static void InitMono();
         static void ShutdownMono();

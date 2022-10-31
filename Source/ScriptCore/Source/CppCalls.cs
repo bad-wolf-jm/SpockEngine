@@ -11,6 +11,9 @@ namespace SpockEngine
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static bool Entity_IsValid(uint aEntityID, ulong aRegistry);
 
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static bool Entity_Has(uint aEntityID, ulong aRegistry, Type aTypeDesc);
+
         // [MethodImplAttribute(MethodImplOptions.InternalCall)]
         // internal extern static object GetScriptInstance(ulong entityID);
 

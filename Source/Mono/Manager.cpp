@@ -15,6 +15,7 @@
 // #include <FileWatch.hpp>
 
 #include "InternalCalls.h"
+#include "EntityRegistry.h"
 
 namespace LTSE::Core
 {
@@ -117,12 +118,11 @@ namespace LTSE::Core
 
         ScriptClass mBaseApplicationClass;
         ScriptClass mBaseControllerClass;
+        ScriptClass mBaseComponentClass;
 
         std::unordered_map<std::string, Ref<ScriptClass>> mApplicationClasses;
-
         std::unordered_map<std::string, Ref<ScriptClass>> mControllerClasses;
-
-        // std::unique_ptr<filewatch::FileWatch<std::string>> mAppAssemblyFileWatcher;
+        std::unordered_map<std::string, Ref<ScriptClass>> mComponentClasses;
 
         void *mSceneContext = nullptr;
 
@@ -161,7 +161,7 @@ namespace LTSE::Core
 
     MonoMethod *ScriptClassInstance::GetMethod( const std::string &aName, int aParameterCount )
     {
-        MonoClass* lClass = mMonoClass;
+        MonoClass  *lClass  = mMonoClass;
         MonoMethod *lMethod = NULL;
         while( lClass != NULL && lMethod == NULL )
         {
@@ -194,6 +194,9 @@ namespace LTSE::Core
 
         sData->mBaseApplicationClass = ScriptClass( "SpockEngine", "SEApplication", true );
         sData->mBaseControllerClass  = ScriptClass( "SpockEngine", "ActorComponent", true );
+        sData->mBaseComponentClass   = ScriptClass( "SpockEngine", "Component", true );
+
+         Utils::PrintAssemblyTypes( sData->mCoreAssembly );
     }
 
     // static void OnAppAssemblyFileSystemEvent( const std::string &path, const filewatch::Event change_type )
@@ -233,6 +236,8 @@ namespace LTSE::Core
         RegisterInternalCppFunctions();
 
         LoadCoreAssembly( "Source/ScriptCore/Build/Debug/SE_Core.dll" );
+
+        RegisterComponentTypes();
     }
 
     // #define SE_ADD_INTERNAL_CALL( Name ) mono_add_internal_call( "SpockEngine.CppCall::" #Name, Name )
@@ -245,12 +250,19 @@ namespace LTSE::Core
     //         std::cout << str << ", " << parameter << std::endl;
     //     }
 
+    void ScriptManager::RegisterComponentTypes()
+    {
+        RegisterComponentType<sNodeTransformComponent>();
+    }
+
     void ScriptManager::RegisterInternalCppFunctions()
     {
         using namespace MonoInternalCalls;
-        //
+
         SE_ADD_INTERNAL_CALL( NativeLog );
+
         SE_ADD_INTERNAL_CALL( Entity_IsValid );
+        SE_ADD_INTERNAL_CALL( Entity_Has );
     }
 
     void ScriptManager::Shutdown()
@@ -314,18 +326,21 @@ namespace LTSE::Core
             MonoClass *lMonoClass = mono_class_from_name( sData->mAppAssemblyImage, lNameSpace, lClassName );
             if( lMonoClass == sData->mBaseApplicationClass.mMonoClass ) continue;
             if( lMonoClass == sData->mBaseControllerClass.mMonoClass ) continue;
+            if( lMonoClass == sData->mBaseComponentClass.mMonoClass ) continue;
 
             auto lNewScriptClass = New<ScriptClass>( lNameSpace, lClassName );
 
             bool lIsApplicationClass =
                 mono_class_is_subclass_of( lNewScriptClass->mMonoClass, sData->mBaseApplicationClass.mMonoClass, false );
-            if( lIsApplicationClass && ( sData->mBaseApplicationClass.mMonoClass == nullptr ) )
-                sData->mApplicationClasses[lFullName] = lNewScriptClass;
+            if( lIsApplicationClass ) sData->mApplicationClasses[lFullName] = lNewScriptClass;
 
-            bool lControllerClass =
+            bool lIsControllerClass =
                 mono_class_is_subclass_of( lNewScriptClass->mMonoClass, sData->mBaseControllerClass.mMonoClass, false );
-            if( lIsApplicationClass && ( sData->mBaseControllerClass.mMonoClass == nullptr ) )
-                sData->mControllerClasses[lFullName] = lNewScriptClass;
+            if( lIsControllerClass ) sData->mControllerClasses[lFullName] = lNewScriptClass;
+
+            bool lIsComponentClass =
+                mono_class_is_subclass_of( lNewScriptClass->mMonoClass, sData->mBaseComponentClass.mMonoClass, false );
+            if( lIsComponentClass ) sData->mComponentClasses[lFullName] = lNewScriptClass;
 
             // This routine is an iterator routine for retrieving the fields in a class.
             // You must pass a gpointer that points to zero and is treated as an opaque handle
