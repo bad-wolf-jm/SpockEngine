@@ -82,10 +82,12 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
 {
     auto lProgramArguments = New<argparse::ArgumentParser>( "bin2ktx" );
 
-    lProgramArguments->add_argument( "-i", "--project" ).help( "Specify input file" );
-    lProgramArguments->add_argument( "-i", "--scenario" ).help( "Specify input file" );
-    lProgramArguments->add_argument( "-o", "--res_x" ).help( "Specify output file" );
-    lProgramArguments->add_argument( "-o", "--res_y" ).help( "Specify output file" );
+    lProgramArguments->add_argument( "-p", "--project" ).help( "Specify input file" );
+    lProgramArguments->add_argument( "-s", "--scenario" ).help( "Specify input file" );
+    lProgramArguments->add_argument( "-x", "--res_x" ).help( "Specify output file" );
+    lProgramArguments->add_argument( "-y", "--res_y" ).help( "Specify output file" );
+    lProgramArguments->add_argument( "-M", "--mono_runtime" ).help( "Specify output file" );
+    lProgramArguments->add_argument( "-L", "--log_level" ).help( "Specify output file" );
 
     try
     {
@@ -137,9 +139,9 @@ int main( int argc, char **argv )
 
     fs::path ConfigurationFile = ConfigurationRoot / "EditorConfiguration.yaml";
     if( fs::exists( ConfigurationFile ) )
-        LoadConfiguration(ConfigurationFile);
+        LoadConfiguration( ConfigurationFile );
     else
-        SaveConfiguration(ConfigurationFile);
+        SaveConfiguration( ConfigurationFile );
 
     mEngineLoop->SetInitialWindowSize( WindowSize );
     mEngineLoop->SetInitialWindowPosition( WindowPosition );

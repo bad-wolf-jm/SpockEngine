@@ -1,3 +1,2 @@
 application:
-  imgui_initialization: imgui_config.ini
   window_properties: {width: 2920, height: 1360, x: 100, y: 100}
