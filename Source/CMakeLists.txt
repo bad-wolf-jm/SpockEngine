@@ -33,6 +33,7 @@ add_library(LTSimulationEngineRuntime STATIC
     
     UI/Widgets.cpp
     UI/UI.cpp
+    UI/TreeNode.cpp
     UI/CanvasView.cpp
     
     Core/Optix/OptixContext.cpp

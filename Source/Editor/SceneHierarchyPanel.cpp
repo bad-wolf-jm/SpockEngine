@@ -3,6 +3,7 @@
 #include "UI/CanvasView.h"
 #include "UI/UI.h"
 #include "UI/Widgets.h"
+#include "UI/TreeNode.h"
 
 #include "Core/EntityRegistry/Components.h"
 #include "Core/EntityRegistry/Registry.h"
@@ -63,7 +64,7 @@ namespace LTSE::Editor
             ImGui::PushStyleColor( ImGuiCol_Header, ImVec4( 0.05f, 0.05f, 0.05f, 1.00f ) );
             ImGui::PushStyleColor( ImGuiCol_HeaderHovered, ImVec4( 0.07f, 0.07f, 0.07f, 1.00f ) );
             ImGui::PushStyleColor( ImGuiCol_HeaderActive, ImVec4( 0.07f, 0.07f, 0.07f, 1.0f ) );
-            bool l_NodeIsOpen = ImGui::TreeNodeEx( l_Label.c_str(), l_Flags );
+            bool l_NodeIsOpen = UI::TreeNodeEx( l_Label.c_str(), l_Flags );
             ImGui::PopStyleColor();
             ImGui::PopStyleColor();
             ImGui::PopStyleColor();
