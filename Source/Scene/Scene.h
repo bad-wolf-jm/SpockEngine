@@ -22,7 +22,7 @@
 #include "Core/EntityRegistry/Registry.h"
 #include "Core/Textures/TextureTypes.h"
 
-#include "Scripting/ScriptingEngine.h"
+// #include "Scripting/ScriptingEngine.h"
 
 #include "Core/Optix/OptixAccelerationStructure.h"
 #include "Core/Optix/OptixContext.h"
@@ -126,7 +126,7 @@ namespace LTSE::Core
         GraphicContext      mGraphicContext;
         Ref<MaterialSystem> mMaterialSystem;
 
-        Ref<ScriptingEngine> mSceneScripting = nullptr;
+        // Ref<ScriptingEngine> mSceneScripting = nullptr;
 
         Ref<UIContext>                m_UI                    = nullptr;
         Ref<OptixDeviceContextObject> mRayTracingContext     = nullptr;

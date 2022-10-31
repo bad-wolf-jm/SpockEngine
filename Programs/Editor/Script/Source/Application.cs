@@ -17,7 +17,15 @@ namespace Test
             Console.WriteLine($"Actor Component Created entity");
 
             if (mEntity.IsValid())
+            {
                 Console.WriteLine($"Valid entity");
+            }
+
+            if (mEntity.Has<sNodeTransformComponent>())
+            {
+                Console.WriteLine($"I have a transform");
+            }
+
         }
 
         override public void OnDestroy()
