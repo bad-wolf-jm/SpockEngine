@@ -20,9 +20,9 @@ namespace LTSE::Core
         return entt::resolve( (uint32_t)( lHashValue & 0xFFFFFFFF ) );
     }
 
-    ScriptClassInstance MarshallComponent( ScriptClass &lMonoType, sNodeTransformComponent const &aComponent )
+    ScriptClassInstance MarshallComponent( ScriptClass &lMonoType, sNodeTransformComponent &aComponent )
     {
-        return lMonoType.Instantiate();
+        return lMonoType.Instantiate( aComponent.mMatrix );
     }
 
     // using namespace sol;

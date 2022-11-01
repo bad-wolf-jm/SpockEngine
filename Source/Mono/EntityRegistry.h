@@ -99,7 +99,7 @@ namespace LTSE::Core
         // }
     } // namespace
 
-    ScriptClassInstance MarshallComponent( ScriptClass &aMonoType, sNodeTransformComponent const &aComponent );
+    ScriptClassInstance MarshallComponent( ScriptClass &aMonoType, sNodeTransformComponent &aComponent );
     entt::meta_type     GetMetaType( MonoType *aObject );
     // {
     //     auto lHashValue = std::hash<uint64_t>()( (uint64_t)aObject );
