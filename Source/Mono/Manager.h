@@ -101,6 +101,7 @@ namespace LTSE::Core
         std::map<std::string, sScriptField> mFields;
 
         MonoClass *mMonoClass = nullptr;
+        bool       mIsCore    = false;
 
         friend class ScriptManager;
     };
@@ -133,7 +134,7 @@ namespace LTSE::Core
 
         static void LoadCoreAssembly( const std::filesystem::path &aFilepath );
 
-        static MonoObject *InstantiateClass( MonoClass *aMonoClass );
+        static MonoObject *InstantiateClass( MonoClass *aMonoClass, bool aIsCore = false );
         static void        LoadAssemblyClasses();
 
         friend class ScriptClass;

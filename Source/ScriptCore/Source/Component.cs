@@ -14,7 +14,7 @@ namespace SpockEngine
         public sNodeTransformComponent() 
         { 
             mDummy = 123; 
-            Console.WriteLine("New sNodeTransformComponent instantiated!!");
+            Console.WriteLine($"New sNodeTransformComponent instantiated!! {mDummy}");
         }
     }
 

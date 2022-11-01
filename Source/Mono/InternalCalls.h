@@ -15,7 +15,8 @@ namespace LTSE::MonoInternalCalls
 
     void NativeLog( MonoString *string, int parameter );
 
-    bool Entity_IsValid( uint32_t aEntityID, EntityRegistry *aRegistry );
-    bool Entity_Has( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType );
+    bool        Entity_IsValid( uint32_t aEntityID, EntityRegistry *aRegistry );
+    bool        Entity_Has( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType );
+    MonoObject *Entity_Get( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType );
 
 } // namespace LTSE::MonoInternalCalls

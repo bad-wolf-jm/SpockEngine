@@ -131,7 +131,7 @@ namespace LTSE::Core
 
     static ScriptEngineData *sData = nullptr;
 
-    MonoObject *ScriptManager::InstantiateClass( MonoClass *aMonoClass )
+    MonoObject *ScriptManager::InstantiateClass( MonoClass *aMonoClass, bool aIsCore )
     {
         MonoObject *aInstance = mono_object_new( sData->mAppDomain, aMonoClass );
         mono_runtime_object_init( aInstance );
@@ -147,13 +147,13 @@ namespace LTSE::Core
     }
 
     ScriptClass::ScriptClass( MonoType *aMonoClass )
-        : mMonoClass{ mono_ptr_class_get( aMonoClass ) }
+        : mMonoClass{ mono_class_from_mono_type( aMonoClass ) }
     {
     }
 
     ScriptClassInstance ScriptClass::Instantiate()
     {
-        MonoObject *lInstance = ScriptManager::InstantiateClass( mMonoClass );
+        MonoObject *lInstance = ScriptManager::InstantiateClass( mMonoClass, mIsCore );
 
         return ScriptClassInstance( mMonoClass, lInstance );
     }
@@ -253,6 +253,7 @@ namespace LTSE::Core
 
         SE_ADD_INTERNAL_CALL( Entity_IsValid );
         SE_ADD_INTERNAL_CALL( Entity_Has );
+        SE_ADD_INTERNAL_CALL( Entity_Get );
     }
 
     void ScriptManager::Shutdown()

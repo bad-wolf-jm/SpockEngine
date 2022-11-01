@@ -61,7 +61,7 @@ namespace LTSE::Core
         }
 
         template <typename _Ty>
-        ScriptClassInstance Get( Entity &aEntity, ScriptClass const &aMonoType )
+        ScriptClassInstance Get( Entity &aEntity, ScriptClass &aMonoType )
         {
             auto &aComponent = aEntity.Get<_Ty>();
 
@@ -99,7 +99,7 @@ namespace LTSE::Core
         // }
     } // namespace
 
-    ScriptClassInstance MarshallComponent( ScriptClass const &aMonoType, sNodeTransformComponent const &aComponent );
+    ScriptClassInstance MarshallComponent( ScriptClass &aMonoType, sNodeTransformComponent const &aComponent );
     entt::meta_type     GetMetaType( MonoType *aObject );
     // {
     //     auto lHashValue = std::hash<uint64_t>()( (uint64_t)aObject );
