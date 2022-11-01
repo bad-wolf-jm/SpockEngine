@@ -49,13 +49,13 @@ namespace LTSE::Core
         }
 
         template <typename _Ty>
-        auto IsValid( Entity &aEntity )
+        bool IsValid( Entity &aEntity )
         {
             return aEntity.IsValid();
         }
 
         template <typename _Ty>
-        auto Has( Entity &aEntity )
+        bool Has( Entity &aEntity )
         {
             return aEntity.Has<_Ty>();
         }
@@ -67,6 +67,15 @@ namespace LTSE::Core
             auto  lInstance  = MarshallComponent( aMonoType, aComponent );
 
             return lInstance;
+        }
+
+        template <typename _Ty>
+        void Replace( Entity &aEntity, ScriptClass &aMonoType, ScriptClassInstance &aNewComponent )
+        {
+            _Ty lInstance;
+            UnmarshallComponent( aNewComponent, aNewComponent, lInstance );
+
+            aEntity.Replace<_Ty>( lInstance );
         }
 
         // template <typename _Ty>
@@ -101,16 +110,12 @@ namespace LTSE::Core
     } // namespace
 
     ScriptClassInstance MarshallComponent( ScriptClass &aMonoType, sNodeTransformComponent &aComponent );
-    entt::meta_type     GetMetaType( MonoType *aObject );
+    void                UnmarshallComponent( ScriptClassInstance &aMonoType, sNodeTransformComponent &aComponent );
+
+    entt::meta_type GetMetaType( MonoType *aObject );
 
     // template <typename _ComponentType>
     // void Add( uint32_t aEntityID, EntityRegistry *aRegistry, MonoType *aTagType, _ComponentType *aValue )
-    // {
-    //     //
-    // }
-
-    // template <typename _ComponentType>
-    // void Replace( uint32_t aEntityID, EntityRegistry *aRegistry, MonoType *aTagType, _ComponentType *aValue )
     // {
     //     //
     // }
