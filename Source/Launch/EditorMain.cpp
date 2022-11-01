@@ -51,6 +51,7 @@ void SaveConfiguration( fs::path ConfigurationFile, math::ivec2 const &aWindowSi
             lConfigurationOut << YAML::Key << "y" << YAML::Value << aWindowPosition.y;
             lConfigurationOut << YAML::EndMap;
         }
+
         lConfigurationOut << YAML::EndMap;
     }
     lConfigurationOut << YAML::EndMap;
@@ -94,7 +95,7 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
     lProgramArguments->add_argument( "-L", "--log_level" )
         .help( "Specify output file" ).scan<'i', int>();
 
-    // clang-format on 
+    // clang-format on
 
     try
     {
@@ -155,30 +156,22 @@ int main( int argc, char **argv )
     else
         SaveConfiguration( ConfigurationFile, lWindowSize, lWindowPosition );
 
-    if( auto lResXOverride =  lProgramArguments->present<int>( "--res_x" ) )
-        lWindowSize.x = lResXOverride.value();
+    if( auto lResXOverride = lProgramArguments->present<int>( "--res_x" ) ) lWindowSize.x = lResXOverride.value();
+    if( auto lResYOverride = lProgramArguments->present<int>( "--res_y" ) ) lWindowSize.y = lResYOverride.value();
+    if( auto lPosXOverride = lProgramArguments->present<int>( "--pos_x" ) ) lWindowPosition.x = lPosXOverride.value();
+    if( auto lPosYOverride = lProgramArguments->present<int>( "--pos_y" ) ) lWindowPosition.y = lPosYOverride.value();
 
-    if( auto lResYOverride = lProgramArguments->present<int>( "--res_y" ) )
-        lWindowSize.y = lResYOverride.value();
-
-    if( auto lPosXOverride =  lProgramArguments->present<int>( "--pos_x" ) )
-        lWindowPosition.x = lPosXOverride.value();
-
-    if( auto lPosYOverride = lProgramArguments->present<int>( "--pos_y" ) )
-        lWindowPosition.y = lPosYOverride.value();
-
-    auto lProjectName = lProgramArguments->get<std::string>( "--project" );
-    fs::path lProjectConfigurationPath = lProjectRoot / fmt::format("{}.yaml", lProjectName);
+    auto     lProjectName              = lProgramArguments->get<std::string>( "--project" );
+    fs::path lProjectConfigurationPath = lProjectRoot / fmt::format( "{}.yaml", lProjectName );
     if( !fs::exists( lProjectConfigurationPath ) )
     {
-        LTSE::Logging::Info("Project file '{}' does not exist", lProjectConfigurationPath.string());
+        LTSE::Logging::Info( "Project file '{}' does not exist", lProjectConfigurationPath.string() );
 
-        std::exit(1);
+        std::exit( 1 );
     }
 
     auto lScenario = fs::path( lProgramArguments->get<std::string>( "--scenario" ) );
-    if( !fs::exists( lScenario ) )
-        LTSE::Logging::Info("Scenario file '{}' does not exist", lScenario.string());
+    if( !fs::exists( lScenario ) ) LTSE::Logging::Info( "Scenario file '{}' does not exist", lScenario.string() );
 
     mEngineLoop->SetInitialWindowSize( lWindowSize );
     mEngineLoop->SetInitialWindowPosition( lWindowPosition );
