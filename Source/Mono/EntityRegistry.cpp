@@ -20,10 +20,13 @@ namespace LTSE::Core
         return entt::resolve( (uint32_t)( lHashValue & 0xFFFFFFFF ) );
     }
 
+    ScriptClassInstance MarshallComponent( ScriptClass const &lMonoType, sNodeTransformComponent const &aComponent )
+    {
+        return ScriptClassInstance{};
+    }
 
     // using namespace sol;
     // using namespace entt::literals;
-// 13339442036045060146
     // namespace
     // {
     //     template <typename _Ty>

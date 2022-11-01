@@ -17,7 +17,6 @@
 #include "EntityRegistry.h"
 #include "InternalCalls.h"
 
-
 namespace LTSE::Core
 {
 
@@ -145,6 +144,11 @@ namespace LTSE::Core
     {
         mMonoClass = mono_class_from_name(
             aIsCore ? sData->mCoreAssemblyImage : sData->mAppAssemblyImage, aClassNamespace.c_str(), aClassName.c_str() );
+    }
+
+    ScriptClass::ScriptClass( MonoType *aMonoClass )
+        : mMonoClass{ mono_ptr_class_get( aMonoClass ) }
+    {
     }
 
     ScriptClassInstance ScriptClass::Instantiate()
