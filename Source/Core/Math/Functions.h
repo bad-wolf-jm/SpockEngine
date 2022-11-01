@@ -20,6 +20,7 @@ namespace math
     template <typename T> T min( T x, T y ) { return glm::min( x, y ); }
 
     template <typename T> float *ptr( T &V ) { return glm::value_ptr( V ); }
+    template <typename T> float *ptr( T const &V ) { return glm::value_ptr( V ); }
 
     template <typename T> T radians( T V ) { return glm::radians( V ); }
 
