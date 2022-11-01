@@ -8,10 +8,13 @@
 #include "mono/metadata/tabledefs.h"
 
 #include "Core/EntityRegistry/Registry.h"
+#include "Manager.h"
+#include "Scene/Components.h"
 
 namespace LTSE::Core
 {
     using namespace entt::literals;
+    using namespace LTSE::Core::EntityComponentSystem::Components;
     namespace
     {
         template <typename _Ty>
@@ -51,6 +54,20 @@ namespace LTSE::Core
             return aEntity.IsValid();
         }
 
+        template <typename _Ty>
+        auto Has( Entity &aEntity )
+        {
+            return aEntity.Has<_Ty>();
+        }
+
+        template <typename _Ty>
+        ScriptClassInstance Get( Entity &aEntity, ScriptClass const &aMonoType )
+        {
+            auto &aComponent = aEntity.Get<_Ty>();
+
+            return MarshallComponent( aMonoType, aComponent );
+        }
+
         // template <typename _Ty>
         // auto Add( Entity &aEntity, const sol::table &aInstance )
         // {
@@ -76,27 +93,14 @@ namespace LTSE::Core
         // }
 
         // template <typename _Ty>
-        // auto Get( Entity &aEntity )
-        // {
-        //     auto &lNewComponent = aEntity.Get<_Ty>();
-
-        //     return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
-        // }
-
-        template <typename _Ty>
-        auto Has( Entity &aEntity )
-        {
-            return aEntity.Has<_Ty>();
-        }
-
-        // template <typename _Ty>
         // auto Remove( Entity &aEntity )
         // {
         //     aEntity.Remove<_Ty>();
         // }
     } // namespace
 
-    entt::meta_type GetMetaType( MonoType *aObject );
+    ScriptClassInstance MarshallComponent( ScriptClass const &aMonoType, sNodeTransformComponent const &aComponent );
+    entt::meta_type     GetMetaType( MonoType *aObject );
     // {
     //     auto lHashValue = std::hash<uint64_t>()( (uint64_t)aObject );
 
@@ -163,6 +167,7 @@ namespace LTSE::Core
         if constexpr( std::is_class<_Ty>::value )
         {
             lNewType.template func<&Has<_Ty>>( "Has"_hs );
+            lNewType.template func<&Get<_Ty>>( "Get"_hs );
         }
     }
 

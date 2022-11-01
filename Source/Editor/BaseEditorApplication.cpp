@@ -35,7 +35,7 @@ namespace LTSE::Editor
     {
         YAML::Node  l_RootNode  = YAML::LoadFile( ConfigurationFile.string() );
         YAML::Node &l_ImGuiInit = l_RootNode["application"]["imgui_initialization"];
-        if( !l_ImGuiInit.IsNull() ) ImGuiIniFile = l_ImGuiInit.as<std::string>();
+        // if( !l_ImGuiInit.IsNull() ) ImGuiIniFile = l_ImGuiInit.as<std::string>();
 
         YAML::Node &l_WindowProperties = l_RootNode["application"]["window_properties"];
         if( !l_WindowProperties.IsNull() )
@@ -53,10 +53,10 @@ namespace LTSE::Editor
             out << YAML::Key << "application" << YAML::Value;
             out << YAML::BeginMap;
             {
-                if( ImGuiIniFile.empty() )
-                    out << YAML::Key << "imgui_initialization" << YAML::Value << YAML::Null;
-                else
-                    out << YAML::Key << "imgui_initialization" << YAML::Value << ImGuiIniFile;
+                // if( ImGuiIniFile.empty() )
+                    // out << YAML::Key << "imgui_initialization" << YAML::Value << YAML::Null;
+                // else
+                    // out << YAML::Key << "imgui_initialization" << YAML::Value << ImGuiIniFile;
 
                 out << YAML::Key << "window_properties" << YAML::Value << YAML::Flow;
                 {

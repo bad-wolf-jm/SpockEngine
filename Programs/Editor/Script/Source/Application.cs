@@ -24,6 +24,7 @@ namespace Test
             if (mEntity.Has<sNodeTransformComponent>())
             {
                 Console.WriteLine($"I have a transform");
+                sNodeTransformComponent lTransform = mEntity.Get<sNodeTransformComponent>();
             }
 
         }

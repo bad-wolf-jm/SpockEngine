@@ -1,3 +1,4 @@
+using System;
 
 namespace SpockEngine
 {
@@ -10,7 +11,11 @@ namespace SpockEngine
     {
         private int mDummy;
 
-        public sNodeTransformComponent() { mDummy = 123; }
+        public sNodeTransformComponent() 
+        { 
+            mDummy = 123; 
+            Console.WriteLine("New sNodeTransformComponent instantiated!!");
+        }
     }
 
 }

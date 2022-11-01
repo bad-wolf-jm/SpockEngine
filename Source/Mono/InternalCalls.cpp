@@ -5,6 +5,7 @@
 #include <string>
 
 #include "Core/Logging.h"
+#include "Manager.h"
 
 namespace LTSE::MonoInternalCalls
 {
@@ -31,5 +32,16 @@ namespace LTSE::MonoInternalCalls
 
         return static_cast<bool>( lMaybeAny );
     }
-    // {klass=0x0000027fd9818a48 {element_class=0x0000027fd9818a48 {element_class=0x0000027fd9818a48 {element_class=...} ...} ...} ...}
+
+    MonoObject *Entity_Get( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType )
+    {
+        MonoType *lMonoType = mono_reflection_type_get_type( aComponentType );
+
+        const entt::meta_type lMetaType = Core::GetMetaType( lMonoType );
+        const entt::meta_any  lMaybeAny = Core::InvokeMetaFunction(
+             lMetaType, "Get"_hs, aRegistry->WrapEntity( static_cast<entt::entity>( aEntityID ) ), ScriptClass( lMonoType ) );
+
+        return lMaybeAny.cast<ScriptClassInstance>().GetInstance();
+    }
+
 } // namespace LTSE::MonoInternalCalls
