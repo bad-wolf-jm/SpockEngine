@@ -1,38 +1,24 @@
 #include <argparse/argparse.hpp>
 #include <filesystem>
 #include <fstream>
+#include <yaml-cpp/yaml.h>
 
 #include <direct.h>
 #include <iostream>
 #include <limits.h>
 #include <string>
 
-#include "Core/EntityRegistry/ScriptableEntity.h"
-#include "Core/GraphicContext//UI/UIContext.h"
+#include "Core/GraphicContext//GraphicContext.h"
 #include "Core/Logging.h"
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 #include "Core/Platform/EngineLoop.h"
 
-#include "Core/GraphicContext//GraphicContext.h"
-#include "Scene/EnvironmentSampler/EnvironmentSampler.h"
-#include "Scene/EnvironmentSampler/PointCloudVisualizer.h"
-#include "Scene/Renderer/SceneRenderer.h"
-#include "Scene/Scene.h"
-
-// #include "LidarSensorModel/SensorDeviceBase.h"
-#include "TensorOps/Scope.h"
-
-#include "Editor/EditorWindow.h"
-#include "UI/UI.h"
-#include "UI/Widgets.h"
+#include "Mono/Manager.h"
 
 using namespace LTSE::Core;
 using namespace LTSE::Graphics;
-using namespace LTSE::Editor;
 using namespace LTSE::Core::UI;
-using namespace LTSE::SensorModel;
-using namespace LTSE::SensorModel::Dev;
 
 namespace fs = std::filesystem;
 
@@ -57,14 +43,13 @@ void SaveConfiguration( fs::path ConfigurationFile, math::ivec2 const &aWindowSi
         lConfigurationOut << YAML::BeginMap;
         {
             lConfigurationOut << YAML::Key << "window_properties" << YAML::Value << YAML::Flow;
-            {
-                lConfigurationOut << YAML::BeginMap;
-                lConfigurationOut << YAML::Key << "width" << YAML::Value << aWindowSize.x;
-                lConfigurationOut << YAML::Key << "height" << YAML::Value << aWindowSize.y;
-                lConfigurationOut << YAML::Key << "x" << YAML::Value << aWindowPosition.x;
-                lConfigurationOut << YAML::Key << "y" << YAML::Value << aWindowPosition.y;
-                lConfigurationOut << YAML::EndMap;
-            }
+
+            lConfigurationOut << YAML::BeginMap;
+            lConfigurationOut << YAML::Key << "width" << YAML::Value << aWindowSize.x;
+            lConfigurationOut << YAML::Key << "height" << YAML::Value << aWindowSize.y;
+            lConfigurationOut << YAML::Key << "x" << YAML::Value << aWindowPosition.x;
+            lConfigurationOut << YAML::Key << "y" << YAML::Value << aWindowPosition.y;
+            lConfigurationOut << YAML::EndMap;
         }
         lConfigurationOut << YAML::EndMap;
     }
@@ -77,14 +62,39 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
 {
     auto lProgramArguments = New<argparse::ArgumentParser>( "bin2ktx" );
 
-    lProgramArguments->add_argument( "-p", "--project" ).help( "Specify input file" ).default_value( std::string{ "" } );
-    lProgramArguments->add_argument( "-s", "--scenario" ).help( "Specify input file" ).default_value( std::string{ "" } );
-    lProgramArguments->add_argument( "-x", "--pos_x" ).help( "Specify output file" ).scan<'i', int>().default_value( 0 );
-    lProgramArguments->add_argument( "-y", "--pos_x" ).help( "Specify output file" ).scan<'i', int>().default_value( 0 );
-    lProgramArguments->add_argument( "-h", "--res_y" ).help( "Specify output file" ).scan<'i', int>().default_value( 0 );
-    lProgramArguments->add_argument( "-h", "--res_y" ).help( "Specify output file" ).scan<'i', int>().default_value( 0 );
-    lProgramArguments->add_argument( "-M", "--mono_runtime" ).help( "Specify output file" ).default_value( std::string{ "" } );
-    lProgramArguments->add_argument( "-L", "--log_level" ).help( "Specify output file" ).scan<'i', int>().default_value( 0 );
+    // clang-format off
+
+    lProgramArguments->add_argument( "-p", "--project" )
+        .help( "Specify input file" )
+        .default_value( std::string{ "" } );
+
+    lProgramArguments->add_argument( "-s", "--scenario" )
+        .help( "Specify input file" )
+        .default_value( std::string{ "" } );
+
+    lProgramArguments->add_argument( "-x", "--pos_x" )
+        .help( "Specify output file" )
+        .scan<'i', int>();
+
+    lProgramArguments->add_argument( "-y", "--pos_y" )
+        .help( "Specify output file" )
+        .scan<'i', int>();
+
+    lProgramArguments->add_argument( "-w", "--res_x" )
+        .help( "Specify output file" )
+        .scan<'i', int>();
+
+    lProgramArguments->add_argument( "-h", "--res_y" )
+        .help( "Specify output file" )
+        .scan<'i', int>();
+
+    lProgramArguments->add_argument( "-M", "--mono_runtime" )
+        .help( "Specify output file" );
+
+    lProgramArguments->add_argument( "-L", "--log_level" )
+        .help( "Specify output file" ).scan<'i', int>();
+
+    // clang-format on 
 
     try
     {
@@ -101,6 +111,15 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
     }
 }
 
+fs::path GetCwd()
+{
+    char buff[MAX_PATH];
+    _getcwd( buff, MAX_PATH );
+    fs::path lCwd = std::string( buff );
+
+    return lCwd;
+}
+
 int main( int argc, char **argv )
 {
     auto lProgramArguments = ParseCommandLine( argc, argv );
@@ -112,43 +131,58 @@ int main( int argc, char **argv )
     mEngineLoop->PreInit( 0, nullptr );
 
     // get cwd
-    fs::path ConfigurationRoot = "";
+    fs::path lProjectRoot = GetCwd();
+
+    LTSE::Logging::Info( "Current working directory is: '{}'", lProjectRoot.string() );
+
+    // Create Saved, Saved/Logs
+    if( !fs::exists( lProjectRoot / "Saved" / "Logs" ) ) fs::create_directories( lProjectRoot / "Saved" / "Logs" );
+
+    // Create Saved, Saved/Config
+    if( !fs::exists( lProjectRoot / "Saved" / "Config" ) ) fs::create_directories( lProjectRoot / "Saved" / "Config" );
+
+    // Configure logger to send messages to Saved/Logs/EditorLogs.txt
+    auto lOutputLogFile = lProjectRoot / "Saved" / "Logs" / "EditorLogs.txt";
+    LTSE::Logging::Info( "Log file will be written to '{}'", lOutputLogFile.string() );
+    LTSE::Logging::SetLogOutputFile( lProjectRoot / "Saved" / "Logs" / "EditorLogs.txt" );
+
+    math::ivec2 lWindowSize     = { 640, 480 };
+    math::ivec2 lWindowPosition = { 100, 100 };
+
+    fs::path ConfigurationFile = lProjectRoot / "Saved" / "Config" / "EditorConfiguration.yaml";
+    if( fs::exists( ConfigurationFile ) )
+        LoadConfiguration( ConfigurationFile, lWindowSize, lWindowPosition );
+    else
+        SaveConfiguration( ConfigurationFile, lWindowSize, lWindowPosition );
+
+    if( auto lResXOverride =  lProgramArguments->present<int>( "--res_x" ) )
+        lWindowSize.x = lResXOverride.value();
+
+    if( auto lResYOverride = lProgramArguments->present<int>( "--res_y" ) )
+        lWindowSize.y = lResYOverride.value();
+
+    if( auto lPosXOverride =  lProgramArguments->present<int>( "--pos_x" ) )
+        lWindowPosition.x = lPosXOverride.value();
+
+    if( auto lPosYOverride = lProgramArguments->present<int>( "--pos_y" ) )
+        lWindowPosition.y = lPosYOverride.value();
+
+    auto lProjectName = lProgramArguments->get<std::string>( "--project" );
+    fs::path lProjectConfigurationPath = lProjectRoot / fmt::format("{}.yaml", lProjectName);
+    if( !fs::exists( lProjectConfigurationPath ) )
     {
-        char buff[MAX_PATH];
-        _getcwd( buff, MAX_PATH );
-        fs::path lCwd = std::string( buff );
+        LTSE::Logging::Info("Project file '{}' does not exist", lProjectConfigurationPath.string());
 
-        LTSE::Logging::Info( "Current working directory is: '{}'", lCwd.string() );
-
-        ConfigurationRoot = lCwd;
-        if( fs::exists( lCwd / "Simulation.yaml" ) )
-            LTSE::Logging::Info( "Current working directory set to: '{}'", ConfigurationRoot.string() );
-
-        // Create Saved, Saved/Logs
-        if( !fs::exists( ConfigurationRoot / "Saved" / "Logs" ) ) fs::create_directories( ConfigurationRoot / "Saved" / "Logs" );
-
-        // Configure logger to send messages to saved/logs/EditorLogs.txt
-        auto lOutputLogFile = ConfigurationRoot / "Saved" / "Logs" / "EditorLogs.txt";
-        LTSE::Logging::Info( "Log file will be written to '{}'", lOutputLogFile.string() );
-        LTSE::Logging::SetLogOutputFile( ConfigurationRoot / "Saved" / "Logs" / "EditorLogs.txt" );
+        std::exit(1);
     }
 
-    math::ivec2 WindowSize     = { 640, 480 };
-    math::ivec2 WindowPosition = { 100, 100 };
+    auto lScenario = fs::path( lProgramArguments->get<std::string>( "--scenario" ) );
+    if( !fs::exists( lScenario ) )
+        LTSE::Logging::Info("Scenario file '{}' does not exist", lScenario.string());
 
-    fs::path ConfigurationFile = ConfigurationRoot / "EditorConfiguration.yaml";
-    if( fs::exists( ConfigurationFile ) )
-        LoadConfiguration( ConfigurationFile, WindowSize, WindowPosition );
-    else
-        SaveConfiguration( ConfigurationFile, WindowSize, WindowPosition );
-
-    if( lProgramArguments->present( "--res_x" ) ) WindowSize.x = lProgramArguments->get<int>( "--res_x" );
-
-    if( lProgramArguments->present( "--res_y" ) ) WindowSize.y = lProgramArguments->get<int>( "--res_y" );
-
-    mEngineLoop->SetInitialWindowSize( WindowSize );
-    mEngineLoop->SetInitialWindowPosition( WindowPosition );
-    mEngineLoop->SetImGuiConfigurationFile( ( ConfigurationRoot / "Saved" / "imgui.ini" ).string() );
+    mEngineLoop->SetInitialWindowSize( lWindowSize );
+    mEngineLoop->SetInitialWindowPosition( lWindowPosition );
+    mEngineLoop->SetImGuiConfigurationFile( ( lProjectRoot / "Saved" / "imgui.ini" ).string() );
     mEngineLoop->Init();
 
     ScriptManager::Initialize();
