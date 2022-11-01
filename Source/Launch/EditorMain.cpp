@@ -77,12 +77,14 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
 {
     auto lProgramArguments = New<argparse::ArgumentParser>( "bin2ktx" );
 
-    lProgramArguments->add_argument( "-p", "--project" ).help( "Specify input file" );
-    lProgramArguments->add_argument( "-s", "--scenario" ).help( "Specify input file" );
-    lProgramArguments->add_argument( "-w", "--res_x" ).help( "Specify output file" );
-    lProgramArguments->add_argument( "-h", "--res_y" ).help( "Specify output file" );
-    lProgramArguments->add_argument( "-M", "--mono_runtime" ).help( "Specify output file" );
-    lProgramArguments->add_argument( "-L", "--log_level" ).help( "Specify output file" );
+    lProgramArguments->add_argument( "-p", "--project" ).help( "Specify input file" ).default_value( std::string{ "" } );
+    lProgramArguments->add_argument( "-s", "--scenario" ).help( "Specify input file" ).default_value( std::string{ "" } );
+    lProgramArguments->add_argument( "-x", "--pos_x" ).help( "Specify output file" ).scan<'i', int>().default_value( 0 );
+    lProgramArguments->add_argument( "-y", "--pos_x" ).help( "Specify output file" ).scan<'i', int>().default_value( 0 );
+    lProgramArguments->add_argument( "-h", "--res_y" ).help( "Specify output file" ).scan<'i', int>().default_value( 0 );
+    lProgramArguments->add_argument( "-h", "--res_y" ).help( "Specify output file" ).scan<'i', int>().default_value( 0 );
+    lProgramArguments->add_argument( "-M", "--mono_runtime" ).help( "Specify output file" ).default_value( std::string{ "" } );
+    lProgramArguments->add_argument( "-L", "--log_level" ).help( "Specify output file" ).scan<'i', int>().default_value( 0 );
 
     try
     {
@@ -101,6 +103,8 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
 
 int main( int argc, char **argv )
 {
+    auto lProgramArguments = ParseCommandLine( argc, argv );
+
     Ref<EngineLoop> mEngineLoop = New<EngineLoop>();
 
     std::string ApplicationName = "Sensor Model Editor";
@@ -129,7 +133,7 @@ int main( int argc, char **argv )
         LTSE::Logging::SetLogOutputFile( ConfigurationRoot / "Saved" / "Logs" / "EditorLogs.txt" );
     }
 
-    math::ivec2 WindowSize     = { 1920, 1080 };
+    math::ivec2 WindowSize     = { 640, 480 };
     math::ivec2 WindowPosition = { 100, 100 };
 
     fs::path ConfigurationFile = ConfigurationRoot / "EditorConfiguration.yaml";
@@ -137,6 +141,10 @@ int main( int argc, char **argv )
         LoadConfiguration( ConfigurationFile, WindowSize, WindowPosition );
     else
         SaveConfiguration( ConfigurationFile, WindowSize, WindowPosition );
+
+    if( lProgramArguments->present( "--res_x" ) ) WindowSize.x = lProgramArguments->get<int>( "--res_x" );
+
+    if( lProgramArguments->present( "--res_y" ) ) WindowSize.y = lProgramArguments->get<int>( "--res_y" );
 
     mEngineLoop->SetInitialWindowSize( WindowSize );
     mEngineLoop->SetInitialWindowPosition( WindowPosition );
