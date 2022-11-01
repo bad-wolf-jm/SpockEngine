@@ -25,6 +25,11 @@ namespace LTSE::Core
         return lMonoType.Instantiate( aComponent.mMatrix );
     }
 
+    void UnmarshallComponent( ScriptClassInstance &aMonoType, sNodeTransformComponent &aComponent )
+    {
+        
+    }
+
     // using namespace sol;
     // using namespace entt::literals;
     // namespace
