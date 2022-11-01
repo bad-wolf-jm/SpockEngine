@@ -64,8 +64,9 @@ namespace LTSE::Core
         ScriptClassInstance Get( Entity &aEntity, ScriptClass &aMonoType )
         {
             auto &aComponent = aEntity.Get<_Ty>();
+            auto  lInstance  = MarshallComponent( aMonoType, aComponent );
 
-            return MarshallComponent( aMonoType, aComponent );
+            return lInstance;
         }
 
         // template <typename _Ty>
@@ -101,35 +102,6 @@ namespace LTSE::Core
 
     ScriptClassInstance MarshallComponent( ScriptClass &aMonoType, sNodeTransformComponent &aComponent );
     entt::meta_type     GetMetaType( MonoType *aObject );
-    // {
-    //     auto lHashValue = std::hash<uint64_t>()( (uint64_t)aObject );
-
-    //     return entt::resolve( (uint32_t)( lHashValue & 0xFFFFFFFF ) );
-    // }
-
-    // void IsValid( uint32_t aEntityID, EntityRegistry *aRegistry )
-    // {
-    //     const auto lMaybeAny = InvokeMetaFunction( GetMetaType( aTagType ), "IsValid"_hs, aRegistry->WrapEntity( aEntityID ) );
-
-    //     return static_cast<bool>( lMaybeAny );
-    // }
-
-    // void Has( uint32_t aEntityID, EntityRegistry *aRegistry, MonoType *aTagType )
-    // {
-    //     const auto lMaybeAny = InvokeMetaFunction( GetMetaType( aTagType ), "Has"_hs, aRegistry->WrapEntity( aEntityID ) );
-
-    //     return static_cast<bool>( lMaybeAny );
-    // }
-
-    // template <typename _ComponentType>
-    // void Get( uint32_t aEntityID, EntityRegistry *aRegistry, MonoType *aTagType, _ComponentType *aOutput )
-    // {
-    //     if( !CheckMetaType<_ComponentType>( aTagType ) ) return;
-
-    //     const auto lMaybeAny = InvokeMetaFunction( GetMetaType( aTagType ), "Get"_hs, aRegistry->WrapEntity( aEntityID ) );
-
-    //     if( lMaybeAny ) *aOutput = lMaybeAny.cast<_ComponentType>();
-    // }
 
     // template <typename _ComponentType>
     // void Add( uint32_t aEntityID, EntityRegistry *aRegistry, MonoType *aTagType, _ComponentType *aValue )
