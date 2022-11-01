@@ -40,8 +40,8 @@ namespace Test
         {
             base.OnUpdate(aTs);
 
-            Console.WriteLine($"Actor Component Updated {aTs}");
-                }
+            // Console.WriteLine($"Actor Component Updated {aTs}");
+        }
     }
 
     public class TestApplication : SEApplication
