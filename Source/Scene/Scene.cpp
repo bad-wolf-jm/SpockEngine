@@ -1160,9 +1160,9 @@ namespace LTSE::Core
         auto &lRTComponent = a_Element.Add<sRayTracingTargetComponent>();
     }
 
-    void Scene::AttachScript( Element aElement, std::string aNamespace, std::string aClassName )
+    void Scene::AttachScript( Element aElement, std::string aClassName )
     {
-        auto &lNewScriptComponent = aElement.Add<sActorComponent>( aNamespace, aClassName );
+        auto &lNewScriptComponent = aElement.Add<sActorComponent>( aClassName );
 
         lNewScriptComponent.Initialize( aElement );
     }
@@ -1516,6 +1516,24 @@ namespace LTSE::Core
             }
         }
         aOut.EndSequence();
+    }
+
+    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sActorComponent const &aComponent )
+    {
+        aOut.WriteKey( aName );
+        aOut.BeginMap( true );
+        {
+            // aOut.WriteKey( "Position" );
+            // aOut.Write( aComponent.Position, { "x", "y", "z" } );
+            // aOut.WriteKey( "Pitch", aComponent.Pitch );
+            // aOut.WriteKey( "Yaw", aComponent.Yaw );
+            // aOut.WriteKey( "Roll", aComponent.Roll );
+            // aOut.WriteKey( "Near", aComponent.Near );
+            // aOut.WriteKey( "Far", aComponent.Far );
+            // aOut.WriteKey( "FieldOfView", aComponent.FieldOfView );
+            // aOut.WriteKey( "AspectRatio", aComponent.AspectRatio );
+        }
+        aOut.EndMap();
     }
 
     void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sAnimatedTransformComponent const &aComponent )

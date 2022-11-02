@@ -141,7 +141,7 @@ class EchoDSMVPEditor : public BaseEditorApplication
 
         ScriptManager::SetAppAssemblyPath("C:/GitLab/SpockEngine/Programs/Editor/Script/Build/Debug/Test.dll");
 
-        m_World->AttachScript(mEditorWindow.Sensor, "Test", "TestActorComponent");
+        m_World->AttachScript(mEditorWindow.Sensor, "Test.TestActorComponent");
     }
 
     void Update( Timestep ts )
