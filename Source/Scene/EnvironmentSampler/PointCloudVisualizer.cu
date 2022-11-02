@@ -78,8 +78,8 @@ namespace LTSE::SensorModel::Dev
         return hsv2rgb( math::vec3( I, 1.0f, 1.0f ) );
     }
 
-    extern "C" __device__ sLidarCartesianSamplePoint LidarDataToCartesian(
-        math::mat3 a_PointCloudRotation, sHitRecord a_LidarReturnPoints, bool a_InvertZAxis )
+    extern "C" __device__ sLidarCartesianSamplePoint LidarDataToCartesian( math::mat3 a_PointCloudRotation,
+                                                                           sHitRecord a_LidarReturnPoints, bool a_InvertZAxis )
     {
         sLidarCartesianSamplePoint l_CartesianSample{};
 
@@ -110,8 +110,9 @@ namespace LTSE::SensorModel::Dev
     }
 
     extern "C" __global__ void __kernel__FillParticleBuffer( math::mat3 a_PointCloudRotation, math::vec3 a_PointCloudOrigin,
-        MultiTensor a_LidarReturnPoints, GPUExternalMemory a_LidarParticle, bool a_LogScale, bool a_HighlightFOV, bool a_InvertZAxis,
-        float aResolution )
+                                                             MultiTensor a_LidarReturnPoints, GPUExternalMemory a_LidarParticle,
+                                                             bool a_LogScale, bool a_HighlightFOV, bool a_InvertZAxis,
+                                                             float aResolution )
     {
         int l_InputArrayIdx = blockIdx.x * blockDim.x + threadIdx.x;
         if( l_InputArrayIdx >= a_LidarReturnPoints.SizeAs<sHitRecord>() ) return;
@@ -140,12 +141,12 @@ namespace LTSE::SensorModel::Dev
 
         lLidarParticle[l_InputArrayIdx].PositionAndSize =
             math::vec4( a_PointCloudOrigin + l_CartesianPoint.mDirection * l_CartesianPoint.mDistance,
-                glm::tan( aResolution / 2.0f ) * l_CartesianPoint.mDistance * 2.0f );
+                        glm::tan( aResolution / 2.0f ) * l_CartesianPoint.mDistance * 2.0f );
         lLidarParticle[l_InputArrayIdx].Color = math::vec4( l_Color, 0.95 );
     }
 
-    void sPointCloudVisualizer::Visualize(
-        math::mat4 a_PointCloudTransform, MultiTensor &a_LidarReturnPoints, GPUExternalMemory &a_Particles )
+    void sPointCloudVisualizer::Visualize( math::mat4 a_PointCloudTransform, MultiTensor &a_LidarReturnPoints,
+                                           GPUExternalMemory &a_Particles )
     {
         int l_BlockCount = ( a_LidarReturnPoints.SizeAs<sHitRecord>() / THREADS_PER_BLOCK ) + 1;
 
@@ -153,9 +154,9 @@ namespace LTSE::SensorModel::Dev
         dim3 l_BlockDim( THREADS_PER_BLOCK );
 
         a_Particles.Zero();
-        __kernel__FillParticleBuffer<<<l_GridDim, l_BlockDim>>>( math::NormalMatrix( a_PointCloudTransform ),
-            math::Translation( a_PointCloudTransform ), a_LidarReturnPoints, a_Particles, mLogScale, mHighlightFlashFOV, mInvertZAxis,
-            mResolution * RADIANS );
+        __kernel__FillParticleBuffer<<<l_GridDim, l_BlockDim>>>(
+            math::NormalMatrix( a_PointCloudTransform ), math::Translation( a_PointCloudTransform ), a_LidarReturnPoints, a_Particles,
+            mLogScale, mHighlightFlashFOV, mInvertZAxis, mResolution * RADIANS );
         cudaDeviceSynchronize();
     }
 
