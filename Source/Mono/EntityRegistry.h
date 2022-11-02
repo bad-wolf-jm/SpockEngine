@@ -70,43 +70,28 @@ namespace LTSE::Core
         }
 
         template <typename _Ty>
-        void Replace( Entity &aEntity, ScriptClass &aMonoType, ScriptClassInstance &aNewComponent )
+        void Replace( Entity &aEntity, ScriptClassInstance &aNewComponent )
         {
             _Ty lInstance;
-            UnmarshallComponent( aNewComponent, aNewComponent, lInstance );
+            UnmarshallComponent( aNewComponent, lInstance );
 
             aEntity.Replace<_Ty>( lInstance );
         }
 
-        // template <typename _Ty>
-        // auto Add( Entity &aEntity, const sol::table &aInstance )
-        // {
-        //     auto &lNewComponent = aEntity.Add<_Ty>( aInstance.valid() ? aInstance.as<_Ty>() : _Ty{} );
+        template <typename _Ty>
+        void Add( Entity &aEntity, ScriptClassInstance &aNewComponent )
+        {
+            _Ty lInstance;
+            UnmarshallComponent( aNewComponent, lInstance );
 
-        //     return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
-        // }
+            aEntity.Add<_Ty>( lInstance );
+        }
 
-        // template <typename _Ty>
-        // auto AddOrReplace( Entity &aEntity, const sol::table &aInstance )
-        // {
-        //     auto &lNewComponent = aEntity.AddOrReplace<_Ty>( aInstance.valid() ? aInstance.as<_Ty>() : _Ty{} );
-
-        //     return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
-        // }
-
-        // template <typename _Ty>
-        // auto Replace( Entity &aEntity, const sol::table &aInstance )
-        // {
-        //     auto &lNewComponent = aEntity.Replace<_Ty>( aInstance.valid() ? aInstance.as<_Ty>() : _Ty{} );
-
-        //     return sol::make_reference( aScriptState, std::ref( lNewComponent ) );
-        // }
-
-        // template <typename _Ty>
-        // auto Remove( Entity &aEntity )
-        // {
-        //     aEntity.Remove<_Ty>();
-        // }
+        template <typename _Ty>
+        auto Remove( Entity &aEntity )
+        {
+            aEntity.Remove<_Ty>();
+        }
     } // namespace
 
     ScriptClassInstance MarshallComponent( ScriptClass &aMonoType, sNodeTransformComponent &aComponent );
@@ -114,38 +99,22 @@ namespace LTSE::Core
 
     entt::meta_type GetMetaType( MonoType *aObject );
 
-    // template <typename _ComponentType>
-    // void Add( uint32_t aEntityID, EntityRegistry *aRegistry, MonoType *aTagType, _ComponentType *aValue )
-    // {
-    //     //
-    // }
-
-    // template <typename _ComponentType>
-    // void AddOrReplace( uint32_t aEntityID, EntityRegistry *aRegistry, MonoType *aTagType, _ComponentType *aValue )
-    // {
-    //     //
-    // }
-
-    // void Remove( uint32_t aEntityID, EntityRegistry *aRegistry, MonoType *aTagType )
-    // {
-    //     //
-    // }
-
     template <typename _Ty>
     void RegisterComponentType()
     {
+        static_assert( std::is_class<_Ty>::value );
+
         using namespace entt::literals;
 
-        auto lMonoType = RetrieveMonoTypeFromNamespace<_Ty>( "SpockEngine" );
-
+        auto lMonoType  = RetrieveMonoTypeFromNamespace<_Ty>( "SpockEngine" );
         auto lHashValue = std::hash<uint64_t>{}( (uint64_t)lMonoType );
         auto lNewType   = entt::meta<_Ty>().type( lHashValue & 0xFFFFFFFF );
 
-        if constexpr( std::is_class<_Ty>::value )
-        {
-            lNewType.template func<&Has<_Ty>>( "Has"_hs );
-            lNewType.template func<&Get<_Ty>>( "Get"_hs );
-        }
+        lNewType.template func<&Has<_Ty>>( "Has"_hs );
+        lNewType.template func<&Get<_Ty>>( "Get"_hs );
+        lNewType.template func<&Replace<_Ty>>( "Replace"_hs );
+        lNewType.template func<&Add<_Ty>>( "Add"_hs );
+        lNewType.template func<&Remove<_Ty>>( "Remove"_hs );
     }
 
 }; // namespace LTSE::Core

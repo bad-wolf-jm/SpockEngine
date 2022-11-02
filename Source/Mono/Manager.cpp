@@ -254,6 +254,7 @@ namespace LTSE::Core
         SE_ADD_INTERNAL_CALL( Entity_IsValid );
         SE_ADD_INTERNAL_CALL( Entity_Has );
         SE_ADD_INTERNAL_CALL( Entity_Get );
+        SE_ADD_INTERNAL_CALL( Entity_Replace );
     }
 
     void ScriptManager::Shutdown()

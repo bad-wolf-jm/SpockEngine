@@ -6,9 +6,6 @@ namespace Test
     public class TestActorComponent : ActorComponent
     {
         public TestActorComponent() : base() {}
-        // public TestActorComponent(Entity e) : base(e) 
-        // {
-        // }
 
         override public void OnCreate() 
         {
@@ -25,6 +22,7 @@ namespace Test
             {
                 Console.WriteLine($"I have a transform");
                 sNodeTransformComponent lTransform = mEntity.Get<sNodeTransformComponent>();
+                mEntity.Replace<sNodeTransformComponent>(new sNodeTransformComponent(new mat4(3.0f)));
             }
 
         }

@@ -2,8 +2,8 @@
 BasedOnStyle: LLVM
 IndentWidth: '4'
 AlignConsecutiveAssignments: true
-AlignConsecutiveDeclarations: 'true'
-AlignAfterOpenBracket: DontAlign
+AlignConsecutiveDeclarations: true
+AlignAfterOpenBracket: Align
 AlignOperands: 'true'
 AlignTrailingComments: 'true'
 AlignEscapedNewlines: Left
@@ -26,7 +26,10 @@ BreakInheritanceList: AfterColon
 AlwaysBreakTemplateDeclarations: Yes
 BinPackArguments: true
 BinPackParameters: true
+AllowShortCaseLabelsOnASingleLine: true
 AllowShortLambdasOnASingleLine: All
 AllowShortLoopsOnASingleLine: true
 AllowShortIfStatementsOnASingleLine: WithoutElse
+ExperimentalAutoDetectBinPacking: false
+AllowAllParametersOfDeclarationOnNextLine: false
 ...

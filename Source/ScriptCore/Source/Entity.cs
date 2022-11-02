@@ -29,26 +29,21 @@ namespace SpockEngine
         {
             if (Has<_Component>()) return;
 
-            // CppCall.Add( mRegistryID, mEntityID, typeof(_Component), ref aComponent);
+            CppCall.Entity_Add<_Component>(mEntityID, mRegistryID, typeof(_Component), aComponent);
         }
 
         public void Replace<_Component>(_Component aComponent) where _Component : Component, new()
         {
             if (!Has<_Component>()) return;
 
-            // CppCall.Replace( mRegistryID, mEntityID, typeof(_Component), ref aComponent);
-        }
-
-        public void AddOrReplace<_Component>(_Component aComponent) where _Component : Component, new()
-        {
-            // CppCall.AddOrReplace( mRegistryID, mEntityID, typeof(_Component), ref aComponent);
+            CppCall.Entity_Replace<_Component>(mEntityID, mRegistryID, typeof(_Component), aComponent);
         }
 
         public void Remove<_Component>() where _Component : Component, new()
         {
             if (!Has<_Component>()) return;
 
-            // CppCall.Replace( mRegistryID, mEntityID, typeof(_Component), ref aComponent);
+            CppCall.Entity_Remove( mEntityID, mRegistryID, typeof(_Component) );
         }
 
     }
