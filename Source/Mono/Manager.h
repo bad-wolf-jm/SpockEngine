@@ -61,6 +61,17 @@ namespace LTSE::Core
             return InvokeMethod( aName, sizeof...( _ArgTypes ), lParameters );
         }
 
+        template <typename _StructType>
+        _StructType GetFieldValue( std::string const &aName )
+        {
+            MonoClassField *lClassField = mono_class_get_field_from_name( mMonoClass, aName.c_str() );
+
+            _StructType     lValue;
+            mono_field_get_value( mInstance, lClassField, &lValue );
+
+            return lValue;
+        }
+
       private:
         MonoClass  *mMonoClass = nullptr;
         MonoObject *mInstance  = nullptr;
