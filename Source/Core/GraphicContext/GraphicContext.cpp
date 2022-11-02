@@ -5,10 +5,10 @@ namespace LTSE::Graphics
 
     GraphicContext::GraphicContext( uint32_t a_Width, uint32_t a_Height, uint32_t a_SampleCount, std::string a_Title )
     {
-        m_ViewportClient = LTSE::Core::New<ViewportClient>( a_Width, a_Height, a_Title );
+        m_ViewportClient = LTSE::Core::New<Window>( a_Width, a_Height, a_Title );
         mContext         = LTSE::Core::New<Internal::VkContext>( m_ViewportClient, true );
 
-        uint32_t lNumberOfDescriptorSets = 1000;
+        uint32_t                          lNumberOfDescriptorSets = 1000;
         std::vector<VkDescriptorPoolSize> lPoolSizes( 4 );
         lPoolSizes[0] = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 };
         lPoolSizes[1] = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 };
@@ -18,7 +18,8 @@ namespace LTSE::Graphics
         mDescriptorPool = New<Internal::sVkDescriptorPoolObject>( mContext, lNumberOfDescriptorSets, lPoolSizes );
     }
 
-    Ref<Internal::sVkDescriptorSetObject> GraphicContext::AllocateDescriptors( Ref<Internal::sVkDescriptorSetLayoutObject> aLayout, uint32_t aDescriptorCount )
+    Ref<Internal::sVkDescriptorSetObject> GraphicContext::AllocateDescriptors( Ref<Internal::sVkDescriptorSetLayoutObject> aLayout,
+                                                                               uint32_t aDescriptorCount )
     {
         return mDescriptorPool->Allocate( aLayout, aDescriptorCount );
     }

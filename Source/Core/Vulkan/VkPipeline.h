@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Memory.h"
-#include "Core/Platform/ViewportClient.h"
+
 #include "VkContext.h"
 #include "VkRenderPass.h"
 
@@ -169,7 +169,7 @@ namespace LTSE::Graphics::Internal
         sVkPipelineLayoutObject()                            = default;
         sVkPipelineLayoutObject( sVkPipelineLayoutObject & ) = default;
         sVkPipelineLayoutObject( Ref<VkContext> aContext, std::vector<Ref<sVkDescriptorSetLayoutObject>> aDescriptorSetLayout,
-            std::vector<sPushConstantRange> aPushConstantRanges );
+                                 std::vector<sPushConstantRange> aPushConstantRanges );
 
         ~sVkPipelineLayoutObject();
 
@@ -258,7 +258,7 @@ namespace LTSE::Graphics::Internal
         std::vector<sBufferLayoutElement>::const_iterator end() const { return mElements.end(); }
 
         void Compile( uint32_t aBinding, VkVertexInputBindingDescription &o_Binding,
-            std::vector<VkVertexInputAttributeDescription> &o_Attributes, bool aInstanced );
+                      std::vector<VkVertexInputAttributeDescription> &o_Attributes, bool aInstanced );
 
       private:
         void CalculateOffsetsAndStride();
@@ -338,9 +338,9 @@ namespace LTSE::Graphics::Internal
         sVkPipelineObject()                      = default;
         sVkPipelineObject( sVkPipelineObject & ) = default;
         sVkPipelineObject( Ref<VkContext> aContext, uint8_t aSampleCount, sBufferLayout aVertexBufferLayout,
-            sBufferLayout aInstanceBufferLayout, ePrimitiveTopology aTopology, eFaceCulling aCullMode, float aLineWidth,
-            sDepthTesting aDepthTest, sBlending aBlending, std::vector<sShader> aShaderStages,
-            Ref<sVkPipelineLayoutObject> aPipelineLayout, Ref<sVkRenderPassObject> aRenderPass );
+                           sBufferLayout aInstanceBufferLayout, ePrimitiveTopology aTopology, eFaceCulling aCullMode, float aLineWidth,
+                           sDepthTesting aDepthTest, sBlending aBlending, std::vector<sShader> aShaderStages,
+                           Ref<sVkPipelineLayoutObject> aPipelineLayout, Ref<sVkRenderPassObject> aRenderPass );
 
         ~sVkPipelineObject();
 

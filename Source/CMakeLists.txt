@@ -32,7 +32,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Cuda/MemoryPool.cu
     Core/Cuda/Texture2D.cu
     
-    Core/Platform/ViewportClient.cpp
+    Core/Platform/Window.cpp
     Core/Platform/EngineLoop.cpp
     
     UI/Widgets.cpp
@@ -51,15 +51,15 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Vulkan/VkImage.cpp
     Core/Vulkan/VkCommand.cpp
     
-    Core/GraphicContext//Buffer.cpp
-    Core/GraphicContext//Texture2D.cpp
-    Core/GraphicContext//TextureCubeMap.cpp
-    Core/GraphicContext//GraphicContext.cpp
-    Core/GraphicContext//DescriptorSet.cpp
-    Core/GraphicContext//GraphicsPipeline.cpp
-    Core/GraphicContext//RenderContext.cpp
-    Core/GraphicContext//RenderTarget.cpp
-    Core/GraphicContext//UI/UIContext.cpp
+    Core/GraphicContext/Buffer.cpp
+    Core/GraphicContext/Texture2D.cpp
+    Core/GraphicContext/TextureCubeMap.cpp
+    Core/GraphicContext/GraphicContext.cpp
+    Core/GraphicContext/DescriptorSet.cpp
+    Core/GraphicContext/GraphicsPipeline.cpp
+    Core/GraphicContext/RenderContext.cpp
+    Core/GraphicContext/RenderTarget.cpp
+    Core/GraphicContext/UI/UIContext.cpp
 
     Scene/Primitives/Primitives.cpp
     Scene/Primitives/Arrow.cpp

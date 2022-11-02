@@ -182,10 +182,10 @@ namespace LTSE::Core
     /** @brief */
     struct UserEvent
     {
-        EventType Type;
-        math::ivec2 MousePosition;
-        math::vec2 MouseDelta;
-        Key KeyCode;
+        EventType     Type;
+        math::ivec2   MousePosition;
+        math::vec2    MouseDelta;
+        Key           KeyCode;
         ModifierFlags Modifiers;
     };
 
@@ -193,17 +193,17 @@ namespace LTSE::Core
     struct LayoutSpecification
     {
         math::ivec2 WindowSize;
-        math::vec2 DpiScaling;
+        math::vec2  DpiScaling;
         math::ivec2 FramebufferSize;
     };
 
     class EngineLoop;
 
-    /** @class ViewportClient
+    /** @class Window
      *
      *  Wrapper around a GLFW3 window.
      */
-    class ViewportClient
+    class Window
     {
       public:
         /** @brief Constructor
@@ -212,16 +212,16 @@ namespace LTSE::Core
          *
          * @param a_Width  The desired width of the window
          * @param a_Height The desired height of the window
-         * @param a_Title  ViewportClient title
+         * @param a_Title  Window title
          */
-        ViewportClient( int a_Width, int a_Height, std::string a_Title );
+        Window( int a_Width, int a_Height, std::string a_Title );
 
         /** @brief Destructor */
-        ~ViewportClient();
+        ~Window();
 
         /** @brief Not copyable */
-        ViewportClient( const ViewportClient & ) = delete;
-        ViewportClient &operator=( const ViewportClient & ) = delete;
+        Window( const Window & ) = delete;
+        Window &operator=( const Window & ) = delete;
 
         /** @brief Should we close the window
          *
@@ -290,8 +290,8 @@ namespace LTSE::Core
 
         void InitializeWindow();
 
-        int m_Width;
-        int m_Height;
+        int  m_Width;
+        int  m_Height;
         bool m_FramebufferWasResized = false;
 
         math::ivec2 m_LastMousePosition;

@@ -1,4 +1,4 @@
-#include "ViewportClient.h"
+#include "Window.h"
 #include "EngineLoop.h"
 
 // std
@@ -8,7 +8,7 @@
 namespace LTSE::Core
 {
 
-    ViewportClient::ViewportClient( int a_Width, int a_Height, std::string a_Title )
+    Window::Window( int a_Width, int a_Height, std::string a_Title )
         : m_Width{ a_Width }
         , m_Height{ a_Height }
         , m_WindowName{ a_Title }
@@ -16,13 +16,13 @@ namespace LTSE::Core
         InitializeWindow();
     }
 
-    ViewportClient::~ViewportClient()
+    Window::~Window()
     {
         glfwDestroyWindow( m_Window );
         glfwTerminate();
     }
 
-    void ViewportClient::InitializeWindow()
+    void Window::InitializeWindow()
     {
         glfwInit();
 
@@ -36,8 +36,7 @@ namespace LTSE::Core
         glfwWindowHint( GLFW_RESIZABLE, GLFW_TRUE );
 
         m_Window = glfwCreateWindow( m_Width, m_Height, m_WindowName.c_str(), nullptr, nullptr );
-        if( !m_Window )
-            throw std::runtime_error( "Failed to create window" );
+        if( !m_Window ) throw std::runtime_error( "Failed to create window" );
 
         // Attach a pointer to this class as used data to the underlying GLFW window. This pointer
         // allows us to retrieve our class from callback functions.
@@ -62,58 +61,57 @@ namespace LTSE::Core
         m_LastMousePosition = math::vec2{ static_cast<float>( xpos ), static_cast<float>( ypos ) };
     }
 
-    math::vec2 ViewportClient::GetMainWindowSize()
+    math::vec2 Window::GetMainWindowSize()
     {
         int width, height;
         glfwGetWindowSize( m_Window, &width, &height );
         return { static_cast<float>( width ), static_cast<float>( height ) };
     }
 
-    math::ivec2 ViewportClient::GetFramebufferSize()
+    math::ivec2 Window::GetFramebufferSize()
     {
         int width, height;
         glfwGetFramebufferSize( m_Window, &width, &height );
         return { width, height };
     }
 
-    void ViewportClient::CreateWindowSurface( VkInstance instance, VkSurfaceKHR *surface )
+    void Window::CreateWindowSurface( VkInstance instance, VkSurfaceKHR *surface )
     {
         if( glfwCreateWindowSurface( instance, m_Window, nullptr, surface ) != VK_SUCCESS )
             throw std::runtime_error( "failed to crrete window surface" );
     }
 
-    void ViewportClient::OnFramebufferResize( GLFWwindow *window, int width, int height )
+    void Window::OnFramebufferResize( GLFWwindow *window, int width, int height )
     {
-        auto l_Window                     = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) );
+        auto l_Window                     = reinterpret_cast<Window *>( glfwGetWindowUserPointer( window ) );
         l_Window->m_FramebufferWasResized = true;
         l_Window->m_Width                 = width;
         l_Window->m_Height                = height;
     }
 
-    void ViewportClient::OnGLFWError( int error, const char *description ) { fprintf( stderr, "Error: %s\n", description ); }
+    void Window::OnGLFWError( int error, const char *description ) { fprintf( stderr, "Error: %s\n", description ); }
 
-    void ViewportClient::OnWindowClose( GLFWwindow *window ) { auto l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) ); }
-
-    void ViewportClient::OnWindowRefresh( GLFWwindow *window ) { auto l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) ); }
-
-    void ViewportClient::OnKey( GLFWwindow *window, const int key, int scancode, const int action, const int mods )
+    void Window::OnWindowClose( GLFWwindow *window )
     {
-        auto l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) );
+        auto l_Window = reinterpret_cast<Window *>( glfwGetWindowUserPointer( window ) );
+    }
+
+    void Window::OnWindowRefresh( GLFWwindow *window )
+    {
+        auto l_Window = reinterpret_cast<Window *>( glfwGetWindowUserPointer( window ) );
+    }
+
+    void Window::OnKey( GLFWwindow *window, const int key, int scancode, const int action, const int mods )
+    {
+        auto      l_Window = reinterpret_cast<Window *>( glfwGetWindowUserPointer( window ) );
         UserEvent l_UserEvent;
 
         switch( action )
         {
-        case GLFW_PRESS:
-            l_UserEvent.Type = EventType::KEY_PRESSED;
-            break;
-        case GLFW_RELEASE:
-            l_UserEvent.Type = EventType::KEY_RELEASED;
-            break;
-        case GLFW_REPEAT:
-            l_UserEvent.Type = EventType::KEY_REPEAT;
-            break;
-        default:
-            l_UserEvent.Type = EventType::UNKNOWN;
+        case GLFW_PRESS: l_UserEvent.Type = EventType::KEY_PRESSED; break;
+        case GLFW_RELEASE: l_UserEvent.Type = EventType::KEY_RELEASED; break;
+        case GLFW_REPEAT: l_UserEvent.Type = EventType::KEY_REPEAT; break;
+        default: l_UserEvent.Type = EventType::UNKNOWN;
         };
 
         l_UserEvent.MousePosition = l_Window->m_LastMousePosition;
@@ -123,21 +121,16 @@ namespace LTSE::Core
         l_Window->m_EngineLoop->IOEvent( l_UserEvent );
     }
 
-    void ViewportClient::OnMouseButton( GLFWwindow *window, const int button, const int action, const int mods )
+    void Window::OnMouseButton( GLFWwindow *window, const int button, const int action, const int mods )
     {
-        auto l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) );
+        auto      l_Window = reinterpret_cast<Window *>( glfwGetWindowUserPointer( window ) );
         UserEvent l_UserEvent;
 
         switch( action )
         {
-        case GLFW_PRESS:
-            l_UserEvent.Type = EventType::MOUSE_BUTTON_PRESSED;
-            break;
-        case GLFW_RELEASE:
-            l_UserEvent.Type = EventType::MOUSE_BUTTON_RELEASED;
-            break;
-        default:
-            l_UserEvent.Type = EventType::UNKNOWN;
+        case GLFW_PRESS: l_UserEvent.Type = EventType::MOUSE_BUTTON_PRESSED; break;
+        case GLFW_RELEASE: l_UserEvent.Type = EventType::MOUSE_BUTTON_RELEASED; break;
+        default: l_UserEvent.Type = EventType::UNKNOWN;
         };
 
         double xpos, ypos;
@@ -151,9 +144,9 @@ namespace LTSE::Core
         l_Window->m_EngineLoop->IOEvent( l_UserEvent );
     }
 
-    void ViewportClient::OnCursorPosition( GLFWwindow *window, const double x, const double y )
+    void Window::OnCursorPosition( GLFWwindow *window, const double x, const double y )
     {
-        auto l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) );
+        auto l_Window = reinterpret_cast<Window *>( glfwGetWindowUserPointer( window ) );
 
         UserEvent l_UserEvent;
         l_UserEvent.Type = EventType::MOUSE_MOVE;
@@ -171,9 +164,9 @@ namespace LTSE::Core
         l_Window->m_EngineLoop->IOEvent( l_UserEvent );
     }
 
-    void ViewportClient::OnMouseScroll( GLFWwindow *window, const double dx, const double dy )
+    void Window::OnMouseScroll( GLFWwindow *window, const double dx, const double dy )
     {
-        auto l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) );
+        auto      l_Window = reinterpret_cast<Window *>( glfwGetWindowUserPointer( window ) );
         UserEvent l_UserEvent;
         l_UserEvent.Type = EventType::MOUSE_SCROLL;
 
@@ -189,9 +182,9 @@ namespace LTSE::Core
         l_Window->m_EngineLoop->IOEvent( l_UserEvent );
     }
 
-    void ViewportClient::OnTextInput( GLFWwindow *window, unsigned int codepoint )
+    void Window::OnTextInput( GLFWwindow *window, unsigned int codepoint )
     {
-        auto l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) );
+        auto      l_Window = reinterpret_cast<Window *>( glfwGetWindowUserPointer( window ) );
         UserEvent l_UserEvent;
         l_UserEvent.MousePosition = l_Window->m_LastMousePosition;
         l_UserEvent.MouseDelta    = { 0, 0 };
