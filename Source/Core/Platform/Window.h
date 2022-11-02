@@ -9,6 +9,9 @@
 #include "Core/Math/Types.h"
 #include "Core/Types.h"
 
+#include <entt/entt.hpp>
+
+
 namespace LTSE::Core
 {
 
@@ -189,13 +192,13 @@ namespace LTSE::Core
         ModifierFlags Modifiers;
     };
 
-    /** @brief */
-    struct LayoutSpecification
-    {
-        math::ivec2 WindowSize;
-        math::vec2  DpiScaling;
-        math::ivec2 FramebufferSize;
-    };
+    // /** @brief */
+    // struct LayoutSpecification
+    // {
+    //     math::ivec2 WindowSize;
+    //     math::vec2  DpiScaling;
+    //     math::ivec2 FramebufferSize;
+    // };
 
     class EngineLoop;
 
@@ -228,7 +231,7 @@ namespace LTSE::Core
          * @return `true` is the user input an event which requires the current window to close,
          *         such as clicking on the 'close' button.
          */
-        bool WindowShouldClose() { return glfwWindowShouldClose( m_Window ); }
+        bool WindowShouldClose() { return glfwWindowShouldClose( mWindow ); }
 
         /** @brief Poll events from the underlying window system
          *
@@ -240,7 +243,7 @@ namespace LTSE::Core
          *
          * @returns VkExtent2D instance holding the window size.
          */
-        VkExtent2D GetExtent() { return { static_cast<uint32_t>( m_Width ), static_cast<uint32_t>( m_Height ) }; }
+        VkExtent2D GetExtent() { return { static_cast<uint32_t>( mWidth ), static_cast<uint32_t>( mHeight ) }; }
 
         /** @brief Check to see if the window was resized during the last frame
          *
@@ -248,10 +251,10 @@ namespace LTSE::Core
          *
          * @returns `true` if the window was resized.
          */
-        bool WindowWasResized() { return m_FramebufferWasResized; }
+        bool WindowWasResized() { return mFramebufferWasResized; }
 
         /** @brief Reset the resized flag */
-        void ResetWindowResizedFlag() { m_FramebufferWasResized = false; }
+        void ResetWindowResizedFlag() { mFramebufferWasResized = false; }
 
         /** @brief Create a Vulkan surface for this window.
          *
@@ -269,13 +272,15 @@ namespace LTSE::Core
         math::ivec2 GetFramebufferSize();
 
         /** @brief */
-        GLFWwindow *GetGLFWWindow() { return m_Window; }
+        GLFWwindow *GetGLFWWindow() { return mWindow; }
 
         /** @brief */
-        void SetEngineLoop( EngineLoop *a_EngineLoop ) { m_EngineLoop = a_EngineLoop; }
+        void SetEngineLoop( EngineLoop *a_EngineLoop ) { mEngineLoop = a_EngineLoop; }
 
         /** @brief */
-        void SetTitle( std::string a_Title ) { glfwSetWindowTitle( m_Window, a_Title.c_str() ); }
+        void SetTitle( std::string a_Title ) { glfwSetWindowTitle( mWindow, a_Title.c_str() ); }
+
+        entt::delegate<void( UserEvent const & )> IOEventDelegate{};
 
       private:
         static void OnFramebufferResize( GLFWwindow *window, int width, int height );
@@ -290,14 +295,14 @@ namespace LTSE::Core
 
         void InitializeWindow();
 
-        int  m_Width;
-        int  m_Height;
-        bool m_FramebufferWasResized = false;
+        int  mWidth;
+        int  mHeight;
+        bool mFramebufferWasResized = false;
 
-        math::ivec2 m_LastMousePosition;
+        math::ivec2 mLastMousePosition;
 
-        std::string m_WindowName = "";
-        GLFWwindow *m_Window     = nullptr;
-        EngineLoop *m_EngineLoop = nullptr;
+        std::string mWindowName = "";
+        GLFWwindow *mWindow     = nullptr;
+        EngineLoop *mEngineLoop = nullptr;
     };
 } // namespace LTSE::Core
