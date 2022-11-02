@@ -5,7 +5,7 @@
 
 #include "Core/Vulkan/VkPipeline.h"
 
-#include "Core/Platform/ViewportClient.h"
+#include "Core/Platform/Window.h"
 #include "Core/Profiling/BlockTimer.h"
 
 // std
@@ -155,13 +155,12 @@ namespace LTSE::Core
         mUIDescriptorSetLayout                       = New<DescriptorSetLayout>( mGraphicContext, lBindingLayout );
 
         std::string lUIVertexShaderFiles = GetResourcePath( "Shaders\\ui_shader.vert.spv" ).string();
-        mUIVertexShader                  = New<Graphics::Internal::ShaderModule>(
-            mGraphicContext.mContext, lUIVertexShaderFiles, Graphics::Internal::eShaderStageTypeFlags::VERTEX );
+        mUIVertexShader                  = New<Graphics::Internal::ShaderModule>( mGraphicContext.mContext, lUIVertexShaderFiles,
+                                                                 Graphics::Internal::eShaderStageTypeFlags::VERTEX );
 
         std::string lUIFragmentShaderFiles = GetResourcePath( "Shaders\\ui_shader.frag.spv" ).string();
-        mUIFragmentShader                  = New<Graphics::Internal::ShaderModule>(
-            mGraphicContext.mContext, lUIFragmentShaderFiles, Graphics::Internal::eShaderStageTypeFlags::FRAGMENT );
-
+        mUIFragmentShader                  = New<Graphics::Internal::ShaderModule>( mGraphicContext.mContext, lUIFragmentShaderFiles,
+                                                                   Graphics::Internal::eShaderStageTypeFlags::FRAGMENT );
         GraphicsPipelineCreateInfo lUIPipelineCreateInfo = {};
         lUIPipelineCreateInfo.mShaderStages              = { { mUIVertexShader, "main" }, { mUIFragmentShader, "main" } };
         lUIPipelineCreateInfo.InputBufferLayout          = {

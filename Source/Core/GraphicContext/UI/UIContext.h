@@ -2,7 +2,6 @@
 
 #include "Core/GraphicContext//DescriptorSet.h"
 
-#include "Core/Vulkan/VkPipeline.h"
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
@@ -42,6 +41,7 @@ namespace LTSE::Core
       public:
         UIContext( Ref<LTSE::Core::ViewportClient> aWindow, GraphicContext &aDevice, ARenderContext &aRenderContext, std::string &aImGuiConfigPath );
         ~UIContext();
+        
         void BeginFrame();
         void EndFrame( ARenderContext &aRenderContext );
 
@@ -50,7 +50,7 @@ namespace LTSE::Core
 
         ImGuiIO &GetIO();
 
-        ImageHandle CreateTextureHandle( Ref<Texture2D> aTexture );
+        ImageHandle        CreateTextureHandle( Ref<Texture2D> aTexture );
         Ref<DescriptorSet> AddTexture( Ref<Texture2D> aTexture );
 
         ImFont *mMonoFont;
@@ -60,9 +60,9 @@ namespace LTSE::Core
         ImFont *mBoldObliqueFont;
 
       private:
-        ImGuiContext *mImGUIOverlay;
+        ImGuiContext  *mImGUIOverlay;
         ImPlotContext *mImPlotContext;
-        std::string mImGuiConfigPath;
+        std::string    mImGuiConfigPath;
 
         UIStyle mUIStyle;
 
@@ -72,9 +72,9 @@ namespace LTSE::Core
 
         Ref<LTSE::Graphics::Internal::ShaderModule> mUIVertexShader   = nullptr;
         Ref<LTSE::Graphics::Internal::ShaderModule> mUIFragmentShader = nullptr;
-        Ref<GraphicsPipeline> mUIRenderPipeline                       = nullptr;
+        Ref<GraphicsPipeline>                       mUIRenderPipeline = nullptr;
 
-        Ref<Texture2D> mFontTexture           = nullptr;
+        Ref<Texture2D>     mFontTexture       = nullptr;
         Ref<DescriptorSet> mFontDescriptorSet = nullptr;
 
         Ref<Buffer> mVertexBuffer;

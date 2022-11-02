@@ -5,7 +5,7 @@
 
 #include "Core/Memory.h"
 
-#include "Core/Platform/ViewportClient.h"
+#include "Core/Platform/Window.h"
 
 #include <vulkan/vulkan.h>
 
@@ -37,35 +37,35 @@ namespace LTSE::Graphics::Internal
         VkContext() = default;
         ~VkContext();
 
-        VkContext( Ref<ViewportClient> aWindow, bool aEnableValidation );
+        VkContext( Ref<Window> aWindow, bool aEnableValidation );
 
         VkBuffer CreateBuffer( VkBufferUsageFlags aBufferFlags, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable );
         void     DestroyBuffer( VkBuffer aBuffer );
 
         VkImage CreateImage( uint32_t aWidth, uint32_t aHeight, uint32_t aDepth, uint32_t aMipLevels, uint32_t aLayers,
-            uint8_t aSampleCount, bool aCubeCompatible, VkFormat aFormat, VkMemoryPropertyFlags aProperties,
-            VkImageUsageFlags aUsage );
+                             uint8_t aSampleCount, bool aCubeCompatible, VkFormat aFormat, VkMemoryPropertyFlags aProperties,
+                             VkImageUsageFlags aUsage );
         void    DestroyImage( VkImage aBuffer );
 
         VkSampler CreateSampler( VkFilter aMinificationFilter, VkFilter aMagnificationFilter, VkSamplerAddressMode aWrappingMode,
-            VkSamplerMipmapMode aMipmapMode );
+                                 VkSamplerMipmapMode aMipmapMode );
         void      DestroySampler( VkSampler aImage );
 
         VkImageView CreateImageView( VkImage aImageObject, uint32_t aLayerCount, VkImageViewType aViewType, VkFormat aImageFormat,
-            VkImageAspectFlags aAspectMask, VkComponentMapping aComponentSwizzle );
+                                     VkImageAspectFlags aAspectMask, VkComponentMapping aComponentSwizzle );
         void        DestroyImageView( VkImageView aImage );
 
         VkRenderPass CreateRenderPass( std::vector<VkAttachmentDescription> aAttachments, std::vector<VkSubpassDescription> aSubpasses,
-            std::vector<VkSubpassDependency> aSubpassDependencies );
+                                       std::vector<VkSubpassDependency> aSubpassDependencies );
         void         DestroyRenderPass( VkRenderPass aRenderPass );
 
-        VkFramebuffer CreateFramebuffer(
-            std::vector<VkImageView> aImageViews, uint32_t aWidth, uint32_t aHeight, uint32_t aLayers, VkRenderPass aRenderPass );
-        void DestroyFramebuffer( VkFramebuffer aFramebuffer );
+        VkFramebuffer CreateFramebuffer( std::vector<VkImageView> aImageViews, uint32_t aWidth, uint32_t aHeight, uint32_t aLayers,
+                                         VkRenderPass aRenderPass );
+        void          DestroyFramebuffer( VkFramebuffer aFramebuffer );
 
-        VkPipelineLayout CreatePipelineLayout(
-            std::vector<VkDescriptorSetLayout> aDescriptorSetLayout, std::vector<VkPushConstantRange> aPushConstants );
-        void DestroyPipelineLayout( VkPipelineLayout aPipelineLayout );
+        VkPipelineLayout CreatePipelineLayout( std::vector<VkDescriptorSetLayout> aDescriptorSetLayout,
+                                               std::vector<VkPushConstantRange>   aPushConstants );
+        void             DestroyPipelineLayout( VkPipelineLayout aPipelineLayout );
 
         VkPipeline CreatePipeline( VkGraphicsPipelineCreateInfo aCreateInfo );
         void       DestroyPipeline( VkPipeline aPipeline );
@@ -75,8 +75,8 @@ namespace LTSE::Graphics::Internal
 
         VkDescriptorPool CreateDescriptorPool( uint32_t aDescriptorSetCount, std::vector<VkDescriptorPoolSize> aPoolSizes );
         void             DestroyDescriptorPool( VkDescriptorPool aDescriptorPool );
-        VkDescriptorSet  AllocateDescriptorSet(
-             VkDescriptorPool aDescriptorPool, VkDescriptorSetLayout aLayout, uint32_t aDescriptorCount = 0 );
+        VkDescriptorSet  AllocateDescriptorSet( VkDescriptorPool aDescriptorPool, VkDescriptorSetLayout aLayout,
+                                                uint32_t aDescriptorCount = 0 );
         void FreeDescriptorSet( VkDescriptorPool aDescriptorPool, VkDescriptorSet *aDescriptorSet, uint32_t aDescriptorCount = 0 );
 
         VkDescriptorSetLayout CreateDescriptorSetLayout( std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded );
@@ -128,8 +128,8 @@ namespace LTSE::Graphics::Internal
 
         void UpdateDescriptorSets( VkWriteDescriptorSet aWriteOps );
 
-        VkResult AcquireNextImage(
-            VkSwapchainKHR aSwapChain, uint64_t aTimeout, VkSemaphore aWaitSemaphore, uint32_t *aNewImageIndex );
+        VkResult AcquireNextImage( VkSwapchainKHR aSwapChain, uint64_t aTimeout, VkSemaphore aWaitSemaphore,
+                                   uint32_t *aNewImageIndex );
         VkResult Present( VkSwapchainKHR aSwapChain, uint32_t aImageIndex, VkSemaphore aWaitSemaphore );
 
         void WaitIdle();
@@ -166,7 +166,7 @@ namespace LTSE::Graphics::Internal
         std::set<VkSwapchainKHR>        mSwapChains;
 
       private:
-        Ref<ViewportClient> mWindow;
+        Ref<Window> mWindow;
 
         VkInstance       mVkInstance            = VK_NULL_HANDLE;
         VkPhysicalDevice mVkPhysicalDevice      = VK_NULL_HANDLE;

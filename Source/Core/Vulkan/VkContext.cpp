@@ -142,8 +142,8 @@ namespace LTSE::Graphics::Internal
             if( lSwapchainFormatCount != 0 )
             {
                 lSwapChainSupportDetails.mFormats.resize( lSwapchainFormatCount );
-                vkGetPhysicalDeviceSurfaceFormatsKHR(
-                    aVkPhysicalDevice, aVkSurface, &lSwapchainFormatCount, lSwapChainSupportDetails.mFormats.data() );
+                vkGetPhysicalDeviceSurfaceFormatsKHR( aVkPhysicalDevice, aVkSurface, &lSwapchainFormatCount,
+                                                      lSwapChainSupportDetails.mFormats.data() );
             }
 
             uint32_t lSwapChainPresentModeCount;
@@ -152,15 +152,15 @@ namespace LTSE::Graphics::Internal
             if( lSwapChainPresentModeCount != 0 )
             {
                 lSwapChainSupportDetails.mPresentModes.resize( lSwapChainPresentModeCount );
-                vkGetPhysicalDeviceSurfacePresentModesKHR(
-                    aVkPhysicalDevice, aVkSurface, &lSwapChainPresentModeCount, lSwapChainSupportDetails.mPresentModes.data() );
+                vkGetPhysicalDeviceSurfacePresentModesKHR( aVkPhysicalDevice, aVkSurface, &lSwapChainPresentModeCount,
+                                                           lSwapChainSupportDetails.mPresentModes.data() );
             }
 
             return lSwapChainSupportDetails;
         }
 
-        bool DeviceIsSuitable(
-            VkPhysicalDevice aVkPhysicalDevice, VkSurfaceKHR aVkSurface, std::vector<const char *> aRequestedExtensions )
+        bool DeviceIsSuitable( VkPhysicalDevice aVkPhysicalDevice, VkSurfaceKHR aVkSurface,
+                               std::vector<const char *> aRequestedExtensions )
         {
             bool lRequiredExtensionsAreSupported = CheckRequiredDeviceExtensions( aVkPhysicalDevice, aRequestedExtensions );
 
@@ -202,8 +202,8 @@ namespace LTSE::Graphics::Internal
             return lPhysicalDeviceObjects;
         }
 
-        VkPhysicalDevice PickPhysicalDevice(
-            VkInstance aVkInstance, VkSurfaceKHR aVkSurface, std::vector<const char *> aRequestedExtensions )
+        VkPhysicalDevice PickPhysicalDevice( VkInstance aVkInstance, VkSurfaceKHR aVkSurface,
+                                             std::vector<const char *> aRequestedExtensions )
         {
             std::vector<VkPhysicalDevice> lPhysicalDeviceList = EnumeratePhysicalDevices( aVkInstance, aVkSurface );
 
@@ -219,7 +219,7 @@ namespace LTSE::Graphics::Internal
         }
 
         VkFormat FindSupportedFormat( VkPhysicalDevice aVkPhysicalDevice, const std::vector<VkFormat> &aCandidates,
-            VkImageTiling aImageTiling, VkFormatFeatureFlags aFeatures )
+                                      VkImageTiling aImageTiling, VkFormatFeatureFlags aFeatures )
         {
             for( VkFormat lCurrentFormat : aCandidates )
             {
@@ -238,12 +238,12 @@ namespace LTSE::Graphics::Internal
         VkFormat FindDepthFormat( VkPhysicalDevice aVkPhysicalDevice )
         {
             return FindSupportedFormat( aVkPhysicalDevice,
-                { VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT }, VK_IMAGE_TILING_OPTIMAL,
-                VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT );
+                                        { VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
+                                        VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT );
         }
 
-        uint32_t FindMemoryTypeIndex(
-            VkPhysicalDevice aVkPhysicalDevice, uint32_t aTypeFilter, VkMemoryPropertyFlags aMemoryProperties )
+        uint32_t FindMemoryTypeIndex( VkPhysicalDevice aVkPhysicalDevice, uint32_t aTypeFilter,
+                                      VkMemoryPropertyFlags aMemoryProperties )
         {
             VkPhysicalDeviceMemoryProperties lMemoryProperties;
             vkGetPhysicalDeviceMemoryProperties( aVkPhysicalDevice, &lMemoryProperties );
@@ -259,7 +259,8 @@ namespace LTSE::Graphics::Internal
         }
 
         VkDeviceMemory DoAllocateMemory( VkPhysicalDevice aVkPhysicalDevice, VkDevice aVkLogicalDevice,
-            VkMemoryRequirements aMemoryRequirements, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable )
+                                         VkMemoryRequirements aMemoryRequirements, size_t aSize, bool aIsHostVisible,
+                                         bool aIsCudaShareable )
         {
             VkDeviceMemory lNewMemory;
 
@@ -323,24 +324,25 @@ namespace LTSE::Graphics::Internal
             else
             {
                 VkExtent2D lActualExtent = mVkSurfaceExtent;
-                lActualExtent.width      = std::max(
-                         aCapabilities.minImageExtent.width, std::min( aCapabilities.maxImageExtent.width, lActualExtent.width ) );
-                lActualExtent.height = std::max(
-                    aCapabilities.minImageExtent.height, std::min( aCapabilities.maxImageExtent.height, lActualExtent.height ) );
+                lActualExtent.width      = std::max( aCapabilities.minImageExtent.width,
+                                                     std::min( aCapabilities.maxImageExtent.width, lActualExtent.width ) );
+                lActualExtent.height     = std::max( aCapabilities.minImageExtent.height,
+                                                     std::min( aCapabilities.maxImageExtent.height, lActualExtent.height ) );
 
                 return lActualExtent;
             }
         }
 
-        VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback( VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-            VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData, void *pUserData )
+        VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback( VkDebugUtilsMessageSeverityFlagBitsEXT      messageSeverity,
+                                                      VkDebugUtilsMessageTypeFlagsEXT             messageType,
+                                                      const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData, void *pUserData )
         {
             LTSE::Logging::Error( pCallbackData->pMessage );
             return VK_FALSE;
         }
     } // namespace
 
-    VkContext::VkContext( Ref<Core::ViewportClient> aWindow, bool aEnableValidation )
+    VkContext::VkContext( Ref<Core::Window> aWindow, bool aEnableValidation )
         : mWindow{ aWindow }
     {
         VkApplicationInfo lApplicationInfo{};
@@ -401,9 +403,11 @@ namespace LTSE::Graphics::Internal
         VK_CHECK_RESULT( glfwCreateWindowSurface( mVkInstance, aWindow->GetGLFWWindow(), nullptr, &mVkSurface ) );
 
         const std::vector<const char *> lLogicalDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-            VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME, VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME,
-            VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME, VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME,
-            VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME };
+                                                                     VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME,
+                                                                     VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME,
+                                                                     VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME,
+                                                                     VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME,
+                                                                     VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME };
 
         mVkPhysicalDevice = PickPhysicalDevice( mVkInstance, mVkSurface, lLogicalDeviceExtensions );
         mDepthFormat      = FindDepthFormat( mVkPhysicalDevice );
@@ -516,8 +520,8 @@ namespace LTSE::Graphics::Internal
         VkMemoryRequirements lMemoryRequirements;
         vkGetImageMemoryRequirements( mVkLogicalDevice, aVkImageObject, &lMemoryRequirements );
 
-        VkDeviceMemory lNewMemory = DoAllocateMemory(
-            mVkPhysicalDevice, mVkLogicalDevice, lMemoryRequirements, lMemoryRequirements.size, aIsHostVisible, aIsCudaShareable );
+        VkDeviceMemory lNewMemory         = DoAllocateMemory( mVkPhysicalDevice, mVkLogicalDevice, lMemoryRequirements,
+                                                              lMemoryRequirements.size, aIsHostVisible, aIsCudaShareable );
         mMemoryPropertyLookup[lNewMemory] = MemoryProperties{ aIsHostVisible, aIsCudaShareable };
         return lNewMemory;
     }
@@ -641,7 +645,8 @@ namespace LTSE::Graphics::Internal
     }
 
     VkImage VkContext::CreateImage( uint32_t aWidth, uint32_t aHeight, uint32_t aDepth, uint32_t aMipLevels, uint32_t aLayers,
-        uint8_t aSampleCount, bool aCubeCompatible, VkFormat aFormat, VkMemoryPropertyFlags aProperties, VkImageUsageFlags aUsage )
+                                    uint8_t aSampleCount, bool aCubeCompatible, VkFormat aFormat, VkMemoryPropertyFlags aProperties,
+                                    VkImageUsageFlags aUsage )
     {
         VkImageCreateInfo lImageCreateInfo{};
         lImageCreateInfo.sType         = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -675,7 +680,7 @@ namespace LTSE::Graphics::Internal
     }
 
     VkSampler VkContext::CreateSampler( VkFilter aMinificationFilter, VkFilter aMagnificationFilter,
-        VkSamplerAddressMode aWrappingMode, VkSamplerMipmapMode aMipmapMode )
+                                        VkSamplerAddressMode aWrappingMode, VkSamplerMipmapMode aMipmapMode )
     {
         VkSamplerCreateInfo lSamplerCreateInfo{};
         lSamplerCreateInfo.sType                   = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -712,7 +717,8 @@ namespace LTSE::Graphics::Internal
     }
 
     VkImageView VkContext::CreateImageView( VkImage aImageObject, uint32_t aLayerCount, VkImageViewType aViewType,
-        VkFormat aImageFormat, VkImageAspectFlags aAspectMask, VkComponentMapping aComponentSwizzle )
+                                            VkFormat aImageFormat, VkImageAspectFlags aAspectMask,
+                                            VkComponentMapping aComponentSwizzle )
     {
         VkImageViewCreateInfo lImageViewCreateInfo{};
         lImageViewCreateInfo.sType                           = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -742,8 +748,8 @@ namespace LTSE::Graphics::Internal
         }
     }
 
-    VkFramebuffer VkContext::CreateFramebuffer(
-        std::vector<VkImageView> aImageViews, uint32_t aWidth, uint32_t aHeight, uint32_t aLayers, VkRenderPass aRenderPass )
+    VkFramebuffer VkContext::CreateFramebuffer( std::vector<VkImageView> aImageViews, uint32_t aWidth, uint32_t aHeight,
+                                                uint32_t aLayers, VkRenderPass aRenderPass )
     {
         VkFramebufferCreateInfo lFramebufferCreateInfo{};
         lFramebufferCreateInfo.sType           = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -773,7 +779,8 @@ namespace LTSE::Graphics::Internal
     }
 
     VkRenderPass VkContext::CreateRenderPass( std::vector<VkAttachmentDescription> aAttachments,
-        std::vector<VkSubpassDescription> aSubpasses, std::vector<VkSubpassDependency> aSubpassDependencies )
+                                              std::vector<VkSubpassDescription>    aSubpasses,
+                                              std::vector<VkSubpassDependency>     aSubpassDependencies )
     {
         VkRenderPassCreateInfo lRenderPassCreateInfo{};
         lRenderPassCreateInfo.sType           = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
@@ -1051,8 +1058,8 @@ namespace LTSE::Graphics::Internal
         return lNewDescriptorPool;
     }
 
-    VkDescriptorSet VkContext::AllocateDescriptorSet(
-        VkDescriptorPool aDescriptorPool, VkDescriptorSetLayout aLayout, uint32_t aDescriptorCount )
+    VkDescriptorSet VkContext::AllocateDescriptorSet( VkDescriptorPool aDescriptorPool, VkDescriptorSetLayout aLayout,
+                                                      uint32_t aDescriptorCount )
     {
         VkDescriptorSetAllocateInfo lDescriptorSetAllocInfo{};
         lDescriptorSetAllocInfo.sType              = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -1097,8 +1104,8 @@ namespace LTSE::Graphics::Internal
         }
     }
 
-    VkPipelineLayout VkContext::CreatePipelineLayout(
-        std::vector<VkDescriptorSetLayout> aDescriptorSetLayout, std::vector<VkPushConstantRange> aPushConstants )
+    VkPipelineLayout VkContext::CreatePipelineLayout( std::vector<VkDescriptorSetLayout> aDescriptorSetLayout,
+                                                      std::vector<VkPushConstantRange>   aPushConstants )
     {
         VkPipelineLayoutCreateInfo lPipelineLayoutCreateInfo{};
         lPipelineLayoutCreateInfo.sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -1128,8 +1135,8 @@ namespace LTSE::Graphics::Internal
         }
     }
 
-    VkResult VkContext::AcquireNextImage(
-        VkSwapchainKHR aSwapChain, uint64_t aTimeout, VkSemaphore aWaitSemaphore, uint32_t *aNewImageIndex )
+    VkResult VkContext::AcquireNextImage( VkSwapchainKHR aSwapChain, uint64_t aTimeout, VkSemaphore aWaitSemaphore,
+                                          uint32_t *aNewImageIndex )
     {
         return vkAcquireNextImageKHR( mVkLogicalDevice, aSwapChain, aTimeout, aWaitSemaphore, VK_NULL_HANDLE, aNewImageIndex );
     }

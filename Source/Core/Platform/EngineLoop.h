@@ -15,8 +15,7 @@
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//SwapChain.h"
 #include "Core/Optix/OptixContext.h"
-#include "ViewportClient.h"
-
+#include "Window.h"
 
 #include "Core/GraphicContext//UI/UIContext.h"
 
@@ -34,13 +33,13 @@ namespace LTSE::Core
     class EngineLoop
     {
       public:
-        friend class ViewportClient;
+        friend class Window;
         EngineLoop()  = default;
         ~EngineLoop() = default;
 
-        entt::delegate<bool( ImGuiIO & )> UIDelegate{};
-        entt::delegate<void( Timestep )> UpdateDelegate{};
-        entt::delegate<void( void )> RenderDelegate{};
+        entt::delegate<bool( ImGuiIO & )>   UIDelegate{};
+        entt::delegate<void( Timestep )>    UpdateDelegate{};
+        entt::delegate<void( void )>        RenderDelegate{};
         entt::delegate<void( UserEvent & )> IOEventDelegate{};
 
         /** @brief Pre-initialization
@@ -112,6 +111,9 @@ namespace LTSE::Core
 
         LTSE::Graphics::GraphicContext &GetDevice() { return mGraphicContext; }
 
+        Ref<LTSE::Graphics::SwapChainRenderTarget> GetSwapchainRenderer() { return m_SwapChainRenderer; }
+        LTSE::Graphics::RenderContext             &GetRenderContext() { return m_RenderContext; }
+
         Ref<LTSE::Core::UIContext> UIContext() { return mImGUIOverlay; };
 
         /** @brief Returns the configuration folder */
@@ -140,7 +142,7 @@ namespace LTSE::Core
 
         LTSE::Graphics::GraphicContext mGraphicContext;
 
-        Ref<LTSE::Core::ViewportClient> m_ViewportClient;
+        Ref<LTSE::Core::Window>        m_ViewportClient;
         LTSE::Graphics::GraphicContext m_GraphicContextData{};
 
         Ref<LTSE::Core::UIContext> mImGUIOverlay;
@@ -153,10 +155,10 @@ namespace LTSE::Core
 
         math::ivec2 m_InitialMainWindowSize     = { 1920, 1080 };
         math::ivec2 m_InitialMainWindowPosition = { 100, 100 };
-        std::string mImGuiConfigPath           = "imgui.ini";
+        std::string mImGuiConfigPath            = "imgui.ini";
 
         math::ivec2 m_MainWindowSize;
-        math::vec2 m_DpiScaling;
+        math::vec2  m_DpiScaling;
         math::ivec2 m_FramebufferSize;
         math::ivec2 s_LastMousePosition;
 
