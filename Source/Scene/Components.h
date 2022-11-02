@@ -64,6 +64,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
     struct sActorComponent
     {
+        std::string mClassFullName = "";
+
         ScriptClass         mClass;
         ScriptClassInstance mInstance;
 
@@ -72,12 +74,15 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
         ~sActorComponent() = default;
 
-        sActorComponent( const std::string &aClassNamespace, std::string const &aClassName )
-            : mClassName{ aClassName }
-            , mClass{ ScriptClass( aClassNamespace, aClassName, false ) }
+        sActorComponent( const std::string &aClassFullName )
+            : mClassFullName{ aClassFullName }
 
         {
-            //
+            size_t      lSeparatorPos   = aClassFullName.find_last_of( '.' );
+            std::string lClassNamespace = aClassFullName.substr( 0, lSeparatorPos );
+            std::string lClassName      = aClassFullName.substr( lSeparatorPos + 1 );
+
+            mClass = ScriptClass( lClassNamespace, lClassName, false );
         }
 
         template <typename T>
@@ -102,15 +107,9 @@ namespace LTSE::Core::EntityComponentSystem::Components
             mInstance.InvokeMethod( "OnCreate", 0, nullptr );
         }
 
-        void OnDestroy()
-        {
-            mInstance.InvokeMethod( "OnDestroy", 0, nullptr );
-        }
+        void OnDestroy() { mInstance.InvokeMethod( "OnDestroy", 0, nullptr ); }
 
-        void OnUpdate( Timestep ts )
-        {
-            mInstance.CallMethod( "OnUpdate", ts.GetMilliseconds() );
-        }
+        void OnUpdate( Timestep ts ) { mInstance.CallMethod( "OnUpdate", ts.GetMilliseconds() ); }
 
         Entity GetControlledEntity() const { return mEntity; };
 
@@ -177,7 +176,8 @@ namespace LTSE::Core::EntityComponentSystem::Components
         math::vec3 GetEulerRotation() const
         {
             math::mat3 lMatrix = math::Rotation( mMatrix );
-            return math::vec3{ math::degrees( atan2f( lMatrix[1][2], lMatrix[2][2] ) ),
+            return math::vec3{
+                math::degrees( atan2f( lMatrix[1][2], lMatrix[2][2] ) ),
                 math::degrees( atan2f( -lMatrix[0][2], sqrtf( lMatrix[1][2] * lMatrix[1][2] + lMatrix[2][2] * lMatrix[2][2] ) ) ),
                 math::degrees( atan2f( lMatrix[0][1], lMatrix[0][0] ) ) };
         }
