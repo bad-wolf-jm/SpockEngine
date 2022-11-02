@@ -6,9 +6,6 @@ namespace SpockEngine
     public static class CppCall
     {
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static void NativeLog(string aString, int i);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static bool Entity_IsValid(uint aEntityID, ulong aRegistry);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]

@@ -249,8 +249,6 @@ namespace LTSE::Core
     {
         using namespace MonoInternalCalls;
 
-        SE_ADD_INTERNAL_CALL( NativeLog );
-
         SE_ADD_INTERNAL_CALL( Entity_IsValid );
         SE_ADD_INTERNAL_CALL( Entity_Has );
         SE_ADD_INTERNAL_CALL( Entity_Get );
