@@ -2,10 +2,6 @@
 
 #include "Core/Math/Types.h"
 
-#pragma once
-
-#include "Core/Math/Types.h"
-
 #ifndef __CUDACC__
 #    include "Core/GraphicContext//GraphicsPipeline.h"
 #endif

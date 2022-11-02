@@ -1,10 +1,9 @@
 #pragma once
 
 #include "Core/Math/Types.h"
-// #include "Core/Types.h"
 
 #ifndef __CUDACC__
-#    include "Core/GraphicContext//GraphicsPipeline.h"
+#    include "Core/GraphicContext/GraphicsPipeline.h"
 #endif
 
 namespace LTSE::Core

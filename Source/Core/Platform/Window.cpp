@@ -9,16 +9,16 @@ namespace LTSE::Core
 {
 
     Window::Window( int a_Width, int a_Height, std::string a_Title )
-        : m_Width{ a_Width }
-        , m_Height{ a_Height }
-        , m_WindowName{ a_Title }
+        : mWidth{ a_Width }
+        , mHeight{ a_Height }
+        , mWindowName{ a_Title }
     {
         InitializeWindow();
     }
 
     Window::~Window()
     {
-        glfwDestroyWindow( m_Window );
+        glfwDestroyWindow( mWindow );
         glfwTerminate();
     }
 
@@ -35,162 +35,168 @@ namespace LTSE::Core
         // Allow window to be resized
         glfwWindowHint( GLFW_RESIZABLE, GLFW_TRUE );
 
-        m_Window = glfwCreateWindow( m_Width, m_Height, m_WindowName.c_str(), nullptr, nullptr );
-        if( !m_Window ) throw std::runtime_error( "Failed to create window" );
+        mWindow = glfwCreateWindow( mWidth, mHeight, mWindowName.c_str(), nullptr, nullptr );
+        if( !mWindow ) throw std::runtime_error( "Failed to create window" );
 
         // Attach a pointer to this class as used data to the underlying GLFW window. This pointer
         // allows us to retrieve our class from callback functions.
-        glfwSetWindowUserPointer( m_Window, this );
-
-        // Make the openGL context current;
-        // glfwMakeContextCurrent(m_Window);
-        // int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+        glfwSetWindowUserPointer( mWindow, this );
 
         // Setup all callback functions
-        glfwSetFramebufferSizeCallback( m_Window, OnFramebufferResize );
-        glfwSetWindowCloseCallback( m_Window, OnWindowClose );
-        glfwSetWindowRefreshCallback( m_Window, OnWindowRefresh );
-        glfwSetKeyCallback( m_Window, OnKey );
-        glfwSetMouseButtonCallback( m_Window, OnMouseButton );
-        glfwSetCursorPosCallback( m_Window, OnCursorPosition );
-        glfwSetScrollCallback( m_Window, OnCursorPosition );
-        glfwSetCharCallback( m_Window, OnTextInput );
+        glfwSetFramebufferSizeCallback( mWindow, OnFramebufferResize );
+        glfwSetWindowCloseCallback( mWindow, OnWindowClose );
+        glfwSetWindowRefreshCallback( mWindow, OnWindowRefresh );
+        glfwSetKeyCallback( mWindow, OnKey );
+        glfwSetMouseButtonCallback( mWindow, OnMouseButton );
+        glfwSetCursorPosCallback( mWindow, OnCursorPosition );
+        glfwSetScrollCallback( mWindow, OnCursorPosition );
+        glfwSetCharCallback( mWindow, OnTextInput );
 
         double xpos, ypos;
-        glfwGetCursorPos( m_Window, &xpos, &ypos );
-        m_LastMousePosition = math::vec2{ static_cast<float>( xpos ), static_cast<float>( ypos ) };
+        glfwGetCursorPos( mWindow, &xpos, &ypos );
+        mLastMousePosition = math::vec2{ static_cast<float>( xpos ), static_cast<float>( ypos ) };
     }
 
     math::vec2 Window::GetMainWindowSize()
     {
         int width, height;
-        glfwGetWindowSize( m_Window, &width, &height );
+        glfwGetWindowSize( mWindow, &width, &height );
         return { static_cast<float>( width ), static_cast<float>( height ) };
     }
 
     math::ivec2 Window::GetFramebufferSize()
     {
         int width, height;
-        glfwGetFramebufferSize( m_Window, &width, &height );
+        glfwGetFramebufferSize( mWindow, &width, &height );
         return { width, height };
     }
 
     void Window::CreateWindowSurface( VkInstance instance, VkSurfaceKHR *surface )
     {
-        if( glfwCreateWindowSurface( instance, m_Window, nullptr, surface ) != VK_SUCCESS )
+        if( glfwCreateWindowSurface( instance, mWindow, nullptr, surface ) != VK_SUCCESS )
             throw std::runtime_error( "failed to crrete window surface" );
     }
 
-    void Window::OnFramebufferResize( GLFWwindow *window, int width, int height )
+    void Window::OnFramebufferResize( GLFWwindow *aWindow, int width, int height )
     {
-        auto l_Window                     = reinterpret_cast<Window *>( glfwGetWindowUserPointer( window ) );
-        l_Window->m_FramebufferWasResized = true;
-        l_Window->m_Width                 = width;
-        l_Window->m_Height                = height;
+        auto lWindow                    = reinterpret_cast<Window *>( glfwGetWindowUserPointer( aWindow ) );
+        lWindow->mFramebufferWasResized = true;
+        lWindow->mWidth                 = width;
+        lWindow->mHeight                = height;
     }
 
     void Window::OnGLFWError( int error, const char *description ) { fprintf( stderr, "Error: %s\n", description ); }
 
-    void Window::OnWindowClose( GLFWwindow *window )
+    void Window::OnWindowClose( GLFWwindow *aWindow )
     {
-        auto l_Window = reinterpret_cast<Window *>( glfwGetWindowUserPointer( window ) );
+        auto lWindow = reinterpret_cast<Window *>( glfwGetWindowUserPointer( aWindow ) );
     }
 
-    void Window::OnWindowRefresh( GLFWwindow *window )
+    void Window::OnWindowRefresh( GLFWwindow *aWindow )
     {
-        auto l_Window = reinterpret_cast<Window *>( glfwGetWindowUserPointer( window ) );
+        auto lWindow = reinterpret_cast<Window *>( glfwGetWindowUserPointer( aWindow ) );
     }
 
-    void Window::OnKey( GLFWwindow *window, const int key, int scancode, const int action, const int mods )
+    void Window::OnKey( GLFWwindow *aWindow, const int aKey, int aScanCode, const int aAction, const int aModifiers )
     {
-        auto      l_Window = reinterpret_cast<Window *>( glfwGetWindowUserPointer( window ) );
-        UserEvent l_UserEvent;
+        auto lWindow = reinterpret_cast<Window *>( glfwGetWindowUserPointer( aWindow ) );
 
-        switch( action )
+        UserEvent lUserEvent;
+
+        switch( aAction )
         {
-        case GLFW_PRESS: l_UserEvent.Type = EventType::KEY_PRESSED; break;
-        case GLFW_RELEASE: l_UserEvent.Type = EventType::KEY_RELEASED; break;
-        case GLFW_REPEAT: l_UserEvent.Type = EventType::KEY_REPEAT; break;
-        default: l_UserEvent.Type = EventType::UNKNOWN;
+        case GLFW_PRESS: lUserEvent.Type = EventType::KEY_PRESSED; break;
+        case GLFW_RELEASE: lUserEvent.Type = EventType::KEY_RELEASED; break;
+        case GLFW_REPEAT: lUserEvent.Type = EventType::KEY_REPEAT; break;
+        default: lUserEvent.Type = EventType::UNKNOWN;
         };
 
-        l_UserEvent.MousePosition = l_Window->m_LastMousePosition;
-        l_UserEvent.MouseDelta    = { 0, 0 };
-        l_UserEvent.KeyCode       = (Key)key;
-        l_UserEvent.Modifiers     = ModifierFlags( (uint8_t)( (int32_t)mods & 0xff ) );
-        l_Window->m_EngineLoop->IOEvent( l_UserEvent );
+        lUserEvent.MousePosition = lWindow->mLastMousePosition;
+        lUserEvent.MouseDelta    = { 0, 0 };
+        lUserEvent.KeyCode       = (Key)aKey;
+        lUserEvent.Modifiers     = ModifierFlags( (uint8_t)( (int32_t)aModifiers & 0xff ) );
+
+        lWindow->mEngineLoop->IOEvent( lUserEvent );
+        if( lWindow->IOEventDelegate ) lWindow->IOEventDelegate( lUserEvent );
     }
 
-    void Window::OnMouseButton( GLFWwindow *window, const int button, const int action, const int mods )
+    void Window::OnMouseButton( GLFWwindow *aWindow, const int button, const int aAction, const int aModifiers )
     {
-        auto      l_Window = reinterpret_cast<Window *>( glfwGetWindowUserPointer( window ) );
-        UserEvent l_UserEvent;
+        auto lWindow = reinterpret_cast<Window *>( glfwGetWindowUserPointer( aWindow ) );
 
-        switch( action )
+        UserEvent lUserEvent;
+
+        switch( aAction )
         {
-        case GLFW_PRESS: l_UserEvent.Type = EventType::MOUSE_BUTTON_PRESSED; break;
-        case GLFW_RELEASE: l_UserEvent.Type = EventType::MOUSE_BUTTON_RELEASED; break;
-        default: l_UserEvent.Type = EventType::UNKNOWN;
+        case GLFW_PRESS: lUserEvent.Type = EventType::MOUSE_BUTTON_PRESSED; break;
+        case GLFW_RELEASE: lUserEvent.Type = EventType::MOUSE_BUTTON_RELEASED; break;
+        default: lUserEvent.Type = EventType::UNKNOWN;
         };
 
         double xpos, ypos;
-        glfwGetCursorPos( window, &xpos, &ypos );
-        l_Window->m_LastMousePosition = math::vec2{ static_cast<float>( xpos ), static_cast<float>( ypos ) };
+        glfwGetCursorPos( aWindow, &xpos, &ypos );
+        lWindow->mLastMousePosition = math::vec2{ static_cast<float>( xpos ), static_cast<float>( ypos ) };
 
-        l_UserEvent.MousePosition = l_Window->m_LastMousePosition;
-        l_UserEvent.MouseDelta    = { 0, 0 };
-        l_UserEvent.KeyCode       = Key::Unknown;
-        l_UserEvent.Modifiers     = ModifierFlags( (uint8_t)( (int32_t)mods & 0xff ) );
-        l_Window->m_EngineLoop->IOEvent( l_UserEvent );
+        lUserEvent.MousePosition = lWindow->mLastMousePosition;
+        lUserEvent.MouseDelta    = { 0, 0 };
+        lUserEvent.KeyCode       = Key::Unknown;
+        lUserEvent.Modifiers     = ModifierFlags( (uint8_t)( (int32_t)aModifiers & 0xff ) );
+        lWindow->mEngineLoop->IOEvent( lUserEvent );
+        if( lWindow->IOEventDelegate ) lWindow->IOEventDelegate( lUserEvent );
     }
 
-    void Window::OnCursorPosition( GLFWwindow *window, const double x, const double y )
+    void Window::OnCursorPosition( GLFWwindow *aWindow, const double x, const double y )
     {
-        auto l_Window = reinterpret_cast<Window *>( glfwGetWindowUserPointer( window ) );
+        auto lWindow = reinterpret_cast<Window *>( glfwGetWindowUserPointer( aWindow ) );
 
-        UserEvent l_UserEvent;
-        l_UserEvent.Type = EventType::MOUSE_MOVE;
+        UserEvent lUserEvent;
+        lUserEvent.Type = EventType::MOUSE_MOVE;
 
         math::ivec2 l_CurrentMousePosition{ static_cast<int32_t>( x ), static_cast<int32_t>( y ) };
-        l_UserEvent.MousePosition = l_CurrentMousePosition;
+        lUserEvent.MousePosition = l_CurrentMousePosition;
 
-        math::ivec2 l_MouseDelta = l_CurrentMousePosition - l_Window->m_LastMousePosition;
+        math::ivec2 l_MouseDelta = l_CurrentMousePosition - lWindow->mLastMousePosition;
 
-        l_UserEvent.MouseDelta = math::vec2{ static_cast<float>( l_MouseDelta.x ), static_cast<float>( l_MouseDelta.y ) };
-        l_UserEvent.KeyCode    = Key::Unknown;
-        l_UserEvent.Modifiers  = ModifierFlags();
+        lUserEvent.MouseDelta = math::vec2{ static_cast<float>( l_MouseDelta.x ), static_cast<float>( l_MouseDelta.y ) };
+        lUserEvent.KeyCode    = Key::Unknown;
+        lUserEvent.Modifiers  = ModifierFlags();
 
-        l_Window->m_LastMousePosition = l_CurrentMousePosition;
-        l_Window->m_EngineLoop->IOEvent( l_UserEvent );
+        lWindow->mLastMousePosition = l_CurrentMousePosition;
+        lWindow->mEngineLoop->IOEvent( lUserEvent );
+        if( lWindow->IOEventDelegate ) lWindow->IOEventDelegate( lUserEvent );
     }
 
-    void Window::OnMouseScroll( GLFWwindow *window, const double dx, const double dy )
+    void Window::OnMouseScroll( GLFWwindow *aWindow, const double dx, const double dy )
     {
-        auto      l_Window = reinterpret_cast<Window *>( glfwGetWindowUserPointer( window ) );
-        UserEvent l_UserEvent;
-        l_UserEvent.Type = EventType::MOUSE_SCROLL;
+        auto lWindow = reinterpret_cast<Window *>( glfwGetWindowUserPointer( aWindow ) );
 
-        l_UserEvent.MousePosition = l_Window->m_LastMousePosition;
-        l_UserEvent.MouseDelta    = math::vec2{ static_cast<float>( dx ), static_cast<float>( dy ) };
-        l_UserEvent.KeyCode       = Key::Unknown;
-        l_UserEvent.Modifiers     = ModifierFlags();
+        UserEvent lUserEvent;
+        lUserEvent.Type = EventType::MOUSE_SCROLL;
+
+        lUserEvent.MousePosition = lWindow->mLastMousePosition;
+        lUserEvent.MouseDelta    = math::vec2{ static_cast<float>( dx ), static_cast<float>( dy ) };
+        lUserEvent.KeyCode       = Key::Unknown;
+        lUserEvent.Modifiers     = ModifierFlags();
 
         double xpos, ypos;
-        glfwGetCursorPos( window, &xpos, &ypos );
-        l_Window->m_LastMousePosition = math::vec2{ static_cast<int32_t>( xpos ), static_cast<int32_t>( ypos ) };
+        glfwGetCursorPos( aWindow, &xpos, &ypos );
+        lWindow->mLastMousePosition = math::vec2{ static_cast<int32_t>( xpos ), static_cast<int32_t>( ypos ) };
 
-        l_Window->m_EngineLoop->IOEvent( l_UserEvent );
+        lWindow->mEngineLoop->IOEvent( lUserEvent );
+        if( lWindow->IOEventDelegate ) lWindow->IOEventDelegate( lUserEvent );
     }
 
-    void Window::OnTextInput( GLFWwindow *window, unsigned int codepoint )
+    void Window::OnTextInput( GLFWwindow *aWindow, unsigned int codepoint )
     {
-        auto      l_Window = reinterpret_cast<Window *>( glfwGetWindowUserPointer( window ) );
-        UserEvent l_UserEvent;
-        l_UserEvent.MousePosition = l_Window->m_LastMousePosition;
-        l_UserEvent.MouseDelta    = { 0, 0 };
-        l_UserEvent.KeyCode       = Key::Unknown;
-        l_UserEvent.Modifiers     = ModifierFlags();
-        l_Window->m_EngineLoop->IOEvent( l_UserEvent );
+        auto lWindow = reinterpret_cast<Window *>( glfwGetWindowUserPointer( aWindow ) );
+
+        UserEvent lUserEvent;
+        lUserEvent.MousePosition = lWindow->mLastMousePosition;
+        lUserEvent.MouseDelta    = { 0, 0 };
+        lUserEvent.KeyCode       = Key::Unknown;
+        lUserEvent.Modifiers     = ModifierFlags();
+        lWindow->mEngineLoop->IOEvent( lUserEvent );
+        if( lWindow->IOEventDelegate ) lWindow->IOEventDelegate( lUserEvent );
     }
 
 } // namespace LTSE::Core
