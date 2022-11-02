@@ -182,10 +182,10 @@ namespace LTSE::Core
     /** @brief */
     struct UserEvent
     {
-        EventType Type;
-        math::ivec2 MousePosition;
-        math::vec2 MouseDelta;
-        Key KeyCode;
+        EventType     Type;
+        math::ivec2   MousePosition;
+        math::vec2    MouseDelta;
+        Key           KeyCode;
         ModifierFlags Modifiers;
     };
 
@@ -193,7 +193,7 @@ namespace LTSE::Core
     struct LayoutSpecification
     {
         math::ivec2 WindowSize;
-        math::vec2 DpiScaling;
+        math::vec2  DpiScaling;
         math::ivec2 FramebufferSize;
     };
 
@@ -290,8 +290,8 @@ namespace LTSE::Core
 
         void InitializeWindow();
 
-        int m_Width;
-        int m_Height;
+        int  m_Width;
+        int  m_Height;
         bool m_FramebufferWasResized = false;
 
         math::ivec2 m_LastMousePosition;

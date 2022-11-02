@@ -36,8 +36,7 @@ namespace LTSE::Core
         glfwWindowHint( GLFW_RESIZABLE, GLFW_TRUE );
 
         m_Window = glfwCreateWindow( m_Width, m_Height, m_WindowName.c_str(), nullptr, nullptr );
-        if( !m_Window )
-            throw std::runtime_error( "Failed to create window" );
+        if( !m_Window ) throw std::runtime_error( "Failed to create window" );
 
         // Attach a pointer to this class as used data to the underlying GLFW window. This pointer
         // allows us to retrieve our class from callback functions.
@@ -92,28 +91,27 @@ namespace LTSE::Core
 
     void ViewportClient::OnGLFWError( int error, const char *description ) { fprintf( stderr, "Error: %s\n", description ); }
 
-    void ViewportClient::OnWindowClose( GLFWwindow *window ) { auto l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) ); }
+    void ViewportClient::OnWindowClose( GLFWwindow *window )
+    {
+        auto l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) );
+    }
 
-    void ViewportClient::OnWindowRefresh( GLFWwindow *window ) { auto l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) ); }
+    void ViewportClient::OnWindowRefresh( GLFWwindow *window )
+    {
+        auto l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) );
+    }
 
     void ViewportClient::OnKey( GLFWwindow *window, const int key, int scancode, const int action, const int mods )
     {
-        auto l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) );
+        auto      l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) );
         UserEvent l_UserEvent;
 
         switch( action )
         {
-        case GLFW_PRESS:
-            l_UserEvent.Type = EventType::KEY_PRESSED;
-            break;
-        case GLFW_RELEASE:
-            l_UserEvent.Type = EventType::KEY_RELEASED;
-            break;
-        case GLFW_REPEAT:
-            l_UserEvent.Type = EventType::KEY_REPEAT;
-            break;
-        default:
-            l_UserEvent.Type = EventType::UNKNOWN;
+        case GLFW_PRESS: l_UserEvent.Type = EventType::KEY_PRESSED; break;
+        case GLFW_RELEASE: l_UserEvent.Type = EventType::KEY_RELEASED; break;
+        case GLFW_REPEAT: l_UserEvent.Type = EventType::KEY_REPEAT; break;
+        default: l_UserEvent.Type = EventType::UNKNOWN;
         };
 
         l_UserEvent.MousePosition = l_Window->m_LastMousePosition;
@@ -125,19 +123,14 @@ namespace LTSE::Core
 
     void ViewportClient::OnMouseButton( GLFWwindow *window, const int button, const int action, const int mods )
     {
-        auto l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) );
+        auto      l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) );
         UserEvent l_UserEvent;
 
         switch( action )
         {
-        case GLFW_PRESS:
-            l_UserEvent.Type = EventType::MOUSE_BUTTON_PRESSED;
-            break;
-        case GLFW_RELEASE:
-            l_UserEvent.Type = EventType::MOUSE_BUTTON_RELEASED;
-            break;
-        default:
-            l_UserEvent.Type = EventType::UNKNOWN;
+        case GLFW_PRESS: l_UserEvent.Type = EventType::MOUSE_BUTTON_PRESSED; break;
+        case GLFW_RELEASE: l_UserEvent.Type = EventType::MOUSE_BUTTON_RELEASED; break;
+        default: l_UserEvent.Type = EventType::UNKNOWN;
         };
 
         double xpos, ypos;
@@ -173,7 +166,7 @@ namespace LTSE::Core
 
     void ViewportClient::OnMouseScroll( GLFWwindow *window, const double dx, const double dy )
     {
-        auto l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) );
+        auto      l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) );
         UserEvent l_UserEvent;
         l_UserEvent.Type = EventType::MOUSE_SCROLL;
 
@@ -191,7 +184,7 @@ namespace LTSE::Core
 
     void ViewportClient::OnTextInput( GLFWwindow *window, unsigned int codepoint )
     {
-        auto l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) );
+        auto      l_Window = reinterpret_cast<ViewportClient *>( glfwGetWindowUserPointer( window ) );
         UserEvent l_UserEvent;
         l_UserEvent.MousePosition = l_Window->m_LastMousePosition;
         l_UserEvent.MouseDelta    = { 0, 0 };
