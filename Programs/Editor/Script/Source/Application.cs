@@ -25,6 +25,12 @@ namespace Test
                 mEntity.Replace<sNodeTransformComponent>(new sNodeTransformComponent(new mat4(3.0f)));
             }
 
+            if (mEntity.Has<sTag>())
+            {
+                Console.WriteLine($"I have a tag");
+                sTag lTransform = mEntity.Get<sTag>();
+                mEntity.Replace<sTag>(new sTag("Sensor is running"));
+            }
         }
 
         override public void OnDestroy()
