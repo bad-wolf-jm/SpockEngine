@@ -23,4 +23,20 @@ namespace SpockEngine
 
     }
 
+    public class sTag : Component
+    {
+        public string mValue;
+
+        public sTag() 
+        { 
+            Console.WriteLine($"New sTag instantiated!!");
+        }
+
+        public sTag( string aValue ) 
+        { 
+            mValue = aValue;
+        }
+
+    }
+
 }
