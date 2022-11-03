@@ -7,6 +7,7 @@
 extern "C"
 {
     typedef struct _MonoClass      MonoClass;
+    typedef struct _MonoMethod      MonoMethod;
     typedef struct _MonoType       MonoType;
     typedef struct _MonoObject     MonoObject;
     typedef struct _MonoMethod     MonoMethod;
@@ -41,6 +42,28 @@ namespace LTSE::Core
         MonoClassField  *mClassField;
     };
 
+
+    class ScriptClassInstance;
+
+    class ScriptClassMethod
+    {
+      public:
+        ScriptClassMethod() = default;
+        ScriptClassMethod( MonoMethod *aMonoMethod, ScriptClassInstance *aInstance );
+
+        template <typename... _ArgTypes>
+        MonoObject *operator()( _ArgTypes... aArgs )
+        {
+            void *lParameters[] = { (void *)&aArgs... };
+
+            return mInstance->InvokeMethod( mMonoMethod, lParameters );
+        }
+
+      private:
+        MonoMethod *mMonoMethod;
+        ScriptClassInstance* mInstance;
+    };
+
     class ScriptClassInstance
     {
       public:
@@ -50,6 +73,7 @@ namespace LTSE::Core
         MonoObject *GetInstance() { return mInstance; };
 
         MonoMethod *GetMethod( const std::string &aName, int aParameterCount );
+        ScriptClassMethod GetBoundMethod( const std::string &aName, int aParameterCount );
         MonoObject *InvokeMethod( MonoMethod *aMethod, void **aParameters = nullptr );
         MonoObject *InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters = nullptr );
 
@@ -66,7 +90,7 @@ namespace LTSE::Core
         {
             MonoClassField *lClassField = mono_class_get_field_from_name( mMonoClass, aName.c_str() );
 
-            _StructType     lValue;
+            _StructType lValue;
             mono_field_get_value( mInstance, lClassField, &lValue );
 
             return lValue;
