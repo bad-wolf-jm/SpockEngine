@@ -1193,7 +1193,7 @@ namespace LTSE::Core
         ForEach<sBehaviourComponent>(
             [=]( auto l_Entity, auto &l_Component )
             {
-                if( !l_Component.ControllerInstance )
+                if( !l_Component.ControllerInstance && l_Component.InstantiateController )
                 {
                     l_Component.ControllerInstance = l_Component.InstantiateController();
                     l_Component.ControllerInstance->Initialize( m_Registry.WrapEntity( l_Entity ) );
