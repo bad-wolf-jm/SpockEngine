@@ -7,7 +7,8 @@
 extern "C"
 {
     typedef struct _MonoClass      MonoClass;
-    typedef struct _MonoMethod      MonoMethod;
+    typedef struct _MonoMethod     MonoMethod;
+    typedef struct _MonoString     MonoString;
     typedef struct _MonoType       MonoType;
     typedef struct _MonoObject     MonoObject;
     typedef struct _MonoMethod     MonoMethod;
@@ -42,7 +43,6 @@ namespace LTSE::Core
         MonoClassField  *mClassField;
     };
 
-
     class ScriptClassInstance;
 
     class ScriptClassMethod
@@ -60,8 +60,8 @@ namespace LTSE::Core
         }
 
       private:
-        MonoMethod *mMonoMethod;
-        ScriptClassInstance* mInstance;
+        MonoMethod          *mMonoMethod;
+        ScriptClassInstance *mInstance;
     };
 
     class ScriptClassInstance
@@ -72,10 +72,10 @@ namespace LTSE::Core
 
         MonoObject *GetInstance() { return mInstance; };
 
-        MonoMethod *GetMethod( const std::string &aName, int aParameterCount );
+        MonoMethod       *GetMethod( const std::string &aName, int aParameterCount );
         ScriptClassMethod GetBoundMethod( const std::string &aName, int aParameterCount );
-        MonoObject *InvokeMethod( MonoMethod *aMethod, void **aParameters = nullptr );
-        MonoObject *InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters = nullptr );
+        MonoObject       *InvokeMethod( MonoMethod *aMethod, void **aParameters = nullptr );
+        MonoObject       *InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters = nullptr );
 
         template <typename... _ArgTypes>
         MonoObject *CallMethod( const std::string &aName, _ArgTypes... aArgs )
@@ -156,6 +156,9 @@ namespace LTSE::Core
         static void ReloadAssembly();
 
         static MonoImage *GetCoreAssemblyImage();
+
+        static MonoString *NewString( std::string const &aString );
+        static std::string NewString( MonoString *aString );
 
         static ScriptClass GetClassType( const std::string &aClassName );
 

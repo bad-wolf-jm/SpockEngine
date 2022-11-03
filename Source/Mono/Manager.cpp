@@ -262,7 +262,12 @@ namespace LTSE::Core
         LoadCoreAssembly( "Source/ScriptCore/Build/Debug/SE_Core.dll" );
     }
 
-    void ScriptManager::RegisterComponentTypes() { RegisterComponentType<sNodeTransformComponent>(); }
+    void ScriptManager::RegisterComponentTypes()
+    {
+        //
+        RegisterComponentType<sTag>();
+        RegisterComponentType<sNodeTransformComponent>();
+    }
 
     void ScriptManager::RegisterInternalCppFunctions()
     {
@@ -304,6 +309,13 @@ namespace LTSE::Core
     MonoImage *ScriptManager::GetCoreAssemblyImage() { return sData->mCoreAssemblyImage; }
 
     void *ScriptManager::GetSceneContext() { return sData->mSceneContext; }
+
+    MonoString *ScriptManager::NewString( std::string const &aString )
+    {
+        return mono_string_new( sData->mAppDomain, aString.c_str() );
+    }
+
+    std::string ScriptManager::NewString( MonoString *aString ) { return std::string( mono_string_to_utf8( aString ) ); }
 
     void ScriptManager::LoadAssemblyClasses()
     {

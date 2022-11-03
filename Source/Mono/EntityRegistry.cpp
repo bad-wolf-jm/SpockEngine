@@ -31,4 +31,21 @@ namespace LTSE::Core
 
         aComponent = sNodeTransformComponent( lFieldValue );
     }
+
+    ScriptClassInstance MarshallComponent( ScriptClass &lMonoType, sTag &aComponent )
+    {
+        MonoString *lManagedSTagValue = ScriptManager::NewString( aComponent.mValue );
+
+        auto lNewObject = lMonoType.Instantiate( lManagedSTagValue );
+
+        return lNewObject;
+    }
+
+    void UnmarshallComponent( ScriptClassInstance &aMonoType, sTag &aComponent )
+    {
+        auto lFieldValue = aMonoType.GetFieldValue<MonoString *>( "mValue" );
+
+        aComponent = sTag( ScriptManager::NewString( lFieldValue ) );
+    }
+
 } // namespace LTSE::Core
