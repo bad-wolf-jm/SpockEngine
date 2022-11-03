@@ -114,8 +114,9 @@ namespace LTSE::Core::EntityComponentSystem::Components
         Entity GetControlledEntity() const { return mEntity; };
 
       private:
-        std::string mClassName;
-        Entity      mEntity;
+        Entity mEntity;
+
+        ScriptClassMethod mOnUpdate{};
     };
 
     struct sAnimationChannel

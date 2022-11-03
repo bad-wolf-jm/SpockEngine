@@ -1813,7 +1813,7 @@ namespace LTSE::Core
                             WriteComponent<sRelationshipComponent>( lOut, "sRelationshipComponent", aEntity );
                             WriteComponent<sCameraComponent>( lOut, "sCameraComponent", aEntity );
                             WriteComponent<sAnimationChooser>( lOut, "sAnimationChooser", aEntity );
-                            WriteComponent<sActorComponent>( lOut, "sAnimationChooser", aEntity );
+                            WriteComponent<sActorComponent>( lOut, "sActorComponent", aEntity );
 
                             if( aEntity.Has<sAnimationComponent>() )
                             {

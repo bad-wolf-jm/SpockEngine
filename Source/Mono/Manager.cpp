@@ -84,12 +84,13 @@ namespace LTSE::Core
             }
         }
 
-        static std::unordered_map<std::string, eScriptFieldType> sScriptFieldTypeMap = { { "System.Single", eScriptFieldType::Float },
-            { "System.Double", eScriptFieldType::Double }, { "System.Boolean", eScriptFieldType::Bool },
-            { "System.Char", eScriptFieldType::Char }, { "System.Int16", eScriptFieldType::Short },
-            { "System.Int32", eScriptFieldType::Int }, { "System.Int64", eScriptFieldType::Long },
-            { "System.Byte", eScriptFieldType::Byte }, { "System.UInt16", eScriptFieldType::UShort },
-            { "System.UInt32", eScriptFieldType::UInt }, { "System.UInt64", eScriptFieldType::ULong } };
+        static std::unordered_map<std::string, eScriptFieldType> sScriptFieldTypeMap = {
+            { "System.Single", eScriptFieldType::Float },  { "System.Double", eScriptFieldType::Double },
+            { "System.Boolean", eScriptFieldType::Bool },  { "System.Char", eScriptFieldType::Char },
+            { "System.Int16", eScriptFieldType::Short },   { "System.Int32", eScriptFieldType::Int },
+            { "System.Int64", eScriptFieldType::Long },    { "System.Byte", eScriptFieldType::Byte },
+            { "System.UInt16", eScriptFieldType::UShort }, { "System.UInt32", eScriptFieldType::UInt },
+            { "System.UInt64", eScriptFieldType::ULong } };
 
         eScriptFieldType MonoTypeToScriptFieldType( MonoType *aMonoType )
         {
@@ -142,12 +143,18 @@ namespace LTSE::Core
         : mClassNamespace( aClassNamespace )
         , mClassName( aClassName )
     {
-        mMonoClass = mono_class_from_name(
-            aIsCore ? sData->mCoreAssemblyImage : sData->mAppAssemblyImage, aClassNamespace.c_str(), aClassName.c_str() );
+        mMonoClass = mono_class_from_name( aIsCore ? sData->mCoreAssemblyImage : sData->mAppAssemblyImage, aClassNamespace.c_str(),
+                                           aClassName.c_str() );
     }
 
     ScriptClass::ScriptClass( MonoType *aMonoClass )
         : mMonoClass{ mono_class_from_mono_type( aMonoClass ) }
+    {
+    }
+
+    ScriptClassMethod::ScriptClassMethod( MonoMethod *aMonoMethod, ScriptClassInstance *aInstance )
+        : mMonoMethod{ aMonoMethod }
+        , mInstance{ aInstance }
     {
     }
 
@@ -162,6 +169,18 @@ namespace LTSE::Core
         : mMonoClass{ aMonoClass }
         , mInstance{ aInstance }
     {
+    }
+
+    ScriptClassMethod ScriptClassInstance::GetBoundMethod( const std::string &aName, int aParameterCount )
+    {
+        MonoClass  *lClass  = mMonoClass;
+        MonoMethod *lMethod = NULL;
+        while( lClass != NULL && lMethod == NULL )
+        {
+            lMethod = mono_class_get_method_from_name( lClass, aName.c_str(), aParameterCount );
+            if( lMethod == NULL ) lClass = mono_class_get_parent( lClass );
+        }
+        return ScriptClassMethod( lMethod, this );
     }
 
     MonoMethod *ScriptClassInstance::GetMethod( const std::string &aName, int aParameterCount )
