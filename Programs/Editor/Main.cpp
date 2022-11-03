@@ -118,7 +118,7 @@ class EchoDSMVPEditor : public BaseEditorApplication
 
     void OnBeginScenario()
     {
-        mEditorWindow.Sensor.Get<sBehaviourComponent>().Bind<SensorControllerBehaviour>( mEngineLoop, m_World );
+        mEditorWindow.Sensor.Get<sBehaviourComponent>().Bind<SensorControllerBehaviour>( mEngineLoop, mWorld );
     }
 
     void OnUI()
@@ -141,7 +141,7 @@ class EchoDSMVPEditor : public BaseEditorApplication
 
         ScriptManager::SetAppAssemblyPath("C:/GitLab/SpockEngine/Programs/Editor/Script/Build/Debug/Test.dll");
 
-        m_World->AttachScript(mEditorWindow.Sensor, "Test", "TestActorComponent");
+        mWorld->AttachScript(mEditorWindow.Sensor, "Test", "TestActorComponent");
     }
 
     void Update( Timestep ts )
@@ -161,5 +161,6 @@ int main( int argc, char **argv )
 
     g_EditorWindow.Init();
 
-    return g_EditorWindow.Run();
+    return 0;
+    // return g_EditorWindow.Run();
 }
