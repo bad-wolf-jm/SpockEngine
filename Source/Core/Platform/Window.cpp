@@ -123,7 +123,6 @@ namespace LTSE::Core
         lUserEvent.Modifiers     = ModifierFlags( (uint8_t)( (int32_t)aModifiers & 0xff ) );
 
         lWindow->mEngineLoop->IOEvent( lUserEvent );
-        // if( lWindow->IOEventDelegate ) lWindow->IOEventDelegate( lUserEvent );
     }
 
     void Window::OnMouseButton( GLFWwindow *aWindow, const int button, const int aAction, const int aModifiers )
@@ -146,7 +145,6 @@ namespace LTSE::Core
         lUserEvent.KeyCode       = Key::Unknown;
         lUserEvent.Modifiers     = ModifierFlags( (uint8_t)( (int32_t)aModifiers & 0xff ) );
         lWindow->mEngineLoop->IOEvent( lUserEvent );
-        // if( lWindow->IOEventDelegate ) lWindow->IOEventDelegate( lUserEvent );
     }
 
     void Window::OnCursorPosition( GLFWwindow *aWindow, const double x, const double y )
@@ -167,7 +165,6 @@ namespace LTSE::Core
 
         lWindow->mLastMousePosition = l_CurrentMousePosition;
         lWindow->mEngineLoop->IOEvent( lUserEvent );
-        // if( lWindow->IOEventDelegate ) lWindow->IOEventDelegate( lUserEvent );
     }
 
     void Window::OnMouseScroll( GLFWwindow *aWindow, const double dx, const double dy )
@@ -185,7 +182,6 @@ namespace LTSE::Core
         lWindow->mLastMousePosition = lWindow->GetMousePosition();
 
         lWindow->mEngineLoop->IOEvent( lUserEvent );
-        // if( lWindow->IOEventDelegate ) lWindow->IOEventDelegate( lUserEvent );
     }
 
     void Window::OnTextInput( GLFWwindow *aWindow, unsigned int codepoint )
@@ -198,7 +194,6 @@ namespace LTSE::Core
         lUserEvent.KeyCode       = Key::Unknown;
         lUserEvent.Modifiers     = ModifierFlags();
         lWindow->mEngineLoop->IOEvent( lUserEvent );
-        // if( lWindow->IOEventDelegate ) lWindow->IOEventDelegate( lUserEvent );
     }
 
 } // namespace LTSE::Core

@@ -44,7 +44,9 @@ namespace LTSE::Editor
         math::ivec2     WindowPosition          = { 100, 100 };
 
       public:
-        BaseEditorApplication();
+        BaseEditorApplication() = default;
+        BaseEditorApplication( Ref<EngineLoop> aEngineLoop );
+
         ~BaseEditorApplication() = default;
 
         void Init();
@@ -52,16 +54,6 @@ namespace LTSE::Editor
         void         RenderScene();
         virtual void Update( Timestep ts ) = 0;
         bool         RenderUI( ImGuiIO &io );
-
-        uint32_t Run();
-
-        virtual void LoadSensorConfiguration() = 0;
-        virtual void SaveSensorConfiguration() = 0;
-        virtual void OnUI()                    = 0;
-
-      protected:
-        void LoadConfiguration();
-        void SaveConfiguration();
 
       protected:
         void RebuildOutputFramebuffer();

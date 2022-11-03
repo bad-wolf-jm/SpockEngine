@@ -14,6 +14,8 @@
 #include "Core/Memory.h"
 #include "Core/Platform/EngineLoop.h"
 
+#include "Editor/BaseEditorApplication.h"
+
 #include "Mono/Manager.h"
 
 using namespace LTSE::Core;
@@ -179,6 +181,13 @@ int main( int argc, char **argv )
     mEngineLoop->Init();
 
     ScriptManager::Initialize();
+
+    LTSE::Editor::BaseEditorApplication lEditorApplication( mEngineLoop );
+    lEditorApplication.Init();
+
+    mEngineLoop->UpdateDelegate.connect<&LTSE::Editor::BaseEditorApplication::Update>( lEditorApplication );
+    mEngineLoop->RenderDelegate.connect<&LTSE::Editor::BaseEditorApplication::RenderScene>( lEditorApplication );
+    mEngineLoop->UIDelegate.connect<&LTSE::Editor::BaseEditorApplication::RenderUI>( lEditorApplication );
 
     while( mEngineLoop->Tick() )
     {
