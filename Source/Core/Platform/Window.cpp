@@ -52,9 +52,15 @@ namespace LTSE::Core
         glfwSetScrollCallback( mWindow, OnCursorPosition );
         glfwSetCharCallback( mWindow, OnTextInput );
 
-        double xpos, ypos;
-        glfwGetCursorPos( mWindow, &xpos, &ypos );
-        mLastMousePosition = math::vec2{ static_cast<float>( xpos ), static_cast<float>( ypos ) };
+        mLastMousePosition = GetMousePosition();
+    }
+
+    math::ivec2 Window::GetMousePosition()
+    {
+        double lXPos, lYPos;
+        glfwGetCursorPos( mWindow, &lXPos, &lYPos );
+
+        return math::vec2{ static_cast<int>( lXPos ), static_cast<int>( lYPos ) };
     }
 
     math::vec2 Window::GetMainWindowSize()
@@ -133,9 +139,7 @@ namespace LTSE::Core
         default: lUserEvent.Type = EventType::UNKNOWN;
         };
 
-        double xpos, ypos;
-        glfwGetCursorPos( aWindow, &xpos, &ypos );
-        lWindow->mLastMousePosition = math::vec2{ static_cast<float>( xpos ), static_cast<float>( ypos ) };
+        lWindow->mLastMousePosition = lWindow->GetMousePosition();
 
         lUserEvent.MousePosition = lWindow->mLastMousePosition;
         lUserEvent.MouseDelta    = { 0, 0 };
@@ -178,9 +182,7 @@ namespace LTSE::Core
         lUserEvent.KeyCode       = Key::Unknown;
         lUserEvent.Modifiers     = ModifierFlags();
 
-        double xpos, ypos;
-        glfwGetCursorPos( aWindow, &xpos, &ypos );
-        lWindow->mLastMousePosition = math::vec2{ static_cast<int32_t>( xpos ), static_cast<int32_t>( ypos ) };
+        lWindow->mLastMousePosition = lWindow->GetMousePosition();
 
         lWindow->mEngineLoop->IOEvent( lUserEvent );
         // if( lWindow->IOEventDelegate ) lWindow->IOEventDelegate( lUserEvent );

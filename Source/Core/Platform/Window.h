@@ -280,7 +280,7 @@ namespace LTSE::Core
         /** @brief */
         void SetTitle( std::string a_Title ) { glfwSetWindowTitle( mWindow, a_Title.c_str() ); }
 
-        // entt::delegate<void( UserEvent const & )> IOEventDelegate{};
+        math::ivec2 GetMousePosition();
 
       private:
         static void OnFramebufferResize( GLFWwindow *window, int width, int height );

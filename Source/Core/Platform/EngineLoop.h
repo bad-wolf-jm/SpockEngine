@@ -91,15 +91,15 @@ namespace LTSE::Core
         // ImGUIOverlay* GetImGUIOverlay() { return s_ImGUIOverlay; }
 
         /** @brief Retrieve the font used for icons. */
-        ImFont *GetIconFont() { return s_IconFont; }
+        ImFont *GetIconFont() { return mIconFont; }
 
         /** @brief Retrieve the font used for normal text. */
-        ImFont *GetNormalFont() { return s_MainFont; }
+        ImFont *GetNormalFont() { return mMainFont; }
 
         /** @brief Retrieve the font used for bold text. */
-        ImFont *GetBoldFont() { return s_MainFont; }
+        ImFont *GetBoldFont() { return mMainFont; }
 
-        math::ivec2 GetViewportSize() { return m_ViewportClient->GetFramebufferSize(); }
+        math::ivec2 GetViewportSize() { return mViewportClient->GetFramebufferSize(); }
 
         /** @brief REtrieve the ImGui IO context. */
         // ImGuiIO& GetImGuiIO()
@@ -111,20 +111,20 @@ namespace LTSE::Core
 
         LTSE::Graphics::GraphicContext &GetDevice() { return mGraphicContext; }
 
-        Ref<LTSE::Graphics::SwapChainRenderTarget> GetSwapchainRenderer() { return m_SwapChainRenderer; }
-        LTSE::Graphics::RenderContext             &GetRenderContext() { return m_RenderContext; }
+        Ref<LTSE::Graphics::SwapChainRenderTarget> GetSwapchainRenderer() { return mSwapChainRenderer; }
+        LTSE::Graphics::RenderContext             &GetRenderContext() { return mRenderContext; }
 
         Ref<LTSE::Core::UIContext> UIContext() { return mImGUIOverlay; };
 
         /** @brief Returns the configuration folder */
-        const std::string &GetConfigFolder() { return m_LocalConfigFolder; }
+        const std::string &GetConfigFolder() { return mLocalConfigFolder; }
 
         /** @brief Returns the configuration folder */
-        const std::string &GetUserHomeFolder() { return m_UserHomeFolder; }
+        const std::string &GetUserHomeFolder() { return mUserHomeFolder; }
 
-        void SetApplicationName( std::string a_Name ) { m_ApplicationName = a_Name; }
+        void SetApplicationName( std::string a_Name ) { mApplicationName = a_Name; }
 
-        std::string GetApplicationName() { return m_ApplicationName; }
+        std::string GetApplicationName() { return mApplicationName; }
 
         void SetInitialWindowPosition( math::ivec2 a_Position );
         void SetInitialWindowSize( math::ivec2 a_Size );
@@ -142,33 +142,33 @@ namespace LTSE::Core
 
         LTSE::Graphics::GraphicContext mGraphicContext;
 
-        Ref<LTSE::Core::Window>        m_ViewportClient;
-        LTSE::Graphics::GraphicContext m_GraphicContextData{};
+        Ref<LTSE::Core::Window>        mViewportClient;
+        LTSE::Graphics::GraphicContext mGraphicContextData{};
 
         Ref<LTSE::Core::UIContext> mImGUIOverlay;
 
         Ref<LTSE::Graphics::SwapChain> m_SwapChain;
         LTSE::Graphics::ARenderContext m_SwapChainRenderContext;
 
-        double m_EngineLoopStartTime;
-        double m_LastFrameTime = 0.0f;
+        double mEngineLoopStartTime;
+        double mLastFrameTime = 0.0f;
 
-        math::ivec2 m_InitialMainWindowSize     = { 1920, 1080 };
-        math::ivec2 m_InitialMainWindowPosition = { 100, 100 };
+        math::ivec2 mInitialMainWindowSize     = { 1920, 1080 };
+        math::ivec2 mInitialMainWindowPosition = { 100, 100 };
         std::string mImGuiConfigPath            = "imgui.ini";
 
-        math::ivec2 m_MainWindowSize;
-        math::vec2  m_DpiScaling;
-        math::ivec2 m_FramebufferSize;
-        math::ivec2 s_LastMousePosition;
+        math::ivec2 mMainWindowSize;
+        math::vec2  mDpiScaling;
+        math::ivec2 mFramebufferSize;
+        math::ivec2 mLastMousePosition;
 
-        ImFont *s_MainFont;
-        ImFont *s_IconFont;
-        UIStyle s_UIStyle;
+        ImFont *mMainFont;
+        ImFont *mIconFont;
+        UIStyle mUIStyle;
 
-        std::string m_ApplicationName   = "";
-        std::string m_LocalConfigFolder = "";
-        std::string m_UserHomeFolder    = "";
+        std::string mApplicationName   = "";
+        std::string mLocalConfigFolder = "";
+        std::string mUserHomeFolder    = "";
     };
 
 } // namespace LTSE::Core
