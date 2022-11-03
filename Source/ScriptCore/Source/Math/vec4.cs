@@ -10,7 +10,7 @@ namespace SpockEngine.Math
         public float z;
         public float w;
 
-        public vec3(float aX, float aY, float aZ, float aW)
+        public vec4(float aX, float aY, float aZ, float aW)
         {
             x = aX;
             y = aY; 
@@ -24,6 +24,14 @@ namespace SpockEngine.Math
             y = aProj.y;  
             z = aProj.z;  
             w = aW;  
+        }
+
+        public vec4(vec3 aProj)
+        {
+            x = aProj.x; 
+            y = aProj.y;  
+            z = aProj.z;  
+            w = 0.0f;  
         }
     }
 }
