@@ -1202,7 +1202,12 @@ namespace LTSE::Core
             } );
 
         // Initialize Lua scripts
-        ForEach<sActorComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnCreate(); } );
+        ForEach<sActorComponent>(
+            [=]( auto l_Entity, auto &l_Component )
+            {
+                l_Component.Initialize( l_Entity );
+                l_Component.OnCreate();
+            } );
 
         mState = eSceneState::RUNNING;
     }
