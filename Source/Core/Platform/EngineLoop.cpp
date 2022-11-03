@@ -17,7 +17,7 @@
 namespace LTSE::Core
 {
 
-    GLFWwindow *EngineLoop::GetMainApplicationWindow() { return m_ViewportClient->GetGLFWWindow(); }
+    GLFWwindow *EngineLoop::GetMainApplicationWindow() { return mViewportClient->GetGLFWWindow(); }
 
     int64_t EngineLoop::GetTime()
     {
@@ -26,7 +26,7 @@ namespace LTSE::Core
         return now_ms.time_since_epoch().count();
     }
 
-    int64_t EngineLoop::GetElapsedTime() { return GetTime() - m_EngineLoopStartTime; }
+    int64_t EngineLoop::GetElapsedTime() { return GetTime() - mEngineLoopStartTime; }
 
     void EngineLoop::PreInit( int argc, char **argv )
     {
@@ -34,52 +34,53 @@ namespace LTSE::Core
         HRESULT result = SHGetFolderPathA( NULL, CSIDL_PROFILE, NULL, 0, profilePath );
         if( SUCCEEDED( result ) )
         {
-            m_UserHomeFolder = std::string( profilePath );
+            mUserHomeFolder = std::string( profilePath );
         }
 
         CHAR appData[MAX_PATH];
         result = SHGetFolderPathA( NULL, CSIDL_LOCAL_APPDATA, NULL, 0, appData );
         if( SUCCEEDED( result ) )
         {
-            m_LocalConfigFolder = std::string( appData );
+            mLocalConfigFolder = std::string( appData );
         }
 
         LTSE::Graphics::OptixDeviceContextObject::Initialize();
 
-        m_EngineLoopStartTime = GetTime();
-        m_LastFrameTime       = m_EngineLoopStartTime;
+        mEngineLoopStartTime = GetTime();
+        mLastFrameTime       = mEngineLoopStartTime;
     }
 
     void EngineLoop::Init()
     {
-        mGraphicContext = LTSE::Graphics::GraphicContext( m_InitialMainWindowSize.x, m_InitialMainWindowSize.y, 4, m_ApplicationName );
+        mGraphicContext = LTSE::Graphics::GraphicContext( mInitialMainWindowSize.x, mInitialMainWindowSize.y, 4, mApplicationName );
 
         SwapChainRenderTargetDescription l_SwapChainSettings{ 4 };
-        m_SwapChainRenderer = LTSE::Core::New<SwapChainRenderTarget>( mGraphicContext, l_SwapChainSettings );
-        m_RenderContext     = LTSE::Graphics::RenderContext( mGraphicContext, m_SwapChainRenderer );
+        mSwapChainRenderer = LTSE::Core::New<SwapChainRenderTarget>( mGraphicContext, l_SwapChainSettings );
+        mRenderContext     = LTSE::Graphics::RenderContext( mGraphicContext, mSwapChainRenderer );
 
-        m_ViewportClient = mGraphicContext.GetViewportClient();
+        mViewportClient = mGraphicContext.GetViewportClient();
 
-        m_ViewportClient->SetEngineLoop( this );
+        mViewportClient->SetEngineLoop( this );
 
-        m_MainWindowSize  = m_ViewportClient->GetMainWindowSize();
-        m_DpiScaling      = math::vec2( 1.0f, 1.0f );
-        m_FramebufferSize = m_ViewportClient->GetFramebufferSize();
-        mImGUIOverlay     = New<LTSE::Core::UIContext>( m_ViewportClient, mGraphicContext, m_RenderContext, mImGuiConfigPath );
+        mMainWindowSize  = mViewportClient->GetMainWindowSize();
+        mDpiScaling      = math::vec2( 1.0f, 1.0f );
+        mFramebufferSize = mViewportClient->GetFramebufferSize();
+        mImGUIOverlay    = New<LTSE::Core::UIContext>( mViewportClient, mGraphicContext, mRenderContext, mImGuiConfigPath );
     }
 
     void EngineLoop::Shutdown() {}
 
     bool EngineLoop::Tick()
     {
-        m_ViewportClient->PollEvents();
+        mViewportClient->PollEvents();
 
-        double   time = (double)GetTime();
-        Timestep timestep{ static_cast<float>( time - m_LastFrameTime ) };
+        double time = (double)GetTime();
+        Timestep timestep{ static_cast<float>( time - mLastFrameTime ) };
 
-        m_LastFrameTime = time;
+        mLastFrameTime = time;
 
-        if( !m_RenderContext.BeginRender() ) return true;
+        if( !mRenderContext.BeginRender() )
+            return true;
 
         bool requestQuit = false;
         mImGUIOverlay->BeginFrame();
@@ -98,11 +99,11 @@ namespace LTSE::Core
         if( RenderDelegate ) RenderDelegate();
 
         // Render the UI on top of the background
-        mImGUIOverlay->EndFrame( m_RenderContext );
+        mImGUIOverlay->EndFrame( mRenderContext );
 
         // Send the draw commands to the screen.
-        m_RenderContext.EndRender();
-        m_RenderContext.Present();
+        mRenderContext.EndRender();
+        mRenderContext.Present();
 
         mGraphicContext.WaitIdle();
         return true;
@@ -113,23 +114,23 @@ namespace LTSE::Core
         if( IOEventDelegate ) IOEventDelegate( a_Event );
     }
 
-    void EngineLoop::SetInitialWindowPosition( math::ivec2 a_Position ) { m_InitialMainWindowPosition = a_Position; }
+    void EngineLoop::SetInitialWindowPosition( math::ivec2 a_Position ) { mInitialMainWindowPosition = a_Position; }
 
-    void EngineLoop::SetInitialWindowSize( math::ivec2 a_Size ) { m_InitialMainWindowSize = a_Size; }
+    void EngineLoop::SetInitialWindowSize( math::ivec2 a_Size ) { mInitialMainWindowSize = a_Size; }
 
     void EngineLoop::SetImGuiConfigurationFile( std::string a_Path ) { mImGuiConfigPath = a_Path; }
 
     math::ivec2 EngineLoop::GetWindowPosition()
     {
         int x, y;
-        glfwGetWindowPos( m_ViewportClient->GetGLFWWindow(), &x, &y );
+        glfwGetWindowPos( mViewportClient->GetGLFWWindow(), &x, &y );
         return { x, y };
     }
 
     math::ivec2 EngineLoop::GetWindowSize()
     {
         int w, h;
-        glfwGetWindowSize( m_ViewportClient->GetGLFWWindow(), &w, &h );
+        glfwGetWindowSize( mViewportClient->GetGLFWWindow(), &w, &h );
         return { w, h };
     }
 

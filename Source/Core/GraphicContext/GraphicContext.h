@@ -14,7 +14,7 @@ namespace LTSE::Graphics
     {
       public:
         Ref<Internal::VkContext> mContext         = nullptr;
-        Ref<Window>              m_ViewportClient = nullptr;
+        Ref<Window>              mViewportClient = nullptr;
 
       public:
         GraphicContext() = default;
@@ -22,7 +22,7 @@ namespace LTSE::Graphics
 
         ~GraphicContext() = default;
 
-        Ref<Window> GetViewportClient() { return m_ViewportClient; };
+        Ref<Window> GetViewportClient() { return mViewportClient; };
 
         Ref<Internal::sVkDescriptorSetObject> AllocateDescriptors( Ref<Internal::sVkDescriptorSetLayoutObject> aLayout,
                                                                    uint32_t                                    aDescriptorCount = 0 );
