@@ -4,7 +4,10 @@ project(SE_CoreScriping LANGUAGES CSharp)
 set(LIBRARY_NAME SE_Core)
 
 add_library(${LIBRARY_NAME} SHARED
-    Source/mat4.cs
+    Source/Math/mat4.cs
+    Source/Math/mat3.cs
+    Source/Math/vec3.cs
+    Source/Math/vec4.cs
     Source/CppCalls.cs
     Source/Component.cs
     Source/Entity.cs
