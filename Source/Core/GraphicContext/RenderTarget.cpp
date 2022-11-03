@@ -185,9 +185,9 @@ namespace LTSE::Graphics
 
         VkResult l_PresentResult = mGraphicContext.mContext->Present( mVkObject, CurrentImage, RenderFinishedSemaphores[CurrentImage] );
 
-        if( ( l_PresentResult == VK_ERROR_OUT_OF_DATE_KHR ) || ( l_PresentResult == VK_SUBOPTIMAL_KHR ) || mGraphicContext.m_ViewportClient->WindowWasResized() )
+        if( ( l_PresentResult == VK_ERROR_OUT_OF_DATE_KHR ) || ( l_PresentResult == VK_SUBOPTIMAL_KHR ) || mGraphicContext.mViewportClient->WindowWasResized() )
         {
-            mGraphicContext.m_ViewportClient->ResetWindowResizedFlag();
+            mGraphicContext.mViewportClient->ResetWindowResizedFlag();
             RecreateSwapChain();
         }
         else if( l_PresentResult != VK_SUCCESS )
