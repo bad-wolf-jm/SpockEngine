@@ -99,7 +99,110 @@ namespace SpockEngine.Math
 
         public mat4 Transposed => new mat4(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
 
-        public float Determinant => m00 * (m11 * (m22 * m33 - m32 * m23) - m21 * (m12 * m33 - m32 * m13) + m31 * (m12 * m23 - m22 * m13)) - m10 * (m01 * (m22 * m33 - m32 * m23) - m21 * (m02 * m33 - m32 * m03) + m31 * (m02 * m23 - m22 * m03)) + m20 * (m01 * (m12 * m33 - m32 * m13) - m11 * (m02 * m33 - m32 * m03) + m31 * (m02 * m13 - m12 * m03)) - m30 * (m01 * (m12 * m23 - m22 * m13) - m11 * (m02 * m23 - m22 * m03) + m21 * (m02 * m13 - m12 * m03));
+        // m00 m01 m02 m03
+        // m10 m11 m12 m13
+        // m20 m21 m22 m23
+        // m30 m31 m32 m33
+
+        public float Determinant()
+        {     
+            return   m00 * (m11 * (m22 * m33 - m32 * m23) - m21 * (m12 * m33 - m32 * m13) + m31 * (m12 * m23 - m22 * m13)) 
+                   - m10 * (m01 * (m22 * m33 - m32 * m23) - m21 * (m02 * m33 - m32 * m03) + m31 * (m02 * m23 - m22 * m03)) 
+                   + m20 * (m01 * (m12 * m33 - m32 * m13) - m11 * (m02 * m33 - m32 * m03) + m31 * (m02 * m13 - m12 * m03)) 
+                   - m30 * (m01 * (m12 * m23 - m22 * m13) - m11 * (m02 * m23 - m22 * m03) + m21 * (m02 * m13 - m12 * m03));
+        }
+
+        public mat4 Inverse()
+        {     
+            // m11 m12 m13
+            // m21 m22 m23
+            // m31 m32 m33
+            float C00 = m11 * (m22 * m33 - m23 * m32) - m12 * (m21 * m33 - m23 * m31) + m13 * (m21 * m32 - m22 * m31);
+
+            // m10 m12 m13
+            // m20 m22 m23
+            // m30 m32 m33
+            float C01 = m10 * (m22 * m33 - m23 * m32) - m12 * (m20 * m33 - m23 * m30) + m13 * (m20 * m32 - m22 * m30);
+
+            // m10 m11 m13
+            // m20 m21 m23
+            // m30 m31 m33
+            float C02 = m10 * (m21 * m33 - m23 * m31) - m11 * (m20 * m33 - m23 * m30) + m13 * (m20 * m31 - m21 * m30);
+
+            // m10 m11 m12 
+            // m20 m21 m22 
+            // m30 m31 m32 
+            float C03 = m10 * (m21 * m33 - m22 * m31) - m11 * (m20 * m32 - m22 * m30) + m12 * (m20 * m31 - m21 * m30);
+
+            // m01 m02 m03 
+            // m21 m22 m23
+            // m31 m32 m33
+            float C10 = m01 * (m22 * m33 - m22 * m32) - m02 * (m21 * m33 - m23 * m31) + m03 * (m21 * m32 - m22 * m31);
+
+            // m00 m02 m03
+            // m20 m22 m23
+            // m30 m32 m33
+            float C11 = m00 * (m22 * m33 - m23 * m32) - m02 * (m20 * m33 - m23 * m30) + m03 * (m20 * m32 - m22 * m30);
+
+            // m00 m01 m03
+            // m20 m21 m23
+            // m30 m31 m33
+            float C12 = m00 * (m21 * m33 - m23 * m31) - m01 * (m20 * m33 - m23 * m30) + m03 * (m20 * m31 - m21 * m30);
+
+            // m00 m01 m02
+            // m20 m21 m22
+            // m30 m31 m32
+            float C13 = m00 * (m21 * m32 - m22 * m31) - m01 * (m20 * m32 - m22 * m30) + m02 * (m20 * m31 - m21 * m30);
+
+            // m01 m02 m03
+            // m11 m12 m13
+            // m31 m32 m33
+            float C20 = m01 * (m12 * m33 - m13 * m32) - m02 * (m11 * m33 - m13 * m31) + m03 * (m11 * m32 - m12 * m31);
+
+            // m00 m02 m03
+            // m10 m12 m13
+            // m30 m32 m33
+            float C21 = m00 * (m12 * m33 - m13 * m32) - m02 * (m10 * m33 - m13 * m30) + m03 * (m10 * m32 - m12 * m30);
+
+            // m00 m01 m03
+            // m10 m11 m13
+            // m30 m31 m33
+            float C22 = m00 * (m10 * m33 - m13 * m30) - m01 * (m10 * m33 - m13 * m30) + m03 * (m10 * m31 - m11 * m30);
+
+            // m00 m01 m02
+            // m10 m11 m12
+            // m30 m31 m32
+            float C23 = m00 * (m11 * m32 - m12 * m31) - m01 * (m10 * m32 - m12 * m30) + m02 * (m10 * m31 - m11 * m30);
+
+            // m01 m02 m03
+            // m11 m12 m13
+            // m21 m22 m23
+            float C30 = m01 * (m12 * m23 - m13 * m22) - m02 * (m11 * m23 - m13 * m21) + m03 * (m11 * m22 - m12 * m21);
+
+            // m00 m02 m03
+            // m10 m12 m13
+            // m20 m22 m23
+            float C31 = m00 * (m12 * m23 - m13 * m22) - m02 * (m10 * m23 - m13 * m20) + m03 * (m10 * m22 - m12 * m20);
+
+            // m00 m01 m03
+            // m10 m11 m13
+            // m20 m21 m23
+            float C32 = m00 * (m11 * m23 - m13 * m21) - m01 * (m10 * m23 - m13 * m20) + m03 * (m10 * m21 - m11 * m20);
+
+            // m00 m01 m02
+            // m10 m11 m12
+            // m20 m21 m22
+            float C33 = m00 * (m11 * m22 - m12 * m21) - m01 * (m10 * m22 - m12 * m20) + m02 * (m10 * m21 - m11 * m20);
+
+            float lDet = (m00 * C00) - (m01 * C01) + (m02 * C02) - (m03 * C03);
+
+            return new mat4(
+                C00 / lDet, C10 / lDet, C20 / lDet, C30 / lDet,
+                C01 / lDet, C11 / lDet, C21 / lDet, C31 / lDet,
+                C02 / lDet, C12 / lDet, C22 / lDet, C32 / lDet,
+                C03 / lDet, C13 / lDet, C23 / lDet, C33 / lDet
+            );
+        }
 
         public static mat4 operator*(mat4 lhs, float rhs) => 
             new mat4(
@@ -221,9 +324,6 @@ namespace SpockEngine.Math
             return m;
         }
         
-        /// <summary>
-        /// Builds a translation matrix by vector v.
-        /// </summary>
         public static mat4 Translation(vec3 v) => Translation(v.x, v.y, v.z);
 
     }
