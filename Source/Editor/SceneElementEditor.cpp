@@ -42,7 +42,7 @@ namespace LTSE::Editor
 
             uint32_t n = 1;
             World->ForEach<sMaterialShaderComponent>(
-                [&]( auto a_Entity, auto &a_Component )
+                [&]( auto a_Entity, auto &aComponent )
                 {
                     Dropdown.Labels.push_back( a_Entity.Get<sTag>().mValue );
                     Dropdown.Values.push_back( a_Entity );
@@ -106,35 +106,68 @@ namespace LTSE::Editor
         }
     };
 
-    static bool EditComponent( sActorComponent &a_Component )
+    static bool EditComponent( sActorComponent &aComponent )
     {
         UI::Text( "Static mesh" );
-        UI::Text( "{}", a_Component.mClassFullName );
+        UI::Text( "{}", aComponent.mClassFullName );
+
+        // auto &entityFields = ScriptEngine::GetScriptFieldMap( entity );
+        for( const auto &[name, field] : aComponent.mClass.GetFields() )
+        {
+            UI::Text( "{}", name );
+            // // Field has been set in editor
+            // if( entityFields.find( name ) != entityFields.end() )
+            // {
+            //     ScriptFieldInstance &scriptField = entityFields.at( name );
+
+            //     // Display control to set it maybe
+            //     if( field.Type == ScriptFieldType::Float )
+            //     {
+            //         float data = scriptField.GetValue<float>();
+            //         if( ImGui::DragFloat( name.c_str(), &data ) ) scriptField.SetValue( data );
+            //     }
+            // }
+            // else
+            // {
+            //     // Display control to set it maybe
+            //     if( field.Type == ScriptFieldType::Float )
+            //     {
+            //         float data = 0.0f;
+            //         if( ImGui::DragFloat( name.c_str(), &data ) )
+            //         {
+            //             ScriptFieldInstance &fieldInstance = entityFields[name];
+            //             fieldInstance.Field                = field;
+            //             fieldInstance.SetValue( data );
+            //         }
+            //     }
+            // }
+        }
+
         return false;
     }
 
-    static bool EditComponent( sStaticMeshComponent &a_Component )
+    static bool EditComponent( sStaticMeshComponent &aComponent )
     {
         UI::Text( "Class:" );
-        UI::Text( "{}", a_Component.Name );
+        UI::Text( "{}", aComponent.Name );
         return false;
     }
 
-    static bool EditComponent( sNodeTransformComponent &a_Component )
+    static bool EditComponent( sNodeTransformComponent &aComponent )
     {
-        math::vec3 l_Position = a_Component.GetTranslation();
-        math::vec3 l_Rotation = a_Component.GetEulerRotation();
-        math::vec3 l_Scale    = a_Component.GetScale();
+        math::vec3 l_Position = aComponent.GetTranslation();
+        math::vec3 l_Rotation = aComponent.GetEulerRotation();
+        math::vec3 l_Scale    = aComponent.GetScale();
 
         UI::VectorComponentEditor( "Position:", l_Position, 0.0, 100 );
         UI::VectorComponentEditor( "Rotation:", l_Rotation, 0.0, 100 );
         UI::VectorComponentEditor( "Scale:", l_Scale, 1.0, 100 );
 
-        a_Component.mMatrix = sNodeTransformComponent( l_Position, l_Rotation, l_Scale ).mMatrix;
+        aComponent.mMatrix = sNodeTransformComponent( l_Position, l_Rotation, l_Scale ).mMatrix;
         return false;
     }
 
-    static bool EditComponent( sDirectionalLightComponent &a_Component )
+    static bool EditComponent( sDirectionalLightComponent &aComponent )
     {
         float                                l_LabelSize = 175.0f;
         static PropertyEditor<Slider<float>> l_AzimuthEditor( "##azimuth" );
@@ -156,19 +189,19 @@ namespace LTSE::Editor
         l_IntensityEditor.ValueChooser.MaxValue = 50.0f;
         l_IntensityEditor.ValueChooser.Format   = "%.2f";
 
-        l_AzimuthEditor.Display( &a_Component.Azimuth );
+        l_AzimuthEditor.Display( &aComponent.Azimuth );
 
         l_ElevationEditor.ValueChooser.MinValue = -90.0f;
         l_ElevationEditor.ValueChooser.MaxValue = 90.0f;
-        l_ElevationEditor.Display( &a_Component.Elevation );
+        l_ElevationEditor.Display( &aComponent.Elevation );
 
-        UI::ColorChooser( "Color:", 125, a_Component.Color );
+        UI::ColorChooser( "Color:", 125, aComponent.Color );
 
-        l_IntensityEditor.Display( &a_Component.Intensity );
+        l_IntensityEditor.Display( &aComponent.Intensity );
         return false;
     }
 
-    static bool EditComponent( sPointLightComponent &a_Component )
+    static bool EditComponent( sPointLightComponent &aComponent )
     {
         float l_LabelSize = 175.0f;
 
@@ -179,14 +212,14 @@ namespace LTSE::Editor
         l_IntensityEditor.ValueChooser.MaxValue = 50.0f;
         l_IntensityEditor.ValueChooser.Format   = "%.2f";
 
-        UI::VectorComponentEditor( "Position:", a_Component.Position, 0.0, 100 );
-        UI::ColorChooser( "Color:", 125, a_Component.Color );
+        UI::VectorComponentEditor( "Position:", aComponent.Position, 0.0, 100 );
+        UI::ColorChooser( "Color:", 125, aComponent.Color );
 
-        l_IntensityEditor.Display( &a_Component.Intensity );
+        l_IntensityEditor.Display( &aComponent.Intensity );
         return false;
     }
 
-    static bool EditComponent( sSpotlightComponent &a_Component )
+    static bool EditComponent( sSpotlightComponent &aComponent )
     {
         float l_LabelSize = 175.0f;
 
@@ -216,93 +249,93 @@ namespace LTSE::Editor
         l_IntensityEditor.ValueChooser.MaxValue = 50.0f;
         l_IntensityEditor.ValueChooser.Format   = "%.2f";
 
-        UI::VectorComponentEditor( "Position:", a_Component.Position, 0.0, 100 );
+        UI::VectorComponentEditor( "Position:", aComponent.Position, 0.0, 100 );
 
-        l_AzimuthEditor.Display( &a_Component.Azimuth );
+        l_AzimuthEditor.Display( &aComponent.Azimuth );
 
         l_ElevationEditor.ValueChooser.MinValue = 0.0f;
         l_ElevationEditor.ValueChooser.MaxValue = 360.0f;
-        l_ElevationEditor.Display( &a_Component.Elevation );
+        l_ElevationEditor.Display( &aComponent.Elevation );
 
-        UI::ColorChooser( "Color:", 125, a_Component.Color );
+        UI::ColorChooser( "Color:", 125, aComponent.Color );
 
-        l_IntensityEditor.Display( &a_Component.Intensity );
-        l_ConeWidthEditor.Display( &a_Component.Cone );
+        l_IntensityEditor.Display( &aComponent.Intensity );
+        l_ConeWidthEditor.Display( &aComponent.Cone );
         return false;
     }
 
-    static bool EditComponent( LTSE::Graphics::GraphicContext aGraphicContext, sLightComponent &a_Component )
+    static bool EditComponent( LTSE::Graphics::GraphicContext aGraphicContext, sLightComponent &aComponent )
     {
-        static UI::ComboBox<eLightType> l_PrimitiveChooser( "##combo_light_type_chooser" );
-        l_PrimitiveChooser.Labels = { "Directional light", "Point light", "Spotlight" };
-        l_PrimitiveChooser.Values = { eLightType::DIRECTIONAL, eLightType::POINT_LIGHT, eLightType::SPOTLIGHT };
+        static UI::ComboBox<eLightType> lPrimitiveChooser( "##combo_light_type_chooser" );
+        lPrimitiveChooser.Labels = { "Directional light", "Point light", "Spotlight" };
+        lPrimitiveChooser.Values = { eLightType::DIRECTIONAL, eLightType::POINT_LIGHT, eLightType::SPOTLIGHT };
 
-        l_PrimitiveChooser.Display();
+        lPrimitiveChooser.Display();
 
-        switch( l_PrimitiveChooser.GetValue() )
+        switch( lPrimitiveChooser.GetValue() )
         {
         case eLightType::POINT_LIGHT:
         {
-            if( l_PrimitiveChooser.Changed )
+            if( lPrimitiveChooser.Changed )
             {
-                a_Component.Light.TryRemove<sSpotlightComponent>();
-                a_Component.Light.TryRemove<SpotlightHelperComponent>();
-                a_Component.Light.TryRemove<sDirectionalLightComponent>();
-                a_Component.Light.TryRemove<DirectionalLightHelperComponent>();
+                aComponent.Light.TryRemove<sSpotlightComponent>();
+                aComponent.Light.TryRemove<SpotlightHelperComponent>();
+                aComponent.Light.TryRemove<sDirectionalLightComponent>();
+                aComponent.Light.TryRemove<DirectionalLightHelperComponent>();
             }
-            if( !a_Component.Light.Has<sPointLightComponent>() )
+            if( !aComponent.Light.Has<sPointLightComponent>() )
             {
-                a_Component.Light.Add<sPointLightComponent>();
+                aComponent.Light.Add<sPointLightComponent>();
 
-                PointLightHelperComponent &l_VisualizerComponent = a_Component.Light.Add<PointLightHelperComponent>();
-                l_VisualizerComponent.LightData                  = a_Component.Light.Get<sPointLightComponent>();
+                PointLightHelperComponent &l_VisualizerComponent = aComponent.Light.Add<PointLightHelperComponent>();
+                l_VisualizerComponent.LightData                  = aComponent.Light.Get<sPointLightComponent>();
                 l_VisualizerComponent.UpdateMesh( aGraphicContext );
             }
-            a_Component.Light.Get<PointLightHelperComponent>().LightData = a_Component.Light.Get<sPointLightComponent>();
-            EditComponent( a_Component.Light.Get<sPointLightComponent>() );
+            aComponent.Light.Get<PointLightHelperComponent>().LightData = aComponent.Light.Get<sPointLightComponent>();
+            EditComponent( aComponent.Light.Get<sPointLightComponent>() );
         }
         break;
         case eLightType::SPOTLIGHT:
         {
-            if( l_PrimitiveChooser.Changed )
+            if( lPrimitiveChooser.Changed )
             {
-                a_Component.Light.TryRemove<sPointLightComponent>();
-                a_Component.Light.TryRemove<PointLightHelperComponent>();
-                a_Component.Light.TryRemove<sDirectionalLightComponent>();
-                a_Component.Light.TryRemove<DirectionalLightHelperComponent>();
+                aComponent.Light.TryRemove<sPointLightComponent>();
+                aComponent.Light.TryRemove<PointLightHelperComponent>();
+                aComponent.Light.TryRemove<sDirectionalLightComponent>();
+                aComponent.Light.TryRemove<DirectionalLightHelperComponent>();
             }
-            if( !a_Component.Light.Has<sSpotlightComponent>() )
+            if( !aComponent.Light.Has<sSpotlightComponent>() )
             {
-                a_Component.Light.Add<sSpotlightComponent>();
+                aComponent.Light.Add<sSpotlightComponent>();
 
-                SpotlightHelperComponent &l_VisualizerComponent = a_Component.Light.Add<SpotlightHelperComponent>();
-                l_VisualizerComponent.LightData                 = a_Component.Light.Get<sSpotlightComponent>();
+                SpotlightHelperComponent &l_VisualizerComponent = aComponent.Light.Add<SpotlightHelperComponent>();
+                l_VisualizerComponent.LightData                 = aComponent.Light.Get<sSpotlightComponent>();
                 l_VisualizerComponent.UpdateMesh( aGraphicContext );
             }
-            a_Component.Light.Get<SpotlightHelperComponent>().LightData = a_Component.Light.Get<sSpotlightComponent>();
-            EditComponent( a_Component.Light.Get<sSpotlightComponent>() );
+            aComponent.Light.Get<SpotlightHelperComponent>().LightData = aComponent.Light.Get<sSpotlightComponent>();
+            EditComponent( aComponent.Light.Get<sSpotlightComponent>() );
         }
         break;
         case eLightType::DIRECTIONAL:
         default:
         {
-            if( l_PrimitiveChooser.Changed )
+            if( lPrimitiveChooser.Changed )
             {
-                a_Component.Light.TryRemove<sPointLightComponent>();
-                a_Component.Light.TryRemove<PointLightHelperComponent>();
-                a_Component.Light.TryRemove<sSpotlightComponent>();
-                a_Component.Light.TryRemove<SpotlightHelperComponent>();
+                aComponent.Light.TryRemove<sPointLightComponent>();
+                aComponent.Light.TryRemove<PointLightHelperComponent>();
+                aComponent.Light.TryRemove<sSpotlightComponent>();
+                aComponent.Light.TryRemove<SpotlightHelperComponent>();
             }
-            if( !a_Component.Light.Has<sDirectionalLightComponent>() )
+            if( !aComponent.Light.Has<sDirectionalLightComponent>() )
             {
-                a_Component.Light.Add<sDirectionalLightComponent>();
+                aComponent.Light.Add<sDirectionalLightComponent>();
 
-                DirectionalLightHelperComponent &l_VisualizerComponent = a_Component.Light.Add<DirectionalLightHelperComponent>();
-                l_VisualizerComponent.LightData                        = a_Component.Light.Get<sDirectionalLightComponent>();
+                DirectionalLightHelperComponent &l_VisualizerComponent = aComponent.Light.Add<DirectionalLightHelperComponent>();
+                l_VisualizerComponent.LightData                        = aComponent.Light.Get<sDirectionalLightComponent>();
                 l_VisualizerComponent.UpdateMesh( aGraphicContext );
             }
-            a_Component.Light.Get<DirectionalLightHelperComponent>().LightData = a_Component.Light.Get<sDirectionalLightComponent>();
-            EditComponent( a_Component.Light.Get<sDirectionalLightComponent>() );
+            aComponent.Light.Get<DirectionalLightHelperComponent>().LightData = aComponent.Light.Get<sDirectionalLightComponent>();
+            EditComponent( aComponent.Light.Get<sDirectionalLightComponent>() );
         }
         break;
         };

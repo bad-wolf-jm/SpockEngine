@@ -6,6 +6,9 @@ namespace Test
 {
     public class TestActorComponent : ActorComponent
     {
+        public float mTestField0;
+        private float mTestField2;
+
         public TestActorComponent() : base() {}
 
         override public void OnCreate() 
@@ -44,8 +47,6 @@ namespace Test
         override public void OnUpdate(float aTs )
         {
             base.OnUpdate(aTs);
-
-            // Console.WriteLine($"Actor Component Updated {aTs}");
         }
     }
 

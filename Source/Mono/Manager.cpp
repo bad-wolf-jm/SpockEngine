@@ -124,6 +124,7 @@ namespace LTSE::Core
         std::unordered_map<std::string, Ref<ScriptClass>> mApplicationClasses;
         std::unordered_map<std::string, Ref<ScriptClass>> mControllerClasses;
         std::unordered_map<std::string, Ref<ScriptClass>> mComponentClasses;
+        std::unordered_map<std::string, Ref<ScriptClass>> mAllClasses;
 
         void *mSceneContext = nullptr;
 
@@ -145,11 +146,42 @@ namespace LTSE::Core
     {
         mMonoClass = mono_class_from_name( aIsCore ? sData->mCoreAssemblyImage : sData->mAppAssemblyImage, aClassNamespace.c_str(),
                                            aClassName.c_str() );
+
+        int   lFieldCount = mono_class_num_fields( mMonoClass );
+        void *lIterator   = nullptr;
+        while( MonoClassField *lField = mono_class_get_fields( mMonoClass, &lIterator ) )
+        {
+            const char *lFieldName = mono_field_get_name( lField );
+            uint32_t    lFlags     = mono_field_get_flags( lField );
+
+            if( lFlags & FIELD_ATTRIBUTE_PUBLIC )
+            {
+                MonoType        *lMonoFieldType = mono_field_get_type( lField );
+                eScriptFieldType lFieldType     = Utils::MonoTypeToScriptFieldType( lMonoFieldType );
+
+                mFields[lFieldName] = { lFieldType, lFieldName, lField };
+            }
+        }
     }
 
     ScriptClass::ScriptClass( MonoType *aMonoClass )
         : mMonoClass{ mono_class_from_mono_type( aMonoClass ) }
     {
+        int   lFieldCount = mono_class_num_fields( mMonoClass );
+        void *lIterator   = nullptr;
+        while( MonoClassField *lField = mono_class_get_fields( mMonoClass, &lIterator ) )
+        {
+            const char *lFieldName = mono_field_get_name( lField );
+            uint32_t    lFlags     = mono_field_get_flags( lField );
+
+            if( lFlags & FIELD_ATTRIBUTE_PUBLIC )
+            {
+                MonoType        *lMonoFieldType = mono_field_get_type( lField );
+                eScriptFieldType lFieldType     = Utils::MonoTypeToScriptFieldType( lMonoFieldType );
+
+                mFields[lFieldName] = { lFieldType, lFieldName, lField };
+            }
+        }
     }
 
     ScriptClassMethod::ScriptClassMethod( MonoMethod *aMonoMethod, ScriptClassInstance *aInstance )
