@@ -58,33 +58,28 @@ namespace LTSE::Core
     {
         mViewportClient->PollEvents();
 
-        double time = (double)GetTime();
+        double   time = (double)GetTime();
         Timestep timestep{ static_cast<float>( time - mLastFrameTime ) };
 
         mLastFrameTime = time;
 
-        if( !mRenderContext.BeginRender() )
-            return true;
+        if( !mRenderContext.BeginRender() ) return true;
 
         bool requestQuit = false;
         mImGUIOverlay->BeginFrame();
 
         // First run the UI delegate so any state that needs updating for this frame
         // gets updated. If the delegate indicates that we should quit, we return immediately
-        if( UIDelegate )
-            requestQuit = UIDelegate( mImGUIOverlay->GetIO() );
+        if( UIDelegate ) requestQuit = UIDelegate( mImGUIOverlay->GetIO() );
 
-        if( requestQuit )
-            return false;
+        if( requestQuit ) return false;
 
         // Run the update delegate to update the state of the various elements
         // of the simulation.
-        if( UpdateDelegate )
-            UpdateDelegate( timestep );
+        if( UpdateDelegate ) UpdateDelegate( timestep );
 
         // Finally, render the main screen.
-        if( RenderDelegate )
-            RenderDelegate();
+        if( RenderDelegate ) RenderDelegate();
 
         // Render the UI on top of the background
         mImGUIOverlay->EndFrame( mRenderContext );
@@ -99,8 +94,7 @@ namespace LTSE::Core
 
     void Engine::IOEvent( UserEvent &a_Event )
     {
-        if( IOEventDelegate )
-            IOEventDelegate( a_Event );
+        if( IOEventDelegate ) IOEventDelegate( a_Event );
     }
 
     void Engine::SetInitialWindowPosition( math::ivec2 a_Position ) { mInitialMainWindowPosition = a_Position; }
