@@ -7,10 +7,6 @@
 #include <string>
 #include <vector>
 
-// #include <glm/glm.hpp>
-// #include <glm/gtx/dual_quaternion.hpp>
-// #include <glm/gtc/type_ptr.hpp>
-
 template <class T, typename std::underlying_type<T>::type fullValue>
 class EnumSet
 {

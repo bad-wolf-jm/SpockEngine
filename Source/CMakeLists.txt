@@ -32,7 +32,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Cuda/MemoryPool.cu
     Core/Cuda/Texture2D.cu
     
-    Core/Platform/EngineLoop.cpp
+    Engine/Engine.cpp
     
     UI/Widgets.cpp
     UI/UI.cpp

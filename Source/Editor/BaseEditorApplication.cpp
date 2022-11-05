@@ -28,7 +28,7 @@ namespace LTSE::Editor
     using namespace LTSE::Cuda;
     using namespace LTSE::Core::EntityComponentSystem::Components;
 
-    BaseEditorApplication::BaseEditorApplication( Ref<Engine> aEngineLoop ) { mEngineLoop = aEngineLoop; }
+    // BaseEditorApplication::BaseEditorApplication(  ) { mEngineLoop = aEngineLoop; }
 
     void BaseEditorApplication::RenderScene()
     {
@@ -55,20 +55,20 @@ namespace LTSE::Editor
             l_RenderTargetCI.OutputSize  = { mViewportWidth, mViewportHeight };
             l_RenderTargetCI.SampleCount = 4;
             l_RenderTargetCI.Sampled     = true;
-            mOffscreenRenderTarget      = New<OffscreenRenderTarget>( mEngineLoop->GetGraphicContext(), l_RenderTargetCI );
-            mViewportRenderContext      = LTSE::Graphics::RenderContext( mEngineLoop->GetGraphicContext(), mOffscreenRenderTarget );
+            mOffscreenRenderTarget      = New<OffscreenRenderTarget>( LTSE::Core::Engine::GetInstance()->GetGraphicContext(), l_RenderTargetCI );
+            mViewportRenderContext      = LTSE::Graphics::RenderContext( LTSE::Core::Engine::GetInstance()->GetGraphicContext(), mOffscreenRenderTarget );
         }
         else
         {
             mOffscreenRenderTarget->Resize( mViewportWidth, mViewportHeight );
         }
 
-        mOffscreenRenderTargetTexture = New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{},
+        mOffscreenRenderTargetTexture = New<Graphics::Texture2D>( LTSE::Core::Engine::GetInstance()->GetGraphicContext(), TextureDescription{},
                                                                    mOffscreenRenderTarget->GetOutputImage() );
 
         if( !mOffscreenRenderTargetDisplayHandle.Handle )
         {
-            mOffscreenRenderTargetDisplayHandle = mEngineLoop->UIContext()->CreateTextureHandle( mOffscreenRenderTargetTexture );
+            mOffscreenRenderTargetDisplayHandle = LTSE::Core::Engine::GetInstance()->UIContext()->CreateTextureHandle( mOffscreenRenderTargetTexture );
             mEditorWindow.UpdateSceneViewport( mOffscreenRenderTargetDisplayHandle );
         }
         else
@@ -96,7 +96,7 @@ namespace LTSE::Editor
         mEditorWindow.mEngineLoop = mEngineLoop;
         // mEditorWindow.SensorModel    = m_SensorController;
         mEditorWindow.WorldRenderer  = mWorldRenderer;
-        mEditorWindow.GraphicContext = mEngineLoop->GetGraphicContext();
+        mEditorWindow.GraphicContext = LTSE::Core::Engine::GetInstance()->GetGraphicContext();
 
         o_RequestQuit = mEditorWindow.Display();
         // OnUI();
@@ -116,11 +116,11 @@ namespace LTSE::Editor
 
     void BaseEditorApplication::Init()
     {
-        mEditorWindow                 = EditorWindow( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
+        mEditorWindow                 = EditorWindow( LTSE::Core::Engine::GetInstance()->GetGraphicContext(), LTSE::Core::Engine::GetInstance()->UIContext() );
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
 
         RebuildOutputFramebuffer();
-        mWorld         = New<Scene>( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
+        mWorld         = New<Scene>( LTSE::Core::Engine::GetInstance()->GetGraphicContext(), LTSE::Core::Engine::GetInstance()->UIContext() );
         mWorldRenderer = New<SceneRenderer>( mWorld, mViewportRenderContext, mOffscreenRenderTarget->GetRenderPass() );
 
         mEditorWindow.World       = mWorld;

@@ -28,11 +28,7 @@ namespace LTSE::Core
 
     int64_t Engine::GetElapsedTime() { return GetTime() - mEngineLoopStartTime; }
 
-    void Engine::PreInit( int argc, char **argv )
-    {
-        mEngineLoopStartTime = GetTime();
-        mLastFrameTime       = mEngineLoopStartTime;
-    }
+    void Engine::PreInit( int argc, char **argv ) {}
 
     void Engine::Init()
     {
@@ -50,9 +46,10 @@ namespace LTSE::Core
         mDpiScaling      = math::vec2( 1.0f, 1.0f );
         mFramebufferSize = mViewportClient->GetFramebufferSize();
         mImGUIOverlay    = New<LTSE::Core::UIContext>( mViewportClient, mGraphicContext, mRenderContext, mImGuiConfigPath );
-    }
 
-    void Engine::Shutdown() {}
+        mEngineLoopStartTime = GetTime();
+        mLastFrameTime       = mEngineLoopStartTime;
+    }
 
     bool Engine::Tick()
     {
@@ -118,5 +115,24 @@ namespace LTSE::Core
     }
 
     std::string Engine::GetImGuiConfigurationFile() { return mImGuiConfigPath; }
+
+    std::unique_ptr<Engine> Engine::mUniqueInstance = nullptr;
+
+    void Engine::Initialize( math::ivec2 aInitialMainWindowSize, math::ivec2 aInitialMainWindowPosition, fs::path aImGuiConfigPath )
+    {
+        if( mUniqueInstance ) return;
+
+        mUniqueInstance = std::make_unique<Engine>();
+
+        mUniqueInstance->mInitialMainWindowSize     = aInitialMainWindowSize;
+        mUniqueInstance->mInitialMainWindowPosition = aInitialMainWindowPosition;
+        mUniqueInstance->mImGuiConfigPath           = aImGuiConfigPath.string();
+        mUniqueInstance->Init();
+    }
+
+    void Engine::Shutdown()
+    {
+        //
+    }
 
 } // namespace LTSE::Core

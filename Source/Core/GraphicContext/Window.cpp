@@ -1,5 +1,5 @@
 #include "Window.h"
-#include "Core/Platform/EngineLoop.h"
+#include "Engine/Engine.h"
 
 // std
 #include <stdexcept>
