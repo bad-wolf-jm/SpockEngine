@@ -93,7 +93,7 @@ namespace LTSE::Editor
             UI::SameLine();
             if( AddChildButton( aNode, math::vec2{ 20.0, 22.0 } ) ) World->Create( "NEW_ELEMENT", aNode );
 
-            if( l_NodeIsOpen )
+            if( lNodeIsOpen )
             {
                 aNode.IfExists<sRelationshipComponent>(
                     [&]( auto &a_Component )

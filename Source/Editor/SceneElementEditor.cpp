@@ -350,7 +350,7 @@ namespace LTSE::Editor
     {
         // PropertiesPanel::Display( width, height );
 
-        ImGuiTreeNodeFlags l_Flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+        ImGuiTreeNodeFlags lFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
 
         if( !ElementToEdit ) return;
 
@@ -381,8 +381,8 @@ namespace LTSE::Editor
             ImGui::Separator();
             if( ImGui::MenuItem( "Light component", NULL, false, !ElementToEdit.Has<sLightComponent>() ) )
             {
-                auto &l_Component = ElementToEdit.Add<sLightComponent>();
-                l_Component.Light = World->Create( "Light", ElementToEdit );
+                auto &lComponent = ElementToEdit.Add<sLightComponent>();
+                lComponent.Light = World->Create( "Light", ElementToEdit );
             }
             ImGui::Separator();
             if( ImGui::MenuItem( "Particle system", NULL, false, !ElementToEdit.Has<sParticleSystemComponent>() ) )
@@ -398,7 +398,7 @@ namespace LTSE::Editor
             ImGui::EndPopup();
         }
 
-        if( ImGui::CollapsingHeader( "Ray tracing", l_Flags ) )
+        if( ImGui::CollapsingHeader( "Ray tracing", lFlags ) )
         {
             bool l_RT = ElementToEdit.Has<sRayTracingTargetComponent>();
             ImGui::Checkbox( "Mark as ray tracing target", &l_RT );
@@ -408,31 +408,31 @@ namespace LTSE::Editor
                 ElementToEdit.TryRemove<sRayTracingTargetComponent>();
         }
 
-        if( ImGui::CollapsingHeader( "Script", l_Flags ) )
+        if( ImGui::CollapsingHeader( "Script", lFlags ) )
         {
-            ElementToEdit.IfExists<sActorComponent>( [&]( auto &l_Component ) { EditComponent( l_Component ); } );
+            ElementToEdit.IfExists<sActorComponent>( [&]( auto &lComponent ) { EditComponent( lComponent ); } );
         }
 
-        if( ImGui::CollapsingHeader( "Transform", l_Flags ) )
+        if( ImGui::CollapsingHeader( "Transform", lFlags ) )
         {
-            ElementToEdit.IfExists<sNodeTransformComponent>( [&]( auto &l_Component ) { EditComponent( l_Component ); } );
+            ElementToEdit.IfExists<sNodeTransformComponent>( [&]( auto &lComponent ) { EditComponent( lComponent ); } );
         }
 
-        if( ImGui::CollapsingHeader( "Mesh", l_Flags ) )
+        if( ImGui::CollapsingHeader( "Mesh", lFlags ) )
         {
-            ElementToEdit.IfExists<sStaticMeshComponent>( [&]( auto &l_Component ) { EditComponent( l_Component ); } );
+            ElementToEdit.IfExists<sStaticMeshComponent>( [&]( auto &lComponent ) { EditComponent( lComponent ); } );
         }
 
-        if( ImGui::CollapsingHeader( "Material", l_Flags ) )
+        if( ImGui::CollapsingHeader( "Material", lFlags ) )
         {
-            static MaterialCombo l_MaterialChooser( "##material_chooser" );
-            l_MaterialChooser.World = World;
+            static MaterialCombo lMaterialChooser( "##material_chooser" );
+            lMaterialChooser.World = World;
         }
 
-        if( ImGui::CollapsingHeader( "Light", l_Flags ) )
+        if( ImGui::CollapsingHeader( "Light", lFlags ) )
         {
-            ElementToEdit.IfExists<sLightComponent>( [&]( auto &l_LightComponent )
-                                                     { EditComponent( mGraphicContext, l_LightComponent ); } );
+            ElementToEdit.IfExists<sLightComponent>( [&]( auto &lLightComponent )
+                                                     { EditComponent( mGraphicContext, lLightComponent ); } );
         }
     }
 
