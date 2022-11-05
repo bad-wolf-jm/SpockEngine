@@ -120,7 +120,6 @@ namespace LTSE::Core
             CopyComponent<sRayTracingTargetComponent>( lEntity, lClonedEntity );
 
             CopyComponent<sMaterialComponent>( lEntity, lClonedEntity );
-            // CopyComponent<RendererComponent>( lEntity, lClonedEntity );
             CopyComponent<sMaterialShaderComponent>( lEntity, lClonedEntity );
 
             CopyComponent<sBackgroundComponent>( lEntity, lClonedEntity );
@@ -132,7 +131,13 @@ namespace LTSE::Core
             CopyComponent<sLightComponent>( lEntity, lClonedEntity );
 
             CopyComponent<sBehaviourComponent>( lEntity, lClonedEntity );
-            CopyComponent<sActorComponent>( lEntity, lClonedEntity );
+            if( ( lEntity.Has<sActorComponent>() ) ) 
+            {
+                auto &lNewScriptComponent = lClonedEntity.AddOrReplace<sActorComponent>( lEntity.Get<sActorComponent>() );
+
+                lNewScriptComponent.Initialize( lClonedEntity );
+            }
+
 
             CopyComponent<PointLightHelperComponent>( lEntity, lClonedEntity );
             CopyComponent<DirectionalLightHelperComponent>( lEntity, lClonedEntity );
@@ -876,6 +881,7 @@ namespace LTSE::Core
                 ReadComponent<sPointLightComponent>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sSpotlightComponent>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sLightComponent>( lEntity, lEntityConfiguration, lEntities );
+                ReadComponent<sActorComponent>( lEntity, lEntityConfiguration, lEntities );
 
                 LTSE::Logging::Info( "Components added to entity {}", aKey );
             } );
