@@ -7,7 +7,7 @@
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Scene/Scene.h"
 
-#include "Core/Platform/EngineLoop.h"
+#include "Engine/Engine.h"
 
 using namespace LTSE::Core;
 using namespace LTSE::Graphics;

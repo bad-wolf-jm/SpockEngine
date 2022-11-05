@@ -62,7 +62,7 @@ namespace LTSE::Core
          *
          * Releases all resources which were acquired by the engine loop, and shuts down Live++ if required.
          */
-        void Shutdown();
+        // void Shutdown();
 
         /** @brief Tick function
          *
@@ -111,11 +111,17 @@ namespace LTSE::Core
         math::ivec2 GetWindowSize();
         std::string GetImGuiConfigurationFile();
 
+        static void Initialize( math::ivec2 aInitialMainWindowSize, math::ivec2 aInitialMainWindowPosition,
+                                fs::path aImGuiConfigPath );
+        static void Shutdown();
+
+        static std::unique_ptr<Engine> &GetInstance() { return mUniqueInstance; };
+
       private:
         void IOEvent( UserEvent &a_Event );
 
       private:
-        // static Engine *s_UniqueInstance;
+        static std::unique_ptr<Engine> mUniqueInstance;
 
         Ref<LTSE::Core::Window>        mViewportClient;
         LTSE::Graphics::GraphicContext mGraphicContext;

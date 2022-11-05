@@ -8,7 +8,7 @@
 #include "UI/UI.h"
 
 #include "Core/GraphicContext//UI/UIContext.h"
-#include "Core/Platform/EngineLoop.h"
+#include "Engine/Engine.h"
 
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Scene/EnvironmentSampler/EnvironmentSampler.h"
@@ -45,7 +45,7 @@ namespace LTSE::Editor
 
       public:
         BaseEditorApplication() = default;
-        BaseEditorApplication( Ref<Engine> aEngineLoop );
+        // BaseEditorApplication( Ref<Engine> aEngineLoop );
 
         ~BaseEditorApplication() = default;
 

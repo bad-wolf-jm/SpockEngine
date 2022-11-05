@@ -1,6 +1,6 @@
 #include "Core/EntityRegistry/Registry.h"
 
-#include "Core/Platform/EngineLoop.h"
+#include "Engine/Engine.h"
 #include "Core/GraphicContext//UI/UIContext.h"
 
 #include "Editor/MaterialEditor.h"

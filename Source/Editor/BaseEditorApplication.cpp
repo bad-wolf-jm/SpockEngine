@@ -29,7 +29,7 @@ namespace LTSE::Editor
     using namespace LTSE::Cuda;
     using namespace LTSE::Core::EntityComponentSystem::Components;
 
-    BaseEditorApplication::BaseEditorApplication( Ref<Engine> aEngineLoop ) { mEngineLoop = aEngineLoop; }
+    // BaseEditorApplication::BaseEditorApplication(  ) { mEngineLoop = aEngineLoop; }
 
     void BaseEditorApplication::RenderScene()
     {
@@ -57,7 +57,7 @@ namespace LTSE::Editor
 
         if( !mOffscreenRenderTargetDisplayHandle.Handle )
         {
-            mOffscreenRenderTargetDisplayHandle = mEngineLoop->UIContext()->CreateTextureHandle( mOffscreenRenderTargetTexture );
+            mOffscreenRenderTargetDisplayHandle = LTSE::Core::Engine::GetInstance()->UIContext()->CreateTextureHandle( mOffscreenRenderTargetTexture );
             mEditorWindow.UpdateSceneViewport( mOffscreenRenderTargetDisplayHandle );
         }
         else
@@ -117,7 +117,7 @@ namespace LTSE::Editor
 
     void BaseEditorApplication::Init()
     {
-        mEditorWindow                 = EditorWindow( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
+        mEditorWindow                 = EditorWindow( LTSE::Core::Engine::GetInstance()->GetGraphicContext(), LTSE::Core::Engine::GetInstance()->UIContext() );
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
 
         mWorld            = New<Scene>( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
