@@ -268,27 +268,12 @@ namespace LTSE::Core::UI
         return is_open;
     }
 
-    void TreePush( const char *str_id )
-    {
-        ImGuiWindow *window = ImGui::GetCurrentWindow();
-        ImGui::Indent();
-        window->DC.TreeDepth++;
-        ImGui::PushID( str_id );
-    }
-
-    void TreePush( const void *ptr_id )
-    {
-        ImGuiWindow *window = ImGui::GetCurrentWindow();
-        ImGui::Indent();
-        window->DC.TreeDepth++;
-        ImGui::PushID( ptr_id );
-    }
 
     void TreePushOverrideID( ImGuiID id )
     {
         ImGuiContext &g      = *GImGui;
         ImGuiWindow  *window = g.CurrentWindow;
-        ImGui::Indent();
+        ImGui::Indent( g.FontSize / 1.5f );
         window->DC.TreeDepth++;
         ImGui::PushOverrideID( id );
     }
@@ -297,7 +282,7 @@ namespace LTSE::Core::UI
     {
         ImGuiContext &g      = *GImGui;
         ImGuiWindow  *window = g.CurrentWindow;
-        ImGui::Unindent();
+        ImGui::Unindent(g.FontSize / 1.5f);
 
         window->DC.TreeDepth--;
         ImU32 tree_depth_mask = ( 1 << window->DC.TreeDepth );
@@ -314,12 +299,5 @@ namespace LTSE::Core::UI
         IM_ASSERT( window->IDStack.Size > 1 ); // There should always be 1 element in the IDStack (pushed during window creation). If
                                                // this triggers you called TreePop/ImGui::PopID too much.
         ImGui::PopID();
-    }
-
-    // Horizontal distance preceding label when using TreeNode() or Bullet()
-    float GetTreeNodeToLabelSpacing()
-    {
-        ImGuiContext &g = *GImGui;
-        return g.FontSize + ( g.Style.FramePadding.x * 2.0f );
     }
 } // namespace LTSE::Core::UI

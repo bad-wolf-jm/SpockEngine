@@ -5,4 +5,5 @@
 namespace LTSE::Core::UI
 {
     bool TreeNodeEx( const char *label, ImGuiTreeNodeFlags flags );
+    void TreePop();
 }
