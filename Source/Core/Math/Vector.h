@@ -97,22 +97,45 @@ namespace math
     inline vec3 z_axis() { return vec3( 0.0f, 0.0f, 1.0f ); }
 
     /** @brief Euclidean length of input vector. */
-    template <typename T> inline float length( const T &aVector ) { return glm::length( aVector ); }
+    template <typename T>
+    inline float length( const T &aVector )
+    {
+        return glm::length( aVector );
+    }
 
     /** @brief Euclidean length of input vector. */
-    template <typename T> inline float length2( const T &aVector ) { return glm::length2( aVector ); }
+    template <typename T>
+    inline float length2( const T &aVector )
+    {
+        return glm::length2( aVector );
+    }
 
     /** @brief Euclidean length of input vector. */
-    template <typename T> inline float dist2( const T &aVector0, const T &aVector1 ) { return glm::distance2( aVector0, aVector1 ); }
+    template <typename T>
+    inline float dist2( const T &aVector0, const T &aVector1 )
+    {
+        return glm::distance2( aVector0, aVector1 );
+    }
 
     /** @brief Euclidean length of input vector. */
-    inline float det( const vec2 &aVector0, const vec2 &aVector1 ) { return (aVector0.x * aVector1.y) - (aVector0.y * aVector1.x); }
+    inline float det( const vec2 &aVector0, const vec2 &aVector1 )
+    {
+        return ( aVector0.x * aVector1.y ) - ( aVector0.y * aVector1.x );
+    }
 
     /** @brief Unit vector in the direction of V. */
-    template <typename T> T normalize( const T &aVector ) { return glm::normalize( aVector ); }
+    template <typename T>
+    T normalize( const T &aVector )
+    {
+        return glm::normalize( aVector );
+    }
 
     /** @brief Standard dot-product of v1 and v2. */
-    template <typename T> inline float dot( const T &aVector1, const T &aVector2 ) { return glm::dot( aVector1, aVector2 ); }
+    template <typename T>
+    inline float dot( const T &aVector1, const T &aVector2 )
+    {
+        return glm::dot( aVector1, aVector2 );
+    }
 
     /** @brief Standard cross-product of v1 and v2. */
     inline vec3 cross( const vec3 &aVector1, const vec3 &aVector2 ) { return glm::cross( aVector1, aVector2 ); }
@@ -125,8 +148,7 @@ namespace math
     {
         aHue -= glm::floor( aHue / 360.0 ) * 360.0f;
 
-        if( aHue < 0 )
-            aHue += 360.0f;
+        if( aHue < 0 ) aHue += 360.0f;
 
         int lH = static_cast<int>( aHue / 60.0f ) % 6;
 
@@ -137,27 +159,28 @@ namespace math
 
         switch( lH )
         {
-        case 0:
-            return vec3( aValue, lT, lP );
-        case 1:
-            return vec3( lQ, aValue, lP );
-        case 2:
-            return vec3( lP, aValue, lT );
-        case 3:
-            return vec3( lP, lQ, aValue );
-        case 4:
-            return vec3( lT, lP, aValue );
-        case 5:
-            return vec3( aValue, lP, lQ );
-        default:
-            return vec3( 0, 0, 0 );
+        case 0: return vec3( aValue, lT, lP );
+        case 1: return vec3( lQ, aValue, lP );
+        case 2: return vec3( lP, aValue, lT );
+        case 3: return vec3( lP, lQ, aValue );
+        case 4: return vec3( lT, lP, aValue );
+        case 5: return vec3( aValue, lP, lQ );
+        default: return vec3( 0, 0, 0 );
         }
     }
 
     /** @brief Interpolates the vectors `aVector1` and `aVector2` using ratio `aCoefficient` */
-    template <typename T> T mix( T aVector1, T aVector2, float aCoefficient ) { return glm::mix( aVector1, aVector2, aCoefficient ); }
+    template <typename T>
+    T mix( T aVector1, T aVector2, float aCoefficient )
+    {
+        return glm::mix( aVector1, aVector2, aCoefficient );
+    }
 
     /** @brief Sperically interpolates the quaternions `aQuaternion1` and `aQuaternion2` using ratio `aCoefficient` */
-    template <typename T> T slerp( T aQuaternion1, T aQuaternion2, float aCoefficient ) { return glm::slerp( aQuaternion1, aQuaternion2, aCoefficient ); }
+    template <typename T>
+    T slerp( T aQuaternion1, T aQuaternion2, float aCoefficient )
+    {
+        return glm::slerp( aQuaternion1, aQuaternion2, aCoefficient );
+    }
 
 } // namespace math
