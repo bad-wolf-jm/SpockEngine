@@ -6,7 +6,7 @@ namespace LTSE::Graphics
     GraphicContext::GraphicContext( uint32_t a_Width, uint32_t a_Height, uint32_t a_SampleCount, std::string a_Title )
     {
         mViewportClient = LTSE::Core::New<Window>( a_Width, a_Height, a_Title );
-        mContext         = LTSE::Core::New<Internal::VkContext>( mViewportClient, true );
+        mContext        = LTSE::Core::New<Internal::VkContext>( mViewportClient, true );
 
         uint32_t                          lNumberOfDescriptorSets = 1000;
         std::vector<VkDescriptorPoolSize> lPoolSizes( 4 );
