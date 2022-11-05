@@ -103,7 +103,6 @@ namespace SpockEngine.Math
         // m10 m11 m12 m13
         // m20 m21 m22 m23
         // m30 m31 m32 m33
-
         public float Determinant()
         {     
             return   m00 * (m11 * (m22 * m33 - m32 * m23) - m21 * (m12 * m33 - m32 * m13) + m31 * (m12 * m23 - m22 * m13)) 
@@ -326,5 +325,51 @@ namespace SpockEngine.Math
         
         public static mat4 Translation(vec3 v) => Translation(v.x, v.y, v.z);
 
+        public static mat4 LookAt(vec3 aEye, vec3 aCenter, vec3 aUp)
+        {
+            var f = (aCenter - aEye).Normalized;
+            var s = f.Cross(aUp).Normalized;
+            var u = s.Cross(f);
+            var m = new mat4(1.0f);
+            m.m00 = s.x;
+            m.m01 = s.y;
+            m.m02 = s.z;
+            m.m10 = u.x;
+            m.m11 = u.y;
+            m.m12 = u.z;
+            m.m20 = -f.x;
+            m.m21 = -f.y;
+            m.m22 = -f.z;
+            m.m03 = -s.Dot(aEye);
+            m.m13 = -u.Dot(aEye);
+            m.m23 = f.Dot(aEye);
+
+            return m;
+        }
+
+        public static mat4 Ortho(float aLeft, float aRight, float aBottom, float aTop, float aNear, float aFar)
+        {
+            var m = new mat4(1.0f);
+            m.m00 =  2 / (aRight - aLeft);
+            m.m11 =  2 / (aTop - aBottom);
+            m.m22 = -2 / (aFar - aNear);
+            m.m03 = -(aRight + aLeft) / (aRight - aLeft);
+            m.m13 = -(aTop + aBottom) / (aTop - aBottom);
+            m.m23 = -(aFar + aNear) / (aFar - aNear);
+
+            return m;
+        }
+
+        public static mat4 Ortho(float aLeft, float aRight, float aBottom, float aTop)
+        {
+            var m = new mat4(1.0f);
+            m.m00 =  2 / (aRight - aLeft);
+            m.m11 =  2 / (aTop - aBottom);
+            m.m22 = -1;
+            m.m03 = -(aRight + aLeft)/(aRight - aLeft);
+            m.m13 = -(aTop + aBottom)/(aTop - aBottom);
+
+            return m;
+        }
     }
 }
