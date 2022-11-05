@@ -28,7 +28,7 @@ namespace LTSE::Editor
     using namespace LTSE::Cuda;
     using namespace LTSE::Core::EntityComponentSystem::Components;
 
-    BaseEditorApplication::BaseEditorApplication( Ref<EngineLoop> aEngineLoop ) { mEngineLoop = aEngineLoop; }
+    BaseEditorApplication::BaseEditorApplication( Ref<Engine> aEngineLoop ) { mEngineLoop = aEngineLoop; }
 
     void BaseEditorApplication::RenderScene()
     {

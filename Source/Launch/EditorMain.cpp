@@ -1,3 +1,10 @@
+
+#ifdef APIENTRY
+#    undef APIENTRY
+#endif
+#include <chrono>
+#include <shlobj.h>
+
 #include <argparse/argparse.hpp>
 #include <filesystem>
 #include <fstream>
@@ -127,11 +134,29 @@ int main( int argc, char **argv )
 {
     auto lProgramArguments = ParseCommandLine( argc, argv );
 
-    Ref<EngineLoop> mEngineLoop = New<EngineLoop>();
+    Ref<Engine> mEngineLoop = New<Engine>();
 
     std::string ApplicationName = "Sensor Model Editor";
     mEngineLoop->SetApplicationName( ApplicationName );
     mEngineLoop->PreInit( 0, nullptr );
+
+    fs::path mLocalConfigFolder = "";
+    fs::path mUserHomeFolder    = "";
+    {
+        CHAR    aProfilePath[MAX_PATH];
+        HRESULT result = SHGetFolderPathA( NULL, CSIDL_PROFILE, NULL, 0, aProfilePath );
+        if( SUCCEEDED( result ) )
+        {
+            mUserHomeFolder = fs::path( aProfilePath );
+        }
+
+        CHAR aUserAppData[MAX_PATH];
+        result = SHGetFolderPathA( NULL, CSIDL_LOCAL_APPDATA, NULL, 0, aUserAppData );
+        if( SUCCEEDED( result ) )
+        {
+            mLocalConfigFolder = fs::path( aUserAppData );
+        }
+    }
 
     // get cwd
     fs::path lProjectRoot = GetCwd();
@@ -180,6 +205,7 @@ int main( int argc, char **argv )
     mEngineLoop->SetImGuiConfigurationFile( ( lProjectRoot / "Saved" / "imgui.ini" ).string() );
     mEngineLoop->Init();
 
+    LTSE::Graphics::OptixDeviceContextObject::Initialize();
     ScriptManager::Initialize();
 
     LTSE::Editor::BaseEditorApplication lEditorApplication( mEngineLoop );

@@ -17,40 +17,24 @@
 namespace LTSE::Core
 {
 
-    GLFWwindow *EngineLoop::GetMainApplicationWindow() { return mViewportClient->GetGLFWWindow(); }
+    GLFWwindow *Engine::GetMainApplicationWindow() { return mViewportClient->GetGLFWWindow(); }
 
-    int64_t EngineLoop::GetTime()
+    int64_t Engine::GetTime()
     {
         auto now    = std::chrono::system_clock::now();
         auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>( now );
         return now_ms.time_since_epoch().count();
     }
 
-    int64_t EngineLoop::GetElapsedTime() { return GetTime() - mEngineLoopStartTime; }
+    int64_t Engine::GetElapsedTime() { return GetTime() - mEngineLoopStartTime; }
 
-    void EngineLoop::PreInit( int argc, char **argv )
+    void Engine::PreInit( int argc, char **argv )
     {
-        CHAR    profilePath[MAX_PATH];
-        HRESULT result = SHGetFolderPathA( NULL, CSIDL_PROFILE, NULL, 0, profilePath );
-        if( SUCCEEDED( result ) )
-        {
-            mUserHomeFolder = std::string( profilePath );
-        }
-
-        CHAR appData[MAX_PATH];
-        result = SHGetFolderPathA( NULL, CSIDL_LOCAL_APPDATA, NULL, 0, appData );
-        if( SUCCEEDED( result ) )
-        {
-            mLocalConfigFolder = std::string( appData );
-        }
-
-        LTSE::Graphics::OptixDeviceContextObject::Initialize();
-
         mEngineLoopStartTime = GetTime();
         mLastFrameTime       = mEngineLoopStartTime;
     }
 
-    void EngineLoop::Init()
+    void Engine::Init()
     {
         mGraphicContext = LTSE::Graphics::GraphicContext( mInitialMainWindowSize.x, mInitialMainWindowSize.y, 4, mApplicationName );
 
@@ -68,9 +52,9 @@ namespace LTSE::Core
         mImGUIOverlay    = New<LTSE::Core::UIContext>( mViewportClient, mGraphicContext, mRenderContext, mImGuiConfigPath );
     }
 
-    void EngineLoop::Shutdown() {}
+    void Engine::Shutdown() {}
 
-    bool EngineLoop::Tick()
+    bool Engine::Tick()
     {
         mViewportClient->PollEvents();
 
@@ -109,31 +93,31 @@ namespace LTSE::Core
         return true;
     }
 
-    void EngineLoop::IOEvent( UserEvent &a_Event )
+    void Engine::IOEvent( UserEvent &a_Event )
     {
         if( IOEventDelegate ) IOEventDelegate( a_Event );
     }
 
-    void EngineLoop::SetInitialWindowPosition( math::ivec2 a_Position ) { mInitialMainWindowPosition = a_Position; }
+    void Engine::SetInitialWindowPosition( math::ivec2 a_Position ) { mInitialMainWindowPosition = a_Position; }
 
-    void EngineLoop::SetInitialWindowSize( math::ivec2 a_Size ) { mInitialMainWindowSize = a_Size; }
+    void Engine::SetInitialWindowSize( math::ivec2 a_Size ) { mInitialMainWindowSize = a_Size; }
 
-    void EngineLoop::SetImGuiConfigurationFile( std::string a_Path ) { mImGuiConfigPath = a_Path; }
+    void Engine::SetImGuiConfigurationFile( std::string a_Path ) { mImGuiConfigPath = a_Path; }
 
-    math::ivec2 EngineLoop::GetWindowPosition()
+    math::ivec2 Engine::GetWindowPosition()
     {
         int x, y;
         glfwGetWindowPos( mViewportClient->GetGLFWWindow(), &x, &y );
         return { x, y };
     }
 
-    math::ivec2 EngineLoop::GetWindowSize()
+    math::ivec2 Engine::GetWindowSize()
     {
         int w, h;
         glfwGetWindowSize( mViewportClient->GetGLFWWindow(), &w, &h );
         return { w, h };
     }
 
-    std::string EngineLoop::GetImGuiConfigurationFile() { return mImGuiConfigPath; }
+    std::string Engine::GetImGuiConfigurationFile() { return mImGuiConfigPath; }
 
 } // namespace LTSE::Core
