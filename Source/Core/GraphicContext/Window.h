@@ -200,7 +200,7 @@ namespace LTSE::Core
     //     math::ivec2 FramebufferSize;
     // };
 
-    class EngineLoop;
+    class Engine;
 
     /** @class Window
      *
@@ -275,7 +275,7 @@ namespace LTSE::Core
         GLFWwindow *GetGLFWWindow() { return mWindow; }
 
         /** @brief */
-        void SetEngineLoop( EngineLoop *a_EngineLoop ) { mEngineLoop = a_EngineLoop; }
+        void SetEngineLoop( Engine *a_EngineLoop ) { mEngineLoop = a_EngineLoop; }
 
         /** @brief */
         void SetTitle( std::string a_Title ) { glfwSetWindowTitle( mWindow, a_Title.c_str() ); }
@@ -303,6 +303,6 @@ namespace LTSE::Core
 
         std::string mWindowName = "";
         GLFWwindow *mWindow     = nullptr;
-        EngineLoop *mEngineLoop = nullptr;
+        Engine *mEngineLoop = nullptr;
     };
 } // namespace LTSE::Core
