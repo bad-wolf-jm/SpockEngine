@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/GraphicContext//Texture2D.h"
-#include "Core/Platform/EngineLoop.h"
+#include "Engine/Engine.h"
 #include "UI/UI.h"
 
 #include <filesystem>

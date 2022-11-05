@@ -19,7 +19,7 @@
 #include "Core/Logging.h"
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
-#include "Core/Platform/EngineLoop.h"
+#include "Engine/Engine.h"
 
 #include "Editor/BaseEditorApplication.h"
 
@@ -138,7 +138,7 @@ int main( int argc, char **argv )
 
     std::string ApplicationName = "Sensor Model Editor";
     mEngineLoop->SetApplicationName( ApplicationName );
-    mEngineLoop->PreInit( 0, nullptr );
+    // mEngineLoop->PreInit( 0, nullptr );
 
     fs::path mLocalConfigFolder = "";
     fs::path mUserHomeFolder    = "";
@@ -200,27 +200,24 @@ int main( int argc, char **argv )
     auto lScenario = fs::path( lProgramArguments->get<std::string>( "--scenario" ) );
     if( !fs::exists( lScenario ) ) LTSE::Logging::Info( "Scenario file '{}' does not exist", lScenario.string() );
 
-    mEngineLoop->SetInitialWindowSize( lWindowSize );
-    mEngineLoop->SetInitialWindowPosition( lWindowPosition );
-    mEngineLoop->SetImGuiConfigurationFile( ( lProjectRoot / "Saved" / "imgui.ini" ).string() );
-    mEngineLoop->Init();
+    LTSE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lProjectRoot / "Saved" / "imgui.ini" );
 
     LTSE::Graphics::OptixDeviceContextObject::Initialize();
     ScriptManager::Initialize();
 
-    LTSE::Editor::BaseEditorApplication lEditorApplication( mEngineLoop );
+    LTSE::Editor::BaseEditorApplication lEditorApplication;
     lEditorApplication.Init();
 
-    mEngineLoop->UpdateDelegate.connect<&LTSE::Editor::BaseEditorApplication::Update>( lEditorApplication );
-    mEngineLoop->RenderDelegate.connect<&LTSE::Editor::BaseEditorApplication::RenderScene>( lEditorApplication );
-    mEngineLoop->UIDelegate.connect<&LTSE::Editor::BaseEditorApplication::RenderUI>( lEditorApplication );
+    LTSE::Core::Engine::GetInstance()->UpdateDelegate.connect<&LTSE::Editor::BaseEditorApplication::Update>( lEditorApplication );
+    LTSE::Core::Engine::GetInstance()->RenderDelegate.connect<&LTSE::Editor::BaseEditorApplication::RenderScene>( lEditorApplication );
+    LTSE::Core::Engine::GetInstance()->UIDelegate.connect<&LTSE::Editor::BaseEditorApplication::RenderUI>( lEditorApplication );
 
-    while( mEngineLoop->Tick() )
+    while( LTSE::Core::Engine::GetInstance()->Tick() )
     {
     }
 
-    mEngineLoop->Shutdown();
     ScriptManager::Shutdown();
+    LTSE::Core::Engine::Shutdown();
 
     return 0;
 }
