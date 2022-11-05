@@ -43,7 +43,7 @@ void LoadConfiguration( fs::path aConfigurationFile, math::ivec2 &aWindowSize, m
     }
 }
 
-void SaveConfiguration( fs::path ConfigurationFile, math::ivec2 const &aWindowSize, math::ivec2 const &aWindowPosition )
+void SaveConfiguration( fs::path aConfigurationFile, math::ivec2 const &aWindowSize, math::ivec2 const &aWindowPosition )
 {
     YAML::Emitter lConfigurationOut;
     lConfigurationOut << YAML::BeginMap;
@@ -64,7 +64,7 @@ void SaveConfiguration( fs::path ConfigurationFile, math::ivec2 const &aWindowSi
         lConfigurationOut << YAML::EndMap;
     }
     lConfigurationOut << YAML::EndMap;
-    std::ofstream fout( ConfigurationFile );
+    std::ofstream fout( aConfigurationFile );
     fout << lConfigurationOut.c_str();
 }
 
@@ -134,27 +134,21 @@ int main( int argc, char **argv )
 {
     auto lProgramArguments = ParseCommandLine( argc, argv );
 
-    Ref<Engine> mEngineLoop = New<Engine>();
-
-    std::string ApplicationName = "Sensor Model Editor";
-    mEngineLoop->SetApplicationName( ApplicationName );
-    // mEngineLoop->PreInit( 0, nullptr );
-
-    fs::path mLocalConfigFolder = "";
-    fs::path mUserHomeFolder    = "";
+    fs::path lLocalConfigFolder = "";
+    fs::path lUserHomeFolder    = "";
     {
         CHAR    aProfilePath[MAX_PATH];
         HRESULT result = SHGetFolderPathA( NULL, CSIDL_PROFILE, NULL, 0, aProfilePath );
         if( SUCCEEDED( result ) )
         {
-            mUserHomeFolder = fs::path( aProfilePath );
+            lUserHomeFolder = fs::path( aProfilePath );
         }
 
         CHAR aUserAppData[MAX_PATH];
         result = SHGetFolderPathA( NULL, CSIDL_LOCAL_APPDATA, NULL, 0, aUserAppData );
         if( SUCCEEDED( result ) )
         {
-            mLocalConfigFolder = fs::path( aUserAppData );
+            lLocalConfigFolder = fs::path( aUserAppData );
         }
     }
 
@@ -177,11 +171,11 @@ int main( int argc, char **argv )
     math::ivec2 lWindowSize     = { 640, 480 };
     math::ivec2 lWindowPosition = { 100, 100 };
 
-    fs::path ConfigurationFile = lProjectRoot / "Saved" / "Config" / "EditorConfiguration.yaml";
-    if( fs::exists( ConfigurationFile ) )
-        LoadConfiguration( ConfigurationFile, lWindowSize, lWindowPosition );
+    fs::path lConfigurationFile = lProjectRoot / "Saved" / "Config" / "EditorConfiguration.yaml";
+    if( fs::exists( lConfigurationFile ) )
+        LoadConfiguration( lConfigurationFile, lWindowSize, lWindowPosition );
     else
-        SaveConfiguration( ConfigurationFile, lWindowSize, lWindowPosition );
+        SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition );
 
     if( auto lResXOverride = lProgramArguments->present<int>( "--res_x" ) ) lWindowSize.x = lResXOverride.value();
     if( auto lResYOverride = lProgramArguments->present<int>( "--res_y" ) ) lWindowSize.y = lResYOverride.value();
