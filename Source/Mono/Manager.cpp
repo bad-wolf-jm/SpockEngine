@@ -84,12 +84,13 @@ namespace LTSE::Core
             }
         }
 
-        static std::unordered_map<std::string, eScriptFieldType> sScriptFieldTypeMap = { { "System.Single", eScriptFieldType::Float },
-            { "System.Double", eScriptFieldType::Double }, { "System.Boolean", eScriptFieldType::Bool },
-            { "System.Char", eScriptFieldType::Char }, { "System.Int16", eScriptFieldType::Short },
-            { "System.Int32", eScriptFieldType::Int }, { "System.Int64", eScriptFieldType::Long },
-            { "System.Byte", eScriptFieldType::Byte }, { "System.UInt16", eScriptFieldType::UShort },
-            { "System.UInt32", eScriptFieldType::UInt }, { "System.UInt64", eScriptFieldType::ULong } };
+        static std::unordered_map<std::string, eScriptFieldType> sScriptFieldTypeMap = {
+            { "System.Single", eScriptFieldType::Float },  { "System.Double", eScriptFieldType::Double },
+            { "System.Boolean", eScriptFieldType::Bool },  { "System.Char", eScriptFieldType::Char },
+            { "System.Int16", eScriptFieldType::Short },   { "System.Int32", eScriptFieldType::Int },
+            { "System.Int64", eScriptFieldType::Long },    { "System.Byte", eScriptFieldType::Byte },
+            { "System.UInt16", eScriptFieldType::UShort }, { "System.UInt32", eScriptFieldType::UInt },
+            { "System.UInt64", eScriptFieldType::ULong } };
 
         eScriptFieldType MonoTypeToScriptFieldType( MonoType *aMonoType )
         {
@@ -142,8 +143,8 @@ namespace LTSE::Core
         : mClassNamespace( aClassNamespace )
         , mClassName( aClassName )
     {
-        mMonoClass = mono_class_from_name(
-            aIsCore ? sData->mCoreAssemblyImage : sData->mAppAssemblyImage, aClassNamespace.c_str(), aClassName.c_str() );
+        mMonoClass = mono_class_from_name( aIsCore ? sData->mCoreAssemblyImage : sData->mAppAssemblyImage, aClassNamespace.c_str(),
+                                           aClassName.c_str() );
     }
 
     ScriptClass::ScriptClass( MonoType *aMonoClass )
@@ -232,15 +233,15 @@ namespace LTSE::Core
         ReloadAssembly();
     }
 
-    void ScriptManager::Initialize()
+    void ScriptManager::Initialize( std::filesystem::path &aMonoPath, const std::filesystem::path &aCoreAssemblyPath )
     {
         sData = new ScriptEngineData();
 
-        InitMono();
+        InitMono( aMonoPath );
 
         RegisterInternalCppFunctions();
 
-        LoadCoreAssembly( "Source/ScriptCore/Build/Debug/SE_Core.dll" );
+        LoadCoreAssembly( aCoreAssemblyPath );
     }
 
     void ScriptManager::RegisterComponentTypes() { RegisterComponentType<sNodeTransformComponent>(); }
@@ -262,9 +263,9 @@ namespace LTSE::Core
         delete sData;
     }
 
-    void ScriptManager::InitMono()
+    void ScriptManager::InitMono( std::filesystem::path &aMonoPath )
     {
-        mono_set_assemblies_path( "C:\\GitLab\\SpockEngine\\mono\\lib" );
+        mono_set_assemblies_path( aMonoPath.string().c_str() );
 
         MonoDomain *lRootDomain = mono_jit_init( "SpockEngineRuntime" );
 

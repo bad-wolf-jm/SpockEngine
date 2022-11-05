@@ -102,6 +102,9 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
     lProgramArguments->add_argument( "-M", "--mono_runtime" )
         .help( "Specify output file" );
 
+    lProgramArguments->add_argument( "-S", "--script_core" )
+        .help( "Specify output file" );
+
     lProgramArguments->add_argument( "-L", "--log_level" )
         .help( "Specify output file" ).scan<'i', int>();
 
@@ -153,18 +156,6 @@ int main( int argc, char **argv )
         }
     }
 
-    // Retrieve the Mono runtime
-    fs::path    lMonoPath = "C:\\Program Files\\Mono\\lib\\mono\\4.5";
-    const char *lPath     = std::getenv( "MONO_PATH" );
-    if( lPath && fs::exists( lPath ) )
-    {
-        lMonoPath = lPath;
-        if( auto lMonoPathOverride = lProgramArguments->present<std::string>( "--mono_runtime" ) )
-        {
-            if( fs ::exists( lMonoPathOverride.value() ) ) lMonoPath = lMonoPathOverride.value();
-        }
-    }
-
     // get cwd
     fs::path lProjectRoot = GetCwd();
 
@@ -204,13 +195,29 @@ int main( int argc, char **argv )
         std::exit( 1 );
     }
 
+    LTSE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lProjectRoot / "Saved" / "imgui.ini" );
+
     auto lScenario = fs::path( lProgramArguments->get<std::string>( "--scenario" ) );
     if( !fs::exists( lScenario ) ) LTSE::Logging::Info( "Scenario file '{}' does not exist", lScenario.string() );
 
-    LTSE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lProjectRoot / "Saved" / "imgui.ini" );
-
     LTSE::Graphics::OptixDeviceContextObject::Initialize();
-    ScriptManager::Initialize();
+
+    // Retrieve the Mono runtime
+    fs::path    lMonoPath = "C:\\Program Files\\Mono\\lib\\mono\\4.5";
+    const char *lPath     = std::getenv( "MONO_PATH" );
+    if( lPath && fs::exists( lPath ) )
+    {
+        lMonoPath = lPath;
+        if( auto lMonoPathOverride = lProgramArguments->present<std::string>( "--mono_runtime" ) )
+            if( fs ::exists( lMonoPathOverride.value() ) ) lMonoPath = lMonoPathOverride.value();
+    }
+
+    // Retrieve the Mono core assembly path
+    fs::path lCoreScriptingPath = "Source/ScriptCore/Build/Debug/SE_Core.dll";
+    if( auto lCoreScriptingPathOverride = lProgramArguments->present<std::string>( "--script_core" ) )
+        if( fs ::exists( lCoreScriptingPathOverride.value() ) ) lCoreScriptingPath = lCoreScriptingPathOverride.value();
+
+    ScriptManager::Initialize( lMonoPath, lCoreScriptingPath );
 
     LTSE::Editor::BaseEditorApplication lEditorApplication;
     lEditorApplication.Init();
