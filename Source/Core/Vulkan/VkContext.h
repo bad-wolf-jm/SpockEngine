@@ -5,7 +5,7 @@
 
 #include "Core/Memory.h"
 
-#include "Core/Platform/Window.h"
+#include "Core/GraphicContext/Window.h"
 
 #include <vulkan/vulkan.h>
 

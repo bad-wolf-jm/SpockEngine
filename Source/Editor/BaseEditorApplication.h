@@ -32,7 +32,7 @@ namespace LTSE::Editor
     class BaseEditorApplication
     {
       public:
-        Ref<EngineLoop> mEngineLoop = nullptr;
+        Ref<Engine> mEngineLoop = nullptr;
 
         EditorWindow mEditorWindow;
         fs::path     ConfigurationRoot       = "";
@@ -45,7 +45,7 @@ namespace LTSE::Editor
 
       public:
         BaseEditorApplication() = default;
-        BaseEditorApplication( Ref<EngineLoop> aEngineLoop );
+        BaseEditorApplication( Ref<Engine> aEngineLoop );
 
         ~BaseEditorApplication() = default;
 

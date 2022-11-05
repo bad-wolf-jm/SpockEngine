@@ -71,7 +71,7 @@ namespace LTSE::Editor
         std::string ApplicationName = "";
         std::string DocumentName    = "";
 
-        Ref<EngineLoop> mEngineLoop = nullptr;
+        Ref<Engine> mEngineLoop = nullptr;
         // Ref<SensorDeviceBase> SensorModel = nullptr;
         Ref<Scene>         World         = nullptr;
         Ref<Scene>         ActiveWorld   = nullptr;

@@ -6,7 +6,7 @@
 
 #include "Core/Vulkan/VkPipeline.h"
 
-#include "Core/Platform/Window.h"
+#include "Core/GraphicContext/Window.h"
 #include "Core/Profiling/BlockTimer.h"
 
 // std

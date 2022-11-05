@@ -12,30 +12,30 @@
 
 #include "entt/entt.hpp"
 
-#include "Core/GraphicContext//GraphicContext.h"
-#include "Core/GraphicContext//RenderContext.h"
+#include "Core/GraphicContext/GraphicContext.h"
+#include "Core/GraphicContext/RenderContext.h"
+#include "Core/GraphicContext/Window.h"
+#include "Core/GraphicContext/UI/UIContext.h"
+
 #include "Core/Optix/OptixContext.h"
-#include "Window.h"
-
-#include "Core/GraphicContext//UI/UIContext.h"
-
 /** @brief */
 namespace LTSE::Core
 {
 
-    /** @class EngineLoop
+    /** @class Engine
      *
      * This class encapsulates the main engine loop. It is responsible for all the initialization
      * required to run a 3D application. This class is designed to be used either in a main function
      * which handles the game loop, or controlled by an external tick function.
      *
      */
-    class EngineLoop
+    class Engine
     {
       public:
         friend class Window;
-        EngineLoop()  = default;
-        ~EngineLoop() = default;
+
+        Engine()  = default;
+        ~Engine() = default;
 
         entt::delegate<bool( ImGuiIO & )>   UIDelegate{};
         entt::delegate<void( Timestep )>    UpdateDelegate{};
@@ -87,26 +87,8 @@ namespace LTSE::Core
         /** @brief Retrieved the underlying application window. */
         GLFWwindow *GetMainApplicationWindow();
 
-        ///** @brief Retrieve the underlying ImGui context */
-        // ImGUIOverlay* GetImGUIOverlay() { return s_ImGUIOverlay; }
-
-        /** @brief Retrieve the font used for icons. */
-        ImFont *GetIconFont() { return mIconFont; }
-
-        /** @brief Retrieve the font used for normal text. */
-        ImFont *GetNormalFont() { return mMainFont; }
-
-        /** @brief Retrieve the font used for bold text. */
-        ImFont *GetBoldFont() { return mMainFont; }
-
         math::ivec2 GetViewportSize() { return mViewportClient->GetFramebufferSize(); }
 
-        /** @brief REtrieve the ImGui IO context. */
-        // ImGuiIO& GetImGuiIO()
-        //{
-        //     ImGui::SetCurrentContext(GetImGUIOverlay());
-        //     return ImGui::GetIO();
-        //  }
         LTSE::Graphics::GraphicContext &GetGraphicContext() { return mGraphicContext; }
 
         LTSE::Graphics::GraphicContext &GetDevice() { return mGraphicContext; }
@@ -116,14 +98,7 @@ namespace LTSE::Core
 
         Ref<LTSE::Core::UIContext> UIContext() { return mImGUIOverlay; };
 
-        /** @brief Returns the configuration folder */
-        const std::string &GetConfigFolder() { return mLocalConfigFolder; }
-
-        /** @brief Returns the configuration folder */
-        const std::string &GetUserHomeFolder() { return mUserHomeFolder; }
-
         void SetApplicationName( std::string a_Name ) { mApplicationName = a_Name; }
-
         std::string GetApplicationName() { return mApplicationName; }
 
         void SetInitialWindowPosition( math::ivec2 a_Position );
@@ -138,13 +113,12 @@ namespace LTSE::Core
         void IOEvent( UserEvent &a_Event );
 
       private:
-        static EngineLoop *s_UniqueInstance;
+        // static Engine *s_UniqueInstance;
 
+        Ref<LTSE::Core::Window>        mViewportClient;
         LTSE::Graphics::GraphicContext mGraphicContext;
         LTSE::Graphics::RenderContext  mRenderContext;
 
-        Ref<LTSE::Core::Window>        mViewportClient;
-        LTSE::Graphics::GraphicContext mGraphicContextData{};
 
         Ref<LTSE::Graphics::SwapChainRenderTarget> mSwapChainRenderer;
         Ref<LTSE::Core::UIContext>                 mImGUIOverlay;
@@ -161,13 +135,7 @@ namespace LTSE::Core
         math::ivec2 mFramebufferSize;
         math::ivec2 mLastMousePosition;
 
-        ImFont *mMainFont;
-        ImFont *mIconFont;
-        UIStyle mUIStyle;
-
         std::string mApplicationName   = "";
-        std::string mLocalConfigFolder = "";
-        std::string mUserHomeFolder    = "";
     };
 
 } // namespace LTSE::Core
