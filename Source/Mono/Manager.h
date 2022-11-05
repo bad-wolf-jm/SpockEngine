@@ -147,7 +147,7 @@ namespace LTSE::Core
         ScriptManager()  = default;
         ~ScriptManager() = default;
 
-        static void Initialize();
+        static void Initialize( std::filesystem::path &aMonoPath, const std::filesystem::path &aCoreAssemblyPath );
         static void Shutdown();
 
         // static void LoadAppAssembly( const std::filesystem::path &aFilepath );
@@ -167,7 +167,7 @@ namespace LTSE::Core
       private:
         static void RegisterComponentTypes();
         static void RegisterInternalCppFunctions();
-        static void InitMono();
+        static void InitMono( std::filesystem::path &aMonoPath );
         static void ShutdownMono();
 
         static void LoadCoreAssembly( const std::filesystem::path &aFilepath );

@@ -251,15 +251,15 @@ namespace LTSE::Core
         ReloadAssembly();
     }
 
-    void ScriptManager::Initialize()
+    void ScriptManager::Initialize( std::filesystem::path &aMonoPath, const std::filesystem::path &aCoreAssemblyPath )
     {
         sData = new ScriptEngineData();
 
-        InitMono();
+        InitMono( aMonoPath );
 
         RegisterInternalCppFunctions();
 
-        LoadCoreAssembly( "Source/ScriptCore/Build/Debug/SE_Core.dll" );
+        LoadCoreAssembly( aCoreAssemblyPath );
     }
 
     void ScriptManager::RegisterComponentTypes()
@@ -286,9 +286,9 @@ namespace LTSE::Core
         delete sData;
     }
 
-    void ScriptManager::InitMono()
+    void ScriptManager::InitMono( std::filesystem::path &aMonoPath )
     {
-        mono_set_assemblies_path( "C:\\GitLab\\SpockEngine\\mono\\lib" );
+        mono_set_assemblies_path( aMonoPath.string().c_str() );
 
         MonoDomain *lRootDomain = mono_jit_init( "SpockEngineRuntime" );
 
