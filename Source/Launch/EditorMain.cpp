@@ -44,6 +44,15 @@ void LoadConfiguration( fs::path aConfigurationFile, math::ivec2 &aWindowSize, m
     }
 }
 
+void LoadProjectConfiguration( fs::path aConfigurationFile )
+{
+    YAML::Node lRootNode = YAML::LoadFile( aConfigurationFile.string() );
+
+    YAML::Node &lAssemblyPath = lRootNode["project"]["assembly_path"];
+    if( !lAssemblyPath.IsNull() && fs::exists(lAssemblyPath.as<std::string>()) )
+        ScriptManager::SetAppAssemblyPath(lAssemblyPath.as<std::string>());
+}
+
 void SaveConfiguration( fs::path aConfigurationFile, math::ivec2 const &aWindowSize, math::ivec2 const &aWindowPosition )
 {
     YAML::Emitter lConfigurationOut;
@@ -218,6 +227,9 @@ int main( int argc, char **argv )
         if( fs ::exists( lCoreScriptingPathOverride.value() ) ) lCoreScriptingPath = lCoreScriptingPathOverride.value();
 
     ScriptManager::Initialize( lMonoPath, lCoreScriptingPath );
+
+    // Load the application assembly
+    LoadProjectConfiguration( lProjectConfigurationPath );
 
     LTSE::Editor::BaseEditorApplication lEditorApplication;
     lEditorApplication.Init();
