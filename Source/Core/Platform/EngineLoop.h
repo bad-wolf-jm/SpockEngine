@@ -14,8 +14,9 @@
 
 #include "Core/GraphicContext/GraphicContext.h"
 #include "Core/GraphicContext/RenderContext.h"
-#include "Core/GraphicContext/Window.h"
 #include "Core/GraphicContext/UI/UIContext.h"
+#include "Core/GraphicContext/Window.h"
+
 
 #include "Core/Optix/OptixContext.h"
 /** @brief */
@@ -98,7 +99,7 @@ namespace LTSE::Core
 
         Ref<LTSE::Core::UIContext> UIContext() { return mImGUIOverlay; };
 
-        void SetApplicationName( std::string a_Name ) { mApplicationName = a_Name; }
+        void        SetApplicationName( std::string a_Name ) { mApplicationName = a_Name; }
         std::string GetApplicationName() { return mApplicationName; }
 
         void SetInitialWindowPosition( math::ivec2 a_Position );
@@ -119,7 +120,6 @@ namespace LTSE::Core
         LTSE::Graphics::GraphicContext mGraphicContext;
         LTSE::Graphics::RenderContext  mRenderContext;
 
-
         Ref<LTSE::Graphics::SwapChainRenderTarget> mSwapChainRenderer;
         Ref<LTSE::Core::UIContext>                 mImGUIOverlay;
 
@@ -128,14 +128,14 @@ namespace LTSE::Core
 
         math::ivec2 mInitialMainWindowSize     = { 1920, 1080 };
         math::ivec2 mInitialMainWindowPosition = { 100, 100 };
-        std::string mImGuiConfigPath            = "imgui.ini";
+        std::string mImGuiConfigPath           = "imgui.ini";
 
         math::ivec2 mMainWindowSize;
         math::vec2  mDpiScaling;
         math::ivec2 mFramebufferSize;
         math::ivec2 mLastMousePosition;
 
-        std::string mApplicationName   = "";
+        std::string mApplicationName = "";
     };
 
 } // namespace LTSE::Core

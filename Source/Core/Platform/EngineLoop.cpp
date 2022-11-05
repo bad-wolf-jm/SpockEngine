@@ -58,13 +58,12 @@ namespace LTSE::Core
     {
         mViewportClient->PollEvents();
 
-        double time = (double)GetTime();
+        double   time = (double)GetTime();
         Timestep timestep{ static_cast<float>( time - mLastFrameTime ) };
 
         mLastFrameTime = time;
 
-        if( !mRenderContext.BeginRender() )
-            return true;
+        if( !mRenderContext.BeginRender() ) return true;
 
         bool requestQuit = false;
         mImGUIOverlay->BeginFrame();
