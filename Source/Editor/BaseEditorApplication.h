@@ -45,7 +45,7 @@ namespace LTSE::Editor
 
       public:
         BaseEditorApplication() = default;
-        BaseEditorApplication( Ref<EngineLoop> aEngineLoop );
+        BaseEditorApplication( Ref<Engine> aEngineLoop );
 
         ~BaseEditorApplication() = default;
 

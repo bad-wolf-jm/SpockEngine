@@ -30,12 +30,12 @@ struct SensorControllerBehaviour : sBehaviourController
 {
     Ref<Scope>        m_ComputeScope = nullptr;
     Ref<WorldSampler> m_WorldSampler = nullptr;
-    Ref<EngineLoop>   mEngineLoop    = nullptr;
+    Ref<Engine>   mEngineLoop    = nullptr;
     Ref<Scene>        m_World        = nullptr;
 
     sPointCloudVisualizer m_PointCloudVisualizer{};
 
-    SensorControllerBehaviour( Ref<EngineLoop> aEngineLoop, Ref<Scene> aWorld )
+    SensorControllerBehaviour( Ref<Engine> aEngineLoop, Ref<Scene> aWorld )
         : mEngineLoop{ aEngineLoop }
         , m_World{ aWorld }
     {

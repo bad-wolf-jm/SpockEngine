@@ -32,7 +32,6 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Cuda/MemoryPool.cu
     Core/Cuda/Texture2D.cu
     
-    Core/Platform/Window.cpp
     Core/Platform/EngineLoop.cpp
     
     UI/Widgets.cpp
@@ -62,6 +61,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/GraphicContext/RenderContext.cpp
     Core/GraphicContext/RenderTarget.cpp
     Core/GraphicContext/UI/UIContext.cpp
+    Core/GraphicContext/Window.cpp
 
     Scene/Primitives/Primitives.cpp
     Scene/Primitives/Arrow.cpp
