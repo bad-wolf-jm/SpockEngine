@@ -3,6 +3,7 @@
 #    undef APIENTRY
 #endif
 #include <chrono>
+#include <cstdlib>
 #include <shlobj.h>
 
 #include <argparse/argparse.hpp>
@@ -149,6 +150,18 @@ int main( int argc, char **argv )
         if( SUCCEEDED( result ) )
         {
             lLocalConfigFolder = fs::path( aUserAppData );
+        }
+    }
+
+    // Retrieve the Mono runtime
+    fs::path    lMonoPath = "C:\\Program Files\\Mono\\lib\\mono\\4.5";
+    const char *lPath     = std::getenv( "MONO_PATH" );
+    if( lPath && fs::exists( lPath ) )
+    {
+        lMonoPath = lPath;
+        if( auto lMonoPathOverride = lProgramArguments->present<std::string>( "--mono_runtime" ) )
+        {
+            if( fs ::exists( lMonoPathOverride.value() ) ) lMonoPath = lMonoPathOverride.value();
         }
     }
 
