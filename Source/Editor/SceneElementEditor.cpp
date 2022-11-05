@@ -16,9 +16,9 @@ namespace LTSE::Editor
     class MaterialCombo
     {
       public:
-        Ref<Scene> World;
-        std::string ID      = "";
-        float ThumbnailSize = 50.0f;
+        Ref<Scene>           World;
+        std::string          ID            = "";
+        float                ThumbnailSize = 50.0f;
         UI::ComboBox<Entity> Dropdown;
 
       public:
@@ -31,8 +31,7 @@ namespace LTSE::Editor
 
         Entity GetValue()
         {
-            if( Dropdown.Values.size() > 0 )
-                return Dropdown.Values[Dropdown.CurrentItem];
+            if( Dropdown.Values.size() > 0 ) return Dropdown.Values[Dropdown.CurrentItem];
             return Entity{};
         }
 
@@ -48,8 +47,7 @@ namespace LTSE::Editor
                     Dropdown.Labels.push_back( a_Entity.Get<sTag>().mValue );
                     Dropdown.Values.push_back( a_Entity );
 
-                    if( (uint32_t)a_Entity == (uint32_t)a_TextureEntity )
-                        Dropdown.CurrentItem = n;
+                    if( (uint32_t)a_Entity == (uint32_t)a_TextureEntity ) Dropdown.CurrentItem = n;
                     n++;
                 } );
             Dropdown.Display();
@@ -61,7 +59,8 @@ namespace LTSE::Editor
         }
     };
 
-    template <typename _SliderType> class Slider
+    template <typename _SliderType>
+    class Slider
     {
       public:
         std::string ID = "";
@@ -84,16 +83,18 @@ namespace LTSE::Editor
         void Display( _SliderType *Value ) { Changed = UI::Slider( ID, Format.c_str(), MinValue, MaxValue, Value ); }
     };
 
-    template <typename _ValueChooserType> class PropertyEditor
+    template <typename _ValueChooserType>
+    class PropertyEditor
     {
       public:
-        std::string Label;
-        float LabelWidth;
+        std::string       Label;
+        float             LabelWidth;
         _ValueChooserType ValueChooser;
 
         PropertyEditor( std::string ID ) { ValueChooser = _ValueChooserType( ID ); }
 
-        template <typename... _ArgTypes> void Display( _ArgTypes... a_ArgList )
+        template <typename... _ArgTypes>
+        void Display( _ArgTypes... a_ArgList )
         {
             float l_Width = UI::GetAvailableContentSpace().x;
             ImGui::AlignTextToFramePadding();
@@ -105,9 +106,16 @@ namespace LTSE::Editor
         }
     };
 
-    static bool EditComponent( sStaticMeshComponent &a_Component )
+    static bool EditComponent( sActorComponent &a_Component )
     {
         UI::Text( "Static mesh" );
+        UI::Text( "{}", a_Component.mClassFullName );
+        return false;
+    }
+
+    static bool EditComponent( sStaticMeshComponent &a_Component )
+    {
+        UI::Text( "Class:" );
         UI::Text( "{}", a_Component.Name );
         return false;
     }
@@ -128,7 +136,7 @@ namespace LTSE::Editor
 
     static bool EditComponent( sDirectionalLightComponent &a_Component )
     {
-        float l_LabelSize = 175.0f;
+        float                                l_LabelSize = 175.0f;
         static PropertyEditor<Slider<float>> l_AzimuthEditor( "##azimuth" );
         l_AzimuthEditor.Label                 = "Azimuth:";
         l_AzimuthEditor.LabelWidth            = l_LabelSize;
@@ -307,15 +315,15 @@ namespace LTSE::Editor
 
     void SceneElementEditor::Display( int32_t width, int32_t height )
     {
-        //PropertiesPanel::Display( width, height );
+        // PropertiesPanel::Display( width, height );
 
         ImGuiTreeNodeFlags l_Flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
 
-        if( !ElementToEdit )
-            return;
+        if( !ElementToEdit ) return;
 
         char buf[128] = { 0 };
-        std::strncpy( buf, ElementToEdit.Get<sTag>().mValue.c_str(), std::min( ElementToEdit.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
+        std::strncpy( buf, ElementToEdit.Get<sTag>().mValue.c_str(),
+                      std::min( ElementToEdit.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
         if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
         {
             ElementToEdit.Get<sTag>().mValue = std::string( buf );
@@ -367,6 +375,11 @@ namespace LTSE::Editor
                 ElementToEdit.TryRemove<sRayTracingTargetComponent>();
         }
 
+        if( ImGui::CollapsingHeader( "Script", l_Flags ) )
+        {
+            ElementToEdit.IfExists<sActorComponent>( [&]( auto &l_Component ) { EditComponent( l_Component ); } );
+        }
+
         if( ImGui::CollapsingHeader( "Transform", l_Flags ) )
         {
             ElementToEdit.IfExists<sNodeTransformComponent>( [&]( auto &l_Component ) { EditComponent( l_Component ); } );
@@ -375,30 +388,18 @@ namespace LTSE::Editor
         if( ImGui::CollapsingHeader( "Mesh", l_Flags ) )
         {
             ElementToEdit.IfExists<sStaticMeshComponent>( [&]( auto &l_Component ) { EditComponent( l_Component ); } );
-
         }
 
         if( ImGui::CollapsingHeader( "Material", l_Flags ) )
         {
             static MaterialCombo l_MaterialChooser( "##material_chooser" );
             l_MaterialChooser.World = World;
-
-            // if( ElementToEdit.Has<RendererComponent>() )
-            // {
-            //     l_MaterialChooser.Display( ElementToEdit.Get<RendererComponent>().Material );
-            // }
-            // else
-            // {
-            //     auto l_NewRenderer = Entity{};
-            //     l_MaterialChooser.Display( l_NewRenderer );
-            //     if( l_NewRenderer )
-            //         ElementToEdit.Add<RendererComponent>( l_NewRenderer );
-            // }
         }
 
         if( ImGui::CollapsingHeader( "Light", l_Flags ) )
         {
-            ElementToEdit.IfExists<sLightComponent>( [&]( auto &l_LightComponent ) { EditComponent( mGraphicContext, l_LightComponent ); } );
+            ElementToEdit.IfExists<sLightComponent>( [&]( auto &l_LightComponent )
+                                                     { EditComponent( mGraphicContext, l_LightComponent ); } );
         }
     }
 
