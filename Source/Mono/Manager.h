@@ -150,7 +150,6 @@ namespace LTSE::Core
         static void Initialize( std::filesystem::path &aMonoPath, const std::filesystem::path &aCoreAssemblyPath );
         static void Shutdown();
 
-        // static void LoadAppAssembly( const std::filesystem::path &aFilepath );
         static void SetAppAssemblyPath( const std::filesystem::path &aFilepath );
 
         static void ReloadAssembly();
