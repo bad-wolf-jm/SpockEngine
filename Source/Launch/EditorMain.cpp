@@ -213,7 +213,7 @@ int main( int argc, char **argv )
     }
 
     // Retrieve the Mono core assembly path
-    fs::path lCoreScriptingPath = "Source/ScriptCore/Build/Debug/SE_Core.dll";
+    fs::path lCoreScriptingPath = "c:/GitLab/SpockEngine/Source/ScriptCore/Build/Debug/SE_Core.dll";
     if( auto lCoreScriptingPathOverride = lProgramArguments->present<std::string>( "--script_core" ) )
         if( fs ::exists( lCoreScriptingPathOverride.value() ) ) lCoreScriptingPath = lCoreScriptingPathOverride.value();
 
