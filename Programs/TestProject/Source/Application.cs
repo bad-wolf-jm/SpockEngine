@@ -14,27 +14,7 @@ namespace Test
         override public void OnCreate() 
         {
             base.OnCreate();
-
-            Console.WriteLine($"Actor Component Created");
-
-            // if (mEntity.IsValid())
-            // {
-            //     Console.WriteLine($"Valid entity");
-            // }
-
-            // if (mEntity.Has<sNodeTransformComponent>())
-            // {
-            //     Console.WriteLine($"I have a transform");
-            //     sNodeTransformComponent lTransform = mEntity.Get<sNodeTransformComponent>();
-            //     mEntity.Replace<sNodeTransformComponent>(new sNodeTransformComponent(new mat4(3.0f)));
-            // }
-
-            // if (mEntity.Has<sTag>())
-            // {
-            //     Console.WriteLine($"I have a tag");
-            //     sTag lTransform = mEntity.Get<sTag>();
-            //     mEntity.Replace<sTag>(new sTag("Sensor is running"));
-            // }
+            mTestField0 = 0.0f;
         }
 
         override public void OnDestroy()
@@ -47,19 +27,14 @@ namespace Test
         override public void OnUpdate(float aTs )
         {
             base.OnUpdate(aTs);
-            
-            if (mEntity.IsValid())
-            {
-                Console.WriteLine($"Valid entity");
-            }
-
-            // Console.WriteLine(mEntity.ToString());
+          
             if (mEntity.Has<sNodeTransformComponent>())
             {
-            // // //     sNodeTransformComponent lTransform = mEntity.Get<sNodeTransformComponent>();
-            // // //     mat4 lDeltaRotation = mat4.Rotation(1.07f / 180.0f, new vec3(0.0f, 1.0f, 0.0f));
+                sNodeTransformComponent lTransform = mEntity.Get<sNodeTransformComponent>();
+                mat4 lDeltaRotation = mat4.Rotation(3.1415f * mTestField0 / 300.0f, new vec3(0.0f, 1.0f, 0.0f));
+                mTestField0 += aTs;
 
-            // // //     // mEntity.Replace<sNodeTransformComponent>(new sNodeTransformComponent(lDeltaRotation * lTransform.mMatrix));
+                mEntity.Replace<sNodeTransformComponent>(new sNodeTransformComponent(lDeltaRotation));
             }
 
         }

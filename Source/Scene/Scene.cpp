@@ -85,8 +85,8 @@ namespace LTSE::Core
 
         InitializeRayTracing();
 
-        std::unordered_map<UUIDv4::UUID, Entity> lSourceEntities{};
-        std::unordered_map<UUIDv4::UUID, Entity> lClonedEntities{};
+        std::unordered_map<std::string, Entity> lSourceEntities{};
+        std::unordered_map<std::string, Entity> lClonedEntities{};
 
         aSource->ForEach<sUUID>(
             [&]( auto aEntity, auto &aUUID )
@@ -96,8 +96,8 @@ namespace LTSE::Core
                 CopyComponent<sUUID>( aEntity, lClonedEntity );
                 CopyComponent<sTag>( aEntity, lClonedEntity );
 
-                lSourceEntities[aUUID.mValue] = aEntity;
-                lClonedEntities[aUUID.mValue] = lClonedEntity;
+                lSourceEntities[aUUID.mValue.str()] = aEntity;
+                lClonedEntities[aUUID.mValue.str()] = lClonedEntity;
             } );
 
         // Copy simple components
@@ -149,7 +149,7 @@ namespace LTSE::Core
             {
                 auto &lSkeletonComponent = lClonedEntity.Get<sSkeletonComponent>();
                 for( uint32_t i = 0; i < lSkeletonComponent.BoneCount; i++ )
-                    lSkeletonComponent.Bones[i] = lClonedEntities[lSkeletonComponent.Bones[i].Get<sUUID>().mValue];
+                    lSkeletonComponent.Bones[i] = lClonedEntities[lSkeletonComponent.Bones[i].Get<sUUID>().mValue.str()];
             }
 
             CopyComponent<sAnimationComponent>( lEntity, lClonedEntity );
@@ -157,7 +157,7 @@ namespace LTSE::Core
             {
                 auto &lAnimationComponent = lClonedEntity.Get<sAnimationComponent>();
                 for( auto &lChannel : lAnimationComponent.mChannels )
-                    lChannel.mTargetNode = lClonedEntities[lChannel.mTargetNode.Get<sUUID>().mValue];
+                    lChannel.mTargetNode = lClonedEntities[lChannel.mTargetNode.Get<sUUID>().mValue.str()];
             }
 
             CopyComponent<sAnimationChooser>( lEntity, lClonedEntity );
@@ -165,7 +165,7 @@ namespace LTSE::Core
             {
                 auto &lAnimationChooser = lClonedEntity.Get<sAnimationChooser>();
                 for( uint32_t i = 0; i < lAnimationChooser.Animations.size(); i++ )
-                    lAnimationChooser.Animations[i] = lClonedEntities[lAnimationChooser.Animations[i].Get<sUUID>().mValue];
+                    lAnimationChooser.Animations[i] = lClonedEntities[lAnimationChooser.Animations[i].Get<sUUID>().mValue.str()];
             }
         }
 
@@ -180,19 +180,19 @@ namespace LTSE::Core
 
                 if( lSourceParentEntity )
                 {
-                    auto &lDestParentEntity = lClonedEntities[lSourceParentEntity.Get<sUUID>().mValue];
+                    auto &lDestParentEntity = lClonedEntities[lSourceParentEntity.Get<sUUID>().mValue.str()];
 
                     m_Registry.SetParent( lDestEntity, lDestParentEntity );
                 }
             }
         }
 
-        Root = lClonedEntities[aSource->Root.Get<sUUID>().mValue];
+        Root = lClonedEntities[aSource->Root.Get<sUUID>().mValue.str()];
 
-        Environment = lClonedEntities[aSource->Environment.Get<sUUID>().mValue];
+        Environment = lClonedEntities[aSource->Environment.Get<sUUID>().mValue.str()];
 
-        DefaultCamera = lClonedEntities[aSource->DefaultCamera.Get<sUUID>().mValue];
-        CurrentCamera = lClonedEntities[aSource->CurrentCamera.Get<sUUID>().mValue];
+        DefaultCamera = lClonedEntities[aSource->DefaultCamera.Get<sUUID>().mValue.str()];
+        CurrentCamera = lClonedEntities[aSource->CurrentCamera.Get<sUUID>().mValue.str()];
 
         // Copy a reference to the main vertex buffer and its CUDA handle
         mVertexBuffer             = aSource->mVertexBuffer;
@@ -1208,10 +1208,12 @@ namespace LTSE::Core
             } );
 
         // Initialize Lua scripts
+        // mActorComponents.clear();
         ForEach<sActorComponent>(
             [=]( auto l_Entity, auto &l_Component )
             {
-                l_Component.Initialize( l_Entity );
+                // mActorComponents.push_back(l_Component);
+                // mActorComponents.back().OnCreate();
                 l_Component.OnCreate();
             } );
 
@@ -1239,6 +1241,10 @@ namespace LTSE::Core
 
         // Destroy Lua scripts
         ForEach<sActorComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnDestroy(); } );
+        // for (auto& lActor : mActorComponents)
+        // {
+        //     lActor.OnDestroy();
+        // }
 
         mState = eSceneState::EDITING;
     }
@@ -1256,7 +1262,15 @@ namespace LTSE::Core
                     if( l_Component.ControllerInstance ) l_Component.ControllerInstance->OnUpdate( ts );
                 } );
 
-            ForEach<sActorComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnUpdate( ts ); } );
+            ForEach<sActorComponent>( [=]( auto l_Entity, auto &l_Component ) { 
+                l_Component.OnUpdate( ts ); 
+                // LTSE::Logging::Info("{} --- {}", (uint32_t)l_Entity, (size_t)l_Entity.GetRegistry());
+            } );
+
+            // for (auto& lActor : mActorComponents)
+            // {
+            //     lActor.OnUpdate( ts );
+            // }
 
             // Update animations
             ForEach<sAnimationChooser>(
@@ -1331,33 +1345,39 @@ namespace LTSE::Core
                 } );
         }
 
-        std::queue<Entity> l_UpdateQueue{};
-        l_UpdateQueue.push( Root );
-        while( !l_UpdateQueue.empty() )
+        std::queue<Entity> lUpdateQueue{};
+        lUpdateQueue.push( Root );
+        while( !lUpdateQueue.empty() )
         {
-            auto l_ElementToProcess = l_UpdateQueue.front();
-            l_UpdateQueue.pop();
+            auto lElementToProcess = lUpdateQueue.front();
+            lUpdateQueue.pop();
 
-            for( auto l_Child : l_ElementToProcess.Get<sRelationshipComponent>().mChildren ) l_UpdateQueue.push( l_Child );
+            for( auto lChild : lElementToProcess.Get<sRelationshipComponent>().mChildren ) lUpdateQueue.push( lChild );
 
-            if( l_ElementToProcess.Has<sNodeTransformComponent>() )
-                l_ElementToProcess.AddOrReplace<sTransformMatrixComponent>(
-                    l_ElementToProcess.Get<sNodeTransformComponent>().mMatrix );
+            auto x = lElementToProcess.Get<sNodeTransformComponent>().mMatrix;
 
-            if( !( l_ElementToProcess.Get<sRelationshipComponent>().mParent ) ) continue;
+            if( lElementToProcess.Has<sNodeTransformComponent>() )
+                lElementToProcess.AddOrReplace<sTransformMatrixComponent>(
+                    lElementToProcess.Get<sNodeTransformComponent>().mMatrix );
 
-            if( !( l_ElementToProcess.Get<sRelationshipComponent>().mParent.Has<sTransformMatrixComponent>() ) ) continue;
+            if( !( lElementToProcess.Get<sRelationshipComponent>().mParent ) ) continue;
 
-            auto l_Parent = l_ElementToProcess.Get<sRelationshipComponent>().mParent;
-            if( !( l_ElementToProcess.Has<sNodeTransformComponent>() ) && !( l_ElementToProcess.Has<sAnimatedTransformComponent>() ) )
+            if( !( lElementToProcess.Get<sRelationshipComponent>().mParent.Has<sTransformMatrixComponent>() ) ) continue;
+
+            auto lParent = lElementToProcess.Get<sRelationshipComponent>().mParent;
+            if( !( lElementToProcess.Has<sNodeTransformComponent>() ) && !( lElementToProcess.Has<sAnimatedTransformComponent>() ) )
             {
-                l_ElementToProcess.AddOrReplace<sTransformMatrixComponent>( l_Parent.Get<sTransformMatrixComponent>().Matrix );
+                lElementToProcess.AddOrReplace<sTransformMatrixComponent>( lParent.Get<sTransformMatrixComponent>().Matrix );
             }
             else
             {
-                l_ElementToProcess.AddOrReplace<sTransformMatrixComponent>(
-                    l_Parent.Get<sTransformMatrixComponent>().Matrix * l_ElementToProcess.Get<sTransformMatrixComponent>().Matrix );
+                lElementToProcess.AddOrReplace<sTransformMatrixComponent>(
+                    lParent.Get<sTransformMatrixComponent>().Matrix * lElementToProcess.Get<sTransformMatrixComponent>().Matrix );
             }
+
+            auto y = lElementToProcess.Get<sTransformMatrixComponent>().Matrix;
+            auto z = lElementToProcess.Get<sTransformMatrixComponent>().Matrix;
+
         }
 
         ForEach<sSkeletonComponent, sTransformMatrixComponent>(

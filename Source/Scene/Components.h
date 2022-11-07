@@ -101,7 +101,6 @@ namespace LTSE::Core::EntityComponentSystem::Components
             auto lRegistryID  = (size_t)mEntity.GetRegistry();
             auto lEntityClass = ScriptClass( "SpockEngine", "Entity", true );
             mEntityInstance   = lEntityClass.Instantiate( lEntityID, lRegistryID );
-            // mEntityInstance.GCAcquire();
 
             // Instantiate the Mono actor class with the entity object as parameter
             mInstance = mClass.Instantiate();
@@ -109,11 +108,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
             mInstance.InvokeMethod( "OnCreate", 0, nullptr );
         }
 
-        void OnDestroy()
-        {
-            mInstance.InvokeMethod( "OnDestroy", 0, nullptr );
-            // mEntityInstance.GCRelease();
-        }
+        void OnDestroy() { mInstance.InvokeMethod( "OnDestroy", 0, nullptr ); }
 
         void OnUpdate( Timestep ts ) { mInstance.CallMethod( "OnUpdate", ts.GetMilliseconds() ); }
 

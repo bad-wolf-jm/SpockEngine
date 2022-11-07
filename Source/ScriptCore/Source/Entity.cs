@@ -8,6 +8,7 @@ namespace SpockEngine
         private ulong mRegistryID;
 
         public Entity() { mEntityID=0; mRegistryID=0; }
+        public Entity(Entity aOther) { mEntityID=aOther.mEntityID; mRegistryID=aOther.mRegistryID; }
         public Entity(uint aEntityID, ulong aRegistryID) { mEntityID=aEntityID; mRegistryID=aRegistryID; }
 
         public override string ToString()
@@ -17,6 +18,7 @@ namespace SpockEngine
 
         public bool IsValid()
         {
+            if (mRegistryID == 0) return false;
             return CppCall.Entity_IsValid( mEntityID, mRegistryID );
         }
 

@@ -135,6 +135,8 @@ namespace LTSE::Core
         Ref<Graphics::Texture2D> m_EmptyTexturePreview = nullptr;
         UI::ImageHandle          m_EmptyTexturePreviewImageHandle;
 
+        std::vector<sActorComponent> mActorComponents;
+
         void UpdateParent( Entity const &aEntity, sRelationshipComponent const &aComponent );
         void UpdateLocalTransform( Entity const &aEntity, sNodeTransformComponent const &aComponent );
         void UpdateTransformMatrix( Entity const &aEntity, sTransformMatrixComponent const &aComponent );

@@ -1,4 +1,5 @@
 
+using System;
 using System.Runtime.InteropServices;
 
 namespace SpockEngine.Math
@@ -271,7 +272,6 @@ namespace SpockEngine.Math
                 lhs.m20 * rhs.m03 + lhs.m21 * rhs.m13 + lhs.m22 * rhs.m23 + lhs.m23 * rhs.m33, 
                 lhs.m30 * rhs.m03 + lhs.m31 * rhs.m13 + lhs.m32 * rhs.m23 + lhs.m33 * rhs.m33 );
 
-
         public static vec4 operator*(mat4 lhs, vec4 rhs) => 
             new vec4(
                 lhs.m00 * rhs.x + lhs.m01 * rhs.y + lhs.m02 * rhs.z + lhs.m03 * rhs.w, 
@@ -287,7 +287,7 @@ namespace SpockEngine.Math
         
             var axis = v.Normalized;
             var temp = (1 - c) * axis;
-        
+
             var m = new mat4(1.0f);
             m.m00 = c + temp.x * axis.x;
             m.m10 = 0 + temp.x * axis.y + s * axis.z;
@@ -300,6 +300,7 @@ namespace SpockEngine.Math
             m.m02 = 0 + temp.z * axis.x + s * axis.y;
             m.m12 = 0 + temp.z * axis.y - s * axis.x;
             m.m22 = c + temp.z * axis.z;
+
             return m;
         }
 

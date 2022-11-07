@@ -72,9 +72,6 @@ namespace LTSE::Core
 
         MonoObject *GetInstance() { return mInstance; };
 
-        void GCAcquire();
-        void GCRelease();
-
         MonoMethod       *GetMethod( const std::string &aName, int aParameterCount );
         ScriptClassMethod GetBoundMethod( const std::string &aName, int aParameterCount );
         MonoObject       *InvokeMethod( MonoMethod *aMethod, void **aParameters = nullptr );
