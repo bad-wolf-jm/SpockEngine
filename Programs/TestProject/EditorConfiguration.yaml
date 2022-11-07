@@ -1,2 +1,11 @@
 application:
   window_properties: {width: 2920, height: 1360, x: 100, y: 100}
+  ui:
+    font_size: 14
+    icon_font: "C:/GitLab/SpockEngine/Resources/fonts/fontawesome-webfont.ttf"
+    main_font: 
+      regular: "C:/GitLab/SpockEngine/Resources/fonts/dejavu-fonts-ttf-2.37/ttf/DejaVuSans.ttf"
+      bold: "C:/GitLab/SpockEngine/Resources/fonts/dejavu-fonts-ttf-2.37/ttf/DejaVuSans-Bold.ttf"
+      oblique: "C:/GitLab/SpockEngine/Resources/fonts/dejavu-fonts-ttf-2.37/ttf/DejaVuSans-Oblique.ttf"
+      bold_oblique: "C:/GitLab/SpockEngine/Resources/fonts/dejavu-fonts-ttf-2.37/ttf\\DejaVuSans-BoldOblique.ttf"
+    mono_font: "C:/GitLab/SpockEngine/Resources/fonts/dejavu-fonts-ttf-2.37/ttf/DejaVuSansMono.ttf"
