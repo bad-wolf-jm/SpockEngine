@@ -188,7 +188,7 @@ namespace LTSE::Core
         lFontConfig.PixelSnapH       = true;
         lFontConfig.GlyphMinAdvanceX = 10.0f;
 
-        const float lFontSize = 12.0f;
+        const float lFontSize = 14.0f;
 
         mMonoFont = io.Fonts->AddFontFromFileTTF( GetResourcePath( "fonts\\dejavu-fonts-ttf-2.37\\ttf\\DejaVuSansMono.ttf" ).string().c_str(), lFontSize );
         io.Fonts->AddFontFromFileTTF( GetResourcePath( "fonts\\fontawesome-webfont.ttf" ).string().c_str(), lFontSize, &lFontConfig, lRanges );

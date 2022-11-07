@@ -69,6 +69,37 @@ namespace LTSE::Core::UI
         return is_open;
     }
 
+    void RenderArrow( ImDrawList *draw_list, ImVec2 pos, ImU32 col, ImGuiDir dir, float scale )
+    {
+        const float h      = draw_list->_Data->FontSize * 1.00f;
+        float       r      = h * 0.45f * scale;
+        ImVec2      center = pos + ImVec2( h * 0.50f, h * 0.50f * scale );
+
+        ImVec2 a, b, c;
+        switch( dir )
+        {
+        case ImGuiDir_Up:
+        case ImGuiDir_Down:
+            if( dir == ImGuiDir_Up ) r = -r;
+            a = ImVec2( +0.000f, +0.750f ) * r;
+            b = ImVec2( -0.866f, -0.750f ) * r;
+            c = ImVec2( +0.866f, -0.750f ) * r;
+            break;
+        case ImGuiDir_Left:
+        case ImGuiDir_Right:
+            if( dir == ImGuiDir_Left ) r = -r;
+            a = ImVec2( +0.750f, +0.000f ) * r;
+            b = ImVec2( -0.750f, +0.866f ) * r;
+            c = ImVec2( -0.750f, -0.866f ) * r;
+            break;
+        case ImGuiDir_None:
+        case ImGuiDir_COUNT:
+            IM_ASSERT( 0 );
+            break;
+        }
+        draw_list->AddTriangleFilled( center + a, center + b, center + c, col );
+    }
+
     bool TreeNodeBehavior( ImGuiID id, ImGuiTreeNodeFlags flags, const char *label, const char *label_end )
     {
         ImGuiWindow *window = ImGui::GetCurrentWindow();
@@ -217,6 +248,7 @@ namespace LTSE::Core::UI
 
         // Render
         const ImU32            text_col            = ImGui::GetColorU32( ImGuiCol_Text );
+        const ImU32            arrow_color         = IM_COL32(60, 60, 60, 100);
         ImGuiNavHighlightFlags nav_highlight_flags = ImGuiNavHighlightFlags_TypeThin;
         if( display_frame )
         {
@@ -228,9 +260,9 @@ namespace LTSE::Core::UI
             ImGui::RenderNavHighlight( frame_bb, id, nav_highlight_flags );
             if( flags & ImGuiTreeNodeFlags_Bullet )
                 ImGui::RenderBullet(
-                    window->DrawList, ImVec2( text_pos.x - text_offset_x * 0.60f, text_pos.y + g.FontSize * 0.5f ), text_col );
+                    window->DrawList, ImVec2( text_pos.x - text_offset_x * 0.60f, text_pos.y + g.FontSize * 0.5f ), arrow_color );
             else if( !is_leaf )
-                ImGui::RenderArrow( window->DrawList, ImVec2( text_pos.x - text_offset_x + padding.x, text_pos.y ), text_col,
+                RenderArrow( window->DrawList, ImVec2( text_pos.x - text_offset_x + padding.x, text_pos.y ), arrow_color,
                     is_open ? ImGuiDir_Down : ImGuiDir_Right, 1.0f );
             else // Leaf without bullet, left-adjusted text
                 text_pos.x -= text_offset_x;
@@ -252,11 +284,11 @@ namespace LTSE::Core::UI
             ImGui::RenderNavHighlight( frame_bb, id, nav_highlight_flags );
             if( flags & ImGuiTreeNodeFlags_Bullet )
                 ImGui::RenderBullet(
-                    window->DrawList, ImVec2( text_pos.x - text_offset_x * 0.5f, text_pos.y + g.FontSize * 0.5f ), text_col );
+                    window->DrawList, ImVec2( text_pos.x - text_offset_x * 0.5f, text_pos.y + g.FontSize * 0.5f ), arrow_color );
             else if( !is_leaf )
-                ImGui::RenderArrow( window->DrawList,
-                    ImVec2( text_pos.x - text_offset_x + padding.x, text_pos.y + g.FontSize * 0.15f ), text_col,
-                    is_open ? ImGuiDir_Down : ImGuiDir_Right, 0.70f );
+                RenderArrow( window->DrawList,
+                    ImVec2( text_pos.x - text_offset_x + padding.x, text_pos.y + g.FontSize * 0.0f ), arrow_color,
+                    is_open ? ImGuiDir_Down : ImGuiDir_Right, 1.0f );
             if( g.LogEnabled ) ImGui::LogSetNextTextDecoration( ">", NULL );
             ImGui::RenderText( text_pos, label, label_end, false );
         }
@@ -267,7 +299,6 @@ namespace LTSE::Core::UI
                 ( is_open ? ImGuiItemStatusFlags_Opened : 0 ) );
         return is_open;
     }
-
 
     void TreePushOverrideID( ImGuiID id )
     {
@@ -282,7 +313,7 @@ namespace LTSE::Core::UI
     {
         ImGuiContext &g      = *GImGui;
         ImGuiWindow  *window = g.CurrentWindow;
-        ImGui::Unindent(g.FontSize / 1.5f);
+        ImGui::Unindent( g.FontSize / 1.5f );
 
         window->DC.TreeDepth--;
         ImU32 tree_depth_mask = ( 1 << window->DC.TreeDepth );
