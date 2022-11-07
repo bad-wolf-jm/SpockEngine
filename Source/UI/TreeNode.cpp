@@ -107,9 +107,8 @@ namespace LTSE::Core::UI
 
         ImGuiContext     &lImGuiContext = *GImGui;
         const ImGuiStyle &style         = lImGuiContext.Style;
-        const bool        lDisplayFrame = ( aFlags & ImGuiTreeNodeFlags_Framed ) != 0;
         const ImVec2      lPadding =
-            ( lDisplayFrame || ( aFlags & ImGuiTreeNodeFlags_FramePadding ) )
+            ( aFlags & ImGuiTreeNodeFlags_FramePadding )
                      ? style.FramePadding
                      : ImVec2( style.FramePadding.x, ImMin( lWindow->DC.CurrLineTextBaseOffset, style.FramePadding.y ) );
 
@@ -124,26 +123,18 @@ namespace LTSE::Core::UI
         lFrameBoundingBox.Min.y = lWindow->DC.CursorPos.y;
         lFrameBoundingBox.Max.x = lWindow->WorkRect.Max.x;
         lFrameBoundingBox.Max.y = lWindow->DC.CursorPos.y + lFrameHeight;
-        if( lDisplayFrame )
-        {
-            // Framed header expand a little outside the default padding, to the edge of InnerClipRect
-            // (FIXME: May remove this at some point and make InnerClipRect align with WindowPadding.x instead of WindowPadding.x*0.5f)
-            lFrameBoundingBox.Min.x -= IM_FLOOR( lWindow->WindowPadding.x * 0.5f - 1.0f );
-            lFrameBoundingBox.Max.x += IM_FLOOR( lWindow->WindowPadding.x * 0.5f );
-        }
 
-        const float lTextOffsetX =
-            lImGuiContext.FontSize + ( lDisplayFrame ? lPadding.x * 3 : lPadding.x * 2 ); // Collapser arrow width + Spacing
-        const float lTExtOffsetY =
+        const float lTextOffsetX = lImGuiContext.FontSize + lPadding.x * 2;
+        const float lTextOffsetY =
             ImMax( lPadding.y, lWindow->DC.CurrLineTextBaseOffset ); // Latch before ImGui::CalcTextSize changes it
         const float lTextWidth =
             lImGuiContext.FontSize + ( lLabelSize.x > 0.0f ? lLabelSize.x + lPadding.x * 2 : 0.0f ); // Include collapser
-        ImVec2 lTextPosition( lWindow->DC.CursorPos.x + lTextOffsetX, lWindow->DC.CursorPos.y + lTExtOffsetY );
+        ImVec2 lTextPosition( lWindow->DC.CursorPos.x + lTextOffsetX, lWindow->DC.CursorPos.y + lTextOffsetY );
         ImGui::ItemSize( ImVec2( lTextWidth, lFrameHeight ), lPadding.y );
 
         // For regular tree nodes, we arbitrary allow to click past 2 worth of ItemSpacing
         ImRect lInteractionBoundingBox = lFrameBoundingBox;
-        if( !lDisplayFrame && ( aFlags & ( ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth ) ) == 0 )
+        if( ( aFlags & ( ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth ) ) == 0 )
             lInteractionBoundingBox.Max.x = lFrameBoundingBox.Min.x + lTextWidth + style.ItemSpacing.x * 2.0f;
 
         // Store a flag for the current depth to tell if we will allow closing this node when navigating one of its child.
@@ -162,9 +153,6 @@ namespace LTSE::Core::UI
         if( !lItemAdd )
         {
             if( lNodeIsOpen && !( aFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) ) TreePushOverrideID( aID );
-            // IMGUI_TEST_ENGINE_ITEM_INFO( lImGuiContext.LastItemData.ID, aLabel,
-            //     lImGuiContext.LastItemData.StatusFlags | ( lNodeIsLeaf ? 0 : ImGuiItemStatusFlags_Openable ) |
-            //         ( lNodeIsOpen ? ImGuiItemStatusFlags_Opened : 0 ) );
 
             return lNodeIsOpen;
         }
@@ -258,54 +246,25 @@ namespace LTSE::Core::UI
         const ImU32            lArrowColor        = IM_COL32( 60, 60, 60, 100 );
         ImGuiNavHighlightFlags lNavHighlightFlags = ImGuiNavHighlightFlags_TypeThin;
 
-        if( lDisplayFrame )
+        if( lIsHovered || lSelected )
         {
-            // Framed type
-            const ImU32 bg_col = ImGui::GetColorU32( ( lIsHeld && lIsHovered ) ? ImGuiCol_HeaderActive
-                                                     : lIsHovered              ? ImGuiCol_HeaderHovered
-                                                                               : ImGuiCol_Header );
-            ImGui::RenderFrame( lFrameBoundingBox.Min, lFrameBoundingBox.Max, bg_col, true, style.FrameRounding );
-            ImGui::RenderNavHighlight( lFrameBoundingBox, aID, lNavHighlightFlags );
-            if( aFlags & ImGuiTreeNodeFlags_Bullet )
-                ImGui::RenderBullet( lWindow->DrawList,
-                    ImVec2( lTextPosition.x - lTextOffsetX * 0.60f, lTextPosition.y + lImGuiContext.FontSize * 0.5f ), lArrowColor );
-            else if( !lNodeIsLeaf )
-                RenderArrow( lWindow->DrawList, ImVec2( lTextPosition.x - lTextOffsetX + lPadding.x, lTextPosition.y ), lArrowColor,
-                    lNodeIsOpen ? ImGuiDir_Down : ImGuiDir_Right, 0.8f );
-            else // Leaf without bullet, left-adjusted text
-                lTextPosition.x -= lTextOffsetX;
-            if( aFlags & ImGuiTreeNodeFlags_ClipLabelForTrailingButton )
-                lFrameBoundingBox.Max.x -= lImGuiContext.FontSize + style.FramePadding.x;
-
-            if( lImGuiContext.LogEnabled ) ImGui::LogSetNextTextDecoration( "###", "###" );
-            ImGui::RenderTextClipped( lTextPosition, lFrameBoundingBox.Max, aLabel, aLabelEnd, &lLabelSize );
+            const ImU32 lBackgroundColor = ImGui::GetColorU32( ( lIsHeld && lIsHovered ) ? ImGuiCol_HeaderActive
+                                                               : lIsHovered              ? ImGuiCol_HeaderHovered
+                                                                                         : ImGuiCol_Header );
+            ImGui::RenderFrame( lFrameBoundingBox.Min, lFrameBoundingBox.Max, lBackgroundColor, false );
         }
-        else
-        {
-            // Unframed typed for tree nodes
-            if( lIsHovered || lSelected )
-            {
-                const ImU32 bg_col = ImGui::GetColorU32( ( lIsHeld && lIsHovered ) ? ImGuiCol_HeaderActive
-                                                         : lIsHovered              ? ImGuiCol_HeaderHovered
-                                                                                   : ImGuiCol_Header );
-                ImGui::RenderFrame( lFrameBoundingBox.Min, lFrameBoundingBox.Max, bg_col, false );
-            }
-            ImGui::RenderNavHighlight( lFrameBoundingBox, aID, lNavHighlightFlags );
-            if( aFlags & ImGuiTreeNodeFlags_Bullet )
-                ImGui::RenderBullet( lWindow->DrawList,
-                    ImVec2( lTextPosition.x - lTextOffsetX * 0.5f, lTextPosition.y + lImGuiContext.FontSize * 0.5f ), lArrowColor );
-            else if( !lNodeIsLeaf )
-                RenderArrow( lWindow->DrawList,
-                    ImVec2( lTextPosition.x - lTextOffsetX + lPadding.x, lTextPosition.y + lImGuiContext.FontSize * 0.16f ),
-                    lArrowColor, lNodeIsOpen ? ImGuiDir_Down : ImGuiDir_Right, 0.8f );
-            if( lImGuiContext.LogEnabled ) ImGui::LogSetNextTextDecoration( ">", NULL );
-            ImGui::RenderText( lTextPosition, aLabel, aLabelEnd, false );
-        }
+        ImGui::RenderNavHighlight( lFrameBoundingBox, aID, lNavHighlightFlags );
+        if( aFlags & ImGuiTreeNodeFlags_Bullet )
+            ImGui::RenderBullet( lWindow->DrawList,
+                ImVec2( lTextPosition.x - lTextOffsetX * 0.5f, lTextPosition.y + lImGuiContext.FontSize * 0.5f ), lArrowColor );
+        else if( !lNodeIsLeaf )
+            RenderArrow( lWindow->DrawList,
+                ImVec2( lTextPosition.x - lTextOffsetX + lPadding.x, lTextPosition.y + lImGuiContext.FontSize * 0.16f ), lArrowColor,
+                lNodeIsOpen ? ImGuiDir_Down : ImGuiDir_Right, 0.8f );
+        if( lImGuiContext.LogEnabled ) ImGui::LogSetNextTextDecoration( ">", NULL );
+        ImGui::RenderText( lTextPosition, aLabel, aLabelEnd, false );
 
         if( lNodeIsOpen && !( aFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) ) TreePushOverrideID( aID );
-        // IMGUI_TEST_ENGINE_ITEM_INFO( aID, aLabel,
-        //     lImGuiContext.LastItemData.StatusFlags | ( lNodeIsLeaf ? 0 : ImGuiItemStatusFlags_Openable ) |
-        //         ( lNodeIsOpen ? ImGuiItemStatusFlags_Opened : 0 ) );
 
         return lNodeIsOpen;
     }

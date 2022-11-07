@@ -66,7 +66,7 @@ namespace LTSE::Editor
                 fmt::format( "{}##node_foo_{}", a_Node.Get<sTag>().mValue.c_str(), (uint32_t)a_Node );
 
             ImGui::PushStyleColor( ImGuiCol_Header, ImVec4( 0.05f, 0.05f, 0.05f, 1.00f ) );
-            ImGui::PushStyleColor( ImGuiCol_HeaderHovered, ImVec4( 0.07f, 0.07f, 0.07f, 1.00f ) );
+            ImGui::PushStyleColor( ImGuiCol_HeaderHovered, ImVec4( 0.025f, 0.025f, 0.025f, 1.00f ) );
             ImGui::PushStyleColor( ImGuiCol_HeaderActive, ImVec4( 0.07f, 0.07f, 0.07f, 1.0f ) );
 
             if( a_Node == SelectedElement )
@@ -112,7 +112,7 @@ namespace LTSE::Editor
             std::string l_Label =
                 fmt::format( "{}##node_foo_{}", a_Node.Get<sTag>().mValue.c_str(), (uint32_t)a_Node );
             ImGui::PushStyleColor( ImGuiCol_Header, ImVec4( 0.05f, 0.05f, 0.05f, 1.00f ) );
-            ImGui::PushStyleColor( ImGuiCol_HeaderHovered, ImVec4( 0.07f, 0.07f, 0.07f, 1.00f ) );
+            ImGui::PushStyleColor( ImGuiCol_HeaderHovered, ImVec4( 0.025f, 0.025f, 0.025f, 1.00f ) );
             ImGui::PushStyleColor( ImGuiCol_HeaderActive, ImVec4( 0.07f, 0.07f, 0.07f, 1.0f ) );
             ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, { 0.0f, 2.0f } );
 
