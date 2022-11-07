@@ -203,6 +203,10 @@ namespace LTSE::Core
     {
     }
 
+    void ScriptClassInstance::GCAcquire() { mGCHandle = mono_gchandle_new( mInstance, true ); }
+
+    void ScriptClassInstance::GCRelease() { mono_gchandle_free( mGCHandle ); }
+
     ScriptClassMethod ScriptClassInstance::GetBoundMethod( const std::string &aName, int aParameterCount )
     {
         MonoClass  *lClass  = mMonoClass;

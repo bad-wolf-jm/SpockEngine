@@ -72,6 +72,9 @@ namespace LTSE::Core
 
         MonoObject *GetInstance() { return mInstance; };
 
+        void GCAcquire();
+        void GCRelease();
+
         MonoMethod       *GetMethod( const std::string &aName, int aParameterCount );
         ScriptClassMethod GetBoundMethod( const std::string &aName, int aParameterCount );
         MonoObject       *InvokeMethod( MonoMethod *aMethod, void **aParameters = nullptr );
@@ -99,6 +102,7 @@ namespace LTSE::Core
       private:
         MonoClass  *mMonoClass = nullptr;
         MonoObject *mInstance  = nullptr;
+        uint32_t    mGCHandle  = 0;
 
         friend class ScriptManager;
     };

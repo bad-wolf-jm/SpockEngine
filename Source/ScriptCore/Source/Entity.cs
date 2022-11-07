@@ -1,3 +1,5 @@
+using System;
+
 namespace SpockEngine
 {
     public class Entity
@@ -8,6 +10,11 @@ namespace SpockEngine
         public Entity() { mEntityID=0; mRegistryID=0; }
         public Entity(uint aEntityID, ulong aRegistryID) { mEntityID=aEntityID; mRegistryID=aRegistryID; }
 
+        public override string ToString()
+        {
+            return $"Entity(mEntityID={mEntityID} -- mRegistryID={mRegistryID})";
+        }
+
         public bool IsValid()
         {
             return CppCall.Entity_IsValid( mEntityID, mRegistryID );
@@ -15,6 +22,7 @@ namespace SpockEngine
 
         public bool Has<_Component>() where _Component : Component, new()
         {
+            // Console.WriteLine(ToString());
             return CppCall.Entity_Has( mEntityID, mRegistryID, typeof(_Component) );
         }
 

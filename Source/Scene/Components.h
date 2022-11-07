@@ -68,6 +68,7 @@ namespace LTSE::Core::EntityComponentSystem::Components
 
         ScriptClass         mClass;
         ScriptClassInstance mInstance;
+        ScriptClassInstance mEntityInstance;
 
         sActorComponent()                          = default;
         sActorComponent( const sActorComponent & ) = default;
@@ -96,18 +97,23 @@ namespace LTSE::Core::EntityComponentSystem::Components
         void OnCreate()
         {
             // Create Mono side entity object
-            auto lEntityID       = static_cast<uint32_t>( mEntity );
-            auto lRegistryID     = (size_t)mEntity.GetRegistry();
-            auto lEntityClass    = ScriptClass( "SpockEngine", "Entity", true );
-            auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
+            auto lEntityID    = static_cast<uint32_t>( mEntity );
+            auto lRegistryID  = (size_t)mEntity.GetRegistry();
+            auto lEntityClass = ScriptClass( "SpockEngine", "Entity", true );
+            mEntityInstance   = lEntityClass.Instantiate( lEntityID, lRegistryID );
+            // mEntityInstance.GCAcquire();
 
             // Instantiate the Mono actor class with the entity object as parameter
             mInstance = mClass.Instantiate();
-            mInstance.CallMethod( "Initialize", (size_t)lEntityInstance.GetInstance() );
+            mInstance.CallMethod( "Initialize", (size_t)mEntityInstance.GetInstance() );
             mInstance.InvokeMethod( "OnCreate", 0, nullptr );
         }
 
-        void OnDestroy() { mInstance.InvokeMethod( "OnDestroy", 0, nullptr ); }
+        void OnDestroy()
+        {
+            mInstance.InvokeMethod( "OnDestroy", 0, nullptr );
+            // mEntityInstance.GCRelease();
+        }
 
         void OnUpdate( Timestep ts ) { mInstance.CallMethod( "OnUpdate", ts.GetMilliseconds() ); }
 
