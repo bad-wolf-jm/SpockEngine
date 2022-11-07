@@ -27,7 +27,6 @@ namespace LTSE::Editor
 
         bool l_IsVisible;
         bool l_DoEdit = UI::Button( l_OnLabel, a_Size );
-        // UI::Button( l_OnLabel, a_Size, [&]() { l_DoEdit = true; } );
 
         ImGui::PopStyleColor();
         ImGui::PopStyleColor();
@@ -54,12 +53,10 @@ namespace LTSE::Editor
 
     void SceneHierarchyPanel::DisplayNode( Scene::Element a_Node, float a_Width )
     {
-        ImGuiTreeNodeFlags l_Flags = ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_FramePadding |
+        ImGuiTreeNodeFlags lFlags = ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_FramePadding |
                                      ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow |
                                      ImGuiTreeNodeFlags_AllowItemOverlap;
-        // ImGuiTreeNodeFlags l_Flags = ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen |
-        // ImGuiTreeNodeFlags_OpenOnArrow |
-        //                              ImGuiTreeNodeFlags_AllowItemOverlap;
+
         ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2( 3, 3 ) );
         if( a_Node.Has<sRelationshipComponent>() && ( a_Node.Get<sRelationshipComponent>().mChildren.size() != 0 ) &&
             !a_Node.Has<LockComponent>() )
@@ -76,7 +73,7 @@ namespace LTSE::Editor
             {
                 ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.9f, 0.4f, 0.9f, 1.0f } );
             }
-            bool l_NodeIsOpen = UI::TreeNodeEx( l_Label.c_str(), l_Flags );
+            bool l_NodeIsOpen = UI::TreeNodeEx( l_Label.c_str(), lFlags );
             if( a_Node == SelectedElement )
             {
                 ImGui::PopStyleColor();
@@ -85,17 +82,8 @@ namespace LTSE::Editor
             ImGui::PopStyleColor();
             ImGui::PopStyleColor();
 
-            // UI::SetCursorPosition( l_Pos + math::vec2( 16.0f, 3.0f ) );
-
-            // ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.5f, 0.2f, 0.7f, 1.0f } );
-            // UI::Text( "{}", ICON_FA_CIRCLE );
-            // UI::SameLine();
-            // ImGui::PopStyleColor();
-
-            // UI::Text( a_Node.Get<sTag>().mValue );
-
             UI::SameLine();
-            UI::SetCursorPosition( math::vec2( a_Width - 45.0f, UI::GetCurrentCursorPosition().y - 4.0f ) );
+            UI::SetCursorPosition( math::vec2( a_Width - 45.0f, UI::GetCurrentCursorPosition().y - 0.0f ) );
             if( EditButton( a_Node, math::vec2{ 20.0, 22.0 } ) )
             {
                 ElementEditor.World         = World;
@@ -132,48 +120,22 @@ namespace LTSE::Editor
             {
                 ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.9f, 0.4f, 0.9f, 1.0f } );
             }
-            ImGuiTreeNodeFlags l_Flags = ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_FramePadding |
+            ImGuiTreeNodeFlags lFlags = ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_FramePadding |
                                          ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow |
                                          ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_Leaf;
-            bool l_NodeIsOpen = UI::TreeNodeEx( l_Label.c_str(), l_Flags );
+            bool l_NodeIsOpen = UI::TreeNodeEx( l_Label.c_str(), lFlags );
             if( a_Node == SelectedElement )
             {
                 ImGui::PopStyleColor();
             }
 
-            // if( ImGui::Selectable( l_Label.c_str(), false, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap,
-            //         ImVec2{ 0.0f, 17.0f } ) )
-            // {
-            //     ElementEditor.World         = World;
-            //     ElementEditor.ElementToEdit = a_Node;
-            //     RequestEditSceneElement     = true;
-            //     SelectedElement             = a_Node;
-            // }
             ImGui::PopStyleVar();
             ImGui::PopStyleColor();
             ImGui::PopStyleColor();
             ImGui::PopStyleColor();
-            // UI::SetCursorPosition( l_Pos + math::vec2{ 12.0f, 0.0f } );
-
-            // ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.5f, 0.2f, 0.7f, 1.0f } );
-            // ImGui::AlignTextToFramePadding();
-            // UI::Text( "{}", ICON_FA_CIRCLE_O );
-            // UI::SameLine();
-            // ImGui::PopStyleColor();
-
-            // if( a_Node == SelectedElement )
-            // {
-            //     ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.9f, 0.4f, 0.9f, 1.0f } );
-            // }
-
-            // UI::Text( a_Node.Get<sTag>().mValue );
-            // if( a_Node == SelectedElement )
-            // {
-            //     ImGui::PopStyleColor();
-            // }
 
             UI::SameLine();
-            UI::SetCursorPosition( math::vec2( a_Width - 45.0f, UI::GetCurrentCursorPosition().y - 3.0f ) );
+            UI::SetCursorPosition( math::vec2( a_Width - 45.0f, UI::GetCurrentCursorPosition().y - 1.0f ) );
             if( EditButton( a_Node, math::vec2{ 20.0, 22.0 } ) )
             {
                 ElementEditor.World         = World;

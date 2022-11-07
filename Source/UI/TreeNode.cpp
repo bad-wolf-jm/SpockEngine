@@ -5,330 +5,340 @@
 
 namespace LTSE::Core::UI
 {
-    bool TreeNodeBehavior( ImGuiID id, ImGuiTreeNodeFlags flags, const char *label, const char *label_end );
-    void TreePushOverrideID( ImGuiID id );
+    bool TreeNodeBehavior( ImGuiID aID, ImGuiTreeNodeFlags aFlags, const char *aLabel, const char *aLabelEnd );
+    void TreePushOverrideID( ImGuiID aID );
 
-    bool TreeNode( const char *label )
+    bool TreeNode( const char *aLabel )
     {
-        ImGuiWindow *window = ImGui::GetCurrentWindow();
-        if( window->SkipItems ) return false;
-        return TreeNodeBehavior( window->GetID( label ), 0, label, NULL );
+        ImGuiWindow *lWindow = ImGui::GetCurrentWindow();
+        if( lWindow->SkipItems ) return false;
+        return TreeNodeBehavior( lWindow->GetID( aLabel ), 0, aLabel, NULL );
     }
 
-    bool TreeNodeEx( const char *label, ImGuiTreeNodeFlags flags )
+    bool TreeNodeEx( const char *aLabel, ImGuiTreeNodeFlags aFlags )
     {
-        ImGuiWindow *window = ImGui::GetCurrentWindow();
-        if( window->SkipItems ) return false;
+        ImGuiWindow *lWindow = ImGui::GetCurrentWindow();
+        if( lWindow->SkipItems ) return false;
 
-        return TreeNodeBehavior( window->GetID( label ), flags, label, NULL );
+        return TreeNodeBehavior( lWindow->GetID( aLabel ), aFlags, aLabel, NULL );
     }
 
-    bool TreeNodeBehaviorIsOpen( ImGuiID id, ImGuiTreeNodeFlags flags )
+    bool TreeNodeBehaviorIsOpen( ImGuiID aID, ImGuiTreeNodeFlags aFlags )
     {
-        if( flags & ImGuiTreeNodeFlags_Leaf ) return true;
+        if( aFlags & ImGuiTreeNodeFlags_Leaf ) return true;
 
         // We only write to the tree storage if the user clicks (or explicitly use the SetNextItemOpen function)
-        ImGuiContext &g       = *GImGui;
-        ImGuiWindow  *window  = g.CurrentWindow;
-        ImGuiStorage *storage = window->DC.StateStorage;
+        ImGuiContext &lImGuiContext  = *GImGui;
+        ImGuiWindow  *lWindow        = lImGuiContext.CurrentWindow;
+        ImGuiStorage *lWindowStorage = lWindow->DC.StateStorage;
 
-        bool is_open;
-        if( g.NextItemData.Flags & ImGuiNextItemDataFlags_HasOpen )
+        bool lNodeIsOpen;
+        if( lImGuiContext.NextItemData.Flags & ImGuiNextItemDataFlags_HasOpen )
         {
-            if( g.NextItemData.OpenCond & ImGuiCond_Always )
+            if( lImGuiContext.NextItemData.OpenCond & ImGuiCond_Always )
             {
-                is_open = g.NextItemData.OpenVal;
-                storage->SetInt( id, is_open );
+                lNodeIsOpen = lImGuiContext.NextItemData.OpenVal;
+                lWindowStorage->SetInt( aID, lNodeIsOpen );
             }
             else
             {
                 // We treat ImGuiCond_Once and ImGuiCond_FirstUseEver the same because tree node state are not saved persistently.
-                const int stored_value = storage->GetInt( id, -1 );
+                const int stored_value = lWindowStorage->GetInt( aID, -1 );
                 if( stored_value == -1 )
                 {
-                    is_open = g.NextItemData.OpenVal;
-                    storage->SetInt( id, is_open );
+                    lNodeIsOpen = lImGuiContext.NextItemData.OpenVal;
+                    lWindowStorage->SetInt( aID, lNodeIsOpen );
                 }
                 else
                 {
-                    is_open = stored_value != 0;
+                    lNodeIsOpen = stored_value != 0;
                 }
             }
         }
         else
         {
-            is_open = storage->GetInt( id, ( flags & ImGuiTreeNodeFlags_DefaultOpen ) ? 1 : 0 ) != 0;
+            lNodeIsOpen = lWindowStorage->GetInt( aID, ( aFlags & ImGuiTreeNodeFlags_DefaultOpen ) ? 1 : 0 ) != 0;
         }
 
         // When logging is enabled, we automatically expand tree nodes (but *NOT* collapsing headers.. seems like sensible behavior).
         // NB- If we are above max depth we still allow manually opened nodes to be logged.
-        if( g.LogEnabled && !( flags & ImGuiTreeNodeFlags_NoAutoOpenOnLog ) &&
-            ( window->DC.TreeDepth - g.LogDepthRef ) < g.LogDepthToExpand )
-            is_open = true;
+        if( lImGuiContext.LogEnabled && !( aFlags & ImGuiTreeNodeFlags_NoAutoOpenOnLog ) &&
+            ( lWindow->DC.TreeDepth - lImGuiContext.LogDepthRef ) < lImGuiContext.LogDepthToExpand )
+            lNodeIsOpen = true;
 
-        return is_open;
+        return lNodeIsOpen;
     }
 
-    void RenderArrow( ImDrawList *draw_list, ImVec2 pos, ImU32 col, ImGuiDir dir, float scale )
+    void RenderArrow( ImDrawList *aDrawList, ImVec2 aPosition, ImU32 aColor, ImGuiDir aDirection, float aScale )
     {
-        const float h      = draw_list->_Data->FontSize * 1.00f;
-        float       r      = h * 0.45f * scale;
-        ImVec2      center = pos + ImVec2( h * 0.50f, h * 0.50f * scale );
+        const float lHeight = aDrawList->_Data->FontSize * 1.00f;
+        float       lRadius = lHeight * 0.45f * aScale;
+        ImVec2      lCenter = aPosition + ImVec2( lHeight * 0.50f, lHeight * 0.50f * aScale );
 
         ImVec2 a, b, c;
-        switch( dir )
+        switch( aDirection )
         {
         case ImGuiDir_Up:
         case ImGuiDir_Down:
-            if( dir == ImGuiDir_Up ) r = -r;
-            a = ImVec2( +0.000f, +0.750f ) * r;
-            b = ImVec2( -0.866f, -0.750f ) * r;
-            c = ImVec2( +0.866f, -0.750f ) * r;
+            if( aDirection == ImGuiDir_Up ) lRadius = -lRadius;
+            a = ImVec2( +0.000f, +0.750f ) * lRadius;
+            b = ImVec2( -0.866f, -0.750f ) * lRadius;
+            c = ImVec2( +0.866f, -0.750f ) * lRadius;
             break;
         case ImGuiDir_Left:
         case ImGuiDir_Right:
-            if( dir == ImGuiDir_Left ) r = -r;
-            a = ImVec2( +0.750f, +0.000f ) * r;
-            b = ImVec2( -0.750f, +0.866f ) * r;
-            c = ImVec2( -0.750f, -0.866f ) * r;
+            if( aDirection == ImGuiDir_Left ) lRadius = -lRadius;
+            a = ImVec2( +0.750f, +0.000f ) * lRadius;
+            b = ImVec2( -0.750f, +0.866f ) * lRadius;
+            c = ImVec2( -0.750f, -0.866f ) * lRadius;
             break;
         case ImGuiDir_None:
         case ImGuiDir_COUNT:
             IM_ASSERT( 0 );
             break;
         }
-        draw_list->AddTriangleFilled( center + a, center + b, center + c, col );
+        aDrawList->AddTriangleFilled( lCenter + a, lCenter + b, lCenter + c, aColor );
     }
 
-    bool TreeNodeBehavior( ImGuiID id, ImGuiTreeNodeFlags flags, const char *label, const char *label_end )
+    bool TreeNodeBehavior( ImGuiID aID, ImGuiTreeNodeFlags aFlags, const char *aLabel, const char *aLabelEnd )
     {
-        ImGuiWindow *window = ImGui::GetCurrentWindow();
-        if( window->SkipItems ) return false;
+        ImGuiWindow *lWindow = ImGui::GetCurrentWindow();
+        if( lWindow->SkipItems ) return false;
 
-        ImGuiContext     &g             = *GImGui;
-        const ImGuiStyle &style         = g.Style;
-        const bool        display_frame = ( flags & ImGuiTreeNodeFlags_Framed ) != 0;
-        const ImVec2      padding       = ( display_frame || ( flags & ImGuiTreeNodeFlags_FramePadding ) )
-                                              ? style.FramePadding
-                                              : ImVec2( style.FramePadding.x, ImMin( window->DC.CurrLineTextBaseOffset, style.FramePadding.y ) );
+        ImGuiContext     &lImGuiContext = *GImGui;
+        const ImGuiStyle &style         = lImGuiContext.Style;
+        const bool        lDisplayFrame = ( aFlags & ImGuiTreeNodeFlags_Framed ) != 0;
+        const ImVec2      lPadding =
+            ( lDisplayFrame || ( aFlags & ImGuiTreeNodeFlags_FramePadding ) )
+                     ? style.FramePadding
+                     : ImVec2( style.FramePadding.x, ImMin( lWindow->DC.CurrLineTextBaseOffset, style.FramePadding.y ) );
 
-        if( !label_end ) label_end = ImGui::FindRenderedTextEnd( label );
-        const ImVec2 label_size = ImGui::CalcTextSize( label, label_end, false );
+        if( !aLabelEnd ) aLabelEnd = ImGui::FindRenderedTextEnd( aLabel );
+        const ImVec2 lLabelSize = ImGui::CalcTextSize( aLabel, aLabelEnd, false );
 
         // We vertically grow up to current line height up the typical widget height.
-        const float frame_height =
-            ImMax( ImMin( window->DC.CurrLineSize.y, g.FontSize + style.FramePadding.y * 2 ), label_size.y + padding.y * 2 );
-        ImRect frame_bb;
-        frame_bb.Min.x = ( flags & ImGuiTreeNodeFlags_SpanFullWidth ) ? window->WorkRect.Min.x : window->DC.CursorPos.x;
-        frame_bb.Min.y = window->DC.CursorPos.y;
-        frame_bb.Max.x = window->WorkRect.Max.x;
-        frame_bb.Max.y = window->DC.CursorPos.y + frame_height;
-        if( display_frame )
+        const float lFrameHeight = ImMax(
+            ImMin( lWindow->DC.CurrLineSize.y, lImGuiContext.FontSize + style.FramePadding.y * 2 ), lLabelSize.y + lPadding.y * 2 );
+        ImRect lFrameBoundingBox;
+        lFrameBoundingBox.Min.x = ( aFlags & ImGuiTreeNodeFlags_SpanFullWidth ) ? lWindow->WorkRect.Min.x : lWindow->DC.CursorPos.x;
+        lFrameBoundingBox.Min.y = lWindow->DC.CursorPos.y;
+        lFrameBoundingBox.Max.x = lWindow->WorkRect.Max.x;
+        lFrameBoundingBox.Max.y = lWindow->DC.CursorPos.y + lFrameHeight;
+        if( lDisplayFrame )
         {
             // Framed header expand a little outside the default padding, to the edge of InnerClipRect
             // (FIXME: May remove this at some point and make InnerClipRect align with WindowPadding.x instead of WindowPadding.x*0.5f)
-            frame_bb.Min.x -= IM_FLOOR( window->WindowPadding.x * 0.5f - 1.0f );
-            frame_bb.Max.x += IM_FLOOR( window->WindowPadding.x * 0.5f );
+            lFrameBoundingBox.Min.x -= IM_FLOOR( lWindow->WindowPadding.x * 0.5f - 1.0f );
+            lFrameBoundingBox.Max.x += IM_FLOOR( lWindow->WindowPadding.x * 0.5f );
         }
 
-        const float text_offset_x = g.FontSize + ( display_frame ? padding.x * 3 : padding.x * 2 ); // Collapser arrow width + Spacing
-        const float text_offset_y =
-            ImMax( padding.y, window->DC.CurrLineTextBaseOffset ); // Latch before ImGui::CalcTextSize changes it
-        const float text_width = g.FontSize + ( label_size.x > 0.0f ? label_size.x + padding.x * 2 : 0.0f ); // Include collapser
-        ImVec2      text_pos( window->DC.CursorPos.x + text_offset_x, window->DC.CursorPos.y + text_offset_y );
-        ImGui::ItemSize( ImVec2( text_width, frame_height ), padding.y );
+        const float lTextOffsetX =
+            lImGuiContext.FontSize + ( lDisplayFrame ? lPadding.x * 3 : lPadding.x * 2 ); // Collapser arrow width + Spacing
+        const float lTExtOffsetY =
+            ImMax( lPadding.y, lWindow->DC.CurrLineTextBaseOffset ); // Latch before ImGui::CalcTextSize changes it
+        const float lTextWidth =
+            lImGuiContext.FontSize + ( lLabelSize.x > 0.0f ? lLabelSize.x + lPadding.x * 2 : 0.0f ); // Include collapser
+        ImVec2 lTextPosition( lWindow->DC.CursorPos.x + lTextOffsetX, lWindow->DC.CursorPos.y + lTExtOffsetY );
+        ImGui::ItemSize( ImVec2( lTextWidth, lFrameHeight ), lPadding.y );
 
         // For regular tree nodes, we arbitrary allow to click past 2 worth of ItemSpacing
-        ImRect interact_bb = frame_bb;
-        if( !display_frame && ( flags & ( ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth ) ) == 0 )
-            interact_bb.Max.x = frame_bb.Min.x + text_width + style.ItemSpacing.x * 2.0f;
+        ImRect lInteractionBoundingBox = lFrameBoundingBox;
+        if( !lDisplayFrame && ( aFlags & ( ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth ) ) == 0 )
+            lInteractionBoundingBox.Max.x = lFrameBoundingBox.Min.x + lTextWidth + style.ItemSpacing.x * 2.0f;
 
         // Store a flag for the current depth to tell if we will allow closing this node when navigating one of its child.
-        // For this purpose we essentially compare if g.NavIdIsAlive went from 0 to 1 between TreeNode() and TreePop().
+        // For this purpose we essentially compare if lImGuiContext.NavIdIsAlive went from 0 to 1 between TreeNode() and TreePop().
         // This is currently only support 32 level deep and we are fine with (1 << Depth) overflowing into a zero.
-        const bool is_leaf = ( flags & ImGuiTreeNodeFlags_Leaf ) != 0;
-        bool       is_open = TreeNodeBehaviorIsOpen( id, flags );
-        if( is_open && !g.NavIdIsAlive && ( flags & ImGuiTreeNodeFlags_NavLeftJumpsBackHere ) &&
-            !( flags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) )
-            window->DC.TreeJumpToParentOnPopMask |= ( 1 << window->DC.TreeDepth );
+        const bool lNodeIsLeaf = ( aFlags & ImGuiTreeNodeFlags_Leaf ) != 0;
+        bool       lNodeIsOpen = TreeNodeBehaviorIsOpen( aID, aFlags );
+        if( lNodeIsOpen && !lImGuiContext.NavIdIsAlive && ( aFlags & ImGuiTreeNodeFlags_NavLeftJumpsBackHere ) &&
+            !( aFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) )
+            lWindow->DC.TreeJumpToParentOnPopMask |= ( 1 << lWindow->DC.TreeDepth );
 
-        bool item_add = ImGui::ItemAdd( interact_bb, id );
-        g.LastItemData.StatusFlags |= ImGuiItemStatusFlags_HasDisplayRect;
-        g.LastItemData.DisplayRect = frame_bb;
+        bool lItemAdd = ImGui::ItemAdd( lInteractionBoundingBox, aID );
+        lImGuiContext.LastItemData.StatusFlags |= ImGuiItemStatusFlags_HasDisplayRect;
+        lImGuiContext.LastItemData.DisplayRect = lFrameBoundingBox;
 
-        if( !item_add )
+        if( !lItemAdd )
         {
-            if( is_open && !( flags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) ) TreePushOverrideID( id );
-            IMGUI_TEST_ENGINE_ITEM_INFO( g.LastItemData.ID, label,
-                g.LastItemData.StatusFlags | ( is_leaf ? 0 : ImGuiItemStatusFlags_Openable ) |
-                    ( is_open ? ImGuiItemStatusFlags_Opened : 0 ) );
-            return is_open;
+            if( lNodeIsOpen && !( aFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) ) TreePushOverrideID( aID );
+            // IMGUI_TEST_ENGINE_ITEM_INFO( lImGuiContext.LastItemData.ID, aLabel,
+            //     lImGuiContext.LastItemData.StatusFlags | ( lNodeIsLeaf ? 0 : ImGuiItemStatusFlags_Openable ) |
+            //         ( lNodeIsOpen ? ImGuiItemStatusFlags_Opened : 0 ) );
+
+            return lNodeIsOpen;
         }
 
-        ImGuiButtonFlags button_flags = ImGuiTreeNodeFlags_None;
-        if( flags & ImGuiTreeNodeFlags_AllowItemOverlap ) button_flags |= ImGuiButtonFlags_AllowItemOverlap;
-        if( !is_leaf ) button_flags |= ImGuiButtonFlags_PressedOnDragDropHold;
+        ImGuiButtonFlags lButtonFlags = ImGuiTreeNodeFlags_None;
+        if( aFlags & ImGuiTreeNodeFlags_AllowItemOverlap ) lButtonFlags |= ImGuiButtonFlags_AllowItemOverlap;
+        if( !lNodeIsLeaf ) lButtonFlags |= ImGuiButtonFlags_PressedOnDragDropHold;
 
         // We allow clicking on the arrow section with keyboard modifiers held, in order to easily
         // allow browsing a tree while preserving selection with code implementing multi-selection patterns.
         // When clicking on the rest of the tree node we always disallow keyboard modifiers.
-        const float arrow_hit_x1 = ( text_pos.x - text_offset_x ) - style.TouchExtraPadding.x;
-        const float arrow_hit_x2 = ( text_pos.x - text_offset_x ) + ( g.FontSize + padding.x * 2.0f ) + style.TouchExtraPadding.x;
-        const bool  is_mouse_x_over_arrow = ( g.IO.MousePos.x >= arrow_hit_x1 && g.IO.MousePos.x < arrow_hit_x2 );
-        if( window != g.HoveredWindow || !is_mouse_x_over_arrow ) button_flags |= ImGuiButtonFlags_NoKeyModifiers;
+        const float lArrowHitX1 = ( lTextPosition.x - lTextOffsetX ) - style.TouchExtraPadding.x;
+        const float lArrowHitX2 =
+            ( lTextPosition.x - lTextOffsetX ) + ( lImGuiContext.FontSize + lPadding.x * 2.0f ) + style.TouchExtraPadding.x;
+        const bool lIsMouseXOverArrow = ( lImGuiContext.IO.MousePos.x >= lArrowHitX1 && lImGuiContext.IO.MousePos.x < lArrowHitX2 );
+        if( lWindow != lImGuiContext.HoveredWindow || !lIsMouseXOverArrow ) lButtonFlags |= ImGuiButtonFlags_NoKeyModifiers;
 
-        // Open behaviors can be altered with the _OpenOnArrow and _OnOnDoubleClick flags.
-        // Some alteration have subtle effects (e.g. toggle on MouseUp vs MouseDown events) due to requirements for multi-selection and
-        // drag and drop support.
-        // - Single-click on label = Toggle on MouseUp (default, when _OpenOnArrow=0)
+        // Open behaviors can be altered with the _OpenOnArrow and _OnOnDoubleClick aFlags.
+        // Some alteration have subtle effects (e.lImGuiContext. toggle on MouseUp vs MouseDown events) due to requirements for
+        // multi-selection and drag and drop support.
+        // - Single-click on aLabel = Toggle on MouseUp (default, when _OpenOnArrow=0)
         // - Single-click on arrow = Toggle on MouseDown (when _OpenOnArrow=0)
         // - Single-click on arrow = Toggle on MouseDown (when _OpenOnArrow=1)
-        // - Double-click on label = Toggle on MouseDoubleClick (when _OpenOnDoubleClick=1)
+        // - Double-click on aLabel = Toggle on MouseDoubleClick (when _OpenOnDoubleClick=1)
         // - Double-click on arrow = Toggle on MouseDoubleClick (when _OpenOnDoubleClick=1 and _OpenOnArrow=0)
         // It is rather standard that arrow click react on Down rather than Up.
         // We set ImGuiButtonFlags_PressedOnClickRelease on OpenOnDoubleClick because we want the item to be active on the initial
         // MouseDown in order for drag and drop to work.
-        if( is_mouse_x_over_arrow )
-            button_flags |= ImGuiButtonFlags_PressedOnClick;
-        else if( flags & ImGuiTreeNodeFlags_OpenOnDoubleClick )
-            button_flags |= ImGuiButtonFlags_PressedOnClickRelease | ImGuiButtonFlags_PressedOnDoubleClick;
+        if( lIsMouseXOverArrow )
+            lButtonFlags |= ImGuiButtonFlags_PressedOnClick;
+        else if( aFlags & ImGuiTreeNodeFlags_OpenOnDoubleClick )
+            lButtonFlags |= ImGuiButtonFlags_PressedOnClickRelease | ImGuiButtonFlags_PressedOnDoubleClick;
         else
-            button_flags |= ImGuiButtonFlags_PressedOnClickRelease;
+            lButtonFlags |= ImGuiButtonFlags_PressedOnClickRelease;
 
-        bool       selected     = ( flags & ImGuiTreeNodeFlags_Selected ) != 0;
-        const bool was_selected = selected;
+        bool       lSelected    = ( aFlags & ImGuiTreeNodeFlags_Selected ) != 0;
+        const bool lWasSelected = lSelected;
 
-        bool hovered, held;
-        bool pressed = ImGui::ButtonBehavior( interact_bb, id, &hovered, &held, button_flags );
-        bool toggled = false;
-        if( !is_leaf )
+        bool lIsHovered, lIsHeld;
+        bool lIsPressed = ImGui::ButtonBehavior( lInteractionBoundingBox, aID, &lIsHovered, &lIsHeld, lButtonFlags );
+        bool lIsToggled = false;
+        if( !lNodeIsLeaf )
         {
-            if( pressed && g.DragDropHoldJustPressedId != id )
+            if( lIsPressed && lImGuiContext.DragDropHoldJustPressedId != aID )
             {
-                if( ( flags & ( ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick ) ) == 0 ||
-                    ( g.NavActivateId == id ) )
-                    toggled = true;
-                if( flags & ImGuiTreeNodeFlags_OpenOnArrow )
-                    toggled |= is_mouse_x_over_arrow && !g.NavDisableMouseHover; // Lightweight equivalent of IsMouseHoveringRect()
-                                                                                 // since ImGui::ButtonBehavior() already did the job
-                if( ( flags & ImGuiTreeNodeFlags_OpenOnDoubleClick ) && g.IO.MouseClickedCount[0] == 2 ) toggled = true;
+                if( ( aFlags & ( ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick ) ) == 0 ||
+                    ( lImGuiContext.NavActivateId == aID ) )
+                    lIsToggled = true;
+                if( aFlags & ImGuiTreeNodeFlags_OpenOnArrow )
+                    lIsToggled |=
+                        lIsMouseXOverArrow && !lImGuiContext.NavDisableMouseHover; // Lightweight equivalent of IsMouseHoveringRect()
+                                                                                   // since ImGui::ButtonBehavior() already did the job
+                if( ( aFlags & ImGuiTreeNodeFlags_OpenOnDoubleClick ) && lImGuiContext.IO.MouseClickedCount[0] == 2 )
+                    lIsToggled = true;
             }
-            else if( pressed && g.DragDropHoldJustPressedId == id )
+            else if( lIsPressed && lImGuiContext.DragDropHoldJustPressedId == aID )
             {
-                IM_ASSERT( button_flags & ImGuiButtonFlags_PressedOnDragDropHold );
-                if( !is_open ) // When using Drag and Drop "hold to open" we keep the node highlighted after opening, but never close
-                               // it again.
-                    toggled = true;
-            }
-
-            if( g.NavId == id && g.NavMoveDir == ImGuiDir_Left && is_open )
-            {
-                toggled = true;
-                ImGui::NavMoveRequestCancel();
-            }
-            if( g.NavId == id && g.NavMoveDir == ImGuiDir_Right &&
-                !is_open ) // If there's something upcoming on the line we may want to give it the priority?
-            {
-                toggled = true;
-                ImGui::NavMoveRequestCancel();
+                IM_ASSERT( lButtonFlags & ImGuiButtonFlags_PressedOnDragDropHold );
+                if( !lNodeIsOpen ) // When using Drag and Drop "hold to open" we keep the node highlighted after opening, but never
+                                   // close it again.
+                    lIsToggled = true;
             }
 
-            if( toggled )
+            if( lImGuiContext.NavId == aID && lImGuiContext.NavMoveDir == ImGuiDir_Left && lNodeIsOpen )
             {
-                is_open = !is_open;
-                window->DC.StateStorage->SetInt( id, is_open );
-                g.LastItemData.StatusFlags |= ImGuiItemStatusFlags_ToggledOpen;
+                lIsToggled = true;
+                ImGui::NavMoveRequestCancel();
+            }
+            if( lImGuiContext.NavId == aID && lImGuiContext.NavMoveDir == ImGuiDir_Right &&
+                !lNodeIsOpen ) // If there's something upcoming on the line we may want to give it the priority?
+            {
+                lIsToggled = true;
+                ImGui::NavMoveRequestCancel();
+            }
+
+            if( lIsToggled )
+            {
+                lNodeIsOpen = !lNodeIsOpen;
+                lWindow->DC.StateStorage->SetInt( aID, lNodeIsOpen );
+                lImGuiContext.LastItemData.StatusFlags |= ImGuiItemStatusFlags_ToggledOpen;
             }
         }
-        if( flags & ImGuiTreeNodeFlags_AllowItemOverlap ) ImGui::SetItemAllowOverlap();
+        if( aFlags & ImGuiTreeNodeFlags_AllowItemOverlap ) ImGui::SetItemAllowOverlap();
 
         // In this branch, TreeNodeBehavior() cannot toggle the selection so this will never trigger.
-        if( selected != was_selected ) //-V547
-            g.LastItemData.StatusFlags |= ImGuiItemStatusFlags_ToggledSelection;
+        if( lSelected != lWasSelected ) //-V547
+            lImGuiContext.LastItemData.StatusFlags |= ImGuiItemStatusFlags_ToggledSelection;
 
         // Render
-        const ImU32            text_col            = ImGui::GetColorU32( ImGuiCol_Text );
-        const ImU32            arrow_color         = IM_COL32(60, 60, 60, 100);
-        ImGuiNavHighlightFlags nav_highlight_flags = ImGuiNavHighlightFlags_TypeThin;
-        if( display_frame )
+        const ImU32            lTextColor         = ImGui::GetColorU32( ImGuiCol_Text );
+        const ImU32            lArrowColor        = IM_COL32( 60, 60, 60, 100 );
+        ImGuiNavHighlightFlags lNavHighlightFlags = ImGuiNavHighlightFlags_TypeThin;
+
+        if( lDisplayFrame )
         {
             // Framed type
-            const ImU32 bg_col = ImGui::GetColorU32( ( held && hovered ) ? ImGuiCol_HeaderActive
-                                                     : hovered           ? ImGuiCol_HeaderHovered
-                                                                         : ImGuiCol_Header );
-            ImGui::RenderFrame( frame_bb.Min, frame_bb.Max, bg_col, true, style.FrameRounding );
-            ImGui::RenderNavHighlight( frame_bb, id, nav_highlight_flags );
-            if( flags & ImGuiTreeNodeFlags_Bullet )
-                ImGui::RenderBullet(
-                    window->DrawList, ImVec2( text_pos.x - text_offset_x * 0.60f, text_pos.y + g.FontSize * 0.5f ), arrow_color );
-            else if( !is_leaf )
-                RenderArrow( window->DrawList, ImVec2( text_pos.x - text_offset_x + padding.x, text_pos.y ), arrow_color,
-                    is_open ? ImGuiDir_Down : ImGuiDir_Right, 1.0f );
+            const ImU32 bg_col = ImGui::GetColorU32( ( lIsHeld && lIsHovered ) ? ImGuiCol_HeaderActive
+                                                     : lIsHovered              ? ImGuiCol_HeaderHovered
+                                                                               : ImGuiCol_Header );
+            ImGui::RenderFrame( lFrameBoundingBox.Min, lFrameBoundingBox.Max, bg_col, true, style.FrameRounding );
+            ImGui::RenderNavHighlight( lFrameBoundingBox, aID, lNavHighlightFlags );
+            if( aFlags & ImGuiTreeNodeFlags_Bullet )
+                ImGui::RenderBullet( lWindow->DrawList,
+                    ImVec2( lTextPosition.x - lTextOffsetX * 0.60f, lTextPosition.y + lImGuiContext.FontSize * 0.5f ), lArrowColor );
+            else if( !lNodeIsLeaf )
+                RenderArrow( lWindow->DrawList, ImVec2( lTextPosition.x - lTextOffsetX + lPadding.x, lTextPosition.y ), lArrowColor,
+                    lNodeIsOpen ? ImGuiDir_Down : ImGuiDir_Right, 0.8f );
             else // Leaf without bullet, left-adjusted text
-                text_pos.x -= text_offset_x;
-            if( flags & ImGuiTreeNodeFlags_ClipLabelForTrailingButton ) frame_bb.Max.x -= g.FontSize + style.FramePadding.x;
+                lTextPosition.x -= lTextOffsetX;
+            if( aFlags & ImGuiTreeNodeFlags_ClipLabelForTrailingButton )
+                lFrameBoundingBox.Max.x -= lImGuiContext.FontSize + style.FramePadding.x;
 
-            if( g.LogEnabled ) ImGui::LogSetNextTextDecoration( "###", "###" );
-            ImGui::RenderTextClipped( text_pos, frame_bb.Max, label, label_end, &label_size );
+            if( lImGuiContext.LogEnabled ) ImGui::LogSetNextTextDecoration( "###", "###" );
+            ImGui::RenderTextClipped( lTextPosition, lFrameBoundingBox.Max, aLabel, aLabelEnd, &lLabelSize );
         }
         else
         {
             // Unframed typed for tree nodes
-            if( hovered || selected )
+            if( lIsHovered || lSelected )
             {
-                const ImU32 bg_col = ImGui::GetColorU32( ( held && hovered ) ? ImGuiCol_HeaderActive
-                                                         : hovered           ? ImGuiCol_HeaderHovered
-                                                                             : ImGuiCol_Header );
-                ImGui::RenderFrame( frame_bb.Min, frame_bb.Max, bg_col, false );
+                const ImU32 bg_col = ImGui::GetColorU32( ( lIsHeld && lIsHovered ) ? ImGuiCol_HeaderActive
+                                                         : lIsHovered              ? ImGuiCol_HeaderHovered
+                                                                                   : ImGuiCol_Header );
+                ImGui::RenderFrame( lFrameBoundingBox.Min, lFrameBoundingBox.Max, bg_col, false );
             }
-            ImGui::RenderNavHighlight( frame_bb, id, nav_highlight_flags );
-            if( flags & ImGuiTreeNodeFlags_Bullet )
-                ImGui::RenderBullet(
-                    window->DrawList, ImVec2( text_pos.x - text_offset_x * 0.5f, text_pos.y + g.FontSize * 0.5f ), arrow_color );
-            else if( !is_leaf )
-                RenderArrow( window->DrawList,
-                    ImVec2( text_pos.x - text_offset_x + padding.x, text_pos.y + g.FontSize * 0.0f ), arrow_color,
-                    is_open ? ImGuiDir_Down : ImGuiDir_Right, 1.0f );
-            if( g.LogEnabled ) ImGui::LogSetNextTextDecoration( ">", NULL );
-            ImGui::RenderText( text_pos, label, label_end, false );
+            ImGui::RenderNavHighlight( lFrameBoundingBox, aID, lNavHighlightFlags );
+            if( aFlags & ImGuiTreeNodeFlags_Bullet )
+                ImGui::RenderBullet( lWindow->DrawList,
+                    ImVec2( lTextPosition.x - lTextOffsetX * 0.5f, lTextPosition.y + lImGuiContext.FontSize * 0.5f ), lArrowColor );
+            else if( !lNodeIsLeaf )
+                RenderArrow( lWindow->DrawList,
+                    ImVec2( lTextPosition.x - lTextOffsetX + lPadding.x, lTextPosition.y + lImGuiContext.FontSize * 0.16f ),
+                    lArrowColor, lNodeIsOpen ? ImGuiDir_Down : ImGuiDir_Right, 0.8f );
+            if( lImGuiContext.LogEnabled ) ImGui::LogSetNextTextDecoration( ">", NULL );
+            ImGui::RenderText( lTextPosition, aLabel, aLabelEnd, false );
         }
 
-        if( is_open && !( flags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) ) TreePushOverrideID( id );
-        IMGUI_TEST_ENGINE_ITEM_INFO( id, label,
-            g.LastItemData.StatusFlags | ( is_leaf ? 0 : ImGuiItemStatusFlags_Openable ) |
-                ( is_open ? ImGuiItemStatusFlags_Opened : 0 ) );
-        return is_open;
+        if( lNodeIsOpen && !( aFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) ) TreePushOverrideID( aID );
+        // IMGUI_TEST_ENGINE_ITEM_INFO( aID, aLabel,
+        //     lImGuiContext.LastItemData.StatusFlags | ( lNodeIsLeaf ? 0 : ImGuiItemStatusFlags_Openable ) |
+        //         ( lNodeIsOpen ? ImGuiItemStatusFlags_Opened : 0 ) );
+
+        return lNodeIsOpen;
     }
 
-    void TreePushOverrideID( ImGuiID id )
+    void TreePushOverrideID( ImGuiID aID )
     {
-        ImGuiContext &g      = *GImGui;
-        ImGuiWindow  *window = g.CurrentWindow;
-        ImGui::Indent( g.FontSize / 1.5f );
-        window->DC.TreeDepth++;
-        ImGui::PushOverrideID( id );
+        ImGuiContext &lImGuiContext = *GImGui;
+        ImGuiWindow  *lWindow       = lImGuiContext.CurrentWindow;
+        ImGui::Indent( lImGuiContext.FontSize / 1.5f );
+        lWindow->DC.TreeDepth++;
+        ImGui::PushOverrideID( aID );
     }
 
     void TreePop()
     {
-        ImGuiContext &g      = *GImGui;
-        ImGuiWindow  *window = g.CurrentWindow;
-        ImGui::Unindent( g.FontSize / 1.5f );
+        ImGuiContext &lImGuiContext = *GImGui;
+        ImGuiWindow  *lWindow       = lImGuiContext.CurrentWindow;
+        ImGui::Unindent( lImGuiContext.FontSize / 1.5f );
 
-        window->DC.TreeDepth--;
-        ImU32 tree_depth_mask = ( 1 << window->DC.TreeDepth );
+        lWindow->DC.TreeDepth--;
+        ImU32 tree_depth_mask = ( 1 << lWindow->DC.TreeDepth );
 
         // Handle Left arrow to move to parent tree node (when ImGuiTreeNodeFlags_NavLeftJumpsBackHere is enabled)
-        if( g.NavMoveDir == ImGuiDir_Left && g.NavWindow == window && ImGui::NavMoveRequestButNoResultYet() )
-            if( g.NavIdIsAlive && ( window->DC.TreeJumpToParentOnPopMask & tree_depth_mask ) )
+        if( lImGuiContext.NavMoveDir == ImGuiDir_Left && lImGuiContext.NavWindow == lWindow && ImGui::NavMoveRequestButNoResultYet() )
+            if( lImGuiContext.NavIdIsAlive && ( lWindow->DC.TreeJumpToParentOnPopMask & tree_depth_mask ) )
             {
-                ImGui::SetNavID( window->IDStack.back(), g.NavLayer, 0, ImRect() );
+                ImGui::SetNavID( lWindow->IDStack.back(), lImGuiContext.NavLayer, 0, ImRect() );
                 ImGui::NavMoveRequestCancel();
             }
-        window->DC.TreeJumpToParentOnPopMask &= tree_depth_mask - 1;
+        lWindow->DC.TreeJumpToParentOnPopMask &= tree_depth_mask - 1;
 
-        IM_ASSERT( window->IDStack.Size > 1 ); // There should always be 1 element in the IDStack (pushed during window creation). If
-                                               // this triggers you called TreePop/ImGui::PopID too much.
+        IM_ASSERT( lWindow->IDStack.Size > 1 ); // There should always be 1 element in the IDStack (pushed during lWindow creation). If
+                                                // this triggers you called TreePop/ImGui::PopID too much.
         ImGui::PopID();
     }
 } // namespace LTSE::Core::UI
