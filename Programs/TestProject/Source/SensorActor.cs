@@ -5,56 +5,57 @@ namespace Test
 
     struct SensorActor : sActorComponent
     {
-        Ref<Scope>        m_ComputeScope = nullptr;
-        Ref<WorldSampler> m_WorldSampler = nullptr;
+        Ref<Scope>        mComputeScope = nullptr;
+        Ref<WorldSampler> mWorldSampler = nullptr;
         Ref<EngineLoop>   mEngineLoop    = nullptr;
-        Ref<Scene>        m_World        = nullptr;
+        Ref<Scene>        mWorld        = nullptr;
 
         sPointCloudVisualizer m_PointCloudVisualizer{};
 
         SensorControllerBehaviour( Ref<EngineLoop> aEngineLoop, Ref<Scene> aWorld )
             : mEngineLoop{ aEngineLoop }
-            , m_World{ aWorld }
+            , mWorld{ aWorld }
         {
         }
 
         void OnCreate()
         {
-            m_ComputeScope = New<Scope>( 512 * 1024 * 1024 );
-            m_WorldSampler = New<WorldSampler>( m_World->GetRayTracingContext() );
+            mComputeScope = New<Scope>( 512 * 1024 * 1024 );
+            mWorldSampler = New<WorldSampler>( mWorld->GetRayTracingContext() );
         }
 
         void OnDestroy() {}
 
         void OnUpdate( Timestep ts )
         {
+            if( !Has<sTransformMatrixComponent>() ) return;
+
             sRandomUniformInitializerComponent lInitializer{};
             lInitializer.mType = eScalarType::FLOAT32;
 
             std::vector<uint32_t> lDim1{ 2500, 2000 };
 
-            auto lAzimuths    = MultiTensorValue( *m_ComputeScope, lInitializer, sTensorShape( { lDim1 }, sizeof( float ) ) );
-            auto lElevations  = MultiTensorValue( *m_ComputeScope, lInitializer, sTensorShape( { lDim1 }, sizeof( float ) ) );
-            auto lIntensities = MultiTensorValue( *m_ComputeScope, lInitializer, sTensorShape( { lDim1 }, sizeof( float ) ) );
+            OpNode lAzimuths    = MultiTensorValue( mComputeScope, lInitializer, sTensorShape( { lDim1 }, sizeof( float ) ) );
+            OpNode lElevations  = MultiTensorValue( mComputeScope, lInitializer, sTensorShape( { lDim1 }, sizeof( float ) ) );
+            OpNode lIntensities = MultiTensorValue( mComputeScope, lInitializer, sTensorShape( { lDim1 }, sizeof( float ) ) );
 
-            auto lRange = ConstantScalarValue( *m_ComputeScope, 25.0f );
+            OpNode lRange = ConstantScalarValue( *mComputeScope, 25.0f );
 
-            lAzimuths   = Multiply( *m_ComputeScope, lAzimuths, lRange );
-            lElevations = Multiply( *m_ComputeScope, lElevations, lRange );
-            m_ComputeScope->Run( { lAzimuths, lElevations, lIntensities } );
+            lAzimuths   = Multiply( mComputeScope, lAzimuths, lRange );
+            lElevations = Multiply( mComputeScope, lElevations, lRange );
+            mComputeScope.Run( { lAzimuths, lElevations, lIntensities } );
 
-            sTensorShape lOutputShape( lIntensities.Get<sMultiTensorComponent>().mValue.Shape().mShape, sizeof( sHitRecord ) );
-            MultiTensor  lHitRecords = MultiTensor( m_ComputeScope->mPool, lOutputShape );
-            if( !Has<sTransformMatrixComponent>() ) return;
+            sTensorShape lOutputShape( lIntensities.GetMultiTensor().Shape().mShape, sizeof( sHitRecord ) );
+            MultiTensor  lHitRecords = MultiTensor( mComputeScope->mPool, lOutputShape );
 
             auto &lParticles = Get<sParticleSystemComponent>();
 
-            m_WorldSampler->Sample( Get<sTransformMatrixComponent>().Matrix, m_World, lAzimuths.Get<sMultiTensorComponent>().mValue,
-                lElevations.Get<sMultiTensorComponent>().mValue, lIntensities.Get<sMultiTensorComponent>().mValue, lHitRecords );
+            mWorldSampler->Sample( Get<sTransformMatrixComponent>().Matrix, mWorld, lAzimuths.GetMultiTensor(),
+                lElevations.GetMultiTensor(), lIntensities.GetMultiTensor(), lHitRecords );
 
-            if( !( lParticles.Particles ) || lParticles.ParticleCount != lAzimuths.Get<sMultiTensorComponent>().mValue.SizeAs<float>() )
+            if( !( lParticles.Particles ) || lParticles.ParticleCount != lAzimuths.GetMultiTensor().SizeAs<float>() )
             {
-                lParticles.ParticleCount = lAzimuths.Get<sMultiTensorComponent>().mValue.SizeAs<float>();
+                lParticles.ParticleCount = lAzimuths.GetMultiTensor().SizeAs<float>();
                 lParticles.Particles = New<Buffer>( mEngineLoop->GetGraphicContext(), eBufferBindType::VERTEX_BUFFER, false, true, true,
                     true, lParticles.ParticleCount * sizeof( Particle ) );
             }

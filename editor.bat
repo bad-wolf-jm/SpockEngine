@@ -1,2 +1,2 @@
 echo off
-"./Build/Programs/Editor/ltse_editor.exe
+cd "Programs/TestProject" && c:\GitLab\SpockEngine\Build\Source\SE_Run.exe --project TestProject
