@@ -1,70 +1,65 @@
-using SpockEngine
+using SpockEngine;
 
 namespace Test 
 {
-
-    struct SensorActor : sActorComponent
+    public class SensorActor : ActorComponent
     {
-        Ref<Scope>        mComputeScope = nullptr;
-        Ref<WorldSampler> mWorldSampler = nullptr;
-        Ref<EngineLoop>   mEngineLoop    = nullptr;
-        Ref<Scene>        mWorld        = nullptr;
+        // private Scope        mComputeScope;
+        // private WorldSampler mWorldSampler;
+        // Ref<EngineLoop>   mEngineLoop = nullptr;
+        // Ref<Scene>        mWorld      = nullptr;
 
-        sPointCloudVisualizer m_PointCloudVisualizer{};
+        // sPointCloudVisualizer mPointCloudVisualizer{};
 
-        SensorControllerBehaviour( Ref<EngineLoop> aEngineLoop, Ref<Scene> aWorld )
-            : mEngineLoop{ aEngineLoop }
-            , mWorld{ aWorld }
+        SensorActor( ) : base() {}
+
+        override public void BeginScenario()
         {
+            // mComputeScope = new Scope( 512 * 1024 * 1024 );
+            // mWorldSampler = new WorldSampler( GetRayTracingContext() );
         }
 
-        void OnCreate()
+        override public void EndScenario() {}
+
+        override public void Tick( float ts )
         {
-            mComputeScope = New<Scope>( 512 * 1024 * 1024 );
-            mWorldSampler = New<WorldSampler>( mWorld->GetRayTracingContext() );
-        }
+            // if( !Has<sTransformMatrixComponent>() ) return;
 
-        void OnDestroy() {}
+            // sRandomUniformInitializerComponent lInitializer{};
+            // lInitializer.mType = eScalarType::FLOAT32;
 
-        void OnUpdate( Timestep ts )
-        {
-            if( !Has<sTransformMatrixComponent>() ) return;
+            // std::vector<uint32_t> lDim1{ 2500, 2000 };
 
-            sRandomUniformInitializerComponent lInitializer{};
-            lInitializer.mType = eScalarType::FLOAT32;
+            // OpNode lAzimuths    = MultiTensorValue( mComputeScope, lInitializer, sTensorShape( { lDim1 }, sizeof( float ) ) );
+            // OpNode lElevations  = MultiTensorValue( mComputeScope, lInitializer, sTensorShape( { lDim1 }, sizeof( float ) ) );
+            // OpNode lIntensities = MultiTensorValue( mComputeScope, lInitializer, sTensorShape( { lDim1 }, sizeof( float ) ) );
 
-            std::vector<uint32_t> lDim1{ 2500, 2000 };
+            // OpNode lRange = ConstantScalarValue( mComputeScope, 25.0f );
 
-            OpNode lAzimuths    = MultiTensorValue( mComputeScope, lInitializer, sTensorShape( { lDim1 }, sizeof( float ) ) );
-            OpNode lElevations  = MultiTensorValue( mComputeScope, lInitializer, sTensorShape( { lDim1 }, sizeof( float ) ) );
-            OpNode lIntensities = MultiTensorValue( mComputeScope, lInitializer, sTensorShape( { lDim1 }, sizeof( float ) ) );
+            // lAzimuths   = Multiply( mComputeScope, lAzimuths, lRange );
+            // lElevations = Multiply( mComputeScope, lElevations, lRange );
+            // mComputeScope.Run( { lAzimuths, lElevations, lIntensities } );
 
-            OpNode lRange = ConstantScalarValue( *mComputeScope, 25.0f );
+            // sTensorShape lOutputShape( lIntensities.GetMultiTensor().Shape().mShape, sizeof( sHitRecord ) );
+            // MultiTensor  lHitRecords = MultiTensor( mComputeScope->mPool, lOutputShape );
 
-            lAzimuths   = Multiply( mComputeScope, lAzimuths, lRange );
-            lElevations = Multiply( mComputeScope, lElevations, lRange );
-            mComputeScope.Run( { lAzimuths, lElevations, lIntensities } );
+            // auto &lParticles = Get<sParticleSystemComponent>();
 
-            sTensorShape lOutputShape( lIntensities.GetMultiTensor().Shape().mShape, sizeof( sHitRecord ) );
-            MultiTensor  lHitRecords = MultiTensor( mComputeScope->mPool, lOutputShape );
+            // mWorldSampler->Sample( Get<sTransformMatrixComponent>().Matrix, mWorld, lAzimuths.GetMultiTensor(),
+            //     lElevations.GetMultiTensor(), lIntensities.GetMultiTensor(), lHitRecords );
 
-            auto &lParticles = Get<sParticleSystemComponent>();
+            // if( !( lParticles.Particles ) || lParticles.ParticleCount != lAzimuths.GetMultiTensor().SizeAs<float>() )
+            // {
+            //     lParticles.ParticleCount = lAzimuths.GetMultiTensor().SizeAs<float>();
+            //     lParticles.Particles = New<Buffer>( mEngineLoop->GetGraphicContext(), eBufferBindType::VERTEX_BUFFER, false, true, true,
+            //         true, lParticles.ParticleCount * sizeof( Particle ) );
+            // }
 
-            mWorldSampler->Sample( Get<sTransformMatrixComponent>().Matrix, mWorld, lAzimuths.GetMultiTensor(),
-                lElevations.GetMultiTensor(), lIntensities.GetMultiTensor(), lHitRecords );
-
-            if( !( lParticles.Particles ) || lParticles.ParticleCount != lAzimuths.GetMultiTensor().SizeAs<float>() )
-            {
-                lParticles.ParticleCount = lAzimuths.GetMultiTensor().SizeAs<float>();
-                lParticles.Particles = New<Buffer>( mEngineLoop->GetGraphicContext(), eBufferBindType::VERTEX_BUFFER, false, true, true,
-                    true, lParticles.ParticleCount * sizeof( Particle ) );
-            }
-
-            GPUExternalMemory lPointCloudMappedBuffer( *( lParticles.Particles ), lParticles.ParticleCount * sizeof( Particle ) );
-            m_PointCloudVisualizer.mInvertZAxis = false;
-            m_PointCloudVisualizer.mResolution  = 0.2;
-            m_PointCloudVisualizer.Visualize( Get<sTransformMatrixComponent>().Matrix, lHitRecords, lPointCloudMappedBuffer );
-            lPointCloudMappedBuffer.Dispose();
+            // GPUExternalMemory lPointCloudMappedBuffer( *( lParticles.Particles ), lParticles.ParticleCount * sizeof( Particle ) );
+            // mPointCloudVisualizer.mInvertZAxis = false;
+            // mPointCloudVisualizer.mResolution  = 0.2;
+            // mPointCloudVisualizer.Visualize( Get<sTransformMatrixComponent>().Matrix, lHitRecords, lPointCloudMappedBuffer );
+            // lPointCloudMappedBuffer.Dispose();
         }
     };
 }

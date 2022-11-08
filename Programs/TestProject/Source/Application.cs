@@ -7,7 +7,7 @@ namespace Test
     public class TestActorComponent : ActorComponent
     {
         public float mTestField0;
-        private float mTestField2;
+        // private float mTestField2;
 
         public TestActorComponent() : base() {}
 

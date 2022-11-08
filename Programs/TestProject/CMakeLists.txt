@@ -4,6 +4,7 @@ project(SE_CoreScriping LANGUAGES CSharp)
 set(LIBRARY_NAME Test)
 
 add_library(${LIBRARY_NAME} SHARED
+    Source/SensorActor.cs
     Source/Application.cs
 )
 
