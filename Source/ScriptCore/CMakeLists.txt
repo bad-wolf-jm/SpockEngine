@@ -8,6 +8,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/Math/mat3.cs
     Source/Math/vec3.cs
     Source/Math/vec4.cs
+    Source/Math/quaternion.cs
     Source/CppCalls.cs
     Source/Component.cs
     Source/Entity.cs

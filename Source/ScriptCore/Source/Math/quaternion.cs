@@ -32,9 +32,10 @@ namespace SpockEngine.Math
         
         public quat(vec3 aU, vec3 aV)
         {
-            var lW = vec3.Cross(aU, aV);
-            var dot = vec3.Dot(aU, aV);
+            var lW = aU.Cross(aV);
+            var dot = aU.Dot(aV);
             var lQ = new quat(lW.x, lW.y, lW.z, 1.0f + dot).Normalized;
+
             x = lQ.x;
             y = lQ.y;
             z = lQ.z;
@@ -46,8 +47,9 @@ namespace SpockEngine.Math
         /// </summary>
         public quat(vec3 aEulerAngle)
         {
-            var lCos = vec3.Cos(aEulerAngle / 2);
-            var lSin = vec3.Sin(aEulerAngle / 2);
+            var lHalfAngle = aEulerAngle / 2.0f;
+            var lCos = new vec3((float)System.Math.Cos( lHalfAngle.x ), (float)System.Math.Cos( lHalfAngle.y ), (float)System.Math.Cos( lHalfAngle.z ));
+            var lSin = new vec3((float)System.Math.Sin( lHalfAngle.x ), (float)System.Math.Sin( lHalfAngle.y ), (float)System.Math.Sin( lHalfAngle.z ));
 
             x = lSin.x * lCos.y * lCos.z - lCos.x * lSin.y * lSin.z;
             y = lCos.x * lSin.y * lCos.z + lSin.x * lCos.y * lSin.z;
@@ -115,7 +117,7 @@ namespace SpockEngine.Math
         /// <summary>
         /// Returns the euclidean length of this quaternion.
         /// </summary>
-        public float Length => (float)Math.Sqrt(((x*x + y*y) + (z*z + w*w)));
+        public float Length => (float)System.Math.Sqrt(((x*x + y*y) + (z*z + w*w)));
         
         /// <summary>
         /// Returns the squared euclidean length of this quaternion.
@@ -135,7 +137,7 @@ namespace SpockEngine.Math
         /// <summary>
         /// Returns the represented angle of this quaternion.
         /// </summary>
-        public double Angle => Math.Acos((double)w) * 2.0;
+        public double Angle => System.Math.Acos((double)w) * 2.0;
         
         /// <summary>
         /// Returns the represented axis of this quaternion.
@@ -145,8 +147,8 @@ namespace SpockEngine.Math
             get
             {
                 var s1 = 1 - w * w;
-                if (s1 < 0) return vec3.UnitZ;
-                var s2 = 1 / Math.Sqrt(s1);
+                if (s1 < 0) return new vec3(0.0f, 0.0f, 1.0f);
+                var s2 = 1 / System.Math.Sqrt(s1);
                 return new vec3((float)(x * s2), (float)(y * s2), (float)(z * s2));
             }
         }
@@ -154,25 +156,25 @@ namespace SpockEngine.Math
         // /// <summary>
         // /// Returns the represented yaw angle of this quaternion.
         // /// </summary>
-        // public double Yaw => Math.Asin(-2.0 * (double)(x * z - w * y));
+        // public double Yaw => System.Math.Asin(-2.0 * (double)(x * z - w * y));
         
         // /// <summary>
         // /// Returns the represented pitch angle of this quaternion.
         // /// </summary>
-        // public double Pitch => Math.Atan2(2.0 * (double)(y * z + w * x), (double)(w * w - x * x - y * y + z * z));
+        // public double Pitch => System.Math.Atan2(2.0 * (double)(y * z + w * x), (double)(w * w - x * x - y * y + z * z));
         
         // /// <summary>
         // /// Returns the represented roll angle of this quaternion.
         // /// </summary>
-        // public double Roll => Math.Atan2(2.0 * (double)(x * y + w * z), (double)(w * w + x * x - y * y - z * z));
+        // public double Roll => System.Math.Atan2(2.0 * (double)(x * y + w * z), (double)(w * w + x * x - y * y - z * z));
         
         /// <summary>
         /// Returns the represented euler angles (pitch, yaw, roll) of this quaternion.
         /// </summary>
         public vec3 EulerAngles => new vec3(
-            Math.Atan2(2.0 * (double)(y * z + w * x), (double)(w * w - x * x - y * y + z * z)), 
-            Math.Asin(-2.0 * (double)(x * z - w * y)), 
-            Math.Atan2(2.0 * (double)(x * y + w * z), (double)(w * w + x * x - y * y - z * z))
+            (float)System.Math.Atan2(2.0 * (double)(y * z + w * x), (double)(w * w - x * x - y * y + z * z)), 
+            (float)System.Math.Asin(-2.0 * (double)(x * z - w * y)), 
+            (float)System.Math.Atan2(2.0 * (double)(x * y + w * z), (double)(w * w + x * x - y * y - z * z))
         );
         
         /// <summary>
@@ -271,8 +273,8 @@ namespace SpockEngine.Math
         public static vec3 operator*(quat q, vec3 v)
         {
             var qv = new vec3(q.x, q.y, q.z);
-            var uv = vec3.Cross(qv, v);
-            var uuv = vec3.Cross(qv, uv);
+            var uv = qv.Cross(v);
+            var uuv = qv.Cross(uv);
             return v + ((uv * q.w) + uuv) * 2;
         }
         
@@ -450,8 +452,8 @@ namespace SpockEngine.Math
         /// </summary>
         public static quat FromAxisAngle(float angle, vec3 v)
         {
-            var s = Math.Sin((double)angle * 0.5);
-            var c = Math.Cos((double)angle * 0.5);
+            var s = System.Math.Sin((double)angle * 0.5);
+            var c = System.Math.Cos((double)angle * 0.5);
             return new quat((float)((double)v.x * s), (float)((double)v.y * s), (float)((double)v.z * s), (float)c);
         }
         
@@ -481,8 +483,8 @@ namespace SpockEngine.Math
                 fourBiggestSquaredMinus1 = lFourZSquaredMinus1;
                 lBiggestIndex = 3;
             }
-            float lBiggestValue = Math.Sqrt(fourBiggestSquaredMinus1 + 1.0f) * 0.5f;
-            float mult = 0.25 / lBiggestValue;
+            float lBiggestValue = (float)System.Math.Sqrt(fourBiggestSquaredMinus1 + 1.0f) * 0.5f;
+            float mult = 0.25f / lBiggestValue;
             switch(lBiggestIndex)
             {
                 case 0: return new quat(lBiggestValue,          (m.m21 + m.m12) * mult, (m.m02 + m.m20) * mult, (m.m10 - m.m01) * mult);
@@ -501,7 +503,12 @@ namespace SpockEngine.Math
         /// <summary>
         /// Returns the cross product between two quaternions.
         /// </summary>
-        public static quat Cross(quat q1, quat q2) => new quat(q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y, q1.w * q2.y + q1.y * q2.w + q1.z * q2.x - q1.x * q2.z, q1.w * q2.z + q1.z * q2.w + q1.x * q2.y - q1.y * q2.x, q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z);
+        public static quat Cross(quat q1, quat q2) => new quat(
+            q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y, 
+            q1.w * q2.y + q1.y * q2.w + q1.z * q2.x - q1.x * q2.z, 
+            q1.w * q2.z + q1.z * q2.w + q1.x * q2.y - q1.y * q2.x, 
+            q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z
+        );
         
         /// <summary>
         /// Calculates a proper spherical interpolation between two quaternions (only works for normalized quaternions).
@@ -513,8 +520,8 @@ namespace SpockEngine.Math
                 return Lerp(x, y, a);
             else
             {
-                var angle = Math.Acos((double)cosTheta);
-                return (quat)( (Math.Sin((1 - (double)a) * angle) * (dquat)x + Math.Sin((double)a * angle) * (dquat)y) / Math.Sin(angle) );
+                var angle = System.Math.Acos((double)cosTheta);
+                return (quat)( ((float)(System.Math.Sin((1 - (double)a) * angle)) * x + ((float)System.Math.Sin((double)a * angle)) * y) / (float)System.Math.Sin(angle) );
             }
         }
         
@@ -530,8 +537,8 @@ namespace SpockEngine.Math
                 return Lerp(x, z, a);
             else
             {
-                var angle = Math.Acos((double)cosTheta);
-                return (quat)( (Math.Sin((1 - (double)a) * angle) * (dquat)x + Math.Sin((double)a * angle) * (dquat)z) / Math.Sin(angle) );
+                var angle = System.Math.Acos((double)cosTheta);
+                return (quat)( (((float)System.Math.Sin((1 - (double)a) * angle)) * x + ((float)System.Math.Sin((double)a * angle) )* z) / (float)System.Math.Sin(angle) );
             }
         }
         
@@ -723,7 +730,7 @@ namespace SpockEngine.Math
         // /// <summary>
         // /// Returns a quat from component-wise application of Lerp (min * (1-a) + max * a).
         // /// </summary>
-        // public static quat Lerp(quat min, quat max, float a) => new quat(min.x * (1-a) + max.x * a, min.y * (1-a) + max.y * a, min.z * (1-a) + max.z * a, min.w * (1-a) + max.w * a);
+        public static quat Lerp(quat min, quat max, float a) => new quat(min.x * (1-a) + max.x * a, min.y * (1-a) + max.y * a, min.z * (1-a) + max.z * a, min.w * (1-a) + max.w * a);
         
         // /// <summary>
         // /// Returns a quat from component-wise application of Lerp (min * (1-a) + max * a).
@@ -823,14 +830,11 @@ namespace SpockEngine.Math
         public static quat operator+(quat v) => v;
         public static quat operator-(quat v) => new quat(-v.x, -v.y, -v.z, -v.w);
         public static quat operator+(quat aLeft, quat aRight) => new quat(aLeft.x + aRight.x, aLeft.y + aRight.y, aLeft.z + aRight.z, aLeft.w + aRight.w);
-        public static quat operator+(quat aLeft, float aRight) => new quat(aLeft.x + aRight, aLeft.y + aRight, aLeft.z + aRight, aLeft.w + aRight);
-        public static quat operator+(float aLeft, quat aRight) => new quat(aLeft + aRight.x, aLeft + aRight.y, aLeft + aRight.z, aLeft + aRight.w);
         public static quat operator-(quat aLeft, quat aRight) => new quat(aLeft.x - aRight.x, aLeft.y - aRight.y, aLeft.z - aRight.z, aLeft.w - aRight.w);
-        public static quat operator-(quat aLeft, float aRight) => new quat(aLeft.x - aRight, aLeft.y - aRight, aLeft.z - aRight, aLeft.w - aRight);
-        public static quat operator-(float aLeft, quat aRight) => new quat(aLeft - aRight.x, aLeft - aRight.y, aLeft - aRight.z, aLeft - aRight.w);
         public static quat operator*(quat aLeft, float aRight) => new quat(aLeft.x * aRight, aLeft.y * aRight, aLeft.z * aRight, aLeft.w * aRight);
         public static quat operator*(float aLeft, quat aRight) => new quat(aLeft * aRight.x, aLeft * aRight.y, aLeft * aRight.z, aLeft * aRight.w);
         public static quat operator/(quat aLeft, float aRight) => new quat(aLeft.x / aRight, aLeft.y / aRight, aLeft.z / aRight, aLeft.w / aRight);
+        public static quat operator/(float aRight, quat aLeft) => new quat(aLeft.x / aRight, aLeft.y / aRight, aLeft.z / aRight, aLeft.w / aRight);
 
         // #endregion
 
