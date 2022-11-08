@@ -5,7 +5,6 @@
 #include "UI/UI.h"
 #include "UI/Widgets.h"
 
-
 #include "Core/EntityRegistry/Components.h"
 #include "Core/EntityRegistry/Registry.h"
 
@@ -16,65 +15,64 @@ using namespace LTSE::Core::EntityComponentSystem::Components;
 namespace LTSE::Editor
 {
 
-    static bool EditButton( Entity a_Node, math::vec2 a_Size )
+    static bool EditButton( Entity aNode, math::vec2 aSize )
     {
-        char l_OnLabel[128];
-        sprintf( l_OnLabel, "%s##%d", ICON_FA_PENCIL_SQUARE_O, (uint32_t)a_Node );
+        char lLabel[128];
+        sprintf( lLabel, "%s##%d", ICON_FA_PENCIL_SQUARE_O, (uint32_t)aNode );
 
         ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.0, 0.0, 0.0, 0.0 } );
         ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 1.0, 1.0, 1.0, 0.02 } );
         ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 1.0, 1.0, 1.0, 0.02 } );
 
         bool l_IsVisible;
-        bool l_DoEdit = UI::Button( l_OnLabel, a_Size );
+        bool lDoEdit = UI::Button( lLabel, aSize );
 
         ImGui::PopStyleColor();
         ImGui::PopStyleColor();
         ImGui::PopStyleColor();
-        return l_DoEdit;
+        return lDoEdit;
     }
 
-    static bool AddChildButton( Scene::Element a_Node, math::vec2 a_Size )
+    static bool AddChildButton( Scene::Element aNode, math::vec2 aSize )
     {
-        char l_OnLabel[128];
-        sprintf( l_OnLabel, "%s##%d", ICON_FA_PLUS, (uint32_t)a_Node );
+        char lLabel[128];
+        sprintf( lLabel, "%s##%d", ICON_FA_PLUS, (uint32_t)aNode );
 
         ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.0, 0.0, 0.0, 0.0 } );
         ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 1.0, 1.0, 1.0, 0.02 } );
         ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 1.0, 1.0, 1.0, 0.02 } );
 
-        bool l_DoEdit = UI::Button( l_OnLabel, a_Size );
+        bool lDoEdit = UI::Button( lLabel, aSize );
 
         ImGui::PopStyleColor();
         ImGui::PopStyleColor();
         ImGui::PopStyleColor();
-        return l_DoEdit;
+        return lDoEdit;
     }
 
-    void SceneHierarchyPanel::DisplayNode( Scene::Element a_Node, float a_Width )
+    void SceneHierarchyPanel::DisplayNode( Scene::Element aNode, float aWidth )
     {
         ImGuiTreeNodeFlags lFlags = ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_FramePadding |
-                                     ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow |
-                                     ImGuiTreeNodeFlags_AllowItemOverlap;
+                                    ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow |
+                                    ImGuiTreeNodeFlags_AllowItemOverlap;
 
         ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2( 3, 3 ) );
-        if( a_Node.Has<sRelationshipComponent>() && ( a_Node.Get<sRelationshipComponent>().mChildren.size() != 0 ) &&
-            !a_Node.Has<LockComponent>() )
+        if( aNode.Has<sRelationshipComponent>() && ( aNode.Get<sRelationshipComponent>().mChildren.size() != 0 ) &&
+            !aNode.Has<LockComponent>() )
         {
-            auto        l_Pos = UI::GetCurrentCursorPosition();
-            std::string l_Label =
-                fmt::format( "{}##node_foo_{}", a_Node.Get<sTag>().mValue.c_str(), (uint32_t)a_Node );
+            auto        lPos   = UI::GetCurrentCursorPosition();
+            std::string lLabel = fmt::format( "{}##node_foo_{}", aNode.Get<sTag>().mValue.c_str(), (uint32_t)aNode );
 
             ImGui::PushStyleColor( ImGuiCol_Header, ImVec4( 0.05f, 0.05f, 0.05f, 1.00f ) );
             ImGui::PushStyleColor( ImGuiCol_HeaderHovered, ImVec4( 0.025f, 0.025f, 0.025f, 1.00f ) );
-            ImGui::PushStyleColor( ImGuiCol_HeaderActive, ImVec4( 0.07f, 0.07f, 0.07f, 1.0f ) );
+            ImGui::PushStyleColor( ImGuiCol_HeaderActive, ImVec4( 0.025f, 0.025f, 0.025f, 1.00f ) );
 
-            if( a_Node == SelectedElement )
+            if( aNode == SelectedElement )
             {
                 ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.9f, 0.4f, 0.9f, 1.0f } );
             }
-            bool l_NodeIsOpen = UI::TreeNodeEx( l_Label.c_str(), lFlags );
-            if( a_Node == SelectedElement )
+            bool l_NodeIsOpen = UI::TreeNodeEx( lLabel.c_str(), lFlags );
+            if( aNode == SelectedElement )
             {
                 ImGui::PopStyleColor();
             }
@@ -83,48 +81,47 @@ namespace LTSE::Editor
             ImGui::PopStyleColor();
 
             UI::SameLine();
-            UI::SetCursorPosition( math::vec2( a_Width - 45.0f, UI::GetCurrentCursorPosition().y - 0.0f ) );
-            if( EditButton( a_Node, math::vec2{ 20.0, 22.0 } ) )
+            UI::SetCursorPosition( math::vec2( aWidth - 45.0f, UI::GetCurrentCursorPosition().y - 0.0f ) );
+            if( EditButton( aNode, math::vec2{ 20.0, 22.0 } ) )
             {
                 ElementEditor.World         = World;
-                ElementEditor.ElementToEdit = a_Node;
+                ElementEditor.ElementToEdit = aNode;
                 RequestEditSceneElement     = true;
-                SelectedElement             = a_Node;
+                SelectedElement             = aNode;
                 ImGui::SetWindowFocus( "PROPERTIES" );
             }
             UI::SameLine();
-            if( AddChildButton( a_Node, math::vec2{ 20.0, 22.0 } ) ) World->Create( "NEW_ELEMENT", a_Node );
+            if( AddChildButton( aNode, math::vec2{ 20.0, 22.0 } ) ) World->Create( "NEW_ELEMENT", aNode );
 
             if( l_NodeIsOpen )
             {
-                a_Node.IfExists<sRelationshipComponent>(
+                aNode.IfExists<sRelationshipComponent>(
                     [&]( auto &a_Component )
                     {
-                        for( auto l_Child : a_Component.mChildren ) DisplayNode( l_Child, a_Width );
+                        for( auto l_Child : a_Component.mChildren ) DisplayNode( l_Child, aWidth );
                     } );
                 UI::TreePop();
             }
         }
         else
         {
-            auto l_Pos = UI::GetCurrentCursorPosition();
-            // std::string l_Label = fmt::format( "##leaf_foo_{}", (uint32_t)a_Node );
-            std::string l_Label =
-                fmt::format( "{}##node_foo_{}", a_Node.Get<sTag>().mValue.c_str(), (uint32_t)a_Node );
+            auto lPos = UI::GetCurrentCursorPosition();
+            // std::string lLabel = fmt::format( "##leaf_foo_{}", (uint32_t)a_Node );
+            std::string lLabel = fmt::format( "{}##node_foo_{}", aNode.Get<sTag>().mValue.c_str(), (uint32_t)aNode );
             ImGui::PushStyleColor( ImGuiCol_Header, ImVec4( 0.05f, 0.05f, 0.05f, 1.00f ) );
             ImGui::PushStyleColor( ImGuiCol_HeaderHovered, ImVec4( 0.025f, 0.025f, 0.025f, 1.00f ) );
-            ImGui::PushStyleColor( ImGuiCol_HeaderActive, ImVec4( 0.07f, 0.07f, 0.07f, 1.0f ) );
+            ImGui::PushStyleColor( ImGuiCol_HeaderActive, ImVec4( 0.025f, 0.025f, 0.025f, 1.00f ) );
             ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, { 0.0f, 2.0f } );
 
-            if( a_Node == SelectedElement )
+            if( aNode == SelectedElement )
             {
                 ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.9f, 0.4f, 0.9f, 1.0f } );
             }
             ImGuiTreeNodeFlags lFlags = ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_FramePadding |
-                                         ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow |
-                                         ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_Leaf;
-            bool l_NodeIsOpen = UI::TreeNodeEx( l_Label.c_str(), lFlags );
-            if( a_Node == SelectedElement )
+                                        ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow |
+                                        ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_Leaf;
+            bool l_NodeIsOpen = UI::TreeNodeEx( lLabel.c_str(), lFlags );
+            if( aNode == SelectedElement )
             {
                 ImGui::PopStyleColor();
             }
@@ -135,16 +132,16 @@ namespace LTSE::Editor
             ImGui::PopStyleColor();
 
             UI::SameLine();
-            UI::SetCursorPosition( math::vec2( a_Width - 45.0f, UI::GetCurrentCursorPosition().y - 1.0f ) );
-            if( EditButton( a_Node, math::vec2{ 20.0, 22.0 } ) )
+            UI::SetCursorPosition( math::vec2( aWidth - 45.0f, UI::GetCurrentCursorPosition().y - 1.0f ) );
+            if( EditButton( aNode, math::vec2{ 20.0, 22.0 } ) )
             {
                 ElementEditor.World         = World;
-                ElementEditor.ElementToEdit = a_Node;
+                ElementEditor.ElementToEdit = aNode;
                 RequestEditSceneElement     = true;
-                SelectedElement             = a_Node;
+                SelectedElement             = aNode;
             }
             UI::SameLine();
-            if( AddChildButton( a_Node, math::vec2{ 20.0, 22.0 } ) ) World->Create( "NEW_ELEMENT", a_Node );
+            if( AddChildButton( aNode, math::vec2{ 20.0, 22.0 } ) ) World->Create( "NEW_ELEMENT", aNode );
             UI::TreePop();
         }
         ImGui::PopStyleVar();
