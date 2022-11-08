@@ -97,6 +97,9 @@ namespace LTSE::Core
     ScriptClassInstance MarshallComponent( ScriptClass &aMonoType, sNodeTransformComponent &aComponent );
     void                UnmarshallComponent( ScriptClassInstance &aMonoType, sNodeTransformComponent &aComponent );
 
+    ScriptClassInstance MarshallComponent( ScriptClass &aMonoType, sTransformMatrixComponent &aComponent );
+    void                UnmarshallComponent( ScriptClassInstance &aMonoType, sTransformMatrixComponent &aComponent );
+
     ScriptClassInstance MarshallComponent( ScriptClass &aMonoType, sTag &aComponent );
     void                UnmarshallComponent( ScriptClassInstance &aMonoType, sTag &aComponent );
 

@@ -32,6 +32,18 @@ namespace LTSE::Core
         aComponent = sNodeTransformComponent( lFieldValue );
     }
 
+    ScriptClassInstance MarshallComponent( ScriptClass &lMonoType, sTransformMatrixComponent &aComponent )
+    {
+        return lMonoType.Instantiate( aComponent.Matrix );
+    }
+
+    void UnmarshallComponent( ScriptClassInstance &aMonoType, sTransformMatrixComponent &aComponent )
+    {
+        math::mat4 lFieldValue = aMonoType.GetFieldValue<math::mat4>( "mMatrix" );
+
+        aComponent = sTransformMatrixComponent( lFieldValue );
+    }
+
     ScriptClassInstance MarshallComponent( ScriptClass &lMonoType, sTag &aComponent )
     {
         MonoString *lManagedSTagValue = ScriptManager::NewString( aComponent.mValue );

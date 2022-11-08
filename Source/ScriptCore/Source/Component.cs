@@ -14,14 +14,28 @@ namespace SpockEngine
 
         public sNodeTransformComponent() 
         { 
-            Console.WriteLine($"New sNodeTransformComponent instantiated!!");
+            // Console.WriteLine($"New sNodeTransformComponent instantiated!!");
         }
 
         public sNodeTransformComponent( mat4 aMatrix ) 
         { 
             mMatrix = aMatrix;
         }
+    }
 
+    public class sTransformMatrixComponent : Component
+    {
+        public mat4 mMatrix;
+
+        public sTransformMatrixComponent() 
+        { 
+            // Console.WriteLine($"New sNodeTransformComponent instantiated!!");
+        }
+
+        public sTransformMatrixComponent( mat4 aMatrix ) 
+        { 
+            mMatrix = aMatrix;
+        }
     }
 
     public class sTag : Component
@@ -30,14 +44,13 @@ namespace SpockEngine
 
         public sTag() 
         { 
-            Console.WriteLine($"New sTag instantiated!!");
+            // Console.WriteLine($"New sTag instantiated!!");
         }
 
         public sTag( string aValue ) 
         { 
             mValue = aValue;
         }
-
     }
 
 }

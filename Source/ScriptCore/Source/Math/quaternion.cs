@@ -16,54 +16,55 @@ namespace SpockEngine.Math
     [StructLayout(LayoutKind.Sequential)]
     public struct quat
     {
-        public float aX;
-        public float aY;
-        public float aZ;
-        public float aW;
+        public float x;
+        public float y;
+        public float z;
+        public float w;
 
         
-        public quat(float aX, float aY, float aZ, float aW) { mX = aX; mY = aY; mZ = aZ; mW = aW; }
+        public quat(float aX, float aY, float aZ, float aW) { x = aX; y = aY; z = aZ; w = aW; }
         
-        public quat(float aV) { mX = aV; mY = aV; mZ = aV; mW = aV; }
+        public quat(float aV) { x = aV; y = aV; z = aV; w = aV; }
         
-        public quat(quat aQ) { mX = aQ.mX; mY = aQ.mY; mZ = aQ.mZ; mW = aQ.mW; }
+        public quat(quat aQ) { x = aQ.x; y = aQ.y; z = aQ.z; w = aQ.w; }
         
-        public quat(vec3 aV, float aS) { mX = aV.mX; mY = aV.mY; mZ = aV.mZ; mW = aS; }
+        public quat(vec3 aV, float aS) { x = aV.x; y = aV.y; z = aV.z; w = aS; }
         
         public quat(vec3 aU, vec3 aV)
         {
             var lW = vec3.Cross(aU, aV);
             var dot = vec3.Dot(aU, aV);
             var lQ = new quat(lW.x, lW.y, lW.z, 1.0f + dot).Normalized;
-            mX = lQ.mX;
-            mY = lQ.mY;
-            mZ = lQ.mZ;
-            mW = lQ.mW;
+            x = lQ.x;
+            y = lQ.y;
+            z = lQ.z;
+            w = lQ.w;
         }
         
         /// <summary>
         /// Create a quaternion from two normalized axis (http://lolengine.net/blog/2013/09/18/beautiful-maths-quaternion-from-vectors)
         /// </summary>
-        public quat(vec3 eulerAngle)
+        public quat(vec3 aEulerAngle)
         {
-            var c = vec3.Cos(eulerAngle / 2);
-            var s = vec3.Sin(eulerAngle / 2);
-            mX = s.x * c.y * c.z - c.x * s.y * s.z;
-            mY = c.x * s.y * c.z + s.x * c.y * s.z;
-            mZ = c.x * c.y * s.z - s.x * s.y * c.z;
-            mW = c.x * c.y * c.z + s.x * s.y * s.z;
+            var lCos = vec3.Cos(aEulerAngle / 2);
+            var lSin = vec3.Sin(aEulerAngle / 2);
+
+            x = lSin.x * lCos.y * lCos.z - lCos.x * lSin.y * lSin.z;
+            y = lCos.x * lSin.y * lCos.z + lSin.x * lCos.y * lSin.z;
+            z = lCos.x * lCos.y * lSin.z - lSin.x * lSin.y * lCos.z;
+            w = lCos.x * lCos.y * lCos.z + lSin.x * lSin.y * lSin.z;
         }
         
-        public quat(mat3 m) : this( FromMat3(m) ) {}
+        public quat(mat3 aMatrix) : this( FromMat3(aMatrix) ) {}
         
         /// <summary>
         /// Creates a quaternion from the rotational part of a mat4.
         /// </summary>
-        public quat(mat4 m) : this( FromMat4(m) ) {}
+        public quat(mat4 aMatrix) : this( FromMat4(aMatrix) ) {}
 
-        public static explicit operator vec4(quat v) => new vec4((float)v.x, (float)v.y, (float)v.z, (float)v.w);
-        public static explicit operator quat(mat3 m) => FromMat3(m);
-        public static explicit operator quat(mat4 m) => FromMat4(m);
+        public static explicit operator vec4(quat aQ) => new vec4((float)aQ.x, (float)aQ.y, (float)aQ.z, (float)aQ.w);
+        public static explicit operator quat(mat3 aMatrix) => FromMat3(aMatrix);
+        public static explicit operator quat(mat4 aMatrix) => FromMat4(aMatrix);
 
         // #region Indexer
         
@@ -99,7 +100,7 @@ namespace SpockEngine.Math
         // #endregion
 
 
-        #region Properties
+        // #region Properties
         
         /// <summary>
         /// Returns an array with all values
@@ -150,47 +151,44 @@ namespace SpockEngine.Math
             }
         }
         
-        /// <summary>
-        /// Returns the represented yaw angle of this quaternion.
-        /// </summary>
-        public double Yaw => Math.Asin(-2.0 * (double)(x * z - w * y));
+        // /// <summary>
+        // /// Returns the represented yaw angle of this quaternion.
+        // /// </summary>
+        // public double Yaw => Math.Asin(-2.0 * (double)(x * z - w * y));
         
-        /// <summary>
-        /// Returns the represented pitch angle of this quaternion.
-        /// </summary>
-        public double Pitch => Math.Atan2(2.0 * (double)(y * z + w * x), (double)(w * w - x * x - y * y + z * z));
+        // /// <summary>
+        // /// Returns the represented pitch angle of this quaternion.
+        // /// </summary>
+        // public double Pitch => Math.Atan2(2.0 * (double)(y * z + w * x), (double)(w * w - x * x - y * y + z * z));
         
-        /// <summary>
-        /// Returns the represented roll angle of this quaternion.
-        /// </summary>
-        public double Roll => Math.Atan2(2.0 * (double)(x * y + w * z), (double)(w * w + x * x - y * y - z * z));
+        // /// <summary>
+        // /// Returns the represented roll angle of this quaternion.
+        // /// </summary>
+        // public double Roll => Math.Atan2(2.0 * (double)(x * y + w * z), (double)(w * w + x * x - y * y - z * z));
         
         /// <summary>
         /// Returns the represented euler angles (pitch, yaw, roll) of this quaternion.
         /// </summary>
-        public dvec3 EulerAngles => new dvec3(Pitch, Yaw, Roll);
+        public vec3 EulerAngles => new vec3(
+            Math.Atan2(2.0 * (double)(y * z + w * x), (double)(w * w - x * x - y * y + z * z)), 
+            Math.Asin(-2.0 * (double)(x * z - w * y)), 
+            Math.Atan2(2.0 * (double)(x * y + w * z), (double)(w * w + x * x - y * y - z * z))
+        );
         
         /// <summary>
         /// Creates a mat3 that realizes the rotation of this quaternion
         /// </summary>
-        public mat3 ToMat3 => new mat3(1 - 2 * (y*y + z*z), 2 * (x*y + w*z), 2 * (x*z - w*y), 2 * (x*y - w*z), 1 - 2 * (x*x + z*z), 2 * (y*z + w*x), 2 * (x*z + w*y), 2 * (y*z - w*x), 1 - 2 * (x*x + y*y));
+        public mat3 ToMat3 => new mat3(
+            1 - 2 * (y*y + z*z), 2 * (x*y + w*z), 2 * (x*z - w*y), 
+            2 * (x*y - w*z), 1 - 2 * (x*x + z*z), 2 * (y*z + w*x), 
+            2 * (x*z + w*y), 2 * (y*z - w*x), 1 - 2 * (x*x + y*y)
+        );
         
-        /// <summary>
-        /// Creates a mat4 that realizes the rotation of this quaternion
-        /// </summary>
         public mat4 ToMat4 => new mat4(ToMat3);
-        
-        /// <summary>
-        /// Returns the conjugated quaternion
-        /// </summary>
         public quat Conjugate => new quat(-x, -y, -z, w);
-        
-        /// <summary>
-        /// Returns the inverse quaternion
-        /// </summary>
         public quat Inverse => Conjugate / LengthSqr;
 
-        #endregion
+        // #endregion
 
 
         // #region Static Properties
@@ -263,10 +261,10 @@ namespace SpockEngine.Math
         // #endregion
 
 
-        #region Operators
+        // #region Operators
         
-        public static bool operator==(quat lhs, quat rhs) => lhs.Equals(rhs);
-        public static bool operator!=(quat lhs, quat rhs) => !lhs.Equals(rhs);
+        public static bool operator==(quat aLeft, quat aRight) => aLeft.Equals(aRight);
+        public static bool operator!=(quat aLeft, quat aRight) => !aLeft.Equals(aRight);
         
         public static quat operator*(quat p, quat q) => new quat(p.w * q.x + p.x * q.w + p.y * q.z - p.z * q.y, p.w * q.y + p.y * q.w + p.z * q.x - p.x * q.z, p.w * q.z + p.z * q.w + p.x * q.y - p.y * q.x, p.w * q.w - p.x * q.x - p.y * q.y - p.z * q.z);
         
@@ -328,12 +326,12 @@ namespace SpockEngine.Math
         // public string ToString(string sep, string format, IFormatProvider provider) => ((x.ToString(format, provider) + sep + y.ToString(format, provider)) + sep + (z.ToString(format, provider) + sep + w.ToString(format, provider)));
         
         /// <summary>
-        /// Returns true iff this equals rhs component-wise.
+        /// Returns true iff this equals aRight component-wise.
         /// </summary>
-        public bool Equals(quat rhs) => ((x.Equals(rhs.x) && y.Equals(rhs.y)) && (z.Equals(rhs.z) && w.Equals(rhs.w)));
+        public bool Equals(quat aRight) => ((x.Equals(aRight.x) && y.Equals(aRight.y)) && (z.Equals(aRight.z) && w.Equals(aRight.w)));
         
         /// <summary>
-        /// Returns true iff this equals rhs type- and component-wise.
+        /// Returns true iff this equals aRight type- and component-wise.
         /// </summary>
         public override bool Equals(object obj)
         {
@@ -360,7 +358,7 @@ namespace SpockEngine.Math
         // #endregion
 
 
-        #region Static Functions
+        // #region Static Functions
         
         // /// <summary>
         // /// Converts the string representation of the quaternion into a quaternion representation (using ', ' as a separator).
@@ -445,7 +443,7 @@ namespace SpockEngine.Math
         /// <summary>
         /// Returns the inner product (dot product, scalar product) of the two quaternions.
         /// </summary>
-        public static float Dot(quat lhs, quat rhs) => ((lhs.x * rhs.x + lhs.y * rhs.y) + (lhs.z * rhs.z + lhs.w * rhs.w));
+        public static float Dot(quat aLeft, quat aRight) => ((aLeft.x * aRight.x + aLeft.y * aRight.y) + (aLeft.z * aRight.z + aLeft.w * aRight.w));
         
         /// <summary>
         /// Creates a quaternion from an axis and an angle (in radians).
@@ -541,7 +539,7 @@ namespace SpockEngine.Math
         /// </summary>
         public static quat Squad(quat q1, quat q2, quat s1, quat s2, float h) => Mix(Mix(q1, q2, h), Mix(s1, s2, h), 2 * (1 - h) * h);
 
-        #endregion
+        // #endregion
 
 
         // #region Component-Wise Static Functions
@@ -597,124 +595,124 @@ namespace SpockEngine.Math
         // public static bvec4 IsPositiveInfinity(float v) => new bvec4(float.IsPositiveInfinity(v));
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of Equal (lhs == rhs).
+        // /// Returns a bvec4 from component-wise application of Equal (aLeft == aRight).
         // /// </summary>
-        // public static bvec4 Equal(quat lhs, quat rhs) => new bvec4(lhs.x == rhs.x, lhs.y == rhs.y, lhs.z == rhs.z, lhs.w == rhs.w);
+        // public static bvec4 Equal(quat aLeft, quat aRight) => new bvec4(aLeft.x == aRight.x, aLeft.y == aRight.y, aLeft.z == aRight.z, aLeft.w == aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of Equal (lhs == rhs).
+        // /// Returns a bvec4 from component-wise application of Equal (aLeft == aRight).
         // /// </summary>
-        // public static bvec4 Equal(quat lhs, float rhs) => new bvec4(lhs.x == rhs, lhs.y == rhs, lhs.z == rhs, lhs.w == rhs);
+        // public static bvec4 Equal(quat aLeft, float aRight) => new bvec4(aLeft.x == aRight, aLeft.y == aRight, aLeft.z == aRight, aLeft.w == aRight);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of Equal (lhs == rhs).
+        // /// Returns a bvec4 from component-wise application of Equal (aLeft == aRight).
         // /// </summary>
-        // public static bvec4 Equal(float lhs, quat rhs) => new bvec4(lhs == rhs.x, lhs == rhs.y, lhs == rhs.z, lhs == rhs.w);
+        // public static bvec4 Equal(float aLeft, quat aRight) => new bvec4(aLeft == aRight.x, aLeft == aRight.y, aLeft == aRight.z, aLeft == aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec from the application of Equal (lhs == rhs).
+        // /// Returns a bvec from the application of Equal (aLeft == aRight).
         // /// </summary>
-        // public static bvec4 Equal(float lhs, float rhs) => new bvec4(lhs == rhs);
+        // public static bvec4 Equal(float aLeft, float aRight) => new bvec4(aLeft == aRight);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of NotEqual (lhs != rhs).
+        // /// Returns a bvec4 from component-wise application of NotEqual (aLeft != aRight).
         // /// </summary>
-        // public static bvec4 NotEqual(quat lhs, quat rhs) => new bvec4(lhs.x != rhs.x, lhs.y != rhs.y, lhs.z != rhs.z, lhs.w != rhs.w);
+        // public static bvec4 NotEqual(quat aLeft, quat aRight) => new bvec4(aLeft.x != aRight.x, aLeft.y != aRight.y, aLeft.z != aRight.z, aLeft.w != aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of NotEqual (lhs != rhs).
+        // /// Returns a bvec4 from component-wise application of NotEqual (aLeft != aRight).
         // /// </summary>
-        // public static bvec4 NotEqual(quat lhs, float rhs) => new bvec4(lhs.x != rhs, lhs.y != rhs, lhs.z != rhs, lhs.w != rhs);
+        // public static bvec4 NotEqual(quat aLeft, float aRight) => new bvec4(aLeft.x != aRight, aLeft.y != aRight, aLeft.z != aRight, aLeft.w != aRight);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of NotEqual (lhs != rhs).
+        // /// Returns a bvec4 from component-wise application of NotEqual (aLeft != aRight).
         // /// </summary>
-        // public static bvec4 NotEqual(float lhs, quat rhs) => new bvec4(lhs != rhs.x, lhs != rhs.y, lhs != rhs.z, lhs != rhs.w);
+        // public static bvec4 NotEqual(float aLeft, quat aRight) => new bvec4(aLeft != aRight.x, aLeft != aRight.y, aLeft != aRight.z, aLeft != aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec from the application of NotEqual (lhs != rhs).
+        // /// Returns a bvec from the application of NotEqual (aLeft != aRight).
         // /// </summary>
-        // public static bvec4 NotEqual(float lhs, float rhs) => new bvec4(lhs != rhs);
+        // public static bvec4 NotEqual(float aLeft, float aRight) => new bvec4(aLeft != aRight);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of GreaterThan (lhs &gt; rhs).
+        // /// Returns a bvec4 from component-wise application of GreaterThan (aLeft &gt; aRight).
         // /// </summary>
-        // public static bvec4 GreaterThan(quat lhs, quat rhs) => new bvec4(lhs.x > rhs.x, lhs.y > rhs.y, lhs.z > rhs.z, lhs.w > rhs.w);
+        // public static bvec4 GreaterThan(quat aLeft, quat aRight) => new bvec4(aLeft.x > aRight.x, aLeft.y > aRight.y, aLeft.z > aRight.z, aLeft.w > aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of GreaterThan (lhs &gt; rhs).
+        // /// Returns a bvec4 from component-wise application of GreaterThan (aLeft &gt; aRight).
         // /// </summary>
-        // public static bvec4 GreaterThan(quat lhs, float rhs) => new bvec4(lhs.x > rhs, lhs.y > rhs, lhs.z > rhs, lhs.w > rhs);
+        // public static bvec4 GreaterThan(quat aLeft, float aRight) => new bvec4(aLeft.x > aRight, aLeft.y > aRight, aLeft.z > aRight, aLeft.w > aRight);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of GreaterThan (lhs &gt; rhs).
+        // /// Returns a bvec4 from component-wise application of GreaterThan (aLeft &gt; aRight).
         // /// </summary>
-        // public static bvec4 GreaterThan(float lhs, quat rhs) => new bvec4(lhs > rhs.x, lhs > rhs.y, lhs > rhs.z, lhs > rhs.w);
+        // public static bvec4 GreaterThan(float aLeft, quat aRight) => new bvec4(aLeft > aRight.x, aLeft > aRight.y, aLeft > aRight.z, aLeft > aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec from the application of GreaterThan (lhs &gt; rhs).
+        // /// Returns a bvec from the application of GreaterThan (aLeft &gt; aRight).
         // /// </summary>
-        // public static bvec4 GreaterThan(float lhs, float rhs) => new bvec4(lhs > rhs);
+        // public static bvec4 GreaterThan(float aLeft, float aRight) => new bvec4(aLeft > aRight);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of GreaterThanEqual (lhs &gt;= rhs).
+        // /// Returns a bvec4 from component-wise application of GreaterThanEqual (aLeft &gt;= aRight).
         // /// </summary>
-        // public static bvec4 GreaterThanEqual(quat lhs, quat rhs) => new bvec4(lhs.x >= rhs.x, lhs.y >= rhs.y, lhs.z >= rhs.z, lhs.w >= rhs.w);
+        // public static bvec4 GreaterThanEqual(quat aLeft, quat aRight) => new bvec4(aLeft.x >= aRight.x, aLeft.y >= aRight.y, aLeft.z >= aRight.z, aLeft.w >= aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of GreaterThanEqual (lhs &gt;= rhs).
+        // /// Returns a bvec4 from component-wise application of GreaterThanEqual (aLeft &gt;= aRight).
         // /// </summary>
-        // public static bvec4 GreaterThanEqual(quat lhs, float rhs) => new bvec4(lhs.x >= rhs, lhs.y >= rhs, lhs.z >= rhs, lhs.w >= rhs);
+        // public static bvec4 GreaterThanEqual(quat aLeft, float aRight) => new bvec4(aLeft.x >= aRight, aLeft.y >= aRight, aLeft.z >= aRight, aLeft.w >= aRight);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of GreaterThanEqual (lhs &gt;= rhs).
+        // /// Returns a bvec4 from component-wise application of GreaterThanEqual (aLeft &gt;= aRight).
         // /// </summary>
-        // public static bvec4 GreaterThanEqual(float lhs, quat rhs) => new bvec4(lhs >= rhs.x, lhs >= rhs.y, lhs >= rhs.z, lhs >= rhs.w);
+        // public static bvec4 GreaterThanEqual(float aLeft, quat aRight) => new bvec4(aLeft >= aRight.x, aLeft >= aRight.y, aLeft >= aRight.z, aLeft >= aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec from the application of GreaterThanEqual (lhs &gt;= rhs).
+        // /// Returns a bvec from the application of GreaterThanEqual (aLeft &gt;= aRight).
         // /// </summary>
-        // public static bvec4 GreaterThanEqual(float lhs, float rhs) => new bvec4(lhs >= rhs);
+        // public static bvec4 GreaterThanEqual(float aLeft, float aRight) => new bvec4(aLeft >= aRight);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of LesserThan (lhs &lt; rhs).
+        // /// Returns a bvec4 from component-wise application of LesserThan (aLeft &lt; aRight).
         // /// </summary>
-        // public static bvec4 LesserThan(quat lhs, quat rhs) => new bvec4(lhs.x < rhs.x, lhs.y < rhs.y, lhs.z < rhs.z, lhs.w < rhs.w);
+        // public static bvec4 LesserThan(quat aLeft, quat aRight) => new bvec4(aLeft.x < aRight.x, aLeft.y < aRight.y, aLeft.z < aRight.z, aLeft.w < aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of LesserThan (lhs &lt; rhs).
+        // /// Returns a bvec4 from component-wise application of LesserThan (aLeft &lt; aRight).
         // /// </summary>
-        // public static bvec4 LesserThan(quat lhs, float rhs) => new bvec4(lhs.x < rhs, lhs.y < rhs, lhs.z < rhs, lhs.w < rhs);
+        // public static bvec4 LesserThan(quat aLeft, float aRight) => new bvec4(aLeft.x < aRight, aLeft.y < aRight, aLeft.z < aRight, aLeft.w < aRight);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of LesserThan (lhs &lt; rhs).
+        // /// Returns a bvec4 from component-wise application of LesserThan (aLeft &lt; aRight).
         // /// </summary>
-        // public static bvec4 LesserThan(float lhs, quat rhs) => new bvec4(lhs < rhs.x, lhs < rhs.y, lhs < rhs.z, lhs < rhs.w);
+        // public static bvec4 LesserThan(float aLeft, quat aRight) => new bvec4(aLeft < aRight.x, aLeft < aRight.y, aLeft < aRight.z, aLeft < aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec from the application of LesserThan (lhs &lt; rhs).
+        // /// Returns a bvec from the application of LesserThan (aLeft &lt; aRight).
         // /// </summary>
-        // public static bvec4 LesserThan(float lhs, float rhs) => new bvec4(lhs < rhs);
+        // public static bvec4 LesserThan(float aLeft, float aRight) => new bvec4(aLeft < aRight);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of LesserThanEqual (lhs &lt;= rhs).
+        // /// Returns a bvec4 from component-wise application of LesserThanEqual (aLeft &lt;= aRight).
         // /// </summary>
-        // public static bvec4 LesserThanEqual(quat lhs, quat rhs) => new bvec4(lhs.x <= rhs.x, lhs.y <= rhs.y, lhs.z <= rhs.z, lhs.w <= rhs.w);
+        // public static bvec4 LesserThanEqual(quat aLeft, quat aRight) => new bvec4(aLeft.x <= aRight.x, aLeft.y <= aRight.y, aLeft.z <= aRight.z, aLeft.w <= aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of LesserThanEqual (lhs &lt;= rhs).
+        // /// Returns a bvec4 from component-wise application of LesserThanEqual (aLeft &lt;= aRight).
         // /// </summary>
-        // public static bvec4 LesserThanEqual(quat lhs, float rhs) => new bvec4(lhs.x <= rhs, lhs.y <= rhs, lhs.z <= rhs, lhs.w <= rhs);
+        // public static bvec4 LesserThanEqual(quat aLeft, float aRight) => new bvec4(aLeft.x <= aRight, aLeft.y <= aRight, aLeft.z <= aRight, aLeft.w <= aRight);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of LesserThanEqual (lhs &lt;= rhs).
+        // /// Returns a bvec4 from component-wise application of LesserThanEqual (aLeft &lt;= aRight).
         // /// </summary>
-        // public static bvec4 LesserThanEqual(float lhs, quat rhs) => new bvec4(lhs <= rhs.x, lhs <= rhs.y, lhs <= rhs.z, lhs <= rhs.w);
+        // public static bvec4 LesserThanEqual(float aLeft, quat aRight) => new bvec4(aLeft <= aRight.x, aLeft <= aRight.y, aLeft <= aRight.z, aLeft <= aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec from the application of LesserThanEqual (lhs &lt;= rhs).
+        // /// Returns a bvec from the application of LesserThanEqual (aLeft &lt;= aRight).
         // /// </summary>
-        // public static bvec4 LesserThanEqual(float lhs, float rhs) => new bvec4(lhs <= rhs);
+        // public static bvec4 LesserThanEqual(float aLeft, float aRight) => new bvec4(aLeft <= aRight);
         
         /// <summary>
         /// Returns a quat from component-wise application of Lerp (min * (1-a) + max * a).
@@ -762,76 +760,76 @@ namespace SpockEngine.Math
         // #region Component-Wise Operator Overloads
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of operator&lt; (lhs &lt; rhs).
+        // /// Returns a bvec4 from component-wise application of operator&lt; (aLeft &lt; aRight).
         // /// </summary>
-        // public static bvec4 operator<(quat lhs, quat rhs) => new bvec4(lhs.x < rhs.x, lhs.y < rhs.y, lhs.z < rhs.z, lhs.w < rhs.w);
+        // public static bvec4 operator<(quat aLeft, quat aRight) => new bvec4(aLeft.x < aRight.x, aLeft.y < aRight.y, aLeft.z < aRight.z, aLeft.w < aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of operator&lt; (lhs &lt; rhs).
+        // /// Returns a bvec4 from component-wise application of operator&lt; (aLeft &lt; aRight).
         // /// </summary>
-        // public static bvec4 operator<(quat lhs, float rhs) => new bvec4(lhs.x < rhs, lhs.y < rhs, lhs.z < rhs, lhs.w < rhs);
+        // public static bvec4 operator<(quat aLeft, float aRight) => new bvec4(aLeft.x < aRight, aLeft.y < aRight, aLeft.z < aRight, aLeft.w < aRight);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of operator&lt; (lhs &lt; rhs).
+        // /// Returns a bvec4 from component-wise application of operator&lt; (aLeft &lt; aRight).
         // /// </summary>
-        // public static bvec4 operator<(float lhs, quat rhs) => new bvec4(lhs < rhs.x, lhs < rhs.y, lhs < rhs.z, lhs < rhs.w);
+        // public static bvec4 operator<(float aLeft, quat aRight) => new bvec4(aLeft < aRight.x, aLeft < aRight.y, aLeft < aRight.z, aLeft < aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of operator&lt;= (lhs &lt;= rhs).
+        // /// Returns a bvec4 from component-wise application of operator&lt;= (aLeft &lt;= aRight).
         // /// </summary>
-        // public static bvec4 operator<=(quat lhs, quat rhs) => new bvec4(lhs.x <= rhs.x, lhs.y <= rhs.y, lhs.z <= rhs.z, lhs.w <= rhs.w);
+        // public static bvec4 operator<=(quat aLeft, quat aRight) => new bvec4(aLeft.x <= aRight.x, aLeft.y <= aRight.y, aLeft.z <= aRight.z, aLeft.w <= aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of operator&lt;= (lhs &lt;= rhs).
+        // /// Returns a bvec4 from component-wise application of operator&lt;= (aLeft &lt;= aRight).
         // /// </summary>
-        // public static bvec4 operator<=(quat lhs, float rhs) => new bvec4(lhs.x <= rhs, lhs.y <= rhs, lhs.z <= rhs, lhs.w <= rhs);
+        // public static bvec4 operator<=(quat aLeft, float aRight) => new bvec4(aLeft.x <= aRight, aLeft.y <= aRight, aLeft.z <= aRight, aLeft.w <= aRight);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of operator&lt;= (lhs &lt;= rhs).
+        // /// Returns a bvec4 from component-wise application of operator&lt;= (aLeft &lt;= aRight).
         // /// </summary>
-        // public static bvec4 operator<=(float lhs, quat rhs) => new bvec4(lhs <= rhs.x, lhs <= rhs.y, lhs <= rhs.z, lhs <= rhs.w);
+        // public static bvec4 operator<=(float aLeft, quat aRight) => new bvec4(aLeft <= aRight.x, aLeft <= aRight.y, aLeft <= aRight.z, aLeft <= aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of operator&gt; (lhs &gt; rhs).
+        // /// Returns a bvec4 from component-wise application of operator&gt; (aLeft &gt; aRight).
         // /// </summary>
-        // public static bvec4 operator>(quat lhs, quat rhs) => new bvec4(lhs.x > rhs.x, lhs.y > rhs.y, lhs.z > rhs.z, lhs.w > rhs.w);
+        // public static bvec4 operator>(quat aLeft, quat aRight) => new bvec4(aLeft.x > aRight.x, aLeft.y > aRight.y, aLeft.z > aRight.z, aLeft.w > aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of operator&gt; (lhs &gt; rhs).
+        // /// Returns a bvec4 from component-wise application of operator&gt; (aLeft &gt; aRight).
         // /// </summary>
-        // public static bvec4 operator>(quat lhs, float rhs) => new bvec4(lhs.x > rhs, lhs.y > rhs, lhs.z > rhs, lhs.w > rhs);
+        // public static bvec4 operator>(quat aLeft, float aRight) => new bvec4(aLeft.x > aRight, aLeft.y > aRight, aLeft.z > aRight, aLeft.w > aRight);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of operator&gt; (lhs &gt; rhs).
+        // /// Returns a bvec4 from component-wise application of operator&gt; (aLeft &gt; aRight).
         // /// </summary>
-        // public static bvec4 operator>(float lhs, quat rhs) => new bvec4(lhs > rhs.x, lhs > rhs.y, lhs > rhs.z, lhs > rhs.w);
+        // public static bvec4 operator>(float aLeft, quat aRight) => new bvec4(aLeft > aRight.x, aLeft > aRight.y, aLeft > aRight.z, aLeft > aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of operator&gt;= (lhs &gt;= rhs).
+        // /// Returns a bvec4 from component-wise application of operator&gt;= (aLeft &gt;= aRight).
         // /// </summary>
-        // public static bvec4 operator>=(quat lhs, quat rhs) => new bvec4(lhs.x >= rhs.x, lhs.y >= rhs.y, lhs.z >= rhs.z, lhs.w >= rhs.w);
+        // public static bvec4 operator>=(quat aLeft, quat aRight) => new bvec4(aLeft.x >= aRight.x, aLeft.y >= aRight.y, aLeft.z >= aRight.z, aLeft.w >= aRight.w);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of operator&gt;= (lhs &gt;= rhs).
+        // /// Returns a bvec4 from component-wise application of operator&gt;= (aLeft &gt;= aRight).
         // /// </summary>
-        // public static bvec4 operator>=(quat lhs, float rhs) => new bvec4(lhs.x >= rhs, lhs.y >= rhs, lhs.z >= rhs, lhs.w >= rhs);
+        // public static bvec4 operator>=(quat aLeft, float aRight) => new bvec4(aLeft.x >= aRight, aLeft.y >= aRight, aLeft.z >= aRight, aLeft.w >= aRight);
         
         // /// <summary>
-        // /// Returns a bvec4 from component-wise application of operator&gt;= (lhs &gt;= rhs).
+        // /// Returns a bvec4 from component-wise application of operator&gt;= (aLeft &gt;= aRight).
         // /// </summary>
-        // public static bvec4 operator>=(float lhs, quat rhs) => new bvec4(lhs >= rhs.x, lhs >= rhs.y, lhs >= rhs.z, lhs >= rhs.w);
+        // public static bvec4 operator>=(float aLeft, quat aRight) => new bvec4(aLeft >= aRight.x, aLeft >= aRight.y, aLeft >= aRight.z, aLeft >= aRight.w);
         
         public static quat operator+(quat v) => v;
         public static quat operator-(quat v) => new quat(-v.x, -v.y, -v.z, -v.w);
-        public static quat operator+(quat lhs, quat rhs) => new quat(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w);
-        public static quat operator+(quat lhs, float rhs) => new quat(lhs.x + rhs, lhs.y + rhs, lhs.z + rhs, lhs.w + rhs);
-        public static quat operator+(float lhs, quat rhs) => new quat(lhs + rhs.x, lhs + rhs.y, lhs + rhs.z, lhs + rhs.w);
-        public static quat operator-(quat lhs, quat rhs) => new quat(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w);
-        public static quat operator-(quat lhs, float rhs) => new quat(lhs.x - rhs, lhs.y - rhs, lhs.z - rhs, lhs.w - rhs);
-        public static quat operator-(float lhs, quat rhs) => new quat(lhs - rhs.x, lhs - rhs.y, lhs - rhs.z, lhs - rhs.w);
-        public static quat operator*(quat lhs, float rhs) => new quat(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.w * rhs);
-        public static quat operator*(float lhs, quat rhs) => new quat(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z, lhs * rhs.w);
-        public static quat operator/(quat lhs, float rhs) => new quat(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs);
+        public static quat operator+(quat aLeft, quat aRight) => new quat(aLeft.x + aRight.x, aLeft.y + aRight.y, aLeft.z + aRight.z, aLeft.w + aRight.w);
+        public static quat operator+(quat aLeft, float aRight) => new quat(aLeft.x + aRight, aLeft.y + aRight, aLeft.z + aRight, aLeft.w + aRight);
+        public static quat operator+(float aLeft, quat aRight) => new quat(aLeft + aRight.x, aLeft + aRight.y, aLeft + aRight.z, aLeft + aRight.w);
+        public static quat operator-(quat aLeft, quat aRight) => new quat(aLeft.x - aRight.x, aLeft.y - aRight.y, aLeft.z - aRight.z, aLeft.w - aRight.w);
+        public static quat operator-(quat aLeft, float aRight) => new quat(aLeft.x - aRight, aLeft.y - aRight, aLeft.z - aRight, aLeft.w - aRight);
+        public static quat operator-(float aLeft, quat aRight) => new quat(aLeft - aRight.x, aLeft - aRight.y, aLeft - aRight.z, aLeft - aRight.w);
+        public static quat operator*(quat aLeft, float aRight) => new quat(aLeft.x * aRight, aLeft.y * aRight, aLeft.z * aRight, aLeft.w * aRight);
+        public static quat operator*(float aLeft, quat aRight) => new quat(aLeft * aRight.x, aLeft * aRight.y, aLeft * aRight.z, aLeft * aRight.w);
+        public static quat operator/(quat aLeft, float aRight) => new quat(aLeft.x / aRight, aLeft.y / aRight, aLeft.z / aRight, aLeft.w / aRight);
 
         // #endregion
 

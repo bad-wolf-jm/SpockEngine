@@ -299,6 +299,7 @@ namespace LTSE::Core
         //
         RegisterComponentType<sTag>();
         RegisterComponentType<sNodeTransformComponent>();
+        RegisterComponentType<sTransformMatrixComponent>();
     }
 
     void ScriptManager::RegisterInternalCppFunctions()
