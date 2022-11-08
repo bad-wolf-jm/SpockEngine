@@ -47,6 +47,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Vulkan/VkPipeline.cpp
     Core/Vulkan/VkImage.cpp
     Core/Vulkan/VkCommand.cpp
+    Core/Vulkan/VkDeferredRenderPass.cpp
     
     Core/GraphicContext//Buffer.cpp
     Core/GraphicContext//Texture2D.cpp
@@ -160,6 +161,18 @@ add_shader(LTSimulationEngineRuntime "WireframeShader.frag")
 
 add_shader(LTSimulationEngineRuntime "Unlit.vert")
 add_shader(LTSimulationEngineRuntime "Unlit.frag")
+
+add_shader(LTSimulationEngineRuntime "Deferred/DeferredLightingMSAA.vert")
+add_shader(LTSimulationEngineRuntime "Deferred/DeferredLightingMSAA.frag")
+
+add_shader(LTSimulationEngineRuntime "Deferred/DEferredLightingShadow.vert")
+add_shader(LTSimulationEngineRuntime "Deferred/DEferredLightingShadow.frag")
+
+add_shader(LTSimulationEngineRuntime "Deferred/MRT.vert")
+add_shader(LTSimulationEngineRuntime "Deferred/MRT.frag")
+
+add_shader(LTSimulationEngineRuntime "Deferred/Shadow.vert")
+add_shader(LTSimulationEngineRuntime "Deferred/Shadow.geom")
 
 target_link_libraries(LTSimulationEngineRuntime PRIVATE
     Vulkan::Vulkan
