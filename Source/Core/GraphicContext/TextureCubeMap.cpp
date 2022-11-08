@@ -22,32 +22,34 @@ namespace LTSE::Graphics
         : mGraphicContext( a_GraphicContext )
         , Spec( a_BufferDescription )
     {
-        m_TextureImageObject =
-            New<Internal::sVkImageObject>( mGraphicContext.mContext, static_cast<uint32_t>( Spec.MipLevels[0].Width ), static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1,
-                                           static_cast<uint32_t>( Spec.MipLevels.size() ), 6, VK_SAMPLE_COUNT_VALUE( a_BufferDescription.SampleCount ), true,
-                                           ToVkFormat( Spec.Format ), ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
+        m_TextureImageObject = New<Internal::sVkImageObject>( mGraphicContext.mContext,
+            static_cast<uint32_t>( Spec.MipLevels[0].Width ), static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1,
+            static_cast<uint32_t>( Spec.MipLevels.size() ), 6, VK_SAMPLE_COUNT_VALUE( a_BufferDescription.SampleCount ), true,
+            ToVkFormat( Spec.Format ), ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
 
         CreateImageView();
         CreateImageSampler();
     }
 
-    TextureCubeMap::TextureCubeMap( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription, gli::texture_cube &a_CubeMapData )
+    TextureCubeMap::TextureCubeMap(
+        GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription, gli::texture_cube &a_CubeMapData )
         : mGraphicContext( a_GraphicContext )
         , Spec( a_BufferDescription )
     {
 
         for( uint32_t l_MipLevel = 0; l_MipLevel < a_CubeMapData.levels(); l_MipLevel++ )
         {
-            Spec.MipLevels.push_back( { static_cast<uint32_t>( a_CubeMapData[0][l_MipLevel].extent().x ), static_cast<uint32_t>( a_CubeMapData[0][l_MipLevel].extent().y ),
-                                        l_MipLevel, a_CubeMapData[0][l_MipLevel].size() } );
+            Spec.MipLevels.push_back( { static_cast<uint32_t>( a_CubeMapData[0][l_MipLevel].extent().x ),
+                static_cast<uint32_t>( a_CubeMapData[0][l_MipLevel].extent().y ), l_MipLevel, a_CubeMapData[0][l_MipLevel].size() } );
         }
 
-        Buffer l_StagingBuffer( mGraphicContext, reinterpret_cast<uint8_t *>( a_CubeMapData.data() ), a_CubeMapData.size(), eBufferBindType::UNKNOWN, true, false, true, false );
+        Buffer l_StagingBuffer( mGraphicContext, reinterpret_cast<uint8_t *>( a_CubeMapData.data() ), a_CubeMapData.size(),
+            eBufferBindType::UNKNOWN, true, false, true, false );
 
-        m_TextureImageObject =
-            New<Internal::sVkImageObject>( mGraphicContext.mContext, static_cast<uint32_t>( Spec.MipLevels[0].Width ), static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1,
-                                           static_cast<uint32_t>( Spec.MipLevels.size() ), 6, VK_SAMPLE_COUNT_VALUE( a_BufferDescription.SampleCount ), true,
-                                           ToVkFormat( Spec.Format ), ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
+        m_TextureImageObject = New<Internal::sVkImageObject>( mGraphicContext.mContext,
+            static_cast<uint32_t>( Spec.MipLevels[0].Width ), static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1,
+            static_cast<uint32_t>( Spec.MipLevels.size() ), 6, VK_SAMPLE_COUNT_VALUE( a_BufferDescription.SampleCount ), true,
+            ToVkFormat( Spec.Format ), ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
 
         TransitionImageLayout( VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
         CopyBufferToImage( l_StagingBuffer, a_CubeMapData );
@@ -62,7 +64,7 @@ namespace LTSE::Graphics
         Ref<Internal::sVkCommandBufferObject> l_CommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
 
         std::vector<Internal::sImageRegion> l_BufferCopyRegions;
-        uint32_t offset = 0;
+        uint32_t                            offset = 0;
 
         for( uint32_t face = 0; face < 6; face++ )
         {
@@ -105,17 +107,16 @@ namespace LTSE::Graphics
 
     void TextureCubeMap::CreateImageView()
     {
-        m_TextureView = New<Internal::sVkImageViewObject>( mGraphicContext.mContext, m_TextureImageObject, 6, VK_IMAGE_VIEW_TYPE_CUBE, ToVkFormat( Spec.Format ),
-                                                           (VkImageAspectFlags)Spec.AspectMask,
-                                                           VkComponentMapping{ (VkComponentSwizzle)Spec.ComponentSwizzle[0], (VkComponentSwizzle)Spec.ComponentSwizzle[1],
-                                                                               (VkComponentSwizzle)Spec.ComponentSwizzle[2], (VkComponentSwizzle)Spec.ComponentSwizzle[3] } );
+        m_TextureView = New<Internal::sVkImageViewObject>( mGraphicContext.mContext, m_TextureImageObject, 6, VK_IMAGE_VIEW_TYPE_CUBE,
+            ToVkFormat( Spec.Format ), (VkImageAspectFlags)Spec.AspectMask,
+            VkComponentMapping{ (VkComponentSwizzle)Spec.ComponentSwizzle[0], (VkComponentSwizzle)Spec.ComponentSwizzle[1],
+                (VkComponentSwizzle)Spec.ComponentSwizzle[2], (VkComponentSwizzle)Spec.ComponentSwizzle[3] } );
     }
 
     void TextureCubeMap::CreateImageSampler()
     {
-        if( !Spec.Sampled )
-            return;
-        m_TextureSamplerObject = New<Internal::sVkImageSamplerObject>( mGraphicContext.mContext, (VkFilter)Spec.MinificationFilter, (VkFilter)Spec.MagnificationFilter,
-                                                                       (VkSamplerAddressMode)Spec.WrappingMode, (VkSamplerMipmapMode)Spec.MipmapMode );
+        if( !Spec.Sampled ) return;
+        m_TextureSamplerObject = New<Internal::sVkImageSamplerObject>( mGraphicContext.mContext, (VkFilter)Spec.MinificationFilter,
+            (VkFilter)Spec.MagnificationFilter, (VkSamplerAddressMode)Spec.WrappingMode, (VkSamplerMipmapMode)Spec.MipmapMode );
     }
 } // namespace LTSE::Graphics

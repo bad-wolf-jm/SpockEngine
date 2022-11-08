@@ -17,8 +17,8 @@
 
 namespace LTSE::Graphics
 {
-    Buffer::Buffer( GraphicContext &aGraphicContext, eBufferBindType aType, bool aIsHostVisible, bool aIsCudaShareable, bool aIsTransferSource, bool aIsTransferDestination,
-                    size_t aSize )
+    Buffer::Buffer( GraphicContext &aGraphicContext, eBufferBindType aType, bool aIsHostVisible, bool aIsCudaShareable,
+        bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
         : mGraphicContext{ aGraphicContext }
         , mSize{ aSize }
         , mType{ aType }
@@ -29,11 +29,9 @@ namespace LTSE::Graphics
 
     {
         VkBufferUsageFlags lBufferFlags = (VkBufferUsageFlags)aType;
-        if( mIsTransferSource )
-            lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+        if( mIsTransferSource ) lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 
-        if( mIsTransferDestination )
-            lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+        if( mIsTransferDestination ) lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
         mVkObject = mGraphicContext.mContext->CreateBuffer( lBufferFlags, mSize, mIsHostVisible, mIsCudaShareable );
         mVkMemory = mGraphicContext.mContext->AllocateMemory( mVkObject, mSize, mIsHostVisible, mIsCudaShareable );
@@ -51,7 +49,8 @@ namespace LTSE::Graphics
     void Buffer::Upload( void *aData, size_t aSize, size_t aOffset )
     {
         if( ( aOffset + aSize ) > mSize )
-            throw std::runtime_error( fmt::format( "Attempted to copy an array of size {} into a buffer if size {}", aSize, mSize ).c_str() );
+            throw std::runtime_error(
+                fmt::format( "Attempted to copy an array of size {} into a buffer if size {}", aSize, mSize ).c_str() );
 
         if( !mIsHostVisible )
         {
@@ -65,8 +64,7 @@ namespace LTSE::Graphics
         else
         {
             uint8_t *lMappedMemory = Map<uint8_t>( aSize, aOffset );
-            if( !lMappedMemory )
-                throw std::runtime_error( "Could not map memory" );
+            if( !lMappedMemory ) throw std::runtime_error( "Could not map memory" );
 
             memcpy( reinterpret_cast<void *>( lMappedMemory ), aData, aSize );
             Unmap();
@@ -80,12 +78,10 @@ namespace LTSE::Graphics
         mGraphicContext.EndSingleTimeCommands( l_CommandBufferObject );
     }
 
-
     static VkDeviceSize g_BufferMemoryAlignment = 256;
-    void Buffer::Resize( size_t a_NewSizeInBytes )
+    void                Buffer::Resize( size_t a_NewSizeInBytes )
     {
-        if( a_NewSizeInBytes <= mSize )
-            return;
+        if( a_NewSizeInBytes <= mSize ) return;
 
         VkDeviceSize vertex_buffer_size_aligned = ( ( a_NewSizeInBytes - 1 ) / g_BufferMemoryAlignment + 1 ) * g_BufferMemoryAlignment;
 
@@ -94,11 +90,9 @@ namespace LTSE::Graphics
 
         mSize                           = vertex_buffer_size_aligned;
         VkBufferUsageFlags lBufferFlags = (VkBufferUsageFlags)mType;
-        if( mIsTransferSource )
-            lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+        if( mIsTransferSource ) lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 
-        if( mIsTransferDestination )
-            lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+        if( mIsTransferDestination ) lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
         mVkObject = mGraphicContext.mContext->CreateBuffer( lBufferFlags, mSize, mIsHostVisible, mIsCudaShareable );
         mVkMemory = mGraphicContext.mContext->AllocateMemory( mVkObject, mSize, mIsHostVisible, mIsCudaShareable );

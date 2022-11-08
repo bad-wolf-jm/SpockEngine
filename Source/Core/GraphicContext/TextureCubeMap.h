@@ -4,9 +4,10 @@
 
 #include <vulkan/vulkan.h>
 
-#include "Core/Textures/ColorFormat.h"
 #include "Core/Memory.h"
+#include "Core/Textures/ColorFormat.h"
 #include "Core/Textures/TextureData.h"
+
 
 #include <gli/gli.hpp>
 
@@ -32,7 +33,7 @@ namespace LTSE::Graphics
     struct CubeMapFace
     {
         CubeMapDirection Direction;
-        TextureData FaceData;
+        TextureData      FaceData;
     };
 
     /** @brief */
@@ -69,8 +70,8 @@ namespace LTSE::Graphics
       private:
         GraphicContext mGraphicContext{};
 
-        Ref<Internal::sVkImageObject> m_TextureImageObject          = nullptr;
+        Ref<Internal::sVkImageObject>        m_TextureImageObject   = nullptr;
         Ref<Internal::sVkImageSamplerObject> m_TextureSamplerObject = nullptr;
-        Ref<Internal::sVkImageViewObject> m_TextureView             = nullptr;
+        Ref<Internal::sVkImageViewObject>    m_TextureView          = nullptr;
     };
 } // namespace LTSE::Graphics

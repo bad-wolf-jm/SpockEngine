@@ -23,27 +23,24 @@ namespace LTSE::Graphics
                 mCommandBufferObject[i]->AddWaitSemaphore( lImageAvailableSemaphore, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT );
 
             auto lRenderFinishedSemaphore = aRenderTarget->GetRenderFinishedSemaphore( i );
-            if( lRenderFinishedSemaphore )
-                mCommandBufferObject[i]->AddSignalSemaphore( lRenderFinishedSemaphore );
+            if( lRenderFinishedSemaphore ) mCommandBufferObject[i]->AddSignalSemaphore( lRenderFinishedSemaphore );
 
             auto lSubmitFence = aRenderTarget->GetInFlightFence( i );
-            if( lSubmitFence )
-                mCommandBufferObject[i]->SetSubmitFence( lSubmitFence );
+            if( lSubmitFence ) mCommandBufferObject[i]->SetSubmitFence( lSubmitFence );
         }
 
-        mRenderPass = New<Internal::sVkRenderPassObject>( mGraphicContext.mContext, ToVkFormat( aRenderTarget->Spec.Format ), aRenderTarget->Spec.SampleCount,
-                                                          aRenderTarget->Spec.Sampled, aRenderTarget->Spec.Presented, aRenderTarget->Spec.ClearColor );
+        mRenderPass = New<Internal::sVkRenderPassObject>( mGraphicContext.mContext, ToVkFormat( aRenderTarget->Spec.Format ),
+            aRenderTarget->Spec.SampleCount, aRenderTarget->Spec.Sampled, aRenderTarget->Spec.Presented,
+            aRenderTarget->Spec.ClearColor );
     }
 
     bool RenderContext::BeginRender()
     {
-        if( mFrameIsStarted )
-            return true;
+        if( mFrameIsStarted ) return true;
 
         mFrameIsStarted = mRenderTarget->BeginRender();
 
-        if( !mFrameIsStarted )
-            return false;
+        if( !mFrameIsStarted ) return false;
 
         mCurrentCommandBuffer = mRenderTarget->GetCurrentImage();
 
@@ -52,7 +49,8 @@ namespace LTSE::Graphics
 
         auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
         lCommandBuffer->Begin();
-        lCommandBuffer->BeginRenderPass( mRenderPass, mRenderTarget->GetFramebuffer(), { lWidth, lHeight }, mRenderPass->GetClearValues() );
+        lCommandBuffer->BeginRenderPass(
+            mRenderPass, mRenderTarget->GetFramebuffer(), { lWidth, lHeight }, mRenderPass->GetClearValues() );
         lCommandBuffer->SetViewport( { 0.0f, 0.0f }, { lWidth, lHeight } );
         lCommandBuffer->SetScissor( { 0.0f, 0.0f }, { lWidth, lHeight } );
 
@@ -61,8 +59,7 @@ namespace LTSE::Graphics
 
     bool RenderContext::EndRender()
     {
-        if( !mFrameIsStarted )
-            return false;
+        if( !mFrameIsStarted ) return false;
 
         auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
         lCommandBuffer->EndRenderPass();
@@ -87,7 +84,8 @@ namespace LTSE::Graphics
         mCurrentIndexBuffer  = nullptr;
     }
 
-    void RenderContext::Draw( uint32_t a_VertexCount, uint32_t a_VertexOffset, uint32_t a_VertexBufferOffset, uint32_t a_InstanceCount, uint32_t a_FirstInstance )
+    void RenderContext::Draw( uint32_t a_VertexCount, uint32_t a_VertexOffset, uint32_t a_VertexBufferOffset, uint32_t a_InstanceCount,
+        uint32_t a_FirstInstance )
     {
         auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
 
@@ -126,7 +124,8 @@ namespace LTSE::Graphics
     {
         auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
 
-        lCommandBuffer->Bind( a_DescriptorSet->GetVkDescriptorSetObject(), VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipelineLayout, a_SetIndex, a_DynamicOffset );
+        lCommandBuffer->Bind( a_DescriptorSet->GetVkDescriptorSetObject(), VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipelineLayout,
+            a_SetIndex, a_DynamicOffset );
     }
 
 } // namespace LTSE::Graphics

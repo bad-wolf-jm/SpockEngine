@@ -14,10 +14,10 @@ namespace LTSE::Graphics
 {
     struct DescriptorBindingInfo
     {
-        uint32_t mBindingIndex                  = 0;
+        uint32_t                  mBindingIndex = 0;
         Internal::eDescriptorType Type          = Internal::eDescriptorType::UNIFORM_BUFFER;
         Internal::ShaderStageType mShaderStages = {};
-        bool Unbounded                         = false;
+        bool                      Unbounded     = false;
 
         operator VkDescriptorSetLayoutBinding() const;
     };
@@ -42,17 +42,18 @@ namespace LTSE::Graphics
         operator VkDescriptorSetLayout() const { return mDescriptorSetLayoutObject->mVkObject; };
 
       private:
-        GraphicContext mGraphicContext{};
+        GraphicContext                              mGraphicContext{};
         Ref<Internal::sVkDescriptorSetLayoutObject> mDescriptorSetLayoutObject = nullptr;
     };
 
-    template <typename _BufType> struct DescriptorBufferInfo
+    template <typename _BufType>
+    struct DescriptorBufferInfo
     {
-        Ref<_BufType> Buffer = nullptr;
-        bool DynamicOffset   = false;
-        uint32_t Binding     = 0;
-        uint32_t Offset      = 0;
-        uint32_t Size        = 0;
+        Ref<_BufType> Buffer        = nullptr;
+        bool          DynamicOffset = false;
+        uint32_t      Binding       = 0;
+        uint32_t      Offset        = 0;
+        uint32_t      Size          = 0;
     };
 
     class DescriptorSet
@@ -71,8 +72,8 @@ namespace LTSE::Graphics
         Ref<Internal::sVkDescriptorSetObject> GetVkDescriptorSetObject() { return mDescriptorSetObject; }
 
       private:
-        GraphicContext mGraphicContext{};
-        Ref<DescriptorSetLayout> mLayout                           = nullptr;
+        GraphicContext                        mGraphicContext{};
+        Ref<DescriptorSetLayout>              mLayout              = nullptr;
         Ref<Internal::sVkDescriptorSetObject> mDescriptorSetObject = nullptr;
     };
 
