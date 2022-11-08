@@ -34,7 +34,7 @@ namespace LTSE::Graphics
         math::mat4 Projection = math::mat4( 1.0f );
 
         VisualHelperRenderer() = default;
-        VisualHelperRenderer( GraphicContext &a_GraphicContext, Ref<LTSE::Graphics::Internal::sVkRenderPassObject> a_RenderPass );
+        VisualHelperRenderer( GraphicContext &a_GraphicContext, Ref<LTSE::Graphics::Internal::sVkRenderPassObject> aRenderPass );
 
         ~VisualHelperRenderer() = default;
 

@@ -9,7 +9,7 @@
 namespace LTSE::Graphics::Internal
 {
 
-    sDeferredVkRenderPassObject::sDeferredVkRenderPassObject( Ref<VkContext> aContext,
+    sVkDeferredRenderPassObject::sVkDeferredRenderPassObject( Ref<VkContext> aContext,
         std::vector<VkAttachmentDescription> aAttachments, std::vector<VkSubpassDescription> aSubpasses,
         std::vector<VkSubpassDependency> aSubpassDependencies )
         : mContext{ aContext }
@@ -17,7 +17,7 @@ namespace LTSE::Graphics::Internal
         mVkObject = mContext->CreateRenderPass( aAttachments, aSubpasses, aSubpassDependencies );
     }
 
-    sDeferredVkRenderPassObject::sDeferredVkRenderPassObject(
+    sVkDeferredRenderPassObject::sVkDeferredRenderPassObject(
         Ref<VkContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented, math::vec4 aClearColor )
         : mSampleCount{ aSampleCount }
         , mContext{ aContext }
@@ -93,11 +93,11 @@ namespace LTSE::Graphics::Internal
         mVkObject = mContext->CreateRenderPass( lAttachments, std::vector<VkSubpassDescription>{ lSubpass }, lSubpassDependencies );
     }
 
-    sDeferredVkRenderPassObject::~sDeferredVkRenderPassObject() { mContext->DestroyRenderPass( mVkObject ); }
+    sVkDeferredRenderPassObject::~sVkDeferredRenderPassObject() { mContext->DestroyRenderPass( mVkObject ); }
 
-    std::vector<VkClearValue> sDeferredVkRenderPassObject::GetClearValues() { return mClearValues; }
+    std::vector<VkClearValue> sVkDeferredRenderPassObject::GetClearValues() { return mClearValues; }
 
-    VkAttachmentDescription sDeferredVkRenderPassObject::ColorAttachment(
+    VkAttachmentDescription sVkDeferredRenderPassObject::ColorAttachment(
         VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented )
     {
         VkAttachmentDescription lAttachmentSpec{};
@@ -125,7 +125,7 @@ namespace LTSE::Graphics::Internal
         return lAttachmentSpec;
     }
 
-    VkAttachmentDescription sDeferredVkRenderPassObject::DepthAttachment( uint32_t aSampleCount )
+    VkAttachmentDescription sVkDeferredRenderPassObject::DepthAttachment( uint32_t aSampleCount )
     {
         VkAttachmentDescription lAttachmentSpec{};
         lAttachmentSpec.samples        = VK_SAMPLE_COUNT_VALUE( aSampleCount );

@@ -14,20 +14,20 @@ namespace LTSE::Graphics::Internal
 {
     using namespace LTSE::Core;
 
-    struct sDeferredVkRenderPassObject
+    struct sVkDeferredRenderPassObject
     {
         VkRenderPass mVkObject    = VK_NULL_HANDLE;
         uint32_t     mSampleCount = 1;
 
-        sDeferredVkRenderPassObject()                        = default;
-        sDeferredVkRenderPassObject( sDeferredVkRenderPassObject & ) = default;
-        sDeferredVkRenderPassObject( Ref<VkContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
+        sVkDeferredRenderPassObject()                        = default;
+        sVkDeferredRenderPassObject( sVkDeferredRenderPassObject & ) = default;
+        sVkDeferredRenderPassObject( Ref<VkContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
             std::vector<VkSubpassDescription> aSubpasses, std::vector<VkSubpassDependency> aSubpassDependencies );
 
-        sDeferredVkRenderPassObject( Ref<VkContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented,
+        sVkDeferredRenderPassObject( Ref<VkContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented,
             math::vec4 aClearColor );
 
-        ~sDeferredVkRenderPassObject();
+        ~sVkDeferredRenderPassObject();
 
         VkAttachmentDescription ColorAttachment( VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented );
         VkAttachmentDescription DepthAttachment( uint32_t aSampleCount );

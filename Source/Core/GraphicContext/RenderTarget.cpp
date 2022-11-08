@@ -8,22 +8,22 @@ namespace LTSE::Graphics
     {
     }
 
-    void AbstractRenderTarget::Initialize( RenderTargetDescription &a_Spec )
+    void AbstractRenderTarget::Initialize( RenderTargetDescription &aSpec )
     {
-        Spec = a_Spec;
+        Spec = aSpec;
 
         m_RenderPassObject = New<Internal::sVkRenderPassObject>(
-            mGraphicContext.mContext, ToVkFormat( a_Spec.Format ), Spec.SampleCount, Spec.Sampled, Spec.Presented, Spec.ClearColor );
+            mGraphicContext.mContext, ToVkFormat( aSpec.Format ), Spec.SampleCount, Spec.Sampled, Spec.Presented, Spec.ClearColor );
 
         if( Spec.SampleCount > 1 )
         {
-            m_MSAAOutputTexture = New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, ToVkFormat( a_Spec.Format ),
-                Spec.Width, Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, false );
+            m_MSAAOutputTexture = New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, ToVkFormat( aSpec.Format ), Spec.Width,
+                Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, false );
         }
 
         if( !Spec.OutputTexture )
         {
-            m_OutputTexture = New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, ToVkFormat( a_Spec.Format ), Spec.Width,
+            m_OutputTexture = New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, ToVkFormat( aSpec.Format ), Spec.Width,
                 Spec.Height, 1, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, true );
         }
         else
@@ -79,21 +79,97 @@ namespace LTSE::Graphics
     VkSemaphore                           AbstractRenderTarget::GetRenderFinishedSemaphore( uint32_t i ) { return VK_NULL_HANDLE; }
     VkFence                               AbstractRenderTarget::GetInFlightFence( uint32_t i ) { return VK_NULL_HANDLE; }
 
-    OffscreenRenderTarget::OffscreenRenderTarget( GraphicContext &a_GraphicContext, OffscreenRenderTargetDescription &a_Spec )
+    DeferredRenderTarget::DeferredRenderTarget( GraphicContext &a_GraphicContext, DeferredRenderTargetDescription &aSpec )
         : AbstractRenderTarget( a_GraphicContext )
     {
         mImageCount = 1;
 
-        RenderTargetDescription l_RTDEscription{};
-        l_RTDEscription.SampleCount   = a_Spec.SampleCount;
-        l_RTDEscription.Format        = a_Spec.Format;
-        l_RTDEscription.ClearColor    = a_Spec.ClearColor;
-        l_RTDEscription.Width         = a_Spec.OutputSize.x;
-        l_RTDEscription.Height        = a_Spec.OutputSize.y;
-        l_RTDEscription.Sampled       = a_Spec.Sampled;
-        l_RTDEscription.OutputTexture = nullptr;
+        RenderTargetDescription lRTDEscription{};
+        lRTDEscription.SampleCount   = aSpec.SampleCount;
+        lRTDEscription.Format        = aSpec.Format;
+        lRTDEscription.ClearColor    = aSpec.ClearColor;
+        lRTDEscription.Width         = aSpec.OutputSize.x;
+        lRTDEscription.Height        = aSpec.OutputSize.y;
+        lRTDEscription.Sampled       = aSpec.Sampled;
+        lRTDEscription.OutputTexture = nullptr;
 
-        Initialize( l_RTDEscription );
+        Initialize( lRTDEscription );
+        InitializeCommandBuffers();
+    }
+
+    void DeferredRenderTarget::Initialize( RenderTargetDescription &aSpec )
+    {
+        Spec = aSpec;
+
+        m_RenderPassObject = New<Internal::sVkDeferredRenderPassObject>(
+            mGraphicContext.mContext, ToVkFormat( aSpec.Format ), Spec.SampleCount, Spec.Sampled, Spec.Presented, Spec.ClearColor );
+
+        m_PositionsOutputTexture =
+            New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, ToVkFormat( eColorFormat::RGBA16_FLOAT ), Spec.Width,
+                Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, false );
+        m_NormalsOutputTexture =
+            New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, ToVkFormat( eColorFormat::RGBA16_FLOAT ), Spec.Width,
+                Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, false );
+        m_AlbedoOutputTexture = New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, ToVkFormat( eColorFormat::RGBA8_UNORM ),
+            Spec.Width, Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, false );
+        m_SpecularOutputTexture =
+            New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, ToVkFormat( eColorFormat::RGBA8_UNORM ), Spec.Width,
+                Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, false );
+        m_DepthTexture = New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, mGraphicContext.mContext->GetDepthFormat(),
+            Spec.Width, Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, false );
+
+        std::vector<Ref<Internal::sVkFramebufferImage>> l_AttachmentViews = {
+            m_PositionsOutputTexture, m_NormalsOutputTexture, m_AlbedoOutputTexture, m_SpecularOutputTexture, m_DepthTexture };
+
+        m_FramebufferObject = New<Internal::sVkFramebufferObject>(
+            mGraphicContext.mContext, Spec.Width, Spec.Height, 1, m_RenderPassObject->mVkObject, l_AttachmentViews );
+
+    }
+
+    void DeferredRenderTarget::Resize( uint32_t aWidth, uint32_t aHeight )
+    {
+        Spec.Width         = aWidth;
+        Spec.Height        = aHeight;
+        Spec.OutputTexture = nullptr;
+
+        Initialize( Spec );
+        InitializeCommandBuffers();
+    }
+
+    bool                                  DeferredRenderTarget::BeginRender() { return true; }
+    void                                  DeferredRenderTarget::EndRender() {}
+    void                                  DeferredRenderTarget::Present() {}
+    uint32_t                              DeferredRenderTarget::GetCurrentImage() { return 0; };
+    Ref<Internal::sVkFramebufferObject>   DeferredRenderTarget::GetFramebuffer() { return m_FramebufferObject; }
+    Ref<Internal::sVkCommandBufferObject> DeferredRenderTarget::GetCommandBuffer( uint32_t i )
+    {
+        return AbstractRenderTarget::GetCommandBuffer( i );
+    }
+    VkSemaphore DeferredRenderTarget::GetImageAvailableSemaphore( uint32_t i )
+    {
+        return AbstractRenderTarget::GetImageAvailableSemaphore( i );
+    }
+    VkSemaphore DeferredRenderTarget::GetRenderFinishedSemaphore( uint32_t i )
+    {
+        return AbstractRenderTarget::GetRenderFinishedSemaphore( i );
+    }
+    VkFence DeferredRenderTarget::GetInFlightFence( uint32_t i ) { return AbstractRenderTarget::GetInFlightFence( i ); }
+
+    OffscreenRenderTarget::OffscreenRenderTarget( GraphicContext &a_GraphicContext, OffscreenRenderTargetDescription &aSpec )
+        : AbstractRenderTarget( a_GraphicContext )
+    {
+        mImageCount = 1;
+
+        RenderTargetDescription lRTDEscription{};
+        lRTDEscription.SampleCount   = aSpec.SampleCount;
+        lRTDEscription.Format        = aSpec.Format;
+        lRTDEscription.ClearColor    = aSpec.ClearColor;
+        lRTDEscription.Width         = aSpec.OutputSize.x;
+        lRTDEscription.Height        = aSpec.OutputSize.y;
+        lRTDEscription.Sampled       = aSpec.Sampled;
+        lRTDEscription.OutputTexture = nullptr;
+
+        Initialize( lRTDEscription );
         InitializeCommandBuffers();
     }
 
@@ -126,11 +202,11 @@ namespace LTSE::Graphics
     }
     VkFence OffscreenRenderTarget::GetInFlightFence( uint32_t i ) { return AbstractRenderTarget::GetInFlightFence( i ); }
 
-    SwapChainRenderTargetImage::SwapChainRenderTargetImage( GraphicContext &a_GraphicContext, RenderTargetDescription &a_Spec )
+    SwapChainRenderTargetImage::SwapChainRenderTargetImage( GraphicContext &a_GraphicContext, RenderTargetDescription &aSpec )
         : AbstractRenderTarget( a_GraphicContext )
     {
         mImageCount = 1;
-        Initialize( a_Spec );
+        Initialize( aSpec );
     }
 
     bool                                  SwapChainRenderTargetImage::BeginRender() { return true; }
@@ -149,10 +225,10 @@ namespace LTSE::Graphics
     }
     VkFence SwapChainRenderTargetImage::GetInFlightFence( uint32_t i ) { return AbstractRenderTarget::GetInFlightFence( i ); }
 
-    SwapChainRenderTarget::SwapChainRenderTarget( GraphicContext &a_GraphicContext, SwapChainRenderTargetDescription &a_Spec )
+    SwapChainRenderTarget::SwapChainRenderTarget( GraphicContext &a_GraphicContext, SwapChainRenderTargetDescription &aSpec )
         : AbstractRenderTarget( a_GraphicContext )
     {
-        Spec.SampleCount = a_Spec.SampleCount;
+        Spec.SampleCount = aSpec.SampleCount;
 
         RecreateSwapChain();
     }
@@ -178,13 +254,6 @@ namespace LTSE::Graphics
             m_RenderTargets[CurrentImage]->BeginRender();
             return FrameIsStarted;
         }
-
-        // if( lFrameIsStarted )
-        // {
-        // }
-        // else
-        // {
-        // }
 
         return FrameIsStarted;
     }

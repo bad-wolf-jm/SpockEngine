@@ -9,6 +9,7 @@
 
 #include "VkPipeline.h"
 #include "VkRenderPass.h"
+#include "VkDeferredRenderPass.h"
 
 namespace LTSE::Graphics::Internal
 {
