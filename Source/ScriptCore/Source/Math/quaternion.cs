@@ -456,44 +456,45 @@ namespace SpockEngine.Math
         }
         
         /// <summary>
-        /// Creates a quaternion from the rotational part of a mat4.
+        /// Creates a quaternion from the rotational part of a mat3.
         /// </summary>
         public static quat FromMat3(mat3 m)
         {
-            var fourXSquaredMinus1 = m.m00 - m.m11 - m.m22;
-            var fourYSquaredMinus1 = m.m11 - m.m00 - m.m22;
-            var fourZSquaredMinus1 = m.m22 - m.m00 - m.m11;
-            var fourWSquaredMinus1 = m.m00 + m.m11 + m.m22;
-            var biggestIndex = 0;
-            var fourBiggestSquaredMinus1 = fourWSquaredMinus1;
-            if(fourXSquaredMinus1 > fourBiggestSquaredMinus1)
+            float lFourXSquaredMinus1 = m.m00 - m.m11 - m.m22;
+            float lFourYSquaredMinus1 = m.m11 - m.m00 - m.m22;
+            float lFourZSquaredMinus1 = m.m22 - m.m00 - m.m11;
+            float lFourWSquaredMinus1 = m.m00 + m.m11 + m.m22;
+            float lBiggestIndex = 0;
+            float fourBiggestSquaredMinus1 = lFourWSquaredMinus1;
+            if(lFourXSquaredMinus1 > fourBiggestSquaredMinus1)
             {
-                fourBiggestSquaredMinus1 = fourXSquaredMinus1;
-                biggestIndex = 1;
+                fourBiggestSquaredMinus1 = lFourXSquaredMinus1;
+                lBiggestIndex = 1;
             }
-            if(fourYSquaredMinus1 > fourBiggestSquaredMinus1)
+            if(lFourYSquaredMinus1 > fourBiggestSquaredMinus1)
             {
-                fourBiggestSquaredMinus1 = fourYSquaredMinus1;
-                biggestIndex = 2;
+                fourBiggestSquaredMinus1 = lFourYSquaredMinus1;
+                lBiggestIndex = 2;
             }
-            if(fourZSquaredMinus1 > fourBiggestSquaredMinus1)
+            if(lFourZSquaredMinus1 > fourBiggestSquaredMinus1)
             {
-                fourBiggestSquaredMinus1 = fourZSquaredMinus1;
-                biggestIndex = 3;
+                fourBiggestSquaredMinus1 = lFourZSquaredMinus1;
+                lBiggestIndex = 3;
             }
-            var biggestVal = Math.Sqrt((double)fourBiggestSquaredMinus1 + 1.0) * 0.5;
-            var mult = 0.25 / biggestVal;
-            switch(biggestIndex)
+            float lBiggestValue = Math.Sqrt(fourBiggestSquaredMinus1 + 1.0f) * 0.5f;
+            float mult = 0.25 / lBiggestValue;
+            switch(lBiggestIndex)
             {
-                case 0: return new quat((float)((double)(m.m12 - m.m21) * mult), (float)((double)(m.m20 - m.m02) * mult), (float)((double)(m.m01 - m.m10) * mult), (float)(biggestVal));
-                case 1: return new quat((float)(biggestVal), (float)((double)(m.m01 + m.m10) * mult), (float)((double)(m.m20 + m.m02) * mult), (float)((double)(m.m12 - m.m21) * mult));
-                case 2: return new quat((float)((double)(m.m01 + m.m10) * mult), (float)(biggestVal), (float)((double)(m.m12 + m.m21) * mult), (float)((double)(m.m20 - m.m02) * mult));
-                default: return new quat((float)((double)(m.m20 + m.m02) * mult), (float)((double)(m.m12 + m.m21) * mult), (float)(biggestVal), (float)((double)(m.m01 - m.m10) * mult));
+                case 0: return new quat(lBiggestValue,          (m.m21 + m.m12) * mult, (m.m02 + m.m20) * mult, (m.m10 - m.m01) * mult);
+                case 1: return new quat((m.m21 + m.m12) * mult, lBiggestValue,          (m.m10 + m.m01) * mult, (m.m02 - m.m20) * mult);
+                case 2: return new quat((m.m02 + m.m20) * mult, (m.m10 + m.m01) * mult, lBiggestValue,          (m.m21 - m.m12) * mult);
+                case 3: return new quat((m.m10 - m.m01) * mult, (m.m02 - m.m20) * mult, (m.m21 - m.m12) * mult, lBiggestValue);
+                default: return new quat(0.0f, 0.0f, 0.0f, 0.0f);
             }
         }
         
         /// <summary>
-        /// Creates a quaternion from the rotational part of a mat3.
+        /// Creates a quaternion from the rotational part of a mat4.
         /// </summary>
         public static quat FromMat4(mat4 m) => FromMat3(new mat3(m));
         
@@ -714,45 +715,45 @@ namespace SpockEngine.Math
         // /// </summary>
         // public static bvec4 LesserThanEqual(float aLeft, float aRight) => new bvec4(aLeft <= aRight);
         
-        /// <summary>
-        /// Returns a quat from component-wise application of Lerp (min * (1-a) + max * a).
-        /// </summary>
-        public static quat Lerp(quat min, quat max, quat a) => new quat(min.x * (1-a.x) + max.x * a.x, min.y * (1-a.y) + max.y * a.y, min.z * (1-a.z) + max.z * a.z, min.w * (1-a.w) + max.w * a.w);
+        // /// <summary>
+        // /// Returns a quat from component-wise application of Lerp (min * (1-a) + max * a).
+        // /// </summary>
+        // public static quat Lerp(quat min, quat max, quat a) => new quat(min.x * (1-a.x) + max.x * a.x, min.y * (1-a.y) + max.y * a.y, min.z * (1-a.z) + max.z * a.z, min.w * (1-a.w) + max.w * a.w);
         
-        /// <summary>
-        /// Returns a quat from component-wise application of Lerp (min * (1-a) + max * a).
-        /// </summary>
-        public static quat Lerp(quat min, quat max, float a) => new quat(min.x * (1-a) + max.x * a, min.y * (1-a) + max.y * a, min.z * (1-a) + max.z * a, min.w * (1-a) + max.w * a);
+        // /// <summary>
+        // /// Returns a quat from component-wise application of Lerp (min * (1-a) + max * a).
+        // /// </summary>
+        // public static quat Lerp(quat min, quat max, float a) => new quat(min.x * (1-a) + max.x * a, min.y * (1-a) + max.y * a, min.z * (1-a) + max.z * a, min.w * (1-a) + max.w * a);
         
-        /// <summary>
-        /// Returns a quat from component-wise application of Lerp (min * (1-a) + max * a).
-        /// </summary>
-        public static quat Lerp(quat min, float max, quat a) => new quat(min.x * (1-a.x) + max * a.x, min.y * (1-a.y) + max * a.y, min.z * (1-a.z) + max * a.z, min.w * (1-a.w) + max * a.w);
+        // /// <summary>
+        // /// Returns a quat from component-wise application of Lerp (min * (1-a) + max * a).
+        // /// </summary>
+        // public static quat Lerp(quat min, float max, quat a) => new quat(min.x * (1-a.x) + max * a.x, min.y * (1-a.y) + max * a.y, min.z * (1-a.z) + max * a.z, min.w * (1-a.w) + max * a.w);
         
-        /// <summary>
-        /// Returns a quat from component-wise application of Lerp (min * (1-a) + max * a).
-        /// </summary>
-        public static quat Lerp(quat min, float max, float a) => new quat(min.x * (1-a) + max * a, min.y * (1-a) + max * a, min.z * (1-a) + max * a, min.w * (1-a) + max * a);
+        // /// <summary>
+        // /// Returns a quat from component-wise application of Lerp (min * (1-a) + max * a).
+        // /// </summary>
+        // public static quat Lerp(quat min, float max, float a) => new quat(min.x * (1-a) + max * a, min.y * (1-a) + max * a, min.z * (1-a) + max * a, min.w * (1-a) + max * a);
         
-        /// <summary>
-        /// Returns a quat from component-wise application of Lerp (min * (1-a) + max * a).
-        /// </summary>
-        public static quat Lerp(float min, quat max, quat a) => new quat(min * (1-a.x) + max.x * a.x, min * (1-a.y) + max.y * a.y, min * (1-a.z) + max.z * a.z, min * (1-a.w) + max.w * a.w);
+        // /// <summary>
+        // /// Returns a quat from component-wise application of Lerp (min * (1-a) + max * a).
+        // /// </summary>
+        // public static quat Lerp(float min, quat max, quat a) => new quat(min * (1-a.x) + max.x * a.x, min * (1-a.y) + max.y * a.y, min * (1-a.z) + max.z * a.z, min * (1-a.w) + max.w * a.w);
         
-        /// <summary>
-        /// Returns a quat from component-wise application of Lerp (min * (1-a) + max * a).
-        /// </summary>
-        public static quat Lerp(float min, quat max, float a) => new quat(min * (1-a) + max.x * a, min * (1-a) + max.y * a, min * (1-a) + max.z * a, min * (1-a) + max.w * a);
+        // /// <summary>
+        // /// Returns a quat from component-wise application of Lerp (min * (1-a) + max * a).
+        // /// </summary>
+        // public static quat Lerp(float min, quat max, float a) => new quat(min * (1-a) + max.x * a, min * (1-a) + max.y * a, min * (1-a) + max.z * a, min * (1-a) + max.w * a);
         
-        /// <summary>
-        /// Returns a quat from component-wise application of Lerp (min * (1-a) + max * a).
-        /// </summary>
-        public static quat Lerp(float min, float max, quat a) => new quat(min * (1-a.x) + max * a.x, min * (1-a.y) + max * a.y, min * (1-a.z) + max * a.z, min * (1-a.w) + max * a.w);
+        // /// <summary>
+        // /// Returns a quat from component-wise application of Lerp (min * (1-a) + max * a).
+        // /// </summary>
+        // public static quat Lerp(float min, float max, quat a) => new quat(min * (1-a.x) + max * a.x, min * (1-a.y) + max * a.y, min * (1-a.z) + max * a.z, min * (1-a.w) + max * a.w);
         
-        /// <summary>
-        /// Returns a quat from the application of Lerp (min * (1-a) + max * a).
-        /// </summary>
-        public static quat Lerp(float min, float max, float a) => new quat(min * (1-a) + max * a);
+        // /// <summary>
+        // /// Returns a quat from the application of Lerp (min * (1-a) + max * a).
+        // /// </summary>
+        // public static quat Lerp(float min, float max, float a) => new quat(min * (1-a) + max * a);
 
         // #endregion
 
