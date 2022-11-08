@@ -10,10 +10,10 @@ namespace SpockEngine
         
         public void Initialize( Entity aEntity ) { mEntity = new Entity(aEntity); }
 
-        public virtual void OnCreate() {}
+        public virtual void BeginScenario() {}
 
-        public virtual void OnDestroy() {}
+        public virtual void EndScenario() {}
 
-        public virtual void OnUpdate( float aTs ) {}
+        public virtual void Tick( float aTs ) {}
     }
 }

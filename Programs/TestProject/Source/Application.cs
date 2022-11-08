@@ -11,22 +11,22 @@ namespace Test
 
         public TestActorComponent() : base() {}
 
-        override public void OnCreate() 
+        override public void BeginScenario() 
         {
-            base.OnCreate();
+            base.BeginScenario();
             mTestField0 = 0.0f;
         }
 
-        override public void OnDestroy()
+        override public void EndScenario()
         {
-            base.OnDestroy();
+            base.EndScenario();
 
             Console.WriteLine("Actor Component Destroyed!!!");
         }
 
-        override public void OnUpdate(float aTs )
+        override public void Tick(float aTs )
         {
-            base.OnUpdate(aTs);
+            base.Tick(aTs);
           
             if (mEntity.Has<sNodeTransformComponent>())
             {

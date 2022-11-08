@@ -105,12 +105,12 @@ namespace LTSE::Core::EntityComponentSystem::Components
             // Instantiate the Mono actor class with the entity object as parameter
             mInstance = mClass.Instantiate();
             mInstance.CallMethod( "Initialize", (size_t)mEntityInstance.GetInstance() );
-            mInstance.InvokeMethod( "OnCreate", 0, nullptr );
+            mInstance.InvokeMethod( "BeginScenario", 0, nullptr );
         }
 
-        void OnDestroy() { mInstance.InvokeMethod( "OnDestroy", 0, nullptr ); }
+        void OnDestroy() { mInstance.InvokeMethod( "EndScenario", 0, nullptr ); }
 
-        void OnUpdate( Timestep ts ) { mInstance.CallMethod( "OnUpdate", ts.GetMilliseconds() ); }
+        void OnUpdate( Timestep ts ) { mInstance.CallMethod( "Tick", ts.GetMilliseconds() ); }
 
         Entity GetControlledEntity() const { return mEntity; };
 
