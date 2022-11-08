@@ -32,19 +32,39 @@ using namespace LTSE::Core::UI;
 
 namespace fs = std::filesystem;
 
-void LoadConfiguration( fs::path aConfigurationFile, math::ivec2 &aWindowSize, math::ivec2 &aWindowPosition )
+
+void LoadConfiguration( fs::path aConfigurationFile, math::ivec2 &aWindowSize, math::ivec2 &aWindowPosition,
+                        UIConfiguration &aUIConfiguration )
 {
     YAML::Node lRootNode = YAML::LoadFile( aConfigurationFile.string() );
+    lRootNode = lRootNode["application"];
 
-    YAML::Node &lWindowProperties = lRootNode["application"]["window_properties"];
+    fs::path lFontRoot = "C:\\Windows\\Fonts";
+
+    YAML::Node lWindowProperties = lRootNode["window_properties"];
     if( !lWindowProperties.IsNull() )
     {
         aWindowSize     = math::ivec2{ lWindowProperties["width"].as<int>(), lWindowProperties["height"].as<int>() };
         aWindowPosition = math::ivec2{ lWindowProperties["x"].as<int>(), lWindowProperties["y"].as<int>() };
     }
+
+    YAML::Node lUIProperties = lRootNode["ui"];
+    if( !lUIProperties.IsNull() )
+    {
+        aUIConfiguration.mFontSize = lUIProperties["font_size"].as<int>();
+
+        aUIConfiguration.mMainFont       = lFontRoot / lUIProperties["main_font"]["regular"].as<std::string>();
+        aUIConfiguration.mBoldFont       = lFontRoot / lUIProperties["main_font"]["bold"].as<std::string>();
+        aUIConfiguration.mItalicFont     = lFontRoot / lUIProperties["main_font"]["italic"].as<std::string>();
+        aUIConfiguration.mBoldItalicFont = lFontRoot / lUIProperties["main_font"]["bold_italic"].as<std::string>();
+
+        aUIConfiguration.mIconFont = fs::path( lUIProperties["icon_font"].as<std::string>() );
+        aUIConfiguration.mMonoFont = fs::path( lUIProperties["mono_font"].as<std::string>() );
+    }
 }
 
-void SaveConfiguration( fs::path aConfigurationFile, math::ivec2 const &aWindowSize, math::ivec2 const &aWindowPosition )
+void SaveConfiguration( fs::path aConfigurationFile, math::ivec2 const &aWindowSize, math::ivec2 const &aWindowPosition,
+                        UIConfiguration &aUIConfiguration )
 {
     YAML::Emitter lConfigurationOut;
     lConfigurationOut << YAML::BeginMap;
@@ -59,6 +79,21 @@ void SaveConfiguration( fs::path aConfigurationFile, math::ivec2 const &aWindowS
             lConfigurationOut << YAML::Key << "height" << YAML::Value << aWindowSize.y;
             lConfigurationOut << YAML::Key << "x" << YAML::Value << aWindowPosition.x;
             lConfigurationOut << YAML::Key << "y" << YAML::Value << aWindowPosition.y;
+            lConfigurationOut << YAML::EndMap;
+
+            lConfigurationOut << YAML::Key << "ui" << YAML::Value;
+            lConfigurationOut << YAML::BeginMap;
+            lConfigurationOut << YAML::Key << "font_size" << YAML::Value << aUIConfiguration.mFontSize;
+            lConfigurationOut << YAML::Key << "icon_font" << YAML::Value << aUIConfiguration.mIconFont.string();
+            lConfigurationOut << YAML::Key << "main_font" << YAML::Value;
+            lConfigurationOut << YAML::BeginMap;
+            lConfigurationOut << YAML::Key << "regular" << YAML::Value << aUIConfiguration.mMainFont.string();
+            lConfigurationOut << YAML::Key << "bold" << YAML::Value << aUIConfiguration.mBoldFont.string();
+            lConfigurationOut << YAML::Key << "italic" << YAML::Value << aUIConfiguration.mItalicFont.string();
+            lConfigurationOut << YAML::Key << "bold_italic" << YAML::Value << aUIConfiguration.mBoldItalicFont.string();
+            lConfigurationOut << YAML::EndMap;
+
+            lConfigurationOut << YAML::Key << "mono_font" << YAML::Value << aUIConfiguration.mMonoFont.string();
             lConfigurationOut << YAML::EndMap;
         }
 
@@ -172,14 +207,15 @@ int main( int argc, char **argv )
     LTSE::Logging::Info( "Log file will be written to '{}'", lOutputLogFile.string() );
     LTSE::Logging::SetLogOutputFile( lProjectRoot / "Saved" / "Logs" / "EditorLogs.txt" );
 
-    math::ivec2 lWindowSize     = { 640, 480 };
-    math::ivec2 lWindowPosition = { 100, 100 };
+    math::ivec2     lWindowSize     = { 640, 480 };
+    math::ivec2     lWindowPosition = { 100, 100 };
+    UIConfiguration lUIConfiguration{};
 
     fs::path lConfigurationFile = lProjectRoot / "Saved" / "Config" / "EditorConfiguration.yaml";
     if( fs::exists( lConfigurationFile ) )
-        LoadConfiguration( lConfigurationFile, lWindowSize, lWindowPosition );
+        LoadConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
     else
-        SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition );
+        SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
 
     if( auto lResXOverride = lProgramArguments->present<int>( "--res_x" ) ) lWindowSize.x = lResXOverride.value();
     if( auto lResYOverride = lProgramArguments->present<int>( "--res_y" ) ) lWindowSize.y = lResYOverride.value();
@@ -195,7 +231,7 @@ int main( int argc, char **argv )
         std::exit( 1 );
     }
 
-    LTSE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lProjectRoot / "Saved" / "imgui.ini" );
+    LTSE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lProjectRoot / "Saved" / "imgui.ini", lUIConfiguration );
 
     auto lScenario = fs::path( lProgramArguments->get<std::string>( "--scenario" ) );
     if( !fs::exists( lScenario ) ) LTSE::Logging::Info( "Scenario file '{}' does not exist", lScenario.string() );
@@ -242,6 +278,8 @@ int main( int argc, char **argv )
     while( LTSE::Core::Engine::GetInstance()->Tick() )
     {
     }
+
+    SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
 
     ScriptManager::Shutdown();
     LTSE::Core::Engine::Shutdown();

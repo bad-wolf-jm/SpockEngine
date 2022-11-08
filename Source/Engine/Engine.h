@@ -23,7 +23,6 @@
 /** @brief */
 namespace LTSE::Core
 {
-
     /** @class Engine
      *
      * This class encapsulates the main engine loop. It is responsible for all the initialization
@@ -112,7 +111,7 @@ namespace LTSE::Core
         std::string GetImGuiConfigurationFile();
 
         static void Initialize( math::ivec2 aInitialMainWindowSize, math::ivec2 aInitialMainWindowPosition,
-                                fs::path aImGuiConfigPath );
+                                fs::path aImGuiConfigPath, UIConfiguration const& aUIConfiguration );
         static void Shutdown();
 
         static std::unique_ptr<Engine> &GetInstance() { return mUniqueInstance; };
@@ -138,6 +137,7 @@ namespace LTSE::Core
         math::ivec2 mInitialMainWindowSize     = { 1920, 1080 };
         math::ivec2 mInitialMainWindowPosition = { 100, 100 };
         std::string mImGuiConfigPath           = "imgui.ini";
+        UIConfiguration mUIConfiguration{};
 
         math::ivec2 mMainWindowSize;
         math::vec2  mDpiScaling;

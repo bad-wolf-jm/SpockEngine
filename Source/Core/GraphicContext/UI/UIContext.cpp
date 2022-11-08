@@ -188,32 +188,20 @@ namespace LTSE::Core
         lFontConfig.PixelSnapH       = true;
         lFontConfig.GlyphMinAdvanceX = 10.0f;
 
-        const float lFontSize = 14.0f;
+        mMonoFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mMonoFont.string().c_str(), aUIConfiguration.mFontSize );
+        io.Fonts->AddFontFromFileTTF( aUIConfiguration.mIconFont.string().c_str(), aUIConfiguration.mFontSize, &lFontConfig, lRanges );
 
-        mMonoFont = io.Fonts->AddFontFromFileTTF(
-            GetResourcePath( "fonts\\dejavu-fonts-ttf-2.37\\ttf\\DejaVuSansMono.ttf" ).string().c_str(), lFontSize );
-        io.Fonts->AddFontFromFileTTF(
-            GetResourcePath( "fonts\\fontawesome-webfont.ttf" ).string().c_str(), lFontSize, &lFontConfig, lRanges );
+        mMainFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mMainFont.string().c_str(), aUIConfiguration.mFontSize );
+        io.Fonts->AddFontFromFileTTF( aUIConfiguration.mIconFont.string().c_str(), aUIConfiguration.mFontSize, &lFontConfig, lRanges );
 
-        mMainFont = io.Fonts->AddFontFromFileTTF(
-            GetResourcePath( "fonts\\dejavu-fonts-ttf-2.37\\ttf\\DejaVuSans.ttf" ).string().c_str(), lFontSize );
-        io.Fonts->AddFontFromFileTTF(
-            GetResourcePath( "fonts\\fontawesome-webfont.ttf" ).string().c_str(), lFontSize, &lFontConfig, lRanges );
+        mBoldFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mBoldFont.string().c_str(), aUIConfiguration.mFontSize );
+        io.Fonts->AddFontFromFileTTF( aUIConfiguration.mIconFont.string().c_str(), aUIConfiguration.mFontSize, &lFontConfig, lRanges );
 
-        mBoldFont = io.Fonts->AddFontFromFileTTF(
-            GetResourcePath( "fonts\\dejavu-fonts-ttf-2.37\\ttf\\DejaVuSans-Bold.ttf" ).string().c_str(), lFontSize );
-        io.Fonts->AddFontFromFileTTF(
-            GetResourcePath( "fonts\\fontawesome-webfont.ttf" ).string().c_str(), lFontSize, &lFontConfig, lRanges );
+        mObliqueFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mItalicFont.string().c_str(), aUIConfiguration.mFontSize );
+        io.Fonts->AddFontFromFileTTF( aUIConfiguration.mIconFont.string().c_str(), aUIConfiguration.mFontSize, &lFontConfig, lRanges );
 
-        mObliqueFont = io.Fonts->AddFontFromFileTTF(
-            GetResourcePath( "fonts\\dejavu-fonts-ttf-2.37\\ttf\\DejaVuSans-Oblique.ttf" ).string().c_str(), lFontSize );
-        io.Fonts->AddFontFromFileTTF(
-            GetResourcePath( "fonts\\fontawesome-webfont.ttf" ).string().c_str(), lFontSize, &lFontConfig, lRanges );
-
-        mBoldObliqueFont = io.Fonts->AddFontFromFileTTF(
-            GetResourcePath( "fonts\\dejavu-fonts-ttf-2.37\\ttf\\DejaVuSans-BoldOblique.ttf" ).string().c_str(), lFontSize );
-        io.Fonts->AddFontFromFileTTF(
-            GetResourcePath( "fonts\\fontawesome-webfont.ttf" ).string().c_str(), lFontSize, &lFontConfig, lRanges );
+        mBoldObliqueFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mBoldItalicFont.string().c_str(), aUIConfiguration.mFontSize );
+        io.Fonts->AddFontFromFileTTF( aUIConfiguration.mIconFont.string().c_str(), aUIConfiguration.mFontSize, &lFontConfig, lRanges );
 
         mUIStyle = UIStyle{ true };
 

@@ -27,6 +27,18 @@ namespace LTSE::Core
     using namespace LTSE::Graphics;
     using namespace LTSE::Core::UI;
 
+    struct UIConfiguration
+    {
+        uint32_t mFontSize;
+
+        fs::path mMainFont;
+        fs::path mBoldFont;
+        fs::path mItalicFont;
+        fs::path mBoldItalicFont;
+        fs::path mMonoFont;
+        fs::path mIconFont;
+    };
+
     enum class FontFamilyFlags : uint8_t
     {
         NORMAL = 0,
@@ -41,7 +53,7 @@ namespace LTSE::Core
       public:
         UIContext( Ref<LTSE::Core::ViewportClient> aWindow, GraphicContext &aDevice, ARenderContext &aRenderContext, std::string &aImGuiConfigPath );
         ~UIContext();
-        
+
         void BeginFrame();
         void EndFrame( ARenderContext &aRenderContext );
 

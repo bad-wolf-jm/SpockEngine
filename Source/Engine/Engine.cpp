@@ -44,7 +44,8 @@ namespace LTSE::Core
         mMainWindowSize  = mViewportClient->GetMainWindowSize();
         mDpiScaling      = math::vec2( 1.0f, 1.0f );
         mFramebufferSize = mViewportClient->GetFramebufferSize();
-        mImGUIOverlay    = New<LTSE::Core::UIContext>( mViewportClient, mGraphicContext, mRenderContext, mImGuiConfigPath );
+        mImGUIOverlay =
+            New<LTSE::Core::UIContext>( mViewportClient, mGraphicContext, mRenderContext, mImGuiConfigPath, mUIConfiguration );
 
         mEngineLoopStartTime = GetTime();
         mLastFrameTime       = mEngineLoopStartTime;
@@ -117,7 +118,8 @@ namespace LTSE::Core
 
     std::unique_ptr<Engine> Engine::mUniqueInstance = nullptr;
 
-    void Engine::Initialize( math::ivec2 aInitialMainWindowSize, math::ivec2 aInitialMainWindowPosition, fs::path aImGuiConfigPath )
+    void Engine::Initialize( math::ivec2 aInitialMainWindowSize, math::ivec2 aInitialMainWindowPosition, fs::path aImGuiConfigPath,
+                             UIConfiguration const &aUIConfiguration )
     {
         if( mUniqueInstance ) return;
 
@@ -126,6 +128,7 @@ namespace LTSE::Core
         mUniqueInstance->mInitialMainWindowSize     = aInitialMainWindowSize;
         mUniqueInstance->mInitialMainWindowPosition = aInitialMainWindowPosition;
         mUniqueInstance->mImGuiConfigPath           = aImGuiConfigPath.string();
+        mUniqueInstance->mUIConfiguration           = aUIConfiguration;
         mUniqueInstance->Init();
     }
 
