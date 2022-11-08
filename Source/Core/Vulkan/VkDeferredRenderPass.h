@@ -7,6 +7,7 @@
 
 #include "VkContext.h"
 #include "VkImage.h"
+#include "VkAbstractRenderPass.h"
 
 #include "Core/Memory.h"
 
@@ -14,11 +15,8 @@ namespace LTSE::Graphics::Internal
 {
     using namespace LTSE::Core;
 
-    struct sVkDeferredRenderPassObject
+    struct sVkDeferredRenderPassObject : public sVkAbstractRenderPassObject
     {
-        VkRenderPass mVkObject    = VK_NULL_HANDLE;
-        uint32_t     mSampleCount = 1;
-
         sVkDeferredRenderPassObject()                        = default;
         sVkDeferredRenderPassObject( sVkDeferredRenderPassObject & ) = default;
         sVkDeferredRenderPassObject( Ref<VkContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
@@ -27,16 +25,7 @@ namespace LTSE::Graphics::Internal
         sVkDeferredRenderPassObject( Ref<VkContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented,
             math::vec4 aClearColor );
 
-        ~sVkDeferredRenderPassObject();
-
-        VkAttachmentDescription ColorAttachment( VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented );
-        VkAttachmentDescription DepthAttachment( uint32_t aSampleCount );
-
-        std::vector<VkClearValue> GetClearValues();
-
-      private:
-        Ref<VkContext>            mContext     = nullptr;
-        std::vector<VkClearValue> mClearValues = {};
+        ~sVkDeferredRenderPassObject() = default;
     };
 
 } // namespace LTSE::Graphics::Internal

@@ -47,6 +47,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Vulkan/VkPipeline.cpp
     Core/Vulkan/VkImage.cpp
     Core/Vulkan/VkCommand.cpp
+    Core/Vulkan/VkAbstractRenderPass.cpp
     Core/Vulkan/VkDeferredRenderPass.cpp
     
     Core/GraphicContext//Buffer.cpp

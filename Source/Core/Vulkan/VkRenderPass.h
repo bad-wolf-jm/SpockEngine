@@ -8,17 +8,16 @@
 #include "VkContext.h"
 #include "VkImage.h"
 
+#include "VkAbstractRenderPass.h"
+
 #include "Core/Memory.h"
 
 namespace LTSE::Graphics::Internal
 {
     using namespace LTSE::Core;
 
-    struct sVkRenderPassObject
+    struct sVkRenderPassObject : public sVkAbstractRenderPassObject
     {
-        VkRenderPass mVkObject    = VK_NULL_HANDLE;
-        uint32_t     mSampleCount = 1;
-
         sVkRenderPassObject()                        = default;
         sVkRenderPassObject( sVkRenderPassObject & ) = default;
         sVkRenderPassObject( Ref<VkContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
@@ -27,16 +26,7 @@ namespace LTSE::Graphics::Internal
         sVkRenderPassObject( Ref<VkContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented,
             math::vec4 aClearColor );
 
-        ~sVkRenderPassObject();
-
-        VkAttachmentDescription ColorAttachment( VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented );
-        VkAttachmentDescription DepthAttachment( uint32_t aSampleCount );
-
-        std::vector<VkClearValue> GetClearValues();
-
-      private:
-        Ref<VkContext>            mContext     = nullptr;
-        std::vector<VkClearValue> mClearValues = {};
+        ~sVkRenderPassObject() = default;
     };
 
 } // namespace LTSE::Graphics::Internal
