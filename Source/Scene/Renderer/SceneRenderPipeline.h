@@ -7,7 +7,6 @@
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/Vulkan/VkRenderPass.h"
 
-
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
 #include "Core/GraphicContext//RenderContext.h"
@@ -47,43 +46,43 @@ namespace LTSE::Core
         {
         }
 
-        void Initialize( SceneRenderPipelineCreateInfo &a_CreateInfo )
+        void Initialize( SceneRenderPipelineCreateInfo &aCreateInfo )
         {
-            Spec = a_CreateInfo;
+            Spec = aCreateInfo;
 
-            std::string                 l_VertexShaderFiles = GetResourcePath( a_CreateInfo.VertexShader ).string();
-            Ref<Internal::ShaderModule> l_VertexShaderModule =
-                New<Internal::ShaderModule>( mGraphicContext.mContext, l_VertexShaderFiles, Internal::eShaderStageTypeFlags::VERTEX );
+            std::string                 lVertexShaderFiles = GetResourcePath( aCreateInfo.VertexShader ).string();
+            Ref<Internal::ShaderModule> lVertexShaderModule =
+                New<Internal::ShaderModule>( mGraphicContext.mContext, lVertexShaderFiles, Internal::eShaderStageTypeFlags::VERTEX );
 
-            std::string                 l_FragmentShaderFiles  = GetResourcePath( a_CreateInfo.FragmentShader ).string();
+            std::string                 l_FragmentShaderFiles  = GetResourcePath( aCreateInfo.FragmentShader ).string();
             Ref<Internal::ShaderModule> l_FragmentShaderModule = New<Internal::ShaderModule>(
                 mGraphicContext.mContext, l_FragmentShaderFiles, Internal::eShaderStageTypeFlags::FRAGMENT );
 
-            GraphicsPipelineCreateInfo l_PipelineCreateInfo{};
-            l_PipelineCreateInfo.mShaderStages        = { { l_VertexShaderModule, "main" }, { l_FragmentShaderModule, "main" } };
-            l_PipelineCreateInfo.InputBufferLayout    = _VertexType::GetDefaultLayout();
-            l_PipelineCreateInfo.InstanceBufferLayout = a_CreateInfo.InstanceBufferLayout;
-            l_PipelineCreateInfo.Topology             = Spec.Topology;
-            l_PipelineCreateInfo.Opaque               = Spec.Opaque;
+            GraphicsPipelineCreateInfo lPipelineCreateInfo{};
+            lPipelineCreateInfo.mShaderStages        = { { lVertexShaderModule, "main" }, { l_FragmentShaderModule, "main" } };
+            lPipelineCreateInfo.InputBufferLayout    = _VertexType::GetDefaultLayout();
+            lPipelineCreateInfo.InstanceBufferLayout = aCreateInfo.InstanceBufferLayout;
+            lPipelineCreateInfo.Topology             = Spec.Topology;
+            lPipelineCreateInfo.Opaque               = Spec.Opaque;
             if( Spec.IsTwoSided )
             {
-                l_PipelineCreateInfo.Culling = eFaceCulling::NONE;
+                lPipelineCreateInfo.Culling = eFaceCulling::NONE;
             }
             else
             {
-                l_PipelineCreateInfo.Culling = eFaceCulling::BACK;
+                lPipelineCreateInfo.Culling = eFaceCulling::BACK;
             }
 
-            l_PipelineCreateInfo.SampleCount      = Spec.RenderPass->mSampleCount;
-            l_PipelineCreateInfo.LineWidth        = Spec.LineWidth;
-            l_PipelineCreateInfo.RenderPass       = Spec.RenderPass;
-            l_PipelineCreateInfo.DepthWriteEnable = true;
-            l_PipelineCreateInfo.DepthTestEnable  = true;
-            l_PipelineCreateInfo.DepthComparison  = eDepthCompareOperation::LESS_OR_EQUAL;
-            l_PipelineCreateInfo.PushConstants    = GetPushConstantLayout();
-            l_PipelineCreateInfo.SetLayouts       = GetDescriptorSetLayout();
+            lPipelineCreateInfo.SampleCount      = Spec.RenderPass->mSampleCount;
+            lPipelineCreateInfo.LineWidth        = Spec.LineWidth;
+            lPipelineCreateInfo.RenderPass       = Spec.RenderPass;
+            lPipelineCreateInfo.DepthWriteEnable = true;
+            lPipelineCreateInfo.DepthTestEnable  = true;
+            lPipelineCreateInfo.DepthComparison  = eDepthCompareOperation::LESS_OR_EQUAL;
+            lPipelineCreateInfo.PushConstants    = GetPushConstantLayout();
+            lPipelineCreateInfo.SetLayouts       = GetDescriptorSetLayout();
 
-            Pipeline = New<GraphicsPipeline>( mGraphicContext, l_PipelineCreateInfo );
+            Pipeline = New<GraphicsPipeline>( mGraphicContext, lPipelineCreateInfo );
         }
 
         virtual std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout() = 0;

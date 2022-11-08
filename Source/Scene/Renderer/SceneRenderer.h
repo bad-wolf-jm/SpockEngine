@@ -158,28 +158,28 @@ namespace LTSE::Core
       protected:
         GraphicContext mGraphicContext;
 
-        Ref<CoordinateGridRenderer> m_CoordinateGridRenderer = nullptr;
-        Ref<VisualHelperRenderer>   m_VisualHelperRenderer   = nullptr;
+        Ref<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;
+        Ref<VisualHelperRenderer>   mVisualHelperRenderer   = nullptr;
 
-        Ref<Buffer> m_CameraUniformBuffer    = nullptr;
-        Ref<Buffer> m_ShaderParametersBuffer = nullptr;
+        Ref<Buffer> mCameraUniformBuffer    = nullptr;
+        Ref<Buffer> mShaderParametersBuffer = nullptr;
 
-        Ref<LTSE::Graphics::Internal::sVkRenderPassObject> m_RenderPass = nullptr;
+        Ref<LTSE::Graphics::Internal::sVkRenderPassObject> mRenderPass = nullptr;
 
-        Ref<DescriptorSetLayout> m_CameraSetLayout  = nullptr;
-        Ref<DescriptorSetLayout> m_NodeSetLayout    = nullptr;
-        Ref<DescriptorSetLayout> m_TextureSetLayout = nullptr;
+        Ref<DescriptorSetLayout> mCameraSetLayout  = nullptr;
+        Ref<DescriptorSetLayout> mNodeSetLayout    = nullptr;
+        Ref<DescriptorSetLayout> mTextureSetLayout = nullptr;
 
-        Ref<DescriptorSet> m_SceneDescriptors = nullptr;
-        Ref<DescriptorSet> m_NodeDescriptors  = nullptr;
+        Ref<DescriptorSet> mSceneDescriptors = nullptr;
+        Ref<DescriptorSet> mNodeDescriptors  = nullptr;
 
-        Ref<Graphics::Texture2D> m_EmptyTexture = nullptr;
+        Ref<Graphics::Texture2D> mEmptyTexture = nullptr;
 
-        std::unordered_map<MeshRendererCreateInfo, MeshRenderer, MeshRendererCreateInfoHash> m_MeshRenderers = {};
+        std::unordered_map<MeshRendererCreateInfo, MeshRenderer, MeshRendererCreateInfoHash> mMeshRenderers = {};
         std::unordered_map<ParticleRendererCreateInfo, ParticleSystemRenderer, ParticleSystemRendererCreateInfoHash>
-            m_ParticleRenderers = {};
+            mParticleRenderers = {};
 
-        std::unordered_map<Entity, Ref<DescriptorSet>> m_Materials = {};
+        std::unordered_map<Entity, Ref<DescriptorSet>> mMaterials = {};
 
       protected:
         void UpdateDescriptorSets( RenderContext &aRenderContext );

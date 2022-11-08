@@ -90,39 +90,53 @@ namespace LTSE::Editor
 
     void BaseEditorApplication::RebuildOutputFramebuffer()
     {
-        if( m_ViewportWidth == 0 || m_ViewportHeight == 0 ) return;
+        if( mViewportWidth == 0 || mViewportHeight == 0 ) return;
 
-        if( !m_OffscreenRenderTarget )
+        if( !mOffscreenRenderTarget )
         {
             OffscreenRenderTargetDescription l_RenderTargetCI{};
-            l_RenderTargetCI.OutputSize  = { m_ViewportWidth, m_ViewportHeight };
+            l_RenderTargetCI.OutputSize  = { mViewportWidth, mViewportHeight };
             l_RenderTargetCI.SampleCount = 4;
             l_RenderTargetCI.Sampled     = true;
-            m_OffscreenRenderTarget      = New<OffscreenRenderTarget>( mEngineLoop->GetGraphicContext(), l_RenderTargetCI );
-            m_ViewportRenderContext      = LTSE::Graphics::RenderContext( mEngineLoop->GetGraphicContext(), m_OffscreenRenderTarget );
+            mOffscreenRenderTarget      = New<OffscreenRenderTarget>( mEngineLoop->GetGraphicContext(), l_RenderTargetCI );
+            m_ViewportRenderContext      = LTSE::Graphics::RenderContext( mEngineLoop->GetGraphicContext(), mOffscreenRenderTarget );
         }
         else
         {
-            m_OffscreenRenderTarget->Resize( m_ViewportWidth, m_ViewportHeight );
+            mOffscreenRenderTarget->Resize( mViewportWidth, mViewportHeight );
         }
 
-        m_OffscreenRenderTargetTexture = New<Graphics::Texture2D>(
-            mEngineLoop->GetGraphicContext(), TextureDescription{}, m_OffscreenRenderTarget->GetOutputImage() );
-
-        if( !m_OffscreenRenderTargetDisplayHandle.Handle )
+        if( !mDeferredRenderTarget )
         {
-            m_OffscreenRenderTargetDisplayHandle = mEngineLoop->UIContext()->CreateTextureHandle( m_OffscreenRenderTargetTexture );
-            mEditorWindow.UpdateSceneViewport( m_OffscreenRenderTargetDisplayHandle );
+            DeferredRenderTargetDescription l_RenderTargetCI{};
+            l_RenderTargetCI.OutputSize  = { mViewportWidth, mViewportHeight };
+            l_RenderTargetCI.SampleCount = 4;
+            l_RenderTargetCI.Sampled     = true;
+            mDeferredRenderTarget      = New<DeferredRenderTarget>( mEngineLoop->GetGraphicContext(), l_RenderTargetCI );
+            // m_ViewportRenderContext      = LTSE::Graphics::RenderContext( mEngineLoop->GetGraphicContext(), mOffscreenRenderTarget );
         }
         else
         {
-            m_OffscreenRenderTargetDisplayHandle.Handle->Write( m_OffscreenRenderTargetTexture, 0 );
+            mDeferredRenderTarget->Resize( mViewportWidth, mViewportHeight );
+        }
+
+        mOffscreenRenderTargetTexture = New<Graphics::Texture2D>(
+            mEngineLoop->GetGraphicContext(), TextureDescription{}, mOffscreenRenderTarget->GetOutputImage() );
+
+        if( !mOffscreenRenderTargetDisplayHandle.Handle )
+        {
+            mOffscreenRenderTargetDisplayHandle = mEngineLoop->UIContext()->CreateTextureHandle( mOffscreenRenderTargetTexture );
+            mEditorWindow.UpdateSceneViewport( mOffscreenRenderTargetDisplayHandle );
+        }
+        else
+        {
+            mOffscreenRenderTargetDisplayHandle.Handle->Write( mOffscreenRenderTargetTexture, 0 );
         }
 
         if( m_WorldRenderer )
         {
             m_WorldRenderer->View.Projection = math::Perspective(
-                90.0_degf, static_cast<float>( m_ViewportWidth ) / static_cast<float>( m_ViewportHeight ), 0.01f, 100000.0f );
+                90.0_degf, static_cast<float>( mViewportWidth ) / static_cast<float>( mViewportHeight ), 0.01f, 100000.0f );
             m_WorldRenderer->View.Projection[1][1] *= -1.0f;
         }
     }
@@ -130,10 +144,10 @@ namespace LTSE::Editor
     bool BaseEditorApplication::RenderUI( ImGuiIO &io )
     {
         bool o_RequestQuit = false;
-        if( m_ShouldRebuildViewport )
+        if( mShouldRebuildViewport )
         {
             RebuildOutputFramebuffer();
-            m_ShouldRebuildViewport = false;
+            mShouldRebuildViewport = false;
         }
 
         mEditorWindow.mEngineLoop = mEngineLoop;
@@ -145,11 +159,11 @@ namespace LTSE::Editor
         OnUI();
 
         auto l_WorkspaceAreaSize = mEditorWindow.GetWorkspaceAreaSize();
-        if( ( m_ViewportWidth != l_WorkspaceAreaSize.x ) || ( m_ViewportHeight != l_WorkspaceAreaSize.y ) )
+        if( ( mViewportWidth != l_WorkspaceAreaSize.x ) || ( mViewportHeight != l_WorkspaceAreaSize.y ) )
         {
-            m_ViewportWidth         = l_WorkspaceAreaSize.x;
-            m_ViewportHeight        = l_WorkspaceAreaSize.y;
-            m_ShouldRebuildViewport = true;
+            mViewportWidth         = l_WorkspaceAreaSize.x;
+            mViewportHeight        = l_WorkspaceAreaSize.y;
+            mShouldRebuildViewport = true;
         }
 
         if( o_RequestQuit ) return true;
@@ -238,7 +252,7 @@ namespace LTSE::Editor
 
         RebuildOutputFramebuffer();
         m_World         = New<Scene>( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
-        m_WorldRenderer = New<SceneRenderer>( m_World, m_ViewportRenderContext, m_OffscreenRenderTarget->GetRenderPass() );
+        m_WorldRenderer = New<SceneRenderer>( m_World, m_ViewportRenderContext, mOffscreenRenderTarget->GetRenderPass() );
 
         mEditorWindow.World       = m_World;
         mEditorWindow.ActiveWorld = m_World;
