@@ -6,7 +6,6 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-
 #include "Core/GraphicContext//Buffer.h"
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//RenderContext.h"
@@ -28,8 +27,8 @@ namespace LTSE::Graphics
 
     struct VisualHelperMeshRendererCreateInfo
     {
-        float                                              LineWidth  = 1.0f;
-        Ref<LTSE::Graphics::Internal::sVkRenderPassObject> RenderPass = nullptr;
+        float                                                      LineWidth  = 1.0f;
+        Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
     class VisualHelperMeshRenderer : public LTSE::Core::SceneRenderPipeline<SimpleVertexData>

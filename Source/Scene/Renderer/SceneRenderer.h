@@ -135,8 +135,8 @@ namespace LTSE::Core
 
       public:
         SceneRenderer() = default;
-        SceneRenderer(
-            Ref<Scene> a_World, RenderContext &a_RenderContext, Ref<LTSE::Graphics::Internal::sVkRenderPassObject> a_RenderPass );
+        SceneRenderer( Ref<Scene> a_World, RenderContext &a_RenderContext,
+            Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> a_RenderPass );
 
         ~SceneRenderer() = default;
 
@@ -164,7 +164,7 @@ namespace LTSE::Core
         Ref<Buffer> mCameraUniformBuffer    = nullptr;
         Ref<Buffer> mShaderParametersBuffer = nullptr;
 
-        Ref<LTSE::Graphics::Internal::sVkRenderPassObject> mRenderPass = nullptr;
+        Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> mRenderPass = nullptr;
 
         Ref<DescriptorSetLayout> mCameraSetLayout  = nullptr;
         Ref<DescriptorSetLayout> mNodeSetLayout    = nullptr;

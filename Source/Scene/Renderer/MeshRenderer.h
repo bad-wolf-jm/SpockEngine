@@ -30,7 +30,7 @@ namespace LTSE::Core
         fs::path VertexShader   = "";
         fs::path FragmentShader = "";
 
-        Ref<LTSE::Graphics::Internal::sVkRenderPassObject> RenderPass = nullptr;
+        Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
 
         bool operator==( const MeshRendererCreateInfo &p ) const
         {

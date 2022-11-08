@@ -5,7 +5,7 @@
 #include "Core/Math/Types.h"
 
 #include "Core/GraphicContext//GraphicContext.h"
-#include "Core/Vulkan/VkRenderPass.h"
+#include "Core/Vulkan/VkAbstractRenderPass.h"
 
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
@@ -20,15 +20,15 @@ namespace LTSE::Core
 
     struct SceneRenderPipelineCreateInfo
     {
-        bool                                               Opaque               = false;
-        bool                                               IsTwoSided           = false;
-        float                                              LineWidth            = 1.0f;
-        ePrimitiveTopology                                 Topology             = ePrimitiveTopology::TRIANGLES;
-        fs::path                                           VertexShader         = "";
-        fs::path                                           FragmentShader       = "";
-        sBufferLayout                                      InputBufferLayout    = {};
-        sBufferLayout                                      InstanceBufferLayout = {};
-        Ref<LTSE::Graphics::Internal::sVkRenderPassObject> RenderPass           = nullptr;
+        bool                                                       Opaque               = false;
+        bool                                                       IsTwoSided           = false;
+        float                                                      LineWidth            = 1.0f;
+        ePrimitiveTopology                                         Topology             = ePrimitiveTopology::TRIANGLES;
+        fs::path                                                   VertexShader         = "";
+        fs::path                                                   FragmentShader       = "";
+        sBufferLayout                                              InputBufferLayout    = {};
+        sBufferLayout                                              InstanceBufferLayout = {};
+        Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass           = nullptr;
     };
 
     template <typename _VertexType>

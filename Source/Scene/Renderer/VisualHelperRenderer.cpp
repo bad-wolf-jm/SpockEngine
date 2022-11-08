@@ -8,7 +8,7 @@ namespace LTSE::Graphics
     using namespace math::literals;
 
     VisualHelperRenderer::VisualHelperRenderer(
-        GraphicContext &a_GraphicContext, Ref<LTSE::Graphics::Internal::sVkRenderPassObject> a_RenderPass )
+        GraphicContext &a_GraphicContext, Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> a_RenderPass )
     {
         VisualHelperMeshRendererCreateInfo l_CreateInfo{};
         l_CreateInfo.RenderPass = a_RenderPass;

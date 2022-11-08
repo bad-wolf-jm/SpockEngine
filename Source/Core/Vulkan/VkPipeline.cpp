@@ -295,7 +295,7 @@ namespace LTSE::Graphics::Internal
     sVkPipelineObject::sVkPipelineObject( Ref<VkContext> aContext, uint8_t aSampleCount, sBufferLayout aVertexBufferLayout,
         sBufferLayout aInstanceBufferLayout, ePrimitiveTopology aTopology, eFaceCulling aCullMode, float aLineWidth,
         sDepthTesting aDepthTest, sBlending aBlending, std::vector<sShader> aShaderStages,
-        Ref<sVkPipelineLayoutObject> aPipelineLayout, Ref<sVkRenderPassObject> aRenderPass )
+        Ref<sVkPipelineLayoutObject> aPipelineLayout, Ref<sVkAbstractRenderPassObject> aRenderPass )
         : mContext{ aContext }
     {
 

@@ -56,7 +56,7 @@ namespace LTSE::Core
     }
 
     SceneRenderer::SceneRenderer(
-        Ref<Scene> aWorld, RenderContext &aRenderContext, Ref<LTSE::Graphics::Internal::sVkRenderPassObject> aRenderPass )
+        Ref<Scene> aWorld, RenderContext &aRenderContext, Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> aRenderPass )
         : mGraphicContext{ aWorld->GetGraphicContext() }
         , m_World{ aWorld }
         , mRenderPass{ aRenderPass }

@@ -39,7 +39,7 @@ namespace LTSE::Graphics::Internal
         VK_CHECK_RESULT( vkBeginCommandBuffer( mVkObject, &lCommandBufferBeginInfo ) );
     }
 
-    void sVkCommandBufferObject::BeginRenderPass( Ref<sVkRenderPassObject> aRenderPass, Ref<sVkFramebufferObject> aFrameBuffer,
+    void sVkCommandBufferObject::BeginRenderPass( Ref<sVkAbstractRenderPassObject> aRenderPass, Ref<sVkFramebufferObject> aFrameBuffer,
         math::uvec2 aExtent, std::vector<VkClearValue> aClearValues )
     {
         VkRenderPassBeginInfo lRenderPassInfo{};

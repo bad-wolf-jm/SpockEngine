@@ -27,8 +27,8 @@ namespace LTSE::Graphics
 
     struct VisualHelperLineRendererCreateInfo
     {
-        float                                              LineWidth  = 1.0f;
-        Ref<LTSE::Graphics::Internal::sVkRenderPassObject> RenderPass = nullptr;
+        float                                                      LineWidth  = 1.0f;
+        Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
     class VisualHelperLineRenderer : public SceneRenderPipeline<PositionData>

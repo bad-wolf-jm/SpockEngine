@@ -5,10 +5,9 @@
 #include "Core/Memory.h"
 
 #include "Core/GraphicContext//GraphicContext.h"
+#include "Core/Vulkan/VkAbstractRenderPass.h"
 #include "Core/Vulkan/VkPipeline.h"
-#include "Core/Vulkan/VkRenderPass.h"
 #include "DescriptorSet.h"
-
 
 namespace LTSE::Graphics
 {
@@ -38,9 +37,9 @@ namespace LTSE::Graphics
         bool                   Opaque               = false;
         eDepthCompareOperation DepthComparison      = eDepthCompareOperation::ALWAYS;
 
-        std::vector<sPushConstantRange>       PushConstants = {};
-        Ref<Internal::sVkRenderPassObject>    RenderPass    = nullptr;
-        std::vector<Ref<DescriptorSetLayout>> SetLayouts    = {};
+        std::vector<sPushConstantRange>            PushConstants = {};
+        Ref<Internal::sVkAbstractRenderPassObject> RenderPass    = nullptr;
+        std::vector<Ref<DescriptorSetLayout>>      SetLayouts    = {};
     };
 
     class GraphicsPipeline

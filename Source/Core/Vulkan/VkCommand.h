@@ -7,9 +7,10 @@
 #include "VkContext.h"
 #include "VkImage.h"
 
+#include "VkDeferredRenderPass.h"
 #include "VkPipeline.h"
 #include "VkRenderPass.h"
-#include "VkDeferredRenderPass.h"
+
 
 namespace LTSE::Graphics::Internal
 {
@@ -29,8 +30,8 @@ namespace LTSE::Graphics::Internal
         void Begin();
         void Begin( VkCommandBufferUsageFlags aUsage );
 
-        void BeginRenderPass( Ref<sVkRenderPassObject> aRenderPass, Ref<sVkFramebufferObject> aFrameBuffer, math::uvec2 aExtent,
-            std::vector<VkClearValue> aClearValues );
+        void BeginRenderPass( Ref<sVkAbstractRenderPassObject> aRenderPass, Ref<sVkFramebufferObject> aFrameBuffer,
+            math::uvec2 aExtent, std::vector<VkClearValue> aClearValues );
         void EndRenderPass();
 
         void SetViewport( math::ivec2 aOffset, math::uvec2 aSize );

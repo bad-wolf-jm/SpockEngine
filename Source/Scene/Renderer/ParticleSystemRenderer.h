@@ -38,7 +38,7 @@ namespace LTSE::Graphics
         fs::path VertexShader   = "";
         fs::path FragmentShader = "";
 
-        Ref<Internal::sVkRenderPassObject> RenderPass = nullptr;
+        Ref<Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
 
         bool operator==( const ParticleRendererCreateInfo &p ) const
         {

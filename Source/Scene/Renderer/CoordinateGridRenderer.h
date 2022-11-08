@@ -27,7 +27,7 @@ namespace LTSE::Core
 
     struct CoordinateGridRendererCreateInfo
     {
-        Ref<LTSE::Graphics::Internal::sVkRenderPassObject> RenderPass = nullptr;
+        Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
     class CoordinateGridRenderer : public LTSE::Core::SceneRenderPipeline<EmptyVertexData>
