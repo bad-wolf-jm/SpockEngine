@@ -55,11 +55,9 @@ namespace LTSE::Core
         Cone            = math::cos( math::radians( aSpec.Cone / 2 ) );
     }
 
-    SceneRenderer::SceneRenderer(
-        Ref<Scene> aWorld, RenderContext &aRenderContext, Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> aRenderPass )
+    SceneRenderer::SceneRenderer( Ref<Scene> aWorld, RenderContext &aRenderContext )
         : mGraphicContext{ aWorld->GetGraphicContext() }
         , mWorld{ aWorld }
-        , mRenderPass{ aRenderPass }
     {
         mSceneDescriptors = New<DescriptorSet>( mGraphicContext, MeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
@@ -71,9 +69,9 @@ namespace LTSE::Core
         mSceneDescriptors->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
 
         CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
-        lCoordinateGridRendererCreateInfo.RenderPass = mRenderPass;
+        lCoordinateGridRendererCreateInfo.RenderPass = aRenderContext.GetRenderPass();
         mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, aRenderContext, lCoordinateGridRendererCreateInfo );
-        mVisualHelperRenderer   = New<VisualHelperRenderer>( mGraphicContext, mRenderPass );
+        mVisualHelperRenderer   = New<VisualHelperRenderer>( mGraphicContext, aRenderContext.GetRenderPass() );
     }
 
     MeshRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo(
@@ -86,7 +84,7 @@ namespace LTSE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
         lCreateInfo.VertexShader   = "Shaders\\PBRMeshShader.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\PBRMeshShader.frag.spv";
-        lCreateInfo.RenderPass     = mRenderPass;
+        lCreateInfo.RenderPass     = aRenderContext.GetRenderPass();
 
         return lCreateInfo;
     }
@@ -125,7 +123,8 @@ namespace LTSE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
         lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
-        lCreateInfo.RenderPass     = mRenderPass;
+        lCreateInfo.RenderPass     = aRenderContext.GetRenderPass();
+        ;
 
         return lCreateInfo;
     }

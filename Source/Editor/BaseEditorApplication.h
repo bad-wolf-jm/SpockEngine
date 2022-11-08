@@ -71,17 +71,17 @@ namespace LTSE::Editor
         uint32_t           mViewportHeight        = 1;
         uint32_t           mViewportWidth         = 1;
         bool               mShouldRebuildViewport = true;
-        Ref<Scene>         m_World                 = nullptr;
-        Ref<SceneRenderer> m_WorldRenderer         = nullptr;
+        Ref<Scene>         mWorld                 = nullptr;
+        Ref<SceneRenderer> mWorldRenderer         = nullptr;
 
-        RenderContext              m_ViewportRenderContext{};
+        RenderContext              mViewportRenderContext{};
         Ref<OffscreenRenderTarget> mOffscreenRenderTarget        = nullptr;
-        Ref<DeferredRenderTarget>  mDeferredRenderTarget         = nullptr;
         Ref<Graphics::Texture2D>   mOffscreenRenderTargetTexture = nullptr;
-        // Ref<SensorDeviceBase> m_SensorController                = nullptr;
+        ImageHandle                mOffscreenRenderTargetDisplayHandle{};
 
-        ImageHandle mOffscreenRenderTargetDisplayHandle{};
-        Entity      m_SensorEntity{};
+        Ref<DeferredRenderTarget> mDeferredRenderTarget = nullptr;
+
+        Entity m_SensorEntity{};
     };
 
 } // namespace LTSE::Editor

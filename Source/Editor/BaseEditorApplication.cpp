@@ -16,7 +16,6 @@
 #include "Core/Cuda/ExternalMemory.h"
 #include "Core/Cuda/MultiTensor.h"
 
-
 #include "Scene/Components.h"
 #include "Scene/Importer/glTFImporter.h"
 
@@ -75,11 +74,11 @@ namespace LTSE::Editor
 
     void BaseEditorApplication::RenderScene()
     {
-        m_ViewportRenderContext.BeginRender();
+        mViewportRenderContext.BeginRender();
 
-        if( m_ViewportRenderContext ) m_WorldRenderer->Render( m_ViewportRenderContext );
+        if( mViewportRenderContext ) mWorldRenderer->Render( mViewportRenderContext );
 
-        m_ViewportRenderContext.EndRender();
+        mViewportRenderContext.EndRender();
     }
 
     void BaseEditorApplication::Update( Timestep ts )
@@ -98,8 +97,8 @@ namespace LTSE::Editor
             l_RenderTargetCI.OutputSize  = { mViewportWidth, mViewportHeight };
             l_RenderTargetCI.SampleCount = 4;
             l_RenderTargetCI.Sampled     = true;
-            mOffscreenRenderTarget      = New<OffscreenRenderTarget>( mEngineLoop->GetGraphicContext(), l_RenderTargetCI );
-            m_ViewportRenderContext      = LTSE::Graphics::RenderContext( mEngineLoop->GetGraphicContext(), mOffscreenRenderTarget );
+            mOffscreenRenderTarget       = New<OffscreenRenderTarget>( mEngineLoop->GetGraphicContext(), l_RenderTargetCI );
+            mViewportRenderContext       = LTSE::Graphics::RenderContext( mEngineLoop->GetGraphicContext(), mOffscreenRenderTarget );
         }
         else
         {
@@ -112,8 +111,9 @@ namespace LTSE::Editor
             l_RenderTargetCI.OutputSize  = { mViewportWidth, mViewportHeight };
             l_RenderTargetCI.SampleCount = 4;
             l_RenderTargetCI.Sampled     = true;
-            mDeferredRenderTarget      = New<DeferredRenderTarget>( mEngineLoop->GetGraphicContext(), l_RenderTargetCI );
-            // m_ViewportRenderContext      = LTSE::Graphics::RenderContext( mEngineLoop->GetGraphicContext(), mOffscreenRenderTarget );
+            mDeferredRenderTarget        = New<DeferredRenderTarget>( mEngineLoop->GetGraphicContext(), l_RenderTargetCI );
+            // m_ViewportRenderContext      = LTSE::Graphics::RenderContext( mEngineLoop->GetGraphicContext(), mOffscreenRenderTarget
+            // );
         }
         else
         {
@@ -133,11 +133,11 @@ namespace LTSE::Editor
             mOffscreenRenderTargetDisplayHandle.Handle->Write( mOffscreenRenderTargetTexture, 0 );
         }
 
-        if( m_WorldRenderer )
+        if( mWorldRenderer )
         {
-            m_WorldRenderer->View.Projection = math::Perspective(
+            mWorldRenderer->View.Projection = math::Perspective(
                 90.0_degf, static_cast<float>( mViewportWidth ) / static_cast<float>( mViewportHeight ), 0.01f, 100000.0f );
-            m_WorldRenderer->View.Projection[1][1] *= -1.0f;
+            mWorldRenderer->View.Projection[1][1] *= -1.0f;
         }
     }
 
@@ -152,7 +152,7 @@ namespace LTSE::Editor
 
         mEditorWindow.mEngineLoop = mEngineLoop;
         // mEditorWindow.SensorModel    = m_SensorController;
-        mEditorWindow.WorldRenderer  = m_WorldRenderer;
+        mEditorWindow.WorldRenderer  = mWorldRenderer;
         mEditorWindow.GraphicContext = mEngineLoop->GetGraphicContext();
 
         o_RequestQuit = mEditorWindow.Display();
@@ -251,15 +251,15 @@ namespace LTSE::Editor
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
 
         RebuildOutputFramebuffer();
-        m_World         = New<Scene>( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
-        m_WorldRenderer = New<SceneRenderer>( m_World, m_ViewportRenderContext, mOffscreenRenderTarget->GetRenderPass() );
+        mWorld         = New<Scene>( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
+        mWorldRenderer = New<SceneRenderer>( mWorld, mViewportRenderContext );
 
-        mEditorWindow.World       = m_World;
-        mEditorWindow.ActiveWorld = m_World;
+        mEditorWindow.World       = mWorld;
+        mEditorWindow.ActiveWorld = mWorld;
 
         {
             // Add sensor entity to the scene
-            mEditorWindow.Sensor = m_World->Create( "Sensor", m_World->Root );
+            mEditorWindow.Sensor = mWorld->Create( "Sensor", mWorld->Root );
             mEditorWindow.Sensor.Add<sNodeTransformComponent>();
             mEditorWindow.Sensor.Add<sBehaviourComponent>();
 
@@ -272,10 +272,10 @@ namespace LTSE::Editor
             mEditorWindow.ActiveSensor = mEditorWindow.Sensor;
         }
 
-        m_WorldRenderer->RenderCoordinateGrid = true;
-        m_WorldRenderer->View.CameraPosition  = math::vec3( 0.0f, 1.0f, 7.5f );
-        m_WorldRenderer->View.ModelFraming    = math::mat4( 0.5f );
-        m_WorldRenderer->View.View = math::Inverse( math::Translate( math::mat4( 1.0f ), m_WorldRenderer->View.CameraPosition ) );
+        mWorldRenderer->RenderCoordinateGrid = true;
+        mWorldRenderer->View.CameraPosition  = math::vec3( 0.0f, 1.0f, 7.5f );
+        mWorldRenderer->View.ModelFraming    = math::mat4( 0.5f );
+        mWorldRenderer->View.View = math::Inverse( math::Translate( math::mat4( 1.0f ), mWorldRenderer->View.CameraPosition ) );
     }
 
     uint32_t BaseEditorApplication::Run()

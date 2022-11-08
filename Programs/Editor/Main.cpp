@@ -261,7 +261,7 @@ class EchoDSMVPEditor : public BaseEditorApplication
         //     break;
         // }
 
-        mEditorWindow.Sensor.Get<sBehaviourComponent>().Bind<SensorControllerBehaviour>( mEngineLoop, m_World );
+        mEditorWindow.Sensor.Get<sBehaviourComponent>().Bind<SensorControllerBehaviour>( mEngineLoop, mWorld );
     }
 
     void OnUI()
