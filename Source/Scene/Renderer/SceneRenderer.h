@@ -135,25 +135,25 @@ namespace LTSE::Core
 
       public:
         SceneRenderer() = default;
-        SceneRenderer( Ref<Scene> a_World, RenderContext &a_RenderContext,
-            Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> a_RenderPass );
+        SceneRenderer( Ref<Scene> aWorld, RenderContext &aRenderContext,
+            Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> aRenderPass );
 
         ~SceneRenderer() = default;
 
         void Render( RenderContext &aRenderContext );
 
-        Ref<Scene> m_World = nullptr;
+        Ref<Scene> mWorld = nullptr;
 
       protected:
         MeshRendererCreateInfo GetRenderPipelineCreateInfo(
-            RenderContext &aRenderContext, sMaterialShaderComponent &a_PipelineSpecification );
+            RenderContext &aRenderContext, sMaterialShaderComponent &aPipelineSpecification );
         ParticleRendererCreateInfo GetRenderPipelineCreateInfo(
-            RenderContext &aRenderContext, sParticleShaderComponent &a_PipelineSpecification );
+            RenderContext &aRenderContext, sParticleShaderComponent &aPipelineSpecification );
 
-        MeshRenderer &GetRenderPipeline( RenderContext &aRenderContext, sMaterialShaderComponent &a_PipelineSpecification );
-        MeshRenderer &GetRenderPipeline( RenderContext &aRenderContext, MeshRendererCreateInfo const &a_PipelineSpecification );
+        MeshRenderer &GetRenderPipeline( RenderContext &aRenderContext, sMaterialShaderComponent &aPipelineSpecification );
+        MeshRenderer &GetRenderPipeline( RenderContext &aRenderContext, MeshRendererCreateInfo const &aPipelineSpecification );
 
-        ParticleSystemRenderer &GetRenderPipeline( RenderContext &aRenderContext, sParticleShaderComponent &a_PipelineSpecification );
+        ParticleSystemRenderer &GetRenderPipeline( RenderContext &aRenderContext, sParticleShaderComponent &aPipelineSpecification );
 
       protected:
         GraphicContext mGraphicContext;

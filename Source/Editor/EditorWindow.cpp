@@ -1286,7 +1286,7 @@ namespace LTSE::Editor
 
                 ActiveWorld = New<Scene>( World );
                 ActiveWorld->BeginScenario();
-                WorldRenderer->m_World = ActiveWorld;
+                WorldRenderer->mWorld = ActiveWorld;
             }
         }
         else
@@ -1301,7 +1301,7 @@ namespace LTSE::Editor
                 ActiveWorld  = World;
                 ActiveSensor = Sensor;
 
-                WorldRenderer->m_World = ActiveWorld;
+                WorldRenderer->mWorld = ActiveWorld;
             }
         }
         UI::SameLine();

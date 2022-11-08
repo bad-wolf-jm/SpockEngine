@@ -58,7 +58,7 @@ namespace LTSE::Core
     SceneRenderer::SceneRenderer(
         Ref<Scene> aWorld, RenderContext &aRenderContext, Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> aRenderPass )
         : mGraphicContext{ aWorld->GetGraphicContext() }
-        , m_World{ aWorld }
+        , mWorld{ aWorld }
         , mRenderPass{ aRenderPass }
     {
         mSceneDescriptors = New<DescriptorSet>( mGraphicContext, MeshRenderer::GetCameraSetLayout( mGraphicContext ) );
@@ -70,20 +70,9 @@ namespace LTSE::Core
         mSceneDescriptors->Write( mCameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
         mSceneDescriptors->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
 
-        TextureDescription l_EmptyTextureDescription{};
-        l_EmptyTextureDescription.IsHostVisible       = false;
-        l_EmptyTextureDescription.Usage               = { TextureUsageFlags::SAMPLED, TextureUsageFlags::TRANSFER_DESTINATION };
-        l_EmptyTextureDescription.MinificationFilter  = SamplerFilter::LINEAR;
-        l_EmptyTextureDescription.MagnificationFilter = SamplerFilter::LINEAR;
-        l_EmptyTextureDescription.MipmapMode          = SamplerMipmap::LINEAR;
-        l_EmptyTextureDescription.WrappingMode        = SamplerWrapping::REPEAT;
-        l_EmptyTextureDescription.Sampled             = true;
-        gli::texture2d l_EmptyTextureImage( gli::load_ktx( GetResourcePath( "textures\\empty.ktx" ).string() ) );
-        mEmptyTexture = New<Graphics::Texture2D>( mGraphicContext, l_EmptyTextureDescription, l_EmptyTextureImage );
-
-        CoordinateGridRendererCreateInfo l_CoordinateGridRendererCreateInfo{};
-        l_CoordinateGridRendererCreateInfo.RenderPass = mRenderPass;
-        mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, aRenderContext, l_CoordinateGridRendererCreateInfo );
+        CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
+        lCoordinateGridRendererCreateInfo.RenderPass = mRenderPass;
+        mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, aRenderContext, lCoordinateGridRendererCreateInfo );
         mVisualHelperRenderer   = New<VisualHelperRenderer>( mGraphicContext, mRenderPass );
     }
 
@@ -146,20 +135,20 @@ namespace LTSE::Core
         LTSE_PROFILE_FUNCTION();
 
         UpdateDescriptorSets( aRenderContext );
-        m_World->GetMaterialSystem()->UpdateDescriptors();
+        mWorld->GetMaterialSystem()->UpdateDescriptors();
 
         int lDirectionalLightCount = 0;
         int lSpotlightCount        = 0;
         int lPointLightCount       = 0;
 
-        m_World->ForEach<sDirectionalLightComponent>(
+        mWorld->ForEach<sDirectionalLightComponent>(
             [&]( auto aEntity, auto &aComponent )
             {
                 View.DirectionalLights[lDirectionalLightCount] = DirectionalLightData( aComponent, math::mat4( 1.0f ) );
                 lDirectionalLightCount++;
             } );
 
-        m_World->ForEach<sPointLightComponent>(
+        mWorld->ForEach<sPointLightComponent>(
             [&]( auto aEntity, auto &aComponent )
             {
                 math::mat4 l_TransformMatrix = math::mat4( 1.0f );
@@ -169,7 +158,7 @@ namespace LTSE::Core
                 lPointLightCount++;
             } );
 
-        m_World->ForEach<sSpotlightComponent>(
+        mWorld->ForEach<sSpotlightComponent>(
             [&]( auto aEntity, auto &aComponent )
             {
                 math::mat4 l_TransformMatrix = math::mat4( 1.0f );
@@ -183,9 +172,9 @@ namespace LTSE::Core
         View.DirectionalLightCount = lDirectionalLightCount;
         View.SpotlightCount        = lSpotlightCount;
 
-        if( m_World->Environment.Has<sAmbientLightingComponent>() )
+        if( mWorld->Environment.Has<sAmbientLightingComponent>() )
         {
-            auto &lComponent = m_World->Environment.Get<sAmbientLightingComponent>();
+            auto &lComponent = mWorld->Environment.Get<sAmbientLightingComponent>();
 
             Settings.AmbientLightIntensity = lComponent.Intensity;
             Settings.AmbientLightColor     = math::vec4( lComponent.Color, 0.0 );
@@ -195,7 +184,7 @@ namespace LTSE::Core
         mShaderParametersBuffer->Write( Settings );
 
         std::unordered_map<MeshRendererCreateInfo, std::vector<Entity>, MeshRendererCreateInfoHash> lOpaqueMeshQueue{};
-        m_World->ForEach<sStaticMeshComponent, sMaterialShaderComponent>(
+        mWorld->ForEach<sStaticMeshComponent, sMaterialShaderComponent>(
             [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterialData )
             {
                 auto &l_PipelineCreateInfo = GetRenderPipelineCreateInfo( aRenderContext, aMaterialData );
@@ -204,9 +193,9 @@ namespace LTSE::Core
                 lOpaqueMeshQueue[l_PipelineCreateInfo].push_back( aEntity );
             } );
 
-        if( m_World->mVertexBuffer && m_World->mIndexBuffer )
+        if( mWorld->mVertexBuffer && mWorld->mIndexBuffer )
         {
-            aRenderContext.Bind( m_World->mTransformedVertexBuffer, m_World->mIndexBuffer );
+            aRenderContext.Bind( mWorld->mTransformedVertexBuffer, mWorld->mIndexBuffer );
             for( auto &lPipelineData : lOpaqueMeshQueue )
             {
                 auto &lPipeline = GetRenderPipeline( aRenderContext, lPipelineData.first );
@@ -216,7 +205,7 @@ namespace LTSE::Core
                     continue;
 
                 aRenderContext.Bind( mSceneDescriptors, 0, -1 );
-                aRenderContext.Bind( m_World->GetMaterialSystem()->GetDescriptorSet(), 1, -1 );
+                aRenderContext.Bind( mWorld->GetMaterialSystem()->GetDescriptorSet(), 1, -1 );
 
                 for( auto &lMeshInformation : lPipelineData.second )
                 {
@@ -236,7 +225,7 @@ namespace LTSE::Core
             }
         }
 
-        m_World->ForEach<sParticleSystemComponent, sParticleShaderComponent>(
+        mWorld->ForEach<sParticleSystemComponent, sParticleShaderComponent>(
             [&]( auto aEntity, auto &aParticleSystemComponent, auto &aParticleShaderComponent )
             {
                 auto &lPipeline = GetRenderPipeline( aRenderContext, aParticleShaderComponent );
@@ -254,7 +243,7 @@ namespace LTSE::Core
         {
             mVisualHelperRenderer->View       = View.View;
             mVisualHelperRenderer->Projection = View.Projection;
-            m_World->ForEach<DirectionalLightHelperComponent>(
+            mWorld->ForEach<DirectionalLightHelperComponent>(
                 [&]( auto aEntity, auto &a_DirectionalLightHelperComponent )
                 {
                     math::mat4 l_Transform = math::mat4( 1.0f );
@@ -262,7 +251,7 @@ namespace LTSE::Core
                     mVisualHelperRenderer->Render( l_Transform, a_DirectionalLightHelperComponent, aRenderContext );
                 } );
 
-            m_World->ForEach<SpotlightHelperComponent>(
+            mWorld->ForEach<SpotlightHelperComponent>(
                 [&]( auto aEntity, auto &a_SpotlightHelperComponent )
                 {
                     math::mat4 l_Transform = math::mat4( 1.0f );
@@ -270,7 +259,7 @@ namespace LTSE::Core
                     mVisualHelperRenderer->Render( l_Transform, a_SpotlightHelperComponent, aRenderContext );
                 } );
 
-            m_World->ForEach<PointLightHelperComponent>(
+            mWorld->ForEach<PointLightHelperComponent>(
                 [&]( auto aEntity, auto &a_PointLightHelperComponent )
                 {
                     math::mat4 l_Transform = math::mat4( 1.0f );
@@ -286,7 +275,7 @@ namespace LTSE::Core
     {
         LTSE_PROFILE_FUNCTION();
 
-        m_World->ForEach<sTransformMatrixComponent>(
+        mWorld->ForEach<sTransformMatrixComponent>(
             [&]( auto aEntity, auto &aComponent )
             {
                 if( !( aEntity.Has<NodeDescriptorComponent>() ) )
