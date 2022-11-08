@@ -1,4 +1,4 @@
-#include "VkRenderPass.h"
+#include "VkDeferredRenderPass.h"
 
 #include <set>
 #include <unordered_set>
@@ -26,48 +26,46 @@ namespace LTSE::Graphics::Internal
         std::vector<VkAttachmentDescription> lAttachments{};
         std::vector<VkAttachmentReference>   lAttachmentReferences{};
 
-        lAttachments.resize( 5 );
-        lAttachmentReferences.resize( 4 );
         mClearValues.resize( 5 );
 
         VkAttachmentDescription lColorAttachmentPosition = ColorAttachment( aFormat, mSampleCount, aIsSampled, aIsPresented );
         VkAttachmentReference   lColorAttachmentPositionReference{};
         lColorAttachmentPositionReference.attachment = 0;
         lColorAttachmentPositionReference.layout     = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-        lAttachments[0]                              = lColorAttachmentPosition;
-        lAttachmentReferences[0]                     = lColorAttachmentPositionReference;
-        mClearValues[0].color                        = { aClearColor.x, aClearColor.y, aClearColor.z, aClearColor.w };
+        lAttachments.push_back( lColorAttachmentPosition );
+        lAttachmentReferences.push_back( lColorAttachmentPositionReference );
+        mClearValues[0].color = { aClearColor.x, aClearColor.y, aClearColor.z, aClearColor.w };
 
         VkAttachmentDescription lColorAttachmentNormals = ColorAttachment( aFormat, mSampleCount, aIsSampled, aIsPresented );
         VkAttachmentReference   lColorAttachmentNormalsReference{};
         lColorAttachmentNormalsReference.attachment = 1;
         lColorAttachmentNormalsReference.layout     = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-        lAttachments[1]                             = lColorAttachmentNormals;
-        lAttachmentReferences[1]                    = lColorAttachmentNormalsReference;
-        mClearValues[1].color                       = { aClearColor.x, aClearColor.y, aClearColor.z, aClearColor.w };
+        lAttachments.push_back( lColorAttachmentNormals );
+        lAttachmentReferences.push_back( lColorAttachmentNormalsReference );
+        mClearValues[1].color = { aClearColor.x, aClearColor.y, aClearColor.z, aClearColor.w };
 
         VkAttachmentDescription lColorAttachmentAlbedo = ColorAttachment( aFormat, mSampleCount, aIsSampled, aIsPresented );
         VkAttachmentReference   lColorAttachmentAlbedoReference{};
         lColorAttachmentAlbedoReference.attachment = 2;
         lColorAttachmentAlbedoReference.layout     = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-        lAttachments[2]                            = lColorAttachmentAlbedo;
-        lAttachmentReferences[2]                   = lColorAttachmentAlbedoReference;
-        mClearValues[2].color                      = { aClearColor.x, aClearColor.y, aClearColor.z, aClearColor.w };
+        lAttachments.push_back( lColorAttachmentAlbedo );
+        lAttachmentReferences.push_back( lColorAttachmentAlbedoReference );
+        mClearValues[2].color = { aClearColor.x, aClearColor.y, aClearColor.z, aClearColor.w };
 
         VkAttachmentDescription lColorAttachmentSpecular = ColorAttachment( aFormat, mSampleCount, aIsSampled, aIsPresented );
         VkAttachmentReference   lColorAttachmentSpecularReference{};
         lColorAttachmentSpecularReference.attachment = 3;
         lColorAttachmentSpecularReference.layout     = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-        lAttachments[3]                              = lColorAttachmentSpecular;
-        lAttachmentReferences[3]                     = lColorAttachmentSpecularReference;
-        mClearValues[3].color                        = { aClearColor.x, aClearColor.y, aClearColor.z, aClearColor.w };
+        lAttachments.push_back( lColorAttachmentSpecular );
+        lAttachmentReferences.push_back( lColorAttachmentSpecularReference );
+        mClearValues[3].color = { aClearColor.x, aClearColor.y, aClearColor.z, aClearColor.w };
 
         VkAttachmentDescription lDepthAttachment = DepthAttachment( mSampleCount );
         VkAttachmentReference   lDepthAttachmentReference{};
         lDepthAttachmentReference.attachment = 4;
         lDepthAttachmentReference.layout     = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-        lAttachments[4]                      = lDepthAttachment;
-        mClearValues[4].depthStencil         = { 1.0f, 0 };
+        lAttachments.push_back( lDepthAttachment );
+        mClearValues[4].depthStencil = { 1.0f, 0 };
 
         lSubpass.pipelineBindPoint       = VK_PIPELINE_BIND_POINT_GRAPHICS;
         lSubpass.colorAttachmentCount    = lAttachmentReferences.size();
