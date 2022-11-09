@@ -69,6 +69,8 @@ namespace LTSE::Graphics::Internal
         lAttachments.push_back( lDepthAttachment );
         mClearValues[4].depthStencil = { 1.0f, 0 };
 
+        mColorAttachmentCount = 4;
+
         CreateUnderlyingRenderpass( lAttachments, lAttachmentReferences, &lDepthAttachmentReference, nullptr );
     }
 } // namespace LTSE::Graphics::Internal

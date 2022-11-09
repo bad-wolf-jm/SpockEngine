@@ -40,9 +40,12 @@ namespace LTSE::Graphics::Internal
             std::vector<VkAttachmentDescription> aAttachments, std::vector<VkAttachmentReference> aAttachmentReferences ,
             VkAttachmentReference *aDepthAttachmentReference, VkAttachmentReference *aResolveAttachmentReference);
 
+        uint32_t GetColorAttachmentCount() { return mColorAttachmentCount; }
+
       protected:
         Ref<VkContext>            mContext     = nullptr;
         std::vector<VkClearValue> mClearValues = {};
+        uint32_t mColorAttachmentCount = 0;
     };
 
 } // namespace LTSE::Graphics::Internal

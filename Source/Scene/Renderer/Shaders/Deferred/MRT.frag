@@ -135,10 +135,5 @@ void main()
     vec3 tnorm = TBN * normalize( tangentNormal );
     outNormal  = vec4( tnorm, 1.0 );
     outAlbedo = texture( gTextures[lMaterial.mBaseColorTextureID], lMaterial.mBaseColorUVChannel == 0 ? inUV0 : inUV1 );
-    outSpecular = vec4(0.3, 0.4, 0.02, 1.0);
-
-    outNormal  =  vec4( inWorldPos, 1.0 );
-    outAlbedo = vec4( inWorldPos, 1.0 );
-    outSpecular = vec4( inWorldPos, 1.0 );
-
+    outSpecular = vec4(0.0, 0.0, 0.0, 1.0);
 }

@@ -45,6 +45,8 @@ namespace LTSE::Graphics::Internal
             mClearValues[1]       = VkClearValue{};
             mClearValues[1].color = { aClearColor.x, aClearColor.y, aClearColor.z, aClearColor.w };
 
+            mColorAttachmentCount = 1;
+
             CreateUnderlyingRenderpass(
                 lAttachments, std::vector<VkAttachmentReference>{ lColorAttachmentReference }, &lDepthAttachmentReference, nullptr );
         }
@@ -81,6 +83,7 @@ namespace LTSE::Graphics::Internal
             mClearValues[2]              = VkClearValue{};
             mClearValues[2].depthStencil = { 1.0f, 0 };
 
+            mColorAttachmentCount = 1;
 
             CreateUnderlyingRenderpass(
                 lAttachments, std::vector<VkAttachmentReference>{ lMSAAColorAttachmentReference }, &lDepthAttachmentReference, &lResolveColorAttachmentReference );

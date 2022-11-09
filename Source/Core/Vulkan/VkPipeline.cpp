@@ -364,13 +364,15 @@ namespace LTSE::Graphics::Internal
         lColorBlendAttachment.dstAlphaBlendFactor = static_cast<VkBlendFactor>( aBlending.mDestAlphaFactor );
         lColorBlendAttachment.alphaBlendOp        = static_cast<VkBlendOp>( aBlending.mAlphaBlendOperation );
 
+        std::vector<VkPipelineColorBlendAttachmentState> lBlendAttachments(aRenderPass->GetColorAttachmentCount(), lColorBlendAttachment);
+
         VkPipelineColorBlendStateCreateInfo lColorBlendingInfo{};
         lColorBlendingInfo.sType           = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
         lColorBlendingInfo.logicOpEnable   = VK_FALSE;
         lColorBlendingInfo.logicOp         = VK_LOGIC_OP_COPY;
-        lColorBlendingInfo.attachmentCount = 1;
+        lColorBlendingInfo.attachmentCount = lBlendAttachments.size();
+        lColorBlendingInfo.pAttachments    = lBlendAttachments.data();
         lColorBlendingInfo.pNext           = nullptr;
-        lColorBlendingInfo.pAttachments    = &lColorBlendAttachment;
         aCreateInfo.pColorBlendState       = &lColorBlendingInfo;
 
         VkPipelineMultisampleStateCreateInfo lMultisamplingInfo{};

@@ -11,8 +11,10 @@
 
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//Texture2D.h"
+#include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/SceneRenderer.h"
 #include "Scene/Scene.h"
+
 
 #include "UI/UI.h"
 
@@ -73,9 +75,10 @@ namespace LTSE::Editor
 
         Ref<EngineLoop> mEngineLoop = nullptr;
         // Ref<SensorDeviceBase> SensorModel = nullptr;
-        Ref<Scene>         World         = nullptr;
-        Ref<Scene>         ActiveWorld   = nullptr;
-        Ref<SceneRenderer> WorldRenderer = nullptr;
+        Ref<Scene>                 World                 = nullptr;
+        Ref<Scene>                 ActiveWorld           = nullptr;
+        Ref<SceneRenderer>         WorldRenderer         = nullptr;
+        Ref<DeferredSceneRenderer> DeferredWorldRenderer = nullptr;
 
         Entity         Sensor{};
         Entity         ActiveSensor{};

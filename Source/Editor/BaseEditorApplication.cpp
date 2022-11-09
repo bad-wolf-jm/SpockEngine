@@ -118,7 +118,7 @@ namespace LTSE::Editor
             l_RenderTargetCI.SampleCount = 4;
             l_RenderTargetCI.Sampled     = true;
             mDeferredRenderTarget        = New<DeferredRenderTarget>( mEngineLoop->GetGraphicContext(), l_RenderTargetCI );
-            mDeferredRenderContext       = LTSE::Graphics::DeferredRenderContext( mEngineLoop->GetGraphicContext(), mDeferredRenderTarget );
+            mDeferredRenderContext = LTSE::Graphics::DeferredRenderContext( mEngineLoop->GetGraphicContext(), mDeferredRenderTarget );
         }
         else
         {
@@ -151,8 +151,6 @@ namespace LTSE::Editor
                 90.0_degf, static_cast<float>( mViewportWidth ) / static_cast<float>( mViewportHeight ), 0.01f, 100000.0f );
             mDeferredWorldRenderer->View.Projection[1][1] *= -1.0f;
         }
-
-
     }
 
     bool BaseEditorApplication::RenderUI( ImGuiIO &io )
@@ -166,8 +164,9 @@ namespace LTSE::Editor
 
         mEditorWindow.mEngineLoop = mEngineLoop;
         // mEditorWindow.SensorModel    = m_SensorController;
-        mEditorWindow.WorldRenderer  = mWorldRenderer;
-        mEditorWindow.GraphicContext = mEngineLoop->GetGraphicContext();
+        mEditorWindow.WorldRenderer         = mWorldRenderer;
+        mEditorWindow.DeferredWorldRenderer = mDeferredWorldRenderer;
+        mEditorWindow.GraphicContext        = mEngineLoop->GetGraphicContext();
 
         o_RequestQuit = mEditorWindow.Display();
         OnUI();
@@ -265,8 +264,8 @@ namespace LTSE::Editor
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
 
         RebuildOutputFramebuffer();
-        mWorld         = New<Scene>( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
-        mWorldRenderer = New<SceneRenderer>( mWorld, mViewportRenderContext );
+        mWorld                 = New<Scene>( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
+        mWorldRenderer         = New<SceneRenderer>( mWorld, mViewportRenderContext );
         mDeferredWorldRenderer = New<DeferredSceneRenderer>( mWorld, mDeferredRenderContext );
 
         mEditorWindow.World       = mWorld;
@@ -295,8 +294,8 @@ namespace LTSE::Editor
         mDeferredWorldRenderer->RenderCoordinateGrid = true;
         mDeferredWorldRenderer->View.CameraPosition  = math::vec3( 0.0f, 1.0f, 7.5f );
         mDeferredWorldRenderer->View.ModelFraming    = math::mat4( 0.5f );
-        mDeferredWorldRenderer->View.View = math::Inverse( math::Translate( math::mat4( 1.0f ), mWorldRenderer->View.CameraPosition ) );
-
+        mDeferredWorldRenderer->View.View =
+            math::Inverse( math::Translate( math::mat4( 1.0f ), mWorldRenderer->View.CameraPosition ) );
     }
 
     uint32_t BaseEditorApplication::Run()
