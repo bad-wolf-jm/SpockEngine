@@ -112,27 +112,30 @@ namespace LTSE::Core
         mWorld->ForEach<sDirectionalLightComponent>(
             [&]( auto aEntity, auto &aComponent )
             {
-                View.DirectionalLights[lDirectionalLightCount] = DirectionalLightData( aComponent, math::mat4( 1.0f ) );
+                math::mat4 lTransformMatrix = math::mat4( 1.0f );
+                if( aEntity.Has<sTransformMatrixComponent>() ) lTransformMatrix = aEntity.Get<sTransformMatrixComponent>().Matrix;
+
+                View.DirectionalLights[lDirectionalLightCount] = DirectionalLightData( aComponent, lTransformMatrix );
                 lDirectionalLightCount++;
             } );
 
         mWorld->ForEach<sPointLightComponent>(
             [&]( auto aEntity, auto &aComponent )
             {
-                math::mat4 l_TransformMatrix = math::mat4( 1.0f );
-                if( aEntity.Has<sTransformMatrixComponent>() ) l_TransformMatrix = aEntity.Get<sTransformMatrixComponent>().Matrix;
+                math::mat4 lTransformMatrix = math::mat4( 1.0f );
+                if( aEntity.Has<sTransformMatrixComponent>() ) lTransformMatrix = aEntity.Get<sTransformMatrixComponent>().Matrix;
 
-                View.PointLights[lPointLightCount] = PointLightData( aComponent, l_TransformMatrix );
+                View.PointLights[lPointLightCount] = PointLightData( aComponent, lTransformMatrix );
                 lPointLightCount++;
             } );
 
         mWorld->ForEach<sSpotlightComponent>(
             [&]( auto aEntity, auto &aComponent )
             {
-                math::mat4 l_TransformMatrix = math::mat4( 1.0f );
-                if( aEntity.Has<sTransformMatrixComponent>() ) l_TransformMatrix = aEntity.Get<sTransformMatrixComponent>().Matrix;
+                math::mat4 lTransformMatrix = math::mat4( 1.0f );
+                if( aEntity.Has<sTransformMatrixComponent>() ) lTransformMatrix = aEntity.Get<sTransformMatrixComponent>().Matrix;
 
-                View.Spotlights[lSpotlightCount] = SpotlightData( aComponent, l_TransformMatrix );
+                View.Spotlights[lSpotlightCount] = SpotlightData( aComponent, lTransformMatrix );
                 lSpotlightCount++;
             } );
 

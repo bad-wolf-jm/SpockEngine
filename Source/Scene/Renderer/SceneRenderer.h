@@ -22,6 +22,8 @@
 namespace LTSE::Core
 {
 
+
+    class SceneRenderer
     {
       public:
         WorldMatrices  View;

@@ -83,7 +83,10 @@ namespace LTSE::Core
         mWorld->ForEach<sDirectionalLightComponent>(
             [&]( auto aEntity, auto &aComponent )
             {
-                View.DirectionalLights[lDirectionalLightCount] = DirectionalLightData( aComponent, math::mat4( 1.0f ) );
+                math::mat4 lTransformMatrix = math::mat4( 1.0f );
+                if( aEntity.Has<sTransformMatrixComponent>() ) lTransformMatrix = aEntity.Get<sTransformMatrixComponent>().Matrix;
+
+                View.DirectionalLights[lDirectionalLightCount] = DirectionalLightData( aComponent, lTransformMatrix );
                 lDirectionalLightCount++;
             } );
 
