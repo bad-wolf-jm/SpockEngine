@@ -118,11 +118,19 @@ namespace LTSE::Editor
             l_RenderTargetCI.SampleCount = 4;
             l_RenderTargetCI.Sampled     = true;
             mDeferredRenderTarget        = New<DeferredRenderTarget>( mEngineLoop->GetGraphicContext(), l_RenderTargetCI );
-            mDeferredRenderContext = LTSE::Graphics::DeferredRenderContext( mEngineLoop->GetGraphicContext(), mDeferredRenderTarget );
+
+            OffscreenRenderTargetDescription l_LightingRenderTargetCI{};
+            l_LightingRenderTargetCI.OutputSize  = { mViewportWidth, mViewportHeight };
+            l_LightingRenderTargetCI.SampleCount = 1;
+            l_LightingRenderTargetCI.Sampled     = true;
+            mLightingRenderTarget                = New<LightingRenderTarget>( mEngineLoop->GetGraphicContext(), l_LightingRenderTargetCI );
+            mDeferredRenderContext               = LTSE::Graphics::DeferredRenderContext(
+                              mEngineLoop->GetGraphicContext(), mDeferredRenderTarget, mLightingRenderTarget );
         }
         else
         {
             mDeferredRenderTarget->Resize( mViewportWidth, mViewportHeight );
+            mLightingRenderTarget->Resize( mViewportWidth, mViewportHeight );
         }
 
         mOffscreenRenderTargetTexture = New<Graphics::Texture2D>(

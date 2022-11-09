@@ -49,6 +49,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Vulkan/VkCommand.cpp
     Core/Vulkan/VkAbstractRenderPass.cpp
     Core/Vulkan/VkDeferredRenderPass.cpp
+    Core/Vulkan/VkLightingRenderPass.cpp
     
     Core/GraphicContext//Buffer.cpp
     Core/GraphicContext//Texture2D.cpp
@@ -60,7 +61,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/GraphicContext//DeferredRenderContext.cpp
     Core/GraphicContext//RenderTarget.cpp
     Core/GraphicContext//UI/UIContext.cpp
-
+    
     Scene/Primitives/Primitives.cpp
     Scene/Primitives/Arrow.cpp
     Scene/Visualizers/Wall2D.cpp
@@ -75,6 +76,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/Renderer/SceneRenderData.cpp
     Scene/Renderer/SceneRenderer.cpp
     Scene/Renderer/DeferredSceneRenderer.cpp
+    Scene/Renderer/DeferredLightingPass.cpp
+    Scene/Renderer/DeferredLightingRenderer.cpp
     Scene/Renderer/VisualHelperRenderer.cpp
     Scene/Renderer/VisualHelperMeshRenderer.cpp
     Scene/Serialize/FileIO.cpp

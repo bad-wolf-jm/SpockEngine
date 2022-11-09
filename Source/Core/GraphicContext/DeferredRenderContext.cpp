@@ -5,7 +5,7 @@
 namespace LTSE::Graphics
 {
 
-    DeferredRenderContext::DeferredRenderContext( GraphicContext const &aGraphicContext, Ref<AbstractRenderTarget> aRenderTarget )
+    DeferredRenderContext::DeferredRenderContext( GraphicContext const &aGraphicContext, Ref<AbstractRenderTarget> aRenderTarget, Ref<AbstractRenderTarget> aLightingRenderTarget )
         : mGraphicContext{ aGraphicContext }
         , mRenderTarget{ aRenderTarget }
     {

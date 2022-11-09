@@ -84,6 +84,7 @@ namespace LTSE::Editor
         ImageHandle                mOffscreenRenderTargetDisplayHandle{};
 
         Ref<DeferredRenderTarget> mDeferredRenderTarget = nullptr;
+        Ref<LightingRenderTarget> mLightingRenderTarget = nullptr;
 
         Entity m_SensorEntity{};
     };

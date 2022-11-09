@@ -213,7 +213,12 @@ void main()
     vec3 emissive = vec3( lMaterial.mEmissiveFactor );
     emissive      = SRGBtoLINEAR( texture( gTextures[lMaterial.mEmissiveTextureID], lMaterial.mEmissiveUVChannel == 0 ? inUV0 : inUV1 ) ).rgb * vec3( lMaterial.mEmissiveFactor );
 
-    vec3 N = getNormalFromMap( gTextures[lMaterial.mNormalTextureID], lMaterial.mNormalUVChannel == 0 ? inUV0 : inUV1 );
+    vec3 N;
+    if (lMaterial.mNormalTextureID == 0)
+        N = normalize( inNormal );
+    else
+        N = getNormalFromMap( gTextures[lMaterial.mNormalTextureID], lMaterial.mNormalUVChannel == 0 ? inUV0 : inUV1 );
+        
     vec3 V = normalize( ubo.camPos - inWorldPos );
 
     // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0

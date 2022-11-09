@@ -62,7 +62,8 @@ namespace LTSE::Core
         return mMeshRenderers[aPipelineSpecification];
     }
 
-    MeshRenderer &DeferredSceneRenderer::GetRenderPipeline( DeferredRenderContext &aRenderContext, sMaterialShaderComponent &aPipelineSpecification )
+    MeshRenderer &DeferredSceneRenderer::GetRenderPipeline(
+        DeferredRenderContext &aRenderContext, sMaterialShaderComponent &aPipelineSpecification )
     {
         MeshRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aRenderContext, aPipelineSpecification );
 
@@ -157,12 +158,11 @@ namespace LTSE::Core
                     MeshRenderer::MaterialPushConstants lMaterialPushConstants{};
                     lMaterialPushConstants.mMaterialID = lMeshInformation.Get<sMaterialComponent>().mMaterialID;
 
-                    aRenderContext.PushConstants(
-                        { Graphics::Internal::eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
+                    aRenderContext.PushConstants( { Graphics::Internal::eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
 
-                    auto &l_StaticMeshComponent = lMeshInformation.Get<sStaticMeshComponent>();
-                    aRenderContext.Draw( l_StaticMeshComponent.mIndexCount, l_StaticMeshComponent.mIndexOffset,
-                        l_StaticMeshComponent.mVertexOffset, 1, 0 );
+                    auto &lStaticMeshComponent = lMeshInformation.Get<sStaticMeshComponent>();
+                    aRenderContext.Draw( lStaticMeshComponent.mIndexCount, lStaticMeshComponent.mIndexOffset,
+                        lStaticMeshComponent.mVertexOffset, 1, 0 );
                 }
             }
         }

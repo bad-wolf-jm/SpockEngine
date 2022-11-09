@@ -110,24 +110,37 @@ layout( location = 3 ) out vec4 outOcclusionMetalRough;
 
 const float c_MinRoughness = 0.04;
 
+
+
+vec3 getNormalFromMap( sampler2D aNormalSampler, vec2 aCoords )
+{
+    // Perturb normal, see http://www.thetenthplanet.de/archives/1180
+    vec3 tangentNormal = texture( aNormalSampler, aCoords ).xyz * 2.0 - vec3( 1.0 );
+
+    vec3 q1  = dFdx( inWorldPos );
+    vec3 q2  = dFdy( inWorldPos );
+    vec2 st1 = dFdx( inUV0 );
+    vec2 st2 = dFdy( inUV0 );
+
+    vec3 N   = normalize( inNormal );
+    vec3 T   = normalize( q1 * st2.t - q2 * st1.t );
+    vec3 B   = -normalize( cross( N, T ) );
+    mat3 TBN = mat3( T, B, N );
+
+    return TBN *  normalize( tangentNormal );
+}
+
 void main()
 {
     sShaderMaterial lMaterial = gMaterials.mArray[material.mMaterialID];
 
     outPosition = vec4( inWorldPos, 1.0 );
 
-    vec3 tangentNormal =
-        texture( gTextures[lMaterial.mNormalTextureID], lMaterial.mNormalUVChannel == 0 ? inUV0 : inUV1 ).xyz * 2.0 - vec3( 1.0 );
-
-    vec3 q1  = dFdx( inWorldPos );
-    vec3 q2  = dFdy( inWorldPos );
-    vec2 st1 = dFdx( lMaterial.mNormalUVChannel == 0 ? inUV0 : inUV1 );
-    vec2 st2 = dFdy( lMaterial.mNormalUVChannel == 0 ? inUV0 : inUV1 );
-
-    vec3 N   = normalize( inNormal );
-    vec3 T   = normalize( q1 * st2.t - q2 * st1.t );
-    vec3 B   = -normalize( cross( N, T ) );
-    mat3 TBN = mat3( T, B, N );
+    vec3 tnorm;
+    if (lMaterial.mNormalTextureID == 0)
+        tnorm = normalize( inNormal );
+    else
+        tnorm = getNormalFromMap( gTextures[lMaterial.mNormalTextureID], lMaterial.mNormalUVChannel == 0 ? inUV0 : inUV1 );
 
     vec4 lSampledValue = texture( gTextures[lMaterial.mMetalnessTextureID], lMaterial.mMetalnessUVChannel == 0 ? inUV0 : inUV1 );
     float metallic     = lSampledValue.r * clamp( lMaterial.mMetallicFactor, 0.0, 1.0 );
@@ -136,8 +149,7 @@ void main()
     metallic           = lSampledValue.r * lMaterial.mMetallicFactor;
     roughness          = lSampledValue.g * lMaterial.mRoughnessFactor;
 
-    vec3 tnorm = TBN * normalize( tangentNormal );
     outNormal  = vec4( tnorm, 1.0 );
-    outAlbedo = texture( gTextures[lMaterial.mBaseColorTextureID], lMaterial.mBaseColorUVChannel == 0 ? inUV0 : inUV1 );
+    outAlbedo = texture( gTextures[lMaterial.mBaseColorTextureID], lMaterial.mBaseColorUVChannel == 0 ? inUV0 : inUV1 ) * lMaterial.mBaseColorFactor;
     outOcclusionMetalRough = vec4(ao, metallic, roughness, 1.0);
 }

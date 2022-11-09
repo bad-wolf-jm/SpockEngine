@@ -138,6 +138,28 @@ namespace LTSE::Graphics
         Ref<Internal::sVkFramebufferObject>        m_FramebufferObject      = nullptr;
     };
 
+    class LightingRenderTarget : public AbstractRenderTarget
+    {
+      public:
+        LightingRenderTarget( GraphicContext &a_GraphicContext, OffscreenRenderTargetDescription &a_Spec );
+        ~LightingRenderTarget() = default;
+
+        void Resize( uint32_t aWidth, uint32_t aHeight );
+
+        bool BeginRender();
+        void EndRender();
+        void Present();
+
+        Ref<Internal::sVkFramebufferObject>   GetFramebuffer();
+        Ref<Internal::sVkCommandBufferObject> GetCommandBuffer( uint32_t i );
+        VkSemaphore                           GetImageAvailableSemaphore( uint32_t i );
+        VkSemaphore                           GetRenderFinishedSemaphore( uint32_t i );
+        VkFence                               GetInFlightFence( uint32_t i );
+
+        uint32_t GetCurrentImage();
+    };
+
+
     struct SwapChainRenderTargetDescription
     {
         uint32_t SampleCount = 1;

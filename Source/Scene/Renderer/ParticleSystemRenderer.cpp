@@ -13,37 +13,37 @@ namespace LTSE::Graphics
     std::vector<sPushConstantRange> ParticleSystemRenderer::GetPushConstantLayout() { return {}; };
 
     ParticleSystemRenderer::ParticleSystemRenderer(
-        GraphicContext &a_GraphicContext, RenderContext &a_RenderContext, ParticleRendererCreateInfo a_CreateInfo )
+        GraphicContext &a_GraphicContext, RenderContext &aRenderContext, ParticleRendererCreateInfo aCreateInfo )
         : SceneRenderPipeline<PositionData>( a_GraphicContext )
-        , Spec{ a_CreateInfo }
+        , Spec{ aCreateInfo }
     {
         mCameraBuffer =
             New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( CameraViewUniforms ) );
 
-        SceneRenderPipelineCreateInfo l_CreateInfo{};
-        l_CreateInfo.IsTwoSided           = true;
-        l_CreateInfo.LineWidth            = a_CreateInfo.LineWidth;
-        l_CreateInfo.VertexShader         = a_CreateInfo.VertexShader;
-        l_CreateInfo.FragmentShader       = a_CreateInfo.FragmentShader;
-        l_CreateInfo.RenderPass           = a_CreateInfo.RenderPass;
-        l_CreateInfo.InstanceBufferLayout = Particle::GetDefaultLayout();
+        SceneRenderPipelineCreateInfo lCreateInfo{};
+        lCreateInfo.IsTwoSided           = true;
+        lCreateInfo.LineWidth            = aCreateInfo.LineWidth;
+        lCreateInfo.VertexShader         = aCreateInfo.VertexShader;
+        lCreateInfo.FragmentShader       = aCreateInfo.FragmentShader;
+        lCreateInfo.RenderPass           = aRenderContext.GetRenderPass();
+        lCreateInfo.InstanceBufferLayout = Particle::GetDefaultLayout();
 
-        DescriptorSetLayoutCreateInfo l_PipelineLayoutCI{};
-        l_PipelineLayoutCI.Bindings = {
+        DescriptorSetLayoutCreateInfo lPipelineLayoutCI{};
+        lPipelineLayoutCI.Bindings = {
             DescriptorBindingInfo{ 0, Internal::eDescriptorType::UNIFORM_BUFFER, { Internal::eShaderStageTypeFlags::VERTEX } } };
-        PipelineLayout = New<DescriptorSetLayout>( mGraphicContext, l_PipelineLayoutCI );
+        PipelineLayout = New<DescriptorSetLayout>( mGraphicContext, lPipelineLayoutCI );
 
-        Initialize( l_CreateInfo );
+        Initialize( lCreateInfo );
 
         mCameraDescriptors = New<DescriptorSet>( mGraphicContext, PipelineLayout );
         mCameraDescriptors->Write( mCameraBuffer, false, 0, sizeof( CameraViewUniforms ), 0 );
 
-        std::vector<math::vec3> g_vertex_buffer_data = {
+        std::vector<math::vec3> lVertexBufferData = {
             { -.5f, -.5f, 0.0f }, { -.5f, .5f, 0.0f }, { .5f, .5f, 0.0f }, { .5f, -.5f, 0.0f } };
         std::vector<uint32_t> l_IndexBufferData = { 0, 2, 1, 0, 3, 2 };
 
         mParticleVertices =
-            New<Buffer>( mGraphicContext, g_vertex_buffer_data, eBufferBindType::VERTEX_BUFFER, false, false, false, true );
+            New<Buffer>( mGraphicContext, lVertexBufferData, eBufferBindType::VERTEX_BUFFER, false, false, false, true );
         mParticleIndices =
             New<Buffer>( mGraphicContext, l_IndexBufferData, eBufferBindType::INDEX_BUFFER, false, false, false, true );
     }

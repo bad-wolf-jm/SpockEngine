@@ -79,6 +79,19 @@ namespace LTSE::Graphics
     VkSemaphore                           AbstractRenderTarget::GetRenderFinishedSemaphore( uint32_t i ) { return VK_NULL_HANDLE; }
     VkFence                               AbstractRenderTarget::GetInFlightFence( uint32_t i ) { return VK_NULL_HANDLE; }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     DeferredRenderTarget::DeferredRenderTarget( GraphicContext &a_GraphicContext, DeferredRenderTargetDescription &aSpec )
         : AbstractRenderTarget( a_GraphicContext )
     {
@@ -154,6 +167,54 @@ namespace LTSE::Graphics
         return AbstractRenderTarget::GetRenderFinishedSemaphore( i );
     }
     VkFence DeferredRenderTarget::GetInFlightFence( uint32_t i ) { return AbstractRenderTarget::GetInFlightFence( i ); }
+
+
+    LightingRenderTarget::LightingRenderTarget( GraphicContext &a_GraphicContext, OffscreenRenderTargetDescription &aSpec )
+        : AbstractRenderTarget( a_GraphicContext )
+    {
+        mImageCount = 1;
+
+        RenderTargetDescription lRTDEscription{};
+        lRTDEscription.SampleCount   = 1;
+        lRTDEscription.Format        = aSpec.Format;
+        lRTDEscription.ClearColor    = aSpec.ClearColor;
+        lRTDEscription.Width         = aSpec.OutputSize.x;
+        lRTDEscription.Height        = aSpec.OutputSize.y;
+        lRTDEscription.Sampled       = aSpec.Sampled;
+        lRTDEscription.OutputTexture = nullptr;
+
+        Initialize( lRTDEscription );
+        InitializeCommandBuffers();
+    }
+
+    void LightingRenderTarget::Resize( uint32_t aWidth, uint32_t aHeight )
+    {
+        Spec.Width         = aWidth;
+        Spec.Height        = aHeight;
+        Spec.OutputTexture = nullptr;
+
+        Initialize( Spec );
+        InitializeCommandBuffers();
+    }
+
+    bool                                  LightingRenderTarget::BeginRender() { return true; }
+    void                                  LightingRenderTarget::EndRender() {}
+    void                                  LightingRenderTarget::Present() {}
+    uint32_t                              LightingRenderTarget::GetCurrentImage() { return 0; };
+    Ref<Internal::sVkFramebufferObject>   LightingRenderTarget::GetFramebuffer() { return m_FramebufferObject; }
+    Ref<Internal::sVkCommandBufferObject> LightingRenderTarget::GetCommandBuffer( uint32_t i )
+    {
+        return AbstractRenderTarget::GetCommandBuffer( i );
+    }
+    VkSemaphore LightingRenderTarget::GetImageAvailableSemaphore( uint32_t i )
+    {
+        return AbstractRenderTarget::GetImageAvailableSemaphore( i );
+    }
+    VkSemaphore LightingRenderTarget::GetRenderFinishedSemaphore( uint32_t i )
+    {
+        return AbstractRenderTarget::GetRenderFinishedSemaphore( i );
+    }
+    VkFence LightingRenderTarget::GetInFlightFence( uint32_t i ) { return AbstractRenderTarget::GetInFlightFence( i ); }
 
     OffscreenRenderTarget::OffscreenRenderTarget( GraphicContext &a_GraphicContext, OffscreenRenderTargetDescription &aSpec )
         : AbstractRenderTarget( a_GraphicContext )

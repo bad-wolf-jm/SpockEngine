@@ -10,23 +10,23 @@ namespace LTSE::Core
     std::vector<sPushConstantRange> CoordinateGridRenderer::GetPushConstantLayout() { return {}; };
 
     CoordinateGridRenderer::CoordinateGridRenderer(
-        GraphicContext &a_GraphicContext, RenderContext &a_RenderContext, CoordinateGridRendererCreateInfo a_CreateInfo )
+        GraphicContext &a_GraphicContext, RenderContext &aRenderContext, CoordinateGridRendererCreateInfo aCreateInfo )
         : SceneRenderPipeline<EmptyVertexData>( a_GraphicContext )
-        , Spec{ a_CreateInfo }
+        , Spec{ aCreateInfo }
     {
-        SceneRenderPipelineCreateInfo l_CreateInfo{};
-        l_CreateInfo.IsTwoSided     = true;
-        l_CreateInfo.LineWidth      = 1.0f;
-        l_CreateInfo.VertexShader   = "Shaders\\coordinategrid.vert.spv";
-        l_CreateInfo.FragmentShader = "Shaders\\coordinategrid.frag.spv";
-        l_CreateInfo.RenderPass     = a_CreateInfo.RenderPass;
+        SceneRenderPipelineCreateInfo lCreateInfo{};
+        lCreateInfo.IsTwoSided     = true;
+        lCreateInfo.LineWidth      = 1.0f;
+        lCreateInfo.VertexShader   = "Shaders\\coordinategrid.vert.spv";
+        lCreateInfo.FragmentShader = "Shaders\\coordinategrid.frag.spv";
+        lCreateInfo.RenderPass     = aRenderContext.GetRenderPass();
 
-        DescriptorSetLayoutCreateInfo l_PipelineLayoutCI{};
-        l_PipelineLayoutCI.Bindings = {
+        DescriptorSetLayoutCreateInfo lPipelineLayoutCI{};
+        lPipelineLayoutCI.Bindings = {
             DescriptorBindingInfo{ 0, Internal::eDescriptorType::UNIFORM_BUFFER, { Internal::eShaderStageTypeFlags::VERTEX } } };
-        PipelineLayout = New<DescriptorSetLayout>( mGraphicContext, l_PipelineLayoutCI );
+        PipelineLayout = New<DescriptorSetLayout>( mGraphicContext, lPipelineLayoutCI );
 
-        Initialize( l_CreateInfo );
+        Initialize( lCreateInfo );
 
         mCameraBuffer =
             New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( CameraViewUniforms ) );
