@@ -24,37 +24,6 @@ namespace LTSE::Core
     using namespace LTSE::Core::EntityComponentSystem::Components;
     using namespace LTSE::Core::Primitives;
 
-    // DirectionalLightData::DirectionalLightData( const sDirectionalLightComponent &aSpec, math::mat4 aTransform )
-    // {
-    //     float lAzimuth   = math::radians( aSpec.Azimuth );
-    //     float lElevation = math::radians( aSpec.Elevation );
-
-    //     Direction = math::vec3{ math::sin( lElevation ) * math::cos( lAzimuth ), math::cos( lElevation ),
-    //         math::sin( lElevation ) * math::sin( lAzimuth ) };
-    //     Color     = aSpec.Color;
-    //     Intensity = aSpec.Intensity;
-    // }
-
-    // PointLightData::PointLightData( const sPointLightComponent &aSpec, math::mat4 aTransform )
-    // {
-    //     WorldPosition = aTransform * math::vec4( aSpec.Position, 1.0f );
-    //     Color         = aSpec.Color;
-    //     Intensity     = aSpec.Intensity;
-    // }
-
-    // SpotlightData::SpotlightData( const sSpotlightComponent &aSpec, math::mat4 aTransform )
-    // {
-    //     float lAzimuth   = math::radians( aSpec.Azimuth );
-    //     float lElevation = math::radians( aSpec.Elevation );
-
-    //     WorldPosition   = aTransform * math::vec4( aSpec.Position, 1.0f );
-    //     LookAtDirection = math::vec3{ math::sin( lElevation ) * math::cos( lAzimuth ), math::cos( lElevation ),
-    //         math::sin( lElevation ) * math::sin( lAzimuth ) };
-    //     Color           = aSpec.Color;
-    //     Intensity       = aSpec.Intensity;
-    //     Cone            = math::cos( math::radians( aSpec.Cone / 2 ) );
-    // }
-
     DeferredSceneRenderer::DeferredSceneRenderer( Ref<Scene> aWorld, DeferredRenderContext &aRenderContext )
         : mGraphicContext{ aWorld->GetGraphicContext() }
         , mWorld{ aWorld }
@@ -67,11 +36,6 @@ namespace LTSE::Core
             New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( CameraSettings ) );
         mSceneDescriptors->Write( mCameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
         mSceneDescriptors->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
-
-        // CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
-        // lCoordinateGridRendererCreateInfo.RenderPass = aRenderContext.GetRenderPass();
-        // mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, aRenderContext, lCoordinateGridRendererCreateInfo );
-        // mVisualHelperRenderer   = New<VisualHelperRenderer>( mGraphicContext, aRenderContext.GetRenderPass() );
     }
 
     MeshRendererCreateInfo DeferredSceneRenderer::GetRenderPipelineCreateInfo(
@@ -104,30 +68,6 @@ namespace LTSE::Core
 
         return GetRenderPipeline( aRenderContext, lCreateInfo );
     }
-
-    // ParticleSystemRenderer &DeferredSceneRenderer::GetRenderPipeline(
-    //     DeferredRenderContext &aRenderContext, sParticleShaderComponent &aPipelineSpecification )
-    // {
-    //     ParticleRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aRenderContext, aPipelineSpecification );
-
-    //     if( mParticleRenderers.find( lCreateInfo ) == mParticleRenderers.end() )
-    //         mParticleRenderers[lCreateInfo] = ParticleSystemRenderer( mGraphicContext, aRenderContext, lCreateInfo );
-
-    //     return mParticleRenderers[lCreateInfo];
-    // }
-
-    // ParticleRendererCreateInfo DeferredSceneRenderer::GetRenderPipelineCreateInfo(
-    //     DeferredRenderContext &aRenderContext, sParticleShaderComponent &aPipelineSpecification )
-    // {
-    //     ParticleRendererCreateInfo lCreateInfo;
-    //     lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
-    //     lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
-    //     lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
-    //     lCreateInfo.RenderPass     = aRenderContext.GetRenderPass();
-    //     ;
-
-    //     return lCreateInfo;
-    // }
 
     void DeferredSceneRenderer::Render( DeferredRenderContext &aRenderContext )
     {
@@ -223,54 +163,6 @@ namespace LTSE::Core
                 }
             }
         }
-
-
-        // mWorld->ForEach<sParticleSystemComponent, sParticleShaderComponent>(
-        //     [&]( auto aEntity, auto &aParticleSystemComponent, auto &aParticleShaderComponent )
-        //     {
-        //         auto &lPipeline = GetRenderPipeline( aRenderContext, aParticleShaderComponent );
-
-        //         ParticleSystemRenderer::ParticleData lParticleData{};
-        //         lParticleData.Model         = math::mat4( 1.0f );
-        //         lParticleData.ParticleCount = aParticleSystemComponent.ParticleCount;
-        //         lParticleData.ParticleSize  = aParticleSystemComponent.ParticleSize;
-        //         lParticleData.Particles     = aParticleSystemComponent.Particles;
-
-        //         lPipeline.Render( View.Projection, View.View, aRenderContext, lParticleData );
-        //     } );
-            
-        // lighting pass
-
-        // if( RenderGizmos )
-        // {
-        //     mVisualHelperRenderer->View       = View.View;
-        //     mVisualHelperRenderer->Projection = View.Projection;
-        //     mWorld->ForEach<DirectionalLightHelperComponent>(
-        //         [&]( auto aEntity, auto &a_DirectionalLightHelperComponent )
-        //         {
-        //             math::mat4 l_Transform = math::mat4( 1.0f );
-        //             if( aEntity.Has<sTransformMatrixComponent>() ) l_Transform = aEntity.Get<sTransformMatrixComponent>().Matrix;
-        //             mVisualHelperRenderer->Render( l_Transform, a_DirectionalLightHelperComponent, aRenderContext );
-        //         } );
-
-        //     mWorld->ForEach<SpotlightHelperComponent>(
-        //         [&]( auto aEntity, auto &a_SpotlightHelperComponent )
-        //         {
-        //             math::mat4 l_Transform = math::mat4( 1.0f );
-        //             if( aEntity.Has<sTransformMatrixComponent>() ) l_Transform = aEntity.Get<sTransformMatrixComponent>().Matrix;
-        //             mVisualHelperRenderer->Render( l_Transform, a_SpotlightHelperComponent, aRenderContext );
-        //         } );
-
-        //     mWorld->ForEach<PointLightHelperComponent>(
-        //         [&]( auto aEntity, auto &a_PointLightHelperComponent )
-        //         {
-        //             math::mat4 l_Transform = math::mat4( 1.0f );
-        //             if( aEntity.Has<sTransformMatrixComponent>() ) l_Transform = aEntity.Get<sTransformMatrixComponent>().Matrix;
-        //             mVisualHelperRenderer->Render( l_Transform, a_PointLightHelperComponent, aRenderContext );
-        //         } );
-        // }
-
-        // if( RenderCoordinateGrid ) mCoordinateGridRenderer->Render( View.Projection, View.View, aRenderContext );
     }
 
     void DeferredSceneRenderer::UpdateDescriptorSets( DeferredRenderContext &aRenderContext )

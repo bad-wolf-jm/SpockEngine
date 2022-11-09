@@ -136,11 +136,6 @@ void main()
     metallic           = lSampledValue.r * lMaterial.mMetallicFactor;
     roughness          = lSampledValue.g * lMaterial.mRoughnessFactor;
 
-    // // Calculate normal in tangent space
-    // vec3 N     = normalize( inNormal );
-    // vec3 T     = normalize( inTangent );
-    // vec3 B     = cross( N, T );
-    // mat3 TBN   = mat3( T, B, N );
     vec3 tnorm = TBN * normalize( tangentNormal );
     outNormal  = vec4( tnorm, 1.0 );
     outAlbedo = texture( gTextures[lMaterial.mBaseColorTextureID], lMaterial.mBaseColorUVChannel == 0 ? inUV0 : inUV1 );
