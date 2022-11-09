@@ -79,6 +79,12 @@ namespace LTSE::Editor
         if( mViewportRenderContext ) mWorldRenderer->Render( mViewportRenderContext );
 
         mViewportRenderContext.EndRender();
+
+        mDeferredRenderContext.BeginRender();
+
+        if( mDeferredRenderContext ) mDeferredWorldRenderer->Render( mDeferredRenderContext );
+
+        mDeferredRenderContext.EndRender();
     }
 
     void BaseEditorApplication::Update( Timestep ts )
@@ -112,8 +118,7 @@ namespace LTSE::Editor
             l_RenderTargetCI.SampleCount = 4;
             l_RenderTargetCI.Sampled     = true;
             mDeferredRenderTarget        = New<DeferredRenderTarget>( mEngineLoop->GetGraphicContext(), l_RenderTargetCI );
-            // m_ViewportRenderContext      = LTSE::Graphics::RenderContext( mEngineLoop->GetGraphicContext(), mOffscreenRenderTarget
-            // );
+            mDeferredRenderContext       = LTSE::Graphics::DeferredRenderContext( mEngineLoop->GetGraphicContext(), mDeferredRenderTarget );
         }
         else
         {
@@ -139,6 +144,15 @@ namespace LTSE::Editor
                 90.0_degf, static_cast<float>( mViewportWidth ) / static_cast<float>( mViewportHeight ), 0.01f, 100000.0f );
             mWorldRenderer->View.Projection[1][1] *= -1.0f;
         }
+
+        if( mDeferredWorldRenderer )
+        {
+            mDeferredWorldRenderer->View.Projection = math::Perspective(
+                90.0_degf, static_cast<float>( mViewportWidth ) / static_cast<float>( mViewportHeight ), 0.01f, 100000.0f );
+            mDeferredWorldRenderer->View.Projection[1][1] *= -1.0f;
+        }
+
+
     }
 
     bool BaseEditorApplication::RenderUI( ImGuiIO &io )
@@ -253,6 +267,7 @@ namespace LTSE::Editor
         RebuildOutputFramebuffer();
         mWorld         = New<Scene>( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
         mWorldRenderer = New<SceneRenderer>( mWorld, mViewportRenderContext );
+        mDeferredWorldRenderer = New<DeferredSceneRenderer>( mWorld, mDeferredRenderContext );
 
         mEditorWindow.World       = mWorld;
         mEditorWindow.ActiveWorld = mWorld;
@@ -276,6 +291,12 @@ namespace LTSE::Editor
         mWorldRenderer->View.CameraPosition  = math::vec3( 0.0f, 1.0f, 7.5f );
         mWorldRenderer->View.ModelFraming    = math::mat4( 0.5f );
         mWorldRenderer->View.View = math::Inverse( math::Translate( math::mat4( 1.0f ), mWorldRenderer->View.CameraPosition ) );
+
+        mDeferredWorldRenderer->RenderCoordinateGrid = true;
+        mDeferredWorldRenderer->View.CameraPosition  = math::vec3( 0.0f, 1.0f, 7.5f );
+        mDeferredWorldRenderer->View.ModelFraming    = math::mat4( 0.5f );
+        mDeferredWorldRenderer->View.View = math::Inverse( math::Translate( math::mat4( 1.0f ), mWorldRenderer->View.CameraPosition ) );
+
     }
 
     uint32_t BaseEditorApplication::Run()

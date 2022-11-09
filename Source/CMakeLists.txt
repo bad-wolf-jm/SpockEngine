@@ -57,6 +57,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/GraphicContext//DescriptorSet.cpp
     Core/GraphicContext//GraphicsPipeline.cpp
     Core/GraphicContext//RenderContext.cpp
+    Core/GraphicContext//DeferredRenderContext.cpp
     Core/GraphicContext//RenderTarget.cpp
     Core/GraphicContext//UI/UIContext.cpp
 
@@ -71,7 +72,9 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/Renderer/CoordinateGridRenderer.cpp
     Scene/Renderer/ParticleSystemRenderer.cpp
     Scene/Renderer/VisualHelperLineRenderer.cpp
+    Scene/Renderer/SceneRenderData.cpp
     Scene/Renderer/SceneRenderer.cpp
+    Scene/Renderer/DeferredSceneRenderer.cpp
     Scene/Renderer/VisualHelperRenderer.cpp
     Scene/Renderer/VisualHelperMeshRenderer.cpp
     Scene/Serialize/FileIO.cpp

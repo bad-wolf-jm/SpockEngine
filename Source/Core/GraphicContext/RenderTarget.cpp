@@ -106,17 +106,17 @@ namespace LTSE::Graphics
 
         m_PositionsOutputTexture =
             New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, ToVkFormat( eColorFormat::RGBA16_FLOAT ), Spec.Width,
-                Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, false );
+                Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, Spec.Sampled );
         m_NormalsOutputTexture =
             New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, ToVkFormat( eColorFormat::RGBA16_FLOAT ), Spec.Width,
-                Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, false );
+                Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, Spec.Sampled );
         m_AlbedoOutputTexture = New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, ToVkFormat( eColorFormat::RGBA8_UNORM ),
-            Spec.Width, Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, false );
+            Spec.Width, Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, Spec.Sampled );
         m_SpecularOutputTexture =
             New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, ToVkFormat( eColorFormat::RGBA8_UNORM ), Spec.Width,
-                Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, false );
+                Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, Spec.Sampled );
         m_DepthTexture = New<Internal::sVkFramebufferImage>( mGraphicContext.mContext, mGraphicContext.mContext->GetDepthFormat(),
-            Spec.Width, Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, false );
+            Spec.Width, Spec.Height, Spec.SampleCount, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, Spec.Sampled );
 
         std::vector<Ref<Internal::sVkFramebufferImage>> l_AttachmentViews = {
             m_PositionsOutputTexture, m_NormalsOutputTexture, m_AlbedoOutputTexture, m_SpecularOutputTexture, m_DepthTexture };

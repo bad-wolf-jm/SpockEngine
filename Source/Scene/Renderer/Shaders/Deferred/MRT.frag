@@ -13,7 +13,7 @@ layout( location = 3 ) in vec2 inUV1;
 // layout (location = 1) in vec2 inUV;
 // layout (location = 2) in vec3 inColor;
 // layout (location = 3) in vec3 inWorldPos;
-layout( location = 4 ) in vec3 inTangent;
+// layout( location = 4 ) in vec3 inTangent;
 
 #define MAX_NUM_LIGHTS 64
 
@@ -134,6 +134,11 @@ void main()
     // mat3 TBN   = mat3( T, B, N );
     vec3 tnorm = TBN * normalize( tangentNormal );
     outNormal  = vec4( tnorm, 1.0 );
-
     outAlbedo = texture( gTextures[lMaterial.mBaseColorTextureID], lMaterial.mBaseColorUVChannel == 0 ? inUV0 : inUV1 );
+    outSpecular = vec4(0.3, 0.4, 0.02, 1.0);
+
+    outNormal  =  vec4( inWorldPos, 1.0 );
+    outAlbedo = vec4( inWorldPos, 1.0 );
+    outSpecular = vec4( inWorldPos, 1.0 );
+
 }
