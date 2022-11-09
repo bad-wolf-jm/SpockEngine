@@ -132,7 +132,7 @@ vec3 getNormalFromMap( sampler2D aNormalSampler, vec2 aCoords )
     // if( material.normalTextureSet == -1.0 )
     //     return normalize( inNormal );
 
-    vec3 tangentNormal = texture( aNormalSampler, aCoords ).xyz * 2.0 - 1.0;
+    vec3 tangentNormal = texture( aNormalSampler, aCoords ).xyz * 2.0 - vec3( 1.0 );
 
     vec3 q1  = dFdx( inWorldPos );
     vec3 q2  = dFdy( inWorldPos );
