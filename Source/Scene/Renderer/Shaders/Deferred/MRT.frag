@@ -106,7 +106,9 @@ material;
 layout( location = 0 ) out vec4 outPosition;
 layout( location = 1 ) out vec4 outNormal;
 layout( location = 2 ) out vec4 outAlbedo;
-layout( location = 3 ) out vec4 outSpecular;
+layout( location = 3 ) out vec4 outOcclusionMetalRough;
+
+const float c_MinRoughness = 0.04;
 
 void main()
 {
@@ -127,6 +129,13 @@ void main()
     vec3 B   = -normalize( cross( N, T ) );
     mat3 TBN = mat3( T, B, N );
 
+    vec4 lSampledValue = texture( gTextures[lMaterial.mMetalnessTextureID], lMaterial.mMetalnessUVChannel == 0 ? inUV0 : inUV1 );
+    float metallic     = lSampledValue.r * clamp( lMaterial.mMetallicFactor, 0.0, 1.0 );
+    float roughness    = lSampledValue.g * clamp( lMaterial.mRoughnessFactor, c_MinRoughness, 1.0 );
+    float ao  = texture( gTextures[lMaterial.mOcclusionTextureID], ( lMaterial.mOcclusionUVChannel == 0 ? inUV0 : inUV1 ) ).r * lMaterial.mOcclusionStrength ;
+    metallic           = lSampledValue.r * lMaterial.mMetallicFactor;
+    roughness          = lSampledValue.g * lMaterial.mRoughnessFactor;
+
     // // Calculate normal in tangent space
     // vec3 N     = normalize( inNormal );
     // vec3 T     = normalize( inTangent );
@@ -135,5 +144,5 @@ void main()
     vec3 tnorm = TBN * normalize( tangentNormal );
     outNormal  = vec4( tnorm, 1.0 );
     outAlbedo = texture( gTextures[lMaterial.mBaseColorTextureID], lMaterial.mBaseColorUVChannel == 0 ? inUV0 : inUV1 );
-    outSpecular = vec4(0.0, 0.0, 0.0, 1.0);
+    outOcclusionMetalRough = vec4(ao, metallic, roughness, 1.0);
 }
