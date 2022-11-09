@@ -3,7 +3,7 @@
 
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
-#include "Core/GraphicContext//DeferredRenderContext.h"
+#include "Core/GraphicContext//DeferredLightingRenderContext.h"
 
 #include "Core/GraphicContext//Texture2D.h"
 #include "Core/GraphicContext//TextureCubemap.h"
@@ -34,11 +34,11 @@ namespace LTSE::Core
 
       public:
         DeferredLightingPass() = default;
-        DeferredLightingPass( Ref<Scene> aWorld, DeferredRenderContext &aRenderContext );
+        DeferredLightingPass( Ref<Scene> aWorld, DeferredLightingRenderContext &aRenderContext );
 
         ~DeferredLightingPass() = default;
 
-        void Render( DeferredRenderContext &aRenderContext );
+        void Render( DeferredLightingRenderContext &aRenderContext );
 
         Ref<Scene> mWorld = nullptr;
 
@@ -58,7 +58,7 @@ namespace LTSE::Core
         Ref<DescriptorSet> mNodeDescriptors  = nullptr;
 
       protected:
-        void UpdateDescriptorSets( DeferredRenderContext &aRenderContext );
+        void UpdateDescriptorSets( DeferredLightingRenderContext &aRenderContext );
     };
 
 } // namespace LTSE::Core

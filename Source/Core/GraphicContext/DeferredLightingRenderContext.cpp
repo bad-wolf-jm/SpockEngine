@@ -1,11 +1,11 @@
-#include "DeferredRenderContext.h"
+#include "DeferredLightingRenderContext.h"
 
 #include "Core/Logging.h"
 
 namespace LTSE::Graphics
 {
 
-    DeferredRenderContext::DeferredRenderContext( GraphicContext const &aGraphicContext, Ref<AbstractRenderTarget> aRenderTarget )
+    DeferredLightingRenderContext::DeferredLightingRenderContext( GraphicContext const &aGraphicContext, Ref<AbstractRenderTarget> aRenderTarget )
         : mGraphicContext{ aGraphicContext }
         , mRenderTarget{ aRenderTarget }
     {
@@ -34,7 +34,7 @@ namespace LTSE::Graphics
             aRenderTarget->Spec.ClearColor );
     }
 
-    bool DeferredRenderContext::BeginRender()
+    bool DeferredLightingRenderContext::BeginRender()
     {
         if( mFrameIsStarted ) return true;
 
@@ -57,7 +57,7 @@ namespace LTSE::Graphics
         return true;
     }
 
-    bool DeferredRenderContext::EndRender()
+    bool DeferredLightingRenderContext::EndRender()
     {
         if( !mFrameIsStarted ) return false;
 
@@ -76,15 +76,15 @@ namespace LTSE::Graphics
         return true;
     }
 
-    void DeferredRenderContext::Present() { mRenderTarget->Present(); }
+    void DeferredLightingRenderContext::Present() { mRenderTarget->Present(); }
 
-    void DeferredRenderContext::ResetBuffers()
+    void DeferredLightingRenderContext::ResetBuffers()
     {
         mCurrentVertexBuffer = nullptr;
         mCurrentIndexBuffer  = nullptr;
     }
 
-    void DeferredRenderContext::Draw( uint32_t a_VertexCount, uint32_t a_VertexOffset, uint32_t a_VertexBufferOffset, uint32_t a_InstanceCount,
+    void DeferredLightingRenderContext::Draw( uint32_t a_VertexCount, uint32_t a_VertexOffset, uint32_t a_VertexBufferOffset, uint32_t a_InstanceCount,
         uint32_t a_FirstInstance )
     {
         auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
@@ -95,7 +95,7 @@ namespace LTSE::Graphics
             lCommandBuffer->Draw( a_VertexCount, a_VertexOffset, a_VertexBufferOffset, a_InstanceCount, a_FirstInstance );
     }
 
-    void DeferredRenderContext::Bind( Ref<GraphicsPipeline> a_GraphicPipeline )
+    void DeferredLightingRenderContext::Bind( Ref<GraphicsPipeline> a_GraphicPipeline )
     {
         auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
 
@@ -103,7 +103,7 @@ namespace LTSE::Graphics
         mCurrentPipelineLayout = a_GraphicPipeline->GetVkPipelineLayoutObject();
     }
 
-    void DeferredRenderContext::Bind( Ref<Buffer> a_VertexBuffer, uint32_t a_BindPoint )
+    void DeferredLightingRenderContext::Bind( Ref<Buffer> a_VertexBuffer, uint32_t a_BindPoint )
     {
         auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
 
@@ -111,7 +111,7 @@ namespace LTSE::Graphics
         mCurrentVertexBuffer = a_VertexBuffer;
     }
 
-    void DeferredRenderContext::Bind( Ref<Buffer> a_VertexBuffer, Ref<Buffer> a_IndexBuffer, uint32_t a_BindPoint )
+    void DeferredLightingRenderContext::Bind( Ref<Buffer> a_VertexBuffer, Ref<Buffer> a_IndexBuffer, uint32_t a_BindPoint )
     {
         auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
 
@@ -120,7 +120,7 @@ namespace LTSE::Graphics
         mCurrentIndexBuffer  = a_IndexBuffer;
     }
 
-    void DeferredRenderContext::Bind( Ref<DescriptorSet> a_DescriptorSet, uint32_t a_SetIndex, int32_t a_DynamicOffset )
+    void DeferredLightingRenderContext::Bind( Ref<DescriptorSet> a_DescriptorSet, uint32_t a_SetIndex, int32_t a_DynamicOffset )
     {
         auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
 

@@ -83,6 +83,7 @@ namespace LTSE::Editor
         mDeferredRenderContext.BeginRender();
 
         if( mDeferredRenderContext ) mDeferredWorldRenderer->Render( mDeferredRenderContext );
+        if( mDeferredLightingRenderContext ) mDeferredLightingRenderer->Render( mDeferredLightingRenderContext );
 
         mDeferredRenderContext.EndRender();
     }
@@ -123,9 +124,10 @@ namespace LTSE::Editor
             l_LightingRenderTargetCI.OutputSize  = { mViewportWidth, mViewportHeight };
             l_LightingRenderTargetCI.SampleCount = 1;
             l_LightingRenderTargetCI.Sampled     = true;
-            mLightingRenderTarget                = New<LightingRenderTarget>( mEngineLoop->GetGraphicContext(), l_LightingRenderTargetCI );
-            mDeferredRenderContext               = LTSE::Graphics::DeferredRenderContext(
-                              mEngineLoop->GetGraphicContext(), mDeferredRenderTarget, mLightingRenderTarget );
+            mLightingRenderTarget  = New<LightingRenderTarget>( mEngineLoop->GetGraphicContext(), l_LightingRenderTargetCI );
+            mDeferredRenderContext = LTSE::Graphics::DeferredRenderContext( mEngineLoop->GetGraphicContext(), mDeferredRenderTarget );
+            mDeferredLightingRenderContext =
+                LTSE::Graphics::DeferredLightingRenderContext( mEngineLoop->GetGraphicContext(), mLightingRenderTarget );
         }
         else
         {
@@ -272,9 +274,10 @@ namespace LTSE::Editor
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
 
         RebuildOutputFramebuffer();
-        mWorld                 = New<Scene>( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
-        mWorldRenderer         = New<SceneRenderer>( mWorld, mViewportRenderContext );
-        mDeferredWorldRenderer = New<DeferredSceneRenderer>( mWorld, mDeferredRenderContext );
+        mWorld                    = New<Scene>( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
+        mWorldRenderer            = New<SceneRenderer>( mWorld, mViewportRenderContext );
+        mDeferredWorldRenderer    = New<DeferredSceneRenderer>( mWorld, mDeferredRenderContext );
+        mDeferredLightingRenderer = New<DeferredLightingPass>( mWorld, mDeferredLightingRenderContext );
 
         mEditorWindow.World       = mWorld;
         mEditorWindow.ActiveWorld = mWorld;

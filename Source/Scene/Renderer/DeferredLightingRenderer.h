@@ -8,7 +8,7 @@
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
-#include "Core/GraphicContext//RenderContext.h"
+#include "Core/GraphicContext//DeferredLightingRenderContext.h"
 
 #include "Scene/VertexData.h"
 

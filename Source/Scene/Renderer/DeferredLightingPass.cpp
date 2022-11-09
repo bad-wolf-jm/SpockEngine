@@ -24,7 +24,7 @@ namespace LTSE::Core
     using namespace LTSE::Core::EntityComponentSystem::Components;
     using namespace LTSE::Core::Primitives;
 
-    DeferredLightingPass::DeferredLightingPass( Ref<Scene> aWorld, DeferredRenderContext &aRenderContext )
+    DeferredLightingPass::DeferredLightingPass( Ref<Scene> aWorld, DeferredLightingRenderContext &aRenderContext )
         : mGraphicContext{ aWorld->GetGraphicContext() }
         , mWorld{ aWorld }
     {
@@ -38,11 +38,11 @@ namespace LTSE::Core
         mSceneDescriptors->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
 
         DeferredLightingRendererCreateInfo mLightingRendererCI{};
-        mLightingRendererCI.RenderPass = aRenderContext.GetLightingRenderPass();
+        mLightingRendererCI.RenderPass = aRenderContext.GetRenderPass();
         mRenderer = DeferredLightingRenderer( mGraphicContext, mLightingRendererCI );
     }
 
-    void DeferredLightingPass::Render( DeferredRenderContext &aRenderContext )
+    void DeferredLightingPass::Render( DeferredLightingRenderContext &aRenderContext )
     {
         LTSE_PROFILE_FUNCTION();
 
@@ -99,7 +99,7 @@ namespace LTSE::Core
         mShaderParametersBuffer->Write( Settings );
     }
 
-    void DeferredLightingPass::UpdateDescriptorSets( DeferredRenderContext &aRenderContext )
+    void DeferredLightingPass::UpdateDescriptorSets( DeferredLightingRenderContext &aRenderContext )
     {
         LTSE_PROFILE_FUNCTION();
     }

@@ -8,13 +8,13 @@
 namespace LTSE::Graphics
 {
 
-    class DeferredRenderContext
+    class DeferredLightingRenderContext
     {
       public:
-        DeferredRenderContext() = default;
-        DeferredRenderContext( GraphicContext const &aGraphicContext, Ref<AbstractRenderTarget> aRenderTarget );
+        DeferredLightingRenderContext() = default;
+        DeferredLightingRenderContext( GraphicContext const &aGraphicContext, Ref<AbstractRenderTarget> aRenderTarget );
 
-        ~DeferredRenderContext() = default;
+        ~DeferredLightingRenderContext() = default;
 
         GraphicContext &GetGraphicContext() { return mGraphicContext; };
 

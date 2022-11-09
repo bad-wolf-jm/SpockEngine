@@ -14,6 +14,7 @@
 #include "Scene/EnvironmentSampler/EnvironmentSampler.h"
 #include "Scene/EnvironmentSampler/PointCloudVisualizer.h"
 #include "Scene/Renderer/DeferredSceneRenderer.h"
+#include "Scene/Renderer/DeferredLightingPass.h"
 #include "Scene/Renderer/SceneRenderer.h"
 #include "Scene/Scene.h"
 
@@ -72,12 +73,14 @@ namespace LTSE::Editor
         Ref<Scene>                 mWorld                 = nullptr;
         Ref<SceneRenderer>         mWorldRenderer         = nullptr;
         Ref<DeferredSceneRenderer> mDeferredWorldRenderer = nullptr;
+        Ref<DeferredLightingPass>  mDeferredLightingRenderer = nullptr;
 
-        RenderContext              mViewportRenderContext{};
-        DeferredRenderContext      mDeferredRenderContext{};
-        Ref<OffscreenRenderTarget> mOffscreenRenderTarget        = nullptr;
-        Ref<Graphics::Texture2D>   mOffscreenRenderTargetTexture = nullptr;
-        ImageHandle                mOffscreenRenderTargetDisplayHandle{};
+        RenderContext                 mViewportRenderContext{};
+        DeferredRenderContext         mDeferredRenderContext{};
+        DeferredLightingRenderContext mDeferredLightingRenderContext{};
+        Ref<OffscreenRenderTarget>    mOffscreenRenderTarget        = nullptr;
+        Ref<Graphics::Texture2D>      mOffscreenRenderTargetTexture = nullptr;
+        ImageHandle                   mOffscreenRenderTargetDisplayHandle{};
 
         Ref<DeferredRenderTarget> mDeferredRenderTarget = nullptr;
         Ref<LightingRenderTarget> mLightingRenderTarget = nullptr;

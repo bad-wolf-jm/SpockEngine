@@ -59,6 +59,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/GraphicContext//GraphicsPipeline.cpp
     Core/GraphicContext//RenderContext.cpp
     Core/GraphicContext//DeferredRenderContext.cpp
+    Core/GraphicContext//DeferredLightingRenderContext.cpp
     Core/GraphicContext//RenderTarget.cpp
     Core/GraphicContext//UI/UIContext.cpp
     
