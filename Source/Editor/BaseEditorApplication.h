@@ -17,8 +17,6 @@
 #include "Scene/Renderer/SceneRenderer.h"
 #include "Scene/Scene.h"
 
-
-// #include "LidarSensorModel/SensorDeviceBase.h"
 #include "TensorOps/Scope.h"
 
 #include "EditorWindow.h"
@@ -29,8 +27,6 @@ namespace LTSE::Editor
 
     using namespace LTSE::Core;
     using namespace LTSE::Graphics;
-    // using namespace LTSE::SensorModel;
-    // using namespace LTSE::SensorModel::Dev;
     using namespace LTSE::TensorOps;
 
     class BaseEditorApplication
