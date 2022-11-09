@@ -69,11 +69,11 @@ namespace LTSE::Core
 
       public:
         MeshRenderer() = default;
-        MeshRenderer( GraphicContext &a_GraphicContext, MeshRendererCreateInfo const &a_CreateInfo );
+        MeshRenderer( GraphicContext &aGraphicContext, MeshRendererCreateInfo const &aCreateInfo );
 
-        static Ref<DescriptorSetLayout> GetCameraSetLayout( GraphicContext &a_GraphicContext );
-        static Ref<DescriptorSetLayout> GetTextureSetLayout( GraphicContext &a_GraphicContext );
-        static Ref<DescriptorSetLayout> GetNodeSetLayout( GraphicContext &a_GraphicContext );
+        static Ref<DescriptorSetLayout> GetCameraSetLayout( GraphicContext &aGraphicContext );
+        static Ref<DescriptorSetLayout> GetTextureSetLayout( GraphicContext &aGraphicContext );
+        static Ref<DescriptorSetLayout> GetNodeSetLayout( GraphicContext &aGraphicContext );
 
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
         std::vector<sPushConstantRange>       GetPushConstantLayout();
