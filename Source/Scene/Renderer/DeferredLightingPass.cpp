@@ -42,38 +42,6 @@ namespace LTSE::Core
         mRenderer = DeferredLightingRenderer( mGraphicContext, mLightingRendererCI );
     }
 
-    // MeshRendererCreateInfo DeferredLightingPass::GetRenderPipelineCreateInfo(
-    //     DeferredRenderContext &aRenderContext, sMaterialShaderComponent &aPipelineSpecification )
-    // {
-    //     MeshRendererCreateInfo lCreateInfo;
-
-    //     lCreateInfo.Opaque         = ( aPipelineSpecification.Type == eCMaterialType::Opaque );
-    //     lCreateInfo.IsTwoSided     = aPipelineSpecification.IsTwoSided;
-    //     lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
-    //     lCreateInfo.VertexShader   = "Shaders\\Deferred\\MRT.vert.spv";
-    //     lCreateInfo.FragmentShader = "Shaders\\Deferred\\MRT.frag.spv";
-    //     lCreateInfo.RenderPass     = aRenderContext.GetRenderPass();
-
-    //     return lCreateInfo;
-    // }
-
-    // MeshRenderer &DeferredLightingPass::GetRenderPipeline(
-    //     DeferredRenderContext &aRenderContext, MeshRendererCreateInfo const &aPipelineSpecification )
-    // {
-    //     if( mMeshRenderers.find( aPipelineSpecification ) == mMeshRenderers.end() )
-    //         mMeshRenderers[aPipelineSpecification] = MeshRenderer( mGraphicContext, aPipelineSpecification );
-
-    //     return mMeshRenderers[aPipelineSpecification];
-    // }
-
-    // MeshRenderer &DeferredLightingPass::GetRenderPipeline(
-    //     DeferredRenderContext &aRenderContext, sMaterialShaderComponent &aPipelineSpecification )
-    // {
-    //     MeshRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aRenderContext, aPipelineSpecification );
-
-    //     return GetRenderPipeline( aRenderContext, lCreateInfo );
-    // }
-
     void DeferredLightingPass::Render( DeferredRenderContext &aRenderContext )
     {
         LTSE_PROFILE_FUNCTION();
@@ -129,83 +97,11 @@ namespace LTSE::Core
 
         mCameraUniformBuffer->Write( View );
         mShaderParametersBuffer->Write( Settings );
-
-        // std::unordered_map<MeshRendererCreateInfo, std::vector<Entity>, MeshRendererCreateInfoHash> lOpaqueMeshQueue{};
-        // mWorld->ForEach<sStaticMeshComponent, sMaterialShaderComponent>(
-        //     [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterialData )
-        //     {
-        //         auto &l_PipelineCreateInfo = GetRenderPipelineCreateInfo( aRenderContext, aMaterialData );
-        //         if( lOpaqueMeshQueue.find( l_PipelineCreateInfo ) == lOpaqueMeshQueue.end() )
-        //             lOpaqueMeshQueue[l_PipelineCreateInfo] = std::vector<Entity>{};
-        //         lOpaqueMeshQueue[l_PipelineCreateInfo].push_back( aEntity );
-        //     } );
-
-        // if( mWorld->mVertexBuffer && mWorld->mIndexBuffer )
-        // {
-        //     aRenderContext.Bind( mWorld->mTransformedVertexBuffer, mWorld->mIndexBuffer );
-        //     for( auto &lPipelineData : lOpaqueMeshQueue )
-        //     {
-        //         auto &lPipeline = GetRenderPipeline( aRenderContext, lPipelineData.first );
-        //         if( lPipeline.Pipeline )
-        //             aRenderContext.Bind( lPipeline.Pipeline );
-        //         else
-        //             continue;
-
-        //         aRenderContext.Bind( mSceneDescriptors, 0, -1 );
-        //         aRenderContext.Bind( mWorld->GetMaterialSystem()->GetDescriptorSet(), 1, -1 );
-
-        //         for( auto &lMeshInformation : lPipelineData.second )
-        //         {
-        //             if( lMeshInformation.Has<NodeDescriptorComponent>() )
-        //                 aRenderContext.Bind( lMeshInformation.Get<NodeDescriptorComponent>().Descriptors, 2, -1 );
-
-        //             MeshRenderer::MaterialPushConstants lMaterialPushConstants{};
-        //             lMaterialPushConstants.mMaterialID = lMeshInformation.Get<sMaterialComponent>().mMaterialID;
-
-        //             aRenderContext.PushConstants( { Graphics::Internal::eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants
-        //             );
-
-        //             auto &lStaticMeshComponent = lMeshInformation.Get<sStaticMeshComponent>();
-        //             aRenderContext.Draw( lStaticMeshComponent.mIndexCount, lStaticMeshComponent.mIndexOffset,
-        //                 lStaticMeshComponent.mVertexOffset, 1, 0 );
-        //         }
-        //     }
-        // }
     }
 
     void DeferredLightingPass::UpdateDescriptorSets( DeferredRenderContext &aRenderContext )
     {
         LTSE_PROFILE_FUNCTION();
-
-        // mWorld->ForEach<sTransformMatrixComponent>(
-        //     [&]( auto aEntity, auto &aComponent )
-        //     {
-        //         if( !( aEntity.Has<NodeDescriptorComponent>() ) )
-        //         {
-        //             auto &l_NodeDescriptor = aEntity.Add<NodeDescriptorComponent>();
-        //             l_NodeDescriptor.Descriptors =
-        //                 New<DescriptorSet>( mGraphicContext, MeshRenderer::GetNodeSetLayout( mGraphicContext ) );
-        //             l_NodeDescriptor.UniformBuffer = New<Buffer>(
-        //                 mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( NodeMatrixDataComponent )
-        //                 );
-
-        //             l_NodeDescriptor.Descriptors->Write(
-        //                 l_NodeDescriptor.UniformBuffer, false, 0, sizeof( NodeMatrixDataComponent ), 0 );
-        //         }
-
-        //         auto                   &l_NodeDescriptor = aEntity.Get<NodeDescriptorComponent>();
-        //         NodeMatrixDataComponent l_NodeTransform{};
-        //         l_NodeTransform.Transform = aComponent.Matrix;
-        //         aEntity.IfExists<sSkeletonComponent>(
-        //             [&]( auto &l_SkeletonComponent )
-        //             {
-        //                 l_NodeTransform.JointCount = l_SkeletonComponent.BoneCount;
-        //                 for( uint32_t i = 0; i < l_SkeletonComponent.BoneCount; i++ )
-        //                     l_NodeTransform.Joints[i] = l_SkeletonComponent.JointMatrices[i];
-        //             } );
-
-        //         l_NodeDescriptor.UniformBuffer->Write( l_NodeTransform );
-        //     } );
     }
 
 } // namespace LTSE::Core
