@@ -14,7 +14,7 @@
 #include "Core/Logging.h"
 #include "Core/Resource.h"
 
-#include "MeshRenderer.h"
+#include "DeferredLightingRenderer.h"
 #include "ParticleSystemRenderer.h"
 
 namespace LTSE::Core
@@ -28,7 +28,7 @@ namespace LTSE::Core
         : mGraphicContext{ aWorld->GetGraphicContext() }
         , mWorld{ aWorld }
     {
-        mSceneDescriptors = New<DescriptorSet>( mGraphicContext, MeshRenderer::GetCameraSetLayout( mGraphicContext ) );
+        mSceneDescriptors = New<DescriptorSet>( mGraphicContext, DeferredLightingRenderer::GetCameraSetLayout( mGraphicContext ) );
 
         mCameraUniformBuffer =
             New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( WorldMatrices ) );
@@ -99,6 +99,7 @@ namespace LTSE::Core
         mShaderParametersBuffer->Write( Settings );
 
         aRenderContext.Bind( mRenderer.Pipeline );
+        aRenderContext.Bind( mSceneDescriptors, 0, -1 );
         aRenderContext.Bind( aTextures, 1, -1 );
         aRenderContext.Draw( 6, 0, 0, 1, 0 );
     }

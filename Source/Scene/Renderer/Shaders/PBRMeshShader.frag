@@ -226,7 +226,7 @@ void main()
     vec3 F0 = vec3( 0.04 );
     F0      = mix( F0, lBaseColor.xyz, metallic );
 
-    // // reflectance equation
+    // reflectance equation
     vec3 Lo = vec3( 0.0f );
 
     for( int l_DirectionalLightIndex = 0; l_DirectionalLightIndex < ubo.DirectionalLightCount; l_DirectionalLightIndex++ )
