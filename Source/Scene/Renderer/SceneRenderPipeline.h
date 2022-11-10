@@ -64,14 +64,11 @@ namespace LTSE::Core
             lPipelineCreateInfo.InstanceBufferLayout = aCreateInfo.InstanceBufferLayout;
             lPipelineCreateInfo.Topology             = Spec.Topology;
             lPipelineCreateInfo.Opaque               = Spec.Opaque;
+
             if( Spec.IsTwoSided )
-            {
                 lPipelineCreateInfo.Culling = eFaceCulling::NONE;
-            }
             else
-            {
                 lPipelineCreateInfo.Culling = eFaceCulling::BACK;
-            }
 
             lPipelineCreateInfo.SampleCount      = Spec.RenderPass->mSampleCount;
             lPipelineCreateInfo.LineWidth        = Spec.LineWidth;

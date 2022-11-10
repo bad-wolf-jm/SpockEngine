@@ -25,40 +25,18 @@ namespace LTSE::Core
     struct DeferredLightingRendererCreateInfo
     {
         bool Opaque = false;
-        // bool     IsTwoSided     = false;
-        // float    LineWidth      = 1.0f;
-        // fs::path VertexShader   = "";
-        // fs::path FragmentShader = "";
 
         Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
-
-        // bool operator==( const DeferredLightingRendererCreateInfo &p ) const
-        // {
-        //     return ( IsTwoSided == p.IsTwoSided ) && ( LineWidth == p.LineWidth ) && ( VertexShader == p.VertexShader ) &&
-        //            ( FragmentShader == p.FragmentShader );
-        // }
     };
 
-    // struct DeferredLightingRendererCreateInfoHash
-    // {
-    //     std::size_t operator()( const DeferredLightingRendererCreateInfo &node ) const
-    //     {
-    //         std::size_t h1 = std::hash<bool>()( node.IsTwoSided );
-    //         std::size_t h2 = std::hash<float>()( node.LineWidth );
-    //         std::size_t h3 = std::hash<std::string>()( node.VertexShader.string() );
-    //         std::size_t h4 = std::hash<std::string>()( node.FragmentShader.string() );
 
-    //         return h1 ^ h2 ^ h3 ^ h4;
-    //     }
-    // };
-
-    class DeferredLightingRenderer : public SceneRenderPipeline<VertexData>
+    class DeferredLightingRenderer : public SceneRenderPipeline<EmptyVertexData>
     {
 
       public:
         struct MaterialPushConstants
         {
-            uint8_t mNumSamples;
+            uint32_t mNumSamples;
         };
 
         DeferredLightingRendererCreateInfo Spec = {};

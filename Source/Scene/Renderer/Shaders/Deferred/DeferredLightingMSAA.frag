@@ -1,26 +1,108 @@
 #version 450
 
-layout (binding = 1) uniform sampler2DMS samplerPosition;
-layout (binding = 2) uniform sampler2DMS samplerNormal;
-layout (binding = 3) uniform sampler2DMS samplerAlbedo;
-layout (binding = 3) uniform sampler2DMS samplerOcclusionMetalRough;
-
 layout (location = 0) in vec2 inUV;
+
+layout (set = 1, binding = 0) uniform sampler2DMS samplerPosition;
+layout (set = 1, binding = 1) uniform sampler2DMS samplerNormal;
+layout (set = 1, binding = 2) uniform sampler2DMS samplerAlbedo;
+layout (set = 1, binding = 3) uniform sampler2DMS samplerOcclusionMetalRough;
 
 layout (location = 0) out vec4 outFragcolor;
 
-struct Light {
-    vec4 position;
-    vec3 color;
-    float radius;
+
+#define MAX_NUM_LIGHTS 64
+
+struct DirectionalLightData
+{
+    vec3 Direction;
+    vec3 Color;
+    float Intensity;
 };
 
-layout (binding = 4) uniform UBO 
+struct PointLightData
 {
-    Light lights[6];
-    vec4 viewPos;
-    int debugDisplayTarget;
-} ubo;
+    vec3 WorldPosition;
+    vec3 Color;
+    float Intensity;
+};
+
+struct SpotlightData
+{
+    vec3 WorldPosition;
+    vec3 LookAtDirection;
+    vec3 Color;
+    float Intensity;
+    float Cone;
+};
+
+struct sShaderMaterial
+{
+    vec4 mBaseColorFactor;
+    int mBaseColorTextureID;
+    int mBaseColorUVChannel;
+
+    float mMetallicFactor;
+    float mRoughnessFactor;
+    int mMetalnessUVChannel;
+    int mMetalnessTextureID;
+
+    float mOcclusionStrength;
+    int mOcclusionUVChannel;
+    int mOcclusionTextureID;
+
+    vec4 mEmissiveFactor;
+    int mEmissiveTextureID;
+    int mEmissiveUVChannel;
+
+    int mNormalTextureID;
+    int mNormalUVChannel;
+
+    float mAlphaThreshold;
+};
+
+// Scene bindings
+layout( set = 0, binding = 0 ) uniform UBO0
+{
+    mat4 projection;
+    mat4 model;
+    mat4 view;
+    vec3 camPos;
+
+    int DirectionalLightCount;
+    DirectionalLightData DirectionalLights[MAX_NUM_LIGHTS];
+
+    int SpotlightCount;
+    SpotlightData Spotlights[MAX_NUM_LIGHTS];
+
+    int PointLightCount;
+    PointLightData PointLights[MAX_NUM_LIGHTS];
+}
+ubo0;
+
+layout( set = 0, binding = 1 ) uniform UBOParams
+{
+    float exposure;
+    float gamma;
+    float AmbientLightIntensity;
+    vec4 AmbientLightColor;
+    float debugViewInputs;
+    float debugViewEquation;
+}
+uboParams;
+
+
+// struct Light {
+//     vec4 position;
+//     vec3 color;
+//     float radius;
+// };
+
+// layout (binding = 4) uniform UBO 
+// {
+//     Light lights[6];
+//     vec4 viewPos;
+//     int debugDisplayTarget;
+// } ubo;
 
 layout (constant_id = 0) const int NUM_SAMPLES = 8;
 
@@ -43,35 +125,35 @@ vec3 calculateLighting(vec3 pos, vec3 normal, vec4 albedo)
 {
     vec3 result = vec3(0.0);
 
-    for(int i = 0; i < NUM_LIGHTS; ++i)
-    {
-        // Vector to light
-        vec3 L = ubo.lights[i].position.xyz - pos;
-        // Distance from light to fragment position
-        float dist = length(L);
+    // for(int i = 0; i < NUM_LIGHTS; ++i)
+    // {
+    //     // Vector to light
+    //     vec3 L = ubo.lights[i].position.xyz - pos;
+    //     // Distance from light to fragment position
+    //     float dist = length(L);
 
-        // Viewer to fragment
-        vec3 V = ubo.viewPos.xyz - pos;
-        V = normalize(V);
+    //     // Viewer to fragment
+    //     vec3 V = ubo.viewPos.xyz - pos;
+    //     V = normalize(V);
         
-        // Light to fragment
-        L = normalize(L);
+    //     // Light to fragment
+    //     L = normalize(L);
 
-        // Attenuation
-        float atten = ubo.lights[i].radius / (pow(dist, 2.0) + 1.0);
+    //     // Attenuation
+    //     float atten = ubo.lights[i].radius / (pow(dist, 2.0) + 1.0);
 
-        // Diffuse part
-        vec3 N = normalize(normal);
-        float NdotL = max(0.0, dot(N, L));
-        vec3 diff = ubo.lights[i].color * albedo.rgb * NdotL * atten;
+    //     // Diffuse part
+    //     vec3 N = normalize(normal);
+    //     float NdotL = max(0.0, dot(N, L));
+    //     vec3 diff = ubo.lights[i].color * albedo.rgb * NdotL * atten;
 
-        // Specular part
-        vec3 R = reflect(-L, N);
-        float NdotR = max(0.0, dot(R, V));
-        vec3 spec = ubo.lights[i].color * albedo.a * pow(NdotR, 8.0) * atten;
+    //     // Specular part
+    //     vec3 R = reflect(-L, N);
+    //     float NdotR = max(0.0, dot(R, V));
+    //     vec3 spec = ubo.lights[i].color * albedo.a * pow(NdotR, 8.0) * atten;
 
-        result += diff + spec;    
-    }
+    //     result += diff + spec;    
+    // }
     return result;
 }
 

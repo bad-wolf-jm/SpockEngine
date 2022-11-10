@@ -49,12 +49,10 @@ namespace LTSE::Core
 
     DeferredLightingRenderer::DeferredLightingRenderer(
         GraphicContext &aGraphicContext, DeferredLightingRendererCreateInfo const &aCreateInfo )
-        : SceneRenderPipeline<VertexData>( aGraphicContext )
+        : SceneRenderPipeline<EmptyVertexData>( aGraphicContext )
         , Spec{ aCreateInfo }
     {
         SceneRenderPipelineCreateInfo lCreateInfo{};
-        // lCreateInfo.Opaque         = aCreateInfo.Opaque;
-        // lCreateInfo.LineWidth      = aCreateInfo.LineWidth;
         lCreateInfo.VertexShader   = "Shaders/Deferred/DeferredLightingMSAA.vert.spv";
         lCreateInfo.FragmentShader = "Shaders/Deferred/DeferredLightingMSAA.frag.spv";
         lCreateInfo.RenderPass     = aCreateInfo.RenderPass;

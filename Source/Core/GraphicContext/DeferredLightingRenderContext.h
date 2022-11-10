@@ -24,8 +24,7 @@ namespace LTSE::Graphics
         {
             return mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
         }
-        Ref<Internal::sVkDeferredRenderPassObject> GetRenderPass() { return mRenderPass; }
-        Ref<Internal::sVkLightingRenderPassObject> GetLightingRenderPass() { return mLightingRenderPass; }
+        Ref<Internal::sVkLightingRenderPassObject> GetRenderPass() { return mRenderPass; }
 
         bool BeginRender();
         bool EndRender();
@@ -49,7 +48,7 @@ namespace LTSE::Graphics
 
         void ResetBuffers();
 
-        operator bool() { return static_cast<bool>( mRenderTarget ) && static_cast<bool>( mRenderPass ) && static_cast<bool>( mLightingRenderPass ); }
+        operator bool() { return static_cast<bool>( mRenderTarget ) && static_cast<bool>( mRenderPass ); }
 
       private:
         GraphicContext mGraphicContext{};
@@ -60,8 +59,7 @@ namespace LTSE::Graphics
 
         Ref<AbstractRenderTarget> mRenderTarget = nullptr;
 
-        Ref<Internal::sVkDeferredRenderPassObject> mRenderPass = nullptr;
-        Ref<Internal::sVkLightingRenderPassObject> mLightingRenderPass = nullptr;
+        Ref<Internal::sVkLightingRenderPassObject> mRenderPass = nullptr;
 
         std::vector<Ref<Internal::sVkCommandBufferObject>> mCommandBufferObject   = {};
         Ref<Internal::sVkPipelineLayoutObject>             mCurrentPipelineLayout = nullptr;

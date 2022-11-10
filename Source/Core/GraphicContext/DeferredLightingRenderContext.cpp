@@ -29,7 +29,7 @@ namespace LTSE::Graphics
             if( lSubmitFence ) mCommandBufferObject[i]->SetSubmitFence( lSubmitFence );
         }
 
-        mRenderPass = New<Internal::sVkDeferredRenderPassObject>( mGraphicContext.mContext, ToVkFormat( aRenderTarget->Spec.Format ),
+        mRenderPass = New<Internal::sVkLightingRenderPassObject>( mGraphicContext.mContext, ToVkFormat( aRenderTarget->Spec.Format ),
             aRenderTarget->Spec.SampleCount, aRenderTarget->Spec.Sampled, aRenderTarget->Spec.Presented,
             aRenderTarget->Spec.ClearColor );
     }
