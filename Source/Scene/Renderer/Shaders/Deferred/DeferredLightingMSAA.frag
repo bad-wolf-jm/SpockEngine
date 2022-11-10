@@ -297,6 +297,8 @@ void main()
     vec4 emissive  = vec4( 0.0f );
 
     // Calualte lighting for every MSAA sample
+    float ao = 0.0f;
+    float aoStrength = 0.0f;
     for( int i = 0; i < NUM_SAMPLES; i++ )
     {
         vec3 pos        = texelFetch( samplerPosition, UV, i ).rgb;
@@ -305,11 +307,13 @@ void main()
         vec4 metalrough = texelFetch( samplerOcclusionMetalRough, UV, i );
 
         fragColor += calculateLighting( pos, normal, albedo, metalrough, emissive );
+        ao += metalrough.r;
+        aoStrength += metalrough.a;
     }
 
     vec3 ambient   = uboParams.AmbientLightIntensity * uboParams.AmbientLightColor.rgb * alb.xyz;
     vec3 hdr_color = ambient + fragColor / NUM_SAMPLES;
-    // hdr_color = mix( hdr_color, hdr_color * ao, lMaterial.mOcclusionStrength );
+    hdr_color = mix( hdr_color, hdr_color * ao / NUM_SAMPLES, aoStrength / NUM_SAMPLES );
     hdr_color = hdr_color + emissive.xyz;
     // fragColor = ( alb.rgb * ambient ) + fragColor / float( NUM_SAMPLES );
     // vec4 full_color = vec4( hdr_color, lBaseColor.a );

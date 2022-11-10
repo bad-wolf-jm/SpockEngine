@@ -127,7 +127,7 @@ vec3 getNormalFromMap( sampler2D aNormalSampler, vec2 aCoords )
     vec3 B   = -normalize( cross( N, T ) );
     mat3 TBN = mat3( T, B, N );
 
-    return TBN *  normalize( tangentNormal );
+    return normalize( TBN *  tangentNormal );
 }
 
 void main()
@@ -151,5 +151,5 @@ void main()
 
     outNormal  = vec4( tnorm, 1.0 );
     outAlbedo = texture( gTextures[lMaterial.mBaseColorTextureID], lMaterial.mBaseColorUVChannel == 0 ? inUV0 : inUV1 ) * lMaterial.mBaseColorFactor;
-    outOcclusionMetalRough = vec4(ao, metallic, roughness, 1.0);
+    outOcclusionMetalRough = vec4( ao, metallic, roughness, lMaterial.mOcclusionStrength );
 }
