@@ -1,9 +1,10 @@
 #pragma once
 #include "Core/Memory.h"
 
+#include "Core/GraphicContext//DeferredLightingRenderContext.h"
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
-#include "Core/GraphicContext//DeferredLightingRenderContext.h"
+
 
 #include "Core/GraphicContext//Texture2D.h"
 #include "Core/GraphicContext//TextureCubemap.h"
@@ -14,11 +15,12 @@
 #include "Scene/Scene.h"
 
 #include "CoordinateGridRenderer.h"
+#include "DeferredLightingRenderer.h"
 #include "MeshRenderer.h"
 #include "ParticleSystemRenderer.h"
-#include "VisualHelperRenderer.h"
 #include "SceneRenderData.h"
-#include "DeferredLightingRenderer.h"
+#include "VisualHelperRenderer.h"
+
 
 namespace LTSE::Core
 {
@@ -38,7 +40,9 @@ namespace LTSE::Core
 
         ~DeferredLightingPass() = default;
 
-        void Render( DeferredLightingRenderContext &aRenderContext );
+        void Render(  Ref<DescriptorSet> aTextures, DeferredLightingRenderContext &aRenderContext );
+
+        Ref<DescriptorSetLayout> GetTextureSetLayout() { return mRenderer.GetTextureSetLayout( mGraphicContext ); }
 
         Ref<Scene> mWorld = nullptr;
 

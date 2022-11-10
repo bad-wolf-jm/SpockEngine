@@ -42,7 +42,7 @@ namespace LTSE::Core
         mRenderer = DeferredLightingRenderer( mGraphicContext, mLightingRendererCI );
     }
 
-    void DeferredLightingPass::Render( DeferredLightingRenderContext &aRenderContext )
+    void DeferredLightingPass::Render( Ref<DescriptorSet> aTextures, DeferredLightingRenderContext &aRenderContext )
     {
         LTSE_PROFILE_FUNCTION();
 
@@ -97,6 +97,10 @@ namespace LTSE::Core
 
         mCameraUniformBuffer->Write( View );
         mShaderParametersBuffer->Write( Settings );
+
+        aRenderContext.Bind( mRenderer.Pipeline );
+        aRenderContext.Bind( aTextures, 1, -1 );
+        aRenderContext.Draw( 6, 0, 0, 1, 0 );
     }
 
     void DeferredLightingPass::UpdateDescriptorSets( DeferredLightingRenderContext &aRenderContext )

@@ -27,7 +27,7 @@ namespace LTSE::Graphics::Internal
         mClearValues.resize( 5 );
 
         VkAttachmentDescription lColorAttachmentPosition =
-            ColorAttachment( VK_FORMAT_R16G16B16A16_SFLOAT, 1, aIsSampled, aIsPresented );
+            ColorAttachment( aFormat, 1, aIsSampled, aIsPresented );
         VkAttachmentReference lColorAttachmentPositionReference{};
         lColorAttachmentPositionReference.attachment = 0;
         lColorAttachmentPositionReference.layout     = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;

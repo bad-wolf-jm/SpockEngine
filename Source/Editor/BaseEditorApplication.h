@@ -13,8 +13,8 @@
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Scene/EnvironmentSampler/EnvironmentSampler.h"
 #include "Scene/EnvironmentSampler/PointCloudVisualizer.h"
-#include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/DeferredLightingPass.h"
+#include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/SceneRenderer.h"
 #include "Scene/Scene.h"
 
@@ -67,12 +67,12 @@ namespace LTSE::Editor
         void RebuildOutputFramebuffer();
 
       protected:
-        uint32_t                   mViewportHeight        = 1;
-        uint32_t                   mViewportWidth         = 1;
-        bool                       mShouldRebuildViewport = true;
-        Ref<Scene>                 mWorld                 = nullptr;
-        Ref<SceneRenderer>         mWorldRenderer         = nullptr;
-        Ref<DeferredSceneRenderer> mDeferredWorldRenderer = nullptr;
+        uint32_t                   mViewportHeight           = 1;
+        uint32_t                   mViewportWidth            = 1;
+        bool                       mShouldRebuildViewport    = true;
+        Ref<Scene>                 mWorld                    = nullptr;
+        Ref<SceneRenderer>         mWorldRenderer            = nullptr;
+        Ref<DeferredSceneRenderer> mDeferredWorldRenderer    = nullptr;
         Ref<DeferredLightingPass>  mDeferredLightingRenderer = nullptr;
 
         RenderContext                 mViewportRenderContext{};
@@ -81,6 +81,8 @@ namespace LTSE::Editor
         Ref<OffscreenRenderTarget>    mOffscreenRenderTarget        = nullptr;
         Ref<Graphics::Texture2D>      mOffscreenRenderTargetTexture = nullptr;
         ImageHandle                   mOffscreenRenderTargetDisplayHandle{};
+
+        Ref<DescriptorSet> mLightingPassInputs = nullptr;
 
         Ref<DeferredRenderTarget> mDeferredRenderTarget = nullptr;
         Ref<LightingRenderTarget> mLightingRenderTarget = nullptr;

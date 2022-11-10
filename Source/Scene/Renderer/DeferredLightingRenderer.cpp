@@ -34,7 +34,7 @@ namespace LTSE::Core
             DescriptorBindingInfo{ 2, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } },
             DescriptorBindingInfo{ 3, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
 
-        return New<DescriptorSetLayout>( aGraphicContext, lTextureBindLayout, true );
+        return New<DescriptorSetLayout>( aGraphicContext, lTextureBindLayout, false );
     }
 
     std::vector<Ref<DescriptorSetLayout>> DeferredLightingRenderer::GetDescriptorSetLayout()

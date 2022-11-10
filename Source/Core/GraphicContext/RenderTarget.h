@@ -128,7 +128,7 @@ namespace LTSE::Graphics
 
         uint32_t GetCurrentImage();
 
-      private:
+      public:
         Ref<Internal::sVkDeferredRenderPassObject> m_RenderPassObject       = nullptr;
         Ref<Internal::sVkFramebufferImage>         m_PositionsOutputTexture = nullptr;
         Ref<Internal::sVkFramebufferImage>         m_NormalsOutputTexture   = nullptr;
