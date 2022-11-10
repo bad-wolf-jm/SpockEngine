@@ -82,6 +82,10 @@ namespace LTSE::Editor
         Ref<Graphics::Texture2D>      mOffscreenRenderTargetTexture = nullptr;
         ImageHandle                   mOffscreenRenderTargetDisplayHandle{};
 
+        Ref<Graphics::Texture2D>      mDeferredRenderTargetTexture = nullptr;
+        ImageHandle                   mDeferredRenderTargetDisplayHandle{};
+
+
         Ref<DescriptorSet> mLightingPassInputs = nullptr;
 
         Ref<DeferredRenderTarget> mDeferredRenderTarget = nullptr;

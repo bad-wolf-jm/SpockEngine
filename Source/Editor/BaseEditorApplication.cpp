@@ -79,8 +79,7 @@ namespace LTSE::Editor
         mViewportRenderContext.EndRender();
 
         mDeferredRenderContext.BeginRender();
-        if( mDeferredRenderContext ) 
-            mDeferredWorldRenderer->Render( mDeferredRenderContext );
+        if( mDeferredRenderContext ) mDeferredWorldRenderer->Render( mDeferredRenderContext );
         mDeferredRenderContext.EndRender();
 
         mDeferredLightingRenderContext.BeginRender();
@@ -133,12 +132,19 @@ namespace LTSE::Editor
         {
             mDeferredRenderTarget->Resize( mViewportWidth, mViewportHeight );
             mLightingRenderTarget->Resize( mViewportWidth, mViewportHeight );
-            mLightingPassInputs->Write(New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{}, mDeferredRenderTarget->m_PositionsOutputTexture ), 0);
-            mLightingPassInputs->Write(New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{}, mDeferredRenderTarget->m_NormalsOutputTexture ), 1);
-            mLightingPassInputs->Write(New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{}, mDeferredRenderTarget->m_AlbedoOutputTexture ), 2);
-            mLightingPassInputs->Write(New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{}, mDeferredRenderTarget->m_SpecularOutputTexture ), 3);
+            mLightingPassInputs->Write( New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{},
+                                            mDeferredRenderTarget->m_PositionsOutputTexture ),
+                0 );
+            mLightingPassInputs->Write( New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{},
+                                            mDeferredRenderTarget->m_NormalsOutputTexture ),
+                1 );
+            mLightingPassInputs->Write( New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{},
+                                            mDeferredRenderTarget->m_AlbedoOutputTexture ),
+                2 );
+            mLightingPassInputs->Write( New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{},
+                                            mDeferredRenderTarget->m_SpecularOutputTexture ),
+                3 );
         }
-
 
         mOffscreenRenderTargetTexture = New<Graphics::Texture2D>(
             mEngineLoop->GetGraphicContext(), TextureDescription{}, mOffscreenRenderTarget->GetOutputImage() );
@@ -151,6 +157,19 @@ namespace LTSE::Editor
         else
         {
             mOffscreenRenderTargetDisplayHandle.Handle->Write( mOffscreenRenderTargetTexture, 0 );
+        }
+
+        mDeferredRenderTargetTexture = New<Graphics::Texture2D>(
+            mEngineLoop->GetGraphicContext(), TextureDescription{}, mLightingRenderTarget->GetOutputImage() );
+
+        if( !mDeferredRenderTargetDisplayHandle.Handle )
+        {
+            mDeferredRenderTargetDisplayHandle = mEngineLoop->UIContext()->CreateTextureHandle( mDeferredRenderTargetTexture );
+            mEditorWindow.UpdateSceneViewport_deferred( mDeferredRenderTargetDisplayHandle );
+        }
+        else
+        {
+            mDeferredRenderTargetDisplayHandle.Handle->Write( mDeferredRenderTargetTexture, 0 );
         }
 
         if( mWorldRenderer )
@@ -179,9 +198,10 @@ namespace LTSE::Editor
 
         mEditorWindow.mEngineLoop = mEngineLoop;
         // mEditorWindow.SensorModel    = m_SensorController;
-        mEditorWindow.WorldRenderer         = mWorldRenderer;
-        mEditorWindow.DeferredWorldRenderer = mDeferredWorldRenderer;
-        mEditorWindow.GraphicContext        = mEngineLoop->GetGraphicContext();
+        mEditorWindow.WorldRenderer            = mWorldRenderer;
+        mEditorWindow.DeferredWorldRenderer    = mDeferredWorldRenderer;
+        mEditorWindow.DeferredLightingRenderer = mDeferredLightingRenderer;
+        mEditorWindow.GraphicContext           = mEngineLoop->GetGraphicContext();
 
         o_RequestQuit = mEditorWindow.Display();
         OnUI();
@@ -284,11 +304,19 @@ namespace LTSE::Editor
         mDeferredWorldRenderer    = New<DeferredSceneRenderer>( mWorld, mDeferredRenderContext );
         mDeferredLightingRenderer = New<DeferredLightingPass>( mWorld, mDeferredLightingRenderContext );
 
-        mLightingPassInputs = New<DescriptorSet>( mEngineLoop->GetGraphicContext(), mDeferredLightingRenderer->GetTextureSetLayout()) ;
-        mLightingPassInputs->Write(New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{}, mDeferredRenderTarget->m_PositionsOutputTexture ), 0);
-        mLightingPassInputs->Write(New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{}, mDeferredRenderTarget->m_NormalsOutputTexture ), 1);
-        mLightingPassInputs->Write(New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{}, mDeferredRenderTarget->m_AlbedoOutputTexture ), 2);
-        mLightingPassInputs->Write(New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{}, mDeferredRenderTarget->m_SpecularOutputTexture ), 3);
+        mLightingPassInputs = New<DescriptorSet>( mEngineLoop->GetGraphicContext(), mDeferredLightingRenderer->GetTextureSetLayout() );
+        mLightingPassInputs->Write( New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{},
+                                        mDeferredRenderTarget->m_PositionsOutputTexture ),
+            0 );
+        mLightingPassInputs->Write( New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{},
+                                        mDeferredRenderTarget->m_NormalsOutputTexture ),
+            1 );
+        mLightingPassInputs->Write( New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{},
+                                        mDeferredRenderTarget->m_AlbedoOutputTexture ),
+            2 );
+        mLightingPassInputs->Write( New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{},
+                                        mDeferredRenderTarget->m_SpecularOutputTexture ),
+            3 );
 
         mEditorWindow.World       = mWorld;
         mEditorWindow.ActiveWorld = mWorld;

@@ -12,9 +12,9 @@
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//Texture2D.h"
 #include "Scene/Renderer/DeferredSceneRenderer.h"
+#include "Scene/Renderer/DeferredLightingPass.h"
 #include "Scene/Renderer/SceneRenderer.h"
 #include "Scene/Scene.h"
-
 
 #include "UI/UI.h"
 
@@ -75,10 +75,11 @@ namespace LTSE::Editor
 
         Ref<EngineLoop> mEngineLoop = nullptr;
         // Ref<SensorDeviceBase> SensorModel = nullptr;
-        Ref<Scene>                 World                 = nullptr;
-        Ref<Scene>                 ActiveWorld           = nullptr;
-        Ref<SceneRenderer>         WorldRenderer         = nullptr;
-        Ref<DeferredSceneRenderer> DeferredWorldRenderer = nullptr;
+        Ref<Scene>                 World                    = nullptr;
+        Ref<Scene>                 ActiveWorld              = nullptr;
+        Ref<SceneRenderer>         WorldRenderer            = nullptr;
+        Ref<DeferredSceneRenderer> DeferredWorldRenderer    = nullptr;
+        Ref<DeferredLightingPass>  DeferredLightingRenderer = nullptr;
 
         Entity         Sensor{};
         Entity         ActiveSensor{};
@@ -118,6 +119,7 @@ namespace LTSE::Editor
         void UpdateFramerate( Timestep ts );
 
         void UpdateSceneViewport( ImageHandle a_SceneViewport );
+        void UpdateSceneViewport_deferred( ImageHandle a_SceneViewport );
 
       private:
         void ConfigureUI();
@@ -152,6 +154,7 @@ namespace LTSE::Editor
 
       private:
         ImageHandle m_SceneViewport{};
+        ImageHandle m_SceneViewport_deferred{};
 
         std::vector<uint8_t> mTestTile;
     };

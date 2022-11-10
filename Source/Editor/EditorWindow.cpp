@@ -257,6 +257,7 @@ namespace LTSE::Editor
     }
 
     void EditorWindow::UpdateSceneViewport( ImageHandle a_SceneViewport ) { m_SceneViewport = a_SceneViewport; }
+    void EditorWindow::UpdateSceneViewport_deferred( ImageHandle a_SceneViewport ) { m_SceneViewport_deferred = a_SceneViewport; }
 
     EditorWindow &EditorWindow::AddMenuItem( std::string l_Icon, std::string l_Title, std::function<bool()> l_Action )
     {
@@ -302,6 +303,16 @@ namespace LTSE::Editor
         // if( m_NewMaterial.Visible )
         //     ImGui::OpenPopup( "NEW MATERIAL..." );
         // m_NewMaterial.Display();
+
+        if( ImGui::Begin( "3D VIEW DEFERRED", &p_open, ImGuiWindowFlags_None ) )
+        {
+            math::ivec2 l3DViewSize = UI::GetAvailableContentSpace();
+            if( m_SceneViewport_deferred.Handle )
+            {
+                UI::Image( m_SceneViewport_deferred, l3DViewSize );
+            }
+        }
+        ImGui::End();
 
         if( ImGui::Begin( "3D VIEW", &p_open, ImGuiWindowFlags_None ) )
         {
@@ -1554,6 +1565,10 @@ namespace LTSE::Editor
                     {
                         ImGui::SliderFloat( "Exposure", &WorldRenderer->Settings.Exposure, 0.1f, 10.0f );
                         ImGui::SliderFloat( "Gamma", &WorldRenderer->Settings.Gamma, 0.1f, 4.0f );
+
+                        DeferredLightingRenderer->Settings.Exposure = WorldRenderer->Settings.Exposure;
+                        DeferredLightingRenderer->Settings.Gamma = WorldRenderer->Settings.Gamma;
+
                     }
                     ImGui::End();
                 }
