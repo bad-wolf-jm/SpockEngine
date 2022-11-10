@@ -177,8 +177,6 @@ vec3 CookTorrance( vec3 F0, vec3 N, vec3 L, vec3 V, vec3 H, float roughness )
 
 vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalrough, vec4 emissive )
 {
-    vec3 result = vec3( 0.0 );
-
     float metallic  = aometalrough.g;
     float roughness = aometalrough.b;
 
@@ -246,6 +244,7 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
 
         // add to outgoing radiance Lo
         Lo += ( kD * lBaseColor.xyz / PI + specular ) * radiance * NdotL;
+        // Lo += ( lBaseColor.xyz / PI + specular ) * radiance * NdotL;
         // Lo += NdotL;
     }
 

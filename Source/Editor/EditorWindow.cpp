@@ -1376,7 +1376,7 @@ namespace LTSE::Editor
                                       l3DViewPosition + math::vec2{ l3DViewSize.x - 125.0f, 35.0f } );
             WorldRenderer->View.CameraPosition         = math::vec3( math::Inverse( WorldRenderer->View.View )[3] );
             DeferredWorldRenderer->View.View           = WorldRenderer->View.View;
-            DeferredWorldRenderer->View.CameraPosition = math::vec3( math::Inverse( WorldRenderer->View.View )[3] );
+            DeferredWorldRenderer->View.CameraPosition = math::vec3( math::Inverse( DeferredWorldRenderer->View.View )[3] );
 
             ManipulationConfig l_Manipulator{};
             l_Manipulator.Type             = lCurrentManipulationType;
