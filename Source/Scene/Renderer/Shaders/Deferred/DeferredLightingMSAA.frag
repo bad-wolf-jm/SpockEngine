@@ -315,8 +315,8 @@ void main()
     }
 
     vec3 ambient   = uboParams.AmbientLightIntensity * uboParams.AmbientLightColor.rgb * alb.xyz;
-    vec3 hdr_color = ambient + fragColor / NUM_SAMPLES;
-    hdr_color = mix( hdr_color, hdr_color * ao / NUM_SAMPLES, aoStrength / NUM_SAMPLES );
+    vec3 hdr_color = ambient + fragColor / float( NUM_SAMPLES );
+    hdr_color = mix( hdr_color, hdr_color * ao / float( NUM_SAMPLES ), aoStrength / float( NUM_SAMPLES ) );
     hdr_color = hdr_color + emissive.xyz;
     // fragColor = ( alb.rgb * ambient ) + fragColor / float( NUM_SAMPLES );
     // vec4 full_color = vec4( hdr_color, lBaseColor.a );
