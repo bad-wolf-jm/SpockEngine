@@ -63,6 +63,7 @@ namespace LTSE::Core
         lLightingSpec.mSampleCount = mOutputSampleCount;
         mLightingRenderTarget      = New<ARenderTarget>( mGraphicContext, lLightingSpec );
 
+        lAttachmentCreateInfo.mType   = eAttachmentType::COLOR;
         lAttachmentCreateInfo.mFormat = eColorFormat::RGBA16_FLOAT;
         mLightingRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
 

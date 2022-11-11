@@ -38,6 +38,8 @@ namespace LTSE::Graphics::Internal
 
         mVkObject =
             mContext->CreateRenderPass( aAttachments, std::vector<VkSubpassDescription>{ lSubpass }, DefaultSubpassDependencies() );
+
+        mColorAttachmentCount = aColorAttachmentReferences.size();
     }
 
     std::vector<VkSubpassDependency> sVkAbstractRenderPassObject::DefaultSubpassDependencies()

@@ -19,9 +19,11 @@ namespace LTSE::Graphics
                 : VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 
         uint32_t lSampleCount = ( aCreateInfo.mType == eAttachmentType::MSAA_RESOLVE ) ? 1 : mSpec.mSampleCount;
+        auto     lVkFormat    = ( aCreateInfo.mType == eAttachmentType::DEPTH ) ? mGraphicContext.mContext->GetDepthFormat()
+                                                                                : ToVkFormat( aCreateInfo.mFormat );
 
         mAttachmentIDs.push_back( aAttachmentID );
-        mAttachments[aAttachmentID] = New<sVkFramebufferImage>( mGraphicContext.mContext, ToVkFormat( aCreateInfo.mFormat ),
+        mAttachments[aAttachmentID] = New<sVkFramebufferImage>( mGraphicContext.mContext, lVkFormat,
             mSpec.mWidth, mSpec.mHeight, lSampleCount, lAttachmentType, aCreateInfo.mIsSampled );
     }
 
@@ -49,28 +51,7 @@ namespace LTSE::Graphics
 
         mRenderPassObject  = CreateDefaultRenderPass();
         mFramebufferObject = New<sVkFramebufferObject>(
-            mGraphicContext.mContext, mSpec.mWidth, mSpec.mHeight, mSpec.mSampleCount, mRenderPassObject->mVkObject, lAttachments );
-
-        // auto lCommandBuffers = mGraphicContext.mContext->AllocateCommandBuffer( GetImageCount() );
-
-        // mCommandBufferObject = {};
-
-        // for( auto &lCB : lCommandBuffers )
-        //     mCommandBufferObject.push_back( New<Internal::sVkCommandBufferObject>( mGraphicContext.mContext, lCB ) );
-
-        // for( size_t i = 0; i < GetImageCount(); i++ )
-        // {
-        //     auto lImageAvailableSemaphore = GetImageAvailableSemaphore( i );
-        //     if( lImageAvailableSemaphore )
-        //         mCommandBufferObject[i]->AddWaitSemaphore( lImageAvailableSemaphore, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-        //         );
-
-        //     auto lRenderFinishedSemaphore = GetRenderFinishedSemaphore( i );
-        //     if( lRenderFinishedSemaphore ) mCommandBufferObject[i]->AddSignalSemaphore( lRenderFinishedSemaphore );
-
-        //     auto lSubmitFence = GetInFlightFence( i );
-        //     if( lSubmitFence ) mCommandBufferObject[i]->SetSubmitFence( lSubmitFence );
-        // }
+            mGraphicContext.mContext, mSpec.mWidth, mSpec.mHeight, 1, mRenderPassObject->mVkObject, lAttachments );
     }
 
     Ref<sVkAbstractRenderPassObject> ARenderTarget::CreateDefaultRenderPass()
@@ -86,6 +67,7 @@ namespace LTSE::Graphics
 
         VkAttachmentReference  lResolveAttachment{};
         VkAttachmentReference *lResolveAttachmentPtr = nullptr;
+
 
         for( uint32_t i = 0; i < mAttachmentInfo.size(); i++ )
         {
