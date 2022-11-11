@@ -6,11 +6,18 @@
 #include "Core/Memory.h"
 
 #include "ASceneRenderer.h"
+#include "SceneRenderData.h"
+#include "DeferredLightingRenderer.h"
+#include "MeshRenderer.h"
 
 namespace LTSE::Core
 {
     class DeferredRenderer : public ASceneRenderer
     {
+      public:
+        WorldMatrices  View;
+        CameraSettings Settings;
+
       public:
         DeferredRenderer() = default;
         DeferredRenderer( GraphicContext aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
@@ -22,16 +29,35 @@ namespace LTSE::Core
         void Update( Ref<Scene> aWorld );
         void Render();
 
+        MeshRendererCreateInfo GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification );
+        MeshRenderer          &GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification );
+        MeshRenderer          &GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification );
+
       private:
-        ARenderContext mGeometryContext{};
+        void UpdateDescriptorSets();
+
+      private:
+        ARenderContext           mGeometryContext{};
+        Ref<DescriptorSetLayout> mGeometryCameraLayout = nullptr;
+        Ref<DescriptorSet>       mGeometryPassCamera   = nullptr;
+
         ARenderContext mLightingContext{};
 
         Ref<ARenderTarget> mGeometryRenderTarget = nullptr;
+
+        Ref<Buffer> mCameraUniformBuffer    = nullptr;
+        Ref<Buffer> mShaderParametersBuffer = nullptr;
 
         Ref<DescriptorSetLayout> mLightingTextureLayout = nullptr;
         Ref<DescriptorSet>       mLightingPassTextures  = nullptr;
         Ref<DescriptorSetLayout> mLightingCameraLayout  = nullptr;
         Ref<DescriptorSet>       mLightingPassCamera    = nullptr;
-        Ref<ARenderTarget>       mLightingRenderTarget  = nullptr;
+
+        Ref<ARenderTarget> mLightingRenderTarget = nullptr;
+
+        DeferredLightingRenderer mLightingRenderer;
+
+        std::unordered_map<MeshRendererCreateInfo, MeshRenderer, MeshRendererCreateInfoHash> mMeshRenderers = {};
+
     };
 } // namespace LTSE::Core
