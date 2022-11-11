@@ -78,18 +78,17 @@ namespace LTSE::Editor
         RenderContext                 mViewportRenderContext{};
         DeferredRenderContext         mDeferredRenderContext{};
         DeferredLightingRenderContext mDeferredLightingRenderContext{};
-        Ref<OffscreenRenderTarget>    mOffscreenRenderTarget        = nullptr;
-        Ref<Graphics::Texture2D>      mOffscreenRenderTargetTexture = nullptr;
-        ImageHandle                   mOffscreenRenderTargetDisplayHandle{};
 
-        Ref<Graphics::Texture2D>      mDeferredRenderTargetTexture = nullptr;
-        ImageHandle                   mDeferredRenderTargetDisplayHandle{};
-
-
-        Ref<DescriptorSet> mLightingPassInputs = nullptr;
+        Ref<OffscreenRenderTarget> mOffscreenRenderTarget        = nullptr;
+        Ref<Graphics::Texture2D>   mOffscreenRenderTargetTexture = nullptr;
+        ImageHandle                mOffscreenRenderTargetDisplayHandle{};
 
         Ref<DeferredRenderTarget> mDeferredRenderTarget = nullptr;
-        Ref<LightingRenderTarget> mLightingRenderTarget = nullptr;
+
+        Ref<DescriptorSet>        mLightingPassInputs          = nullptr;
+        Ref<LightingRenderTarget> mLightingRenderTarget        = nullptr;
+        Ref<Graphics::Texture2D>  mDeferredRenderTargetTexture = nullptr;
+        ImageHandle               mDeferredRenderTargetDisplayHandle{};
 
         Entity m_SensorEntity{};
     };

@@ -13,6 +13,12 @@ namespace LTSE::Core
     using namespace math;
     using namespace LTSE::Core::EntityComponentSystem::Components;
 
+    ASceneRenderer::ASceneRenderer( eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
+        : mOutputFormat{ aOutputFormat }
+        , mOutputSampleCount{ aOutputSampleCount }
+    {
+    }
+
     void ASceneRenderer::SetProjection( math::mat4 aProjectionMatrix ) { mProjectionMatrix = aProjectionMatrix; }
 
     void ASceneRenderer::SetView( math::mat4 aViewMatrix ) { mViewMatrix = aViewMatrix; }
@@ -23,18 +29,19 @@ namespace LTSE::Core
 
     void ASceneRenderer::SetAmbientLighting( math::vec4 aAmbientLight ) { mAmbientLight = aAmbientLight; }
 
+    void ASceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    {
+        mOutputWidth  = aOutputWidth;
+        mOutputHeight = aOutputHeight;
+    }
+
     void ASceneRenderer::Update( Ref<Scene> aScene )
     {
         LTSE_PROFILE_FUNCTION();
 
+        mScene = aScene;
+
         if( !aScene ) return;
-
-        // if( aScene->Environment.Has<sAmbientLightingComponent>() )
-        // {
-        //     auto &lComponent = aScene->Environment.Get<sAmbientLightingComponent>();
-
-        //     mAmbientLight = vec4( lComponent.Color, lComponent.Intensity );
-        // }
 
         mDirectionalLights.clear();
         mPointLights.clear();
@@ -68,22 +75,6 @@ namespace LTSE::Core
             } );
     }
 
-    // void ASceneRenderer::Update( mat4 aProjectionMatrix, mat4 aViewMatrix )
-    // {
-    //     LTSE_PROFILE_FUNCTION();
+    void ASceneRenderer::Render() {}
 
-    //     mProjectionMatrix = aProjectionMatrix;
-    //     mViewMatrix       = aViewMatrix;
-    // }
-
-    // void ASceneRenderer::Update( Ref<Scene> aScene, mat4 aProjectionMatrix, mat4 aViewMatrix )
-    // {
-    //     LTSE_PROFILE_FUNCTION();
-
-    //     Update( aProjectionMatrix, aViewMatrix );
-    //     mProjectionMatrix = aProjectionMatrix;
-    //     mViewMatrix       = aViewMatrix;
-
-    //     Update( aScene );
-    // }
 } // namespace LTSE::Core
