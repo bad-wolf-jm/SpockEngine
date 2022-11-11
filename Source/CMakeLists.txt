@@ -72,6 +72,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/VertexTransform.cu
     Scene/MaterialSystem/MaterialSystem.cpp
     Scene/Components/VisualHelpers.cpp
+    Scene/Renderer/ASceneRenderer.cpp
     Scene/Renderer/MeshRenderer.cpp
     Scene/Renderer/CoordinateGridRenderer.cpp
     Scene/Renderer/ParticleSystemRenderer.cpp
