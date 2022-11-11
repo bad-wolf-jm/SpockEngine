@@ -49,12 +49,15 @@ namespace SpockEngine.Math
     // /** @brief Returns a vector normal to v1. */
     // inline vec2 perpendicular( const vec2 &aVector1 ) { return { -aVector1.y, aVector1.x }; }
 
-    float sin(float x) { return (float) System.Math.Sin((double)x ); }
+    public class Functions
+    {
+        static float sin(float x) { return (float) System.Math.Sin((double)x ); }
 
-    float asin(float x) { return (float) System.Math.Asin((double)x ); }
+        static float asin(float x) { return (float) System.Math.Asin((double)x ); }
 
-    float cos(float x) { return (float) System.Math.Cos((double)x ); }
+        static float cos(float x) { return (float) System.Math.Cos((double)x ); }
 
-    float acos(float x) { return (float) System.Math.Acos((double)x ); }
+        static float acos(float x) { return (float) System.Math.Acos((double)x ); }
+    }
 
 }
