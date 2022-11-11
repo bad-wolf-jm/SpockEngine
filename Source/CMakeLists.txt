@@ -51,6 +51,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Vulkan/VkDeferredRenderPass.cpp
     Core/Vulkan/VkLightingRenderPass.cpp
     
+    Core/GraphicContext//ARenderTarget.cpp
+    Core/GraphicContext//ARenderContext.cpp
     Core/GraphicContext//Buffer.cpp
     Core/GraphicContext//Texture2D.cpp
     Core/GraphicContext//TextureCubeMap.cpp

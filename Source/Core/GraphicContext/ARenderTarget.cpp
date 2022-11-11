@@ -17,9 +17,8 @@ namespace LTSE::Graphics
             mSpec.mWidth, mSpec.mHeight, lSampleCount, lAttachmentType, aCreateInfo.mIsSampled );
     }
 
-    ARenderTarget &ARenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, uint32_t aWidth,
-        uint32_t aHeight, eColorFormat aFormat, math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
-        eAttachmentStoreOp eStoreOp )
+    ARenderTarget &ARenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
+        math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp )
     {
         sAttachmentDescription lCreateInfo{};
         lCreateInfo.mType        = aType;
@@ -45,7 +44,7 @@ namespace LTSE::Graphics
             mGraphicContext.mContext, mSpec.mWidth, mSpec.mHeight, mSpec.mSampleCount, mRenderPassObject->mVkObject, lAttachments );
     }
 
-    Ref<sVkRenderPassObject> ARenderTarget::CreateDefaultRenderPass()
+    Ref<sVkAbstractRenderPassObject> ARenderTarget::CreateDefaultRenderPass()
     {
         Ref<sVkAbstractRenderPassObject> lNewRenderPass = New<sVkAbstractRenderPassObject>(
             mGraphicContext.mContext, VK_FORMAT_UNDEFINED, mSpec.mSampleCount, false, false, math::vec4( 0.0f ) );
@@ -83,7 +82,6 @@ namespace LTSE::Graphics
                 lResolveAttachment.attachment = i;
                 lResolveAttachment.layout     = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
                 lResolveAttachmentPtr         = &lResolveAttachment;
-                lColorAttachmentReferences.push_back( lAttachmentReference );
                 break;
             }
             case eAttachmentType::DEPTH:

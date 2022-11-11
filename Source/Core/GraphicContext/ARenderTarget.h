@@ -35,8 +35,8 @@ namespace LTSE::Graphics
 
     enum class eAttachmentType
     {
-        COLOR = 0,
-        DEPTH = 1,
+        COLOR        = 0,
+        DEPTH        = 1,
         MSAA_RESOLVE = 2
     };
 
@@ -67,16 +67,16 @@ namespace LTSE::Graphics
         ~ARenderTarget() = default;
 
         uint32_t GetImageCount() { return mImageCount; }
-        void     Initialize( RenderTargetDescription &aSpec );
+        void     Initialize( sRenderTargetDescription &aSpec );
         void     InitializeCommandBuffers();
 
-        void AddAttachment( sAttachmentDescription const &aCreateInfo );
+        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
 
-        ARenderTarget &AddAttachment( eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor, bool aIsSampled,
-            bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp );
+        ARenderTarget &AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
+            math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp );
 
-        void Finalize();
-        Ref<sVkRenderPassObject> GetRenderPass() { return mRenderPassObject; }
+        void                             Finalize();
+        Ref<sVkAbstractRenderPassObject> GetRenderPass() { return mRenderPassObject; }
 
         virtual bool BeginRender();
         virtual void EndRender();
@@ -103,7 +103,7 @@ namespace LTSE::Graphics
 
         std::unordered_map<std::string, Ref<sVkFramebufferImage>> mAttachments = {};
 
-        Ref<sVkRenderPassObject>  mRenderPassObject  = nullptr;
-        Ref<sVkFramebufferObject> mFramebufferObject = nullptr;
+        Ref<sVkAbstractRenderPassObject> mRenderPassObject  = nullptr;
+        Ref<sVkFramebufferObject>        mFramebufferObject = nullptr;
     };
 } // namespace LTSE::Graphics
