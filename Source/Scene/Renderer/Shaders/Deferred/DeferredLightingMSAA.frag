@@ -164,7 +164,10 @@ float GeometrySmith( vec3 N, vec3 V, vec3 L, float roughness )
 }
 
 // ----------------------------------------------------------------------------
-vec3 fresnelSchlick( float cosTheta, vec3 F0 ) { return F0 + ( 1.0 - F0 ) * pow( clamp( 1.0 - cosTheta, 0.0, 1.0 ), 5.0 ); }
+vec3 fresnelSchlick( float cosTheta, vec3 F0 ) 
+{ 
+    return F0 + ( 1.0 - F0 ) * pow( clamp( 1.0 - cosTheta, 0.0, 1.0 ), 5.0 ); 
+}
 
 vec3 CookTorrance( vec3 F0, vec3 N, vec3 L, vec3 V, vec3 H, float roughness )
 {
@@ -213,6 +216,7 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
 
         // add to outgoing radiance Lo
         Lo += ( kD * lBaseColor.xyz / PI + specular ) * radiance * NdotL;
+        // Lo += kD;
     }
 
     for( int l_PointLightIndex = 0; l_PointLightIndex < ubo.PointLightCount; l_PointLightIndex++ )
@@ -245,7 +249,7 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
         // add to outgoing radiance Lo
         Lo += ( kD * lBaseColor.xyz / PI + specular ) * radiance * NdotL;
         // Lo += ( lBaseColor.xyz / PI + specular ) * radiance * NdotL;
-        // Lo += NdotL;
+        // Lo += normalize(inWorldPos);
     }
 
     for( int l_SpotlightIndex = 0; l_SpotlightIndex < ubo.SpotlightCount; l_SpotlightIndex++ )
