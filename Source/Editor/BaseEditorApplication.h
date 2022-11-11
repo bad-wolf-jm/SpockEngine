@@ -16,6 +16,7 @@
 #include "Scene/Renderer/DeferredLightingPass.h"
 #include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/SceneRenderer.h"
+#include "Scene/Renderer/DeferredRenderer.h"
 #include "Scene/Scene.h"
 
 #include "TensorOps/Scope.h"
@@ -74,6 +75,8 @@ namespace LTSE::Editor
         Ref<SceneRenderer>         mWorldRenderer            = nullptr;
         Ref<DeferredSceneRenderer> mDeferredWorldRenderer    = nullptr;
         Ref<DeferredLightingPass>  mDeferredLightingRenderer = nullptr;
+
+        Ref<DeferredRenderer>  mDeferredRenderer = nullptr;
 
         RenderContext                 mViewportRenderContext{};
         DeferredRenderContext         mDeferredRenderContext{};

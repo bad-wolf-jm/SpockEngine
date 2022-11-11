@@ -43,7 +43,7 @@ namespace LTSE::Graphics
         float lWidth  = static_cast<float>( mRenderTarget->mSpec.mWidth );
         float lHeight = static_cast<float>( mRenderTarget->mSpec.mHeight );
 
-        auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
+        auto lCommandBuffer = mCommandBufferObject[mCurrentCommandBuffer];
         lCommandBuffer->Begin();
         lCommandBuffer->BeginRenderPass( mRenderTarget->GetRenderPass(), mRenderTarget->GetFramebuffer(), { lWidth, lHeight },
             mRenderTarget->GetRenderPass()->GetClearValues() );
@@ -57,7 +57,7 @@ namespace LTSE::Graphics
     {
         if( !mFrameIsStarted ) return false;
 
-        auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
+        auto lCommandBuffer = mCommandBufferObject[mCurrentCommandBuffer];
         lCommandBuffer->EndRenderPass();
         lCommandBuffer->End();
         lCommandBuffer->SubmitTo( mGraphicContext.mContext->GetGraphicsQueue() );
@@ -83,7 +83,7 @@ namespace LTSE::Graphics
     void ARenderContext::Draw( uint32_t a_VertexCount, uint32_t a_VertexOffset, uint32_t a_VertexBufferOffset,
         uint32_t a_InstanceCount, uint32_t a_FirstInstance )
     {
-        auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
+        auto lCommandBuffer = mCommandBufferObject[mCurrentCommandBuffer];
 
         if( mCurrentIndexBuffer != nullptr )
             lCommandBuffer->DrawIndexed( a_VertexCount, a_VertexOffset, a_VertexBufferOffset, a_InstanceCount, a_FirstInstance );
@@ -93,7 +93,7 @@ namespace LTSE::Graphics
 
     void ARenderContext::Bind( Ref<GraphicsPipeline> a_GraphicPipeline )
     {
-        auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
+        auto lCommandBuffer = mCommandBufferObject[mCurrentCommandBuffer];
 
         lCommandBuffer->Bind( a_GraphicPipeline->GetVkPipelineObject(), VK_PIPELINE_BIND_POINT_GRAPHICS );
         mCurrentPipelineLayout = a_GraphicPipeline->GetVkPipelineLayoutObject();
@@ -101,7 +101,7 @@ namespace LTSE::Graphics
 
     void ARenderContext::Bind( Ref<Buffer> a_VertexBuffer, uint32_t a_BindPoint )
     {
-        auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
+        auto lCommandBuffer = mCommandBufferObject[mCurrentCommandBuffer];
 
         lCommandBuffer->Bind( a_VertexBuffer->mVkObject, a_BindPoint );
         mCurrentVertexBuffer = a_VertexBuffer;
@@ -109,7 +109,7 @@ namespace LTSE::Graphics
 
     void ARenderContext::Bind( Ref<Buffer> a_VertexBuffer, Ref<Buffer> a_IndexBuffer, uint32_t a_BindPoint )
     {
-        auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
+        auto lCommandBuffer = mCommandBufferObject[mCurrentCommandBuffer];
 
         lCommandBuffer->Bind( a_VertexBuffer->mVkObject, a_IndexBuffer->mVkObject, a_BindPoint );
         mCurrentVertexBuffer = a_VertexBuffer;
@@ -118,7 +118,7 @@ namespace LTSE::Graphics
 
     void ARenderContext::Bind( Ref<DescriptorSet> a_DescriptorSet, uint32_t a_SetIndex, int32_t a_DynamicOffset )
     {
-        auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
+        auto lCommandBuffer = mCommandBufferObject[mCurrentCommandBuffer];
 
         lCommandBuffer->Bind( a_DescriptorSet->GetVkDescriptorSetObject(), VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipelineLayout,
             a_SetIndex, a_DynamicOffset );

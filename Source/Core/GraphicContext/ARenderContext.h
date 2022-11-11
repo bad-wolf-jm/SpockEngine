@@ -21,7 +21,7 @@ namespace LTSE::Graphics
 
         uint32_t                         GetOutputImageCount();
         Ref<ARenderTarget>               GetRenderTarget() { return mRenderTarget; }
-        Ref<sVkCommandBufferObject>      GetCurrentCommandBuffer() { return mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer ); }
+        Ref<sVkCommandBufferObject>      GetCurrentCommandBuffer() { return  mCommandBufferObject[mCurrentCommandBuffer]; }
         Ref<sVkAbstractRenderPassObject> GetRenderPass() { return mRenderTarget->GetRenderPass(); }
 
         bool BeginRender();
@@ -35,7 +35,7 @@ namespace LTSE::Graphics
         template <typename T>
         void PushConstants( ShaderStageType aShaderStages, uint32_t aOffset, const T &aValue )
         {
-            auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
+            auto lCommandBuffer = mCommandBufferObject[mCurrentCommandBuffer];
             lCommandBuffer->PushConstants<T>( (VkShaderStageFlags)aShaderStages, aOffset, aValue, mCurrentPipelineLayout );
         }
 

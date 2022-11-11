@@ -84,14 +84,14 @@ namespace LTSE::Graphics
 
         virtual Ref<sVkFramebufferObject> GetFramebuffer();
 
-        virtual Ref<sVkCommandBufferObject> GetCommandBuffer( uint32_t i );
+        // virtual Ref<sVkCommandBufferObject> GetCommandBuffer( uint32_t i );
         virtual VkSemaphore                 GetImageAvailableSemaphore( uint32_t i );
         virtual VkSemaphore                 GetRenderFinishedSemaphore( uint32_t i );
         virtual VkFence                     GetInFlightFence( uint32_t i );
 
         virtual uint32_t GetCurrentImage();
 
-        Ref<sVkFramebufferImage> &GetAttachment(std::string const& aKey);
+        Ref<sVkFramebufferImage> &GetAttachment( std::string const &aKey );
 
       protected:
         Ref<sVkAbstractRenderPassObject> CreateDefaultRenderPass();
@@ -107,5 +107,7 @@ namespace LTSE::Graphics
 
         Ref<sVkAbstractRenderPassObject> mRenderPassObject  = nullptr;
         Ref<sVkFramebufferObject>        mFramebufferObject = nullptr;
+
+        std::vector<Ref<sVkCommandBufferObject>> mCommandBufferObject = {};
     };
 } // namespace LTSE::Graphics

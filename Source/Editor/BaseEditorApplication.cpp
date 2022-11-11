@@ -16,6 +16,7 @@
 #include "Core/Cuda/ExternalMemory.h"
 #include "Core/Cuda/MultiTensor.h"
 
+#include "Core/Textures/ColorFormat.h"
 #include "Scene/Components.h"
 #include "Scene/Importer/glTFImporter.h"
 
@@ -96,6 +97,8 @@ namespace LTSE::Editor
     void BaseEditorApplication::RebuildOutputFramebuffer()
     {
         if( mViewportWidth == 0 || mViewportHeight == 0 ) return;
+
+        mDeferredRenderer->ResizeOutput( mViewportWidth, mViewportHeight );
 
         if( !mOffscreenRenderTarget )
         {
@@ -298,6 +301,7 @@ namespace LTSE::Editor
         mEditorWindow                 = EditorWindow( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
 
+        mDeferredRenderer         = New<DeferredRenderer>( mEngineLoop->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 4 );
         RebuildOutputFramebuffer();
         mWorld                    = New<Scene>( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
         mWorldRenderer            = New<SceneRenderer>( mWorld, mViewportRenderContext );

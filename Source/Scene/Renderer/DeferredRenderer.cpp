@@ -6,7 +6,7 @@ namespace LTSE::Core
     using namespace Graphics;
 
     DeferredRenderer::DeferredRenderer( GraphicContext aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
-        : ASceneRenderer( aGraphicContext, aOutputFormat, mOutputSampleCount )
+        : ASceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {
         // Internal uniform buffers
         mCameraUniformBuffer =
@@ -19,23 +19,19 @@ namespace LTSE::Core
         mGeometryPassCamera->Write( mCameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
         mGeometryPassCamera->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
 
-        DeferredLightingRendererCreateInfo mLightingRendererCI{};
-        mLightingRendererCI.RenderPass = mLightingContext.GetRenderPass();
-        mLightingRenderer              = DeferredLightingRenderer( mGraphicContext, mLightingRendererCI );
-
         mLightingCameraLayout = DeferredLightingRenderer::GetCameraSetLayout( mGraphicContext );
-        mLightingPassCamera = New<DescriptorSet>( mGraphicContext, mLightingCameraLayout );
+        mLightingPassCamera   = New<DescriptorSet>( mGraphicContext, mLightingCameraLayout );
         mLightingPassCamera->Write( mCameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
         mLightingPassCamera->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
 
         mLightingTextureLayout = DeferredLightingRenderer::GetTextureSetLayout( mGraphicContext );
-        mLightingPassTextures = New<DescriptorSet>( mGraphicContext, mLightingTextureLayout );
+        mLightingPassTextures  = New<DescriptorSet>( mGraphicContext, mLightingTextureLayout );
     }
 
     void DeferredRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
         sRenderTargetDescription lGeometrySpec{};
-        lGeometrySpec.mWidth       = aOutputHeight;
+        lGeometrySpec.mWidth       = aOutputWidth;
         lGeometrySpec.mHeight      = aOutputHeight;
         lGeometrySpec.mSampleCount = mOutputSampleCount;
         mGeometryRenderTarget      = New<ARenderTarget>( mGraphicContext, lGeometrySpec );
@@ -74,6 +70,10 @@ namespace LTSE::Core
         mLightingRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
         mLightingRenderTarget->Finalize();
         mLightingContext = ARenderContext( mGraphicContext, mLightingRenderTarget );
+
+        DeferredLightingRendererCreateInfo mLightingRendererCI{};
+        mLightingRendererCI.RenderPass = mLightingContext.GetRenderPass();
+        mLightingRenderer              = DeferredLightingRenderer( mGraphicContext, mLightingRendererCI );
 
         mLightingPassTextures->Write(
             New<Texture2D>( mGraphicContext, TextureDescription{}, mGeometryRenderTarget->GetAttachment( "POSITION" ) ), 0 );
@@ -138,7 +138,7 @@ namespace LTSE::Core
         for( uint32_t i = 0; i < View.SpotlightCount; i++ ) View.Spotlights[i] = mSpotlights[i];
 
         Settings.AmbientLightIntensity = mAmbientLight.a;
-        Settings.AmbientLightColor     = math::vec4( math::vec3(mAmbientLight), 0.0 );
+        Settings.AmbientLightColor     = math::vec4( math::vec3( mAmbientLight ), 0.0 );
 
         mCameraUniformBuffer->Write( View );
         mShaderParametersBuffer->Write( Settings );
