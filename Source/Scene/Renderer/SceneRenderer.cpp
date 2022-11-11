@@ -93,7 +93,6 @@ namespace LTSE::Core
         lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
         lCreateInfo.RenderPass     = aRenderContext.GetRenderPass();
-        ;
 
         return lCreateInfo;
     }
