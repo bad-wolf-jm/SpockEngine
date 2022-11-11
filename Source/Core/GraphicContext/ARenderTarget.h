@@ -62,7 +62,7 @@ namespace LTSE::Graphics
         sRenderTargetDescription mSpec;
 
         ARenderTarget() = default;
-        ARenderTarget( GraphicContext &aGraphicContext );
+        ARenderTarget( GraphicContext &aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription );
 
         ~ARenderTarget() = default;
 
@@ -90,6 +90,8 @@ namespace LTSE::Graphics
         virtual VkFence                     GetInFlightFence( uint32_t i );
 
         virtual uint32_t GetCurrentImage();
+
+        Ref<sVkFramebufferImage> &GetAttachment(std::string const& aKey);
 
       protected:
         Ref<sVkAbstractRenderPassObject> CreateDefaultRenderPass();

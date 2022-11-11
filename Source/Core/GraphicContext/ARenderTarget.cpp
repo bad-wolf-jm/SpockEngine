@@ -2,6 +2,13 @@
 
 namespace LTSE::Graphics
 {
+
+    ARenderTarget::ARenderTarget( GraphicContext &aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription )
+        : mGraphicContext{ aGraphicContext }
+        , mSpec{ aRenderTargetDescription }
+    {
+    }
+
     void ARenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo )
     {
         mAttachmentInfo.push_back( aCreateInfo );
@@ -102,6 +109,12 @@ namespace LTSE::Graphics
             lAttachmentDescriptions, lColorAttachmentReferences, lDepthAttachmentPtr, lResolveAttachmentPtr );
 
         return lNewRenderPass;
+    }
+
+    Ref<sVkFramebufferImage> &ARenderTarget::GetAttachment( std::string const &aKey )
+    {
+        //
+        return mAttachments[aKey];
     }
 
 } // namespace LTSE::Graphics

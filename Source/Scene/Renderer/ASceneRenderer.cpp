@@ -13,8 +13,9 @@ namespace LTSE::Core
     using namespace math;
     using namespace LTSE::Core::EntityComponentSystem::Components;
 
-    ASceneRenderer::ASceneRenderer( eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
-        : mOutputFormat{ aOutputFormat }
+    ASceneRenderer::ASceneRenderer( GraphicContext aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
+        : mGraphicContext{ aGraphicContext }
+        , mOutputFormat{ aOutputFormat }
         , mOutputSampleCount{ aOutputSampleCount }
     {
     }

@@ -14,7 +14,7 @@ namespace LTSE::Core
       public:
         ASceneRenderer() = default;
 
-        ASceneRenderer( eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
+        ASceneRenderer( GraphicContext aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
 
         ~ASceneRenderer() = default;
 
@@ -34,6 +34,8 @@ namespace LTSE::Core
         virtual void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
       protected:
+        GraphicContext mGraphicContext{};
+
         Ref<Scene> mScene = nullptr;
 
         uint32_t mOutputWidth  = 0;
