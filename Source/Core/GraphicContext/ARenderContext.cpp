@@ -28,8 +28,6 @@ namespace LTSE::Graphics
             auto lSubmitFence = aRenderTarget->GetInFlightFence( i );
             if( lSubmitFence ) mCommandBufferObject[i]->SetSubmitFence( lSubmitFence );
         }
-
-        mRenderPass = aRenderTarget->GetRenderPass();
     }
 
     bool ARenderContext::BeginRender()
@@ -47,8 +45,8 @@ namespace LTSE::Graphics
 
         auto lCommandBuffer = mRenderTarget->GetCommandBuffer( mCurrentCommandBuffer );
         lCommandBuffer->Begin();
-        lCommandBuffer->BeginRenderPass(
-            mRenderPass, mRenderTarget->GetFramebuffer(), { lWidth, lHeight }, mRenderPass->GetClearValues() );
+        lCommandBuffer->BeginRenderPass( mRenderTarget->GetRenderPass(), mRenderTarget->GetFramebuffer(), { lWidth, lHeight },
+            mRenderTarget->GetRenderPass()->GetClearValues() );
         lCommandBuffer->SetViewport( { 0.0f, 0.0f }, { lWidth, lHeight } );
         lCommandBuffer->SetScissor( { 0.0f, 0.0f }, { lWidth, lHeight } );
 
