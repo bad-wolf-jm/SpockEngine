@@ -1322,6 +1322,7 @@ namespace LTSE::Editor
         if( UI::Button( "Gizmos", math::vec2{ 65.0f, 24.0f } ) )
         {
             WorldRenderer->RenderGizmos = !WorldRenderer->RenderGizmos;
+            ForwardRenderer->RenderGizmos = WorldRenderer->RenderGizmos;
         }
         ImGui::PopStyleColor();
         UI::SameLine();
@@ -1330,6 +1331,7 @@ namespace LTSE::Editor
         if( UI::Button( "Grid", math::vec2{ 65.0f, 24.0f } ) )
         {
             WorldRenderer->RenderCoordinateGrid = !WorldRenderer->RenderCoordinateGrid;
+            ForwardRenderer->RenderCoordinateGrid = WorldRenderer->RenderCoordinateGrid;
         }
         ImGui::PopStyleColor();
         UI::SameLine();
@@ -1339,6 +1341,7 @@ namespace LTSE::Editor
         if( UI::Button( "Grayscale", math::vec2{ 65.0f, 24.0f } ) )
         {
             WorldRenderer->GrayscaleRendering = !WorldRenderer->GrayscaleRendering;
+            ForwardRenderer->GrayscaleRendering = WorldRenderer->GrayscaleRendering;
         }
         ImGui::PopStyleColor();
         ImGui::PopStyleColor();

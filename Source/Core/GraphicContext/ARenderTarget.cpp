@@ -108,7 +108,7 @@ namespace LTSE::Graphics
             }
             case eAttachmentType::MSAA_RESOLVE:
             {
-                lDescription = lNewRenderPass->ColorAttachment( ToVkFormat( mAttachmentInfo[i].mFormat ), mSpec.mSampleCount,
+                lDescription = lNewRenderPass->ColorAttachment( ToVkFormat( mAttachmentInfo[i].mFormat ), 1,
                     mAttachmentInfo[i].mIsSampled, mAttachmentInfo[i].mIsPresented );
                 lAttachmentDescriptions.push_back( lDescription );
                 lResolveAttachment.attachment = i;

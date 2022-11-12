@@ -278,7 +278,7 @@ namespace LTSE::Editor
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
 
         mDeferredRenderer = New<DeferredRenderer>( mEngineLoop->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
-        mForwardRenderer = New<ForwardSceneRenderer>( mEngineLoop->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
+        mForwardRenderer = New<ForwardSceneRenderer>( mEngineLoop->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 4 );
         RebuildOutputFramebuffer();
         mWorld         = New<Scene>( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
         mWorldRenderer = New<SceneRenderer>( mWorld, mViewportRenderContext );
