@@ -9,7 +9,7 @@
 
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//Texture2D.h"
-#include "Scene/Renderer/DeferredRenderer.h"
+#include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/SceneRenderer.h"
 #include "Scene/Scene.h"
 

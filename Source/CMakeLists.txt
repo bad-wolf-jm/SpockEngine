@@ -48,8 +48,6 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Vulkan/VkImage.cpp
     Core/Vulkan/VkCommand.cpp
     Core/Vulkan/VkAbstractRenderPass.cpp
-    # Core/Vulkan/VkDeferredRenderPass.cpp
-    # Core/Vulkan/VkLightingRenderPass.cpp
     
     Core/GraphicContext//ARenderTarget.cpp
     Core/GraphicContext//ARenderContext.cpp
@@ -60,8 +58,6 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/GraphicContext//DescriptorSet.cpp
     Core/GraphicContext//GraphicsPipeline.cpp
     Core/GraphicContext//RenderContext.cpp
-    # Core/GraphicContext//DeferredRenderContext.cpp
-    # Core/GraphicContext//DeferredLightingRenderContext.cpp
     Core/GraphicContext//RenderTarget.cpp
     Core/GraphicContext//UI/UIContext.cpp
     
@@ -73,15 +69,14 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/MaterialSystem/MaterialSystem.cpp
     Scene/Components/VisualHelpers.cpp
     Scene/Renderer/ASceneRenderer.cpp
-    Scene/Renderer/DeferredRenderer.cpp
     Scene/Renderer/MeshRenderer.cpp
     Scene/Renderer/CoordinateGridRenderer.cpp
     Scene/Renderer/ParticleSystemRenderer.cpp
     Scene/Renderer/VisualHelperLineRenderer.cpp
     Scene/Renderer/SceneRenderData.cpp
     Scene/Renderer/SceneRenderer.cpp
-    # Scene/Renderer/DeferredSceneRenderer.cpp
-    # Scene/Renderer/DeferredLightingPass.cpp
+    Scene/Renderer/ForwardSceneRenderer.cpp
+    Scene/Renderer/DeferredSceneRenderer.cpp
     Scene/Renderer/DeferredLightingRenderer.cpp
     Scene/Renderer/VisualHelperRenderer.cpp
     Scene/Renderer/VisualHelperMeshRenderer.cpp

@@ -11,6 +11,7 @@
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
 #include "Core/GraphicContext//RenderContext.h"
+#include "Core/GraphicContext//ARenderContext.h"
 
 #include "Scene/ParticleData.h"
 #include "Scene/VertexData.h"
@@ -80,12 +81,16 @@ namespace LTSE::Graphics
         ParticleSystemRenderer(
             GraphicContext &a_GraphicContext, RenderContext &a_RenderContext, ParticleRendererCreateInfo a_CreateInfo );
 
+        ParticleSystemRenderer(
+            GraphicContext &a_GraphicContext, ARenderContext &a_RenderContext, ParticleRendererCreateInfo a_CreateInfo );
+
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
         std::vector<sPushConstantRange>       GetPushConstantLayout();
 
         ~ParticleSystemRenderer() = default;
 
         void Render( math::mat4 a_Projection, math::mat4 a_View, RenderContext &aRenderContext, ParticleData &a_ParticleData );
+        void Render( math::mat4 a_Projection, math::mat4 a_View, ARenderContext &aRenderContext, ParticleData &a_ParticleData );
 
       protected:
         Ref<Buffer>        mParticleVertices  = nullptr;

@@ -13,7 +13,7 @@
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Scene/EnvironmentSampler/EnvironmentSampler.h"
 #include "Scene/EnvironmentSampler/PointCloudVisualizer.h"
-#include "Scene/Renderer/DeferredRenderer.h"
+#include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/SceneRenderer.h"
 #include "Scene/Scene.h"
 
