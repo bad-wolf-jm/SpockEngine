@@ -140,6 +140,8 @@ namespace LTSE::Core
 
         Settings.AmbientLightIntensity = mAmbientLight.a;
         Settings.AmbientLightColor     = math::vec4( math::vec3( mAmbientLight ), 0.0 );
+        Settings.Gamma                 = mGamma;
+        Settings.Exposure              = mExposure;
 
         View.Projection     = mProjectionMatrix;
         View.CameraPosition = mCameraPosition;
