@@ -7,13 +7,9 @@
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 
-// #include "LidarSensorModel/SensorDeviceBase.h"
-
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//Texture2D.h"
 #include "Scene/Renderer/DeferredRenderer.h"
-// #include "Scene/Renderer/DeferredSceneRenderer.h"
-// #include "Scene/Renderer/DeferredLightingPass.h"
 #include "Scene/Renderer/SceneRenderer.h"
 #include "Scene/Scene.h"
 
@@ -25,9 +21,6 @@
 #include "ContentBrowser.h"
 #include "SceneElementEditor.h"
 #include "SceneHierarchyPanel.h"
-// #include "TileFlashEditor.h"
-// #include "TileLayoutEditor.h"
-// #include "PhotodetectorCellEditor.h"
 
 namespace LTSE::Editor
 {
@@ -74,24 +67,17 @@ namespace LTSE::Editor
         std::string ApplicationName = "";
         std::string DocumentName    = "";
 
-        Ref<EngineLoop> mEngineLoop = nullptr;
-        // Ref<SensorDeviceBase> SensorModel = nullptr;
-        Ref<Scene>                 World                    = nullptr;
-        Ref<Scene>                 ActiveWorld              = nullptr;
-        Ref<SceneRenderer>         WorldRenderer            = nullptr;
-        Ref<DeferredRenderer>      DefRenderer            = nullptr;
-        // Ref<DeferredSceneRenderer> DeferredWorldRenderer    = nullptr;
-        // Ref<DeferredLightingPass>  DeferredLightingRenderer = nullptr;
+        Ref<EngineLoop>       mEngineLoop   = nullptr;
+        Ref<Scene>            World         = nullptr;
+        Ref<Scene>            ActiveWorld   = nullptr;
+        Ref<SceneRenderer>    WorldRenderer = nullptr;
+        Ref<DeferredRenderer> DefRenderer   = nullptr;
 
         Entity         Sensor{};
         Entity         ActiveSensor{};
         GraphicContext GraphicContext{};
 
         PropertyPanelID CurrentPropertyPanel = PropertyPanelID::NONE;
-
-        // TileLayoutEditor LayoutEditor;
-        // FlashAttenuationBindingPopup FlashEditor;
-        // PhotodetectorCellEditor PhotodetectorEditor{};
 
       public:
         float HeaderHeight       = 31.0f;
