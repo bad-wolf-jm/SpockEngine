@@ -13,8 +13,8 @@
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Scene/EnvironmentSampler/EnvironmentSampler.h"
 #include "Scene/EnvironmentSampler/PointCloudVisualizer.h"
-#include "Scene/Renderer/DeferredLightingPass.h"
-#include "Scene/Renderer/DeferredSceneRenderer.h"
+// #include "Scene/Renderer/DeferredLightingPass.h"
+// #include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/SceneRenderer.h"
 #include "Scene/Renderer/DeferredRenderer.h"
 #include "Scene/Scene.h"
@@ -73,23 +73,23 @@ namespace LTSE::Editor
         bool                       mShouldRebuildViewport    = true;
         Ref<Scene>                 mWorld                    = nullptr;
         Ref<SceneRenderer>         mWorldRenderer            = nullptr;
-        Ref<DeferredSceneRenderer> mDeferredWorldRenderer    = nullptr;
-        Ref<DeferredLightingPass>  mDeferredLightingRenderer = nullptr;
+        // Ref<DeferredSceneRenderer> mDeferredWorldRenderer    = nullptr;
+        // Ref<DeferredLightingPass>  mDeferredLightingRenderer = nullptr;
 
         Ref<DeferredRenderer>  mDeferredRenderer = nullptr;
 
         RenderContext                 mViewportRenderContext{};
-        DeferredRenderContext         mDeferredRenderContext{};
-        DeferredLightingRenderContext mDeferredLightingRenderContext{};
+        // DeferredRenderContext         mDeferredRenderContext{};
+        // DeferredLightingRenderContext mDeferredLightingRenderContext{};
 
         Ref<OffscreenRenderTarget> mOffscreenRenderTarget        = nullptr;
         Ref<Graphics::Texture2D>   mOffscreenRenderTargetTexture = nullptr;
         ImageHandle                mOffscreenRenderTargetDisplayHandle{};
 
-        Ref<DeferredRenderTarget> mDeferredRenderTarget = nullptr;
+        // Ref<DeferredRenderTarget> mDeferredRenderTarget = nullptr;
 
-        Ref<DescriptorSet>        mLightingPassInputs          = nullptr;
-        Ref<LightingRenderTarget> mLightingRenderTarget        = nullptr;
+        // Ref<DescriptorSet>        mLightingPassInputs          = nullptr;
+        // Ref<LightingRenderTarget> mLightingRenderTarget        = nullptr;
         Ref<Graphics::Texture2D>  mDeferredRenderTargetTexture = nullptr;
         ImageHandle               mDeferredRenderTargetDisplayHandle{};
 

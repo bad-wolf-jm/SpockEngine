@@ -98,66 +98,66 @@ namespace LTSE::Graphics
         uint32_t GetCurrentImage();
     };
 
-    struct DeferredRenderTargetDescription
-    {
-        uint32_t     SampleCount = 1;
-        eColorFormat Format      = eColorFormat::RGBA8_UNORM;
-        math::vec4   ClearColor  = { 0.0f, 0.0f, 0.0f, 1.0f };
-        math::uvec2  OutputSize  = { 0, 0 };
-        bool         Sampled     = false;
-    };
+    // struct DeferredRenderTargetDescription
+    // {
+    //     uint32_t     SampleCount = 1;
+    //     eColorFormat Format      = eColorFormat::RGBA8_UNORM;
+    //     math::vec4   ClearColor  = { 0.0f, 0.0f, 0.0f, 1.0f };
+    //     math::uvec2  OutputSize  = { 0, 0 };
+    //     bool         Sampled     = false;
+    // };
 
-    class DeferredRenderTarget : public AbstractRenderTarget
-    {
-      public:
-        DeferredRenderTarget( GraphicContext &a_GraphicContext, DeferredRenderTargetDescription &a_Spec );
-        ~DeferredRenderTarget() = default;
+    // class DeferredRenderTarget : public AbstractRenderTarget
+    // {
+    //   public:
+    //     DeferredRenderTarget( GraphicContext &a_GraphicContext, DeferredRenderTargetDescription &a_Spec );
+    //     ~DeferredRenderTarget() = default;
 
-        void Initialize( RenderTargetDescription &a_Spec );
-        void Resize( uint32_t aWidth, uint32_t aHeight );
+    //     void Initialize( RenderTargetDescription &a_Spec );
+    //     void Resize( uint32_t aWidth, uint32_t aHeight );
 
-        bool BeginRender();
-        void EndRender();
-        void Present();
+    //     bool BeginRender();
+    //     void EndRender();
+    //     void Present();
 
-        Ref<Internal::sVkFramebufferObject>   GetFramebuffer();
-        Ref<Internal::sVkCommandBufferObject> GetCommandBuffer( uint32_t i );
-        VkSemaphore                           GetImageAvailableSemaphore( uint32_t i );
-        VkSemaphore                           GetRenderFinishedSemaphore( uint32_t i );
-        VkFence                               GetInFlightFence( uint32_t i );
+    //     Ref<Internal::sVkFramebufferObject>   GetFramebuffer();
+    //     Ref<Internal::sVkCommandBufferObject> GetCommandBuffer( uint32_t i );
+    //     VkSemaphore                           GetImageAvailableSemaphore( uint32_t i );
+    //     VkSemaphore                           GetRenderFinishedSemaphore( uint32_t i );
+    //     VkFence                               GetInFlightFence( uint32_t i );
 
-        uint32_t GetCurrentImage();
+    //     uint32_t GetCurrentImage();
 
-      public:
-        Ref<Internal::sVkDeferredRenderPassObject> m_RenderPassObject       = nullptr;
-        Ref<Internal::sVkFramebufferImage>         m_PositionsOutputTexture = nullptr;
-        Ref<Internal::sVkFramebufferImage>         m_NormalsOutputTexture   = nullptr;
-        Ref<Internal::sVkFramebufferImage>         m_AlbedoOutputTexture    = nullptr;
-        Ref<Internal::sVkFramebufferImage>         m_SpecularOutputTexture  = nullptr;
-        Ref<Internal::sVkFramebufferImage>         m_DepthTexture           = nullptr;
-        Ref<Internal::sVkFramebufferObject>        m_FramebufferObject      = nullptr;
-    };
+    //   public:
+    //     Ref<Internal::sVkDeferredRenderPassObject> m_RenderPassObject       = nullptr;
+    //     Ref<Internal::sVkFramebufferImage>         m_PositionsOutputTexture = nullptr;
+    //     Ref<Internal::sVkFramebufferImage>         m_NormalsOutputTexture   = nullptr;
+    //     Ref<Internal::sVkFramebufferImage>         m_AlbedoOutputTexture    = nullptr;
+    //     Ref<Internal::sVkFramebufferImage>         m_SpecularOutputTexture  = nullptr;
+    //     Ref<Internal::sVkFramebufferImage>         m_DepthTexture           = nullptr;
+    //     Ref<Internal::sVkFramebufferObject>        m_FramebufferObject      = nullptr;
+    // };
 
-    class LightingRenderTarget : public AbstractRenderTarget
-    {
-      public:
-        LightingRenderTarget( GraphicContext &a_GraphicContext, OffscreenRenderTargetDescription &a_Spec );
-        ~LightingRenderTarget() = default;
+    // class LightingRenderTarget : public AbstractRenderTarget
+    // {
+    //   public:
+    //     LightingRenderTarget( GraphicContext &a_GraphicContext, OffscreenRenderTargetDescription &a_Spec );
+    //     ~LightingRenderTarget() = default;
 
-        void Resize( uint32_t aWidth, uint32_t aHeight );
+    //     void Resize( uint32_t aWidth, uint32_t aHeight );
 
-        bool BeginRender();
-        void EndRender();
-        void Present();
+    //     bool BeginRender();
+    //     void EndRender();
+    //     void Present();
 
-        Ref<Internal::sVkFramebufferObject>   GetFramebuffer();
-        Ref<Internal::sVkCommandBufferObject> GetCommandBuffer( uint32_t i );
-        VkSemaphore                           GetImageAvailableSemaphore( uint32_t i );
-        VkSemaphore                           GetRenderFinishedSemaphore( uint32_t i );
-        VkFence                               GetInFlightFence( uint32_t i );
+    //     Ref<Internal::sVkFramebufferObject>   GetFramebuffer();
+    //     Ref<Internal::sVkCommandBufferObject> GetCommandBuffer( uint32_t i );
+    //     VkSemaphore                           GetImageAvailableSemaphore( uint32_t i );
+    //     VkSemaphore                           GetRenderFinishedSemaphore( uint32_t i );
+    //     VkFence                               GetInFlightFence( uint32_t i );
 
-        uint32_t GetCurrentImage();
-    };
+    //     uint32_t GetCurrentImage();
+    // };
 
 
     struct SwapChainRenderTargetDescription

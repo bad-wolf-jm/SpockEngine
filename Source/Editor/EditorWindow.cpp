@@ -1376,10 +1376,10 @@ namespace LTSE::Editor
                 l3DViewPosition + math::vec2{ l3DViewSize.x - 125.0f, 35.0f } );
 
             WorldRenderer->View.CameraPosition            = math::vec3( math::Inverse( WorldRenderer->View.View )[3] );
-            DeferredWorldRenderer->View.View              = WorldRenderer->View.View;
-            DeferredWorldRenderer->View.CameraPosition    = math::vec3( math::Inverse( DeferredWorldRenderer->View.View )[3] );
-            DeferredLightingRenderer->View.View           = WorldRenderer->View.View;
-            DeferredLightingRenderer->View.CameraPosition = math::vec3( math::Inverse( DeferredWorldRenderer->View.View )[3] );
+            // DeferredWorldRenderer->View.View              = WorldRenderer->View.View;
+            // DeferredWorldRenderer->View.CameraPosition    = math::vec3( math::Inverse( DeferredWorldRenderer->View.View )[3] );
+            // DeferredLightingRenderer->View.View           = WorldRenderer->View.View;
+            // DeferredLightingRenderer->View.CameraPosition = math::vec3( math::Inverse( DeferredWorldRenderer->View.View )[3] );
             DefRenderer->SetView( WorldRenderer->View.View );
 
             ManipulationConfig l_Manipulator{};
@@ -1573,11 +1573,11 @@ namespace LTSE::Editor
                         ImGui::SliderFloat( "Exposure", &WorldRenderer->Settings.Exposure, 0.1f, 10.0f );
                         ImGui::SliderFloat( "Gamma", &WorldRenderer->Settings.Gamma, 0.1f, 4.0f );
 
-                        DeferredLightingRenderer->Settings.Exposure = WorldRenderer->Settings.Exposure;
-                        DeferredLightingRenderer->Settings.Gamma    = WorldRenderer->Settings.Gamma;
+                        // DeferredLightingRenderer->Settings.Exposure = WorldRenderer->Settings.Exposure;
+                        // DeferredLightingRenderer->Settings.Gamma    = WorldRenderer->Settings.Gamma;
 
-                        DefRenderer->SetExposure( DeferredLightingRenderer->Settings.Exposure );
-                        DefRenderer->SetGamma( DeferredLightingRenderer->Settings.Gamma );
+                        DefRenderer->SetExposure( WorldRenderer->Settings.Exposure );
+                        DefRenderer->SetGamma( WorldRenderer->Settings.Gamma );
                     }
                     ImGui::End();
                 }

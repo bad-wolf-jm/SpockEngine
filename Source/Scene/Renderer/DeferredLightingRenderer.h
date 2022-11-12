@@ -5,7 +5,7 @@
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 
-#include "Core/GraphicContext//DeferredLightingRenderContext.h"
+// #include "Core/GraphicContext//DeferredLightingRenderContext.h"
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"

@@ -52,8 +52,8 @@ namespace LTSE::Core
         mGeometryRenderTarget->AddAttachment( "ALBEDO", lAttachmentCreateInfo );
         mGeometryRenderTarget->AddAttachment( "AO_METAL_ROUGH", lAttachmentCreateInfo );
 
-        lAttachmentCreateInfo.mType = eAttachmentType::DEPTH;
-        lAttachmentCreateInfo.mClearColor  = { 1.0f, 0.0f, 0.0f, 0.0f };
+        lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
+        lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
         mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
         mGeometryRenderTarget->Finalize();
         mGeometryContext = ARenderContext( mGraphicContext, mGeometryRenderTarget );
@@ -64,13 +64,13 @@ namespace LTSE::Core
         lLightingSpec.mSampleCount = mOutputSampleCount;
         mLightingRenderTarget      = New<ARenderTarget>( mGraphicContext, lLightingSpec );
 
-        lAttachmentCreateInfo.mType   = eAttachmentType::COLOR;
-        lAttachmentCreateInfo.mFormat = eColorFormat::RGBA16_FLOAT;
-        lAttachmentCreateInfo.mClearColor  = { 0.0f, 0.0f, 0.0f, 1.0f };
+        lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
+        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA16_FLOAT;
+        lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
         mLightingRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
 
-        lAttachmentCreateInfo.mType = eAttachmentType::DEPTH;
-        lAttachmentCreateInfo.mClearColor  = { 1.0f, 0.0f, 0.0f, 0.0f };
+        lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
+        lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
         mLightingRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
         mLightingRenderTarget->Finalize();
         mLightingContext = ARenderContext( mGraphicContext, mLightingRenderTarget );
@@ -87,6 +87,12 @@ namespace LTSE::Core
             New<Texture2D>( mGraphicContext, TextureDescription{}, mGeometryRenderTarget->GetAttachment( "ALBEDO" ) ), 2 );
         mLightingPassTextures->Write(
             New<Texture2D>( mGraphicContext, TextureDescription{}, mGeometryRenderTarget->GetAttachment( "AO_METAL_ROUGH" ) ), 3 );
+    }
+
+    Ref<sVkFramebufferImage> DeferredRenderer::GetOutputImage()
+    {
+        //
+        return mLightingRenderTarget->GetAttachment( "OUTPUT" );
     }
 
     MeshRendererCreateInfo DeferredRenderer::GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification )

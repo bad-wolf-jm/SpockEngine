@@ -2,10 +2,10 @@
 
 layout( location = 0 ) in vec2 inUV;
 
-layout( set = 1, binding = 0 ) uniform sampler2DMS samplerPosition;
-layout( set = 1, binding = 1 ) uniform sampler2DMS samplerNormal;
-layout( set = 1, binding = 2 ) uniform sampler2DMS samplerAlbedo;
-layout( set = 1, binding = 3 ) uniform sampler2DMS samplerOcclusionMetalRough;
+layout( set = 1, binding = 0 ) uniform sampler2D samplerPosition;
+layout( set = 1, binding = 1 ) uniform sampler2D samplerNormal;
+layout( set = 1, binding = 2 ) uniform sampler2D samplerAlbedo;
+layout( set = 1, binding = 3 ) uniform sampler2D samplerOcclusionMetalRough;
 
 layout( location = 0 ) out vec4 outFragcolor;
 
@@ -89,23 +89,23 @@ layout( set = 0, binding = 1 ) uniform UBOParams
 }
 uboParams;
 
-layout( constant_id = 0 ) const int NUM_SAMPLES = 4;
+// layout( constant_id = 0 ) const int NUM_SAMPLES = 4;
 
-#define NUM_LIGHTS 6
+// #define NUM_LIGHTS 6
 const float PI = 3.14159265359;
 
-// Manual resolve for MSAA samples
-vec4 resolve( sampler2DMS tex, ivec2 uv )
-{
-    vec4 result = vec4( 0.0 );
-    for( int i = 0; i < NUM_SAMPLES; i++ )
-    {
-        vec4 val = texelFetch( tex, uv, i );
-        result += val;
-    }
-    // Average resolved samples
-    return result / float( NUM_SAMPLES );
-}
+// // Manual resolve for MSAA samples
+// vec4 resolve( sampler2DMS tex, ivec2 uv )
+// {
+//     vec4 result = vec4( 0.0 );
+//     for( int i = 0; i < NUM_SAMPLES; i++ )
+//     {
+//         vec4 val = texelFetch( tex, uv, i );
+//         result += val;
+//     }
+//     // Average resolved samples
+//     return result / float( NUM_SAMPLES );
+// }
 
 vec3 Uncharted2Tonemap( vec3 color )
 {
@@ -291,32 +291,32 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
 
 void main()
 {
-    ivec2 attDim = textureSize( samplerPosition );
-    ivec2 UV     = ivec2( inUV * attDim );
+    // ivec2 attDim = textureSize( samplerPosition );
+    // ivec2 UV     = ivec2( inUV * attDim );
 
     // Ambient part
-    vec4 alb       = resolve( samplerAlbedo, UV );
+    // vec4 alb       = texture( samplerAlbedo, inUV );
     vec3 fragColor = vec3( 0.0f );
     vec4 emissive  = vec4( 0.0f );
 
     // Calualte lighting for every MSAA sample
-    float ao = 0.0f;
-    float aoStrength = 0.0f;
-    for( int i = 0; i < NUM_SAMPLES; i++ )
-    {
-        vec3 pos        = texelFetch( samplerPosition, UV, i ).rgb;
-        vec3 normal     = texelFetch( samplerNormal, UV, i ).rgb;
-        vec4 albedo     = texelFetch( samplerAlbedo, UV, i );
-        vec4 metalrough = texelFetch( samplerOcclusionMetalRough, UV, i );
+    // float ao = 0.0f;
+    // float aoStrength = 0.0f;
+    // for( int i = 0; i < NUM_SAMPLES; i++ )
+    // {
+    vec3 pos        = texture( samplerPosition, inUV ).rgb;
+    vec3 normal     = texture( samplerNormal, inUV ).rgb;
+    vec4 albedo     = texture( samplerAlbedo, inUV );
+    vec4 metalrough = texture( samplerOcclusionMetalRough, inUV );
 
-        fragColor += calculateLighting( pos, normal, albedo, metalrough, emissive );
-        ao += metalrough.r;
-        aoStrength += metalrough.a;
-    }
+    fragColor += calculateLighting( pos, normal, albedo, metalrough, emissive );
+    float ao = metalrough.r;
+    float aoStrength = metalrough.a;
+    // }
 
-    vec3 ambient   = uboParams.AmbientLightIntensity * uboParams.AmbientLightColor.rgb * alb.xyz;
-    vec3 hdr_color = ambient + fragColor / float( NUM_SAMPLES );
-    hdr_color = mix( hdr_color, hdr_color * ao / float( NUM_SAMPLES ), aoStrength / float( NUM_SAMPLES ) );
+    vec3 ambient   = uboParams.AmbientLightIntensity * uboParams.AmbientLightColor.rgb * albedo.xyz;
+    vec3 hdr_color = ambient + fragColor;
+    hdr_color = mix( hdr_color, hdr_color * ao, aoStrength );
     hdr_color = hdr_color + emissive.xyz;
     // fragColor = ( alb.rgb * ambient ) + fragColor / float( NUM_SAMPLES );
     // vec4 full_color = vec4( hdr_color, lBaseColor.a );

@@ -29,6 +29,8 @@ namespace LTSE::Core
         void Update( Ref<Scene> aWorld );
         void Render();
 
+        Ref<sVkFramebufferImage> GetOutputImage();
+
         MeshRendererCreateInfo GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification );
         MeshRenderer          &GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification );
         MeshRenderer          &GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification );
