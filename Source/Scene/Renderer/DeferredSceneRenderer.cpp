@@ -1,4 +1,4 @@
-#include "DeferredRenderer.h"
+#include "DeferredSceneRenderer.h"
 #include "Core/Profiling/BlockTimer.h"
 
 namespace LTSE::Core
