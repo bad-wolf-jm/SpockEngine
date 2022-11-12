@@ -26,7 +26,7 @@ namespace LTSE::Core
 
     // ForwardSceneRenderer::ForwardSceneRenderer( Ref<Scene> aWorld, RenderContext &mGeometryContext )
     //     : mGraphicContext{ aWorld->GetGraphicContext() }
-    //     , mWorld{ aWorld }
+    //     , mScene{ aWorld }
     // {
     //     mSceneDescriptors = New<DescriptorSet>( mGraphicContext, MeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
@@ -56,10 +56,6 @@ namespace LTSE::Core
         mSceneDescriptors->Write( mCameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
         mSceneDescriptors->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
 
-        CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
-        lCoordinateGridRendererCreateInfo.RenderPass = mGeometryContext.GetRenderPass();
-        mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mGeometryContext, lCoordinateGridRendererCreateInfo );
-        mVisualHelperRenderer   = New<VisualHelperRenderer>( mGraphicContext, mGeometryContext.GetRenderPass() );
     }
 
     MeshRendererCreateInfo ForwardSceneRenderer::GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification )
@@ -130,6 +126,11 @@ namespace LTSE::Core
         // lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
         // mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
         mGeometryContext = ARenderContext( mGraphicContext, mGeometryRenderTarget );
+
+        CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
+        lCoordinateGridRendererCreateInfo.RenderPass = mGeometryContext.GetRenderPass();
+        mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mGeometryContext, lCoordinateGridRendererCreateInfo );
+        mVisualHelperRenderer   = New<VisualHelperRenderer>( mGraphicContext, mGeometryContext.GetRenderPass() );
 
         // sRenderTargetDescription lLightingSpec{};
         // lLightingSpec.mWidth       = aOutputWidth;
@@ -230,14 +231,15 @@ namespace LTSE::Core
     {
         LTSE_PROFILE_FUNCTION();
 
+        if (!mScene) return;
         UpdateDescriptorSets( );
-        mWorld->GetMaterialSystem()->UpdateDescriptors();
+        mScene->GetMaterialSystem()->UpdateDescriptors();
 
         // int lDirectionalLightCount = 0;
         // int lSpotlightCount        = 0;
         // int lPointLightCount       = 0;
 
-        // mWorld->ForEach<sDirectionalLightComponent>(
+        // mScene->ForEach<sDirectionalLightComponent>(
         //     [&]( auto aEntity, auto &aComponent )
         //     {
         //         math::mat4 lTransformMatrix = math::mat4( 1.0f );
@@ -247,7 +249,7 @@ namespace LTSE::Core
         //         lDirectionalLightCount++;
         //     } );
 
-        // mWorld->ForEach<sPointLightComponent>(
+        // mScene->ForEach<sPointLightComponent>(
         //     [&]( auto aEntity, auto &aComponent )
         //     {
         //         math::mat4 lTransformMatrix = math::mat4( 1.0f );
@@ -257,7 +259,7 @@ namespace LTSE::Core
         //         lPointLightCount++;
         //     } );
 
-        // mWorld->ForEach<sSpotlightComponent>(
+        // mScene->ForEach<sSpotlightComponent>(
         //     [&]( auto aEntity, auto &aComponent )
         //     {
         //         math::mat4 lTransformMatrix = math::mat4( 1.0f );
@@ -271,9 +273,9 @@ namespace LTSE::Core
         // View.DirectionalLightCount = lDirectionalLightCount;
         // View.SpotlightCount        = lSpotlightCount;
 
-        // if( mWorld->Environment.Has<sAmbientLightingComponent>() )
+        // if( mScene->Environment.Has<sAmbientLightingComponent>() )
         // {
-        //     auto &lComponent = mWorld->Environment.Get<sAmbientLightingComponent>();
+        //     auto &lComponent = mScene->Environment.Get<sAmbientLightingComponent>();
 
         //     Settings.AmbientLightIntensity = lComponent.Intensity;
         //     Settings.AmbientLightColor     = math::vec4( lComponent.Color, 0.0 );
@@ -283,7 +285,7 @@ namespace LTSE::Core
         // mShaderParametersBuffer->Write( Settings );
 
         std::unordered_map<MeshRendererCreateInfo, std::vector<Entity>, MeshRendererCreateInfoHash> lOpaqueMeshQueue{};
-        mWorld->ForEach<sStaticMeshComponent, sMaterialShaderComponent>(
+        mScene->ForEach<sStaticMeshComponent, sMaterialShaderComponent>(
             [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterialData )
             {
                 auto &l_PipelineCreateInfo = GetRenderPipelineCreateInfo( aMaterialData );
@@ -292,9 +294,10 @@ namespace LTSE::Core
                 lOpaqueMeshQueue[l_PipelineCreateInfo].push_back( aEntity );
             } );
 
-        if( mWorld->mVertexBuffer && mWorld->mIndexBuffer )
+        mGeometryContext.BeginRender();
+        if( mScene->mVertexBuffer && mScene->mIndexBuffer )
         {
-            mGeometryContext.Bind( mWorld->mTransformedVertexBuffer, mWorld->mIndexBuffer );
+            mGeometryContext.Bind( mScene->mTransformedVertexBuffer, mScene->mIndexBuffer );
             for( auto &lPipelineData : lOpaqueMeshQueue )
             {
                 auto &lPipeline = GetRenderPipeline( lPipelineData.first );
@@ -304,7 +307,7 @@ namespace LTSE::Core
                     continue;
 
                 mGeometryContext.Bind( mSceneDescriptors, 0, -1 );
-                mGeometryContext.Bind( mWorld->GetMaterialSystem()->GetDescriptorSet(), 1, -1 );
+                mGeometryContext.Bind( mScene->GetMaterialSystem()->GetDescriptorSet(), 1, -1 );
 
                 for( auto &lMeshInformation : lPipelineData.second )
                 {
@@ -324,7 +327,7 @@ namespace LTSE::Core
             }
         }
 
-        mWorld->ForEach<sParticleSystemComponent, sParticleShaderComponent>(
+        mScene->ForEach<sParticleSystemComponent, sParticleShaderComponent>(
             [&]( auto aEntity, auto &aParticleSystemComponent, auto &aParticleShaderComponent )
             {
                 auto &lPipeline = GetRenderPipeline( aParticleShaderComponent );
@@ -342,7 +345,7 @@ namespace LTSE::Core
         {
             mVisualHelperRenderer->View       = View.View;
             mVisualHelperRenderer->Projection = View.Projection;
-            mWorld->ForEach<DirectionalLightHelperComponent>(
+            mScene->ForEach<DirectionalLightHelperComponent>(
                 [&]( auto aEntity, auto &a_DirectionalLightHelperComponent )
                 {
                     math::mat4 l_Transform = math::mat4( 1.0f );
@@ -350,7 +353,7 @@ namespace LTSE::Core
                     mVisualHelperRenderer->Render( l_Transform, a_DirectionalLightHelperComponent, mGeometryContext );
                 } );
 
-            mWorld->ForEach<SpotlightHelperComponent>(
+            mScene->ForEach<SpotlightHelperComponent>(
                 [&]( auto aEntity, auto &a_SpotlightHelperComponent )
                 {
                     math::mat4 l_Transform = math::mat4( 1.0f );
@@ -358,7 +361,7 @@ namespace LTSE::Core
                     mVisualHelperRenderer->Render( l_Transform, a_SpotlightHelperComponent, mGeometryContext );
                 } );
 
-            mWorld->ForEach<PointLightHelperComponent>(
+            mScene->ForEach<PointLightHelperComponent>(
                 [&]( auto aEntity, auto &a_PointLightHelperComponent )
                 {
                     math::mat4 l_Transform = math::mat4( 1.0f );
@@ -368,13 +371,21 @@ namespace LTSE::Core
         }
 
         if( RenderCoordinateGrid ) mCoordinateGridRenderer->Render( View.Projection, View.View, mGeometryContext );
+        mGeometryContext.EndRender();
+
+    }
+
+    Ref<sVkFramebufferImage> ForwardSceneRenderer::GetOutputImage()
+    {
+        //
+        return mGeometryRenderTarget->GetAttachment( "OUTPUT" );
     }
 
     void ForwardSceneRenderer::UpdateDescriptorSets()
     {
         LTSE_PROFILE_FUNCTION();
 
-        mWorld->ForEach<sTransformMatrixComponent>(
+        mScene->ForEach<sTransformMatrixComponent>(
             [&]( auto aEntity, auto &aComponent )
             {
                 if( !( aEntity.Has<NodeDescriptorComponent>() ) )

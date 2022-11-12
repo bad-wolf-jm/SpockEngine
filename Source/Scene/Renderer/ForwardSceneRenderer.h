@@ -41,10 +41,12 @@ namespace LTSE::Core
 
         ~ForwardSceneRenderer() = default;
 
+        Ref<sVkFramebufferImage> GetOutputImage();
+
         void Update( Ref<Scene> aWorld );
         void Render();
 
-        Ref<Scene> mWorld = nullptr;
+        // Ref<Scene> mWorld = nullptr;
         void       ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
       protected:

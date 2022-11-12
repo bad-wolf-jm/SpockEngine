@@ -80,6 +80,7 @@ namespace LTSE::Editor
         mViewportRenderContext.EndRender();
 
         mDeferredRenderer->Render();
+        mForwardRenderer->Render();
     }
 
     void BaseEditorApplication::Update( Timestep ts )
@@ -87,6 +88,7 @@ namespace LTSE::Editor
         mEditorWindow.ActiveWorld->Update( ts );
         mEditorWindow.UpdateFramerate( ts );
         mDeferredRenderer->Update( mWorld );
+        mForwardRenderer->Update( mWorld );
     }
 
     void BaseEditorApplication::RebuildOutputFramebuffer()
@@ -94,6 +96,7 @@ namespace LTSE::Editor
         if( mViewportWidth == 0 || mViewportHeight == 0 ) return;
 
         mDeferredRenderer->ResizeOutput( mViewportWidth, mViewportHeight );
+        mForwardRenderer->ResizeOutput( mViewportWidth, mViewportHeight );
 
         if( !mOffscreenRenderTarget )
         {
@@ -125,14 +128,27 @@ namespace LTSE::Editor
         mDeferredRenderTargetTexture =
             New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{}, mDeferredRenderer->GetOutputImage() );
 
-        if( !mDeferredRenderTargetDisplayHandle.Handle )
+        // if( !mDeferredRenderTargetDisplayHandle.Handle )
+        // {
+        //     mDeferredRenderTargetDisplayHandle = mEngineLoop->UIContext()->CreateTextureHandle( mDeferredRenderTargetTexture );
+        //     mEditorWindow.UpdateSceneViewport_deferred( mDeferredRenderTargetDisplayHandle );
+        // }
+        // else
+        // {
+        //     mDeferredRenderTargetDisplayHandle.Handle->Write( mDeferredRenderTargetTexture, 0 );
+        // }
+
+        mForwardRenderTargetTexture =
+            New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{}, mForwardRenderer->GetOutputImage() );
+
+        if( !mForwardRenderTargetDisplayHandle.Handle )
         {
-            mDeferredRenderTargetDisplayHandle = mEngineLoop->UIContext()->CreateTextureHandle( mDeferredRenderTargetTexture );
-            mEditorWindow.UpdateSceneViewport_deferred( mDeferredRenderTargetDisplayHandle );
+            mForwardRenderTargetDisplayHandle = mEngineLoop->UIContext()->CreateTextureHandle( mForwardRenderTargetTexture );
+            mEditorWindow.UpdateSceneViewport_deferred( mForwardRenderTargetDisplayHandle );
         }
         else
         {
-            mDeferredRenderTargetDisplayHandle.Handle->Write( mDeferredRenderTargetTexture, 0 );
+            mForwardRenderTargetDisplayHandle.Handle->Write( mForwardRenderTargetTexture, 0 );
         }
 
         if( mWorldRenderer )
@@ -143,6 +159,8 @@ namespace LTSE::Editor
         }
 
         mDeferredRenderer->SetProjection( math::Perspective(
+            90.0_degf, static_cast<float>( mViewportWidth ) / static_cast<float>( mViewportHeight ), 0.01f, 100000.0f ) );
+        mForwardRenderer->SetProjection( math::Perspective(
             90.0_degf, static_cast<float>( mViewportWidth ) / static_cast<float>( mViewportHeight ), 0.01f, 100000.0f ) );
     }
 
@@ -160,6 +178,7 @@ namespace LTSE::Editor
         mEditorWindow.WorldRenderer = mWorldRenderer;
         // mEditorWindow.DeferredWorldRenderer    = mDeferredWorldRenderer;
         mEditorWindow.DefRenderer = mDeferredRenderer;
+        mEditorWindow.ForwardRenderer = mForwardRenderer;
         // mEditorWindow.DeferredLightingRenderer = mDeferredLightingRenderer;
         mEditorWindow.GraphicContext = mEngineLoop->GetGraphicContext();
 
@@ -259,6 +278,7 @@ namespace LTSE::Editor
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
 
         mDeferredRenderer = New<DeferredRenderer>( mEngineLoop->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
+        mForwardRenderer = New<ForwardSceneRenderer>( mEngineLoop->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
         RebuildOutputFramebuffer();
         mWorld         = New<Scene>( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
         mWorldRenderer = New<SceneRenderer>( mWorld, mViewportRenderContext );

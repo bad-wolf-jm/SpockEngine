@@ -1377,6 +1377,7 @@ namespace LTSE::Editor
 
             WorldRenderer->View.CameraPosition = math::vec3( math::Inverse( WorldRenderer->View.View )[3] );
             DefRenderer->SetView( WorldRenderer->View.View );
+            ForwardRenderer->SetView( WorldRenderer->View.View );
 
             ManipulationConfig l_Manipulator{};
             l_Manipulator.Type             = lCurrentManipulationType;
@@ -1555,6 +1556,8 @@ namespace LTSE::Editor
 
                             DefRenderer->SetAmbientLighting(
                                 math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
+                            ForwardRenderer->SetAmbientLighting(
+                                math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
                         }
 
                         if( World->Environment.Has<sBackgroundComponent>() )
@@ -1571,6 +1574,9 @@ namespace LTSE::Editor
 
                         DefRenderer->SetExposure( WorldRenderer->Settings.Exposure );
                         DefRenderer->SetGamma( WorldRenderer->Settings.Gamma );
+
+                        ForwardRenderer->SetExposure( WorldRenderer->Settings.Exposure );
+                        ForwardRenderer->SetGamma( WorldRenderer->Settings.Gamma );
                     }
                     ImGui::End();
                 }

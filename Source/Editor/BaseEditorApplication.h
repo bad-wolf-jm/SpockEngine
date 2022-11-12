@@ -14,6 +14,7 @@
 #include "Scene/EnvironmentSampler/EnvironmentSampler.h"
 #include "Scene/EnvironmentSampler/PointCloudVisualizer.h"
 #include "Scene/Renderer/DeferredSceneRenderer.h"
+#include "Scene/Renderer/ForwardSceneRenderer.h"
 #include "Scene/Renderer/SceneRenderer.h"
 #include "Scene/Scene.h"
 
@@ -74,6 +75,7 @@ namespace LTSE::Editor
         Ref<SceneRenderer> mWorldRenderer         = nullptr;
 
         Ref<DeferredRenderer> mDeferredRenderer = nullptr;
+        Ref<ForwardSceneRenderer> mForwardRenderer = nullptr;
 
         RenderContext mViewportRenderContext{};
 
@@ -83,6 +85,9 @@ namespace LTSE::Editor
 
         Ref<Graphics::Texture2D> mDeferredRenderTargetTexture = nullptr;
         ImageHandle              mDeferredRenderTargetDisplayHandle{};
+
+        Ref<Graphics::Texture2D> mForwardRenderTargetTexture = nullptr;
+        ImageHandle              mForwardRenderTargetDisplayHandle{};
 
         Entity m_SensorEntity{};
     };
