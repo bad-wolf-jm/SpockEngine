@@ -82,12 +82,12 @@ namespace LTSE::Graphics
         virtual void EndRender();
         virtual void Present();
 
+        std::vector<VkClearValue> GetClearValues();
         virtual Ref<sVkFramebufferObject> GetFramebuffer();
 
-        // virtual Ref<sVkCommandBufferObject> GetCommandBuffer( uint32_t i );
-        virtual VkSemaphore                 GetImageAvailableSemaphore( uint32_t i );
-        virtual VkSemaphore                 GetRenderFinishedSemaphore( uint32_t i );
-        virtual VkFence                     GetInFlightFence( uint32_t i );
+        virtual VkSemaphore GetImageAvailableSemaphore( uint32_t i );
+        virtual VkSemaphore GetRenderFinishedSemaphore( uint32_t i );
+        virtual VkFence     GetInFlightFence( uint32_t i );
 
         virtual uint32_t GetCurrentImage();
 
@@ -100,6 +100,7 @@ namespace LTSE::Graphics
 
         GraphicContext mGraphicContext{};
 
+        std::vector<VkClearValue>           mClearValues    = {};
         std::vector<sAttachmentDescription> mAttachmentInfo = {};
         std::vector<std::string>            mAttachmentIDs  = {};
 

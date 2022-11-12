@@ -20,9 +20,17 @@ namespace LTSE::Core
     {
     }
 
-    void ASceneRenderer::SetProjection( math::mat4 aProjectionMatrix ) { mProjectionMatrix = aProjectionMatrix; }
+    void ASceneRenderer::SetProjection( math::mat4 aProjectionMatrix )
+    {
+        mProjectionMatrix = aProjectionMatrix;
+        mProjectionMatrix[1][1] *= -1.0f;
+    }
 
-    void ASceneRenderer::SetView( math::mat4 aViewMatrix ) { mViewMatrix = aViewMatrix; }
+    void ASceneRenderer::SetView( math::mat4 aViewMatrix )
+    {
+        mViewMatrix     = aViewMatrix;
+        mCameraPosition = math::vec3( math::Inverse( mViewMatrix )[3] );
+    }
 
     void ASceneRenderer::SetGamma( float aGamma ) { mGamma = aGamma; }
 

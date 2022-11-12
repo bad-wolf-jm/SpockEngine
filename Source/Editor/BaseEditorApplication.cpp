@@ -86,12 +86,15 @@ namespace LTSE::Editor
         mDeferredLightingRenderContext.BeginRender();
         if( mDeferredLightingRenderContext ) mDeferredLightingRenderer->Render( mLightingPassInputs, mDeferredLightingRenderContext );
         mDeferredLightingRenderContext.EndRender();
+
+        mDeferredRenderer->Render();
     }
 
     void BaseEditorApplication::Update( Timestep ts )
     {
         mEditorWindow.ActiveWorld->Update( ts );
         mEditorWindow.UpdateFramerate( ts );
+        mDeferredRenderer->Update( mWorld );
     }
 
     void BaseEditorApplication::RebuildOutputFramebuffer()
@@ -188,6 +191,9 @@ namespace LTSE::Editor
                 90.0_degf, static_cast<float>( mViewportWidth ) / static_cast<float>( mViewportHeight ), 0.01f, 100000.0f );
             mDeferredWorldRenderer->View.Projection[1][1] *= -1.0f;
         }
+
+        mDeferredRenderer->SetProjection( math::Perspective(
+            90.0_degf, static_cast<float>( mViewportWidth ) / static_cast<float>( mViewportHeight ), 0.01f, 100000.0f ) );
     }
 
     bool BaseEditorApplication::RenderUI( ImGuiIO &io )
@@ -203,6 +209,7 @@ namespace LTSE::Editor
         // mEditorWindow.SensorModel    = m_SensorController;
         mEditorWindow.WorldRenderer            = mWorldRenderer;
         mEditorWindow.DeferredWorldRenderer    = mDeferredWorldRenderer;
+        mEditorWindow.DefRenderer              = mDeferredRenderer;
         mEditorWindow.DeferredLightingRenderer = mDeferredLightingRenderer;
         mEditorWindow.GraphicContext           = mEngineLoop->GetGraphicContext();
 
@@ -301,7 +308,7 @@ namespace LTSE::Editor
         mEditorWindow                 = EditorWindow( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
 
-        mDeferredRenderer         = New<DeferredRenderer>( mEngineLoop->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 4 );
+        mDeferredRenderer = New<DeferredRenderer>( mEngineLoop->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 4 );
         RebuildOutputFramebuffer();
         mWorld                    = New<Scene>( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
         mWorldRenderer            = New<SceneRenderer>( mWorld, mViewportRenderContext );

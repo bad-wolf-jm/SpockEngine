@@ -1372,13 +1372,15 @@ namespace LTSE::Editor
             float lRotationSpeed = 2.5_degf;
             float lPanningSpeed  = 0.25f;
 
-            bool lViewLanipulate                       = ViewManipulate( WorldRenderer->View.CameraPosition, WorldRenderer->View.View,
-                                      l3DViewPosition + math::vec2{ l3DViewSize.x - 125.0f, 35.0f } );
-            WorldRenderer->View.CameraPosition         = math::vec3( math::Inverse( WorldRenderer->View.View )[3] );
-            DeferredWorldRenderer->View.View           = WorldRenderer->View.View;
-            DeferredWorldRenderer->View.CameraPosition = math::vec3( math::Inverse( DeferredWorldRenderer->View.View )[3] );
+            bool lViewLanipulate = ViewManipulate( WorldRenderer->View.CameraPosition, WorldRenderer->View.View,
+                l3DViewPosition + math::vec2{ l3DViewSize.x - 125.0f, 35.0f } );
+
+            WorldRenderer->View.CameraPosition            = math::vec3( math::Inverse( WorldRenderer->View.View )[3] );
+            DeferredWorldRenderer->View.View              = WorldRenderer->View.View;
+            DeferredWorldRenderer->View.CameraPosition    = math::vec3( math::Inverse( DeferredWorldRenderer->View.View )[3] );
             DeferredLightingRenderer->View.View           = WorldRenderer->View.View;
             DeferredLightingRenderer->View.CameraPosition = math::vec3( math::Inverse( DeferredWorldRenderer->View.View )[3] );
+            DefRenderer->SetView( WorldRenderer->View.View );
 
             ManipulationConfig l_Manipulator{};
             l_Manipulator.Type             = lCurrentManipulationType;
@@ -1554,6 +1556,9 @@ namespace LTSE::Editor
                             UI::SetCursorPosition( ImVec2{ l_LabelSize, l_CursorPosition.y } + ImVec2( 0.0f, -5.0f ) );
                             ImGui::SetNextItemWidth( l_WindowSize.x - l_LabelSize );
                             UI::Slider( "##ambient_intensity", "%.3f", 0.0f, 0.1f, &l_AmbientLightComponent.Intensity );
+
+                            DefRenderer->SetAmbientLighting(
+                                math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
                         }
 
                         if( World->Environment.Has<sBackgroundComponent>() )
@@ -1569,8 +1574,10 @@ namespace LTSE::Editor
                         ImGui::SliderFloat( "Gamma", &WorldRenderer->Settings.Gamma, 0.1f, 4.0f );
 
                         DeferredLightingRenderer->Settings.Exposure = WorldRenderer->Settings.Exposure;
-                        DeferredLightingRenderer->Settings.Gamma = WorldRenderer->Settings.Gamma;
+                        DeferredLightingRenderer->Settings.Gamma    = WorldRenderer->Settings.Gamma;
 
+                        DefRenderer->SetExposure( DeferredLightingRenderer->Settings.Exposure );
+                        DefRenderer->SetGamma( DeferredLightingRenderer->Settings.Gamma );
                     }
                     ImGui::End();
                 }

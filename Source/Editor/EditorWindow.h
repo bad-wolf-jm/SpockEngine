@@ -11,6 +11,7 @@
 
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//Texture2D.h"
+#include "Scene/Renderer/DeferredRenderer.h"
 #include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/DeferredLightingPass.h"
 #include "Scene/Renderer/SceneRenderer.h"
@@ -78,6 +79,7 @@ namespace LTSE::Editor
         Ref<Scene>                 World                    = nullptr;
         Ref<Scene>                 ActiveWorld              = nullptr;
         Ref<SceneRenderer>         WorldRenderer            = nullptr;
+        Ref<DeferredRenderer>      DefRenderer            = nullptr;
         Ref<DeferredSceneRenderer> DeferredWorldRenderer    = nullptr;
         Ref<DeferredLightingPass>  DeferredLightingRenderer = nullptr;
 

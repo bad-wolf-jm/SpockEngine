@@ -10,6 +10,28 @@ namespace LTSE::Graphics
         mImageCount = 1;
     }
 
+    std::vector<VkClearValue> ARenderTarget::GetClearValues()
+    {
+        std::vector<VkClearValue> lValues;
+        for( auto const &lInfo : mAttachmentInfo )
+        {
+            if( ( lInfo.mType == eAttachmentType::COLOR ) || ( lInfo.mType == eAttachmentType::MSAA_RESOLVE ) )
+            {
+                VkClearValue lValue{};
+                lValue.color = { lInfo.mClearColor.x, lInfo.mClearColor.y, lInfo.mClearColor.z, lInfo.mClearColor.w };
+                lValues.push_back( lValue );
+            }
+            else
+            {
+                VkClearValue lValue{};
+                lValue.depthStencil = { lInfo.mClearColor.x, static_cast<uint32_t>( lInfo.mClearColor.y ) };
+                lValues.push_back( lValue );
+            }
+        }
+
+        return lValues;
+    }
+
     void ARenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo )
     {
         mAttachmentInfo.push_back( aCreateInfo );
@@ -23,8 +45,8 @@ namespace LTSE::Graphics
                                                                                 : ToVkFormat( aCreateInfo.mFormat );
 
         mAttachmentIDs.push_back( aAttachmentID );
-        mAttachments[aAttachmentID] = New<sVkFramebufferImage>( mGraphicContext.mContext, lVkFormat,
-            mSpec.mWidth, mSpec.mHeight, lSampleCount, lAttachmentType, aCreateInfo.mIsSampled );
+        mAttachments[aAttachmentID] = New<sVkFramebufferImage>(
+            mGraphicContext.mContext, lVkFormat, mSpec.mWidth, mSpec.mHeight, lSampleCount, lAttachmentType, aCreateInfo.mIsSampled );
     }
 
     ARenderTarget &ARenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
@@ -67,7 +89,6 @@ namespace LTSE::Graphics
 
         VkAttachmentReference  lResolveAttachment{};
         VkAttachmentReference *lResolveAttachmentPtr = nullptr;
-
 
         for( uint32_t i = 0; i < mAttachmentInfo.size(); i++ )
         {

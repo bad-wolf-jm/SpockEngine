@@ -45,8 +45,8 @@ namespace LTSE::Graphics
 
         auto lCommandBuffer = mCommandBufferObject[mCurrentCommandBuffer];
         lCommandBuffer->Begin();
-        lCommandBuffer->BeginRenderPass( mRenderTarget->GetRenderPass(), mRenderTarget->GetFramebuffer(), { lWidth, lHeight },
-            mRenderTarget->GetRenderPass()->GetClearValues() );
+        lCommandBuffer->BeginRenderPass(
+            mRenderTarget->GetRenderPass(), mRenderTarget->GetFramebuffer(), { lWidth, lHeight }, mRenderTarget->GetClearValues() );
         lCommandBuffer->SetViewport( { 0.0f, 0.0f }, { lWidth, lHeight } );
         lCommandBuffer->SetScissor( { 0.0f, 0.0f }, { lWidth, lHeight } );
 
@@ -80,48 +80,48 @@ namespace LTSE::Graphics
         mCurrentIndexBuffer  = nullptr;
     }
 
-    void ARenderContext::Draw( uint32_t a_VertexCount, uint32_t a_VertexOffset, uint32_t a_VertexBufferOffset,
-        uint32_t a_InstanceCount, uint32_t a_FirstInstance )
+    void ARenderContext::Draw( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset, uint32_t a_InstanceCount,
+        uint32_t a_FirstInstance )
     {
         auto lCommandBuffer = mCommandBufferObject[mCurrentCommandBuffer];
 
         if( mCurrentIndexBuffer != nullptr )
-            lCommandBuffer->DrawIndexed( a_VertexCount, a_VertexOffset, a_VertexBufferOffset, a_InstanceCount, a_FirstInstance );
+            lCommandBuffer->DrawIndexed( aVertexCount, aVertexOffset, aVertexBufferOffset, a_InstanceCount, a_FirstInstance );
         else
-            lCommandBuffer->Draw( a_VertexCount, a_VertexOffset, a_VertexBufferOffset, a_InstanceCount, a_FirstInstance );
+            lCommandBuffer->Draw( aVertexCount, aVertexOffset, aVertexBufferOffset, a_InstanceCount, a_FirstInstance );
     }
 
-    void ARenderContext::Bind( Ref<GraphicsPipeline> a_GraphicPipeline )
+    void ARenderContext::Bind( Ref<GraphicsPipeline> aGraphicPipeline )
     {
         auto lCommandBuffer = mCommandBufferObject[mCurrentCommandBuffer];
 
-        lCommandBuffer->Bind( a_GraphicPipeline->GetVkPipelineObject(), VK_PIPELINE_BIND_POINT_GRAPHICS );
-        mCurrentPipelineLayout = a_GraphicPipeline->GetVkPipelineLayoutObject();
+        lCommandBuffer->Bind( aGraphicPipeline->GetVkPipelineObject(), VK_PIPELINE_BIND_POINT_GRAPHICS );
+        mCurrentPipelineLayout = aGraphicPipeline->GetVkPipelineLayoutObject();
     }
 
-    void ARenderContext::Bind( Ref<Buffer> a_VertexBuffer, uint32_t a_BindPoint )
+    void ARenderContext::Bind( Ref<Buffer> aVertexBuffer, uint32_t aBindPoint )
     {
         auto lCommandBuffer = mCommandBufferObject[mCurrentCommandBuffer];
 
-        lCommandBuffer->Bind( a_VertexBuffer->mVkObject, a_BindPoint );
-        mCurrentVertexBuffer = a_VertexBuffer;
+        lCommandBuffer->Bind( aVertexBuffer->mVkObject, aBindPoint );
+        mCurrentVertexBuffer = aVertexBuffer;
     }
 
-    void ARenderContext::Bind( Ref<Buffer> a_VertexBuffer, Ref<Buffer> a_IndexBuffer, uint32_t a_BindPoint )
+    void ARenderContext::Bind( Ref<Buffer> aVertexBuffer, Ref<Buffer> aIndexBuffer, uint32_t aBindPoint )
     {
         auto lCommandBuffer = mCommandBufferObject[mCurrentCommandBuffer];
 
-        lCommandBuffer->Bind( a_VertexBuffer->mVkObject, a_IndexBuffer->mVkObject, a_BindPoint );
-        mCurrentVertexBuffer = a_VertexBuffer;
-        mCurrentIndexBuffer  = a_IndexBuffer;
+        lCommandBuffer->Bind( aVertexBuffer->mVkObject, aIndexBuffer->mVkObject, aBindPoint );
+        mCurrentVertexBuffer = aVertexBuffer;
+        mCurrentIndexBuffer  = aIndexBuffer;
     }
 
-    void ARenderContext::Bind( Ref<DescriptorSet> a_DescriptorSet, uint32_t a_SetIndex, int32_t a_DynamicOffset )
+    void ARenderContext::Bind( Ref<DescriptorSet> aDescriptorSet, uint32_t aSetIndex, int32_t aDynamicOffset )
     {
         auto lCommandBuffer = mCommandBufferObject[mCurrentCommandBuffer];
 
-        lCommandBuffer->Bind( a_DescriptorSet->GetVkDescriptorSetObject(), VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipelineLayout,
-            a_SetIndex, a_DynamicOffset );
+        lCommandBuffer->Bind( aDescriptorSet->GetVkDescriptorSetObject(), VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipelineLayout,
+            aSetIndex, aDynamicOffset );
     }
 
 } // namespace LTSE::Graphics

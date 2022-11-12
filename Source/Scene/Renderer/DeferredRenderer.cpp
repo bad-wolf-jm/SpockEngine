@@ -38,7 +38,7 @@ namespace LTSE::Core
 
         sAttachmentDescription lAttachmentCreateInfo{};
         lAttachmentCreateInfo.mType        = eAttachmentType::COLOR;
-        lAttachmentCreateInfo.mClearColor  = { 0.0f, 0.0f, 0.0f, 0.0f };
+        lAttachmentCreateInfo.mClearColor  = { 0.0f, 0.0f, 0.0f, 1.0f };
         lAttachmentCreateInfo.mIsSampled   = true;
         lAttachmentCreateInfo.mIsPresented = false;
         lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
@@ -53,21 +53,24 @@ namespace LTSE::Core
         mGeometryRenderTarget->AddAttachment( "AO_METAL_ROUGH", lAttachmentCreateInfo );
 
         lAttachmentCreateInfo.mType = eAttachmentType::DEPTH;
+        lAttachmentCreateInfo.mClearColor  = { 1.0f, 0.0f, 0.0f, 0.0f };
         mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
         mGeometryRenderTarget->Finalize();
         mGeometryContext = ARenderContext( mGraphicContext, mGeometryRenderTarget );
 
         sRenderTargetDescription lLightingSpec{};
-        lLightingSpec.mWidth       = aOutputHeight;
+        lLightingSpec.mWidth       = aOutputWidth;
         lLightingSpec.mHeight      = aOutputHeight;
         lLightingSpec.mSampleCount = mOutputSampleCount;
         mLightingRenderTarget      = New<ARenderTarget>( mGraphicContext, lLightingSpec );
 
         lAttachmentCreateInfo.mType   = eAttachmentType::COLOR;
         lAttachmentCreateInfo.mFormat = eColorFormat::RGBA16_FLOAT;
+        lAttachmentCreateInfo.mClearColor  = { 0.0f, 0.0f, 0.0f, 1.0f };
         mLightingRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
 
         lAttachmentCreateInfo.mType = eAttachmentType::DEPTH;
+        lAttachmentCreateInfo.mClearColor  = { 1.0f, 0.0f, 0.0f, 0.0f };
         mLightingRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
         mLightingRenderTarget->Finalize();
         mLightingContext = ARenderContext( mGraphicContext, mLightingRenderTarget );
@@ -119,15 +122,6 @@ namespace LTSE::Core
     {
         //
         ASceneRenderer::Update( aWorld );
-    }
-
-    void DeferredRenderer::Render()
-    {
-        ASceneRenderer::Render();
-
-        // Geometry pass
-        UpdateDescriptorSets();
-        mScene->GetMaterialSystem()->UpdateDescriptors();
 
         View.PointLightCount = mPointLights.size();
         for( uint32_t i = 0; i < View.PointLightCount; i++ ) View.PointLights[i] = mPointLights[i];
@@ -141,8 +135,21 @@ namespace LTSE::Core
         Settings.AmbientLightIntensity = mAmbientLight.a;
         Settings.AmbientLightColor     = math::vec4( math::vec3( mAmbientLight ), 0.0 );
 
+        View.Projection     = mProjectionMatrix;
+        View.CameraPosition = mCameraPosition;
+        View.View           = mViewMatrix;
+
         mCameraUniformBuffer->Write( View );
         mShaderParametersBuffer->Write( Settings );
+    }
+
+    void DeferredRenderer::Render()
+    {
+        ASceneRenderer::Render();
+
+        // Geometry pass
+        UpdateDescriptorSets();
+        mScene->GetMaterialSystem()->UpdateDescriptors();
 
         std::unordered_map<MeshRendererCreateInfo, std::vector<Entity>, MeshRendererCreateInfoHash> lOpaqueMeshQueue{};
         mScene->ForEach<sStaticMeshComponent, sMaterialShaderComponent>(
@@ -156,41 +163,49 @@ namespace LTSE::Core
 
         if( mScene->mVertexBuffer && mScene->mIndexBuffer )
         {
-            mGeometryContext.Bind( mScene->mTransformedVertexBuffer, mScene->mIndexBuffer );
-            for( auto &lPipelineData : lOpaqueMeshQueue )
+            mGeometryContext.BeginRender();
             {
-                auto &lPipeline = GetRenderPipeline( lPipelineData.first );
-                if( lPipeline.Pipeline )
-                    mGeometryContext.Bind( lPipeline.Pipeline );
-                else
-                    continue;
-
-                mGeometryContext.Bind( mGeometryPassCamera, 0, -1 );
-                mGeometryContext.Bind( mScene->GetMaterialSystem()->GetDescriptorSet(), 1, -1 );
-
-                for( auto &lMeshInformation : lPipelineData.second )
+                mGeometryContext.Bind( mScene->mTransformedVertexBuffer, mScene->mIndexBuffer );
+                for( auto &lPipelineData : lOpaqueMeshQueue )
                 {
-                    if( lMeshInformation.Has<NodeDescriptorComponent>() )
-                        mGeometryContext.Bind( lMeshInformation.Get<NodeDescriptorComponent>().Descriptors, 2, -1 );
+                    auto &lPipeline = GetRenderPipeline( lPipelineData.first );
+                    if( lPipeline.Pipeline )
+                        mGeometryContext.Bind( lPipeline.Pipeline );
+                    else
+                        continue;
 
-                    MeshRenderer::MaterialPushConstants lMaterialPushConstants{};
-                    lMaterialPushConstants.mMaterialID = lMeshInformation.Get<sMaterialComponent>().mMaterialID;
+                    mGeometryContext.Bind( mGeometryPassCamera, 0, -1 );
+                    mGeometryContext.Bind( mScene->GetMaterialSystem()->GetDescriptorSet(), 1, -1 );
 
-                    mGeometryContext.PushConstants(
-                        { Graphics::Internal::eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
+                    for( auto &lMeshInformation : lPipelineData.second )
+                    {
+                        if( lMeshInformation.Has<NodeDescriptorComponent>() )
+                            mGeometryContext.Bind( lMeshInformation.Get<NodeDescriptorComponent>().Descriptors, 2, -1 );
 
-                    auto &lStaticMeshComponent = lMeshInformation.Get<sStaticMeshComponent>();
-                    mGeometryContext.Draw( lStaticMeshComponent.mIndexCount, lStaticMeshComponent.mIndexOffset,
-                        lStaticMeshComponent.mVertexOffset, 1, 0 );
+                        MeshRenderer::MaterialPushConstants lMaterialPushConstants{};
+                        lMaterialPushConstants.mMaterialID = lMeshInformation.Get<sMaterialComponent>().mMaterialID;
+
+                        mGeometryContext.PushConstants(
+                            { Graphics::Internal::eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
+
+                        auto &lStaticMeshComponent = lMeshInformation.Get<sStaticMeshComponent>();
+                        mGeometryContext.Draw( lStaticMeshComponent.mIndexCount, lStaticMeshComponent.mIndexOffset,
+                            lStaticMeshComponent.mVertexOffset, 1, 0 );
+                    }
                 }
             }
-        }
+            mGeometryContext.EndRender();
 
-        // Lighting pass
-        mLightingContext.Bind( mLightingRenderer.Pipeline );
-        mLightingContext.Bind( mLightingPassCamera, 0, -1 );
-        mLightingContext.Bind( mLightingPassTextures, 1, -1 );
-        mLightingContext.Draw( 6, 0, 0, 1, 0 );
+            // Lighting pass
+            mLightingContext.BeginRender();
+            {
+                mLightingContext.Bind( mLightingRenderer.Pipeline );
+                mLightingContext.Bind( mLightingPassCamera, 0, -1 );
+                mLightingContext.Bind( mLightingPassTextures, 1, -1 );
+                mLightingContext.Draw( 6, 0, 0, 1, 0 );
+            }
+            mLightingContext.EndRender();
+        }
     }
 
     void DeferredRenderer::UpdateDescriptorSets()

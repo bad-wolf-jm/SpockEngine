@@ -50,6 +50,7 @@ namespace LTSE::Core
 
         math::mat4 mProjectionMatrix{};
         math::mat4 mViewMatrix{};
+        math::vec3 mCameraPosition{};
 
         float      mExposure     = 4.5f;
         float      mGamma        = 2.2f;
