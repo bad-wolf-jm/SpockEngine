@@ -75,10 +75,6 @@ namespace LTSE::Editor
 
     void BaseEditorApplication::RenderScene()
     {
-        mViewportRenderContext.BeginRender();
-        if( mViewportRenderContext ) mWorldRenderer->Render( mViewportRenderContext );
-        mViewportRenderContext.EndRender();
-
         mDeferredRenderer->Render();
         mForwardRenderer->Render();
     }
@@ -87,8 +83,8 @@ namespace LTSE::Editor
     {
         mEditorWindow.ActiveWorld->Update( ts );
         mEditorWindow.UpdateFramerate( ts );
-        mDeferredRenderer->Update( mWorld );
-        mForwardRenderer->Update( mWorld );
+        mDeferredRenderer->Update( mEditorWindow.ActiveWorld );
+        mForwardRenderer->Update( mEditorWindow.ActiveWorld );
     }
 
     void BaseEditorApplication::RebuildOutputFramebuffer()
@@ -98,22 +94,8 @@ namespace LTSE::Editor
         mDeferredRenderer->ResizeOutput( mViewportWidth, mViewportHeight );
         mForwardRenderer->ResizeOutput( mViewportWidth, mViewportHeight );
 
-        if( !mOffscreenRenderTarget )
-        {
-            OffscreenRenderTargetDescription l_RenderTargetCI{};
-            l_RenderTargetCI.OutputSize  = { mViewportWidth, mViewportHeight };
-            l_RenderTargetCI.SampleCount = 4;
-            l_RenderTargetCI.Sampled     = true;
-            mOffscreenRenderTarget       = New<OffscreenRenderTarget>( mEngineLoop->GetGraphicContext(), l_RenderTargetCI );
-            mViewportRenderContext       = LTSE::Graphics::RenderContext( mEngineLoop->GetGraphicContext(), mOffscreenRenderTarget );
-        }
-        else
-        {
-            mOffscreenRenderTarget->Resize( mViewportWidth, mViewportHeight );
-        }
-
-        mOffscreenRenderTargetTexture = New<Graphics::Texture2D>(
-            mEngineLoop->GetGraphicContext(), TextureDescription{}, mOffscreenRenderTarget->GetOutputImage() );
+        mOffscreenRenderTargetTexture =
+            New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{}, mForwardRenderer->GetOutputImage() );
 
         if( !mOffscreenRenderTargetDisplayHandle.Handle )
         {
@@ -128,34 +110,14 @@ namespace LTSE::Editor
         mDeferredRenderTargetTexture =
             New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{}, mDeferredRenderer->GetOutputImage() );
 
-        // if( !mDeferredRenderTargetDisplayHandle.Handle )
-        // {
-        //     mDeferredRenderTargetDisplayHandle = mEngineLoop->UIContext()->CreateTextureHandle( mDeferredRenderTargetTexture );
-        //     mEditorWindow.UpdateSceneViewport_deferred( mDeferredRenderTargetDisplayHandle );
-        // }
-        // else
-        // {
-        //     mDeferredRenderTargetDisplayHandle.Handle->Write( mDeferredRenderTargetTexture, 0 );
-        // }
-
-        mForwardRenderTargetTexture =
-            New<Graphics::Texture2D>( mEngineLoop->GetGraphicContext(), TextureDescription{}, mForwardRenderer->GetOutputImage() );
-
-        if( !mForwardRenderTargetDisplayHandle.Handle )
+        if( !mDeferredRenderTargetDisplayHandle.Handle )
         {
-            mForwardRenderTargetDisplayHandle = mEngineLoop->UIContext()->CreateTextureHandle( mForwardRenderTargetTexture );
-            mEditorWindow.UpdateSceneViewport_deferred( mForwardRenderTargetDisplayHandle );
+            mDeferredRenderTargetDisplayHandle = mEngineLoop->UIContext()->CreateTextureHandle( mDeferredRenderTargetTexture );
+            mEditorWindow.UpdateSceneViewport_deferred( mDeferredRenderTargetDisplayHandle );
         }
         else
         {
-            mForwardRenderTargetDisplayHandle.Handle->Write( mForwardRenderTargetTexture, 0 );
-        }
-
-        if( mWorldRenderer )
-        {
-            mWorldRenderer->View.Projection = math::Perspective(
-                90.0_degf, static_cast<float>( mViewportWidth ) / static_cast<float>( mViewportHeight ), 0.01f, 100000.0f );
-            mWorldRenderer->View.Projection[1][1] *= -1.0f;
+            mDeferredRenderTargetDisplayHandle.Handle->Write( mDeferredRenderTargetTexture, 0 );
         }
 
         mDeferredRenderer->SetProjection( math::Perspective(
@@ -175,11 +137,8 @@ namespace LTSE::Editor
 
         mEditorWindow.mEngineLoop = mEngineLoop;
         // mEditorWindow.SensorModel    = m_SensorController;
-        mEditorWindow.WorldRenderer = mWorldRenderer;
-        // mEditorWindow.DeferredWorldRenderer    = mDeferredWorldRenderer;
+        mEditorWindow.WorldRenderer = mForwardRenderer;
         mEditorWindow.DefRenderer = mDeferredRenderer;
-        mEditorWindow.ForwardRenderer = mForwardRenderer;
-        // mEditorWindow.DeferredLightingRenderer = mDeferredLightingRenderer;
         mEditorWindow.GraphicContext = mEngineLoop->GetGraphicContext();
 
         o_RequestQuit = mEditorWindow.Display();
@@ -277,11 +236,13 @@ namespace LTSE::Editor
         mEditorWindow                 = EditorWindow( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
 
+        mWorld            = New<Scene>( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
         mDeferredRenderer = New<DeferredRenderer>( mEngineLoop->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
-        mForwardRenderer = New<ForwardSceneRenderer>( mEngineLoop->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 4 );
+        mForwardRenderer  = New<ForwardSceneRenderer>( mEngineLoop->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 4 );
         RebuildOutputFramebuffer();
-        mWorld         = New<Scene>( mEngineLoop->GetGraphicContext(), mEngineLoop->UIContext() );
-        mWorldRenderer = New<SceneRenderer>( mWorld, mViewportRenderContext );
+
+        mForwardRenderer->Update( mWorld );
+        mDeferredRenderer->Update( mWorld );
 
         mEditorWindow.World       = mWorld;
         mEditorWindow.ActiveWorld = mWorld;
@@ -301,10 +262,10 @@ namespace LTSE::Editor
             mEditorWindow.ActiveSensor = mEditorWindow.Sensor;
         }
 
-        mWorldRenderer->RenderCoordinateGrid = true;
-        mWorldRenderer->View.CameraPosition  = math::vec3( 0.0f, 1.0f, 7.5f );
-        mWorldRenderer->View.ModelFraming    = math::mat4( 0.5f );
-        mWorldRenderer->View.View = math::Inverse( math::Translate( math::mat4( 1.0f ), mWorldRenderer->View.CameraPosition ) );
+        mForwardRenderer->RenderCoordinateGrid = true;
+        mForwardRenderer->View.CameraPosition  = math::vec3( 0.0f, 1.0f, 7.5f );
+        mForwardRenderer->View.ModelFraming    = math::mat4( 0.5f );
+        mForwardRenderer->View.View = math::Inverse( math::Translate( math::mat4( 1.0f ), mForwardRenderer->View.CameraPosition ) );
     }
 
     uint32_t BaseEditorApplication::Run()

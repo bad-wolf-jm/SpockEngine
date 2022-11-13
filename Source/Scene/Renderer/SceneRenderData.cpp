@@ -1,4 +1,4 @@
-#include "SceneRenderer.h"
+#include "SceneRenderData.h"
 
 #include <chrono>
 #include <gli/gli.hpp>

@@ -36,7 +36,6 @@ namespace LTSE::Core
 
       public:
         ForwardSceneRenderer() = default;
-        // ForwardSceneRenderer( Ref<Scene> aWorld, RenderContext &aRenderContext );
         ForwardSceneRenderer( GraphicContext aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
 
         ~ForwardSceneRenderer() = default;
@@ -46,8 +45,7 @@ namespace LTSE::Core
         void Update( Ref<Scene> aWorld );
         void Render();
 
-        // Ref<Scene> mWorld = nullptr;
-        void       ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
+        void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
       protected:
         MeshRendererCreateInfo     GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification );
@@ -58,8 +56,6 @@ namespace LTSE::Core
         ParticleSystemRenderer &GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification );
 
       protected:
-        // GraphicContext mGraphicContext;
-
         Ref<ARenderTarget> mGeometryRenderTarget = nullptr;
         ARenderContext     mGeometryContext{};
 

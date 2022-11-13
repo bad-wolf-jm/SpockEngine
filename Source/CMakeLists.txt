@@ -74,7 +74,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/Renderer/ParticleSystemRenderer.cpp
     Scene/Renderer/VisualHelperLineRenderer.cpp
     Scene/Renderer/SceneRenderData.cpp
-    Scene/Renderer/SceneRenderer.cpp
+    # Scene/Renderer/SceneRenderer.cpp
     Scene/Renderer/ForwardSceneRenderer.cpp
     Scene/Renderer/DeferredSceneRenderer.cpp
     Scene/Renderer/DeferredLightingRenderer.cpp

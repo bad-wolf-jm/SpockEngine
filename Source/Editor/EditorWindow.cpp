@@ -1297,7 +1297,6 @@ namespace LTSE::Editor
 
                 ActiveWorld = New<Scene>( World );
                 ActiveWorld->BeginScenario();
-                WorldRenderer->mWorld = ActiveWorld;
             }
         }
         else
@@ -1311,8 +1310,6 @@ namespace LTSE::Editor
                 ActiveWorld->EndScenario();
                 ActiveWorld  = World;
                 ActiveSensor = Sensor;
-
-                WorldRenderer->mWorld = ActiveWorld;
             }
         }
         UI::SameLine();
@@ -1322,7 +1319,6 @@ namespace LTSE::Editor
         if( UI::Button( "Gizmos", math::vec2{ 65.0f, 24.0f } ) )
         {
             WorldRenderer->RenderGizmos = !WorldRenderer->RenderGizmos;
-            ForwardRenderer->RenderGizmos = WorldRenderer->RenderGizmos;
         }
         ImGui::PopStyleColor();
         UI::SameLine();
@@ -1331,7 +1327,6 @@ namespace LTSE::Editor
         if( UI::Button( "Grid", math::vec2{ 65.0f, 24.0f } ) )
         {
             WorldRenderer->RenderCoordinateGrid = !WorldRenderer->RenderCoordinateGrid;
-            ForwardRenderer->RenderCoordinateGrid = WorldRenderer->RenderCoordinateGrid;
         }
         ImGui::PopStyleColor();
         UI::SameLine();
@@ -1341,7 +1336,6 @@ namespace LTSE::Editor
         if( UI::Button( "Grayscale", math::vec2{ 65.0f, 24.0f } ) )
         {
             WorldRenderer->GrayscaleRendering = !WorldRenderer->GrayscaleRendering;
-            ForwardRenderer->GrayscaleRendering = WorldRenderer->GrayscaleRendering;
         }
         ImGui::PopStyleColor();
         ImGui::PopStyleColor();
@@ -1378,9 +1372,8 @@ namespace LTSE::Editor
             bool lViewLanipulate = ViewManipulate( WorldRenderer->View.CameraPosition, WorldRenderer->View.View,
                 l3DViewPosition + math::vec2{ l3DViewSize.x - 125.0f, 35.0f } );
 
-            WorldRenderer->View.CameraPosition = math::vec3( math::Inverse( WorldRenderer->View.View )[3] );
             DefRenderer->SetView( WorldRenderer->View.View );
-            ForwardRenderer->SetView( WorldRenderer->View.View );
+            WorldRenderer->SetView( WorldRenderer->View.View );
 
             ManipulationConfig l_Manipulator{};
             l_Manipulator.Type             = lCurrentManipulationType;
@@ -1559,7 +1552,7 @@ namespace LTSE::Editor
 
                             DefRenderer->SetAmbientLighting(
                                 math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
-                            ForwardRenderer->SetAmbientLighting(
+                            WorldRenderer->SetAmbientLighting(
                                 math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
                         }
 
@@ -1572,14 +1565,16 @@ namespace LTSE::Editor
 
                     if( ImGui::CollapsingHeader( "Camera", l_Flags ) )
                     {
-                        ImGui::SliderFloat( "Exposure", &WorldRenderer->Settings.Exposure, 0.1f, 10.0f );
-                        ImGui::SliderFloat( "Gamma", &WorldRenderer->Settings.Gamma, 0.1f, 4.0f );
+                        static float lExposure = 4.5f;
+                        static float lGamma = 2.2f;
+                        ImGui::SliderFloat( "Exposure", &lExposure, 0.1f, 10.0f );
+                        ImGui::SliderFloat( "Gamma", &lGamma, 0.1f, 4.0f );
 
-                        DefRenderer->SetExposure( WorldRenderer->Settings.Exposure );
-                        DefRenderer->SetGamma( WorldRenderer->Settings.Gamma );
+                        DefRenderer->SetExposure( lExposure );
+                        DefRenderer->SetGamma( lGamma );
 
-                        ForwardRenderer->SetExposure( WorldRenderer->Settings.Exposure );
-                        ForwardRenderer->SetGamma( WorldRenderer->Settings.Gamma );
+                        WorldRenderer->SetExposure( lExposure );
+                        WorldRenderer->SetGamma( lGamma );
                     }
                     ImGui::End();
                 }

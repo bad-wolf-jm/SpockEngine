@@ -169,9 +169,9 @@ namespace LTSE::Core
                 lOpaqueMeshQueue[lPipelineCreateInfo].push_back( aEntity );
             } );
 
+        mGeometryContext.BeginRender();
         if( mScene->mVertexBuffer && mScene->mIndexBuffer )
         {
-            mGeometryContext.BeginRender();
             {
                 mGeometryContext.Bind( mScene->mTransformedVertexBuffer, mScene->mIndexBuffer );
                 for( auto &lPipelineData : lOpaqueMeshQueue )
@@ -202,18 +202,18 @@ namespace LTSE::Core
                     }
                 }
             }
-            mGeometryContext.EndRender();
-
-            // Lighting pass
-            mLightingContext.BeginRender();
-            {
-                mLightingContext.Bind( mLightingRenderer.Pipeline );
-                mLightingContext.Bind( mLightingPassCamera, 0, -1 );
-                mLightingContext.Bind( mLightingPassTextures, 1, -1 );
-                mLightingContext.Draw( 6, 0, 0, 1, 0 );
-            }
-            mLightingContext.EndRender();
         }
+        mGeometryContext.EndRender();
+
+        // Lighting pass
+        mLightingContext.BeginRender();
+        {
+            mLightingContext.Bind( mLightingRenderer.Pipeline );
+            mLightingContext.Bind( mLightingPassCamera, 0, -1 );
+            mLightingContext.Bind( mLightingPassTextures, 1, -1 );
+            mLightingContext.Draw( 6, 0, 0, 1, 0 );
+        }
+        mLightingContext.EndRender();
     }
 
     void DeferredRenderer::UpdateDescriptorSets()

@@ -15,7 +15,6 @@
 #include "Scene/EnvironmentSampler/PointCloudVisualizer.h"
 #include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/ForwardSceneRenderer.h"
-#include "Scene/Renderer/SceneRenderer.h"
 #include "Scene/Scene.h"
 
 
@@ -72,22 +71,17 @@ namespace LTSE::Editor
         uint32_t           mViewportWidth         = 1;
         bool               mShouldRebuildViewport = true;
         Ref<Scene>         mWorld                 = nullptr;
-        Ref<SceneRenderer> mWorldRenderer         = nullptr;
 
         Ref<DeferredRenderer> mDeferredRenderer = nullptr;
         Ref<ForwardSceneRenderer> mForwardRenderer = nullptr;
 
         RenderContext mViewportRenderContext{};
 
-        Ref<OffscreenRenderTarget> mOffscreenRenderTarget        = nullptr;
         Ref<Graphics::Texture2D>   mOffscreenRenderTargetTexture = nullptr;
         ImageHandle                mOffscreenRenderTargetDisplayHandle{};
 
         Ref<Graphics::Texture2D> mDeferredRenderTargetTexture = nullptr;
         ImageHandle              mDeferredRenderTargetDisplayHandle{};
-
-        Ref<Graphics::Texture2D> mForwardRenderTargetTexture = nullptr;
-        ImageHandle              mForwardRenderTargetDisplayHandle{};
 
         Entity m_SensorEntity{};
     };

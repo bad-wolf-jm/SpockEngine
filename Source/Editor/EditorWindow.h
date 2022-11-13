@@ -11,7 +11,6 @@
 #include "Core/GraphicContext//Texture2D.h"
 #include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/ForwardSceneRenderer.h"
-#include "Scene/Renderer/SceneRenderer.h"
 #include "Scene/Scene.h"
 
 #include "UI/UI.h"
@@ -68,12 +67,11 @@ namespace LTSE::Editor
         std::string ApplicationName = "";
         std::string DocumentName    = "";
 
-        Ref<EngineLoop>           mEngineLoop     = nullptr;
-        Ref<Scene>                World           = nullptr;
-        Ref<Scene>                ActiveWorld     = nullptr;
-        Ref<SceneRenderer>        WorldRenderer   = nullptr;
-        Ref<DeferredRenderer>     DefRenderer     = nullptr;
-        Ref<ForwardSceneRenderer> ForwardRenderer = nullptr;
+        Ref<EngineLoop>           mEngineLoop   = nullptr;
+        Ref<Scene>                World         = nullptr;
+        Ref<Scene>                ActiveWorld   = nullptr;
+        Ref<ForwardSceneRenderer> WorldRenderer = nullptr;
+        Ref<DeferredRenderer>     DefRenderer   = nullptr;
 
         Entity         Sensor{};
         Entity         ActiveSensor{};
