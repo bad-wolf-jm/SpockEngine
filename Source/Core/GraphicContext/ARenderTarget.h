@@ -71,9 +71,15 @@ namespace LTSE::Graphics
         void     InitializeCommandBuffers();
 
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
+        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+            Ref<Internal::sVkFramebufferImage> aFramebufferImage );
 
         ARenderTarget &AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
             math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp );
+
+        ARenderTarget &AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
+            math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp,
+            Ref<Internal::sVkFramebufferImage> aFramebufferImage );
 
         void                             Finalize();
         Ref<sVkAbstractRenderPassObject> GetRenderPass() { return mRenderPassObject; }
@@ -82,7 +88,7 @@ namespace LTSE::Graphics
         virtual void EndRender();
         virtual void Present();
 
-        std::vector<VkClearValue> GetClearValues();
+        std::vector<VkClearValue>         GetClearValues();
         virtual Ref<sVkFramebufferObject> GetFramebuffer();
 
         virtual VkSemaphore GetImageAvailableSemaphore( uint32_t i );

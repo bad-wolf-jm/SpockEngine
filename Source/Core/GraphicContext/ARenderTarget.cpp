@@ -2,7 +2,6 @@
 
 namespace LTSE::Graphics
 {
-
     ARenderTarget::ARenderTarget( GraphicContext &aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription )
         : mGraphicContext{ aGraphicContext }
         , mSpec{ aRenderTargetDescription }
@@ -49,6 +48,23 @@ namespace LTSE::Graphics
             mGraphicContext.mContext, lVkFormat, mSpec.mWidth, mSpec.mHeight, lSampleCount, lAttachmentType, aCreateInfo.mIsSampled );
     }
 
+    void ARenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+        Ref<Internal::sVkFramebufferImage> aFramebufferImage )
+    {
+        mAttachmentInfo.push_back( aCreateInfo );
+        VkImageUsageFlags lAttachmentType =
+            ( aCreateInfo.mType == eAttachmentType::COLOR || aCreateInfo.mType == eAttachmentType::MSAA_RESOLVE )
+                ? VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
+                : VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+
+        uint32_t lSampleCount = ( aCreateInfo.mType == eAttachmentType::MSAA_RESOLVE ) ? 1 : mSpec.mSampleCount;
+        auto     lVkFormat    = ( aCreateInfo.mType == eAttachmentType::DEPTH ) ? mGraphicContext.mContext->GetDepthFormat()
+                                                                                : ToVkFormat( aCreateInfo.mFormat );
+
+        mAttachmentIDs.push_back( aAttachmentID );
+        mAttachments[aAttachmentID] = aFramebufferImage;
+    }
+
     ARenderTarget &ARenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
         math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp )
     {
@@ -62,6 +78,24 @@ namespace LTSE::Graphics
         lCreateInfo.mStoreOp     = eStoreOp;
 
         AddAttachment( aAttachmentID, lCreateInfo );
+
+        return *this;
+    }
+
+    ARenderTarget &ARenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
+        math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp,
+        Ref<Internal::sVkFramebufferImage> aFramebufferImage )
+    {
+        sAttachmentDescription lCreateInfo{};
+        lCreateInfo.mType        = aType;
+        lCreateInfo.mFormat      = aFormat;
+        lCreateInfo.mClearColor  = aClearColor;
+        lCreateInfo.mIsSampled   = aIsSampled;
+        lCreateInfo.mIsPresented = aIsPresented;
+        lCreateInfo.mLoadOp      = aLoadOp;
+        lCreateInfo.mStoreOp     = eStoreOp;
+
+        AddAttachment( aAttachmentID, lCreateInfo, aFramebufferImage );
 
         return *this;
     }
@@ -108,8 +142,8 @@ namespace LTSE::Graphics
             }
             case eAttachmentType::MSAA_RESOLVE:
             {
-                lDescription = lNewRenderPass->ColorAttachment( ToVkFormat( mAttachmentInfo[i].mFormat ), 1,
-                    mAttachmentInfo[i].mIsSampled, mAttachmentInfo[i].mIsPresented );
+                lDescription = lNewRenderPass->ColorAttachment(
+                    ToVkFormat( mAttachmentInfo[i].mFormat ), 1, mAttachmentInfo[i].mIsSampled, mAttachmentInfo[i].mIsPresented );
                 lAttachmentDescriptions.push_back( lDescription );
                 lResolveAttachment.attachment = i;
                 lResolveAttachment.layout     = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
@@ -142,14 +176,20 @@ namespace LTSE::Graphics
         return mAttachments[aKey];
     }
 
-    bool                      ARenderTarget::BeginRender() { return true; }
-    void                      ARenderTarget::EndRender() {}
-    void                      ARenderTarget::Present() {}
-    uint32_t                  ARenderTarget::GetCurrentImage() { return 0; };
+    bool ARenderTarget::BeginRender() { return true; }
+
+    void ARenderTarget::EndRender() {}
+
+    void ARenderTarget::Present() {}
+
+    uint32_t ARenderTarget::GetCurrentImage() { return 0; };
+
     Ref<sVkFramebufferObject> ARenderTarget::GetFramebuffer() { return mFramebufferObject; }
-    // Ref<sVkCommandBufferObject> ARenderTarget::GetCommandBuffer( uint32_t i ) { return mCommandBufferObject[i]; }
+
     VkSemaphore ARenderTarget::GetImageAvailableSemaphore( uint32_t i ) { return VK_NULL_HANDLE; }
+
     VkSemaphore ARenderTarget::GetRenderFinishedSemaphore( uint32_t i ) { return VK_NULL_HANDLE; }
-    VkFence     ARenderTarget::GetInFlightFence( uint32_t i ) { return VK_NULL_HANDLE; }
+
+    VkFence ARenderTarget::GetInFlightFence( uint32_t i ) { return VK_NULL_HANDLE; }
 
 } // namespace LTSE::Graphics

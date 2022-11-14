@@ -52,9 +52,9 @@ namespace LTSE::Core
 
     void EngineLoop::Init()
     {
-        mGraphicContext = LTSE::Graphics::GraphicContext( m_InitialMainWindowSize.x, m_InitialMainWindowSize.y, 4, m_ApplicationName );
+        mGraphicContext = LTSE::Graphics::GraphicContext( m_InitialMainWindowSize.x, m_InitialMainWindowSize.y, 1, m_ApplicationName );
 
-        SwapChainRenderTargetDescription l_SwapChainSettings{ 4 };
+        SwapChainRenderTargetDescription l_SwapChainSettings{ 1 };
         m_SwapChainRenderer = LTSE::Core::New<SwapChainRenderTarget>( mGraphicContext, l_SwapChainSettings );
         m_RenderContext     = LTSE::Graphics::RenderContext( mGraphicContext, m_SwapChainRenderer );
 
