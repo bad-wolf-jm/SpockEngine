@@ -48,8 +48,8 @@ namespace SpockEngine.Math
         public quat(vec3 aEulerAngle)
         {
             var lHalfAngle = aEulerAngle / 2.0f;
-            var lCos = new vec3((float)System.Math.Cos( lHalfAngle.x ), (float)System.Math.Cos( lHalfAngle.y ), (float)System.Math.Cos( lHalfAngle.z ));
-            var lSin = new vec3((float)System.Math.Sin( lHalfAngle.x ), (float)System.Math.Sin( lHalfAngle.y ), (float)System.Math.Sin( lHalfAngle.z ));
+            var lCos = new vec3(Functions.cos( lHalfAngle.x ), Functions.cos( lHalfAngle.y ), Functions.cos( lHalfAngle.z ));
+            var lSin = new vec3(Functions.sin( lHalfAngle.x ), Functions.sin( lHalfAngle.y ), Functions.sin( lHalfAngle.z ));
 
             x = lSin.x * lCos.y * lCos.z - lCos.x * lSin.y * lSin.z;
             y = lCos.x * lSin.y * lCos.z + lSin.x * lCos.y * lSin.z;
@@ -137,7 +137,7 @@ namespace SpockEngine.Math
         /// <summary>
         /// Returns the represented angle of this quaternion.
         /// </summary>
-        public double Angle => System.Math.Acos((double)w) * 2.0;
+        public double Angle => Functions.acos(w) * 2.0;
         
         /// <summary>
         /// Returns the represented axis of this quaternion.
@@ -156,25 +156,25 @@ namespace SpockEngine.Math
         // /// <summary>
         // /// Returns the represented yaw angle of this quaternion.
         // /// </summary>
-        // public double Yaw => System.Math.Asin(-2.0 * (double)(x * z - w * y));
+        // public double Yaw => System.Math.Asin(-2.0 * (x * z - w * y));
         
         // /// <summary>
         // /// Returns the represented pitch angle of this quaternion.
         // /// </summary>
-        // public double Pitch => System.Math.Atan2(2.0 * (double)(y * z + w * x), (double)(w * w - x * x - y * y + z * z));
+        // public double Pitch => System.Math.Atan2(2.0 * (y * z + w * x), (w * w - x * x - y * y + z * z));
         
         // /// <summary>
         // /// Returns the represented roll angle of this quaternion.
         // /// </summary>
-        // public double Roll => System.Math.Atan2(2.0 * (double)(x * y + w * z), (double)(w * w + x * x - y * y - z * z));
+        // public double Roll => System.Math.Atan2(2.0 * (x * y + w * z), (w * w + x * x - y * y - z * z));
         
         /// <summary>
         /// Returns the represented euler angles (pitch, yaw, roll) of this quaternion.
         /// </summary>
         public vec3 EulerAngles => new vec3(
-            (float)System.Math.Atan2(2.0 * (double)(y * z + w * x), (double)(w * w - x * x - y * y + z * z)), 
-            (float)System.Math.Asin(-2.0 * (double)(x * z - w * y)), 
-            (float)System.Math.Atan2(2.0 * (double)(x * y + w * z), (double)(w * w + x * x - y * y - z * z))
+            (float)System.Math.Atan2(2.0 * (y * z + w * x), (w * w - x * x - y * y + z * z)), 
+            (float)System.Math.Asin(-2.0 * (x * z - w * y)), 
+            (float)System.Math.Atan2(2.0 * (x * y + w * z), (w * w + x * x - y * y - z * z))
         );
         
         /// <summary>
@@ -452,9 +452,9 @@ namespace SpockEngine.Math
         /// </summary>
         public static quat FromAxisAngle(float angle, vec3 v)
         {
-            var s = System.Math.Sin((double)angle * 0.5);
-            var c = System.Math.Cos((double)angle * 0.5);
-            return new quat((float)((double)v.x * s), (float)((double)v.y * s), (float)((double)v.z * s), (float)c);
+            var s = Functions.sin(angle * 0.5f);
+            var c = Functions.cos(angle * 0.5f);
+            return new quat((float)(v.x * s), (float)(v.y * s), (float)(v.z * s), (float)c);
         }
         
         /// <summary>
@@ -515,13 +515,13 @@ namespace SpockEngine.Math
         /// </summary>
         public static quat Mix(quat x, quat y, float a)
         {
-            var cosTheta = (double)Dot(x, y);
+            var cosTheta = Dot(x, y);
             if (cosTheta > 1 - float.Epsilon)
                 return Lerp(x, y, a);
             else
             {
-                var angle = System.Math.Acos((double)cosTheta);
-                return (quat)( ((float)(System.Math.Sin((1 - (double)a) * angle)) * x + ((float)System.Math.Sin((double)a * angle)) * y) / (float)System.Math.Sin(angle) );
+                var angle = Functions.acos(cosTheta);
+                return (quat)( ((float)(Functions.sin((1 - a) * angle)) * x + (Functions.sin(a * angle)) * y) / Functions.sin(angle) );
             }
         }
         
@@ -531,14 +531,14 @@ namespace SpockEngine.Math
         public static quat SLerp(quat x, quat y, float a)
         {
             var z = y;
-            var cosTheta = (double)Dot(x, y);
+            var cosTheta = Dot(x, y);
             if (cosTheta < 0) { z = -y; cosTheta = -cosTheta; }
             if (cosTheta > 1 - float.Epsilon)
                 return Lerp(x, z, a);
             else
             {
-                var angle = System.Math.Acos((double)cosTheta);
-                return (quat)( (((float)System.Math.Sin((1 - (double)a) * angle)) * x + ((float)System.Math.Sin((double)a * angle) )* z) / (float)System.Math.Sin(angle) );
+                var angle = Functions.acos(cosTheta);
+                return (quat)( ((Functions.sin((1 - a) * angle)) * x + (Functions.sin(a * angle) )* z) / Functions.sin(angle) );
             }
         }
         
