@@ -113,9 +113,6 @@ namespace LTSE::Graphics
 
       private:
         void RecreateSwapChain();
-        void CreateSwapChain();
-        void CreateSyncObjects();
-        void CreateRenderTargets();
 
         std::vector<Ref<AbstractRenderTarget>> mRenderTargets = {};
 

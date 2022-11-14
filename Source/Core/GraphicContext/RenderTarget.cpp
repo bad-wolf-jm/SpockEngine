@@ -193,7 +193,6 @@ namespace LTSE::Graphics
             mInFlightFences[i]           = mGraphicContext.mContext->CreateFence();
         }
 
-        mImageCount     = mImageCount;
         Spec.Format     = ToLtseFormat( lSwapChainImageFormat );
         Spec.ClearColor = { 0.01f, 0.01f, 0.03f, 1.0f };
         Spec.Width      = lSwapchainExtent.width;

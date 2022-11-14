@@ -67,8 +67,6 @@ namespace LTSE::Graphics
         ~ARenderTarget() = default;
 
         uint32_t GetImageCount() { return mImageCount; }
-        void     Initialize( sRenderTargetDescription &aSpec );
-        void     InitializeCommandBuffers();
 
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
