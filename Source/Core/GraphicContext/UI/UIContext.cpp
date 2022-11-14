@@ -1,7 +1,7 @@
 #include "UIContext.h"
 
-#include "Core/Textures/ColorFormat.h"
 #include "Core/Logging.h"
+#include "Core/Textures/ColorFormat.h"
 
 #include "Core/Vulkan/VkPipeline.h"
 
@@ -23,8 +23,7 @@ namespace LTSE::Core
 
         aRenderContext.Bind( mUIRenderPipeline );
 
-        if( aDrawData->TotalVtxCount > 0 )
-            aRenderContext.Bind( mVertexBuffer, mIndexBuffer );
+        if( aDrawData->TotalVtxCount > 0 ) aRenderContext.Bind( mVertexBuffer, mIndexBuffer );
 
         int lFramebufferWidth  = (int)( aDrawData->DisplaySize.x * aDrawData->FramebufferScale.x );
         int lFramebufferHeight = (int)( aDrawData->DisplaySize.y * aDrawData->FramebufferScale.y );
@@ -32,8 +31,8 @@ namespace LTSE::Core
         aRenderContext.GetCurrentCommandBuffer()->SetViewport( { 0, 0 }, { lFramebufferWidth, lFramebufferHeight } );
 
         // Setup scale and translation:
-        // Our visible imgui space lies from aDrawData->DisplayPps (top left) to aDrawData->DisplayPos+data_data->DisplaySize (bottom right).
-        // DisplayPos is (0,0) for single viewport apps.
+        // Our visible imgui space lies from aDrawData->DisplayPps (top left) to aDrawData->DisplayPos+data_data->DisplaySize (bottom
+        // right). DisplayPos is (0,0) for single viewport apps.
         {
             float lScale[2];
             lScale[0] = 2.0f / aDrawData->DisplaySize.x;
@@ -55,8 +54,7 @@ namespace LTSE::Core
         int lFramebufferWidth  = (int)( aDrawData->DisplaySize.x * aDrawData->FramebufferScale.x );
         int lFramebufferHeight = (int)( aDrawData->DisplaySize.y * aDrawData->FramebufferScale.y );
 
-        if( ( lFramebufferWidth <= 0 ) || ( lFramebufferHeight <= 0 ) )
-            return;
+        if( ( lFramebufferWidth <= 0 ) || ( lFramebufferHeight <= 0 ) ) return;
 
         if( aDrawData->TotalVtxCount > 0 )
         {
@@ -67,15 +65,15 @@ namespace LTSE::Core
             mVertexBuffer->Resize( vertex_size );
             mIndexBuffer->Resize( index_size );
 
-            int vtx_offset = 0;
-            int idx_offset = 0;
+            int lVertexOffset = 0;
+            int lIndexOffset  = 0;
             for( int n = 0; n < aDrawData->CmdListsCount; n++ )
             {
                 const ImDrawList *lImGuiDrawCommands = aDrawData->CmdLists[n];
-                mVertexBuffer->Upload( lImGuiDrawCommands->VtxBuffer.Data, lImGuiDrawCommands->VtxBuffer.Size, vtx_offset );
-                mIndexBuffer->Upload( lImGuiDrawCommands->IdxBuffer.Data, lImGuiDrawCommands->IdxBuffer.Size, idx_offset );
-                vtx_offset += lImGuiDrawCommands->VtxBuffer.Size * sizeof( ImDrawVert );
-                idx_offset += lImGuiDrawCommands->IdxBuffer.Size * sizeof( ImDrawIdx );
+                mVertexBuffer->Upload( lImGuiDrawCommands->VtxBuffer.Data, lImGuiDrawCommands->VtxBuffer.Size, lVertexOffset );
+                mIndexBuffer->Upload( lImGuiDrawCommands->IdxBuffer.Data, lImGuiDrawCommands->IdxBuffer.Size, lIndexOffset );
+                lVertexOffset += lImGuiDrawCommands->VtxBuffer.Size * sizeof( ImDrawVert );
+                lIndexOffset += lImGuiDrawCommands->IdxBuffer.Size * sizeof( ImDrawIdx );
             }
         }
 
@@ -105,22 +103,21 @@ namespace LTSE::Core
                 if( lClipRect.x < lFramebufferWidth && lClipRect.y < lFramebufferHeight && lClipRect.z >= 0.0f && lClipRect.w >= 0.0f )
                 {
                     // Negative offsets are illegal for vkCmdSetScissor
-                    if( lClipRect.x < 0.0f )
-                        lClipRect.x = 0.0f;
-                    if( lClipRect.y < 0.0f )
-                        lClipRect.y = 0.0f;
+                    if( lClipRect.x < 0.0f ) lClipRect.x = 0.0f;
+                    if( lClipRect.y < 0.0f ) lClipRect.y = 0.0f;
 
                     aRenderContext.GetCurrentCommandBuffer()->SetScissor( { (int32_t)( lClipRect.x ), (int32_t)( lClipRect.y ) },
-                                                                          { (uint32_t)( lClipRect.z - lClipRect.x ), (uint32_t)( lClipRect.w - lClipRect.y ) } );
+                        { (uint32_t)( lClipRect.z - lClipRect.x ), (uint32_t)( lClipRect.w - lClipRect.y ) } );
 
                     // Bind a the descriptor set for the current texture.
                     if( (VkDescriptorSet)lPcmd->TextureId )
                     {
                         VkDescriptorSet desc_set[1] = { (VkDescriptorSet)lPcmd->TextureId };
                         vkCmdBindDescriptorSets( aRenderContext.GetCurrentCommandBuffer()->mVkObject, VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                                 mUIRenderPipeline->GetVkPipelineLayoutObject()->mVkObject, 0, 1, desc_set, 0, NULL );
+                            mUIRenderPipeline->GetVkPipelineLayoutObject()->mVkObject, 0, 1, desc_set, 0, NULL );
 
-                        aRenderContext.Draw( lPcmd->ElemCount, lPcmd->IdxOffset + lGlobalIdxOffset, lPcmd->VtxOffset + lGlobalVtxOffset, 1, 0 );
+                        aRenderContext.Draw(
+                            lPcmd->ElemCount, lPcmd->IdxOffset + lGlobalIdxOffset, lPcmd->VtxOffset + lGlobalVtxOffset, 1, 0 );
                     }
                 }
             }
@@ -129,7 +126,8 @@ namespace LTSE::Core
         }
     }
 
-    UIContext::UIContext( Ref<LTSE::Core::ViewportClient> aWindow, GraphicContext &aGraphicContext, RenderContext &aRenderContext, std::string &aImGuiConfigPath )
+    UIContext::UIContext( Ref<LTSE::Core::ViewportClient> aWindow, GraphicContext &aGraphicContext, RenderContext &aRenderContext,
+        std::string &aImGuiConfigPath )
         : mGraphicContext{ aGraphicContext }
         , mImGuiConfigPath{ aImGuiConfigPath }
     {
@@ -151,18 +149,21 @@ namespace LTSE::Core
 
         ImGui_ImplGlfw_InitForVulkan( aWindow->GetGLFWWindow(), true );
 
-        DescriptorBindingInfo lDescriptorBinding     = { 0, Internal::eDescriptorType::COMBINED_IMAGE_SAMPLER, { Graphics::Internal::eShaderStageTypeFlags::FRAGMENT } };
+        DescriptorBindingInfo lDescriptorBinding = {
+            0, Internal::eDescriptorType::COMBINED_IMAGE_SAMPLER, { Graphics::Internal::eShaderStageTypeFlags::FRAGMENT } };
         DescriptorSetLayoutCreateInfo lBindingLayout = { { lDescriptorBinding } };
         mUIDescriptorSetLayout                       = New<DescriptorSetLayout>( mGraphicContext, lBindingLayout );
 
         std::string lUIVertexShaderFiles = GetResourcePath( "Shaders\\ui_shader.vert.spv" ).string();
-        mUIVertexShader = New<Graphics::Internal::ShaderModule>( mGraphicContext.mContext, lUIVertexShaderFiles, Graphics::Internal::eShaderStageTypeFlags::VERTEX );
+        mUIVertexShader                  = New<Graphics::Internal::ShaderModule>(
+            mGraphicContext.mContext, lUIVertexShaderFiles, Graphics::Internal::eShaderStageTypeFlags::VERTEX );
 
         std::string lUIFragmentShaderFiles = GetResourcePath( "Shaders\\ui_shader.frag.spv" ).string();
-        mUIFragmentShader = New<Graphics::Internal::ShaderModule>( mGraphicContext.mContext, lUIFragmentShaderFiles, Graphics::Internal::eShaderStageTypeFlags::FRAGMENT );
+        mUIFragmentShader                  = New<Graphics::Internal::ShaderModule>(
+            mGraphicContext.mContext, lUIFragmentShaderFiles, Graphics::Internal::eShaderStageTypeFlags::FRAGMENT );
 
         GraphicsPipelineCreateInfo lUIPipelineCreateInfo = {};
-        lUIPipelineCreateInfo.mShaderStages               = { { mUIVertexShader, "main" }, { mUIFragmentShader, "main" } };
+        lUIPipelineCreateInfo.mShaderStages              = { { mUIVertexShader, "main" }, { mUIFragmentShader, "main" } };
         lUIPipelineCreateInfo.InputBufferLayout          = {
             { "Position", eBufferDataType::VEC2, 0, 0 },
             { "TextureCoords", eBufferDataType::VEC2, 0, 1 },
@@ -183,32 +184,42 @@ namespace LTSE::Core
         lMainViewport->RendererUserData = nullptr;
 
         static ImWchar lRanges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
-        ImFontConfig lFontConfig;
+        ImFontConfig   lFontConfig;
         lFontConfig.MergeMode        = true;
         lFontConfig.PixelSnapH       = true;
         lFontConfig.GlyphMinAdvanceX = 10.0f;
 
         const float lFontSize = 14.0f;
 
-        mMonoFont = io.Fonts->AddFontFromFileTTF( GetResourcePath( "fonts\\dejavu-fonts-ttf-2.37\\ttf\\DejaVuSansMono.ttf" ).string().c_str(), lFontSize );
-        io.Fonts->AddFontFromFileTTF( GetResourcePath( "fonts\\fontawesome-webfont.ttf" ).string().c_str(), lFontSize, &lFontConfig, lRanges );
+        mMonoFont = io.Fonts->AddFontFromFileTTF(
+            GetResourcePath( "fonts\\dejavu-fonts-ttf-2.37\\ttf\\DejaVuSansMono.ttf" ).string().c_str(), lFontSize );
+        io.Fonts->AddFontFromFileTTF(
+            GetResourcePath( "fonts\\fontawesome-webfont.ttf" ).string().c_str(), lFontSize, &lFontConfig, lRanges );
 
-        mMainFont = io.Fonts->AddFontFromFileTTF( GetResourcePath( "fonts\\dejavu-fonts-ttf-2.37\\ttf\\DejaVuSans.ttf" ).string().c_str(), lFontSize );
-        io.Fonts->AddFontFromFileTTF( GetResourcePath( "fonts\\fontawesome-webfont.ttf" ).string().c_str(), lFontSize, &lFontConfig, lRanges );
+        mMainFont = io.Fonts->AddFontFromFileTTF(
+            GetResourcePath( "fonts\\dejavu-fonts-ttf-2.37\\ttf\\DejaVuSans.ttf" ).string().c_str(), lFontSize );
+        io.Fonts->AddFontFromFileTTF(
+            GetResourcePath( "fonts\\fontawesome-webfont.ttf" ).string().c_str(), lFontSize, &lFontConfig, lRanges );
 
-        mBoldFont = io.Fonts->AddFontFromFileTTF( GetResourcePath( "fonts\\dejavu-fonts-ttf-2.37\\ttf\\DejaVuSans-Bold.ttf" ).string().c_str(), lFontSize );
-        io.Fonts->AddFontFromFileTTF( GetResourcePath( "fonts\\fontawesome-webfont.ttf" ).string().c_str(), lFontSize, &lFontConfig, lRanges );
+        mBoldFont = io.Fonts->AddFontFromFileTTF(
+            GetResourcePath( "fonts\\dejavu-fonts-ttf-2.37\\ttf\\DejaVuSans-Bold.ttf" ).string().c_str(), lFontSize );
+        io.Fonts->AddFontFromFileTTF(
+            GetResourcePath( "fonts\\fontawesome-webfont.ttf" ).string().c_str(), lFontSize, &lFontConfig, lRanges );
 
-        mObliqueFont = io.Fonts->AddFontFromFileTTF( GetResourcePath( "fonts\\dejavu-fonts-ttf-2.37\\ttf\\DejaVuSans-Oblique.ttf" ).string().c_str(), lFontSize );
-        io.Fonts->AddFontFromFileTTF( GetResourcePath( "fonts\\fontawesome-webfont.ttf" ).string().c_str(), lFontSize, &lFontConfig, lRanges );
+        mObliqueFont = io.Fonts->AddFontFromFileTTF(
+            GetResourcePath( "fonts\\dejavu-fonts-ttf-2.37\\ttf\\DejaVuSans-Oblique.ttf" ).string().c_str(), lFontSize );
+        io.Fonts->AddFontFromFileTTF(
+            GetResourcePath( "fonts\\fontawesome-webfont.ttf" ).string().c_str(), lFontSize, &lFontConfig, lRanges );
 
-        mBoldObliqueFont = io.Fonts->AddFontFromFileTTF( GetResourcePath( "fonts\\dejavu-fonts-ttf-2.37\\ttf\\DejaVuSans-BoldOblique.ttf" ).string().c_str(), lFontSize );
-        io.Fonts->AddFontFromFileTTF( GetResourcePath( "fonts\\fontawesome-webfont.ttf" ).string().c_str(), lFontSize, &lFontConfig, lRanges );
+        mBoldObliqueFont = io.Fonts->AddFontFromFileTTF(
+            GetResourcePath( "fonts\\dejavu-fonts-ttf-2.37\\ttf\\DejaVuSans-BoldOblique.ttf" ).string().c_str(), lFontSize );
+        io.Fonts->AddFontFromFileTTF(
+            GetResourcePath( "fonts\\fontawesome-webfont.ttf" ).string().c_str(), lFontSize, &lFontConfig, lRanges );
 
         mUIStyle = UIStyle{ true };
 
         unsigned char *lFontPixelData;
-        int lWidth, lHeight;
+        int            lWidth, lHeight;
         io.Fonts->GetTexDataAsRGBA32( &lFontPixelData, &lWidth, &lHeight );
         size_t lUploadSize = lWidth * lHeight * 4 * sizeof( char );
 

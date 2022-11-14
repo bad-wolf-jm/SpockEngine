@@ -11,17 +11,18 @@ namespace LTSE::Graphics
 {
 
     using namespace LTSE::Core;
+    using namespace LTSE::Graphics::Internal;
 
     struct RenderTargetDescription
     {
-        uint32_t                           SampleCount   = 1;
-        eColorFormat                       Format        = eColorFormat::RGBA8_UNORM;
-        math::vec4                         ClearColor    = { 0.0f, 0.0f, 0.0f, 1.0f };
-        uint32_t                           Width         = 0;
-        uint32_t                           Height        = 0;
-        bool                               Sampled       = false;
-        bool                               Presented     = false;
-        Ref<Internal::sVkFramebufferImage> OutputTexture = nullptr;
+        uint32_t                 SampleCount   = 1;
+        eColorFormat             Format        = eColorFormat::RGBA8_UNORM;
+        math::vec4               ClearColor    = { 0.0f, 0.0f, 0.0f, 1.0f };
+        uint32_t                 Width         = 0;
+        uint32_t                 Height        = 0;
+        bool                     Sampled       = false;
+        bool                     Presented     = false;
+        Ref<sVkFramebufferImage> OutputTexture = nullptr;
     };
 
     class AbstractRenderTarget
@@ -38,34 +39,34 @@ namespace LTSE::Graphics
         void Initialize( RenderTargetDescription &a_Spec );
         void InitializeCommandBuffers();
 
-        Ref<Internal::sVkRenderPassObject> GetRenderPass() { return m_RenderPassObject; }
+        Ref<sVkRenderPassObject> GetRenderPass() { return mRenderPassObject; }
 
-        Ref<Internal::sVkFramebufferImage> GetOutputImage() { return m_OutputTexture; }
+        Ref<sVkFramebufferImage> GetOutputImage() { return mOutputTexture; }
 
-        virtual bool                                BeginRender();
-        virtual void                                EndRender();
-        virtual void                                Present();
-        virtual Ref<Internal::sVkFramebufferObject> GetFramebuffer();
+        virtual bool                      BeginRender();
+        virtual void                      EndRender();
+        virtual void                      Present();
+        virtual Ref<sVkFramebufferObject> GetFramebuffer();
 
-        virtual Ref<Internal::sVkCommandBufferObject> GetCommandBuffer( uint32_t i );
-        virtual VkSemaphore                           GetImageAvailableSemaphore( uint32_t i );
-        virtual VkSemaphore                           GetRenderFinishedSemaphore( uint32_t i );
-        virtual VkFence                               GetInFlightFence( uint32_t i );
+        virtual Ref<sVkCommandBufferObject> GetCommandBuffer( uint32_t i );
+        virtual VkSemaphore                 GetImageAvailableSemaphore( uint32_t i );
+        virtual VkSemaphore                 GetRenderFinishedSemaphore( uint32_t i );
+        virtual VkFence                     GetInFlightFence( uint32_t i );
 
         virtual uint32_t GetCurrentImage();
 
       protected:
         uint32_t mImageCount = 0;
 
-        GraphicContext                     mGraphicContext{};
-        Ref<Internal::sVkRenderPassObject> m_RenderPassObject = nullptr;
-        std::vector<VkClearValue>          m_ClearColors      = {};
+        GraphicContext            mGraphicContext{};
+        Ref<sVkRenderPassObject>  mRenderPassObject = nullptr;
+        std::vector<VkClearValue> mClearColors      = {};
 
-        Ref<Internal::sVkFramebufferImage>                 m_MSAAOutputTexture  = nullptr;
-        Ref<Internal::sVkFramebufferImage>                 m_OutputTexture      = nullptr;
-        Ref<Internal::sVkFramebufferImage>                 m_DepthTexture       = nullptr;
-        Ref<Internal::sVkFramebufferObject>                m_FramebufferObject  = nullptr;
-        std::vector<Ref<Internal::sVkCommandBufferObject>> mCommandBufferObject = {};
+        Ref<sVkFramebufferImage>                 mMSAAOutputTexture   = nullptr;
+        Ref<sVkFramebufferImage>                 mOutputTexture       = nullptr;
+        Ref<sVkFramebufferImage>                 mDepthTexture        = nullptr;
+        Ref<sVkFramebufferObject>                mFramebufferObject   = nullptr;
+        std::vector<Ref<sVkCommandBufferObject>> mCommandBufferObject = {};
     };
 
     struct SwapChainRenderTargetDescription
@@ -83,11 +84,11 @@ namespace LTSE::Graphics
         void EndRender();
         void Present();
 
-        Ref<Internal::sVkFramebufferObject>   GetFramebuffer();
-        Ref<Internal::sVkCommandBufferObject> GetCommandBuffer( uint32_t i );
-        VkSemaphore                           GetImageAvailableSemaphore( uint32_t i );
-        VkSemaphore                           GetRenderFinishedSemaphore( uint32_t i );
-        VkFence                               GetInFlightFence( uint32_t i );
+        Ref<sVkFramebufferObject>   GetFramebuffer();
+        Ref<sVkCommandBufferObject> GetCommandBuffer( uint32_t i );
+        VkSemaphore                 GetImageAvailableSemaphore( uint32_t i );
+        VkSemaphore                 GetRenderFinishedSemaphore( uint32_t i );
+        VkFence                     GetInFlightFence( uint32_t i );
 
         uint32_t GetCurrentImage();
     };
@@ -102,11 +103,11 @@ namespace LTSE::Graphics
         void EndRender();
         void Present();
 
-        Ref<Internal::sVkFramebufferObject>   GetFramebuffer();
-        Ref<Internal::sVkCommandBufferObject> GetCommandBuffer( uint32_t i );
-        VkSemaphore                           GetImageAvailableSemaphore( uint32_t i );
-        VkSemaphore                           GetRenderFinishedSemaphore( uint32_t i );
-        VkFence                               GetInFlightFence( uint32_t i );
+        Ref<sVkFramebufferObject>   GetFramebuffer();
+        Ref<sVkCommandBufferObject> GetCommandBuffer( uint32_t i );
+        VkSemaphore                 GetImageAvailableSemaphore( uint32_t i );
+        VkSemaphore                 GetRenderFinishedSemaphore( uint32_t i );
+        VkFence                     GetInFlightFence( uint32_t i );
 
         uint32_t GetCurrentImage();
 
@@ -116,20 +117,18 @@ namespace LTSE::Graphics
         void CreateSyncObjects();
         void CreateRenderTargets();
 
-        std::vector<Ref<AbstractRenderTarget>> m_RenderTargets = {};
-        // Ref<Internal::VkSwapChainObject> m_SwapChainObject     = nullptr;
+        std::vector<Ref<AbstractRenderTarget>> mRenderTargets = {};
 
-        VkSwapchainKHR       mVkObject      = VK_NULL_HANDLE;
-        VkExtent2D           Extent         = { 0, 0 };
-        VkFormat             ImageFormat    = VK_FORMAT_UNDEFINED;
-        uint32_t             ImageCount     = 0;
-        uint32_t             CurrentImage   = 0;
-        bool                 FrameIsStarted = 0;
-        std::vector<VkImage> Images         = {};
+        VkSwapchainKHR       mVkObject       = VK_NULL_HANDLE;
+        VkExtent2D           mExtent         = { 0, 0 };
+        VkFormat             mImageFormat    = VK_FORMAT_UNDEFINED;
+        uint32_t             mCurrentImage   = 0;
+        bool                 mFrameIsStarted = 0;
+        std::vector<VkImage> mImages         = {};
 
-        std::vector<VkSemaphore> ImageAvailableSemaphores = {};
-        std::vector<VkSemaphore> RenderFinishedSemaphores = {};
-        std::vector<VkFence>     InFlightFences           = {};
+        std::vector<VkSemaphore> mImageAvailableSemaphores = {};
+        std::vector<VkSemaphore> mRenderFinishedSemaphores = {};
+        std::vector<VkFence>     mInFlightFences           = {};
     };
 
 } // namespace LTSE::Graphics
