@@ -6,16 +6,6 @@
 
 namespace LTSE::Graphics
 {
-    class SwapChainImage : public ARenderTarget
-    {
-      public:
-        SwapChainImage( GraphicContext &aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription );
-
-        bool BeginRender();
-        void EndRender();
-        void Present();
-    };
-
     class SwapChain : public ARenderTarget
     {
       public:
