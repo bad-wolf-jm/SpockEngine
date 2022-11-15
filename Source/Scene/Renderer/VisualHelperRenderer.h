@@ -6,7 +6,6 @@
 
 #include "Core/GraphicContext//Buffer.h"
 #include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//RenderContext.h"
 #include "Core/GraphicContext//ARenderContext.h"
 
 #include "Core/GraphicContext//GraphicContext.h"
@@ -38,23 +37,6 @@ namespace LTSE::Graphics
 
 
         ~VisualHelperRenderer() = default;
-
-        void Render( math::mat4 a_Transform, ArrowMeshData &a_Arrow, math::vec3 a_Color, RenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, ConeMeshData &a_Arrow, math::vec3 a_Color, RenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, CircleMeshData &a_Arrow, math::vec3 a_Color, RenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, CubeMeshData &a_Arrow, math::vec3 a_Color, RenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, PyramidMeshData &a_Arrow, math::vec3 a_Color, RenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, SurfaceMeshData &a_Arrow, math::vec3 a_Color, RenderContext &aRenderContext );
-
-        void Render( math::mat4 a_Transform, AxesComponent &a_AxesComponent, RenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, PointLightHelperComponent &a_AxesComponent, RenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, DirectionalLightHelperComponent &a_AxesComponent, RenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, SpotlightHelperComponent &a_AxesComponent, RenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, FieldOfViewHelperComponent &a_AxesComponent, RenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, CameraHelperComponent &a_AxesComponent, RenderContext &aRenderContext );
-
-
-
 
         void Render( math::mat4 a_Transform, ArrowMeshData &a_Arrow, math::vec3 a_Color, ARenderContext &aRenderContext );
         void Render( math::mat4 a_Transform, ConeMeshData &a_Arrow, math::vec3 a_Color, ARenderContext &aRenderContext );

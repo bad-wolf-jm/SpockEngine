@@ -8,7 +8,6 @@
 
 #include "Core/GraphicContext//Buffer.h"
 #include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//RenderContext.h"
 #include "Core/GraphicContext//ARenderContext.h"
 
 #include "Core/GraphicContext//GraphicContext.h"
@@ -49,9 +48,6 @@ namespace LTSE::Graphics
         VisualHelperMeshRenderer( GraphicContext &a_GraphicContext, VisualHelperMeshRendererCreateInfo a_CreateInfo );
 
         ~VisualHelperMeshRenderer() = default;
-
-        void Render( math::mat4 a_Model, math::mat4 a_View, math::mat4 a_Projection, math::vec3 a_Color, Ref<Buffer> a_VertexBuffer,
-            Ref<Buffer> a_IndexBuffer, RenderContext &aRenderContext );
 
         void Render( math::mat4 a_Model, math::mat4 a_View, math::mat4 a_Projection, math::vec3 a_Color, Ref<Buffer> a_VertexBuffer,
             Ref<Buffer> a_IndexBuffer, ARenderContext &aRenderContext );

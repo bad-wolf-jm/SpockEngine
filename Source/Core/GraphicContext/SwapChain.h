@@ -15,6 +15,12 @@ namespace LTSE::Graphics
         void EndRender();
         void Present();
 
+        std::vector<VkClearValue> GetClearValues()
+        {
+            return mRenderTargets[mCurrentImage]->GetClearValues();
+        }
+
+        Ref<sVkFramebufferObject>        GetFramebuffer() { return mRenderTargets[mCurrentImage]->GetFramebuffer(); }
         Ref<sVkAbstractRenderPassObject> GetRenderPass() { return mRenderTargets[0]->GetRenderPass(); }
 
       private:

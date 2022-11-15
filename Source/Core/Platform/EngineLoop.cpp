@@ -30,7 +30,7 @@ namespace LTSE::Core
 
     void EngineLoop::PreInit( int argc, char **argv )
     {
-        CHAR profilePath[MAX_PATH];
+        CHAR    profilePath[MAX_PATH];
         HRESULT result = SHGetFolderPathA( NULL, CSIDL_PROFILE, NULL, 0, profilePath );
         if( SUCCEEDED( result ) )
         {
@@ -54,9 +54,8 @@ namespace LTSE::Core
     {
         mGraphicContext = LTSE::Graphics::GraphicContext( m_InitialMainWindowSize.x, m_InitialMainWindowSize.y, 1, m_ApplicationName );
 
-        SwapChainRenderTargetDescription l_SwapChainSettings{ 1 };
-        m_SwapChainRenderer = LTSE::Core::New<SwapChainRenderTarget>( mGraphicContext, l_SwapChainSettings );
-        m_RenderContext     = LTSE::Graphics::RenderContext( mGraphicContext, m_SwapChainRenderer );
+        m_SwapChain              = LTSE::Core::New<SwapChain>( mGraphicContext );
+        m_SwapChainRenderContext = LTSE::Graphics::ARenderContext( mGraphicContext, m_SwapChain );
 
         m_ViewportClient = mGraphicContext.GetViewportClient();
 
@@ -65,7 +64,7 @@ namespace LTSE::Core
         m_MainWindowSize  = m_ViewportClient->GetMainWindowSize();
         m_DpiScaling      = math::vec2( 1.0f, 1.0f );
         m_FramebufferSize = m_ViewportClient->GetFramebufferSize();
-        mImGUIOverlay    = New<LTSE::Core::UIContext>( m_ViewportClient, mGraphicContext, m_RenderContext, mImGuiConfigPath );
+        mImGUIOverlay     = New<LTSE::Core::UIContext>( m_ViewportClient, mGraphicContext, m_SwapChainRenderContext, mImGuiConfigPath );
     }
 
     void EngineLoop::Shutdown() {}
@@ -74,40 +73,35 @@ namespace LTSE::Core
     {
         m_ViewportClient->PollEvents();
 
-        double time = (double)GetTime();
+        double   time = (double)GetTime();
         Timestep timestep{ static_cast<float>( time - m_LastFrameTime ) };
 
         m_LastFrameTime = time;
 
-        if( !m_RenderContext.BeginRender() )
-            return true;
+        if( !m_SwapChainRenderContext.BeginRender() ) return true;
 
         bool requestQuit = false;
         mImGUIOverlay->BeginFrame();
 
         // First run the UI delegate so any state that needs updating for this frame
         // gets updated. If the delegate indicates that we should quit, we return immediately
-        if( UIDelegate )
-            requestQuit = UIDelegate( mImGUIOverlay->GetIO() );
+        if( UIDelegate ) requestQuit = UIDelegate( mImGUIOverlay->GetIO() );
 
-        if( requestQuit )
-            return false;
+        if( requestQuit ) return false;
 
         // Run the update delegate to update the state of the various elements
         // of the simulation.
-        if( UpdateDelegate )
-            UpdateDelegate( timestep );
+        if( UpdateDelegate ) UpdateDelegate( timestep );
 
         // Finally, render the main screen.
-        if( RenderDelegate )
-            RenderDelegate();
+        if( RenderDelegate ) RenderDelegate();
 
         // Render the UI on top of the background
-        mImGUIOverlay->EndFrame( m_RenderContext );
+        mImGUIOverlay->EndFrame( m_SwapChainRenderContext );
 
         // Send the draw commands to the screen.
-        m_RenderContext.EndRender();
-        m_RenderContext.Present();
+        m_SwapChainRenderContext.EndRender();
+        m_SwapChainRenderContext.Present();
 
         mGraphicContext.WaitIdle();
         return true;
@@ -115,8 +109,7 @@ namespace LTSE::Core
 
     void EngineLoop::IOEvent( UserEvent &a_Event )
     {
-        if( IOEventDelegate )
-            IOEventDelegate( a_Event );
+        if( IOEventDelegate ) IOEventDelegate( a_Event );
     }
 
     void EngineLoop::SetInitialWindowPosition( math::ivec2 a_Position ) { m_InitialMainWindowPosition = a_Position; }

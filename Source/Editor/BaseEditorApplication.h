@@ -75,8 +75,6 @@ namespace LTSE::Editor
         Ref<DeferredRenderer> mDeferredRenderer = nullptr;
         Ref<ForwardSceneRenderer> mForwardRenderer = nullptr;
 
-        RenderContext mViewportRenderContext{};
-
         Ref<Graphics::Texture2D>   mOffscreenRenderTargetTexture = nullptr;
         ImageHandle                mOffscreenRenderTargetDisplayHandle{};
 

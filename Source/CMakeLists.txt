@@ -57,8 +57,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/GraphicContext//GraphicContext.cpp
     Core/GraphicContext//DescriptorSet.cpp
     Core/GraphicContext//GraphicsPipeline.cpp
-    Core/GraphicContext//RenderContext.cpp
-    Core/GraphicContext//RenderTarget.cpp
+    # Core/GraphicContext//RenderContext.cpp
+    # Core/GraphicContext//RenderTarget.cpp
     Core/GraphicContext//SwapChain.cpp
     Core/GraphicContext//UI/UIContext.cpp
     

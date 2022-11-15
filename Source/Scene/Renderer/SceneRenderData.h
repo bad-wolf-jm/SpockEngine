@@ -5,7 +5,6 @@
 
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
-#include "Core/GraphicContext//RenderContext.h"
 
 #include "Core/GraphicContext//Texture2D.h"
 #include "Core/GraphicContext//TextureCubemap.h"

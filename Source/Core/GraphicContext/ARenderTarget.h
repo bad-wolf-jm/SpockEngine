@@ -79,14 +79,15 @@ namespace LTSE::Graphics
             math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp,
             Ref<Internal::sVkFramebufferImage> aFramebufferImage );
 
-        void                             Finalize();
+        void Finalize();
+
         Ref<sVkAbstractRenderPassObject> GetRenderPass() { return mRenderPassObject; }
 
         virtual bool BeginRender();
         virtual void EndRender();
         virtual void Present();
 
-        std::vector<VkClearValue>         GetClearValues();
+        virtual std::vector<VkClearValue> GetClearValues();
         virtual Ref<sVkFramebufferObject> GetFramebuffer();
 
         virtual VkSemaphore GetImageAvailableSemaphore( uint32_t i );

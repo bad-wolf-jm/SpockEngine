@@ -17,7 +17,7 @@
 namespace LTSE::Core
 {
 
-    void UIContext::SetupRenderState( RenderContext &aRenderContext, ImDrawData *aDrawData )
+    void UIContext::SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData )
     {
         LTSE_PROFILE_FUNCTION();
 
@@ -46,7 +46,7 @@ namespace LTSE::Core
     }
 
     // Render function
-    void UIContext::RenderDrawData( RenderContext &aRenderContext, ImDrawData *aDrawData )
+    void UIContext::RenderDrawData( ARenderContext &aRenderContext, ImDrawData *aDrawData )
     {
         LTSE_PROFILE_FUNCTION();
 
@@ -126,7 +126,7 @@ namespace LTSE::Core
         }
     }
 
-    UIContext::UIContext( Ref<LTSE::Core::ViewportClient> aWindow, GraphicContext &aGraphicContext, RenderContext &aRenderContext,
+    UIContext::UIContext( Ref<LTSE::Core::ViewportClient> aWindow, GraphicContext &aGraphicContext, ARenderContext &aRenderContext,
         std::string &aImGuiConfigPath )
         : mGraphicContext{ aGraphicContext }
         , mImGuiConfigPath{ aImGuiConfigPath }
@@ -171,7 +171,7 @@ namespace LTSE::Core
         };
         lUIPipelineCreateInfo.Topology      = ePrimitiveTopology::TRIANGLES;
         lUIPipelineCreateInfo.Culling       = eFaceCulling::NONE;
-        lUIPipelineCreateInfo.SampleCount   = aRenderContext.GetRenderTarget()->Spec.SampleCount;
+        lUIPipelineCreateInfo.SampleCount   = aRenderContext.GetRenderTarget()->mSpec.mSampleCount;
         lUIPipelineCreateInfo.LineWidth     = 1.0f;
         lUIPipelineCreateInfo.RenderPass    = aRenderContext.GetRenderPass();
         lUIPipelineCreateInfo.PushConstants = {
@@ -263,7 +263,7 @@ namespace LTSE::Core
         ImGui::PushFont( mMainFont );
     }
 
-    void UIContext::EndFrame( RenderContext &aRenderContext )
+    void UIContext::EndFrame( ARenderContext &aRenderContext )
     {
         ImGui::PopFont();
         ImGui::Render();

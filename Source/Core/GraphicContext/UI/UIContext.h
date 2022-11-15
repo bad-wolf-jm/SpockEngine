@@ -6,7 +6,7 @@
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
-#include "Core/GraphicContext//RenderContext.h"
+#include "Core/GraphicContext//ARenderContext.h"
 
 #include "UI/UI.h"
 
@@ -40,10 +40,10 @@ namespace LTSE::Core
     class UIContext
     {
       public:
-        UIContext( Ref<LTSE::Core::ViewportClient> aWindow, GraphicContext &aDevice, RenderContext &aRenderContext, std::string &aImGuiConfigPath );
+        UIContext( Ref<LTSE::Core::ViewportClient> aWindow, GraphicContext &aDevice, ARenderContext &aRenderContext, std::string &aImGuiConfigPath );
         ~UIContext();
         void BeginFrame();
-        void EndFrame( RenderContext &aRenderContext );
+        void EndFrame( ARenderContext &aRenderContext );
 
         void PushFontFamily( FontFamily aFamily );
         void PopFont();
@@ -81,7 +81,7 @@ namespace LTSE::Core
         Ref<Buffer> mIndexBuffer;
 
       private:
-        void SetupRenderState( RenderContext &aRenderContext, ImDrawData *aDrawData );
-        void RenderDrawData( RenderContext &aRenderContext, ImDrawData *aDrawData );
+        void SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData );
+        void RenderDrawData( ARenderContext &aRenderContext, ImDrawData *aDrawData );
     };
 } // namespace LTSE::Core

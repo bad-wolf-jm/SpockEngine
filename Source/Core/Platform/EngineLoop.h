@@ -13,7 +13,7 @@
 #include "entt/entt.hpp"
 
 #include "Core/GraphicContext//GraphicContext.h"
-#include "Core/GraphicContext//RenderContext.h"
+#include "Core/GraphicContext//SwapChain.h"
 #include "Core/Optix/OptixContext.h"
 #include "ViewportClient.h"
 
@@ -112,9 +112,6 @@ namespace LTSE::Core
 
         LTSE::Graphics::GraphicContext &GetDevice() { return mGraphicContext; }
 
-        Ref<LTSE::Graphics::SwapChainRenderTarget> GetSwapchainRenderer() { return m_SwapChainRenderer; }
-        LTSE::Graphics::RenderContext &GetRenderContext() { return m_RenderContext; }
-
         Ref<LTSE::Core::UIContext> UIContext() { return mImGUIOverlay; };
 
         /** @brief Returns the configuration folder */
@@ -142,13 +139,14 @@ namespace LTSE::Core
         static EngineLoop *s_UniqueInstance;
 
         LTSE::Graphics::GraphicContext mGraphicContext;
-        LTSE::Graphics::RenderContext m_RenderContext;
 
         Ref<LTSE::Core::ViewportClient> m_ViewportClient;
         LTSE::Graphics::GraphicContext m_GraphicContextData{};
 
-        Ref<LTSE::Graphics::SwapChainRenderTarget> m_SwapChainRenderer;
         Ref<LTSE::Core::UIContext> mImGUIOverlay;
+
+        Ref<LTSE::Graphics::SwapChain> m_SwapChain;
+        LTSE::Graphics::ARenderContext m_SwapChainRenderContext;
 
         double m_EngineLoopStartTime;
         double m_LastFrameTime = 0.0f;

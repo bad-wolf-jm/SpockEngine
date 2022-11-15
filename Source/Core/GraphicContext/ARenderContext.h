@@ -22,7 +22,7 @@ namespace LTSE::Graphics
         uint32_t                         GetOutputImageCount();
         Ref<ARenderTarget>               GetRenderTarget() { return mRenderTarget; }
         Ref<sVkCommandBufferObject>      GetCurrentCommandBuffer() { return  mCommandBufferObject[mCurrentCommandBuffer]; }
-        Ref<sVkAbstractRenderPassObject> GetRenderPass() { return mRenderTarget->GetRenderPass(); }
+        virtual Ref<sVkAbstractRenderPassObject> GetRenderPass() { return mRenderTarget->GetRenderPass(); }
 
         bool BeginRender();
         bool EndRender();

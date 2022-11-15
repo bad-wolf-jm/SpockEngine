@@ -13,6 +13,7 @@ namespace LTSE::Graphics
 
     void SwapChain::RecreateSwapChain()
     {
+        mRenderTargets.clear();
         mGraphicContext.mContext->WaitIdle();
 
         auto [lSwapChainImageFormat, lSwapChainImageCount, lSwapchainExtent, lNewSwapchain] =
@@ -56,6 +57,8 @@ namespace LTSE::Graphics
 
             mRenderTargets.push_back( lSwapChainImage );
         }
+
+        mRenderPassObject = mRenderTargets[0]->GetRenderPass();
     }
 
     bool SwapChain::BeginRender()

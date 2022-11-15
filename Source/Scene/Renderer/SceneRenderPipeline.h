@@ -9,7 +9,6 @@
 
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
-#include "Core/GraphicContext//RenderContext.h"
 
 namespace LTSE::Core
 {

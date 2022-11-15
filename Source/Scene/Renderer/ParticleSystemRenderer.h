@@ -10,7 +10,6 @@
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
-#include "Core/GraphicContext//RenderContext.h"
 #include "Core/GraphicContext//ARenderContext.h"
 
 #include "Scene/ParticleData.h"
@@ -78,8 +77,6 @@ namespace LTSE::Graphics
         Ref<DescriptorSetLayout>   PipelineLayout = nullptr;
 
         ParticleSystemRenderer() = default;
-        ParticleSystemRenderer(
-            GraphicContext &a_GraphicContext, RenderContext &a_RenderContext, ParticleRendererCreateInfo a_CreateInfo );
 
         ParticleSystemRenderer(
             GraphicContext &a_GraphicContext, ARenderContext &a_RenderContext, ParticleRendererCreateInfo a_CreateInfo );
@@ -89,7 +86,6 @@ namespace LTSE::Graphics
 
         ~ParticleSystemRenderer() = default;
 
-        void Render( math::mat4 a_Projection, math::mat4 a_View, RenderContext &aRenderContext, ParticleData &a_ParticleData );
         void Render( math::mat4 a_Projection, math::mat4 a_View, ARenderContext &aRenderContext, ParticleData &a_ParticleData );
 
       protected:
