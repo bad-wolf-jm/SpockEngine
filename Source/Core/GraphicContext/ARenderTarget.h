@@ -96,10 +96,14 @@ namespace LTSE::Graphics
 
         virtual uint32_t GetCurrentImage();
 
+        virtual Ref<sVkCommandBufferObject> GetCurrentCommandBuffer() { return mCommandBufferObject[0]; }
+
         Ref<sVkFramebufferImage> &GetAttachment( std::string const &aKey );
 
       protected:
         Ref<sVkAbstractRenderPassObject> CreateDefaultRenderPass();
+
+        void InitializeCommandBuffers();
 
         uint32_t mImageCount = 0;
 

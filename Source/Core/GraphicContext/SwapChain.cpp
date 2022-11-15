@@ -59,6 +59,8 @@ namespace LTSE::Graphics
         }
 
         mRenderPassObject = mRenderTargets[0]->GetRenderPass();
+
+        InitializeCommandBuffers();
     }
 
     bool SwapChain::BeginRender()

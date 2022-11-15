@@ -15,13 +15,14 @@ namespace LTSE::Graphics
         void EndRender();
         void Present();
 
-        std::vector<VkClearValue> GetClearValues()
-        {
-            return mRenderTargets[mCurrentImage]->GetClearValues();
-        }
+        std::vector<VkClearValue>           GetClearValues() { return mRenderTargets[mCurrentImage]->GetClearValues(); }
+        Ref<sVkFramebufferObject>           GetFramebuffer() { return mRenderTargets[mCurrentImage]->GetFramebuffer(); }
+        Ref<sVkAbstractRenderPassObject>    GetRenderPass() { return mRenderTargets[0]->GetRenderPass(); }
+        virtual Ref<sVkCommandBufferObject> GetCurrentCommandBuffer() { return mCommandBufferObject[mCurrentImage]; }
 
-        Ref<sVkFramebufferObject>        GetFramebuffer() { return mRenderTargets[mCurrentImage]->GetFramebuffer(); }
-        Ref<sVkAbstractRenderPassObject> GetRenderPass() { return mRenderTargets[0]->GetRenderPass(); }
+        VkSemaphore GetImageAvailableSemaphore( uint32_t i ) { return mImageAvailableSemaphores[i]; }
+        VkSemaphore GetRenderFinishedSemaphore( uint32_t i ) { return mRenderFinishedSemaphores[i]; }
+        VkFence     GetInFlightFence( uint32_t i ) { return mInFlightFences[i]; }
 
       private:
         void RecreateSwapChain();
