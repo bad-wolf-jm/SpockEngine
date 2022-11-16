@@ -106,7 +106,8 @@ namespace LTSE::Core
                     if( lClipRect.x < 0.0f ) lClipRect.x = 0.0f;
                     if( lClipRect.y < 0.0f ) lClipRect.y = 0.0f;
 
-                    aRenderContext.GetCurrentCommandBuffer()->SetScissor( { (int32_t)( lClipRect.x ), (int32_t)( lClipRect.y ) },
+                    aRenderContext.GetCurrentCommandBuffer()->SetScissor(
+                        { (int32_t)( lClipRect.x ), (int32_t)( lClipRect.y ) },
                         { (uint32_t)( lClipRect.z - lClipRect.x ), (uint32_t)( lClipRect.w - lClipRect.y ) } );
 
                     // Bind a the descriptor set for the current texture.
@@ -114,10 +115,10 @@ namespace LTSE::Core
                     {
                         VkDescriptorSet desc_set[1] = { (VkDescriptorSet)lPcmd->TextureId };
                         vkCmdBindDescriptorSets( aRenderContext.GetCurrentCommandBuffer()->mVkObject, VK_PIPELINE_BIND_POINT_GRAPHICS,
-                            mUIRenderPipeline->GetVkPipelineLayoutObject()->mVkObject, 0, 1, desc_set, 0, NULL );
+                                                 mUIRenderPipeline->GetVkPipelineLayoutObject()->mVkObject, 0, 1, desc_set, 0, NULL );
 
-                        aRenderContext.Draw(
-                            lPcmd->ElemCount, lPcmd->IdxOffset + lGlobalIdxOffset, lPcmd->VtxOffset + lGlobalVtxOffset, 1, 0 );
+                        aRenderContext.Draw( lPcmd->ElemCount, lPcmd->IdxOffset + lGlobalIdxOffset,
+                                             lPcmd->VtxOffset + lGlobalVtxOffset, 1, 0 );
                     }
                 }
             }
@@ -126,8 +127,8 @@ namespace LTSE::Core
         }
     }
 
-    UIContext::UIContext( Ref<LTSE::Core::ViewportClient> aWindow, GraphicContext &aGraphicContext, ARenderContext &aRenderContext,
-        std::string &aImGuiConfigPath )
+    UIContext::UIContext( Ref<LTSE::Core::Window> aWindow, GraphicContext &aGraphicContext, ARenderContext &aRenderContext,
+                          std::string &aImGuiConfigPath, UIConfiguration const& aUIConfiguration )
         : mGraphicContext{ aGraphicContext }
         , mImGuiConfigPath{ aImGuiConfigPath }
     {
@@ -200,7 +201,8 @@ namespace LTSE::Core
         mObliqueFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mItalicFont.string().c_str(), aUIConfiguration.mFontSize );
         io.Fonts->AddFontFromFileTTF( aUIConfiguration.mIconFont.string().c_str(), aUIConfiguration.mFontSize, &lFontConfig, lRanges );
 
-        mBoldObliqueFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mBoldItalicFont.string().c_str(), aUIConfiguration.mFontSize );
+        mBoldObliqueFont =
+            io.Fonts->AddFontFromFileTTF( aUIConfiguration.mBoldItalicFont.string().c_str(), aUIConfiguration.mFontSize );
         io.Fonts->AddFontFromFileTTF( aUIConfiguration.mIconFont.string().c_str(), aUIConfiguration.mFontSize, &lFontConfig, lRanges );
 
         mUIStyle = UIStyle{ true };

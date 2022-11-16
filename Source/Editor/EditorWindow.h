@@ -9,6 +9,7 @@
 
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//Texture2D.h"
+
 #include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/ForwardSceneRenderer.h"
 #include "Scene/Scene.h"
@@ -67,7 +68,7 @@ namespace LTSE::Editor
         std::string ApplicationName = "";
         std::string DocumentName    = "";
 
-        Ref<EngineLoop>           mEngineLoop   = nullptr;
+        Ref<Engine>               mEngineLoop   = nullptr;
         Ref<Scene>                World         = nullptr;
         Ref<Scene>                ActiveWorld   = nullptr;
         Ref<ForwardSceneRenderer> WorldRenderer = nullptr;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Math/Types.h"
-#include "Core/Platform/ViewportClient.h"
+#include "Core/GraphicContext/Window.h"
 #include <memory>
 #include <vulkan/vulkan.h>
 

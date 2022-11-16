@@ -31,7 +31,7 @@ namespace LTSE::Graphics::Internal
         void Begin();
         void Begin( VkCommandBufferUsageFlags aUsage );
 
-        void BeginRenderPass( Ref<sVkRenderPassObject> aRenderPass, Ref<sVkFramebufferObject> aFrameBuffer, math::uvec2 aExtent,
+        void BeginRenderPass( Ref<sVkAbstractRenderPassObject> aRenderPass, Ref<sVkFramebufferObject> aFrameBuffer, math::uvec2 aExtent,
                               std::vector<VkClearValue> aClearValues );
         void EndRenderPass();
 

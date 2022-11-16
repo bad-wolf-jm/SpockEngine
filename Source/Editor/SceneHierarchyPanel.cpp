@@ -24,7 +24,7 @@ namespace LTSE::Editor
         ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 1.0, 1.0, 1.0, 0.02 } );
         ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 1.0, 1.0, 1.0, 0.02 } );
 
-        bool l_IsVisible;
+        bool lIsVisible;
         bool lDoEdit = UI::Button( lLabel, aSize );
 
         ImGui::PopStyleColor();
@@ -71,7 +71,7 @@ namespace LTSE::Editor
             {
                 ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.9f, 0.4f, 0.9f, 1.0f } );
             }
-            bool l_NodeIsOpen = UI::TreeNodeEx( lLabel.c_str(), lFlags );
+            bool lNodeIsOpen = UI::TreeNodeEx( lLabel.c_str(), lFlags );
             if( aNode == SelectedElement )
             {
                 ImGui::PopStyleColor();
@@ -98,7 +98,7 @@ namespace LTSE::Editor
                 aNode.IfExists<sRelationshipComponent>(
                     [&]( auto &a_Component )
                     {
-                        for( auto l_Child : a_Component.mChildren ) DisplayNode( l_Child, aWidth );
+                        for( auto lChild : a_Component.mChildren ) DisplayNode( lChild, aWidth );
                     } );
                 UI::TreePop();
             }
@@ -120,7 +120,7 @@ namespace LTSE::Editor
             ImGuiTreeNodeFlags lFlags = ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_FramePadding |
                                         ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow |
                                         ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_Leaf;
-            bool l_NodeIsOpen = UI::TreeNodeEx( lLabel.c_str(), lFlags );
+            bool lNodeIsOpen = UI::TreeNodeEx( lLabel.c_str(), lFlags );
             if( aNode == SelectedElement )
             {
                 ImGui::PopStyleColor();

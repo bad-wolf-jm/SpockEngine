@@ -51,7 +51,7 @@ namespace LTSE::Core
     class UIContext
     {
       public:
-        UIContext( Ref<LTSE::Core::ViewportClient> aWindow, GraphicContext &aDevice, ARenderContext &aRenderContext, std::string &aImGuiConfigPath );
+        UIContext( Ref<LTSE::Core::Window> aWindow, GraphicContext &aDevice, ARenderContext &aRenderContext, std::string &aImGuiConfigPath, UIConfiguration const& aUIConfiguration );
         ~UIContext();
 
         void BeginFrame();

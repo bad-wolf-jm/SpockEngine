@@ -32,7 +32,7 @@ namespace LTSE::Core
 
     void Engine::Init()
     {
-        mGraphicContext = LTSE::Graphics::GraphicContext( m_InitialMainWindowSize.x, m_InitialMainWindowSize.y, 1, m_ApplicationName );
+        mGraphicContext = LTSE::Graphics::GraphicContext( mInitialMainWindowSize.x, mInitialMainWindowSize.y, 1, mApplicationName );
 
         m_SwapChain              = LTSE::Core::New<SwapChain>( mGraphicContext );
         m_SwapChainRenderContext = LTSE::Graphics::ARenderContext( mGraphicContext, m_SwapChain );
@@ -45,7 +45,7 @@ namespace LTSE::Core
         mDpiScaling      = math::vec2( 1.0f, 1.0f );
         mFramebufferSize = mViewportClient->GetFramebufferSize();
         mImGUIOverlay =
-            New<LTSE::Core::UIContext>( mViewportClient, mGraphicContext, mRenderContext, mImGuiConfigPath, mUIConfiguration );
+            New<LTSE::Core::UIContext>( mViewportClient, mGraphicContext, m_SwapChainRenderContext, mImGuiConfigPath, mUIConfiguration );
 
         mEngineLoopStartTime = GetTime();
         mLastFrameTime       = mEngineLoopStartTime;

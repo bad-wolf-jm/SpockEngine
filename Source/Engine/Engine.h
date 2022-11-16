@@ -15,7 +15,7 @@
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//SwapChain.h"
 #include "Core/Optix/OptixContext.h"
-#include "Window.h"
+#include "Core/GraphicContext/Window.h"
 
 #include "Core/GraphicContext//UI/UIContext.h"
 
@@ -94,8 +94,8 @@ namespace LTSE::Core
 
         LTSE::Graphics::GraphicContext &GetDevice() { return mGraphicContext; }
 
-        Ref<LTSE::Graphics::SwapChainRenderTarget> GetSwapchainRenderer() { return mSwapChainRenderer; }
-        LTSE::Graphics::RenderContext             &GetRenderContext() { return mRenderContext; }
+        // Ref<LTSE::Graphics::SwapChainRenderTarget> GetSwapchainRenderer() { return mSwapChainRenderer; }
+        // LTSE::Graphics::RenderContext             &GetRenderContext() { return mRenderContext; }
 
         Ref<LTSE::Core::UIContext> UIContext() { return mImGUIOverlay; };
 

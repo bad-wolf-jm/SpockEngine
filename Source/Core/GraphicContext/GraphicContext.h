@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Memory.h"
-#include "Core/Platform/ViewportClient.h"
+#include "Core/GraphicContext/Window.h"
 #include "Core/Vulkan/VkCommand.h"
 #include "Core/Vulkan/VkContext.h"
 
