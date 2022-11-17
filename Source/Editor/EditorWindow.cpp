@@ -797,7 +797,7 @@ namespace LTSE::Editor
             float lPanningSpeed  = 0.25f;
 
             bool lViewLanipulate = ViewManipulate( WorldRenderer->View.CameraPosition, WorldRenderer->View.View,
-                l3DViewPosition + math::vec2{ l3DViewSize.x - 125.0f, 35.0f } );
+                                                   l3DViewPosition + math::vec2{ l3DViewSize.x - 125.0f, 35.0f } );
 
             DefRenderer->SetView( WorldRenderer->View.View );
             WorldRenderer->SetView( WorldRenderer->View.View );
@@ -993,7 +993,7 @@ namespace LTSE::Editor
                     if( ImGui::CollapsingHeader( "Camera", l_Flags ) )
                     {
                         static float lExposure = 4.5f;
-                        static float lGamma = 2.2f;
+                        static float lGamma    = 2.2f;
                         ImGui::SliderFloat( "Exposure", &lExposure, 0.1f, 10.0f );
                         ImGui::SliderFloat( "Gamma", &lGamma, 0.1f, 4.0f );
 

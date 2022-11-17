@@ -190,12 +190,12 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
     // reflectance equation
     vec3 Lo = vec3( 0.0f );
 
-    for( int l_DirectionalLightIndex = 0; l_DirectionalLightIndex < ubo.DirectionalLightCount; l_DirectionalLightIndex++ )
+    for( int lDirectionalLightIndex = 0; lDirectionalLightIndex < ubo.DirectionalLightCount; lDirectionalLightIndex++ )
     {
-        vec3 L = normalize( ubo.DirectionalLights[l_DirectionalLightIndex].Direction );
+        vec3 L = normalize( ubo.DirectionalLights[lDirectionalLightIndex].Direction );
         vec3 H = normalize( V + L );
         vec3 radiance =
-            ubo.DirectionalLights[l_DirectionalLightIndex].Color * ubo.DirectionalLights[l_DirectionalLightIndex].Intensity;
+            ubo.DirectionalLights[lDirectionalLightIndex].Color * ubo.DirectionalLights[lDirectionalLightIndex].Intensity;
 
         // Cook-Torrance BRDF
         vec3 specular = CookTorrance( F0, N, L, V, H, roughness );
@@ -219,15 +219,15 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
         // Lo += kD;
     }
 
-    for( int l_PointLightIndex = 0; l_PointLightIndex < ubo.PointLightCount; l_PointLightIndex++ )
+    for( int lPointLightIndex = 0; lPointLightIndex < ubo.PointLightCount; lPointLightIndex++ )
     {
-        vec3 l_LightPosition = ubo.PointLights[l_PointLightIndex].WorldPosition;
+        vec3 lLightPosition = ubo.PointLights[lPointLightIndex].WorldPosition;
 
-        vec3  L           = normalize( l_LightPosition - inWorldPos );
+        vec3  L           = normalize( lLightPosition - inWorldPos );
         vec3  H           = normalize( V + L );
-        float distance    = length( l_LightPosition - inWorldPos );
+        float distance    = length( lLightPosition - inWorldPos );
         float attenuation = 1.0 / ( distance * distance );
-        vec3  radiance    = ubo.PointLights[l_PointLightIndex].Color * ubo.PointLights[l_PointLightIndex].Intensity * attenuation;
+        vec3  radiance    = ubo.PointLights[lPointLightIndex].Color * ubo.PointLights[lPointLightIndex].Intensity * attenuation;
 
         // Cook-Torrance BRDF
         vec3 specular = CookTorrance( F0, N, L, V, H, roughness );
@@ -252,18 +252,18 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
         // Lo += normalize(inWorldPos);
     }
 
-    for( int l_SpotlightIndex = 0; l_SpotlightIndex < ubo.SpotlightCount; l_SpotlightIndex++ )
+    for( int lSpotlightIndex = 0; lSpotlightIndex < ubo.SpotlightCount; lSpotlightIndex++ )
     {
-        vec3  L                    = normalize( ubo.Spotlights[l_SpotlightIndex].WorldPosition - inWorldPos );
-        vec3  l_LightDirection     = normalize( ubo.Spotlights[l_SpotlightIndex].LookAtDirection );
-        float l_AngleToLightOrigin = dot( L, normalize( -l_LightDirection ) );
+        vec3  L                    = normalize( ubo.Spotlights[lSpotlightIndex].WorldPosition - inWorldPos );
+        vec3  lLightDirection     = normalize( ubo.Spotlights[lSpotlightIndex].LookAtDirection );
+        float lAngleToLightOrigin = dot( L, normalize( -lLightDirection ) );
 
-        if( l_AngleToLightOrigin < ubo.Spotlights[l_SpotlightIndex].Cone ) continue;
+        if( lAngleToLightOrigin < ubo.Spotlights[lSpotlightIndex].Cone ) continue;
 
         vec3  H           = normalize( V + L );
-        float distance    = length( ubo.Spotlights[l_SpotlightIndex].WorldPosition - inWorldPos );
+        float distance    = length( ubo.Spotlights[lSpotlightIndex].WorldPosition - inWorldPos );
         float attenuation = 1.0 / ( distance * distance );
-        vec3  radiance    = ubo.Spotlights[l_SpotlightIndex].Color * ubo.Spotlights[l_SpotlightIndex].Intensity * attenuation;
+        vec3  radiance    = ubo.Spotlights[lSpotlightIndex].Color * ubo.Spotlights[lSpotlightIndex].Intensity * attenuation;
 
         // Cook-Torrance BRDF
         vec3 specular = CookTorrance( F0, N, L, V, H, roughness );
@@ -289,6 +289,13 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
     return Lo;
 }
 
+vec4 SRGBtoLINEAR( vec4 srgbIn )
+{
+    vec3 bLess  = step( vec3( 0.04045 ), srgbIn.xyz );
+    vec3 linOut = mix( srgbIn.xyz / vec3( 12.92 ), pow( ( srgbIn.xyz + vec3( 0.055 ) ) / vec3( 1.055 ), vec3( 2.4 ) ), bLess );
+    return vec4( linOut, srgbIn.w );
+}
+
 void main()
 {
     // ivec2 attDim = textureSize( samplerPosition );
@@ -306,7 +313,9 @@ void main()
     // {
     vec3 pos        = texture( samplerPosition, inUV ).rgb;
     vec3 normal     = texture( samplerNormal, inUV ).rgb;
-    vec4 albedo     = texture( samplerAlbedo, inUV );
+    vec4 albedo     = SRGBtoLINEAR( texture( samplerAlbedo, inUV ) );
+        
+
     vec4 metalrough = texture( samplerOcclusionMetalRough, inUV );
 
     fragColor += calculateLighting( pos, normal, albedo, metalrough, emissive );

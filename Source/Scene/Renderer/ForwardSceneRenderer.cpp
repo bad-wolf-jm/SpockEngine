@@ -24,8 +24,8 @@ namespace LTSE::Core
     using namespace LTSE::Core::EntityComponentSystem::Components;
     using namespace LTSE::Core::Primitives;
 
-    ForwardSceneRenderer::ForwardSceneRenderer(
-        GraphicContext aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
+    ForwardSceneRenderer::ForwardSceneRenderer( GraphicContext aGraphicContext, eColorFormat aOutputFormat,
+                                                uint32_t aOutputSampleCount )
         : ASceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {
         mSceneDescriptors = New<DescriptorSet>( mGraphicContext, MeshRenderer::GetCameraSetLayout( mGraphicContext ) );
@@ -145,6 +145,12 @@ namespace LTSE::Core
         //
         ASceneRenderer::Update( aWorld );
 
+        if( aWorld->Environment.Has<sAmbientLightingComponent>() )
+        {
+            auto &l_AmbientLightComponent = aWorld->Environment.Get<sAmbientLightingComponent>();
+            SetAmbientLighting( math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
+        }
+
         View.PointLightCount = mPointLights.size();
         for( uint32_t i = 0; i < View.PointLightCount; i++ ) View.PointLights[i] = mPointLights[i];
 
@@ -208,12 +214,12 @@ namespace LTSE::Core
                     MeshRenderer::MaterialPushConstants l_MaterialPushConstants{};
                     l_MaterialPushConstants.mMaterialID = lMeshInformation.Get<sMaterialComponent>().mMaterialID;
 
-                    mGeometryContext.PushConstants(
-                        { Graphics::Internal::eShaderStageTypeFlags::FRAGMENT }, 0, l_MaterialPushConstants );
+                    mGeometryContext.PushConstants( { Graphics::Internal::eShaderStageTypeFlags::FRAGMENT }, 0,
+                                                    l_MaterialPushConstants );
 
                     auto &l_StaticMeshComponent = lMeshInformation.Get<sStaticMeshComponent>();
                     mGeometryContext.Draw( l_StaticMeshComponent.mIndexCount, l_StaticMeshComponent.mIndexOffset,
-                        l_StaticMeshComponent.mVertexOffset, 1, 0 );
+                                           l_StaticMeshComponent.mVertexOffset, 1, 0 );
                 }
             }
         }
@@ -283,11 +289,11 @@ namespace LTSE::Core
                     auto &lNodeDescriptor = aEntity.Add<NodeDescriptorComponent>();
                     lNodeDescriptor.Descriptors =
                         New<DescriptorSet>( mGraphicContext, MeshRenderer::GetNodeSetLayout( mGraphicContext ) );
-                    lNodeDescriptor.UniformBuffer = New<Buffer>(
-                        mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( NodeMatrixDataComponent ) );
+                    lNodeDescriptor.UniformBuffer = New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true,
+                                                                 true, sizeof( NodeMatrixDataComponent ) );
 
-                    lNodeDescriptor.Descriptors->Write(
-                        lNodeDescriptor.UniformBuffer, false, 0, sizeof( NodeMatrixDataComponent ), 0 );
+                    lNodeDescriptor.Descriptors->Write( lNodeDescriptor.UniformBuffer, false, 0, sizeof( NodeMatrixDataComponent ),
+                                                        0 );
                 }
 
                 NodeMatrixDataComponent lNodeTransform{};

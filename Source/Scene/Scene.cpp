@@ -1354,8 +1354,6 @@ namespace LTSE::Core
 
             for( auto lChild : lElementToProcess.Get<sRelationshipComponent>().mChildren ) lUpdateQueue.push( lChild );
 
-            auto x = lElementToProcess.Get<sNodeTransformComponent>().mMatrix;
-
             if( lElementToProcess.Has<sNodeTransformComponent>() )
                 lElementToProcess.AddOrReplace<sTransformMatrixComponent>(
                     lElementToProcess.Get<sNodeTransformComponent>().mMatrix );
@@ -1374,10 +1372,6 @@ namespace LTSE::Core
                 lElementToProcess.AddOrReplace<sTransformMatrixComponent>(
                     lParent.Get<sTransformMatrixComponent>().Matrix * lElementToProcess.Get<sTransformMatrixComponent>().Matrix );
             }
-
-            auto y = lElementToProcess.Get<sTransformMatrixComponent>().Matrix;
-            auto z = lElementToProcess.Get<sTransformMatrixComponent>().Matrix;
-
         }
 
         ForEach<sSkeletonComponent, sTransformMatrixComponent>(
