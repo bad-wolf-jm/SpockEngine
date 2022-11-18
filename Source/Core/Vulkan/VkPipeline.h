@@ -8,9 +8,9 @@
 #include <memory>
 #include <vulkan/vulkan.h>
 
-namespace LTSE::Graphics::Internal
+namespace SE::Graphics::Internal
 {
-    using namespace LTSE::Core;
+    using namespace SE::Core;
 
     struct sVkShaderModuleObject
     {
@@ -348,4 +348,4 @@ namespace LTSE::Graphics::Internal
         Ref<VkContext> mContext = nullptr;
     };
 
-} // namespace LTSE::Graphics::Internal
+} // namespace SE::Graphics::Internal

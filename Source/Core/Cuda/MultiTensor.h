@@ -15,7 +15,7 @@
 
 #include "MemoryPool.h"
 
-namespace LTSE::Cuda
+namespace SE::Cuda
 {
 
     /// @brief Buffer offset structure
@@ -399,4 +399,4 @@ namespace LTSE::Cuda
         MemoryBuffer mMemoryBuffer{}; //!< Memory buffer assigned to the tensor
     };
 
-} // namespace LTSE::Cuda
+} // namespace SE::Cuda

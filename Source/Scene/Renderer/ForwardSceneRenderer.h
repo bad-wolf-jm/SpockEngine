@@ -21,7 +21,7 @@
 #include "SceneRenderData.h"
 #include "VisualHelperRenderer.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     class ForwardSceneRenderer : public ASceneRenderer
@@ -83,4 +83,4 @@ namespace LTSE::Core
         void UpdateDescriptorSets();
     };
 
-} // namespace LTSE::Core
+} // namespace SE::Core

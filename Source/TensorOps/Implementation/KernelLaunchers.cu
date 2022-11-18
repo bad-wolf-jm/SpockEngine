@@ -21,7 +21,7 @@
 
 #include "DeviceKernels.inl"
 
-namespace LTSE::TensorOps
+namespace SE::TensorOps
 {
 
     struct RandomNumberGenerator
@@ -1808,4 +1808,4 @@ namespace LTSE::TensorOps
         DISPATCH_BY_TYPE( aOutputElementType, HCatImpl, ( aOut, aArray0, aElementCount0, aArray1, aElementCount1, aBlockSizes0, aMaxBlockSize0 ) );
     }
 
-} // namespace LTSE::TensorOps
+} // namespace SE::TensorOps

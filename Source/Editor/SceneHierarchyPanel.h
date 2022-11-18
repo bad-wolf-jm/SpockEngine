@@ -10,9 +10,9 @@
 
 #include "SceneElementEditor.h"
 
-namespace LTSE::Editor
+namespace SE::Editor
 {
-    using namespace LTSE::Core;
+    using namespace SE::Core;
 
     struct LockComponent
     {
@@ -37,4 +37,4 @@ namespace LTSE::Editor
         void DisplayNode( Scene::Element a_Node, float a_Width );
     };
 
-} // namespace LTSE::Editor
+} // namespace SE::Editor

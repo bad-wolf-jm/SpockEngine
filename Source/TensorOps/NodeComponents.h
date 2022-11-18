@@ -18,15 +18,15 @@
 
 #include "ScalarTypes.h"
 
-namespace LTSE::TensorOps
+namespace SE::TensorOps
 {
 
-    using MultiTensor  = LTSE::Cuda::MultiTensor;
-    using MemoryBuffer = LTSE::Cuda::MemoryBuffer;
-    using MemoryPool   = LTSE::Cuda::MemoryPool;
-    using sTensorShape = LTSE::Cuda::sTensorShape;
+    using MultiTensor  = SE::Cuda::MultiTensor;
+    using MemoryBuffer = SE::Cuda::MemoryBuffer;
+    using MemoryPool   = SE::Cuda::MemoryPool;
+    using sTensorShape = SE::Cuda::sTensorShape;
 
-    using OpNode = LTSE::Core::Entity;
+    using OpNode = SE::Core::Entity;
 
     /// @brief sGraphOperationController
     ///
@@ -619,4 +619,4 @@ namespace LTSE::TensorOps
         sHCatNodeComponent()                             = default;
         sHCatNodeComponent( const sHCatNodeComponent & ) = default;
     };
-} // namespace LTSE::TensorOps
+} // namespace SE::TensorOps

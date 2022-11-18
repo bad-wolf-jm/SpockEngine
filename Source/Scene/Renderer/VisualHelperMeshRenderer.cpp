@@ -3,9 +3,9 @@
 #include "Core/Logging.h"
 #include "Core/Resource.h"
 
-using namespace LTSE::Core;
+using namespace SE::Core;
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
     std::vector<Ref<DescriptorSetLayout>> VisualHelperMeshRenderer::GetDescriptorSetLayout() { return {}; }
@@ -43,4 +43,4 @@ namespace LTSE::Graphics
         aRenderContext.Draw( a_IndexBuffer->SizeAs<uint32_t>(), 0, 0, 1, 0 );
     }
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

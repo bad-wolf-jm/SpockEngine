@@ -8,7 +8,7 @@
 
 #include "Scene/Components.h"
 
-namespace LTSE::Core::EntityComponentSystem::Components
+namespace SE::Core::EntityComponentSystem::Components
 {
 
     struct VisualHelperComponent
@@ -198,4 +198,4 @@ namespace LTSE::Core::EntityComponentSystem::Components
         }
     };
 
-} // namespace LTSE::Core::EntityComponentSystem::Components
+} // namespace SE::Core::EntityComponentSystem::Components

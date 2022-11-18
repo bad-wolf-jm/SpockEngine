@@ -13,7 +13,7 @@
 
 namespace fs = std::filesystem;
 
-namespace LTSE::Core
+namespace SE::Core
 {
     // Changing this value here also requires changing it in the vertex shader
     constexpr uint32_t MAX_NUM_JOINTS = 128u;
@@ -154,4 +154,4 @@ namespace LTSE::Core
         std::vector<sImportedNode>      mNodes      = {};
         std::vector<sImportedSkin>      mSkins      = {};
     };
-} // namespace LTSE::Core
+} // namespace SE::Core

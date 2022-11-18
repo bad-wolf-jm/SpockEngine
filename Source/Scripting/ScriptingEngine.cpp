@@ -17,7 +17,7 @@
 #include "TensorOps/ScalarTypes.h"
 
 
-namespace LTSE::Core
+namespace SE::Core
 {
     using namespace math;
     using namespace sol;
@@ -106,4 +106,4 @@ namespace LTSE::Core
     void ScriptingEngine::Execute( std::string aString ) { ScriptState.script( aString ); }
     void ScriptingEngine::Execute( ScriptEnvironment &aEnvironment, std::string aString ) { ScriptState.script( aString, aEnvironment ); }
 
-} // namespace LTSE::Core
+} // namespace SE::Core

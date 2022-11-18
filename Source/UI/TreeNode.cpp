@@ -3,7 +3,7 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui_internal.h"
 
-namespace LTSE::Core::UI
+namespace SE::Core::UI
 {
     bool TreeNodeBehavior( ImGuiID aID, ImGuiTreeNodeFlags aFlags, const char *aLabel, const char *aLabelEnd );
     void TreePushOverrideID( ImGuiID aID );
@@ -300,4 +300,4 @@ namespace LTSE::Core::UI
                                                 // this triggers you called TreePop/ImGui::PopID too much.
         ImGui::PopID();
     }
-} // namespace LTSE::Core::UI
+} // namespace SE::Core::UI

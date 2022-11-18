@@ -11,10 +11,10 @@
 #include "Manager.h"
 #include "Scene/Components.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     using namespace entt::literals;
-    using namespace LTSE::Core::EntityComponentSystem::Components;
+    using namespace SE::Core::EntityComponentSystem::Components;
     namespace
     {
         template <typename _Ty>
@@ -41,7 +41,7 @@ namespace LTSE::Core
             MonoType *lMonoType = mono_reflection_type_from_name( lMonoTypeName.data(), ScriptManager::GetCoreAssemblyImage() );
             if( !lMonoType )
             {
-                LTSE::Logging::Info( "Could not find type '{}'", lMonoTypeName );
+                SE::Logging::Info( "Could not find type '{}'", lMonoTypeName );
                 return nullptr;
             }
 
@@ -123,4 +123,4 @@ namespace LTSE::Core
         lNewType.template func<&Remove<_Ty>>( "Remove"_hs );
     }
 
-}; // namespace LTSE::Core
+}; // namespace SE::Core

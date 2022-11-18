@@ -10,12 +10,12 @@
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     using namespace math;
-    using namespace LTSE::Graphics;
-    using namespace LTSE::Graphics::Internal;
+    using namespace SE::Graphics;
+    using namespace SE::Graphics::Internal;
     namespace fs = std::filesystem;
 
     struct SceneRenderPipelineCreateInfo
@@ -91,4 +91,4 @@ namespace LTSE::Core
         GraphicContext mGraphicContext;
     };
 
-} // namespace LTSE::Core
+} // namespace SE::Core

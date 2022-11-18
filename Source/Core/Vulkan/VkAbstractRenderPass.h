@@ -10,9 +10,9 @@
 
 #include "Core/Memory.h"
 
-namespace LTSE::Graphics::Internal
+namespace SE::Graphics::Internal
 {
-    using namespace LTSE::Core;
+    using namespace SE::Core;
 
     struct sVkAbstractRenderPassObject
     {
@@ -53,4 +53,4 @@ namespace LTSE::Graphics::Internal
         uint32_t                  mColorAttachmentCount = 0;
     };
 
-} // namespace LTSE::Graphics::Internal
+} // namespace SE::Graphics::Internal

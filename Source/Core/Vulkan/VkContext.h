@@ -18,9 +18,9 @@
 #include <vulkan/vulkan_win32.h>
 // clang-format on
 
-using namespace LTSE::Core;
+using namespace SE::Core;
 
-namespace LTSE::Graphics::Internal
+namespace SE::Graphics::Internal
 {
     enum class eBufferBindType : uint32_t
     {
@@ -186,4 +186,4 @@ namespace LTSE::Graphics::Internal
         uint32_t                   mGraphicFamily = std::numeric_limits<uint32_t>::max();
         uint32_t                   mPresentFamily = std::numeric_limits<uint32_t>::max();
     };
-} // namespace LTSE::Graphics::Internal
+} // namespace SE::Graphics::Internal

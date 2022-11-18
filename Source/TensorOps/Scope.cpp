@@ -12,9 +12,9 @@
 
 #include "Implementation/KernelLaunchers.h"
 
-namespace LTSE::TensorOps
+namespace SE::TensorOps
 {
-    using namespace LTSE::Cuda;
+    using namespace SE::Cuda;
 
     Scope::Scope( uint32_t aMemorySize ) { mPool = MemoryPool( aMemorySize ); }
 
@@ -1225,4 +1225,4 @@ namespace LTSE::TensorOps
         return lNewEntity;
     }
 
-} // namespace LTSE::TensorOps
+} // namespace SE::TensorOps

@@ -16,10 +16,10 @@
 #include "OptixProgramGroup.h"
 #include "OptixShaderBindingTable.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
-    using namespace LTSE::Cuda;
-    using namespace LTSE::Core;
+    using namespace SE::Cuda;
+    using namespace SE::Core;
 
     struct OptixTraversableObject
     {
@@ -52,4 +52,4 @@ namespace LTSE::Graphics
         GPUMemory m_ASBuffer;
     };
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

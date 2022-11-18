@@ -16,7 +16,7 @@
 
 namespace fs = std::filesystem;
 
-namespace LTSE::Core::Internal
+namespace SE::Core::Internal
 {
 
     template <typename ParentType>
@@ -70,4 +70,4 @@ namespace LTSE::Core::Internal
         }
     };
 
-} // namespace LTSE::Core::Internal
+} // namespace SE::Core::Internal

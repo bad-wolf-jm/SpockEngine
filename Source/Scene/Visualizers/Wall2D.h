@@ -37,5 +37,5 @@ struct Wall2D
     void UpdatePositions();
 
   private:
-    LTSE::Core::Primitives::WireframeVertexBufferData m_WireframeGrid;
+    SE::Core::Primitives::WireframeVertexBufferData m_WireframeGrid;
 };

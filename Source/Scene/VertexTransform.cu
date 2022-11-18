@@ -2,7 +2,7 @@
 #include "VertexTransform.h"
 
 #include "TensorOps/Implementation/HelperMacros.h"
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
 #define THREADS_PER_BLOCK 512
@@ -18,7 +18,7 @@ namespace LTSE::Graphics
             uint32_t lObjectVertexCount = aObjectVertexCount[blockIdx.x];
             uint32_t lObjectJointOffset = aJointOffsets[blockIdx.x];
 
-            uint32_t lVertexID = blockIdx.y * LTSE::TensorOps::Private::ThreadsPerBlock + threadIdx.x;
+            uint32_t lVertexID = blockIdx.y * SE::TensorOps::Private::ThreadsPerBlock + threadIdx.x;
 
             RETURN_UNLESS( lVertexID < lObjectVertexCount );
 
@@ -48,7 +48,7 @@ namespace LTSE::Graphics
             uint32_t lObjectOffset      = aObjectOffsets[blockIdx.x];
             uint32_t lObjectVertexCount = aObjectVertexCount[blockIdx.x];
 
-            uint32_t lVertexID = blockIdx.y * LTSE::TensorOps::Private::ThreadsPerBlock + threadIdx.x;
+            uint32_t lVertexID = blockIdx.y * SE::TensorOps::Private::ThreadsPerBlock + threadIdx.x;
 
             RETURN_UNLESS( lVertexID < lObjectVertexCount );
 
@@ -68,9 +68,9 @@ namespace LTSE::Graphics
                                 uint32_t aObjectCount, uint32_t *aObjectOffsets, uint32_t *aObjectVertexCount,
                                 uint32_t aMaxVertexCount )
     {
-        int  lBlockCount = ( aMaxVertexCount / LTSE::TensorOps::Private::ThreadsPerBlock ) + 1;
+        int  lBlockCount = ( aMaxVertexCount / SE::TensorOps::Private::ThreadsPerBlock ) + 1;
         dim3 lGridDim( aObjectCount, lBlockCount, 1 );
-        dim3 lBlockDim( LTSE::TensorOps::Private::ThreadsPerBlock );
+        dim3 lBlockDim( SE::TensorOps::Private::ThreadsPerBlock );
 
         Kernels::StaticVertexTransform<<<lGridDim, lBlockDim>>>( aOutTransformedVertices, aVertices, aObjectToWorldTransform,
                                                                  aObjectCount, aObjectOffsets, aObjectVertexCount );
@@ -80,13 +80,13 @@ namespace LTSE::Graphics
                                  math::mat4 *aJointMatrices, uint32_t *aJointOffsets, uint32_t aObjectCount, uint32_t *aObjectOffsets,
                                  uint32_t *aObjectVertexCount, uint32_t aMaxVertexCount )
     {
-        int  lBlockCount = ( aMaxVertexCount / LTSE::TensorOps::Private::ThreadsPerBlock ) + 1;
+        int  lBlockCount = ( aMaxVertexCount / SE::TensorOps::Private::ThreadsPerBlock ) + 1;
         dim3 lGridDim( aObjectCount, lBlockCount, 1 );
-        dim3 lBlockDim( LTSE::TensorOps::Private::ThreadsPerBlock );
+        dim3 lBlockDim( SE::TensorOps::Private::ThreadsPerBlock );
 
         Kernels::SkinnedVertexTransform<<<lGridDim, lBlockDim>>>( aOutTransformedVertices, aVertices, aObjectToWorldTransform,
                                                                   aJointMatrices, aJointOffsets, aObjectCount, aObjectOffsets,
                                                                   aObjectVertexCount );
     }
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

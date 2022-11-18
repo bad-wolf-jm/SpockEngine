@@ -1,6 +1,6 @@
 /// @file   ReturnDataDestructer.cpp
 ///
-/// @brief  Implementation file for converting dSpace ray tracing return data into LTSE nodes
+/// @brief  Implementation file for converting dSpace ray tracing return data into SE nodes
 ///
 /// @author Jean-Martin Albert
 ///
@@ -13,11 +13,11 @@
 
 #include "TensorOps/ScalarTypes.h"
 
-namespace LTSE::SensorModel
+namespace SE::SensorModel
 {
-    using namespace LTSE::Core;
-    using namespace LTSE::Cuda;
-    using namespace LTSE::TensorOps;
+    using namespace SE::Core;
+    using namespace SE::Cuda;
+    using namespace SE::TensorOps;
 
     void sExtractReflectivityController::Run()
     {
@@ -71,4 +71,4 @@ namespace LTSE::SensorModel
         return lNewEntity;
     }
 
-} // namespace LTSE::SensorModel
+} // namespace SE::SensorModel

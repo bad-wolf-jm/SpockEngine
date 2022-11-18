@@ -23,12 +23,12 @@
 #include "SceneElementEditor.h"
 #include "SceneHierarchyPanel.h"
 
-namespace LTSE::Editor
+namespace SE::Editor
 {
 
-    using namespace LTSE::Core;
-    using namespace LTSE::Core::UI;
-    using namespace LTSE::Graphics;
+    using namespace SE::Core;
+    using namespace SE::Core::UI;
+    using namespace SE::Graphics;
 
     struct MenuItem
     {
@@ -91,7 +91,7 @@ namespace LTSE::Editor
 
       public:
         EditorWindow() = default;
-        EditorWindow( LTSE::Graphics::GraphicContext &aGraphicContext, Ref<UIContext> mUIOverlay );
+        EditorWindow( SE::Graphics::GraphicContext &aGraphicContext, Ref<UIContext> mUIOverlay );
         ~EditorWindow() = default;
 
         bool        Display();
@@ -114,7 +114,7 @@ namespace LTSE::Editor
         void ConfigureUI();
 
       private:
-        LTSE::Graphics::GraphicContext mGraphicContext;
+        SE::Graphics::GraphicContext mGraphicContext;
         Ref<UIContext>                 mUIOverlay;
 
         std::vector<MenuItem> m_MainMenuItems;
@@ -124,14 +124,14 @@ namespace LTSE::Editor
         uint32_t m_LastFPS      = 0;
 
         math::ivec2                    m_WorkspaceAreaSize = { 0, 0 };
-        Ref<LTSE::Graphics::Texture2D> m_PlayIcon;
+        Ref<SE::Graphics::Texture2D> m_PlayIcon;
         ImageHandle                    m_PlayIconHandle;
-        Ref<LTSE::Graphics::Texture2D> m_PauseIcon;
+        Ref<SE::Graphics::Texture2D> m_PauseIcon;
         ImageHandle                    m_PauseIconHandle;
-        Ref<LTSE::Graphics::Texture2D> m_CameraIcon;
+        Ref<SE::Graphics::Texture2D> m_CameraIcon;
         ImageHandle                    m_CameraIconHandle;
 
-        Ref<LTSE::Graphics::Texture2D> m_DefaultTextureImage;
+        Ref<SE::Graphics::Texture2D> m_DefaultTextureImage;
         ImageHandle                    m_DefaultTextureImageHandle;
 
         SimulationState mState         = SimulationState::EDIT;
@@ -147,4 +147,4 @@ namespace LTSE::Editor
 
         std::vector<uint8_t> mTestTile;
     };
-} // namespace LTSE::Editor
+} // namespace SE::Editor

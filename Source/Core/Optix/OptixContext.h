@@ -2,7 +2,7 @@
 
 #include "Optix7.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
     struct OptixDeviceContextObject
     {
@@ -16,4 +16,4 @@ namespace LTSE::Graphics
         static void Initialize();
     };
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

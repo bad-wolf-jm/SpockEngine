@@ -7,10 +7,10 @@
 #include "Core/GraphicContext//Texture2D.h"
 
 using namespace math::literals;
-using namespace LTSE::Graphics;
+using namespace SE::Graphics;
 namespace fs = std::filesystem;
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     struct sShaderMaterial
@@ -121,4 +121,4 @@ namespace LTSE::Core
         Ref<DescriptorSetLayout> mTextureDescriptorLayout;
         Ref<DescriptorSet>       mTextureDescriptorSet;
     };
-} // namespace LTSE::Core
+} // namespace SE::Core

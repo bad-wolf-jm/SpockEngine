@@ -9,9 +9,9 @@
 
 #define SE_ADD_INTERNAL_CALL( Name ) mono_add_internal_call( "SpockEngine.CppCall::" #Name, Name )
 
-namespace LTSE::MonoInternalCalls
+namespace SE::MonoInternalCalls
 {
-    using namespace LTSE::Core;
+    using namespace SE::Core;
 
     bool Entity_IsValid( uint32_t aEntityID, EntityRegistry *aRegistry );
 
@@ -26,4 +26,4 @@ namespace LTSE::MonoInternalCalls
     void Entity_Replace( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType,
                          MonoObject *aNewComponent );
 
-} // namespace LTSE::MonoInternalCalls
+} // namespace SE::MonoInternalCalls

@@ -4,7 +4,7 @@
 
 #include "Core/EntityRegistry/Registry.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     [[nodiscard]] entt::id_type GetTypeID( const sol::table &aObject );
 

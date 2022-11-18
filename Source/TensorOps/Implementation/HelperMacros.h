@@ -124,12 +124,12 @@ inline void __CURAND_ASSERT( curandStatus_t err, const char *file, const int lin
     if( CURAND_STATUS_SUCCESS == err )
         return;
 
-    LTSE::Logging::Error( "CURAND_ASSERT() API error = {} from file <{}>, line {}.\n", err, file, line );
+    SE::Logging::Error( "CURAND_ASSERT() API error = {} from file <{}>, line {}.\n", err, file, line );
     exit( EXIT_FAILURE );
 }
 #endif
 
-namespace LTSE::TensorOps::Private
+namespace SE::TensorOps::Private
 {
 
     constexpr uint32_t ThreadsPerBlock = 1024;
@@ -143,4 +143,4 @@ namespace LTSE::TensorOps::Private
         }
         return lValue;
     }
-} // namespace LTSE::TensorOps::Private
+} // namespace SE::TensorOps::Private

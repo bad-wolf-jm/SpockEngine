@@ -5,7 +5,7 @@
 #include "UI.h"
 #include "Widgets.h"
 
-namespace LTSE::Core::UI
+namespace SE::Core::UI
 {
 
     static inline ImVec2 to_ImVec( const math::vec2 &v ) { return ImVec2{ v.x, v.y }; }
@@ -190,4 +190,4 @@ namespace LTSE::Core::UI
         // });
     }
 
-} // namespace LTSE::Core::UI
+} // namespace SE::Core::UI

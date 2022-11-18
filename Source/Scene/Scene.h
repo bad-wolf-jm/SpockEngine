@@ -36,11 +36,11 @@
 
 using namespace math;
 using namespace math::literals;
-using namespace LTSE::Graphics;
+using namespace SE::Graphics;
 namespace fs = std::filesystem;
-using namespace LTSE::Core::EntityComponentSystem::Components;
+using namespace SE::Core::EntityComponentSystem::Components;
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     class Scene
@@ -54,7 +54,7 @@ namespace LTSE::Core
 
         typedef Entity Element;
 
-        Scene( GraphicContext &a_GraphicContext, Ref<LTSE::Core::UIContext> a_UI );
+        Scene( GraphicContext &a_GraphicContext, Ref<SE::Core::UIContext> a_UI );
         Scene( Ref<Scene> aSource );
         Scene( Scene & ) = delete;
         ~Scene();
@@ -105,7 +105,7 @@ namespace LTSE::Core
             return 0;
         }
 
-        Ref<LTSE::Graphics::OptixDeviceContextObject> GetRayTracingContext() { return mRayTracingContext; }
+        Ref<SE::Graphics::OptixDeviceContextObject> GetRayTracingContext() { return mRayTracingContext; }
 
         eSceneState         GetState() { return mState; }
         Ref<MaterialSystem> GetMaterialSystem() { return mMaterialSystem; }
@@ -142,7 +142,7 @@ namespace LTSE::Core
         void UpdateTransformMatrix( Entity const &aEntity, sTransformMatrixComponent const &aComponent );
 
       protected:
-        LTSE::Core::EntityRegistry m_Registry;
+        SE::Core::EntityRegistry m_Registry;
 
         void InitializeRayTracing();
         void RebuildAccelerationStructure();
@@ -162,4 +162,4 @@ namespace LTSE::Core
         friend class Element;
     };
 
-} // namespace LTSE::Core
+} // namespace SE::Core

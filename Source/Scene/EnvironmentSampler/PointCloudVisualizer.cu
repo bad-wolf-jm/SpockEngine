@@ -9,7 +9,7 @@
 
 #define THREADS_PER_BLOCK 512
 
-namespace LTSE::SensorModel::Dev
+namespace SE::SensorModel::Dev
 {
 
     static constexpr float PI      = 3.14159265359;
@@ -160,4 +160,4 @@ namespace LTSE::SensorModel::Dev
         cudaDeviceSynchronize();
     }
 
-} // namespace LTSE::SensorModel::Dev
+} // namespace SE::SensorModel::Dev

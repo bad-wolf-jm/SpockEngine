@@ -10,7 +10,7 @@
 
 #include <variant>
 
-namespace LTSE::TensorOps
+namespace SE::TensorOps
 {
 
     enum class eBroadcastHint : uint8_t
@@ -58,4 +58,4 @@ namespace LTSE::TensorOps
     ///
     eScalarType TypeOf( ScalarValue aValue );
 
-} // namespace LTSE::TensorOps
+} // namespace SE::TensorOps

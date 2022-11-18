@@ -19,7 +19,7 @@
 #include "Core/Math/Types.h"
 
 
-using namespace LTSE::Cuda;
+using namespace SE::Cuda;
 using namespace TestUtils;
 
 struct TestStruct

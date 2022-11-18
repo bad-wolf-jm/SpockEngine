@@ -8,7 +8,7 @@
 #include "Core/Memory.h"
 #include "VkCoreMacros.h"
 
-namespace LTSE::Graphics::Internal
+namespace SE::Graphics::Internal
 {
 
     sVkShaderModuleObject::sVkShaderModuleObject( Ref<VkContext> aContext, std::vector<uint32_t> aByteCode )
@@ -189,7 +189,7 @@ namespace LTSE::Graphics::Internal
     Ref<sVkDescriptorSetObject> sVkDescriptorPoolObject::Allocate(
         Ref<sVkDescriptorSetLayoutObject> aLayout, uint32_t aDescriptorCount )
     {
-        return LTSE::Core::New<sVkDescriptorSetObject>(
+        return SE::Core::New<sVkDescriptorSetObject>(
             mContext, mVkObject, mContext->AllocateDescriptorSet( mVkObject, aLayout->mVkObject, aDescriptorCount ) );
     }
 
@@ -467,4 +467,4 @@ namespace LTSE::Graphics::Internal
 
     sVkPipelineObject::~sVkPipelineObject() { mContext->DestroyPipeline( mVkObject ); }
 
-} // namespace LTSE::Graphics::Internal
+} // namespace SE::Graphics::Internal

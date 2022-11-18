@@ -4,7 +4,7 @@
 #include "Core/Cuda/CudaAssert.h"
 
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
     OptixModuleObject::OptixModuleObject( const std::string a_LaunchParameterVariableName, const char *a_PtxCode, Ref<OptixDeviceContextObject> a_RTContext )
@@ -42,7 +42,7 @@ namespace LTSE::Graphics
         pgDesc.miss.module                 = RTObject;
         pgDesc.miss.entryFunctionName      = a_EntryName.c_str();
 
-        m_MissProgramGroups.push_back( LTSE::Core::New<OptixProgramGroupObject>( pgDesc, pgOptions, m_RTContext ) );
+        m_MissProgramGroups.push_back( SE::Core::New<OptixProgramGroupObject>( pgDesc, pgOptions, m_RTContext ) );
     }
 
     void OptixModuleObject::CreateRayGenGroup( std::string a_EntryName )
@@ -53,7 +53,7 @@ namespace LTSE::Graphics
         pgDesc.raygen.module               = RTObject;
         pgDesc.raygen.entryFunctionName    = a_EntryName.c_str();
 
-        m_RayGenProgramGroups.push_back( LTSE::Core::New<OptixProgramGroupObject>( pgDesc, pgOptions, m_RTContext ) );
+        m_RayGenProgramGroups.push_back( SE::Core::New<OptixProgramGroupObject>( pgDesc, pgOptions, m_RTContext ) );
     }
 
     void OptixModuleObject::CreateHitGroup( std::string a_ClosestHitEntryName, std::string a_AnyHitHitEntryName )
@@ -67,7 +67,7 @@ namespace LTSE::Graphics
         pgDesc.hitgroup.moduleAH            = RTObject;
         pgDesc.hitgroup.entryFunctionNameAH = a_AnyHitHitEntryName.c_str();
 
-        m_HitProgramGroups.push_back( LTSE::Core::New<OptixProgramGroupObject>( pgDesc, pgOptions, m_RTContext ) );
+        m_HitProgramGroups.push_back( SE::Core::New<OptixProgramGroupObject>( pgDesc, pgOptions, m_RTContext ) );
     }
 
     Ref<OptixPipelineObject> OptixModuleObject::CreatePipeline()
@@ -79,7 +79,7 @@ namespace LTSE::Graphics
             l_ProgramGroups.push_back( pg );
         for( auto pg : m_MissProgramGroups )
             l_ProgramGroups.push_back( pg );
-        return LTSE::Core::New<OptixPipelineObject>( m_PipelineLinkOptions, m_PipelineCompileOptions, l_ProgramGroups, m_RTContext );
+        return SE::Core::New<OptixPipelineObject>( m_PipelineLinkOptions, m_PipelineCompileOptions, l_ProgramGroups, m_RTContext );
     }
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

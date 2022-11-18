@@ -6,10 +6,10 @@
 #include "Core/Vulkan/VkContext.h"
 
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
-    using namespace LTSE::Core;
+    using namespace SE::Core;
 
     class GraphicContext
     {
@@ -37,4 +37,4 @@ namespace LTSE::Graphics
       private:
         Ref<Internal::sVkDescriptorPoolObject> mDescriptorPool;
     };
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

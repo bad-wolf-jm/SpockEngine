@@ -3,7 +3,7 @@
 #include <vulkan/vulkan.h>
 
 
-namespace LTSE::Core::UI
+namespace SE::Core::UI
 {
 
     void HelpMarker( const char *desc )
@@ -21,7 +21,7 @@ namespace LTSE::Core::UI
 
     void Separator() { ImGui::Separator(); }
 
-    bool ImageButton( LTSE::Core::UI::ImageHandle a_Texture, math::vec2 a_Size, math::vec4 a_Rect )
+    bool ImageButton( SE::Core::UI::ImageHandle a_Texture, math::vec2 a_Size, math::vec4 a_Rect )
     {
         return ImGui::ImageButton( (ImTextureID)a_Texture.Handle->GetVkDescriptorSet(), ImVec2{ a_Size.x, a_Size.y },
             ImVec2{ a_Rect.x, a_Rect.y }, ImVec2{ a_Rect.z, a_Rect.w }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
@@ -118,19 +118,19 @@ namespace LTSE::Core::UI
         return l_Value;
     }
 
-    void Image( LTSE::Core::UI::ImageHandle a_Texture, math::vec2 a_Size, math::vec4 a_Rect )
+    void Image( SE::Core::UI::ImageHandle a_Texture, math::vec2 a_Size, math::vec4 a_Rect )
     {
         ImGui::Image( (ImTextureID)a_Texture.Handle->GetVkDescriptorSet(), ImVec2{ a_Size.x, a_Size.y }, ImVec2{ a_Rect.x, a_Rect.y },
             ImVec2{ a_Rect.z, a_Rect.w } );
     }
 
-    void Image( LTSE::Core::UI::ImageHandle a_Texture, math::vec2 a_Size )
+    void Image( SE::Core::UI::ImageHandle a_Texture, math::vec2 a_Size )
     {
         ImGui::Image(
             (ImTextureID)a_Texture.Handle->GetVkDescriptorSet(), ImVec2{ a_Size.x, a_Size.y }, ImVec2{ 0, 0 }, ImVec2{ 1, 1 } );
     }
 
-    void Image( LTSE::Core::UI::ImageHandle a_Texture, math::ivec2 a_Size )
+    void Image( SE::Core::UI::ImageHandle a_Texture, math::ivec2 a_Size )
     {
         ImGui::Image( (ImTextureID)a_Texture.Handle->GetVkDescriptorSet(), ImVec2{ (float)a_Size.x, (float)a_Size.y }, ImVec2{ 0, 0 },
             ImVec2{ 1, 1 } );
@@ -553,4 +553,4 @@ namespace LTSE::Core::UI
         return Changed;
     }
 
-} // namespace LTSE::Core::UI
+} // namespace SE::Core::UI

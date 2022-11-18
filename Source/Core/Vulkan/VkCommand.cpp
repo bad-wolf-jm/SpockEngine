@@ -8,7 +8,7 @@
 
 #include "VkCoreMacros.h"
 
-namespace LTSE::Graphics::Internal
+namespace SE::Graphics::Internal
 {
 
     sVkCommandBufferObject::sVkCommandBufferObject( Ref<VkContext> aContext, VkCommandBuffer aCommandBuffer )
@@ -342,4 +342,4 @@ namespace LTSE::Graphics::Internal
         mContext->ResetFence( mSubmitFence );
         vkQueueSubmit( aQueue, 1, &lQueueSubmitInfo, mSubmitFence );
     }
-} // namespace LTSE::Graphics::Internal
+} // namespace SE::Graphics::Internal

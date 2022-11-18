@@ -24,7 +24,7 @@
 #include <fstream>
 #include <gli/generate_mipmaps.hpp>
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     sImageData LoadImageData( fs::path const &aPath )
@@ -346,7 +346,7 @@ namespace LTSE::Core
             mSpec.mDepth     = 1;
             mSpec.mMipLevels = 1;
 
-            // LTSE::Logging::Info("File: {} -- Format: {}", aImagePath.string(), (uint32_t)lImageData.mFormat);
+            // SE::Logging::Info("File: {} -- Format: {}", aImagePath.string(), (uint32_t)lImageData.mFormat);
             Initialize();
 
             std::memcpy( mInternalTexture.data(), lImageData.mPixelData, lImageData.mByteSize );
@@ -453,4 +453,4 @@ namespace LTSE::Core
         return std::array<float, 4>{ lColor.x, lColor.y, lColor.z, lColor.w };
     }
 
-} // namespace LTSE::Core
+} // namespace SE::Core

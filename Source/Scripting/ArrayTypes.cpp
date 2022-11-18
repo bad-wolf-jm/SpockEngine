@@ -1,6 +1,6 @@
 #include "ArrayTypes.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     namespace
     {
@@ -96,4 +96,4 @@ namespace LTSE::Core
         NewArrayType<Cuda::TextureSampler2D::DeviceData>( aModule, "CudaTextureSamplerArray" );
     }
 
-} // namespace LTSE::Core
+} // namespace SE::Core

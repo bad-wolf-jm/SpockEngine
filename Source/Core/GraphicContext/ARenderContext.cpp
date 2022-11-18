@@ -2,7 +2,7 @@
 
 #include "Core/Logging.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
     ARenderContext::ARenderContext( GraphicContext const &aGraphicContext, Ref<ARenderTarget> aRenderTarget )
@@ -103,4 +103,4 @@ namespace LTSE::Graphics
             aSetIndex, aDynamicOffset );
     }
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

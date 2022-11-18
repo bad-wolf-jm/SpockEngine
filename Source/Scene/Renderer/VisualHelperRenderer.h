@@ -19,11 +19,11 @@
 #include "VisualHelperLineRenderer.h"
 #include "VisualHelperMeshRenderer.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
     using namespace math;
-    using namespace LTSE::Core::EntityComponentSystem::Components;
+    using namespace SE::Core::EntityComponentSystem::Components;
 
     class VisualHelperRenderer
     {
@@ -33,7 +33,7 @@ namespace LTSE::Graphics
 
         VisualHelperRenderer() = default;
         VisualHelperRenderer(
-            GraphicContext &a_GraphicContext, Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> aRenderPass );
+            GraphicContext &a_GraphicContext, Ref<SE::Graphics::Internal::sVkAbstractRenderPassObject> aRenderPass );
 
 
         ~VisualHelperRenderer() = default;
@@ -62,4 +62,4 @@ namespace LTSE::Graphics
         Ref<VisualHelperLineRenderer> m_VisualHelperLineRenderer = nullptr;
     };
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

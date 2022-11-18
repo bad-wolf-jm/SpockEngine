@@ -5,7 +5,7 @@
 
 #include "Scripting/PrimitiveTypes.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     using namespace sol;
 
@@ -47,4 +47,4 @@ namespace LTSE::Core
         return lNewType;
     }
 
-} // namespace LTSE::Core
+} // namespace SE::Core

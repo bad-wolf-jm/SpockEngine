@@ -12,12 +12,12 @@
 
 #include "PointerView.h"
 
-/** \namespace LTSE::Cuda
+/** \namespace SE::Cuda
  *
  * @brief
  *
  */
-namespace LTSE::Cuda
+namespace SE::Cuda
 {
 
     class MemoryPool;
@@ -92,4 +92,4 @@ namespace LTSE::Cuda
         size_t mTotalSize = 0; //!< Total size of the memory pool, in bytes.
     };
 
-} // namespace LTSE::Cuda
+} // namespace SE::Cuda

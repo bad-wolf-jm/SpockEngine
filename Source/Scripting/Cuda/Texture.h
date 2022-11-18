@@ -4,7 +4,7 @@
 
 #include "Core/EntityRegistry/Registry.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     void RequireCudaTexture( sol::table &aScriptingState );
 }; // names

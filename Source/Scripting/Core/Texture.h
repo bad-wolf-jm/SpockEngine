@@ -5,11 +5,11 @@
 #include "Core/EntityRegistry/Registry.h"
 #include "Core/Textures/TextureData.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     TextureData::sCreateInfo ParseCreateInfo( sol::table aTable );
     sImageData ParseImageData( sol::table aTable );
     sTextureSamplingInfo ParseSamplerInfo( sol::table aTable );
 
     void OpenCoreLibrary( sol::table &aScriptingState );
-}; // namespace LTSE::Core
+}; // namespace SE::Core

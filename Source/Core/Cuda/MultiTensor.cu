@@ -9,7 +9,7 @@
 #include "MultiTensor.h"
 #include <stdexcept>
 
-namespace LTSE::Cuda
+namespace SE::Cuda
 {
     sTensorShape::sTensorShape( std::vector<std::vector<uint32_t>> const &aShape, size_t aElementSize )
     {
@@ -196,4 +196,4 @@ namespace LTSE::Cuda
         mShape.SyncDeviceData();
     }
 
-} // namespace LTSE::Cuda
+} // namespace SE::Cuda

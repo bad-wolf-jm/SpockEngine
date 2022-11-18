@@ -8,8 +8,8 @@
 
 #include "Texture2D.h"
 
-using namespace LTSE::Core;
-namespace LTSE::Cuda
+using namespace SE::Core;
+namespace SE::Cuda
 {
     /// @brief Convert our internal color format into a CUDA channel description
     static cudaChannelFormatDesc ToCudaChannelDesc( eColorFormat aColorFormat )
@@ -147,4 +147,4 @@ namespace LTSE::Cuda
         CUDA_ASSERT( cudaCreateTextureObject( &( mDeviceData.mTextureObject ), &lResourceDescription, &lTextureDescription, NULL ) );
     }
 
-} // namespace LTSE::Cuda
+} // namespace SE::Cuda

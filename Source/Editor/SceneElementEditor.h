@@ -9,11 +9,11 @@
 
 #include "Engine/Engine.h"
 
-using namespace LTSE::Core;
-using namespace LTSE::Graphics;
-using namespace LTSE::Core::EntityComponentSystem;
+using namespace SE::Core;
+using namespace SE::Graphics;
+using namespace SE::Core::EntityComponentSystem;
 
-namespace LTSE::Editor
+namespace SE::Editor
 {
     class SceneElementEditor
     {
@@ -23,13 +23,13 @@ namespace LTSE::Editor
 
       public:
         SceneElementEditor() = default;
-        SceneElementEditor( LTSE::Graphics::GraphicContext &aGraphicContext );
+        SceneElementEditor( SE::Graphics::GraphicContext &aGraphicContext );
         ~SceneElementEditor() = default;
 
         void Display( int32_t width, int32_t height );
 
       private:
-        LTSE::Graphics::GraphicContext mGraphicContext;
+        SE::Graphics::GraphicContext mGraphicContext;
     };
 
-} // namespace LTSE::Editor
+} // namespace SE::Editor

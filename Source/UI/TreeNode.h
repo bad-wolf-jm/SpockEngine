@@ -2,7 +2,7 @@
 
 #include "imgui.h"
 
-namespace LTSE::Core::UI
+namespace SE::Core::UI
 {
     bool TreeNodeEx( const char *label, ImGuiTreeNodeFlags flags );
     void TreePop();

@@ -1,6 +1,6 @@
 #include "MaterialSystem.h"
 #include "Core/Logging.h"
-namespace LTSE::Core
+namespace SE::Core
 {
     MaterialSystem::MaterialSystem( GraphicContext &aGraphicContext )
         : mGraphicContext{ aGraphicContext }
@@ -195,4 +195,4 @@ namespace LTSE::Core
 
         mDirty = false;
     }
-} // namespace LTSE::Core
+} // namespace SE::Core

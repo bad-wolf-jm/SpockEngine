@@ -6,7 +6,7 @@
 #include "Core/Memory.h"
 #include "VkCoreMacros.h"
 
-namespace LTSE::Graphics::Internal
+namespace SE::Graphics::Internal
 {
 
     sVkAbstractRenderPassObject::sVkAbstractRenderPassObject( Ref<VkContext>                       aContext,
@@ -117,4 +117,4 @@ namespace LTSE::Graphics::Internal
         return lAttachmentSpec;
     }
 
-} // namespace LTSE::Graphics::Internal
+} // namespace SE::Graphics::Internal

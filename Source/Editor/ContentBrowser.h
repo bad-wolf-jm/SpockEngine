@@ -6,11 +6,11 @@
 
 #include <filesystem>
 
-using namespace LTSE::Core;
-using namespace LTSE::Core::UI;
-using namespace LTSE::Graphics;
+using namespace SE::Core;
+using namespace SE::Core::UI;
+using namespace SE::Graphics;
 
-namespace LTSE::Editor
+namespace SE::Editor
 {
     class ContentBrowser
     {
@@ -29,17 +29,17 @@ namespace LTSE::Editor
         std::filesystem::path m_RootDirectory;
         std::filesystem::path m_CurrentDirectory;
 
-        Ref<LTSE::Graphics::Texture2D> m_DirectoryIcon;
+        Ref<SE::Graphics::Texture2D> m_DirectoryIcon;
         ImageHandle m_DirectoryIconHandle;
 
-        Ref<LTSE::Graphics::Texture2D> m_FileIcon;
+        Ref<SE::Graphics::Texture2D> m_FileIcon;
         ImageHandle m_FileIconHandle;
 
-        Ref<LTSE::Graphics::Texture2D> m_BackIcon;
+        Ref<SE::Graphics::Texture2D> m_BackIcon;
         ImageHandle m_BackIconHandle;
 
         float padding       = 5.0f;
         float thumbnailSize = 30.0f;
         float textSize      = 125.0f;
     };
-} // namespace LTSE::Editor
+} // namespace SE::Editor

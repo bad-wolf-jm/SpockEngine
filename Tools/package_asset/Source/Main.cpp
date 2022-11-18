@@ -10,7 +10,7 @@
 #include "Scene/Serialize/AssetFile.h"
 #include "Scene/Serialize/FileIO.h"
 
-using namespace LTSE::Core;
+using namespace SE::Core;
 
 sImageData LoadBinData( fs::path const &aPath )
 {
@@ -47,25 +47,25 @@ std::vector<char> ConvertToKTX( fs::path const &aPath )
     {
         lBinaryData = LoadBinData( aPath );
 
-        LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+        SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mMipLevels = 1;
-        LTSE::Core::TextureData2D lTexture( lTextureCreateInfo, lBinaryData );
+        SE::Core::TextureData2D lTexture( lTextureCreateInfo, lBinaryData );
 
         return lTexture.Serialize();
     }
     else if( aPath.extension().string() == ".ktx" )
     {
-        LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-        LTSE::Core::TextureData2D            lTexture( lTextureCreateInfo, aPath );
+        SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+        SE::Core::TextureData2D            lTexture( lTextureCreateInfo, aPath );
 
         return lTexture.Serialize();
     }
     else
     {
         lBinaryData = LoadImageData( aPath );
-        LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+        SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mMipLevels = 1;
-        LTSE::Core::TextureData2D lTexture( lTextureCreateInfo, lBinaryData );
+        SE::Core::TextureData2D lTexture( lTextureCreateInfo, lBinaryData );
 
         return lTexture.Serialize();
     }
@@ -161,12 +161,12 @@ int main( int argc, char **argv )
     auto lInput  = fs::path( lProgramArguments.get<std::string>( "--input" ) );
     auto lOutput = fs::path( lProgramArguments.get<std::string>( "--output" ) );
 
-    LTSE::Logging::Info( "Input: {}", lInput.string() );
-    LTSE::Logging::Info( "Output: {}", lOutput.string() );
+    SE::Logging::Info( "Input: {}", lInput.string() );
+    SE::Logging::Info( "Output: {}", lOutput.string() );
 
     if( !fs::exists( lInput ) )
     {
-        LTSE::Logging::Info( "Input file '{}' does not exist", lInput.string() );
+        SE::Logging::Info( "Input file '{}' does not exist", lInput.string() );
         std::exit( 1 );
     }
 
@@ -218,7 +218,7 @@ int main( int argc, char **argv )
                 auto lTexturePacket = MakePacket( lSamplingInfo, lKTXData );
                 lPackets.push_back( lTexturePacket );
 
-                LTSE::Logging::Info( "{} - {}", lAbsoluteFilePath.string(), lAssetType );
+                SE::Logging::Info( "{} - {}", lAbsoluteFilePath.string(), lAssetType );
             }
         } );
     uint32_t lAssetCount = static_cast<uint32_t>( lAssetIndex.size() );

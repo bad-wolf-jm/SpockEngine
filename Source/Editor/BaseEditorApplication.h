@@ -21,13 +21,13 @@
 
 #include "EditorWindow.h"
 
-namespace LTSE::Editor
+namespace SE::Editor
 {
     namespace fs = std::filesystem;
 
-    using namespace LTSE::Core;
-    using namespace LTSE::Graphics;
-    using namespace LTSE::TensorOps;
+    using namespace SE::Core;
+    using namespace SE::Graphics;
+    using namespace SE::TensorOps;
 
     class BaseEditorApplication
     {
@@ -75,4 +75,4 @@ namespace LTSE::Editor
         Entity m_SensorEntity{};
     };
 
-} // namespace LTSE::Editor
+} // namespace SE::Editor

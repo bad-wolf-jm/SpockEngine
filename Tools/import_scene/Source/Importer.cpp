@@ -21,7 +21,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
-using namespace LTSE::Core;
+using namespace SE::Core;
 
 static void PrintNodeTree( int level, NodeData &CurrentNode, std::vector<NodeData> o_NodesList )
 {
@@ -311,7 +311,7 @@ void EmitMaterial( fs::path a_MaterialRoot, MaterialData &a_MaterialData )
 
 void ReadAssetFile( const fs::path &a_FilePath, const fs::path &a_YamlFilePath )
 {
-    LTSE::Logging::Info( "Loading asset file: {}", a_FilePath.string() );
+    SE::Logging::Info( "Loading asset file: {}", a_FilePath.string() );
 
     if( !fs::exists( a_FilePath ) )
         return;
@@ -330,25 +330,25 @@ void ReadAssetFile( const fs::path &a_FilePath, const fs::path &a_YamlFilePath )
 
     if( !l_Scene )
     {
-        LTSE::Logging::Error( "Could not load asset file \"{}\": {}", a_FilePath.string(), importer.GetErrorString() );
+        SE::Logging::Error( "Could not load asset file \"{}\": {}", a_FilePath.string(), importer.GetErrorString() );
         return;
     }
 
     if( !l_Scene->mRootNode )
     {
-        LTSE::Logging::Error( "Could not load asset file \"{}\": {}", a_FilePath.string(), importer.GetErrorString() );
+        SE::Logging::Error( "Could not load asset file \"{}\": {}", a_FilePath.string(), importer.GetErrorString() );
         return;
     }
 
-    LTSE::Logging::Info( "Successfully loaded asset file \"{}\"", a_FilePath.string() );
-    LTSE::Logging::Info( "Asset info:" );
-    LTSE::Logging::Info( " - Root: {}", l_AssetRoot.string() );
-    LTSE::Logging::Info( " - {} meshes", l_Scene->mNumMeshes );
-    LTSE::Logging::Info( " - {} embedded textures", l_Scene->mNumTextures );
-    LTSE::Logging::Info( " - {} materials", l_Scene->mNumMaterials );
-    LTSE::Logging::Info( " - {} cameras", l_Scene->mNumCameras );
-    LTSE::Logging::Info( " - {} lights", l_Scene->mNumLights );
-    LTSE::Logging::Info( " - {} animations", l_Scene->mNumAnimations );
+    SE::Logging::Info( "Successfully loaded asset file \"{}\"", a_FilePath.string() );
+    SE::Logging::Info( "Asset info:" );
+    SE::Logging::Info( " - Root: {}", l_AssetRoot.string() );
+    SE::Logging::Info( " - {} meshes", l_Scene->mNumMeshes );
+    SE::Logging::Info( " - {} embedded textures", l_Scene->mNumTextures );
+    SE::Logging::Info( " - {} materials", l_Scene->mNumMaterials );
+    SE::Logging::Info( " - {} cameras", l_Scene->mNumCameras );
+    SE::Logging::Info( " - {} lights", l_Scene->mNumLights );
+    SE::Logging::Info( " - {} animations", l_Scene->mNumAnimations );
 
     fs::create_directories( l_AssetOutputRoot / "meshes" );
     fs::create_directories( l_AssetOutputRoot / "materials" );
@@ -368,7 +368,7 @@ void ReadAssetFile( const fs::path &a_FilePath, const fs::path &a_YamlFilePath )
     std::vector<std::string> l_TexturePaths;
 
     if( l_Scene->mNumTextures > 0 && l_Scene->mTextures != nullptr )
-        LTSE::Logging::Info( "Loading embedded textures" );
+        SE::Logging::Info( "Loading embedded textures" );
 
     std::vector<MaterialData> Materials;
     if( ( l_Scene->mNumMaterials > 0 ) && ( l_Scene->mMaterials != nullptr ) )
@@ -445,7 +445,7 @@ void ReadAssetFile( const fs::path &a_FilePath, const fs::path &a_YamlFilePath )
             std::ofstream l_VertexBufferFile( l_VertexBufferPath, std::ios::out | std::ios::binary );
             size_t size = l_Mesh->Vertices.size();
             l_VertexBufferFile.write( (char *)&size, sizeof( size ) );
-            l_VertexBufferFile.write( (char *)&l_Mesh->Vertices[0], l_Mesh->Vertices.size() * sizeof( LTSE::Core::VertexData ) );
+            l_VertexBufferFile.write( (char *)&l_Mesh->Vertices[0], l_Mesh->Vertices.size() * sizeof( SE::Core::VertexData ) );
             l_VertexBufferFile.flush();
 
             fs::path l_IndexBufferPath = a_YamlFilePath / l_MeshPath / "Indices.dat";

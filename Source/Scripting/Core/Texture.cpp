@@ -9,7 +9,7 @@
 
 #include "Core/Logging.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     using namespace sol;
 
@@ -215,4 +215,4 @@ namespace LTSE::Core
         RequireTexture( aScriptingState );
         OpenVectorLibrary( aScriptingState );
     }
-}; // namespace LTSE::Core
+}; // namespace SE::Core

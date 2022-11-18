@@ -27,17 +27,17 @@
 #include "Serialize/AssetFile.h"
 #include "Serialize/FileIO.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     namespace fs = std::filesystem;
-    using namespace LTSE::Graphics;
-    using namespace LTSE::Cuda;
-    // using namespace LTSE::SensorModel;
-    using namespace LTSE::Core::EntityComponentSystem;
-    using namespace LTSE::Core::EntityComponentSystem::Components;
+    using namespace SE::Graphics;
+    using namespace SE::Cuda;
+    // using namespace SE::SensorModel;
+    using namespace SE::Core::EntityComponentSystem;
+    using namespace SE::Core::EntityComponentSystem::Components;
 
-    Scene::Scene( GraphicContext &a_GraphicContext, Ref<LTSE::Core::UIContext> a_UI )
+    Scene::Scene( GraphicContext &a_GraphicContext, Ref<SE::Core::UIContext> a_UI )
         : mGraphicContext{ a_GraphicContext }
         , m_UI{ a_UI }
     {
@@ -449,7 +449,7 @@ namespace LTSE::Core
                     Entity      lAnimationNode = aEntities[lAnimationUUID];
 
                     lComponent.Animations.push_back( lAnimationNode );
-                    LTSE::Logging::Info( "ANIMATION {}", lAnimationUUID );
+                    SE::Logging::Info( "ANIMATION {}", lAnimationUUID );
                 } );
         }
     }
@@ -667,7 +667,7 @@ namespace LTSE::Core
             auto &lComponent = aEntity.Add<sMaterialComponent>();
 
             lComponent.mMaterialID = aNode["sMaterialComponent"]["mMaterialID"].As<uint32_t>( 0 );
-            LTSE::Logging::Info( "{}", lComponent.mMaterialID );
+            SE::Logging::Info( "{}", lComponent.mMaterialID );
         }
     }
 
@@ -883,25 +883,25 @@ namespace LTSE::Core
                 ReadComponent<sLightComponent>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sActorComponent>( lEntity, lEntityConfiguration, lEntities );
 
-                LTSE::Logging::Info( "Components added to entity {}", aKey );
+                SE::Logging::Info( "Components added to entity {}", aKey );
             } );
 
         auto lRootNodeUUIDStr = lSceneRoot["root"].As<std::string>( "" );
         auto lRootNodeUUID    = UUIDv4::UUID::fromStrFactory( lRootNodeUUIDStr );
         Root                  = lEntities[lRootNodeUUIDStr];
-        LTSE::Logging::Info( "Created root", lRootNodeUUIDStr );
+        SE::Logging::Info( "Created root", lRootNodeUUIDStr );
 
         auto lEnvironmentNodeUUID = lSceneRoot["environment"].As<std::string>( "" );
         Environment               = lEntities[lEnvironmentNodeUUID];
-        LTSE::Logging::Info( "Created environment", lEnvironmentNodeUUID );
+        SE::Logging::Info( "Created environment", lEnvironmentNodeUUID );
 
         auto lCurrentCameraUUID = lSceneRoot["current_camera"].As<std::string>( "" );
         CurrentCamera           = lEntities[lCurrentCameraUUID];
-        LTSE::Logging::Info( "Created camera", lCurrentCameraUUID );
+        SE::Logging::Info( "Created camera", lCurrentCameraUUID );
 
         auto lDefaultCameraUUID = lSceneRoot["default_camera"].As<std::string>( "" );
         DefaultCamera           = lEntities[lDefaultCameraUUID];
-        LTSE::Logging::Info( "Created camera", lDefaultCameraUUID );
+        SE::Logging::Info( "Created camera", lDefaultCameraUUID );
 
         uint32_t lTransformCount = 0;
         ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
@@ -1264,7 +1264,7 @@ namespace LTSE::Core
 
             ForEach<sActorComponent>( [=]( auto l_Entity, auto &l_Component ) { 
                 l_Component.OnUpdate( ts ); 
-                // LTSE::Logging::Info("{} --- {}", (uint32_t)l_Entity, (size_t)l_Entity.GetRegistry());
+                // SE::Logging::Info("{} --- {}", (uint32_t)l_Entity, (size_t)l_Entity.GetRegistry());
             } );
 
             // for (auto& lActor : mActorComponents)
@@ -1481,7 +1481,7 @@ namespace LTSE::Core
     {
         LTSE_PROFILE_FUNCTION();
 
-        m_AccelerationStructure = LTSE::Core::New<OptixTraversableObject>( mRayTracingContext );
+        m_AccelerationStructure = SE::Core::New<OptixTraversableObject>( mRayTracingContext );
 
         ForEach<sRayTracingTargetComponent, sStaticMeshComponent>(
             [&]( auto a_Entity, auto &a_RTComponent, auto &a_MeshComponent )
@@ -1496,8 +1496,8 @@ namespace LTSE::Core
 
     void Scene::InitializeRayTracing()
     {
-        mRayTracingContext      = LTSE::Core::New<OptixDeviceContextObject>();
-        m_AccelerationStructure = LTSE::Core::New<OptixTraversableObject>( mRayTracingContext );
+        mRayTracingContext      = SE::Core::New<OptixDeviceContextObject>();
+        m_AccelerationStructure = SE::Core::New<OptixTraversableObject>( mRayTracingContext );
     }
 
     void Scene::Render() {}
@@ -2004,4 +2004,4 @@ namespace LTSE::Core
 
         // Write material system to           aPath / Materials.dat
     }
-} // namespace LTSE::Core
+} // namespace SE::Core

@@ -4,7 +4,7 @@
 
 #include "Core/EntityRegistry/Registry.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     void OpenEntityRegistry( sol::table &aScriptingState );
-}; // namespace LTSE::Core
+}; // namespace SE::Core

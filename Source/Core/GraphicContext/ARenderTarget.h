@@ -8,10 +8,10 @@
 #include "Core/Textures/ColorFormat.h"
 #include "Core/Vulkan/VkCoreMacros.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
     using namespace Internal;
-    using namespace LTSE::Core;
+    using namespace SE::Core;
 
     struct sRenderTargetDescription
     {
@@ -129,4 +129,4 @@ namespace LTSE::Graphics
 
         std::vector<Ref<sVkCommandBufferObject>> mCommandBufferObject = {};
     };
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

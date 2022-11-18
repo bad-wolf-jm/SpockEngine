@@ -22,12 +22,12 @@
 
 #include "Mono/Manager.h"
 
-namespace LTSE::Editor
+namespace SE::Editor
 {
 
-    using namespace LTSE::Core;
-    using namespace LTSE::Cuda;
-    using namespace LTSE::Core::EntityComponentSystem::Components;
+    using namespace SE::Core;
+    using namespace SE::Cuda;
+    using namespace SE::Core::EntityComponentSystem::Components;
 
     // BaseEditorApplication::BaseEditorApplication(  ) { mEngineLoop = aEngineLoop; }
 
@@ -53,11 +53,11 @@ namespace LTSE::Editor
         mForwardRenderer->ResizeOutput( mViewportWidth, mViewportHeight );
 
         mOffscreenRenderTargetTexture =
-            New<Graphics::Texture2D>(LTSE::Core::Engine::GetInstance()->GetGraphicContext(), TextureDescription{}, mForwardRenderer->GetOutputImage() );
+            New<Graphics::Texture2D>(SE::Core::Engine::GetInstance()->GetGraphicContext(), TextureDescription{}, mForwardRenderer->GetOutputImage() );
 
         if( !mOffscreenRenderTargetDisplayHandle.Handle )
         {
-            mOffscreenRenderTargetDisplayHandle = LTSE::Core::Engine::GetInstance()->UIContext()->CreateTextureHandle( mOffscreenRenderTargetTexture );
+            mOffscreenRenderTargetDisplayHandle = SE::Core::Engine::GetInstance()->UIContext()->CreateTextureHandle( mOffscreenRenderTargetTexture );
             mEditorWindow.UpdateSceneViewport( mOffscreenRenderTargetDisplayHandle );
         }
         else
@@ -66,11 +66,11 @@ namespace LTSE::Editor
         }
 
         mDeferredRenderTargetTexture =
-            New<Graphics::Texture2D>( LTSE::Core::Engine::GetInstance()->GetGraphicContext(), TextureDescription{}, mDeferredRenderer->GetOutputImage() );
+            New<Graphics::Texture2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(), TextureDescription{}, mDeferredRenderer->GetOutputImage() );
 
         if( !mDeferredRenderTargetDisplayHandle.Handle )
         {
-            mDeferredRenderTargetDisplayHandle = LTSE::Core::Engine::GetInstance()->UIContext()->CreateTextureHandle( mDeferredRenderTargetTexture );
+            mDeferredRenderTargetDisplayHandle = SE::Core::Engine::GetInstance()->UIContext()->CreateTextureHandle( mDeferredRenderTargetTexture );
             mEditorWindow.UpdateSceneViewport_deferred( mDeferredRenderTargetDisplayHandle );
         }
         else
@@ -97,7 +97,7 @@ namespace LTSE::Editor
         // mEditorWindow.SensorModel    = m_SensorController;
         mEditorWindow.WorldRenderer = mForwardRenderer;
         mEditorWindow.DefRenderer = mDeferredRenderer;
-        mEditorWindow.GraphicContext = LTSE::Core::Engine::GetInstance()->GetGraphicContext();
+        mEditorWindow.GraphicContext = SE::Core::Engine::GetInstance()->GetGraphicContext();
 
         o_RequestQuit = mEditorWindow.Display();
         // OnUI();
@@ -117,12 +117,12 @@ namespace LTSE::Editor
 
     void BaseEditorApplication::Init()
     {
-        mEditorWindow                 = EditorWindow( LTSE::Core::Engine::GetInstance()->GetGraphicContext(), LTSE::Core::Engine::GetInstance()->UIContext() );
+        mEditorWindow                 = EditorWindow( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
 
-        mWorld            = New<Scene>( LTSE::Core::Engine::GetInstance()->GetGraphicContext(), LTSE::Core::Engine::GetInstance()->UIContext() );
-        mDeferredRenderer = New<DeferredRenderer>( LTSE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
-        mForwardRenderer  = New<ForwardSceneRenderer>( LTSE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 4 );
+        mWorld            = New<Scene>( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
+        mDeferredRenderer = New<DeferredRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
+        mForwardRenderer  = New<ForwardSceneRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 4 );
         RebuildOutputFramebuffer();
 
         mForwardRenderer->Update( mWorld );
@@ -151,4 +151,4 @@ namespace LTSE::Editor
         mForwardRenderer->View.ModelFraming    = math::mat4( 0.5f );
         mForwardRenderer->View.View = math::Inverse( math::Translate( math::mat4( 1.0f ), mForwardRenderer->View.CameraPosition ) );
     }
-} // namespace LTSE::Editor
+} // namespace SE::Editor

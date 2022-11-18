@@ -16,7 +16,7 @@
 
 namespace fs = std::filesystem;
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     /** @brief Minification and magnification filters */
@@ -130,4 +130,4 @@ namespace LTSE::Core
     /// @brief Load an image file using stb_image. The image can be in any format that stb_image can handle
     sImageData LoadImageData( fs::path const &aPath );
 
-} // namespace LTSE::Core
+} // namespace SE::Core

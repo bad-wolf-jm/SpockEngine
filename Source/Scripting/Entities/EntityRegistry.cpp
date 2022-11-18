@@ -2,7 +2,7 @@
 
 #include "Scripting/PrimitiveTypes.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     using namespace sol;
     using namespace entt::literals;
@@ -136,4 +136,4 @@ namespace LTSE::Core
 
     }
 
-} // namespace LTSE::Core
+} // namespace SE::Core

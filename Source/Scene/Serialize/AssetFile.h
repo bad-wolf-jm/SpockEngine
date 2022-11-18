@@ -20,7 +20,7 @@
 
 namespace fs = std::filesystem;
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     enum class eAssetType : uint32_t
@@ -116,4 +116,4 @@ namespace LTSE::Core
         std::vector<sAssetIndex> mAssetIndex{};
     };
 
-} // namespace LTSE::Core
+} // namespace SE::Core

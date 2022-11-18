@@ -18,12 +18,12 @@
 
 #include "Scene/EnvironmentSampler/EnvironmentSampler.h"
 
-using namespace LTSE::Core;
-using namespace LTSE::Graphics;
-using namespace LTSE::Editor;
-using namespace LTSE::Core::UI;
-using namespace LTSE::SensorModel;
-using namespace LTSE::SensorModel::Dev;
+using namespace SE::Core;
+using namespace SE::Graphics;
+using namespace SE::Editor;
+using namespace SE::Core::UI;
+using namespace SE::SensorModel;
+using namespace SE::SensorModel::Dev;
 
 
 struct SensorControllerBehaviour : sBehaviourController

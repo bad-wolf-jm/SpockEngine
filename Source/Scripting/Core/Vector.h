@@ -5,7 +5,7 @@
 #include "Core/EntityRegistry/Registry.h"
 #include "Core/Textures/TextureData.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     void OpenVectorLibrary( sol::table &aScriptingState );
-}; // namespace LTSE::Core
+}; // namespace SE::Core

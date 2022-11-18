@@ -10,10 +10,10 @@
 
 // #include <vulkan/vulkan.h>
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
-    using namespace LTSE::Core;
-    using namespace LTSE::Graphics::Internal;
+    using namespace SE::Core;
+    using namespace SE::Graphics::Internal;
 
     struct Buffer
     {
@@ -107,4 +107,4 @@ namespace LTSE::Graphics
 
         size_t mSize = 0;
     };
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

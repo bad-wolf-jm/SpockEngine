@@ -1,7 +1,7 @@
 #include "Logging.h"
 
 #include <vector>
-namespace LTSE::Logging
+namespace SE::Logging
 {
     static std::ofstream gLogFile;
 
@@ -28,4 +28,4 @@ namespace LTSE::Logging
 
     void SetLogOutputFile( fs::path aFilePath ) {}
 
-} // namespace LTSE::Logging
+} // namespace SE::Logging

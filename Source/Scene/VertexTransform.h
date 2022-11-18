@@ -8,10 +8,10 @@
 
 #include "Scene/VertexData.h"
 
-using namespace LTSE::Cuda;
-using namespace LTSE::Core;
+using namespace SE::Cuda;
+using namespace SE::Core;
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
     void StaticVertexTransform( VertexData *aOutTransformedVertices, VertexData *aVertices,
@@ -22,4 +22,4 @@ namespace LTSE::Graphics
         math::mat4 *aObjectToWorldTransform, math::mat4 *aJointMatrices, uint32_t *aJointOffsets, uint32_t aObjectCount,
         uint32_t *aObjectOffsets, uint32_t *aObjectVertexCount, uint32_t aMaxVertexCount );
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

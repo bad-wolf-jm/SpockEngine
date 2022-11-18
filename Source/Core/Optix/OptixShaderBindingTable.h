@@ -4,9 +4,9 @@
 #include "Optix7.h"
 #include "OptixProgramGroup.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
-    using namespace LTSE::Core;
+    using namespace SE::Core;
 
     struct OptixShaderBindingTableObject
     {
@@ -16,14 +16,14 @@ namespace LTSE::Graphics
 
         ~OptixShaderBindingTableObject() = default;
 
-        template <typename _RecordType> _RecordType NewRecordType( Ref<LTSE::Graphics::OptixProgramGroupObject> a_ProgramGroup )
+        template <typename _RecordType> _RecordType NewRecordType( Ref<SE::Graphics::OptixProgramGroupObject> a_ProgramGroup )
         {
             _RecordType l_NewRecord;
             OPTIX_CHECK( optixSbtRecordPackHeader( a_ProgramGroup->RTObject, &l_NewRecord ) );
             return l_NewRecord;
         }
 
-        template <typename _RecordType> std::vector<_RecordType> NewRecordType( std::vector<Ref<LTSE::Graphics::OptixProgramGroupObject>> a_ProgramGroup )
+        template <typename _RecordType> std::vector<_RecordType> NewRecordType( std::vector<Ref<SE::Graphics::OptixProgramGroupObject>> a_ProgramGroup )
         {
             std::vector<_RecordType> l_NewRecordTypes;
             for( int i = 0; i < a_ProgramGroup.size(); i++ )
@@ -51,4 +51,4 @@ namespace LTSE::Graphics
         }
     };
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

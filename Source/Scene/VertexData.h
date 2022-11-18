@@ -6,18 +6,18 @@
 #    include "Core/GraphicContext/GraphicsPipeline.h"
 #endif
 
-namespace LTSE::Core
+namespace SE::Core
 {
     using namespace math;
 
 #ifndef __CUDACC__
-    using namespace LTSE::Graphics;
+    using namespace SE::Graphics;
 #endif
 
     struct EmptyVertexData
     {
 #ifndef __CUDACC__
-        static LTSE::Graphics::sBufferLayout GetDefaultLayout() { return {}; }
+        static SE::Graphics::sBufferLayout GetDefaultLayout() { return {}; }
 #endif
     };
 
@@ -32,7 +32,7 @@ namespace LTSE::Core
 
 #ifndef __CUDACC__
         // clang-format off
-        static LTSE::Graphics::sBufferLayout GetDefaultLayout()
+        static SE::Graphics::sBufferLayout GetDefaultLayout()
         {
             return {
                 { "Position",   eBufferDataType::VEC3, 0, 0 },
@@ -53,7 +53,7 @@ namespace LTSE::Core
 
 #ifndef __CUDACC__
         // clang-format off
-        static LTSE::Graphics::sBufferLayout GetDefaultLayout()
+        static SE::Graphics::sBufferLayout GetDefaultLayout()
         {
             return {
                 { "Position", eBufferDataType::VEC3, 0, 0 },
@@ -70,7 +70,7 @@ namespace LTSE::Core
 
 #ifndef __CUDACC__
         // clang-format off
-        static LTSE::Graphics::sBufferLayout GetDefaultLayout()
+        static SE::Graphics::sBufferLayout GetDefaultLayout()
         {
             return {
                 { "Position", eBufferDataType::VEC3, 0, 0 }
@@ -87,7 +87,7 @@ namespace LTSE::Core
 
 #ifndef __CUDACC__
         // clang-format off
-        static LTSE::Graphics::sBufferLayout GetDefaultLayout()
+        static SE::Graphics::sBufferLayout GetDefaultLayout()
         {
             return {
                 { "Position", eBufferDataType::VEC3, 0, 0 },
@@ -98,4 +98,4 @@ namespace LTSE::Core
 #endif
     };
 
-} // namespace LTSE::Core
+} // namespace SE::Core

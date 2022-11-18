@@ -5,7 +5,7 @@
 #include "ARenderTarget.h"
 #include "GraphicsPipeline.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
     using namespace Internal;
 
@@ -64,4 +64,4 @@ namespace LTSE::Graphics
         Ref<Buffer> mCurrentIndexBuffer  = nullptr;
     };
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

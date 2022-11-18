@@ -14,7 +14,7 @@
 
 // #include "Socket.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     GLFWwindow *Engine::GetMainApplicationWindow() { return mViewportClient->GetGLFWWindow(); }
@@ -32,10 +32,10 @@ namespace LTSE::Core
 
     void Engine::Init()
     {
-        mGraphicContext = LTSE::Graphics::GraphicContext( mInitialMainWindowSize.x, mInitialMainWindowSize.y, 1, mApplicationName );
+        mGraphicContext = SE::Graphics::GraphicContext( mInitialMainWindowSize.x, mInitialMainWindowSize.y, 1, mApplicationName );
 
-        m_SwapChain              = LTSE::Core::New<SwapChain>( mGraphicContext );
-        m_SwapChainRenderContext = LTSE::Graphics::ARenderContext( mGraphicContext, m_SwapChain );
+        m_SwapChain              = SE::Core::New<SwapChain>( mGraphicContext );
+        m_SwapChainRenderContext = SE::Graphics::ARenderContext( mGraphicContext, m_SwapChain );
 
         mViewportClient = mGraphicContext.GetViewportClient();
 
@@ -45,7 +45,7 @@ namespace LTSE::Core
         mDpiScaling      = math::vec2( 1.0f, 1.0f );
         mFramebufferSize = mViewportClient->GetFramebufferSize();
         mImGUIOverlay =
-            New<LTSE::Core::UIContext>( mViewportClient, mGraphicContext, m_SwapChainRenderContext, mImGuiConfigPath, mUIConfiguration );
+            New<SE::Core::UIContext>( mViewportClient, mGraphicContext, m_SwapChainRenderContext, mImGuiConfigPath, mUIConfiguration );
 
         mEngineLoopStartTime = GetTime();
         mLastFrameTime       = mEngineLoopStartTime;
@@ -137,4 +137,4 @@ namespace LTSE::Core
         //
     }
 
-} // namespace LTSE::Core
+} // namespace SE::Core

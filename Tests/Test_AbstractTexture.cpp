@@ -11,7 +11,7 @@
 
 namespace fs = std::filesystem;
 
-using namespace LTSE::Core;
+using namespace SE::Core;
 
 class TestTextureData : public TextureData
 {

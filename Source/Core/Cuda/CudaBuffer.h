@@ -14,7 +14,7 @@
 #include "CudaAssert.h"
 #include "PointerView.h"
 
-namespace LTSE::Cuda
+namespace SE::Cuda
 {
 
 #pragma once
@@ -75,4 +75,4 @@ namespace LTSE::Cuda
         CUdeviceptr *RawDevicePtrP() { return &( mDevicePointer ); }
     };
 
-} // namespace LTSE::Cuda
+} // namespace SE::Cuda

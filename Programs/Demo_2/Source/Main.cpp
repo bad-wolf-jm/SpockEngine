@@ -15,10 +15,10 @@
 #include "Editor/BaseEditorApplication.h"
 #include "Editor/EditorWindow.h"
 
-using namespace LTSE::Core;
-using namespace LTSE::Graphics;
-using namespace LTSE::Editor;
-using namespace LTSE::Core::UI;
+using namespace SE::Core;
+using namespace SE::Graphics;
+using namespace SE::Editor;
+using namespace SE::Core::UI;
 using namespace math::literals;
 
 static EngineLoop g_EngineLoop;

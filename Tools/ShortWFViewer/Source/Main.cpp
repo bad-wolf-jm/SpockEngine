@@ -29,9 +29,9 @@
 
 #include <chrono>
 
-using namespace LTSE::Core;
-using namespace LTSE::TensorOps;
-using namespace LTSE::SensorModel;
+using namespace SE::Core;
+using namespace SE::TensorOps;
+using namespace SE::SensorModel;
 namespace fs = std::filesystem;
 
 EngineLoop g_EngineLoop;

@@ -7,7 +7,7 @@
 #endif
 
 #ifndef __CUDACC__
-using namespace LTSE::Graphics;
+using namespace SE::Graphics;
 #endif
 
 struct Particle
@@ -16,7 +16,7 @@ struct Particle
     math::vec4 Color;
 
 #ifndef __CUDACC__
-    static LTSE::Graphics::sBufferLayout GetDefaultLayout()
+    static SE::Graphics::sBufferLayout GetDefaultLayout()
     {
         return { { "Position", eBufferDataType::VEC4, 0, 1 }, { "Color", eBufferDataType::VEC4, 0, 2 } };
     }

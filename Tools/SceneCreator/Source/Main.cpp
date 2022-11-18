@@ -23,15 +23,15 @@
 
 #include "FileTree.h"
 
-using namespace LTSE::Core;
-using namespace LTSE;
-using namespace LTSE::Core::Primitives;
+using namespace SE::Core;
+using namespace SE;
+using namespace SE::Core::Primitives;
 using namespace math::literals;
 
-LTSE::Core::EngineLoop *g_EngineLoop;
+SE::Core::EngineLoop *g_EngineLoop;
 
-std::shared_ptr<LTSE::Core::Scene> g_World;
-std::shared_ptr<LTSE::Core::SceneRenderer> g_WorldRenderer;
+std::shared_ptr<SE::Core::Scene> g_World;
+std::shared_ptr<SE::Core::SceneRenderer> g_WorldRenderer;
 
 uint32_t frameCounter = 0;
 float fpsTimer        = 0.0f;
@@ -41,8 +41,8 @@ bool g_Animate = false;
 Scene::Element g_Animation;
 Scene::Element g_MainAsset;
 
-std::shared_ptr<LTSE::Core::Scene> g_OffScreenWorld;
-std::shared_ptr<LTSE::Core::SceneRenderer> g_OffScreenWorldRenderer;
+std::shared_ptr<SE::Core::Scene> g_OffScreenWorld;
+std::shared_ptr<SE::Core::SceneRenderer> g_OffScreenWorldRenderer;
 std::shared_ptr<OffscreenRenderTarget> g_OffscreenRenderTarget;
 
 std::shared_ptr<Texture2D> g_TextDisplayTexture;
@@ -910,7 +910,7 @@ void RebuildOutputFramebuffer()
         l_RenderTargetCI.SampleCount = 4;
         l_RenderTargetCI.Sampled     = true;
         m_OffscreenRenderTarget      = New<OffscreenRenderTarget>( g_EngineLoop->GetGraphicContext(), l_RenderTargetCI );
-        m_ViewportRenderContext      = LTSE::Graphics::RenderContext( g_EngineLoop->GetGraphicContext(), m_OffscreenRenderTarget );
+        m_ViewportRenderContext      = SE::Graphics::RenderContext( g_EngineLoop->GetGraphicContext(), m_OffscreenRenderTarget );
     }
     else
     {
@@ -939,7 +939,7 @@ void RebuildOutputFramebuffer()
 
 int main( int argc, char **argv )
 {
-    g_EngineLoop = new LTSE::Core::EngineLoop();
+    g_EngineLoop = new SE::Core::EngineLoop();
     g_EngineLoop->PreInit( 0, nullptr );
     g_EngineLoop->Init();
 
@@ -990,7 +990,7 @@ int main( int argc, char **argv )
 
     if( lAnimations.size() > 0 )
     {
-        LTSE::Logging::Info( "ANIMATION" );
+        SE::Logging::Info( "ANIMATION" );
         g_Animate   = true;
         g_Animation = lAnimations[0];
     }

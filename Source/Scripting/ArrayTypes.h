@@ -8,7 +8,7 @@
 #include "Core/Math/Types.h"
 #include "Core/Cuda/Texture2D.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     template <typename _Ty> struct NumericArray
     {
@@ -57,4 +57,4 @@ namespace LTSE::Core
 
     void DefineArrayTypes( sol::table &aModule );
 
-} // namespace LTSE::Core
+} // namespace SE::Core

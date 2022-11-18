@@ -8,9 +8,9 @@
 #include "Core/Memory.h"
 
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
-    using namespace LTSE::Core;
+    using namespace SE::Core;
 
     struct OptixProgramGroupObject
     {
@@ -26,4 +26,4 @@ namespace LTSE::Graphics
         Ref<OptixDeviceContextObject> m_RTContext = nullptr;
     };
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

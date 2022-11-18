@@ -1,7 +1,7 @@
 #include "OptixContext.h"
 #include "Core/Cuda/CudaAssert.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
     OptixDeviceContextObject::OptixDeviceContextObject()
@@ -26,4 +26,4 @@ namespace LTSE::Graphics
         OPTIX_CHECK( optixInit() );
     }
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

@@ -14,10 +14,10 @@
 
 #include "SceneRenderPipeline.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
-    using namespace LTSE::Graphics;
+    using namespace SE::Graphics;
 
     struct CameraViewUniforms
     {
@@ -27,10 +27,10 @@ namespace LTSE::Core
 
     struct CoordinateGridRendererCreateInfo
     {
-        Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
+        Ref<SE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
-    class CoordinateGridRenderer : public LTSE::Core::SceneRenderPipeline<EmptyVertexData>
+    class CoordinateGridRenderer : public SE::Core::SceneRenderPipeline<EmptyVertexData>
     {
       public:
         CoordinateGridRenderer(
@@ -50,4 +50,4 @@ namespace LTSE::Core
         Ref<DescriptorSet> mCameraDescriptors = nullptr;
     };
 
-} // namespace LTSE::Core
+} // namespace SE::Core

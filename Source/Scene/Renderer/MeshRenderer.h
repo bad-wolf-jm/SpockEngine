@@ -14,11 +14,11 @@
 #include "Core/Vulkan/VkRenderPass.h"
 #include "SceneRenderPipeline.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     using namespace math;
-    using namespace LTSE::Graphics;
+    using namespace SE::Graphics;
     namespace fs = std::filesystem;
 
     struct MeshRendererCreateInfo
@@ -29,7 +29,7 @@ namespace LTSE::Core
         fs::path VertexShader   = "";
         fs::path FragmentShader = "";
 
-        Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
+        Ref<SE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
 
         bool operator==( const MeshRendererCreateInfo &p ) const
         {
@@ -80,4 +80,4 @@ namespace LTSE::Core
         ~MeshRenderer() = default;
     };
 
-} // namespace LTSE::Core
+} // namespace SE::Core

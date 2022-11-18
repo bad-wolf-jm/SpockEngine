@@ -14,12 +14,12 @@
 
 #include "CudaAssert.h"
 
-/** \namespace LTSE::Cuda::Internal
+/** \namespace SE::Cuda::Internal
  *
  * @brief Internal definition
  *
  */
-namespace LTSE::Cuda::Internal
+namespace SE::Cuda::Internal
 {
 
     /// @struct sGPUDevicePointerView
@@ -324,4 +324,4 @@ namespace LTSE::Cuda::Internal
         }
     };
 
-} // namespace LTSE::Cuda::Internal
+} // namespace SE::Cuda::Internal

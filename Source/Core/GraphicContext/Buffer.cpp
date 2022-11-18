@@ -15,7 +15,7 @@
 #include <vulkan/vulkan_win32.h>
 // clang-format on
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
     Buffer::Buffer( GraphicContext &aGraphicContext, eBufferBindType aType, bool aIsHostVisible, bool aIsCudaShareable,
         bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
@@ -99,4 +99,4 @@ namespace LTSE::Graphics
         mGraphicContext.mContext->BindMemory( mVkObject, mVkMemory );
     }
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

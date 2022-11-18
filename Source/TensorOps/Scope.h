@@ -24,9 +24,9 @@
 #include "NodeControllers.h"
 #include "ScalarTypes.h"
 
-namespace LTSE::TensorOps
+namespace SE::TensorOps
 {
-    using OpNode       = LTSE::Core::Entity;
+    using OpNode       = SE::Core::Entity;
     using ScalarVector = sVectorComponent<ScalarValue>;
     using U32Vector    = sVectorComponent<uint32_t>;
 
@@ -82,10 +82,10 @@ namespace LTSE::TensorOps
         void Run( std::vector<OpNode> const &aNode );
 
         /// @brief Access the underlying nodes registry
-        LTSE::Core::EntityRegistry &GetNodesRegistry() { return mNodesRegistry; };
+        SE::Core::EntityRegistry &GetNodesRegistry() { return mNodesRegistry; };
 
       private:
-        LTSE::Core::EntityRegistry mNodesRegistry{};                        //!< Underlying node database
+        SE::Core::EntityRegistry mNodesRegistry{};                        //!< Underlying node database
         std::optional<std::string> mName                    = std::nullopt; //!< If this is set, the next node will be stored under the given value
         std::unordered_map<std::string, OpNode> mNamedNodes = {};           //!< Mapping of node names to OpNodes
     };
@@ -833,4 +833,4 @@ namespace LTSE::TensorOps
     ///
     OpNode HCat( Scope &aScope, OpNode const &aArray0, OpNode const &aArray1 );
 
-} // namespace LTSE::TensorOps
+} // namespace SE::TensorOps

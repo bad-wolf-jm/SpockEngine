@@ -1,7 +1,7 @@
 #include "DeferredSceneRenderer.h"
 #include "Core/Profiling/BlockTimer.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     using namespace Graphics;
 
@@ -340,4 +340,4 @@ namespace LTSE::Core
             } );
     }
 
-} // namespace LTSE::Core
+} // namespace SE::Core

@@ -10,7 +10,7 @@
 
 #include <cstdint>
 
-namespace LTSE::TensorOps
+namespace SE::TensorOps
 {
 
     size_t SizeOf( eScalarType aType )
@@ -44,4 +44,4 @@ namespace LTSE::TensorOps
 
     eScalarType TypeOf( ScalarValue aType ) { return static_cast<eScalarType>( aType.index() ); }
 
-} // namespace LTSE::TensorOps
+} // namespace SE::TensorOps

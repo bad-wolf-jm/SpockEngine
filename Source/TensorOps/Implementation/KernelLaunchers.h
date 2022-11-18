@@ -18,10 +18,10 @@
 
 #include "../ScalarTypes.h"
 
-namespace LTSE::TensorOps
+namespace SE::TensorOps
 {
 
-    using namespace LTSE::Cuda;
+    using namespace SE::Cuda;
 
     struct TextureData
     {
@@ -851,4 +851,4 @@ namespace LTSE::TensorOps
     void HCatOp( eScalarType aOutputElementType, MultiTensor &aOut, MultiTensor &aArray0, MemoryBuffer &aElementCount0, MultiTensor &aArray1, MemoryBuffer &aElementCount1,
                  MemoryBuffer &aBlockSizes, uint32_t aMaxBlockSize );
 
-} // namespace LTSE::TensorOps
+} // namespace SE::TensorOps

@@ -11,11 +11,11 @@
 #include "Scripting/ArrayTypes.h"
 #include "Scripting/PrimitiveTypes.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     using namespace sol;
     using namespace entt::literals;
-    using namespace LTSE::TensorOps;
+    using namespace SE::TensorOps;
 
     namespace
     {
@@ -553,4 +553,4 @@ namespace LTSE::Core
 
         lOpsModule["Conv1D"] = TensorOps::Conv1D;
     }
-}; // namespace LTSE::Core
+}; // namespace SE::Core

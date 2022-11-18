@@ -6,7 +6,7 @@
 
 bool LoadMeshes( const aiScene *a_SceneData, std::vector<std::shared_ptr<MeshData>> &a_Meshes, std::vector<MaterialData> &a_Materials )
 {
-    LTSE::Logging::Info( "Loading meshes..." );
+    SE::Logging::Info( "Loading meshes..." );
     a_Meshes.resize( a_SceneData->mNumMeshes );
     for( auto l_MeshIdx = 0; l_MeshIdx < a_SceneData->mNumMeshes; l_MeshIdx++ )
     {
@@ -18,7 +18,7 @@ bool LoadMeshes( const aiScene *a_SceneData, std::vector<std::shared_ptr<MeshDat
             l_MeshData->Name = fmt::format( "Unnamed mesh {}", l_MeshIdx );
 
         l_MeshData->ID        = l_MeshIdx;
-        l_MeshData->Primitive = LTSE::Graphics::PrimitiveTopology::TRIANGLES;
+        l_MeshData->Primitive = SE::Graphics::PrimitiveTopology::TRIANGLES;
         l_MeshData->Material  = a_Materials[l_Mesh->mMaterialIndex];
 
         l_MeshData->Vertices.resize( l_Mesh->mNumVertices );
@@ -27,7 +27,7 @@ bool LoadMeshes( const aiScene *a_SceneData, std::vector<std::shared_ptr<MeshDat
         bool l_HasTangents           = ( l_Mesh->mTangents != nullptr );
         bool l_HasVertexColors       = ( l_Mesh->mColors[0] != nullptr );
         bool l_HasTextureCoordinates = ( l_Mesh->mTextureCoords[0] != nullptr );
-        LTSE::Logging::Info( "  Mesh #{} with {} vertices (normals={}, tangents={}, colors={}, texcoords={})", l_MeshIdx + 1, l_Mesh->mNumVertices, l_HasNormals, l_HasTangents,
+        SE::Logging::Info( "  Mesh #{} with {} vertices (normals={}, tangents={}, colors={}, texcoords={})", l_MeshIdx + 1, l_Mesh->mNumVertices, l_HasNormals, l_HasTangents,
                              l_HasVertexColors, l_HasTextureCoordinates );
 
         // Process the vertex data: the data from Assimp's scene structure is converted into our internal
@@ -71,7 +71,7 @@ bool LoadMeshes( const aiScene *a_SceneData, std::vector<std::shared_ptr<MeshDat
         for( auto l_BoneIdx = 0; l_BoneIdx < l_Mesh->mNumBones; l_BoneIdx++ )
         {
             auto l_Bone = l_Mesh->mBones[l_BoneIdx];
-            LTSE::Logging::Info( "      Bone #{} - {}", l_BoneIdx, l_Bone->mName.C_Str() );
+            SE::Logging::Info( "      Bone #{} - {}", l_BoneIdx, l_Bone->mName.C_Str() );
             BoneData l_BoneData;
             l_BoneData.Name              = l_Bone->mName.C_Str();
             l_BoneData.ID                = l_BoneIdx;

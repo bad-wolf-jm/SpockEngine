@@ -12,12 +12,12 @@
 // #include "LidarSensorModel/SensorModelBase.h"
 
 
-namespace LTSE::Core
+namespace SE::Core
 {
     namespace
     {
 
-        // using namespace LTSE::SensorModel;
+        // using namespace SE::SensorModel;
 
         template <typename _Ty> auto RandomVector( size_t aSize, double aMin, double aMax, sol::this_state aScriptState )
         {
@@ -259,4 +259,4 @@ namespace LTSE::Core
 
         return lNewLuaType;
     }
-}; // namespace LTSE::Core
+}; // namespace SE::Core

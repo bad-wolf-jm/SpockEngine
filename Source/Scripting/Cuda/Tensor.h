@@ -6,7 +6,7 @@
 
 #include "Core/Cuda/MultiTensor.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     void OpenTensorLibrary( sol::table &aScriptingState );
-}; // namespace LTSE::Core
+}; // namespace SE::Core

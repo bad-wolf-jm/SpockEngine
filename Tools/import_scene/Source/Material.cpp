@@ -101,12 +101,12 @@ static bool LoadTexture( fs::path a_AssetRoot, const aiMaterial *a_Material, con
 
     a_Material->GetTexture( a_Type, 0, &l_TexturePath, &l_TextureMapping, &l_UVIndex, nullptr, nullptr, l_TextureMapMode );
 
-    LTSE::Logging::Info( "    {} - {}", TextureTypeToString( a_Type ), a_Material->GetTextureCount( a_Type ) );
-    LTSE::Logging::Info( "     - root: {}", a_AssetRoot.string() );
-    LTSE::Logging::Info( "     - path: {}", ( a_AssetRoot / removeLeadingCharacters(std::string( l_TexturePath.C_Str() ), '/' )).string() );
-    LTSE::Logging::Info( "     - ipath: {}", removeLeadingCharacters(std::string( l_TexturePath.C_Str() ), '/' ) );
-    LTSE::Logging::Info( "     - mapping: {}", l_TextureMapping );
-    LTSE::Logging::Info( "     - map_mode=({}, {})", l_TextureMapMode[0], l_TextureMapMode[1] );
+    SE::Logging::Info( "    {} - {}", TextureTypeToString( a_Type ), a_Material->GetTextureCount( a_Type ) );
+    SE::Logging::Info( "     - root: {}", a_AssetRoot.string() );
+    SE::Logging::Info( "     - path: {}", ( a_AssetRoot / removeLeadingCharacters(std::string( l_TexturePath.C_Str() ), '/' )).string() );
+    SE::Logging::Info( "     - ipath: {}", removeLeadingCharacters(std::string( l_TexturePath.C_Str() ), '/' ) );
+    SE::Logging::Info( "     - mapping: {}", l_TextureMapping );
+    SE::Logging::Info( "     - map_mode=({}, {})", l_TextureMapMode[0], l_TextureMapMode[1] );
 
     o_Material.TextureFlags |= ( 1 << (size_t)a_Type );
     o_Material.TexturePaths[a_Type] = ( a_AssetRoot / removeLeadingCharacters(std::string( l_TexturePath.C_Str() ), '/' ) ).string();
@@ -121,7 +121,7 @@ static bool LoadTexture( fs::path a_AssetRoot, const aiMaterial *a_Material, con
 
 bool LoadMaterials( const aiScene *a_SceneData, fs::path a_AssetRoot, std::vector<MaterialData> &a_Materials )
 {
-    LTSE::Logging::Info( "Loading materials..." );
+    SE::Logging::Info( "Loading materials..." );
     a_Materials.resize( a_SceneData->mNumMaterials );
     for( auto l_MaterialIdx = 0; l_MaterialIdx < a_SceneData->mNumMaterials; l_MaterialIdx++ )
     {
@@ -131,7 +131,7 @@ bool LoadMaterials( const aiScene *a_SceneData, fs::path a_AssetRoot, std::vecto
         l_NewMaterial.ID   = l_MaterialIdx;
         if( l_NewMaterial.Name.length() == 0 )
             l_NewMaterial.Name = fmt::format( "Unnamed_material_{}", l_MaterialIdx );
-        LTSE::Logging::Info( "  #{} - {}", l_MaterialIdx, l_NewMaterial.Name );
+        SE::Logging::Info( "  #{} - {}", l_MaterialIdx, l_NewMaterial.Name );
 
         l_NewMaterial.DiffuseColor = math::vec3{ 0.0f, 0.0f, 0.0f };
         GET_MATERIAL_COLOR_3D( l_Material, AI_MATKEY_COLOR_DIFFUSE, l_NewMaterial.DiffuseColor );

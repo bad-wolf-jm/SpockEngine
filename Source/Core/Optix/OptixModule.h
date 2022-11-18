@@ -9,9 +9,9 @@
 #include "Optix7.h"
 
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
-    using namespace LTSE::Core;
+    using namespace SE::Core;
 
     struct OptixModuleObject
     {
@@ -43,4 +43,4 @@ namespace LTSE::Graphics
         const std::string m_LaunchParameterVariableName;
     };
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

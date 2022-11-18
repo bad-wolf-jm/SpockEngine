@@ -7,7 +7,7 @@
 
 namespace fs = std::filesystem;
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     class GlTFImporter : public sImportedModel
@@ -73,4 +73,4 @@ namespace LTSE::Core
         void LoadAnimations();
         void LoadSkins();
     };
-} // namespace LTSE::Core
+} // namespace SE::Core

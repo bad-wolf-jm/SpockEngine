@@ -18,9 +18,9 @@
 #include "Core/EntityRegistry/Registry.h"
 
 using namespace math;
-using namespace LTSE::Core;
-using namespace LTSE::Cuda;
-using namespace LTSE::TensorOps;
+using namespace SE::Core;
+using namespace SE::Cuda;
+using namespace SE::TensorOps;
 using namespace TestUtils;
 
 TEST_CASE( "LUA Arrays", "[CORE_SCRIPTING]" )
@@ -1284,7 +1284,7 @@ TEST_CASE( "LUA TextureSampler", "[CORE_SCRIPTING]" )
     value = Core/TextureSampler2D(texture, sampler_create_info)
 )" );
 
-    auto lTextureSampler = lScriptingEngine.Get<LTSE::Core::TextureSampler2D>( "value" );
+    auto lTextureSampler = lScriptingEngine.Get<SE::Core::TextureSampler2D>( "value" );
     REQUIRE( lTextureSampler.mSamplingSpec.mScaling == std::array<float, 2>{ 5.0f, 6.0f } );
     REQUIRE( lTextureSampler.mSamplingSpec.mOffset == std::array<float, 2>{ 3.0f, 4.0f } );
     REQUIRE( lTextureSampler.mSamplingSpec.mBorderColor == std::array<float, 4>{ .1f, .2f, .3f, .4f } );
@@ -1305,7 +1305,7 @@ TEST_CASE( "LUA Cuda Texture2D", "[CORE_SCRIPTING]" )
     value = Cuda.Texture2D(texture_create_info, texture:get_image_data())
 )" );
 
-    auto &lCudaTexture = lScriptingEngine.GetRef<LTSE::Cuda::Texture2D>( "value" );
+    auto &lCudaTexture = lScriptingEngine.GetRef<SE::Cuda::Texture2D>( "value" );
     REQUIRE( lCudaTexture.mSpec.mFormat == eColorFormat::RGBA8_UNORM );
     REQUIRE( lCudaTexture.mSpec.mWidth == 256 );
     REQUIRE( lCudaTexture.mSpec.mHeight == 256 );
@@ -1338,7 +1338,7 @@ TEST_CASE( "LUA Cuda TextureSampler2D", "[CORE_SCRIPTING]" )
     value = Cuda.TextureSampler2D(tex2d, sampler_create_info)
 )" );
 
-    auto &lCudaTextureSampler = lScriptingEngine.GetRef<LTSE::Cuda::TextureSampler2D>( "value" );
+    auto &lCudaTextureSampler = lScriptingEngine.GetRef<SE::Cuda::TextureSampler2D>( "value" );
     REQUIRE( lCudaTextureSampler.mSamplingSpec.mScaling == std::array<float, 2>{ 5.0f, 6.0f } );
     REQUIRE( lCudaTextureSampler.mSamplingSpec.mOffset == std::array<float, 2>{ 3.0f, 4.0f } );
     REQUIRE( lCudaTextureSampler.mSamplingSpec.mBorderColor == std::array<float, 4>{ .1f, .2f, .3f, .4f } );

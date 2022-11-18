@@ -1,6 +1,6 @@
 /// @file   ReturnDataDestructer.cpp
 ///
-/// @brief  Defines a new tensor node for converting Aurelion's LidarRayTracingPoint data into LTSE nodes.
+/// @brief  Defines a new tensor node for converting Aurelion's LidarRayTracingPoint data into SE nodes.
 ///
 /// @author Jean-Martin Albert
 ///
@@ -18,15 +18,15 @@
 #include "TensorOps/NodeComponents.h"
 #include "TensorOps/Scope.h"
 
-namespace LTSE::SensorModel
+namespace SE::SensorModel
 {
 
-    using sGraphOperationController = LTSE::TensorOps::sGraphOperationController;
-    using OpNode                    = LTSE::TensorOps::OpNode;
-    using Scope                     = LTSE::TensorOps::Scope;
-    using MultiTensor               = LTSE::Cuda::MultiTensor;
-    using MemoryBuffer              = LTSE::Cuda::MemoryBuffer;
-    using sTensorShape              = LTSE::Cuda::sTensorShape;
+    using sGraphOperationController = SE::TensorOps::sGraphOperationController;
+    using OpNode                    = SE::TensorOps::OpNode;
+    using Scope                     = SE::TensorOps::Scope;
+    using MultiTensor               = SE::Cuda::MultiTensor;
+    using MemoryBuffer              = SE::Cuda::MemoryBuffer;
+    using sTensorShape              = SE::Cuda::sTensorShape;
 
     /// @struct sDestructHitRecordStructures
     ///
@@ -78,4 +78,4 @@ namespace LTSE::SensorModel
     ///
     OpNode RetrieveIntensities( Scope &aScope, MultiTensor &aReturnData );
 
-} // namespace LTSE::SensorModel
+} // namespace SE::SensorModel

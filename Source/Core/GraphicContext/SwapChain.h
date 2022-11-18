@@ -4,7 +4,7 @@
 
 #include "Core/Vulkan/VkCoreMacros.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
     class SwapChain : public ARenderTarget
     {
@@ -37,4 +37,4 @@ namespace LTSE::Graphics
         uint32_t mCurrentImage   = 0;
         bool     mFrameIsStarted = 0;
     };
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

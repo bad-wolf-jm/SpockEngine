@@ -1,6 +1,6 @@
 #include "ColorFormat.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     eColorFormat ToLtseFormat( VkFormat C )
     {
@@ -102,4 +102,4 @@ namespace LTSE::Core
         return VK_FORMAT_UNDEFINED;
     }
 
-} // namespace LTSE::Core
+} // namespace SE::Core

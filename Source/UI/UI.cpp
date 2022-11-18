@@ -1,6 +1,6 @@
 #include "UI.h"
 
-namespace LTSE::Core::UI
+namespace SE::Core::UI
 {
 
     UIStyle::UIStyle( [[maybe_unused]] bool x )
@@ -150,4 +150,4 @@ namespace LTSE::Core::UI
 
     void SetNextWindowSize( math::vec2 a_Size ) { ImGui::SetNextWindowSize( { a_Size.x, a_Size.y } ); }
 
-} // namespace LTSE::Core::UI
+} // namespace SE::Core::UI

@@ -5,7 +5,7 @@
 #include <stdexcept>
 // #include <glad/glad.h>
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     Window::Window( int a_Width, int a_Height, std::string a_Title )
@@ -196,4 +196,4 @@ namespace LTSE::Core
         lWindow->mEngineLoop->IOEvent( lUserEvent );
     }
 
-} // namespace LTSE::Core
+} // namespace SE::Core

@@ -6,11 +6,11 @@
 
 #include "Scene/Components.h"
 
-using namespace LTSE::Core::EntityComponentSystem;
+using namespace SE::Core::EntityComponentSystem;
 
-namespace LTSE::Editor
+namespace SE::Editor
 {
-    using namespace LTSE::Core;
+    using namespace SE::Core;
 
     template <typename _SliderType> class Slider
     {
@@ -309,4 +309,4 @@ namespace LTSE::Editor
         l_TextureItemPosition += math::vec2{ 0.0f, 80.0f };
         UI::SetCursorPosition( l_TextureItemPosition );
     }
-} // namespace LTSE::Editor
+} // namespace SE::Editor

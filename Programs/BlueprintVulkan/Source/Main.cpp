@@ -14,9 +14,9 @@
 
 #include "blueprints-example.h"s
 
-using namespace LTSE::Core;
-using namespace LTSE::Graphics;
-using namespace LTSE::Core::UI;
+using namespace SE::Core;
+using namespace SE::Graphics;
+using namespace SE::Core::UI;
 using namespace math::literals;
 
 static EngineLoop g_EngineLoop;

@@ -9,14 +9,14 @@
 
 #include "Core/GraphicContext//Texture2D.h"
 
-namespace LTSE::Core::UI
+namespace SE::Core::UI
 {
 
     void HelpMarker( const char *desc );
 
     void Separator();
 
-    bool ImageButton( LTSE::Core::UI::ImageHandle a_Texture, math::vec2 a_Size, math::vec4 a_Rect );
+    bool ImageButton( SE::Core::UI::ImageHandle a_Texture, math::vec2 a_Size, math::vec4 a_Rect );
 
     bool Button( const char *a_Label, math::vec2 a_Size );
 
@@ -42,9 +42,9 @@ namespace LTSE::Core::UI
     bool MenuItem( const char *label, const char *shortcut );
     bool SelectionMenuItem( const char *label, const char *shortcut, bool *selected );
 
-    void Image( LTSE::Core::UI::ImageHandle a_Texture, math::vec2 a_Size, math::vec4 a_Rect );
-    void Image( LTSE::Graphics::Texture2D &texture, math::vec2 size );
-    void Image( LTSE::Graphics::Texture2D &texture, math::ivec2 size );
+    void Image( SE::Core::UI::ImageHandle a_Texture, math::vec2 a_Size, math::vec4 a_Rect );
+    void Image( SE::Graphics::Texture2D &texture, math::vec2 size );
+    void Image( SE::Graphics::Texture2D &texture, math::ivec2 size );
     void Image( ImageHandle texture, math::vec2 size );
     void Image( ImageHandle texture, math::ivec2 size );
 
@@ -177,4 +177,4 @@ namespace LTSE::Core::UI
     bool VectorComponentEditor( const std::string &a_Label, uint32_t ID, math::vec2 &values, float a_XMin, float a_XMax, float a_XStep,
         float a_YMin, float a_YMax, float a_YStep, float a_ResetValue, float a_ColumnWidth );
 
-} // namespace LTSE::Core::UI
+} // namespace SE::Core::UI

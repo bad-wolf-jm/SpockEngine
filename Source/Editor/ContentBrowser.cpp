@@ -7,7 +7,7 @@
 #include "UI/UI.h"
 #include "UI/Widgets.h"
 
-namespace LTSE::Editor
+namespace SE::Editor
 {
     ContentBrowser::ContentBrowser( GraphicContext &aGraphicContext, Ref<UIContext> aUIOverlay, fs::path aRoot )
         : mGraphicContext{ aGraphicContext }
@@ -15,7 +15,7 @@ namespace LTSE::Editor
         , Root{ aRoot }
     {
         {
-            LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+            SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
             TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Folder.png" );
             sTextureSamplingInfo lSamplingInfo{};
             TextureSampler2D lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
@@ -25,7 +25,7 @@ namespace LTSE::Editor
         }
 
         {
-            LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+            SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
             TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\File.png" );
             sTextureSamplingInfo lSamplingInfo{};
             TextureSampler2D lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
@@ -35,7 +35,7 @@ namespace LTSE::Editor
         }
 
         {
-            LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+            SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
             TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Back.png" );
             sTextureSamplingInfo lSamplingInfo{};
             TextureSampler2D lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
@@ -129,4 +129,4 @@ namespace LTSE::Editor
         ImGui::Columns( 1 );
     }
 
-} // namespace LTSE::Editor
+} // namespace SE::Editor

@@ -29,8 +29,8 @@ struct MeshData
 {
     uint32_t ID;
     std::string Name;
-    LTSE::Graphics::PrimitiveTopology Primitive;
-    std::vector<LTSE::Core::VertexData> Vertices;
+    SE::Graphics::PrimitiveTopology Primitive;
+    std::vector<SE::Core::VertexData> Vertices;
     std::vector<uint32_t> Indices;
     std::vector<uint32_t> WireframeIndices;
     std::vector<BoneData> Bones;

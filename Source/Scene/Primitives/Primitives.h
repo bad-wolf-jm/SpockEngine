@@ -4,12 +4,12 @@
 #include "Core/Types.h"
 #include "Scene/VertexData.h"
 
-namespace LTSE::Core::Primitives
+namespace SE::Core::Primitives
 {
 
     struct VertexBufferData
     {
-        std::vector<LTSE::Core::VertexData> Vertices = {};
+        std::vector<SE::Core::VertexData> Vertices = {};
         std::vector<uint32_t> Indices              = {};
 
         VertexBufferData()  = default;
@@ -52,4 +52,4 @@ namespace LTSE::Core::Primitives
     VertexBufferData CreatePyramid( const uint32_t segments_x, const uint32_t segments_y );
     WireframeVertexBufferData CreateWireframePyramid( const uint32_t segments_x, const uint32_t segments_y );
 
-} // namespace LTSE::Core::Primitives
+} // namespace SE::Core::Primitives

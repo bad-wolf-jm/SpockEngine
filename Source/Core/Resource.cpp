@@ -1,6 +1,6 @@
 #include "Resource.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     // static fs::path a_ResourceRoot = "Deps\\LTSimulationEngine\\Resources";
@@ -8,4 +8,4 @@ namespace LTSE::Core
 
     fs::path GetResourcePath( fs::path a_RelativePath ) { return a_ResourceRoot / a_RelativePath; }
 
-} // namespace LTSE::Core
+} // namespace SE::Core

@@ -16,7 +16,7 @@
 #include <mutex>
 #include <thread>
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     /// @brief sProfilingEvent
@@ -158,4 +158,4 @@ namespace LTSE::Core
 #    define LTSE_PROFILE_FUNCTION()
 #endif
 
-} // namespace LTSE::Core
+} // namespace SE::Core

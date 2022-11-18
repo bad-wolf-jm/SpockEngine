@@ -12,7 +12,7 @@
         if( lVkResult != VK_SUCCESS )                                                                                                \
         {                                                                                                                            \
             std::string l_ErrorString = fmt::format( "Fatal : VkResult is \"{}\" in {} at line {}", lVkResult, __FILE__, __LINE__ ); \
-            LTSE::Logging::Error( l_ErrorString );                                                                                   \
+            SE::Logging::Error( l_ErrorString );                                                                                   \
             throw std::runtime_error( l_ErrorString );                                                                               \
         }                                                                                                                            \
     } while( 0 )

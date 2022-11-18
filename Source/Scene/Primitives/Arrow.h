@@ -4,7 +4,7 @@
 
 #include "Primitives.h"
 
-namespace LTSE::Core::Primitives
+namespace SE::Core::Primitives
 {
 
     VertexBufferData CreateArrow();

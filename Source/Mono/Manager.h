@@ -17,7 +17,7 @@ extern "C"
     typedef struct _MonoClassField MonoClassField;
 }
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     enum class eScriptFieldType
@@ -177,4 +177,4 @@ namespace LTSE::Core
 
         friend class ScriptClass;
     };
-} // namespace LTSE::Core
+} // namespace SE::Core

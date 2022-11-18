@@ -16,11 +16,11 @@
 
 
 /**
- * \namespace LTSE::Logging
+ * \namespace SE::Logging
  *
  * @brief Basic logging functions.
  */
-namespace LTSE::Logging
+namespace SE::Logging
 {
     namespace fs = std::filesystem;
     enum class LogLevel : uint8_t
@@ -70,4 +70,4 @@ namespace LTSE::Logging
     void LogLine(std::string const &aLine);
     void SetLogOutputFile( fs::path aFilePath );
 
-} // namespace LTSE::Logging
+} // namespace SE::Logging

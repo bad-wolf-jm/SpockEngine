@@ -15,7 +15,7 @@
 
 namespace fs = std::filesystem;
 
-namespace LTSE::Core
+namespace SE::Core
 {
     /// @brief Abstraction around an entry in the configuration file.
     class ConfigurationNode
@@ -279,4 +279,4 @@ namespace LTSE::Core
         YAML::Emitter mOut{};
     };
 
-} // namespace LTSE::Core
+} // namespace SE::Core

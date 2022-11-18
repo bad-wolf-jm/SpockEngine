@@ -18,7 +18,7 @@
 #include "Core/Vulkan/VkRenderPass.h"
 #include "SceneRenderPipeline.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
     using namespace math;
@@ -58,7 +58,7 @@ namespace LTSE::Graphics
         }
     };
 
-    class ParticleSystemRenderer : public LTSE::Core::SceneRenderPipeline<PositionData>
+    class ParticleSystemRenderer : public SE::Core::SceneRenderPipeline<PositionData>
     {
       public:
         struct ParticleData
@@ -95,4 +95,4 @@ namespace LTSE::Graphics
         Ref<DescriptorSet> mCameraDescriptors = nullptr;
     };
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

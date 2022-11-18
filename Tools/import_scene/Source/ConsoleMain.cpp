@@ -36,12 +36,12 @@ int main( int argc, char **argv )
     // auto lInput  = fs::path( lProgramArguments.get<std::string>( "--input" ) );
     // auto lOutput = fs::path( lProgramArguments.get<std::string>( "--output" ) );
 
-    // LTSE::Logging::Info( "Input: {}", lInput.string() );
-    // LTSE::Logging::Info( "Output: {}", lOutput.string() );
+    // SE::Logging::Info( "Input: {}", lInput.string() );
+    // SE::Logging::Info( "Output: {}", lOutput.string() );
 
     // if( !fs::exists( lInput ) )
     // {
-    //     LTSE::Logging::Info( "Input file '{}' does not exist", lInput.string() );
+    //     SE::Logging::Info( "Input file '{}' does not exist", lInput.string() );
     // }
 
     // try

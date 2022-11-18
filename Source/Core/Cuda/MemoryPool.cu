@@ -12,7 +12,7 @@
 
 #include "Core/Logging.h"
 
-namespace LTSE::Cuda
+namespace SE::Cuda
 {
 
     MemoryPool::MemoryPool( size_t aTotalSize )
@@ -38,4 +38,4 @@ namespace LTSE::Cuda
         mFreePtr = 0;
     }
 
-} // namespace LTSE::Cuda
+} // namespace SE::Cuda

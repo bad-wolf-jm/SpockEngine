@@ -4,7 +4,7 @@
 #include "Core/Logging.h"
 #include "fmt/core.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     static eSamplerWrapping getLTSEWrapMode( int32_t aWrapMode )
@@ -60,25 +60,25 @@ namespace LTSE::Core
             std::cerr << "Could not load gltf file: " << lError << std::endl;
         }
 
-        LTSE::Logging::Info( "Samplers" );
+        SE::Logging::Info( "Samplers" );
         LoadSamplers();
 
-        LTSE::Logging::Info( "Textures" );
+        SE::Logging::Info( "Textures" );
         LoadTextures();
 
-        LTSE::Logging::Info( "Materials" );
+        SE::Logging::Info( "Materials" );
         LoadMaterials();
 
-        LTSE::Logging::Info( "Nodes" );
+        SE::Logging::Info( "Nodes" );
         LoadNodes();
 
-        LTSE::Logging::Info( "Animations" );
+        SE::Logging::Info( "Animations" );
         LoadAnimations();
 
-        LTSE::Logging::Info( "Skins" );
+        SE::Logging::Info( "Skins" );
         LoadSkins();
 
-        LTSE::Logging::Info( "Done" );
+        SE::Logging::Info( "Done" );
     }
 
     void GlTFImporter::LoadSamplers()
@@ -596,4 +596,4 @@ namespace LTSE::Core
             }
         }
     }
-} // namespace LTSE::Core
+} // namespace SE::Core

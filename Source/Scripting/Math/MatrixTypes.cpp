@@ -3,7 +3,7 @@
 
 #include "Core/Math/Types.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     using namespace math;
 
@@ -41,4 +41,4 @@ namespace LTSE::Core
         lMat4Type["right"]           = []( mat4 aSelf ) -> vec3 { return RightDirection( aSelf ); };
         lMat4Type["back"]            = []( mat4 aSelf ) -> vec3 { return BackwardDirection( aSelf ); };
     }
-} // namespace LTSE::Core
+} // namespace SE::Core

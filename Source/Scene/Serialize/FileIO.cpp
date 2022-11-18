@@ -15,7 +15,7 @@
 
 using namespace std;
 
-namespace LTSE::Core
+namespace SE::Core
 {
     namespace
     {
@@ -202,4 +202,4 @@ namespace LTSE::Core
         for( YAML::iterator it = mNode.begin(); it != mNode.end(); ++it ) aFunc( ConfigurationNode( *it ) );
     }
 
-} // namespace LTSE::Core
+} // namespace SE::Core

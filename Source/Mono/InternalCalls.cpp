@@ -7,7 +7,7 @@
 #include "Core/Logging.h"
 #include "Manager.h"
 
-namespace LTSE::MonoInternalCalls
+namespace SE::MonoInternalCalls
 {
     bool Entity_IsValid( uint32_t aEntityID, EntityRegistry *aRegistry )
     {
@@ -66,4 +66,4 @@ namespace LTSE::MonoInternalCalls
     }
 
 
-} // namespace LTSE::MonoInternalCalls
+} // namespace SE::MonoInternalCalls

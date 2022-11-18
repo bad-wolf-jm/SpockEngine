@@ -2,22 +2,22 @@
 
 #include "Scene/Primitives/Arrow.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
     using namespace math::literals;
 
     VisualHelperRenderer::VisualHelperRenderer(
-        GraphicContext &a_GraphicContext, Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> a_RenderPass )
+        GraphicContext &a_GraphicContext, Ref<SE::Graphics::Internal::sVkAbstractRenderPassObject> a_RenderPass )
     {
         VisualHelperMeshRendererCreateInfo l_CreateInfo{};
         l_CreateInfo.RenderPass = a_RenderPass;
-        m_MeshRenderer          = LTSE::Core::New<VisualHelperMeshRenderer>( a_GraphicContext, l_CreateInfo );
+        m_MeshRenderer          = SE::Core::New<VisualHelperMeshRenderer>( a_GraphicContext, l_CreateInfo );
 
         VisualHelperLineRendererCreateInfo l_GizmoCreateInfo{};
         l_GizmoCreateInfo.LineWidth  = 2.0;
         l_GizmoCreateInfo.RenderPass = a_RenderPass;
-        m_VisualHelperLineRenderer   = LTSE::Core::New<VisualHelperLineRenderer>( a_GraphicContext, l_GizmoCreateInfo );
+        m_VisualHelperLineRenderer   = SE::Core::New<VisualHelperLineRenderer>( a_GraphicContext, l_GizmoCreateInfo );
     }
 
     void VisualHelperRenderer::Render(
@@ -122,4 +122,4 @@ namespace LTSE::Graphics
             math::vec3{ 0.1f, 0.25f, 0.8f }, aRenderContext );
     }
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

@@ -8,9 +8,9 @@
 #include "New.h"
 #include "VkContext.h"
 
-namespace LTSE::Graphics::Internal
+namespace SE::Graphics::Internal
 {
-    using namespace LTSE::Core;
+    using namespace SE::Core;
 
     struct sImageRegion
     {
@@ -106,4 +106,4 @@ namespace LTSE::Graphics::Internal
         Ref<VkContext> mContext = nullptr;
     };
 
-} // namespace LTSE::Graphics::Internal
+} // namespace SE::Graphics::Internal

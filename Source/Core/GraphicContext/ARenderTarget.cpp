@@ -1,6 +1,6 @@
 #include "ARenderTarget.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
     ARenderTarget::ARenderTarget( GraphicContext &aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription )
         : mGraphicContext{ aGraphicContext }
@@ -243,4 +243,4 @@ namespace LTSE::Graphics
         }
     }
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

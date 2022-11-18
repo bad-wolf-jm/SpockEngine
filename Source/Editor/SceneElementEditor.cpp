@@ -8,9 +8,9 @@
 
 #include "Scene/Components/VisualHelpers.h"
 
-using namespace LTSE::Core::EntityComponentSystem::Components;
+using namespace SE::Core::EntityComponentSystem::Components;
 
-namespace LTSE::Editor
+namespace SE::Editor
 {
 
     class MaterialCombo
@@ -264,7 +264,7 @@ namespace LTSE::Editor
         return false;
     }
 
-    static bool EditComponent( LTSE::Graphics::GraphicContext aGraphicContext, sLightComponent &aComponent )
+    static bool EditComponent( SE::Graphics::GraphicContext aGraphicContext, sLightComponent &aComponent )
     {
         static UI::ComboBox<eLightType> lPrimitiveChooser( "##combo_light_type_chooser" );
         lPrimitiveChooser.Labels = { "Directional light", "Point light", "Spotlight" };
@@ -436,4 +436,4 @@ namespace LTSE::Editor
         }
     }
 
-} // namespace LTSE::Editor
+} // namespace SE::Editor

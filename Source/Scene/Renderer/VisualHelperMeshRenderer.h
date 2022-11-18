@@ -19,7 +19,7 @@
 
 #include "SceneRenderPipeline.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
     using namespace math;
@@ -28,10 +28,10 @@ namespace LTSE::Graphics
     struct VisualHelperMeshRendererCreateInfo
     {
         float                                                      LineWidth  = 1.0f;
-        Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
+        Ref<SE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
-    class VisualHelperMeshRenderer : public LTSE::Core::SceneRenderPipeline<SimpleVertexData>
+    class VisualHelperMeshRenderer : public SE::Core::SceneRenderPipeline<SimpleVertexData>
     {
       public:
         struct CameraViewUniforms
@@ -56,4 +56,4 @@ namespace LTSE::Graphics
         std::vector<sPushConstantRange>       GetPushConstantLayout();
     };
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

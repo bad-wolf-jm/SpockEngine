@@ -2,7 +2,7 @@
 
 #include "LaunchParams.h"
 
-namespace LTSE::SensorModel::Dev
+namespace SE::SensorModel::Dev
 {
 
     static constexpr float PI      = 3.14159265359;
@@ -129,4 +129,4 @@ namespace LTSE::SensorModel::Dev
         gOptixLaunchParams.mSamplePoints[lRayID] = lOutputSamplePoint;
     }
 
-} // namespace LTSE::SensorModel::Dev
+} // namespace SE::SensorModel::Dev

@@ -5,7 +5,7 @@
 
 #include "VkCoreMacros.h"
 
-namespace LTSE::Graphics::Internal
+namespace SE::Graphics::Internal
 {
 
     sVkImageObject::sVkImageObject( Ref<VkContext> aContext, VkImage aExternalImage )
@@ -118,4 +118,4 @@ namespace LTSE::Graphics::Internal
     }
 
     sVkFramebufferObject::~sVkFramebufferObject() { mContext->DestroyFramebuffer( mVkObject ); }
-} // namespace LTSE::Graphics::Internal
+} // namespace SE::Graphics::Internal

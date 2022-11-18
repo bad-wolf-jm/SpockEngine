@@ -25,10 +25,10 @@
 
 #include "HelperMacros.h"
 
-namespace LTSE::TensorOps::Kernels
+namespace SE::TensorOps::Kernels
 {
 
-    using namespace LTSE::Cuda;
+    using namespace SE::Cuda;
 
     template <typename _Ty> CUDA_KERNEL_DEFINITION void ConstantFill( MultiTensor aArray, _Ty aConstant )
     {
@@ -1938,4 +1938,4 @@ namespace LTSE::TensorOps::Kernels
             lOut[k++] = lY[j];
     }
 
-} // namespace LTSE::TensorOps::Kernels
+} // namespace SE::TensorOps::Kernels

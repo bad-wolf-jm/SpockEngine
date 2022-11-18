@@ -13,10 +13,10 @@
 
 #include "TensorOps/ScalarTypes.h"
 
-namespace LTSE::SensorModel
+namespace SE::SensorModel
 {
-    using MultiTensor = LTSE::Cuda::MultiTensor;
-    using MemoryBuffer = LTSE::Cuda::MemoryBuffer;
+    using MultiTensor = SE::Cuda::MultiTensor;
+    using MemoryBuffer = SE::Cuda::MemoryBuffer;
 
     /// @brief Retrieve the radiance from the returns
     ///
@@ -36,4 +36,4 @@ namespace LTSE::SensorModel
     ///
     void ExtractDistanceOp( MultiTensor &aOut, MultiTensor &aReturns );
 
-} // namespace LTSE::SensorModel
+} // namespace SE::SensorModel

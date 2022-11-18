@@ -8,10 +8,10 @@
 #include "Core/Logging.h"
 #include "Core/Resource.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     using namespace math;
-    using namespace LTSE::Core::EntityComponentSystem::Components;
+    using namespace SE::Core::EntityComponentSystem::Components;
 
     ASceneRenderer::ASceneRenderer( GraphicContext aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
         : mGraphicContext{ aGraphicContext }
@@ -86,4 +86,4 @@ namespace LTSE::Core
 
     void ASceneRenderer::Render() {}
 
-} // namespace LTSE::Core
+} // namespace SE::Core

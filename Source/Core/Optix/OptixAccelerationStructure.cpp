@@ -1,6 +1,6 @@
 #include "OptixAccelerationStructure.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
     OptixTraversableObject::OptixTraversableObject( Ref<OptixDeviceContextObject> a_RTContext )
@@ -83,4 +83,4 @@ namespace LTSE::Graphics
 
     void OptixTraversableObject::Reset() {}
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

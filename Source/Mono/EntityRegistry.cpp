@@ -10,7 +10,7 @@
 #include <functional>
 #include <string>
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     entt::meta_type GetMetaType( MonoType *aObject )
@@ -60,4 +60,4 @@ namespace LTSE::Core
         aComponent = sTag( ScriptManager::NewString( lFieldValue ) );
     }
 
-} // namespace LTSE::Core
+} // namespace SE::Core

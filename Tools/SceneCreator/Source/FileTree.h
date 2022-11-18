@@ -1,6 +1,6 @@
 #pragma once
 
-namespace LTSE::Core::UI
+namespace SE::Core::UI
 {
 
 std::pair<bool, uint32_t> DirectoryTreeViewRecursive(const std::filesystem::path& path, uint32_t* count, int* selection_mask);

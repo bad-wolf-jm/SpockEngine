@@ -1,6 +1,6 @@
 #include "AssetFile.h"
 #include "Core/Logging.h"
-namespace LTSE::Core
+namespace SE::Core
 {
     static constexpr uint8_t sFileMagic[] = { '@', '%', 'S', 'P', 'O', 'C', 'K', 'E', 'N', 'G', 'I', 'N', 'E', '_', 'S', 'C', 'E', 'N',
         'E', '_', 'A', 'S', 'S', 'E', 'T', '@', '%' };
@@ -290,7 +290,7 @@ namespace LTSE::Core
         auto lOutputSize           = Read<uint32_t>();
         aMaterialData.mOutputsVec4 = Read<math::vec4>( lOutputSize );
 
-        LTSE::Logging::Info( "{}", aIndex );
+        SE::Logging::Info( "{}", aIndex );
     }
 
-} // namespace LTSE::Core
+} // namespace SE::Core

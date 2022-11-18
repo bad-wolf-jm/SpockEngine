@@ -6,7 +6,7 @@
 
 #include <imgui_canvas.h>
 
-namespace LTSE::Core::UI
+namespace SE::Core::UI
 {
 
     using namespace math;
@@ -47,4 +47,4 @@ namespace LTSE::Core::UI
         bool            m_IsDragging = false;
     };
 
-} // namespace LTSE::Core::UI
+} // namespace SE::Core::UI

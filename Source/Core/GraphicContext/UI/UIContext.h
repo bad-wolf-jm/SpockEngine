@@ -21,11 +21,11 @@
 
 #include <stdexcept>
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
-    using namespace LTSE::Graphics;
-    using namespace LTSE::Core::UI;
+    using namespace SE::Graphics;
+    using namespace SE::Core::UI;
 
     struct UIConfiguration
     {
@@ -51,7 +51,7 @@ namespace LTSE::Core
     class UIContext
     {
       public:
-        UIContext( Ref<LTSE::Core::Window> aWindow, GraphicContext &aDevice, ARenderContext &aRenderContext, std::string &aImGuiConfigPath, UIConfiguration const& aUIConfiguration );
+        UIContext( Ref<SE::Core::Window> aWindow, GraphicContext &aDevice, ARenderContext &aRenderContext, std::string &aImGuiConfigPath, UIConfiguration const& aUIConfiguration );
         ~UIContext();
 
         void BeginFrame();
@@ -82,8 +82,8 @@ namespace LTSE::Core
 
         Ref<DescriptorSetLayout> mUIDescriptorSetLayout = nullptr;
 
-        Ref<LTSE::Graphics::Internal::ShaderModule> mUIVertexShader   = nullptr;
-        Ref<LTSE::Graphics::Internal::ShaderModule> mUIFragmentShader = nullptr;
+        Ref<SE::Graphics::Internal::ShaderModule> mUIVertexShader   = nullptr;
+        Ref<SE::Graphics::Internal::ShaderModule> mUIFragmentShader = nullptr;
         Ref<GraphicsPipeline>                       mUIRenderPipeline = nullptr;
 
         Ref<Texture2D>     mFontTexture       = nullptr;
@@ -96,4 +96,4 @@ namespace LTSE::Core
         void SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData );
         void RenderDrawData( ARenderContext &aRenderContext, ImDrawData *aDrawData );
     };
-} // namespace LTSE::Core
+} // namespace SE::Core

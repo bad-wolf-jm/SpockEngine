@@ -12,9 +12,9 @@
 
 using namespace math;
 using namespace TestUtils;
-using namespace LTSE;
-using namespace LTSE::Core;
-using namespace LTSE::SensorModel;
+using namespace SE;
+using namespace SE::Core;
+using namespace SE::SensorModel;
 
 const char *YamlTest0 = R""""(
 root:

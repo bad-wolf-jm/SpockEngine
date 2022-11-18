@@ -18,7 +18,7 @@
 
 #include <unordered_map>
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     /// \class EntityRegistry
@@ -358,11 +358,11 @@ namespace LTSE::Core
     template <typename _Ty>
     using sJoinComponent = Internal::Entity<EntityRegistry *>::sJoin<_Ty>;
 
-} // namespace LTSE::Core
+} // namespace SE::Core
 
 /// @brief Hash entities so they can be used in unordered maps and sets
 template <>
-struct std::hash<LTSE::Core::Entity>
+struct std::hash<SE::Core::Entity>
 {
-    std::size_t operator()( LTSE::Core::Entity const &k ) const { return std::hash<uint32_t>()( static_cast<uint32_t>( k ) ); }
+    std::size_t operator()( SE::Core::Entity const &k ) const { return std::hash<uint32_t>()( static_cast<uint32_t>( k ) ); }
 };

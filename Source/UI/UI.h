@@ -13,7 +13,7 @@
 #include "Core/Types.h"
 
 
-namespace LTSE::Core::UI
+namespace SE::Core::UI
 {
     class UIStyle
     {
@@ -27,7 +27,7 @@ namespace LTSE::Core::UI
 
     struct ImageHandle
     {
-        Ref<LTSE::Graphics::DescriptorSet> Handle = nullptr;
+        Ref<SE::Graphics::DescriptorSet> Handle = nullptr;
 
         ImageHandle()                      = default;
         ImageHandle( const ImageHandle & ) = default;
@@ -59,4 +59,4 @@ namespace LTSE::Core::UI
     void SetNextWindowPosition( math::vec2 a_Position );
     void SetNextWindowSize( math::vec2 a_Size );
 
-} // namespace LTSE::Core::UI
+} // namespace SE::Core::UI

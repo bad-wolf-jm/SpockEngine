@@ -20,7 +20,7 @@
 #endif
 #include <uuid_v4.h>
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     struct sTag
@@ -65,4 +65,4 @@ namespace LTSE::Core
         sRelationship( const sRelationship & ) = default;
     };
 
-} // namespace LTSE::Core
+} // namespace SE::Core

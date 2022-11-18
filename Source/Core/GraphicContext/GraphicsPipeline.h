@@ -9,7 +9,7 @@
 #include "Core/Vulkan/VkPipeline.h"
 #include "DescriptorSet.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
     using eBufferDataType        = Internal::eBufferDataType;
     using sBufferLayoutElement   = Internal::sBufferLayoutElement;
@@ -57,4 +57,4 @@ namespace LTSE::Graphics
         Ref<Internal::sVkPipelineObject>       m_PipelineObject       = nullptr;
     };
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

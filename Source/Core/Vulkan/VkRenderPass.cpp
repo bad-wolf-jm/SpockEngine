@@ -6,7 +6,7 @@
 #include "Core/Memory.h"
 #include "VkCoreMacros.h"
 
-namespace LTSE::Graphics::Internal
+namespace SE::Graphics::Internal
 {
 
     sVkRenderPassObject::sVkRenderPassObject( Ref<VkContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
@@ -89,4 +89,4 @@ namespace LTSE::Graphics::Internal
                 lAttachments, std::vector<VkAttachmentReference>{ lMSAAColorAttachmentReference }, &lDepthAttachmentReference, &lResolveColorAttachmentReference );
         }
     }
-} // namespace LTSE::Graphics::Internal
+} // namespace SE::Graphics::Internal

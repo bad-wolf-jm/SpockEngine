@@ -14,10 +14,10 @@
 #include "Buffer.h"
 #include "GraphicContext.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
-    using namespace LTSE::Core;
+    using namespace SE::Core;
 
     /** @brief */
     enum class SamplerFilter : uint32_t
@@ -185,4 +185,4 @@ namespace LTSE::Graphics
         Ref<Internal::sVkImageSamplerObject> m_TextureSamplerObject = nullptr;
         Ref<Internal::sVkImageViewObject>    m_TextureView          = nullptr;
     };
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

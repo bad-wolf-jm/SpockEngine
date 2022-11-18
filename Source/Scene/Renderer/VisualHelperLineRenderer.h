@@ -19,16 +19,16 @@
 
 #include "SceneRenderPipeline.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
     using namespace math;
-    using namespace LTSE::Core;
+    using namespace SE::Core;
     namespace fs = std::filesystem;
 
     struct VisualHelperLineRendererCreateInfo
     {
         float                                                      LineWidth  = 1.0f;
-        Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
+        Ref<SE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
     class VisualHelperLineRenderer : public SceneRenderPipeline<PositionData>
@@ -58,4 +58,4 @@ namespace LTSE::Graphics
         std::vector<sPushConstantRange>       GetPushConstantLayout();
     };
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

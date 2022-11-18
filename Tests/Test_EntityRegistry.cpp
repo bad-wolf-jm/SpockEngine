@@ -3,7 +3,7 @@
 #define ENTT_DISABLE_ASSERT
 #include "Core/EntityRegistry/Registry.h"
 
-using namespace LTSE::Core;
+using namespace SE::Core;
 
 struct ComponentA
 {

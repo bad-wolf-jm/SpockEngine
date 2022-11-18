@@ -19,11 +19,11 @@
 #include "ParticleSystemRenderer.h"
 #include "VisualHelperRenderer.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
-    using namespace LTSE::Graphics;
-    using namespace LTSE::Core::EntityComponentSystem::Components;
+    using namespace SE::Graphics;
+    using namespace SE::Core::EntityComponentSystem::Components;
 
 #define MAX_NUM_LIGHTS 64
 
@@ -124,4 +124,4 @@ namespace LTSE::Core
         MaterialDescriptorComponent()                                      = default;
         MaterialDescriptorComponent( const MaterialDescriptorComponent & ) = default;
     };
-} // namespace LTSE::Core
+} // namespace SE::Core

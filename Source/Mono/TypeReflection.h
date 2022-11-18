@@ -4,7 +4,7 @@
 
 #include "Core/EntityRegistry/Registry.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     template <typename T>
     [[nodiscard]] entt::id_type DeduceType( T &&aObject )
@@ -41,4 +41,4 @@ namespace LTSE::Core
         return InvokeMetaFunction( entt::resolve( aTypeID ), aFunctionID, std::forward<Args>( aArgs )... );
     }
 
-}; // namespace LTSE::Core
+}; // namespace SE::Core

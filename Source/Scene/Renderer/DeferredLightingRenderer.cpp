@@ -9,7 +9,7 @@
 #include "Core/Logging.h"
 #include "Core/Resource.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     using namespace math;
@@ -65,4 +65,4 @@ namespace LTSE::Core
         Initialize( lCreateInfo );
     }
 
-} // namespace LTSE::Core
+} // namespace SE::Core

@@ -17,12 +17,12 @@
 #include "MeshRenderer.h"
 #include "ParticleSystemRenderer.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     using namespace math;
-    using namespace LTSE::Core::EntityComponentSystem::Components;
-    using namespace LTSE::Core::Primitives;
+    using namespace SE::Core::EntityComponentSystem::Components;
+    using namespace SE::Core::Primitives;
 
     ForwardSceneRenderer::ForwardSceneRenderer( GraphicContext aGraphicContext, eColorFormat aOutputFormat,
                                                 uint32_t aOutputSampleCount )
@@ -311,4 +311,4 @@ namespace LTSE::Core
             } );
     }
 
-} // namespace LTSE::Core
+} // namespace SE::Core

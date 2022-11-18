@@ -17,7 +17,7 @@
 #include "EntityRegistry.h"
 #include "InternalCalls.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     namespace Utils
@@ -80,7 +80,7 @@ namespace LTSE::Core
 
                 const char *lNameSpace = mono_metadata_string_heap( lImage, lCols[MONO_TYPEDEF_NAMESPACE] );
                 const char *lName      = mono_metadata_string_heap( lImage, lCols[MONO_TYPEDEF_NAME] );
-                LTSE::Logging::Info( "{}.{}", lNameSpace, lName );
+                SE::Logging::Info( "{}.{}", lNameSpace, lName );
             }
         }
 
@@ -436,4 +436,4 @@ namespace LTSE::Core
         LoadAssemblyClasses();
         RegisterComponentTypes();
     }
-} // namespace LTSE::Core
+} // namespace SE::Core

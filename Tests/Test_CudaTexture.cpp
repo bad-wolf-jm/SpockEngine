@@ -15,9 +15,9 @@
 
 namespace fs = std::filesystem;
 
-using namespace LTSE;
-using namespace LTSE::Core;
-using namespace LTSE::Cuda;
+using namespace SE;
+using namespace SE::Core;
+using namespace SE::Cuda;
 
 TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
 {

@@ -5,7 +5,7 @@
 #include "Core/Memory.h"
 #include "Core/EntityRegistry/Registry.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     class sLuaScriptComponent
     {
@@ -41,4 +41,4 @@ namespace LTSE::Core
         fs::path mScriptFile;
         Entity mEntity;
     };
-} // namespace LTSE::Core
+} // namespace SE::Core

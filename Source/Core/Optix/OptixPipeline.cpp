@@ -5,7 +5,7 @@
 #include "Core/Cuda/CudaAssert.h"
 
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
     OptixPipelineObject::OptixPipelineObject( OptixPipelineLinkOptions a_PipelineLinkOptions, OptixPipelineCompileOptions a_PipelineCompileOptions,
@@ -31,4 +31,4 @@ namespace LTSE::Graphics
         CUDA_SYNC_CHECK();
     }
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

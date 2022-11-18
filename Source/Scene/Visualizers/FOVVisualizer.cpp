@@ -94,7 +94,7 @@ void FOVVisualizer::UpdatePositions()
     m_VertexData.resize( m_Positions.size() );
     for( uint32_t i = 0; i < m_Positions.size(); i++ )
     {
-        LTSE::Scene::VertexData& l_Vertex = m_VertexData[i];
+        SE::Scene::VertexData& l_Vertex = m_VertexData[i];
         l_Vertex.Position                 = m_Positions[i];
     }
 }

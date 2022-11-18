@@ -10,7 +10,7 @@
 
 #include <memory>
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     template <typename _Ty> std::shared_ptr<_Ty> New() { return std::make_shared<_Ty>(); }
@@ -20,4 +20,4 @@ namespace LTSE::Core
     template <typename _Ty> using Ref     = std::shared_ptr<_Ty>;
     template <typename _Ty> using WeakRef = std::weak_ptr<_Ty>;
 
-} // namespace LTSE::Core
+} // namespace SE::Core

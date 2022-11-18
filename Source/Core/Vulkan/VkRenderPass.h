@@ -12,9 +12,9 @@
 
 #include "Core/Memory.h"
 
-namespace LTSE::Graphics::Internal
+namespace SE::Graphics::Internal
 {
-    using namespace LTSE::Core;
+    using namespace SE::Core;
 
     struct sVkRenderPassObject : public sVkAbstractRenderPassObject
     {
@@ -29,4 +29,4 @@ namespace LTSE::Graphics::Internal
         ~sVkRenderPassObject() = default;
     };
 
-} // namespace LTSE::Graphics::Internal
+} // namespace SE::Graphics::Internal

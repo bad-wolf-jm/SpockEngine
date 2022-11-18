@@ -14,7 +14,7 @@
 #include "Core/Resource.h"
 #include "UI/UI.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     void UIContext::SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData )
@@ -127,7 +127,7 @@ namespace LTSE::Core
         }
     }
 
-    UIContext::UIContext( Ref<LTSE::Core::Window> aWindow, GraphicContext &aGraphicContext, ARenderContext &aRenderContext,
+    UIContext::UIContext( Ref<SE::Core::Window> aWindow, GraphicContext &aGraphicContext, ARenderContext &aRenderContext,
                           std::string &aImGuiConfigPath, UIConfiguration const& aUIConfiguration )
         : mGraphicContext{ aGraphicContext }
         , mImGuiConfigPath{ aImGuiConfigPath }
@@ -223,7 +223,7 @@ namespace LTSE::Core
         lTextureDesc.Format              = eColorFormat::RGBA8_UNORM;
         lTextureDesc.Sampled             = true;
 
-        LTSE::Graphics::TextureData lTextureData;
+        SE::Graphics::TextureData lTextureData;
         lTextureData.ByteSize = lUploadSize;
         lTextureData.Data     = lFontPixelData;
 
@@ -291,4 +291,4 @@ namespace LTSE::Core
         return lDescriptorSet;
     }
 
-} // namespace LTSE::Core
+} // namespace SE::Core

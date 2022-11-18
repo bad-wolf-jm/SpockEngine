@@ -18,7 +18,7 @@
 
 #include "Core/GraphicContext//Buffer.h"
 
-namespace LTSE::Cuda
+namespace SE::Cuda
 {
 
     /** @brief Map a graphic resource for use by CUDA
@@ -34,7 +34,7 @@ namespace LTSE::Cuda
          * Registers the graphics buffer `aBuffer` for use with CUDA. The registered buffer
          * is then mapped and its corresponding device pointer is saved as per RAII.
          */
-        GPUExternalMemory( LTSE::Graphics::Buffer &aBuffer, size_t aSize, size_t aOffset = 0 )
+        GPUExternalMemory( SE::Graphics::Buffer &aBuffer, size_t aSize, size_t aOffset = 0 )
             : mSize{ aSize }
         {
             cudaExternalMemoryHandleDesc lExternalMemoryHandleDesc{};
@@ -137,4 +137,4 @@ namespace LTSE::Cuda
         size_t               mSize                 = 0;
     };
 
-} // namespace LTSE::Cuda
+} // namespace SE::Cuda

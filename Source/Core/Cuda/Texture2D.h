@@ -19,12 +19,12 @@
 
 #include "Core/Math/Types.h"
 
-/** \namespace LTSE::Cuda
+/** \namespace SE::Cuda
  */
-namespace LTSE::Cuda
+namespace SE::Cuda
 {
 
-    using namespace LTSE::Core;
+    using namespace SE::Core;
 
     /** \struct sTextureCreateInfo
      *
@@ -147,4 +147,4 @@ namespace LTSE::Cuda
         TextureSampler2D( Ref<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingInfo );
     };
 
-} // namespace LTSE::Cuda
+} // namespace SE::Cuda

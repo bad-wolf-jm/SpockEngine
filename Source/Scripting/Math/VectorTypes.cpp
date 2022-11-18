@@ -2,7 +2,7 @@
 
 #include "Core/Math/Types.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     using namespace math;
 
@@ -106,4 +106,4 @@ namespace LTSE::Core
         NewVector4Type<uvec4>( aModule, "uvec4" );
         DeclareVectorOperation<uvec4>( aModule );
     }
-} // namespace LTSE::Core
+} // namespace SE::Core

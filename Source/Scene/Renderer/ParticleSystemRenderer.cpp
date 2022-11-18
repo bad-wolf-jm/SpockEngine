@@ -3,9 +3,9 @@
 #include "Core/Logging.h"
 #include "Core/Resource.h"
 
-using namespace LTSE::Core;
+using namespace SE::Core;
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
     std::vector<Ref<DescriptorSetLayout>> ParticleSystemRenderer::GetDescriptorSetLayout() { return { PipelineLayout }; }
@@ -78,4 +78,4 @@ namespace LTSE::Graphics
         aRenderContext.Draw( 6, 0, 0, a_ParticleData.ParticleCount, 0 );
     }
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

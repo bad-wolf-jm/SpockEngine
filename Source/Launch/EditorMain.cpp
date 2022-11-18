@@ -26,9 +26,9 @@
 
 #include "Mono/Manager.h"
 
-using namespace LTSE::Core;
-using namespace LTSE::Graphics;
-using namespace LTSE::Core::UI;
+using namespace SE::Core;
+using namespace SE::Graphics;
+using namespace SE::Core::UI;
 
 namespace fs = std::filesystem;
 
@@ -194,7 +194,7 @@ int main( int argc, char **argv )
     // get cwd
     fs::path lProjectRoot = GetCwd();
 
-    LTSE::Logging::Info( "Current working directory is: '{}'", lProjectRoot.string() );
+    SE::Logging::Info( "Current working directory is: '{}'", lProjectRoot.string() );
 
     // Create Saved, Saved/Logs
     if( !fs::exists( lProjectRoot / "Saved" / "Logs" ) ) fs::create_directories( lProjectRoot / "Saved" / "Logs" );
@@ -204,8 +204,8 @@ int main( int argc, char **argv )
 
     // Configure logger to send messages to Saved/Logs/EditorLogs.txt
     auto lOutputLogFile = lProjectRoot / "Saved" / "Logs" / "EditorLogs.txt";
-    LTSE::Logging::Info( "Log file will be written to '{}'", lOutputLogFile.string() );
-    LTSE::Logging::SetLogOutputFile( lProjectRoot / "Saved" / "Logs" / "EditorLogs.txt" );
+    SE::Logging::Info( "Log file will be written to '{}'", lOutputLogFile.string() );
+    SE::Logging::SetLogOutputFile( lProjectRoot / "Saved" / "Logs" / "EditorLogs.txt" );
 
     math::ivec2     lWindowSize     = { 640, 480 };
     math::ivec2     lWindowPosition = { 100, 100 };
@@ -226,17 +226,17 @@ int main( int argc, char **argv )
     fs::path lProjectConfigurationPath = lProjectRoot / fmt::format( "{}.yaml", lProjectName );
     if( !fs::exists( lProjectConfigurationPath ) )
     {
-        LTSE::Logging::Info( "Project file '{}' does not exist", lProjectConfigurationPath.string() );
+        SE::Logging::Info( "Project file '{}' does not exist", lProjectConfigurationPath.string() );
 
         std::exit( 1 );
     }
 
-    LTSE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lProjectRoot / "Saved" / "imgui.ini", lUIConfiguration );
+    SE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lProjectRoot / "Saved" / "imgui.ini", lUIConfiguration );
 
     auto lScenario = fs::path( lProgramArguments->get<std::string>( "--scenario" ) );
-    if( !fs::exists( lScenario ) ) LTSE::Logging::Info( "Scenario file '{}' does not exist", lScenario.string() );
+    if( !fs::exists( lScenario ) ) SE::Logging::Info( "Scenario file '{}' does not exist", lScenario.string() );
 
-    LTSE::Graphics::OptixDeviceContextObject::Initialize();
+    SE::Graphics::OptixDeviceContextObject::Initialize();
 
     // Retrieve the Mono runtime
     fs::path    lMonoPath = "C:\\Program Files\\Mono\\lib\\mono\\4.5";
@@ -255,12 +255,12 @@ int main( int argc, char **argv )
 
     ScriptManager::Initialize( lMonoPath, lCoreScriptingPath );
 
-    LTSE::Editor::BaseEditorApplication lEditorApplication;
+    SE::Editor::BaseEditorApplication lEditorApplication;
     lEditorApplication.Init();
 
-    LTSE::Core::Engine::GetInstance()->UpdateDelegate.connect<&LTSE::Editor::BaseEditorApplication::Update>( lEditorApplication );
-    LTSE::Core::Engine::GetInstance()->RenderDelegate.connect<&LTSE::Editor::BaseEditorApplication::RenderScene>( lEditorApplication );
-    LTSE::Core::Engine::GetInstance()->UIDelegate.connect<&LTSE::Editor::BaseEditorApplication::RenderUI>( lEditorApplication );
+    SE::Core::Engine::GetInstance()->UpdateDelegate.connect<&SE::Editor::BaseEditorApplication::Update>( lEditorApplication );
+    SE::Core::Engine::GetInstance()->RenderDelegate.connect<&SE::Editor::BaseEditorApplication::RenderScene>( lEditorApplication );
+    SE::Core::Engine::GetInstance()->UIDelegate.connect<&SE::Editor::BaseEditorApplication::RenderUI>( lEditorApplication );
 
     // Load the application assembly and the default scenario file
     {
@@ -275,14 +275,14 @@ int main( int argc, char **argv )
             lEditorApplication.mEditorWindow.World->LoadScenario( lDefaultScenarioPath.as<std::string>() );
     }
 
-    while( LTSE::Core::Engine::GetInstance()->Tick() )
+    while( SE::Core::Engine::GetInstance()->Tick() )
     {
     }
 
     SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
 
     ScriptManager::Shutdown();
-    LTSE::Core::Engine::Shutdown();
+    SE::Core::Engine::Shutdown();
 
     return 0;
 }

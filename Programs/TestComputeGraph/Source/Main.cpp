@@ -29,9 +29,9 @@
 
 #include <chrono>
 
-using namespace LTSE::Core;
-using namespace LTSE::TensorOps;
-using namespace LTSE::SensorModel;
+using namespace SE::Core;
+using namespace SE::TensorOps;
+using namespace SE::SensorModel;
 namespace fs = std::filesystem;
 
 EngineLoop g_EngineLoop;
@@ -79,7 +79,7 @@ struct Profile
     {
         auto now    = std::chrono::system_clock::now();
         auto now_ns = std::chrono::time_point_cast<std::chrono::microseconds>( now );
-        LTSE::Logging::Info( "{} - {}", Name, static_cast<float>( now_ns.time_since_epoch().count() - StartTime ) / 1000.0f );
+        SE::Logging::Info( "{} - {}", Name, static_cast<float>( now_ns.time_since_epoch().count() - StartTime ) / 1000.0f );
     }
 };
 
@@ -223,7 +223,7 @@ void RunPipeline( Scope &g_ComputeScope )
     now_ns           = std::chrono::time_point_cast<std::chrono::microseconds>( now );
     auto ComputeTime = static_cast<float>( now_ns.time_since_epoch().count() - valu0.count() ) / 1000.0f;
 
-    LTSE::Logging::Info( "{:.3f}", ComputeTime );
+    SE::Logging::Info( "{:.3f}", ComputeTime );
 
     ComputeFpsTimer += ComputeTime;
     ComputeFrameCounter++;
@@ -292,7 +292,7 @@ bool RenderUI( ImGuiIO &io )
                   static float l_WF[l_WaveformLength] = { 0.0f };
                   std::memcpy( l_WF, g_Waveforms.data(), l_WaveformLength * sizeof( float ) );
 
-                  auto l_WindowSize = LTSE::Core::UI::GetAvailableContentSpace();
+                  auto l_WindowSize = SE::Core::UI::GetAvailableContentSpace();
 
                   LinePlotConfig l_PlotConfig = { "Waveforms", "Sample", "Amplitude", (float)l_WindowSize.x, (float)l_WindowSize.y, { -10, 1034 }, { -0.25, 1.25 } };
                   std::vector<LinePlotData> l_PlotData( 1 );

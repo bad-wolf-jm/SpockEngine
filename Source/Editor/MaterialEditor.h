@@ -9,9 +9,9 @@
 
 #include "Engine/Engine.h"
 
-using namespace LTSE::Core;
+using namespace SE::Core;
 
-namespace LTSE::Editor
+namespace SE::Editor
 {
     class MaterialEditor
     {
@@ -26,4 +26,4 @@ namespace LTSE::Editor
         void Display( int32_t width, int32_t height );
     };
 
-} // namespace LTSE::Editor
+} // namespace SE::Editor

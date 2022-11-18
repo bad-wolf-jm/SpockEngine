@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include <vulkan/vulkan.h>
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     /// @brief Enumeration type for the various color formats in use
@@ -44,4 +44,4 @@ namespace LTSE::Core
     eColorFormat ToLtseFormat( VkFormat C );
     VkFormat     ToVkFormat( eColorFormat C );
 
-} // namespace LTSE::Core
+} // namespace SE::Core

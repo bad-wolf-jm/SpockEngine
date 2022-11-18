@@ -20,11 +20,11 @@
 
 // #include "ShortWaveformDisplay.h"
 
-namespace LTSE::Editor
+namespace SE::Editor
 {
 
-    using namespace LTSE::Core;
-    using namespace LTSE::Core::EntityComponentSystem::Components;
+    using namespace SE::Core;
+    using namespace SE::Core::EntityComponentSystem::Components;
 
     // class SamplerChooser
     // {
@@ -131,22 +131,22 @@ namespace LTSE::Editor
         return lItemPathStr;
     }
 
-    static Ref<LTSE::Graphics::Texture2D> LoadImagePreview( LTSE::Graphics::GraphicContext &aGraphicContext, fs::path aImagePath )
+    static Ref<SE::Graphics::Texture2D> LoadImagePreview( SE::Graphics::GraphicContext &aGraphicContext, fs::path aImagePath )
     {
         if( aImagePath.extension() == ".png" )
         {
-            LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+            SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
             TextureData2D                        lTextureData( lTextureCreateInfo, aImagePath );
             sTextureSamplingInfo                 lSamplingInfo{};
-            LTSE::Core::TextureSampler2D         lTextureSampler = LTSE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
+            SE::Core::TextureSampler2D         lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            return New<LTSE::Graphics::Texture2D>( aGraphicContext, lTextureData, lTextureSampler );
+            return New<SE::Graphics::Texture2D>( aGraphicContext, lTextureData, lTextureSampler );
         }
         return nullptr;
     }
 
-    static void UpdateImageHandle( Ref<LTSE::Core::UIContext> aUIOverlay, ImageHandle &aImageHandle,
-                                   Ref<LTSE::Graphics::Texture2D> aTexture )
+    static void UpdateImageHandle( Ref<SE::Core::UIContext> aUIOverlay, ImageHandle &aImageHandle,
+                                   Ref<SE::Graphics::Texture2D> aTexture )
     {
         if( !aTexture ) return;
 
@@ -182,47 +182,47 @@ namespace LTSE::Editor
         mContentBrowser                     = ContentBrowser( mGraphicContext, mUIOverlay, "C:\\GitLab\\SpockEngine\\Saved" );
 
         {
-            LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+            SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
             TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Play.png" );
             sTextureSamplingInfo lSamplingInfo{};
-            LTSE::Core::TextureSampler2D lTextureSampler = LTSE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
+            SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            m_PlayIcon       = New<LTSE::Graphics::Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
+            m_PlayIcon       = New<SE::Graphics::Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
             m_PlayIconHandle = mUIOverlay->CreateTextureHandle( m_PlayIcon );
         }
 
         {
-            LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+            SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
             TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Pause.png" );
             sTextureSamplingInfo lSamplingInfo{};
-            LTSE::Core::TextureSampler2D lTextureSampler = LTSE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
+            SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            m_PauseIcon       = New<LTSE::Graphics::Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
+            m_PauseIcon       = New<SE::Graphics::Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
             m_PauseIconHandle = mUIOverlay->CreateTextureHandle( m_PauseIcon );
         }
 
         {
-            LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+            SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
             TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Play.png" );
             sTextureSamplingInfo lSamplingInfo{};
-            LTSE::Core::TextureSampler2D lTextureSampler = LTSE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
+            SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            m_DefaultTextureImage       = New<LTSE::Graphics::Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
+            m_DefaultTextureImage       = New<SE::Graphics::Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
             m_DefaultTextureImageHandle = mUIOverlay->CreateTextureHandle( m_PlayIcon );
         }
 
         {
-            LTSE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+            SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
             TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Camera.png" );
             sTextureSamplingInfo lSamplingInfo{};
-            LTSE::Core::TextureSampler2D lTextureSampler = LTSE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
+            SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            m_CameraIcon       = New<LTSE::Graphics::Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
+            m_CameraIcon       = New<SE::Graphics::Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
             m_CameraIconHandle = mUIOverlay->CreateTextureHandle( m_CameraIcon );
         }
     }
 
-    EditorWindow::EditorWindow( LTSE::Graphics::GraphicContext &aGraphicContext, Ref<UIContext> aUIOverlay )
+    EditorWindow::EditorWindow( SE::Graphics::GraphicContext &aGraphicContext, Ref<UIContext> aUIOverlay )
         : mGraphicContext{ aGraphicContext }
         , mUIOverlay{ aUIOverlay }
     {
@@ -339,7 +339,7 @@ namespace LTSE::Editor
             UI::Slider( "##alpha_threshold", "%.2f", 0.0f, 1.0f, &l_AlphaMaskThreshold );
 
             {
-                static Ref<LTSE::Graphics::Texture2D> lBaseColorTexture = nullptr;
+                static Ref<SE::Graphics::Texture2D> lBaseColorTexture = nullptr;
                 static ImageHandle                    lBaseColorTextureHandle{};
                 UI::Text( "Base color:" );
                 ImGui::Columns( 2, NULL, false );
@@ -370,7 +370,7 @@ namespace LTSE::Editor
             }
 
             {
-                static Ref<LTSE::Graphics::Texture2D> lEmissiveTexture = nullptr;
+                static Ref<SE::Graphics::Texture2D> lEmissiveTexture = nullptr;
                 static ImageHandle                    lEmissiveTextureHandle{};
                 UI::Text( "Emissive:" );
                 ImGui::Columns( 2, NULL, false );
@@ -400,7 +400,7 @@ namespace LTSE::Editor
             }
 
             {
-                static Ref<LTSE::Graphics::Texture2D> lNormalsTexture = nullptr;
+                static Ref<SE::Graphics::Texture2D> lNormalsTexture = nullptr;
                 static ImageHandle                    lNormalsTextureHandle{};
                 UI::Text( "Normals:" );
                 auto l_TopLeft     = ImGui::GetCursorScreenPos();
@@ -423,7 +423,7 @@ namespace LTSE::Editor
             }
 
             {
-                static Ref<LTSE::Graphics::Texture2D> lOcclusionTexture = nullptr;
+                static Ref<SE::Graphics::Texture2D> lOcclusionTexture = nullptr;
                 static ImageHandle                    lOcclusionTextureHandle{};
                 UI::Text( "Occlusion:" );
                 ImGui::Columns( 2, NULL, false );
@@ -453,7 +453,7 @@ namespace LTSE::Editor
             }
 
             {
-                static Ref<LTSE::Graphics::Texture2D> lPhysicalTexture = nullptr;
+                static Ref<SE::Graphics::Texture2D> lPhysicalTexture = nullptr;
                 static ImageHandle                    lPhysicalTextureHandle{};
                 UI::Text( "Physical properties:" );
                 ImGui::Columns( 2, NULL, false );
@@ -508,8 +508,8 @@ namespace LTSE::Editor
             {
                 if( lIsProfiling )
                 {
-                    auto lResults = LTSE::Core::Instrumentor::Get().EndSession();
-                    LTSE::Logging::Info( "{}", lResults->mEvents.size() );
+                    auto lResults = SE::Core::Instrumentor::Get().EndSession();
+                    SE::Logging::Info( "{}", lResults->mEvents.size() );
                     lIsProfiling            = false;
                     lProfilingDataAvailable = true;
                     lProfilingResults       = {};
@@ -534,7 +534,7 @@ namespace LTSE::Editor
                 }
                 else
                 {
-                    LTSE::Core::Instrumentor::Get().BeginSession( "Session" );
+                    SE::Core::Instrumentor::Get().BeginSession( "Session" );
                     lIsProfiling            = true;
                     lProfilingDataAvailable = false;
                     lProfilingResults       = {};
@@ -1021,7 +1021,7 @@ namespace LTSE::Editor
                                       ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_Resizable |
                                       ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
 
-        auto  &l_Logs     = LTSE::Logging::GetLogMessages();
+        auto  &l_Logs     = SE::Logging::GetLogMessages();
         ImVec2 outer_size = ImVec2( 0.0f, height );
         if( ImGui::BeginTable( "table_scrolly", 3, flags, outer_size ) )
         {
@@ -1058,4 +1058,4 @@ namespace LTSE::Editor
         }
     }
 
-} // namespace LTSE::Editor
+} // namespace SE::Editor

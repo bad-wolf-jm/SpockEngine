@@ -15,7 +15,7 @@
 #include "GraphicContext.h"
 #include "Texture2D.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
     // front, back, up, down, right, left
@@ -74,4 +74,4 @@ namespace LTSE::Graphics
         Ref<Internal::sVkImageSamplerObject> m_TextureSamplerObject = nullptr;
         Ref<Internal::sVkImageViewObject>    m_TextureView          = nullptr;
     };
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

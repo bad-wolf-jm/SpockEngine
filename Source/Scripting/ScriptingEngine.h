@@ -12,7 +12,7 @@
 
 namespace fs = std::filesystem;
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     using ScriptEnvironment = sol::environment;
@@ -55,4 +55,4 @@ namespace LTSE::Core
         sol::state ScriptState;
         sol::table mTypesModule;
     };
-} // namespace LTSE::Core
+} // namespace SE::Core

@@ -3,7 +3,7 @@
 #include "TensorOps/ScalarTypes.h"
 #include "Scripting/PrimitiveTypes.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     using namespace entt::literals;
 
@@ -23,4 +23,4 @@ namespace LTSE::Core
             return lMaybeAny ? lMaybeAny.cast<sol::reference>() : sol::lua_nil_t{};
         };
     }
-}; // namespace LTSE::Core
+}; // namespace SE::Core

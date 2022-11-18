@@ -22,9 +22,9 @@
 
 // #include "SensorModelDev/Base/KernelComponents.h"
 
-namespace LTSE::SensorModel::Dev
+namespace SE::SensorModel::Dev
 {
-    using namespace LTSE::Core;
+    using namespace SE::Core;
 
     struct sHitRecord
     {
@@ -57,4 +57,4 @@ namespace LTSE::SensorModel::Dev
         sHitRecord            *mSamplePoints;
     };
 
-} // namespace LTSE::SensorModel::Dev
+} // namespace SE::SensorModel::Dev

@@ -10,9 +10,9 @@
 
 #include "Scene/Components.h"
 
-using namespace LTSE::Core::EntityComponentSystem::Components;
+using namespace SE::Core::EntityComponentSystem::Components;
 
-namespace LTSE::Editor
+namespace SE::Editor
 {
 
     static bool EditButton( Entity aNode, math::vec2 aSize )
@@ -156,4 +156,4 @@ namespace LTSE::Editor
         ImGui::PopStyleVar();
     }
 
-} // namespace LTSE::Editor
+} // namespace SE::Editor

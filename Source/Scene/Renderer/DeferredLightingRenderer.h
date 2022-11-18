@@ -16,18 +16,18 @@
 #include "Core/Vulkan/VkRenderPass.h"
 #include "SceneRenderPipeline.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     using namespace math;
-    using namespace LTSE::Graphics;
+    using namespace SE::Graphics;
     namespace fs = std::filesystem;
 
     struct DeferredLightingRendererCreateInfo
     {
         bool Opaque = false;
 
-        Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
+        Ref<SE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
     class DeferredLightingRenderer : public SceneRenderPipeline<EmptyVertexData>
@@ -57,4 +57,4 @@ namespace LTSE::Core
         ~DeferredLightingRenderer() = default;
     };
 
-} // namespace LTSE::Core
+} // namespace SE::Core

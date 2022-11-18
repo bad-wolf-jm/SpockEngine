@@ -3,7 +3,7 @@
 #include "Core/Memory.h"
 #include "GraphicContext.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
     SwapChain::SwapChain( GraphicContext &aGraphicContext )
         : ARenderTarget( aGraphicContext, sRenderTargetDescription{} )
@@ -109,4 +109,4 @@ namespace LTSE::Graphics
             throw std::runtime_error( "failed to present swap chain image!" );
         }
     }
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

@@ -12,7 +12,7 @@
 #include "SceneRenderData.h"
 #include "VisualHelperRenderer.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
     class DeferredRenderer : public ASceneRenderer
     {
@@ -74,4 +74,4 @@ namespace LTSE::Core
         std::unordered_map<ParticleRendererCreateInfo, ParticleSystemRenderer, ParticleSystemRendererCreateInfoHash>
             mParticleRenderers = {};
     };
-} // namespace LTSE::Core
+} // namespace SE::Core

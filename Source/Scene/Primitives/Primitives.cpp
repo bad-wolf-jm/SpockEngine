@@ -1,11 +1,11 @@
 #include "Primitives.h"
 
-namespace LTSE::Core::Primitives
+namespace SE::Core::Primitives
 {
 
     uint32_t VertexBufferData::PushVertex( const math::vec3 &position, const math::vec3 &normal, const math::vec2 texCoords )
     {
-        LTSE::Core::VertexData l_NewVertex = { math::vec4( position, 1.0f ), normal, texCoords, texCoords, { -1.0f, -1.0f, -1.0f, -1.0f }, { 0.0f, 0.0f, 0.0f, 0.0f } };
+        SE::Core::VertexData l_NewVertex = { math::vec4( position, 1.0f ), normal, texCoords, texCoords, { -1.0f, -1.0f, -1.0f, -1.0f }, { 0.0f, 0.0f, 0.0f, 0.0f } };
         Vertices.emplace_back( l_NewVertex );
         return ( Vertices.size() - 1 );
     }
@@ -96,7 +96,7 @@ namespace LTSE::Core::Primitives
         const math::ivec2 faceCount   = subdivisions + math::ivec2{ 1 };
 
         VertexBufferData l_VertexData;
-        l_VertexData.Vertices = std::vector<LTSE::Core::VertexData>( vertexCount.x * vertexCount.y );
+        l_VertexData.Vertices = std::vector<SE::Core::VertexData>( vertexCount.x * vertexCount.y );
         l_VertexData.Indices  = std::vector<uint32_t>( (uint32_t)faceCount.x * faceCount.y * 6 );
 
         /* Indices */
@@ -600,4 +600,4 @@ namespace LTSE::Core::Primitives
         return l_VertexData;
     }
 
-} // namespace LTSE::Core::Primitives
+} // namespace SE::Core::Primitives

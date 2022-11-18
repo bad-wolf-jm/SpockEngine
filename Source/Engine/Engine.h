@@ -21,7 +21,7 @@
 
 #include "Core/Optix/OptixContext.h"
 /** @brief */
-namespace LTSE::Core
+namespace SE::Core
 {
     /** @class Engine
      *
@@ -90,14 +90,14 @@ namespace LTSE::Core
 
         math::ivec2 GetViewportSize() { return mViewportClient->GetFramebufferSize(); }
 
-        LTSE::Graphics::GraphicContext &GetGraphicContext() { return mGraphicContext; }
+        SE::Graphics::GraphicContext &GetGraphicContext() { return mGraphicContext; }
 
-        LTSE::Graphics::GraphicContext &GetDevice() { return mGraphicContext; }
+        SE::Graphics::GraphicContext &GetDevice() { return mGraphicContext; }
 
-        // Ref<LTSE::Graphics::SwapChainRenderTarget> GetSwapchainRenderer() { return mSwapChainRenderer; }
-        // LTSE::Graphics::RenderContext             &GetRenderContext() { return mRenderContext; }
+        // Ref<SE::Graphics::SwapChainRenderTarget> GetSwapchainRenderer() { return mSwapChainRenderer; }
+        // SE::Graphics::RenderContext             &GetRenderContext() { return mRenderContext; }
 
-        Ref<LTSE::Core::UIContext> UIContext() { return mImGUIOverlay; };
+        Ref<SE::Core::UIContext> UIContext() { return mImGUIOverlay; };
 
         void        SetApplicationName( std::string a_Name ) { mApplicationName = a_Name; }
         std::string GetApplicationName() { return mApplicationName; }
@@ -122,14 +122,14 @@ namespace LTSE::Core
       private:
         static std::unique_ptr<Engine> mUniqueInstance;
 
-        Ref<LTSE::Core::Window>        mViewportClient;
-        LTSE::Graphics::GraphicContext mGraphicContext;
+        Ref<SE::Core::Window>        mViewportClient;
+        SE::Graphics::GraphicContext mGraphicContext;
 
 
-        Ref<LTSE::Core::UIContext> mImGUIOverlay;
+        Ref<SE::Core::UIContext> mImGUIOverlay;
 
-        Ref<LTSE::Graphics::SwapChain> m_SwapChain;
-        LTSE::Graphics::ARenderContext m_SwapChainRenderContext;
+        Ref<SE::Graphics::SwapChain> m_SwapChain;
+        SE::Graphics::ARenderContext m_SwapChainRenderContext;
 
         double mEngineLoopStartTime;
         double mLastFrameTime = 0.0f;
@@ -147,4 +147,4 @@ namespace LTSE::Core
         std::string mApplicationName = "";
     };
 
-} // namespace LTSE::Core
+} // namespace SE::Core

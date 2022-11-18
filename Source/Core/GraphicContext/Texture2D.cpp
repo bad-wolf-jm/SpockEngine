@@ -6,7 +6,7 @@
 
 #include "Core/Logging.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
     static VkMemoryPropertyFlags ToVkMemoryFlag( TextureDescription const &a_BufferDescription )
@@ -354,4 +354,4 @@ namespace LTSE::Graphics
         return lSamplingInfo;
     }
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

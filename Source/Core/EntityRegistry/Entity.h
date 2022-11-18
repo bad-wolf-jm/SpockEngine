@@ -11,7 +11,7 @@
 #include "entt/entt.hpp"
 #include <functional>
 
-namespace LTSE::Core::Internal
+namespace SE::Core::Internal
 {
 
     /// \class Entity
@@ -20,7 +20,7 @@ namespace LTSE::Core::Internal
     /// This class maintains a pointer to its parent registry so as to be self contained
     /// when trying to access components.
     ///
-    /// @tparam ParentType Always set to `LTSE::Core::EntityRegistry`
+    /// @tparam ParentType Always set to `SE::Core::EntityRegistry`
     ///
     template <typename ParentType>
     class Entity
@@ -377,4 +377,4 @@ namespace LTSE::Core::Internal
         entt::entity mEntityHandle{ entt::null };
         ParentType   mParentRegistry = nullptr;
     };
-} // namespace LTSE::Core::Internal
+} // namespace SE::Core::Internal

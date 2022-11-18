@@ -1,12 +1,12 @@
 #include "GraphicContext.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
     GraphicContext::GraphicContext( uint32_t a_Width, uint32_t a_Height, uint32_t a_SampleCount, std::string a_Title )
     {
-        mViewportClient = LTSE::Core::New<Window>( a_Width, a_Height, a_Title );
-        mContext        = LTSE::Core::New<Internal::VkContext>( mViewportClient, true );
+        mViewportClient = SE::Core::New<Window>( a_Width, a_Height, a_Title );
+        mContext        = SE::Core::New<Internal::VkContext>( mViewportClient, true );
 
         uint32_t                          lNumberOfDescriptorSets = 1000;
         std::vector<VkDescriptorPoolSize> lPoolSizes( 4 );
@@ -26,7 +26,7 @@ namespace LTSE::Graphics
 
     Ref<Internal::sVkCommandBufferObject> GraphicContext::BeginSingleTimeCommands()
     {
-        Ref<Internal::sVkCommandBufferObject> l_CommandBuffer = LTSE::Core::New<Internal::sVkCommandBufferObject>( mContext );
+        Ref<Internal::sVkCommandBufferObject> l_CommandBuffer = SE::Core::New<Internal::sVkCommandBufferObject>( mContext );
         l_CommandBuffer->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         return l_CommandBuffer;
     }
@@ -39,4 +39,4 @@ namespace LTSE::Graphics
     }
 
     void GraphicContext::WaitIdle() { mContext->WaitIdle(); }
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

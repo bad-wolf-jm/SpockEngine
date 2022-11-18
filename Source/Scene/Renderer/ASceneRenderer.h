@@ -6,7 +6,7 @@
 
 #include "SceneRenderData.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     class ASceneRenderer
@@ -59,4 +59,4 @@ namespace LTSE::Core
         math::vec4 mAmbientLight = { 1.0f, 1.0f, 1.0f, 0.0001f };
     };
 
-} // namespace LTSE::Core
+} // namespace SE::Core

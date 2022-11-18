@@ -11,8 +11,8 @@
 #include "TensorOps/NodeComponents.h"
 #include "TensorOps/Scope.h"
 
-using namespace LTSE::Core;
-using namespace LTSE::TensorOps;
+using namespace SE::Core;
+using namespace SE::TensorOps;
 using namespace TestUtils;
 
 std::vector<uint8_t> RandomBooleanValues( std::vector<uint32_t> aDim )

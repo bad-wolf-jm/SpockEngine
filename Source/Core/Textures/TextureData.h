@@ -19,7 +19,7 @@
 
 namespace fs = std::filesystem;
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     /** \struct TextureData
@@ -187,4 +187,4 @@ namespace LTSE::Core
         std::array<float, 4> Fetch( float x, float y );
     };
 
-} // namespace LTSE::Core
+} // namespace SE::Core

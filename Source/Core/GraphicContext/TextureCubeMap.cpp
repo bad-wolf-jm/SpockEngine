@@ -5,7 +5,7 @@
 
 #include "Core/Logging.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
     static VkMemoryPropertyFlags ToVkMemoryFlag( TextureDescription const &a_BufferDescription )
     {
@@ -119,4 +119,4 @@ namespace LTSE::Graphics
         m_TextureSamplerObject = New<Internal::sVkImageSamplerObject>( mGraphicContext.mContext, (VkFilter)Spec.MinificationFilter,
             (VkFilter)Spec.MagnificationFilter, (VkSamplerAddressMode)Spec.WrappingMode, (VkSamplerMipmapMode)Spec.MipmapMode );
     }
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

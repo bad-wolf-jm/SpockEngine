@@ -13,13 +13,13 @@
 #include "Core/Cuda/CudaAssert.h"
 #include "TensorOps/Implementation/HelperMacros.h"
 
-namespace LTSE::SensorModel
+namespace SE::SensorModel
 {
     namespace Kernel
     {
         CUDA_KERNEL_DEFINITION void ExtractReflectivity( MultiTensor aOut, MultiTensor aReturns )
         {
-            int32_t i = blockIdx.x * LTSE::TensorOps::Private::ThreadsPerBlock + threadIdx.x;
+            int32_t i = blockIdx.x * SE::TensorOps::Private::ThreadsPerBlock + threadIdx.x;
 
             RETURN_UNLESS( i < aReturns.SizeAs<Dev::sHitRecord>() );
             RETURN_UNLESS( i < aOut.SizeAs<float>() );
@@ -32,7 +32,7 @@ namespace LTSE::SensorModel
 
         CUDA_KERNEL_DEFINITION void ExtractDistance( MultiTensor aOut, MultiTensor aReturns )
         {
-            int32_t i = blockIdx.x * LTSE::TensorOps::Private::ThreadsPerBlock + threadIdx.x;
+            int32_t i = blockIdx.x * SE::TensorOps::Private::ThreadsPerBlock + threadIdx.x;
 
             RETURN_UNLESS( i < aReturns.SizeAs<Dev::sHitRecord>() );
             RETURN_UNLESS( i < aOut.SizeAs<float>() );
@@ -46,22 +46,22 @@ namespace LTSE::SensorModel
 
     void ExtractReflectivityOp( MultiTensor &aOut, MultiTensor &aReturns )
     {
-        int lBlockCount = ( aReturns.SizeAs<Dev::sHitRecord>() / LTSE::TensorOps::Private::ThreadsPerBlock ) + 1;
+        int lBlockCount = ( aReturns.SizeAs<Dev::sHitRecord>() / SE::TensorOps::Private::ThreadsPerBlock ) + 1;
 
         dim3 lGridDim( lBlockCount, 1, 1 );
-        dim3 lBlockDim( LTSE::TensorOps::Private::ThreadsPerBlock );
+        dim3 lBlockDim( SE::TensorOps::Private::ThreadsPerBlock );
 
         Kernel::ExtractReflectivity<<<lGridDim, lBlockDim>>>( aOut, aReturns );
     }
 
     void ExtractDistanceOp( MultiTensor &aOut, MultiTensor &aReturns )
     {
-        int lBlockCount = ( aReturns.SizeAs<Dev::sHitRecord>() / LTSE::TensorOps::Private::ThreadsPerBlock ) + 1;
+        int lBlockCount = ( aReturns.SizeAs<Dev::sHitRecord>() / SE::TensorOps::Private::ThreadsPerBlock ) + 1;
 
         dim3 lGridDim( lBlockCount, 1, 1 );
-        dim3 lBlockDim( LTSE::TensorOps::Private::ThreadsPerBlock );
+        dim3 lBlockDim( SE::TensorOps::Private::ThreadsPerBlock );
 
         Kernel::ExtractDistance<<<lGridDim, lBlockDim>>>( aOut, aReturns );
     }
 
-} // namespace LTSE::SensorModel
+} // namespace SE::SensorModel

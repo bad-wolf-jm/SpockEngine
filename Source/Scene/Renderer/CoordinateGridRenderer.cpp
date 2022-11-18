@@ -2,7 +2,7 @@
 #include "Core/Math/Types.h"
 #include "Core/Resource.h"
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     std::vector<Ref<DescriptorSetLayout>> CoordinateGridRenderer::GetDescriptorSetLayout() { return { PipelineLayout }; }
@@ -45,4 +45,4 @@ namespace LTSE::Core
         aRenderContext.Draw( 6, 0, 0, 1, 0 );
     }
 
-} // namespace LTSE::Core
+} // namespace SE::Core

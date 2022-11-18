@@ -3,7 +3,7 @@
 #include "Core/Memory.h"
 #include <stdexcept>
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
     DescriptorSet::DescriptorSet( GraphicContext &aGraphicContext, Ref<DescriptorSetLayout> aLayout, uint32_t aDescriptorCount )
@@ -89,4 +89,4 @@ namespace LTSE::Graphics
         mDescriptorSetLayoutObject = New<Internal::sVkDescriptorSetLayoutObject>( mGraphicContext.mContext, lBindings, aUnbounded );
     }
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

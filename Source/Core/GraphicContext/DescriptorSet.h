@@ -10,7 +10,7 @@
 #include <vector>
 #include <vulkan/vulkan.h>
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
     struct DescriptorBindingInfo
     {
@@ -77,4 +77,4 @@ namespace LTSE::Graphics
         Ref<Internal::sVkDescriptorSetObject> mDescriptorSetObject = nullptr;
     };
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

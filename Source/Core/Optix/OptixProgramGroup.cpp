@@ -4,7 +4,7 @@
 #include "Core/Cuda/CudaAssert.h"
 
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
 
     OptixProgramGroupObject::OptixProgramGroupObject( OptixProgramGroupDesc a_ProgramGroupDescription, OptixProgramGroupOptions a_ProgramGroupOptions,
@@ -16,4 +16,4 @@ namespace LTSE::Graphics
 
     OptixProgramGroupObject::~OptixProgramGroupObject() { OPTIX_CHECK( optixProgramGroupDestroy( RTObject ) ); }
 
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

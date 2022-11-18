@@ -1,7 +1,7 @@
 #include "MaterialCreator.h"
 #include "UI/UI.h"
 
-namespace LTSE::Editor
+namespace SE::Editor
 {
 
     MaterialCreator::MaterialCreator( std::string a_Title, math::vec2 a_Size )
@@ -23,4 +23,4 @@ namespace LTSE::Editor
         }
     }
 
-} // namespace LTSE::Editor
+} // namespace SE::Editor

@@ -13,9 +13,9 @@
 #include "VkRenderPass.h"
 
 
-namespace LTSE::Graphics::Internal
+namespace SE::Graphics::Internal
 {
-    using namespace LTSE::Core;
+    using namespace SE::Core;
 
     struct sVkCommandBufferObject
     {
@@ -88,4 +88,4 @@ namespace LTSE::Graphics::Internal
         std::vector<VkPipelineStageFlags> mSubmitWaitSemaphoreStage = {};
         std::vector<VkSemaphore>          mSubmitSignalSemaphores   = {};
     };
-} // namespace LTSE::Graphics::Internal
+} // namespace SE::Graphics::Internal

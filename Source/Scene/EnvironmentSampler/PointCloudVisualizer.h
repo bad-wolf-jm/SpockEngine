@@ -14,10 +14,10 @@
 
 #include "Scene/ParticleData.h"
 
-namespace LTSE::SensorModel::Dev
+namespace SE::SensorModel::Dev
 {
 
-    using namespace LTSE::Cuda;
+    using namespace SE::Cuda;
 
     /**
      *  @struct LidarSamplePoint
@@ -60,4 +60,4 @@ namespace LTSE::SensorModel::Dev
         void Visualize( math::mat4 a_PointCloudTransform, MultiTensor &a_LidarReturnPoints, GPUExternalMemory &a_Particles );
     };
 
-} // namespace LTSE::SensorModel::Dev
+} // namespace SE::SensorModel::Dev

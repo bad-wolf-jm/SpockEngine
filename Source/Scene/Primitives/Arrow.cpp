@@ -1,6 +1,6 @@
 #include "Arrow.h"
 
-namespace LTSE::Core::Primitives
+namespace SE::Core::Primitives
 {
 
     using namespace math::literals;
@@ -36,4 +36,4 @@ namespace LTSE::Core::Primitives
         return l_Output;
     }
 
-} // namespace LTSE::Core::Primitives
+} // namespace SE::Core::Primitives

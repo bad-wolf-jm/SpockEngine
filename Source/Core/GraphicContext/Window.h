@@ -12,7 +12,7 @@
 // #include <entt/entt.hpp>
 
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     /** @brief */
@@ -305,4 +305,4 @@ namespace LTSE::Core
         GLFWwindow *mWindow     = nullptr;
         Engine *mEngineLoop = nullptr;
     };
-} // namespace LTSE::Core
+} // namespace SE::Core

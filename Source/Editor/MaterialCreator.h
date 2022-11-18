@@ -5,9 +5,9 @@
 
 #include "PopupWindow.h"
 
-using namespace LTSE::Core;
+using namespace SE::Core;
 
-namespace LTSE::Editor
+namespace SE::Editor
 {
     class MaterialCreator : public PopupWindow
     {
@@ -22,4 +22,4 @@ namespace LTSE::Editor
         void WindowContent();
     };
 
-} // namespace LTSE::Editor
+} // namespace SE::Editor

@@ -7,7 +7,7 @@
 
 int main( int, char *[] )
 {
-    LTSE::Core::ScriptingEngine lEngine{};
+    SE::Core::ScriptingEngine lEngine{};
 
     lEngine.Execute("print('foobar')");
 

@@ -2,7 +2,7 @@
 #include "Core/Logging.h"
 #include "Core/Profiling/BlockTimer.h"
 
-namespace LTSE::SensorModel::Dev
+namespace SE::SensorModel::Dev
 {
 
     extern "C" char g_SensorModelEnvironmentSampler[];
@@ -35,8 +35,8 @@ namespace LTSE::SensorModel::Dev
         mSBT->BindMissRecordTable<sMissRecord>( mMissRecordsBuffer.RawDevicePtr(), mMissRecordsBuffer.SizeAs<sMissRecord>() );
 
         std::vector<sHitgroupRecord> lHitgroupRecords;
-        a_Scene->ForEach<LTSE::Core::EntityComponentSystem::Components::sRayTracingTargetComponent,
-            LTSE::Core::EntityComponentSystem::Components::sStaticMeshComponent>(
+        a_Scene->ForEach<SE::Core::EntityComponentSystem::Components::sRayTracingTargetComponent,
+            SE::Core::EntityComponentSystem::Components::sStaticMeshComponent>(
             [&]( auto l_Entity, auto &l_Component, auto &aMeshComponent )
             {
                 sHitgroupRecord rec     = mSBT->NewRecordType<sHitgroupRecord>( mRayTracingModule->m_HitProgramGroups[0] );
@@ -65,9 +65,9 @@ namespace LTSE::SensorModel::Dev
             mLaunchParams.mIntensities    = a_Intensities.DataAs<float>();
             mLaunchParams.mSamplePoints   = a_SamplePoints.DataAs<sHitRecord>();
 
-            LTSE::Cuda::GPUExternalMemory lTransformedVertexBuffer(
+            SE::Cuda::GPUExternalMemory lTransformedVertexBuffer(
                 *a_Scene->mTransformedVertexBuffer, a_Scene->mTransformedVertexBuffer->SizeAs<uint8_t>() );
-            LTSE::Cuda::GPUExternalMemory lIndexBuffer( *a_Scene->mIndexBuffer, a_Scene->mIndexBuffer->SizeAs<uint8_t>() );
+            SE::Cuda::GPUExternalMemory lIndexBuffer( *a_Scene->mIndexBuffer, a_Scene->mIndexBuffer->SizeAs<uint8_t>() );
             mLaunchParams.mIndexBuffer  = lIndexBuffer.DataAs<math::uvec3>();
             mLaunchParams.mVertexBuffer = lTransformedVertexBuffer.DataAs<VertexData>();
 
@@ -82,4 +82,4 @@ namespace LTSE::SensorModel::Dev
         }
     }
 
-} // namespace LTSE::SensorModel::Dev
+} // namespace SE::SensorModel::Dev

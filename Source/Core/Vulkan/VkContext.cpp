@@ -5,7 +5,7 @@
 #include <set>
 #include <string>
 
-namespace LTSE::Graphics::Internal
+namespace SE::Graphics::Internal
 {
     namespace
     {
@@ -337,7 +337,7 @@ namespace LTSE::Graphics::Internal
                                                       VkDebugUtilsMessageTypeFlagsEXT             messageType,
                                                       const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData, void *pUserData )
         {
-            LTSE::Logging::Error( pCallbackData->pMessage );
+            SE::Logging::Error( pCallbackData->pMessage );
             return VK_FALSE;
         }
     } // namespace
@@ -1167,4 +1167,4 @@ namespace LTSE::Graphics::Internal
     void VkContext::WaitIdle() { vkDeviceWaitIdle( mVkLogicalDevice ); }
     void VkContext::WaitIdle( VkQueue aQueue ) { vkQueueWaitIdle( aQueue ); };
 
-} // namespace LTSE::Graphics::Internal
+} // namespace SE::Graphics::Internal

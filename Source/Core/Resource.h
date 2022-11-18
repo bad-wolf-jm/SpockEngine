@@ -4,7 +4,7 @@
 
 namespace fs = std::filesystem;
 
-namespace LTSE::Core
+namespace SE::Core
 {
 
     fs::path GetResourcePath( fs::path a_RelativePath );

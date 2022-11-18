@@ -33,14 +33,14 @@
 
 #include "Core/Profiling/BlockTimer.h"
 
-namespace LTSE::Core::EntityComponentSystem::Components
+namespace SE::Core::EntityComponentSystem::Components
 {
 
     using namespace math;
-    using namespace LTSE::Graphics;
-    using namespace LTSE::Core::EntityComponentSystem;
-    using namespace LTSE::Core;
-    using namespace LTSE::Cuda;
+    using namespace SE::Graphics;
+    using namespace SE::Core::EntityComponentSystem;
+    using namespace SE::Core;
+    using namespace SE::Cuda;
     using namespace math::literals;
 
     template <typename _Ty>
@@ -416,4 +416,4 @@ namespace LTSE::Core::EntityComponentSystem::Components
         sLightComponent( const sLightComponent & ) = default;
     };
 
-} // namespace LTSE::Core::EntityComponentSystem::Components
+} // namespace SE::Core::EntityComponentSystem::Components

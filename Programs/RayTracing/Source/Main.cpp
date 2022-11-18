@@ -48,23 +48,23 @@
 #include <fstream>
 #include <iostream>
 
-using namespace LTSE::Core;
-using namespace LTSE::Cuda;
-using namespace LTSE::Graphics;
-// using namespace LTSE::SensorModel::Dev;
-// using namespace LTSE::SensorModel::Test;
-using namespace LTSE::Core::Primitives;
+using namespace SE::Core;
+using namespace SE::Cuda;
+using namespace SE::Graphics;
+// using namespace SE::SensorModel::Dev;
+// using namespace SE::SensorModel::Test;
+using namespace SE::Core::Primitives;
 using namespace math::literals;
-using namespace LTSE::Core::UI;
-using namespace LTSE::TensorOps;
+using namespace SE::Core::UI;
+using namespace SE::TensorOps;
 
-LTSE::Core::EngineLoop *g_EngineLoop;
-// std::shared_ptr<LTSE::SensorModel::Dev::SensorModelEditor> g_SensorModel;
+SE::Core::EngineLoop *g_EngineLoop;
+// std::shared_ptr<SE::SensorModel::Dev::SensorModelEditor> g_SensorModel;
 
 // Ref<TestSensorDevice> g_SensorModel = nullptr;
 
-std::shared_ptr<LTSE::Core::Scene> g_World;
-std::shared_ptr<LTSE::Core::SceneRenderer> g_WorldRenderer;
+std::shared_ptr<SE::Core::Scene> g_World;
+std::shared_ptr<SE::Core::SceneRenderer> g_WorldRenderer;
 
 uint32_t frameCounter = 0;
 float fpsTimer        = 0.0f;
@@ -99,7 +99,7 @@ std::vector<std::shared_ptr<Buffer>> g_SubdivisionVisualizerVertices = {};
 std::vector<std::shared_ptr<Buffer>> g_SubdivisionVisualizerIndices  = {};
 std::vector<uint32_t> g_SubdivisionVisualizerSizes                   = {};
 
-// LTSE::SensorModel::Dev::PointCloudVisualizer l_PointCloudVisualizer;
+// SE::SensorModel::Dev::PointCloudVisualizer l_PointCloudVisualizer;
 
 math::mat4 g_SensorTransform;
 
@@ -126,7 +126,7 @@ void Table( std::string a_Name, std::vector<std::string> a_Columns, math::vec2 a
         }
         catch( const std::exception &e )
         {
-            LTSE::Logging::Info( "ERROR - {}", e.what() );
+            SE::Logging::Info( "ERROR - {}", e.what() );
         }
         ImGui::EndTable();
     }
@@ -157,7 +157,7 @@ void Update( Scope &a_Scope, Timestep ts )
     frameCounter++;
     fpsTimer += (float)ts;
 
-    // LTSE::Logging::Info( "Frame time: {}", (float)ts );
+    // SE::Logging::Info( "Frame time: {}", (float)ts );
 
     if( fpsTimer > 1000.0f )
     {
@@ -271,7 +271,7 @@ bool RenderUI( ImGuiIO &io )
 
 int main( int argc, char **argv )
 {
-    g_EngineLoop = new LTSE::Core::EngineLoop();
+    g_EngineLoop = new SE::Core::EngineLoop();
     g_EngineLoop->PreInit( 0, nullptr );
     g_EngineLoop->Init();
     Scope g_ComputeScope( 1024 * 1024 );
@@ -290,9 +290,9 @@ int main( int argc, char **argv )
 
     m_ParticleSystemRenderer = std::make_shared<ParticleSystemRenderer>( g_EngineLoop->GetGraphicContext(), g_EngineLoop->GetRenderContext(), l_ParticleRendererCreateInfo );
 
-    g_World = std::make_shared<LTSE::Core::Scene>( g_EngineLoop->GetGraphicContext(), g_EngineLoop->UIContext() );
+    g_World = std::make_shared<SE::Core::Scene>( g_EngineLoop->GetGraphicContext(), g_EngineLoop->UIContext() );
 
-    g_WorldRenderer                  = std::make_shared<LTSE::Core::SceneRenderer>( g_World, g_EngineLoop->GetRenderContext(), g_EngineLoop->GetRenderContext().GetRenderPass() );
+    g_WorldRenderer                  = std::make_shared<SE::Core::SceneRenderer>( g_World, g_EngineLoop->GetRenderContext(), g_EngineLoop->GetRenderContext().GetRenderPass() );
     math::ivec2 l_ViewportSize       = g_EngineLoop->GetViewportSize();
     g_WorldRenderer->View.Projection = math::Perspective( 90.0_degf, static_cast<float>( l_ViewportSize.x ) / static_cast<float>( l_ViewportSize.y ), 0.01f, 100000.0f );
     g_WorldRenderer->View.Projection[1][1] *= -1.0f;
@@ -334,9 +334,9 @@ int main( int argc, char **argv )
     // l_SphereMesh.Dirty     = true;
     // l_SphereMesh.UpdateBuffers( g_EngineLoop->GetGraphicContext() );
     // g_World->MarkAsRayTracingTarget( l_Sphere );
-    LTSE::Logging::Info("--------------------------------------------");
+    SE::Logging::Info("--------------------------------------------");
     auto foo = AsyncModelLoader( "C:\\work\\asset_import_test\\Sponza\\asset.yaml" );
-    LTSE::Logging::Info("--------------------------------------------");
+    SE::Logging::Info("--------------------------------------------");
 
     math::mat4 lTransform = math::Scale( math::Rotation( 90.0_degf, math::y_axis() ), math::vec3{ 0.01f, 0.01f, 0.01f } );
     g_World->LoadModel(  "C:\\work\\asset_import_test\\Sponza\\asset.yaml", "Sponza", lTransform );
@@ -358,7 +358,7 @@ int main( int argc, char **argv )
     while( g_EngineLoop->Tick() )
     {
         if( !foo.IsReady() )
-            LTSE::Logging::Info( "Remaining: {}", foo.Progress() );
+            SE::Logging::Info( "Remaining: {}", foo.Progress() );
     }
 
     return 0;

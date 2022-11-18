@@ -16,10 +16,10 @@
 
 #include "Core/Cuda/Texture2D.h"
 
-namespace LTSE::TensorOps
+namespace SE::TensorOps
 {
 
-    using namespace LTSE::Core;
+    using namespace SE::Core;
 
     void sARangeOperationController::Run()
     {
@@ -1029,4 +1029,4 @@ namespace LTSE::TensorOps
                 lOperandData.mArray1.Get<sMultiTensorComponent>().mValue, lOperandData.mElementCount1.Get<sVectorComponent<uint32_t>>().mData,
                 lOperandData.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData, lOperandData.mMaxBlockSize );
     }
-} // namespace LTSE::TensorOps
+} // namespace SE::TensorOps

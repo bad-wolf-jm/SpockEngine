@@ -11,10 +11,10 @@
 #include "Implementation/HelperMacros.h"
 #include "NodeComponents.h"
 
-namespace LTSE::TensorOps
+namespace SE::TensorOps
 {
 
-    using namespace LTSE::Cuda;
+    using namespace SE::Cuda;
 
     /// @struct sMultiTensorRunner
     ///
@@ -504,4 +504,4 @@ namespace LTSE::TensorOps
         void Run();
     };
 
-} // namespace LTSE::TensorOps
+} // namespace SE::TensorOps

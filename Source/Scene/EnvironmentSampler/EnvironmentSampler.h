@@ -21,12 +21,12 @@
 
 #include "LaunchParams.h"
 
-namespace LTSE::SensorModel::Dev
+namespace SE::SensorModel::Dev
 {
 
-    using namespace LTSE::Core;
-    using namespace LTSE::Cuda;
-    using namespace LTSE::Graphics;
+    using namespace SE::Core;
+    using namespace SE::Cuda;
+    using namespace SE::Graphics;
 
     struct __align__( OPTIX_SBT_RECORD_ALIGNMENT ) sRaygenRecord
     {
@@ -87,4 +87,4 @@ namespace LTSE::SensorModel::Dev
         GPUMemory    mLaunchParamsBuffer;
     };
 
-} // namespace LTSE::SensorModel::Dev
+} // namespace SE::SensorModel::Dev
