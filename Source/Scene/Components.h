@@ -31,6 +31,8 @@
 
 #include "Mono/Manager.h"
 
+#include "Core/Profiling/BlockTimer.h"
+
 namespace LTSE::Core::EntityComponentSystem::Components
 {
 
