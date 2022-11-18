@@ -352,7 +352,7 @@ namespace SE::Core::EntityComponentSystem::Components
     struct sAmbientLightingComponent
     {
         vec3  Color     = { 1.0f, 1.0f, 1.0f };
-        float Intensity = 0.0005f;
+        float Intensity = 0.03f;
 
         sAmbientLightingComponent()                                    = default;
         sAmbientLightingComponent( const sAmbientLightingComponent & ) = default;
