@@ -159,7 +159,7 @@ namespace LTSE::Graphics
             case eAttachmentType::COLOR:
             {
                 lDescription = lNewRenderPass->ColorAttachment( ToVkFormat( mAttachmentInfo[i].mFormat ), mSpec.mSampleCount,
-                                                                mAttachmentInfo[i].mIsSampled, mAttachmentInfo[i].mIsPresented,
+                                                                mAttachmentInfo[i].mIsSampled, mAttachmentInfo[i].mIsPresented, mAttachmentInfo[i].mIsDefined,
                                                                 lAttachmentLoadOp, lAttachmentStoreOp );
                 lAttachmentDescriptions.push_back( lDescription );
                 VkAttachmentReference lAttachmentReference{};
@@ -172,7 +172,7 @@ namespace LTSE::Graphics
             {
                 lDescription =
                     lNewRenderPass->ColorAttachment( ToVkFormat( mAttachmentInfo[i].mFormat ), 1, mAttachmentInfo[i].mIsSampled,
-                                                     mAttachmentInfo[i].mIsPresented, lAttachmentLoadOp, lAttachmentStoreOp );
+                                                     mAttachmentInfo[i].mIsPresented, mAttachmentInfo[i].mIsDefined, lAttachmentLoadOp, lAttachmentStoreOp );
                 lAttachmentDescriptions.push_back( lDescription );
                 lResolveAttachment.attachment = i;
                 lResolveAttachment.layout     = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
@@ -181,7 +181,7 @@ namespace LTSE::Graphics
             }
             case eAttachmentType::DEPTH:
             {
-                lDescription = lNewRenderPass->DepthAttachment( mSpec.mSampleCount, lAttachmentLoadOp, lAttachmentStoreOp );
+                lDescription = lNewRenderPass->DepthAttachment( mAttachmentInfo[i].mIsDefined, mSpec.mSampleCount, lAttachmentLoadOp, lAttachmentStoreOp );
                 lAttachmentDescriptions.push_back( lDescription );
                 lDepthAttachment.attachment = i;
                 lDepthAttachment.layout     = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;

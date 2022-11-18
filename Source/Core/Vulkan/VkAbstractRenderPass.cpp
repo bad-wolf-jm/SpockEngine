@@ -71,7 +71,8 @@ namespace LTSE::Graphics::Internal
     std::vector<VkClearValue> sVkAbstractRenderPassObject::GetClearValues() { return mClearValues; }
 
     VkAttachmentDescription sVkAbstractRenderPassObject::ColorAttachment( VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
-                                                                          bool aIsPresented, VkAttachmentLoadOp aAttachmentLoadOp,
+                                                                          bool aIsPresented, bool aIsDefined,
+                                                                          VkAttachmentLoadOp  aAttachmentLoadOp,
                                                                           VkAttachmentStoreOp aAttachmentStoreOp )
     {
         VkAttachmentDescription lAttachmentSpec{};
@@ -81,25 +82,26 @@ namespace LTSE::Graphics::Internal
         lAttachmentSpec.storeOp        = aAttachmentStoreOp;
         lAttachmentSpec.stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         lAttachmentSpec.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        lAttachmentSpec.initialLayout  = VK_IMAGE_LAYOUT_UNDEFINED;
+        lAttachmentSpec.initialLayout  = aIsDefined ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_UNDEFINED;
 
         if( aIsSampled )
         {
-            lAttachmentSpec.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            lAttachmentSpec.finalLayout   = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
         }
         else if( aIsPresented )
         {
-            lAttachmentSpec.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+            lAttachmentSpec.finalLayout   = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
         }
         else
         {
-            lAttachmentSpec.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+            lAttachmentSpec.finalLayout   = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
         }
 
         return lAttachmentSpec;
     }
 
-    VkAttachmentDescription sVkAbstractRenderPassObject::DepthAttachment( uint32_t aSampleCount, VkAttachmentLoadOp aAttachmentLoadOp,
+    VkAttachmentDescription sVkAbstractRenderPassObject::DepthAttachment( bool aIsDefined, uint32_t aSampleCount,
+                                                                          VkAttachmentLoadOp  aAttachmentLoadOp,
                                                                           VkAttachmentStoreOp aAttachmentStoreOp )
     {
         VkAttachmentDescription lAttachmentSpec{};
@@ -109,7 +111,7 @@ namespace LTSE::Graphics::Internal
         lAttachmentSpec.storeOp        = aAttachmentStoreOp;
         lAttachmentSpec.stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         lAttachmentSpec.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        lAttachmentSpec.initialLayout  = VK_IMAGE_LAYOUT_UNDEFINED;
+        lAttachmentSpec.initialLayout  = aIsDefined ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_UNDEFINED;
         lAttachmentSpec.finalLayout    = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
         return lAttachmentSpec;

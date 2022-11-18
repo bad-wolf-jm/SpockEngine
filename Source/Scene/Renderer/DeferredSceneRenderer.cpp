@@ -58,7 +58,7 @@ namespace LTSE::Core
         lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
         lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
         lAttachmentCreateInfo.mLoadOp     = eAttachmentLoadOp::CLEAR;
-        lAttachmentCreateInfo.mStoreOp    = eAttachmentStoreOp::UNSPECIFIED;
+        lAttachmentCreateInfo.mStoreOp    = eAttachmentStoreOp::STORE;
         mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
         mGeometryRenderTarget->Finalize();
         mGeometryContext = ARenderContext( mGraphicContext, mGeometryRenderTarget );
@@ -78,8 +78,9 @@ namespace LTSE::Core
 
         lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
         lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
-        lAttachmentCreateInfo.mLoadOp     = eAttachmentLoadOp::CLEAR;
+        lAttachmentCreateInfo.mLoadOp     = eAttachmentLoadOp::LOAD;
         lAttachmentCreateInfo.mStoreOp    = eAttachmentStoreOp::UNSPECIFIED;
+        lAttachmentCreateInfo.mIsDefined  = true;
         mLightingRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo,
                                               mGeometryRenderTarget->GetAttachment( "DEPTH_STENCIL" ) );
         mLightingRenderTarget->Finalize();

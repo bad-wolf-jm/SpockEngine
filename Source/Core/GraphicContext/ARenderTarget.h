@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Memory.h"
 #include "Core/GraphicContext/Window.h"
+#include "Core/Memory.h"
 
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicContext.h"
@@ -40,6 +40,13 @@ namespace LTSE::Graphics
         MSAA_RESOLVE = 2
     };
 
+    enum class eAttachmentLayout
+    {
+        SHADER_READ_ONLY = 0,
+        COLOR_ATTACHMENT = 1,
+        DEPTH_STENCIL    = 2
+    };
+
     struct sAttachmentDescription
     {
         eAttachmentType    mType        = eAttachmentType::COLOR;
@@ -47,6 +54,7 @@ namespace LTSE::Graphics
         math::vec4         mClearColor  = { 0.0f, 0.0f, 0.0f, 0.0f };
         bool               mIsSampled   = false;
         bool               mIsPresented = false;
+        bool               mIsDefined   = false;
         eAttachmentLoadOp  mLoadOp      = eAttachmentLoadOp::UNSPECIFIED;
         eAttachmentStoreOp mStoreOp     = eAttachmentStoreOp::UNSPECIFIED;
 
@@ -70,14 +78,15 @@ namespace LTSE::Graphics
 
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-            Ref<Internal::sVkFramebufferImage> aFramebufferImage );
+                            Ref<Internal::sVkFramebufferImage> aFramebufferImage );
 
         ARenderTarget &AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
-            math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp );
+                                      math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
+                                      eAttachmentStoreOp eStoreOp );
 
         ARenderTarget &AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
-            math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp,
-            Ref<Internal::sVkFramebufferImage> aFramebufferImage );
+                                      math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
+                                      eAttachmentStoreOp eStoreOp, Ref<Internal::sVkFramebufferImage> aFramebufferImage );
 
         void Finalize();
 

@@ -5,7 +5,6 @@
 #include <memory>
 #include <vulkan/vulkan.h>
 
-
 #include "VkContext.h"
 #include "VkImage.h"
 
@@ -32,8 +31,9 @@ namespace LTSE::Graphics::Internal
         ~sVkAbstractRenderPassObject();
 
         VkAttachmentDescription ColorAttachment( VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented,
-                                                 VkAttachmentLoadOp aAttachmentLoadOp, VkAttachmentStoreOp aAttachmentStoreOp );
-        VkAttachmentDescription DepthAttachment( uint32_t aSampleCount, VkAttachmentLoadOp aAttachmentLoadOp,
+                                                 bool aIsDefined, VkAttachmentLoadOp aAttachmentLoadOp,
+                                                 VkAttachmentStoreOp aAttachmentStoreOp );
+        VkAttachmentDescription DepthAttachment( bool aIsDefined, uint32_t aSampleCount, VkAttachmentLoadOp aAttachmentLoadOp,
                                                  VkAttachmentStoreOp aAttachmentStoreOp );
 
         std::vector<VkClearValue> GetClearValues();
