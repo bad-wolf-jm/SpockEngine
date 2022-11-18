@@ -1,7 +1,8 @@
 #include "Tensor.h"
 
-#include "Core/Memory.h"
 #include "Core/Cuda/MultiTensor.h"
+#include "Core/Memory.h"
+
 
 #include "TensorOps/ScalarTypes.h"
 #include "TensorOps/Scope.h"
@@ -19,7 +20,8 @@ namespace SE::Core
 
     namespace
     {
-        template <typename _Ty> auto MakeUploadFunction()
+        template <typename _Ty>
+        auto MakeUploadFunction()
         {
             return overload(
                 []( Cuda::MultiTensor &aSelf, NumericArray<_Ty> &aValues )
@@ -48,7 +50,8 @@ namespace SE::Core
                 } );
         }
 
-        template <typename _Ty> auto MakeFetchFunction()
+        template <typename _Ty>
+        auto MakeFetchFunction()
         {
             return overload( []( Cuda::MultiTensor &aSelf ) { return aSelf.FetchFlattened<_Ty>(); },
                              []( Cuda::MultiTensor &aSelf, uint32_t aLayer ) { return aSelf.FetchBufferAt<_Ty>( aLayer ); } );
@@ -88,17 +91,18 @@ namespace SE::Core
         );
         // clang-format on
 
-        lTensorShapeType["count_layers"] = []( Cuda::sTensorShape &aSelf ) { return aSelf.CountLayers( ); };
+        lTensorShapeType["count_layers"]  = []( Cuda::sTensorShape &aSelf ) { return aSelf.CountLayers(); };
         lTensorShapeType["get_dimension"] = []( Cuda::sTensorShape &aSelf, int32_t i ) { return aSelf.GetDimension( i ); };
         lTensorShapeType["trim"]          = []( Cuda::sTensorShape &aSelf, int32_t i ) { aSelf.Trim( i ); };
         lTensorShapeType["flatten"]       = []( Cuda::sTensorShape &aSelf, int32_t i ) { aSelf.Flatten( i ); };
 
-        auto lMemoryPoolType        = aScriptingState.new_usertype<Cuda::MemoryPool>( "MemoryPool", constructors<Cuda::MemoryPool( uint32_t aMemorySize )>() );
+        auto lMemoryPoolType =
+            aScriptingState.new_usertype<Cuda::MemoryPool>( "MemoryPool", constructors<Cuda::MemoryPool( uint32_t aMemorySize )>() );
         lMemoryPoolType["reset"]    = []( Cuda::MemoryPool &aSelf ) { aSelf.Reset(); };
         lMemoryPoolType["allocate"] = []( Cuda::MemoryPool &aSelf, int32_t aBytes ) { return aSelf.Allocate( aBytes ); };
 
-        auto lMultiTensorType =
-            aScriptingState.new_usertype<Cuda::MultiTensor>( "MultiTensor", constructors<Cuda::MultiTensor( Cuda::MemoryPool & aMemoryPool, const Cuda::sTensorShape &aShape )>() );
+        auto lMultiTensorType = aScriptingState.new_usertype<Cuda::MultiTensor>(
+            "MultiTensor", constructors<Cuda::MultiTensor( Cuda::MemoryPool & aMemoryPool, const Cuda::sTensorShape &aShape )>() );
         lMultiTensorType["size"]    = []( Cuda::MultiTensor &aSelf ) { return aSelf.Size(); };
         lMultiTensorType["shape"]   = []( Cuda::MultiTensor &aSelf ) { return aSelf.Shape(); };
         lMultiTensorType["size_as"] = []( Cuda::MultiTensor &aSelf, const sol::object &aTypeOrID )
@@ -164,7 +168,8 @@ namespace SE::Core
         lMultiTensorType["fetch_mat3"] = MakeFetchFunction<math::mat3>();
         lMultiTensorType["fetch_mat4"] = MakeFetchFunction<math::mat4>();
 
-        auto lScopeType       = aScriptingState.new_usertype<TensorOps::Scope>( "Scope", constructors<TensorOps::Scope( uint32_t aMemorySize )>() );
+        auto lScopeType =
+            aScriptingState.new_usertype<TensorOps::Scope>( "Scope", constructors<TensorOps::Scope( uint32_t aMemorySize )>() );
         lScopeType["ref_new"] = []( uint32_t aMemorySize ) { return New<TensorOps::Scope>( aMemorySize ); };
         lScopeType["reset"]   = []( TensorOps::Scope &aSelf ) { aSelf.Reset(); };
 
@@ -293,18 +298,19 @@ namespace SE::Core
         );
         // clang-format on
 
-        auto lRandomUniformInitializerComponent              = lOpsModule.new_usertype<sRandomUniformInitializerComponent>( "sRandomUniformInitializerComponent" );
-        lRandomUniformInitializerComponent[call_constructor] = []( eScalarType value ) { return sRandomUniformInitializerComponent{ value }; };
+        auto lRandomUniformInitializerComponent =
+            lOpsModule.new_usertype<sRandomUniformInitializerComponent>( "sRandomUniformInitializerComponent" );
+        lRandomUniformInitializerComponent[call_constructor] = []( eScalarType value )
+        { return sRandomUniformInitializerComponent{ value }; };
 
-        auto lRandomNormalInitializerComponent              = lOpsModule.new_usertype<sRandomNormalInitializerComponent>( "sRandomNormalInitializerComponent" );
+        auto lRandomNormalInitializerComponent =
+            lOpsModule.new_usertype<sRandomNormalInitializerComponent>( "sRandomNormalInitializerComponent" );
         lRandomNormalInitializerComponent[call_constructor] = []( eScalarType value, double mean, double std )
         {
             switch( value )
             {
-            case eScalarType::FLOAT64:
-                return sRandomNormalInitializerComponent{ value, mean, std };
-            default:
-                return sRandomNormalInitializerComponent{ value, static_cast<float>( mean ), static_cast<float>( std ) };
+            case eScalarType::FLOAT64: return sRandomNormalInitializerComponent{ value, mean, std };
+            default: return sRandomNormalInitializerComponent{ value, static_cast<float>( mean ), static_cast<float>( std ) };
             }
         };
 
@@ -524,7 +530,7 @@ namespace SE::Core
 
         lOpsModule["Where"] = TensorOps::Where;
 
-        lOpsModule["Mix"]    = TensorOps::Mix;
+        lOpsModule["Mix"]             = TensorOps::Mix;
         lOpsModule["AffineTransform"] = TensorOps::AffineTransform;
 
         lOpsModule["ARange"]      = TensorOps::ARange;
@@ -543,9 +549,9 @@ namespace SE::Core
         lOpsModule["Slice"]    = TensorOps::Slice;
         lOpsModule["HCat"]     = TensorOps::HCat;
 
-        lOpsModule["Summation"] =
-            overload( []( Scope &aScope, OpNode const &aArray ) { return Summation( aScope, aArray ); },
-                      []( Scope &aScope, OpNode const &aArray, OpNode const &aBegin, OpNode const &aEnd ) { return Summation( aScope, aArray, aBegin, aEnd ); } );
+        lOpsModule["Summation"] = overload( []( Scope &aScope, OpNode const &aArray ) { return Summation( aScope, aArray ); },
+                                            []( Scope &aScope, OpNode const &aArray, OpNode const &aBegin, OpNode const &aEnd )
+                                            { return Summation( aScope, aArray, aBegin, aEnd ); } );
 
         lOpsModule["CountTrue"]    = TensorOps::CountTrue;
         lOpsModule["CountNonZero"] = TensorOps::CountNonZero;
