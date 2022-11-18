@@ -48,12 +48,17 @@ namespace LTSE::Core
         mGeometryRenderTarget->AddAttachment( "POSITION", lAttachmentCreateInfo );
         mGeometryRenderTarget->AddAttachment( "NORMALS", lAttachmentCreateInfo );
 
+        // lAttachmentCreateInfo.mFormat = eColorFormat::R32_FLOAT;
+        // mGeometryRenderTarget->AddAttachment( "OBJECT_ID", lAttachmentCreateInfo );
+
         lAttachmentCreateInfo.mFormat = eColorFormat::RGBA8_UNORM;
         mGeometryRenderTarget->AddAttachment( "ALBEDO", lAttachmentCreateInfo );
         mGeometryRenderTarget->AddAttachment( "AO_METAL_ROUGH", lAttachmentCreateInfo );
 
         lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
         lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
+        lAttachmentCreateInfo.mLoadOp     = eAttachmentLoadOp::CLEAR;
+        lAttachmentCreateInfo.mStoreOp    = eAttachmentStoreOp::UNSPECIFIED;
         mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
         mGeometryRenderTarget->Finalize();
         mGeometryContext = ARenderContext( mGraphicContext, mGeometryRenderTarget );
@@ -67,11 +72,16 @@ namespace LTSE::Core
         lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
         lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA16_FLOAT;
         lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+        lAttachmentCreateInfo.mLoadOp     = eAttachmentLoadOp::CLEAR;
+        lAttachmentCreateInfo.mStoreOp    = eAttachmentStoreOp::STORE;
         mLightingRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
 
         lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
         lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
-        mLightingRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
+        lAttachmentCreateInfo.mLoadOp     = eAttachmentLoadOp::CLEAR;
+        lAttachmentCreateInfo.mStoreOp    = eAttachmentStoreOp::UNSPECIFIED;
+        mLightingRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo,
+                                              mGeometryRenderTarget->GetAttachment( "DEPTH_STENCIL" ) );
         mLightingRenderTarget->Finalize();
         mLightingContext = ARenderContext( mGraphicContext, mLightingRenderTarget );
 
@@ -87,6 +97,11 @@ namespace LTSE::Core
             New<Texture2D>( mGraphicContext, TextureDescription{}, mGeometryRenderTarget->GetAttachment( "ALBEDO" ) ), 2 );
         mLightingPassTextures->Write(
             New<Texture2D>( mGraphicContext, TextureDescription{}, mGeometryRenderTarget->GetAttachment( "AO_METAL_ROUGH" ) ), 3 );
+
+        CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
+        lCoordinateGridRendererCreateInfo.RenderPass = mLightingContext.GetRenderPass();
+        mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mLightingContext, lCoordinateGridRendererCreateInfo );
+        mVisualHelperRenderer   = New<VisualHelperRenderer>( mGraphicContext, mLightingContext.GetRenderPass() );
     }
 
     Ref<sVkFramebufferImage> DeferredRenderer::GetOutputImage()
@@ -109,6 +124,17 @@ namespace LTSE::Core
         return lCreateInfo;
     }
 
+    ParticleRendererCreateInfo DeferredRenderer::GetRenderPipelineCreateInfo( sParticleShaderComponent &aPipelineSpecification )
+    {
+        ParticleRendererCreateInfo lCreateInfo;
+        lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
+        lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
+        lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
+        lCreateInfo.RenderPass     = mGeometryContext.GetRenderPass();
+
+        return lCreateInfo;
+    }
+
     MeshRenderer &DeferredRenderer::GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification )
     {
         if( mMeshRenderers.find( aPipelineSpecification ) == mMeshRenderers.end() )
@@ -122,6 +148,16 @@ namespace LTSE::Core
         MeshRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 
         return GetRenderPipeline( lCreateInfo );
+    }
+
+    ParticleSystemRenderer &DeferredRenderer::GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification )
+    {
+        ParticleRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
+
+        if( mParticleRenderers.find( lCreateInfo ) == mParticleRenderers.end() )
+            mParticleRenderers[lCreateInfo] = ParticleSystemRenderer( mGraphicContext, mLightingContext, lCreateInfo );
+
+        return mParticleRenderers[lCreateInfo];
     }
 
     void DeferredRenderer::Update( Ref<Scene> aWorld )
@@ -219,6 +255,52 @@ namespace LTSE::Core
             mLightingContext.Bind( mLightingPassTextures, 1, -1 );
             mLightingContext.Draw( 6, 0, 0, 1, 0 );
         }
+
+        mScene->ForEach<sParticleSystemComponent, sParticleShaderComponent>(
+            [&]( auto aEntity, auto &aParticleSystemComponent, auto &aParticleShaderComponent )
+            {
+                auto &lPipeline = GetRenderPipeline( aParticleShaderComponent );
+
+                ParticleSystemRenderer::ParticleData lParticleData{};
+                lParticleData.Model         = math::mat4( 1.0f );
+                lParticleData.ParticleCount = aParticleSystemComponent.ParticleCount;
+                lParticleData.ParticleSize  = aParticleSystemComponent.ParticleSize;
+                lParticleData.Particles     = aParticleSystemComponent.Particles;
+
+                lPipeline.Render( View.Projection, View.View, mLightingContext, lParticleData );
+            } );
+
+        if( mRenderGizmos )
+        {
+            mVisualHelperRenderer->View       = View.View;
+            mVisualHelperRenderer->Projection = View.Projection;
+            mScene->ForEach<DirectionalLightHelperComponent>(
+                [&]( auto aEntity, auto &aDirectionalLightHelperComponent )
+                {
+                    math::mat4 lTransform = math::mat4( 1.0f );
+                    if( aEntity.Has<sTransformMatrixComponent>() ) lTransform = aEntity.Get<sTransformMatrixComponent>().Matrix;
+                    mVisualHelperRenderer->Render( lTransform, aDirectionalLightHelperComponent, mLightingContext );
+                } );
+
+            mScene->ForEach<SpotlightHelperComponent>(
+                [&]( auto aEntity, auto &aSpotlightHelperComponent )
+                {
+                    math::mat4 lTransform = math::mat4( 1.0f );
+                    if( aEntity.Has<sTransformMatrixComponent>() ) lTransform = aEntity.Get<sTransformMatrixComponent>().Matrix;
+                    mVisualHelperRenderer->Render( lTransform, aSpotlightHelperComponent, mLightingContext );
+                } );
+
+            mScene->ForEach<PointLightHelperComponent>(
+                [&]( auto aEntity, auto &aPointLightHelperComponent )
+                {
+                    math::mat4 lTransform = math::mat4( 1.0f );
+                    if( aEntity.Has<sTransformMatrixComponent>() ) lTransform = aEntity.Get<sTransformMatrixComponent>().Matrix;
+                    mVisualHelperRenderer->Render( lTransform, aPointLightHelperComponent, mLightingContext );
+                } );
+        }
+
+        if( mRenderCoordinateGrid ) mCoordinateGridRenderer->Render( View.Projection, View.View, mLightingContext );
+
         mLightingContext.EndRender();
     }
 

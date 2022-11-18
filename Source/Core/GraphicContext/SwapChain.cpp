@@ -50,7 +50,7 @@ namespace LTSE::Graphics
             auto lSwapChainImage = New<ARenderTarget>( mGraphicContext, lCreateInfo );
 
             lSwapChainImage->AddAttachment( "SWAPCHAIN_OUTPUT", eAttachmentType::COLOR, ToLtseFormat( lSwapChainImageFormat ),
-                { 0.01f, 0.01f, 0.03f, 1.0f }, false, true, eAttachmentLoadOp::CLEAR, eAttachmentStoreOp::UNSPECIFIED,
+                { 0.01f, 0.01f, 0.03f, 1.0f }, false, true, eAttachmentLoadOp::CLEAR, eAttachmentStoreOp::STORE,
                 lFramebufferImage );
 
             lSwapChainImage->Finalize();

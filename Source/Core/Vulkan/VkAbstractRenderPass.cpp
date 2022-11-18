@@ -9,24 +9,26 @@
 namespace LTSE::Graphics::Internal
 {
 
-    sVkAbstractRenderPassObject::sVkAbstractRenderPassObject( Ref<VkContext> aContext,
-        std::vector<VkAttachmentDescription> aAttachments, std::vector<VkSubpassDescription> aSubpasses,
-        std::vector<VkSubpassDependency> aSubpassDependencies )
+    sVkAbstractRenderPassObject::sVkAbstractRenderPassObject( Ref<VkContext>                       aContext,
+                                                              std::vector<VkAttachmentDescription> aAttachments,
+                                                              std::vector<VkSubpassDescription>    aSubpasses,
+                                                              std::vector<VkSubpassDependency>     aSubpassDependencies )
         : mContext{ aContext }
     {
         mVkObject = mContext->CreateRenderPass( aAttachments, aSubpasses, aSubpassDependencies );
     }
 
-    sVkAbstractRenderPassObject::sVkAbstractRenderPassObject(
-        Ref<VkContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented, math::vec4 aClearColor )
+    sVkAbstractRenderPassObject::sVkAbstractRenderPassObject( Ref<VkContext> aContext, VkFormat aFormat, uint32_t aSampleCount,
+                                                              bool aIsSampled, bool aIsPresented, math::vec4 aClearColor )
         : mSampleCount{ aSampleCount }
         , mContext{ aContext }
     {
     }
 
     void sVkAbstractRenderPassObject::CreateUnderlyingRenderpass( std::vector<VkAttachmentDescription> aAttachments,
-        std::vector<VkAttachmentReference> aColorAttachmentReferences, VkAttachmentReference *aDepthAttachmentReference,
-        VkAttachmentReference *aResolveAttachmentReference )
+                                                                  std::vector<VkAttachmentReference>   aColorAttachmentReferences,
+                                                                  VkAttachmentReference               *aDepthAttachmentReference,
+                                                                  VkAttachmentReference               *aResolveAttachmentReference )
     {
         VkSubpassDescription lSubpass{};
 
@@ -68,14 +70,15 @@ namespace LTSE::Graphics::Internal
 
     std::vector<VkClearValue> sVkAbstractRenderPassObject::GetClearValues() { return mClearValues; }
 
-    VkAttachmentDescription sVkAbstractRenderPassObject::ColorAttachment(
-        VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented )
+    VkAttachmentDescription sVkAbstractRenderPassObject::ColorAttachment( VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
+                                                                          bool aIsPresented, VkAttachmentLoadOp aAttachmentLoadOp,
+                                                                          VkAttachmentStoreOp aAttachmentStoreOp )
     {
         VkAttachmentDescription lAttachmentSpec{};
         lAttachmentSpec.samples        = VK_SAMPLE_COUNT_VALUE( aSampleCount );
         lAttachmentSpec.format         = aFormat;
-        lAttachmentSpec.loadOp         = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        lAttachmentSpec.storeOp        = VK_ATTACHMENT_STORE_OP_STORE;
+        lAttachmentSpec.loadOp         = aAttachmentLoadOp;
+        lAttachmentSpec.storeOp        = aAttachmentStoreOp;
         lAttachmentSpec.stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         lAttachmentSpec.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
         lAttachmentSpec.initialLayout  = VK_IMAGE_LAYOUT_UNDEFINED;
@@ -96,13 +99,14 @@ namespace LTSE::Graphics::Internal
         return lAttachmentSpec;
     }
 
-    VkAttachmentDescription sVkAbstractRenderPassObject::DepthAttachment( uint32_t aSampleCount )
+    VkAttachmentDescription sVkAbstractRenderPassObject::DepthAttachment( uint32_t aSampleCount, VkAttachmentLoadOp aAttachmentLoadOp,
+                                                                          VkAttachmentStoreOp aAttachmentStoreOp )
     {
         VkAttachmentDescription lAttachmentSpec{};
         lAttachmentSpec.samples        = VK_SAMPLE_COUNT_VALUE( aSampleCount );
         lAttachmentSpec.format         = mContext->GetDepthFormat();
-        lAttachmentSpec.loadOp         = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        lAttachmentSpec.storeOp        = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        lAttachmentSpec.loadOp         = aAttachmentLoadOp;
+        lAttachmentSpec.storeOp        = aAttachmentStoreOp;
         lAttachmentSpec.stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         lAttachmentSpec.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
         lAttachmentSpec.initialLayout  = VK_IMAGE_LAYOUT_UNDEFINED;

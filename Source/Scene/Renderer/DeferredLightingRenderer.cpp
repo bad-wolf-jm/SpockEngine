@@ -47,8 +47,8 @@ namespace LTSE::Core
         return { { { eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( MaterialPushConstants ) } };
     };
 
-    DeferredLightingRenderer::DeferredLightingRenderer(
-        GraphicContext &aGraphicContext, DeferredLightingRendererCreateInfo const &aCreateInfo )
+    DeferredLightingRenderer::DeferredLightingRenderer( GraphicContext                           &aGraphicContext,
+                                                        DeferredLightingRendererCreateInfo const &aCreateInfo )
         : SceneRenderPipeline<EmptyVertexData>( aGraphicContext )
         , Spec{ aCreateInfo }
     {
@@ -56,6 +56,8 @@ namespace LTSE::Core
         lCreateInfo.VertexShader   = "Shaders/Deferred/DeferredLightingMSAA.vert.spv";
         lCreateInfo.FragmentShader = "Shaders/Deferred/DeferredLightingMSAA.frag.spv";
         lCreateInfo.RenderPass     = aCreateInfo.RenderPass;
+        lCreateInfo.DepthTest      = false;
+        lCreateInfo.DepthWrite     = false;
 
         CameraSetLayout  = GetCameraSetLayout( mGraphicContext );
         TextureSetLayout = GetTextureSetLayout( mGraphicContext );

@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Core/Math/Types.h"
 #include "Core/GraphicContext/Window.h"
+#include "Core/Math/Types.h"
 #include <memory>
 #include <vulkan/vulkan.h>
+
 
 #include "VkContext.h"
 #include "VkImage.h"
@@ -22,30 +23,34 @@ namespace LTSE::Graphics::Internal
         sVkAbstractRenderPassObject()                                = default;
         sVkAbstractRenderPassObject( sVkAbstractRenderPassObject & ) = default;
         sVkAbstractRenderPassObject( Ref<VkContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
-            std::vector<VkSubpassDescription> aSubpasses, std::vector<VkSubpassDependency> aSubpassDependencies );
+                                     std::vector<VkSubpassDescription> aSubpasses,
+                                     std::vector<VkSubpassDependency>  aSubpassDependencies );
 
         sVkAbstractRenderPassObject( Ref<VkContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
-            bool aIsPresented, math::vec4 aClearColor );
+                                     bool aIsPresented, math::vec4 aClearColor );
 
         ~sVkAbstractRenderPassObject();
 
-        VkAttachmentDescription ColorAttachment( VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented );
-        VkAttachmentDescription DepthAttachment( uint32_t aSampleCount );
+        VkAttachmentDescription ColorAttachment( VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented,
+                                                 VkAttachmentLoadOp aAttachmentLoadOp, VkAttachmentStoreOp aAttachmentStoreOp );
+        VkAttachmentDescription DepthAttachment( uint32_t aSampleCount, VkAttachmentLoadOp aAttachmentLoadOp,
+                                                 VkAttachmentStoreOp aAttachmentStoreOp );
 
         std::vector<VkClearValue> GetClearValues();
 
         std::vector<VkSubpassDependency> DefaultSubpassDependencies();
 
-        void CreateUnderlyingRenderpass(
-            std::vector<VkAttachmentDescription> aAttachments, std::vector<VkAttachmentReference> aAttachmentReferences ,
-            VkAttachmentReference *aDepthAttachmentReference, VkAttachmentReference *aResolveAttachmentReference);
+        void CreateUnderlyingRenderpass( std::vector<VkAttachmentDescription> aAttachments,
+                                         std::vector<VkAttachmentReference>   aAttachmentReferences,
+                                         VkAttachmentReference               *aDepthAttachmentReference,
+                                         VkAttachmentReference               *aResolveAttachmentReference );
 
         uint32_t GetColorAttachmentCount() { return mColorAttachmentCount; }
 
       protected:
-        Ref<VkContext>            mContext     = nullptr;
-        std::vector<VkClearValue> mClearValues = {};
-        uint32_t mColorAttachmentCount = 0;
+        Ref<VkContext>            mContext              = nullptr;
+        std::vector<VkClearValue> mClearValues          = {};
+        uint32_t                  mColorAttachmentCount = 0;
     };
 
 } // namespace LTSE::Graphics::Internal

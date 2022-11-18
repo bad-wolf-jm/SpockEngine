@@ -44,12 +44,12 @@ namespace LTSE::Graphics
                                                                                 : ToVkFormat( aCreateInfo.mFormat );
 
         mAttachmentIDs.push_back( aAttachmentID );
-        mAttachments[aAttachmentID] = New<sVkFramebufferImage>(
-            mGraphicContext.mContext, lVkFormat, mSpec.mWidth, mSpec.mHeight, lSampleCount, lAttachmentType, aCreateInfo.mIsSampled );
+        mAttachments[aAttachmentID] = New<sVkFramebufferImage>( mGraphicContext.mContext, lVkFormat, mSpec.mWidth, mSpec.mHeight,
+                                                                lSampleCount, lAttachmentType, aCreateInfo.mIsSampled );
     }
 
     void ARenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-        Ref<Internal::sVkFramebufferImage> aFramebufferImage )
+                                       Ref<Internal::sVkFramebufferImage> aFramebufferImage )
     {
         mAttachmentInfo.push_back( aCreateInfo );
         VkImageUsageFlags lAttachmentType =
@@ -66,7 +66,8 @@ namespace LTSE::Graphics
     }
 
     ARenderTarget &ARenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
-        math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp )
+                                                 math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
+                                                 eAttachmentStoreOp eStoreOp )
     {
         sAttachmentDescription lCreateInfo{};
         lCreateInfo.mType        = aType;
@@ -83,8 +84,8 @@ namespace LTSE::Graphics
     }
 
     ARenderTarget &ARenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
-        math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp,
-        Ref<Internal::sVkFramebufferImage> aFramebufferImage )
+                                                 math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
+                                                 eAttachmentStoreOp eStoreOp, Ref<Internal::sVkFramebufferImage> aFramebufferImage )
     {
         sAttachmentDescription lCreateInfo{};
         lCreateInfo.mType        = aType;
@@ -106,10 +107,31 @@ namespace LTSE::Graphics
         for( auto const &lAttachmentID : mAttachmentIDs ) lAttachments.push_back( mAttachments[lAttachmentID] );
 
         mRenderPassObject  = CreateDefaultRenderPass();
-        mFramebufferObject = New<sVkFramebufferObject>(
-            mGraphicContext.mContext, mSpec.mWidth, mSpec.mHeight, 1, mRenderPassObject->mVkObject, lAttachments );
+        mFramebufferObject = New<sVkFramebufferObject>( mGraphicContext.mContext, mSpec.mWidth, mSpec.mHeight, 1,
+                                                        mRenderPassObject->mVkObject, lAttachments );
 
         InitializeCommandBuffers();
+    }
+
+    VkAttachmentLoadOp ToVkLoadOp( eAttachmentLoadOp aOp )
+    {
+        switch( aOp )
+        {
+        case eAttachmentLoadOp::CLEAR: return VK_ATTACHMENT_LOAD_OP_CLEAR;
+        case eAttachmentLoadOp::LOAD: return VK_ATTACHMENT_LOAD_OP_LOAD;
+        case eAttachmentLoadOp::UNSPECIFIED:
+        default: return VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        }
+    }
+
+    VkAttachmentStoreOp ToVkStoreOp( eAttachmentStoreOp aOp )
+    {
+        switch( aOp )
+        {
+        case eAttachmentStoreOp::STORE: return VK_ATTACHMENT_STORE_OP_STORE;
+        case eAttachmentStoreOp::UNSPECIFIED:
+        default: return VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        }
     }
 
     Ref<sVkAbstractRenderPassObject> ARenderTarget::CreateDefaultRenderPass()
@@ -129,12 +151,16 @@ namespace LTSE::Graphics
         for( uint32_t i = 0; i < mAttachmentInfo.size(); i++ )
         {
             VkAttachmentDescription lDescription;
+            VkAttachmentLoadOp      lAttachmentLoadOp  = ToVkLoadOp( mAttachmentInfo[i].mLoadOp );
+            VkAttachmentStoreOp     lAttachmentStoreOp = ToVkStoreOp( mAttachmentInfo[i].mStoreOp );
+
             switch( mAttachmentInfo[i].mType )
             {
             case eAttachmentType::COLOR:
             {
                 lDescription = lNewRenderPass->ColorAttachment( ToVkFormat( mAttachmentInfo[i].mFormat ), mSpec.mSampleCount,
-                    mAttachmentInfo[i].mIsSampled, mAttachmentInfo[i].mIsPresented );
+                                                                mAttachmentInfo[i].mIsSampled, mAttachmentInfo[i].mIsPresented,
+                                                                lAttachmentLoadOp, lAttachmentStoreOp );
                 lAttachmentDescriptions.push_back( lDescription );
                 VkAttachmentReference lAttachmentReference{};
                 lAttachmentReference.attachment = i;
@@ -144,8 +170,9 @@ namespace LTSE::Graphics
             }
             case eAttachmentType::MSAA_RESOLVE:
             {
-                lDescription = lNewRenderPass->ColorAttachment(
-                    ToVkFormat( mAttachmentInfo[i].mFormat ), 1, mAttachmentInfo[i].mIsSampled, mAttachmentInfo[i].mIsPresented );
+                lDescription =
+                    lNewRenderPass->ColorAttachment( ToVkFormat( mAttachmentInfo[i].mFormat ), 1, mAttachmentInfo[i].mIsSampled,
+                                                     mAttachmentInfo[i].mIsPresented, lAttachmentLoadOp, lAttachmentStoreOp );
                 lAttachmentDescriptions.push_back( lDescription );
                 lResolveAttachment.attachment = i;
                 lResolveAttachment.layout     = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
@@ -154,20 +181,19 @@ namespace LTSE::Graphics
             }
             case eAttachmentType::DEPTH:
             {
-                lDescription = lNewRenderPass->DepthAttachment( mSpec.mSampleCount );
+                lDescription = lNewRenderPass->DepthAttachment( mSpec.mSampleCount, lAttachmentLoadOp, lAttachmentStoreOp );
                 lAttachmentDescriptions.push_back( lDescription );
                 lDepthAttachment.attachment = i;
                 lDepthAttachment.layout     = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
                 lDepthAttachmentPtr         = &lDepthAttachment;
                 break;
             }
-            default:
-                break;
+            default: break;
             }
         }
 
-        lNewRenderPass->CreateUnderlyingRenderpass(
-            lAttachmentDescriptions, lColorAttachmentReferences, lDepthAttachmentPtr, lResolveAttachmentPtr );
+        lNewRenderPass->CreateUnderlyingRenderpass( lAttachmentDescriptions, lColorAttachmentReferences, lDepthAttachmentPtr,
+                                                    lResolveAttachmentPtr );
 
         return lNewRenderPass;
     }
@@ -216,7 +242,5 @@ namespace LTSE::Graphics
             if( lSubmitFence ) mCommandBufferObject[i]->SetSubmitFence( lSubmitFence );
         }
     }
-
-
 
 } // namespace LTSE::Graphics
