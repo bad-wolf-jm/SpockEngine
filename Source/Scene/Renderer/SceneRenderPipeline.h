@@ -15,19 +15,22 @@ namespace LTSE::Core
 
     using namespace math;
     using namespace LTSE::Graphics;
+    using namespace LTSE::Graphics::Internal;
     namespace fs = std::filesystem;
 
     struct SceneRenderPipelineCreateInfo
     {
-        bool                                                       Opaque               = false;
-        bool                                                       IsTwoSided           = false;
-        float                                                      LineWidth            = 1.0f;
-        ePrimitiveTopology                                         Topology             = ePrimitiveTopology::TRIANGLES;
-        fs::path                                                   VertexShader         = "";
-        fs::path                                                   FragmentShader       = "";
-        sBufferLayout                                              InputBufferLayout    = {};
-        sBufferLayout                                              InstanceBufferLayout = {};
-        Ref<LTSE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass           = nullptr;
+        bool                             Opaque               = false;
+        bool                             IsTwoSided           = false;
+        bool                             DepthTest            = true;
+        bool                             DepthWrite           = true;
+        float                            LineWidth            = 1.0f;
+        ePrimitiveTopology               Topology             = ePrimitiveTopology::TRIANGLES;
+        fs::path                         VertexShader         = "";
+        fs::path                         FragmentShader       = "";
+        sBufferLayout                    InputBufferLayout    = {};
+        sBufferLayout                    InstanceBufferLayout = {};
+        Ref<sVkAbstractRenderPassObject> RenderPass           = nullptr;
     };
 
     template <typename _VertexType>
@@ -72,8 +75,8 @@ namespace LTSE::Core
             lPipelineCreateInfo.SampleCount      = Spec.RenderPass->mSampleCount;
             lPipelineCreateInfo.LineWidth        = Spec.LineWidth;
             lPipelineCreateInfo.RenderPass       = Spec.RenderPass;
-            lPipelineCreateInfo.DepthWriteEnable = true;
-            lPipelineCreateInfo.DepthTestEnable  = true;
+            lPipelineCreateInfo.DepthWriteEnable = Spec.DepthTest;
+            lPipelineCreateInfo.DepthTestEnable  = Spec.DepthWrite;
             lPipelineCreateInfo.DepthComparison  = eDepthCompareOperation::LESS_OR_EQUAL;
             lPipelineCreateInfo.PushConstants    = GetPushConstantLayout();
             lPipelineCreateInfo.SetLayouts       = GetDescriptorSetLayout();

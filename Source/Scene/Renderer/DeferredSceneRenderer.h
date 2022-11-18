@@ -6,9 +6,11 @@
 #include "Core/Memory.h"
 
 #include "ASceneRenderer.h"
-#include "SceneRenderData.h"
+#include "CoordinateGridRenderer.h"
 #include "DeferredLightingRenderer.h"
 #include "MeshRenderer.h"
+#include "SceneRenderData.h"
+#include "VisualHelperRenderer.h"
 
 namespace LTSE::Core
 {
@@ -17,6 +19,10 @@ namespace LTSE::Core
       public:
         WorldMatrices  View;
         CameraSettings Settings;
+
+        bool mRenderCoordinateGrid = true;
+        bool mRenderGizmos         = false;
+        bool mGrayscaleRendering   = false;
 
       public:
         DeferredRenderer() = default;
@@ -31,9 +37,11 @@ namespace LTSE::Core
 
         Ref<sVkFramebufferImage> GetOutputImage();
 
-        MeshRendererCreateInfo GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification );
-        MeshRenderer          &GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification );
-        MeshRenderer          &GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification );
+        MeshRendererCreateInfo     GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification );
+        ParticleRendererCreateInfo GetRenderPipelineCreateInfo( sParticleShaderComponent &aPipelineSpecification );
+        MeshRenderer              &GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification );
+        MeshRenderer              &GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification );
+        ParticleSystemRenderer    &GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification );
 
       private:
         void UpdateDescriptorSets();
@@ -59,7 +67,11 @@ namespace LTSE::Core
 
         DeferredLightingRenderer mLightingRenderer;
 
-        std::unordered_map<MeshRendererCreateInfo, MeshRenderer, MeshRendererCreateInfoHash> mMeshRenderers = {};
+        Ref<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;
+        Ref<VisualHelperRenderer>   mVisualHelperRenderer   = nullptr;
 
+        std::unordered_map<MeshRendererCreateInfo, MeshRenderer, MeshRendererCreateInfoHash> mMeshRenderers = {};
+        std::unordered_map<ParticleRendererCreateInfo, ParticleSystemRenderer, ParticleSystemRendererCreateInfoHash>
+            mParticleRenderers = {};
     };
 } // namespace LTSE::Core

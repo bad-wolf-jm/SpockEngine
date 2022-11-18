@@ -46,7 +46,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Optix/OptixAccelerationStructure.cpp
     
     Core/Vulkan/VkContext.cpp
-    Core/Vulkan/VkRenderPass.cpp
+    # Core/Vulkan/VkRenderPass.cpp
     Core/Vulkan/VkPipeline.cpp
     Core/Vulkan/VkImage.cpp
     Core/Vulkan/VkCommand.cpp
