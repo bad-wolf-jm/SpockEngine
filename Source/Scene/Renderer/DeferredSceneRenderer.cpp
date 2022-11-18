@@ -255,53 +255,52 @@ namespace SE::Core
             mLightingContext.Bind( mLightingPassCamera, 0, -1 );
             mLightingContext.Bind( mLightingPassTextures, 1, -1 );
             mLightingContext.Draw( 6, 0, 0, 1, 0 );
-        }
 
-        mScene->ForEach<sParticleSystemComponent, sParticleShaderComponent>(
-            [&]( auto aEntity, auto &aParticleSystemComponent, auto &aParticleShaderComponent )
+            mScene->ForEach<sParticleSystemComponent, sParticleShaderComponent>(
+                [&]( auto aEntity, auto &aParticleSystemComponent, auto &aParticleShaderComponent )
+                {
+                    auto &lPipeline = GetRenderPipeline( aParticleShaderComponent );
+
+                    ParticleSystemRenderer::ParticleData lParticleData{};
+                    lParticleData.Model         = math::mat4( 1.0f );
+                    lParticleData.ParticleCount = aParticleSystemComponent.ParticleCount;
+                    lParticleData.ParticleSize  = aParticleSystemComponent.ParticleSize;
+                    lParticleData.Particles     = aParticleSystemComponent.Particles;
+
+                    lPipeline.Render( View.Projection, View.View, mLightingContext, lParticleData );
+                } );
+
+            if( mRenderGizmos )
             {
-                auto &lPipeline = GetRenderPipeline( aParticleShaderComponent );
+                mVisualHelperRenderer->View       = View.View;
+                mVisualHelperRenderer->Projection = View.Projection;
+                mScene->ForEach<DirectionalLightHelperComponent>(
+                    [&]( auto aEntity, auto &aDirectionalLightHelperComponent )
+                    {
+                        math::mat4 lTransform = math::mat4( 1.0f );
+                        if( aEntity.Has<sTransformMatrixComponent>() ) lTransform = aEntity.Get<sTransformMatrixComponent>().Matrix;
+                        mVisualHelperRenderer->Render( lTransform, aDirectionalLightHelperComponent, mLightingContext );
+                    } );
 
-                ParticleSystemRenderer::ParticleData lParticleData{};
-                lParticleData.Model         = math::mat4( 1.0f );
-                lParticleData.ParticleCount = aParticleSystemComponent.ParticleCount;
-                lParticleData.ParticleSize  = aParticleSystemComponent.ParticleSize;
-                lParticleData.Particles     = aParticleSystemComponent.Particles;
+                mScene->ForEach<SpotlightHelperComponent>(
+                    [&]( auto aEntity, auto &aSpotlightHelperComponent )
+                    {
+                        math::mat4 lTransform = math::mat4( 1.0f );
+                        if( aEntity.Has<sTransformMatrixComponent>() ) lTransform = aEntity.Get<sTransformMatrixComponent>().Matrix;
+                        mVisualHelperRenderer->Render( lTransform, aSpotlightHelperComponent, mLightingContext );
+                    } );
 
-                lPipeline.Render( View.Projection, View.View, mLightingContext, lParticleData );
-            } );
+                mScene->ForEach<PointLightHelperComponent>(
+                    [&]( auto aEntity, auto &aPointLightHelperComponent )
+                    {
+                        math::mat4 lTransform = math::mat4( 1.0f );
+                        if( aEntity.Has<sTransformMatrixComponent>() ) lTransform = aEntity.Get<sTransformMatrixComponent>().Matrix;
+                        mVisualHelperRenderer->Render( lTransform, aPointLightHelperComponent, mLightingContext );
+                    } );
+            }
 
-        if( mRenderGizmos )
-        {
-            mVisualHelperRenderer->View       = View.View;
-            mVisualHelperRenderer->Projection = View.Projection;
-            mScene->ForEach<DirectionalLightHelperComponent>(
-                [&]( auto aEntity, auto &aDirectionalLightHelperComponent )
-                {
-                    math::mat4 lTransform = math::mat4( 1.0f );
-                    if( aEntity.Has<sTransformMatrixComponent>() ) lTransform = aEntity.Get<sTransformMatrixComponent>().Matrix;
-                    mVisualHelperRenderer->Render( lTransform, aDirectionalLightHelperComponent, mLightingContext );
-                } );
-
-            mScene->ForEach<SpotlightHelperComponent>(
-                [&]( auto aEntity, auto &aSpotlightHelperComponent )
-                {
-                    math::mat4 lTransform = math::mat4( 1.0f );
-                    if( aEntity.Has<sTransformMatrixComponent>() ) lTransform = aEntity.Get<sTransformMatrixComponent>().Matrix;
-                    mVisualHelperRenderer->Render( lTransform, aSpotlightHelperComponent, mLightingContext );
-                } );
-
-            mScene->ForEach<PointLightHelperComponent>(
-                [&]( auto aEntity, auto &aPointLightHelperComponent )
-                {
-                    math::mat4 lTransform = math::mat4( 1.0f );
-                    if( aEntity.Has<sTransformMatrixComponent>() ) lTransform = aEntity.Get<sTransformMatrixComponent>().Matrix;
-                    mVisualHelperRenderer->Render( lTransform, aPointLightHelperComponent, mLightingContext );
-                } );
+            if( mRenderCoordinateGrid ) mCoordinateGridRenderer->Render( View.Projection, View.View, mLightingContext );
         }
-
-        if( mRenderCoordinateGrid ) mCoordinateGridRenderer->Render( View.Projection, View.View, mLightingContext );
-
         mLightingContext.EndRender();
     }
 
