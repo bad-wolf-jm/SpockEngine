@@ -307,7 +307,7 @@ namespace SE::Core
 
     void DeferredRenderer::UpdateDescriptorSets()
     {
-        LTSE_PROFILE_FUNCTION();
+        SE_PROFILE_FUNCTION();
 
         mScene->ForEach<sTransformMatrixComponent>(
             [&]( auto aEntity, auto &aComponent )

@@ -162,7 +162,7 @@ namespace SE::Cuda
 
         /// @brief Retrieves the size and offset, of the i-th layer of the sTensorShape
         template <typename _Ty>
-        LTSE_CUDA_INLINE LTSE_CUDA_DEVICE_FUNCTION_DEF sBufferSizeInfo GetBufferSizeAs( uint32_t i ) const
+        SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF sBufferSizeInfo GetBufferSizeAs( uint32_t i ) const
         {
 #ifdef __CUDACC__
             auto lData = mDeviceSideData.mBufferSizes.DataAs<sBufferSizeInfo>()[i];
@@ -178,7 +178,7 @@ namespace SE::Cuda
         }
 
         template <typename _AsType>
-        LTSE_CUDA_INLINE LTSE_CUDA_DEVICE_FUNCTION_DEF bool InBounds( uint32_t aLayer, uint32_t i ) const
+        SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF bool InBounds( uint32_t aLayer, uint32_t i ) const
         {
 #ifdef __CUDACC__
             auto lData = mDeviceSideData.mBufferSizes.DataAs<sBufferSizeInfo>()[aLayer];
@@ -268,7 +268,7 @@ namespace SE::Cuda
         MultiTensor( MemoryPool &aMemoryPool, MemoryBuffer &aMemoryBuffer, const sTensorShape &aShape );
 
         /// @brief Retrieves the shape of the tensor
-        LTSE_CUDA_INLINE LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF sTensorShape &Shape() { return mShape; }
+        SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF sTensorShape &Shape() { return mShape; }
 
         /// @brief Retrieve a pointer to the i-th layer
         ///
@@ -277,7 +277,7 @@ namespace SE::Cuda
         /// @return  A MemoryBuffer pointing to the layer
         ///
         template <typename _Ty>
-        LTSE_CUDA_INLINE LTSE_CUDA_DEVICE_FUNCTION_DEF _Ty *DeviceBufferAt( uint32_t i ) const
+        SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF _Ty *DeviceBufferAt( uint32_t i ) const
         {
             sBufferSizeInfo lBufferSize = mShape.GetBufferSizeAs<_Ty>( i );
             return DataAs<_Ty>() + lBufferSize.mOffset;
@@ -376,18 +376,18 @@ namespace SE::Cuda
         }
 
         /// @brief Size, in bytes, of the tensor.
-        LTSE_CUDA_INLINE LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t Size() const { return mMemoryBuffer.Size(); }
+        SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t Size() const { return mMemoryBuffer.Size(); }
 
         /// @brief Size of the tensor as elements of type `_Ty`.
         template <typename _Tx>
-        LTSE_CUDA_INLINE LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t SizeAs() const
+        SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t SizeAs() const
         {
             return mMemoryBuffer.SizeAs<_Tx>();
         }
 
         /// @brief Pointer to the underlying data as type `_Ty`.
         template <typename _Tx>
-        LTSE_CUDA_INLINE LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF _Tx *DataAs() const
+        SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF _Tx *DataAs() const
         {
             return mMemoryBuffer.DataAs<_Tx>();
         }

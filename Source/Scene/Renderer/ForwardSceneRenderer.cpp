@@ -175,7 +175,7 @@ namespace SE::Core
 
     void ForwardSceneRenderer::Render()
     {
-        LTSE_PROFILE_FUNCTION();
+        SE_PROFILE_FUNCTION();
 
         if( !mScene ) return;
         UpdateDescriptorSets();
@@ -279,7 +279,7 @@ namespace SE::Core
 
     void ForwardSceneRenderer::UpdateDescriptorSets()
     {
-        LTSE_PROFILE_FUNCTION();
+        SE_PROFILE_FUNCTION();
 
         mScene->ForEach<sTransformMatrixComponent>(
             [&]( auto aEntity, auto &aComponent )

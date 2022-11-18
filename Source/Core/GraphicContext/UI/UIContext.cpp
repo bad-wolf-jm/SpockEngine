@@ -19,7 +19,7 @@ namespace SE::Core
 
     void UIContext::SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData )
     {
-        LTSE_PROFILE_FUNCTION();
+        SE_PROFILE_FUNCTION();
 
         aRenderContext.Bind( mUIRenderPipeline );
 
@@ -48,7 +48,7 @@ namespace SE::Core
     // Render function
     void UIContext::RenderDrawData( ARenderContext &aRenderContext, ImDrawData *aDrawData )
     {
-        LTSE_PROFILE_FUNCTION();
+        SE_PROFILE_FUNCTION();
 
         // Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
         int lFramebufferWidth  = (int)( aDrawData->DisplaySize.x * aDrawData->FramebufferScale.x );

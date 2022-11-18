@@ -1251,7 +1251,7 @@ namespace SE::Core
 
     void Scene::Update( Timestep ts )
     {
-        LTSE_PROFILE_FUNCTION();
+        SE_PROFILE_FUNCTION();
 
         // Run scripts if the scene is in RUNNING mode.  The native scripts are run first, followed by the Lua scripts.
         if( mState == eSceneState::RUNNING )
@@ -1392,7 +1392,7 @@ namespace SE::Core
 
         if( mVertexBuffer )
         {
-            LTSE_PROFILE_SCOPE( "Transform Vertices" );
+            SE_PROFILE_SCOPE( "Transform Vertices" );
 
             // Update the transformed vertex buffer for static meshies
             {
@@ -1461,7 +1461,7 @@ namespace SE::Core
 
     void Scene::UpdateRayTracingComponents()
     {
-        LTSE_PROFILE_FUNCTION();
+        SE_PROFILE_FUNCTION();
 
         bool l_RebuildAS = false;
         ForEach<sTransformMatrixComponent, sStaticMeshComponent, sRayTracingTargetComponent>(
@@ -1479,7 +1479,7 @@ namespace SE::Core
 
     void Scene::RebuildAccelerationStructure()
     {
-        LTSE_PROFILE_FUNCTION();
+        SE_PROFILE_FUNCTION();
 
         m_AccelerationStructure = SE::Core::New<OptixTraversableObject>( mRayTracingContext );
 

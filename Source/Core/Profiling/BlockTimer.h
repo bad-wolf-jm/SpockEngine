@@ -136,26 +136,26 @@ namespace SE::Core
         std::chrono::time_point<std::chrono::high_resolution_clock> mStartTimePoint;
     };
 
-#define LTSE_ENABLE_PROFILING 1
-#if LTSE_ENABLE_PROFILING
+#define SE_ENABLE_PROFILING 1
+#if SE_ENABLE_PROFILING
 #    if( defined( __FUNCSIG__ ) || ( _MSC_VER ) )
-#        define LTSE_FUNC_SIG __func__
+#        define SE_FUNC_SIG __func__
 #    elif( defined( __INTEL_COMPILER ) && ( __INTEL_COMPILER >= 600 ) ) || ( defined( __IBMCPP__ ) && ( __IBMCPP__ >= 500 ) )
-#        define LTSE_FUNC_SIG __FUNCTION__
+#        define SE_FUNC_SIG __FUNCTION__
 #    elif defined( __STDC_VERSION__ ) && ( __STDC_VERSION__ >= 199901 )
-#        define LTSE_FUNC_SIG __func__
+#        define SE_FUNC_SIG __func__
 #    elif defined( __cplusplus ) && ( __cplusplus >= 201103 )
-#        define LTSE_FUNC_SIG __func__
+#        define SE_FUNC_SIG __func__
 #    else
-#        define LTSE_FUNC_SIG "LTSE_FUNC_SIG unknown!"
+#        define SE_FUNC_SIG "SE_FUNC_SIG unknown!"
 #    endif
-#    define LTSE_PROFILE_SCOPE_LINE2( name, line ) BlockTimer timer##line( name )
-#    define LTSE_PROFILE_SCOPE_LINE( name, line ) LTSE_PROFILE_SCOPE_LINE2( name, line )
-#    define LTSE_PROFILE_SCOPE( name ) LTSE_PROFILE_SCOPE_LINE( name, __LINE__ )
-#    define LTSE_PROFILE_FUNCTION() LTSE_PROFILE_SCOPE( LTSE_FUNC_SIG )
+#    define SE_PROFILE_SCOPE_LINE2( name, line ) BlockTimer timer##line( name )
+#    define SE_PROFILE_SCOPE_LINE( name, line ) SE_PROFILE_SCOPE_LINE2( name, line )
+#    define SE_PROFILE_SCOPE( name ) SE_PROFILE_SCOPE_LINE( name, __LINE__ )
+#    define SE_PROFILE_FUNCTION() SE_PROFILE_SCOPE( SE_FUNC_SIG )
 #else
-#    define LTSE_PROFILE_SCOPE( name )
-#    define LTSE_PROFILE_FUNCTION()
+#    define SE_PROFILE_SCOPE( name )
+#    define SE_PROFILE_FUNCTION()
 #endif
 
 } // namespace SE::Core

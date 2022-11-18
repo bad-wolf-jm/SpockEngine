@@ -46,7 +46,7 @@ namespace SE::Core
 
     void ASceneRenderer::Update( Ref<Scene> aScene )
     {
-        LTSE_PROFILE_FUNCTION();
+        SE_PROFILE_FUNCTION();
 
         mScene = aScene;
 

@@ -126,7 +126,7 @@ namespace SE::Cuda
              * @param y y coordinate of the texel to retrieve
              */
             template <typename _Ty>
-            LTSE_CUDA_DEVICE_FUNCTION_DEF _Ty Fetch( float x, float y )
+            SE_CUDA_DEVICE_FUNCTION_DEF _Ty Fetch( float x, float y )
             {
                 return tex2D<_Ty>( mTextureObject, ( x + mOffset.x ) / mScaling.x, ( y + mOffset.y ) / mScaling.y );
             }

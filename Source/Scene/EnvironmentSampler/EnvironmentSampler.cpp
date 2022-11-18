@@ -51,7 +51,7 @@ namespace SE::SensorModel::Dev
     void WorldSampler::Sample( math::mat4 a_SensorTransform, Ref<Scene> a_Scene, MultiTensor &a_Azimuths, MultiTensor &a_Elevations,
         MultiTensor &a_Intensities, MultiTensor &a_SamplePoints )
     {
-        LTSE_PROFILE_FUNCTION();
+        SE_PROFILE_FUNCTION();
 
         BuildShaderBindingTable( a_Scene );
 

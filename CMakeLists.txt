@@ -24,7 +24,7 @@ FetchContent_Declare(
   GIT_PROGRESS   TRUE )
 FetchContent_MakeAvailable(uuid_v4)
 include_directories(${uuid_v4_SOURCE_DIR})
-set(LTSE_EXTRA_INCLUDES "${uuid_v4_SOURCE_DIR}")
+set(SE_EXTRA_INCLUDES "${uuid_v4_SOURCE_DIR}")
 
 FetchContent_Declare(
   yaml-cpp
@@ -33,7 +33,7 @@ FetchContent_Declare(
   GIT_PROGRESS   TRUE )
 FetchContent_MakeAvailable(yaml-cpp)
 include_directories(${yaml-cpp_SOURCE_DIR}/include)
-set(LTSE_EXTRA_INCLUDES "${yaml-cpp_SOURCE_DIR}/include" ${LTSE_EXTRA_INCLUDES})
+set(SE_EXTRA_INCLUDES "${yaml-cpp_SOURCE_DIR}/include" ${SE_EXTRA_INCLUDES})
 
 FetchContent_Declare(
   entt
@@ -42,7 +42,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(entt)
 include_directories(${entt_SOURCE_DIR}/single_include)
 include_directories(${entt_SOURCE_DIR}/src)
-set(LTSE_EXTRA_INCLUDES ${entt_SOURCE_DIR}/single_include ${entt_SOURCE_DIR}/src ${LTSE_EXTRA_INCLUDES})
+set(SE_EXTRA_INCLUDES ${entt_SOURCE_DIR}/single_include ${entt_SOURCE_DIR}/src ${SE_EXTRA_INCLUDES})
 
 FetchContent_Declare(
   fmt
@@ -51,7 +51,7 @@ FetchContent_Declare(
   GIT_PROGRESS   TRUE )
 FetchContent_MakeAvailable(fmt)
 include_directories(${fmt_SOURCE_DIR}/include)
-set(LTSE_EXTRA_INCLUDES ${fmt_SOURCE_DIR}/include ${LTSE_EXTRA_INCLUDES})
+set(SE_EXTRA_INCLUDES ${fmt_SOURCE_DIR}/include ${SE_EXTRA_INCLUDES})
 
 FetchContent_Declare(
   glfw
@@ -60,7 +60,7 @@ FetchContent_Declare(
   GIT_PROGRESS   TRUE  )
 FetchContent_MakeAvailable(glfw)
 include_directories(${glfw_SOURCE_DIR}/include)
-set(LTSE_EXTRA_INCLUDES ${glfw_SOURCE_DIR}/include ${LTSE_EXTRA_INCLUDES})
+set(SE_EXTRA_INCLUDES ${glfw_SOURCE_DIR}/include ${SE_EXTRA_INCLUDES})
 
 FetchContent_Declare(
   glm
@@ -69,7 +69,7 @@ FetchContent_Declare(
   GIT_PROGRESS   TRUE  )
 FetchContent_MakeAvailable(glm)
 include_directories(${glm_SOURCE_DIR})
-set(LTSE_EXTRA_INCLUDES ${glm_SOURCE_DIR} ${LTSE_EXTRA_INCLUDES})
+set(SE_EXTRA_INCLUDES ${glm_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
 
 FetchContent_Declare(
   stb
@@ -77,7 +77,7 @@ FetchContent_Declare(
   GIT_TAG        master )
 FetchContent_MakeAvailable(stb)
 include_directories(${stb_SOURCE_DIR})
-set(LTSE_EXTRA_INCLUDES ${stb_SOURCE_DIR} ${LTSE_EXTRA_INCLUDES})
+set(SE_EXTRA_INCLUDES ${stb_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
 
 FetchContent_Declare(
   argparse
@@ -85,7 +85,7 @@ FetchContent_Declare(
   GIT_TAG        v2.3 )
 FetchContent_MakeAvailable(argparse)
 include_directories(${argparse_SOURCE_DIR}/include)
-set(LTSE_EXTRA_INCLUDES ${argparse_SOURCE_DIR} ${LTSE_EXTRA_INCLUDES})
+set(SE_EXTRA_INCLUDES ${argparse_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
 
 FetchContent_Declare(
   lua
@@ -93,7 +93,7 @@ FetchContent_Declare(
   GIT_TAG        master )
 FetchContent_MakeAvailable(lua)
 include_directories(${lua_SOURCE_DIR}/src)
-set(LTSE_EXTRA_INCLUDES ${lua_SOURCE_DIR}/src ${LTSE_EXTRA_INCLUDES})
+set(SE_EXTRA_INCLUDES ${lua_SOURCE_DIR}/src ${SE_EXTRA_INCLUDES})
 
 FetchContent_Declare(
   sol2
@@ -101,7 +101,7 @@ FetchContent_Declare(
   GIT_TAG        v4.0.0-alpha )
 FetchContent_MakeAvailable(sol2)
 include_directories(${sol2_SOURCE_DIR}/include)
-set(LTSE_EXTRA_INCLUDES ${sol2_SOURCE_DIR}/include ${LTSE_EXTRA_INCLUDES})
+set(SE_EXTRA_INCLUDES ${sol2_SOURCE_DIR}/include ${SE_EXTRA_INCLUDES})
 
 FetchContent_Declare(
   filewatch
@@ -109,7 +109,7 @@ FetchContent_Declare(
   GIT_TAG        master )
 FetchContent_MakeAvailable(filewatch)
 include_directories(${filewatch_SOURCE_DIR})
-set(LTSE_EXTRA_INCLUDES ${filewatch_SOURCE_DIR} ${LTSE_EXTRA_INCLUDES})
+set(SE_EXTRA_INCLUDES ${filewatch_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
 
 FetchContent_Declare(
   tinygltf
@@ -118,10 +118,10 @@ FetchContent_Declare(
   GIT_PROGRESS   TRUE )
 
 FetchContent_MakeAvailable(tinygltf)
-set(LTSE_EXTRA_INCLUDES ${tinygltf} ${LTSE_EXTRA_INCLUDES})
+set(SE_EXTRA_INCLUDES ${tinygltf} ${SE_EXTRA_INCLUDES})
 
 
-set(LTSE_EXTRA_INCLUDES ${LTSE_EXTRA_INCLUDES} PARENT_SCOPE)
+set(SE_EXTRA_INCLUDES ${SE_EXTRA_INCLUDES} PARENT_SCOPE)
 set(EXTERNAL_LIBRARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty)
 
 set(IMGUI_DIR ${EXTERNAL_LIBRARY_DIR}/imgui)

@@ -30,14 +30,14 @@ inline void __CUDA_ASSERT( cudaError_t aErr, const char *aFile, const int aLine 
 #endif
 
 #ifdef __CUDACC__
-#    define LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF __device__ __host__
-#    define LTSE_CUDA_DEVICE_FUNCTION_DEF __device__
-#    define LTSE_CUDA_INLINE __forceinline__
+#    define SE_CUDA_HOST_DEVICE_FUNCTION_DEF __device__ __host__
+#    define SE_CUDA_DEVICE_FUNCTION_DEF __device__
+#    define SE_CUDA_INLINE __forceinline__
 #    define CUDA_KERNEL_DEFINITION __global__
 #else
-#    define LTSE_CUDA_INLINE
-#    define LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF
-#    define LTSE_CUDA_DEVICE_FUNCTION_DEF
+#    define SE_CUDA_INLINE
+#    define SE_CUDA_HOST_DEVICE_FUNCTION_DEF
+#    define SE_CUDA_DEVICE_FUNCTION_DEF
 #    define CUDA_KERNEL_DEFINITION
 #endif
 

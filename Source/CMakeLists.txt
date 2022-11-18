@@ -226,7 +226,7 @@ add_executable(SE_Run WIN32
     Launch/EditorMain.cpp
 )
 
-target_include_directories(SE_Run PRIVATE Source ${LTSE_EXTRA_INCLUDES})
+target_include_directories(SE_Run PRIVATE Source ${SE_EXTRA_INCLUDES})
 target_compile_definitions(SE_Run PRIVATE VK_USE_PLATFORM_WIN32_KHR)
 target_link_libraries( SE_Run LTSimulationEngineRuntime lua::lua)
 set_target_properties( SE_Run PROPERTIES LINK_FLAGS /SUBSYSTEM:CONSOLE )

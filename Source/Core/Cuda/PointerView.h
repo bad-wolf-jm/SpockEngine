@@ -270,18 +270,18 @@ namespace SE::Cuda::Internal
         void Zero() const { CUDA_ASSERT( cudaMemset( (void *)mDevicePointer, 0, mSize ) ); }
 
         /// @brief Size of the allocated buffer, in bytes.
-        LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t Size() const { return mSize; }
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t Size() const { return mSize; }
 
         /// @brief Size of the allocated buffer, in elements of type `_Ty`.
         template <typename _Ty>
-        LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t SizeAs() const
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t SizeAs() const
         {
             return mSize / sizeof( _Ty );
         }
 
         /// @brief Return the underlying device pointer as a pointer to an array of type `_Ty`.
         template <typename _Ty>
-        LTSE_CUDA_HOST_DEVICE_FUNCTION_DEF _Ty *DataAs() const
+        SE_CUDA_HOST_DEVICE_FUNCTION_DEF _Ty *DataAs() const
         {
             return (_Ty *)mDevicePointer;
         }
