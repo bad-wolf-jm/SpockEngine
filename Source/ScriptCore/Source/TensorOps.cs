@@ -2,6 +2,41 @@ using System;
 
 namespace SpockEngine
 {
+    public class sTensorShape
+    {
+    
+    };
+
+    public class Scope
+    {
+        
+    };
+
+    public struct  sConstantValueInitializerComponent
+    {
+        
+    };
+
+    public struct  sVectorInitializerComponent
+    {
+        
+    };
+
+    public struct  sDataInitializerComponent
+    {
+        
+    };
+
+    public struct  sRandomUniformInitializerComponent
+    {
+        
+    };
+
+    public struct  sRandomNormalInitializerComponent
+    {
+        
+    };
+
     public class TensorOps
     {
         OpNode MultiTensorValue( Scope aScope, sConstantValueInitializerComponent aInitializer, sTensorShape aShape );
@@ -279,5 +314,5 @@ namespace SpockEngine
         {
             
         }
-    }
+    };
 }
