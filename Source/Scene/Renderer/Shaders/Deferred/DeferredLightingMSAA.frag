@@ -89,23 +89,7 @@ layout( set = 0, binding = 1 ) uniform UBOParams
 }
 uboParams;
 
-// layout( constant_id = 0 ) const int NUM_SAMPLES = 4;
-
-// #define NUM_LIGHTS 6
 const float PI = 3.14159265359;
-
-// // Manual resolve for MSAA samples
-// vec4 resolve( sampler2DMS tex, ivec2 uv )
-// {
-//     vec4 result = vec4( 0.0 );
-//     for( int i = 0; i < NUM_SAMPLES; i++ )
-//     {
-//         vec4 val = texelFetch( tex, uv, i );
-//         result += val;
-//     }
-//     // Average resolved samples
-//     return result / float( NUM_SAMPLES );
-// }
 
 vec3 Uncharted2Tonemap( vec3 color )
 {
@@ -136,7 +120,7 @@ float DistributionGGX( vec3 N, vec3 H, float roughness )
 
     float nom   = a2;
     float denom = ( NdotH2 * ( a2 - 1.0 ) + 1.0 );
-    denom       = PI * denom;// * denom;
+    denom       = PI * denom; // * denom;
 
     return nom / denom;
 }
@@ -164,10 +148,7 @@ float GeometrySmith( vec3 N, vec3 V, vec3 L, float roughness )
 }
 
 // ----------------------------------------------------------------------------
-vec3 fresnelSchlick( float cosTheta, vec3 F0 ) 
-{ 
-    return F0 + ( vec3(1.0) - F0 ) * pow( clamp( 1.0 - cosTheta, 0.0, 1.0 ), 5.0 ); 
-}
+vec3 fresnelSchlick( float cosTheta, vec3 F0 ) { return F0 + ( vec3( 1.0 ) - F0 ) * pow( clamp( 1.0 - cosTheta, 0.0, 1.0 ), 5.0 ); }
 
 vec3 CookTorrance( vec3 F0, vec3 N, vec3 L, vec3 V, vec3 H, float roughness )
 {
@@ -176,6 +157,34 @@ vec3 CookTorrance( vec3 F0, vec3 N, vec3 L, vec3 V, vec3 H, float roughness )
     float G   = GeometrySmith( N, V, L, roughness );
     vec3  F   = fresnelSchlick( max( dot( H, V ), 0.0 ), F0 );
     return ( NDF * G * F ) / ( 4 * max( dot( N, V ), 0.0 ) * max( dot( N, L ), 0.0 ) + 0.0001 );
+}
+
+vec3 ComputeLightContribution( vec3 aBaseColor, vec3 aSurfaceNormal, vec3 aEyeDirection, vec3 aLightDirection, vec3 aRadiance,
+                               float aMetal, float aRough )
+{
+    vec3 lF0 = mix( vec3( 0.04 ), aBaseColor, aMetal );
+
+    vec3 H = normalize( aEyeDirection + aLightDirection );
+
+    // Cook-Torrance BRDF
+    vec3 lSpecular = CookTorrance( lF0, aSurfaceNormal, aLightDirection, aEyeDirection, H, aRough );
+
+    // kS is equal to Fresnel
+    vec3 kS = fresnelSchlick( max( dot( H, aEyeDirection ), 0.0 ), lF0 );
+
+    // for energy conservation, the diffuse and specular light can't be above 1.0 (unless the surface emits light); to preserve
+    // this relationship the diffuse component (kD) should equal 1.0 - kS.
+    vec3 kD = vec3( 1.0 ) - kS;
+
+    // multiply kD by the inverse metalness such that only non-metals have diffuse lighting, or a linear blend if partly metal
+    // (pure metals have no diffuse light).
+    kD *= ( 1.0 - aMetal );
+
+    // scale light by NdotL
+    float NdotL = max( dot( aSurfaceNormal, aLightDirection ), 0.0 );
+
+    // add to outgoing radiance Lo
+    return ( kD * aBaseColor / PI + lSpecular ) * aRadiance * NdotL;
 }
 
 vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalrough, vec4 emissive )
@@ -192,98 +201,34 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
 
     for( int lDirectionalLightIndex = 0; lDirectionalLightIndex < ubo.DirectionalLightCount; lDirectionalLightIndex++ )
     {
-        vec3 L = normalize( ubo.DirectionalLights[lDirectionalLightIndex].Direction );
-        vec3 H = normalize( V + L );
-        vec3 radiance =
-            ubo.DirectionalLights[lDirectionalLightIndex].Color * ubo.DirectionalLights[lDirectionalLightIndex].Intensity;
-
-        // Cook-Torrance BRDF
-        vec3 specular = CookTorrance( F0, N, L, V, H, roughness );
-
-        // kS is equal to Fresnel
-        vec3 kS = fresnelSchlick( max( dot( H, V ), 0.0 ), F0 );
-
-        // for energy conservation, the diffuse and specular light can't be above 1.0 (unless the surface emits light); to preserve
-        // this relationship the diffuse component (kD) should equal 1.0 - kS.
-        vec3 kD = vec3( 1.0 ) - kS;
-
-        // multiply kD by the inverse metalness such that only non-metals have diffuse lighting, or a linear blend if partly metal
-        // (pure metals have no diffuse light).
-        kD *= ( 1.0 - metallic );
-
-        // scale light by NdotL
-        float NdotL = max( dot( N, L ), 0.0 );
-
-        // add to outgoing radiance Lo
-        Lo += ( kD * lBaseColor.xyz / PI + specular ) * radiance * NdotL;
-        // Lo += kD;
+        vec3 radiance = ubo.DirectionalLights[lDirectionalLightIndex].Color * ubo.DirectionalLights[lDirectionalLightIndex].Intensity;
+        vec3 lLightDirection = normalize( ubo.DirectionalLights[lDirectionalLightIndex].Direction );
+        Lo += ComputeLightContribution( lBaseColor.xyz, N, V, lLightDirection, radiance, metallic, roughness );
     }
 
     for( int lPointLightIndex = 0; lPointLightIndex < ubo.PointLightCount; lPointLightIndex++ )
     {
-        vec3 lLightPosition = ubo.PointLights[lPointLightIndex].WorldPosition;
-
-        vec3  L           = normalize( lLightPosition - inWorldPos );
-        vec3  H           = normalize( V + L );
-        float distance    = length( lLightPosition - inWorldPos );
-        float attenuation = 1.0 / ( distance * distance );
-        vec3  radiance    = ubo.PointLights[lPointLightIndex].Color * ubo.PointLights[lPointLightIndex].Intensity * attenuation;
-
-        // Cook-Torrance BRDF
-        vec3 specular = CookTorrance( F0, N, L, V, H, roughness );
-
-        // kS is equal to Fresnel
-        vec3 kS = fresnelSchlick( max( dot( H, V ), 0.0 ), F0 );
-
-        // for energy conservation, the diffuse and specular light can't be above 1.0 (unless the surface emits light); to preserve
-        // this relationship the diffuse component (kD) should equal 1.0 - kS.
-        vec3 kD = vec3( 1.0 ) - kS;
-
-        // multiply kD by the inverse metalness such that only non-metals have diffuse lighting, or a linear blend if partly metal
-        // (pure metals have no diffuse light).
-        kD *= ( 1.0 - metallic );
-
-        // scale light by NdotL
-        float NdotL = clamp( dot( N, L ), 0.000001, 1.0 );
-
-        // add to outgoing radiance Lo
-        Lo += ( kD * lBaseColor.xyz / PI + specular ) * radiance * NdotL;
-        // Lo += ( lBaseColor.xyz / PI + specular ) * radiance * NdotL;
-        // Lo += normalize(inWorldPos);
+        vec3  lLightPosition  = ubo.PointLights[lPointLightIndex].WorldPosition;
+        float distance        = length( lLightPosition - inWorldPos );
+        float attenuation     = 1.0 / ( distance * distance );
+        vec3  radiance        = ubo.PointLights[lPointLightIndex].Color * ubo.PointLights[lPointLightIndex].Intensity * attenuation;
+        vec3  lLightDirection = normalize( lLightPosition - inWorldPos );
+        Lo += ComputeLightContribution( lBaseColor.xyz, N, V, lLightDirection, radiance, metallic, roughness );
     }
 
     for( int lSpotlightIndex = 0; lSpotlightIndex < ubo.SpotlightCount; lSpotlightIndex++ )
     {
-        vec3  L                    = normalize( ubo.Spotlights[lSpotlightIndex].WorldPosition - inWorldPos );
+        vec3  L                   = normalize( ubo.Spotlights[lSpotlightIndex].WorldPosition - inWorldPos );
         vec3  lLightDirection     = normalize( ubo.Spotlights[lSpotlightIndex].LookAtDirection );
         float lAngleToLightOrigin = dot( L, normalize( -lLightDirection ) );
 
         if( lAngleToLightOrigin < ubo.Spotlights[lSpotlightIndex].Cone ) continue;
 
-        vec3  H           = normalize( V + L );
         float distance    = length( ubo.Spotlights[lSpotlightIndex].WorldPosition - inWorldPos );
         float attenuation = 1.0 / ( distance * distance );
         vec3  radiance    = ubo.Spotlights[lSpotlightIndex].Color * ubo.Spotlights[lSpotlightIndex].Intensity * attenuation;
 
-        // Cook-Torrance BRDF
-        vec3 specular = CookTorrance( F0, N, L, V, H, roughness );
-
-        // kS is equal to Fresnel
-        vec3 kS = fresnelSchlick( max( dot( H, V ), 0.0 ), F0 );
-
-        // for energy conservation, the diffuse and specular light can't be above 1.0 (unless the surface emits light); to preserve
-        // this relationship the diffuse component (kD) should equal 1.0 - kS.
-        vec3 kD = vec3( 1.0 ) - kS;
-
-        // multiply kD by the inverse metalness such that only non-metals have diffuse lighting, or a linear blend if partly metal
-        // (pure metals have no diffuse light).
-        kD *= ( 1.0 - metallic );
-
-        // scale light by NdotL
-        float NdotL = max( dot( N, L ), 0.0 );
-
-        // add to outgoing radiance Lo
-        Lo += ( kD * lBaseColor.xyz / PI + specular ) * radiance * NdotL;
+        Lo += ComputeLightContribution( lBaseColor.xyz, N, V, L, radiance, metallic, roughness );
     }
 
     return Lo;
@@ -298,37 +243,23 @@ vec4 SRGBtoLINEAR( vec4 srgbIn )
 
 void main()
 {
-    // ivec2 attDim = textureSize( samplerPosition );
-    // ivec2 UV     = ivec2( inUV * attDim );
-
-    // Ambient part
-    // vec4 alb       = texture( samplerAlbedo, inUV );
     vec3 fragColor = vec3( 0.0f );
     vec4 emissive  = vec4( 0.0f );
 
-    // Calualte lighting for every MSAA sample
-    // float ao = 0.0f;
-    // float aoStrength = 0.0f;
-    // for( int i = 0; i < NUM_SAMPLES; i++ )
-    // {
-    vec3 pos        = texture( samplerPosition, inUV ).rgb;
-    vec3 normal     = texture( samplerNormal, inUV ).rgb;
-    vec4 albedo     = SRGBtoLINEAR( texture( samplerAlbedo, inUV ) );
-        
+    vec3 pos    = texture( samplerPosition, inUV ).rgb;
+    vec3 normal = texture( samplerNormal, inUV ).rgb;
+    vec4 albedo = SRGBtoLINEAR( texture( samplerAlbedo, inUV ) );
 
     vec4 metalrough = texture( samplerOcclusionMetalRough, inUV );
 
     fragColor += calculateLighting( pos, normal, albedo, metalrough, emissive );
-    float ao = metalrough.r;
+    float ao         = metalrough.r;
     float aoStrength = metalrough.a;
-    // }
 
     vec3 ambient   = uboParams.AmbientLightIntensity * uboParams.AmbientLightColor.rgb * albedo.xyz;
     vec3 hdr_color = ambient + fragColor;
-    hdr_color = mix( hdr_color, hdr_color * ao, aoStrength );
-    hdr_color = hdr_color + emissive.xyz;
-    // fragColor = ( alb.rgb * ambient ) + fragColor / float( NUM_SAMPLES );
-    // vec4 full_color = vec4( hdr_color, lBaseColor.a );
+    hdr_color      = mix( hdr_color, hdr_color * ao, aoStrength );
+    hdr_color      = hdr_color + emissive.xyz;
 
     vec3 outColor = tonemap( hdr_color );
 
