@@ -22,12 +22,9 @@ cuda_compile_and_embed(embedded_ptx_code devicePrograms.cu)
 
 add_executable(ex09_shadowRays
   ${embedded_ptx_code}
-  # optix7.h
-  # CUDABuffer.h
   LaunchParams.h
   SampleRenderer.h
   SampleRenderer.cpp
-  # Model.h
   ${PROJECT_SOURCE_DIR}/common/ray_trace/Model.cpp
   main.cpp
   )
