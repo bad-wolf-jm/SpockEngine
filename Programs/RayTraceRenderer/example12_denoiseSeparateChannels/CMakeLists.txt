@@ -26,12 +26,12 @@ add_executable(ex12_denoiseSeparateChannels
   ${embedded_ptx_code}
   devicePrograms.cu
   optix7.h
-  CUDABuffer.h
+  # common/CUDABuffer.h
   LaunchParams.h
   SampleRenderer.h
   SampleRenderer.cpp
-  Model.h
-  Model.cpp
+  # Model.h
+  ${PROJECT_SOURCE_DIR}/common/ray_trace/Model.cpp
   main.cpp
   )
 
