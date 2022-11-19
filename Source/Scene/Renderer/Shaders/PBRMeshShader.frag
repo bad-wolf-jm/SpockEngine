@@ -10,23 +10,23 @@ layout( location = 3 ) in vec2 inUV1;
 
 struct DirectionalLightData
 {
-    vec3 Direction;
-    vec3 Color;
+    vec3  Direction;
+    vec3  Color;
     float Intensity;
 };
 
 struct PointLightData
 {
-    vec3 WorldPosition;
-    vec3 Color;
+    vec3  WorldPosition;
+    vec3  Color;
     float Intensity;
 };
 
 struct SpotlightData
 {
-    vec3 WorldPosition;
-    vec3 LookAtDirection;
-    vec3 Color;
+    vec3  WorldPosition;
+    vec3  LookAtDirection;
+    vec3  Color;
     float Intensity;
     float Cone;
 };
@@ -34,21 +34,21 @@ struct SpotlightData
 struct sShaderMaterial
 {
     vec4 mBaseColorFactor;
-    int mBaseColorTextureID;
-    int mBaseColorUVChannel;
+    int  mBaseColorTextureID;
+    int  mBaseColorUVChannel;
 
     float mMetallicFactor;
     float mRoughnessFactor;
-    int mMetalnessUVChannel;
-    int mMetalnessTextureID;
+    int   mMetalnessUVChannel;
+    int   mMetalnessTextureID;
 
     float mOcclusionStrength;
-    int mOcclusionUVChannel;
-    int mOcclusionTextureID;
+    int   mOcclusionUVChannel;
+    int   mOcclusionTextureID;
 
     vec4 mEmissiveFactor;
-    int mEmissiveTextureID;
-    int mEmissiveUVChannel;
+    int  mEmissiveTextureID;
+    int  mEmissiveUVChannel;
 
     int mNormalTextureID;
     int mNormalUVChannel;
@@ -64,13 +64,13 @@ layout( set = 0, binding = 0 ) uniform UBO
     mat4 view;
     vec3 camPos;
 
-    int DirectionalLightCount;
+    int                  DirectionalLightCount;
     DirectionalLightData DirectionalLights[MAX_NUM_LIGHTS];
 
-    int SpotlightCount;
+    int           SpotlightCount;
     SpotlightData Spotlights[MAX_NUM_LIGHTS];
 
-    int PointLightCount;
+    int            PointLightCount;
     PointLightData PointLights[MAX_NUM_LIGHTS];
 }
 ubo;
@@ -80,7 +80,7 @@ layout( set = 0, binding = 1 ) uniform UBOParams
     float exposure;
     float gamma;
     float AmbientLightIntensity;
-    vec4 AmbientLightColor;
+    vec4  AmbientLightColor;
     float debugViewInputs;
     float debugViewEquation;
 }
@@ -192,8 +192,46 @@ vec3 CookTorrance( vec3 F0, vec3 N, vec3 L, vec3 V, vec3 H, float roughness )
     // Cook-Torrance BRDF
     float NDF = DistributionGGX( N, H, roughness );
     float G   = GeometrySmith( N, V, L, roughness );
-    vec3 F    = fresnelSchlick( max( dot( H, V ), 0.0 ), F0 );
+    vec3  F   = fresnelSchlick( max( dot( H, V ), 0.0 ), F0 );
     return ( NDF * G * F ) / ( 4 * max( dot( N, V ), 0.0 ) * max( dot( N, L ), 0.0 ) + 0.0001 );
+}
+
+vec3 ComputeLightContribution( vec3 aBaseColor, vec3 aSurfaceNormal, vec3 aEyeDirection, vec3 aLightDirection, vec3 aRadiance,
+                               float aMetal, float aRough )
+{
+    // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0
+    // of 0.04 and if it's a metal, use the base color as F0 (metallic workflow)
+    vec3 lF0 = mix( vec3( 0.04 ), aBaseColor, aMetal );
+
+    vec3 H = normalize( aEyeDirection + aLightDirection );
+
+    // Cook-Torrance BRDF
+    vec3 lSpecular = CookTorrance( lF0, aSurfaceNormal, aLightDirection, aEyeDirection, H, aRough );
+
+    // kS is equal to Fresnel
+    vec3 kS = fresnelSchlick( max( dot( H, aEyeDirection ), 0.0 ), lF0 );
+
+    // for energy conservation, the diffuse and specular light can't be above 1.0 (unless the surface emits light); to preserve
+    // this relationship the diffuse component (kD) should equal 1.0 - kS.
+    vec3 kD = vec3( 1.0 ) - kS;
+
+    // multiply kD by the inverse metalness such that only non-metals have diffuse lighting, or a linear blend if partly metal
+    // (pure metals have no diffuse light).
+    kD *= ( 1.0 - aMetal );
+
+    // scale light by NdotL
+    float NdotL = max( dot( aSurfaceNormal, aLightDirection ), 0.0 );
+
+    // add to outgoing radiance Lo
+    return ( kD * aBaseColor / PI + lSpecular ) * aRadiance * NdotL;
+}
+
+vec3 ComputeRadiance( vec3 aLightPosition, vec3 aObjectPosition, vec3 aLightColor, float aLightIntensity )
+{
+    float lDistance    = length( aLightPosition - aObjectPosition );
+    float lAttenuation = 1.0 / ( lDistance * lDistance );
+
+    return aLightColor * aLightIntensity * lAttenuation;
 }
 
 // ----------------------------------------------------------------------------
@@ -202,125 +240,61 @@ void main()
     sShaderMaterial lMaterial = gMaterials.mArray[material.mMaterialID];
 
     vec4 lBaseColor = lMaterial.mBaseColorFactor;
-    lBaseColor = SRGBtoLINEAR( texture( gTextures[lMaterial.mBaseColorTextureID], lMaterial.mBaseColorUVChannel == 0 ? inUV0 : inUV1 ) ) * lMaterial.mBaseColorFactor;
+    lBaseColor =
+        SRGBtoLINEAR( texture( gTextures[lMaterial.mBaseColorTextureID], lMaterial.mBaseColorUVChannel == 0 ? inUV0 : inUV1 ) ) *
+        lMaterial.mBaseColorFactor;
 
-    float metallic     = clamp( lMaterial.mMetallicFactor, 0.0, 1.0 );
-    float roughness    = clamp( lMaterial.mRoughnessFactor, c_MinRoughness, 1.0 );
-    vec4 lSampledValue = texture( gTextures[lMaterial.mMetalnessTextureID], lMaterial.mMetalnessUVChannel == 0 ? inUV0 : inUV1 );
-    metallic           = lSampledValue.r * lMaterial.mMetallicFactor;
-    roughness          = lSampledValue.g * lMaterial.mRoughnessFactor;
+    float metallic      = clamp( lMaterial.mMetallicFactor, 0.0, 1.0 );
+    float roughness     = clamp( lMaterial.mRoughnessFactor, c_MinRoughness, 1.0 );
+    vec4  lSampledValue = texture( gTextures[lMaterial.mMetalnessTextureID], lMaterial.mMetalnessUVChannel == 0 ? inUV0 : inUV1 );
+    metallic            = lSampledValue.r * lMaterial.mMetallicFactor;
+    roughness           = lSampledValue.g * lMaterial.mRoughnessFactor;
 
     vec3 emissive = vec3( lMaterial.mEmissiveFactor );
-    emissive      = SRGBtoLINEAR( texture( gTextures[lMaterial.mEmissiveTextureID], lMaterial.mEmissiveUVChannel == 0 ? inUV0 : inUV1 ) ).rgb * vec3( lMaterial.mEmissiveFactor );
+    emissive =
+        SRGBtoLINEAR( texture( gTextures[lMaterial.mEmissiveTextureID], lMaterial.mEmissiveUVChannel == 0 ? inUV0 : inUV1 ) ).rgb *
+        vec3( lMaterial.mEmissiveFactor );
 
     vec3 N;
-    if (lMaterial.mNormalTextureID == 0)
+    if( lMaterial.mNormalTextureID == 0 )
         N = normalize( inNormal );
     else
         N = getNormalFromMap( gTextures[lMaterial.mNormalTextureID], lMaterial.mNormalUVChannel == 0 ? inUV0 : inUV1 );
-        
-    vec3 V = normalize( ubo.camPos - inWorldPos );
 
-    // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0
-    // of 0.04 and if it's a metal, use the base color as F0 (metallic workflow)
-    vec3 F0 = vec3( 0.04 );
-    F0      = mix( F0, lBaseColor.xyz, metallic );
+    vec3 V = normalize( ubo.camPos - inWorldPos );
 
     // reflectance equation
     vec3 Lo = vec3( 0.0f );
 
-    for( int l_DirectionalLightIndex = 0; l_DirectionalLightIndex < ubo.DirectionalLightCount; l_DirectionalLightIndex++ )
+    for( int lDirectionalLightIndex = 0; lDirectionalLightIndex < ubo.DirectionalLightCount; lDirectionalLightIndex++ )
     {
-        vec3 L        = normalize( ubo.DirectionalLights[l_DirectionalLightIndex].Direction );
-        vec3 H        = normalize( V + L );
-        vec3 radiance = ubo.DirectionalLights[l_DirectionalLightIndex].Color * ubo.DirectionalLights[l_DirectionalLightIndex].Intensity;
-
-        // Cook-Torrance BRDF
-        vec3 specular = CookTorrance( F0, N, L, V, H, roughness );
-
-        // kS is equal to Fresnel
-        vec3 kS = fresnelSchlick( max( dot( H, V ), 0.0 ), F0 );
-
-        // for energy conservation, the diffuse and specular light can't be above 1.0 (unless the surface emits light); to preserve this
-        // relationship the diffuse component (kD) should equal 1.0 - kS.
-        vec3 kD = vec3( 1.0 ) - kS;
-
-        // multiply kD by the inverse metalness such that only non-metals have diffuse lighting, or a linear blend if partly metal (pure metals
-        // have no diffuse light).
-        kD *= ( 1.0 - metallic );
-
-        // scale light by NdotL
-        float NdotL = max( dot( N, L ), 0.0 );
-
-        // add to outgoing radiance Lo
-        Lo += ( kD * lBaseColor.xyz / PI + specular ) * radiance * NdotL;
+        vec3 radiance = ubo.DirectionalLights[lDirectionalLightIndex].Color * ubo.DirectionalLights[lDirectionalLightIndex].Intensity;
+        vec3 lLightDirection = normalize( ubo.DirectionalLights[lDirectionalLightIndex].Direction );
+        Lo += ComputeLightContribution( lBaseColor.xyz, N, V, lLightDirection, radiance, metallic, roughness );
     }
 
-    for( int l_PointLightIndex = 0; l_PointLightIndex < ubo.PointLightCount; l_PointLightIndex++ )
+    for( int lPointLightIndex = 0; lPointLightIndex < ubo.PointLightCount; lPointLightIndex++ )
     {
-        vec3 l_LightPosition = ubo.PointLights[l_PointLightIndex].WorldPosition;
+        vec3 lLightPosition = ubo.PointLights[lPointLightIndex].WorldPosition;
+        vec3 lLightDirection = normalize( lLightPosition - inWorldPos );
 
-        vec3 L            = normalize( l_LightPosition - inWorldPos );
-        vec3 H            = normalize( V + L );
-        float distance    = length( l_LightPosition - inWorldPos );
-        float attenuation = 1.0 / ( distance * distance );
-        vec3 radiance     = ubo.PointLights[l_PointLightIndex].Color * ubo.PointLights[l_PointLightIndex].Intensity * attenuation;
-
-        // Cook-Torrance BRDF
-        vec3 specular = CookTorrance( F0, N, L, V, H, roughness );
-
-        // kS is equal to Fresnel
-        vec3 kS = fresnelSchlick( max( dot( H, V ), 0.0 ), F0 );
-
-        // for energy conservation, the diffuse and specular light can't be above 1.0 (unless the surface emits light); to preserve this
-        // relationship the diffuse component (kD) should equal 1.0 - kS.
-        vec3 kD = vec3( 1.0 ) - kS;
-
-        // multiply kD by the inverse metalness such that only non-metals have diffuse lighting, or a linear blend if partly metal (pure metals
-        // have no diffuse light).
-        kD *= ( 1.0 - metallic );
-
-        // scale light by NdotL
-        float NdotL = clamp( dot( N, L ), 0.000001, 1.0 );
-
-        // add to outgoing radiance Lo
-        Lo += ( kD * lBaseColor.xyz / PI + specular ) * radiance * NdotL;
-        // Lo += NdotL;
+        vec3 lRadiance = ComputeRadiance( ubo.PointLights[lPointLightIndex].WorldPosition, inWorldPos,
+                                          ubo.PointLights[lPointLightIndex].Color, ubo.PointLights[lPointLightIndex].Intensity );
+        Lo += ComputeLightContribution( lBaseColor.xyz, N, V, lLightDirection, lRadiance, metallic, roughness );
     }
 
-    for( int l_SpotlightIndex = 0; l_SpotlightIndex < ubo.SpotlightCount; l_SpotlightIndex++ )
+    for( int lSpotlightIndex = 0; lSpotlightIndex < ubo.SpotlightCount; lSpotlightIndex++ )
     {
-        vec3 L                     = normalize( ubo.Spotlights[l_SpotlightIndex].WorldPosition - inWorldPos );
-        vec3 l_LightDirection      = normalize( ubo.Spotlights[l_SpotlightIndex].LookAtDirection );
-        float l_AngleToLightOrigin = dot( L, normalize( -l_LightDirection ) );
+        vec3  L                   = normalize( ubo.Spotlights[lSpotlightIndex].WorldPosition - inWorldPos );
+        vec3  lLightDirection     = normalize( ubo.Spotlights[lSpotlightIndex].LookAtDirection );
+        float lAngleToLightOrigin = dot( L, normalize( -lLightDirection ) );
 
-        if( l_AngleToLightOrigin < ubo.Spotlights[l_SpotlightIndex].Cone )
-            continue;
+        if( lAngleToLightOrigin < ubo.Spotlights[lSpotlightIndex].Cone ) continue;
 
-        vec3 H            = normalize( V + L );
-        float distance    = length( ubo.Spotlights[l_SpotlightIndex].WorldPosition - inWorldPos );
-        float attenuation = 1.0 / ( distance * distance );
-        vec3 radiance     = ubo.Spotlights[l_SpotlightIndex].Color * ubo.Spotlights[l_SpotlightIndex].Intensity * attenuation;
+        vec3 lRadiance = ComputeRadiance( ubo.Spotlights[lSpotlightIndex].WorldPosition, inWorldPos,
+                                          ubo.Spotlights[lSpotlightIndex].Color, ubo.Spotlights[lSpotlightIndex].Intensity );
 
-        // Cook-Torrance BRDF
-        vec3 specular = CookTorrance( F0, N, L, V, H, roughness );
-
-        // kS is equal to Fresnel
-        vec3 kS = fresnelSchlick( max( dot( H, V ), 0.0 ), F0 );
-
-        // for energy conservation, the diffuse and specular light can't be above 1.0 (unless the surface emits light); to preserve this
-        // relationship the diffuse component (kD) should equal 1.0 - kS.
-        vec3 kD = vec3( 1.0 ) - kS;
-
-        // multiply kD by the inverse metalness such that only non-metals have diffuse lighting, or a linear blend if partly metal (pure metals
-        // have no diffuse light).
-        kD *= ( 1.0 - metallic );
-
-        // scale light by NdotL
-        float NdotL = max( dot( N, L ), 0.0 );
-
-        // add to outgoing radiance Lo
-        Lo += ( kD * lBaseColor.xyz / PI + specular ) * radiance * NdotL;
+        Lo += ComputeLightContribution( lBaseColor.xyz, N, V, L, lRadiance, metallic, roughness );
     }
 
     // ambient lighting (note that the next IBL tutorial will replace
@@ -333,8 +307,8 @@ void main()
 
     hdr_color = hdr_color + emissive;
     // vec3 hdr_color = Lo;
-    vec4 full_color = vec4( hdr_color, lBaseColor.a );
+    vec4 fullcolor = vec4( hdr_color, lBaseColor.a );
 
-    outColor = tonemap( full_color );
+    outColor = tonemap( fullcolor );
     // outColor = vec4(vec3((length(inWorldPos) - 0.5)), 1.0);
 }

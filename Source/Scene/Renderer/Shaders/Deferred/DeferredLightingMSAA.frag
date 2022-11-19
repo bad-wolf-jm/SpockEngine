@@ -162,6 +162,9 @@ vec3 CookTorrance( vec3 F0, vec3 N, vec3 L, vec3 V, vec3 H, float roughness )
 vec3 ComputeLightContribution( vec3 aBaseColor, vec3 aSurfaceNormal, vec3 aEyeDirection, vec3 aLightDirection, vec3 aRadiance,
                                float aMetal, float aRough )
 {
+
+    // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0
+    // of 0.04 and if it's a metal, use the base color as F0 (metallic workflow)
     vec3 lF0 = mix( vec3( 0.04 ), aBaseColor, aMetal );
 
     vec3 H = normalize( aEyeDirection + aLightDirection );
@@ -187,14 +190,21 @@ vec3 ComputeLightContribution( vec3 aBaseColor, vec3 aSurfaceNormal, vec3 aEyeDi
     return ( kD * aBaseColor / PI + lSpecular ) * aRadiance * NdotL;
 }
 
+vec3 ComputeRadiance( vec3 aLightPosition, vec3 aObjectPosition, vec3 aLightColor, float aLightIntensity )
+{
+    float lDistance    = length( aLightPosition - aObjectPosition );
+    float lAttenuation = 1.0 / ( lDistance * lDistance );
+
+    return aLightColor * aLightIntensity * lAttenuation;
+}
+
+
 vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalrough, vec4 emissive )
 {
     float metallic  = aometalrough.g;
     float roughness = aometalrough.b;
 
-    vec3 V  = normalize( ubo.camPos - inWorldPos );
-    vec3 F0 = vec3( 0.04 );
-    F0      = mix( F0, lBaseColor.xyz, metallic );
+    vec3 V = normalize( ubo.camPos - inWorldPos );
 
     // reflectance equation
     vec3 Lo = vec3( 0.0f );
@@ -208,27 +218,27 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
 
     for( int lPointLightIndex = 0; lPointLightIndex < ubo.PointLightCount; lPointLightIndex++ )
     {
-        vec3  lLightPosition  = ubo.PointLights[lPointLightIndex].WorldPosition;
-        float distance        = length( lLightPosition - inWorldPos );
-        float attenuation     = 1.0 / ( distance * distance );
-        vec3  radiance        = ubo.PointLights[lPointLightIndex].Color * ubo.PointLights[lPointLightIndex].Intensity * attenuation;
-        vec3  lLightDirection = normalize( lLightPosition - inWorldPos );
-        Lo += ComputeLightContribution( lBaseColor.xyz, N, V, lLightDirection, radiance, metallic, roughness );
+        vec3 lLightPosition = ubo.PointLights[lPointLightIndex].WorldPosition;
+        vec3 lLightDirection = normalize( lLightPosition - inWorldPos );
+
+        vec3 lRadiance = ComputeRadiance( ubo.PointLights[lPointLightIndex].WorldPosition, inWorldPos,
+                                          ubo.PointLights[lPointLightIndex].Color, ubo.PointLights[lPointLightIndex].Intensity );
+        Lo += ComputeLightContribution( lBaseColor.xyz, N, V, lLightDirection, lRadiance, metallic, roughness );
     }
 
     for( int lSpotlightIndex = 0; lSpotlightIndex < ubo.SpotlightCount; lSpotlightIndex++ )
     {
+
         vec3  L                   = normalize( ubo.Spotlights[lSpotlightIndex].WorldPosition - inWorldPos );
         vec3  lLightDirection     = normalize( ubo.Spotlights[lSpotlightIndex].LookAtDirection );
         float lAngleToLightOrigin = dot( L, normalize( -lLightDirection ) );
 
         if( lAngleToLightOrigin < ubo.Spotlights[lSpotlightIndex].Cone ) continue;
 
-        float distance    = length( ubo.Spotlights[lSpotlightIndex].WorldPosition - inWorldPos );
-        float attenuation = 1.0 / ( distance * distance );
-        vec3  radiance    = ubo.Spotlights[lSpotlightIndex].Color * ubo.Spotlights[lSpotlightIndex].Intensity * attenuation;
+        vec3 lRadiance = ComputeRadiance( ubo.Spotlights[lSpotlightIndex].WorldPosition, inWorldPos,
+                                          ubo.Spotlights[lSpotlightIndex].Color, ubo.Spotlights[lSpotlightIndex].Intensity );
 
-        Lo += ComputeLightContribution( lBaseColor.xyz, N, V, L, radiance, metallic, roughness );
+        Lo += ComputeLightContribution( lBaseColor.xyz, N, V, L, lRadiance, metallic, roughness );
     }
 
     return Lo;
