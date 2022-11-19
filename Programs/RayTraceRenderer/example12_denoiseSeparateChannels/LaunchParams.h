@@ -44,7 +44,7 @@ namespace osc
 
     struct LaunchParams
     {
-        int numPixelSamples = 1;
+        int numPixelSamples = 8;
         struct
         {
             int     frameID = 0;
