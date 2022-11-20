@@ -33,7 +33,7 @@ namespace osc
 
     struct TriangleMeshSBTData
     {
-        vec3f               color;
+        vec3f               mColor;
         vec3f              *vertex;
         vec3f              *normal;
         vec2f              *texcoord;

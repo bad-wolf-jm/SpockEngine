@@ -25,7 +25,7 @@ cuda_add_library(toneMap
 add_executable(ex12_denoiseSeparateChannels
   ${embedded_ptx_code}
   devicePrograms.cu
-  LaunchParams.h
+  # LaunchParams.h
   SampleRenderer.h
   SampleRenderer.cpp
   ${PROJECT_SOURCE_DIR}/common/ray_trace/Model.cpp

@@ -102,7 +102,7 @@ namespace osc
         // compute diffuse material color, including diffuse texture, if
         // available
         // ------------------------------------------------------------------
-        vec3f diffuseColor = sbtData.color;
+        vec3f diffuseColor = sbtData.mColor;
         if( sbtData.hasTexture && sbtData.texcoord )
         {
             const vec2f tc =

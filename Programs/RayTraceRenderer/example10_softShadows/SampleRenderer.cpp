@@ -503,7 +503,7 @@ namespace osc
 
                 HitgroupRecord rec;
                 OPTIX_CHECK( optixSbtRecordPackHeader( hitgroupPGs[rayID], &rec ) );
-                rec.data.color = mesh->diffuse;
+                rec.data.mColor = mesh->diffuse;
                 if( mesh->diffuseTextureID >= 0 )
                 {
                     rec.data.hasTexture = true;
