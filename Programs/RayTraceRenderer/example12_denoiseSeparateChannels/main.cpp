@@ -145,7 +145,7 @@ namespace osc
 #endif
             );
             Camera camera = { /*from*/ vec3f( -1293.07f, 154.681f, -0.7304f ),
-                              /* at */ model->bounds.center() - vec3f( 0, 400, 0 ),
+                              /* at */ model->mBounds.center() - vec3f( 0, 400, 0 ),
                               /* up */ vec3f( 0.f, 1.f, 0.f ) };
 
             // some simple, hard-coded light ... obviously, only works for sponza
@@ -157,7 +157,7 @@ namespace osc
 
             // something approximating the scale of the world, so the
             // camera knows how much to move for any given user interaction:
-            const float worldScale = length( model->bounds.span() );
+            const float worldScale = length( model->mBounds.span() );
 
             SampleWindow *window = new SampleWindow( "Optix 7 Course Example", model, camera, light, worldScale );
             window->enableFlyMode();

@@ -80,14 +80,14 @@ namespace osc
 
     extern "C" __global__ void __closesthit__radiance()
     {
-        const TriangleMeshSBTData &sbtData = *(const TriangleMeshSBTData *)optixGetSbtDataPointer();
+        const sTriangleMeshSBTData &sbtData = *(const sTriangleMeshSBTData *)optixGetSbtDataPointer();
         PRD                       &prd     = *getPRD<PRD>();
 
         // ------------------------------------------------------------------
         // gather some basic hit information
         // ------------------------------------------------------------------
         const int   primID = optixGetPrimitiveIndex();
-        const vec3i index  = sbtData.index[primID];
+        const vec3i index  = sbtData.mIndex[primID];
         const float u      = optixGetTriangleBarycentrics().x;
         const float v      = optixGetTriangleBarycentrics().y;
 
@@ -95,12 +95,12 @@ namespace osc
         // compute normal, using either shading normal (if avail), or
         // geometry normal (fallback)
         // ------------------------------------------------------------------
-        const vec3f &A  = sbtData.vertex[index.x];
-        const vec3f &B  = sbtData.vertex[index.y];
-        const vec3f &C  = sbtData.vertex[index.z];
+        const vec3f &A  = sbtData.mVertex[index.x];
+        const vec3f &B  = sbtData.mVertex[index.y];
+        const vec3f &C  = sbtData.mVertex[index.z];
         vec3f        Ng = cross( B - A, C - A );
-        vec3f        Ns = ( sbtData.normal )
-                              ? ( ( 1.f - u - v ) * sbtData.normal[index.x] + u * sbtData.normal[index.y] + v * sbtData.normal[index.z] )
+        vec3f        Ns = ( sbtData.mNormal )
+                              ? ( ( 1.f - u - v ) * sbtData.mNormal[index.x] + u * sbtData.mNormal[index.y] + v * sbtData.mNormal[index.z] )
                               : Ng;
 
         // ------------------------------------------------------------------
@@ -119,12 +119,12 @@ namespace osc
         // available
         // ------------------------------------------------------------------
         vec3f diffuseColor = sbtData.mColor;
-        if( sbtData.hasTexture && sbtData.texcoord )
+        if( sbtData.mHasTexture && sbtData.mTexCoord )
         {
             const vec2f tc =
-                ( 1.f - u - v ) * sbtData.texcoord[index.x] + u * sbtData.texcoord[index.y] + v * sbtData.texcoord[index.z];
+                ( 1.f - u - v ) * sbtData.mTexCoord[index.x] + u * sbtData.mTexCoord[index.y] + v * sbtData.mTexCoord[index.z];
 
-            vec4f fromTexture = tex2D<float4>( sbtData.texture, tc.x, tc.y );
+            vec4f fromTexture = tex2D<float4>( sbtData.mTexture, tc.x, tc.y );
             diffuseColor *= (vec3f)fromTexture;
         }
 
@@ -134,7 +134,7 @@ namespace osc
         // ------------------------------------------------------------------
         // compute shadow
         // ------------------------------------------------------------------
-        const vec3f surfPos = ( 1.f - u - v ) * sbtData.vertex[index.x] + u * sbtData.vertex[index.y] + v * sbtData.vertex[index.z];
+        const vec3f surfPos = ( 1.f - u - v ) * sbtData.mVertex[index.x] + u * sbtData.mVertex[index.y] + v * sbtData.mVertex[index.z];
 
         const int numLightSamples = NUM_LIGHT_SAMPLES;
         for( int lightSampleID = 0; lightSampleID < numLightSamples; lightSampleID++ )

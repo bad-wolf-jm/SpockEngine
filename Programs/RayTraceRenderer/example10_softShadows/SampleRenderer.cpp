@@ -47,7 +47,7 @@ namespace osc
     struct __align__( OPTIX_SBT_RECORD_ALIGNMENT ) HitgroupRecord
     {
         __align__( OPTIX_SBT_RECORD_ALIGNMENT ) char header[OPTIX_SBT_RECORD_HEADER_SIZE];
-        TriangleMeshSBTData                          data;
+        sTriangleMeshSBTData                          data;
     };
 
     /*! constructor - performs all setup, including initializing
@@ -57,10 +57,10 @@ namespace osc
     {
         initOptix();
 
-        launchParams.light.origin = light.origin;
-        launchParams.light.du     = light.du;
-        launchParams.light.dv     = light.dv;
-        launchParams.light.power  = light.power;
+        launchParams.light.origin = light.mOrigin;
+        launchParams.light.du     = light.mDu;
+        launchParams.light.dv     = light.mDv;
+        launchParams.light.power  = light.mPower;
 
         std::cout << "#osc: creating optix context ..." << std::endl;
         createContext();
@@ -95,20 +95,20 @@ namespace osc
 
     void SampleRenderer::createTextures()
     {
-        int numTextures = (int)model->textures.size();
+        int numTextures = (int)model->mTextures.size();
 
         textureArrays.resize( numTextures );
         textureObjects.resize( numTextures );
 
         for( int textureID = 0; textureID < numTextures; textureID++ )
         {
-            auto texture = model->textures[textureID];
+            auto mTexture = model->mTextures[textureID];
 
             cudaResourceDesc res_desc = {};
 
             cudaChannelFormatDesc channel_desc;
-            int32_t               width         = texture->resolution.x;
-            int32_t               height        = texture->resolution.y;
+            int32_t               width         = mTexture->mResolution.x;
+            int32_t               height        = mTexture->mResolution.y;
             int32_t               numComponents = 4;
             int32_t               pitch         = width * numComponents * sizeof( uint8_t );
             channel_desc                        = cudaCreateChannelDesc<uchar4>();
@@ -117,7 +117,7 @@ namespace osc
             CUDA_CHECK( MallocArray( &pixelArray, &channel_desc, width, height ) );
 
             CUDA_CHECK( Memcpy2DToArray( pixelArray,
-                                         /* offset */ 0, 0, texture->pixel, pitch, pitch, height, cudaMemcpyHostToDevice ) );
+                                         /* offset */ 0, 0, mTexture->mPixel, pitch, pitch, height, cudaMemcpyHostToDevice ) );
 
             res_desc.resType         = cudaResourceTypeArray;
             res_desc.res.array.array = pixelArray;
@@ -135,7 +135,7 @@ namespace osc
             tex_desc.borderColor[0]      = 1.0f;
             tex_desc.sRGB                = 0;
 
-            // Create texture object
+            // Create mTexture object
             cudaTextureObject_t cuda_tex = 0;
             CUDA_CHECK( CreateTextureObject( &cuda_tex, &res_desc, &tex_desc, nullptr ) );
             textureObjects[textureID] = cuda_tex;
@@ -144,7 +144,7 @@ namespace osc
 
     OptixTraversableHandle SampleRenderer::buildAccel()
     {
-        const int numMeshes = (int)model->meshes.size();
+        const int numMeshes = (int)model->mMeshes.size();
         vertexBuffer.resize( numMeshes );
         normalBuffer.resize( numMeshes );
         texcoordBuffer.resize( numMeshes );
@@ -163,11 +163,11 @@ namespace osc
         for( int meshID = 0; meshID < numMeshes; meshID++ )
         {
             // upload the model to the device: the builder
-            TriangleMesh &mesh = *model->meshes[meshID];
-            vertexBuffer[meshID].alloc_and_upload( mesh.vertex );
-            indexBuffer[meshID].alloc_and_upload( mesh.index );
-            if( !mesh.normal.empty() ) normalBuffer[meshID].alloc_and_upload( mesh.normal );
-            if( !mesh.texcoord.empty() ) texcoordBuffer[meshID].alloc_and_upload( mesh.texcoord );
+            TriangleMesh &mesh = *model->mMeshes[meshID];
+            vertexBuffer[meshID].alloc_and_upload( mesh.mVertex );
+            indexBuffer[meshID].alloc_and_upload( mesh.mIndex );
+            if( !mesh.mNormal.empty() ) normalBuffer[meshID].alloc_and_upload( mesh.mNormal );
+            if( !mesh.mTexCoord.empty() ) texcoordBuffer[meshID].alloc_and_upload( mesh.mTexCoord );
 
             triangleInput[meshID]      = {};
             triangleInput[meshID].type = OPTIX_BUILD_INPUT_TYPE_TRIANGLES;
@@ -179,12 +179,12 @@ namespace osc
 
             triangleInput[meshID].triangleArray.vertexFormat        = OPTIX_VERTEX_FORMAT_FLOAT3;
             triangleInput[meshID].triangleArray.vertexStrideInBytes = sizeof( vec3f );
-            triangleInput[meshID].triangleArray.numVertices         = (int)mesh.vertex.size();
+            triangleInput[meshID].triangleArray.numVertices         = (int)mesh.mVertex.size();
             triangleInput[meshID].triangleArray.vertexBuffers       = &d_vertices[meshID];
 
             triangleInput[meshID].triangleArray.indexFormat        = OPTIX_INDICES_FORMAT_UNSIGNED_INT3;
             triangleInput[meshID].triangleArray.indexStrideInBytes = sizeof( vec3i );
-            triangleInput[meshID].triangleArray.numIndexTriplets   = (int)mesh.index.size();
+            triangleInput[meshID].triangleArray.numIndexTriplets   = (int)mesh.mIndex.size();
             triangleInput[meshID].triangleArray.indexBuffer        = d_indices[meshID];
 
             triangleInputFlags[meshID] = 0;
@@ -493,30 +493,30 @@ namespace osc
         // ------------------------------------------------------------------
         // build hitgroup records
         // ------------------------------------------------------------------
-        int                         numObjects = (int)model->meshes.size();
+        int                         numObjects = (int)model->mMeshes.size();
         std::vector<HitgroupRecord> hitgroupRecords;
         for( int meshID = 0; meshID < numObjects; meshID++ )
         {
             for( int rayID = 0; rayID < RAY_TYPE_COUNT; rayID++ )
             {
-                auto mesh = model->meshes[meshID];
+                auto mesh = model->mMeshes[meshID];
 
                 HitgroupRecord rec;
                 OPTIX_CHECK( optixSbtRecordPackHeader( hitgroupPGs[rayID], &rec ) );
-                rec.data.mColor = mesh->diffuse;
-                if( mesh->diffuseTextureID >= 0 )
+                rec.data.mColor = mesh->mDiffuse;
+                if( mesh->mDiffuseTextureID >= 0 )
                 {
-                    rec.data.hasTexture = true;
-                    rec.data.texture    = textureObjects[mesh->diffuseTextureID];
+                    rec.data.mHasTexture = true;
+                    rec.data.mTexture    = textureObjects[mesh->mDiffuseTextureID];
                 }
                 else
                 {
-                    rec.data.hasTexture = false;
+                    rec.data.mHasTexture = false;
                 }
-                rec.data.index    = (vec3i *)indexBuffer[meshID].d_pointer();
-                rec.data.vertex   = (vec3f *)vertexBuffer[meshID].d_pointer();
-                rec.data.normal   = (vec3f *)normalBuffer[meshID].d_pointer();
-                rec.data.texcoord = (vec2f *)texcoordBuffer[meshID].d_pointer();
+                rec.data.mIndex    = (vec3i *)indexBuffer[meshID].d_pointer();
+                rec.data.mVertex   = (vec3f *)vertexBuffer[meshID].d_pointer();
+                rec.data.mNormal   = (vec3f *)normalBuffer[meshID].d_pointer();
+                rec.data.mTexCoord = (vec2f *)texcoordBuffer[meshID].d_pointer();
                 hitgroupRecords.push_back( rec );
             }
         }

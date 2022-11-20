@@ -28,44 +28,44 @@ namespace osc
         render */
     struct TriangleMesh
     {
-        std::vector<vec3f> vertex;
-        std::vector<vec3f> normal;
-        std::vector<vec2f> texcoord;
-        std::vector<vec3i> index;
+        std::vector<vec3f> mVertex;
+        std::vector<vec3f> mNormal;
+        std::vector<vec2f> mTexCoord;
+        std::vector<vec3i> mIndex;
 
         // material data:
-        vec3f diffuse;
-        int   diffuseTextureID{ -1 };
+        vec3f mDiffuse;
+        int   mDiffuseTextureID{ -1 };
     };
 
     struct QuadLight
     {
-        vec3f origin, du, dv, power;
+        vec3f mOrigin, mDu, mDv, mPower;
     };
 
     struct Texture
     {
         ~Texture()
         {
-            if( pixel ) delete[] pixel;
+            if( mPixel ) delete[] mPixel;
         }
 
-        uint32_t *pixel{ nullptr };
-        vec2i     resolution{ -1 };
+        uint32_t *mPixel{ nullptr };
+        vec2i     mResolution{ -1 };
     };
 
     struct Model
     {
         ~Model()
         {
-            for( auto mesh : meshes ) delete mesh;
-            for( auto texture : textures ) delete texture;
+            for( auto mesh : mMeshes ) delete mesh;
+            for( auto texture : mTextures ) delete texture;
         }
 
-        std::vector<TriangleMesh *> meshes;
-        std::vector<Texture *>      textures;
+        std::vector<TriangleMesh *> mMeshes;
+        std::vector<Texture *>      mTextures;
         //! bounding box of all vertices in the model
-        box3f bounds;
+        box3f mBounds;
     };
 
     Model *loadOBJ( const std::string &objFile );

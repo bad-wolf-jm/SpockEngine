@@ -57,23 +57,23 @@ namespace osc
         const vec3f *normal_array   = (const vec3f *)attributes.normals.data();
         const vec2f *texcoord_array = (const vec2f *)attributes.texcoords.data();
 
-        int newID          = (int)mesh->vertex.size();
+        int newID          = (int)mesh->mVertex.size();
         knownVertices[idx] = newID;
 
-        mesh->vertex.push_back( vertex_array[idx.vertex_index] );
+        mesh->mVertex.push_back( vertex_array[idx.vertex_index] );
         if( idx.normal_index >= 0 )
         {
-            while( mesh->normal.size() < mesh->vertex.size() ) mesh->normal.push_back( normal_array[idx.normal_index] );
+            while( mesh->mNormal.size() < mesh->mVertex.size() ) mesh->mNormal.push_back( normal_array[idx.normal_index] );
         }
         if( idx.texcoord_index >= 0 )
         {
-            while( mesh->texcoord.size() < mesh->vertex.size() ) mesh->texcoord.push_back( texcoord_array[idx.texcoord_index] );
+            while( mesh->mTexCoord.size() < mesh->mVertex.size() ) mesh->mTexCoord.push_back( texcoord_array[idx.texcoord_index] );
         }
 
         // just for sanity's sake:
-        if( mesh->texcoord.size() > 0 ) mesh->texcoord.resize( mesh->vertex.size() );
+        if( mesh->mTexCoord.size() > 0 ) mesh->mTexCoord.resize( mesh->mVertex.size() );
         // just for sanity's sake:
-        if( mesh->normal.size() > 0 ) mesh->normal.resize( mesh->vertex.size() );
+        if( mesh->mNormal.size() > 0 ) mesh->mNormal.resize( mesh->mVertex.size() );
 
         return newID;
     }
@@ -100,17 +100,17 @@ namespace osc
         int            textureID = -1;
         if( image )
         {
-            textureID           = (int)model->textures.size();
+            textureID           = (int)model->mTextures.size();
             Texture *texture    = new Texture;
-            texture->resolution = res;
-            texture->pixel      = (uint32_t *)image;
+            texture->mResolution = res;
+            texture->mPixel      = (uint32_t *)image;
 
             /* iw - actually, it seems that stbi loads the pictures
                mirrored along the y axis - mirror them here */
             for( int y = 0; y < res.y / 2; y++ )
             {
-                uint32_t *line_y     = texture->pixel + y * res.x;
-                uint32_t *mirrored_y = texture->pixel + ( res.y - 1 - y ) * res.x;
+                uint32_t *line_y     = texture->mPixel + y * res.x;
+                uint32_t *mirrored_y = texture->mPixel + ( res.y - 1 - y ) * res.x;
                 int       mirror_y   = res.y - 1 - y;
                 for( int x = 0; x < res.x; x++ )
                 {
@@ -118,7 +118,7 @@ namespace osc
                 }
             }
 
-            model->textures.push_back( texture );
+            model->mTextures.push_back( texture );
         }
         else
         {
@@ -174,24 +174,24 @@ namespace osc
 
                     vec3i idx( addVertex( mesh, attributes, idx0, knownVertices ), addVertex( mesh, attributes, idx1, knownVertices ),
                                addVertex( mesh, attributes, idx2, knownVertices ) );
-                    mesh->index.push_back( idx );
-                    mesh->diffuse          = (const vec3f &)materials[materialID].diffuse;
-                    mesh->diffuseTextureID = loadTexture( model, knownTextures, materials[materialID].diffuse_texname, modelDir );
+                    mesh->mIndex.push_back( idx );
+                    mesh->mDiffuse          = (const vec3f &)materials[materialID].diffuse;
+                    mesh->mDiffuseTextureID = loadTexture( model, knownTextures, materials[materialID].diffuse_texname, modelDir );
                 }
 
-                if( mesh->vertex.empty() )
+                if( mesh->mVertex.empty() )
                     delete mesh;
                 else
-                    model->meshes.push_back( mesh );
+                    model->mMeshes.push_back( mesh );
             }
         }
 
         // of course, you should be using tbb::parallel_for for stuff
         // like this:
-        for( auto mesh : model->meshes )
-            for( auto vtx : mesh->vertex ) model->bounds.extend( vtx );
+        for( auto mesh : model->mMeshes )
+            for( auto vtx : mesh->mVertex ) model->mBounds.extend( vtx );
 
-        std::cout << "created a total of " << model->meshes.size() << " meshes" << std::endl;
+        std::cout << "created a total of " << model->mMeshes.size() << " meshes" << std::endl;
         return model;
     }
 } // namespace osc

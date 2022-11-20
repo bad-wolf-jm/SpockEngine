@@ -31,15 +31,15 @@ namespace osc
         RAY_TYPE_COUNT
     };
 
-    struct TriangleMeshSBTData
+    struct sTriangleMeshSBTData
     {
         vec3f               mColor;
-        vec3f              *vertex;
-        vec3f              *normal;
-        vec2f              *texcoord;
-        vec3i              *index;
-        bool                hasTexture;
-        cudaTextureObject_t texture;
+        vec3f              *mVertex;
+        vec3f              *mNormal;
+        vec2f              *mTexCoord;
+        vec3i              *mIndex;
+        bool                mHasTexture;
+        cudaTextureObject_t mTexture;
     };
 
     struct LaunchParams
