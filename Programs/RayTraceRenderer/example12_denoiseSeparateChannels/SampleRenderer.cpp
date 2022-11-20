@@ -47,7 +47,7 @@ namespace osc
     struct __align__( OPTIX_SBT_RECORD_ALIGNMENT ) HitgroupRecord
     {
         __align__( OPTIX_SBT_RECORD_ALIGNMENT ) char header[OPTIX_SBT_RECORD_HEADER_SIZE];
-        sTriangleMeshSBTData                          data;
+        sTriangleMeshSBTData                         data;
     };
 
     /*! constructor - performs all setup, including initializing
@@ -57,10 +57,10 @@ namespace osc
     {
         initOptix();
 
-        launchParams.light.origin = light.mOrigin;
-        launchParams.light.du     = light.mDu;
-        launchParams.light.dv     = light.mDv;
-        launchParams.light.power  = light.mPower;
+        launchParams.mLight.mOrigin = light.mOrigin;
+        launchParams.mLight.mDu     = light.mDu;
+        launchParams.mLight.mDv     = light.mDv;
+        launchParams.mLight.mPower  = light.mPower;
 
         std::cout << "#osc: creating optix context ..." << std::endl;
         createContext();
@@ -75,7 +75,7 @@ namespace osc
         std::cout << "#osc: creating hitgroup programs ..." << std::endl;
         createHitgroupPrograms();
 
-        launchParams.traversable = buildAccel();
+        launchParams.mSceneRoot = buildAccel();
 
         std::cout << "#osc: setting up optix pipeline ..." << std::endl;
         createPipeline();
@@ -146,7 +146,7 @@ namespace osc
     {
         const int numMeshes = (int)model->mMeshes.size();
         vertexBuffer.resize( numMeshes );
-        normalBuffer.resize( numMeshes );
+        mNormalBuffer.resize( numMeshes );
         texcoordBuffer.resize( numMeshes );
         indexBuffer.resize( numMeshes );
 
@@ -166,7 +166,7 @@ namespace osc
             TriangleMesh &mesh = *model->mMeshes[meshID];
             vertexBuffer[meshID].alloc_and_upload( mesh.mVertex );
             indexBuffer[meshID].alloc_and_upload( mesh.mIndex );
-            if( !mesh.mNormal.empty() ) normalBuffer[meshID].alloc_and_upload( mesh.mNormal );
+            if( !mesh.mNormal.empty() ) mNormalBuffer[meshID].alloc_and_upload( mesh.mNormal );
             if( !mesh.mTexCoord.empty() ) texcoordBuffer[meshID].alloc_and_upload( mesh.mTexCoord );
 
             triangleInput[meshID]      = {};
@@ -517,7 +517,7 @@ namespace osc
                 }
                 rec.data.mIndex    = (vec3i *)indexBuffer[meshID].d_pointer();
                 rec.data.mVertex   = (vec3f *)vertexBuffer[meshID].d_pointer();
-                rec.data.mNormal   = (vec3f *)normalBuffer[meshID].d_pointer();
+                rec.data.mNormal   = (vec3f *)mNormalBuffer[meshID].d_pointer();
                 rec.data.mTexCoord = (vec2f *)texcoordBuffer[meshID].d_pointer();
                 hitgroupRecords.push_back( rec );
             }
@@ -533,29 +533,29 @@ namespace osc
     {
         // sanity check: make sure we launch only after first resize is
         // already done:
-        if( launchParams.frame.size.x == 0 ) return;
+        if( launchParams.mFrame.mSize.x == 0 ) return;
 
-        if( !accumulate ) launchParams.frame.frameID = 0;
+        if( !accumulate ) launchParams.mFrame.mFrameID = 0;
         launchParamsBuffer.upload( &launchParams, 1 );
-        launchParams.frame.frameID++;
+        launchParams.mFrame.mFrameID++;
 
         OPTIX_CHECK( optixLaunch( /*! pipeline we're launching launch: */
                                   pipeline, stream,
                                   /*! parameters and SBT */
                                   launchParamsBuffer.d_pointer(), launchParamsBuffer.sizeInBytes, &sbt,
                                   /*! dimensions of the launch: */
-                                  launchParams.frame.size.x, launchParams.frame.size.y, 1 ) );
+                                  launchParams.mFrame.mSize.x, launchParams.mFrame.mSize.y, 1 ) );
 
         denoiserIntensity.resize( sizeof( float ) );
 
         OptixDenoiserParams denoiserParams;
-        denoiserParams.denoiseAlpha = 1;//OPTIX_DENOISER_ALPHA_MODE_ALPHA_AS_AOV;
+        denoiserParams.denoiseAlpha = 1; // OPTIX_DENOISER_ALPHA_MODE_ALPHA_AS_AOV;
 #if OPTIX_VERSION >= 70300
         if( denoiserIntensity.sizeInBytes != sizeof( float ) ) denoiserIntensity.alloc( sizeof( float ) );
 #endif
         denoiserParams.hdrIntensity = denoiserIntensity.d_pointer();
         if( accumulate )
-            denoiserParams.blendFactor = 1.f / ( launchParams.frame.frameID );
+            denoiserParams.blendFactor = 1.f / ( launchParams.mFrame.mFrameID );
         else
             denoiserParams.blendFactor = 0.0f;
 
@@ -563,11 +563,11 @@ namespace osc
         OptixImage2D inputLayer[3];
         inputLayer[0].data = fbColor.d_pointer();
         /// Width of the image (in pixels)
-        inputLayer[0].width = launchParams.frame.size.x;
+        inputLayer[0].width = launchParams.mFrame.mSize.x;
         /// Height of the image (in pixels)
-        inputLayer[0].height = launchParams.frame.size.y;
+        inputLayer[0].height = launchParams.mFrame.mSize.y;
         /// Stride between subsequent rows of the image (in bytes).
-        inputLayer[0].rowStrideInBytes = launchParams.frame.size.x * sizeof( float4 );
+        inputLayer[0].rowStrideInBytes = launchParams.mFrame.mSize.x * sizeof( float4 );
         /// Stride between subsequent pixels of the image (in bytes).
         /// For now, only 0 or the value that corresponds to a dense packing of pixels
         /// (no gaps) is supported.
@@ -578,11 +578,11 @@ namespace osc
         // ..................................................................
         inputLayer[2].data = fbNormal.d_pointer();
         /// Width of the image (in pixels)
-        inputLayer[2].width = launchParams.frame.size.x;
+        inputLayer[2].width = launchParams.mFrame.mSize.x;
         /// Height of the image (in pixels)
-        inputLayer[2].height = launchParams.frame.size.y;
+        inputLayer[2].height = launchParams.mFrame.mSize.y;
         /// Stride between subsequent rows of the image (in bytes).
-        inputLayer[2].rowStrideInBytes = launchParams.frame.size.x * sizeof( float4 );
+        inputLayer[2].rowStrideInBytes = launchParams.mFrame.mSize.x * sizeof( float4 );
         /// Stride between subsequent pixels of the image (in bytes).
         /// For now, only 0 or the value that corresponds to a dense packing of pixels
         /// (no gaps) is supported.
@@ -593,11 +593,11 @@ namespace osc
         // ..................................................................
         inputLayer[1].data = fbAlbedo.d_pointer();
         /// Width of the image (in pixels)
-        inputLayer[1].width = launchParams.frame.size.x;
+        inputLayer[1].width = launchParams.mFrame.mSize.x;
         /// Height of the image (in pixels)
-        inputLayer[1].height = launchParams.frame.size.y;
+        inputLayer[1].height = launchParams.mFrame.mSize.y;
         /// Stride between subsequent rows of the image (in bytes).
-        inputLayer[1].rowStrideInBytes = launchParams.frame.size.x * sizeof( float4 );
+        inputLayer[1].rowStrideInBytes = launchParams.mFrame.mSize.x * sizeof( float4 );
         /// Stride between subsequent pixels of the image (in bytes).
         /// For now, only 0 or the value that corresponds to a dense packing of pixels
         /// (no gaps) is supported.
@@ -609,11 +609,11 @@ namespace osc
         OptixImage2D outputLayer;
         outputLayer.data = denoisedBuffer.d_pointer();
         /// Width of the image (in pixels)
-        outputLayer.width = launchParams.frame.size.x;
+        outputLayer.width = launchParams.mFrame.mSize.x;
         /// Height of the image (in pixels)
-        outputLayer.height = launchParams.frame.size.y;
+        outputLayer.height = launchParams.mFrame.mSize.y;
         /// Stride between subsequent rows of the image (in bytes).
-        outputLayer.rowStrideInBytes = launchParams.frame.size.x * sizeof( float4 );
+        outputLayer.rowStrideInBytes = launchParams.mFrame.mSize.x * sizeof( float4 );
         /// Stride between subsequent pixels of the image (in bytes).
         /// For now, only 0 or the value that corresponds to a dense packing of pixels
         /// (no gaps) is supported.
@@ -669,13 +669,14 @@ namespace osc
     {
         lastSetCamera = camera;
         // reset accumulation
-        launchParams.frame.frameID     = 0;
-        launchParams.camera.position   = camera.from;
-        launchParams.camera.direction  = normalize( camera.at - camera.from );
-        const float cosFovy            = 0.66f;
-        const float aspect             = float( launchParams.frame.size.x ) / float( launchParams.frame.size.y );
-        launchParams.camera.horizontal = cosFovy * aspect * normalize( cross( launchParams.camera.direction, camera.up ) );
-        launchParams.camera.vertical   = cosFovy * normalize( cross( launchParams.camera.horizontal, launchParams.camera.direction ) );
+        launchParams.mFrame.mFrameID     = 0;
+        launchParams.mCamera.mPosition   = camera.from;
+        launchParams.mCamera.mDirection  = normalize( camera.at - camera.from );
+        const float cosFovy              = 0.66f;
+        const float aspect               = float( launchParams.mFrame.mSize.x ) / float( launchParams.mFrame.mSize.y );
+        launchParams.mCamera.mHorizontal = cosFovy * aspect * normalize( cross( launchParams.mCamera.mDirection, camera.up ) );
+        launchParams.mCamera.mVertical =
+            cosFovy * normalize( cross( launchParams.mCamera.mHorizontal, launchParams.mCamera.mDirection ) );
     }
 
     /*! resize frame buffer to given resolution */
@@ -724,10 +725,10 @@ namespace osc
 
         // update the launch parameters that we'll pass to the optix
         // launch:
-        launchParams.frame.size         = newSize;
-        launchParams.frame.colorBuffer  = (float4 *)fbColor.d_pointer();
-        launchParams.frame.normalBuffer = (float4 *)fbNormal.d_pointer();
-        launchParams.frame.albedoBuffer = (float4 *)fbAlbedo.d_pointer();
+        launchParams.mFrame.mSize         = newSize;
+        launchParams.mFrame.mColorBuffer  = (float4 *)fbColor.d_pointer();
+        launchParams.mFrame.mNormalBuffer = (float4 *)fbNormal.d_pointer();
+        launchParams.mFrame.mAlbedoBuffer = (float4 *)fbAlbedo.d_pointer();
 
         // and re-set the camera, since aspect may have changed
         setCamera( lastSetCamera );
@@ -740,7 +741,7 @@ namespace osc
     /*! download the rendered color buffer */
     void SampleRenderer::downloadPixels( uint32_t h_pixels[] )
     {
-        finalColorBuffer.download( h_pixels, launchParams.frame.size.x * launchParams.frame.size.y );
+        finalColorBuffer.download( h_pixels, launchParams.mFrame.mSize.x * launchParams.mFrame.mSize.y );
     }
 
 } // namespace osc

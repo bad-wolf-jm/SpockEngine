@@ -47,7 +47,7 @@ namespace osc
 
     void SampleRenderer::computeFinalPixelColors()
     {
-        vec2i fbSize    = launchParams.frame.size;
+        vec2i fbSize    = launchParams.mFrame.mSize;
         vec2i blockSize = 32;
         vec2i numBlocks = divRoundUp( fbSize, blockSize );
         computeFinalPixelColorsKernel<<<dim3( numBlocks.x, numBlocks.y ), dim3( blockSize.x, blockSize.y )>>>(

@@ -44,34 +44,34 @@ namespace osc
 
     struct LaunchParams
     {
-        int numPixelSamples = 8;
+        int mNumPixelSamples = 8;
         struct
         {
-            int     frameID = 0;
-            float4 *colorBuffer;
-            uint32_t *colorBufferU32;
-            float4 *normalBuffer;
-            float4 *albedoBuffer;
+            int       mFrameID = 0;
+            float4   *mColorBuffer;
+            uint32_t *mColorBufferU32;
+            float4   *mNormalBuffer;
+            float4   *mAlbedoBuffer;
 
             /*! the size of the frame buffer to render */
-            vec2i size;
-            int       accumID{ 0 };
-        } frame;
+            vec2i mSize;
+            int   mAccumID{ 0 };
+        } mFrame;
 
         struct
         {
-            vec3f position;
-            vec3f direction;
-            vec3f horizontal;
-            vec3f vertical;
-        } camera;
+            vec3f mPosition;
+            vec3f mDirection;
+            vec3f mHorizontal;
+            vec3f mVertical;
+        } mCamera;
 
         struct
         {
-            vec3f origin, du, dv, power;
-        } light;
+            vec3f mOrigin, mDu, mDv, mPower;
+        } mLight;
 
-        OptixTraversableHandle traversable;
+        OptixTraversableHandle mSceneRoot;
     };
 
 } // namespace osc

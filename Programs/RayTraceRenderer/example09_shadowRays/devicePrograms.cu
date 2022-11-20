@@ -61,7 +61,9 @@ namespace osc
     // one group of them to set up the SBT)
     //------------------------------------------------------------------------------
 
-    extern "C" __global__ void __closesthit__shadow() { /* not going to be used ... */ }
+    extern "C" __global__ void __closesthit__shadow()
+    { /* not going to be used ... */
+    }
 
     extern "C" __global__ void __closesthit__radiance()
     {
@@ -124,7 +126,7 @@ namespace osc
         // the values we store the PRD pointer in:
         uint32_t u0, u1;
         packPointer( &lightVisibility, u0, u1 );
-        optixTrace( optixLaunchParams.traversable, surfPos + 1e-3f * Ng, lightDir,
+        optixTrace( optixLaunchParams.mSceneRoot, surfPos + 1e-3f * Ng, lightDir,
                     1e-3f,       // tmin
                     1.f - 1e-3f, // tmax
                     0.0f,        // rayTime
@@ -187,7 +189,7 @@ namespace osc
         const int ix = optixGetLaunchIndex().x;
         const int iy = optixGetLaunchIndex().y;
 
-        const auto &camera = optixLaunchParams.camera;
+        const auto &camera = optixLaunchParams.mCamera;
 
         // our per-ray data for this example. what we initialize it to
         // won't matter, since this value will be overwritten by either
@@ -199,12 +201,13 @@ namespace osc
         packPointer( &pixelColorPRD, u0, u1 );
 
         // normalized screen plane position, in [0,1]^2
-        const vec2f screen( vec2f( ix + .5f, iy + .5f ) / vec2f( optixLaunchParams.frame.size ) );
+        const vec2f screen( vec2f( ix + .5f, iy + .5f ) / vec2f( optixLaunchParams.mFrame.mSize ) );
 
         // generate ray direction
-        vec3f rayDir = normalize( camera.direction + ( screen.x - 0.5f ) * camera.horizontal + ( screen.y - 0.5f ) * camera.vertical );
+        vec3f rayDir =
+            normalize( camera.mDirection + ( screen.x - 0.5f ) * camera.mHorizontal + ( screen.y - 0.5f ) * camera.mVertical );
 
-        optixTrace( optixLaunchParams.traversable, camera.position, rayDir,
+        optixTrace( optixLaunchParams.mSceneRoot, camera.mPosition, rayDir,
                     0.f,   // tmin
                     1e20f, // tmax
                     0.0f,  // rayTime
@@ -224,8 +227,8 @@ namespace osc
         const uint32_t rgba = 0xff000000 | ( r << 0 ) | ( g << 8 ) | ( b << 16 );
 
         // and write to frame buffer ...
-        const uint32_t fbIndex                       = ix + iy * optixLaunchParams.frame.size.x;
-        optixLaunchParams.frame.colorBufferU32[fbIndex] = rgba;
+        const uint32_t fbIndex                            = ix + iy * optixLaunchParams.mFrame.mSize.x;
+        optixLaunchParams.mFrame.mColorBufferU32[fbIndex] = rgba;
     }
 
 } // namespace osc

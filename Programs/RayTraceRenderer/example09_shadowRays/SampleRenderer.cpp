@@ -47,7 +47,7 @@ namespace osc
     struct __align__( OPTIX_SBT_RECORD_ALIGNMENT ) HitgroupRecord
     {
         __align__( OPTIX_SBT_RECORD_ALIGNMENT ) char header[OPTIX_SBT_RECORD_HEADER_SIZE];
-        sTriangleMeshSBTData                          data;
+        sTriangleMeshSBTData                         data;
     };
 
     /*! constructor - performs all setup, including initializing
@@ -70,7 +70,7 @@ namespace osc
         std::cout << "#osc: creating hitgroup programs ..." << std::endl;
         createHitgroupPrograms();
 
-        launchParams.traversable = buildAccel();
+        launchParams.mSceneRoot = buildAccel();
 
         std::cout << "#osc: setting up optix pipeline ..." << std::endl;
         createPipeline();
@@ -141,7 +141,7 @@ namespace osc
     {
         const int numMeshes = (int)model->mMeshes.size();
         vertexBuffer.resize( numMeshes );
-        normalBuffer.resize( numMeshes );
+        mNormalBuffer.resize( numMeshes );
         texcoordBuffer.resize( numMeshes );
         indexBuffer.resize( numMeshes );
 
@@ -161,7 +161,7 @@ namespace osc
             TriangleMesh &mesh = *model->mMeshes[meshID];
             vertexBuffer[meshID].alloc_and_upload( mesh.mVertex );
             indexBuffer[meshID].alloc_and_upload( mesh.mIndex );
-            if( !mesh.mNormal.empty() ) normalBuffer[meshID].alloc_and_upload( mesh.mNormal );
+            if( !mesh.mNormal.empty() ) mNormalBuffer[meshID].alloc_and_upload( mesh.mNormal );
             if( !mesh.mTexCoord.empty() ) texcoordBuffer[meshID].alloc_and_upload( mesh.mTexCoord );
 
             triangleInput[meshID]      = {};
@@ -510,7 +510,7 @@ namespace osc
                 }
                 rec.data.mIndex    = (vec3i *)indexBuffer[meshID].d_pointer();
                 rec.data.mVertex   = (vec3f *)vertexBuffer[meshID].d_pointer();
-                rec.data.mNormal   = (vec3f *)normalBuffer[meshID].d_pointer();
+                rec.data.mNormal   = (vec3f *)mNormalBuffer[meshID].d_pointer();
                 rec.data.mTexCoord = (vec2f *)texcoordBuffer[meshID].d_pointer();
                 hitgroupRecords.push_back( rec );
             }
@@ -526,7 +526,7 @@ namespace osc
     {
         // sanity check: make sure we launch only after first resize is
         // already done:
-        if( launchParams.frame.size.x == 0 ) return;
+        if( launchParams.mFrame.mSize.x == 0 ) return;
 
         launchParamsBuffer.upload( &launchParams, 1 );
 
@@ -535,7 +535,7 @@ namespace osc
                                   /*! parameters and SBT */
                                   launchParamsBuffer.d_pointer(), launchParamsBuffer.sizeInBytes, &sbt,
                                   /*! dimensions of the launch: */
-                                  launchParams.frame.size.x, launchParams.frame.size.y, 1 ) );
+                                  launchParams.mFrame.mSize.x, launchParams.mFrame.mSize.y, 1 ) );
         // sync - make sure the frame is rendered before we download and
         // display (obviously, for a high-performance application you
         // want to use streams and double-buffering, but for this simple
@@ -546,13 +546,14 @@ namespace osc
     /*! set camera to render with */
     void SampleRenderer::setCamera( const Camera &camera )
     {
-        lastSetCamera                  = camera;
-        launchParams.camera.position   = camera.from;
-        launchParams.camera.direction  = normalize( camera.at - camera.from );
-        const float cosFovy            = 0.66f;
-        const float aspect             = launchParams.frame.size.x / float( launchParams.frame.size.y );
-        launchParams.camera.horizontal = cosFovy * aspect * normalize( cross( launchParams.camera.direction, camera.up ) );
-        launchParams.camera.vertical   = cosFovy * normalize( cross( launchParams.camera.horizontal, launchParams.camera.direction ) );
+        lastSetCamera                    = camera;
+        launchParams.mCamera.mPosition   = camera.from;
+        launchParams.mCamera.mDirection  = normalize( camera.at - camera.from );
+        const float cosFovy              = 0.66f;
+        const float aspect               = launchParams.mFrame.mSize.x / float( launchParams.mFrame.mSize.y );
+        launchParams.mCamera.mHorizontal = cosFovy * aspect * normalize( cross( launchParams.mCamera.mDirection, camera.up ) );
+        launchParams.mCamera.mVertical =
+            cosFovy * normalize( cross( launchParams.mCamera.mHorizontal, launchParams.mCamera.mDirection ) );
     }
 
     /*! resize frame buffer to given resolution */
@@ -566,8 +567,8 @@ namespace osc
 
         // update the launch parameters that we'll pass to the optix
         // launch:
-        launchParams.frame.size        = newSize;
-        launchParams.frame.colorBufferU32 = (uint32_t *)colorBuffer.d_pointer();
+        launchParams.mFrame.mSize           = newSize;
+        launchParams.mFrame.mColorBufferU32 = (uint32_t *)colorBuffer.d_pointer();
 
         // and re-set the camera, since aspect may have changed
         setCamera( lastSetCamera );
@@ -576,7 +577,7 @@ namespace osc
     /*! download the rendered color buffer */
     void SampleRenderer::downloadPixels( uint32_t h_pixels[] )
     {
-        colorBuffer.download( h_pixels, launchParams.frame.size.x * launchParams.frame.size.y );
+        colorBuffer.download( h_pixels, launchParams.mFrame.mSize.x * launchParams.mFrame.mSize.y );
     }
 
 } // namespace osc

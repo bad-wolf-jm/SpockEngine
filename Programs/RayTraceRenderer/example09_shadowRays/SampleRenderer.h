@@ -147,7 +147,7 @@ namespace osc
 
         /*! @{ one buffer per input mesh */
         std::vector<CUDABuffer> vertexBuffer;
-        std::vector<CUDABuffer> normalBuffer;
+        std::vector<CUDABuffer> mNormalBuffer;
         std::vector<CUDABuffer> texcoordBuffer;
         std::vector<CUDABuffer> indexBuffer;
         /*! @} */

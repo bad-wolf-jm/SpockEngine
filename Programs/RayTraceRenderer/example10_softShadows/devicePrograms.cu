@@ -75,12 +75,14 @@ namespace osc
     // one group of them to set up the SBT)
     //------------------------------------------------------------------------------
 
-    extern "C" __global__ void __closesthit__shadow() { /* not going to be used ... */ }
+    extern "C" __global__ void __closesthit__shadow()
+    { /* not going to be used ... */
+    }
 
     extern "C" __global__ void __closesthit__radiance()
     {
         const sTriangleMeshSBTData &sbtData = *(const sTriangleMeshSBTData *)optixGetSbtDataPointer();
-        PRD                       &prd     = *getPRD<PRD>();
+        PRD                        &prd     = *getPRD<PRD>();
 
         // ------------------------------------------------------------------
         // gather some basic hit information
@@ -139,8 +141,8 @@ namespace osc
         for( int lightSampleID = 0; lightSampleID < numLightSamples; lightSampleID++ )
         {
             // produce random light sample
-            const vec3f lightPos =
-                optixLaunchParams.light.origin + prd.random() * optixLaunchParams.light.du + prd.random() * optixLaunchParams.light.dv;
+            const vec3f lightPos = optixLaunchParams.mLight.mOrigin + prd.random() * optixLaunchParams.mLight.mDu +
+                                   prd.random() * optixLaunchParams.mLight.mDv;
             vec3f lightDir  = lightPos - surfPos;
             float lightDist = gdt::length( lightDir );
             lightDir        = normalize( lightDir );
@@ -153,7 +155,7 @@ namespace osc
                 // the values we store the PRD pointer in:
                 uint32_t u0, u1;
                 packPointer( &lightVisibility, u0, u1 );
-                optixTrace( optixLaunchParams.traversable, surfPos + 1e-3f * Ng, lightDir,
+                optixTrace( optixLaunchParams.mSceneRoot, surfPos + 1e-3f * Ng, lightDir,
                             1e-3f,                       // tmin
                             lightDist * ( 1.f - 1e-3f ), // tmax
                             0.0f,                        // rayTime
@@ -166,7 +168,7 @@ namespace osc
                             RAY_TYPE_COUNT,  // SBT stride
                             SHADOW_RAY_TYPE, // missSBTIndex
                             u0, u1 );
-                pixelColor += lightVisibility * optixLaunchParams.light.power * diffuseColor *
+                pixelColor += lightVisibility * optixLaunchParams.mLight.mPower * diffuseColor *
                               ( NdotL / ( lightDist * lightDist * numLightSamples ) );
             }
         }
@@ -212,11 +214,11 @@ namespace osc
         // compute a test pattern based on pixel ID
         const int   ix      = optixGetLaunchIndex().x;
         const int   iy      = optixGetLaunchIndex().y;
-        const int   accumID = optixLaunchParams.frame.accumID;
-        const auto &camera  = optixLaunchParams.camera;
+        const int   accumID = optixLaunchParams.mFrame.mAccumID;
+        const auto &camera  = optixLaunchParams.mCamera;
 
         PRD prd;
-        prd.random.init( ix + accumID * optixLaunchParams.frame.size.x, iy + accumID * optixLaunchParams.frame.size.y );
+        prd.random.init( ix + accumID * optixLaunchParams.mFrame.mSize.x, iy + accumID * optixLaunchParams.mFrame.mSize.y );
         prd.pixelColor = vec3f( 0.f );
 
         // the values we store the PRD pointer in:
@@ -229,13 +231,13 @@ namespace osc
         for( int sampleID = 0; sampleID < numPixelSamples; sampleID++ )
         {
             // normalized screen plane position, in [0,1]^2
-            const vec2f screen( vec2f( ix + prd.random(), iy + prd.random() ) / vec2f( optixLaunchParams.frame.size ) );
+            const vec2f screen( vec2f( ix + prd.random(), iy + prd.random() ) / vec2f( optixLaunchParams.mFrame.mSize ) );
 
             // generate ray direction
             vec3f rayDir =
-                normalize( camera.direction + ( screen.x - 0.5f ) * camera.horizontal + ( screen.y - 0.5f ) * camera.vertical );
+                normalize( camera.mDirection + ( screen.x - 0.5f ) * camera.mHorizontal + ( screen.y - 0.5f ) * camera.mVertical );
 
-            optixTrace( optixLaunchParams.traversable, camera.position, rayDir,
+            optixTrace( optixLaunchParams.mSceneRoot, camera.mPosition, rayDir,
                         0.f,   // tmin
                         1e20f, // tmax
                         0.0f,  // rayTime
@@ -257,8 +259,8 @@ namespace osc
         const uint32_t rgba = 0xff000000 | ( r << 0 ) | ( g << 8 ) | ( b << 16 );
 
         // and write to frame buffer ...
-        const uint32_t fbIndex                       = ix + iy * optixLaunchParams.frame.size.x;
-        optixLaunchParams.frame.colorBufferU32[fbIndex] = rgba;
+        const uint32_t fbIndex                            = ix + iy * optixLaunchParams.mFrame.mSize.x;
+        optixLaunchParams.mFrame.mColorBufferU32[fbIndex] = rgba;
     }
 
 } // namespace osc

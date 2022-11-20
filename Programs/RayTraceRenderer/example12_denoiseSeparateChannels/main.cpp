@@ -111,13 +111,13 @@ namespace osc
             }
             if( key == ',' )
             {
-                sample.launchParams.numPixelSamples = std::max( 1, sample.launchParams.numPixelSamples - 1 );
-                std::cout << "num samples/pixel now " << sample.launchParams.numPixelSamples << std::endl;
+                sample.launchParams.mNumPixelSamples = std::max( 1, sample.launchParams.mNumPixelSamples - 1 );
+                std::cout << "num samples/pixel now " << sample.launchParams.mNumPixelSamples << std::endl;
             }
             if( key == '.' )
             {
-                sample.launchParams.numPixelSamples = std::max( 1, sample.launchParams.numPixelSamples + 1 );
-                std::cout << "num samples/pixel now " << sample.launchParams.numPixelSamples << std::endl;
+                sample.launchParams.mNumPixelSamples = std::max( 1, sample.launchParams.mNumPixelSamples + 1 );
+                std::cout << "num samples/pixel now " << sample.launchParams.mNumPixelSamples << std::endl;
             }
         }
 
