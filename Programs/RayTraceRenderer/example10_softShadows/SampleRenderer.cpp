@@ -573,7 +573,7 @@ namespace osc
         // update the launch parameters that we'll pass to the optix
         // launch:
         launchParams.frame.size        = newSize;
-        launchParams.frame.colorBuffer = (uint32_t *)colorBuffer.d_pointer();
+        launchParams.frame.colorBufferU32 = (uint32_t *)colorBuffer.d_pointer();
 
         // and re-set the camera, since aspect may have changed
         setCamera( lastSetCamera );

@@ -258,7 +258,7 @@ namespace osc
 
         // and write to frame buffer ...
         const uint32_t fbIndex                       = ix + iy * optixLaunchParams.frame.size.x;
-        optixLaunchParams.frame.colorBuffer[fbIndex] = rgba;
+        optixLaunchParams.frame.colorBufferU32[fbIndex] = rgba;
     }
 
 } // namespace osc
