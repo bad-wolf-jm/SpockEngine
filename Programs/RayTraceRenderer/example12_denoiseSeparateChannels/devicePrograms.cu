@@ -32,7 +32,7 @@ namespace osc
     /*! launch parameters in constant memory, filled in by optix upon
         optixLaunch (this gets filled in from the buffer we pass to
         optixLaunch) */
-    extern "C" __constant__ LaunchParams optixLaunchParams;
+    extern "C" __constant__ sLaunchParams optixLaunchParams;
 
     /*! per-ray data now captures random number generator, so programs
         can access RNG state */

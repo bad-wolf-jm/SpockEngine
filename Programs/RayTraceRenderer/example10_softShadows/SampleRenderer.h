@@ -133,7 +133,7 @@ namespace osc
 
         /*! @{ our launch parameters, on the host, and the buffer to store
             them on the device */
-        LaunchParams launchParams;
+        sLaunchParams launchParams;
         CUDABuffer   launchParamsBuffer;
         /*! @} */
 

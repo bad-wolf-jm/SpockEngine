@@ -42,7 +42,7 @@ namespace osc
         cudaTextureObject_t mTexture;
     };
 
-    struct LaunchParams
+    struct sLaunchParams
     {
         int mNumPixelSamples = 8;
         struct

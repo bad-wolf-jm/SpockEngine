@@ -27,7 +27,7 @@ namespace osc
     /*! launch parameters in constant memory, filled in by optix upon
         optixLaunch (this gets filled in from the buffer we pass to
         optixLaunch) */
-    extern "C" __constant__ LaunchParams optixLaunchParams;
+    extern "C" __constant__ sLaunchParams optixLaunchParams;
 
     static __forceinline__ __device__ void *unpackPointer( uint32_t i0, uint32_t i1 )
     {
