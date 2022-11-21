@@ -321,6 +321,22 @@ namespace SE::Editor
             ImGuiTreeNodeFlags l_Flags      = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
             float              l_LabelSize  = 175.0f;
 
+            Text( "Viewport: {} x {}", m_WorkspaceAreaSize.x, m_WorkspaceAreaSize.y );
+            {
+                const float lAspect = static_cast<float>( m_WorkspaceAreaSize.x ) / static_cast<float>( m_WorkspaceAreaSize.y );
+                static float lFoVY   = 48.7;
+                static float lFoVX   = lFoVY * lAspect;
+                Text( "Field of view:" );
+                UI::SameLine();
+                ImVec2 l_CursorPosition = ImGui::GetCursorPos();
+                UI::SetCursorPosition( ImVec2{ l_LabelSize, l_CursorPosition.y } + ImVec2( 0.0f, -5.0f ) );
+                ImGui::SetNextItemWidth( l_WindowSize.x - l_LabelSize );
+                UI::Slider( "##camera_fov", "%.2f", 1.0f, 180.0f, &lFoVX );
+
+                DefRenderer->SetProjection( math::Perspective( math::radians(lFoVX), lAspect, 0.01f, 100000.0f ) );
+                WorldRenderer->SetProjection( math::Perspective( math::radians(lFoVX), lAspect, 0.01f, 100000.0f ) );
+            }
+
             // if( ImGui::CollapsingHeader( "Environment", l_Flags ) )
             // {
             if( World->Environment.Has<sAmbientLightingComponent>() )

@@ -80,11 +80,11 @@ namespace SE::Editor
             mDeferredRenderTargetDisplayHandle.Handle->Write( mDeferredRenderTargetTexture, 0 );
         }
 
-        const float lAspect = static_cast<float>( mViewportWidth ) / static_cast<float>( mViewportHeight );
-        const float lFoVY   = 48.7_degf;
-        const float lFoVX   = lFoVY * lAspect;
-        mDeferredRenderer->SetProjection( math::Perspective( lFoVX, lAspect, 0.01f, 100000.0f ) );
-        mForwardRenderer->SetProjection( math::Perspective( lFoVX, lAspect, 0.01f, 100000.0f ) );
+        // const float lAspect = static_cast<float>( mViewportWidth ) / static_cast<float>( mViewportHeight );
+        // const float lFoVY   = 48.7_degf;
+        // const float lFoVX   = lFoVY * lAspect;
+        // mDeferredRenderer->SetProjection( math::Perspective( lFoVX, lAspect, 0.01f, 100000.0f ) );
+        // mForwardRenderer->SetProjection( math::Perspective( lFoVX, lAspect, 0.01f, 100000.0f ) );
     }
 
     bool BaseEditorApplication::RenderUI( ImGuiIO &io )
