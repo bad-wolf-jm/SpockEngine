@@ -315,15 +315,13 @@ namespace SE::Editor
                                                          ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
                                                          ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoNavFocus;
 
-            // if( ImGui::Begin( "##CAMERA_SETTINGS", &s_DisplayCameraSettings, lStatusBarFlags ) )
-            // {
             math::ivec2        l_WindowSize = UI::GetAvailableContentSpace();
             ImGuiTreeNodeFlags l_Flags      = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
             float              l_LabelSize  = 175.0f;
 
             Text( "Viewport: {} x {}", m_WorkspaceAreaSize.x, m_WorkspaceAreaSize.y );
             {
-                const float lAspect = static_cast<float>( m_WorkspaceAreaSize.x ) / static_cast<float>( m_WorkspaceAreaSize.y );
+                const float  lAspect = static_cast<float>( m_WorkspaceAreaSize.x ) / static_cast<float>( m_WorkspaceAreaSize.y );
                 static float lFoVY   = 48.7;
                 static float lFoVX   = lFoVY * lAspect;
                 Text( "Field of view:" );
@@ -333,12 +331,10 @@ namespace SE::Editor
                 ImGui::SetNextItemWidth( l_WindowSize.x - l_LabelSize );
                 UI::Slider( "##camera_fov", "%.2f", 1.0f, 180.0f, &lFoVX );
 
-                DefRenderer->SetProjection( math::Perspective( math::radians(lFoVX), lAspect, 0.01f, 100000.0f ) );
-                WorldRenderer->SetProjection( math::Perspective( math::radians(lFoVX), lAspect, 0.01f, 100000.0f ) );
+                DefRenderer->SetProjection( math::Perspective( math::radians( lFoVX ), lAspect, 0.01f, 100000.0f ) );
+                WorldRenderer->SetProjection( math::Perspective( math::radians( lFoVX ), lAspect, 0.01f, 100000.0f ) );
             }
 
-            // if( ImGui::CollapsingHeader( "Environment", l_Flags ) )
-            // {
             if( World->Environment.Has<sAmbientLightingComponent>() )
             {
                 auto &l_AmbientLightComponent = World->Environment.Get<sAmbientLightingComponent>();
@@ -354,15 +350,6 @@ namespace SE::Editor
                 WorldRenderer->SetAmbientLighting( math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
             }
 
-            // if( World->Environment.Has<sBackgroundComponent>() )
-            // {
-            //     auto &l_BackgroundComponent = World->Environment.Get<sBackgroundComponent>();
-            //     UI::ColorChooser( "Background color:", 175, l_BackgroundComponent.Color );
-            // }
-            // }
-
-            // if( ImGui::CollapsingHeader( "Camera", l_Flags ) )
-            // {
             static float lExposure = 4.5f;
             static float lGamma    = 2.2f;
             ImGui::SliderFloat( "Exposure", &lExposure, 0.1f, 10.0f );
@@ -373,9 +360,6 @@ namespace SE::Editor
 
             WorldRenderer->SetExposure( lExposure );
             WorldRenderer->SetGamma( lGamma );
-            // }
-            // ImGui::End();
-            // }
             ImGui::PopStyleVar( 3 );
             ImGui::PopStyleColor();
         }
@@ -1033,71 +1017,6 @@ namespace SE::Editor
                     WorldRenderer->View.View = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
                 }
             }
-
-            // if( s_DisplayCameraSettings )
-            // {
-            //     math::vec2 l_Size     = { 350.0f, 350.0f };
-            //     math::vec2 l_Position = l_WorkspacePosition + l_CursorPosition + math::vec2( 40.0f, -20.0f );
-
-            //     ImGui::PushStyleColor( ImGuiCol_WindowBg, ImVec4{ 12.0f / 255.0f, 12.0f / 255.0f, 12.0f / 255.0f, 1.0f } );
-            //     ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, 0.0f );
-            //     ImGui::PushStyleVar( ImGuiStyleVar_WindowBorderSize, 0.0f );
-            //     ImGui::PushStyleVar( ImGuiStyleVar_WindowPadding, ImVec2( 5.0f, 7.0f ) );
-            //     ImGui::SetNextWindowSize( ImVec2{ l_Size.x, l_Size.y } );
-            //     ImGui::SetNextWindowPos( ImVec2{ l_Position.x, l_Position.y } );
-            //     constexpr ImGuiWindowFlags lStatusBarFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
-            //                                                  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-            //                                                  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoNavFocus;
-
-            //     if( ImGui::Begin( "##CAMERA_SETTINGS", &s_DisplayCameraSettings, lStatusBarFlags ) )
-            //     {
-            //         math::ivec2        l_WindowSize = UI::GetAvailableContentSpace();
-            //         ImGuiTreeNodeFlags l_Flags      = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
-            //         float              l_LabelSize  = 175.0f;
-            //         if( ImGui::CollapsingHeader( "Environment", l_Flags ) )
-            //         {
-            //             if( World->Environment.Has<sAmbientLightingComponent>() )
-            //             {
-            //                 auto &l_AmbientLightComponent = World->Environment.Get<sAmbientLightingComponent>();
-            //                 UI::ColorChooser( "Ambient light color:", 175, l_AmbientLightComponent.Color );
-            //                 Text( "Ambient intensity:" );
-            //                 UI::SameLine();
-            //                 ImVec2 l_CursorPosition = ImGui::GetCursorPos();
-            //                 UI::SetCursorPosition( ImVec2{ l_LabelSize, l_CursorPosition.y } + ImVec2( 0.0f, -5.0f ) );
-            //                 ImGui::SetNextItemWidth( l_WindowSize.x - l_LabelSize );
-            //                 UI::Slider( "##ambient_intensity", "%.2f", 0.0f, 0.2f, &l_AmbientLightComponent.Intensity );
-
-            //                 DefRenderer->SetAmbientLighting(
-            //                     math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
-            //                 WorldRenderer->SetAmbientLighting(
-            //                     math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
-            //             }
-
-            //             if( World->Environment.Has<sBackgroundComponent>() )
-            //             {
-            //                 auto &l_BackgroundComponent = World->Environment.Get<sBackgroundComponent>();
-            //                 UI::ColorChooser( "Background color:", 175, l_BackgroundComponent.Color );
-            //             }
-            //         }
-
-            //         if( ImGui::CollapsingHeader( "Camera", l_Flags ) )
-            //         {
-            //             static float lExposure = 4.5f;
-            //             static float lGamma    = 2.2f;
-            //             ImGui::SliderFloat( "Exposure", &lExposure, 0.1f, 10.0f );
-            //             ImGui::SliderFloat( "Gamma", &lGamma, 0.1f, 4.0f );
-
-            //             DefRenderer->SetExposure( lExposure );
-            //             DefRenderer->SetGamma( lGamma );
-
-            //             WorldRenderer->SetExposure( lExposure );
-            //             WorldRenderer->SetGamma( lGamma );
-            //         }
-            //         ImGui::End();
-            //     }
-            //     ImGui::PopStyleVar( 3 );
-            //     ImGui::PopStyleColor();
-            // }
         }
     }
 
