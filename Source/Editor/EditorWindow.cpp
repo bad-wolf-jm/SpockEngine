@@ -136,8 +136,8 @@ namespace SE::Editor
         if( aImagePath.extension() == ".png" )
         {
             SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-            TextureData2D                        lTextureData( lTextureCreateInfo, aImagePath );
-            sTextureSamplingInfo                 lSamplingInfo{};
+            TextureData2D                      lTextureData( lTextureCreateInfo, aImagePath );
+            sTextureSamplingInfo               lSamplingInfo{};
             SE::Core::TextureSampler2D         lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
             return New<SE::Graphics::Texture2D>( aGraphicContext, lTextureData, lTextureSampler );
@@ -277,7 +277,8 @@ namespace SE::Editor
         //     ImGui::OpenPopup( "NEW MATERIAL..." );
         // m_NewMaterial.Display();
 
-        if( ImGui::Begin( "3D VIEW DEFERRED", &p_open, ImGuiWindowFlags_None ) )
+        static bool p_open_2 = true;
+        if( ImGui::Begin( "3D VIEW DEFERRED", &p_open_2, ImGuiWindowFlags_None ) )
         {
             math::ivec2 l3DViewSize = UI::GetAvailableContentSpace();
             if( m_SceneViewport_deferred.Handle )
@@ -287,18 +288,88 @@ namespace SE::Editor
         }
         ImGui::End();
 
-        if( ImGui::Begin( "3D VIEW", &p_open, ImGuiWindowFlags_None ) )
+        static bool p_open_3 = true;
+        if( ImGui::Begin( "3D VIEW", &p_open_3, ImGuiWindowFlags_None ) )
         {
             auto lWorkspaceAreaSize = UI::GetAvailableContentSpace();
             Workspace( lWorkspaceAreaSize.x, lWorkspaceAreaSize.y );
         }
         ImGui::End();
 
-        if( ImGui::Begin( "TRACKS", &p_open, ImGuiWindowFlags_None ) )
+        static bool p_open_4 = true;
+        if( ImGui::Begin( "OBSERVER CAMERA", &p_open_4, ImGuiWindowFlags_None ) )
         {
-            auto lWorkspaceAreaSize = UI::GetAvailableContentSpace();
+            math::vec2 l_WorkspacePosition = UI::GetCurrentCursorScreenPosition();
+            math::vec2 l_CursorPosition    = UI::GetCurrentCursorPosition();
+
+            math::vec2 l_Size     = { 350.0f, 350.0f };
+            math::vec2 l_Position = l_WorkspacePosition + l_CursorPosition + math::vec2( 40.0f, -20.0f );
+
+            ImGui::PushStyleColor( ImGuiCol_WindowBg, ImVec4{ 12.0f / 255.0f, 12.0f / 255.0f, 12.0f / 255.0f, 1.0f } );
+            ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, 0.0f );
+            ImGui::PushStyleVar( ImGuiStyleVar_WindowBorderSize, 0.0f );
+            ImGui::PushStyleVar( ImGuiStyleVar_WindowPadding, ImVec2( 5.0f, 7.0f ) );
+            ImGui::SetNextWindowSize( ImVec2{ l_Size.x, l_Size.y } );
+            ImGui::SetNextWindowPos( ImVec2{ l_Position.x, l_Position.y } );
+            constexpr ImGuiWindowFlags lStatusBarFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
+                                                         ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+                                                         ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoNavFocus;
+
+            // if( ImGui::Begin( "##CAMERA_SETTINGS", &s_DisplayCameraSettings, lStatusBarFlags ) )
+            // {
+            math::ivec2        l_WindowSize = UI::GetAvailableContentSpace();
+            ImGuiTreeNodeFlags l_Flags      = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+            float              l_LabelSize  = 175.0f;
+
+            // if( ImGui::CollapsingHeader( "Environment", l_Flags ) )
+            // {
+            if( World->Environment.Has<sAmbientLightingComponent>() )
+            {
+                auto &l_AmbientLightComponent = World->Environment.Get<sAmbientLightingComponent>();
+                UI::ColorChooser( "Ambient light color:", 175, l_AmbientLightComponent.Color );
+                Text( "Ambient intensity:" );
+                UI::SameLine();
+                ImVec2 l_CursorPosition = ImGui::GetCursorPos();
+                UI::SetCursorPosition( ImVec2{ l_LabelSize, l_CursorPosition.y } + ImVec2( 0.0f, -5.0f ) );
+                ImGui::SetNextItemWidth( l_WindowSize.x - l_LabelSize );
+                UI::Slider( "##ambient_intensity", "%.2f", 0.0f, 0.2f, &l_AmbientLightComponent.Intensity );
+
+                DefRenderer->SetAmbientLighting( math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
+                WorldRenderer->SetAmbientLighting( math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
+            }
+
+            // if( World->Environment.Has<sBackgroundComponent>() )
+            // {
+            //     auto &l_BackgroundComponent = World->Environment.Get<sBackgroundComponent>();
+            //     UI::ColorChooser( "Background color:", 175, l_BackgroundComponent.Color );
+            // }
+            // }
+
+            // if( ImGui::CollapsingHeader( "Camera", l_Flags ) )
+            // {
+            static float lExposure = 4.5f;
+            static float lGamma    = 2.2f;
+            ImGui::SliderFloat( "Exposure", &lExposure, 0.1f, 10.0f );
+            ImGui::SliderFloat( "Gamma", &lGamma, 0.1f, 4.0f );
+
+            DefRenderer->SetExposure( lExposure );
+            DefRenderer->SetGamma( lGamma );
+
+            WorldRenderer->SetExposure( lExposure );
+            WorldRenderer->SetGamma( lGamma );
+            // }
+            // ImGui::End();
+            // }
+            ImGui::PopStyleVar( 3 );
+            ImGui::PopStyleColor();
         }
         ImGui::End();
+
+        // if( ImGui::Begin( "TRACKS", &p_open, ImGuiWindowFlags_None ) )
+        // {
+        //     auto lWorkspaceAreaSize = UI::GetAvailableContentSpace();
+        // }
+        // ImGui::End();
 
         if( ImGui::Begin( "MATERIAL", &p_open, ImGuiWindowFlags_None ) )
         {
@@ -340,7 +411,7 @@ namespace SE::Editor
 
             {
                 static Ref<SE::Graphics::Texture2D> lBaseColorTexture = nullptr;
-                static ImageHandle                    lBaseColorTextureHandle{};
+                static ImageHandle                  lBaseColorTextureHandle{};
                 UI::Text( "Base color:" );
                 ImGui::Columns( 2, NULL, false );
                 ImGui::SetColumnWidth( 0, 150 );
@@ -371,7 +442,7 @@ namespace SE::Editor
 
             {
                 static Ref<SE::Graphics::Texture2D> lEmissiveTexture = nullptr;
-                static ImageHandle                    lEmissiveTextureHandle{};
+                static ImageHandle                  lEmissiveTextureHandle{};
                 UI::Text( "Emissive:" );
                 ImGui::Columns( 2, NULL, false );
                 ImGui::SetColumnWidth( 0, 150 );
@@ -401,7 +472,7 @@ namespace SE::Editor
 
             {
                 static Ref<SE::Graphics::Texture2D> lNormalsTexture = nullptr;
-                static ImageHandle                    lNormalsTextureHandle{};
+                static ImageHandle                  lNormalsTextureHandle{};
                 UI::Text( "Normals:" );
                 auto l_TopLeft     = ImGui::GetCursorScreenPos();
                 auto l_BottomRight = ImGui::GetCursorScreenPos() + ImVec2{ 128, 128 };
@@ -424,7 +495,7 @@ namespace SE::Editor
 
             {
                 static Ref<SE::Graphics::Texture2D> lOcclusionTexture = nullptr;
-                static ImageHandle                    lOcclusionTextureHandle{};
+                static ImageHandle                  lOcclusionTextureHandle{};
                 UI::Text( "Occlusion:" );
                 ImGui::Columns( 2, NULL, false );
                 ImGui::SetColumnWidth( 0, 150 );
@@ -454,7 +525,7 @@ namespace SE::Editor
 
             {
                 static Ref<SE::Graphics::Texture2D> lPhysicalTexture = nullptr;
-                static ImageHandle                    lPhysicalTextureHandle{};
+                static ImageHandle                  lPhysicalTextureHandle{};
                 UI::Text( "Physical properties:" );
                 ImGui::Columns( 2, NULL, false );
                 ImGui::SetColumnWidth( 0, 150 );
@@ -689,14 +760,14 @@ namespace SE::Editor
         ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 1.0f, 1.0f, 1.0f, 0.01f } );
         ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 1.0f, 1.0f, 1.0f, 0.02f } );
 
-        UI::SetCursorPosition( l_CursorPosition );
-        if( ImGui::ImageButton( (ImTextureID)m_CameraIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
-                                ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
-                                ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f } ) )
-        {
-            s_DisplayCameraSettings = !s_DisplayCameraSettings;
-        }
-        UI::SameLine();
+        // UI::SetCursorPosition( l_CursorPosition );
+        // if( ImGui::ImageButton( (ImTextureID)m_CameraIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
+        //                         ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
+        //                         ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f } ) )
+        // {
+        //     s_DisplayCameraSettings = !s_DisplayCameraSettings;
+        // }
+        // UI::SameLine();
         float                   l_SliderSize0            = 150.0f;
         static ManipulationType lCurrentManipulationType = ManipulationType::ROTATION;
         ManipulationTypeChooser lManipulationTypeChooser( "##FOO_2" );
@@ -746,7 +817,7 @@ namespace SE::Editor
         if( UI::Button( "Gizmos", math::vec2{ 65.0f, 24.0f } ) )
         {
             WorldRenderer->RenderGizmos = !WorldRenderer->RenderGizmos;
-            DefRenderer->mRenderGizmos = WorldRenderer->RenderGizmos;
+            DefRenderer->mRenderGizmos  = WorldRenderer->RenderGizmos;
         }
         ImGui::PopStyleColor();
         UI::SameLine();
@@ -755,7 +826,7 @@ namespace SE::Editor
         if( UI::Button( "Grid", math::vec2{ 65.0f, 24.0f } ) )
         {
             WorldRenderer->RenderCoordinateGrid = !WorldRenderer->RenderCoordinateGrid;
-            DefRenderer->mRenderCoordinateGrid = WorldRenderer->RenderCoordinateGrid;
+            DefRenderer->mRenderCoordinateGrid  = WorldRenderer->RenderCoordinateGrid;
         }
         ImGui::PopStyleColor();
         UI::SameLine();
@@ -765,7 +836,7 @@ namespace SE::Editor
         if( UI::Button( "Grayscale", math::vec2{ 65.0f, 24.0f } ) )
         {
             WorldRenderer->GrayscaleRendering = !WorldRenderer->GrayscaleRendering;
-            DefRenderer->mGrayscaleRendering = WorldRenderer->GrayscaleRendering;
+            DefRenderer->mGrayscaleRendering  = WorldRenderer->GrayscaleRendering;
         }
         ImGui::PopStyleColor();
         ImGui::PopStyleColor();
@@ -947,70 +1018,70 @@ namespace SE::Editor
                 }
             }
 
-            if( s_DisplayCameraSettings )
-            {
-                math::vec2 l_Size     = { 350.0f, 350.0f };
-                math::vec2 l_Position = l_WorkspacePosition + l_CursorPosition + math::vec2( 40.0f, -20.0f );
+            // if( s_DisplayCameraSettings )
+            // {
+            //     math::vec2 l_Size     = { 350.0f, 350.0f };
+            //     math::vec2 l_Position = l_WorkspacePosition + l_CursorPosition + math::vec2( 40.0f, -20.0f );
 
-                ImGui::PushStyleColor( ImGuiCol_WindowBg, ImVec4{ 12.0f / 255.0f, 12.0f / 255.0f, 12.0f / 255.0f, 1.0f } );
-                ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, 0.0f );
-                ImGui::PushStyleVar( ImGuiStyleVar_WindowBorderSize, 0.0f );
-                ImGui::PushStyleVar( ImGuiStyleVar_WindowPadding, ImVec2( 5.0f, 7.0f ) );
-                ImGui::SetNextWindowSize( ImVec2{ l_Size.x, l_Size.y } );
-                ImGui::SetNextWindowPos( ImVec2{ l_Position.x, l_Position.y } );
-                constexpr ImGuiWindowFlags lStatusBarFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
-                                                             ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-                                                             ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoNavFocus;
+            //     ImGui::PushStyleColor( ImGuiCol_WindowBg, ImVec4{ 12.0f / 255.0f, 12.0f / 255.0f, 12.0f / 255.0f, 1.0f } );
+            //     ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, 0.0f );
+            //     ImGui::PushStyleVar( ImGuiStyleVar_WindowBorderSize, 0.0f );
+            //     ImGui::PushStyleVar( ImGuiStyleVar_WindowPadding, ImVec2( 5.0f, 7.0f ) );
+            //     ImGui::SetNextWindowSize( ImVec2{ l_Size.x, l_Size.y } );
+            //     ImGui::SetNextWindowPos( ImVec2{ l_Position.x, l_Position.y } );
+            //     constexpr ImGuiWindowFlags lStatusBarFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
+            //                                                  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+            //                                                  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoNavFocus;
 
-                if( ImGui::Begin( "##CAMERA_SETTINGS", &s_DisplayCameraSettings, lStatusBarFlags ) )
-                {
-                    math::ivec2        l_WindowSize = UI::GetAvailableContentSpace();
-                    ImGuiTreeNodeFlags l_Flags      = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
-                    float              l_LabelSize  = 175.0f;
-                    if( ImGui::CollapsingHeader( "Environment", l_Flags ) )
-                    {
-                        if( World->Environment.Has<sAmbientLightingComponent>() )
-                        {
-                            auto &l_AmbientLightComponent = World->Environment.Get<sAmbientLightingComponent>();
-                            UI::ColorChooser( "Ambient light color:", 175, l_AmbientLightComponent.Color );
-                            Text( "Ambient intensity:" );
-                            UI::SameLine();
-                            ImVec2 l_CursorPosition = ImGui::GetCursorPos();
-                            UI::SetCursorPosition( ImVec2{ l_LabelSize, l_CursorPosition.y } + ImVec2( 0.0f, -5.0f ) );
-                            ImGui::SetNextItemWidth( l_WindowSize.x - l_LabelSize );
-                            UI::Slider( "##ambient_intensity", "%.2f", 0.0f, 0.2f, &l_AmbientLightComponent.Intensity );
+            //     if( ImGui::Begin( "##CAMERA_SETTINGS", &s_DisplayCameraSettings, lStatusBarFlags ) )
+            //     {
+            //         math::ivec2        l_WindowSize = UI::GetAvailableContentSpace();
+            //         ImGuiTreeNodeFlags l_Flags      = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+            //         float              l_LabelSize  = 175.0f;
+            //         if( ImGui::CollapsingHeader( "Environment", l_Flags ) )
+            //         {
+            //             if( World->Environment.Has<sAmbientLightingComponent>() )
+            //             {
+            //                 auto &l_AmbientLightComponent = World->Environment.Get<sAmbientLightingComponent>();
+            //                 UI::ColorChooser( "Ambient light color:", 175, l_AmbientLightComponent.Color );
+            //                 Text( "Ambient intensity:" );
+            //                 UI::SameLine();
+            //                 ImVec2 l_CursorPosition = ImGui::GetCursorPos();
+            //                 UI::SetCursorPosition( ImVec2{ l_LabelSize, l_CursorPosition.y } + ImVec2( 0.0f, -5.0f ) );
+            //                 ImGui::SetNextItemWidth( l_WindowSize.x - l_LabelSize );
+            //                 UI::Slider( "##ambient_intensity", "%.2f", 0.0f, 0.2f, &l_AmbientLightComponent.Intensity );
 
-                            DefRenderer->SetAmbientLighting(
-                                math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
-                            WorldRenderer->SetAmbientLighting(
-                                math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
-                        }
+            //                 DefRenderer->SetAmbientLighting(
+            //                     math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
+            //                 WorldRenderer->SetAmbientLighting(
+            //                     math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
+            //             }
 
-                        if( World->Environment.Has<sBackgroundComponent>() )
-                        {
-                            auto &l_BackgroundComponent = World->Environment.Get<sBackgroundComponent>();
-                            UI::ColorChooser( "Background color:", 175, l_BackgroundComponent.Color );
-                        }
-                    }
+            //             if( World->Environment.Has<sBackgroundComponent>() )
+            //             {
+            //                 auto &l_BackgroundComponent = World->Environment.Get<sBackgroundComponent>();
+            //                 UI::ColorChooser( "Background color:", 175, l_BackgroundComponent.Color );
+            //             }
+            //         }
 
-                    if( ImGui::CollapsingHeader( "Camera", l_Flags ) )
-                    {
-                        static float lExposure = 4.5f;
-                        static float lGamma    = 2.2f;
-                        ImGui::SliderFloat( "Exposure", &lExposure, 0.1f, 10.0f );
-                        ImGui::SliderFloat( "Gamma", &lGamma, 0.1f, 4.0f );
+            //         if( ImGui::CollapsingHeader( "Camera", l_Flags ) )
+            //         {
+            //             static float lExposure = 4.5f;
+            //             static float lGamma    = 2.2f;
+            //             ImGui::SliderFloat( "Exposure", &lExposure, 0.1f, 10.0f );
+            //             ImGui::SliderFloat( "Gamma", &lGamma, 0.1f, 4.0f );
 
-                        DefRenderer->SetExposure( lExposure );
-                        DefRenderer->SetGamma( lGamma );
+            //             DefRenderer->SetExposure( lExposure );
+            //             DefRenderer->SetGamma( lGamma );
 
-                        WorldRenderer->SetExposure( lExposure );
-                        WorldRenderer->SetGamma( lGamma );
-                    }
-                    ImGui::End();
-                }
-                ImGui::PopStyleVar( 3 );
-                ImGui::PopStyleColor();
-            }
+            //             WorldRenderer->SetExposure( lExposure );
+            //             WorldRenderer->SetGamma( lGamma );
+            //         }
+            //         ImGui::End();
+            //     }
+            //     ImGui::PopStyleVar( 3 );
+            //     ImGui::PopStyleColor();
+            // }
         }
     }
 
