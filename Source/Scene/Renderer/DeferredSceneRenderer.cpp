@@ -185,6 +185,7 @@ namespace SE::Core
         Settings.AmbientLightColor     = math::vec4( math::vec3( mAmbientLight ), 0.0 );
         Settings.Gamma                 = mGamma;
         Settings.Exposure              = mExposure;
+        Settings.RenderGrayscale       = mGrayscaleRendering ? 1.0f: 0.0f;
 
         View.Projection     = mProjectionMatrix;
         View.CameraPosition = mCameraPosition;

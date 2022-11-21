@@ -98,6 +98,7 @@ namespace SE::Core
         alignas( 16 ) math::vec4 AmbientLightColor = math::vec4{ 1.0f, 1.0f, 1.0f, 0.0f };
         float DebugViewInputs                      = 0.0f;
         float DebugViewEquation                    = 0.0f;
+        float RenderGrayscale                      = 0.0f;
     };
 
 #define MAX_NUM_JOINTS 512

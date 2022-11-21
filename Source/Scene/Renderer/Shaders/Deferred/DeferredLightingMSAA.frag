@@ -86,6 +86,7 @@ layout( set = 0, binding = 1 ) uniform UBOParams
     vec4  AmbientLightColor;
     float debugViewInputs;
     float debugViewEquation;
+    float grayscaleRendering;
 }
 uboParams;
 
@@ -198,7 +199,6 @@ vec3 ComputeRadiance( vec3 aLightPosition, vec3 aObjectPosition, vec3 aLightColo
     return aLightColor * aLightIntensity * lAttenuation;
 }
 
-
 vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalrough, vec4 emissive )
 {
     float metallic  = aometalrough.g;
@@ -218,7 +218,7 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
 
     for( int lPointLightIndex = 0; lPointLightIndex < ubo.PointLightCount; lPointLightIndex++ )
     {
-        vec3 lLightPosition = ubo.PointLights[lPointLightIndex].WorldPosition;
+        vec3 lLightPosition  = ubo.PointLights[lPointLightIndex].WorldPosition;
         vec3 lLightDirection = normalize( lLightPosition - inWorldPos );
 
         vec3 lRadiance = ComputeRadiance( ubo.PointLights[lPointLightIndex].WorldPosition, inWorldPos,
@@ -273,5 +273,8 @@ void main()
 
     vec3 outColor = tonemap( hdr_color );
 
-    outFragcolor = vec4( outColor, 1.0 );
+    if( uboParams.grayscaleRendering == 1.0f )
+        outFragcolor = vec4( vec3( dot( outColor, vec3( 0.2126, 0.7152, 0.0722 ) ) ), 1.0f );
+    else
+        outFragcolor = vec4( outColor, 1.0 );
 }

@@ -83,6 +83,7 @@ layout( set = 0, binding = 1 ) uniform UBOParams
     vec4  AmbientLightColor;
     float debugViewInputs;
     float debugViewEquation;
+    float grayscaleRendering;
 }
 uboParams;
 
@@ -275,7 +276,7 @@ void main()
 
     for( int lPointLightIndex = 0; lPointLightIndex < ubo.PointLightCount; lPointLightIndex++ )
     {
-        vec3 lLightPosition = ubo.PointLights[lPointLightIndex].WorldPosition;
+        vec3 lLightPosition  = ubo.PointLights[lPointLightIndex].WorldPosition;
         vec3 lLightDirection = normalize( lLightPosition - inWorldPos );
 
         vec3 lRadiance = ComputeRadiance( ubo.PointLights[lPointLightIndex].WorldPosition, inWorldPos,
@@ -310,5 +311,6 @@ void main()
     vec4 fullcolor = vec4( hdr_color, lBaseColor.a );
 
     outColor = tonemap( fullcolor );
+    if( uboParams.grayscaleRendering == 1.0f ) outColor = vec4( vec3( dot( outColor.xyz, vec3( 0.2126, 0.7152, 0.0722 ) ) ), lBaseColor.a );
     // outColor = vec4(vec3((length(inWorldPos) - 0.5)), 1.0);
 }
