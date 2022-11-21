@@ -56,31 +56,18 @@ namespace SE::Core
         mPointLights.clear();
         mSpotlights.clear();
 
-        aScene->ForEach<sDirectionalLightComponent>(
+        aScene->ForEach<sLightComponent>(
             [&]( auto aEntity, auto &aComponent )
             {
                 mat4 lTransformMatrix = mat4( 1.0f );
                 if( aEntity.Has<sTransformMatrixComponent>() ) lTransformMatrix = aEntity.Get<sTransformMatrixComponent>().Matrix;
 
-                mDirectionalLights.emplace_back( aComponent, lTransformMatrix );
-            } );
-
-        aScene->ForEach<sPointLightComponent>(
-            [&]( auto aEntity, auto &aComponent )
-            {
-                mat4 lTransformMatrix = mat4( 1.0f );
-                if( aEntity.Has<sTransformMatrixComponent>() ) lTransformMatrix = aEntity.Get<sTransformMatrixComponent>().Matrix;
-
-                mPointLights.emplace_back( aComponent, lTransformMatrix );
-            } );
-
-        aScene->ForEach<sSpotlightComponent>(
-            [&]( auto aEntity, auto &aComponent )
-            {
-                mat4 lTransformMatrix = mat4( 1.0f );
-                if( aEntity.Has<sTransformMatrixComponent>() ) lTransformMatrix = aEntity.Get<sTransformMatrixComponent>().Matrix;
-
-                mSpotlights.emplace_back( aComponent, lTransformMatrix );
+                switch( aComponent.mType )
+                {
+                case eLightType::DIRECTIONAL: mDirectionalLights.emplace_back( aComponent, lTransformMatrix ); break;
+                case eLightType::POINT_LIGHT: mPointLights.emplace_back( aComponent, lTransformMatrix ); break;
+                case eLightType::SPOTLIGHT: mSpotlights.emplace_back( aComponent, lTransformMatrix ); break;
+                }
             } );
     }
 

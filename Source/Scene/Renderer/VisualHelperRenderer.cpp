@@ -76,14 +76,14 @@ namespace SE::Graphics
     {
         math::mat4 l_Transform{};// = a_Transform * math::Translation( a_PointLightHelperComponent.LightData.Position );
 
-        Render( l_Transform, a_PointLightHelperComponent.AxisCircle, a_PointLightHelperComponent.LightData.Color, aRenderContext );
+        Render( l_Transform, a_PointLightHelperComponent.AxisCircle, a_PointLightHelperComponent.LightData.mColor, aRenderContext );
         Render( l_Transform * math::Rotation( 90.0_degf, math::vec3{ 1.0f, 0.0f, 0.0f } ), a_PointLightHelperComponent.AxisCircle,
-            a_PointLightHelperComponent.LightData.Color, aRenderContext );
+            a_PointLightHelperComponent.LightData.mColor, aRenderContext );
         Render( l_Transform * math::Rotation( 90.0_degf, math::vec3{ 0.0f, 1.0f, 0.0f } ), a_PointLightHelperComponent.AxisCircle,
-            a_PointLightHelperComponent.LightData.Color, aRenderContext );
+            a_PointLightHelperComponent.LightData.mColor, aRenderContext );
 
         Render( l_Transform * math::Scale( math::mat4( 1.0f ), math::vec3{ 0.05f, 0.05f, 0.05f } ), a_PointLightHelperComponent.Origin,
-            a_PointLightHelperComponent.LightData.Color, aRenderContext );
+            a_PointLightHelperComponent.LightData.mColor, aRenderContext );
     }
 
     void VisualHelperRenderer::Render(

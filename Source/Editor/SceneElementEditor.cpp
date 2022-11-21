@@ -167,175 +167,70 @@ namespace SE::Editor
         return false;
     }
 
-    static bool EditComponent( sDirectionalLightComponent &aComponent )
-    {
-        float                                l_LabelSize = 175.0f;
-        // static PropertyEditor<Slider<float>> l_AzimuthEditor( "##azimuth" );
-        // l_AzimuthEditor.Label                 = "Azimuth:";
-        // l_AzimuthEditor.LabelWidth            = l_LabelSize;
-        // l_AzimuthEditor.ValueChooser.MinValue = 0.0f;
-        // l_AzimuthEditor.ValueChooser.MaxValue = 360.0f;
-        // l_AzimuthEditor.ValueChooser.Format   = "%.2f";
-
-        // static PropertyEditor<Slider<float>> l_ElevationEditor( "##elevation" );
-        // l_ElevationEditor.Label               = "Elevation:";
-        // l_ElevationEditor.LabelWidth          = l_LabelSize;
-        // l_ElevationEditor.ValueChooser.Format = "%.2f";
-
-        static PropertyEditor<Slider<float>> l_IntensityEditor( "##intensity" );
-        l_IntensityEditor.Label                 = "Intensity:";
-        l_IntensityEditor.LabelWidth            = l_LabelSize;
-        l_IntensityEditor.ValueChooser.MinValue = 0.0f;
-        l_IntensityEditor.ValueChooser.MaxValue = 50.0f;
-        l_IntensityEditor.ValueChooser.Format   = "%.2f";
-
-        // l_AzimuthEditor.Display( &aComponent.Azimuth );
-
-        // l_ElevationEditor.ValueChooser.MinValue = -90.0f;
-        // l_ElevationEditor.ValueChooser.MaxValue = 90.0f;
-        // l_ElevationEditor.Display( &aComponent.Elevation );
-
-        UI::ColorChooser( "Color:", 125, aComponent.Color );
-
-        l_IntensityEditor.Display( &aComponent.Intensity );
-        return false;
-    }
-
-    static bool EditComponent( sPointLightComponent &aComponent )
-    {
-        float l_LabelSize = 175.0f;
-
-        static PropertyEditor<Slider<float>> l_IntensityEditor( "##intensity" );
-        l_IntensityEditor.Label                 = "Intensity:";
-        l_IntensityEditor.LabelWidth            = l_LabelSize;
-        l_IntensityEditor.ValueChooser.MinValue = 0.0f;
-        l_IntensityEditor.ValueChooser.MaxValue = 50.0f;
-        l_IntensityEditor.ValueChooser.Format   = "%.2f";
-
-        // UI::VectorComponentEditor( "Position:", aComponent.Position, 0.0, 100 );
-        UI::ColorChooser( "Color:", 125, aComponent.Color );
-
-        l_IntensityEditor.Display( &aComponent.Intensity );
-        return false;
-    }
-
-    static bool EditComponent( sSpotlightComponent &aComponent )
-    {
-        float l_LabelSize = 175.0f;
-
-        // static PropertyEditor<Slider<float>> l_AzimuthEditor( "##azimuth" );
-        // l_AzimuthEditor.Label                 = "Azimuth:";
-        // l_AzimuthEditor.LabelWidth            = l_LabelSize;
-        // l_AzimuthEditor.ValueChooser.MinValue = 0.0f;
-        // l_AzimuthEditor.ValueChooser.MaxValue = 360.0f;
-        // l_AzimuthEditor.ValueChooser.Format   = "%.2f";
-
-        // static PropertyEditor<Slider<float>> l_ElevationEditor( "##elevation" );
-        // l_ElevationEditor.Label               = "Elevation:";
-        // l_ElevationEditor.LabelWidth          = l_LabelSize;
-        // l_ElevationEditor.ValueChooser.Format = "%.2f";
-
-        static PropertyEditor<Slider<float>> l_ConeWidthEditor( "##cone_width" );
-        l_ConeWidthEditor.Label                 = "Cone width:";
-        l_ConeWidthEditor.ValueChooser.MinValue = 0.0f;
-        l_ConeWidthEditor.ValueChooser.MaxValue = 180.0f;
-        l_ConeWidthEditor.LabelWidth            = l_LabelSize;
-        l_ConeWidthEditor.ValueChooser.Format   = "%.2f";
-
-        static PropertyEditor<Slider<float>> l_IntensityEditor( "##intensity" );
-        l_IntensityEditor.Label                 = "Intensity:";
-        l_IntensityEditor.LabelWidth            = l_LabelSize;
-        l_IntensityEditor.ValueChooser.MinValue = 0.0f;
-        l_IntensityEditor.ValueChooser.MaxValue = 50.0f;
-        l_IntensityEditor.ValueChooser.Format   = "%.2f";
-
-        // UI::VectorComponentEditor( "Position:", aComponent.Position, 0.0, 100 );
-
-        // l_AzimuthEditor.Display( &aComponent.Azimuth );
-
-        // l_ElevationEditor.ValueChooser.MinValue = 0.0f;
-        // l_ElevationEditor.ValueChooser.MaxValue = 360.0f;
-        // l_ElevationEditor.Display( &aComponent.Elevation );
-
-        UI::ColorChooser( "Color:", 125, aComponent.Color );
-
-        l_IntensityEditor.Display( &aComponent.Intensity );
-        l_ConeWidthEditor.Display( &aComponent.Cone );
-        return false;
-    }
 
     static bool EditComponent( SE::Graphics::GraphicContext aGraphicContext, sLightComponent &aComponent )
     {
         static UI::ComboBox<eLightType> lPrimitiveChooser( "##combo_light_type_chooser" );
-        lPrimitiveChooser.Labels = { "Directional light", "Point light", "Spotlight" };
-        lPrimitiveChooser.Values = { eLightType::DIRECTIONAL, eLightType::POINT_LIGHT, eLightType::SPOTLIGHT };
+        lPrimitiveChooser.Labels = { "Point light", "Spotlight", "Directional light" };
+        lPrimitiveChooser.Values = { eLightType::POINT_LIGHT, eLightType::SPOTLIGHT, eLightType::DIRECTIONAL };
 
         lPrimitiveChooser.Display();
 
-        switch( lPrimitiveChooser.GetValue() )
+        float lLabelSize = 175.0f;
+        aComponent.mType = lPrimitiveChooser.GetValue();
+        switch( aComponent.mType )
         {
         case eLightType::POINT_LIGHT:
         {
-            if( lPrimitiveChooser.Changed )
-            {
-                aComponent.Light.TryRemove<sSpotlightComponent>();
-                aComponent.Light.TryRemove<SpotlightHelperComponent>();
-                aComponent.Light.TryRemove<sDirectionalLightComponent>();
-                aComponent.Light.TryRemove<DirectionalLightHelperComponent>();
-            }
-            if( !aComponent.Light.Has<sPointLightComponent>() )
-            {
-                aComponent.Light.Add<sPointLightComponent>();
 
-                PointLightHelperComponent &l_VisualizerComponent = aComponent.Light.Add<PointLightHelperComponent>();
-                l_VisualizerComponent.LightData                  = aComponent.Light.Get<sPointLightComponent>();
-                l_VisualizerComponent.UpdateMesh( aGraphicContext );
-            }
-            aComponent.Light.Get<PointLightHelperComponent>().LightData = aComponent.Light.Get<sPointLightComponent>();
-            EditComponent( aComponent.Light.Get<sPointLightComponent>() );
+            static PropertyEditor<Slider<float>> l_IntensityEditor( "##intensity" );
+            l_IntensityEditor.Label                 = "Intensity:";
+            l_IntensityEditor.LabelWidth            = lLabelSize;
+            l_IntensityEditor.ValueChooser.MinValue = 0.0f;
+            l_IntensityEditor.ValueChooser.MaxValue = 50.0f;
+            l_IntensityEditor.ValueChooser.Format   = "%.2f";
+
+            UI::ColorChooser( "Color:", 125, aComponent.mColor );
+
+            l_IntensityEditor.Display( &aComponent.mIntensity );
         }
         break;
         case eLightType::SPOTLIGHT:
         {
-            if( lPrimitiveChooser.Changed )
-            {
-                aComponent.Light.TryRemove<sPointLightComponent>();
-                aComponent.Light.TryRemove<PointLightHelperComponent>();
-                aComponent.Light.TryRemove<sDirectionalLightComponent>();
-                aComponent.Light.TryRemove<DirectionalLightHelperComponent>();
-            }
-            if( !aComponent.Light.Has<sSpotlightComponent>() )
-            {
-                aComponent.Light.Add<sSpotlightComponent>();
+            static PropertyEditor<Slider<float>> l_ConeWidthEditor( "##cone_width" );
+            l_ConeWidthEditor.Label                 = "Cone width:";
+            l_ConeWidthEditor.ValueChooser.MinValue = 0.0f;
+            l_ConeWidthEditor.ValueChooser.MaxValue = 180.0f;
+            l_ConeWidthEditor.LabelWidth            = lLabelSize;
+            l_ConeWidthEditor.ValueChooser.Format   = "%.2f";
 
-                SpotlightHelperComponent &l_VisualizerComponent = aComponent.Light.Add<SpotlightHelperComponent>();
-                l_VisualizerComponent.LightData                 = aComponent.Light.Get<sSpotlightComponent>();
-                l_VisualizerComponent.UpdateMesh( aGraphicContext );
-            }
-            aComponent.Light.Get<SpotlightHelperComponent>().LightData = aComponent.Light.Get<sSpotlightComponent>();
-            EditComponent( aComponent.Light.Get<sSpotlightComponent>() );
+            static PropertyEditor<Slider<float>> l_IntensityEditor( "##intensity" );
+            l_IntensityEditor.Label                 = "Intensity:";
+            l_IntensityEditor.LabelWidth            = lLabelSize;
+            l_IntensityEditor.ValueChooser.MinValue = 0.0f;
+            l_IntensityEditor.ValueChooser.MaxValue = 50.0f;
+            l_IntensityEditor.ValueChooser.Format   = "%.2f";
+
+            UI::ColorChooser( "Color:", 125, aComponent.mColor );
+
+            l_IntensityEditor.Display( &aComponent.mIntensity );
+            l_ConeWidthEditor.Display( &aComponent.mCone );
         }
         break;
         case eLightType::DIRECTIONAL:
         default:
         {
-            if( lPrimitiveChooser.Changed )
-            {
-                aComponent.Light.TryRemove<sPointLightComponent>();
-                aComponent.Light.TryRemove<PointLightHelperComponent>();
-                aComponent.Light.TryRemove<sSpotlightComponent>();
-                aComponent.Light.TryRemove<SpotlightHelperComponent>();
-            }
-            if( !aComponent.Light.Has<sDirectionalLightComponent>() )
-            {
-                aComponent.Light.Add<sDirectionalLightComponent>();
+            float lLabelSize = 175.0f;
+            static PropertyEditor<Slider<float>> l_IntensityEditor( "##intensity" );
+            l_IntensityEditor.Label                 = "Intensity:";
+            l_IntensityEditor.LabelWidth            = lLabelSize;
+            l_IntensityEditor.ValueChooser.MinValue = 0.0f;
+            l_IntensityEditor.ValueChooser.MaxValue = 50.0f;
+            l_IntensityEditor.ValueChooser.Format   = "%.2f";
 
-                DirectionalLightHelperComponent &l_VisualizerComponent = aComponent.Light.Add<DirectionalLightHelperComponent>();
-                l_VisualizerComponent.LightData                        = aComponent.Light.Get<sDirectionalLightComponent>();
-                l_VisualizerComponent.UpdateMesh( aGraphicContext );
-            }
-            aComponent.Light.Get<DirectionalLightHelperComponent>().LightData = aComponent.Light.Get<sDirectionalLightComponent>();
-            EditComponent( aComponent.Light.Get<sDirectionalLightComponent>() );
+            UI::ColorChooser( "Color:", 125, aComponent.mColor );
+
+            l_IntensityEditor.Display( &aComponent.mIntensity );
         }
         break;
         };
@@ -381,8 +276,8 @@ namespace SE::Editor
             ImGui::Separator();
             if( ImGui::MenuItem( "Light component", NULL, false, !ElementToEdit.Has<sLightComponent>() ) )
             {
-                auto &lComponent = ElementToEdit.Add<sLightComponent>();
-                lComponent.Light = World->Create( "Light", ElementToEdit );
+                ElementToEdit.Add<sLightComponent>();
+                // lComponent.Light = World->Create( "Light", ElementToEdit );
             }
             ImGui::Separator();
             if( ImGui::MenuItem( "Particle system", NULL, false, !ElementToEdit.Has<sParticleSystemComponent>() ) )

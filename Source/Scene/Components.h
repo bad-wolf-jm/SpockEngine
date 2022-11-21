@@ -365,55 +365,13 @@ namespace SE::Core::EntityComponentSystem::Components
         POINT_LIGHT = 2
     };
 
-    struct sDirectionalLightComponent
-    {
-        // float Azimuth   = 0.0f;
-        // float Elevation = 0.0f;
-        float Intensity = 0.0f;
-        vec3  Color     = { 0.0f, 0.0f, 0.0f };
-
-        bool operator==( const sDirectionalLightComponent &a_Other )
-        {
-            return //( Azimuth == a_Other.Azimuth ) && ( Elevation == a_Other.Elevation ) && 
-                   ( Intensity == a_Other.Intensity ) &&
-                   ( Color == a_Other.Color );
-        }
-    };
-
-    struct sPointLightComponent
-    {
-        // vec3  Position  = { 0.0f, 0.0f, 0.0f };
-        vec3  Color     = { 0.0f, 0.0f, 0.0f };
-        float Intensity = 0.0f;
-
-        bool operator==( const sPointLightComponent &a_Other )
-        {
-            return //( Position == a_Other.Position ) && 
-                ( Color == a_Other.Color ) && ( Intensity == a_Other.Intensity );
-        }
-    };
-
-    struct sSpotlightComponent
-    {
-        // vec3  Position  = { 0.0f, 0.0f, 0.0f };
-        // float Azimuth   = 0.0f;
-        // float Elevation = 0.0f;
-
-        vec3  Color     = { 0.0f, 0.0f, 0.0f };
-        float Intensity = 0.0f;
-        float Cone      = 0.0;
-
-        bool operator==( const sSpotlightComponent &a_Other )
-        {
-            return // ( Position == a_Other.Position ) && 
-                    // ( Azimuth == a_Other.Azimuth ) && ( Elevation == a_Other.Elevation ) &&
-                   ( Intensity == a_Other.Intensity ) && ( Color == a_Other.Color ) && ( Cone == a_Other.Cone );
-        }
-    };
-
     struct sLightComponent
     {
-        Entity Light;
+        eLightType mType = eLightType::POINT_LIGHT;
+
+        float mIntensity = 100.0f;
+        vec3  mColor     = { 1.0f, 1.0f, 1.0f };
+        float mCone      = 60.0f;
 
         sLightComponent()                          = default;
         sLightComponent( const sLightComponent & ) = default;

@@ -37,7 +37,7 @@ namespace SE::Core
         ~DirectionalLightData() = default;
 
         DirectionalLightData( const DirectionalLightData & ) = default;
-        DirectionalLightData( const sDirectionalLightComponent &a_Spec, math::mat4 a_Transform );
+        DirectionalLightData( const sLightComponent &a_Spec, math::mat4 a_Transform );
     };
 
     struct PointLightData
@@ -50,7 +50,7 @@ namespace SE::Core
         ~PointLightData() = default;
 
         PointLightData( const PointLightData & ) = default;
-        PointLightData( const sPointLightComponent &a_Spec, math::mat4 a_Transform );
+        PointLightData( const sLightComponent &a_Spec, math::mat4 a_Transform );
     };
 
     struct SpotlightData
@@ -65,7 +65,7 @@ namespace SE::Core
         ~SpotlightData() = default;
 
         SpotlightData( const SpotlightData & ) = default;
-        SpotlightData( const sSpotlightComponent &a_Spec, math::mat4 a_Transform );
+        SpotlightData( const sLightComponent &a_Spec, math::mat4 a_Transform );
     };
 
     struct WorldMatrices

@@ -120,7 +120,7 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct PointLightHelperComponent
     {
-        sPointLightComponent LightData;
+        sLightComponent LightData;
 
         CubeMeshData   Origin;
         CircleMeshData AxisCircle;
@@ -137,7 +137,7 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct DirectionalLightHelperComponent
     {
-        sDirectionalLightComponent LightData;
+        sLightComponent LightData;
 
         ArrowMeshData Direction;
         CubeMeshData  Origin;
@@ -154,7 +154,7 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct SpotlightHelperComponent
     {
-        sSpotlightComponent LightData;
+        sLightComponent LightData;
 
         CubeMeshData Origin;
         ConeMeshData Spot;

@@ -125,19 +125,15 @@ namespace SE::Core
             CopyComponent<sBackgroundComponent>( lEntity, lClonedEntity );
 
             CopyComponent<sAmbientLightingComponent>( lEntity, lClonedEntity );
-            CopyComponent<sDirectionalLightComponent>( lEntity, lClonedEntity );
-            CopyComponent<sPointLightComponent>( lEntity, lClonedEntity );
-            CopyComponent<sSpotlightComponent>( lEntity, lClonedEntity );
             CopyComponent<sLightComponent>( lEntity, lClonedEntity );
 
             CopyComponent<sBehaviourComponent>( lEntity, lClonedEntity );
-            if( ( lEntity.Has<sActorComponent>() ) ) 
+            if( ( lEntity.Has<sActorComponent>() ) )
             {
                 auto &lNewScriptComponent = lClonedEntity.AddOrReplace<sActorComponent>( lEntity.Get<sActorComponent>() );
 
                 lNewScriptComponent.Initialize( lClonedEntity );
             }
-
 
             CopyComponent<PointLightHelperComponent>( lEntity, lClonedEntity );
             CopyComponent<DirectionalLightHelperComponent>( lEntity, lClonedEntity );
@@ -701,15 +697,6 @@ namespace SE::Core
     }
 
     template <>
-    void ReadComponent<sDirectionalLightComponent>( Entity aEntity, ConfigurationNode const &aNode,
-                                                    std::unordered_map<std::string, Entity> &aEntities )
-    {
-        if( !aNode["sDirectionalLightComponent"].IsNull() )
-        {
-        }
-    }
-
-    template <>
     void ReadComponent<sAmbientLightingComponent>( Entity aEntity, ConfigurationNode const &aNode,
                                                    std::unordered_map<std::string, Entity> &aEntities )
     {
@@ -723,47 +710,16 @@ namespace SE::Core
     }
 
     template <>
-    void ReadComponent<sPointLightComponent>( Entity aEntity, ConfigurationNode const &aNode,
-                                              std::unordered_map<std::string, Entity> &aEntities )
-    {
-        if( !aNode["sPointLightComponent"].IsNull() )
-        {
-            auto &lComponent = aEntity.Add<sPointLightComponent>();
-
-            // lComponent.Position  = aNode["sPointLightComponent"]["Position"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
-            lComponent.Color     = aNode["sPointLightComponent"]["Color"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
-            lComponent.Intensity = aNode["sPointLightComponent"]["Intensity"].As<float>( .0005f );
-        }
-    }
-
-    template <>
-    void ReadComponent<sSpotlightComponent>( Entity aEntity, ConfigurationNode const &aNode,
-                                             std::unordered_map<std::string, Entity> &aEntities )
-    {
-        if( !aNode["sSpotlightComponent"].IsNull() )
-        {
-            auto &lComponent = aEntity.Add<sSpotlightComponent>();
-
-            // lComponent.Position  = aNode["sSpotlightComponent"]["Position"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
-            // lComponent.Azimuth   = aNode["sSpotlightComponent"]["Azimuth"].As<float>( .0f );
-            // lComponent.Elevation = aNode["sSpotlightComponent"]["Elevation"].As<float>( .0f );
-            lComponent.Color     = aNode["sSpotlightComponent"]["Color"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
-            lComponent.Intensity = aNode["sSpotlightComponent"]["Intensity"].As<float>( .0005f );
-            lComponent.Cone      = aNode["sSpotlightComponent"]["Cone"].As<float>( .0005f );
-        }
-    }
-
-    template <>
     void ReadComponent<sLightComponent>( Entity aEntity, ConfigurationNode const &aNode,
                                          std::unordered_map<std::string, Entity> &aEntities )
     {
-        if( !aNode["sLightComponent"].IsNull() )
+        if( !aNode["sSpotlightComponent"].IsNull() )
         {
             auto &lComponent = aEntity.Add<sLightComponent>();
 
-            std::string lTargetNodeUUID = aNode["Light"].As<std::string>( "" );
-
-            lComponent.Light = aEntities[lTargetNodeUUID];
+            lComponent.mColor     = aNode["sSpotlightComponent"]["Color"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+            lComponent.mIntensity = aNode["sSpotlightComponent"]["Intensity"].As<float>( .0005f );
+            lComponent.mCone      = aNode["sSpotlightComponent"]["Cone"].As<float>( .0005f );
         }
     }
 
@@ -876,10 +832,7 @@ namespace SE::Core
                 ReadComponent<sMaterialComponent>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sMaterialShaderComponent>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sBackgroundComponent>( lEntity, lEntityConfiguration, lEntities );
-                ReadComponent<sDirectionalLightComponent>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sAmbientLightingComponent>( lEntity, lEntityConfiguration, lEntities );
-                ReadComponent<sPointLightComponent>( lEntity, lEntityConfiguration, lEntities );
-                ReadComponent<sSpotlightComponent>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sLightComponent>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sActorComponent>( lEntity, lEntityConfiguration, lEntities );
 
@@ -1164,10 +1117,6 @@ namespace SE::Core
             }
         }
 
-        // ForEach<sNodeTransformComponent>(
-        //     [&]( auto aEntity, auto &aComponent ) { aEntity.AddOrReplace<sLocalTransformComponent>( aComponent.mMatrix ); }
-        //     );
-
         return l_AssetEntity;
     }
 
@@ -1262,10 +1211,7 @@ namespace SE::Core
                     if( l_Component.ControllerInstance ) l_Component.ControllerInstance->OnUpdate( ts );
                 } );
 
-            ForEach<sActorComponent>( [=]( auto l_Entity, auto &l_Component ) { 
-                l_Component.OnUpdate( ts ); 
-                // SE::Logging::Info("{} --- {}", (uint32_t)l_Entity, (size_t)l_Entity.GetRegistry());
-            } );
+            ForEach<sActorComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnUpdate( ts ); } );
 
             // for (auto& lActor : mActorComponents)
             // {
@@ -1355,8 +1301,7 @@ namespace SE::Core
             for( auto lChild : lElementToProcess.Get<sRelationshipComponent>().mChildren ) lUpdateQueue.push( lChild );
 
             if( lElementToProcess.Has<sNodeTransformComponent>() )
-                lElementToProcess.AddOrReplace<sTransformMatrixComponent>(
-                    lElementToProcess.Get<sNodeTransformComponent>().mMatrix );
+                lElementToProcess.AddOrReplace<sTransformMatrixComponent>( lElementToProcess.Get<sNodeTransformComponent>().mMatrix );
 
             if( !( lElementToProcess.Get<sRelationshipComponent>().mParent ) ) continue;
 
@@ -1369,8 +1314,8 @@ namespace SE::Core
             }
             else
             {
-                lElementToProcess.AddOrReplace<sTransformMatrixComponent>(
-                    lParent.Get<sTransformMatrixComponent>().Matrix * lElementToProcess.Get<sTransformMatrixComponent>().Matrix );
+                lElementToProcess.AddOrReplace<sTransformMatrixComponent>( lParent.Get<sTransformMatrixComponent>().Matrix *
+                                                                           lElementToProcess.Get<sTransformMatrixComponent>().Matrix );
             }
         }
 
@@ -1735,65 +1680,17 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sDirectionalLightComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap( true );
-        {
-            // aOut.WriteKey( "Azimuth", aComponent.Azimuth );
-            // aOut.WriteKey( "Elevation", aComponent.Elevation );
-            aOut.WriteKey( "Intensity", aComponent.Intensity );
-            aOut.WriteKey( "Color" );
-            aOut.Write( aComponent.Color, { "r", "g", "b" } );
-        }
-        aOut.EndMap();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sPointLightComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap( true );
-        {
-            aOut.WriteKey( "Intensity", aComponent.Intensity );
-            // aOut.WriteKey( "Position" );
-            // aOut.Write( aComponent.Position, { "x", "y", "z" } );
-            aOut.WriteKey( "Color" );
-            aOut.Write( aComponent.Color, { "r", "g", "b" } );
-        }
-        aOut.EndMap();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sSpotlightComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap( true );
-        {
-            // aOut.WriteKey( "Position" );
-            // aOut.Write( aComponent.Position, { "x", "y", "z" } );
-            // aOut.WriteKey( "Azimuth", aComponent.Azimuth );
-            // aOut.WriteKey( "Elevation", aComponent.Elevation );
-            aOut.WriteKey( "Color" );
-            aOut.Write( aComponent.Color, { "r", "g", "b" } );
-            aOut.WriteKey( "Intensity", aComponent.Intensity );
-            aOut.WriteKey( "Cone", aComponent.Cone );
-        }
-        aOut.EndMap();
-    }
-
     void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sLightComponent const &aComponent )
     {
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
         {
-            if( aComponent.Light )
-            {
-                aOut.WriteKey( "Light", aComponent.Light.Get<sUUID>().mValue.str() );
-            }
-            else
-            {
-                aOut.WriteKey( "Light" );
-                aOut.WriteNull();
-            }
+            aOut.WriteKey( "Type" );
+            aOut.WriteNull();
+            aOut.WriteKey( "Color" );
+            aOut.Write( aComponent.mColor, { "r", "g", "b" } );
+            aOut.WriteKey( "Intensity", aComponent.mIntensity );
+            aOut.WriteKey( "Cone", aComponent.mCone );
         }
         aOut.EndMap();
     }
@@ -1882,10 +1779,7 @@ namespace SE::Core
                             WriteComponent<sMaterialComponent>( lOut, "sMaterialComponent", aEntity );
                             WriteComponent<sMaterialShaderComponent>( lOut, "sMaterialShaderComponent", aEntity );
                             WriteComponent<sBackgroundComponent>( lOut, "sBackgroundComponent", aEntity );
-                            WriteComponent<sDirectionalLightComponent>( lOut, "sDirectionalLightComponent", aEntity );
                             WriteComponent<sAmbientLightingComponent>( lOut, "sAmbientLightingComponent", aEntity );
-                            WriteComponent<sPointLightComponent>( lOut, "sPointLightComponent", aEntity );
-                            WriteComponent<sSpotlightComponent>( lOut, "sSpotlightComponent", aEntity );
                             WriteComponent<sLightComponent>( lOut, "sLightComponent", aEntity );
                         }
                         lOut.EndMap();
