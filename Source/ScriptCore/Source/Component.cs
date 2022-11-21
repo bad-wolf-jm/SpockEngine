@@ -50,4 +50,34 @@ namespace SpockEngine
         }
     }
 
+    public enum eLightType
+    {
+        DIRECTIONAL = 0,
+        SPOTLIGHT   = 1,
+        POINT_LIGHT = 2
+    }
+
+    public class sLightComponent : Component
+    {
+        public eLightType mType;
+
+        public float mIntensity;
+
+        public vec3  mColor;
+
+        public float mCone;
+
+        public sLightComponent() 
+        { 
+        }
+
+        public sLightComponent( eLightType aType, float aIntensity, vec3 aColor, float aCone ) 
+        { 
+            mType = aType; 
+            mIntensity = aIntensity; 
+            mColor = aColor; 
+            mCone = aCone;
+        }
+    }
+
 }

@@ -60,4 +60,19 @@ namespace SE::Core
         aComponent = sTag( ScriptManager::NewString( lFieldValue ) );
     }
 
+    ScriptClassInstance MarshallComponent( ScriptClass &lMonoType, sLightComponent &aComponent )
+    {
+        auto lNewObject = lMonoType.Instantiate( aComponent.mType, aComponent.mIntensity, aComponent.mColor, aComponent.mCone );
+
+        return lNewObject;
+    }
+
+    void UnmarshallComponent( ScriptClassInstance &aMonoType, sLightComponent &aComponent )
+    {
+        aComponent.mType      = aMonoType.GetFieldValue<eLightType>( "mType" );
+        aComponent.mIntensity = aMonoType.GetFieldValue<float>( "mIntensity" );
+        aComponent.mColor     = aMonoType.GetFieldValue<math::vec3>( "mColor" );
+        aComponent.mCone      = aMonoType.GetFieldValue<float>( "mCone" );
+    }
+
 } // namespace SE::Core

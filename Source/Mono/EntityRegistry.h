@@ -103,6 +103,9 @@ namespace SE::Core
     ScriptClassInstance MarshallComponent( ScriptClass &aMonoType, sTag &aComponent );
     void                UnmarshallComponent( ScriptClassInstance &aMonoType, sTag &aComponent );
 
+    ScriptClassInstance MarshallComponent( ScriptClass &aMonoType, sLightComponent &aComponent );
+    void                UnmarshallComponent( ScriptClassInstance &aMonoType, sLightComponent &aComponent );
+
     entt::meta_type GetMetaType( MonoType *aObject );
 
     template <typename _Ty>

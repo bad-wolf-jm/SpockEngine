@@ -300,6 +300,7 @@ namespace SE::Core
         RegisterComponentType<sTag>();
         RegisterComponentType<sNodeTransformComponent>();
         RegisterComponentType<sTransformMatrixComponent>();
+        RegisterComponentType<sLightComponent>();
     }
 
     void ScriptManager::RegisterInternalCppFunctions()
