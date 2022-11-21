@@ -1,13 +1,13 @@
 #pragma once
 
+#include "Core/Memory.h"
 #include <string>
 #include <vector>
-#include "Core/Memory.h"
 
+
+#include "Optix7.h"
 #include "OptixContext.h"
 #include "OptixPipeline.h"
-#include "Optix7.h"
-
 
 namespace SE::Graphics
 {
@@ -18,7 +18,8 @@ namespace SE::Graphics
         OptixModule RTObject = nullptr;
 
         OptixModuleObject() = default;
-        OptixModuleObject( const std::string a_LaunchParameterVariableName, const char *a_PtxCode, Ref<OptixDeviceContextObject> a_RTContext );
+        OptixModuleObject( const std::string a_LaunchParameterVariableName, const char *a_PtxCode,
+                           Ref<OptixDeviceContextObject> a_RTContext );
 
         ~OptixModuleObject();
 
@@ -38,9 +39,9 @@ namespace SE::Graphics
 
       private:
         Ref<OptixDeviceContextObject> m_RTContext = nullptr;
-        OptixPipelineLinkOptions m_PipelineLinkOptions{};
-        OptixPipelineCompileOptions m_PipelineCompileOptions{};
-        const std::string m_LaunchParameterVariableName;
+        OptixPipelineLinkOptions      m_PipelineLinkOptions{};
+        OptixPipelineCompileOptions   m_PipelineCompileOptions{};
+        const std::string             m_LaunchParameterVariableName;
     };
 
 } // namespace SE::Graphics

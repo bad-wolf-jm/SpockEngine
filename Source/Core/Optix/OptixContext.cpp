@@ -11,7 +11,10 @@ namespace SE::Graphics
         OPTIX_CHECK( optixDeviceContextCreate( l_CudaContext, 0, &RTObject ) );
     }
 
-    OptixDeviceContextObject::OptixDeviceContextObject( CUcontext a_CudaContext ) { OPTIX_CHECK( optixDeviceContextCreate( a_CudaContext, 0, &RTObject ) ); }
+    OptixDeviceContextObject::OptixDeviceContextObject( CUcontext a_CudaContext )
+    {
+        OPTIX_CHECK( optixDeviceContextCreate( a_CudaContext, 0, &RTObject ) );
+    }
 
     OptixDeviceContextObject::~OptixDeviceContextObject() { OPTIX_CHECK( optixDeviceContextDestroy( RTObject ) ); }
 
@@ -20,8 +23,7 @@ namespace SE::Graphics
         cudaFree( 0 );
         int numDevices;
         cudaGetDeviceCount( &numDevices );
-        if( numDevices == 0 )
-            throw std::runtime_error( "No CUDA capable devices found!" );
+        if( numDevices == 0 ) throw std::runtime_error( "No CUDA capable devices found!" );
 
         OPTIX_CHECK( optixInit() );
     }

@@ -3,10 +3,9 @@
 #include <string>
 #include <vector>
 
-#include "OptixContext.h"
-#include "Optix7.h"
 #include "Core/Memory.h"
-
+#include "Optix7.h"
+#include "OptixContext.h"
 
 namespace SE::Graphics
 {

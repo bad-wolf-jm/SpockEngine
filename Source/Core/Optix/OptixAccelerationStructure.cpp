@@ -8,8 +8,8 @@ namespace SE::Graphics
     {
     }
 
-    void OptixTraversableObject::AddGeometry( GPUExternalMemory &aVertices, GPUExternalMemory &aIndices, uint32_t aVertexOffset, uint32_t aVertexCount, uint32_t aIndexOffset,
-                                              uint32_t aIndexCount )
+    void OptixTraversableObject::AddGeometry( GPUExternalMemory &aVertices, GPUExternalMemory &aIndices, uint32_t aVertexOffset,
+                                              uint32_t aVertexCount, uint32_t aIndexOffset, uint32_t aIndexCount )
     {
         m_VertexBuffers.push_back( (CUdeviceptr)( aVertices.DataAs<VertexData>() + aVertexOffset ) );
         m_VertexCounts.push_back( (int)aVertexCount );
@@ -46,8 +46,7 @@ namespace SE::Graphics
         }
 
         uint32_t l_Idx = 0;
-        for( auto &l_Buildinput : m_TriangleInput )
-            l_Buildinput.triangleArray.flags = &m_InputFlags.data()[l_Idx++];
+        for( auto &l_Buildinput : m_TriangleInput ) l_Buildinput.triangleArray.flags = &m_InputFlags.data()[l_Idx++];
 
         OptixAccelBuildOptions l_AccelOptions = {};
         l_AccelOptions.buildFlags             = OPTIX_BUILD_FLAG_NONE | OPTIX_BUILD_FLAG_ALLOW_COMPACTION;
@@ -55,7 +54,8 @@ namespace SE::Graphics
         l_AccelOptions.operation              = OPTIX_BUILD_OPERATION_BUILD;
 
         OptixAccelBufferSizes l_BlasBufferSizes;
-        OPTIX_CHECK( optixAccelComputeMemoryUsage( m_RTContext->RTObject, &l_AccelOptions, m_TriangleInput.data(), (int)m_TriangleInput.size(), &l_BlasBufferSizes ) );
+        OPTIX_CHECK( optixAccelComputeMemoryUsage( m_RTContext->RTObject, &l_AccelOptions, m_TriangleInput.data(),
+                                                   (int)m_TriangleInput.size(), &l_BlasBufferSizes ) );
 
         GPUMemory l_CompactedSizeBuffer( sizeof( uint64_t ) );
         GPUMemory l_TempBuffer( l_BlasBufferSizes.tempSizeInBytes );
@@ -65,14 +65,16 @@ namespace SE::Graphics
         l_EmitDesc.type   = OPTIX_PROPERTY_TYPE_COMPACTED_SIZE;
         l_EmitDesc.result = l_CompactedSizeBuffer.RawDevicePtr();
 
-        OPTIX_CHECK( optixAccelBuild( m_RTContext->RTObject, 0, &l_AccelOptions, m_TriangleInput.data(), (int)m_TriangleInput.size(), l_TempBuffer.RawDevicePtr(),
-                                      l_TempBuffer.Size(), l_OutputBuffer.RawDevicePtr(), l_OutputBuffer.Size(), &RTObject, &l_EmitDesc, 1 ) );
+        OPTIX_CHECK( optixAccelBuild( m_RTContext->RTObject, 0, &l_AccelOptions, m_TriangleInput.data(), (int)m_TriangleInput.size(),
+                                      l_TempBuffer.RawDevicePtr(), l_TempBuffer.Size(), l_OutputBuffer.RawDevicePtr(),
+                                      l_OutputBuffer.Size(), &RTObject, &l_EmitDesc, 1 ) );
         CUDA_SYNC_CHECK();
 
         uint64_t l_CompactedSize = l_CompactedSizeBuffer.Fetch<uint64_t>()[0];
 
         m_ASBuffer = GPUMemory( l_CompactedSize );
-        OPTIX_CHECK( optixAccelCompact( m_RTContext->RTObject, 0, RTObject, m_ASBuffer.RawDevicePtr(), m_ASBuffer.Size(), &RTObject ) );
+        OPTIX_CHECK(
+            optixAccelCompact( m_RTContext->RTObject, 0, RTObject, m_ASBuffer.RawDevicePtr(), m_ASBuffer.Size(), &RTObject ) );
 
         CUDA_SYNC_CHECK();
 

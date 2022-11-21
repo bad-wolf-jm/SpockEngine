@@ -30,7 +30,8 @@ namespace SE::Graphics
 
         ~OptixTraversableObject() { m_ASBuffer.Dispose(); };
 
-        void AddGeometry( GPUExternalMemory &aVertices, GPUExternalMemory &aIndices, uint32_t aVertexOffset, uint32_t aVertexCount, uint32_t aIndexOffset, uint32_t aIndexCount );
+        void AddGeometry( GPUExternalMemory &aVertices, GPUExternalMemory &aIndices, uint32_t aVertexOffset, uint32_t aVertexCount,
+                          uint32_t aIndexOffset, uint32_t aIndexCount );
 
         void Build();
 
@@ -42,12 +43,12 @@ namespace SE::Graphics
         Ref<OptixDeviceContextObject> m_RTContext = nullptr;
 
         std::vector<OptixBuildInput> m_TriangleInput = {};
-        std::vector<uint32_t> m_InputFlags           = {};
+        std::vector<uint32_t>        m_InputFlags    = {};
 
         std::vector<CUdeviceptr> m_VertexBuffers = {};
-        std::vector<int32_t> m_VertexCounts      = {};
+        std::vector<int32_t>     m_VertexCounts  = {};
         std::vector<CUdeviceptr> m_IndexBuffers  = {};
-        std::vector<int32_t> m_IndexCounts       = {};
+        std::vector<int32_t>     m_IndexCounts   = {};
 
         GPUMemory m_ASBuffer;
     };
