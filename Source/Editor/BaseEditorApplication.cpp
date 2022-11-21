@@ -52,12 +52,13 @@ namespace SE::Editor
         mDeferredRenderer->ResizeOutput( mViewportWidth, mViewportHeight );
         mForwardRenderer->ResizeOutput( mViewportWidth, mViewportHeight );
 
-        mOffscreenRenderTargetTexture =
-            New<Graphics::Texture2D>(SE::Core::Engine::GetInstance()->GetGraphicContext(), TextureDescription{}, mForwardRenderer->GetOutputImage() );
+        mOffscreenRenderTargetTexture = New<Graphics::Texture2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
+                                                                  TextureDescription{}, mForwardRenderer->GetOutputImage() );
 
         if( !mOffscreenRenderTargetDisplayHandle.Handle )
         {
-            mOffscreenRenderTargetDisplayHandle = SE::Core::Engine::GetInstance()->UIContext()->CreateTextureHandle( mOffscreenRenderTargetTexture );
+            mOffscreenRenderTargetDisplayHandle =
+                SE::Core::Engine::GetInstance()->UIContext()->CreateTextureHandle( mOffscreenRenderTargetTexture );
             mEditorWindow.UpdateSceneViewport( mOffscreenRenderTargetDisplayHandle );
         }
         else
@@ -65,12 +66,13 @@ namespace SE::Editor
             mOffscreenRenderTargetDisplayHandle.Handle->Write( mOffscreenRenderTargetTexture, 0 );
         }
 
-        mDeferredRenderTargetTexture =
-            New<Graphics::Texture2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(), TextureDescription{}, mDeferredRenderer->GetOutputImage() );
+        mDeferredRenderTargetTexture = New<Graphics::Texture2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
+                                                                 TextureDescription{}, mDeferredRenderer->GetOutputImage() );
 
         if( !mDeferredRenderTargetDisplayHandle.Handle )
         {
-            mDeferredRenderTargetDisplayHandle = SE::Core::Engine::GetInstance()->UIContext()->CreateTextureHandle( mDeferredRenderTargetTexture );
+            mDeferredRenderTargetDisplayHandle =
+                SE::Core::Engine::GetInstance()->UIContext()->CreateTextureHandle( mDeferredRenderTargetTexture );
             mEditorWindow.UpdateSceneViewport_deferred( mDeferredRenderTargetDisplayHandle );
         }
         else
@@ -78,10 +80,11 @@ namespace SE::Editor
             mDeferredRenderTargetDisplayHandle.Handle->Write( mDeferredRenderTargetTexture, 0 );
         }
 
-        mDeferredRenderer->SetProjection( math::Perspective(
-            90.0_degf, static_cast<float>( mViewportWidth ) / static_cast<float>( mViewportHeight ), 0.01f, 100000.0f ) );
-        mForwardRenderer->SetProjection( math::Perspective(
-            90.0_degf, static_cast<float>( mViewportWidth ) / static_cast<float>( mViewportHeight ), 0.01f, 100000.0f ) );
+        const float lAspect = static_cast<float>( mViewportWidth ) / static_cast<float>( mViewportHeight );
+        const float lFoVY   = 48.7_degf;
+        const float lFoVX   = lFoVY * lAspect;
+        mDeferredRenderer->SetProjection( math::Perspective( lFoVX, lAspect, 0.01f, 100000.0f ) );
+        mForwardRenderer->SetProjection( math::Perspective( lFoVX, lAspect, 0.01f, 100000.0f ) );
     }
 
     bool BaseEditorApplication::RenderUI( ImGuiIO &io )
@@ -95,8 +98,8 @@ namespace SE::Editor
 
         // mEditorWindow.mEngineLoop = mEngineLoop;
         // mEditorWindow.SensorModel    = m_SensorController;
-        mEditorWindow.WorldRenderer = mForwardRenderer;
-        mEditorWindow.DefRenderer = mDeferredRenderer;
+        mEditorWindow.WorldRenderer  = mForwardRenderer;
+        mEditorWindow.DefRenderer    = mDeferredRenderer;
         mEditorWindow.GraphicContext = SE::Core::Engine::GetInstance()->GetGraphicContext();
 
         o_RequestQuit = mEditorWindow.Display();
@@ -117,12 +120,15 @@ namespace SE::Editor
 
     void BaseEditorApplication::Init()
     {
-        mEditorWindow                 = EditorWindow( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
+        mEditorWindow =
+            EditorWindow( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
 
-        mWorld            = New<Scene>( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
-        mDeferredRenderer = New<DeferredRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
-        mForwardRenderer  = New<ForwardSceneRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 4 );
+        mWorld = New<Scene>( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
+        mDeferredRenderer =
+            New<DeferredRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
+        mForwardRenderer =
+            New<ForwardSceneRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 4 );
         RebuildOutputFramebuffer();
 
         mForwardRenderer->Update( mWorld );
