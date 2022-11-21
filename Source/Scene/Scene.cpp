@@ -730,7 +730,7 @@ namespace SE::Core
         {
             auto &lComponent = aEntity.Add<sPointLightComponent>();
 
-            lComponent.Position  = aNode["sPointLightComponent"]["Position"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+            // lComponent.Position  = aNode["sPointLightComponent"]["Position"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
             lComponent.Color     = aNode["sPointLightComponent"]["Color"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
             lComponent.Intensity = aNode["sPointLightComponent"]["Intensity"].As<float>( .0005f );
         }
@@ -744,9 +744,9 @@ namespace SE::Core
         {
             auto &lComponent = aEntity.Add<sSpotlightComponent>();
 
-            lComponent.Position  = aNode["sSpotlightComponent"]["Position"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
-            lComponent.Azimuth   = aNode["sSpotlightComponent"]["Azimuth"].As<float>( .0f );
-            lComponent.Elevation = aNode["sSpotlightComponent"]["Elevation"].As<float>( .0f );
+            // lComponent.Position  = aNode["sSpotlightComponent"]["Position"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+            // lComponent.Azimuth   = aNode["sSpotlightComponent"]["Azimuth"].As<float>( .0f );
+            // lComponent.Elevation = aNode["sSpotlightComponent"]["Elevation"].As<float>( .0f );
             lComponent.Color     = aNode["sSpotlightComponent"]["Color"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
             lComponent.Intensity = aNode["sSpotlightComponent"]["Intensity"].As<float>( .0005f );
             lComponent.Cone      = aNode["sSpotlightComponent"]["Cone"].As<float>( .0005f );
@@ -1740,8 +1740,8 @@ namespace SE::Core
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
         {
-            aOut.WriteKey( "Azimuth", aComponent.Azimuth );
-            aOut.WriteKey( "Elevation", aComponent.Elevation );
+            // aOut.WriteKey( "Azimuth", aComponent.Azimuth );
+            // aOut.WriteKey( "Elevation", aComponent.Elevation );
             aOut.WriteKey( "Intensity", aComponent.Intensity );
             aOut.WriteKey( "Color" );
             aOut.Write( aComponent.Color, { "r", "g", "b" } );
@@ -1755,8 +1755,8 @@ namespace SE::Core
         aOut.BeginMap( true );
         {
             aOut.WriteKey( "Intensity", aComponent.Intensity );
-            aOut.WriteKey( "Position" );
-            aOut.Write( aComponent.Position, { "x", "y", "z" } );
+            // aOut.WriteKey( "Position" );
+            // aOut.Write( aComponent.Position, { "x", "y", "z" } );
             aOut.WriteKey( "Color" );
             aOut.Write( aComponent.Color, { "r", "g", "b" } );
         }
@@ -1768,10 +1768,10 @@ namespace SE::Core
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
         {
-            aOut.WriteKey( "Position" );
-            aOut.Write( aComponent.Position, { "x", "y", "z" } );
-            aOut.WriteKey( "Azimuth", aComponent.Azimuth );
-            aOut.WriteKey( "Elevation", aComponent.Elevation );
+            // aOut.WriteKey( "Position" );
+            // aOut.Write( aComponent.Position, { "x", "y", "z" } );
+            // aOut.WriteKey( "Azimuth", aComponent.Azimuth );
+            // aOut.WriteKey( "Elevation", aComponent.Elevation );
             aOut.WriteKey( "Color" );
             aOut.Write( aComponent.Color, { "r", "g", "b" } );
             aOut.WriteKey( "Intensity", aComponent.Intensity );

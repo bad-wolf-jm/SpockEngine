@@ -74,7 +74,7 @@ namespace SE::Graphics
     void VisualHelperRenderer::Render(
         math::mat4 a_Transform, PointLightHelperComponent &a_PointLightHelperComponent, ARenderContext &aRenderContext )
     {
-        math::mat4 l_Transform = a_Transform * math::Translation( a_PointLightHelperComponent.LightData.Position );
+        math::mat4 l_Transform{};// = a_Transform * math::Translation( a_PointLightHelperComponent.LightData.Position );
 
         Render( l_Transform, a_PointLightHelperComponent.AxisCircle, a_PointLightHelperComponent.LightData.Color, aRenderContext );
         Render( l_Transform * math::Rotation( 90.0_degf, math::vec3{ 1.0f, 0.0f, 0.0f } ), a_PointLightHelperComponent.AxisCircle,
@@ -97,9 +97,10 @@ namespace SE::Graphics
     void VisualHelperRenderer::Render(
         math::mat4 a_Transform, SpotlightHelperComponent &a_SpotlightComponent, ARenderContext &aRenderContext )
     {
-        math::mat4 l_Transform = a_Transform * math::Translation( a_SpotlightComponent.LightData.Position ) *
-                                 math::Rotation( math::radians( -90.0f + a_SpotlightComponent.LightData.Azimuth ), math::y_axis() ) *
-                                 math::Rotation( math::radians( 90.0f - a_SpotlightComponent.LightData.Elevation ), math::x_axis() );
+        math::mat4 l_Transform{};
+        //  = a_Transform * math::Translation( a_SpotlightComponent.LightData.Position ) *
+        //                          math::Rotation( math::radians( -90.0f + a_SpotlightComponent.LightData.Azimuth ), math::y_axis() ) *
+        //                          math::Rotation( math::radians( 90.0f - a_SpotlightComponent.LightData.Elevation ), math::x_axis() );
 
         Render( l_Transform, a_SpotlightComponent.Spot, math::vec3{ 0.1f, 0.25f, 0.8f }, aRenderContext );
 

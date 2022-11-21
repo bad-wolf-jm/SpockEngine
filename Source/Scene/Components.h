@@ -367,35 +367,37 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct sDirectionalLightComponent
     {
-        float Azimuth   = 0.0f;
-        float Elevation = 0.0f;
+        // float Azimuth   = 0.0f;
+        // float Elevation = 0.0f;
         float Intensity = 0.0f;
         vec3  Color     = { 0.0f, 0.0f, 0.0f };
 
         bool operator==( const sDirectionalLightComponent &a_Other )
         {
-            return ( Azimuth == a_Other.Azimuth ) && ( Elevation == a_Other.Elevation ) && ( Intensity == a_Other.Intensity ) &&
+            return //( Azimuth == a_Other.Azimuth ) && ( Elevation == a_Other.Elevation ) && 
+                   ( Intensity == a_Other.Intensity ) &&
                    ( Color == a_Other.Color );
         }
     };
 
     struct sPointLightComponent
     {
-        vec3  Position  = { 0.0f, 0.0f, 0.0f };
+        // vec3  Position  = { 0.0f, 0.0f, 0.0f };
         vec3  Color     = { 0.0f, 0.0f, 0.0f };
         float Intensity = 0.0f;
 
         bool operator==( const sPointLightComponent &a_Other )
         {
-            return ( Position == a_Other.Position ) && ( Color == a_Other.Color ) && ( Intensity == a_Other.Intensity );
+            return //( Position == a_Other.Position ) && 
+                ( Color == a_Other.Color ) && ( Intensity == a_Other.Intensity );
         }
     };
 
     struct sSpotlightComponent
     {
-        vec3  Position  = { 0.0f, 0.0f, 0.0f };
-        float Azimuth   = 0.0f;
-        float Elevation = 0.0f;
+        // vec3  Position  = { 0.0f, 0.0f, 0.0f };
+        // float Azimuth   = 0.0f;
+        // float Elevation = 0.0f;
 
         vec3  Color     = { 0.0f, 0.0f, 0.0f };
         float Intensity = 0.0f;
@@ -403,7 +405,8 @@ namespace SE::Core::EntityComponentSystem::Components
 
         bool operator==( const sSpotlightComponent &a_Other )
         {
-            return ( Position == a_Other.Position ) && ( Azimuth == a_Other.Azimuth ) && ( Elevation == a_Other.Elevation ) &&
+            return // ( Position == a_Other.Position ) && 
+                    // ( Azimuth == a_Other.Azimuth ) && ( Elevation == a_Other.Elevation ) &&
                    ( Intensity == a_Other.Intensity ) && ( Color == a_Other.Color ) && ( Cone == a_Other.Cone );
         }
     };

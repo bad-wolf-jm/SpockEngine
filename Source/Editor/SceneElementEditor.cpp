@@ -170,17 +170,17 @@ namespace SE::Editor
     static bool EditComponent( sDirectionalLightComponent &aComponent )
     {
         float                                l_LabelSize = 175.0f;
-        static PropertyEditor<Slider<float>> l_AzimuthEditor( "##azimuth" );
-        l_AzimuthEditor.Label                 = "Azimuth:";
-        l_AzimuthEditor.LabelWidth            = l_LabelSize;
-        l_AzimuthEditor.ValueChooser.MinValue = 0.0f;
-        l_AzimuthEditor.ValueChooser.MaxValue = 360.0f;
-        l_AzimuthEditor.ValueChooser.Format   = "%.2f";
+        // static PropertyEditor<Slider<float>> l_AzimuthEditor( "##azimuth" );
+        // l_AzimuthEditor.Label                 = "Azimuth:";
+        // l_AzimuthEditor.LabelWidth            = l_LabelSize;
+        // l_AzimuthEditor.ValueChooser.MinValue = 0.0f;
+        // l_AzimuthEditor.ValueChooser.MaxValue = 360.0f;
+        // l_AzimuthEditor.ValueChooser.Format   = "%.2f";
 
-        static PropertyEditor<Slider<float>> l_ElevationEditor( "##elevation" );
-        l_ElevationEditor.Label               = "Elevation:";
-        l_ElevationEditor.LabelWidth          = l_LabelSize;
-        l_ElevationEditor.ValueChooser.Format = "%.2f";
+        // static PropertyEditor<Slider<float>> l_ElevationEditor( "##elevation" );
+        // l_ElevationEditor.Label               = "Elevation:";
+        // l_ElevationEditor.LabelWidth          = l_LabelSize;
+        // l_ElevationEditor.ValueChooser.Format = "%.2f";
 
         static PropertyEditor<Slider<float>> l_IntensityEditor( "##intensity" );
         l_IntensityEditor.Label                 = "Intensity:";
@@ -189,11 +189,11 @@ namespace SE::Editor
         l_IntensityEditor.ValueChooser.MaxValue = 50.0f;
         l_IntensityEditor.ValueChooser.Format   = "%.2f";
 
-        l_AzimuthEditor.Display( &aComponent.Azimuth );
+        // l_AzimuthEditor.Display( &aComponent.Azimuth );
 
-        l_ElevationEditor.ValueChooser.MinValue = -90.0f;
-        l_ElevationEditor.ValueChooser.MaxValue = 90.0f;
-        l_ElevationEditor.Display( &aComponent.Elevation );
+        // l_ElevationEditor.ValueChooser.MinValue = -90.0f;
+        // l_ElevationEditor.ValueChooser.MaxValue = 90.0f;
+        // l_ElevationEditor.Display( &aComponent.Elevation );
 
         UI::ColorChooser( "Color:", 125, aComponent.Color );
 
@@ -212,7 +212,7 @@ namespace SE::Editor
         l_IntensityEditor.ValueChooser.MaxValue = 50.0f;
         l_IntensityEditor.ValueChooser.Format   = "%.2f";
 
-        UI::VectorComponentEditor( "Position:", aComponent.Position, 0.0, 100 );
+        // UI::VectorComponentEditor( "Position:", aComponent.Position, 0.0, 100 );
         UI::ColorChooser( "Color:", 125, aComponent.Color );
 
         l_IntensityEditor.Display( &aComponent.Intensity );
@@ -223,17 +223,17 @@ namespace SE::Editor
     {
         float l_LabelSize = 175.0f;
 
-        static PropertyEditor<Slider<float>> l_AzimuthEditor( "##azimuth" );
-        l_AzimuthEditor.Label                 = "Azimuth:";
-        l_AzimuthEditor.LabelWidth            = l_LabelSize;
-        l_AzimuthEditor.ValueChooser.MinValue = 0.0f;
-        l_AzimuthEditor.ValueChooser.MaxValue = 360.0f;
-        l_AzimuthEditor.ValueChooser.Format   = "%.2f";
+        // static PropertyEditor<Slider<float>> l_AzimuthEditor( "##azimuth" );
+        // l_AzimuthEditor.Label                 = "Azimuth:";
+        // l_AzimuthEditor.LabelWidth            = l_LabelSize;
+        // l_AzimuthEditor.ValueChooser.MinValue = 0.0f;
+        // l_AzimuthEditor.ValueChooser.MaxValue = 360.0f;
+        // l_AzimuthEditor.ValueChooser.Format   = "%.2f";
 
-        static PropertyEditor<Slider<float>> l_ElevationEditor( "##elevation" );
-        l_ElevationEditor.Label               = "Elevation:";
-        l_ElevationEditor.LabelWidth          = l_LabelSize;
-        l_ElevationEditor.ValueChooser.Format = "%.2f";
+        // static PropertyEditor<Slider<float>> l_ElevationEditor( "##elevation" );
+        // l_ElevationEditor.Label               = "Elevation:";
+        // l_ElevationEditor.LabelWidth          = l_LabelSize;
+        // l_ElevationEditor.ValueChooser.Format = "%.2f";
 
         static PropertyEditor<Slider<float>> l_ConeWidthEditor( "##cone_width" );
         l_ConeWidthEditor.Label                 = "Cone width:";
@@ -249,13 +249,13 @@ namespace SE::Editor
         l_IntensityEditor.ValueChooser.MaxValue = 50.0f;
         l_IntensityEditor.ValueChooser.Format   = "%.2f";
 
-        UI::VectorComponentEditor( "Position:", aComponent.Position, 0.0, 100 );
+        // UI::VectorComponentEditor( "Position:", aComponent.Position, 0.0, 100 );
 
-        l_AzimuthEditor.Display( &aComponent.Azimuth );
+        // l_AzimuthEditor.Display( &aComponent.Azimuth );
 
-        l_ElevationEditor.ValueChooser.MinValue = 0.0f;
-        l_ElevationEditor.ValueChooser.MaxValue = 360.0f;
-        l_ElevationEditor.Display( &aComponent.Elevation );
+        // l_ElevationEditor.ValueChooser.MinValue = 0.0f;
+        // l_ElevationEditor.ValueChooser.MaxValue = 360.0f;
+        // l_ElevationEditor.Display( &aComponent.Elevation );
 
         UI::ColorChooser( "Color:", 125, aComponent.Color );
 
