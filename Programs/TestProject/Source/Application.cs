@@ -15,6 +15,8 @@ namespace Test
         {
             base.BeginScenario();
             mTestField0 = 0.0f;
+
+            base.CreateEntity("HELLO!!!");
         }
 
         override public void EndScenario()

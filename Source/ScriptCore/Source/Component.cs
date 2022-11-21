@@ -14,7 +14,6 @@ namespace SpockEngine
 
         public sNodeTransformComponent() 
         { 
-            // Console.WriteLine($"New sNodeTransformComponent instantiated!!");
         }
 
         public sNodeTransformComponent( mat4 aMatrix ) 
@@ -29,7 +28,6 @@ namespace SpockEngine
 
         public sTransformMatrixComponent() 
         { 
-            // Console.WriteLine($"New sNodeTransformComponent instantiated!!");
         }
 
         public sTransformMatrixComponent( mat4 aMatrix ) 
@@ -44,7 +42,6 @@ namespace SpockEngine
 
         public sTag() 
         { 
-            // Console.WriteLine($"New sTag instantiated!!");
         }
 
         public sTag( string aValue ) 

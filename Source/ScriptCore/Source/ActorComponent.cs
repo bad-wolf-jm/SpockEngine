@@ -15,5 +15,10 @@ namespace SpockEngine
         public virtual void EndScenario() {}
 
         public virtual void Tick( float aTs ) {}
+
+        public Entity CreateEntity(string aName)
+        {
+            return mEntity.CreateEntity(aName);
+        }
     }
 }

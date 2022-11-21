@@ -11,6 +11,13 @@ namespace SpockEngine
         public Entity(Entity aOther) { mEntityID=aOther.mEntityID; mRegistryID=aOther.mRegistryID; }
         public Entity(uint aEntityID, ulong aRegistryID) { mEntityID=aEntityID; mRegistryID=aRegistryID; }
 
+        public Entity CreateEntity(string aName)
+        {
+            uint lNewEntityID = CppCall.Entity_Create(mRegistryID, aName, mEntityID);
+
+            return new Entity(lNewEntityID, mRegistryID);
+        }
+
         public override string ToString()
         {
             return $"Entity(mEntityID={mEntityID} -- mRegistryID={mRegistryID})";
@@ -24,7 +31,6 @@ namespace SpockEngine
 
         public bool Has<_Component>() where _Component : Component, new()
         {
-            // Console.WriteLine(ToString());
             return CppCall.Entity_Has( mEntityID, mRegistryID, typeof(_Component) );
         }
 

@@ -41,8 +41,6 @@ namespace SE::Core
         : mGraphicContext{ a_GraphicContext }
         , m_UI{ a_UI }
     {
-
-        // mSceneScripting = New<ScriptingEngine>();
         mMaterialSystem = New<MaterialSystem>( a_GraphicContext );
 
         DefaultCamera                 = m_Registry.CreateEntity( "DefaultCamera" );
@@ -713,13 +711,19 @@ namespace SE::Core
     void ReadComponent<sLightComponent>( Entity aEntity, ConfigurationNode const &aNode,
                                          std::unordered_map<std::string, Entity> &aEntities )
     {
-        if( !aNode["sSpotlightComponent"].IsNull() )
+        if( !aNode["sLightComponent"].IsNull() )
         {
             auto &lComponent = aEntity.Add<sLightComponent>();
 
-            lComponent.mColor     = aNode["sSpotlightComponent"]["Color"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
-            lComponent.mIntensity = aNode["sSpotlightComponent"]["Intensity"].As<float>( .0005f );
-            lComponent.mCone      = aNode["sSpotlightComponent"]["Cone"].As<float>( .0005f );
+            std::unordered_map<std::string, eLightType> lLightTypeLookup = { { "DIRECTIONAL", eLightType::DIRECTIONAL },
+                                                                             { "SPOTLIGHT", eLightType::SPOTLIGHT },
+                                                                             { "POINT_LIGHT", eLightType::POINT_LIGHT },
+                                                                             { "", eLightType::POINT_LIGHT } };
+
+            lComponent.mType      = lLightTypeLookup[aNode["sLightComponent"]["mType"].As<std::string>( "" )];
+            lComponent.mColor     = aNode["sLightComponent"]["mColor"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+            lComponent.mIntensity = aNode["sLightComponent"]["mIntensity"].As<float>( .0005f );
+            lComponent.mCone      = aNode["sLightComponent"]["mCone"].As<float>( .0005f );
         }
     }
 
@@ -1685,12 +1689,15 @@ namespace SE::Core
         aOut.WriteKey( aName );
         aOut.BeginMap( true );
         {
-            aOut.WriteKey( "Type" );
-            aOut.WriteNull();
-            aOut.WriteKey( "Color" );
+            std::unordered_map<eLightType, std::string> lLightTypeLookup = { { eLightType::DIRECTIONAL, "DIRECTIONAL" },
+                                                                             { eLightType::SPOTLIGHT, "SPOTLIGHT" },
+                                                                             { eLightType::POINT_LIGHT, "POINT_LIGHT" } };
+
+            aOut.WriteKey( "mType", lLightTypeLookup[aComponent.mType] );
+            aOut.WriteKey( "mColor" );
             aOut.Write( aComponent.mColor, { "r", "g", "b" } );
-            aOut.WriteKey( "Intensity", aComponent.mIntensity );
-            aOut.WriteKey( "Cone", aComponent.mCone );
+            aOut.WriteKey( "mIntensity", aComponent.mIntensity );
+            aOut.WriteKey( "mCone", aComponent.mCone );
         }
         aOut.EndMap();
     }

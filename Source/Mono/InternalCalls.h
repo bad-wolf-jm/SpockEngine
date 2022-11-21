@@ -13,6 +13,8 @@ namespace SE::MonoInternalCalls
 {
     using namespace SE::Core;
 
+    uint32_t Entity_Create( EntityRegistry *aRegistry, MonoString *aName, uint32_t aParentEntityID );
+
     bool Entity_IsValid( uint32_t aEntityID, EntityRegistry *aRegistry );
 
     bool Entity_Has( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType );

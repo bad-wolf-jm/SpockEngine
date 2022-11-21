@@ -306,6 +306,7 @@ namespace SE::Core
     {
         using namespace MonoInternalCalls;
 
+        SE_ADD_INTERNAL_CALL( Entity_Create );
         SE_ADD_INTERNAL_CALL( Entity_IsValid );
         SE_ADD_INTERNAL_CALL( Entity_Has );
         SE_ADD_INTERNAL_CALL( Entity_Get );
