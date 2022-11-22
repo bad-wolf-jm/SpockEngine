@@ -9,7 +9,7 @@ namespace SE::Graphics
     }
 
     void OptixScene::AddGeometry( GPUExternalMemory &aVertices, GPUExternalMemory &aIndices, uint32_t aVertexOffset,
-                                              uint32_t aVertexCount, uint32_t aIndexOffset, uint32_t aIndexCount )
+                                  uint32_t aVertexCount, uint32_t aIndexOffset, uint32_t aIndexCount )
     {
         mVertexBuffers.push_back( (CUdeviceptr)( aVertices.DataAs<VertexData>() + aVertexOffset ) );
         mVertexCounts.push_back( (int)aVertexCount );
@@ -48,12 +48,12 @@ namespace SE::Graphics
         uint32_t l_Idx = 0;
         for( auto &lBuildinput : mTriangleInput ) lBuildinput.triangleArray.flags = &mInputFlags.data()[l_Idx++];
 
-        OptixAccelBuildOptions lAccelOptions = {};
-        lAccelOptions.buildFlags             = OPTIX_BUILD_FLAG_NONE | OPTIX_BUILD_FLAG_ALLOW_COMPACTION;
-        lAccelOptions.motionOptions.numKeys  = 1;
-        lAccelOptions.operation              = OPTIX_BUILD_OPERATION_BUILD;
+        OptixAccelBuildOptions lAccelOptions{};
+        lAccelOptions.buildFlags            = OPTIX_BUILD_FLAG_NONE | OPTIX_BUILD_FLAG_ALLOW_COMPACTION;
+        lAccelOptions.motionOptions.numKeys = 1;
+        lAccelOptions.operation             = OPTIX_BUILD_OPERATION_BUILD;
 
-        OptixAccelBufferSizes lBlasBufferSizes;
+        OptixAccelBufferSizes lBlasBufferSizes{};
         OPTIX_CHECK( optixAccelComputeMemoryUsage( mRayTracingContext->mOptixObject, &lAccelOptions, mTriangleInput.data(),
                                                    (int)mTriangleInput.size(), &lBlasBufferSizes ) );
 
@@ -61,7 +61,7 @@ namespace SE::Graphics
         GPUMemory lTempBuffer( lBlasBufferSizes.tempSizeInBytes );
         GPUMemory lOutputBuffer( lBlasBufferSizes.outputSizeInBytes );
 
-        OptixAccelEmitDesc lEmitDesc;
+        OptixAccelEmitDesc lEmitDesc{};
         lEmitDesc.type   = OPTIX_PROPERTY_TYPE_COMPACTED_SIZE;
         lEmitDesc.result = lCompactedSizeBuffer.RawDevicePtr();
 
