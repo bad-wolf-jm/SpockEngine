@@ -20,20 +20,20 @@ include_directories(${OptiX_INCLUDE})
 
 cuda_compile_and_embed(embedded_ptx_code devicePrograms.cu)
 
-cuda_add_library(toneMap
-  toneMap.cu)
+# cuda_add_library(toneMap toneMap.cu)
+
 add_executable(ex12_denoiseSeparateChannels
   ${embedded_ptx_code}
-  devicePrograms.cu
-  # LaunchParams.h
+  # devicePrograms.cu
+  toneMap.cu
   SampleRenderer.h
   SampleRenderer.cpp
-  ${PROJECT_SOURCE_DIR}/common/ray_trace/Model.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../common/ray_trace/Model.cpp
   main.cpp
   )
 
 target_link_libraries(ex12_denoiseSeparateChannels
-  toneMap
+  # toneMap
   gdt
   # optix dependencies, for rendering
   ${optix_LIBRARY}

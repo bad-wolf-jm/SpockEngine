@@ -137,7 +137,7 @@ namespace osc
 #ifdef _WIN32
                 // on windows, visual studio creates _two_ levels of build dir
                 // (x86/Release)
-                "../../models/sponza.obj"
+                "C:/GitLab/SpockEngine/Programs/RayTraceRenderer/models/sponza.obj"
 #else
                 // on linux, common practice is to have ONE level of build dir
                 // (say, <project>/build/)...
