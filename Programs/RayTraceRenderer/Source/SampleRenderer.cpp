@@ -14,6 +14,8 @@
 // limitations under the License.                                           //
 // ======================================================================== //
 
+#include "Core/Cuda/CudaAssert.h"
+
 #include "SampleRenderer.h"
 #include "LaunchParams.h"
 // this include may only appear in a single source file:
@@ -178,12 +180,12 @@ namespace osc
             d_indices[meshID]  = indexBuffer[meshID].d_pointer();
 
             triangleInput[meshID].triangleArray.vertexFormat        = OPTIX_VERTEX_FORMAT_FLOAT3;
-            triangleInput[meshID].triangleArray.vertexStrideInBytes = sizeof( vec3f );
+            triangleInput[meshID].triangleArray.vertexStrideInBytes = sizeof( math::vec3 );
             triangleInput[meshID].triangleArray.numVertices         = (int)mesh.mVertex.size();
             triangleInput[meshID].triangleArray.vertexBuffers       = &d_vertices[meshID];
 
             triangleInput[meshID].triangleArray.indexFormat        = OPTIX_INDICES_FORMAT_UNSIGNED_INT3;
-            triangleInput[meshID].triangleArray.indexStrideInBytes = sizeof( vec3i );
+            triangleInput[meshID].triangleArray.indexStrideInBytes = sizeof( math::ivec3 );
             triangleInput[meshID].triangleArray.numIndexTriplets   = (int)mesh.mIndex.size();
             triangleInput[meshID].triangleArray.indexBuffer        = d_indices[meshID];
 
@@ -515,10 +517,10 @@ namespace osc
                 {
                     rec.data.mHasTexture = false;
                 }
-                rec.data.mIndex    = (vec3i *)indexBuffer[meshID].d_pointer();
-                rec.data.mVertex   = (vec3f *)vertexBuffer[meshID].d_pointer();
-                rec.data.mNormal   = (vec3f *)mNormalBuffer[meshID].d_pointer();
-                rec.data.mTexCoord = (vec2f *)texcoordBuffer[meshID].d_pointer();
+                rec.data.mIndex    = (math::ivec3 *)indexBuffer[meshID].d_pointer();
+                rec.data.mVertex   = (math::vec3 *)vertexBuffer[meshID].d_pointer();
+                rec.data.mNormal   = (math::vec3 *)mNormalBuffer[meshID].d_pointer();
+                rec.data.mTexCoord = (math::vec2 *)texcoordBuffer[meshID].d_pointer();
                 hitgroupRecords.push_back( rec );
             }
         }
@@ -669,18 +671,19 @@ namespace osc
     {
         lastSetCamera = camera;
         // reset accumulation
-        launchParams.mFrame.mFrameID     = 0;
-        launchParams.mCamera.mPosition   = camera.from;
-        launchParams.mCamera.mDirection  = normalize( camera.at - camera.from );
-        const float cosFovy              = 0.66f;
-        const float aspect               = float( launchParams.mFrame.mSize.x ) / float( launchParams.mFrame.mSize.y );
-        launchParams.mCamera.mHorizontal = cosFovy * aspect * normalize( cross( launchParams.mCamera.mDirection, camera.up ) );
+        launchParams.mFrame.mFrameID    = 0;
+        launchParams.mCamera.mPosition  = camera.from;
+        launchParams.mCamera.mDirection = normalize( camera.at - camera.from );
+        const float cosFovy             = 0.66f;
+        const float aspect              = float( launchParams.mFrame.mSize.x ) / float( launchParams.mFrame.mSize.y );
+        launchParams.mCamera.mHorizontal =
+            cosFovy * aspect * math::normalize( math::cross( launchParams.mCamera.mDirection, camera.up ) );
         launchParams.mCamera.mVertical =
             cosFovy * normalize( cross( launchParams.mCamera.mHorizontal, launchParams.mCamera.mDirection ) );
     }
 
     /*! resize frame buffer to given resolution */
-    void SampleRenderer::resize( const vec2i &newSize )
+    void SampleRenderer::resize( const math::ivec2 &newSize )
     {
         if( denoiser )
         {
@@ -726,9 +729,9 @@ namespace osc
         // update the launch parameters that we'll pass to the optix
         // launch:
         launchParams.mFrame.mSize         = newSize;
-        launchParams.mFrame.mColorBuffer  = (float4 *)fbColor.d_pointer();
-        launchParams.mFrame.mNormalBuffer = (float4 *)fbNormal.d_pointer();
-        launchParams.mFrame.mAlbedoBuffer = (float4 *)fbAlbedo.d_pointer();
+        launchParams.mFrame.mColorBuffer  = (math::vec4 *)fbColor.d_pointer();
+        launchParams.mFrame.mNormalBuffer = (math::vec4 *)fbNormal.d_pointer();
+        launchParams.mFrame.mAlbedoBuffer = (math::vec4 *)fbAlbedo.d_pointer();
 
         // and re-set the camera, since aspect may have changed
         setCamera( lastSetCamera );

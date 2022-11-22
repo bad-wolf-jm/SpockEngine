@@ -30,11 +30,11 @@ namespace osc
     struct Camera
     {
         /*! camera position - *from* where we are looking */
-        vec3f from;
+        math::vec3 from;
         /*! which point we are looking *at* */
-        vec3f at;
+        math::vec3 at;
         /*! general up-vector */
-        vec3f up;
+        math::vec3 up;
     };
 
     /*! a sample OptiX-7 renderer that demonstrates how to set up
@@ -55,7 +55,7 @@ namespace osc
         void render();
 
         /*! resize frame buffer to given resolution */
-        void resize( const vec2i &newSize );
+        void resize( const math::ivec2 &newSize );
 
         /*! download the rendered color buffer */
         void downloadPixels( uint32_t h_pixels[] );

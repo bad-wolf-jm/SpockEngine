@@ -34,11 +34,13 @@
 
 #pragma once
 
-#include "vec.h"
+#include "Core/Math/Types.h"
+// #include "vec.h"
 #include "Quaternion.h"
 
 namespace gdt {
 
+  using namespace math;
   ////////////////////////////////////////////////////////////////////////////////
   /// 2D Linear Transform (2x2 Matrix)
   ////////////////////////////////////////////////////////////////////////////////
@@ -48,7 +50,7 @@ namespace gdt {
     using vector_t = T;
     // using Scalar = typename T::scalar_t;
     // using vector_t = T;
-    using scalar_t = typename T::scalar_t;
+    using scalar_t = typename T::value_type;
     
     /*! default matrix constructor */
     inline LinearSpace2           ( ) = default;
@@ -183,7 +185,7 @@ namespace gdt {
   struct GDT_INTERFACE LinearSpace3
   {
     // using vector_t = T;
-    using scalar_t = typename T::scalar_t;
+    using scalar_t = typename T::value_type;
     using vector_t = T;
     // using scalar_t = typename T::scalar_t;
 
@@ -332,9 +334,9 @@ namespace gdt {
   }
 
   /*! Shortcuts for common linear spaces. */
-  using LinearSpace2f  = LinearSpace2<vec2f> ;
-  using LinearSpace3f  = LinearSpace3<vec3f> ;
-  using LinearSpace3fa = LinearSpace3<vec3fa>;
+  using LinearSpace2f  = LinearSpace2<math::vec2> ;
+  using LinearSpace3f  = LinearSpace3<math::vec3> ;
+  using LinearSpace3fa = LinearSpace3<math::vec3>;
 
   using linear2f = LinearSpace2f;
   using linear3f = LinearSpace3f;

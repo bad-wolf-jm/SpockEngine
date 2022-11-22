@@ -16,12 +16,14 @@
 
 #pragma once
 
-#include "gdt/math/vec.h"
-#include "optix7.h"
+#include "Core/Math/Types.h"
+#include "Core/Optix/Optix7.h"
+
+// #include "gdt/math/vec.h"
 
 namespace osc
 {
-    using namespace gdt;
+    // using namespace gdt;
 
     // for this simple example, we have a single ray type
     enum
@@ -33,11 +35,11 @@ namespace osc
 
     struct sTriangleMeshSBTData
     {
-        vec3f               mColor;
-        vec3f              *mVertex;
-        vec3f              *mNormal;
-        vec2f              *mTexCoord;
-        vec3i              *mIndex;
+        math::vec3          mColor;
+        math::vec3         *mVertex;
+        math::vec3         *mNormal;
+        math::vec2         *mTexCoord;
+        math::ivec3        *mIndex;
         bool                mHasTexture;
         cudaTextureObject_t mTexture;
     };
@@ -47,28 +49,28 @@ namespace osc
         int mNumPixelSamples = 8;
         struct
         {
-            int       mFrameID = 0;
-            float4   *mColorBuffer;
-            uint32_t *mColorBufferU32;
-            float4   *mNormalBuffer;
-            float4   *mAlbedoBuffer;
+            int         mFrameID = 0;
+            math::vec4 *mColorBuffer;
+            uint32_t   *mColorBufferU32;
+            math::vec4 *mNormalBuffer;
+            math::vec4 *mAlbedoBuffer;
 
             /*! the size of the frame buffer to render */
-            vec2i mSize;
-            int   mAccumID{ 0 };
+            math::ivec2 mSize;
+            int         mAccumID{ 0 };
         } mFrame;
 
         struct
         {
-            vec3f mPosition;
-            vec3f mDirection;
-            vec3f mHorizontal;
-            vec3f mVertical;
+            math::vec3 mPosition;
+            math::vec3 mDirection;
+            math::vec3 mHorizontal;
+            math::vec3 mVertical;
         } mCamera;
 
         struct
         {
-            vec3f mOrigin, mDu, mDv, mPower;
+            math::vec3 mOrigin, mDu, mDv, mPower;
         } mLight;
 
         OptixTraversableHandle mSceneRoot;

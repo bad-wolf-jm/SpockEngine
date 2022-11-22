@@ -53,9 +53,9 @@ namespace osc
     {
         if( knownVertices.find( idx ) != knownVertices.end() ) return knownVertices[idx];
 
-        const vec3f *vertex_array   = (const vec3f *)attributes.vertices.data();
-        const vec3f *normal_array   = (const vec3f *)attributes.normals.data();
-        const vec2f *texcoord_array = (const vec2f *)attributes.texcoords.data();
+        const math::vec3 *vertex_array   = (const math::vec3 *)attributes.vertices.data();
+        const math::vec3 *normal_array   = (const math::vec3 *)attributes.normals.data();
+        const math::vec2 *texcoord_array = (const math::vec2 *)attributes.texcoords.data();
 
         int newID          = (int)mesh->mVertex.size();
         knownVertices[idx] = newID;
@@ -94,14 +94,14 @@ namespace osc
             if( c == '\\' ) c = '/';
         fileName = modelPath + "/" + fileName;
 
-        vec2i          res;
+        math::ivec2    res;
         int            comp;
         unsigned char *image     = stbi_load( fileName.c_str(), &res.x, &res.y, &comp, STBI_rgb_alpha );
         int            textureID = -1;
         if( image )
         {
-            textureID           = (int)model->mTextures.size();
-            Texture *texture    = new Texture;
+            textureID            = (int)model->mTextures.size();
+            Texture *texture     = new Texture;
             texture->mResolution = res;
             texture->mPixel      = (uint32_t *)image;
 
@@ -172,10 +172,11 @@ namespace osc
                     tinyobj::index_t idx1 = shape.mesh.indices[3 * faceID + 1];
                     tinyobj::index_t idx2 = shape.mesh.indices[3 * faceID + 2];
 
-                    vec3i idx( addVertex( mesh, attributes, idx0, knownVertices ), addVertex( mesh, attributes, idx1, knownVertices ),
-                               addVertex( mesh, attributes, idx2, knownVertices ) );
+                    math::ivec3 idx( addVertex( mesh, attributes, idx0, knownVertices ),
+                                     addVertex( mesh, attributes, idx1, knownVertices ),
+                                     addVertex( mesh, attributes, idx2, knownVertices ) );
                     mesh->mIndex.push_back( idx );
-                    mesh->mDiffuse          = (const vec3f &)materials[materialID].diffuse;
+                    mesh->mDiffuse          = (const math::vec3 &)materials[materialID].diffuse;
                     mesh->mDiffuseTextureID = loadTexture( model, knownTextures, materials[materialID].diffuse_texname, modelDir );
                 }
 

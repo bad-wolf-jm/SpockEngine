@@ -26,7 +26,7 @@ namespace osc
     inline __device__ float4 clamp( float4 f ) { return make_float4( clampf( f.x ), clampf( f.y ), clampf( f.z ), clampf( f.w ) ); }
 
     /*! runs a cuda kernel that performs gamma correction and float4-to-rgba conversion */
-    __global__ void computeFinalPixelColorsKernel( uint32_t *finalColorBuffer, float4 *denoisedBuffer, vec2i size )
+    __global__ void computeFinalPixelColorsKernel( uint32_t *finalColorBuffer, float4 *denoisedBuffer, math::ivec2 size )
     {
         int pixelX = threadIdx.x + blockIdx.x * blockDim.x;
         int pixelY = threadIdx.y + blockIdx.y * blockDim.y;
@@ -47,9 +47,9 @@ namespace osc
 
     void SampleRenderer::computeFinalPixelColors()
     {
-        vec2i fbSize    = launchParams.mFrame.mSize;
-        vec2i blockSize = 32;
-        vec2i numBlocks = divRoundUp( fbSize, blockSize );
+        math::ivec2 fbSize    = launchParams.mFrame.mSize;
+        math::ivec2 blockSize(32);
+        math::ivec2 numBlocks = divRoundUp( fbSize, blockSize );
         computeFinalPixelColorsKernel<<<dim3( numBlocks.x, numBlocks.y ), dim3( blockSize.x, blockSize.y )>>>(
             (uint32_t *)finalColorBuffer.d_pointer(), (float4 *)denoisedBuffer.d_pointer(), fbSize );
     }

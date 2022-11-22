@@ -19,6 +19,8 @@
 #include "gdt/math/AffineSpace.h"
 #include <vector>
 
+#include "Core/Math/Types.h"
+
 /*! \namespace osc - Optix Siggraph Course */
 namespace osc
 {
@@ -28,19 +30,19 @@ namespace osc
         render */
     struct TriangleMesh
     {
-        std::vector<vec3f> mVertex;
-        std::vector<vec3f> mNormal;
-        std::vector<vec2f> mTexCoord;
-        std::vector<vec3i> mIndex;
+        std::vector<math::vec3>  mVertex;
+        std::vector<math::vec3>  mNormal;
+        std::vector<math::vec2>  mTexCoord;
+        std::vector<math::ivec3> mIndex;
 
         // material data:
-        vec3f mDiffuse;
-        int   mDiffuseTextureID{ -1 };
+        math::vec3 mDiffuse;
+        int        mDiffuseTextureID{ -1 };
     };
 
     struct QuadLight
     {
-        vec3f mOrigin, mDu, mDv, mPower;
+        math::vec3 mOrigin, mDu, mDv, mPower;
     };
 
     struct Texture
@@ -50,8 +52,8 @@ namespace osc
             if( mPixel ) delete[] mPixel;
         }
 
-        uint32_t *mPixel{ nullptr };
-        vec2i     mResolution{ -1 };
+        uint32_t   *mPixel{ nullptr };
+        math::ivec2 mResolution{ -1 };
     };
 
     struct Model
@@ -64,8 +66,9 @@ namespace osc
 
         std::vector<TriangleMesh *> mMeshes;
         std::vector<Texture *>      mTextures;
+
         //! bounding box of all vertices in the model
-        box3f mBounds;
+        box_t<math::vec3> mBounds;
     };
 
     Model *loadOBJ( const std::string &objFile );

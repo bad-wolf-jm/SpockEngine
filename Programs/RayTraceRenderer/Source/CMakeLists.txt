@@ -42,4 +42,5 @@ target_link_libraries(ex12_denoiseSeparateChannels
   glfWindow
   glfw
   ${OPENGL_gl_LIBRARY}
+  LTSimulationEngineRuntime
   )

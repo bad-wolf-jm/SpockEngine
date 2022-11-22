@@ -16,11 +16,10 @@
 
 #pragma once
 
-#include "optix7.h"
+#include "Core/Optix/Optix7.h"
 // common std stuff
 #include <assert.h>
 #include <vector>
-
 
 /*! \namespace osc - Optix Siggraph Course */
 namespace osc
