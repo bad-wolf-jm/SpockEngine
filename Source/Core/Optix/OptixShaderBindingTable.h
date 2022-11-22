@@ -10,48 +10,48 @@ namespace SE::Graphics
 
     struct OptixShaderBindingTableObject
     {
-        OptixShaderBindingTable RTObject;
+        OptixShaderBindingTable mOptixObject;
 
         OptixShaderBindingTableObject() = default;
 
         ~OptixShaderBindingTableObject() = default;
 
         template <typename _RecordType>
-        _RecordType NewRecordType( Ref<SE::Graphics::OptixProgramGroupObject> a_ProgramGroup )
+        _RecordType NewRecordType( Ref<SE::Graphics::OptixProgramGroupObject> aProgramGroup )
         {
-            _RecordType l_NewRecord;
-            OPTIX_CHECK( optixSbtRecordPackHeader( a_ProgramGroup->RTObject, &l_NewRecord ) );
-            return l_NewRecord;
+            _RecordType lNewRecord;
+            OPTIX_CHECK( optixSbtRecordPackHeader( aProgramGroup->mOptixObject, &lNewRecord ) );
+            return lNewRecord;
         }
 
         template <typename _RecordType>
-        std::vector<_RecordType> NewRecordType( std::vector<Ref<SE::Graphics::OptixProgramGroupObject>> a_ProgramGroup )
+        std::vector<_RecordType> NewRecordType( std::vector<Ref<SE::Graphics::OptixProgramGroupObject>> aProgramGroup )
         {
-            std::vector<_RecordType> l_NewRecordTypes;
-            for( int i = 0; i < a_ProgramGroup.size(); i++ )
+            std::vector<_RecordType> lNewRecordTypes;
+            for( int i = 0; i < aProgramGroup.size(); i++ )
             {
-                _RecordType rec = NewRecordType<_RecordType>( a_ProgramGroup[i] );
-                l_NewRecordTypes.push_back( rec );
+                _RecordType rec = NewRecordType<_RecordType>( aProgramGroup[i] );
+                lNewRecordTypes.push_back( rec );
             }
-            return l_NewRecordTypes;
+            return lNewRecordTypes;
         }
 
-        void BindRayGenRecordTable( CUdeviceptr a_DevicePointer ) { RTObject.raygenRecord = a_DevicePointer; }
+        void BindRayGenRecordTable( CUdeviceptr aDevicePointer ) { mOptixObject.raygenRecord = aDevicePointer; }
 
         template <typename _RecordType>
-        void BindMissRecordTable( CUdeviceptr a_DevicePointer, size_t a_Size )
+        void BindMissRecordTable( CUdeviceptr aDevicePointer, size_t aSize )
         {
-            RTObject.missRecordBase          = a_DevicePointer;
-            RTObject.missRecordStrideInBytes = sizeof( _RecordType );
-            RTObject.missRecordCount         = static_cast<int>( a_Size );
+            mOptixObject.missRecordBase          = aDevicePointer;
+            mOptixObject.missRecordStrideInBytes = sizeof( _RecordType );
+            mOptixObject.missRecordCount         = static_cast<int>( aSize );
         }
 
         template <typename _RecordType>
-        void BindHitRecordTable( CUdeviceptr a_DevicePointer, size_t a_Size )
+        void BindHitRecordTable( CUdeviceptr aDevicePointer, size_t aSize )
         {
-            RTObject.hitgroupRecordBase          = a_DevicePointer;
-            RTObject.hitgroupRecordStrideInBytes = sizeof( _RecordType );
-            RTObject.hitgroupRecordCount         = static_cast<int>( a_Size );
+            mOptixObject.hitgroupRecordBase          = aDevicePointer;
+            mOptixObject.hitgroupRecordStrideInBytes = sizeof( _RecordType );
+            mOptixObject.hitgroupRecordCount         = static_cast<int>( aSize );
         }
     };
 

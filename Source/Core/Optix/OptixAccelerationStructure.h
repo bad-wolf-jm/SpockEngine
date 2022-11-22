@@ -23,12 +23,12 @@ namespace SE::Graphics
 
     struct OptixTraversableObject
     {
-        OptixTraversableHandle RTObject = 0;
+        OptixTraversableHandle mOptixObject = 0;
 
         OptixTraversableObject() = default;
-        OptixTraversableObject( Ref<OptixDeviceContextObject> aRTContext );
+        OptixTraversableObject( Ref<OptixDeviceContextObject> aRayTracingContext );
 
-        ~OptixTraversableObject() { m_ASBuffer.Dispose(); };
+        ~OptixTraversableObject() { mAccelerationStructureBuffer.Dispose(); };
 
         void AddGeometry( GPUExternalMemory &aVertices, GPUExternalMemory &aIndices, uint32_t aVertexOffset, uint32_t aVertexCount,
                           uint32_t aIndexOffset, uint32_t aIndexCount );
@@ -37,20 +37,20 @@ namespace SE::Graphics
 
         void Reset();
 
-        GPUMemory &GetBuffer() { return m_ASBuffer; };
+        GPUMemory &GetBuffer() { return mAccelerationStructureBuffer; };
 
       private:
-        Ref<OptixDeviceContextObject> m_RTContext = nullptr;
+        Ref<OptixDeviceContextObject> mRayTracingContext = nullptr;
 
-        std::vector<OptixBuildInput> m_TriangleInput = {};
-        std::vector<uint32_t>        m_InputFlags    = {};
+        std::vector<OptixBuildInput> mTriangleInput = {};
+        std::vector<uint32_t>        mInputFlags    = {};
 
-        std::vector<CUdeviceptr> m_VertexBuffers = {};
-        std::vector<int32_t>     m_VertexCounts  = {};
-        std::vector<CUdeviceptr> m_IndexBuffers  = {};
-        std::vector<int32_t>     m_IndexCounts   = {};
+        std::vector<CUdeviceptr> mVertexBuffers = {};
+        std::vector<int32_t>     mVertexCounts  = {};
+        std::vector<CUdeviceptr> mIndexBuffers  = {};
+        std::vector<int32_t>     mIndexCounts   = {};
 
-        GPUMemory m_ASBuffer;
+        GPUMemory mAccelerationStructureBuffer;
     };
 
 } // namespace SE::Graphics

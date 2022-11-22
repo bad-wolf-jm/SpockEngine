@@ -4,83 +4,83 @@ namespace SE::Graphics
 {
 
     OptixTraversableObject::OptixTraversableObject( Ref<OptixDeviceContextObject> a_RTContext )
-        : m_RTContext{ a_RTContext }
+        : mRayTracingContext{ a_RTContext }
     {
     }
 
     void OptixTraversableObject::AddGeometry( GPUExternalMemory &aVertices, GPUExternalMemory &aIndices, uint32_t aVertexOffset,
                                               uint32_t aVertexCount, uint32_t aIndexOffset, uint32_t aIndexCount )
     {
-        m_VertexBuffers.push_back( (CUdeviceptr)( aVertices.DataAs<VertexData>() + aVertexOffset ) );
-        m_VertexCounts.push_back( (int)aVertexCount );
-        m_IndexBuffers.push_back( (CUdeviceptr)( aIndices.DataAs<uint32_t>() + aIndexOffset ) );
-        m_IndexCounts.push_back( (int)( aIndexCount / 3 ) );
+        mVertexBuffers.push_back( (CUdeviceptr)( aVertices.DataAs<VertexData>() + aVertexOffset ) );
+        mVertexCounts.push_back( (int)aVertexCount );
+        mIndexBuffers.push_back( (CUdeviceptr)( aIndices.DataAs<uint32_t>() + aIndexOffset ) );
+        mIndexCounts.push_back( (int)( aIndexCount / 3 ) );
     }
 
     void OptixTraversableObject::Build()
     {
-        for( uint32_t i = 0; i < m_VertexBuffers.size(); i++ )
+        for( uint32_t i = 0; i < mVertexBuffers.size(); i++ )
         {
-            m_TriangleInput.emplace_back( OptixBuildInput{} );
-            m_InputFlags.push_back( 0 );
-            auto &l_Buildinput = m_TriangleInput[m_TriangleInput.size() - 1];
+            mTriangleInput.emplace_back( OptixBuildInput{} );
+            mInputFlags.push_back( 0 );
+            auto &lBuildinput = mTriangleInput[mTriangleInput.size() - 1];
 
-            l_Buildinput.type = OPTIX_BUILD_INPUT_TYPE_TRIANGLES;
+            lBuildinput.type = OPTIX_BUILD_INPUT_TYPE_TRIANGLES;
 
-            l_Buildinput.triangleArray.vertexFormat        = OPTIX_VERTEX_FORMAT_FLOAT3;
-            l_Buildinput.triangleArray.vertexStrideInBytes = sizeof( VertexData );
-            l_Buildinput.triangleArray.numVertices         = m_VertexCounts[i];
-            l_Buildinput.triangleArray.vertexBuffers       = &( m_VertexBuffers.data()[i] );
-            l_Buildinput.triangleArray.preTransform        = 0;
+            lBuildinput.triangleArray.vertexFormat        = OPTIX_VERTEX_FORMAT_FLOAT3;
+            lBuildinput.triangleArray.vertexStrideInBytes = sizeof( VertexData );
+            lBuildinput.triangleArray.numVertices         = mVertexCounts[i];
+            lBuildinput.triangleArray.vertexBuffers       = &( mVertexBuffers.data()[i] );
+            lBuildinput.triangleArray.preTransform        = 0;
 
-            l_Buildinput.triangleArray.indexFormat        = OPTIX_INDICES_FORMAT_UNSIGNED_INT3;
-            l_Buildinput.triangleArray.indexStrideInBytes = sizeof( math::uvec3 );
-            l_Buildinput.triangleArray.numIndexTriplets   = m_IndexCounts[i];
-            l_Buildinput.triangleArray.indexBuffer        = m_IndexBuffers[i];
+            lBuildinput.triangleArray.indexFormat        = OPTIX_INDICES_FORMAT_UNSIGNED_INT3;
+            lBuildinput.triangleArray.indexStrideInBytes = sizeof( math::uvec3 );
+            lBuildinput.triangleArray.numIndexTriplets   = mIndexCounts[i];
+            lBuildinput.triangleArray.indexBuffer        = mIndexBuffers[i];
 
-            l_Buildinput.triangleArray.flags                       = 0;
-            l_Buildinput.triangleArray.numSbtRecords               = 1;
-            l_Buildinput.triangleArray.sbtIndexOffsetBuffer        = 0;
-            l_Buildinput.triangleArray.sbtIndexOffsetSizeInBytes   = 0;
-            l_Buildinput.triangleArray.sbtIndexOffsetStrideInBytes = 0;
+            lBuildinput.triangleArray.flags                       = 0;
+            lBuildinput.triangleArray.numSbtRecords               = 1;
+            lBuildinput.triangleArray.sbtIndexOffsetBuffer        = 0;
+            lBuildinput.triangleArray.sbtIndexOffsetSizeInBytes   = 0;
+            lBuildinput.triangleArray.sbtIndexOffsetStrideInBytes = 0;
         }
 
         uint32_t l_Idx = 0;
-        for( auto &l_Buildinput : m_TriangleInput ) l_Buildinput.triangleArray.flags = &m_InputFlags.data()[l_Idx++];
+        for( auto &lBuildinput : mTriangleInput ) lBuildinput.triangleArray.flags = &mInputFlags.data()[l_Idx++];
 
-        OptixAccelBuildOptions l_AccelOptions = {};
-        l_AccelOptions.buildFlags             = OPTIX_BUILD_FLAG_NONE | OPTIX_BUILD_FLAG_ALLOW_COMPACTION;
-        l_AccelOptions.motionOptions.numKeys  = 1;
-        l_AccelOptions.operation              = OPTIX_BUILD_OPERATION_BUILD;
+        OptixAccelBuildOptions lAccelOptions = {};
+        lAccelOptions.buildFlags             = OPTIX_BUILD_FLAG_NONE | OPTIX_BUILD_FLAG_ALLOW_COMPACTION;
+        lAccelOptions.motionOptions.numKeys  = 1;
+        lAccelOptions.operation              = OPTIX_BUILD_OPERATION_BUILD;
 
-        OptixAccelBufferSizes l_BlasBufferSizes;
-        OPTIX_CHECK( optixAccelComputeMemoryUsage( m_RTContext->RTObject, &l_AccelOptions, m_TriangleInput.data(),
-                                                   (int)m_TriangleInput.size(), &l_BlasBufferSizes ) );
+        OptixAccelBufferSizes lBlasBufferSizes;
+        OPTIX_CHECK( optixAccelComputeMemoryUsage( mRayTracingContext->mOptixObject, &lAccelOptions, mTriangleInput.data(),
+                                                   (int)mTriangleInput.size(), &lBlasBufferSizes ) );
 
-        GPUMemory l_CompactedSizeBuffer( sizeof( uint64_t ) );
-        GPUMemory l_TempBuffer( l_BlasBufferSizes.tempSizeInBytes );
-        GPUMemory l_OutputBuffer( l_BlasBufferSizes.outputSizeInBytes );
+        GPUMemory lCompactedSizeBuffer( sizeof( uint64_t ) );
+        GPUMemory lTempBuffer( lBlasBufferSizes.tempSizeInBytes );
+        GPUMemory lOutputBuffer( lBlasBufferSizes.outputSizeInBytes );
 
-        OptixAccelEmitDesc l_EmitDesc;
-        l_EmitDesc.type   = OPTIX_PROPERTY_TYPE_COMPACTED_SIZE;
-        l_EmitDesc.result = l_CompactedSizeBuffer.RawDevicePtr();
+        OptixAccelEmitDesc lEmitDesc;
+        lEmitDesc.type   = OPTIX_PROPERTY_TYPE_COMPACTED_SIZE;
+        lEmitDesc.result = lCompactedSizeBuffer.RawDevicePtr();
 
-        OPTIX_CHECK( optixAccelBuild( m_RTContext->RTObject, 0, &l_AccelOptions, m_TriangleInput.data(), (int)m_TriangleInput.size(),
-                                      l_TempBuffer.RawDevicePtr(), l_TempBuffer.Size(), l_OutputBuffer.RawDevicePtr(),
-                                      l_OutputBuffer.Size(), &RTObject, &l_EmitDesc, 1 ) );
+        OPTIX_CHECK( optixAccelBuild( mRayTracingContext->mOptixObject, 0, &lAccelOptions, mTriangleInput.data(),
+                                      (int)mTriangleInput.size(), lTempBuffer.RawDevicePtr(), lTempBuffer.Size(),
+                                      lOutputBuffer.RawDevicePtr(), lOutputBuffer.Size(), &mOptixObject, &lEmitDesc, 1 ) );
         CUDA_SYNC_CHECK();
 
-        uint64_t l_CompactedSize = l_CompactedSizeBuffer.Fetch<uint64_t>()[0];
+        uint64_t lCompactedSize = lCompactedSizeBuffer.Fetch<uint64_t>()[0];
 
-        m_ASBuffer = GPUMemory( l_CompactedSize );
-        OPTIX_CHECK(
-            optixAccelCompact( m_RTContext->RTObject, 0, RTObject, m_ASBuffer.RawDevicePtr(), m_ASBuffer.Size(), &RTObject ) );
+        mAccelerationStructureBuffer = GPUMemory( lCompactedSize );
+        OPTIX_CHECK( optixAccelCompact( mRayTracingContext->mOptixObject, 0, mOptixObject, mAccelerationStructureBuffer.RawDevicePtr(),
+                                        mAccelerationStructureBuffer.Size(), &mOptixObject ) );
 
         CUDA_SYNC_CHECK();
 
-        l_TempBuffer.Dispose();
-        l_OutputBuffer.Dispose();
-        l_CompactedSizeBuffer.Dispose();
+        lTempBuffer.Dispose();
+        lOutputBuffer.Dispose();
+        lCompactedSizeBuffer.Dispose();
     }
 
     void OptixTraversableObject::Reset() {}

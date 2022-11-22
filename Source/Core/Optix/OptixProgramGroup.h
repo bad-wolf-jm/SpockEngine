@@ -13,16 +13,16 @@ namespace SE::Graphics
 
     struct OptixProgramGroupObject
     {
-        OptixProgramGroup RTObject = nullptr;
+        OptixProgramGroup mOptixObject = nullptr;
 
         OptixProgramGroupObject() = default;
-        OptixProgramGroupObject( OptixProgramGroupDesc a_ProgramGroupDescription, OptixProgramGroupOptions a_ProgramGroupOptions,
-                                 Ref<OptixDeviceContextObject> a_RTContext );
+        OptixProgramGroupObject( OptixProgramGroupDesc aProgramGroupDescription, OptixProgramGroupOptions aProgramGroupOptions,
+                                 Ref<OptixDeviceContextObject> aRTContext );
 
         ~OptixProgramGroupObject();
 
       private:
-        Ref<OptixDeviceContextObject> m_RTContext = nullptr;
+        Ref<OptixDeviceContextObject> mRayTracingContext = nullptr;
     };
 
 } // namespace SE::Graphics

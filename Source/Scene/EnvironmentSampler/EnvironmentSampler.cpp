@@ -25,21 +25,21 @@ namespace SE::SensorModel::Dev
         mSBT = New<OptixShaderBindingTableObject>();
 
         // build raygen records
-        std::vector<sRaygenRecord> lRaygenRecords = mSBT->NewRecordType<sRaygenRecord>( mRayTracingModule->m_RayGenProgramGroups );
-        mRaygenRecordsBuffer                     = GPUMemory::Create( lRaygenRecords );
+        std::vector<sRaygenRecord> lRaygenRecords = mSBT->NewRecordType<sRaygenRecord>( mRayTracingModule->mRayGenProgramGroups );
+        mRaygenRecordsBuffer                      = GPUMemory::Create( lRaygenRecords );
         mSBT->BindRayGenRecordTable( mRaygenRecordsBuffer.RawDevicePtr() );
 
         // build miss records
-        std::vector<sMissRecord> lMissRecords = mSBT->NewRecordType<sMissRecord>( mRayTracingModule->m_MissProgramGroups );
-        mMissRecordsBuffer                   = GPUMemory::Create( lMissRecords );
+        std::vector<sMissRecord> lMissRecords = mSBT->NewRecordType<sMissRecord>( mRayTracingModule->mMissProgramGroups );
+        mMissRecordsBuffer                    = GPUMemory::Create( lMissRecords );
         mSBT->BindMissRecordTable<sMissRecord>( mMissRecordsBuffer.RawDevicePtr(), mMissRecordsBuffer.SizeAs<sMissRecord>() );
 
         std::vector<sHitgroupRecord> lHitgroupRecords;
         a_Scene->ForEach<SE::Core::EntityComponentSystem::Components::sRayTracingTargetComponent,
-            SE::Core::EntityComponentSystem::Components::sStaticMeshComponent>(
+                         SE::Core::EntityComponentSystem::Components::sStaticMeshComponent>(
             [&]( auto l_Entity, auto &l_Component, auto &aMeshComponent )
             {
-                sHitgroupRecord rec     = mSBT->NewRecordType<sHitgroupRecord>( mRayTracingModule->m_HitProgramGroups[0] );
+                sHitgroupRecord rec     = mSBT->NewRecordType<sHitgroupRecord>( mRayTracingModule->mHitProgramGroups[0] );
                 rec.mData.mVertexOffset = aMeshComponent.mVertexOffset;
                 rec.mData.mIndexOffset  = aMeshComponent.mIndexOffset / 3;
                 lHitgroupRecords.push_back( rec );
@@ -49,7 +49,7 @@ namespace SE::SensorModel::Dev
     }
 
     void WorldSampler::Sample( math::mat4 a_SensorTransform, Ref<Scene> a_Scene, MultiTensor &a_Azimuths, MultiTensor &a_Elevations,
-        MultiTensor &a_Intensities, MultiTensor &a_SamplePoints )
+                               MultiTensor &a_Intensities, MultiTensor &a_SamplePoints )
     {
         SE_PROFILE_FUNCTION();
 
@@ -65,15 +65,15 @@ namespace SE::SensorModel::Dev
             mLaunchParams.mIntensities    = a_Intensities.DataAs<float>();
             mLaunchParams.mSamplePoints   = a_SamplePoints.DataAs<sHitRecord>();
 
-            SE::Cuda::GPUExternalMemory lTransformedVertexBuffer(
-                *a_Scene->mTransformedVertexBuffer, a_Scene->mTransformedVertexBuffer->SizeAs<uint8_t>() );
+            SE::Cuda::GPUExternalMemory lTransformedVertexBuffer( *a_Scene->mTransformedVertexBuffer,
+                                                                  a_Scene->mTransformedVertexBuffer->SizeAs<uint8_t>() );
             SE::Cuda::GPUExternalMemory lIndexBuffer( *a_Scene->mIndexBuffer, a_Scene->mIndexBuffer->SizeAs<uint8_t>() );
             mLaunchParams.mIndexBuffer  = lIndexBuffer.DataAs<math::uvec3>();
             mLaunchParams.mVertexBuffer = lTransformedVertexBuffer.DataAs<VertexData>();
 
             mLaunchParamsBuffer.Upload( mLaunchParams );
             mRayTracingPipeline->Launch( 0, mLaunchParamsBuffer.RawDevicePtr(), mLaunchParamsBuffer.Size(), mSBT,
-                math::uvec3{ a_Azimuths.SizeAs<float>(), 1, 1 } );
+                                         math::uvec3{ a_Azimuths.SizeAs<float>(), 1, 1 } );
 
             CUDA_SYNC_CHECK();
 

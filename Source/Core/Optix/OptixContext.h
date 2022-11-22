@@ -6,10 +6,10 @@ namespace SE::Graphics
 {
     struct OptixDeviceContextObject
     {
-        OptixDeviceContext RTObject = nullptr;
+        OptixDeviceContext mOptixObject = nullptr;
 
         OptixDeviceContextObject();
-        OptixDeviceContextObject( CUcontext a_CudaContext );
+        OptixDeviceContextObject( CUcontext aCudaContext );
 
         ~OptixDeviceContextObject();
 

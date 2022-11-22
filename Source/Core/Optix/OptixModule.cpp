@@ -6,78 +6,81 @@
 namespace SE::Graphics
 {
 
-    OptixModuleObject::OptixModuleObject( const std::string a_LaunchParameterVariableName, const char *a_PtxCode,
-                                          Ref<OptixDeviceContextObject> a_RTContext )
-        : m_RTContext{ a_RTContext }
-        , m_LaunchParameterVariableName{ a_LaunchParameterVariableName }
+    OptixModuleObject::OptixModuleObject( const std::string aLaunchParameterVariableName, const char *aPtxCode,
+                                          Ref<OptixDeviceContextObject> aRayTracingContext )
+        : mRayTracingContext{ aRayTracingContext }
+        , mLaunchParameterVariableName{ aLaunchParameterVariableName }
     {
-        OptixModuleCompileOptions moduleCompileOptions{};
+        OptixModuleCompileOptions lModuleCompileOptions{};
 
-        moduleCompileOptions.maxRegisterCount = 50;
-        moduleCompileOptions.optLevel         = OPTIX_COMPILE_OPTIMIZATION_DEFAULT;
-        moduleCompileOptions.debugLevel       = OPTIX_COMPILE_DEBUG_LEVEL_NONE;
+        lModuleCompileOptions.maxRegisterCount = 50;
+        lModuleCompileOptions.optLevel         = OPTIX_COMPILE_OPTIMIZATION_DEFAULT;
+        lModuleCompileOptions.debugLevel       = OPTIX_COMPILE_DEBUG_LEVEL_NONE;
 
         // pipelineCompileOptions = {};
-        m_PipelineCompileOptions.traversableGraphFlags            = OPTIX_TRAVERSABLE_GRAPH_FLAG_ALLOW_SINGLE_GAS;
-        m_PipelineCompileOptions.usesMotionBlur                   = false;
-        m_PipelineCompileOptions.numPayloadValues                 = 2;
-        m_PipelineCompileOptions.numAttributeValues               = 2;
-        m_PipelineCompileOptions.exceptionFlags                   = OPTIX_EXCEPTION_FLAG_NONE;
-        m_PipelineCompileOptions.pipelineLaunchParamsVariableName = m_LaunchParameterVariableName.c_str();
+        mPipelineCompileOptions.traversableGraphFlags            = OPTIX_TRAVERSABLE_GRAPH_FLAG_ALLOW_SINGLE_GAS;
+        mPipelineCompileOptions.usesMotionBlur                   = false;
+        mPipelineCompileOptions.numPayloadValues                 = 2;
+        mPipelineCompileOptions.numAttributeValues               = 2;
+        mPipelineCompileOptions.exceptionFlags                   = OPTIX_EXCEPTION_FLAG_NONE;
+        mPipelineCompileOptions.pipelineLaunchParamsVariableName = mLaunchParameterVariableName.c_str();
 
-        m_PipelineLinkOptions.maxTraceDepth = 2;
+        mPipelineLinkOptions.maxTraceDepth = 2;
 
-        const std::string ptxCode = a_PtxCode;
+        const std::string ptxCode = aPtxCode;
 
-        OPTIX_CHECK( optixModuleCreateFromPTX( m_RTContext->RTObject, &moduleCompileOptions, &m_PipelineCompileOptions,
-                                               ptxCode.c_str(), ptxCode.size(), NULL, NULL, &RTObject ) );
+        OPTIX_CHECK( optixModuleCreateFromPTX( mRayTracingContext->mOptixObject, &lModuleCompileOptions, &mPipelineCompileOptions,
+                                               ptxCode.c_str(), ptxCode.size(), NULL, NULL, &mOptixObject ) );
     }
 
-    OptixModuleObject::~OptixModuleObject() { OPTIX_CHECK( optixModuleDestroy( RTObject ) ); }
+    OptixModuleObject::~OptixModuleObject() { OPTIX_CHECK( optixModuleDestroy( mOptixObject ) ); }
 
-    void OptixModuleObject::CreateMissGroup( std::string a_EntryName )
+    void OptixModuleObject::CreateMissGroup( std::string aEntryName )
     {
-        OptixProgramGroupOptions pgOptions = {};
-        OptixProgramGroupDesc    pgDesc    = {};
-        pgDesc.kind                        = OPTIX_PROGRAM_GROUP_KIND_MISS;
-        pgDesc.miss.module                 = RTObject;
-        pgDesc.miss.entryFunctionName      = a_EntryName.c_str();
+        OptixProgramGroupOptions lProgramGroupOptions{};
+        OptixProgramGroupDesc    lProgramGroupDescription{};
+        lProgramGroupDescription.kind                   = OPTIX_PROGRAM_GROUP_KIND_MISS;
+        lProgramGroupDescription.miss.module            = mOptixObject;
+        lProgramGroupDescription.miss.entryFunctionName = aEntryName.c_str();
 
-        m_MissProgramGroups.push_back( SE::Core::New<OptixProgramGroupObject>( pgDesc, pgOptions, m_RTContext ) );
+        mMissProgramGroups.push_back(
+            SE::Core::New<OptixProgramGroupObject>( lProgramGroupDescription, lProgramGroupOptions, mRayTracingContext ) );
     }
 
-    void OptixModuleObject::CreateRayGenGroup( std::string a_EntryName )
+    void OptixModuleObject::CreateRayGenGroup( std::string aEntryName )
     {
-        OptixProgramGroupOptions pgOptions = {};
-        OptixProgramGroupDesc    pgDesc    = {};
-        pgDesc.kind                        = OPTIX_PROGRAM_GROUP_KIND_RAYGEN;
-        pgDesc.raygen.module               = RTObject;
-        pgDesc.raygen.entryFunctionName    = a_EntryName.c_str();
+        OptixProgramGroupOptions lProgramGroupOptions{};
+        OptixProgramGroupDesc    lProgramGroupDescription{};
+        lProgramGroupDescription.kind                     = OPTIX_PROGRAM_GROUP_KIND_RAYGEN;
+        lProgramGroupDescription.raygen.module            = mOptixObject;
+        lProgramGroupDescription.raygen.entryFunctionName = aEntryName.c_str();
 
-        m_RayGenProgramGroups.push_back( SE::Core::New<OptixProgramGroupObject>( pgDesc, pgOptions, m_RTContext ) );
+        mRayGenProgramGroups.push_back(
+            SE::Core::New<OptixProgramGroupObject>( lProgramGroupDescription, lProgramGroupOptions, mRayTracingContext ) );
     }
 
-    void OptixModuleObject::CreateHitGroup( std::string a_ClosestHitEntryName, std::string a_AnyHitHitEntryName )
+    void OptixModuleObject::CreateHitGroup( std::string aClosestHitEntryName, std::string aAnyHitHitEntryName )
     {
-        OptixProgramGroupOptions pgOptions  = {};
-        OptixProgramGroupDesc    pgDesc     = {};
-        pgDesc.kind                         = OPTIX_PROGRAM_GROUP_KIND_MISS;
-        pgDesc.kind                         = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
-        pgDesc.hitgroup.moduleCH            = RTObject;
-        pgDesc.hitgroup.entryFunctionNameCH = a_ClosestHitEntryName.c_str();
-        pgDesc.hitgroup.moduleAH            = RTObject;
-        pgDesc.hitgroup.entryFunctionNameAH = a_AnyHitHitEntryName.c_str();
+        OptixProgramGroupOptions lProgramGroupOptions{};
+        OptixProgramGroupDesc    lProgramGroupDescription{};
+        lProgramGroupDescription.kind                         = OPTIX_PROGRAM_GROUP_KIND_MISS;
+        lProgramGroupDescription.kind                         = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
+        lProgramGroupDescription.hitgroup.moduleCH            = mOptixObject;
+        lProgramGroupDescription.hitgroup.entryFunctionNameCH = aClosestHitEntryName.c_str();
+        lProgramGroupDescription.hitgroup.moduleAH            = mOptixObject;
+        lProgramGroupDescription.hitgroup.entryFunctionNameAH = aAnyHitHitEntryName.c_str();
 
-        m_HitProgramGroups.push_back( SE::Core::New<OptixProgramGroupObject>( pgDesc, pgOptions, m_RTContext ) );
+        mHitProgramGroups.push_back(
+            SE::Core::New<OptixProgramGroupObject>( lProgramGroupDescription, lProgramGroupOptions, mRayTracingContext ) );
     }
 
     Ref<OptixPipelineObject> OptixModuleObject::CreatePipeline()
     {
-        std::vector<Ref<OptixProgramGroupObject>> l_ProgramGroups;
-        for( auto pg : m_RayGenProgramGroups ) l_ProgramGroups.push_back( pg );
-        for( auto pg : m_HitProgramGroups ) l_ProgramGroups.push_back( pg );
-        for( auto pg : m_MissProgramGroups ) l_ProgramGroups.push_back( pg );
-        return SE::Core::New<OptixPipelineObject>( m_PipelineLinkOptions, m_PipelineCompileOptions, l_ProgramGroups, m_RTContext );
+        std::vector<Ref<OptixProgramGroupObject>> lProgramGroups;
+        for( auto pg : mRayGenProgramGroups ) lProgramGroups.push_back( pg );
+        for( auto pg : mHitProgramGroups ) lProgramGroups.push_back( pg );
+        for( auto pg : mMissProgramGroups ) lProgramGroups.push_back( pg );
+        return SE::Core::New<OptixPipelineObject>( mPipelineLinkOptions, mPipelineCompileOptions, lProgramGroups, mRayTracingContext );
     }
 
 } // namespace SE::Graphics

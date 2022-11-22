@@ -7,27 +7,28 @@
 namespace SE::Graphics
 {
 
-    OptixPipelineObject::OptixPipelineObject( OptixPipelineLinkOptions                  a_PipelineLinkOptions,
-                                              OptixPipelineCompileOptions               a_PipelineCompileOptions,
-                                              std::vector<Ref<OptixProgramGroupObject>> a_ProgramGroups,
-                                              Ref<OptixDeviceContextObject>             a_RTContext )
-        : m_RTContext{ a_RTContext }
+    OptixPipelineObject::OptixPipelineObject( OptixPipelineLinkOptions                  aPipelineLinkOptions,
+                                              OptixPipelineCompileOptions               aPipelineCompileOptions,
+                                              std::vector<Ref<OptixProgramGroupObject>> aProgramGroups,
+                                              Ref<OptixDeviceContextObject>             aRayTracingContext )
+        : mRayTracingContext{ aRayTracingContext }
     {
-        std::vector<OptixProgramGroup> l_ProgramGroups;
-        for( auto pg : a_ProgramGroups ) l_ProgramGroups.push_back( pg->RTObject );
+        std::vector<OptixProgramGroup> lProgramGroups;
+        for( auto pg : aProgramGroups ) lProgramGroups.push_back( pg->mOptixObject );
 
-        OPTIX_CHECK( optixPipelineCreate( m_RTContext->RTObject, &a_PipelineCompileOptions, &a_PipelineLinkOptions,
-                                          l_ProgramGroups.data(), (int)l_ProgramGroups.size(), NULL, NULL, &RTObject ) );
-        OPTIX_CHECK( optixPipelineSetStackSize( RTObject, 2 * 1024, 2 * 1024, 2 * 1024, 1 ) );
+        OPTIX_CHECK( optixPipelineCreate( mRayTracingContext->mOptixObject, &aPipelineCompileOptions, &aPipelineLinkOptions,
+                                          lProgramGroups.data(), (int)lProgramGroups.size(), NULL, NULL, &mOptixObject ) );
+        OPTIX_CHECK( optixPipelineSetStackSize( mOptixObject, 2 * 1024, 2 * 1024, 2 * 1024, 1 ) );
     }
 
-    OptixPipelineObject::~OptixPipelineObject() { OPTIX_CHECK( optixPipelineDestroy( RTObject ) ); }
+    OptixPipelineObject::~OptixPipelineObject() { OPTIX_CHECK( optixPipelineDestroy( mOptixObject ) ); }
 
-    void OptixPipelineObject::Launch( CUstream stream, CUdeviceptr launchParamsBuffer, size_t launchParamBufferSize,
-                                      Ref<OptixShaderBindingTableObject> a_SBT, math::uvec3 a_LaunchDimensions )
+    void OptixPipelineObject::Launch( CUstream aStream, CUdeviceptr aLaunchParamsBuffer, size_t aLaunchParamBufferSize,
+                                      Ref<OptixShaderBindingTableObject> aShaderBindingTable, math::uvec3 aLaunchDimensions )
     {
-        OPTIX_CHECK( optixLaunch( RTObject, stream, launchParamsBuffer, launchParamBufferSize, &a_SBT->RTObject, a_LaunchDimensions.x,
-                                  a_LaunchDimensions.y, a_LaunchDimensions.z ) );
+        OPTIX_CHECK( optixLaunch( mOptixObject, aStream, aLaunchParamsBuffer, aLaunchParamBufferSize,
+                                  &aShaderBindingTable->mOptixObject, aLaunchDimensions.x, aLaunchDimensions.y,
+                                  aLaunchDimensions.z ) );
         CUDA_SYNC_CHECK();
     }
 

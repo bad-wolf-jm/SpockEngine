@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 
-
 #include "Optix7.h"
 #include "OptixContext.h"
 #include "OptixPipeline.h"
@@ -15,33 +14,33 @@ namespace SE::Graphics
 
     struct OptixModuleObject
     {
-        OptixModule RTObject = nullptr;
+        OptixModule mOptixObject = nullptr;
 
         OptixModuleObject() = default;
-        OptixModuleObject( const std::string a_LaunchParameterVariableName, const char *a_PtxCode,
-                           Ref<OptixDeviceContextObject> a_RTContext );
+        OptixModuleObject( const std::string aLaunchParameterVariableName, const char *aPtxCode,
+                           Ref<OptixDeviceContextObject> aRayTracingContext );
 
         ~OptixModuleObject();
 
-        OptixPipelineCompileOptions GetPipelineCompileOptions() { return m_PipelineCompileOptions; }
+        OptixPipelineCompileOptions GetPipelineCompileOptions() { return mPipelineCompileOptions; }
 
-        OptixPipelineLinkOptions GetPipelineLinkOptions() { return m_PipelineLinkOptions; };
+        OptixPipelineLinkOptions GetPipelineLinkOptions() { return mPipelineLinkOptions; };
 
-        void CreateMissGroup( std::string a_EntryName );
-        void CreateRayGenGroup( std::string a_EntryName );
-        void CreateHitGroup( std::string a_ClosestHitEntryName, std::string a_AnyHitHitEntryName );
+        void CreateMissGroup( std::string aEntryName );
+        void CreateRayGenGroup( std::string aEntryName );
+        void CreateHitGroup( std::string aClosestHitEntryName, std::string aAnyHitHitEntryName );
 
         Ref<OptixPipelineObject> CreatePipeline();
 
-        std::vector<Ref<OptixProgramGroupObject>> m_RayGenProgramGroups = {};
-        std::vector<Ref<OptixProgramGroupObject>> m_HitProgramGroups    = {};
-        std::vector<Ref<OptixProgramGroupObject>> m_MissProgramGroups   = {};
+        std::vector<Ref<OptixProgramGroupObject>> mRayGenProgramGroups = {};
+        std::vector<Ref<OptixProgramGroupObject>> mHitProgramGroups    = {};
+        std::vector<Ref<OptixProgramGroupObject>> mMissProgramGroups   = {};
 
       private:
-        Ref<OptixDeviceContextObject> m_RTContext = nullptr;
-        OptixPipelineLinkOptions      m_PipelineLinkOptions{};
-        OptixPipelineCompileOptions   m_PipelineCompileOptions{};
-        const std::string             m_LaunchParameterVariableName;
+        Ref<OptixDeviceContextObject> mRayTracingContext = nullptr;
+        OptixPipelineLinkOptions      mPipelineLinkOptions{};
+        OptixPipelineCompileOptions   mPipelineCompileOptions{};
+        const std::string             mLaunchParameterVariableName;
     };
 
 } // namespace SE::Graphics

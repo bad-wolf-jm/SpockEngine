@@ -19,19 +19,19 @@ namespace SE::Graphics
 
     struct OptixPipelineObject
     {
-        OptixPipeline RTObject;
+        OptixPipeline mOptixObject;
 
         OptixPipelineObject() = default;
-        OptixPipelineObject( OptixPipelineLinkOptions a_PipelineLinkOptions, OptixPipelineCompileOptions a_PipelineCompileOptions,
-                             std::vector<Ref<OptixProgramGroupObject>> a_ProgramGroups, Ref<OptixDeviceContextObject> a_RTContext );
+        OptixPipelineObject( OptixPipelineLinkOptions aPipelineLinkOptions, OptixPipelineCompileOptions aPipelineCompileOptions,
+                             std::vector<Ref<OptixProgramGroupObject>> aProgramGroups, Ref<OptixDeviceContextObject> aRTContext );
 
-        void Launch( CUstream stream, CUdeviceptr launchParamsBuffer, size_t launchParamBufferSize,
-                     Ref<OptixShaderBindingTableObject> a_SBT, math::uvec3 a_LaunchDimensions );
+        void Launch( CUstream aStream, CUdeviceptr aLaunchParamsBuffer, size_t aLaunchParamBufferSize,
+                     Ref<OptixShaderBindingTableObject> aShaderBindingTable, math::uvec3 aLaunchDimensions );
 
         ~OptixPipelineObject();
 
       private:
-        Ref<OptixDeviceContextObject> m_RTContext = nullptr;
+        Ref<OptixDeviceContextObject> mRayTracingContext = nullptr;
     };
 
 } // namespace SE::Graphics

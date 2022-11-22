@@ -101,7 +101,7 @@ namespace SE::Core
         void                   UpdateRayTracingComponents();
         OptixTraversableHandle GetRayTracingRoot()
         {
-            if( m_AccelerationStructure ) return m_AccelerationStructure->RTObject;
+            if( m_AccelerationStructure ) return m_AccelerationStructure->mOptixObject;
             return 0;
         }
 

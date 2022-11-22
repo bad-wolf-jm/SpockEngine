@@ -6,15 +6,15 @@
 namespace SE::Graphics
 {
 
-    OptixProgramGroupObject::OptixProgramGroupObject( OptixProgramGroupDesc         a_ProgramGroupDescription,
-                                                      OptixProgramGroupOptions      a_ProgramGroupOptions,
-                                                      Ref<OptixDeviceContextObject> a_RTContext )
-        : m_RTContext{ a_RTContext }
+    OptixProgramGroupObject::OptixProgramGroupObject( OptixProgramGroupDesc         aProgramGroupDescription,
+                                                      OptixProgramGroupOptions      aProgramGroupOptions,
+                                                      Ref<OptixDeviceContextObject> aRayTracingContext )
+        : mRayTracingContext{ aRayTracingContext }
     {
-        OPTIX_CHECK( optixProgramGroupCreate( m_RTContext->RTObject, &a_ProgramGroupDescription, 1, &a_ProgramGroupOptions, NULL, NULL,
-                                              &RTObject ) );
+        OPTIX_CHECK( optixProgramGroupCreate( mRayTracingContext->mOptixObject, &aProgramGroupDescription, 1, &aProgramGroupOptions,
+                                              NULL, NULL, &mOptixObject ) );
     }
 
-    OptixProgramGroupObject::~OptixProgramGroupObject() { OPTIX_CHECK( optixProgramGroupDestroy( RTObject ) ); }
+    OptixProgramGroupObject::~OptixProgramGroupObject() { OPTIX_CHECK( optixProgramGroupDestroy( mOptixObject ) ); }
 
 } // namespace SE::Graphics
