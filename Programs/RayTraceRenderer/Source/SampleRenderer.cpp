@@ -16,8 +16,9 @@
 
 #include "Core/Cuda/CudaAssert.h"
 
-#include "SampleRenderer.h"
 #include "LaunchParams.h"
+#include "SampleRenderer.h"
+
 // this include may only appear in a single source file:
 #include <optix_function_table_definition.h>
 
@@ -234,15 +235,9 @@ namespace osc
         CUDABuffer outputBuffer;
         outputBuffer.alloc( blasBufferSizes.outputSizeInBytes );
 
-        OPTIX_CHECK( optixAccelBuild( optixContext,
-                                      /* stream */ 0, &accelOptions, triangleInput.data(), (int)numMeshes, tempBuffer.d_pointer(),
-                                      tempBuffer.sizeInBytes,
-
-                                      outputBuffer.d_pointer(), outputBuffer.sizeInBytes,
-
-                                      &asHandle,
-
-                                      &emitDesc, 1 ) );
+        OPTIX_CHECK( optixAccelBuild( optixContext, 0, &accelOptions, triangleInput.data(), (int)numMeshes, tempBuffer.d_pointer(),
+                                      tempBuffer.sizeInBytes, outputBuffer.d_pointer(), outputBuffer.sizeInBytes, &asHandle, &emitDesc,
+                                      1 ) );
         CUDA_SYNC_CHECK();
 
         // ==================================================================
@@ -252,8 +247,7 @@ namespace osc
         compactedSizeBuffer.download( &compactedSize, 1 );
 
         asBuffer.alloc( compactedSize );
-        OPTIX_CHECK( optixAccelCompact( optixContext,
-                                        /*stream:*/ 0, asHandle, asBuffer.d_pointer(), asBuffer.sizeInBytes, &asHandle ) );
+        OPTIX_CHECK( optixAccelCompact( optixContext, 0, asHandle, asBuffer.d_pointer(), asBuffer.sizeInBytes, &asHandle ) );
         CUDA_SYNC_CHECK();
 
         // ==================================================================
@@ -443,21 +437,7 @@ namespace osc
                                           (int)programGroups.size(), log, &sizeof_log, &pipeline ) );
         if( sizeof_log > 1 ) PRINT( log );
 
-        OPTIX_CHECK( optixPipelineSetStackSize( /* [in] The pipeline to configure the stack size
-                                                   for */
-                                                pipeline,
-                                                /* [in] The direct stack size requirement for
-                                                   direct callables invoked from IS or AH. */
-                                                2 * 1024,
-                                                /* [in] The direct stack size requirement for
-                                                   direct
-                                                   callables invoked from RG, MS, or CH.  */
-                                                2 * 1024,
-                                                /* [in] The continuation stack requirement. */
-                                                2 * 1024,
-                                                /* [in] The maximum depth of a traversable graph
-                                                   passed to trace. */
-                                                1 ) );
+        OPTIX_CHECK( optixPipelineSetStackSize( pipeline, 2 * 1024, 2 * 1024, 2 * 1024, 1 ) );
         if( sizeof_log > 1 ) PRINT( log );
     }
 
@@ -541,11 +521,7 @@ namespace osc
         launchParamsBuffer.upload( &launchParams, 1 );
         launchParams.mFrame.mFrameID++;
 
-        OPTIX_CHECK( optixLaunch( /*! pipeline we're launching launch: */
-                                  pipeline, stream,
-                                  /*! parameters and SBT */
-                                  launchParamsBuffer.d_pointer(), launchParamsBuffer.sizeInBytes, &sbt,
-                                  /*! dimensions of the launch: */
+        OPTIX_CHECK( optixLaunch( pipeline, stream, launchParamsBuffer.d_pointer(), launchParamsBuffer.sizeInBytes, &sbt,
                                   launchParams.mFrame.mSize.x, launchParams.mFrame.mSize.y, 1 ) );
 
         denoiserIntensity.resize( sizeof( float ) );

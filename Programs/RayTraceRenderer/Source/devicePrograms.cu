@@ -40,10 +40,10 @@ namespace osc
         can access RNG state */
     struct PRD
     {
-        Random     random;
-        math::vec3 pixelColor;
-        math::vec3 pixelNormal;
-        math::vec3 pixelAlbedo;
+        Random     mRandom;
+        math::vec3 mPixelColor;
+        math::vec3 mPixelNormal;
+        math::vec3 mPixelAlbedo;
     };
 
     static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF void *unpackPointer( uint32_t i0, uint32_t i1 )
@@ -61,7 +61,7 @@ namespace osc
     }
 
     template <typename T>
-    static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF T *getPRD()
+    static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF T *GetPerRayData()
     {
         const uint32_t u0 = optixGetPayload_0();
         const uint32_t u1 = optixGetPayload_1();
@@ -85,7 +85,7 @@ namespace osc
     extern "C" CUDA_KERNEL_DEFINITION void __closesthit__radiance()
     {
         const sTriangleMeshSBTData &sbtData = *(const sTriangleMeshSBTData *)optixGetSbtDataPointer();
-        PRD                        &prd     = *getPRD<PRD>();
+        PRD                        &prd     = *GetPerRayData<PRD>();
 
         // ------------------------------------------------------------------
         // gather some basic hit information
@@ -148,8 +148,8 @@ namespace osc
         for( int lightSampleID = 0; lightSampleID < numLightSamples; lightSampleID++ )
         {
             // produce random light sample
-            const math::vec3 lightPos = optixLaunchParams.mLight.mOrigin + prd.random() * optixLaunchParams.mLight.mDu +
-                                        prd.random() * optixLaunchParams.mLight.mDv;
+            const math::vec3 lightPos = optixLaunchParams.mLight.mOrigin + prd.mRandom() * optixLaunchParams.mLight.mDu +
+                                        prd.mRandom() * optixLaunchParams.mLight.mDv;
             math::vec3 lightDir  = lightPos - surfPos;
             float      lightDist = glm::length( lightDir );
             lightDir             = glm::normalize( lightDir );
@@ -182,9 +182,9 @@ namespace osc
             }
         }
 
-        prd.pixelNormal = Ns;
-        prd.pixelAlbedo = diffuseColor;
-        prd.pixelColor  = pixelColor;
+        prd.mPixelNormal = Ns;
+        prd.mPixelAlbedo = diffuseColor;
+        prd.mPixelColor  = pixelColor;
     }
 
     extern "C" CUDA_KERNEL_DEFINITION void __anyhit__radiance()
@@ -205,15 +205,15 @@ namespace osc
 
     extern "C" CUDA_KERNEL_DEFINITION void __miss__radiance()
     {
-        PRD &prd = *getPRD<PRD>();
+        PRD &prd = *GetPerRayData<PRD>();
         // set to constant white as background color
-        prd.pixelColor = math::vec3( 1.f );
+        prd.mPixelColor = math::vec3( 1.f );
     }
 
     extern "C" CUDA_KERNEL_DEFINITION void __miss__shadow()
     {
         // we didn't hit anything, so the light is visible
-        math::vec3 &prd = *(math::vec3 *)getPRD<math::vec3>();
+        math::vec3 &prd = *(math::vec3 *)GetPerRayData<math::vec3>();
         prd             = math::vec3( 1.f );
     }
 
@@ -228,8 +228,8 @@ namespace osc
         const auto &camera = optixLaunchParams.mCamera;
 
         PRD prd;
-        prd.random.init( ix + optixLaunchParams.mFrame.mSize.x * iy, optixLaunchParams.mFrame.mFrameID );
-        prd.pixelColor = math::vec3( 0.f );
+        prd.mRandom.init( ix + optixLaunchParams.mFrame.mSize.x * iy, optixLaunchParams.mFrame.mFrameID );
+        prd.mPixelColor = math::vec3( 0.f );
 
         // the values we store the PRD pointer in:
         uint32_t u0, u1;
@@ -248,7 +248,7 @@ namespace osc
             // assume that the camera should only(!) cover the denoised
             // screen then the actual screen plane we shuld be using during
             // rendreing is slightly larger than [0,1]^2
-            math::vec2 screen( math::vec2( ix + prd.random(), iy + prd.random() ) / math::vec2( optixLaunchParams.mFrame.mSize ) );
+            math::vec2 screen( math::vec2( ix + prd.mRandom(), iy + prd.mRandom() ) / math::vec2( optixLaunchParams.mFrame.mSize ) );
             // screen
             //   = screen
             //   * math::vec2(optixLaunchParams.frame.denoisedSize)
@@ -273,9 +273,9 @@ namespace osc
                         RAY_TYPE_COUNT,                // SBT stride
                         RADIANCE_RAY_TYPE,             // missSBTIndex
                         u0, u1 );
-            pixelColor += prd.pixelColor;
-            pixelNormal += prd.pixelNormal;
-            pixelAlbedo += prd.pixelAlbedo;
+            pixelColor += prd.mPixelColor;
+            pixelNormal += prd.mPixelNormal;
+            pixelAlbedo += prd.mPixelAlbedo;
         }
 
         math::vec4 rgba( pixelColor / static_cast<float>( numPixelSamples ), 1.f );
