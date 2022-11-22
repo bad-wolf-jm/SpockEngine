@@ -103,15 +103,15 @@ namespace SE::Cuda
         /** @brief Set the content of the buffer to 0 */
         void CopyFrom( GPUMemory aFromBuffer )
         {
-            CUDA_ASSERT( cudaMemcpy(
-                (void *)mDevicePointer, aFromBuffer.DataAs<uint8_t>(), aFromBuffer.SizeAs<uint8_t>(), cudaMemcpyDeviceToDevice ) );
+            CUDA_ASSERT( cudaMemcpy( (void *)mDevicePointer, aFromBuffer.DataAs<uint8_t>(), aFromBuffer.SizeAs<uint8_t>(),
+                                     cudaMemcpyDeviceToDevice ) );
         }
 
         /** @brief Set the content of the buffer to 0 */
         void CopyTo( GPUMemory aToBuffer )
         {
-            CUDA_ASSERT( cudaMemcpy(
-                (void *)aToBuffer.DataAs<uint8_t>(), (void *)mDevicePointer, SizeAs<uint8_t>(), cudaMemcpyDeviceToDevice ) );
+            CUDA_ASSERT( cudaMemcpy( (void *)aToBuffer.DataAs<uint8_t>(), (void *)mDevicePointer, SizeAs<uint8_t>(),
+                                     cudaMemcpyDeviceToDevice ) );
         }
 
         /** @brief Downloads data from the device.

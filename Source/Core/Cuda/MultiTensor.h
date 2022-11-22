@@ -166,14 +166,14 @@ namespace SE::Cuda
         {
 #ifdef __CUDACC__
             auto lData = mDeviceSideData.mBufferSizes.DataAs<sBufferSizeInfo>()[i];
-            return sBufferSizeInfo{
-                lData.mSize / static_cast<uint32_t>( sizeof( _Ty ) ), lData.mOffset / static_cast<uint32_t>( sizeof( _Ty ) ) };
+            return sBufferSizeInfo{ lData.mSize / static_cast<uint32_t>( sizeof( _Ty ) ),
+                                    lData.mOffset / static_cast<uint32_t>( sizeof( _Ty ) ) };
 #else
             if( i >= CountLayers() )
                 throw std::out_of_range(
                     fmt::format( "Attempted to access layer {}, but the stack only has {} layers", i + 1, CountLayers() ) );
             return sBufferSizeInfo{ mBufferSizes[i].mSize / static_cast<uint32_t>( sizeof( _Ty ) ),
-                mBufferSizes[i].mOffset / static_cast<uint32_t>( sizeof( _Ty ) ) };
+                                    mBufferSizes[i].mOffset / static_cast<uint32_t>( sizeof( _Ty ) ) };
 #endif
         }
 

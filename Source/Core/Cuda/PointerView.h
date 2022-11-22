@@ -62,7 +62,7 @@ namespace SE::Cuda::Internal
             if( ( aSize + aOffset ) > aParent.Size() )
                 throw std::runtime_error(
                     fmt::format( "View upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})",
-                        aOffset, aSize, aParent.Size() ) );
+                                 aOffset, aSize, aParent.Size() ) );
 
             mDevicePointer = ( aParent.mDevicePointer + aOffset );
         }
@@ -111,11 +111,11 @@ namespace SE::Cuda::Internal
             if( ( aArray.size() + aOffset ) * sizeof( _Ty ) > mSize )
                 throw std::runtime_error(
                     fmt::format( "Upload upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})",
-                        aOffset, aArray.size(), mSize / sizeof( _Ty ) )
+                                 aOffset, aArray.size(), mSize / sizeof( _Ty ) )
                         .c_str() );
 
-            CUDA_ASSERT( cudaMemcpy(
-                (void *)( DataAs<_Ty>() + aOffset ), (void *)aArray.data(), aArray.size() * sizeof( _Ty ), cudaMemcpyHostToDevice ) );
+            CUDA_ASSERT( cudaMemcpy( (void *)( DataAs<_Ty>() + aOffset ), (void *)aArray.data(), aArray.size() * sizeof( _Ty ),
+                                     cudaMemcpyHostToDevice ) );
         }
 
         template <typename _Ty>
@@ -124,11 +124,11 @@ namespace SE::Cuda::Internal
             if( ( aArray.size() + aOffset ) * sizeof( _Ty ) > mSize )
                 throw std::runtime_error(
                     fmt::format( "Upload upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})",
-                        aOffset, aArray.size(), mSize / sizeof( _Ty ) )
+                                 aOffset, aArray.size(), mSize / sizeof( _Ty ) )
                         .c_str() );
 
-            CUDA_ASSERT( cudaMemcpy(
-                (void *)( DataAs<_Ty>() + aOffset ), (void *)aArray.data(), aArray.size() * sizeof( _Ty ), cudaMemcpyHostToDevice ) );
+            CUDA_ASSERT( cudaMemcpy( (void *)( DataAs<_Ty>() + aOffset ), (void *)aArray.data(), aArray.size() * sizeof( _Ty ),
+                                     cudaMemcpyHostToDevice ) );
         }
 
         /// @brief Overloaded member provided for convenience
@@ -176,7 +176,7 @@ namespace SE::Cuda::Internal
             if( aByteSize + aOffset > Size() )
                 throw std::runtime_error(
                     fmt::format( "Upload upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})",
-                        aOffset, aByteSize, Size() )
+                                 aOffset, aByteSize, Size() )
                         .c_str() );
             CUDA_ASSERT( cudaMemcpy( (void *)( DataAs<uint8_t>() + aOffset ), aData, aByteSize, cudaMemcpyHostToDevice ) );
         }
@@ -228,7 +228,8 @@ namespace SE::Cuda::Internal
                     fmt::format( "Attempted to fetch an array of size {} from a buffer of size {}", aSize, Size() ).c_str() );
             std::vector<_Ty> lHostArray( aSize );
             CUDA_ASSERT( cudaMemcpy( reinterpret_cast<void *>( lHostArray.data() ),
-                reinterpret_cast<void *>( DataAs<_Ty>() + aOffset ), aSize * sizeof( _Ty ), cudaMemcpyDeviceToHost ) );
+                                     reinterpret_cast<void *>( DataAs<_Ty>() + aOffset ), aSize * sizeof( _Ty ),
+                                     cudaMemcpyDeviceToHost ) );
             return lHostArray;
         }
 

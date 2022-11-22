@@ -16,23 +16,15 @@ namespace SE::Cuda
     {
         switch( aColorFormat )
         {
-        case eColorFormat::R32_FLOAT:
-            return cudaCreateChannelDesc( 32, 0, 0, 0, cudaChannelFormatKindFloat );
-        case eColorFormat::RG32_FLOAT:
-            return cudaCreateChannelDesc( 32, 32, 0, 0, cudaChannelFormatKindFloat );
-        case eColorFormat::RGB32_FLOAT:
-            return cudaCreateChannelDesc( 32, 32, 32, 0, cudaChannelFormatKindFloat );
-        case eColorFormat::RGBA32_FLOAT:
-            return cudaCreateChannelDesc( 32, 32, 32, 32, cudaChannelFormatKindFloat );
-        case eColorFormat::R8_UNORM:
-            return cudaCreateChannelDesc( 8, 0, 0, 0, cudaChannelFormatKindUnsigned );
-        case eColorFormat::RG8_UNORM:
-            return cudaCreateChannelDesc( 8, 8, 0, 0, cudaChannelFormatKindUnsigned );
-        case eColorFormat::RGB8_UNORM:
-            return cudaCreateChannelDesc( 8, 8, 8, 0, cudaChannelFormatKindUnsigned );
+        case eColorFormat::R32_FLOAT: return cudaCreateChannelDesc( 32, 0, 0, 0, cudaChannelFormatKindFloat );
+        case eColorFormat::RG32_FLOAT: return cudaCreateChannelDesc( 32, 32, 0, 0, cudaChannelFormatKindFloat );
+        case eColorFormat::RGB32_FLOAT: return cudaCreateChannelDesc( 32, 32, 32, 0, cudaChannelFormatKindFloat );
+        case eColorFormat::RGBA32_FLOAT: return cudaCreateChannelDesc( 32, 32, 32, 32, cudaChannelFormatKindFloat );
+        case eColorFormat::R8_UNORM: return cudaCreateChannelDesc( 8, 0, 0, 0, cudaChannelFormatKindUnsigned );
+        case eColorFormat::RG8_UNORM: return cudaCreateChannelDesc( 8, 8, 0, 0, cudaChannelFormatKindUnsigned );
+        case eColorFormat::RGB8_UNORM: return cudaCreateChannelDesc( 8, 8, 8, 0, cudaChannelFormatKindUnsigned );
         case eColorFormat::RGBA8_UNORM:
-        default:
-            return cudaCreateChannelDesc( 8, 8, 8, 8, cudaChannelFormatKindUnsigned );
+        default: return cudaCreateChannelDesc( 8, 8, 8, 8, cudaChannelFormatKindUnsigned );
         }
     }
 
@@ -41,16 +33,12 @@ namespace SE::Cuda
     {
         switch( aAddressMode )
         {
-        case eSamplerWrapping::REPEAT:
-            return cudaAddressModeWrap;
-        case eSamplerWrapping::MIRRORED_REPEAT:
-            return cudaAddressModeMirror;
-        case eSamplerWrapping::CLAMP_TO_EDGE:
-            return cudaAddressModeClamp;
+        case eSamplerWrapping::REPEAT: return cudaAddressModeWrap;
+        case eSamplerWrapping::MIRRORED_REPEAT: return cudaAddressModeMirror;
+        case eSamplerWrapping::CLAMP_TO_EDGE: return cudaAddressModeClamp;
         case eSamplerWrapping::CLAMP_TO_BORDER:
         case eSamplerWrapping::MIRROR_CLAMP_TO_BORDER:
-        default:
-            return cudaAddressModeBorder;
+        default: return cudaAddressModeBorder;
         }
     }
 
@@ -59,11 +47,9 @@ namespace SE::Cuda
     {
         switch( aFilterMode )
         {
-        case eSamplerFilter::NEAREST:
-            return cudaFilterModePoint;
+        case eSamplerFilter::NEAREST: return cudaFilterModePoint;
         case eSamplerFilter::LINEAR:
-        default:
-            return cudaFilterModeLinear;
+        default: return cudaFilterModeLinear;
         }
     }
 
@@ -73,9 +59,9 @@ namespace SE::Cuda
         cudaChannelFormatDesc lTextureFormat = ToCudaChannelDesc( mSpec.mFormat );
 
         CUDA_ASSERT( cudaMallocArray( &mInternalCudaArray, &lTextureFormat, static_cast<size_t>( mSpec.mWidth ),
-            static_cast<size_t>( mSpec.mHeight ), cudaArrayDefault ) );
-        CUDA_ASSERT( cudaMemcpyToArray(
-            mInternalCudaArray, 0, 0, reinterpret_cast<void *>( aData.data() ), aData.size(), cudaMemcpyHostToDevice ) );
+                                      static_cast<size_t>( mSpec.mHeight ), cudaArrayDefault ) );
+        CUDA_ASSERT( cudaMemcpyToArray( mInternalCudaArray, 0, 0, reinterpret_cast<void *>( aData.data() ), aData.size(),
+                                        cudaMemcpyHostToDevice ) );
     }
 
     Texture2D::Texture2D( sTextureCreateInfo &aSpec, uint8_t *aData, size_t aSize )
@@ -84,7 +70,7 @@ namespace SE::Cuda
         cudaChannelFormatDesc lTextureFormat = ToCudaChannelDesc( mSpec.mFormat );
 
         CUDA_ASSERT( cudaMallocArray( &mInternalCudaArray, &lTextureFormat, static_cast<size_t>( mSpec.mWidth ),
-            static_cast<size_t>( mSpec.mHeight ), cudaArrayDefault ) );
+                                      static_cast<size_t>( mSpec.mHeight ), cudaArrayDefault ) );
         CUDA_ASSERT( cudaMemcpyToArray( mInternalCudaArray, 0, 0, reinterpret_cast<void *>( aData ), aSize, cudaMemcpyHostToDevice ) );
     }
 
@@ -98,7 +84,7 @@ namespace SE::Cuda
         cudaChannelFormatDesc lTextureFormat = ToCudaChannelDesc( mSpec.mFormat );
 
         CUDA_ASSERT( cudaMallocArray( &mInternalCudaArray, &lTextureFormat, static_cast<size_t>( mSpec.mWidth ),
-            static_cast<size_t>( mSpec.mHeight ), cudaArrayDefault ) );
+                                      static_cast<size_t>( mSpec.mHeight ), cudaArrayDefault ) );
         CUDA_ASSERT(
             cudaMemcpyToArray( mInternalCudaArray, 0, 0, aImageData.mPixelData, aImageData.mByteSize, cudaMemcpyHostToDevice ) );
     }
