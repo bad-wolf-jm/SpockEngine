@@ -35,12 +35,13 @@ namespace osc
 
     struct sTriangleMeshSBTData
     {
-        math::vec3          mColor;
-        math::vec3         *mVertex;
-        math::vec3         *mNormal;
-        math::vec2         *mTexCoord;
-        math::ivec3        *mIndex;
-        bool                mHasTexture;
+        math::vec3   mColor;
+        math::vec3  *mVertex;
+        math::vec3  *mNormal;
+        math::vec2  *mTexCoord;
+        math::ivec3 *mIndex;
+        bool         mHasTexture;
+
         cudaTextureObject_t mTexture;
     };
 

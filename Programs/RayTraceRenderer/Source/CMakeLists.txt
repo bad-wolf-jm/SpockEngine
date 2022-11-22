@@ -31,6 +31,8 @@ add_executable(ex12_denoiseSeparateChannels
   main.cpp
 )
 
+target_compile_options( ex12_denoiseSeparateChannels PRIVATE $<$<COMPILE_LANGUAGE:CUDA>: --expt-relaxed-constexpr -Xcudafe "--display_error_number --diag_suppress=20012"> )
+
 target_link_libraries(ex12_denoiseSeparateChannels
   # toneMap
   gdt

@@ -14,6 +14,8 @@
 // limitations under the License.                                           //
 // ======================================================================== //
 
+#include "Core/Cuda/CudaAssert.h"
+
 #include "SampleRenderer.h"
 
 using namespace osc;
@@ -21,12 +23,12 @@ using namespace osc;
 namespace osc
 {
 
-    inline __device__ float4 sqrt( float4 f ) { return make_float4( sqrtf( f.x ), sqrtf( f.y ), sqrtf( f.z ), sqrtf( f.w ) ); }
-    inline __device__ float  clampf( float f ) { return min( 1.f, max( 0.f, f ) ); }
-    inline __device__ float4 clamp( float4 f ) { return make_float4( clampf( f.x ), clampf( f.y ), clampf( f.z ), clampf( f.w ) ); }
+    inline SE_CUDA_DEVICE_FUNCTION_DEF float4 sqrt( float4 f ) { return make_float4( sqrtf( f.x ), sqrtf( f.y ), sqrtf( f.z ), sqrtf( f.w ) ); }
+    inline SE_CUDA_DEVICE_FUNCTION_DEF float  clampf( float f ) { return min( 1.f, max( 0.f, f ) ); }
+    inline SE_CUDA_DEVICE_FUNCTION_DEF float4 clamp( float4 f ) { return make_float4( clampf( f.x ), clampf( f.y ), clampf( f.z ), clampf( f.w ) ); }
 
     /*! runs a cuda kernel that performs gamma correction and float4-to-rgba conversion */
-    __global__ void computeFinalPixelColorsKernel( uint32_t *finalColorBuffer, float4 *denoisedBuffer, math::ivec2 size )
+    CUDA_KERNEL_DEFINITION void computeFinalPixelColorsKernel( uint32_t *finalColorBuffer, float4 *denoisedBuffer, math::ivec2 size )
     {
         int pixelX = threadIdx.x + blockIdx.x * blockDim.x;
         int pixelY = threadIdx.y + blockIdx.y * blockDim.y;

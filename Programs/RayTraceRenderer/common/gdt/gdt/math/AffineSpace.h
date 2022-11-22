@@ -215,17 +215,17 @@ namespace gdt
     }
 
     template <typename L>
-    inline __both__ const VectorT xfmPoint( const AffineSpaceT<L> &m, const VectorT &p )
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF const VectorT xfmPoint( const AffineSpaceT<L> &m, const VectorT &p )
     {
         return madd( VectorT( p.x ), m.l.vx, madd( VectorT( p.y ), m.l.vy, madd( VectorT( p.z ), m.l.vz, m.p ) ) );
     }
     template <typename L>
-    inline __both__ const VectorT xfmVector( const AffineSpaceT<L> &m, const VectorT &v )
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF const VectorT xfmVector( const AffineSpaceT<L> &m, const VectorT &v )
     {
         return xfmVector( m.l, v );
     }
     template <typename L>
-    inline __both__ const VectorT xfmNormal( const AffineSpaceT<L> &m, const VectorT &n )
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF const VectorT xfmNormal( const AffineSpaceT<L> &m, const VectorT &n )
     {
         return xfmNormal( m.l, n );
     }

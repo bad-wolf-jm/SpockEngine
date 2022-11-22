@@ -14,6 +14,8 @@
 // limitations under the License.                                           //
 // ======================================================================== //
 
+#include "Core/Cuda/CudaAssert.h"
+
 #include <cuda_runtime.h>
 #include <optix_device.h>
 
@@ -44,14 +46,14 @@ namespace osc
         math::vec3 pixelAlbedo;
     };
 
-    static __forceinline__ __device__ void *unpackPointer( uint32_t i0, uint32_t i1 )
+    static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF void *unpackPointer( uint32_t i0, uint32_t i1 )
     {
         const uint64_t uptr = static_cast<uint64_t>( i0 ) << 32 | i1;
         void          *ptr  = reinterpret_cast<void *>( uptr );
         return ptr;
     }
 
-    static __forceinline__ __device__ void packPointer( void *ptr, uint32_t &i0, uint32_t &i1 )
+    static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF void packPointer( void *ptr, uint32_t &i0, uint32_t &i1 )
     {
         const uint64_t uptr = reinterpret_cast<uint64_t>( ptr );
         i0                  = uptr >> 32;
@@ -59,7 +61,7 @@ namespace osc
     }
 
     template <typename T>
-    static __forceinline__ __device__ T *getPRD()
+    static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF T *getPRD()
     {
         const uint32_t u0 = optixGetPayload_0();
         const uint32_t u1 = optixGetPayload_1();
@@ -76,11 +78,11 @@ namespace osc
     // one group of them to set up the SBT)
     //------------------------------------------------------------------------------
 
-    extern "C" __global__ void __closesthit__shadow()
+    extern "C" CUDA_KERNEL_DEFINITION void __closesthit__shadow()
     { /* not going to be used ... */
     }
 
-    extern "C" __global__ void __closesthit__radiance()
+    extern "C" CUDA_KERNEL_DEFINITION void __closesthit__radiance()
     {
         const sTriangleMeshSBTData &sbtData = *(const sTriangleMeshSBTData *)optixGetSbtDataPointer();
         PRD                        &prd     = *getPRD<PRD>();
@@ -185,11 +187,11 @@ namespace osc
         prd.pixelColor  = pixelColor;
     }
 
-    extern "C" __global__ void __anyhit__radiance()
+    extern "C" CUDA_KERNEL_DEFINITION void __anyhit__radiance()
     { /*! for this simple example, this will remain empty */
     }
 
-    extern "C" __global__ void __anyhit__shadow()
+    extern "C" CUDA_KERNEL_DEFINITION void __anyhit__shadow()
     { /*! not going to be used */
     }
 
@@ -201,14 +203,14 @@ namespace osc
     // need to have _some_ dummy function to set up a valid SBT
     // ------------------------------------------------------------------------------
 
-    extern "C" __global__ void __miss__radiance()
+    extern "C" CUDA_KERNEL_DEFINITION void __miss__radiance()
     {
         PRD &prd = *getPRD<PRD>();
         // set to constant white as background color
         prd.pixelColor = math::vec3( 1.f );
     }
 
-    extern "C" __global__ void __miss__shadow()
+    extern "C" CUDA_KERNEL_DEFINITION void __miss__shadow()
     {
         // we didn't hit anything, so the light is visible
         math::vec3 &prd = *(math::vec3 *)getPRD<math::vec3>();
@@ -218,7 +220,7 @@ namespace osc
     //------------------------------------------------------------------------------
     // ray gen program - the actual rendering happens in here
     //------------------------------------------------------------------------------
-    extern "C" __global__ void __raygen__renderFrame()
+    extern "C" CUDA_KERNEL_DEFINITION void __raygen__renderFrame()
     {
         // compute a test pattern based on pixel ID
         const int   ix     = optixGetLaunchIndex().x;

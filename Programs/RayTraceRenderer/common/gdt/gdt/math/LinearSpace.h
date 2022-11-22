@@ -35,6 +35,7 @@
 #pragma once
 
 #include "Core/Math/Types.h"
+#include "Core/Cuda/CudaAssert.h"
 // #include "vec.h"
 #include "Quaternion.h"
 
@@ -60,25 +61,25 @@ namespace gdt {
     template<typename L1> inline LinearSpace2( const LinearSpace2<L1>& s ) : vx(s.vx), vy(s.vy) {}
 
     /*! matrix construction from column vectors */
-    inline __both__ LinearSpace2(const vector_t& vx, const vector_t& vy)
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace2(const vector_t& vx, const vector_t& vy)
       : vx(vx), vy(vy) {}
 
     /*! matrix construction from row mayor data */
-    inline __both__ LinearSpace2(const scalar_t& m00, const scalar_t& m01, 
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace2(const scalar_t& m00, const scalar_t& m01, 
                         const scalar_t& m10, const scalar_t& m11)
       : vx(m00,m10), vy(m01,m11) {}
 
     /*! compute the determinant of the matrix */
-    inline __both__ const scalar_t det() const { return vx.x*vy.y - vx.y*vy.x; }
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF const scalar_t det() const { return vx.x*vy.y - vx.y*vy.x; }
 
     /*! compute adjoint matrix */
-    inline __both__ const LinearSpace2 adjoint() const { return LinearSpace2(vy.y,-vy.x,-vx.y,vx.x); }
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF const LinearSpace2 adjoint() const { return LinearSpace2(vy.y,-vy.x,-vx.y,vx.x); }
 
     /*! compute inverse matrix */
-    inline __both__ const LinearSpace2 inverse() const { return adjoint()/det(); }
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF const LinearSpace2 inverse() const { return adjoint()/det(); }
 
     /*! compute transposed matrix */
-    inline __both__ const LinearSpace2 transposed() const { return LinearSpace2(vx.x,vx.y,vy.x,vy.y); }
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF const LinearSpace2 transposed() const { return LinearSpace2(vx.x,vx.y,vy.x,vy.y); }
 
     /*! returns first row of matrix */
     inline const vector_t row0() const { return vector_t(vx.x,vy.x); }
@@ -141,9 +142,9 @@ namespace gdt {
   // Unary Operators
   ////////////////////////////////////////////////////////////////////////////////
 
-  template<typename T> __both__ inline LinearSpace2<T> operator -( const LinearSpace2<T>& a ) { return LinearSpace2<T>(-a.vx,-a.vy); }
-  template<typename T> __both__ inline LinearSpace2<T> operator +( const LinearSpace2<T>& a ) { return LinearSpace2<T>(+a.vx,+a.vy); }
-  template<typename T> __both__ inline LinearSpace2<T> rcp       ( const LinearSpace2<T>& a ) { return a.inverse(); }
+  template<typename T> SE_CUDA_HOST_DEVICE_FUNCTION_DEF inline LinearSpace2<T> operator -( const LinearSpace2<T>& a ) { return LinearSpace2<T>(-a.vx,-a.vy); }
+  template<typename T> SE_CUDA_HOST_DEVICE_FUNCTION_DEF inline LinearSpace2<T> operator +( const LinearSpace2<T>& a ) { return LinearSpace2<T>(+a.vx,+a.vy); }
+  template<typename T> SE_CUDA_HOST_DEVICE_FUNCTION_DEF inline LinearSpace2<T> rcp       ( const LinearSpace2<T>& a ) { return a.inverse(); }
 
   ////////////////////////////////////////////////////////////////////////////////
   // Binary Operators
@@ -191,64 +192,64 @@ namespace gdt {
 
     /*! default matrix constructor */
     inline LinearSpace3           ( ) = default;
-    inline __both__ LinearSpace3           ( const LinearSpace3& other ) { vx = other.vx; vy = other.vy; vz = other.vz; }
-    inline __both__ LinearSpace3& operator=( const LinearSpace3& other ) { vx = other.vx; vy = other.vy; vz = other.vz; return *this; }
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3           ( const LinearSpace3& other ) { vx = other.vx; vy = other.vy; vz = other.vz; }
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3& operator=( const LinearSpace3& other ) { vx = other.vx; vy = other.vy; vz = other.vz; return *this; }
 
-    template<typename L1> inline __both__ LinearSpace3( const LinearSpace3<L1>& s ) : vx(s.vx), vy(s.vy), vz(s.vz) {}
+    template<typename L1> inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3( const LinearSpace3<L1>& s ) : vx(s.vx), vy(s.vy), vz(s.vz) {}
 
     /*! matrix construction from column vectors */
-    inline __both__ LinearSpace3(const vector_t& vx, const vector_t& vy, const vector_t& vz)
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3(const vector_t& vx, const vector_t& vy, const vector_t& vz)
       : vx(vx), vy(vy), vz(vz) {}
 
     /*! construction from quaternion */
-    inline __both__ LinearSpace3( const QuaternionT<scalar_t>& q )
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3( const QuaternionT<scalar_t>& q )
       : vx((q.r*q.r + q.i*q.i - q.j*q.j - q.k*q.k), 2.0f*(q.i*q.j + q.r*q.k), 2.0f*(q.i*q.k - q.r*q.j))
       , vy(2.0f*(q.i*q.j - q.r*q.k), (q.r*q.r - q.i*q.i + q.j*q.j - q.k*q.k), 2.0f*(q.j*q.k + q.r*q.i))
       , vz(2.0f*(q.i*q.k + q.r*q.j), 2.0f*(q.j*q.k - q.r*q.i), (q.r*q.r - q.i*q.i - q.j*q.j + q.k*q.k)) {}
 
     /*! matrix construction from row mayor data */
-    inline __both__ LinearSpace3(const scalar_t& m00, const scalar_t& m01, const scalar_t& m02,
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3(const scalar_t& m00, const scalar_t& m01, const scalar_t& m02,
                         const scalar_t& m10, const scalar_t& m11, const scalar_t& m12,
                         const scalar_t& m20, const scalar_t& m21, const scalar_t& m22)
       : vx(m00,m10,m20), vy(m01,m11,m21), vz(m02,m12,m22) {}
 
     /*! compute the determinant of the matrix */
-    inline __both__ const scalar_t det() const { return dot(vx,cross(vy,vz)); }
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF const scalar_t det() const { return dot(vx,cross(vy,vz)); }
 
     /*! compute adjoint matrix */
-    inline __both__ const LinearSpace3 adjoint() const { return LinearSpace3(cross(vy,vz),cross(vz,vx),cross(vx,vy)).transposed(); }
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF const LinearSpace3 adjoint() const { return LinearSpace3(cross(vy,vz),cross(vz,vx),cross(vx,vy)).transposed(); }
 
     /*! compute inverse matrix */
-    inline __both__ const LinearSpace3 inverse() const { return adjoint()/det(); }
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF const LinearSpace3 inverse() const { return adjoint()/det(); }
 
     /*! compute transposed matrix */
-    inline __both__ const LinearSpace3 transposed() const { return LinearSpace3(vx.x,vx.y,vx.z,vy.x,vy.y,vy.z,vz.x,vz.y,vz.z); }
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF const LinearSpace3 transposed() const { return LinearSpace3(vx.x,vx.y,vx.z,vy.x,vy.y,vy.z,vz.x,vz.y,vz.z); }
 
     /*! returns first row of matrix */
-    inline __both__ const vector_t row0() const { return vector_t(vx.x,vy.x,vz.x); }
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF const vector_t row0() const { return vector_t(vx.x,vy.x,vz.x); }
 
     /*! returns second row of matrix */
-    inline __both__ const vector_t row1() const { return vector_t(vx.y,vy.y,vz.y); }
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF const vector_t row1() const { return vector_t(vx.y,vy.y,vz.y); }
 
     /*! returns third row of matrix */
-    inline __both__ const vector_t row2() const { return vector_t(vx.z,vy.z,vz.z); }
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF const vector_t row2() const { return vector_t(vx.z,vy.z,vz.z); }
 
     ////////////////////////////////////////////////////////////////////////////////
     /// Constants
     ////////////////////////////////////////////////////////////////////////////////
 
-    inline __both__ LinearSpace3( ZeroTy ) : vx(zero), vy(zero), vz(zero) {}
-    inline __both__ LinearSpace3( OneTy ) : vx(one, zero, zero), vy(zero, one, zero), vz(zero, zero, one) {}
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3( ZeroTy ) : vx(zero), vy(zero), vz(zero) {}
+    inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3( OneTy ) : vx(one, zero, zero), vy(zero, one, zero), vz(zero, zero, one) {}
 
     /*! return matrix for scaling */
-    static inline __both__ LinearSpace3 scale(const vector_t& s) {
+    static inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3 scale(const vector_t& s) {
       return LinearSpace3(s.x,   0,   0,
                           0  , s.y,   0,
                           0  ,   0, s.z);
     }
 
     /*! return matrix for rotation around arbitrary axis */
-    static inline __both__ LinearSpace3 rotate(const vector_t& _u, const scalar_t& r) {
+    static inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3 rotate(const vector_t& _u, const scalar_t& r) {
       vector_t u = normalize(_u);
       scalar_t s = sin(r), c = cos(r);
       return LinearSpace3(u.x*u.x+(1-u.x*u.x)*c,  u.x*u.y*(1-c)-u.z*s,    u.x*u.z*(1-c)+u.y*s,
@@ -266,12 +267,12 @@ namespace gdt {
   // Unary Operators
   ////////////////////////////////////////////////////////////////////////////////
 
-  template<typename T> inline __both__ LinearSpace3<T> operator -( const LinearSpace3<T>& a ) { return LinearSpace3<T>(-a.vx,-a.vy,-a.vz); }
-  template<typename T> inline __both__ LinearSpace3<T> operator +( const LinearSpace3<T>& a ) { return LinearSpace3<T>(+a.vx,+a.vy,+a.vz); }
-  template<typename T> inline __both__ LinearSpace3<T> rcp       ( const LinearSpace3<T>& a ) { return a.inverse(); }
+  template<typename T> inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3<T> operator -( const LinearSpace3<T>& a ) { return LinearSpace3<T>(-a.vx,-a.vy,-a.vz); }
+  template<typename T> inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3<T> operator +( const LinearSpace3<T>& a ) { return LinearSpace3<T>(+a.vx,+a.vy,+a.vz); }
+  template<typename T> inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3<T> rcp       ( const LinearSpace3<T>& a ) { return a.inverse(); }
 
   /* constructs a coordinate frame form a normalized normal */
-  template<typename T> inline __both__ LinearSpace3<T> frame(const T& N) 
+  template<typename T> inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3<T> frame(const T& N) 
   {
     const T dx0 = cross(T(one,zero,zero),N);
     const T dx1 = cross(T(zero,one,zero),N);
@@ -281,7 +282,7 @@ namespace gdt {
   }
 
   /* constructs a coordinate frame from a normal and approximate x-direction */
-  template<typename T> inline __both__ LinearSpace3<T> frame(const T& N, const T& dxi)
+  template<typename T> inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3<T> frame(const T& N, const T& dxi)
   {
     if (abs(dot(dxi,N)) > 0.99f) return frame(N); // fallback in case N and dxi are very parallel
     const T dx = normalize(cross(dxi,N));
@@ -290,7 +291,7 @@ namespace gdt {
   }
   
   /* clamps linear space to range -1 to +1 */
-  template<typename T> inline __both__ LinearSpace3<T> clamp(const LinearSpace3<T>& space) {
+  template<typename T> inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3<T> clamp(const LinearSpace3<T>& space) {
     return LinearSpace3<T>(clamp(space.vx,T(-1.0f),T(1.0f)),
                            clamp(space.vy,T(-1.0f),T(1.0f)),
                            clamp(space.vz,T(-1.0f),T(1.0f)));
@@ -300,23 +301,23 @@ namespace gdt {
   // Binary Operators
   ////////////////////////////////////////////////////////////////////////////////
 
-  template<typename T> inline __both__ LinearSpace3<T> operator +( const LinearSpace3<T>& a, const LinearSpace3<T>& b ) { return LinearSpace3<T>(a.vx+b.vx,a.vy+b.vy,a.vz+b.vz); }
-  template<typename T> inline __both__ LinearSpace3<T> operator -( const LinearSpace3<T>& a, const LinearSpace3<T>& b ) { return LinearSpace3<T>(a.vx-b.vx,a.vy-b.vy,a.vz-b.vz); }
+  template<typename T> inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3<T> operator +( const LinearSpace3<T>& a, const LinearSpace3<T>& b ) { return LinearSpace3<T>(a.vx+b.vx,a.vy+b.vy,a.vz+b.vz); }
+  template<typename T> inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3<T> operator -( const LinearSpace3<T>& a, const LinearSpace3<T>& b ) { return LinearSpace3<T>(a.vx-b.vx,a.vy-b.vy,a.vz-b.vz); }
 
-  template<typename T> inline __both__ LinearSpace3<T> operator*(const typename T::scalar_t & a, const LinearSpace3<T>& b) { return LinearSpace3<T>(a*b.vx, a*b.vy, a*b.vz); }
-  template<typename T> inline __both__ T               operator*(const LinearSpace3<T>& a, const T              & b) { return b.x*a.vx + b.y*a.vy + b.z*a.vz; }
-  template<typename T> inline __both__ LinearSpace3<T> operator*(const LinearSpace3<T>& a, const LinearSpace3<T>& b) { return LinearSpace3<T>(a*b.vx, a*b.vy, a*b.vz); }
+  template<typename T> inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3<T> operator*(const typename T::scalar_t & a, const LinearSpace3<T>& b) { return LinearSpace3<T>(a*b.vx, a*b.vy, a*b.vz); }
+  template<typename T> inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF T               operator*(const LinearSpace3<T>& a, const T              & b) { return b.x*a.vx + b.y*a.vy + b.z*a.vz; }
+  template<typename T> inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF LinearSpace3<T> operator*(const LinearSpace3<T>& a, const LinearSpace3<T>& b) { return LinearSpace3<T>(a*b.vx, a*b.vy, a*b.vz); }
 
-  template<typename T> __both__ inline LinearSpace3<T> operator/(const LinearSpace3<T>& a, const typename T::scalar_t & b) { return LinearSpace3<T>(a.vx/b, a.vy/b, a.vz/b); }
+  template<typename T> SE_CUDA_HOST_DEVICE_FUNCTION_DEF inline LinearSpace3<T> operator/(const LinearSpace3<T>& a, const typename T::scalar_t & b) { return LinearSpace3<T>(a.vx/b, a.vy/b, a.vz/b); }
   
-  template<typename T> __both__ inline LinearSpace3<T> operator/(const LinearSpace3<T>& a, const LinearSpace3<T>& b) { return a * rcp(b); }
+  template<typename T> SE_CUDA_HOST_DEVICE_FUNCTION_DEF inline LinearSpace3<T> operator/(const LinearSpace3<T>& a, const LinearSpace3<T>& b) { return a * rcp(b); }
 
   template<typename T> inline LinearSpace3<T>& operator *=( LinearSpace3<T>& a, const LinearSpace3<T>& b ) { return a = a * b; }
   template<typename T> inline LinearSpace3<T>& operator /=( LinearSpace3<T>& a, const LinearSpace3<T>& b ) { return a = a / b; }
 
-  template<typename T> inline __both__ T xfmPoint (const LinearSpace3<T>& s, const T& a) { return madd(T(a.x),s.vx,madd(T(a.y),s.vy,T(a.z*s.vz))); }
-  template<typename T> inline __both__ T xfmVector(const LinearSpace3<T>& s, const T& a) { return madd(T(a.x),s.vx,madd(T(a.y),s.vy,T(a.z*s.vz))); }
-  template<typename T> inline __both__ T xfmNormal(const LinearSpace3<T>& s, const T& a) { return xfmVector(s.inverse().transposed(),a); }
+  template<typename T> inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF T xfmPoint (const LinearSpace3<T>& s, const T& a) { return madd(T(a.x),s.vx,madd(T(a.y),s.vy,T(a.z*s.vz))); }
+  template<typename T> inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF T xfmVector(const LinearSpace3<T>& s, const T& a) { return madd(T(a.x),s.vx,madd(T(a.y),s.vy,T(a.z*s.vz))); }
+  template<typename T> inline SE_CUDA_HOST_DEVICE_FUNCTION_DEF T xfmNormal(const LinearSpace3<T>& s, const T& a) { return xfmVector(s.inverse().transposed(),a); }
 
   ////////////////////////////////////////////////////////////////////////////////
   /// Comparison Operators
