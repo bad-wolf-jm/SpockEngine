@@ -17,7 +17,6 @@ namespace SE::Graphics
         lModuleCompileOptions.optLevel         = OPTIX_COMPILE_OPTIMIZATION_DEFAULT;
         lModuleCompileOptions.debugLevel       = OPTIX_COMPILE_DEBUG_LEVEL_NONE;
 
-        // pipelineCompileOptions = {};
         mPipelineCompileOptions.traversableGraphFlags            = OPTIX_TRAVERSABLE_GRAPH_FLAG_ALLOW_SINGLE_GAS;
         mPipelineCompileOptions.usesMotionBlur                   = false;
         mPipelineCompileOptions.numPayloadValues                 = 2;
