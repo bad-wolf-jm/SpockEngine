@@ -21,6 +21,8 @@
 #include "LaunchParams.h"
 #include "Model.h"
 
+#include "Core/Math/Types.h"
+
 /*! \namespace osc - Optix Siggraph Course */
 namespace osc
 {
