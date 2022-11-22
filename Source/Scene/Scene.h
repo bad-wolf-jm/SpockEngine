@@ -130,7 +130,7 @@ namespace SE::Core
 
         Ref<UIContext>                m_UI                    = nullptr;
         Ref<OptixDeviceContextObject> mRayTracingContext     = nullptr;
-        Ref<OptixTraversableObject>   m_AccelerationStructure = nullptr;
+        Ref<OptixScene>   m_AccelerationStructure = nullptr;
 
         Ref<Graphics::Texture2D> m_EmptyTexturePreview = nullptr;
         UI::ImageHandle          m_EmptyTexturePreviewImageHandle;

@@ -1430,7 +1430,7 @@ namespace SE::Core
     {
         SE_PROFILE_FUNCTION();
 
-        m_AccelerationStructure = SE::Core::New<OptixTraversableObject>( mRayTracingContext );
+        m_AccelerationStructure = SE::Core::New<OptixScene>( mRayTracingContext );
 
         ForEach<sRayTracingTargetComponent, sStaticMeshComponent>(
             [&]( auto a_Entity, auto &a_RTComponent, auto &a_MeshComponent )
@@ -1446,7 +1446,7 @@ namespace SE::Core
     void Scene::InitializeRayTracing()
     {
         mRayTracingContext      = SE::Core::New<OptixDeviceContextObject>();
-        m_AccelerationStructure = SE::Core::New<OptixTraversableObject>( mRayTracingContext );
+        m_AccelerationStructure = SE::Core::New<OptixScene>( mRayTracingContext );
     }
 
     void Scene::Render() {}

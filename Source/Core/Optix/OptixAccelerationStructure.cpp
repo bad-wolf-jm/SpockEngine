@@ -3,12 +3,12 @@
 namespace SE::Graphics
 {
 
-    OptixTraversableObject::OptixTraversableObject( Ref<OptixDeviceContextObject> a_RTContext )
+    OptixScene::OptixScene( Ref<OptixDeviceContextObject> a_RTContext )
         : mRayTracingContext{ a_RTContext }
     {
     }
 
-    void OptixTraversableObject::AddGeometry( GPUExternalMemory &aVertices, GPUExternalMemory &aIndices, uint32_t aVertexOffset,
+    void OptixScene::AddGeometry( GPUExternalMemory &aVertices, GPUExternalMemory &aIndices, uint32_t aVertexOffset,
                                               uint32_t aVertexCount, uint32_t aIndexOffset, uint32_t aIndexCount )
     {
         mVertexBuffers.push_back( (CUdeviceptr)( aVertices.DataAs<VertexData>() + aVertexOffset ) );
@@ -17,7 +17,7 @@ namespace SE::Graphics
         mIndexCounts.push_back( (int)( aIndexCount / 3 ) );
     }
 
-    void OptixTraversableObject::Build()
+    void OptixScene::Build()
     {
         for( uint32_t i = 0; i < mVertexBuffers.size(); i++ )
         {
@@ -83,6 +83,6 @@ namespace SE::Graphics
         lCompactedSizeBuffer.Dispose();
     }
 
-    void OptixTraversableObject::Reset() {}
+    void OptixScene::Reset() {}
 
 } // namespace SE::Graphics

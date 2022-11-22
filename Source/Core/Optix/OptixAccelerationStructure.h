@@ -21,14 +21,14 @@ namespace SE::Graphics
     using namespace SE::Cuda;
     using namespace SE::Core;
 
-    struct OptixTraversableObject
+    struct OptixScene
     {
         OptixTraversableHandle mOptixObject = 0;
 
-        OptixTraversableObject() = default;
-        OptixTraversableObject( Ref<OptixDeviceContextObject> aRayTracingContext );
+        OptixScene() = default;
+        OptixScene( Ref<OptixDeviceContextObject> aRayTracingContext );
 
-        ~OptixTraversableObject() { mAccelerationStructureBuffer.Dispose(); };
+        ~OptixScene() { mAccelerationStructureBuffer.Dispose(); };
 
         void AddGeometry( GPUExternalMemory &aVertices, GPUExternalMemory &aIndices, uint32_t aVertexOffset, uint32_t aVertexCount,
                           uint32_t aIndexOffset, uint32_t aIndexCount );
