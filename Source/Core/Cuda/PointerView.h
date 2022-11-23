@@ -323,6 +323,14 @@ namespace SE::Cuda::Internal
             if( mDevicePointer != 0 ) CUDA_ASSERT( cudaFree( (void *)mDevicePointer ) );
             mDevicePointer = 0;
         }
+
+        void Resize( uint32_t aNewSize )
+        {
+            Dispose();
+
+            mSize = aNewSize;
+            CUDA_ASSERT( cudaMalloc( (void **)&mDevicePointer, mSize ) );
+        }
     };
 
 } // namespace SE::Cuda::Internal

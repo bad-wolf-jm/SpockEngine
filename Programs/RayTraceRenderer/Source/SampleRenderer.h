@@ -17,7 +17,6 @@
 #pragma once
 
 // our own classes, partly shared between host and device
-#include "CUDABuffer.h"
 #include "LaunchParams.h"
 #include "Model.h"
 
@@ -135,11 +134,11 @@ namespace osc
         /*! vector of all our program(group)s, and the SBT built around
             them */
         std::vector<OptixProgramGroup> raygenPGs;
-        CUDABuffer                     raygenRecordsBuffer;
+        GPUMemory                      raygenRecordsBuffer;
         std::vector<OptixProgramGroup> missPGs;
-        CUDABuffer                     missRecordsBuffer;
+        GPUMemory                      missRecordsBuffer;
         std::vector<OptixProgramGroup> hitgroupPGs;
-        CUDABuffer                     hitgroupRecordsBuffer;
+        GPUMemory                      hitgroupRecordsBuffer;
         OptixShaderBindingTable        sbt = {};
 
         /*! @{ our launch parameters, on the host, and the buffer to store
@@ -148,27 +147,27 @@ namespace osc
         sLaunchParams launchParams;
 
       protected:
-        CUDABuffer launchParamsBuffer;
+        GPUMemory launchParamsBuffer;
         /*! @} */
 
         /*! the color buffer we use during _rendering_, which is a bit
             larger than the actual displayed frame buffer (to account for
             the border), and in float4 format (the denoiser requires
             floats) */
-        CUDABuffer fbColor;
-        CUDABuffer fbNormal;
-        CUDABuffer fbAlbedo;
+        GPUMemory fbColor;
+        GPUMemory fbNormal;
+        GPUMemory fbAlbedo;
 
         /*! output of the denoiser pass, in float4 */
-        CUDABuffer denoisedBuffer;
+        GPUMemory denoisedBuffer;
 
         /* the actual final color buffer used for display, in rgba8 */
-        CUDABuffer finalColorBuffer;
+        GPUMemory finalColorBuffer;
 
         OptixDenoiser denoiser = nullptr;
-        CUDABuffer    denoiserScratch;
-        CUDABuffer    denoiserState;
-        CUDABuffer    denoiserIntensity;
+        GPUMemory     denoiserScratch;
+        GPUMemory     denoiserState;
+        GPUMemory     denoiserIntensity;
 
         /*! the camera we are to render with. */
         Camera lastSetCamera;
@@ -182,7 +181,7 @@ namespace osc
         std::vector<GPUMemory> mTexCoords;
 
         //! buffer that keeps the (final, compacted) accel structure
-        CUDABuffer asBuffer;
+        GPUMemory asBuffer;
 
         /*! @{ one mTexture object and pixel array per used mTexture */
         std::vector<cudaArray_t>         textureArrays;

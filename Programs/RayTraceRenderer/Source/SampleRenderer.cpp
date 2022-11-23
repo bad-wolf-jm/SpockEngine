@@ -89,7 +89,7 @@ namespace osc
         std::cout << "#osc: building SBT ..." << std::endl;
         buildSBT();
 
-        launchParamsBuffer.alloc( sizeof( launchParams ) );
+        launchParamsBuffer = GPUMemory( sizeof( launchParams ) ); //.alloc( sizeof( launchParams ) );
         std::cout << "#osc: context, module, pipeline, etc, all set up ..." << std::endl;
 
         std::cout << GDT_TERMINAL_GREEN;
@@ -212,44 +212,44 @@ namespace osc
         // prepare compaction
         // ==================================================================
 
-        CUDABuffer compactedSizeBuffer;
-        compactedSizeBuffer.alloc( sizeof( uint64_t ) );
+        GPUMemory compactedSizeBuffer( sizeof( uint64_t ) );
+        // compactedSizeBuffer.alloc( sizeof( uint64_t ) );
 
         OptixAccelEmitDesc emitDesc;
         emitDesc.type   = OPTIX_PROPERTY_TYPE_COMPACTED_SIZE;
-        emitDesc.result = compactedSizeBuffer.d_pointer();
+        emitDesc.result = compactedSizeBuffer.RawDevicePtr();
 
         // ==================================================================
         // execute build (main stage)
         // ==================================================================
 
-        CUDABuffer tempBuffer;
-        tempBuffer.alloc( blasBufferSizes.tempSizeInBytes );
+        GPUMemory tempBuffer( blasBufferSizes.tempSizeInBytes );
+        // tempBuffer.alloc( blasBufferSizes.tempSizeInBytes );
 
-        CUDABuffer outputBuffer;
-        outputBuffer.alloc( blasBufferSizes.outputSizeInBytes );
+        GPUMemory outputBuffer( blasBufferSizes.outputSizeInBytes );
+        // outputBuffer.alloc( blasBufferSizes.outputSizeInBytes );
 
-        OPTIX_CHECK( optixAccelBuild( optixContext, 0, &accelOptions, triangleInput.data(), (int)numMeshes, tempBuffer.d_pointer(),
-                                      tempBuffer.sizeInBytes, outputBuffer.d_pointer(), outputBuffer.sizeInBytes, &asHandle, &emitDesc,
-                                      1 ) );
+        OPTIX_CHECK( optixAccelBuild( optixContext, 0, &accelOptions, triangleInput.data(), (int)numMeshes, tempBuffer.RawDevicePtr(),
+                                      tempBuffer.SizeAs<uint8_t>(), outputBuffer.RawDevicePtr(), outputBuffer.SizeAs<uint8_t>(),
+                                      &asHandle, &emitDesc, 1 ) );
         CUDA_SYNC_CHECK();
 
         // ==================================================================
         // perform compaction
         // ==================================================================
-        uint64_t compactedSize;
-        compactedSizeBuffer.download( &compactedSize, 1 );
+        uint64_t compactedSize = compactedSizeBuffer.Fetch<uint64_t>()[0];
+        // compactedSizeBuffer.download( &compactedSize, 1 );
 
-        asBuffer.alloc( compactedSize );
-        OPTIX_CHECK( optixAccelCompact( optixContext, 0, asHandle, asBuffer.d_pointer(), asBuffer.sizeInBytes, &asHandle ) );
+        asBuffer = GPUMemory( compactedSize ); //.alloc( compactedSize );
+        OPTIX_CHECK( optixAccelCompact( optixContext, 0, asHandle, asBuffer.RawDevicePtr(), asBuffer.SizeAs<uint8_t>(), &asHandle ) );
         CUDA_SYNC_CHECK();
 
         // ==================================================================
         // aaaaaand .... clean up
         // ==================================================================
-        outputBuffer.free(); // << the UNcompacted, temporary output buffer
-        tempBuffer.free();
-        compactedSizeBuffer.free();
+        outputBuffer.Dispose(); // << the UNcompacted, temporary output buffer
+        tempBuffer.Dispose();
+        compactedSizeBuffer.Dispose();
 
         return asHandle;
     }
@@ -449,8 +449,8 @@ namespace osc
             rec.data = nullptr; /* for now ... */
             raygenRecords.push_back( rec );
         }
-        raygenRecordsBuffer.alloc_and_upload( raygenRecords );
-        sbt.raygenRecord = raygenRecordsBuffer.d_pointer();
+        raygenRecordsBuffer = GPUMemory::Create( raygenRecords );
+        sbt.raygenRecord    = raygenRecordsBuffer.RawDevicePtr();
 
         // ------------------------------------------------------------------
         // build miss records
@@ -463,8 +463,8 @@ namespace osc
             rec.data = nullptr; /* for now ... */
             missRecords.push_back( rec );
         }
-        missRecordsBuffer.alloc_and_upload( missRecords );
-        sbt.missRecordBase          = missRecordsBuffer.d_pointer();
+        missRecordsBuffer           = GPUMemory::Create( missRecords );
+        sbt.missRecordBase          = missRecordsBuffer.RawDevicePtr();
         sbt.missRecordStrideInBytes = sizeof( MissRecord );
         sbt.missRecordCount         = (int)missRecords.size();
 
@@ -498,8 +498,8 @@ namespace osc
                 hitgroupRecords.push_back( rec );
             }
         }
-        hitgroupRecordsBuffer.alloc_and_upload( hitgroupRecords );
-        sbt.hitgroupRecordBase          = hitgroupRecordsBuffer.d_pointer();
+        hitgroupRecordsBuffer           = GPUMemory::Create( hitgroupRecords );
+        sbt.hitgroupRecordBase          = hitgroupRecordsBuffer.RawDevicePtr();
         sbt.hitgroupRecordStrideInBytes = sizeof( HitgroupRecord );
         sbt.hitgroupRecordCount         = (int)hitgroupRecords.size();
     }
@@ -512,23 +512,26 @@ namespace osc
         if( launchParams.mFrame.mSize.x == 0 ) return;
 
         if( !accumulate ) launchParams.mFrame.mFrameID = 0;
-        launchParamsBuffer.upload( &launchParams, 1 );
+        launchParamsBuffer.Upload( launchParams );
         launchParams.mFrame.mFrameID++;
 
         launchParams.mNumLightSamples = 1;
         launchParams.mNumPixelSamples = 1;
 
-        OPTIX_CHECK( optixLaunch( pipeline, stream, launchParamsBuffer.d_pointer(), launchParamsBuffer.sizeInBytes, &sbt,
+        OPTIX_CHECK( optixLaunch( pipeline, stream, launchParamsBuffer.RawDevicePtr(), launchParamsBuffer.SizeAs<uint8_t>(), &sbt,
                                   launchParams.mFrame.mSize.x, launchParams.mFrame.mSize.y, 1 ) );
 
-        denoiserIntensity.resize( sizeof( float ) );
+        denoiserIntensity.Resize( sizeof( float ) );
 
         OptixDenoiserParams denoiserParams;
         denoiserParams.denoiseAlpha = 1; // OPTIX_DENOISER_ALPHA_MODE_ALPHA_AS_AOV;
 #if OPTIX_VERSION >= 70300
-        if( denoiserIntensity.sizeInBytes != sizeof( float ) ) denoiserIntensity.alloc( sizeof( float ) );
+        if( denoiserIntensity.SizeAs<uint8_t>() != sizeof( float ) )
+        {
+            denoiserIntensity.Resize( sizeof( float ) );
+        };
 #endif
-        denoiserParams.hdrIntensity = denoiserIntensity.d_pointer();
+        denoiserParams.hdrIntensity = denoiserIntensity.RawDevicePtr();
         if( accumulate )
             denoiserParams.blendFactor = 1.f / ( launchParams.mFrame.mFrameID );
         else
@@ -536,7 +539,7 @@ namespace osc
 
         // -------------------------------------------------------
         OptixImage2D inputLayer[3];
-        inputLayer[0].data = fbColor.d_pointer();
+        inputLayer[0].data = fbColor.RawDevicePtr();
         /// Width of the image (in pixels)
         inputLayer[0].width = launchParams.mFrame.mSize.x;
         /// Height of the image (in pixels)
@@ -551,7 +554,7 @@ namespace osc
         inputLayer[0].format = OPTIX_PIXEL_FORMAT_FLOAT4;
 
         // ..................................................................
-        inputLayer[2].data = fbNormal.d_pointer();
+        inputLayer[2].data = fbNormal.RawDevicePtr();
         /// Width of the image (in pixels)
         inputLayer[2].width = launchParams.mFrame.mSize.x;
         /// Height of the image (in pixels)
@@ -566,7 +569,7 @@ namespace osc
         inputLayer[2].format = OPTIX_PIXEL_FORMAT_FLOAT4;
 
         // ..................................................................
-        inputLayer[1].data = fbAlbedo.d_pointer();
+        inputLayer[1].data = fbAlbedo.RawDevicePtr();
         /// Width of the image (in pixels)
         inputLayer[1].width = launchParams.mFrame.mSize.x;
         /// Height of the image (in pixels)
@@ -582,7 +585,7 @@ namespace osc
 
         // -------------------------------------------------------
         OptixImage2D outputLayer;
-        outputLayer.data = denoisedBuffer.d_pointer();
+        outputLayer.data = denoisedBuffer.RawDevicePtr();
         /// Width of the image (in pixels)
         outputLayer.width = launchParams.mFrame.mSize.x;
         /// Height of the image (in pixels)
@@ -600,8 +603,9 @@ namespace osc
         if( denoiserOn )
         {
             OPTIX_CHECK( optixDenoiserComputeIntensity( denoiser,
-                                                        /*stream*/ 0, &inputLayer[0], (CUdeviceptr)denoiserIntensity.d_pointer(),
-                                                        (CUdeviceptr)denoiserScratch.d_pointer(), denoiserScratch.size() ) );
+                                                        /*stream*/ 0, &inputLayer[0], (CUdeviceptr)denoiserIntensity.RawDevicePtr(),
+                                                        (CUdeviceptr)denoiserScratch.RawDevicePtr(),
+                                                        denoiserScratch.SizeAs<uint8_t>() ) );
 
 #if OPTIX_VERSION >= 70300
             OptixDenoiserGuideLayer denoiserGuideLayer = {};
@@ -613,16 +617,17 @@ namespace osc
             denoiserLayer.output             = outputLayer;
 
             OPTIX_CHECK( optixDenoiserInvoke( denoiser,
-                                              /*stream*/ 0, &denoiserParams, denoiserState.d_pointer(), denoiserState.size(),
-                                              &denoiserGuideLayer, &denoiserLayer, 1,
+                                              /*stream*/ 0, &denoiserParams, denoiserState.RawDevicePtr(),
+                                              denoiserState.SizeAs<uint8_t>(), &denoiserGuideLayer, &denoiserLayer, 1,
                                               /*inputOffsetX*/ 0,
-                                              /*inputOffsetY*/ 0, denoiserScratch.d_pointer(), denoiserScratch.size() ) );
+                                              /*inputOffsetY*/ 0, denoiserScratch.RawDevicePtr(),
+                                              denoiserScratch.SizeAs<uint8_t>() ) );
 #else
-            OPTIX_CHECK(
-                optixDenoiserInvoke( denoiser,
-                                     /*stream*/ 0, &denoiserParams, denoiserState.d_pointer(), denoiserState.size(), &inputLayer[0], 2,
-                                     /*inputOffsetX*/ 0,
-                                     /*inputOffsetY*/ 0, &outputLayer, denoiserScratch.d_pointer(), denoiserScratch.size() ) );
+            OPTIX_CHECK( optixDenoiserInvoke(
+                denoiser,
+                /*stream*/ 0, &denoiserParams, denoiserState.RawDevicePtr(), denoiserState.SizeAs<uint8_t>(), &inputLayer[0], 2,
+                /*inputOffsetX*/ 0,
+                /*inputOffsetY*/ 0, &outputLayer, denoiserScratch.RawDevicePtr(), denoiserScratch.SizeAs<uint8_t>() ) );
 #endif
         }
         else
@@ -684,40 +689,44 @@ namespace osc
         OPTIX_CHECK( optixDenoiserComputeMemoryResources( denoiser, newSize.x, newSize.y, &denoiserReturnSizes ) );
 
 #if OPTIX_VERSION < 70100
-        denoiserScratch.resize( denoiserReturnSizes.recommendedScratchSizeInBytes );
+        denoiserScratch.Resize( denoiserReturnSizes.recommendedScratchSizeInBytes );
 #else
-        denoiserScratch.resize(
+        denoiserScratch.Resize(
             std::max( denoiserReturnSizes.withOverlapScratchSizeInBytes, denoiserReturnSizes.withoutOverlapScratchSizeInBytes ) );
 #endif
-        denoiserState.resize( denoiserReturnSizes.stateSizeInBytes );
+        denoiserState.Resize( denoiserReturnSizes.stateSizeInBytes );
 
         // ------------------------------------------------------------------
         // resize our cuda frame buffer
-        denoisedBuffer.resize( newSize.x * newSize.y * sizeof( float4 ) );
-        fbColor.resize( newSize.x * newSize.y * sizeof( float4 ) );
-        fbNormal.resize( newSize.x * newSize.y * sizeof( float4 ) );
-        fbAlbedo.resize( newSize.x * newSize.y * sizeof( float4 ) );
-        finalColorBuffer.resize( newSize.x * newSize.y * sizeof( uint32_t ) );
+
+        denoisedBuffer.Resize( newSize.x * newSize.y * sizeof( float4 ) );
+        fbColor.Resize( newSize.x * newSize.y * sizeof( float4 ) );
+        fbNormal.Resize( newSize.x * newSize.y * sizeof( float4 ) );
+        fbAlbedo.Resize( newSize.x * newSize.y * sizeof( float4 ) );
+        finalColorBuffer.Resize( newSize.x * newSize.y * sizeof( uint32_t ) );
 
         // update the launch parameters that we'll pass to the optix
         // launch:
         launchParams.mFrame.mSize         = newSize;
-        launchParams.mFrame.mColorBuffer  = (math::vec4 *)fbColor.d_pointer();
-        launchParams.mFrame.mNormalBuffer = (math::vec4 *)fbNormal.d_pointer();
-        launchParams.mFrame.mAlbedoBuffer = (math::vec4 *)fbAlbedo.d_pointer();
+        launchParams.mFrame.mColorBuffer  = (math::vec4 *)fbColor.RawDevicePtr();
+        launchParams.mFrame.mNormalBuffer = (math::vec4 *)fbNormal.RawDevicePtr();
+        launchParams.mFrame.mAlbedoBuffer = (math::vec4 *)fbAlbedo.RawDevicePtr();
 
         // and re-set the camera, since aspect may have changed
         setCamera( lastSetCamera );
 
         // ------------------------------------------------------------------
-        OPTIX_CHECK( optixDenoiserSetup( denoiser, 0, newSize.x, newSize.y, denoiserState.d_pointer(), denoiserState.size(),
-                                         denoiserScratch.d_pointer(), denoiserScratch.size() ) );
+        OPTIX_CHECK( optixDenoiserSetup( denoiser, 0, newSize.x, newSize.y, denoiserState.RawDevicePtr(),
+                                         denoiserState.SizeAs<uint8_t>(), denoiserScratch.RawDevicePtr(),
+                                         denoiserScratch.SizeAs<uint8_t>() ) );
     }
 
     /*! download the rendered color buffer */
     void SampleRenderer::downloadPixels( uint32_t h_pixels[] )
     {
-        finalColorBuffer.download( h_pixels, launchParams.mFrame.mSize.x * launchParams.mFrame.mSize.y );
+        auto lColors = finalColorBuffer.Fetch<uint32_t>();
+        for( uint32_t i = 0; i < lColors.size(); i++ ) h_pixels[i] = lColors[i];
+        // finalColorBuffer.download( h_pixels, launchParams.mFrame.mSize.x * launchParams.mFrame.mSize.y );
     }
 
 } // namespace osc
