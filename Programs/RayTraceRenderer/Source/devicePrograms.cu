@@ -144,7 +144,7 @@ namespace osc
         const math::vec3 surfPos =
             ( 1.f - u - v ) * sbtData.mVertex[index.x] + u * sbtData.mVertex[index.y] + v * sbtData.mVertex[index.z];
 
-        const int numLightSamples = NUM_LIGHT_SAMPLES;
+        const int numLightSamples = optixLaunchParams.mNumLightSamples;
         for( int lightSampleID = 0; lightSampleID < numLightSamples; lightSampleID++ )
         {
             // produce random light sample

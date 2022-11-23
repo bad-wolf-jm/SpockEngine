@@ -48,11 +48,11 @@ namespace osc
     struct sLaunchParams
     {
         int mNumPixelSamples = 8;
+        int mNumLightSamples = 8;
         struct
         {
             int         mFrameID = 0;
             math::vec4 *mColorBuffer;
-            uint32_t   *mColorBufferU32;
             math::vec4 *mNormalBuffer;
             math::vec4 *mAlbedoBuffer;
 
