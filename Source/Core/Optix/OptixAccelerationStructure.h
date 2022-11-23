@@ -8,8 +8,10 @@
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 
+#include "Core/Cuda/CudaBuffer.h"
 #include "Core/Cuda/ExternalMemory.h"
 #include "Scene/VertexData.h"
+
 
 #include "Optix7.h"
 #include "OptixContext.h"
@@ -30,6 +32,17 @@ namespace SE::Graphics
 
         ~OptixScene() { mAccelerationStructureBuffer.Dispose(); };
 
+        template <typename _VertexStructType>
+        void AddGeometry( GPUMemory &aVertices, GPUMemory &aIndices, uint32_t aVertexOffset, uint32_t aVertexCount,
+                          uint32_t aIndexOffset, uint32_t aIndexCount )
+        {
+            mVertexBuffers.push_back( (CUdeviceptr)( aVertices.DataAs<_VertexStructType>() + aVertexOffset ) );
+            mVertexCounts.push_back( (int)aVertexCount );
+            mVertexStrides.push_back( sizeof(_VertexStructType) );
+            mIndexBuffers.push_back( (CUdeviceptr)( aIndices.DataAs<uint32_t>() + aIndexOffset ) );
+            mIndexCounts.push_back( (int)( aIndexCount / 3 ) );
+        }
+
         void AddGeometry( GPUExternalMemory &aVertices, GPUExternalMemory &aIndices, uint32_t aVertexOffset, uint32_t aVertexCount,
                           uint32_t aIndexOffset, uint32_t aIndexCount );
 
@@ -47,6 +60,7 @@ namespace SE::Graphics
 
         std::vector<CUdeviceptr> mVertexBuffers = {};
         std::vector<int32_t>     mVertexCounts  = {};
+        std::vector<int32_t>     mVertexStrides = {};
         std::vector<CUdeviceptr> mIndexBuffers  = {};
         std::vector<int32_t>     mIndexCounts   = {};
 

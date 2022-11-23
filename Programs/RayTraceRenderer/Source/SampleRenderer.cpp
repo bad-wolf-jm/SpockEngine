@@ -134,19 +134,13 @@ namespace osc
 
     OptixTraversableHandle SampleRenderer::buildAccel()
     {
+        mScene = New<OptixScene>( mOptixContext );
+
         const int numMeshes = (int)model->mMeshes.size();
         mVertices.resize( numMeshes );
         mIndices.resize( numMeshes );
         mTexCoords.resize( numMeshes );
         mNormals.resize( numMeshes );
-
-        OptixTraversableHandle asHandle{ 0 };
-
-        // ==================================================================
-        // triangle inputs
-        // ==================================================================
-        std::vector<OptixBuildInput> triangleInput( numMeshes );
-        std::vector<uint32_t>        triangleInputFlags( numMeshes );
 
         for( int meshID = 0; meshID < numMeshes; meshID++ )
         {
@@ -158,80 +152,13 @@ namespace osc
             if( !mesh.mNormal.empty() ) mNormals[meshID] = GPUMemory::Create<math::vec3>( mesh.mNormal );
             if( !mesh.mTexCoord.empty() ) mTexCoords[meshID] = GPUMemory::Create<math::vec2>( mesh.mTexCoord );
 
-            triangleInput[meshID]      = {};
-            triangleInput[meshID].type = OPTIX_BUILD_INPUT_TYPE_TRIANGLES;
-
-            triangleInput[meshID].triangleArray.vertexFormat        = OPTIX_VERTEX_FORMAT_FLOAT3;
-            triangleInput[meshID].triangleArray.vertexStrideInBytes = sizeof( math::vec3 );
-            triangleInput[meshID].triangleArray.numVertices         = (int)mesh.mVertex.size();
-            triangleInput[meshID].triangleArray.vertexBuffers       = mVertices[meshID].RawDevicePtrP(); //&d_vertices[meshID];
-
-            triangleInput[meshID].triangleArray.indexFormat        = OPTIX_INDICES_FORMAT_UNSIGNED_INT3;
-            triangleInput[meshID].triangleArray.indexStrideInBytes = sizeof( math::ivec3 );
-            triangleInput[meshID].triangleArray.numIndexTriplets   = (int)mesh.mIndex.size();
-            triangleInput[meshID].triangleArray.indexBuffer        = mIndices[meshID].RawDevicePtr(); //  d_indices[meshID];
-
-            triangleInputFlags[meshID] = 0;
-
-            // in this example we have one SBT entry, and no per-primitive
-            // materials:
-            triangleInput[meshID].triangleArray.flags                       = &triangleInputFlags[meshID];
-            triangleInput[meshID].triangleArray.numSbtRecords               = 1;
-            triangleInput[meshID].triangleArray.sbtIndexOffsetBuffer        = 0;
-            triangleInput[meshID].triangleArray.sbtIndexOffsetSizeInBytes   = 0;
-            triangleInput[meshID].triangleArray.sbtIndexOffsetStrideInBytes = 0;
+            mScene->AddGeometry<math::vec3>( mVertices[meshID], mIndices[meshID], 0, (int)mesh.mVertex.size(), 0,
+                                             (int)mesh.mIndex.size() * 3 );
         }
-        // ==================================================================
-        // BLAS setup
-        // ==================================================================
 
-        OptixAccelBuildOptions accelOptions = {};
-        accelOptions.buildFlags             = OPTIX_BUILD_FLAG_NONE | OPTIX_BUILD_FLAG_ALLOW_COMPACTION;
-        accelOptions.motionOptions.numKeys  = 1;
-        accelOptions.operation              = OPTIX_BUILD_OPERATION_BUILD;
+        mScene->Build();
 
-        OptixAccelBufferSizes blasBufferSizes;
-        OPTIX_CHECK( optixAccelComputeMemoryUsage( mOptixContext->mOptixObject, &accelOptions, triangleInput.data(), (int)numMeshes,
-                                                   &blasBufferSizes ) );
-
-        // ==================================================================
-        // prepare compaction
-        // ==================================================================
-
-        GPUMemory compactedSizeBuffer( sizeof( uint64_t ) );
-        // compactedSizeBuffer.alloc( sizeof( uint64_t ) );
-
-        OptixAccelEmitDesc emitDesc;
-        emitDesc.type   = OPTIX_PROPERTY_TYPE_COMPACTED_SIZE;
-        emitDesc.result = compactedSizeBuffer.RawDevicePtr();
-
-        // ==================================================================
-        // execute build (main stage)
-        // ==================================================================
-
-        GPUMemory tempBuffer( blasBufferSizes.tempSizeInBytes );
-        GPUMemory outputBuffer( blasBufferSizes.outputSizeInBytes );
-
-        OPTIX_CHECK( optixAccelBuild( mOptixContext->mOptixObject, 0, &accelOptions, triangleInput.data(), (int)numMeshes,
-                                      tempBuffer.RawDevicePtr(), tempBuffer.SizeAs<uint8_t>(), outputBuffer.RawDevicePtr(),
-                                      outputBuffer.SizeAs<uint8_t>(), &asHandle, &emitDesc, 1 ) );
-        CUDA_SYNC_CHECK();
-
-        // ==================================================================
-        // perform compaction
-        // ==================================================================
-        uint64_t compactedSize = compactedSizeBuffer.Fetch<uint64_t>()[0];
-
-        asBuffer = GPUMemory( compactedSize ); //.alloc( compactedSize );
-        OPTIX_CHECK( optixAccelCompact( mOptixContext->mOptixObject, 0, asHandle, asBuffer.RawDevicePtr(), asBuffer.SizeAs<uint8_t>(),
-                                        &asHandle ) );
-        CUDA_SYNC_CHECK();
-
-        outputBuffer.Dispose(); // << the UNcompacted, temporary output buffer
-        tempBuffer.Dispose();
-        compactedSizeBuffer.Dispose();
-
-        return asHandle;
+        return mScene->mOptixObject;
     }
 
     static void context_log_cb( unsigned int level, const char *tag, const char *message, void * )
@@ -244,25 +171,16 @@ namespace osc
     {
         mShaderBindingTable = New<OptixShaderBindingTableObject>();
 
-        // ------------------------------------------------------------------
-        // build raygen records
-        // ------------------------------------------------------------------
         std::vector<RaygenRecord> raygenRecords =
             mShaderBindingTable->NewRecordType<RaygenRecord>( mOptixModule->mRayGenProgramGroups );
         raygenRecordsBuffer = GPUMemory::Create( raygenRecords );
         mShaderBindingTable->BindRayGenRecordTable( raygenRecordsBuffer.RawDevicePtr() );
 
-        // ------------------------------------------------------------------
-        // build miss records
-        // ------------------------------------------------------------------
         std::vector<MissRecord> missRecords = mShaderBindingTable->NewRecordType<MissRecord>( mOptixModule->mMissProgramGroups );
         missRecordsBuffer                   = GPUMemory::Create( missRecords );
         mShaderBindingTable->BindMissRecordTable<MissRecord>( missRecordsBuffer.RawDevicePtr(),
                                                               missRecordsBuffer.SizeAs<MissRecord>() );
 
-        // ------------------------------------------------------------------
-        // build hitgroup records
-        // ------------------------------------------------------------------
         int numObjects = (int)model->mMeshes.size();
 
         std::vector<HitgroupRecord> hitgroupRecords;

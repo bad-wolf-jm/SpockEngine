@@ -9,6 +9,7 @@
 #include "Core/Cuda/CudaBuffer.h"
 #include "Core/Math/Types.h"
 
+#include "Core/Optix/OptixAccelerationStructure.h"
 #include "Core/Optix/OptixContext.h"
 #include "Core/Optix/OptixModule.h"
 #include "Core/Optix/OptixShaderBindingTable.h"
@@ -118,9 +119,6 @@ namespace osc
         std::vector<GPUMemory> mNormals;
         std::vector<GPUMemory> mTexCoords;
 
-        //! buffer that keeps the (final, compacted) accel structure
-        GPUMemory asBuffer;
-
         /*! @{ one mTexture object and pixel array per used mTexture */
         std::vector<cudaArray_t>         textureArrays;
         std::vector<cudaTextureObject_t> textureObjects;
@@ -130,6 +128,7 @@ namespace osc
         Ref<OptixModuleObject> mOptixModule = nullptr;
         Ref<OptixPipelineObject> mOptixPipeline = nullptr;
         Ref<OptixShaderBindingTableObject> mShaderBindingTable = nullptr;
+        Ref<OptixScene> mScene = nullptr;
 
     };
 

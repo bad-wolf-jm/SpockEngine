@@ -13,6 +13,7 @@ namespace SE::Graphics
     {
         mVertexBuffers.push_back( (CUdeviceptr)( aVertices.DataAs<VertexData>() + aVertexOffset ) );
         mVertexCounts.push_back( (int)aVertexCount );
+        mVertexStrides.push_back( sizeof(VertexData) );
         mIndexBuffers.push_back( (CUdeviceptr)( aIndices.DataAs<uint32_t>() + aIndexOffset ) );
         mIndexCounts.push_back( (int)( aIndexCount / 3 ) );
     }
@@ -23,12 +24,12 @@ namespace SE::Graphics
         {
             mTriangleInput.emplace_back( OptixBuildInput{} );
             mInputFlags.push_back( 0 );
-            auto &lBuildinput = mTriangleInput[mTriangleInput.size() - 1];
+            auto &lBuildinput = mTriangleInput.back(); //[mTriangleInput.size() - 1];
 
             lBuildinput.type = OPTIX_BUILD_INPUT_TYPE_TRIANGLES;
 
             lBuildinput.triangleArray.vertexFormat        = OPTIX_VERTEX_FORMAT_FLOAT3;
-            lBuildinput.triangleArray.vertexStrideInBytes = sizeof( VertexData );
+            lBuildinput.triangleArray.vertexStrideInBytes = mVertexStrides[i];
             lBuildinput.triangleArray.numVertices         = mVertexCounts[i];
             lBuildinput.triangleArray.vertexBuffers       = &( mVertexBuffers.data()[i] );
             lBuildinput.triangleArray.preTransform        = 0;
