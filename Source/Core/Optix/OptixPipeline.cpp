@@ -16,8 +16,15 @@ namespace SE::Graphics
         std::vector<OptixProgramGroup> lProgramGroups;
         for( auto pg : aProgramGroups ) lProgramGroups.push_back( pg->mOptixObject );
 
+        char   lLogString[2048];
+        size_t lLogStringSize = sizeof( lLogString );
+
         OPTIX_CHECK( optixPipelineCreate( mRayTracingContext->mOptixObject, &aPipelineCompileOptions, &aPipelineLinkOptions,
-                                          lProgramGroups.data(), (int)lProgramGroups.size(), NULL, NULL, &mOptixObject ) );
+                                          lProgramGroups.data(), (int)lProgramGroups.size(), lLogString, &lLogStringSize,
+                                          &mOptixObject ) );
+
+        if( lLogStringSize > 1 ) SE::Logging::Info( "{}", lLogString );
+        
         OPTIX_CHECK( optixPipelineSetStackSize( mOptixObject, 2 * 1024, 2 * 1024, 2 * 1024, 1 ) );
     }
 

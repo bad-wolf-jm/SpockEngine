@@ -28,8 +28,11 @@ namespace SE::Graphics
 
         const std::string ptxCode = aPtxCode;
 
+        char   lLogString[2048];
+        size_t lLogStringSize = sizeof( lLogString );
         OPTIX_CHECK( optixModuleCreateFromPTX( mRayTracingContext->mOptixObject, &lModuleCompileOptions, &mPipelineCompileOptions,
-                                               ptxCode.c_str(), ptxCode.size(), NULL, NULL, &mOptixObject ) );
+                                               ptxCode.c_str(), ptxCode.size(), lLogString, &lLogStringSize, &mOptixObject ) );
+        if( lLogStringSize > 1 ) SE::Logging::Info( "{}", lLogString );
     }
 
     OptixModuleObject::~OptixModuleObject() { OPTIX_CHECK( optixModuleDestroy( mOptixObject ) ); }
