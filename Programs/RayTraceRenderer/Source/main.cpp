@@ -123,7 +123,7 @@ namespace osc
             }
         }
 
-        math::ivec2                 fbSize;
+        math::ivec2           fbSize;
         GLuint                fbTexture{ 0 };
         SampleRenderer        sample;
         std::vector<uint32_t> pixels;

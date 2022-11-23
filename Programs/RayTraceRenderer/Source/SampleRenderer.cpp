@@ -25,6 +25,7 @@
 /*! \namespace osc - Optix Siggraph Course */
 namespace osc
 {
+    using namespace SE::Cuda;
 
     extern "C" char embedded_ptx_code[];
 
@@ -148,10 +149,10 @@ namespace osc
     OptixTraversableHandle SampleRenderer::buildAccel()
     {
         const int numMeshes = (int)model->mMeshes.size();
-        vertexBuffer.resize( numMeshes );
-        mNormalBuffer.resize( numMeshes );
-        texcoordBuffer.resize( numMeshes );
-        indexBuffer.resize( numMeshes );
+        mVertices.resize( numMeshes );
+        mIndices.resize( numMeshes );
+        mTexCoords.resize( numMeshes );
+        mNormals.resize( numMeshes );
 
         OptixTraversableHandle asHandle{ 0 };
 
@@ -159,36 +160,30 @@ namespace osc
         // triangle inputs
         // ==================================================================
         std::vector<OptixBuildInput> triangleInput( numMeshes );
-        std::vector<CUdeviceptr>     d_vertices( numMeshes );
-        std::vector<CUdeviceptr>     d_indices( numMeshes );
         std::vector<uint32_t>        triangleInputFlags( numMeshes );
 
         for( int meshID = 0; meshID < numMeshes; meshID++ )
         {
             // upload the model to the device: the builder
             TriangleMesh &mesh = *model->mMeshes[meshID];
-            vertexBuffer[meshID].alloc_and_upload( mesh.mVertex );
-            indexBuffer[meshID].alloc_and_upload( mesh.mIndex );
-            if( !mesh.mNormal.empty() ) mNormalBuffer[meshID].alloc_and_upload( mesh.mNormal );
-            if( !mesh.mTexCoord.empty() ) texcoordBuffer[meshID].alloc_and_upload( mesh.mTexCoord );
+            mVertices[meshID]  = GPUMemory::Create<math::vec3>( mesh.mVertex );
+            mIndices[meshID]   = GPUMemory::Create<math::ivec3>( mesh.mIndex );
+
+            if( !mesh.mNormal.empty() ) mNormals[meshID] = GPUMemory::Create<math::vec3>( mesh.mNormal );
+            if( !mesh.mTexCoord.empty() ) mTexCoords[meshID] = GPUMemory::Create<math::vec2>( mesh.mTexCoord );
 
             triangleInput[meshID]      = {};
             triangleInput[meshID].type = OPTIX_BUILD_INPUT_TYPE_TRIANGLES;
 
-            // create local variables, because we need a *pointer* to the
-            // device pointers
-            d_vertices[meshID] = vertexBuffer[meshID].d_pointer();
-            d_indices[meshID]  = indexBuffer[meshID].d_pointer();
-
             triangleInput[meshID].triangleArray.vertexFormat        = OPTIX_VERTEX_FORMAT_FLOAT3;
             triangleInput[meshID].triangleArray.vertexStrideInBytes = sizeof( math::vec3 );
             triangleInput[meshID].triangleArray.numVertices         = (int)mesh.mVertex.size();
-            triangleInput[meshID].triangleArray.vertexBuffers       = &d_vertices[meshID];
+            triangleInput[meshID].triangleArray.vertexBuffers       = mVertices[meshID].RawDevicePtrP(); //&d_vertices[meshID];
 
             triangleInput[meshID].triangleArray.indexFormat        = OPTIX_INDICES_FORMAT_UNSIGNED_INT3;
             triangleInput[meshID].triangleArray.indexStrideInBytes = sizeof( math::ivec3 );
             triangleInput[meshID].triangleArray.numIndexTriplets   = (int)mesh.mIndex.size();
-            triangleInput[meshID].triangleArray.indexBuffer        = d_indices[meshID];
+            triangleInput[meshID].triangleArray.indexBuffer        = mIndices[meshID].RawDevicePtr(); //  d_indices[meshID];
 
             triangleInputFlags[meshID] = 0;
 
@@ -210,9 +205,8 @@ namespace osc
         accelOptions.operation              = OPTIX_BUILD_OPERATION_BUILD;
 
         OptixAccelBufferSizes blasBufferSizes;
-        OPTIX_CHECK( optixAccelComputeMemoryUsage( optixContext, &accelOptions, triangleInput.data(),
-                                                   (int)numMeshes, // num_build_inputs
-                                                   &blasBufferSizes ) );
+        OPTIX_CHECK(
+            optixAccelComputeMemoryUsage( optixContext, &accelOptions, triangleInput.data(), (int)numMeshes, &blasBufferSizes ) );
 
         // ==================================================================
         // prepare compaction
@@ -497,10 +491,10 @@ namespace osc
                 {
                     rec.data.mHasTexture = false;
                 }
-                rec.data.mIndex    = (math::ivec3 *)indexBuffer[meshID].d_pointer();
-                rec.data.mVertex   = (math::vec3 *)vertexBuffer[meshID].d_pointer();
-                rec.data.mNormal   = (math::vec3 *)mNormalBuffer[meshID].d_pointer();
-                rec.data.mTexCoord = (math::vec2 *)texcoordBuffer[meshID].d_pointer();
+                rec.data.mIndex    = mIndices[meshID].DataAs<math::ivec3>();
+                rec.data.mVertex   = mVertices[meshID].DataAs<math::vec3>();
+                rec.data.mNormal   = mNormals[meshID].DataAs<math::vec3>();
+                rec.data.mTexCoord = mTexCoords[meshID].DataAs<math::vec2>();
                 hitgroupRecords.push_back( rec );
             }
         }
@@ -520,6 +514,9 @@ namespace osc
         if( !accumulate ) launchParams.mFrame.mFrameID = 0;
         launchParamsBuffer.upload( &launchParams, 1 );
         launchParams.mFrame.mFrameID++;
+
+        launchParams.mNumLightSamples = 1;
+        launchParams.mNumPixelSamples = 1;
 
         OPTIX_CHECK( optixLaunch( pipeline, stream, launchParamsBuffer.d_pointer(), launchParamsBuffer.sizeInBytes, &sbt,
                                   launchParams.mFrame.mSize.x, launchParams.mFrame.mSize.y, 1 ) );

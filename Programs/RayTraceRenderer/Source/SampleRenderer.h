@@ -21,11 +21,13 @@
 #include "LaunchParams.h"
 #include "Model.h"
 
+#include "Core/Cuda/CudaBuffer.h"
 #include "Core/Math/Types.h"
 
 /*! \namespace osc - Optix Siggraph Course */
 namespace osc
 {
+    using namespace SE::Cuda;
 
     struct Camera
     {
@@ -174,12 +176,10 @@ namespace osc
         /*! the model we are going to trace rays against */
         const Model *model;
 
-        /*! @{ one buffer per input mesh */
-        std::vector<CUDABuffer> vertexBuffer;
-        std::vector<CUDABuffer> mNormalBuffer;
-        std::vector<CUDABuffer> texcoordBuffer;
-        std::vector<CUDABuffer> indexBuffer;
-        /*! @} */
+        std::vector<GPUMemory> mVertices;
+        std::vector<GPUMemory> mIndices;
+        std::vector<GPUMemory> mNormals;
+        std::vector<GPUMemory> mTexCoords;
 
         //! buffer that keeps the (final, compacted) accel structure
         CUDABuffer asBuffer;
