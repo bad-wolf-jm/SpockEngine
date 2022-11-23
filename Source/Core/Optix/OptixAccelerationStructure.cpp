@@ -13,7 +13,7 @@ namespace SE::Graphics
     {
         mVertexBuffers.push_back( (CUdeviceptr)( aVertices.DataAs<VertexData>() + aVertexOffset ) );
         mVertexCounts.push_back( (int)aVertexCount );
-        mVertexStrides.push_back( sizeof(VertexData) );
+        mVertexStrides.push_back( sizeof( VertexData ) );
         mIndexBuffers.push_back( (CUdeviceptr)( aIndices.DataAs<uint32_t>() + aIndexOffset ) );
         mIndexCounts.push_back( (int)( aIndexCount / 3 ) );
     }
