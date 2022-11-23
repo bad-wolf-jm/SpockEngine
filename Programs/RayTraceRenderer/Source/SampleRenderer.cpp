@@ -1,28 +1,10 @@
-// ======================================================================== //
-// Copyright 2018-2019 Ingo Wald                                            //
-//                                                                          //
-// Licensed under the Apache License, Version 2.0 (the "License");          //
-// you may not use this file except in compliance with the License.         //
-// You may obtain a copy of the License at                                  //
-//                                                                          //
-//     http://www.apache.org/licenses/LICENSE-2.0                           //
-//                                                                          //
-// Unless required by applicable law or agreed to in writing, software      //
-// distributed under the License is distributed on an "AS IS" BASIS,        //
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. //
-// See the License for the specific language governing permissions and      //
-// limitations under the License.                                           //
-// ======================================================================== //
-
 #include "Core/Cuda/CudaAssert.h"
 
 #include "LaunchParams.h"
 #include "SampleRenderer.h"
 
-// this include may only appear in a single source file:
 #include <optix_function_table_definition.h>
 
-/*! \namespace osc - Optix Siggraph Course */
 namespace osc
 {
     using namespace SE::Cuda;
@@ -60,7 +42,9 @@ namespace osc
     SampleRenderer::SampleRenderer( const Model *model, const QuadLight &light )
         : model( model )
     {
-        initOptix();
+        SE::Graphics::OptixDeviceContextObject::Initialize();
+
+        std::cout << GDT_TERMINAL_GREEN << "#osc: successfully initialized optix... yay!" << GDT_TERMINAL_DEFAULT << std::endl;
 
         launchParams.mLight.mOrigin = light.mOrigin;
         launchParams.mLight.mDu     = light.mDu;
@@ -68,20 +52,21 @@ namespace osc
         launchParams.mLight.mPower  = light.mPower;
 
         std::cout << "#osc: creating optix context ..." << std::endl;
-        createContext();
+        // createContext();
+        mOptixContext      = New<OptixDeviceContextObject>();
+        const int deviceID = 0;
+        CUDA_CHECK( SetDevice( deviceID ) );
+        CUDA_CHECK( StreamCreate( &stream ) );
 
-        std::cout << "#osc: setting up mOptixModule->mOptixObject ..." << std::endl;
-        createModule();
-
-        // std::cout << "#osc: creating raygen programs ..." << std::endl;
-        // createRaygenPrograms();
-        // std::cout << "#osc: creating miss programs ..." << std::endl;
-        // createMissPrograms();
-        // std::cout << "#osc: creating hitgroup programs ..." << std::endl;
-        // createHitgroupPrograms();
-
-        std::cout << "#osc: setting up optix pipeline ..." << std::endl;
-        // createPipeline();
+        std::cout << "#osc: setting up module and pipeline ..." << std::endl;
+        // createModule();
+        mOptixModule = New<OptixModuleObject>( "optixLaunchParams", embedded_ptx_code, mOptixContext );
+        mOptixModule->CreateRayGenGroup( "__raygen__renderFrame" );
+        mOptixModule->CreateMissGroup( "__miss__radiance" );
+        mOptixModule->CreateHitGroup( "__closesthit__radiance", "__anyhit__radiance" );
+        mOptixModule->CreateMissGroup( "__miss__shadow" );
+        mOptixModule->CreateHitGroup( "__closesthit__shadow", "__anyhit__shadow" );
+        mOptixPipeline = mOptixModule->CreatePipeline();
 
         createTextures();
 
@@ -225,10 +210,7 @@ namespace osc
         // ==================================================================
 
         GPUMemory tempBuffer( blasBufferSizes.tempSizeInBytes );
-        // tempBuffer.alloc( blasBufferSizes.tempSizeInBytes );
-
         GPUMemory outputBuffer( blasBufferSizes.outputSizeInBytes );
-        // outputBuffer.alloc( blasBufferSizes.outputSizeInBytes );
 
         OPTIX_CHECK( optixAccelBuild( mOptixContext->mOptixObject, 0, &accelOptions, triangleInput.data(), (int)numMeshes,
                                       tempBuffer.RawDevicePtr(), tempBuffer.SizeAs<uint8_t>(), outputBuffer.RawDevicePtr(),
@@ -239,16 +221,12 @@ namespace osc
         // perform compaction
         // ==================================================================
         uint64_t compactedSize = compactedSizeBuffer.Fetch<uint64_t>()[0];
-        // compactedSizeBuffer.download( &compactedSize, 1 );
 
         asBuffer = GPUMemory( compactedSize ); //.alloc( compactedSize );
         OPTIX_CHECK( optixAccelCompact( mOptixContext->mOptixObject, 0, asHandle, asBuffer.RawDevicePtr(), asBuffer.SizeAs<uint8_t>(),
                                         &asHandle ) );
         CUDA_SYNC_CHECK();
 
-        // ==================================================================
-        // aaaaaand .... clean up
-        // ==================================================================
         outputBuffer.Dispose(); // << the UNcompacted, temporary output buffer
         tempBuffer.Dispose();
         compactedSizeBuffer.Dispose();
@@ -256,46 +234,9 @@ namespace osc
         return asHandle;
     }
 
-    /*! helper function that initializes optix and checks for errors */
-    void SampleRenderer::initOptix()
-    {
-        SE::Graphics::OptixDeviceContextObject::Initialize();
-
-        std::cout << GDT_TERMINAL_GREEN << "#osc: successfully initialized optix... yay!" << GDT_TERMINAL_DEFAULT << std::endl;
-    }
-
     static void context_log_cb( unsigned int level, const char *tag, const char *message, void * )
     {
         fprintf( stderr, "[%2d][%12s]: %s\n", (int)level, tag, message );
-    }
-
-    /*! creates and configures a optix device context (in this simple
-      example, only for the primary GPU device) */
-    void SampleRenderer::createContext()
-    {
-        mOptixContext = New<OptixDeviceContextObject>();
-
-        const int deviceID = 0;
-        CUDA_CHECK( SetDevice( deviceID ) );
-        CUDA_CHECK( StreamCreate( &stream ) );
-    }
-
-    /*! creates the mOptixModule->mOptixObject that contains all the programs we are going
-      to use. in this simple example, we use a single mOptixModule->mOptixObject from a
-      single .cu file, using a single embedded ptx string */
-    void SampleRenderer::createModule()
-    {
-        mOptixModule = New<OptixModuleObject>( "optixLaunchParams", embedded_ptx_code, mOptixContext );
-
-        mOptixModule->CreateRayGenGroup( "__raygen__renderFrame" );
-
-        mOptixModule->CreateMissGroup( "__miss__radiance" );
-        mOptixModule->CreateHitGroup( "__closesthit__radiance", "__anyhit__radiance" );
-
-        mOptixModule->CreateMissGroup( "__miss__shadow" );
-        mOptixModule->CreateHitGroup( "__closesthit__shadow", "__anyhit__shadow" );
-
-        mOptixPipeline = mOptixModule->CreatePipeline();
     }
 
     /*! constructs the shader binding table */
@@ -332,7 +273,7 @@ namespace osc
                 auto mesh = model->mMeshes[meshID];
 
                 HitgroupRecord rec = mShaderBindingTable->NewRecordType<HitgroupRecord>( mOptixModule->mHitProgramGroups[rayID] );
-                rec.data.mColor = mesh->mDiffuse;
+                rec.data.mColor    = mesh->mDiffuse;
                 if( mesh->mDiffuseTextureID >= 0 && mesh->mDiffuseTextureID < textureObjects.size() )
                 {
                     rec.data.mHasTexture = true;
@@ -356,8 +297,6 @@ namespace osc
     /*! render one frame */
     void SampleRenderer::render()
     {
-        // sanity check: make sure we launch only after first resize is
-        // already done:
         if( launchParams.mFrame.mSize.x == 0 ) return;
 
         if( !accumulate ) launchParams.mFrame.mFrameID = 0;
@@ -367,9 +306,8 @@ namespace osc
         launchParams.mNumLightSamples = 1;
         launchParams.mNumPixelSamples = 1;
 
-        OPTIX_CHECK( optixLaunch( mOptixPipeline->mOptixObject, stream, launchParamsBuffer.RawDevicePtr(),
-                                  launchParamsBuffer.SizeAs<uint8_t>(), &mShaderBindingTable->mOptixObject,
-                                  launchParams.mFrame.mSize.x, launchParams.mFrame.mSize.y, 1 ) );
+        mOptixPipeline->Launch( stream, launchParamsBuffer.RawDevicePtr(), launchParamsBuffer.SizeAs<uint8_t>(), mShaderBindingTable,
+                                math::uvec3{ launchParams.mFrame.mSize.x, launchParams.mFrame.mSize.y, 1 } );
 
         denoiserIntensity.Resize( sizeof( float ) );
 
