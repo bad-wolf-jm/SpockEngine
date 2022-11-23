@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include "Core/Memory.h"
+
 // our own classes, partly shared between host and device
 #include "LaunchParams.h"
 #include "Model.h"
@@ -23,10 +25,15 @@
 #include "Core/Cuda/CudaBuffer.h"
 #include "Core/Math/Types.h"
 
+#include "Core/Optix/OptixContext.h"
+#include "Core/Optix/OptixModule.h"
+
 /*! \namespace osc - Optix Siggraph Course */
 namespace osc
 {
     using namespace SE::Cuda;
+    using namespace SE::Core;
+    using namespace SE::Graphics;
 
     struct Camera
     {
@@ -88,17 +95,17 @@ namespace osc
           single .cu file, using a single embedded ptx string */
         void createModule();
 
-        /*! does all setup for the raygen program(s) we are going to use */
-        void createRaygenPrograms();
+        // /*! does all setup for the raygen program(s) we are going to use */
+        // void createRaygenPrograms();
 
-        /*! does all setup for the miss program(s) we are going to use */
-        void createMissPrograms();
+        // /*! does all setup for the miss program(s) we are going to use */
+        // void createMissPrograms();
 
-        /*! does all setup for the hitgroup program(s) we are going to use */
-        void createHitgroupPrograms();
+        // /*! does all setup for the hitgroup program(s) we are going to use */
+        // void createHitgroupPrograms();
 
-        /*! assembles the full pipeline of all programs */
-        void createPipeline();
+        // /*! assembles the full pipeline of all programs */
+        // void createPipeline();
 
         /*! constructs the shader binding table */
         void buildSBT();
@@ -118,7 +125,7 @@ namespace osc
         /*! @} */
 
         //! the optix context that our pipeline will run in.
-        OptixDeviceContext optixContext;
+        // OptixDeviceContext optixContext;
 
         /*! @{ the pipeline we're building */
         OptixPipeline               pipeline;
@@ -187,6 +194,11 @@ namespace osc
         std::vector<cudaArray_t>         textureArrays;
         std::vector<cudaTextureObject_t> textureObjects;
         /*! @} */
+
+        Ref<OptixDeviceContextObject> mOptixContext = nullptr;
+        Ref<OptixModuleObject> mOptixModule = nullptr;
+        Ref<OptixPipelineObject> mOptixPipeline = nullptr;
+
     };
 
 } // namespace osc

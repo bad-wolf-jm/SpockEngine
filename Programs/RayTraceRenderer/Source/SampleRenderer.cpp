@@ -26,6 +26,7 @@
 namespace osc
 {
     using namespace SE::Cuda;
+    using namespace SE::Core;
 
     extern "C" char embedded_ptx_code[];
 
@@ -55,7 +56,7 @@ namespace osc
     };
 
     /*! constructor - performs all setup, including initializing
-      optix, creates module, pipeline, programs, SBT, etc. */
+      optix, creates mOptixModule->mOptixObject, pipeline, programs, SBT, etc. */
     SampleRenderer::SampleRenderer( const Model *model, const QuadLight &light )
         : model( model )
     {
@@ -69,28 +70,28 @@ namespace osc
         std::cout << "#osc: creating optix context ..." << std::endl;
         createContext();
 
-        std::cout << "#osc: setting up module ..." << std::endl;
+        std::cout << "#osc: setting up mOptixModule->mOptixObject ..." << std::endl;
         createModule();
 
-        std::cout << "#osc: creating raygen programs ..." << std::endl;
-        createRaygenPrograms();
-        std::cout << "#osc: creating miss programs ..." << std::endl;
-        createMissPrograms();
-        std::cout << "#osc: creating hitgroup programs ..." << std::endl;
-        createHitgroupPrograms();
-
-        launchParams.mSceneRoot = buildAccel();
+        // std::cout << "#osc: creating raygen programs ..." << std::endl;
+        // createRaygenPrograms();
+        // std::cout << "#osc: creating miss programs ..." << std::endl;
+        // createMissPrograms();
+        // std::cout << "#osc: creating hitgroup programs ..." << std::endl;
+        // createHitgroupPrograms();
 
         std::cout << "#osc: setting up optix pipeline ..." << std::endl;
-        createPipeline();
+        // createPipeline();
 
         createTextures();
+
+        launchParams.mSceneRoot = buildAccel();
 
         std::cout << "#osc: building SBT ..." << std::endl;
         buildSBT();
 
         launchParamsBuffer = GPUMemory( sizeof( launchParams ) ); //.alloc( sizeof( launchParams ) );
-        std::cout << "#osc: context, module, pipeline, etc, all set up ..." << std::endl;
+        std::cout << "#osc: context, mOptixModule->mOptixObject, pipeline, etc, all set up ..." << std::endl;
 
         std::cout << GDT_TERMINAL_GREEN;
         std::cout << "#osc: Optix 7 Sample fully set up" << std::endl;
@@ -205,8 +206,8 @@ namespace osc
         accelOptions.operation              = OPTIX_BUILD_OPERATION_BUILD;
 
         OptixAccelBufferSizes blasBufferSizes;
-        OPTIX_CHECK(
-            optixAccelComputeMemoryUsage( optixContext, &accelOptions, triangleInput.data(), (int)numMeshes, &blasBufferSizes ) );
+        OPTIX_CHECK( optixAccelComputeMemoryUsage( mOptixContext->mOptixObject, &accelOptions, triangleInput.data(), (int)numMeshes,
+                                                   &blasBufferSizes ) );
 
         // ==================================================================
         // prepare compaction
@@ -229,9 +230,9 @@ namespace osc
         GPUMemory outputBuffer( blasBufferSizes.outputSizeInBytes );
         // outputBuffer.alloc( blasBufferSizes.outputSizeInBytes );
 
-        OPTIX_CHECK( optixAccelBuild( optixContext, 0, &accelOptions, triangleInput.data(), (int)numMeshes, tempBuffer.RawDevicePtr(),
-                                      tempBuffer.SizeAs<uint8_t>(), outputBuffer.RawDevicePtr(), outputBuffer.SizeAs<uint8_t>(),
-                                      &asHandle, &emitDesc, 1 ) );
+        OPTIX_CHECK( optixAccelBuild( mOptixContext->mOptixObject, 0, &accelOptions, triangleInput.data(), (int)numMeshes,
+                                      tempBuffer.RawDevicePtr(), tempBuffer.SizeAs<uint8_t>(), outputBuffer.RawDevicePtr(),
+                                      outputBuffer.SizeAs<uint8_t>(), &asHandle, &emitDesc, 1 ) );
         CUDA_SYNC_CHECK();
 
         // ==================================================================
@@ -241,7 +242,8 @@ namespace osc
         // compactedSizeBuffer.download( &compactedSize, 1 );
 
         asBuffer = GPUMemory( compactedSize ); //.alloc( compactedSize );
-        OPTIX_CHECK( optixAccelCompact( optixContext, 0, asHandle, asBuffer.RawDevicePtr(), asBuffer.SizeAs<uint8_t>(), &asHandle ) );
+        OPTIX_CHECK( optixAccelCompact( mOptixContext->mOptixObject, 0, asHandle, asBuffer.RawDevicePtr(), asBuffer.SizeAs<uint8_t>(),
+                                        &asHandle ) );
         CUDA_SYNC_CHECK();
 
         // ==================================================================
@@ -257,21 +259,22 @@ namespace osc
     /*! helper function that initializes optix and checks for errors */
     void SampleRenderer::initOptix()
     {
-        std::cout << "#osc: initializing optix..." << std::endl;
+        SE::Graphics::OptixDeviceContextObject::Initialize();
+        // std::cout << "#osc: initializing optix..." << std::endl;
 
-        // -------------------------------------------------------
-        // check for available optix7 capable devices
-        // -------------------------------------------------------
-        cudaFree( 0 );
-        int numDevices;
-        cudaGetDeviceCount( &numDevices );
-        if( numDevices == 0 ) throw std::runtime_error( "#osc: no CUDA capable devices found!" );
-        std::cout << "#osc: found " << numDevices << " CUDA devices" << std::endl;
+        // // -------------------------------------------------------
+        // // check for available optix7 capable devices
+        // // -------------------------------------------------------
+        // cudaFree( 0 );
+        // int numDevices;
+        // cudaGetDeviceCount( &numDevices );
+        // if( numDevices == 0 ) throw std::runtime_error( "#osc: no CUDA capable devices found!" );
+        // std::cout << "#osc: found " << numDevices << " CUDA devices" << std::endl;
 
-        // -------------------------------------------------------
-        // initialize optix
-        // -------------------------------------------------------
-        OPTIX_CHECK( optixInit() );
+        // // -------------------------------------------------------
+        // // initialize optix
+        // // -------------------------------------------------------
+        // OPTIX_CHECK( optixInit() );
         std::cout << GDT_TERMINAL_GREEN << "#osc: successfully initialized optix... yay!" << GDT_TERMINAL_DEFAULT << std::endl;
     }
 
@@ -284,156 +287,179 @@ namespace osc
       example, only for the primary GPU device) */
     void SampleRenderer::createContext()
     {
-        // for this sample, do everything on one device
+        mOptixContext = New<OptixDeviceContextObject>();
+        // // for this sample, do everything on one device
         const int deviceID = 0;
         CUDA_CHECK( SetDevice( deviceID ) );
         CUDA_CHECK( StreamCreate( &stream ) );
 
-        cudaGetDeviceProperties( &deviceProps, deviceID );
-        std::cout << "#osc: running on device: " << deviceProps.name << std::endl;
+        // cudaGetDeviceProperties( &deviceProps, deviceID );
+        // std::cout << "#osc: running on device: " << deviceProps.name << std::endl;
 
-        CUresult cuRes = cuCtxGetCurrent( &cudaContext );
-        if( cuRes != CUDA_SUCCESS ) fprintf( stderr, "Error querying current context: error code %d\n", cuRes );
+        // CUresult cuRes = cuCtxGetCurrent( &cudaContext );
+        // if( cuRes != CUDA_SUCCESS ) fprintf( stderr, "Error querying current context: error code %d\n", cuRes );
 
-        OPTIX_CHECK( optixDeviceContextCreate( cudaContext, 0, &optixContext ) );
-        OPTIX_CHECK( optixDeviceContextSetLogCallback( optixContext, context_log_cb, nullptr, 4 ) );
+        // OPTIX_CHECK( optixDeviceContextCreate( cudaContext, 0, &optixContext ) );
+        // OPTIX_CHECK( optixDeviceContextSetLogCallback( optixContext, context_log_cb, nullptr, 4 ) );
     }
 
-    /*! creates the module that contains all the programs we are going
-      to use. in this simple example, we use a single module from a
+    /*! creates the mOptixModule->mOptixObject that contains all the programs we are going
+      to use. in this simple example, we use a single mOptixModule->mOptixObject from a
       single .cu file, using a single embedded ptx string */
     void SampleRenderer::createModule()
     {
-        moduleCompileOptions.maxRegisterCount = 50;
-        moduleCompileOptions.optLevel         = OPTIX_COMPILE_OPTIMIZATION_DEFAULT;
-        moduleCompileOptions.debugLevel       = OPTIX_COMPILE_DEBUG_LEVEL_NONE;
+        // const std::string ptxCode = embedded_ptx_code;
+        mOptixModule = New<OptixModuleObject>( "optixLaunchParams", embedded_ptx_code, mOptixContext );
+        // moduleCompileOptions.maxRegisterCount = 50;
+        // moduleCompileOptions.optLevel         = OPTIX_COMPILE_OPTIMIZATION_DEFAULT;
+        // moduleCompileOptions.debugLevel       = OPTIX_COMPILE_DEBUG_LEVEL_NONE;
 
-        pipelineCompileOptions                                  = {};
-        pipelineCompileOptions.traversableGraphFlags            = OPTIX_TRAVERSABLE_GRAPH_FLAG_ALLOW_SINGLE_GAS;
-        pipelineCompileOptions.usesMotionBlur                   = false;
-        pipelineCompileOptions.numPayloadValues                 = 2;
-        pipelineCompileOptions.numAttributeValues               = 2;
-        pipelineCompileOptions.exceptionFlags                   = OPTIX_EXCEPTION_FLAG_NONE;
-        pipelineCompileOptions.pipelineLaunchParamsVariableName = "optixLaunchParams";
+        // pipelineCompileOptions = mOptixModule->GetPipelineCompileOptions();
+        // pipelineLinkOptions    = mOptixModule->GetPipelineLinkOptions();
 
-        pipelineLinkOptions.maxTraceDepth = 2;
+        mOptixModule->CreateRayGenGroup( "__raygen__renderFrame" );
 
-        const std::string ptxCode = embedded_ptx_code;
+        mOptixModule->CreateMissGroup( "__miss__radiance" );
+        mOptixModule->CreateHitGroup( "__closesthit__radiance", "__anyhit__radiance" );
 
-        char   log[2048];
-        size_t sizeof_log = sizeof( log );
-        OPTIX_CHECK( optixModuleCreateFromPTX( optixContext, &moduleCompileOptions, &pipelineCompileOptions, ptxCode.c_str(),
-                                               ptxCode.size(), log, &sizeof_log, &module ) );
-        if( sizeof_log > 1 ) PRINT( log );
+        mOptixModule->CreateMissGroup( "__miss__shadow" );
+        mOptixModule->CreateHitGroup( "__closesthit__shadow", "__anyhit__shadow" );
+
+        mOptixPipeline = mOptixModule->CreatePipeline();
+        // pipelineCompileOptions.traversableGraphFlags            = OPTIX_TRAVERSABLE_GRAPH_FLAG_ALLOW_SINGLE_GAS;
+        // pipelineCompileOptions.usesMotionBlur                   = false;
+        // pipelineCompileOptions.numPayloadValues                 = 2;
+        // pipelineCompileOptions.numAttributeValues               = 2;
+        // pipelineCompileOptions.exceptionFlags                   = OPTIX_EXCEPTION_FLAG_NONE;
+        // pipelineCompileOptions.pipelineLaunchParamsVariableName = "optixLaunchParams";
+
+        // char   log[2048];
+        // size_t sizeof_log = sizeof( log );
+        // OPTIX_CHECK( optixModuleCreateFromPTX( mOptixContext->mOptixObject, &moduleCompileOptions, &pipelineCompileOptions,
+        // ptxCode.c_str(),
+        //                                        ptxCode.size(), log, &sizeof_log, &module ) );
+        // if( sizeof_log > 1 ) PRINT( log );
     }
 
-    /*! does all setup for the raygen program(s) we are going to use */
-    void SampleRenderer::createRaygenPrograms()
-    {
-        // we do a single ray gen program in this example:
-        raygenPGs.resize( 1 );
+    // /*! does all setup for the raygen program(s) we are going to use */
+    // void SampleRenderer::createRaygenPrograms()
+    // {
+    //     mOptixModule->CreateRayGenGroup( "__raygen__renderFrame" );
 
-        OptixProgramGroupOptions pgOptions = {};
-        OptixProgramGroupDesc    pgDesc    = {};
-        pgDesc.kind                        = OPTIX_PROGRAM_GROUP_KIND_RAYGEN;
-        pgDesc.raygen.module               = module;
-        pgDesc.raygen.entryFunctionName    = "__raygen__renderFrame";
+    //     // // we do a single ray gen program in this example:
+    //     // raygenPGs.resize( 1 );
 
-        // OptixProgramGroup raypg;
-        char   log[2048];
-        size_t sizeof_log = sizeof( log );
-        OPTIX_CHECK( optixProgramGroupCreate( optixContext, &pgDesc, 1, &pgOptions, log, &sizeof_log, &raygenPGs[0] ) );
-        if( sizeof_log > 1 ) PRINT( log );
-    }
+    //     // OptixProgramGroupOptions pgOptions = {};
+    //     // OptixProgramGroupDesc    pgDesc    = {};
+    //     // pgDesc.kind                        = OPTIX_PROGRAM_GROUP_KIND_RAYGEN;
+    //     // pgDesc.raygen.module               = mOptixModule->mOptixObject;
+    //     // pgDesc.raygen.entryFunctionName    = "__raygen__renderFrame";
 
-    /*! does all setup for the miss program(s) we are going to use */
-    void SampleRenderer::createMissPrograms()
-    {
-        // we do a single ray gen program in this example:
-        missPGs.resize( RAY_TYPE_COUNT );
+    //     // // OptixProgramGroup raypg;
+    //     // char   log[2048];
+    //     // size_t sizeof_log = sizeof( log );
+    //     // OPTIX_CHECK( optixProgramGroupCreate( mOptixContext->mOptixObject, &pgDesc, 1, &pgOptions, log, &sizeof_log,
+    //     &raygenPGs[0] )
+    //     // ); if( sizeof_log > 1 ) PRINT( log );
+    // }
 
-        char   log[2048];
-        size_t sizeof_log = sizeof( log );
+    // /*! does all setup for the miss program(s) we are going to use */
+    // void SampleRenderer::createMissPrograms()
+    // {
+    //     mOptixModule->CreateMissGroup( "__miss__radiance" );
+    //     mOptixModule->CreateMissGroup( "__miss__shadow" );
 
-        OptixProgramGroupOptions pgOptions = {};
-        OptixProgramGroupDesc    pgDesc    = {};
-        pgDesc.kind                        = OPTIX_PROGRAM_GROUP_KIND_MISS;
-        pgDesc.miss.module                 = module;
+    //     // we do a single ray gen program in this example:
+    //     // missPGs.resize( RAY_TYPE_COUNT );
 
-        // ------------------------------------------------------------------
-        // radiance rays
-        // ------------------------------------------------------------------
-        pgDesc.miss.entryFunctionName = "__miss__radiance";
+    //     // char   log[2048];
+    //     // size_t sizeof_log = sizeof( log );
 
-        OPTIX_CHECK( optixProgramGroupCreate( optixContext, &pgDesc, 1, &pgOptions, log, &sizeof_log, &missPGs[RADIANCE_RAY_TYPE] ) );
-        if( sizeof_log > 1 ) PRINT( log );
+    //     // OptixProgramGroupOptions pgOptions = {};
+    //     // OptixProgramGroupDesc    pgDesc    = {};
+    //     // pgDesc.kind                        = OPTIX_PROGRAM_GROUP_KIND_MISS;
+    //     // pgDesc.miss.module                 = mOptixModule->mOptixObject;
 
-        // ------------------------------------------------------------------
-        // shadow rays
-        // ------------------------------------------------------------------
-        pgDesc.miss.entryFunctionName = "__miss__shadow";
+    //     // // ------------------------------------------------------------------
+    //     // // radiance rays
+    //     // // ------------------------------------------------------------------
+    //     // pgDesc.miss.entryFunctionName = "__miss__radiance";
 
-        OPTIX_CHECK( optixProgramGroupCreate( optixContext, &pgDesc, 1, &pgOptions, log, &sizeof_log, &missPGs[SHADOW_RAY_TYPE] ) );
-        if( sizeof_log > 1 ) PRINT( log );
-    }
+    //     // OPTIX_CHECK( optixProgramGroupCreate( mOptixContext->mOptixObject, &pgDesc, 1, &pgOptions, log, &sizeof_log,
+    //     //                                       &missPGs[RADIANCE_RAY_TYPE] ) );
+    //     // if( sizeof_log > 1 ) PRINT( log );
 
-    /*! does all setup for the hitgroup program(s) we are going to use */
-    void SampleRenderer::createHitgroupPrograms()
-    {
-        // for this simple example, we set up a single hit group
-        hitgroupPGs.resize( RAY_TYPE_COUNT );
+    //     // // ------------------------------------------------------------------
+    //     // // shadow rays
+    //     // // ------------------------------------------------------------------
+    //     // pgDesc.miss.entryFunctionName = "__miss__shadow";
 
-        char   log[2048];
-        size_t sizeof_log = sizeof( log );
+    //     // OPTIX_CHECK( optixProgramGroupCreate( mOptixContext->mOptixObject, &pgDesc, 1, &pgOptions, log, &sizeof_log,
+    //     //                                       &missPGs[SHADOW_RAY_TYPE] ) );
+    //     // if( sizeof_log > 1 ) PRINT( log );
+    // }
 
-        OptixProgramGroupOptions pgOptions = {};
-        OptixProgramGroupDesc    pgDesc    = {};
-        pgDesc.kind                        = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
-        pgDesc.hitgroup.moduleCH           = module;
-        pgDesc.hitgroup.moduleAH           = module;
+    // /*! does all setup for the hitgroup program(s) we are going to use */
+    // void SampleRenderer::createHitgroupPrograms()
+    // {
+    //     // for this simple example, we set up a single hit group
+    //     mOptixModule->CreateHitGroup( "__closesthit__radiance", "__anyhit__radiance" );
+    //     mOptixModule->CreateHitGroup( "__closesthit__shadow", "__anyhit__shadow" );
 
-        // -------------------------------------------------------
-        // radiance rays
-        // -------------------------------------------------------
-        pgDesc.hitgroup.entryFunctionNameCH = "__closesthit__radiance";
-        pgDesc.hitgroup.entryFunctionNameAH = "__anyhit__radiance";
+    //     // hitgroupPGs.resize( RAY_TYPE_COUNT );
 
-        OPTIX_CHECK(
-            optixProgramGroupCreate( optixContext, &pgDesc, 1, &pgOptions, log, &sizeof_log, &hitgroupPGs[RADIANCE_RAY_TYPE] ) );
-        if( sizeof_log > 1 ) PRINT( log );
+    //     // char   log[2048];
+    //     // size_t sizeof_log = sizeof( log );
 
-        // -------------------------------------------------------
-        // shadow rays: technically we don't need this hit group,
-        // since we just use the miss shader to check if we were not
-        // in shadow
-        // -------------------------------------------------------
-        pgDesc.hitgroup.entryFunctionNameCH = "__closesthit__shadow";
-        pgDesc.hitgroup.entryFunctionNameAH = "__anyhit__shadow";
+    //     // OptixProgramGroupOptions pgOptions = {};
+    //     // OptixProgramGroupDesc    pgDesc    = {};
+    //     // pgDesc.kind                        = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
+    //     // pgDesc.hitgroup.moduleCH           = mOptixModule->mOptixObject;
+    //     // pgDesc.hitgroup.moduleAH           = mOptixModule->mOptixObject;
 
-        OPTIX_CHECK(
-            optixProgramGroupCreate( optixContext, &pgDesc, 1, &pgOptions, log, &sizeof_log, &hitgroupPGs[SHADOW_RAY_TYPE] ) );
-        if( sizeof_log > 1 ) PRINT( log );
-    }
+    //     // // -------------------------------------------------------
+    //     // // radiance rays
+    //     // // -------------------------------------------------------
+    //     // pgDesc.hitgroup.entryFunctionNameCH = "__closesthit__radiance";
+    //     // pgDesc.hitgroup.entryFunctionNameAH = "__anyhit__radiance";
 
-    /*! assembles the full pipeline of all programs */
-    void SampleRenderer::createPipeline()
-    {
-        std::vector<OptixProgramGroup> programGroups;
-        for( auto pg : raygenPGs ) programGroups.push_back( pg );
-        for( auto pg : hitgroupPGs ) programGroups.push_back( pg );
-        for( auto pg : missPGs ) programGroups.push_back( pg );
+    //     // OPTIX_CHECK( optixProgramGroupCreate( mOptixContext->mOptixObject, &pgDesc, 1, &pgOptions, log, &sizeof_log,
+    //     //                                       &hitgroupPGs[RADIANCE_RAY_TYPE] ) );
+    //     // if( sizeof_log > 1 ) PRINT( log );
 
-        char   log[2048];
-        size_t sizeof_log = sizeof( log );
-        PING;
-        PRINT( programGroups.size() );
-        OPTIX_CHECK( optixPipelineCreate( optixContext, &pipelineCompileOptions, &pipelineLinkOptions, programGroups.data(),
-                                          (int)programGroups.size(), log, &sizeof_log, &pipeline ) );
-        if( sizeof_log > 1 ) PRINT( log );
+    //     // // -------------------------------------------------------
+    //     // // shadow rays: technically we don't need this hit group,
+    //     // // since we just use the miss shader to check if we were not
+    //     // // in shadow
+    //     // // -------------------------------------------------------
+    //     // pgDesc.hitgroup.entryFunctionNameCH = "__closesthit__shadow";
+    //     // pgDesc.hitgroup.entryFunctionNameAH = "__anyhit__shadow";
 
-        OPTIX_CHECK( optixPipelineSetStackSize( pipeline, 2 * 1024, 2 * 1024, 2 * 1024, 1 ) );
-        if( sizeof_log > 1 ) PRINT( log );
-    }
+    //     // OPTIX_CHECK( optixProgramGroupCreate( mOptixContext->mOptixObject, &pgDesc, 1, &pgOptions, log, &sizeof_log,
+    //     //                                       &hitgroupPGs[SHADOW_RAY_TYPE] ) );
+    //     // if( sizeof_log > 1 ) PRINT( log );
+    // }
+
+    // /*! assembles the full pipeline of all programs */
+    // void SampleRenderer::createPipeline()
+    // {
+    //     mOptixPipeline = mOptixModule->CreatePipeline();
+    //     // std::vector<OptixProgramGroup> programGroups;
+    //     // for( auto pg : raygenPGs ) programGroups.push_back( pg );
+    //     // for( auto pg : hitgroupPGs ) programGroups.push_back( pg );
+    //     // for( auto pg : missPGs ) programGroups.push_back( pg );
+
+    //     // char   log[2048];
+    //     // size_t sizeof_log = sizeof( log );
+    //     // PING;
+    //     // PRINT( programGroups.size() );
+    //     // OPTIX_CHECK( optixPipelineCreate( mOptixContext->mOptixObject, &pipelineCompileOptions, &pipelineLinkOptions,
+    //     //                                   programGroups.data(), (int)programGroups.size(), log, &sizeof_log, &pipeline ) );
+    //     // if( sizeof_log > 1 ) PRINT( log );
+
+    //     // OPTIX_CHECK( optixPipelineSetStackSize( pipeline, 2 * 1024, 2 * 1024, 2 * 1024, 1 ) );
+    //     // if( sizeof_log > 1 ) PRINT( log );
+    // }
 
     /*! constructs the shader binding table */
     void SampleRenderer::buildSBT()
@@ -442,10 +468,10 @@ namespace osc
         // build raygen records
         // ------------------------------------------------------------------
         std::vector<RaygenRecord> raygenRecords;
-        for( int i = 0; i < raygenPGs.size(); i++ )
+        for( int i = 0; i < mOptixModule->mRayGenProgramGroups.size(); i++ )
         {
             RaygenRecord rec;
-            OPTIX_CHECK( optixSbtRecordPackHeader( raygenPGs[i], &rec ) );
+            OPTIX_CHECK( optixSbtRecordPackHeader( mOptixModule->mRayGenProgramGroups[i]->mOptixObject, &rec ) );
             rec.data = nullptr; /* for now ... */
             raygenRecords.push_back( rec );
         }
@@ -456,10 +482,10 @@ namespace osc
         // build miss records
         // ------------------------------------------------------------------
         std::vector<MissRecord> missRecords;
-        for( int i = 0; i < missPGs.size(); i++ )
+        for( int i = 0; i < mOptixModule->mMissProgramGroups.size(); i++ )
         {
             MissRecord rec;
-            OPTIX_CHECK( optixSbtRecordPackHeader( missPGs[i], &rec ) );
+            OPTIX_CHECK( optixSbtRecordPackHeader( mOptixModule->mMissProgramGroups[i]->mOptixObject, &rec ) );
             rec.data = nullptr; /* for now ... */
             missRecords.push_back( rec );
         }
@@ -480,7 +506,7 @@ namespace osc
                 auto mesh = model->mMeshes[meshID];
 
                 HitgroupRecord rec;
-                OPTIX_CHECK( optixSbtRecordPackHeader( hitgroupPGs[rayID], &rec ) );
+                OPTIX_CHECK( optixSbtRecordPackHeader( mOptixModule->mHitProgramGroups[rayID]->mOptixObject, &rec ) );
                 rec.data.mColor = mesh->mDiffuse;
                 if( mesh->mDiffuseTextureID >= 0 && mesh->mDiffuseTextureID < textureObjects.size() )
                 {
@@ -518,8 +544,9 @@ namespace osc
         launchParams.mNumLightSamples = 1;
         launchParams.mNumPixelSamples = 1;
 
-        OPTIX_CHECK( optixLaunch( pipeline, stream, launchParamsBuffer.RawDevicePtr(), launchParamsBuffer.SizeAs<uint8_t>(), &sbt,
-                                  launchParams.mFrame.mSize.x, launchParams.mFrame.mSize.y, 1 ) );
+        OPTIX_CHECK( optixLaunch( mOptixPipeline->mOptixObject, stream, launchParamsBuffer.RawDevicePtr(),
+                                  launchParamsBuffer.SizeAs<uint8_t>(), &sbt, launchParams.mFrame.mSize.x, launchParams.mFrame.mSize.y,
+                                  1 ) );
 
         denoiserIntensity.Resize( sizeof( float ) );
 
@@ -672,7 +699,7 @@ namespace osc
         // create the denoiser:
         OptixDenoiserOptions denoiserOptions = {};
 #if OPTIX_VERSION >= 70300
-        OPTIX_CHECK( optixDenoiserCreate( optixContext, OPTIX_DENOISER_MODEL_KIND_LDR, &denoiserOptions, &denoiser ) );
+        OPTIX_CHECK( optixDenoiserCreate( mOptixContext->mOptixObject, OPTIX_DENOISER_MODEL_KIND_LDR, &denoiserOptions, &denoiser ) );
 #else
         denoiserOptions.inputKind = OPTIX_DENOISER_INPUT_RGB_ALBEDO;
 #    if OPTIX_VERSION < 70100
@@ -680,7 +707,7 @@ namespace osc
         denoiserOptions.pixelFormat = OPTIX_PIXEL_FORMAT_FLOAT4;
 #    endif
 
-        OPTIX_CHECK( optixDenoiserCreate( optixContext, &denoiserOptions, &denoiser ) );
+        OPTIX_CHECK( optixDenoiserCreate( mOptixContext->mOptixObject, &denoiserOptions, &denoiser ) );
         OPTIX_CHECK( optixDenoiserSetModel( denoiser, OPTIX_DENOISER_MODEL_KIND_LDR, NULL, 0 ) );
 #endif
 
