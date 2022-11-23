@@ -27,6 +27,7 @@
 
 #include "Core/Optix/OptixContext.h"
 #include "Core/Optix/OptixModule.h"
+#include "Core/Optix/OptixShaderBindingTable.h"
 
 /*! \namespace osc - Optix Siggraph Course */
 namespace osc
@@ -198,6 +199,7 @@ namespace osc
         Ref<OptixDeviceContextObject> mOptixContext = nullptr;
         Ref<OptixModuleObject> mOptixModule = nullptr;
         Ref<OptixPipelineObject> mOptixPipeline = nullptr;
+        Ref<OptixShaderBindingTableObject> mShaderBindingTable = nullptr;
 
     };
 

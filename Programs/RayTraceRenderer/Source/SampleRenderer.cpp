@@ -286,7 +286,7 @@ namespace osc
     void SampleRenderer::createModule()
     {
         mOptixModule = New<OptixModuleObject>( "optixLaunchParams", embedded_ptx_code, mOptixContext );
- 
+
         mOptixModule->CreateRayGenGroup( "__raygen__renderFrame" );
 
         mOptixModule->CreateMissGroup( "__miss__radiance" );
@@ -298,44 +298,32 @@ namespace osc
         mOptixPipeline = mOptixModule->CreatePipeline();
     }
 
- 
     /*! constructs the shader binding table */
     void SampleRenderer::buildSBT()
     {
+        mShaderBindingTable = New<OptixShaderBindingTableObject>();
+
         // ------------------------------------------------------------------
         // build raygen records
         // ------------------------------------------------------------------
-        std::vector<RaygenRecord> raygenRecords;
-        for( int i = 0; i < mOptixModule->mRayGenProgramGroups.size(); i++ )
-        {
-            RaygenRecord rec;
-            OPTIX_CHECK( optixSbtRecordPackHeader( mOptixModule->mRayGenProgramGroups[i]->mOptixObject, &rec ) );
-            rec.data = nullptr; /* for now ... */
-            raygenRecords.push_back( rec );
-        }
+        std::vector<RaygenRecord> raygenRecords =
+            mShaderBindingTable->NewRecordType<RaygenRecord>( mOptixModule->mRayGenProgramGroups );
         raygenRecordsBuffer = GPUMemory::Create( raygenRecords );
-        sbt.raygenRecord    = raygenRecordsBuffer.RawDevicePtr();
+        mShaderBindingTable->BindRayGenRecordTable( raygenRecordsBuffer.RawDevicePtr() );
 
         // ------------------------------------------------------------------
         // build miss records
         // ------------------------------------------------------------------
-        std::vector<MissRecord> missRecords;
-        for( int i = 0; i < mOptixModule->mMissProgramGroups.size(); i++ )
-        {
-            MissRecord rec;
-            OPTIX_CHECK( optixSbtRecordPackHeader( mOptixModule->mMissProgramGroups[i]->mOptixObject, &rec ) );
-            rec.data = nullptr; /* for now ... */
-            missRecords.push_back( rec );
-        }
-        missRecordsBuffer           = GPUMemory::Create( missRecords );
-        sbt.missRecordBase          = missRecordsBuffer.RawDevicePtr();
-        sbt.missRecordStrideInBytes = sizeof( MissRecord );
-        sbt.missRecordCount         = (int)missRecords.size();
+        std::vector<MissRecord> missRecords = mShaderBindingTable->NewRecordType<MissRecord>( mOptixModule->mMissProgramGroups );
+        missRecordsBuffer                   = GPUMemory::Create( missRecords );
+        mShaderBindingTable->BindMissRecordTable<MissRecord>( missRecordsBuffer.RawDevicePtr(),
+                                                              missRecordsBuffer.SizeAs<MissRecord>() );
 
         // ------------------------------------------------------------------
         // build hitgroup records
         // ------------------------------------------------------------------
-        int                         numObjects = (int)model->mMeshes.size();
+        int numObjects = (int)model->mMeshes.size();
+
         std::vector<HitgroupRecord> hitgroupRecords;
         for( int meshID = 0; meshID < numObjects; meshID++ )
         {
@@ -343,8 +331,7 @@ namespace osc
             {
                 auto mesh = model->mMeshes[meshID];
 
-                HitgroupRecord rec;
-                OPTIX_CHECK( optixSbtRecordPackHeader( mOptixModule->mHitProgramGroups[rayID]->mOptixObject, &rec ) );
+                HitgroupRecord rec = mShaderBindingTable->NewRecordType<HitgroupRecord>( mOptixModule->mHitProgramGroups[rayID] );
                 rec.data.mColor = mesh->mDiffuse;
                 if( mesh->mDiffuseTextureID >= 0 && mesh->mDiffuseTextureID < textureObjects.size() )
                 {
@@ -362,10 +349,8 @@ namespace osc
                 hitgroupRecords.push_back( rec );
             }
         }
-        hitgroupRecordsBuffer           = GPUMemory::Create( hitgroupRecords );
-        sbt.hitgroupRecordBase          = hitgroupRecordsBuffer.RawDevicePtr();
-        sbt.hitgroupRecordStrideInBytes = sizeof( HitgroupRecord );
-        sbt.hitgroupRecordCount         = (int)hitgroupRecords.size();
+        hitgroupRecordsBuffer = GPUMemory::Create( hitgroupRecords );
+        mShaderBindingTable->BindHitRecordTable<HitgroupRecord>( hitgroupRecordsBuffer.RawDevicePtr(), hitgroupRecordsBuffer.Size() );
     }
 
     /*! render one frame */
@@ -383,8 +368,8 @@ namespace osc
         launchParams.mNumPixelSamples = 1;
 
         OPTIX_CHECK( optixLaunch( mOptixPipeline->mOptixObject, stream, launchParamsBuffer.RawDevicePtr(),
-                                  launchParamsBuffer.SizeAs<uint8_t>(), &sbt, launchParams.mFrame.mSize.x, launchParams.mFrame.mSize.y,
-                                  1 ) );
+                                  launchParamsBuffer.SizeAs<uint8_t>(), &mShaderBindingTable->mOptixObject,
+                                  launchParams.mFrame.mSize.x, launchParams.mFrame.mSize.y, 1 ) );
 
         denoiserIntensity.Resize( sizeof( float ) );
 
