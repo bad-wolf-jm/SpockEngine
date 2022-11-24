@@ -93,11 +93,59 @@ namespace SE::Core
         bool        lReadOK = tinyobj::LoadObj( &mAttributes, &mShapes, &mMaterials, &lErrorString, &lErrorString, aObjFile.c_str(),
                                                 mModelDir.c_str(), true );
         if( !lReadOK ) throw std::runtime_error( "Could not read OBJ model from " + aObjFile + " : " + lErrorString );
-
-        if( mMaterials.empty() ) throw std::runtime_error( "could not parse materials ..." );
-
+        if( mMaterials.empty() ) throw std::runtime_error( "Could not parse materials ..." );
         std::cout << "Done loading obj file - found " << mShapes.size() << " shapes with " << mMaterials.size() << " materials"
                   << std::endl;
+
+        for( uint32_t i = 0; i < mAttributes.vertices.size() / 3; i++ )
+            mVertexData.push_back(
+                math::vec3{ mAttributes.vertices[3 * i + 0], mAttributes.vertices[3 * i + 1], mAttributes.vertices[3 * i + 2] } );
+
+        for( uint32_t i = 0; i < mAttributes.vertices.size() / 3; i++ )
+            mNormalsData.push_back(
+                math::vec3{ mAttributes.normals[3 * i + 0], mAttributes.normals[3 * i + 1], mAttributes.normals[3 * i + 2] } );
+
+        for( uint32_t i = 0; i < mAttributes.vertices.size() / 2; i++ )
+            mTexCoordData.push_back( math::vec3{ mAttributes.texcoords[2 * i + 0], mAttributes.texcoords[2 * i + 1] } );
+
+        // Load textures
+
+        // Create materials for this model
+        uint32_t lMaterialIndex;
+        for( auto const &lMaterial : mMaterials )
+        {
+            sImportedMaterial lNewImportedMaterial{};
+
+            lNewImportedMaterial.mName =
+                lMaterial.name.empty() ? fmt::format( "UNNAMED_MATERIAL_{}", lMaterialIndex ) : lMaterial.name;
+
+            lNewImportedMaterial.mConstants.mIsTwoSided      = false;
+            lNewImportedMaterial.mConstants.mMetallicFactor  = lMaterial.metallic;
+            lNewImportedMaterial.mConstants.mRoughnessFactor = lMaterial.roughness;
+
+            lNewImportedMaterial.mConstants.mBaseColorFactor  = math::vec4{lMaterial.diffuse[0], lMaterial.diffuse[1], lMaterial.diffuse[2], 1.0f};
+            lNewImportedMaterial.mConstants.mEmissiveFactor   = math::vec4{lMaterial.emission[0], lMaterial.emission[1], lMaterial.emission[2], 1.0f};
+
+            // lNewImportedMaterial.mAlpha.mCutOff = 0.0f;
+
+            lNewImportedMaterial.mTextures.mBaseColorTexture         = RetrieveTextureData( lMaterial.diffuse_texname );
+            lNewImportedMaterial.mTextures.mMetallicRoughnessTexture = RetrieveTextureData( lMaterial, "metallicRoughnessTexture" );
+            lNewImportedMaterial.mTextures.mNormalTexture            = RetrieveAdditionalTextureData( lMaterial.normal_texname );
+            lNewImportedMaterial.mTextures.mEmissiveTexture          = RetrieveAdditionalTextureData( lMaterial.emissive_texname );
+            // lNewImportedMaterial.mTextures.mOcclusionTexture         = RetrieveAdditionalTextureData( lMaterial, "occlusionTexture" );
+
+            lNewImportedMaterial.mAlpha.mMode = sImportedMaterial::AlphaMode::BLEND_MODE;
+            // if( lMaterial.additionalValues.find( "alphaMode" ) != lMaterial.additionalValues.end() )
+            // {
+            //     tinygltf::Parameter param = lMaterial.additionalValues["alphaMode"];
+            //     if( param.string_value == "BLEND" ) lNewImportedMaterial.mAlpha.mMode = sImportedMaterial::AlphaMode::BLEND_MODE;
+
+            //     if( param.string_value == "MASK" ) lNewImportedMaterial.mAlpha.mMode = sImportedMaterial::AlphaMode::ALPHA_MASK_MODE;
+            // }
+
+            mMaterials.push_back( lNewImportedMaterial );
+            mMaterialIDLookup[lMaterialIndex++] = mMaterials.size() - 1;
+        }
 
         for( auto const &lShape : mShapes )
         {
@@ -119,7 +167,7 @@ namespace SE::Core
                     lMesh->mIndices.push_back( AddVertex( lIdx1 ) );
                     lMesh->mIndices.push_back( AddVertex( lIdx2 ) );
                     lMesh->mDiffuse          = (const math::vec3 &)mMaterials[lMaterialID].diffuse;
-                    lMesh->mDiffuseTextureID = loadTexture( mMaterials[lMaterialID].diffuse_texname, mModelDir );
+                    lMesh->mDiffuseTextureID = LoadTexture( mMaterials[lMaterialID].diffuse_texname, mModelDir );
                 }
 
                 if( lMesh->mVertex.empty() )

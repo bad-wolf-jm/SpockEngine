@@ -27,5 +27,11 @@ namespace SE::Core
         std::vector<tinyobj::shape_t>    mShapes;
         std::vector<tinyobj::material_t> mMaterials;
         fs::path                         mModelDir;
+
+        std::unordered_map<std::string, uint32_t> mTextureLookup;
+
+        std:::vector<math::vec3> mVertexData;
+        std:::vector<math::vec3> mNormalsData;
+        std:::vector<math::vec2> mTexCoordData;
     };
 } // namespace SE::Core
