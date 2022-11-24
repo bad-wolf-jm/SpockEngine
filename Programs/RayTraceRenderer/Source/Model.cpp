@@ -30,153 +30,153 @@ namespace osc
 {
 
     /*! find vertex with given position, normal, texcoord, and return
-        its vertex ID, or, if it doesn't exit, add it to the mesh, and
+        its vertex ID, or, if it doesn't exit, add it to the aMesh, and
         its just-created index */
-    int addVertex( TriangleMesh *mesh, tinyobj::attrib_t &attributes, const tinyobj::index_t &idx,
-                   std::map<tinyobj::index_t, int> &knownVertices )
+    int AddVertex( TriangleMesh *aMesh, tinyobj::attrib_t &aAttributes, const tinyobj::index_t &aIdx,
+                   std::map<tinyobj::index_t, int> &aKnownVertices )
     {
-        if( knownVertices.find( idx ) != knownVertices.end() ) return knownVertices[idx];
+        if( aKnownVertices.find( aIdx ) != aKnownVertices.end() ) return aKnownVertices[aIdx];
 
-        const math::vec3 *vertex_array   = (const math::vec3 *)attributes.vertices.data();
-        const math::vec3 *normal_array   = (const math::vec3 *)attributes.normals.data();
-        const math::vec2 *texcoord_array = (const math::vec2 *)attributes.texcoords.data();
+        const math::vec3 *lVertexArray   = (const math::vec3 *)aAttributes.vertices.data();
+        const math::vec3 *lNormalArray   = (const math::vec3 *)aAttributes.normals.data();
+        const math::vec2 *lTexCoordArray = (const math::vec2 *)aAttributes.texcoords.data();
 
-        int newID          = (int)mesh->mVertex.size();
-        knownVertices[idx] = newID;
+        int lNewID           = (int)aMesh->mVertex.size();
+        aKnownVertices[aIdx] = lNewID;
 
-        mesh->mVertex.push_back( vertex_array[idx.vertex_index] );
-        if( idx.normal_index >= 0 )
+        aMesh->mVertex.push_back( lVertexArray[aIdx.vertex_index] );
+        if( aIdx.normal_index >= 0 )
         {
-            while( mesh->mNormal.size() < mesh->mVertex.size() ) mesh->mNormal.push_back( normal_array[idx.normal_index] );
+            while( aMesh->mNormal.size() < aMesh->mVertex.size() ) aMesh->mNormal.push_back( lNormalArray[aIdx.normal_index] );
         }
-        if( idx.texcoord_index >= 0 )
+        if( aIdx.texcoord_index >= 0 )
         {
-            while( mesh->mTexCoord.size() < mesh->mVertex.size() ) mesh->mTexCoord.push_back( texcoord_array[idx.texcoord_index] );
+            while( aMesh->mTexCoord.size() < aMesh->mVertex.size() ) aMesh->mTexCoord.push_back( lTexCoordArray[aIdx.texcoord_index] );
         }
 
-        // just for sanity's sake:
-        if( mesh->mTexCoord.size() > 0 ) mesh->mTexCoord.resize( mesh->mVertex.size() );
-        // just for sanity's sake:
-        if( mesh->mNormal.size() > 0 ) mesh->mNormal.resize( mesh->mVertex.size() );
+        if( aMesh->mTexCoord.size() > 0 ) aMesh->mTexCoord.resize( aMesh->mVertex.size() );
+        if( aMesh->mNormal.size() > 0 ) aMesh->mNormal.resize( aMesh->mVertex.size() );
 
-        return newID;
+        return lNewID;
     }
 
     /*! load a texture (if not already loaded), and return its ID in the
         model's textures[] vector. Textures that could not get loaded
         return -1 */
-    int loadTexture( Model *model, std::map<std::string, int> &knownTextures, const std::string &inFileName,
-                     const std::string &modelPath )
+    int loadTexture( Model *aModel, std::map<std::string, int> &aKnownTextures, const std::string &aInFileName,
+                     const std::string &aModelPath )
     {
-        if( inFileName == "" ) return -1;
+        if( aInFileName == "" ) return -1;
 
-        if( knownTextures.find( inFileName ) != knownTextures.end() ) return knownTextures[inFileName];
+        if( aKnownTextures.find( aInFileName ) != aKnownTextures.end() ) return aKnownTextures[aInFileName];
 
-        std::string fileName = inFileName;
+        std::string lFileName = aInFileName;
         // first, fix backspaces:
-        for( auto &c : fileName )
+        for( auto &c : lFileName )
             if( c == '\\' ) c = '/';
-        fileName = modelPath + "/" + fileName;
+        lFileName = aModelPath + "/" + lFileName;
 
-        math::ivec2    res;
-        int            comp;
-        unsigned char *image     = stbi_load( fileName.c_str(), &res.x, &res.y, &comp, STBI_rgb_alpha );
-        int            textureID = -1;
-        if( image )
+        math::ivec2    lResolution;
+        int            lComp;
+        unsigned char *lImage     = stbi_load( lFileName.c_str(), &lResolution.x, &lResolution.y, &lComp, STBI_rgb_alpha );
+        int            lTextureID = -1;
+        if( lImage )
         {
-            textureID            = (int)model->mTextures.size();
+            lTextureID           = (int)aModel->mTextures.size();
             Texture *texture     = new Texture;
-            texture->mResolution = res;
-            texture->mPixel      = (uint32_t *)image;
+            texture->mResolution = lResolution;
+            texture->mPixel      = (uint32_t *)lImage;
 
             /* iw - actually, it seems that stbi loads the pictures
                mirrored along the y axis - mirror them here */
-            for( int y = 0; y < res.y / 2; y++ )
+            for( int y = 0; y < lResolution.y / 2; y++ )
             {
-                uint32_t *line_y     = texture->mPixel + y * res.x;
-                uint32_t *mirrored_y = texture->mPixel + ( res.y - 1 - y ) * res.x;
-                int       mirror_y   = res.y - 1 - y;
-                for( int x = 0; x < res.x; x++ )
+                uint32_t *line_y     = texture->mPixel + y * lResolution.x;
+                uint32_t *mirrored_y = texture->mPixel + ( lResolution.y - 1 - y ) * lResolution.x;
+                int       mirror_y   = lResolution.y - 1 - y;
+                for( int x = 0; x < lResolution.x; x++ )
                 {
                     std::swap( line_y[x], mirrored_y[x] );
                 }
             }
 
-            model->mTextures.push_back( texture );
+            aModel->mTextures.push_back( texture );
         }
         else
         {
-            std::cout << GDT_TERMINAL_RED << "Could not load texture from " << fileName << "!" << GDT_TERMINAL_DEFAULT << std::endl;
+            std::cout << GDT_TERMINAL_RED << "Could not load texture from " << lFileName << "!" << GDT_TERMINAL_DEFAULT << std::endl;
         }
 
-        knownTextures[inFileName] = textureID;
-        return textureID;
+        aKnownTextures[aInFileName] = lTextureID;
+        return lTextureID;
     }
 
-    Model *loadOBJ( const std::string &objFile )
+    Model *loadOBJ( const std::string &lObjFile )
     {
-        Model *model = new Model;
+        Model *lModel = new Model;
 
-        const std::string modelDir = objFile.substr( 0, objFile.rfind( '/' ) + 1 );
+        const std::string lModelDir = lObjFile.substr( 0, lObjFile.rfind( '/' ) + 1 );
 
-        tinyobj::attrib_t                attributes;
-        std::vector<tinyobj::shape_t>    shapes;
-        std::vector<tinyobj::material_t> materials;
-        std::string                      err = "";
+        tinyobj::attrib_t                aAttributes;
+        std::vector<tinyobj::shape_t>    lShapes;
+        std::vector<tinyobj::material_t> lMaterials;
+        std::string                      lErrorString = "";
 
-        bool readOK = tinyobj::LoadObj( &attributes, &shapes, &materials, &err, &err, objFile.c_str(), modelDir.c_str(),
-                                        /* triangulate */ true );
-        if( !readOK )
+        bool lReadOK =
+            tinyobj::LoadObj( &aAttributes, &lShapes, &lMaterials, &lErrorString, &lErrorString, lObjFile.c_str(), lModelDir.c_str(),
+                              /* triangulate */ true );
+        if( !lReadOK )
         {
-            throw std::runtime_error( "Could not read OBJ model from " + objFile + " : " + err );
+            throw std::runtime_error( "Could not read OBJ model from " + lObjFile + " : " + lErrorString );
         }
 
-        if( materials.empty() ) throw std::runtime_error( "could not parse materials ..." );
+        if( lMaterials.empty() ) throw std::runtime_error( "could not parse materials ..." );
 
-        std::cout << "Done loading obj file - found " << shapes.size() << " shapes with " << materials.size() << " materials"
+        std::cout << "Done loading obj file - found " << lShapes.size() << " shapes with " << lMaterials.size() << " materials"
                   << std::endl;
-        std::map<std::string, int> knownTextures;
-        for( int shapeID = 0; shapeID < (int)shapes.size(); shapeID++ )
+        std::map<std::string, int> lKnownTextures;
+        for( int lShapeID = 0; lShapeID < (int)lShapes.size(); lShapeID++ )
         {
-            tinyobj::shape_t &shape = shapes[shapeID];
+            tinyobj::shape_t &lShape = lShapes[lShapeID];
 
-            std::set<int> materialIDs;
-            for( auto faceMatID : shape.mesh.material_ids ) materialIDs.insert( faceMatID );
+            std::set<int> lMaterialIDs;
+            for( auto lFaceMatID : lShape.mesh.material_ids ) lMaterialIDs.insert( lFaceMatID );
 
-            std::map<tinyobj::index_t, int> knownVertices;
+            std::map<tinyobj::index_t, int> lKnownVertices;
 
-            for( int materialID : materialIDs )
+            for( int lMaterialID : lMaterialIDs )
             {
-                TriangleMesh *mesh = new TriangleMesh;
+                TriangleMesh *lMesh = new TriangleMesh;
 
-                for( int faceID = 0; faceID < shape.mesh.material_ids.size(); faceID++ )
+                for( int lFaceID = 0; lFaceID < lShape.mesh.material_ids.size(); lFaceID++ )
                 {
-                    if( shape.mesh.material_ids[faceID] != materialID ) continue;
-                    tinyobj::index_t idx0 = shape.mesh.indices[3 * faceID + 0];
-                    tinyobj::index_t idx1 = shape.mesh.indices[3 * faceID + 1];
-                    tinyobj::index_t idx2 = shape.mesh.indices[3 * faceID + 2];
+                    if( lShape.mesh.material_ids[lFaceID] != lMaterialID ) continue;
+                    tinyobj::index_t lIdx0 = lShape.mesh.indices[3 * lFaceID + 0];
+                    tinyobj::index_t lIdx1 = lShape.mesh.indices[3 * lFaceID + 1];
+                    tinyobj::index_t lIdx2 = lShape.mesh.indices[3 * lFaceID + 2];
 
-                    math::ivec3 idx( addVertex( mesh, attributes, idx0, knownVertices ),
-                                     addVertex( mesh, attributes, idx1, knownVertices ),
-                                     addVertex( mesh, attributes, idx2, knownVertices ) );
-                    mesh->mIndex.push_back( idx );
-                    mesh->mDiffuse          = (const math::vec3 &)materials[materialID].diffuse;
-                    mesh->mDiffuseTextureID = loadTexture( model, knownTextures, materials[materialID].diffuse_texname, modelDir );
+                    math::ivec3 lIdx( AddVertex( lMesh, aAttributes, lIdx0, lKnownVertices ),
+                                      AddVertex( lMesh, aAttributes, lIdx1, lKnownVertices ),
+                                      AddVertex( lMesh, aAttributes, lIdx2, lKnownVertices ) );
+                    lMesh->mIndex.push_back( lIdx );
+                    lMesh->mDiffuse = (const math::vec3 &)lMaterials[lMaterialID].diffuse;
+                    lMesh->mDiffuseTextureID =
+                        loadTexture( lModel, lKnownTextures, lMaterials[lMaterialID].diffuse_texname, lModelDir );
                 }
 
-                if( mesh->mVertex.empty() )
-                    delete mesh;
+                if( lMesh->mVertex.empty() )
+                    delete lMesh;
                 else
-                    model->mMeshes.push_back( mesh );
+                    lModel->mMeshes.push_back( lMesh );
             }
         }
 
         // of course, you should be using tbb::parallel_for for stuff
         // like this:
-        for( auto mesh : model->mMeshes )
-            for( auto vtx : mesh->mVertex ) model->mBounds.extend( vtx );
+        for( auto lMesh : lModel->mMeshes )
+            for( auto lVtx : lMesh->mVertex ) lModel->mBounds.extend( lVtx );
 
-        std::cout << "created a total of " << model->mMeshes.size() << " meshes" << std::endl;
-        return model;
+        std::cout << "created a total of " << lModel->mMeshes.size() << " meshes" << std::endl;
+        return lModel;
     }
 } // namespace osc
