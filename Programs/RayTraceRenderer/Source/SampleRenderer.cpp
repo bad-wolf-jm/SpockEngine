@@ -432,7 +432,6 @@ namespace osc
     {
         auto lColors = finalColorBuffer.Fetch<uint32_t>();
         for( uint32_t i = 0; i < lColors.size(); i++ ) h_pixels[i] = lColors[i];
-        // finalColorBuffer.download( h_pixels, launchParams.mFrame.mSize.x * launchParams.mFrame.mSize.y );
     }
 
 } // namespace osc
