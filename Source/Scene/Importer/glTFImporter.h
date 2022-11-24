@@ -28,7 +28,7 @@ namespace SE::Core
       private:
         void LoadSamplers();
         void CreateTexture( uint32_t aTextureIndex, std::string aName, tinygltf::Image const &aGltfimage,
-            sTextureSamplingInfo const &aTextureSamplingInfo );
+                            sTextureSamplingInfo const &aTextureSamplingInfo );
         void LoadTextures();
         sImportedMaterial::sTextureReference RetrieveTextureData( tinygltf::Material &aMaterial, std::string aName );
         sImportedMaterial::sTextureReference RetrieveAdditionalTextureData( tinygltf::Material &aMaterial, std::string aName );
@@ -62,8 +62,8 @@ namespace SE::Core
             }
         }
 
-        std::tuple<uint32_t, uint32_t, uint32_t, uint32_t> RetrievePrimitiveCount(
-            const tinygltf::Primitive &aPrimitive, std::string aName );
+        std::tuple<uint32_t, uint32_t, uint32_t, uint32_t> RetrievePrimitiveCount( const tinygltf::Primitive &aPrimitive,
+                                                                                   std::string                aName );
 
         void LoadMaterials();
 
