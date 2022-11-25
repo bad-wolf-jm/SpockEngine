@@ -119,17 +119,13 @@ namespace osc
     {
         try
         {
-            Model *model = loadOBJ(
-#ifdef _WIN32
-                // on windows, visual studio creates _two_ levels of build dir
-                // (x86/Release)
-                "C:/GitLab/SpockEngine/Programs/RayTraceRenderer/models/sponza.obj"
-#else
-                // on linux, common practice is to have ONE level of build dir
-                // (say, <project>/build/)...
-                "../models/sponza.obj"
-#endif
-            );
+            Model *model  = loadOBJ( "C:/GitLab/SpockEngine/Programs/RayTraceRenderer/models/sponza.obj" );
+            // Model *model  = loadOBJ( "C:/GitLab/SpockEngine/Saved/Scenes/Bedroom/iscv2.obj" );
+            // Model *model  = loadOBJ( "C:/GitLab/SpockEngine/Saved/Scenes/living_room/living_room.obj" );
+            // Model *model  = loadOBJ( "C:/GitLab/SpockEngine/Saved/Scenes/sibenik/sibenik.obj" );
+            // Model *model  = loadOBJ( "C:/GitLab/SpockEngine/Saved/Scenes/gallery/gallery.obj" );
+            // Model *model  = loadOBJ( "C:/GitLab/SpockEngine/Saved/Scenes/San_Miguel/san-miguel.obj" );
+            // Model *model  = loadOBJ( "C:/GitLab/SpockEngine/Saved/Scenes/fireplace_room/fireplace_room.obj" );
             Camera camera = { /*from*/ math::vec3( -1293.07f, 154.681f, -0.7304f ),
                               /* at */ model->mBounds.center() - math::vec3( 0, 400, 0 ),
                               /* up */ math::vec3( 0.f, 1.f, 0.f ) };

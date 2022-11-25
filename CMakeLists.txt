@@ -116,9 +116,18 @@ FetchContent_Declare(
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
   GIT_TAG        release
   GIT_PROGRESS   TRUE )
-
 FetchContent_MakeAvailable(tinygltf)
-set(SE_EXTRA_INCLUDES ${tinygltf} ${SE_EXTRA_INCLUDES})
+include_directories(${tinygltf_SOURCE_DIR})
+set(SE_EXTRA_INCLUDES ${tinygltf_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
+
+FetchContent_Declare(
+  tinyobjloader
+  GIT_REPOSITORY https://github.com/tinyobjloader/tinyobjloader.git
+  GIT_TAG        release
+  GIT_PROGRESS   TRUE )
+FetchContent_MakeAvailable(tinyobjloader)
+include_directories(${tinyobjloader_SOURCE_DIR})
+set(SE_EXTRA_INCLUDES ${tinyobjloader_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
 
 
 set(SE_EXTRA_INCLUDES ${SE_EXTRA_INCLUDES} PARENT_SCOPE)

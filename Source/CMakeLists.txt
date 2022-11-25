@@ -87,6 +87,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/Serialize/AssetFile.cpp
     
     Scene/Importer/glTFImporter.cpp
+    Scene/Importer/ObjImporter.cpp
 
     Editor/PopupWindow.cpp
     Editor/EditorWindow.cpp
@@ -210,6 +211,7 @@ target_link_libraries(LTSimulationEngineRuntime PRIVATE
     ws2_32
     yaml-cpp
     tinygltf
+    tinyobjloader
     lua::lua
     Zep
     ${ASSIMP_LIBRARIES}

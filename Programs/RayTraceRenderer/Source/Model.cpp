@@ -1,5 +1,5 @@
 #include "Model.h"
-#define TINYOBJLOADER_IMPLEMENTATION
+// #define TINYOBJLOADER_IMPLEMENTATION
 #include "3rdParty/tiny_obj_loader.h"
 
 #define STB_IMAGE_IMPLEMENTATION
