@@ -172,6 +172,8 @@ namespace SE::Graphics
 
         void                 GetTextureData( TextureData2D &aTextureData );
         sTextureSamplingInfo GetTextureSampling();
+        
+        void *GetMemoryHandle() { return mGraphicContext.mContext->GetSharedMemoryHandle( mTextureImageObject->mVkMemory ); }
 
       private:
         void TransitionImageLayout( VkImageLayout oldLayout, VkImageLayout newLayout );

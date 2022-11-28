@@ -59,6 +59,8 @@ namespace SE::Graphics
         /** @brief */
         inline VkSampler GetSampler() { return mTextureSamplerObject->mVkObject; }
 
+        void *GetMemoryHandle() { return mGraphicContext.mContext->GetSharedMemoryHandle( mTextureImageObject->mVkMemory ); }
+
         void TransitionImageLayout( VkImageLayout oldLayout, VkImageLayout newLayout );
 
       private:
