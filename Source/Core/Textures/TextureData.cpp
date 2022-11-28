@@ -66,6 +66,14 @@ namespace SE::Core
 
             if( !lData ) return sImageData{};
 
+            for( int y = 0; y < lHeight / 2; y++ )
+            {
+                uint32_t *line_y     = (uint32_t *)lData + y * lWidth;
+                uint32_t *mirrored_y = (uint32_t *)lData + ( lHeight - 1 - y ) * lWidth;
+                int       mirror_y   = lHeight - 1 - y;
+                for( int x = 0; x < lWidth; x++ ) std::swap( line_y[x], mirrored_y[x] );
+            }
+
             lImageData.mFormat    = eColorFormat::RGBA32_FLOAT;
             lImageData.mPixelData = reinterpret_cast<uint8_t *>( lData );
         }
@@ -76,6 +84,14 @@ namespace SE::Core
             stbi_uc *lData = stbi_load( aPath.string().c_str(), &lWidth, &lHeight, &lActualComponentCount, lComponentCount );
 
             if( !lData ) return sImageData{};
+
+            for( int y = 0; y < lHeight / 2; y++ )
+            {
+                uint32_t *line_y     = (uint32_t *)lData + y * lWidth;
+                uint32_t *mirrored_y = (uint32_t *)lData + ( lHeight - 1 - y ) * lWidth;
+                int       mirror_y   = lHeight - 1 - y;
+                for( int x = 0; x < lWidth; x++ ) std::swap( line_y[x], mirrored_y[x] );
+            }
 
             lImageData.mFormat    = eColorFormat::RGBA8_UNORM;
             lImageData.mPixelData = reinterpret_cast<uint8_t *>( lData );
@@ -91,46 +107,26 @@ namespace SE::Core
     {
         switch( aFormat )
         {
-        case eColorFormat::R32_FLOAT:
-            return gli::FORMAT_R32_SFLOAT_PACK32;
-        case eColorFormat::RG32_FLOAT:
-            return gli::FORMAT_RG32_SFLOAT_PACK32;
-        case eColorFormat::RGB32_FLOAT:
-            return gli::FORMAT_RGB32_SFLOAT_PACK32;
-        case eColorFormat::RGBA32_FLOAT:
-            return gli::FORMAT_RGBA32_SFLOAT_PACK32;
-        case eColorFormat::R16_FLOAT:
-            return gli::FORMAT_R16_SFLOAT_PACK16;
-        case eColorFormat::RG16_FLOAT:
-            return gli::FORMAT_RG16_SFLOAT_PACK16;
-        case eColorFormat::RGB16_FLOAT:
-            return gli::FORMAT_RGB16_SFLOAT_PACK16;
-        case eColorFormat::RGBA16_FLOAT:
-            return gli::FORMAT_RGBA16_SFLOAT_PACK16;
-        case eColorFormat::R8_UNORM:
-            return gli::FORMAT_R8_UNORM_PACK8;
-        case eColorFormat::RG8_UNORM:
-            return gli::FORMAT_RG8_UNORM_PACK8;
-        case eColorFormat::RGB8_UNORM:
-            return gli::FORMAT_RGB8_UNORM_PACK8;
-        case eColorFormat::RGBA8_UNORM:
-            return gli::FORMAT_RGBA8_UNORM_PACK8;
-        case eColorFormat::D16_UNORM:
-            return gli::FORMAT_D16_UNORM_PACK16;
-        case eColorFormat::X8_D24_UNORM_PACK32:
-            return gli::FORMAT_D24_UNORM_PACK32;
-        case eColorFormat::D32_SFLOAT:
-            return gli::FORMAT_D32_SFLOAT_PACK32;
-        case eColorFormat::S8_UINT:
-            return gli::FORMAT_R8_SNORM_PACK8;
-        case eColorFormat::D16_UNORM_S8_UINT:
-            return gli::FORMAT_D16_UNORM_S8_UINT_PACK32;
-        case eColorFormat::D24_UNORM_S8_UINT:
-            return gli::FORMAT_D24_UNORM_S8_UINT_PACK32;
-        case eColorFormat::D32_UNORM_S8_UINT:
-            return gli::FORMAT_D32_SFLOAT_S8_UINT_PACK64;
-        default:
-            return gli::FORMAT_UNDEFINED;
+        case eColorFormat::R32_FLOAT: return gli::FORMAT_R32_SFLOAT_PACK32;
+        case eColorFormat::RG32_FLOAT: return gli::FORMAT_RG32_SFLOAT_PACK32;
+        case eColorFormat::RGB32_FLOAT: return gli::FORMAT_RGB32_SFLOAT_PACK32;
+        case eColorFormat::RGBA32_FLOAT: return gli::FORMAT_RGBA32_SFLOAT_PACK32;
+        case eColorFormat::R16_FLOAT: return gli::FORMAT_R16_SFLOAT_PACK16;
+        case eColorFormat::RG16_FLOAT: return gli::FORMAT_RG16_SFLOAT_PACK16;
+        case eColorFormat::RGB16_FLOAT: return gli::FORMAT_RGB16_SFLOAT_PACK16;
+        case eColorFormat::RGBA16_FLOAT: return gli::FORMAT_RGBA16_SFLOAT_PACK16;
+        case eColorFormat::R8_UNORM: return gli::FORMAT_R8_UNORM_PACK8;
+        case eColorFormat::RG8_UNORM: return gli::FORMAT_RG8_UNORM_PACK8;
+        case eColorFormat::RGB8_UNORM: return gli::FORMAT_RGB8_UNORM_PACK8;
+        case eColorFormat::RGBA8_UNORM: return gli::FORMAT_RGBA8_UNORM_PACK8;
+        case eColorFormat::D16_UNORM: return gli::FORMAT_D16_UNORM_PACK16;
+        case eColorFormat::X8_D24_UNORM_PACK32: return gli::FORMAT_D24_UNORM_PACK32;
+        case eColorFormat::D32_SFLOAT: return gli::FORMAT_D32_SFLOAT_PACK32;
+        case eColorFormat::S8_UINT: return gli::FORMAT_R8_SNORM_PACK8;
+        case eColorFormat::D16_UNORM_S8_UINT: return gli::FORMAT_D16_UNORM_S8_UINT_PACK32;
+        case eColorFormat::D24_UNORM_S8_UINT: return gli::FORMAT_D24_UNORM_S8_UINT_PACK32;
+        case eColorFormat::D32_UNORM_S8_UINT: return gli::FORMAT_D32_SFLOAT_S8_UINT_PACK64;
+        default: return gli::FORMAT_UNDEFINED;
         }
     }
 
@@ -138,46 +134,26 @@ namespace SE::Core
     {
         switch( aFormat )
         {
-        case gli::FORMAT_R32_SFLOAT_PACK32:
-            return eColorFormat::R32_FLOAT;
-        case gli::FORMAT_RG32_SFLOAT_PACK32:
-            return eColorFormat::RG32_FLOAT;
-        case gli::FORMAT_RGB32_SFLOAT_PACK32:
-            return eColorFormat::RGB32_FLOAT;
-        case gli::FORMAT_RGBA32_SFLOAT_PACK32:
-            return eColorFormat::RGBA32_FLOAT;
-        case gli::FORMAT_R16_SFLOAT_PACK16:
-            return eColorFormat::R16_FLOAT;
-        case gli::FORMAT_RG16_SFLOAT_PACK16:
-            return eColorFormat::RG16_FLOAT;
-        case gli::FORMAT_RGB16_SFLOAT_PACK16:
-            return eColorFormat::RGB16_FLOAT;
-        case gli::FORMAT_RGBA16_SFLOAT_PACK16:
-            return eColorFormat::RGBA16_FLOAT;
-        case gli::FORMAT_R8_UNORM_PACK8:
-            return eColorFormat::R8_UNORM;
-        case gli::FORMAT_RG8_UNORM_PACK8:
-            return eColorFormat::RG8_UNORM;
-        case gli::FORMAT_RGB8_UNORM_PACK8:
-            return eColorFormat::RGB8_UNORM;
-        case gli::FORMAT_RGBA8_UNORM_PACK8:
-            return eColorFormat::RGBA8_UNORM;
-        case gli::FORMAT_D16_UNORM_PACK16:
-            return eColorFormat::D16_UNORM;
-        case gli::FORMAT_D24_UNORM_PACK32:
-            return eColorFormat::X8_D24_UNORM_PACK32;
-        case gli::FORMAT_D32_SFLOAT_PACK32:
-            return eColorFormat::D32_SFLOAT;
-        case gli::FORMAT_R8_SNORM_PACK8:
-            return eColorFormat::S8_UINT;
-        case gli::FORMAT_D16_UNORM_S8_UINT_PACK32:
-            return eColorFormat::D16_UNORM_S8_UINT;
-        case gli::FORMAT_D24_UNORM_S8_UINT_PACK32:
-            return eColorFormat::D24_UNORM_S8_UINT;
-        case gli::FORMAT_D32_SFLOAT_S8_UINT_PACK64:
-            return eColorFormat::D32_UNORM_S8_UINT;
-        default:
-            return eColorFormat::UNDEFINED;
+        case gli::FORMAT_R32_SFLOAT_PACK32: return eColorFormat::R32_FLOAT;
+        case gli::FORMAT_RG32_SFLOAT_PACK32: return eColorFormat::RG32_FLOAT;
+        case gli::FORMAT_RGB32_SFLOAT_PACK32: return eColorFormat::RGB32_FLOAT;
+        case gli::FORMAT_RGBA32_SFLOAT_PACK32: return eColorFormat::RGBA32_FLOAT;
+        case gli::FORMAT_R16_SFLOAT_PACK16: return eColorFormat::R16_FLOAT;
+        case gli::FORMAT_RG16_SFLOAT_PACK16: return eColorFormat::RG16_FLOAT;
+        case gli::FORMAT_RGB16_SFLOAT_PACK16: return eColorFormat::RGB16_FLOAT;
+        case gli::FORMAT_RGBA16_SFLOAT_PACK16: return eColorFormat::RGBA16_FLOAT;
+        case gli::FORMAT_R8_UNORM_PACK8: return eColorFormat::R8_UNORM;
+        case gli::FORMAT_RG8_UNORM_PACK8: return eColorFormat::RG8_UNORM;
+        case gli::FORMAT_RGB8_UNORM_PACK8: return eColorFormat::RGB8_UNORM;
+        case gli::FORMAT_RGBA8_UNORM_PACK8: return eColorFormat::RGBA8_UNORM;
+        case gli::FORMAT_D16_UNORM_PACK16: return eColorFormat::D16_UNORM;
+        case gli::FORMAT_D24_UNORM_PACK32: return eColorFormat::X8_D24_UNORM_PACK32;
+        case gli::FORMAT_D32_SFLOAT_PACK32: return eColorFormat::D32_SFLOAT;
+        case gli::FORMAT_R8_SNORM_PACK8: return eColorFormat::S8_UINT;
+        case gli::FORMAT_D16_UNORM_S8_UINT_PACK32: return eColorFormat::D16_UNORM_S8_UINT;
+        case gli::FORMAT_D24_UNORM_S8_UINT_PACK32: return eColorFormat::D24_UNORM_S8_UINT;
+        case gli::FORMAT_D32_SFLOAT_S8_UINT_PACK64: return eColorFormat::D32_UNORM_S8_UINT;
+        default: return eColorFormat::UNDEFINED;
         }
     }
 
@@ -185,19 +161,13 @@ namespace SE::Core
     {
         switch( aSwizzleComponent )
         {
-        case eSwizzleComponent::ONE:
-            return gli::SWIZZLE_ONE;
-        case eSwizzleComponent::R:
-            return gli::SWIZZLE_RED;
-        case eSwizzleComponent::G:
-            return gli::SWIZZLE_GREEN;
-        case eSwizzleComponent::B:
-            return gli::SWIZZLE_BLUE;
-        case eSwizzleComponent::A:
-            return gli::SWIZZLE_ALPHA;
+        case eSwizzleComponent::ONE: return gli::SWIZZLE_ONE;
+        case eSwizzleComponent::R: return gli::SWIZZLE_RED;
+        case eSwizzleComponent::G: return gli::SWIZZLE_GREEN;
+        case eSwizzleComponent::B: return gli::SWIZZLE_BLUE;
+        case eSwizzleComponent::A: return gli::SWIZZLE_ALPHA;
         case eSwizzleComponent::ZERO:
-        default:
-            return gli::SWIZZLE_ZERO;
+        default: return gli::SWIZZLE_ZERO;
         }
     }
 
@@ -205,19 +175,13 @@ namespace SE::Core
     {
         switch( aSwizzleComponent )
         {
-        case gli::SWIZZLE_ONE:
-            return eSwizzleComponent::ONE;
-        case gli::SWIZZLE_RED:
-            return eSwizzleComponent::R;
-        case gli::SWIZZLE_GREEN:
-            return eSwizzleComponent::G;
-        case gli::SWIZZLE_BLUE:
-            return eSwizzleComponent::B;
-        case gli::SWIZZLE_ALPHA:
-            return eSwizzleComponent::A;
+        case gli::SWIZZLE_ONE: return eSwizzleComponent::ONE;
+        case gli::SWIZZLE_RED: return eSwizzleComponent::R;
+        case gli::SWIZZLE_GREEN: return eSwizzleComponent::G;
+        case gli::SWIZZLE_BLUE: return eSwizzleComponent::B;
+        case gli::SWIZZLE_ALPHA: return eSwizzleComponent::A;
         case gli::SWIZZLE_ZERO:
-        default:
-            return eSwizzleComponent::ZERO;
+        default: return eSwizzleComponent::ZERO;
         }
     }
 
@@ -225,11 +189,9 @@ namespace SE::Core
     {
         switch( aTextureType )
         {
-        case eTextureType::TEXTURE_3D:
-            return gli::TARGET_3D;
+        case eTextureType::TEXTURE_3D: return gli::TARGET_3D;
         case eTextureType::TEXTURE_2D:
-        default:
-            return gli::TARGET_2D;
+        default: return gli::TARGET_2D;
         }
     }
 
@@ -237,35 +199,31 @@ namespace SE::Core
     {
         switch( aTextureType )
         {
-        case gli::TARGET_3D:
-            return eTextureType::TEXTURE_3D;
+        case gli::TARGET_3D: return eTextureType::TEXTURE_3D;
         case gli::TARGET_2D:
-        default:
-            return eTextureType::TEXTURE_2D;
+        default: return eTextureType::TEXTURE_2D;
         }
     }
 
     static const gli::swizzles ToGliType( const sSwizzleTransform &aSwizzleTransform )
     {
         return gli::swizzles( ToGliType( aSwizzleTransform.mR ), ToGliType( aSwizzleTransform.mG ), ToGliType( aSwizzleTransform.mB ),
-            ToGliType( aSwizzleTransform.mA ) );
+                              ToGliType( aSwizzleTransform.mA ) );
     }
 
     static const sSwizzleTransform ToLtseType( const gli::swizzles &aSwizzleTransform )
     {
         return sSwizzleTransform{ ToLtseType( aSwizzleTransform.r ), ToLtseType( aSwizzleTransform.g ),
-            ToLtseType( aSwizzleTransform.b ), ToLtseType( aSwizzleTransform.a ) };
+                                  ToLtseType( aSwizzleTransform.b ), ToLtseType( aSwizzleTransform.a ) };
     }
 
     static const gli::filter ToGliType( const eSamplerFilter &aTextureType )
     {
         switch( aTextureType )
         {
-        case eSamplerFilter::NEAREST:
-            return gli::FILTER_NEAREST;
+        case eSamplerFilter::NEAREST: return gli::FILTER_NEAREST;
         case eSamplerFilter::LINEAR:
-        default:
-            return gli::FILTER_LINEAR;
+        default: return gli::FILTER_LINEAR;
         }
     }
 
@@ -273,11 +231,9 @@ namespace SE::Core
     {
         switch( aTextureType )
         {
-        case eSamplerMipmap::NEAREST:
-            return gli::FILTER_NEAREST;
+        case eSamplerMipmap::NEAREST: return gli::FILTER_NEAREST;
         case eSamplerMipmap::LINEAR:
-        default:
-            return gli::FILTER_LINEAR;
+        default: return gli::FILTER_LINEAR;
         }
     }
 
@@ -285,17 +241,12 @@ namespace SE::Core
     {
         switch( aTextureType )
         {
-        case eSamplerWrapping::REPEAT:
-            return gli::WRAP_REPEAT;
-        case eSamplerWrapping::MIRRORED_REPEAT:
-            return gli::WRAP_MIRROR_REPEAT;
-        case eSamplerWrapping::CLAMP_TO_EDGE:
-            return gli::WRAP_CLAMP_TO_EDGE;
-        case eSamplerWrapping::MIRROR_CLAMP_TO_BORDER:
-            return gli::WRAP_MIRROR_CLAMP_TO_BORDER;
+        case eSamplerWrapping::REPEAT: return gli::WRAP_REPEAT;
+        case eSamplerWrapping::MIRRORED_REPEAT: return gli::WRAP_MIRROR_REPEAT;
+        case eSamplerWrapping::CLAMP_TO_EDGE: return gli::WRAP_CLAMP_TO_EDGE;
+        case eSamplerWrapping::MIRROR_CLAMP_TO_BORDER: return gli::WRAP_MIRROR_CLAMP_TO_BORDER;
         case eSamplerWrapping::CLAMP_TO_BORDER:
-        default:
-            return gli::WRAP_CLAMP_TO_BORDER;
+        default: return gli::WRAP_CLAMP_TO_BORDER;
         }
     }
 
@@ -399,7 +350,8 @@ namespace SE::Core
     void TextureData::Initialize()
     {
         mInternalTexture = gli::texture( ToGliType( mSpec.mType ), ToGliType( mSpec.mFormat ),
-            gli::extent3d{ mSpec.mWidth, mSpec.mHeight, mSpec.mDepth }, 1, 1, mSpec.mMipLevels, ToGliType( mSpec.mSwizzles ) );
+                                         gli::extent3d{ mSpec.mWidth, mSpec.mHeight, mSpec.mDepth }, 1, 1, mSpec.mMipLevels,
+                                         ToGliType( mSpec.mSwizzles ) );
     }
 
     TextureData2D::TextureData2D( TextureData::sCreateInfo const &aCreateInfo )
@@ -434,14 +386,14 @@ namespace SE::Core
     sImageData TextureData2D::GetImageData()
     {
         return { mSpec.mFormat, static_cast<size_t>( mSpec.mWidth ), static_cast<size_t>( mSpec.mHeight ), mInternalTexture2d.size(),
-            reinterpret_cast<uint8_t *>( mInternalTexture2d.data() ) };
+                 reinterpret_cast<uint8_t *>( mInternalTexture2d.data() ) };
     }
 
     TextureSampler2D::TextureSampler2D( TextureData2D const &aTexture, sTextureSamplingInfo const &aSamplingInfo )
         : gli::sampler2d<float>( aTexture.mInternalTexture2d, ToGliType( aSamplingInfo.mWrapping ), ToGliType( aSamplingInfo.mMip ),
-              ToGliType( aSamplingInfo.mMinification ),
-              gli::vec4{ aSamplingInfo.mBorderColor[0], aSamplingInfo.mBorderColor[1], aSamplingInfo.mBorderColor[2],
-                  aSamplingInfo.mBorderColor[3] } )
+                                 ToGliType( aSamplingInfo.mMinification ),
+                                 gli::vec4{ aSamplingInfo.mBorderColor[0], aSamplingInfo.mBorderColor[1],
+                                            aSamplingInfo.mBorderColor[2], aSamplingInfo.mBorderColor[3] } )
         , mSamplingSpec{ aSamplingInfo }
     {
     }

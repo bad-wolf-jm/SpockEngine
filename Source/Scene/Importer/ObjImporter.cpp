@@ -31,6 +31,8 @@ namespace SE::Core
 
         aMesh.mUV0.resize( aMesh.mPositions.size() );
         aMesh.mUV1.resize( aMesh.mPositions.size() );
+        aMesh.mJoints.resize( aMesh.mPositions.size() );
+        aMesh.mWeights.resize( aMesh.mPositions.size() );
         aMesh.mNormals.resize( aMesh.mPositions.size() );
 
         aMesh.mIndices.push_back( mKnownVertices[aIdx] );
@@ -56,7 +58,10 @@ namespace SE::Core
             lNewTexture.mName = aTextureName.empty() ? fmt::format( "TEXTURE_{}", mTextures.size() ) : aTextureName;
 
             lNewTexture.mTexture = New<TextureData2D>( TextureData::sCreateInfo{}, lTexturePath );
-            lNewTexture.mSampler = New<TextureSampler2D>( *lNewTexture.mTexture, sTextureSamplingInfo{} );
+
+            sTextureSamplingInfo lSamplerCreateInfo{};
+            lSamplerCreateInfo.mWrapping = eSamplerWrapping::REPEAT;
+            lNewTexture.mSampler         = New<TextureSampler2D>( *lNewTexture.mTexture, lSamplerCreateInfo );
 
             mTextures.push_back( lNewTexture );
             mKnownTextures[aTextureName] = mTextures.size() - 1;
@@ -76,8 +81,6 @@ namespace SE::Core
                                                      aObjFile.string().c_str(), mModelDir.string().c_str(), true );
         if( !lReadOK ) throw std::runtime_error( "Could not read OBJ model from " + aObjFile.string() + " : " + lErrorString );
         if( lObjMaterials.empty() ) throw std::runtime_error( "Could not parse materials ..." );
-        std::cout << "Done loading obj file - found " << mShapes.size() << " shapes with " << lObjMaterials.size() << " materials"
-                  << std::endl;
 
         for( uint32_t i = 0; i < mAttributes.vertices.size() / 3; i++ )
             mVertexData.push_back(

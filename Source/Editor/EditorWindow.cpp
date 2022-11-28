@@ -10,7 +10,9 @@
 #include "UI/Widgets.h"
 
 #include "Scene/Components.h"
+#include "Scene/Importer/ObjImporter.h"
 #include "Scene/Importer/glTFImporter.h"
+
 
 #include "Core/File.h"
 #include "Core/Logging.h"
@@ -739,12 +741,22 @@ namespace SE::Editor
 
     void EditorWindow::LoadScenario( fs::path aPath )
     {
-        auto lImporter = New<GlTFImporter>( aPath );
-        auto lName     = aPath.filename().string();
+        auto lName = aPath.filename().string();
+        auto lExt  = aPath.extension().string();
 
-        auto lNewModel = World->LoadModel( lImporter, math::mat4( 1.0f ), lName );
-        // lNewModel.Add<LockComponent>();
-        World->ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aComponent ) { World->MarkAsRayTracingTarget( aEntity ); } );
+        Ref<sImportedModel> lImporter = nullptr;
+        if( lExt == ".gltf" )
+            lImporter = New<GlTFImporter>( aPath );
+        else if( lExt == ".obj" )
+            lImporter = New<ObjImporter>( aPath );
+
+        if( lImporter != nullptr )
+        {
+            auto lNewModel = World->LoadModel( lImporter, math::mat4( 1.0f ), lName );
+            // lNewModel.Add<LockComponent>();
+            World->ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aComponent )
+                                                  { World->MarkAsRayTracingTarget( aEntity ); } );
+        }
     }
 
     void EditorWindow::Workspace( int32_t width, int32_t height )
