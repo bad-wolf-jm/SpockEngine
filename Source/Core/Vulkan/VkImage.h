@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <memory>
 #include <vulkan/vulkan.h>
 
@@ -33,7 +32,7 @@ namespace SE::Graphics::Internal
         sVkImageObject( sVkImageObject & ) = default;
         sVkImageObject( Ref<VkContext> aContext, VkImage aExternalImage );
         sVkImageObject( Ref<VkContext> aContext, uint32_t aWidth, uint32_t aHeight, uint32_t aDepth, uint32_t aMipLevels,
-                        uint32_t aLayers, uint8_t aSampleCount, bool aCubeCompatible, VkFormat aFormat,
+                        uint32_t aLayers, uint8_t aSampleCount, bool aCudaCompatible, bool aCubeCompatible, VkFormat aFormat,
                         VkMemoryPropertyFlags aProperties, VkImageUsageFlags aUsage );
 
         ~sVkImageObject();

@@ -8,7 +8,6 @@
 #include "Core/Textures/ColorFormat.h"
 #include "Core/Textures/TextureData.h"
 
-
 #include <gli/gli.hpp>
 
 #include "Buffer.h"
@@ -52,13 +51,13 @@ namespace SE::Graphics
         TextureData GetImageData();
 
         /** @brief */
-        inline VkImageView GetImageView() { return m_TextureView->mVkObject; }
+        inline VkImageView GetImageView() { return mTextureView->mVkObject; }
 
         /** @brief */
-        inline VkImage GetImage() { return m_TextureImageObject->mVkObject; }
+        inline VkImage GetImage() { return mTextureImageObject->mVkObject; }
 
         /** @brief */
-        inline VkSampler GetSampler() { return m_TextureSamplerObject->mVkObject; }
+        inline VkSampler GetSampler() { return mTextureSamplerObject->mVkObject; }
 
         void TransitionImageLayout( VkImageLayout oldLayout, VkImageLayout newLayout );
 
@@ -70,8 +69,8 @@ namespace SE::Graphics
       private:
         GraphicContext mGraphicContext{};
 
-        Ref<Internal::sVkImageObject>        m_TextureImageObject   = nullptr;
-        Ref<Internal::sVkImageSamplerObject> m_TextureSamplerObject = nullptr;
-        Ref<Internal::sVkImageViewObject>    m_TextureView          = nullptr;
+        Ref<Internal::sVkImageObject>        mTextureImageObject   = nullptr;
+        Ref<Internal::sVkImageSamplerObject> mTextureSamplerObject = nullptr;
+        Ref<Internal::sVkImageViewObject>    mTextureView          = nullptr;
     };
 } // namespace SE::Graphics

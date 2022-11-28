@@ -97,6 +97,7 @@ namespace SE::Graphics
     {
         bool                   ExternalImage       = false; /**!< */
         bool                   IsHostVisible       = false;
+        bool                   IsCudaVisible       = false;
         TextureUsage           Usage               = { TextureUsageFlags::SAMPLED };
         TextureAspectMask      AspectMask          = { TextureAspectMaskBits::COLOR };
         SamplerFilter          MinificationFilter  = SamplerFilter::LINEAR;
@@ -107,8 +108,8 @@ namespace SE::Graphics
         std::vector<Mip>       MipLevels           = {};
         bool                   Sampled             = false;
         uint8_t                SampleCount         = 1;
-        std::array<Swizzle, 4> ComponentSwizzle    = {
-            Swizzle::IDENTITY, Swizzle::IDENTITY, Swizzle::IDENTITY, Swizzle::IDENTITY }; /**!< */
+        std::array<Swizzle, 4> ComponentSwizzle    = { Swizzle::IDENTITY, Swizzle::IDENTITY, Swizzle::IDENTITY,
+                                                    Swizzle::IDENTITY }; /**!< */
 
         TextureDescription()                       = default;
         TextureDescription( TextureDescription & ) = default;
@@ -131,26 +132,26 @@ namespace SE::Graphics
         TextureDescription Spec; /**!< */
 
         /** @brief */
-        Texture2D( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription, VkImage a_Image );
+        Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription, VkImage aImage );
 
         /** @brief */
-        Texture2D( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription, TextureData &a_BufferData );
+        Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription, TextureData &aBufferData );
 
         /** @brief */
-        Texture2D( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription, sImageData &a_ImageData );
+        Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription, sImageData &aImageData );
 
         /** @brief */
-        Texture2D( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription, gli::texture2d &a_CubeMapData );
+        Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription, gli::texture2d &aCubeMapData );
 
         /** @brief */
-        Texture2D( GraphicContext &a_GraphicContext, TextureData2D &a_CubeMapData, TextureSampler2D &aSamplingInfo );
+        Texture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData, TextureSampler2D &aSamplingInfo );
 
         /** @brief */
-        Texture2D( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription );
+        Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription );
 
         /** @brief */
-        Texture2D( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription,
-            Ref<Internal::sVkFramebufferImage> a_FramebufferImage );
+        Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription,
+                   Ref<Internal::sVkFramebufferImage> a_FramebufferImage );
 
         /** @brief */
         ~Texture2D() = default;
@@ -158,16 +159,16 @@ namespace SE::Graphics
         TextureData GetImageData();
 
         /** @brief */
-        inline VkImageView GetImageView() { return m_TextureView->mVkObject; }
+        inline VkImageView GetImageView() { return mTextureView->mVkObject; }
 
         /** @brief */
-        inline VkImage GetImage() { return m_TextureImageObject->mVkObject; }
+        inline VkImage GetImage() { return mTextureImageObject->mVkObject; }
 
         /** @brief */
-        inline Ref<Internal::sVkImageObject> GetImageObject() { return m_TextureImageObject; }
+        inline Ref<Internal::sVkImageObject> GetImageObject() { return mTextureImageObject; }
 
         /** @brief */
-        inline VkSampler GetSampler() { return m_TextureSamplerObject->mVkObject; }
+        inline VkSampler GetSampler() { return mTextureSamplerObject->mVkObject; }
 
         void                 GetTextureData( TextureData2D &aTextureData );
         sTextureSamplingInfo GetTextureSampling();
@@ -181,8 +182,8 @@ namespace SE::Graphics
       private:
         GraphicContext mGraphicContext{};
 
-        Ref<Internal::sVkImageObject>        m_TextureImageObject   = nullptr;
-        Ref<Internal::sVkImageSamplerObject> m_TextureSamplerObject = nullptr;
-        Ref<Internal::sVkImageViewObject>    m_TextureView          = nullptr;
+        Ref<Internal::sVkImageObject>        mTextureImageObject   = nullptr;
+        Ref<Internal::sVkImageSamplerObject> mTextureSamplerObject = nullptr;
+        Ref<Internal::sVkImageViewObject>    mTextureView          = nullptr;
     };
 } // namespace SE::Graphics
