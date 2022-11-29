@@ -11,45 +11,39 @@ namespace SE::Core
 
     extern "C" char embedded_ptx_code[];
 
-    /*! SBT record for a raygen program */
-    struct __align__( OPTIX_SBT_RECORD_ALIGNMENT ) RaygenRecord
+#define RECORD_ALIGN __align__( OPTIX_SBT_RECORD_ALIGNMENT )
+#define RECORD_HEADER( header ) RECORD_ALIGN char header[OPTIX_SBT_RECORD_HEADER_SIZE]
+
+    struct RECORD_ALIGN sRaygenRecord
     {
-        __align__( OPTIX_SBT_RECORD_ALIGNMENT ) char header[OPTIX_SBT_RECORD_HEADER_SIZE];
-        // just a dummy value - later examples will use more interesting
-        // data here
+        RECORD_HEADER( mDummyHeader );
+
         void *data;
     };
 
-    /*! SBT record for a miss program */
-    struct __align__( OPTIX_SBT_RECORD_ALIGNMENT ) MissRecord
+    struct RECORD_ALIGN sMissRecord
     {
-        __align__( OPTIX_SBT_RECORD_ALIGNMENT ) char header[OPTIX_SBT_RECORD_HEADER_SIZE];
-        // just a dummy value - later examples will use more interesting
-        // data here
+        RECORD_HEADER( mDummyHeader );
+
         void *data;
     };
 
-    /*! SBT record for a hitgroup program */
-    struct __align__( OPTIX_SBT_RECORD_ALIGNMENT ) HitgroupRecord
+    struct RECORD_ALIGN sHitgroupRecord
     {
-        __align__( OPTIX_SBT_RECORD_ALIGNMENT ) char header[OPTIX_SBT_RECORD_HEADER_SIZE];
-        sTriangleMeshSBTData                         data;
+        RECORD_HEADER( mDummyHeader );
+
+        sTriangleMeshSBTData data;
     };
 
-    /*! constructor - performs all setup, including initializing
-      optix, creates mOptixModule->mOptixObject, pipeline, programs, SBT, etc. */
     RayTracingRenderer::RayTracingRenderer()
-
     {
         SE::Graphics::OptixDeviceContextObject::Initialize();
 
-        std::cout << "#osc: creating optix context ..." << std::endl;
         mOptixContext      = New<OptixDeviceContextObject>();
         const int deviceID = 0;
         CUDA_CHECK( SetDevice( deviceID ) );
         CUDA_CHECK( StreamCreate( &stream ) );
 
-        std::cout << "#osc: setting up module and pipeline ..." << std::endl;
         mOptixModule = New<OptixModuleObject>( "optixLaunchParams", embedded_ptx_code, mOptixContext );
         mOptixModule->CreateRayGenGroup( "__raygen__renderFrame" );
         mOptixModule->CreateMissGroup( "__miss__radiance" );
@@ -58,63 +52,59 @@ namespace SE::Core
         mOptixModule->CreateHitGroup( "__closesthit__shadow", "__anyhit__shadow" );
         mOptixPipeline = mOptixModule->CreatePipeline();
 
-        launchParamsBuffer = GPUMemory( sizeof( launchParams ) ); //.alloc( sizeof( launchParams ) );
+        mRayTracingParameterBuffer = GPUMemory( sizeof( mRayTracingParameters ) ); //.alloc( sizeof( launchParams ) );
         std::cout << "#osc: context, mOptixModule->mOptixObject, pipeline, etc, all set up ..." << std::endl;
     }
 
-
-    static void context_log_cb( unsigned int level, const char *tag, const char *message, void * )
-    {
-        fprintf( stderr, "[%2d][%12s]: %s\n", (int)level, tag, message );
-    }
-
-    void WorldSampler::BuildShaderBindingTable()
+    void RayTracingRenderer::BuildShaderBindingTable()
     {
         mShaderBindingTable = New<OptixShaderBindingTableObject>();
 
-        std::vector<RaygenRecord> lRaygenRecords =
-            mShaderBindingTable->NewRecordType<RaygenRecord>( mOptixModule->mRayGenProgramGroups );
-        raygenRecordsBuffer = GPUMemory::Create( lRaygenRecords );
-        mShaderBindingTable->BindRayGenRecordTable( raygenRecordsBuffer.RawDevicePtr() );
+        std::vector<sRaygenRecord> lRaygenRecords =
+            mShaderBindingTable->NewRecordType<sRaygenRecord>( mOptixModule->mRayGenProgramGroups );
+        mRaygenRecordsBuffer = GPUMemory::Create( lRaygenRecords );
+        mShaderBindingTable->BindRayGenRecordTable( mRaygenRecordsBuffer.RawDevicePtr() );
 
-        std::vector<MissRecord> lMissRecords = mShaderBindingTable->NewRecordType<MissRecord>( mOptixModule->mMissProgramGroups );
-        missRecordsBuffer                   = GPUMemory::Create( lMissRecords );
-        mShaderBindingTable->BindMissRecordTable<MissRecord>( missRecordsBuffer.RawDevicePtr(),
-                                                              missRecordsBuffer.SizeAs<MissRecord>() );
+        std::vector<sMissRecord> lMissRecords = mShaderBindingTable->NewRecordType<sMissRecord>( mOptixModule->mMissProgramGroups );
+        mMissRecordsBuffer                    = GPUMemory::Create( lMissRecords );
+        mShaderBindingTable->BindMissRecordTable<sMissRecord>( mMissRecordsBuffer.RawDevicePtr(),
+                                                               mMissRecordsBuffer.SizeAs<sMissRecord>() );
 
         std::vector<sHitgroupRecord> lHitgroupRecords;
-        a_Scene->ForEach<SE::Core::EntityComponentSystem::Components::sRayTracingTargetComponent,
-                         SE::Core::EntityComponentSystem::Components::sStaticMeshComponent>(
+        mScene->ForEach<SE::Core::EntityComponentSystem::Components::sRayTracingTargetComponent,
+                        SE::Core::EntityComponentSystem::Components::sStaticMeshComponent>(
             [&]( auto lEntity, auto &lComponent, auto &aMeshComponent )
             {
                 for( int lRayTypeID = 0; lRayTypeID < RAY_TYPE_COUNT; lRayTypeID++ )
                 {
-                    HitgroupRecord rec =
-                        mShaderBindingTable->NewRecordType<HitgroupRecord>( mOptixModule->mHitProgramGroups[lRayTypeID] );
-                    rec.data.mColor = mesh->mDiffuse;
-                    if( mesh->mDiffuseTextureID >= 0 && mesh->mDiffuseTextureID < textureObjects.size() )
-                    {
-                        rec.data.mHasTexture = true;
-                        rec.data.mTexture    = textureObjects[mesh->mDiffuseTextureID];
-                    }
-                    else
-                    {
-                        rec.data.mHasTexture = false;
-                    }
-                    rec.data.mIndex    = mIndices[meshID].DataAs<math::ivec3>();
-                    rec.data.mVertex   = mVertices[meshID].DataAs<math::vec3>();
-                    rec.data.mNormal   = mNormals[meshID].DataAs<math::vec3>();
-                    rec.data.mTexCoord = mTexCoords[meshID].DataAs<math::vec2>();
-                    hitgroupRecords.push_back( rec );
+                    sHitgroupRecord rec =
+                        mShaderBindingTable->NewRecordType<sHitgroupRecord>( mOptixModule->mHitProgramGroups[lRayTypeID] );
+                    // rec.data.mColor = mesh->mDiffuse;
+                    // if( mesh->mDiffuseTextureID >= 0 && mesh->mDiffuseTextureID < textureObjects.size() )
+                    // {
+                    //     rec.data.mHasTexture = true;
+                    //     rec.data.mTexture    = textureObjects[mesh->mDiffuseTextureID];
+                    // }
+                    // else
+                    // {
+                    //     rec.data.mHasTexture = false;
+                    // }
+                    // rec.data.mIndex    = mIndices[meshID].DataAs<math::ivec3>();
+                    // rec.data.mVertex   = mVertices[meshID].DataAs<math::vec3>();
+                    // rec.data.mNormal   = mNormals[meshID].DataAs<math::vec3>();
+                    // rec.data.mTexCoord = mTexCoords[meshID].DataAs<math::vec2>();
+                    lHitgroupRecords.push_back( rec );
                 }
             } );
         mHitgroupRecordsBuffer = GPUMemory::Create( lHitgroupRecords );
-        mSBT->BindHitRecordTable<sHitgroupRecord>( mHitgroupRecordsBuffer.RawDevicePtr(), mHitgroupRecordsBuffer.Size() );
+        mShaderBindingTable->BindHitRecordTable<sHitgroupRecord>( mHitgroupRecordsBuffer.RawDevicePtr(),
+                                                                  mHitgroupRecordsBuffer.Size() );
     }
 
     void RayTracingRenderer::Update( Ref<Scene> aWorld )
     {
-        launchParams.mSceneRoot = aWorld->GetRayTracingRoot();
+        mScene                           = aWorld;
+        mRayTracingParameters.mSceneRoot = aWorld->GetRayTracingRoot();
 
         BuildShaderBindingTable();
     }
@@ -122,17 +112,18 @@ namespace SE::Core
     /*! render one frame */
     void RayTracingRenderer::Render()
     {
-        if( launchParams.mFrame.mSize.x == 0 ) return;
+        if( mRayTracingParameters.mFrame.mSize.x == 0 ) return;
 
-        if( !accumulate ) launchParams.mFrame.mFrameID = 0;
-        launchParamsBuffer.Upload( launchParams );
-        launchParams.mFrame.mFrameID++;
+        if( !accumulate ) mRayTracingParameters.mFrame.mFrameID = 0;
+        mRayTracingParameterBuffer.Upload( mRayTracingParameters );
+        mRayTracingParameters.mFrame.mFrameID++;
 
-        launchParams.mNumLightSamples = 1;
-        launchParams.mNumPixelSamples = 1;
+        mRayTracingParameters.mNumLightSamples = 1;
+        mRayTracingParameters.mNumPixelSamples = 1;
 
-        mOptixPipeline->Launch( stream, launchParamsBuffer.RawDevicePtr(), launchParamsBuffer.SizeAs<uint8_t>(), mShaderBindingTable,
-                                math::uvec3{ launchParams.mFrame.mSize.x, launchParams.mFrame.mSize.y, 1 } );
+        mOptixPipeline->Launch( stream, mRayTracingParameterBuffer.RawDevicePtr(), mRayTracingParameterBuffer.SizeAs<uint8_t>(),
+                                mShaderBindingTable,
+                                math::uvec3{ mRayTracingParameters.mFrame.mSize.x, mRayTracingParameters.mFrame.mSize.y, 1 } );
 
         denoiserIntensity.Resize( sizeof( float ) );
 
@@ -148,37 +139,37 @@ namespace SE::Core
 
         denoiserParams.hdrIntensity = denoiserIntensity.RawDevicePtr();
         if( accumulate )
-            denoiserParams.blendFactor = 1.f / ( launchParams.mFrame.mFrameID );
+            denoiserParams.blendFactor = 1.f / ( mRayTracingParameters.mFrame.mFrameID );
         else
             denoiserParams.blendFactor = 0.0f;
 
         OptixImage2D inputLayer[3];
         inputLayer[0].data               = fbColor.RawDevicePtr();
-        inputLayer[0].width              = launchParams.mFrame.mSize.x;
-        inputLayer[0].height             = launchParams.mFrame.mSize.y;
-        inputLayer[0].rowStrideInBytes   = launchParams.mFrame.mSize.x * sizeof( float4 );
+        inputLayer[0].width              = mRayTracingParameters.mFrame.mSize.x;
+        inputLayer[0].height             = mRayTracingParameters.mFrame.mSize.y;
+        inputLayer[0].rowStrideInBytes   = mRayTracingParameters.mFrame.mSize.x * sizeof( float4 );
         inputLayer[0].pixelStrideInBytes = sizeof( float4 );
         inputLayer[0].format             = OPTIX_PIXEL_FORMAT_FLOAT4;
 
         inputLayer[2].data               = fbNormal.RawDevicePtr();
-        inputLayer[2].width              = launchParams.mFrame.mSize.x;
-        inputLayer[2].height             = launchParams.mFrame.mSize.y;
-        inputLayer[2].rowStrideInBytes   = launchParams.mFrame.mSize.x * sizeof( float4 );
+        inputLayer[2].width              = mRayTracingParameters.mFrame.mSize.x;
+        inputLayer[2].height             = mRayTracingParameters.mFrame.mSize.y;
+        inputLayer[2].rowStrideInBytes   = mRayTracingParameters.mFrame.mSize.x * sizeof( float4 );
         inputLayer[2].pixelStrideInBytes = sizeof( float4 );
         inputLayer[2].format             = OPTIX_PIXEL_FORMAT_FLOAT4;
 
         inputLayer[1].data               = fbAlbedo.RawDevicePtr();
-        inputLayer[1].width              = launchParams.mFrame.mSize.x;
-        inputLayer[1].height             = launchParams.mFrame.mSize.y;
-        inputLayer[1].rowStrideInBytes   = launchParams.mFrame.mSize.x * sizeof( float4 );
+        inputLayer[1].width              = mRayTracingParameters.mFrame.mSize.x;
+        inputLayer[1].height             = mRayTracingParameters.mFrame.mSize.y;
+        inputLayer[1].rowStrideInBytes   = mRayTracingParameters.mFrame.mSize.x * sizeof( float4 );
         inputLayer[1].pixelStrideInBytes = sizeof( float4 );
         inputLayer[1].format             = OPTIX_PIXEL_FORMAT_FLOAT4;
 
         OptixImage2D outputLayer;
-        outputLayer.data               = denoisedBuffer.RawDevicePtr();
-        outputLayer.width              = launchParams.mFrame.mSize.x;
-        outputLayer.height             = launchParams.mFrame.mSize.y;
-        outputLayer.rowStrideInBytes   = launchParams.mFrame.mSize.x * sizeof( float4 );
+        outputLayer.data               = mDenoisedBuffer.RawDevicePtr();
+        outputLayer.width              = mRayTracingParameters.mFrame.mSize.x;
+        outputLayer.height             = mRayTracingParameters.mFrame.mSize.y;
+        outputLayer.rowStrideInBytes   = mRayTracingParameters.mFrame.mSize.x * sizeof( float4 );
         outputLayer.pixelStrideInBytes = sizeof( float4 );
         outputLayer.format             = OPTIX_PIXEL_FORMAT_FLOAT4;
 
@@ -223,15 +214,15 @@ namespace SE::Core
     {
         lastSetCamera = camera;
         // reset accumulation
-        launchParams.mFrame.mFrameID    = 0;
-        launchParams.mCamera.mPosition  = camera.from;
-        launchParams.mCamera.mDirection = normalize( camera.at - camera.from );
-        const float cosFovy             = 0.66f;
-        const float aspect              = float( launchParams.mFrame.mSize.x ) / float( launchParams.mFrame.mSize.y );
-        launchParams.mCamera.mHorizontal =
-            cosFovy * aspect * math::normalize( math::cross( launchParams.mCamera.mDirection, camera.up ) );
-        launchParams.mCamera.mVertical =
-            cosFovy * normalize( cross( launchParams.mCamera.mHorizontal, launchParams.mCamera.mDirection ) );
+        mRayTracingParameters.mFrame.mFrameID    = 0;
+        mRayTracingParameters.mCamera.mPosition  = camera.from;
+        mRayTracingParameters.mCamera.mDirection = normalize( camera.at - camera.from );
+        const float cosFovy                      = 0.66f;
+        const float aspect = float( mRayTracingParameters.mFrame.mSize.x ) / float( mRayTracingParameters.mFrame.mSize.y );
+        mRayTracingParameters.mCamera.mHorizontal =
+            cosFovy * aspect * math::normalize( math::cross( mRayTracingParameters.mCamera.mDirection, camera.up ) );
+        mRayTracingParameters.mCamera.mVertical =
+            cosFovy * normalize( cross( mRayTracingParameters.mCamera.mHorizontal, mRayTracingParameters.mCamera.mDirection ) );
     }
 
     /*! resize frame buffer to given resolution */
@@ -273,18 +264,18 @@ namespace SE::Core
         // ------------------------------------------------------------------
         // resize our cuda frame buffer
 
-        denoisedBuffer.Resize( aOutputWidth * aOutputHeight * sizeof( float4 ) );
+        mDenoisedBuffer.Resize( aOutputWidth * aOutputHeight * sizeof( float4 ) );
         fbColor.Resize( aOutputWidth * aOutputHeight * sizeof( float4 ) );
         fbNormal.Resize( aOutputWidth * aOutputHeight * sizeof( float4 ) );
         fbAlbedo.Resize( aOutputWidth * aOutputHeight * sizeof( float4 ) );
-        finalColorBuffer.Resize( aOutputWidth * aOutputHeight * sizeof( uint32_t ) );
+        mFinalColorBuffer.Resize( aOutputWidth * aOutputHeight * sizeof( uint32_t ) );
 
         // update the launch parameters that we'll pass to the optix
         // launch:
-        launchParams.mFrame.mSize         = math::ivec2{ aOutputWidth, aOutputHeight };
-        launchParams.mFrame.mColorBuffer  = (math::vec4 *)fbColor.RawDevicePtr();
-        launchParams.mFrame.mNormalBuffer = (math::vec4 *)fbNormal.RawDevicePtr();
-        launchParams.mFrame.mAlbedoBuffer = (math::vec4 *)fbAlbedo.RawDevicePtr();
+        mRayTracingParameters.mFrame.mSize         = math::ivec2{ aOutputWidth, aOutputHeight };
+        mRayTracingParameters.mFrame.mColorBuffer  = (math::vec4 *)fbColor.RawDevicePtr();
+        mRayTracingParameters.mFrame.mNormalBuffer = (math::vec4 *)fbNormal.RawDevicePtr();
+        mRayTracingParameters.mFrame.mAlbedoBuffer = (math::vec4 *)fbAlbedo.RawDevicePtr();
 
         // and re-set the camera, since aspect may have changed
         setCamera( lastSetCamera );
@@ -298,7 +289,7 @@ namespace SE::Core
     /*! download the rendered color buffer */
     void RayTracingRenderer::downloadPixels( uint32_t h_pixels[] )
     {
-        auto lColors = finalColorBuffer.Fetch<uint32_t>();
+        auto lColors = mFinalColorBuffer.Fetch<uint32_t>();
         for( uint32_t i = 0; i < lColors.size(); i++ ) h_pixels[i] = lColors[i];
     }
 

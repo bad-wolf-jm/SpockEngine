@@ -55,22 +55,22 @@ namespace SE::Core
         CUstream       stream;
         cudaDeviceProp deviceProps;
 
-        GPUMemory raygenRecordsBuffer;
-        GPUMemory missRecordsBuffer;
-        GPUMemory hitgroupRecordsBuffer;
+        GPUMemory mRaygenRecordsBuffer;
+        GPUMemory mMissRecordsBuffer;
+        GPUMemory mHitgroupRecordsBuffer;
 
       public:
-        sLaunchParams launchParams;
+        sLaunchParams mRayTracingParameters;
 
       protected:
-        GPUMemory launchParamsBuffer;
+        GPUMemory mRayTracingParameterBuffer;
 
         GPUMemory fbColor;
         GPUMemory fbNormal;
         GPUMemory fbAlbedo;
 
-        GPUMemory denoisedBuffer;
-        GPUMemory finalColorBuffer;
+        GPUMemory mDenoisedBuffer;
+        GPUMemory mFinalColorBuffer;
 
         OptixDenoiser denoiser = nullptr;
         GPUMemory     denoiserScratch;
@@ -88,6 +88,7 @@ namespace SE::Core
         Ref<OptixModuleObject>             mOptixModule        = nullptr;
         Ref<OptixPipelineObject>           mOptixPipeline      = nullptr;
         Ref<OptixShaderBindingTableObject> mShaderBindingTable = nullptr;
-        Ref<OptixScene>                    mScene              = nullptr;
+
+        Ref<Scene> mScene = nullptr;
     };
 } // namespace SE::Core
