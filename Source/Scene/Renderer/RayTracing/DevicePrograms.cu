@@ -50,16 +50,6 @@ namespace SE::Core
         return reinterpret_cast<T *>( unpackPointer( u0, u1 ) );
     }
 
-    //------------------------------------------------------------------------------
-    // closest hit and anyhit programs for radiance-type rays.
-    //
-    // Note eventually we will have to create one pair of those for each
-    // ray type and each geometry type we want to render; but this
-    // simple example doesn't use any actual geometries yet, so we only
-    // create a single, dummy, set of them (we do have to have at least
-    // one group of them to set up the SBT)
-    //------------------------------------------------------------------------------
-
     extern "C" CUDA_KERNEL_DEFINITION void __closesthit__shadow()
     { /* not going to be used ... */
     }
@@ -69,21 +59,11 @@ namespace SE::Core
         const sTriangleMeshSBTData &sbtData = *(const sTriangleMeshSBTData *)optixGetSbtDataPointer();
         PRD                        &prd     = *GetPerRayData<PRD>();
 
-        // ------------------------------------------------------------------
-        // gather some basic hit information
-        // ------------------------------------------------------------------
         const int         primID = optixGetPrimitiveIndex();
         const math::ivec3 index  = sbtData.mIndex[primID];
         const float       u      = optixGetTriangleBarycentrics().x;
         const float       v      = optixGetTriangleBarycentrics().y;
 
-        // ------------------------------------------------------------------
-        // compute normal, using either shading normal (if avail), or
-        // geometry normal (fallback)
-        // ------------------------------------------------------------------
-        // const math::vec3 &A  = sbtData.mVertex[index.x];
-        // const math::vec3 &B  = sbtData.mVertex[index.y];
-        // const math::vec3 &C  = sbtData.mVertex[index.z];
         const int lPrimitiveID = optixGetPrimitiveIndex() + sbtData.mIndexOffset;
 
         const math::vec3 &A =
@@ -92,16 +72,16 @@ namespace SE::Core
             optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].y].Position;
         const math::vec3 &C =
             optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].z].Position;
-
         math::vec3 Ng = glm::cross( B - A, C - A );
-        math::vec3 Ns =
-            ( sbtData.mNormal )
-                ? ( ( 1.f - u - v ) * sbtData.mNormal[index.x] + u * sbtData.mNormal[index.y] + v * sbtData.mNormal[index.z] )
-                : Ng;
 
-        // ------------------------------------------------------------------
-        // face-forward and normalize normals
-        // ------------------------------------------------------------------
+        const math::vec3 &NA =
+            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].x].Normal;
+        const math::vec3 &NB =
+            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].y].Normal;
+        const math::vec3 &NC =
+            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].z].Normal;
+        math::vec3 Ns = ( ( 1.f - u - v ) * NA + u * NB + v * NC );
+
         float3           lWorldRayDirection = optixGetWorldRayDirection();
         const math::vec3 rayDir             = { lWorldRayDirection.x, lWorldRayDirection.y, lWorldRayDirection.z };
 
@@ -121,7 +101,7 @@ namespace SE::Core
             const math::vec2 &C =
                 optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].z].TexCoords_0;
 
-            const math::vec2 tc = ( 1.f - u - v ) * A + u * B + v * C;
+            const math::vec2 tc = ( 1.f - u - v ) * TA + u * TB + v * TC;
 
             auto       lValue      = tex2D<float4>( sbtData.mTexture, tc.x, tc.y );
             math::vec4 fromTexture = { lValue.x, lValue.y, lValue.z, lValue.w };
@@ -134,6 +114,13 @@ namespace SE::Core
         // ------------------------------------------------------------------
         // compute shadow
         // ------------------------------------------------------------------
+        const math::vec3 &A =
+            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].x].Position;
+        const math::vec3 &B =
+            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].y].Position;
+        const math::vec3 &C =
+            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].z].Position;
+
         const math::vec3 surfPos = ( 1.f - u - v ) * A + u * B + v * C;
 
         const int numLightSamples = optixLaunchParams.mNumLightSamples;
@@ -177,20 +164,12 @@ namespace SE::Core
     }
 
     extern "C" CUDA_KERNEL_DEFINITION void __anyhit__radiance()
-    { /*! for this simple example, this will remain empty */
+    { 
     }
 
     extern "C" CUDA_KERNEL_DEFINITION void __anyhit__shadow()
-    { /*! not going to be used */
+    { 
     }
-
-    //------------------------------------------------------------------------------
-    // miss program that gets called for any ray that did not have a
-    // valid intersection
-    //
-    // as with the anyhit/closest hit programs, in this example we only
-    // need to have _some_ dummy function to set up a valid SBT
-    // ------------------------------------------------------------------------------
 
     extern "C" CUDA_KERNEL_DEFINITION void __miss__radiance()
     {
