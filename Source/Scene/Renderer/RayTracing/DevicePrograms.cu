@@ -59,8 +59,6 @@ namespace SE::Core
         const sTriangleMeshSBTData &sbtData = *(const sTriangleMeshSBTData *)optixGetSbtDataPointer();
         PRD                        &prd     = *GetPerRayData<PRD>();
 
-        const int         primID = optixGetPrimitiveIndex();
-        const math::ivec3 index  = sbtData.mIndex[primID];
         const float       u      = optixGetTriangleBarycentrics().x;
         const float       v      = optixGetTriangleBarycentrics().y;
 
@@ -94,11 +92,11 @@ namespace SE::Core
         math::vec3 diffuseColor = sbtData.mColor;
         if( sbtData.mHasTexture && sbtData.mTexCoord )
         {
-            const math::vec2 &A =
+            const math::vec2 &TA =
                 optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].x].TexCoords_0;
-            const math::vec2 &B =
+            const math::vec2 &TB =
                 optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].y].TexCoords_0;
-            const math::vec2 &C =
+            const math::vec2 &TC =
                 optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].z].TexCoords_0;
 
             const math::vec2 tc = ( 1.f - u - v ) * TA + u * TB + v * TC;
@@ -114,13 +112,6 @@ namespace SE::Core
         // ------------------------------------------------------------------
         // compute shadow
         // ------------------------------------------------------------------
-        const math::vec3 &A =
-            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].x].Position;
-        const math::vec3 &B =
-            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].y].Position;
-        const math::vec3 &C =
-            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].z].Position;
-
         const math::vec3 surfPos = ( 1.f - u - v ) * A + u * B + v * C;
 
         const int numLightSamples = optixLaunchParams.mNumLightSamples;
