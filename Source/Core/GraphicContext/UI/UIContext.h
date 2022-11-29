@@ -62,8 +62,8 @@ namespace SE::Core
 
         ImGuiIO &GetIO();
 
-        ImageHandle        CreateTextureHandle( Ref<Texture2D> aTexture );
-        Ref<DescriptorSet> AddTexture( Ref<Texture2D> aTexture );
+        ImageHandle        CreateTextureHandle( Ref<Graphics::Texture2D> aTexture );
+        Ref<DescriptorSet> AddTexture( Ref<Graphics::Texture2D> aTexture );
 
         ImFont *mMonoFont;
         ImFont *mMainFont;
@@ -86,7 +86,7 @@ namespace SE::Core
         Ref<SE::Graphics::Internal::ShaderModule> mUIFragmentShader = nullptr;
         Ref<GraphicsPipeline>                       mUIRenderPipeline = nullptr;
 
-        Ref<Texture2D>     mFontTexture       = nullptr;
+        Ref<Graphics::Texture2D>     mFontTexture       = nullptr;
         Ref<DescriptorSet> mFontDescriptorSet = nullptr;
 
         Ref<Buffer> mVertexBuffer;

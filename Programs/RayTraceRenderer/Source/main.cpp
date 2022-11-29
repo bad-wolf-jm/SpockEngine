@@ -9,6 +9,7 @@
 /*! \namespace osc - Optix Siggraph Course */
 namespace osc
 {
+    using namespace SE::Core;
 
     struct SampleWindow : public GLFCameraWindow
     {
@@ -119,7 +120,7 @@ namespace osc
     {
         try
         {
-            Model *model  = loadOBJ( "C:/GitLab/SpockEngine/Programs/RayTraceRenderer/models/sponza.obj" );
+            Model *model = loadOBJ( "C:/GitLab/SpockEngine/Programs/RayTraceRenderer/models/sponza.obj" );
             // Model *model  = loadOBJ( "C:/GitLab/SpockEngine/Saved/Scenes/Bedroom/iscv2.obj" );
             // Model *model  = loadOBJ( "C:/GitLab/SpockEngine/Saved/Scenes/living_room/living_room.obj" );
             // Model *model  = loadOBJ( "C:/GitLab/SpockEngine/Saved/Scenes/sibenik/sibenik.obj" );

@@ -2,7 +2,7 @@ find_package(OpenGL REQUIRED)
 
 include_directories(${OptiX_INCLUDE})
 
-cuda_compile_and_embed(embedded_ptx_code devicePrograms.cu)
+# cuda_compile_and_embed(embedded_ptx_code devicePrograms.cu)
 
 # cuda_add_library(toneMap toneMap.cu)
 

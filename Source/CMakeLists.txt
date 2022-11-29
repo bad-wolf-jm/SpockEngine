@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.20)
 project(LTSimulationEngine LANGUAGES CUDA CXX C)
 
 cuda_compile_and_embed(g_SensorModelEnvironmentSampler Scene/EnvironmentSampler/DevicePrograms.cu)
+cuda_compile_and_embed(embedded_ptx_code Scene/Renderer/RayTracing/DevicePrograms.cu)
 
 add_library(LTSimulationEngineRuntime STATIC
     Core/File.cpp
@@ -85,7 +86,11 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/Renderer/VisualHelperMeshRenderer.cpp
     Scene/Serialize/FileIO.cpp
     Scene/Serialize/AssetFile.cpp
-    
+    ${embedded_ptx_code}
+    Scene/Renderer/RayTracing/ToneMap.cu
+    Scene/Renderer/RayTracing/RayTracingRenderer.h
+    Scene/Renderer/RayTracing/RayTracingRenderer.cpp
+
     Scene/Importer/glTFImporter.cpp
     Scene/Importer/ObjImporter.cpp
 
