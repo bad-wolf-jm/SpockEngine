@@ -91,11 +91,32 @@ namespace SE::Cuda
          */
         Texture2D( sTextureCreateInfo &aSpec, sImageData &aImageData );
 
+        /** @brief Constructor
+         *
+         * Create a texture from the provided imagedata, according to the requested specification.
+         *
+         * @param aSpec      Texture specification
+         * @param aImageData Texture image data
+         */
+        Texture2D( sTextureCreateInfo &aSpec, void *aExternalBuffer, size_t aImageMemorySize );
+
+        /** @brief Constructor
+         *
+         * Create a texture from the provided imagedata, according to the requested specification.
+         *
+         * @param aSpec      Texture specification
+         * @param aImageData Texture image data
+         */
+        // Texture2D( sTextureCreateInfo &aSpec, Graphics::Texture2D &aImageData );
+
         /** @brief Destructor */
         ~Texture2D();
 
       private:
-        cudaArray_t mInternalCudaArray = nullptr;
+        size_t               mImageMemorySize            = 0;
+        cudaArray_t          mInternalCudaArray          = nullptr;
+        cudaMipmappedArray_t mInternalCudaMipmappedArray = nullptr;
+        cudaExternalMemory_t mExternalMemoryHandle       = nullptr;
     };
 
     /** \class TextureSampler2D

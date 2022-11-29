@@ -144,7 +144,7 @@ namespace SE::Graphics
         Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription, gli::texture2d &aCubeMapData );
 
         /** @brief */
-        Texture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData, TextureSampler2D &aSamplingInfo );
+        Texture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData, TextureSampler2D &aSamplingInfo, bool aCudaVisible = true );
 
         /** @brief */
         Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription );
@@ -172,8 +172,9 @@ namespace SE::Graphics
 
         void                 GetTextureData( TextureData2D &aTextureData );
         sTextureSamplingInfo GetTextureSampling();
-        
+
         void *GetMemoryHandle() { return mGraphicContext.mContext->GetSharedMemoryHandle( mTextureImageObject->mVkMemory ); }
+        size_t GetMemorySize() { return mTextureImageObject->GetMemorySize(); }
 
       private:
         void TransitionImageLayout( VkImageLayout oldLayout, VkImageLayout newLayout );

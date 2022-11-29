@@ -22,9 +22,9 @@ namespace SE::Graphics::Internal
         : mContext{ aContext }
         , mExternal{ false }
     {
-        mVkObject = mContext->CreateImage( aWidth, aHeight, aDepth, aMipLevels, aLayers, aSampleCount, aCubeCompatible, aFormat,
+        mVkObject = mContext->CreateImage( aWidth, aHeight, aDepth, aMipLevels, aLayers, aSampleCount, aCudaCompatible, aCubeCompatible, aFormat,
                                            aProperties, aUsage );
-        mVkMemory = mContext->AllocateMemory( mVkObject, 0, false, aCudaCompatible );
+        mVkMemory = mContext->AllocateMemory( mVkObject, 0, false, aCudaCompatible, &mMemorySize );
 
         mContext->BindMemory( mVkObject, mVkMemory );
     }

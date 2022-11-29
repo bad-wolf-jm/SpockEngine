@@ -89,9 +89,40 @@ namespace SE::Cuda
             cudaMemcpyToArray( mInternalCudaArray, 0, 0, aImageData.mPixelData, aImageData.mByteSize, cudaMemcpyHostToDevice ) );
     }
 
+    Texture2D::Texture2D( sTextureCreateInfo &aSpec, void *aExternalBuffer, size_t aImageMemorySize )
+        : mSpec( aSpec )
+        , mImageMemorySize{ aImageMemorySize }
+    {
+        cudaExternalMemoryHandleDesc lCudaExternalMemoryHandleDesc{};
+        lCudaExternalMemoryHandleDesc.type                = cudaExternalMemoryHandleTypeOpaqueWin32;
+        lCudaExternalMemoryHandleDesc.size                = mImageMemorySize;
+        lCudaExternalMemoryHandleDesc.flags               = 0;
+        lCudaExternalMemoryHandleDesc.handle.win32.handle = aExternalBuffer;
+
+        CUDA_ASSERT( cudaImportExternalMemory( &mExternalMemoryHandle, &lCudaExternalMemoryHandleDesc ) );
+
+        cudaExternalMemoryMipmappedArrayDesc lExternalMemoryMipmappedArrayDesc{};
+        lExternalMemoryMipmappedArrayDesc.formatDesc = ToCudaChannelDesc( mSpec.mFormat );
+        lExternalMemoryMipmappedArrayDesc.extent     = make_cudaExtent( mSpec.mWidth, mSpec.mHeight, 1 );
+        lExternalMemoryMipmappedArrayDesc.numLevels  = 1;
+        lExternalMemoryMipmappedArrayDesc.flags      = 0;
+
+        CUDA_ASSERT( cudaExternalMemoryGetMappedMipmappedArray( &mInternalCudaMipmappedArray, mExternalMemoryHandle,
+                                                                &lExternalMemoryMipmappedArrayDesc ) );
+        CUDA_ASSERT( cudaGetMipmappedArrayLevel( &mInternalCudaArray, mInternalCudaMipmappedArray, 0 ) );
+    }
+
     Texture2D::~Texture2D()
     {
         if( ( nullptr != ( (void *)mInternalCudaArray ) ) ) CUDA_ASSERT( cudaFreeArray( mInternalCudaArray ) );
+        mInternalCudaArray = nullptr;
+
+        if( ( nullptr != ( (void *)mInternalCudaMipmappedArray ) ) )
+            CUDA_ASSERT( cudaFreeMipmappedArray( mInternalCudaMipmappedArray ) );
+        mInternalCudaMipmappedArray = nullptr;
+
+        if( mExternalMemoryHandle ) CUDA_ASSERT( cudaDestroyExternalMemory( mExternalMemoryHandle ) );
+        mExternalMemoryHandle = nullptr;
     }
 
     TextureSampler2D::TextureSampler2D( Ref<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingSpec )

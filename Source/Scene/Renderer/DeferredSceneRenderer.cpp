@@ -91,13 +91,14 @@ namespace SE::Core
         mLightingRenderer              = DeferredLightingRenderer( mGraphicContext, mLightingRendererCI );
 
         mLightingPassTextures->Write(
-            New<Texture2D>( mGraphicContext, TextureDescription{}, mGeometryRenderTarget->GetAttachment( "POSITION" ) ), 0 );
+            New<Graphics::Texture2D>( mGraphicContext, TextureDescription{}, mGeometryRenderTarget->GetAttachment( "POSITION" ) ), 0 );
         mLightingPassTextures->Write(
-            New<Texture2D>( mGraphicContext, TextureDescription{}, mGeometryRenderTarget->GetAttachment( "NORMALS" ) ), 1 );
+            New<Graphics::Texture2D>( mGraphicContext, TextureDescription{}, mGeometryRenderTarget->GetAttachment( "NORMALS" ) ), 1 );
         mLightingPassTextures->Write(
-            New<Texture2D>( mGraphicContext, TextureDescription{}, mGeometryRenderTarget->GetAttachment( "ALBEDO" ) ), 2 );
-        mLightingPassTextures->Write(
-            New<Texture2D>( mGraphicContext, TextureDescription{}, mGeometryRenderTarget->GetAttachment( "AO_METAL_ROUGH" ) ), 3 );
+            New<Graphics::Texture2D>( mGraphicContext, TextureDescription{}, mGeometryRenderTarget->GetAttachment( "ALBEDO" ) ), 2 );
+        mLightingPassTextures->Write( New<Graphics::Texture2D>( mGraphicContext, TextureDescription{},
+                                                                mGeometryRenderTarget->GetAttachment( "AO_METAL_ROUGH" ) ),
+                                      3 );
 
         CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
         lCoordinateGridRendererCreateInfo.RenderPass = mLightingContext.GetRenderPass();

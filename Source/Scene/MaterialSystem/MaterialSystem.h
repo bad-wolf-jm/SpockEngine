@@ -6,6 +6,8 @@
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//Texture2D.h"
 
+#include "Core/Cuda//Texture2D.h"
+
 using namespace math::literals;
 using namespace SE::Graphics;
 namespace fs = std::filesystem;
@@ -112,8 +114,9 @@ namespace SE::Core
       private:
         GraphicContext mGraphicContext;
 
-        std::vector<Ref<Graphics::Texture2D>> mTextures  = {};
-        std::vector<sMaterial>                mMaterials = {};
+        std::vector<Ref<Cuda::Texture2D>>     mCudaTextures = {};
+        std::vector<Ref<Graphics::Texture2D>> mTextures     = {};
+        std::vector<sMaterial>                mMaterials    = {};
 
         Ref<Buffer> mShaderMaterials = nullptr;
 

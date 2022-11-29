@@ -260,7 +260,7 @@ namespace SE::Graphics::Internal
 
         VkDeviceMemory DoAllocateMemory( VkPhysicalDevice aVkPhysicalDevice, VkDevice aVkLogicalDevice,
                                          VkMemoryRequirements aMemoryRequirements, size_t aSize, bool aIsHostVisible,
-                                         bool aIsCudaShareable )
+                                         bool aIsCudaShareable, bool aIsImage )
         {
             VkDeviceMemory lNewMemory;
 
@@ -515,25 +515,29 @@ namespace SE::Graphics::Internal
         if( mVkInstance != VK_NULL_HANDLE ) vkDestroyInstance( mVkInstance, nullptr );
     }
 
-    VkDeviceMemory VkContext::AllocateMemory( VkImage aVkImageObject, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable )
+    VkDeviceMemory VkContext::AllocateMemory( VkImage aVkImageObject, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable,
+                                              size_t *aAllocatedSize )
     {
         VkMemoryRequirements lMemoryRequirements;
         vkGetImageMemoryRequirements( mVkLogicalDevice, aVkImageObject, &lMemoryRequirements );
 
         VkDeviceMemory lNewMemory         = DoAllocateMemory( mVkPhysicalDevice, mVkLogicalDevice, lMemoryRequirements,
-                                                              lMemoryRequirements.size, aIsHostVisible, aIsCudaShareable );
+                                                              lMemoryRequirements.size, aIsHostVisible, aIsCudaShareable, true );
         mMemoryPropertyLookup[lNewMemory] = MemoryProperties{ aIsHostVisible, aIsCudaShareable };
+        if( aAllocatedSize ) *aAllocatedSize = lMemoryRequirements.size;
         return lNewMemory;
     }
 
-    VkDeviceMemory VkContext::AllocateMemory( VkBuffer aVkBufferObject, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable )
+    VkDeviceMemory VkContext::AllocateMemory( VkBuffer aVkBufferObject, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable,
+                                              size_t *aAllocatedSize )
     {
         VkMemoryRequirements lMemoryRequirements;
         vkGetBufferMemoryRequirements( mVkLogicalDevice, aVkBufferObject, &lMemoryRequirements );
 
-        VkDeviceMemory lNewMemory =
-            DoAllocateMemory( mVkPhysicalDevice, mVkLogicalDevice, lMemoryRequirements, aSize, aIsHostVisible, aIsCudaShareable );
+        VkDeviceMemory lNewMemory = DoAllocateMemory( mVkPhysicalDevice, mVkLogicalDevice, lMemoryRequirements, aSize, aIsHostVisible,
+                                                      aIsCudaShareable, false );
         mMemoryPropertyLookup[lNewMemory] = MemoryProperties{ aIsHostVisible, aIsCudaShareable };
+        if( aAllocatedSize ) *aAllocatedSize = lMemoryRequirements.size;
         return lNewMemory;
     }
 
@@ -619,12 +623,12 @@ namespace SE::Graphics::Internal
         lBufferCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
         lBufferCreateInfo.usage       = aBufferFlags;
 
-        VkExternalMemoryBufferCreateInfo externalMemoryBufferInfo{};
+        VkExternalMemoryBufferCreateInfo lExternalMemoryBufferInfo{};
         if( aIsCudaShareable )
         {
-            externalMemoryBufferInfo.sType       = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO;
-            externalMemoryBufferInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT;
-            lBufferCreateInfo.pNext              = &externalMemoryBufferInfo;
+            lExternalMemoryBufferInfo.sType       = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO;
+            lExternalMemoryBufferInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT;
+            lBufferCreateInfo.pNext               = &lExternalMemoryBufferInfo;
         }
 
         VkBuffer lNewBuffer{};
@@ -645,8 +649,8 @@ namespace SE::Graphics::Internal
     }
 
     VkImage VkContext::CreateImage( uint32_t aWidth, uint32_t aHeight, uint32_t aDepth, uint32_t aMipLevels, uint32_t aLayers,
-                                    uint8_t aSampleCount, bool aCubeCompatible, VkFormat aFormat, VkMemoryPropertyFlags aProperties,
-                                    VkImageUsageFlags aUsage )
+                                    uint8_t aSampleCount, bool aIsCudaShareable, bool aCubeCompatible, VkFormat aFormat,
+                                    VkMemoryPropertyFlags aProperties, VkImageUsageFlags aUsage )
     {
         VkImageCreateInfo lImageCreateInfo{};
         lImageCreateInfo.sType         = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -662,6 +666,14 @@ namespace SE::Graphics::Internal
         lImageCreateInfo.usage         = aUsage;
         lImageCreateInfo.samples       = VK_SAMPLE_COUNT_VALUE( aSampleCount );
         lImageCreateInfo.flags         = aCubeCompatible ? VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT : 0;
+
+        VkExternalMemoryImageCreateInfo lExternalMemoryBufferInfo{};
+        if( aIsCudaShareable )
+        {
+            lExternalMemoryBufferInfo.sType       = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO;
+            lExternalMemoryBufferInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT;
+            lImageCreateInfo.pNext                = &lExternalMemoryBufferInfo;
+        }
 
         VkImage lNewImage{};
         VK_CHECK_RESULT( vkCreateImage( mVkLogicalDevice, &lImageCreateInfo, nullptr, &lNewImage ) );

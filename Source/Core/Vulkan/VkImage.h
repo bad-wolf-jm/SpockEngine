@@ -37,9 +37,12 @@ namespace SE::Graphics::Internal
 
         ~sVkImageObject();
 
+        size_t GetMemorySize() { return mMemorySize; }
+
       private:
-        bool           mExternal = false;
-        Ref<VkContext> mContext  = nullptr;
+        bool           mExternal   = false;
+        Ref<VkContext> mContext    = nullptr;
+        size_t         mMemorySize = 0;
     };
 
     struct sVkImageSamplerObject

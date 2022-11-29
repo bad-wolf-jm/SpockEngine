@@ -162,7 +162,7 @@ namespace SE::Graphics
     }
 
     /** @brief */
-    Texture2D::Texture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData, TextureSampler2D &aSamplingInfo )
+    Texture2D::Texture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData, TextureSampler2D &aSamplingInfo, bool aCudaVisible )
         : mGraphicContext( aGraphicContext )
     {
         Spec.MinificationFilter  = Convert( aSamplingInfo.mSamplingSpec.mMinification );
@@ -171,7 +171,7 @@ namespace SE::Graphics
         Spec.WrappingMode        = Convert( aSamplingInfo.mSamplingSpec.mWrapping );
         Spec.Format              = aCubeMapData.mSpec.mFormat;
         Spec.Sampled             = true;
-        Spec.IsCudaVisible       = false;
+        Spec.IsCudaVisible       = aCudaVisible;
         Spec.SampleCount         = 1;
         Spec.Usage = { TextureUsageFlags::SAMPLED, TextureUsageFlags::TRANSFER_SOURCE, TextureUsageFlags::TRANSFER_DESTINATION };
 

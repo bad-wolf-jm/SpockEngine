@@ -43,7 +43,7 @@ namespace SE::Graphics::Internal
         void     DestroyBuffer( VkBuffer aBuffer );
 
         VkImage CreateImage( uint32_t aWidth, uint32_t aHeight, uint32_t aDepth, uint32_t aMipLevels, uint32_t aLayers,
-                             uint8_t aSampleCount, bool aCubeCompatible, VkFormat aFormat, VkMemoryPropertyFlags aProperties,
+                             uint8_t aSampleCount, bool aIsCudaShareable, bool aCubeCompatible, VkFormat aFormat, VkMemoryPropertyFlags aProperties,
                              VkImageUsageFlags aUsage );
         void    DestroyImage( VkImage aBuffer );
 
@@ -98,8 +98,8 @@ namespace SE::Graphics::Internal
         VkSemaphore CreateVkSemaphore();
         void        DestroySemaphore( VkSemaphore aFence );
 
-        VkDeviceMemory AllocateMemory( VkBuffer aVkBufferObject, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable );
-        VkDeviceMemory AllocateMemory( VkImage aVkImageObject, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable );
+        VkDeviceMemory AllocateMemory( VkBuffer aVkBufferObject, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable, size_t *aAllocatedSize = nullptr );
+        VkDeviceMemory AllocateMemory( VkImage aVkImageObject, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable, size_t *aAllocatedSize = nullptr );
         void           FreeMemory( VkDeviceMemory aMemory );
 
         template <typename _MapType>

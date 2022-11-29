@@ -98,9 +98,23 @@ namespace SE::Core
 
     uint32_t MaterialSystem::CreateTexture( TextureData2D &aTexture, TextureSampler2D &aTextureSampler )
     {
-        auto lNewTexture = New<Texture2D>( mGraphicContext, aTexture, aTextureSampler );
+        auto lNewTexture = New<Graphics::Texture2D>( mGraphicContext, aTexture, aTextureSampler, true );
 
         mTextures.push_back( lNewTexture );
+
+        Cuda::sTextureCreateInfo lNewTextureCreateInfo{};
+        lNewTextureCreateInfo.mFilterMode            = eSamplerFilter::LINEAR;
+        lNewTextureCreateInfo.mWrappingMode          = eSamplerWrapping::REPEAT;
+        lNewTextureCreateInfo.mFormat                = aTexture.mSpec.mFormat;
+        lNewTextureCreateInfo.mWidth                 = aTexture.mSpec.mWidth;
+        lNewTextureCreateInfo.mHeight                = aTexture.mSpec.mHeight;
+        lNewTextureCreateInfo.mNormalizedCoordinates = true;
+        lNewTextureCreateInfo.mNormalizedValues      = true;
+
+        auto lNewCudaTexture =
+            New<Cuda::Texture2D>( lNewTextureCreateInfo, lNewTexture->GetMemoryHandle(), lNewTexture->GetMemorySize() );
+
+        mCudaTextures.push_back( lNewCudaTexture );
 
         mDirty = true;
 
