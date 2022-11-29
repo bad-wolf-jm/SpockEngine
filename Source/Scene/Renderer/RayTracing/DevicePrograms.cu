@@ -114,14 +114,14 @@ namespace SE::Core
         math::vec3 diffuseColor = sbtData.mColor;
         if( sbtData.mHasTexture && sbtData.mTexCoord )
         {
-            const math::vec2 &TA =
+            const math::vec2 &A =
                 optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].x].TexCoords_0;
-            const math::vec2 &TB =
+            const math::vec2 &B =
                 optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].y].TexCoords_0;
-            const math::vec2 &TC =
+            const math::vec2 &C =
                 optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].z].TexCoords_0;
 
-            const math::vec2 tc = ( 1.f - u - v ) * TA + u * TB + v * TC;
+            const math::vec2 tc = ( 1.f - u - v ) * A + u * B + v * C;
 
             auto       lValue      = tex2D<float4>( sbtData.mTexture, tc.x, tc.y );
             math::vec4 fromTexture = { lValue.x, lValue.y, lValue.z, lValue.w };
