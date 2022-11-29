@@ -3,8 +3,8 @@
 #include <cuda_runtime.h>
 #include <optix_device.h>
 
-#include "LaunchParams.h"
 #include "Core/Cuda/Random.h"
+#include "LaunchParams.h"
 
 #define NUM_LIGHT_SAMPLES 8
 
@@ -81,14 +81,23 @@ namespace SE::Core
         // compute normal, using either shading normal (if avail), or
         // geometry normal (fallback)
         // ------------------------------------------------------------------
-        const math::vec3 &A  = sbtData.mVertex[index.x];
-        const math::vec3 &B  = sbtData.mVertex[index.y];
-        const math::vec3 &C  = sbtData.mVertex[index.z];
-        math::vec3        Ng = cross( B - A, C - A );
-        math::vec3        Ns =
+        // const math::vec3 &A  = sbtData.mVertex[index.x];
+        // const math::vec3 &B  = sbtData.mVertex[index.y];
+        // const math::vec3 &C  = sbtData.mVertex[index.z];
+        const int lPrimitiveID = optixGetPrimitiveIndex() + sbtData.mIndexOffset;
+
+        const math::vec3 &A =
+            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].x].Position;
+        const math::vec3 &B =
+            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].y].Position;
+        const math::vec3 &C =
+            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].z].Position;
+
+        math::vec3 Ng = glm::cross( B - A, C - A );
+        math::vec3 Ns =
             ( sbtData.mNormal )
-                       ? ( ( 1.f - u - v ) * sbtData.mNormal[index.x] + u * sbtData.mNormal[index.y] + v * sbtData.mNormal[index.z] )
-                       : Ng;
+                ? ( ( 1.f - u - v ) * sbtData.mNormal[index.x] + u * sbtData.mNormal[index.y] + v * sbtData.mNormal[index.z] )
+                : Ng;
 
         // ------------------------------------------------------------------
         // face-forward and normalize normals
@@ -102,15 +111,17 @@ namespace SE::Core
         if( dot( Ng, Ns ) < 0.f ) Ns -= 2.f * dot( Ng, Ns ) * Ng;
         Ns = normalize( Ns );
 
-        // ------------------------------------------------------------------
-        // compute diffuse material color, including diffuse texture, if
-        // available
-        // ------------------------------------------------------------------
         math::vec3 diffuseColor = sbtData.mColor;
         if( sbtData.mHasTexture && sbtData.mTexCoord )
         {
-            const math::vec2 tc =
-                ( 1.f - u - v ) * sbtData.mTexCoord[index.x] + u * sbtData.mTexCoord[index.y] + v * sbtData.mTexCoord[index.z];
+            const math::vec2 &TA =
+                optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].x].TexCoords_0;
+            const math::vec2 &TB =
+                optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].y].TexCoords_0;
+            const math::vec2 &TC =
+                optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].z].TexCoords_0;
+
+            const math::vec2 tc = ( 1.f - u - v ) * TA + u * TB + v * TC;
 
             auto       lValue      = tex2D<float4>( sbtData.mTexture, tc.x, tc.y );
             math::vec4 fromTexture = { lValue.x, lValue.y, lValue.z, lValue.w };
@@ -123,8 +134,7 @@ namespace SE::Core
         // ------------------------------------------------------------------
         // compute shadow
         // ------------------------------------------------------------------
-        const math::vec3 surfPos =
-            ( 1.f - u - v ) * sbtData.mVertex[index.x] + u * sbtData.mVertex[index.y] + v * sbtData.mVertex[index.z];
+        const math::vec3 surfPos = ( 1.f - u - v ) * A + u * B + v * C;
 
         const int numLightSamples = optixLaunchParams.mNumLightSamples;
         for( int lightSampleID = 0; lightSampleID < numLightSamples; lightSampleID++ )
@@ -147,17 +157,14 @@ namespace SE::Core
                 auto lRayOrigin = surfPos + 1e-3f * Ng;
                 optixTrace( optixLaunchParams.mSceneRoot, float3{ lRayOrigin.x, lRayOrigin.y, lRayOrigin.z },
                             float3{ lightDir.x, lightDir.y, lightDir.z },
-                            1e-3f,                       // tmin
-                            lightDist * ( 1.f - 1e-3f ), // tmax
-                            0.0f,                        // rayTime
+                            1e-3f,                       
+                            lightDist * ( 1.f - 1e-3f ), 
+                            0.0f,                        
                             OptixVisibilityMask( 255 ),
-                            // For shadow rays: skip any/closest hit shaders and terminate on first
-                            // intersection with anything. The miss shader is used to mark if the
-                            // light was visible.
                             OPTIX_RAY_FLAG_DISABLE_ANYHIT | OPTIX_RAY_FLAG_TERMINATE_ON_FIRST_HIT | OPTIX_RAY_FLAG_DISABLE_CLOSESTHIT,
-                            SHADOW_RAY_TYPE, // SBT offset
-                            RAY_TYPE_COUNT,  // SBT stride
-                            SHADOW_RAY_TYPE, // missSBTIndex
+                            SHADOW_RAY_TYPE,
+                            RAY_TYPE_COUNT, 
+                            SHADOW_RAY_TYPE,
                             u0, u1 );
                 pixelColor += lightVisibility * optixLaunchParams.mLight.mPower * diffuseColor *
                               ( NdotL / ( lightDist * lightDist * numLightSamples ) );
@@ -224,36 +231,21 @@ namespace SE::Core
         math::vec3 pixelAlbedo( 0.f );
         for( int sampleID = 0; sampleID < numPixelSamples; sampleID++ )
         {
-            // normalized screen plane position, in [0,1]^2
-
-            // iw: note for denoising that's not actually correct - if we
-            // assume that the camera should only(!) cover the denoised
-            // screen then the actual screen plane we shuld be using during
-            // rendreing is slightly larger than [0,1]^2
             math::vec2 screen( math::vec2( ix + prd.mRandom(), iy + prd.mRandom() ) / math::vec2( optixLaunchParams.mFrame.mSize ) );
-            // screen
-            //   = screen
-            //   * math::vec2(optixLaunchParams.frame.denoisedSize)
-            //   * math::vec2(optixLaunchParams.frame.size)
-            //   - 0.5f*(math::vec2(optixLaunchParams.frame.size)
-            //           -
-            //           math::vec2(optixLaunchParams.frame.denoisedSize)
-            //           );
 
-            // generate ray direction
             math::vec3 rayDir =
                 normalize( camera.mDirection + ( screen.x - 0.5f ) * camera.mHorizontal + ( screen.y - 0.5f ) * camera.mVertical );
 
             optixTrace( optixLaunchParams.mSceneRoot, float3{ camera.mPosition.x, camera.mPosition.y, camera.mPosition.z },
                         float3{ rayDir.x, rayDir.y, rayDir.z },
-                        0.f,   // tmin
-                        1e20f, // tmax
-                        0.0f,  // rayTime
+                        0.f,  
+                        1e20f,
+                        0.0f, 
                         OptixVisibilityMask( 255 ),
-                        OPTIX_RAY_FLAG_DISABLE_ANYHIT, // OPTIX_RAY_FLAG_NONE,
-                        RADIANCE_RAY_TYPE,             // SBT offset
-                        RAY_TYPE_COUNT,                // SBT stride
-                        RADIANCE_RAY_TYPE,             // missSBTIndex
+                        OPTIX_RAY_FLAG_DISABLE_ANYHIT,
+                        RADIANCE_RAY_TYPE,            
+                        RAY_TYPE_COUNT,               
+                        RADIANCE_RAY_TYPE,            
                         u0, u1 );
             pixelColor += prd.mPixelColor;
             pixelNormal += prd.mPixelNormal;
@@ -276,4 +268,4 @@ namespace SE::Core
         optixLaunchParams.mFrame.mNormalBuffer[fbIndex] = (math::vec4)normal;
     }
 
-} // namespace osc
+} // namespace SE::Core

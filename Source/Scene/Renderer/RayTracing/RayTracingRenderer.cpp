@@ -79,20 +79,11 @@ namespace SE::Core
                 {
                     sHitgroupRecord rec =
                         mShaderBindingTable->NewRecordType<sHitgroupRecord>( mOptixModule->mHitProgramGroups[lRayTypeID] );
-                    // rec.data.mColor = mesh->mDiffuse;
-                    // if( mesh->mDiffuseTextureID >= 0 && mesh->mDiffuseTextureID < textureObjects.size() )
-                    // {
-                    //     rec.data.mHasTexture = true;
-                    //     rec.data.mTexture    = textureObjects[mesh->mDiffuseTextureID];
-                    // }
-                    // else
-                    // {
-                    //     rec.data.mHasTexture = false;
-                    // }
-                    // rec.data.mIndex    = mIndices[meshID].DataAs<math::ivec3>();
-                    // rec.data.mVertex   = mVertices[meshID].DataAs<math::vec3>();
-                    // rec.data.mNormal   = mNormals[meshID].DataAs<math::vec3>();
-                    // rec.data.mTexCoord = mTexCoords[meshID].DataAs<math::vec2>();
+
+                    rec.data.mVertexOffset = aMeshComponent.mVertexOffset;
+                    rec.data.mIndexOffset  = aMeshComponent.mIndexOffset / 3;
+                    if( lEntity.Has<sMaterialComponent>() ) rec.data.mMaterialID = lEntity.Get<sMaterialComponent>().mMaterialID;
+
                     lHitgroupRecords.push_back( rec );
                 }
             } );
@@ -120,6 +111,12 @@ namespace SE::Core
 
         mRayTracingParameters.mNumLightSamples = 1;
         mRayTracingParameters.mNumPixelSamples = 1;
+
+        SE::Cuda::GPUExternalMemory lTransformedVertexBuffer( *mScene->mTransformedVertexBuffer,
+                                                              mScene->mTransformedVertexBuffer->SizeAs<uint8_t>() );
+        SE::Cuda::GPUExternalMemory lIndexBuffer( *mScene->mIndexBuffer, mScene->mIndexBuffer->SizeAs<uint8_t>() );
+        mRayTracingParameters.mIndexBuffer  = lIndexBuffer.DataAs<math::uvec3>();
+        mRayTracingParameters.mVertexBuffer = lTransformedVertexBuffer.DataAs<VertexData>();
 
         mOptixPipeline->Launch( stream, mRayTracingParameterBuffer.RawDevicePtr(), mRayTracingParameterBuffer.SizeAs<uint8_t>(),
                                 mShaderBindingTable,

@@ -3,6 +3,8 @@
 #include "Core/Math/Types.h"
 #include "Core/Optix/Optix7.h"
 
+#include "Scene/VertexData.h"
+
 namespace SE::Core
 {
     // for this simple example, we have a single ray type
@@ -23,6 +25,10 @@ namespace SE::Core
         bool         mHasTexture;
 
         cudaTextureObject_t mTexture;
+
+        uint32_t mMaterialID;
+        uint32_t mVertexOffset;
+        uint32_t mIndexOffset;
     };
 
     struct sLaunchParams
@@ -36,7 +42,6 @@ namespace SE::Core
             math::vec4 *mNormalBuffer;
             math::vec4 *mAlbedoBuffer;
 
-            /*! the size of the frame buffer to render */
             math::ivec2 mSize;
             int         mAccumID{ 0 };
         } mFrame;
@@ -55,6 +60,9 @@ namespace SE::Core
         } mLight;
 
         OptixTraversableHandle mSceneRoot;
+
+        VertexData  *mVertexBuffer = nullptr;
+        math::uvec3 *mIndexBuffer  = nullptr;
     };
 
-} // namespace osc
+} // namespace SE::Core
