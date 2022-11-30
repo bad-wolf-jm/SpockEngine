@@ -59,8 +59,8 @@ namespace SE::Core
         const sTriangleMeshSBTData &sbtData = *(const sTriangleMeshSBTData *)optixGetSbtDataPointer();
         PRD                        &prd     = *GetPerRayData<PRD>();
 
-        const float       u      = optixGetTriangleBarycentrics().x;
-        const float       v      = optixGetTriangleBarycentrics().y;
+        const float u = optixGetTriangleBarycentrics().x;
+        const float v = optixGetTriangleBarycentrics().y;
 
         const int lPrimitiveID = optixGetPrimitiveIndex() + sbtData.mIndexOffset;
 
@@ -90,77 +90,70 @@ namespace SE::Core
         Ns = normalize( Ns );
 
         math::vec3 diffuseColor = sbtData.mColor;
-        if( sbtData.mHasTexture && sbtData.mTexCoord )
-        {
-            const math::vec2 &TA =
-                optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].x].TexCoords_0;
-            const math::vec2 &TB =
-                optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].y].TexCoords_0;
-            const math::vec2 &TC =
-                optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].z].TexCoords_0;
+        // if( sbtData.mHasTexture && sbtData.mTexCoord )
+        // {
+        //     const math::vec2 &TA =
+        //         optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].x].TexCoords_0;
+        //     const math::vec2 &TB =
+        //         optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].y].TexCoords_0;
+        //     const math::vec2 &TC =
+        //         optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].z].TexCoords_0;
 
-            const math::vec2 tc = ( 1.f - u - v ) * TA + u * TB + v * TC;
+        //     const math::vec2 tc = ( 1.f - u - v ) * TA + u * TB + v * TC;
 
-            auto       lValue      = tex2D<float4>( sbtData.mTexture, tc.x, tc.y );
-            math::vec4 fromTexture = { lValue.x, lValue.y, lValue.z, lValue.w };
-            diffuseColor *= (math::vec3)fromTexture;
-        }
+        //     auto       lValue      = tex2D<float4>( sbtData.mTexture, tc.x, tc.y );
+        //     math::vec4 fromTexture = { lValue.x, lValue.y, lValue.z, lValue.w };
+        //     diffuseColor *= (math::vec3)fromTexture;
+        // }
 
-        // start with some ambient term
+        // // start with some ambient term
         math::vec3 pixelColor = ( 0.1f + 0.2f * fabsf( dot( Ns, rayDir ) ) ) * diffuseColor;
 
-        // ------------------------------------------------------------------
-        // compute shadow
-        // ------------------------------------------------------------------
-        const math::vec3 surfPos = ( 1.f - u - v ) * A + u * B + v * C;
+        // // ------------------------------------------------------------------
+        // // compute shadow
+        // // ------------------------------------------------------------------
+        // const math::vec3 surfPos = ( 1.f - u - v ) * A + u * B + v * C;
 
-        const int numLightSamples = optixLaunchParams.mNumLightSamples;
-        for( int lightSampleID = 0; lightSampleID < numLightSamples; lightSampleID++ )
-        {
-            // produce random light sample
-            const math::vec3 lightPos = optixLaunchParams.mLight.mOrigin + prd.mRandom() * optixLaunchParams.mLight.mDu +
-                                        prd.mRandom() * optixLaunchParams.mLight.mDv;
-            math::vec3 lightDir  = lightPos - surfPos;
-            float      lightDist = glm::length( lightDir );
-            lightDir             = glm::normalize( lightDir );
+        // const int numLightSamples = optixLaunchParams.mNumLightSamples;
+        // for( int lightSampleID = 0; lightSampleID < numLightSamples; lightSampleID++ )
+        // {
+        //     // produce random light sample
+        //     const math::vec3 lightPos = optixLaunchParams.mLight.mOrigin + prd.mRandom() * optixLaunchParams.mLight.mDu +
+        //                                 prd.mRandom() * optixLaunchParams.mLight.mDv;
+        //     math::vec3 lightDir  = lightPos - surfPos;
+        //     float      lightDist = glm::length( lightDir );
+        //     lightDir             = glm::normalize( lightDir );
 
-            // trace shadow ray:
-            const float NdotL = dot( lightDir, Ns );
-            if( NdotL >= 0.f )
-            {
-                math::vec3 lightVisibility( 0.0f );
-                // the values we store the PRD pointer in:
-                uint32_t u0, u1;
-                packPointer( &lightVisibility, u0, u1 );
-                auto lRayOrigin = surfPos + 1e-3f * Ng;
-                optixTrace( optixLaunchParams.mSceneRoot, float3{ lRayOrigin.x, lRayOrigin.y, lRayOrigin.z },
-                            float3{ lightDir.x, lightDir.y, lightDir.z },
-                            1e-3f,                       
-                            lightDist * ( 1.f - 1e-3f ), 
-                            0.0f,                        
-                            OptixVisibilityMask( 255 ),
-                            OPTIX_RAY_FLAG_DISABLE_ANYHIT | OPTIX_RAY_FLAG_TERMINATE_ON_FIRST_HIT | OPTIX_RAY_FLAG_DISABLE_CLOSESTHIT,
-                            SHADOW_RAY_TYPE,
-                            RAY_TYPE_COUNT, 
-                            SHADOW_RAY_TYPE,
-                            u0, u1 );
-                pixelColor += lightVisibility * optixLaunchParams.mLight.mPower * diffuseColor *
-                              ( NdotL / ( lightDist * lightDist * numLightSamples ) );
-            }
-        }
+        //     // trace shadow ray:
+        //     const float NdotL = dot( lightDir, Ns );
+        //     if( NdotL >= 0.f )
+        //     {
+        //         math::vec3 lightVisibility( 0.0f );
+        //         // the values we store the PRD pointer in:
+        //         uint32_t u0, u1;
+        //         packPointer( &lightVisibility, u0, u1 );
+        //         auto lRayOrigin = surfPos + 1e-3f * Ng;
+        //         optixTrace( optixLaunchParams.mSceneRoot, float3{ lRayOrigin.x, lRayOrigin.y, lRayOrigin.z },
+        //                     float3{ lightDir.x, lightDir.y, lightDir.z },
+        //                     1e-3f,
+        //                     lightDist * ( 1.f - 1e-3f ),
+        //                     0.0f,
+        //                     OptixVisibilityMask( 255 ),
+        //                     OPTIX_RAY_FLAG_DISABLE_ANYHIT | OPTIX_RAY_FLAG_TERMINATE_ON_FIRST_HIT |
+        //                     OPTIX_RAY_FLAG_DISABLE_CLOSESTHIT, SHADOW_RAY_TYPE, RAY_TYPE_COUNT, SHADOW_RAY_TYPE, u0, u1 );
+        //         pixelColor += lightVisibility * optixLaunchParams.mLight.mPower * diffuseColor *
+        //                       ( NdotL / ( lightDist * lightDist * numLightSamples ) );
+        //     }
+        // }
 
         prd.mPixelNormal = Ns;
         prd.mPixelAlbedo = diffuseColor;
         prd.mPixelColor  = pixelColor;
     }
 
-    extern "C" CUDA_KERNEL_DEFINITION void __anyhit__radiance()
-    { 
-    }
+    extern "C" CUDA_KERNEL_DEFINITION void __anyhit__radiance() {}
 
-    extern "C" CUDA_KERNEL_DEFINITION void __anyhit__shadow()
-    { 
-    }
+    extern "C" CUDA_KERNEL_DEFINITION void __anyhit__shadow() {}
 
     extern "C" CUDA_KERNEL_DEFINITION void __miss__radiance()
     {
@@ -207,16 +200,8 @@ namespace SE::Core
                 normalize( camera.mDirection + ( screen.x - 0.5f ) * camera.mHorizontal + ( screen.y - 0.5f ) * camera.mVertical );
 
             optixTrace( optixLaunchParams.mSceneRoot, float3{ camera.mPosition.x, camera.mPosition.y, camera.mPosition.z },
-                        float3{ rayDir.x, rayDir.y, rayDir.z },
-                        0.f,  
-                        1e20f,
-                        0.0f, 
-                        OptixVisibilityMask( 255 ),
-                        OPTIX_RAY_FLAG_DISABLE_ANYHIT,
-                        RADIANCE_RAY_TYPE,            
-                        RAY_TYPE_COUNT,               
-                        RADIANCE_RAY_TYPE,            
-                        u0, u1 );
+                        float3{ rayDir.x, rayDir.y, rayDir.z }, 0.f, 1e20f, 0.0f, OptixVisibilityMask( 255 ),
+                        OPTIX_RAY_FLAG_DISABLE_ANYHIT, RADIANCE_RAY_TYPE, RAY_TYPE_COUNT, RADIANCE_RAY_TYPE, u0, u1 );
             pixelColor += prd.mPixelColor;
             pixelNormal += prd.mPixelNormal;
             pixelAlbedo += prd.mPixelAlbedo;

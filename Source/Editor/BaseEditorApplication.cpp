@@ -69,8 +69,10 @@ namespace SE::Editor
             mOffscreenRenderTargetDisplayHandle.Handle->Write( mOffscreenRenderTargetTexture, 0 );
         }
 
-        mDeferredRenderTargetTexture = New<Graphics::Texture2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
-                                                                 TextureDescription{}, mDeferredRenderer->GetOutputImage() );
+        // mDeferredRenderTargetTexture = New<Graphics::Texture2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
+        //                                                          TextureDescription{}, mDeferredRenderer->GetOutputImage() );
+        mDeferredRenderTargetTexture = mRayTracingRenderer->GetOutputTexture();
+        if (!mDeferredRenderTargetTexture) return;
 
         if( !mDeferredRenderTargetDisplayHandle.Handle )
         {

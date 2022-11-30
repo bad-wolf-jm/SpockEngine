@@ -177,9 +177,9 @@ namespace SE::Graphics
         size_t GetMemorySize() { return mTextureImageObject->GetMemorySize(); }
 
         void CopyBufferToImage( Buffer &a_Buffer );
-        
-      private:
         void TransitionImageLayout( VkImageLayout oldLayout, VkImageLayout newLayout );
+
+      private:
         void CreateImageView();
         void CreateImageSampler();
 

@@ -41,6 +41,7 @@ namespace SE::Core
         void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
         Ref<sVkFramebufferImage> GetOutputImage() { return nullptr; }
+        Ref<Graphics::Texture2D> GetOutputTexture() { return mOutputTexture; }
 
         void downloadPixels( uint32_t h_pixels[] );
         void setCamera( const Camera &camera );

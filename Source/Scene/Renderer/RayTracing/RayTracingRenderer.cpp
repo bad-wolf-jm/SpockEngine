@@ -55,6 +55,11 @@ namespace SE::Core
 
         mRayTracingParameterBuffer = GPUMemory( sizeof( mRayTracingParameters ) ); //.alloc( sizeof( launchParams ) );
         std::cout << "#osc: context, mOptixModule->mOptixObject, pipeline, etc, all set up ..." << std::endl;
+
+        Camera camera = { /*from*/ math::vec3( -12.9307f, 1.54681f, -.07304f ),
+                          /* at */ -math::vec3( 0, 40, 0 ),
+                          /* up */ math::vec3( 0.f, 1.f, 0.f ) };
+        setCamera( camera );
     }
 
     void RayTracingRenderer::BuildShaderBindingTable()
@@ -107,7 +112,6 @@ namespace SE::Core
         if( mRayTracingParameters.mFrame.mSize.x == 0 ) return;
 
         if( !accumulate ) mRayTracingParameters.mFrame.mFrameID = 0;
-        mRayTracingParameterBuffer.Upload( mRayTracingParameters );
         mRayTracingParameters.mFrame.mFrameID++;
 
         mRayTracingParameters.mNumLightSamples = 1;
@@ -118,6 +122,8 @@ namespace SE::Core
         SE::Cuda::GPUExternalMemory lIndexBuffer( *mScene->mIndexBuffer, mScene->mIndexBuffer->SizeAs<uint8_t>() );
         mRayTracingParameters.mIndexBuffer  = lIndexBuffer.DataAs<math::uvec3>();
         mRayTracingParameters.mVertexBuffer = lTransformedVertexBuffer.DataAs<VertexData>();
+
+        mRayTracingParameterBuffer.Upload( mRayTracingParameters );
 
         mOptixPipeline->Launch( stream, mRayTracingParameterBuffer.RawDevicePtr(), mRayTracingParameterBuffer.SizeAs<uint8_t>(),
                                 mShaderBindingTable,
@@ -202,11 +208,13 @@ namespace SE::Core
                         outputLayer.width * outputLayer.height * sizeof( float4 ), cudaMemcpyDeviceToDevice );
         }
 
-        computeFinalPixelColors( mRayTracingParameters, mDenoisedBuffer, mFinalColorBuffer );
+        computeFinalPixelColors( mRayTracingParameters, mDenoisedBuffer, mCudaOutputBuffer );
 
         CUDA_SYNC_CHECK();
 
+        mOutputTexture->TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
         mOutputTexture->CopyBufferToImage( *mOutputBuffer );
+        mOutputTexture->TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
     }
 
     /*! set camera to render with */
@@ -274,6 +282,7 @@ namespace SE::Core
         lTextureCreateInfo.Format    = eColorFormat::RGBA8_UNORM;
         lTextureCreateInfo.MipLevels = { Mip{ aOutputWidth, aOutputHeight, 0 } };
         lTextureCreateInfo.Usage     = { TextureUsageFlags::TRANSFER_DESTINATION, TextureUsageFlags::SAMPLED };
+        lTextureCreateInfo.Sampled   = true;
         mOutputTexture               = New<Graphics::Texture2D>( mGraphicContext, lTextureCreateInfo );
         mOutputBuffer                = New<Graphics::Buffer>( mGraphicContext, eBufferBindType::UNKNOWN, false, true, true, false,
                                                aOutputWidth * aOutputHeight * sizeof( uint32_t ) );
