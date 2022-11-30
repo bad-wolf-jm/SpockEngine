@@ -176,9 +176,10 @@ namespace SE::Graphics
         void *GetMemoryHandle() { return mGraphicContext.mContext->GetSharedMemoryHandle( mTextureImageObject->mVkMemory ); }
         size_t GetMemorySize() { return mTextureImageObject->GetMemorySize(); }
 
+        void CopyBufferToImage( Buffer &a_Buffer );
+        
       private:
         void TransitionImageLayout( VkImageLayout oldLayout, VkImageLayout newLayout );
-        void CopyBufferToImage( Buffer &a_Buffer );
         void CreateImageView();
         void CreateImageSampler();
 

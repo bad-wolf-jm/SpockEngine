@@ -35,7 +35,8 @@ namespace SE::Core
         sTriangleMeshSBTData data;
     };
 
-    RayTracingRenderer::RayTracingRenderer()
+    RayTracingRenderer::RayTracingRenderer( GraphicContext const &aGraphicContext )
+        : mGraphicContext{ aGraphicContext }
     {
         SE::Graphics::OptixDeviceContextObject::Initialize();
 
@@ -204,6 +205,8 @@ namespace SE::Core
         computeFinalPixelColors( mRayTracingParameters, mDenoisedBuffer, mFinalColorBuffer );
 
         CUDA_SYNC_CHECK();
+
+        mOutputTexture->CopyBufferToImage( *mOutputBuffer );
     }
 
     /*! set camera to render with */
@@ -267,6 +270,15 @@ namespace SE::Core
         fbAlbedo.Resize( aOutputWidth * aOutputHeight * sizeof( float4 ) );
         mFinalColorBuffer.Resize( aOutputWidth * aOutputHeight * sizeof( uint32_t ) );
 
+        TextureDescription lTextureCreateInfo{};
+        lTextureCreateInfo.Format    = eColorFormat::RGBA8_UNORM;
+        lTextureCreateInfo.MipLevels = { Mip{ aOutputWidth, aOutputHeight, 0 } };
+        lTextureCreateInfo.Usage     = { TextureUsageFlags::TRANSFER_DESTINATION, TextureUsageFlags::SAMPLED };
+        mOutputTexture               = New<Graphics::Texture2D>( mGraphicContext, lTextureCreateInfo );
+        mOutputBuffer                = New<Graphics::Buffer>( mGraphicContext, eBufferBindType::UNKNOWN, false, true, true, false,
+                                               aOutputWidth * aOutputHeight * sizeof( uint32_t ) );
+
+        mCudaOutputBuffer = GPUExternalMemory( *mOutputBuffer, aOutputWidth * aOutputHeight * sizeof( uint32_t ) );
         // update the launch parameters that we'll pass to the optix
         // launch:
         mRayTracingParameters.mFrame.mSize         = math::ivec2{ aOutputWidth, aOutputHeight };

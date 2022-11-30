@@ -34,7 +34,7 @@ namespace SE::Core
     class RayTracingRenderer : public ASceneRenderer
     {
       public:
-        RayTracingRenderer();
+        RayTracingRenderer( GraphicContext const &aGraphicContext );
 
         void Update( Ref<Scene> aWorld );
         void Render();
@@ -63,6 +63,12 @@ namespace SE::Core
 
       public:
         sLaunchParams mRayTracingParameters;
+
+      protected:
+        GraphicContext           mGraphicContext{};
+        Ref<Graphics::Texture2D> mOutputTexture = nullptr;
+        Ref<Graphics::Buffer>    mOutputBuffer  = nullptr;
+        GPUExternalMemory        mCudaOutputBuffer{};
 
       protected:
         GPUMemory mRayTracingParameterBuffer;
@@ -96,5 +102,8 @@ namespace SE::Core
 
     void computeFinalPixelColors( sLaunchParams const &launchParams, Cuda::GPUMemory &denoisedBuffer,
                                   Cuda::GPUMemory &finalColorBuffer );
+
+    void computeFinalPixelColors( sLaunchParams const &launchParams, Cuda::GPUMemory &denoisedBuffer,
+                                  Cuda::GPUExternalMemory &finalColorBuffer );
 
 } // namespace SE::Core

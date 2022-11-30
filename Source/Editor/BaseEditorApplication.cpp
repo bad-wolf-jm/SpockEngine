@@ -35,6 +35,7 @@ namespace SE::Editor
     {
         mDeferredRenderer->Render();
         mForwardRenderer->Render();
+        mRayTracingRenderer->Render();
     }
 
     void BaseEditorApplication::Update( Timestep ts )
@@ -127,11 +128,12 @@ namespace SE::Editor
         mForwardRenderer =
             New<ForwardSceneRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 4 );
 
-        mRayTracingRenderer = New<RayTracingRenderer>();
+        mRayTracingRenderer = New<RayTracingRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext() );
         RebuildOutputFramebuffer();
 
         mForwardRenderer->Update( mWorld );
         mDeferredRenderer->Update( mWorld );
+        mRayTracingRenderer->Update( mWorld );
 
         mEditorWindow.World       = mWorld;
         mEditorWindow.ActiveWorld = mWorld;
