@@ -201,7 +201,7 @@ namespace SE::Core
                         outputLayer.width * outputLayer.height * sizeof( float4 ), cudaMemcpyDeviceToDevice );
         }
 
-        computeFinalPixelColors();
+        computeFinalPixelColors( mRayTracingParameters, mDenoisedBuffer, mFinalColorBuffer );
 
         CUDA_SYNC_CHECK();
     }

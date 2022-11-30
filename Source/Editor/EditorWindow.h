@@ -12,6 +12,7 @@
 
 #include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/ForwardSceneRenderer.h"
+#include "Scene/Renderer/RayTracing/RayTracingRenderer.h"
 #include "Scene/Scene.h"
 
 #include "UI/UI.h"
@@ -73,6 +74,7 @@ namespace SE::Editor
         Ref<Scene>                ActiveWorld   = nullptr;
         Ref<ForwardSceneRenderer> WorldRenderer = nullptr;
         Ref<DeferredRenderer>     DefRenderer   = nullptr;
+        Ref<RayTracingRenderer>   RTRenderer    = nullptr;
 
         Entity         Sensor{};
         Entity         ActiveSensor{};
@@ -115,7 +117,7 @@ namespace SE::Editor
 
       private:
         SE::Graphics::GraphicContext mGraphicContext;
-        Ref<UIContext>                 mUIOverlay;
+        Ref<UIContext>               mUIOverlay;
 
         std::vector<MenuItem> m_MainMenuItems;
 
@@ -123,16 +125,16 @@ namespace SE::Editor
         float    m_FpsTimer     = 0.0f;
         uint32_t m_LastFPS      = 0;
 
-        math::ivec2                    m_WorkspaceAreaSize = { 0, 0 };
+        math::ivec2                  m_WorkspaceAreaSize = { 0, 0 };
         Ref<SE::Graphics::Texture2D> m_PlayIcon;
-        ImageHandle                    m_PlayIconHandle;
+        ImageHandle                  m_PlayIconHandle;
         Ref<SE::Graphics::Texture2D> m_PauseIcon;
-        ImageHandle                    m_PauseIconHandle;
+        ImageHandle                  m_PauseIconHandle;
         Ref<SE::Graphics::Texture2D> m_CameraIcon;
-        ImageHandle                    m_CameraIconHandle;
+        ImageHandle                  m_CameraIconHandle;
 
         Ref<SE::Graphics::Texture2D> m_DefaultTextureImage;
-        ImageHandle                    m_DefaultTextureImageHandle;
+        ImageHandle                  m_DefaultTextureImageHandle;
 
         SimulationState mState         = SimulationState::EDIT;
         SidePanelID     m_CurrentPanel = SidePanelID::SENSOR_CONFIGURATION;

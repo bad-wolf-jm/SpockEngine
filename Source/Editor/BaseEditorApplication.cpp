@@ -43,6 +43,7 @@ namespace SE::Editor
         mEditorWindow.UpdateFramerate( ts );
         mDeferredRenderer->Update( mEditorWindow.ActiveWorld );
         mForwardRenderer->Update( mEditorWindow.ActiveWorld );
+        mRayTracingRenderer->Update( mEditorWindow.ActiveWorld );
     }
 
     void BaseEditorApplication::RebuildOutputFramebuffer()
@@ -51,6 +52,7 @@ namespace SE::Editor
 
         mDeferredRenderer->ResizeOutput( mViewportWidth, mViewportHeight );
         mForwardRenderer->ResizeOutput( mViewportWidth, mViewportHeight );
+        mRayTracingRenderer->ResizeOutput( mViewportWidth, mViewportHeight );
 
         mOffscreenRenderTargetTexture = New<Graphics::Texture2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
                                                                   TextureDescription{}, mForwardRenderer->GetOutputImage() );
@@ -79,12 +81,6 @@ namespace SE::Editor
         {
             mDeferredRenderTargetDisplayHandle.Handle->Write( mDeferredRenderTargetTexture, 0 );
         }
-
-        // const float lAspect = static_cast<float>( mViewportWidth ) / static_cast<float>( mViewportHeight );
-        // const float lFoVY   = 48.7_degf;
-        // const float lFoVX   = lFoVY * lAspect;
-        // mDeferredRenderer->SetProjection( math::Perspective( lFoVX, lAspect, 0.01f, 100000.0f ) );
-        // mForwardRenderer->SetProjection( math::Perspective( lFoVX, lAspect, 0.01f, 100000.0f ) );
     }
 
     bool BaseEditorApplication::RenderUI( ImGuiIO &io )
@@ -100,6 +96,7 @@ namespace SE::Editor
         // mEditorWindow.SensorModel    = m_SensorController;
         mEditorWindow.WorldRenderer  = mForwardRenderer;
         mEditorWindow.DefRenderer    = mDeferredRenderer;
+        mEditorWindow.RTRenderer     = mRayTracingRenderer;
         mEditorWindow.GraphicContext = SE::Core::Engine::GetInstance()->GetGraphicContext();
 
         o_RequestQuit = mEditorWindow.Display();
@@ -129,6 +126,8 @@ namespace SE::Editor
             New<DeferredRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
         mForwardRenderer =
             New<ForwardSceneRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 4 );
+
+        mRayTracingRenderer = New<RayTracingRenderer>();
         RebuildOutputFramebuffer();
 
         mForwardRenderer->Update( mWorld );

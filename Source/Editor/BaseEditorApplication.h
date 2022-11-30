@@ -15,6 +15,7 @@
 #include "Scene/EnvironmentSampler/PointCloudVisualizer.h"
 #include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/ForwardSceneRenderer.h"
+#include "Scene/Renderer/RayTracing/RayTracingRenderer.h"
 #include "Scene/Scene.h"
 
 #include "TensorOps/Scope.h"
@@ -63,8 +64,9 @@ namespace SE::Editor
         bool       mShouldRebuildViewport = true;
         Ref<Scene> mWorld                 = nullptr;
 
-        Ref<DeferredRenderer>     mDeferredRenderer = nullptr;
-        Ref<ForwardSceneRenderer> mForwardRenderer  = nullptr;
+        Ref<DeferredRenderer>     mDeferredRenderer   = nullptr;
+        Ref<ForwardSceneRenderer> mForwardRenderer    = nullptr;
+        Ref<RayTracingRenderer>   mRayTracingRenderer = nullptr;
 
         Ref<Graphics::Texture2D> mOffscreenRenderTargetTexture = nullptr;
         ImageHandle              mOffscreenRenderTargetDisplayHandle{};

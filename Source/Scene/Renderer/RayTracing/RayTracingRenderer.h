@@ -40,6 +40,8 @@ namespace SE::Core
         void Render();
         void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
+        Ref<sVkFramebufferImage> GetOutputImage() { return nullptr; }
+
         void downloadPixels( uint32_t h_pixels[] );
         void setCamera( const Camera &camera );
 
@@ -47,7 +49,7 @@ namespace SE::Core
         bool accumulate = true;
 
       protected:
-        void computeFinalPixelColors();
+        // void computeFinalPixelColors();
         void BuildShaderBindingTable();
 
       protected:
@@ -91,4 +93,8 @@ namespace SE::Core
 
         Ref<Scene> mScene = nullptr;
     };
+
+    void computeFinalPixelColors( sLaunchParams const &launchParams, Cuda::GPUMemory &denoisedBuffer,
+                                  Cuda::GPUMemory &finalColorBuffer );
+
 } // namespace SE::Core
