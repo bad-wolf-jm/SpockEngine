@@ -100,8 +100,6 @@ namespace SE::Core
         if( dot( Ng, Ns ) < 0.f ) Ns -= 2.f * dot( Ng, Ns ) * Ng;
         Ns = normalize( Ns );
 
-        math::vec3 diffuseColor = sbtData.mColor;
-
         const math::vec2 &TA =
             optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].x].TexCoords_0;
         const math::vec2 &TB =
@@ -115,7 +113,8 @@ namespace SE::Core
         auto lBaseColor    = optixLaunchParams.mTextures[lMaterialData.mBaseColorTextureID];
         auto lTextureValue = tex2D<float4>( lBaseColor.mTextureObject, tc.x, tc.y );
 
-        diffuseColor *= math::vec3{ lTextureValue.x, lTextureValue.y, lTextureValue.z };
+        math::vec3 diffuseColor =
+            math::vec3{ lTextureValue.x, lTextureValue.y, lTextureValue.z } * math::vec3( lMaterialData.mBaseColorFactor );
 
         // // start with some ambient term
         math::vec3 pixelColor = ( 0.1f + 0.2f * fabsf( dot( Ns, rayDir ) ) ) * diffuseColor;
@@ -159,7 +158,9 @@ namespace SE::Core
 
         prd.mPixelNormal = Ns;
         prd.mPixelAlbedo = diffuseColor;
-        prd.mPixelColor  = pixelColor;
+        // prd.mPixelColor  = math::vec3{lMaterialData.mBaseColorTextureID / 255.0, lMaterialData.mBaseColorTextureID / 255.0,
+        // lMaterialData.mBaseColorTextureID / 255.0};//pixelColor;
+        prd.mPixelColor = math::vec3{tc.x, tc.y, 0.0f};
     }
 
     extern "C" CUDA_KERNEL_DEFINITION void __anyhit__radiance() {}
@@ -211,7 +212,7 @@ namespace SE::Core
                 normalize( camera.mDirection + ( screen.x - 0.5f ) * camera.mHorizontal + ( screen.y - 0.5f ) * camera.mVertical );
 
             optixTrace( optixLaunchParams.mSceneRoot, float3{ camera.mPosition.x, camera.mPosition.y, camera.mPosition.z },
-                        float3{ rayDir.x, rayDir.y, rayDir.z }, 0.f, 1e20f, 0.0f, OptixVisibilityMask( 255 ),
+                        float3{ rayDir.x, -rayDir.y, rayDir.z }, 0.f, 1e20f, 0.0f, OptixVisibilityMask( 255 ),
                         OPTIX_RAY_FLAG_DISABLE_ANYHIT, RADIANCE_RAY_TYPE, RAY_TYPE_COUNT, RADIANCE_RAY_TYPE, u0, u1 );
             pixelColor += prd.mPixelColor;
             pixelNormal += prd.mPixelNormal;

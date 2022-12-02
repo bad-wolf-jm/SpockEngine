@@ -57,7 +57,7 @@ namespace SE::Core
         std::cout << "#osc: context, mOptixModule->mOptixObject, pipeline, etc, all set up ..." << std::endl;
 
         Camera camera = { /*from*/ math::vec3( -1293.07f, 154.681f, -0.7304f ),
-                          /* at */ -math::vec3( 0, 400, 0 ),
+                          /* at */ -math::vec3( 0, 100, 0 ),
                           /* up */ math::vec3( 0.f, 1.f, 0.f ) };
         setCamera( camera );
     }
