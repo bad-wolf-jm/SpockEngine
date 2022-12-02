@@ -28,6 +28,11 @@ namespace SE::Core
         math::vec3 mPixelAlbedo;
     };
 
+    static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF float clampf( float f, float aMin, float aMax )
+    {
+        return min( aMax, max( aMin, f ) );
+    }
+
     static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF void *unpackPointer( uint32_t i0, uint32_t i1 )
     {
         const uint64_t uptr = static_cast<uint64_t>( i0 ) << 32 | i1;
@@ -65,6 +70,34 @@ namespace SE::Core
         aV3 = optixLaunchParams.mVertexBuffer[lVertexOffset + lPrimitive.z];
     }
 
+    math::vec3 SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF GetNormalFromMap( math::vec3 aInNormal, cudaTextureObject_t aNormalSampler,
+                                                                            math::vec2 aCoords )
+    {
+        // // Perturb normal, see http://www.thetenthplanet.de/archives/1180
+        // auto       lNormalMapSample = tex2D<float4>( aNormalSampler, aCoords.x, aCoordx.y );
+        // math::vec3 lNormalMapValue  = math::vec3{ lNormalMapSample.x, lNormalMapSample.y, lNormalMapSample.z };
+
+        // math::vec3 lTangentNormal = normalize( lNormalMapValue * 2.0 - vec3( 1.0 ) );
+
+        // math::vec3 dp1  = dFdx( inWorldPos );
+        // math::vec3 dp2  = dFdy( inWorldPos );
+        // math::vec2 duv1 = dFdx( aCoords );
+        // math::vec2 duv2 = dFdy( aCoords );
+
+        // // solve the linear system
+        // math::vec3 dp1perp = cross( aInNormal, dp1 );
+        // math::vec3 dp2perp = cross( dp2, aInNormal );
+        // math::vec3 T       = dp2perp * duv1.x + dp1perp * duv2.x;
+        // math::vec3 B       = dp2perp * duv1.y + dp1perp * duv2.y;
+
+        // // construct a scale-invariant frame
+        // float invmax = inversesqrt( max( dot( T, T ), dot( B, B ) ) );
+
+        // return normalize( math::mat3( T * invmax, B * invmax, aInNormal ) * lTangentNormal );
+
+        return normalize( aInNormal );
+    }
+
     extern "C" CUDA_KERNEL_DEFINITION void __closesthit__radiance()
     {
         const sTriangleMeshSBTData &sbtData = *(const sTriangleMeshSBTData *)optixGetSbtDataPointer();
@@ -75,21 +108,18 @@ namespace SE::Core
 
         const int lPrimitiveID = optixGetPrimitiveIndex() + sbtData.mIndexOffset;
 
-        const math::vec3 &A =
-            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].x].Position;
-        const math::vec3 &B =
-            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].y].Position;
-        const math::vec3 &C =
-            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].z].Position;
-        math::vec3 Ng = glm::cross( B - A, C - A );
+        VertexData lV1, lV2, lV3;
+        GetPrimitive( sbtData, lPrimitiveID, lV1, lV2, lV3 );
 
-        const math::vec3 &NA =
-            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].x].Normal;
-        const math::vec3 &NB =
-            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].y].Normal;
-        const math::vec3 &NC =
-            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].z].Normal;
-        math::vec3 Ns = ( ( 1.f - u - v ) * NA + u * NB + v * NC );
+        const math::vec3 &A  = lV1.Position;
+        const math::vec3 &B  = lV2.Position;
+        const math::vec3 &C  = lV3.Position;
+        math::vec3        Ng = glm::cross( B - A, C - A );
+
+        const math::vec3 &NA = lV1.Normal;
+        const math::vec3 &NB = lV2.Normal;
+        const math::vec3 &NC = lV3.Normal;
+        math::vec3        Ns = ( ( 1.f - u - v ) * NA + u * NB + v * NC );
 
         float3           lWorldRayDirection = optixGetWorldRayDirection();
         const math::vec3 rayDir             = { lWorldRayDirection.x, lWorldRayDirection.y, lWorldRayDirection.z };
@@ -100,12 +130,9 @@ namespace SE::Core
         if( dot( Ng, Ns ) < 0.f ) Ns -= 2.f * dot( Ng, Ns ) * Ng;
         Ns = normalize( Ns );
 
-        const math::vec2 &TA =
-            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].x].TexCoords_0;
-        const math::vec2 &TB =
-            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].y].TexCoords_0;
-        const math::vec2 &TC =
-            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].z].TexCoords_0;
+        const math::vec2 &TA = lV1.TexCoords_0;
+        const math::vec2 &TB = lV2.TexCoords_0;
+        const math::vec2 &TC = lV3.TexCoords_0;
 
         const math::vec2 tc = ( 1.f - u - v ) * TA + u * TB + v * TC;
 
@@ -118,6 +145,17 @@ namespace SE::Core
 
         // start with some ambient term
         math::vec3 pixelColor = ( 0.1f + 0.2f * fabsf( dot( Ns, rayDir ) ) ) * diffuseColor;
+
+        math::vec3 lTNorm;
+        if( lMaterialData.mNormalTextureID == 0 )
+            lTNorm = normalize( Ns );
+        else
+            lTNorm = GetNormalFromMap( Ns, optixLaunchParams.mTextures[lMaterialData.mNormalTextureID].mTextureObject, tc );
+
+        const float cMinRoughness = 0.04;
+        auto lMetalRough = tex2D<float4>( optixLaunchParams.mTextures[lMaterialData.mMetalnessTextureID].mTextureObject, tc.x, tc.y );
+        const float lMetallic  = lMetalRough.x * clampf( lMaterialData.mMetallicFactor, 0.0, 1.0 );
+        const float lRoughness = lMetalRough.y * clampf( lMaterialData.mRoughnessFactor, cMinRoughness, 1.0 );
 
         // // ------------------------------------------------------------------
         // // compute shadow
