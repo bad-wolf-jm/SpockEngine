@@ -103,7 +103,7 @@ namespace SE::Cuda
 
         cudaExternalMemoryMipmappedArrayDesc lExternalMemoryMipmappedArrayDesc{};
         lExternalMemoryMipmappedArrayDesc.formatDesc = ToCudaChannelDesc( mSpec.mFormat );
-        lExternalMemoryMipmappedArrayDesc.extent     = make_cudaExtent( mSpec.mWidth, mSpec.mHeight, 1 );
+        lExternalMemoryMipmappedArrayDesc.extent     = make_cudaExtent( mSpec.mWidth, mSpec.mHeight, 0 );
         lExternalMemoryMipmappedArrayDesc.numLevels  = 1;
         lExternalMemoryMipmappedArrayDesc.flags      = 0;
 
