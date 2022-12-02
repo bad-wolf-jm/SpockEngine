@@ -134,6 +134,51 @@ namespace SE::Core
         return ggx1 * ggx2;
     }
 
+    static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF math::vec3 FresnelSchlick( float cosTheta, math::vec3 F0 )
+    {
+        return F0 + ( math::vec3(1.0) - F0 ) * pow( clampf( 1.0f - cosTheta, 0.0f, 1.0f ), 5.0f );
+    }
+
+    static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF math::vec3 CookTorrance( math::vec3 F0, math::vec3 N, math::vec3 L, math::vec3 V,
+                                                                               math::vec3 H, float roughness )
+    {
+        float NDF = DistributionGGX( N, H, roughness );
+        float G   = GeometrySmith( N, V, L, roughness );
+        vec3  F   = FresnelSchlick( max( dot( H, V ), 0.0f ), F0 );
+        return ( NDF * G * F ) / ( 4 * max( dot( N, V ), 0.0f ) * max( dot( N, L ), 0.0f ) + 0.0001f );
+    }
+
+    static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF math::vec3
+    ComputeLightContribution( math::vec3 aBaseColor, math::vec3 aSurfaceNormal, math::vec3 aEyeDirection, math::vec3 aLightDirection,
+                              math::vec3 aRadiance, float aMetal, float aRough )
+    {
+        // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0
+        // of 0.04 and if it's a metal, use the base color as F0 (metallic workflow)
+        vec3 lF0 = math::mix( math::vec3( 0.04 ), aBaseColor, aMetal );
+
+        vec3 H = normalize( aEyeDirection + aLightDirection );
+
+        // Cook-Torrance BRDF
+        vec3 lSpecular = CookTorrance( lF0, aSurfaceNormal, aLightDirection, aEyeDirection, H, aRough );
+
+        // kS is equal to Fresnel
+        vec3 kS = FresnelSchlick( max( dot( H, aEyeDirection ), 0.0 ), lF0 );
+
+        // for energy conservation, the diffuse and specular light can't be above 1.0 (unless the surface emits light); to preserve
+        // this relationship the diffuse component (kD) should equal 1.0 - kS.
+        vec3 kD = vec3( 1.0 ) - kS;
+
+        // multiply kD by the inverse metalness such that only non-metals have diffuse lighting, or a linear blend if partly metal
+        // (pure metals have no diffuse light).
+        kD *= ( 1.0 - aMetal );
+
+        // scale light by NdotL
+        float NdotL = max( dot( aSurfaceNormal, aLightDirection ), 0.0 );
+
+        // add to outgoing radiance Lo
+        return ( kD * aBaseColor / PI + lSpecular ) * aRadiance * NdotL;
+    }
+
     extern "C" CUDA_KERNEL_DEFINITION void __closesthit__radiance()
     {
         const sTriangleMeshSBTData &sbtData = *(const sTriangleMeshSBTData *)optixGetSbtDataPointer();
