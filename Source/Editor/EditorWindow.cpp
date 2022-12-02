@@ -886,6 +886,7 @@ namespace SE::Editor
 
             DefRenderer->SetView( WorldRenderer->View.View );
             WorldRenderer->SetView( WorldRenderer->View.View );
+            RTRenderer->SetView( WorldRenderer->View.View );
 
             ManipulationConfig l_Manipulator{};
             l_Manipulator.Type             = lCurrentManipulationType;
@@ -915,6 +916,7 @@ namespace SE::Editor
                         WorldRenderer->View.View = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
                         DefRenderer->SetView( WorldRenderer->View.View );
                         WorldRenderer->SetView( WorldRenderer->View.View );
+                        RTRenderer->SetView( WorldRenderer->View.View );
                     }
                     else if( lIO.KeyAlt )
                     {
@@ -924,6 +926,7 @@ namespace SE::Editor
                         WorldRenderer->View.View = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
                         DefRenderer->SetView( WorldRenderer->View.View );
                         WorldRenderer->SetView( WorldRenderer->View.View );
+                        RTRenderer->SetView( WorldRenderer->View.View );
                     }
                     else if( lIO.KeyCtrl )
                     {
@@ -933,6 +936,7 @@ namespace SE::Editor
                         WorldRenderer->View.View = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
                         DefRenderer->SetView( WorldRenderer->View.View );
                         WorldRenderer->SetView( WorldRenderer->View.View );
+                        RTRenderer->SetView( WorldRenderer->View.View );
                     }
                     else
                     {
@@ -944,6 +948,7 @@ namespace SE::Editor
                             math::Inverse( math::FromComponents( lNewRotationX * lNewRotationY * lRotationMatrix, lCameraPosition ) );
                         DefRenderer->SetView( WorldRenderer->View.View );
                         WorldRenderer->SetView( WorldRenderer->View.View );
+                        RTRenderer->SetView( WorldRenderer->View.View );
                     }
                     ImGui::ResetMouseDragDelta( ImGuiMouseButton_Left );
                 }
@@ -961,6 +966,7 @@ namespace SE::Editor
                     WorldRenderer->View.View = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
                     DefRenderer->SetView( WorldRenderer->View.View );
                     WorldRenderer->SetView( WorldRenderer->View.View );
+                    RTRenderer->SetView( WorldRenderer->View.View );
 
                     ImGui::ResetMouseDragDelta( ImGuiMouseButton_Right );
                 }
@@ -977,6 +983,7 @@ namespace SE::Editor
                         WorldRenderer->View.View = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
                         DefRenderer->SetView( WorldRenderer->View.View );
                         WorldRenderer->SetView( WorldRenderer->View.View );
+                        RTRenderer->SetView( WorldRenderer->View.View );
                     }
                     else
                     {
@@ -985,6 +992,7 @@ namespace SE::Editor
                         WorldRenderer->View.View = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
                         DefRenderer->SetView( WorldRenderer->View.View );
                         WorldRenderer->SetView( WorldRenderer->View.View );
+                        RTRenderer->SetView( WorldRenderer->View.View );
                     }
                 }
                 else if( ImGui::IsKeyPressed( ImGuiKey_DownArrow ) )
@@ -996,6 +1004,7 @@ namespace SE::Editor
                         WorldRenderer->View.View = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
                         DefRenderer->SetView( WorldRenderer->View.View );
                         WorldRenderer->SetView( WorldRenderer->View.View );
+                        RTRenderer->SetView( WorldRenderer->View.View );
                     }
                     else
                     {
@@ -1004,6 +1013,7 @@ namespace SE::Editor
                         WorldRenderer->View.View = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
                         DefRenderer->SetView( WorldRenderer->View.View );
                         WorldRenderer->SetView( WorldRenderer->View.View );
+                        RTRenderer->SetView( WorldRenderer->View.View );
                     }
                 }
                 else if( ImGui::IsKeyPressed( ImGuiKey_LeftArrow ) )
@@ -1012,6 +1022,7 @@ namespace SE::Editor
                     WorldRenderer->View.View = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
                     DefRenderer->SetView( WorldRenderer->View.View );
                     WorldRenderer->SetView( WorldRenderer->View.View );
+                    RTRenderer->SetView( WorldRenderer->View.View );
                 }
                 else if( ImGui::IsKeyPressed( ImGuiKey_RightArrow ) )
                 {
@@ -1019,6 +1030,7 @@ namespace SE::Editor
                     WorldRenderer->View.View = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
                     DefRenderer->SetView( WorldRenderer->View.View );
                     WorldRenderer->SetView( WorldRenderer->View.View );
+                    RTRenderer->SetView( WorldRenderer->View.View );
                 }
 
                 if( ImGui::IsKeyPressed( ImGuiKey_W ) )
@@ -1029,6 +1041,7 @@ namespace SE::Editor
                     WorldRenderer->View.View = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
                     DefRenderer->SetView( WorldRenderer->View.View );
                     WorldRenderer->SetView( WorldRenderer->View.View );
+                    RTRenderer->SetView( WorldRenderer->View.View );
                 }
                 else if( ImGui::IsKeyPressed( ImGuiKey_S ) )
                 {
@@ -1038,6 +1051,7 @@ namespace SE::Editor
                     WorldRenderer->View.View = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
                     DefRenderer->SetView( WorldRenderer->View.View );
                     WorldRenderer->SetView( WorldRenderer->View.View );
+                    RTRenderer->SetView( WorldRenderer->View.View );
                 }
                 else if( ImGui::IsKeyPressed( ImGuiKey_A ) )
                 {
@@ -1047,6 +1061,7 @@ namespace SE::Editor
                     WorldRenderer->View.View = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
                     DefRenderer->SetView( WorldRenderer->View.View );
                     WorldRenderer->SetView( WorldRenderer->View.View );
+                    RTRenderer->SetView( WorldRenderer->View.View );
                 }
                 else if( ImGui::IsKeyPressed( ImGuiKey_D ) )
                 {
@@ -1056,6 +1071,7 @@ namespace SE::Editor
                     WorldRenderer->View.View = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
                     DefRenderer->SetView( WorldRenderer->View.View );
                     WorldRenderer->SetView( WorldRenderer->View.View );
+                    RTRenderer->SetView( WorldRenderer->View.View );
                 }
             }
         }

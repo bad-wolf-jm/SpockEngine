@@ -40,11 +40,10 @@ namespace SE::Core
         void Render();
         void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
+        void SetView( math::mat4 aViewMatrix );
+
         Ref<sVkFramebufferImage> GetOutputImage() { return nullptr; }
         Ref<Graphics::Texture2D> GetOutputTexture() { return mOutputTexture; }
-
-        void downloadPixels( uint32_t h_pixels[] );
-        void setCamera( const Camera &camera );
 
         bool denoiserOn = true;
         bool accumulate = true;

@@ -55,11 +55,6 @@ namespace SE::Core
 
         mRayTracingParameterBuffer = GPUMemory( sizeof( mRayTracingParameters ) ); //.alloc( sizeof( launchParams ) );
         std::cout << "#osc: context, mOptixModule->mOptixObject, pipeline, etc, all set up ..." << std::endl;
-
-        Camera camera = { /*from*/ math::vec3( -1293.07f, 154.681f, -0.7304f ),
-                          /* at */ -math::vec3( 0, 100, 0 ),
-                          /* up */ math::vec3( 0.f, 1.f, 0.f ) };
-        setCamera( camera );
     }
 
     void RayTracingRenderer::BuildShaderBindingTable()
@@ -122,7 +117,7 @@ namespace SE::Core
         SE::Cuda::GPUExternalMemory lIndexBuffer( *mScene->mIndexBuffer, mScene->mIndexBuffer->SizeAs<uint8_t>() );
         mRayTracingParameters.mIndexBuffer  = lIndexBuffer.DataAs<math::uvec3>();
         mRayTracingParameters.mVertexBuffer = lTransformedVertexBuffer.DataAs<VertexData>();
-        
+
         mRayTracingParameters.mTextures  = mScene->GetMaterialSystem()->GetCudaTextures().DataAs<Cuda::TextureSampler2D::DeviceData>();
         mRayTracingParameters.mMaterials = mScene->GetMaterialSystem()->GetCudaMaterials().DataAs<sShaderMaterial>();
 
@@ -221,17 +216,18 @@ namespace SE::Core
     }
 
     /*! set camera to render with */
-    void RayTracingRenderer::setCamera( const Camera &camera )
+    void RayTracingRenderer::SetView( math::mat4 aViewMatrix )
     {
-        lastSetCamera = camera;
-        // reset accumulation
+        ASceneRenderer::SetView( aViewMatrix );
         mRayTracingParameters.mFrame.mFrameID    = 0;
-        mRayTracingParameters.mCamera.mPosition  = camera.from;
-        mRayTracingParameters.mCamera.mDirection = normalize( camera.at - camera.from );
+        mRayTracingParameters.mCamera.mPosition  = -math::vec3( mViewMatrix[3] );
+        mRayTracingParameters.mCamera.mDirection = -normalize( math::vec3( mViewMatrix[0][2], mViewMatrix[1][2], mViewMatrix[2][2] ) );
         const float cosFovy                      = 0.66f;
         const float aspect = float( mRayTracingParameters.mFrame.mSize.x ) / float( mRayTracingParameters.mFrame.mSize.y );
         mRayTracingParameters.mCamera.mHorizontal =
-            cosFovy * aspect * math::normalize( math::cross( mRayTracingParameters.mCamera.mDirection, camera.up ) );
+            cosFovy * aspect *
+            math::normalize( math::cross( mRayTracingParameters.mCamera.mDirection,
+                                          normalize( math::vec3( mViewMatrix[0][1], mViewMatrix[1][1], mViewMatrix[2][1] ) ) ) );
         mRayTracingParameters.mCamera.mVertical =
             cosFovy * normalize( cross( mRayTracingParameters.mCamera.mHorizontal, mRayTracingParameters.mCamera.mDirection ) );
     }
@@ -300,19 +296,11 @@ namespace SE::Core
         mRayTracingParameters.mFrame.mAlbedoBuffer = (math::vec4 *)fbAlbedo.RawDevicePtr();
 
         // and re-set the camera, since aspect may have changed
-        setCamera( lastSetCamera );
+        SetView( mViewMatrix );
 
         // ------------------------------------------------------------------
         OPTIX_CHECK( optixDenoiserSetup( denoiser, 0, aOutputWidth, aOutputHeight, denoiserState.RawDevicePtr(),
                                          denoiserState.SizeAs<uint8_t>(), denoiserScratch.RawDevicePtr(),
                                          denoiserScratch.SizeAs<uint8_t>() ) );
     }
-
-    /*! download the rendered color buffer */
-    void RayTracingRenderer::downloadPixels( uint32_t h_pixels[] )
-    {
-        auto lColors = mFinalColorBuffer.Fetch<uint32_t>();
-        for( uint32_t i = 0; i < lColors.size(); i++ ) h_pixels[i] = lColors[i];
-    }
-
 } // namespace SE::Core
