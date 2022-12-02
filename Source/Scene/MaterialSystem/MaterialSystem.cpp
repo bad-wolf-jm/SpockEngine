@@ -31,12 +31,19 @@ namespace SE::Core
     {
         mTextures.clear();
         mMaterials.clear();
+
+        mCudaTextures.clear();
+        mCudaTextureBuffer.Dispose();
+        mCudaShaderMaterials.Dispose();
     }
 
     void MaterialSystem::Clear()
     {
         mTextures.clear();
         mMaterials.clear();
+        mCudaTextures.clear();
+        mCudaTextureBuffer.Dispose();
+        mCudaShaderMaterials.Dispose();
 
         sImageData lImageDataStruct{};
         lImageDataStruct.mFormat   = eColorFormat::RGBA8_UNORM;

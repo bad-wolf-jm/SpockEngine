@@ -116,7 +116,7 @@ namespace SE::Core
         math::vec3 diffuseColor =
             math::vec3{ lTextureValue.x, lTextureValue.y, lTextureValue.z } * math::vec3( lMaterialData.mBaseColorFactor );
 
-        // // start with some ambient term
+        // start with some ambient term
         math::vec3 pixelColor = ( 0.1f + 0.2f * fabsf( dot( Ns, rayDir ) ) ) * diffuseColor;
 
         // // ------------------------------------------------------------------
@@ -160,7 +160,7 @@ namespace SE::Core
         prd.mPixelAlbedo = diffuseColor;
         // prd.mPixelColor  = math::vec3{lMaterialData.mBaseColorTextureID / 255.0, lMaterialData.mBaseColorTextureID / 255.0,
         // lMaterialData.mBaseColorTextureID / 255.0};//pixelColor;
-        prd.mPixelColor = math::vec3{tc.x, tc.y, 0.0f};
+        prd.mPixelColor = pixelColor;
     }
 
     extern "C" CUDA_KERNEL_DEFINITION void __anyhit__radiance() {}

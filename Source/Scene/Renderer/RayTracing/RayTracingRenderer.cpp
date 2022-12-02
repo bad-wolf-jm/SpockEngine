@@ -122,7 +122,7 @@ namespace SE::Core
         SE::Cuda::GPUExternalMemory lIndexBuffer( *mScene->mIndexBuffer, mScene->mIndexBuffer->SizeAs<uint8_t>() );
         mRayTracingParameters.mIndexBuffer  = lIndexBuffer.DataAs<math::uvec3>();
         mRayTracingParameters.mVertexBuffer = lTransformedVertexBuffer.DataAs<VertexData>();
-
+        
         mRayTracingParameters.mTextures  = mScene->GetMaterialSystem()->GetCudaTextures().DataAs<Cuda::TextureSampler2D::DeviceData>();
         mRayTracingParameters.mMaterials = mScene->GetMaterialSystem()->GetCudaMaterials().DataAs<sShaderMaterial>();
 
