@@ -68,13 +68,13 @@ namespace SE::Cuda
 
         /** @brief Retrieve the device pointer */
         template <typename _Ty>
-        SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF _Ty *DataAs()
+        SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF _Ty *DataAs() const
         {
             return (_Ty *)mDevicePointer;
         }
 
         template <typename _Ty>
-        SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t SizeAs()
+        SE_CUDA_INLINE SE_CUDA_HOST_DEVICE_FUNCTION_DEF size_t SizeAs() const
         {
             return mSize / sizeof( _Ty );
         }

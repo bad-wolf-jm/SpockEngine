@@ -2,15 +2,22 @@
 
 #include "Core/Math/Types.h"
 
-#include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//GraphicContext.h"
-#include "Core/GraphicContext//Texture2D.h"
+#ifndef __CUDACC__
+#    include "Core/GraphicContext//DescriptorSet.h"
+#    include "Core/GraphicContext//GraphicContext.h"
+#    include "Core/GraphicContext//Texture2D.h"
+#endif
 
+#include "Core/Cuda//CudaBuffer.h"
+#include "Core/Cuda//ExternalMemory.h"
 #include "Core/Cuda//Texture2D.h"
 
 using namespace math::literals;
+
+#ifndef __CUDACC__
 using namespace SE::Graphics;
 namespace fs = std::filesystem;
+#endif
 
 namespace SE::Core
 {
@@ -40,6 +47,7 @@ namespace SE::Core
         float mAlphaThreshold = 0.0f;
     };
 
+#ifndef __CUDACC__
     enum class eMaterialType : uint8_t
     {
         Opaque,
@@ -110,13 +118,18 @@ namespace SE::Core
 
         std::vector<sMaterial> const                &GetMaterialData() const { return mMaterials; }
         std::vector<Ref<Graphics::Texture2D>> const &GetTextures() const { return mTextures; }
+        Cuda::GPUMemory const                       &GetCudaTextures() const { return mCudaTextureBuffer; }
+        Cuda::GPUExternalMemory const               &GetCudaMaterials() const { return mCudaShaderMaterials; }
 
       private:
         GraphicContext mGraphicContext;
 
-        std::vector<Ref<Cuda::Texture2D>>     mCudaTextures = {};
-        std::vector<Ref<Graphics::Texture2D>> mTextures     = {};
-        std::vector<sMaterial>                mMaterials    = {};
+        std::vector<Ref<Cuda::TextureSampler2D>> mCudaTextures = {};
+        std::vector<Ref<Graphics::Texture2D>>    mTextures     = {};
+        std::vector<sMaterial>                   mMaterials    = {};
+
+        Cuda::GPUMemory         mCudaTextureBuffer{};
+        Cuda::GPUExternalMemory mCudaShaderMaterials{};
 
         Ref<Buffer> mShaderMaterials = nullptr;
 
@@ -124,4 +137,6 @@ namespace SE::Core
         Ref<DescriptorSetLayout> mTextureDescriptorLayout;
         Ref<DescriptorSet>       mTextureDescriptorSet;
     };
+
+#endif
 } // namespace SE::Core

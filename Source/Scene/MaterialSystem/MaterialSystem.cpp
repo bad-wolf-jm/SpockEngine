@@ -114,7 +114,15 @@ namespace SE::Core
         auto lNewCudaTexture =
             New<Cuda::Texture2D>( lNewTextureCreateInfo, lNewTexture->GetMemoryHandle(), lNewTexture->GetMemorySize() );
 
-        mCudaTextures.push_back( lNewCudaTexture );
+        sTextureSamplingInfo lCudaSampler{};
+        lCudaSampler.mMinification  = eSamplerFilter::LINEAR;
+        lCudaSampler.mMagnification = eSamplerFilter::LINEAR;
+        lCudaSampler.mMip           = eSamplerMipmap::LINEAR;
+        lCudaSampler.mWrapping      = eSamplerWrapping::REPEAT;
+
+        auto lNewCudaTextureSampler = New<Cuda::TextureSampler2D>( lNewCudaTexture, lCudaSampler );
+
+        mCudaTextures.push_back( lNewCudaTextureSampler );
 
         mDirty = true;
 
@@ -161,8 +169,20 @@ namespace SE::Core
         if( mShaderMaterials->SizeAs<sShaderMaterial>() < mMaterials.size() )
         {
             auto lBufferSize = std::max( mMaterials.size(), static_cast<size_t>( 1 ) ) * sizeof( sShaderMaterial );
-            mShaderMaterials = New<Buffer>( mGraphicContext, eBufferBindType::STORAGE_BUFFER, true, false, true, true, lBufferSize );
+            mShaderMaterials = New<Buffer>( mGraphicContext, eBufferBindType::STORAGE_BUFFER, true, true, true, true, lBufferSize );
             mTextureDescriptorSet->Write( mShaderMaterials, false, 0, lBufferSize, 0 );
+
+            mCudaShaderMaterials.Dispose();
+            mCudaShaderMaterials = Cuda::GPUExternalMemory( *mShaderMaterials, mShaderMaterials->SizeAs<uint8_t>() );
+        }
+
+        if( mCudaTextureBuffer.SizeAs<Cuda::TextureSampler2D::DeviceData>() < mCudaTextures.size() )
+        {
+            mCudaTextureBuffer.Dispose();
+            std::vector<Cuda::TextureSampler2D::DeviceData> lTextureDeviceData{};
+            for( auto const &lCudaTextureSampler : mCudaTextures ) lTextureDeviceData.push_back( lCudaTextureSampler->mDeviceData );
+
+            mCudaTextureBuffer = Cuda::GPUMemory::Create( lTextureDeviceData );
         }
 
         if( mMaterials.size() > 0 )

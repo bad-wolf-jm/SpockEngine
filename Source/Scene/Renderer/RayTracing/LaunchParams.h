@@ -3,6 +3,9 @@
 #include "Core/Math/Types.h"
 #include "Core/Optix/Optix7.h"
 
+#include "Core/Cuda/Texture2D.h"
+
+#include "Scene/MaterialSystem/MaterialSystem.h"
 #include "Scene/VertexData.h"
 
 namespace SE::Core
@@ -61,8 +64,11 @@ namespace SE::Core
 
         OptixTraversableHandle mSceneRoot;
 
-        VertexData  *mVertexBuffer = nullptr;
-        math::uvec3 *mIndexBuffer  = nullptr;
+        VertexData      *mVertexBuffer = nullptr;
+        math::uvec3     *mIndexBuffer  = nullptr;
+        sShaderMaterial *mMaterials    = nullptr;
+
+        Cuda::TextureSampler2D::DeviceData *mTextures = nullptr;
     };
 
 } // namespace SE::Core

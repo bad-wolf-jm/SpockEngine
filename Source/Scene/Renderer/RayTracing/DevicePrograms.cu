@@ -54,6 +54,17 @@ namespace SE::Core
     { /* not going to be used ... */
     }
 
+    static SE_CUDA_DEVICE_FUNCTION_DEF void GetPrimitive( sTriangleMeshSBTData const &aSbtData, int aPrimitiveID, VertexData &aV1,
+                                                          VertexData &aV2, VertexData &aV3 )
+    {
+        uint32_t const     lVertexOffset = aSbtData.mVertexOffset;
+        math::uvec3 const &lPrimitive    = optixLaunchParams.mIndexBuffer[aPrimitiveID];
+
+        aV1 = optixLaunchParams.mVertexBuffer[lVertexOffset + lPrimitive.x];
+        aV2 = optixLaunchParams.mVertexBuffer[lVertexOffset + lPrimitive.y];
+        aV3 = optixLaunchParams.mVertexBuffer[lVertexOffset + lPrimitive.z];
+    }
+
     extern "C" CUDA_KERNEL_DEFINITION void __closesthit__radiance()
     {
         const sTriangleMeshSBTData &sbtData = *(const sTriangleMeshSBTData *)optixGetSbtDataPointer();
@@ -90,21 +101,21 @@ namespace SE::Core
         Ns = normalize( Ns );
 
         math::vec3 diffuseColor = sbtData.mColor;
-        // if( sbtData.mHasTexture && sbtData.mTexCoord )
-        // {
-        //     const math::vec2 &TA =
-        //         optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].x].TexCoords_0;
-        //     const math::vec2 &TB =
-        //         optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].y].TexCoords_0;
-        //     const math::vec2 &TC =
-        //         optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].z].TexCoords_0;
 
-        //     const math::vec2 tc = ( 1.f - u - v ) * TA + u * TB + v * TC;
+        const math::vec2 &TA =
+            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].x].TexCoords_0;
+        const math::vec2 &TB =
+            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].y].TexCoords_0;
+        const math::vec2 &TC =
+            optixLaunchParams.mVertexBuffer[sbtData.mVertexOffset + optixLaunchParams.mIndexBuffer[lPrimitiveID].z].TexCoords_0;
 
-        //     auto       lValue      = tex2D<float4>( sbtData.mTexture, tc.x, tc.y );
-        //     math::vec4 fromTexture = { lValue.x, lValue.y, lValue.z, lValue.w };
-        //     diffuseColor *= (math::vec3)fromTexture;
-        // }
+        const math::vec2 tc = ( 1.f - u - v ) * TA + u * TB + v * TC;
+
+        auto lMaterialData = optixLaunchParams.mMaterials[sbtData.mMaterialID];
+        auto lBaseColor    = optixLaunchParams.mTextures[lMaterialData.mBaseColorTextureID];
+        auto lTextureValue = tex2D<float4>( lBaseColor.mTextureObject, tc.x, tc.y );
+
+        diffuseColor *= math::vec3{ lTextureValue.x, lTextureValue.y, lTextureValue.z };
 
         // // start with some ambient term
         math::vec3 pixelColor = ( 0.1f + 0.2f * fabsf( dot( Ns, rayDir ) ) ) * diffuseColor;
