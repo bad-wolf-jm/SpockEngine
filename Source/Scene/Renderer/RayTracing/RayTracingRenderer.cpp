@@ -219,7 +219,7 @@ namespace SE::Core
     void RayTracingRenderer::SetView( math::mat4 aViewMatrix )
     {
         ASceneRenderer::SetView( math::Inverse( aViewMatrix ) );
-        
+
         mRayTracingParameters.mFrame.mFrameID    = 0;
         mRayTracingParameters.mCamera.mPosition  = math::vec3( mViewMatrix[3] );
         mRayTracingParameters.mCamera.mDirection = normalize( math::vec3( mViewMatrix[0][2], mViewMatrix[1][2], mViewMatrix[2][2] ) );
@@ -227,10 +227,10 @@ namespace SE::Core
         const float aspect = float( mRayTracingParameters.mFrame.mSize.x ) / float( mRayTracingParameters.mFrame.mSize.y );
         mRayTracingParameters.mCamera.mHorizontal =
             cosFovy * aspect *
-            math::normalize( math::cross( mRayTracingParameters.mCamera.mDirection,
-                                          normalize( math::vec3( mViewMatrix[0][1], mViewMatrix[1][1], mViewMatrix[2][1] ) ) ) );
+            math::normalize( math::cross( mRayTracingParameters.mCamera.mDirection, math::vec3( 0.0f, 1.0f, 0.0f ) ) );
         mRayTracingParameters.mCamera.mVertical =
-            cosFovy * normalize( cross( mRayTracingParameters.mCamera.mHorizontal, mRayTracingParameters.mCamera.mDirection ) );
+            cosFovy *
+            math::normalize( math::cross( mRayTracingParameters.mCamera.mHorizontal, mRayTracingParameters.mCamera.mDirection ) );
     }
 
     /*! resize frame buffer to given resolution */

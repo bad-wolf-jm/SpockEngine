@@ -65,6 +65,10 @@ namespace SE::Core
         sLaunchParams mRayTracingParameters;
 
       protected:
+        math::vec3 mCameraPosition{};
+        math::mat3 mCameraRotation{};
+
+      protected:
         GraphicContext           mGraphicContext{};
         Ref<Graphics::Texture2D> mOutputTexture = nullptr;
         Ref<Graphics::Buffer>    mOutputBuffer  = nullptr;
