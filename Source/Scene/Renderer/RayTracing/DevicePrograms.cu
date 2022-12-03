@@ -329,8 +329,9 @@ namespace SE::Core
                 normalize( camera.mDirection + ( screen.x - 0.5f ) * camera.mHorizontal + ( screen.y - 0.5f ) * camera.mVertical );
 
             optixTrace( optixLaunchParams.mSceneRoot, float3{ camera.mPosition.x, camera.mPosition.y, camera.mPosition.z },
-                        float3{ rayDir.x, -rayDir.y, rayDir.z }, 0.f, 1e20f, 0.0f, OptixVisibilityMask( 255 ),
+                        float3{ rayDir.x, rayDir.y, rayDir.z }, 0.f, 1e20f, 0.0f, OptixVisibilityMask( 255 ),
                         OPTIX_RAY_FLAG_DISABLE_ANYHIT, RADIANCE_RAY_TYPE, RAY_TYPE_COUNT, RADIANCE_RAY_TYPE, u0, u1 );
+
             pixelColor += prd.mPixelColor;
             pixelNormal += prd.mPixelNormal;
             pixelAlbedo += prd.mPixelAlbedo;
