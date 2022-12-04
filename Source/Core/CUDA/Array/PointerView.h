@@ -12,7 +12,7 @@
 #include <cuda_runtime_api.h>
 #include <vector>
 
-#include "Core/GPUResource/CudaAssert.h"
+#include "Core/CUDA/CudaAssert.h"
 
 /** \namespace SE::Cuda::Internal
  *

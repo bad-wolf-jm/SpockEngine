@@ -39,7 +39,7 @@ namespace SE::Core
             int32_t mHeight      = 0;                        /**!< Height of the texture, in pixels*/
             int32_t mDepth       = 0;                        /**!< Depth of the texture, in pixels (for 3D textures only)*/
             int32_t mMipLevels   = 0;                        /**!< Specifies the length of the mip chain associated with the texture*/
-            sSwizzleTransform mSwizzles{};                   /**!< Specifies the swizzling of the texture. */
+            // sSwizzleTransform mSwizzles{};                   /**!< Specifies the swizzling of the texture. */
 
             sCreateInfo()                = default;
             sCreateInfo( sCreateInfo const & ) = default;

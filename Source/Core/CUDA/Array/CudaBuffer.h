@@ -11,7 +11,7 @@
 #include "Core/Logging.h"
 #include "Core/Memory.h"
 
-#include "Core/GPUResource/CudaAssert.h"
+#include "Core/CUDA/CudaAssert.h"
 #include "PointerView.h"
 
 namespace SE::Cuda

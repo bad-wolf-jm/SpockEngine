@@ -157,33 +157,33 @@ namespace SE::Core
         }
     }
 
-    static const gli::swizzle ToGliType( const eSwizzleComponent &aSwizzleComponent )
-    {
-        switch( aSwizzleComponent )
-        {
-        case eSwizzleComponent::ONE: return gli::SWIZZLE_ONE;
-        case eSwizzleComponent::R: return gli::SWIZZLE_RED;
-        case eSwizzleComponent::G: return gli::SWIZZLE_GREEN;
-        case eSwizzleComponent::B: return gli::SWIZZLE_BLUE;
-        case eSwizzleComponent::A: return gli::SWIZZLE_ALPHA;
-        case eSwizzleComponent::ZERO:
-        default: return gli::SWIZZLE_ZERO;
-        }
-    }
+    // static const gli::swizzle ToGliType( const eSwizzleComponent &aSwizzleComponent )
+    // {
+    //     switch( aSwizzleComponent )
+    //     {
+    //     case eSwizzleComponent::ONE: return gli::SWIZZLE_ONE;
+    //     case eSwizzleComponent::R: return gli::SWIZZLE_RED;
+    //     case eSwizzleComponent::G: return gli::SWIZZLE_GREEN;
+    //     case eSwizzleComponent::B: return gli::SWIZZLE_BLUE;
+    //     case eSwizzleComponent::A: return gli::SWIZZLE_ALPHA;
+    //     case eSwizzleComponent::ZERO:
+    //     default: return gli::SWIZZLE_ZERO;
+    //     }
+    // }
 
-    static const eSwizzleComponent ToLtseType( const gli::swizzle &aSwizzleComponent )
-    {
-        switch( aSwizzleComponent )
-        {
-        case gli::SWIZZLE_ONE: return eSwizzleComponent::ONE;
-        case gli::SWIZZLE_RED: return eSwizzleComponent::R;
-        case gli::SWIZZLE_GREEN: return eSwizzleComponent::G;
-        case gli::SWIZZLE_BLUE: return eSwizzleComponent::B;
-        case gli::SWIZZLE_ALPHA: return eSwizzleComponent::A;
-        case gli::SWIZZLE_ZERO:
-        default: return eSwizzleComponent::ZERO;
-        }
-    }
+    // static const eSwizzleComponent ToLtseType( const gli::swizzle &aSwizzleComponent )
+    // {
+    //     switch( aSwizzleComponent )
+    //     {
+    //     case gli::SWIZZLE_ONE: return eSwizzleComponent::ONE;
+    //     case gli::SWIZZLE_RED: return eSwizzleComponent::R;
+    //     case gli::SWIZZLE_GREEN: return eSwizzleComponent::G;
+    //     case gli::SWIZZLE_BLUE: return eSwizzleComponent::B;
+    //     case gli::SWIZZLE_ALPHA: return eSwizzleComponent::A;
+    //     case gli::SWIZZLE_ZERO:
+    //     default: return eSwizzleComponent::ZERO;
+    //     }
+    // }
 
     static const gli::target ToGliType( const eTextureType &aTextureType )
     {
@@ -205,17 +205,17 @@ namespace SE::Core
         }
     }
 
-    static const gli::swizzles ToGliType( const sSwizzleTransform &aSwizzleTransform )
-    {
-        return gli::swizzles( ToGliType( aSwizzleTransform.mR ), ToGliType( aSwizzleTransform.mG ), ToGliType( aSwizzleTransform.mB ),
-                              ToGliType( aSwizzleTransform.mA ) );
-    }
+    // static const gli::swizzles ToGliType( const sSwizzleTransform &aSwizzleTransform )
+    // {
+    //     return gli::swizzles( ToGliType( aSwizzleTransform.mR ), ToGliType( aSwizzleTransform.mG ), ToGliType( aSwizzleTransform.mB ),
+    //                           ToGliType( aSwizzleTransform.mA ) );
+    // }
 
-    static const sSwizzleTransform ToLtseType( const gli::swizzles &aSwizzleTransform )
-    {
-        return sSwizzleTransform{ ToLtseType( aSwizzleTransform.r ), ToLtseType( aSwizzleTransform.g ),
-                                  ToLtseType( aSwizzleTransform.b ), ToLtseType( aSwizzleTransform.a ) };
-    }
+    // static const sSwizzleTransform ToLtseType( const gli::swizzles &aSwizzleTransform )
+    // {
+    //     return sSwizzleTransform{ ToLtseType( aSwizzleTransform.r ), ToLtseType( aSwizzleTransform.g ),
+    //                               ToLtseType( aSwizzleTransform.b ), ToLtseType( aSwizzleTransform.a ) };
+    // }
 
     static const gli::filter ToGliType( const eSamplerFilter &aTextureType )
     {
@@ -284,7 +284,7 @@ namespace SE::Core
             mSpec.mHeight    = mInternalTexture.extent().y;
             mSpec.mDepth     = mInternalTexture.extent().z;
             mSpec.mMipLevels = mInternalTexture.levels();
-            mSpec.mSwizzles  = ToLtseType( mInternalTexture.swizzles() );
+            // mSpec.mSwizzles  = ToLtseType( mInternalTexture.swizzles() );
         }
         else
         {
@@ -314,7 +314,7 @@ namespace SE::Core
         mSpec.mHeight    = mInternalTexture.extent().y;
         mSpec.mDepth     = mInternalTexture.extent().z;
         mSpec.mMipLevels = mInternalTexture.levels();
-        mSpec.mSwizzles  = ToLtseType( mInternalTexture.swizzles() );
+        // mSpec.mSwizzles  = ToLtseType( mInternalTexture.swizzles() );
     }
 
     void TextureData::SaveTo( fs::path const &aImagePath )
@@ -350,8 +350,10 @@ namespace SE::Core
     void TextureData::Initialize()
     {
         mInternalTexture = gli::texture( ToGliType( mSpec.mType ), ToGliType( mSpec.mFormat ),
-                                         gli::extent3d{ mSpec.mWidth, mSpec.mHeight, mSpec.mDepth }, 1, 1, mSpec.mMipLevels,
-                                         ToGliType( mSpec.mSwizzles ) );
+                                         gli::extent3d{ mSpec.mWidth, mSpec.mHeight, mSpec.mDepth }, 1, 1, mSpec.mMipLevels );
+                                         
+                                        //  ,
+                                        //  ToGliType( mSpec.mSwizzles ) );
     }
 
     TextureData2D::TextureData2D( TextureData::sCreateInfo const &aCreateInfo )
