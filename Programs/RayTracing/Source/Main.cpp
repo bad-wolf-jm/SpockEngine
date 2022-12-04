@@ -1,5 +1,5 @@
 
-#include "Core/Textures/TextureData.h"
+#include "Core/GPUResource/Texture/TextureData.h"
 
 // #include "Core/GraphicContext//OffscreenRenderTarget.h"
 
@@ -30,8 +30,8 @@
 #include "UI/UI.h"
 #include "UI/Widgets.h"
 
-#include "Core/Cuda/CudaBuffer.h"
-#include "Core/Cuda/ExternalMemory.h"
+#include "Core/GPUResource/Array/CudaBuffer.h"
+#include "Core/GPUResource/Array/ExternalMemory.h"
 
 #include <fmt/core.h>
 

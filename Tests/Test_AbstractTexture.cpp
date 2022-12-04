@@ -6,8 +6,8 @@
 #include <numeric>
 
 #include "Core/Math/Types.h"
-#include "Core/Textures/TextureData.h"
-#include "Core/Textures/TextureTypes.h"
+#include "Core/GPUResource/Texture/TextureData.h"
+#include "Core/GPUResource/Texture/TextureTypes.h"
 
 namespace fs = std::filesystem;
 

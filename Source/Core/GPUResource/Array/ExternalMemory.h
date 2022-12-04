@@ -13,8 +13,8 @@
 #include <vulkan/vulkan_win32.h>
 // clang-format on
 
-#include "Core/Cuda/CudaAssert.h"
-#include "Core/Cuda/CudaBuffer.h"
+#include "Core/GPUResource/CudaAssert.h"
+#include "Core/GPUResource/Array/CudaBuffer.h"
 
 #include "Core/GraphicContext//Buffer.h"
 

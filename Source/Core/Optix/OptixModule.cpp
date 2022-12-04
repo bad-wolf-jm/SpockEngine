@@ -1,5 +1,5 @@
 #include "OptixModule.h"
-#include "Core/Cuda/CudaAssert.h"
+#include "Core/GPUResource/CudaAssert.h"
 #include "Core/Logging.h"
 #include "Core/Memory.h"
 

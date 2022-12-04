@@ -1,4 +1,4 @@
-#include "Core/Cuda/CudaAssert.h"
+#include "Core/GPUResource/CudaAssert.h"
 
 #include "SampleRenderer.h"
 

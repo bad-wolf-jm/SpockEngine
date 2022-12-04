@@ -1,7 +1,7 @@
 #include "UIContext.h"
 
 #include "Core/Logging.h"
-#include "Core/Textures/ColorFormat.h"
+#include "Core/GPUResource/Texture/ColorFormat.h"
 
 #include "Core/Vulkan/VkPipeline.h"
 

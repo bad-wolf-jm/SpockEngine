@@ -35,7 +35,7 @@
 #pragma once
 
 #include "Core/Math/Types.h"
-#include "Core/Cuda/CudaAssert.h"
+#include "Core/GPUResource/CudaAssert.h"
 // #include "vec.h"
 #include "Quaternion.h"
 

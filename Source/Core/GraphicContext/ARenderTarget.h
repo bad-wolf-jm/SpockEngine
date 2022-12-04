@@ -5,7 +5,7 @@
 
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicContext.h"
-#include "Core/Textures/ColorFormat.h"
+#include "Core/GPUResource/Texture/ColorFormat.h"
 #include "Core/Vulkan/VkCoreMacros.h"
 
 namespace SE::Graphics

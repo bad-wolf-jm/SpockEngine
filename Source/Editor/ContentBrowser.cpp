@@ -2,7 +2,7 @@
 
 #include "ContentBrowser.h"
 
-#include "Core/Textures/TextureData.h"
+#include "Core/GPUResource/Texture/TextureData.h"
 
 #include "UI/UI.h"
 #include "UI/Widgets.h"

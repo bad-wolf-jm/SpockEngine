@@ -6,7 +6,7 @@
 #include "LaunchParams.h"
 #include "Model.h"
 
-#include "Core/Cuda/CudaBuffer.h"
+#include "Core/GPUResource/Array/CudaBuffer.h"
 #include "Core/Math/Types.h"
 
 #include "Core/Optix/OptixAccelerationStructure.h"

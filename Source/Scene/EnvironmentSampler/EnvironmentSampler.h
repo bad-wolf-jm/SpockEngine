@@ -7,8 +7,8 @@
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 
-#include "Core/Cuda/CudaBuffer.h"
-#include "Core/Cuda/MultiTensor.h"
+#include "Core/GPUResource/Array/CudaBuffer.h"
+#include "Core/GPUResource/Array/MultiTensor.h"
 
 #include "Scene/Components.h"
 #include "Scene/Scene.h"

@@ -10,12 +10,12 @@
 
 #include <vector>
 
-#include "CudaAssert.h"
+#include "Core/GPUResource/CudaAssert.h"
 
 #include "Core/Logging.h"
 #include "Core/Memory.h"
-#include "Core/Textures/ColorFormat.h"
-#include "Core/Textures/TextureTypes.h"
+#include "Core/GPUResource/Texture/ColorFormat.h"
+#include "Core/GPUResource/Texture/TextureTypes.h"
 
 #include "Core/Math/Types.h"
 

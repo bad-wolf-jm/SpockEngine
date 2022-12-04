@@ -10,28 +10,16 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Resource.cpp
     Core/Logging.cpp
 
-    Core/Textures/ColorFormat.cpp
-    Core/Textures/TextureData.cpp
     
-    # Scripting/ScriptingEngine.cpp
-    # Scripting/Core/Texture.cpp
-    # Scripting/Core/Vector.cpp
-    # Scripting/Entities/EntityRegistry.cpp
-    # Scripting/Cuda/Tensor.cpp
-    # Scripting/Cuda/Texture.cpp
-    # Scripting/Math/VectorTypes.cpp
-    # Scripting/Math/MatrixTypes.cpp
-    # # Scripting/SensorModel.cpp
-    # Scripting/ArrayTypes.cpp
-    # # Scripting/ScriptedSensorDevice.cpp
-
     Mono/Manager.cpp
     Mono/InternalCalls.cpp
     Mono/EntityRegistry.cpp
     
-    Core/Cuda/MultiTensor.cu
-    Core/Cuda/MemoryPool.cu
-    Core/Cuda/Texture2D.cu
+    Core/GPUResource/Array/MultiTensor.cu
+    Core/GPUResource/Array/MemoryPool.cu
+    Core/GPUResource/Texture/Texture2D.cu
+    Core/GPUResource/Texture/ColorFormat.cpp
+    Core/GPUResource/Texture/TextureData.cpp
     
     Engine/Engine.cpp
     
@@ -47,7 +35,6 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Optix/OptixAccelerationStructure.cpp
     
     Core/Vulkan/VkContext.cpp
-    # Core/Vulkan/VkRenderPass.cpp
     Core/Vulkan/VkPipeline.cpp
     Core/Vulkan/VkImage.cpp
     Core/Vulkan/VkCommand.cpp

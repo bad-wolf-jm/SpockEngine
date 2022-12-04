@@ -5,8 +5,8 @@
 
 #include "Core/Math/Types.h"
 
-#include "Core/Cuda/MemoryPool.h"
-#include "Core/Cuda/MultiTensor.h"
+#include "Core/GPUResource/Array/MemoryPool.h"
+#include "Core/GPUResource/Array/MultiTensor.h"
 
 #include "TensorOps/NodeComponents.h"
 #include "TensorOps/Scope.h"

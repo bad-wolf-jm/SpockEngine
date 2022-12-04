@@ -1,9 +1,9 @@
-#include "Core/Cuda/CudaAssert.h"
+#include "Core/GPUResource/CudaAssert.h"
 
 #include <cuda_runtime.h>
 #include <optix_device.h>
 
-#include "Core/Cuda/Random.h"
+#include "Core/GPUResource/Random.h"
 #include "LaunchParams.h"
 
 #define NUM_LIGHT_SAMPLES 8

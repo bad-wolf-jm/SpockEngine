@@ -8,9 +8,9 @@
 
 #include "Core/Math/Types.h"
 
-#include "Core/Cuda/CudaBuffer.h"
-#include "Core/Cuda/ExternalMemory.h"
-#include "Core/Cuda/MultiTensor.h"
+#include "Core/GPUResource/Array/CudaBuffer.h"
+#include "Core/GPUResource/Array/ExternalMemory.h"
+#include "Core/GPUResource/Array/MultiTensor.h"
 
 #include "Scene/ParticleData.h"
 

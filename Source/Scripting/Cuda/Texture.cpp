@@ -1,8 +1,8 @@
 #include "Texture.h"
 
 #include "Core/Memory.h"
-#include "Core/Textures/TextureData.h"
-#include "Core/Cuda/Texture2D.h"
+#include "Core/GPUResource/Texture/TextureData.h"
+#include "Core/GPUResource/Texture/Texture2D.h"
 
 #include "TensorOps/Scope.h"
 

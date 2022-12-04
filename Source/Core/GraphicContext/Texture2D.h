@@ -6,10 +6,10 @@
 #include <vulkan/vulkan.h>
 
 #include "Core/Memory.h"
-#include "Core/Textures/TextureData.h"
+#include "Core/GPUResource/Texture/TextureData.h"
 #include "Core/Types.h"
 
-#include "Core/Textures/ColorFormat.h"
+#include "Core/GPUResource/Texture/ColorFormat.h"
 
 #include "Buffer.h"
 #include "GraphicContext.h"

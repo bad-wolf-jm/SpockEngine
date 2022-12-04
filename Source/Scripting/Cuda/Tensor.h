@@ -4,7 +4,7 @@
 
 #include "Core/EntityRegistry/Registry.h"
 
-#include "Core/Cuda/MultiTensor.h"
+#include "Core/GPUResource/Array/MultiTensor.h"
 
 namespace SE::Core
 {

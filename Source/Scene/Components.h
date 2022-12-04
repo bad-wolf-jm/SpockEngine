@@ -10,8 +10,8 @@
 
 #include "UI/UI.h"
 
-#include "Core/Cuda/CudaBuffer.h"
-#include "Core/Cuda/ExternalMemory.h"
+#include "Core/GPUResource/Array/CudaBuffer.h"
+#include "Core/GPUResource/Array/ExternalMemory.h"
 
 #include "Core/GraphicContext//Buffer.h"
 #include "Core/GraphicContext//GraphicContext.h"

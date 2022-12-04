@@ -8,7 +8,7 @@
 
 #include "Scope.h"
 
-#include "Core/Cuda/Texture2D.h"
+#include "Core/GPUResource/Texture/Texture2D.h"
 
 #include "Implementation/KernelLaunchers.h"
 

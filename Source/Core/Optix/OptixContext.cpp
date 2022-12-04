@@ -1,5 +1,5 @@
 #include "OptixContext.h"
-#include "Core/Cuda/CudaAssert.h"
+#include "Core/GPUResource/CudaAssert.h"
 
 namespace SE::Graphics
 {

@@ -5,7 +5,7 @@
 // our own classes, partly shared between host and device
 #include "LaunchParams.h"
 
-#include "Core/Cuda/CudaBuffer.h"
+#include "Core/GPUResource/Array/CudaBuffer.h"
 #include "Core/Math/Types.h"
 
 #include "Core/Optix/OptixAccelerationStructure.h"

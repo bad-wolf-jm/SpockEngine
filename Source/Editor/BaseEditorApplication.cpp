@@ -12,11 +12,11 @@
 #include "UI/UI.h"
 #include "UI/Widgets.h"
 
-#include "Core/Cuda/CudaBuffer.h"
-#include "Core/Cuda/ExternalMemory.h"
-#include "Core/Cuda/MultiTensor.h"
+#include "Core/GPUResource/Array/CudaBuffer.h"
+#include "Core/GPUResource/Array/ExternalMemory.h"
+#include "Core/GPUResource/Array/MultiTensor.h"
 
-#include "Core/Textures/ColorFormat.h"
+#include "Core/GPUResource/Texture/ColorFormat.h"
 #include "Scene/Components.h"
 #include "Scene/Importer/glTFImporter.h"
 

@@ -16,9 +16,9 @@
 
 #include "Core/EntityRegistry/Registry.h"
 
-#include "Core/Cuda/CudaAssert.h"
-#include "Core/Cuda/MemoryPool.h"
-#include "Core/Cuda/MultiTensor.h"
+#include "Core/GPUResource/CudaAssert.h"
+#include "Core/GPUResource/Array/MemoryPool.h"
+#include "Core/GPUResource/Array/MultiTensor.h"
 
 #include "NodeComponents.h"
 #include "NodeControllers.h"

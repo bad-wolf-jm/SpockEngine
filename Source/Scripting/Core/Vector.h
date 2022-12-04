@@ -3,7 +3,7 @@
 #include <sol/sol.hpp>
 
 #include "Core/EntityRegistry/Registry.h"
-#include "Core/Textures/TextureData.h"
+#include "Core/GPUResource/Texture/TextureData.h"
 
 namespace SE::Core
 {

@@ -15,7 +15,7 @@
 
 #include "Core/File.h"
 #include "Core/Logging.h"
-#include "Core/Textures/TextureData.h"
+#include "Core/GPUResource/Texture/TextureData.h"
 
 #include "Scene/Components.h"
 

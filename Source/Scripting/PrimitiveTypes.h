@@ -5,9 +5,9 @@
 #include <type_traits>
 
 #include "Core/EntityRegistry/Registry.h"
-#include "Core/Textures/TextureData.h"
+#include "Core/GPUResource/Texture/TextureData.h"
 
-#include "Core/Cuda/MultiTensor.h"
+#include "Core/GPUResource/Array/MultiTensor.h"
 
 // #include "LidarSensorModel/SensorModelBase.h"
 
