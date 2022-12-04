@@ -8,7 +8,7 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-#include "Core/GPUResource/Array/ExternalMemory.h"
+#include "Core/CUDA/Array/ExternalMemory.h"
 
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicContext.h"
@@ -20,7 +20,7 @@
 #include "VertexData.h"
 
 #include "Core/EntityRegistry/Registry.h"
-#include "Core/GPUResource/Texture/TextureTypes.h"
+#include "Core/CUDA/Texture/TextureTypes.h"
 
 // #include "Scripting/ScriptingEngine.h"
 

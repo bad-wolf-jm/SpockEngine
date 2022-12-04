@@ -1,7 +1,7 @@
 #include "Core/Core.h"
 #include "Core/Logging.h"
 #include "Core/Memory.h"
-#include "Core/GPUResource/Texture/TextureData.h"
+#include "Core/CUDA/Texture/TextureData.h"
 
 #include <argparse/argparse.hpp>
 #include <filesystem>

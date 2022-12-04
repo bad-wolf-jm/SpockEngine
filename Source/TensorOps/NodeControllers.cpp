@@ -14,7 +14,7 @@
 #include "NodeComponents.h"
 #include "NodeControllers.h"
 
-#include "Core/GPUResource/Texture/Texture2D.h"
+#include "Core/CUDA/Texture/Texture2D.h"
 
 namespace SE::TensorOps
 {

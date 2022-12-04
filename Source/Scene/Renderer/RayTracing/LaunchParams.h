@@ -3,7 +3,7 @@
 #include "Core/Math/Types.h"
 #include "Core/Optix/Optix7.h"
 
-#include "Core/GPUResource/Texture/Texture2D.h"
+#include "Core/CUDA/Texture/Texture2D.h"
 
 #include "Scene/MaterialSystem/MaterialSystem.h"
 #include "Scene/VertexData.h"

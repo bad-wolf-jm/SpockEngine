@@ -13,9 +13,9 @@
 
 #include "TestUtils.h"
 
-#include "Core/GPUResource/Array/MemoryPool.h"
-#include "Core/GPUResource/Array/MultiTensor.h"
-#include "Core/GPUResource/Array/PointerView.h"
+#include "Core/CUDA/Array/MemoryPool.h"
+#include "Core/CUDA/Array/MultiTensor.h"
+#include "Core/CUDA/Array/PointerView.h"
 #include "Core/Math/Types.h"
 
 

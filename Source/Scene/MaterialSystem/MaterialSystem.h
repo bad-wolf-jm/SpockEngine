@@ -8,9 +8,9 @@
 #    include "Core/GraphicContext//Texture2D.h"
 #endif
 
-#include "Core/GPUResource/Array/CudaBuffer.h"
-#include "Core/GPUResource/Array/ExternalMemory.h"
-#include "Core/GPUResource/Texture/Texture2D.h"
+#include "Core/CUDA/Array/CudaBuffer.h"
+#include "Core/CUDA/Array/ExternalMemory.h"
+#include "Core/CUDA/Texture/Texture2D.h"
 
 using namespace math::literals;
 

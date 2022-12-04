@@ -12,8 +12,8 @@
 
 #include "Core/EntityRegistry/Registry.h"
 
-#include "Core/GPUResource/Array/MemoryPool.h"
-#include "Core/GPUResource/Array/MultiTensor.h"
+#include "Core/CUDA/Array/MemoryPool.h"
+#include "Core/CUDA/Array/MultiTensor.h"
 
 #include "TensorOps/NodeComponents.h"
 #include "TensorOps/Scope.h"

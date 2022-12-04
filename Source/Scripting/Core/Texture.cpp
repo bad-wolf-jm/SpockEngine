@@ -2,8 +2,8 @@
 #include "Vector.h"
 
 #include "Core/Memory.h"
-#include "Core/GPUResource/Texture/TextureData.h"
-#include "Core/GPUResource/Array/MultiTensor.h"
+#include "Core/CUDA/Texture/TextureData.h"
+#include "Core/CUDA/Array/MultiTensor.h"
 
 #include "TensorOps/Scope.h"
 

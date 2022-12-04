@@ -3,10 +3,10 @@
 #include "TestUtils.h"
 
 #include "Core/Math/Types.h"
-#include "Core/GPUResource/Texture/TextureData.h"
+#include "Core/CUDA/Texture/TextureData.h"
 
-#include "Core/GPUResource/Array/MultiTensor.h"
-#include "Core/GPUResource/Texture/Texture2D.h"
+#include "Core/CUDA/Array/MultiTensor.h"
+#include "Core/CUDA/Texture/Texture2D.h"
 
 #include "TensorOps/Scope.h"
 

@@ -10,7 +10,7 @@
 
 #include "Scene/EnvironmentSampler/LaunchParams.h"
 
-#include "Core/GPUResource/CudaAssert.h"
+#include "Core/CUDA/CudaAssert.h"
 #include "TensorOps/Implementation/HelperMacros.h"
 
 namespace SE::SensorModel

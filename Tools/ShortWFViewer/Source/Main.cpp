@@ -4,8 +4,8 @@
 #include "UI/UI.h"
 #include "UI/Widgets.h"
 
-#include "Core/GPUResource/Array/CudaBuffer.h"
-#include "Core/GPUResource/Array/ExternalMemory.h"
+#include "Core/CUDA/Array/CudaBuffer.h"
+#include "Core/CUDA/Array/ExternalMemory.h"
 
 #include "Core/Logging.h"
 #include "Core/Memory.h"

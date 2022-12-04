@@ -5,7 +5,7 @@
 
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
-#include "Core/GPUResource/Texture/TextureData.h"
+#include "Core/CUDA/Texture/TextureData.h"
 
 #include "Core/GraphicContext//GraphicsPipeline.h"
 #include "Scene/MaterialSystem/MaterialSystem.h"

@@ -13,8 +13,8 @@
 #include "Core/Math/Types.h"
 #include "Core/Types.h"
 
-#include "Core/GPUResource/Texture/ColorFormat.h"
-#include "Core/GPUResource/Texture/TextureTypes.h"
+#include "Core/CUDA/Texture/ColorFormat.h"
+#include "Core/CUDA/Texture/TextureTypes.h"
 
 #include "yaml-cpp/yaml.h"
 

@@ -18,10 +18,10 @@
 #include "Core/Logging.h"
 #include "Core/Math/Types.h"
 
-#include "Core/GPUResource/CudaAssert.h"
-#include "Core/GPUResource/Array/MemoryPool.h"
-#include "Core/GPUResource/Array/MultiTensor.h"
-#include "Core/GPUResource/Texture/Texture2D.h"
+#include "Core/CUDA/CudaAssert.h"
+#include "Core/CUDA/Array/MemoryPool.h"
+#include "Core/CUDA/Array/MultiTensor.h"
+#include "Core/CUDA/Texture/Texture2D.h"
 
 #include "HelperMacros.h"
 

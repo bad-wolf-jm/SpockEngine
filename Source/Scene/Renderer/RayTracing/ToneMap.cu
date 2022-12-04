@@ -1,6 +1,6 @@
-#include "Core/GPUResource/CudaAssert.h"
-#include "Core/GPUResource/Array/CudaBuffer.h"
-#include "Core/GPUResource/Array/ExternalMemory.h"
+#include "Core/CUDA/CudaAssert.h"
+#include "Core/CUDA/Array/CudaBuffer.h"
+#include "Core/CUDA/Array/ExternalMemory.h"
 
 #include "Core/Math/Types.h"
 #include "LaunchParams.h"

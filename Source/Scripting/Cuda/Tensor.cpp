@@ -1,6 +1,6 @@
 #include "Tensor.h"
 
-#include "Core/GPUResource/Array/MultiTensor.h"
+#include "Core/CUDA/Array/MultiTensor.h"
 #include "Core/Memory.h"
 
 

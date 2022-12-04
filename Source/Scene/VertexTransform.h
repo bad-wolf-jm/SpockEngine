@@ -3,7 +3,7 @@
 #include "Core/Math/Types.h"
 
 // #include "Core/Cuda/CudaArray.h"
-#include "Core/GPUResource/Array/CudaBuffer.h"
+#include "Core/CUDA/Array/CudaBuffer.h"
 // #include "SensorModelDev/Base/KernelComponents.h"
 
 #include "Scene/VertexData.h"

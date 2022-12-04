@@ -8,10 +8,10 @@
 #include "TestUtils.h"
 
 #include "Core/Math/Types.h"
-#include "Core/GPUResource/Texture/TextureData.h"
-#include "Core/GPUResource/Texture/TextureTypes.h"
+#include "Core/CUDA/Texture/TextureData.h"
+#include "Core/CUDA/Texture/TextureTypes.h"
 
-#include "Core/GPUResource/Texture/Texture2D.h"
+#include "Core/CUDA/Texture/Texture2D.h"
 
 namespace fs = std::filesystem;
 

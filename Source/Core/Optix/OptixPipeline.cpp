@@ -1,6 +1,6 @@
 #include "OptixPipeline.h"
 
-#include "Core/GPUResource/CudaAssert.h"
+#include "Core/CUDA/CudaAssert.h"
 #include "Core/Logging.h"
 #include "Core/Memory.h"
 

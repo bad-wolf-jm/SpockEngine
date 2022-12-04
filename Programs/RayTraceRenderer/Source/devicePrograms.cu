@@ -1,4 +1,4 @@
-#include "Core/GPUResource/CudaAssert.h"
+#include "Core/CUDA/CudaAssert.h"
 
 #include <cuda_runtime.h>
 #include <optix_device.h>

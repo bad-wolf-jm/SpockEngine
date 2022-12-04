@@ -15,11 +15,11 @@ add_library(LTSimulationEngineRuntime STATIC
     Mono/InternalCalls.cpp
     Mono/EntityRegistry.cpp
     
-    Core/GPUResource/Array/MultiTensor.cu
-    Core/GPUResource/Array/MemoryPool.cu
-    Core/GPUResource/Texture/Texture2D.cu
-    Core/GPUResource/Texture/ColorFormat.cpp
-    Core/GPUResource/Texture/TextureData.cpp
+    Core/CUDA/Array/MultiTensor.cu
+    Core/CUDA/Array/MemoryPool.cu
+    Core/CUDA/Texture/Texture2D.cu
+    Core/CUDA/Texture/ColorFormat.cpp
+    Core/CUDA/Texture/TextureData.cpp
     
     Engine/Engine.cpp
     
