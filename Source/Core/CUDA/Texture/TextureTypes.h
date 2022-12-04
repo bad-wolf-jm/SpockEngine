@@ -43,18 +43,6 @@ namespace SE::Core
         MIRROR_CLAMP_TO_BORDER = 4  /**!< specifies that the mirror clamp to edge wrap mode will be used.  */
     };
 
-    // /** @brief Swizzles */
-    // enum class eSwizzleComponent : uint8_t
-    // {
-    //     IDENTITY = 0, /**!< specifies that the component is set to the identity swizzle. */
-    //     ZERO     = 1, /**!< specifies that the component is set to zero. */
-    //     ONE      = 2, /**!< specifies that the component is set to one */
-    //     R        = 3, /**!< specifies that the component is set to the value of the R component of the image. */
-    //     G        = 4, /**!< specifies that the component is set to the value of the G component of the image. */
-    //     B        = 5, /**!< specifies that the component is set to the value of the B component of the image. */
-    //     A        = 6  /**!< specifies that the component is set to the value of the A component of the image. */
-    // };
-
     /** \struct sTextureSamplingInfo
      *
      * @brief Texture sampling configuration.
@@ -79,29 +67,11 @@ namespace SE::Core
         sTextureSamplingInfo( const sTextureSamplingInfo & ) = default;
     };
 
-    // /** \struct sSwizzleTransform
-    //  *
-    //  * @brief Swizzling is the ability to create vectors by arbitrarily rearranging the components of a given vector
-    //  *
-    //  * This structure specifies the swizzling used to create the texture image.
-    //  *
-    //  */
-    // struct sSwizzleTransform
-    // {
-    //     eSwizzleComponent mR = eSwizzleComponent::IDENTITY;
-    //     eSwizzleComponent mG = eSwizzleComponent::IDENTITY;
-    //     eSwizzleComponent mB = eSwizzleComponent::IDENTITY;
-    //     eSwizzleComponent mA = eSwizzleComponent::IDENTITY;
-
-    //     sSwizzleTransform()                            = default;
-    //     sSwizzleTransform( sSwizzleTransform const & ) = default;
-    // };
-
     /** @brief */
     enum class eTextureType : uint8_t
     {
         TEXTURE_2D       = 0, //!< The texture is an ordinary 2 dimensional image
-        TEXTURE_3D       = 1,  //!< The texture is an 3 dimensional image, //!< The texture is an ordinary 2 dimensional image
+        TEXTURE_3D       = 1, //!< The texture is an 3 dimensional image, //!< The texture is an ordinary 2 dimensional image
         TEXTURE_CUBE_MAP = 2  //!< The texture is an 3 dimensional image
     };
 
