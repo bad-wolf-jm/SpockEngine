@@ -230,7 +230,7 @@ namespace osc
         denoiserIntensity.Resize( sizeof( float ) );
 
         OptixDenoiserParams denoiserParams;
-        denoiserParams.denoiseAlpha = 1; // OPTIX_DENOISER_ALPHA_MODE_ALPHA_AS_AOV;
+        denoiserParams.denoiseAlpha = OPTIX_DENOISER_ALPHA_MODE_ALPHA_AS_AOV;
 #if OPTIX_VERSION >= 70300
         if( denoiserIntensity.SizeAs<uint8_t>() != sizeof( float ) )
         {
