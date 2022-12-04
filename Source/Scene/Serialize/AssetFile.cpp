@@ -2,8 +2,8 @@
 #include "Core/Logging.h"
 namespace SE::Core
 {
-    static constexpr uint8_t sFileMagic[] = { '@', '%', 'S', 'P', 'O', 'C', 'K', 'E', 'N', 'G', 'I', 'N', 'E', '_', 'S', 'C', 'E', 'N',
-        'E', '_', 'A', 'S', 'S', 'E', 'T', '@', '%' };
+    static constexpr uint8_t sFileMagic[] = { '@', '%', 'S', 'P', 'O', 'C', 'K', 'E', 'N', 'G', 'I', 'N', 'E', '_',
+                                              'S', 'C', 'E', 'N', 'E', '_', 'A', 'S', 'S', 'E', 'T', '@', '%' };
 
     BinaryAsset::BinaryAsset( fs::path const &aPath )
         : mFilePath{ aPath }
@@ -57,11 +57,11 @@ namespace SE::Core
         std::vector<char> lPacket( lPacketSize );
 
         auto *lPtr = lPacket.data();
-        std::memcpy( lPtr, &aSampler.mMinification, sizeof( eSamplerFilter ) );
+        std::memcpy( lPtr, &aSampler.mFilter, sizeof( eSamplerFilter ) );
         lPtr += sizeof( eSamplerFilter );
-        std::memcpy( lPtr, &aSampler.mMagnification, sizeof( eSamplerFilter ) );
+        std::memcpy( lPtr, &aSampler.mFilter, sizeof( eSamplerFilter ) );
         lPtr += sizeof( eSamplerFilter );
-        std::memcpy( lPtr, &aSampler.mMip, sizeof( eSamplerMipmap ) );
+        std::memcpy( lPtr, &aSampler.mMipFilter, sizeof( eSamplerMipmap ) );
         lPtr += sizeof( eSamplerMipmap );
         std::memcpy( lPtr, &aSampler.mWrapping, sizeof( eSamplerWrapping ) );
         lPtr += sizeof( eSamplerWrapping );
@@ -98,9 +98,9 @@ namespace SE::Core
         Seek( lAssetIndex.mByteStart );
 
         sTextureSamplingInfo lSamplerCreateInfo{};
-        lSamplerCreateInfo.mMinification   = Read<eSamplerFilter>();
-        lSamplerCreateInfo.mMagnification  = Read<eSamplerFilter>();
-        lSamplerCreateInfo.mMip            = Read<eSamplerMipmap>();
+        lSamplerCreateInfo.mFilter         = Read<eSamplerFilter>();
+        lSamplerCreateInfo.mFilter         = Read<eSamplerFilter>();
+        lSamplerCreateInfo.mMipFilter      = Read<eSamplerMipmap>();
         lSamplerCreateInfo.mWrapping       = Read<eSamplerWrapping>();
         lSamplerCreateInfo.mScaling[0]     = Read<float>();
         lSamplerCreateInfo.mScaling[1]     = Read<float>();

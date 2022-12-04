@@ -349,8 +349,8 @@ namespace SE::Core
     }
 
     TextureSampler2D::TextureSampler2D( TextureData2D const &aTexture, sTextureSamplingInfo const &aSamplingInfo )
-        : gli::sampler2d<float>( aTexture.mInternalTexture2d, ToGliType( aSamplingInfo.mWrapping ), ToGliType( aSamplingInfo.mMip ),
-                                 ToGliType( aSamplingInfo.mMinification ),
+        : gli::sampler2d<float>( aTexture.mInternalTexture2d, ToGliType( aSamplingInfo.mWrapping ),
+                                 ToGliType( aSamplingInfo.mMipFilter ), ToGliType( aSamplingInfo.mFilter ),
                                  gli::vec4{ aSamplingInfo.mBorderColor[0], aSamplingInfo.mBorderColor[1],
                                             aSamplingInfo.mBorderColor[2], aSamplingInfo.mBorderColor[3] } )
         , mSamplingSpec{ aSamplingInfo }

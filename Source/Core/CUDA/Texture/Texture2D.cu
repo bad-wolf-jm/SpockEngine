@@ -139,7 +139,7 @@ namespace SE::Cuda
         memset( &lTextureDescription, 0, sizeof( cudaTextureDesc ) );
 
         lTextureDescription.readMode = cudaReadModeElementType;
-        if( mTexture->mSpec.mNormalizedValues ) lTextureDescription.readMode = cudaReadModeNormalizedFloat;
+        if( mSamplingSpec.mNormalizedValues ) lTextureDescription.readMode = cudaReadModeNormalizedFloat;
         lTextureDescription.borderColor[0] = mSamplingSpec.mBorderColor[0];
         lTextureDescription.borderColor[1] = mSamplingSpec.mBorderColor[1];
         lTextureDescription.borderColor[2] = mSamplingSpec.mBorderColor[2];
@@ -149,10 +149,10 @@ namespace SE::Cuda
         lTextureDescription.addressMode[1] = ToCudaAddressMode( mSamplingSpec.mWrapping );
         lTextureDescription.addressMode[2] = ToCudaAddressMode( mSamplingSpec.mWrapping );
 
-        lTextureDescription.filterMode = ToCudaFilterMode( mSamplingSpec.mMagnification );
+        lTextureDescription.filterMode = ToCudaFilterMode( mSamplingSpec.mFilter );
 
         lTextureDescription.normalizedCoords = 0;
-        if( mTexture->mSpec.mNormalizedCoordinates ) lTextureDescription.normalizedCoords = 1;
+        if( mSamplingSpec.mNormalizedCoordinates ) lTextureDescription.normalizedCoords = 1;
 
         lTextureDescription.mipmapFilterMode    = cudaFilterModePoint;
         lTextureDescription.mipmapLevelBias     = 0.0f;

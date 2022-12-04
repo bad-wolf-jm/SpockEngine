@@ -50,14 +50,11 @@ namespace SE::Core
      */
     struct sTextureSamplingInfo
     {
-        eSamplerFilter   mFilterMode    = eSamplerFilter::LINEAR;
-        eSamplerFilter   mMinification  = eSamplerFilter::LINEAR;
-        eSamplerFilter   mMagnification = eSamplerFilter::LINEAR;
-        eSamplerMipmap   mMip           = eSamplerMipmap::LINEAR;
-        eSamplerWrapping mWrapping      = eSamplerWrapping::CLAMP_TO_BORDER;
-
-        bool mNormalizedCoordinates = false;
-        bool mNormalizedValues      = false;
+        eSamplerFilter   mFilter                = eSamplerFilter::LINEAR;
+        eSamplerMipmap   mMipFilter             = eSamplerMipmap::LINEAR;
+        eSamplerWrapping mWrapping              = eSamplerWrapping::CLAMP_TO_BORDER;
+        bool             mNormalizedCoordinates = false;
+        bool             mNormalizedValues      = false;
 
         std::array<float, 2> mScaling     = { 1.0f, 1.0f };             //!< Specified the scaling to be used.
         std::array<float, 2> mOffset      = { 0.0f, 0.0f };             //!< Specified the offset to be used.

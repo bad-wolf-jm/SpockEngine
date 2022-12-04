@@ -11,13 +11,10 @@ namespace SE::Core
     {
         switch( aWrapMode )
         {
-        case 33071:
-            return eSamplerWrapping::CLAMP_TO_EDGE;
-        case 33648:
-            return eSamplerWrapping::MIRRORED_REPEAT;
+        case 33071: return eSamplerWrapping::CLAMP_TO_EDGE;
+        case 33648: return eSamplerWrapping::MIRRORED_REPEAT;
         case 10497:
-        default:
-            return eSamplerWrapping::REPEAT;
+        default: return eSamplerWrapping::REPEAT;
         }
     }
 
@@ -27,13 +24,11 @@ namespace SE::Core
         {
         case 9729:
         case 9986:
-        case 9987:
-            return eSamplerFilter::LINEAR;
+        case 9987: return eSamplerFilter::LINEAR;
         case 9728:
         case 9984:
         case 9985:
-        default:
-            return eSamplerFilter::NEAREST;
+        default: return eSamplerFilter::NEAREST;
         }
     }
 
@@ -86,16 +81,15 @@ namespace SE::Core
         for( tinygltf::Sampler lGltfSampler : mGltfModel.samplers )
         {
             sTextureSamplingInfo lSamplerInfo{};
-            lSamplerInfo.mMinification  = getLTSEFilterMode( lGltfSampler.minFilter );
-            lSamplerInfo.mMagnification = getLTSEFilterMode( lGltfSampler.magFilter );
-            lSamplerInfo.mWrapping      = getLTSEWrapMode( lGltfSampler.wrapS );
+            lSamplerInfo.mFilter   = getLTSEFilterMode( lGltfSampler.magFilter );
+            lSamplerInfo.mWrapping = getLTSEWrapMode( lGltfSampler.wrapS );
 
             mTextureSamplers.push_back( lSamplerInfo );
         }
     }
 
     void GlTFImporter::CreateTexture( uint32_t aTextureIndex, std::string aName, tinygltf::Image const &aGltfimage,
-        sTextureSamplingInfo const &aTextureSamplingInfo )
+                                      sTextureSamplingInfo const &aTextureSamplingInfo )
     {
         sImageData lImageData{};
         lImageData.mFormat = eColorFormat::RGBA8_UNORM;
@@ -164,8 +158,8 @@ namespace SE::Core
         return sImportedMaterial::sTextureReference{};
     }
 
-    sImportedMaterial::sTextureReference GlTFImporter::RetrieveAdditionalTextureData(
-        tinygltf::Material &aMaterial, std::string aName )
+    sImportedMaterial::sTextureReference GlTFImporter::RetrieveAdditionalTextureData( tinygltf::Material &aMaterial,
+                                                                                      std::string         aName )
     {
         if( aMaterial.additionalValues.find( aName ) != aMaterial.additionalValues.end() )
         {
@@ -188,8 +182,8 @@ namespace SE::Core
         return aDefault;
     }
 
-    std::tuple<uint32_t, uint32_t, uint32_t, uint32_t> GlTFImporter::RetrievePrimitiveCount(
-        const tinygltf::Primitive &aPrimitive, std::string aName )
+    std::tuple<uint32_t, uint32_t, uint32_t, uint32_t> GlTFImporter::RetrievePrimitiveCount( const tinygltf::Primitive &aPrimitive,
+                                                                                             std::string                aName )
     {
         if( aPrimitive.attributes.find( aName ) != aPrimitive.attributes.end() )
         {
@@ -201,7 +195,7 @@ namespace SE::Core
             auto  lBufferByteStride = lAccessor.ByteStride( lBufferView );
 
             return { lBufferCount, lBufferByteStride, lAccessor.componentType,
-                tinygltf::GetComponentSizeInBytes( lAccessor.componentType ) };
+                     tinygltf::GetComponentSizeInBytes( lAccessor.componentType ) };
         }
         return { 0, 0, 0, 0 };
     }
@@ -306,21 +300,14 @@ namespace SE::Core
 
                 switch( lPrimitive.mode )
                 {
-                case 0:
-                    lNewImportedMesh.mPrimitive = Graphics::ePrimitiveTopology::POINTS;
-                    break;
-                case 1:
-                    lNewImportedMesh.mPrimitive = Graphics::ePrimitiveTopology::LINES;
-                    break;
-                case 4:
-                    lNewImportedMesh.mPrimitive = Graphics::ePrimitiveTopology::TRIANGLES;
-                    break;
+                case 0: lNewImportedMesh.mPrimitive = Graphics::ePrimitiveTopology::POINTS; break;
+                case 1: lNewImportedMesh.mPrimitive = Graphics::ePrimitiveTopology::LINES; break;
+                case 4: lNewImportedMesh.mPrimitive = Graphics::ePrimitiveTopology::TRIANGLES; break;
                 case 2:
                 case 3:
                 case 5:
                 case 6:
-                default:
-                    lNewImportedMesh.mPrimitive = Graphics::ePrimitiveTopology::POINTS;
+                default: lNewImportedMesh.mPrimitive = Graphics::ePrimitiveTopology::POINTS;
                 }
 
                 lNewImportedMesh.mMaterialID = ( lPrimitive.material > -1 ) ? mMaterialIDLookup[lPrimitive.material] : 0;
@@ -365,7 +352,7 @@ namespace SE::Core
                         for( uint32_t i = 0; i < lCount; i++ )
                             lNewImportedMesh.mJoints[i] =
                                 math::uvec4( lJoints1[i * lComponentCount + 0], lJoints1[i * lComponentCount + 1],
-                                    lJoints1[i * lComponentCount + 2], lJoints1[i * lComponentCount + 3] );
+                                             lJoints1[i * lComponentCount + 2], lJoints1[i * lComponentCount + 3] );
                         break;
                     }
                     case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
@@ -380,7 +367,7 @@ namespace SE::Core
                         for( uint32_t i = 0; i < lCount; i++ )
                             lNewImportedMesh.mJoints[i] =
                                 math::uvec4( lJoints1[i * lComponentCount + 0], lJoints1[i * lComponentCount + 1],
-                                    lJoints1[i * lComponentCount + 2], lJoints1[i * lComponentCount + 3] );
+                                             lJoints1[i * lComponentCount + 2], lJoints1[i * lComponentCount + 3] );
                         break;
                     }
                     default:
@@ -434,9 +421,7 @@ namespace SE::Core
                         }
                         break;
                     }
-                    default:
-                        std::cerr << "Index component type " << accessor.componentType << " not supported!" << std::endl;
-                        return;
+                    default: std::cerr << "Index component type " << accessor.componentType << " not supported!" << std::endl; return;
                     }
                 }
 
@@ -477,7 +462,7 @@ namespace SE::Core
                 const tinygltf::Buffer     &buffer     = mGltfModel.buffers[bufferView.buffer];
                 lNewImportedSkin.mInverseBindMatrices.resize( accessor.count );
                 memcpy( lNewImportedSkin.mInverseBindMatrices.data(), &buffer.data[accessor.byteOffset + bufferView.byteOffset],
-                    accessor.count * sizeof( glm::mat4 ) );
+                        accessor.count * sizeof( glm::mat4 ) );
             }
 
             mSkinIDLookup[lSkinID++] = mSkins.size() - 1;

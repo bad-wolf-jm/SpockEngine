@@ -1,9 +1,9 @@
 #include "Texture.h"
 #include "Vector.h"
 
-#include "Core/Memory.h"
-#include "Core/CUDA/Texture/TextureData.h"
 #include "Core/CUDA/Array/MultiTensor.h"
+#include "Core/CUDA/Texture/TextureData.h"
+#include "Core/Memory.h"
 
 #include "TensorOps/Scope.h"
 
@@ -62,7 +62,7 @@ namespace SE::Core
     sTextureSamplingInfo ParseSamplerInfo( sol::table aTable )
     {
         sTextureSamplingInfo lSamplingInfo{};
-        lSamplingInfo.mMinification  = aTable["minification"].valid() ? aTable["minification"] : eSamplerFilter::LINEAR;
+        lSamplingInfo.mFilter        = aTable["minification"].valid() ? aTable["minification"] : eSamplerFilter::LINEAR;
         lSamplingInfo.mMagnification = aTable["magnification"].valid() ? aTable["magnification"] : eSamplerFilter::LINEAR;
         lSamplingInfo.mMip           = aTable["mip"].valid() ? aTable["mip"] : eSamplerMipmap::LINEAR;
         lSamplingInfo.mWrapping      = aTable["wrapping"].valid() ? aTable["wrapping"] : eSamplerWrapping::CLAMP_TO_BORDER;
@@ -162,15 +162,14 @@ namespace SE::Core
         lTextureData2DType["get_image_data"] = [&]( TextureData2D &aSelf, sol::this_state aScriptState )
         {
             sol::table lDataTable( aScriptState, sol::new_table{} );
-            auto lImageData = aSelf.GetImageData();
+            auto       lImageData = aSelf.GetImageData();
 
             lDataTable["color_format"] = lImageData.mFormat;
             lDataTable["width"]        = lImageData.mWidth;
             lDataTable["height"]       = lImageData.mHeight;
 
             auto lDataVector = std::vector<uint8_t>( lImageData.mByteSize );
-            for( uint32_t i = 0; i < lImageData.mByteSize; i++ )
-                lDataVector[i] = lImageData.mPixelData[i];
+            for( uint32_t i = 0; i < lImageData.mByteSize; i++ ) lDataVector[i] = lImageData.mPixelData[i];
             lDataTable["pixel_data"] = lDataVector;
 
             return lDataTable;
@@ -186,28 +185,29 @@ namespace SE::Core
             lDataTable["width"]        = lImageData.mWidth;
             lDataTable["height"]       = lImageData.mHeight;
             auto lDataVector           = std::vector<uint8_t>( lImageData.mByteSize );
-            for( uint32_t i = 0; i < lImageData.mByteSize; i++ )
-                lDataVector[i] = lImageData.mPixelData[i];
+            for( uint32_t i = 0; i < lImageData.mByteSize; i++ ) lDataVector[i] = lImageData.mPixelData[i];
             lDataTable["pixel_data"] = lDataVector;
 
             return lDataTable;
         };
 
-        auto lTextureSamplerInfoType              = aScriptingState.new_usertype<sTextureSamplingInfo>( "sTextureSamplingInfo" );
-        lTextureSamplerInfoType[call_constructor] = factories( []( sol::table aCreateInfo ) { return ParseSamplerInfo( aCreateInfo ); } );
-        lTextureSamplerInfoType["minification"] = &sTextureSamplingInfo::mMinification;
+        auto lTextureSamplerInfoType = aScriptingState.new_usertype<sTextureSamplingInfo>( "sTextureSamplingInfo" );
+        lTextureSamplerInfoType[call_constructor] =
+            factories( []( sol::table aCreateInfo ) { return ParseSamplerInfo( aCreateInfo ); } );
+        lTextureSamplerInfoType["minification"]  = &sTextureSamplingInfo::mFilter;
         lTextureSamplerInfoType["magnification"] = &sTextureSamplingInfo::mMagnification;
-        lTextureSamplerInfoType["mip"] = &sTextureSamplingInfo::mMip;
-        lTextureSamplerInfoType["wrapping"] = &sTextureSamplingInfo::mWrapping;
-        lTextureSamplerInfoType["scaling"] = &sTextureSamplingInfo::mScaling;
-        lTextureSamplerInfoType["offset"] = &sTextureSamplingInfo::mOffset;
-        lTextureSamplerInfoType["border_color"] = &sTextureSamplingInfo::mBorderColor;
+        lTextureSamplerInfoType["mip"]           = &sTextureSamplingInfo::mMip;
+        lTextureSamplerInfoType["wrapping"]      = &sTextureSamplingInfo::mWrapping;
+        lTextureSamplerInfoType["scaling"]       = &sTextureSamplingInfo::mScaling;
+        lTextureSamplerInfoType["offset"]        = &sTextureSamplingInfo::mOffset;
+        lTextureSamplerInfoType["border_color"]  = &sTextureSamplingInfo::mBorderColor;
 
         auto lTextureSampler2DType = aScriptingState.new_usertype<TextureSampler2D>( "TextureSampler2D" );
         lTextureSampler2DType[call_constructor] =
-            factories( []( TextureData2D const &aTexture, sol::table aCreateInfo ) { return TextureSampler2D( aTexture, ParseSamplerInfo( aCreateInfo ) ); } );
+            factories( []( TextureData2D const &aTexture, sol::table aCreateInfo )
+                       { return TextureSampler2D( aTexture, ParseSamplerInfo( aCreateInfo ) ); } );
         lTextureSampler2DType["fetch"] = []( TextureSampler2D &aSelf, float x, float y ) { return aSelf.Fetch( x, y ); };
-        lTextureSampler2DType["spec"] = &TextureSampler2D::mSamplingSpec;
+        lTextureSampler2DType["spec"]  = &TextureSampler2D::mSamplingSpec;
     }
 
     void OpenCoreLibrary( sol::table &aScriptingState )

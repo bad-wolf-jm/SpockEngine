@@ -1,8 +1,8 @@
 #include "Texture.h"
 
-#include "Core/Memory.h"
-#include "Core/CUDA/Texture/TextureData.h"
 #include "Core/CUDA/Texture/Texture2D.h"
+#include "Core/CUDA/Texture/TextureData.h"
+#include "Core/Memory.h"
 
 #include "TensorOps/Scope.h"
 
@@ -46,33 +46,30 @@ namespace SE::Core
         auto lTextureSampler2DType = aScriptingState.new_usertype<Cuda::TextureSampler2D>( "TextureSampler2D" );
 
         lTextureSampler2DType[call_constructor] =
-            factories( []( Ref<Cuda::Texture2D> &aTexture, sol::table aCreateInfo ) { return Cuda::TextureSampler2D( aTexture, ParseSamplerInfo( aCreateInfo ) ); } );
-        lTextureSampler2DType["spec"] = &Cuda::TextureSampler2D::mSamplingSpec;
+            factories( []( Ref<Cuda::Texture2D> &aTexture, sol::table aCreateInfo )
+                       { return Cuda::TextureSampler2D( aTexture, ParseSamplerInfo( aCreateInfo ) ); } );
+        lTextureSampler2DType["spec"]        = &Cuda::TextureSampler2D::mSamplingSpec;
         lTextureSampler2DType["device_data"] = &Cuda::TextureSampler2D::mDeviceData;
 
         aScriptingState["load_texture_sampler"] = overload(
             []( sol::table aCreateInfo, std::string const &aTexturePath )
             {
                 TextureData2D::sCreateInfo lCreateInfo{};
-                TextureData2D lTextureData( lCreateInfo, aTexturePath );
+                TextureData2D              lTextureData( lCreateInfo, aTexturePath );
 
                 SE::Cuda::sTextureCreateInfo lTextureCreateInfo = ParseCudaCreateInfo( aCreateInfo );
 
                 switch( lTextureData.mSpec.mFormat )
                 {
-                case SE::Core::eColorFormat::R32_FLOAT:
-                    lTextureCreateInfo.mNormalizedValues = false;
-                    break;
-                default:
-                    lTextureCreateInfo.mNormalizedValues = true;
-                    break;
+                case SE::Core::eColorFormat::R32_FLOAT: lTextureCreateInfo.mNormalizedValues = false; break;
+                default: lTextureCreateInfo.mNormalizedValues = true; break;
                 }
 
                 Ref<SE::Cuda::Texture2D> lTexture = New<SE::Cuda::Texture2D>( lTextureCreateInfo, lTextureData.GetImageData() );
 
                 sTextureSamplingInfo lSamplingInfo{};
                 lSamplingInfo.mScaling       = std::array<float, 2>{ 1.0f, 1.0f };
-                lSamplingInfo.mMinification  = SE::Core::eSamplerFilter::LINEAR;
+                lSamplingInfo.mFilter        = SE::Core::eSamplerFilter::LINEAR;
                 lSamplingInfo.mMagnification = SE::Core::eSamplerFilter::LINEAR;
                 lSamplingInfo.mWrapping      = SE::Core::eSamplerWrapping::CLAMP_TO_EDGE;
 
@@ -89,12 +86,8 @@ namespace SE::Core
 
                 switch( aTexture.mSpec.mFormat )
                 {
-                case SE::Core::eColorFormat::R32_FLOAT:
-                    lTextureCreateInfo.mNormalizedValues = false;
-                    break;
-                default:
-                    lTextureCreateInfo.mNormalizedValues = true;
-                    break;
+                case SE::Core::eColorFormat::R32_FLOAT: lTextureCreateInfo.mNormalizedValues = false; break;
+                default: lTextureCreateInfo.mNormalizedValues = true; break;
                 }
 
                 Ref<SE::Cuda::Texture2D> lTexture = New<SE::Cuda::Texture2D>( lTextureCreateInfo, aTexture.GetImageData() );

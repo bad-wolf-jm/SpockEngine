@@ -110,20 +110,19 @@ namespace SE::Core
         mTextures.push_back( lNewTexture );
 
         Cuda::sTextureCreateInfo lNewTextureCreateInfo{};
-        lNewTextureCreateInfo.mFormat                = aTexture.mSpec.mFormat;
-        lNewTextureCreateInfo.mWidth                 = aTexture.mSpec.mWidth;
-        lNewTextureCreateInfo.mHeight                = aTexture.mSpec.mHeight;
-        lNewTextureCreateInfo.mNormalizedCoordinates = true;
-        lNewTextureCreateInfo.mNormalizedValues      = true;
+        lNewTextureCreateInfo.mFormat = aTexture.mSpec.mFormat;
+        lNewTextureCreateInfo.mWidth  = aTexture.mSpec.mWidth;
+        lNewTextureCreateInfo.mHeight = aTexture.mSpec.mHeight;
 
         auto lNewCudaTexture =
             New<Cuda::Texture2D>( lNewTextureCreateInfo, lNewTexture->GetMemoryHandle(), lNewTexture->GetMemorySize() );
 
         sTextureSamplingInfo lCudaSampler{};
-        lCudaSampler.mMinification  = eSamplerFilter::LINEAR;
-        lCudaSampler.mMagnification = eSamplerFilter::LINEAR;
-        lCudaSampler.mMip           = eSamplerMipmap::LINEAR;
-        lCudaSampler.mWrapping      = eSamplerWrapping::REPEAT;
+        lCudaSampler.mFilter                = eSamplerFilter::LINEAR;
+        lCudaSampler.mMipFilter             = eSamplerMipmap::LINEAR;
+        lCudaSampler.mWrapping              = eSamplerWrapping::REPEAT;
+        lCudaSampler.mNormalizedCoordinates = true;
+        lCudaSampler.mNormalizedValues      = true;
 
         auto lNewCudaTextureSampler = New<Cuda::TextureSampler2D>( lNewCudaTexture, lCudaSampler );
 

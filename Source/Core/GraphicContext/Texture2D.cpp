@@ -162,12 +162,13 @@ namespace SE::Graphics
     }
 
     /** @brief */
-    Texture2D::Texture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData, TextureSampler2D &aSamplingInfo, bool aCudaVisible )
+    Texture2D::Texture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData, TextureSampler2D &aSamplingInfo,
+                          bool aCudaVisible )
         : mGraphicContext( aGraphicContext )
     {
-        Spec.MinificationFilter  = Convert( aSamplingInfo.mSamplingSpec.mMinification );
-        Spec.MagnificationFilter = Convert( aSamplingInfo.mSamplingSpec.mMagnification );
-        Spec.MipmapMode          = Convert( aSamplingInfo.mSamplingSpec.mMip );
+        Spec.MinificationFilter  = Convert( aSamplingInfo.mSamplingSpec.mFilter );
+        Spec.MagnificationFilter = Convert( aSamplingInfo.mSamplingSpec.mFilter );
+        Spec.MipmapMode          = Convert( aSamplingInfo.mSamplingSpec.mMipFilter );
         Spec.WrappingMode        = Convert( aSamplingInfo.mSamplingSpec.mWrapping );
         Spec.Format              = aCubeMapData.mSpec.mFormat;
         Spec.Sampled             = true;
@@ -335,10 +336,9 @@ namespace SE::Graphics
     {
         sTextureSamplingInfo lSamplingInfo{};
 
-        lSamplingInfo.mMinification  = Convert( Spec.MinificationFilter );
-        lSamplingInfo.mMagnification = Convert( Spec.MagnificationFilter );
-        lSamplingInfo.mMip           = Convert( Spec.MipmapMode );
-        lSamplingInfo.mWrapping      = Convert( Spec.WrappingMode );
+        lSamplingInfo.mFilter    = Convert( Spec.MagnificationFilter );
+        lSamplingInfo.mMipFilter = Convert( Spec.MipmapMode );
+        lSamplingInfo.mWrapping  = Convert( Spec.WrappingMode );
 
         return lSamplingInfo;
     }

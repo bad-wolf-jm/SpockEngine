@@ -33,11 +33,9 @@ namespace SE::Cuda
      */
     struct sTextureCreateInfo
     {
-        eColorFormat mFormat                = eColorFormat::R32_FLOAT;
-        int32_t      mWidth                 = 0;
-        int32_t      mHeight                = 0;
-        bool         mNormalizedCoordinates = false;
-        bool         mNormalizedValues      = false;
+        eColorFormat mFormat = eColorFormat::R32_FLOAT;
+        int32_t      mWidth  = 0;
+        int32_t      mHeight = 0;
     };
 
     class TextureSampler2D;

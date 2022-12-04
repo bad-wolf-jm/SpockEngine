@@ -1,7 +1,7 @@
+#include "Core/CUDA/Texture/TextureData.h"
 #include "Core/Core.h"
 #include "Core/Logging.h"
 #include "Core/Memory.h"
-#include "Core/CUDA/Texture/TextureData.h"
 
 #include <argparse/argparse.hpp>
 #include <filesystem>
@@ -73,22 +73,24 @@ std::vector<char> ConvertToKTX( fs::path const &aPath )
 
 eSamplerFilter GetFilter( std::string const &aKey )
 {
-    std::unordered_map<std::string, eSamplerFilter> lValues = {
-        { "nearest", eSamplerFilter::NEAREST }, { "linear", eSamplerFilter::LINEAR } };
+    std::unordered_map<std::string, eSamplerFilter> lValues = { { "nearest", eSamplerFilter::NEAREST },
+                                                                { "linear", eSamplerFilter::LINEAR } };
     return lValues[aKey];
 }
 
 eSamplerMipmap GetMipFilter( std::string const &aKey )
 {
-    std::unordered_map<std::string, eSamplerMipmap> lValues = {
-        { "nearest", eSamplerMipmap::NEAREST }, { "linear", eSamplerMipmap::LINEAR } };
+    std::unordered_map<std::string, eSamplerMipmap> lValues = { { "nearest", eSamplerMipmap::NEAREST },
+                                                                { "linear", eSamplerMipmap::LINEAR } };
     return lValues[aKey];
 }
 
 eSamplerWrapping GetWrapping( std::string const &aKey )
 {
-    std::unordered_map<std::string, eSamplerWrapping> lValues = { { "repeat", eSamplerWrapping::REPEAT },
-        { "mirrored_repeat", eSamplerWrapping::MIRRORED_REPEAT }, { "clamp_to_edge", eSamplerWrapping::CLAMP_TO_EDGE },
+    std::unordered_map<std::string, eSamplerWrapping> lValues = {
+        { "repeat", eSamplerWrapping::REPEAT },
+        { "mirrored_repeat", eSamplerWrapping::MIRRORED_REPEAT },
+        { "clamp_to_edge", eSamplerWrapping::CLAMP_TO_EDGE },
         { "clamp_to_border", eSamplerWrapping::CLAMP_TO_BORDER },
         { "mirror_clamnp_to_border", eSamplerWrapping::MIRROR_CLAMP_TO_BORDER } };
     return lValues[aKey];
@@ -97,8 +99,7 @@ eSamplerWrapping GetWrapping( std::string const &aKey )
 std::vector<char> MakePacket( sTextureSamplingInfo aSampling, std::vector<char> aKTXData )
 {
     uint32_t lHeaderSize = 0;
-    lHeaderSize +=
-        sizeof( eSamplerFilter ) + sizeof( eSamplerFilter ) + sizeof( eSamplerMipmap ) + sizeof( eSamplerWrapping );
+    lHeaderSize += sizeof( eSamplerFilter ) + sizeof( eSamplerFilter ) + sizeof( eSamplerMipmap ) + sizeof( eSamplerWrapping );
     lHeaderSize += 2 * sizeof( float );
     lHeaderSize += 2 * sizeof( float );
     lHeaderSize += 4 * sizeof( float );
@@ -107,11 +108,11 @@ std::vector<char> MakePacket( sTextureSamplingInfo aSampling, std::vector<char> 
 
     std::vector<char> lPacket( lPacketSize );
     auto             *lPtr = lPacket.data();
-    std::memcpy( lPtr, &aSampling.mMinification, sizeof( eSamplerFilter ) );
+    std::memcpy( lPtr, &aSampling.mFilter, sizeof( eSamplerFilter ) );
     lPtr += sizeof( eSamplerFilter );
-    std::memcpy( lPtr, &aSampling.mMagnification, sizeof( eSamplerFilter ) );
+    std::memcpy( lPtr, &aSampling.mFilter, sizeof( eSamplerFilter ) );
     lPtr += sizeof( eSamplerFilter );
-    std::memcpy( lPtr, &aSampling.mMip, sizeof( eSamplerMipmap ) );
+    std::memcpy( lPtr, &aSampling.mMipFilter, sizeof( eSamplerMipmap ) );
     lPtr += sizeof( eSamplerMipmap );
     std::memcpy( lPtr, &aSampling.mWrapping, sizeof( eSamplerWrapping ) );
     lPtr += sizeof( eSamplerWrapping );
@@ -193,10 +194,9 @@ int main( int argc, char **argv )
             {
                 auto                 lProperties = aValue["properties"];
                 sTextureSamplingInfo lSamplingInfo{};
-                lSamplingInfo.mMinification  = GetFilter( lProperties["filttering.min"].As<std::string>( "linear" ) );
-                lSamplingInfo.mMagnification = GetFilter( lProperties["filttering.max"].As<std::string>( "linear" ) );
-                lSamplingInfo.mMip           = GetMipFilter( lProperties["mipmap"].As<std::string>( "linear" ) );
-                lSamplingInfo.mWrapping      = GetWrapping( lProperties["wrapping"].As<std::string>( "clamp_to_border" ) );
+                lSamplingInfo.mFilter    = GetFilter( lProperties["filttering.max"].As<std::string>( "linear" ) );
+                lSamplingInfo.mMipFilter = GetMipFilter( lProperties["mipmap"].As<std::string>( "linear" ) );
+                lSamplingInfo.mWrapping  = GetWrapping( lProperties["wrapping"].As<std::string>( "clamp_to_border" ) );
 
                 auto lOffset          = lProperties["offset"].Vec( { "x", "y" }, math::vec2{ 0.0f, 0.0f } );
                 lSamplingInfo.mOffset = { lOffset.x, lOffset.y };
@@ -204,8 +204,7 @@ int main( int argc, char **argv )
                 auto lScaling          = lProperties["scaling"].Vec( { "x", "y" }, math::vec2{ 1.0f, 1.0f } );
                 lSamplingInfo.mScaling = { lScaling.x, lScaling.y };
 
-                auto lBorderColor =
-                    lProperties["border_color"].Vec( { "x", "y", "z", "w" }, math::vec4{ 0.0f, 0.0f, 0.0f, 0.0f } );
+                auto lBorderColor = lProperties["border_color"].Vec( { "x", "y", "z", "w" }, math::vec4{ 0.0f, 0.0f, 0.0f, 0.0f } );
                 lSamplingInfo.mBorderColor = { lBorderColor.x, lBorderColor.y, lBorderColor.z, lBorderColor.w };
 
                 sAssetIndex lAssetIndexEntry{};
