@@ -110,8 +110,6 @@ namespace SE::Core
         mTextures.push_back( lNewTexture );
 
         Cuda::sTextureCreateInfo lNewTextureCreateInfo{};
-        lNewTextureCreateInfo.mFilterMode            = eSamplerFilter::LINEAR;
-        lNewTextureCreateInfo.mWrappingMode          = eSamplerWrapping::REPEAT;
         lNewTextureCreateInfo.mFormat                = aTexture.mSpec.mFormat;
         lNewTextureCreateInfo.mWidth                 = aTexture.mSpec.mWidth;
         lNewTextureCreateInfo.mHeight                = aTexture.mSpec.mHeight;
