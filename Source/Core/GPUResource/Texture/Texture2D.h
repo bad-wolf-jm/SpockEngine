@@ -12,10 +12,10 @@
 
 #include "Core/GPUResource/CudaAssert.h"
 
-#include "Core/Logging.h"
-#include "Core/Memory.h"
 #include "Core/GPUResource/Texture/ColorFormat.h"
 #include "Core/GPUResource/Texture/TextureTypes.h"
+#include "Core/Logging.h"
+#include "Core/Memory.h"
 
 #include "Core/Math/Types.h"
 
@@ -33,13 +33,11 @@ namespace SE::Cuda
      */
     struct sTextureCreateInfo
     {
-        eSamplerFilter   mFilterMode            = eSamplerFilter::LINEAR;
-        eSamplerWrapping mWrappingMode          = eSamplerWrapping::CLAMP_TO_BORDER;
-        eColorFormat     mFormat                = eColorFormat::R32_FLOAT;
-        int32_t          mWidth                 = 0;
-        int32_t          mHeight                = 0;
-        bool             mNormalizedCoordinates = false;
-        bool             mNormalizedValues      = false;
+        eColorFormat mFormat                = eColorFormat::R32_FLOAT;
+        int32_t      mWidth                 = 0;
+        int32_t      mHeight                = 0;
+        bool         mNormalizedCoordinates = false;
+        bool         mNormalizedValues      = false;
     };
 
     class TextureSampler2D;
