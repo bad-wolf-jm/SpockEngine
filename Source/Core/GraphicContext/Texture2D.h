@@ -99,9 +99,6 @@ namespace SE::Graphics
         sTextureSamplingInfo mSamplingSpec; /**!< */
 
         /** @brief */
-        Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription, VkImage aImage );
-
-        /** @brief */
         Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription, TextureData &aBufferData );
 
         /** @brief */

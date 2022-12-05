@@ -127,15 +127,6 @@ namespace SE::Graphics
         CreateImageSampler();
     }
 
-    Texture2D::Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription, VkImage aImage )
-        : Spec( aBufferDescription )
-        , mGraphicContext( aGraphicContext )
-    {
-        mTextureImageObject = New<sVkImageObject>( aGraphicContext.mContext, aImage );
-        CreateImageView();
-        CreateImageSampler();
-    }
-
     Texture2D::Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription,
                           Ref<sVkFramebufferImage> aFramebufferImage )
         : Spec( aBufferDescription )

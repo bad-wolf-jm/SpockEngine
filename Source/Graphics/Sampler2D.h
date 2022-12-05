@@ -34,7 +34,6 @@ namespace SE::Graphics
 
       private:
         GraphicContext mGraphicContext{};
-
         Ref<Internal::sVkImageSamplerObject> mTextureSamplerObject = nullptr;
     };
 } // namespace SE::Graphics
