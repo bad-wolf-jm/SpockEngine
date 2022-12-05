@@ -18,7 +18,7 @@
 namespace SE::Graphics
 {
     Buffer::Buffer( GraphicContext &aGraphicContext, eBufferBindType aType, bool aIsHostVisible, bool aIsCudaShareable,
-        bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
+                    bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
         : mGraphicContext{ aGraphicContext }
         , mSize{ aSize }
         , mType{ aType }
@@ -78,12 +78,13 @@ namespace SE::Graphics
         mGraphicContext.EndSingleTimeCommands( l_CommandBufferObject );
     }
 
-    static VkDeviceSize g_BufferMemoryAlignment = 256;
-    void                Buffer::Resize( size_t a_NewSizeInBytes )
+    static VkDeviceSize gBufferMemoryAlignment = 256;
+
+    void Buffer::Resize( size_t a_NewSizeInBytes )
     {
         if( a_NewSizeInBytes <= mSize ) return;
 
-        VkDeviceSize vertex_buffer_size_aligned = ( ( a_NewSizeInBytes - 1 ) / g_BufferMemoryAlignment + 1 ) * g_BufferMemoryAlignment;
+        VkDeviceSize vertex_buffer_size_aligned = ( ( a_NewSizeInBytes - 1 ) / gBufferMemoryAlignment + 1 ) * gBufferMemoryAlignment;
 
         mGraphicContext.mContext->DestroyBuffer( mVkObject );
         mGraphicContext.mContext->FreeMemory( mVkMemory );
