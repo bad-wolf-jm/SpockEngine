@@ -17,7 +17,6 @@
 
 namespace SE::Graphics
 {
-
     using namespace SE::Core;
 
     /** @brief */
@@ -38,7 +37,5 @@ namespace SE::Graphics
 
         VkImageView mVkImageView    = VK_NULL_HANDLE;
         VkSampler   mVkImageSampler = VK_NULL_HANDLE;
-
-        Ref<Internal::sVkImageSamplerObject> mTextureSamplerObject = nullptr;
     };
 } // namespace SE::Graphics

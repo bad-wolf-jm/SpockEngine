@@ -18,7 +18,6 @@
 
 namespace SE::Graphics
 {
-
     using namespace SE::Core;
 
     /** @brief */
@@ -47,8 +46,5 @@ namespace SE::Graphics
         VkImage        mVkImage    = VK_NULL_HANDLE;
         VkDeviceMemory mVkMemory   = VK_NULL_HANDLE;
         size_t         mMemorySize = 0;
-
-        // Ref<Internal::sVkImageObject>     mTextureImageObject = nullptr;
-        // Ref<Internal::sVkImageViewObject> mTextureView        = nullptr;
     };
 } // namespace SE::Graphics
