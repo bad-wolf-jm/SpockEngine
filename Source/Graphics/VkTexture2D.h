@@ -27,10 +27,12 @@ namespace SE::Graphics
         Core::TextureData::sCreateInfo mSpec;
 
         /** @brief */
-        VkTexture2D( GraphicContext &aGraphicContext, Core::TextureData::sCreateInfo &aTextureImageDescription, bool aIsHostVisible );
+        VkTexture2D( GraphicContext &aGraphicContext, Core::TextureData::sCreateInfo &aTextureImageDescription, bool aIsHostVisible,
+                     bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
 
         /** @brief */
-        VkTexture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData );
+        VkTexture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData, bool aIsHostVisible, bool aIsGraphicsOnly,
+                     bool aIsTransferSource );
 
         /** @brief */
         ~VkTexture2D() = default;

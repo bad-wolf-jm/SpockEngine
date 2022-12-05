@@ -40,7 +40,8 @@ namespace SE::Core
             int32_t      mWidth     = 0;                       /**!< Width of the texture, in pixels*/
             int32_t      mHeight    = 0;                       /**!< Height of the texture, in pixels*/
             int32_t      mDepth     = 0;                       /**!< Depth of the texture, in pixels (for 3D textures only)*/
-            int32_t      mMipLevels = 0; /**!< Specifies the length of the mip chain associated with the texture*/
+            int32_t      mMipLevels = 1; /**!< Specifies the length of the mip chain associated with the texture*/
+            int32_t      mLayers    = 1; /**!< Depth of the texture, in pixels (for 3D textures only)*/
 
             sCreateInfo()                      = default;
             sCreateInfo( sCreateInfo const & ) = default;

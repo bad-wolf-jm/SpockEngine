@@ -10,10 +10,7 @@ namespace SE::Graphics
 {
     using namespace Internal;
 
-    static
-
-        static VkMemoryPropertyFlags
-        ToVkMemoryFlag( TextureDescription const &aBufferDescription )
+    static VkMemoryPropertyFlags ToVkMemoryFlag( TextureDescription const &aBufferDescription )
     {
         VkMemoryPropertyFlags lFlags = 0;
         if( aBufferDescription.IsHostVisible )
@@ -58,17 +55,50 @@ namespace SE::Graphics
     }
 
     /** @brief */
-    VkTexture2D::VkTexture2D( GraphicContext &aGraphicContext, TextureData2D &aTextureData, TextureSampler2D &aSamplingInfo )
+    VkTexture2D::VkTexture2D( GraphicContext &aGraphicContext, TextureData2D &aTextureData, TextureSampler2D &aSamplingInfo,
+                              uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
         : mGraphicContext( aGraphicContext )
         , mSpec{ aTextureData.mSpec }
     {
 
-        mVkImage = mGraphicContext.mContext->CreateImage( aWidth, aHeight, aDepth, aMipLevels, aLayers, aSampleCount, true,
-                                                          false, aFormat, aProperties, aUsage );
+        VkMemoryPropertyFlags lProperties = 0;
+        if( aIsHostVisible )
+            lProperties |= ( VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT );
+        else
+            lProperties |= VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
-        mVkMemory = mGraphicContext.mContext->AllocateMemory( mVkObject, 0, false, true, &mMemorySize );
+        VkMemoryPropertyFlags lUsage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+        if( aIsTransferSource ) lUsage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
 
-        mGraphicContext.mContext->BindMemory( mVkObject, mVkMemory );
+        mVkImage = mGraphicContext.mContext->CreateImage(
+            aTextureData.mSpec.mWidth, aTextureData.mSpec.mHeight, aTextureData.mSpec.mDepth, aTextureData.mSpec.mMipLevels,
+            aTextureData.mSpec.mLayers, VK_SAMPLE_COUNT_VALUE( aSampleCount ), !aIsGraphicsOnly, false,
+            ToVkFormat( aTextureData.mSpec.mFormat ), lProperties, lUsage );
+
+        mVkMemory = mGraphicContext.mContext->AllocateMemory( mVkImage, 0, aIsHostVisible, !aIsGraphicsOnly, &mMemorySize );
+
+        mGraphicContext.mContext->BindMemory( mVkImage, mVkMemory );
+
+        if( !aIsGraphicsOnly )
+        {
+            cudaExternalMemoryHandleDesc lCudaExternalMemoryHandleDesc{};
+            lCudaExternalMemoryHandleDesc.type                = cudaExternalMemoryHandleTypeOpaqueWin32;
+            lCudaExternalMemoryHandleDesc.size                = mImageMemorySize;
+            lCudaExternalMemoryHandleDesc.flags               = 0;
+            lCudaExternalMemoryHandleDesc.handle.win32.handle = aExternalBuffer;
+
+            CUDA_ASSERT( cudaImportExternalMemory( &mExternalMemoryHandle, &lCudaExternalMemoryHandleDesc ) );
+
+            cudaExternalMemoryMipmappedArrayDesc lExternalMemoryMipmappedArrayDesc{};
+            lExternalMemoryMipmappedArrayDesc.formatDesc = ToCudaChannelDesc( mSpec.mFormat );
+            lExternalMemoryMipmappedArrayDesc.extent     = make_cudaExtent( mSpec.mWidth, mSpec.mHeight, 0 );
+            lExternalMemoryMipmappedArrayDesc.numLevels  = 1;
+            lExternalMemoryMipmappedArrayDesc.flags      = 0;
+
+            CUDA_ASSERT( cudaExternalMemoryGetMappedMipmappedArray( &mInternalCudaMipmappedArray, mExternalMemoryHandle,
+                                                                    &lExternalMemoryMipmappedArrayDesc ) );
+            CUDA_ASSERT( cudaGetMipmappedArrayLevel( &mInternalCudaArray, mInternalCudaMipmappedArray, 0 ) );
+        }
 
         // sImageData &lImageData = aTextureData.GetImageData();
         // Buffer lStagingBuffer( mGraphicContext, lImageData.mPixelData, lImageData.mByteSize, eBufferBindType::UNKNOWN, true, false,
@@ -85,18 +115,58 @@ namespace SE::Graphics
         // TransitionImageLayout( VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
         // CopyBufferToImage( lStagingBuffer );
         // TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
-
     }
 
-    VkTexture2D::VkTexture2D( GraphicContext &aGraphicContext, Core::TextureData::sCreateInfo &aTextureImageDescription )
+    VkTexture2D::VkTexture2D( GraphicContext &aGraphicContext, Core::TextureData::sCreateInfo &aTextureImageDescription,
+                              bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
         : mGraphicContext( aGraphicContext )
         , mSpec( aTextureImageDescription )
     {
-        mTextureImageObject = New<sVkImageObject>(
-            mGraphicContext.mContext, static_cast<uint32_t>( mSpec.mWidth ), static_cast<uint32_t>( mSpec.mHeight ), 1,
-            static_cast<uint32_t>( mSpec.mMipLevels ), 1, VK_SAMPLE_COUNT_VALUE( aBufferDescription.SampleCount ), true, false,
-            ToVkFormat( Spec.Format ), ToVkMemoryFlag( mSpec ), (VkImageUsageFlags)Spec.Usage );
 
+        VkMemoryPropertyFlags lProperties = 0;
+        if( aIsHostVisible )
+            lProperties |= ( VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT );
+        else
+            lProperties |= VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+
+        VkMemoryPropertyFlags lUsage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+        if( aIsTransferSource ) lUsage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+        if( aIsTransferDestination ) lUsage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+
+        mVkImage = mGraphicContext.mContext->CreateImage(
+            aTextureData.mSpec.mWidth, aTextureData.mSpec.mHeight, aTextureData.mSpec.mDepth, aTextureData.mSpec.mMipLevels,
+            aTextureData.mSpec.mLayers, VK_SAMPLE_COUNT_VALUE( aSampleCount ), !aIsGraphicsOnly, false,
+            ToVkFormat( aTextureData.mSpec.mFormat ), lProperties, lUsage );
+
+        mVkMemory = mGraphicContext.mContext->AllocateMemory( mVkImage, 0, aIsHostVisible, !aIsGraphicsOnly, &mMemorySize );
+
+        mGraphicContext.mContext->BindMemory( mVkImage, mVkMemory );
+
+        if( !aIsGraphicsOnly )
+        {
+            cudaExternalMemoryHandleDesc lCudaExternalMemoryHandleDesc{};
+            lCudaExternalMemoryHandleDesc.type                = cudaExternalMemoryHandleTypeOpaqueWin32;
+            lCudaExternalMemoryHandleDesc.size                = mImageMemorySize;
+            lCudaExternalMemoryHandleDesc.flags               = 0;
+            lCudaExternalMemoryHandleDesc.handle.win32.handle = aExternalBuffer;
+
+            CUDA_ASSERT( cudaImportExternalMemory( &mExternalMemoryHandle, &lCudaExternalMemoryHandleDesc ) );
+
+            cudaExternalMemoryMipmappedArrayDesc lExternalMemoryMipmappedArrayDesc{};
+            lExternalMemoryMipmappedArrayDesc.formatDesc = ToCudaChannelDesc( mSpec.mFormat );
+            lExternalMemoryMipmappedArrayDesc.extent     = make_cudaExtent( mSpec.mWidth, mSpec.mHeight, 0 );
+            lExternalMemoryMipmappedArrayDesc.numLevels  = 1;
+            lExternalMemoryMipmappedArrayDesc.flags      = 0;
+
+            CUDA_ASSERT( cudaExternalMemoryGetMappedMipmappedArray( &mInternalCudaMipmappedArray, mExternalMemoryHandle,
+                                                                    &lExternalMemoryMipmappedArrayDesc ) );
+            CUDA_ASSERT( cudaGetMipmappedArrayLevel( &mInternalCudaArray, mInternalCudaMipmappedArray, 0 ) );
+        }
+
+        // mTextureImageObject = New<sVkImageObject>(
+        //     mGraphicContext.mContext, static_cast<uint32_t>( mSpec.mWidth ), static_cast<uint32_t>( mSpec.mHeight ), 1,
+        //     static_cast<uint32_t>( mSpec.mMipLevels ), 1, VK_SAMPLE_COUNT_VALUE( aBufferDescription.SampleCount ), true, false,
+        //     ToVkFormat( Spec.Format ), ToVkMemoryFlag( mSpec ), (VkImageUsageFlags)Spec.Usage );
     }
 
     void VkTexture2D::CopyBufferToImage( Buffer &aBuffer )
