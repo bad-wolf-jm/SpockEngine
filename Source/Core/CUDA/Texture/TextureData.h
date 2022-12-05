@@ -33,15 +33,16 @@ namespace SE::Core
         /** @brief Texture creation metadata */
         struct sCreateInfo
         {
-            eTextureType mType   = eTextureType::TEXTURE_2D; /**!< Specifies the type of texture. Possible values are TEXTURE_2D and TEXTURE_3D*/
-            eColorFormat mFormat = eColorFormat::UNDEFINED;  /**!< Specifies the color format used for the texture*/
-            int32_t mWidth       = 0;                        /**!< Width of the texture, in pixels*/
-            int32_t mHeight      = 0;                        /**!< Height of the texture, in pixels*/
-            int32_t mDepth       = 0;                        /**!< Depth of the texture, in pixels (for 3D textures only)*/
-            int32_t mMipLevels   = 0;                        /**!< Specifies the length of the mip chain associated with the texture*/
-            // sSwizzleTransform mSwizzles{};                   /**!< Specifies the swizzling of the texture. */
+            eTextureType mType =
+                eTextureType::TEXTURE_2D; /**!< Specifies the type of texture. Possible values are TEXTURE_2D and TEXTURE_3D*/
 
-            sCreateInfo()                = default;
+            eColorFormat mFormat    = eColorFormat::UNDEFINED; /**!< Specifies the color format used for the texture*/
+            int32_t      mWidth     = 0;                       /**!< Width of the texture, in pixels*/
+            int32_t      mHeight    = 0;                       /**!< Height of the texture, in pixels*/
+            int32_t      mDepth     = 0;                       /**!< Depth of the texture, in pixels (for 3D textures only)*/
+            int32_t      mMipLevels = 0; /**!< Specifies the length of the mip chain associated with the texture*/
+
+            sCreateInfo()                      = default;
             sCreateInfo( sCreateInfo const & ) = default;
         };
 
@@ -94,7 +95,7 @@ namespace SE::Core
 
         void SaveTo( fs::path const &aImagePath );
 
-        std::vector<char> Serialize(  ) const;
+        std::vector<char> Serialize() const;
 
       private:
         // Common initialization for all constructor versions.
@@ -136,7 +137,8 @@ namespace SE::Core
 
         /** @brief Other constructors
          *
-         * These constructors perform the same function as the corresponding constructor for the base class, but also internally create a 2D texture.
+         * These constructors perform the same function as the corresponding constructor for the base class, but also internally create
+         * a 2D texture.
          */
         TextureData2D( sCreateInfo const &aCreateInfo );
         TextureData2D( sCreateInfo const &aCreateInfo, sImageData const &aImageData );
