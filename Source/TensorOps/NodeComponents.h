@@ -13,8 +13,8 @@
 #include "Core/Memory.h"
 
 #include "Core/EntityRegistry/Registry.h"
-#include "Core/Cuda/MemoryPool.h"
-#include "Core/Cuda/MultiTensor.h"
+#include "Cuda/MemoryPool.h"
+#include "Cuda/MultiTensor.h"
 
 #include "ScalarTypes.h"
 
@@ -37,9 +37,17 @@ namespace SE::TensorOps
       public:
         virtual ~sGraphOperationController() = default;
 
-        template <typename T> T &Get() { return mEntity.Get<T>(); }
+        template <typename T>
+        T &Get()
+        {
+            return mEntity.Get<T>();
+        }
 
-        template <typename T> bool Has() { return mEntity.Has<T>(); }
+        template <typename T>
+        bool Has()
+        {
+            return mEntity.Has<T>();
+        }
 
         OpNode GetControlledEntity() { return mEntity; };
 
@@ -61,10 +69,11 @@ namespace SE::TensorOps
     {
         sGraphOperationController *mControllerInstance = nullptr;
 
-        std::function<sGraphOperationController *()> mInstantiateController;
+        std::function<sGraphOperationController *()>      mInstantiateController;
         std::function<void( sGraphOperationComponent * )> mDestroyController;
 
-        template <typename T, typename... Args> void Bind( Args &&...args )
+        template <typename T, typename... Args>
+        void Bind( Args &&...args )
         {
             mInstantiateController = []() { return reinterpret_cast<sGraphOperationController *>( new T() ); };
             mDestroyController     = []( sGraphOperationComponent *nsc )
@@ -85,18 +94,42 @@ namespace SE::TensorOps
         // This structure is intentionally empty.
     };
 
+    /// @brief sAllocatedTag
+    ///
+    /// Nodes tagged with this structure already have their memory allocated in the pool
+    ///
+    struct sAllocatedTag
+    {
+        // This structure is intentionally empty.
+    };
+
     /// @brief sVectorComponent
     ///
     /// Upload a vector of values to the GPU upon running
     ///
-    template <typename _Ty> struct sVectorComponent
+    template <typename _Ty>
+    struct sVectorValueComponent
     {
         std::vector<_Ty> mValue = {}; //!< Values to upload
-        MemoryBuffer mData{};         //!< GPU area where the values should be uploaded. This is typically allocated from a pool
 
-        sVectorComponent()                           = default;
-        sVectorComponent( const sVectorComponent & ) = default;
+        sVectorValueComponent()                                = default;
+        sVectorValueComponent( const sVectorValueComponent & ) = default;
+
+        size_t Size() { return mValue.size(); }
     };
+
+    struct sVectorBufferComponent
+    {
+        size_t       mSize = 0; //!< Size hint for the underlying memory buffer
+        MemoryBuffer mValue{};  //!< GPU area where the values should be uploaded. This is typically allocated from a pool
+
+        sVectorBufferComponent()                                 = default;
+        sVectorBufferComponent( const sVectorBufferComponent & ) = default;
+    };
+
+    using sU32VectorComponent         = sVectorValueComponent<uint32_t>;
+    using sF32VectorComponent         = sVectorValueComponent<float>;
+    using sScalarValueVectorComponent = sVectorValueComponent<ScalarValue>;
 
     /// @brief sTypeComponent
     ///
@@ -160,9 +193,9 @@ namespace SE::TensorOps
     {
         eBroadcastHint mBroadcastHint = eBroadcastHint::NONE; //!< How to broadcast the operation.
 
-        OpNode mBlockSizes;                  //!< Block sizes
+        OpNode   mBlockSizes;                //!< Block sizes
         uint32_t mMaxBlockSize = 0;          //!< Maximum value of the `mBlockSizes` parameter
-        OpNode mBroadcastDimension;          //!< Size of the broadcast dimension
+        OpNode   mBroadcastDimension;        //!< Size of the broadcast dimension
         uint32_t mMaxBroadcastDimension = 0; //!< Maximum size of the broadcast dimension
 
         sBroadcastInfoComponent()                                  = default;
@@ -187,11 +220,11 @@ namespace SE::TensorOps
 
     struct sInIntervalOperationComponent
     {
-        OpNode mX;         //!< Value to test
-        OpNode mLower;     //!< Interval lower bound
-        OpNode mUpper;     //!< Interval upper bound
-        bool mStrictLower; //!< Use strict inequality for lower bound
-        bool mStrictUpper; //!< Use strict inequality for upper bound
+        OpNode mX;           //!< Value to test
+        OpNode mLower;       //!< Interval lower bound
+        OpNode mUpper;       //!< Interval upper bound
+        bool   mStrictLower; //!< Use strict inequality for lower bound
+        bool   mStrictUpper; //!< Use strict inequality for upper bound
 
         sInIntervalOperationComponent()                                        = default;
         sInIntervalOperationComponent( const sInIntervalOperationComponent & ) = default;
@@ -289,7 +322,11 @@ namespace SE::TensorOps
         ScalarValue mValue = 0.0f; //!< Value to initialize the @ref MultiTensor with.
 
         sConstantValueInitializerComponent() = default;
-        template <typename _Ty> sConstantValueInitializerComponent( _Ty const &aValue ) { mValue = aValue; }
+        template <typename _Ty>
+        sConstantValueInitializerComponent( _Ty const &aValue )
+        {
+            mValue = aValue;
+        }
 
         sConstantValueInitializerComponent( const sConstantValueInitializerComponent & ) = default;
     };
@@ -302,11 +339,12 @@ namespace SE::TensorOps
     struct sVectorInitializerComponent
     {
         std::vector<ScalarValue> mValue = {}; //!< Vector of values
-        MemoryBuffer mData;                   //!< GPU representation of the data of values
+        MemoryBuffer             mData;       //!< GPU representation of the data of values
 
         sVectorInitializerComponent() = default;
 
-        template <typename _Ty> sVectorInitializerComponent( std::vector<_Ty> const &aValues )
+        template <typename _Ty>
+        sVectorInitializerComponent( std::vector<_Ty> const &aValues )
         {
             uint32_t lVectorSize = aValues.size();
             mValue               = std::vector<ScalarValue>( lVectorSize );
@@ -333,7 +371,8 @@ namespace SE::TensorOps
 
         sDataInitializerComponent() = default;
 
-        template <typename _Ty> sDataInitializerComponent( std::vector<_Ty> const &aValues )
+        template <typename _Ty>
+        sDataInitializerComponent( std::vector<_Ty> const &aValues )
         {
             uint32_t lVectorSize = aValues.size();
             mValue               = std::vector<ScalarValue>( lVectorSize );
@@ -382,18 +421,22 @@ namespace SE::TensorOps
     ///
     struct sMultiTensorComponent
     {
-        MultiTensor mValue{}; //!< GPU buffer
+        MultiTensor  mValue{}; //!< GPU buffer
+        sTensorShape mShape{}; //!< Shape of the multitensor
 
         sMultiTensorComponent() = default;
         sMultiTensorComponent( MemoryPool &aMemoryPool, const sTensorShape &aShape )
-            : mValue{ MultiTensor( aMemoryPool, aShape ) }
+            : mShape{ aShape }
         {
         }
         sMultiTensorComponent( MemoryPool &aMemoryPool, MemoryBuffer &aMemoryBuffer, const sTensorShape &aShape )
-            : mValue{ MultiTensor( aMemoryPool, aMemoryBuffer, aShape ) }
+            : mShape{ aShape }
+
         {
         }
         sMultiTensorComponent( const sMultiTensorComponent & ) = default;
+
+        sTensorShape &Shape() { return mShape; }
     };
 
     /// @brief sSample2DComponent
@@ -418,8 +461,8 @@ namespace SE::TensorOps
     struct sToFixedPointNodeComponent
     {
         eScalarType mOutputType = eScalarType::UINT32; //!< Integer type to use to engode the fixed point decimal numbers
-        OpNode mArray{};                               //!< Input tensor/
-        OpNode mScaling{};                             //!< Scaling factor.
+        OpNode      mArray{};                          //!< Input tensor/
+        OpNode      mScaling{};                        //!< Scaling factor.
 
         sToFixedPointNodeComponent()                                     = default;
         sToFixedPointNodeComponent( const sToFixedPointNodeComponent & ) = default;
@@ -474,15 +517,15 @@ namespace SE::TensorOps
     /// @brief sConv1DNodeComponent
     struct sConv1DNodeComponent
     {
-        OpNode mArray0;                 //!< Tensor to transform
-        OpNode mElementCount0;          //!< Length of the last dimension of `mArray0`
-        OpNode mBlockSizes0;            //!< Product of the lengths of the first rank-1 dimensions of `mArray0`
+        OpNode   mArray0;               //!< Tensor to transform
+        OpNode   mElementCount0;        //!< Length of the last dimension of `mArray0`
+        OpNode   mBlockSizes0;          //!< Product of the lengths of the first rank-1 dimensions of `mArray0`
         uint32_t mMaxElementCount0 = 0; //!< Maximum value of the `mElementCount0` parameter
         uint32_t mMaxBlockSize0    = 0; //!< Maximum value of the `aBlockSizes0` parameter
 
-        OpNode mArray1;              //!< Convolution kernel
-        OpNode mElementCount1;       //!< Length of the last dimension of `mArray1`
-        OpNode mBlockSizes1;         //!< Product of the lengths of the first rank-1 dimensions of `mArray1`
+        OpNode   mArray1;            //!< Convolution kernel
+        OpNode   mElementCount1;     //!< Length of the last dimension of `mArray1`
+        OpNode   mBlockSizes1;       //!< Product of the lengths of the first rank-1 dimensions of `mArray1`
         uint32_t mMaxBlockSize1 = 0; //!< Maximum value of the `aBlockSizes1` parameter
 
         sConv1DNodeComponent()                               = default;
@@ -576,7 +619,7 @@ namespace SE::TensorOps
     /// @brief sDiffNodeComponent
     struct sDiffNodeComponent
     {
-        OpNode mArray; //!< Tensor to transform
+        OpNode   mArray; //!< Tensor to transform
         uint32_t mCount = 0;
 
         OpNode mBlockSizes;   //!< Product of the lengths of the first rank-1 dimensions of `mArray`
@@ -591,9 +634,9 @@ namespace SE::TensorOps
     /// @brief sShiftNodeComponent
     struct sShiftNodeComponent
     {
-        OpNode mArray; //!< Tensor to transform
+        OpNode  mArray; //!< Tensor to transform
         int32_t mCount = 0;
-        OpNode mFillValue;
+        OpNode  mFillValue;
 
         OpNode mBlockSizes;   //!< Product of the lengths of the first rank-1 dimensions of `mArray`
         OpNode mElementCount; //!< Length of the last dimension of `mArray`
@@ -610,7 +653,7 @@ namespace SE::TensorOps
         OpNode mArray0; //!< First tensor to concatenate
         OpNode mArray1; //!< Second tensor to concatenate
 
-        OpNode mBlockSizes;         //!< Product of the lengths of the first rank-1 dimensions of `mArray0`
+        OpNode   mBlockSizes;       //!< Product of the lengths of the first rank-1 dimensions of `mArray0`
         uint32_t mMaxBlockSize = 0; //!< Maximum value of the `mBlockSizes` parameter
 
         OpNode mElementCount0; //!< Length of the last dimension of `mArray0`

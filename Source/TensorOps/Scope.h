@@ -16,9 +16,9 @@
 
 #include "Core/EntityRegistry/Registry.h"
 
-#include "Core/Cuda/CudaAssert.h"
-#include "Core/Cuda/MemoryPool.h"
-#include "Core/Cuda/MultiTensor.h"
+#include "Cuda/CudaAssert.h"
+#include "Cuda/MemoryPool.h"
+#include "Cuda/MultiTensor.h"
 
 #include "NodeComponents.h"
 #include "NodeControllers.h"
@@ -26,9 +26,7 @@
 
 namespace SE::TensorOps
 {
-    using OpNode       = SE::Core::Entity;
-    using ScalarVector = sVectorComponent<ScalarValue>;
-    using U32Vector    = sVectorComponent<uint32_t>;
+    using OpNode = SE::Core::Entity;
 
     struct Scope
     {
@@ -36,9 +34,6 @@ namespace SE::TensorOps
 
         /// @brief Default constructor
         Scope() = default;
-
-        /// @brief Default destructor
-        ~Scope();
 
         /// @brief Copy constructor
         Scope( const Scope & ) = default;
@@ -85,9 +80,9 @@ namespace SE::TensorOps
         SE::Core::EntityRegistry &GetNodesRegistry() { return mNodesRegistry; };
 
       private:
-        SE::Core::EntityRegistry mNodesRegistry{};                        //!< Underlying node database
-        std::optional<std::string> mName                    = std::nullopt; //!< If this is set, the next node will be stored under the given value
-        std::unordered_map<std::string, OpNode> mNamedNodes = {};           //!< Mapping of node names to OpNodes
+        SE::Core::EntityRegistry   mNodesRegistry{};     //!< Underlying node database
+        std::optional<std::string> mName = std::nullopt; //!< If this is set, the next node will be stored under the given value
+        std::unordered_map<std::string, OpNode> mNamedNodes = {}; //!< Mapping of node names to OpNodes
     };
 
     /// @brief Create a constant @ref MultiTensor initialized with the given constant
@@ -154,13 +149,16 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    template <typename _Ty> OpNode VectorValue( Scope &aScope, std::vector<_Ty> const &aValue )
+    template <typename _Ty>
+    OpNode VectorValue( Scope &aScope, std::vector<_Ty> const &aValue )
     {
         auto l_NewEntity = aScope.CreateNode();
 
-        auto &l_Value  = l_NewEntity.Add<sVectorComponent<_Ty>>();
+        auto &l_Value  = l_NewEntity.Add<sVectorValueComponent<_Ty>>();
         l_Value.mValue = aValue;
-        l_Value.mData  = aScope.mPool.Allocate( aValue.size() * sizeof( _Ty ) );
+
+        auto &l_Buffer = l_NewEntity.Add<sVectorBufferComponent>();
+        l_Buffer.mSize = aValue.size() * sizeof( _Ty );
 
         if constexpr( std::is_same_v<_Ty, ScalarValue> )
         {
@@ -181,9 +179,10 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    template <typename _Ty> OpNode ScalarVectorValue( Scope &aScope, eScalarType aType, std::vector<_Ty> const &aValue )
+    template <typename _Ty>
+    OpNode ScalarVectorValue( Scope &aScope, eScalarType aType, std::vector<_Ty> const &aValue )
     {
-        uint32_t lSize = aValue.size();
+        uint32_t                 lSize = aValue.size();
         std::vector<ScalarValue> lValues( lSize );
         for( uint32_t i = 0; i < lSize; i++ )
         {
@@ -201,7 +200,8 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    template <typename _Ty> OpNode ConstantScalarValue( Scope &aScope, _Ty const &aValue )
+    template <typename _Ty>
+    OpNode ConstantScalarValue( Scope &aScope, _Ty const &aValue )
     {
         auto l_NewEntity = aScope.CreateNode();
 
@@ -371,7 +371,8 @@ namespace SE::TensorOps
     ///
     /// @return The newly created computation node
     ///
-    OpNode InInterval( Scope &aScope, OpNode const &aX, OpNode const &aLower, OpNode const &aUpper, bool aStrictLower, bool aStrictUpper );
+    OpNode InInterval( Scope &aScope, OpNode const &aX, OpNode const &aLower, OpNode const &aUpper, bool aStrictLower,
+                       bool aStrictUpper );
 
     /// @brief Equality
     ///
@@ -604,7 +605,8 @@ namespace SE::TensorOps
     /// @brief Expand the first dimension of a @ref MultiTensor with only one layer into a multi-layered MultiTensor
     ///
     /// The number of layers in the output @ref MultiTensor is equal to the first dimension of the input @ref MultiTensor.
-    /// Furthermore, the memory area is shared between the input and the output multitensors, so that there is no actual copying involved.
+    /// Furthermore, the memory area is shared between the input and the output multitensors, so that there is no actual copying
+    /// involved.
     ///
     /// @param aScope Parent computation scope
     /// @param aArray MultiTensor to expand
@@ -707,8 +709,8 @@ namespace SE::TensorOps
 
     /// @brief Count the number of non-zero elements in the last dimension of @ref MultiTensor
     ///
-    /// The output multi-tensor will have the same number of layers as the input. For now, counting the non-zero values of a multi-tensor
-    /// only considers the last dimension.
+    /// The output multi-tensor will have the same number of layers as the input. For now, counting the non-zero values of a
+    /// multi-tensor only considers the last dimension.
     ///
     /// @param aScope Parent computation scope
     /// @param aArray MultiTensor to process
@@ -719,8 +721,8 @@ namespace SE::TensorOps
 
     /// @brief Count the number of zero elements in the last dimension of @ref MultiTensor
     ///
-    /// The output multi-tensor will have the same number of layers as the input. For now, counting the zero values of a multi-tensor only
-    /// considers the last dimension.
+    /// The output multi-tensor will have the same number of layers as the input. For now, counting the zero values of a multi-tensor
+    /// only considers the last dimension.
     ///
     /// @param aScope Parent computation scope
     /// @param aArray MultiTensor to process

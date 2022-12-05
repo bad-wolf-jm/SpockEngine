@@ -14,7 +14,7 @@
 #include "NodeComponents.h"
 #include "NodeControllers.h"
 
-#include "Core/Cuda/Texture2D.h"
+#include "Cuda/Texture2D.h"
 
 namespace SE::TensorOps
 {
@@ -26,15 +26,14 @@ namespace SE::TensorOps
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sARangeComponent>();
 
-        auto &lLeft  = lOperandData.mLeft.Get<sVectorComponent<ScalarValue>>().mData;
-        auto &lRight = lOperandData.mRight.Get<sVectorComponent<ScalarValue>>().mData;
-        auto &lDelta = lOperandData.mDelta.Get<sVectorComponent<ScalarValue>>().mData;
+        auto &lLeft  = lOperandData.mLeft.Get<sVectorBufferComponent>().mValue;
+        auto &lRight = lOperandData.mRight.Get<sVectorBufferComponent>().mValue;
+        auto &lDelta = lOperandData.mDelta.Get<sVectorBufferComponent>().mValue;
 
         auto lElementType = Get<sTypeComponent>().mValue;
 
         uint32_t lMaxSubdivisions = 0;
-        for( const auto &lSub : lValue.Shape().mShape )
-            lMaxSubdivisions = std::max( lMaxSubdivisions, lSub[0] );
+        for( const auto &lSub : lValue.Shape().mShape ) lMaxSubdivisions = std::max( lMaxSubdivisions, lSub[0] );
 
         ARangeOp( lElementType, lValue, lLeft, lRight, lDelta, lMaxSubdivisions );
     }
@@ -47,25 +46,23 @@ namespace SE::TensorOps
 
         if( Has<sRepeatOperationComponent>() )
         {
-            auto &lOperandData       = Get<sRepeatOperationComponent>();
-            auto &lArray             = lOperandData.mArray.Get<sMultiTensorComponent>().mValue;
-            auto &lRepetitions       = lOperandData.mRepetitions.Get<sVectorComponent<uint32_t>>();
+            auto    &lOperandData    = Get<sRepeatOperationComponent>();
+            auto    &lArray          = lOperandData.mArray.Get<sMultiTensorComponent>().mValue;
+            auto    &lRepetitions    = lOperandData.mRepetitions.Get<sU32VectorComponent>();
             uint32_t lMaxRepetitions = 0;
-            for( const auto &lSub : lRepetitions.mValue )
-                lMaxRepetitions = std::max( lMaxRepetitions, lSub );
-            RepeatOp( lElementType, lValue, lArray, lRepetitions.mData, lMaxRepetitions );
+            for( const auto &lSub : lRepetitions.mValue ) lMaxRepetitions = std::max( lMaxRepetitions, lSub );
+            RepeatOp( lElementType, lValue, lArray, lOperandData.mRepetitions.Get<sVectorBufferComponent>().mValue, lMaxRepetitions );
             return;
         }
 
         if( Has<sTileOperationComponent>() )
         {
-            auto &lOperandData       = Get<sTileOperationComponent>();
-            auto &lArray             = lOperandData.mArray.Get<sMultiTensorComponent>().mValue;
-            auto &lRepetitions       = lOperandData.mRepetitions.Get<sVectorComponent<uint32_t>>();
+            auto    &lOperandData    = Get<sTileOperationComponent>();
+            auto    &lArray          = lOperandData.mArray.Get<sMultiTensorComponent>().mValue;
+            auto    &lRepetitions    = lOperandData.mRepetitions.Get<sU32VectorComponent>();
             uint32_t lMaxRepetitions = 0;
-            for( const auto &lSub : lRepetitions.mValue )
-                lMaxRepetitions = std::max( lMaxRepetitions, lSub );
-            TileOp( lElementType, lValue, lArray, lRepetitions.mData, lMaxRepetitions );
+            for( const auto &lSub : lRepetitions.mValue ) lMaxRepetitions = std::max( lMaxRepetitions, lSub );
+            TileOp( lElementType, lValue, lArray, lOperandData.mRepetitions.Get<sVectorBufferComponent>().mValue, lMaxRepetitions );
             return;
         }
     }
@@ -74,7 +71,7 @@ namespace SE::TensorOps
     {
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sBinaryOperationComponent>();
-        auto lElementType  = Get<sTypeComponent>().mValue;
+        auto  lElementType = Get<sTypeComponent>().mValue;
 
         if( lOperandData.mLeftOperand.Has<sMultiTensorComponent>() && lOperandData.mRightOperand.Has<sMultiTensorComponent>() )
         {
@@ -86,19 +83,21 @@ namespace SE::TensorOps
             else
                 Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
         }
-        else if( lOperandData.mLeftOperand.Has<sMultiTensorComponent>() && lOperandData.mRightOperand.Has<sVectorComponent<ScalarValue>>() )
+        else if( lOperandData.mLeftOperand.Has<sMultiTensorComponent>() &&
+                 lOperandData.mRightOperand.Has<sScalarValueVectorComponent>() )
         {
             auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<sMultiTensorComponent>();
-            auto &lRightOpOperandData = lOperandData.mRightOperand.Get<sVectorComponent<ScalarValue>>();
+            auto &lRightOpOperandData = lOperandData.mRightOperand.Get<sVectorBufferComponent>();
 
-            Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mData );
+            Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
         }
-        else if( lOperandData.mLeftOperand.Has<sVectorComponent<ScalarValue>>() && lOperandData.mRightOperand.Has<sMultiTensorComponent>() )
+        else if( lOperandData.mLeftOperand.Has<sScalarValueVectorComponent>() &&
+                 lOperandData.mRightOperand.Has<sMultiTensorComponent>() )
         {
-            auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<sVectorComponent<ScalarValue>>();
+            auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<sVectorBufferComponent>();
             auto &lRightOpOperandData = lOperandData.mRightOperand.Get<sMultiTensorComponent>();
 
-            Op( lElementType, lValue, lLeftOperandData.mData, lRightOpOperandData.mValue );
+            Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
         }
         else if( lOperandData.mLeftOperand.Has<sMultiTensorComponent>() && lOperandData.mRightOperand.Has<sScalarNodeComponent>() )
         {
@@ -130,34 +129,36 @@ namespace SE::TensorOps
         {
             auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<sMultiTensorComponent>();
             auto &lRightOpOperandData = lOperandData.mRightOperand.Get<sMultiTensorComponent>();
-            auto lElementType         = lOperandData.mLeftOperand.Get<sTypeComponent>().mValue;
+            auto  lElementType        = lOperandData.mLeftOperand.Get<sTypeComponent>().mValue;
 
             if( Has<sBroadcastInfoComponent>() )
                 Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue, Get<sBroadcastInfoComponent>() );
             else
                 Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
         }
-        else if( lOperandData.mLeftOperand.Has<sMultiTensorComponent>() && lOperandData.mRightOperand.Has<sVectorComponent<ScalarValue>>() )
+        else if( lOperandData.mLeftOperand.Has<sMultiTensorComponent>() &&
+                 lOperandData.mRightOperand.Has<sScalarValueVectorComponent>() )
         {
             auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<sMultiTensorComponent>();
-            auto &lRightOpOperandData = lOperandData.mRightOperand.Get<sVectorComponent<ScalarValue>>();
-            auto lElementType         = lOperandData.mLeftOperand.Get<sTypeComponent>().mValue;
+            auto &lRightOpOperandData = lOperandData.mRightOperand.Get<sVectorBufferComponent>();
+            auto  lElementType        = lOperandData.mLeftOperand.Get<sTypeComponent>().mValue;
 
-            Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mData );
+            Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
         }
-        else if( lOperandData.mLeftOperand.Has<sVectorComponent<ScalarValue>>() && lOperandData.mRightOperand.Has<sMultiTensorComponent>() )
+        else if( lOperandData.mLeftOperand.Has<sScalarValueVectorComponent>() &&
+                 lOperandData.mRightOperand.Has<sMultiTensorComponent>() )
         {
-            auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<sVectorComponent<ScalarValue>>();
+            auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<sVectorBufferComponent>();
             auto &lRightOpOperandData = lOperandData.mRightOperand.Get<sMultiTensorComponent>();
-            auto lElementType         = lOperandData.mRightOperand.Get<sTypeComponent>().mValue;
+            auto  lElementType        = lOperandData.mRightOperand.Get<sTypeComponent>().mValue;
 
-            Op( lElementType, lValue, lLeftOperandData.mData, lRightOpOperandData.mValue );
+            Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
         }
         else if( lOperandData.mLeftOperand.Has<sMultiTensorComponent>() && lOperandData.mRightOperand.Has<sScalarNodeComponent>() )
         {
             auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<sMultiTensorComponent>();
             auto &lRightOpOperandData = lOperandData.mRightOperand.Get<sScalarNodeComponent>();
-            auto lElementType         = lOperandData.mLeftOperand.Get<sTypeComponent>().mValue;
+            auto  lElementType        = lOperandData.mLeftOperand.Get<sTypeComponent>().mValue;
 
             Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
         }
@@ -165,7 +166,7 @@ namespace SE::TensorOps
         {
             auto &lLeftOperandData    = lOperandData.mLeftOperand.Get<sScalarNodeComponent>();
             auto &lRightOpOperandData = lOperandData.mRightOperand.Get<sMultiTensorComponent>();
-            auto lElementType         = lOperandData.mRightOperand.Get<sTypeComponent>().mValue;
+            auto  lElementType        = lOperandData.mRightOperand.Get<sTypeComponent>().mValue;
 
             Op( lElementType, lValue, lLeftOperandData.mValue, lRightOpOperandData.mValue );
         }
@@ -180,10 +181,12 @@ namespace SE::TensorOps
         AddOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sAddOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight, sBroadcastInfoComponent &aBroadcast )
+    void sAddOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+                                      sBroadcastInfoComponent &aBroadcast )
     {
-        AddOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint, aBroadcast.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBlockSize,
-               aBroadcast.mBroadcastDimension.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBroadcastDimension );
+        AddOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
+               aBroadcast.mBlockSizes.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBlockSize,
+               aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
     void sAddOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aIn, ScalarValue &aConstant )
@@ -211,28 +214,34 @@ namespace SE::TensorOps
         MultiplyOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sMultiplyOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight, sBroadcastInfoComponent &aBroadcast )
+    void sMultiplyOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+                                           sBroadcastInfoComponent &aBroadcast )
     {
-        MultiplyOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint, aBroadcast.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBlockSize,
-                    aBroadcast.mBroadcastDimension.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBroadcastDimension );
+        MultiplyOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
+                    aBroadcast.mBlockSizes.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBlockSize,
+                    aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sMultiplyOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aIn, ScalarValue &aConstant )
-    {
-        MultiplyOp( aTensorElementType, aOut, aIn, aConstant );
-    }
-
-    void sMultiplyOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aConstant, MultiTensor &aIn )
+    void sMultiplyOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aIn,
+                                           ScalarValue &aConstant )
     {
         MultiplyOp( aTensorElementType, aOut, aIn, aConstant );
     }
 
-    void sMultiplyOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight )
+    void sMultiplyOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aConstant,
+                                           MultiTensor &aIn )
+    {
+        MultiplyOp( aTensorElementType, aOut, aIn, aConstant );
+    }
+
+    void sMultiplyOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+                                           MemoryBuffer &aRight )
     {
         MultiplyOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sMultiplyOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight )
+    void sMultiplyOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
+                                           MultiTensor &aRight )
     {
         MultiplyOp( aTensorElementType, aOut, aRight, aLeft );
     }
@@ -242,28 +251,34 @@ namespace SE::TensorOps
         SubtractOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sSubtractOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight, sBroadcastInfoComponent &aBroadcast )
+    void sSubtractOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+                                           sBroadcastInfoComponent &aBroadcast )
     {
-        SubtractOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint, aBroadcast.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBlockSize,
-                    aBroadcast.mBroadcastDimension.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBroadcastDimension );
+        SubtractOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
+                    aBroadcast.mBlockSizes.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBlockSize,
+                    aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sSubtractOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aIn, ScalarValue &aConstant )
+    void sSubtractOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aIn,
+                                           ScalarValue &aConstant )
     {
         SubtractOp( aTensorElementType, aOut, aIn, aConstant );
     }
 
-    void sSubtractOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aConstant, MultiTensor &aIn )
+    void sSubtractOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aConstant,
+                                           MultiTensor &aIn )
     {
         SubtractOp( aTensorElementType, aOut, aConstant, aIn );
     }
 
-    void sSubtractOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight )
+    void sSubtractOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+                                           MemoryBuffer &aRight )
     {
         SubtractOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sSubtractOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight )
+    void sSubtractOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
+                                           MultiTensor &aRight )
     {
         SubtractOp( aTensorElementType, aOut, aLeft, aRight );
     }
@@ -278,10 +293,12 @@ namespace SE::TensorOps
         DivideOp( aTensorElementType, aOut, aIn, aConstant );
     }
 
-    void sDivideOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight, sBroadcastInfoComponent &aBroadcast )
+    void sDivideOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+                                         sBroadcastInfoComponent &aBroadcast )
     {
-        DivideOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint, aBroadcast.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBlockSize,
-                  aBroadcast.mBroadcastDimension.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBroadcastDimension );
+        DivideOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
+                  aBroadcast.mBlockSizes.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBlockSize,
+                  aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
     void sDivideOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aConstant, MultiTensor &aIn )
@@ -304,10 +321,12 @@ namespace SE::TensorOps
         AndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight, sBroadcastInfoComponent &aBroadcast )
+    void sAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+                                      sBroadcastInfoComponent &aBroadcast )
     {
-        AndOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint, aBroadcast.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBlockSize,
-               aBroadcast.mBroadcastDimension.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBroadcastDimension );
+        AndOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
+               aBroadcast.mBlockSizes.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBlockSize,
+               aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
     void sAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight )
@@ -335,10 +354,12 @@ namespace SE::TensorOps
         OrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight, sBroadcastInfoComponent &aBroadcast )
+    void sOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+                                     sBroadcastInfoComponent &aBroadcast )
     {
-        OrOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint, aBroadcast.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBlockSize,
-              aBroadcast.mBroadcastDimension.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBroadcastDimension );
+        OrOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
+              aBroadcast.mBlockSizes.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBlockSize,
+              aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
     void sOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight )
@@ -363,78 +384,92 @@ namespace SE::TensorOps
 
     void sNotOperationController::Run()
     {
-        auto lElementType  = Get<sTypeComponent>().mValue;
+        auto  lElementType = Get<sTypeComponent>().mValue;
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sNotOperationComponent>();
 
         NotOp( lElementType, lValue, lOperandData.mOperand.Get<sMultiTensorComponent>().mValue );
     }
 
-    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
+    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+                                             MultiTensor &aRight )
     {
         BitwiseAndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight, sBroadcastInfoComponent &aBroadcast )
+    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+                                             MultiTensor &aRight, sBroadcastInfoComponent &aBroadcast )
     {
-        BitwiseAndOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint, aBroadcast.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBlockSize,
-                      aBroadcast.mBroadcastDimension.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBroadcastDimension );
+        BitwiseAndOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
+                      aBroadcast.mBlockSizes.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBlockSize,
+                      aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight )
-    {
-        BitwiseAndOp( aTensorElementType, aOut, aLeft, aRight );
-    }
-
-    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft, MultiTensor &aRight )
+    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+                                             ScalarValue &aRight )
     {
         BitwiseAndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight )
+    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft,
+                                             MultiTensor &aRight )
     {
         BitwiseAndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight )
+    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+                                             MemoryBuffer &aRight )
     {
         BitwiseAndOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
+    void sBitwiseAndOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
+                                             MultiTensor &aRight )
+    {
+        BitwiseAndOp( aTensorElementType, aOut, aLeft, aRight );
+    }
+
+    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+                                            MultiTensor &aRight )
     {
         BitwiseOrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight, sBroadcastInfoComponent &aBroadcast )
+    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+                                            sBroadcastInfoComponent &aBroadcast )
     {
-        BitwiseOrOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint, aBroadcast.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBlockSize,
-                     aBroadcast.mBroadcastDimension.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBroadcastDimension );
+        BitwiseOrOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
+                     aBroadcast.mBlockSizes.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBlockSize,
+                     aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight )
-    {
-        BitwiseOrOp( aTensorElementType, aOut, aLeft, aRight );
-    }
-
-    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft, MultiTensor &aRight )
+    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+                                            ScalarValue &aRight )
     {
         BitwiseOrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight )
+    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft,
+                                            MultiTensor &aRight )
     {
         BitwiseOrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight )
+    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+                                            MemoryBuffer &aRight )
+    {
+        BitwiseOrOp( aTensorElementType, aOut, aLeft, aRight );
+    }
+
+    void sBitwiseOrOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
+                                            MultiTensor &aRight )
     {
         BitwiseOrOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
     void sBitwiseNotOperationController::Run()
     {
-        auto lElementType  = Get<sTypeComponent>().mValue;
+        auto  lElementType = Get<sTypeComponent>().mValue;
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sBitwiseNotOperationComponent>();
 
@@ -446,71 +481,80 @@ namespace SE::TensorOps
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sInIntervalOperationComponent>();
 
-        auto &lX          = lOperandData.mX.Get<sMultiTensorComponent>().mValue;
-        auto lElementType = lOperandData.mX.Get<sTypeComponent>().mValue;
+        auto &lX           = lOperandData.mX.Get<sMultiTensorComponent>().mValue;
+        auto  lElementType = lOperandData.mX.Get<sTypeComponent>().mValue;
 
         if( lOperandData.mLower.Has<sMultiTensorComponent>() && lOperandData.mUpper.Has<sMultiTensorComponent>() )
         {
             auto &lLower = lOperandData.mLower.Get<sMultiTensorComponent>();
             auto &lUpper = lOperandData.mUpper.Get<sMultiTensorComponent>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower, lOperandData.mStrictUpper );
+            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
+                          lOperandData.mStrictUpper );
         }
-        else if( lOperandData.mLower.Has<sMultiTensorComponent>() && lOperandData.mUpper.Has<sVectorComponent<ScalarValue>>() )
+        else if( lOperandData.mLower.Has<sMultiTensorComponent>() && lOperandData.mUpper.Has<sScalarValueVectorComponent>() )
         {
             auto &lLower = lOperandData.mLower.Get<sMultiTensorComponent>();
-            auto &lUpper = lOperandData.mUpper.Get<sVectorComponent<ScalarValue>>();
+            auto &lUpper = lOperandData.mUpper.Get<sVectorBufferComponent>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mData, lOperandData.mStrictLower, lOperandData.mStrictUpper );
+            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
+                          lOperandData.mStrictUpper );
         }
         else if( lOperandData.mLower.Has<sMultiTensorComponent>() && lOperandData.mUpper.Has<sScalarNodeComponent>() )
         {
             auto &lLower = lOperandData.mLower.Get<sMultiTensorComponent>();
             auto &lUpper = lOperandData.mUpper.Get<sScalarNodeComponent>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower, lOperandData.mStrictUpper );
+            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
+                          lOperandData.mStrictUpper );
         }
-        else if( lOperandData.mLower.Has<sVectorComponent<ScalarValue>>() && lOperandData.mUpper.Has<sMultiTensorComponent>() )
+        else if( lOperandData.mLower.Has<sScalarValueVectorComponent>() && lOperandData.mUpper.Has<sMultiTensorComponent>() )
         {
-            auto &lLower = lOperandData.mLower.Get<sVectorComponent<ScalarValue>>();
+            auto &lLower = lOperandData.mLower.Get<sVectorBufferComponent>();
             auto &lUpper = lOperandData.mUpper.Get<sMultiTensorComponent>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mData, lUpper.mValue, lOperandData.mStrictLower, lOperandData.mStrictUpper );
+            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
+                          lOperandData.mStrictUpper );
         }
-        else if( lOperandData.mLower.Has<sVectorComponent<ScalarValue>>() && lOperandData.mUpper.Has<sVectorComponent<ScalarValue>>() )
+        else if( lOperandData.mLower.Has<sScalarValueVectorComponent>() && lOperandData.mUpper.Has<sScalarValueVectorComponent>() )
         {
-            auto &lLower = lOperandData.mLower.Get<sVectorComponent<ScalarValue>>();
-            auto &lUpper = lOperandData.mUpper.Get<sVectorComponent<ScalarValue>>();
+            auto &lLower = lOperandData.mLower.Get<sVectorBufferComponent>();
+            auto &lUpper = lOperandData.mUpper.Get<sVectorBufferComponent>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mData, lUpper.mData, lOperandData.mStrictLower, lOperandData.mStrictUpper );
+            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
+                          lOperandData.mStrictUpper );
         }
-        else if( lOperandData.mLower.Has<sVectorComponent<ScalarValue>>() && lOperandData.mUpper.Has<sScalarNodeComponent>() )
+        else if( lOperandData.mLower.Has<sScalarValueVectorComponent>() && lOperandData.mUpper.Has<sScalarNodeComponent>() )
         {
-            auto &lLower = lOperandData.mLower.Get<sVectorComponent<ScalarValue>>();
+            auto &lLower = lOperandData.mLower.Get<sVectorBufferComponent>();
             auto &lUpper = lOperandData.mUpper.Get<sScalarNodeComponent>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mData, lUpper.mValue, lOperandData.mStrictLower, lOperandData.mStrictUpper );
+            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
+                          lOperandData.mStrictUpper );
         }
         else if( lOperandData.mLower.Has<sScalarNodeComponent>() && lOperandData.mUpper.Has<sMultiTensorComponent>() )
         {
             auto &lLower = lOperandData.mLower.Get<sScalarNodeComponent>();
             auto &lUpper = lOperandData.mUpper.Get<sMultiTensorComponent>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower, lOperandData.mStrictUpper );
+            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
+                          lOperandData.mStrictUpper );
         }
-        else if( lOperandData.mLower.Has<sScalarNodeComponent>() && lOperandData.mUpper.Has<sVectorComponent<ScalarValue>>() )
+        else if( lOperandData.mLower.Has<sScalarNodeComponent>() && lOperandData.mUpper.Has<sScalarValueVectorComponent>() )
         {
             auto &lLower = lOperandData.mLower.Get<sScalarNodeComponent>();
-            auto &lUpper = lOperandData.mUpper.Get<sVectorComponent<ScalarValue>>();
+            auto &lUpper = lOperandData.mUpper.Get<sVectorBufferComponent>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mData, lOperandData.mStrictLower, lOperandData.mStrictUpper );
+            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
+                          lOperandData.mStrictUpper );
         }
         else if( lOperandData.mLower.Has<sScalarNodeComponent>() && lOperandData.mUpper.Has<sScalarNodeComponent>() )
         {
             auto &lLower = lOperandData.mLower.Get<sScalarNodeComponent>();
             auto &lUpper = lOperandData.mUpper.Get<sScalarNodeComponent>();
 
-            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower, lOperandData.mStrictUpper );
+            InIntervalOp( lElementType, lValue, lX, lLower.mValue, lUpper.mValue, lOperandData.mStrictLower,
+                          lOperandData.mStrictUpper );
         }
         else
         {
@@ -523,10 +567,12 @@ namespace SE::TensorOps
         EqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight, sBroadcastInfoComponent &aBroadcast )
+    void sEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+                                        sBroadcastInfoComponent &aBroadcast )
     {
-        EqualOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint, aBroadcast.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBlockSize,
-                 aBroadcast.mBroadcastDimension.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBroadcastDimension );
+        EqualOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
+                 aBroadcast.mBlockSizes.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBlockSize,
+                 aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
     void sEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight )
@@ -554,10 +600,12 @@ namespace SE::TensorOps
         LessThanOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight, sBroadcastInfoComponent &aBroadcast )
+    void sLessThanOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight,
+                                           sBroadcastInfoComponent &aBroadcast )
     {
-        LessThanOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint, aBroadcast.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBlockSize,
-                    aBroadcast.mBroadcastDimension.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBroadcastDimension );
+        LessThanOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
+                    aBroadcast.mBlockSizes.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBlockSize,
+                    aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
     void sLessThanOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight )
@@ -570,43 +618,52 @@ namespace SE::TensorOps
         LessThanOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight )
+    void sLessThanOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+                                           MemoryBuffer &aRight )
     {
         LessThanOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight )
+    void sLessThanOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
+                                           MultiTensor &aRight )
     {
         LessThanOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight )
+    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+                                                  MultiTensor &aRight )
     {
         LessThanOrEqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MultiTensor &aRight, sBroadcastInfoComponent &aBroadcast )
+    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+                                                  MultiTensor &aRight, sBroadcastInfoComponent &aBroadcast )
     {
-        LessThanOrEqualOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint, aBroadcast.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData,
-                           aBroadcast.mMaxBlockSize, aBroadcast.mBroadcastDimension.Get<sVectorComponent<uint32_t>>().mData, aBroadcast.mMaxBroadcastDimension );
+        LessThanOrEqualOp( aTensorElementType, aOut, aLeft, aRight, aBroadcast.mBroadcastHint,
+                           aBroadcast.mBlockSizes.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBlockSize,
+                           aBroadcast.mBroadcastDimension.Get<sVectorBufferComponent>().mValue, aBroadcast.mMaxBroadcastDimension );
     }
 
-    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, ScalarValue &aRight )
-    {
-        LessThanOrEqualOp( aTensorElementType, aOut, aLeft, aRight );
-    }
-
-    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft, MultiTensor &aRight )
+    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+                                                  ScalarValue &aRight )
     {
         LessThanOrEqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft, MemoryBuffer &aRight )
+    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, ScalarValue &aLeft,
+                                                  MultiTensor &aRight )
     {
         LessThanOrEqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
 
-    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft, MultiTensor &aRight )
+    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MultiTensor &aLeft,
+                                                  MemoryBuffer &aRight )
+    {
+        LessThanOrEqualOp( aTensorElementType, aOut, aLeft, aRight );
+    }
+
+    void sLessThanOrEqualOperationController::Op( eScalarType aTensorElementType, MultiTensor &aOut, MemoryBuffer &aLeft,
+                                                  MultiTensor &aRight )
     {
         LessThanOrEqualOp( aTensorElementType, aOut, aLeft, aRight );
     }
@@ -616,8 +673,8 @@ namespace SE::TensorOps
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sWhereOperationComponent>();
 
-        auto &lCondition  = lOperandData.mCondition.Get<sMultiTensorComponent>().mValue;
-        auto lElementType = lOperandData.mValueIfTrue.Get<sTypeComponent>().mValue;
+        auto &lCondition   = lOperandData.mCondition.Get<sMultiTensorComponent>().mValue;
+        auto  lElementType = lOperandData.mValueIfTrue.Get<sTypeComponent>().mValue;
 
         if( lOperandData.mValueIfTrue.Has<sMultiTensorComponent>() && lOperandData.mValueIfFalse.Has<sMultiTensorComponent>() )
         {
@@ -626,12 +683,13 @@ namespace SE::TensorOps
 
             WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mValue );
         }
-        else if( lOperandData.mValueIfTrue.Has<sMultiTensorComponent>() && lOperandData.mValueIfFalse.Has<sVectorComponent<ScalarValue>>() )
+        else if( lOperandData.mValueIfTrue.Has<sMultiTensorComponent>() &&
+                 lOperandData.mValueIfFalse.Has<sScalarValueVectorComponent>() )
         {
             auto &lValueIfTrue  = lOperandData.mValueIfTrue.Get<sMultiTensorComponent>();
-            auto &lValueIfFalse = lOperandData.mValueIfFalse.Get<sVectorComponent<ScalarValue>>();
+            auto &lValueIfFalse = lOperandData.mValueIfFalse.Get<sVectorBufferComponent>();
 
-            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mData );
+            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mValue );
         }
         else if( lOperandData.mValueIfTrue.Has<sMultiTensorComponent>() && lOperandData.mValueIfFalse.Has<sScalarNodeComponent>() )
         {
@@ -640,26 +698,29 @@ namespace SE::TensorOps
 
             WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mValue );
         }
-        else if( lOperandData.mValueIfTrue.Has<sVectorComponent<ScalarValue>>() && lOperandData.mValueIfFalse.Has<sMultiTensorComponent>() )
+        else if( lOperandData.mValueIfTrue.Has<sScalarValueVectorComponent>() &&
+                 lOperandData.mValueIfFalse.Has<sMultiTensorComponent>() )
         {
-            auto &lValueIfTrue  = lOperandData.mValueIfTrue.Get<sVectorComponent<ScalarValue>>();
+            auto &lValueIfTrue  = lOperandData.mValueIfTrue.Get<sVectorBufferComponent>();
             auto &lValueIfFalse = lOperandData.mValueIfFalse.Get<sMultiTensorComponent>();
 
-            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mData, lValueIfFalse.mValue );
+            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mValue );
         }
-        else if( lOperandData.mValueIfTrue.Has<sVectorComponent<ScalarValue>>() && lOperandData.mValueIfFalse.Has<sVectorComponent<ScalarValue>>() )
+        else if( lOperandData.mValueIfTrue.Has<sScalarValueVectorComponent>() &&
+                 lOperandData.mValueIfFalse.Has<sScalarValueVectorComponent>() )
         {
-            auto &lValueIfTrue  = lOperandData.mValueIfTrue.Get<sVectorComponent<ScalarValue>>();
-            auto &lValueIfFalse = lOperandData.mValueIfFalse.Get<sVectorComponent<ScalarValue>>();
+            auto &lValueIfTrue  = lOperandData.mValueIfTrue.Get<sVectorBufferComponent>();
+            auto &lValueIfFalse = lOperandData.mValueIfFalse.Get<sVectorBufferComponent>();
 
-            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mData, lValueIfFalse.mData );
+            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mValue );
         }
-        else if( lOperandData.mValueIfTrue.Has<sVectorComponent<ScalarValue>>() && lOperandData.mValueIfFalse.Has<sScalarNodeComponent>() )
+        else if( lOperandData.mValueIfTrue.Has<sScalarValueVectorComponent>() &&
+                 lOperandData.mValueIfFalse.Has<sScalarNodeComponent>() )
         {
-            auto &lValueIfTrue  = lOperandData.mValueIfTrue.Get<sVectorComponent<ScalarValue>>();
+            auto &lValueIfTrue  = lOperandData.mValueIfTrue.Get<sVectorBufferComponent>();
             auto &lValueIfFalse = lOperandData.mValueIfFalse.Get<sScalarNodeComponent>();
 
-            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mData, lValueIfFalse.mValue );
+            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mValue );
         }
         else if( lOperandData.mValueIfTrue.Has<sScalarNodeComponent>() && lOperandData.mValueIfFalse.Has<sMultiTensorComponent>() )
         {
@@ -668,12 +729,13 @@ namespace SE::TensorOps
 
             WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mValue );
         }
-        else if( lOperandData.mValueIfTrue.Has<sScalarNodeComponent>() && lOperandData.mValueIfFalse.Has<sVectorComponent<ScalarValue>>() )
+        else if( lOperandData.mValueIfTrue.Has<sScalarNodeComponent>() &&
+                 lOperandData.mValueIfFalse.Has<sScalarValueVectorComponent>() )
         {
             auto &lValueIfTrue  = lOperandData.mValueIfTrue.Get<sScalarNodeComponent>();
-            auto &lValueIfFalse = lOperandData.mValueIfFalse.Get<sVectorComponent<ScalarValue>>();
+            auto &lValueIfFalse = lOperandData.mValueIfFalse.Get<sVectorBufferComponent>();
 
-            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mData );
+            WhereOp( lElementType, lValue, lCondition, lValueIfTrue.mValue, lValueIfFalse.mValue );
         }
         else if( lOperandData.mValueIfTrue.Has<sScalarNodeComponent>() && lOperandData.mValueIfFalse.Has<sScalarNodeComponent>() )
         {
@@ -695,15 +757,15 @@ namespace SE::TensorOps
 
         auto &lLeft         = lOperandData.mLeft.Get<sMultiTensorComponent>().mValue;
         auto &lRight        = lOperandData.mRight.Get<sMultiTensorComponent>().mValue;
-        auto &lSubdivisions = lOperandData.mSubdivisions.Get<sVectorComponent<uint32_t>>();
+        auto &lSubdivisions = lOperandData.mSubdivisions.Get<sU32VectorComponent>();
 
         auto lElementType = Get<sTypeComponent>().mValue;
 
         uint32_t lMaxSubdivisions = 0;
-        for( const auto &lSub : lSubdivisions.mValue )
-            lMaxSubdivisions = std::max( lMaxSubdivisions, lSub );
+        for( const auto &lSub : lSubdivisions.mValue ) lMaxSubdivisions = std::max( lMaxSubdivisions, lSub );
 
-        LinearSpaceOp( lElementType, lValue, lLeft, lRight, lSubdivisions.mData, lMaxSubdivisions );
+        LinearSpaceOp( lElementType, lValue, lLeft, lRight, lOperandData.mSubdivisions.Get<sVectorBufferComponent>().mValue,
+                       lMaxSubdivisions );
     }
 
     void sMixOperationController::Run()
@@ -760,7 +822,7 @@ namespace SE::TensorOps
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sSample2DComponent>();
 
-        auto &lTextures = lOperandData.mTextures.Get<sVectorComponent<Cuda::TextureSampler2D::DeviceData>>().mData;
+        auto &lTextures = lOperandData.mTextures.Get<sVectorBufferComponent>().mValue;
 
         if( lOperandData.mX.Has<sMultiTensorComponent>() && lOperandData.mY.Has<sMultiTensorComponent>() )
         {
@@ -769,10 +831,10 @@ namespace SE::TensorOps
 
             Sample2DOp( lValue, lX, lY, lTextures );
         }
-        else if( lOperandData.mX.Has<sMultiTensorComponent>() && lOperandData.mY.Has<sVectorComponent<ScalarValue>>() )
+        else if( lOperandData.mX.Has<sMultiTensorComponent>() && lOperandData.mY.Has<sScalarValueVectorComponent>() )
         {
             auto &lX = lOperandData.mX.Get<sMultiTensorComponent>().mValue;
-            auto &lY = lOperandData.mY.Get<sVectorComponent<ScalarValue>>().mData;
+            auto &lY = lOperandData.mY.Get<sVectorBufferComponent>().mValue;
 
             Sample2DOp( lValue, lX, lY, lTextures );
         }
@@ -783,9 +845,9 @@ namespace SE::TensorOps
 
             Sample2DOp( lValue, lX, lY, lTextures );
         }
-        else if( lOperandData.mX.Has<sVectorComponent<ScalarValue>>() && lOperandData.mY.Has<sMultiTensorComponent>() )
+        else if( lOperandData.mX.Has<sScalarValueVectorComponent>() && lOperandData.mY.Has<sMultiTensorComponent>() )
         {
-            auto &lX = lOperandData.mX.Get<sVectorComponent<ScalarValue>>().mData;
+            auto &lX = lOperandData.mX.Get<sVectorBufferComponent>().mValue;
             auto &lY = lOperandData.mY.Get<sMultiTensorComponent>().mValue;
 
             Sample2DOp( lValue, lX, lY, lTextures );
@@ -807,7 +869,7 @@ namespace SE::TensorOps
     {
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sToFixedPointNodeComponent>();
-        auto lElementType  = lOperandData.mArray.Get<sTypeComponent>().mValue;
+        auto  lElementType = lOperandData.mArray.Get<sTypeComponent>().mValue;
         auto &lArray       = lOperandData.mArray.Get<sMultiTensorComponent>().mValue;
         auto &lScaling     = lOperandData.mScaling.Get<sScalarNodeComponent>().mValue;
 
@@ -819,7 +881,7 @@ namespace SE::TensorOps
 
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sAffineNodeComponent>();
-        auto lElementType  = Get<sTypeComponent>().mValue;
+        auto  lElementType = Get<sTypeComponent>().mValue;
 
         auto &lX = lOperandData.mX.Get<sMultiTensorComponent>();
 
@@ -830,12 +892,12 @@ namespace SE::TensorOps
 
             AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mValue );
         }
-        else if( lOperandData.mA.Has<sMultiTensorComponent>() && lOperandData.mB.Has<sVectorComponent<ScalarValue>>() )
+        else if( lOperandData.mA.Has<sMultiTensorComponent>() && lOperandData.mB.Has<sScalarValueVectorComponent>() )
         {
             auto &lA = lOperandData.mA.Get<sMultiTensorComponent>();
-            auto &lB = lOperandData.mB.Get<sVectorComponent<ScalarValue>>();
+            auto &lB = lOperandData.mB.Get<sVectorBufferComponent>();
 
-            AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mData );
+            AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mValue );
         }
         else if( lOperandData.mA.Has<sMultiTensorComponent>() && lOperandData.mB.Has<sScalarNodeComponent>() )
         {
@@ -844,26 +906,26 @@ namespace SE::TensorOps
 
             AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mValue );
         }
-        else if( lOperandData.mA.Has<sVectorComponent<ScalarValue>>() && lOperandData.mB.Has<sMultiTensorComponent>() )
+        else if( lOperandData.mA.Has<sScalarValueVectorComponent>() && lOperandData.mB.Has<sMultiTensorComponent>() )
         {
-            auto &lA = lOperandData.mA.Get<sVectorComponent<ScalarValue>>();
+            auto &lA = lOperandData.mA.Get<sVectorBufferComponent>();
             auto &lB = lOperandData.mB.Get<sMultiTensorComponent>();
 
-            AffineTransformOp( lElementType, lValue, lA.mData, lX.mValue, lB.mValue );
+            AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mValue );
         }
-        else if( lOperandData.mA.Has<sVectorComponent<ScalarValue>>() && lOperandData.mB.Has<sVectorComponent<ScalarValue>>() )
+        else if( lOperandData.mA.Has<sScalarValueVectorComponent>() && lOperandData.mB.Has<sScalarValueVectorComponent>() )
         {
-            auto &lA = lOperandData.mA.Get<sVectorComponent<ScalarValue>>();
-            auto &lB = lOperandData.mB.Get<sVectorComponent<ScalarValue>>();
+            auto &lA = lOperandData.mA.Get<sVectorBufferComponent>();
+            auto &lB = lOperandData.mB.Get<sVectorBufferComponent>();
 
-            AffineTransformOp( lElementType, lValue, lA.mData, lX.mValue, lB.mData );
+            AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mValue );
         }
-        else if( lOperandData.mA.Has<sVectorComponent<ScalarValue>>() && lOperandData.mB.Has<sScalarNodeComponent>() )
+        else if( lOperandData.mA.Has<sScalarValueVectorComponent>() && lOperandData.mB.Has<sScalarNodeComponent>() )
         {
-            auto &lA = lOperandData.mA.Get<sVectorComponent<ScalarValue>>();
+            auto &lA = lOperandData.mA.Get<sVectorBufferComponent>();
             auto &lB = lOperandData.mB.Get<sScalarNodeComponent>();
 
-            AffineTransformOp( lElementType, lValue, lA.mData, lX.mValue, lB.mValue );
+            AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mValue );
         }
         else if( lOperandData.mA.Has<sScalarNodeComponent>() && lOperandData.mB.Has<sMultiTensorComponent>() )
         {
@@ -872,12 +934,12 @@ namespace SE::TensorOps
 
             AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mValue );
         }
-        else if( lOperandData.mA.Has<sScalarNodeComponent>() && lOperandData.mB.Has<sVectorComponent<ScalarValue>>() )
+        else if( lOperandData.mA.Has<sScalarNodeComponent>() && lOperandData.mB.Has<sScalarValueVectorComponent>() )
         {
             auto &lA = lOperandData.mA.Get<sScalarNodeComponent>();
-            auto &lB = lOperandData.mB.Get<sVectorComponent<ScalarValue>>();
+            auto &lB = lOperandData.mB.Get<sVectorBufferComponent>();
 
-            AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mData );
+            AffineTransformOp( lElementType, lValue, lA.mValue, lX.mValue, lB.mValue );
         }
         else if( lOperandData.mA.Has<sScalarNodeComponent>() && lOperandData.mB.Has<sScalarNodeComponent>() )
         {
@@ -912,7 +974,7 @@ namespace SE::TensorOps
     {
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sAbsNodeComponent>();
-        auto lElementType  = Get<sTypeComponent>().mValue;
+        auto  lElementType = Get<sTypeComponent>().mValue;
 
         AbsOp( lElementType, lValue, lOperandData.mArray.Get<sMultiTensorComponent>().mValue );
     }
@@ -921,7 +983,7 @@ namespace SE::TensorOps
     {
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sSqrtNodeComponent>();
-        auto lElementType  = Get<sTypeComponent>().mValue;
+        auto  lElementType = Get<sTypeComponent>().mValue;
 
         SqrtOp( lElementType, lValue, lOperandData.mArray.Get<sMultiTensorComponent>().mValue );
     }
@@ -930,7 +992,7 @@ namespace SE::TensorOps
     {
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sRoundNodeComponent>();
-        auto lElementType  = Get<sTypeComponent>().mValue;
+        auto  lElementType = Get<sTypeComponent>().mValue;
 
         RoundOp( lElementType, lValue, lOperandData.mArray.Get<sMultiTensorComponent>().mValue );
     }
@@ -939,94 +1001,107 @@ namespace SE::TensorOps
     {
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sCountTrueNodeComponent>();
-        auto lElementType  = Get<sTypeComponent>().mValue;
+        auto  lElementType = Get<sTypeComponent>().mValue;
 
-        CountTrueOp( lValue, lOperandData.mArray.Get<sMultiTensorComponent>().mValue, lOperandData.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData,
-                     lOperandData.mElementCount.Get<sVectorComponent<uint32_t>>().mData, lOperandData.mMaxBlockSize );
+        CountTrueOp( lValue, lOperandData.mArray.Get<sMultiTensorComponent>().mValue,
+                     lOperandData.mBlockSizes.Get<sVectorBufferComponent>().mValue,
+                     lOperandData.mElementCount.Get<sVectorBufferComponent>().mValue, lOperandData.mMaxBlockSize );
     }
 
     void sCountNonZeroOperationController::Run()
     {
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sCountNonZeroNodeComponent>();
-        auto lElementType  = Get<sTypeComponent>().mValue;
+        auto  lElementType = Get<sTypeComponent>().mValue;
 
-        CountNonZeroOp( lElementType, lValue, lOperandData.mArray.Get<sMultiTensorComponent>().mValue, lOperandData.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData,
-                        lOperandData.mElementCount.Get<sVectorComponent<uint32_t>>().mData, lOperandData.mMaxBlockSize );
+        CountNonZeroOp( lElementType, lValue, lOperandData.mArray.Get<sMultiTensorComponent>().mValue,
+                        lOperandData.mBlockSizes.Get<sVectorBufferComponent>().mValue,
+                        lOperandData.mElementCount.Get<sVectorBufferComponent>().mValue, lOperandData.mMaxBlockSize );
     }
 
     void sCountZeroOperationController::Run()
     {
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sCountZeroNodeComponent>();
-        auto lElementType  = Get<sTypeComponent>().mValue;
+        auto  lElementType = Get<sTypeComponent>().mValue;
 
-        CountZeroOp( lElementType, lValue, lOperandData.mArray.Get<sMultiTensorComponent>().mValue, lOperandData.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData,
-                     lOperandData.mElementCount.Get<sVectorComponent<uint32_t>>().mData, lOperandData.mMaxBlockSize );
+        CountZeroOp( lElementType, lValue, lOperandData.mArray.Get<sMultiTensorComponent>().mValue,
+                     lOperandData.mBlockSizes.Get<sVectorBufferComponent>().mValue,
+                     lOperandData.mElementCount.Get<sVectorBufferComponent>().mValue, lOperandData.mMaxBlockSize );
     }
 
     void sArraySummationOperationController::Run()
     {
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sArraySummationNodeComponent>();
-        auto lElementType  = Get<sTypeComponent>().mValue;
+        auto  lElementType = Get<sTypeComponent>().mValue;
 
-        ArraySummationOp( lElementType, lValue, lOperandData.mArray.Get<sMultiTensorComponent>().mValue, lOperandData.mBegin.Get<sVectorComponent<uint32_t>>().mData,
-                          lOperandData.mEnd.Get<sVectorComponent<uint32_t>>().mData, lOperandData.mElementCount.Get<sVectorComponent<uint32_t>>().mData,
-                          lOperandData.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData, lOperandData.mMaxBlockSize );
+        ArraySummationOp( lElementType, lValue, lOperandData.mArray.Get<sMultiTensorComponent>().mValue,
+                          lOperandData.mBegin.Get<sVectorBufferComponent>().mValue,
+                          lOperandData.mEnd.Get<sVectorBufferComponent>().mValue,
+                          lOperandData.mElementCount.Get<sVectorBufferComponent>().mValue,
+                          lOperandData.mBlockSizes.Get<sVectorBufferComponent>().mValue, lOperandData.mMaxBlockSize );
     }
 
     void sArraySliceOperationController::Run()
     {
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sArraySliceNodeComponent>();
-        auto lElementType  = Get<sTypeComponent>().mValue;
+        auto  lElementType = Get<sTypeComponent>().mValue;
 
-        ArraySliceOp( lElementType, lValue, lOperandData.mArray.Get<sMultiTensorComponent>().mValue, lOperandData.mBegin.Get<sVectorComponent<uint32_t>>().mData,
-                      lOperandData.mEnd.Get<sVectorComponent<uint32_t>>().mData, lOperandData.mElementCount.Get<sVectorComponent<uint32_t>>().mData,
-                      lOperandData.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData, lOperandData.mMaxBlockSize );
+        ArraySliceOp( lElementType, lValue, lOperandData.mArray.Get<sMultiTensorComponent>().mValue,
+                      lOperandData.mBegin.Get<sVectorBufferComponent>().mValue, lOperandData.mEnd.Get<sVectorBufferComponent>().mValue,
+                      lOperandData.mElementCount.Get<sVectorBufferComponent>().mValue,
+                      lOperandData.mBlockSizes.Get<sVectorBufferComponent>().mValue, lOperandData.mMaxBlockSize );
     }
 
     void sDiffOperationController::Run()
     {
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sDiffNodeComponent>();
-        auto lElementType  = Get<sTypeComponent>().mValue;
+        auto  lElementType = Get<sTypeComponent>().mValue;
 
         DiffOp( lElementType, lValue, lOperandData.mArray.Get<sMultiTensorComponent>().mValue, lOperandData.mCount,
-                lOperandData.mElementCount.Get<sVectorComponent<uint32_t>>().mData, lOperandData.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData, lOperandData.mMaxBlockSize );
+                lOperandData.mElementCount.Get<sVectorBufferComponent>().mValue,
+                lOperandData.mBlockSizes.Get<sVectorBufferComponent>().mValue, lOperandData.mMaxBlockSize );
     }
 
     void sShiftOperationController::Run()
     {
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sShiftNodeComponent>();
-        auto lElementType  = Get<sTypeComponent>().mValue;
+        auto  lElementType = Get<sTypeComponent>().mValue;
 
-        ShiftOp( lElementType, lValue, lOperandData.mArray.Get<sMultiTensorComponent>().mValue, lOperandData.mCount, lOperandData.mFillValue.Get<sScalarNodeComponent>().mValue,
-                 lOperandData.mElementCount.Get<sVectorComponent<uint32_t>>().mData, lOperandData.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData, lOperandData.mMaxBlockSize );
+        ShiftOp( lElementType, lValue, lOperandData.mArray.Get<sMultiTensorComponent>().mValue, lOperandData.mCount,
+                 lOperandData.mFillValue.Get<sScalarNodeComponent>().mValue,
+                 lOperandData.mElementCount.Get<sVectorBufferComponent>().mValue,
+                 lOperandData.mBlockSizes.Get<sVectorBufferComponent>().mValue, lOperandData.mMaxBlockSize );
     }
 
     void sConv1DOperationController::Run()
     {
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sConv1DNodeComponent>();
-        auto lElementType  = Get<sTypeComponent>().mValue;
+        auto  lElementType = Get<sTypeComponent>().mValue;
 
-        Conv1DOp( lElementType, lValue, lOperandData.mArray0.Get<sMultiTensorComponent>().mValue, lOperandData.mElementCount0.Get<sVectorComponent<uint32_t>>().mData,
-                  lOperandData.mBlockSizes0.Get<sVectorComponent<uint32_t>>().mData, lOperandData.mMaxElementCount0, lOperandData.mMaxBlockSize0,
-                  lOperandData.mArray1.Get<sMultiTensorComponent>().mValue, lOperandData.mElementCount1.Get<sVectorComponent<uint32_t>>().mData,
-                  lOperandData.mBlockSizes1.Get<sVectorComponent<uint32_t>>().mData, lOperandData.mMaxBlockSize1 );
+        Conv1DOp( lElementType, lValue, lOperandData.mArray0.Get<sMultiTensorComponent>().mValue,
+                  lOperandData.mElementCount0.Get<sVectorBufferComponent>().mValue,
+                  lOperandData.mBlockSizes0.Get<sVectorBufferComponent>().mValue, lOperandData.mMaxElementCount0,
+                  lOperandData.mMaxBlockSize0, lOperandData.mArray1.Get<sMultiTensorComponent>().mValue,
+                  lOperandData.mElementCount1.Get<sVectorBufferComponent>().mValue,
+                  lOperandData.mBlockSizes1.Get<sVectorBufferComponent>().mValue, lOperandData.mMaxBlockSize1 );
     }
 
     void sHCatOperationController::Run()
     {
         auto &lValue       = Get<sMultiTensorComponent>().mValue;
         auto &lOperandData = Get<sHCatNodeComponent>();
-        auto lElementType  = Get<sTypeComponent>().mValue;
+        auto  lElementType = Get<sTypeComponent>().mValue;
 
-        HCatOp( lElementType, lValue, lOperandData.mArray0.Get<sMultiTensorComponent>().mValue, lOperandData.mElementCount0.Get<sVectorComponent<uint32_t>>().mData,
-                lOperandData.mArray1.Get<sMultiTensorComponent>().mValue, lOperandData.mElementCount1.Get<sVectorComponent<uint32_t>>().mData,
-                lOperandData.mBlockSizes.Get<sVectorComponent<uint32_t>>().mData, lOperandData.mMaxBlockSize );
+        HCatOp( lElementType, lValue, lOperandData.mArray0.Get<sMultiTensorComponent>().mValue,
+                lOperandData.mElementCount0.Get<sVectorBufferComponent>().mValue,
+                lOperandData.mArray1.Get<sMultiTensorComponent>().mValue,
+                lOperandData.mElementCount1.Get<sVectorBufferComponent>().mValue,
+                lOperandData.mBlockSizes.Get<sVectorBufferComponent>().mValue, lOperandData.mMaxBlockSize );
     }
 } // namespace SE::TensorOps
