@@ -1,10 +1,6 @@
 #include "VkBuffer.h"
 
 #include <fmt/core.h>
-#include <set>
-#include <unordered_set>
-
-// #include "VkCoreMacros.h"
 
 #ifdef APIENTRY
 #    undef APIENTRY
