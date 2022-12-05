@@ -12,7 +12,6 @@
 #include "VkPipeline.h"
 #include "VkRenderPass.h"
 
-
 namespace SE::Graphics::Internal
 {
     using namespace SE::Core;
@@ -31,8 +30,8 @@ namespace SE::Graphics::Internal
         void Begin();
         void Begin( VkCommandBufferUsageFlags aUsage );
 
-        void BeginRenderPass( Ref<sVkAbstractRenderPassObject> aRenderPass, Ref<sVkFramebufferObject> aFrameBuffer, math::uvec2 aExtent,
-                              std::vector<VkClearValue> aClearValues );
+        void BeginRenderPass( Ref<sVkAbstractRenderPassObject> aRenderPass, Ref<sVkFramebufferObject> aFrameBuffer,
+                              math::uvec2 aExtent, std::vector<VkClearValue> aClearValues );
         void EndRenderPass();
 
         void SetViewport( math::ivec2 aOffset, math::uvec2 aSize );
@@ -56,10 +55,8 @@ namespace SE::Graphics::Internal
                          sImageRegion const &aImageRegion );
         void CopyBuffer( VkBuffer aSource, Ref<sVkImageObject> aDestination, std::vector<sImageRegion> aBufferRegions,
                          sImageRegion const &aImageRegion );
-
         void CopyImage( Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion, Ref<sVkImageObject> aDestination,
                         sImageRegion const &aDestRegion );
-
         void CopyImage( Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion, VkBuffer aDestination,
                         sImageRegion const &aDestRegion );
 
