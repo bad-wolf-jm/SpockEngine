@@ -15,14 +15,14 @@ namespace SE::Graphics
 {
     static constexpr VkDeviceSize gBufferMemoryAlignment = 256;
 
-    VkBuffer::VkBuffer( GraphicContext &aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
+    VkGpuBuffer::VkGpuBuffer( GraphicContext &aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                         bool aIsTransferDestination, size_t aSize )
-        : VkBuffer::VkBuffer( aGraphicContext, eBufferBindType::UNKNOWN, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
+        : VkGpuBuffer::VkGpuBuffer( aGraphicContext, eBufferBindType::UNKNOWN, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                               aIsTransferDestination, aSize )
     {
     }
 
-    VkBuffer::VkBuffer( GraphicContext &aGraphicContext, eBufferBindType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
+    VkGpuBuffer::VkGpuBuffer( GraphicContext &aGraphicContext, eBufferBindType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
                         bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
         : mGraphicContext{ aGraphicContext }
         , mSize{ aSize }
@@ -59,7 +59,7 @@ namespace SE::Graphics
         }
     }
 
-    VkBuffer::~VkBuffer()
+    VkGpuBuffer::~VkGpuBuffer()
     {
         mGraphicContext.mContext->DestroyBuffer( mVkObject );
         mGraphicContext.mContext->FreeMemory( mVkMemory );
@@ -70,7 +70,7 @@ namespace SE::Graphics
         mExternalMemoryHandle = 0;
     }
 
-    void VkBuffer::Upload( void *aData, size_t aSize, size_t aOffset )
+    void VkGpuBuffer::Upload( void *aData, size_t aSize, size_t aOffset )
     {
         if( ( aOffset + aSize ) > mSize )
             throw std::runtime_error(
@@ -78,7 +78,7 @@ namespace SE::Graphics
 
         if( !mIsHostVisible )
         {
-            auto lStagingBuffer = VkBuffer( mGraphicContext, eBufferBindType::UNKNOWN, true, false, true, false, aSize );
+            auto lStagingBuffer = VkGpuBuffer( mGraphicContext, eBufferBindType::UNKNOWN, true, false, true, false, aSize );
             lStagingBuffer.Upload( aData, aSize, 0 );
 
             Ref<Internal::sVkCommandBufferObject> l_CommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
@@ -95,14 +95,14 @@ namespace SE::Graphics
         }
     }
 
-    void VkBuffer::Copy( Ref<VkBuffer> aSource, size_t aOffset )
+    void VkGpuBuffer::Copy( Ref<VkGpuBuffer> aSource, size_t aOffset )
     {
         Ref<Internal::sVkCommandBufferObject> l_CommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
         l_CommandBufferObject->CopyBuffer( aSource->mVkObject, 0, aSource->mSize, mVkObject, aOffset );
         mGraphicContext.EndSingleTimeCommands( l_CommandBufferObject );
     }
 
-    void VkBuffer::Resize( size_t aNewSizeInBytes )
+    void VkGpuBuffer::Resize( size_t aNewSizeInBytes )
     {
         if( aNewSizeInBytes <= mSize ) return;
 

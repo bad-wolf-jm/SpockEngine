@@ -4,18 +4,15 @@
 
 #include "Core/Memory.h"
 
-// #include "VkContext.h"
 #include "Core/CUDA/Array/CudaBuffer.h"
 #include "GraphicContext.h"
-
-// #include <vulkan/vulkan.h>
 
 namespace SE::Graphics
 {
     using namespace SE::Core;
     using namespace SE::Graphics::Internal;
 
-    class VkBuffer : public GPUMemory
+    class VkGpuBuffer : public GPUMemory
     {
         eBufferBindType mType                  = eBufferBindType::UNKNOWN;
         bool            mIsHostVisible         = true;
@@ -23,37 +20,37 @@ namespace SE::Graphics
         bool            mIsTransferDestination = true;
         bool            mIsGraphicsOnly        = true;
 
-        VkBuffer       mVkObject = VK_NULL_HANDLE;
+        VkGpuBuffer       mVkObject = VK_NULL_HANDLE;
         VkDeviceMemory mVkMemory = VK_NULL_HANDLE;
 
-        VkBuffer()             = default;
-        VkBuffer( VkBuffer & ) = default;
+        VkGpuBuffer()             = default;
+        VkGpuBuffer( VkGpuBuffer & ) = default;
 
-        VkBuffer( GraphicContext &aGraphicContext, eBufferBindType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
+        VkGpuBuffer( GraphicContext &aGraphicContext, eBufferBindType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
                   bool aIsTransferSource, bool aIsTransferDestination, size_t aSize );
 
-        VkBuffer( GraphicContext &aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly,
+        VkGpuBuffer( GraphicContext &aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly,
                   bool aIsTransferSource, bool aIsTransferDestination, size_t aSize );
 
         template <typename _Ty>
-        VkBuffer( GraphicContext &aGraphicContext, std::vector<_Ty> aData, eBufferBindType aType, bool aIsHostVisible,
+        VkGpuBuffer( GraphicContext &aGraphicContext, std::vector<_Ty> aData, eBufferBindType aType, bool aIsHostVisible,
                   bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
-            : VkBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination,
+            : VkGpuBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination,
                         aData.size() * sizeof( _Ty ) )
         {
             Upload( aData );
         }
 
         template <typename _Ty>
-        VkBuffer( GraphicContext &aGraphicContext, _Ty *aData, size_t aSize, eBufferBindType aType, bool aIsHostVisible,
+        VkGpuBuffer( GraphicContext &aGraphicContext, _Ty *aData, size_t aSize, eBufferBindType aType, bool aIsHostVisible,
                   bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
-            : VkBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination,
+            : VkGpuBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination,
                         aSize * sizeof( _Ty ) )
         {
             Upload( aData, aSize );
         }
 
-        ~VkBuffer();
+        ~VkGpuBuffer();
 
         template <typename _MapType>
         _MapType *Map( size_t aSize, size_t aOffset )
@@ -87,7 +84,7 @@ namespace SE::Graphics
         }
 
         void Upload( void *aData, size_t aSize, size_t aOffset );
-        void Copy( Ref<VkBuffer> aSource, size_t aOffset );
+        void Copy( Ref<VkGpuBuffer> aSource, size_t aOffset );
 
         template <typename _Ty>
         void Write( _Ty a_Value, size_t offset = 0 )

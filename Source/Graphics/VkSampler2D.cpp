@@ -50,32 +50,16 @@ namespace SE::Graphics
         , mTextureData{ aTextureData }
         , mSamplingSpec{ aSamplingSpec }
     {
-        // Spec.MinificationFilter  = Convert( aSamplingInfo.mSamplingSpec.mFilter );
-        // Spec.MagnificationFilter = Convert( aSamplingInfo.mSamplingSpec.mFilter );
-        // Spec.MipmapMode          = Convert( aSamplingInfo.mSamplingSpec.mMipFilter );
-        // Spec.WrappingMode        = Convert( aSamplingInfo.mSamplingSpec.mWrapping );
-        // Spec.Format              = aCubeMapData.mSpec.mFormat;
-        // Spec.Sampled             = true;
-        // Spec.IsCudaVisible       = aCudaVisible;
-        // Spec.SampleCount         = 1;
-        // Spec.Usage = { TextureUsageFlags::SAMPLED, TextureUsageFlags::TRANSFER_SOURCE, TextureUsageFlags::TRANSFER_DESTINATION };
+        constexpr VkComponentMapping lSwizzles{ VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY,
+                                                VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY };
 
-        mVkImageView = mGraphicContext.mContext->CreateImageView(
-            aImageObject->mVkObject, aLayerCount, VK_IMAGE_VIEW_TYPE_2D, aImageFormat, aAspectMask,
-            VkComponentMapping{ VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY,
-                                VK_COMPONENT_SWIZZLE_IDENTITY } );
+        mVkImageView = mGraphicContext.mContext->CreateImageView( aImageObject->mVkObject, mTextureData->mSpec.mLayers,
+                                                                  VK_IMAGE_VIEW_TYPE_2D, ToVkFormat( mTextureData->mSpec.mFormat ),
+                                                                  VK_IMAGE_ASPECT_COLOR_BIT, lSwizzles );
+
         mVkImageSampler = mGraphicContext.mContext->CreateSampler(
             Convert( aSamplingInfo.mSamplingSpec.mFilter ), Convert( aSamplingInfo.mSamplingSpec.mFilter ),
             Convert( aSamplingInfo.mSamplingSpec.mWrapping ), Convert( aSamplingInfo.mSamplingSpec.mMipFilter ) );
-
-        // mTextureView = New<sVkImageViewObject>( mGraphicContext.mContext, mTextureImageObject, 1, VK_IMAGE_VIEW_TYPE_2D,
-        //                                         ToVkFormat( Spec.Format ), (VkImageAspectFlags)Spec.AspectMask,
-        //                                         VkComponentMapping{ VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY,
-        //                                                             VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY }
-        //                                                             );
-
-        // mTextureSamplerObject = New<sVkImageSamplerObject>( mGraphicContext.mContext, Spec.MinificationFilter,
-        //                                                     Spec.MagnificationFilter, Spec.WrappingMode, Spec.MipmapMode );
     }
 
 } // namespace SE::Graphics

@@ -39,14 +39,27 @@ namespace SE::Graphics
 
       private:
         // void CreateImageView();
-        void CopyBufferToImage( Buffer &a_Buffer );
+        void ConfigureExternalMemoryHandle();
+
+        VkMemoryPropertyFlags MemoryProperties();
+        VkImageUsageFlags ImageUsage();
+
+        void CopyBufferToImage( VkGpuBuffer &a_Buffer );
         void TransitionImageLayout( VkImageLayout oldLayout, VkImageLayout newLayout );
 
       private:
         GraphicContext mGraphicContext{};
 
+        VkSampleCountFlagBits mSampleCount           = false;
+        bool                  mIsHostVisible         = false;
+        bool                  mIsGraphicsOnly        = false;
+        bool                  mIsTransferSource      = false;
+        bool                  mIsTransferDestination = false;
+
         VkImage        mVkImage    = VK_NULL_HANDLE;
         VkDeviceMemory mVkMemory   = VK_NULL_HANDLE;
         size_t         mMemorySize = 0;
+
+        cudaExternalMemory_t mExternalMemoryHandle = nullptr;
     };
 } // namespace SE::Graphics
