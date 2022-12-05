@@ -65,6 +65,26 @@ namespace SE::Graphics
 
     VkDeviceMemory VkTexture2D::BindMemory() { mGraphicContext.mContext->BindMemory( mVkImage, mVkMemory ); }
 
+    VkMemoryPropertyFlags VkTexture2D::MemoryProperties()
+    {
+        VkMemoryPropertyFlags lProperties = 0;
+        if( mIsHostVisible )
+            lProperties |= ( VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT );
+        else
+            lProperties |= VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+
+        return lProperties;
+    }
+
+    VkImageUsageFlags VkTexture2D::ImageUsage()
+    {
+        VkImageUsageFlags lUsage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+        if( mIsTransferSource ) lUsage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+        if( mIsTransferDestination ) lUsage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+
+        return lUsage;
+    }
+
     void VkTexture2D::ConfigureExternalMemoryHandle()
     {
         if( mIsGraphicsOnly ) return;
@@ -84,26 +104,6 @@ namespace SE::Graphics
         CUDA_ASSERT( cudaExternalMemoryGetMappedMipmappedArray( &mInternalCudaMipmappedArray, mExternalMemoryHandle,
                                                                 &lExternalMemoryMipmappedArrayDesc ) );
         CUDA_ASSERT( cudaGetMipmappedArrayLevel( &mInternalCudaArray, mInternalCudaMipmappedArray, 0 ) );
-    }
-
-    VkMemoryPropertyFlags VkTexture2D::MemoryProperties()
-    {
-        VkMemoryPropertyFlags lProperties = 0;
-        if( mIsHostVisible )
-            lProperties |= ( VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT );
-        else
-            lProperties |= VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-
-        return lProperties;
-    }
-
-    VkImageUsageFlags VkTexture2D::ImageUsage()
-    {
-        VkImageUsageFlags lUsage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
-        if( mIsTransferSource ) lUsage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-        if( mIsTransferDestination ) lUsage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
-
-        return lUsage;
     }
 
     void VkTexture2D::CopyBufferToImage( VkGpuBuffer &aBuffer )
