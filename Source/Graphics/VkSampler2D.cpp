@@ -53,7 +53,7 @@ namespace SE::Graphics
         constexpr VkComponentMapping lSwizzles{ VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY,
                                                 VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY };
 
-        mVkImageView = mGraphicContext.mContext->CreateImageView( aImageObject->mVkObject, mTextureData->mSpec.mLayers,
+        mVkImageView = mGraphicContext.mContext->CreateImageView( mTextureData->mVkImage, mTextureData->mSpec.mLayers,
                                                                   VK_IMAGE_VIEW_TYPE_2D, ToVkFormat( mTextureData->mSpec.mFormat ),
                                                                   VK_IMAGE_ASPECT_COLOR_BIT, lSwizzles );
 

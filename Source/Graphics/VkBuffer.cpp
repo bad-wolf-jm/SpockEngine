@@ -39,9 +39,9 @@ namespace SE::Graphics
         if( mIsTransferSource ) lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
         if( mIsTransferDestination ) lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
-        mVkObject = mGraphicContext.mContext->CreateBuffer( lBufferFlags, mSizeAligned, mIsHostVisible, !mIsGraphicsOnly );
-        mVkMemory = mGraphicContext.mContext->AllocateMemory( mVkObject, mSizeAligned, mIsHostVisible, !mIsGraphicsOnly );
-        mGraphicContext.mContext->BindMemory( mVkObject, mVkMemory );
+        mVkBuffer = mGraphicContext.mContext->CreateBuffer( lBufferFlags, mSizeAligned, mIsHostVisible, !mIsGraphicsOnly );
+        mVkMemory = mGraphicContext.mContext->AllocateMemory( mVkBuffer, mSizeAligned, mIsHostVisible, !mIsGraphicsOnly );
+        mGraphicContext.mContext->BindMemory( mVkBuffer, mVkMemory );
 
         if( !mIsGraphicsOnly )
         {
@@ -61,7 +61,7 @@ namespace SE::Graphics
 
     VkGpuBuffer::~VkGpuBuffer()
     {
-        mGraphicContext.mContext->DestroyBuffer( mVkObject );
+        mGraphicContext.mContext->DestroyBuffer( mVkBuffer );
         mGraphicContext.mContext->FreeMemory( mVkMemory );
 
         GPUMemory::Dispose();
@@ -82,7 +82,7 @@ namespace SE::Graphics
             lStagingBuffer.Upload( aData, aSize, 0 );
 
             Ref<Internal::sVkCommandBufferObject> l_CommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
-            l_CommandBufferObject->CopyBuffer( lStagingBuffer.mVkObject, 0, lStagingBuffer.mSize, mVkObject, aOffset );
+            l_CommandBufferObject->CopyBuffer( lStagingBuffer.mVkBuffer, 0, lStagingBuffer.mSize, mVkBuffer, aOffset );
             mGraphicContext.EndSingleTimeCommands( l_CommandBufferObject );
         }
         else
@@ -98,7 +98,7 @@ namespace SE::Graphics
     void VkGpuBuffer::Copy( Ref<VkGpuBuffer> aSource, size_t aOffset )
     {
         Ref<Internal::sVkCommandBufferObject> l_CommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
-        l_CommandBufferObject->CopyBuffer( aSource->mVkObject, 0, aSource->mSize, mVkObject, aOffset );
+        l_CommandBufferObject->CopyBuffer( aSource->mVkBuffer, 0, aSource->mSize, mVkBuffer, aOffset );
         mGraphicContext.EndSingleTimeCommands( l_CommandBufferObject );
     }
 
@@ -106,7 +106,7 @@ namespace SE::Graphics
     {
         if( aNewSizeInBytes <= mSize ) return;
 
-        mGraphicContext.mContext->DestroyBuffer( mVkObject );
+        mGraphicContext.mContext->DestroyBuffer( mVkBuffer );
         mGraphicContext.mContext->FreeMemory( mVkMemory );
 
         mSize = lBufferSizeAligned;
@@ -115,9 +115,9 @@ namespace SE::Graphics
         if( mIsTransferSource ) lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
         if( mIsTransferDestination ) lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
-        mVkObject = mGraphicContext.mContext->CreateBuffer( lBufferFlags, mSize, mIsHostVisible, !mIsGraphicsOnly );
-        mVkMemory = mGraphicContext.mContext->AllocateMemory( mVkObject, mSize, mIsHostVisible, !mIsGraphicsOnly );
-        mGraphicContext.mContext->BindMemory( mVkObject, mVkMemory );
+        mVkBuffer = mGraphicContext.mContext->CreateBuffer( lBufferFlags, mSize, mIsHostVisible, !mIsGraphicsOnly );
+        mVkMemory = mGraphicContext.mContext->AllocateMemory( mVkBuffer, mSize, mIsHostVisible, !mIsGraphicsOnly );
+        mGraphicContext.mContext->BindMemory( mVkBuffer, mVkMemory );
     }
 
 } // namespace SE::Graphics

@@ -20,32 +20,32 @@ namespace SE::Graphics
         bool            mIsTransferDestination = true;
         bool            mIsGraphicsOnly        = true;
 
-        VkGpuBuffer       mVkObject = VK_NULL_HANDLE;
+        VkGpuBuffer    mVkBuffer = VK_NULL_HANDLE;
         VkDeviceMemory mVkMemory = VK_NULL_HANDLE;
 
-        VkGpuBuffer()             = default;
+        VkGpuBuffer()                = default;
         VkGpuBuffer( VkGpuBuffer & ) = default;
 
         VkGpuBuffer( GraphicContext &aGraphicContext, eBufferBindType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
-                  bool aIsTransferSource, bool aIsTransferDestination, size_t aSize );
+                     bool aIsTransferSource, bool aIsTransferDestination, size_t aSize );
 
-        VkGpuBuffer( GraphicContext &aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly,
-                  bool aIsTransferSource, bool aIsTransferDestination, size_t aSize );
+        VkGpuBuffer( GraphicContext &aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
+                     bool aIsTransferDestination, size_t aSize );
 
         template <typename _Ty>
         VkGpuBuffer( GraphicContext &aGraphicContext, std::vector<_Ty> aData, eBufferBindType aType, bool aIsHostVisible,
-                  bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
+                     bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
             : VkGpuBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination,
-                        aData.size() * sizeof( _Ty ) )
+                           aData.size() * sizeof( _Ty ) )
         {
             Upload( aData );
         }
 
         template <typename _Ty>
         VkGpuBuffer( GraphicContext &aGraphicContext, _Ty *aData, size_t aSize, eBufferBindType aType, bool aIsHostVisible,
-                  bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
+                     bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
             : VkGpuBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination,
-                        aSize * sizeof( _Ty ) )
+                           aSize * sizeof( _Ty ) )
         {
             Upload( aData, aSize );
         }

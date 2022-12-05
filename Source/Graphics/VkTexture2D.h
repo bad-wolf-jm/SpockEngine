@@ -42,10 +42,13 @@ namespace SE::Graphics
         void ConfigureExternalMemoryHandle();
 
         VkMemoryPropertyFlags MemoryProperties();
-        VkImageUsageFlags ImageUsage();
+        VkImageUsageFlags     ImageUsage();
+        VkImage               CreateImage();
+        VkDeviceMemory        AllocateMemory();
+        void                  BindMemory();
 
         void CopyBufferToImage( VkGpuBuffer &a_Buffer );
-        void TransitionImageLayout( VkImageLayout oldLayout, VkImageLayout newLayout );
+        void TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout );
 
       private:
         GraphicContext mGraphicContext{};
