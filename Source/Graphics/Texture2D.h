@@ -21,7 +21,6 @@ namespace SE::Graphics
 
     using namespace SE::Core;
 
-
     /** @brief */
     class Texture2D : public Cuda::Texture2D
     {
