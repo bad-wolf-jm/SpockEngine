@@ -215,10 +215,10 @@ namespace SE::Core
         TextureDescription lTextureDesc;
         lTextureDesc.IsHostVisible       = false;
         lTextureDesc.Usage               = { TextureUsageFlags::SAMPLED, TextureUsageFlags::TRANSFER_DESTINATION };
-        lTextureDesc.MinificationFilter  = SamplerFilter::LINEAR;
-        lTextureDesc.MagnificationFilter = SamplerFilter::LINEAR;
-        lTextureDesc.MipmapMode          = SamplerMipmap::LINEAR;
-        lTextureDesc.WrappingMode        = SamplerWrapping::REPEAT;
+        lTextureDesc.MinificationFilter  = VK_FILTER_LINEAR;
+        lTextureDesc.MagnificationFilter = VK_FILTER_LINEAR;
+        lTextureDesc.MipmapMode          = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+        lTextureDesc.WrappingMode        = VK_SAMPLER_ADDRESS_MODE_REPEAT;
         lTextureDesc.MipLevels           = { { static_cast<uint32_t>( lWidth ), static_cast<uint32_t>( lHeight ), 0, 0 } };
         lTextureDesc.Format              = eColorFormat::RGBA8_UNORM;
         lTextureDesc.Sampled             = true;

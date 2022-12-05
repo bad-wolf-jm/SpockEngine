@@ -110,11 +110,11 @@ namespace SE::Graphics
 
     void TextureCubeMap::CreateImageView()
     {
-        mTextureView = New<Internal::sVkImageViewObject>(
-            mGraphicContext.mContext, mTextureImageObject, 6, VK_IMAGE_VIEW_TYPE_CUBE, ToVkFormat( Spec.Format ),
-            (VkImageAspectFlags)Spec.AspectMask,
-            VkComponentMapping{ (VkComponentSwizzle)Spec.ComponentSwizzle[0], (VkComponentSwizzle)Spec.ComponentSwizzle[1],
-                                (VkComponentSwizzle)Spec.ComponentSwizzle[2], (VkComponentSwizzle)Spec.ComponentSwizzle[3] } );
+        mTextureView =
+            New<Internal::sVkImageViewObject>( mGraphicContext.mContext, mTextureImageObject, 6, VK_IMAGE_VIEW_TYPE_CUBE,
+                                               ToVkFormat( Spec.Format ), (VkImageAspectFlags)Spec.AspectMask,
+                                               VkComponentMapping{ VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY,
+                                                                   VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY } );
     }
 
     void TextureCubeMap::CreateImageSampler()

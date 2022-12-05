@@ -5,11 +5,12 @@
 #include <gli/gli.hpp>
 #include <vulkan/vulkan.h>
 
-#include "Core/Memory.h"
 #include "Core/CUDA/Texture/TextureData.h"
+#include "Core/Memory.h"
 #include "Core/Types.h"
 
 #include "Core/CUDA/Texture/ColorFormat.h"
+#include "Core/CUDA/Texture/TextureTypes.h"
 
 #include "Buffer.h"
 #include "GraphicContext.h"
@@ -18,42 +19,6 @@ namespace SE::Graphics
 {
 
     using namespace SE::Core;
-
-    /** @brief */
-    enum class SamplerFilter : uint32_t
-    {
-        NEAREST = VK_FILTER_NEAREST,
-        LINEAR  = VK_FILTER_LINEAR
-    };
-
-    /** @brief */
-    enum class SamplerMipmap : uint32_t
-    {
-        NEAREST = VK_SAMPLER_MIPMAP_MODE_NEAREST,
-        LINEAR  = VK_SAMPLER_MIPMAP_MODE_LINEAR
-    };
-
-    /** @brief */
-    enum class SamplerWrapping : uint32_t
-    {
-        REPEAT                 = VK_SAMPLER_ADDRESS_MODE_REPEAT,
-        MIRRORED_REPEAT        = VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT,
-        CLAMP_TO_EDGE          = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
-        CLAMP_TO_BORDER        = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER,
-        MIRROR_CLAMP_TO_BORDER = VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE
-    };
-
-    /** @brief */
-    enum class Swizzle : uint32_t
-    {
-        IDENTITY = VK_COMPONENT_SWIZZLE_IDENTITY,
-        ZERO     = VK_COMPONENT_SWIZZLE_ZERO,
-        ONE      = VK_COMPONENT_SWIZZLE_ONE,
-        R        = VK_COMPONENT_SWIZZLE_R,
-        G        = VK_COMPONENT_SWIZZLE_G,
-        B        = VK_COMPONENT_SWIZZLE_B,
-        A        = VK_COMPONENT_SWIZZLE_A
-    };
 
     /** @brief */
     enum class TextureUsageFlags : uint32_t
@@ -100,16 +65,16 @@ namespace SE::Graphics
         bool                   IsCudaVisible       = false;
         TextureUsage           Usage               = { TextureUsageFlags::SAMPLED };
         TextureAspectMask      AspectMask          = { TextureAspectMaskBits::COLOR };
-        SamplerFilter          MinificationFilter  = SamplerFilter::LINEAR;
-        SamplerFilter          MagnificationFilter = SamplerFilter::LINEAR;
-        SamplerMipmap          MipmapMode          = SamplerMipmap::LINEAR;
-        SamplerWrapping        WrappingMode        = SamplerWrapping::CLAMP_TO_BORDER;
+        VkFilter               MinificationFilter  = VK_FILTER_LINEAR;
+        VkFilter               MagnificationFilter = VK_FILTER_LINEAR;
+        VkSamplerMipmapMode    MipmapMode          = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+        VkSamplerAddressMode   WrappingMode        = VK_SAMPLER_ADDRESS_MODE_REPEAT;
         eColorFormat           Format              = eColorFormat::RGBA8_UNORM;
         std::vector<Mip>       MipLevels           = {};
         bool                   Sampled             = false;
         uint8_t                SampleCount         = 1;
-        std::array<Swizzle, 4> ComponentSwizzle    = { Swizzle::IDENTITY, Swizzle::IDENTITY, Swizzle::IDENTITY,
-                                                    Swizzle::IDENTITY }; /**!< */
+        // std::array<Swizzle, 4> ComponentSwizzle    = { Swizzle::IDENTITY, Swizzle::IDENTITY, Swizzle::IDENTITY,
+        //                                                Swizzle::IDENTITY }; /**!< */
 
         TextureDescription()                       = default;
         TextureDescription( TextureDescription & ) = default;
@@ -130,6 +95,8 @@ namespace SE::Graphics
     {
       public:
         TextureDescription Spec; /**!< */
+        Core::TextureData::sCreateInfo mSpec;
+        sTextureSamplingInfo mSamplingSpec; /**!< */
 
         /** @brief */
         Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription, VkImage aImage );
@@ -138,13 +105,8 @@ namespace SE::Graphics
         Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription, TextureData &aBufferData );
 
         /** @brief */
-        Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription, sImageData &aImageData );
-
-        /** @brief */
-        Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription, gli::texture2d &aCubeMapData );
-
-        /** @brief */
-        Texture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData, TextureSampler2D &aSamplingInfo, bool aCudaVisible = true );
+        Texture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData, TextureSampler2D &aSamplingInfo,
+                   bool aCudaVisible = true );
 
         /** @brief */
         Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription );
@@ -173,7 +135,7 @@ namespace SE::Graphics
         void                 GetTextureData( TextureData2D &aTextureData );
         sTextureSamplingInfo GetTextureSampling();
 
-        void *GetMemoryHandle() { return mGraphicContext.mContext->GetSharedMemoryHandle( mTextureImageObject->mVkMemory ); }
+        void  *GetMemoryHandle() { return mGraphicContext.mContext->GetSharedMemoryHandle( mTextureImageObject->mVkMemory ); }
         size_t GetMemorySize() { return mTextureImageObject->GetMemorySize(); }
 
         void CopyBufferToImage( Buffer &a_Buffer );

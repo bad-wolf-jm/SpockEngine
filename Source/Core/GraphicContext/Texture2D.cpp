@@ -41,123 +41,36 @@ namespace SE::Graphics
         CreateImageSampler();
     }
 
-    Texture2D::Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription, sImageData &a_ImageData )
-        : mGraphicContext( aGraphicContext )
-        , Spec( aBufferDescription )
-    {
-        Buffer l_StagingBuffer( mGraphicContext, a_ImageData.mPixelData, a_ImageData.mByteSize, eBufferBindType::UNKNOWN, true, false,
-                                true, false );
-
-        Spec.MipLevels = { { static_cast<uint32_t>( a_ImageData.mWidth ), static_cast<uint32_t>( a_ImageData.mHeight ), 0, 0 } };
-        Spec.Format    = a_ImageData.mFormat;
-
-        mTextureImageObject = New<Internal::sVkImageObject>(
-            mGraphicContext.mContext, static_cast<uint32_t>( Spec.MipLevels[0].Width ),
-            static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1, static_cast<uint32_t>( Spec.MipLevels.size() ), 1,
-            VK_SAMPLE_COUNT_VALUE( aBufferDescription.SampleCount ), aBufferDescription.IsCudaVisible, false,
-            ToVkFormat( Spec.Format ), ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
-
-        TransitionImageLayout( VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
-        CopyBufferToImage( l_StagingBuffer );
-        TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
-
-        CreateImageView();
-        CreateImageSampler();
-    }
-
-    Texture2D::Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription, gli::texture2d &a_ImageData )
-        : mGraphicContext( aGraphicContext )
-        , Spec( aBufferDescription )
-    {
-        Buffer l_StagingBuffer( mGraphicContext, reinterpret_cast<uint8_t *>( a_ImageData.data() ), a_ImageData.size(),
-                                eBufferBindType::UNKNOWN, true, false, true, false );
-
-        for( uint32_t l_MipLevel = 0; l_MipLevel < a_ImageData.levels(); l_MipLevel++ )
-        {
-            Spec.MipLevels.push_back( { static_cast<uint32_t>( a_ImageData[l_MipLevel].extent().x ),
-                                        static_cast<uint32_t>( a_ImageData[l_MipLevel].extent().x ), l_MipLevel,
-                                        a_ImageData[l_MipLevel].size() } );
-        }
-
-        Spec.Format = aBufferDescription.Format;
-
-        mTextureImageObject = New<Internal::sVkImageObject>(
-            mGraphicContext.mContext, static_cast<uint32_t>( Spec.MipLevels[0].Width ),
-            static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1, static_cast<uint32_t>( Spec.MipLevels.size() ), 1,
-            VK_SAMPLE_COUNT_VALUE( aBufferDescription.SampleCount ), aBufferDescription.IsCudaVisible, false,
-            ToVkFormat( Spec.Format ), ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
-
-        TransitionImageLayout( VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
-        CopyBufferToImage( l_StagingBuffer );
-        TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
-
-        CreateImageView();
-        CreateImageSampler();
-    }
-
-    static eSamplerFilter Convert( SamplerFilter aValue )
+    static VkFilter Convert( eSamplerFilter aValue )
     {
         switch( aValue )
         {
-        case SamplerFilter::NEAREST: return eSamplerFilter::NEAREST;
-        case SamplerFilter::LINEAR:
-        default: return eSamplerFilter::LINEAR;
-        }
-    }
-
-    static SamplerFilter Convert( eSamplerFilter aValue )
-    {
-        switch( aValue )
-        {
-        case eSamplerFilter::NEAREST: return SamplerFilter::NEAREST;
+        case eSamplerFilter::NEAREST: return VK_FILTER_NEAREST;
         case eSamplerFilter::LINEAR:
-        default: return SamplerFilter::LINEAR;
+        default: return VK_FILTER_LINEAR;
         }
     }
 
-    static eSamplerMipmap Convert( SamplerMipmap aValue )
+    static VkSamplerMipmapMode Convert( eSamplerMipmap aValue )
     {
         switch( aValue )
         {
-        case SamplerMipmap::NEAREST: return eSamplerMipmap::NEAREST;
-        case SamplerMipmap::LINEAR:
-        default: return eSamplerMipmap::LINEAR;
-        }
-    }
-
-    static SamplerMipmap Convert( eSamplerMipmap aValue )
-    {
-        switch( aValue )
-        {
-        case eSamplerMipmap::NEAREST: return SamplerMipmap::NEAREST;
+        case eSamplerMipmap::NEAREST: return VK_SAMPLER_MIPMAP_MODE_NEAREST;
         case eSamplerMipmap::LINEAR:
-        default: return SamplerMipmap::LINEAR;
+        default: return VK_SAMPLER_MIPMAP_MODE_LINEAR;
         }
     }
 
-    static eSamplerWrapping Convert( SamplerWrapping aValue )
+    static VkSamplerAddressMode Convert( eSamplerWrapping aValue )
     {
         switch( aValue )
         {
-        case SamplerWrapping::REPEAT: return eSamplerWrapping::REPEAT;
-        case SamplerWrapping::MIRRORED_REPEAT: return eSamplerWrapping::MIRRORED_REPEAT;
-        case SamplerWrapping::CLAMP_TO_EDGE: return eSamplerWrapping::CLAMP_TO_EDGE;
-        case SamplerWrapping::CLAMP_TO_BORDER: return eSamplerWrapping::CLAMP_TO_BORDER;
-        case SamplerWrapping::MIRROR_CLAMP_TO_BORDER: return eSamplerWrapping::MIRROR_CLAMP_TO_BORDER;
-        default: return eSamplerWrapping::REPEAT;
-        }
-    }
-
-    static SamplerWrapping Convert( eSamplerWrapping aValue )
-    {
-        switch( aValue )
-        {
-        case eSamplerWrapping::REPEAT: return SamplerWrapping::REPEAT;
-        case eSamplerWrapping::MIRRORED_REPEAT: return SamplerWrapping::MIRRORED_REPEAT;
-        case eSamplerWrapping::CLAMP_TO_EDGE: return SamplerWrapping::CLAMP_TO_EDGE;
-        case eSamplerWrapping::CLAMP_TO_BORDER: return SamplerWrapping::CLAMP_TO_BORDER;
-        case eSamplerWrapping::MIRROR_CLAMP_TO_BORDER: return SamplerWrapping::MIRROR_CLAMP_TO_BORDER;
-        default: return SamplerWrapping::REPEAT;
+        case eSamplerWrapping::MIRRORED_REPEAT: return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+        case eSamplerWrapping::CLAMP_TO_EDGE: return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        case eSamplerWrapping::CLAMP_TO_BORDER: return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+        case eSamplerWrapping::MIRROR_CLAMP_TO_BORDER: return VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE;
+        case eSamplerWrapping::REPEAT:
+        default: return VK_SAMPLER_ADDRESS_MODE_REPEAT;
         }
     }
 
@@ -165,6 +78,8 @@ namespace SE::Graphics
     Texture2D::Texture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData, TextureSampler2D &aSamplingInfo,
                           bool aCudaVisible )
         : mGraphicContext( aGraphicContext )
+        , mSpec{ aCubeMapData.mSpec }
+        , mSamplingSpec{ aSamplingInfo.mSamplingSpec }
     {
         Spec.MinificationFilter  = Convert( aSamplingInfo.mSamplingSpec.mFilter );
         Spec.MagnificationFilter = Convert( aSamplingInfo.mSamplingSpec.mFilter );
@@ -274,19 +189,18 @@ namespace SE::Graphics
 
     void Texture2D::CreateImageView()
     {
-        mTextureView = New<Internal::sVkImageViewObject>(
-            mGraphicContext.mContext, mTextureImageObject, 1, VK_IMAGE_VIEW_TYPE_2D, ToVkFormat( Spec.Format ),
-            (VkImageAspectFlags)Spec.AspectMask,
-            VkComponentMapping{ (VkComponentSwizzle)Spec.ComponentSwizzle[0], (VkComponentSwizzle)Spec.ComponentSwizzle[1],
-                                (VkComponentSwizzle)Spec.ComponentSwizzle[2], (VkComponentSwizzle)Spec.ComponentSwizzle[3] } );
+        mTextureView =
+            New<Internal::sVkImageViewObject>( mGraphicContext.mContext, mTextureImageObject, 1, VK_IMAGE_VIEW_TYPE_2D,
+                                               ToVkFormat( Spec.Format ), (VkImageAspectFlags)Spec.AspectMask,
+                                               VkComponentMapping{ VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY,
+                                                                   VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY } );
     }
 
     void Texture2D::CreateImageSampler()
     {
         if( !Spec.Sampled ) return;
-        mTextureSamplerObject = New<Internal::sVkImageSamplerObject>(
-            mGraphicContext.mContext, (VkFilter)Spec.MinificationFilter, (VkFilter)Spec.MagnificationFilter,
-            (VkSamplerAddressMode)Spec.WrappingMode, (VkSamplerMipmapMode)Spec.MipmapMode );
+        mTextureSamplerObject = New<Internal::sVkImageSamplerObject>( mGraphicContext.mContext, Spec.MinificationFilter,
+                                                                      Spec.MagnificationFilter, Spec.WrappingMode, Spec.MipmapMode );
     }
 
     void Texture2D::GetTextureData( TextureData2D &aTextureData )
@@ -334,13 +248,6 @@ namespace SE::Graphics
 
     sTextureSamplingInfo Texture2D::GetTextureSampling()
     {
-        sTextureSamplingInfo lSamplingInfo{};
-
-        lSamplingInfo.mFilter    = Convert( Spec.MagnificationFilter );
-        lSamplingInfo.mMipFilter = Convert( Spec.MipmapMode );
-        lSamplingInfo.mWrapping  = Convert( Spec.WrappingMode );
-
-        return lSamplingInfo;
+        return mSamplingSpec;
     }
-
 } // namespace SE::Graphics
