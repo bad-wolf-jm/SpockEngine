@@ -136,7 +136,7 @@ namespace SE::Cuda
     class TextureSampler2D
     {
       public:
-        sTextureSamplingInfo mSamplingSpec{};    //!< Copy of the specification structure used to create the texture
+        sTextureSamplingInfo mSpec{};    //!< Copy of the specification structure used to create the texture
         Ref<Texture2D>       mTexture = nullptr; //!< Reference to the parent texture
 
         struct DeviceData
@@ -171,6 +171,8 @@ namespace SE::Cuda
          * @param aSamplingInfo Sampling data
          */
         TextureSampler2D( Ref<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingInfo );
+
+        void InitializeTextureSampler();
     };
 
     cudaChannelFormatDesc ToCudaChannelDesc( eColorFormat aColorFormat );

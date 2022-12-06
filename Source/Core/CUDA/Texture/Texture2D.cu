@@ -127,7 +127,12 @@ namespace SE::Cuda
 
     TextureSampler2D::TextureSampler2D( Ref<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingSpec )
         : mTexture{ aTexture }
-        , mSamplingSpec{ aSamplingSpec }
+        , mSpec{ aSamplingSpec }
+    {
+        InitializeTextureSampler();
+    }
+
+    void TextureSampler2D::InitializeTextureSampler()
     {
         cudaResourceDesc lResourceDescription{};
         memset( &lResourceDescription, 0, sizeof( cudaResourceDesc ) );
@@ -139,28 +144,28 @@ namespace SE::Cuda
         memset( &lTextureDescription, 0, sizeof( cudaTextureDesc ) );
 
         lTextureDescription.readMode = cudaReadModeElementType;
-        if( mSamplingSpec.mNormalizedValues ) lTextureDescription.readMode = cudaReadModeNormalizedFloat;
-        lTextureDescription.borderColor[0] = mSamplingSpec.mBorderColor[0];
-        lTextureDescription.borderColor[1] = mSamplingSpec.mBorderColor[1];
-        lTextureDescription.borderColor[2] = mSamplingSpec.mBorderColor[2];
-        lTextureDescription.borderColor[3] = mSamplingSpec.mBorderColor[3];
+        if( mSpec.mNormalizedValues ) lTextureDescription.readMode = cudaReadModeNormalizedFloat;
+        lTextureDescription.borderColor[0] = mSpec.mBorderColor[0];
+        lTextureDescription.borderColor[1] = mSpec.mBorderColor[1];
+        lTextureDescription.borderColor[2] = mSpec.mBorderColor[2];
+        lTextureDescription.borderColor[3] = mSpec.mBorderColor[3];
 
-        lTextureDescription.addressMode[0] = ToCudaAddressMode( mSamplingSpec.mWrapping );
-        lTextureDescription.addressMode[1] = ToCudaAddressMode( mSamplingSpec.mWrapping );
-        lTextureDescription.addressMode[2] = ToCudaAddressMode( mSamplingSpec.mWrapping );
+        lTextureDescription.addressMode[0] = ToCudaAddressMode( mSpec.mWrapping );
+        lTextureDescription.addressMode[1] = ToCudaAddressMode( mSpec.mWrapping );
+        lTextureDescription.addressMode[2] = ToCudaAddressMode( mSpec.mWrapping );
 
-        lTextureDescription.filterMode = ToCudaFilterMode( mSamplingSpec.mFilter );
+        lTextureDescription.filterMode = ToCudaFilterMode( mSpec.mFilter );
 
         lTextureDescription.normalizedCoords = 0;
-        if( mSamplingSpec.mNormalizedCoordinates ) lTextureDescription.normalizedCoords = 1;
+        if( mSpec.mNormalizedCoordinates ) lTextureDescription.normalizedCoords = 1;
 
         lTextureDescription.mipmapFilterMode    = cudaFilterModePoint;
         lTextureDescription.mipmapLevelBias     = 0.0f;
         lTextureDescription.minMipmapLevelClamp = 0.0f;
         lTextureDescription.maxMipmapLevelClamp = 1.0f;
 
-        mDeviceData.mScaling = math::vec2{ aSamplingSpec.mScaling[0], aSamplingSpec.mScaling[1] };
-        mDeviceData.mOffset  = math::vec2{ aSamplingSpec.mOffset[0], aSamplingSpec.mOffset[1] };
+        mDeviceData.mScaling = math::vec2{ mSpec.mScaling[0], mSpec.mScaling[1] };
+        mDeviceData.mOffset  = math::vec2{ mSpec.mOffset[0], mSpec.mOffset[1] };
         CUDA_ASSERT( cudaCreateTextureObject( &( mDeviceData.mTextureObject ), &lResourceDescription, &lTextureDescription, NULL ) );
     }
 

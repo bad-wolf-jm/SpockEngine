@@ -25,8 +25,6 @@ namespace SE::Graphics
     class VkSampler2D : public Cuda::TextureSampler2D
     {
       public:
-        sTextureSamplingInfo mSamplingSpec;
-
         /** @brief */
         VkSampler2D( GraphicContext &aGraphicContext, Ref<VkTexture2D> aTextureData, sTextureSamplingInfo const &aSamplingSpec );
 

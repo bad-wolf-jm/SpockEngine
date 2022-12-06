@@ -154,14 +154,14 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
             lSamplingInfo.mNormalizedValues        = true;
             Cuda::TextureSampler2D lTextureSampler = Cuda::TextureSampler2D( lTexture, lSamplingInfo );
 
-            REQUIRE( lTextureSampler.mSamplingSpec.mFilter == eSamplerFilter::LINEAR );
-            REQUIRE( lTextureSampler.mSamplingSpec.mWrapping == eSamplerWrapping::CLAMP_TO_BORDER );
-            REQUIRE( lTextureSampler.mSamplingSpec.mBorderColor[0] == 0.0f );
-            REQUIRE( lTextureSampler.mSamplingSpec.mBorderColor[1] == 0.0f );
-            REQUIRE( lTextureSampler.mSamplingSpec.mBorderColor[2] == 0.0f );
-            REQUIRE( lTextureSampler.mSamplingSpec.mBorderColor[3] == 0.0f );
+            REQUIRE( lTextureSampler.mSpec.mFilter == eSamplerFilter::LINEAR );
+            REQUIRE( lTextureSampler.mSpec.mWrapping == eSamplerWrapping::CLAMP_TO_BORDER );
+            REQUIRE( lTextureSampler.mSpec.mBorderColor[0] == 0.0f );
+            REQUIRE( lTextureSampler.mSpec.mBorderColor[1] == 0.0f );
+            REQUIRE( lTextureSampler.mSpec.mBorderColor[2] == 0.0f );
+            REQUIRE( lTextureSampler.mSpec.mBorderColor[3] == 0.0f );
 
-            REQUIRE( TestUtils::VectorEqual( lTextureSampler.mSamplingSpec.mScaling, std::array<float, 2>{ 1.0f, 1.0f } ) );
+            REQUIRE( TestUtils::VectorEqual( lTextureSampler.mSpec.mScaling, std::array<float, 2>{ 1.0f, 1.0f } ) );
         }
 
         {
@@ -183,7 +183,7 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
             lSamplingInfo.mNormalizedValues        = true;
             Cuda::TextureSampler2D lTextureSampler = Cuda::TextureSampler2D( lTexture, lSamplingInfo );
 
-            REQUIRE( TestUtils::VectorEqual( lTextureSampler.mSamplingSpec.mScaling, std::array<float, 2>{ 3.0f, 4.0f } ) );
+            REQUIRE( TestUtils::VectorEqual( lTextureSampler.mSpec.mScaling, std::array<float, 2>{ 3.0f, 4.0f } ) );
         }
     }
 }
