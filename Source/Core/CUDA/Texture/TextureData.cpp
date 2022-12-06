@@ -37,27 +37,6 @@ namespace SE::Core
         int32_t    lHeight               = 0;
         size_t     lChannelSize          = 0;
 
-        if( aPath.extension().string() == ".bin" )
-        {
-            std::ifstream l_InputFile;
-            l_InputFile.open( aPath, std::ios::in | std::ios::binary );
-            uint32_t l_Height, l_Width;
-            l_InputFile.seekg( 0, std::ios::beg );
-            l_InputFile.read( (char *)&l_Height, sizeof( uint32_t ) );
-            l_InputFile.read( (char *)&l_Width, sizeof( uint32_t ) );
-            l_InputFile.seekg( 2 * sizeof( uint32_t ), std::ios::beg );
-
-            float *l_Value = (float *)malloc( l_Height * l_Width * sizeof( float ) );
-            l_InputFile.read( (char *)l_Value, l_Height * l_Width * sizeof( float ) );
-
-            lImageData.mWidth     = static_cast<size_t>( l_Width );
-            lImageData.mHeight    = static_cast<size_t>( l_Height );
-            lImageData.mFormat    = eColorFormat::R32_FLOAT;
-            lImageData.mByteSize  = l_Height * l_Width * sizeof( float );
-            lImageData.mPixelData = (uint8_t *)l_Value;
-            return lImageData;
-        }
-
         if( stbi_is_hdr( aPath.string().c_str() ) )
         {
             lChannelSize = 4;
@@ -75,7 +54,7 @@ namespace SE::Core
             }
 
             lImageData.mFormat    = eColorFormat::RGBA32_FLOAT;
-            lImageData.mPixelData = reinterpret_cast<uint8_t *>( lData );
+            lImageData.mPixelData = std::vector<uint8_t>( (uint8_t*)lData, ((uint8_t*)lData )+ ( lWidth * lHeight * sizeof( float ) ) );
         }
         else
         {
@@ -94,7 +73,7 @@ namespace SE::Core
             }
 
             lImageData.mFormat    = eColorFormat::RGBA8_UNORM;
-            lImageData.mPixelData = reinterpret_cast<uint8_t *>( lData );
+            lImageData.mPixelData = std::vector<uint8_t>( lData, lData + ( lWidth * lHeight * sizeof( float ) ) );
         }
 
         lImageData.mWidth    = static_cast<size_t>( lWidth );
@@ -225,7 +204,7 @@ namespace SE::Core
         mSpec.mDepth  = 1;
 
         Initialize();
-        std::memcpy( mInternalTexture.data(), aImageData.mPixelData, aImageData.mByteSize );
+        std::memcpy( mInternalTexture.data(), aImageData.mPixelData.data(), aImageData.mByteSize );
     }
 
     TextureData::TextureData( sTextureCreateInfo const &aTextureCreateInfo, fs::path const &aImagePath )
@@ -244,7 +223,6 @@ namespace SE::Core
             mSpec.mHeight    = mInternalTexture.extent().y;
             mSpec.mDepth     = mInternalTexture.extent().z;
             mSpec.mMipLevels = mInternalTexture.levels();
-            // mSpec.mSwizzles  = ToLtseType( mInternalTexture.swizzles() );
         }
         else
         {
@@ -257,10 +235,9 @@ namespace SE::Core
             mSpec.mDepth     = 1;
             mSpec.mMipLevels = 1;
 
-            // SE::Logging::Info("File: {} -- Format: {}", aImagePath.string(), (uint32_t)lImageData.mFormat);
             Initialize();
 
-            std::memcpy( mInternalTexture.data(), lImageData.mPixelData, lImageData.mByteSize );
+            std::memcpy( mInternalTexture.data(), lImageData.mPixelData.data(), lImageData.mByteSize );
         }
     }
 
@@ -344,8 +321,9 @@ namespace SE::Core
 
     sImageData TextureData2D::GetImageData()
     {
+        std::vector<uint8_t> lImageData( (uint8_t*)mInternalTexture2d.data(), ((uint8_t*)mInternalTexture2d.data()) + mInternalTexture2d.size() );
         return { mSpec.mFormat, static_cast<size_t>( mSpec.mWidth ), static_cast<size_t>( mSpec.mHeight ), mInternalTexture2d.size(),
-                 reinterpret_cast<uint8_t *>( mInternalTexture2d.data() ) };
+                 std::move( lImageData ) };
     }
 
     TextureSampler2D::TextureSampler2D( TextureData2D const &aTexture, sTextureSamplingInfo const &aSamplingInfo )

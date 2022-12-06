@@ -69,7 +69,8 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
             lImageDataStruct.mWidth     = 4;
             lImageDataStruct.mHeight    = 4;
             lImageDataStruct.mByteSize  = 16 * sizeof( uint32_t );
-            lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
+            lImageDataStruct.mPixelData = std::vector<uint8_t>(
+                reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
 
             sTextureCreateInfo lCudaTextureCreateInfo{};
             Texture2D          lCudaTexture( lCudaTextureCreateInfo, lImageDataStruct );
@@ -84,7 +85,8 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
             lImageDataStruct.mWidth     = 4;
             lImageDataStruct.mHeight    = 4;
             lImageDataStruct.mByteSize  = 16 * sizeof( float );
-            lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
+            lImageDataStruct.mPixelData = std::vector<uint8_t>(
+                reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
 
             sTextureCreateInfo lCudaTextureCreateInfo{};
             Texture2D          lCudaTexture( lCudaTextureCreateInfo, lImageDataStruct );
@@ -104,7 +106,8 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
             lImageDataStruct.mWidth     = 4;
             lImageDataStruct.mHeight    = 4;
             lImageDataStruct.mByteSize  = 16 * sizeof( uint32_t );
-            lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
+            lImageDataStruct.mPixelData = std::vector<uint8_t>(
+                reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
 
             sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
@@ -123,7 +126,8 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
             lImageDataStruct.mWidth     = 4;
             lImageDataStruct.mHeight    = 4;
             lImageDataStruct.mByteSize  = 16 * sizeof( float );
-            lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
+            lImageDataStruct.mPixelData = std::vector<uint8_t>(
+                reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
 
             sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;

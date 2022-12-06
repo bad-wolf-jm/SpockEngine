@@ -86,7 +86,7 @@ namespace SE::Cuda
         CUDA_ASSERT( cudaMallocArray( &mInternalCudaArray, &lTextureFormat, static_cast<size_t>( mSpec.mWidth ),
                                       static_cast<size_t>( mSpec.mHeight ), cudaArrayDefault ) );
         CUDA_ASSERT(
-            cudaMemcpyToArray( mInternalCudaArray, 0, 0, aImageData.mPixelData, aImageData.mByteSize, cudaMemcpyHostToDevice ) );
+            cudaMemcpyToArray( mInternalCudaArray, 0, 0, aImageData.mPixelData.data(), aImageData.mByteSize, cudaMemcpyHostToDevice ) );
     }
 
     Texture2D::Texture2D( sTextureCreateInfo &aSpec, void *aExternalBuffer, size_t aImageMemorySize )

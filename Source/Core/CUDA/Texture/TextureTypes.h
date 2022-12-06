@@ -81,11 +81,11 @@ namespace SE::Core
      */
     struct sImageData
     {
-        eColorFormat mFormat    = eColorFormat::UNDEFINED; //!< Image format
-        size_t       mWidth     = 0;                       //!< Width of the image, in pixels
-        size_t       mHeight    = 0;                       //!< Height of the image, in pixels
-        size_t       mByteSize  = 0;                       //!< Size of the pixel data pointer, in bytes
-        uint8_t     *mPixelData = nullptr;                 //!< Raw pixel data
+        eColorFormat         mFormat    = eColorFormat::UNDEFINED; //!< Image format
+        size_t               mWidth     = 0;                       //!< Width of the image, in pixels
+        size_t               mHeight    = 0;                       //!< Height of the image, in pixels
+        size_t               mByteSize  = 0;                       //!< Size of the pixel data pointer, in bytes
+        std::vector<uint8_t> mPixelData = {};                      //!< Raw pixel data
 
         template <typename PixelType>
         static sImageData Create( eColorFormat aFormat, size_t aWidth, size_t aHeight, uint8_t *aPixelData )
@@ -95,7 +95,7 @@ namespace SE::Core
             o_ImageData.mHeight    = aHeight;
             o_ImageData.mFormat    = aFormat;
             o_ImageData.mByteSize  = aHeight * aWidth * sizeof( PixelType );
-            o_ImageData.mPixelData = aPixelData;
+            o_ImageData.mPixelData = std::vector<uint8_t>( aPixelData, aPixelData + o_ImageData.mByteSize );
 
             return o_ImageData;
         }

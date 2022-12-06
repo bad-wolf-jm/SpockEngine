@@ -93,7 +93,7 @@ namespace SE::Graphics
         Spec.Usage = { TextureUsageFlags::SAMPLED, TextureUsageFlags::TRANSFER_SOURCE, TextureUsageFlags::TRANSFER_DESTINATION };
 
         sImageData &lImageData = aCubeMapData.GetImageData();
-        Buffer lStagingBuffer( mGraphicContext, lImageData.mPixelData, lImageData.mByteSize, eBufferBindType::UNKNOWN, true, false,
+        Buffer lStagingBuffer( mGraphicContext, lImageData.mPixelData.data(), lImageData.mByteSize, eBufferBindType::UNKNOWN, true, false,
                                true, false );
 
         Spec.MipLevels = { { static_cast<uint32_t>( lImageData.mWidth ), static_cast<uint32_t>( lImageData.mHeight ), 0, 0 } };
@@ -230,7 +230,7 @@ namespace SE::Graphics
         lImageDataStruct.mWidth     = Spec.MipLevels[0].Width;
         lImageDataStruct.mHeight    = Spec.MipLevels[0].Height;
         lImageDataStruct.mByteSize  = lByteSize;
-        lImageDataStruct.mPixelData = lPixelData;
+        lImageDataStruct.mPixelData = std::vector<uint8_t>(lPixelData, lPixelData + lByteSize);
 
         Core::sTextureCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mMipLevels = 1;

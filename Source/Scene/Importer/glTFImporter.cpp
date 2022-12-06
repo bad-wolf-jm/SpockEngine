@@ -99,9 +99,9 @@ namespace SE::Core
         if( aGltfimage.component == 3 )
         {
             lImageData.mByteSize  = aGltfimage.width * aGltfimage.height * 4;
-            lImageData.mPixelData = new unsigned char[lImageData.mByteSize];
+            lImageData.mPixelData = std::vector<uint8_t>(lImageData.mByteSize);
 
-            unsigned char       *rgba = lImageData.mPixelData;
+            unsigned char       *rgba = lImageData.mPixelData.data();
             unsigned char const *rgb  = &aGltfimage.image[0];
             for( int32_t i = 0; i < aGltfimage.width * aGltfimage.height; ++i )
             {
@@ -115,7 +115,7 @@ namespace SE::Core
         }
         else
         {
-            lImageData.mPixelData = const_cast<uint8_t *>( &aGltfimage.image[0] );
+            lImageData.mPixelData = std::vector<uint8_t>( &aGltfimage.image[0], &aGltfimage.image[0] + aGltfimage.image.size() );
             lImageData.mByteSize  = aGltfimage.image.size();
         }
 

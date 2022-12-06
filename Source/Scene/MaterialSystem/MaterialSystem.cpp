@@ -58,17 +58,14 @@ namespace SE::Core
         lSamplingInfo.mWrapping = eSamplerWrapping::CLAMP_TO_EDGE;
 
         // Create default 1x1 black transparent texture ( tex_index: 0 )
-        uint32_t lBlackImageData[1] = { 0x00000000 };
-        lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lBlackImageData );
+        lImageDataStruct.mPixelData = { 0, 0, 0, 0 }; // reinterpret_cast<uint8_t *>( lBlackImageData );
 
         TextureData2D    lBlackTexture( lTextureCreateInfo, lImageDataStruct );
         TextureSampler2D lBlackTextureSampler = TextureSampler2D( lBlackTexture, lSamplingInfo );
         CreateTexture( lBlackTexture, lBlackTextureSampler );
 
         // Create default 1x1 white texture ( tex_index: 1 )
-        uint32_t lWhiteImageData[1] = { 0xFFFFFFFF };
-        lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lWhiteImageData );
-
+        lImageDataStruct.mPixelData = { 255, 255, 255, 255 }; // reinterpret_cast<uint8_t *>( lWhiteImageData );
         TextureData2D    lWhiteTexture( lTextureCreateInfo, lImageDataStruct );
         TextureSampler2D lWhiteTextureSampler = TextureSampler2D( lWhiteTexture, lSamplingInfo );
         CreateTexture( lWhiteTexture, lWhiteTextureSampler );

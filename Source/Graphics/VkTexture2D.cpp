@@ -32,7 +32,7 @@ namespace SE::Graphics
         ConfigureExternalMemoryHandle();
 
         sImageData &lImageData = mTextureData.GetImageData();
-        VkGpuBuffer lStagingBuffer( mGraphicContext, lImageData.mPixelData, lImageData.mByteSize, eBufferBindType::UNKNOWN, true,
+        VkGpuBuffer lStagingBuffer( mGraphicContext, lImageData.mPixelData.data(), lImageData.mByteSize, eBufferBindType::UNKNOWN, true,
                                     false, true, false );
         TransitionImageLayout( VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
         SetPixelData( lStagingBuffer );
@@ -190,7 +190,7 @@ namespace SE::Graphics
         lImageDataStruct.mWidth     = mSpec.mWidth;
         lImageDataStruct.mHeight    = mSpec.mHeight;
         lImageDataStruct.mByteSize  = lByteSize;
-        lImageDataStruct.mPixelData = lPixelData;
+        lImageDataStruct.mPixelData = std::vector<uint8_t>(lPixelData, lPixelData + lByteSize);
 
         Core::sTextureCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mMipLevels = 1;

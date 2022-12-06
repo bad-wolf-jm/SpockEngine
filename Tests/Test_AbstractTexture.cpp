@@ -57,7 +57,7 @@ TEST_CASE( "Loading textures", "[CORE_CPU_TEXTURES]" )
             REQUIRE( lImageData.mFormat == eColorFormat::RGBA8_UNORM );
             REQUIRE( lImageData.mWidth == 256 );
             REQUIRE( lImageData.mHeight == 256 );
-            REQUIRE( lImageData.mPixelData != nullptr );
+            REQUIRE( lImageData.mPixelData.size() != 0 );
         }
 
         {
@@ -65,7 +65,7 @@ TEST_CASE( "Loading textures", "[CORE_CPU_TEXTURES]" )
             REQUIRE( lImageData.mFormat == eColorFormat::RGBA8_UNORM );
             REQUIRE( lImageData.mWidth == 256 );
             REQUIRE( lImageData.mHeight == 256 );
-            REQUIRE( lImageData.mPixelData != nullptr );
+            REQUIRE( lImageData.mPixelData.size() != 0 );
         }
     }
 
@@ -270,7 +270,8 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
             lImageDataStruct.mWidth     = 4;
             lImageDataStruct.mHeight    = 4;
             lImageDataStruct.mByteSize  = 16 * sizeof( uint32_t );
-            lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
+            lImageDataStruct.mPixelData = std::vector<uint8_t>(
+                reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
 
             sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
@@ -290,7 +291,8 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
             lImageDataStruct.mWidth     = 4;
             lImageDataStruct.mHeight    = 4;
             lImageDataStruct.mByteSize  = 16 * sizeof( float );
-            lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
+            lImageDataStruct.mPixelData = std::vector<uint8_t>(
+                reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
 
             sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
@@ -315,7 +317,8 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
             lImageDataStruct.mWidth     = 4;
             lImageDataStruct.mHeight    = 4;
             lImageDataStruct.mByteSize  = 16 * sizeof( uint32_t );
-            lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
+            lImageDataStruct.mPixelData = std::vector<uint8_t>(
+                reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
 
             sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
@@ -340,7 +343,8 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
             lImageDataStruct.mWidth     = 4;
             lImageDataStruct.mHeight    = 4;
             lImageDataStruct.mByteSize  = 16 * sizeof( float );
-            lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
+            lImageDataStruct.mPixelData = std::vector<uint8_t>(
+                reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
 
             sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
@@ -369,7 +373,8 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
             lImageDataStruct.mWidth     = 3;
             lImageDataStruct.mHeight    = 3;
             lImageDataStruct.mByteSize  = 9 * sizeof( uint32_t );
-            lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
+            lImageDataStruct.mPixelData = std::vector<uint8_t>(
+                reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
 
             sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
@@ -393,7 +398,8 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
             lImageDataStruct.mWidth     = 3;
             lImageDataStruct.mHeight    = 3;
             lImageDataStruct.mByteSize  = 9 * sizeof( uint32_t );
-            lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
+            lImageDataStruct.mPixelData = std::vector<uint8_t>(
+                reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
 
             sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
@@ -422,7 +428,8 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
             lImageDataStruct.mWidth     = 3;
             lImageDataStruct.mHeight    = 3;
             lImageDataStruct.mByteSize  = 9 * sizeof( uint32_t );
-            lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
+            lImageDataStruct.mPixelData = std::vector<uint8_t>(
+                reinterpret_cast<uint8_t *>( lImageData ), reinterpret_cast<uint8_t *>( lImageData ) + lImageDataStruct.mByteSize );
 
             sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;

@@ -35,7 +35,7 @@ sImageData LoadBinData( fs::path const &aPath )
     lImageData.mHeight    = static_cast<size_t>( lHeight );
     lImageData.mFormat    = eColorFormat::R32_FLOAT;
     lImageData.mByteSize  = lHeight * lWidth * sizeof( float );
-    lImageData.mPixelData = (uint8_t *)lValue;
+    lImageData.mPixelData = std::vector<uint8_t>( (uint8_t*)lValue, ((uint8_t*)lValue) + lImageData.mByteSize );
 
     return lImageData;
 }
