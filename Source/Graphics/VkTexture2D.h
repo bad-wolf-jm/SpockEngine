@@ -5,16 +5,17 @@
 #include <gli/gli.hpp>
 #include <vulkan/vulkan.h>
 
-#include "Core/CUDA/Texture/TextureData.h"
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
 #include "Core/CUDA/Texture/ColorFormat.h"
+#include "Core/CUDA/Texture/Texture2D.h"
+#include "Core/CUDA/Texture/TextureData.h"
 #include "Core/CUDA/Texture/TextureTypes.h"
-#include "Core/CUDA/Texture/VkTexture2D.h"
 
-#include "Buffer.h"
-#include "GraphicContext.h"
+#include "Core/GraphicContext/GraphicContext.h"
+
+#include "VkGpuBuffer.h"
 
 namespace SE::Graphics
 {
@@ -23,19 +24,22 @@ namespace SE::Graphics
     /** @brief */
     class VkTexture2D : public Cuda::Texture2D
     {
+        friend class VkSampler2D;
+
       public:
         Core::TextureData::sCreateInfo mSpec;
 
         /** @brief */
-        VkTexture2D( GraphicContext &aGraphicContext, Core::TextureData::sCreateInfo &aTextureImageDescription, bool aIsHostVisible,
-                     bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
+        VkTexture2D( GraphicContext &aGraphicContext, Core::TextureData::sCreateInfo &aTextureImageDescription, uint8_t aSampleCount,
+                     bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
 
         /** @brief */
-        VkTexture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData, bool aIsHostVisible, bool aIsGraphicsOnly,
-                     bool aIsTransferSource );
+        VkTexture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData, uint8_t aSampleCount, bool aIsHostVisible,
+                     bool aIsGraphicsOnly, bool aIsTransferSource );
 
         /** @brief */
         ~VkTexture2D() = default;
+        void GetTextureData( TextureData2D &mTextureData );
 
       private:
         // void CreateImageView();
@@ -43,17 +47,18 @@ namespace SE::Graphics
 
         VkMemoryPropertyFlags MemoryProperties();
         VkImageUsageFlags     ImageUsage();
-        VkImage               CreateImage();
-        VkDeviceMemory        AllocateMemory();
-        void                  BindMemory();
 
-        void CopyBufferToImage( VkGpuBuffer &a_Buffer );
+        void CreateImage();
+        void AllocateMemory();
+        void BindMemory();
+
+        void SetPixelData( VkGpuBuffer &a_Buffer );
         void TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout );
 
       private:
         GraphicContext mGraphicContext{};
 
-        VkSampleCountFlagBits mSampleCount           = false;
+        VkSampleCountFlagBits mSampleCount           = VK_SAMPLE_COUNT_1_BIT;
         bool                  mIsHostVisible         = false;
         bool                  mIsGraphicsOnly        = false;
         bool                  mIsTransferSource      = false;

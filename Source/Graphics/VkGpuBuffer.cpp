@@ -1,4 +1,4 @@
-#include "VkBuffer.h"
+#include "VkGpuBuffer.h"
 
 #include <fmt/core.h>
 
@@ -52,10 +52,10 @@ namespace SE::Graphics
             CUDA_ASSERT( cudaImportExternalMemory( &mExternalMemoryHandle, &lExternalMemoryHandleDesc ) );
 
             cudaExternalMemoryBufferDesc lExternalMemBufferDesc{};
-            lExternalMemBufferDesc.offset = aOffset;
+            lExternalMemBufferDesc.offset = 0;
             lExternalMemBufferDesc.flags  = 0;
             lExternalMemBufferDesc.size   = mSizeAligned;
-            CUDA_ASSERT( cudaExternalMemoryGetMappedBuffer( &mDevicePointer, mExternalMemoryHandle, &lExternalMemBufferDesc ) );
+            CUDA_ASSERT( cudaExternalMemoryGetMappedBuffer( (void **)&mDevicePointer, mExternalMemoryHandle, &lExternalMemBufferDesc ) );
         }
     }
 
@@ -109,7 +109,8 @@ namespace SE::Graphics
         mGraphicContext.mContext->DestroyBuffer( mVkBuffer );
         mGraphicContext.mContext->FreeMemory( mVkMemory );
 
-        mSize = lBufferSizeAligned;
+        mSize = aNewSizeInBytes;
+        mSizeAligned = ( ( mSize - 1 ) / gBufferMemoryAlignment + 1 ) * gBufferMemoryAlignment;
 
         VkBufferUsageFlags lBufferFlags = (VkBufferUsageFlags)mType;
         if( mIsTransferSource ) lBufferFlags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;

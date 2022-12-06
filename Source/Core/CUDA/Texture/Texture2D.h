@@ -66,6 +66,15 @@ namespace SE::Cuda
          * @param aSpec Texture specification
          * @param aData Texture data
          */
+        Texture2D() = default;
+
+        /** @brief Constructor
+         *
+         * Create a texture from the provided raw data, according to the requested specification
+         *
+         * @param aSpec Texture specification
+         * @param aData Texture data
+         */
         Texture2D( sTextureCreateInfo &aSpec, std::vector<uint8_t> aData );
 
         /** @brief Constructor
@@ -108,7 +117,7 @@ namespace SE::Cuda
         /** @brief Destructor */
         ~Texture2D();
 
-      private:
+      protected:
         size_t               mImageMemorySize            = 0;
         cudaArray_t          mInternalCudaArray          = nullptr;
         cudaMipmappedArray_t mInternalCudaMipmappedArray = nullptr;
@@ -163,5 +172,9 @@ namespace SE::Cuda
          */
         TextureSampler2D( Ref<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingInfo );
     };
+
+    cudaChannelFormatDesc ToCudaChannelDesc( eColorFormat aColorFormat );
+
+
 
 } // namespace SE::Cuda

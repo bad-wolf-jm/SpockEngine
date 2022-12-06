@@ -12,7 +12,7 @@ using namespace SE::Core;
 namespace SE::Cuda
 {
     /// @brief Convert our internal color format into a CUDA channel description
-    static cudaChannelFormatDesc ToCudaChannelDesc( eColorFormat aColorFormat )
+    cudaChannelFormatDesc ToCudaChannelDesc( eColorFormat aColorFormat )
     {
         switch( aColorFormat )
         {

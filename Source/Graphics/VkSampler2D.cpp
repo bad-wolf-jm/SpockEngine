@@ -1,5 +1,5 @@
 #include "VkSampler2D.h"
-#include "Buffer.h"
+
 #include "Core/Core.h"
 #include "Core/Memory.h"
 #include "Core/Vulkan/VkCoreMacros.h"
@@ -57,9 +57,9 @@ namespace SE::Graphics
                                                                   VK_IMAGE_VIEW_TYPE_2D, ToVkFormat( mTextureData->mSpec.mFormat ),
                                                                   VK_IMAGE_ASPECT_COLOR_BIT, lSwizzles );
 
-        mVkImageSampler = mGraphicContext.mContext->CreateSampler(
-            Convert( aSamplingInfo.mSamplingSpec.mFilter ), Convert( aSamplingInfo.mSamplingSpec.mFilter ),
-            Convert( aSamplingInfo.mSamplingSpec.mWrapping ), Convert( aSamplingInfo.mSamplingSpec.mMipFilter ) );
+        mVkImageSampler =
+            mGraphicContext.mContext->CreateSampler( Convert( mSamplingSpec.mFilter ), Convert( mSamplingSpec.mFilter ),
+                                                     Convert( mSamplingSpec.mWrapping ), Convert( mSamplingSpec.mMipFilter ) );
     }
 
 } // namespace SE::Graphics

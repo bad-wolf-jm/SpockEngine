@@ -5,22 +5,23 @@
 #include "Core/Memory.h"
 
 #include "Core/CUDA/Array/CudaBuffer.h"
-#include "GraphicContext.h"
+#include "Core/GraphicContext/GraphicContext.h"
 
 namespace SE::Graphics
 {
     using namespace SE::Core;
     using namespace SE::Graphics::Internal;
 
-    class VkGpuBuffer : public GPUMemory
+    class VkGpuBuffer : public Cuda::GPUMemory
     {
+      public:
         eBufferBindType mType                  = eBufferBindType::UNKNOWN;
         bool            mIsHostVisible         = true;
         bool            mIsTransferSource      = true;
         bool            mIsTransferDestination = true;
         bool            mIsGraphicsOnly        = true;
 
-        VkGpuBuffer    mVkBuffer = VK_NULL_HANDLE;
+        VkBuffer       mVkBuffer = VK_NULL_HANDLE;
         VkDeviceMemory mVkMemory = VK_NULL_HANDLE;
 
         VkGpuBuffer()                = default;

@@ -52,6 +52,10 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/GraphicContext/UI/UIContext.cpp
     Core/GraphicContext/Window.cpp
 
+    Graphics/VkGpuBuffer.cpp
+    Graphics/VkTexture2D.cpp
+    Graphics/VkSampler2D.cpp
+
     Scene/Primitives/Primitives.cpp
     Scene/Primitives/Arrow.cpp
     Scene/Visualizers/Wall2D.cpp

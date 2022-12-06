@@ -1,21 +1,26 @@
 #include "VkTexture2D.h"
-#include "Core/Core.h"
-#include "Core/Memory.h"
-#include "Core/Vulkan/VkCoreMacros.h"
-#include "VkBuffer.h"
 
+#include "Core/Core.h"
 #include "Core/Logging.h"
+#include "Core/Memory.h"
+
+#include "Core/Vulkan/VkCoreMacros.h"
+
+#include "Core/CUDA/Array/CudaBuffer.h"
+#include "Core/CUDA/CudaAssert.h"
+
+#include "VkGpuBuffer.h"
 
 namespace SE::Graphics
 {
     using namespace Internal;
 
     /** @brief */
-    VkTexture2D::VkTexture2D( GraphicContext &aGraphicContext, TextureData2D &mTextureData, TextureSampler2D &aSamplingInfo,
-                              uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
+    VkTexture2D::VkTexture2D( GraphicContext &aGraphicContext, TextureData2D &mTextureData, uint8_t aSampleCount, bool aIsHostVisible,
+                              bool aIsGraphicsOnly, bool aIsTransferSource )
         : mGraphicContext( aGraphicContext )
         , mSpec{ mTextureData.mSpec }
-        , mSampleCount{ aSampleCount }
+        , mSampleCount{ VK_SAMPLE_COUNT_VALUE( aSampleCount ) }
         , mIsHostVisible{ aIsHostVisible }
         , mIsGraphicsOnly{ aIsGraphicsOnly }
         , mIsTransferSource{ aIsTransferSource }
@@ -30,7 +35,7 @@ namespace SE::Graphics
         VkGpuBuffer lStagingBuffer( mGraphicContext, lImageData.mPixelData, lImageData.mByteSize, eBufferBindType::UNKNOWN, true,
                                     false, true, false );
         TransitionImageLayout( VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
-        CopyBufferToImage( lStagingBuffer );
+        SetPixelData( lStagingBuffer );
         TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
     }
 
@@ -51,19 +56,19 @@ namespace SE::Graphics
         ConfigureExternalMemoryHandle();
     }
 
-    VkImage VkTexture2D::CreateImage()
+    void VkTexture2D::CreateImage()
     {
         mVkImage = mGraphicContext.mContext->CreateImage( mSpec.mWidth, mSpec.mHeight, mSpec.mDepth, mSpec.mMipLevels, mSpec.mLayers,
                                                           mSampleCount, !mIsGraphicsOnly, false, ToVkFormat( mSpec.mFormat ),
                                                           MemoryProperties(), ImageUsage() );
     }
 
-    VkDeviceMemory VkTexture2D::AllocateMemory()
+    void VkTexture2D::AllocateMemory()
     {
-        mVkMemory = mGraphicContext.mContext->AllocateMemory( mVkImage, 0, aIsHostVisible, !aIsGraphicsOnly, &mMemorySize );
+        mVkMemory = mGraphicContext.mContext->AllocateMemory( mVkImage, 0, mIsHostVisible, !mIsGraphicsOnly, &mMemorySize );
     }
 
-    VkDeviceMemory VkTexture2D::BindMemory() { mGraphicContext.mContext->BindMemory( mVkImage, mVkMemory ); }
+    void VkTexture2D::BindMemory() { mGraphicContext.mContext->BindMemory( mVkImage, mVkMemory ); }
 
     VkMemoryPropertyFlags VkTexture2D::MemoryProperties()
     {
@@ -97,16 +102,19 @@ namespace SE::Graphics
         CUDA_ASSERT( cudaImportExternalMemory( &mExternalMemoryHandle, &lCudaExternalMemoryHandleDesc ) );
 
         cudaExternalMemoryMipmappedArrayDesc lExternalMemoryMipmappedArrayDesc{};
-        lExternalMemoryMipmappedArrayDesc.formatDesc = ToCudaChannelDesc( mSpec.mFormat );
-        lExternalMemoryMipmappedArrayDesc.extent     = make_cudaExtent( mSpec.mWidth, mSpec.mHeight, 0 );
-        lExternalMemoryMipmappedArrayDesc.numLevels  = mSpec.mMipLevels;
-        lExternalMemoryMipmappedArrayDesc.flags      = 0;
+        lExternalMemoryMipmappedArrayDesc.formatDesc = Cuda::ToCudaChannelDesc( mSpec.mFormat );
+
+        lExternalMemoryMipmappedArrayDesc.extent.width  = mSpec.mWidth;
+        lExternalMemoryMipmappedArrayDesc.extent.height = mSpec.mHeight;
+        lExternalMemoryMipmappedArrayDesc.extent.depth  = 0;
+        lExternalMemoryMipmappedArrayDesc.numLevels     = mSpec.mMipLevels;
+        lExternalMemoryMipmappedArrayDesc.flags         = 0;
         CUDA_ASSERT( cudaExternalMemoryGetMappedMipmappedArray( &mInternalCudaMipmappedArray, mExternalMemoryHandle,
                                                                 &lExternalMemoryMipmappedArrayDesc ) );
         CUDA_ASSERT( cudaGetMipmappedArrayLevel( &mInternalCudaArray, mInternalCudaMipmappedArray, 0 ) );
     }
 
-    void VkTexture2D::CopyBufferToImage( VkGpuBuffer &aBuffer )
+    void VkTexture2D::SetPixelData( VkGpuBuffer &aBuffer )
     {
         Ref<sVkCommandBufferObject> lCommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
 
@@ -160,25 +168,25 @@ namespace SE::Graphics
             lBufferCopyRegion.mLayerCount    = 1;
             lBufferCopyRegion.mBaseMipLevel  = i;
             lBufferCopyRegion.mMipLevelCount = 1;
-            lBufferCopyRegion.mWidth         = Spec.MipLevels[i].Width;
-            lBufferCopyRegion.mHeight        = Spec.MipLevels[i].Height;
+            lBufferCopyRegion.mWidth         = mSpec.mWidth >> i;
+            lBufferCopyRegion.mHeight        = mSpec.mHeight >> i;
             lBufferCopyRegion.mDepth         = 1;
             lBufferCopyRegion.mOffset        = lBufferByteOffset;
 
             lBufferCopyRegions.push_back( lBufferCopyRegion );
-            lBufferByteOffset += static_cast<uint32_t>( Spec.MipLevels[i].Size );
+            lBufferByteOffset += static_cast<uint32_t>( ( mSpec.mWidth >> i ) * ( mSpec.mHeight >> i ) * sizeof( uint32_t ) );
         }
 
         TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL );
         Ref<sVkCommandBufferObject> lCommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
-        lCommandBufferObject->CopyImage( mVkImage, lStagingBuffer.mVkObject, lBufferCopyRegions, 0 );
+        lCommandBufferObject->CopyImage( mVkImage, lStagingBuffer.mVkBuffer, lBufferCopyRegions, 0 );
         mGraphicContext.EndSingleTimeCommands( lCommandBufferObject );
         TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
 
         uint8_t *lPixelData = lStagingBuffer.Map<uint8_t>( lByteSize, 0 );
 
         sImageData lImageDataStruct{};
-        lImageDataStruct.mFormat    = Spec.Format;
+        lImageDataStruct.mFormat    = mSpec.mFormat;
         lImageDataStruct.mWidth     = mSpec.mWidth;
         lImageDataStruct.mHeight    = mSpec.mHeight;
         lImageDataStruct.mByteSize  = lByteSize;

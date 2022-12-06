@@ -46,15 +46,25 @@ namespace SE::Graphics::Internal
         void Bind( Ref<sVkDescriptorSetObject> aDescriptorSet, VkPipelineBindPoint aBindPoint,
                    Ref<sVkPipelineLayoutObject> aPipelineLayout, uint32_t aSetIndex, int32_t aDynamicOffset );
 
+        void ImageMemoryBarrier( VkImage aImage, VkImageLayout aOldLayout, VkImageLayout aNewLayout, uint32_t aMipCount,
+                                 uint32_t aLayerCount );
         void ImageMemoryBarrier( Ref<sVkImageObject> aImage, VkImageLayout aOldLayout, VkImageLayout aNewLayout, uint32_t aMipCount,
                                  uint32_t aLayerCount );
 
         void CopyBuffer( VkBuffer aSource, VkBuffer aDest );
         void CopyBuffer( VkBuffer aSource, uint32_t aSourceOffset, uint32_t aSize, VkBuffer aDest, uint32_t aDestOffset );
+
+        void CopyBuffer( VkBuffer aSource, VkImage aDestination, sImageRegion const &aBufferRegion, sImageRegion const &aImageRegion );
+        void CopyBuffer( VkBuffer aSource, VkImage aDestination, std::vector<sImageRegion> aBufferRegions,
+                         sImageRegion const &aImageRegion );
+
         void CopyBuffer( VkBuffer aSource, Ref<sVkImageObject> aDestination, sImageRegion const &aBufferRegion,
                          sImageRegion const &aImageRegion );
         void CopyBuffer( VkBuffer aSource, Ref<sVkImageObject> aDestination, std::vector<sImageRegion> aBufferRegions,
                          sImageRegion const &aImageRegion );
+
+        void CopyImage( VkImage aSource, sImageRegion const &aSourceRegion, VkImage aDestination, sImageRegion const &aDestRegion );
+        void CopyImage( VkImage aSource, VkBuffer aDestination, std::vector<sImageRegion> aImageRegions, uint32_t aBufferOffset );
         void CopyImage( Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion, Ref<sVkImageObject> aDestination,
                         sImageRegion const &aDestRegion );
         void CopyImage( Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion, VkBuffer aDestination,

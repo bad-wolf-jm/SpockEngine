@@ -125,7 +125,7 @@ namespace SE::Graphics::Internal
         }
     }
 
-    void sVkCommandBufferObject::ImageMemoryBarrier( Ref<sVkImageObject> aImage, VkImageLayout aOldLayout, VkImageLayout aNewLayout,
+    void sVkCommandBufferObject::ImageMemoryBarrier( VkImage aImage, VkImageLayout aOldLayout, VkImageLayout aNewLayout,
                                                      uint32_t aMipCount, uint32_t aLayerCount )
     {
         VkImageMemoryBarrier lBarrier{};
@@ -134,7 +134,7 @@ namespace SE::Graphics::Internal
         lBarrier.newLayout                       = aNewLayout;
         lBarrier.srcQueueFamilyIndex             = VK_QUEUE_FAMILY_IGNORED;
         lBarrier.dstQueueFamilyIndex             = VK_QUEUE_FAMILY_IGNORED;
-        lBarrier.image                           = aImage->mVkObject;
+        lBarrier.image                           = aImage;
         lBarrier.subresourceRange.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
         lBarrier.subresourceRange.baseMipLevel   = 0;
         lBarrier.subresourceRange.levelCount     = aMipCount;
@@ -185,6 +185,12 @@ namespace SE::Graphics::Internal
         vkCmdPipelineBarrier( mVkObject, lSourceStage, lDestinationStage, 0, 0, nullptr, 0, nullptr, 1, &lBarrier );
     }
 
+    void sVkCommandBufferObject::ImageMemoryBarrier( Ref<sVkImageObject> aImage, VkImageLayout aOldLayout, VkImageLayout aNewLayout,
+                                                     uint32_t aMipCount, uint32_t aLayerCount )
+    {
+        ImageMemoryBarrier( aImage->mVkObject, aOldLayout, aNewLayout, aMipCount, aLayerCount );
+    }
+
     void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, uint32_t aSourceOffset, uint32_t aSize, VkBuffer aDest,
                                              uint32_t aDestOffset )
     {
@@ -198,11 +204,23 @@ namespace SE::Graphics::Internal
     void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, Ref<sVkImageObject> aDestination, sImageRegion const &aBufferRegion,
                                              sImageRegion const &aImageRegion )
     {
+        CopyBuffer( aSource, aDestination->mVkObject, { aBufferRegion }, aImageRegion );
+    }
+
+    void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, VkImage aDestination, sImageRegion const &aBufferRegion,
+                                             sImageRegion const &aImageRegion )
+    {
         CopyBuffer( aSource, aDestination, { aBufferRegion }, aImageRegion );
     }
 
     void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, Ref<sVkImageObject> aDestination,
                                              std::vector<sImageRegion> aBufferRegions, sImageRegion const &aImageRegion )
+    {
+        CopyBuffer(aSource, aDestination->mVkObject, aBufferRegions, aImageRegion);
+    }
+
+    void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, VkImage aDestination, std::vector<sImageRegion> aBufferRegions,
+                                             sImageRegion const &aImageRegion )
     {
         std::vector<VkBufferImageCopy> lBufferCopyRegions;
 
@@ -231,12 +249,12 @@ namespace SE::Graphics::Internal
         ImageMemoryBarrier( aDestination, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, aImageRegion.mMipLevelCount,
                             aImageRegion.mLayerCount );
 
-        vkCmdCopyBufferToImage( mVkObject, aSource, aDestination->mVkObject, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        vkCmdCopyBufferToImage( mVkObject, aSource, aDestination, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                                 static_cast<uint32_t>( lBufferCopyRegions.size() ), lBufferCopyRegions.data() );
     }
 
-    void sVkCommandBufferObject::CopyImage( Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion,
-                                            Ref<sVkImageObject> aDestination, sImageRegion const &aDestRegion )
+    void sVkCommandBufferObject::CopyImage( VkImage aSource, sImageRegion const &aSourceRegion, VkImage aDestination,
+                                            sImageRegion const &aDestRegion )
     {
         ImageMemoryBarrier( aDestination, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, 1, 1 );
 
@@ -258,9 +276,15 @@ namespace SE::Graphics::Internal
         lCopyRegion.extent.height = aSourceRegion.mHeight;
         lCopyRegion.extent.depth  = aSourceRegion.mDepth;
 
-        vkCmdCopyImage( mVkObject, aSource->mVkObject, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, aDestination->mVkObject,
-                        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &lCopyRegion );
+        vkCmdCopyImage( mVkObject, aSource, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, aDestination, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                        1, &lCopyRegion );
         ImageMemoryBarrier( aDestination, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1, 1 );
+    }
+
+    void sVkCommandBufferObject::CopyImage( Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion,
+                                            Ref<sVkImageObject> aDestination, sImageRegion const &aDestRegion )
+    {
+        CopyImage( aSource->mVkObject, aSourceRegion, aDestination->mVkObject, aDestRegion );
     }
 
     void sVkCommandBufferObject::CopyImage( Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion, VkBuffer aDestination,
@@ -280,8 +304,8 @@ namespace SE::Graphics::Internal
         vkCmdCopyImageToBuffer( mVkObject, aSource->mVkObject, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, aDestination, 1, &lCopyRegion );
     }
 
-    void sVkCommandBufferObject::CopyImage( Ref<sVkImageObject> aSource, VkBuffer aDestination,
-                                            std::vector<sImageRegion> aImageRegions, uint32_t aBufferOffset )
+    void sVkCommandBufferObject::CopyImage( VkImage aSource, VkBuffer aDestination, std::vector<sImageRegion> aImageRegions,
+                                            uint32_t aBufferOffset )
     {
         std::vector<VkBufferImageCopy> lBufferCopyRegions;
 
@@ -301,8 +325,14 @@ namespace SE::Graphics::Internal
             lBufferCopyRegions.push_back( lBufferCopyRegion );
         }
 
-        vkCmdCopyImageToBuffer( mVkObject, aSource->mVkObject, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, aDestination,
+        vkCmdCopyImageToBuffer( mVkObject, aSource, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, aDestination,
                                 static_cast<uint32_t>( lBufferCopyRegions.size() ), lBufferCopyRegions.data() );
+    }
+
+    void sVkCommandBufferObject::CopyImage( Ref<sVkImageObject> aSource, VkBuffer aDestination,
+                                            std::vector<sImageRegion> aImageRegions, uint32_t aBufferOffset )
+    {
+        CopyImage( aSource->mVkObject, aDestination, aImageRegions, aBufferOffset );
     }
 
     void sVkCommandBufferObject::End() { VK_CHECK_RESULT( vkEndCommandBuffer( mVkObject ) ); }
