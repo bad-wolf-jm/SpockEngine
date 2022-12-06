@@ -6,7 +6,6 @@ namespace SE::Core
         : mGraphicContext{ aGraphicContext }
         , mDirty{ true }
     {
-
         Clear();
 
         // The material system should be bound to a descriptor set as follows:
@@ -29,19 +28,15 @@ namespace SE::Core
 
     void MaterialSystem::Wipe()
     {
-        mTextures.clear();
         mMaterials.clear();
 
-        mCudaTextures.clear();
         mCudaTextureBuffer.Dispose();
         mCudaShaderMaterials.Dispose();
     }
 
     void MaterialSystem::Clear()
     {
-        mTextures.clear();
         mMaterials.clear();
-        mCudaTextures.clear();
         mCudaTextureBuffer.Dispose();
         mCudaShaderMaterials.Dispose();
 
@@ -55,17 +50,19 @@ namespace SE::Core
         lTextureCreateInfo.mMipLevels = 1;
 
         sTextureSamplingInfo lSamplingInfo{};
-        lSamplingInfo.mWrapping = eSamplerWrapping::CLAMP_TO_EDGE;
+        lSamplingInfo.mWrapping              = eSamplerWrapping::CLAMP_TO_EDGE;
+        lSamplingInfo.mNormalizedValues      = true;
+        lSamplingInfo.mNormalizedCoordinates = true;
 
         // Create default 1x1 black transparent texture ( tex_index: 0 )
-        lImageDataStruct.mPixelData = { 0, 0, 0, 0 }; // reinterpret_cast<uint8_t *>( lBlackImageData );
+        lImageDataStruct.mPixelData = { 0, 0, 0, 0 };
 
         TextureData2D    lBlackTexture( lTextureCreateInfo, lImageDataStruct );
         TextureSampler2D lBlackTextureSampler = TextureSampler2D( lBlackTexture, lSamplingInfo );
         CreateTexture( lBlackTexture, lBlackTextureSampler );
 
         // Create default 1x1 white texture ( tex_index: 1 )
-        lImageDataStruct.mPixelData = { 255, 255, 255, 255 }; // reinterpret_cast<uint8_t *>( lWhiteImageData );
+        lImageDataStruct.mPixelData = { 255, 255, 255, 255 };
         TextureData2D    lWhiteTexture( lTextureCreateInfo, lImageDataStruct );
         TextureSampler2D lWhiteTextureSampler = TextureSampler2D( lWhiteTexture, lSamplingInfo );
         CreateTexture( lWhiteTexture, lWhiteTextureSampler );
@@ -102,35 +99,16 @@ namespace SE::Core
 
     uint32_t MaterialSystem::CreateTexture( TextureData2D &aTexture, TextureSampler2D &aTextureSampler )
     {
-        auto lNewTexture = New<Graphics::Texture2D>( mGraphicContext, aTexture, aTextureSampler, true );
-
-        mTextures.push_back( lNewTexture );
-
-        Cuda::sTextureCreateInfo lNewTextureCreateInfo{};
-        lNewTextureCreateInfo.mFormat = aTexture.mSpec.mFormat;
-        lNewTextureCreateInfo.mWidth  = aTexture.mSpec.mWidth;
-        lNewTextureCreateInfo.mHeight = aTexture.mSpec.mHeight;
-
-        auto lNewCudaTexture =
-            New<Cuda::Texture2D>( lNewTextureCreateInfo, lNewTexture->GetMemoryHandle(), lNewTexture->GetMemorySize() );
-
-        sTextureSamplingInfo lCudaSampler{};
-        lCudaSampler.mFilter                = eSamplerFilter::LINEAR;
-        lCudaSampler.mMipFilter             = eSamplerMipmap::LINEAR;
-        lCudaSampler.mWrapping              = eSamplerWrapping::REPEAT;
-        lCudaSampler.mNormalizedCoordinates = true;
-        lCudaSampler.mNormalizedValues      = true;
-
-        auto lNewCudaTextureSampler = New<Cuda::TextureSampler2D>( lNewCudaTexture, lCudaSampler );
-
-        mCudaTextures.push_back( lNewCudaTextureSampler );
+        auto lNewInteropTexture = New<Graphics::VkTexture2D>( mGraphicContext, aTexture, 1, false, false, false );
+        auto lNewInteropSampler = New<Graphics::VkSampler2D>( mGraphicContext, lNewInteropTexture, aTextureSampler.mSamplingSpec );
+        mTextureSamplers.push_back( lNewInteropSampler );
 
         mDirty = true;
 
-        return mTextures.size() - 1;
+        return mTextureSamplers.size() - 1;
     }
 
-    Ref<Graphics::Texture2D> MaterialSystem::GetTextureByID( uint32_t aID ) { return mTextures[aID]; }
+    Ref<Graphics::VkSampler2D> MaterialSystem::GetTextureByID( uint32_t aID ) { return mTextureSamplers[aID]; }
 
     sMaterial &MaterialSystem::CreateMaterial()
     {
@@ -177,11 +155,11 @@ namespace SE::Core
             mCudaShaderMaterials = Cuda::GPUExternalMemory( *mShaderMaterials, mShaderMaterials->SizeAs<uint8_t>() );
         }
 
-        if( mCudaTextureBuffer.SizeAs<Cuda::TextureSampler2D::DeviceData>() < mCudaTextures.size() )
+        if( mCudaTextureBuffer.SizeAs<Cuda::TextureSampler2D::DeviceData>() < mTextureSamplers.size() )
         {
             mCudaTextureBuffer.Dispose();
             std::vector<Cuda::TextureSampler2D::DeviceData> lTextureDeviceData{};
-            for( auto const &lCudaTextureSampler : mCudaTextures ) lTextureDeviceData.push_back( lCudaTextureSampler->mDeviceData );
+            for( auto const &lCudaTextureSampler : mTextureSamplers ) lTextureDeviceData.push_back( lCudaTextureSampler->mDeviceData );
 
             mCudaTextureBuffer = Cuda::GPUMemory::Create( lTextureDeviceData );
         }
@@ -226,7 +204,7 @@ namespace SE::Core
             mShaderMaterials->Upload( lMaterialData );
         }
 
-        mTextureDescriptorSet->Write( mTextures, 1 );
+        mTextureDescriptorSet->Write( mTextureSamplers, 1 );
 
         mDirty = false;
     }

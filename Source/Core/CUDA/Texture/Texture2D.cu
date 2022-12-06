@@ -145,6 +145,7 @@ namespace SE::Cuda
 
         lTextureDescription.readMode = cudaReadModeElementType;
         if( mSpec.mNormalizedValues ) lTextureDescription.readMode = cudaReadModeNormalizedFloat;
+        
         lTextureDescription.borderColor[0] = mSpec.mBorderColor[0];
         lTextureDescription.borderColor[1] = mSpec.mBorderColor[1];
         lTextureDescription.borderColor[2] = mSpec.mBorderColor[2];

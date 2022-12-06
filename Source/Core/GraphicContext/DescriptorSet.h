@@ -4,6 +4,8 @@
 #include "Core/GraphicContext//Texture2D.h"
 #include "Core/GraphicContext//TextureCubeMap.h"
 
+#include "Graphics/VkSampler2D.h"
+
 #include "Core/Memory.h"
 #include "Core/Vulkan/VkPipeline.h"
 
@@ -66,6 +68,9 @@ namespace SE::Graphics
 
         void Write( Ref<Texture2D> aBuffer, uint32_t aBinding );
         void Write( std::vector<Ref<Texture2D>> aBuffer, uint32_t aBinding );
+
+        void Write( Ref<VkSampler2D> aBuffer, uint32_t aBinding );
+        void Write( std::vector<Ref<VkSampler2D>> aBuffer, uint32_t aBinding );
 
         VkDescriptorSet GetVkDescriptorSet() { return mDescriptorSetObject->mVkObject; }
 

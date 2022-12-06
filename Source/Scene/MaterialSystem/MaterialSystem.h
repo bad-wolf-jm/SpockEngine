@@ -6,6 +6,10 @@
 #    include "Core/GraphicContext//DescriptorSet.h"
 #    include "Core/GraphicContext//GraphicContext.h"
 #    include "Core/GraphicContext//Texture2D.h"
+
+#    include "Graphics/VkGpuBuffer.h"
+#    include "Graphics/VkSampler2D.h"
+#    include "Graphics/VkTexture2D.h"
 #endif
 
 #include "Core/CUDA/Array/CudaBuffer.h"
@@ -100,10 +104,10 @@ namespace SE::Core
 
         MaterialSystem( GraphicContext &aGraphicContext );
 
-        sMaterial               &CreateMaterial();
-        sMaterial               &CreateMaterial( sMaterial const &aMaterialData );
-        sMaterial               &GetMaterialByID( uint32_t aID );
-        Ref<Graphics::Texture2D> GetTextureByID( uint32_t aID );
+        sMaterial                 &CreateMaterial();
+        sMaterial                 &CreateMaterial( sMaterial const &aMaterialData );
+        sMaterial                 &GetMaterialByID( uint32_t aID );
+        Ref<Graphics::VkSampler2D> GetTextureByID( uint32_t aID );
 
         uint32_t CreateTexture( fs::path aFilePath, sTextureSamplingInfo aSamplingInfo );
         uint32_t CreateTexture( Ref<TextureData2D> aTexture, Ref<TextureSampler2D> aTextureSampler );
@@ -116,17 +120,16 @@ namespace SE::Core
         void Clear();
         void Wipe();
 
-        std::vector<sMaterial> const                &GetMaterialData() const { return mMaterials; }
-        std::vector<Ref<Graphics::Texture2D>> const &GetTextures() const { return mTextures; }
-        Cuda::GPUMemory const                       &GetCudaTextures() const { return mCudaTextureBuffer; }
-        Cuda::GPUExternalMemory const               &GetCudaMaterials() const { return mCudaShaderMaterials; }
+        std::vector<sMaterial> const                  &GetMaterialData() const { return mMaterials; }
+        std::vector<Ref<Graphics::VkSampler2D>> const &GetTextures() const { return mTextureSamplers; }
+        Cuda::GPUMemory const                         &GetCudaTextures() const { return mCudaTextureBuffer; }
+        Cuda::GPUExternalMemory const                 &GetCudaMaterials() const { return mCudaShaderMaterials; }
 
       private:
         GraphicContext mGraphicContext;
 
-        std::vector<Ref<Cuda::TextureSampler2D>> mCudaTextures = {};
-        std::vector<Ref<Graphics::Texture2D>>    mTextures     = {};
-        std::vector<sMaterial>                   mMaterials    = {};
+        std::vector<Ref<Graphics::VkSampler2D>> mTextureSamplers = {};
+        std::vector<sMaterial>                  mMaterials       = {};
 
         Cuda::GPUMemory         mCudaTextureBuffer{};
         Cuda::GPUExternalMemory mCudaShaderMaterials{};

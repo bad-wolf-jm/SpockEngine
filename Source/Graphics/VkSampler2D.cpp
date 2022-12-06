@@ -49,8 +49,9 @@ namespace SE::Graphics
         : mGraphicContext( aGraphicContext )
         , mTextureData{ aTextureData }
     {
-        mSpec = aSamplingSpec;
-        
+        mSpec    = aSamplingSpec;
+        mTexture = aTextureData;
+
         constexpr VkComponentMapping lSwizzles{ VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY,
                                                 VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY };
 
@@ -58,9 +59,8 @@ namespace SE::Graphics
                                                                   VK_IMAGE_VIEW_TYPE_2D, ToVkFormat( mTextureData->mSpec.mFormat ),
                                                                   VK_IMAGE_ASPECT_COLOR_BIT, lSwizzles );
 
-        mVkImageSampler =
-            mGraphicContext.mContext->CreateSampler( Convert( mSpec.mFilter ), Convert( mSpec.mFilter ),
-                                                     Convert( mSpec.mWrapping ), Convert( mSpec.mMipFilter ) );
+        mVkImageSampler = mGraphicContext.mContext->CreateSampler( Convert( mSpec.mFilter ), Convert( mSpec.mFilter ),
+                                                                   Convert( mSpec.mWrapping ), Convert( mSpec.mMipFilter ) );
 
         if( mTextureData->mIsGraphicsOnly ) return;
 

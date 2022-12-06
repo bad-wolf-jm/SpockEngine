@@ -1859,9 +1859,9 @@ namespace SE::Core
         for( auto &lTexture : mMaterialSystem->GetTextures() )
         {
             TextureData2D lTextureData;
-            lTexture->GetTextureData( lTextureData );
+            lTexture->GetTexture()->GetTextureData( lTextureData );
 
-            sTextureSamplingInfo lSamplingInfo = lTexture->GetTextureSampling();
+            sTextureSamplingInfo lSamplingInfo = lTexture->mSpec;
 
             sAssetIndex lAssetIndexEntry{};
             lAssetIndexEntry.mType      = eAssetType::KTX_TEXTURE_2D;

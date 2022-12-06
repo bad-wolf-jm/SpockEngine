@@ -60,8 +60,10 @@ namespace SE::Core
             lNewTexture.mTexture = New<TextureData2D>( sTextureCreateInfo{}, lTexturePath );
 
             sTextureSamplingInfo lSamplerCreateInfo{};
-            lSamplerCreateInfo.mWrapping = eSamplerWrapping::REPEAT;
-            lNewTexture.mSampler         = New<TextureSampler2D>( *lNewTexture.mTexture, lSamplerCreateInfo );
+            lSamplerCreateInfo.mWrapping              = eSamplerWrapping::REPEAT;
+            lSamplerCreateInfo.mNormalizedCoordinates = true;
+            lSamplerCreateInfo.mNormalizedValues      = true;
+            lNewTexture.mSampler                      = New<TextureSampler2D>( *lNewTexture.mTexture, lSamplerCreateInfo );
 
             mTextures.push_back( lNewTexture );
             mKnownTextures[aTextureName] = mTextures.size() - 1;

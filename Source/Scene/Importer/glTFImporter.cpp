@@ -81,9 +81,10 @@ namespace SE::Core
         for( tinygltf::Sampler lGltfSampler : mGltfModel.samplers )
         {
             sTextureSamplingInfo lSamplerInfo{};
-            lSamplerInfo.mFilter   = getLTSEFilterMode( lGltfSampler.magFilter );
-            lSamplerInfo.mWrapping = getLTSEWrapMode( lGltfSampler.wrapS );
-
+            lSamplerInfo.mFilter                = getLTSEFilterMode( lGltfSampler.magFilter );
+            lSamplerInfo.mWrapping              = getLTSEWrapMode( lGltfSampler.wrapS );
+            lSamplerInfo.mNormalizedCoordinates = true;
+            lSamplerInfo.mNormalizedValues      = true;
             mTextureSamplers.push_back( lSamplerInfo );
         }
     }
@@ -99,7 +100,7 @@ namespace SE::Core
         if( aGltfimage.component == 3 )
         {
             lImageData.mByteSize  = aGltfimage.width * aGltfimage.height * 4;
-            lImageData.mPixelData = std::vector<uint8_t>(lImageData.mByteSize);
+            lImageData.mPixelData = std::vector<uint8_t>( lImageData.mByteSize );
 
             unsigned char       *rgba = lImageData.mPixelData.data();
             unsigned char const *rgb  = &aGltfimage.image[0];

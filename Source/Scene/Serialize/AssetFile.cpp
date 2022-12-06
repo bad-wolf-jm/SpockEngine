@@ -98,18 +98,20 @@ namespace SE::Core
         Seek( lAssetIndex.mByteStart );
 
         sTextureSamplingInfo lSamplerCreateInfo{};
-        lSamplerCreateInfo.mFilter         = Read<eSamplerFilter>();
-        lSamplerCreateInfo.mFilter         = Read<eSamplerFilter>();
-        lSamplerCreateInfo.mMipFilter      = Read<eSamplerMipmap>();
-        lSamplerCreateInfo.mWrapping       = Read<eSamplerWrapping>();
-        lSamplerCreateInfo.mScaling[0]     = Read<float>();
-        lSamplerCreateInfo.mScaling[1]     = Read<float>();
-        lSamplerCreateInfo.mOffset[0]      = Read<float>();
-        lSamplerCreateInfo.mOffset[1]      = Read<float>();
-        lSamplerCreateInfo.mBorderColor[0] = Read<float>();
-        lSamplerCreateInfo.mBorderColor[1] = Read<float>();
-        lSamplerCreateInfo.mBorderColor[2] = Read<float>();
-        lSamplerCreateInfo.mBorderColor[3] = Read<float>();
+        lSamplerCreateInfo.mFilter                = Read<eSamplerFilter>();
+        lSamplerCreateInfo.mFilter                = Read<eSamplerFilter>();
+        lSamplerCreateInfo.mMipFilter             = Read<eSamplerMipmap>();
+        lSamplerCreateInfo.mWrapping              = Read<eSamplerWrapping>();
+        lSamplerCreateInfo.mNormalizedCoordinates = true;
+        lSamplerCreateInfo.mNormalizedValues      = true;
+        lSamplerCreateInfo.mScaling[0]            = Read<float>();
+        lSamplerCreateInfo.mScaling[1]            = Read<float>();
+        lSamplerCreateInfo.mOffset[0]             = Read<float>();
+        lSamplerCreateInfo.mOffset[1]             = Read<float>();
+        lSamplerCreateInfo.mBorderColor[0]        = Read<float>();
+        lSamplerCreateInfo.mBorderColor[1]        = Read<float>();
+        lSamplerCreateInfo.mBorderColor[2]        = Read<float>();
+        lSamplerCreateInfo.mBorderColor[3]        = Read<float>();
 
         uint32_t lKTXDataSize = lAssetIndex.mByteEnd - static_cast<uint32_t>( CurrentPosition() );
 
