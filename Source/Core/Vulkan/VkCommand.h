@@ -7,10 +7,7 @@
 #include "VkContext.h"
 #include "VkImage.h"
 
-// #include "VkDeferredRenderPass.h"
-// #include "VkLightingRenderPass.h"
 #include "VkPipeline.h"
-#include "VkRenderPass.h"
 
 namespace SE::Graphics::Internal
 {

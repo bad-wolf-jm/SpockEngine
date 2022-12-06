@@ -3,7 +3,7 @@
 #include "Core/Memory.h"
 
 #include "VkContext.h"
-#include "VkRenderPass.h"
+#include "VkAbstractRenderPass.h"
 
 #include <memory>
 #include <vulkan/vulkan.h>

@@ -9,7 +9,6 @@
 #include "Core/GraphicContext//Texture2D.h"
 #include "Core/GraphicContext//TextureCubemap.h"
 #include "Core/Vulkan/VkImage.h"
-#include "Core/Vulkan/VkRenderPass.h"
 
 #include "Scene/Components.h"
 #include "Scene/Scene.h"

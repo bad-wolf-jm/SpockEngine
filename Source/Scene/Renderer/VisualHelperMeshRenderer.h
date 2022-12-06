@@ -12,7 +12,7 @@
 
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
-#include "Core/Vulkan/VkRenderPass.h"
+#include "Core/Vulkan/VkAbstractRenderPass.h"
 
 #include "Scene/ParticleData.h"
 #include "Scene/VertexData.h"

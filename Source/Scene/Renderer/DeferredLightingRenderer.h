@@ -5,7 +5,6 @@
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 
-// #include "Core/GraphicContext//DeferredLightingRenderContext.h"
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
@@ -13,7 +12,7 @@
 
 #include "Scene/VertexData.h"
 
-#include "Core/Vulkan/VkRenderPass.h"
+#include "Core/Vulkan/VkAbstractRenderPass.h"
 #include "SceneRenderPipeline.h"
 
 namespace SE::Core

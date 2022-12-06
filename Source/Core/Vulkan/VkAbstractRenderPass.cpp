@@ -1,4 +1,4 @@
-#include "VkRenderPass.h"
+#include "VkAbstractRenderPass.h"
 
 #include <set>
 #include <unordered_set>
