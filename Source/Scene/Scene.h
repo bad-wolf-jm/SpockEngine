@@ -19,10 +19,8 @@
 #include "Core/GraphicContext//UI/UIContext.h"
 #include "VertexData.h"
 
-#include "Core/EntityRegistry/Registry.h"
 #include "Core/CUDA/Texture/TextureTypes.h"
-
-// #include "Scripting/ScriptingEngine.h"
+#include "Core/EntityRegistry/Registry.h"
 
 #include "Core/Optix/OptixAccelerationStructure.h"
 #include "Core/Optix/OptixContext.h"
@@ -101,7 +99,7 @@ namespace SE::Core
         void                   UpdateRayTracingComponents();
         OptixTraversableHandle GetRayTracingRoot()
         {
-            if( m_AccelerationStructure ) return m_AccelerationStructure->mOptixObject;
+            if( mAccelerationStructure ) return mAccelerationStructure->mOptixObject;
             return 0;
         }
 
@@ -112,11 +110,9 @@ namespace SE::Core
 
         void ClearScene();
 
-        Ref<Buffer> mVertexBuffer = nullptr;
-        Ref<Buffer> mIndexBuffer  = nullptr;
-
-        Ref<Buffer> mTransformedVertexBuffer = nullptr;
-
+        Ref<Buffer>             mVertexBuffer            = nullptr;
+        Ref<Buffer>             mIndexBuffer             = nullptr;
+        Ref<Buffer>             mTransformedVertexBuffer = nullptr;
         Cuda::GPUExternalMemory mTransformedVertexBufferMemoryHandle{};
         Cuda::GPUExternalMemory mVertexBufferMemoryHandle{};
         Cuda::GPUExternalMemory mIndexBufferMemoryHandle{};
@@ -126,14 +122,8 @@ namespace SE::Core
         GraphicContext      mGraphicContext;
         Ref<MaterialSystem> mMaterialSystem;
 
-        // Ref<ScriptingEngine> mSceneScripting = nullptr;
-
-        Ref<UIContext>                m_UI                    = nullptr;
         Ref<OptixDeviceContextObject> mRayTracingContext     = nullptr;
-        Ref<OptixScene>   m_AccelerationStructure = nullptr;
-
-        Ref<Graphics::Texture2D> m_EmptyTexturePreview = nullptr;
-        UI::ImageHandle          m_EmptyTexturePreviewImageHandle;
+        Ref<OptixScene>               mAccelerationStructure = nullptr;
 
         std::vector<sActorComponent> mActorComponents;
 

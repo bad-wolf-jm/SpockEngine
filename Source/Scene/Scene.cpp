@@ -39,7 +39,6 @@ namespace SE::Core
 
     Scene::Scene( GraphicContext &a_GraphicContext, Ref<SE::Core::UIContext> a_UI )
         : mGraphicContext{ a_GraphicContext }
-        , m_UI{ a_UI }
     {
         mMaterialSystem = New<MaterialSystem>( a_GraphicContext );
 
@@ -76,9 +75,6 @@ namespace SE::Core
     Scene::Scene( Ref<Scene> aSource )
     {
         mGraphicContext = aSource->mGraphicContext;
-        m_UI            = aSource->m_UI;
-
-        // mSceneScripting = aSource->mSceneScripting;
         mMaterialSystem = aSource->mMaterialSystem;
 
         InitializeRayTracing();
@@ -1430,23 +1426,23 @@ namespace SE::Core
     {
         SE_PROFILE_FUNCTION();
 
-        m_AccelerationStructure = SE::Core::New<OptixScene>( mRayTracingContext );
+        mAccelerationStructure = SE::Core::New<OptixScene>( mRayTracingContext );
 
         ForEach<sRayTracingTargetComponent, sStaticMeshComponent>(
             [&]( auto a_Entity, auto &a_RTComponent, auto &a_MeshComponent )
             {
-                m_AccelerationStructure->AddGeometry( mTransformedVertexBufferMemoryHandle, mIndexBufferMemoryHandle,
-                                                      a_MeshComponent.mVertexOffset, a_MeshComponent.mVertexCount,
-                                                      a_MeshComponent.mIndexOffset, a_MeshComponent.mIndexCount );
+                mAccelerationStructure->AddGeometry( mTransformedVertexBufferMemoryHandle, mIndexBufferMemoryHandle,
+                                                     a_MeshComponent.mVertexOffset, a_MeshComponent.mVertexCount,
+                                                     a_MeshComponent.mIndexOffset, a_MeshComponent.mIndexCount );
             } );
 
-        m_AccelerationStructure->Build();
+        mAccelerationStructure->Build();
     }
 
     void Scene::InitializeRayTracing()
     {
-        mRayTracingContext      = SE::Core::New<OptixDeviceContextObject>();
-        m_AccelerationStructure = SE::Core::New<OptixScene>( mRayTracingContext );
+        mRayTracingContext     = SE::Core::New<OptixDeviceContextObject>();
+        mAccelerationStructure = SE::Core::New<OptixScene>( mRayTracingContext );
     }
 
     void Scene::Render() {}
