@@ -1,7 +1,7 @@
+#include "Core/CUDA/Texture/TextureData.h"
 #include "Core/Core.h"
 #include "Core/Logging.h"
 #include "Core/Memory.h"
-#include "Core/CUDA/Texture/TextureData.h"
 
 #include <argparse/argparse.hpp>
 #include <filesystem>
@@ -14,8 +14,8 @@ sImageData LoadBinData( fs::path &aPath )
     constexpr size_t lComponentCount = 4;
 
     sImageData lImageData{};
-    int32_t lActualComponentCount = 0;
-    size_t lChannelSize           = 0;
+    int32_t    lActualComponentCount = 0;
+    size_t     lChannelSize          = 0;
 
     std::ifstream lInputFile;
     lInputFile.open( aPath, std::ios::in | std::ios::binary );
@@ -82,11 +82,11 @@ int main( int argc, char **argv )
     std::cout << "Height: " << lBinaryData.mHeight << std::endl;
     std::cout << "========================================" << std::endl;
 
-    TextureData::sCreateInfo lTextureCreateInfo{};
+    sTextureCreateInfo lTextureCreateInfo{};
     lTextureCreateInfo.mMipLevels = 1;
     TextureData2D lTexture( lTextureCreateInfo, lBinaryData );
 
-    lTexture.SaveTo(lOutput);
+    lTexture.SaveTo( lOutput );
 
     return 0;
 }

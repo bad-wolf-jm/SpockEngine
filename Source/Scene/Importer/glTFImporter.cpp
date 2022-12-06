@@ -119,7 +119,7 @@ namespace SE::Core
             lImageData.mByteSize  = aGltfimage.image.size();
         }
 
-        TextureData::sCreateInfo lTextureCreateInfo{};
+        sTextureCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mMipLevels = 1;
 
         sImportedTexture lNewTexture{};

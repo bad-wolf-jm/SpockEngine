@@ -210,13 +210,13 @@ namespace SE::Core
         }
     }
 
-    TextureData::TextureData( TextureData::sCreateInfo const &aTextureCreateInfo )
+    TextureData::TextureData( sTextureCreateInfo const &aTextureCreateInfo )
         : mSpec{ aTextureCreateInfo }
     {
         Initialize();
     }
 
-    TextureData::TextureData( TextureData::sCreateInfo const &aTextureCreateInfo, sImageData const &aImageData )
+    TextureData::TextureData( sTextureCreateInfo const &aTextureCreateInfo, sImageData const &aImageData )
         : mSpec{ aTextureCreateInfo }
     {
         mSpec.mFormat = aImageData.mFormat;
@@ -228,7 +228,7 @@ namespace SE::Core
         std::memcpy( mInternalTexture.data(), aImageData.mPixelData, aImageData.mByteSize );
     }
 
-    TextureData::TextureData( TextureData::sCreateInfo const &aTextureCreateInfo, fs::path const &aImagePath )
+    TextureData::TextureData( sTextureCreateInfo const &aTextureCreateInfo, fs::path const &aImagePath )
         : mSpec{ aTextureCreateInfo }
     {
         std::string           lExtension     = aImagePath.extension().string();
@@ -313,13 +313,13 @@ namespace SE::Core
                                          gli::extent3d{ mSpec.mWidth, mSpec.mHeight, mSpec.mDepth }, 1, 1, mSpec.mMipLevels );
     }
 
-    TextureData2D::TextureData2D( TextureData::sCreateInfo const &aCreateInfo )
+    TextureData2D::TextureData2D( sTextureCreateInfo const &aCreateInfo )
         : TextureData( aCreateInfo )
     {
         mInternalTexture2d = gli::texture2d( mInternalTexture );
     }
 
-    TextureData2D::TextureData2D( TextureData::sCreateInfo const &aCreateInfo, sImageData const &aImageData )
+    TextureData2D::TextureData2D( sTextureCreateInfo const &aCreateInfo, sImageData const &aImageData )
         : TextureData( aCreateInfo, aImageData )
     {
         mInternalTexture2d = gli::texture2d( mInternalTexture );
@@ -330,7 +330,7 @@ namespace SE::Core
         }
     }
 
-    TextureData2D::TextureData2D( TextureData::sCreateInfo const &aCreateInfo, fs::path const &aImagePath )
+    TextureData2D::TextureData2D( sTextureCreateInfo const &aCreateInfo, fs::path const &aImagePath )
         : TextureData( aCreateInfo, aImagePath )
     {
         mInternalTexture2d = gli::texture2d( mInternalTexture );

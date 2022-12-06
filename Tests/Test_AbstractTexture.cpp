@@ -5,9 +5,9 @@
 #include <iostream>
 #include <numeric>
 
-#include "Core/Math/Types.h"
 #include "Core/CUDA/Texture/TextureData.h"
 #include "Core/CUDA/Texture/TextureTypes.h"
+#include "Core/Math/Types.h"
 
 namespace fs = std::filesystem;
 
@@ -16,11 +16,11 @@ using namespace SE::Core;
 class TestTextureData : public TextureData
 {
   public:
-    TestTextureData( TextureData::sCreateInfo &a_CreateInfo )
+    TestTextureData( sTextureCreateInfo &a_CreateInfo )
         : TextureData( a_CreateInfo ){};
-    TestTextureData( TextureData::sCreateInfo &a_CreateInfo, sImageData &a_ImageData )
+    TestTextureData( sTextureCreateInfo &a_CreateInfo, sImageData &a_ImageData )
         : TextureData( a_CreateInfo, a_ImageData ){};
-    TestTextureData( TextureData::sCreateInfo &a_CreateInfo, fs::path &a_ImagePath )
+    TestTextureData( sTextureCreateInfo &a_CreateInfo, fs::path &a_ImagePath )
         : TextureData( a_CreateInfo, a_ImagePath ){};
 
     gli::texture &GetTexture() { return mInternalTexture; }
@@ -38,7 +38,7 @@ TEST_CASE( "Loading textures", "[CORE_CPU_TEXTURES]" )
 
     SECTION( "Texture creation" )
     {
-        TextureData::sCreateInfo lTextureCreateInfo{};
+        sTextureCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mFormat    = eColorFormat::RGB8_UNORM;
         lTextureCreateInfo.mWidth     = 32;
         lTextureCreateInfo.mHeight    = 64;
@@ -72,75 +72,75 @@ TEST_CASE( "Loading textures", "[CORE_CPU_TEXTURES]" )
     SECTION( "Load abstract textures from file" )
     {
         {
-            TextureData::sCreateInfo lTextureCreateInfo{};
+            sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
             TestTextureData lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgb8.jpg" );
             REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGBA8_UNORM );
             REQUIRE( lTexture.GetTexture().size() != 0 );
             REQUIRE( lTexture.GetTextureExtent3() == math::ivec3{ 256, 256, 1 } );
-            REQUIRE(
-                lTexture.GetTextureExtent3() == math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
+            REQUIRE( lTexture.GetTextureExtent3() ==
+                     math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
         }
 
         {
-            TextureData::sCreateInfo lTextureCreateInfo{};
+            sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
             TestTextureData lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_srgb8.png" );
             REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGBA8_UNORM );
             REQUIRE( lTexture.GetTexture().size() != 0 );
             REQUIRE( lTexture.GetTextureExtent3() == math::ivec3{ 256, 256, 1 } );
-            REQUIRE(
-                lTexture.GetTextureExtent3() == math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
+            REQUIRE( lTexture.GetTextureExtent3() ==
+                     math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
         }
 
         {
-            TextureData::sCreateInfo lTextureCreateInfo{};
-            TestTextureData          lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba8_unorm.dds" );
+            sTextureCreateInfo lTextureCreateInfo{};
+            TestTextureData    lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba8_unorm.dds" );
             REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGBA8_UNORM );
             REQUIRE( lTexture.GetTexture().size() != 0 );
             REQUIRE( lTexture.GetTextureExtent3() == math::ivec3{ 256, 256, 1 } );
-            REQUIRE(
-                lTexture.GetTextureExtent3() == math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
+            REQUIRE( lTexture.GetTextureExtent3() ==
+                     math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
         }
 
         {
-            TextureData::sCreateInfo lTextureCreateInfo{};
-            TestTextureData          lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba8_snorm.dds" );
+            sTextureCreateInfo lTextureCreateInfo{};
+            TestTextureData    lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba8_snorm.dds" );
             REQUIRE( lTexture.mSpec.mFormat == eColorFormat::UNDEFINED );
             REQUIRE( lTexture.GetTexture().size() != 0 );
             REQUIRE( lTexture.GetTextureExtent3() == math::ivec3{ 256, 256, 1 } );
-            REQUIRE(
-                lTexture.GetTextureExtent3() == math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
+            REQUIRE( lTexture.GetTextureExtent3() ==
+                     math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
         }
 
         {
-            TextureData::sCreateInfo lTextureCreateInfo{};
-            TestTextureData          lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba8_unorm.ktx" );
+            sTextureCreateInfo lTextureCreateInfo{};
+            TestTextureData    lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba8_unorm.ktx" );
             REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGBA8_UNORM );
             REQUIRE( lTexture.GetTexture().size() != 0 );
             REQUIRE( lTexture.GetTextureExtent3() == math::ivec3{ 256, 256, 1 } );
-            REQUIRE(
-                lTexture.GetTextureExtent3() == math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
+            REQUIRE( lTexture.GetTextureExtent3() ==
+                     math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
         }
 
         {
-            TextureData::sCreateInfo lTextureCreateInfo{};
-            TestTextureData          lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba16_sfloat.dds" );
+            sTextureCreateInfo lTextureCreateInfo{};
+            TestTextureData    lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba16_sfloat.dds" );
             REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGBA16_FLOAT );
             REQUIRE( lTexture.GetTexture().size() != 0 );
             REQUIRE( lTexture.GetTextureExtent3() == math::ivec3{ 256, 256, 1 } );
-            REQUIRE(
-                lTexture.GetTextureExtent3() == math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
+            REQUIRE( lTexture.GetTextureExtent3() ==
+                     math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
         }
 
         {
-            TextureData::sCreateInfo lTextureCreateInfo{};
-            TestTextureData          lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba16_sfloat.ktx" );
+            sTextureCreateInfo lTextureCreateInfo{};
+            TestTextureData    lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba16_sfloat.ktx" );
             REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGBA16_FLOAT );
             REQUIRE( lTexture.GetTexture().size() != 0 );
             REQUIRE( lTexture.GetTextureExtent3() == math::ivec3{ 256, 256, 1 } );
-            REQUIRE(
-                lTexture.GetTextureExtent3() == math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
+            REQUIRE( lTexture.GetTextureExtent3() ==
+                     math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
         }
     }
 }
@@ -148,11 +148,11 @@ TEST_CASE( "Loading textures", "[CORE_CPU_TEXTURES]" )
 class TestTextureData2D : public TextureData2D
 {
   public:
-    TestTextureData2D( TextureData::sCreateInfo &a_CreateInfo )
+    TestTextureData2D( sTextureCreateInfo &a_CreateInfo )
         : TextureData2D( a_CreateInfo ){};
-    TestTextureData2D( TextureData::sCreateInfo &a_CreateInfo, sImageData &a_ImageData )
+    TestTextureData2D( sTextureCreateInfo &a_CreateInfo, sImageData &a_ImageData )
         : TextureData2D( a_CreateInfo, a_ImageData ){};
-    TestTextureData2D( TextureData::sCreateInfo &a_CreateInfo, fs::path &a_ImagePath )
+    TestTextureData2D( sTextureCreateInfo &a_CreateInfo, fs::path &a_ImagePath )
         : TextureData2D( a_CreateInfo, a_ImagePath ){};
 
     gli::texture2d &GetTexture() { return mInternalTexture2d; }
@@ -170,7 +170,7 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
 
     SECTION( "Texture creation" )
     {
-        TextureData::sCreateInfo lTextureCreateInfo{};
+        sTextureCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mFormat    = eColorFormat::RGB8_UNORM;
         lTextureCreateInfo.mWidth     = 32;
         lTextureCreateInfo.mHeight    = 64;
@@ -186,83 +186,84 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
     SECTION( "Load 2D textures from file" )
     {
         {
-            TextureData::sCreateInfo lTextureCreateInfo{};
+            sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
             TestTextureData2D lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgb8.jpg" );
             REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGBA8_UNORM );
             REQUIRE( lTexture.GetTexture().size() != 0 );
             REQUIRE( lTexture.GetTextureExtent3() == math::ivec3{ 256, 256, 1 } );
-            REQUIRE(
-                lTexture.GetTextureExtent3() == math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
+            REQUIRE( lTexture.GetTextureExtent3() ==
+                     math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
         }
 
         {
-            TextureData::sCreateInfo lTextureCreateInfo{};
+            sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
             TestTextureData2D lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_srgb8.png" );
             REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGBA8_UNORM );
             REQUIRE( lTexture.GetTexture().size() != 0 );
             REQUIRE( lTexture.GetTextureExtent3() == math::ivec3{ 256, 256, 1 } );
-            REQUIRE(
-                lTexture.GetTextureExtent3() == math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
+            REQUIRE( lTexture.GetTextureExtent3() ==
+                     math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
         }
 
         {
-            TextureData::sCreateInfo lTextureCreateInfo{};
-            TestTextureData2D        lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba8_unorm.dds" );
+            sTextureCreateInfo lTextureCreateInfo{};
+            TestTextureData2D  lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba8_unorm.dds" );
             REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGBA8_UNORM );
             REQUIRE( lTexture.GetTexture().size() != 0 );
             REQUIRE( lTexture.GetTextureExtent3() == math::ivec3{ 256, 256, 1 } );
-            REQUIRE(
-                lTexture.GetTextureExtent3() == math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
+            REQUIRE( lTexture.GetTextureExtent3() ==
+                     math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
         }
 
         {
-            TextureData::sCreateInfo lTextureCreateInfo{};
-            TestTextureData2D        lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba8_snorm.dds" );
+            sTextureCreateInfo lTextureCreateInfo{};
+            TestTextureData2D  lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba8_snorm.dds" );
             REQUIRE( lTexture.mSpec.mFormat == eColorFormat::UNDEFINED );
             REQUIRE( lTexture.GetTexture().size() != 0 );
             REQUIRE( lTexture.GetTextureExtent3() == math::ivec3{ 256, 256, 1 } );
-            REQUIRE(
-                lTexture.GetTextureExtent3() == math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
+            REQUIRE( lTexture.GetTextureExtent3() ==
+                     math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
         }
 
         {
-            TextureData::sCreateInfo lTextureCreateInfo{};
-            TestTextureData2D        lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba8_unorm.ktx" );
+            sTextureCreateInfo lTextureCreateInfo{};
+            TestTextureData2D  lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba8_unorm.ktx" );
             REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGBA8_UNORM );
             REQUIRE( lTexture.GetTexture().size() != 0 );
             REQUIRE( lTexture.GetTextureExtent3() == math::ivec3{ 256, 256, 1 } );
-            REQUIRE(
-                lTexture.GetTextureExtent3() == math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
+            REQUIRE( lTexture.GetTextureExtent3() ==
+                     math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
         }
 
         {
-            TextureData::sCreateInfo lTextureCreateInfo{};
-            TestTextureData2D        lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba16_sfloat.dds" );
+            sTextureCreateInfo lTextureCreateInfo{};
+            TestTextureData2D  lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba16_sfloat.dds" );
             REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGBA16_FLOAT );
             REQUIRE( lTexture.GetTexture().size() != 0 );
             REQUIRE( lTexture.GetTextureExtent3() == math::ivec3{ 256, 256, 1 } );
-            REQUIRE(
-                lTexture.GetTextureExtent3() == math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
+            REQUIRE( lTexture.GetTextureExtent3() ==
+                     math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
         }
 
         {
-            TextureData::sCreateInfo lTextureCreateInfo{};
-            TestTextureData2D        lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba16_sfloat.ktx" );
+            sTextureCreateInfo lTextureCreateInfo{};
+            TestTextureData2D  lTexture( lTextureCreateInfo, lTestDataRoot / "kueken7_rgba16_sfloat.ktx" );
             REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGBA16_FLOAT );
             REQUIRE( lTexture.GetTexture().size() != 0 );
             REQUIRE( lTexture.GetTextureExtent3() == math::ivec3{ 256, 256, 1 } );
-            REQUIRE(
-                lTexture.GetTextureExtent3() == math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
+            REQUIRE( lTexture.GetTextureExtent3() ==
+                     math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
         }
     }
 
     SECTION( "Load 2D textures from data" )
     {
         {
-            uint32_t lImageData[16] = { 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000,
-                0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000 };
+            uint32_t lImageData[16] = { 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000,
+                                        0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
+                                        0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000 };
 
             sImageData lImageDataStruct{};
             lImageDataStruct.mFormat    = eColorFormat::RGBA8_UNORM;
@@ -271,14 +272,14 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
             lImageDataStruct.mByteSize  = 16 * sizeof( uint32_t );
             lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
 
-            TextureData::sCreateInfo lTextureCreateInfo{};
+            sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
             TestTextureData2D lTexture( lTextureCreateInfo, lImageDataStruct );
             REQUIRE( lTexture.mSpec.mFormat == eColorFormat::RGBA8_UNORM );
             REQUIRE( lTexture.GetTexture().size() != 0 );
             REQUIRE( lTexture.GetTextureExtent3() == math::ivec3{ 4, 4, 1 } );
-            REQUIRE(
-                lTexture.GetTextureExtent3() == math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
+            REQUIRE( lTexture.GetTextureExtent3() ==
+                     math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
         }
 
         {
@@ -291,22 +292,23 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
             lImageDataStruct.mByteSize  = 16 * sizeof( float );
             lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
 
-            TextureData::sCreateInfo lTextureCreateInfo{};
+            sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
             TestTextureData2D lTexture( lTextureCreateInfo, lImageDataStruct );
             REQUIRE( lTexture.mSpec.mFormat == eColorFormat::R32_FLOAT );
             REQUIRE( lTexture.GetTexture().size() != 0 );
             REQUIRE( lTexture.GetTextureExtent3() == math::ivec3{ 4, 4, 1 } );
-            REQUIRE(
-                lTexture.GetTextureExtent3() == math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
+            REQUIRE( lTexture.GetTextureExtent3() ==
+                     math::ivec3{ lTexture.mSpec.mWidth, lTexture.mSpec.mHeight, lTexture.mSpec.mDepth } );
         }
     }
 
     SECTION( "Retrieve image data" )
     {
         {
-            uint32_t lImageData[16] = { 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000,
-                0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000 };
+            uint32_t lImageData[16] = { 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000,
+                                        0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
+                                        0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000 };
 
             sImageData lImageDataStruct{};
             lImageDataStruct.mFormat    = eColorFormat::RGBA8_UNORM;
@@ -315,7 +317,7 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
             lImageDataStruct.mByteSize  = 16 * sizeof( uint32_t );
             lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
 
-            TextureData::sCreateInfo lTextureCreateInfo{};
+            sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
             TestTextureData2D lTexture( lTextureCreateInfo, lImageDataStruct );
             sImageData        lRetrievedImageData = lTexture.GetImageData();
@@ -340,7 +342,7 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
             lImageDataStruct.mByteSize  = 16 * sizeof( float );
             lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
 
-            TextureData::sCreateInfo lTextureCreateInfo{};
+            sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
             TestTextureData2D lTexture( lTextureCreateInfo, lImageDataStruct );
             sImageData        lRetrievedImageData = lTexture.GetImageData();
@@ -359,8 +361,8 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
     SECTION( "Sampling 2D textures" )
     {
         {
-            uint32_t lImageData[9] = {
-                0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF };
+            uint32_t lImageData[9] = { 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
+                                       0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF };
 
             sImageData lImageDataStruct{};
             lImageDataStruct.mFormat    = eColorFormat::RGBA8_UNORM;
@@ -369,7 +371,7 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
             lImageDataStruct.mByteSize  = 9 * sizeof( uint32_t );
             lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
 
-            TextureData::sCreateInfo lTextureCreateInfo{};
+            sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
             TestTextureData2D lTexture( lTextureCreateInfo, lImageDataStruct );
 
@@ -383,8 +385,8 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
     SECTION( "Sampling 2D textures" )
     {
         {
-            uint32_t lImageData[9] = {
-                0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF };
+            uint32_t lImageData[9] = { 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
+                                       0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF };
 
             sImageData lImageDataStruct{};
             lImageDataStruct.mFormat    = eColorFormat::RGBA8_UNORM;
@@ -393,7 +395,7 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
             lImageDataStruct.mByteSize  = 9 * sizeof( uint32_t );
             lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
 
-            TextureData::sCreateInfo lTextureCreateInfo{};
+            sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
             TestTextureData2D lTexture( lTextureCreateInfo, lImageDataStruct );
 
@@ -412,8 +414,8 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
         }
 
         {
-            uint32_t lImageData[9] = {
-                0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF };
+            uint32_t lImageData[9] = { 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
+                                       0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF };
 
             sImageData lImageDataStruct{};
             lImageDataStruct.mFormat    = eColorFormat::RGBA8_UNORM;
@@ -422,7 +424,7 @@ TEST_CASE( "Loading 2D textures", "[CORE_CPU_TEXTURES]" )
             lImageDataStruct.mByteSize  = 9 * sizeof( uint32_t );
             lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
 
-            TextureData::sCreateInfo lTextureCreateInfo{};
+            sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
             TestTextureData2D lTexture( lTextureCreateInfo, lImageDataStruct );
 

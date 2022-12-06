@@ -13,9 +13,9 @@ namespace SE::Core
 {
     using namespace sol;
 
-    TextureData::sCreateInfo ParseCreateInfo( sol::table aTable )
+    sTextureCreateInfo ParseCreateInfo( sol::table aTable )
     {
-        TextureData::sCreateInfo lCreateInfo{};
+        sTextureCreateInfo lCreateInfo{};
         lCreateInfo.mType      = aTable["type"].valid() ? aTable["type"] : eTextureType::TEXTURE_2D;
         lCreateInfo.mFormat    = aTable["color_format"].valid() ? aTable["color_format"] : eColorFormat::UNDEFINED;
         lCreateInfo.mWidth     = aTable["width"].valid() ? aTable["width"] : 0;
@@ -153,7 +153,7 @@ namespace SE::Core
             []( sol::table aCreateInfo, sol::table aImageData ){ return TextureData2D( ParseCreateInfo( aCreateInfo ), ParseImageData( aImageData ) ); },
             []( std::string const &aImagePath )
             {
-                TextureData::sCreateInfo lCreateInfo{};
+                sTextureCreateInfo lCreateInfo{};
                 return TextureData2D( lCreateInfo, fs::path(aImagePath) );
             }
         );

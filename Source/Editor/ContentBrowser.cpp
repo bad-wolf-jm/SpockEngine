@@ -15,30 +15,30 @@ namespace SE::Editor
         , Root{ aRoot }
     {
         {
-            SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Folder.png" );
+            SE::Core::sTextureCreateInfo lTextureCreateInfo{};
+            TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Folder.png" );
             sTextureSamplingInfo lSamplingInfo{};
-            TextureSampler2D lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
+            TextureSampler2D     lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
 
             m_DirectoryIcon       = New<Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
             m_DirectoryIconHandle = aUIOverlay->CreateTextureHandle( m_DirectoryIcon );
         }
 
         {
-            SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\File.png" );
+            SE::Core::sTextureCreateInfo lTextureCreateInfo{};
+            TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\File.png" );
             sTextureSamplingInfo lSamplingInfo{};
-            TextureSampler2D lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
+            TextureSampler2D     lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
 
             m_FileIcon       = New<Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
             m_FileIconHandle = aUIOverlay->CreateTextureHandle( m_FileIcon );
         }
 
         {
-            SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-            TextureData2D lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Back.png" );
+            SE::Core::sTextureCreateInfo lTextureCreateInfo{};
+            TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Back.png" );
             sTextureSamplingInfo lSamplingInfo{};
-            TextureSampler2D lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
+            TextureSampler2D     lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
 
             m_BackIcon       = New<Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
             m_BackIconHandle = aUIOverlay->CreateTextureHandle( m_BackIcon );
@@ -49,8 +49,7 @@ namespace SE::Editor
     {
         bool lBackButtonDisabled = m_CurrentDirectory == std::filesystem::path( Root );
 
-        if( lBackButtonDisabled )
-            ImGui::BeginDisabled();
+        if( lBackButtonDisabled ) ImGui::BeginDisabled();
 
         ImGui::PushStyleColor( ImGuiCol_Button, ImVec4( 0, 0, 0, 0 ) );
         if( ImGui::ImageButton( (ImTextureID)m_BackIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 15, 15 } ) )
@@ -58,15 +57,13 @@ namespace SE::Editor
             m_CurrentDirectory = m_CurrentDirectory.parent_path();
         }
         ImGui::PopStyleColor();
-        if( lBackButtonDisabled )
-            ImGui::EndDisabled();
+        if( lBackButtonDisabled ) ImGui::EndDisabled();
 
         float cellSize = thumbnailSize + padding + textSize;
 
-        float panelWidth = ImGui::GetContentRegionAvail().x;
-        int columnCount  = (int)( panelWidth / cellSize );
-        if( columnCount < 1 )
-            columnCount = 1;
+        float panelWidth  = ImGui::GetContentRegionAvail().x;
+        int   columnCount = (int)( panelWidth / cellSize );
+        if( columnCount < 1 ) columnCount = 1;
 
         ImGui::Columns( columnCount, 0, false );
         ImDrawList *draw_list = ImGui::GetWindowDrawList();
@@ -87,7 +84,7 @@ namespace SE::Editor
         for( auto &directoryEntry : lFolderContent )
         {
             const auto &path           = directoryEntry;
-            auto relativePath          = std::filesystem::relative( path, Root );
+            auto        relativePath   = std::filesystem::relative( path, Root );
             std::string filenameString = relativePath.filename().string();
 
             ImGui::PushID( filenameString.c_str() );
@@ -111,8 +108,7 @@ namespace SE::Editor
 
             if( ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked( ImGuiMouseButton_Left ) )
             {
-                if( std::filesystem::is_directory( directoryEntry ) )
-                    m_CurrentDirectory /= path.filename();
+                if( std::filesystem::is_directory( directoryEntry ) ) m_CurrentDirectory /= path.filename();
             }
 
             UI::SetCursorPosition( lPos0 );

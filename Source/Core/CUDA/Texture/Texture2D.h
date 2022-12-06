@@ -26,18 +26,6 @@ namespace SE::Cuda
 
     using namespace SE::Core;
 
-    /** \struct sTextureCreateInfo
-     *
-     * @brief Texture configuration
-     *
-     */
-    struct sTextureCreateInfo
-    {
-        eColorFormat mFormat = eColorFormat::R32_FLOAT;
-        int32_t      mWidth  = 0;
-        int32_t      mHeight = 0;
-    };
-
     class TextureSampler2D;
 
     /** \class Texture2D
@@ -136,7 +124,7 @@ namespace SE::Cuda
     class TextureSampler2D
     {
       public:
-        sTextureSamplingInfo mSpec{};    //!< Copy of the specification structure used to create the texture
+        sTextureSamplingInfo mSpec{};            //!< Copy of the specification structure used to create the texture
         Ref<Texture2D>       mTexture = nullptr; //!< Reference to the parent texture
 
         struct DeviceData
@@ -176,7 +164,5 @@ namespace SE::Cuda
     };
 
     cudaChannelFormatDesc ToCudaChannelDesc( eColorFormat aColorFormat );
-
-
 
 } // namespace SE::Cuda

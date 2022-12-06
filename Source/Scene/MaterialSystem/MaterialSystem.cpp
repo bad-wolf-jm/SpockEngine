@@ -51,7 +51,7 @@ namespace SE::Core
         lImageDataStruct.mHeight   = 1;
         lImageDataStruct.mByteSize = sizeof( uint32_t );
 
-        TextureData::sCreateInfo lTextureCreateInfo{};
+        sTextureCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mMipLevels = 1;
 
         sTextureSamplingInfo lSamplingInfo{};
@@ -88,7 +88,7 @@ namespace SE::Core
 
     uint32_t MaterialSystem::CreateTexture( fs::path aFilePath, sTextureSamplingInfo aSamplingInfo )
     {
-        TextureData::sCreateInfo lTextureCreateInfo{};
+        sTextureCreateInfo lTextureCreateInfo{};
 
         TextureData2D    lTextureImage( lTextureCreateInfo, aFilePath );
         TextureSampler2D lTextureSampler( lTextureImage, aSamplingInfo );

@@ -47,7 +47,7 @@ std::vector<char> ConvertToKTX( fs::path const &aPath )
     {
         lBinaryData = LoadBinData( aPath );
 
-        SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+        SE::Core::sTextureCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mMipLevels = 1;
         SE::Core::TextureData2D lTexture( lTextureCreateInfo, lBinaryData );
 
@@ -55,15 +55,15 @@ std::vector<char> ConvertToKTX( fs::path const &aPath )
     }
     else if( aPath.extension().string() == ".ktx" )
     {
-        SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-        SE::Core::TextureData2D            lTexture( lTextureCreateInfo, aPath );
+        SE::Core::sTextureCreateInfo lTextureCreateInfo{};
+        SE::Core::TextureData2D      lTexture( lTextureCreateInfo, aPath );
 
         return lTexture.Serialize();
     }
     else
     {
         lBinaryData = LoadImageData( aPath );
-        SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+        SE::Core::sTextureCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mMipLevels = 1;
         SE::Core::TextureData2D lTexture( lTextureCreateInfo, lBinaryData );
 

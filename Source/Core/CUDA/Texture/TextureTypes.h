@@ -104,4 +104,20 @@ namespace SE::Core
     /// @brief Load an image file using stb_image. The image can be in any format that stb_image can handle
     sImageData LoadImageData( fs::path const &aPath );
 
+    struct sTextureCreateInfo
+    {
+        eTextureType mType =
+            eTextureType::TEXTURE_2D; /**!< Specifies the type of texture. Possible values are TEXTURE_2D and TEXTURE_3D*/
+
+        eColorFormat mFormat    = eColorFormat::UNDEFINED; /**!< Specifies the color format used for the texture*/
+        int32_t      mWidth     = 0;                       /**!< Width of the texture, in pixels*/
+        int32_t      mHeight    = 0;                       /**!< Height of the texture, in pixels*/
+        int32_t      mDepth     = 0;                       /**!< Depth of the texture, in pixels (for 3D textures only)*/
+        int32_t      mMipLevels = 1;                       /**!< Specifies the length of the mip chain associated with the texture*/
+        int32_t      mLayers    = 1;                       /**!< Depth of the texture, in pixels (for 3D textures only)*/
+
+        sTextureCreateInfo()                             = default;
+        sTextureCreateInfo( sTextureCreateInfo const & ) = default;
+    };
+
 } // namespace SE::Core

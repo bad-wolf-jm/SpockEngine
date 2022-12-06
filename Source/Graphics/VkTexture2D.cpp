@@ -39,7 +39,7 @@ namespace SE::Graphics
         TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
     }
 
-    VkTexture2D::VkTexture2D( GraphicContext &aGraphicContext, Core::TextureData::sCreateInfo &aTextureImageDescription,
+    VkTexture2D::VkTexture2D( GraphicContext &aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
                               uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                               bool aIsTransferDestination )
         : mGraphicContext( aGraphicContext )
@@ -192,7 +192,7 @@ namespace SE::Graphics
         lImageDataStruct.mByteSize  = lByteSize;
         lImageDataStruct.mPixelData = lPixelData;
 
-        Core::TextureData::sCreateInfo lTextureCreateInfo{};
+        Core::sTextureCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mMipLevels = 1;
         mTextureData                  = TextureData2D( lTextureCreateInfo, lImageDataStruct );
     }

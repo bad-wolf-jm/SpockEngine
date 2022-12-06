@@ -31,24 +31,9 @@ namespace SE::Core
     {
       public:
         /** @brief Texture creation metadata */
-        struct sCreateInfo
-        {
-            eTextureType mType =
-                eTextureType::TEXTURE_2D; /**!< Specifies the type of texture. Possible values are TEXTURE_2D and TEXTURE_3D*/
-
-            eColorFormat mFormat    = eColorFormat::UNDEFINED; /**!< Specifies the color format used for the texture*/
-            int32_t      mWidth     = 0;                       /**!< Width of the texture, in pixels*/
-            int32_t      mHeight    = 0;                       /**!< Height of the texture, in pixels*/
-            int32_t      mDepth     = 0;                       /**!< Depth of the texture, in pixels (for 3D textures only)*/
-            int32_t      mMipLevels = 1; /**!< Specifies the length of the mip chain associated with the texture*/
-            int32_t      mLayers    = 1; /**!< Depth of the texture, in pixels (for 3D textures only)*/
-
-            sCreateInfo()                      = default;
-            sCreateInfo( sCreateInfo const & ) = default;
-        };
 
       public:
-        sCreateInfo mSpec; /**!< Copy of the sCreateInfo structure used ot define the texture. */
+        sTextureCreateInfo mSpec; /**!< Copy of the sCreateInfo structure used ot define the texture. */
 
         /** @brief Default constructor*/
         TextureData() = default;
@@ -63,7 +48,7 @@ namespace SE::Core
          *
          * @param aCreateInfo Creation structure
          */
-        TextureData( sCreateInfo const &aCreateInfo );
+        TextureData( sTextureCreateInfo const &aCreateInfo );
 
         /** @brief Construct a texture from a create information structure and initial data
          *
@@ -75,7 +60,7 @@ namespace SE::Core
          * @param aCreateInfo Creation structure
          * @param aImageData  Image pixel data.
          */
-        TextureData( sCreateInfo const &aCreateInfo, sImageData const &aImageData );
+        TextureData( sTextureCreateInfo const &aCreateInfo, sImageData const &aImageData );
 
         /** @brief Construct a texture from a create information structure and initial data from image file
          *
@@ -90,7 +75,7 @@ namespace SE::Core
          * @param aCreateInfo Creation structure
          * @param aImagePath  Image file.
          */
-        TextureData( sCreateInfo const &aCreateInfo, fs::path const &aImagePath );
+        TextureData( sTextureCreateInfo const &aCreateInfo, fs::path const &aImagePath );
 
         TextureData( char const *aKTXData, uint32_t aSize );
 
@@ -141,9 +126,9 @@ namespace SE::Core
          * These constructors perform the same function as the corresponding constructor for the base class, but also internally create
          * a 2D texture.
          */
-        TextureData2D( sCreateInfo const &aCreateInfo );
-        TextureData2D( sCreateInfo const &aCreateInfo, sImageData const &aImageData );
-        TextureData2D( sCreateInfo const &aCreateInfo, fs::path const &aImagePath );
+        TextureData2D( sTextureCreateInfo const &aCreateInfo );
+        TextureData2D( sTextureCreateInfo const &aCreateInfo, sImageData const &aImageData );
+        TextureData2D( sTextureCreateInfo const &aCreateInfo, fs::path const &aImagePath );
         TextureData2D( char const *aKTXData, uint32_t aSize );
 
         sImageData GetImageData();

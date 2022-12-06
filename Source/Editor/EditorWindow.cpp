@@ -13,9 +13,9 @@
 #include "Scene/Importer/ObjImporter.h"
 #include "Scene/Importer/glTFImporter.h"
 
+#include "Core/CUDA/Texture/TextureData.h"
 #include "Core/File.h"
 #include "Core/Logging.h"
-#include "Core/CUDA/Texture/TextureData.h"
 
 #include "Scene/Components.h"
 
@@ -136,10 +136,10 @@ namespace SE::Editor
     {
         if( aImagePath.extension() == ".png" )
         {
-            SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
-            TextureData2D                      lTextureData( lTextureCreateInfo, aImagePath );
-            sTextureSamplingInfo               lSamplingInfo{};
-            SE::Core::TextureSampler2D         lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
+            SE::Core::sTextureCreateInfo lTextureCreateInfo{};
+            TextureData2D                lTextureData( lTextureCreateInfo, aImagePath );
+            sTextureSamplingInfo         lSamplingInfo{};
+            SE::Core::TextureSampler2D   lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
             return New<SE::Graphics::Texture2D>( aGraphicContext, lTextureData, lTextureSampler );
         }
@@ -183,7 +183,7 @@ namespace SE::Editor
         mContentBrowser                     = ContentBrowser( mGraphicContext, mUIOverlay, "C:\\GitLab\\SpockEngine\\Saved" );
 
         {
-            SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+            SE::Core::sTextureCreateInfo lTextureCreateInfo{};
             TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Play.png" );
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
@@ -193,7 +193,7 @@ namespace SE::Editor
         }
 
         {
-            SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+            SE::Core::sTextureCreateInfo lTextureCreateInfo{};
             TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Pause.png" );
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
@@ -203,7 +203,7 @@ namespace SE::Editor
         }
 
         {
-            SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+            SE::Core::sTextureCreateInfo lTextureCreateInfo{};
             TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Play.png" );
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
@@ -213,7 +213,7 @@ namespace SE::Editor
         }
 
         {
-            SE::Core::TextureData::sCreateInfo lTextureCreateInfo{};
+            SE::Core::sTextureCreateInfo lTextureCreateInfo{};
             TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Camera.png" );
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );

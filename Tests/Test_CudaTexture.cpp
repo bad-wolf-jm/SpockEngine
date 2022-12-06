@@ -106,7 +106,7 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
             lImageDataStruct.mByteSize  = 16 * sizeof( uint32_t );
             lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
 
-            TextureData::sCreateInfo lTextureCreateInfo{};
+            sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
             TextureData2D lTexture( lTextureCreateInfo, lImageDataStruct );
 
@@ -125,7 +125,7 @@ TEST_CASE( "Loading Cuda 2D textures", "[CORE_CUDA_TEXTURES]" )
             lImageDataStruct.mByteSize  = 16 * sizeof( float );
             lImageDataStruct.mPixelData = reinterpret_cast<uint8_t *>( lImageData );
 
-            TextureData::sCreateInfo lTextureCreateInfo{};
+            sTextureCreateInfo lTextureCreateInfo{};
             lTextureCreateInfo.mMipLevels = 1;
             TextureData2D      lTexture( lTextureCreateInfo, lImageDataStruct );
             sTextureCreateInfo lCudaTextureCreateInfo{};

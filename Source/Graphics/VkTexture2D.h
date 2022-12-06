@@ -27,10 +27,10 @@ namespace SE::Graphics
         friend class VkSampler2D;
 
       public:
-        Core::TextureData::sCreateInfo mSpec;
+        Core::sTextureCreateInfo mSpec;
 
         /** @brief */
-        VkTexture2D( GraphicContext &aGraphicContext, Core::TextureData::sCreateInfo &aTextureImageDescription, uint8_t aSampleCount,
+        VkTexture2D( GraphicContext &aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription, uint8_t aSampleCount,
                      bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
 
         /** @brief */

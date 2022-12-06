@@ -60,19 +60,19 @@ namespace SE::Graphics
     /** @brief */
     struct TextureDescription
     {
-        bool                   ExternalImage       = false; /**!< */
-        bool                   IsHostVisible       = false;
-        bool                   IsCudaVisible       = false;
-        TextureUsage           Usage               = { TextureUsageFlags::SAMPLED };
-        TextureAspectMask      AspectMask          = { TextureAspectMaskBits::COLOR };
-        VkFilter               MinificationFilter  = VK_FILTER_LINEAR;
-        VkFilter               MagnificationFilter = VK_FILTER_LINEAR;
-        VkSamplerMipmapMode    MipmapMode          = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-        VkSamplerAddressMode   WrappingMode        = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        eColorFormat           Format              = eColorFormat::RGBA8_UNORM;
-        std::vector<Mip>       MipLevels           = {};
-        bool                   Sampled             = false;
-        uint8_t                SampleCount         = 1;
+        bool                 ExternalImage       = false; /**!< */
+        bool                 IsHostVisible       = false;
+        bool                 IsCudaVisible       = false;
+        TextureUsage         Usage               = { TextureUsageFlags::SAMPLED };
+        TextureAspectMask    AspectMask          = { TextureAspectMaskBits::COLOR };
+        VkFilter             MinificationFilter  = VK_FILTER_LINEAR;
+        VkFilter             MagnificationFilter = VK_FILTER_LINEAR;
+        VkSamplerMipmapMode  MipmapMode          = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+        VkSamplerAddressMode WrappingMode        = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        eColorFormat         Format              = eColorFormat::RGBA8_UNORM;
+        std::vector<Mip>     MipLevels           = {};
+        bool                 Sampled             = false;
+        uint8_t              SampleCount         = 1;
         // std::array<Swizzle, 4> ComponentSwizzle    = { Swizzle::IDENTITY, Swizzle::IDENTITY, Swizzle::IDENTITY,
         //                                                Swizzle::IDENTITY }; /**!< */
 
@@ -94,9 +94,9 @@ namespace SE::Graphics
     class Texture2D
     {
       public:
-        TextureDescription Spec; /**!< */
-        Core::TextureData::sCreateInfo mSpec;
-        sTextureSamplingInfo mSamplingSpec; /**!< */
+        TextureDescription       Spec; /**!< */
+        Core::sTextureCreateInfo mSpec;
+        sTextureSamplingInfo     mSamplingSpec; /**!< */
 
         /** @brief */
         Texture2D( GraphicContext &aGraphicContext, TextureDescription &aBufferDescription, TextureData &aBufferData );

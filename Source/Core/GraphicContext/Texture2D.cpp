@@ -26,7 +26,7 @@ namespace SE::Graphics
         , Spec( aBufferDescription )
     {
         Buffer lStagingBuffer( mGraphicContext, reinterpret_cast<uint8_t *>( a_BufferData.Data ), a_BufferData.ByteSize,
-                                eBufferBindType::UNKNOWN, true, false, true, false );
+                               eBufferBindType::UNKNOWN, true, false, true, false );
 
         mTextureImageObject =
             New<sVkImageObject>( mGraphicContext.mContext, static_cast<uint32_t>( Spec.MipLevels[0].Width ),
@@ -94,7 +94,7 @@ namespace SE::Graphics
 
         sImageData &lImageData = aCubeMapData.GetImageData();
         Buffer lStagingBuffer( mGraphicContext, lImageData.mPixelData, lImageData.mByteSize, eBufferBindType::UNKNOWN, true, false,
-                                true, false );
+                               true, false );
 
         Spec.MipLevels = { { static_cast<uint32_t>( lImageData.mWidth ), static_cast<uint32_t>( lImageData.mHeight ), 0, 0 } };
         Spec.Format    = lImageData.mFormat;
@@ -232,7 +232,7 @@ namespace SE::Graphics
         lImageDataStruct.mByteSize  = lByteSize;
         lImageDataStruct.mPixelData = lPixelData;
 
-        Core::TextureData::sCreateInfo lTextureCreateInfo{};
+        Core::sTextureCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mMipLevels = 1;
         aTextureData                  = TextureData2D( lTextureCreateInfo, lImageDataStruct );
     }

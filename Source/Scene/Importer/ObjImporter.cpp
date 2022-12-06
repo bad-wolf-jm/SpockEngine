@@ -57,7 +57,7 @@ namespace SE::Core
             sImportedTexture lNewTexture{};
             lNewTexture.mName = aTextureName.empty() ? fmt::format( "TEXTURE_{}", mTextures.size() ) : aTextureName;
 
-            lNewTexture.mTexture = New<TextureData2D>( TextureData::sCreateInfo{}, lTexturePath );
+            lNewTexture.mTexture = New<TextureData2D>( sTextureCreateInfo{}, lTexturePath );
 
             sTextureSamplingInfo lSamplerCreateInfo{};
             lSamplerCreateInfo.mWrapping = eSamplerWrapping::REPEAT;
