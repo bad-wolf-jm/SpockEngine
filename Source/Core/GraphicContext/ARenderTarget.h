@@ -3,10 +3,13 @@
 #include "Core/GraphicContext/Window.h"
 #include "Core/Memory.h"
 
+#include "Core/CUDA/Texture/ColorFormat.h"
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicContext.h"
-#include "Core/CUDA/Texture/ColorFormat.h"
 #include "Core/Vulkan/VkCoreMacros.h"
+
+#include "Graphics/VkRenderTarget.h"
+#include "Graphics/VkTexture2D.h"
 
 namespace SE::Graphics
 {
@@ -78,7 +81,7 @@ namespace SE::Graphics
 
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-                            Ref<Internal::sVkFramebufferImage> aFramebufferImage );
+                            Ref<VkTexture2D> aFramebufferImage );
 
         ARenderTarget &AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
                                       math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
@@ -86,7 +89,7 @@ namespace SE::Graphics
 
         ARenderTarget &AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
                                       math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
-                                      eAttachmentStoreOp eStoreOp, Ref<Internal::sVkFramebufferImage> aFramebufferImage );
+                                      eAttachmentStoreOp eStoreOp, Ref<VkTexture2D> aFramebufferImage );
 
         void Finalize();
 
@@ -97,7 +100,7 @@ namespace SE::Graphics
         virtual void Present();
 
         virtual std::vector<VkClearValue> GetClearValues();
-        virtual Ref<sVkFramebufferObject> GetFramebuffer();
+        virtual Ref<VkRenderTarget>       GetFramebuffer();
 
         virtual VkSemaphore GetImageAvailableSemaphore( uint32_t i );
         virtual VkSemaphore GetRenderFinishedSemaphore( uint32_t i );
@@ -107,7 +110,7 @@ namespace SE::Graphics
 
         virtual Ref<sVkCommandBufferObject> GetCurrentCommandBuffer() { return mCommandBufferObject[0]; }
 
-        Ref<sVkFramebufferImage> &GetAttachment( std::string const &aKey );
+        Ref<VkTexture2D> &GetAttachment( std::string const &aKey );
 
       protected:
         Ref<sVkAbstractRenderPassObject> CreateDefaultRenderPass();
@@ -122,10 +125,10 @@ namespace SE::Graphics
         std::vector<sAttachmentDescription> mAttachmentInfo = {};
         std::vector<std::string>            mAttachmentIDs  = {};
 
-        std::unordered_map<std::string, Ref<sVkFramebufferImage>> mAttachments = {};
+        std::unordered_map<std::string, Ref<VkTexture2D>> mAttachments = {};
 
         Ref<sVkAbstractRenderPassObject> mRenderPassObject  = nullptr;
-        Ref<sVkFramebufferObject>        mFramebufferObject = nullptr;
+        Ref<VkRenderTarget>              mFramebufferObject = nullptr;
 
         std::vector<Ref<sVkCommandBufferObject>> mCommandBufferObject = {};
     };

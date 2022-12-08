@@ -36,13 +36,9 @@ add_library(LTSimulationEngineRuntime STATIC
     
     Core/Vulkan/VkContext.cpp
     Core/Vulkan/VkPipeline.cpp
-    Core/Vulkan/VkImage.cpp
     Core/Vulkan/VkCommand.cpp
     Core/Vulkan/VkAbstractRenderPass.cpp
     
-    Core/GraphicContext/Buffer.cpp
-    Core/GraphicContext/Texture2D.cpp
-    Core/GraphicContext/TextureCubeMap.cpp
     Core/GraphicContext/GraphicContext.cpp
     Core/GraphicContext/DescriptorSet.cpp
     Core/GraphicContext/GraphicsPipeline.cpp
@@ -55,6 +51,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/VkGpuBuffer.cpp
     Graphics/VkTexture2D.cpp
     Graphics/VkSampler2D.cpp
+    Graphics/VkRenderTarget.cpp
 
     Scene/Primitives/Primitives.cpp
     Scene/Primitives/Arrow.cpp

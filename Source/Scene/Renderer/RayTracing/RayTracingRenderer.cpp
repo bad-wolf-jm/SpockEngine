@@ -112,11 +112,8 @@ namespace SE::Core
         mRayTracingParameters.mNumLightSamples = 1;
         mRayTracingParameters.mNumPixelSamples = 1;
 
-        SE::Cuda::GPUExternalMemory lTransformedVertexBuffer( *mScene->mTransformedVertexBuffer,
-                                                              mScene->mTransformedVertexBuffer->SizeAs<uint8_t>() );
-        SE::Cuda::GPUExternalMemory lIndexBuffer( *mScene->mIndexBuffer, mScene->mIndexBuffer->SizeAs<uint8_t>() );
-        mRayTracingParameters.mIndexBuffer  = lIndexBuffer.DataAs<math::uvec3>();
-        mRayTracingParameters.mVertexBuffer = lTransformedVertexBuffer.DataAs<VertexData>();
+        mRayTracingParameters.mIndexBuffer  = mScene->mIndexBuffer->DataAs<math::uvec3>();
+        mRayTracingParameters.mVertexBuffer = mScene->mTransformedVertexBuffer->DataAs<VertexData>();
 
         mRayTracingParameters.mTextures  = mScene->GetMaterialSystem()->GetCudaTextures().DataAs<Cuda::TextureSampler2D::DeviceData>();
         mRayTracingParameters.mMaterials = mScene->GetMaterialSystem()->GetCudaMaterials().DataAs<sShaderMaterial>();
@@ -130,7 +127,7 @@ namespace SE::Core
         denoiserIntensity.Resize( sizeof( float ) );
 
         OptixDenoiserParams denoiserParams;
-        denoiserParams.denoiseAlpha =  OPTIX_DENOISER_ALPHA_MODE_ALPHA_AS_AOV;
+        denoiserParams.denoiseAlpha = OPTIX_DENOISER_ALPHA_MODE_ALPHA_AS_AOV;
 
 #if OPTIX_VERSION >= 70300
         if( denoiserIntensity.SizeAs<uint8_t>() != sizeof( float ) )
@@ -206,12 +203,12 @@ namespace SE::Core
                         outputLayer.width * outputLayer.height * sizeof( float4 ), cudaMemcpyDeviceToDevice );
         }
 
-        computeFinalPixelColors( mRayTracingParameters, mDenoisedBuffer, mCudaOutputBuffer );
+        computeFinalPixelColors( mRayTracingParameters, mDenoisedBuffer, *mOutputBuffer );
 
         CUDA_SYNC_CHECK();
 
         mOutputTexture->TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
-        mOutputTexture->CopyBufferToImage( *mOutputBuffer );
+        mOutputTexture->SetPixelData( *mOutputBuffer );
         mOutputTexture->TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
     }
 
@@ -228,9 +225,8 @@ namespace SE::Core
         mRayTracingParameters.mCamera.mHorizontal =
             cosFovy * aspect *
             math::normalize( math::cross( mRayTracingParameters.mCamera.mDirection, math::vec3( 0.0f, 1.0f, 0.0f ) ) );
-        mRayTracingParameters.mCamera.mVertical =
-            cosFovy *
-            math::normalize( math::cross( mRayTracingParameters.mCamera.mHorizontal, mRayTracingParameters.mCamera.mDirection ) );
+        mRayTracingParameters.mCamera.mVertical = cosFovy * math::normalize( math::cross( mRayTracingParameters.mCamera.mHorizontal,
+                                                                                          mRayTracingParameters.mCamera.mDirection ) );
     }
 
     /*! resize frame buffer to given resolution */
@@ -278,17 +274,18 @@ namespace SE::Core
         fbAlbedo.Resize( aOutputWidth * aOutputHeight * sizeof( float4 ) );
         mFinalColorBuffer.Resize( aOutputWidth * aOutputHeight * sizeof( uint32_t ) );
 
-        TextureDescription lTextureCreateInfo{};
-        lTextureCreateInfo.Format    = eColorFormat::RGBA8_UNORM;
-        lTextureCreateInfo.MipLevels = { Mip{ aOutputWidth, aOutputHeight, 0 } };
-        lTextureCreateInfo.Usage     = { TextureUsageFlags::TRANSFER_DESTINATION, TextureUsageFlags::SAMPLED };
-        lTextureCreateInfo.Sampled   = true;
-        mOutputBuffer                = New<Graphics::Buffer>( mGraphicContext, eBufferBindType::UNKNOWN, false, true, true, false,
-                                               aOutputWidth * aOutputHeight * sizeof( uint32_t ) );
-        mOutputTexture               = New<Graphics::Texture2D>( mGraphicContext, lTextureCreateInfo );
+        sTextureCreateInfo lTextureCreateInfo{};
+        lTextureCreateInfo.mFormat    = eColorFormat::RGBA8_UNORM;
+        lTextureCreateInfo.mMipLevels = 1;
+        lTextureCreateInfo.mWidth     = aOutputWidth;
+        lTextureCreateInfo.mHeight    = aOutputHeight;
+        lTextureCreateInfo.mDepth     = 1;
+        mOutputTexture                = New<Graphics::VkTexture2D>( mGraphicContext, lTextureCreateInfo, 1, false, false, true, true );
         mOutputTexture->TransitionImageLayout( VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
 
-        mCudaOutputBuffer = GPUExternalMemory( *mOutputBuffer, aOutputWidth * aOutputHeight * sizeof( uint32_t ) );
+        mOutputBuffer = New<Graphics::VkGpuBuffer>( mGraphicContext, eBufferBindType::UNKNOWN, false, false, true, false,
+                                                    aOutputWidth * aOutputHeight * sizeof( uint32_t ) );
+
         // update the launch parameters that we'll pass to the optix
         // launch:
         mRayTracingParameters.mFrame.mSize         = math::ivec2{ aOutputWidth, aOutputHeight };

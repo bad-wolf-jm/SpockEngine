@@ -2,11 +2,12 @@
 
 #include "Core/Memory.h"
 
-#include "Core/GraphicContext//Buffer.h"
+#include "Graphics/VkGpuBuffer.h"
+
+#include "Core/GraphicContext//ARenderContext.h"
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
-#include "Core/GraphicContext//ARenderContext.h"
 
 #include "Scene/VertexData.h"
 
@@ -33,8 +34,8 @@ namespace SE::Core
     class CoordinateGridRenderer : public SE::Core::SceneRenderPipeline<EmptyVertexData>
     {
       public:
-        CoordinateGridRenderer(
-            GraphicContext &mGraphicContext, ARenderContext &a_RenderContext, CoordinateGridRendererCreateInfo a_CreateInfo );
+        CoordinateGridRenderer( GraphicContext &mGraphicContext, ARenderContext &a_RenderContext,
+                                CoordinateGridRendererCreateInfo a_CreateInfo );
         ~CoordinateGridRenderer() = default;
 
         void Render( math::mat4 a_Projection, math::mat4 a_View, ARenderContext &aRenderContext );
@@ -46,7 +47,7 @@ namespace SE::Core
         std::vector<sPushConstantRange>       GetPushConstantLayout();
 
       private:
-        Ref<Buffer>        mCameraBuffer      = nullptr;
+        Ref<VkGpuBuffer>   mCameraBuffer      = nullptr;
         Ref<DescriptorSet> mCameraDescriptors = nullptr;
     };
 

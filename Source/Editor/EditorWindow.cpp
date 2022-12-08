@@ -132,31 +132,6 @@ namespace SE::Editor
         return lItemPathStr;
     }
 
-    static Ref<SE::Graphics::Texture2D> LoadImagePreview( SE::Graphics::GraphicContext &aGraphicContext, fs::path aImagePath )
-    {
-        if( aImagePath.extension() == ".png" )
-        {
-            SE::Core::sTextureCreateInfo lTextureCreateInfo{};
-            TextureData2D                lTextureData( lTextureCreateInfo, aImagePath );
-            sTextureSamplingInfo         lSamplingInfo{};
-            SE::Core::TextureSampler2D   lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
-
-            return New<SE::Graphics::Texture2D>( aGraphicContext, lTextureData, lTextureSampler );
-        }
-        return nullptr;
-    }
-
-    static void UpdateImageHandle( Ref<SE::Core::UIContext> aUIOverlay, ImageHandle &aImageHandle,
-                                   Ref<SE::Graphics::Texture2D> aTexture )
-    {
-        if( !aTexture ) return;
-
-        if( !aImageHandle.Handle )
-            aImageHandle = aUIOverlay->CreateTextureHandle( aTexture );
-        else
-            aImageHandle.Handle->Write( aTexture, 0 );
-    }
-
     static bool EditButton( Entity a_Node, math::vec2 a_Size )
     {
         char l_OnLabel[128];
@@ -188,7 +163,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            m_PlayIcon       = New<SE::Graphics::Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
+            auto lTexture    = New<SE::Graphics::VkTexture2D>( mGraphicContext, lTextureData );
+            m_PlayIcon       = New<SE::Graphics::VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
             m_PlayIconHandle = mUIOverlay->CreateTextureHandle( m_PlayIcon );
         }
 
@@ -198,7 +174,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            m_PauseIcon       = New<SE::Graphics::Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
+            auto lTexture     = New<SE::Graphics::VkTexture2D>( mGraphicContext, lTextureData );
+            m_PauseIcon       = New<SE::Graphics::VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
             m_PauseIconHandle = mUIOverlay->CreateTextureHandle( m_PauseIcon );
         }
 
@@ -208,7 +185,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            m_DefaultTextureImage       = New<SE::Graphics::Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
+            auto lTexture               = New<SE::Graphics::VkTexture2D>( mGraphicContext, lTextureData );
+            m_DefaultTextureImage       = New<SE::Graphics::VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
             m_DefaultTextureImageHandle = mUIOverlay->CreateTextureHandle( m_PlayIcon );
         }
 
@@ -218,7 +196,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            m_CameraIcon       = New<SE::Graphics::Texture2D>( mGraphicContext, lTextureData, lTextureSampler );
+            auto lTexture      = New<SE::Graphics::VkTexture2D>( mGraphicContext, lTextureData );
+            m_CameraIcon       = New<SE::Graphics::VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
             m_CameraIconHandle = mUIOverlay->CreateTextureHandle( m_CameraIcon );
         }
     }
@@ -372,192 +351,192 @@ namespace SE::Editor
         // }
         // ImGui::End();
 
-        if( ImGui::Begin( "MATERIAL", &p_open, ImGuiWindowFlags_None ) )
-        {
-            auto  l_WindowSize       = UI::GetAvailableContentSpace();
-            auto  lWorkspaceAreaSize = UI::GetAvailableContentSpace();
-            float l_LabelSize        = 175.0f;
-            auto  l_DrawList         = ImGui::GetWindowDrawList();
+        // if( ImGui::Begin( "MATERIAL", &p_open, ImGuiWindowFlags_None ) )
+        // {
+        //     auto  l_WindowSize       = UI::GetAvailableContentSpace();
+        //     auto  lWorkspaceAreaSize = UI::GetAvailableContentSpace();
+        //     float l_LabelSize        = 175.0f;
+        //     auto  l_DrawList         = ImGui::GetWindowDrawList();
 
-            {
-            }
+        //     {
+        //     }
 
-            UI::Text( "Material name:" );
-            char buf[128] = { 0 };
-            std::strncpy( buf, "NAME", std::min( std::size_t( 4 ), std::size_t( 128 ) ) );
-            if( ImGui::InputText( "##material_name", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
-            {
-            }
+        //     UI::Text( "Material name:" );
+        //     char buf[128] = { 0 };
+        //     std::strncpy( buf, "NAME", std::min( std::size_t( 4 ), std::size_t( 128 ) ) );
+        //     if( ImGui::InputText( "##material_name", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
+        //     {
+        //     }
 
-            UI::Text( "Material preview:" );
-            UI::Image( m_CameraIconHandle, math::vec2{ 200, 200 } );
+        //     UI::Text( "Material preview:" );
+        //     UI::Image( m_CameraIconHandle, math::vec2{ 200, 200 } );
 
-            UI::Text( "Line width" );
-            ImGui::SameLine();
-            float l_LineWidth = 0.0f;
-            UI::SetCursorPosition( ImVec2( static_cast<float>( l_WindowSize.x ) - 256.0f, ImGui::GetCursorPos().y - 5.0f ) );
-            UI::Slider( "##line_width", "%.2f", 1.0f, 5.0f, &l_LineWidth );
+        //     UI::Text( "Line width" );
+        //     ImGui::SameLine();
+        //     float l_LineWidth = 0.0f;
+        //     UI::SetCursorPosition( ImVec2( static_cast<float>( l_WindowSize.x ) - 256.0f, ImGui::GetCursorPos().y - 5.0f ) );
+        //     UI::Slider( "##line_width", "%.2f", 1.0f, 5.0f, &l_LineWidth );
 
-            Text( "Use alpha mask" );
-            ImGui::SameLine();
-            bool l_AlphaMask = false;
-            UI::SetCursorPosition( ImVec2( static_cast<float>( l_WindowSize.x ) - 32.0f, ImGui::GetCursorPos().y - 5.0f ) );
-            UI::Checkbox( "##use_alpha_mask", &l_AlphaMask );
+        //     Text( "Use alpha mask" );
+        //     ImGui::SameLine();
+        //     bool l_AlphaMask = false;
+        //     UI::SetCursorPosition( ImVec2( static_cast<float>( l_WindowSize.x ) - 32.0f, ImGui::GetCursorPos().y - 5.0f ) );
+        //     UI::Checkbox( "##use_alpha_mask", &l_AlphaMask );
 
-            UI::Text( "Alpha mask threshold" );
-            ImGui::SameLine();
-            float l_AlphaMaskThreshold = 0.0f;
-            UI::SetCursorPosition( ImVec2( static_cast<float>( l_WindowSize.x ) - 256.0f, ImGui::GetCursorPos().y - 5.0f ) );
-            UI::Slider( "##alpha_threshold", "%.2f", 0.0f, 1.0f, &l_AlphaMaskThreshold );
+        //     UI::Text( "Alpha mask threshold" );
+        //     ImGui::SameLine();
+        //     float l_AlphaMaskThreshold = 0.0f;
+        //     UI::SetCursorPosition( ImVec2( static_cast<float>( l_WindowSize.x ) - 256.0f, ImGui::GetCursorPos().y - 5.0f ) );
+        //     UI::Slider( "##alpha_threshold", "%.2f", 0.0f, 1.0f, &l_AlphaMaskThreshold );
 
-            {
-                static Ref<SE::Graphics::Texture2D> lBaseColorTexture = nullptr;
-                static ImageHandle                  lBaseColorTextureHandle{};
-                UI::Text( "Base color:" );
-                ImGui::Columns( 2, NULL, false );
-                ImGui::SetColumnWidth( 0, 150 );
-                auto l_TopLeft     = ImGui::GetCursorScreenPos();
-                auto l_BottomRight = ImGui::GetCursorScreenPos() + ImVec2{ 128, 128 };
-                if( lBaseColorTextureHandle.Handle )
-                    UI::Image( lBaseColorTextureHandle, math::vec2{ 128, 128 } );
-                else
-                    UI::Image( m_DefaultTextureImageHandle, math::vec2{ 128, 128 } );
+        //     {
+        //         static Ref<SE::Graphics::Texture2D> lBaseColorTexture = nullptr;
+        //         static ImageHandle                  lBaseColorTextureHandle{};
+        //         UI::Text( "Base color:" );
+        //         ImGui::Columns( 2, NULL, false );
+        //         ImGui::SetColumnWidth( 0, 150 );
+        //         auto l_TopLeft     = ImGui::GetCursorScreenPos();
+        //         auto l_BottomRight = ImGui::GetCursorScreenPos() + ImVec2{ 128, 128 };
+        //         if( lBaseColorTextureHandle.Handle )
+        //             UI::Image( lBaseColorTextureHandle, math::vec2{ 128, 128 } );
+        //         else
+        //             UI::Image( m_DefaultTextureImageHandle, math::vec2{ 128, 128 } );
 
-                if( ImGui::BeginDragDropTarget() )
-                {
-                    if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
-                    {
-                        fs::path lItemPath( UTF16ToAscii( (const char *)payload->Data, payload->DataSize ) );
-                        lBaseColorTexture = LoadImagePreview( mGraphicContext, lItemPath );
-                        UpdateImageHandle( mUIOverlay, lBaseColorTextureHandle, lBaseColorTexture );
-                    }
-                    ImGui::EndDragDropTarget();
-                }
-                l_DrawList->AddRect( l_TopLeft, l_BottomRight, IM_COL32( 15, 15, 15, 255 ) );
-                ImGui::NextColumn();
-                UI::Text( "Base color factor:" );
-                math::vec4 lBaseColorFactor = 0xffffffff_rgbaf;
-                UI::VectorComponentEditor( "", lBaseColorFactor, 1.0, 0.0f );
-                ImGui::Columns( 1 );
-            }
+        //         if( ImGui::BeginDragDropTarget() )
+        //         {
+        //             if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
+        //             {
+        //                 fs::path lItemPath( UTF16ToAscii( (const char *)payload->Data, payload->DataSize ) );
+        //                 lBaseColorTexture = LoadImagePreview( mGraphicContext, lItemPath );
+        //                 UpdateImageHandle( mUIOverlay, lBaseColorTextureHandle, lBaseColorTexture );
+        //             }
+        //             ImGui::EndDragDropTarget();
+        //         }
+        //         l_DrawList->AddRect( l_TopLeft, l_BottomRight, IM_COL32( 15, 15, 15, 255 ) );
+        //         ImGui::NextColumn();
+        //         UI::Text( "Base color factor:" );
+        //         math::vec4 lBaseColorFactor = 0xffffffff_rgbaf;
+        //         UI::VectorComponentEditor( "", lBaseColorFactor, 1.0, 0.0f );
+        //         ImGui::Columns( 1 );
+        //     }
 
-            {
-                static Ref<SE::Graphics::Texture2D> lEmissiveTexture = nullptr;
-                static ImageHandle                  lEmissiveTextureHandle{};
-                UI::Text( "Emissive:" );
-                ImGui::Columns( 2, NULL, false );
-                ImGui::SetColumnWidth( 0, 150 );
-                auto l_TopLeft     = ImGui::GetCursorScreenPos();
-                auto l_BottomRight = ImGui::GetCursorScreenPos() + ImVec2{ 128, 128 };
-                if( lEmissiveTextureHandle.Handle )
-                    UI::Image( lEmissiveTextureHandle, math::vec2{ 128, 128 } );
-                else
-                    UI::Image( m_DefaultTextureImageHandle, math::vec2{ 128, 128 } );
-                if( ImGui::BeginDragDropTarget() )
-                {
-                    if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
-                    {
-                        fs::path lItemPath( UTF16ToAscii( (const char *)payload->Data, payload->DataSize ) );
-                        lEmissiveTexture = LoadImagePreview( mGraphicContext, lItemPath );
-                        UpdateImageHandle( mUIOverlay, lEmissiveTextureHandle, lEmissiveTexture );
-                    }
-                    ImGui::EndDragDropTarget();
-                }
-                l_DrawList->AddRect( l_TopLeft, l_BottomRight, IM_COL32( 15, 15, 15, 255 ) );
-                ImGui::NextColumn();
-                UI::Text( "Emissive factor:" );
-                math::vec4 lBaseColorFactor = 0xffffffff_rgbaf;
-                UI::VectorComponentEditor( "", lBaseColorFactor, 1.0, 0.0f );
-                ImGui::Columns( 1 );
-            }
+        //     {
+        //         static Ref<SE::Graphics::Texture2D> lEmissiveTexture = nullptr;
+        //         static ImageHandle                  lEmissiveTextureHandle{};
+        //         UI::Text( "Emissive:" );
+        //         ImGui::Columns( 2, NULL, false );
+        //         ImGui::SetColumnWidth( 0, 150 );
+        //         auto l_TopLeft     = ImGui::GetCursorScreenPos();
+        //         auto l_BottomRight = ImGui::GetCursorScreenPos() + ImVec2{ 128, 128 };
+        //         if( lEmissiveTextureHandle.Handle )
+        //             UI::Image( lEmissiveTextureHandle, math::vec2{ 128, 128 } );
+        //         else
+        //             UI::Image( m_DefaultTextureImageHandle, math::vec2{ 128, 128 } );
+        //         if( ImGui::BeginDragDropTarget() )
+        //         {
+        //             if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
+        //             {
+        //                 fs::path lItemPath( UTF16ToAscii( (const char *)payload->Data, payload->DataSize ) );
+        //                 lEmissiveTexture = LoadImagePreview( mGraphicContext, lItemPath );
+        //                 UpdateImageHandle( mUIOverlay, lEmissiveTextureHandle, lEmissiveTexture );
+        //             }
+        //             ImGui::EndDragDropTarget();
+        //         }
+        //         l_DrawList->AddRect( l_TopLeft, l_BottomRight, IM_COL32( 15, 15, 15, 255 ) );
+        //         ImGui::NextColumn();
+        //         UI::Text( "Emissive factor:" );
+        //         math::vec4 lBaseColorFactor = 0xffffffff_rgbaf;
+        //         UI::VectorComponentEditor( "", lBaseColorFactor, 1.0, 0.0f );
+        //         ImGui::Columns( 1 );
+        //     }
 
-            {
-                static Ref<SE::Graphics::Texture2D> lNormalsTexture = nullptr;
-                static ImageHandle                  lNormalsTextureHandle{};
-                UI::Text( "Normals:" );
-                auto l_TopLeft     = ImGui::GetCursorScreenPos();
-                auto l_BottomRight = ImGui::GetCursorScreenPos() + ImVec2{ 128, 128 };
-                if( lNormalsTextureHandle.Handle )
-                    UI::Image( lNormalsTextureHandle, math::vec2{ 128, 128 } );
-                else
-                    UI::Image( m_DefaultTextureImageHandle, math::vec2{ 128, 128 } );
-                if( ImGui::BeginDragDropTarget() )
-                {
-                    if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
-                    {
-                        fs::path lItemPath( UTF16ToAscii( (const char *)payload->Data, payload->DataSize ) );
-                        lNormalsTexture = LoadImagePreview( mGraphicContext, lItemPath );
-                        UpdateImageHandle( mUIOverlay, lNormalsTextureHandle, lNormalsTexture );
-                    }
-                    ImGui::EndDragDropTarget();
-                }
-                l_DrawList->AddRect( l_TopLeft, l_BottomRight, IM_COL32( 15, 15, 15, 255 ) );
-            }
+        //     {
+        //         static Ref<SE::Graphics::Texture2D> lNormalsTexture = nullptr;
+        //         static ImageHandle                  lNormalsTextureHandle{};
+        //         UI::Text( "Normals:" );
+        //         auto l_TopLeft     = ImGui::GetCursorScreenPos();
+        //         auto l_BottomRight = ImGui::GetCursorScreenPos() + ImVec2{ 128, 128 };
+        //         if( lNormalsTextureHandle.Handle )
+        //             UI::Image( lNormalsTextureHandle, math::vec2{ 128, 128 } );
+        //         else
+        //             UI::Image( m_DefaultTextureImageHandle, math::vec2{ 128, 128 } );
+        //         if( ImGui::BeginDragDropTarget() )
+        //         {
+        //             if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
+        //             {
+        //                 fs::path lItemPath( UTF16ToAscii( (const char *)payload->Data, payload->DataSize ) );
+        //                 lNormalsTexture = LoadImagePreview( mGraphicContext, lItemPath );
+        //                 UpdateImageHandle( mUIOverlay, lNormalsTextureHandle, lNormalsTexture );
+        //             }
+        //             ImGui::EndDragDropTarget();
+        //         }
+        //         l_DrawList->AddRect( l_TopLeft, l_BottomRight, IM_COL32( 15, 15, 15, 255 ) );
+        //     }
 
-            {
-                static Ref<SE::Graphics::Texture2D> lOcclusionTexture = nullptr;
-                static ImageHandle                  lOcclusionTextureHandle{};
-                UI::Text( "Occlusion:" );
-                ImGui::Columns( 2, NULL, false );
-                ImGui::SetColumnWidth( 0, 150 );
-                auto l_TopLeft     = ImGui::GetCursorScreenPos();
-                auto l_BottomRight = ImGui::GetCursorScreenPos() + ImVec2{ 128, 128 };
-                if( lOcclusionTextureHandle.Handle )
-                    UI::Image( lOcclusionTextureHandle, math::vec2{ 128, 128 } );
-                else
-                    UI::Image( m_DefaultTextureImageHandle, math::vec2{ 128, 128 } );
-                if( ImGui::BeginDragDropTarget() )
-                {
-                    if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
-                    {
-                        fs::path lItemPath( UTF16ToAscii( (const char *)payload->Data, payload->DataSize ) );
-                        lOcclusionTexture = LoadImagePreview( mGraphicContext, lItemPath );
-                        UpdateImageHandle( mUIOverlay, lOcclusionTextureHandle, lOcclusionTexture );
-                    }
-                    ImGui::EndDragDropTarget();
-                }
-                l_DrawList->AddRect( l_TopLeft, l_BottomRight, IM_COL32( 15, 15, 15, 255 ) );
-                ImGui::NextColumn();
-                UI::Text( "Occlusion strength:" );
-                float l_OcclusionStrength = 0.0f;
-                UI::Slider( "##occlusion", "%.2f", 0.0f, 1.0f, &l_OcclusionStrength );
-                ImGui::Columns( 1 );
-            }
+        //     {
+        //         static Ref<SE::Graphics::Texture2D> lOcclusionTexture = nullptr;
+        //         static ImageHandle                  lOcclusionTextureHandle{};
+        //         UI::Text( "Occlusion:" );
+        //         ImGui::Columns( 2, NULL, false );
+        //         ImGui::SetColumnWidth( 0, 150 );
+        //         auto l_TopLeft     = ImGui::GetCursorScreenPos();
+        //         auto l_BottomRight = ImGui::GetCursorScreenPos() + ImVec2{ 128, 128 };
+        //         if( lOcclusionTextureHandle.Handle )
+        //             UI::Image( lOcclusionTextureHandle, math::vec2{ 128, 128 } );
+        //         else
+        //             UI::Image( m_DefaultTextureImageHandle, math::vec2{ 128, 128 } );
+        //         if( ImGui::BeginDragDropTarget() )
+        //         {
+        //             if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
+        //             {
+        //                 fs::path lItemPath( UTF16ToAscii( (const char *)payload->Data, payload->DataSize ) );
+        //                 lOcclusionTexture = LoadImagePreview( mGraphicContext, lItemPath );
+        //                 UpdateImageHandle( mUIOverlay, lOcclusionTextureHandle, lOcclusionTexture );
+        //             }
+        //             ImGui::EndDragDropTarget();
+        //         }
+        //         l_DrawList->AddRect( l_TopLeft, l_BottomRight, IM_COL32( 15, 15, 15, 255 ) );
+        //         ImGui::NextColumn();
+        //         UI::Text( "Occlusion strength:" );
+        //         float l_OcclusionStrength = 0.0f;
+        //         UI::Slider( "##occlusion", "%.2f", 0.0f, 1.0f, &l_OcclusionStrength );
+        //         ImGui::Columns( 1 );
+        //     }
 
-            {
-                static Ref<SE::Graphics::Texture2D> lPhysicalTexture = nullptr;
-                static ImageHandle                  lPhysicalTextureHandle{};
-                UI::Text( "Physical properties:" );
-                ImGui::Columns( 2, NULL, false );
-                ImGui::SetColumnWidth( 0, 150 );
-                auto l_TopLeft     = ImGui::GetCursorScreenPos();
-                auto l_BottomRight = ImGui::GetCursorScreenPos() + ImVec2{ 128, 128 };
-                if( lPhysicalTextureHandle.Handle )
-                    UI::Image( lPhysicalTextureHandle, math::vec2{ 128, 128 } );
-                else
-                    UI::Image( m_DefaultTextureImageHandle, math::vec2{ 128, 128 } );
-                if( ImGui::BeginDragDropTarget() )
-                {
-                    if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
-                    {
-                        fs::path lItemPath( UTF16ToAscii( (const char *)payload->Data, payload->DataSize ) );
-                        lPhysicalTexture = LoadImagePreview( mGraphicContext, lItemPath );
-                        UpdateImageHandle( mUIOverlay, lPhysicalTextureHandle, lPhysicalTexture );
-                    }
-                    ImGui::EndDragDropTarget();
-                }
-                l_DrawList->AddRect( l_TopLeft, l_BottomRight, IM_COL32( 15, 15, 15, 255 ) );
-                ImGui::NextColumn();
-                float l_Roughness = 0.0f;
-                UI::Text( "Roughness factor" );
-                UI::Slider( "##roughness", "%.2f", 0.0f, 1.0f, &l_Roughness );
-                float l_Metalness = 0.0f;
-                UI::Text( "Metalness factor" );
-                UI::Slider( "##metalness", "%.2f", 0.0f, 1.0f, &l_Metalness );
-                ImGui::Columns( 1 );
-            }
-        }
-        ImGui::End();
+        //     {
+        //         static Ref<SE::Graphics::Texture2D> lPhysicalTexture = nullptr;
+        //         static ImageHandle                  lPhysicalTextureHandle{};
+        //         UI::Text( "Physical properties:" );
+        //         ImGui::Columns( 2, NULL, false );
+        //         ImGui::SetColumnWidth( 0, 150 );
+        //         auto l_TopLeft     = ImGui::GetCursorScreenPos();
+        //         auto l_BottomRight = ImGui::GetCursorScreenPos() + ImVec2{ 128, 128 };
+        //         if( lPhysicalTextureHandle.Handle )
+        //             UI::Image( lPhysicalTextureHandle, math::vec2{ 128, 128 } );
+        //         else
+        //             UI::Image( m_DefaultTextureImageHandle, math::vec2{ 128, 128 } );
+        //         if( ImGui::BeginDragDropTarget() )
+        //         {
+        //             if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
+        //             {
+        //                 fs::path lItemPath( UTF16ToAscii( (const char *)payload->Data, payload->DataSize ) );
+        //                 lPhysicalTexture = LoadImagePreview( mGraphicContext, lItemPath );
+        //                 UpdateImageHandle( mUIOverlay, lPhysicalTextureHandle, lPhysicalTexture );
+        //             }
+        //             ImGui::EndDragDropTarget();
+        //         }
+        //         l_DrawList->AddRect( l_TopLeft, l_BottomRight, IM_COL32( 15, 15, 15, 255 ) );
+        //         ImGui::NextColumn();
+        //         float l_Roughness = 0.0f;
+        //         UI::Text( "Roughness factor" );
+        //         UI::Slider( "##roughness", "%.2f", 0.0f, 1.0f, &l_Roughness );
+        //         float l_Metalness = 0.0f;
+        //         UI::Text( "Metalness factor" );
+        //         UI::Slider( "##metalness", "%.2f", 0.0f, 1.0f, &l_Metalness );
+        //         ImGui::Columns( 1 );
+        //     }
+        // }
+        // ImGui::End();
 
         if( ImGui::Begin( "LOGS", &p_open, ImGuiWindowFlags_None ) )
         {

@@ -9,7 +9,6 @@
 #include "Core/Math/Types.h"
 
 #include "Core/CUDA/Array/CudaBuffer.h"
-#include "Core/CUDA/Array/ExternalMemory.h"
 #include "Core/CUDA/Array/MultiTensor.h"
 
 #include "Scene/ParticleData.h"
@@ -57,7 +56,7 @@ namespace SE::SensorModel::Dev
         sPointCloudVisualizer()  = default;
         ~sPointCloudVisualizer() = default;
 
-        void Visualize( math::mat4 a_PointCloudTransform, MultiTensor &a_LidarReturnPoints, GPUExternalMemory &a_Particles );
+        void Visualize( math::mat4 a_PointCloudTransform, MultiTensor &a_LidarReturnPoints, GPUMemory &a_Particles );
     };
 
 } // namespace SE::SensorModel::Dev

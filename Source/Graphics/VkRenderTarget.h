@@ -4,7 +4,7 @@
 #include <vulkan/vulkan.h>
 
 #include "Core/Memory.h"
-#include "VkContext.h"
+
 #include "VkTexture2D.h"
 
 namespace SE::Graphics
@@ -13,16 +13,21 @@ namespace SE::Graphics
 
     class VkRenderTarget
     {
+      public:
+        VkFramebuffer mVkFramebuffer = VK_NULL_HANDLE;
+
+      public:
         VkRenderTarget()                   = default;
         VkRenderTarget( VkRenderTarget & ) = default;
-        sVkFramebufferObject( Ref<VkContext> aContext, uint32_t aWidth, uint32_t aHeight, uint32_t aLayers, VkRenderPass aRenderPass,
-                              std::vector<Ref<VkTexture2D>> aAttachments );
+        VkRenderTarget( GraphicContext &aGraphicContext, uint32_t aWidth, uint32_t aHeight, uint32_t aLayers, VkRenderPass aRenderPass,
+                        std::vector<Ref<VkTexture2D>> aAttachments );
 
         ~VkRenderTarget();
 
       private:
-        VkFramebuffer  mVkObject = VK_NULL_HANDLE;
-        Ref<VkContext> mContext  = nullptr;
+        GraphicContext mGraphicContext{};
+
+        std::vector<VkImageView> mVkImageViews = {};
     };
 
 } // namespace SE::Graphics

@@ -9,14 +9,14 @@
 #include "Core/Memory.h"
 
 #include "Core/CUDA/Array/CudaBuffer.h"
-#include "Core/CUDA/Array/ExternalMemory.h"
 #include "Scene/VertexData.h"
-
 
 #include "Optix7.h"
 #include "OptixContext.h"
 #include "OptixProgramGroup.h"
 #include "OptixShaderBindingTable.h"
+
+#include "Graphics/VkGpuBuffer.h"
 
 namespace SE::Graphics
 {
@@ -38,12 +38,12 @@ namespace SE::Graphics
         {
             mVertexBuffers.push_back( (CUdeviceptr)( aVertices.DataAs<_VertexStructType>() + aVertexOffset ) );
             mVertexCounts.push_back( (int)aVertexCount );
-            mVertexStrides.push_back( sizeof(_VertexStructType) );
+            mVertexStrides.push_back( sizeof( _VertexStructType ) );
             mIndexBuffers.push_back( (CUdeviceptr)( aIndices.DataAs<uint32_t>() + aIndexOffset ) );
             mIndexCounts.push_back( (int)( aIndexCount / 3 ) );
         }
 
-        void AddGeometry( GPUExternalMemory &aVertices, GPUExternalMemory &aIndices, uint32_t aVertexOffset, uint32_t aVertexCount,
+        void AddGeometry( VkGpuBuffer &aVertices, VkGpuBuffer &aIndices, uint32_t aVertexOffset, uint32_t aVertexCount,
                           uint32_t aIndexOffset, uint32_t aIndexCount );
 
         void Build();

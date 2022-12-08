@@ -11,12 +11,10 @@
 #include "UI/UI.h"
 
 #include "Core/CUDA/Array/CudaBuffer.h"
-#include "Core/CUDA/Array/ExternalMemory.h"
 
-#include "Core/GraphicContext//Buffer.h"
 #include "Core/GraphicContext//GraphicContext.h"
-#include "Core/GraphicContext//Texture2D.h"
-#include "Core/GraphicContext//TextureCubeMap.h"
+
+#include "Graphics/VkGpuBuffer.h"
 
 #include "Scene/Importer/ImporterData.h"
 
@@ -250,9 +248,9 @@ namespace SE::Core::EntityComponentSystem::Components
     {
         std::string Name = "";
 
-        uint32_t    ParticleCount = 0;
-        float       ParticleSize  = 0.0f;
-        Ref<Buffer> Particles;
+        uint32_t         ParticleCount = 0;
+        float            ParticleSize  = 0.0f;
+        Ref<VkGpuBuffer> Particles;
 
         sParticleSystemComponent()                                   = default;
         sParticleSystemComponent( const sParticleSystemComponent & ) = default;

@@ -55,9 +55,15 @@ namespace SE::Graphics
         constexpr VkComponentMapping lSwizzles{ VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY,
                                                 VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY };
 
-        mVkImageView = mGraphicContext.mContext->CreateImageView( mTextureData->mVkImage, mTextureData->mSpec.mLayers,
-                                                                  VK_IMAGE_VIEW_TYPE_2D, ToVkFormat( mTextureData->mSpec.mFormat ),
-                                                                  VK_IMAGE_ASPECT_COLOR_BIT, lSwizzles );
+        VkImageAspectFlags lImageAspect = 0;
+        if( aTextureData->mSpec.mIsDepthTexture )
+            lImageAspect |= VK_IMAGE_ASPECT_DEPTH_BIT;
+        else
+            lImageAspect |= VK_IMAGE_ASPECT_COLOR_BIT;
+
+        mVkImageView =
+            mGraphicContext.mContext->CreateImageView( mTextureData->mVkImage, mTextureData->mSpec.mLayers, VK_IMAGE_VIEW_TYPE_2D,
+                                                       ToVkFormat( mTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
 
         mVkImageSampler = mGraphicContext.mContext->CreateSampler( Convert( mSpec.mFilter ), Convert( mSpec.mFilter ),
                                                                    Convert( mSpec.mWrapping ), Convert( mSpec.mMipFilter ) );

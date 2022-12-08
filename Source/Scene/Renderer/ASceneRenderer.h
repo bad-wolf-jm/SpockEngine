@@ -33,7 +33,7 @@ namespace SE::Core
 
         virtual void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
-        virtual Ref<sVkFramebufferImage> GetOutputImage() = 0;
+        virtual Ref<VkTexture2D> GetOutputImage() = 0;
 
       protected:
         GraphicContext mGraphicContext{};

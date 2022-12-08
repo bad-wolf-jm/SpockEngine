@@ -3,21 +3,36 @@
 #include <set>
 #include <unordered_set>
 
-#include "VkCoreMacros.h"
-
 namespace SE::Graphics
 {
-    VkRenderTarget::VkRenderTarget( Ref<VkContext> aContext, uint32_t aWidth, uint32_t aHeight, uint32_t aLayers,
+    VkRenderTarget::VkRenderTarget( GraphicContext &aGraphicContext, uint32_t aWidth, uint32_t aHeight, uint32_t aLayers,
                                     VkRenderPass aRenderPass, std::vector<Ref<VkTexture2D>> aAttachments )
-        : mContext{ aContext }
+        : mGraphicContext{ aGraphicContext }
     {
+        for( auto lTextureData : aAttachments )
+        {
+            constexpr VkComponentMapping lSwizzles{ VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY,
+                                                    VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY };
 
-        std::vector<VkImageView> lAttachmentViews( aAttachments.size() );
+            VkImageAspectFlags lImageAspect = 0;
+            if( lTextureData->mSpec.mIsDepthTexture )
+                lImageAspect |= VK_IMAGE_ASPECT_DEPTH_BIT;
+            else
+                lImageAspect |= VK_IMAGE_ASPECT_COLOR_BIT;
 
-        for( uint32_t i = 0; i < aAttachments.size(); i++ ) lAttachmentViews[i] = aAttachments[i]->mImageView->mVkObject;
+            auto lVkImageView =
+                mGraphicContext.mContext->CreateImageView( lTextureData->mVkImage, lTextureData->mSpec.mLayers, VK_IMAGE_VIEW_TYPE_2D,
+                                                           ToVkFormat( lTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
 
-        mVkObject = mContext->CreateFramebuffer( lAttachmentViews, aWidth, aHeight, aLayers, aRenderPass );
+            mVkImageViews.push_back( lVkImageView );
+        }
+
+        mVkFramebuffer = mGraphicContext.mContext->CreateFramebuffer( mVkImageViews, aWidth, aHeight, aLayers, aRenderPass );
     }
 
-    VkRenderTarget::~VkRenderTarget() { mContext->DestroyFramebuffer( mVkObject ); }
+    VkRenderTarget::~VkRenderTarget()
+    {
+        for( auto &lImageView : mVkImageViews ) mGraphicContext.mContext->DestroyImageView( lImageView );
+        mGraphicContext.mContext->DestroyFramebuffer( mVkFramebuffer );
+    }
 } // namespace SE::Graphics

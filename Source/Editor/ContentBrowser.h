@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/GraphicContext//Texture2D.h"
+// #include "Core/GraphicContext//VkSampler2D.h"
 #include "Engine/Engine.h"
 #include "UI/UI.h"
 
@@ -25,18 +25,18 @@ namespace SE::Editor
         void Display();
 
       private:
-        GraphicContext mGraphicContext;
+        GraphicContext        mGraphicContext;
         std::filesystem::path m_RootDirectory;
         std::filesystem::path m_CurrentDirectory;
 
-        Ref<SE::Graphics::Texture2D> m_DirectoryIcon;
-        ImageHandle m_DirectoryIconHandle;
+        Ref<SE::Graphics::VkSampler2D> m_DirectoryIcon;
+        ImageHandle                    m_DirectoryIconHandle;
 
-        Ref<SE::Graphics::Texture2D> m_FileIcon;
-        ImageHandle m_FileIconHandle;
+        Ref<SE::Graphics::VkSampler2D> m_FileIcon;
+        ImageHandle                    m_FileIconHandle;
 
-        Ref<SE::Graphics::Texture2D> m_BackIcon;
-        ImageHandle m_BackIconHandle;
+        Ref<SE::Graphics::VkSampler2D> m_BackIcon;
+        ImageHandle                    m_BackIconHandle;
 
         float padding       = 5.0f;
         float thumbnailSize = 30.0f;

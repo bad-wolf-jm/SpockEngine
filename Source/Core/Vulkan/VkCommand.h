@@ -5,13 +5,25 @@
 #include <memory>
 
 #include "VkContext.h"
-#include "VkImage.h"
+// #include "VkImage.h"
 
 #include "VkPipeline.h"
 
 namespace SE::Graphics::Internal
 {
     using namespace SE::Core;
+
+    struct sImageRegion
+    {
+        uint32_t mBaseMipLevel  = 0;
+        uint32_t mMipLevelCount = 0;
+        uint32_t mBaseLayer     = 0;
+        uint32_t mLayerCount    = 0;
+        uint32_t mOffset        = 0;
+        uint32_t mWidth         = 0;
+        uint32_t mHeight        = 0;
+        uint32_t mDepth         = 0;
+    };
 
     struct sVkCommandBufferObject
     {
@@ -27,8 +39,8 @@ namespace SE::Graphics::Internal
         void Begin();
         void Begin( VkCommandBufferUsageFlags aUsage );
 
-        void BeginRenderPass( Ref<sVkAbstractRenderPassObject> aRenderPass, Ref<sVkFramebufferObject> aFrameBuffer,
-                              math::uvec2 aExtent, std::vector<VkClearValue> aClearValues );
+        void BeginRenderPass( Ref<sVkAbstractRenderPassObject> aRenderPass, VkFramebuffer aFrameBuffer, math::uvec2 aExtent,
+                              std::vector<VkClearValue> aClearValues );
         void EndRenderPass();
 
         void SetViewport( math::ivec2 aOffset, math::uvec2 aSize );
@@ -45,8 +57,6 @@ namespace SE::Graphics::Internal
 
         void ImageMemoryBarrier( VkImage aImage, VkImageLayout aOldLayout, VkImageLayout aNewLayout, uint32_t aMipCount,
                                  uint32_t aLayerCount );
-        void ImageMemoryBarrier( Ref<sVkImageObject> aImage, VkImageLayout aOldLayout, VkImageLayout aNewLayout, uint32_t aMipCount,
-                                 uint32_t aLayerCount );
 
         void CopyBuffer( VkBuffer aSource, VkBuffer aDest );
         void CopyBuffer( VkBuffer aSource, uint32_t aSourceOffset, uint32_t aSize, VkBuffer aDest, uint32_t aDestOffset );
@@ -55,20 +65,8 @@ namespace SE::Graphics::Internal
         void CopyBuffer( VkBuffer aSource, VkImage aDestination, std::vector<sImageRegion> aBufferRegions,
                          sImageRegion const &aImageRegion );
 
-        void CopyBuffer( VkBuffer aSource, Ref<sVkImageObject> aDestination, sImageRegion const &aBufferRegion,
-                         sImageRegion const &aImageRegion );
-        void CopyBuffer( VkBuffer aSource, Ref<sVkImageObject> aDestination, std::vector<sImageRegion> aBufferRegions,
-                         sImageRegion const &aImageRegion );
-
         void CopyImage( VkImage aSource, sImageRegion const &aSourceRegion, VkImage aDestination, sImageRegion const &aDestRegion );
         void CopyImage( VkImage aSource, VkBuffer aDestination, std::vector<sImageRegion> aImageRegions, uint32_t aBufferOffset );
-        void CopyImage( Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion, Ref<sVkImageObject> aDestination,
-                        sImageRegion const &aDestRegion );
-        void CopyImage( Ref<sVkImageObject> aSource, sImageRegion const &aSourceRegion, VkBuffer aDestination,
-                        sImageRegion const &aDestRegion );
-
-        void sVkCommandBufferObject::CopyImage( Ref<sVkImageObject> aSource, VkBuffer aDestination,
-                                                std::vector<sImageRegion> aImageRegions, uint32_t aBufferOffset );
 
         template <typename T>
         void PushConstants( VkShaderStageFlags aShaderStages, uint32_t aOffset, const T &aValue,

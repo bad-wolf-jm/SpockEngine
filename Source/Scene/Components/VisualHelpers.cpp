@@ -40,29 +40,30 @@ namespace SE::Core::EntityComponentSystem::Components
     {
         math::mat4 l_ScalingTransform = math::Scale( math::mat4( 1.0f ), math::vec3{ SideLength, SideLength, SideLength } );
         SE::Core::Primitives::VertexBufferData l_Cube           = SE::Core::Primitives::CreateCube();
-        std::vector<SimpleVertexData>            l_CubeVertexData = ToSimpleVertex( l_Cube.Vertices, l_ScalingTransform );
+        std::vector<SimpleVertexData>          l_CubeVertexData = ToSimpleVertex( l_Cube.Vertices, l_ScalingTransform );
 
-        Mesh.Vertices = New<Buffer>( a_GraphicContext, l_CubeVertexData, eBufferBindType::VERTEX_BUFFER, false, false, true, true );
-        Mesh.Indices  = New<Buffer>( a_GraphicContext, l_Cube.Indices, eBufferBindType::INDEX_BUFFER, false, false, true, true );
+        Mesh.Vertices =
+            New<VkGpuBuffer>( a_GraphicContext, l_CubeVertexData, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
+        Mesh.Indices = New<VkGpuBuffer>( a_GraphicContext, l_Cube.Indices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
     }
 
     void ConeMeshData::UpdateMesh( GraphicContext &a_GraphicContext )
     {
         SE::Core::Primitives::WireframeVertexBufferData l_Cone = SE::Core::Primitives::CreateWireframeCone( Divisions, Segments );
 
-        Mesh.Vertices = New<Buffer>( a_GraphicContext, l_Cone.Vertices, eBufferBindType::VERTEX_BUFFER, false, false, true, true );
-        Mesh.Indices  = New<Buffer>( a_GraphicContext, l_Cone.Indices, eBufferBindType::INDEX_BUFFER, false, false, true, true );
+        Mesh.Vertices = New<VkGpuBuffer>( a_GraphicContext, l_Cone.Vertices, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
+        Mesh.Indices  = New<VkGpuBuffer>( a_GraphicContext, l_Cone.Indices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
     }
 
     void ArrowMeshData::UpdateMesh( GraphicContext &a_GraphicContext )
     {
         SE::Core::Primitives::VertexBufferData l_Shaft          = SE::Core::Primitives::CreateCylinder( 3, Segments );
-        math::mat4                               l_ShaftTransform = math::Translation( math::vec3{ 0.0f, 0.46f, 0.0f } ) *
+        math::mat4                             l_ShaftTransform = math::Translation( math::vec3{ 0.0f, 0.46f, 0.0f } ) *
                                       math::Scale( math::mat4( 1.0f ), math::vec3{ .0075f, 0.5 * 0.95f, .0075f } );
         ApplyTransform( l_Shaft.Vertices, l_ShaftTransform );
 
         SE::Core::Primitives::VertexBufferData l_Tip = SE::Core::Primitives::CreateCone( Segments );
-        math::mat4                               l_TipTransform =
+        math::mat4                             l_TipTransform =
             math::Translation( math::vec3{ .0f, .90f, 0.0f } ) * math::Scale( math::mat4( 1.0f ), math::vec3{ .025f, .1f, .025f } );
         ApplyTransform( l_Tip.Vertices, l_TipTransform );
 
@@ -80,9 +81,10 @@ namespace SE::Core::EntityComponentSystem::Components
 
         std::vector<SimpleVertexData> l_ArrowVertexData = ToSimpleVertex( l_ArrowMeshData.Vertices, math::mat4( 1.0f ) );
 
-        Mesh.Vertices = New<Buffer>( a_GraphicContext, l_ArrowVertexData, eBufferBindType::VERTEX_BUFFER, false, false, true, true );
+        Mesh.Vertices =
+            New<VkGpuBuffer>( a_GraphicContext, l_ArrowVertexData, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
         Mesh.Indices =
-            New<Buffer>( a_GraphicContext, l_ArrowMeshData.Indices, eBufferBindType::INDEX_BUFFER, false, false, true, true );
+            New<VkGpuBuffer>( a_GraphicContext, l_ArrowMeshData.Indices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
     }
 
     void CircleMeshData::UpdateMesh( GraphicContext &a_GraphicContext )
@@ -92,26 +94,29 @@ namespace SE::Core::EntityComponentSystem::Components
         math::mat4 l_RadiusTransform = math::Scale( math::mat4( 1.0f ), math::vec3{ Radius, Radius, Radius } );
         ApplyTransform( l_Circle.Vertices, l_RadiusTransform );
 
-        Mesh.Vertices = New<Buffer>( a_GraphicContext, l_Circle.Vertices, eBufferBindType::VERTEX_BUFFER, false, false, true, true );
-        Mesh.Indices  = New<Buffer>( a_GraphicContext, l_Circle.Indices, eBufferBindType::INDEX_BUFFER, false, false, true, true );
+        Mesh.Vertices =
+            New<VkGpuBuffer>( a_GraphicContext, l_Circle.Vertices, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
+        Mesh.Indices = New<VkGpuBuffer>( a_GraphicContext, l_Circle.Indices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
     }
 
     void PyramidMeshData::UpdateMesh( GraphicContext &a_GraphicContext )
     {
         SE::Core::Primitives::WireframeVertexBufferData l_Pyramid = SE::Core::Primitives::CreateWireframePyramid( 64, 64 );
 
-        Mesh.Vertices = New<Buffer>( a_GraphicContext, l_Pyramid.Vertices, eBufferBindType::VERTEX_BUFFER, false, false, true, true );
-        Mesh.Indices  = New<Buffer>( a_GraphicContext, l_Pyramid.Indices, eBufferBindType::INDEX_BUFFER, false, false, true, true );
+        Mesh.Vertices =
+            New<VkGpuBuffer>( a_GraphicContext, l_Pyramid.Vertices, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
+        Mesh.Indices = New<VkGpuBuffer>( a_GraphicContext, l_Pyramid.Indices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
     }
 
     void SurfaceMeshData::UpdateMesh( GraphicContext &a_GraphicContext )
     {
         SE::Core::Primitives::VertexBufferData l_Plane = SE::Core::Primitives::CreatePlane( math::ivec2{ 32, 32 } );
-        std::vector<SimpleVertexData>            l_PlaneVertexData =
+        std::vector<SimpleVertexData>          l_PlaneVertexData =
             ToSimpleVertex( l_Plane.Vertices, math::mat4( 1.0f ) ); //(l_Plane.Vertices.size());
 
-        Mesh.Vertices = New<Buffer>( a_GraphicContext, l_PlaneVertexData, eBufferBindType::VERTEX_BUFFER, false, false, true, true );
-        Mesh.Indices  = New<Buffer>( a_GraphicContext, l_Plane.Indices, eBufferBindType::INDEX_BUFFER, false, false, true, true );
+        Mesh.Vertices =
+            New<VkGpuBuffer>( a_GraphicContext, l_PlaneVertexData, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
+        Mesh.Indices = New<VkGpuBuffer>( a_GraphicContext, l_Plane.Indices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
     }
 
     void SpotlightHelperComponent::UpdateMesh( GraphicContext &a_GraphicContext )
@@ -124,8 +129,9 @@ namespace SE::Core::EntityComponentSystem::Components
         ApplyTransform( l_Spot.Vertices, l_Transform );
 
         Spot.Mesh.Vertices =
-            New<Buffer>( a_GraphicContext, l_Spot.Vertices, eBufferBindType::VERTEX_BUFFER, false, false, true, true );
-        Spot.Mesh.Indices = New<Buffer>( a_GraphicContext, l_Spot.Indices, eBufferBindType::INDEX_BUFFER, false, false, true, true );
+            New<VkGpuBuffer>( a_GraphicContext, l_Spot.Vertices, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
+        Spot.Mesh.Indices =
+            New<VkGpuBuffer>( a_GraphicContext, l_Spot.Indices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
     }
 
     void FieldOfViewHelperComponent::UpdateMesh( GraphicContext &a_GraphicContext )
@@ -136,12 +142,12 @@ namespace SE::Core::EntityComponentSystem::Components
         ApplyTransform( l_Pyramid.Vertices, l_Transform );
 
         Outline.Mesh.Vertices =
-            New<Buffer>( a_GraphicContext, l_Pyramid.Vertices, eBufferBindType::VERTEX_BUFFER, false, false, true, true );
+            New<VkGpuBuffer>( a_GraphicContext, l_Pyramid.Vertices, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
         Outline.Mesh.Indices =
-            New<Buffer>( a_GraphicContext, l_Pyramid.Indices, eBufferBindType::INDEX_BUFFER, false, false, true, true );
+            New<VkGpuBuffer>( a_GraphicContext, l_Pyramid.Indices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
 
         SE::Core::Primitives::VertexBufferData l_Plane = SE::Core::Primitives::CreatePlane( math::ivec2{ 32, 32 } );
-        std::vector<SimpleVertexData>            l_PlaneVertexData( l_Plane.Vertices.size() );
+        std::vector<SimpleVertexData>          l_PlaneVertexData( l_Plane.Vertices.size() );
         for( uint32_t i = 0; i < l_Plane.Vertices.size(); i++ )
         {
             l_PlaneVertexData[i].Position = math::vec4( math::vec2( l_Plane.Vertices[i].Position ), -1.0f, 1.0f );
@@ -149,9 +155,9 @@ namespace SE::Core::EntityComponentSystem::Components
         }
 
         OuterLimit.Mesh.Vertices =
-            New<Buffer>( a_GraphicContext, l_PlaneVertexData, eBufferBindType::VERTEX_BUFFER, false, false, true, true );
+            New<VkGpuBuffer>( a_GraphicContext, l_PlaneVertexData, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
         OuterLimit.Mesh.Indices =
-            New<Buffer>( a_GraphicContext, l_Plane.Indices, eBufferBindType::INDEX_BUFFER, false, false, true, true );
+            New<VkGpuBuffer>( a_GraphicContext, l_Plane.Indices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
     }
 
 } // namespace SE::Core::EntityComponentSystem::Components

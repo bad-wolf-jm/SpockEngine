@@ -18,7 +18,7 @@ namespace SE::Core
                 1, Internal::eDescriptorType::COMBINED_IMAGE_SAMPLER, { Internal::eShaderStageTypeFlags::FRAGMENT } } };
 
         mShaderMaterials =
-            New<Buffer>( mGraphicContext, eBufferBindType::STORAGE_BUFFER, true, false, true, true, sizeof( sShaderMaterial ) );
+            New<VkGpuBuffer>( mGraphicContext, eBufferBindType::STORAGE_BUFFER, true, true, true, true, sizeof( sShaderMaterial ) );
 
         mTextureDescriptorLayout = New<DescriptorSetLayout>( mGraphicContext, lTextureBindLayout, true );
         mTextureDescriptorSet    = New<DescriptorSet>( mGraphicContext, mTextureDescriptorLayout, 1024 );
@@ -31,14 +31,12 @@ namespace SE::Core
         mMaterials.clear();
 
         mCudaTextureBuffer.Dispose();
-        mCudaShaderMaterials.Dispose();
     }
 
     void MaterialSystem::Clear()
     {
         mMaterials.clear();
         mCudaTextureBuffer.Dispose();
-        mCudaShaderMaterials.Dispose();
 
         sImageData lImageDataStruct{};
         lImageDataStruct.mFormat   = eColorFormat::RGBA8_UNORM;
@@ -148,11 +146,9 @@ namespace SE::Core
         if( mShaderMaterials->SizeAs<sShaderMaterial>() < mMaterials.size() )
         {
             auto lBufferSize = std::max( mMaterials.size(), static_cast<size_t>( 1 ) ) * sizeof( sShaderMaterial );
-            mShaderMaterials = New<Buffer>( mGraphicContext, eBufferBindType::STORAGE_BUFFER, true, true, true, true, lBufferSize );
+            mShaderMaterials =
+                New<VkGpuBuffer>( mGraphicContext, eBufferBindType::STORAGE_BUFFER, true, false, true, true, lBufferSize );
             mTextureDescriptorSet->Write( mShaderMaterials, false, 0, lBufferSize, 0 );
-
-            mCudaShaderMaterials.Dispose();
-            mCudaShaderMaterials = Cuda::GPUExternalMemory( *mShaderMaterials, mShaderMaterials->SizeAs<uint8_t>() );
         }
 
         if( mCudaTextureBuffer.SizeAs<Cuda::TextureSampler2D::DeviceData>() < mTextureSamplers.size() )

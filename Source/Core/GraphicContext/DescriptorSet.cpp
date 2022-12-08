@@ -13,10 +13,10 @@ namespace SE::Graphics
         mDescriptorSetObject = mGraphicContext.AllocateDescriptors( aLayout->GetVkDescriptorSetLayoutObject(), aDescriptorCount );
     }
 
-    void DescriptorSet::Write( Ref<Buffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding )
+    void DescriptorSet::Write( Ref<VkGpuBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding )
     {
         Internal::sVkDescriptorSetObject::sBufferBindInfo lBufferBindInfo{};
-        lBufferBindInfo.mBuffer        = aBuffer->mVkObject;
+        lBufferBindInfo.mBuffer        = aBuffer->mVkBuffer;
         lBufferBindInfo.mType          = aBuffer->mType;
         lBufferBindInfo.mDynamicOffset = false;
         lBufferBindInfo.mBinding       = aBinding;
@@ -44,25 +44,6 @@ namespace SE::Graphics
 
     void DescriptorSet::Write( Ref<VkSampler2D> aBuffer, uint32_t aBinding ) { Write( std::vector{ aBuffer }, aBinding ); }
 
-
-    void DescriptorSet::Write( std::vector<Ref<Texture2D>> aWriteOperations, uint32_t aBinding )
-    {
-        if( aWriteOperations.size() == 0 ) return;
-
-        Internal::sVkDescriptorSetObject::sImageBindInfo lImages{};
-
-        for( auto &lBuffer : aWriteOperations )
-        {
-            lImages.mSampler.push_back( lBuffer->GetSampler() );
-            lImages.mImageView.push_back( lBuffer->GetImageView() );
-        }
-        lImages.mBinding = aBinding;
-
-        mDescriptorSetObject->Write( lImages );
-    }
-
-    void DescriptorSet::Write( Ref<Texture2D> aBuffer, uint32_t aBinding ) { Write( std::vector{ aBuffer }, aBinding ); }
-
     DescriptorBindingInfo::operator VkDescriptorSetLayoutBinding() const
     {
         VkDescriptorSetLayoutBinding lNewBinding = {};
@@ -88,8 +69,8 @@ namespace SE::Graphics
         return lNewBinding;
     }
 
-    DescriptorSetLayout::DescriptorSetLayout(
-        GraphicContext &aGraphicContext, DescriptorSetLayoutCreateInfo &aCreateInfo, bool aUnbounded )
+    DescriptorSetLayout::DescriptorSetLayout( GraphicContext &aGraphicContext, DescriptorSetLayoutCreateInfo &aCreateInfo,
+                                              bool aUnbounded )
         : mGraphicContext{ aGraphicContext }
         , Spec( aCreateInfo )
     {

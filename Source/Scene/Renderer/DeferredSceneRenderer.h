@@ -35,7 +35,7 @@ namespace SE::Core
         void Update( Ref<Scene> aWorld );
         void Render();
 
-        Ref<sVkFramebufferImage> GetOutputImage();
+        Ref<VkTexture2D> GetOutputImage();
 
         MeshRendererCreateInfo     GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification );
         ParticleRendererCreateInfo GetRenderPipelineCreateInfo( sParticleShaderComponent &aPipelineSpecification );
@@ -55,8 +55,8 @@ namespace SE::Core
 
         Ref<ARenderTarget> mGeometryRenderTarget = nullptr;
 
-        Ref<Buffer> mCameraUniformBuffer    = nullptr;
-        Ref<Buffer> mShaderParametersBuffer = nullptr;
+        Ref<VkGpuBuffer> mCameraUniformBuffer    = nullptr;
+        Ref<VkGpuBuffer> mShaderParametersBuffer = nullptr;
 
         Ref<DescriptorSetLayout> mLightingTextureLayout = nullptr;
         Ref<DescriptorSet>       mLightingPassTextures  = nullptr;

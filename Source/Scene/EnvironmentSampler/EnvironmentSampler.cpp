@@ -65,20 +65,13 @@ namespace SE::SensorModel::Dev
             mLaunchParams.mIntensities    = a_Intensities.DataAs<float>();
             mLaunchParams.mSamplePoints   = a_SamplePoints.DataAs<sHitRecord>();
 
-            SE::Cuda::GPUExternalMemory lTransformedVertexBuffer( *a_Scene->mTransformedVertexBuffer,
-                                                                  a_Scene->mTransformedVertexBuffer->SizeAs<uint8_t>() );
-            SE::Cuda::GPUExternalMemory lIndexBuffer( *a_Scene->mIndexBuffer, a_Scene->mIndexBuffer->SizeAs<uint8_t>() );
-            mLaunchParams.mIndexBuffer  = lIndexBuffer.DataAs<math::uvec3>();
-            mLaunchParams.mVertexBuffer = lTransformedVertexBuffer.DataAs<VertexData>();
+            mLaunchParams.mIndexBuffer  = a_Scene->mIndexBuffer->DataAs<math::uvec3>();
+            mLaunchParams.mVertexBuffer = a_Scene->mTransformedVertexBuffer->DataAs<VertexData>();
 
             mLaunchParamsBuffer.Upload( mLaunchParams );
             mRayTracingPipeline->Launch( 0, mLaunchParamsBuffer.RawDevicePtr(), mLaunchParamsBuffer.Size(), mSBT,
                                          math::uvec3{ a_Azimuths.SizeAs<float>(), 1, 1 } );
-
             CUDA_SYNC_CHECK();
-
-            lTransformedVertexBuffer.Dispose();
-            lIndexBuffer.Dispose();
         }
     }
 

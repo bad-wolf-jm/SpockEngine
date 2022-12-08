@@ -9,8 +9,8 @@ namespace SE::Core
 
     std::vector<sPushConstantRange> CoordinateGridRenderer::GetPushConstantLayout() { return {}; };
 
-    CoordinateGridRenderer::CoordinateGridRenderer(
-        GraphicContext &a_GraphicContext, ARenderContext &aRenderContext, CoordinateGridRendererCreateInfo aCreateInfo )
+    CoordinateGridRenderer::CoordinateGridRenderer( GraphicContext &a_GraphicContext, ARenderContext &aRenderContext,
+                                                    CoordinateGridRendererCreateInfo aCreateInfo )
         : SceneRenderPipeline<EmptyVertexData>( a_GraphicContext )
         , Spec{ aCreateInfo }
     {
@@ -29,7 +29,7 @@ namespace SE::Core
         Initialize( lCreateInfo );
 
         mCameraBuffer =
-            New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( CameraViewUniforms ) );
+            New<VkGpuBuffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraViewUniforms ) );
         mCameraDescriptors = New<DescriptorSet>( a_GraphicContext, PipelineLayout );
         mCameraDescriptors->Write( mCameraBuffer, false, 0, sizeof( CameraViewUniforms ), 0 );
     }

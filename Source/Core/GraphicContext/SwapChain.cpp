@@ -41,17 +41,20 @@ namespace SE::Graphics
 
         for( int i = 0; i < mImageCount; i++ )
         {
-            auto lFramebufferImage = New<sVkFramebufferImage>( mGraphicContext.mContext, lImages[i], lSwapChainImageFormat,
-                mSpec.mWidth, mSpec.mHeight, 1, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, false );
+            sTextureCreateInfo lTextureCreateInfo{};
+            lTextureCreateInfo.mFormat = ToLtseFormat( lSwapChainImageFormat );
+            lTextureCreateInfo.mWidth  = mSpec.mWidth;
+            lTextureCreateInfo.mHeight = mSpec.mHeight;
+
+            auto lFramebufferImage = New<VkTexture2D>( mGraphicContext, lTextureCreateInfo, lImages[i] );
 
             sRenderTargetDescription lCreateInfo{};
             lCreateInfo.mWidth   = lSwapchainExtent.width;
             lCreateInfo.mHeight  = lSwapchainExtent.height;
             auto lSwapChainImage = New<ARenderTarget>( mGraphicContext, lCreateInfo );
-
             lSwapChainImage->AddAttachment( "SWAPCHAIN_OUTPUT", eAttachmentType::COLOR, ToLtseFormat( lSwapChainImageFormat ),
-                { 0.01f, 0.01f, 0.03f, 1.0f }, false, true, eAttachmentLoadOp::CLEAR, eAttachmentStoreOp::STORE,
-                lFramebufferImage );
+                                            { 0.01f, 0.01f, 0.03f, 1.0f }, false, true, eAttachmentLoadOp::CLEAR,
+                                            eAttachmentStoreOp::STORE, lFramebufferImage );
 
             lSwapChainImage->Finalize();
 

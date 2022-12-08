@@ -24,8 +24,8 @@ namespace SE::Graphics
 
         auto lCommandBuffer = GetCurrentCommandBuffer();
         lCommandBuffer->Begin();
-        lCommandBuffer->BeginRenderPass(
-            mRenderTarget->GetRenderPass(), mRenderTarget->GetFramebuffer(), { lWidth, lHeight }, mRenderTarget->GetClearValues() );
+        lCommandBuffer->BeginRenderPass( mRenderTarget->GetRenderPass(), mRenderTarget->GetFramebuffer()->mVkFramebuffer, { lWidth, lHeight },
+                                         mRenderTarget->GetClearValues() );
         lCommandBuffer->SetViewport( { 0.0f, 0.0f }, { lWidth, lHeight } );
         lCommandBuffer->SetScissor( { 0.0f, 0.0f }, { lWidth, lHeight } );
 
@@ -45,8 +45,7 @@ namespace SE::Graphics
 
         mFrameIsStarted        = false;
         mCurrentPipelineLayout = nullptr;
-        mCurrentVertexBuffer   = nullptr;
-        mCurrentIndexBuffer    = nullptr;
+        mHasIndex              = false;
 
         return true;
     }
@@ -55,16 +54,15 @@ namespace SE::Graphics
 
     void ARenderContext::ResetBuffers()
     {
-        mCurrentVertexBuffer = nullptr;
-        mCurrentIndexBuffer  = nullptr;
+        mHasIndex = false;
     }
 
     void ARenderContext::Draw( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset, uint32_t a_InstanceCount,
-        uint32_t a_FirstInstance )
+                               uint32_t a_FirstInstance )
     {
         auto lCommandBuffer = GetCurrentCommandBuffer();
 
-        if( mCurrentIndexBuffer != nullptr )
+        if( mHasIndex )
             lCommandBuffer->DrawIndexed( aVertexCount, aVertexOffset, aVertexBufferOffset, a_InstanceCount, a_FirstInstance );
         else
             lCommandBuffer->Draw( aVertexCount, aVertexOffset, aVertexBufferOffset, a_InstanceCount, a_FirstInstance );
@@ -78,21 +76,20 @@ namespace SE::Graphics
         mCurrentPipelineLayout = aGraphicPipeline->GetVkPipelineLayoutObject();
     }
 
-    void ARenderContext::Bind( Ref<Buffer> aVertexBuffer, uint32_t aBindPoint )
+    void ARenderContext::Bind( Ref<VkGpuBuffer> aVertexBuffer, uint32_t aBindPoint )
     {
         auto lCommandBuffer = GetCurrentCommandBuffer();
 
-        lCommandBuffer->Bind( aVertexBuffer->mVkObject, aBindPoint );
-        mCurrentVertexBuffer = aVertexBuffer;
+        lCommandBuffer->Bind( aVertexBuffer->mVkBuffer, aBindPoint );
+        mHasIndex = false;
     }
 
-    void ARenderContext::Bind( Ref<Buffer> aVertexBuffer, Ref<Buffer> aIndexBuffer, uint32_t aBindPoint )
+    void ARenderContext::Bind( Ref<VkGpuBuffer> aVertexBuffer, Ref<VkGpuBuffer> aIndexBuffer, uint32_t aBindPoint )
     {
         auto lCommandBuffer = GetCurrentCommandBuffer();
 
-        lCommandBuffer->Bind( aVertexBuffer->mVkObject, aIndexBuffer->mVkObject, aBindPoint );
-        mCurrentVertexBuffer = aVertexBuffer;
-        mCurrentIndexBuffer  = aIndexBuffer;
+        lCommandBuffer->Bind( aVertexBuffer->mVkBuffer, aIndexBuffer->mVkBuffer, aBindPoint );
+        mHasIndex = true;
     }
 
     void ARenderContext::Bind( Ref<DescriptorSet> aDescriptorSet, uint32_t aSetIndex, int32_t aDynamicOffset )
@@ -100,7 +97,7 @@ namespace SE::Graphics
         auto lCommandBuffer = GetCurrentCommandBuffer();
 
         lCommandBuffer->Bind( aDescriptorSet->GetVkDescriptorSetObject(), VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipelineLayout,
-            aSetIndex, aDynamicOffset );
+                              aSetIndex, aDynamicOffset );
     }
 
 } // namespace SE::Graphics

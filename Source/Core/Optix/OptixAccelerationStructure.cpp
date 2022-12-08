@@ -8,8 +8,8 @@ namespace SE::Graphics
     {
     }
 
-    void OptixScene::AddGeometry( GPUExternalMemory &aVertices, GPUExternalMemory &aIndices, uint32_t aVertexOffset,
-                                  uint32_t aVertexCount, uint32_t aIndexOffset, uint32_t aIndexCount )
+    void OptixScene::AddGeometry( VkGpuBuffer &aVertices, VkGpuBuffer &aIndices, uint32_t aVertexOffset, uint32_t aVertexCount,
+                                  uint32_t aIndexOffset, uint32_t aIndexCount )
     {
         mVertexBuffers.push_back( (CUdeviceptr)( aVertices.DataAs<VertexData>() + aVertexOffset ) );
         mVertexCounts.push_back( (int)aVertexCount );

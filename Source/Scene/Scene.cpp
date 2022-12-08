@@ -20,9 +20,6 @@
 
 #include "Renderer/MeshRenderer.h"
 
-#include "Core/GraphicContext//Texture2D.h"
-// #include "Scripting/ScriptComponent.h"
-
 #include "Scene/Components/VisualHelpers.h"
 #include "Serialize/AssetFile.h"
 #include "Serialize/FileIO.h"
@@ -185,18 +182,11 @@ namespace SE::Core
         CurrentCamera = lClonedEntities[aSource->CurrentCamera.Get<sUUID>().mValue.str()];
 
         // Copy a reference to the main vertex buffer and its CUDA handle
-        mVertexBuffer             = aSource->mVertexBuffer;
-        mVertexBufferMemoryHandle = aSource->mVertexBufferMemoryHandle;
-
-        // Copy a reference to the main index buffer and its CUDA handle
-        mIndexBuffer             = aSource->mIndexBuffer;
-        mIndexBufferMemoryHandle = aSource->mIndexBufferMemoryHandle;
-
+        mVertexBuffer = aSource->mVertexBuffer;
+        mIndexBuffer  = aSource->mIndexBuffer;
         // Create the transformed vertex buffer and its CUDA handle
-        mTransformedVertexBuffer =
-            New<Buffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, true, true, true, mVertexBuffer->SizeAs<uint8_t>() );
-        mTransformedVertexBufferMemoryHandle =
-            Cuda::GPUExternalMemory( *mTransformedVertexBuffer, mTransformedVertexBuffer->SizeAs<uint8_t>() );
+        mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, false, true, true,
+                                                     mVertexBuffer->SizeAs<uint8_t>() );
 
         uint32_t lTransformCount = 0;
         aSource->ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
@@ -225,13 +215,6 @@ namespace SE::Core
 
     Scene::~Scene()
     {
-        if( !mIsClone )
-        {
-            mVertexBufferMemoryHandle.Dispose();
-            mIndexBufferMemoryHandle.Dispose();
-        }
-
-        mTransformedVertexBufferMemoryHandle.Dispose();
         mTransforms.Dispose();
         mVertexOffsets.Dispose();
         mVertexCounts.Dispose();
@@ -745,19 +728,12 @@ namespace SE::Core
         std::vector<uint32_t>   lIndexBuffer;
         lScenarioData.Retrieve( 1, lVertexBuffer, lIndexBuffer );
 
-        mVertexBuffer = New<Buffer>( mGraphicContext, lVertexBuffer, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
-        mVertexBufferMemoryHandle.Dispose();
-        mVertexBufferMemoryHandle = Cuda::GPUExternalMemory( *mVertexBuffer, mVertexBuffer->SizeAs<uint8_t>() );
-
-        mIndexBuffer = New<Buffer>( mGraphicContext, lIndexBuffer, eBufferBindType::INDEX_BUFFER, false, true, true, true );
-        mIndexBufferMemoryHandle.Dispose();
-        mIndexBufferMemoryHandle = Cuda::GPUExternalMemory( *mIndexBuffer, mIndexBuffer->SizeAs<uint8_t>() );
+        mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, lVertexBuffer, eBufferBindType::VERTEX_BUFFER, false, false, true, true );
+        mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, lIndexBuffer, eBufferBindType::INDEX_BUFFER, false, false, true, true );
 
         // Create the transformed vertex buffer and its CUDA handle
-        mTransformedVertexBuffer =
-            New<Buffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, true, true, true, mVertexBuffer->SizeAs<uint8_t>() );
-        mTransformedVertexBufferMemoryHandle =
-            Cuda::GPUExternalMemory( *mTransformedVertexBuffer, mTransformedVertexBuffer->SizeAs<uint8_t>() );
+        mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, false, true, true,
+                                                     mVertexBuffer->SizeAs<uint8_t>() );
 
         for( uint32_t lMaterialIndex = 0; lMaterialIndex < lMaterialCount; lMaterialIndex++ )
         {
@@ -988,35 +964,26 @@ namespace SE::Core
         {
             auto lOldVertexBuffer = mVertexBuffer;
 
-            mVertexBuffer = New<Buffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, true, true, true,
-                                         lOldVertexBuffer->SizeAs<uint8_t>() + lVertexData.size() * sizeof( VertexData ) );
+            mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, false, true, true,
+                                              lOldVertexBuffer->SizeAs<uint8_t>() + lVertexData.size() * sizeof( VertexData ) );
             mVertexBuffer->Copy( lOldVertexBuffer, 0 );
             mVertexBuffer->Upload( lVertexData, lOldVertexBuffer->SizeAs<uint8_t>() );
 
             auto lOldIndexBuffer = mIndexBuffer;
 
-            mIndexBuffer = New<Buffer>( mGraphicContext, eBufferBindType::INDEX_BUFFER, false, true, true, true,
-                                        lOldIndexBuffer->SizeAs<uint8_t>() + lIndexData.size() * sizeof( uint32_t ) );
+            mIndexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::INDEX_BUFFER, false, false, true, true,
+                                             lOldIndexBuffer->SizeAs<uint8_t>() + lIndexData.size() * sizeof( uint32_t ) );
             mIndexBuffer->Copy( lOldIndexBuffer, 0 );
             mIndexBuffer->Upload( lIndexData, lOldIndexBuffer->SizeAs<uint8_t>() );
         }
         else
         {
-            mVertexBuffer = New<Buffer>( mGraphicContext, lVertexData, eBufferBindType::VERTEX_BUFFER, false, true, true, true );
-            mIndexBuffer  = New<Buffer>( mGraphicContext, lIndexData, eBufferBindType::INDEX_BUFFER, false, true, true, true );
+            mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, lVertexData, eBufferBindType::VERTEX_BUFFER, false, false, true, true );
+            mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, lIndexData, eBufferBindType::INDEX_BUFFER, false, false, true, true );
         }
 
-        mVertexBufferMemoryHandle.Dispose();
-        mVertexBufferMemoryHandle = Cuda::GPUExternalMemory( *mVertexBuffer, mVertexBuffer->SizeAs<uint8_t>() );
-
-        mIndexBufferMemoryHandle.Dispose();
-        mIndexBufferMemoryHandle = Cuda::GPUExternalMemory( *mIndexBuffer, mIndexBuffer->SizeAs<uint8_t>() );
-
-        mTransformedVertexBuffer =
-            New<Buffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, true, true, true, mVertexBuffer->SizeAs<uint8_t>() );
-        mTransformedVertexBufferMemoryHandle.Dispose();
-        mTransformedVertexBufferMemoryHandle =
-            Cuda::GPUExternalMemory( *mTransformedVertexBuffer, mTransformedVertexBuffer->SizeAs<uint8_t>() );
+        mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, false, true, true,
+                                                     mVertexBuffer->SizeAs<uint8_t>() );
 
         uint32_t lTransformCount = 0;
         ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
@@ -1213,11 +1180,6 @@ namespace SE::Core
 
             ForEach<sActorComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnUpdate( ts ); } );
 
-            // for (auto& lActor : mActorComponents)
-            // {
-            //     lActor.OnUpdate( ts );
-            // }
-
             // Update animations
             ForEach<sAnimationChooser>(
                 [=]( auto l_Entity, auto &l_Component )
@@ -1360,10 +1322,9 @@ namespace SE::Core
                 mVertexOffsets.Upload( lVertexOffsets );
                 mVertexCounts.Upload( lVertexCounts );
 
-                StaticVertexTransform( mTransformedVertexBufferMemoryHandle.DataAs<VertexData>(),
-                                       mVertexBufferMemoryHandle.DataAs<VertexData>(), mTransforms.DataAs<math::mat4>(),
-                                       lVertexOffsets.size(), mVertexOffsets.DataAs<uint32_t>(), mVertexCounts.DataAs<uint32_t>(),
-                                       lMaxVertexCount );
+                StaticVertexTransform( mTransformedVertexBuffer->DataAs<VertexData>(), mVertexBuffer->DataAs<VertexData>(),
+                                       mTransforms.DataAs<math::mat4>(), lVertexOffsets.size(), mVertexOffsets.DataAs<uint32_t>(),
+                                       mVertexCounts.DataAs<uint32_t>(), lMaxVertexCount );
             }
 
             // Update the transformed vertex buffer for animated meshies
@@ -1392,10 +1353,10 @@ namespace SE::Core
                 mJointOffsets.Upload( lJointOffsets );
                 mJointTransforms.Upload( lJointTransforms );
 
-                SkinnedVertexTransform( mTransformedVertexBufferMemoryHandle.DataAs<VertexData>(),
-                                        mVertexBufferMemoryHandle.DataAs<VertexData>(), mTransforms.DataAs<math::mat4>(),
-                                        mJointTransforms.DataAs<math::mat4>(), mJointOffsets.DataAs<uint32_t>(), lVertexOffsets.size(),
-                                        mVertexOffsets.DataAs<uint32_t>(), mVertexCounts.DataAs<uint32_t>(), lMaxVertexCount );
+                SkinnedVertexTransform( mTransformedVertexBuffer->DataAs<VertexData>(), mVertexBuffer->DataAs<VertexData>(),
+                                        mTransforms.DataAs<math::mat4>(), mJointTransforms.DataAs<math::mat4>(),
+                                        mJointOffsets.DataAs<uint32_t>(), lVertexOffsets.size(), mVertexOffsets.DataAs<uint32_t>(),
+                                        mVertexCounts.DataAs<uint32_t>(), lMaxVertexCount );
             }
 
             CUDA_SYNC_CHECK();
@@ -1431,9 +1392,9 @@ namespace SE::Core
         ForEach<sRayTracingTargetComponent, sStaticMeshComponent>(
             [&]( auto a_Entity, auto &a_RTComponent, auto &a_MeshComponent )
             {
-                mAccelerationStructure->AddGeometry( mTransformedVertexBufferMemoryHandle, mIndexBufferMemoryHandle,
-                                                     a_MeshComponent.mVertexOffset, a_MeshComponent.mVertexCount,
-                                                     a_MeshComponent.mIndexOffset, a_MeshComponent.mIndexCount );
+                mAccelerationStructure->AddGeometry( *mTransformedVertexBuffer, *mIndexBuffer, a_MeshComponent.mVertexOffset,
+                                                     a_MeshComponent.mVertexCount, a_MeshComponent.mIndexOffset,
+                                                     a_MeshComponent.mIndexCount );
             } );
 
         mAccelerationStructure->Build();
@@ -1834,8 +1795,8 @@ namespace SE::Core
         lMeshAssetIndexEntry.mByteEnd   = 1;
         lAssetIndex.push_back( lMeshAssetIndexEntry );
 
-        auto lVertexData = mVertexBufferMemoryHandle.Fetch<VertexData>();
-        auto lIndexData  = mIndexBufferMemoryHandle.Fetch<uint32_t>();
+        auto lVertexData = mVertexBuffer->Fetch<VertexData>();
+        auto lIndexData  = mIndexBuffer->Fetch<uint32_t>();
         auto lMeshData   = lBinaryDataFile.Package( lVertexData, lIndexData );
         lPackets.push_back( lMeshData );
 

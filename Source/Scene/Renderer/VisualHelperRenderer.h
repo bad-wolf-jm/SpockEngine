@@ -4,13 +4,12 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-#include "Core/GraphicContext//Buffer.h"
-#include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//ARenderContext.h"
+#include "Core/GraphicContext//DescriptorSet.h"
 
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
-#include "Core/GraphicContext//Texture2D.h"
+
 #include "Core/Vulkan/VkAbstractRenderPass.h"
 
 #include "Scene/Components/VisualHelpers.h"
@@ -32,9 +31,7 @@ namespace SE::Graphics
         math::mat4 Projection = math::mat4( 1.0f );
 
         VisualHelperRenderer() = default;
-        VisualHelperRenderer(
-            GraphicContext &a_GraphicContext, Ref<SE::Graphics::Internal::sVkAbstractRenderPassObject> aRenderPass );
-
+        VisualHelperRenderer( GraphicContext &a_GraphicContext, Ref<SE::Graphics::Internal::sVkAbstractRenderPassObject> aRenderPass );
 
         ~VisualHelperRenderer() = default;
 
@@ -51,8 +48,6 @@ namespace SE::Graphics
         void Render( math::mat4 a_Transform, SpotlightHelperComponent &a_AxesComponent, ARenderContext &aRenderContext );
         void Render( math::mat4 a_Transform, FieldOfViewHelperComponent &a_AxesComponent, ARenderContext &aRenderContext );
         void Render( math::mat4 a_Transform, CameraHelperComponent &a_AxesComponent, ARenderContext &aRenderContext );
-
-
 
       private:
         GraphicContext        mGraphicContext;

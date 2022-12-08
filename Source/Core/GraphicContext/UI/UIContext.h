@@ -2,12 +2,14 @@
 
 #include "Core/GraphicContext//DescriptorSet.h"
 
+#include "Core/GraphicContext//ARenderContext.h"
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
-#include "Core/GraphicContext//ARenderContext.h"
 
 #include "UI/UI.h"
+
+#include "Graphics/VkGpuBuffer.h"
 
 #include <imgui.h>
 #define IMGUI_DEFINE_MATH_OPERATORS
@@ -51,7 +53,8 @@ namespace SE::Core
     class UIContext
     {
       public:
-        UIContext( Ref<SE::Core::Window> aWindow, GraphicContext &aDevice, ARenderContext &aRenderContext, std::string &aImGuiConfigPath, UIConfiguration const& aUIConfiguration );
+        UIContext( Ref<SE::Core::Window> aWindow, GraphicContext &aDevice, ARenderContext &aRenderContext,
+                   std::string &aImGuiConfigPath, UIConfiguration const &aUIConfiguration );
         ~UIContext();
 
         void BeginFrame();
@@ -62,8 +65,8 @@ namespace SE::Core
 
         ImGuiIO &GetIO();
 
-        ImageHandle        CreateTextureHandle( Ref<Graphics::Texture2D> aTexture );
-        Ref<DescriptorSet> AddTexture( Ref<Graphics::Texture2D> aTexture );
+        ImageHandle        CreateTextureHandle( Ref<Graphics::VkSampler2D> aTexture );
+        Ref<DescriptorSet> AddTexture( Ref<Graphics::VkSampler2D> aTexture );
 
         ImFont *mMonoFont;
         ImFont *mMainFont;
@@ -84,13 +87,13 @@ namespace SE::Core
 
         Ref<SE::Graphics::Internal::ShaderModule> mUIVertexShader   = nullptr;
         Ref<SE::Graphics::Internal::ShaderModule> mUIFragmentShader = nullptr;
-        Ref<GraphicsPipeline>                       mUIRenderPipeline = nullptr;
+        Ref<GraphicsPipeline>                     mUIRenderPipeline = nullptr;
 
-        Ref<Graphics::Texture2D>     mFontTexture       = nullptr;
-        Ref<DescriptorSet> mFontDescriptorSet = nullptr;
+        Ref<Graphics::VkSampler2D> mFontTexture       = nullptr;
+        Ref<DescriptorSet>         mFontDescriptorSet = nullptr;
 
-        Ref<Buffer> mVertexBuffer;
-        Ref<Buffer> mIndexBuffer;
+        Ref<VkGpuBuffer> mVertexBuffer;
+        Ref<VkGpuBuffer> mIndexBuffer;
 
       private:
         void SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData );

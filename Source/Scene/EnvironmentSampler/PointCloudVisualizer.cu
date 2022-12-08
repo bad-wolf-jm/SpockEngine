@@ -110,7 +110,7 @@ namespace SE::SensorModel::Dev
     }
 
     extern "C" __global__ void __kernel__FillParticleBuffer( math::mat3 a_PointCloudRotation, math::vec3 a_PointCloudOrigin,
-                                                             MultiTensor a_LidarReturnPoints, GPUExternalMemory a_LidarParticle,
+                                                             MultiTensor a_LidarReturnPoints, GPUMemory a_LidarParticle,
                                                              bool a_LogScale, bool a_HighlightFOV, bool a_InvertZAxis,
                                                              float aResolution )
     {
@@ -145,8 +145,7 @@ namespace SE::SensorModel::Dev
         lLidarParticle[l_InputArrayIdx].Color = math::vec4( l_Color, 0.95 );
     }
 
-    void sPointCloudVisualizer::Visualize( math::mat4 a_PointCloudTransform, MultiTensor &a_LidarReturnPoints,
-                                           GPUExternalMemory &a_Particles )
+    void sPointCloudVisualizer::Visualize( math::mat4 a_PointCloudTransform, MultiTensor &a_LidarReturnPoints, GPUMemory &a_Particles )
     {
         int l_BlockCount = ( a_LidarReturnPoints.SizeAs<sHitRecord>() / THREADS_PER_BLOCK ) + 1;
 

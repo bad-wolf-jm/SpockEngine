@@ -25,6 +25,7 @@ namespace SE::Graphics
     class VkTexture2D : public Cuda::Texture2D
     {
         friend class VkSampler2D;
+        friend class VkRenderTarget;
 
       public:
         Core::sTextureCreateInfo mSpec;
@@ -34,15 +35,26 @@ namespace SE::Graphics
                      bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
 
         /** @brief */
+        VkTexture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData )
+            : VkTexture2D( aGraphicContext, aCubeMapData, 1, false, true, true )
+        {
+        }
+
+        /** @brief */
         VkTexture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData, uint8_t aSampleCount, bool aIsHostVisible,
                      bool aIsGraphicsOnly, bool aIsTransferSource );
+
+        /** @brief */
+        VkTexture2D( GraphicContext &aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription, VkImage aExternalImage );
 
         /** @brief */
         ~VkTexture2D() = default;
         void GetTextureData( TextureData2D &mTextureData );
 
+        void SetPixelData( VkGpuBuffer &a_Buffer );
+        void TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout );
+
       private:
-        // void CreateImageView();
         void ConfigureExternalMemoryHandle();
 
         VkMemoryPropertyFlags MemoryProperties();
@@ -51,9 +63,6 @@ namespace SE::Graphics
         void CreateImage();
         void AllocateMemory();
         void BindMemory();
-
-        void SetPixelData( VkGpuBuffer &a_Buffer );
-        void TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout );
 
       private:
         GraphicContext mGraphicContext{};

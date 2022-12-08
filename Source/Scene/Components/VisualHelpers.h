@@ -3,7 +3,8 @@
 #include "Core/EntityRegistry/Registry.h"
 #include "Core/Memory.h"
 
-#include "Core/GraphicContext//Buffer.h"
+#include "Graphics/VkGpuBuffer.h"
+
 #include "Core/GraphicContext//GraphicContext.h"
 
 #include "Scene/Components.h"
@@ -21,8 +22,8 @@ namespace SE::Core::EntityComponentSystem::Components
         using VertexType = _VertexType;
         using IndexType  = _IndexType;
 
-        Ref<Buffer> Vertices;
-        Ref<Buffer> Indices;
+        Ref<VkGpuBuffer> Vertices;
+        Ref<VkGpuBuffer> Indices;
 
         MeshData()                   = default;
         MeshData( const MeshData & ) = default;

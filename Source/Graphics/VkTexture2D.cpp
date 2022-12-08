@@ -26,14 +26,16 @@ namespace SE::Graphics
         , mIsTransferSource{ aIsTransferSource }
         , mIsTransferDestination{ false }
     {
+        if( mSpec.mIsDepthTexture ) mSpec.mFormat = ToLtseFormat( mGraphicContext.mContext->GetDepthFormat() );
+
         CreateImage();
         AllocateMemory();
         BindMemory();
         ConfigureExternalMemoryHandle();
 
         sImageData &lImageData = mTextureData.GetImageData();
-        VkGpuBuffer lStagingBuffer( mGraphicContext, lImageData.mPixelData.data(), lImageData.mByteSize, eBufferBindType::UNKNOWN, true,
-                                    false, true, false );
+        VkGpuBuffer lStagingBuffer( mGraphicContext, lImageData.mPixelData.data(), lImageData.mByteSize, eBufferBindType::UNKNOWN,
+                                    true, false, true, false );
         TransitionImageLayout( VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
         SetPixelData( lStagingBuffer );
         TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
@@ -50,17 +52,34 @@ namespace SE::Graphics
         , mIsTransferSource{ aIsTransferSource }
         , mIsTransferDestination{ aIsTransferDestination }
     {
+        if( mSpec.mIsDepthTexture ) mSpec.mFormat = ToLtseFormat( mGraphicContext.mContext->GetDepthFormat() );
+
         CreateImage();
         AllocateMemory();
         BindMemory();
         ConfigureExternalMemoryHandle();
     }
 
+    VkTexture2D::VkTexture2D( GraphicContext &aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+                              VkImage aExternalImage )
+        : mGraphicContext( aGraphicContext )
+        , mSpec( aTextureImageDescription )
+        , mSampleCount{ VK_SAMPLE_COUNT_VALUE( 1 ) }
+        , mIsHostVisible{ false }
+        , mIsGraphicsOnly{ true }
+        , mIsTransferSource{ false }
+        , mIsTransferDestination{ false }
+        , mVkImage{ aExternalImage }
+    {
+        if( mSpec.mIsDepthTexture ) mSpec.mFormat = ToLtseFormat( mGraphicContext.mContext->GetDepthFormat() );
+    }
+
     void VkTexture2D::CreateImage()
     {
-        mVkImage = mGraphicContext.mContext->CreateImage( mSpec.mWidth, mSpec.mHeight, mSpec.mDepth, mSpec.mMipLevels, mSpec.mLayers,
-                                                          mSampleCount, !mIsGraphicsOnly, false, ToVkFormat( mSpec.mFormat ),
-                                                          MemoryProperties(), ImageUsage() );
+        mVkImage = mGraphicContext.mContext->CreateImage(
+            mSpec.mWidth, mSpec.mHeight, mSpec.mDepth, mSpec.mMipLevels, mSpec.mLayers, mSampleCount, !mIsGraphicsOnly, false,
+            mSpec.mIsDepthTexture ? mGraphicContext.mContext->GetDepthFormat() : ToVkFormat( mSpec.mFormat ), MemoryProperties(),
+            ImageUsage() );
     }
 
     void VkTexture2D::AllocateMemory()
@@ -86,6 +105,11 @@ namespace SE::Graphics
         VkImageUsageFlags lUsage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
         if( mIsTransferSource ) lUsage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
         if( mIsTransferDestination ) lUsage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+
+        if( mSpec.mIsDepthTexture )
+            lUsage |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+        else
+            lUsage |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
         return lUsage;
     }
@@ -190,7 +214,7 @@ namespace SE::Graphics
         lImageDataStruct.mWidth     = mSpec.mWidth;
         lImageDataStruct.mHeight    = mSpec.mHeight;
         lImageDataStruct.mByteSize  = lByteSize;
-        lImageDataStruct.mPixelData = std::vector<uint8_t>(lPixelData, lPixelData + lByteSize);
+        lImageDataStruct.mPixelData = std::vector<uint8_t>( lPixelData, lPixelData + lByteSize );
 
         Core::sTextureCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mMipLevels = 1;

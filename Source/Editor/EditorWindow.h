@@ -8,7 +8,8 @@
 #include "Core/Memory.h"
 
 #include "Core/GraphicContext//GraphicContext.h"
-#include "Core/GraphicContext//Texture2D.h"
+
+#include "Graphics/VkSampler2D.h"
 
 #include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/ForwardSceneRenderer.h"
@@ -125,16 +126,16 @@ namespace SE::Editor
         float    m_FpsTimer     = 0.0f;
         uint32_t m_LastFPS      = 0;
 
-        math::ivec2                  m_WorkspaceAreaSize = { 0, 0 };
-        Ref<SE::Graphics::Texture2D> m_PlayIcon;
-        ImageHandle                  m_PlayIconHandle;
-        Ref<SE::Graphics::Texture2D> m_PauseIcon;
-        ImageHandle                  m_PauseIconHandle;
-        Ref<SE::Graphics::Texture2D> m_CameraIcon;
-        ImageHandle                  m_CameraIconHandle;
+        math::ivec2                    m_WorkspaceAreaSize = { 0, 0 };
+        Ref<SE::Graphics::VkSampler2D> m_PlayIcon;
+        ImageHandle                    m_PlayIconHandle;
+        Ref<SE::Graphics::VkSampler2D> m_PauseIcon;
+        ImageHandle                    m_PauseIconHandle;
+        Ref<SE::Graphics::VkSampler2D> m_CameraIcon;
+        ImageHandle                    m_CameraIconHandle;
 
-        Ref<SE::Graphics::Texture2D> m_DefaultTextureImage;
-        ImageHandle                  m_DefaultTextureImageHandle;
+        Ref<SE::Graphics::VkSampler2D> m_DefaultTextureImage;
+        ImageHandle                    m_DefaultTextureImageHandle;
 
         SimulationState mState         = SimulationState::EDIT;
         SidePanelID     m_CurrentPanel = SidePanelID::SENSOR_CONFIGURATION;

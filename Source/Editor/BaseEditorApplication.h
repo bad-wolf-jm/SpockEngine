@@ -45,7 +45,6 @@ namespace SE::Editor
 
       public:
         BaseEditorApplication() = default;
-        // BaseEditorApplication( Ref<Engine> aEngineLoop );
 
         ~BaseEditorApplication() = default;
 
@@ -68,11 +67,11 @@ namespace SE::Editor
         Ref<ForwardSceneRenderer> mForwardRenderer    = nullptr;
         Ref<RayTracingRenderer>   mRayTracingRenderer = nullptr;
 
-        Ref<Graphics::Texture2D> mOffscreenRenderTargetTexture = nullptr;
-        ImageHandle              mOffscreenRenderTargetDisplayHandle{};
+        Ref<Graphics::VkSampler2D> mOffscreenRenderTargetTexture = nullptr;
+        ImageHandle                mOffscreenRenderTargetDisplayHandle{};
 
-        Ref<Graphics::Texture2D> mDeferredRenderTargetTexture = nullptr;
-        ImageHandle              mDeferredRenderTargetDisplayHandle{};
+        Ref<Graphics::VkSampler2D> mDeferredRenderTargetTexture = nullptr;
+        ImageHandle                mDeferredRenderTargetDisplayHandle{};
 
         Entity m_SensorEntity{};
     };

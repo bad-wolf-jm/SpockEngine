@@ -13,7 +13,6 @@
 #include "UI/Widgets.h"
 
 #include "Core/CUDA/Array/CudaBuffer.h"
-#include "Core/CUDA/Array/ExternalMemory.h"
 #include "Core/CUDA/Array/MultiTensor.h"
 
 #include "Core/CUDA/Texture/ColorFormat.h"
@@ -28,8 +27,6 @@ namespace SE::Editor
     using namespace SE::Core;
     using namespace SE::Cuda;
     using namespace SE::Core::EntityComponentSystem::Components;
-
-    // BaseEditorApplication::BaseEditorApplication(  ) { mEngineLoop = aEngineLoop; }
 
     void BaseEditorApplication::RenderScene()
     {
@@ -55,8 +52,12 @@ namespace SE::Editor
         mForwardRenderer->ResizeOutput( mViewportWidth, mViewportHeight );
         mRayTracingRenderer->ResizeOutput( mViewportWidth, mViewportHeight );
 
-        mOffscreenRenderTargetTexture = New<Graphics::Texture2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
-                                                                  TextureDescription{}, mForwardRenderer->GetOutputImage() );
+        sTextureSamplingInfo lSamplingInfo{};
+        lSamplingInfo.mNormalizedCoordinates = true;
+        lSamplingInfo.mNormalizedValues      = true;
+
+        mOffscreenRenderTargetTexture = New<Graphics::VkSampler2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
+                                                                    mForwardRenderer->GetOutputImage(), lSamplingInfo );
 
         if( !mOffscreenRenderTargetDisplayHandle.Handle )
         {
@@ -69,10 +70,9 @@ namespace SE::Editor
             mOffscreenRenderTargetDisplayHandle.Handle->Write( mOffscreenRenderTargetTexture, 0 );
         }
 
-        // mDeferredRenderTargetTexture = New<Graphics::Texture2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
-        //                                                          TextureDescription{}, mDeferredRenderer->GetOutputImage() );
-        mDeferredRenderTargetTexture = mRayTracingRenderer->GetOutputTexture();
-        if (!mDeferredRenderTargetTexture) return;
+        mDeferredRenderTargetTexture = New<Graphics::VkSampler2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
+                                                                   mRayTracingRenderer->GetOutputImage(), lSamplingInfo );
+        if( !mDeferredRenderTargetTexture ) return;
 
         if( !mDeferredRenderTargetDisplayHandle.Handle )
         {
@@ -95,15 +95,12 @@ namespace SE::Editor
             mShouldRebuildViewport = false;
         }
 
-        // mEditorWindow.mEngineLoop = mEngineLoop;
-        // mEditorWindow.SensorModel    = m_SensorController;
         mEditorWindow.WorldRenderer  = mForwardRenderer;
         mEditorWindow.DefRenderer    = mDeferredRenderer;
         mEditorWindow.RTRenderer     = mRayTracingRenderer;
         mEditorWindow.GraphicContext = SE::Core::Engine::GetInstance()->GetGraphicContext();
 
         o_RequestQuit = mEditorWindow.Display();
-        // OnUI();
 
         auto l_WorkspaceAreaSize = mEditorWindow.GetWorkspaceAreaSize();
         if( ( mViewportWidth != l_WorkspaceAreaSize.x ) || ( mViewportHeight != l_WorkspaceAreaSize.y ) )

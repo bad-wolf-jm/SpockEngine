@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Core/GraphicContext//GraphicContext.h"
-#include "Core/GraphicContext//Texture2D.h"
-#include "Core/GraphicContext//TextureCubeMap.h"
 
 #include "Graphics/VkSampler2D.h"
 
@@ -64,10 +62,9 @@ namespace SE::Graphics
         DescriptorSet( GraphicContext &aGraphicContext, Ref<DescriptorSetLayout> aLayout, uint32_t aDescriptorCount = 0 );
         ~DescriptorSet() = default;
 
-        void Write( Ref<Buffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding );
-
-        void Write( Ref<Texture2D> aBuffer, uint32_t aBinding );
-        void Write( std::vector<Ref<Texture2D>> aBuffer, uint32_t aBinding );
+        void Write( Ref<VkGpuBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding );
+        // void Write( Ref<Texture2D> aBuffer, uint32_t aBinding );
+        // void Write( std::vector<Ref<Texture2D>> aBuffer, uint32_t aBinding );
 
         void Write( Ref<VkSampler2D> aBuffer, uint32_t aBinding );
         void Write( std::vector<Ref<VkSampler2D>> aBuffer, uint32_t aBinding );

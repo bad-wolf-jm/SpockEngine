@@ -3,6 +3,7 @@
 #include "Core/GraphicContext//GraphicContext.h"
 
 #include "ARenderTarget.h"
+#include "Graphics/VkGpuBuffer.h"
 #include "GraphicsPipeline.h"
 
 namespace SE::Graphics
@@ -19,9 +20,9 @@ namespace SE::Graphics
 
         GraphicContext &GetGraphicContext() { return mGraphicContext; };
 
-        uint32_t                         GetOutputImageCount();
-        Ref<ARenderTarget>               GetRenderTarget() { return mRenderTarget; }
-        Ref<sVkCommandBufferObject>      GetCurrentCommandBuffer() { return  mRenderTarget->GetCurrentCommandBuffer(); }
+        uint32_t                                 GetOutputImageCount();
+        Ref<ARenderTarget>                       GetRenderTarget() { return mRenderTarget; }
+        Ref<sVkCommandBufferObject>              GetCurrentCommandBuffer() { return mRenderTarget->GetCurrentCommandBuffer(); }
         virtual Ref<sVkAbstractRenderPassObject> GetRenderPass() { return mRenderTarget->GetRenderPass(); }
 
         bool BeginRender();
@@ -29,8 +30,8 @@ namespace SE::Graphics
 
         void Bind( Ref<GraphicsPipeline> aGraphicPipeline );
         void Bind( Ref<DescriptorSet> aDescriptorSet, uint32_t aSetIndex, int32_t aDynamicOffset = -1 );
-        void Bind( Ref<Buffer> aVertexBuffer, uint32_t aBindPoint = 0 );
-        void Bind( Ref<Buffer> aVertexBuffer, Ref<Buffer> aIndexBuffer, uint32_t aBindPoint = 0 );
+        void Bind( Ref<VkGpuBuffer> aVertexBuffer, uint32_t aBindPoint = 0 );
+        void Bind( Ref<VkGpuBuffer> aVertexBuffer, Ref<VkGpuBuffer> aIndexBuffer, uint32_t aBindPoint = 0 );
 
         template <typename T>
         void PushConstants( ShaderStageType aShaderStages, uint32_t aOffset, const T &aValue )
@@ -40,7 +41,7 @@ namespace SE::Graphics
         }
 
         void Draw( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset = 0, uint32_t aInstanceCount = 0,
-            uint32_t aFirstInstance = 0 );
+                   uint32_t aFirstInstance = 0 );
 
         void Present();
 
@@ -60,8 +61,7 @@ namespace SE::Graphics
         std::vector<Ref<sVkCommandBufferObject>> mCommandBufferObject   = {};
         Ref<sVkPipelineLayoutObject>             mCurrentPipelineLayout = nullptr;
 
-        Ref<Buffer> mCurrentVertexBuffer = nullptr;
-        Ref<Buffer> mCurrentIndexBuffer  = nullptr;
+        bool mHasIndex = false;
     };
 
 } // namespace SE::Graphics

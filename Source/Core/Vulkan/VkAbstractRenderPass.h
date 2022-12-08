@@ -6,7 +6,6 @@
 #include <vulkan/vulkan.h>
 
 #include "VkContext.h"
-#include "VkImage.h"
 
 #include "Core/Memory.h"
 

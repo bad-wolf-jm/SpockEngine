@@ -6,11 +6,12 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-#include "Core/GraphicContext//Buffer.h"
+#include "Graphics/VkGpuBuffer.h"
+
+#include "Core/GraphicContext//ARenderContext.h"
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
-#include "Core/GraphicContext//ARenderContext.h"
 
 #include "Scene/ParticleData.h"
 #include "Scene/VertexData.h"
@@ -67,7 +68,7 @@ namespace SE::Graphics
             uint32_t   ParticleCount = 0;
             float      ParticleSize  = 0.0f;
 
-            Ref<Buffer> Particles = nullptr;
+            Ref<VkGpuBuffer> Particles = nullptr;
 
             ParticleData()                       = default;
             ParticleData( const ParticleData & ) = default;
@@ -78,8 +79,8 @@ namespace SE::Graphics
 
         ParticleSystemRenderer() = default;
 
-        ParticleSystemRenderer(
-            GraphicContext &a_GraphicContext, ARenderContext &a_RenderContext, ParticleRendererCreateInfo a_CreateInfo );
+        ParticleSystemRenderer( GraphicContext &a_GraphicContext, ARenderContext &a_RenderContext,
+                                ParticleRendererCreateInfo a_CreateInfo );
 
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
         std::vector<sPushConstantRange>       GetPushConstantLayout();
@@ -89,9 +90,9 @@ namespace SE::Graphics
         void Render( math::mat4 a_Projection, math::mat4 a_View, ARenderContext &aRenderContext, ParticleData &a_ParticleData );
 
       protected:
-        Ref<Buffer>        mParticleVertices  = nullptr;
-        Ref<Buffer>        mParticleIndices   = nullptr;
-        Ref<Buffer>        mCameraBuffer      = nullptr;
+        Ref<VkGpuBuffer>   mParticleVertices  = nullptr;
+        Ref<VkGpuBuffer>   mParticleIndices   = nullptr;
+        Ref<VkGpuBuffer>   mCameraBuffer      = nullptr;
         Ref<DescriptorSet> mCameraDescriptors = nullptr;
     };
 

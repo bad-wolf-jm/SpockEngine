@@ -42,8 +42,7 @@ namespace SE::Core
 
         void SetView( math::mat4 aViewMatrix );
 
-        Ref<sVkFramebufferImage> GetOutputImage() { return nullptr; }
-        Ref<Graphics::Texture2D> GetOutputTexture() { return mOutputTexture; }
+        Ref<VkTexture2D> GetOutputImage() { return mOutputTexture; }
 
         bool denoiserOn = true;
         bool accumulate = true;
@@ -69,10 +68,9 @@ namespace SE::Core
         math::mat3 mCameraRotation{};
 
       protected:
-        GraphicContext           mGraphicContext{};
-        Ref<Graphics::Texture2D> mOutputTexture = nullptr;
-        Ref<Graphics::Buffer>    mOutputBuffer  = nullptr;
-        GPUExternalMemory        mCudaOutputBuffer{};
+        GraphicContext             mGraphicContext{};
+        Ref<Graphics::VkTexture2D> mOutputTexture = nullptr;
+        Ref<Graphics::VkGpuBuffer> mOutputBuffer  = nullptr;
 
       protected:
         GPUMemory mRayTracingParameterBuffer;
@@ -106,8 +104,4 @@ namespace SE::Core
 
     void computeFinalPixelColors( sLaunchParams const &launchParams, Cuda::GPUMemory &denoisedBuffer,
                                   Cuda::GPUMemory &finalColorBuffer );
-
-    void computeFinalPixelColors( sLaunchParams const &launchParams, Cuda::GPUMemory &denoisedBuffer,
-                                  Cuda::GPUExternalMemory &finalColorBuffer );
-
 } // namespace SE::Core

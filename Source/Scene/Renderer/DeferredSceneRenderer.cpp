@@ -10,9 +10,9 @@ namespace SE::Core
     {
         // Internal uniform buffers
         mCameraUniformBuffer =
-            New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( WorldMatrices ) );
+            New<VkGpuBuffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, true, true, true, sizeof( WorldMatrices ) );
         mShaderParametersBuffer =
-            New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( CameraSettings ) );
+            New<VkGpuBuffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraSettings ) );
 
         // Layout for the geometry pass
         mGeometryPassCamera = New<DescriptorSet>( mGraphicContext, MeshRenderer::GetCameraSetLayout( mGraphicContext ) );
@@ -52,8 +52,8 @@ namespace SE::Core
         mGeometryRenderTarget->AddAttachment( "ALBEDO", lAttachmentCreateInfo );
         mGeometryRenderTarget->AddAttachment( "AO_METAL_ROUGH", lAttachmentCreateInfo );
 
-        lAttachmentCreateInfo.mFormat = eColorFormat::R32_FLOAT;
-        mGeometryRenderTarget->AddAttachment( "OBJECT_ID", lAttachmentCreateInfo );
+        // lAttachmentCreateInfo.mFormat = eColorFormat::R32_FLOAT;
+        // mGeometryRenderTarget->AddAttachment( "OBJECT_ID", lAttachmentCreateInfo );
 
         lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
         lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
@@ -91,13 +91,17 @@ namespace SE::Core
         mLightingRenderer              = DeferredLightingRenderer( mGraphicContext, mLightingRendererCI );
 
         mLightingPassTextures->Write(
-            New<Graphics::Texture2D>( mGraphicContext, TextureDescription{}, mGeometryRenderTarget->GetAttachment( "POSITION" ) ), 0 );
+            New<Graphics::VkSampler2D>( mGraphicContext, mGeometryRenderTarget->GetAttachment( "POSITION" ), sTextureSamplingInfo{} ),
+            0 );
         mLightingPassTextures->Write(
-            New<Graphics::Texture2D>( mGraphicContext, TextureDescription{}, mGeometryRenderTarget->GetAttachment( "NORMALS" ) ), 1 );
+            New<Graphics::VkSampler2D>( mGraphicContext, mGeometryRenderTarget->GetAttachment( "NORMALS" ), sTextureSamplingInfo{} ),
+            1 );
         mLightingPassTextures->Write(
-            New<Graphics::Texture2D>( mGraphicContext, TextureDescription{}, mGeometryRenderTarget->GetAttachment( "ALBEDO" ) ), 2 );
-        mLightingPassTextures->Write( New<Graphics::Texture2D>( mGraphicContext, TextureDescription{},
-                                                                mGeometryRenderTarget->GetAttachment( "AO_METAL_ROUGH" ) ),
+            New<Graphics::VkSampler2D>( mGraphicContext, mGeometryRenderTarget->GetAttachment( "ALBEDO" ), sTextureSamplingInfo{} ),
+            2 );
+        mLightingPassTextures->Write( New<Graphics::VkSampler2D>( mGraphicContext,
+                                                                  mGeometryRenderTarget->GetAttachment( "AO_METAL_ROUGH" ),
+                                                                  sTextureSamplingInfo{} ),
                                       3 );
 
         CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
@@ -106,7 +110,7 @@ namespace SE::Core
         mVisualHelperRenderer   = New<VisualHelperRenderer>( mGraphicContext, mLightingContext.GetRenderPass() );
     }
 
-    Ref<sVkFramebufferImage> DeferredRenderer::GetOutputImage()
+    Ref<VkTexture2D> DeferredRenderer::GetOutputImage()
     {
         //
         return mLightingRenderTarget->GetAttachment( "OUTPUT" );
@@ -186,7 +190,7 @@ namespace SE::Core
         Settings.AmbientLightColor     = math::vec4( math::vec3( mAmbientLight ), 0.0 );
         Settings.Gamma                 = mGamma;
         Settings.Exposure              = mExposure;
-        Settings.RenderGrayscale       = mGrayscaleRendering ? 1.0f: 0.0f;
+        Settings.RenderGrayscale       = mGrayscaleRendering ? 1.0f : 0.0f;
 
         View.Projection     = mProjectionMatrix;
         View.CameraPosition = mCameraPosition;
@@ -318,8 +322,8 @@ namespace SE::Core
                     auto &lNodeDescriptor = aEntity.Add<NodeDescriptorComponent>();
                     lNodeDescriptor.Descriptors =
                         New<DescriptorSet>( mGraphicContext, MeshRenderer::GetNodeSetLayout( mGraphicContext ) );
-                    lNodeDescriptor.UniformBuffer = New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true,
-                                                                 true, sizeof( NodeMatrixDataComponent ) );
+                    lNodeDescriptor.UniformBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, true,
+                                                                      true, true, sizeof( NodeMatrixDataComponent ) );
 
                     lNodeDescriptor.Descriptors->Write( lNodeDescriptor.UniformBuffer, false, 0, sizeof( NodeMatrixDataComponent ),
                                                         0 );

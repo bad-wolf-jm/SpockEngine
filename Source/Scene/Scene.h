@@ -8,8 +8,6 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-#include "Core/CUDA/Array/ExternalMemory.h"
-
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
@@ -96,7 +94,8 @@ namespace SE::Core
             m_Registry.ForEach<Args...>( a_ApplyFunction );
         }
 
-        void                   UpdateRayTracingComponents();
+        void UpdateRayTracingComponents();
+
         OptixTraversableHandle GetRayTracingRoot()
         {
             if( mAccelerationStructure ) return mAccelerationStructure->mOptixObject;
@@ -110,12 +109,15 @@ namespace SE::Core
 
         void ClearScene();
 
-        Ref<Buffer>             mVertexBuffer            = nullptr;
-        Ref<Buffer>             mIndexBuffer             = nullptr;
-        Ref<Buffer>             mTransformedVertexBuffer = nullptr;
-        Cuda::GPUExternalMemory mTransformedVertexBufferMemoryHandle{};
-        Cuda::GPUExternalMemory mVertexBufferMemoryHandle{};
-        Cuda::GPUExternalMemory mIndexBufferMemoryHandle{};
+        Ref<VkGpuBuffer> mVertexBuffer            = nullptr;
+        Ref<VkGpuBuffer> mIndexBuffer             = nullptr;
+        Ref<VkGpuBuffer> mTransformedVertexBuffer = nullptr;
+        // Ref<Buffer>             mVertexBuffer            = nullptr;
+        // Ref<Buffer>             mIndexBuffer             = nullptr;
+        // Ref<Buffer>             mTransformedVertexBuffer = nullptr;
+        // Cuda::GPUExternalMemory mTransformedVertexBufferMemoryHandle{};
+        // Cuda::GPUExternalMemory mVertexBufferMemoryHandle{};
+        // Cuda::GPUExternalMemory mIndexBufferMemoryHandle{};
 
       private:
         eSceneState         mState = eSceneState::EDITING;

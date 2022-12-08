@@ -31,9 +31,9 @@ namespace SE::Core
         mSceneDescriptors = New<DescriptorSet>( mGraphicContext, MeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
         mCameraUniformBuffer =
-            New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( WorldMatrices ) );
+            New<VkGpuBuffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, true, true, true, sizeof( WorldMatrices ) );
         mShaderParametersBuffer =
-            New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( CameraSettings ) );
+            New<VkGpuBuffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraSettings ) );
         mSceneDescriptors->Write( mCameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
         mSceneDescriptors->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
     }
@@ -164,7 +164,7 @@ namespace SE::Core
         Settings.AmbientLightColor     = math::vec4( math::vec3( mAmbientLight ), 0.0 );
         Settings.Gamma                 = mGamma;
         Settings.Exposure              = mExposure;
-        Settings.RenderGrayscale       = GrayscaleRendering? 1.0f: 0.0f;
+        Settings.RenderGrayscale       = GrayscaleRendering ? 1.0f : 0.0f;
 
         View.Projection     = mProjectionMatrix;
         View.CameraPosition = mCameraPosition;
@@ -271,7 +271,7 @@ namespace SE::Core
         mGeometryContext.EndRender();
     }
 
-    Ref<sVkFramebufferImage> ForwardSceneRenderer::GetOutputImage()
+    Ref<VkTexture2D> ForwardSceneRenderer::GetOutputImage()
     {
         //
         return mGeometryRenderTarget->GetAttachment( "OUTPUT" );
@@ -289,8 +289,8 @@ namespace SE::Core
                     auto &lNodeDescriptor = aEntity.Add<NodeDescriptorComponent>();
                     lNodeDescriptor.Descriptors =
                         New<DescriptorSet>( mGraphicContext, MeshRenderer::GetNodeSetLayout( mGraphicContext ) );
-                    lNodeDescriptor.UniformBuffer = New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true,
-                                                                 true, sizeof( NodeMatrixDataComponent ) );
+                    lNodeDescriptor.UniformBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, true,
+                                                                      true, true, sizeof( NodeMatrixDataComponent ) );
 
                     lNodeDescriptor.Descriptors->Write( lNodeDescriptor.UniformBuffer, false, 0, sizeof( NodeMatrixDataComponent ),
                                                         0 );

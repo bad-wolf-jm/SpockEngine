@@ -1,7 +1,7 @@
 #include "UIContext.h"
 
-#include "Core/Logging.h"
 #include "Core/CUDA/Texture/ColorFormat.h"
+#include "Core/Logging.h"
 
 #include "Core/Vulkan/VkPipeline.h"
 
@@ -128,7 +128,7 @@ namespace SE::Core
     }
 
     UIContext::UIContext( Ref<SE::Core::Window> aWindow, GraphicContext &aGraphicContext, ARenderContext &aRenderContext,
-                          std::string &aImGuiConfigPath, UIConfiguration const& aUIConfiguration )
+                          std::string &aImGuiConfigPath, UIConfiguration const &aUIConfiguration )
         : mGraphicContext{ aGraphicContext }
         , mImGuiConfigPath{ aImGuiConfigPath }
     {
@@ -165,9 +165,9 @@ namespace SE::Core
         GraphicsPipelineCreateInfo lUIPipelineCreateInfo = {};
         lUIPipelineCreateInfo.mShaderStages              = { { mUIVertexShader, "main" }, { mUIFragmentShader, "main" } };
         lUIPipelineCreateInfo.InputBufferLayout          = {
-            { "Position", eBufferDataType::VEC2, 0, 0 },
-            { "TextureCoords", eBufferDataType::VEC2, 0, 1 },
-            { "Color", eBufferDataType::COLOR, 0, 2 },
+                     { "Position", eBufferDataType::VEC2, 0, 0 },
+                     { "TextureCoords", eBufferDataType::VEC2, 0, 1 },
+                     { "Color", eBufferDataType::COLOR, 0, 2 },
         };
         lUIPipelineCreateInfo.Topology      = ePrimitiveTopology::TRIANGLES;
         lUIPipelineCreateInfo.Culling       = eFaceCulling::NONE;
@@ -212,27 +212,30 @@ namespace SE::Core
         io.Fonts->GetTexDataAsRGBA32( &lFontPixelData, &lWidth, &lHeight );
         size_t lUploadSize = lWidth * lHeight * 4 * sizeof( char );
 
-        TextureDescription lTextureDesc;
-        lTextureDesc.IsHostVisible       = false;
-        lTextureDesc.Usage               = { TextureUsageFlags::SAMPLED, TextureUsageFlags::TRANSFER_DESTINATION };
-        lTextureDesc.MinificationFilter  = VK_FILTER_LINEAR;
-        lTextureDesc.MagnificationFilter = VK_FILTER_LINEAR;
-        lTextureDesc.MipmapMode          = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-        lTextureDesc.WrappingMode        = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        lTextureDesc.MipLevels           = { { static_cast<uint32_t>( lWidth ), static_cast<uint32_t>( lHeight ), 0, 0 } };
-        lTextureDesc.Format              = eColorFormat::RGBA8_UNORM;
-        lTextureDesc.Sampled             = true;
+        sTextureCreateInfo lTextureCreateInfo{};
+        lTextureCreateInfo.mMipLevels = 1;
 
-        SE::Graphics::TextureData lTextureData;
-        lTextureData.ByteSize = lUploadSize;
-        lTextureData.Data     = lFontPixelData;
+        sImageData lImageData{};
+        lImageData.mByteSize  = lUploadSize;
+        lImageData.mFormat    = eColorFormat::RGBA8_UNORM;
+        lImageData.mWidth     = static_cast<uint32_t>( lWidth );
+        lImageData.mHeight    = static_cast<uint32_t>( lHeight );
+        lImageData.mPixelData = std::vector<uint8_t>( lFontPixelData, lFontPixelData + lUploadSize );
+        TextureData2D lTextureImage( lTextureCreateInfo, lImageData );
 
-        mFontTexture       = New<Texture2D>( mGraphicContext, lTextureDesc, lTextureData );
+        sTextureSamplingInfo lSamplingInfo{};
+        lSamplingInfo.mFilter   = eSamplerFilter::LINEAR;
+        lSamplingInfo.mWrapping = eSamplerWrapping::REPEAT;
+        TextureSampler2D lTextureSampler( lTextureImage, lSamplingInfo );
+
+        auto lFontTexture = New<VkTexture2D>( mGraphicContext, lTextureImage );
+
+        mFontTexture       = New<VkSampler2D>( mGraphicContext, lFontTexture, lSamplingInfo );
         mFontDescriptorSet = AddTexture( mFontTexture );
         io.Fonts->TexID    = (ImTextureID)mFontDescriptorSet->GetVkDescriptorSet();
 
-        mVertexBuffer = New<Buffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, true, false, true, true, 1 );
-        mIndexBuffer  = New<Buffer>( mGraphicContext, eBufferBindType::INDEX_BUFFER, true, false, true, true, 1 );
+        mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, true, true, true, true, 1 );
+        mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::INDEX_BUFFER, true, true, true, true, 1 );
     }
 
     UIContext::~UIContext()
@@ -260,7 +263,7 @@ namespace SE::Core
         RenderDrawData( aRenderContext, drawdata );
     }
 
-    ImageHandle UIContext::CreateTextureHandle( Ref<Texture2D> aTexture ) { return ImageHandle{ AddTexture( aTexture ) }; }
+    ImageHandle UIContext::CreateTextureHandle( Ref<VkSampler2D> aTexture ) { return ImageHandle{ AddTexture( aTexture ) }; }
 
     ImGuiIO &UIContext::GetIO()
     {
@@ -284,7 +287,7 @@ namespace SE::Core
 
     void UIContext::PopFont() { ImGui::PopFont(); }
 
-    Ref<DescriptorSet> UIContext::AddTexture( Ref<Texture2D> aTexture )
+    Ref<DescriptorSet> UIContext::AddTexture( Ref<VkSampler2D> aTexture )
     {
         Ref<DescriptorSet> lDescriptorSet = New<DescriptorSet>( mGraphicContext, mUIDescriptorSetLayout );
         lDescriptorSet->Write( aTexture, 0 );

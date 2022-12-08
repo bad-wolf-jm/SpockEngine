@@ -6,9 +6,10 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-#include "Core/GraphicContext//Buffer.h"
-#include "Core/GraphicContext//DescriptorSet.h"
+#include "Graphics/VkGpuBuffer.h"
+
 #include "Core/GraphicContext//ARenderContext.h"
+#include "Core/GraphicContext//DescriptorSet.h"
 
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
@@ -27,7 +28,7 @@ namespace SE::Graphics
 
     struct VisualHelperMeshRendererCreateInfo
     {
-        float                                                      LineWidth  = 1.0f;
+        float                                                    LineWidth  = 1.0f;
         Ref<SE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
@@ -49,8 +50,8 @@ namespace SE::Graphics
 
         ~VisualHelperMeshRenderer() = default;
 
-        void Render( math::mat4 a_Model, math::mat4 a_View, math::mat4 a_Projection, math::vec3 a_Color, Ref<Buffer> a_VertexBuffer,
-            Ref<Buffer> a_IndexBuffer, ARenderContext &aRenderContext );
+        void Render( math::mat4 a_Model, math::mat4 a_View, math::mat4 a_Projection, math::vec3 a_Color,
+                     Ref<VkGpuBuffer> a_VertexBuffer, Ref<VkGpuBuffer> a_IndexBuffer, ARenderContext &aRenderContext );
 
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
         std::vector<sPushConstantRange>       GetPushConstantLayout();

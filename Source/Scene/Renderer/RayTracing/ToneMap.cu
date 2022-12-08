@@ -1,6 +1,6 @@
-#include "Core/CUDA/CudaAssert.h"
 #include "Core/CUDA/Array/CudaBuffer.h"
-#include "Core/CUDA/Array/ExternalMemory.h"
+#include "Core/CUDA/CudaAssert.h"
+// #include "Core/CUDA/Array/ExternalMemory.h"
 
 #include "Core/Math/Types.h"
 #include "LaunchParams.h"
@@ -45,16 +45,8 @@ namespace SE::Core
         return T( ( a + b - 1 ) / b );
     }
 
-    void computeFinalPixelColors(sLaunchParams const& launchParams, Cuda::GPUMemory &denoisedBuffer, Cuda::GPUMemory &finalColorBuffer)
-    {
-        math::ivec2 fbSize = launchParams.mFrame.mSize;
-        math::ivec2 blockSize( 32 );
-        math::ivec2 numBlocks = divRoundUp( fbSize, blockSize );
-        computeFinalPixelColorsKernel<<<dim3( numBlocks.x, numBlocks.y ), dim3( blockSize.x, blockSize.y )>>>(
-            (uint32_t *)finalColorBuffer.RawDevicePtr(), (float4 *)denoisedBuffer.RawDevicePtr(), fbSize );
-    }
-
-    void computeFinalPixelColors(sLaunchParams const& launchParams, Cuda::GPUMemory &denoisedBuffer, Cuda::GPUExternalMemory &finalColorBuffer)
+    void computeFinalPixelColors( sLaunchParams const &launchParams, Cuda::GPUMemory &denoisedBuffer,
+                                  Cuda::GPUMemory &finalColorBuffer )
     {
         math::ivec2 fbSize = launchParams.mFrame.mSize;
         math::ivec2 blockSize( 32 );

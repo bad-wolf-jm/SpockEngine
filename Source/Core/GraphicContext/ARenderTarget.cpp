@@ -34,34 +34,39 @@ namespace SE::Graphics
     void ARenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo )
     {
         mAttachmentInfo.push_back( aCreateInfo );
-        VkImageUsageFlags lAttachmentType =
-            ( aCreateInfo.mType == eAttachmentType::COLOR || aCreateInfo.mType == eAttachmentType::MSAA_RESOLVE )
-                ? VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
-                : VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
-
-        uint32_t lSampleCount = ( aCreateInfo.mType == eAttachmentType::MSAA_RESOLVE ) ? 1 : mSpec.mSampleCount;
-        auto     lVkFormat    = ( aCreateInfo.mType == eAttachmentType::DEPTH ) ? mGraphicContext.mContext->GetDepthFormat()
-                                                                                : ToVkFormat( aCreateInfo.mFormat );
-
         mAttachmentIDs.push_back( aAttachmentID );
-        mAttachments[aAttachmentID] = New<sVkFramebufferImage>( mGraphicContext.mContext, lVkFormat, mSpec.mWidth, mSpec.mHeight,
-                                                                lSampleCount, lAttachmentType, aCreateInfo.mIsSampled );
+
+        if( aCreateInfo.mType == eAttachmentType::DEPTH )
+            mAttachmentInfo.back().mFormat = ToLtseFormat( mGraphicContext.mContext->GetDepthFormat() );
+
+        sTextureCreateInfo lTextureCreateInfo{};
+        lTextureCreateInfo.mFormat         = aCreateInfo.mFormat;
+        lTextureCreateInfo.mWidth          = mSpec.mWidth;
+        lTextureCreateInfo.mHeight         = mSpec.mHeight;
+        lTextureCreateInfo.mDepth          = 1;
+        lTextureCreateInfo.mIsDepthTexture = ( aCreateInfo.mType == eAttachmentType::DEPTH );
+
+        uint32_t lSampleCount       = ( aCreateInfo.mType == eAttachmentType::MSAA_RESOLVE ) ? 1 : mSpec.mSampleCount;
+        mAttachments[aAttachmentID] = New<VkTexture2D>( mGraphicContext, lTextureCreateInfo, lSampleCount, false, true, true, true );
     }
 
     void ARenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-                                       Ref<Internal::sVkFramebufferImage> aFramebufferImage )
+                                       Ref<VkTexture2D> aFramebufferImage )
     {
         mAttachmentInfo.push_back( aCreateInfo );
-        VkImageUsageFlags lAttachmentType =
-            ( aCreateInfo.mType == eAttachmentType::COLOR || aCreateInfo.mType == eAttachmentType::MSAA_RESOLVE )
-                ? VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
-                : VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
-
-        uint32_t lSampleCount = ( aCreateInfo.mType == eAttachmentType::MSAA_RESOLVE ) ? 1 : mSpec.mSampleCount;
-        auto     lVkFormat    = ( aCreateInfo.mType == eAttachmentType::DEPTH ) ? mGraphicContext.mContext->GetDepthFormat()
-                                                                                : ToVkFormat( aCreateInfo.mFormat );
-
         mAttachmentIDs.push_back( aAttachmentID );
+
+        if( aCreateInfo.mType == eAttachmentType::DEPTH )
+            mAttachmentInfo.back().mFormat = ToLtseFormat( mGraphicContext.mContext->GetDepthFormat() );
+
+        sTextureCreateInfo lTextureCreateInfo{};
+        lTextureCreateInfo.mFormat         = aCreateInfo.mFormat;
+        lTextureCreateInfo.mWidth          = mSpec.mWidth;
+        lTextureCreateInfo.mHeight         = mSpec.mHeight;
+        lTextureCreateInfo.mDepth          = 1;
+        lTextureCreateInfo.mIsDepthTexture = ( aCreateInfo.mType == eAttachmentType::DEPTH );
+
+        uint32_t lSampleCount       = ( aCreateInfo.mType == eAttachmentType::MSAA_RESOLVE ) ? 1 : mSpec.mSampleCount;
         mAttachments[aAttachmentID] = aFramebufferImage;
     }
 
@@ -85,7 +90,7 @@ namespace SE::Graphics
 
     ARenderTarget &ARenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
                                                  math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
-                                                 eAttachmentStoreOp eStoreOp, Ref<Internal::sVkFramebufferImage> aFramebufferImage )
+                                                 eAttachmentStoreOp eStoreOp, Ref<VkTexture2D> aFramebufferImage )
     {
         sAttachmentDescription lCreateInfo{};
         lCreateInfo.mType        = aType;
@@ -103,12 +108,12 @@ namespace SE::Graphics
 
     void ARenderTarget::Finalize()
     {
-        std::vector<Ref<Internal::sVkFramebufferImage>> lAttachments{};
+        std::vector<Ref<VkTexture2D>> lAttachments{};
         for( auto const &lAttachmentID : mAttachmentIDs ) lAttachments.push_back( mAttachments[lAttachmentID] );
 
-        mRenderPassObject  = CreateDefaultRenderPass();
-        mFramebufferObject = New<sVkFramebufferObject>( mGraphicContext.mContext, mSpec.mWidth, mSpec.mHeight, 1,
-                                                        mRenderPassObject->mVkObject, lAttachments );
+        mRenderPassObject = CreateDefaultRenderPass();
+        mFramebufferObject =
+            New<VkRenderTarget>( mGraphicContext, mSpec.mWidth, mSpec.mHeight, 1, mRenderPassObject->mVkObject, lAttachments );
 
         InitializeCommandBuffers();
     }
@@ -159,8 +164,8 @@ namespace SE::Graphics
             case eAttachmentType::COLOR:
             {
                 lDescription = lNewRenderPass->ColorAttachment( ToVkFormat( mAttachmentInfo[i].mFormat ), mSpec.mSampleCount,
-                                                                mAttachmentInfo[i].mIsSampled, mAttachmentInfo[i].mIsPresented, mAttachmentInfo[i].mIsDefined,
-                                                                lAttachmentLoadOp, lAttachmentStoreOp );
+                                                                mAttachmentInfo[i].mIsSampled, mAttachmentInfo[i].mIsPresented,
+                                                                mAttachmentInfo[i].mIsDefined, lAttachmentLoadOp, lAttachmentStoreOp );
                 lAttachmentDescriptions.push_back( lDescription );
                 VkAttachmentReference lAttachmentReference{};
                 lAttachmentReference.attachment = i;
@@ -170,9 +175,9 @@ namespace SE::Graphics
             }
             case eAttachmentType::MSAA_RESOLVE:
             {
-                lDescription =
-                    lNewRenderPass->ColorAttachment( ToVkFormat( mAttachmentInfo[i].mFormat ), 1, mAttachmentInfo[i].mIsSampled,
-                                                     mAttachmentInfo[i].mIsPresented, mAttachmentInfo[i].mIsDefined, lAttachmentLoadOp, lAttachmentStoreOp );
+                lDescription = lNewRenderPass->ColorAttachment( ToVkFormat( mAttachmentInfo[i].mFormat ), 1,
+                                                                mAttachmentInfo[i].mIsSampled, mAttachmentInfo[i].mIsPresented,
+                                                                mAttachmentInfo[i].mIsDefined, lAttachmentLoadOp, lAttachmentStoreOp );
                 lAttachmentDescriptions.push_back( lDescription );
                 lResolveAttachment.attachment = i;
                 lResolveAttachment.layout     = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
@@ -181,7 +186,8 @@ namespace SE::Graphics
             }
             case eAttachmentType::DEPTH:
             {
-                lDescription = lNewRenderPass->DepthAttachment( mAttachmentInfo[i].mIsDefined, mSpec.mSampleCount, lAttachmentLoadOp, lAttachmentStoreOp );
+                lDescription = lNewRenderPass->DepthAttachment( mAttachmentInfo[i].mIsDefined, mSpec.mSampleCount, lAttachmentLoadOp,
+                                                                lAttachmentStoreOp );
                 lAttachmentDescriptions.push_back( lDescription );
                 lDepthAttachment.attachment = i;
                 lDepthAttachment.layout     = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
@@ -198,7 +204,7 @@ namespace SE::Graphics
         return lNewRenderPass;
     }
 
-    Ref<sVkFramebufferImage> &ARenderTarget::GetAttachment( std::string const &aKey )
+    Ref<VkTexture2D> &ARenderTarget::GetAttachment( std::string const &aKey )
     {
         //
         return mAttachments[aKey];
@@ -212,7 +218,7 @@ namespace SE::Graphics
 
     uint32_t ARenderTarget::GetCurrentImage() { return 0; };
 
-    Ref<sVkFramebufferObject> ARenderTarget::GetFramebuffer() { return mFramebufferObject; }
+    Ref<VkRenderTarget> ARenderTarget::GetFramebuffer() { return mFramebufferObject; }
 
     VkSemaphore ARenderTarget::GetImageAvailableSemaphore( uint32_t i ) { return VK_NULL_HANDLE; }
 

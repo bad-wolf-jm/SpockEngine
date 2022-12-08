@@ -7,7 +7,9 @@
 #include "Core/Types.h"
 #include "UI.h"
 
-#include "Core/GraphicContext//Texture2D.h"
+// #include "Core/GraphicContext//Texture2D.h"
+
+#include "Graphics/VkSampler2D.h"
 
 namespace SE::Core::UI
 {
@@ -21,17 +23,17 @@ namespace SE::Core::UI
     bool Button( const char *a_Label, math::vec2 a_Size );
 
     void ToggleButton( const char *a_OnLabel, const char *a_OffLabel, bool *l_state, math::vec2 a_Size );
-    void ToggleButton(
-        const char *a_OnLabel, const char *a_OffLabel, bool l_State, math::vec2 a_Size, std::function<void( bool )> a_Action );
+    void ToggleButton( const char *a_OnLabel, const char *a_OffLabel, bool l_State, math::vec2 a_Size,
+                       std::function<void( bool )> a_Action );
     void ToggleButton( const char *a_OnLabel, const char *a_OffLabel, ImFont *a_Font, bool l_State, math::vec2 a_Size,
-        std::function<void( bool )> a_Action );
+                       std::function<void( bool )> a_Action );
 
     void BulletText( const char *a_Text );
 
-    bool Slider(
-        std::string a_Title, const char *a_DisplayTemplate, uint16_t a_MinValue, uint16_t a_MaxValue, uint16_t *a_CurrentValue );
-    bool Slider(
-        std::string a_Title, const char *a_DisplayTemplate, uint32_t a_MinValue, uint32_t a_MaxValue, uint32_t *a_CurrentValue );
+    bool Slider( std::string a_Title, const char *a_DisplayTemplate, uint16_t a_MinValue, uint16_t a_MaxValue,
+                 uint16_t *a_CurrentValue );
+    bool Slider( std::string a_Title, const char *a_DisplayTemplate, uint32_t a_MinValue, uint32_t a_MaxValue,
+                 uint32_t *a_CurrentValue );
     bool Slider( std::string a_Title, const char *a_DisplayTemplate, float a_MinValue, float a_MaxValue, float *a_CurrentValue );
     bool Slider( std::string a_Title, const char *a_DisplayTemplate, int32_t a_MinValue, int32_t a_MaxValue, int32_t *a_CurrentValue );
 
@@ -43,8 +45,6 @@ namespace SE::Core::UI
     bool SelectionMenuItem( const char *label, const char *shortcut, bool *selected );
 
     void Image( SE::Core::UI::ImageHandle a_Texture, math::vec2 a_Size, math::vec4 a_Rect );
-    void Image( SE::Graphics::Texture2D &texture, math::vec2 size );
-    void Image( SE::Graphics::Texture2D &texture, math::ivec2 size );
     void Image( ImageHandle texture, math::vec2 size );
     void Image( ImageHandle texture, math::ivec2 size );
 
@@ -175,6 +175,6 @@ namespace SE::Core::UI
     bool VectorComponentEditor( const std::string &a_Label, math::vec3 &values, float a_ResetValue, float a_ColumnWidth );
     bool VectorComponentEditor( const std::string &label, math::vec4 &values, float resetValue, float columnWidth );
     bool VectorComponentEditor( const std::string &a_Label, uint32_t ID, math::vec2 &values, float a_XMin, float a_XMax, float a_XStep,
-        float a_YMin, float a_YMax, float a_YStep, float a_ResetValue, float a_ColumnWidth );
+                                float a_YMin, float a_YMax, float a_YStep, float a_ResetValue, float a_ColumnWidth );
 
 } // namespace SE::Core::UI

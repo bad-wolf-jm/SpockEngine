@@ -6,10 +6,6 @@
 #include "Core/GraphicContext/ARenderContext.h"
 #include "Core/GraphicContext/ARenderTarget.h"
 
-#include "Core/GraphicContext//Texture2D.h"
-#include "Core/GraphicContext//TextureCubemap.h"
-#include "Core/Vulkan/VkImage.h"
-
 #include "Scene/Components.h"
 #include "Scene/Scene.h"
 
@@ -38,7 +34,7 @@ namespace SE::Core
 
         ~ForwardSceneRenderer() = default;
 
-        Ref<sVkFramebufferImage> GetOutputImage();
+        Ref<VkTexture2D> GetOutputImage();
 
         void Update( Ref<Scene> aWorld );
         void Render();
@@ -60,8 +56,8 @@ namespace SE::Core
         Ref<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;
         Ref<VisualHelperRenderer>   mVisualHelperRenderer   = nullptr;
 
-        Ref<Buffer> mCameraUniformBuffer    = nullptr;
-        Ref<Buffer> mShaderParametersBuffer = nullptr;
+        Ref<VkGpuBuffer> mCameraUniformBuffer    = nullptr;
+        Ref<VkGpuBuffer> mShaderParametersBuffer = nullptr;
 
         Ref<DescriptorSetLayout> mCameraSetLayout  = nullptr;
         Ref<DescriptorSetLayout> mNodeSetLayout    = nullptr;
@@ -69,8 +65,6 @@ namespace SE::Core
 
         Ref<DescriptorSet> mSceneDescriptors = nullptr;
         Ref<DescriptorSet> mNodeDescriptors  = nullptr;
-
-        Ref<Graphics::Texture2D> mEmptyTexture = nullptr;
 
         std::unordered_map<MeshRendererCreateInfo, MeshRenderer, MeshRendererCreateInfoHash> mMeshRenderers = {};
         std::unordered_map<ParticleRendererCreateInfo, ParticleSystemRenderer, ParticleSystemRendererCreateInfoHash>

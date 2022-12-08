@@ -5,16 +5,12 @@
 #ifndef __CUDACC__
 #    include "Core/GraphicContext//DescriptorSet.h"
 #    include "Core/GraphicContext//GraphicContext.h"
-#    include "Core/GraphicContext//Texture2D.h"
-
 #    include "Graphics/VkGpuBuffer.h"
 #    include "Graphics/VkSampler2D.h"
 #    include "Graphics/VkTexture2D.h"
 #endif
 
 #include "Core/CUDA/Array/CudaBuffer.h"
-#include "Core/CUDA/Array/ExternalMemory.h"
-#include "Core/CUDA/Texture/Texture2D.h"
 
 using namespace math::literals;
 
@@ -123,7 +119,7 @@ namespace SE::Core
         std::vector<sMaterial> const                  &GetMaterialData() const { return mMaterials; }
         std::vector<Ref<Graphics::VkSampler2D>> const &GetTextures() const { return mTextureSamplers; }
         Cuda::GPUMemory const                         &GetCudaTextures() const { return mCudaTextureBuffer; }
-        Cuda::GPUExternalMemory const                 &GetCudaMaterials() const { return mCudaShaderMaterials; }
+        Cuda::GPUMemory const                         &GetCudaMaterials() const { return *mShaderMaterials; }
 
       private:
         GraphicContext mGraphicContext;
@@ -131,10 +127,9 @@ namespace SE::Core
         std::vector<Ref<Graphics::VkSampler2D>> mTextureSamplers = {};
         std::vector<sMaterial>                  mMaterials       = {};
 
-        Cuda::GPUMemory         mCudaTextureBuffer{};
-        Cuda::GPUExternalMemory mCudaShaderMaterials{};
+        Cuda::GPUMemory mCudaTextureBuffer{};
 
-        Ref<Buffer> mShaderMaterials = nullptr;
+        Ref<VkGpuBuffer> mShaderMaterials = nullptr;
 
         bool                     mDirty = false;
         Ref<DescriptorSetLayout> mTextureDescriptorLayout;

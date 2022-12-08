@@ -12,13 +12,13 @@ namespace SE::Graphics
 
     std::vector<sPushConstantRange> ParticleSystemRenderer::GetPushConstantLayout() { return {}; };
 
-    ParticleSystemRenderer::ParticleSystemRenderer(
-        GraphicContext &a_GraphicContext, ARenderContext &aRenderContext, ParticleRendererCreateInfo aCreateInfo )
+    ParticleSystemRenderer::ParticleSystemRenderer( GraphicContext &a_GraphicContext, ARenderContext &aRenderContext,
+                                                    ParticleRendererCreateInfo aCreateInfo )
         : SceneRenderPipeline<PositionData>( a_GraphicContext )
         , Spec{ aCreateInfo }
     {
-        mCameraBuffer =
-            New<Buffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true, sizeof( CameraViewUniforms ) );
+        mCameraBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true,
+                                          sizeof( CameraViewUniforms ) );
 
         SceneRenderPipelineCreateInfo lCreateInfo{};
         lCreateInfo.IsTwoSided           = true;
@@ -43,28 +43,13 @@ namespace SE::Graphics
         std::vector<uint32_t> l_IndexBufferData = { 0, 2, 1, 0, 3, 2 };
 
         mParticleVertices =
-            New<Buffer>( mGraphicContext, lVertexBufferData, eBufferBindType::VERTEX_BUFFER, false, false, false, true );
+            New<VkGpuBuffer>( mGraphicContext, lVertexBufferData, eBufferBindType::VERTEX_BUFFER, false, false, false, true );
         mParticleIndices =
-            New<Buffer>( mGraphicContext, l_IndexBufferData, eBufferBindType::INDEX_BUFFER, false, false, false, true );
+            New<VkGpuBuffer>( mGraphicContext, l_IndexBufferData, eBufferBindType::INDEX_BUFFER, false, false, false, true );
     }
 
-    // void ParticleSystemRenderer::Render(
-    //     math::mat4 a_Projection, math::mat4 a_View, RenderContext &aRenderContext, ParticleData &a_ParticleData )
-    // {
-    //     if( a_ParticleData.Particles == nullptr ) return;
-
-    //     CameraViewUniforms l_View{ a_ParticleData.Model, a_View, a_Projection, a_ParticleData.ParticleSize };
-
-    //     mCameraBuffer->Write( l_View );
-    //     aRenderContext.Bind( Pipeline );
-    //     aRenderContext.Bind( mCameraDescriptors, 0, -1 );
-    //     aRenderContext.Bind( mParticleVertices, mParticleIndices, 0 );
-    //     aRenderContext.Bind( a_ParticleData.Particles, 1 );
-    //     aRenderContext.Draw( 6, 0, 0, a_ParticleData.ParticleCount, 0 );
-    // }
-
-    void ParticleSystemRenderer::Render(
-        math::mat4 a_Projection, math::mat4 a_View, ARenderContext &aRenderContext, ParticleData &a_ParticleData )
+    void ParticleSystemRenderer::Render( math::mat4 a_Projection, math::mat4 a_View, ARenderContext &aRenderContext,
+                                         ParticleData &a_ParticleData )
     {
         if( a_ParticleData.Particles == nullptr ) return;
 

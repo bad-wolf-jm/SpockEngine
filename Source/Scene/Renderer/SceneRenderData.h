@@ -6,10 +6,6 @@
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
 
-#include "Core/GraphicContext//Texture2D.h"
-#include "Core/GraphicContext//TextureCubemap.h"
-#include "Core/Vulkan/VkImage.h"
-
 #include "Scene/Components.h"
 #include "Scene/Scene.h"
 
@@ -110,7 +106,7 @@ namespace SE::Core
 
     struct NodeDescriptorComponent
     {
-        Ref<Buffer>        UniformBuffer = nullptr;
+        Ref<VkGpuBuffer>   UniformBuffer = nullptr;
         Ref<DescriptorSet> Descriptors   = nullptr;
 
         NodeDescriptorComponent()                                  = default;
