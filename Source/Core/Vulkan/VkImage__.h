@@ -11,17 +11,6 @@ namespace SE::Graphics::Internal
 {
     using namespace SE::Core;
 
-    struct sImageRegion
-    {
-        uint32_t mBaseMipLevel  = 0;
-        uint32_t mMipLevelCount = 0;
-        uint32_t mBaseLayer     = 0;
-        uint32_t mLayerCount    = 0;
-        uint32_t mOffset        = 0;
-        uint32_t mWidth         = 0;
-        uint32_t mHeight        = 0;
-        uint32_t mDepth         = 0;
-    };
 
     struct sVkImageObject
     {
