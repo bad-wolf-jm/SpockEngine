@@ -288,6 +288,7 @@ namespace SE::Graphics::Internal
         MIN              = VK_BLEND_OP_MIN,
         MAX              = VK_BLEND_OP_MAX
     };
+    
     enum class eBlendFactor : uint32_t
     {
         ZERO                     = VK_BLEND_FACTOR_ZERO,
