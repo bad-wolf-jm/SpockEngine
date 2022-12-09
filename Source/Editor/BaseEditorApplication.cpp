@@ -56,8 +56,8 @@ namespace SE::Editor
         lSamplingInfo.mNormalizedCoordinates = true;
         lSamplingInfo.mNormalizedValues      = true;
 
-        mOffscreenRenderTargetTexture = New<Graphics::VkSampler2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
-                                                                    mForwardRenderer->GetOutputImage(), lSamplingInfo );
+        mOffscreenRenderTargetTexture = New<VkSampler2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
+                                                          mForwardRenderer->GetOutputImage(), lSamplingInfo );
 
         if( !mOffscreenRenderTargetDisplayHandle.Handle )
         {
@@ -70,8 +70,8 @@ namespace SE::Editor
             mOffscreenRenderTargetDisplayHandle.Handle->Write( mOffscreenRenderTargetTexture, 0 );
         }
 
-        mDeferredRenderTargetTexture = New<Graphics::VkSampler2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
-                                                                   mRayTracingRenderer->GetOutputImage(), lSamplingInfo );
+        mDeferredRenderTargetTexture = New<VkSampler2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
+                                                         mRayTracingRenderer->GetOutputImage(), lSamplingInfo );
         if( !mDeferredRenderTargetTexture ) return;
 
         if( !mDeferredRenderTargetDisplayHandle.Handle )
@@ -95,10 +95,10 @@ namespace SE::Editor
             mShouldRebuildViewport = false;
         }
 
-        mEditorWindow.WorldRenderer  = mForwardRenderer;
-        mEditorWindow.DefRenderer    = mDeferredRenderer;
-        mEditorWindow.RTRenderer     = mRayTracingRenderer;
-        mEditorWindow.GraphicContext = SE::Core::Engine::GetInstance()->GetGraphicContext();
+        mEditorWindow.WorldRenderer = mForwardRenderer;
+        mEditorWindow.DefRenderer   = mDeferredRenderer;
+        mEditorWindow.RTRenderer    = mRayTracingRenderer;
+        // mEditorWindow.mGraphicContext = SE::Core::Engine::GetInstance()->GetGraphicContext();
 
         o_RequestQuit = mEditorWindow.Display();
 

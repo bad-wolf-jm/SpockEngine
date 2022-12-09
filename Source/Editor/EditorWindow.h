@@ -28,10 +28,6 @@
 namespace SE::Editor
 {
 
-    using namespace SE::Core;
-    using namespace SE::Core::UI;
-    using namespace SE::Graphics;
-
     struct MenuItem
     {
         std::string           Icon  = "";
@@ -77,9 +73,8 @@ namespace SE::Editor
         Ref<DeferredRenderer>     DefRenderer   = nullptr;
         Ref<RayTracingRenderer>   RTRenderer    = nullptr;
 
-        Entity         Sensor{};
-        Entity         ActiveSensor{};
-        GraphicContext GraphicContext{};
+        Entity Sensor{};
+        Entity ActiveSensor{};
 
         PropertyPanelID CurrentPropertyPanel = PropertyPanelID::NONE;
 
@@ -94,7 +89,8 @@ namespace SE::Editor
 
       public:
         EditorWindow() = default;
-        EditorWindow( SE::Graphics::GraphicContext &aGraphicContext, Ref<UIContext> mUIOverlay );
+        EditorWindow( GraphicContext &aGraphicContext, Ref<UIContext> mUIOverlay );
+
         ~EditorWindow() = default;
 
         bool        Display();
@@ -117,8 +113,9 @@ namespace SE::Editor
         void ConfigureUI();
 
       private:
-        SE::Graphics::GraphicContext mGraphicContext;
-        Ref<UIContext>               mUIOverlay;
+        GraphicContext mGraphicContext;
+
+        Ref<UIContext> mUIOverlay;
 
         std::vector<MenuItem> m_MainMenuItems;
 
@@ -126,16 +123,16 @@ namespace SE::Editor
         float    m_FpsTimer     = 0.0f;
         uint32_t m_LastFPS      = 0;
 
-        math::ivec2                    m_WorkspaceAreaSize = { 0, 0 };
-        Ref<SE::Graphics::VkSampler2D> m_PlayIcon;
-        ImageHandle                    m_PlayIconHandle;
-        Ref<SE::Graphics::VkSampler2D> m_PauseIcon;
-        ImageHandle                    m_PauseIconHandle;
-        Ref<SE::Graphics::VkSampler2D> m_CameraIcon;
-        ImageHandle                    m_CameraIconHandle;
+        math::ivec2      m_WorkspaceAreaSize = { 0, 0 };
+        Ref<VkSampler2D> m_PlayIcon;
+        ImageHandle      m_PlayIconHandle;
+        Ref<VkSampler2D> m_PauseIcon;
+        ImageHandle      m_PauseIconHandle;
+        Ref<VkSampler2D> m_CameraIcon;
+        ImageHandle      m_CameraIconHandle;
 
-        Ref<SE::Graphics::VkSampler2D> m_DefaultTextureImage;
-        ImageHandle                    m_DefaultTextureImageHandle;
+        Ref<VkSampler2D> m_DefaultTextureImage;
+        ImageHandle      m_DefaultTextureImageHandle;
 
         SimulationState mState         = SimulationState::EDIT;
         SidePanelID     m_CurrentPanel = SidePanelID::SENSOR_CONFIGURATION;

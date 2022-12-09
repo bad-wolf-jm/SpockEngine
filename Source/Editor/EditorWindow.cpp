@@ -163,8 +163,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture    = New<SE::Graphics::VkTexture2D>( mGraphicContext, lTextureData );
-            m_PlayIcon       = New<SE::Graphics::VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture    = New<VkTexture2D>( mGraphicContext, lTextureData );
+            m_PlayIcon       = New<VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
             m_PlayIconHandle = mUIOverlay->CreateTextureHandle( m_PlayIcon );
         }
 
@@ -174,8 +174,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture     = New<SE::Graphics::VkTexture2D>( mGraphicContext, lTextureData );
-            m_PauseIcon       = New<SE::Graphics::VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture     = New<VkTexture2D>( mGraphicContext, lTextureData );
+            m_PauseIcon       = New<VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
             m_PauseIconHandle = mUIOverlay->CreateTextureHandle( m_PauseIcon );
         }
 
@@ -185,8 +185,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture               = New<SE::Graphics::VkTexture2D>( mGraphicContext, lTextureData );
-            m_DefaultTextureImage       = New<SE::Graphics::VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture               = New<VkTexture2D>( mGraphicContext, lTextureData );
+            m_DefaultTextureImage       = New<VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
             m_DefaultTextureImageHandle = mUIOverlay->CreateTextureHandle( m_PlayIcon );
         }
 
@@ -196,13 +196,13 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture      = New<SE::Graphics::VkTexture2D>( mGraphicContext, lTextureData );
-            m_CameraIcon       = New<SE::Graphics::VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture      = New<VkTexture2D>( mGraphicContext, lTextureData );
+            m_CameraIcon       = New<VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
             m_CameraIconHandle = mUIOverlay->CreateTextureHandle( m_CameraIcon );
         }
     }
 
-    EditorWindow::EditorWindow( SE::Graphics::GraphicContext &aGraphicContext, Ref<UIContext> aUIOverlay )
+    EditorWindow::EditorWindow( GraphicContext &aGraphicContext, Ref<UIContext> aUIOverlay )
         : mGraphicContext{ aGraphicContext }
         , mUIOverlay{ aUIOverlay }
     {
@@ -390,7 +390,7 @@ namespace SE::Editor
         //     UI::Slider( "##alpha_threshold", "%.2f", 0.0f, 1.0f, &l_AlphaMaskThreshold );
 
         //     {
-        //         static Ref<SE::Graphics::Texture2D> lBaseColorTexture = nullptr;
+        //         static Ref<Texture2D> lBaseColorTexture = nullptr;
         //         static ImageHandle                  lBaseColorTextureHandle{};
         //         UI::Text( "Base color:" );
         //         ImGui::Columns( 2, NULL, false );
@@ -421,7 +421,7 @@ namespace SE::Editor
         //     }
 
         //     {
-        //         static Ref<SE::Graphics::Texture2D> lEmissiveTexture = nullptr;
+        //         static Ref<Texture2D> lEmissiveTexture = nullptr;
         //         static ImageHandle                  lEmissiveTextureHandle{};
         //         UI::Text( "Emissive:" );
         //         ImGui::Columns( 2, NULL, false );
@@ -451,7 +451,7 @@ namespace SE::Editor
         //     }
 
         //     {
-        //         static Ref<SE::Graphics::Texture2D> lNormalsTexture = nullptr;
+        //         static Ref<Texture2D> lNormalsTexture = nullptr;
         //         static ImageHandle                  lNormalsTextureHandle{};
         //         UI::Text( "Normals:" );
         //         auto l_TopLeft     = ImGui::GetCursorScreenPos();
@@ -474,7 +474,7 @@ namespace SE::Editor
         //     }
 
         //     {
-        //         static Ref<SE::Graphics::Texture2D> lOcclusionTexture = nullptr;
+        //         static Ref<Texture2D> lOcclusionTexture = nullptr;
         //         static ImageHandle                  lOcclusionTextureHandle{};
         //         UI::Text( "Occlusion:" );
         //         ImGui::Columns( 2, NULL, false );
@@ -504,7 +504,7 @@ namespace SE::Editor
         //     }
 
         //     {
-        //         static Ref<SE::Graphics::Texture2D> lPhysicalTexture = nullptr;
+        //         static Ref<Texture2D> lPhysicalTexture = nullptr;
         //         static ImageHandle                  lPhysicalTextureHandle{};
         //         UI::Text( "Physical properties:" );
         //         ImGui::Columns( 2, NULL, false );
