@@ -2,7 +2,7 @@
 
 #include "Core/GraphicContext//GraphicContext.h"
 
-#include "Graphics/VkSampler2D.h"
+#include "Graphics/Vulkan/VkSampler2D.h"
 
 #include "Core/Memory.h"
 #include "Core/Vulkan/VkPipeline.h"

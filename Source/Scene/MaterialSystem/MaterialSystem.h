@@ -5,9 +5,9 @@
 #ifndef __CUDACC__
 #    include "Core/GraphicContext//DescriptorSet.h"
 #    include "Core/GraphicContext//GraphicContext.h"
-#    include "Graphics/VkGpuBuffer.h"
-#    include "Graphics/VkSampler2D.h"
-#    include "Graphics/VkTexture2D.h"
+#    include "Graphics/Vulkan/VkGpuBuffer.h"
+#    include "Graphics/Vulkan/VkSampler2D.h"
+#    include "Graphics/Vulkan/VkTexture2D.h"
 #endif
 
 #include "Core/CUDA/Array/CudaBuffer.h"

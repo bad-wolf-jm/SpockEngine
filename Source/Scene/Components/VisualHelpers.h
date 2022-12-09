@@ -3,7 +3,7 @@
 #include "Core/EntityRegistry/Registry.h"
 #include "Core/Memory.h"
 
-#include "Graphics/VkGpuBuffer.h"
+#include "Graphics/Vulkan/VkGpuBuffer.h"
 
 #include "Core/GraphicContext//GraphicContext.h"
 

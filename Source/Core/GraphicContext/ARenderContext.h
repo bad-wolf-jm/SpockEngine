@@ -3,7 +3,7 @@
 #include "Core/GraphicContext//GraphicContext.h"
 
 #include "ARenderTarget.h"
-#include "Graphics/VkGpuBuffer.h"
+#include "Graphics/Vulkan/VkGpuBuffer.h"
 #include "GraphicsPipeline.h"
 
 namespace SE::Graphics

@@ -8,8 +8,8 @@
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/Vulkan/VkCoreMacros.h"
 
-#include "Graphics/VkRenderTarget.h"
-#include "Graphics/VkTexture2D.h"
+#include "Graphics/Vulkan/VkRenderTarget.h"
+#include "Graphics/Vulkan/VkTexture2D.h"
 
 namespace SE::Graphics
 {

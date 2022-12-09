@@ -9,7 +9,7 @@
 
 #include "Core/GraphicContext//GraphicContext.h"
 
-#include "Graphics/VkSampler2D.h"
+#include "Graphics/Vulkan/VkSampler2D.h"
 
 #include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/ForwardSceneRenderer.h"

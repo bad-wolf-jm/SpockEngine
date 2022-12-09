@@ -16,7 +16,7 @@
 #include "OptixProgramGroup.h"
 #include "OptixShaderBindingTable.h"
 
-#include "Graphics/VkGpuBuffer.h"
+#include "Graphics/Vulkan/VkGpuBuffer.h"
 
 namespace SE::Graphics
 {

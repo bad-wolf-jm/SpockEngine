@@ -14,7 +14,7 @@
 
 #include "Core/GraphicContext//GraphicContext.h"
 
-#include "Graphics/VkGpuBuffer.h"
+#include "Graphics/Vulkan/VkGpuBuffer.h"
 
 #include "Scene/Importer/ImporterData.h"
 

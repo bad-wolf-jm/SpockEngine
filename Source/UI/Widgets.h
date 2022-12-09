@@ -9,7 +9,7 @@
 
 // #include "Core/GraphicContext//Texture2D.h"
 
-#include "Graphics/VkSampler2D.h"
+#include "Graphics/Vulkan/VkSampler2D.h"
 
 namespace SE::Core::UI
 {

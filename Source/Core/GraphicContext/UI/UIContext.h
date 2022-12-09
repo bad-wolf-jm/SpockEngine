@@ -9,7 +9,7 @@
 
 #include "UI/UI.h"
 
-#include "Graphics/VkGpuBuffer.h"
+#include "Graphics/Vulkan/VkGpuBuffer.h"
 
 #include <imgui.h>
 #define IMGUI_DEFINE_MATH_OPERATORS
