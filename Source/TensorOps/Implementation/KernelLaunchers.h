@@ -13,8 +13,8 @@
 #include <cmath>
 
 #include "Core/Math/Types.h"
-#include "Cuda/MemoryPool.h"
-#include "Cuda/MultiTensor.h"
+#include "Core/Cuda/MemoryPool.h"
+#include "Core/Cuda/MultiTensor.h"
 
 #include "../ScalarTypes.h"
 

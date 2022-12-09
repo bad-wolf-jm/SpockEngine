@@ -8,7 +8,7 @@
 
 #include "Scope.h"
 
-#include "Cuda/Texture2D.h"
+#include "Core/Cuda/Texture2D.h"
 
 #include "Implementation/KernelLaunchers.h"
 
@@ -93,14 +93,14 @@ namespace SE::TensorOps
             {
                 ( *lElement ).Get<sMultiTensorComponent>().mValue =
                     MultiTensor( mPool, ( *lElement ).Get<sMultiTensorComponent>().mShape );
-                ( *lElement ).Tag<sAllocatedTag>();
+                ( *lElement ).Add<sAllocatedTag>();
             }
 
             if( ( *lElement ).Has<sVectorBufferComponent>() )
             {
                 ( *lElement ).Get<sVectorBufferComponent>().mValue =
                     mPool.Allocate( ( *lElement ).Get<sVectorBufferComponent>().mSize );
-                ( *lElement ).Tag<sAllocatedTag>();
+                ( *lElement ).Add<sAllocatedTag>();
             }
         }
 

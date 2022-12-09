@@ -96,8 +96,8 @@ std::vector<_Ty> BroadcastMap( _Ty aValue, std::vector<_Ty> aVec1, std::function
 }
 
 template <typename _Ty>
-std::vector<std::vector<_Ty>> BroadcastMap(
-    std::vector<std::vector<_Ty>> aVec1, std::vector<_Ty> aVec2, std::function<_Ty( _Ty, _Ty )> aFunction )
+std::vector<std::vector<_Ty>> BroadcastMap( std::vector<std::vector<_Ty>> aVec1, std::vector<_Ty> aVec2,
+                                            std::function<_Ty( _Ty, _Ty )> aFunction )
 {
     std::vector<std::vector<_Ty>> lResult{};
 
@@ -117,8 +117,8 @@ std::vector<std::vector<_Ty>> BroadcastMap( std::vector<std::vector<_Ty>> aVec1,
 }
 
 template <typename _Ty>
-std::vector<std::vector<_Ty>> BroadcastMap(
-    std::vector<_Ty> aVec1, std::vector<std::vector<_Ty>> aVec2, std::function<_Ty( _Ty, _Ty )> aFunction )
+std::vector<std::vector<_Ty>> BroadcastMap( std::vector<_Ty> aVec1, std::vector<std::vector<_Ty>> aVec2,
+                                            std::function<_Ty( _Ty, _Ty )> aFunction )
 {
     std::vector<std::vector<_Ty>> lResult{};
 
@@ -139,7 +139,7 @@ TEST_CASE( "VectorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = VectorValue<uint32_t>( lScope, lValue );
         lScope.Run( lNode );
 
-        REQUIRE( lNode.Get<sVectorComponent<uint32_t>>().mData.SizeAs<uint32_t>() == lValue.size() );
+        REQUIRE( lNode.Get<sVectorBufferComponent>().mValue.SizeAs<uint32_t>() == lValue.size() );
     }
 
     SECTION( "Node initialization" )
@@ -149,7 +149,7 @@ TEST_CASE( "VectorNode", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode = VectorValue<uint32_t>( lScope, lValue );
         lScope.Run( lNode );
 
-        auto lBuffer2 = lNode.Get<sVectorComponent<uint32_t>>().mData.Fetch<uint32_t>();
+        auto lBuffer2 = lNode.Get<sVectorBufferComponent>().mValue.Fetch<uint32_t>();
         REQUIRE( lBuffer2 == lValue );
     }
 }
@@ -167,7 +167,9 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lDim1{ 2, 2 };
         std::vector<uint32_t> lDim2{ 3, 4 };
 
-        auto lNode    = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( int8_t ) ) );
+        auto lNode = MultiTensorValue( lScope, lInitializer, sTensorShape( { lDim1, lDim2 }, sizeof( int8_t ) ) );
+        lScope.Run( lNode );
+
         auto lBuffer1 = lNode.Get<sMultiTensorComponent>().mValue.BufferAt( 0 );
         auto lBuffer2 = lNode.Get<sMultiTensorComponent>().mValue.BufferAt( 1 );
         REQUIRE( lBuffer1.Size() == Prod( lDim1 ) );
@@ -413,8 +415,8 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Data initializer (float)" )
     {
-        std::vector<float> lExpectedValues{
-            4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f, 16.0f, 17.0f, 18.0f, 19.0f };
+        std::vector<float>        lExpectedValues{ 4.0f,  5.0f,  6.0f,  7.0f,  8.0f,  9.0f,  10.0f, 11.0f,
+                                            12.0f, 13.0f, 14.0f, 15.0f, 16.0f, 17.0f, 18.0f, 19.0f };
         sDataInitializerComponent lInitializer( lExpectedValues );
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -429,8 +431,8 @@ TEST_CASE( "TensorNode", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Data initializer (double)" )
     {
-        std::vector<double> lExpectedValues{
-            4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0 };
+        std::vector<double>       lExpectedValues{ 4.0,  5.0,  6.0,  7.0,  8.0,  9.0,  10.0, 11.0,
+                                             12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0 };
         sDataInitializerComponent lInitializer( lExpectedValues );
 
         std::vector<uint32_t> lDim1{ 2, 2 };
@@ -1003,8 +1005,8 @@ TEST_CASE( "Arithmetic nodes", "[CORE_COMPUTATION_GRAPH]" )
     }
 }
 
-TEMPLATE_TEST_CASE(
-    "DIVIDE Array_Scalar", "[CORE_COMPUTATION_GRAPH]", uint16_t, uint32_t, uint64_t, int16_t, int32_t, int64_t, float, double )
+TEMPLATE_TEST_CASE( "DIVIDE Array_Scalar", "[CORE_COMPUTATION_GRAPH]", uint16_t, uint32_t, uint64_t, int16_t, int32_t, int64_t, float,
+                    double )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
     Scope  lScope( lPoolSize );
@@ -1040,7 +1042,7 @@ TEMPLATE_TEST_CASE(
     auto lResult0 = Divide( lScope, lInputTensor, lScalarNode );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 1400 } );
@@ -1661,7 +1663,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lBValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().mValue.Shape().GetBufferSizeAs<float>( i ).mSize;
+            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().Shape().GetBufferSizeAs<float>( i ).mSize;
             std::vector<float> lA    = lNodeA.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lX    = lNodeX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
@@ -1693,9 +1695,9 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         lScope.Run( lResult0 );
 
         std::vector<float> lExpectedValues = {};
-        for( uint32_t i = 0; i < lNodeX.Get<sMultiTensorComponent>().mValue.Shape().CountLayers(); i++ )
+        for( uint32_t i = 0; i < lNodeX.Get<sMultiTensorComponent>().Shape().CountLayers(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().mValue.Shape().GetBufferSizeAs<float>( i ).mSize;
+            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().Shape().GetBufferSizeAs<float>( i ).mSize;
             std::vector<float> lA    = lNodeA.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lX    = lNodeX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
@@ -1739,7 +1741,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().mValue.Shape().GetBufferSizeAs<float>( i ).mSize;
+            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().Shape().GetBufferSizeAs<float>( i ).mSize;
             std::vector<float> lX    = lNodeX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lB    = lNodeB.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
@@ -1783,7 +1785,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().mValue.Shape().GetBufferSizeAs<float>( i ).mSize;
+            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().Shape().GetBufferSizeAs<float>( i ).mSize;
             std::vector<float> lX    = lNodeX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
             for( uint32_t j = 0; j < lSize; j++ )
@@ -1827,7 +1829,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().mValue.Shape().GetBufferSizeAs<float>( i ).mSize;
+            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().Shape().GetBufferSizeAs<float>( i ).mSize;
             std::vector<float> lX    = lNodeX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
             for( uint32_t j = 0; j < lSize; j++ )
@@ -1871,7 +1873,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().mValue.Shape().GetBufferSizeAs<float>( i ).mSize;
+            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().Shape().GetBufferSizeAs<float>( i ).mSize;
             std::vector<float> lX    = lNodeX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lB    = lNodeB.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
@@ -1916,7 +1918,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().mValue.Shape().GetBufferSizeAs<float>( i ).mSize;
+            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().Shape().GetBufferSizeAs<float>( i ).mSize;
             std::vector<float> lX    = lNodeX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
             for( uint32_t j = 0; j < lSize; j++ )
@@ -1961,7 +1963,7 @@ TEST_CASE( "Affine transform node", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<float> lExpectedValues = {};
         for( uint32_t i = 0; i < lAValues.size(); i++ )
         {
-            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().mValue.Shape().GetBufferSizeAs<float>( i ).mSize;
+            uint32_t           lSize = lNodeX.Get<sMultiTensorComponent>().Shape().GetBufferSizeAs<float>( i ).mSize;
             std::vector<float> lX    = lNodeX.Get<sMultiTensorComponent>().mValue.FetchBufferAt<float>( i );
             std::vector<float> lValues( lSize );
             for( uint32_t j = 0; j < lSize; j++ )
@@ -2030,9 +2032,9 @@ TEST_CASE( "Linear space node", "[CORE_COMPUTATION_GRAPH]" )
         auto                  lNode_S = VectorValue( lScope, lSubdivisions );
 
         auto &lResult0 = LinearSpace( lScope, lNodeA, lNodeB, lNode_S );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mRank == 3 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[0] == std::vector<uint32_t>{ 2, 2, 32 } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[1] == std::vector<uint32_t>{ 3, 4, 64 } );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == 3 );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[0] == std::vector<uint32_t>{ 2, 2, 32 } );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[1] == std::vector<uint32_t>{ 3, 4, 64 } );
     }
 
     SECTION( "Linear space (float)" )
@@ -2122,17 +2124,17 @@ TEST_CASE( "ARange node", "[CORE_COMPUTATION_GRAPH]" )
         auto lNode_D = ScalarVectorValue( lScope, eScalarType::FLOAT32, lDValues );
 
         auto lResult0 = ARange( lScope, lNodeA, lNodeB, lNode_D );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().CountLayers() == 5 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mRank == 1 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[0] ==
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().CountLayers() == 5 );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == 1 );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[0] ==
                  std::vector<uint32_t>{ static_cast<uint32_t>( std::ceil( ( lBValues[0] - lAValues[0] ) / lDValues[0] ) ) } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[1] ==
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[1] ==
                  std::vector<uint32_t>{ static_cast<uint32_t>( std::ceil( ( lBValues[1] - lAValues[1] ) / lDValues[1] ) ) } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[2] ==
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[2] ==
                  std::vector<uint32_t>{ static_cast<uint32_t>( std::ceil( ( lBValues[2] - lAValues[2] ) / lDValues[2] ) ) } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[3] ==
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[3] ==
                  std::vector<uint32_t>{ static_cast<uint32_t>( std::ceil( ( lBValues[3] - lAValues[3] ) / lDValues[3] ) ) } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[4] ==
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[4] ==
                  std::vector<uint32_t>{ static_cast<uint32_t>( std::ceil( ( lBValues[4] - lAValues[4] ) / lDValues[4] ) ) } );
     }
 
@@ -2218,9 +2220,9 @@ TEST_CASE( "Repeat node", "[CORE_COMPUTATION_GRAPH]" )
         auto                  lNode_S = VectorValue( lScope, lSubdivisions );
 
         auto lResult0 = Repeat( lScope, lNodeA, lNode_S );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mRank == 3 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[0] == std::vector<uint32_t>{ 2, 2, 3 } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[1] == std::vector<uint32_t>{ 3, 4, 5 } );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == 3 );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[0] == std::vector<uint32_t>{ 2, 2, 3 } );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[1] == std::vector<uint32_t>{ 3, 4, 5 } );
     }
 
     SECTION( "Repeat (float)" )
@@ -2304,9 +2306,9 @@ TEST_CASE( "Tile node", "[CORE_COMPUTATION_GRAPH]" )
         auto                  lNode_S = VectorValue( lScope, lSubdivisions );
 
         auto lResult0 = Tile( lScope, lNodeA, lNode_S );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mRank == 3 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[0] == std::vector<uint32_t>{ 3, 2, 2 } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[1] == std::vector<uint32_t>{ 5, 3, 4 } );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == 3 );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[0] == std::vector<uint32_t>{ 3, 2, 2 } );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[1] == std::vector<uint32_t>{ 5, 3, 4 } );
     }
 
     SECTION( "Tile (float)" )
@@ -2388,12 +2390,12 @@ TEST_CASE( "Expand MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             MultiTensorValue( lScope, lInitializer, sTensorShape( std::vector<std::vector<uint32_t>>{ lDim1 }, sizeof( float ) ) );
         auto lResult0 = Expand( lScope, lNodeA );
 
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mRank == ( lDim1.size() - 1 ) );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().CountLayers() == lDim1[0] );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[0] == std::vector<uint32_t>{ 23, 42 } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[1] == std::vector<uint32_t>{ 23, 42 } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[2] == std::vector<uint32_t>{ 23, 42 } );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[3] == std::vector<uint32_t>{ 23, 42 } );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == ( lDim1.size() - 1 ) );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().CountLayers() == lDim1[0] );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[0] == std::vector<uint32_t>{ 23, 42 } );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[1] == std::vector<uint32_t>{ 23, 42 } );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[2] == std::vector<uint32_t>{ 23, 42 } );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[3] == std::vector<uint32_t>{ 23, 42 } );
     }
 
     SECTION( "Expanding multi-tensors does not change values" )
@@ -2425,8 +2427,8 @@ TEST_CASE( "Collapse MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
 
     SECTION( "Collapsing multi-tensors preserved types" )
     {
-        auto lNodeA = MultiTensorValue(
-            lScope, lInitializer, sTensorShape( std::vector<std::vector<uint32_t>>{ lDim1, lDim2 }, sizeof( float ) ) );
+        auto lNodeA   = MultiTensorValue( lScope, lInitializer,
+                                          sTensorShape( std::vector<std::vector<uint32_t>>{ lDim1, lDim2 }, sizeof( float ) ) );
         auto lResult0 = Collapse( lScope, lNodeA );
 
         REQUIRE( lResult0.Get<sTypeComponent>().mValue == lNodeA.Get<sTypeComponent>().mValue );
@@ -2438,9 +2440,9 @@ TEST_CASE( "Collapse MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
             lScope, lInitializer, sTensorShape( std::vector<std::vector<uint32_t>>{ lDim1, lDim2, lDim3, lDim4 }, sizeof( float ) ) );
         auto lResult0 = Collapse( lScope, lNodeA );
 
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mRank == 3 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().CountLayers() == 1 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[0] == std::vector<uint32_t>{ 4, 23, 42 } );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == 3 );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().CountLayers() == 1 );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[0] == std::vector<uint32_t>{ 4, 23, 42 } );
     }
 
     SECTION( "Collapsing multi-tensors does not change values" )
@@ -2477,6 +2479,7 @@ TEST_CASE( "Reshape MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lODim2{ 25, 8, 5 };
         std::vector<uint32_t> lODim3{ 7, 2, 4 };
         auto                  lResult0 = Reshape( lScope, lNodeA, sTensorShape( { lODim1, lODim2, lODim3 }, sizeof( float ) ) );
+        lScope.Run( lResult0 );
 
         REQUIRE( lResult0.Get<sTypeComponent>().mValue == lNodeA.Get<sTypeComponent>().mValue );
     }
@@ -2490,12 +2493,13 @@ TEST_CASE( "Reshape MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lODim3{ 7, 2, 4 };
 
         auto lResult0 = Reshape( lScope, lNodeA, sTensorShape( { lODim1, lODim2, lODim3 }, sizeof( float ) ) );
+        lScope.Run( lResult0 );
 
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mRank == 3 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().CountLayers() == 3 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[0] == lODim1 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[1] == lODim2 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[2] == lODim3 );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == 3 );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().CountLayers() == 3 );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[0] == lODim1 );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[1] == lODim2 );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[2] == lODim3 );
     }
 
     SECTION( "Reshaping multi-tensors does not change values" )
@@ -2507,6 +2511,7 @@ TEST_CASE( "Reshape MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lODim3{ 7, 2, 4 };
 
         auto lResult0 = Reshape( lScope, lNodeA, sTensorShape( { lODim1, lODim2, lODim3 }, sizeof( float ) ) );
+        lScope.Run( lResult0 );
 
         std::vector<float> lTensorValues0 = lNodeA.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
         std::vector<float> lTensorValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
@@ -2543,12 +2548,13 @@ TEST_CASE( "Flatten MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lODim3{ 7, 2, 4 };
 
         auto lResult0 = Flatten( lScope, lNodeA );
+        lScope.Run( lResult0 );
 
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mRank == 1 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().CountLayers() == 3 );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[0][0] == Prod( lODim1 ) );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[1][0] == Prod( lODim2 ) );
-        REQUIRE( lResult0.Get<sMultiTensorComponent>().mValue.Shape().mShape[2][0] == Prod( lODim3 ) );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mRank == 1 );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().CountLayers() == 3 );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[0][0] == Prod( lODim1 ) );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[1][0] == Prod( lODim2 ) );
+        REQUIRE( lResult0.Get<sMultiTensorComponent>().Shape().mShape[2][0] == Prod( lODim3 ) );
     }
 
     SECTION( "Flattening multi-tensors does not change values" )
@@ -2560,6 +2566,7 @@ TEST_CASE( "Flatten MultiTensors", "[CORE_COMPUTATION_GRAPH]" )
         std::vector<uint32_t> lODim3{ 7, 2, 4 };
 
         auto lResult0 = Flatten( lScope, lNodeA );
+        lScope.Run( lResult0 );
 
         std::vector<float> lTensorValues0 = lNodeA.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
         std::vector<float> lTensorValues1 = lResult0.Get<sMultiTensorComponent>().mValue.FetchFlattened<float>();
@@ -3738,7 +3745,7 @@ TEST_CASE( "ArraySlice VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Slice( lScope, lInputTensor, lStart, lEnd );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, lSliceEnd[0] - lSliceStart[0] + 1 } );
@@ -3816,7 +3823,7 @@ TEST_CASE( "ArraySlice SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Slice( lScope, lInputTensor, lStart, lEnd );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, lSliceEnd[0] - lSliceStart + 1 } );
@@ -3894,7 +3901,7 @@ TEST_CASE( "ArraySlice VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Slice( lScope, lInputTensor, lStart, lEnd );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, lSliceEnd - lSliceStart[0] + 1 } );
@@ -3972,7 +3979,7 @@ TEST_CASE( "ArraySlice SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Slice( lScope, lInputTensor, lStart, lEnd );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, lSliceEnd - lSliceStart + 1 } );
@@ -4006,8 +4013,8 @@ TEST_CASE( "ArraySummation VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
         {
             auto lY = RandomNumber<uint64_t>( 1024 );
             lValues1.insert( lValues1.end(), lY.begin(), lY.end() );
-            lExpectedValues1.push_back( std::accumulate(
-                lY.begin() + lSliceStart[0], lY.begin() + lSliceEnd[0] + 1, static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
+            lExpectedValues1.push_back( std::accumulate( lY.begin() + lSliceStart[0], lY.begin() + lSliceEnd[0] + 1,
+                                                         static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
         }
     }
 
@@ -4020,8 +4027,8 @@ TEST_CASE( "ArraySummation VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
         {
             auto lY = RandomNumber<uint64_t>( 256 );
             lValues2.insert( lValues2.end(), lY.begin(), lY.end() );
-            lExpectedValues2.push_back( std::accumulate(
-                lY.begin() + lSliceStart[1], lY.begin() + lSliceEnd[1] + 1, static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
+            lExpectedValues2.push_back( std::accumulate( lY.begin() + lSliceStart[1], lY.begin() + lSliceEnd[1] + 1,
+                                                         static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
         }
     }
 
@@ -4034,8 +4041,8 @@ TEST_CASE( "ArraySummation VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
         {
             auto lY = RandomNumber<uint64_t>( 512 );
             lValues3.insert( lValues3.end(), lY.begin(), lY.end() );
-            lExpectedValues3.push_back( std::accumulate(
-                lY.begin() + lSliceStart[2], lY.begin() + lSliceEnd[2] + 1, static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
+            lExpectedValues3.push_back( std::accumulate( lY.begin() + lSliceStart[2], lY.begin() + lSliceEnd[2] + 1,
+                                                         static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
         }
     }
 
@@ -4053,7 +4060,7 @@ TEST_CASE( "ArraySummation VECTOR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Summation( lScope, lInputTensor, lStart, lEnd );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 2 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
@@ -4087,8 +4094,8 @@ TEST_CASE( "ArraySummation SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
         {
             auto lY = RandomNumber<uint64_t>( 1024 );
             lValues1.insert( lValues1.end(), lY.begin(), lY.end() );
-            lExpectedValues1.push_back( std::accumulate(
-                lY.begin() + lSliceStart, lY.begin() + lSliceEnd[0] + 1, static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
+            lExpectedValues1.push_back( std::accumulate( lY.begin() + lSliceStart, lY.begin() + lSliceEnd[0] + 1,
+                                                         static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
         }
     }
 
@@ -4101,8 +4108,8 @@ TEST_CASE( "ArraySummation SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
         {
             auto lY = RandomNumber<uint64_t>( 256 );
             lValues2.insert( lValues2.end(), lY.begin(), lY.end() );
-            lExpectedValues2.push_back( std::accumulate(
-                lY.begin() + lSliceStart, lY.begin() + lSliceEnd[1] + 1, static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
+            lExpectedValues2.push_back( std::accumulate( lY.begin() + lSliceStart, lY.begin() + lSliceEnd[1] + 1,
+                                                         static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
         }
     }
 
@@ -4115,8 +4122,8 @@ TEST_CASE( "ArraySummation SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
         {
             auto lY = RandomNumber<uint64_t>( 512 );
             lValues3.insert( lValues3.end(), lY.begin(), lY.end() );
-            lExpectedValues3.push_back( std::accumulate(
-                lY.begin() + lSliceStart, lY.begin() + lSliceEnd[2] + 1, static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
+            lExpectedValues3.push_back( std::accumulate( lY.begin() + lSliceStart, lY.begin() + lSliceEnd[2] + 1,
+                                                         static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
         }
     }
 
@@ -4134,7 +4141,7 @@ TEST_CASE( "ArraySummation SCALAR_VECTOR", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Summation( lScope, lInputTensor, lStart, lEnd );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 2 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
@@ -4168,8 +4175,8 @@ TEST_CASE( "ArraySummation VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
         {
             auto lY = RandomNumber<uint64_t>( 1024 );
             lValues1.insert( lValues1.end(), lY.begin(), lY.end() );
-            lExpectedValues1.push_back( std::accumulate(
-                lY.begin() + lSliceStart[0], lY.begin() + lSliceEnd + 1, static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
+            lExpectedValues1.push_back( std::accumulate( lY.begin() + lSliceStart[0], lY.begin() + lSliceEnd + 1,
+                                                         static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
         }
     }
 
@@ -4182,8 +4189,8 @@ TEST_CASE( "ArraySummation VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
         {
             auto lY = RandomNumber<uint64_t>( 256 );
             lValues2.insert( lValues2.end(), lY.begin(), lY.end() );
-            lExpectedValues2.push_back( std::accumulate(
-                lY.begin() + lSliceStart[1], lY.begin() + lSliceEnd + 1, static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
+            lExpectedValues2.push_back( std::accumulate( lY.begin() + lSliceStart[1], lY.begin() + lSliceEnd + 1,
+                                                         static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
         }
     }
 
@@ -4196,8 +4203,8 @@ TEST_CASE( "ArraySummation VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
         {
             auto lY = RandomNumber<uint64_t>( 512 );
             lValues3.insert( lValues3.end(), lY.begin(), lY.end() );
-            lExpectedValues3.push_back( std::accumulate(
-                lY.begin() + lSliceStart[2], lY.begin() + lSliceEnd + 1, static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
+            lExpectedValues3.push_back( std::accumulate( lY.begin() + lSliceStart[2], lY.begin() + lSliceEnd + 1,
+                                                         static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
         }
     }
 
@@ -4215,7 +4222,7 @@ TEST_CASE( "ArraySummation VECTOR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Summation( lScope, lInputTensor, lStart, lEnd );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 2 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
@@ -4249,8 +4256,8 @@ TEST_CASE( "ArraySummation SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
         {
             auto lY = RandomNumber<uint64_t>( 1024 );
             lValues1.insert( lValues1.end(), lY.begin(), lY.end() );
-            lExpectedValues1.push_back( std::accumulate(
-                lY.begin() + lSliceStart, lY.begin() + lSliceEnd + 1, static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
+            lExpectedValues1.push_back( std::accumulate( lY.begin() + lSliceStart, lY.begin() + lSliceEnd + 1,
+                                                         static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
         }
     }
 
@@ -4263,8 +4270,8 @@ TEST_CASE( "ArraySummation SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
         {
             auto lY = RandomNumber<uint64_t>( 256 );
             lValues2.insert( lValues2.end(), lY.begin(), lY.end() );
-            lExpectedValues2.push_back( std::accumulate(
-                lY.begin() + lSliceStart, lY.begin() + lSliceEnd + 1, static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
+            lExpectedValues2.push_back( std::accumulate( lY.begin() + lSliceStart, lY.begin() + lSliceEnd + 1,
+                                                         static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
         }
     }
 
@@ -4277,8 +4284,8 @@ TEST_CASE( "ArraySummation SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
         {
             auto lY = RandomNumber<uint64_t>( 512 );
             lValues3.insert( lValues3.end(), lY.begin(), lY.end() );
-            lExpectedValues3.push_back( std::accumulate(
-                lY.begin() + lSliceStart, lY.begin() + lSliceEnd + 1, static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
+            lExpectedValues3.push_back( std::accumulate( lY.begin() + lSliceStart, lY.begin() + lSliceEnd + 1,
+                                                         static_cast<uint64_t>( 0 ), std::plus<uint64_t>() ) );
         }
     }
 
@@ -4296,7 +4303,7 @@ TEST_CASE( "ArraySummation SCALAR_SCALAR", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Summation( lScope, lInputTensor, lStart, lEnd );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 2 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
@@ -4374,7 +4381,7 @@ TEST_CASE( "ArraySummation full", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Summation( lScope, lInputTensor );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 2 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
@@ -4453,7 +4460,7 @@ TEST_CASE( "CountTrue", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = CountTrue( lScope, lInputTensor );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 2 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
@@ -4532,7 +4539,7 @@ TEST_CASE( "CountNonZero", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = CountNonZero( lScope, lInputTensor );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 2 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
@@ -4611,7 +4618,7 @@ TEST_CASE( "CountZero", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = CountZero( lScope, lInputTensor );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 2 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3 } );
@@ -4841,7 +4848,7 @@ TEST_CASE( "Finite differences", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Diff( lScope, lInputTensor, 1 );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 1024 } );
@@ -4917,7 +4924,7 @@ TEST_CASE( "Finite shift to the left  by 1", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0   = Shift( lScope, lInputTensor, -1, lFillValue );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 1024 } );
@@ -4999,7 +5006,7 @@ TEST_CASE( "Finite shift to the left by 3", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0   = Shift( lScope, lInputTensor, -3, lFillValue );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 1024 } );
@@ -5120,7 +5127,7 @@ TEST_CASE( "1D convolution", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Conv1D( lScope, lInputTensor, lKernelensor );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5238,7 +5245,7 @@ TEST_CASE( "1D convolution (uint32_t)", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = Conv1D( lScope, lInputTensor, lKernelensor );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5349,7 +5356,7 @@ TEST_CASE( "HCat (uint32_t)", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult0 = HCat( lScope, lInputTensor, lKernelensor );
     lScope.Run( lResult0 );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 + 34 } );
@@ -5405,7 +5412,7 @@ TEMPLATE_TEST_CASE( "Addition broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, 
     auto lResult1 = Add( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5422,8 +5429,8 @@ TEMPLATE_TEST_CASE( "Addition broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, 
     REQUIRE( lResultValues1 == lExpectedValues );
 }
 
-TEMPLATE_TEST_CASE(
-    "Multiplication broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, uint32_t, uint64_t, int16_t, int32_t, int64_t, float )
+TEMPLATE_TEST_CASE( "Multiplication broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, uint32_t, uint64_t, int16_t, int32_t, int64_t,
+                    float )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
     Scope  lScope( lPoolSize );
@@ -5465,7 +5472,7 @@ TEMPLATE_TEST_CASE(
     auto lResult1 = Multiply( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5528,7 +5535,7 @@ TEST_CASE( "Divison broadcast", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult1 = Divide( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5593,7 +5600,7 @@ TEMPLATE_TEST_CASE( "Subtraction broadcast", "[CORE_COMPUTATION_GRAPH]", int16_t
     auto lResult1 = Subtract( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5654,7 +5661,7 @@ TEST_CASE( "AND broadcast", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult1 = And( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5713,7 +5720,7 @@ TEST_CASE( "OR broadcast", "[CORE_COMPUTATION_GRAPH]" )
     auto lResult1 = Or( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5772,7 +5779,7 @@ TEMPLATE_TEST_CASE( "Bitwise AND broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_
     auto lResult1 = BitwiseAnd( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5831,7 +5838,7 @@ TEMPLATE_TEST_CASE( "Bitwise OR broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t
     auto lResult1 = BitwiseOr( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5848,8 +5855,8 @@ TEMPLATE_TEST_CASE( "Bitwise OR broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t
     REQUIRE( lResultValues1 == lExpectedValues );
 }
 
-TEMPLATE_TEST_CASE(
-    "Equal broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, uint32_t, uint64_t, int16_t, int32_t, int64_t, float, double )
+TEMPLATE_TEST_CASE( "Equal broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, uint32_t, uint64_t, int16_t, int32_t, int64_t, float,
+                    double )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
     Scope  lScope( lPoolSize );
@@ -5891,7 +5898,7 @@ TEMPLATE_TEST_CASE(
     auto lResult1 = Equal( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5910,8 +5917,8 @@ TEMPLATE_TEST_CASE(
     REQUIRE( lResultValues1 == lExpectedValues );
 }
 
-TEMPLATE_TEST_CASE(
-    "LessThan broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, uint32_t, uint64_t, int16_t, int32_t, int64_t, float, double )
+TEMPLATE_TEST_CASE( "LessThan broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, uint32_t, uint64_t, int16_t, int32_t, int64_t, float,
+                    double )
 {
     size_t lPoolSize = 3 * 1024 * 1024;
     Scope  lScope( lPoolSize );
@@ -5957,7 +5964,7 @@ TEMPLATE_TEST_CASE(
     auto lResult1 = LessThan( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
@@ -5981,8 +5988,8 @@ TEMPLATE_TEST_CASE(
     REQUIRE( lResultValues1 == lExpectedValues1 );
 }
 
-TEMPLATE_TEST_CASE(
-    "LessThanOrEqual broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, uint32_t, uint64_t, int16_t, int32_t, int64_t, float, double )
+TEMPLATE_TEST_CASE( "LessThanOrEqual broadcast", "[CORE_COMPUTATION_GRAPH]", uint16_t, uint32_t, uint64_t, int16_t, int32_t, int64_t,
+                    float, double )
 {
 
     size_t lPoolSize = 3 * 1024 * 1024;
@@ -6029,7 +6036,7 @@ TEMPLATE_TEST_CASE(
     auto lResult1 = LessThanOrEqual( lScope, lKernelensor, lInputTensor );
     lScope.Run( { lResult0, lResult1 } );
 
-    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().mValue.Shape();
+    auto lOutputShape = lResult0.Get<sMultiTensorComponent>().Shape();
     REQUIRE( lOutputShape.CountLayers() == 3 );
     REQUIRE( lOutputShape.mRank == 3 );
     REQUIRE( lOutputShape.mShape[0] == std::vector<uint32_t>{ 7, 3, 124 } );
