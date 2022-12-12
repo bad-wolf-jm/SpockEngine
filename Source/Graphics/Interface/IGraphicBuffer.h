@@ -5,6 +5,7 @@
 #include "Core/Memory.h"
 
 #include "IGraphicContext.h"
+#include "IGraphicResource.h"
 
 #include "Core/CUDA/Array/PointerView.h"
 
@@ -22,27 +23,18 @@ namespace SE::Graphics
         UNKNOWN        = 4
     };
 
-    class IBuffer : public Cuda::Internal::sGPUDevicePointerView
+    class IBuffer : public IGraphicResource
     {
       public:
-        eBufferType mType                  = eBufferBindType::UNKNOWN;
-        bool        mIsHostVisible         = true;
-        bool        mIsGraphicsOnly        = true;
-        bool        mIsTransferSource      = true;
-        bool        mIsTransferDestination = true;
+        eBufferType mType = eBufferBindType::UNKNOWN;
 
         IBuffer()            = default;
         IBuffer( IBuffer & ) = default;
 
         IBuffer( Ref<IGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
                  bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
-            : Cuda::Internal::sGPUDevicePointerView( aSize, nullptr )
-            , mGraphicConext{ aGraphicContext }
+            : IGraphicResource( aGraphicContext, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination, aSize )
             , mType{ aType }
-            , mIsHostVisible{ aIsHostVisible }
-            , mIsTransferSource{ aIsTransferSource }
-            , mIsTransferDestination{ aIsTransferDestination }
-            , mIsGraphicsOnly{ aIsGraphicsOnly }
         {
             Allocate( mSize );
         }
@@ -56,7 +48,7 @@ namespace SE::Graphics
         }
 
         template <typename _Ty>
-        IBuffer( GraphicContext &aGraphicContext, std::vector<_Ty> aData, eBufferBindType aType, bool aIsHostVisible,
+        IBuffer( Ref<IGraphicContext> aGraphicContext, std::vector<_Ty> aData, eBufferBindType aType, bool aIsHostVisible,
                  bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
             : IBuffer( aGraphicContext, aData.data(), aData.size(), aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                        aIsTransferDestination, aData.size() * sizeof( _Ty ) )
@@ -64,7 +56,7 @@ namespace SE::Graphics
         }
 
         template <typename _Ty>
-        IBuffer( GraphicContext &aGraphicContext, _Ty *aData, size_t aSize, eBufferBindType aType, bool aIsHostVisible,
+        IBuffer( Ref<IGraphicContext> aGraphicContext, _Ty *aData, size_t aSize, eBufferBindType aType, bool aIsHostVisible,
                  bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
             : IBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination,
                        aSize * sizeof( _Ty ) )
@@ -73,7 +65,7 @@ namespace SE::Graphics
             Upload( aData, aSize );
         }
 
-        ~IBuffer();
+        ~IBuffer() = default;
 
         template <typename _MapType>
         void Upload( std::vector<_MapType> aData )
@@ -96,21 +88,18 @@ namespace SE::Graphics
         template <typename _MapType>
         void Upload( _MapType *aData, size_t aSize, size_t aOffset )
         {
-            Upload( reinterpret_cast<void *>( aData ), aSize * sizeof( _MapType ), aOffset );
+            Upload( reinterpret_cast<void *>( aData ), aSize * sizeof( _MapType ), aOffset * sizeof( _MapType ) );
         }
 
         template <typename _Ty>
         void Write( _Ty aValue, size_t aIndex = 0 )
         {
-            Upload( reinterpret_cast<void *>( &aValue ), sizeof( _Ty ), aIndex );
+            Upload( reinterpret_cast<void *>( &aValue ), sizeof( _Ty ), aIndex * sizeof( _Ty ) );
         }
 
         virtual void Allocate( size_t aSizeInBytes )                     = 0;
         virtual void Resize( size_t aNewSizeInBytes )                    = 0;
         virtual void Copy( Ref<IBuffer> aSource, size_t aOffset )        = 0;
         virtual void Upload( void *aData, size_t aSize, size_t aOffset ) = 0;
-
-      private:
-        Ref<IGraphicContext> mGraphicContext = nullptr;
     };
 } // namespace SE::Graphics
