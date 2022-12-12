@@ -13,19 +13,28 @@ namespace SE::Graphics
     using namespace SE::Core;
     using namespace SE::Graphics::Internal;
 
+    enum class eBufferType : uint32_t
+    {
+        VERTEX_BUFFER  = 0,
+        INDEX_BUFFER   = 1,
+        STORAGE_BUFFER = 2,
+        UNIFORM_BUFFER = 3,
+        UNKNOWN        = 4
+    };
+
     class IBuffer : public Cuda::Internal::sGPUDevicePointerView
     {
       public:
-        eBufferBindType mType                  = eBufferBindType::UNKNOWN;
-        bool            mIsHostVisible         = true;
-        bool            mIsGraphicsOnly        = true;
-        bool            mIsTransferSource      = true;
-        bool            mIsTransferDestination = true;
+        eBufferType mType                  = eBufferBindType::UNKNOWN;
+        bool        mIsHostVisible         = true;
+        bool        mIsGraphicsOnly        = true;
+        bool        mIsTransferSource      = true;
+        bool        mIsTransferDestination = true;
 
         IBuffer()            = default;
         IBuffer( IBuffer & ) = default;
 
-        IBuffer( Ref<IGraphicContext> aGraphicContext, eBufferBindType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
+        IBuffer( Ref<IGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
                  bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
             : Cuda::Internal::sGPUDevicePointerView( aSize, nullptr )
             , mGraphicConext{ aGraphicContext }
@@ -35,18 +44,23 @@ namespace SE::Graphics
             , mIsTransferDestination{ aIsTransferDestination }
             , mIsGraphicsOnly{ aIsGraphicsOnly }
         {
+            Allocate( mSize );
         }
 
         IBuffer( Ref<IGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
-                 bool aIsTransferDestination, size_t aSize );
+                 bool aIsTransferDestination, size_t aSize )
+            : IBuffer( aGraphicContext, eBufferType::UNKNOWN, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
+                       aIsTransferDestination, aSize )
+
+        {
+        }
 
         template <typename _Ty>
         IBuffer( GraphicContext &aGraphicContext, std::vector<_Ty> aData, eBufferBindType aType, bool aIsHostVisible,
                  bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
-            : IBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination,
-                       aData.size() * sizeof( _Ty ) )
+            : IBuffer( aGraphicContext, aData.data(), aData.size(), aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
+                       aIsTransferDestination, aData.size() * sizeof( _Ty ) )
         {
-            Upload( aData );
         }
 
         template <typename _Ty>
@@ -55,6 +69,7 @@ namespace SE::Graphics
             : IBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination,
                        aSize * sizeof( _Ty ) )
         {
+            Allocate( mSize );
             Upload( aData, aSize );
         }
 
@@ -90,13 +105,12 @@ namespace SE::Graphics
             Upload( reinterpret_cast<void *>( &aValue ), sizeof( _Ty ), aIndex );
         }
 
-        virtual void Allocate( size_t aSizeInBytes )  = 0;
-        virtual void Resize( size_t aNewSizeInBytes ) = 0;
-
+        virtual void Allocate( size_t aSizeInBytes )                     = 0;
+        virtual void Resize( size_t aNewSizeInBytes )                    = 0;
         virtual void Copy( Ref<IBuffer> aSource, size_t aOffset )        = 0;
         virtual void Upload( void *aData, size_t aSize, size_t aOffset ) = 0;
 
       private:
-        Ref<IGraphicContext> mGraphicContext;
+        Ref<IGraphicContext> mGraphicContext = nullptr;
     };
 } // namespace SE::Graphics
