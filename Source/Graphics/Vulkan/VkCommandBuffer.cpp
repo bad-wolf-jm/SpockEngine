@@ -12,25 +12,25 @@ namespace SE::Graphics::Internal
 {
 
     sVkCommandBuffer::sVkCommandBuffer( Ref<VkGraphicContext> aContext, VkCommandBuffer aCommandBuffer )
-        : mContext{ aContext }
+        : mGraphicContext{ aContext }
         , mVkObject{ aCommandBuffer }
     {
     }
 
     sVkCommandBuffer::sVkCommandBuffer( Ref<VkGraphicContext> aContext )
-        : mContext{ aContext }
+        : mGraphicContext{ aContext }
     {
-        mVkObject    = mContext->AllocateCommandBuffer( 1 )[0];
-        mSubmitFence = mContext->CreateFence();
+        mVkObject    = mGraphicContext->AllocateCommandBuffer( 1 )[0];
+        mSubmitFence = mGraphicContext->CreateFence();
     }
 
-    sVkCommandBuffer::~sVkCommandBuffer() { mContext->DestroyCommandBuffer( mVkObject ); }
+    sVkCommandBuffer::~sVkCommandBuffer() { mGraphicContext->DestroyCommandBuffer( mVkObject ); }
 
     void sVkCommandBuffer::Begin() { Begin( 0 ); }
 
     void sVkCommandBuffer::Begin( VkCommandBufferUsageFlags aUsage )
     {
-        mContext->WaitForFence( mSubmitFence );
+        mGraphicContext->WaitForFence( mSubmitFence );
 
         VkCommandBufferBeginInfo lCommandBufferBeginInfo{};
         lCommandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -301,7 +301,7 @@ namespace SE::Graphics::Internal
 
     void sVkCommandBuffer::SubmitTo( VkQueue aQueue )
     {
-        mContext->WaitForFences( { mSubmitFence } );
+        mGraphicContext->WaitForFences( { mSubmitFence } );
 
         VkSubmitInfo lQueueSubmitInfo{};
         lQueueSubmitInfo.sType              = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -321,7 +321,7 @@ namespace SE::Graphics::Internal
             lQueueSubmitInfo.pSignalSemaphores    = mSubmitSignalSemaphores.data();
         }
 
-        mContext->ResetFence( mSubmitFence );
+        mGraphicContext->ResetFence( mSubmitFence );
         vkQueueSubmit( aQueue, 1, &lQueueSubmitInfo, mSubmitFence );
     }
 } // namespace SE::Graphics::Internal
