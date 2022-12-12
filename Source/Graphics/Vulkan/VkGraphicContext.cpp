@@ -9,7 +9,6 @@ namespace SE::Graphics::Internal
 {
     namespace
     {
-
         struct sSwapChainSupportDetails
         {
             VkSurfaceCapabilitiesKHR        mCapabilities;
