@@ -12,7 +12,7 @@
 
 #include "Scene/VertexData.h"
 
-#include "Core/Vulkan/VkAbstractRenderPass.h"
+#include "Graphics/Vulkan/VkAbstractRenderPass.h"
 #include "SceneRenderPipeline.h"
 
 namespace SE::Core

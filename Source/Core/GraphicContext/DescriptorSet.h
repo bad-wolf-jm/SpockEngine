@@ -5,7 +5,7 @@
 #include "Graphics/Vulkan/VkSampler2D.h"
 
 #include "Core/Memory.h"
-#include "Core/Vulkan/VkPipeline.h"
+#include "Graphics/Vulkan/VkPipeline.h"
 
 #include <vector>
 #include <vulkan/vulkan.h>

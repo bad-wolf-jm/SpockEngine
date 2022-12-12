@@ -3,7 +3,7 @@
 #include "Core/CUDA/Texture/ColorFormat.h"
 #include "Core/Logging.h"
 
-#include "Core/Vulkan/VkPipeline.h"
+#include "Graphics/Vulkan/VkPipeline.h"
 
 #include "Graphics/Interface/IWindow.h"
 #include "Core/Profiling/BlockTimer.h"

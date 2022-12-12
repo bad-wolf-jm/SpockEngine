@@ -5,8 +5,8 @@
 #include "Core/Memory.h"
 
 #include "Core/GraphicContext//GraphicContext.h"
-#include "Core/Vulkan/VkAbstractRenderPass.h"
-#include "Core/Vulkan/VkPipeline.h"
+#include "Graphics/Vulkan/VkAbstractRenderPass.h"
+#include "Graphics/Vulkan/VkPipeline.h"
 #include "DescriptorSet.h"
 
 namespace SE::Graphics

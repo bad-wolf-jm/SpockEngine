@@ -12,7 +12,7 @@
 #include "Core/Profiling/BlockTimer.h"
 #include "Core/Resource.h"
 
-#include "Core/Vulkan/VkPipeline.h"
+#include "Graphics/Vulkan/VkPipeline.h"
 
 #include "Components.h"
 #include "Scene.h"

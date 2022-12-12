@@ -14,7 +14,7 @@
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
 
-#include "Core/Vulkan/VkAbstractRenderPass.h"
+#include "Graphics/Vulkan/VkAbstractRenderPass.h"
 
 #include "Scene/VertexData.h"
 
