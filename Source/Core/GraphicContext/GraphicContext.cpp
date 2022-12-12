@@ -18,23 +18,23 @@ namespace SE::Graphics
         mDescriptorPool = New<Internal::sVkDescriptorPoolObject>( mContext, lNumberOfDescriptorSets, lPoolSizes );
     }
 
-    Ref<Internal::sVkDescriptorSetObject> GraphicContext::AllocateDescriptors(
-        Ref<Internal::sVkDescriptorSetLayoutObject> aLayout, uint32_t aDescriptorCount )
+    Ref<Internal::sVkDescriptorSetObject> GraphicContext::AllocateDescriptors( Ref<Internal::sVkDescriptorSetLayoutObject> aLayout,
+                                                                               uint32_t aDescriptorCount )
     {
         return mDescriptorPool->Allocate( aLayout, aDescriptorCount );
     }
 
     Ref<Internal::sVkCommandBufferObject> GraphicContext::BeginSingleTimeCommands()
     {
-        Ref<Internal::sVkCommandBufferObject> l_CommandBuffer = SE::Core::New<Internal::sVkCommandBufferObject>( mContext );
-        l_CommandBuffer->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
-        return l_CommandBuffer;
+        Ref<Internal::sVkCommandBufferObject> lCommandBuffer = SE::Core::New<Internal::sVkCommandBufferObject>( mContext );
+        lCommandBuffer->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
+        return lCommandBuffer;
     }
 
-    void GraphicContext::EndSingleTimeCommands( Ref<Internal::sVkCommandBufferObject> a_CommandBuffer )
+    void GraphicContext::EndSingleTimeCommands( Ref<Internal::sVkCommandBufferObject> aCommandBuffer )
     {
-        a_CommandBuffer->End();
-        a_CommandBuffer->SubmitTo( mContext->GetGraphicsQueue() );
+        aCommandBuffer->End();
+        aCommandBuffer->SubmitTo( mContext->GetGraphicsQueue() );
         mContext->WaitIdle( mContext->GetGraphicsQueue() );
     }
 
