@@ -13,6 +13,8 @@ namespace SE::Graphics
         {
         }
 
+        Ref<IWindow> GetWindow() { return mWindow; };
+
       protected:
         Ref<IWindow> mWindow = nullptr;
 
