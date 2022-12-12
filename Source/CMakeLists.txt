@@ -46,12 +46,13 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/GraphicContext/ARenderTarget.cpp
     Core/GraphicContext/SwapChain.cpp
     Core/GraphicContext/UI/UIContext.cpp
-    Core/GraphicContext/Window.cpp
 
+    
     Graphics/Vulkan/VkGpuBuffer.cpp
     Graphics/Vulkan/VkTexture2D.cpp
     Graphics/Vulkan/VkSampler2D.cpp
     Graphics/Vulkan/VkRenderTarget.cpp
+    Graphics/Interface/IWindow.cpp
 
     Scene/Primitives/Primitives.cpp
     Scene/Primitives/Arrow.cpp

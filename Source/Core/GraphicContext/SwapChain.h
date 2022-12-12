@@ -2,7 +2,7 @@
 
 #include "ARenderTarget.h"
 
-#include "Core/Vulkan/VkCoreMacros.h"
+#include "Graphics/Vulkan/VkCoreMacros.h"
 
 namespace SE::Graphics
 {

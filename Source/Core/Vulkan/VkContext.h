@@ -5,7 +5,7 @@
 
 #include "Core/Memory.h"
 
-#include "Core/GraphicContext/Window.h"
+#include "Graphics/Interface/IWindow.h"
 
 #include <vulkan/vulkan.h>
 
@@ -37,7 +37,7 @@ namespace SE::Graphics::Internal
         VkContext() = default;
         ~VkContext();
 
-        VkContext( Ref<Window> aWindow, bool aEnableValidation );
+        VkContext( Ref<IWindow> aWindow, bool aEnableValidation );
 
         VkBuffer CreateBuffer( VkBufferUsageFlags aBufferFlags, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable );
         void     DestroyBuffer( VkBuffer aBuffer );
@@ -166,7 +166,7 @@ namespace SE::Graphics::Internal
         std::set<VkSwapchainKHR>        mSwapChains;
 
       private:
-        Ref<Window> mWindow;
+        Ref<IWindow> mWindow;
 
         VkInstance       mVkInstance            = VK_NULL_HANDLE;
         VkPhysicalDevice mVkPhysicalDevice      = VK_NULL_HANDLE;

@@ -4,7 +4,7 @@
 #include "Core/Logging.h"
 #include "Core/Memory.h"
 
-#include "Core/Vulkan/VkCoreMacros.h"
+#include "Graphics/Vulkan/VkCoreMacros.h"
 
 #include "Core/CUDA/Array/CudaBuffer.h"
 #include "Core/CUDA/CudaAssert.h"

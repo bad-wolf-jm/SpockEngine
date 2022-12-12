@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/GraphicContext/Window.h"
+#include "Graphics/Interface/IWindow.h"
 #include "Core/Math/Types.h"
 #include <memory>
 #include <vulkan/vulkan.h>

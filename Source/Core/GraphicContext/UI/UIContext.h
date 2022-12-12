@@ -53,7 +53,7 @@ namespace SE::Core
     class UIContext
     {
       public:
-        UIContext( Ref<SE::Core::Window> aWindow, GraphicContext &aDevice, ARenderContext &aRenderContext,
+        UIContext( Ref<SE::Core::IWindow> aWindow, GraphicContext &aDevice, ARenderContext &aRenderContext,
                    std::string &aImGuiConfigPath, UIConfiguration const &aUIConfiguration );
         ~UIContext();
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Core/GraphicContext/Window.h"
 #include "Core/Memory.h"
 #include "Core/Vulkan/VkCommand.h"
 #include "Core/Vulkan/VkContext.h"
+#include "Graphics/Interface/IWindow.h"
 
 namespace SE::Graphics
 {
@@ -14,7 +14,7 @@ namespace SE::Graphics
     {
       public:
         Ref<Internal::VkContext> mContext        = nullptr;
-        Ref<Window>              mViewportClient = nullptr;
+        Ref<IWindow>             mViewportClient = nullptr;
 
       public:
         GraphicContext() = default;
@@ -22,7 +22,7 @@ namespace SE::Graphics
 
         ~GraphicContext() = default;
 
-        Ref<Window> GetViewportClient() { return mViewportClient; };
+        Ref<IWindow> GetViewportClient() { return mViewportClient; };
 
         Ref<Internal::sVkDescriptorSetObject> AllocateDescriptors( Ref<Internal::sVkDescriptorSetLayoutObject> aLayout,
                                                                    uint32_t                                    aDescriptorCount = 0 );

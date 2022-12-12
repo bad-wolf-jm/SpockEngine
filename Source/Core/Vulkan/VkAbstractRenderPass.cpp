@@ -4,7 +4,7 @@
 #include <unordered_set>
 
 #include "Core/Memory.h"
-#include "VkCoreMacros.h"
+#include "Graphics/Vulkan/VkCoreMacros.h"
 
 namespace SE::Graphics::Internal
 {

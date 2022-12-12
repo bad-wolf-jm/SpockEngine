@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Core/GraphicContext/Window.h"
+#include "Graphics/Interface/IWindow.h"
 #include "Core/Memory.h"
 
 #include "Core/CUDA/Texture/ColorFormat.h"
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicContext.h"
-#include "Core/Vulkan/VkCoreMacros.h"
+#include "Graphics/Vulkan/VkCoreMacros.h"
 
 #include "Graphics/Vulkan/VkRenderTarget.h"
 #include "Graphics/Vulkan/VkTexture2D.h"

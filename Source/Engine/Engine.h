@@ -16,7 +16,7 @@
 
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//SwapChain.h"
-#include "Core/GraphicContext/Window.h"
+#include "Graphics/Interface/IWindow.h"
 #include "Core/Optix/OptixContext.h"
 
 #include "Core/GraphicContext//UI/UIContext.h"
@@ -35,7 +35,7 @@ namespace SE::Core
     class Engine
     {
       public:
-        friend class Window;
+        friend class IWindow;
 
         Engine()  = default;
         ~Engine() = default;
@@ -130,7 +130,7 @@ namespace SE::Core
         std::vector<std::function<void()>> mMainThreadQueue;
         std::mutex                         mMainThreadQueueMutex;
 
-        Ref<SE::Core::Window>        mViewportClient;
+        Ref<SE::Core::IWindow>        mViewportClient;
         SE::Graphics::GraphicContext mGraphicContext;
 
         Ref<SE::Core::UIContext> mImGUIOverlay;

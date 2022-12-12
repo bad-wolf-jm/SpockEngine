@@ -2,7 +2,7 @@
 
 #include "Core/Core.h"
 #include "Core/Memory.h"
-#include "Core/Vulkan/VkCoreMacros.h"
+#include "Graphics/Vulkan/VkCoreMacros.h"
 
 #include "Core/Logging.h"
 

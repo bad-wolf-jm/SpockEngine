@@ -5,7 +5,7 @@
 
 #include "Core/Vulkan/VkPipeline.h"
 
-#include "Core/GraphicContext/Window.h"
+#include "Graphics/Interface/IWindow.h"
 #include "Core/Profiling/BlockTimer.h"
 
 // std
@@ -127,7 +127,7 @@ namespace SE::Core
         }
     }
 
-    UIContext::UIContext( Ref<SE::Core::Window> aWindow, GraphicContext &aGraphicContext, ARenderContext &aRenderContext,
+    UIContext::UIContext( Ref<SE::Core::IWindow> aWindow, GraphicContext &aGraphicContext, ARenderContext &aRenderContext,
                           std::string &aImGuiConfigPath, UIConfiguration const &aUIConfiguration )
         : mGraphicContext{ aGraphicContext }
         , mImGuiConfigPath{ aImGuiConfigPath }

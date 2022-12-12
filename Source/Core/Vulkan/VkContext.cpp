@@ -1,5 +1,5 @@
 #include "VkContext.h"
-#include "VkCoreMacros.h"
+#include "Graphics/Vulkan/VkCoreMacros.h"
 
 #include <algorithm>
 #include <set>
@@ -342,7 +342,7 @@ namespace SE::Graphics::Internal
         }
     } // namespace
 
-    VkContext::VkContext( Ref<Core::Window> aWindow, bool aEnableValidation )
+    VkContext::VkContext( Ref<Core::IWindow> aWindow, bool aEnableValidation )
         : mWindow{ aWindow }
     {
         VkApplicationInfo lApplicationInfo{};
