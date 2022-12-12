@@ -7,7 +7,7 @@
 #include "Graphics/Vulkan/VkGraphicContext.h"
 // #include "VkImage.h"
 
-#include "VkPipeline.h"
+#include "Graphics/Vulkan/VkPipeline.h"
 
 namespace SE::Graphics::Internal
 {
