@@ -103,6 +103,7 @@ FetchContent_MakeAvailable(sol2)
 include_directories(${sol2_SOURCE_DIR}/include)
 set(SE_EXTRA_INCLUDES ${sol2_SOURCE_DIR}/include ${SE_EXTRA_INCLUDES})
 
+set (BuildTests OFF CACHE INTERNAL "Turn off tests")
 FetchContent_Declare(
   filewatch
   GIT_REPOSITORY https://github.com/ThomasMonkman/filewatch.git

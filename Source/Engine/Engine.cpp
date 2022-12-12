@@ -100,6 +100,22 @@ namespace SE::Core
 
     void Engine::SetImGuiConfigurationFile( std::string a_Path ) { mImGuiConfigPath = a_Path; }
 
+    void Engine::ExecuteMainThreadQueue()
+    {
+        std::scoped_lock<std::mutex> lock( mMainThreadQueueMutex );
+
+        for( auto &lThunk : mMainThreadQueue ) lThunk();
+
+        mMainThreadQueue.clear();
+    }
+
+    void Engine::SubmitToMainThread( const std::function<void()> &aThunk )
+    {
+        std::scoped_lock<std::mutex> lock( mMainThreadQueueMutex );
+
+        mMainThreadQueue.emplace_back( aThunk );
+    }
+
     math::ivec2 Engine::GetWindowPosition()
     {
         int x, y;

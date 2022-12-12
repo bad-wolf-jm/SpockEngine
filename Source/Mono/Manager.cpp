@@ -3,6 +3,8 @@
 #include "Core/Logging.h"
 #include "Core/Memory.h"
 
+#include "Engine/Engine.h"
+
 #include "Scene/Scene.h"
 
 #include "mono/jit/jit.h"
@@ -12,7 +14,10 @@
 
 #include <unordered_map>
 
-// #include <FileWatch.hpp>
+#ifdef WIN32_LEAN_AND_MEAN
+#    undef WIN32_LEAN_AND_MEAN
+#endif
+#include <FileWatch.hpp>
 
 #include "EntityRegistry.h"
 #include "InternalCalls.h"
@@ -125,6 +130,8 @@ namespace SE::Core
         std::unordered_map<std::string, Ref<ScriptClass>> mControllerClasses;
         std::unordered_map<std::string, Ref<ScriptClass>> mComponentClasses;
         std::unordered_map<std::string, Ref<ScriptClass>> mAllClasses;
+
+        std::unique_ptr<filewatch::FileWatch<std::string>> mAppAssemblyFileWatcher;
 
         void *mSceneContext = nullptr;
 
@@ -255,20 +262,20 @@ namespace SE::Core
         Utils::PrintAssemblyTypes( sData->mCoreAssembly );
     }
 
-    // static void OnAppAssemblyFileSystemEvent( const std::string &path, const filewatch::Event change_type )
-    // {
-    //     if( !sData->mAssemblyReloadPending && change_type == filewatch::Event::modified )
-    //     {
-    //         sData->mAssemblyReloadPending = true;
+    static void OnAppAssemblyFileSystemEvent( const std::string &path, const filewatch::Event change_type )
+    {
+        if( !sData->mAssemblyReloadPending && change_type == filewatch::Event::modified )
+        {
+            sData->mAssemblyReloadPending = true;
 
-    //         // Application::Get().SubmitToMainThread(
-    //         //     []()
-    //         //     {
-    //         //         sData->mAppAssemblyFileWatcher.reset();
-    //         //         ScriptEngine::ReloadAssembly();
-    //         //     } );
-    //     }
-    // }
+            Engine::GetInstance()->SubmitToMainThread(
+                [&]()
+                {
+                    sData->mAppAssemblyFileWatcher.reset();
+                    ScriptManager::ReloadAssembly();
+                } );
+        }
+    }
 
     void ScriptManager::SetAppAssemblyPath( const std::filesystem::path &aFilepath )
     {
@@ -276,9 +283,9 @@ namespace SE::Core
 
         sData->mAssemblyReloadPending = false;
 
-        // if( !sData->mAppAssemblyFilepath.empty() )
-        //     sData->mAppAssemblyFileWatcher =
-        //         std::make_unique<filewatch::FileWatch<std::string>>( aFilepath.string(), OnAppAssemblyFileSystemEvent );
+        if( !sData->mAppAssemblyFilepath.empty() )
+            sData->mAppAssemblyFileWatcher =
+                std::make_unique<filewatch::FileWatch<std::string>>( aFilepath.string(), OnAppAssemblyFileSystemEvent );
 
         ReloadAssembly();
     }

@@ -4,6 +4,8 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+#include <mutex>
+
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 #include "Core/Types.h"
@@ -14,8 +16,8 @@
 
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//SwapChain.h"
-#include "Core/Optix/OptixContext.h"
 #include "Core/GraphicContext/Window.h"
+#include "Core/Optix/OptixContext.h"
 
 #include "Core/GraphicContext//UI/UIContext.h"
 
@@ -110,11 +112,14 @@ namespace SE::Core
         math::ivec2 GetWindowSize();
         std::string GetImGuiConfigurationFile();
 
-        static void Initialize( math::ivec2 aInitialMainWindowSize, math::ivec2 aInitialMainWindowPosition,
-                                fs::path aImGuiConfigPath, UIConfiguration const& aUIConfiguration );
+        static void Initialize( math::ivec2 aInitialMainWindowSize, math::ivec2 aInitialMainWindowPosition, fs::path aImGuiConfigPath,
+                                UIConfiguration const &aUIConfiguration );
         static void Shutdown();
 
         static std::unique_ptr<Engine> &GetInstance() { return mUniqueInstance; };
+
+        void SubmitToMainThread( const std::function<void()> &aThunk );
+        void ExecuteMainThreadQueue();
 
       private:
         void IOEvent( UserEvent &a_Event );
@@ -122,9 +127,11 @@ namespace SE::Core
       private:
         static std::unique_ptr<Engine> mUniqueInstance;
 
+        std::vector<std::function<void()>> mMainThreadQueue;
+        std::mutex                         mMainThreadQueueMutex;
+
         Ref<SE::Core::Window>        mViewportClient;
         SE::Graphics::GraphicContext mGraphicContext;
-
 
         Ref<SE::Core::UIContext> mImGUIOverlay;
 
@@ -134,9 +141,9 @@ namespace SE::Core
         double mEngineLoopStartTime;
         double mLastFrameTime = 0.0f;
 
-        math::ivec2 mInitialMainWindowSize     = { 1920, 1080 };
-        math::ivec2 mInitialMainWindowPosition = { 100, 100 };
-        std::string mImGuiConfigPath           = "imgui.ini";
+        math::ivec2     mInitialMainWindowSize     = { 1920, 1080 };
+        math::ivec2     mInitialMainWindowPosition = { 100, 100 };
+        std::string     mImGuiConfigPath           = "imgui.ini";
         UIConfiguration mUIConfiguration{};
 
         math::ivec2 mMainWindowSize;
