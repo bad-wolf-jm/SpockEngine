@@ -1,9 +1,12 @@
 #pragma once
 
+#include "Core/Memory.h"
+
 #include "IWindow.h"
 
 namespace SE::Graphics
 {
+    using namespace SE::Core;
     class IGraphicContext
     {
       public:
@@ -19,5 +22,5 @@ namespace SE::Graphics
         Ref<IWindow> mWindow = nullptr;
 
         uint32_t mSampleCount = 1;
-    }
+    };
 } // namespace SE::Graphics

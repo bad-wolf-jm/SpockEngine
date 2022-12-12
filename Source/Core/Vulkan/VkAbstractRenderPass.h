@@ -5,7 +5,7 @@
 #include <memory>
 #include <vulkan/vulkan.h>
 
-#include "VkContext.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "Core/Memory.h"
 
@@ -20,11 +20,11 @@ namespace SE::Graphics::Internal
 
         sVkAbstractRenderPassObject()                                = default;
         sVkAbstractRenderPassObject( sVkAbstractRenderPassObject & ) = default;
-        sVkAbstractRenderPassObject( Ref<VkContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
+        sVkAbstractRenderPassObject( Ref<VkGraphicContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
                                      std::vector<VkSubpassDescription> aSubpasses,
                                      std::vector<VkSubpassDependency>  aSubpassDependencies );
 
-        sVkAbstractRenderPassObject( Ref<VkContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
+        sVkAbstractRenderPassObject( Ref<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
                                      bool aIsPresented, math::vec4 aClearColor );
 
         ~sVkAbstractRenderPassObject();
@@ -47,7 +47,7 @@ namespace SE::Graphics::Internal
         uint32_t GetColorAttachmentCount() { return mColorAttachmentCount; }
 
       protected:
-        Ref<VkContext>            mContext              = nullptr;
+        Ref<VkGraphicContext>            mContext              = nullptr;
         std::vector<VkClearValue> mClearValues          = {};
         uint32_t                  mColorAttachmentCount = 0;
     };

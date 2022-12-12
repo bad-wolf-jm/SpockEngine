@@ -4,7 +4,7 @@
 
 #include <memory>
 
-#include "VkContext.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 // #include "VkImage.h"
 
 #include "VkPipeline.h"
@@ -31,8 +31,8 @@ namespace SE::Graphics::Internal
 
         sVkCommandBufferObject()                           = default;
         sVkCommandBufferObject( sVkCommandBufferObject & ) = default;
-        sVkCommandBufferObject( Ref<VkContext> aContext );
-        sVkCommandBufferObject( Ref<VkContext> aContext, VkCommandBuffer aCommandBuffer );
+        sVkCommandBufferObject( Ref<VkGraphicContext> aContext );
+        sVkCommandBufferObject( Ref<VkGraphicContext> aContext, VkCommandBuffer aCommandBuffer );
 
         ~sVkCommandBufferObject();
 
@@ -84,7 +84,7 @@ namespace SE::Graphics::Internal
         void SubmitTo( VkQueue aQueue );
 
       private:
-        Ref<VkContext>                    mContext                  = nullptr;
+        Ref<VkGraphicContext>                    mContext                  = nullptr;
         VkFence                           mSubmitFence              = nullptr;
         std::vector<VkSemaphore>          mSubmitWaitSemaphores     = {};
         std::vector<VkPipelineStageFlags> mSubmitWaitSemaphoreStage = {};

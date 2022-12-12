@@ -11,13 +11,13 @@
 namespace SE::Graphics::Internal
 {
 
-    sVkCommandBufferObject::sVkCommandBufferObject( Ref<VkContext> aContext, VkCommandBuffer aCommandBuffer )
+    sVkCommandBufferObject::sVkCommandBufferObject( Ref<VkGraphicContext> aContext, VkCommandBuffer aCommandBuffer )
         : mContext{ aContext }
         , mVkObject{ aCommandBuffer }
     {
     }
 
-    sVkCommandBufferObject::sVkCommandBufferObject( Ref<VkContext> aContext )
+    sVkCommandBufferObject::sVkCommandBufferObject( Ref<VkGraphicContext> aContext )
         : mContext{ aContext }
     {
         mVkObject    = mContext->AllocateCommandBuffer( 1 )[0];

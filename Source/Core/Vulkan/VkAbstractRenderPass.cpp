@@ -9,7 +9,7 @@
 namespace SE::Graphics::Internal
 {
 
-    sVkAbstractRenderPassObject::sVkAbstractRenderPassObject( Ref<VkContext>                       aContext,
+    sVkAbstractRenderPassObject::sVkAbstractRenderPassObject( Ref<VkGraphicContext>                       aContext,
                                                               std::vector<VkAttachmentDescription> aAttachments,
                                                               std::vector<VkSubpassDescription>    aSubpasses,
                                                               std::vector<VkSubpassDependency>     aSubpassDependencies )
@@ -18,7 +18,7 @@ namespace SE::Graphics::Internal
         mVkObject = mContext->CreateRenderPass( aAttachments, aSubpasses, aSubpassDependencies );
     }
 
-    sVkAbstractRenderPassObject::sVkAbstractRenderPassObject( Ref<VkContext> aContext, VkFormat aFormat, uint32_t aSampleCount,
+    sVkAbstractRenderPassObject::sVkAbstractRenderPassObject( Ref<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount,
                                                               bool aIsSampled, bool aIsPresented, math::vec4 aClearColor )
         : mSampleCount{ aSampleCount }
         , mContext{ aContext }

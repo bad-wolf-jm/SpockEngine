@@ -11,7 +11,7 @@
 namespace SE::Graphics::Internal
 {
 
-    sVkShaderModuleObject::sVkShaderModuleObject( Ref<VkContext> aContext, std::vector<uint32_t> aByteCode )
+    sVkShaderModuleObject::sVkShaderModuleObject( Ref<VkGraphicContext> aContext, std::vector<uint32_t> aByteCode )
         : mContext{ aContext }
     {
         mVkObject = mContext->CreateShaderModule( aByteCode );
@@ -51,7 +51,7 @@ namespace SE::Graphics::Internal
         return std::vector<uint32_t>( 0 );
     }
 
-    ShaderModule::ShaderModule( Ref<VkContext> mContext, std::string FilePaths, eShaderStageTypeFlags aShaderType )
+    ShaderModule::ShaderModule( Ref<VkGraphicContext> mContext, std::string FilePaths, eShaderStageTypeFlags aShaderType )
         : Type{ aShaderType }
     {
         std::vector<uint32_t> lByteCode = CompileShaderSources( FilePaths, aShaderType );
@@ -97,7 +97,7 @@ namespace SE::Graphics::Internal
     }
 
     sVkDescriptorSetLayoutObject::sVkDescriptorSetLayoutObject(
-        Ref<VkContext> aContext, std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded )
+        Ref<VkGraphicContext> aContext, std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded )
         : mContext{ aContext }
     {
         mVkObject = mContext->CreateDescriptorSetLayout( aBindings, aUnbounded );
@@ -106,7 +106,7 @@ namespace SE::Graphics::Internal
     sVkDescriptorSetLayoutObject::~sVkDescriptorSetLayoutObject() { mContext->DestroyDescriptorSetLayout( mVkObject ); }
 
     sVkDescriptorSetObject::sVkDescriptorSetObject(
-        Ref<VkContext> aContext, VkDescriptorPool aDescriptorPool, VkDescriptorSet aDescriporSet )
+        Ref<VkGraphicContext> aContext, VkDescriptorPool aDescriptorPool, VkDescriptorSet aDescriporSet )
         : mContext{ aContext }
         , mDescriptorPool{ aDescriptorPool }
         , mVkObject{ aDescriporSet }
@@ -178,7 +178,7 @@ namespace SE::Graphics::Internal
     }
 
     sVkDescriptorPoolObject::sVkDescriptorPoolObject(
-        Ref<VkContext> aContext, uint32_t aDescriptorSetCount, std::vector<VkDescriptorPoolSize> aPoolSizes )
+        Ref<VkGraphicContext> aContext, uint32_t aDescriptorSetCount, std::vector<VkDescriptorPoolSize> aPoolSizes )
         : mContext{ aContext }
     {
         mVkObject = mContext->CreateDescriptorPool( aDescriptorSetCount, aPoolSizes );
@@ -193,7 +193,7 @@ namespace SE::Graphics::Internal
             mContext, mVkObject, mContext->AllocateDescriptorSet( mVkObject, aLayout->mVkObject, aDescriptorCount ) );
     }
 
-    sVkPipelineLayoutObject::sVkPipelineLayoutObject( Ref<VkContext> aContext,
+    sVkPipelineLayoutObject::sVkPipelineLayoutObject( Ref<VkGraphicContext> aContext,
         std::vector<Ref<sVkDescriptorSetLayoutObject>> aDescriptorSetLayout, std::vector<sPushConstantRange> aPushConstantRanges )
         : mContext{ aContext }
     {
@@ -292,7 +292,7 @@ namespace SE::Graphics::Internal
         }
     }
 
-    sVkPipelineObject::sVkPipelineObject( Ref<VkContext> aContext, uint8_t aSampleCount, sBufferLayout aVertexBufferLayout,
+    sVkPipelineObject::sVkPipelineObject( Ref<VkGraphicContext> aContext, uint8_t aSampleCount, sBufferLayout aVertexBufferLayout,
         sBufferLayout aInstanceBufferLayout, ePrimitiveTopology aTopology, eFaceCulling aCullMode, float aLineWidth,
         sDepthTesting aDepthTest, sBlending aBlending, std::vector<sShader> aShaderStages,
         Ref<sVkPipelineLayoutObject> aPipelineLayout, Ref<sVkAbstractRenderPassObject> aRenderPass )

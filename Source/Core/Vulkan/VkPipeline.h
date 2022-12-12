@@ -2,7 +2,7 @@
 
 #include "Core/Memory.h"
 
-#include "VkContext.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 #include "VkAbstractRenderPass.h"
 
 #include <memory>
@@ -18,12 +18,12 @@ namespace SE::Graphics::Internal
 
         sVkShaderModuleObject()                          = default;
         sVkShaderModuleObject( sVkShaderModuleObject & ) = default;
-        sVkShaderModuleObject( Ref<VkContext> mContext, std::vector<uint32_t> aByteCode );
+        sVkShaderModuleObject( Ref<VkGraphicContext> mContext, std::vector<uint32_t> aByteCode );
 
         ~sVkShaderModuleObject();
 
       private:
-        Ref<VkContext> mContext = nullptr;
+        Ref<VkGraphicContext> mContext = nullptr;
     };
 
     struct sVkDescriptorSetLayoutObject
@@ -32,12 +32,12 @@ namespace SE::Graphics::Internal
 
         sVkDescriptorSetLayoutObject()                                 = default;
         sVkDescriptorSetLayoutObject( sVkDescriptorSetLayoutObject & ) = default;
-        sVkDescriptorSetLayoutObject( Ref<VkContext> mContext, std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded );
+        sVkDescriptorSetLayoutObject( Ref<VkGraphicContext> mContext, std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded );
 
         ~sVkDescriptorSetLayoutObject();
 
       private:
-        Ref<VkContext> mContext = nullptr;
+        Ref<VkGraphicContext> mContext = nullptr;
     };
 
     enum class eShaderStageTypeFlags : uint32_t
@@ -68,7 +68,7 @@ namespace SE::Graphics::Internal
          *                     compilation
          * @param aShaderType The type of the shader we are compiling.
          */
-        ShaderModule( Ref<VkContext> mContext, std::string FilePaths, eShaderStageTypeFlags aShaderType );
+        ShaderModule( Ref<VkGraphicContext> mContext, std::string FilePaths, eShaderStageTypeFlags aShaderType );
 
         ~ShaderModule() = default;
 
@@ -127,7 +127,7 @@ namespace SE::Graphics::Internal
 
         sVkDescriptorSetObject()                           = default;
         sVkDescriptorSetObject( sVkDescriptorSetObject & ) = default;
-        sVkDescriptorSetObject( Ref<VkContext> aContext, VkDescriptorPool aDescriptorPool, VkDescriptorSet aDescriporSet );
+        sVkDescriptorSetObject( Ref<VkGraphicContext> aContext, VkDescriptorPool aDescriptorPool, VkDescriptorSet aDescriporSet );
 
         void Write( sBufferBindInfo aBuffers );
         void Write( sImageBindInfo aImages );
@@ -135,7 +135,7 @@ namespace SE::Graphics::Internal
         ~sVkDescriptorSetObject();
 
       private:
-        Ref<VkContext>   mContext        = nullptr;
+        Ref<VkGraphicContext>   mContext        = nullptr;
         VkDescriptorPool mDescriptorPool = VK_NULL_HANDLE;
     };
 
@@ -145,14 +145,14 @@ namespace SE::Graphics::Internal
 
         sVkDescriptorPoolObject()                            = default;
         sVkDescriptorPoolObject( sVkDescriptorPoolObject & ) = default;
-        sVkDescriptorPoolObject( Ref<VkContext> mContext, uint32_t aDescriptorSetCount, std::vector<VkDescriptorPoolSize> aPoolSizes );
+        sVkDescriptorPoolObject( Ref<VkGraphicContext> mContext, uint32_t aDescriptorSetCount, std::vector<VkDescriptorPoolSize> aPoolSizes );
 
         Ref<sVkDescriptorSetObject> Allocate( Ref<sVkDescriptorSetLayoutObject> aLayout, uint32_t aDescriptorCount = 0 );
 
         ~sVkDescriptorPoolObject();
 
       private:
-        Ref<VkContext> mContext = nullptr;
+        Ref<VkGraphicContext> mContext = nullptr;
     };
 
     struct sPushConstantRange
@@ -168,13 +168,13 @@ namespace SE::Graphics::Internal
 
         sVkPipelineLayoutObject()                            = default;
         sVkPipelineLayoutObject( sVkPipelineLayoutObject & ) = default;
-        sVkPipelineLayoutObject( Ref<VkContext> aContext, std::vector<Ref<sVkDescriptorSetLayoutObject>> aDescriptorSetLayout,
+        sVkPipelineLayoutObject( Ref<VkGraphicContext> aContext, std::vector<Ref<sVkDescriptorSetLayoutObject>> aDescriptorSetLayout,
                                  std::vector<sPushConstantRange> aPushConstantRanges );
 
         ~sVkPipelineLayoutObject();
 
       private:
-        Ref<VkContext> mContext = nullptr;
+        Ref<VkGraphicContext> mContext = nullptr;
     };
 
     enum class ePrimitiveTopology : uint32_t
@@ -338,7 +338,7 @@ namespace SE::Graphics::Internal
 
         sVkPipelineObject()                      = default;
         sVkPipelineObject( sVkPipelineObject & ) = default;
-        sVkPipelineObject( Ref<VkContext> aContext, uint8_t aSampleCount, sBufferLayout aVertexBufferLayout,
+        sVkPipelineObject( Ref<VkGraphicContext> aContext, uint8_t aSampleCount, sBufferLayout aVertexBufferLayout,
                            sBufferLayout aInstanceBufferLayout, ePrimitiveTopology aTopology, eFaceCulling aCullMode, float aLineWidth,
                            sDepthTesting aDepthTest, sBlending aBlending, std::vector<sShader> aShaderStages,
                            Ref<sVkPipelineLayoutObject> aPipelineLayout, Ref<sVkAbstractRenderPassObject> aRenderPass );
@@ -346,7 +346,7 @@ namespace SE::Graphics::Internal
         ~sVkPipelineObject();
 
       private:
-        Ref<VkContext> mContext = nullptr;
+        Ref<VkGraphicContext> mContext = nullptr;
     };
 
 } // namespace SE::Graphics::Internal

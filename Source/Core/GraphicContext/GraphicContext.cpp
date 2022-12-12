@@ -6,7 +6,7 @@ namespace SE::Graphics
     GraphicContext::GraphicContext( uint32_t a_Width, uint32_t a_Height, uint32_t a_SampleCount, std::string a_Title )
     {
         mViewportClient = SE::Core::New<IWindow>( a_Width, a_Height, a_Title );
-        mContext        = SE::Core::New<Internal::VkContext>( mViewportClient, true );
+        mContext        = SE::Core::New<Internal::VkGraphicContext>( mViewportClient, a_SampleCount, true );
 
         uint32_t                          lNumberOfDescriptorSets = 10000;
         std::vector<VkDescriptorPoolSize> lPoolSizes( 4 );

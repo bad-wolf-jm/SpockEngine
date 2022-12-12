@@ -23,6 +23,17 @@ using namespace SE::Core;
 
 namespace SE::Graphics::Internal
 {
+
+    enum class eBufferBindType : uint32_t
+    {
+        VERTEX_BUFFER  = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+        INDEX_BUFFER   = VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+        STORAGE_BUFFER = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+        UNIFORM_BUFFER = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        UNKNOWN        = VK_BUFFER_USAGE_TRANSFER_SRC_BIT
+    };
+
+
     class VkGraphicContext : public IGraphicContext
     {
       public:
@@ -160,7 +171,7 @@ namespace SE::Graphics::Internal
         std::set<VkSwapchainKHR>        mSwapChains;
 
       private:
-        Ref<IWindow> mWindow;
+        // Ref<IWindow> mWindow;
 
         VkInstance       mVkInstance            = VK_NULL_HANDLE;
         VkPhysicalDevice mVkPhysicalDevice      = VK_NULL_HANDLE;

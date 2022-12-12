@@ -2,7 +2,7 @@
 
 #include "Core/Memory.h"
 #include "Core/Vulkan/VkCommand.h"
-#include "Core/Vulkan/VkContext.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Graphics/Interface/IWindow.h"
 
 namespace SE::Graphics
@@ -13,7 +13,7 @@ namespace SE::Graphics
     class GraphicContext
     {
       public:
-        Ref<Internal::VkContext> mContext        = nullptr;
+        Ref<Internal::VkGraphicContext> mContext        = nullptr;
         Ref<IWindow>             mViewportClient = nullptr;
 
       public:
