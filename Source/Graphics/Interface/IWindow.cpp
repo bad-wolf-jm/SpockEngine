@@ -1,4 +1,4 @@
-#include "Window.h"
+#include "IWindow.h"
 #include "Engine/Engine.h"
 
 // std
@@ -8,21 +8,21 @@
 namespace SE::Core
 {
 
-    Window::Window( int a_Width, int a_Height, std::string a_Title )
-        : mWidth{ a_Width }
-        , mHeight{ a_Height }
-        , mWindowName{ a_Title }
+    IWindow::IWindow( int aWidth, int aHeight, std::string aTitle )
+        : mWidth{ aWidth }
+        , mHeight{ aHeight }
+        , mWindowName{ aTitle }
     {
         InitializeWindow();
     }
 
-    Window::~Window()
+    IWindow::~IWindow()
     {
         glfwDestroyWindow( mWindow );
         glfwTerminate();
     }
 
-    void Window::InitializeWindow()
+    void IWindow::InitializeWindow()
     {
         glfwInit();
 
@@ -55,7 +55,7 @@ namespace SE::Core
         mLastMousePosition = GetMousePosition();
     }
 
-    math::ivec2 Window::GetMousePosition()
+    math::ivec2 IWindow::GetMousePosition()
     {
         double lXPos, lYPos;
         glfwGetCursorPos( mWindow, &lXPos, &lYPos );
@@ -63,49 +63,49 @@ namespace SE::Core
         return math::vec2{ static_cast<int>( lXPos ), static_cast<int>( lYPos ) };
     }
 
-    math::vec2 Window::GetMainWindowSize()
+    math::vec2 IWindow::GetMainWindowSize()
     {
         int width, height;
         glfwGetWindowSize( mWindow, &width, &height );
         return { static_cast<float>( width ), static_cast<float>( height ) };
     }
 
-    math::ivec2 Window::GetFramebufferSize()
+    math::ivec2 IWindow::GetFramebufferSize()
     {
         int width, height;
         glfwGetFramebufferSize( mWindow, &width, &height );
         return { width, height };
     }
 
-    void Window::CreateWindowSurface( VkInstance instance, VkSurfaceKHR *surface )
+    void IWindow::CreateWindowSurface( VkInstance instance, VkSurfaceKHR *surface )
     {
         if( glfwCreateWindowSurface( instance, mWindow, nullptr, surface ) != VK_SUCCESS )
             throw std::runtime_error( "failed to crrete window surface" );
     }
 
-    void Window::OnFramebufferResize( GLFWwindow *aWindow, int width, int height )
+    void IWindow::OnFramebufferResize( GLFWwindow *aWindow, int width, int height )
     {
-        auto lWindow                    = reinterpret_cast<Window *>( glfwGetWindowUserPointer( aWindow ) );
+        auto lWindow                    = reinterpret_cast<IWindow *>( glfwGetWindowUserPointer( aWindow ) );
         lWindow->mFramebufferWasResized = true;
         lWindow->mWidth                 = width;
         lWindow->mHeight                = height;
     }
 
-    void Window::OnGLFWError( int error, const char *description ) { fprintf( stderr, "Error: %s\n", description ); }
+    void IWindow::OnGLFWError( int error, const char *description ) { fprintf( stderr, "Error: %s\n", description ); }
 
-    void Window::OnWindowClose( GLFWwindow *aWindow )
+    void IWindow::OnWindowClose( GLFWwindow *aWindow )
     {
-        auto lWindow = reinterpret_cast<Window *>( glfwGetWindowUserPointer( aWindow ) );
+        auto lWindow = reinterpret_cast<IWindow *>( glfwGetWindowUserPointer( aWindow ) );
     }
 
-    void Window::OnWindowRefresh( GLFWwindow *aWindow )
+    void IWindow::OnWindowRefresh( GLFWwindow *aWindow )
     {
-        auto lWindow = reinterpret_cast<Window *>( glfwGetWindowUserPointer( aWindow ) );
+        auto lWindow = reinterpret_cast<IWindow *>( glfwGetWindowUserPointer( aWindow ) );
     }
 
-    void Window::OnKey( GLFWwindow *aWindow, const int aKey, int aScanCode, const int aAction, const int aModifiers )
+    void IWindow::OnKey( GLFWwindow *aWindow, const int aKey, int aScanCode, const int aAction, const int aModifiers )
     {
-        auto lWindow = reinterpret_cast<Window *>( glfwGetWindowUserPointer( aWindow ) );
+        auto lWindow = reinterpret_cast<IWindow *>( glfwGetWindowUserPointer( aWindow ) );
 
         UserEvent lUserEvent;
 
@@ -125,9 +125,9 @@ namespace SE::Core
         lWindow->mEngineLoop->IOEvent( lUserEvent );
     }
 
-    void Window::OnMouseButton( GLFWwindow *aWindow, const int button, const int aAction, const int aModifiers )
+    void IWindow::OnMouseButton( GLFWwindow *aWindow, const int aButton, const int aAction, const int aModifiers )
     {
-        auto lWindow = reinterpret_cast<Window *>( glfwGetWindowUserPointer( aWindow ) );
+        auto lWindow = reinterpret_cast<IWindow *>( glfwGetWindowUserPointer( aWindow ) );
 
         UserEvent lUserEvent;
 
@@ -147,9 +147,9 @@ namespace SE::Core
         lWindow->mEngineLoop->IOEvent( lUserEvent );
     }
 
-    void Window::OnCursorPosition( GLFWwindow *aWindow, const double x, const double y )
+    void IWindow::OnCursorPosition( GLFWwindow *aWindow, const double x, const double y )
     {
-        auto lWindow = reinterpret_cast<Window *>( glfwGetWindowUserPointer( aWindow ) );
+        auto lWindow = reinterpret_cast<IWindow *>( glfwGetWindowUserPointer( aWindow ) );
 
         UserEvent lUserEvent;
         lUserEvent.Type = EventType::MOUSE_MOVE;
@@ -167,9 +167,9 @@ namespace SE::Core
         lWindow->mEngineLoop->IOEvent( lUserEvent );
     }
 
-    void Window::OnMouseScroll( GLFWwindow *aWindow, const double dx, const double dy )
+    void IWindow::OnMouseScroll( GLFWwindow *aWindow, const double dx, const double dy )
     {
-        auto lWindow = reinterpret_cast<Window *>( glfwGetWindowUserPointer( aWindow ) );
+        auto lWindow = reinterpret_cast<IWindow *>( glfwGetWindowUserPointer( aWindow ) );
 
         UserEvent lUserEvent;
         lUserEvent.Type = EventType::MOUSE_SCROLL;
@@ -184,9 +184,9 @@ namespace SE::Core
         lWindow->mEngineLoop->IOEvent( lUserEvent );
     }
 
-    void Window::OnTextInput( GLFWwindow *aWindow, unsigned int codepoint )
+    void IWindow::OnTextInput( GLFWwindow *aWindow, unsigned int codepoint )
     {
-        auto lWindow = reinterpret_cast<Window *>( glfwGetWindowUserPointer( aWindow ) );
+        auto lWindow = reinterpret_cast<IWindow *>( glfwGetWindowUserPointer( aWindow ) );
 
         UserEvent lUserEvent;
         lUserEvent.MousePosition = lWindow->mLastMousePosition;

@@ -11,7 +11,6 @@
 
 // #include <entt/entt.hpp>
 
-
 namespace SE::Core
 {
 
@@ -206,25 +205,25 @@ namespace SE::Core
      *
      *  Wrapper around a GLFW3 window.
      */
-    class Window
+    class IWindow
     {
       public:
         /** @brief Constructor
          *
          * Constructs a window with the given size and title.
          *
-         * @param a_Width  The desired width of the window
-         * @param a_Height The desired height of the window
-         * @param a_Title  Window title
+         * @param aWidth  The desired width of the window
+         * @param aHeight The desired height of the window
+         * @param aTitle  Window title
          */
-        Window( int a_Width, int a_Height, std::string a_Title );
+        IWindow( int aWidth, int aHeight, std::string aTitle );
 
         /** @brief Destructor */
-        ~Window();
+        ~IWindow();
 
         /** @brief Not copyable */
-        Window( const Window & ) = delete;
-        Window &operator=( const Window & ) = delete;
+        IWindow( const IWindow & )            = delete;
+        IWindow &operator=( const IWindow & ) = delete;
 
         /** @brief Should we close the window
          *
@@ -260,10 +259,10 @@ namespace SE::Core
          *
          * Throws a std::runtime_error if the surface could not be created.
          *
-         * @param  a_Instance The Vulkan instance that the surface wil be created in
+         * @param  aInstance The Vulkan instance that the surface wil be created in
          * @param  o_Surface  Pointer to the location the surface is stored in.
          */
-        void CreateWindowSurface( VkInstance a_Instance, VkSurfaceKHR *o_Surface );
+        void CreateWindowSurface( VkInstance aInstance, VkSurfaceKHR *o_Surface );
 
         /** @brief */
         math::vec2 GetMainWindowSize();
@@ -275,10 +274,10 @@ namespace SE::Core
         GLFWwindow *GetGLFWWindow() { return mWindow; }
 
         /** @brief */
-        void SetEngineLoop( Engine *a_EngineLoop ) { mEngineLoop = a_EngineLoop; }
+        void SetEngineLoop( Engine *aEngineLoop ) { mEngineLoop = aEngineLoop; }
 
         /** @brief */
-        void SetTitle( std::string a_Title ) { glfwSetWindowTitle( mWindow, a_Title.c_str() ); }
+        void SetTitle( std::string aTitle ) { glfwSetWindowTitle( mWindow, aTitle.c_str() ); }
 
         math::ivec2 GetMousePosition();
 
@@ -303,6 +302,6 @@ namespace SE::Core
 
         std::string mWindowName = "";
         GLFWwindow *mWindow     = nullptr;
-        Engine *mEngineLoop = nullptr;
+        Engine     *mEngineLoop = nullptr;
     };
 } // namespace SE::Core
