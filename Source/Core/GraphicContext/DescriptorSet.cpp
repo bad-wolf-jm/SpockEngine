@@ -10,7 +10,9 @@ namespace SE::Graphics
         : mGraphicContext{ aGraphicContext }
         , mLayout{ aLayout }
     {
-        mDescriptorSetObject = mGraphicContext.AllocateDescriptors( aLayout->GetVkDescriptorSetLayoutObject(), aDescriptorCount );
+        mDescriptorSetObject = SE::Core::New<sVkDescriptorSetObject>(
+            aGraphicContext.mContext, aGraphicContext.mContext->AllocateDescriptorSet(
+                                          aLayout->GetVkDescriptorSetLayoutObject()->mVkObject, aDescriptorCount ) );
     }
 
     void DescriptorSet::Write( Ref<VkGpuBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding )

@@ -21,11 +21,5 @@ namespace SE::Graphics
         GraphicContext( Ref<Internal::VkGraphicContext>, Ref<IWindow> );
 
         ~GraphicContext() = default;
-
-        Ref<Internal::sVkDescriptorSetObject> AllocateDescriptors( Ref<Internal::sVkDescriptorSetLayoutObject> aLayout,
-                                                                   uint32_t                                    aDescriptorCount = 0 );
-
-      private:
-        Ref<Internal::sVkDescriptorPoolObject> mDescriptorPool;
     };
 } // namespace SE::Graphics

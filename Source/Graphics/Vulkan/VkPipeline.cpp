@@ -180,7 +180,7 @@ namespace SE::Graphics::Internal
         Ref<VkGraphicContext> aContext, uint32_t aDescriptorSetCount, std::vector<VkDescriptorPoolSize> aPoolSizes )
         : mContext{ aContext }
     {
-        mVkObject = mContext->CreateDescriptorPool( aDescriptorSetCount, aPoolSizes );
+        // mVkObject = mContext->CreateDescriptorPool( aDescriptorSetCount, aPoolSizes );
     }
 
     sVkDescriptorPoolObject::~sVkDescriptorPoolObject() { mContext->DestroyDescriptorPool( mVkObject ); }
