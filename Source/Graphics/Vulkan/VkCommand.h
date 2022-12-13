@@ -84,7 +84,7 @@ namespace SE::Graphics::Internal
         void SubmitTo( VkQueue aQueue );
 
       private:
-        Ref<VkGraphicContext>                    mContext                  = nullptr;
+        Ref<VkGraphicContext>             mContext                  = nullptr;
         VkFence                           mSubmitFence              = nullptr;
         std::vector<VkSemaphore>          mSubmitWaitSemaphores     = {};
         std::vector<VkPipelineStageFlags> mSubmitWaitSemaphoreStage = {};

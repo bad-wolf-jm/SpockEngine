@@ -16,8 +16,9 @@
 
 #include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//SwapChain.h"
-#include "Graphics/Interface/IWindow.h"
 #include "Core/Optix/OptixContext.h"
+#include "Graphics/Interface/IWindow.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "Core/GraphicContext//UI/UIContext.h"
 
@@ -25,6 +26,7 @@
 /** @brief */
 namespace SE::Core
 {
+
     /** @class Engine
      *
      * This class encapsulates the main engine loop. It is responsible for all the initialization
@@ -130,8 +132,9 @@ namespace SE::Core
         std::vector<std::function<void()>> mMainThreadQueue;
         std::mutex                         mMainThreadQueueMutex;
 
-        Ref<SE::Core::IWindow>        mViewportClient;
-        SE::Graphics::GraphicContext mGraphicContext;
+        Ref<SE::Core::IWindow>          mViewportClient;
+        Ref< SE::Graphics::Internal::VkGraphicContext> mVkContext = nullptr;
+        SE::Graphics::GraphicContext    mGraphicContext;
 
         Ref<SE::Core::UIContext> mImGUIOverlay;
 

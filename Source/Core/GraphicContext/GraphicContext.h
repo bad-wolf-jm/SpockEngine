@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Core/Memory.h"
+#include "Graphics/Interface/IWindow.h"
 #include "Graphics/Vulkan/VkCommand.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
-#include "Graphics/Interface/IWindow.h"
 
 namespace SE::Graphics
 {
@@ -14,24 +14,18 @@ namespace SE::Graphics
     {
       public:
         Ref<Internal::VkGraphicContext> mContext        = nullptr;
-        Ref<IWindow>             mViewportClient = nullptr;
+        Ref<IWindow>                    mViewportClient = nullptr;
 
       public:
         GraphicContext() = default;
-        GraphicContext( uint32_t aWidth, uint32_t aHeight, uint32_t aSampleCount, std::string aTitle );
+        GraphicContext( Ref<Internal::VkGraphicContext>, Ref<IWindow> );
 
         ~GraphicContext() = default;
 
-        Ref<IWindow> GetViewportClient() { return mViewportClient; };
+        Ref<IWindow> GetWindow() { return mViewportClient; };
 
         Ref<Internal::sVkDescriptorSetObject> AllocateDescriptors( Ref<Internal::sVkDescriptorSetLayoutObject> aLayout,
                                                                    uint32_t                                    aDescriptorCount = 0 );
-
-        Ref<Internal::sVkCommandBufferObject> BeginSingleTimeCommands();
-
-        void EndSingleTimeCommands( Ref<Internal::sVkCommandBufferObject> commandBuffer );
-
-        void WaitIdle();
 
       private:
         Ref<Internal::sVkDescriptorPoolObject> mDescriptorPool;

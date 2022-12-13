@@ -13,8 +13,8 @@ namespace SE::Graphics
 
     void SwapChain::RecreateSwapChain()
     {
-        mRenderTargets.clear();
         mGraphicContext.mContext->WaitIdle();
+        mRenderTargets.clear();
 
         auto [lSwapChainImageFormat, lSwapChainImageCount, lSwapchainExtent, lNewSwapchain] =
             mGraphicContext.mContext->CreateSwapChain();

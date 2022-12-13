@@ -2,11 +2,10 @@
 
 namespace SE::Graphics
 {
-
-    GraphicContext::GraphicContext( uint32_t a_Width, uint32_t a_Height, uint32_t a_SampleCount, std::string a_Title )
+    GraphicContext::GraphicContext( Ref<Internal::VkGraphicContext> aContext, Ref<IWindow> aWindow )
+        : mViewportClient{ aWindow }
+        , mContext{ aContext }
     {
-        mViewportClient = SE::Core::New<IWindow>( a_Width, a_Height, a_Title );
-        mContext        = SE::Core::New<Internal::VkGraphicContext>( mViewportClient, a_SampleCount, true );
 
         uint32_t                          lNumberOfDescriptorSets = 10000;
         std::vector<VkDescriptorPoolSize> lPoolSizes( 4 );
@@ -23,20 +22,4 @@ namespace SE::Graphics
     {
         return mDescriptorPool->Allocate( aLayout, aDescriptorCount );
     }
-
-    Ref<Internal::sVkCommandBufferObject> GraphicContext::BeginSingleTimeCommands()
-    {
-        Ref<Internal::sVkCommandBufferObject> lCommandBuffer = SE::Core::New<Internal::sVkCommandBufferObject>( mContext );
-        lCommandBuffer->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
-        return lCommandBuffer;
-    }
-
-    void GraphicContext::EndSingleTimeCommands( Ref<Internal::sVkCommandBufferObject> aCommandBuffer )
-    {
-        aCommandBuffer->End();
-        aCommandBuffer->SubmitTo( mContext->GetGraphicsQueue() );
-        mContext->WaitIdle( mContext->GetGraphicsQueue() );
-    }
-
-    void GraphicContext::WaitIdle() { mContext->WaitIdle(); }
 } // namespace SE::Graphics

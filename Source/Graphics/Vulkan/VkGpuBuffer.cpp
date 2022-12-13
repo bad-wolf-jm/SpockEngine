@@ -16,14 +16,14 @@ namespace SE::Graphics
     static constexpr VkDeviceSize gBufferMemoryAlignment = 256;
 
     VkGpuBuffer::VkGpuBuffer( GraphicContext &aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
-                        bool aIsTransferDestination, size_t aSize )
+                              bool aIsTransferDestination, size_t aSize )
         : VkGpuBuffer::VkGpuBuffer( aGraphicContext, eBufferBindType::UNKNOWN, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
-                              aIsTransferDestination, aSize )
+                                    aIsTransferDestination, aSize )
     {
     }
 
     VkGpuBuffer::VkGpuBuffer( GraphicContext &aGraphicContext, eBufferBindType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
-                        bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
+                              bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
         : mGraphicContext{ aGraphicContext }
         , mSize{ aSize }
         , mType{ aType }
@@ -55,7 +55,8 @@ namespace SE::Graphics
             lExternalMemBufferDesc.offset = 0;
             lExternalMemBufferDesc.flags  = 0;
             lExternalMemBufferDesc.size   = mSizeAligned;
-            CUDA_ASSERT( cudaExternalMemoryGetMappedBuffer( (void **)&mDevicePointer, mExternalMemoryHandle, &lExternalMemBufferDesc ) );
+            CUDA_ASSERT(
+                cudaExternalMemoryGetMappedBuffer( (void **)&mDevicePointer, mExternalMemoryHandle, &lExternalMemBufferDesc ) );
         }
     }
 
@@ -81,9 +82,13 @@ namespace SE::Graphics
             auto lStagingBuffer = VkGpuBuffer( mGraphicContext, eBufferBindType::UNKNOWN, true, false, true, false, aSize );
             lStagingBuffer.Upload( aData, aSize, 0 );
 
-            Ref<Internal::sVkCommandBufferObject> l_CommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
-            l_CommandBufferObject->CopyBuffer( lStagingBuffer.mVkBuffer, 0, lStagingBuffer.mSize, mVkBuffer, aOffset );
-            mGraphicContext.EndSingleTimeCommands( l_CommandBufferObject );
+            Ref<Internal::sVkCommandBufferObject> lCommandBuffer =
+                SE::Core::New<Internal::sVkCommandBufferObject>( mGraphicContext.mContext );
+            lCommandBuffer->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
+            lCommandBuffer->CopyBuffer( lStagingBuffer.mVkBuffer, 0, lStagingBuffer.mSize, mVkBuffer, aOffset );
+            lCommandBuffer->End();
+            lCommandBuffer->SubmitTo( mGraphicContext.mContext->GetGraphicsQueue() );
+            mGraphicContext.mContext->WaitIdle( mGraphicContext.mContext->GetGraphicsQueue() );
         }
         else
         {
@@ -97,9 +102,14 @@ namespace SE::Graphics
 
     void VkGpuBuffer::Copy( Ref<VkGpuBuffer> aSource, size_t aOffset )
     {
-        Ref<Internal::sVkCommandBufferObject> l_CommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
-        l_CommandBufferObject->CopyBuffer( aSource->mVkBuffer, 0, aSource->mSize, mVkBuffer, aOffset );
-        mGraphicContext.EndSingleTimeCommands( l_CommandBufferObject );
+
+        Ref<Internal::sVkCommandBufferObject> lCommandBuffer =
+            SE::Core::New<Internal::sVkCommandBufferObject>( mGraphicContext.mContext );
+        lCommandBuffer->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
+        lCommandBuffer->CopyBuffer( aSource->mVkBuffer, 0, aSource->mSize, mVkBuffer, aOffset );
+        lCommandBuffer->End();
+        lCommandBuffer->SubmitTo( mGraphicContext.mContext->GetGraphicsQueue() );
+        mGraphicContext.mContext->WaitIdle( mGraphicContext.mContext->GetGraphicsQueue() );
     }
 
     void VkGpuBuffer::Resize( size_t aNewSizeInBytes )
@@ -109,7 +119,7 @@ namespace SE::Graphics
         mGraphicContext.mContext->DestroyBuffer( mVkBuffer );
         mGraphicContext.mContext->FreeMemory( mVkMemory );
 
-        mSize = aNewSizeInBytes;
+        mSize        = aNewSizeInBytes;
         mSizeAligned = ( ( mSize - 1 ) / gBufferMemoryAlignment + 1 ) * gBufferMemoryAlignment;
 
         VkBufferUsageFlags lBufferFlags = (VkBufferUsageFlags)mType;

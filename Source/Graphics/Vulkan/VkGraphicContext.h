@@ -33,7 +33,6 @@ namespace SE::Graphics::Internal
         UNKNOWN        = VK_BUFFER_USAGE_TRANSFER_SRC_BIT
     };
 
-
     class VkGraphicContext : public IGraphicContext
     {
       public:
@@ -190,5 +189,8 @@ namespace SE::Graphics::Internal
         VkPhysicalDeviceProperties mPhysicalDeviceProperties;
         uint32_t                   mGraphicFamily = std::numeric_limits<uint32_t>::max();
         uint32_t                   mPresentFamily = std::numeric_limits<uint32_t>::max();
+
+      private:
+        VkDescriptorPool mVkDescriptorPool = VK_NULL_HANDLE;
     };
 } // namespace SE::Graphics::Internal

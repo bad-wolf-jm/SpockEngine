@@ -470,6 +470,13 @@ namespace SE::Graphics::Internal
         lGraphicsCommandPoolCreateInfo.queueFamilyIndex = mGraphicFamily;
         lGraphicsCommandPoolCreateInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
         VK_CHECK_RESULT( vkCreateCommandPool( mVkLogicalDevice, &lGraphicsCommandPoolCreateInfo, nullptr, &mVkGraphicsCommandPool ) );
+
+        std::vector<VkDescriptorPoolSize> lPoolSizes( 4 );
+        lPoolSizes[0]     = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 10000 };
+        lPoolSizes[1]     = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 10000 };
+        lPoolSizes[2]     = { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 10000 };
+        lPoolSizes[3]     = { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 10000 };
+        mVkDescriptorPool = CreateDescriptorPool( 10000, lPoolSizes );
     }
 
     VkGraphicContext::~VkGraphicContext()

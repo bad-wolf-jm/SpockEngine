@@ -2,8 +2,8 @@
 
 #include "Core/Memory.h"
 
-#include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Graphics/Vulkan/VkAbstractRenderPass.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include <memory>
 #include <vulkan/vulkan.h>
@@ -32,7 +32,8 @@ namespace SE::Graphics::Internal
 
         sVkDescriptorSetLayoutObject()                                 = default;
         sVkDescriptorSetLayoutObject( sVkDescriptorSetLayoutObject & ) = default;
-        sVkDescriptorSetLayoutObject( Ref<VkGraphicContext> mContext, std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded );
+        sVkDescriptorSetLayoutObject( Ref<VkGraphicContext> mContext, std::vector<VkDescriptorSetLayoutBinding> aBindings,
+                                      bool aUnbounded );
 
         ~sVkDescriptorSetLayoutObject();
 
@@ -135,8 +136,8 @@ namespace SE::Graphics::Internal
         ~sVkDescriptorSetObject();
 
       private:
-        Ref<VkGraphicContext>   mContext        = nullptr;
-        VkDescriptorPool mDescriptorPool = VK_NULL_HANDLE;
+        Ref<VkGraphicContext> mContext        = nullptr;
+        VkDescriptorPool      mDescriptorPool = VK_NULL_HANDLE;
     };
 
     struct sVkDescriptorPoolObject
@@ -145,7 +146,8 @@ namespace SE::Graphics::Internal
 
         sVkDescriptorPoolObject()                            = default;
         sVkDescriptorPoolObject( sVkDescriptorPoolObject & ) = default;
-        sVkDescriptorPoolObject( Ref<VkGraphicContext> mContext, uint32_t aDescriptorSetCount, std::vector<VkDescriptorPoolSize> aPoolSizes );
+        sVkDescriptorPoolObject( Ref<VkGraphicContext> mContext, uint32_t aDescriptorSetCount,
+                                 std::vector<VkDescriptorPoolSize> aPoolSizes );
 
         Ref<sVkDescriptorSetObject> Allocate( Ref<sVkDescriptorSetLayoutObject> aLayout, uint32_t aDescriptorCount = 0 );
 
@@ -288,7 +290,7 @@ namespace SE::Graphics::Internal
         MIN              = VK_BLEND_OP_MIN,
         MAX              = VK_BLEND_OP_MAX
     };
-    
+
     enum class eBlendFactor : uint32_t
     {
         ZERO                     = VK_BLEND_FACTOR_ZERO,
