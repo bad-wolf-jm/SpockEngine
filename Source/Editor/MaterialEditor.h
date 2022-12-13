@@ -1,10 +1,10 @@
 #pragma once
 #include <string>
 
-#include "Core/Memory.h"
 #include "Core/EntityRegistry/Registry.h"
+#include "Core/Memory.h"
 
-#include "Core/GraphicContext//GraphicContext.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Scene/Scene.h"
 
 #include "Engine/Engine.h"
@@ -16,7 +16,7 @@ namespace SE::Editor
     class MaterialEditor
     {
       public:
-        Entity ElementToEdit{};
+        Entity     ElementToEdit{};
         Ref<Scene> World;
 
       public:

@@ -9,6 +9,7 @@
 #include "Core/CUDA/Array/CudaBuffer.h"
 #include "Core/CUDA/CudaAssert.h"
 
+#include "VkCommand.h"
 #include "VkGpuBuffer.h"
 
 namespace SE::Graphics
@@ -16,8 +17,8 @@ namespace SE::Graphics
     using namespace Internal;
 
     /** @brief */
-    VkTexture2D::VkTexture2D( GraphicContext &aGraphicContext, TextureData2D &mTextureData, uint8_t aSampleCount, bool aIsHostVisible,
-                              bool aIsGraphicsOnly, bool aIsTransferSource )
+    VkTexture2D::VkTexture2D( Ref<VkGraphicContext> aGraphicContext, TextureData2D &mTextureData, uint8_t aSampleCount,
+                              bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
         : mGraphicContext( aGraphicContext )
         , mSpec{ mTextureData.mSpec }
         , mSampleCount{ VK_SAMPLE_COUNT_VALUE( aSampleCount ) }
@@ -26,7 +27,7 @@ namespace SE::Graphics
         , mIsTransferSource{ aIsTransferSource }
         , mIsTransferDestination{ false }
     {
-        if( mSpec.mIsDepthTexture ) mSpec.mFormat = ToLtseFormat( mGraphicContext.mContext->GetDepthFormat() );
+        if( mSpec.mIsDepthTexture ) mSpec.mFormat = ToLtseFormat( mGraphicContext->GetDepthFormat() );
 
         CreateImage();
         AllocateMemory();
@@ -41,7 +42,7 @@ namespace SE::Graphics
         TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
     }
 
-    VkTexture2D::VkTexture2D( GraphicContext &aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+    VkTexture2D::VkTexture2D( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
                               uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                               bool aIsTransferDestination )
         : mGraphicContext( aGraphicContext )
@@ -52,7 +53,7 @@ namespace SE::Graphics
         , mIsTransferSource{ aIsTransferSource }
         , mIsTransferDestination{ aIsTransferDestination }
     {
-        if( mSpec.mIsDepthTexture ) mSpec.mFormat = ToLtseFormat( mGraphicContext.mContext->GetDepthFormat() );
+        if( mSpec.mIsDepthTexture ) mSpec.mFormat = ToLtseFormat( mGraphicContext->GetDepthFormat() );
 
         CreateImage();
         AllocateMemory();
@@ -60,7 +61,7 @@ namespace SE::Graphics
         ConfigureExternalMemoryHandle();
     }
 
-    VkTexture2D::VkTexture2D( GraphicContext &aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+    VkTexture2D::VkTexture2D( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
                               VkImage aExternalImage )
         : mGraphicContext( aGraphicContext )
         , mSpec( aTextureImageDescription )
@@ -71,23 +72,23 @@ namespace SE::Graphics
         , mIsTransferDestination{ false }
         , mVkImage{ aExternalImage }
     {
-        if( mSpec.mIsDepthTexture ) mSpec.mFormat = ToLtseFormat( mGraphicContext.mContext->GetDepthFormat() );
+        if( mSpec.mIsDepthTexture ) mSpec.mFormat = ToLtseFormat( mGraphicContext->GetDepthFormat() );
     }
 
     void VkTexture2D::CreateImage()
     {
-        mVkImage = mGraphicContext.mContext->CreateImage(
+        mVkImage = mGraphicContext->CreateImage(
             mSpec.mWidth, mSpec.mHeight, mSpec.mDepth, mSpec.mMipLevels, mSpec.mLayers, mSampleCount, !mIsGraphicsOnly, false,
-            mSpec.mIsDepthTexture ? mGraphicContext.mContext->GetDepthFormat() : ToVkFormat( mSpec.mFormat ), MemoryProperties(),
+            mSpec.mIsDepthTexture ? mGraphicContext->GetDepthFormat() : ToVkFormat( mSpec.mFormat ), MemoryProperties(),
             ImageUsage() );
     }
 
     void VkTexture2D::AllocateMemory()
     {
-        mVkMemory = mGraphicContext.mContext->AllocateMemory( mVkImage, 0, mIsHostVisible, !mIsGraphicsOnly, &mMemorySize );
+        mVkMemory = mGraphicContext->AllocateMemory( mVkImage, 0, mIsHostVisible, !mIsGraphicsOnly, &mMemorySize );
     }
 
-    void VkTexture2D::BindMemory() { mGraphicContext.mContext->BindMemory( mVkImage, mVkMemory ); }
+    void VkTexture2D::BindMemory() { mGraphicContext->BindMemory( mVkImage, mVkMemory ); }
 
     VkMemoryPropertyFlags VkTexture2D::MemoryProperties()
     {
@@ -122,7 +123,7 @@ namespace SE::Graphics
         lCudaExternalMemoryHandleDesc.type                = cudaExternalMemoryHandleTypeOpaqueWin32;
         lCudaExternalMemoryHandleDesc.size                = mMemorySize;
         lCudaExternalMemoryHandleDesc.flags               = 0;
-        lCudaExternalMemoryHandleDesc.handle.win32.handle = (HANDLE)mGraphicContext.mContext->GetSharedMemoryHandle( mVkMemory );
+        lCudaExternalMemoryHandleDesc.handle.win32.handle = (HANDLE)mGraphicContext->GetSharedMemoryHandle( mVkMemory );
         CUDA_ASSERT( cudaImportExternalMemory( &mExternalMemoryHandle, &lCudaExternalMemoryHandleDesc ) );
 
         cudaExternalMemoryMipmappedArrayDesc lExternalMemoryMipmappedArrayDesc{};
@@ -142,7 +143,7 @@ namespace SE::Graphics
     {
         // Ref<sVkCommandBufferObject> lCommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
         Ref<Internal::sVkCommandBufferObject> lCommandBufferObject =
-            SE::Core::New<Internal::sVkCommandBufferObject>( mGraphicContext.mContext );
+            SE::Core::New<Internal::sVkCommandBufferObject>( mGraphicContext );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
 
         std::vector<sImageRegion> lBufferCopyRegions;
@@ -173,21 +174,21 @@ namespace SE::Graphics
 
         // mGraphicContext.EndSingleTimeCommands( lCommandBufferObject );
         lCommandBufferObject->End();
-        lCommandBufferObject->SubmitTo( mGraphicContext.mContext->GetGraphicsQueue() );
-        mGraphicContext.mContext->WaitIdle( mGraphicContext.mContext->GetGraphicsQueue() );
+        lCommandBufferObject->SubmitTo( mGraphicContext->GetGraphicsQueue() );
+        mGraphicContext->WaitIdle( mGraphicContext->GetGraphicsQueue() );
     }
 
     void VkTexture2D::TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout )
     {
         Ref<Internal::sVkCommandBufferObject> lCommandBufferObject =
-            SE::Core::New<Internal::sVkCommandBufferObject>( mGraphicContext.mContext );
+            SE::Core::New<Internal::sVkCommandBufferObject>( mGraphicContext );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         // Ref<sVkCommandBufferObject> lCommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
         lCommandBufferObject->ImageMemoryBarrier( mVkImage, aOldLayout, aNewLayout, mSpec.mMipLevels, 1 );
         // mGraphicContext.EndSingleTimeCommands( lCommandBufferObject );
         lCommandBufferObject->End();
-        lCommandBufferObject->SubmitTo( mGraphicContext.mContext->GetGraphicsQueue() );
-        mGraphicContext.mContext->WaitIdle( mGraphicContext.mContext->GetGraphicsQueue() );
+        lCommandBufferObject->SubmitTo( mGraphicContext->GetGraphicsQueue() );
+        mGraphicContext->WaitIdle( mGraphicContext->GetGraphicsQueue() );
     }
 
     void VkTexture2D::GetTextureData( TextureData2D &mTextureData )
@@ -215,14 +216,14 @@ namespace SE::Graphics
 
         TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL );
         Ref<Internal::sVkCommandBufferObject> lCommandBufferObject =
-            SE::Core::New<Internal::sVkCommandBufferObject>( mGraphicContext.mContext );
+            SE::Core::New<Internal::sVkCommandBufferObject>( mGraphicContext );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         // Ref<sVkCommandBufferObject> lCommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
         lCommandBufferObject->CopyImage( mVkImage, lStagingBuffer.mVkBuffer, lBufferCopyRegions, 0 );
         // mGraphicContext.EndSingleTimeCommands( lCommandBufferObject );
         lCommandBufferObject->End();
-        lCommandBufferObject->SubmitTo( mGraphicContext.mContext->GetGraphicsQueue() );
-        mGraphicContext.mContext->WaitIdle( mGraphicContext.mContext->GetGraphicsQueue() );
+        lCommandBufferObject->SubmitTo( mGraphicContext->GetGraphicsQueue() );
+        mGraphicContext->WaitIdle( mGraphicContext->GetGraphicsQueue() );
         TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
 
         uint8_t *lPixelData = lStagingBuffer.Map<uint8_t>( lByteSize, 0 );

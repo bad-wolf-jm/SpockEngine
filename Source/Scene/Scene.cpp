@@ -34,7 +34,7 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem;
     using namespace SE::Core::EntityComponentSystem::Components;
 
-    Scene::Scene( GraphicContext &a_GraphicContext, Ref<SE::Core::UIContext> a_UI )
+    Scene::Scene( Ref<VkGraphicContext> a_GraphicContext, Ref<SE::Core::UIContext> a_UI )
         : mGraphicContext{ a_GraphicContext }
     {
         mMaterialSystem = New<MaterialSystem>( a_GraphicContext );

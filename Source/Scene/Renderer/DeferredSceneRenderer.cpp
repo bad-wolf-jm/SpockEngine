@@ -5,7 +5,8 @@ namespace SE::Core
 {
     using namespace Graphics;
 
-    DeferredRenderer::DeferredRenderer( GraphicContext aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
+    DeferredRenderer::DeferredRenderer( Ref<VkGraphicContext> aGraphicContext, eColorFormat aOutputFormat,
+                                        uint32_t aOutputSampleCount )
         : ASceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {
         // Internal uniform buffers

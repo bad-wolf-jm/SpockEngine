@@ -44,7 +44,7 @@ namespace SE::Graphics
     }
 
     /** @brief */
-    VkSampler2D::VkSampler2D( GraphicContext &aGraphicContext, Ref<VkTexture2D> aTextureData,
+    VkSampler2D::VkSampler2D( Ref<VkGraphicContext> aGraphicContext, Ref<VkTexture2D> aTextureData,
                               sTextureSamplingInfo const &aSamplingSpec )
         : mGraphicContext( aGraphicContext )
         , mTextureData{ aTextureData }
@@ -61,12 +61,11 @@ namespace SE::Graphics
         else
             lImageAspect |= VK_IMAGE_ASPECT_COLOR_BIT;
 
-        mVkImageView =
-            mGraphicContext.mContext->CreateImageView( mTextureData->mVkImage, mTextureData->mSpec.mLayers, VK_IMAGE_VIEW_TYPE_2D,
-                                                       ToVkFormat( mTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
+        mVkImageView = mGraphicContext->CreateImageView( mTextureData->mVkImage, mTextureData->mSpec.mLayers, VK_IMAGE_VIEW_TYPE_2D,
+                                                         ToVkFormat( mTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
 
-        mVkImageSampler = mGraphicContext.mContext->CreateSampler( Convert( mSpec.mFilter ), Convert( mSpec.mFilter ),
-                                                                   Convert( mSpec.mWrapping ), Convert( mSpec.mMipFilter ) );
+        mVkImageSampler = mGraphicContext->CreateSampler( Convert( mSpec.mFilter ), Convert( mSpec.mFilter ),
+                                                          Convert( mSpec.mWrapping ), Convert( mSpec.mMipFilter ) );
 
         if( mTextureData->mIsGraphicsOnly ) return;
 

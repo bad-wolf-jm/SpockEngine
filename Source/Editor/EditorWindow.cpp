@@ -202,7 +202,7 @@ namespace SE::Editor
         }
     }
 
-    EditorWindow::EditorWindow( GraphicContext &aGraphicContext, Ref<UIContext> aUIOverlay )
+    EditorWindow::EditorWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
         : mGraphicContext{ aGraphicContext }
         , mUIOverlay{ aUIOverlay }
     {

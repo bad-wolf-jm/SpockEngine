@@ -6,12 +6,12 @@
 #include "Core/Memory.h"
 
 #include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
 
 #include "Scene/VertexData.h"
 
 #include "Graphics/Vulkan/VkAbstractRenderPass.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 #include "SceneRenderPipeline.h"
 
 namespace SE::Core
@@ -68,11 +68,11 @@ namespace SE::Core
 
       public:
         MeshRenderer() = default;
-        MeshRenderer( GraphicContext &aGraphicContext, MeshRendererCreateInfo const &aCreateInfo );
+        MeshRenderer( Ref<VkGraphicContext> aGraphicContext, MeshRendererCreateInfo const &aCreateInfo );
 
-        static Ref<DescriptorSetLayout> GetCameraSetLayout( GraphicContext &aGraphicContext );
-        static Ref<DescriptorSetLayout> GetTextureSetLayout( GraphicContext &aGraphicContext );
-        static Ref<DescriptorSetLayout> GetNodeSetLayout( GraphicContext &aGraphicContext );
+        static Ref<DescriptorSetLayout> GetCameraSetLayout( Ref<VkGraphicContext> aGraphicContext );
+        static Ref<DescriptorSetLayout> GetTextureSetLayout( Ref<VkGraphicContext> aGraphicContext );
+        static Ref<DescriptorSetLayout> GetNodeSetLayout( Ref<VkGraphicContext> aGraphicContext );
 
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
         std::vector<sPushConstantRange>       GetPushConstantLayout();

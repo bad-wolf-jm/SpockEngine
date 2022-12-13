@@ -18,7 +18,7 @@ namespace SE::Graphics
                    sizeof( CameraViewUniforms ) } };
     };
 
-    VisualHelperLineRenderer::VisualHelperLineRenderer( GraphicContext                    &a_GraphicContext,
+    VisualHelperLineRenderer::VisualHelperLineRenderer( Ref<VkGraphicContext>              a_GraphicContext,
                                                         VisualHelperLineRendererCreateInfo a_CreateInfo )
         : SceneRenderPipeline<PositionData>( a_GraphicContext )
         , Spec{ a_CreateInfo }

@@ -12,15 +12,12 @@
 
 #include "Core/CUDA/Array/CudaBuffer.h"
 
-#include "Core/GraphicContext//GraphicContext.h"
-
 #include "Graphics/Vulkan/VkGpuBuffer.h"
 
 #include "Scene/Importer/ImporterData.h"
 
 #include "Core/EntityRegistry/Registry.h"
 
-#include "Core/GraphicContext//UI/UIContext.h"
 
 #include "Renderer/MeshRenderer.h"
 #include "Renderer/ParticleSystemRenderer.h"

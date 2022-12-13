@@ -9,7 +9,7 @@ namespace SE::Graphics
     class SwapChain : public ARenderTarget
     {
       public:
-        SwapChain( GraphicContext &aGraphicContext );
+        SwapChain( Ref<VkGraphicContext> aGraphicContext, Ref<IWindow> aWindow );
 
         bool BeginRender();
         void EndRender();
@@ -26,6 +26,8 @@ namespace SE::Graphics
 
       private:
         void RecreateSwapChain();
+
+        Ref<IWindow> mViewportClient = nullptr;
 
       private:
         VkSwapchainKHR                  mVkObject                 = VK_NULL_HANDLE;

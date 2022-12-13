@@ -4,8 +4,8 @@
 
 #include "Core/GraphicContext//ARenderContext.h"
 #include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "UI/UI.h"
 
@@ -53,7 +53,7 @@ namespace SE::Core
     class UIContext
     {
       public:
-        UIContext( Ref<SE::Core::IWindow> aWindow, GraphicContext &aDevice, ARenderContext &aRenderContext,
+        UIContext( Ref<SE::Core::IWindow> aWindow, Ref<VkGraphicContext> aDevice, ARenderContext &aRenderContext,
                    std::string &aImGuiConfigPath, UIConfiguration const &aUIConfiguration );
         ~UIContext();
 
@@ -81,7 +81,7 @@ namespace SE::Core
 
         UIStyle mUIStyle;
 
-        GraphicContext mGraphicContext{};
+        Ref<VkGraphicContext> mGraphicContext{};
 
         Ref<DescriptorSetLayout> mUIDescriptorSetLayout = nullptr;
 

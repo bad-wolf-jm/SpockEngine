@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/GraphicContext//GraphicContext.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "ARenderTarget.h"
 #include "Graphics/Vulkan/VkGpuBuffer.h"
@@ -14,11 +14,11 @@ namespace SE::Graphics
     {
       public:
         ARenderContext() = default;
-        ARenderContext( GraphicContext const &aGraphicContext, Ref<ARenderTarget> aRenderTarget );
+        ARenderContext( Ref<VkGraphicContext> aGraphicContext, Ref<ARenderTarget> aRenderTarget );
 
         ~ARenderContext() = default;
 
-        GraphicContext &GetGraphicContext() { return mGraphicContext; };
+        Ref<VkGraphicContext> GetGraphicContext() { return mGraphicContext; };
 
         uint32_t                                 GetOutputImageCount();
         Ref<ARenderTarget>                       GetRenderTarget() { return mRenderTarget; }
@@ -50,7 +50,7 @@ namespace SE::Graphics
         operator bool() { return static_cast<bool>( mRenderTarget ) && static_cast<bool>( mRenderTarget->GetRenderPass() ); }
 
       private:
-        GraphicContext mGraphicContext{};
+        Ref<VkGraphicContext> mGraphicContext{};
 
         bool mFrameIsStarted = false;
 

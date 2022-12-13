@@ -6,9 +6,8 @@
 #include "Core/Memory.h"
 
 #include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
-
+#include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "Scene/VertexData.h"
 
@@ -45,10 +44,10 @@ namespace SE::Core
 
       public:
         DeferredLightingRenderer() = default;
-        DeferredLightingRenderer( GraphicContext &aGraphicContext, DeferredLightingRendererCreateInfo const &aCreateInfo );
+        DeferredLightingRenderer( Ref<VkGraphicContext> aGraphicContext, DeferredLightingRendererCreateInfo const &aCreateInfo );
 
-        static Ref<DescriptorSetLayout> GetCameraSetLayout( GraphicContext &aGraphicContext );
-        static Ref<DescriptorSetLayout> GetTextureSetLayout( GraphicContext &aGraphicContext );
+        static Ref<DescriptorSetLayout> GetCameraSetLayout( Ref<VkGraphicContext> aGraphicContext );
+        static Ref<DescriptorSetLayout> GetTextureSetLayout( Ref<VkGraphicContext> aGraphicContext );
 
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
         std::vector<sPushConstantRange>       GetPushConstantLayout();

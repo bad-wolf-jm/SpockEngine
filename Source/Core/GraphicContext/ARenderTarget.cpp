@@ -2,7 +2,7 @@
 
 namespace SE::Graphics
 {
-    ARenderTarget::ARenderTarget( GraphicContext &aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription )
+    ARenderTarget::ARenderTarget( Ref<VkGraphicContext> aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription )
         : mGraphicContext{ aGraphicContext }
         , mSpec{ aRenderTargetDescription }
     {
@@ -37,7 +37,7 @@ namespace SE::Graphics
         mAttachmentIDs.push_back( aAttachmentID );
 
         if( aCreateInfo.mType == eAttachmentType::DEPTH )
-            mAttachmentInfo.back().mFormat = ToLtseFormat( mGraphicContext.mContext->GetDepthFormat() );
+            mAttachmentInfo.back().mFormat = ToLtseFormat( mGraphicContext->GetDepthFormat() );
 
         sTextureCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mFormat         = aCreateInfo.mFormat;
@@ -57,7 +57,7 @@ namespace SE::Graphics
         mAttachmentIDs.push_back( aAttachmentID );
 
         if( aCreateInfo.mType == eAttachmentType::DEPTH )
-            mAttachmentInfo.back().mFormat = ToLtseFormat( mGraphicContext.mContext->GetDepthFormat() );
+            mAttachmentInfo.back().mFormat = ToLtseFormat( mGraphicContext->GetDepthFormat() );
 
         sTextureCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mFormat         = aCreateInfo.mFormat;
@@ -142,7 +142,7 @@ namespace SE::Graphics
     Ref<sVkAbstractRenderPassObject> ARenderTarget::CreateDefaultRenderPass()
     {
         Ref<sVkAbstractRenderPassObject> lNewRenderPass = New<sVkAbstractRenderPassObject>(
-            mGraphicContext.mContext, VK_FORMAT_UNDEFINED, mSpec.mSampleCount, false, false, math::vec4( 0.0f ) );
+            mGraphicContext, VK_FORMAT_UNDEFINED, mSpec.mSampleCount, false, false, math::vec4( 0.0f ) );
 
         std::vector<VkAttachmentDescription> lAttachmentDescriptions{};
         std::vector<VkAttachmentReference>   lColorAttachmentReferences{};
@@ -228,12 +228,11 @@ namespace SE::Graphics
 
     void ARenderTarget::InitializeCommandBuffers()
     {
-        auto lCommandBuffers = mGraphicContext.mContext->AllocateCommandBuffer( GetImageCount() );
+        auto lCommandBuffers = mGraphicContext->AllocateCommandBuffer( GetImageCount() );
 
         mCommandBufferObject = {};
 
-        for( auto &lCB : lCommandBuffers )
-            mCommandBufferObject.push_back( New<sVkCommandBufferObject>( mGraphicContext.mContext, lCB ) );
+        for( auto &lCB : lCommandBuffers ) mCommandBufferObject.push_back( New<sVkCommandBufferObject>( mGraphicContext, lCB ) );
 
         for( size_t i = 0; i < GetImageCount(); i++ )
         {

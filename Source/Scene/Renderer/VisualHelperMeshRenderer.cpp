@@ -17,7 +17,7 @@ namespace SE::Graphics
                    sizeof( CameraViewUniforms ) } };
     };
 
-    VisualHelperMeshRenderer::VisualHelperMeshRenderer( GraphicContext                    &a_GraphicContext,
+    VisualHelperMeshRenderer::VisualHelperMeshRenderer( Ref<VkGraphicContext>              a_GraphicContext,
                                                         VisualHelperMeshRendererCreateInfo a_CreateInfo )
         : SceneRenderPipeline<SimpleVertexData>( a_GraphicContext )
         , Spec{ a_CreateInfo }

@@ -24,7 +24,7 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem::Components;
     using namespace SE::Core::Primitives;
 
-    ForwardSceneRenderer::ForwardSceneRenderer( GraphicContext aGraphicContext, eColorFormat aOutputFormat,
+    ForwardSceneRenderer::ForwardSceneRenderer( Ref<VkGraphicContext> aGraphicContext, eColorFormat aOutputFormat,
                                                 uint32_t aOutputSampleCount )
         : ASceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {

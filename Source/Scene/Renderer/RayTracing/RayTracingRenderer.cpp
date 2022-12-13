@@ -35,7 +35,7 @@ namespace SE::Core
         sTriangleMeshSBTData data;
     };
 
-    RayTracingRenderer::RayTracingRenderer( GraphicContext const &aGraphicContext )
+    RayTracingRenderer::RayTracingRenderer( Ref<VkGraphicContext> aGraphicContext )
         : mGraphicContext{ aGraphicContext }
     {
         SE::Graphics::OptixDeviceContextObject::Initialize();

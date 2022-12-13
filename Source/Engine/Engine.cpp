@@ -34,11 +34,9 @@ namespace SE::Core
     {
 
         mViewportClient = SE::Core::New<IWindow>( mInitialMainWindowSize.x, mInitialMainWindowSize.y, mApplicationName );
-        mVkContext      = SE::Core::New<Internal::VkGraphicContext>( mViewportClient, 1, true );
+        mGraphicContext = SE::Core::New<Internal::VkGraphicContext>( mViewportClient, 1, true );
 
-        mGraphicContext = SE::Graphics::GraphicContext( mVkContext, mViewportClient );
-
-        m_SwapChain              = SE::Core::New<SwapChain>( mGraphicContext );
+        m_SwapChain              = SE::Core::New<SwapChain>( mGraphicContext, mViewportClient );
         m_SwapChainRenderContext = SE::Graphics::ARenderContext( mGraphicContext, m_SwapChain );
 
         mViewportClient->SetEngineLoop( this );
@@ -88,7 +86,7 @@ namespace SE::Core
         m_SwapChainRenderContext.Present();
 
         // mGraphicContext.WaitIdle();
-        mGraphicContext.mContext->WaitIdle();
+        mGraphicContext->WaitIdle();
 
         return true;
     }

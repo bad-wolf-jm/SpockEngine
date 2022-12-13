@@ -13,20 +13,22 @@
 #include "Core/CUDA/Texture/Texture2D.h"
 #include "Core/CUDA/Texture/TextureTypes.h"
 
-#include "Core/GraphicContext/GraphicContext.h"
+// #include "Core/GraphicContext/GraphicContext.h"
 
+#include "VkGraphicContext.h"
 #include "VkTexture2D.h"
 
 namespace SE::Graphics
 {
     using namespace SE::Core;
+    using namespace SE::Graphics::Internal;
 
     /** @brief */
     class VkSampler2D : public Cuda::TextureSampler2D
     {
       public:
         /** @brief */
-        VkSampler2D( GraphicContext &aGraphicContext, Ref<VkTexture2D> aTextureData, sTextureSamplingInfo const &aSamplingSpec );
+        VkSampler2D( Ref<VkGraphicContext> aGraphicContext, Ref<VkTexture2D> aTextureData, sTextureSamplingInfo const &aSamplingSpec );
 
         /** @brief */
         ~VkSampler2D() = default;
@@ -36,8 +38,8 @@ namespace SE::Graphics
         VkSampler        GetSampler() { return mVkImageSampler; }
 
       private:
-        GraphicContext   mGraphicContext{};
-        Ref<VkTexture2D> mTextureData = nullptr;
+        Ref<VkGraphicContext> mGraphicContext{};
+        Ref<VkTexture2D>      mTextureData = nullptr;
 
         VkImageView mVkImageView    = VK_NULL_HANDLE;
         VkSampler   mVkImageSampler = VK_NULL_HANDLE;

@@ -34,7 +34,7 @@ namespace SE::Core
     class RayTracingRenderer : public ASceneRenderer
     {
       public:
-        RayTracingRenderer( GraphicContext const &aGraphicContext );
+        RayTracingRenderer( Ref<VkGraphicContext> aGraphicContext );
 
         void Update( Ref<Scene> aWorld );
         void Render();
@@ -68,7 +68,7 @@ namespace SE::Core
         math::mat3 mCameraRotation{};
 
       protected:
-        GraphicContext             mGraphicContext{};
+        Ref<VkGraphicContext>      mGraphicContext{};
         Ref<Graphics::VkTexture2D> mOutputTexture = nullptr;
         Ref<Graphics::VkGpuBuffer> mOutputBuffer  = nullptr;
 

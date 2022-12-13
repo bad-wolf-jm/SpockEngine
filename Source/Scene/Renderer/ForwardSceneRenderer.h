@@ -30,7 +30,7 @@ namespace SE::Core
 
       public:
         ForwardSceneRenderer() = default;
-        ForwardSceneRenderer( GraphicContext aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
+        ForwardSceneRenderer( Ref<VkGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
 
         ~ForwardSceneRenderer() = default;
 

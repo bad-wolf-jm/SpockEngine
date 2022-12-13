@@ -11,7 +11,7 @@
 #include "Core/GraphicContext//ARenderContext.h"
 #include "Core/GraphicContext//DescriptorSet.h"
 
-#include "Core/GraphicContext//GraphicContext.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
 #include "Graphics/Vulkan/VkAbstractRenderPass.h"
 
@@ -46,7 +46,7 @@ namespace SE::Graphics
         VisualHelperMeshRendererCreateInfo Spec;
 
         VisualHelperMeshRenderer() = default;
-        VisualHelperMeshRenderer( GraphicContext &a_GraphicContext, VisualHelperMeshRendererCreateInfo a_CreateInfo );
+        VisualHelperMeshRenderer( Ref<VkGraphicContext> a_GraphicContext, VisualHelperMeshRendererCreateInfo a_CreateInfo );
 
         ~VisualHelperMeshRenderer() = default;
 

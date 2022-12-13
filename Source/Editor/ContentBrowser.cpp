@@ -9,7 +9,7 @@
 
 namespace SE::Editor
 {
-    ContentBrowser::ContentBrowser( GraphicContext &aGraphicContext, Ref<UIContext> aUIOverlay, fs::path aRoot )
+    ContentBrowser::ContentBrowser( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay, fs::path aRoot )
         : mGraphicContext{ aGraphicContext }
         , m_CurrentDirectory( aRoot )
         , Root{ aRoot }

@@ -1,13 +1,14 @@
 #pragma once
 
-#include "Graphics/Interface/IWindow.h"
 #include "Core/Memory.h"
+#include "Graphics/Interface/IWindow.h"
 
 #include "Core/CUDA/Texture/ColorFormat.h"
 #include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//GraphicContext.h"
-#include "Graphics/Vulkan/VkCoreMacros.h"
 
+#include "Graphics/Vulkan/VkCommand.h"
+#include "Graphics/Vulkan/VkCoreMacros.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Graphics/Vulkan/VkRenderTarget.h"
 #include "Graphics/Vulkan/VkTexture2D.h"
 
@@ -73,7 +74,7 @@ namespace SE::Graphics
         sRenderTargetDescription mSpec;
 
         ARenderTarget() = default;
-        ARenderTarget( GraphicContext &aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription );
+        ARenderTarget( Ref<VkGraphicContext> aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription );
 
         ~ARenderTarget() = default;
 
@@ -119,7 +120,7 @@ namespace SE::Graphics
 
         uint32_t mImageCount = 0;
 
-        GraphicContext mGraphicContext{};
+        Ref<VkGraphicContext> mGraphicContext{};
 
         std::vector<VkClearValue>           mClearValues    = {};
         std::vector<sAttachmentDescription> mAttachmentInfo = {};

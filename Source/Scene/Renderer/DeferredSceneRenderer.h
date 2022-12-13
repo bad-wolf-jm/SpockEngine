@@ -26,7 +26,7 @@ namespace SE::Core
 
       public:
         DeferredRenderer() = default;
-        DeferredRenderer( GraphicContext aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
+        DeferredRenderer( Ref<VkGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
 
         ~DeferredRenderer() = default;
 

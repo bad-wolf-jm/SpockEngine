@@ -15,7 +15,7 @@ namespace SE::Core
     using namespace math;
     using namespace Internal;
 
-    Ref<DescriptorSetLayout> DeferredLightingRenderer::GetCameraSetLayout( GraphicContext &aGraphicContext )
+    Ref<DescriptorSetLayout> DeferredLightingRenderer::GetCameraSetLayout( Ref<VkGraphicContext> aGraphicContext )
     {
         DescriptorSetLayoutCreateInfo l_CameraBindLayout{};
         l_CameraBindLayout.Bindings = {
@@ -25,7 +25,7 @@ namespace SE::Core
         return New<DescriptorSetLayout>( aGraphicContext, l_CameraBindLayout );
     }
 
-    Ref<DescriptorSetLayout> DeferredLightingRenderer::GetTextureSetLayout( GraphicContext &aGraphicContext )
+    Ref<DescriptorSetLayout> DeferredLightingRenderer::GetTextureSetLayout( Ref<VkGraphicContext> aGraphicContext )
     {
         DescriptorSetLayoutCreateInfo lTextureBindLayout{};
         lTextureBindLayout.Bindings = {
@@ -47,7 +47,7 @@ namespace SE::Core
         return { { { eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( MaterialPushConstants ) } };
     };
 
-    DeferredLightingRenderer::DeferredLightingRenderer( GraphicContext                           &aGraphicContext,
+    DeferredLightingRenderer::DeferredLightingRenderer( Ref<VkGraphicContext>                     aGraphicContext,
                                                         DeferredLightingRendererCreateInfo const &aCreateInfo )
         : SceneRenderPipeline<EmptyVertexData>( aGraphicContext )
         , Spec{ aCreateInfo }

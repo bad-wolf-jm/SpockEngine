@@ -1,26 +1,26 @@
 #include "SwapChain.h"
 
 #include "Core/Memory.h"
-#include "GraphicContext.h"
+// #include "GraphicContext.h"
 
 namespace SE::Graphics
 {
-    SwapChain::SwapChain( GraphicContext &aGraphicContext )
+    SwapChain::SwapChain( Ref<VkGraphicContext> aGraphicContext, Ref<IWindow> aWindow )
         : ARenderTarget( aGraphicContext, sRenderTargetDescription{} )
+        , mViewportClient{ aWindow }
     {
         RecreateSwapChain();
     }
 
     void SwapChain::RecreateSwapChain()
     {
-        mGraphicContext.mContext->WaitIdle();
+        mGraphicContext->WaitIdle();
         mRenderTargets.clear();
 
-        auto [lSwapChainImageFormat, lSwapChainImageCount, lSwapchainExtent, lNewSwapchain] =
-            mGraphicContext.mContext->CreateSwapChain();
+        auto [lSwapChainImageFormat, lSwapChainImageCount, lSwapchainExtent, lNewSwapchain] = mGraphicContext->CreateSwapChain();
 
         mVkObject    = lNewSwapchain;
-        auto lImages = mGraphicContext.mContext->GetSwapChainImages( mVkObject );
+        auto lImages = mGraphicContext->GetSwapChainImages( mVkObject );
 
         mImageCount = lImages.size();
 
@@ -30,9 +30,9 @@ namespace SE::Graphics
 
         for( size_t i = 0; i < mImageCount; i++ )
         {
-            mImageAvailableSemaphores[i] = mGraphicContext.mContext->CreateVkSemaphore();
-            mRenderFinishedSemaphores[i] = mGraphicContext.mContext->CreateVkSemaphore();
-            mInFlightFences[i]           = mGraphicContext.mContext->CreateFence();
+            mImageAvailableSemaphores[i] = mGraphicContext->CreateVkSemaphore();
+            mRenderFinishedSemaphores[i] = mGraphicContext->CreateVkSemaphore();
+            mInFlightFences[i]           = mGraphicContext->CreateFence();
         }
 
         mSpec.mSampleCount = 1;
@@ -68,11 +68,11 @@ namespace SE::Graphics
 
     bool SwapChain::BeginRender()
     {
-        mGraphicContext.mContext->WaitForFence( mInFlightFences[mCurrentImage] );
+        mGraphicContext->WaitForFence( mInFlightFences[mCurrentImage] );
 
-        uint64_t lTimeout           = std::numeric_limits<uint64_t>::max();
-        VkResult lBeginRenderResult = mGraphicContext.mContext->AcquireNextImage(
-            mVkObject, lTimeout, mImageAvailableSemaphores[mCurrentImage], &mCurrentImage );
+        uint64_t lTimeout = std::numeric_limits<uint64_t>::max();
+        VkResult lBeginRenderResult =
+            mGraphicContext->AcquireNextImage( mVkObject, lTimeout, mImageAvailableSemaphores[mCurrentImage], &mCurrentImage );
 
         if( lBeginRenderResult == VK_ERROR_OUT_OF_DATE_KHR )
         {
@@ -98,13 +98,12 @@ namespace SE::Graphics
 
     void SwapChain::Present()
     {
-        VkResult lPresentResult =
-            mGraphicContext.mContext->Present( mVkObject, mCurrentImage, mRenderFinishedSemaphores[mCurrentImage] );
+        VkResult lPresentResult = mGraphicContext->Present( mVkObject, mCurrentImage, mRenderFinishedSemaphores[mCurrentImage] );
 
         if( ( lPresentResult == VK_ERROR_OUT_OF_DATE_KHR ) || ( lPresentResult == VK_SUBOPTIMAL_KHR ) ||
-            mGraphicContext.mViewportClient->WindowWasResized() )
+            mViewportClient->WindowWasResized() )
         {
-            mGraphicContext.mViewportClient->ResetWindowResizedFlag();
+            mViewportClient->ResetWindowResizedFlag();
             RecreateSwapChain();
         }
         else if( lPresentResult != VK_SUCCESS )

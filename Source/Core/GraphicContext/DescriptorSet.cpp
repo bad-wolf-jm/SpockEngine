@@ -6,13 +6,13 @@
 namespace SE::Graphics
 {
 
-    DescriptorSet::DescriptorSet( GraphicContext &aGraphicContext, Ref<DescriptorSetLayout> aLayout, uint32_t aDescriptorCount )
+    DescriptorSet::DescriptorSet( Ref<VkGraphicContext> aGraphicContext, Ref<DescriptorSetLayout> aLayout, uint32_t aDescriptorCount )
         : mGraphicContext{ aGraphicContext }
         , mLayout{ aLayout }
     {
         mDescriptorSetObject = SE::Core::New<sVkDescriptorSetObject>(
-            aGraphicContext.mContext, aGraphicContext.mContext->AllocateDescriptorSet(
-                                          aLayout->GetVkDescriptorSetLayoutObject()->mVkObject, aDescriptorCount ) );
+            mGraphicContext,
+            mGraphicContext->AllocateDescriptorSet( aLayout->GetVkDescriptorSetLayoutObject()->mVkObject, aDescriptorCount ) );
     }
 
     void DescriptorSet::Write( Ref<VkGpuBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding )
@@ -71,7 +71,7 @@ namespace SE::Graphics
         return lNewBinding;
     }
 
-    DescriptorSetLayout::DescriptorSetLayout( GraphicContext &aGraphicContext, DescriptorSetLayoutCreateInfo &aCreateInfo,
+    DescriptorSetLayout::DescriptorSetLayout( Ref<VkGraphicContext> aGraphicContext, DescriptorSetLayoutCreateInfo &aCreateInfo,
                                               bool aUnbounded )
         : mGraphicContext{ aGraphicContext }
         , Spec( aCreateInfo )
@@ -88,7 +88,7 @@ namespace SE::Graphics
             lBindings[lBindings.size() - 1].descriptorCount = 1024;
         }
 
-        mDescriptorSetLayoutObject = New<Internal::sVkDescriptorSetLayoutObject>( mGraphicContext.mContext, lBindings, aUnbounded );
+        mDescriptorSetLayoutObject = New<Internal::sVkDescriptorSetLayoutObject>( mGraphicContext, lBindings, aUnbounded );
     }
 
 } // namespace SE::Graphics

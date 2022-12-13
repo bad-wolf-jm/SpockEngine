@@ -10,7 +10,7 @@
 #include "Core/GraphicContext//UI/UIContext.h"
 #include "Engine/Engine.h"
 
-#include "Core/GraphicContext//GraphicContext.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Scene/EnvironmentSampler/EnvironmentSampler.h"
 #include "Scene/EnvironmentSampler/PointCloudVisualizer.h"
 #include "Scene/Renderer/DeferredSceneRenderer.h"

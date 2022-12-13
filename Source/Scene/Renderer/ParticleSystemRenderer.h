@@ -10,7 +10,7 @@
 
 #include "Core/GraphicContext//ARenderContext.h"
 #include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//GraphicContext.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
 
 #include "Scene/ParticleData.h"
@@ -79,7 +79,7 @@ namespace SE::Graphics
 
         ParticleSystemRenderer() = default;
 
-        ParticleSystemRenderer( GraphicContext &a_GraphicContext, ARenderContext &a_RenderContext,
+        ParticleSystemRenderer( Ref<VkGraphicContext> a_GraphicContext, ARenderContext &a_RenderContext,
                                 ParticleRendererCreateInfo a_CreateInfo );
 
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();

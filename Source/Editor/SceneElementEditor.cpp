@@ -167,8 +167,7 @@ namespace SE::Editor
         return false;
     }
 
-
-    static bool EditComponent( SE::Graphics::GraphicContext aGraphicContext, sLightComponent &aComponent )
+    static bool EditComponent( SE::Graphics::Ref<VkGraphicContext> aGraphicContext, sLightComponent &aComponent )
     {
         static UI::ComboBox<eLightType> lPrimitiveChooser( "##combo_light_type_chooser" );
         lPrimitiveChooser.Labels = { "Point light", "Spotlight", "Directional light" };
@@ -220,7 +219,7 @@ namespace SE::Editor
         case eLightType::DIRECTIONAL:
         default:
         {
-            float lLabelSize = 175.0f;
+            float                                lLabelSize = 175.0f;
             static PropertyEditor<Slider<float>> l_IntensityEditor( "##intensity" );
             l_IntensityEditor.Label                 = "Intensity:";
             l_IntensityEditor.LabelWidth            = lLabelSize;
@@ -238,7 +237,7 @@ namespace SE::Editor
         return false;
     }
 
-    SceneElementEditor::SceneElementEditor( GraphicContext &aGraphicContext )
+    SceneElementEditor::SceneElementEditor( Ref<VkGraphicContext> aGraphicContext )
         : mGraphicContext{ aGraphicContext } {};
 
     void SceneElementEditor::Display( int32_t width, int32_t height )

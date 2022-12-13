@@ -4,13 +4,15 @@
 
 #include "Core/Memory.h"
 
-#include "Core/GraphicContext//GraphicContext.h"
-#include "Graphics/Vulkan/VkAbstractRenderPass.h"
-#include "Graphics/Vulkan/VkPipeline.h"
 #include "DescriptorSet.h"
+#include "Graphics/Vulkan/VkAbstractRenderPass.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
+#include "Graphics/Vulkan/VkPipeline.h"
 
 namespace SE::Graphics
 {
+    using namespace Internal;
+
     using eBufferDataType        = Internal::eBufferDataType;
     using sBufferLayoutElement   = Internal::sBufferLayoutElement;
     using sBufferLayout          = Internal::sBufferLayout;
@@ -45,14 +47,14 @@ namespace SE::Graphics
     class GraphicsPipeline
     {
       public:
-        GraphicsPipeline( GraphicContext &a_GraphicContext, GraphicsPipelineCreateInfo &a_CreateInfo );
+        GraphicsPipeline( Ref<VkGraphicContext> a_GraphicContext, GraphicsPipelineCreateInfo &a_CreateInfo );
         ~GraphicsPipeline() = default;
 
         Ref<Internal::sVkPipelineObject>       GetVkPipelineObject() { return m_PipelineObject; }
         Ref<Internal::sVkPipelineLayoutObject> GetVkPipelineLayoutObject() { return m_PipelineLayoutObject; }
 
       private:
-        GraphicContext                         mGraphicContext{};
+        Ref<VkGraphicContext>                  mGraphicContext{};
         Ref<Internal::sVkPipelineLayoutObject> m_PipelineLayoutObject = nullptr;
         Ref<Internal::sVkPipelineObject>       m_PipelineObject       = nullptr;
     };

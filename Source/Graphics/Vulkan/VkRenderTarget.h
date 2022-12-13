@@ -5,11 +5,13 @@
 
 #include "Core/Memory.h"
 
+#include "VkGraphicContext.h"
 #include "VkTexture2D.h"
 
 namespace SE::Graphics
 {
     using namespace SE::Core;
+    using namespace SE::Graphics::Internal;
 
     class VkRenderTarget
     {
@@ -19,13 +21,13 @@ namespace SE::Graphics
       public:
         VkRenderTarget()                   = default;
         VkRenderTarget( VkRenderTarget & ) = default;
-        VkRenderTarget( GraphicContext &aGraphicContext, uint32_t aWidth, uint32_t aHeight, uint32_t aLayers, VkRenderPass aRenderPass,
-                        std::vector<Ref<VkTexture2D>> aAttachments );
+        VkRenderTarget( Ref<VkGraphicContext> aGraphicContext, uint32_t aWidth, uint32_t aHeight, uint32_t aLayers,
+                        VkRenderPass aRenderPass, std::vector<Ref<VkTexture2D>> aAttachments );
 
         ~VkRenderTarget();
 
       private:
-        GraphicContext mGraphicContext{};
+        Ref<VkGraphicContext> mGraphicContext{};
 
         std::vector<VkImageView> mVkImageViews = {};
     };

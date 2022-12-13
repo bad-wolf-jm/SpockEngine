@@ -14,7 +14,7 @@ namespace SE::Core
       public:
         ASceneRenderer() = default;
 
-        ASceneRenderer( GraphicContext aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
+        ASceneRenderer( Ref<VkGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
 
         ~ASceneRenderer() = default;
 
@@ -36,7 +36,7 @@ namespace SE::Core
         virtual Ref<VkTexture2D> GetOutputImage() = 0;
 
       protected:
-        GraphicContext mGraphicContext{};
+        Ref<VkGraphicContext> mGraphicContext{};
 
         Ref<Scene> mScene = nullptr;
 

@@ -5,7 +5,7 @@
 namespace SE::Graphics
 {
 
-    ARenderContext::ARenderContext( GraphicContext const &aGraphicContext, Ref<ARenderTarget> aRenderTarget )
+    ARenderContext::ARenderContext( Ref<VkGraphicContext> aGraphicContext, Ref<ARenderTarget> aRenderTarget )
         : mGraphicContext{ aGraphicContext }
         , mRenderTarget{ aRenderTarget }
     {
@@ -24,8 +24,8 @@ namespace SE::Graphics
 
         auto lCommandBuffer = GetCurrentCommandBuffer();
         lCommandBuffer->Begin();
-        lCommandBuffer->BeginRenderPass( mRenderTarget->GetRenderPass(), mRenderTarget->GetFramebuffer()->mVkFramebuffer, { lWidth, lHeight },
-                                         mRenderTarget->GetClearValues() );
+        lCommandBuffer->BeginRenderPass( mRenderTarget->GetRenderPass(), mRenderTarget->GetFramebuffer()->mVkFramebuffer,
+                                         { lWidth, lHeight }, mRenderTarget->GetClearValues() );
         lCommandBuffer->SetViewport( { 0.0f, 0.0f }, { lWidth, lHeight } );
         lCommandBuffer->SetScissor( { 0.0f, 0.0f }, { lWidth, lHeight } );
 
@@ -39,7 +39,7 @@ namespace SE::Graphics
         auto lCommandBuffer = GetCurrentCommandBuffer();
         lCommandBuffer->EndRenderPass();
         lCommandBuffer->End();
-        lCommandBuffer->SubmitTo( mGraphicContext.mContext->GetGraphicsQueue() );
+        lCommandBuffer->SubmitTo( mGraphicContext->GetGraphicsQueue() );
 
         mRenderTarget->EndRender();
 
@@ -52,10 +52,7 @@ namespace SE::Graphics
 
     void ARenderContext::Present() { mRenderTarget->Present(); }
 
-    void ARenderContext::ResetBuffers()
-    {
-        mHasIndex = false;
-    }
+    void ARenderContext::ResetBuffers() { mHasIndex = false; }
 
     void ARenderContext::Draw( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset, uint32_t a_InstanceCount,
                                uint32_t a_FirstInstance )

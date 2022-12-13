@@ -6,8 +6,8 @@
 
 #include "Core/GraphicContext//ARenderContext.h"
 #include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "Scene/VertexData.h"
 
@@ -34,7 +34,7 @@ namespace SE::Core
     class CoordinateGridRenderer : public SE::Core::SceneRenderPipeline<EmptyVertexData>
     {
       public:
-        CoordinateGridRenderer( GraphicContext &mGraphicContext, ARenderContext &a_RenderContext,
+        CoordinateGridRenderer( Ref<VkGraphicContext> mGraphicContext, ARenderContext &a_RenderContext,
                                 CoordinateGridRendererCreateInfo a_CreateInfo );
         ~CoordinateGridRenderer() = default;
 

@@ -9,7 +9,7 @@ namespace SE::Core
 
     std::vector<sPushConstantRange> CoordinateGridRenderer::GetPushConstantLayout() { return {}; };
 
-    CoordinateGridRenderer::CoordinateGridRenderer( GraphicContext &a_GraphicContext, ARenderContext &aRenderContext,
+    CoordinateGridRenderer::CoordinateGridRenderer( Ref<VkGraphicContext> a_GraphicContext, ARenderContext &aRenderContext,
                                                     CoordinateGridRendererCreateInfo aCreateInfo )
         : SceneRenderPipeline<EmptyVertexData>( a_GraphicContext )
         , Spec{ aCreateInfo }

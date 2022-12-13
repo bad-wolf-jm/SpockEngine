@@ -5,8 +5,8 @@
 
 #include "Graphics/Vulkan/VkPipeline.h"
 
-#include "Graphics/Interface/IWindow.h"
 #include "Core/Profiling/BlockTimer.h"
+#include "Graphics/Interface/IWindow.h"
 
 // std
 #include <stdexcept>
@@ -127,7 +127,7 @@ namespace SE::Core
         }
     }
 
-    UIContext::UIContext( Ref<SE::Core::IWindow> aWindow, GraphicContext &aGraphicContext, ARenderContext &aRenderContext,
+    UIContext::UIContext( Ref<SE::Core::IWindow> aWindow, Ref<VkGraphicContext> aGraphicContext, ARenderContext &aRenderContext,
                           std::string &aImGuiConfigPath, UIConfiguration const &aUIConfiguration )
         : mGraphicContext{ aGraphicContext }
         , mImGuiConfigPath{ aImGuiConfigPath }
@@ -156,18 +156,18 @@ namespace SE::Core
         mUIDescriptorSetLayout                       = New<DescriptorSetLayout>( mGraphicContext, lBindingLayout );
 
         std::string lUIVertexShaderFiles = GetResourcePath( "Shaders\\ui_shader.vert.spv" ).string();
-        mUIVertexShader                  = New<Graphics::Internal::ShaderModule>( mGraphicContext.mContext, lUIVertexShaderFiles,
+        mUIVertexShader                  = New<Graphics::Internal::ShaderModule>( mGraphicContext, lUIVertexShaderFiles,
                                                                  Graphics::Internal::eShaderStageTypeFlags::VERTEX );
 
         std::string lUIFragmentShaderFiles = GetResourcePath( "Shaders\\ui_shader.frag.spv" ).string();
-        mUIFragmentShader                  = New<Graphics::Internal::ShaderModule>( mGraphicContext.mContext, lUIFragmentShaderFiles,
+        mUIFragmentShader                  = New<Graphics::Internal::ShaderModule>( mGraphicContext, lUIFragmentShaderFiles,
                                                                    Graphics::Internal::eShaderStageTypeFlags::FRAGMENT );
         GraphicsPipelineCreateInfo lUIPipelineCreateInfo = {};
         lUIPipelineCreateInfo.mShaderStages              = { { mUIVertexShader, "main" }, { mUIFragmentShader, "main" } };
         lUIPipelineCreateInfo.InputBufferLayout          = {
-                     { "Position", eBufferDataType::VEC2, 0, 0 },
-                     { "TextureCoords", eBufferDataType::VEC2, 0, 1 },
-                     { "Color", eBufferDataType::COLOR, 0, 2 },
+            { "Position", eBufferDataType::VEC2, 0, 0 },
+            { "TextureCoords", eBufferDataType::VEC2, 0, 1 },
+            { "Color", eBufferDataType::COLOR, 0, 2 },
         };
         lUIPipelineCreateInfo.Topology      = ePrimitiveTopology::TRIANGLES;
         lUIPipelineCreateInfo.Culling       = eFaceCulling::NONE;

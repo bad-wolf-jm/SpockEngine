@@ -16,7 +16,7 @@
 #include <limits.h>
 #include <string>
 
-#include "Core/GraphicContext//GraphicContext.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Core/Logging.h"
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"

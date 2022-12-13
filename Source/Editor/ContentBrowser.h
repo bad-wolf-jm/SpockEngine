@@ -20,12 +20,12 @@ namespace SE::Editor
         ContentBrowser()  = default;
         ~ContentBrowser() = default;
 
-        ContentBrowser( GraphicContext &aGraphicContext, Ref<UIContext> aUIOverlay, fs::path aRoot );
+        ContentBrowser( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay, fs::path aRoot );
 
         void Display();
 
       private:
-        GraphicContext        mGraphicContext;
+        Ref<VkGraphicContext> mGraphicContext;
         std::filesystem::path m_RootDirectory;
         std::filesystem::path m_CurrentDirectory;
 

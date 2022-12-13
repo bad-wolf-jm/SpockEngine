@@ -4,8 +4,9 @@
 
 #ifndef __CUDACC__
 #    include "Core/GraphicContext//DescriptorSet.h"
-#    include "Core/GraphicContext//GraphicContext.h"
+
 #    include "Graphics/Vulkan/VkGpuBuffer.h"
+#    include "Graphics/Vulkan/VkGraphicContext.h"
 #    include "Graphics/Vulkan/VkSampler2D.h"
 #    include "Graphics/Vulkan/VkTexture2D.h"
 #endif
@@ -98,7 +99,7 @@ namespace SE::Core
         MaterialSystem()  = default;
         ~MaterialSystem() = default;
 
-        MaterialSystem( GraphicContext &aGraphicContext );
+        MaterialSystem( Ref<VkGraphicContext> aGraphicContext );
 
         sMaterial                 &CreateMaterial();
         sMaterial                 &CreateMaterial( sMaterial const &aMaterialData );
@@ -122,7 +123,7 @@ namespace SE::Core
         Cuda::GPUMemory const                         &GetCudaMaterials() const { return *mShaderMaterials; }
 
       private:
-        GraphicContext mGraphicContext;
+        Ref<VkGraphicContext> mGraphicContext;
 
         std::vector<Ref<Graphics::VkSampler2D>> mTextureSamplers = {};
         std::vector<sMaterial>                  mMaterials       = {};

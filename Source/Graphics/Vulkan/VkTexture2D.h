@@ -13,13 +13,13 @@
 #include "Core/CUDA/Texture/TextureData.h"
 #include "Core/CUDA/Texture/TextureTypes.h"
 
-#include "Core/GraphicContext/GraphicContext.h"
-
 #include "VkGpuBuffer.h"
+#include "VkGraphicContext.h"
 
 namespace SE::Graphics
 {
     using namespace SE::Core;
+    using namespace SE::Graphics::Internal;
 
     /** @brief */
     class VkTexture2D : public Cuda::Texture2D
@@ -31,21 +31,22 @@ namespace SE::Graphics
         Core::sTextureCreateInfo mSpec;
 
         /** @brief */
-        VkTexture2D( GraphicContext &aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription, uint8_t aSampleCount,
+        VkTexture2D( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription, uint8_t aSampleCount,
                      bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
 
         /** @brief */
-        VkTexture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData )
+        VkTexture2D( Ref<VkGraphicContext> aGraphicContext, TextureData2D &aCubeMapData )
             : VkTexture2D( aGraphicContext, aCubeMapData, 1, false, true, true )
         {
         }
 
         /** @brief */
-        VkTexture2D( GraphicContext &aGraphicContext, TextureData2D &aCubeMapData, uint8_t aSampleCount, bool aIsHostVisible,
+        VkTexture2D( Ref<VkGraphicContext> aGraphicContext, TextureData2D &aCubeMapData, uint8_t aSampleCount, bool aIsHostVisible,
                      bool aIsGraphicsOnly, bool aIsTransferSource );
 
         /** @brief */
-        VkTexture2D( GraphicContext &aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription, VkImage aExternalImage );
+        VkTexture2D( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+                     VkImage aExternalImage );
 
         /** @brief */
         ~VkTexture2D() = default;
@@ -65,7 +66,7 @@ namespace SE::Graphics
         void BindMemory();
 
       private:
-        GraphicContext mGraphicContext{};
+        Ref<VkGraphicContext> mGraphicContext{};
 
         VkSampleCountFlagBits mSampleCount           = VK_SAMPLE_COUNT_1_BIT;
         bool                  mIsHostVisible         = false;

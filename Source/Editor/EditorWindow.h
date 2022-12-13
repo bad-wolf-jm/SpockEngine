@@ -7,7 +7,7 @@
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 
-#include "Core/GraphicContext//GraphicContext.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "Graphics/Vulkan/VkSampler2D.h"
 
@@ -89,7 +89,7 @@ namespace SE::Editor
 
       public:
         EditorWindow() = default;
-        EditorWindow( GraphicContext &aGraphicContext, Ref<UIContext> mUIOverlay );
+        EditorWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> mUIOverlay );
 
         ~EditorWindow() = default;
 
@@ -113,7 +113,7 @@ namespace SE::Editor
         void ConfigureUI();
 
       private:
-        GraphicContext mGraphicContext;
+        Ref<VkGraphicContext> mGraphicContext;
 
         Ref<UIContext> mUIOverlay;
 

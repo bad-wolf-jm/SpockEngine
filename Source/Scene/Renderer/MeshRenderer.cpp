@@ -14,17 +14,19 @@ namespace SE::Core
 
     using namespace math;
 
-    Ref<DescriptorSetLayout> MeshRenderer::GetCameraSetLayout( GraphicContext &aGraphicContext )
+    Ref<DescriptorSetLayout> MeshRenderer::GetCameraSetLayout( Ref<VkGraphicContext> aGraphicContext )
     {
         DescriptorSetLayoutCreateInfo l_CameraBindLayout{};
-        l_CameraBindLayout.Bindings = { DescriptorBindingInfo{ 0, Internal::eDescriptorType::UNIFORM_BUFFER,
-                                            { Internal::eShaderStageTypeFlags::VERTEX, Internal::eShaderStageTypeFlags::FRAGMENT } },
+        l_CameraBindLayout.Bindings = {
+            DescriptorBindingInfo{ 0,
+                                   Internal::eDescriptorType::UNIFORM_BUFFER,
+                                   { Internal::eShaderStageTypeFlags::VERTEX, Internal::eShaderStageTypeFlags::FRAGMENT } },
             DescriptorBindingInfo{ 1, Internal::eDescriptorType::UNIFORM_BUFFER, { Internal::eShaderStageTypeFlags::FRAGMENT } } };
 
         return New<DescriptorSetLayout>( aGraphicContext, l_CameraBindLayout );
     }
 
-    Ref<DescriptorSetLayout> MeshRenderer::GetTextureSetLayout( GraphicContext &aGraphicContext )
+    Ref<DescriptorSetLayout> MeshRenderer::GetTextureSetLayout( Ref<VkGraphicContext> aGraphicContext )
     {
         DescriptorSetLayoutCreateInfo lTextureBindLayout{};
         lTextureBindLayout.Bindings = {
@@ -35,7 +37,7 @@ namespace SE::Core
         return New<DescriptorSetLayout>( aGraphicContext, lTextureBindLayout, true );
     }
 
-    Ref<DescriptorSetLayout> MeshRenderer::GetNodeSetLayout( GraphicContext &aGraphicContext )
+    Ref<DescriptorSetLayout> MeshRenderer::GetNodeSetLayout( Ref<VkGraphicContext> aGraphicContext )
     {
         DescriptorSetLayoutCreateInfo l_NodeBindLayout{};
         l_NodeBindLayout.Bindings = {
@@ -53,7 +55,7 @@ namespace SE::Core
         return { { { Internal::eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( MaterialPushConstants ) } };
     };
 
-    MeshRenderer::MeshRenderer( GraphicContext &aGraphicContext, MeshRendererCreateInfo const &aCreateInfo )
+    MeshRenderer::MeshRenderer( Ref<VkGraphicContext> aGraphicContext, MeshRendererCreateInfo const &aCreateInfo )
         : SceneRenderPipeline<VertexData>( aGraphicContext )
         , Spec{ aCreateInfo }
     {

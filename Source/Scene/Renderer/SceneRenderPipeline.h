@@ -4,8 +4,8 @@
 
 #include "Core/Math/Types.h"
 
-#include "Core/GraphicContext//GraphicContext.h"
 #include "Graphics/Vulkan/VkAbstractRenderPass.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "Core/GraphicContext//DescriptorSet.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
@@ -43,7 +43,7 @@ namespace SE::Core
         SceneRenderPipeline()  = default;
         ~SceneRenderPipeline() = default;
 
-        SceneRenderPipeline( GraphicContext &a_GraphicContext )
+        SceneRenderPipeline( Ref<VkGraphicContext> a_GraphicContext )
             : mGraphicContext{ a_GraphicContext }
         {
         }
@@ -54,11 +54,11 @@ namespace SE::Core
 
             std::string                 lVertexShaderFiles = GetResourcePath( aCreateInfo.VertexShader ).string();
             Ref<Internal::ShaderModule> lVertexShaderModule =
-                New<Internal::ShaderModule>( mGraphicContext.mContext, lVertexShaderFiles, Internal::eShaderStageTypeFlags::VERTEX );
+                New<Internal::ShaderModule>( mGraphicContext, lVertexShaderFiles, Internal::eShaderStageTypeFlags::VERTEX );
 
-            std::string                 l_FragmentShaderFiles  = GetResourcePath( aCreateInfo.FragmentShader ).string();
-            Ref<Internal::ShaderModule> l_FragmentShaderModule = New<Internal::ShaderModule>(
-                mGraphicContext.mContext, l_FragmentShaderFiles, Internal::eShaderStageTypeFlags::FRAGMENT );
+            std::string                 l_FragmentShaderFiles = GetResourcePath( aCreateInfo.FragmentShader ).string();
+            Ref<Internal::ShaderModule> l_FragmentShaderModule =
+                New<Internal::ShaderModule>( mGraphicContext, l_FragmentShaderFiles, Internal::eShaderStageTypeFlags::FRAGMENT );
 
             GraphicsPipelineCreateInfo lPipelineCreateInfo{};
             lPipelineCreateInfo.mShaderStages        = { { lVertexShaderModule, "main" }, { l_FragmentShaderModule, "main" } };
@@ -88,7 +88,7 @@ namespace SE::Core
         virtual std::vector<sPushConstantRange>       GetPushConstantLayout()  = 0;
 
       protected:
-        GraphicContext mGraphicContext;
+        Ref<VkGraphicContext> mGraphicContext;
     };
 
 } // namespace SE::Core

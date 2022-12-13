@@ -35,7 +35,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Optix/OptixAccelerationStructure.cpp
     
     
-    Core/GraphicContext/GraphicContext.cpp
+    # Core/GraphicContext/GraphicContext.cpp
     Core/GraphicContext/DescriptorSet.cpp
     Core/GraphicContext/GraphicsPipeline.cpp
     Core/GraphicContext/ARenderContext.cpp

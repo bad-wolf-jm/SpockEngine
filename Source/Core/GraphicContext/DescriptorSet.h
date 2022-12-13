@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Core/GraphicContext//GraphicContext.h"
-
 #include "Graphics/Vulkan/VkSampler2D.h"
+// #include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "Core/Memory.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Graphics/Vulkan/VkPipeline.h"
 
 #include <vector>
@@ -30,7 +30,8 @@ namespace SE::Graphics
     class DescriptorSetLayout
     {
       public:
-        DescriptorSetLayout( GraphicContext &aGraphicContext, DescriptorSetLayoutCreateInfo &aCreateInfo, bool aUnbounded = false );
+        DescriptorSetLayout( Ref<VkGraphicContext> aGraphicContext, DescriptorSetLayoutCreateInfo &aCreateInfo,
+                             bool aUnbounded = false );
         ~DescriptorSetLayout() = default;
 
         DescriptorSetLayoutCreateInfo Spec;
@@ -42,7 +43,7 @@ namespace SE::Graphics
         operator VkDescriptorSetLayout() const { return mDescriptorSetLayoutObject->mVkObject; };
 
       private:
-        GraphicContext                              mGraphicContext{};
+        Ref<VkGraphicContext>                       mGraphicContext{};
         Ref<Internal::sVkDescriptorSetLayoutObject> mDescriptorSetLayoutObject = nullptr;
     };
 
@@ -59,7 +60,7 @@ namespace SE::Graphics
     class DescriptorSet
     {
       public:
-        DescriptorSet( GraphicContext &aGraphicContext, Ref<DescriptorSetLayout> aLayout, uint32_t aDescriptorCount = 0 );
+        DescriptorSet( Ref<VkGraphicContext> aGraphicContext, Ref<DescriptorSetLayout> aLayout, uint32_t aDescriptorCount = 0 );
         ~DescriptorSet() = default;
 
         void Write( Ref<VkGpuBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding );
@@ -74,7 +75,7 @@ namespace SE::Graphics
         Ref<Internal::sVkDescriptorSetObject> GetVkDescriptorSetObject() { return mDescriptorSetObject; }
 
       private:
-        GraphicContext                        mGraphicContext{};
+        Ref<VkGraphicContext>                 mGraphicContext{};
         Ref<DescriptorSetLayout>              mLayout              = nullptr;
         Ref<Internal::sVkDescriptorSetObject> mDescriptorSetObject = nullptr;
     };

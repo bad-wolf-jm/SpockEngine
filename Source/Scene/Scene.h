@@ -9,7 +9,7 @@
 #include "Core/Types.h"
 
 #include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//GraphicContext.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Core/GraphicContext//GraphicsPipeline.h"
 
 #include "UI/UI.h"
@@ -50,7 +50,7 @@ namespace SE::Core
 
         typedef Entity Element;
 
-        Scene( GraphicContext &a_GraphicContext, Ref<SE::Core::UIContext> a_UI );
+        Scene( Ref<VkGraphicContext> a_GraphicContext, Ref<SE::Core::UIContext> a_UI );
         Scene( Ref<Scene> aSource );
         Scene( Scene & ) = delete;
         ~Scene();
@@ -86,7 +86,7 @@ namespace SE::Core
         Element Environment;
         Element Root;
 
-        GraphicContext &GetGraphicContext() { return mGraphicContext; }
+        Ref<VkGraphicContext> GetGraphicContext() { return mGraphicContext; }
 
         template <typename... Args>
         void ForEach( std::function<void( Element, Args &... )> a_ApplyFunction )
@@ -121,7 +121,7 @@ namespace SE::Core
 
       private:
         eSceneState         mState = eSceneState::EDITING;
-        GraphicContext      mGraphicContext;
+        Ref<VkGraphicContext>      mGraphicContext;
         Ref<MaterialSystem> mMaterialSystem;
 
         Ref<OptixDeviceContextObject> mRayTracingContext     = nullptr;

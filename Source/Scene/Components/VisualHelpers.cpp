@@ -36,7 +36,7 @@ namespace SE::Core::EntityComponentSystem::Components
         }
     }
 
-    void CubeMeshData::UpdateMesh( GraphicContext &a_GraphicContext )
+    void CubeMeshData::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
     {
         math::mat4 l_ScalingTransform = math::Scale( math::mat4( 1.0f ), math::vec3{ SideLength, SideLength, SideLength } );
         SE::Core::Primitives::VertexBufferData l_Cube           = SE::Core::Primitives::CreateCube();
@@ -47,7 +47,7 @@ namespace SE::Core::EntityComponentSystem::Components
         Mesh.Indices = New<VkGpuBuffer>( a_GraphicContext, l_Cube.Indices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
     }
 
-    void ConeMeshData::UpdateMesh( GraphicContext &a_GraphicContext )
+    void ConeMeshData::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
     {
         SE::Core::Primitives::WireframeVertexBufferData l_Cone = SE::Core::Primitives::CreateWireframeCone( Divisions, Segments );
 
@@ -55,7 +55,7 @@ namespace SE::Core::EntityComponentSystem::Components
         Mesh.Indices  = New<VkGpuBuffer>( a_GraphicContext, l_Cone.Indices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
     }
 
-    void ArrowMeshData::UpdateMesh( GraphicContext &a_GraphicContext )
+    void ArrowMeshData::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
     {
         SE::Core::Primitives::VertexBufferData l_Shaft          = SE::Core::Primitives::CreateCylinder( 3, Segments );
         math::mat4                             l_ShaftTransform = math::Translation( math::vec3{ 0.0f, 0.46f, 0.0f } ) *
@@ -87,7 +87,7 @@ namespace SE::Core::EntityComponentSystem::Components
             New<VkGpuBuffer>( a_GraphicContext, l_ArrowMeshData.Indices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
     }
 
-    void CircleMeshData::UpdateMesh( GraphicContext &a_GraphicContext )
+    void CircleMeshData::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
     {
         SE::Core::Primitives::WireframeVertexBufferData l_Circle = SE::Core::Primitives::CreateCircle( Segments );
 
@@ -99,7 +99,7 @@ namespace SE::Core::EntityComponentSystem::Components
         Mesh.Indices = New<VkGpuBuffer>( a_GraphicContext, l_Circle.Indices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
     }
 
-    void PyramidMeshData::UpdateMesh( GraphicContext &a_GraphicContext )
+    void PyramidMeshData::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
     {
         SE::Core::Primitives::WireframeVertexBufferData l_Pyramid = SE::Core::Primitives::CreateWireframePyramid( 64, 64 );
 
@@ -108,7 +108,7 @@ namespace SE::Core::EntityComponentSystem::Components
         Mesh.Indices = New<VkGpuBuffer>( a_GraphicContext, l_Pyramid.Indices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
     }
 
-    void SurfaceMeshData::UpdateMesh( GraphicContext &a_GraphicContext )
+    void SurfaceMeshData::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
     {
         SE::Core::Primitives::VertexBufferData l_Plane = SE::Core::Primitives::CreatePlane( math::ivec2{ 32, 32 } );
         std::vector<SimpleVertexData>          l_PlaneVertexData =
@@ -119,7 +119,7 @@ namespace SE::Core::EntityComponentSystem::Components
         Mesh.Indices = New<VkGpuBuffer>( a_GraphicContext, l_Plane.Indices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
     }
 
-    void SpotlightHelperComponent::UpdateMesh( GraphicContext &a_GraphicContext )
+    void SpotlightHelperComponent::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
     {
         Origin.UpdateMesh( a_GraphicContext );
 
@@ -134,7 +134,7 @@ namespace SE::Core::EntityComponentSystem::Components
             New<VkGpuBuffer>( a_GraphicContext, l_Spot.Indices, eBufferBindType::INDEX_BUFFER, false, true, true, true );
     }
 
-    void FieldOfViewHelperComponent::UpdateMesh( GraphicContext &a_GraphicContext )
+    void FieldOfViewHelperComponent::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
     {
         SE::Core::Primitives::WireframeVertexBufferData l_Pyramid = SE::Core::Primitives::CreateWireframePyramid( 64, 64 );
 

@@ -14,7 +14,6 @@
 
 #include "entt/entt.hpp"
 
-#include "Core/GraphicContext//GraphicContext.h"
 #include "Core/GraphicContext//SwapChain.h"
 #include "Core/Optix/OptixContext.h"
 #include "Graphics/Interface/IWindow.h"
@@ -94,9 +93,9 @@ namespace SE::Core
 
         math::ivec2 GetViewportSize() { return mViewportClient->GetFramebufferSize(); }
 
-        SE::Graphics::GraphicContext &GetGraphicContext() { return mGraphicContext; }
+        SE::Graphics::Ref<VkGraphicContext> GetGraphicContext() { return mGraphicContext; }
 
-        SE::Graphics::GraphicContext &GetDevice() { return mGraphicContext; }
+        SE::Graphics::Ref<VkGraphicContext> GetDevice() { return mGraphicContext; }
 
         // Ref<SE::Graphics::SwapChainRenderTarget> GetSwapchainRenderer() { return mSwapChainRenderer; }
         // SE::Graphics::RenderContext             &GetRenderContext() { return mRenderContext; }
@@ -132,9 +131,8 @@ namespace SE::Core
         std::vector<std::function<void()>> mMainThreadQueue;
         std::mutex                         mMainThreadQueueMutex;
 
-        Ref<SE::Core::IWindow>          mViewportClient;
-        Ref< SE::Graphics::Internal::VkGraphicContext> mVkContext = nullptr;
-        SE::Graphics::GraphicContext    mGraphicContext;
+        Ref<SE::Core::IWindow>                        mViewportClient;
+        Ref<SE::Graphics::Internal::VkGraphicContext> mGraphicContext = nullptr;
 
         Ref<SE::Core::UIContext> mImGUIOverlay;
 

@@ -2,7 +2,7 @@
 #include "Core/Logging.h"
 namespace SE::Core
 {
-    MaterialSystem::MaterialSystem( GraphicContext &aGraphicContext )
+    MaterialSystem::MaterialSystem( Ref<VkGraphicContext> aGraphicContext )
         : mGraphicContext{ aGraphicContext }
         , mDirty{ true }
     {
