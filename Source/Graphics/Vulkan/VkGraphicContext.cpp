@@ -1082,13 +1082,13 @@ namespace SE::Graphics::Internal
         return lNewDescriptorPool;
     }
 
-    VkDescriptorSet VkGraphicContext::AllocateDescriptorSet( VkDescriptorPool aDescriptorPool, VkDescriptorSetLayout aLayout,
+    VkDescriptorSet VkGraphicContext::AllocateDescriptorSet( VkDescriptorSetLayout aLayout,
                                                              uint32_t aDescriptorCount )
     {
         VkDescriptorSetAllocateInfo lDescriptorSetAllocInfo{};
         lDescriptorSetAllocInfo.sType              = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         lDescriptorSetAllocInfo.pNext              = nullptr;
-        lDescriptorSetAllocInfo.descriptorPool     = aDescriptorPool;
+        lDescriptorSetAllocInfo.descriptorPool     = mVkDescriptorPool;
         lDescriptorSetAllocInfo.descriptorSetCount = 1;
 
         uint32_t lDescriptorCount[1];
@@ -1114,10 +1114,10 @@ namespace SE::Graphics::Internal
         return lNewDescriptorSet;
     }
 
-    void VkGraphicContext::FreeDescriptorSet( VkDescriptorPool aDescriptorPool, VkDescriptorSet *aDescriptorSet,
+    void VkGraphicContext::FreeDescriptorSet( VkDescriptorSet *aDescriptorSet,
                                               uint32_t aDescriptorCount )
     {
-        VK_CHECK_RESULT( vkFreeDescriptorSets( mVkLogicalDevice, aDescriptorPool, 1, aDescriptorSet ) );
+        VK_CHECK_RESULT( vkFreeDescriptorSets( mVkLogicalDevice, mVkDescriptorPool, 1, aDescriptorSet ) );
     }
 
     void VkGraphicContext::DestroyDescriptorPool( VkDescriptorPool aDescriptorPool )

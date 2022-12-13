@@ -128,7 +128,7 @@ namespace SE::Graphics::Internal
 
         sVkDescriptorSetObject()                           = default;
         sVkDescriptorSetObject( sVkDescriptorSetObject & ) = default;
-        sVkDescriptorSetObject( Ref<VkGraphicContext> aContext, VkDescriptorPool aDescriptorPool, VkDescriptorSet aDescriporSet );
+        sVkDescriptorSetObject( Ref<VkGraphicContext> aContext, VkDescriptorSet aDescriporSet );
 
         void Write( sBufferBindInfo aBuffers );
         void Write( sImageBindInfo aImages );

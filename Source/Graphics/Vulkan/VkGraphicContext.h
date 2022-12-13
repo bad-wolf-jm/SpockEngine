@@ -77,9 +77,9 @@ namespace SE::Graphics::Internal
 
         VkDescriptorPool CreateDescriptorPool( uint32_t aDescriptorSetCount, std::vector<VkDescriptorPoolSize> aPoolSizes );
         void             DestroyDescriptorPool( VkDescriptorPool aDescriptorPool );
-        VkDescriptorSet  AllocateDescriptorSet( VkDescriptorPool aDescriptorPool, VkDescriptorSetLayout aLayout,
+        VkDescriptorSet  AllocateDescriptorSet( VkDescriptorSetLayout aLayout,
                                                 uint32_t aDescriptorCount = 0 );
-        void FreeDescriptorSet( VkDescriptorPool aDescriptorPool, VkDescriptorSet *aDescriptorSet, uint32_t aDescriptorCount = 0 );
+        void FreeDescriptorSet( VkDescriptorSet *aDescriptorSet, uint32_t aDescriptorCount = 0 );
 
         VkDescriptorSetLayout CreateDescriptorSetLayout( std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded );
         void                  DestroyDescriptorSetLayout( VkDescriptorSetLayout aDescriptorSetLayout );

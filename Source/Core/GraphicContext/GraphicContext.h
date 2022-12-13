@@ -22,8 +22,6 @@ namespace SE::Graphics
 
         ~GraphicContext() = default;
 
-        Ref<IWindow> GetWindow() { return mViewportClient; };
-
         Ref<Internal::sVkDescriptorSetObject> AllocateDescriptors( Ref<Internal::sVkDescriptorSetLayoutObject> aLayout,
                                                                    uint32_t                                    aDescriptorCount = 0 );
 

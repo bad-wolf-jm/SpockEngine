@@ -106,15 +106,14 @@ namespace SE::Graphics::Internal
     sVkDescriptorSetLayoutObject::~sVkDescriptorSetLayoutObject() { mContext->DestroyDescriptorSetLayout( mVkObject ); }
 
     sVkDescriptorSetObject::sVkDescriptorSetObject(
-        Ref<VkGraphicContext> aContext, VkDescriptorPool aDescriptorPool, VkDescriptorSet aDescriporSet )
+        Ref<VkGraphicContext> aContext, VkDescriptorSet aDescriporSet )
         : mContext{ aContext }
-        , mDescriptorPool{ aDescriptorPool }
         , mVkObject{ aDescriporSet }
 
     {
     }
 
-    sVkDescriptorSetObject::~sVkDescriptorSetObject() { mContext->FreeDescriptorSet( mDescriptorPool, &mVkObject ); }
+    sVkDescriptorSetObject::~sVkDescriptorSetObject() { mContext->FreeDescriptorSet( &mVkObject ); }
 
     void sVkDescriptorSetObject::Write( sBufferBindInfo aBuffers )
     {
@@ -190,7 +189,7 @@ namespace SE::Graphics::Internal
         Ref<sVkDescriptorSetLayoutObject> aLayout, uint32_t aDescriptorCount )
     {
         return SE::Core::New<sVkDescriptorSetObject>(
-            mContext, mVkObject, mContext->AllocateDescriptorSet( mVkObject, aLayout->mVkObject, aDescriptorCount ) );
+            mContext, mContext->AllocateDescriptorSet( aLayout->mVkObject, aDescriptorCount ) );
     }
 
     sVkPipelineLayoutObject::sVkPipelineLayoutObject( Ref<VkGraphicContext> aContext,
