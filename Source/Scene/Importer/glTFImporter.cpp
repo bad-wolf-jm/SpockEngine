@@ -177,7 +177,7 @@ namespace SE::Core
     {
         if( aMaterial.values.find( aName ) != aMaterial.values.end() )
         {
-            return glm::make_vec4( aMaterial.values[aName].ColorFactor().data() );
+            return math::make_vec4( aMaterial.values[aName].ColorFactor().data() );
         }
 
         return aDefault;
@@ -256,27 +256,27 @@ namespace SE::Core
 
         if( aNode.matrix.size() == 16 )
         {
-            lNewNode.mTransform = glm::make_mat4x4( aNode.matrix.data() );
+            lNewNode.mTransform = math::make_mat4x4( aNode.matrix.data() );
         }
         else
         {
             // Generate local node matrix
-            glm::mat4 lTranslation = glm::mat4( 1.0f );
-            glm::mat4 lRotation    = glm::mat4( 1.0f );
-            glm::mat4 lScale       = glm::mat4( 1.0f );
+            math::mat4 lTranslation = math::mat4( 1.0f );
+            math::mat4 lRotation    = math::mat4( 1.0f );
+            math::mat4 lScale       = math::mat4( 1.0f );
 
             if( aNode.translation.size() == 3 )
             {
-                lTranslation = math::Translation( glm::make_vec3( aNode.translation.data() ) );
+                lTranslation = math::Translation( math::make_vec3( aNode.translation.data() ) );
             }
             if( aNode.rotation.size() == 4 )
             {
-                glm::quat lQ = glm::make_quat( aNode.rotation.data() );
-                lRotation    = glm::mat4( lQ );
+                math::quat lQ = math::make_quat( aNode.rotation.data() );
+                lRotation    = math::mat4( lQ );
             }
             if( aNode.scale.size() == 3 )
             {
-                lScale = math::Scaling( glm::make_vec3( aNode.scale.data() ) );
+                lScale = math::Scaling( math::make_vec3( aNode.scale.data() ) );
             }
 
             lNewNode.mTransform = lTranslation * lRotation * lScale;
@@ -463,7 +463,7 @@ namespace SE::Core
                 const tinygltf::Buffer     &buffer     = mGltfModel.buffers[bufferView.buffer];
                 lNewImportedSkin.mInverseBindMatrices.resize( accessor.count );
                 memcpy( lNewImportedSkin.mInverseBindMatrices.data(), &buffer.data[accessor.byteOffset + bufferView.byteOffset],
-                        accessor.count * sizeof( glm::mat4 ) );
+                        accessor.count * sizeof( math::mat4 ) );
             }
 
             mSkinIDLookup[lSkinID++] = mSkins.size() - 1;
@@ -537,14 +537,14 @@ namespace SE::Core
                     {
                     case TINYGLTF_TYPE_VEC3:
                     {
-                        const glm::vec3 *buf = static_cast<const glm::vec3 *>( dataPtr );
+                        const math::vec3 *buf = static_cast<const math::vec3 *>( dataPtr );
                         for( size_t index = 0; index < accessor.count; index++ )
-                            lNewSampler.mOutputsVec4.push_back( glm::vec4( buf[index], 0.0f ) );
+                            lNewSampler.mOutputsVec4.push_back( math::vec4( buf[index], 0.0f ) );
                         break;
                     }
                     case TINYGLTF_TYPE_VEC4:
                     {
-                        const glm::vec4 *buf = static_cast<const glm::vec4 *>( dataPtr );
+                        const math::vec4 *buf = static_cast<const math::vec4 *>( dataPtr );
                         for( size_t index = 0; index < accessor.count; index++ ) lNewSampler.mOutputsVec4.push_back( buf[index] );
                         break;
                     }
