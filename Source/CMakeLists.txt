@@ -34,16 +34,13 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Optix/OptixProgramGroup.cpp
     Core/Optix/OptixAccelerationStructure.cpp
     
-    
-    # Core/GraphicContext/GraphicContext.cpp
-    Core/GraphicContext/DescriptorSet.cpp
-    Core/GraphicContext/GraphicsPipeline.cpp
-    Core/GraphicContext/ARenderContext.cpp
-    Core/GraphicContext/ARenderTarget.cpp
-    Core/GraphicContext/SwapChain.cpp
     Core/GraphicContext/UI/UIContext.cpp
-    
-    
+
+    Graphics/Vulkan/DescriptorSet.cpp
+    Graphics/Vulkan/GraphicsPipeline.cpp
+    Graphics/Vulkan/ARenderContext.cpp
+    Graphics/Vulkan/ARenderTarget.cpp
+    Graphics/Vulkan/SwapChain.cpp
     Graphics/Vulkan/VkGpuBuffer.cpp
     Graphics/Vulkan/VkTexture2D.cpp
     Graphics/Vulkan/VkSampler2D.cpp
@@ -52,6 +49,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Vulkan/VkPipeline.cpp
     Graphics/Vulkan/VkCommand.cpp
     Graphics/Vulkan/VkAbstractRenderPass.cpp
+
     Graphics/Interface/IWindow.cpp
 
     Scene/Primitives/Primitives.cpp

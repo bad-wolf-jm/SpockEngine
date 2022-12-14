@@ -1,10 +1,10 @@
 #pragma once
 #include "Core/Memory.h"
 
-#include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//GraphicsPipeline.h"
-#include "Core/GraphicContext/ARenderContext.h"
-#include "Core/GraphicContext/ARenderTarget.h"
+#include "Graphics/Vulkan/ARenderContext.h"
+#include "Graphics/Vulkan/ARenderTarget.h"
+#include "Graphics/Vulkan/DescriptorSet.h"
+#include "Graphics/Vulkan/GraphicsPipeline.h"
 
 #include "Scene/Components.h"
 #include "Scene/Scene.h"

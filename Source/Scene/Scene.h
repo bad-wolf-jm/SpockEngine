@@ -8,9 +8,9 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-#include "Core/GraphicContext//DescriptorSet.h"
+#include "Graphics/Vulkan/DescriptorSet.h"
+#include "Graphics/Vulkan/GraphicsPipeline.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
-#include "Core/GraphicContext//GraphicsPipeline.h"
 
 #include "UI/UI.h"
 
@@ -120,9 +120,9 @@ namespace SE::Core
         // Cuda::GPUExternalMemory mIndexBufferMemoryHandle{};
 
       private:
-        eSceneState         mState = eSceneState::EDITING;
-        Ref<VkGraphicContext>      mGraphicContext;
-        Ref<MaterialSystem> mMaterialSystem;
+        eSceneState           mState = eSceneState::EDITING;
+        Ref<VkGraphicContext> mGraphicContext;
+        Ref<MaterialSystem>   mMaterialSystem;
 
         Ref<OptixDeviceContextObject> mRayTracingContext     = nullptr;
         Ref<OptixScene>               mAccelerationStructure = nullptr;

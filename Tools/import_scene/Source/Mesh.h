@@ -3,7 +3,7 @@
 #include "Core/Math/Types.h"
 
 #include "Core/GraphicContext//Buffer.h"
-#include "Core/GraphicContext//GraphicsPipeline.h"
+#include "Graphics/Vulkan/GraphicsPipeline.h"
 
 #include "Scene/VertexData.h"
 
@@ -11,32 +11,33 @@
 
 struct BoneData
 {
-    uint32_t ID;
-    std::string Name;
-    int32_t NodeID;
+    uint32_t              ID;
+    std::string           Name;
+    int32_t               NodeID;
     std::vector<uint32_t> Vertices;
-    std::vector<float> Weights;
-    math::mat4 InverseBindMatrix;
+    std::vector<float>    Weights;
+    math::mat4            InverseBindMatrix;
 };
 
 struct AugmentedVertexData
 {
     std::vector<uint32_t> Bones;
-    std::vector<float> Weights;
+    std::vector<float>    Weights;
 };
 
 struct MeshData
 {
-    uint32_t ID;
-    std::string Name;
-    SE::Graphics::PrimitiveTopology Primitive;
+    uint32_t                          ID;
+    std::string                       Name;
+    SE::Graphics::PrimitiveTopology   Primitive;
     std::vector<SE::Core::VertexData> Vertices;
-    std::vector<uint32_t> Indices;
-    std::vector<uint32_t> WireframeIndices;
-    std::vector<BoneData> Bones;
-    std::map<std::string, uint32_t> BoneMap;
-    MaterialData Material;
+    std::vector<uint32_t>             Indices;
+    std::vector<uint32_t>             WireframeIndices;
+    std::vector<BoneData>             Bones;
+    std::map<std::string, uint32_t>   BoneMap;
+    MaterialData                      Material;
     // Bounding Box
 };
 
-bool LoadMeshes( const aiScene *a_SceneData, std::vector<std::shared_ptr<MeshData>> &a_Meshes, std::vector<MaterialData> &a_Materials );
+bool LoadMeshes( const aiScene *a_SceneData, std::vector<std::shared_ptr<MeshData>> &a_Meshes,
+                 std::vector<MaterialData> &a_Materials );

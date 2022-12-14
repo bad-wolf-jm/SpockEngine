@@ -3,7 +3,7 @@
 #include "Core/Math/Types.h"
 
 #ifndef __CUDACC__
-#    include "Core/GraphicContext//GraphicsPipeline.h"
+#    include "Graphics/Vulkan/GraphicsPipeline.h"
 #endif
 
 #ifndef __CUDACC__

@@ -8,12 +8,12 @@
 
 #include "Graphics/Vulkan/VkGpuBuffer.h"
 
-#include "Core/GraphicContext//ARenderContext.h"
-#include "Core/GraphicContext//DescriptorSet.h"
+#include "Graphics/Vulkan/ARenderContext.h"
+#include "Graphics/Vulkan/DescriptorSet.h"
 
-#include "Graphics/Vulkan/VkGraphicContext.h"
-#include "Core/GraphicContext//GraphicsPipeline.h"
+#include "Graphics/Vulkan/GraphicsPipeline.h"
 #include "Graphics/Vulkan/VkAbstractRenderPass.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "Scene/ParticleData.h"
 #include "Scene/VertexData.h"

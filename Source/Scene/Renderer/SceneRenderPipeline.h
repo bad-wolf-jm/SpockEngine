@@ -7,8 +7,8 @@
 #include "Graphics/Vulkan/VkAbstractRenderPass.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 
-#include "Core/GraphicContext//DescriptorSet.h"
-#include "Core/GraphicContext//GraphicsPipeline.h"
+#include "Graphics/Vulkan/DescriptorSet.h"
+#include "Graphics/Vulkan/GraphicsPipeline.h"
 
 namespace SE::Core
 {

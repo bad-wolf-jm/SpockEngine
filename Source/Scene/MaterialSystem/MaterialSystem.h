@@ -3,7 +3,7 @@
 #include "Core/Math/Types.h"
 
 #ifndef __CUDACC__
-#    include "Core/GraphicContext//DescriptorSet.h"
+#    include "Graphics/Vulkan/DescriptorSet.h"
 
 #    include "Graphics/Vulkan/VkGpuBuffer.h"
 #    include "Graphics/Vulkan/VkGraphicContext.h"

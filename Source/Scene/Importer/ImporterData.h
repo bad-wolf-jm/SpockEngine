@@ -3,11 +3,11 @@
 #include <filesystem>
 #include <string>
 
+#include "Core/CUDA/Texture/TextureData.h"
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
-#include "Core/CUDA/Texture/TextureData.h"
 
-#include "Core/GraphicContext//GraphicsPipeline.h"
+#include "Graphics/Vulkan/GraphicsPipeline.h"
 #include "Scene/MaterialSystem/MaterialSystem.h"
 #include "yaml-cpp/yaml.h"
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Core/GraphicContext/ARenderContext.h"
-#include "Core/GraphicContext/ARenderTarget.h"
-#include "Core/GraphicContext/DescriptorSet.h"
 #include "Core/Memory.h"
+#include "Graphics/Vulkan/ARenderContext.h"
+#include "Graphics/Vulkan/ARenderTarget.h"
+#include "Graphics/Vulkan/DescriptorSet.h"
 
 #include "ASceneRenderer.h"
 #include "CoordinateGridRenderer.h"
