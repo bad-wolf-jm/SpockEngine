@@ -85,9 +85,9 @@ namespace SE::Core
 
         Ref<DescriptorSetLayout> mUIDescriptorSetLayout = nullptr;
 
-        Ref<SE::Graphics::Internal::ShaderModule> mUIVertexShader   = nullptr;
-        Ref<SE::Graphics::Internal::ShaderModule> mUIFragmentShader = nullptr;
-        Ref<GraphicsPipeline>                     mUIRenderPipeline = nullptr;
+        Ref<ShaderModule>     mUIVertexShader   = nullptr;
+        Ref<ShaderModule>     mUIFragmentShader = nullptr;
+        Ref<GraphicsPipeline> mUIRenderPipeline = nullptr;
 
         Ref<Graphics::VkSampler2D> mFontTexture       = nullptr;
         Ref<DescriptorSet>         mFontDescriptorSet = nullptr;

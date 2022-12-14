@@ -8,8 +8,6 @@
 
 namespace SE::Graphics
 {
-    using namespace Internal;
-
     class ARenderContext
     {
       public:

@@ -11,10 +11,7 @@
 
 namespace SE::Core
 {
-
     using namespace math;
-    using namespace Internal;
-
     Ref<DescriptorSetLayout> DeferredLightingRenderer::GetCameraSetLayout( Ref<VkGraphicContext> aGraphicContext )
     {
         DescriptorSetLayoutCreateInfo l_CameraBindLayout{};

@@ -15,7 +15,6 @@ namespace SE::Core
 
     using namespace math;
     using namespace SE::Graphics;
-    using namespace SE::Graphics::Internal;
     namespace fs = std::filesystem;
 
     struct SceneRenderPipelineCreateInfo
@@ -52,13 +51,13 @@ namespace SE::Core
         {
             Spec = aCreateInfo;
 
-            std::string                 lVertexShaderFiles = GetResourcePath( aCreateInfo.VertexShader ).string();
-            Ref<Internal::ShaderModule> lVertexShaderModule =
-                New<Internal::ShaderModule>( mGraphicContext, lVertexShaderFiles, Internal::eShaderStageTypeFlags::VERTEX );
+            std::string       lVertexShaderFiles = GetResourcePath( aCreateInfo.VertexShader ).string();
+            Ref<ShaderModule> lVertexShaderModule =
+                New<ShaderModule>( mGraphicContext, lVertexShaderFiles, eShaderStageTypeFlags::VERTEX );
 
-            std::string                 l_FragmentShaderFiles = GetResourcePath( aCreateInfo.FragmentShader ).string();
-            Ref<Internal::ShaderModule> l_FragmentShaderModule =
-                New<Internal::ShaderModule>( mGraphicContext, l_FragmentShaderFiles, Internal::eShaderStageTypeFlags::FRAGMENT );
+            std::string       l_FragmentShaderFiles = GetResourcePath( aCreateInfo.FragmentShader ).string();
+            Ref<ShaderModule> l_FragmentShaderModule =
+                New<ShaderModule>( mGraphicContext, l_FragmentShaderFiles, eShaderStageTypeFlags::FRAGMENT );
 
             GraphicsPipelineCreateInfo lPipelineCreateInfo{};
             lPipelineCreateInfo.mShaderStages        = { { lVertexShaderModule, "main" }, { l_FragmentShaderModule, "main" } };

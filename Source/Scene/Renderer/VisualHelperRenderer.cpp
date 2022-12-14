@@ -7,8 +7,7 @@ namespace SE::Graphics
 
     using namespace math::literals;
 
-    VisualHelperRenderer::VisualHelperRenderer( Ref<VkGraphicContext>                                    a_GraphicContext,
-                                                Ref<SE::Graphics::Internal::sVkAbstractRenderPassObject> a_RenderPass )
+    VisualHelperRenderer::VisualHelperRenderer( Ref<VkGraphicContext> a_GraphicContext, Ref<sVkAbstractRenderPassObject> a_RenderPass )
     {
         VisualHelperMeshRendererCreateInfo l_CreateInfo{};
         l_CreateInfo.RenderPass = a_RenderPass;

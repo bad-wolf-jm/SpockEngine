@@ -5,7 +5,7 @@
 #include <set>
 #include <string>
 
-namespace SE::Graphics::Internal
+namespace SE::Graphics
 {
     namespace
     {
@@ -1082,8 +1082,7 @@ namespace SE::Graphics::Internal
         return lNewDescriptorPool;
     }
 
-    VkDescriptorSet VkGraphicContext::AllocateDescriptorSet( VkDescriptorSetLayout aLayout,
-                                                             uint32_t aDescriptorCount )
+    VkDescriptorSet VkGraphicContext::AllocateDescriptorSet( VkDescriptorSetLayout aLayout, uint32_t aDescriptorCount )
     {
         VkDescriptorSetAllocateInfo lDescriptorSetAllocInfo{};
         lDescriptorSetAllocInfo.sType              = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -1114,8 +1113,7 @@ namespace SE::Graphics::Internal
         return lNewDescriptorSet;
     }
 
-    void VkGraphicContext::FreeDescriptorSet( VkDescriptorSet *aDescriptorSet,
-                                              uint32_t aDescriptorCount )
+    void VkGraphicContext::FreeDescriptorSet( VkDescriptorSet *aDescriptorSet, uint32_t aDescriptorCount )
     {
         VK_CHECK_RESULT( vkFreeDescriptorSets( mVkLogicalDevice, mVkDescriptorPool, 1, aDescriptorSet ) );
     }
@@ -1192,4 +1190,4 @@ namespace SE::Graphics::Internal
     void VkGraphicContext::WaitIdle() { vkDeviceWaitIdle( mVkLogicalDevice ); }
     void VkGraphicContext::WaitIdle( VkQueue aQueue ) { vkQueueWaitIdle( aQueue ); };
 
-} // namespace SE::Graphics::Internal
+} // namespace SE::Graphics

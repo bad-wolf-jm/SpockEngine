@@ -28,8 +28,8 @@ namespace SE::Graphics
 
     struct VisualHelperLineRendererCreateInfo
     {
-        float                                                    LineWidth  = 1.0f;
-        Ref<SE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
+        float                            LineWidth  = 1.0f;
+        Ref<sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
     class VisualHelperLineRenderer : public SceneRenderPipeline<PositionData>

@@ -40,8 +40,8 @@ namespace SE::Core
             float translate[2];
             translate[0] = -1.0f - aDrawData->DisplayPos.x * lScale[0];
             translate[1] = -1.0f - aDrawData->DisplayPos.y * lScale[1];
-            aRenderContext.PushConstants( { Graphics::Internal::eShaderStageTypeFlags::VERTEX }, 0, lScale );
-            aRenderContext.PushConstants( { Graphics::Internal::eShaderStageTypeFlags::VERTEX }, sizeof( float ) * 2, translate );
+            aRenderContext.PushConstants( { Graphics::eShaderStageTypeFlags::VERTEX }, 0, lScale );
+            aRenderContext.PushConstants( { Graphics::eShaderStageTypeFlags::VERTEX }, sizeof( float ) * 2, translate );
         }
     }
 
@@ -151,17 +151,17 @@ namespace SE::Core
         ImGui_ImplGlfw_InitForVulkan( aWindow->GetGLFWWindow(), true );
 
         DescriptorBindingInfo lDescriptorBinding = {
-            0, Internal::eDescriptorType::COMBINED_IMAGE_SAMPLER, { Graphics::Internal::eShaderStageTypeFlags::FRAGMENT } };
+            0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { Graphics::eShaderStageTypeFlags::FRAGMENT } };
         DescriptorSetLayoutCreateInfo lBindingLayout = { { lDescriptorBinding } };
         mUIDescriptorSetLayout                       = New<DescriptorSetLayout>( mGraphicContext, lBindingLayout );
 
         std::string lUIVertexShaderFiles = GetResourcePath( "Shaders\\ui_shader.vert.spv" ).string();
-        mUIVertexShader                  = New<Graphics::Internal::ShaderModule>( mGraphicContext, lUIVertexShaderFiles,
-                                                                 Graphics::Internal::eShaderStageTypeFlags::VERTEX );
+        mUIVertexShader =
+            New<Graphics::ShaderModule>( mGraphicContext, lUIVertexShaderFiles, Graphics::eShaderStageTypeFlags::VERTEX );
 
         std::string lUIFragmentShaderFiles = GetResourcePath( "Shaders\\ui_shader.frag.spv" ).string();
-        mUIFragmentShader                  = New<Graphics::Internal::ShaderModule>( mGraphicContext, lUIFragmentShaderFiles,
-                                                                   Graphics::Internal::eShaderStageTypeFlags::FRAGMENT );
+        mUIFragmentShader =
+            New<Graphics::ShaderModule>( mGraphicContext, lUIFragmentShaderFiles, Graphics::eShaderStageTypeFlags::FRAGMENT );
         GraphicsPipelineCreateInfo lUIPipelineCreateInfo = {};
         lUIPipelineCreateInfo.mShaderStages              = { { mUIVertexShader, "main" }, { mUIFragmentShader, "main" } };
         lUIPipelineCreateInfo.InputBufferLayout          = {
@@ -175,7 +175,7 @@ namespace SE::Core
         lUIPipelineCreateInfo.LineWidth     = 1.0f;
         lUIPipelineCreateInfo.RenderPass    = aRenderContext.GetRenderPass();
         lUIPipelineCreateInfo.PushConstants = {
-            { { Graphics::Internal::eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 },
+            { { Graphics::eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 },
         };
         lUIPipelineCreateInfo.SetLayouts = { mUIDescriptorSetLayout };
 

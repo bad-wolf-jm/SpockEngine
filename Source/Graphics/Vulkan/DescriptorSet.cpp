@@ -17,7 +17,7 @@ namespace SE::Graphics
 
     void DescriptorSet::Write( Ref<VkGpuBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding )
     {
-        Internal::sVkDescriptorSetObject::sBufferBindInfo lBufferBindInfo{};
+        sVkDescriptorSetObject::sBufferBindInfo lBufferBindInfo{};
         lBufferBindInfo.mBuffer        = aBuffer->mVkBuffer;
         lBufferBindInfo.mType          = aBuffer->mType;
         lBufferBindInfo.mDynamicOffset = false;
@@ -32,7 +32,7 @@ namespace SE::Graphics
     {
         if( aWriteOperations.size() == 0 ) return;
 
-        Internal::sVkDescriptorSetObject::sImageBindInfo lImages{};
+        sVkDescriptorSetObject::sImageBindInfo lImages{};
 
         for( auto &lBuffer : aWriteOperations )
         {
@@ -54,18 +54,18 @@ namespace SE::Graphics
         lNewBinding.descriptorType               = (VkDescriptorType)Type;
         lNewBinding.pImmutableSamplers           = nullptr;
 
-        if( mShaderStages & Internal::eShaderStageTypeFlags::VERTEX ) lNewBinding.stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
+        if( mShaderStages & eShaderStageTypeFlags::VERTEX ) lNewBinding.stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
 
-        if( mShaderStages & Internal::eShaderStageTypeFlags::COMPUTE ) lNewBinding.stageFlags |= VK_SHADER_STAGE_COMPUTE_BIT;
+        if( mShaderStages & eShaderStageTypeFlags::COMPUTE ) lNewBinding.stageFlags |= VK_SHADER_STAGE_COMPUTE_BIT;
 
-        if( mShaderStages & Internal::eShaderStageTypeFlags::GEOMETRY ) lNewBinding.stageFlags |= VK_SHADER_STAGE_GEOMETRY_BIT;
+        if( mShaderStages & eShaderStageTypeFlags::GEOMETRY ) lNewBinding.stageFlags |= VK_SHADER_STAGE_GEOMETRY_BIT;
 
-        if( mShaderStages & Internal::eShaderStageTypeFlags::FRAGMENT ) lNewBinding.stageFlags |= VK_SHADER_STAGE_FRAGMENT_BIT;
+        if( mShaderStages & eShaderStageTypeFlags::FRAGMENT ) lNewBinding.stageFlags |= VK_SHADER_STAGE_FRAGMENT_BIT;
 
-        if( mShaderStages & Internal::eShaderStageTypeFlags::TESSELATION_CONTROL )
+        if( mShaderStages & eShaderStageTypeFlags::TESSELATION_CONTROL )
             lNewBinding.stageFlags |= VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
 
-        if( mShaderStages & Internal::eShaderStageTypeFlags::TESSELATION_EVALUATION )
+        if( mShaderStages & eShaderStageTypeFlags::TESSELATION_EVALUATION )
             lNewBinding.stageFlags |= VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
 
         return lNewBinding;
@@ -88,7 +88,7 @@ namespace SE::Graphics
             lBindings[lBindings.size() - 1].descriptorCount = 1024;
         }
 
-        mDescriptorSetLayoutObject = New<Internal::sVkDescriptorSetLayoutObject>( mGraphicContext, lBindings, aUnbounded );
+        mDescriptorSetLayoutObject = New<sVkDescriptorSetLayoutObject>( mGraphicContext, lBindings, aUnbounded );
     }
 
 } // namespace SE::Graphics

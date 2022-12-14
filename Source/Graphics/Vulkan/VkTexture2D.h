@@ -19,7 +19,6 @@
 namespace SE::Graphics
 {
     using namespace SE::Core;
-    using namespace SE::Graphics::Internal;
 
     /** @brief */
     class VkTexture2D : public Cuda::Texture2D

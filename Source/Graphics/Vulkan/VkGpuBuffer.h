@@ -12,7 +12,6 @@
 namespace SE::Graphics
 {
     using namespace SE::Core;
-    using namespace SE::Graphics::Internal;
 
     class VkGpuBuffer : public Cuda::GPUMemory
     {

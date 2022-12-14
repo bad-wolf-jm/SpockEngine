@@ -14,7 +14,6 @@
 
 namespace SE::Graphics
 {
-    using namespace Internal;
     using namespace SE::Core;
 
     struct sRenderTargetDescription

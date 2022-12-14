@@ -11,20 +11,6 @@
 
 namespace SE::Graphics
 {
-    using namespace Internal;
-
-    using eBufferDataType        = Internal::eBufferDataType;
-    using sBufferLayoutElement   = Internal::sBufferLayoutElement;
-    using sBufferLayout          = Internal::sBufferLayout;
-    using ePrimitiveTopology     = Internal::ePrimitiveTopology;
-    using eFaceCulling           = Internal::eFaceCulling;
-    using sShader                = Internal::sShader;
-    using sPushConstantRange     = Internal::sPushConstantRange;
-    using sBlending              = Internal::sBlending;
-    using eBlendOperation        = Internal::eBlendOperation;
-    using eBlendFactor           = Internal::eBlendFactor;
-    using eDepthCompareOperation = Internal::eDepthCompareOperation;
-
     struct GraphicsPipelineCreateInfo
     {
         std::vector<sShader>   mShaderStages        = {};
@@ -40,7 +26,7 @@ namespace SE::Graphics
         eDepthCompareOperation DepthComparison      = eDepthCompareOperation::ALWAYS;
 
         std::vector<sPushConstantRange>            PushConstants = {};
-        Ref<Internal::sVkAbstractRenderPassObject> RenderPass    = nullptr;
+        Ref<sVkAbstractRenderPassObject> RenderPass    = nullptr;
         std::vector<Ref<DescriptorSetLayout>>      SetLayouts    = {};
     };
 
@@ -50,13 +36,13 @@ namespace SE::Graphics
         GraphicsPipeline( Ref<VkGraphicContext> a_GraphicContext, GraphicsPipelineCreateInfo &a_CreateInfo );
         ~GraphicsPipeline() = default;
 
-        Ref<Internal::sVkPipelineObject>       GetVkPipelineObject() { return m_PipelineObject; }
-        Ref<Internal::sVkPipelineLayoutObject> GetVkPipelineLayoutObject() { return m_PipelineLayoutObject; }
+        Ref<sVkPipelineObject>       GetVkPipelineObject() { return m_PipelineObject; }
+        Ref<sVkPipelineLayoutObject> GetVkPipelineLayoutObject() { return m_PipelineLayoutObject; }
 
       private:
         Ref<VkGraphicContext>                  mGraphicContext{};
-        Ref<Internal::sVkPipelineLayoutObject> m_PipelineLayoutObject = nullptr;
-        Ref<Internal::sVkPipelineObject>       m_PipelineObject       = nullptr;
+        Ref<sVkPipelineLayoutObject> m_PipelineLayoutObject = nullptr;
+        Ref<sVkPipelineObject>       m_PipelineObject       = nullptr;
     };
 
 } // namespace SE::Graphics

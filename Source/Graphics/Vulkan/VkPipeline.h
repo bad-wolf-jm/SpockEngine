@@ -8,7 +8,7 @@
 #include <memory>
 #include <vulkan/vulkan.h>
 
-namespace SE::Graphics::Internal
+namespace SE::Graphics
 {
     using namespace SE::Core;
 
@@ -351,4 +351,4 @@ namespace SE::Graphics::Internal
         Ref<VkGraphicContext> mContext = nullptr;
     };
 
-} // namespace SE::Graphics::Internal
+} // namespace SE::Graphics

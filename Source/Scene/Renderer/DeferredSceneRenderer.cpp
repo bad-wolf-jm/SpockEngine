@@ -243,8 +243,7 @@ namespace SE::Core
                         MeshRenderer::MaterialPushConstants lMaterialPushConstants{};
                         lMaterialPushConstants.mMaterialID = lMeshInformation.Get<sMaterialComponent>().mMaterialID;
 
-                        mGeometryContext.PushConstants( { Graphics::Internal::eShaderStageTypeFlags::FRAGMENT }, 0,
-                                                        lMaterialPushConstants );
+                        mGeometryContext.PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
 
                         auto &lStaticMeshComponent = lMeshInformation.Get<sStaticMeshComponent>();
                         mGeometryContext.Draw( lStaticMeshComponent.mIndexCount, lStaticMeshComponent.mIndexOffset,

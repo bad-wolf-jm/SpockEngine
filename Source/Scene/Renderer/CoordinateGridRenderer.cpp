@@ -23,7 +23,7 @@ namespace SE::Core
 
         DescriptorSetLayoutCreateInfo lPipelineLayoutCI{};
         lPipelineLayoutCI.Bindings = {
-            DescriptorBindingInfo{ 0, Internal::eDescriptorType::UNIFORM_BUFFER, { Internal::eShaderStageTypeFlags::VERTEX } } };
+            DescriptorBindingInfo{ 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } } };
         PipelineLayout = New<DescriptorSetLayout>( mGraphicContext, lPipelineLayoutCI );
 
         Initialize( lCreateInfo );

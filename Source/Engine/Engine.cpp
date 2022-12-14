@@ -34,7 +34,7 @@ namespace SE::Core
     {
 
         mViewportClient = SE::Core::New<IWindow>( mInitialMainWindowSize.x, mInitialMainWindowSize.y, mApplicationName );
-        mGraphicContext = SE::Core::New<Internal::VkGraphicContext>( mViewportClient, 1, true );
+        mGraphicContext = SE::Core::New<VkGraphicContext>( mViewportClient, 1, true );
 
         m_SwapChain              = SE::Core::New<SwapChain>( mGraphicContext, mViewportClient );
         m_SwapChainRenderContext = SE::Graphics::ARenderContext( mGraphicContext, m_SwapChain );

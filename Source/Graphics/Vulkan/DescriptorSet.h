@@ -14,10 +14,10 @@ namespace SE::Graphics
 {
     struct DescriptorBindingInfo
     {
-        uint32_t                  mBindingIndex = 0;
-        Internal::eDescriptorType Type          = Internal::eDescriptorType::UNIFORM_BUFFER;
-        Internal::ShaderStageType mShaderStages = {};
-        bool                      Unbounded     = false;
+        uint32_t        mBindingIndex = 0;
+        eDescriptorType Type          = eDescriptorType::UNIFORM_BUFFER;
+        ShaderStageType mShaderStages = {};
+        bool            Unbounded     = false;
 
         operator VkDescriptorSetLayoutBinding() const;
     };
@@ -36,15 +36,15 @@ namespace SE::Graphics
 
         DescriptorSetLayoutCreateInfo Spec;
 
-        Ref<Internal::sVkDescriptorSetLayoutObject> GetVkDescriptorSetLayoutObject() { return mDescriptorSetLayoutObject; }
+        Ref<sVkDescriptorSetLayoutObject> GetVkDescriptorSetLayoutObject() { return mDescriptorSetLayoutObject; }
 
         VkDescriptorSetLayout GetVkDescriptorSetLayout() { return mDescriptorSetLayoutObject->mVkObject; }
 
         operator VkDescriptorSetLayout() const { return mDescriptorSetLayoutObject->mVkObject; };
 
       private:
-        Ref<VkGraphicContext>                       mGraphicContext{};
-        Ref<Internal::sVkDescriptorSetLayoutObject> mDescriptorSetLayoutObject = nullptr;
+        Ref<VkGraphicContext>             mGraphicContext{};
+        Ref<sVkDescriptorSetLayoutObject> mDescriptorSetLayoutObject = nullptr;
     };
 
     template <typename _BufType>
@@ -72,12 +72,12 @@ namespace SE::Graphics
 
         VkDescriptorSet GetVkDescriptorSet() { return mDescriptorSetObject->mVkObject; }
 
-        Ref<Internal::sVkDescriptorSetObject> GetVkDescriptorSetObject() { return mDescriptorSetObject; }
+        Ref<sVkDescriptorSetObject> GetVkDescriptorSetObject() { return mDescriptorSetObject; }
 
       private:
-        Ref<VkGraphicContext>                 mGraphicContext{};
-        Ref<DescriptorSetLayout>              mLayout              = nullptr;
-        Ref<Internal::sVkDescriptorSetObject> mDescriptorSetObject = nullptr;
+        Ref<VkGraphicContext>       mGraphicContext{};
+        Ref<DescriptorSetLayout>    mLayout              = nullptr;
+        Ref<sVkDescriptorSetObject> mDescriptorSetObject = nullptr;
     };
 
 } // namespace SE::Graphics

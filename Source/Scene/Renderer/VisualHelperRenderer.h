@@ -31,8 +31,7 @@ namespace SE::Graphics
         math::mat4 Projection = math::mat4( 1.0f );
 
         VisualHelperRenderer() = default;
-        VisualHelperRenderer( Ref<VkGraphicContext>                                    a_GraphicContext,
-                              Ref<SE::Graphics::Internal::sVkAbstractRenderPassObject> aRenderPass );
+        VisualHelperRenderer( Ref<VkGraphicContext> a_GraphicContext, Ref<sVkAbstractRenderPassObject> aRenderPass );
 
         ~VisualHelperRenderer() = default;
 

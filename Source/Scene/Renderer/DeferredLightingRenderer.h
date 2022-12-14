@@ -25,7 +25,7 @@ namespace SE::Core
     {
         bool Opaque = false;
 
-        Ref<SE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
+        Ref<sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
     class DeferredLightingRenderer : public SceneRenderPipeline<EmptyVertexData>

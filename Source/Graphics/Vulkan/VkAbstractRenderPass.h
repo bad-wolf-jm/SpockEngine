@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Graphics/Interface/IWindow.h"
 #include "Core/Math/Types.h"
+#include "Graphics/Interface/IWindow.h"
 #include <memory>
 #include <vulkan/vulkan.h>
 
@@ -9,7 +9,7 @@
 
 #include "Core/Memory.h"
 
-namespace SE::Graphics::Internal
+namespace SE::Graphics
 {
     using namespace SE::Core;
 
@@ -47,9 +47,9 @@ namespace SE::Graphics::Internal
         uint32_t GetColorAttachmentCount() { return mColorAttachmentCount; }
 
       protected:
-        Ref<VkGraphicContext>            mContext              = nullptr;
+        Ref<VkGraphicContext>     mContext              = nullptr;
         std::vector<VkClearValue> mClearValues          = {};
         uint32_t                  mColorAttachmentCount = 0;
     };
 
-} // namespace SE::Graphics::Internal
+} // namespace SE::Graphics

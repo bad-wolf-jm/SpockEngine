@@ -28,8 +28,8 @@ namespace SE::Graphics
 
     struct VisualHelperMeshRendererCreateInfo
     {
-        float                                                    LineWidth  = 1.0f;
-        Ref<SE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
+        float                                          LineWidth  = 1.0f;
+        Ref<SE::Graphics::sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
     class VisualHelperMeshRenderer : public SE::Core::SceneRenderPipeline<SimpleVertexData>

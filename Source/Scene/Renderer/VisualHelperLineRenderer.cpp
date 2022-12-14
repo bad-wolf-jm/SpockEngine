@@ -13,9 +13,7 @@ namespace SE::Graphics
 
     std::vector<sPushConstantRange> VisualHelperLineRenderer::GetPushConstantLayout()
     {
-        return { { { Internal::eShaderStageTypeFlags::VERTEX, Internal::eShaderStageTypeFlags::FRAGMENT },
-                   0,
-                   sizeof( CameraViewUniforms ) } };
+        return { { { eShaderStageTypeFlags::VERTEX, eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( CameraViewUniforms ) } };
     };
 
     VisualHelperLineRenderer::VisualHelperLineRenderer( Ref<VkGraphicContext>              a_GraphicContext,
@@ -40,8 +38,7 @@ namespace SE::Graphics
         CameraViewUniforms l_View{ a_Model, a_View, a_Projection, math::vec4( a_Color, 1.0f ) };
 
         aRenderContext.Bind( Pipeline );
-        aRenderContext.PushConstants( { Internal::eShaderStageTypeFlags::VERTEX, Internal::eShaderStageTypeFlags::FRAGMENT }, 0,
-                                      l_View );
+        aRenderContext.PushConstants( { eShaderStageTypeFlags::VERTEX, eShaderStageTypeFlags::FRAGMENT }, 0, l_View );
         aRenderContext.Bind( a_VertexBuffer, a_IndexBuffer, 0 );
         aRenderContext.Draw( a_IndexBuffer->SizeAs<uint32_t>(), 0, 0, 1, 0 );
     }

@@ -14,8 +14,6 @@
 
 namespace SE::Graphics
 {
-    using namespace Internal;
-
     /** @brief */
     VkTexture2D::VkTexture2D( Ref<VkGraphicContext> aGraphicContext, TextureData2D &mTextureData, uint8_t aSampleCount,
                               bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
@@ -142,8 +140,7 @@ namespace SE::Graphics
     void VkTexture2D::SetPixelData( VkGpuBuffer &aBuffer )
     {
         // Ref<sVkCommandBufferObject> lCommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
-        Ref<Internal::sVkCommandBufferObject> lCommandBufferObject =
-            SE::Core::New<Internal::sVkCommandBufferObject>( mGraphicContext );
+        Ref<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( mGraphicContext );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
 
         std::vector<sImageRegion> lBufferCopyRegions;
@@ -180,8 +177,7 @@ namespace SE::Graphics
 
     void VkTexture2D::TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout )
     {
-        Ref<Internal::sVkCommandBufferObject> lCommandBufferObject =
-            SE::Core::New<Internal::sVkCommandBufferObject>( mGraphicContext );
+        Ref<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( mGraphicContext );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         // Ref<sVkCommandBufferObject> lCommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
         lCommandBufferObject->ImageMemoryBarrier( mVkImage, aOldLayout, aNewLayout, mSpec.mMipLevels, 1 );
@@ -215,8 +211,7 @@ namespace SE::Graphics
         }
 
         TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL );
-        Ref<Internal::sVkCommandBufferObject> lCommandBufferObject =
-            SE::Core::New<Internal::sVkCommandBufferObject>( mGraphicContext );
+        Ref<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( mGraphicContext );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         // Ref<sVkCommandBufferObject> lCommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
         lCommandBufferObject->CopyImage( mVkImage, lStagingBuffer.mVkBuffer, lBufferCopyRegions, 0 );

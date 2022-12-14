@@ -9,7 +9,7 @@
 
 #include "VkPipeline.h"
 
-namespace SE::Graphics::Internal
+namespace SE::Graphics
 {
     using namespace SE::Core;
 
@@ -90,4 +90,4 @@ namespace SE::Graphics::Internal
         std::vector<VkPipelineStageFlags> mSubmitWaitSemaphoreStage = {};
         std::vector<VkSemaphore>          mSubmitSignalSemaphores   = {};
     };
-} // namespace SE::Graphics::Internal
+} // namespace SE::Graphics

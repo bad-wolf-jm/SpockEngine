@@ -21,7 +21,7 @@
 
 using namespace SE::Core;
 
-namespace SE::Graphics::Internal
+namespace SE::Graphics
 {
 
     enum class eBufferBindType : uint32_t
@@ -77,9 +77,8 @@ namespace SE::Graphics::Internal
 
         VkDescriptorPool CreateDescriptorPool( uint32_t aDescriptorSetCount, std::vector<VkDescriptorPoolSize> aPoolSizes );
         void             DestroyDescriptorPool( VkDescriptorPool aDescriptorPool );
-        VkDescriptorSet  AllocateDescriptorSet( VkDescriptorSetLayout aLayout,
-                                                uint32_t aDescriptorCount = 0 );
-        void FreeDescriptorSet( VkDescriptorSet *aDescriptorSet, uint32_t aDescriptorCount = 0 );
+        VkDescriptorSet  AllocateDescriptorSet( VkDescriptorSetLayout aLayout, uint32_t aDescriptorCount = 0 );
+        void             FreeDescriptorSet( VkDescriptorSet *aDescriptorSet, uint32_t aDescriptorCount = 0 );
 
         VkDescriptorSetLayout CreateDescriptorSetLayout( std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded );
         void                  DestroyDescriptorSetLayout( VkDescriptorSetLayout aDescriptorSetLayout );
@@ -193,4 +192,4 @@ namespace SE::Graphics::Internal
       private:
         VkDescriptorPool mVkDescriptorPool = VK_NULL_HANDLE;
     };
-} // namespace SE::Graphics::Internal
+} // namespace SE::Graphics

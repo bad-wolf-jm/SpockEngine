@@ -6,10 +6,10 @@
 #include "Core/Memory.h"
 #include "Graphics/Vulkan/VkCoreMacros.h"
 
-namespace SE::Graphics::Internal
+namespace SE::Graphics
 {
 
-    sVkAbstractRenderPassObject::sVkAbstractRenderPassObject( Ref<VkGraphicContext>                       aContext,
+    sVkAbstractRenderPassObject::sVkAbstractRenderPassObject( Ref<VkGraphicContext>                aContext,
                                                               std::vector<VkAttachmentDescription> aAttachments,
                                                               std::vector<VkSubpassDescription>    aSubpasses,
                                                               std::vector<VkSubpassDependency>     aSubpassDependencies )
@@ -86,15 +86,15 @@ namespace SE::Graphics::Internal
 
         if( aIsSampled )
         {
-            lAttachmentSpec.finalLayout   = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            lAttachmentSpec.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
         }
         else if( aIsPresented )
         {
-            lAttachmentSpec.finalLayout   = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+            lAttachmentSpec.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
         }
         else
         {
-            lAttachmentSpec.finalLayout   = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+            lAttachmentSpec.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
         }
 
         return lAttachmentSpec;
@@ -117,4 +117,4 @@ namespace SE::Graphics::Internal
         return lAttachmentSpec;
     }
 
-} // namespace SE::Graphics::Internal
+} // namespace SE::Graphics

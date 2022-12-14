@@ -131,8 +131,8 @@ namespace SE::Core
         std::vector<std::function<void()>> mMainThreadQueue;
         std::mutex                         mMainThreadQueueMutex;
 
-        Ref<SE::Core::IWindow>                        mViewportClient;
-        Ref<SE::Graphics::Internal::VkGraphicContext> mGraphicContext = nullptr;
+        Ref<SE::Core::IWindow>              mViewportClient;
+        Ref<SE::Graphics::VkGraphicContext> mGraphicContext = nullptr;
 
         Ref<SE::Core::UIContext> mImGUIOverlay;
 

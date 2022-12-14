@@ -8,7 +8,7 @@
 #include "Core/Memory.h"
 #include "Graphics/Vulkan/VkCoreMacros.h"
 
-namespace SE::Graphics::Internal
+namespace SE::Graphics
 {
 
     sVkShaderModuleObject::sVkShaderModuleObject( Ref<VkGraphicContext> aContext, std::vector<uint32_t> aByteCode )
@@ -65,27 +65,14 @@ namespace SE::Graphics::Internal
 
         switch( Type )
         {
-        case eShaderStageTypeFlags::VERTEX:
-            shaderStages.stage = VK_SHADER_STAGE_VERTEX_BIT;
-            break;
-        case eShaderStageTypeFlags::GEOMETRY:
-            shaderStages.stage = VK_SHADER_STAGE_GEOMETRY_BIT;
-            break;
-        case eShaderStageTypeFlags::FRAGMENT:
-            shaderStages.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-            break;
-        case eShaderStageTypeFlags::TESSELATION_CONTROL:
-            shaderStages.stage = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
-            break;
-        case eShaderStageTypeFlags::TESSELATION_EVALUATION:
-            shaderStages.stage = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
-            break;
-        case eShaderStageTypeFlags::COMPUTE:
-            shaderStages.stage = VK_SHADER_STAGE_COMPUTE_BIT;
-            break;
+        case eShaderStageTypeFlags::VERTEX: shaderStages.stage = VK_SHADER_STAGE_VERTEX_BIT; break;
+        case eShaderStageTypeFlags::GEOMETRY: shaderStages.stage = VK_SHADER_STAGE_GEOMETRY_BIT; break;
+        case eShaderStageTypeFlags::FRAGMENT: shaderStages.stage = VK_SHADER_STAGE_FRAGMENT_BIT; break;
+        case eShaderStageTypeFlags::TESSELATION_CONTROL: shaderStages.stage = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT; break;
+        case eShaderStageTypeFlags::TESSELATION_EVALUATION: shaderStages.stage = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT; break;
+        case eShaderStageTypeFlags::COMPUTE: shaderStages.stage = VK_SHADER_STAGE_COMPUTE_BIT; break;
         case eShaderStageTypeFlags::DEFAULT:
-        default:
-            throw std::runtime_error( "Unknown shader type" );
+        default: throw std::runtime_error( "Unknown shader type" );
         }
 
         shaderStages.module              = mShaderModuleObject->mVkObject;
@@ -96,8 +83,8 @@ namespace SE::Graphics::Internal
         return shaderStages;
     }
 
-    sVkDescriptorSetLayoutObject::sVkDescriptorSetLayoutObject(
-        Ref<VkGraphicContext> aContext, std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded )
+    sVkDescriptorSetLayoutObject::sVkDescriptorSetLayoutObject( Ref<VkGraphicContext>                     aContext,
+                                                                std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded )
         : mContext{ aContext }
     {
         mVkObject = mContext->CreateDescriptorSetLayout( aBindings, aUnbounded );
@@ -105,8 +92,7 @@ namespace SE::Graphics::Internal
 
     sVkDescriptorSetLayoutObject::~sVkDescriptorSetLayoutObject() { mContext->DestroyDescriptorSetLayout( mVkObject ); }
 
-    sVkDescriptorSetObject::sVkDescriptorSetObject(
-        Ref<VkGraphicContext> aContext, VkDescriptorSet aDescriporSet )
+    sVkDescriptorSetObject::sVkDescriptorSetObject( Ref<VkGraphicContext> aContext, VkDescriptorSet aDescriporSet )
         : mContext{ aContext }
         , mVkObject{ aDescriporSet }
 
@@ -176,23 +162,24 @@ namespace SE::Graphics::Internal
         mContext->UpdateDescriptorSets( lWriteDSOps );
     }
 
-    sVkDescriptorPoolObject::sVkDescriptorPoolObject(
-        Ref<VkGraphicContext> aContext, uint32_t aDescriptorSetCount, std::vector<VkDescriptorPoolSize> aPoolSizes )
+    sVkDescriptorPoolObject::sVkDescriptorPoolObject( Ref<VkGraphicContext> aContext, uint32_t aDescriptorSetCount,
+                                                      std::vector<VkDescriptorPoolSize> aPoolSizes )
         : mContext{ aContext }
     {
     }
 
     sVkDescriptorPoolObject::~sVkDescriptorPoolObject() { mContext->DestroyDescriptorPool( mVkObject ); }
 
-    Ref<sVkDescriptorSetObject> sVkDescriptorPoolObject::Allocate(
-        Ref<sVkDescriptorSetLayoutObject> aLayout, uint32_t aDescriptorCount )
+    Ref<sVkDescriptorSetObject> sVkDescriptorPoolObject::Allocate( Ref<sVkDescriptorSetLayoutObject> aLayout,
+                                                                   uint32_t                          aDescriptorCount )
     {
-        return SE::Core::New<sVkDescriptorSetObject>(
-            mContext, mContext->AllocateDescriptorSet( aLayout->mVkObject, aDescriptorCount ) );
+        return SE::Core::New<sVkDescriptorSetObject>( mContext,
+                                                      mContext->AllocateDescriptorSet( aLayout->mVkObject, aDescriptorCount ) );
     }
 
-    sVkPipelineLayoutObject::sVkPipelineLayoutObject( Ref<VkGraphicContext> aContext,
-        std::vector<Ref<sVkDescriptorSetLayoutObject>> aDescriptorSetLayout, std::vector<sPushConstantRange> aPushConstantRanges )
+    sVkPipelineLayoutObject::sVkPipelineLayoutObject( Ref<VkGraphicContext>                          aContext,
+                                                      std::vector<Ref<sVkDescriptorSetLayoutObject>> aDescriptorSetLayout,
+                                                      std::vector<sPushConstantRange>                aPushConstantRanges )
         : mContext{ aContext }
     {
 
@@ -241,8 +228,8 @@ namespace SE::Graphics::Internal
         return 0;
     };
 
-    sBufferLayoutElement::sBufferLayoutElement(
-        const std::string &aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation )
+    sBufferLayoutElement::sBufferLayoutElement( const std::string &aName, eBufferDataType aType, uint32_t aBinding,
+                                                uint32_t aLocation )
         : mName( aName )
         , mType( aType )
         , mBinding( aBinding )
@@ -272,7 +259,7 @@ namespace SE::Graphics::Internal
     }
 
     void sBufferLayout::Compile( uint32_t aBinding, VkVertexInputBindingDescription &aBindingDesc,
-        std::vector<VkVertexInputAttributeDescription> &aAttributes, bool aInstanced )
+                                 std::vector<VkVertexInputAttributeDescription> &aAttributes, bool aInstanced )
     {
         aBindingDesc.binding   = aBinding;
         aBindingDesc.stride    = mStride;
@@ -291,9 +278,10 @@ namespace SE::Graphics::Internal
     }
 
     sVkPipelineObject::sVkPipelineObject( Ref<VkGraphicContext> aContext, uint8_t aSampleCount, sBufferLayout aVertexBufferLayout,
-        sBufferLayout aInstanceBufferLayout, ePrimitiveTopology aTopology, eFaceCulling aCullMode, float aLineWidth,
-        sDepthTesting aDepthTest, sBlending aBlending, std::vector<sShader> aShaderStages,
-        Ref<sVkPipelineLayoutObject> aPipelineLayout, Ref<sVkAbstractRenderPassObject> aRenderPass )
+                                          sBufferLayout aInstanceBufferLayout, ePrimitiveTopology aTopology, eFaceCulling aCullMode,
+                                          float aLineWidth, sDepthTesting aDepthTest, sBlending aBlending,
+                                          std::vector<sShader> aShaderStages, Ref<sVkPipelineLayoutObject> aPipelineLayout,
+                                          Ref<sVkAbstractRenderPassObject> aRenderPass )
         : mContext{ aContext }
     {
 
@@ -362,7 +350,8 @@ namespace SE::Graphics::Internal
         lColorBlendAttachment.dstAlphaBlendFactor = static_cast<VkBlendFactor>( aBlending.mDestAlphaFactor );
         lColorBlendAttachment.alphaBlendOp        = static_cast<VkBlendOp>( aBlending.mAlphaBlendOperation );
 
-        std::vector<VkPipelineColorBlendAttachmentState> lBlendAttachments(aRenderPass->GetColorAttachmentCount(), lColorBlendAttachment);
+        std::vector<VkPipelineColorBlendAttachmentState> lBlendAttachments( aRenderPass->GetColorAttachmentCount(),
+                                                                            lColorBlendAttachment );
 
         VkPipelineColorBlendStateCreateInfo lColorBlendingInfo{};
         lColorBlendingInfo.sType           = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -410,16 +399,10 @@ namespace SE::Graphics::Internal
 
         switch( aTopology )
         {
-        case ePrimitiveTopology::TRIANGLES:
-            lRasterizationConfig.polygonMode = VK_POLYGON_MODE_FILL;
-            break;
-        case ePrimitiveTopology::LINES:
-            lRasterizationConfig.polygonMode = VK_POLYGON_MODE_LINE;
-            break;
+        case ePrimitiveTopology::TRIANGLES: lRasterizationConfig.polygonMode = VK_POLYGON_MODE_FILL; break;
+        case ePrimitiveTopology::LINES: lRasterizationConfig.polygonMode = VK_POLYGON_MODE_LINE; break;
         case ePrimitiveTopology::POINTS:
-        default:
-            lRasterizationConfig.polygonMode = VK_POLYGON_MODE_POINT;
-            break;
+        default: lRasterizationConfig.polygonMode = VK_POLYGON_MODE_POINT; break;
         }
 
         lRasterizationConfig.lineWidth               = aLineWidth;
@@ -465,4 +448,4 @@ namespace SE::Graphics::Internal
 
     sVkPipelineObject::~sVkPipelineObject() { mContext->DestroyPipeline( mVkObject ); }
 
-} // namespace SE::Graphics::Internal
+} // namespace SE::Graphics

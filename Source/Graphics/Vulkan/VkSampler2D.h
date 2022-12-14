@@ -13,15 +13,12 @@
 #include "Core/CUDA/Texture/Texture2D.h"
 #include "Core/CUDA/Texture/TextureTypes.h"
 
-// #include "Core/GraphicContext/GraphicContext.h"
-
 #include "VkGraphicContext.h"
 #include "VkTexture2D.h"
 
 namespace SE::Graphics
 {
     using namespace SE::Core;
-    using namespace SE::Graphics::Internal;
 
     /** @brief */
     class VkSampler2D : public Cuda::TextureSampler2D

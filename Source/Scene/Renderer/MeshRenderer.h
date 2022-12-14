@@ -29,7 +29,7 @@ namespace SE::Core
         fs::path VertexShader   = "";
         fs::path FragmentShader = "";
 
-        Ref<SE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
+        Ref<sVkAbstractRenderPassObject> RenderPass = nullptr;
 
         bool operator==( const MeshRendererCreateInfo &p ) const
         {

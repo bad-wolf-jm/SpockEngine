@@ -13,9 +13,8 @@ namespace SE::Core
         // layout( set = X, binding = 0 ) uniform sampler2D Textures[];
         DescriptorSetLayoutCreateInfo lTextureBindLayout{};
         lTextureBindLayout.Bindings = {
-            DescriptorBindingInfo{ 0, Internal::eDescriptorType::STORAGE_BUFFER, { Internal::eShaderStageTypeFlags::FRAGMENT } },
-            DescriptorBindingInfo{
-                1, Internal::eDescriptorType::COMBINED_IMAGE_SAMPLER, { Internal::eShaderStageTypeFlags::FRAGMENT } } };
+            DescriptorBindingInfo{ 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } },
+            DescriptorBindingInfo{ 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
 
         mShaderMaterials =
             New<VkGpuBuffer>( mGraphicContext, eBufferBindType::STORAGE_BUFFER, true, true, true, true, sizeof( sShaderMaterial ) );

@@ -28,7 +28,7 @@ namespace SE::Core
 
     struct CoordinateGridRendererCreateInfo
     {
-        Ref<SE::Graphics::Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
+        Ref<sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
     class CoordinateGridRenderer : public SE::Core::SceneRenderPipeline<EmptyVertexData>

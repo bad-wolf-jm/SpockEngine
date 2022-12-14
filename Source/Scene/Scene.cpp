@@ -30,7 +30,6 @@ namespace SE::Core
     namespace fs = std::filesystem;
     using namespace SE::Graphics;
     using namespace SE::Cuda;
-    // using namespace SE::SensorModel;
     using namespace SE::Core::EntityComponentSystem;
     using namespace SE::Core::EntityComponentSystem::Components;
 

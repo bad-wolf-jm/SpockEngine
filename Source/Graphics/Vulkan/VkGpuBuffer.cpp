@@ -84,7 +84,7 @@ namespace SE::Graphics
             auto lStagingBuffer = VkGpuBuffer( mGraphicContext, eBufferBindType::UNKNOWN, true, false, true, false, aSize );
             lStagingBuffer.Upload( aData, aSize, 0 );
 
-            Ref<Internal::sVkCommandBufferObject> lCommandBuffer = SE::Core::New<Internal::sVkCommandBufferObject>( mGraphicContext );
+            Ref<sVkCommandBufferObject> lCommandBuffer = SE::Core::New<sVkCommandBufferObject>( mGraphicContext );
             lCommandBuffer->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
             lCommandBuffer->CopyBuffer( lStagingBuffer.mVkBuffer, 0, lStagingBuffer.mSize, mVkBuffer, aOffset );
             lCommandBuffer->End();
@@ -104,7 +104,7 @@ namespace SE::Graphics
     void VkGpuBuffer::Copy( Ref<VkGpuBuffer> aSource, size_t aOffset )
     {
 
-        Ref<Internal::sVkCommandBufferObject> lCommandBuffer = SE::Core::New<Internal::sVkCommandBufferObject>( mGraphicContext );
+        Ref<sVkCommandBufferObject> lCommandBuffer = SE::Core::New<sVkCommandBufferObject>( mGraphicContext );
         lCommandBuffer->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBuffer->CopyBuffer( aSource->mVkBuffer, 0, aSource->mSize, mVkBuffer, aOffset );
         lCommandBuffer->End();

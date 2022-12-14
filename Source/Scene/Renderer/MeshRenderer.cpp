@@ -18,10 +18,9 @@ namespace SE::Core
     {
         DescriptorSetLayoutCreateInfo l_CameraBindLayout{};
         l_CameraBindLayout.Bindings = {
-            DescriptorBindingInfo{ 0,
-                                   Internal::eDescriptorType::UNIFORM_BUFFER,
-                                   { Internal::eShaderStageTypeFlags::VERTEX, Internal::eShaderStageTypeFlags::FRAGMENT } },
-            DescriptorBindingInfo{ 1, Internal::eDescriptorType::UNIFORM_BUFFER, { Internal::eShaderStageTypeFlags::FRAGMENT } } };
+            DescriptorBindingInfo{
+                0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX, eShaderStageTypeFlags::FRAGMENT } },
+            DescriptorBindingInfo{ 1, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } } };
 
         return New<DescriptorSetLayout>( aGraphicContext, l_CameraBindLayout );
     }
@@ -30,9 +29,8 @@ namespace SE::Core
     {
         DescriptorSetLayoutCreateInfo lTextureBindLayout{};
         lTextureBindLayout.Bindings = {
-            DescriptorBindingInfo{ 0, Internal::eDescriptorType::STORAGE_BUFFER, { Internal::eShaderStageTypeFlags::FRAGMENT } },
-            DescriptorBindingInfo{
-                1, Internal::eDescriptorType::COMBINED_IMAGE_SAMPLER, { Internal::eShaderStageTypeFlags::FRAGMENT } } };
+            DescriptorBindingInfo{ 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } },
+            DescriptorBindingInfo{ 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
 
         return New<DescriptorSetLayout>( aGraphicContext, lTextureBindLayout, true );
     }
@@ -40,8 +38,7 @@ namespace SE::Core
     Ref<DescriptorSetLayout> MeshRenderer::GetNodeSetLayout( Ref<VkGraphicContext> aGraphicContext )
     {
         DescriptorSetLayoutCreateInfo l_NodeBindLayout{};
-        l_NodeBindLayout.Bindings = {
-            DescriptorBindingInfo{ 0, Internal::eDescriptorType::UNIFORM_BUFFER, { Internal::eShaderStageTypeFlags::VERTEX } } };
+        l_NodeBindLayout.Bindings = { DescriptorBindingInfo{ 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } } };
         return New<DescriptorSetLayout>( aGraphicContext, l_NodeBindLayout );
     }
 
@@ -52,7 +49,7 @@ namespace SE::Core
 
     std::vector<sPushConstantRange> MeshRenderer::GetPushConstantLayout()
     {
-        return { { { Internal::eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( MaterialPushConstants ) } };
+        return { { { eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( MaterialPushConstants ) } };
     };
 
     MeshRenderer::MeshRenderer( Ref<VkGraphicContext> aGraphicContext, MeshRendererCreateInfo const &aCreateInfo )

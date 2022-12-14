@@ -8,8 +8,6 @@
 
 namespace SE::Graphics
 {
-    using namespace Internal;
-
     static VkFilter Convert( eSamplerFilter aValue )
     {
         switch( aValue )

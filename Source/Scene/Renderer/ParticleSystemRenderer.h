@@ -39,7 +39,7 @@ namespace SE::Graphics
         fs::path VertexShader   = "";
         fs::path FragmentShader = "";
 
-        Ref<Internal::sVkAbstractRenderPassObject> RenderPass = nullptr;
+        Ref<sVkAbstractRenderPassObject> RenderPass = nullptr;
 
         bool operator==( const ParticleRendererCreateInfo &p ) const
         {

@@ -8,7 +8,7 @@
 
 #include "Graphics/Vulkan/VkCoreMacros.h"
 
-namespace SE::Graphics::Internal
+namespace SE::Graphics
 {
 
     sVkCommandBuffer::sVkCommandBuffer( Ref<VkGraphicContext> aContext, VkCommandBuffer aCommandBuffer )
@@ -324,4 +324,4 @@ namespace SE::Graphics::Internal
         mGraphicContext->ResetFence( mSubmitFence );
         vkQueueSubmit( aQueue, 1, &lQueueSubmitInfo, mSubmitFence );
     }
-} // namespace SE::Graphics::Internal
+} // namespace SE::Graphics
