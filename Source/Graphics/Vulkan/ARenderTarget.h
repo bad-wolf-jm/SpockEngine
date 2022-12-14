@@ -4,7 +4,7 @@
 #include "Graphics/Interface/IWindow.h"
 
 #include "Core/CUDA/Texture/ColorFormat.h"
-#include "Core/GraphicContext//DescriptorSet.h"
+#include "Graphics/Vulkan/DescriptorSet.h"
 
 #include "Graphics/Vulkan/VkCommand.h"
 #include "Graphics/Vulkan/VkCoreMacros.h"
