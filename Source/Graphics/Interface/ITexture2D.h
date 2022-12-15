@@ -22,8 +22,6 @@ namespace SE::Graphics
         friend class IRenderTarget;
 
       public:
-        sTextureCreateInfo mSpec;
-
         /** @brief */
         ITexture2D( Ref<IGraphicContext> aGraphicContext, sTextureCreateInfo &aTextureImageDescription, uint8_t aSampleCount,
                     bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
@@ -41,8 +39,8 @@ namespace SE::Graphics
         /** @brief */
         ~ITexture2D() = default;
 
-        virtual void GetPixelData( TextureData2D &mTextureData ) = 0;
-        virtual void SetPixelData( IBuffer &a_Buffer )           = 0;
+        virtual void GetPixelData( TextureData2D &mTextureData )  = 0;
+        virtual void SetPixelData( Ref<IGraphicBuffer> a_Buffer ) = 0;
 
       protected:
         Ref<IGraphicContext> mGraphicContext{};

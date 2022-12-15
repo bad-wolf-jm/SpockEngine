@@ -51,6 +51,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Vulkan/VkAbstractRenderPass.cpp
 
     Graphics/Interface/IWindow.cpp
+    Graphics/Interface/ITexture2D.cpp
 
     Scene/Primitives/Primitives.cpp
     Scene/Primitives/Arrow.cpp

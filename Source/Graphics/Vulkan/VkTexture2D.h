@@ -2,33 +2,27 @@
 
 #include <memory>
 
-#include <gli/gli.hpp>
 #include <vulkan/vulkan.h>
 
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-#include "Core/CUDA/Texture/ColorFormat.h"
-#include "Core/CUDA/Texture/Texture2D.h"
-#include "Core/CUDA/Texture/TextureData.h"
-#include "Core/CUDA/Texture/TextureTypes.h"
-
 #include "VkGpuBuffer.h"
 #include "VkGraphicContext.h"
+
+#include "Graphics/Interface/ITexture2D.h"
 
 namespace SE::Graphics
 {
     using namespace SE::Core;
 
     /** @brief */
-    class VkTexture2D : public Cuda::Texture2D
+    class VkTexture2D : public ITexture2D
     {
         friend class VkSampler2D;
         friend class VkRenderTarget;
 
       public:
-        Core::sTextureCreateInfo mSpec;
-
         /** @brief */
         VkTexture2D( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription, uint8_t aSampleCount,
                      bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
@@ -49,9 +43,9 @@ namespace SE::Graphics
 
         /** @brief */
         ~VkTexture2D() = default;
-        void GetTextureData( TextureData2D &mTextureData );
 
-        void SetPixelData( VkGpuBuffer &a_Buffer );
+        void GetPixelData( TextureData2D &mTextureData );
+        void SetPixelData( Ref<IGraphicBuffer> a_Buffer );
         void TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout );
 
       private:
@@ -65,14 +59,6 @@ namespace SE::Graphics
         void BindMemory();
 
       private:
-        Ref<VkGraphicContext> mGraphicContext{};
-
-        VkSampleCountFlagBits mSampleCount           = VK_SAMPLE_COUNT_1_BIT;
-        bool                  mIsHostVisible         = false;
-        bool                  mIsGraphicsOnly        = false;
-        bool                  mIsTransferSource      = false;
-        bool                  mIsTransferDestination = false;
-
         VkImage        mVkImage    = VK_NULL_HANDLE;
         VkDeviceMemory mVkMemory   = VK_NULL_HANDLE;
         size_t         mMemorySize = 0;

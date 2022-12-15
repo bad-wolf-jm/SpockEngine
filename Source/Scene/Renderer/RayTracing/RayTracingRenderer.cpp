@@ -208,7 +208,7 @@ namespace SE::Core
         CUDA_SYNC_CHECK();
 
         mOutputTexture->TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
-        mOutputTexture->SetPixelData( *mOutputBuffer );
+        mOutputTexture->SetPixelData( mOutputBuffer );
         mOutputTexture->TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
     }
 

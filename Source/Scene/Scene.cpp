@@ -1815,7 +1815,7 @@ namespace SE::Core
         for( auto &lTexture : mMaterialSystem->GetTextures() )
         {
             TextureData2D lTextureData;
-            lTexture->GetTexture()->GetTextureData( lTextureData );
+            lTexture->GetTexture()->GetPixelData( lTextureData );
 
             sTextureSamplingInfo lSamplingInfo = lTexture->mSpec;
 
