@@ -17,7 +17,7 @@ namespace SE::Core
             DescriptorBindingInfo{ 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
 
         mShaderMaterials =
-            New<VkGpuBuffer>( mGraphicContext, eBufferBindType::STORAGE_BUFFER, true, true, true, true, sizeof( sShaderMaterial ) );
+            New<VkGpuBuffer>( mGraphicContext, eBufferType::STORAGE_BUFFER, true, true, true, true, sizeof( sShaderMaterial ) );
 
         mTextureDescriptorLayout = New<DescriptorSetLayout>( mGraphicContext, lTextureBindLayout, true );
         mTextureDescriptorSet    = New<DescriptorSet>( mGraphicContext, mTextureDescriptorLayout, 1024 );
@@ -145,8 +145,7 @@ namespace SE::Core
         if( mShaderMaterials->SizeAs<sShaderMaterial>() < mMaterials.size() )
         {
             auto lBufferSize = std::max( mMaterials.size(), static_cast<size_t>( 1 ) ) * sizeof( sShaderMaterial );
-            mShaderMaterials =
-                New<VkGpuBuffer>( mGraphicContext, eBufferBindType::STORAGE_BUFFER, true, false, true, true, lBufferSize );
+            mShaderMaterials = New<VkGpuBuffer>( mGraphicContext, eBufferType::STORAGE_BUFFER, true, false, true, true, lBufferSize );
             mTextureDescriptorSet->Write( mShaderMaterials, false, 0, lBufferSize, 0 );
         }
 

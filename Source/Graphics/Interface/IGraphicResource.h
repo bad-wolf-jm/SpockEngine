@@ -11,7 +11,6 @@
 namespace SE::Graphics
 {
     using namespace SE::Core;
-    using namespace SE::Graphics::Internal;
 
     class IGraphicResource : public Cuda::Internal::sGPUDevicePointerView
     {
@@ -27,7 +26,7 @@ namespace SE::Graphics
         IGraphicResource( Ref<IGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                           bool aIsTransferDestination, size_t aSize )
             : Cuda::Internal::sGPUDevicePointerView( aSize, nullptr )
-            , mGraphicConext{ aGraphicContext }
+            , mGraphicContext{ aGraphicContext }
             , mIsHostVisible{ aIsHostVisible }
             , mIsTransferSource{ aIsTransferSource }
             , mIsTransferDestination{ aIsTransferDestination }
@@ -37,7 +36,7 @@ namespace SE::Graphics
 
         ~IGraphicResource() = default;
 
-      private:
+      protected:
         Ref<IGraphicContext> mGraphicContext = nullptr;
     };
 } // namespace SE::Graphics

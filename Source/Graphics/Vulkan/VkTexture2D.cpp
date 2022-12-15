@@ -33,8 +33,8 @@ namespace SE::Graphics
         ConfigureExternalMemoryHandle();
 
         sImageData &lImageData = mTextureData.GetImageData();
-        VkGpuBuffer lStagingBuffer( mGraphicContext, lImageData.mPixelData.data(), lImageData.mByteSize, eBufferBindType::UNKNOWN,
-                                    true, false, true, false );
+        VkGpuBuffer lStagingBuffer( mGraphicContext, lImageData.mPixelData.data(), lImageData.mByteSize, eBufferType::UNKNOWN, true,
+                                    false, true, false );
         TransitionImageLayout( VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
         SetPixelData( lStagingBuffer );
         TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
@@ -139,7 +139,6 @@ namespace SE::Graphics
 
     void VkTexture2D::SetPixelData( VkGpuBuffer &aBuffer )
     {
-        // Ref<sVkCommandBufferObject> lCommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
         Ref<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( mGraphicContext );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
 
@@ -169,7 +168,6 @@ namespace SE::Graphics
 
         lCommandBufferObject->CopyBuffer( aBuffer.mVkBuffer, mVkImage, lBufferCopyRegions, lImageCopyRegion );
 
-        // mGraphicContext.EndSingleTimeCommands( lCommandBufferObject );
         lCommandBufferObject->End();
         lCommandBufferObject->SubmitTo( mGraphicContext->GetGraphicsQueue() );
         mGraphicContext->WaitIdle( mGraphicContext->GetGraphicsQueue() );
@@ -179,9 +177,7 @@ namespace SE::Graphics
     {
         Ref<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( mGraphicContext );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
-        // Ref<sVkCommandBufferObject> lCommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
         lCommandBufferObject->ImageMemoryBarrier( mVkImage, aOldLayout, aNewLayout, mSpec.mMipLevels, 1 );
-        // mGraphicContext.EndSingleTimeCommands( lCommandBufferObject );
         lCommandBufferObject->End();
         lCommandBufferObject->SubmitTo( mGraphicContext->GetGraphicsQueue() );
         mGraphicContext->WaitIdle( mGraphicContext->GetGraphicsQueue() );
@@ -190,7 +186,7 @@ namespace SE::Graphics
     void VkTexture2D::GetTextureData( TextureData2D &mTextureData )
     {
         uint32_t    lByteSize = mSpec.mWidth * mSpec.mHeight * sizeof( uint32_t );
-        VkGpuBuffer lStagingBuffer( mGraphicContext, eBufferBindType::UNKNOWN, true, false, false, true, lByteSize );
+        VkGpuBuffer lStagingBuffer( mGraphicContext, eBufferType::UNKNOWN, true, false, false, true, lByteSize );
 
         std::vector<sImageRegion> lBufferCopyRegions;
         uint32_t                  lBufferByteOffset = 0;
@@ -213,9 +209,7 @@ namespace SE::Graphics
         TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL );
         Ref<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( mGraphicContext );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
-        // Ref<sVkCommandBufferObject> lCommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
         lCommandBufferObject->CopyImage( mVkImage, lStagingBuffer.mVkBuffer, lBufferCopyRegions, 0 );
-        // mGraphicContext.EndSingleTimeCommands( lCommandBufferObject );
         lCommandBufferObject->End();
         lCommandBufferObject->SubmitTo( mGraphicContext->GetGraphicsQueue() );
         mGraphicContext->WaitIdle( mGraphicContext->GetGraphicsQueue() );

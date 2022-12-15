@@ -25,12 +25,11 @@ using namespace SE::Core::UI;
 using namespace SE::SensorModel;
 using namespace SE::SensorModel::Dev;
 
-
 struct SensorControllerBehaviour : sBehaviourController
 {
     Ref<Scope>        m_ComputeScope = nullptr;
     Ref<WorldSampler> m_WorldSampler = nullptr;
-    Ref<Engine>   mEngineLoop    = nullptr;
+    Ref<Engine>       mEngineLoop    = nullptr;
     Ref<Scene>        m_World        = nullptr;
 
     sPointCloudVisualizer m_PointCloudVisualizer{};
@@ -73,13 +72,14 @@ struct SensorControllerBehaviour : sBehaviourController
         auto &lParticles = Get<sParticleSystemComponent>();
 
         m_WorldSampler->Sample( Get<sTransformMatrixComponent>().Matrix, m_World, lAzimuths.Get<sMultiTensorComponent>().mValue,
-            lElevations.Get<sMultiTensorComponent>().mValue, lIntensities.Get<sMultiTensorComponent>().mValue, lHitRecords );
+                                lElevations.Get<sMultiTensorComponent>().mValue, lIntensities.Get<sMultiTensorComponent>().mValue,
+                                lHitRecords );
 
         if( !( lParticles.Particles ) || lParticles.ParticleCount != lAzimuths.Get<sMultiTensorComponent>().mValue.SizeAs<float>() )
         {
             lParticles.ParticleCount = lAzimuths.Get<sMultiTensorComponent>().mValue.SizeAs<float>();
-            lParticles.Particles = New<Buffer>( mEngineLoop->GetGraphicContext(), eBufferBindType::VERTEX_BUFFER, false, true, true,
-                true, lParticles.ParticleCount * sizeof( Particle ) );
+            lParticles.Particles = New<Buffer>( mEngineLoop->GetGraphicContext(), eBufferType::VERTEX_BUFFER, false, true, true, true,
+                                                lParticles.ParticleCount * sizeof( Particle ) );
         }
 
         GPUExternalMemory lPointCloudMappedBuffer( *( lParticles.Particles ), lParticles.ParticleCount * sizeof( Particle ) );
@@ -116,10 +116,7 @@ class EchoDSMVPEditor : public BaseEditorApplication
     float      g_SystemTemperature = 25.0f;
     float      g_StaticNoiseFactor = .001f;
 
-    void OnBeginScenario()
-    {
-        mEditorWindow.Sensor.Get<sBehaviourComponent>().Bind<SensorControllerBehaviour>( mEngineLoop, mWorld );
-    }
+    void OnBeginScenario() { mEditorWindow.Sensor.Get<sBehaviourComponent>().Bind<SensorControllerBehaviour>( mEngineLoop, mWorld ); }
 
     void OnUI()
     {
@@ -131,7 +128,6 @@ class EchoDSMVPEditor : public BaseEditorApplication
             ImPlot::ShowDemoWindow();
         }
         ImGui::End();
-
     }
 
     void Init()
@@ -139,16 +135,12 @@ class EchoDSMVPEditor : public BaseEditorApplication
         BaseEditorApplication::Init();
         mEditorWindow.OnBeginScenario.connect<&EchoDSMVPEditor::OnBeginScenario>( *this );
 
-        ScriptManager::SetAppAssemblyPath("C:/GitLab/SpockEngine/Programs/Editor/Script/Build/Debug/Test.dll");
+        ScriptManager::SetAppAssemblyPath( "C:/GitLab/SpockEngine/Programs/Editor/Script/Build/Debug/Test.dll" );
 
-        mWorld->AttachScript(mEditorWindow.Sensor, "Test.TestActorComponent");
+        mWorld->AttachScript( mEditorWindow.Sensor, "Test.TestActorComponent" );
     }
 
-    void Update( Timestep ts )
-    {
-        BaseEditorApplication::Update( ts );
-
-    }
+    void Update( Timestep ts ) { BaseEditorApplication::Update( ts ); }
 
     void DisplayPointCloud() {}
 

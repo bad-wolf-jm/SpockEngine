@@ -72,8 +72,8 @@ namespace SE::Core
                 const ImDrawList *lImGuiDrawCommands = aDrawData->CmdLists[n];
                 mVertexBuffer->Upload( lImGuiDrawCommands->VtxBuffer.Data, lImGuiDrawCommands->VtxBuffer.Size, lVertexOffset );
                 mIndexBuffer->Upload( lImGuiDrawCommands->IdxBuffer.Data, lImGuiDrawCommands->IdxBuffer.Size, lIndexOffset );
-                lVertexOffset += lImGuiDrawCommands->VtxBuffer.Size * sizeof( ImDrawVert );
-                lIndexOffset += lImGuiDrawCommands->IdxBuffer.Size * sizeof( ImDrawIdx );
+                lVertexOffset += lImGuiDrawCommands->VtxBuffer.Size;
+                lIndexOffset += lImGuiDrawCommands->IdxBuffer.Size;
             }
         }
 
@@ -234,8 +234,8 @@ namespace SE::Core
         mFontDescriptorSet = AddTexture( mFontTexture );
         io.Fonts->TexID    = (ImTextureID)mFontDescriptorSet->GetVkDescriptorSet();
 
-        mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, true, true, true, true, 1 );
-        mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::INDEX_BUFFER, true, true, true, true, 1 );
+        mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, true, true, true, true, 1 );
+        mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, eBufferType::INDEX_BUFFER, true, true, true, true, 1 );
     }
 
     UIContext::~UIContext()

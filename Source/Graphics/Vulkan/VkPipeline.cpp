@@ -116,12 +116,12 @@ namespace SE::Graphics
         lWriteDSOps.dstSet          = mVkObject;
         lWriteDSOps.descriptorCount = 1;
 
-        if( aBuffers.mType == eBufferBindType::STORAGE_BUFFER )
+        if( aBuffers.mType == eBufferType::STORAGE_BUFFER )
         {
             lWriteDSOps.descriptorType = aBuffers.mDynamicOffset ? VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC
                                                                  : static_cast<VkDescriptorType>( eDescriptorType::STORAGE_BUFFER );
         }
-        else if( aBuffers.mType == eBufferBindType::UNIFORM_BUFFER )
+        else if( aBuffers.mType == eBufferType::UNIFORM_BUFFER )
         {
             lWriteDSOps.descriptorType = aBuffers.mDynamicOffset ? VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
                                                                  : static_cast<VkDescriptorType>( eDescriptorType::UNIFORM_BUFFER );

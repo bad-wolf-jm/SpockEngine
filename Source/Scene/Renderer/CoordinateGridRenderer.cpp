@@ -29,7 +29,7 @@ namespace SE::Core
         Initialize( lCreateInfo );
 
         mCameraBuffer =
-            New<VkGpuBuffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraViewUniforms ) );
+            New<VkGpuBuffer>( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraViewUniforms ) );
         mCameraDescriptors = New<DescriptorSet>( a_GraphicContext, PipelineLayout );
         mCameraDescriptors->Write( mCameraBuffer, false, 0, sizeof( CameraViewUniforms ), 0 );
     }

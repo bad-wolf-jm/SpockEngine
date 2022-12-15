@@ -103,5 +103,5 @@ namespace SE::Core
     };
 
     void computeFinalPixelColors( sLaunchParams const &launchParams, Cuda::GPUMemory &denoisedBuffer,
-                                  Cuda::GPUMemory &finalColorBuffer );
+                                  Cuda::Internal::sGPUDevicePointerView &finalColorBuffer );
 } // namespace SE::Core

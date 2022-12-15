@@ -12,7 +12,6 @@
 namespace SE::Graphics
 {
     using namespace SE::Core;
-    using namespace SE::Graphics::Internal;
 
     enum class eBufferType : uint32_t
     {
@@ -23,49 +22,46 @@ namespace SE::Graphics
         UNKNOWN        = 4
     };
 
-    class IBuffer : public IGraphicResource
+    class IGraphicBuffer : public IGraphicResource
     {
       public:
-        eBufferType mType = eBufferBindType::UNKNOWN;
+        eBufferType mType = eBufferType::UNKNOWN;
 
-        IBuffer()            = default;
-        IBuffer( IBuffer & ) = default;
+        IGraphicBuffer()                   = default;
+        IGraphicBuffer( IGraphicBuffer & ) = default;
 
-        IBuffer( Ref<IGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
-                 bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
+        IGraphicBuffer( Ref<IGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
+                        bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
             : IGraphicResource( aGraphicContext, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination, aSize )
             , mType{ aType }
         {
-            Allocate( mSize );
         }
 
-        IBuffer( Ref<IGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
-                 bool aIsTransferDestination, size_t aSize )
-            : IBuffer( aGraphicContext, eBufferType::UNKNOWN, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
-                       aIsTransferDestination, aSize )
+        IGraphicBuffer( Ref<IGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
+                        bool aIsTransferDestination, size_t aSize )
+            : IGraphicBuffer( aGraphicContext, eBufferType::UNKNOWN, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
+                              aIsTransferDestination, aSize )
 
         {
         }
 
         template <typename _Ty>
-        IBuffer( Ref<IGraphicContext> aGraphicContext, std::vector<_Ty> aData, eBufferBindType aType, bool aIsHostVisible,
-                 bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
-            : IBuffer( aGraphicContext, aData.data(), aData.size(), aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
-                       aIsTransferDestination, aData.size() * sizeof( _Ty ) )
+        IGraphicBuffer( Ref<IGraphicContext> aGraphicContext, std::vector<_Ty> aData, eBufferType aType, bool aIsHostVisible,
+                        bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
+            : IGraphicBuffer( aGraphicContext, aData.data(), aData.size(), aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
+                              aIsTransferDestination )
         {
         }
 
         template <typename _Ty>
-        IBuffer( Ref<IGraphicContext> aGraphicContext, _Ty *aData, size_t aSize, eBufferBindType aType, bool aIsHostVisible,
-                 bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
-            : IBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination,
-                       aSize * sizeof( _Ty ) )
+        IGraphicBuffer( Ref<IGraphicContext> aGraphicContext, _Ty *aData, size_t aSize, eBufferType aType, bool aIsHostVisible,
+                        bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
+            : IGraphicBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination,
+                              aSize * sizeof( _Ty ) )
         {
-            Allocate( mSize );
-            Upload( aData, aSize );
         }
 
-        ~IBuffer() = default;
+        ~IGraphicBuffer() = default;
 
         template <typename _MapType>
         void Upload( std::vector<_MapType> aData )
@@ -73,33 +69,33 @@ namespace SE::Graphics
             Upload( aData, 0 );
         }
 
-        template <typename _MapType>
-        void Upload( std::vector<_MapType> aData, size_t aOffset )
+        template <typename _Ty>
+        void Upload( std::vector<_Ty> aData, size_t aOffset )
         {
             Upload( aData.data(), aData.size(), aOffset );
         }
 
-        template <typename _MapType>
-        void Upload( _MapType *aData, size_t aSize )
+        template <typename _Ty>
+        void Upload( _Ty *aData, size_t aSize )
         {
             Upload( aData, aSize, 0 );
         }
 
-        template <typename _MapType>
-        void Upload( _MapType *aData, size_t aSize, size_t aOffset )
+        template <typename _Ty>
+        void Upload( _Ty *aData, size_t aSize, size_t aOffset )
         {
-            Upload( reinterpret_cast<void *>( aData ), aSize * sizeof( _MapType ), aOffset * sizeof( _MapType ) );
+            DoUpload( reinterpret_cast<void *>( aData ), aSize * sizeof( _Ty ), aOffset * sizeof( _Ty ) );
         }
 
         template <typename _Ty>
         void Write( _Ty aValue, size_t aIndex = 0 )
         {
-            Upload( reinterpret_cast<void *>( &aValue ), sizeof( _Ty ), aIndex * sizeof( _Ty ) );
+            DoUpload( reinterpret_cast<void *>( &aValue ), sizeof( _Ty ), aIndex * sizeof( _Ty ) );
         }
 
-        virtual void Allocate( size_t aSizeInBytes )                     = 0;
-        virtual void Resize( size_t aNewSizeInBytes )                    = 0;
-        virtual void Copy( Ref<IBuffer> aSource, size_t aOffset )        = 0;
-        virtual void Upload( void *aData, size_t aSize, size_t aOffset ) = 0;
+        virtual void Allocate( size_t aSizeInBytes )                       = 0;
+        virtual void Resize( size_t aNewSizeInBytes )                      = 0;
+        virtual void Copy( Ref<IGraphicBuffer> aSource, size_t aOffset )   = 0;
+        virtual void DoUpload( void *aData, size_t aSize, size_t aOffset ) = 0;
     };
 } // namespace SE::Graphics

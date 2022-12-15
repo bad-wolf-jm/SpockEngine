@@ -55,7 +55,7 @@ namespace Test
             if( !( lParticles.Particles ) || lParticles.ParticleCount != lAzimuths.Get<sMultiTensorComponent>().mValue.SizeAs<float>() )
             {
                 lParticles.ParticleCount = lAzimuths.Get<sMultiTensorComponent>().mValue.SizeAs<float>();
-                lParticles.Particles = New<Buffer>( mEngineLoop->GetGraphicContext(), eBufferBindType::VERTEX_BUFFER, false, true, true,
+                lParticles.Particles = New<Buffer>( mEngineLoop->GetGraphicContext(), eBufferType::VERTEX_BUFFER, false, true, true,
                     true, lParticles.ParticleCount * sizeof( Particle ) );
             }
 

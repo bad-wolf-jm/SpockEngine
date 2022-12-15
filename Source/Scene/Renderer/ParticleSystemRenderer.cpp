@@ -17,8 +17,8 @@ namespace SE::Graphics
         : SceneRenderPipeline<PositionData>( a_GraphicContext )
         , Spec{ aCreateInfo }
     {
-        mCameraBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, false, true, true,
-                                          sizeof( CameraViewUniforms ) );
+        mCameraBuffer =
+            New<VkGpuBuffer>( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, false, true, true, sizeof( CameraViewUniforms ) );
 
         SceneRenderPipelineCreateInfo lCreateInfo{};
         lCreateInfo.IsTwoSided           = true;
@@ -43,9 +43,9 @@ namespace SE::Graphics
         std::vector<uint32_t> l_IndexBufferData = { 0, 2, 1, 0, 3, 2 };
 
         mParticleVertices =
-            New<VkGpuBuffer>( mGraphicContext, lVertexBufferData, eBufferBindType::VERTEX_BUFFER, false, false, false, true );
+            New<VkGpuBuffer>( mGraphicContext, lVertexBufferData, eBufferType::VERTEX_BUFFER, false, false, false, true );
         mParticleIndices =
-            New<VkGpuBuffer>( mGraphicContext, l_IndexBufferData, eBufferBindType::INDEX_BUFFER, false, false, false, true );
+            New<VkGpuBuffer>( mGraphicContext, l_IndexBufferData, eBufferType::INDEX_BUFFER, false, false, false, true );
     }
 
     void ParticleSystemRenderer::Render( math::mat4 a_Projection, math::mat4 a_View, ARenderContext &aRenderContext,

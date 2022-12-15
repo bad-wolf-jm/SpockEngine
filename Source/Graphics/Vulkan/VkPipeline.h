@@ -2,6 +2,8 @@
 
 #include "Core/Memory.h"
 
+#include "Graphics/Interface/IGraphicBuffer.h"
+
 #include "Graphics/Vulkan/VkAbstractRenderPass.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 
@@ -116,12 +118,12 @@ namespace SE::Graphics
 
         struct sBufferBindInfo
         {
-            VkBuffer        mBuffer        = VK_NULL_HANDLE;
-            eBufferBindType mType          = eBufferBindType::UNIFORM_BUFFER;
-            bool            mDynamicOffset = false;
-            uint32_t        mBinding       = 0;
-            uint32_t        mOffset        = 0;
-            uint32_t        mSize          = 0;
+            VkBuffer    mBuffer        = VK_NULL_HANDLE;
+            eBufferType mType          = eBufferType::UNIFORM_BUFFER;
+            bool        mDynamicOffset = false;
+            uint32_t    mBinding       = 0;
+            uint32_t    mOffset        = 0;
+            uint32_t    mSize          = 0;
         };
 
         VkDescriptorSet mVkObject = VK_NULL_HANDLE;

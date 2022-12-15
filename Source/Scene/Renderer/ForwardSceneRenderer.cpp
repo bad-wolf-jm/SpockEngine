@@ -31,9 +31,9 @@ namespace SE::Core
         mSceneDescriptors = New<DescriptorSet>( mGraphicContext, MeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
         mCameraUniformBuffer =
-            New<VkGpuBuffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, true, true, true, sizeof( WorldMatrices ) );
+            New<VkGpuBuffer>( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( WorldMatrices ) );
         mShaderParametersBuffer =
-            New<VkGpuBuffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraSettings ) );
+            New<VkGpuBuffer>( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraSettings ) );
         mSceneDescriptors->Write( mCameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
         mSceneDescriptors->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
     }
@@ -288,8 +288,8 @@ namespace SE::Core
                     auto &lNodeDescriptor = aEntity.Add<NodeDescriptorComponent>();
                     lNodeDescriptor.Descriptors =
                         New<DescriptorSet>( mGraphicContext, MeshRenderer::GetNodeSetLayout( mGraphicContext ) );
-                    lNodeDescriptor.UniformBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::UNIFORM_BUFFER, true, true,
-                                                                      true, true, sizeof( NodeMatrixDataComponent ) );
+                    lNodeDescriptor.UniformBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true,
+                                                                      true, sizeof( NodeMatrixDataComponent ) );
 
                     lNodeDescriptor.Descriptors->Write( lNodeDescriptor.UniformBuffer, false, 0, sizeof( NodeMatrixDataComponent ),
                                                         0 );

@@ -283,7 +283,7 @@ namespace SE::Core
         mOutputTexture                = New<Graphics::VkTexture2D>( mGraphicContext, lTextureCreateInfo, 1, false, false, true, true );
         mOutputTexture->TransitionImageLayout( VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
 
-        mOutputBuffer = New<Graphics::VkGpuBuffer>( mGraphicContext, eBufferBindType::UNKNOWN, false, false, true, false,
+        mOutputBuffer = New<Graphics::VkGpuBuffer>( mGraphicContext, eBufferType::UNKNOWN, false, false, true, false,
                                                     aOutputWidth * aOutputHeight * sizeof( uint32_t ) );
 
         // update the launch parameters that we'll pass to the optix

@@ -46,7 +46,7 @@ namespace SE::Core
     }
 
     void computeFinalPixelColors( sLaunchParams const &launchParams, Cuda::GPUMemory &denoisedBuffer,
-                                  Cuda::GPUMemory &finalColorBuffer )
+                                  Cuda::Internal::sGPUDevicePointerView &finalColorBuffer )
     {
         math::ivec2 fbSize = launchParams.mFrame.mSize;
         math::ivec2 blockSize( 32 );

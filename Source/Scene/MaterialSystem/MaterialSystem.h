@@ -120,7 +120,7 @@ namespace SE::Core
         std::vector<sMaterial> const                  &GetMaterialData() const { return mMaterials; }
         std::vector<Ref<Graphics::VkSampler2D>> const &GetTextures() const { return mTextureSamplers; }
         Cuda::GPUMemory const                         &GetCudaTextures() const { return mCudaTextureBuffer; }
-        Cuda::GPUMemory const                         &GetCudaMaterials() const { return *mShaderMaterials; }
+        VkGpuBuffer const                             &GetCudaMaterials() const { return *mShaderMaterials; }
 
       private:
         Ref<VkGraphicContext> mGraphicContext;

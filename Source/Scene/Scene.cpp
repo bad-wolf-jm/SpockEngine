@@ -184,7 +184,7 @@ namespace SE::Core
         mVertexBuffer = aSource->mVertexBuffer;
         mIndexBuffer  = aSource->mIndexBuffer;
         // Create the transformed vertex buffer and its CUDA handle
-        mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, false, true, true,
+        mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
                                                      mVertexBuffer->SizeAs<uint8_t>() );
 
         uint32_t lTransformCount = 0;
@@ -727,11 +727,11 @@ namespace SE::Core
         std::vector<uint32_t>   lIndexBuffer;
         lScenarioData.Retrieve( 1, lVertexBuffer, lIndexBuffer );
 
-        mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, lVertexBuffer, eBufferBindType::VERTEX_BUFFER, false, false, true, true );
-        mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, lIndexBuffer, eBufferBindType::INDEX_BUFFER, false, false, true, true );
+        mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, lVertexBuffer, eBufferType::VERTEX_BUFFER, false, false, true, true );
+        mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, lIndexBuffer, eBufferType::INDEX_BUFFER, false, false, true, true );
 
         // Create the transformed vertex buffer and its CUDA handle
-        mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, false, true, true,
+        mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
                                                      mVertexBuffer->SizeAs<uint8_t>() );
 
         for( uint32_t lMaterialIndex = 0; lMaterialIndex < lMaterialCount; lMaterialIndex++ )
@@ -963,25 +963,25 @@ namespace SE::Core
         {
             auto lOldVertexBuffer = mVertexBuffer;
 
-            mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, false, true, true,
+            mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
                                               lOldVertexBuffer->SizeAs<uint8_t>() + lVertexData.size() * sizeof( VertexData ) );
             mVertexBuffer->Copy( lOldVertexBuffer, 0 );
-            mVertexBuffer->Upload( lVertexData, lOldVertexBuffer->SizeAs<uint8_t>() );
+            mVertexBuffer->Upload( lVertexData, lOldVertexBuffer->SizeAs<VertexData>() );
 
             auto lOldIndexBuffer = mIndexBuffer;
 
-            mIndexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::INDEX_BUFFER, false, false, true, true,
+            mIndexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::INDEX_BUFFER, false, false, true, true,
                                              lOldIndexBuffer->SizeAs<uint8_t>() + lIndexData.size() * sizeof( uint32_t ) );
             mIndexBuffer->Copy( lOldIndexBuffer, 0 );
-            mIndexBuffer->Upload( lIndexData, lOldIndexBuffer->SizeAs<uint8_t>() );
+            mIndexBuffer->Upload( lIndexData, lOldIndexBuffer->SizeAs<uint32_t>() );
         }
         else
         {
-            mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, lVertexData, eBufferBindType::VERTEX_BUFFER, false, false, true, true );
-            mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, lIndexData, eBufferBindType::INDEX_BUFFER, false, false, true, true );
+            mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, lVertexData, eBufferType::VERTEX_BUFFER, false, false, true, true );
+            mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, lIndexData, eBufferType::INDEX_BUFFER, false, false, true, true );
         }
 
-        mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferBindType::VERTEX_BUFFER, false, false, true, true,
+        mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
                                                      mVertexBuffer->SizeAs<uint8_t>() );
 
         uint32_t lTransformCount = 0;
