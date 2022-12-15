@@ -30,8 +30,8 @@ namespace SE::Graphics
         Ref<ITexture2D> GetTexture() { return mTextureData; }
 
       protected:
-        Ref<IGraphicContext> mGraphicContext{};
-        Ref<ITexture2D>      mTextureData = nullptr;
+        Ref<IGraphicContext> mGraphicContext = nullptr;
+        Ref<ITexture2D>      mTextureData    = nullptr;
 
         friend class ITexture2D;
     };
