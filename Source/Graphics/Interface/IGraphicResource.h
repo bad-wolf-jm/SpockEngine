@@ -6,13 +6,11 @@
 
 #include "IGraphicContext.h"
 
-#include "Core/CUDA/Array/PointerView.h"
-
 namespace SE::Graphics
 {
     using namespace SE::Core;
 
-    class IGraphicResource : public Cuda::Internal::sGPUDevicePointerView
+    class IGraphicResource
     {
       public:
         bool mIsHostVisible         = true;
@@ -25,8 +23,7 @@ namespace SE::Graphics
 
         IGraphicResource( Ref<IGraphicContext> aGraphicContext, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                           bool aIsTransferDestination, size_t aSize )
-            : Cuda::Internal::sGPUDevicePointerView( aSize, nullptr )
-            , mGraphicContext{ aGraphicContext }
+            : mGraphicContext{ aGraphicContext }
             , mIsHostVisible{ aIsHostVisible }
             , mIsTransferSource{ aIsTransferSource }
             , mIsTransferDestination{ aIsTransferDestination }

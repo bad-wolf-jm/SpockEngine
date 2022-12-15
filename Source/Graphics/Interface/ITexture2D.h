@@ -10,13 +10,14 @@
 
 #include "IGraphicBuffer.h"
 #include "IGraphicContext.h"
+#include "IGraphicResource.h"
 
 namespace SE::Graphics
 {
     using namespace SE::Core;
 
     /** @brief */
-    class ITexture2D : public Cuda::Texture2D
+    class ITexture2D : public IGraphicResource, public Cuda::Texture2D
     {
         friend class ISampler2D;
         friend class IRenderTarget;
@@ -43,12 +44,6 @@ namespace SE::Graphics
         virtual void SetPixelData( Ref<IGraphicBuffer> a_Buffer ) = 0;
 
       protected:
-        Ref<IGraphicContext> mGraphicContext{};
-
-        uint8_t mSampleCount           = 1;
-        bool    mIsHostVisible         = false;
-        bool    mIsGraphicsOnly        = false;
-        bool    mIsTransferSource      = false;
-        bool    mIsTransferDestination = false;
+        uint8_t mSampleCount = 1;
     };
 } // namespace SE::Graphics

@@ -22,7 +22,7 @@ namespace SE::Graphics
         UNKNOWN        = 4
     };
 
-    class IGraphicBuffer : public IGraphicResource
+    class IGraphicBuffer : public IGraphicResource, public Cuda::Internal::sGPUDevicePointerView
     {
       public:
         eBufferType mType = eBufferType::UNKNOWN;
@@ -33,6 +33,7 @@ namespace SE::Graphics
         IGraphicBuffer( Ref<IGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible, bool aIsGraphicsOnly,
                         bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
             : IGraphicResource( aGraphicContext, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination, aSize )
+            , Cuda::Internal::sGPUDevicePointerView( aSize, nullptr )
             , mType{ aType }
         {
         }
@@ -41,7 +42,6 @@ namespace SE::Graphics
                         bool aIsTransferDestination, size_t aSize )
             : IGraphicBuffer( aGraphicContext, eBufferType::UNKNOWN, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                               aIsTransferDestination, aSize )
-
         {
         }
 
