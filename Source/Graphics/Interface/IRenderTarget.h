@@ -1,18 +1,8 @@
 #pragma once
 
 #include "Core/Memory.h"
-#include "Graphics/Interface/IWindow.h"
 
 #include "IGraphicContext.h"
-
-#include "Core/CUDA/Texture/ColorFormat.h"
-#include "Graphics/Vulkan/DescriptorSet.h"
-
-#include "Graphics/Vulkan/VkCommand.h"
-#include "Graphics/Vulkan/VkCoreMacros.h"
-#include "Graphics/Vulkan/VkGraphicContext.h"
-#include "Graphics/Vulkan/VkRenderTarget.h"
-#include "Graphics/Vulkan/VkTexture2D.h"
 
 namespace SE::Graphics
 {
@@ -93,45 +83,21 @@ namespace SE::Graphics
                             bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp,
                             Ref<ITexture2D> aFramebufferImage );
 
-        // void Finalize();
-
-        Ref<sVkAbstractRenderPassObject> GetRenderPass() { return mRenderPassObject; }
-
+        virtual void Finalize();
         virtual bool BeginRender();
         virtual void EndRender();
         virtual void Present();
-
-        // virtual std::vector<VkClearValue> GetClearValues();
-        // virtual Ref<VkRenderTarget>       GetFramebuffer();
-
-        // virtual VkSemaphore GetImageAvailableSemaphore( uint32_t i );
-        // virtual VkSemaphore GetRenderFinishedSemaphore( uint32_t i );
-        // virtual VkFence     GetInFlightFence( uint32_t i );
-
-        // virtual uint32_t GetCurrentImage();
-
-        // virtual Ref<sVkCommandBufferObject> GetCurrentCommandBuffer() { return mCommandBufferObject[0]; }
 
         Ref<ITexture2D> &GetAttachment( std::string const &aKey );
 
       protected:
         Ref<IGraphicContext> mGraphicContext{};
 
-        // Ref<sVkAbstractRenderPassObject> CreateDefaultRenderPass();
-
-        // void InitializeCommandBuffers();
-
         uint32_t mImageCount = 0;
 
-        // std::vector<VkClearValue>           mClearValues    = {};
         std::vector<sAttachmentDescription> mAttachmentInfo = {};
         std::vector<std::string>            mAttachmentIDs  = {};
 
         std::unordered_map<std::string, Ref<ITexture2D>> mAttachments = {};
-
-        // Ref<sVkAbstractRenderPassObject> mRenderPassObject  = nullptr;
-        // Ref<VkRenderTarget>              mFramebufferObject = nullptr;
-
-        // std::vector<Ref<sVkCommandBufferObject>> mCommandBufferObject = {};
     };
 } // namespace SE::Graphics
