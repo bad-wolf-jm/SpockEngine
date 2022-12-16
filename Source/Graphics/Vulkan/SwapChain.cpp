@@ -14,13 +14,14 @@ namespace SE::Graphics
 
     void SwapChain::RecreateSwapChain()
     {
-        mGraphicContext->WaitIdle();
+        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->WaitIdle();
         mRenderTargets.clear();
 
-        auto [lSwapChainImageFormat, lSwapChainImageCount, lSwapchainExtent, lNewSwapchain] = mGraphicContext->CreateSwapChain();
+        auto [lSwapChainImageFormat, lSwapChainImageCount, lSwapchainExtent, lNewSwapchain] =
+            std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->CreateSwapChain();
 
         mVkObject    = lNewSwapchain;
-        auto lImages = mGraphicContext->GetSwapChainImages( mVkObject );
+        auto lImages = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetSwapChainImages( mVkObject );
 
         mImageCount = lImages.size();
 
@@ -30,9 +31,9 @@ namespace SE::Graphics
 
         for( size_t i = 0; i < mImageCount; i++ )
         {
-            mImageAvailableSemaphores[i] = mGraphicContext->CreateVkSemaphore();
-            mRenderFinishedSemaphores[i] = mGraphicContext->CreateVkSemaphore();
-            mInFlightFences[i]           = mGraphicContext->CreateFence();
+            mImageAvailableSemaphores[i] = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->CreateVkSemaphore();
+            mRenderFinishedSemaphores[i] = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->CreateVkSemaphore();
+            mInFlightFences[i]           = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->CreateFence();
         }
 
         mSpec.mSampleCount = 1;
@@ -46,12 +47,14 @@ namespace SE::Graphics
             lTextureCreateInfo.mWidth  = mSpec.mWidth;
             lTextureCreateInfo.mHeight = mSpec.mHeight;
 
-            auto lFramebufferImage = New<VkTexture2D>( mGraphicContext, lTextureCreateInfo, lImages[i] );
+            auto lFramebufferImage =
+                New<VkTexture2D>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), lTextureCreateInfo, lImages[i] );
 
             sRenderTargetDescription lCreateInfo{};
-            lCreateInfo.mWidth   = lSwapchainExtent.width;
-            lCreateInfo.mHeight  = lSwapchainExtent.height;
-            auto lSwapChainImage = New<ARenderTarget>( mGraphicContext, lCreateInfo );
+            lCreateInfo.mWidth  = lSwapchainExtent.width;
+            lCreateInfo.mHeight = lSwapchainExtent.height;
+            auto lSwapChainImage =
+                New<ARenderTarget>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), lCreateInfo );
             lSwapChainImage->AddAttachment( "SWAPCHAIN_OUTPUT", eAttachmentType::COLOR, ToLtseFormat( lSwapChainImageFormat ),
                                             { 0.01f, 0.01f, 0.03f, 1.0f }, false, true, eAttachmentLoadOp::CLEAR,
                                             eAttachmentStoreOp::STORE, lFramebufferImage );
@@ -68,11 +71,12 @@ namespace SE::Graphics
 
     bool SwapChain::BeginRender()
     {
-        mGraphicContext->WaitForFence( mInFlightFences[mCurrentImage] );
+        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->WaitForFence( mInFlightFences[mCurrentImage] );
 
         uint64_t lTimeout = std::numeric_limits<uint64_t>::max();
         VkResult lBeginRenderResult =
-            mGraphicContext->AcquireNextImage( mVkObject, lTimeout, mImageAvailableSemaphores[mCurrentImage], &mCurrentImage );
+            std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
+                ->AcquireNextImage( mVkObject, lTimeout, mImageAvailableSemaphores[mCurrentImage], &mCurrentImage );
 
         if( lBeginRenderResult == VK_ERROR_OUT_OF_DATE_KHR )
         {
@@ -98,7 +102,8 @@ namespace SE::Graphics
 
     void SwapChain::Present()
     {
-        VkResult lPresentResult = mGraphicContext->Present( mVkObject, mCurrentImage, mRenderFinishedSemaphores[mCurrentImage] );
+        VkResult lPresentResult = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
+                                      ->Present( mVkObject, mCurrentImage, mRenderFinishedSemaphores[mCurrentImage] );
 
         if( ( lPresentResult == VK_ERROR_OUT_OF_DATE_KHR ) || ( lPresentResult == VK_SUBOPTIMAL_KHR ) ||
             mViewportClient->WindowWasResized() )

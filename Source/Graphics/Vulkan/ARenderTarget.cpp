@@ -3,10 +3,11 @@
 namespace SE::Graphics
 {
     ARenderTarget::ARenderTarget( Ref<VkGraphicContext> aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription )
-        : mGraphicContext{ aGraphicContext }
-        , mSpec{ aRenderTargetDescription }
+        : IRenderTarget( aGraphicContext, aRenderTargetDescription )
+    // : std::reinterpret_pointer_cast<VkGraphicContext>(mGraphicContext){ aGraphicContext }
+    // , mSpec{ aRenderTargetDescription }
     {
-        mImageCount = 1;
+        // mImageCount = 1;
     }
 
     std::vector<VkClearValue> ARenderTarget::GetClearValues()
@@ -33,46 +34,28 @@ namespace SE::Graphics
 
     void ARenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo )
     {
-        mAttachmentInfo.push_back( aCreateInfo );
-        mAttachmentIDs.push_back( aAttachmentID );
-
-        if( aCreateInfo.mType == eAttachmentType::DEPTH )
-            mAttachmentInfo.back().mFormat = mGraphicContext->GetDepthFormat();
-
         sTextureCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mFormat         = aCreateInfo.mFormat;
         lTextureCreateInfo.mWidth          = mSpec.mWidth;
         lTextureCreateInfo.mHeight         = mSpec.mHeight;
         lTextureCreateInfo.mDepth          = 1;
         lTextureCreateInfo.mIsDepthTexture = ( aCreateInfo.mType == eAttachmentType::DEPTH );
+        uint32_t lSampleCount              = ( aCreateInfo.mType == eAttachmentType::MSAA_RESOLVE ) ? 1 : mSpec.mSampleCount;
 
-        uint32_t lSampleCount       = ( aCreateInfo.mType == eAttachmentType::MSAA_RESOLVE ) ? 1 : mSpec.mSampleCount;
-        mAttachments[aAttachmentID] = New<VkTexture2D>( mGraphicContext, lTextureCreateInfo, lSampleCount, false, true, true, true );
+        auto lNewAttachment = New<VkTexture2D>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), lTextureCreateInfo,
+                                                lSampleCount, false, true, true, true );
+        IRenderTarget::AddAttachment( aAttachmentID, aCreateInfo, lNewAttachment );
     }
 
     void ARenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
                                        Ref<VkTexture2D> aFramebufferImage )
     {
-        mAttachmentInfo.push_back( aCreateInfo );
-        mAttachmentIDs.push_back( aAttachmentID );
-
-        if( aCreateInfo.mType == eAttachmentType::DEPTH )
-            mAttachmentInfo.back().mFormat = mGraphicContext->GetDepthFormat();
-
-        sTextureCreateInfo lTextureCreateInfo{};
-        lTextureCreateInfo.mFormat         = aCreateInfo.mFormat;
-        lTextureCreateInfo.mWidth          = mSpec.mWidth;
-        lTextureCreateInfo.mHeight         = mSpec.mHeight;
-        lTextureCreateInfo.mDepth          = 1;
-        lTextureCreateInfo.mIsDepthTexture = ( aCreateInfo.mType == eAttachmentType::DEPTH );
-
-        uint32_t lSampleCount       = ( aCreateInfo.mType == eAttachmentType::MSAA_RESOLVE ) ? 1 : mSpec.mSampleCount;
-        mAttachments[aAttachmentID] = aFramebufferImage;
+        IRenderTarget::AddAttachment( aAttachmentID, aCreateInfo, aFramebufferImage );
     }
 
-    ARenderTarget &ARenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
-                                                 math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
-                                                 eAttachmentStoreOp eStoreOp )
+    void ARenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
+                                       math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
+                                       eAttachmentStoreOp eStoreOp )
     {
         sAttachmentDescription lCreateInfo{};
         lCreateInfo.mType        = aType;
@@ -84,36 +67,25 @@ namespace SE::Graphics
         lCreateInfo.mStoreOp     = eStoreOp;
 
         AddAttachment( aAttachmentID, lCreateInfo );
-
-        return *this;
     }
 
-    ARenderTarget &ARenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
-                                                 math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
-                                                 eAttachmentStoreOp eStoreOp, Ref<VkTexture2D> aFramebufferImage )
+    void ARenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
+                                       math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
+                                       eAttachmentStoreOp eStoreOp, Ref<VkTexture2D> aFramebufferImage )
     {
-        sAttachmentDescription lCreateInfo{};
-        lCreateInfo.mType        = aType;
-        lCreateInfo.mFormat      = aFormat;
-        lCreateInfo.mClearColor  = aClearColor;
-        lCreateInfo.mIsSampled   = aIsSampled;
-        lCreateInfo.mIsPresented = aIsPresented;
-        lCreateInfo.mLoadOp      = aLoadOp;
-        lCreateInfo.mStoreOp     = eStoreOp;
-
-        AddAttachment( aAttachmentID, lCreateInfo, aFramebufferImage );
-
-        return *this;
+        IRenderTarget::AddAttachment( aAttachmentID, aType, aFormat, aClearColor, aIsSampled, aIsPresented, aLoadOp, eStoreOp,
+                                      aFramebufferImage );
     }
 
     void ARenderTarget::Finalize()
     {
         std::vector<Ref<VkTexture2D>> lAttachments{};
-        for( auto const &lAttachmentID : mAttachmentIDs ) lAttachments.push_back( mAttachments[lAttachmentID] );
+        for( auto const &lAttachmentID : mAttachmentIDs )
+            lAttachments.push_back( std::reinterpret_pointer_cast<VkTexture2D>( mAttachments[lAttachmentID] ) );
 
-        mRenderPassObject = CreateDefaultRenderPass();
-        mFramebufferObject =
-            New<VkRenderTarget>( mGraphicContext, mSpec.mWidth, mSpec.mHeight, 1, mRenderPassObject->mVkObject, lAttachments );
+        mRenderPassObject  = CreateDefaultRenderPass();
+        mFramebufferObject = New<VkRenderTarget>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), mSpec.mWidth,
+                                                  mSpec.mHeight, 1, mRenderPassObject->mVkObject, lAttachments );
 
         InitializeCommandBuffers();
     }
@@ -141,8 +113,9 @@ namespace SE::Graphics
 
     Ref<sVkAbstractRenderPassObject> ARenderTarget::CreateDefaultRenderPass()
     {
-        Ref<sVkAbstractRenderPassObject> lNewRenderPass = New<sVkAbstractRenderPassObject>(
-            mGraphicContext, VK_FORMAT_UNDEFINED, mSpec.mSampleCount, false, false, math::vec4( 0.0f ) );
+        Ref<sVkAbstractRenderPassObject> lNewRenderPass =
+            New<sVkAbstractRenderPassObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), VK_FORMAT_UNDEFINED,
+                                              mSpec.mSampleCount, false, false, math::vec4( 0.0f ) );
 
         std::vector<VkAttachmentDescription> lAttachmentDescriptions{};
         std::vector<VkAttachmentReference>   lColorAttachmentReferences{};
@@ -204,10 +177,10 @@ namespace SE::Graphics
         return lNewRenderPass;
     }
 
-    Ref<VkTexture2D> &ARenderTarget::GetAttachment( std::string const &aKey )
+    Ref<VkTexture2D> ARenderTarget::GetAttachment( std::string const &aKey )
     {
         //
-        return mAttachments[aKey];
+        return std::reinterpret_pointer_cast<VkTexture2D>( mAttachments[aKey] );
     }
 
     bool ARenderTarget::BeginRender() { return true; }
@@ -228,11 +201,14 @@ namespace SE::Graphics
 
     void ARenderTarget::InitializeCommandBuffers()
     {
-        auto lCommandBuffers = mGraphicContext->AllocateCommandBuffer( GetImageCount() );
+        auto lCommandBuffers =
+            std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->AllocateCommandBuffer( GetImageCount() );
 
         mCommandBufferObject = {};
 
-        for( auto &lCB : lCommandBuffers ) mCommandBufferObject.push_back( New<sVkCommandBufferObject>( mGraphicContext, lCB ) );
+        for( auto &lCB : lCommandBuffers )
+            mCommandBufferObject.push_back(
+                New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), lCB ) );
 
         for( size_t i = 0; i < GetImageCount(); i++ )
         {

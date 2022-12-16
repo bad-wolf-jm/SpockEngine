@@ -22,7 +22,7 @@ namespace SE::Graphics
 
             auto lVkImageView =
                 mGraphicContext->CreateImageView( lTextureData->mVkImage, lTextureData->mSpec.mLayers, VK_IMAGE_VIEW_TYPE_2D,
-                                                           ToVkFormat( lTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
+                                                  ToVkFormat( lTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
 
             mVkImageViews.push_back( lVkImageView );
         }

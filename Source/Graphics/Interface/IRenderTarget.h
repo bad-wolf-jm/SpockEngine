@@ -84,7 +84,7 @@ namespace SE::Graphics
         virtual void EndRender();
         virtual void Present();
 
-        Ref<ITexture2D> &GetAttachment( std::string const &aKey );
+        Ref<ITexture2D> GetAttachment( std::string const &aKey );
 
       protected:
         Ref<IGraphicContext> mGraphicContext{};

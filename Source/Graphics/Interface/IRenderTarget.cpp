@@ -36,7 +36,7 @@ namespace SE::Graphics
         AddAttachment( aAttachmentID, lCreateInfo, aFramebufferImage );
     }
 
-    Ref<ITexture2D> &IRenderTarget::GetAttachment( std::string const &aKey )
+    Ref<ITexture2D> IRenderTarget::GetAttachment( std::string const &aKey )
     {
         //
         return mAttachments[aKey];
@@ -47,4 +47,6 @@ namespace SE::Graphics
     void IRenderTarget::EndRender() {}
 
     void IRenderTarget::Present() {}
+
+    void IRenderTarget::Finalize() {}
 } // namespace SE::Graphics
