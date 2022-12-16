@@ -117,7 +117,7 @@ namespace SE::Graphics
         VkQueue GetGraphicsQueue() { return mVkGraphicsQueue; }
         VkQueue GetPresentQueue() { return mVkPresentQueue; }
 
-        VkFormat GetDepthFormat() { return mDepthFormat; }
+        eColorFormat GetDepthFormat() { return ToLtseFormat( mDepthFormat ); }
 
         void UpdateDescriptorSets( VkWriteDescriptorSet aWriteOps );
 

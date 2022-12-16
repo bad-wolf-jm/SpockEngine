@@ -37,7 +37,7 @@ namespace SE::Graphics
         mAttachmentIDs.push_back( aAttachmentID );
 
         if( aCreateInfo.mType == eAttachmentType::DEPTH )
-            mAttachmentInfo.back().mFormat = ToLtseFormat( mGraphicContext->GetDepthFormat() );
+            mAttachmentInfo.back().mFormat = mGraphicContext->GetDepthFormat();
 
         sTextureCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mFormat         = aCreateInfo.mFormat;
@@ -57,7 +57,7 @@ namespace SE::Graphics
         mAttachmentIDs.push_back( aAttachmentID );
 
         if( aCreateInfo.mType == eAttachmentType::DEPTH )
-            mAttachmentInfo.back().mFormat = ToLtseFormat( mGraphicContext->GetDepthFormat() );
+            mAttachmentInfo.back().mFormat = mGraphicContext->GetDepthFormat();
 
         sTextureCreateInfo lTextureCreateInfo{};
         lTextureCreateInfo.mFormat         = aCreateInfo.mFormat;

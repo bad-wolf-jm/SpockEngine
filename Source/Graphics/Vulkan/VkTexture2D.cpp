@@ -20,7 +20,7 @@ namespace SE::Graphics
         : ITexture2D( aGraphicContext, mTextureData.mSpec, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, false )
     {
         if( mSpec.mIsDepthTexture )
-            mSpec.mFormat = ToLtseFormat( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat() );
+            mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
 
         CreateImage();
         AllocateMemory();
@@ -43,7 +43,7 @@ namespace SE::Graphics
                       aIsTransferDestination )
     {
         if( mSpec.mIsDepthTexture )
-            mSpec.mFormat = ToLtseFormat( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat() );
+            mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
 
         CreateImage();
         AllocateMemory();
@@ -57,18 +57,17 @@ namespace SE::Graphics
         , mVkImage{ aExternalImage }
     {
         if( mSpec.mIsDepthTexture )
-            mSpec.mFormat = ToLtseFormat( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat() );
+            mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
     }
 
     void VkTexture2D::CreateImage()
     {
-        mVkImage = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-                       ->CreateImage( mSpec.mWidth, mSpec.mHeight, mSpec.mDepth, mSpec.mMipLevels, mSpec.mLayers,
-                                      VK_SAMPLE_COUNT_VALUE( mSampleCount ), !mIsGraphicsOnly, false,
-                                      mSpec.mIsDepthTexture
-                                          ? std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat()
-                                          : ToVkFormat( mSpec.mFormat ),
-                                      MemoryProperties(), ImageUsage() );
+        mVkImage =
+            std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
+                ->CreateImage( mSpec.mWidth, mSpec.mHeight, mSpec.mDepth, mSpec.mMipLevels, mSpec.mLayers,
+                               VK_SAMPLE_COUNT_VALUE( mSampleCount ), !mIsGraphicsOnly, false,
+                               mSpec.mIsDepthTexture ? ToVkFormat( mGraphicContext->GetDepthFormat() ) : ToVkFormat( mSpec.mFormat ),
+                               MemoryProperties(), ImageUsage() );
     }
 
     void VkTexture2D::AllocateMemory()

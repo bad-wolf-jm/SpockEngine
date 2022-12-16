@@ -2,6 +2,7 @@
 
 #include "Core/Memory.h"
 
+#include "Core/CUDA/Texture/TextureData.h"
 #include "IWindow.h"
 
 namespace SE::Graphics
@@ -17,6 +18,8 @@ namespace SE::Graphics
         }
 
         Ref<IWindow> GetWindow() { return mWindow; };
+
+        virtual eColorFormat GetDepthFormat() = 0;
 
       protected:
         Ref<IWindow> mWindow = nullptr;

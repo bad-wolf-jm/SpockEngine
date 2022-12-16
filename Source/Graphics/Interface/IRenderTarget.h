@@ -3,6 +3,7 @@
 #include "Core/Memory.h"
 
 #include "IGraphicContext.h"
+#include "ITexture2D.h"
 
 namespace SE::Graphics
 {
@@ -71,13 +72,8 @@ namespace SE::Graphics
 
         uint32_t GetImageCount() { return mImageCount; }
 
-        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
-
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
                             Ref<ITexture2D> aFramebufferImage );
-
-        void AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
-                            bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp );
 
         void AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
                             bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp,

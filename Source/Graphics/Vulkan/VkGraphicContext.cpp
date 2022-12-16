@@ -5,6 +5,8 @@
 #include <set>
 #include <string>
 
+#include "VkTexture2D.h"
+
 namespace SE::Graphics
 {
     namespace
@@ -520,6 +522,13 @@ namespace SE::Graphics
 
         if( mVkInstance != VK_NULL_HANDLE ) vkDestroyInstance( mVkInstance, nullptr );
     }
+
+    // Ref<ITexture2D> VkGraphicContext::NewTexture2D( sTextureCreateInfo const &aCreateInfo, uint8_t aSampleCount, bool aIsHostVisible,
+    //                                                 bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
+    // {
+    //     return New<VkTexture2D>( this, aCreateInfo, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
+    //                              aIsTransferDestination );
+    // }
 
     VkDeviceMemory VkGraphicContext::AllocateMemory( VkImage aVkImageObject, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable,
                                                      size_t *aAllocatedSize )

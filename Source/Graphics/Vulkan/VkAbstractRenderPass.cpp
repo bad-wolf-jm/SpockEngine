@@ -106,7 +106,7 @@ namespace SE::Graphics
     {
         VkAttachmentDescription lAttachmentSpec{};
         lAttachmentSpec.samples        = VK_SAMPLE_COUNT_VALUE( aSampleCount );
-        lAttachmentSpec.format         = mContext->GetDepthFormat();
+        lAttachmentSpec.format         = ToVkFormat( mContext->GetDepthFormat() );
         lAttachmentSpec.loadOp         = aAttachmentLoadOp;
         lAttachmentSpec.storeOp        = aAttachmentStoreOp;
         lAttachmentSpec.stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
