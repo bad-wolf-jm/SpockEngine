@@ -58,7 +58,7 @@ namespace SE::Core
         lRenderTargetSpec.mWidth       = aOutputWidth;
         lRenderTargetSpec.mHeight      = aOutputHeight;
         lRenderTargetSpec.mSampleCount = mOutputSampleCount;
-        mGeometryRenderTarget          = New<ARenderTarget>( mGraphicContext, lRenderTargetSpec );
+        mGeometryRenderTarget          = New<VkRenderTarget>( mGraphicContext, lRenderTargetSpec );
 
         sAttachmentDescription lAttachmentCreateInfo{};
         lAttachmentCreateInfo.mIsSampled   = true;

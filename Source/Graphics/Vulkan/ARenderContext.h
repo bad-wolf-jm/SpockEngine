@@ -2,7 +2,7 @@
 
 #include "Graphics/Vulkan/VkGraphicContext.h"
 
-#include "ARenderTarget.h"
+#include "VkRenderTarget.h"
 #include "Graphics/Vulkan/VkGpuBuffer.h"
 #include "GraphicsPipeline.h"
 
@@ -12,14 +12,14 @@ namespace SE::Graphics
     {
       public:
         ARenderContext() = default;
-        ARenderContext( Ref<VkGraphicContext> aGraphicContext, Ref<ARenderTarget> aRenderTarget );
+        ARenderContext( Ref<VkGraphicContext> aGraphicContext, Ref<VkRenderTarget> aRenderTarget );
 
         ~ARenderContext() = default;
 
         Ref<VkGraphicContext> GetGraphicContext() { return mGraphicContext; };
 
         uint32_t                                 GetOutputImageCount();
-        Ref<ARenderTarget>                       GetRenderTarget() { return mRenderTarget; }
+        Ref<VkRenderTarget>                       GetRenderTarget() { return mRenderTarget; }
         Ref<sVkCommandBufferObject>              GetCurrentCommandBuffer() { return mRenderTarget->GetCurrentCommandBuffer(); }
         virtual Ref<sVkAbstractRenderPassObject> GetRenderPass() { return mRenderTarget->GetRenderPass(); }
 
@@ -54,7 +54,7 @@ namespace SE::Graphics
 
         uint32_t mCurrentCommandBuffer = 0;
 
-        Ref<ARenderTarget> mRenderTarget = nullptr;
+        Ref<VkRenderTarget> mRenderTarget = nullptr;
 
         std::vector<Ref<sVkCommandBufferObject>> mCommandBufferObject   = {};
         Ref<sVkPipelineLayoutObject>             mCurrentPipelineLayout = nullptr;

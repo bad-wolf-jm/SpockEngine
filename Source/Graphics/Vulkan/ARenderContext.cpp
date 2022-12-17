@@ -5,7 +5,7 @@
 namespace SE::Graphics
 {
 
-    ARenderContext::ARenderContext( Ref<VkGraphicContext> aGraphicContext, Ref<ARenderTarget> aRenderTarget )
+    ARenderContext::ARenderContext( Ref<VkGraphicContext> aGraphicContext, Ref<VkRenderTarget> aRenderTarget )
         : mGraphicContext{ aGraphicContext }
         , mRenderTarget{ aRenderTarget }
     {
@@ -24,7 +24,7 @@ namespace SE::Graphics
 
         auto lCommandBuffer = GetCurrentCommandBuffer();
         lCommandBuffer->Begin();
-        lCommandBuffer->BeginRenderPass( mRenderTarget->GetRenderPass(), mRenderTarget->GetFramebuffer()->mVkFramebuffer,
+        lCommandBuffer->BeginRenderPass( mRenderTarget->GetRenderPass(), mRenderTarget->GetFramebuffer(),
                                          { lWidth, lHeight }, mRenderTarget->GetClearValues() );
         lCommandBuffer->SetViewport( { 0.0f, 0.0f }, { lWidth, lHeight } );
         lCommandBuffer->SetScissor( { 0.0f, 0.0f }, { lWidth, lHeight } );

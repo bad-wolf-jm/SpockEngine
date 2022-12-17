@@ -6,7 +6,7 @@
 namespace SE::Graphics
 {
     SwapChain::SwapChain( Ref<VkGraphicContext> aGraphicContext, Ref<IWindow> aWindow )
-        : ARenderTarget( aGraphicContext, sRenderTargetDescription{} )
+        : VkRenderTarget( aGraphicContext, sRenderTargetDescription{} )
         , mViewportClient{ aWindow }
     {
         RecreateSwapChain();
@@ -54,7 +54,7 @@ namespace SE::Graphics
             lCreateInfo.mWidth  = lSwapchainExtent.width;
             lCreateInfo.mHeight = lSwapchainExtent.height;
             auto lSwapChainImage =
-                New<ARenderTarget>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), lCreateInfo );
+                New<VkRenderTarget>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), lCreateInfo );
             lSwapChainImage->AddAttachment( "SWAPCHAIN_OUTPUT", eAttachmentType::COLOR, ToLtseFormat( lSwapChainImageFormat ),
                                             { 0.01f, 0.01f, 0.03f, 1.0f }, false, true, eAttachmentLoadOp::CLEAR,
                                             eAttachmentStoreOp::STORE, lFramebufferImage );

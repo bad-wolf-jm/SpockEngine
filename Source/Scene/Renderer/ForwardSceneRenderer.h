@@ -2,7 +2,7 @@
 #include "Core/Memory.h"
 
 #include "Graphics/Vulkan/ARenderContext.h"
-#include "Graphics/Vulkan/ARenderTarget.h"
+#include "Graphics/Vulkan/VkRenderTarget.h"
 #include "Graphics/Vulkan/DescriptorSet.h"
 #include "Graphics/Vulkan/GraphicsPipeline.h"
 
@@ -50,7 +50,7 @@ namespace SE::Core
         ParticleSystemRenderer &GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification );
 
       protected:
-        Ref<ARenderTarget> mGeometryRenderTarget = nullptr;
+        Ref<VkRenderTarget> mGeometryRenderTarget = nullptr;
         ARenderContext     mGeometryContext{};
 
         Ref<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;

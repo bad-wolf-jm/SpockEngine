@@ -39,12 +39,12 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Vulkan/DescriptorSet.cpp
     Graphics/Vulkan/GraphicsPipeline.cpp
     Graphics/Vulkan/ARenderContext.cpp
-    Graphics/Vulkan/ARenderTarget.cpp
+    Graphics/Vulkan/VkRenderTarget.cpp
     Graphics/Vulkan/SwapChain.cpp
     Graphics/Vulkan/VkGpuBuffer.cpp
     Graphics/Vulkan/VkTexture2D.cpp
     Graphics/Vulkan/VkSampler2D.cpp
-    Graphics/Vulkan/VkRenderTarget.cpp
+    # Graphics/Vulkan/VkRenderTarget.cpp
     Graphics/Vulkan/VkGraphicContext.cpp
     Graphics/Vulkan/VkPipeline.cpp
     Graphics/Vulkan/VkCommand.cpp

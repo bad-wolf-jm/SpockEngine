@@ -35,7 +35,7 @@ namespace SE::Core
         lGeometrySpec.mWidth       = aOutputWidth;
         lGeometrySpec.mHeight      = aOutputHeight;
         lGeometrySpec.mSampleCount = mOutputSampleCount;
-        mGeometryRenderTarget      = New<ARenderTarget>( mGraphicContext, lGeometrySpec );
+        mGeometryRenderTarget      = New<VkRenderTarget>( mGraphicContext, lGeometrySpec );
 
         sAttachmentDescription lAttachmentCreateInfo{};
         lAttachmentCreateInfo.mType        = eAttachmentType::COLOR;
@@ -68,7 +68,7 @@ namespace SE::Core
         lLightingSpec.mWidth       = aOutputWidth;
         lLightingSpec.mHeight      = aOutputHeight;
         lLightingSpec.mSampleCount = mOutputSampleCount;
-        mLightingRenderTarget      = New<ARenderTarget>( mGraphicContext, lLightingSpec );
+        mLightingRenderTarget      = New<VkRenderTarget>( mGraphicContext, lLightingSpec );
 
         lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
         lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA16_FLOAT;

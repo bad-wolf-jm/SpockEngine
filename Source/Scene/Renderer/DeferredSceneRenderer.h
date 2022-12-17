@@ -2,7 +2,7 @@
 
 #include "Core/Memory.h"
 #include "Graphics/Vulkan/ARenderContext.h"
-#include "Graphics/Vulkan/ARenderTarget.h"
+#include "Graphics/Vulkan/VkRenderTarget.h"
 #include "Graphics/Vulkan/DescriptorSet.h"
 
 #include "ASceneRenderer.h"
@@ -53,7 +53,7 @@ namespace SE::Core
 
         ARenderContext mLightingContext{};
 
-        Ref<ARenderTarget> mGeometryRenderTarget = nullptr;
+        Ref<VkRenderTarget> mGeometryRenderTarget = nullptr;
 
         Ref<VkGpuBuffer> mCameraUniformBuffer    = nullptr;
         Ref<VkGpuBuffer> mShaderParametersBuffer = nullptr;
@@ -63,7 +63,7 @@ namespace SE::Core
         Ref<DescriptorSetLayout> mLightingCameraLayout  = nullptr;
         Ref<DescriptorSet>       mLightingPassCamera    = nullptr;
 
-        Ref<ARenderTarget> mLightingRenderTarget = nullptr;
+        Ref<VkRenderTarget> mLightingRenderTarget = nullptr;
 
         DeferredLightingRenderer mLightingRenderer;
 
