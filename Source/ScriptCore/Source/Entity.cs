@@ -7,9 +7,9 @@ namespace SpockEngine
         private uint mEntityID;
         private ulong mRegistryID;
 
-        public Entity() { mEntityID=0; mRegistryID=0; }
-        public Entity(Entity aOther) { mEntityID=aOther.mEntityID; mRegistryID=aOther.mRegistryID; }
-        public Entity(uint aEntityID, ulong aRegistryID) { mEntityID=aEntityID; mRegistryID=aRegistryID; }
+        public Entity() { mEntityID = 0; mRegistryID = 0; }
+        public Entity(Entity aOther) { mEntityID = aOther.mEntityID; mRegistryID = aOther.mRegistryID; }
+        public Entity(uint aEntityID, ulong aRegistryID) { mEntityID = aEntityID; mRegistryID = aRegistryID; }
 
         public Entity CreateEntity(string aName)
         {
@@ -26,12 +26,12 @@ namespace SpockEngine
         public bool IsValid()
         {
             if (mRegistryID == 0) return false;
-            return CppCall.Entity_IsValid( mEntityID, mRegistryID );
+            return CppCall.Entity_IsValid(mEntityID, mRegistryID);
         }
 
         public bool Has<_Component>() where _Component : Component, new()
         {
-            return CppCall.Entity_Has( mEntityID, mRegistryID, typeof(_Component) );
+            return CppCall.Entity_Has(mEntityID, mRegistryID, typeof(_Component));
         }
 
         public _Component Get<_Component>() where _Component : Component, new()
@@ -59,7 +59,7 @@ namespace SpockEngine
         {
             if (!Has<_Component>()) return;
 
-            CppCall.Entity_Remove( mEntityID, mRegistryID, typeof(_Component) );
+            CppCall.Entity_Remove(mEntityID, mRegistryID, typeof(_Component));
         }
 
 
