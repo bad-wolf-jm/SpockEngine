@@ -1,12 +1,5 @@
 #include "EntityRegistry.h"
 
-// #include "TypeReflection.h"
-
-// #include "mono/jit/jit.h"
-// #include "mono/metadata/assembly.h"
-// #include "mono/metadata/object.h"
-// #include "mono/metadata/tabledefs.h"
-
 #include <functional>
 #include <string>
 

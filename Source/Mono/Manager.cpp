@@ -27,8 +27,6 @@ namespace SE::Core
 
     namespace Utils
     {
-
-        // TODO: move to FileSystem class
         static char *ReadBytes( const std::filesystem::path &aFilepath, uint32_t *aOutSize )
         {
             std::ifstream lStream( aFilepath, std::ios::binary | std::ios::ate );
@@ -106,7 +104,6 @@ namespace SE::Core
 
             return it->second;
         }
-
     } // namespace Utils
 
     struct ScriptEngineData
@@ -122,13 +119,15 @@ namespace SE::Core
         std::filesystem::path mCoreAssemblyFilepath;
         std::filesystem::path mAppAssemblyFilepath;
 
-        ScriptClass mBaseApplicationClass;
-        ScriptClass mBaseControllerClass;
-        ScriptClass mBaseComponentClass;
-
+        ScriptClass                                       mBaseApplicationClass;
         std::unordered_map<std::string, Ref<ScriptClass>> mApplicationClasses;
+
+        ScriptClass                                       mBaseControllerClass;
         std::unordered_map<std::string, Ref<ScriptClass>> mControllerClasses;
+
+        ScriptClass                                       mBaseComponentClass;
         std::unordered_map<std::string, Ref<ScriptClass>> mComponentClasses;
+
         std::unordered_map<std::string, Ref<ScriptClass>> mAllClasses;
 
         std::unique_ptr<filewatch::FileWatch<std::string>> mAppAssemblyFileWatcher;
@@ -212,13 +211,8 @@ namespace SE::Core
 
     ScriptClassMethod ScriptClassInstance::GetBoundMethod( const std::string &aName, int aParameterCount )
     {
-        MonoClass  *lClass  = mMonoClass;
-        MonoMethod *lMethod = NULL;
-        while( lClass != NULL && lMethod == NULL )
-        {
-            lMethod = mono_class_get_method_from_name( lClass, aName.c_str(), aParameterCount );
-            if( lMethod == NULL ) lClass = mono_class_get_parent( lClass );
-        }
+        auto lMethod = GetMethod( aName, aParameterCount );
+
         return ScriptClassMethod( lMethod, this );
     }
 
@@ -303,7 +297,6 @@ namespace SE::Core
 
     void ScriptManager::RegisterComponentTypes()
     {
-        //
         RegisterComponentType<sTag>();
         RegisterComponentType<sNodeTransformComponent>();
         RegisterComponentType<sTransformMatrixComponent>();
@@ -408,7 +401,6 @@ namespace SE::Core
             // This routine is an iterator routine for retrieving the fields in a class.
             // You must pass a gpointer that points to zero and is treated as an opaque handle
             // to iterate over all of the elements. When no more values are available, the return value is NULL.
-
             int   lFieldCount = mono_class_num_fields( lMonoClass );
             void *lIterator   = nullptr;
             while( MonoClassField *lField = mono_class_get_fields( lMonoClass, &lIterator ) )
@@ -438,8 +430,6 @@ namespace SE::Core
         {
             sData->mAppAssembly      = Utils::LoadMonoAssembly( sData->mAppAssemblyFilepath );
             sData->mAppAssemblyImage = mono_assembly_get_image( sData->mAppAssembly );
-
-            // Utils::PrintAssemblyTypes( sData->mAppAssembly );
         }
 
         LoadAssemblyClasses();

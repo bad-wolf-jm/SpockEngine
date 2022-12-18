@@ -1122,15 +1122,7 @@ namespace SE::Core
                 }
             } );
 
-        // Initialize Lua scripts
-        // mActorComponents.clear();
-        ForEach<sActorComponent>(
-            [=]( auto l_Entity, auto &l_Component )
-            {
-                // mActorComponents.push_back(l_Component);
-                // mActorComponents.back().OnCreate();
-                l_Component.OnCreate();
-            } );
+        ForEach<sActorComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnCreate(); } );
 
         mState = eSceneState::RUNNING;
     }
@@ -1156,10 +1148,6 @@ namespace SE::Core
 
         // Destroy Lua scripts
         ForEach<sActorComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnDestroy(); } );
-        // for (auto& lActor : mActorComponents)
-        // {
-        //     lActor.OnDestroy();
-        // }
 
         mState = eSceneState::EDITING;
     }
