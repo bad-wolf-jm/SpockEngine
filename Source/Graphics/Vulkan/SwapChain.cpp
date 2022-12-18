@@ -17,6 +17,8 @@ namespace SE::Graphics
         std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->WaitIdle();
         mRenderTargets.clear();
 
+        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->DestroySwapChain( mVkObject );
+
         auto [lSwapChainImageFormat, lSwapChainImageCount, lSwapchainExtent, lNewSwapchain] =
             std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->CreateSwapChain();
 

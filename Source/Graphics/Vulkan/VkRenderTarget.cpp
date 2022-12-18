@@ -9,9 +9,10 @@ namespace SE::Graphics
 
     VkRenderTarget::~VkRenderTarget()
     {
+        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->DestroyFramebuffer( mVkFramebuffer );
+        
         for( auto &lImageView : mVkImageViews )
             std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->DestroyImageView( lImageView );
-        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->DestroyFramebuffer( mVkFramebuffer );
     }
 
     std::vector<VkClearValue> VkRenderTarget::GetClearValues()
