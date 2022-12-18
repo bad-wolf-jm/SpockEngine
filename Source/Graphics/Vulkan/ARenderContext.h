@@ -2,9 +2,9 @@
 
 #include "Graphics/Vulkan/VkGraphicContext.h"
 
-#include "VkRenderTarget.h"
 #include "Graphics/Vulkan/VkGpuBuffer.h"
 #include "GraphicsPipeline.h"
+#include "VkRenderTarget.h"
 
 namespace SE::Graphics
 {
@@ -18,9 +18,10 @@ namespace SE::Graphics
 
         Ref<VkGraphicContext> GetGraphicContext() { return mGraphicContext; };
 
-        uint32_t                                 GetOutputImageCount();
-        Ref<VkRenderTarget>                       GetRenderTarget() { return mRenderTarget; }
-        Ref<sVkCommandBufferObject>              GetCurrentCommandBuffer() { return mRenderTarget->GetCurrentCommandBuffer(); }
+        uint32_t                    GetOutputImageCount();
+        Ref<VkRenderTarget>         GetRenderTarget() { return mRenderTarget; }
+        Ref<sVkCommandBufferObject> GetCurrentCommandBuffer() { return mRenderTarget->GetCurrentCommandBuffer(); }
+
         virtual Ref<sVkAbstractRenderPassObject> GetRenderPass() { return mRenderTarget->GetRenderPass(); }
 
         bool BeginRender();

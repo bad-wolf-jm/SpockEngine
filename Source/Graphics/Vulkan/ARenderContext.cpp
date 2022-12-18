@@ -54,15 +54,15 @@ namespace SE::Graphics
 
     void ARenderContext::ResetBuffers() { mHasIndex = false; }
 
-    void ARenderContext::Draw( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset, uint32_t a_InstanceCount,
-                               uint32_t a_FirstInstance )
+    void ARenderContext::Draw( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset, uint32_t aInstanceCount,
+                               uint32_t aFirstInstance )
     {
         auto lCommandBuffer = GetCurrentCommandBuffer();
 
         if( mHasIndex )
-            lCommandBuffer->DrawIndexed( aVertexCount, aVertexOffset, aVertexBufferOffset, a_InstanceCount, a_FirstInstance );
+            lCommandBuffer->DrawIndexed( aVertexCount, aVertexOffset, aVertexBufferOffset, aInstanceCount, aFirstInstance );
         else
-            lCommandBuffer->Draw( aVertexCount, aVertexOffset, aVertexBufferOffset, a_InstanceCount, a_FirstInstance );
+            lCommandBuffer->Draw( aVertexCount, aVertexOffset, aVertexBufferOffset, aInstanceCount, aFirstInstance );
     }
 
     void ARenderContext::Bind( Ref<GraphicsPipeline> aGraphicPipeline )
