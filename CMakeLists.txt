@@ -123,6 +123,15 @@ FetchContent_MakeAvailable(tinyobjloader)
 include_directories(${tinyobjloader_SOURCE_DIR})
 set(SE_EXTRA_INCLUDES ${tinyobjloader_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
 
+FetchContent_Declare(
+  glslang
+  GIT_REPOSITORY https://github.com/KhronosGroup/glslang.git
+  GIT_TAG        master
+  GIT_PROGRESS   TRUE )
+FetchContent_MakeAvailable(glslang)
+include_directories(${glslang_SOURCE_DIR}/glslang/Public)
+set(SE_EXTRA_INCLUDES ${glslang_SOURCE_DIR}/glslang/Public ${SE_EXTRA_INCLUDES})
+
 
 set(SE_EXTRA_INCLUDES ${SE_EXTRA_INCLUDES} PARENT_SCOPE)
 set(EXTERNAL_LIBRARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty)
