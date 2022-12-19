@@ -37,6 +37,11 @@ namespace SpockEngine
 
     };
 
+    public struct OpNode
+    {
+
+    };
+
     public class TensorOps
     {
         OpNode MultiTensorValue(Scope aScope, sConstantValueInitializerComponent aInitializer, sTensorShape aShape);
@@ -225,12 +230,12 @@ namespace SpockEngine
 
         }
 
-        OpNode Reshape(Scope aScope, OpNode aArray, sTensorShape &aNewShape )
+        OpNode Reshape(Scope aScope, OpNode aArray, sTensorShape aNewShape )
         {
 
         }
 
-        OpNode Relayout(Scope aScope, OpNode aArray, sTensorShape &aNewLayout )
+        OpNode Relayout(Scope aScope, OpNode aArray, sTensorShape aNewLayout )
         {
 
         }
@@ -295,12 +300,12 @@ namespace SpockEngine
 
         }
 
-        OpNode Diff(Scope aScope, OpNode aArray, uint32_t aCount)
+        OpNode Diff(Scope aScope, OpNode aArray, UInt32 aCount)
         {
 
         }
 
-        OpNode Shift(Scope aScope, OpNode aArray, int32_t aCount, OpNode aFillValue)
+        OpNode Shift(Scope aScope, OpNode aArray, Int32 aCount, OpNode aFillValue)
         {
 
         }
