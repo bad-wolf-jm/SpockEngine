@@ -9,7 +9,9 @@ namespace SpockEngine
 
     public class Scope
     {
+        private ulong mInternalScope;
 
+        public Scope(uint aInternalScope) { mInternalScope = aInternalScope; }
     };
 
     public struct sConstantValueInitializerComponent
@@ -37,7 +39,7 @@ namespace SpockEngine
 
     };
 
-    public struct OpNode
+    public struct OpNode : Entity
     {
 
     };
@@ -54,46 +56,11 @@ namespace SpockEngine
 
         OpNode MultiTensorValue(Scope aScope, sRandomNormalInitializerComponent aInitializer, sTensorShape aShape);
 
-        template<typename _Ty> OpNode VectorValue(Scope aScope, std::vector<_Ty> aValue)
-        {
-            auto l_NewEntity = aScope.CreateNode();
+        OpNode VectorValue<_Ty>(Scope aScope, std::vector<_Ty> aValue);
 
-            auto & l_Value = l_NewEntity.Add<sVectorComponent<_Ty>>();
-            l_Value.mValue = aValue;
-            l_Value.mData = aScope.mPool.Allocate(aValue.size() * sizeof(_Ty));
+        OpNode ScalarVectorValue<_Ty>(Scope aScope, eScalarType aType, std::vector<_Ty> aValue);
 
-            if constexpr(std::is_same_v<_Ty, ScalarValue>)
-            {
-                l_NewEntity.Add<sTypeComponent>(TypeOf(aValue[0]));
-            }
-
-            l_NewEntity.Add<sGraphOperationComponent>().Bind<VectorRunner<_Ty>>();
-
-            return l_NewEntity;
-        }
-
-        template<typename _Ty> OpNode ScalarVectorValue(Scope aScope, eScalarType aType, std::vector<_Ty> aValue)
-        {
-            uint32_t lSize = aValue.size();
-            std::vector<ScalarValue> lValues(lSize );
-            for (uint32_t i = 0; i < lSize; i++)
-            {
-                lValues[i] = aValue[i];
-            }
-            return VectorValue(aScope, lValues);
-        }
-
-        template<typename _Ty> OpNode ConstantScalarValue(Scope aScope, _Ty aValue)
-        {
-            auto l_NewEntity = aScope.CreateNode();
-
-            auto & l_Value = l_NewEntity.Add<sScalarNodeComponent>();
-            l_Value.mValue = aValue;
-
-            l_NewEntity.Add<sTypeComponent>(TypeOf(l_Value.mValue));
-
-            return l_NewEntity;
-        }
+        OpNode ConstantScalarValue<_Ty>(Scope aScope, _Ty aValue);
 
         OpNode Add(Scope aScope, OpNode aLeft, OpNode aRight)
         {
@@ -230,12 +197,12 @@ namespace SpockEngine
 
         }
 
-        OpNode Reshape(Scope aScope, OpNode aArray, sTensorShape aNewShape )
+        OpNode Reshape(Scope aScope, OpNode aArray, sTensorShape aNewShape)
         {
 
         }
 
-        OpNode Relayout(Scope aScope, OpNode aArray, sTensorShape aNewLayout )
+        OpNode Relayout(Scope aScope, OpNode aArray, sTensorShape aNewLayout)
         {
 
         }
