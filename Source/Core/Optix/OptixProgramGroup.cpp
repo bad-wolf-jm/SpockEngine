@@ -21,6 +21,6 @@ namespace SE::Graphics
         if( lLogStringSize > 1 ) SE::Logging::Info( "{}", lLogString );
     }
 
-    OptixProgramGroupObject::~OptixProgramGroupObject() { OPTIX_CHECK( optixProgramGroupDestroy( mOptixObject ) ); }
+    OptixProgramGroupObject::~OptixProgramGroupObject() { OPTIX_CHECK_NO_EXCEPT( optixProgramGroupDestroy( mOptixObject ) ); }
 
 } // namespace SE::Graphics

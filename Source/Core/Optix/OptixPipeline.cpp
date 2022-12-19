@@ -28,7 +28,7 @@ namespace SE::Graphics
         OPTIX_CHECK( optixPipelineSetStackSize( mOptixObject, 2 * 1024, 2 * 1024, 2 * 1024, 1 ) );
     }
 
-    OptixPipelineObject::~OptixPipelineObject() { OPTIX_CHECK( optixPipelineDestroy( mOptixObject ) ); }
+    OptixPipelineObject::~OptixPipelineObject() { OPTIX_CHECK_NO_EXCEPT( optixPipelineDestroy( mOptixObject ) ); }
 
     void OptixPipelineObject::Launch( CUstream aStream, CUdeviceptr aLaunchParamsBuffer, size_t aLaunchParamBufferSize,
                                       Ref<OptixShaderBindingTableObject> aShaderBindingTable, math::uvec3 aLaunchDimensions )

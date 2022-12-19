@@ -49,3 +49,12 @@
             throw std::runtime_error( "" );                                                             \
         }                                                                                               \
     }
+
+#define OPTIX_CHECK_NO_EXCEPT( call )                                                                   \
+    {                                                                                                   \
+        OptixResult res = call;                                                                         \
+        if( res != OPTIX_SUCCESS )                                                                      \
+        {                                                                                               \
+            fprintf( stderr, "Optix call (%s) failed with code %d (line %d)\n", #call, res, __LINE__ ); \
+        }                                                                                               \
+    }

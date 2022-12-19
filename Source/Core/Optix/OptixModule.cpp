@@ -35,7 +35,7 @@ namespace SE::Graphics
         if( lLogStringSize > 1 ) SE::Logging::Info( "{}", lLogString );
     }
 
-    OptixModuleObject::~OptixModuleObject() { OPTIX_CHECK( optixModuleDestroy( mOptixObject ) ); }
+    OptixModuleObject::~OptixModuleObject() { OPTIX_CHECK_NO_EXCEPT( optixModuleDestroy( mOptixObject ) ); }
 
     void OptixModuleObject::CreateMissGroup( std::string aEntryName )
     {

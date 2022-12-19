@@ -16,7 +16,7 @@ namespace SE::Graphics
         OPTIX_CHECK( optixDeviceContextCreate( aCudaContext, 0, &mOptixObject ) );
     }
 
-    OptixDeviceContextObject::~OptixDeviceContextObject() { OPTIX_CHECK( optixDeviceContextDestroy( mOptixObject ) ); }
+    OptixDeviceContextObject::~OptixDeviceContextObject() { OPTIX_CHECK_NO_EXCEPT( optixDeviceContextDestroy( mOptixObject ) ); }
 
     void OptixDeviceContextObject::Initialize()
     {
