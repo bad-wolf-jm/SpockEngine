@@ -25,6 +25,8 @@
 #include "Primitives/Primitives.h"
 
 #include "Mono/Manager.h"
+#include "Mono/MonoScriptMethod.h"
+
 
 #include "Core/Profiling/BlockTimer.h"
 
@@ -63,9 +65,9 @@ namespace SE::Core::EntityComponentSystem::Components
     {
         std::string mClassFullName = "";
 
-        ScriptClass         mClass;
-        ScriptClassInstance mInstance;
-        ScriptClassInstance mEntityInstance;
+        MonoScriptClass         mClass;
+        MonoScriptInstance mInstance;
+        MonoScriptInstance mEntityInstance;
 
         sActorComponent()                          = default;
         sActorComponent( const sActorComponent & ) = default;
@@ -80,7 +82,7 @@ namespace SE::Core::EntityComponentSystem::Components
             std::string lClassNamespace = aClassFullName.substr( 0, lSeparatorPos );
             std::string lClassName      = aClassFullName.substr( lSeparatorPos + 1 );
 
-            mClass = ScriptClass( lClassNamespace, lClassName, false );
+            mClass = MonoScriptClass( lClassNamespace, lClassName, false );
         }
 
         template <typename T>
@@ -96,7 +98,7 @@ namespace SE::Core::EntityComponentSystem::Components
             // Create Mono side entity object
             auto lEntityID    = static_cast<uint32_t>( mEntity );
             auto lRegistryID  = (size_t)mEntity.GetRegistry();
-            auto lEntityClass = ScriptClass( "SpockEngine", "Entity", true );
+            auto lEntityClass = MonoScriptClass( "SpockEngine", "Entity", true );
             mEntityInstance   = lEntityClass.Instantiate( lEntityID, lRegistryID );
 
             // Instantiate the Mono actor class with the entity object as parameter
@@ -114,7 +116,7 @@ namespace SE::Core::EntityComponentSystem::Components
       private:
         Entity mEntity;
 
-        ScriptClassMethod mOnUpdate{};
+        MonoScriptMehod mOnUpdate{};
     };
 
     struct sAnimationChannel

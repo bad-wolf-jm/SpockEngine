@@ -36,7 +36,7 @@ namespace SE::Core
             std::string_view lStructName   = GetTypeName<_Ty>();
             std::string      lMonoTypeName = fmt::format( "{}.{}", aNamespace, lStructName );
 
-            MonoType *lMonoType = mono_reflection_type_from_name( lMonoTypeName.data(), ScriptManager::GetCoreAssemblyImage() );
+            MonoType *lMonoType = mono_reflection_type_from_name( lMonoTypeName.data(), MonoScriptEngine::GetCoreAssemblyImage() );
             if( !lMonoType )
             {
                 SE::Logging::Info( "Could not find type '{}'", lMonoTypeName );
@@ -59,7 +59,7 @@ namespace SE::Core
         }
 
         template <typename _Ty>
-        ScriptClassInstance Get( Entity &aEntity, ScriptClass &aMonoType )
+        MonoScriptInstance Get( Entity &aEntity, MonoScriptClass &aMonoType )
         {
             auto &aComponent = aEntity.Get<_Ty>();
             auto  lInstance  = MarshallComponent( aMonoType, aComponent );
@@ -68,7 +68,7 @@ namespace SE::Core
         }
 
         template <typename _Ty>
-        void Replace( Entity &aEntity, ScriptClassInstance &aNewComponent )
+        void Replace( Entity &aEntity, MonoScriptInstance &aNewComponent )
         {
             _Ty lInstance;
             UnmarshallComponent( aNewComponent, lInstance );
@@ -77,7 +77,7 @@ namespace SE::Core
         }
 
         template <typename _Ty>
-        void Add( Entity &aEntity, ScriptClassInstance &aNewComponent )
+        void Add( Entity &aEntity, MonoScriptInstance &aNewComponent )
         {
             _Ty lInstance;
             UnmarshallComponent( aNewComponent, lInstance );
@@ -92,17 +92,17 @@ namespace SE::Core
         }
     } // namespace
 
-    ScriptClassInstance MarshallComponent( ScriptClass &aMonoType, sNodeTransformComponent &aComponent );
-    void                UnmarshallComponent( ScriptClassInstance &aMonoType, sNodeTransformComponent &aComponent );
+    MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sNodeTransformComponent &aComponent );
+    void                UnmarshallComponent( MonoScriptInstance &aMonoType, sNodeTransformComponent &aComponent );
 
-    ScriptClassInstance MarshallComponent( ScriptClass &aMonoType, sTransformMatrixComponent &aComponent );
-    void                UnmarshallComponent( ScriptClassInstance &aMonoType, sTransformMatrixComponent &aComponent );
+    MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sTransformMatrixComponent &aComponent );
+    void                UnmarshallComponent( MonoScriptInstance &aMonoType, sTransformMatrixComponent &aComponent );
 
-    ScriptClassInstance MarshallComponent( ScriptClass &aMonoType, sTag &aComponent );
-    void                UnmarshallComponent( ScriptClassInstance &aMonoType, sTag &aComponent );
+    MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sTag &aComponent );
+    void                UnmarshallComponent( MonoScriptInstance &aMonoType, sTag &aComponent );
 
-    ScriptClassInstance MarshallComponent( ScriptClass &aMonoType, sLightComponent &aComponent );
-    void                UnmarshallComponent( ScriptClassInstance &aMonoType, sLightComponent &aComponent );
+    MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sLightComponent &aComponent );
+    void                UnmarshallComponent( MonoScriptInstance &aMonoType, sLightComponent &aComponent );
 
     entt::meta_type GetMetaType( MonoType *aObject );
 

@@ -39,9 +39,9 @@ namespace SE::MonoInternalCalls
 
         const entt::meta_type lMetaType = Core::GetMetaType( lMonoType );
         const entt::meta_any  lMaybeAny = Core::InvokeMetaFunction(
-             lMetaType, "Get"_hs, aRegistry->WrapEntity( static_cast<entt::entity>( aEntityID ) ), ScriptClass( lMonoType ) );
+             lMetaType, "Get"_hs, aRegistry->WrapEntity( static_cast<entt::entity>( aEntityID ) ), MonoScriptClass( lMonoType ) );
 
-        return lMaybeAny.cast<ScriptClassInstance>().GetInstance();
+        return lMaybeAny.cast<MonoScriptInstance>().GetInstance();
     }
 
     void Entity_Replace( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType, MonoObject *aNewComponent )
@@ -51,7 +51,7 @@ namespace SE::MonoInternalCalls
 
         const entt::meta_type lMetaType = Core::GetMetaType( lMonoType );
         Core::InvokeMetaFunction( lMetaType, "Replace"_hs, aRegistry->WrapEntity( static_cast<entt::entity>( aEntityID ) ),
-                                  ScriptClassInstance( lMonoClass, aNewComponent ) );
+                                  MonoScriptInstance( lMonoClass, aNewComponent ) );
     }
 
     void Entity_Add( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType, MonoObject *aNewComponent )
@@ -61,7 +61,7 @@ namespace SE::MonoInternalCalls
 
         const entt::meta_type lMetaType = Core::GetMetaType( lMonoType );
         Core::InvokeMetaFunction( lMetaType, "Add"_hs, aRegistry->WrapEntity( static_cast<entt::entity>( aEntityID ) ),
-                                  ScriptClassInstance( lMonoClass, aNewComponent ) );
+                                  MonoScriptInstance( lMonoClass, aNewComponent ) );
     }
 
     void Entity_Remove( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType )

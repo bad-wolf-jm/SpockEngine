@@ -13,54 +13,54 @@ namespace SE::Core
         return entt::resolve( (uint32_t)( lHashValue & 0xFFFFFFFF ) );
     }
 
-    ScriptClassInstance MarshallComponent( ScriptClass &lMonoType, sNodeTransformComponent &aComponent )
+    MonoScriptInstance MarshallComponent( MonoScriptClass &lMonoType, sNodeTransformComponent &aComponent )
     {
         return lMonoType.Instantiate( aComponent.mMatrix );
     }
 
-    void UnmarshallComponent( ScriptClassInstance &aMonoType, sNodeTransformComponent &aComponent )
+    void UnmarshallComponent( MonoScriptInstance &aMonoType, sNodeTransformComponent &aComponent )
     {
         math::mat4 lFieldValue = aMonoType.GetFieldValue<math::mat4>( "mMatrix" );
 
         aComponent = sNodeTransformComponent( lFieldValue );
     }
 
-    ScriptClassInstance MarshallComponent( ScriptClass &lMonoType, sTransformMatrixComponent &aComponent )
+    MonoScriptInstance MarshallComponent( MonoScriptClass &lMonoType, sTransformMatrixComponent &aComponent )
     {
         return lMonoType.Instantiate( aComponent.Matrix );
     }
 
-    void UnmarshallComponent( ScriptClassInstance &aMonoType, sTransformMatrixComponent &aComponent )
+    void UnmarshallComponent( MonoScriptInstance &aMonoType, sTransformMatrixComponent &aComponent )
     {
         math::mat4 lFieldValue = aMonoType.GetFieldValue<math::mat4>( "mMatrix" );
 
         aComponent = sTransformMatrixComponent( lFieldValue );
     }
 
-    ScriptClassInstance MarshallComponent( ScriptClass &lMonoType, sTag &aComponent )
+    MonoScriptInstance MarshallComponent( MonoScriptClass &lMonoType, sTag &aComponent )
     {
-        MonoString *lManagedSTagValue = ScriptManager::NewString( aComponent.mValue );
+        MonoString *lManagedSTagValue = MonoScriptEngine::NewString( aComponent.mValue );
 
         auto lNewObject = lMonoType.Instantiate( lManagedSTagValue );
 
         return lNewObject;
     }
 
-    void UnmarshallComponent( ScriptClassInstance &aMonoType, sTag &aComponent )
+    void UnmarshallComponent( MonoScriptInstance &aMonoType, sTag &aComponent )
     {
         auto lFieldValue = aMonoType.GetFieldValue<MonoString *>( "mValue" );
 
-        aComponent = sTag( ScriptManager::NewString( lFieldValue ) );
+        aComponent = sTag( MonoScriptEngine::NewString( lFieldValue ) );
     }
 
-    ScriptClassInstance MarshallComponent( ScriptClass &lMonoType, sLightComponent &aComponent )
+    MonoScriptInstance MarshallComponent( MonoScriptClass &lMonoType, sLightComponent &aComponent )
     {
         auto lNewObject = lMonoType.Instantiate( aComponent.mType, aComponent.mIntensity, aComponent.mColor, aComponent.mCone );
 
         return lNewObject;
     }
 
-    void UnmarshallComponent( ScriptClassInstance &aMonoType, sLightComponent &aComponent )
+    void UnmarshallComponent( MonoScriptInstance &aMonoType, sLightComponent &aComponent )
     {
         aComponent.mType      = aMonoType.GetFieldValue<eLightType>( "mType" );
         aComponent.mIntensity = aMonoType.GetFieldValue<float>( "mIntensity" );
