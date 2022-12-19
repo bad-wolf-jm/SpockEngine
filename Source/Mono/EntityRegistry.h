@@ -6,8 +6,9 @@
 #include "mono/metadata/tabledefs.h"
 
 #include "Core/EntityRegistry/Registry.h"
-#include "Manager.h"
 #include "Scene/Components.h"
+
+#include "MonoScriptEngine.h"
 
 namespace SE::Core
 {

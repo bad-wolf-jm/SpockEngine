@@ -1,4 +1,4 @@
-#include "Manager.h"
+#include "MonoScriptClass.h"
 
 #include "Core/Logging.h"
 #include "Core/Memory.h"
@@ -22,7 +22,7 @@
 #include "EntityRegistry.h"
 #include "InternalCalls.h"
 
-#include "Manager.h"
+#include "MonoScriptEngine.h"
 #include "MonoScriptUtils.h"
 
 namespace SE::Core

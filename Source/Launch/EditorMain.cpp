@@ -24,7 +24,7 @@
 
 #include "Editor/BaseEditorApplication.h"
 
-#include "Mono/Manager.h"
+#include "Mono/MonoScriptEngine.h"
 
 using namespace SE::Core;
 using namespace SE::Graphics;

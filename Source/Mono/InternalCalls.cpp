@@ -5,7 +5,7 @@
 #include <string>
 
 #include "Core/Logging.h"
-#include "Manager.h"
+#include "MonoScriptEngine.h"
 
 namespace SE::MonoInternalCalls
 {

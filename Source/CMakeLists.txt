@@ -9,15 +9,14 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/File.cpp
     Core/Resource.cpp
     Core/Logging.cpp
-
     
-    Mono/Manager.cpp
-    Mono/InternalCalls.cpp
-    Mono/EntityRegistry.cpp
+    Mono/MonoscriptEngine.cpp
     Mono/MonoScriptClass.cpp
     Mono/MonoScriptInstance.cpp
     Mono/MonoScriptMethod.cpp
     Mono/MonoScriptUtils.cpp
+    Mono/InternalCalls.cpp
+    Mono/EntityRegistry.cpp
     
     Core/CUDA/Array/MultiTensor.cu
     Core/CUDA/Array/MemoryPool.cu
