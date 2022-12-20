@@ -77,4 +77,30 @@ namespace SE::Core
 
         return MonoScriptInstance( mMonoClass, lInstance );
     }
+
+    MonoMethod *MonoScriptClass::GetMethod( const std::string &aName, int aParameterCount )
+    {
+        MonoClass  *lClass  = mMonoClass;
+        MonoMethod *lMethod = NULL;
+        while( lClass != NULL && lMethod == NULL )
+        {
+            lMethod = mono_class_get_method_from_name( lClass, aName.c_str(), aParameterCount );
+            if( lMethod == NULL ) lClass = mono_class_get_parent( lClass );
+        }
+
+        return lMethod;
+    }
+
+    MonoObject *MonoScriptClass::InvokeMethod( MonoMethod *aMethod, void **aParameters )
+    {
+        return mono_runtime_invoke( aMethod, nullptr, aParameters, nullptr );
+    }
+
+    MonoObject *MonoScriptClass::InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters )
+    {
+        auto lMethod = GetMethod( aName, aParameterCount );
+        return InvokeMethod( lMethod, aParameters );
+    }
+
+
 } // namespace SE::Core

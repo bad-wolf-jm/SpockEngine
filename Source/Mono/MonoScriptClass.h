@@ -52,8 +52,16 @@ namespace SE::Core
             return lNewInstance;
         }
 
+        template <typename... _ArgTypes>
+        MonoObject *CallMethod( const std::string &aName, _ArgTypes... aArgs )
+        {
+            void *lParameters[] = { (void *)&aArgs... };
+
+            return InvokeMethod( aName, sizeof...( _ArgTypes ), lParameters );
+        }
+
         MonoMethod *GetMethod( const std::string &aName, int aParameterCount );
-        MonoObject *InvokeMethod( MonoObject *aInstance, MonoMethod *aMethod, void **aParameters = nullptr );
+        MonoObject *InvokeMethod( MonoMethod *aMethod, void **aParameters );
         MonoObject *InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters = nullptr );
 
         const std::map<std::string, sScriptField> &GetFields() const { return mFields; }
