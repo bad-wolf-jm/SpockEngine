@@ -78,7 +78,7 @@ namespace SE::Core
         sData->mBaseControllerClass  = MonoScriptClass( "SpockEngine", "ActorComponent", true );
         sData->mBaseComponentClass   = MonoScriptClass( "SpockEngine", "Component", true );
 
-        Mono::Utils::PrintAssemblyTypes( sData->mCoreAssembly );
+        // Mono::Utils::PrintAssemblyTypes( sData->mCoreAssembly );
     }
 
     static void OnAppAssemblyFileSystemEvent( const std::string &path, const filewatch::Event change_type )

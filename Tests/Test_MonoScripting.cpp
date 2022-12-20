@@ -28,7 +28,7 @@ TEST_CASE( "Initialize scripting engine", "[MONO_SCRIPTING]" )
 TEST_CASE( "Set app assembly path", "[MONO_SCRIPTING]" )
 {
     InitializeMonoscripting();
-    fs::path lAppAssemblyPath = "C:\\GitLab\\SpockEngine\\Programs\\TestProject\\Build\\Debug\\Test.dll";
+    fs::path lAppAssemblyPath = "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll";
     MonoScriptEngine::SetAppAssemblyPath( lAppAssemblyPath );
     REQUIRE( true );
 }
