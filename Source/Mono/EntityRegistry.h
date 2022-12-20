@@ -94,16 +94,16 @@ namespace SE::Core
     } // namespace
 
     MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sNodeTransformComponent &aComponent );
-    void                UnmarshallComponent( MonoScriptInstance &aMonoType, sNodeTransformComponent &aComponent );
+    void               UnmarshallComponent( MonoScriptInstance &aMonoType, sNodeTransformComponent &aComponent );
 
     MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sTransformMatrixComponent &aComponent );
-    void                UnmarshallComponent( MonoScriptInstance &aMonoType, sTransformMatrixComponent &aComponent );
+    void               UnmarshallComponent( MonoScriptInstance &aMonoType, sTransformMatrixComponent &aComponent );
 
     MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sTag &aComponent );
-    void                UnmarshallComponent( MonoScriptInstance &aMonoType, sTag &aComponent );
+    void               UnmarshallComponent( MonoScriptInstance &aMonoType, sTag &aComponent );
 
     MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sLightComponent &aComponent );
-    void                UnmarshallComponent( MonoScriptInstance &aMonoType, sLightComponent &aComponent );
+    void               UnmarshallComponent( MonoScriptInstance &aMonoType, sLightComponent &aComponent );
 
     entt::meta_type GetMetaType( MonoType *aObject );
 

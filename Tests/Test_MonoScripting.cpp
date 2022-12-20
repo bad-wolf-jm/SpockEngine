@@ -1,6 +1,7 @@
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <filesystem>
+#include <type_traits>
 
 #include "TestUtils.h"
 
@@ -14,6 +15,7 @@
 
 using namespace SE::Core;
 using namespace TestUtils;
+using namespace math;
 
 namespace fs = std::filesystem;
 
@@ -47,16 +49,29 @@ TEST_CASE( "Set app assembly path", "[MONO_SCRIPTING]" )
 
 inline float ToFloat( MonoObject *x ) { return *(float *)mono_object_unbox( x ); }
 
-inline math::vec3 ToVec3( MonoObject *x )
+inline vec3 ToVec3( MonoObject *x )
 {
     float *lV = (float *)mono_object_unbox( x );
-    return math::make_vec3( lV );
+    return make_vec3( lV );
 }
 
-inline math::vec4 ToVec4( MonoObject *x )
+inline vec4 ToVec4( MonoObject *x )
 {
     float *lV = (float *)mono_object_unbox( x );
-    return math::make_vec4( lV );
+    return make_vec4( lV );
+}
+
+template <typename _RetType, typename... _ArgTypes>
+inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string const &aName, _ArgTypes... aArgs )
+{
+    auto lR = aVectorTest.CallMethod( aName, std::forward<_ArgTypes>( aArgs )... );
+
+    if constexpr( std::is_same_v<_RetType, vec3> )
+        return ToVec3( lR );
+    else if constexpr( std::is_same_v<_RetType, vec4> )
+        return ToVec4( lR );
+    else
+        return ToFloat( lR );
 }
 
 TEST_CASE( "Vector3 operations", "[MONO_SCRIPTING]" )
@@ -66,91 +81,27 @@ TEST_CASE( "Vector3 operations", "[MONO_SCRIPTING]" )
     auto lVectorTest = MonoScriptClass( "SEUnitTest", "Vector3Tests", false );
 
     float lS = 1.234f;
-    auto  lX = math::vec3{ 1.2f, 3.4f, 5.6f };
-    auto  lY = math::vec3{ 3.4f, 5.6f, 7.8f };
+    auto  lX = vec3{ 1.2f, 3.4f, 5.6f };
+    auto  lY = vec3{ 3.4f, 5.6f, 7.8f };
+
+    REQUIRE( CallMethodHelper<vec3, float, float, float>( lVectorTest, "Constructor", lX.x, lX.y, lX.z ) == lX );
+    REQUIRE( CallMethodHelper<vec3, vec3, vec3>( lVectorTest, "Add", lX, lY ) == ( lX + lY ) );
+    REQUIRE( CallMethodHelper<vec3, vec3, vec3>( lVectorTest, "Subtract", lX, lY ) == ( lX - lY ) );
+    REQUIRE( CallMethodHelper<vec3, vec3, float>( lVectorTest, "Divide0", lX, lS ) == ( lX / lS ) );
+    REQUIRE( CallMethodHelper<vec3, float, vec3>( lVectorTest, "Divide1", lS, lY ) == ( lS / lY ) );
+    REQUIRE( CallMethodHelper<vec3, vec3, float>( lVectorTest, "Multiply0", lX, lS ) == ( lX * lS ) );
+    REQUIRE( CallMethodHelper<vec3, float, vec3>( lVectorTest, "Multiply1", lS, lY ) == ( lS * lY ) );
+    REQUIRE( CallMethodHelper<vec3, vec3, vec3>( lVectorTest, "Cross", lX, lY ) == ( cross( lX, lY ) ) );
+    REQUIRE( CallMethodHelper<float, vec3, vec3>( lVectorTest, "Dot", lX, lY ) == ( dot( lX, lY ) ) );
+    REQUIRE( CallMethodHelper<float, vec3>( lVectorTest, "Length", lX ) == ( length( lX ) ) );
+    REQUIRE( CallMethodHelper<float, vec3>( lVectorTest, "Norm", lX ) == ( length( lX ) ) );
+    REQUIRE( CallMethodHelper<float, vec3>( lVectorTest, "Norm1", lX ) ==
+             ( math::abs( lX.x ) + math::abs( lX.y ) + math::abs( lX.z ) ) );
+    REQUIRE( CallMethodHelper<float, vec3>( lVectorTest, "Norm2", lX ) == ( length( lX ) ) );
 
     {
-        auto lR = lVectorTest.CallMethod( "Constructor", lX.x, lX.y, lX.z );
-        auto lZ = ToVec3( lR );
-        REQUIRE( lZ == lX );
-    }
-
-    {
-        auto lR = lVectorTest.CallMethod( "Add", lX, lY );
-        auto lZ = ToVec3( lR );
-        REQUIRE( lZ == ( lX + lY ) );
-    }
-
-    {
-        auto lR = lVectorTest.CallMethod( "Subtract", lX, lY );
-        auto lZ = ToVec3( lR );
-        REQUIRE( lZ == ( lX - lY ) );
-    }
-
-    {
-        auto lR = lVectorTest.CallMethod( "Divide0", lX, lS );
-        auto lZ = ToVec3( lR );
-        REQUIRE( lZ == ( lX / lS ) );
-    }
-
-    {
-        auto lR = lVectorTest.CallMethod( "Divide1", lS, lY );
-        auto lZ = ToVec3( lR );
-        REQUIRE( lZ == ( lS / lY ) );
-    }
-
-    {
-        auto lR = lVectorTest.CallMethod( "Multiply0", lX, lS );
-        auto lZ = ToVec3( lR );
-        REQUIRE( lZ == ( lX * lS ) );
-    }
-
-    {
-        auto lR = lVectorTest.CallMethod( "Multiply1", lS, lY );
-        auto lZ = ToVec3( lR );
-        REQUIRE( lZ == ( lS * lY ) );
-    }
-
-    {
-        auto lR = lVectorTest.CallMethod( "Cross", lX, lY );
-        auto lZ = ToVec3( lR );
-        REQUIRE( lZ == math::cross( lX, lY ) );
-    }
-
-    {
-        auto  lR = lVectorTest.CallMethod( "Dot", lX, lY );
-        float lV = ToFloat( lR );
-        REQUIRE( lV == ( math::dot( lX, lY ) ) );
-    }
-
-    {
-        auto  lR = lVectorTest.CallMethod( "Length", lX );
-        float lV = ToFloat( lR );
-        REQUIRE( lV == ( math::length( lX ) ) );
-    }
-
-    {
-        auto  lR = lVectorTest.CallMethod( "Norm", lX );
-        float lV = ToFloat( lR );
-        REQUIRE( lV == ( math::length( lX ) ) );
-    }
-
-    {
-        auto  lR = lVectorTest.CallMethod( "Norm1", lX );
-        float lV = ToFloat( lR );
-        REQUIRE( lV == ( math::abs( lX.x ) + math::abs( lX.y ) + math::abs( lX.z ) ) );
-    }
-
-    {
-        auto  lR = lVectorTest.CallMethod( "Norm2", lX );
-        float lV = ToFloat( lR );
-        REQUIRE( lV == ( math::length( lX ) ) );
-    }
-
-    {
-        auto lR = lVectorTest.CallMethod( "Normalized", lX );
-        auto lZ = ToVec3( lR );
-        REQUIRE( math::length( lZ - math::normalize( lX ) ) < 0.0000001f );
+        auto lZ = CallMethodHelper<vec3, vec3>( lVectorTest, "Normalized", lX );
+        REQUIRE( length( lZ - normalize( lX ) ) < 0.0000001f );
     }
 }
 
@@ -161,101 +112,28 @@ TEST_CASE( "Vector4 operations", "[MONO_SCRIPTING]" )
     auto lVectorTest = MonoScriptClass( "SEUnitTest", "Vector4Tests", false );
 
     float lS = 1.234f;
-    auto  lX = math::vec4{ 1.2f, 3.4f, 5.6f, 4.2f };
-    auto  lY = math::vec4{ 3.4f, 5.6f, 7.8f, 7.5f };
+    auto  lX = vec4{ 1.2f, 3.4f, 5.6f, 4.2f };
+    auto  lY = vec4{ 3.4f, 5.6f, 7.8f, 7.5f };
+
+    REQUIRE( CallMethodHelper<vec4, float, float, float, float>( lVectorTest, "Constructor0", lX.x, lX.y, lX.z, lX.w ) == lX );
+    REQUIRE( CallMethodHelper<vec4, vec3, float>( lVectorTest, "Constructor1", vec3( lX ), lX.w ) == lX );
+    REQUIRE( CallMethodHelper<vec4, vec3>( lVectorTest, "Constructor2", vec3( lX ) ) == math::vec4( vec3( lX ), 0.0f ) );
+    REQUIRE( CallMethodHelper<vec3, vec4>( lVectorTest, "Projection", lX ) == vec3( lX ) );
+    REQUIRE( CallMethodHelper<vec4, vec4, vec4>( lVectorTest, "Add", lX, lY ) == ( lX + lY ) );
+    REQUIRE( CallMethodHelper<vec4, vec4, vec4>( lVectorTest, "Subtract", lX, lY ) == ( lX - lY ) );
+    REQUIRE( CallMethodHelper<vec4, vec4, float>( lVectorTest, "Divide0", lX, lS ) == ( lX / lS ) );
+    REQUIRE( CallMethodHelper<vec4, float, vec4>( lVectorTest, "Divide1", lS, lY ) == ( lS / lY ) );
+    REQUIRE( CallMethodHelper<vec4, vec4, float>( lVectorTest, "Multiply0", lX, lS ) == ( lX * lS ) );
+    REQUIRE( CallMethodHelper<vec4, float, vec4>( lVectorTest, "Multiply1", lS, lY ) == ( lS * lY ) );
+    REQUIRE( CallMethodHelper<float, vec4, vec4>( lVectorTest, "Dot", lX, lY ) == ( dot( lX, lY ) ) );
+    REQUIRE( CallMethodHelper<float, vec4>( lVectorTest, "Length", lX ) == ( length( lX ) ) );
+    REQUIRE( CallMethodHelper<float, vec4>( lVectorTest, "Norm", lX ) == ( length( lX ) ) );
+    REQUIRE( CallMethodHelper<float, vec4>( lVectorTest, "Norm1", lX ) ==
+             ( math::abs( lX.x ) + math::abs( lX.y ) + math::abs( lX.z ) + math::abs( lX.w ) ) );
+    REQUIRE( CallMethodHelper<float, vec4>( lVectorTest, "Norm2", lX ) == ( length( lX ) ) );
 
     {
-        auto lR = lVectorTest.CallMethod( "Constructor0", lX.x, lX.y, lX.z, lX.w );
-        auto lZ = ToVec4( lR );
-        REQUIRE( lZ == lX );
-    }
-
-    {
-        auto lR = lVectorTest.CallMethod( "Constructor1", math::vec3( lX ), lX.w );
-        auto lZ = ToVec4( lR );
-        REQUIRE( lZ == lX );
-    }
-    {
-        auto lR = lVectorTest.CallMethod( "Constructor2", math::vec3( lX ) );
-        auto lZ = ToVec4( lR );
-        REQUIRE( (( math::vec3( lZ ) == math::vec3( lX ) ) && ( lZ.w == 0.0f )) );
-    }
-
-    {
-        auto lR = lVectorTest.CallMethod( "Projection", lX );
-        auto lZ = ToVec3( lR );
-        REQUIRE( lZ == math::vec3( lX ) );
-    }
-
-    {
-        auto lR = lVectorTest.CallMethod( "Add", lX, lY );
-        auto lZ = ToVec4( lR );
-        REQUIRE( lZ == ( lX + lY ) );
-    }
-
-    {
-        auto lR = lVectorTest.CallMethod( "Subtract", lX, lY );
-        auto lZ = ToVec4( lR );
-        REQUIRE( lZ == ( lX - lY ) );
-    }
-
-    {
-        auto lR = lVectorTest.CallMethod( "Divide0", lX, lS );
-        auto lZ = ToVec4( lR );
-        REQUIRE( lZ == ( lX / lS ) );
-    }
-
-    {
-        auto lR = lVectorTest.CallMethod( "Divide1", lS, lY );
-        auto lZ = ToVec4( lR );
-        REQUIRE( lZ == ( lS / lY ) );
-    }
-
-    {
-        auto lR = lVectorTest.CallMethod( "Multiply0", lX, lS );
-        auto lZ = ToVec4( lR );
-        REQUIRE( lZ == ( lX * lS ) );
-    }
-
-    {
-        auto lR = lVectorTest.CallMethod( "Multiply1", lS, lY );
-        auto lZ = ToVec4( lR );
-        REQUIRE( lZ == ( lS * lY ) );
-    }
-
-    {
-        auto  lR = lVectorTest.CallMethod( "Dot", lX, lY );
-        float lV = ToFloat( lR );
-        REQUIRE( lV == ( math::dot( lX, lY ) ) );
-    }
-
-    {
-        auto  lR = lVectorTest.CallMethod( "Length", lX );
-        float lV = ToFloat( lR );
-        REQUIRE( lV == ( math::length( lX ) ) );
-    }
-
-    {
-        auto  lR = lVectorTest.CallMethod( "Norm", lX );
-        float lV = ToFloat( lR );
-        REQUIRE( lV == ( math::length( lX ) ) );
-    }
-
-    {
-        auto  lR = lVectorTest.CallMethod( "Norm1", lX );
-        float lV = ToFloat( lR );
-        REQUIRE( lV == ( math::abs( lX.x ) + math::abs( lX.y ) + math::abs( lX.z ) + math::abs( lX.w ) ) );
-    }
-
-    {
-        auto  lR = lVectorTest.CallMethod( "Norm2", lX );
-        float lV = ToFloat( lR );
-        REQUIRE( lV == ( math::length( lX ) ) );
-    }
-
-    {
-        auto lR = lVectorTest.CallMethod( "Normalized", lX );
-        auto lZ = ToVec4( lR );
-        REQUIRE( math::length( lZ - math::normalize( lX ) ) < 0.0000001f );
+        auto lZ = CallMethodHelper<vec4, vec4>( lVectorTest, "Normalized", lX );
+        REQUIRE( length( lZ - normalize( lX ) ) < 0.0000001f );
     }
 }
