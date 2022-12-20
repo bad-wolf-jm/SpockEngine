@@ -160,116 +160,116 @@ value = value0:dot(value1)
     REQUIRE( lScriptingEngine.Get<float>( "value" ) == dot( vec2{ 1.0f, 2.0f }, vec2{ 3.0f, 6.0f } ) );
 }
 
-TEST_CASE( "LUA Vec3 type", "[CORE_SCRIPTING]" )
-{
-    ScriptingEngine lScriptingEngine{};
+// TEST_CASE( "LUA Vec3 type", "[CORE_SCRIPTING]" )
+// {
+//     ScriptingEngine lScriptingEngine{};
 
-    lScriptingEngine.Execute( "value = Math.vec3(1.0, 2.0, 3.0)" );
-    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 1.0f, 2.0f, 3.0f } );
+//     lScriptingEngine.Execute( "value = Math.vec3(1.0, 2.0, 3.0)" );
+//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 1.0f, 2.0f, 3.0f } );
 
-    lScriptingEngine.Execute( "value = Math.vec3{1.0, 2.0, 3.0}" );
-    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 1.0f, 2.0f, 3.0f } );
+//     lScriptingEngine.Execute( "value = Math.vec3{1.0, 2.0, 3.0}" );
+//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 1.0f, 2.0f, 3.0f } );
 
-    lScriptingEngine.Execute( "value = Math.vec3{ x=1.0, y=2.0, z=3.0 }" );
-    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 1.0f, 2.0f, 3.0f } );
+//     lScriptingEngine.Execute( "value = Math.vec3{ x=1.0, y=2.0, z=3.0 }" );
+//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 1.0f, 2.0f, 3.0f } );
 
-    lScriptingEngine.Execute( R"(
-value = Math.vec3(0.0, 0.0, 0.0)
-value.x = 3.0
-value.y = 4.0
-value.z = 1.0
-)" );
-    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 3.0f, 4.0f, 1.0f } );
+//     lScriptingEngine.Execute( R"(
+// value = Math.vec3(0.0, 0.0, 0.0)
+// value.x = 3.0
+// value.y = 4.0
+// value.z = 1.0
+// )" );
+//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 3.0f, 4.0f, 1.0f } );
 
-    lScriptingEngine.Execute( R"(
-value0 = Math.vec3(1.0, 2.0, 3.0)
-value1 = Math.vec3(0.5, .25, .125)
-value = value0 + value1
-)" );
-    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 1.5f, 2.25f, 3.125f } );
+//     lScriptingEngine.Execute( R"(
+// value0 = Math.vec3(1.0, 2.0, 3.0)
+// value1 = Math.vec3(0.5, .25, .125)
+// value = value0 + value1
+// )" );
+//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 1.5f, 2.25f, 3.125f } );
 
-    lScriptingEngine.Execute( R"(
-value = Math.vec3(1.0, 2.0, 3.0) * 2.0
-)" );
-    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 2.0f, 4.0f, 6.0f } );
+//     lScriptingEngine.Execute( R"(
+// value = Math.vec3(1.0, 2.0, 3.0) * 2.0
+// )" );
+//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 2.0f, 4.0f, 6.0f } );
 
-    lScriptingEngine.Execute( "value = 2.0 * Math.vec3(1.0, 2.0, 3.0)" );
-    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 2.0f, 4.0f, 6.0f } );
+//     lScriptingEngine.Execute( "value = 2.0 * Math.vec3(1.0, 2.0, 3.0)" );
+//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == vec3{ 2.0f, 4.0f, 6.0f } );
 
-    lScriptingEngine.Execute( "value = Math.vec3(1.0, 2.0, 3.0):normalize()" );
-    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == normalize( vec3{ 1.0f, 2.0f, 3.0f } ) );
+//     lScriptingEngine.Execute( "value = Math.vec3(1.0, 2.0, 3.0):normalize()" );
+//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == normalize( vec3{ 1.0f, 2.0f, 3.0f } ) );
 
-    lScriptingEngine.Execute( "value = Math.vec3(1.0, 2.0, 3.0):length()" );
-    REQUIRE( lScriptingEngine.Get<float>( "value" ) == length( vec3{ 1.0f, 2.0f, 3.0f } ) );
-    lScriptingEngine.Execute( "value = Math.vec3(1.0, 2.0, 3.0):length2()" );
-    REQUIRE( lScriptingEngine.Get<float>( "value" ) == length2( vec3{ 1.0f, 2.0f, 3.0f } ) );
+//     lScriptingEngine.Execute( "value = Math.vec3(1.0, 2.0, 3.0):length()" );
+//     REQUIRE( lScriptingEngine.Get<float>( "value" ) == length( vec3{ 1.0f, 2.0f, 3.0f } ) );
+//     lScriptingEngine.Execute( "value = Math.vec3(1.0, 2.0, 3.0):length2()" );
+//     REQUIRE( lScriptingEngine.Get<float>( "value" ) == length2( vec3{ 1.0f, 2.0f, 3.0f } ) );
 
-    lScriptingEngine.Execute( R"(
-value0 = Math.vec3(1.0, 2.0, 3.0)
-value1 = Math.vec3(3.0, 6.0, 9.0)
-value = value0:dot(value1)
-)" );
-    REQUIRE( lScriptingEngine.Get<float>( "value" ) == dot( vec3{ 1.0f, 2.0f, 3.0f }, vec3{ 3.0f, 6.0f, 9.0f } ) );
+//     lScriptingEngine.Execute( R"(
+// value0 = Math.vec3(1.0, 2.0, 3.0)
+// value1 = Math.vec3(3.0, 6.0, 9.0)
+// value = value0:dot(value1)
+// )" );
+//     REQUIRE( lScriptingEngine.Get<float>( "value" ) == dot( vec3{ 1.0f, 2.0f, 3.0f }, vec3{ 3.0f, 6.0f, 9.0f } ) );
 
-    lScriptingEngine.Execute( R"(
-value0 = Math.vec3(1.0, 2.0, 3.0)
-value1 = Math.vec3(3.0, 1.0, 2.0)
-value = value0:cross(value1)
-)" );
-    REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == cross( vec3{ 1.0f, 2.0f, 3.0f }, vec3{ 3.0f, 1.0f, 2.0f } ) );
-}
+//     lScriptingEngine.Execute( R"(
+// value0 = Math.vec3(1.0, 2.0, 3.0)
+// value1 = Math.vec3(3.0, 1.0, 2.0)
+// value = value0:cross(value1)
+// )" );
+//     REQUIRE( lScriptingEngine.Get<vec3>( "value" ) == cross( vec3{ 1.0f, 2.0f, 3.0f }, vec3{ 3.0f, 1.0f, 2.0f } ) );
+// }
 
-TEST_CASE( "LUA Vec4 type", "[CORE_SCRIPTING]" )
-{
-    ScriptingEngine lScriptingEngine{};
+// TEST_CASE( "LUA Vec4 type", "[CORE_SCRIPTING]" )
+// {
+//     ScriptingEngine lScriptingEngine{};
 
-    lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0)" );
-    REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 1.0f, 2.0f, 3.0f, 4.0f } );
+//     lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0)" );
+//     REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 1.0f, 2.0f, 3.0f, 4.0f } );
 
-    lScriptingEngine.Execute( "value = Math.vec4{1.0, 2.0, 3.0, 4.0}" );
-    REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 1.0f, 2.0f, 3.0f, 4.0f } );
+//     lScriptingEngine.Execute( "value = Math.vec4{1.0, 2.0, 3.0, 4.0}" );
+//     REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 1.0f, 2.0f, 3.0f, 4.0f } );
 
-    lScriptingEngine.Execute( "value = Math.vec4{ x=1.0, y=2.0, z=3.0, w=4.0 }" );
-    REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 1.0f, 2.0f, 3.0f, 4.0f } );
+//     lScriptingEngine.Execute( "value = Math.vec4{ x=1.0, y=2.0, z=3.0, w=4.0 }" );
+//     REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 1.0f, 2.0f, 3.0f, 4.0f } );
 
-    lScriptingEngine.Execute( R"(
-value = Math.vec4(0.0, 0.0, 0.0, 0.0)
-value.x = 3.0
-value.y = 4.0
-value.z = 1.0
-value.w = 2.0
-)" );
-    REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 3.0f, 4.0f, 1.0f, 2.0f } );
+//     lScriptingEngine.Execute( R"(
+// value = Math.vec4(0.0, 0.0, 0.0, 0.0)
+// value.x = 3.0
+// value.y = 4.0
+// value.z = 1.0
+// value.w = 2.0
+// )" );
+//     REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 3.0f, 4.0f, 1.0f, 2.0f } );
 
-    lScriptingEngine.Execute( R"(
-value0 = Math.vec4(1.0, 2.0, 3.0, 4.0)
-value1 = Math.vec4(0.5, .25, .125, .225)
-value = value0 + value1
-)" );
-    REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 1.5f, 2.25f, 3.125f, 4.225f } );
+//     lScriptingEngine.Execute( R"(
+// value0 = Math.vec4(1.0, 2.0, 3.0, 4.0)
+// value1 = Math.vec4(0.5, .25, .125, .225)
+// value = value0 + value1
+// )" );
+//     REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 1.5f, 2.25f, 3.125f, 4.225f } );
 
-    lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0) * 2.0" );
-    REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 2.0f, 4.0f, 6.0f, 8.0f } );
+//     lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0) * 2.0" );
+//     REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 2.0f, 4.0f, 6.0f, 8.0f } );
 
-    lScriptingEngine.Execute( "value = 2.0 * Math.vec4(1.0, 2.0, 3.0, 4.0)" );
-    REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 2.0f, 4.0f, 6.0f, 8.0f } );
+//     lScriptingEngine.Execute( "value = 2.0 * Math.vec4(1.0, 2.0, 3.0, 4.0)" );
+//     REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == vec4{ 2.0f, 4.0f, 6.0f, 8.0f } );
 
-    lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0):normalize()" );
-    REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == normalize( vec4{ 1.0f, 2.0f, 3.0f, 4.0f } ) );
+//     lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0):normalize()" );
+//     REQUIRE( lScriptingEngine.Get<vec4>( "value" ) == normalize( vec4{ 1.0f, 2.0f, 3.0f, 4.0f } ) );
 
-    lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0):length()" );
-    REQUIRE( lScriptingEngine.Get<float>( "value" ) == length( vec4{ 1.0f, 2.0f, 3.0f, 4.0f } ) );
+//     lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0):length()" );
+//     REQUIRE( lScriptingEngine.Get<float>( "value" ) == length( vec4{ 1.0f, 2.0f, 3.0f, 4.0f } ) );
 
-    lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0):length2()" );
-    REQUIRE( lScriptingEngine.Get<float>( "value" ) == length2( vec4{ 1.0f, 2.0f, 3.0f, 4.0f } ) );
+//     lScriptingEngine.Execute( "value = Math.vec4(1.0, 2.0, 3.0, 4.0):length2()" );
+//     REQUIRE( lScriptingEngine.Get<float>( "value" ) == length2( vec4{ 1.0f, 2.0f, 3.0f, 4.0f } ) );
 
-    lScriptingEngine.Execute( R"(
-value0 = Math.vec4(1.0, 2.0, 3.0, 1.2)
-value1 = Math.vec4(3.0, 6.0, 9.0, 1.25)
-value = value0:dot(value1)
-)" );
-    REQUIRE( lScriptingEngine.Get<float>( "value" ) == dot( vec4{ 1.0f, 2.0f, 3.0f, 1.2f }, vec4{ 3.0f, 6.0f, 9.0f, 1.25f } ) );
-}
+//     lScriptingEngine.Execute( R"(
+// value0 = Math.vec4(1.0, 2.0, 3.0, 1.2)
+// value1 = Math.vec4(3.0, 6.0, 9.0, 1.25)
+// value = value0:dot(value1)
+// )" );
+//     REQUIRE( lScriptingEngine.Get<float>( "value" ) == dot( vec4{ 1.0f, 2.0f, 3.0f, 1.2f }, vec4{ 3.0f, 6.0f, 9.0f, 1.25f } ) );
+// }
 
 TEST_CASE( "LUA iVec2 type", "[CORE_SCRIPTING]" )
 {
