@@ -15,7 +15,14 @@ void InitializeMonoscripting()
 {
     fs::path lMonoPath          = "C:\\Program Files\\Mono\\lib\\mono\\4.5";
     fs::path lCoreScriptingPath = "c:\\GitLab\\SpockEngine\\Source\\ScriptCore\\Build\\Debug\\SE_Core.dll";
+
     MonoScriptEngine::Initialize( lMonoPath, lCoreScriptingPath );
+}
+
+void InitializeMonoscripting( fs::path aAppAssemblyPath )
+{
+    InitializeMonoscripting();
+    MonoScriptEngine::SetAppAssemblyPath( aAppAssemblyPath );
 }
 
 TEST_CASE( "Initialize scripting engine", "[MONO_SCRIPTING]" )
@@ -27,8 +34,7 @@ TEST_CASE( "Initialize scripting engine", "[MONO_SCRIPTING]" )
 
 TEST_CASE( "Set app assembly path", "[MONO_SCRIPTING]" )
 {
-    InitializeMonoscripting();
-    fs::path lAppAssemblyPath = "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll";
-    MonoScriptEngine::SetAppAssemblyPath( lAppAssemblyPath );
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+
     REQUIRE( true );
 }
