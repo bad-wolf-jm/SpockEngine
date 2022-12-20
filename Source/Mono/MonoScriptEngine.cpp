@@ -98,6 +98,8 @@ namespace SE::Core
 
     void MonoScriptEngine::SetAppAssemblyPath( const std::filesystem::path &aFilepath )
     {
+        if( sData->mAppAssemblyFilepath == aFilepath ) return;
+
         sData->mAppAssemblyFilepath = aFilepath;
 
         sData->mAssemblyReloadPending = false;
@@ -111,6 +113,8 @@ namespace SE::Core
 
     void MonoScriptEngine::Initialize( std::filesystem::path &aMonoPath, const std::filesystem::path &aCoreAssemblyPath )
     {
+        if( sData != nullptr ) return;
+
         sData = new ScriptEngineData();
 
         InitMono( aMonoPath );
@@ -144,6 +148,7 @@ namespace SE::Core
         ShutdownMono();
 
         delete sData;
+        sData = nullptr;
     }
 
     void MonoScriptEngine::InitMono( std::filesystem::path &aMonoPath )

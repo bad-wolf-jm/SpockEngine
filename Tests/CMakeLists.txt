@@ -19,9 +19,9 @@ add_executable(lste_cuda_test WIN32
   Test_CudaBuffer.cpp
   Test_EntityRegistry.cpp
   Test_ComputationScope.cpp
+  Test_MonoScripting.cpp
   # Test_ConfigurationReader.cpp
   # ${TEST_DATA_FILES}
-  # Test_FPGA_Model.cpp
   # Test_Scripting.cpp
 )
 
