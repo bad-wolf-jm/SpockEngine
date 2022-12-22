@@ -25,6 +25,7 @@ namespace math
 
     template <typename T> math::vec3 make_vec3( T *V ) { return math::vec3(glm::make_vec3( V )); }
     template <typename T> math::vec4 make_vec4( T *V ) { return math::vec4(glm::make_vec4( V )); }
+    template <typename T> math::mat4 make_mat3x3( T *V ) { return math::mat4(glm::make_mat3x3( V )); }
     template <typename T> math::mat4 make_mat4x4( T *V ) { return math::mat4(glm::make_mat4x4( V )); }
     template <typename T> math::quat make_quat( T *V ) { return math::quat(glm::make_quat( V )); }
 

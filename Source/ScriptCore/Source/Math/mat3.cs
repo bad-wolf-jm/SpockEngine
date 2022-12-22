@@ -131,66 +131,110 @@ namespace SpockEngine.Math
             float lDet = (m00 * C00) - (m01 * C01) + (m02 * C02);
 
             return new mat3(
-                C00 / lDet, C10 / lDet, C20 / lDet,
-                C01 / lDet, C11 / lDet, C21 / lDet,
-                C02 / lDet, C12 / lDet, C22 / lDet
+                C00 / lDet,
+               -C10 / lDet,
+                C20 / lDet,
+
+               -C01 / lDet,
+                C11 / lDet,
+               -C21 / lDet,
+                
+                C02 / lDet,
+               -C12 / lDet,
+                C22 / lDet
             );
         }
 
         public static mat3 operator *(mat3 lhs, float rhs) =>
             new mat3(
-                rhs * lhs.m00, rhs * lhs.m10, rhs * lhs.m20,
-                rhs * lhs.m01, rhs * lhs.m11, rhs * lhs.m21,
-                rhs * lhs.m02, rhs * lhs.m12, rhs * lhs.m22
+                rhs * lhs.m00,
+                rhs * lhs.m01,
+                rhs * lhs.m02,
+                rhs * lhs.m10,
+                rhs * lhs.m11,
+                rhs * lhs.m12,
+                rhs * lhs.m20,
+                rhs * lhs.m21,
+                rhs * lhs.m22
             );
 
         public static mat3 operator *(float lhs, mat3 rhs) =>
             new mat3(
-                lhs * rhs.m00, lhs * rhs.m10, lhs * rhs.m20,
-                lhs * rhs.m01, lhs * rhs.m11, lhs * rhs.m21,
-                lhs * rhs.m02, lhs * rhs.m12, lhs * rhs.m22
+                lhs * rhs.m00,
+                lhs * rhs.m01,
+                lhs * rhs.m02,
+                lhs * rhs.m10,
+                lhs * rhs.m11,
+                lhs * rhs.m12,
+                lhs * rhs.m20,
+                lhs * rhs.m21,
+                lhs * rhs.m22
             );
 
         public static mat3 operator /(mat3 lhs, float rhs) =>
             new mat3(
-                rhs / lhs.m00, rhs / lhs.m10, rhs / lhs.m20,
-                rhs / lhs.m01, rhs / lhs.m11, rhs / lhs.m21,
-                rhs / lhs.m02, rhs / lhs.m12, rhs / lhs.m22
+                 lhs.m00 / rhs,
+                 lhs.m01 / rhs,
+                 lhs.m02 / rhs,
+                 lhs.m10 / rhs,
+                 lhs.m11 / rhs,
+                 lhs.m12 / rhs,
+                 lhs.m20 / rhs,
+                 lhs.m21 / rhs,
+                 lhs.m22 / rhs
             );
 
         public static mat3 operator /(float lhs, mat3 rhs) =>
             new mat3(
-                lhs / rhs.m00, lhs / rhs.m10, lhs / rhs.m20,
-                lhs / rhs.m01, lhs / rhs.m11, lhs / rhs.m21,
-                lhs / rhs.m02, lhs / rhs.m12, lhs / rhs.m22
+                lhs / rhs.m00,
+                lhs / rhs.m01,
+                lhs / rhs.m02,
+                lhs / rhs.m10,
+                lhs / rhs.m11,
+                lhs / rhs.m12,
+                lhs / rhs.m20,
+                lhs / rhs.m21,
+                lhs / rhs.m22
             );
 
         public static mat3 operator +(mat3 lhs, mat3 rhs) =>
             new mat3(
-                lhs.m00 + rhs.m00, lhs.m10 + rhs.m10, lhs.m20 + rhs.m20,
-                lhs.m01 + rhs.m01, lhs.m11 + rhs.m11, lhs.m21 + rhs.m21,
-                lhs.m02 + rhs.m02, lhs.m12 + rhs.m12, lhs.m22 + rhs.m22
+                lhs.m00 + rhs.m00,
+                lhs.m01 + rhs.m01,
+                lhs.m02 + rhs.m02,
+                lhs.m10 + rhs.m10,
+                lhs.m11 + rhs.m11,
+                lhs.m12 + rhs.m12,
+                lhs.m20 + rhs.m20,
+                lhs.m21 + rhs.m21,
+                lhs.m22 + rhs.m22
             );
 
         public static mat3 operator -(mat3 lhs, mat3 rhs) =>
             new mat3(
-                lhs.m00 - rhs.m00, lhs.m10 - rhs.m10, lhs.m20 - rhs.m20,
-                lhs.m01 - rhs.m01, lhs.m11 - rhs.m11, lhs.m21 - rhs.m21,
-                lhs.m02 - rhs.m02, lhs.m12 - rhs.m12, lhs.m22 - rhs.m22
+                lhs.m00 - rhs.m00,
+                lhs.m01 - rhs.m01,
+                lhs.m02 - rhs.m02,
+                lhs.m10 - rhs.m10,
+                lhs.m11 - rhs.m11,
+                lhs.m12 - rhs.m12,
+                lhs.m20 - rhs.m20,
+                lhs.m21 - rhs.m21,
+                lhs.m22 - rhs.m22
             );
 
         public static mat3 operator *(mat3 lhs, mat3 rhs) =>
             new mat3(
                 lhs.m00 * rhs.m00 + lhs.m01 * rhs.m10 + lhs.m02 * rhs.m20,
-                lhs.m10 * rhs.m00 + lhs.m11 * rhs.m10 + lhs.m12 * rhs.m20,
-                lhs.m20 * rhs.m00 + lhs.m21 * rhs.m10 + lhs.m22 * rhs.m20,
-
                 lhs.m00 * rhs.m01 + lhs.m01 * rhs.m11 + lhs.m02 * rhs.m21,
-                lhs.m10 * rhs.m01 + lhs.m11 * rhs.m11 + lhs.m12 * rhs.m21,
-                lhs.m20 * rhs.m01 + lhs.m21 * rhs.m11 + lhs.m22 * rhs.m21,
-
                 lhs.m00 * rhs.m02 + lhs.m01 * rhs.m12 + lhs.m02 * rhs.m22,
+
+                lhs.m10 * rhs.m00 + lhs.m11 * rhs.m10 + lhs.m12 * rhs.m20,
+                lhs.m10 * rhs.m01 + lhs.m11 * rhs.m11 + lhs.m12 * rhs.m21,
                 lhs.m10 * rhs.m02 + lhs.m11 * rhs.m12 + lhs.m12 * rhs.m22,
+
+                lhs.m20 * rhs.m00 + lhs.m21 * rhs.m10 + lhs.m22 * rhs.m20,
+                lhs.m20 * rhs.m01 + lhs.m21 * rhs.m11 + lhs.m22 * rhs.m21,
                 lhs.m20 * rhs.m02 + lhs.m21 * rhs.m12 + lhs.m22 * rhs.m22
             );
 

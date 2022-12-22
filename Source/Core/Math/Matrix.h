@@ -93,6 +93,7 @@ namespace math
     }
 
     template <typename T> T Inverse( T const &a_Matrix ) { return glm::inverse( a_Matrix ); }
+    template <typename T> float Determinant( T const &a_Matrix ) { return glm::determinant( a_Matrix ); }
 
     template <typename T> T Transpose( T const &a_Matrix ) { return glm::transpose( a_Matrix ); }
 

@@ -42,4 +42,64 @@ namespace SEUnitTest
         public static vec4 Normalized(vec4 x) { return x.Normalized; }
     }
 
+    public class Matrix3Tests
+    {
+        public static mat3 Constructor0(float x) { return new mat3(x); }
+        public static mat3 Constructor1(float a00, float a01, float a02, float a10, float a11, float a12, float a20, float a21, float a22)
+        {
+            return new mat3(a00, a01, a02, a10, a11, a12, a20, a21, a22);
+        }
+        public static mat3 Constructor2(mat4 x) { return new mat3(x); }
+
+        public static vec3 Column0(mat3 aM) { return aM.mC0; }
+        public static vec3 Column1(mat3 aM) { return aM.mC1; }
+        public static vec3 Column2(mat3 aM) { return aM.mC2; }
+
+        public static mat3 Transposed(mat3 aM) { return aM.Transposed; }
+        public static float Determinant(mat3 aM) { return aM.Determinant(); }
+        public static mat3 Inverse(mat3 aM) { return aM.Inverse(); }
+
+        public static mat3 Divide0(mat3 x, float y) { return x / y; }
+        public static mat3 Divide1(float x, mat3 y) { return x / y; }
+
+        public static mat3 Multiply0(mat3 x, float y) { return x * y; }
+        public static mat3 Multiply1(float x, mat3 y) { return x * y; }
+        public static mat3 Multiply2(mat3 x, mat3 y) { return x * y; }
+        public static vec3 Multiply3(mat3 x, vec3 y) { return x * y; }
+
+        public static mat3 Add(mat3 x, mat3 y) { return x + y; }
+        public static mat3 Subtract(mat3 x, mat3 y) { return x - y; }
+    }
+
+    public class Matrix4Tests
+    {
+        public static mat4 Constructor0(float x) { return new mat4(x); }
+        public static mat4 Constructor1(float a00, float a01, float a02, float a03, float a10, float a11, float a12, float a13,
+                                        float a20, float a21, float a22, float a23, float a30, float a31, float a32, float a33)
+        {
+            return new mat4(a00, a01, a02, a03, a10, a11, a12, a13, a20, a21, a22, a23, a30, a31, a32, a33);
+        }
+        public static mat4 Constructor2(mat3 x) { return new mat4(x); }
+
+        public static vec4 Column0(mat4 aM) { return aM.mC0; }
+        public static vec4 Column1(mat4 aM) { return aM.mC1; }
+        public static vec4 Column2(mat4 aM) { return aM.mC2; }
+        public static vec4 Column3(mat4 aM) { return aM.mC3; }
+
+        public static mat4 Transposed(mat4 aM) { return aM.Transposed; }
+        public static float Determinant(mat4 aM) { return aM.Determinant(); }
+        public static mat4 Inverse(mat4 aM) { return aM.Inverse(); }
+
+        public static mat4 Divide0(mat4 x, float y) { return x / y; }
+        public static mat4 Divide1(float x, mat4 y) { return x / y; }
+
+        public static mat4 Multiply0(mat4 x, float y) { return x * y; }
+        public static mat4 Multiply1(float x, mat4 y) { return x * y; }
+        public static mat4 Multiply2(mat4 x, mat4 y) { return x * y; }
+        public static vec4 Multiply3(mat4 x, vec4 y) { return x * y; }
+
+        public static mat4 Add(mat4 x, mat4 y) { return x + y; }
+        public static mat4 Subtract(mat4 x, mat4 y) { return x - y; }
+    }
+
 }
