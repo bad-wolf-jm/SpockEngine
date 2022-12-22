@@ -100,6 +100,15 @@ namespace SEUnitTest
 
         public static mat4 Add(mat4 x, mat4 y) { return x + y; }
         public static mat4 Subtract(mat4 x, mat4 y) { return x - y; }
-    }
+        public static mat4 Rotation(float x, vec3 y) { return SpockEngine.Math.mat4.Rotation(x, y); }
+        public static mat4 Scaling0(vec3 y) { return SpockEngine.Math.mat4.Scaling(y); }
+        public static mat4 Scaling1(float y) { return SpockEngine.Math.mat4.Scaling(y); }
+        public static mat4 Translation0(vec3 y) { return SpockEngine.Math.mat4.Translation(y); }
+        public static mat4 Translation1(float x, float y, float z) { return SpockEngine.Math.mat4.Translation(x, y, z); }
 
+        public static mat4 LookAt(vec3 x, vec3 y, vec3 z) { return SpockEngine.Math.mat4.LookAt(x, y, z); }
+
+        public static mat4 Ortho0(float x0, float x1, float x2, float x3, float x4, float x5) { return SpockEngine.Math.mat4.Ortho(x0, x1, x2, x3, x4, x5); }
+        public static mat4 Ortho1(float x0, float x1, float x2, float x3) { return SpockEngine.Math.mat4.Ortho(x0, x1, x2, x3); }
+    }
 }

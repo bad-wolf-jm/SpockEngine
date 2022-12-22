@@ -272,5 +272,103 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
     }
     REQUIRE_THAT( ( CallMethodHelper<float, mat4>( lVectorTest, "Determinant", lX ) ),
                   Catch::Matchers::WithinAbs( math::Determinant( lX ), 0.001f ) );
+                  
     REQUIRE( CallMethodHelper<mat4, mat4>( lVectorTest, "Transposed", lX ) == math::Transpose( lX ) );
+
+    {
+        float lRho = RandomNumber( -10.0f, 10.0f );
+        auto  lI0  = CallMethodHelper<mat4, float, vec3>( lVectorTest, "Rotation", lRho, lV );
+        auto  lI1  = math::Rotation( lRho, lV );
+
+        REQUIRE_THAT( math::length2( lI0[0] - lI1[0] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[1] - lI1[1] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[2] - lI1[2] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[3] - lI1[3] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+    }
+
+    {
+        auto lI0 = CallMethodHelper<mat4, vec3>( lVectorTest, "Scaling0", lV );
+        auto lI1 = math::Scaling( lV );
+
+        REQUIRE_THAT( math::length2( lI0[0] - lI1[0] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[1] - lI1[1] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[2] - lI1[2] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[3] - lI1[3] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+    }
+
+    {
+        auto lI0 = CallMethodHelper<mat4, float>( lVectorTest, "Scaling1", lS );
+        auto lI1 = math::Scaling( math::vec3{ lS, lS, lS } );
+
+        REQUIRE_THAT( math::length2( lI0[0] - lI1[0] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[1] - lI1[1] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[2] - lI1[2] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[3] - lI1[3] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+    }
+
+    {
+        auto lI0 = CallMethodHelper<mat4, vec3>( lVectorTest, "Translation0", math::vec3( lV ) );
+        auto lI1 = math::Translation( math::vec3( lV ) );
+
+        REQUIRE_THAT( math::length2( lI0[0] - lI1[0] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[1] - lI1[1] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[2] - lI1[2] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[3] - lI1[3] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+    }
+
+    {
+        auto lV0 = math::vec3{ lV };
+        auto lI0 = CallMethodHelper<mat4, float, float, float>( lVectorTest, "Translation1", lV0.x, lV0.y, lV0.z );
+        auto lI1 = math::Translation( math::vec3( lV0 ) );
+
+        REQUIRE_THAT( math::length2( lI0[0] - lI1[0] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[1] - lI1[1] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[2] - lI1[2] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[3] - lI1[3] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+    }
+
+    {
+        auto lV0 = RandomVec4();
+        auto lV1 = RandomVec4();
+        auto lV2 = RandomVec4();
+        auto lI0 = CallMethodHelper<mat4, vec3, vec3, vec3>( lVectorTest, "LookAt", lV0, lV1, lV2 );
+        auto lI1 = math::LookAt( lV0, lV1, lV2 );
+
+        REQUIRE_THAT( math::length2( lI0[0] - lI1[0] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[1] - lI1[1] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[2] - lI1[2] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[3] - lI1[3] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+    }
+
+    {
+        auto lV0 = RandomNumber( -100.0f, 100.0f );
+        auto lV1 = RandomNumber( -100.0f, 100.0f );
+        auto lV2 = RandomNumber( -100.0f, 100.0f );
+        auto lV3 = RandomNumber( -100.0f, 100.0f );
+        auto lV4 = RandomNumber( -100.0f, 100.0f );
+        auto lV5 = RandomNumber( -100.0f, 100.0f );
+        auto lI0 =
+            CallMethodHelper<mat4, float, float, float, float, float, float>( lVectorTest, "Ortho0", lV0, lV1, lV2, lV3, lV4, lV5 );
+        auto lI1 = glm::ortho( lV0, lV1, lV2, lV3, lV4, lV5 );
+
+        REQUIRE_THAT( math::length2( lI0[0] - lI1[0] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[1] - lI1[1] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[2] - lI1[2] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[3] - lI1[3] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+    }
+
+    {
+        auto lV0 = RandomNumber( -100.0f, 100.0f );
+        auto lV1 = RandomNumber( -100.0f, 100.0f );
+        auto lV2 = RandomNumber( -100.0f, 100.0f );
+        auto lV3 = RandomNumber( -100.0f, 100.0f );
+        auto lI0 =
+            CallMethodHelper<mat4, float, float, float, float>( lVectorTest, "Ortho1", lV0, lV1, lV2, lV3 );
+        auto lI1 = glm::ortho( lV0, lV1, lV2, lV3 );
+
+        REQUIRE_THAT( math::length2( lI0[0] - lI1[0] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[1] - lI1[1] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[2] - lI1[2] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[3] - lI1[3] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+    }
 }

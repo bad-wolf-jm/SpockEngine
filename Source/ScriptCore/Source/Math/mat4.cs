@@ -464,7 +464,7 @@ namespace SpockEngine.Math
             m.m22 = -2 / (aFar - aNear);
             m.m03 = -(aRight + aLeft) / (aRight - aLeft);
             m.m13 = -(aTop + aBottom) / (aTop - aBottom);
-            m.m23 = -(aFar + aNear) / (aFar - aNear);
+            m.m23 = - aNear / (aFar - aNear);
 
             return m;
         }
