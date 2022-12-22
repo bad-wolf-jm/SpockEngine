@@ -237,13 +237,10 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
     auto  lV = RandomVec4();
 
     REQUIRE( CallMethodHelper<mat4, float>( lVectorTest, "Constructor0", lS ) == mat4( lS ) );
-    REQUIRE( (CallMethodHelper<mat4, float, float, float, float, float, float, float, float, float, float, float, float, float, float,
-                              float, float>( lVectorTest, "Constructor1", 
-                                             lX[0][0], lX[1][0], lX[2][0],lX[3][0], 
-                                             lX[0][1], lX[1][1], lX[2][1],lX[3][1],
-                                             lX[0][2], lX[1][2], lX[2][2],lX[3][2], 
-                                             lX[0][3], lX[1][3], lX[2][3],lX[3][3] 
-                                             )) == lX );
+    REQUIRE( ( CallMethodHelper<mat4, float, float, float, float, float, float, float, float, float, float, float, float, float, float,
+                                float, float>( lVectorTest, "Constructor1", lX[0][0], lX[1][0], lX[2][0], lX[3][0], lX[0][1], lX[1][1],
+                                               lX[2][1], lX[3][1], lX[0][2], lX[1][2], lX[2][2], lX[3][2], lX[0][3], lX[1][3],
+                                               lX[2][3], lX[3][3] ) ) == lX );
     REQUIRE( CallMethodHelper<mat4, mat3>( lVectorTest, "Constructor2", lA ) == mat4( lA ) );
     REQUIRE( CallMethodHelper<vec4, mat4>( lVectorTest, "Column0", lX ) == ( lX[0] ) );
     REQUIRE( CallMethodHelper<vec4, mat4>( lVectorTest, "Column1", lX ) == ( lX[1] ) );
@@ -257,15 +254,21 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
     REQUIRE( CallMethodHelper<mat4, mat4, float>( lVectorTest, "Multiply0", lX, lS ) == ( lX * lS ) );
     REQUIRE( CallMethodHelper<mat4, float, mat4>( lVectorTest, "Multiply1", lS, lY ) == ( lS * lY ) );
     REQUIRE( CallMethodHelper<mat4, mat4, mat4>( lVectorTest, "Multiply2", lX, lY ) == ( lX * lY ) );
-    REQUIRE( CallMethodHelper<vec4, mat4, vec4>( lVectorTest, "Multiply3", lX, lV ) == ( lX * lV ) );
+
+    {
+        auto lI0 = CallMethodHelper<vec4, mat4, vec4>( lVectorTest, "Multiply3", lX, lV );
+        auto lI1 = ( lX * lV );
+        REQUIRE_THAT( math::length2( lI0 - lI1 ), Catch::Matchers::WithinAbs( 0.0f, 0.000001f ) );
+    }
+
     {
         auto lI0 = CallMethodHelper<mat4, mat4>( lVectorTest, "Inverse", lX );
         auto lI1 = math::Inverse( lX );
 
-        REQUIRE_THAT( math::length2( lI0[0] - lI1[0] ), Catch::Matchers::WithinAbs( 0.0f, 0.000001f ) );
-        REQUIRE_THAT( math::length2( lI0[1] - lI1[1] ), Catch::Matchers::WithinAbs( 0.0f, 0.000001f ) );
-        REQUIRE_THAT( math::length2( lI0[2] - lI1[2] ), Catch::Matchers::WithinAbs( 0.0f, 0.000001f ) );
-        REQUIRE_THAT( math::length2( lI0[3] - lI1[3] ), Catch::Matchers::WithinAbs( 0.0f, 0.000001f ) );
+        REQUIRE_THAT( math::length2( lI0[0] - lI1[0] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[1] - lI1[1] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[2] - lI1[2] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
+        REQUIRE_THAT( math::length2( lI0[3] - lI1[3] ), Catch::Matchers::WithinAbs( 0.0f, 0.001f ) );
     }
     REQUIRE_THAT( ( CallMethodHelper<float, mat4>( lVectorTest, "Determinant", lX ) ),
                   Catch::Matchers::WithinAbs( math::Determinant( lX ), 0.001f ) );
