@@ -26,6 +26,7 @@ namespace SpockEngine
         public bool IsValid()
         {
             if (mRegistryID == 0) return false;
+            
             return CppCall.Entity_IsValid(mEntityID, mRegistryID);
         }
 
@@ -61,11 +62,5 @@ namespace SpockEngine
 
             CppCall.Entity_Remove(mEntityID, mRegistryID, typeof(_Component));
         }
-
-
-        // public Entity   mUUID { get;}
-        // public Entity   mParent { get; set;}
-        // public Entity[] mChildren {get; set;}
-
     }
 }
