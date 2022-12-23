@@ -224,6 +224,15 @@ TEST_CASE( "Matrix3 operations", "[MONO_SCRIPTING]" )
     REQUIRE( CallMethodHelper<mat3, mat3>( lVectorTest, "Transposed", lX ) == Transpose( lX ) );
 }
 
+#define TEST_MAT4_COLUMNS( C1, C2, e )                                  \
+    do                                                                  \
+    {                                                                   \
+        REQUIRE_THAT( length2( C1[0] - C2[0] ), WithinAbs( 0.0f, e ) ); \
+        REQUIRE_THAT( length2( C1[1] - C2[1] ), WithinAbs( 0.0f, e ) ); \
+        REQUIRE_THAT( length2( C1[2] - C2[2] ), WithinAbs( 0.0f, e ) ); \
+        REQUIRE_THAT( length2( C1[3] - C2[3] ), WithinAbs( 0.0f, e ) ); \
+    } while( 0 )
+
 TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 {
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
@@ -265,10 +274,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
         auto lI0 = CallMethodHelper<mat4, mat4>( lVectorTest, "Inverse", lX );
         auto lI1 = Inverse( lX );
 
-        REQUIRE_THAT( length2( lI0[0] - lI1[0] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[1] - lI1[1] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[2] - lI1[2] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[3] - lI1[3] ), WithinAbs( 0.0f, 0.001f ) );
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
     }
 
     REQUIRE_THAT( ( CallMethodHelper<float, mat4>( lVectorTest, "Determinant", lX ) ), WithinAbs( Determinant( lX ), 0.001f ) );
@@ -280,40 +286,28 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
         auto  lI0  = CallMethodHelper<mat4, float, vec3>( lVectorTest, "Rotation", lRho, lV );
         auto  lI1  = Rotation( lRho, lV );
 
-        REQUIRE_THAT( length2( lI0[0] - lI1[0] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[1] - lI1[1] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[2] - lI1[2] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[3] - lI1[3] ), WithinAbs( 0.0f, 0.001f ) );
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
     }
 
     {
         auto lI0 = CallMethodHelper<mat4, vec3>( lVectorTest, "Scaling0", lV );
         auto lI1 = Scaling( lV );
 
-        REQUIRE_THAT( length2( lI0[0] - lI1[0] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[1] - lI1[1] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[2] - lI1[2] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[3] - lI1[3] ), WithinAbs( 0.0f, 0.001f ) );
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
     }
 
     {
         auto lI0 = CallMethodHelper<mat4, float>( lVectorTest, "Scaling1", lS );
         auto lI1 = Scaling( vec3{ lS, lS, lS } );
 
-        REQUIRE_THAT( length2( lI0[0] - lI1[0] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[1] - lI1[1] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[2] - lI1[2] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[3] - lI1[3] ), WithinAbs( 0.0f, 0.001f ) );
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
     }
 
     {
         auto lI0 = CallMethodHelper<mat4, vec3>( lVectorTest, "Translation0", vec3( lV ) );
         auto lI1 = Translation( vec3( lV ) );
 
-        REQUIRE_THAT( length2( lI0[0] - lI1[0] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[1] - lI1[1] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[2] - lI1[2] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[3] - lI1[3] ), WithinAbs( 0.0f, 0.001f ) );
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
     }
 
     {
@@ -321,10 +315,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
         auto lI0 = CallMethodHelper<mat4, float, float, float>( lVectorTest, "Translation1", lV0.x, lV0.y, lV0.z );
         auto lI1 = Translation( vec3( lV0 ) );
 
-        REQUIRE_THAT( length2( lI0[0] - lI1[0] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[1] - lI1[1] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[2] - lI1[2] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[3] - lI1[3] ), WithinAbs( 0.0f, 0.001f ) );
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
     }
 
     {
@@ -334,10 +325,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
         auto lI0 = CallMethodHelper<mat4, vec3, vec3, vec3>( lVectorTest, "LookAt", lV0, lV1, lV2 );
         auto lI1 = LookAt( lV0, lV1, lV2 );
 
-        REQUIRE_THAT( length2( lI0[0] - lI1[0] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[1] - lI1[1] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[2] - lI1[2] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[3] - lI1[3] ), WithinAbs( 0.0f, 0.001f ) );
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
     }
 
     {
@@ -351,10 +339,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
             CallMethodHelper<mat4, float, float, float, float, float, float>( lVectorTest, "Ortho0", lV0, lV1, lV2, lV3, lV4, lV5 );
         auto lI1 = glm::ortho( lV0, lV1, lV2, lV3, lV4, lV5 );
 
-        REQUIRE_THAT( length2( lI0[0] - lI1[0] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[1] - lI1[1] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[2] - lI1[2] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[3] - lI1[3] ), WithinAbs( 0.0f, 0.001f ) );
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
     }
 
     {
@@ -365,9 +350,6 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
         auto lI0 = CallMethodHelper<mat4, float, float, float, float>( lVectorTest, "Ortho1", lV0, lV1, lV2, lV3 );
         auto lI1 = glm::ortho( lV0, lV1, lV2, lV3 );
 
-        REQUIRE_THAT( length2( lI0[0] - lI1[0] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[1] - lI1[1] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[2] - lI1[2] ), WithinAbs( 0.0f, 0.001f ) );
-        REQUIRE_THAT( length2( lI0[3] - lI1[3] ), WithinAbs( 0.0f, 0.001f ) );
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
     }
 }
