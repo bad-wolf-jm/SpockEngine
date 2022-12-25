@@ -22,9 +22,16 @@ namespace SE::Core
         template <typename... _ArgTypes>
         MonoObject *CallMethod( const std::string &aName, _ArgTypes... aArgs )
         {
-            void *lParameters[] = { (void *)&aArgs... };
+            if constexpr( sizeof...( _ArgTypes ) == 0 )
+            {
+                return InvokeMethod( aName, 0, nullptr );
+            }
+            else
+            {
+                void *lParameters[] = { (void *)&aArgs... };
 
-            return InvokeMethod( aName, sizeof...( _ArgTypes ), lParameters );
+                return InvokeMethod( aName, sizeof...( _ArgTypes ), lParameters );
+            }
         }
 
         template <typename _Ty>

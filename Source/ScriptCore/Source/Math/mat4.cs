@@ -98,7 +98,7 @@ namespace SpockEngine.Math
         public static bool operator ==(mat4 lhs, mat4 rhs) => lhs.Equals(rhs);
         public static bool operator !=(mat4 lhs, mat4 rhs) => !lhs.Equals(rhs);
 
-        public mat4 Transposed => new mat4(m00, m10, m20, m30, m01, m11, m21, m31, m02, m12, m22, m32, m01, m13, m23, m33);
+        public mat4 Transposed => new mat4(m00, m10, m20, m30, m01, m11, m21, m31, m02, m12, m22, m32, m03, m13, m23, m33);
 
         // m00 m01 m02 m03
         // m10 m11 m12 m13
@@ -132,12 +132,12 @@ namespace SpockEngine.Math
             // m10 m11 m12 
             // m20 m21 m22 
             // m30 m31 m32 
-            float C03 = m10 * (m21 * m33 - m22 * m31) - m11 * (m20 * m32 - m22 * m30) + m12 * (m20 * m31 - m21 * m30);
+            float C03 = m10 * (m21 * m32 - m22 * m31) - m11 * (m20 * m32 - m22 * m30) + m12 * (m20 * m31 - m21 * m30);
 
             // m01 m02 m03 
             // m21 m22 m23
             // m31 m32 m33
-            float C10 = m01 * (m22 * m33 - m22 * m32) - m02 * (m21 * m33 - m23 * m31) + m03 * (m21 * m32 - m22 * m31);
+            float C10 = m01 * (m22 * m33 - m23 * m32) - m02 * (m21 * m33 - m23 * m31) + m03 * (m21 * m32 - m22 * m31);
 
             // m00 m02 m03
             // m20 m22 m23

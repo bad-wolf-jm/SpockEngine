@@ -6,8 +6,11 @@
 
 #include "TestUtils.h"
 
+#include "Core/EntityRegistry/Registry.h"
 #include "Core/Logging.h"
 #include "Mono/MonoScriptEngine.h"
+
+#include "Scene/Components.h"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
@@ -18,6 +21,7 @@ using namespace Catch::Matchers;
 using namespace SE::Core;
 using namespace TestUtils;
 using namespace math;
+using namespace SE::Core::EntityComponentSystem::Components;
 
 namespace fs = std::filesystem;
 
@@ -50,6 +54,7 @@ TEST_CASE( "Set app assembly path", "[MONO_SCRIPTING]" )
 }
 
 inline float ToFloat( MonoObject *x ) { return *(float *)mono_object_unbox( x ); }
+inline bool  ToBool( MonoObject *x ) { return *(bool *)mono_object_unbox( x ); }
 
 inline vec3 ToVec3( MonoObject *x )
 {
@@ -88,8 +93,10 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
         return ToMat3( lR );
     else if constexpr( std::is_same_v<_RetType, mat4> )
         return ToMat4( lR );
-    else
+    else if constexpr( std::is_same_v<_RetType, float> )
         return ToFloat( lR );
+    else if constexpr( std::is_same_v<_RetType, bool> )
+        return ToBool( lR );
 }
 
 TEST_CASE( "Vector3 operations", "[MONO_SCRIPTING]" )
@@ -279,7 +286,12 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 
     REQUIRE_THAT( ( CallMethodHelper<float, mat4>( lVectorTest, "Determinant", lX ) ), WithinAbs( Determinant( lX ), 0.001f ) );
 
-    REQUIRE( CallMethodHelper<mat4, mat4>( lVectorTest, "Transposed", lX ) == Transpose( lX ) );
+    {
+        auto lI0 = CallMethodHelper<mat4, mat4>( lVectorTest, "Transposed", lX );
+        auto lI1 = Transpose( lX );
+
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
+    }
 
     {
         float lRho = RandomNumber( -10.0f, 10.0f );
@@ -352,4 +364,157 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 
         TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
     }
+}
+
+TEST_CASE( "Entity is valid when first created", "[MONO_SCRIPTING]" )
+{
+    SE::Core::EntityRegistry lRegistry;
+
+    auto lEntity         = lRegistry.CreateEntity();
+    auto lEntityID       = static_cast<uint32_t>( lEntity );
+    auto lRegistryID     = (size_t)lEntity.GetRegistry();
+    auto lEntityClass    = MonoScriptClass( "SpockEngine", "Entity", true );
+    auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
+
+    REQUIRE( lEntityInstance.CallMethod( "IsValid" ) );
+}
+
+TEST_CASE( "Entity tag is reflected in scripting world", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "EntityTest", false );
+
+    SE::Core::EntityRegistry lRegistry;
+
+    auto lEntity         = lRegistry.CreateEntity( "TAG_0" );
+    auto lEntityID       = static_cast<uint32_t>( lEntity );
+    auto lRegistryID     = (size_t)lEntity.GetRegistry();
+    auto lEntityClass    = MonoScriptClass( "SpockEngine", "Entity", true );
+    auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
+
+    REQUIRE( CallMethodHelper<bool, MonoObject *>( lEntityTest, "TestHasTag", lEntityInstance.GetInstance() ) );
+
+    MonoString *lManagedSTagValue = MonoScriptEngine::NewString( lEntity.Get<sTag>().mValue );
+    REQUIRE( CallMethodHelper<bool, MonoObject *, MonoString *>( lEntityTest, "TestTagValue", lEntityInstance.GetInstance(),
+                                                                 lManagedSTagValue ) );
+}
+
+TEST_CASE( "Entity tag is reflected in C++ world", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "EntityTest", false );
+
+    SE::Core::EntityRegistry lRegistry;
+
+    auto lEntity         = lRegistry.CreateEntity();
+    auto lEntityID       = static_cast<uint32_t>( lEntity );
+    auto lRegistryID     = (size_t)lEntity.GetRegistry();
+    auto lEntityClass    = MonoScriptClass( "SpockEngine", "Entity", true );
+    auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
+
+    MonoString *lManagedSTagValue = MonoScriptEngine::NewString( "TAG_1" );
+    CallMethodHelper<bool, MonoObject *, MonoString *>( lEntityTest, "AddTagValue", lEntityInstance.GetInstance(), lManagedSTagValue );
+
+    REQUIRE( ( lEntity.Has<sTag>() ) );
+    REQUIRE( ( lEntity.Get<sTag>().mValue == "TAG_1" ) );
+}
+
+TEST_CASE( "Entity transform is reflected in scripting world", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "EntityTest", false );
+
+    SE::Core::EntityRegistry lRegistry;
+
+    auto lEntity = lRegistry.CreateEntity( "TAG_0" );
+    lEntity.Add<sNodeTransformComponent>( RandomMat4() );
+
+    auto lEntityID    = static_cast<uint32_t>( lEntity );
+    auto lRegistryID  = (size_t)lEntity.GetRegistry();
+    auto lEntityClass = MonoScriptClass( "SpockEngine", "Entity", true );
+
+    auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
+    REQUIRE( CallMethodHelper<bool, MonoObject *>( lEntityTest, "TestHasNodeTransform", lEntityInstance.GetInstance() ) );
+    REQUIRE( CallMethodHelper<bool, MonoObject *, mat4>( lEntityTest, "TestNodeTransformValue", lEntityInstance.GetInstance(),
+                                                         lEntity.Get<sNodeTransformComponent>().mMatrix ) );
+}
+
+TEST_CASE( "Entity transform is reflected in C++ world", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "EntityTest", false );
+
+    SE::Core::EntityRegistry lRegistry;
+
+    auto lEntity         = lRegistry.CreateEntity();
+    auto lEntityID       = static_cast<uint32_t>( lEntity );
+    auto lRegistryID     = (size_t)lEntity.GetRegistry();
+    auto lEntityClass    = MonoScriptClass( "SpockEngine", "Entity", true );
+    auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
+
+    auto lMat4 = RandomMat4();
+
+    CallMethodHelper<bool, MonoObject *, mat4>( lEntityTest, "AddNodeTransform", lEntityInstance.GetInstance(), lMat4 );
+
+    REQUIRE( ( lEntity.Has<sNodeTransformComponent>() ) );
+    REQUIRE( ( lEntity.Get<sNodeTransformComponent>().mMatrix == lMat4 ) );
+}
+
+TEST_CASE( "Entity transform matrix is reflected in scripting world", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "EntityTest", false );
+
+    SE::Core::EntityRegistry lRegistry;
+
+    auto lEntity = lRegistry.CreateEntity( "TAG_0" );
+    lEntity.Add<sTransformMatrixComponent>( RandomMat4() );
+
+    auto lEntityID    = static_cast<uint32_t>( lEntity );
+    auto lRegistryID  = (size_t)lEntity.GetRegistry();
+    auto lEntityClass = MonoScriptClass( "SpockEngine", "Entity", true );
+
+    auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
+    REQUIRE( CallMethodHelper<bool, MonoObject *>( lEntityTest, "TestHasTransformMatrix", lEntityInstance.GetInstance() ) );
+    REQUIRE( CallMethodHelper<bool, MonoObject *, mat4>( lEntityTest, "TestTransformMatrixValue", lEntityInstance.GetInstance(),
+                                                         lEntity.Get<sTransformMatrixComponent>().Matrix ) );
+}
+
+TEST_CASE( "Entity transform matrix is reflected in C++ world", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "EntityTest", false );
+
+    SE::Core::EntityRegistry lRegistry;
+
+    auto lEntity         = lRegistry.CreateEntity();
+    auto lEntityID       = static_cast<uint32_t>( lEntity );
+    auto lRegistryID     = (size_t)lEntity.GetRegistry();
+    auto lEntityClass    = MonoScriptClass( "SpockEngine", "Entity", true );
+    auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
+
+    auto lMat4 = RandomMat4();
+
+    CallMethodHelper<bool, MonoObject *, mat4>( lEntityTest, "AddNodeTransformMartix", lEntityInstance.GetInstance(), lMat4 );
+
+    REQUIRE( ( lEntity.Has<sTransformMatrixComponent>() ) );
+    REQUIRE( ( lEntity.Get<sTransformMatrixComponent>().Matrix == lMat4 ) );
+}
+ 
+TEST_CASE( "Entity light component is reflected in scripting world", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "EntityTest", false );
+
+    SE::Core::EntityRegistry lRegistry;
+
+    auto lEntity = lRegistry.CreateEntity( "TAG_0" );
+    lEntity.Add<sLightComponent>();
+
+    auto lEntityID    = static_cast<uint32_t>( lEntity );
+    auto lRegistryID  = (size_t)lEntity.GetRegistry();
+    auto lEntityClass = MonoScriptClass( "SpockEngine", "Entity", true );
+
+    auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
+    REQUIRE( CallMethodHelper<bool, MonoObject *>( lEntityTest, "TestHasLight", lEntityInstance.GetInstance() ) );
 }

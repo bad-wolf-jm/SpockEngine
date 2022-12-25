@@ -30,7 +30,7 @@ namespace SE::MonoInternalCalls
         const entt::meta_any  lMaybeAny =
             Core::InvokeMetaFunction( lMetaType, "Has"_hs, aRegistry->WrapEntity( static_cast<entt::entity>( aEntityID ) ) );
 
-        return static_cast<bool>( lMaybeAny );
+        return lMaybeAny.cast<bool>();
     }
 
     MonoObject *Entity_Get( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType )

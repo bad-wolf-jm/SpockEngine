@@ -44,7 +44,7 @@ namespace SpockEngine
         {
         }
 
-        public sTag(string aValue)
+        public sTag(ref string aValue)
         {
             mValue = aValue;
         }

@@ -5,6 +5,7 @@
 #include "mono/metadata/object.h"
 #include "mono/metadata/tabledefs.h"
 
+#include "Core/Logging.h"
 #include "Core/EntityRegistry/Registry.h"
 #include "Scene/Components.h"
 
