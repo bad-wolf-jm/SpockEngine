@@ -518,3 +518,21 @@ TEST_CASE( "Entity light component is reflected in scripting world", "[MONO_SCRI
     auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
     REQUIRE( CallMethodHelper<bool, MonoObject *>( lEntityTest, "TestHasLight", lEntityInstance.GetInstance() ) );
 }
+
+TEST_CASE( "Entity light is reflected in C++ world", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "EntityTest", false );
+
+    SE::Core::EntityRegistry lRegistry;
+
+    auto lEntity         = lRegistry.CreateEntity();
+    auto lEntityID       = static_cast<uint32_t>( lEntity );
+    auto lRegistryID     = (size_t)lEntity.GetRegistry();
+    auto lEntityClass    = MonoScriptClass( "SpockEngine", "Entity", true );
+    auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
+
+    CallMethodHelper<bool, MonoObject *>( lEntityTest, "AddLight", lEntityInstance.GetInstance() );
+
+    REQUIRE( ( lEntity.Has<sLightComponent>() ) );
+}

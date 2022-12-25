@@ -61,6 +61,12 @@ namespace SEUnitTest
         {
             return aEntity.Has<sLightComponent>();
         }
+        public static bool AddLight(ref Entity aEntity)
+        {
+            aEntity.Add<sLightComponent>(new sLightComponent());
+
+            return true;
+        }
 
     }
 }
