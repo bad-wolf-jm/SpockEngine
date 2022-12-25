@@ -80,6 +80,34 @@ inline mat4 ToMat4( MonoObject *x )
     return make_mat4x4( lV );
 }
 
+vec3 RandomVec3()
+{
+    auto lM = RandomNumber( 3, -10.0f, 10.0f );
+
+    return make_vec3( lM.data() );
+}
+
+vec4 RandomVec4()
+{
+    auto lM = RandomNumber( 4, -10.0f, 10.0f );
+
+    return make_vec4( lM.data() );
+}
+
+mat3 RandomMat3()
+{
+    auto lM = RandomNumber( 9, -10.0f, 10.0f );
+
+    return make_mat3x3( lM.data() );
+}
+
+mat4 RandomMat4()
+{
+    auto lM = RandomNumber( 16, -10.0f, 10.0f );
+
+    return make_mat4x4( lM.data() );
+}
+
 template <typename _RetType, typename... _ArgTypes>
 inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string const &aName, _ArgTypes... aArgs )
 {
@@ -161,34 +189,6 @@ TEST_CASE( "Vector4 operations", "[MONO_SCRIPTING]" )
         auto lZ = CallMethodHelper<vec4, vec4>( lVectorTest, "Normalized", lX );
         REQUIRE( length( lZ - normalize( lX ) ) < 0.0000001f );
     }
-}
-
-vec3 RandomVec3()
-{
-    auto lM = RandomNumber( 3, -10.0f, 10.0f );
-
-    return make_vec3( lM.data() );
-}
-
-vec4 RandomVec4()
-{
-    auto lM = RandomNumber( 4, -10.0f, 10.0f );
-
-    return make_vec4( lM.data() );
-}
-
-mat3 RandomMat3()
-{
-    auto lM = RandomNumber( 9, -10.0f, 10.0f );
-
-    return make_mat3x3( lM.data() );
-}
-
-mat4 RandomMat4()
-{
-    auto lM = RandomNumber( 16, -10.0f, 10.0f );
-
-    return make_mat4x4( lM.data() );
 }
 
 TEST_CASE( "Matrix3 operations", "[MONO_SCRIPTING]" )
@@ -500,7 +500,7 @@ TEST_CASE( "Entity transform matrix is reflected in C++ world", "[MONO_SCRIPTING
     REQUIRE( ( lEntity.Has<sTransformMatrixComponent>() ) );
     REQUIRE( ( lEntity.Get<sTransformMatrixComponent>().Matrix == lMat4 ) );
 }
- 
+
 TEST_CASE( "Entity light component is reflected in scripting world", "[MONO_SCRIPTING]" )
 {
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
