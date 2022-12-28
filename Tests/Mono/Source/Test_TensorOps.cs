@@ -4,7 +4,22 @@ using SpockEngine.Math;
 
 namespace SEUnitTest
 {
-    public class TensorOpeTest
+    public class TensorOpsTest
     {
+        public static sTensorShape CreateTensorShape(uint dummy)
+        {
+            uint[,] aShape = {{2, 3, 4}, {5, 6, 7}, {8, 9, 10}, {2, 3, 2}};
+            uint aElementSize = 8;
+
+            return new sTensorShape(aShape, aElementSize);
+        }
+
+        public static sTensorShape CreateRank1TensorShape(uint dummy)
+        {
+            uint[] aShape = {2, 5, 3, 2};
+            uint aElementSize = 8;
+
+            return new sTensorShape(aShape, aElementSize);
+        }
     }
 }

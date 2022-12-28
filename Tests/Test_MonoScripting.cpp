@@ -6,8 +6,11 @@
 
 #include "TestUtils.h"
 
+#include "Core/CUDA/Array/MemoryPool.h"
+#include "Core/CUDA/Array/MultiTensor.h"
 #include "Core/EntityRegistry/Registry.h"
 #include "Core/Logging.h"
+
 #include "Mono/MonoScriptEngine.h"
 
 #include "Scene/Components.h"
@@ -19,6 +22,7 @@
 
 using namespace Catch::Matchers;
 using namespace SE::Core;
+using namespace SE::Cuda;
 using namespace TestUtils;
 using namespace math;
 using namespace SE::Core::EntityComponentSystem::Components;
@@ -125,6 +129,8 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
         return ToFloat( lR );
     else if constexpr( std::is_same_v<_RetType, bool> )
         return ToBool( lR );
+    else
+        return lR;
 }
 
 TEST_CASE( "Vector3 operations", "[MONO_SCRIPTING]" )
@@ -535,4 +541,412 @@ TEST_CASE( "Entity light is reflected in C++ world", "[MONO_SCRIPTING]" )
     CallMethodHelper<bool, MonoObject *>( lEntityTest, "AddLight", lEntityInstance.GetInstance() );
 
     REQUIRE( ( lEntity.Has<sLightComponent>() ) );
+}
+
+TEST_CASE( "Create Full Tensor Shape", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
+
+    auto lRetValue    = CallMethodHelper<MonoObject *, uint32_t>( lEntityTest, "CreateTensorShape", 0 );
+    auto lRetInstance = MonoScriptInstance( lTensorShapeClass.Class(), lRetValue );
+
+    sTensorShape *lCPPShape = lRetInstance.GetFieldValue<sTensorShape *>( "mInternalTensorShape" );
+    REQUIRE( lRetInstance.GetFieldValue<bool>( "mIsOwner" ) );
+    REQUIRE( lCPPShape != nullptr );
+    REQUIRE( lCPPShape->mRank == 3 );
+    REQUIRE( lCPPShape->mElementSize == 8 );
+    REQUIRE( lCPPShape->CountLayers() == 4 );
+
+    REQUIRE( ( lCPPShape->GetDimension( 0 ) == std::vector<uint32_t>{ 2, 5, 8, 2 } ) );
+    REQUIRE( ( lCPPShape->GetDimension( 1 ) == std::vector<uint32_t>{ 3, 6, 9, 3 } ) );
+    REQUIRE( ( lCPPShape->GetDimension( 2 ) == std::vector<uint32_t>{ 4, 7, 10, 2 } ) );
+}
+
+TEST_CASE( "C++ Tensor Shape", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
+
+    std::vector<uint32_t> lDim1{ 2, 2 };
+    std::vector<uint32_t> lDim2{ 3, 4 };
+    auto                  lNode = sTensorShape( { lDim1, lDim2 }, sizeof( uint32_t ) );
+
+    auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+    REQUIRE( !( lScriptShape.GetFieldValue<bool>( "mIsOwner" ) ) );
+}
+
+TEST_CASE( "Create rank 1 Tensor Shape", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
+
+    auto lRetValue    = CallMethodHelper<MonoObject *, uint32_t>( lEntityTest, "CreateRank1TensorShape", 0 );
+    auto lRetInstance = MonoScriptInstance( lTensorShapeClass.Class(), lRetValue );
+
+    sTensorShape *lCPPShape = lRetInstance.GetFieldValue<sTensorShape *>( "mInternalTensorShape" );
+    REQUIRE( lCPPShape != nullptr );
+    REQUIRE( lCPPShape->mRank == 1 );
+    REQUIRE( lCPPShape->mElementSize == 8 );
+    REQUIRE( lCPPShape->CountLayers() == 4 );
+
+    REQUIRE( ( lCPPShape->GetDimension( 0 ) == std::vector<uint32_t>{ 2, 5, 3, 2 } ) );
+}
+
+TEST_CASE( "C++ Tensor Shape has correct layer count", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
+
+    std::vector<uint32_t> lDim1{ 2, 2, 4, 3 };
+    std::vector<uint32_t> lDim2{ 3, 4, 2, 6 };
+    std::vector<uint32_t> lDim3{ 2, 3, 4, 5 };
+    auto                  lNode = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+
+    auto     lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+    auto     lRetVal      = lScriptShape.CallMethod( "CountLayers" );
+    uint32_t lLayerCount  = *( (uint32_t *)mono_object_unbox( lRetVal ) );
+
+    REQUIRE( lLayerCount == 3 );
+}
+
+TEST_CASE( "C++ Tensor Shape has correct dimension", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
+
+    std::vector<uint32_t> lDim1{ 2, 2, 4, 3 };
+    std::vector<uint32_t> lDim2{ 3, 4, 2, 6 };
+    std::vector<uint32_t> lDim3{ 2, 3, 4, 5 };
+    auto                  lNode = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+
+    auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+
+    auto lGetDim = [&]( MonoArray *aArray ) -> std::vector<uint32_t>
+    {
+        auto lLength = static_cast<uint32_t>( mono_array_length( aArray ) );
+
+        std::vector<uint32_t> lDim( lLength );
+        for( uint32_t i = 0; i < lLength; i++ )
+        {
+            lDim[i] = *( mono_array_addr( aArray, uint32_t, i ) );
+        }
+
+        return lDim;
+    };
+
+    {
+        auto lRetVal0 = lGetDim( (MonoArray *)lScriptShape.CallMethod( "GetDimension", 0 ) );
+        auto lRetVal1 = lGetDim( (MonoArray *)lScriptShape.CallMethod( "GetDimension", 1 ) );
+        auto lRetVal2 = lGetDim( (MonoArray *)lScriptShape.CallMethod( "GetDimension", 2 ) );
+        auto lRetVal3 = lGetDim( (MonoArray *)lScriptShape.CallMethod( "GetDimension", 3 ) );
+
+        REQUIRE( ( lRetVal0 == lNode.GetDimension( 0 ) ) );
+        REQUIRE( ( lRetVal1 == lNode.GetDimension( 1 ) ) );
+        REQUIRE( ( lRetVal2 == lNode.GetDimension( 2 ) ) );
+        REQUIRE( ( lRetVal3 == lNode.GetDimension( 3 ) ) );
+    }
+
+    {
+        auto lRetVal0 = lGetDim( (MonoArray *)lScriptShape.CallMethod( "GetDimension", -4 ) );
+        auto lRetVal1 = lGetDim( (MonoArray *)lScriptShape.CallMethod( "GetDimension", -3 ) );
+        auto lRetVal2 = lGetDim( (MonoArray *)lScriptShape.CallMethod( "GetDimension", -2 ) );
+        auto lRetVal3 = lGetDim( (MonoArray *)lScriptShape.CallMethod( "GetDimension", -1 ) );
+
+        REQUIRE( ( lRetVal0 == lNode.GetDimension( -4 ) ) );
+        REQUIRE( ( lRetVal1 == lNode.GetDimension( -3 ) ) );
+        REQUIRE( ( lRetVal2 == lNode.GetDimension( -2 ) ) );
+        REQUIRE( ( lRetVal3 == lNode.GetDimension( -1 ) ) );
+    }
+}
+
+TEST_CASE( "C++ Tensor Shape has correct dimension after trimming", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
+
+    std::vector<uint32_t> lDim1{ 2, 2, 4, 3 };
+    std::vector<uint32_t> lDim2{ 3, 4, 2, 6 };
+    std::vector<uint32_t> lDim3{ 2, 3, 4, 5 };
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        lScriptShape.CallMethod( "Trim", 1 );
+        REQUIRE( lNode.mRank == 1 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        lScriptShape.CallMethod( "Trim", 2 );
+        REQUIRE( lNode.mRank == 2 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 2, 4, 3 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        lScriptShape.CallMethod( "Trim", 3 );
+        REQUIRE( lNode.mRank == 3 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 2, 4, 3 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 4, 2, 4 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        lScriptShape.CallMethod( "Trim", 4 );
+        REQUIRE( lNode.mRank == 4 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 2, 4, 3 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 4, 2, 4 } );
+        REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 3, 6, 5 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        lScriptShape.CallMethod( "Trim", -3 );
+        REQUIRE( lNode.mRank == 1 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        lScriptShape.CallMethod( "Trim", -2 );
+        REQUIRE( lNode.mRank == 2 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 2, 4, 3 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        lScriptShape.CallMethod( "Trim", -1 );
+        REQUIRE( lNode.mRank == 3 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 2, 4, 3 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 4, 2, 4 } );
+    }
+}
+
+TEST_CASE( "C++ Tensor Shape has correct dimension after flattening", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
+
+    std::vector<uint32_t> lDim1{ 2, 2, 4, 3 };
+    std::vector<uint32_t> lDim2{ 3, 4, 2, 6 };
+    std::vector<uint32_t> lDim3{ 2, 3, 4, 5 };
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        lScriptShape.CallMethod( "Flatten", 1 );
+        REQUIRE( lNode.mRank == 4 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 2, 4, 3 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 4, 2, 4 } );
+        REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 3, 6, 5 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        lScriptShape.CallMethod( "Flatten", 2 );
+        REQUIRE( lNode.mRank == 3 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 4, 12, 6 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 4, 2, 4 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 3, 6, 5 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        lScriptShape.CallMethod( "Flatten", 3 );
+        REQUIRE( lNode.mRank == 2 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 16, 24, 24 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 3, 6, 5 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        lScriptShape.CallMethod( "Flatten", 4 );
+        REQUIRE( lNode.mRank == 1 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 48, 144, 120 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        lScriptShape.CallMethod( "Flatten", -3 );
+        REQUIRE( lNode.mRank == 4 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 2, 4, 3 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 4, 2, 4 } );
+        REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 3, 6, 5 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        lScriptShape.CallMethod( "Flatten", -2 );
+        REQUIRE( lNode.mRank == 3 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 4, 12, 6 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 4, 2, 4 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 3, 6, 5 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        lScriptShape.CallMethod( "Flatten", -1 );
+        REQUIRE( lNode.mRank == 2 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 16, 24, 24 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 3, 6, 5 } );
+    }
+}
+
+TEST_CASE( "C++ Tensor Shape has correct dimension after inserting", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
+
+    std::vector<uint32_t> lDim1{ 2, 4, 3 };
+    std::vector<uint32_t> lDim2{ 3, 2, 6 };
+    std::vector<uint32_t> lDim3{ 2, 4, 5 };
+
+    auto lMakeNewDim = [&]( std::vector<uint32_t> const &aArray ) -> MonoArray *
+    {
+        MonoArray *lNewArray = mono_array_new( mono_domain_get(), mono_get_uint32_class(), aArray.size() );
+        for( uint32_t i = 0; i < aArray.size(); i++ ) mono_array_set( lNewArray, uint32_t, i, aArray[i] );
+
+        return lNewArray;
+    };
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        auto lNewDim      = lMakeNewDim( std::vector<uint32_t>{ 21, 31, 21 } );
+
+        lScriptShape.CallMethod( "InsertDimension", 0, lNewDim );
+        REQUIRE( lNode.mRank == 4 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 21, 31, 21 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 2, 3, 2 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 3, 2, 6 } );
+        REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 3, 6, 5 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        auto lNewDim      = lMakeNewDim( std::vector<uint32_t>{ 21, 31, 21 } );
+
+        lScriptShape.CallMethod( "InsertDimension", 1, lNewDim );
+        REQUIRE( lNode.mRank == 4 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 21, 31, 21 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 3, 2, 6 } );
+        REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 3, 6, 5 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        auto lNewDim      = lMakeNewDim( std::vector<uint32_t>{ 21, 31, 21 } );
+
+        lScriptShape.CallMethod( "InsertDimension", 2, lNewDim );
+        REQUIRE( lNode.mRank == 4 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 3, 2, 6 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 21, 31, 21 } );
+        REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 3, 6, 5 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        auto lNewDim      = lMakeNewDim( std::vector<uint32_t>{ 21, 31, 21 } );
+
+        lScriptShape.CallMethod( "InsertDimension", 3, lNewDim );
+        REQUIRE( lNode.mRank == 4 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 3, 2, 6 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 3, 6, 5 } );
+        REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 21, 31, 21 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        auto lNewDim      = lMakeNewDim( std::vector<uint32_t>{ 21, 31, 21 } );
+
+        lScriptShape.CallMethod( "InsertDimension", -4, lNewDim );
+        REQUIRE( lNode.mRank == 4 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 21, 31, 21 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 2, 3, 2 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 3, 2, 6 } );
+        REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 3, 6, 5 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        auto lNewDim      = lMakeNewDim( std::vector<uint32_t>{ 21, 31, 21 } );
+
+        lScriptShape.CallMethod( "InsertDimension", -3, lNewDim );
+        REQUIRE( lNode.mRank == 4 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 21, 31, 21 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 3, 2, 6 } );
+        REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 3, 6, 5 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        auto lNewDim      = lMakeNewDim( std::vector<uint32_t>{ 21, 31, 21 } );
+
+        lScriptShape.CallMethod( "InsertDimension", -2, lNewDim );
+        REQUIRE( lNode.mRank == 4 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 3, 2, 6 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 21, 31, 21 } );
+        REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 3, 6, 5 } );
+    }
+
+    {
+        auto lNode        = sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) );
+        auto lScriptShape = lTensorShapeClass.Instantiate( (size_t)&lNode );
+        auto lNewDim      = lMakeNewDim( std::vector<uint32_t>{ 21, 31, 21 } );
+
+        lScriptShape.CallMethod( "InsertDimension", -1, lNewDim );
+        REQUIRE( lNode.mRank == 4 );
+        REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 3, 2, 6 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 3, 6, 5 } );
+        REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 21, 31, 21 } );
+    }
 }

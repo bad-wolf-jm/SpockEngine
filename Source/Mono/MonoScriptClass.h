@@ -66,6 +66,8 @@ namespace SE::Core
 
         const std::map<std::string, sScriptField> &GetFields() const { return mFields; }
 
+        MonoClass * Class() { return mMonoClass; }
+
       private:
         std::string mClassNamespace;
         std::string mClassName;

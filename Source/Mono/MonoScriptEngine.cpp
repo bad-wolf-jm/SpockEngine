@@ -142,6 +142,14 @@ namespace SE::Core
         SE_ADD_INTERNAL_CALL( Entity_Get );
         SE_ADD_INTERNAL_CALL( Entity_Add );
         SE_ADD_INTERNAL_CALL( Entity_Replace );
+
+        SE_ADD_INTERNAL_CALL( OpNode_NewTensorShape );
+        SE_ADD_INTERNAL_CALL( OpNode_DestroyTensorShape );
+        SE_ADD_INTERNAL_CALL( OpNode_CountLayers );
+        SE_ADD_INTERNAL_CALL( OpNode_GetDimension );
+        SE_ADD_INTERNAL_CALL( OpNode_Trim );
+        SE_ADD_INTERNAL_CALL( OpNode_Flatten );
+        SE_ADD_INTERNAL_CALL( OpNode_InsertDimension );
     }
 
     void MonoScriptEngine::Shutdown()
