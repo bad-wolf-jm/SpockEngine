@@ -65,7 +65,7 @@ namespace SpockEngine
             CppCall.OpNode_Flatten(mInternalTensorShape, aToDimension);
         }
 
-        public void InsertDimension(int aPosition, uint[] aDimension)
+        public void InsertDimension(int aPosition, ref uint[] aDimension)
         {
             if (mInternalTensorShape == 0) return;
 

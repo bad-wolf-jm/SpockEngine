@@ -842,7 +842,6 @@ TEST_CASE( "C++ Tensor Shape has correct dimension after inserting", "[MONO_SCRI
     {
         MonoArray *lNewArray = mono_array_new( mono_domain_get(), mono_get_uint32_class(), aArray.size() );
         for( uint32_t i = 0; i < aArray.size(); i++ ) mono_array_set( lNewArray, uint32_t, i, aArray[i] );
-
         return lNewArray;
     };
 
@@ -855,7 +854,7 @@ TEST_CASE( "C++ Tensor Shape has correct dimension after inserting", "[MONO_SCRI
         REQUIRE( lNode.mRank == 4 );
         REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 21, 31, 21 } );
         REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 2, 3, 2 } );
-        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 3, 2, 6 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 4, 2, 4 } );
         REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 3, 6, 5 } );
     }
 
@@ -868,7 +867,7 @@ TEST_CASE( "C++ Tensor Shape has correct dimension after inserting", "[MONO_SCRI
         REQUIRE( lNode.mRank == 4 );
         REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
         REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 21, 31, 21 } );
-        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 3, 2, 6 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 4, 2, 4 } );
         REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 3, 6, 5 } );
     }
 
@@ -880,7 +879,7 @@ TEST_CASE( "C++ Tensor Shape has correct dimension after inserting", "[MONO_SCRI
         lScriptShape.CallMethod( "InsertDimension", 2, lNewDim );
         REQUIRE( lNode.mRank == 4 );
         REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
-        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 3, 2, 6 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 4, 2, 4 } );
         REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 21, 31, 21 } );
         REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 3, 6, 5 } );
     }
@@ -893,7 +892,7 @@ TEST_CASE( "C++ Tensor Shape has correct dimension after inserting", "[MONO_SCRI
         lScriptShape.CallMethod( "InsertDimension", 3, lNewDim );
         REQUIRE( lNode.mRank == 4 );
         REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
-        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 3, 2, 6 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 4, 2, 4 } );
         REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 3, 6, 5 } );
         REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 21, 31, 21 } );
     }
@@ -907,7 +906,7 @@ TEST_CASE( "C++ Tensor Shape has correct dimension after inserting", "[MONO_SCRI
         REQUIRE( lNode.mRank == 4 );
         REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 21, 31, 21 } );
         REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 2, 3, 2 } );
-        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 3, 2, 6 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 4, 2, 4 } );
         REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 3, 6, 5 } );
     }
 
@@ -920,7 +919,7 @@ TEST_CASE( "C++ Tensor Shape has correct dimension after inserting", "[MONO_SCRI
         REQUIRE( lNode.mRank == 4 );
         REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
         REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 21, 31, 21 } );
-        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 3, 2, 6 } );
+        REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 4, 2, 4 } );
         REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 3, 6, 5 } );
     }
 
@@ -932,7 +931,7 @@ TEST_CASE( "C++ Tensor Shape has correct dimension after inserting", "[MONO_SCRI
         lScriptShape.CallMethod( "InsertDimension", -2, lNewDim );
         REQUIRE( lNode.mRank == 4 );
         REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
-        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 3, 2, 6 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 4, 2, 4 } );
         REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 21, 31, 21 } );
         REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 3, 6, 5 } );
     }
@@ -945,7 +944,7 @@ TEST_CASE( "C++ Tensor Shape has correct dimension after inserting", "[MONO_SCRI
         lScriptShape.CallMethod( "InsertDimension", -1, lNewDim );
         REQUIRE( lNode.mRank == 4 );
         REQUIRE( lNode.GetDimension( 0 ) == std::vector<uint32_t>{ 2, 3, 2 } );
-        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 3, 2, 6 } );
+        REQUIRE( lNode.GetDimension( 1 ) == std::vector<uint32_t>{ 4, 2, 4 } );
         REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 3, 6, 5 } );
         REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 21, 31, 21 } );
     }
