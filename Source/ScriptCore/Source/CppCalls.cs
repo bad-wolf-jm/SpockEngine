@@ -75,9 +75,142 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static uint OpNode_CreateScalarVector<_Ty>(Scope aScope, _Ty[] aInitializer);
-        
+
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static uint OpNode_CreateScalarValue<_Ty>(Scope aScope, _Ty aInitializer);
 
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Add(Scope aScope, OpNode aLeft, OpNode aRight);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Subtract(Scope aScope, OpNode aLeft, OpNode aRight);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Divide(Scope aScope, OpNode aLeft, OpNode aRight);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Multiply(Scope aScope, OpNode aLeft, OpNode aRight);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_And(Scope aScope, OpNode aLeft, OpNode aRight);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Or(Scope aScope, OpNode aLeft, OpNode aRight);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Not(Scope aScope, OpNode aOperand);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_BitwiseAnd(Scope aScope, OpNode aLeft, OpNode aRight);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_BitwiseOr(Scope aScope, OpNode aLeft, OpNode aRight);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_BitwiseNot(Scope aScope, OpNode aOperand);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_InInterval(Scope aScope, OpNode aLower, OpNode aUpper, OpNode aStrictLower, OpNode aStrictUpper);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Equal(Scope aScope, OpNode aX, OpNode aY);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_LessThan(Scope aScope, OpNode aX, OpNode aY);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_LessThanOrEqual(Scope aScope, OpNode aX, OpNode aY);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_GreaterThan(Scope aScope, OpNode aX, OpNode aY);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_GreaterThanOrEqual(Scope aScope, OpNode aX, OpNode aY);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Where(Scope aScope, OpNode aCondition, OpNode aValueIfTrue, OpNode aValueIfFalse);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Mix(Scope aScope, OpNode aA, OpNode aB, OpNode aT);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_AffineTransform(Scope aScope, OpNode aA, OpNode aX, OpNode aB);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_ARange(Scope aScope, OpNode aLeft, OpNode aRight, OpNode aDelta);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_LinearSpace(Scope aScope, OpNode aLeft, OpNode aRight, OpNode aSubdivisions);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Repeat(Scope aScope, OpNode aArray, OpNode aRepetitions);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Tile(Scope aScope, OpNode aArray, OpNode aRepetitions);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Sample2D(Scope aScope, OpNode aX, OpNode aY, OpNode aTextures);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Collapse(Scope aScope, OpNode aArray);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Expand(Scope aScope, OpNode aArray);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Reshape(Scope aScope, sTensorShape aNewShape);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Relayout(Scope aScope, sTensorShape aNewLayout);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Flatten(Scope aScope, OpNode aArray);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Slice(Scope aScope, OpNode aArray, OpNode aBegin, OpNode aEnd);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Summation(Scope aScope, OpNode aArray);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Summation(Scope aScope, OpNode aArray, OpNode aBegin, OpNode aEnd);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_CountTrue(Scope aScope, OpNode aArray);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_CountNonZero(Scope aScope, OpNode aArray);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_CountZero(Scope aScope, OpNode aArray);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Floor(Scope aScope, OpNode aArray);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Ceil(Scope aScope, OpNode aArray);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Abs(Scope aScope, OpNode aArray);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Sqrt(Scope aScope, OpNode aArray);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Round(Scope aScope, OpNode aArray);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Diff(Scope aScope, OpNode aArray, uint32_t aCount);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Shift(Scope aScope, OpNode aArray, OpNode aCount, OpNode aFillValue);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_Conv1D(Scope aScope, OpNode aArray0, OpNode aArray1);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint OpNode_HCat(Scope aScope, OpNode aArray0, OpNode aArray1);
+        
     }
 }

@@ -161,6 +161,48 @@ namespace SE::Core
         SE_ADD_INTERNAL_CALL( OpNode_CreateVector );
         SE_ADD_INTERNAL_CALL( OpNode_CreateScalarVector );
         SE_ADD_INTERNAL_CALL( OpNode_CreateScalarValue );
+
+        SE_ADD_INTERNAL_CALL( OpNode_Add );
+        SE_ADD_INTERNAL_CALL( OpNode_Subtract );
+        SE_ADD_INTERNAL_CALL( OpNode_Divide );
+        SE_ADD_INTERNAL_CALL( OpNode_Multiply );
+        SE_ADD_INTERNAL_CALL( OpNode_And );
+        SE_ADD_INTERNAL_CALL( OpNode_Or );
+        SE_ADD_INTERNAL_CALL( OpNode_Not );
+        SE_ADD_INTERNAL_CALL( OpNode_BitwiseAnd );
+        SE_ADD_INTERNAL_CALL( OpNode_BitwiseOr );
+        SE_ADD_INTERNAL_CALL( OpNode_BitwiseNot );
+        SE_ADD_INTERNAL_CALL( OpNode_InInterval );
+        SE_ADD_INTERNAL_CALL( OpNode_LessThan );
+        SE_ADD_INTERNAL_CALL( OpNode_LessThanOrEqual );
+        SE_ADD_INTERNAL_CALL( OpNode_GreaterThan );
+        SE_ADD_INTERNAL_CALL( OpNode_GreaterThanOrEqual );
+        SE_ADD_INTERNAL_CALL( OpNode_Where );
+        SE_ADD_INTERNAL_CALL( OpNode_Mix );
+        SE_ADD_INTERNAL_CALL( OpNode_AffineTransform );
+        SE_ADD_INTERNAL_CALL( OpNode_LinearSpace );
+        SE_ADD_INTERNAL_CALL( OpNode_Repeat );
+        SE_ADD_INTERNAL_CALL( OpNode_Tile );
+        SE_ADD_INTERNAL_CALL( OpNode_Sample2D );
+        SE_ADD_INTERNAL_CALL( OpNode_Collapse );
+        SE_ADD_INTERNAL_CALL( OpNode_Expand );
+        SE_ADD_INTERNAL_CALL( OpNode_Reshape );
+        SE_ADD_INTERNAL_CALL( OpNode_Relayout );
+        SE_ADD_INTERNAL_CALL( OpNode_Flatten );
+        SE_ADD_INTERNAL_CALL( OpNode_Slice );
+        SE_ADD_INTERNAL_CALL( OpNode_Summation );
+        SE_ADD_INTERNAL_CALL( OpNode_CountTrue );
+        SE_ADD_INTERNAL_CALL( OpNode_CountNonZero );
+        SE_ADD_INTERNAL_CALL( OpNode_CountZero );
+        SE_ADD_INTERNAL_CALL( OpNode_Floor );
+        SE_ADD_INTERNAL_CALL( OpNode_Ceil );
+        SE_ADD_INTERNAL_CALL( OpNode_Abs );
+        SE_ADD_INTERNAL_CALL( OpNode_Sqrt );
+        SE_ADD_INTERNAL_CALL( OpNode_Round );
+        SE_ADD_INTERNAL_CALL( OpNode_Diff );
+        SE_ADD_INTERNAL_CALL( OpNode_Shift );
+        SE_ADD_INTERNAL_CALL( OpNode_Conv1D );
+        SE_ADD_INTERNAL_CALL( OpNode_HCat );
     }
 
     void MonoScriptEngine::Shutdown()

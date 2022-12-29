@@ -177,4 +177,250 @@ namespace SE::MonoInternalCalls
         return 0;
     }
 
+    uint32_t OpNode_Add( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Subtract( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Divide( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Multiply( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_And( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Or( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Not( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_BitwiseAnd( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_BitwiseOr( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_BitwiseNot( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_InInterval( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_LessThan( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_LessThanOrEqual( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_GreaterThan( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_GreaterThanOrEqual( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Where( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Mix( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_AffineTransform( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_LinearSpace( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Repeat( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Tile( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Sample2D( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Collapse( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Expand( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Reshape( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Relayout( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Flatten( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Slice( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Summation( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_CountTrue( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_CountNonZero( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_CountZero( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Floor( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Ceil( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Abs( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Sqrt( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Round( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Diff( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Shift( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Conv1D( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_HCat( MonoObject *aScope )
+    {
+        //
+        return 0;
+    }
+
 } // namespace SE::MonoInternalCalls
