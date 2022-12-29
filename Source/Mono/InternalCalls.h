@@ -63,7 +63,7 @@ namespace SE::MonoInternalCalls
     uint32_t OpNode_BitwiseAnd( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight );
     uint32_t OpNode_BitwiseOr( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight );
     uint32_t OpNode_BitwiseNot( MonoObject *aScope, MonoObject *aOperand );
-    uint32_t OpNode_InInterval( MonoObject *aScope, MonoObject *aLower, MonoObject *aUpper, bool aStrictLower, bool aStrictUpper );
+    uint32_t OpNode_InInterval( MonoObject *aScope, MonoObject *aX, MonoObject *aLower, MonoObject *aUpper, bool aStrictLower, bool aStrictUpper );
     uint32_t OpNode_Equal( MonoObject *aScope, MonoObject *aX, MonoObject *aY );
     uint32_t OpNode_LessThan( MonoObject *aScope, MonoObject *aX, MonoObject *aY );
     uint32_t OpNode_LessThanOrEqual( MonoObject *aScope, MonoObject *aX, MonoObject *aY );
@@ -77,10 +77,10 @@ namespace SE::MonoInternalCalls
     uint32_t OpNode_Repeat( MonoObject *aScope, MonoObject *aArray, MonoObject *aRepetitions );
     uint32_t OpNode_Tile( MonoObject *aScope, MonoObject *aArray, MonoObject *aRepetitions );
     uint32_t OpNode_Sample2D( MonoObject *aScope, MonoObject *aX, MonoObject *aY, MonoObject *aTextures );
-    uint32_t OpNode_Collapse( MonoObject *aScope );
+    uint32_t OpNode_Collapse( MonoObject *aScope, MonoObject *aArray );
     uint32_t OpNode_Expand( MonoObject *aScope, MonoObject *aArray );
-    uint32_t OpNode_Reshape( MonoObject *aScope, MonoObject *aNewShape );
-    uint32_t OpNode_Relayout( MonoObject *aScope, MonoObject *aNewShape );
+    uint32_t OpNode_Reshape( MonoObject *aScope, MonoObject *aArray, MonoObject *aNewShape );
+    uint32_t OpNode_Relayout( MonoObject *aScope, MonoObject *aArray, MonoObject *aNewShape );
     uint32_t OpNode_FlattenNode( MonoObject *aScope, MonoObject *aArray );
     uint32_t OpNode_Slice( MonoObject *aScope, MonoObject *aArray, MonoObject *aBegin, MonoObject *aEnd );
     uint32_t OpNode_Summation( MonoObject *aScope, MonoObject *aArray, MonoObject *aBegin, MonoObject *aEnd );

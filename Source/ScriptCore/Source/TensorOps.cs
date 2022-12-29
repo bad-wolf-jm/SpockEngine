@@ -290,7 +290,7 @@ namespace SpockEngine
 
         OpNode InInterval(Scope aScope, OpNode aX, OpNode aLower, OpNode aUpper, bool aStrictLower, bool aStrictUpper)
         {
-            uint lNewOpNodeID = CppCall.OpNode_InInterval(aScope, aLower, aUpper, aStrictLower, aStrictUpper);
+            uint lNewOpNodeID = CppCall.OpNode_InInterval(aScope, aX, aLower, aUpper, aStrictLower, aStrictUpper);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
@@ -402,14 +402,14 @@ namespace SpockEngine
 
         OpNode Reshape(Scope aScope, OpNode aArray, sTensorShape aNewShape)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Reshape(aScope, aNewShape);
+            uint lNewOpNodeID = CppCall.OpNode_Reshape(aScope, aArray, aNewShape);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Relayout(Scope aScope, OpNode aArray, sTensorShape aNewLayout)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Relayout(aScope, aNewLayout);
+            uint lNewOpNodeID = CppCall.OpNode_Relayout(aScope, aArray, aNewLayout);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }

@@ -110,7 +110,7 @@ namespace SpockEngine
         internal extern static uint OpNode_BitwiseNot(Scope aScope, OpNode aOperand);
         
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static uint OpNode_InInterval(Scope aScope, OpNode aLower, OpNode aUpper, bool aStrictLower, bool aStrictUpper);
+        internal extern static uint OpNode_InInterval(Scope aScope, OpNode aX, OpNode aLower, OpNode aUpper, bool aStrictLower, bool aStrictUpper);
         
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static uint OpNode_Equal(Scope aScope, OpNode aX, OpNode aY);
@@ -158,10 +158,10 @@ namespace SpockEngine
         internal extern static uint OpNode_Expand(Scope aScope, OpNode aArray);
         
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static uint OpNode_Reshape(Scope aScope, sTensorShape aNewShape);
+        internal extern static uint OpNode_Reshape(Scope aScope, OpNode aArray, sTensorShape aNewShape);
         
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static uint OpNode_Relayout(Scope aScope, sTensorShape aNewLayout);
+        internal extern static uint OpNode_Relayout(Scope aScope, OpNode aArray, sTensorShape aNewLayout);
         
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static uint OpNode_FlattenNode(Scope aScope, OpNode aArray);
