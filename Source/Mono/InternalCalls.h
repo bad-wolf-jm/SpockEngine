@@ -4,7 +4,6 @@
 
 #include "Core/CUDA/Array/MultiTensor.h"
 
-
 #include "TensorOps/Scope.h"
 
 #include "mono/jit/jit.h"
@@ -42,7 +41,16 @@ namespace SE::MonoInternalCalls
     void       OpNode_Flatten( Cuda::sTensorShape *aTensorShape, int aToDimension );
     void       OpNode_InsertDimension( Cuda::sTensorShape *aTensorShape, int aPosition, MonoArray *aDimension );
 
-    size_t     OpNode_NewScope( uint32_t aMemorySize );
-    void       OpNode_DestroyScope( Scope *aTensorShape );
+    size_t OpNode_NewScope( uint32_t aMemorySize );
+    void   OpNode_DestroyScope( Scope *aTensorShape );
+
+    uint32_t OpNode_CreateMultiTensor_Constant_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape );
+    uint32_t OpNode_CreateMultiTensor_Vector_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape );
+    uint32_t OpNode_CreateMultiTensor_Data_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape );
+    uint32_t OpNode_CreateMultiTensor_Random_Uniform_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape );
+    uint32_t OpNode_CreateMultiTensor_Random_Normal_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape );
+    uint32_t OpNode_CreateVector( MonoObject *aScope, MonoArray *aValues );
+    uint32_t OpNode_CreateScalarVector( MonoObject *aScope, MonoArray *aValues );
+    uint32_t OpNode_CreateScalarValue( MonoObject *aScope, MonoObject *aInitializer );
 
 } // namespace SE::MonoInternalCalls

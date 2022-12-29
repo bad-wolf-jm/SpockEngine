@@ -153,6 +153,14 @@ namespace SE::Core
 
         SE_ADD_INTERNAL_CALL( OpNode_NewScope );
         SE_ADD_INTERNAL_CALL( OpNode_DestroyScope );
+        SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Constant_Initializer );
+        SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Vector_Initializer );
+        SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Data_Initializer );
+        SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Random_Uniform_Initializer );
+        SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Random_Normal_Initializer );
+        SE_ADD_INTERNAL_CALL( OpNode_CreateVector );
+        SE_ADD_INTERNAL_CALL( OpNode_CreateScalarVector );
+        SE_ADD_INTERNAL_CALL( OpNode_CreateScalarValue );
     }
 
     void MonoScriptEngine::Shutdown()
