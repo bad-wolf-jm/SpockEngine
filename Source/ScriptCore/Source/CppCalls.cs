@@ -48,5 +48,11 @@ namespace SpockEngine
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static void OpNode_InsertDimension( ulong aTensorShape, int aPosition, uint[] aDimension );
 
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static ulong OpNode_NewScope( uint aMemorySize );
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static ulong OpNode_DestroyScope( ulong aScope );
+
     }
 }

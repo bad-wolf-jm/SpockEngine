@@ -15,6 +15,8 @@
 
 #include "Scene/Components.h"
 
+#include "TensorOps/Scope.h"
+
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
 #include "mono/metadata/object.h"
@@ -23,6 +25,7 @@
 using namespace Catch::Matchers;
 using namespace SE::Core;
 using namespace SE::Cuda;
+using namespace SE::TensorOps;
 using namespace TestUtils;
 using namespace math;
 using namespace SE::Core::EntityComponentSystem::Components;
@@ -948,4 +951,33 @@ TEST_CASE( "C++ Tensor Shape has correct dimension after inserting", "[MONO_SCRI
         REQUIRE( lNode.GetDimension( 2 ) == std::vector<uint32_t>{ 3, 6, 5 } );
         REQUIRE( lNode.GetDimension( 3 ) == std::vector<uint32_t>{ 21, 31, 21 } );
     }
+}
+
+TEST_CASE( "Create Scope in C#", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto lScopeClass = MonoScriptClass( "SpockEngine", "Scope", true );
+
+    auto lRetValue    = CallMethodHelper<MonoObject *, uint32_t>( lEntityTest, "CreateScope", 1024 );
+    auto lRetInstance = MonoScriptInstance( lScopeClass.Class(), lRetValue );
+
+    Scope *lCPPShape = lRetInstance.GetFieldValue<Scope *>( "mInternalScope" );
+    REQUIRE( lRetInstance.GetFieldValue<bool>( "mIsOwner" ) );
+    REQUIRE( lCPPShape != nullptr );
+}
+
+TEST_CASE( "Create scope in C++", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto lScopeClass = MonoScriptClass( "SpockEngine", "Scope", true );
+    auto lNode       = Scope( 1024 );
+
+    auto lScriptShape = lScopeClass.Instantiate( (size_t)&lNode, true );
+    Scope *lCPPShape = lScriptShape.GetFieldValue<Scope *>( "mInternalScope" );
+    REQUIRE( lCPPShape == &lNode );
+    REQUIRE( !( lScriptShape.GetFieldValue<bool>( "mIsOwner" ) ) );
 }

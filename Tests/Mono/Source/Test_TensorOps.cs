@@ -21,5 +21,10 @@ namespace SEUnitTest
 
             return new sTensorShape(aShape, aElementSize);
         }
+
+       public static Scope CreateScope(uint aMemorySize)
+        {
+            return new Scope(aMemorySize);
+        }
     }
 }

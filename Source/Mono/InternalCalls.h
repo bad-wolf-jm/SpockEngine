@@ -4,6 +4,9 @@
 
 #include "Core/CUDA/Array/MultiTensor.h"
 
+
+#include "TensorOps/Scope.h"
+
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
 #include "mono/metadata/object.h"
@@ -14,6 +17,7 @@
 namespace SE::MonoInternalCalls
 {
     using namespace SE::Core;
+    using namespace SE::TensorOps;
 
     uint32_t Entity_Create( EntityRegistry *aRegistry, MonoString *aName, uint32_t aParentEntityID );
 
@@ -37,5 +41,8 @@ namespace SE::MonoInternalCalls
     void       OpNode_Trim( Cuda::sTensorShape *aTensorShape, int aToDimension );
     void       OpNode_Flatten( Cuda::sTensorShape *aTensorShape, int aToDimension );
     void       OpNode_InsertDimension( Cuda::sTensorShape *aTensorShape, int aPosition, MonoArray *aDimension );
+
+    size_t     OpNode_NewScope( uint32_t aMemorySize );
+    void       OpNode_DestroyScope( Scope *aTensorShape );
 
 } // namespace SE::MonoInternalCalls

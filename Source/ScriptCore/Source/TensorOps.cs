@@ -79,88 +79,89 @@ namespace SpockEngine
         }
     };
 
-    // public class Scope
-    // {
-    //     private ulong mInternalScope;
-    //     private bool mIsOwner;
+    public class Scope
+    {
+        private ulong mInternalScope;
+        private bool mIsOwner;
 
-    //     public Scope(uint aMemorySize)
-    //     {
-    //         mInternalScope = CppCall.OpNode_NewScope(aMemorySize);
-    //         mIsOwner = true;
-    //     }
+        public Scope()
+        {
+            mInternalScope = 0;
+            mIsOwner = true;
+        }
 
-    //     public Scope(ulong aInternalScope)
-    //     {
-    //         mInternalScope = aInternalScope;
-    //         mIsOwner = false;
-    //     }
+        public Scope(uint aMemorySize)
+        {
+            mInternalScope = CppCall.OpNode_NewScope(aMemorySize);
+            mIsOwner = true;
+        }
 
-    //     public ~Scope()
-    //     {
-    //         if (mIsOwner)
-    //             CppCall.OpNode_DestroyScope(mInternalScope);
-    //     }
+        public Scope(ulong aInternalScope, bool aDummy)
+        {
+            mInternalScope = aInternalScope;
+            mIsOwner = false;
+        }
 
-    //     public InternalScope() { return mInternalScope; }
-    // };
+        ~Scope()
+        {
+            if (mIsOwner)
+                CppCall.OpNode_DestroyScope(mInternalScope);
+        }
+    };
 
-    // public struct sConstantValueInitializerComponent<_Ty>
-    // {
-    //     private Type mType;
-    //     private _Ty mValue;
+    public class sConstantValueInitializerComponent<_Ty>
+    {
+        private Type mType;
+        private _Ty mValue;
 
-    //     sConstantValueInitializerComponent(_Ty aValue) { mType = typeof(_Ty); mValue = aValue; }
-    // };
+        public sConstantValueInitializerComponent(_Ty aValue) { mType = typeof(_Ty); mValue = aValue; }
+    };
 
-    // public struct sVectorInitializerComponent<_Ty>
-    // {
-    //     private Type mType;
-    //     private List<_Ty> mValue;
+    public class sVectorInitializerComponent<_Ty>
+    {
+        private Type mType;
+        private _Ty[] mValue;
 
-    //     sVectorInitializerComponent(_Ty[] aValue) { mType = typeof(_Ty); mValue = new List<_Ty>(aValue); }
-    //     sVectorInitializerComponent(List<_Ty> aValue) { mType = typeof(_Ty); mValue = aValue; }
-    // };
+        public sVectorInitializerComponent(ref _Ty[] aValue) { mType = typeof(_Ty); mValue = aValue; }
+    };
 
-    // public struct sDataInitializerComponent<_Ty>
-    // {
-    //     private Type mType;
-    //     private List<_Ty> mValue;
+    public class sDataInitializerComponent<_Ty>
+    {
+        private Type mType;
+        private _Ty[] mValue;
 
-    //     sDataInitializerComponent(_Ty[] aValue) { mType = typeof(_Ty); mValue = new List<_Ty>(aValue); }
-    //     sDataInitializerComponent(List<_Ty> aValue) { mType = typeof(_Ty); mValue = aValue; }
-    // };
+        public sDataInitializerComponent(ref _Ty[] aValue) { mType = typeof(_Ty); mValue = aValue; }
+    };
 
-    // public struct sRandomUniformInitializerComponent<_Ty>
-    // {
-    //     private Type mType;
-    // };
+    public class sRandomUniformInitializerComponent<_Ty>
+    {
+        private Type mType;
 
-    // public struct sRandomNormalInitializerComponent<_Ty>
-    // {
-    //     private Type mType;
-    //     private _Ty mMean;
-    //     private _Ty mStd;
-    // };
+        public sRandomUniformInitializerComponent() { mType = typeof(_Ty); }
+    };
 
-    // public struct OpNode
-    // {
+    public class sRandomNormalInitializerComponent<_Ty>
+    {
+        private Type mType;
+        private _Ty mMean;
+        private _Ty mStd;
 
-    //     private uint mEntityID;
-    //     private Scope mScope;
+        public sRandomNormalInitializerComponent(_Ty aMean, _Ty aStd) { mType = typeof(_Ty); mMean = aMean; mStd = aStd; }
+    };
 
-    //     public OpNode(uint aEntityID, Scope aScope)
-    //     {
-    //         mEntityID = aEntityID;
-    //         mScope = aScope;
-    //     }
+    public class OpNode
+    {
 
-    //     public uint EntityID() { return mEntityID; }
-    //     public Scope ScopeID() { return mScope; }
-    // };
+        private uint mEntityID;
+        private Scope mScope;
 
-    // public class TensorOps
-    // {
+        public OpNode() { mEntityID = 0; mScope = new Scope(); }
+
+        public OpNode(uint aEntityID, ref Scope aScope) { mEntityID = aEntityID; mScope = aScope; }
+    };
+
+    public class TensorOps
+    {
     //     OpNode MultiTensorValue(Scope aScope, sConstantValueInitializerComponent aInitializer, sTensorShape aShape)
     //     {
 
@@ -203,310 +204,310 @@ namespace SpockEngine
 
     //     OpNode Add(Scope aScope, OpNode aLeft, OpNode aRight)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Add(aScope.InternalScope(), aLeft.EntityID(), aRight.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Add(aScope, aLeft, aRight);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Subtract(Scope aScope, OpNode aLeft, OpNode aRight)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Subtract(aScope.InternalScope(), aLeft.EntityID(), aRight.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Subtract(aScope, aLeft, aRight);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Divide(Scope aScope, OpNode aLeft, OpNode aRight)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Divide(aScope.InternalScope(), aLeft.EntityID(), aRight.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Divide(aScope, aLeft, aRight);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Multiply(Scope aScope, OpNode aLeft, OpNode aRight)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Multiply(aScope.InternalScope(), aLeft.EntityID(), aRight.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Multiply(aScope, aLeft, aRight);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode And(Scope aScope, OpNode aLeft, OpNode aRight)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_And(aScope.InternalScope(), aLeft.EntityID(), aRight.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_And(aScope, aLeft, aRight);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Or(Scope aScope, OpNode aLeft, OpNode aRight)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Or(aScope.InternalScope(), aLeft.EntityID(), aRight.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Or(aScope, aLeft, aRight);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Not(Scope aScope, OpNode aOperand)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Not(aScope.InternalScope(), aOperand.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Not(aScope, aOperand);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode BitwiseAnd(Scope aScope, OpNode aLeft, OpNode aRight)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_BitwiseAnd(aScope.InternalScope(), aLeft.EntityID(), aRight.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_BitwiseAnd(aScope, aLeft, aRight);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode BitwiseOr(Scope aScope, OpNode aLeft, OpNode aRight)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_BitwiseOr(aScope.InternalScope(), aLeft.EntityID(), aRight.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_BitwiseOr(aScope, aLeft, aRight);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode BitwiseNot(Scope aScope, OpNode aOperand)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_BitwiseNot(aScope.InternalScope(), aOperand.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_BitwiseNot(aScope, aOperand);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode InInterval(Scope aScope, OpNode aX, OpNode aLower, OpNode aUpper, bool aStrictLower, bool aStrictUpper)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_InInterval(aScope.InternalScope(), aLower.EntityID(), aUpper.EntityID(), aStrictLower, aStrictUpper);
+    //         ulong lNewOpNodeID = CppCall.OpNode_InInterval(aScope, aLower, aUpper, aStrictLower, aStrictUpper);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Equal(Scope aScope, OpNode aX, OpNode aY)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Equal(aScope.InternalScope(), aX.EntityID(), aY.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Equal(aScope, aX, aY);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode LessThan(Scope aScope, OpNode aX, OpNode aY)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_LessThan(aScope.InternalScope(), aX.EntityID(), aY.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_LessThan(aScope, aX, aY);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode LessThanOrEqual(Scope aScope, OpNode aX, OpNode aY)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_LessThanOrEqual(aScope.InternalScope(), aX.EntityID(), aY.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_LessThanOrEqual(aScope, aX, aY);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode GreaterThan(Scope aScope, OpNode aX, OpNode aY)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_GreaterThan(aScope.InternalScope(), aX.EntityID(), aY.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_GreaterThan(aScope, aX, aY);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode GreaterThanOrEqual(Scope aScope, OpNode aX, OpNode aY)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_GreaterThanOrEqual(aScope.InternalScope(), aX.EntityID(), aY.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_GreaterThanOrEqual(aScope, aX, aY);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Where(Scope aScope, OpNode aCondition, OpNode aValueIfTrue, OpNode aValueIfFalse)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Where(aScope.InternalScope(), aCondition.EntityID(), aValueIfTrue.EntityID(), aValueIfFalse.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Where(aScope, aCondition, aValueIfTrue, aValueIfFalse);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Mix(Scope aScope, OpNode aA, OpNode aB, OpNode aT)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Mix(aScope.InternalScope(), aA.EntityID(), aB.EntityID(), aT.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Mix(aScope, aA, aB, aT);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode AffineTransform(Scope aScope, OpNode aA, OpNode aX, OpNode aB)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_AffineTransform(aScope.InternalScope(), aA.EntityID(), aX.EntityID(), aB.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_AffineTransform(aScope, aA, aX, aB);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode ARange(Scope aScope, OpNode aLeft, OpNode aRight, OpNode aDelta)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_ARange(aScope.InternalScope(), aLeft.EntityID(), aRight.EntityID(), aDelta.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_ARange(aScope, aLeft, aRight, aDelta);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode LinearSpace(Scope aScope, OpNode aLeft, OpNode aRight, OpNode aSubdivisions)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_LinearSpace(aScope.InternalScope(), aLeft.EntityID(), aRight.EntityID(), aSubdivisions.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_LinearSpace(aScope, aLeft, aRight, aSubdivisions);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Repeat(Scope aScope, OpNode aArray, OpNode aRepetitions)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Repeat(aScope.InternalScope(), aArray.EntityID(), aRepetitions.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Repeat(aScope, aArray, aRepetitions);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Tile(Scope aScope, OpNode aArray, OpNode aRepetitions)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Tile(aScope.InternalScope(), aArray.EntityID(), aRepetitions.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Tile(aScope, aArray, aRepetitions);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Sample2D(Scope aScope, OpNode aX, OpNode aY, OpNode aTextures)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Sample2D(aScope.InternalScope(), aX.EntityID(), aY.EntityID(), aTextures.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Sample2D(aScope, aX, aY, aTextures);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Collapse(Scope aScope, OpNode aArray)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Collapse(aScope.InternalScope(), aArray.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Collapse(aScope, aArray);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Expand(Scope aScope, OpNode aArray)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Expand(aScope.InternalScope(), aArray.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Expand(aScope, aArray);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Reshape(Scope aScope, OpNode aArray, sTensorShape aNewShape)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Reshape(aScope.InternalScope(), aNewShape);
+    //         ulong lNewOpNodeID = CppCall.OpNode_Reshape(aScope, aNewShape);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Relayout(Scope aScope, OpNode aArray, sTensorShape aNewLayout)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Relayout(aScope.InternalScope(), aNewLayout);
+    //         ulong lNewOpNodeID = CppCall.OpNode_Relayout(aScope, aNewLayout);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Flatten(Scope aScope, OpNode aArray)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Flatten(aScope.InternalScope(), aArray.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Flatten(aScope, aArray);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Slice(Scope aScope, OpNode aArray, OpNode aBegin, OpNode aEnd)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Slice(aScope.InternalScope(), aArray.EntityID(), aBegin.EntityID(), aEnd.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Slice(aScope, aArray, aBegin, aEnd);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Summation(Scope aScope, OpNode aArray)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Summation(aScope.InternalScope(), aArray.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Summation(aScope, aArray);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Summation(Scope aScope, OpNode aArray, OpNode aBegin, OpNode aEnd)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Summation(aScope.InternalScope(), aArray.EntityID(), aBegin.EntityID(), aEnd.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Summation(aScope, aArray, aBegin, aEnd);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode CountTrue(Scope aScope, OpNode aArray)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_CountTrue(aScope.InternalScope(), aArray.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_CountTrue(aScope, aArray);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode CountNonZero(Scope aScope, OpNode aArray)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_CountNonZero(aScope.InternalScope(), aArray.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_CountNonZero(aScope, aArray);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode CountZero(Scope aScope, OpNode aArray)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_CountZero(aScope.InternalScope(), aArray.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_CountZero(aScope, aArray);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Floor(Scope aScope, OpNode aArray)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Floor(aScope.InternalScope(), aArray.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Floor(aScope, aArray);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Ceil(Scope aScope, OpNode aArray)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Ceil(aScope.InternalScope(), aArray.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Ceil(aScope, aArray);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Abs(Scope aScope, OpNode aArray)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Abs(aScope.InternalScope(), aArray.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Abs(aScope, aArray);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Sqrt(Scope aScope, OpNode aArray)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Sqrt(aScope.InternalScope(), aArray.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Sqrt(aScope, aArray);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Round(Scope aScope, OpNode aArray)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Round(aScope.InternalScope(), aArray.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Round(aScope, aArray);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Diff(Scope aScope, OpNode aArray, UInt32 aCount)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Diff(aScope.InternalScope(), aArray.EntityID(), aCount);
+    //         ulong lNewOpNodeID = CppCall.OpNode_Diff(aScope, aArray, aCount);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Shift(Scope aScope, OpNode aArray, Int32 aCount, OpNode aFillValue)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Shift(aScope.InternalScope(), aArray.EntityID(), aCount, aFillValue.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Shift(aScope, aArray, aCount, aFillValue);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode Conv1D(Scope aScope, OpNode aArray0, OpNode aArray1)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_Conv1D(aScope.InternalScope(), aArray0.EntityID(), aArray1.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_Conv1D(aScope, aArray0, aArray1);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
 
     //     OpNode HCat(Scope aScope, OpNode aArray0, OpNode aArray1)
     //     {
-    //         ulong lNewOpNodeID = CppCall.OpNode_HCat(aScope.InternalScope(), aArray0.EntityID(), aArray1.EntityID());
+    //         ulong lNewOpNodeID = CppCall.OpNode_HCat(aScope, aArray0, aArray1);
 
     //         return OpNode(lNewOpNodeID, aScope);
     //     }
-    // };
+    };
 }

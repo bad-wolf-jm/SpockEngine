@@ -150,6 +150,9 @@ namespace SE::Core
         SE_ADD_INTERNAL_CALL( OpNode_Trim );
         SE_ADD_INTERNAL_CALL( OpNode_Flatten );
         SE_ADD_INTERNAL_CALL( OpNode_InsertDimension );
+
+        SE_ADD_INTERNAL_CALL( OpNode_NewScope );
+        SE_ADD_INTERNAL_CALL( OpNode_DestroyScope );
     }
 
     void MonoScriptEngine::Shutdown()

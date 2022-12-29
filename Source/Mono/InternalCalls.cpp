@@ -122,7 +122,11 @@ namespace SE::MonoInternalCalls
             lNewDimension.push_back( *( mono_array_addr( aDimension, uint32_t, i ) ) );
         }
 
-        aTensorShape->InsertDimension(aPosition, lNewDimension);
+        aTensorShape->InsertDimension( aPosition, lNewDimension );
     }
+
+    size_t OpNode_NewScope( uint32_t aMemorySize ) { return (size_t)( new Scope( aMemorySize ) ); }
+
+    void OpNode_DestroyScope( Scope *aScope ) { delete aScope; }
 
 } // namespace SE::MonoInternalCalls
