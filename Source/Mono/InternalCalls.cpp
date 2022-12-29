@@ -177,133 +177,145 @@ namespace SE::MonoInternalCalls
         return 0;
     }
 
-    uint32_t OpNode_Add( MonoObject *aScope )
+    uint32_t OpNode_Add( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Subtract( MonoObject *aScope )
+    uint32_t OpNode_Subtract( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Divide( MonoObject *aScope )
+    uint32_t OpNode_Divide( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Multiply( MonoObject *aScope )
+    uint32_t OpNode_Multiply( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_And( MonoObject *aScope )
+    uint32_t OpNode_And( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Or( MonoObject *aScope )
+    uint32_t OpNode_Or( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Not( MonoObject *aScope )
+    uint32_t OpNode_Not( MonoObject *aScope, MonoObject *aOperand )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_BitwiseAnd( MonoObject *aScope )
+    uint32_t OpNode_BitwiseAnd( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_BitwiseOr( MonoObject *aScope )
+    uint32_t OpNode_BitwiseOr( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_BitwiseNot( MonoObject *aScope )
+    uint32_t OpNode_BitwiseNot( MonoObject *aScope, MonoObject *aOperand )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_InInterval( MonoObject *aScope )
+    uint32_t OpNode_InInterval( MonoObject *aScope, MonoObject *aLower, MonoObject *aUpper, bool aStrictLower, bool aStrictUpper )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_LessThan( MonoObject *aScope )
+    uint32_t OpNode_Equal( MonoObject *aScope, MonoObject *aX, MonoObject *aY )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_LessThanOrEqual( MonoObject *aScope )
+    uint32_t OpNode_LessThan( MonoObject *aScope, MonoObject *aX, MonoObject *aY )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_GreaterThan( MonoObject *aScope )
+    uint32_t OpNode_LessThanOrEqual( MonoObject *aScope, MonoObject *aX, MonoObject *aY )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_GreaterThanOrEqual( MonoObject *aScope )
+    uint32_t OpNode_GreaterThan( MonoObject *aScope, MonoObject *aX, MonoObject *aY )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Where( MonoObject *aScope )
+    uint32_t OpNode_GreaterThanOrEqual( MonoObject *aScope, MonoObject *aX, MonoObject *aY )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Mix( MonoObject *aScope )
+    uint32_t OpNode_Where( MonoObject *aScope, MonoObject *aCondition, MonoObject *aValueIfTrue, MonoObject *aValueIfFalse )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_AffineTransform( MonoObject *aScope )
+    uint32_t OpNode_Mix( MonoObject *aScope, MonoObject *aA, MonoObject *aB, MonoObject *aT )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_LinearSpace( MonoObject *aScope )
+    uint32_t OpNode_AffineTransform( MonoObject *aScope, MonoObject *aA, MonoObject *aX, MonoObject *aB )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Repeat( MonoObject *aScope )
+    uint32_t OpNode_ARange( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight, MonoObject *aDelta )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Tile( MonoObject *aScope )
+    uint32_t OpNode_LinearSpace( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight, MonoObject *aSubdivisions )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Sample2D( MonoObject *aScope )
+    uint32_t OpNode_Repeat( MonoObject *aScope, MonoObject *aArray, MonoObject *aRepetitions )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Tile( MonoObject *aScope, MonoObject *aArray, MonoObject *aRepetitions )
+    {
+        //
+        return 0;
+    }
+
+    uint32_t OpNode_Sample2D( MonoObject *aScope, MonoObject *aX, MonoObject *aY, MonoObject *aTextures )
     {
         //
         return 0;
@@ -315,109 +327,109 @@ namespace SE::MonoInternalCalls
         return 0;
     }
 
-    uint32_t OpNode_Expand( MonoObject *aScope )
+    uint32_t OpNode_Expand( MonoObject *aScope, MonoObject *aArray )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Reshape( MonoObject *aScope )
+    uint32_t OpNode_Reshape( MonoObject *aScope, MonoObject *aNewShape )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Relayout( MonoObject *aScope )
+    uint32_t OpNode_Relayout( MonoObject *aScope, MonoObject *aNewShape )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Flatten( MonoObject *aScope )
+    uint32_t OpNode_FlattenNode( MonoObject *aScope, MonoObject *aArray )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Slice( MonoObject *aScope )
+    uint32_t OpNode_Slice( MonoObject *aScope, MonoObject *aArray, MonoObject *aBegin, MonoObject *aEnd )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Summation( MonoObject *aScope )
+    uint32_t OpNode_Summation( MonoObject *aScope, MonoObject *aArray, MonoObject *aBegin, MonoObject *aEnd )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_CountTrue( MonoObject *aScope )
+    uint32_t OpNode_CountTrue( MonoObject *aScope, MonoObject *aArray )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_CountNonZero( MonoObject *aScope )
+    uint32_t OpNode_CountNonZero( MonoObject *aScope, MonoObject *aArray )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_CountZero( MonoObject *aScope )
+    uint32_t OpNode_CountZero( MonoObject *aScope, MonoObject *aArray )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Floor( MonoObject *aScope )
+    uint32_t OpNode_Floor( MonoObject *aScope, MonoObject *aArray )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Ceil( MonoObject *aScope )
+    uint32_t OpNode_Ceil( MonoObject *aScope, MonoObject *aArray )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Abs( MonoObject *aScope )
+    uint32_t OpNode_Abs( MonoObject *aScope, MonoObject *aArray )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Sqrt( MonoObject *aScope )
+    uint32_t OpNode_Sqrt( MonoObject *aScope, MonoObject *aArray )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Round( MonoObject *aScope )
+    uint32_t OpNode_Round( MonoObject *aScope, MonoObject *aArray )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Diff( MonoObject *aScope )
+    uint32_t OpNode_Diff( MonoObject *aScope, MonoObject *aArray, uint32_t aCount )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Shift( MonoObject *aScope )
+    uint32_t OpNode_Shift( MonoObject *aScope, MonoObject *aArray, int32_t aCount, MonoObject *aFillValue )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_Conv1D( MonoObject *aScope )
+    uint32_t OpNode_Conv1D( MonoObject *aScope, MonoObject *aArray0, MonoObject *aArray1 )
     {
         //
         return 0;
     }
 
-    uint32_t OpNode_HCat( MonoObject *aScope )
+    uint32_t OpNode_HCat( MonoObject *aScope, MonoObject *aArray0, MonoObject *aArray1 )
     {
         //
         return 0;

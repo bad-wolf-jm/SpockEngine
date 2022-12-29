@@ -222,308 +222,308 @@ namespace SpockEngine
         {
             uint lNewOpNodeID = CppCall.OpNode_Add(aScope, aLeft, aRight);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Subtract(Scope aScope, OpNode aLeft, OpNode aRight)
         {
             uint lNewOpNodeID = CppCall.OpNode_Subtract(aScope, aLeft, aRight);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Divide(Scope aScope, OpNode aLeft, OpNode aRight)
         {
             uint lNewOpNodeID = CppCall.OpNode_Divide(aScope, aLeft, aRight);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Multiply(Scope aScope, OpNode aLeft, OpNode aRight)
         {
             uint lNewOpNodeID = CppCall.OpNode_Multiply(aScope, aLeft, aRight);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode And(Scope aScope, OpNode aLeft, OpNode aRight)
         {
             uint lNewOpNodeID = CppCall.OpNode_And(aScope, aLeft, aRight);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Or(Scope aScope, OpNode aLeft, OpNode aRight)
         {
             uint lNewOpNodeID = CppCall.OpNode_Or(aScope, aLeft, aRight);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Not(Scope aScope, OpNode aOperand)
         {
             uint lNewOpNodeID = CppCall.OpNode_Not(aScope, aOperand);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode BitwiseAnd(Scope aScope, OpNode aLeft, OpNode aRight)
         {
             uint lNewOpNodeID = CppCall.OpNode_BitwiseAnd(aScope, aLeft, aRight);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode BitwiseOr(Scope aScope, OpNode aLeft, OpNode aRight)
         {
             uint lNewOpNodeID = CppCall.OpNode_BitwiseOr(aScope, aLeft, aRight);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode BitwiseNot(Scope aScope, OpNode aOperand)
         {
             uint lNewOpNodeID = CppCall.OpNode_BitwiseNot(aScope, aOperand);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode InInterval(Scope aScope, OpNode aX, OpNode aLower, OpNode aUpper, bool aStrictLower, bool aStrictUpper)
         {
             uint lNewOpNodeID = CppCall.OpNode_InInterval(aScope, aLower, aUpper, aStrictLower, aStrictUpper);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Equal(Scope aScope, OpNode aX, OpNode aY)
         {
             uint lNewOpNodeID = CppCall.OpNode_Equal(aScope, aX, aY);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode LessThan(Scope aScope, OpNode aX, OpNode aY)
         {
             uint lNewOpNodeID = CppCall.OpNode_LessThan(aScope, aX, aY);
-uint
-            return OpNode(lNewOpNodeID, aScope);
+
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode LessThanOrEqual(Scope aScope, OpNode aX, OpNode aY)
         {
             uint lNewOpNodeID = CppCall.OpNode_LessThanOrEqual(aScope, aX, aY);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode GreaterThan(Scope aScope, OpNode aX, OpNode aY)
         {
             uint lNewOpNodeID = CppCall.OpNode_GreaterThan(aScope, aX, aY);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode GreaterThanOrEqual(Scope aScope, OpNode aX, OpNode aY)
         {
             uint lNewOpNodeID = CppCall.OpNode_GreaterThanOrEqual(aScope, aX, aY);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Where(Scope aScope, OpNode aCondition, OpNode aValueIfTrue, OpNode aValueIfFalse)
         {
             uint lNewOpNodeID = CppCall.OpNode_Where(aScope, aCondition, aValueIfTrue, aValueIfFalse);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Mix(Scope aScope, OpNode aA, OpNode aB, OpNode aT)
         {
             uint lNewOpNodeID = CppCall.OpNode_Mix(aScope, aA, aB, aT);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode AffineTransform(Scope aScope, OpNode aA, OpNode aX, OpNode aB)
         {
             uint lNewOpNodeID = CppCall.OpNode_AffineTransform(aScope, aA, aX, aB);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode ARange(Scope aScope, OpNode aLeft, OpNode aRight, OpNode aDelta)
         {
             uint lNewOpNodeID = CppCall.OpNode_ARange(aScope, aLeft, aRight, aDelta);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode LinearSpace(Scope aScope, OpNode aLeft, OpNode aRight, OpNode aSubdivisions)
         {
             uint lNewOpNodeID = CppCall.OpNode_LinearSpace(aScope, aLeft, aRight, aSubdivisions);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Repeat(Scope aScope, OpNode aArray, OpNode aRepetitions)
         {
             uint lNewOpNodeID = CppCall.OpNode_Repeat(aScope, aArray, aRepetitions);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Tile(Scope aScope, OpNode aArray, OpNode aRepetitions)
         {
             uint lNewOpNodeID = CppCall.OpNode_Tile(aScope, aArray, aRepetitions);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Sample2D(Scope aScope, OpNode aX, OpNode aY, OpNode aTextures)
         {
             uint lNewOpNodeID = CppCall.OpNode_Sample2D(aScope, aX, aY, aTextures);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Collapse(Scope aScope, OpNode aArray)
         {
             uint lNewOpNodeID = CppCall.OpNode_Collapse(aScope, aArray);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Expand(Scope aScope, OpNode aArray)
         {
             uint lNewOpNodeID = CppCall.OpNode_Expand(aScope, aArray);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Reshape(Scope aScope, OpNode aArray, sTensorShape aNewShape)
         {
             uint lNewOpNodeID = CppCall.OpNode_Reshape(aScope, aNewShape);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Relayout(Scope aScope, OpNode aArray, sTensorShape aNewLayout)
         {
             uint lNewOpNodeID = CppCall.OpNode_Relayout(aScope, aNewLayout);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Flatten(Scope aScope, OpNode aArray)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Flatten(aScope, aArray);
+            uint lNewOpNodeID = CppCall.OpNode_FlattenNode(aScope, aArray);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Slice(Scope aScope, OpNode aArray, OpNode aBegin, OpNode aEnd)
         {
             uint lNewOpNodeID = CppCall.OpNode_Slice(aScope, aArray, aBegin, aEnd);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Summation(Scope aScope, OpNode aArray)
         {
             uint lNewOpNodeID = CppCall.OpNode_Summation(aScope, aArray);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Summation(Scope aScope, OpNode aArray, OpNode aBegin, OpNode aEnd)
         {
             uint lNewOpNodeID = CppCall.OpNode_Summation(aScope, aArray, aBegin, aEnd);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode CountTrue(Scope aScope, OpNode aArray)
         {
             uint lNewOpNodeID = CppCall.OpNode_CountTrue(aScope, aArray);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode CountNonZero(Scope aScope, OpNode aArray)
         {
             uint lNewOpNodeID = CppCall.OpNode_CountNonZero(aScope, aArray);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode CountZero(Scope aScope, OpNode aArray)
         {
             uint lNewOpNodeID = CppCall.OpNode_CountZero(aScope, aArray);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Floor(Scope aScope, OpNode aArray)
         {
             uint lNewOpNodeID = CppCall.OpNode_Floor(aScope, aArray);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Ceil(Scope aScope, OpNode aArray)
         {
             uint lNewOpNodeID = CppCall.OpNode_Ceil(aScope, aArray);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Abs(Scope aScope, OpNode aArray)
         {
             uint lNewOpNodeID = CppCall.OpNode_Abs(aScope, aArray);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Sqrt(Scope aScope, OpNode aArray)
         {
             uint lNewOpNodeID = CppCall.OpNode_Sqrt(aScope, aArray);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Round(Scope aScope, OpNode aArray)
         {
             uint lNewOpNodeID = CppCall.OpNode_Round(aScope, aArray);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Diff(Scope aScope, OpNode aArray, UInt32 aCount)
         {
             uint lNewOpNodeID = CppCall.OpNode_Diff(aScope, aArray, aCount);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Shift(Scope aScope, OpNode aArray, Int32 aCount, OpNode aFillValue)
+        OpNode Shift(Scope aScope, OpNode aArray, int aCount, OpNode aFillValue)
         {
             uint lNewOpNodeID = CppCall.OpNode_Shift(aScope, aArray, aCount, aFillValue);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode Conv1D(Scope aScope, OpNode aArray0, OpNode aArray1)
         {
             uint lNewOpNodeID = CppCall.OpNode_Conv1D(aScope, aArray0, aArray1);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
 
         OpNode HCat(Scope aScope, OpNode aArray0, OpNode aArray1)
         {
             uint lNewOpNodeID = CppCall.OpNode_HCat(aScope, aArray0, aArray1);
 
-            return OpNode(lNewOpNodeID, aScope);
+            return new OpNode(lNewOpNodeID, ref aScope);
         }
     };
 }

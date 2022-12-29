@@ -79,7 +79,6 @@ namespace SpockEngine
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static uint OpNode_CreateScalarValue<_Ty>(Scope aScope, _Ty aInitializer);
 
-
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static uint OpNode_Add(Scope aScope, OpNode aLeft, OpNode aRight);
         
@@ -111,7 +110,7 @@ namespace SpockEngine
         internal extern static uint OpNode_BitwiseNot(Scope aScope, OpNode aOperand);
         
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static uint OpNode_InInterval(Scope aScope, OpNode aLower, OpNode aUpper, OpNode aStrictLower, OpNode aStrictUpper);
+        internal extern static uint OpNode_InInterval(Scope aScope, OpNode aLower, OpNode aUpper, bool aStrictLower, bool aStrictUpper);
         
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static uint OpNode_Equal(Scope aScope, OpNode aX, OpNode aY);
@@ -165,7 +164,7 @@ namespace SpockEngine
         internal extern static uint OpNode_Relayout(Scope aScope, sTensorShape aNewLayout);
         
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static uint OpNode_Flatten(Scope aScope, OpNode aArray);
+        internal extern static uint OpNode_FlattenNode(Scope aScope, OpNode aArray);
         
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static uint OpNode_Slice(Scope aScope, OpNode aArray, OpNode aBegin, OpNode aEnd);
@@ -201,10 +200,10 @@ namespace SpockEngine
         internal extern static uint OpNode_Round(Scope aScope, OpNode aArray);
         
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static uint OpNode_Diff(Scope aScope, OpNode aArray, uint32_t aCount);
+        internal extern static uint OpNode_Diff(Scope aScope, OpNode aArray, uint aCount);
         
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static uint OpNode_Shift(Scope aScope, OpNode aArray, OpNode aCount, OpNode aFillValue);
+        internal extern static uint OpNode_Shift(Scope aScope, OpNode aArray, int aCount, OpNode aFillValue);
         
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static uint OpNode_Conv1D(Scope aScope, OpNode aArray0, OpNode aArray1);

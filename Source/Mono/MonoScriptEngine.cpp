@@ -173,6 +173,7 @@ namespace SE::Core
         SE_ADD_INTERNAL_CALL( OpNode_BitwiseOr );
         SE_ADD_INTERNAL_CALL( OpNode_BitwiseNot );
         SE_ADD_INTERNAL_CALL( OpNode_InInterval );
+        SE_ADD_INTERNAL_CALL( OpNode_Equal );
         SE_ADD_INTERNAL_CALL( OpNode_LessThan );
         SE_ADD_INTERNAL_CALL( OpNode_LessThanOrEqual );
         SE_ADD_INTERNAL_CALL( OpNode_GreaterThan );
@@ -180,6 +181,7 @@ namespace SE::Core
         SE_ADD_INTERNAL_CALL( OpNode_Where );
         SE_ADD_INTERNAL_CALL( OpNode_Mix );
         SE_ADD_INTERNAL_CALL( OpNode_AffineTransform );
+        SE_ADD_INTERNAL_CALL( OpNode_ARange );
         SE_ADD_INTERNAL_CALL( OpNode_LinearSpace );
         SE_ADD_INTERNAL_CALL( OpNode_Repeat );
         SE_ADD_INTERNAL_CALL( OpNode_Tile );
@@ -188,7 +190,7 @@ namespace SE::Core
         SE_ADD_INTERNAL_CALL( OpNode_Expand );
         SE_ADD_INTERNAL_CALL( OpNode_Reshape );
         SE_ADD_INTERNAL_CALL( OpNode_Relayout );
-        SE_ADD_INTERNAL_CALL( OpNode_Flatten );
+        SE_ADD_INTERNAL_CALL( OpNode_FlattenNode );
         SE_ADD_INTERNAL_CALL( OpNode_Slice );
         SE_ADD_INTERNAL_CALL( OpNode_Summation );
         SE_ADD_INTERNAL_CALL( OpNode_CountTrue );
