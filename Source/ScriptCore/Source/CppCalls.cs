@@ -79,6 +79,7 @@ namespace SpockEngine
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static uint OpNode_CreateScalarValue<_Ty>(Scope aScope, _Ty aInitializer);
 
+
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static uint OpNode_Add(Scope aScope, OpNode aLeft, OpNode aRight);
         

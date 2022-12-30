@@ -219,162 +219,162 @@ namespace SE::MonoInternalCalls
 
     uint32_t OpNode_Add( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lLeft    = ToOpNode( aLeft );
-        auto  lRight   = ToOpNode( aRight );
-        auto  lNewNode = Add( *lScope, lLeft, lRight );
+        auto *lScope = ToScope( aScope );
+        auto  lLeft  = ToOpNode( aLeft );
+        auto  lRight = ToOpNode( aRight );
+        auto  lNode  = Add( *lScope, lLeft, lRight );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Subtract( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lLeft    = ToOpNode( aLeft );
-        auto  lRight   = ToOpNode( aRight );
-        auto  lNewNode = Subtract( *lScope, lLeft, lRight );
+        auto *lScope = ToScope( aScope );
+        auto  lLeft  = ToOpNode( aLeft );
+        auto  lRight = ToOpNode( aRight );
+        auto  lNode  = Subtract( *lScope, lLeft, lRight );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Divide( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lLeft    = ToOpNode( aLeft );
-        auto  lRight   = ToOpNode( aRight );
-        auto  lNewNode = Divide( *lScope, lLeft, lRight );
+        auto *lScope = ToScope( aScope );
+        auto  lLeft  = ToOpNode( aLeft );
+        auto  lRight = ToOpNode( aRight );
+        auto  lNode  = Divide( *lScope, lLeft, lRight );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Multiply( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lLeft    = ToOpNode( aLeft );
-        auto  lRight   = ToOpNode( aRight );
-        auto  lNewNode = Multiply( *lScope, lLeft, lRight );
+        auto *lScope = ToScope( aScope );
+        auto  lLeft  = ToOpNode( aLeft );
+        auto  lRight = ToOpNode( aRight );
+        auto  lNode  = Multiply( *lScope, lLeft, lRight );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_And( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lLeft    = ToOpNode( aLeft );
-        auto  lRight   = ToOpNode( aRight );
-        auto  lNewNode = And( *lScope, lLeft, lRight );
+        auto *lScope = ToScope( aScope );
+        auto  lLeft  = ToOpNode( aLeft );
+        auto  lRight = ToOpNode( aRight );
+        auto  lNode  = And( *lScope, lLeft, lRight );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Or( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lLeft    = ToOpNode( aLeft );
-        auto  lRight   = ToOpNode( aRight );
-        auto  lNewNode = Or( *lScope, lLeft, lRight );
+        auto *lScope = ToScope( aScope );
+        auto  lLeft  = ToOpNode( aLeft );
+        auto  lRight = ToOpNode( aRight );
+        auto  lNode  = Or( *lScope, lLeft, lRight );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Not( MonoObject *aScope, MonoObject *aOperand )
     {
         auto *lScope   = ToScope( aScope );
         auto  lOperand = ToOpNode( aOperand );
-        auto  lNewNode = Not( *lScope, lOperand );
+        auto  lNode    = Not( *lScope, lOperand );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_BitwiseAnd( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lLeft    = ToOpNode( aLeft );
-        auto  lRight   = ToOpNode( aRight );
-        auto  lNewNode = BitwiseAnd( *lScope, lLeft, lRight );
+        auto *lScope = ToScope( aScope );
+        auto  lLeft  = ToOpNode( aLeft );
+        auto  lRight = ToOpNode( aRight );
+        auto  lNode  = BitwiseAnd( *lScope, lLeft, lRight );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_BitwiseOr( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lLeft    = ToOpNode( aLeft );
-        auto  lRight   = ToOpNode( aRight );
-        auto  lNewNode = BitwiseOr( *lScope, lLeft, lRight );
+        auto *lScope = ToScope( aScope );
+        auto  lLeft  = ToOpNode( aLeft );
+        auto  lRight = ToOpNode( aRight );
+        auto  lNode  = BitwiseOr( *lScope, lLeft, lRight );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_BitwiseNot( MonoObject *aScope, MonoObject *aOperand )
     {
         auto *lScope   = ToScope( aScope );
         auto  lOperand = ToOpNode( aOperand );
-        auto  lNewNode = BitwiseNot( *lScope, lOperand );
+        auto  lNode    = BitwiseNot( *lScope, lOperand );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_InInterval( MonoObject *aScope, MonoObject *aX, MonoObject *aLower, MonoObject *aUpper, bool aStrictLower,
                                 bool aStrictUpper )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lX       = ToOpNode( aX );
-        auto  lLower   = ToOpNode( aLower );
-        auto  lUpper   = ToOpNode( aUpper );
-        auto  lNewNode = InInterval( *lScope, lX, lLower, lUpper, aStrictLower, aStrictUpper );
+        auto *lScope = ToScope( aScope );
+        auto  lX     = ToOpNode( aX );
+        auto  lLower = ToOpNode( aLower );
+        auto  lUpper = ToOpNode( aUpper );
+        auto  lNode  = InInterval( *lScope, lX, lLower, lUpper, aStrictLower, aStrictUpper );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Equal( MonoObject *aScope, MonoObject *aX, MonoObject *aY )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lX       = ToOpNode( aX );
-        auto  lY       = ToOpNode( aY );
-        auto  lNewNode = Equal( *lScope, lX, lY );
+        auto *lScope = ToScope( aScope );
+        auto  lX     = ToOpNode( aX );
+        auto  lY     = ToOpNode( aY );
+        auto  lNode  = Equal( *lScope, lX, lY );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_LessThan( MonoObject *aScope, MonoObject *aX, MonoObject *aY )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lX       = ToOpNode( aX );
-        auto  lY       = ToOpNode( aY );
-        auto  lNewNode = LessThan( *lScope, lX, lY );
+        auto *lScope = ToScope( aScope );
+        auto  lX     = ToOpNode( aX );
+        auto  lY     = ToOpNode( aY );
+        auto  lNode  = LessThan( *lScope, lX, lY );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_LessThanOrEqual( MonoObject *aScope, MonoObject *aX, MonoObject *aY )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lX       = ToOpNode( aX );
-        auto  lY       = ToOpNode( aY );
-        auto  lNewNode = LessThanOrEqual( *lScope, lX, lY );
+        auto *lScope = ToScope( aScope );
+        auto  lX     = ToOpNode( aX );
+        auto  lY     = ToOpNode( aY );
+        auto  lNode  = LessThanOrEqual( *lScope, lX, lY );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_GreaterThan( MonoObject *aScope, MonoObject *aX, MonoObject *aY )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lX       = ToOpNode( aX );
-        auto  lY       = ToOpNode( aY );
-        auto  lNewNode = GreaterThan( *lScope, lX, lY );
+        auto *lScope = ToScope( aScope );
+        auto  lX     = ToOpNode( aX );
+        auto  lY     = ToOpNode( aY );
+        auto  lNode  = GreaterThan( *lScope, lX, lY );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_GreaterThanOrEqual( MonoObject *aScope, MonoObject *aX, MonoObject *aY )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lX       = ToOpNode( aX );
-        auto  lY       = ToOpNode( aY );
-        auto  lNewNode = GreaterThanOrEqual( *lScope, lX, lY );
+        auto *lScope = ToScope( aScope );
+        auto  lX     = ToOpNode( aX );
+        auto  lY     = ToOpNode( aY );
+        auto  lNode  = GreaterThanOrEqual( *lScope, lX, lY );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Where( MonoObject *aScope, MonoObject *aCondition, MonoObject *aValueIfTrue, MonoObject *aValueIfFalse )
@@ -383,42 +383,42 @@ namespace SE::MonoInternalCalls
         auto  lCondition    = ToOpNode( aCondition );
         auto  lValueIfTrue  = ToOpNode( aValueIfTrue );
         auto  lValueIfFalse = ToOpNode( aValueIfFalse );
-        auto  lNewNode      = Where( *lScope, lCondition, lValueIfTrue, lValueIfFalse );
+        auto  lNode         = Where( *lScope, lCondition, lValueIfTrue, lValueIfFalse );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Mix( MonoObject *aScope, MonoObject *aA, MonoObject *aB, MonoObject *aT )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lA       = ToOpNode( aA );
-        auto  lB       = ToOpNode( aB );
-        auto  lT       = ToOpNode( aT );
-        auto  lNewNode = Mix( *lScope, lA, lB, lT );
+        auto *lScope = ToScope( aScope );
+        auto  lA     = ToOpNode( aA );
+        auto  lB     = ToOpNode( aB );
+        auto  lT     = ToOpNode( aT );
+        auto  lNode  = Mix( *lScope, lA, lB, lT );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_AffineTransform( MonoObject *aScope, MonoObject *aA, MonoObject *aX, MonoObject *aB )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lA       = ToOpNode( aA );
-        auto  lX       = ToOpNode( aX );
-        auto  lB       = ToOpNode( aB );
-        auto  lNewNode = AffineTransform( *lScope, lA, lX, lB );
+        auto *lScope = ToScope( aScope );
+        auto  lA     = ToOpNode( aA );
+        auto  lX     = ToOpNode( aX );
+        auto  lB     = ToOpNode( aB );
+        auto  lNode  = AffineTransform( *lScope, lA, lX, lB );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_ARange( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight, MonoObject *aDelta )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lLeft    = ToOpNode( aLeft );
-        auto  lRight   = ToOpNode( aRight );
-        auto  lDelta   = ToOpNode( aDelta );
-        auto  lNewNode = ARange( *lScope, lLeft, lRight, lDelta );
+        auto *lScope = ToScope( aScope );
+        auto  lLeft  = ToOpNode( aLeft );
+        auto  lRight = ToOpNode( aRight );
+        auto  lDelta = ToOpNode( aDelta );
+        auto  lNode  = ARange( *lScope, lLeft, lRight, lDelta );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_LinearSpace( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight, MonoObject *aSubdivisions )
@@ -427,9 +427,9 @@ namespace SE::MonoInternalCalls
         auto  lLeft         = ToOpNode( aLeft );
         auto  lRight        = ToOpNode( aRight );
         auto  lSubdivisions = ToOpNode( aSubdivisions );
-        auto  lNewNode      = LinearSpace( *lScope, lLeft, lRight, lSubdivisions );
+        auto  lNode         = LinearSpace( *lScope, lLeft, lRight, lSubdivisions );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Repeat( MonoObject *aScope, MonoObject *aArray, MonoObject *aRepetitions )
@@ -437,9 +437,9 @@ namespace SE::MonoInternalCalls
         auto *lScope       = ToScope( aScope );
         auto  lArray       = ToOpNode( aArray );
         auto  lRepetitions = ToOpNode( aRepetitions );
-        auto  lNewNode     = Repeat( *lScope, lArray, lRepetitions );
+        auto  lNode        = Repeat( *lScope, lArray, lRepetitions );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Tile( MonoObject *aScope, MonoObject *aArray, MonoObject *aRepetitions )
@@ -447,9 +447,9 @@ namespace SE::MonoInternalCalls
         auto *lScope       = ToScope( aScope );
         auto  lArray       = ToOpNode( aArray );
         auto  lRepetitions = ToOpNode( aRepetitions );
-        auto  lNewNode     = Tile( *lScope, lArray, lRepetitions );
+        auto  lNode        = Tile( *lScope, lArray, lRepetitions );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Sample2D( MonoObject *aScope, MonoObject *aX, MonoObject *aY, MonoObject *aTextures )
@@ -458,150 +458,150 @@ namespace SE::MonoInternalCalls
         auto  lX        = ToOpNode( aX );
         auto  lY        = ToOpNode( aY );
         auto  lTextures = ToOpNode( aTextures );
-        auto  lNewNode  = Sample2D( *lScope, lX, lY, lTextures );
+        auto  lNode     = Sample2D( *lScope, lX, lY, lTextures );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Collapse( MonoObject *aScope, MonoObject *aArray )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lArray   = ToOpNode( aArray );
-        auto  lNewNode = Collapse( *lScope, lArray );
+        auto *lScope = ToScope( aScope );
+        auto  lArray = ToOpNode( aArray );
+        auto  lNode  = Collapse( *lScope, lArray );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Expand( MonoObject *aScope, MonoObject *aArray )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lArray   = ToOpNode( aArray );
-        auto  lNewNode = Expand( *lScope, lArray );
+        auto *lScope = ToScope( aScope );
+        auto  lArray = ToOpNode( aArray );
+        auto  lNode  = Expand( *lScope, lArray );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Reshape( MonoObject *aScope, MonoObject *aArray, MonoObject *aNewShape )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lArray   = ToOpNode( aArray );
-        auto *lShape   = ToShape( aNewShape );
-        auto  lNewNode = Reshape( *lScope, lArray, *lShape );
+        auto *lScope = ToScope( aScope );
+        auto  lArray = ToOpNode( aArray );
+        auto *lShape = ToShape( aNewShape );
+        auto  lNode  = Reshape( *lScope, lArray, *lShape );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Relayout( MonoObject *aScope, MonoObject *aArray, MonoObject *aNewShape )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lArray   = ToOpNode( aArray );
-        auto *lShape   = ToShape( aNewShape );
-        auto  lNewNode = Relayout( *lScope, lArray, *lShape );
+        auto *lScope = ToScope( aScope );
+        auto  lArray = ToOpNode( aArray );
+        auto *lShape = ToShape( aNewShape );
+        auto  lNode  = Relayout( *lScope, lArray, *lShape );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_FlattenNode( MonoObject *aScope, MonoObject *aArray )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lArray   = ToOpNode( aArray );
-        auto  lNewNode = Flatten( *lScope, lArray );
+        auto *lScope = ToScope( aScope );
+        auto  lArray = ToOpNode( aArray );
+        auto  lNode  = Flatten( *lScope, lArray );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Slice( MonoObject *aScope, MonoObject *aArray, MonoObject *aBegin, MonoObject *aEnd )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lArray   = ToOpNode( aArray );
-        auto  lBegin   = ToOpNode( aBegin );
-        auto  lEnd     = ToOpNode( aEnd );
-        auto  lNewNode = Slice( *lScope, lArray, lBegin, lEnd );
+        auto *lScope = ToScope( aScope );
+        auto  lArray = ToOpNode( aArray );
+        auto  lBegin = ToOpNode( aBegin );
+        auto  lEnd   = ToOpNode( aEnd );
+        auto  lNode  = Slice( *lScope, lArray, lBegin, lEnd );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Summation( MonoObject *aScope, MonoObject *aArray, MonoObject *aBegin, MonoObject *aEnd )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lArray   = ToOpNode( aArray );
-        auto  lBegin   = ToOpNode( aBegin );
-        auto  lEnd     = ToOpNode( aEnd );
-        auto  lNewNode = Summation( *lScope, lArray, lBegin, lEnd );
+        auto *lScope = ToScope( aScope );
+        auto  lArray = ToOpNode( aArray );
+        auto  lBegin = ToOpNode( aBegin );
+        auto  lEnd   = ToOpNode( aEnd );
+        auto  lNode  = Summation( *lScope, lArray, lBegin, lEnd );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_CountTrue( MonoObject *aScope, MonoObject *aArray )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lArray   = ToOpNode( aArray );
-        auto  lNewNode = CountTrue( *lScope, lArray );
+        auto *lScope = ToScope( aScope );
+        auto  lArray = ToOpNode( aArray );
+        auto  lNode  = CountTrue( *lScope, lArray );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_CountNonZero( MonoObject *aScope, MonoObject *aArray )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lArray   = ToOpNode( aArray );
-        auto  lNewNode = CountNonZero( *lScope, lArray );
+        auto *lScope = ToScope( aScope );
+        auto  lArray = ToOpNode( aArray );
+        auto  lNode  = CountNonZero( *lScope, lArray );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_CountZero( MonoObject *aScope, MonoObject *aArray )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lArray   = ToOpNode( aArray );
-        auto  lNewNode = CountZero( *lScope, lArray );
+        auto *lScope = ToScope( aScope );
+        auto  lArray = ToOpNode( aArray );
+        auto  lNode  = CountZero( *lScope, lArray );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Floor( MonoObject *aScope, MonoObject *aArray )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lArray   = ToOpNode( aArray );
-        auto  lNewNode = Floor( *lScope, lArray );
+        auto *lScope = ToScope( aScope );
+        auto  lArray = ToOpNode( aArray );
+        auto  lNode  = Floor( *lScope, lArray );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Ceil( MonoObject *aScope, MonoObject *aArray )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lArray   = ToOpNode( aArray );
-        auto  lNewNode = Ceil( *lScope, lArray );
+        auto *lScope = ToScope( aScope );
+        auto  lArray = ToOpNode( aArray );
+        auto  lNode  = Ceil( *lScope, lArray );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Abs( MonoObject *aScope, MonoObject *aArray )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lArray   = ToOpNode( aArray );
-        auto  lNewNode = Abs( *lScope, lArray );
+        auto *lScope = ToScope( aScope );
+        auto  lArray = ToOpNode( aArray );
+        auto  lNode  = Abs( *lScope, lArray );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Sqrt( MonoObject *aScope, MonoObject *aArray )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lArray   = ToOpNode( aArray );
-        auto  lNewNode = Sqrt( *lScope, lArray );
+        auto *lScope = ToScope( aScope );
+        auto  lArray = ToOpNode( aArray );
+        auto  lNode  = Sqrt( *lScope, lArray );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Round( MonoObject *aScope, MonoObject *aArray )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lArray   = ToOpNode( aArray );
-        auto  lNewNode = Round( *lScope, lArray );
+        auto *lScope = ToScope( aScope );
+        auto  lArray = ToOpNode( aArray );
+        auto  lNode  = Round( *lScope, lArray );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Diff( MonoObject *aScope, MonoObject *aArray, uint32_t aCount )
@@ -609,8 +609,8 @@ namespace SE::MonoInternalCalls
         auto *lScope = ToScope( aScope );
         auto  lArray = ToOpNode( aArray );
 
-        auto lNewNode = Diff( *lScope, lArray, aCount );
-        return static_cast<uint32_t>( lNewNode );
+        auto lNode = Diff( *lScope, lArray, aCount );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Shift( MonoObject *aScope, MonoObject *aArray, int32_t aCount, MonoObject *aFillValue )
@@ -618,29 +618,29 @@ namespace SE::MonoInternalCalls
         auto *lScope     = ToScope( aScope );
         auto  lArray     = ToOpNode( aArray );
         auto  lFillValue = ToOpNode( aFillValue );
-        auto  lNewNode   = Shift( *lScope, lArray, aCount, lFillValue );
+        auto  lNode      = Shift( *lScope, lArray, aCount, lFillValue );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_Conv1D( MonoObject *aScope, MonoObject *aArray0, MonoObject *aArray1 )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lArray0  = ToOpNode( aArray0 );
-        auto  lArray1  = ToOpNode( aArray1 );
-        auto  lNewNode = Conv1D( *lScope, lArray0, lArray1 );
+        auto *lScope  = ToScope( aScope );
+        auto  lArray0 = ToOpNode( aArray0 );
+        auto  lArray1 = ToOpNode( aArray1 );
+        auto  lNode   = Conv1D( *lScope, lArray0, lArray1 );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
     uint32_t OpNode_HCat( MonoObject *aScope, MonoObject *aArray0, MonoObject *aArray1 )
     {
-        auto *lScope   = ToScope( aScope );
-        auto  lArray0  = ToOpNode( aArray0 );
-        auto  lArray1  = ToOpNode( aArray1 );
-        auto  lNewNode = HCat( *lScope, lArray0, lArray1 );
+        auto *lScope  = ToScope( aScope );
+        auto  lArray0 = ToOpNode( aArray0 );
+        auto  lArray1 = ToOpNode( aArray1 );
+        auto  lNode   = HCat( *lScope, lArray0, lArray1 );
 
-        return static_cast<uint32_t>( lNewNode );
+        return static_cast<uint32_t>( lNode );
     }
 
 } // namespace SE::MonoInternalCalls
