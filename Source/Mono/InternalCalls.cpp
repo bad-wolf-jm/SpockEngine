@@ -247,11 +247,44 @@ namespace SE::MonoInternalCalls
         return 0;
     }
 
+    template <typename _Ty>
+    static inline uint32_t CreateDataMultiTensor( Scope *aScope, sTensorShape *aShape, MonoArray *aObject )
+    {
+        std::vector<_Ty> lLayerConstants( aShape->CountLayers() );
+        for( uint32_t j = 0; j < aShape->CountLayers(); j++ ) lLayerConstants[j] = *( mono_array_addr( aObject, _Ty, j ) );
+
+        auto lNode  = MultiTensorValue( *aScope, sDataInitializerComponent( lLayerConstants ), *aShape );
+
+        return static_cast<uint32_t>( lNode );
+    }
+
+
     uint32_t OpNode_CreateMultiTensor_Data_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoArray *aInitializer,
                                                         MonoObject *aShape )
     {
         auto *lScope = ToScope( aScope );
         auto *lShape = ToShape( aShape );
+
+        MonoType *lMonoType = mono_reflection_type_get_type( aType );
+        auto      lDataType = SE::Core::Mono::Utils::MonoTypeToScriptFieldType( lMonoType );
+
+        switch( lDataType )
+        {
+        case eScriptFieldType::Float: return CreateDataMultiTensor<float>( lScope, lShape, aInitializer );
+        case eScriptFieldType::Double: return CreateDataMultiTensor<double>( lScope, lShape, aInitializer );
+        case eScriptFieldType::Bool: return CreateDataMultiTensor<bool>( lScope, lShape, aInitializer );
+        case eScriptFieldType::Char:
+        case eScriptFieldType::Byte: return CreateDataMultiTensor<int8_t>( lScope, lShape, aInitializer );
+        case eScriptFieldType::Short: return CreateDataMultiTensor<int16_t>( lScope, lShape, aInitializer );
+        case eScriptFieldType::Int: return CreateDataMultiTensor<int32_t>( lScope, lShape, aInitializer );
+        case eScriptFieldType::Long: return CreateDataMultiTensor<int64_t>( lScope, lShape, aInitializer );
+        case eScriptFieldType::UByte: return CreateDataMultiTensor<uint8_t>( lScope, lShape, aInitializer );
+        case eScriptFieldType::UShort: return CreateDataMultiTensor<uint16_t>( lScope, lShape, aInitializer );
+        case eScriptFieldType::UInt: return CreateDataMultiTensor<uint32_t>( lScope, lShape, aInitializer );
+        case eScriptFieldType::ULong: return CreateDataMultiTensor<uint64_t>( lScope, lShape, aInitializer );
+        case eScriptFieldType::None:
+        default: return 0;
+        }
 
         return 0;
     }

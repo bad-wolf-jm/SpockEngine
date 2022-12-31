@@ -262,8 +262,10 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 //     auto  lV = RandomVec4();
 
 //     REQUIRE( CallMethodHelper<mat4, float>( lVectorTest, "Constructor0", lS ) == mat4( lS ) );
-//     REQUIRE( ( CallMethodHelper<mat4, float, float, float, float, float, float, float, float, float, float, float, float, float, float,
-//                                 float, float>( lVectorTest, "Constructor1", lX[0][0], lX[1][0], lX[2][0], lX[3][0], lX[0][1], lX[1][1],
+//     REQUIRE( ( CallMethodHelper<mat4, float, float, float, float, float, float, float, float, float, float, float, float, float,
+//     float,
+//                                 float, float>( lVectorTest, "Constructor1", lX[0][0], lX[1][0], lX[2][0], lX[3][0], lX[0][1],
+//                                 lX[1][1],
 //                                                lX[2][1], lX[3][1], lX[0][2], lX[1][2], lX[2][2], lX[3][2], lX[0][3], lX[1][3],
 //                                                lX[2][3], lX[3][3] ) ) == lX );
 //     REQUIRE( CallMethodHelper<mat4, mat3>( lVectorTest, "Constructor2", lA ) == mat4( lA ) );
@@ -422,7 +424,8 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 //     auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
 
 //     MonoString *lManagedSTagValue = MonoScriptEngine::NewString( "TAG_1" );
-//     CallMethodHelper<bool, MonoObject *, MonoString *>( lEntityTest, "AddTagValue", lEntityInstance.GetInstance(), lManagedSTagValue );
+//     CallMethodHelper<bool, MonoObject *, MonoString *>( lEntityTest, "AddTagValue", lEntityInstance.GetInstance(), lManagedSTagValue
+//     );
 
 //     REQUIRE( ( lEntity.Has<sTag>() ) );
 //     REQUIRE( ( lEntity.Get<sTag>().mValue == "TAG_1" ) );
@@ -999,7 +1002,7 @@ TEST_CASE( "Create constant multitensor", "[MONO_SCRIPTING]" )
     REQUIRE( ( lCppNode.Has<sMultiTensorComponent>() ) );
     REQUIRE( ( lCppNode.Get<sMultiTensorComponent>().Shape().CountLayers() == 4 ) );
     REQUIRE( ( lCppNode.Has<sConstantValueInitializerComponent>() ) );
-    REQUIRE( ( std::get<float>(lCppNode.Get<sConstantValueInitializerComponent>().mValue ) == 1234.5f) );
+    REQUIRE( ( std::get<float>( lCppNode.Get<sConstantValueInitializerComponent>().mValue ) == 1234.5f ) );
 }
 
 TEST_CASE( "Create layered multitensor", "[MONO_SCRIPTING]" )
@@ -1021,10 +1024,30 @@ TEST_CASE( "Create layered multitensor", "[MONO_SCRIPTING]" )
     REQUIRE( ( lCppNode.Has<sVectorInitializerComponent>() ) );
 
     auto lComponent = lCppNode.Get<sVectorInitializerComponent>().mValue;
-    REQUIRE(lComponent.size() == 4);
+    REQUIRE( lComponent.size() == 4 );
 
     std::vector<float> lRetValues{};
-    std::vector<float> lExpValues = {1.2f, 3.4f, 4.5f, 6.7f};
-    for (auto& x : lComponent) lRetValues.push_back(std::get<float>(x));
-    REQUIRE(lRetValues == lExpValues);
+    std::vector<float> lExpValues = { 1.2f, 3.4f, 4.5f, 6.7f };
+    for( auto &x : lComponent ) lRetValues.push_back( std::get<float>( x ) );
+    REQUIRE( lRetValues == lExpValues );
+}
+
+TEST_CASE( "Create multitensor with initial data", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateDataMultiTensor", (size_t)&lScope );
+    auto lNodeClass = MonoScriptClass( "SpockEngine", "OpNode", true );
+    auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
+
+    auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
+    OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
+
+    REQUIRE( ( lCppNode.Has<sMultiTensorComponent>() ) );
+    REQUIRE( ( lCppNode.Get<sMultiTensorComponent>().Shape().CountLayers() == 2 ) );
+    REQUIRE( ( lCppNode.Has<sDataInitializerComponent>() ) );
+    REQUIRE( false );
 }
