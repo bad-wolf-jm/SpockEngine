@@ -1022,10 +1022,9 @@ TEST_CASE( "Create layered multitensor", "[MONO_SCRIPTING]" )
 
     auto lComponent = lCppNode.Get<sVectorInitializerComponent>().mValue;
     REQUIRE(lComponent.size() == 4);
-    
+
     std::vector<float> lRetValues{};
     std::vector<float> lExpValues = {1.2f, 3.4f, 4.5f, 6.7f};
     for (auto& x : lComponent) lRetValues.push_back(std::get<float>(x));
     REQUIRE(lRetValues == lExpValues);
-    // REQUIRE( ( std::get<float>(lCppNode.Get<sVectorInitializerComponent>().mValue ) == {1.2f, 3.4f, 4.5f, 6.7f}) );
 }
