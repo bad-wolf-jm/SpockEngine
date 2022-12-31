@@ -115,6 +115,10 @@ namespace SpockEngine
         private _Ty mValue;
 
         public sConstantValueInitializerComponent(_Ty aValue) { mType = typeof(_Ty); mValue = aValue; }
+        public sConstantValueInitializerComponent(sConstantValueInitializerComponent<_Ty> aValue) { mType = aValue.mType; mValue = aValue.mValue; }
+
+        public Type Type() { return mType; }
+        public _Ty Value() { return mValue; }
     };
 
     public class sVectorInitializerComponent<_Ty>
@@ -162,366 +166,367 @@ namespace SpockEngine
 
     public class TensorOps
     {
-        OpNode MultiTensorValue<_Ty>(Scope aScope, sConstantValueInitializerComponent<_Ty> aInitializer, ref sTensorShape aShape)
+        public static OpNode MultiTensorValue<_Ty>(ref Scope aScope, sConstantValueInitializerComponent<_Ty> aInitializer, ref sTensorShape aShape)
         {
-            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Constant_Initializer(aScope, aInitializer, ref aShape);
+            object lBoxedValue = aInitializer.Value();
+            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Constant_Initializer(ref aScope, aInitializer.Type(), lBoxedValue, ref aShape);
 
             return new OpNode(lNodeHandle, ref aScope);
         }
 
-        OpNode MultiTensorValue<_Ty>(Scope aScope, sVectorInitializerComponent<_Ty> aInitializer, sTensorShape aShape)
+        public static OpNode MultiTensorValue<_Ty>(ref Scope aScope, sVectorInitializerComponent<_Ty> aInitializer, sTensorShape aShape)
         {
-            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Vector_Initializer(aScope, aInitializer, ref aShape);
+            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Vector_Initializer(ref aScope, aInitializer, ref aShape);
 
             return new OpNode(lNodeHandle, ref aScope);
         }
 
-        OpNode MultiTensorValue<_Ty>(Scope aScope, sDataInitializerComponent<_Ty> aInitializer, sTensorShape aShape)
+        public static OpNode MultiTensorValue<_Ty>(ref Scope aScope, sDataInitializerComponent<_Ty> aInitializer, sTensorShape aShape)
         {
-            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Data_Initializer(aScope, aInitializer, ref aShape);
+            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Data_Initializer(ref aScope, aInitializer, ref aShape);
 
             return new OpNode(lNodeHandle, ref aScope);
         }
 
-        OpNode MultiTensorValue<_Ty>(Scope aScope, sRandomUniformInitializerComponent<_Ty> aInitializer, sTensorShape aShape)
+        public static OpNode MultiTensorValue<_Ty>(ref Scope aScope, sRandomUniformInitializerComponent<_Ty> aInitializer, sTensorShape aShape)
         {
-            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Random_Uniform_Initializer(aScope, aInitializer, ref aShape);
+            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Random_Uniform_Initializer(ref aScope, aInitializer, ref aShape);
 
             return new OpNode(lNodeHandle, ref aScope);
         }
 
-        OpNode MultiTensorValue<_Ty>(Scope aScope, sRandomNormalInitializerComponent<_Ty> aInitializer, sTensorShape aShape)
+        public static OpNode MultiTensorValue<_Ty>(ref Scope aScope, sRandomNormalInitializerComponent<_Ty> aInitializer, sTensorShape aShape)
         {
-            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Random_Normal_Initializer(aScope, aInitializer, ref aShape);
+            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Random_Normal_Initializer(ref aScope, aInitializer, ref aShape);
 
             return new OpNode(lNodeHandle, ref aScope);
         }
 
-        OpNode VectorValue<_Ty>(Scope aScope, _Ty[] aValue)
+        public static OpNode VectorValue<_Ty>(ref Scope aScope, _Ty[] aValue)
         {
-            var lNodeHandle = CppCall.OpNode_CreateVector(aScope, aValue);
+            var lNodeHandle = CppCall.OpNode_CreateVector(ref aScope, aValue);
 
             return new OpNode(lNodeHandle, ref aScope);
         }
 
-        OpNode ScalarVectorValue<_Ty>(Scope aScope, _Ty[] aValue)
+        public static OpNode ScalarVectorValue<_Ty>(ref Scope aScope, _Ty[] aValue)
         {
-            var lNodeHandle = CppCall.OpNode_CreateScalarVector(aScope, aValue);
+            var lNodeHandle = CppCall.OpNode_CreateScalarVector(ref aScope, aValue);
 
             return new OpNode(lNodeHandle, ref aScope);
         }
 
-        OpNode ConstantScalarValue<_Ty>(Scope aScope, _Ty aValue)
+        public static OpNode ConstantScalarValue<_Ty>(ref Scope aScope, _Ty aValue)
         {
-            var lNodeHandle = CppCall.OpNode_CreateScalarValue(aScope, aValue);
+            var lNodeHandle = CppCall.OpNode_CreateScalarValue(ref aScope, aValue);
 
             return new OpNode(lNodeHandle, ref aScope);
         }
 
-        OpNode Add(Scope aScope, OpNode aLeft, OpNode aRight)
+        public static OpNode Add(ref Scope aScope, OpNode aLeft, OpNode aRight)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Add(aScope, aLeft, aRight);
+            uint lNewOpNodeID = CppCall.OpNode_Add(ref aScope, aLeft, aRight);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Subtract(Scope aScope, OpNode aLeft, OpNode aRight)
+        public static OpNode Subtract(ref Scope aScope, OpNode aLeft, OpNode aRight)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Subtract(aScope, aLeft, aRight);
+            uint lNewOpNodeID = CppCall.OpNode_Subtract(ref aScope, aLeft, aRight);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Divide(Scope aScope, OpNode aLeft, OpNode aRight)
+        public static OpNode Divide(ref Scope aScope, OpNode aLeft, OpNode aRight)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Divide(aScope, aLeft, aRight);
+            uint lNewOpNodeID = CppCall.OpNode_Divide(ref aScope, aLeft, aRight);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Multiply(Scope aScope, OpNode aLeft, OpNode aRight)
+        public static OpNode Multiply(ref Scope aScope, OpNode aLeft, OpNode aRight)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Multiply(aScope, aLeft, aRight);
+            uint lNewOpNodeID = CppCall.OpNode_Multiply(ref aScope, aLeft, aRight);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode And(Scope aScope, OpNode aLeft, OpNode aRight)
+        public static OpNode And(ref Scope aScope, OpNode aLeft, OpNode aRight)
         {
-            uint lNewOpNodeID = CppCall.OpNode_And(aScope, aLeft, aRight);
+            uint lNewOpNodeID = CppCall.OpNode_And(ref aScope, aLeft, aRight);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Or(Scope aScope, OpNode aLeft, OpNode aRight)
+        public static OpNode Or(ref Scope aScope, OpNode aLeft, OpNode aRight)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Or(aScope, aLeft, aRight);
+            uint lNewOpNodeID = CppCall.OpNode_Or(ref aScope, aLeft, aRight);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Not(Scope aScope, OpNode aOperand)
+        public static OpNode Not(ref Scope aScope, OpNode aOperand)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Not(aScope, aOperand);
+            uint lNewOpNodeID = CppCall.OpNode_Not(ref aScope, aOperand);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode BitwiseAnd(Scope aScope, OpNode aLeft, OpNode aRight)
+        public static OpNode BitwiseAnd(ref Scope aScope, OpNode aLeft, OpNode aRight)
         {
-            uint lNewOpNodeID = CppCall.OpNode_BitwiseAnd(aScope, aLeft, aRight);
+            uint lNewOpNodeID = CppCall.OpNode_BitwiseAnd(ref aScope, aLeft, aRight);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode BitwiseOr(Scope aScope, OpNode aLeft, OpNode aRight)
+        public static OpNode BitwiseOr(ref Scope aScope, OpNode aLeft, OpNode aRight)
         {
-            uint lNewOpNodeID = CppCall.OpNode_BitwiseOr(aScope, aLeft, aRight);
+            uint lNewOpNodeID = CppCall.OpNode_BitwiseOr(ref aScope, aLeft, aRight);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode BitwiseNot(Scope aScope, OpNode aOperand)
+        public static OpNode BitwiseNot(ref Scope aScope, OpNode aOperand)
         {
-            uint lNewOpNodeID = CppCall.OpNode_BitwiseNot(aScope, aOperand);
+            uint lNewOpNodeID = CppCall.OpNode_BitwiseNot(ref aScope, aOperand);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode InInterval(Scope aScope, OpNode aX, OpNode aLower, OpNode aUpper, bool aStrictLower, bool aStrictUpper)
+        public static OpNode InInterval(ref Scope aScope, OpNode aX, OpNode aLower, OpNode aUpper, bool aStrictLower, bool aStrictUpper)
         {
-            uint lNewOpNodeID = CppCall.OpNode_InInterval(aScope, aX, aLower, aUpper, aStrictLower, aStrictUpper);
+            uint lNewOpNodeID = CppCall.OpNode_InInterval(ref aScope, aX, aLower, aUpper, aStrictLower, aStrictUpper);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Equal(Scope aScope, OpNode aX, OpNode aY)
+        public static OpNode Equal(ref Scope aScope, OpNode aX, OpNode aY)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Equal(aScope, aX, aY);
+            uint lNewOpNodeID = CppCall.OpNode_Equal(ref aScope, aX, aY);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode LessThan(Scope aScope, OpNode aX, OpNode aY)
+        public static OpNode LessThan(ref Scope aScope, OpNode aX, OpNode aY)
         {
-            uint lNewOpNodeID = CppCall.OpNode_LessThan(aScope, aX, aY);
+            uint lNewOpNodeID = CppCall.OpNode_LessThan(ref aScope, aX, aY);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode LessThanOrEqual(Scope aScope, OpNode aX, OpNode aY)
+        public static OpNode LessThanOrEqual(ref Scope aScope, OpNode aX, OpNode aY)
         {
-            uint lNewOpNodeID = CppCall.OpNode_LessThanOrEqual(aScope, aX, aY);
+            uint lNewOpNodeID = CppCall.OpNode_LessThanOrEqual(ref aScope, aX, aY);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode GreaterThan(Scope aScope, OpNode aX, OpNode aY)
+        public static OpNode GreaterThan(ref Scope aScope, OpNode aX, OpNode aY)
         {
-            uint lNewOpNodeID = CppCall.OpNode_GreaterThan(aScope, aX, aY);
+            uint lNewOpNodeID = CppCall.OpNode_GreaterThan(ref aScope, aX, aY);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode GreaterThanOrEqual(Scope aScope, OpNode aX, OpNode aY)
+        public static OpNode GreaterThanOrEqual(ref Scope aScope, OpNode aX, OpNode aY)
         {
-            uint lNewOpNodeID = CppCall.OpNode_GreaterThanOrEqual(aScope, aX, aY);
+            uint lNewOpNodeID = CppCall.OpNode_GreaterThanOrEqual(ref aScope, aX, aY);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Where(Scope aScope, OpNode aCondition, OpNode aValueIfTrue, OpNode aValueIfFalse)
+        public static OpNode Where(ref Scope aScope, OpNode aCondition, OpNode aValueIfTrue, OpNode aValueIfFalse)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Where(aScope, aCondition, aValueIfTrue, aValueIfFalse);
+            uint lNewOpNodeID = CppCall.OpNode_Where(ref aScope, aCondition, aValueIfTrue, aValueIfFalse);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Mix(Scope aScope, OpNode aA, OpNode aB, OpNode aT)
+        public static OpNode Mix(ref Scope aScope, OpNode aA, OpNode aB, OpNode aT)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Mix(aScope, aA, aB, aT);
+            uint lNewOpNodeID = CppCall.OpNode_Mix(ref aScope, aA, aB, aT);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode AffineTransform(Scope aScope, OpNode aA, OpNode aX, OpNode aB)
+        public static OpNode AffineTransform(ref Scope aScope, OpNode aA, OpNode aX, OpNode aB)
         {
-            uint lNewOpNodeID = CppCall.OpNode_AffineTransform(aScope, aA, aX, aB);
+            uint lNewOpNodeID = CppCall.OpNode_AffineTransform(ref aScope, aA, aX, aB);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode ARange(Scope aScope, OpNode aLeft, OpNode aRight, OpNode aDelta)
+        public static OpNode ARange(ref Scope aScope, OpNode aLeft, OpNode aRight, OpNode aDelta)
         {
-            uint lNewOpNodeID = CppCall.OpNode_ARange(aScope, aLeft, aRight, aDelta);
+            uint lNewOpNodeID = CppCall.OpNode_ARange(ref aScope, aLeft, aRight, aDelta);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode LinearSpace(Scope aScope, OpNode aLeft, OpNode aRight, OpNode aSubdivisions)
+        public static OpNode LinearSpace(ref Scope aScope, OpNode aLeft, OpNode aRight, OpNode aSubdivisions)
         {
-            uint lNewOpNodeID = CppCall.OpNode_LinearSpace(aScope, aLeft, aRight, aSubdivisions);
+            uint lNewOpNodeID = CppCall.OpNode_LinearSpace(ref aScope, aLeft, aRight, aSubdivisions);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Repeat(Scope aScope, OpNode aArray, OpNode aRepetitions)
+        public static OpNode Repeat(ref Scope aScope, OpNode aArray, OpNode aRepetitions)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Repeat(aScope, aArray, aRepetitions);
+            uint lNewOpNodeID = CppCall.OpNode_Repeat(ref aScope, aArray, aRepetitions);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Tile(Scope aScope, OpNode aArray, OpNode aRepetitions)
+        public static OpNode Tile(ref Scope aScope, OpNode aArray, OpNode aRepetitions)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Tile(aScope, aArray, aRepetitions);
+            uint lNewOpNodeID = CppCall.OpNode_Tile(ref aScope, aArray, aRepetitions);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Sample2D(Scope aScope, OpNode aX, OpNode aY, OpNode aTextures)
+        public static OpNode Sample2D(ref Scope aScope, OpNode aX, OpNode aY, OpNode aTextures)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Sample2D(aScope, aX, aY, aTextures);
+            uint lNewOpNodeID = CppCall.OpNode_Sample2D(ref aScope, aX, aY, aTextures);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Collapse(Scope aScope, OpNode aArray)
+        public static OpNode Collapse(ref Scope aScope, OpNode aArray)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Collapse(aScope, aArray);
+            uint lNewOpNodeID = CppCall.OpNode_Collapse(ref aScope, aArray);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Expand(Scope aScope, OpNode aArray)
+        public static OpNode Expand(ref Scope aScope, OpNode aArray)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Expand(aScope, aArray);
+            uint lNewOpNodeID = CppCall.OpNode_Expand(ref aScope, aArray);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Reshape(Scope aScope, OpNode aArray, sTensorShape aNewShape)
+        public static OpNode Reshape(ref Scope aScope, OpNode aArray, sTensorShape aNewShape)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Reshape(aScope, aArray, aNewShape);
+            uint lNewOpNodeID = CppCall.OpNode_Reshape(ref aScope, aArray, aNewShape);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Relayout(Scope aScope, OpNode aArray, sTensorShape aNewLayout)
+        public static OpNode Relayout(ref Scope aScope, OpNode aArray, sTensorShape aNewLayout)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Relayout(aScope, aArray, aNewLayout);
+            uint lNewOpNodeID = CppCall.OpNode_Relayout(ref aScope, aArray, aNewLayout);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Flatten(Scope aScope, OpNode aArray)
+        public static OpNode Flatten(ref Scope aScope, OpNode aArray)
         {
-            uint lNewOpNodeID = CppCall.OpNode_FlattenNode(aScope, aArray);
+            uint lNewOpNodeID = CppCall.OpNode_FlattenNode(ref aScope, aArray);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Slice(Scope aScope, OpNode aArray, OpNode aBegin, OpNode aEnd)
+        public static OpNode Slice(ref Scope aScope, OpNode aArray, OpNode aBegin, OpNode aEnd)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Slice(aScope, aArray, aBegin, aEnd);
+            uint lNewOpNodeID = CppCall.OpNode_Slice(ref aScope, aArray, aBegin, aEnd);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Summation(Scope aScope, OpNode aArray)
+        public static OpNode Summation(ref Scope aScope, OpNode aArray)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Summation(aScope, aArray);
+            uint lNewOpNodeID = CppCall.OpNode_Summation(ref aScope, aArray);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Summation(Scope aScope, OpNode aArray, OpNode aBegin, OpNode aEnd)
+        public static OpNode Summation(ref Scope aScope, OpNode aArray, OpNode aBegin, OpNode aEnd)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Summation(aScope, aArray, aBegin, aEnd);
+            uint lNewOpNodeID = CppCall.OpNode_Summation(ref aScope, aArray, aBegin, aEnd);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode CountTrue(Scope aScope, OpNode aArray)
+        public static OpNode CountTrue(ref Scope aScope, OpNode aArray)
         {
-            uint lNewOpNodeID = CppCall.OpNode_CountTrue(aScope, aArray);
+            uint lNewOpNodeID = CppCall.OpNode_CountTrue(ref aScope, aArray);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode CountNonZero(Scope aScope, OpNode aArray)
+        public static OpNode CountNonZero(ref Scope aScope, OpNode aArray)
         {
-            uint lNewOpNodeID = CppCall.OpNode_CountNonZero(aScope, aArray);
+            uint lNewOpNodeID = CppCall.OpNode_CountNonZero(ref aScope, aArray);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode CountZero(Scope aScope, OpNode aArray)
+        public static OpNode CountZero(ref Scope aScope, OpNode aArray)
         {
-            uint lNewOpNodeID = CppCall.OpNode_CountZero(aScope, aArray);
+            uint lNewOpNodeID = CppCall.OpNode_CountZero(ref aScope, aArray);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Floor(Scope aScope, OpNode aArray)
+        public static OpNode Floor(ref Scope aScope, OpNode aArray)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Floor(aScope, aArray);
+            uint lNewOpNodeID = CppCall.OpNode_Floor(ref aScope, aArray);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Ceil(Scope aScope, OpNode aArray)
+        public static OpNode Ceil(ref Scope aScope, OpNode aArray)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Ceil(aScope, aArray);
+            uint lNewOpNodeID = CppCall.OpNode_Ceil(ref aScope, aArray);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Abs(Scope aScope, OpNode aArray)
+        public static OpNode Abs(ref Scope aScope, OpNode aArray)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Abs(aScope, aArray);
+            uint lNewOpNodeID = CppCall.OpNode_Abs(ref aScope, aArray);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Sqrt(Scope aScope, OpNode aArray)
+        public static OpNode Sqrt(ref Scope aScope, OpNode aArray)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Sqrt(aScope, aArray);
+            uint lNewOpNodeID = CppCall.OpNode_Sqrt(ref aScope, aArray);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Round(Scope aScope, OpNode aArray)
+        public static OpNode Round(ref Scope aScope, OpNode aArray)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Round(aScope, aArray);
+            uint lNewOpNodeID = CppCall.OpNode_Round(ref aScope, aArray);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Diff(Scope aScope, OpNode aArray, UInt32 aCount)
+        public static OpNode Diff(ref Scope aScope, OpNode aArray, UInt32 aCount)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Diff(aScope, aArray, aCount);
+            uint lNewOpNodeID = CppCall.OpNode_Diff(ref aScope, aArray, aCount);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Shift(Scope aScope, OpNode aArray, int aCount, OpNode aFillValue)
+        public static OpNode Shift(ref Scope aScope, OpNode aArray, int aCount, OpNode aFillValue)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Shift(aScope, aArray, aCount, aFillValue);
+            uint lNewOpNodeID = CppCall.OpNode_Shift(ref aScope, aArray, aCount, aFillValue);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode Conv1D(Scope aScope, OpNode aArray0, OpNode aArray1)
+        public static OpNode Conv1D(ref Scope aScope, OpNode aArray0, OpNode aArray1)
         {
-            uint lNewOpNodeID = CppCall.OpNode_Conv1D(aScope, aArray0, aArray1);
+            uint lNewOpNodeID = CppCall.OpNode_Conv1D(ref aScope, aArray0, aArray1);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }
 
-        OpNode HCat(Scope aScope, OpNode aArray0, OpNode aArray1)
+        public static OpNode HCat(ref Scope aScope, OpNode aArray0, OpNode aArray1)
         {
-            uint lNewOpNodeID = CppCall.OpNode_HCat(aScope, aArray0, aArray1);
+            uint lNewOpNodeID = CppCall.OpNode_HCat(ref aScope, aArray0, aArray1);
 
             return new OpNode(lNewOpNodeID, ref aScope);
         }

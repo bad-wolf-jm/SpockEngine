@@ -85,7 +85,6 @@ namespace SE::Core::Mono::Utils
     eScriptFieldType MonoTypeToScriptFieldType( MonoType *aMonoType )
     {
         std::string typeName = mono_type_get_name( aMonoType );
-
         auto it = sScriptFieldTypeMap.find( typeName );
         if( it == sScriptFieldTypeMap.end() ) return eScriptFieldType::None;
 

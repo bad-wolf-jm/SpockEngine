@@ -7,6 +7,7 @@
 #include "Core/Logging.h"
 
 #include "MonoScriptEngine.h"
+#include "MonoScriptUtils.h"
 
 namespace SE::MonoInternalCalls
 {
@@ -134,7 +135,10 @@ namespace SE::MonoInternalCalls
         auto lScopeClass = MonoScriptClass( "SpockEngine", "Scope", true );
         auto lScope      = MonoScriptInstance( lScopeClass.Class(), aScope );
 
-        return lScope.GetFieldValue<Scope *>( "mInternalScope" );
+        Scope *lRetVal = lScope.GetFieldValue<Scope *>( "mInternalScope" );
+        return lRetVal;
+
+        // return lScope.GetFieldValue<Scope *>( "mInternalScope" );
     }
 
     static Cuda::sTensorShape *ToShape( MonoObject *aShape )
@@ -142,7 +146,8 @@ namespace SE::MonoInternalCalls
         auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
         auto lTensorShape      = MonoScriptInstance( lTensorShapeClass.Class(), aShape );
 
-        return lTensorShape.GetFieldValue<Cuda::sTensorShape *>( "mInternalTensorShape" );
+        Cuda::sTensorShape *lRetVal = lTensorShape.GetFieldValue<Cuda::sTensorShape *>( "mInternalTensorShape" );
+        return lRetVal;
     }
 
     static OpNode ToOpNode( MonoObject *aNode )
@@ -156,10 +161,104 @@ namespace SE::MonoInternalCalls
         return lScope->GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
     }
 
-    uint32_t OpNode_CreateMultiTensor_Constant_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape )
+    template <typename _Ty>
+    static inline _Ty UnboxScalarType( MonoObject *aObject )
+    {
+        return *(_Ty *)mono_object_unbox( aObject );
+    }
+
+    uint32_t OpNode_CreateMultiTensor_Constant_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoObject *aInitializer,
+                                                            MonoObject *aShape )
     {
         auto *lScope = ToScope( aScope );
         auto *lShape = ToShape( aShape );
+
+        MonoType *lMonoType = mono_reflection_type_get_type( aType );
+        auto      lDataType = SE::Core::Mono::Utils::MonoTypeToScriptFieldType( lMonoType );
+
+        switch( lDataType )
+        {
+        case eScriptFieldType::Float:
+        {
+            auto lValue = UnboxScalarType<float>( aInitializer );
+            auto lNode  = MultiTensorValue( *lScope, sConstantValueInitializerComponent( lValue ), *lShape );
+
+            return static_cast<uint32_t>( lNode );
+        }
+        case eScriptFieldType::Double:
+        {
+            auto lValue = UnboxScalarType<double>( aInitializer );
+            auto lNode  = MultiTensorValue( *lScope, sConstantValueInitializerComponent( lValue ), *lShape );
+
+            return static_cast<uint32_t>( lNode );
+        }
+        case eScriptFieldType::Bool:
+        {
+            auto lValue = UnboxScalarType<bool>( aInitializer );
+            auto lNode  = MultiTensorValue( *lScope, sConstantValueInitializerComponent( lValue ), *lShape );
+
+            return static_cast<uint32_t>( lNode );
+        }
+        case eScriptFieldType::Char:
+        case eScriptFieldType::Byte:
+        {
+            auto lValue = UnboxScalarType<int8_t>( aInitializer );
+            auto lNode  = MultiTensorValue( *lScope, sConstantValueInitializerComponent( lValue ), *lShape );
+
+            return static_cast<uint32_t>( lNode );
+        }
+        case eScriptFieldType::Short:
+        {
+            auto lValue = UnboxScalarType<int16_t>( aInitializer );
+            auto lNode  = MultiTensorValue( *lScope, sConstantValueInitializerComponent( lValue ), *lShape );
+
+            return static_cast<uint32_t>( lNode );
+        }
+        case eScriptFieldType::Int:
+        {
+            auto lValue = UnboxScalarType<int32_t>( aInitializer );
+            auto lNode  = MultiTensorValue( *lScope, sConstantValueInitializerComponent( lValue ), *lShape );
+
+            return static_cast<uint32_t>( lNode );
+        }
+        case eScriptFieldType::Long:
+        {
+            auto lValue = UnboxScalarType<int64_t>( aInitializer );
+            auto lNode  = MultiTensorValue( *lScope, sConstantValueInitializerComponent( lValue ), *lShape );
+
+            return static_cast<uint32_t>( lNode );
+        }
+        case eScriptFieldType::UByte:
+        {
+            auto lValue = UnboxScalarType<uint8_t>( aInitializer );
+            auto lNode  = MultiTensorValue( *lScope, sConstantValueInitializerComponent( lValue ), *lShape );
+
+            return static_cast<uint32_t>( lNode );
+        }
+        case eScriptFieldType::UShort:
+        {
+            auto lValue = UnboxScalarType<uint16_t>( aInitializer );
+            auto lNode  = MultiTensorValue( *lScope, sConstantValueInitializerComponent( lValue ), *lShape );
+
+            return static_cast<uint32_t>( lNode );
+        }
+        case eScriptFieldType::UInt:
+        {
+            auto lValue = UnboxScalarType<uint32_t>( aInitializer );
+            auto lNode  = MultiTensorValue( *lScope, sConstantValueInitializerComponent( lValue ), *lShape );
+
+            return static_cast<uint32_t>( lNode );
+        }
+        case eScriptFieldType::ULong:
+        {
+            auto lValue = UnboxScalarType<uint64_t>( aInitializer );
+            auto lNode  = MultiTensorValue( *lScope, sConstantValueInitializerComponent( lValue ), *lShape );
+
+            return static_cast<uint32_t>( lNode );
+        }
+        case eScriptFieldType::None:
+        default: return 0;
+        }
 
         return 0;
     }

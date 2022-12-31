@@ -44,7 +44,7 @@ namespace SE::MonoInternalCalls
     size_t OpNode_NewScope( uint32_t aMemorySize );
     void   OpNode_DestroyScope( Scope *aTensorShape );
 
-    uint32_t OpNode_CreateMultiTensor_Constant_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape );
+    uint32_t OpNode_CreateMultiTensor_Constant_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoObject *aInitializer, MonoObject *aShape );
     uint32_t OpNode_CreateMultiTensor_Vector_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape );
     uint32_t OpNode_CreateMultiTensor_Data_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape );
     uint32_t OpNode_CreateMultiTensor_Random_Uniform_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape );
