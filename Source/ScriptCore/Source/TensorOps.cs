@@ -118,7 +118,7 @@ namespace SpockEngine
         public sConstantValueInitializerComponent(sConstantValueInitializerComponent<_Ty> aValue) { mType = aValue.mType; mValue = aValue.mValue; }
 
         public Type Type() { return mType; }
-        public _Ty Value() { return mValue; }
+        public object Value() { return mValue; }
     };
 
     public class sVectorInitializerComponent<_Ty>
@@ -127,6 +127,9 @@ namespace SpockEngine
         private _Ty[] mValue;
 
         public sVectorInitializerComponent(ref _Ty[] aValue) { mType = typeof(_Ty); mValue = aValue; }
+
+        public Type Type() { return mType; }
+        public object[] Value() { return mValue; }
     };
 
     public class sDataInitializerComponent<_Ty>
@@ -135,6 +138,9 @@ namespace SpockEngine
         private _Ty[] mValue;
 
         public sDataInitializerComponent(ref _Ty[] aValue) { mType = typeof(_Ty); mValue = aValue; }
+
+        public Type Type() { return mType; }
+        public object[] Value() { return mValue; }
     };
 
     public class sRandomUniformInitializerComponent<_Ty>
@@ -142,6 +148,8 @@ namespace SpockEngine
         private Type mType;
 
         public sRandomUniformInitializerComponent() { mType = typeof(_Ty); }
+
+        public Type Type() { return mType; }
     };
 
     public class sRandomNormalInitializerComponent<_Ty>
@@ -151,6 +159,11 @@ namespace SpockEngine
         private _Ty mStd;
 
         public sRandomNormalInitializerComponent(_Ty aMean, _Ty aStd) { mType = typeof(_Ty); mMean = aMean; mStd = aStd; }
+
+        public Type Type() { return mType; }
+        public object Mean() { return mMean; }
+        public object Std() { return mStd; }
+
     };
 
     public class OpNode
@@ -168,36 +181,35 @@ namespace SpockEngine
     {
         public static OpNode MultiTensorValue<_Ty>(ref Scope aScope, sConstantValueInitializerComponent<_Ty> aInitializer, ref sTensorShape aShape)
         {
-            object lBoxedValue = aInitializer.Value();
-            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Constant_Initializer(ref aScope, aInitializer.Type(), lBoxedValue, ref aShape);
+            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Constant_Initializer(ref aScope, aInitializer.Type(), aInitializer.Value(), ref aShape);
 
             return new OpNode(lNodeHandle, ref aScope);
         }
 
         public static OpNode MultiTensorValue<_Ty>(ref Scope aScope, sVectorInitializerComponent<_Ty> aInitializer, sTensorShape aShape)
         {
-            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Vector_Initializer(ref aScope, aInitializer, ref aShape);
+            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Vector_Initializer(ref aScope, aInitializer.Type(), aInitializer.Value(), ref aShape);
 
             return new OpNode(lNodeHandle, ref aScope);
         }
 
         public static OpNode MultiTensorValue<_Ty>(ref Scope aScope, sDataInitializerComponent<_Ty> aInitializer, sTensorShape aShape)
         {
-            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Data_Initializer(ref aScope, aInitializer, ref aShape);
+            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Data_Initializer(ref aScope, aInitializer.Type(), aInitializer.Value(), ref aShape);
 
             return new OpNode(lNodeHandle, ref aScope);
         }
 
         public static OpNode MultiTensorValue<_Ty>(ref Scope aScope, sRandomUniformInitializerComponent<_Ty> aInitializer, sTensorShape aShape)
         {
-            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Random_Uniform_Initializer(ref aScope, aInitializer, ref aShape);
+            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Random_Uniform_Initializer(ref aScope, aInitializer.Type(), ref aShape);
 
             return new OpNode(lNodeHandle, ref aScope);
         }
 
         public static OpNode MultiTensorValue<_Ty>(ref Scope aScope, sRandomNormalInitializerComponent<_Ty> aInitializer, sTensorShape aShape)
         {
-            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Random_Normal_Initializer(ref aScope, aInitializer, ref aShape);
+            var lNodeHandle = CppCall.OpNode_CreateMultiTensor_Random_Normal_Initializer(ref aScope, aInitializer.Type(), aInitializer.Mean(), aInitializer.Std(), ref aShape);
 
             return new OpNode(lNodeHandle, ref aScope);
         }
@@ -211,14 +223,14 @@ namespace SpockEngine
 
         public static OpNode ScalarVectorValue<_Ty>(ref Scope aScope, _Ty[] aValue)
         {
-            var lNodeHandle = CppCall.OpNode_CreateScalarVector(ref aScope, aValue);
+            var lNodeHandle = CppCall.OpNode_CreateScalarVector(ref aScope, typeof(_Ty), aValue);
 
             return new OpNode(lNodeHandle, ref aScope);
         }
 
         public static OpNode ConstantScalarValue<_Ty>(ref Scope aScope, _Ty aValue)
         {
-            var lNodeHandle = CppCall.OpNode_CreateScalarValue(ref aScope, aValue);
+            var lNodeHandle = CppCall.OpNode_CreateScalarValue(ref aScope, typeof(_Ty), aValue);
 
             return new OpNode(lNodeHandle, ref aScope);
         }

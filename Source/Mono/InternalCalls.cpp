@@ -263,7 +263,8 @@ namespace SE::MonoInternalCalls
         return 0;
     }
 
-    uint32_t OpNode_CreateMultiTensor_Vector_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape )
+    uint32_t OpNode_CreateMultiTensor_Vector_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoArray *aInitializer,
+                                                          MonoObject *aShape )
     {
         auto *lScope = ToScope( aScope );
         auto *lShape = ToShape( aShape );
@@ -271,7 +272,8 @@ namespace SE::MonoInternalCalls
         return 0;
     }
 
-    uint32_t OpNode_CreateMultiTensor_Data_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape )
+    uint32_t OpNode_CreateMultiTensor_Data_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoArray *aInitializer,
+                                                        MonoObject *aShape )
     {
         auto *lScope = ToScope( aScope );
         auto *lShape = ToShape( aShape );
@@ -279,7 +281,7 @@ namespace SE::MonoInternalCalls
         return 0;
     }
 
-    uint32_t OpNode_CreateMultiTensor_Random_Uniform_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape )
+    uint32_t OpNode_CreateMultiTensor_Random_Uniform_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoObject *aShape )
     {
         auto *lScope = ToScope( aScope );
         auto *lShape = ToShape( aShape );
@@ -287,7 +289,8 @@ namespace SE::MonoInternalCalls
         return 0;
     }
 
-    uint32_t OpNode_CreateMultiTensor_Random_Normal_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape )
+    uint32_t OpNode_CreateMultiTensor_Random_Normal_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoObject *aMean,
+                                                                 MonoObject *aStd, MonoObject *aShape )
     {
         auto *lScope = ToScope( aScope );
         auto *lShape = ToShape( aShape );
@@ -302,14 +305,14 @@ namespace SE::MonoInternalCalls
         return 0;
     }
 
-    uint32_t OpNode_CreateScalarVector( MonoObject *aScope, MonoArray *aValues )
+    uint32_t OpNode_CreateScalarVector( MonoObject *aScope, MonoReflectionType *aType, MonoArray *aValues )
     {
         auto *lScope = ToScope( aScope );
 
         return 0;
     }
 
-    uint32_t OpNode_CreateScalarValue( MonoObject *aScope, MonoObject *aInitializer )
+    uint32_t OpNode_CreateScalarValue( MonoObject *aScope, MonoReflectionType *aType, MonoObject *aInitializer )
     {
         auto *lScope = ToScope( aScope );
 

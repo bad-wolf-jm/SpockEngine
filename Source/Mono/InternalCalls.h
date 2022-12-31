@@ -45,13 +45,13 @@ namespace SE::MonoInternalCalls
     void   OpNode_DestroyScope( Scope *aTensorShape );
 
     uint32_t OpNode_CreateMultiTensor_Constant_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoObject *aInitializer, MonoObject *aShape );
-    uint32_t OpNode_CreateMultiTensor_Vector_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape );
-    uint32_t OpNode_CreateMultiTensor_Data_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape );
-    uint32_t OpNode_CreateMultiTensor_Random_Uniform_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape );
-    uint32_t OpNode_CreateMultiTensor_Random_Normal_Initializer( MonoObject *aScope, MonoObject *aInitializer, MonoObject *aShape );
+    uint32_t OpNode_CreateMultiTensor_Vector_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoArray *aInitializer, MonoObject *aShape );
+    uint32_t OpNode_CreateMultiTensor_Data_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoArray *aInitializer, MonoObject *aShape );
+    uint32_t OpNode_CreateMultiTensor_Random_Uniform_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoObject *aShape );
+    uint32_t OpNode_CreateMultiTensor_Random_Normal_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoObject *aMean, MonoObject *aStd, MonoObject *aShape );
     uint32_t OpNode_CreateVector( MonoObject *aScope, MonoArray *aValues );
-    uint32_t OpNode_CreateScalarVector( MonoObject *aScope, MonoArray *aValues );
-    uint32_t OpNode_CreateScalarValue( MonoObject *aScope, MonoObject *aInitializer );
+    uint32_t OpNode_CreateScalarVector( MonoObject *aScope, MonoReflectionType *aType, MonoArray *aValues );
+    uint32_t OpNode_CreateScalarValue( MonoObject *aScope, MonoReflectionType *aType, MonoObject *aInitializer );
 
     uint32_t OpNode_Add( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight );
     uint32_t OpNode_Subtract( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight );
