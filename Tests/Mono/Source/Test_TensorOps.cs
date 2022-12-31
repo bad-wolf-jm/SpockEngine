@@ -34,7 +34,7 @@ namespace SEUnitTest
             uint[,] aShape = { { 2, 3, 4 }, { 4, 2, 3 }, { 2, 4, 3 }, { 4, 3, 2 } };
             sTensorShape lShape = new sTensorShape(aShape, sizeof(float));
 
-            return TensorOps.MultiTensorValue(ref lScope, new sConstantValueInitializerComponent<float>(1234.5f), ref lShape);
+            return TensorOps.MultiTensorValue(lScope, new sConstantValueInitializerComponent<float>(1234.5f), lShape);
         }
     }
 }

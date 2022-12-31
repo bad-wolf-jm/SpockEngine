@@ -997,5 +997,7 @@ TEST_CASE( "Create constant multitensor", "[MONO_SCRIPTING]" )
     OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
 
     REQUIRE( ( lCppNode.Has<sMultiTensorComponent>() ) );
+    REQUIRE( ( lCppNode.Get<sMultiTensorComponent>().Shape().CountLayers() == 4 ) );
     REQUIRE( ( lCppNode.Has<sConstantValueInitializerComponent>() ) );
+    REQUIRE( ( std::get<float>(lCppNode.Get<sConstantValueInitializerComponent>().mValue ) == 1234.5f) );
 }
