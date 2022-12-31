@@ -36,5 +36,16 @@ namespace SEUnitTest
 
             return TensorOps.MultiTensorValue(lScope, new sConstantValueInitializerComponent<float>(1234.5f), lShape);
         }
+
+        public static OpNode CreateLayeredConstantMultiTensor(ulong aScopeHandle)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+
+            uint[,] aShape = { { 2, 3, 4 }, { 4, 2, 3 }, { 2, 4, 3 }, { 4, 3, 2 } };
+            sTensorShape lShape = new sTensorShape(aShape, sizeof(float));
+
+            float[] lValues = {1.2f, 3.4f, 4.5f, 6.7f};
+            return TensorOps.MultiTensorValue(lScope, new sVectorInitializerComponent<float>(ref lValues), lShape);
+        }
     }
 }

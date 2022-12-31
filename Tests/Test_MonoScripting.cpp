@@ -1001,3 +1001,31 @@ TEST_CASE( "Create constant multitensor", "[MONO_SCRIPTING]" )
     REQUIRE( ( lCppNode.Has<sConstantValueInitializerComponent>() ) );
     REQUIRE( ( std::get<float>(lCppNode.Get<sConstantValueInitializerComponent>().mValue ) == 1234.5f) );
 }
+
+TEST_CASE( "Create layered multitensor", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateLayeredConstantMultiTensor", (size_t)&lScope );
+    auto lNodeClass = MonoScriptClass( "SpockEngine", "OpNode", true );
+    auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
+
+    auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
+    OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
+
+    REQUIRE( ( lCppNode.Has<sMultiTensorComponent>() ) );
+    REQUIRE( ( lCppNode.Get<sMultiTensorComponent>().Shape().CountLayers() == 4 ) );
+    REQUIRE( ( lCppNode.Has<sVectorInitializerComponent>() ) );
+
+    auto lComponent = lCppNode.Get<sVectorInitializerComponent>().mValue;
+    REQUIRE(lComponent.size() == 4);
+    
+    std::vector<float> lRetValues{};
+    std::vector<float> lExpValues = {1.2f, 3.4f, 4.5f, 6.7f};
+    for (auto& x : lComponent) lRetValues.push_back(std::get<float>(x));
+    REQUIRE(lRetValues == lExpValues);
+    // REQUIRE( ( std::get<float>(lCppNode.Get<sVectorInitializerComponent>().mValue ) == {1.2f, 3.4f, 4.5f, 6.7f}) );
+}
