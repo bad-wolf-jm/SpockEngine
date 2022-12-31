@@ -118,7 +118,7 @@ namespace SpockEngine
         public sConstantValueInitializerComponent(sConstantValueInitializerComponent<_Ty> aValue) { mType = aValue.mType; mValue = aValue.mValue; }
 
         public Type Type() { return mType; }
-        public object Value() { return mValue; }
+        public object Value() { return (object)mValue; }
     };
 
     public class sVectorInitializerComponent<_Ty>
@@ -129,7 +129,7 @@ namespace SpockEngine
         public sVectorInitializerComponent(ref _Ty[] aValue) { mType = typeof(_Ty); mValue = aValue; }
 
         public Type Type() { return mType; }
-        public object[] Value() { return mValue; }
+        public _Ty[] Value() { return mValue; }
     };
 
     public class sDataInitializerComponent<_Ty>
@@ -140,7 +140,7 @@ namespace SpockEngine
         public sDataInitializerComponent(ref _Ty[] aValue) { mType = typeof(_Ty); mValue = aValue; }
 
         public Type Type() { return mType; }
-        public object[] Value() { return mValue; }
+        public _Ty[] Value() { return mValue; }
     };
 
     public class sRandomUniformInitializerComponent<_Ty>
@@ -161,8 +161,8 @@ namespace SpockEngine
         public sRandomNormalInitializerComponent(_Ty aMean, _Ty aStd) { mType = typeof(_Ty); mMean = aMean; mStd = aStd; }
 
         public Type Type() { return mType; }
-        public object Mean() { return mMean; }
-        public object Std() { return mStd; }
+        public object Mean() { return (object)mMean; }
+        public object Std() { return (object)mStd; }
 
     };
 
@@ -230,7 +230,7 @@ namespace SpockEngine
 
         public static OpNode ConstantScalarValue<_Ty>(ref Scope aScope, _Ty aValue)
         {
-            var lNodeHandle = CppCall.OpNode_CreateScalarValue(ref aScope, typeof(_Ty), aValue);
+            var lNodeHandle = CppCall.OpNode_CreateScalarValue(ref aScope, typeof(_Ty), (object) aValue);
 
             return new OpNode(lNodeHandle, ref aScope);
         }

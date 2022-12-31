@@ -59,25 +59,25 @@ namespace SpockEngine
         internal extern static uint OpNode_CreateMultiTensor_Constant_Initializer(ref Scope aScope, Type aType, object aInitializer, ref sTensorShape aShape);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static uint OpNode_CreateMultiTensor_Vector_Initializer<_Ty>(ref Scope aScope, Type aType, object[] aInitializer, ref sTensorShape aShape);
+        internal extern static uint OpNode_CreateMultiTensor_Vector_Initializer<_Ty>(ref Scope aScope, Type aType, _Ty[] aInitializer, ref sTensorShape aShape);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static uint OpNode_CreateMultiTensor_Data_Initializer<_Ty>(ref Scope aScope, Type aType, object[] aInitializer, ref sTensorShape aShape);
+        internal extern static uint OpNode_CreateMultiTensor_Data_Initializer<_Ty>(ref Scope aScope, Type aType, _Ty[] aInitializer, ref sTensorShape aShape);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static uint OpNode_CreateMultiTensor_Random_Normal_Initializer<_Ty>(ref Scope aScope, Type aType, object aMean, object aStd, sRandomNormalInitializerComponent<_Ty> aInitializer, ref sTensorShape aShape);
+        internal extern static uint OpNode_CreateMultiTensor_Random_Normal_Initializer(ref Scope aScope, Type aType, object aMean, object aStd, ref sTensorShape aShape);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static uint OpNode_CreateMultiTensor_Random_Uniform_Initializer<_Ty>(ref Scope aScope, Type aType, ref sTensorShape aShape);
+        internal extern static uint OpNode_CreateMultiTensor_Random_Uniform_Initializer(ref Scope aScope, Type aType, ref sTensorShape aShape);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static uint OpNode_CreateVector<_Ty>(ref Scope aScope, _Ty[] aInitializer);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static uint OpNode_CreateScalarVector<_Ty>(ref Scope aScope, Type aType, object[] aInitializer);
+        internal extern static uint OpNode_CreateScalarVector<_Ty>(ref Scope aScope, Type aType, _Ty[] aInitializer);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static uint OpNode_CreateScalarValue<_Ty>(ref Scope aScope, Type aType, object[] aInitializer);
+        internal extern static uint OpNode_CreateScalarValue(ref Scope aScope, Type aType, object aInitializer);
 
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
