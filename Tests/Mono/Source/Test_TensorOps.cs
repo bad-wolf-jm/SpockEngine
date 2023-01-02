@@ -58,5 +58,25 @@ namespace SEUnitTest
             float[] lValues = {1.2f, 3.4f, 4.5f, 6.7f, 8.9f, 10.11f, 1.2f, 3.4f, 4.5f, 6.7f, 8.9f, 10.11f, 12.13f, 14.15f};
             return TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref lValues), lShape);
         }
+
+        public static OpNode CreateRandomUniformMultiTensor(ulong aScopeHandle)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+
+            uint[,] aShape = { { 2, 3 }, { 4, 2 } };
+            sTensorShape lShape = new sTensorShape(aShape, sizeof(float));
+
+            return TensorOps.MultiTensorValue(lScope, new sRandomUniformInitializerComponent<float>(), lShape);
+        }
+
+        public static OpNode CreateRandomNormalMultiTensor(ulong aScopeHandle)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+
+            uint[,] aShape = { { 2, 3 }, { 4, 2 } };
+            sTensorShape lShape = new sTensorShape(aShape, sizeof(float));
+
+            return TensorOps.MultiTensorValue(lScope, new sRandomNormalInitializerComponent<float>(1.234f, 2.345f), lShape);
+        }
     }
 }

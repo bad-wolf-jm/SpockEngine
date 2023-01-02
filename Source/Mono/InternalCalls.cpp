@@ -182,7 +182,7 @@ namespace SE::MonoInternalCalls
         std::vector<_Ty> lLayerConstants( aShape->CountLayers() );
         for( uint32_t j = 0; j < aShape->CountLayers(); j++ ) lLayerConstants[j] = *( mono_array_addr( aObject, _Ty, j ) );
 
-        auto lNode  = MultiTensorValue( *aScope, sVectorInitializerComponent( lLayerConstants ), *aShape );
+        auto lNode = MultiTensorValue( *aScope, sVectorInitializerComponent( lLayerConstants ), *aShape );
 
         return static_cast<uint32_t>( lNode );
     }
@@ -253,11 +253,10 @@ namespace SE::MonoInternalCalls
         std::vector<_Ty> lLayerConstants( aShape->CountLayers() );
         for( uint32_t j = 0; j < aShape->CountLayers(); j++ ) lLayerConstants[j] = *( mono_array_addr( aObject, _Ty, j ) );
 
-        auto lNode  = MultiTensorValue( *aScope, sDataInitializerComponent( lLayerConstants ), *aShape );
+        auto lNode = MultiTensorValue( *aScope, sDataInitializerComponent( lLayerConstants ), *aShape );
 
         return static_cast<uint32_t>( lNode );
     }
-
 
     uint32_t OpNode_CreateMultiTensor_Data_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoArray *aInitializer,
                                                         MonoObject *aShape )
@@ -289,10 +288,45 @@ namespace SE::MonoInternalCalls
         return 0;
     }
 
+    template <typename _Ty>
+    static inline uint32_t CreateRandomDataMultiTensor( Scope *aScope, sTensorShape *aShape, eScalarType aType )
+    {
+        sRandomUniformInitializerComponent lInitializer{};
+        lInitializer.mType = aType;
+
+        auto lNode = MultiTensorValue( *aScope, lInitializer, *aShape );
+
+        return static_cast<uint32_t>( lNode );
+    }
+
+    template <typename _Ty>
+    static inline uint32_t CreateRandomDataMultiTensor( Scope *aScope, sTensorShape *aShape, eScalarType aType, MonoObject *aMean,
+                                                        MonoObject *aStd )
+    {
+        sRandomNormalInitializerComponent lInitializer{};
+        lInitializer.mType = aType;
+        lInitializer.mMean = UnboxScalarType<_Ty>( aMean );
+        lInitializer.mStd  = UnboxScalarType<_Ty>( aStd );
+
+        auto lNode = MultiTensorValue( *aScope, lInitializer, *aShape );
+
+        return static_cast<uint32_t>( lNode );
+    }
+
     uint32_t OpNode_CreateMultiTensor_Random_Uniform_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoObject *aShape )
     {
         auto *lScope = ToScope( aScope );
         auto *lShape = ToShape( aShape );
+
+        MonoType *lMonoType = mono_reflection_type_get_type( aType );
+        auto      lDataType = SE::Core::Mono::Utils::MonoTypeToScriptFieldType( lMonoType );
+
+        switch( lDataType )
+        {
+        case eScriptFieldType::Float: return CreateRandomDataMultiTensor<float>( lScope, lShape, eScalarType::FLOAT32 );
+        case eScriptFieldType::Double: return CreateRandomDataMultiTensor<double>( lScope, lShape, eScalarType::FLOAT64 );
+        default: return 0;
+        }
 
         return 0;
     }
@@ -302,6 +336,16 @@ namespace SE::MonoInternalCalls
     {
         auto *lScope = ToScope( aScope );
         auto *lShape = ToShape( aShape );
+
+        MonoType *lMonoType = mono_reflection_type_get_type( aType );
+        auto      lDataType = SE::Core::Mono::Utils::MonoTypeToScriptFieldType( lMonoType );
+
+        switch( lDataType )
+        {
+        case eScriptFieldType::Float: return CreateRandomDataMultiTensor<float>( lScope, lShape, eScalarType::FLOAT32, aMean, aStd );
+        case eScriptFieldType::Double: return CreateRandomDataMultiTensor<double>( lScope, lShape, eScalarType::FLOAT64, aMean, aStd );
+        default: return 0;
+        }
 
         return 0;
     }
