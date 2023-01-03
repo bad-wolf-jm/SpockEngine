@@ -102,8 +102,41 @@ namespace SEUnitTest
 
             var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape); 
             var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
-            
+
             return TensorOps.Add(lScope, lNode0, lNode1);
+        }
+
+        public static OpNode TestMultiply(ulong aScopeHandle, ulong aShape, float[] aData0, float[] aData1)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape); 
+            var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
+            
+            return TensorOps.Multiply(lScope, lNode0, lNode1);
+        }
+
+        public static OpNode TestSubtract(ulong aScopeHandle, ulong aShape, float[] aData0, float[] aData1)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape); 
+            var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
+            
+            return TensorOps.Subtract(lScope, lNode0, lNode1);
+        }
+
+        public static OpNode TestDivide(ulong aScopeHandle, ulong aShape, float[] aData0, float[] aData1)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape); 
+            var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
+            
+            return TensorOps.Divide(lScope, lNode0, lNode1);
         }
     }
 }

@@ -1178,3 +1178,60 @@ TEST_CASE( "ADD", "[MONO_SCRIPTING]" )
 
     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
 }
+
+TEST_CASE( "MULTIPLY", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0 = MakeValueArray( lSize );
+    auto *lValues1 = MakeValueArray( lSize );
+    auto  lRetValue =
+        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestMultiply", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+}
+
+TEST_CASE( "SUBTRACT", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0 = MakeValueArray( lSize );
+    auto *lValues1 = MakeValueArray( lSize );
+    auto  lRetValue =
+        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestSubtract", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+}
+
+TEST_CASE( "DIVIDE", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0 = MakeValueArray( lSize );
+    auto *lValues1 = MakeValueArray( lSize );
+    auto  lRetValue =
+        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestDivide", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+}
