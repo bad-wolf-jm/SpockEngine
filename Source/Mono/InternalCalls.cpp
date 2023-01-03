@@ -357,9 +357,51 @@ namespace SE::MonoInternalCalls
         return 0;
     }
 
-    uint32_t OpNode_CreateScalarVector( MonoObject *aScope, MonoReflectionType *aType, MonoArray *aValues )
+    template <typename _Ty>
+    static inline uint32_t CreateScalarValue( Scope *aScope, MonoObject *aObject )
+    {
+        auto lValue = UnboxScalarType<_Ty>( aObject );
+        auto lNode  = ConstantScalarValue( *aScope, lValue );
+
+        return static_cast<uint32_t>( lNode );
+    }
+
+    template <typename _Ty>
+    static inline uint32_t CreateScalarValue( Scope *aScope, MonoArray *aObject )
+    {
+        uint32_t aArrayLength = static_cast<uint32_t>(mono_array_length(aObject));
+        std::vector<_Ty> lScalarValues( aArrayLength );
+        for( uint32_t j = 0; j < aArrayLength; j++ ) lScalarValues[j] = *( mono_array_addr( aObject, _Ty, j ) );
+
+        auto lNode = VectorValue( *aScope, lScalarValues );
+
+        return static_cast<uint32_t>( lNode );
+    }
+
+    uint32_t OpNode_CreateScalarVector( MonoObject *aScope, MonoReflectionType *aType, MonoArray *aInitializer )
     {
         auto *lScope = ToScope( aScope );
+
+        MonoType *lMonoType = mono_reflection_type_get_type( aType );
+        auto      lDataType = SE::Core::Mono::Utils::MonoTypeToScriptFieldType( lMonoType );
+
+        switch( lDataType )
+        {
+        case eScriptFieldType::Float: return CreateScalarValue<float>( lScope, aInitializer );
+        case eScriptFieldType::Double: return CreateScalarValue<double>( lScope, aInitializer );
+        case eScriptFieldType::Bool: return CreateScalarValue<uint8_t>( lScope, aInitializer );
+        case eScriptFieldType::Char:
+        case eScriptFieldType::Byte: return CreateScalarValue<int8_t>( lScope, aInitializer );
+        case eScriptFieldType::Short: return CreateScalarValue<int16_t>( lScope, aInitializer );
+        case eScriptFieldType::Int: return CreateScalarValue<int32_t>( lScope, aInitializer );
+        case eScriptFieldType::Long: return CreateScalarValue<int64_t>( lScope, aInitializer );
+        case eScriptFieldType::UByte: return CreateScalarValue<uint8_t>( lScope, aInitializer );
+        case eScriptFieldType::UShort: return CreateScalarValue<uint16_t>( lScope, aInitializer );
+        case eScriptFieldType::UInt: return CreateScalarValue<uint32_t>( lScope, aInitializer );
+        case eScriptFieldType::ULong: return CreateScalarValue<uint64_t>( lScope, aInitializer );
+        case eScriptFieldType::None:
+        default: return 0;
+        }
 
         return 0;
     }
@@ -367,6 +409,27 @@ namespace SE::MonoInternalCalls
     uint32_t OpNode_CreateScalarValue( MonoObject *aScope, MonoReflectionType *aType, MonoObject *aInitializer )
     {
         auto *lScope = ToScope( aScope );
+
+        MonoType *lMonoType = mono_reflection_type_get_type( aType );
+        auto      lDataType = SE::Core::Mono::Utils::MonoTypeToScriptFieldType( lMonoType );
+
+        switch( lDataType )
+        {
+        case eScriptFieldType::Float: return CreateScalarValue<float>( lScope, aInitializer );
+        case eScriptFieldType::Double: return CreateScalarValue<double>( lScope, aInitializer );
+        case eScriptFieldType::Bool: return CreateScalarValue<bool>( lScope, aInitializer );
+        case eScriptFieldType::Char:
+        case eScriptFieldType::Byte: return CreateScalarValue<int8_t>( lScope, aInitializer );
+        case eScriptFieldType::Short: return CreateScalarValue<int16_t>( lScope, aInitializer );
+        case eScriptFieldType::Int: return CreateScalarValue<int32_t>( lScope, aInitializer );
+        case eScriptFieldType::Long: return CreateScalarValue<int64_t>( lScope, aInitializer );
+        case eScriptFieldType::UByte: return CreateScalarValue<uint8_t>( lScope, aInitializer );
+        case eScriptFieldType::UShort: return CreateScalarValue<uint16_t>( lScope, aInitializer );
+        case eScriptFieldType::UInt: return CreateScalarValue<uint32_t>( lScope, aInitializer );
+        case eScriptFieldType::ULong: return CreateScalarValue<uint64_t>( lScope, aInitializer );
+        case eScriptFieldType::None:
+        default: return 0;
+        }
 
         return 0;
     }
