@@ -94,5 +94,16 @@ namespace SEUnitTest
 
             return TensorOps.ScalarVectorValue(lScope, aValues);
         }
+
+        public static OpNode TestAdd(ulong aScopeHandle, ulong aShape, float[] aData0, float[] aData1)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape); 
+            var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
+            
+            return TensorOps.Add(lScope, lNode0, lNode1);
+        }
     }
 }

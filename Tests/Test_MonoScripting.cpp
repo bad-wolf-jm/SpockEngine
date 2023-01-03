@@ -1128,3 +1128,36 @@ TEST_CASE( "Create scalar constant", "[MONO_SCRIPTING]" )
     REQUIRE( ( lCppNode.Has<sScalarNodeComponent>() ) );
     REQUIRE( false );
 }
+
+TEST_CASE( "ADD", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    std::vector<uint32_t> lDim1{ 2, 4, 3 };
+    std::vector<uint32_t> lDim2{ 3, 2, 6 };
+    auto                  lShape = sTensorShape( { lDim1, lDim2 }, sizeof( uint32_t ) );
+
+    auto lMakeNewData = [&]( std::vector<float> const &aArray ) -> MonoArray *
+    {
+        MonoArray *lNewArray = mono_array_new( mono_domain_get(), mono_get_uint32_class(), aArray.size() );
+        for( uint32_t i = 0; i < aArray.size(); i++ ) mono_array_set( lNewArray, uint32_t, i, aArray[i] );
+
+        return lNewArray;
+    };
+
+    std::vector<float> lValues0 = RandomNumber( 2 * 4 * 3 + 3 * 2 * 6, -1000.0f, 1000.0f );
+    std::vector<float> lValues1 = RandomNumber( 2 * 4 * 3 + 3 * 2 * 6, -1000.0f, 1000.0f );
+
+    auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestAdd", (size_t)&lScope, (size_t)&lShape,
+                                                             lMakeNewData( lValues0 ), lMakeNewData( lValues1 ) );
+    auto lNodeClass = MonoScriptClass( "SpockEngine", "OpNode", true );
+    auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
+
+    auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
+    OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+}
