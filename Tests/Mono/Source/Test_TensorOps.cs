@@ -44,7 +44,7 @@ namespace SEUnitTest
             uint[,] aShape = { { 2, 3, 4 }, { 4, 2, 3 }, { 2, 4, 3 }, { 4, 3, 2 } };
             sTensorShape lShape = new sTensorShape(aShape, sizeof(float));
 
-            float[] lValues = {1.2f, 3.4f, 4.5f, 6.7f};
+            float[] lValues = { 1.2f, 3.4f, 4.5f, 6.7f };
             return TensorOps.MultiTensorValue(lScope, new sVectorInitializerComponent<float>(ref lValues), lShape);
         }
 
@@ -55,7 +55,7 @@ namespace SEUnitTest
             uint[,] aShape = { { 2, 3 }, { 4, 2 } };
             sTensorShape lShape = new sTensorShape(aShape, sizeof(float));
 
-            float[] lValues = {1.2f, 3.4f, 4.5f, 6.7f, 8.9f, 10.11f, 1.2f, 3.4f, 4.5f, 6.7f, 8.9f, 10.11f, 12.13f, 14.15f};
+            float[] lValues = { 1.2f, 3.4f, 4.5f, 6.7f, 8.9f, 10.11f, 1.2f, 3.4f, 4.5f, 6.7f, 8.9f, 10.11f, 12.13f, 14.15f };
             return TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref lValues), lShape);
         }
 
@@ -77,6 +77,22 @@ namespace SEUnitTest
             sTensorShape lShape = new sTensorShape(aShape, sizeof(float));
 
             return TensorOps.MultiTensorValue(lScope, new sRandomNormalInitializerComponent<float>(1.234f, 2.345f), lShape);
+        }
+
+        public static OpNode CreateScalarValue(ulong aScopeHandle)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+
+            return TensorOps.ConstantScalarValue(lScope, 123.456f);
+        }
+
+        public static OpNode CreateScalarVector(ulong aScopeHandle)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+
+            float[] aValues = { 1.2f, 3.4f, 5.6f, 7.8f, 9.0f };
+
+            return TensorOps.ScalarVectorValue(lScope, aValues);
         }
     }
 }

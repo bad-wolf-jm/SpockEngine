@@ -1091,3 +1091,40 @@ TEST_CASE( "Create multitensor with random normal initial data", "[MONO_SCRIPTIN
     REQUIRE( ( lCppNode.Has<sRandomNormalInitializerComponent>() ) );
     REQUIRE( false );
 }
+
+TEST_CASE( "Create scalar arrays", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateScalarVector", (size_t)&lScope );
+    auto lNodeClass = MonoScriptClass( "SpockEngine", "OpNode", true );
+    auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
+
+    auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
+    OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
+
+    REQUIRE( ( lCppNode.Has<sVectorValueComponent<float>>() ) );
+    REQUIRE( ( lCppNode.Has<sVectorBufferComponent>() ) );
+    REQUIRE( false );
+}
+
+TEST_CASE( "Create scalar constant", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateScalarValue", (size_t)&lScope );
+    auto lNodeClass = MonoScriptClass( "SpockEngine", "OpNode", true );
+    auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
+
+    auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
+    OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
+
+    REQUIRE( ( lCppNode.Has<sScalarNodeComponent>() ) );
+    REQUIRE( false );
+}
