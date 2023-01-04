@@ -1303,18 +1303,18 @@ namespace SE::Core
     {
         SE_PROFILE_FUNCTION();
 
-        bool l_RebuildAS = false;
+        bool lRebuildAS = false;
         ForEach<sTransformMatrixComponent, sStaticMeshComponent, sRayTracingTargetComponent>(
-            [&]( auto a_Entity, auto &a_TransformComponent, auto &a_MeshComponent, auto &a_RTComponent )
+            [&]( auto aEntity, auto &aTransformComponent, auto &aMeshComponent, auto &aRTComponent )
             {
-                if( !glm::all( glm::equal( a_TransformComponent.Matrix, a_RTComponent.Transform, 0.0001 ) ) )
+                if( !glm::all( glm::equal( aTransformComponent.Matrix, aRTComponent.Transform, 0.0001 ) ) )
                 {
-                    a_RTComponent.Transform = a_TransformComponent.Matrix;
-                    l_RebuildAS             = true;
+                    aRTComponent.Transform = aTransformComponent.Matrix;
+                    lRebuildAS             = true;
                 }
             } );
 
-        if( l_RebuildAS ) RebuildAccelerationStructure();
+        if( lRebuildAS ) RebuildAccelerationStructure();
     }
 
     void Scene::RebuildAccelerationStructure()
@@ -1326,11 +1326,11 @@ namespace SE::Core
         mAccelerationStructure = SE::Core::New<OptixScene>( mRayTracingContext );
 
         ForEach<sRayTracingTargetComponent, sStaticMeshComponent>(
-            [&]( auto a_Entity, auto &a_RTComponent, auto &a_MeshComponent )
+            [&]( auto aEntity, auto &aRTComponent, auto &aMeshComponent )
             {
-                mAccelerationStructure->AddGeometry( *mTransformedVertexBuffer, *mIndexBuffer, a_MeshComponent.mVertexOffset,
-                                                     a_MeshComponent.mVertexCount, a_MeshComponent.mIndexOffset,
-                                                     a_MeshComponent.mIndexCount );
+                mAccelerationStructure->AddGeometry( *mTransformedVertexBuffer, *mIndexBuffer, aMeshComponent.mVertexOffset,
+                                                     aMeshComponent.mVertexCount, aMeshComponent.mIndexOffset,
+                                                     aMeshComponent.mIndexCount );
             } );
 
         mAccelerationStructure->Build();
