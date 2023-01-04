@@ -81,6 +81,8 @@ namespace SE::Core
                     sHitgroupRecord rec =
                         mShaderBindingTable->NewRecordType<sHitgroupRecord>( mOptixModule->mHitProgramGroups[lRayTypeID] );
 
+                    rec.data.mVertexBuffer = aMeshComponent.mVertexBuffer->DataAs<VertexData>();
+                    rec.data.mIndexBuffer  = aMeshComponent.mIndexBuffer->DataAs<math::uvec3>();
                     rec.data.mVertexOffset = aMeshComponent.mVertexOffset;
                     rec.data.mIndexOffset  = aMeshComponent.mIndexOffset / 3;
                     if( lEntity.Has<sMaterialComponent>() ) rec.data.mMaterialID = lEntity.Get<sMaterialComponent>().mMaterialID;
@@ -104,8 +106,8 @@ namespace SE::Core
     /*! render one frame */
     void RayTracingRenderer::Render()
     {
-        if( !mScene->mIndexBuffer ) return;
-        if( !mScene->mTransformedVertexBuffer ) return;
+        // if( !mScene->mIndexBuffer ) return;
+        // if( !mScene->mTransformedVertexBuffer ) return;
 
         if( mRayTracingParameters.mFrame.mSize.x == 0 ) return;
 
@@ -115,8 +117,8 @@ namespace SE::Core
         mRayTracingParameters.mNumLightSamples = 1;
         mRayTracingParameters.mNumPixelSamples = 1;
 
-        mRayTracingParameters.mIndexBuffer  = mScene->mIndexBuffer->DataAs<math::uvec3>();
-        mRayTracingParameters.mVertexBuffer = mScene->mTransformedVertexBuffer->DataAs<VertexData>();
+        // mRayTracingParameters.mIndexBuffer  = mScene->mIndexBuffer->DataAs<math::uvec3>();
+        // mRayTracingParameters.mVertexBuffer = mScene->mTransformedVertexBuffer->DataAs<VertexData>();
 
         mRayTracingParameters.mTextures  = mScene->GetMaterialSystem()->GetCudaTextures().DataAs<Cuda::TextureSampler2D::DeviceData>();
         mRayTracingParameters.mMaterials = mScene->GetMaterialSystem()->GetCudaMaterials().DataAs<sShaderMaterial>();

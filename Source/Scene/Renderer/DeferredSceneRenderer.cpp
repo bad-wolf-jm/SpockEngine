@@ -220,38 +220,41 @@ namespace SE::Core
             } );
 
         mGeometryContext.BeginRender();
-        if( mScene->mVertexBuffer && mScene->mIndexBuffer )
+        // if( mScene->mVertexBuffer && mScene->mIndexBuffer )
+        // {
+        // {
+        // mGeometryContext.Bind( mScene->mTransformedVertexBuffer, mScene->mIndexBuffer );
+        for( auto &lPipelineData : lOpaqueMeshQueue )
         {
+            auto &lPipeline = GetRenderPipeline( lPipelineData.first );
+            if( lPipeline.Pipeline )
+                mGeometryContext.Bind( lPipeline.Pipeline );
+            else
+                continue;
+
+            mGeometryContext.Bind( mGeometryPassCamera, 0, -1 );
+            mGeometryContext.Bind( mScene->GetMaterialSystem()->GetDescriptorSet(), 1, -1 );
+
+            for( auto &lMeshInformation : lPipelineData.second )
             {
-                mGeometryContext.Bind( mScene->mTransformedVertexBuffer, mScene->mIndexBuffer );
-                for( auto &lPipelineData : lOpaqueMeshQueue )
-                {
-                    auto &lPipeline = GetRenderPipeline( lPipelineData.first );
-                    if( lPipeline.Pipeline )
-                        mGeometryContext.Bind( lPipeline.Pipeline );
-                    else
-                        continue;
+                auto &lStaticMeshData = lMeshInformation.Get<sStaticMeshComponent>();
+                if (!lStaticMeshData.mTransformedBuffer || !lStaticMeshData.mIndexBuffer) continue;
+                mGeometryContext.Bind( lStaticMeshData.mTransformedBuffer, lStaticMeshData.mIndexBuffer );
+                if( lMeshInformation.Has<NodeDescriptorComponent>() )
+                    mGeometryContext.Bind( lMeshInformation.Get<NodeDescriptorComponent>().Descriptors, 2, -1 );
 
-                    mGeometryContext.Bind( mGeometryPassCamera, 0, -1 );
-                    mGeometryContext.Bind( mScene->GetMaterialSystem()->GetDescriptorSet(), 1, -1 );
+                MeshRenderer::MaterialPushConstants lMaterialPushConstants{};
+                lMaterialPushConstants.mMaterialID = lMeshInformation.Get<sMaterialComponent>().mMaterialID;
 
-                    for( auto &lMeshInformation : lPipelineData.second )
-                    {
-                        if( lMeshInformation.Has<NodeDescriptorComponent>() )
-                            mGeometryContext.Bind( lMeshInformation.Get<NodeDescriptorComponent>().Descriptors, 2, -1 );
+                mGeometryContext.PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
 
-                        MeshRenderer::MaterialPushConstants lMaterialPushConstants{};
-                        lMaterialPushConstants.mMaterialID = lMeshInformation.Get<sMaterialComponent>().mMaterialID;
-
-                        mGeometryContext.PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
-
-                        auto &lStaticMeshComponent = lMeshInformation.Get<sStaticMeshComponent>();
-                        mGeometryContext.Draw( lStaticMeshComponent.mIndexCount, lStaticMeshComponent.mIndexOffset,
-                                               lStaticMeshComponent.mVertexOffset, 1, 0 );
-                    }
-                }
+                auto &lStaticMeshComponent = lMeshInformation.Get<sStaticMeshComponent>();
+                mGeometryContext.Draw( lStaticMeshComponent.mIndexCount, lStaticMeshComponent.mIndexOffset,
+                                       lStaticMeshComponent.mVertexOffset, 1, 0 );
             }
         }
+        // }
+        // }
         mGeometryContext.EndRender();
 
         // Lighting pass

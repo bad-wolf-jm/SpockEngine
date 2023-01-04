@@ -30,8 +30,12 @@ namespace SE::Core
         cudaTextureObject_t mTexture;
 
         uint32_t mMaterialID;
-        uint32_t mVertexOffset;
-        uint32_t mIndexOffset;
+
+        VertexData *mVertexBuffer = nullptr;
+        uint32_t    mVertexOffset;
+
+        math::uvec3 *mIndexBuffer = nullptr;
+        uint32_t     mIndexOffset;
     };
 
     struct sLaunchParams

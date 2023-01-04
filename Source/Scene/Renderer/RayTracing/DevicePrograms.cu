@@ -65,9 +65,9 @@ namespace SE::Core
         uint32_t const     lVertexOffset = aSbtData.mVertexOffset;
         math::uvec3 const &lPrimitive    = optixLaunchParams.mIndexBuffer[aPrimitiveID];
 
-        aV1 = optixLaunchParams.mVertexBuffer[lVertexOffset + lPrimitive.x];
-        aV2 = optixLaunchParams.mVertexBuffer[lVertexOffset + lPrimitive.y];
-        aV3 = optixLaunchParams.mVertexBuffer[lVertexOffset + lPrimitive.z];
+        aV1 = aSbtData.mVertexBuffer[lVertexOffset + lPrimitive.x];
+        aV2 = aSbtData.mVertexBuffer[lVertexOffset + lPrimitive.y];
+        aV3 = aSbtData.mVertexBuffer[lVertexOffset + lPrimitive.z];
     }
 
     math::vec3 SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF GetNormalFromMap( math::vec3 aInNormal, cudaTextureObject_t aNormalSampler,

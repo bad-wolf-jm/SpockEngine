@@ -231,14 +231,14 @@ namespace SE::Core::EntityComponentSystem::Components
     {
         std::string mName = "";
 
-        ePrimitiveTopology mPrimitive            = ePrimitiveTopology::TRIANGLES;
-        Ref<VkGpuBuffer>   mVertexBuffer         = nullptr;
-        Ref<VkGpuBuffer>   mIndexBuffer          = nullptr;
-        Ref<VkGpuBuffer>   mTransformedBuffer    = nullptr;
-        uint32_t           mVertexOffset         = 0;
-        uint32_t           mVertexCount          = 0;
-        uint32_t           mIndexOffset          = 0;
-        uint32_t           mIndexCount           = 0;
+        ePrimitiveTopology mPrimitive         = ePrimitiveTopology::TRIANGLES;
+        Ref<VkGpuBuffer>   mVertexBuffer      = nullptr;
+        Ref<VkGpuBuffer>   mIndexBuffer       = nullptr;
+        Ref<VkGpuBuffer>   mTransformedBuffer = nullptr;
+        uint32_t           mVertexOffset      = 0;
+        uint32_t           mVertexCount       = 0;
+        uint32_t           mIndexOffset       = 0;
+        uint32_t           mIndexCount        = 0;
 
         sStaticMeshComponent()                               = default;
         sStaticMeshComponent( const sStaticMeshComponent & ) = default;
@@ -248,9 +248,9 @@ namespace SE::Core::EntityComponentSystem::Components
     {
         std::string Name = "";
 
+        Ref<VkGpuBuffer> Particles     = nullptr;
         uint32_t         ParticleCount = 0;
         float            ParticleSize  = 0.0f;
-        Ref<VkGpuBuffer> Particles;
 
         sParticleSystemComponent()                                   = default;
         sParticleSystemComponent( const sParticleSystemComponent & ) = default;

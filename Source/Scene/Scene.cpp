@@ -180,11 +180,11 @@ namespace SE::Core
         CurrentCamera = lClonedEntities[aSource->CurrentCamera.Get<sUUID>().mValue.str()];
 
         // Copy a reference to the main vertex buffer and its CUDA handle
-        mVertexBuffer = aSource->mVertexBuffer;
-        mIndexBuffer  = aSource->mIndexBuffer;
-        // Create the transformed vertex buffer and its CUDA handle
-        mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
-                                                     mVertexBuffer->SizeAs<uint8_t>() );
+        // mVertexBuffer = aSource->mVertexBuffer;
+        // mIndexBuffer  = aSource->mIndexBuffer;
+        // // Create the transformed vertex buffer and its CUDA handle
+        // mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
+        //                                              mVertexBuffer->SizeAs<uint8_t>() );
 
         uint32_t lTransformCount = 0;
         aSource->ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
@@ -195,7 +195,7 @@ namespace SE::Core
         uint32_t lJointMatrixCount = 0;
         uint32_t lJointOffsetCount = 0;
         ForEach<sSkeletonComponent>(
-            [&]( auto l_ElementToProcess, auto &s )
+            [&]( auto lElementToProcess, auto &s )
             {
                 lJointMatrixCount += s.JointMatrices.size();
                 lJointOffsetCount += 1;
@@ -783,7 +783,7 @@ namespace SE::Core
         uint32_t lJointMatrixCount = 0;
         uint32_t lJointOffsetCount = 0;
         ForEach<sSkeletonComponent>(
-            [&]( auto l_ElementToProcess, auto &s )
+            [&]( auto lElementToProcess, auto &s )
             {
                 lJointMatrixCount += s.JointMatrices.size();
                 lJointOffsetCount += 1;
@@ -994,7 +994,7 @@ namespace SE::Core
         uint32_t lJointMatrixCount = 0;
         uint32_t lJointOffsetCount = 0;
         ForEach<sSkeletonComponent>(
-            [&]( auto l_ElementToProcess, auto &s )
+            [&]( auto lElementToProcess, auto &s )
             {
                 lJointMatrixCount += s.JointMatrices.size();
                 lJointOffsetCount += 1;
@@ -1032,13 +1032,13 @@ namespace SE::Core
         return lAssetEntity;
     }
 
-    void Scene::MarkAsRayTracingTarget( Scene::Element a_Element )
+    void Scene::MarkAsRayTracingTarget( Scene::Element aElement )
     {
-        if( !a_Element.Has<sStaticMeshComponent>() ) return;
+        if( !aElement.Has<sStaticMeshComponent>() ) return;
 
-        if( a_Element.Has<sRayTracingTargetComponent>() ) return;
+        if( aElement.Has<sRayTracingTargetComponent>() ) return;
 
-        auto &lRTComponent = a_Element.Add<sRayTracingTargetComponent>();
+        auto &lRTComponent = aElement.Add<sRayTracingTargetComponent>();
     }
 
     void Scene::AttachScript( Element aElement, std::string aClassName )
@@ -1177,13 +1177,13 @@ namespace SE::Core
                 } );
 
             ForEach<sAnimatedTransformComponent>(
-                [&]( auto l_ElementToProcess, auto &lComponent )
+                [&]( auto lElementToProcess, auto &lComponent )
                 {
                     math::mat4 lRotation    = math::mat4( lComponent.Rotation );
                     math::mat4 lTranslation = math::Translation( lComponent.Translation );
                     math::mat4 lScale       = math::Scaling( lComponent.Scaling );
 
-                    l_ElementToProcess.AddOrReplace<sNodeTransformComponent>( lTranslation * lRotation * lScale );
+                    lElementToProcess.AddOrReplace<sNodeTransformComponent>( lTranslation * lRotation * lScale );
                 } );
         }
 
@@ -1216,18 +1216,18 @@ namespace SE::Core
         }
 
         ForEach<sSkeletonComponent, sTransformMatrixComponent>(
-            [&]( auto l_ElementToProcess, auto &s, auto &t )
+            [&]( auto lElementToProcess, auto &s, auto &t )
             {
-                math::mat4 lInverseTransform = math::Inverse( l_ElementToProcess.Get<sTransformMatrixComponent>().Matrix );
+                math::mat4 lInverseTransform = math::Inverse( lElementToProcess.Get<sTransformMatrixComponent>().Matrix );
 
-                for( uint32_t lJointID = 0; lJointID < l_ElementToProcess.Get<sSkeletonComponent>().Bones.size(); lJointID++ )
+                for( uint32_t lJointID = 0; lJointID < lElementToProcess.Get<sSkeletonComponent>().Bones.size(); lJointID++ )
                 {
-                    Element    lJoint             = l_ElementToProcess.Get<sSkeletonComponent>().Bones[lJointID];
-                    math::mat4 lInverseBindMatrix = l_ElementToProcess.Get<sSkeletonComponent>().InverseBindMatrices[lJointID];
+                    Element    lJoint             = lElementToProcess.Get<sSkeletonComponent>().Bones[lJointID];
+                    math::mat4 lInverseBindMatrix = lElementToProcess.Get<sSkeletonComponent>().InverseBindMatrices[lJointID];
                     math::mat4 lJointMatrix       = lJoint.TryGet<sTransformMatrixComponent>( sTransformMatrixComponent{} ).Matrix;
                     lJointMatrix                  = lInverseTransform * lJointMatrix * lInverseBindMatrix;
 
-                    l_ElementToProcess.Get<sSkeletonComponent>().JointMatrices[lJointID] = lJointMatrix;
+                    lElementToProcess.Get<sSkeletonComponent>().JointMatrices[lJointID] = lJointMatrix;
                 }
             } );
 
@@ -1328,7 +1328,7 @@ namespace SE::Core
         ForEach<sRayTracingTargetComponent, sStaticMeshComponent>(
             [&]( auto aEntity, auto &aRTComponent, auto &aMeshComponent )
             {
-                mAccelerationStructure->AddGeometry( *mTransformedVertexBuffer, *mIndexBuffer, aMeshComponent.mVertexOffset,
+                mAccelerationStructure->AddGeometry( *aMeshComponent.mTransformedBuffer, *aMeshComponent.mIndexBuffer, aMeshComponent.mVertexOffset,
                                                      aMeshComponent.mVertexCount, aMeshComponent.mIndexOffset,
                                                      aMeshComponent.mIndexCount );
             } );
