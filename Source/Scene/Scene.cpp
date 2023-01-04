@@ -224,11 +224,11 @@ namespace SE::Core
         {
             auto &lComponent = CurrentCamera.Get<sCameraComponent>();
 
-            math::mat4 l_Rx = math::Rotation( lComponent.Pitch, math::vec3( 1.0f, 0.0f, 0.0f ) );
-            math::mat4 l_Ry = math::Rotation( lComponent.Yaw, math::vec3( 0.0f, 1.0f, 0.0f ) );
-            math::mat4 l_Rz = math::Rotation( -lComponent.Roll, math::vec3( 0.0f, 0.0f, 1.0f ) );
+            math::mat4 lRx = math::Rotation( lComponent.Pitch, math::vec3( 1.0f, 0.0f, 0.0f ) );
+            math::mat4 lRy = math::Rotation( lComponent.Yaw, math::vec3( 0.0f, 1.0f, 0.0f ) );
+            math::mat4 lRz = math::Rotation( -lComponent.Roll, math::vec3( 0.0f, 0.0f, 1.0f ) );
 
-            l_CameraView = math::Inverse( math::Translate( l_Rx * l_Ry * l_Rz, lComponent.Position ) );
+            l_CameraView = math::Inverse( math::Translate( lRx * lRy * lRz, lComponent.Position ) );
         }
 
         return l_CameraView;
