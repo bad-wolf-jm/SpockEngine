@@ -670,12 +670,12 @@ namespace SE::Core
         std::vector<uint32_t>   lIndexBuffer;
         lScenarioData.Retrieve( 1, lVertexBuffer, lIndexBuffer );
 
-        mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, lVertexBuffer, eBufferType::VERTEX_BUFFER, false, false, true, true );
-        mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, lIndexBuffer, eBufferType::INDEX_BUFFER, false, false, true, true );
+        // mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, lVertexBuffer, eBufferType::VERTEX_BUFFER, false, false, true, true );
+        // mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, lIndexBuffer, eBufferType::INDEX_BUFFER, false, false, true, true );
 
-        // Create the transformed vertex buffer and its CUDA handle
-        mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
-                                                     mVertexBuffer->SizeAs<uint8_t>() );
+        // // Create the transformed vertex buffer and its CUDA handle
+        // mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
+        //                                              mVertexBuffer->SizeAs<uint8_t>() );
 
         for( uint32_t lMaterialIndex = 0; lMaterialIndex < lMaterialCount; lMaterialIndex++ )
         {
@@ -875,14 +875,21 @@ namespace SE::Core
                 lVertices[i].Weights     = lMesh.mWeights[i];
             }
 
-            lMeshComponent.mVertexOffset = lVertexData.size();
-            lMeshComponent.mIndexOffset  = lIndexData.size();
+            lMeshComponent.mVertexBuffer =
+                New<VkGpuBuffer>( mGraphicContext, lVertices, eBufferType::VERTEX_BUFFER, false, false, true, true );
+            lMeshComponent.mIndexBuffer =
+                New<VkGpuBuffer>( mGraphicContext, lMesh.mIndices, eBufferType::INDEX_BUFFER, false, false, true, true );
+            lMeshComponent.mTransformedBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true,
+                                                                  true, lMeshComponent.mVertexBuffer->SizeAs<uint8_t>() );
 
-            if( mVertexBuffer )
-            {
-                lMeshComponent.mVertexOffset += mVertexBuffer->SizeAs<VertexData>();
-                lMeshComponent.mIndexOffset += mIndexBuffer->SizeAs<uint32_t>();
-            }
+            lMeshComponent.mVertexOffset = 0; // lVertexData.size();
+            // lMeshComponent.mIndexOffset  = 0; //lIndexData.size();
+
+            // if( mVertexBuffer )
+            // {
+            //     lMeshComponent.mVertexOffset += mVertexBuffer->SizeAs<VertexData>();
+            //     lMeshComponent.mIndexOffset += mIndexBuffer->SizeAs<uint32_t>();
+            // }
 
             lMeshComponent.mVertexCount = lVertices.size();
             lMeshComponent.mIndexCount  = lMesh.mIndices.size();
@@ -893,35 +900,35 @@ namespace SE::Core
             lMeshEntity.Add<sMaterialShaderComponent>( lMaterialCreateInfo[lMesh.mMaterialID] );
             lMeshEntity.Add<sNodeTransformComponent>( math::mat4( 1.0f ) );
 
-            lVertexData.insert( lVertexData.end(), lVertices.begin(), lVertices.end() );
-            lIndexData.insert( lIndexData.end(), lMesh.mIndices.begin(), lMesh.mIndices.end() );
+            // lVertexData.insert( lVertexData.end(), lVertices.begin(), lVertices.end() );
+            // lIndexData.insert( lIndexData.end(), lMesh.mIndices.begin(), lMesh.mIndices.end() );
             lMeshes.push_back( lMeshEntity );
         }
 
-        if( mVertexBuffer )
-        {
-            auto lOldVertexBuffer = mVertexBuffer;
+        // if( mVertexBuffer )
+        // {
+        //     auto lOldVertexBuffer = mVertexBuffer;
 
-            mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
-                                              lOldVertexBuffer->SizeAs<uint8_t>() + lVertexData.size() * sizeof( VertexData ) );
-            mVertexBuffer->Copy( lOldVertexBuffer, 0 );
-            mVertexBuffer->Upload( lVertexData, lOldVertexBuffer->SizeAs<VertexData>() );
+        //     mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
+        //                                       lOldVertexBuffer->SizeAs<uint8_t>() + lVertexData.size() * sizeof( VertexData ) );
+        //     mVertexBuffer->Copy( lOldVertexBuffer, 0 );
+        //     mVertexBuffer->Upload( lVertexData, lOldVertexBuffer->SizeAs<VertexData>() );
 
-            auto lOldIndexBuffer = mIndexBuffer;
+        //     auto lOldIndexBuffer = mIndexBuffer;
 
-            mIndexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::INDEX_BUFFER, false, false, true, true,
-                                             lOldIndexBuffer->SizeAs<uint8_t>() + lIndexData.size() * sizeof( uint32_t ) );
-            mIndexBuffer->Copy( lOldIndexBuffer, 0 );
-            mIndexBuffer->Upload( lIndexData, lOldIndexBuffer->SizeAs<uint32_t>() );
-        }
-        else
-        {
-            mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, lVertexData, eBufferType::VERTEX_BUFFER, false, false, true, true );
-            mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, lIndexData, eBufferType::INDEX_BUFFER, false, false, true, true );
-        }
+        //     mIndexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::INDEX_BUFFER, false, false, true, true,
+        //                                      lOldIndexBuffer->SizeAs<uint8_t>() + lIndexData.size() * sizeof( uint32_t ) );
+        //     mIndexBuffer->Copy( lOldIndexBuffer, 0 );
+        //     mIndexBuffer->Upload( lIndexData, lOldIndexBuffer->SizeAs<uint32_t>() );
+        // }
+        // else
+        // {
+        //     mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, lVertexData, eBufferType::VERTEX_BUFFER, false, false, true, true );
+        //     mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, lIndexData, eBufferType::INDEX_BUFFER, false, false, true, true );
+        // }
 
-        mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
-                                                     mVertexBuffer->SizeAs<uint8_t>() );
+        // mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
+        //                                              mVertexBuffer->SizeAs<uint8_t>() );
 
         uint32_t lTransformCount = 0;
         ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
@@ -1000,13 +1007,13 @@ namespace SE::Core
 
         for( auto &lAnimation : aModelData->mAnimations )
         {
-            auto &l_AnimationChooser = lAssetEntity.Get<sAnimationChooser>();
+            auto &lAnimationChooser = lAssetEntity.Get<sAnimationChooser>();
 
-            auto  l_AnimationEntity    = m_Registry.CreateEntity( lAssetEntity, lAnimation.mName );
-            auto &l_AnimationComponent = l_AnimationEntity.Add<sAnimationComponent>();
+            auto  l_AnimationEntity   = m_Registry.CreateEntity( lAssetEntity, lAnimation.mName );
+            auto &lAnimationComponent = l_AnimationEntity.Add<sAnimationComponent>();
 
-            l_AnimationChooser.Animations.push_back( l_AnimationEntity );
-            l_AnimationComponent.Duration = lAnimation.mEnd - lAnimation.mStart;
+            lAnimationChooser.Animations.push_back( l_AnimationEntity );
+            lAnimationComponent.Duration = lAnimation.mEnd - lAnimation.mStart;
 
             for( uint32_t lAnimationChannelIndex = 0; lAnimationChannelIndex < lAnimation.mChannels.size(); lAnimationChannelIndex++ )
             {
@@ -1018,7 +1025,7 @@ namespace SE::Core
                 lAnimationChannel.mTargetNode.TryAdd<sStaticTransformComponent>(
                     lAnimationChannel.mTargetNode.Get<sNodeTransformComponent>().mMatrix );
 
-                l_AnimationComponent.mChannels.push_back( lAnimationChannel );
+                lAnimationComponent.mChannels.push_back( lAnimationChannel );
             }
         }
 
@@ -1313,6 +1320,8 @@ namespace SE::Core
     void Scene::RebuildAccelerationStructure()
     {
         SE_PROFILE_FUNCTION();
+
+        if( ( !mTransformedVertexBuffer ) || ( !mIndexBuffer ) ) return;
 
         mAccelerationStructure = SE::Core::New<OptixScene>( mRayTracingContext );
 

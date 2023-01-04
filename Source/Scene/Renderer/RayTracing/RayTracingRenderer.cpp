@@ -104,6 +104,9 @@ namespace SE::Core
     /*! render one frame */
     void RayTracingRenderer::Render()
     {
+        if( !mScene->mIndexBuffer ) return;
+        if( !mScene->mTransformedVertexBuffer ) return;
+
         if( mRayTracingParameters.mFrame.mSize.x == 0 ) return;
 
         if( !accumulate ) mRayTracingParameters.mFrame.mFrameID = 0;
