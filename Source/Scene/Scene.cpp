@@ -239,9 +239,9 @@ namespace SE::Core
         math::mat4 l_CameraProjection( 1.0f );
         if( CurrentCamera.Has<sCameraComponent>() )
         {
-            auto &lComponent  = CurrentCamera.Get<sCameraComponent>();
-            l_CameraProjection = math::Perspective( math::radians( lComponent.FieldOfView ), lComponent.AspectRatio,
-                                                    lComponent.Near, lComponent.Far );
+            auto &lComponent = CurrentCamera.Get<sCameraComponent>();
+            l_CameraProjection =
+                math::Perspective( math::radians( lComponent.FieldOfView ), lComponent.AspectRatio, lComponent.Near, lComponent.Far );
             l_CameraProjection[1][1] *= -1.0f;
         }
         return l_CameraProjection;
@@ -253,7 +253,7 @@ namespace SE::Core
         if( CurrentCamera.Has<sCameraComponent>() )
         {
             auto &lComponent = CurrentCamera.Get<sCameraComponent>();
-            l_CameraPosition  = lComponent.Position;
+            l_CameraPosition = lComponent.Position;
         }
         return l_CameraPosition;
     }
@@ -861,8 +861,8 @@ namespace SE::Core
         for( auto &lMesh : aModelData->mMeshes )
         {
             sStaticMeshComponent lMeshComponent{};
-            lMeshComponent.Name      = lMesh.mName;
-            lMeshComponent.Primitive = lMesh.mPrimitive;
+            lMeshComponent.mName      = lMesh.mName;
+            lMeshComponent.mPrimitive = lMesh.mPrimitive;
 
             std::vector<VertexData> lVertices( lMesh.mPositions.size() );
             for( uint32_t i = 0; i < lMesh.mPositions.size(); i++ )

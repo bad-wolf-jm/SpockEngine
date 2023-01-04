@@ -149,7 +149,7 @@ namespace SE::Editor
     static bool EditComponent( sStaticMeshComponent &aComponent )
     {
         UI::Text( "Class:" );
-        UI::Text( "{}", aComponent.Name );
+        UI::Text( "{}", aComponent.mName );
         return false;
     }
 

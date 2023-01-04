@@ -229,16 +229,16 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct sStaticMeshComponent
     {
-        std::string Name = "";
+        std::string mName = "";
 
-        ePrimitiveTopology Primitive          = ePrimitiveTopology::TRIANGLES;
-        Ref<VkGpuBuffer>   mVertexBuffer      = nullptr;
-        Ref<VkGpuBuffer>   mIndexBuffer       = nullptr;
-        Ref<VkGpuBuffer>   mTransformedBuffer = nullptr;
-        uint32_t           mVertexOffset      = 0;
-        uint32_t           mVertexCount       = 0;
-        uint32_t           mIndexOffset       = 0;
-        uint32_t           mIndexCount        = 0;
+        ePrimitiveTopology mPrimitive            = ePrimitiveTopology::TRIANGLES;
+        Ref<VkGpuBuffer>   mVertexBuffer         = nullptr;
+        Ref<VkGpuBuffer>   mIndexBuffer          = nullptr;
+        Ref<VkGpuBuffer>   mTransformedBuffer    = nullptr;
+        uint32_t           mVertexOffset         = 0;
+        uint32_t           mVertexCount          = 0;
+        uint32_t           mIndexOffset          = 0;
+        uint32_t           mIndexCount           = 0;
 
         sStaticMeshComponent()                               = default;
         sStaticMeshComponent( const sStaticMeshComponent & ) = default;
