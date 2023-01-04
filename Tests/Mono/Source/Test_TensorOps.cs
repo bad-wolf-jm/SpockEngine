@@ -100,7 +100,7 @@ namespace SEUnitTest
             Scope lScope = new Scope(aScopeHandle, false);
             sTensorShape lShape = new sTensorShape(aShape);
 
-            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape); 
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
             var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
 
             return TensorOps.Add(lScope, lNode0, lNode1);
@@ -111,9 +111,9 @@ namespace SEUnitTest
             Scope lScope = new Scope(aScopeHandle, false);
             sTensorShape lShape = new sTensorShape(aShape);
 
-            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape); 
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
             var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
-            
+
             return TensorOps.Multiply(lScope, lNode0, lNode1);
         }
 
@@ -122,9 +122,9 @@ namespace SEUnitTest
             Scope lScope = new Scope(aScopeHandle, false);
             sTensorShape lShape = new sTensorShape(aShape);
 
-            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape); 
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
             var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
-            
+
             return TensorOps.Subtract(lScope, lNode0, lNode1);
         }
 
@@ -133,10 +133,75 @@ namespace SEUnitTest
             Scope lScope = new Scope(aScopeHandle, false);
             sTensorShape lShape = new sTensorShape(aShape);
 
-            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape); 
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
             var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
-            
+
             return TensorOps.Divide(lScope, lNode0, lNode1);
         }
+
+        public static OpNode TestAnd(ulong aScopeHandle, ulong aShape, bool[] aData0, bool[] aData1)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<bool>(ref aData0), lShape);
+            var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<bool>(ref aData1), lShape);
+
+            return TensorOps.And(lScope, lNode0, lNode1);
+        }
+
+        public static OpNode TestOr(ulong aScopeHandle, ulong aShape, bool[] aData0, bool[] aData1)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<bool>(ref aData0), lShape);
+            var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<bool>(ref aData1), lShape);
+
+            return TensorOps.Or(lScope, lNode0, lNode1);
+        }
+
+        public static OpNode TestNot(ulong aScopeHandle, ulong aShape, bool[] aData0)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<bool>(ref aData0), lShape);
+
+            return TensorOps.Not(lScope, lNode0);
+        }
+
+        public static OpNode TestBitwiseAnd(ulong aScopeHandle, ulong aShape, uint[] aData0, uint[] aData1)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<uint>(ref aData0), lShape);
+            var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<uint>(ref aData1), lShape);
+
+            return TensorOps.BitwiseAnd(lScope, lNode0, lNode1);
+        }
+
+        public static OpNode TestBitwiseOr(ulong aScopeHandle, ulong aShape, uint[] aData0, uint[] aData1)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<uint>(ref aData0), lShape);
+            var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<uint>(ref aData1), lShape);
+
+            return TensorOps.BitwiseOr(lScope, lNode0, lNode1);
+        }
+
+        public static OpNode TestBitwiseNot(ulong aScopeHandle, ulong aShape, uint[] aData0)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<uint>(ref aData0), lShape);
+
+            return TensorOps.BitwiseNot(lScope, lNode0);
+        }
+
     }
 }

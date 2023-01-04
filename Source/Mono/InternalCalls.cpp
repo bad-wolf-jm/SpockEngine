@@ -200,8 +200,8 @@ namespace SE::MonoInternalCalls
         {
         case eScriptFieldType::Float: return CreateConstantMultiTensor<float>( lScope, lShape, aInitializer );
         case eScriptFieldType::Double: return CreateConstantMultiTensor<double>( lScope, lShape, aInitializer );
-        case eScriptFieldType::Bool: return CreateConstantMultiTensor<bool>( lScope, lShape, aInitializer );
-        case eScriptFieldType::Char:
+        case eScriptFieldType::Bool: return CreateConstantMultiTensor<uint8_t>( lScope, lShape, aInitializer );
+        case eScriptFieldType::Char:return CreateConstantMultiTensor<uint8_t>( lScope, lShape, aInitializer );
         case eScriptFieldType::Byte: return CreateConstantMultiTensor<int8_t>( lScope, lShape, aInitializer );
         case eScriptFieldType::Short: return CreateConstantMultiTensor<int16_t>( lScope, lShape, aInitializer );
         case eScriptFieldType::Int: return CreateConstantMultiTensor<int32_t>( lScope, lShape, aInitializer );
@@ -230,9 +230,9 @@ namespace SE::MonoInternalCalls
         {
         case eScriptFieldType::Float: return CreateConstantMultiTensor<float>( lScope, lShape, aInitializer );
         case eScriptFieldType::Double: return CreateConstantMultiTensor<double>( lScope, lShape, aInitializer );
-        case eScriptFieldType::Bool: return CreateConstantMultiTensor<bool>( lScope, lShape, aInitializer );
-        case eScriptFieldType::Char:
-        case eScriptFieldType::Byte: return CreateConstantMultiTensor<int8_t>( lScope, lShape, aInitializer );
+        case eScriptFieldType::Bool: return CreateConstantMultiTensor<uint8_t>( lScope, lShape, aInitializer );
+        case eScriptFieldType::Char: return CreateConstantMultiTensor<int8_t>( lScope, lShape, aInitializer );
+        case eScriptFieldType::Byte: return CreateConstantMultiTensor<uint8_t>( lScope, lShape, aInitializer );
         case eScriptFieldType::Short: return CreateConstantMultiTensor<int16_t>( lScope, lShape, aInitializer );
         case eScriptFieldType::Int: return CreateConstantMultiTensor<int32_t>( lScope, lShape, aInitializer );
         case eScriptFieldType::Long: return CreateConstantMultiTensor<int64_t>( lScope, lShape, aInitializer );
@@ -271,9 +271,9 @@ namespace SE::MonoInternalCalls
         {
         case eScriptFieldType::Float: return CreateDataMultiTensor<float>( lScope, lShape, aInitializer );
         case eScriptFieldType::Double: return CreateDataMultiTensor<double>( lScope, lShape, aInitializer );
-        case eScriptFieldType::Bool: return CreateDataMultiTensor<bool>( lScope, lShape, aInitializer );
-        case eScriptFieldType::Char:
-        case eScriptFieldType::Byte: return CreateDataMultiTensor<int8_t>( lScope, lShape, aInitializer );
+        case eScriptFieldType::Bool: return CreateDataMultiTensor<uint8_t>( lScope, lShape, aInitializer );
+        case eScriptFieldType::Char: return CreateDataMultiTensor<int8_t>( lScope, lShape, aInitializer );
+        case eScriptFieldType::Byte: return CreateDataMultiTensor<uint8_t>( lScope, lShape, aInitializer );
         case eScriptFieldType::Short: return CreateDataMultiTensor<int16_t>( lScope, lShape, aInitializer );
         case eScriptFieldType::Int: return CreateDataMultiTensor<int32_t>( lScope, lShape, aInitializer );
         case eScriptFieldType::Long: return CreateDataMultiTensor<int64_t>( lScope, lShape, aInitializer );
@@ -369,7 +369,7 @@ namespace SE::MonoInternalCalls
     template <typename _Ty>
     static inline uint32_t CreateScalarValue( Scope *aScope, MonoArray *aObject )
     {
-        uint32_t aArrayLength = static_cast<uint32_t>(mono_array_length(aObject));
+        uint32_t         aArrayLength = static_cast<uint32_t>( mono_array_length( aObject ) );
         std::vector<_Ty> lScalarValues( aArrayLength );
         for( uint32_t j = 0; j < aArrayLength; j++ ) lScalarValues[j] = *( mono_array_addr( aObject, _Ty, j ) );
 
@@ -390,8 +390,8 @@ namespace SE::MonoInternalCalls
         case eScriptFieldType::Float: return CreateScalarValue<float>( lScope, aInitializer );
         case eScriptFieldType::Double: return CreateScalarValue<double>( lScope, aInitializer );
         case eScriptFieldType::Bool: return CreateScalarValue<uint8_t>( lScope, aInitializer );
-        case eScriptFieldType::Char:
-        case eScriptFieldType::Byte: return CreateScalarValue<int8_t>( lScope, aInitializer );
+        case eScriptFieldType::Char: return CreateScalarValue<int8_t>( lScope, aInitializer );
+        case eScriptFieldType::Byte: return CreateScalarValue<uint8_t>( lScope, aInitializer );
         case eScriptFieldType::Short: return CreateScalarValue<int16_t>( lScope, aInitializer );
         case eScriptFieldType::Int: return CreateScalarValue<int32_t>( lScope, aInitializer );
         case eScriptFieldType::Long: return CreateScalarValue<int64_t>( lScope, aInitializer );
@@ -417,9 +417,9 @@ namespace SE::MonoInternalCalls
         {
         case eScriptFieldType::Float: return CreateScalarValue<float>( lScope, aInitializer );
         case eScriptFieldType::Double: return CreateScalarValue<double>( lScope, aInitializer );
-        case eScriptFieldType::Bool: return CreateScalarValue<bool>( lScope, aInitializer );
-        case eScriptFieldType::Char:
-        case eScriptFieldType::Byte: return CreateScalarValue<int8_t>( lScope, aInitializer );
+        case eScriptFieldType::Bool: return CreateScalarValue<uint8_t>( lScope, aInitializer );
+        case eScriptFieldType::Char: return CreateScalarValue<int8_t>( lScope, aInitializer );
+        case eScriptFieldType::Byte: return CreateScalarValue<uint8_t>( lScope, aInitializer );
         case eScriptFieldType::Short: return CreateScalarValue<int16_t>( lScope, aInitializer );
         case eScriptFieldType::Int: return CreateScalarValue<int32_t>( lScope, aInitializer );
         case eScriptFieldType::Long: return CreateScalarValue<int64_t>( lScope, aInitializer );

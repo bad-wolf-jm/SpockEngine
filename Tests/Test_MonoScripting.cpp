@@ -1139,6 +1139,26 @@ static MonoArray *MakeValueArray( uint32_t aSize )
     return lNewArray;
 }
 
+static MonoArray *MakeU32Array( uint32_t aSize )
+{
+    std::vector<float> aArray = RandomNumber( aSize, -1000.0f, 1000.0f );
+
+    MonoArray *lNewArray = mono_array_new( mono_domain_get(), mono_get_uint32_class(), aArray.size() );
+    for( uint32_t i = 0; i < aArray.size(); i++ ) mono_array_set( lNewArray, uint32_t, i, aArray[i] );
+
+    return lNewArray;
+}
+
+static MonoArray *MakeBoolArray( uint32_t aSize )
+{
+    std::vector<uint8_t> aArray = RandomBool( aSize );
+
+    MonoArray *lNewArray = mono_array_new( mono_domain_get(), mono_get_boolean_class(), aArray.size() );
+    for( uint32_t i = 0; i < aArray.size(); i++ ) mono_array_set( lNewArray, uint8_t, i, aArray[i] );
+
+    return lNewArray;
+}
+
 static OpNode ConvertCSOpNode( Scope &aScope, MonoObject *aOpNode )
 {
     auto lNodeClass = MonoScriptClass( "SpockEngine", "OpNode", true );
@@ -1230,6 +1250,117 @@ TEST_CASE( "DIVIDE", "[MONO_SCRIPTING]" )
     auto *lValues1 = MakeValueArray( lSize );
     auto  lRetValue =
         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestDivide", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+}
+
+TEST_CASE( "AND", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0 = MakeBoolArray( lSize );
+    auto *lValues1 = MakeBoolArray( lSize );
+    auto  lRetValue =
+        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestAnd", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+}
+
+TEST_CASE( "OR", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0 = MakeBoolArray( lSize );
+    auto *lValues1 = MakeBoolArray( lSize );
+    auto  lRetValue =
+        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestOr", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+}
+
+TEST_CASE( "NOT", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0  = MakeBoolArray( lSize );
+    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestNot", (size_t)&lScope, (size_t)&lShape, lValues0 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+}
+
+
+TEST_CASE( "BITWISE_AND", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0 = MakeU32Array( lSize );
+    auto *lValues1 = MakeU32Array( lSize );
+    auto  lRetValue =
+        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestBitwiseAnd", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+}
+
+TEST_CASE( "BITWISE_OR", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0 = MakeU32Array( lSize );
+    auto *lValues1 = MakeU32Array( lSize );
+    auto  lRetValue =
+        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestBitwiseOr", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+}
+
+TEST_CASE( "BITWISE_NOT", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0  = MakeU32Array( lSize );
+    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestBitwiseNot", (size_t)&lScope, (size_t)&lShape, lValues0 );
 
     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
