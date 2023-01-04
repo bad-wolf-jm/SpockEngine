@@ -203,5 +203,218 @@ namespace SEUnitTest
             return TensorOps.BitwiseNot(lScope, lNode0);
         }
 
+        public static OpNode TestInInterval(ulong aScopeHandle, ulong aShape, float[] aData0, float[] aData1, float[] aData2)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+            var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
+            var lNode2 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData2), lShape);
+
+            return TensorOps.InInterval(lScope, lNode0, lNode1, lNode2, false, false);
+        }
+
+        public static OpNode TestEqual(ulong aScopeHandle, ulong aShape, float[] aData0, float[] aData1)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+            var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
+
+            return TensorOps.Equal(lScope, lNode0, lNode1);
+        }
+
+        public static OpNode TestLessThan(ulong aScopeHandle, ulong aShape, float[] aData0, float[] aData1)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+            var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
+
+            return TensorOps.LessThan(lScope, lNode0, lNode1);
+        }
+
+        public static OpNode TestLessThanOrEqual(ulong aScopeHandle, ulong aShape, float[] aData0, float[] aData1)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+            var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
+
+            return TensorOps.LessThanOrEqual(lScope, lNode0, lNode1);
+        }
+
+        public static OpNode TestGreaterThan(ulong aScopeHandle, ulong aShape, float[] aData0, float[] aData1)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+            var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
+
+            return TensorOps.GreaterThan(lScope, lNode0, lNode1);
+        }
+
+        public static OpNode TestGreaterThanOrEqual(ulong aScopeHandle, ulong aShape, float[] aData0, float[] aData1)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+            var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
+
+            return TensorOps.GreaterThanOrEqual(lScope, lNode0, lNode1);
+        }
+
+        public static OpNode TestWhere(ulong aScopeHandle, ulong aShape, bool[] aCond, float[] aData0, float[] aData1)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lCond = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<bool>(ref aCond), lShape);
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+            var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
+
+            return TensorOps.Where(lScope, lCond, lNode0, lNode1);
+        }
+
+        public static OpNode TestMix(ulong aScopeHandle, ulong aShape, float[] aData0, float[] aData1, float[] aData2)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+            var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
+            var lNode2 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData2), lShape);
+
+            return TensorOps.Mix(lScope, lNode0, lNode1, lNode2);
+        }
+
+        public static OpNode TestAffineTransform(ulong aScopeHandle, ulong aShape, float[] aData0, float[] aData1, float[] aData2)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+            var lNode1 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData1), lShape);
+            var lNode2 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData2), lShape);
+
+            return TensorOps.Mix(lScope, lNode0, lNode1, lNode2);
+        }
+
+        public static OpNode TestCollapse(ulong aScopeHandle, ulong aShape, float[] aData0)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+
+            return TensorOps.Collapse(lScope, lNode0);
+        }
+
+        public static OpNode TestExpand(ulong aScopeHandle, ulong aShape, float[] aData0)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+
+            return TensorOps.Expand(lScope, lNode0);
+        }
+
+        public static OpNode TestFlatten(ulong aScopeHandle, ulong aShape, float[] aData0)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+
+            return TensorOps.Flatten(lScope, lNode0);
+        }
+
+        public static OpNode TestCountTrue(ulong aScopeHandle, ulong aShape, float[] aData0)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+
+            return TensorOps.CountTrue(lScope, lNode0);
+        }
+
+        public static OpNode TestCountNonZero(ulong aScopeHandle, ulong aShape, float[] aData0)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+
+            return TensorOps.CountNonZero(lScope, lNode0);
+        }
+
+        public static OpNode TestCountZero(ulong aScopeHandle, ulong aShape, float[] aData0)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+
+            return TensorOps.CountZero(lScope, lNode0);
+        }
+
+        public static OpNode TestFloor(ulong aScopeHandle, ulong aShape, float[] aData0)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+
+            return TensorOps.Floor(lScope, lNode0);
+        }
+
+        public static OpNode TestCeil(ulong aScopeHandle, ulong aShape, float[] aData0)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+
+            return TensorOps.Ceil(lScope, lNode0);
+        }
+
+        public static OpNode TestAbs(ulong aScopeHandle, ulong aShape, float[] aData0)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+
+            return TensorOps.Abs(lScope, lNode0);
+        }
+
+        public static OpNode TestSqrt(ulong aScopeHandle, ulong aShape, float[] aData0)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+
+            return TensorOps.Sqrt(lScope, lNode0);
+        }
+
+        public static OpNode TestRound(ulong aScopeHandle, ulong aShape, float[] aData0)
+        {
+            Scope lScope = new Scope(aScopeHandle, false);
+            sTensorShape lShape = new sTensorShape(aShape);
+
+            var lNode0 = TensorOps.MultiTensorValue(lScope, new sDataInitializerComponent<float>(ref aData0), lShape);
+
+            return TensorOps.Round(lScope, lNode0);
+        }
+
     }
 }

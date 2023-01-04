@@ -1180,6 +1180,30 @@ static std::tuple<uint32_t, sTensorShape> TestTensorShape()
     return { lSize, sTensorShape( { lDim1, lDim2 }, sizeof( uint32_t ) ) };
 }
 
+static std::tuple<uint32_t, sTensorShape> TestCollapsableTensorShape()
+{
+    std::vector<uint32_t> lDim1{ 2, 4, 3 };
+    std::vector<uint32_t> lDim2{ 2, 4, 3 };
+    std::vector<uint32_t> lDim3{ 2, 4, 3 };
+
+    uint32_t lSize = 0;
+    lSize += std::accumulate( lDim1.begin(), lDim1.end(), 1, std::multiplies<uint32_t>() );
+    lSize += std::accumulate( lDim2.begin(), lDim2.end(), 1, std::multiplies<uint32_t>() );
+    lSize += std::accumulate( lDim3.begin(), lDim3.end(), 1, std::multiplies<uint32_t>() );
+
+    return { lSize, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) ) };
+}
+
+static std::tuple<uint32_t, sTensorShape> TestExpandableTensorShape()
+{
+    std::vector<uint32_t> lDim1{ 5, 4, 3 };
+
+    uint32_t lSize = 0;
+    lSize += std::accumulate( lDim1.begin(), lDim1.end(), 1, std::multiplies<uint32_t>() );
+
+    return { lSize, sTensorShape(  std::vector< std::vector<uint32_t>>{ lDim1 }, sizeof( uint32_t ) ) };
+}
+
 TEST_CASE( "ADD", "[MONO_SCRIPTING]" )
 {
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
@@ -1197,6 +1221,7 @@ TEST_CASE( "ADD", "[MONO_SCRIPTING]" )
     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
 }
 
 TEST_CASE( "MULTIPLY", "[MONO_SCRIPTING]" )
@@ -1216,6 +1241,7 @@ TEST_CASE( "MULTIPLY", "[MONO_SCRIPTING]" )
     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
 }
 
 TEST_CASE( "SUBTRACT", "[MONO_SCRIPTING]" )
@@ -1235,6 +1261,7 @@ TEST_CASE( "SUBTRACT", "[MONO_SCRIPTING]" )
     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
 }
 
 TEST_CASE( "DIVIDE", "[MONO_SCRIPTING]" )
@@ -1254,6 +1281,7 @@ TEST_CASE( "DIVIDE", "[MONO_SCRIPTING]" )
     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
 }
 
 TEST_CASE( "AND", "[MONO_SCRIPTING]" )
@@ -1273,6 +1301,7 @@ TEST_CASE( "AND", "[MONO_SCRIPTING]" )
     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
 }
 
 TEST_CASE( "OR", "[MONO_SCRIPTING]" )
@@ -1292,6 +1321,7 @@ TEST_CASE( "OR", "[MONO_SCRIPTING]" )
     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
 }
 
 TEST_CASE( "NOT", "[MONO_SCRIPTING]" )
@@ -1309,8 +1339,8 @@ TEST_CASE( "NOT", "[MONO_SCRIPTING]" )
     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
 }
-
 
 TEST_CASE( "BITWISE_AND", "[MONO_SCRIPTING]" )
 {
@@ -1329,6 +1359,7 @@ TEST_CASE( "BITWISE_AND", "[MONO_SCRIPTING]" )
     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
 }
 
 TEST_CASE( "BITWISE_OR", "[MONO_SCRIPTING]" )
@@ -1348,6 +1379,7 @@ TEST_CASE( "BITWISE_OR", "[MONO_SCRIPTING]" )
     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
 }
 
 TEST_CASE( "BITWISE_NOT", "[MONO_SCRIPTING]" )
@@ -1359,10 +1391,505 @@ TEST_CASE( "BITWISE_NOT", "[MONO_SCRIPTING]" )
 
     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0  = MakeU32Array( lSize );
-    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestBitwiseNot", (size_t)&lScope, (size_t)&lShape, lValues0 );
+    auto *lValues0 = MakeU32Array( lSize );
+    auto  lRetValue =
+        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestBitwiseNot", (size_t)&lScope, (size_t)&lShape, lValues0 );
 
     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
+}
+
+TEST_CASE( "IN_INTERVAL", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0 = MakeValueArray( lSize );
+    auto *lValues1 = MakeValueArray( lSize );
+    auto *lValues2 = MakeValueArray( lSize );
+    auto lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestInInterval", (size_t)&lScope, (size_t)&lShape, lValues0,
+                                                             lValues1, lValues2 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
+}
+
+TEST_CASE( "EQUAL", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0 = MakeValueArray( lSize );
+    auto *lValues1 = MakeValueArray( lSize );
+    auto  lRetValue =
+        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestEqual", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
+}
+
+TEST_CASE( "LESS_THAN", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0 = MakeValueArray( lSize );
+    auto *lValues1 = MakeValueArray( lSize );
+    auto  lRetValue =
+        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestLessThan", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
+}
+
+TEST_CASE( "LESS_THAN_OR_EQUAL", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0  = MakeValueArray( lSize );
+    auto *lValues1  = MakeValueArray( lSize );
+    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestLessThanOrEqual", (size_t)&lScope, (size_t)&lShape,
+                                                             lValues0, lValues1 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
+}
+
+TEST_CASE( "GREATER_THAN", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0 = MakeValueArray( lSize );
+    auto *lValues1 = MakeValueArray( lSize );
+    auto  lRetValue =
+        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestGreaterThan", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
+}
+
+TEST_CASE( "GREATER_THAN_OR_EQUAL", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0  = MakeValueArray( lSize );
+    auto *lValues1  = MakeValueArray( lSize );
+    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestGreaterThanOrEqual", (size_t)&lScope, (size_t)&lShape,
+                                                             lValues0, lValues1 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
+}
+
+TEST_CASE( "WHERE", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0  = MakeBoolArray( lSize );
+    auto *lValues1  = MakeValueArray( lSize );
+    auto *lValues2  = MakeValueArray( lSize );
+    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestWhere", (size_t)&lScope, (size_t)&lShape, lValues0,
+                                                             lValues1, lValues2 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
+}
+
+TEST_CASE( "MIX", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0  = MakeValueArray( lSize );
+    auto *lValues1  = MakeValueArray( lSize );
+    auto *lValues2  = MakeValueArray( lSize );
+    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestMix", (size_t)&lScope, (size_t)&lShape, lValues0,
+                                                             lValues1, lValues2 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
+}
+
+TEST_CASE( "AFFINE_TRANSFORM", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0  = MakeValueArray( lSize );
+    auto *lValues1  = MakeValueArray( lSize );
+    auto *lValues2  = MakeValueArray( lSize );
+    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestAffineTransform", (size_t)&lScope, (size_t)&lShape,
+                                                             lValues0, lValues1, lValues2 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
+}
+
+TEST_CASE( "ARANGE", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "LINEAR_SPACE", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "REPEAT", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "TILE", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "SAMPLE_2D", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "COLLAPSE", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestCollapsableTensorShape();
+
+    auto *lValues0 = MakeValueArray( lSize );
+    auto lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCollapse", (size_t)&lScope, (size_t)&lShape, lValues0 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    // REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
+}
+
+TEST_CASE( "EXPAND", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestExpandableTensorShape();
+
+    auto *lValues0  = MakeValueArray( lSize );
+    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestExpand", (size_t)&lScope, (size_t)&lShape, lValues0 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    // REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+    REQUIRE( false );
+}
+
+TEST_CASE( "RESHAPE", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "RELAYOUT", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "FLATTEN", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0  = MakeValueArray( lSize );
+    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestFlatten", (size_t)&lScope, (size_t)&lShape, lValues0 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "SLICE", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "SUMMATION_1", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "SUMMATION_2", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "COUNT_TRUE", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0  = MakeValueArray( lSize );
+    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCountTrue", (size_t)&lScope, (size_t)&lShape, lValues0 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "COUNT_NON_ZERO", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0  = MakeValueArray( lSize );
+    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCountNonZero", (size_t)&lScope, (size_t)&lShape, lValues0 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "COUNT_ZERO", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0  = MakeValueArray( lSize );
+    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCountZero", (size_t)&lScope, (size_t)&lShape, lValues0 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "FLOOR", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0  = MakeValueArray( lSize );
+    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestFloor", (size_t)&lScope, (size_t)&lShape, lValues0 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "CEIL", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0  = MakeValueArray( lSize );
+    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCeil", (size_t)&lScope, (size_t)&lShape, lValues0 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "ABS", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0  = MakeValueArray( lSize );
+    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestAbs", (size_t)&lScope, (size_t)&lShape, lValues0 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "SQRT", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0  = MakeValueArray( lSize );
+    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestSqrt", (size_t)&lScope, (size_t)&lShape, lValues0 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( false );
+}
+
+TEST_CASE( "ROUND", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+    auto lScope = Scope( 1024 * 1024 );
+
+    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+
+    auto [lSize, lShape] = TestTensorShape();
+
+    auto *lValues0  = MakeValueArray( lSize );
+    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestRound", (size_t)&lScope, (size_t)&lShape, lValues0 );
+
+    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+
+    REQUIRE( false );
 }
