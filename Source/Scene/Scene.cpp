@@ -222,13 +222,13 @@ namespace SE::Core
         math::mat4 l_CameraView( 1.0f );
         if( CurrentCamera.Has<sCameraComponent>() )
         {
-            auto &l_Component = CurrentCamera.Get<sCameraComponent>();
+            auto &lComponent = CurrentCamera.Get<sCameraComponent>();
 
-            math::mat4 l_Rx = math::Rotation( l_Component.Pitch, math::vec3( 1.0f, 0.0f, 0.0f ) );
-            math::mat4 l_Ry = math::Rotation( l_Component.Yaw, math::vec3( 0.0f, 1.0f, 0.0f ) );
-            math::mat4 l_Rz = math::Rotation( -l_Component.Roll, math::vec3( 0.0f, 0.0f, 1.0f ) );
+            math::mat4 l_Rx = math::Rotation( lComponent.Pitch, math::vec3( 1.0f, 0.0f, 0.0f ) );
+            math::mat4 l_Ry = math::Rotation( lComponent.Yaw, math::vec3( 0.0f, 1.0f, 0.0f ) );
+            math::mat4 l_Rz = math::Rotation( -lComponent.Roll, math::vec3( 0.0f, 0.0f, 1.0f ) );
 
-            l_CameraView = math::Inverse( math::Translate( l_Rx * l_Ry * l_Rz, l_Component.Position ) );
+            l_CameraView = math::Inverse( math::Translate( l_Rx * l_Ry * l_Rz, lComponent.Position ) );
         }
 
         return l_CameraView;
@@ -239,9 +239,9 @@ namespace SE::Core
         math::mat4 l_CameraProjection( 1.0f );
         if( CurrentCamera.Has<sCameraComponent>() )
         {
-            auto &l_Component  = CurrentCamera.Get<sCameraComponent>();
-            l_CameraProjection = math::Perspective( math::radians( l_Component.FieldOfView ), l_Component.AspectRatio,
-                                                    l_Component.Near, l_Component.Far );
+            auto &lComponent  = CurrentCamera.Get<sCameraComponent>();
+            l_CameraProjection = math::Perspective( math::radians( lComponent.FieldOfView ), lComponent.AspectRatio,
+                                                    lComponent.Near, lComponent.Far );
             l_CameraProjection[1][1] *= -1.0f;
         }
         return l_CameraProjection;
@@ -252,8 +252,8 @@ namespace SE::Core
         math::vec3 l_CameraPosition( 0.0f );
         if( CurrentCamera.Has<sCameraComponent>() )
         {
-            auto &l_Component = CurrentCamera.Get<sCameraComponent>();
-            l_CameraPosition  = l_Component.Position;
+            auto &lComponent = CurrentCamera.Get<sCameraComponent>();
+            l_CameraPosition  = lComponent.Position;
         }
         return l_CameraPosition;
     }
@@ -794,19 +794,16 @@ namespace SE::Core
         mVertexCounts    = GPUMemory::Create<uint32_t>( static_cast<uint32_t>( lStaticMeshCount ) );
         mJointTransforms = GPUMemory::Create<math::mat4>( lJointMatrixCount );
         mJointOffsets    = GPUMemory::Create<uint32_t>( lJointOffsetCount );
-
     }
 
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name )
     {
-        auto l_AssetEntity = m_Registry.CreateEntity( Root, a_Name );
-        l_AssetEntity.Add<sNodeTransformComponent>( aTransform );
+        auto lAssetEntity = m_Registry.CreateEntity( Root, a_Name );
+        lAssetEntity.Add<sNodeTransformComponent>( aTransform );
 
         std::vector<uint32_t> lTextureIds = {};
         for( auto &lTexture : aModelData->mTextures )
-        {
             lTextureIds.push_back( mMaterialSystem->CreateTexture( lTexture.mTexture, lTexture.mSampler ) );
-        }
 
         std::vector<uint32_t>                 lMaterialIds        = {};
         std::vector<sMaterialShaderComponent> lMaterialCreateInfo = {};
@@ -863,9 +860,9 @@ namespace SE::Core
         std::vector<uint32_t>   lIndexData        = {};
         for( auto &lMesh : aModelData->mMeshes )
         {
-            sStaticMeshComponent l_MeshComponent{};
-            l_MeshComponent.Name      = lMesh.mName;
-            l_MeshComponent.Primitive = lMesh.mPrimitive;
+            sStaticMeshComponent lMeshComponent{};
+            lMeshComponent.Name      = lMesh.mName;
+            lMeshComponent.Primitive = lMesh.mPrimitive;
 
             std::vector<VertexData> lVertices( lMesh.mPositions.size() );
             for( uint32_t i = 0; i < lMesh.mPositions.size(); i++ )
@@ -878,27 +875,27 @@ namespace SE::Core
                 lVertices[i].Weights     = lMesh.mWeights[i];
             }
 
-            l_MeshComponent.mVertexOffset = lVertexData.size();
-            l_MeshComponent.mIndexOffset  = lIndexData.size();
+            lMeshComponent.mVertexOffset = lVertexData.size();
+            lMeshComponent.mIndexOffset  = lIndexData.size();
 
             if( mVertexBuffer )
             {
-                l_MeshComponent.mVertexOffset += mVertexBuffer->SizeAs<VertexData>();
-                l_MeshComponent.mIndexOffset += mIndexBuffer->SizeAs<uint32_t>();
+                lMeshComponent.mVertexOffset += mVertexBuffer->SizeAs<VertexData>();
+                lMeshComponent.mIndexOffset += mIndexBuffer->SizeAs<uint32_t>();
             }
 
-            l_MeshComponent.mVertexCount = lVertices.size();
-            l_MeshComponent.mIndexCount  = lMesh.mIndices.size();
+            lMeshComponent.mVertexCount = lVertices.size();
+            lMeshComponent.mIndexCount  = lMesh.mIndices.size();
 
-            auto l_MeshEntity = Create( lMesh.mName, l_AssetEntity );
-            l_MeshEntity.Add<sStaticMeshComponent>( l_MeshComponent );
-            l_MeshEntity.Add<sMaterialComponent>( lMaterialIds[lMesh.mMaterialID] );
-            l_MeshEntity.Add<sMaterialShaderComponent>( lMaterialCreateInfo[lMesh.mMaterialID] );
-            l_MeshEntity.Add<sNodeTransformComponent>( math::mat4( 1.0f ) );
+            auto lMeshEntity = Create( lMesh.mName, lAssetEntity );
+            lMeshEntity.Add<sStaticMeshComponent>( lMeshComponent );
+            lMeshEntity.Add<sMaterialComponent>( lMaterialIds[lMesh.mMaterialID] );
+            lMeshEntity.Add<sMaterialShaderComponent>( lMaterialCreateInfo[lMesh.mMaterialID] );
+            lMeshEntity.Add<sNodeTransformComponent>( math::mat4( 1.0f ) );
 
             lVertexData.insert( lVertexData.end(), lVertices.begin(), lVertices.end() );
             lIndexData.insert( lIndexData.end(), lMesh.mIndices.begin(), lMesh.mIndices.end() );
-            lMeshes.push_back( l_MeshEntity );
+            lMeshes.push_back( lMeshEntity );
         }
 
         if( mVertexBuffer )
@@ -949,7 +946,7 @@ namespace SE::Core
         for( auto &l_NodeEntity : lNodes )
         {
             if( aModelData->mNodes[l_Index].mParentID == std::numeric_limits<uint32_t>::max() )
-                m_Registry.SetParent( l_NodeEntity, l_AssetEntity );
+                m_Registry.SetParent( l_NodeEntity, lAssetEntity );
             else
                 m_Registry.SetParent( l_NodeEntity, lNodes[aModelData->mNodes[l_Index].mParentID] );
             l_Index++;
@@ -999,13 +996,13 @@ namespace SE::Core
         mJointTransforms = GPUMemory::Create<math::mat4>( lJointMatrixCount );
         mJointOffsets    = GPUMemory::Create<uint32_t>( lJointOffsetCount );
 
-        if( aModelData->mAnimations.size() > 0 ) l_AssetEntity.Add<sAnimationChooser>();
+        if( aModelData->mAnimations.size() > 0 ) lAssetEntity.Add<sAnimationChooser>();
 
         for( auto &lAnimation : aModelData->mAnimations )
         {
-            auto &l_AnimationChooser = l_AssetEntity.Get<sAnimationChooser>();
+            auto &l_AnimationChooser = lAssetEntity.Get<sAnimationChooser>();
 
-            auto  l_AnimationEntity    = m_Registry.CreateEntity( l_AssetEntity, lAnimation.mName );
+            auto  l_AnimationEntity    = m_Registry.CreateEntity( lAssetEntity, lAnimation.mName );
             auto &l_AnimationComponent = l_AnimationEntity.Add<sAnimationComponent>();
 
             l_AnimationChooser.Animations.push_back( l_AnimationEntity );
@@ -1025,7 +1022,7 @@ namespace SE::Core
             }
         }
 
-        return l_AssetEntity;
+        return lAssetEntity;
     }
 
     void Scene::MarkAsRayTracingTarget( Scene::Element a_Element )
@@ -1049,22 +1046,22 @@ namespace SE::Core
         if( mState != eSceneState::EDITING ) return;
 
         ForEach<sAnimatedTransformComponent>(
-            [=]( auto l_Entity, auto &l_Component )
-            { l_Entity.AddOrReplace<sStaticTransformComponent>( l_Entity.Get<sNodeTransformComponent>().mMatrix ); } );
+            [=]( auto lEntity, auto &lComponent )
+            { lEntity.AddOrReplace<sStaticTransformComponent>( lEntity.Get<sNodeTransformComponent>().mMatrix ); } );
 
         // Initialize native scripts
         ForEach<sBehaviourComponent>(
-            [=]( auto l_Entity, auto &l_Component )
+            [=]( auto lEntity, auto &lComponent )
             {
-                if( !l_Component.ControllerInstance && l_Component.InstantiateController )
+                if( !lComponent.ControllerInstance && lComponent.InstantiateController )
                 {
-                    l_Component.ControllerInstance = l_Component.InstantiateController();
-                    l_Component.ControllerInstance->Initialize( m_Registry.WrapEntity( l_Entity ) );
-                    l_Component.ControllerInstance->OnCreate();
+                    lComponent.ControllerInstance = lComponent.InstantiateController();
+                    lComponent.ControllerInstance->Initialize( m_Registry.WrapEntity( lEntity ) );
+                    lComponent.ControllerInstance->OnCreate();
                 }
             } );
 
-        ForEach<sActorComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnCreate(); } );
+        ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnCreate(); } );
 
         mState = eSceneState::RUNNING;
     }
@@ -1074,22 +1071,22 @@ namespace SE::Core
         if( mState != eSceneState::RUNNING ) return;
 
         ForEach<sAnimatedTransformComponent>(
-            [=]( auto l_Entity, auto &l_Component )
-            { l_Entity.AddOrReplace<sNodeTransformComponent>( l_Entity.Get<sStaticTransformComponent>().Matrix ); } );
+            [=]( auto lEntity, auto &lComponent )
+            { lEntity.AddOrReplace<sNodeTransformComponent>( lEntity.Get<sStaticTransformComponent>().Matrix ); } );
 
         // Destroy scripts
         ForEach<sBehaviourComponent>(
-            [=]( auto l_Entity, auto &l_Component )
+            [=]( auto lEntity, auto &lComponent )
             {
-                if( l_Component.ControllerInstance )
+                if( lComponent.ControllerInstance )
                 {
-                    l_Component.ControllerInstance->OnDestroy();
-                    l_Component.DestroyController( &l_Component );
+                    lComponent.ControllerInstance->OnDestroy();
+                    lComponent.DestroyController( &lComponent );
                 }
             } );
 
         // Destroy Lua scripts
-        ForEach<sActorComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnDestroy(); } );
+        ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnDestroy(); } );
 
         mState = eSceneState::EDITING;
     }
@@ -1102,18 +1099,18 @@ namespace SE::Core
         if( mState == eSceneState::RUNNING )
         {
             ForEach<sBehaviourComponent>(
-                [=]( auto l_Entity, auto &l_Component )
+                [=]( auto lEntity, auto &lComponent )
                 {
-                    if( l_Component.ControllerInstance ) l_Component.ControllerInstance->OnUpdate( ts );
+                    if( lComponent.ControllerInstance ) lComponent.ControllerInstance->OnUpdate( ts );
                 } );
 
-            ForEach<sActorComponent>( [=]( auto l_Entity, auto &l_Component ) { l_Component.OnUpdate( ts ); } );
+            ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnUpdate( ts ); } );
 
             // Update animations
             ForEach<sAnimationChooser>(
-                [=]( auto l_Entity, auto &l_Component )
+                [=]( auto lEntity, auto &lComponent )
                 {
-                    auto &lAnimation = l_Component.Animations[0].Get<sAnimationComponent>();
+                    auto &lAnimation = lComponent.Animations[0].Get<sAnimationComponent>();
                     lAnimation.CurrentTime += ( ts / 1000.0f );
                     if( lAnimation.CurrentTime > lAnimation.Duration )
                     {
@@ -1171,12 +1168,13 @@ namespace SE::Core
                         }
                     }
                 } );
+
             ForEach<sAnimatedTransformComponent>(
-                [&]( auto l_ElementToProcess, auto &l_Component )
+                [&]( auto l_ElementToProcess, auto &lComponent )
                 {
-                    math::mat4 lRotation    = math::mat4( l_Component.Rotation );
-                    math::mat4 lTranslation = math::Translation( l_Component.Translation );
-                    math::mat4 lScale       = math::Scaling( l_Component.Scaling );
+                    math::mat4 lRotation    = math::mat4( lComponent.Rotation );
+                    math::mat4 lTranslation = math::Translation( lComponent.Translation );
+                    math::mat4 lScale       = math::Scaling( lComponent.Scaling );
 
                     l_ElementToProcess.AddOrReplace<sNodeTransformComponent>( lTranslation * lRotation * lScale );
                 } );
