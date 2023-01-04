@@ -18,7 +18,6 @@
 
 #include "Core/EntityRegistry/Registry.h"
 
-
 #include "Renderer/MeshRenderer.h"
 #include "Renderer/ParticleSystemRenderer.h"
 
@@ -26,7 +25,6 @@
 
 #include "Mono/MonoScriptEngine.h"
 #include "Mono/MonoScriptMethod.h"
-
 
 #include "Core/Profiling/BlockTimer.h"
 
@@ -65,7 +63,7 @@ namespace SE::Core::EntityComponentSystem::Components
     {
         std::string mClassFullName = "";
 
-        MonoScriptClass         mClass;
+        MonoScriptClass    mClass;
         MonoScriptInstance mInstance;
         MonoScriptInstance mEntityInstance;
 
@@ -233,11 +231,14 @@ namespace SE::Core::EntityComponentSystem::Components
     {
         std::string Name = "";
 
-        ePrimitiveTopology Primitive     = ePrimitiveTopology::TRIANGLES;
-        uint32_t           mVertexOffset = 0;
-        uint32_t           mVertexCount  = 0;
-        uint32_t           mIndexOffset  = 0;
-        uint32_t           mIndexCount   = 0;
+        ePrimitiveTopology Primitive          = ePrimitiveTopology::TRIANGLES;
+        Ref<VkGpuBuffer>   mVertexBuffer      = nullptr;
+        Ref<VkGpuBuffer>   mIndexBuffer       = nullptr;
+        Ref<VkGpuBuffer>   mTransformedBuffer = nullptr;
+        uint32_t           mVertexOffset      = 0;
+        uint32_t           mVertexCount       = 0;
+        uint32_t           mIndexOffset       = 0;
+        uint32_t           mIndexCount        = 0;
 
         sStaticMeshComponent()                               = default;
         sStaticMeshComponent( const sStaticMeshComponent & ) = default;
@@ -258,7 +259,6 @@ namespace SE::Core::EntityComponentSystem::Components
     struct sParticleShaderComponent
     {
         float LineWidth = 1.0f;
-        // ParticleSystemRenderer Renderer{};
 
         sParticleShaderComponent()                                   = default;
         sParticleShaderComponent( const sParticleShaderComponent & ) = default;

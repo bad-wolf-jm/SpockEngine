@@ -112,12 +112,6 @@ namespace SE::Core
         Ref<VkGpuBuffer> mVertexBuffer            = nullptr;
         Ref<VkGpuBuffer> mIndexBuffer             = nullptr;
         Ref<VkGpuBuffer> mTransformedVertexBuffer = nullptr;
-        // Ref<Buffer>             mVertexBuffer            = nullptr;
-        // Ref<Buffer>             mIndexBuffer             = nullptr;
-        // Ref<Buffer>             mTransformedVertexBuffer = nullptr;
-        // Cuda::GPUExternalMemory mTransformedVertexBufferMemoryHandle{};
-        // Cuda::GPUExternalMemory mVertexBufferMemoryHandle{};
-        // Cuda::GPUExternalMemory mIndexBufferMemoryHandle{};
 
       private:
         eSceneState           mState = eSceneState::EDITING;
@@ -129,10 +123,6 @@ namespace SE::Core
 
         std::vector<sActorComponent> mActorComponents;
 
-        void UpdateParent( Entity const &aEntity, sRelationshipComponent const &aComponent );
-        void UpdateLocalTransform( Entity const &aEntity, sNodeTransformComponent const &aComponent );
-        void UpdateTransformMatrix( Entity const &aEntity, sTransformMatrixComponent const &aComponent );
-
       protected:
         SE::Core::EntityRegistry m_Registry;
 
@@ -141,7 +131,6 @@ namespace SE::Core
         void DestroyEntity( Element entity );
         void ConnectSignalHandlers();
 
-        // std::unordered_map<std::string, Element> mAssetSystem = {};
         GPUMemory mTransforms{};
         GPUMemory mVertexOffsets{};
         GPUMemory mVertexCounts{};

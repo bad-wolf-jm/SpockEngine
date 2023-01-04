@@ -59,7 +59,6 @@ namespace SE::Core
         Root.Add<sNodeTransformComponent>();
 
         InitializeRayTracing();
-        ConnectSignalHandlers();
     }
 
     template <typename _Component>
@@ -208,7 +207,6 @@ namespace SE::Core
         mJointTransforms = GPUMemory::Create<math::mat4>( lJointMatrixCount );
         mJointOffsets    = GPUMemory::Create<uint32_t>( lJointOffsetCount );
 
-        ConnectSignalHandlers();
         mIsClone = true;
     }
 
@@ -217,60 +215,6 @@ namespace SE::Core
         mTransforms.Dispose();
         mVertexOffsets.Dispose();
         mVertexCounts.Dispose();
-    }
-
-    void Scene::UpdateParent( Entity const &aEntity, sRelationshipComponent const &aComponent )
-    {
-        auto &lParent = aComponent.mParent;
-
-        if( !( aEntity.Has<sNodeTransformComponent>() ) ) return;
-
-        auto &lLocalTransform = aEntity.Get<sNodeTransformComponent>();
-
-        if( lParent && lParent.Has<sTransformMatrixComponent>() )
-        {
-            aEntity.AddOrReplace<sTransformMatrixComponent>( lParent.Get<sTransformMatrixComponent>().Matrix *
-                                                             lLocalTransform.mMatrix );
-
-            UpdateTransformMatrix( aEntity, aEntity.Get<sTransformMatrixComponent>() );
-        }
-    }
-
-    void Scene::UpdateLocalTransform( Entity const &aEntity, sNodeTransformComponent const &aComponent )
-    {
-        if( !aEntity.Has<sRelationshipComponent>() ) return;
-
-        auto &lParent = aEntity.Get<sRelationshipComponent>().mParent;
-
-        if( lParent && lParent.Has<sTransformMatrixComponent>() )
-            aEntity.AddOrReplace<sTransformMatrixComponent>( lParent.Get<sTransformMatrixComponent>().Matrix * aComponent.mMatrix );
-        else
-            aEntity.AddOrReplace<sTransformMatrixComponent>( aComponent.mMatrix );
-
-        UpdateTransformMatrix( aEntity, aEntity.Get<sTransformMatrixComponent>() );
-    }
-
-    void Scene::UpdateTransformMatrix( Entity const &aEntity, sTransformMatrixComponent const &aComponent )
-    {
-        if( !aEntity.Has<sRelationshipComponent>() ) return;
-
-        for( auto lChild : aEntity.Get<sRelationshipComponent>().mChildren )
-        {
-            if( lChild.Has<sNodeTransformComponent>() )
-            {
-                lChild.AddOrReplace<sTransformMatrixComponent>( aComponent.Matrix * lChild.Get<sNodeTransformComponent>().mMatrix );
-
-                UpdateTransformMatrix( lChild, lChild.Get<sTransformMatrixComponent>() );
-            }
-        }
-    }
-
-    void Scene::ConnectSignalHandlers()
-    {
-        using namespace std::placeholders;
-
-        m_Registry.OnComponentAdded<sRelationshipComponent>( std::bind( &Scene::UpdateParent, this, _1, _2 ) );
-        m_Registry.OnComponentUpdated<sRelationshipComponent>( std::bind( &Scene::UpdateParent, this, _1, _2 ) );
     }
 
     math::mat4 Scene::GetView()
@@ -324,7 +268,6 @@ namespace SE::Core
     {
         mMaterialSystem->Wipe();
         m_Registry.Clear();
-        ConnectSignalHandlers();
 
         mMaterialSystem->Clear();
 
@@ -852,7 +795,6 @@ namespace SE::Core
         mJointTransforms = GPUMemory::Create<math::mat4>( lJointMatrixCount );
         mJointOffsets    = GPUMemory::Create<uint32_t>( lJointOffsetCount );
 
-        ConnectSignalHandlers();
     }
 
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name )
