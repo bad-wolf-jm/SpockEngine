@@ -181,13 +181,6 @@ namespace SE::Core
         DefaultCamera = lClonedEntities[aSource->DefaultCamera.Get<sUUID>().mValue.str()];
         CurrentCamera = lClonedEntities[aSource->CurrentCamera.Get<sUUID>().mValue.str()];
 
-        // Copy a reference to the main vertex buffer and its CUDA handle
-        // mVertexBuffer = aSource->mVertexBuffer;
-        // mIndexBuffer  = aSource->mIndexBuffer;
-        // // Create the transformed vertex buffer and its CUDA handle
-        // mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
-        //                                              mVertexBuffer->SizeAs<uint8_t>() );
-
         uint32_t lTransformCount = 0;
         aSource->ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
 
