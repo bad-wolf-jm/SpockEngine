@@ -9,7 +9,8 @@ namespace SE::Graphics
 
     namespace Kernels
     {
-        CUDA_KERNEL_DEFINITION void SkinnedVertexTransform( VertexData *aOutTransformedVertices, VertexData *aVertices,
+        CUDA_KERNEL_DEFINITION void SkinnedVertexTransform( SE::Cuda::Internal::sGPUDevicePointerView *aOutTransformedVertices,
+                                                            SE::Cuda::Internal::sGPUDevicePointerView *aVertices,
                                                             math::mat4 *aObjectToWorldTransform, math::mat4 *aJointMatrices,
                                                             uint32_t *aJointOffsets, uint32_t aObjectCount, uint32_t *aObjectOffsets,
                                                             uint32_t *aObjectVertexCount )
@@ -24,7 +25,8 @@ namespace SE::Graphics
 
             math::mat4 lTransform = aObjectToWorldTransform[blockIdx.x];
 
-            VertexData lVertex = aVertices[lObjectOffset + lVertexID];
+            VertexData  lVertex            = aVertices[blockIdx.x].DataAs<VertexData>()[lObjectOffset + lVertexID];
+            VertexData *lTransformedVertex = aOutTransformedVertices[blockIdx.x].DataAs<VertexData>();
 
             math::mat4 lSkinTransform = lVertex.Weights.x * aJointMatrices[int( lVertex.Bones.x )] +
                                         lVertex.Weights.y * aJointMatrices[int( lVertex.Bones.y )] +
@@ -33,15 +35,16 @@ namespace SE::Graphics
 
             math::mat4 lFinalTransform = lTransform * lSkinTransform;
 
-            aOutTransformedVertices[lObjectOffset + lVertexID] = lVertex;
+            lTransformedVertex[lObjectOffset + lVertexID] = lVertex;
 
-            aOutTransformedVertices[lObjectOffset + lVertexID].Position =
+            lTransformedVertex[lObjectOffset + lVertexID].Position =
                 math::vec3( lFinalTransform * math::vec4( lVertex.Position, 1.0 ) );
-            aOutTransformedVertices[lObjectOffset + lVertexID].Normal =
+            lTransformedVertex[lObjectOffset + lVertexID].Normal =
                 normalize( transpose( inverse( mat3( lFinalTransform ) ) ) * lVertex.Normal );
         }
 
-        CUDA_KERNEL_DEFINITION void StaticVertexTransform( VertexData *aOutTransformedVertices, VertexData *aVertices,
+        CUDA_KERNEL_DEFINITION void StaticVertexTransform( SE::Cuda::Internal::sGPUDevicePointerView *aOutTransformedVertices,
+                                                           SE::Cuda::Internal::sGPUDevicePointerView *aVertices,
                                                            math::mat4 *aObjectToWorldTransform, uint32_t aObjectCount,
                                                            uint32_t *aObjectOffsets, uint32_t *aObjectVertexCount )
         {
@@ -52,21 +55,21 @@ namespace SE::Graphics
 
             RETURN_UNLESS( lVertexID < lObjectVertexCount );
 
-            math::mat4 lTransform = aObjectToWorldTransform[blockIdx.x];
-            VertexData lVertex    = aVertices[lObjectOffset + lVertexID];
+            math::mat4  lTransform         = aObjectToWorldTransform[blockIdx.x];
+            VertexData  lVertex            = aVertices[blockIdx.x].DataAs<VertexData>()[lObjectOffset + lVertexID];
+            VertexData *lTransformedVertex = aOutTransformedVertices[blockIdx.x].DataAs<VertexData>();
 
-            aOutTransformedVertices[lObjectOffset + lVertexID] = lVertex;
+            lTransformedVertex[lObjectOffset + lVertexID] = lVertex;
 
-            aOutTransformedVertices[lObjectOffset + lVertexID].Position =
-                math::vec3( lTransform * math::vec4( lVertex.Position, 1.0 ) );
-            aOutTransformedVertices[lObjectOffset + lVertexID].Normal =
+            lTransformedVertex[lObjectOffset + lVertexID].Position = math::vec3( lTransform * math::vec4( lVertex.Position, 1.0 ) );
+            lTransformedVertex[lObjectOffset + lVertexID].Normal =
                 normalize( transpose( inverse( mat3( lTransform ) ) ) * lVertex.Normal );
         }
     } // namespace Kernels
 
-    void StaticVertexTransform( VertexData *aOutTransformedVertices, VertexData *aVertices, math::mat4 *aObjectToWorldTransform,
-                                uint32_t aObjectCount, uint32_t *aObjectOffsets, uint32_t *aObjectVertexCount,
-                                uint32_t aMaxVertexCount )
+    void StaticVertexTransform( SE::Cuda::Internal::sGPUDevicePointerView *aOutTransformedVertices,
+                                Internal::sGPUDevicePointerView *aVertices, math::mat4 *aObjectToWorldTransform, uint32_t aObjectCount,
+                                uint32_t *aObjectOffsets, uint32_t *aObjectVertexCount, uint32_t aMaxVertexCount )
     {
         int  lBlockCount = ( aMaxVertexCount / SE::TensorOps::Private::ThreadsPerBlock ) + 1;
         dim3 lGridDim( aObjectCount, lBlockCount, 1 );
@@ -76,7 +79,8 @@ namespace SE::Graphics
                                                                  aObjectCount, aObjectOffsets, aObjectVertexCount );
     }
 
-    void SkinnedVertexTransform( VertexData *aOutTransformedVertices, VertexData *aVertices, math::mat4 *aObjectToWorldTransform,
+    void SkinnedVertexTransform( SE::Cuda::Internal::sGPUDevicePointerView *aOutTransformedVertices,
+                                 Internal::sGPUDevicePointerView *aVertices, math::mat4 *aObjectToWorldTransform,
                                  math::mat4 *aJointMatrices, uint32_t *aJointOffsets, uint32_t aObjectCount, uint32_t *aObjectOffsets,
                                  uint32_t *aObjectVertexCount, uint32_t aMaxVertexCount )
     {

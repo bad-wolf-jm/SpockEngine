@@ -63,7 +63,7 @@ namespace SE::Core
                                                           VertexData &aV2, VertexData &aV3 )
     {
         uint32_t const     lVertexOffset = aSbtData.mVertexOffset;
-        math::uvec3 const &lPrimitive    = optixLaunchParams.mIndexBuffer[aPrimitiveID];
+        math::uvec3 const &lPrimitive    = aSbtData.mIndexBuffer[aPrimitiveID];
 
         aV1 = aSbtData.mVertexBuffer[lVertexOffset + lPrimitive.x];
         aV2 = aSbtData.mVertexBuffer[lVertexOffset + lPrimitive.y];

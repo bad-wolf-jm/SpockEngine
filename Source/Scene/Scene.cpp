@@ -12,6 +12,8 @@
 #include "Core/Profiling/BlockTimer.h"
 #include "Core/Resource.h"
 
+#include "Core/CUDA/Array/CudaBuffer.h"
+
 #include "Graphics/Vulkan/VkPipeline.h"
 
 #include "Components.h"
@@ -201,11 +203,13 @@ namespace SE::Core
                 lJointOffsetCount += 1;
             } );
 
-        mTransforms      = GPUMemory::Create<math::mat4>( lTransformCount );
-        mVertexOffsets   = GPUMemory::Create<uint32_t>( lStaticMeshCount );
-        mVertexCounts    = GPUMemory::Create<uint32_t>( lStaticMeshCount );
-        mJointTransforms = GPUMemory::Create<math::mat4>( lJointMatrixCount );
-        mJointOffsets    = GPUMemory::Create<uint32_t>( lJointOffsetCount );
+        mTransforms         = GPUMemory::Create<math::mat4>( lTransformCount );
+        mVertexBuffers      = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
+        mTransformedBuffers = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
+        mVertexOffsets      = GPUMemory::Create<uint32_t>( lStaticMeshCount );
+        mVertexCounts       = GPUMemory::Create<uint32_t>( lStaticMeshCount );
+        mJointTransforms    = GPUMemory::Create<math::mat4>( lJointMatrixCount );
+        mJointOffsets       = GPUMemory::Create<uint32_t>( lJointOffsetCount );
 
         mIsClone = true;
     }
@@ -670,13 +674,6 @@ namespace SE::Core
         std::vector<uint32_t>   lIndexBuffer;
         lScenarioData.Retrieve( 1, lVertexBuffer, lIndexBuffer );
 
-        // mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, lVertexBuffer, eBufferType::VERTEX_BUFFER, false, false, true, true );
-        // mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, lIndexBuffer, eBufferType::INDEX_BUFFER, false, false, true, true );
-
-        // // Create the transformed vertex buffer and its CUDA handle
-        // mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
-        //                                              mVertexBuffer->SizeAs<uint8_t>() );
-
         for( uint32_t lMaterialIndex = 0; lMaterialIndex < lMaterialCount; lMaterialIndex++ )
         {
             sMaterial lMaterialData;
@@ -789,11 +786,13 @@ namespace SE::Core
                 lJointOffsetCount += 1;
             } );
 
-        mTransforms      = GPUMemory::Create<math::mat4>( static_cast<uint32_t>( lTransformCount ) );
-        mVertexOffsets   = GPUMemory::Create<uint32_t>( static_cast<uint32_t>( lStaticMeshCount ) );
-        mVertexCounts    = GPUMemory::Create<uint32_t>( static_cast<uint32_t>( lStaticMeshCount ) );
-        mJointTransforms = GPUMemory::Create<math::mat4>( lJointMatrixCount );
-        mJointOffsets    = GPUMemory::Create<uint32_t>( lJointOffsetCount );
+        mTransforms         = GPUMemory::Create<math::mat4>( static_cast<uint32_t>( lTransformCount ) );
+        mVertexBuffers      = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
+        mTransformedBuffers = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
+        mVertexOffsets      = GPUMemory::Create<uint32_t>( static_cast<uint32_t>( lStaticMeshCount ) );
+        mVertexCounts       = GPUMemory::Create<uint32_t>( static_cast<uint32_t>( lStaticMeshCount ) );
+        mJointTransforms    = GPUMemory::Create<math::mat4>( lJointMatrixCount );
+        mJointOffsets       = GPUMemory::Create<uint32_t>( lJointOffsetCount );
     }
 
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name )
@@ -882,16 +881,9 @@ namespace SE::Core
             lMeshComponent.mTransformedBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true,
                                                                   true, lMeshComponent.mVertexBuffer->SizeAs<uint8_t>() );
 
-            lMeshComponent.mVertexOffset = 0; // lVertexData.size();
-            // lMeshComponent.mIndexOffset  = 0; //lIndexData.size();
-
-            // if( mVertexBuffer )
-            // {
-            //     lMeshComponent.mVertexOffset += mVertexBuffer->SizeAs<VertexData>();
-            //     lMeshComponent.mIndexOffset += mIndexBuffer->SizeAs<uint32_t>();
-            // }
-
+            lMeshComponent.mVertexOffset = 0;
             lMeshComponent.mVertexCount = lVertices.size();
+            lMeshComponent.mIndexOffset = 0;
             lMeshComponent.mIndexCount  = lMesh.mIndices.size();
 
             auto lMeshEntity = Create( lMesh.mName, lAssetEntity );
@@ -900,35 +892,8 @@ namespace SE::Core
             lMeshEntity.Add<sMaterialShaderComponent>( lMaterialCreateInfo[lMesh.mMaterialID] );
             lMeshEntity.Add<sNodeTransformComponent>( math::mat4( 1.0f ) );
 
-            // lVertexData.insert( lVertexData.end(), lVertices.begin(), lVertices.end() );
-            // lIndexData.insert( lIndexData.end(), lMesh.mIndices.begin(), lMesh.mIndices.end() );
             lMeshes.push_back( lMeshEntity );
         }
-
-        // if( mVertexBuffer )
-        // {
-        //     auto lOldVertexBuffer = mVertexBuffer;
-
-        //     mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
-        //                                       lOldVertexBuffer->SizeAs<uint8_t>() + lVertexData.size() * sizeof( VertexData ) );
-        //     mVertexBuffer->Copy( lOldVertexBuffer, 0 );
-        //     mVertexBuffer->Upload( lVertexData, lOldVertexBuffer->SizeAs<VertexData>() );
-
-        //     auto lOldIndexBuffer = mIndexBuffer;
-
-        //     mIndexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::INDEX_BUFFER, false, false, true, true,
-        //                                      lOldIndexBuffer->SizeAs<uint8_t>() + lIndexData.size() * sizeof( uint32_t ) );
-        //     mIndexBuffer->Copy( lOldIndexBuffer, 0 );
-        //     mIndexBuffer->Upload( lIndexData, lOldIndexBuffer->SizeAs<uint32_t>() );
-        // }
-        // else
-        // {
-        //     mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, lVertexData, eBufferType::VERTEX_BUFFER, false, false, true, true );
-        //     mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, lIndexData, eBufferType::INDEX_BUFFER, false, false, true, true );
-        // }
-
-        // mTransformedVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
-        //                                              mVertexBuffer->SizeAs<uint8_t>() );
 
         uint32_t lTransformCount = 0;
         ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
@@ -936,9 +901,11 @@ namespace SE::Core
         uint32_t lStaticMeshCount = 0;
         ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aUUID ) { lStaticMeshCount++; } );
 
-        mTransforms    = GPUMemory::Create<math::mat4>( lTransformCount );
-        mVertexOffsets = GPUMemory::Create<uint32_t>( lStaticMeshCount );
-        mVertexCounts  = GPUMemory::Create<uint32_t>( lStaticMeshCount );
+        mTransforms         = GPUMemory::Create<math::mat4>( lTransformCount );
+        mVertexBuffers      = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
+        mTransformedBuffers = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
+        mVertexOffsets      = GPUMemory::Create<uint32_t>( lStaticMeshCount );
+        mVertexCounts       = GPUMemory::Create<uint32_t>( lStaticMeshCount );
 
         std::vector<Element> lNodes = {};
         for( auto &lNode : aModelData->mNodes )
@@ -1231,70 +1198,86 @@ namespace SE::Core
                 }
             } );
 
-        if( mVertexBuffer )
+        // if( mVertexBuffer )
+        // {
+        //     SE_PROFILE_SCOPE( "Transform Vertices" );
+
+        // Update the transformed vertex buffer for static meshies
         {
-            SE_PROFILE_SCOPE( "Transform Vertices" );
+            std::vector<SE::Cuda::Internal::sGPUDevicePointerView> lVertexBuffers{};
+            std::vector<SE::Cuda::Internal::sGPUDevicePointerView> lOutVertexBuffers{};
 
-            // Update the transformed vertex buffer for static meshies
-            {
-                std::vector<uint32_t>   lVertexOffsets{};
-                std::vector<uint32_t>   lVertexCounts{};
-                std::vector<math::mat4> lObjectToWorldTransforms{};
-                uint32_t                lMaxVertexCount = 0;
-                ForEach<sStaticMeshComponent, sTransformMatrixComponent>(
-                    [&]( auto aEntiy, auto &aMesh, auto &aTransform )
-                    {
-                        if( aEntiy.Has<sSkeletonComponent>() ) return;
+            std::vector<uint32_t>   lVertexOffsets{};
+            std::vector<uint32_t>   lVertexCounts{};
+            std::vector<math::mat4> lObjectToWorldTransforms{};
+            uint32_t                lMaxVertexCount = 0;
+            ForEach<sStaticMeshComponent, sTransformMatrixComponent>(
+                [&]( auto aEntiy, auto &aMesh, auto &aTransform )
+                {
+                    if( aEntiy.Has<sSkeletonComponent>() ) return;
 
-                        lObjectToWorldTransforms.push_back( aTransform.Matrix );
-                        lVertexOffsets.push_back( aMesh.mVertexOffset );
-                        lVertexCounts.push_back( aMesh.mVertexCount );
-                        lMaxVertexCount = std::max( lMaxVertexCount, static_cast<uint32_t>( aMesh.mVertexCount ) );
-                    } );
+                    lObjectToWorldTransforms.push_back( aTransform.Matrix );
+                    lVertexBuffers.push_back( *aMesh.mVertexBuffer );
+                    lOutVertexBuffers.push_back( *aMesh.mTransformedBuffer );
+                    lVertexOffsets.push_back( aMesh.mVertexOffset );
+                    lVertexCounts.push_back( aMesh.mVertexCount );
+                    lMaxVertexCount = std::max( lMaxVertexCount, static_cast<uint32_t>( aMesh.mVertexCount ) );
+                } );
 
-                mTransforms.Upload( lObjectToWorldTransforms );
-                mVertexOffsets.Upload( lVertexOffsets );
-                mVertexCounts.Upload( lVertexCounts );
+            mTransforms.Upload( lObjectToWorldTransforms );
+            mVertexOffsets.Upload( lVertexOffsets );
+            mVertexCounts.Upload( lVertexCounts );
+            mVertexBuffers.Upload( lVertexBuffers );
+            mTransformedBuffers.Upload( lOutVertexBuffers );
 
-                StaticVertexTransform( mTransformedVertexBuffer->DataAs<VertexData>(), mVertexBuffer->DataAs<VertexData>(),
-                                       mTransforms.DataAs<math::mat4>(), lVertexOffsets.size(), mVertexOffsets.DataAs<uint32_t>(),
-                                       mVertexCounts.DataAs<uint32_t>(), lMaxVertexCount );
-            }
-
-            // Update the transformed vertex buffer for animated meshies
-            {
-                std::vector<uint32_t>   lVertexOffsets{};
-                std::vector<uint32_t>   lVertexCounts{};
-                std::vector<math::mat4> lObjectToWorldTransforms{};
-                std::vector<math::mat4> lJointTransforms{};
-                std::vector<uint32_t>   lJointOffsets{};
-                uint32_t                lMaxVertexCount = 0;
-                ForEach<sStaticMeshComponent, sTransformMatrixComponent, sSkeletonComponent>(
-                    [&]( auto aEntiy, auto &aMesh, auto &aTransform, auto &aSkeleton )
-                    {
-                        lObjectToWorldTransforms.push_back( aTransform.Matrix );
-                        lVertexOffsets.push_back( aMesh.mVertexOffset );
-                        lVertexCounts.push_back( aMesh.mVertexCount );
-                        lMaxVertexCount = std::max( lMaxVertexCount, static_cast<uint32_t>( aMesh.mVertexCount ) );
-
-                        lJointOffsets.push_back( lJointTransforms.size() );
-                        for( auto &lJoint : aSkeleton.JointMatrices ) lJointTransforms.push_back( lJoint );
-                    } );
-
-                mTransforms.Upload( lObjectToWorldTransforms );
-                mVertexOffsets.Upload( lVertexOffsets );
-                mVertexCounts.Upload( lVertexCounts );
-                mJointOffsets.Upload( lJointOffsets );
-                mJointTransforms.Upload( lJointTransforms );
-
-                SkinnedVertexTransform( mTransformedVertexBuffer->DataAs<VertexData>(), mVertexBuffer->DataAs<VertexData>(),
-                                        mTransforms.DataAs<math::mat4>(), mJointTransforms.DataAs<math::mat4>(),
-                                        mJointOffsets.DataAs<uint32_t>(), lVertexOffsets.size(), mVertexOffsets.DataAs<uint32_t>(),
-                                        mVertexCounts.DataAs<uint32_t>(), lMaxVertexCount );
-            }
-
-            CUDA_SYNC_CHECK();
+            StaticVertexTransform( mTransformedBuffers.DataAs<SE::Cuda::Internal::sGPUDevicePointerView>(),
+                                   mVertexBuffers.DataAs<SE::Cuda::Internal::sGPUDevicePointerView>(),
+                                   mTransforms.DataAs<math::mat4>(), lVertexOffsets.size(), mVertexOffsets.DataAs<uint32_t>(),
+                                   mVertexCounts.DataAs<uint32_t>(), lMaxVertexCount );
         }
+
+        // Update the transformed vertex buffer for animated meshies
+        {
+            std::vector<SE::Cuda::Internal::sGPUDevicePointerView> lVertexBuffers{};
+            std::vector<SE::Cuda::Internal::sGPUDevicePointerView> lOutVertexBuffers{};
+
+            std::vector<uint32_t>   lVertexOffsets{};
+            std::vector<uint32_t>   lVertexCounts{};
+            std::vector<math::mat4> lObjectToWorldTransforms{};
+            std::vector<math::mat4> lJointTransforms{};
+            std::vector<uint32_t>   lJointOffsets{};
+            uint32_t                lMaxVertexCount = 0;
+            ForEach<sStaticMeshComponent, sTransformMatrixComponent, sSkeletonComponent>(
+                [&]( auto aEntiy, auto &aMesh, auto &aTransform, auto &aSkeleton )
+                {
+                    lObjectToWorldTransforms.push_back( aTransform.Matrix );
+                    lVertexBuffers.push_back( *aMesh.mVertexBuffer );
+                    lOutVertexBuffers.push_back( *aMesh.mTransformedBuffer );
+                    lVertexOffsets.push_back( aMesh.mVertexOffset );
+                    lVertexCounts.push_back( aMesh.mVertexCount );
+                    lMaxVertexCount = std::max( lMaxVertexCount, static_cast<uint32_t>( aMesh.mVertexCount ) );
+
+                    lJointOffsets.push_back( lJointTransforms.size() );
+                    for( auto &lJoint : aSkeleton.JointMatrices ) lJointTransforms.push_back( lJoint );
+                } );
+
+            mTransforms.Upload( lObjectToWorldTransforms );
+            mVertexBuffers.Upload( lVertexBuffers );
+            mTransformedBuffers.Upload( lOutVertexBuffers );
+            mVertexOffsets.Upload( lVertexOffsets );
+            mVertexCounts.Upload( lVertexCounts );
+            mJointOffsets.Upload( lJointOffsets );
+            mJointTransforms.Upload( lJointTransforms );
+
+            SkinnedVertexTransform( mTransformedBuffers.DataAs<SE::Cuda::Internal::sGPUDevicePointerView>(),
+                                    mVertexBuffers.DataAs<SE::Cuda::Internal::sGPUDevicePointerView>(),
+                                    mTransforms.DataAs<math::mat4>(), mJointTransforms.DataAs<math::mat4>(),
+                                    mJointOffsets.DataAs<uint32_t>(), lVertexOffsets.size(), mVertexOffsets.DataAs<uint32_t>(),
+                                    mVertexCounts.DataAs<uint32_t>(), lMaxVertexCount );
+        }
+
+        CUDA_SYNC_CHECK();
+        // }
 
         UpdateRayTracingComponents();
     }
@@ -1321,16 +1304,16 @@ namespace SE::Core
     {
         SE_PROFILE_FUNCTION();
 
-        if( ( !mTransformedVertexBuffer ) || ( !mIndexBuffer ) ) return;
+        // if( ( !mTransformedVertexBuffer ) || ( !mIndexBuffer ) ) return;
 
         mAccelerationStructure = SE::Core::New<OptixScene>( mRayTracingContext );
 
         ForEach<sRayTracingTargetComponent, sStaticMeshComponent>(
             [&]( auto aEntity, auto &aRTComponent, auto &aMeshComponent )
             {
-                mAccelerationStructure->AddGeometry( *aMeshComponent.mTransformedBuffer, *aMeshComponent.mIndexBuffer, aMeshComponent.mVertexOffset,
-                                                     aMeshComponent.mVertexCount, aMeshComponent.mIndexOffset,
-                                                     aMeshComponent.mIndexCount );
+                mAccelerationStructure->AddGeometry( *aMeshComponent.mTransformedBuffer, *aMeshComponent.mIndexBuffer,
+                                                     aMeshComponent.mVertexOffset, aMeshComponent.mVertexCount,
+                                                     aMeshComponent.mIndexOffset, aMeshComponent.mIndexCount );
             } );
 
         mAccelerationStructure->Build();

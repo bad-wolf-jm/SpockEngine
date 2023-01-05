@@ -132,6 +132,8 @@ namespace SE::Core
         void ConnectSignalHandlers();
 
         GPUMemory mTransforms{};
+        GPUMemory mVertexBuffers{};
+        GPUMemory mTransformedBuffers{};
         GPUMemory mVertexOffsets{};
         GPUMemory mVertexCounts{};
         GPUMemory mJointTransforms{};
