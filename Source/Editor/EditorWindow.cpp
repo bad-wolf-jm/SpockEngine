@@ -2,6 +2,7 @@
 
 #include <fmt/core.h>
 #include <fstream>
+#include <iostream>
 #include <locale>
 
 #include "Core/Profiling/BlockTimer.h"
@@ -18,6 +19,8 @@
 #include "Core/Logging.h"
 
 #include "Scene/Components.h"
+#include "Scene/Serialize/AssetFile.h"
+#include "Scene/Serialize/FileIO.h"
 
 // #include "ShortWaveformDisplay.h"
 
@@ -26,55 +29,6 @@ namespace SE::Editor
 
     using namespace SE::Core;
     using namespace SE::Core::EntityComponentSystem::Components;
-
-    // class SamplerChooser
-    // {
-    //   public:
-    //     // Ref<SensorDeviceBase> SensorModel = nullptr;
-    //     std::string ID                    = "";
-    //     UI::ComboBox<Entity> Dropdown;
-
-    //   public:
-    //     SamplerChooser() = default;
-    //     SamplerChooser( std::string a_ID )
-    //         : ID{ a_ID }
-    //         , Dropdown{ UI::ComboBox<Entity>( a_ID ) } {};
-
-    //     ~SamplerChooser() = default;
-
-    //     Entity GetValue()
-    //     {
-    //         if( Dropdown.Values.size() > 0 )
-    //             return Dropdown.Values[Dropdown.CurrentItem];
-    //         return Entity{};
-    //     }
-
-    //     void Display( Entity &a_TargetEntity )
-    //     {
-    //         Dropdown.Labels = { "None" };
-    //         Dropdown.Values = { Entity{} };
-
-    //         uint32_t n = 1;
-
-    //         SensorModel->mSensorDefinition->ForEach<sSampler>(
-    //             [&]( auto aEntity, auto &aComponent )
-    //             {
-    //                 Dropdown.Labels.push_back( aEntity.Get<sTag>().mValue );
-    //                 Dropdown.Values.push_back( aEntity );
-
-    //                 if( (uint32_t)aEntity == (uint32_t)a_TargetEntity )
-    //                     Dropdown.CurrentItem = n;
-    //                 n++;
-    //             } );
-
-    //         Dropdown.Display();
-
-    //         if( Dropdown.Changed )
-    //         {
-    //             a_TargetEntity = Dropdown.GetValue();
-    //         }
-    //     }
-    // };
 
     template <typename _SliderType>
     class Slider
@@ -663,13 +617,19 @@ namespace SE::Editor
         {
             if( UI::MenuItem( fmt::format( "{} Load scene", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
             {
-                auto lFilePath = FileDialogs::OpenFile( mEngineLoop->GetMainApplicationWindow(),
+                auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
                                                         "glTf Files (*.gltf)\0*.gltf\0All Files (*.*)\0*.*\0" );
                 if( lFilePath.has_value() ) LoadScenario( lFilePath.value() );
             }
             if( UI::MenuItem( fmt::format( "{} New material", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
             {
                 // m_NewMaterial.Visible = true;
+            }
+            if( UI::MenuItem( fmt::format( "{} Import model...", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
+            {
+                auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
+                                                        "glTf Files (*.gltf)\0*.gltf\0All Files (*.*)\0*.*\0" );
+                if( lFilePath.has_value() ) ImportModel( lFilePath.value() );
             }
             if( UI::MenuItem( fmt::format( "{} Save Scene", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
             {
@@ -680,7 +640,7 @@ namespace SE::Editor
             if( UI::MenuItem( fmt::format( "{} Load Scenario Scene", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
             {
                 // m_NewMaterial.Visible = true;
-                World->LoadScenario( fs::path( "C:\\GitLab\\SpockEngine\\Saved" ) / "TEST" / "SCENE" / "Scene.yaml" );
+                // World->LoadScenario( fs::path( "C:\\GitLab\\SpockEngine\\Saved" ) / "TEST" / "SCENE" / "Scene.yaml" );
             }
 
             l_RequestQuit = UI::MenuItem( fmt::format( "{} Exit", ICON_FA_WINDOW_CLOSE_O ).c_str(), NULL );
@@ -734,6 +694,67 @@ namespace SE::Editor
             // lNewModel.Add<LockComponent>();
             World->ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aComponent )
                                                   { World->MarkAsRayTracingTarget( aEntity ); } );
+        }
+    }
+
+    void EditorWindow::ImportModel( fs::path aPath )
+    {
+        auto lName = aPath.filename().string();
+        auto lExt  = aPath.extension().string();
+
+        Ref<sImportedModel> lModelData = nullptr;
+        if( lExt == ".gltf" )
+            lModelData = New<GlTFImporter>( aPath );
+        else if( lExt == ".obj" )
+            lModelData = New<ObjImporter>( aPath );
+
+        if( !lModelData ) return;
+
+        auto lModelName = aPath.stem().string();
+        if( !fs::exists( mModelsPath / lModelName ) ) fs::create_directories( mModelsPath / lModelName );
+        if( !fs::exists( mModelsPath / lModelName / "Materials" ) ) fs::create_directories( mModelsPath / lModelName / "Materials" );
+        if( !fs::exists( mModelsPath / lModelName / "Meshes" ) ) fs::create_directories( mModelsPath / lModelName / "Meshes" );
+        if( !fs::exists( mModelsPath / lModelName / "Animations" ) ) fs::create_directories( mModelsPath / lModelName / "Animations" );
+
+        for( auto &lMaterial : lModelData->mMaterials )
+        {
+            if( !fs::exists( mModelsPath / lModelName / "Materials" / lMaterial.mName ) )
+                fs::create_directories( mModelsPath / lModelName / "Materials" / lMaterial.mName );
+        }
+
+        for( auto &lMesh : lModelData->mMeshes )
+        {
+            BinaryAsset lBinaryDataFile;
+
+            std::string lSerializedMeshName = fmt::format( "{}.mesh", lMesh.mName );
+            auto        lPath               = mModelsPath / lModelName / "Meshes" / lSerializedMeshName;
+
+            std::vector<VertexData> lVertices( lMesh.mPositions.size() );
+            for( uint32_t i = 0; i < lMesh.mPositions.size(); i++ )
+            {
+                lVertices[i].Position    = lMesh.mPositions[i];
+                lVertices[i].Normal      = lMesh.mNormals[i];
+                lVertices[i].TexCoords_0 = lMesh.mUV0[i];
+                lVertices[i].TexCoords_1 = lMesh.mUV1[i];
+                lVertices[i].Bones       = lMesh.mJoints[i];
+                lVertices[i].Weights     = lMesh.mWeights[i];
+            }
+
+            auto lMeshData = lBinaryDataFile.Package( lVertices, lMesh.mIndices );
+
+            sAssetIndex lMeshAssetIndexEntry{};
+            lMeshAssetIndexEntry.mType      = eAssetType::MESH_DATA;
+            lMeshAssetIndexEntry.mByteStart = 0;
+            lMeshAssetIndexEntry.mByteEnd   = 0;
+
+            auto    *lMagic       = BinaryAsset::GetMagic();
+            auto     lMagicLength = BinaryAsset::GetMagicLength();
+            auto     lOutFile     = std::ofstream( lPath.string(), std::ofstream::binary );
+            uint32_t lAssetCount  = static_cast<uint32_t>( 1 );
+            lOutFile.write( (const char *)lMagic, lMagicLength );
+            lOutFile.write( (const char *)&lAssetCount, sizeof( uint32_t ) );
+            lOutFile.write( (const char *)&lMeshAssetIndexEntry, sizeof( sAssetIndex ) );
+            lOutFile.write( (const char *)lMeshData.data(), lMeshData.size() );
         }
     }
 
