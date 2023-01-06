@@ -90,6 +90,20 @@ namespace SE::Core
         return lPacket;
     }
 
+    std::vector<char> BinaryAsset::Package( Ref<TextureData2D> aData, Ref<TextureSampler2D> aSampler )
+    {
+        if( aData != nullptr )
+        {
+            return Package( *aData, aSampler->mSamplingSpec );
+        }
+        else
+        {
+            return Package( TextureData2D{}, sTextureSamplingInfo{} );
+        }
+    }
+
+    std::vector<char> BinaryAsset::Package( sImportedTexture const &aData ) { return Package( aData.mTexture, aData.mSampler ); }
+
     std::tuple<TextureData2D, TextureSampler2D> BinaryAsset::Retrieve( uint32_t aIndex )
     {
         auto lAssetIndex = mAssetIndex[aIndex];

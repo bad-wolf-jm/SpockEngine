@@ -17,7 +17,6 @@
 #include "Scene/Importer/ImporterData.h"
 #include "Scene/VertexData.h"
 
-
 namespace fs = std::filesystem;
 
 namespace SE::Core
@@ -105,6 +104,8 @@ namespace SE::Core
         std::vector<char> Package( std::vector<VertexData> const &aVertexData, std::vector<uint32_t> const &aIndexData );
         std::vector<char> Package( sMaterial const &aMaterialData );
         std::vector<char> Package( sImportedAnimationSampler const &aMaterialData );
+        std::vector<char> Package( Ref<TextureData2D> aData, Ref<TextureSampler2D> aSampler );
+        std::vector<char> Package( sImportedTexture const &aData );
 
       private:
         fs::path      mFilePath   = "";
