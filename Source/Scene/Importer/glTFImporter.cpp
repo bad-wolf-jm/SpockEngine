@@ -298,6 +298,7 @@ namespace SE::Core
 
                 mMeshes.emplace_back();
                 sImportedMesh &lNewImportedMesh = mMeshes.back();
+                lNewImportedMesh.mName = fmt::format( "MESH_{}", mMeshes.size() - 1 );
 
                 switch( lPrimitive.mode )
                 {

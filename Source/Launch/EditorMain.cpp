@@ -16,11 +16,11 @@
 #include <limits.h>
 #include <string>
 
-#include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Core/Logging.h"
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 #include "Engine/Engine.h"
+#include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "Editor/BaseEditorApplication.h"
 
@@ -32,12 +32,11 @@ using namespace SE::Core::UI;
 
 namespace fs = std::filesystem;
 
-
 void LoadConfiguration( fs::path aConfigurationFile, math::ivec2 &aWindowSize, math::ivec2 &aWindowPosition,
                         UIConfiguration &aUIConfiguration )
 {
     YAML::Node lRootNode = YAML::LoadFile( aConfigurationFile.string() );
-    lRootNode = lRootNode["application"];
+    lRootNode            = lRootNode["application"];
 
     fs::path lFontRoot = "C:\\Windows\\Fonts";
 
@@ -196,6 +195,10 @@ int main( int argc, char **argv )
 
     SE::Logging::Info( "Current working directory is: '{}'", lProjectRoot.string() );
 
+    // Create Assets, Assets/Materials, Assets/Models
+    if( !fs::exists( lProjectRoot / "Assets" / "Materials" ) ) fs::create_directories( lProjectRoot / "Assets" / "Materials" );
+    if( !fs::exists( lProjectRoot / "Assets" / "Models" ) ) fs::create_directories( lProjectRoot / "Assets" / "Models" );
+
     // Create Saved, Saved/Logs
     if( !fs::exists( lProjectRoot / "Saved" / "Logs" ) ) fs::create_directories( lProjectRoot / "Saved" / "Logs" );
 
@@ -257,6 +260,9 @@ int main( int argc, char **argv )
 
     SE::Editor::BaseEditorApplication lEditorApplication;
     lEditorApplication.Init();
+
+    lEditorApplication.mEditorWindow.mMaterialsPath = lProjectRoot / "Assets" / "Materials";
+    lEditorApplication.mEditorWindow.mModelsPath = lProjectRoot / "Assets" / "Models";
 
     SE::Core::Engine::GetInstance()->UpdateDelegate.connect<&SE::Editor::BaseEditorApplication::Update>( lEditorApplication );
     SE::Core::Engine::GetInstance()->RenderDelegate.connect<&SE::Editor::BaseEditorApplication::RenderScene>( lEditorApplication );

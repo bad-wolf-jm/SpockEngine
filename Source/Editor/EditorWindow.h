@@ -66,6 +66,9 @@ namespace SE::Editor
         std::string ApplicationName = "";
         std::string DocumentName    = "";
 
+        fs::path mMaterialsPath = "";
+        fs::path mModelsPath    = "";
+
         Ref<Engine>               mEngineLoop   = nullptr;
         Ref<Scene>                World         = nullptr;
         Ref<Scene>                ActiveWorld   = nullptr;
@@ -101,6 +104,7 @@ namespace SE::Editor
 
         void ClearScene();
         void LoadScenario( fs::path aPath );
+        void ImportModel( fs::path aPath );
 
         void Workspace( int32_t width, int32_t height );
         void Console( int32_t width, int32_t height );
