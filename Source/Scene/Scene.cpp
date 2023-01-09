@@ -25,6 +25,7 @@
 #include "Scene/Components/VisualHelpers.h"
 #include "Serialize/AssetFile.h"
 #include "Serialize/FileIO.h"
+#include "Serialize/SerializeComponents.h"
 
 namespace SE::Core
 {
@@ -875,9 +876,9 @@ namespace SE::Core
                                                                   true, lMeshComponent.mVertexBuffer->SizeAs<uint8_t>() );
 
             lMeshComponent.mVertexOffset = 0;
-            lMeshComponent.mVertexCount = lVertices.size();
-            lMeshComponent.mIndexOffset = 0;
-            lMeshComponent.mIndexCount  = lMesh.mIndices.size();
+            lMeshComponent.mVertexCount  = lVertices.size();
+            lMeshComponent.mIndexOffset  = 0;
+            lMeshComponent.mIndexCount   = lMesh.mIndices.size();
 
             auto lMeshEntity = Create( lMesh.mName, lAssetEntity );
             lMeshEntity.Add<sStaticMeshComponent>( lMeshComponent );
@@ -1297,8 +1298,6 @@ namespace SE::Core
     {
         SE_PROFILE_FUNCTION();
 
-        // if( ( !mTransformedVertexBuffer ) || ( !mIndexBuffer ) ) return;
-
         mAccelerationStructure = SE::Core::New<OptixScene>( mRayTracingContext );
 
         ForEach<sRayTracingTargetComponent, sStaticMeshComponent>(
@@ -1320,272 +1319,150 @@ namespace SE::Core
 
     void Scene::Render() {}
 
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sTag const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap( true );
-        {
-            aOut.WriteKey( "mValue", aComponent.mValue );
-        }
-        aOut.EndMap();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sRelationshipComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap( true );
-        {
-            if( aComponent.mParent )
-            {
-                aOut.WriteKey( "mParent", aComponent.mParent.Get<sUUID>().mValue.str() );
-            }
-            else
-            {
-                aOut.WriteKey( "mParent" );
-                aOut.WriteNull();
-            }
-        }
-        aOut.EndMap();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sCameraComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap( true );
-        {
-            aOut.WriteKey( "Position" );
-            aOut.Write( aComponent.Position, { "x", "y", "z" } );
-            aOut.WriteKey( "Pitch", aComponent.Pitch );
-            aOut.WriteKey( "Yaw", aComponent.Yaw );
-            aOut.WriteKey( "Roll", aComponent.Roll );
-            aOut.WriteKey( "Near", aComponent.Near );
-            aOut.WriteKey( "Far", aComponent.Far );
-            aOut.WriteKey( "FieldOfView", aComponent.FieldOfView );
-            aOut.WriteKey( "AspectRatio", aComponent.AspectRatio );
-        }
-        aOut.EndMap();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sAnimationChooser const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginSequence( true );
-        {
-            for( auto &lAnimationEntity : aComponent.Animations )
-            {
-                if( lAnimationEntity ) aOut.Write( lAnimationEntity.Get<sUUID>().mValue.str() );
-            }
-        }
-        aOut.EndSequence();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sActorComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap( true );
-        aOut.WriteKey( "mClassFullName", aComponent.mClassFullName );
-        aOut.EndMap();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sAnimatedTransformComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap();
-        {
-            aOut.WriteKey( "Translation" );
-            aOut.Write( aComponent.Translation, { "x", "y", "z" } );
-            aOut.WriteKey( "Scaling" );
-            aOut.Write( aComponent.Scaling, { "x", "y", "z" } );
-            aOut.WriteKey( "Rotation" );
-            aOut.Write( aComponent.Rotation, { "x", "y", "z", "w" } );
-        }
-        aOut.EndMap();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sNodeTransformComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap( true );
-        {
-            aOut.WriteKey( "mMatrix" );
-            aOut.Write( aComponent.mMatrix );
-        }
-        aOut.EndMap();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sTransformMatrixComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap( true );
-        {
-            aOut.WriteKey( "mMatrix" );
-            aOut.Write( aComponent.Matrix );
-        }
-        aOut.EndMap();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sStaticMeshComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap( true );
-        {
-            aOut.WriteKey( "mVertexOffset", aComponent.mVertexOffset );
-            aOut.WriteKey( "mVertexCount", aComponent.mVertexCount );
-            aOut.WriteKey( "mIndexOffset", aComponent.mIndexOffset );
-            aOut.WriteKey( "mIndexCount", aComponent.mIndexCount );
-        }
-        aOut.EndMap();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sParticleSystemComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.WriteNull();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sParticleShaderComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.WriteNull();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sSkeletonComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap();
-        {
-            aOut.WriteKey( "BoneCount", (uint32_t)aComponent.BoneCount );
-            aOut.WriteKey( "Bones" );
-            aOut.BeginSequence( true );
-            {
-                for( auto &x : aComponent.Bones ) aOut.Write( x.Get<sUUID>().mValue.str() );
-            }
-            aOut.EndSequence();
-            aOut.WriteKey( "InverseBindMatrices" );
-            aOut.BeginSequence( true );
-            {
-                for( auto &x : aComponent.InverseBindMatrices ) aOut.Write( x );
-            }
-            aOut.EndSequence();
-            aOut.WriteKey( "JointMatrices" );
-            aOut.BeginSequence( true );
-            {
-                for( auto &x : aComponent.JointMatrices ) aOut.Write( x );
-            }
-            aOut.EndSequence();
-        }
-        aOut.EndMap();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sWireframeComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.WriteNull();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sWireframeMeshComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.WriteNull();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sBoundingBoxComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.WriteNull();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sRayTracingTargetComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap( true );
-        {
-            aOut.WriteKey( "Transform" );
-            aOut.Write( aComponent.Transform );
-        }
-        aOut.EndMap();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sMaterialComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap( true );
-        {
-            aOut.WriteKey( "mMaterialID", aComponent.mMaterialID );
-        }
-        aOut.EndMap();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sMaterialShaderComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap( true );
-        {
-            aOut.WriteKey( "Type", (uint32_t)aComponent.Type );
-            aOut.WriteKey( "IsTwoSided", aComponent.IsTwoSided );
-            aOut.WriteKey( "UseAlphaMask", aComponent.UseAlphaMask );
-            aOut.WriteKey( "LineWidth", aComponent.LineWidth );
-            aOut.WriteKey( "AlphaMaskTheshold", aComponent.AlphaMaskTheshold );
-        }
-        aOut.EndMap();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sBackgroundComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap( true );
-        {
-            aOut.WriteKey( "Color" );
-            aOut.Write( aComponent.Color, { "r", "g", "b" } );
-        }
-        aOut.EndMap();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sAmbientLightingComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap( true );
-        {
-            aOut.WriteKey( "Intensity", aComponent.Intensity );
-            aOut.WriteKey( "Color" );
-            aOut.Write( aComponent.Color, { "r", "g", "b" } );
-        }
-        aOut.EndMap();
-    }
-
-    void DoWriteComponent( ConfigurationWriter &aOut, std::string &aName, sLightComponent const &aComponent )
-    {
-        aOut.WriteKey( aName );
-        aOut.BeginMap( true );
-        {
-            std::unordered_map<eLightType, std::string> lLightTypeLookup = { { eLightType::DIRECTIONAL, "DIRECTIONAL" },
-                                                                             { eLightType::SPOTLIGHT, "SPOTLIGHT" },
-                                                                             { eLightType::POINT_LIGHT, "POINT_LIGHT" } };
-
-            aOut.WriteKey( "mType", lLightTypeLookup[aComponent.mType] );
-            aOut.WriteKey( "mColor" );
-            aOut.Write( aComponent.mColor, { "r", "g", "b" } );
-            aOut.WriteKey( "mIntensity", aComponent.mIntensity );
-            aOut.WriteKey( "mCone", aComponent.mCone );
-        }
-        aOut.EndMap();
-    }
-
     template <typename ComponentType>
-    void WriteComponent( ConfigurationWriter &aOut, std::string aName, Entity const &aEntity )
+    void WriteComponent( ConfigurationWriter &aOut, Entity const &aEntity )
     {
-        if( aEntity.Has<ComponentType>() ) DoWriteComponent( aOut, aName, aEntity.Get<ComponentType>() );
+        if( aEntity.Has<ComponentType>() ) DoWriteComponent( aOut, aEntity.Get<ComponentType>() );
+    }
+
+    static void WriteNode( ConfigurationWriter &lOut, Entity const &aEntity, sUUID const &aUUID,
+                           std::vector<sImportedAnimationSampler> &lInterpolationData )
+    {
+        lOut.WriteKey( aUUID.mValue.str() );
+        lOut.BeginMap();
+        {
+            WriteComponent<sTag>( lOut, aEntity );
+            WriteComponent<sRelationshipComponent>( lOut, aEntity );
+            WriteComponent<sCameraComponent>( lOut, aEntity );
+            WriteComponent<sAnimationChooser>( lOut, aEntity );
+            WriteComponent<sActorComponent>( lOut, aEntity );
+
+            if( aEntity.Has<sAnimationComponent>() )
+            {
+                auto &lComponent = aEntity.Get<sAnimationComponent>();
+                lOut.WriteKey( "sAnimationComponent" );
+                lOut.BeginMap();
+                {
+                    lOut.WriteKey( "Duration", lComponent.Duration );
+                    lOut.WriteKey( "mChannels" );
+                    lOut.BeginSequence();
+                    {
+                        for( auto &lAnimationChannel : lComponent.mChannels )
+                        {
+                            lOut.BeginMap( true );
+                            {
+                                lOut.WriteKey( "mTargetNode", lAnimationChannel.mTargetNode.Get<sUUID>().mValue.str() );
+                                lOut.WriteKey( "mChannelID", (uint32_t)lAnimationChannel.mChannelID );
+                                lOut.WriteKey( "mInterpolationDataIndex", lInterpolationData.size() );
+                                lInterpolationData.push_back( lAnimationChannel.mInterpolation );
+                            }
+                            lOut.EndMap();
+                        }
+                    }
+                    lOut.EndSequence();
+                }
+                lOut.EndMap();
+            }
+
+            WriteComponent<sAnimatedTransformComponent>( lOut, aEntity );
+            WriteComponent<sNodeTransformComponent>( lOut, aEntity );
+            WriteComponent<sTransformMatrixComponent>( lOut, aEntity );
+            WriteComponent<sStaticMeshComponent>( lOut, aEntity );
+            WriteComponent<sParticleSystemComponent>( lOut, aEntity );
+            WriteComponent<sParticleShaderComponent>( lOut, aEntity );
+            WriteComponent<sSkeletonComponent>( lOut, aEntity );
+            WriteComponent<sWireframeComponent>( lOut, aEntity );
+            WriteComponent<sWireframeMeshComponent>( lOut, aEntity );
+            WriteComponent<sBoundingBoxComponent>( lOut, aEntity );
+            WriteComponent<sRayTracingTargetComponent>( lOut, aEntity );
+            WriteComponent<sMaterialComponent>( lOut, aEntity );
+            WriteComponent<sMaterialShaderComponent>( lOut, aEntity );
+            WriteComponent<sBackgroundComponent>( lOut, aEntity );
+            WriteComponent<sAmbientLightingComponent>( lOut, aEntity );
+            WriteComponent<sLightComponent>( lOut, aEntity );
+        }
+        lOut.EndMap();
     }
 
     void Scene::SaveAs( fs::path aPath )
     {
         // Check that path does not exist, or exists and is a folder
-        // Create Saved, Saved/Logs
         if( !fs::exists( aPath ) ) fs::create_directories( aPath );
-
         if( !fs::is_directory( aPath ) ) return;
 
-        auto lOut = ConfigurationWriter( aPath / "Scene.yaml" );
+        if( !fs::exists( aPath / "Materials" ) ) fs::create_directories( aPath / "Materials" );
+        if( !fs::exists( aPath / "Meshes" ) ) fs::create_directories( aPath / "Meshes" );
+        if( !fs::exists( aPath / "Animations" ) ) fs::create_directories( aPath / "Animations" );
+
+        {
+            auto &lMaterials = mMaterialSystem->GetMaterialData();
+            auto &lTextures  = mMaterialSystem->GetTextures();
+
+            for( auto &lMaterial : lMaterials )
+            {
+                BinaryAsset lBinaryDataFile{};
+                std::string lSerializedMeshName = fmt::format( "{}.material", lMaterial.mName );
+                auto        lPath               = aPath / "Materials" / lSerializedMeshName;
+
+                auto lRetrieveAndPackageTexture = [&]( uint32_t aTextureID )
+                {
+                    if( aTextureID < 2 )
+                    {
+                        sTextureSamplingInfo lSamplingInfo = lTextures[aTextureID]->mSpec;
+                        TextureData2D        lTextureData;
+                        lTextures[aTextureID]->GetTexture()->GetPixelData( lTextureData );
+                        lBinaryDataFile.Package( lTextureData, lSamplingInfo );
+                    }
+                };
+
+                sMaterial lNewMaterial{};
+                lNewMaterial.mName                         = lMaterial.mName;
+                lNewMaterial.mType                         = eMaterialType::Opaque;
+                lNewMaterial.mLineWidth                    = 1.0f;
+                lNewMaterial.mIsTwoSided                   = lMaterial.mIsTwoSided;
+                lNewMaterial.mUseAlphaMask                 = false;
+                lNewMaterial.mAlphaThreshold               = 0.5;
+                lNewMaterial.mBaseColorFactor              = lMaterial.mBaseColorFactor;
+                lNewMaterial.mBaseColorTexture.mTextureID  = 0;
+                lNewMaterial.mBaseColorTexture.mUVChannel  = 0;
+                lNewMaterial.mNormalsTexture.mTextureID    = 1;
+                lNewMaterial.mNormalsTexture.mUVChannel    = 0;
+                lNewMaterial.mRoughnessFactor              = lMaterial.mRoughnessFactor;
+                lNewMaterial.mMetallicFactor               = lMaterial.mMetallicFactor;
+                lNewMaterial.mMetalRoughTexture.mTextureID = 2;
+                lNewMaterial.mMetalRoughTexture.mUVChannel = 0;
+                lNewMaterial.mOcclusionStrength            = 0.0f;
+                lNewMaterial.mOcclusionTexture.mTextureID  = 3;
+                lNewMaterial.mOcclusionTexture.mUVChannel  = 0;
+                lNewMaterial.mEmissiveFactor               = lMaterial.mEmissiveFactor;
+                lNewMaterial.mEmissiveTexture.mTextureID   = 4;
+                lNewMaterial.mEmissiveTexture.mUVChannel   = 0;
+
+                lBinaryDataFile.Package( lNewMaterial );
+
+                lRetrieveAndPackageTexture( lMaterial.mBaseColorTexture.mTextureID );
+                lRetrieveAndPackageTexture( lMaterial.mNormalsTexture.mTextureID );
+                lRetrieveAndPackageTexture( lMaterial.mMetalRoughTexture.mTextureID );
+                lRetrieveAndPackageTexture( lMaterial.mOcclusionTexture.mTextureID );
+                lRetrieveAndPackageTexture( lMaterial.mEmissiveTexture.mTextureID );
+
+                lBinaryDataFile.WriteTo( lPath );
+            }
+        }
+
+        ForEach<sStaticMeshComponent>(
+            [&]( auto aEntity, auto &aComponent )
+            {
+                BinaryAsset lBinaryDataFile{};
+                std::string lSerializedMeshName = fmt::format( "{}.mesh", aEntity.Get<sUUID>().mValue.str() );
+
+                auto lVertexData = aComponent.mVertexBuffer->Fetch<VertexData>();
+                auto lIndexData  = aComponent.mIndexBuffer->Fetch<uint32_t>();
+                lBinaryDataFile.Package( lVertexData, lIndexData );
+                lBinaryDataFile.WriteTo( aPath / "Meshes" / lSerializedMeshName );
+            } );
+
+        auto lOut = ConfigurationWriter( aPath / "SceneDefinition.yaml" );
 
         std::vector<sImportedAnimationSampler> lInterpolationData;
         lOut.BeginMap();
@@ -1601,177 +1478,16 @@ namespace SE::Core
             lOut.WriteKey( "nodes" );
             {
                 lOut.BeginMap();
-                ForEach<sUUID>(
-                    [&]( auto aEntity, auto &aUUID )
-                    {
-                        lOut.WriteKey( aUUID.mValue.str() );
-                        lOut.BeginMap();
-                        {
-                            WriteComponent<sTag>( lOut, "sTag", aEntity );
-                            WriteComponent<sRelationshipComponent>( lOut, "sRelationshipComponent", aEntity );
-                            WriteComponent<sCameraComponent>( lOut, "sCameraComponent", aEntity );
-                            WriteComponent<sAnimationChooser>( lOut, "sAnimationChooser", aEntity );
-                            WriteComponent<sActorComponent>( lOut, "sActorComponent", aEntity );
-
-                            if( aEntity.Has<sAnimationComponent>() )
-                            {
-                                auto &lComponent = aEntity.Get<sAnimationComponent>();
-                                lOut.WriteKey( "sAnimationComponent" );
-                                lOut.BeginMap();
-                                {
-                                    lOut.WriteKey( "Duration", lComponent.Duration );
-                                    lOut.WriteKey( "mChannels" );
-                                    lOut.BeginSequence();
-                                    {
-                                        for( auto &lAnimationChannel : lComponent.mChannels )
-                                        {
-                                            lOut.BeginMap( true );
-                                            {
-                                                lOut.WriteKey( "mTargetNode",
-                                                               lAnimationChannel.mTargetNode.Get<sUUID>().mValue.str() );
-                                                lOut.WriteKey( "mChannelID", (uint32_t)lAnimationChannel.mChannelID );
-                                                lOut.WriteKey( "mInterpolationDataIndex", lInterpolationData.size() );
-                                                lInterpolationData.push_back( lAnimationChannel.mInterpolation );
-                                            }
-                                            lOut.EndMap();
-                                        }
-                                    }
-                                    lOut.EndSequence();
-                                }
-                                lOut.EndMap();
-                            }
-
-                            WriteComponent<sAnimatedTransformComponent>( lOut, "sAnimatedTransformComponent", aEntity );
-                            WriteComponent<sNodeTransformComponent>( lOut, "sLocalTransformComponent", aEntity );
-                            WriteComponent<sTransformMatrixComponent>( lOut, "sTransformMatrixComponent", aEntity );
-                            WriteComponent<sStaticMeshComponent>( lOut, "sStaticMeshComponent", aEntity );
-                            WriteComponent<sParticleSystemComponent>( lOut, "sParticleSystemComponent", aEntity );
-                            WriteComponent<sParticleShaderComponent>( lOut, "sParticleShaderComponent", aEntity );
-                            WriteComponent<sSkeletonComponent>( lOut, "sSkeletonComponent", aEntity );
-                            WriteComponent<sWireframeComponent>( lOut, "sWireframeComponent", aEntity );
-                            WriteComponent<sWireframeMeshComponent>( lOut, "sWireframeMeshComponent", aEntity );
-                            WriteComponent<sBoundingBoxComponent>( lOut, "sBoundingBoxComponent", aEntity );
-                            WriteComponent<sRayTracingTargetComponent>( lOut, "sRayTracingTargetComponent", aEntity );
-                            WriteComponent<sMaterialComponent>( lOut, "sMaterialComponent", aEntity );
-                            WriteComponent<sMaterialShaderComponent>( lOut, "sMaterialShaderComponent", aEntity );
-                            WriteComponent<sBackgroundComponent>( lOut, "sBackgroundComponent", aEntity );
-                            WriteComponent<sAmbientLightingComponent>( lOut, "sAmbientLightingComponent", aEntity );
-                            WriteComponent<sLightComponent>( lOut, "sLightComponent", aEntity );
-                        }
-                        lOut.EndMap();
-                    } );
-
+                ForEach<sUUID>( [&]( auto aEntity, auto &aUUID ) { WriteNode( lOut, aEntity, aUUID, lInterpolationData ); } );
                 lOut.EndMap();
             }
             lOut.EndMap();
         }
         lOut.EndMap();
 
-        fs::path                       lOutput = aPath / "BinaryData.bin";
-        BinaryAsset                    lBinaryDataFile;
-        std::vector<sAssetIndex>       lAssetIndex{};
-        std::vector<std::vector<char>> lPackets{};
-
-        sAssetIndex lOffsetsIndexEntry{};
-        lOffsetsIndexEntry.mType      = eAssetType::OFFSET_DATA;
-        lOffsetsIndexEntry.mByteStart = 0;
-        lOffsetsIndexEntry.mByteEnd   = 1;
-        lAssetIndex.push_back( lOffsetsIndexEntry );
-
-        uint32_t lMaterialOffset  = 2;
-        uint32_t lMaterialCount   = mMaterialSystem->GetMaterialData().size();
-        uint32_t lTextureOffset   = lMaterialOffset + lMaterialCount;
-        uint32_t lTextureCount    = mMaterialSystem->GetTextures().size();
-        uint32_t lAnimationOffset = lTextureOffset + lTextureCount;
-        uint32_t lAnimationCount  = lInterpolationData.size();
-
-        std::vector<char> lOffsetData( 6 * sizeof( uint32_t ) );
-        auto             *lPtr = lOffsetData.data();
-        std::memcpy( lPtr, &lMaterialOffset, sizeof( uint32_t ) );
-        lPtr += sizeof( uint32_t );
-        std::memcpy( lPtr, &lMaterialCount, sizeof( uint32_t ) );
-        lPtr += sizeof( uint32_t );
-        std::memcpy( lPtr, &lTextureOffset, sizeof( uint32_t ) );
-        lPtr += sizeof( uint32_t );
-        std::memcpy( lPtr, &lTextureCount, sizeof( uint32_t ) );
-        lPtr += sizeof( uint32_t );
-        std::memcpy( lPtr, &lAnimationOffset, sizeof( uint32_t ) );
-        lPtr += sizeof( uint32_t );
-        std::memcpy( lPtr, &lAnimationCount, sizeof( uint32_t ) );
-        lPackets.push_back( lOffsetData );
-
-        // Meshes
-        sAssetIndex lMeshAssetIndexEntry{};
-        lMeshAssetIndexEntry.mType      = eAssetType::MESH_DATA;
-        lMeshAssetIndexEntry.mByteStart = 0;
-        lMeshAssetIndexEntry.mByteEnd   = 1;
-        lAssetIndex.push_back( lMeshAssetIndexEntry );
-
-        auto lVertexData = mVertexBuffer->Fetch<VertexData>();
-        auto lIndexData  = mIndexBuffer->Fetch<uint32_t>();
-        auto lMeshData   = lBinaryDataFile.Package( lVertexData, lIndexData );
-        lPackets.push_back( lMeshData );
-
-        // Materials
-        for( auto &lMaterial : mMaterialSystem->GetMaterialData() )
-        {
-            sAssetIndex lMaterialAssetIndexEntry{};
-            lMaterialAssetIndexEntry.mType      = eAssetType::MATERIAL_DATA;
-            lMaterialAssetIndexEntry.mByteStart = 0;
-            lMaterialAssetIndexEntry.mByteEnd   = 1;
-            lAssetIndex.push_back( lMaterialAssetIndexEntry );
-
-            auto lMaterialData = lBinaryDataFile.Package( lMaterial );
-            lPackets.push_back( lMaterialData );
-        }
-
-        for( auto &lTexture : mMaterialSystem->GetTextures() )
-        {
-            TextureData2D lTextureData;
-            lTexture->GetTexture()->GetPixelData( lTextureData );
-
-            sTextureSamplingInfo lSamplingInfo = lTexture->mSpec;
-
-            sAssetIndex lAssetIndexEntry{};
-            lAssetIndexEntry.mType      = eAssetType::KTX_TEXTURE_2D;
-            lAssetIndexEntry.mByteStart = 0;
-            lAssetIndexEntry.mByteEnd   = 1;
-            lAssetIndex.push_back( lAssetIndexEntry );
-
-            auto lTexturePacket = lBinaryDataFile.Package( lTextureData, lSamplingInfo );
-            lPackets.push_back( lTexturePacket );
-        }
-
-        for( auto &lInterpolation : lInterpolationData )
-        {
-            sAssetIndex lAnimationAssetIndexEntry{};
-            lAnimationAssetIndexEntry.mType      = eAssetType::ANIMATION_DATA;
-            lAnimationAssetIndexEntry.mByteStart = 0;
-            lAnimationAssetIndexEntry.mByteEnd   = 1;
-            lAssetIndex.push_back( lAnimationAssetIndexEntry );
-
-            auto lAnimationPacket = lBinaryDataFile.Package( lInterpolation );
-            lPackets.push_back( lAnimationPacket );
-        }
-
-        uint32_t lAssetCount = static_cast<uint32_t>( lAssetIndex.size() );
-
-        uint32_t lCurrentByte = BinaryAsset::GetMagicLength() + sizeof( uint32_t ) + lAssetIndex.size() * sizeof( sAssetIndex );
-        for( uint32_t i = 0; i < lAssetCount; i++ )
-        {
-            lAssetIndex[i].mByteStart = lCurrentByte;
-            lCurrentByte = lAssetIndex[i].mByteEnd = lAssetIndex[i].mByteStart + static_cast<uint32_t>( lPackets[i].size() );
-        }
-
-        auto *lMagic       = BinaryAsset::GetMagic();
-        auto  lMagicLength = BinaryAsset::GetMagicLength();
-        auto  lOutFile     = std::ofstream( lOutput.string(), std::ofstream::binary );
-        lOutFile.write( (const char *)lMagic, lMagicLength );
-        lOutFile.write( (const char *)&lAssetCount, sizeof( uint32_t ) );
-        lOutFile.write( (const char *)lAssetIndex.data(), lAssetIndex.size() * sizeof( sAssetIndex ) );
-
-        for( auto &lPacket : lPackets ) lOutFile.write( (const char *)lPacket.data(), lPacket.size() );
-
-        // Write material system to           aPath / Materials.dat
+        fs::path    lOutput = aPath / "Animations" / "BinaryData.bin";
+        BinaryAsset lBinaryDataFile;
+        for( auto &lInterpolation : lInterpolationData ) lBinaryDataFile.Package( lInterpolation );
+        lBinaryDataFile.WriteTo( lOutput );
     }
 } // namespace SE::Core

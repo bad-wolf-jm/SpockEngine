@@ -93,6 +93,8 @@ namespace SE::Core
 
         sAssetIndex const &GetIndex( uint32_t aIndex ) const;
 
+        void WriteTo(fs::path aPath);
+
         /// @brief Retrieve the texture stored in the file at index `aIndex`
         std::tuple<TextureData2D, TextureSampler2D> Retrieve( uint32_t aIndex );
         void                                        Retrieve( uint32_t aIndex, TextureData2D &aData, TextureSampler2D &aSampler );
@@ -100,12 +102,12 @@ namespace SE::Core
         void Retrieve( uint32_t aIndex, sMaterial &aMaterialData );
         void Retrieve( uint32_t aIndex, sImportedAnimationSampler &aMaterialData );
 
-        std::vector<char> Package( Core::TextureData2D const &aData, sTextureSamplingInfo const &aSampler );
-        std::vector<char> Package( std::vector<VertexData> const &aVertexData, std::vector<uint32_t> const &aIndexData );
-        std::vector<char> Package( sMaterial const &aMaterialData );
-        std::vector<char> Package( sImportedAnimationSampler const &aMaterialData );
-        std::vector<char> Package( Ref<TextureData2D> aData, Ref<TextureSampler2D> aSampler );
-        std::vector<char> Package( sImportedTexture const &aData );
+        void Package( Core::TextureData2D const &aData, sTextureSamplingInfo const &aSampler );
+        void Package( std::vector<VertexData> const &aVertexData, std::vector<uint32_t> const &aIndexData );
+        void Package( sMaterial const &aMaterialData );
+        void Package( sImportedAnimationSampler const &aMaterialData );
+        void Package( Ref<TextureData2D> aData, Ref<TextureSampler2D> aSampler );
+        void Package( sImportedTexture const &aData );
 
       private:
         fs::path      mFilePath   = "";
@@ -113,8 +115,10 @@ namespace SE::Core
         std::ifstream mFileStream{};
         size_t        mFileSize = 0;
 
-        uint32_t                 mAssetCount = 0;
-        std::vector<sAssetIndex> mAssetIndex{};
+        uint32_t                       mAssetCount = 0;
+        std::vector<sAssetIndex>       mAssetIndex{};
+        std::vector<std::vector<char>> mPackets{};
+        uint32_t                       mTotalPacketSize = 0;
     };
 
 } // namespace SE::Core

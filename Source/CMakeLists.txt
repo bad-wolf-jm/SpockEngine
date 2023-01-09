@@ -79,6 +79,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/Renderer/VisualHelperMeshRenderer.cpp
     Scene/Serialize/FileIO.cpp
     Scene/Serialize/AssetFile.cpp
+    Scene/Serialize/SerializeComponents.cpp
     ${embedded_ptx_code}
     Scene/Renderer/RayTracing/ToneMap.cu
     Scene/Renderer/RayTracing/RayTracingRenderer.h
@@ -94,19 +95,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Editor/SceneHierarchyPanel.cpp
     Editor/SceneElementEditor.cpp
 
-    # LidarSensorModel/SensorModelBase.cpp
-    # LidarSensorModel/EnvironmentSampler.cpp
-    # LidarSensorModel/SensorControllerBase.cpp
-    # LidarSensorModel/SensorDevicebase.cpp
-    # LidarSensorModel/ModelArchive.cpp
-    # LidarSensorModel/AcquisitionContext/AcquisitionContext.cpp
-
     ProcessingNodes/HitRecordProcessorKernels.cu
     ProcessingNodes/HitRecordProcessor.cpp
-
-    # Serialize/SensorAsset.cpp
-    # Serialize/SensorComponents.cpp
-    # Serialize/SensorDefinition.cpp
 
     Scene/EnvironmentSampler/PointCloudVisualizer.cu
     Scene/EnvironmentSampler/EnvironmentSampler.cpp
