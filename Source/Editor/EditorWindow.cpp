@@ -699,63 +699,238 @@ namespace SE::Editor
 
     void EditorWindow::ImportModel( fs::path aPath )
     {
-        auto lName = aPath.filename().string();
-        auto lExt  = aPath.extension().string();
+        // auto lName = aPath.filename().string();
+        // auto lExt  = aPath.extension().string();
 
-        Ref<sImportedModel> lModelData = nullptr;
-        if( lExt == ".gltf" )
-            lModelData = New<GlTFImporter>( aPath );
-        else if( lExt == ".obj" )
-            lModelData = New<ObjImporter>( aPath );
+        // Ref<sImportedModel> lModelData = nullptr;
+        // if( lExt == ".gltf" )
+        //     lModelData = New<GlTFImporter>( aPath );
+        // else if( lExt == ".obj" )
+        //     lModelData = New<ObjImporter>( aPath );
 
-        if( !lModelData ) return;
+        // if( !lModelData ) return;
 
-        auto lModelName = aPath.stem().string();
-        if( !fs::exists( mModelsPath / lModelName ) ) fs::create_directories( mModelsPath / lModelName );
-        if( !fs::exists( mModelsPath / lModelName / "Materials" ) ) fs::create_directories( mModelsPath / lModelName / "Materials" );
-        if( !fs::exists( mModelsPath / lModelName / "Meshes" ) ) fs::create_directories( mModelsPath / lModelName / "Meshes" );
-        if( !fs::exists( mModelsPath / lModelName / "Animations" ) ) fs::create_directories( mModelsPath / lModelName / "Animations" );
+        // auto lModelName = aPath.stem().string();
+        // if( !fs::exists( mModelsPath / lModelName ) ) fs::create_directories( mModelsPath / lModelName );
+        // if( !fs::exists( mModelsPath / lModelName / "Materials" ) ) fs::create_directories( mModelsPath / lModelName / "Materials" );
+        // if( !fs::exists( mModelsPath / lModelName / "Meshes" ) ) fs::create_directories( mModelsPath / lModelName / "Meshes" );
+        // if( !fs::exists( mModelsPath / lModelName / "Animations" ) ) fs::create_directories( mModelsPath / lModelName / "Animations" );
 
-        for( auto &lMaterial : lModelData->mMaterials )
-        {
-            if( !fs::exists( mModelsPath / lModelName / "Materials" / lMaterial.mName ) )
-                fs::create_directories( mModelsPath / lModelName / "Materials" / lMaterial.mName );
-        }
+        // for( auto &lMaterial : lModelData->mMaterials )
+        // {
+        //     std::string lSerializedMeshName = fmt::format( "{}.material", lMaterial.mName );
+        //     auto        lPath               = mModelsPath / lModelName / "Materials" / lSerializedMeshName;
 
-        for( auto &lMesh : lModelData->mMeshes )
-        {
-            BinaryAsset lBinaryDataFile;
+        //     BinaryAsset                    lBinaryDataFile;
+        //     std::vector<sAssetIndex>       lAssetIndex{};
+        //     std::vector<std::vector<char>> lPackets{};
 
-            std::string lSerializedMeshName = fmt::format( "{}.mesh", lMesh.mName );
-            auto        lPath               = mModelsPath / lModelName / "Meshes" / lSerializedMeshName;
+        //     sMaterial lNewMaterial{};
+        //     lNewMaterial.mName                         = lMaterial.mName;
+        //     lNewMaterial.mType                         = eMaterialType::Opaque;
+        //     lNewMaterial.mLineWidth                    = 1.0f;
+        //     lNewMaterial.mIsTwoSided                   = lMaterial.mConstants.mIsTwoSided;
+        //     lNewMaterial.mUseAlphaMask                 = false;
+        //     lNewMaterial.mAlphaThreshold               = 0.5;
+        //     lNewMaterial.mBaseColorFactor              = lMaterial.mConstants.mBaseColorFactor;
+        //     lNewMaterial.mBaseColorTexture.mTextureID  = 0;
+        //     lNewMaterial.mBaseColorTexture.mUVChannel  = 0;
+        //     lNewMaterial.mNormalsTexture.mTextureID    = 1;
+        //     lNewMaterial.mNormalsTexture.mUVChannel    = 0;
+        //     lNewMaterial.mRoughnessFactor              = lMaterial.mConstants.mRoughnessFactor;
+        //     lNewMaterial.mMetallicFactor               = lMaterial.mConstants.mMetallicFactor;
+        //     lNewMaterial.mMetalRoughTexture.mTextureID = 2;
+        //     lNewMaterial.mMetalRoughTexture.mUVChannel = 0;
+        //     lNewMaterial.mOcclusionStrength            = 0.0f;
+        //     lNewMaterial.mOcclusionTexture.mTextureID  = 3;
+        //     lNewMaterial.mOcclusionTexture.mUVChannel  = 0;
+        //     lNewMaterial.mEmissiveFactor               = lMaterial.mConstants.mEmissiveFactor;
+        //     lNewMaterial.mEmissiveTexture.mTextureID   = 4;
+        //     lNewMaterial.mEmissiveTexture.mUVChannel   = 0;
 
-            std::vector<VertexData> lVertices( lMesh.mPositions.size() );
-            for( uint32_t i = 0; i < lMesh.mPositions.size(); i++ )
-            {
-                lVertices[i].Position    = lMesh.mPositions[i];
-                lVertices[i].Normal      = lMesh.mNormals[i];
-                lVertices[i].TexCoords_0 = lMesh.mUV0[i];
-                lVertices[i].TexCoords_1 = lMesh.mUV1[i];
-                lVertices[i].Bones       = lMesh.mJoints[i];
-                lVertices[i].Weights     = lMesh.mWeights[i];
-            }
+        //     lPackets.push_back( lBinaryDataFile.Package( lNewMaterial ) );
+        //     lAssetIndex.emplace_back();
+        //     lAssetIndex.back().mType      = eAssetType::MATERIAL_DATA;
+        //     lAssetIndex.back().mByteStart = 0;
+        //     lAssetIndex.back().mByteEnd   = sizeof( sMaterial );
 
-            auto lMeshData = lBinaryDataFile.Package( lVertices, lMesh.mIndices );
+        //     sImportedTexture lBaseColorTexture{};
+        //     if( lMaterial.mTextures.mBaseColorTexture.TextureID != std::numeric_limits<uint32_t>::max() )
+        //         lBaseColorTexture = lModelData->mTextures[lMaterial.mTextures.mBaseColorTexture.TextureID];
 
-            sAssetIndex lMeshAssetIndexEntry{};
-            lMeshAssetIndexEntry.mType      = eAssetType::MESH_DATA;
-            lMeshAssetIndexEntry.mByteStart = 0;
-            lMeshAssetIndexEntry.mByteEnd   = 0;
+        //     lPackets.push_back( lBinaryDataFile.Package( lBaseColorTexture ) );
 
-            auto    *lMagic       = BinaryAsset::GetMagic();
-            auto     lMagicLength = BinaryAsset::GetMagicLength();
-            auto     lOutFile     = std::ofstream( lPath.string(), std::ofstream::binary );
-            uint32_t lAssetCount  = static_cast<uint32_t>( 1 );
-            lOutFile.write( (const char *)lMagic, lMagicLength );
-            lOutFile.write( (const char *)&lAssetCount, sizeof( uint32_t ) );
-            lOutFile.write( (const char *)&lMeshAssetIndexEntry, sizeof( sAssetIndex ) );
-            lOutFile.write( (const char *)lMeshData.data(), lMeshData.size() );
-        }
+        //     lAssetIndex.emplace_back();
+        //     lAssetIndex.back().mType      = eAssetType::KTX_TEXTURE_2D;
+        //     lAssetIndex.back().mByteStart = 0;
+        //     lAssetIndex.back().mByteEnd   = lPackets.back().size();
+
+        //     sImportedTexture lNormalTexture{};
+        //     if( lMaterial.mTextures.mNormalTexture.TextureID != std::numeric_limits<uint32_t>::max() )
+        //         lNormalTexture = lModelData->mTextures[lMaterial.mTextures.mNormalTexture.TextureID];
+        //     lPackets.push_back( lBinaryDataFile.Package( lNormalTexture ) );
+
+        //     lAssetIndex.emplace_back();
+        //     lAssetIndex.back().mType      = eAssetType::KTX_TEXTURE_2D;
+        //     lAssetIndex.back().mByteStart = 0;
+        //     lAssetIndex.back().mByteEnd   = lPackets.back().size();
+
+        //     sImportedTexture lMetallicRoughnessTexture{};
+        //     if( lMaterial.mTextures.mMetallicRoughnessTexture.TextureID != std::numeric_limits<uint32_t>::max() )
+        //         lMetallicRoughnessTexture = lModelData->mTextures[lMaterial.mTextures.mMetallicRoughnessTexture.TextureID];
+        //     lPackets.push_back( lBinaryDataFile.Package( lMetallicRoughnessTexture ) );
+
+        //     lAssetIndex.emplace_back();
+        //     lAssetIndex.back().mType      = eAssetType::KTX_TEXTURE_2D;
+        //     lAssetIndex.back().mByteStart = 0;
+        //     lAssetIndex.back().mByteEnd   = lPackets.back().size();
+
+        //     sImportedTexture lOcclusionTexture{};
+        //     if( lMaterial.mTextures.mOcclusionTexture.TextureID != std::numeric_limits<uint32_t>::max() )
+        //         lOcclusionTexture = lModelData->mTextures[lMaterial.mTextures.mOcclusionTexture.TextureID];
+        //     lPackets.push_back( lBinaryDataFile.Package( lOcclusionTexture ) );
+
+        //     lAssetIndex.emplace_back();
+        //     lAssetIndex.back().mType      = eAssetType::KTX_TEXTURE_2D;
+        //     lAssetIndex.back().mByteStart = 0;
+        //     lAssetIndex.back().mByteEnd   = lPackets.back().size();
+
+        //     sImportedTexture lEmissiveTexture{};
+        //     if( lMaterial.mTextures.mEmissiveTexture.TextureID != std::numeric_limits<uint32_t>::max() )
+        //         lEmissiveTexture = lModelData->mTextures[lMaterial.mTextures.mEmissiveTexture.TextureID];
+
+        //     lPackets.push_back( lBinaryDataFile.Package( lEmissiveTexture ) );
+        //     lAssetIndex.emplace_back();
+        //     lAssetIndex.back().mType      = eAssetType::KTX_TEXTURE_2D;
+        //     lAssetIndex.back().mByteStart = 0;
+        //     lAssetIndex.back().mByteEnd   = lPackets.back().size();
+
+        //     uint32_t lAssetCount = static_cast<uint32_t>( lAssetIndex.size() );
+
+        //     uint32_t lCurrentByte = BinaryAsset::GetMagicLength() + sizeof( uint32_t ) + lAssetIndex.size() * sizeof( sAssetIndex );
+        //     for( uint32_t i = 0; i < lAssetCount; i++ )
+        //     {
+        //         lAssetIndex[i].mByteStart = lCurrentByte;
+        //         lCurrentByte = lAssetIndex[i].mByteEnd = lAssetIndex[i].mByteStart + static_cast<uint32_t>( lPackets[i].size() );
+        //     }
+
+        //     auto *lMagic       = BinaryAsset::GetMagic();
+        //     auto  lMagicLength = BinaryAsset::GetMagicLength();
+        //     auto  lOutFile     = std::ofstream( lPath.string(), std::ofstream::binary );
+        //     lOutFile.write( (const char *)lMagic, lMagicLength );
+        //     lOutFile.write( (const char *)&lAssetCount, sizeof( uint32_t ) );
+        //     lOutFile.write( (const char *)lAssetIndex.data(), lAssetIndex.size() * sizeof( sAssetIndex ) );
+
+        //     for( auto &lPacket : lPackets ) lOutFile.write( (const char *)lPacket.data(), lPacket.size() );
+        // }
+
+        // for( auto &lMesh : lModelData->mMeshes )
+        // {
+        //     BinaryAsset lBinaryDataFile;
+
+        //     std::string lSerializedMeshName = fmt::format( "{}.mesh", lMesh.mName );
+        //     auto        lPath               = mModelsPath / lModelName / "Meshes" / lSerializedMeshName;
+
+        //     std::vector<VertexData> lVertices( lMesh.mPositions.size() );
+        //     for( uint32_t i = 0; i < lMesh.mPositions.size(); i++ )
+        //     {
+        //         lVertices[i].Position    = lMesh.mPositions[i];
+        //         lVertices[i].Normal      = lMesh.mNormals[i];
+        //         lVertices[i].TexCoords_0 = lMesh.mUV0[i];
+        //         lVertices[i].TexCoords_1 = lMesh.mUV1[i];
+        //         lVertices[i].Bones       = lMesh.mJoints[i];
+        //         lVertices[i].Weights     = lMesh.mWeights[i];
+        //     }
+
+        //     auto lMeshData = lBinaryDataFile.Package( lVertices, lMesh.mIndices );
+
+        //     sAssetIndex lMeshAssetIndexEntry{};
+        //     lMeshAssetIndexEntry.mType      = eAssetType::MESH_DATA;
+        //     lMeshAssetIndexEntry.mByteStart = 0;
+        //     lMeshAssetIndexEntry.mByteEnd   = 0;
+
+        //     auto    *lMagic       = BinaryAsset::GetMagic();
+        //     auto     lMagicLength = BinaryAsset::GetMagicLength();
+        //     auto     lOutFile     = std::ofstream( lPath.string(), std::ofstream::binary );
+        //     uint32_t lAssetCount  = static_cast<uint32_t>( 1 );
+        //     lOutFile.write( (const char *)lMagic, lMagicLength );
+        //     lOutFile.write( (const char *)&lAssetCount, sizeof( uint32_t ) );
+        //     lOutFile.write( (const char *)&lMeshAssetIndexEntry, sizeof( sAssetIndex ) );
+        //     lOutFile.write( (const char *)lMeshData.data(), lMeshData.size() );
+        // }
+
+        // auto lOut = ConfigurationWriter( mModelsPath / lModelName / "Model.yaml" );
+        // lOut.BeginMap();
+        // lOut.WriteKey( "model" );
+        // {
+        //     lOut.BeginMap();
+        //     {
+        //         lOut.WriteKey( "meshes" );
+        //         {
+        //             lOut.WriteNull();
+        //         }
+        //         lOut.WriteKey( "materials" );
+        //         {
+        //             lOut.WriteNull();
+        //         }
+        //         lOut.WriteKey( "nodes" );
+        //         {
+        //             lOut.BeginMap();
+        //             {
+        //                 uint32_t lNodeID = 0;
+        //                 for( auto &lNode : lModelData->mNodes )
+        //                 {
+        //                     auto lNodeKey = fmt::format( "NODE_{}", lNodeID );
+
+        //                     lOut.WriteKey( lNodeKey );
+        //                     lOut.BeginMap();
+        //                     {
+        //                         lOut.WriteKey( "parent" );
+        //                         if( lNode.mParentID == std::numeric_limits<uint32_t>::max() )
+        //                             lOut.WriteNull();
+        //                         else
+        //                             lOut.Write( fmt::format( "NODE_{}", lNode.mParentID ) );
+
+        //                         lOut.WriteKey( "transform" );
+        //                         lOut.WriteNull();
+        //                         lOut.WriteKey( "skin" );
+        //                         lOut.WriteNull();
+        //                     }
+        //                     lOut.EndMap();
+
+        //                     lNodeID++;
+        //                 }
+
+        //                 // Meshes
+        //                 uint32_t lMeshNodeID = 0;
+        //                 for( uint32_t lNodeID = 0; lNodeID < lModelData->mNodes.size(); lNodeID++ )
+        //                 {
+        //                     auto &lNode = lModelData->mNodes[lNodeID];
+        //                     if( lNode.mMeshes.size() == 0 ) continue;
+
+        //                     for( uint32_t lNodeMeshID = 0; lNodeMeshID < lNode.mMeshes.size(); lNodeMeshID++ )
+        //                     {
+        //                         auto &lMesh    = lModelData->mMeshes[lNode.mMeshes[lNodeMeshID]];
+        //                         auto  lNodeKey = fmt::format( "MESH_NODE_{}", lMeshNodeID );
+        //                         lOut.WriteKey( lNodeKey );
+        //                         lOut.BeginMap();
+        //                         {
+        //                             lOut.WriteKey( "parent", fmt::format( "NODE_{}", lNodeID ) );
+        //                             lOut.WriteKey( "mesh", fmt::format( "MESH_{}", lNode.mMeshes[lNodeMeshID] ) );
+        //                             lOut.WriteKey( "material", fmt::format( "MATERIAL_{}", lMesh.mMaterialID ) );
+        //                         }
+        //                         lOut.EndMap();
+
+        //                         lMeshNodeID++;
+        //                     }
+        //                 }
+        //             }
+        //             lOut.EndMap();
+        //         }
+        //     }
+        //     lOut.EndMap();
+        // }
+        // lOut.EndMap();
     }
 
     void EditorWindow::Workspace( int32_t width, int32_t height )
