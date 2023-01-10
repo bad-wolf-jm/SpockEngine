@@ -8,8 +8,8 @@
 #include "Graphics/Vulkan/GraphicsPipeline.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 
-#include "Scene/Components.h"
 #include "FileIO.h"
+#include "Scene/Components.h"
 
 namespace SE::Core
 {
@@ -24,6 +24,22 @@ namespace SE::Core
         EntityMap mEntities;
         BufferMap mBuffers;
     };
+
+    std::string const &GetTypeTag( std::string const &aTypeName );
+
+    template <typename _Ty>
+    void HasTypeTag( ConfigurationNode const &aNode )
+    {
+        auto lInternalTypeName = std::string( typeid( _Ty ).name() );
+        return ( !aNode[GetTypeTag( lInternalTypeName )].IsNull() )
+    }
+
+    template <typename _Ty>
+    void TypeTag()
+    {
+        auto lInternalTypeName = std::string( typeid( _Ty ).name() );
+        return ( GetTypeTag( lInternalTypeName ) );
+    }
 
     void ReadComponent( sTag &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
     void ReadComponent( sCameraComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );

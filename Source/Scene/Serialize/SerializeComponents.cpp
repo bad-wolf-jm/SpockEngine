@@ -2,6 +2,41 @@
 
 namespace SE::Core
 {
+    // clang-format off
+    static std::unordered_map<std::string, std::string> gTypeTags = 
+    {
+        { typeid(sTag).name(),                        "TAG" },
+        { typeid(sRelationshipComponent).name(),      "RELATIONSHIP" },
+        { typeid(sCameraComponent).name(),            "CAMERA" },
+        { typeid(sAnimationChooser).name(),           "ANIMATION_CHOOSER" },
+        { typeid(sAnimationComponent).name(),         "ANIMATION" },
+        { typeid(sActorComponent).name(),             "ACTOR" },
+        { typeid(sAnimatedTransformComponent).name(), "ANIMATED_TRANSFORM" },
+        { typeid(sNodeTransformComponent).name(),     "NODE_TRANSFORM" },
+        { typeid(sTransformMatrixComponent).name(),   "TRANSFORM_MATRIX" },
+        { typeid(sStaticMeshComponent).name(),        "STATIC_MESH" },
+        { typeid(sParticleSystemComponent).name(),    "PARTICLE_SYSTEM" },
+        { typeid(sParticleShaderComponent).name(),    "PARTICLE_SHADER" },
+        { typeid(sSkeletonComponent).name(),          "SKELETON" },
+        { typeid(sWireframeComponent).name(),         "WIREFRAME" },
+        { typeid(sWireframeMeshComponent).name(),     "WIREFRAME_MESH" },
+        { typeid(sBoundingBoxComponent).name(),       "BOUNDING_BOX" },
+        { typeid(sRayTracingTargetComponent).name(),  "RAY_TRACING_TARGET" },
+        { typeid(sMaterialComponent).name(),          "MATERIAL_COMPONENT" },
+        { typeid(sMaterialShaderComponent).name(),    "MATERIAL_SHADER" },
+        { typeid(sBackgroundComponent).name(),        "BACKGROUND" },
+        { typeid(sAmbientLightingComponent).name(),   "AMBIENT_LIGHTING" },
+        { typeid(sLightComponent).name(),             "LIGHT" }
+    };
+    // clang-format on
+
+    std::string const &GetTypeTag( std::string const &aTypeName )
+    {
+        if( gTypeTags.find( aTypeName ) != gTypeTags.end() ) return gTypeTags[aTypeName];
+        
+        return "VOID";
+    }
+
     void ReadComponent( sTag &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
     {
         aComponent.mValue = aNode["mValue"].As<std::string>( "" );
@@ -190,34 +225,6 @@ namespace SE::Core
         aComponent.mIntensity = aNode["mIntensity"].As<float>( .0005f );
         aComponent.mCone      = aNode["mCone"].As<float>( .0005f );
     }
-
-    // clang-format off
-    static std::unordered_map<std::string, std::string> gTypeTags = 
-    {
-        { typeid(sTag).name(),                        "TAG" },
-        { typeid(sRelationshipComponent).name(),      "RELATIONSHIP" },
-        { typeid(sCameraComponent).name(),            "CAMERA" },
-        { typeid(sAnimationChooser).name(),           "ANIMATION_CHOOSER" },
-        { typeid(sAnimationComponent).name(),         "ANIMATION" },
-        { typeid(sActorComponent).name(),             "ACTOR" },
-        { typeid(sAnimatedTransformComponent).name(), "ANIMATED_TRANSFORM" },
-        { typeid(sNodeTransformComponent).name(),     "NODE_TRANSFORM" },
-        { typeid(sTransformMatrixComponent).name(),   "TRANSFORM_MATRIX" },
-        { typeid(sStaticMeshComponent).name(),        "STATIC_MESH" },
-        { typeid(sParticleSystemComponent).name(),    "PARTICLE_SYSTEM" },
-        { typeid(sParticleShaderComponent).name(),    "PARTICLE_SHADER" },
-        { typeid(sSkeletonComponent).name(),          "SKELETON" },
-        { typeid(sWireframeComponent).name(),         "WIREFRAME" },
-        { typeid(sWireframeMeshComponent).name(),     "WIREFRAME_MESH" },
-        { typeid(sBoundingBoxComponent).name(),       "BOUNDING_BOX" },
-        { typeid(sRayTracingTargetComponent).name(),  "RAY_TRACING_TARGET" },
-        { typeid(sMaterialComponent).name(),          "MATERIAL_COMPONENT" },
-        { typeid(sMaterialShaderComponent).name(),    "MATERIAL_SHADER" },
-        { typeid(sBackgroundComponent).name(),        "BACKGROUND" },
-        { typeid(sAmbientLightingComponent).name(),   "AMBIENT_LIGHTING" },
-        { typeid(sLightComponent).name(),             "LIGHT" }
-    };
-    // clang-format on
 
     template <typename _Ty>
     void WriteTypeTag( ConfigurationWriter &aOut )
