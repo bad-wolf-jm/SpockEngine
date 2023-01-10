@@ -28,14 +28,14 @@ namespace SE::Core
     std::string const &GetTypeTag( std::string const &aTypeName );
 
     template <typename _Ty>
-    void HasTypeTag( ConfigurationNode const &aNode )
+    bool HasTypeTag( ConfigurationNode const &aNode )
     {
         auto lInternalTypeName = std::string( typeid( _Ty ).name() );
-        return ( !aNode[GetTypeTag( lInternalTypeName )].IsNull() )
+        return ( !aNode[GetTypeTag( lInternalTypeName )].IsNull() );
     }
 
     template <typename _Ty>
-    void TypeTag()
+    std::string TypeTag()
     {
         auto lInternalTypeName = std::string( typeid( _Ty ).name() );
         return ( GetTypeTag( lInternalTypeName ) );
