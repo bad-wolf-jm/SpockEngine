@@ -96,7 +96,7 @@ namespace SE::Core
 
     uint32_t MaterialSystem::CreateTexture( TextureData2D &aTexture, TextureSampler2D &aTextureSampler )
     {
-        auto lNewInteropTexture = New<Graphics::VkTexture2D>( mGraphicContext, aTexture, 1, false, true, true );
+        auto lNewInteropTexture = New<Graphics::VkTexture2D>( mGraphicContext, aTexture, 1, false, false, true );
         auto lNewInteropSampler = New<Graphics::VkSampler2D>( mGraphicContext, lNewInteropTexture, aTextureSampler.mSamplingSpec );
         mTextureSamplers.push_back( lNewInteropSampler );
 
