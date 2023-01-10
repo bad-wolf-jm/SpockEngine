@@ -354,28 +354,42 @@ namespace SE::Core
         auto lScenarioDescription = ConfigurationReader( aScenarioPath );
 
         sReadContext lReadContext{};
-        // std::unordered_map<std::string, Entity>      lEntities{};
         std::unordered_map<std::string, std::string> lParentEntityLUT{};
 
         auto &lSceneRoot = lScenarioDescription.GetRoot()["scene"];
 
         lSceneRoot["nodes"].ForEach<std::string>(
-            [&]( auto const &aKey, auto const &aValue )
+            [&]( auto const &aKey, auto const &lEntityConfiguration )
             {
                 auto lEntity = mRegistry.CreateEntity( sUUID( aKey ) );
                 auto lUUID   = lEntity.Get<sUUID>().mValue;
 
                 lReadContext.mEntities[aKey] = lEntity;
 
-                if( HasTypeTag<sRelationshipComponent>( aValue ) )
+                if( HasTypeTag<sRelationshipComponent>( lEntityConfiguration ) )
                 {
-                    if( !( aValue[TypeTag<sRelationshipComponent>()]["mParent"].IsNull() ) )
+                    if( !( lEntityConfiguration[TypeTag<sRelationshipComponent>()]["mParent"].IsNull() ) )
                     {
-                        auto lParentUUIDStr    = aValue[TypeTag<sRelationshipComponent>()]["mParent"].As<std::string>( "" );
-                        auto lParentUUID       = UUIDv4::UUID::fromStrFactory( lParentUUIDStr );
+                        auto lParentUUIDStr = lEntityConfiguration[TypeTag<sRelationshipComponent>()]["mParent"].As<std::string>( "" );
+                        auto lParentUUID    = UUIDv4::UUID::fromStrFactory( lParentUUIDStr );
                         lParentEntityLUT[aKey] = lParentUUIDStr;
                     }
                 }
+
+                ReadAndAddComponent<sTag>( lEntity, lEntityConfiguration, lReadContext );
+                ReadAndAddComponent<sCameraComponent>( lEntity, lEntityConfiguration, lReadContext );
+                ReadAndAddComponent<sAnimationChooser>( lEntity, lEntityConfiguration, lReadContext );
+                ReadAndAddComponent<sAnimatedTransformComponent>( lEntity, lEntityConfiguration, lReadContext );
+                ReadAndAddComponent<sNodeTransformComponent>( lEntity, lEntityConfiguration, lReadContext );
+                ReadAndAddComponent<sTransformMatrixComponent>( lEntity, lEntityConfiguration, lReadContext );
+                ReadAndAddComponent<sSkeletonComponent>( lEntity, lEntityConfiguration, lReadContext );
+                ReadAndAddComponent<sRayTracingTargetComponent>( lEntity, lEntityConfiguration, lReadContext );
+                ReadAndAddComponent<sMaterialComponent>( lEntity, lEntityConfiguration, lReadContext );
+                ReadAndAddComponent<sMaterialShaderComponent>( lEntity, lEntityConfiguration, lReadContext );
+                ReadAndAddComponent<sBackgroundComponent>( lEntity, lEntityConfiguration, lReadContext );
+                ReadAndAddComponent<sAmbientLightingComponent>( lEntity, lEntityConfiguration, lReadContext );
+                ReadAndAddComponent<sLightComponent>( lEntity, lEntityConfiguration, lReadContext );
+                ReadAndAddComponent<sActorComponent>( lEntity, lEntityConfiguration, lReadContext );
             } );
 
         lSceneRoot["nodes"].ForEach<std::string>(
@@ -389,25 +403,25 @@ namespace SE::Core
                 if( lParentEntityLUT.find( aKey ) != lParentEntityLUT.end() )
                     mRegistry.SetParent( lEntity, lReadContext.mEntities[lParentEntityLUT[aKey]] );
 
-                ReadAndAddComponent<sTag>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sCameraComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sAnimationChooser>( lEntity, lEntityConfiguration, lReadContext );
+                SE::Logging::Info( "Components added to entity {}", aKey );
+            } );
+
+        lSceneRoot["nodes"].ForEach<std::string>(
+            [&]( auto const &aKey, auto const &lEntityConfiguration )
+            {
+                auto  lUUID   = UUIDv4::UUID::fromStrFactory( aKey );
+                auto &lEntity = lReadContext.mEntities[aKey];
+
+                if( !lEntity ) return;
+
                 // ReadAndAddComponent<sAnimationComponent>( lEntity, lEntityConfiguration, lReadContext, lInterpolationData );
-                ReadAndAddComponent<sAnimatedTransformComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sNodeTransformComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sTransformMatrixComponent>( lEntity, lEntityConfiguration, lReadContext );
                 // ReadAndAddComponent<sStaticMeshComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sSkeletonComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sRayTracingTargetComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sMaterialComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sMaterialShaderComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sBackgroundComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sAmbientLightingComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sLightComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sActorComponent>( lEntity, lEntityConfiguration, lReadContext );
 
                 SE::Logging::Info( "Components added to entity {}", aKey );
             } );
+
+
+
 
         auto lRootNodeUUIDStr = lSceneRoot["root"].As<std::string>( "" );
         auto lRootNodeUUID    = UUIDv4::UUID::fromStrFactory( lRootNodeUUIDStr );
