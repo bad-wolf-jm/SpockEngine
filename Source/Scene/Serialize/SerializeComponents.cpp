@@ -33,7 +33,7 @@ namespace SE::Core
     std::string const &GetTypeTag( std::string const &aTypeName )
     {
         if( gTypeTags.find( aTypeName ) != gTypeTags.end() ) return gTypeTags[aTypeName];
-        
+
         return "VOID";
     }
 
@@ -190,7 +190,7 @@ namespace SE::Core
 
     void ReadComponent( sMaterialComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
     {
-        aComponent.mMaterialID = aNode["mMaterialID"].As<uint32_t>( 0 );
+        aComponent.mMaterialID = aNode["mMaterialPath"].As<uint32_t>( 0 );
     }
 
     void ReadComponent( sMaterialShaderComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
@@ -233,7 +233,7 @@ namespace SE::Core
         if( gTypeTags.find( lInternalTypeName ) != gTypeTags.end() ) aOut.WriteKey( gTypeTags[lInternalTypeName] );
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sTag const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sTag const &aComponent )
     {
         WriteTypeTag<sTag>( aOut );
         aOut.BeginMap( true );
@@ -243,7 +243,7 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sRelationshipComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sRelationshipComponent const &aComponent )
     {
         WriteTypeTag<sRelationshipComponent>( aOut );
         aOut.BeginMap( true );
@@ -261,7 +261,7 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sCameraComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sCameraComponent const &aComponent )
     {
         WriteTypeTag<sCameraComponent>( aOut );
         aOut.BeginMap( true );
@@ -279,7 +279,7 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sAnimationChooser const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sAnimationChooser const &aComponent )
     {
         WriteTypeTag<sAnimationChooser>( aOut );
         aOut.BeginSequence( true );
@@ -292,7 +292,7 @@ namespace SE::Core
         aOut.EndSequence();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sActorComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sActorComponent const &aComponent )
     {
         WriteTypeTag<sActorComponent>( aOut );
         aOut.BeginMap( true );
@@ -300,7 +300,7 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sAnimatedTransformComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sAnimatedTransformComponent const &aComponent )
     {
         WriteTypeTag<sAnimatedTransformComponent>( aOut );
         aOut.BeginMap();
@@ -315,7 +315,7 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sNodeTransformComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sNodeTransformComponent const &aComponent )
     {
         WriteTypeTag<sNodeTransformComponent>( aOut );
         aOut.BeginMap( true );
@@ -326,7 +326,7 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sTransformMatrixComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sTransformMatrixComponent const &aComponent )
     {
         WriteTypeTag<sTransformMatrixComponent>( aOut );
         aOut.BeginMap( true );
@@ -337,11 +337,12 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sStaticMeshComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sStaticMeshComponent const &aComponent, std::string const &aMeshPath )
     {
         WriteTypeTag<sStaticMeshComponent>( aOut );
         aOut.BeginMap( true );
         {
+            aOut.WriteKey( "mMeshData", aMeshPath );
             aOut.WriteKey( "mVertexOffset", aComponent.mVertexOffset );
             aOut.WriteKey( "mVertexCount", aComponent.mVertexCount );
             aOut.WriteKey( "mIndexOffset", aComponent.mIndexOffset );
@@ -350,19 +351,19 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sParticleSystemComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sParticleSystemComponent const &aComponent )
     {
         WriteTypeTag<sParticleSystemComponent>( aOut );
         aOut.WriteNull();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sParticleShaderComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sParticleShaderComponent const &aComponent )
     {
         WriteTypeTag<sParticleShaderComponent>( aOut );
         aOut.WriteNull();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sSkeletonComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sSkeletonComponent const &aComponent )
     {
         WriteTypeTag<sSkeletonComponent>( aOut );
         aOut.BeginMap();
@@ -390,25 +391,25 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sWireframeComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sWireframeComponent const &aComponent )
     {
         WriteTypeTag<sWireframeComponent>( aOut );
         aOut.WriteNull();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sWireframeMeshComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sWireframeMeshComponent const &aComponent )
     {
         WriteTypeTag<sWireframeMeshComponent>( aOut );
         aOut.WriteNull();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sBoundingBoxComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sBoundingBoxComponent const &aComponent )
     {
         WriteTypeTag<sBoundingBoxComponent>( aOut );
         aOut.WriteNull();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sRayTracingTargetComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sRayTracingTargetComponent const &aComponent )
     {
         WriteTypeTag<sRayTracingTargetComponent>( aOut );
         aOut.BeginMap( true );
@@ -419,17 +420,17 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sMaterialComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sMaterialComponent const &aComponent, std::string const &aMaterialPath )
     {
         WriteTypeTag<sMaterialComponent>( aOut );
         aOut.BeginMap( true );
         {
-            aOut.WriteKey( "mMaterialID", aComponent.mMaterialID );
+            aOut.WriteKey( "mMaterialID", aMaterialPath );
         }
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sMaterialShaderComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sMaterialShaderComponent const &aComponent )
     {
         WriteTypeTag<sMaterialShaderComponent>( aOut );
         aOut.BeginMap( true );
@@ -443,7 +444,7 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sBackgroundComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sBackgroundComponent const &aComponent )
     {
         WriteTypeTag<sBackgroundComponent>( aOut );
         aOut.BeginMap( true );
@@ -454,7 +455,7 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sAmbientLightingComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sAmbientLightingComponent const &aComponent )
     {
         WriteTypeTag<sAmbientLightingComponent>( aOut );
         aOut.BeginMap( true );
@@ -466,7 +467,7 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void DoWriteComponent( ConfigurationWriter &aOut, sLightComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sLightComponent const &aComponent )
     {
         WriteTypeTag<sLightComponent>( aOut );
         aOut.BeginMap( true );
