@@ -1406,7 +1406,7 @@ namespace SE::Core
 
                 auto lRetrieveAndPackageTexture = [&]( sTextureReference aTexture )
                 {
-                    if( aTextureID < 2 )
+                    if( aTexture.mTextureID < 2 )
                     {
                         sTextureSamplingInfo lSamplingInfo = lTextures[aTexture.mTextureID]->mSpec;
                         TextureData2D        lTextureData;
@@ -1415,12 +1415,29 @@ namespace SE::Core
                     }
                 };
 
-                sMaterial lNewMaterial          = lMaterial;
-                lNewMaterial.mBaseColorTexture  = sTextureReference{ 0, 0 };
-                lNewMaterial.mNormalsTexture    = sTextureReference{ 1, 0 };
-                lNewMaterial.mMetalRoughTexture = sTextureReference{ 2, 0 };
-                lNewMaterial.mOcclusionTexture  = sTextureReference{ 3, 0 };
-                lNewMaterial.mEmissiveTexture   = sTextureReference{ 4, 0 };
+                uint32_t          lCurrentTextureID = 0;
+                sMaterial         lNewMaterial      = lMaterial;
+                sTextureReference lDefaultTexture{ std::numeric_limits<uint32_t>::max(), 0 };
+
+                lNewMaterial.mBaseColorTexture = lDefaultTexture;
+                if( lNewMaterial.mBaseColorTexture.mTextureID >= 2 )
+                    lNewMaterial.mBaseColorTexture = sTextureReference{ lCurrentTextureID++, 0 };
+
+                lNewMaterial.mNormalsTexture = lDefaultTexture;
+                if( lNewMaterial.mNormalsTexture.mTextureID >= 2 )
+                    lNewMaterial.mNormalsTexture = sTextureReference{ lCurrentTextureID++, 0 };
+
+                lNewMaterial.mMetalRoughTexture = lDefaultTexture;
+                if( lNewMaterial.mMetalRoughTexture.mTextureID >= 2 )
+                    lNewMaterial.mMetalRoughTexture = sTextureReference{ lCurrentTextureID++, 0 };
+
+                lNewMaterial.mOcclusionTexture = lDefaultTexture;
+                if( lNewMaterial.mOcclusionTexture.mTextureID >= 2 )
+                    lNewMaterial.mOcclusionTexture = sTextureReference{ lCurrentTextureID++, 0 };
+
+                lNewMaterial.mEmissiveTexture = lDefaultTexture;
+                if( lNewMaterial.mEmissiveTexture.mTextureID >= 2 )
+                    lNewMaterial.mEmissiveTexture = sTextureReference{ lCurrentTextureID++, 0 };
 
                 lBinaryDataFile.Package( lNewMaterial );
 
