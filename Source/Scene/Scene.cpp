@@ -426,28 +426,28 @@ namespace SE::Core
         DefaultCamera           = lReadContext.mEntities[lDefaultCameraUUID];
         SE::Logging::Info( "Created camera", lDefaultCameraUUID );
 
-        // uint32_t lTransformCount = 0;
-        // ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
+        uint32_t lTransformCount = 0;
+        ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
 
-        // uint32_t lStaticMeshCount = 0;
-        // ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aUUID ) { lStaticMeshCount++; } );
+        uint32_t lStaticMeshCount = 0;
+        ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aUUID ) { lStaticMeshCount++; } );
 
-        // uint32_t lJointMatrixCount = 0;
-        // uint32_t lJointOffsetCount = 0;
-        // ForEach<sSkeletonComponent>(
-        //     [&]( auto lElementToProcess, auto &s )
-        //     {
-        //         lJointMatrixCount += s.JointMatrices.size();
-        //         lJointOffsetCount += 1;
-        //     } );
+        uint32_t lJointMatrixCount = 0;
+        uint32_t lJointOffsetCount = 0;
+        ForEach<sSkeletonComponent>(
+            [&]( auto lElementToProcess, auto &s )
+            {
+                lJointMatrixCount += s.JointMatrices.size();
+                lJointOffsetCount += 1;
+            } );
 
-        // mTransforms         = GPUMemory::Create<math::mat4>( static_cast<uint32_t>( lTransformCount ) );
-        // mVertexBuffers      = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
-        // mTransformedBuffers = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
-        // mVertexOffsets      = GPUMemory::Create<uint32_t>( static_cast<uint32_t>( lStaticMeshCount ) );
-        // mVertexCounts       = GPUMemory::Create<uint32_t>( static_cast<uint32_t>( lStaticMeshCount ) );
-        // mJointTransforms    = GPUMemory::Create<math::mat4>( lJointMatrixCount );
-        // mJointOffsets       = GPUMemory::Create<uint32_t>( lJointOffsetCount );
+        mTransforms         = GPUMemory::Create<math::mat4>( static_cast<uint32_t>( lTransformCount ) );
+        mVertexBuffers      = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
+        mTransformedBuffers = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
+        mVertexOffsets      = GPUMemory::Create<uint32_t>( static_cast<uint32_t>( lStaticMeshCount ) );
+        mVertexCounts       = GPUMemory::Create<uint32_t>( static_cast<uint32_t>( lStaticMeshCount ) );
+        mJointTransforms    = GPUMemory::Create<math::mat4>( lJointMatrixCount );
+        mJointOffsets       = GPUMemory::Create<uint32_t>( lJointOffsetCount );
     }
 
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name )
@@ -852,10 +852,6 @@ namespace SE::Core
                     lElementToProcess.Get<sSkeletonComponent>().JointMatrices[lJointID] = lJointMatrix;
                 }
             } );
-
-        // if( mVertexBuffer )
-        // {
-        //     SE_PROFILE_SCOPE( "Transform Vertices" );
 
         // Update the transformed vertex buffer for static meshies
         {
