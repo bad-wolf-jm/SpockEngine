@@ -91,7 +91,7 @@ namespace SE::Core
         template <typename... Args>
         void ForEach( std::function<void( Element, Args &... )> a_ApplyFunction )
         {
-            m_Registry.ForEach<Args...>( a_ApplyFunction );
+            mRegistry.ForEach<Args...>( a_ApplyFunction );
         }
 
         void UpdateRayTracingComponents();
@@ -124,7 +124,7 @@ namespace SE::Core
         std::vector<sActorComponent> mActorComponents;
 
       protected:
-        SE::Core::EntityRegistry m_Registry;
+        SE::Core::EntityRegistry mRegistry;
 
         void InitializeRayTracing();
         void RebuildAccelerationStructure();
