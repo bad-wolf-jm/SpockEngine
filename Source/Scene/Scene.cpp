@@ -41,7 +41,7 @@ namespace SE::Core
     {
         mMaterialSystem = New<MaterialSystem>( a_GraphicContext );
 
-        DefaultCamera                 = m_Registry.CreateEntity( "DefaultCamera" );
+        DefaultCamera                 = mRegistry.CreateEntity( "DefaultCamera" );
         auto &l_CameraComponent       = DefaultCamera.Add<sCameraComponent>();
         l_CameraComponent.Position    = math::vec3{ 0.0f, 0.0f, 0.0f };
         l_CameraComponent.Pitch       = 0.0f;
@@ -54,11 +54,11 @@ namespace SE::Core
 
         CurrentCamera = DefaultCamera;
 
-        Environment = m_Registry.CreateEntity( "Environment" );
+        Environment = mRegistry.CreateEntity( "Environment" );
         Environment.Add<sAmbientLightingComponent>();
         Environment.Add<sBackgroundComponent>();
 
-        Root = m_Registry.CreateEntityWithRelationship( "WorldRoot" );
+        Root = mRegistry.CreateEntityWithRelationship( "WorldRoot" );
         Root.Add<sNodeTransformComponent>();
 
         InitializeRayTracing();
@@ -170,7 +170,7 @@ namespace SE::Core
                 {
                     auto &lDestParentEntity = lClonedEntities[lSourceParentEntity.Get<sUUID>().mValue.str()];
 
-                    m_Registry.SetParent( lDestEntity, lDestParentEntity );
+                    mRegistry.SetParent( lDestEntity, lDestParentEntity );
                 }
             }
         }
@@ -256,20 +256,20 @@ namespace SE::Core
         return l_CameraPosition;
     }
 
-    Scene::Element Scene::Create( std::string a_Name, Element a_Parent ) { return m_Registry.CreateEntity( a_Parent, a_Name ); }
+    Scene::Element Scene::Create( std::string a_Name, Element a_Parent ) { return mRegistry.CreateEntity( a_Parent, a_Name ); }
 
-    Scene::Element Scene::CreateEntity() { return m_Registry.CreateEntity(); }
+    Scene::Element Scene::CreateEntity() { return mRegistry.CreateEntity(); }
 
-    Scene::Element Scene::CreateEntity( std::string a_Name ) { return m_Registry.CreateEntity( a_Name ); }
+    Scene::Element Scene::CreateEntity( std::string a_Name ) { return mRegistry.CreateEntity( a_Name ); }
 
     void Scene::ClearScene()
     {
         mMaterialSystem->Wipe();
-        m_Registry.Clear();
+        mRegistry.Clear();
 
         mMaterialSystem->Clear();
 
-        DefaultCamera                 = m_Registry.CreateEntity( "DefaultCamera" );
+        DefaultCamera                 = mRegistry.CreateEntity( "DefaultCamera" );
         auto &l_CameraComponent       = DefaultCamera.Add<sCameraComponent>();
         l_CameraComponent.Position    = math::vec3{ 0.0f, 0.0f, 0.0f };
         l_CameraComponent.Pitch       = 0.0f;
@@ -282,11 +282,11 @@ namespace SE::Core
 
         CurrentCamera = DefaultCamera;
 
-        Environment = m_Registry.CreateEntity( "Environment" );
+        Environment = mRegistry.CreateEntity( "Environment" );
         Environment.Add<sAmbientLightingComponent>();
         Environment.Add<sBackgroundComponent>();
 
-        Root = m_Registry.CreateEntityWithRelationship( "WorldRoot" );
+        Root = mRegistry.CreateEntityWithRelationship( "WorldRoot" );
         Root.Add<sNodeTransformComponent>();
     }
 
@@ -648,7 +648,7 @@ namespace SE::Core
 
     void Scene::LoadScenario( fs::path aScenarioPath )
     {
-        m_Registry.Clear();
+        mRegistry.Clear();
         mMaterialSystem->Wipe();
 
         auto lScenarioRoot = aScenarioPath.parent_path();
@@ -701,7 +701,7 @@ namespace SE::Core
         lSceneRoot["nodes"].ForEach<std::string>(
             [&]( auto const &aKey, auto const &aValue )
             {
-                auto lEntity = m_Registry.CreateEntity( sUUID( aKey ) );
+                auto lEntity = mRegistry.CreateEntity( sUUID( aKey ) );
                 auto lUUID   = lEntity.Get<sUUID>().mValue;
 
                 lEntities[aKey] = lEntity;
@@ -726,7 +726,7 @@ namespace SE::Core
                 if( !lEntity ) return;
 
                 if( lParentEntityLUT.find( aKey ) != lParentEntityLUT.end() )
-                    m_Registry.SetParent( lEntity, lEntities[lParentEntityLUT[aKey]] );
+                    mRegistry.SetParent( lEntity, lEntities[lParentEntityLUT[aKey]] );
 
                 ReadComponent<sTag>( lEntity, lEntityConfiguration, lEntities );
                 ReadComponent<sCameraComponent>( lEntity, lEntityConfiguration, lEntities );
@@ -791,7 +791,7 @@ namespace SE::Core
 
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name )
     {
-        auto lAssetEntity = m_Registry.CreateEntity( Root, a_Name );
+        auto lAssetEntity = mRegistry.CreateEntity( Root, a_Name );
         lAssetEntity.Add<sNodeTransformComponent>( aTransform );
 
         std::vector<uint32_t> lTextureIds = {};
@@ -904,7 +904,7 @@ namespace SE::Core
         std::vector<Element> lNodes = {};
         for( auto &lNode : aModelData->mNodes )
         {
-            auto l_NodeEntity = m_Registry.CreateEntityWithRelationship( lNode.mName );
+            auto l_NodeEntity = mRegistry.CreateEntityWithRelationship( lNode.mName );
             l_NodeEntity.Add<sNodeTransformComponent>( lNode.mTransform );
 
             lNodes.push_back( l_NodeEntity );
@@ -914,9 +914,9 @@ namespace SE::Core
         for( auto &l_NodeEntity : lNodes )
         {
             if( aModelData->mNodes[l_Index].mParentID == std::numeric_limits<uint32_t>::max() )
-                m_Registry.SetParent( l_NodeEntity, lAssetEntity );
+                mRegistry.SetParent( l_NodeEntity, lAssetEntity );
             else
-                m_Registry.SetParent( l_NodeEntity, lNodes[aModelData->mNodes[l_Index].mParentID] );
+                mRegistry.SetParent( l_NodeEntity, lNodes[aModelData->mNodes[l_Index].mParentID] );
             l_Index++;
         }
 
@@ -927,7 +927,7 @@ namespace SE::Core
             if( lNode.mMeshes.size() == 0 ) continue;
 
             for( uint32_t lNodeMeshID = 0; lNodeMeshID < lNode.mMeshes.size(); lNodeMeshID++ )
-                m_Registry.SetParent( lMeshes[lNodeMeshID], lNodes[lNodeID] );
+                mRegistry.SetParent( lMeshes[lNodeMeshID], lNodes[lNodeID] );
 
             if( lNode.mSkinID != std::numeric_limits<uint32_t>::max() )
             {
@@ -970,7 +970,7 @@ namespace SE::Core
         {
             auto &lAnimationChooser = lAssetEntity.Get<sAnimationChooser>();
 
-            auto  l_AnimationEntity   = m_Registry.CreateEntity( lAssetEntity, lAnimation.mName );
+            auto  l_AnimationEntity   = mRegistry.CreateEntity( lAssetEntity, lAnimation.mName );
             auto &lAnimationComponent = l_AnimationEntity.Add<sAnimationComponent>();
 
             lAnimationChooser.Animations.push_back( l_AnimationEntity );
@@ -1024,7 +1024,7 @@ namespace SE::Core
                 if( !lComponent.ControllerInstance && lComponent.InstantiateController )
                 {
                     lComponent.ControllerInstance = lComponent.InstantiateController();
-                    lComponent.ControllerInstance->Initialize( m_Registry.WrapEntity( lEntity ) );
+                    lComponent.ControllerInstance->Initialize( mRegistry.WrapEntity( lEntity ) );
                     lComponent.ControllerInstance->OnCreate();
                 }
             } );
@@ -1404,47 +1404,31 @@ namespace SE::Core
                 std::string lSerializedMeshName = fmt::format( "{}.material", lMaterial.mName );
                 auto        lPath               = aPath / "Materials" / lSerializedMeshName;
 
-                auto lRetrieveAndPackageTexture = [&]( uint32_t aTextureID )
+                auto lRetrieveAndPackageTexture = [&]( sTextureReference aTexture )
                 {
                     if( aTextureID < 2 )
                     {
-                        sTextureSamplingInfo lSamplingInfo = lTextures[aTextureID]->mSpec;
+                        sTextureSamplingInfo lSamplingInfo = lTextures[aTexture.mTextureID]->mSpec;
                         TextureData2D        lTextureData;
-                        lTextures[aTextureID]->GetTexture()->GetPixelData( lTextureData );
+                        lTextures[aTexture.mTextureID]->GetTexture()->GetPixelData( lTextureData );
                         lBinaryDataFile.Package( lTextureData, lSamplingInfo );
                     }
                 };
 
-                sMaterial lNewMaterial{};
-                lNewMaterial.mName                         = lMaterial.mName;
-                lNewMaterial.mType                         = eMaterialType::Opaque;
-                lNewMaterial.mLineWidth                    = 1.0f;
-                lNewMaterial.mIsTwoSided                   = lMaterial.mIsTwoSided;
-                lNewMaterial.mUseAlphaMask                 = false;
-                lNewMaterial.mAlphaThreshold               = 0.5;
-                lNewMaterial.mBaseColorFactor              = lMaterial.mBaseColorFactor;
-                lNewMaterial.mBaseColorTexture.mTextureID  = 0;
-                lNewMaterial.mBaseColorTexture.mUVChannel  = 0;
-                lNewMaterial.mNormalsTexture.mTextureID    = 1;
-                lNewMaterial.mNormalsTexture.mUVChannel    = 0;
-                lNewMaterial.mRoughnessFactor              = lMaterial.mRoughnessFactor;
-                lNewMaterial.mMetallicFactor               = lMaterial.mMetallicFactor;
-                lNewMaterial.mMetalRoughTexture.mTextureID = 2;
-                lNewMaterial.mMetalRoughTexture.mUVChannel = 0;
-                lNewMaterial.mOcclusionStrength            = 0.0f;
-                lNewMaterial.mOcclusionTexture.mTextureID  = 3;
-                lNewMaterial.mOcclusionTexture.mUVChannel  = 0;
-                lNewMaterial.mEmissiveFactor               = lMaterial.mEmissiveFactor;
-                lNewMaterial.mEmissiveTexture.mTextureID   = 4;
-                lNewMaterial.mEmissiveTexture.mUVChannel   = 0;
+                sMaterial lNewMaterial          = lMaterial;
+                lNewMaterial.mBaseColorTexture  = sTextureReference{ 0, 0 };
+                lNewMaterial.mNormalsTexture    = sTextureReference{ 1, 0 };
+                lNewMaterial.mMetalRoughTexture = sTextureReference{ 2, 0 };
+                lNewMaterial.mOcclusionTexture  = sTextureReference{ 3, 0 };
+                lNewMaterial.mEmissiveTexture   = sTextureReference{ 4, 0 };
 
                 lBinaryDataFile.Package( lNewMaterial );
 
-                lRetrieveAndPackageTexture( lMaterial.mBaseColorTexture.mTextureID );
-                lRetrieveAndPackageTexture( lMaterial.mNormalsTexture.mTextureID );
-                lRetrieveAndPackageTexture( lMaterial.mMetalRoughTexture.mTextureID );
-                lRetrieveAndPackageTexture( lMaterial.mOcclusionTexture.mTextureID );
-                lRetrieveAndPackageTexture( lMaterial.mEmissiveTexture.mTextureID );
+                lRetrieveAndPackageTexture( lMaterial.mBaseColorTexture );
+                lRetrieveAndPackageTexture( lMaterial.mNormalsTexture );
+                lRetrieveAndPackageTexture( lMaterial.mMetalRoughTexture );
+                lRetrieveAndPackageTexture( lMaterial.mOcclusionTexture );
+                lRetrieveAndPackageTexture( lMaterial.mEmissiveTexture );
 
                 lBinaryDataFile.WriteTo( lPath );
             }
