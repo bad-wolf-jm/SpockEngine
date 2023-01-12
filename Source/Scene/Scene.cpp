@@ -387,6 +387,7 @@ namespace SE::Core
             } );
 
         std::mutex lMaterialSystemLock;
+        uint32_t   lMaterialIndex = 0;
         std::for_each( std::execution::seq, lMaterialLoadQueue.begin(), lMaterialLoadQueue.end(),
                        [&]( auto const &aElement )
                        {
@@ -414,8 +415,8 @@ namespace SE::Core
                            {
                                std::lock_guard<std::mutex> guard( lMaterialSystemLock );
 
-                               auto &lNewMaterial = mMaterialSystem->CreateMaterial( lMaterialData );
-
+                               auto &lNewMaterial                         = mMaterialSystem->CreateMaterial( lMaterialData );
+                               lNewMaterial.mID                           = lMaterialIndex++;
                                lNewMaterial.mBaseColorTexture.mTextureID  = lGetTexID( lNewMaterial.mBaseColorTexture.mTextureID, 1 );
                                lNewMaterial.mEmissiveTexture.mTextureID   = lGetTexID( lNewMaterial.mEmissiveTexture.mTextureID, 0 );
                                lNewMaterial.mMetalRoughTexture.mTextureID = lGetTexID( lNewMaterial.mMetalRoughTexture.mTextureID, 0 );
@@ -1143,7 +1144,7 @@ namespace SE::Core
 
                 uint32_t          lCurrentTextureID = 0;
                 sMaterial         lNewMaterial      = lMaterial;
-                sTextureReference lDefaultTexture{ std::numeric_limits<uint32_t>::max(), 0 };
+                sTextureReference lDefaultTexture{ 0, std::numeric_limits<uint32_t>::max() };
 
                 lNewMaterial.mBaseColorTexture = lDefaultTexture;
                 if( lMaterial.mBaseColorTexture.mTextureID >= 2 )
