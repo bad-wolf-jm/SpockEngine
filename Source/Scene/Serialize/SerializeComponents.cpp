@@ -129,8 +129,8 @@ namespace SE::Core
 
     void ReadComponent( sStaticMeshComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
     {
-        aComponent.mVertexBuffer = aReadConext.mBuffers[aNode["mVertexBuffer"].As<std::string>( "" )];
-        aComponent.mIndexBuffer  = aReadConext.mBuffers[aNode["mMeshID"].As<std::string>( "" )];
+        aComponent.mVertexBuffer = nullptr;
+        aComponent.mIndexBuffer  = nullptr;
         aComponent.mVertexOffset = aNode["mVertexOffset"].As<uint32_t>( 0 );
         aComponent.mVertexCount  = aNode["mVertexCount"].As<uint32_t>( 0 );
         aComponent.mIndexOffset  = aNode["mIndexOffset"].As<uint32_t>( 0 );
@@ -425,7 +425,7 @@ namespace SE::Core
         WriteTypeTag<sMaterialComponent>( aOut );
         aOut.BeginMap( true );
         {
-            aOut.WriteKey( "mMaterialID", aMaterialPath );
+            aOut.WriteKey( "mMaterialPath", aMaterialPath );
         }
         aOut.EndMap();
     }

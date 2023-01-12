@@ -1,8 +1,12 @@
+#include <algorithm>
+#include <execution>
 #include <filesystem>
 #include <fmt/core.h>
 #include <future>
 #include <gli/gli.hpp>
 #include <iostream>
+#include <map>
+#include <mutex>
 #include <queue>
 #include <stack>
 #include <unordered_map>
@@ -308,40 +312,10 @@ namespace SE::Core
 
     void Scene::LoadScenario( fs::path aScenarioPath )
     {
-        // mRegistry.Clear();
-        // mMaterialSystem->Wipe();
+        mRegistry.Clear();
+        mMaterialSystem->Wipe();
 
-        // auto lScenarioRoot = aScenarioPath.parent_path();
-        // auto lScenarioData = BinaryAsset( lScenarioRoot / "BinaryData.bin" );
-
-        // auto lOffseIndex = lScenarioData.GetIndex( 0 );
-        // if( lOffseIndex.mType != eAssetType::OFFSET_DATA ) throw std::runtime_error( "Binary data type mismatch" );
-        // lScenarioData.Seek( lOffseIndex.mByteStart );
-        // auto lMaterialOffset  = lScenarioData.Read<uint32_t>();
-        // auto lMaterialCount   = lScenarioData.Read<uint32_t>();
-        // auto lTextureOffset   = lScenarioData.Read<uint32_t>();
-        // auto lTextureCount    = lScenarioData.Read<uint32_t>();
-        // auto lAnimationOffset = lScenarioData.Read<uint32_t>();
-        // auto lAnimationCount  = lScenarioData.Read<uint32_t>();
-
-        // std::vector<VertexData> lVertexBuffer;
-        // std::vector<uint32_t>   lIndexBuffer;
-        // lScenarioData.Retrieve( 1, lVertexBuffer, lIndexBuffer );
-
-        // for( uint32_t lMaterialIndex = 0; lMaterialIndex < lMaterialCount; lMaterialIndex++ )
-        // {
-        //     sMaterial lMaterialData;
-        //     lScenarioData.Retrieve( lMaterialIndex + lMaterialOffset, lMaterialData );
-
-        //     auto &lNewMaterial = mMaterialSystem->CreateMaterial( lMaterialData );
-        // }
-
-        // for( uint32_t lTextureIndex = 0; lTextureIndex < lTextureCount; lTextureIndex++ )
-        // {
-        //     auto [aData, aSampler] = lScenarioData.Retrieve( lTextureIndex + lTextureOffset );
-
-        //     auto lNewTexture = mMaterialSystem->CreateTexture( aData, aSampler );
-        // }
+        auto lScenarioRoot = aScenarioPath.parent_path();
 
         // std::vector<sImportedAnimationSampler> lInterpolationData;
         // for( uint32_t lInterpolationIndex = 0; lInterpolationIndex < lAnimationCount; lInterpolationIndex++ )
@@ -353,11 +327,14 @@ namespace SE::Core
 
         auto lScenarioDescription = ConfigurationReader( aScenarioPath );
 
-        sReadContext lReadContext{};
+        sReadContext                                 lReadContext{};
         std::unordered_map<std::string, std::string> lParentEntityLUT{};
 
         auto &lSceneRoot = lScenarioDescription.GetRoot()["scene"];
 
+        std::vector<std::tuple<std::string, sStaticMeshComponent, std::string>> lBufferLoadQueue{};
+
+        std::map<std::string, std::set<std::string>> lMaterialLoadQueue{};
         lSceneRoot["nodes"].ForEach<std::string>(
             [&]( auto const &aKey, auto const &lEntityConfiguration )
             {
@@ -376,6 +353,24 @@ namespace SE::Core
                     }
                 }
 
+                if( HasTypeTag<sStaticMeshComponent>( lEntityConfiguration ) )
+                {
+                    auto &[lEntityID, lComponent, lBufferID] = lBufferLoadQueue.emplace_back();
+
+                    lEntityID = aKey;
+                    lBufferID = lEntityConfiguration[TypeTag<sStaticMeshComponent>()]["mMeshData"].As<std::string>( "" );
+                    ReadComponent( lComponent, lEntityConfiguration[TypeTag<sStaticMeshComponent>()], lReadContext );
+                }
+
+                if( HasTypeTag<sMaterialComponent>( lEntityConfiguration ) )
+                {
+                    auto &lMaterialID = lEntityConfiguration[TypeTag<sMaterialComponent>()]["mMaterialPath"].As<std::string>( "" );
+                    if( lMaterialLoadQueue.find( lMaterialID ) == lMaterialLoadQueue.end() )
+                        lMaterialLoadQueue.emplace( lMaterialID, std::set<std::string>{ aKey } );
+                    else
+                        lMaterialLoadQueue[lMaterialID].emplace( aKey );
+                }
+
                 ReadAndAddComponent<sTag>( lEntity, lEntityConfiguration, lReadContext );
                 ReadAndAddComponent<sCameraComponent>( lEntity, lEntityConfiguration, lReadContext );
                 ReadAndAddComponent<sAnimationChooser>( lEntity, lEntityConfiguration, lReadContext );
@@ -384,7 +379,6 @@ namespace SE::Core
                 ReadAndAddComponent<sTransformMatrixComponent>( lEntity, lEntityConfiguration, lReadContext );
                 ReadAndAddComponent<sSkeletonComponent>( lEntity, lEntityConfiguration, lReadContext );
                 ReadAndAddComponent<sRayTracingTargetComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sMaterialComponent>( lEntity, lEntityConfiguration, lReadContext );
                 ReadAndAddComponent<sMaterialShaderComponent>( lEntity, lEntityConfiguration, lReadContext );
                 ReadAndAddComponent<sBackgroundComponent>( lEntity, lEntityConfiguration, lReadContext );
                 ReadAndAddComponent<sAmbientLightingComponent>( lEntity, lEntityConfiguration, lReadContext );
@@ -392,36 +386,98 @@ namespace SE::Core
                 ReadAndAddComponent<sActorComponent>( lEntity, lEntityConfiguration, lReadContext );
             } );
 
+        std::mutex lMaterialSystemLock;
+        std::for_each( std::execution::seq, lMaterialLoadQueue.begin(), lMaterialLoadQueue.end(),
+                       [&]( auto const &aElement )
+                       {
+                           auto &[lMaterialID, lEntities] = aElement;
+
+                           BinaryAsset lBinaryDataFile( lScenarioRoot / lMaterialID );
+
+                           sMaterial lMaterialData;
+
+                           uint32_t lTextureCount = lBinaryDataFile.CountAssets() - 1;
+                           lBinaryDataFile.Retrieve( 0, lMaterialData );
+
+                           std::vector<uint32_t> lTextureIds{};
+                           for( uint32_t i = 0; i < lTextureCount; i++ )
+                           {
+                               auto &[lTextureData, lTextureSampler] = lBinaryDataFile.Retrieve( i + 1 );
+
+                               lTextureIds.push_back( mMaterialSystem->CreateTexture( lTextureData, lTextureSampler ) );
+                           }
+
+                           auto lGetTexID = [&]( uint32_t aID, uint32_t aDefault ) {
+                               return ( ( aID == std::numeric_limits<uint32_t>::max() ) || ( lTextureCount == 0 ) ) ? aDefault
+                                                                                                                    : lTextureIds[aID];
+                           };
+                           {
+                               std::lock_guard<std::mutex> guard( lMaterialSystemLock );
+
+                               auto &lNewMaterial = mMaterialSystem->CreateMaterial( lMaterialData );
+
+                               lNewMaterial.mBaseColorTexture.mTextureID  = lGetTexID( lNewMaterial.mBaseColorTexture.mTextureID, 1 );
+                               lNewMaterial.mEmissiveTexture.mTextureID   = lGetTexID( lNewMaterial.mEmissiveTexture.mTextureID, 0 );
+                               lNewMaterial.mMetalRoughTexture.mTextureID = lGetTexID( lNewMaterial.mMetalRoughTexture.mTextureID, 0 );
+                               lNewMaterial.mOcclusionTexture.mTextureID  = lGetTexID( lNewMaterial.mOcclusionTexture.mTextureID, 1 );
+                               lNewMaterial.mNormalsTexture.mTextureID    = lGetTexID( lNewMaterial.mNormalsTexture.mTextureID, 0 );
+
+                               for( auto &lEntity : lEntities )
+                               {
+                                   lReadContext.mEntities[lEntity].AddOrReplace<sMaterialComponent>( lNewMaterial.mID );
+                               }
+                           }
+                       } );
+
+        std::mutex lBufferLock;
+        std::for_each(
+            std::execution::seq, lBufferLoadQueue.begin(), lBufferLoadQueue.end(),
+            [&]( auto &aElement )
+            {
+                auto &[lEntityID, lComponent, lBufferID] = aElement;
+
+                BinaryAsset lBinaryDataFile( lScenarioRoot / lBufferID );
+
+                std::vector<VertexData> lVertexBuffer;
+                std::vector<uint32_t>   lIndexBuffer;
+                lBinaryDataFile.Retrieve( 0, lVertexBuffer, lIndexBuffer );
+
+                {
+                    std::lock_guard<std::mutex> guard( lBufferLock );
+
+                    lComponent.mVertexBuffer =
+                        New<VkGpuBuffer>( mGraphicContext, lVertexBuffer, eBufferType::VERTEX_BUFFER, false, false, true, true );
+                    lComponent.mIndexBuffer =
+                        New<VkGpuBuffer>( mGraphicContext, lIndexBuffer, eBufferType::INDEX_BUFFER, false, false, true, true );
+                    lComponent.mTransformedBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true,
+                                                                      true, lComponent.mVertexBuffer->SizeAs<uint8_t>() );
+
+                    lReadContext.mEntities[lEntityID].AddOrReplace<sStaticMeshComponent>( lComponent );
+                }
+
+                SE::Logging::Info( "{}", lEntityID );
+            } );
+
         lSceneRoot["nodes"].ForEach<std::string>(
             [&]( auto const &aKey, auto const &lEntityConfiguration )
             {
-                auto  lUUID   = UUIDv4::UUID::fromStrFactory( aKey );
                 auto &lEntity = lReadContext.mEntities[aKey];
 
                 if( !lEntity ) return;
 
                 if( lParentEntityLUT.find( aKey ) != lParentEntityLUT.end() )
                     mRegistry.SetParent( lEntity, lReadContext.mEntities[lParentEntityLUT[aKey]] );
-
-                SE::Logging::Info( "Components added to entity {}", aKey );
             } );
 
         lSceneRoot["nodes"].ForEach<std::string>(
             [&]( auto const &aKey, auto const &lEntityConfiguration )
             {
-                auto  lUUID   = UUIDv4::UUID::fromStrFactory( aKey );
                 auto &lEntity = lReadContext.mEntities[aKey];
 
                 if( !lEntity ) return;
 
                 // ReadAndAddComponent<sAnimationComponent>( lEntity, lEntityConfiguration, lReadContext, lInterpolationData );
-                // ReadAndAddComponent<sStaticMeshComponent>( lEntity, lEntityConfiguration, lReadContext );
-
-                SE::Logging::Info( "Components added to entity {}", aKey );
             } );
-
-
-
 
         auto lRootNodeUUIDStr = lSceneRoot["root"].As<std::string>( "" );
         auto lRootNodeUUID    = UUIDv4::UUID::fromStrFactory( lRootNodeUUIDStr );

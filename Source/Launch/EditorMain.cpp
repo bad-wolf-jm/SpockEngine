@@ -277,7 +277,7 @@ int main( int argc, char **argv )
             MonoScriptEngine::SetAppAssemblyPath( lAssemblyPath.as<std::string>() );
 
         YAML::Node &lDefaultScenarioPath = lRootNode["project"]["default_scenario"];
-        if( !lDefaultScenarioPath.IsNull() && fs::exists( lDefaultScenarioPath.as<std::string>() ) )
+        if( (!lDefaultScenarioPath.IsNull()) && fs::exists( lDefaultScenarioPath.as<std::string>() ) )
             lEditorApplication.mEditorWindow.World->LoadScenario( lDefaultScenarioPath.as<std::string>() );
     }
 

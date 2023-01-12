@@ -93,7 +93,9 @@ namespace SE::Core
 
         sAssetIndex const &GetIndex( uint32_t aIndex ) const;
 
-        void WriteTo(fs::path aPath);
+        uint32_t CountAssets() { return mAssetIndex.size(); }
+
+        void WriteTo( fs::path aPath );
 
         /// @brief Retrieve the texture stored in the file at index `aIndex`
         std::tuple<TextureData2D, TextureSampler2D> Retrieve( uint32_t aIndex );
