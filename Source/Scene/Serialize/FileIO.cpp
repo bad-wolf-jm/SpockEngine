@@ -202,4 +202,9 @@ namespace SE::Core
         for( YAML::iterator it = mNode.begin(); it != mNode.end(); ++it ) aFunc( ConfigurationNode( *it ) );
     }
 
+    void ConfigurationNode::ForEach( std::function<void( ConfigurationNode & )> aFunc ) const
+    {
+        for( YAML::const_iterator it = mNode.begin(); it != mNode.end(); ++it ) aFunc( ConfigurationNode( *it ) );
+    }
+
 } // namespace SE::Core

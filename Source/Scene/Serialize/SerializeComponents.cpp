@@ -61,7 +61,7 @@ namespace SE::Core
 
     void ReadComponent( sAnimationChooser &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
     {
-        aNode["sAnimationChooser"].ForEach(
+        aNode.ForEach(
             [&]( ConfigurationNode &aNode )
             {
                 std::string lAnimationUUID = aNode.As<std::string>( "" );

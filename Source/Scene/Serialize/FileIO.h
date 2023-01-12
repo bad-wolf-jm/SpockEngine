@@ -135,6 +135,9 @@ namespace SE::Core
         /// @brief Iterate over a list
         void ForEach( std::function<void( ConfigurationNode & )> aFunc );
 
+        /// @brief Iterate over a list
+        void ForEach( std::function<void( ConfigurationNode & )> aFunc ) const;
+
       private:
         YAML::Node mNode{}; //!< Underlying node
     };

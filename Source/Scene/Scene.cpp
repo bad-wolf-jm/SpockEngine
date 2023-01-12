@@ -45,16 +45,16 @@ namespace SE::Core
     {
         mMaterialSystem = New<MaterialSystem>( a_GraphicContext );
 
-        DefaultCamera                 = mRegistry.CreateEntity( "DefaultCamera" );
-        auto &l_CameraComponent       = DefaultCamera.Add<sCameraComponent>();
-        l_CameraComponent.Position    = math::vec3{ 0.0f, 0.0f, 0.0f };
-        l_CameraComponent.Pitch       = 0.0f;
-        l_CameraComponent.Yaw         = 0.0f;
-        l_CameraComponent.Roll        = 0.0f;
-        l_CameraComponent.Near        = 0.001;
-        l_CameraComponent.Far         = 1000.0f;
-        l_CameraComponent.FieldOfView = 90.0f;
-        l_CameraComponent.AspectRatio = 16.0f / 9.0f;
+        DefaultCamera                = mRegistry.CreateEntity( "DefaultCamera" );
+        auto &lCameraComponent       = DefaultCamera.Add<sCameraComponent>();
+        lCameraComponent.Position    = math::vec3{ 0.0f, 0.0f, 0.0f };
+        lCameraComponent.Pitch       = 0.0f;
+        lCameraComponent.Yaw         = 0.0f;
+        lCameraComponent.Roll        = 0.0f;
+        lCameraComponent.Near        = 0.001;
+        lCameraComponent.Far         = 1000.0f;
+        lCameraComponent.FieldOfView = 90.0f;
+        lCameraComponent.AspectRatio = 16.0f / 9.0f;
 
         CurrentCamera = DefaultCamera;
 
@@ -221,7 +221,7 @@ namespace SE::Core
 
     math::mat4 Scene::GetView()
     {
-        math::mat4 l_CameraView( 1.0f );
+        math::mat4 lCameraView( 1.0f );
         if( CurrentCamera.Has<sCameraComponent>() )
         {
             auto &lComponent = CurrentCamera.Get<sCameraComponent>();
@@ -230,10 +230,10 @@ namespace SE::Core
             math::mat4 lRy = math::Rotation( lComponent.Yaw, math::vec3( 0.0f, 1.0f, 0.0f ) );
             math::mat4 lRz = math::Rotation( -lComponent.Roll, math::vec3( 0.0f, 0.0f, 1.0f ) );
 
-            l_CameraView = math::Inverse( math::Translate( lRx * lRy * lRz, lComponent.Position ) );
+            lCameraView = math::Inverse( math::Translate( lRx * lRy * lRz, lComponent.Position ) );
         }
 
-        return l_CameraView;
+        return lCameraView;
     }
 
     math::mat4 Scene::GetProjection()
@@ -273,16 +273,16 @@ namespace SE::Core
 
         mMaterialSystem->Clear();
 
-        DefaultCamera                 = mRegistry.CreateEntity( "DefaultCamera" );
-        auto &l_CameraComponent       = DefaultCamera.Add<sCameraComponent>();
-        l_CameraComponent.Position    = math::vec3{ 0.0f, 0.0f, 0.0f };
-        l_CameraComponent.Pitch       = 0.0f;
-        l_CameraComponent.Yaw         = 0.0f;
-        l_CameraComponent.Roll        = 0.0f;
-        l_CameraComponent.Near        = 0.001;
-        l_CameraComponent.Far         = 1000.0f;
-        l_CameraComponent.FieldOfView = 90.0f;
-        l_CameraComponent.AspectRatio = 16.0f / 9.0f;
+        DefaultCamera                = mRegistry.CreateEntity( "DefaultCamera" );
+        auto &lCameraComponent       = DefaultCamera.Add<sCameraComponent>();
+        lCameraComponent.Position    = math::vec3{ 0.0f, 0.0f, 0.0f };
+        lCameraComponent.Pitch       = 0.0f;
+        lCameraComponent.Yaw         = 0.0f;
+        lCameraComponent.Roll        = 0.0f;
+        lCameraComponent.Near        = 0.001;
+        lCameraComponent.Far         = 1000.0f;
+        lCameraComponent.FieldOfView = 90.0f;
+        lCameraComponent.AspectRatio = 16.0f / 9.0f;
 
         CurrentCamera = DefaultCamera;
 
@@ -317,13 +317,17 @@ namespace SE::Core
 
         auto lScenarioRoot = aScenarioPath.parent_path();
 
-        // std::vector<sImportedAnimationSampler> lInterpolationData;
-        // for( uint32_t lInterpolationIndex = 0; lInterpolationIndex < lAnimationCount; lInterpolationIndex++ )
-        // {
-        //     auto &lAnimationData = lInterpolationData.emplace_back();
+        std::vector<sImportedAnimationSampler> lInterpolationData;
+        {
+            BinaryAsset lBinaryDataFile( lScenarioRoot / "Animations" / "BinaryData.bin" );
 
-        //     lScenarioData.Retrieve( lInterpolationIndex + lAnimationOffset, lAnimationData );
-        // }
+            for( uint32_t lInterpolationIndex = 0; lInterpolationIndex < lBinaryDataFile.CountAssets(); lInterpolationIndex++ )
+            {
+                auto &lAnimationData = lInterpolationData.emplace_back();
+
+                lBinaryDataFile.Retrieve( lInterpolationIndex, lAnimationData );
+            }
+        }
 
         auto lScenarioDescription = ConfigurationReader( aScenarioPath );
 
@@ -370,6 +374,14 @@ namespace SE::Core
                     else
                         lMaterialLoadQueue[lMaterialID].emplace( aKey );
                 }
+
+                // if( HasTypeTag<sAnimationComponent>( lEntityConfiguration ) )
+                // {
+                //     auto &lComponent = lEntity.Add<sAnimationComponent>();
+
+                //     ReadComponent( lComponent, lEntityConfiguration[TypeTag<sAnimationComponent>()], lReadContext,
+                //                    lInterpolationData );
+                // }
 
                 ReadAndAddComponent<sTag>( lEntity, lEntityConfiguration, lReadContext );
                 ReadAndAddComponent<sCameraComponent>( lEntity, lEntityConfiguration, lReadContext );
@@ -475,7 +487,13 @@ namespace SE::Core
 
                 if( !lEntity ) return;
 
-                // ReadAndAddComponent<sAnimationComponent>( lEntity, lEntityConfiguration, lReadContext, lInterpolationData );
+                if( HasTypeTag<sAnimationComponent>( lEntityConfiguration ) )
+                {
+                    auto &lComponent = lEntity.Add<sAnimationComponent>();
+
+                    ReadComponent( lComponent, lEntityConfiguration[TypeTag<sAnimationComponent>()], lReadContext,
+                                   lInterpolationData );
+                }
             } );
 
         auto lRootNodeUUIDStr = lSceneRoot["root"].As<std::string>( "" );
@@ -517,6 +535,8 @@ namespace SE::Core
         mVertexCounts       = GPUMemory::Create<uint32_t>( static_cast<uint32_t>( lStaticMeshCount ) );
         mJointTransforms    = GPUMemory::Create<math::mat4>( lJointMatrixCount );
         mJointOffsets       = GPUMemory::Create<uint32_t>( lJointOffsetCount );
+
+        RebuildAccelerationStructure();
     }
 
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name )
@@ -634,20 +654,20 @@ namespace SE::Core
         std::vector<Element> lNodes = {};
         for( auto &lNode : aModelData->mNodes )
         {
-            auto l_NodeEntity = mRegistry.CreateEntityWithRelationship( lNode.mName );
-            l_NodeEntity.Add<sNodeTransformComponent>( lNode.mTransform );
+            auto lNodeEntity = mRegistry.CreateEntityWithRelationship( lNode.mName );
+            lNodeEntity.Add<sNodeTransformComponent>( lNode.mTransform );
 
-            lNodes.push_back( l_NodeEntity );
+            lNodes.push_back( lNodeEntity );
         }
 
-        int32_t l_Index = 0;
-        for( auto &l_NodeEntity : lNodes )
+        int32_t lIndex = 0;
+        for( auto &lNodeEntity : lNodes )
         {
-            if( aModelData->mNodes[l_Index].mParentID == std::numeric_limits<uint32_t>::max() )
-                mRegistry.SetParent( l_NodeEntity, lAssetEntity );
+            if( aModelData->mNodes[lIndex].mParentID == std::numeric_limits<uint32_t>::max() )
+                mRegistry.SetParent( lNodeEntity, lAssetEntity );
             else
-                mRegistry.SetParent( l_NodeEntity, lNodes[aModelData->mNodes[l_Index].mParentID] );
-            l_Index++;
+                mRegistry.SetParent( lNodeEntity, lNodes[aModelData->mNodes[lIndex].mParentID] );
+            lIndex++;
         }
 
         for( uint32_t lNodeID = 0; lNodeID < aModelData->mNodes.size(); lNodeID++ )
@@ -1065,7 +1085,7 @@ namespace SE::Core
             if( aEntity.Has<sAnimationComponent>() )
             {
                 auto &lComponent = aEntity.Get<sAnimationComponent>();
-                lOut.WriteKey( "sAnimationComponent" );
+                lOut.WriteKey( TypeTag<sAnimationComponent>() );
                 lOut.BeginMap();
                 {
                     lOut.WriteKey( "Duration", lComponent.Duration );
