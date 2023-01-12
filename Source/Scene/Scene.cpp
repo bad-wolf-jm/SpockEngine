@@ -423,9 +423,7 @@ namespace SE::Core
                                lNewMaterial.mNormalsTexture.mTextureID    = lGetTexID( lNewMaterial.mNormalsTexture.mTextureID, 0 );
 
                                for( auto &lEntity : lEntities )
-                               {
                                    lReadContext.mEntities[lEntity].AddOrReplace<sMaterialComponent>( lNewMaterial.mID );
-                               }
                            }
                        } );
 
