@@ -398,12 +398,6 @@ namespace SE::Core
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sCameraComponent>()], lReadContext );
             }
 
-            if( HasTypeTag<sAnimationChooser>( lEntityConfiguration ) )
-            {
-                auto &lComponent = lEntity.Add<sAnimationChooser>();
-
-                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sAnimationChooser>()], lReadContext );
-            }
 
             if( HasTypeTag<sAnimatedTransformComponent>( lEntityConfiguration ) )
             {
@@ -424,13 +418,6 @@ namespace SE::Core
                 auto &lComponent = lEntity.Add<sTransformMatrixComponent>();
 
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sTransformMatrixComponent>()], lReadContext );
-            }
-
-            if( HasTypeTag<sSkeletonComponent>( lEntityConfiguration ) )
-            {
-                auto &lComponent = lEntity.Add<sSkeletonComponent>();
-
-                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sSkeletonComponent>()], lReadContext );
             }
 
             if( HasTypeTag<sRayTracingTargetComponent>( lEntityConfiguration ) )
@@ -533,6 +520,23 @@ namespace SE::Core
 
             if( !lEntity ) return;
 
+            if( HasTypeTag<sSkeletonComponent>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sSkeletonComponent>();
+
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sSkeletonComponent>()], lReadContext );
+            }
+        }
+
+        for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
+        {
+            auto const &lKey                 = it->first.as<std::string>();
+            auto       &lEntityConfiguration = it->second;
+
+            auto &lEntity = lReadContext.mEntities[lKey];
+
+            if( !lEntity ) return;
+
             if( HasTypeTag<sAnimationComponent>( lEntityConfiguration ) )
             {
                 auto &lComponent = lEntity.Add<sAnimationComponent>();
@@ -540,6 +544,27 @@ namespace SE::Core
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sAnimationComponent>()], lReadContext, lInterpolationData );
             }
         }
+
+
+
+        for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
+        {
+            auto const &lKey                 = it->first.as<std::string>();
+            auto       &lEntityConfiguration = it->second;
+
+            auto &lEntity = lReadContext.mEntities[lKey];
+
+            if( !lEntity ) return;
+
+            if( HasTypeTag<sAnimationChooser>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sAnimationChooser>();
+
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sAnimationChooser>()], lReadContext );
+            }
+        }
+
+
 
         auto lRootNodeUUIDStr = Get( lSceneRoot["root"], std::string{ "" } );
         auto lRootNodeUUID    = UUIDv4::UUID::fromStrFactory( lRootNodeUUIDStr );

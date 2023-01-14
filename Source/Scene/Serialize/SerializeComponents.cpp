@@ -110,7 +110,7 @@ namespace SE::Core
         aComponent.Duration  = Get( aNode["Duration"], 0.0f );
         aComponent.mChannels = std::vector<sAnimationChannel>{};
 
-        auto const& lChannels = aNode["mChannels"];
+        auto const &lChannels = aNode["mChannels"];
         for( YAML::const_iterator it = lChannels.begin(); it != lChannels.end(); ++it )
         {
             auto &aInterpolationDataNode = *it;
@@ -220,20 +220,6 @@ namespace SE::Core
             aComponent.JointMatrices.push_back( ReadMatrix( *it ) );
         }
 
-        // aNode["Bones"].ForEach(
-        //     [&]( YAML::Node &aNode )
-        //     {
-        //         auto lUUID = aNode.As<std::string>( "" );
-        //         if( lUUID.empty() ) return;
-
-        //         aComponent.Bones.push_back( aReadConext.mEntities[lUUID] );
-        //     } );
-
-        // aNode["InverseBindMatrices"].ForEach( [&]( YAML::Node &aNode )
-        //                                       { aComponent.InverseBindMatrices.push_back( ReadMatrix( aNode ) ); } );
-
-        // aNode["JointMatrices"].ForEach( [&]( YAML::Node &aNode ) { aComponent.JointMatrices.push_back( ReadMatrix( aNode ) ); } );
-
         aComponent.BoneCount = aComponent.Bones.size();
     }
 
@@ -244,12 +230,12 @@ namespace SE::Core
 
     void ReadComponent( sMaterialComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
-        aComponent.mMaterialID = 0;//Get( aNode["mMaterialPath"], std::string{ "" } );
+        aComponent.mMaterialID = 0; 
     }
 
     void ReadComponent( sMaterialShaderComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
-        aComponent.Type              = static_cast<eCMaterialType>( Get( aNode["Type"], uint8_t{0} ));
+        aComponent.Type              = static_cast<eCMaterialType>( Get( aNode["Type"], uint8_t{ 0 } ) );
         aComponent.IsTwoSided        = Get( aNode["IsTwoSided"], true );
         aComponent.UseAlphaMask      = Get( aNode["UseAlphaMask"], true );
         aComponent.LineWidth         = Get( aNode["LineWidth"], 1.0f );
@@ -258,7 +244,7 @@ namespace SE::Core
 
     void ReadComponent( sBackgroundComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
-        aComponent.Color = Get(aNode["Color"], { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+        aComponent.Color = Get( aNode["Color"], { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
     }
 
     void ReadComponent( sAmbientLightingComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
