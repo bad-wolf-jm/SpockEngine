@@ -359,7 +359,8 @@ namespace SE::Core
                 if( !( lEntityConfiguration[TypeTag<sRelationshipComponent>()]["mParent"].IsNull() ) )
                 {
                     auto lParentUUIDStr = Get( lEntityConfiguration[TypeTag<sRelationshipComponent>()]["mParent"], std::string{ "" } );
-                    auto lParentUUID    = UUIDv4::UUID::fromStrFactory( lParentUUIDStr );
+
+                    auto lParentUUID       = UUIDv4::UUID::fromStrFactory( lParentUUIDStr );
                     lParentEntityLUT[lKey] = lParentUUIDStr;
                 }
             }
@@ -376,6 +377,7 @@ namespace SE::Core
             if( HasTypeTag<sMaterialComponent>( lEntityConfiguration ) )
             {
                 auto &lMaterialID = Get( lEntityConfiguration[TypeTag<sMaterialComponent>()]["mMaterialPath"], std::string{ "" } );
+
                 if( lMaterialLoadQueue.find( lMaterialID ) == lMaterialLoadQueue.end() )
                     lMaterialLoadQueue.emplace( lMaterialID, std::set<std::string>{ lKey } );
                 else
@@ -413,6 +415,7 @@ namespace SE::Core
             if( HasTypeTag<sNodeTransformComponent>( lEntityConfiguration ) )
             {
                 auto &lComponent = lEntity.Add<sNodeTransformComponent>();
+
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sNodeTransformComponent>()], lReadContext );
             }
 
