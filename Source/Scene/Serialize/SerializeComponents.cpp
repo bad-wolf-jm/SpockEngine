@@ -37,78 +37,113 @@ namespace SE::Core
         return "VOID";
     }
 
-    void ReadComponent( sTag &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    template <uint32_t N>
+    bool HasAll( YAML::Node const &aNode, std::array<std::string, N> const &aKeys )
     {
-        aComponent.mValue = aNode["mValue"].As<std::string>( "" );
+        for( auto &lKey : aKeys )
+        {
+            if( !( aNode[lKey] ) ) return false;
+        }
+        return true;
     }
 
-    void ReadComponent( sCameraComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    math::vec2 Get( YAML::Node const &aNode, std::array<std::string, 2> const &aKeys, math::vec2 const &aDefault )
     {
-        aComponent.Position    = aNode["Position"].Vec( { "x", "y", "z" }, math::vec3{ 0.0f, 0.0f, 0.0f } );
-        aComponent.Pitch       = aNode["Pitch"].As<float>( 0.0f );
-        aComponent.Yaw         = aNode["Yaw"].As<float>( 0.0f );
-        aComponent.Roll        = aNode["Roll"].As<float>( 0.0f );
-        aComponent.Near        = aNode["Near"].As<float>( 0.0f );
-        aComponent.Far         = aNode["Far"].As<float>( 0.0f );
-        aComponent.FieldOfView = aNode["FieldOfView"].As<float>( 0.0f );
-        aComponent.AspectRatio = aNode["AspectRatio"].As<float>( 0.0f );
+        if( !HasAll( aNode, aKeys ) ) return aDefault;
+
+        return math::vec2{ Get( aNode[aKeys[0]], aDefault.x ), Get( aNode[aKeys[1]], aDefault.y ) };
     }
 
-    void ReadComponent( sActorComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    math::vec3 Get( YAML::Node const &aNode, std::array<std::string, 3> const &aKeys, math::vec3 const &aDefault )
     {
-        aComponent.mClassFullName = aNode["mClassFullName"].As<std::string>( "" );
+        if( !HasAll( aNode, aKeys ) ) return aDefault;
+
+        return math::vec3{ Get( aNode[aKeys[0]], aDefault.x ), Get( aNode[aKeys[1]], aDefault.y ),
+                           Get( aNode[aKeys[2]], aDefault.z ) };
     }
 
-    void ReadComponent( sAnimationChooser &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    math::vec4 Get( YAML::Node const &aNode, std::array<std::string, 4> const &aKeys, math::vec4 const &aDefault )
     {
-        aNode.ForEach(
-            [&]( ConfigurationNode &aNode )
-            {
-                std::string lAnimationUUID = aNode.As<std::string>( "" );
-                Entity      lAnimationNode = aReadConext.mEntities[lAnimationUUID];
+        if( !HasAll( aNode, aKeys ) ) return aDefault;
 
-                aComponent.Animations.push_back( lAnimationNode );
-                SE::Logging::Info( "ANIMATION {}", lAnimationUUID );
-            } );
+        return math::vec4{ Get( aNode[aKeys[0]], aDefault.x ), Get( aNode[aKeys[1]], aDefault.y ), Get( aNode[aKeys[2]], aDefault.z ),
+                           Get( aNode[aKeys[3]], aDefault.w ) };
     }
 
-    void ReadComponent( sAnimationComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext,
+    void ReadComponent( sTag &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
+    {
+        aComponent.mValue = Get<std::string>( aNode["mValue"], "" );
+    }
+
+    void ReadComponent( sCameraComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
+    {
+        aComponent.Position    = Get( aNode["Position"], { "x", "y", "z" }, math::vec3{ 0.0f, 0.0f, 0.0f } );
+        aComponent.Pitch       = Get( aNode["Pitch"], 0.0f );
+        aComponent.Yaw         = Get( aNode["Yaw"], 0.0f );
+        aComponent.Roll        = Get( aNode["Roll"], 0.0f );
+        aComponent.Near        = Get( aNode["Near"], 0.0f );
+        aComponent.Far         = Get( aNode["Far"], 0.0f );
+        aComponent.FieldOfView = Get( aNode["FieldOfView"], 0.0f );
+        aComponent.AspectRatio = Get( aNode["AspectRatio"], 0.0f );
+    }
+
+    void ReadComponent( sActorComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
+    {
+        aComponent.mClassFullName = Get( aNode["mClassFullName"], std::string{ "" } );
+    }
+
+    void ReadComponent( sAnimationChooser &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
+    {
+        for( YAML::const_iterator it = aNode.begin(); it != aNode.end(); ++it )
+        {
+            std::string lAnimationUUID = Get( *it, std::string{ "" } );
+            Entity      lAnimationNode = aReadConext.mEntities[lAnimationUUID];
+
+            aComponent.Animations.push_back( lAnimationNode );
+            SE::Logging::Info( "ANIMATION {}", lAnimationUUID );
+        }
+    }
+
+    void ReadComponent( sAnimationComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext,
                         std::vector<sImportedAnimationSampler> &aInterpolationData )
     {
-        aComponent.Duration  = aNode["Duration"].As<float>( 0.0f );
+        aComponent.Duration  = Get( aNode["Duration"], 0.0f );
         aComponent.mChannels = std::vector<sAnimationChannel>{};
 
-        aNode["mChannels"].ForEach(
-            [&]( ConfigurationNode &aInterpolationDataNode )
-            {
-                sAnimationChannel lNewChannel{};
-                std::string       lTargetNodeUUID = aInterpolationDataNode["mTargetNode"].As<std::string>( "" );
+        auto const& lChannels = aNode["mChannels"];
+        for( YAML::const_iterator it = lChannels.begin(); it != lChannels.end(); ++it )
+        {
+            auto &aInterpolationDataNode = *it;
 
-                lNewChannel.mTargetNode = aReadConext.mEntities[lTargetNodeUUID];
-                lNewChannel.mChannelID =
-                    static_cast<sImportedAnimationChannel::Channel>( aInterpolationDataNode["mChannelID"].As<uint32_t>( 0 ) );
-                lNewChannel.mInterpolation = aInterpolationData[aInterpolationDataNode["mInterpolationDataIndex"].As<uint32_t>( 0 )];
+            sAnimationChannel lNewChannel{};
+            std::string       lTargetNodeUUID = Get( aInterpolationDataNode["mTargetNode"], std::string{ "" } );
 
-                aComponent.mChannels.push_back( lNewChannel );
-            } );
+            lNewChannel.mTargetNode = aReadConext.mEntities[lTargetNodeUUID];
+            lNewChannel.mChannelID =
+                static_cast<sImportedAnimationChannel::Channel>( Get( aInterpolationDataNode["mChannelID"], uint32_t{ 0 } ) );
+            lNewChannel.mInterpolation = aInterpolationData[Get( aInterpolationDataNode["mInterpolationDataIndex"], uint32_t{ 0 } )];
+
+            aComponent.mChannels.push_back( lNewChannel );
+        }
     }
 
-    void ReadComponent( sAnimatedTransformComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sAnimatedTransformComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
-        aComponent.Translation = aNode["Translation"].Vec( { "x", "y", "z" }, math::vec3{ 0.0f, 0.0f, 0.0f } );
-        aComponent.Scaling     = aNode["Scaling"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+        aComponent.Translation = Get( aNode["Translation"], { "x", "y", "z" }, math::vec3{ 0.0f, 0.0f, 0.0f } );
+        aComponent.Scaling     = Get( aNode["Scaling"], { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
 
-        auto lCoefficients    = aNode["Rotation"].Vec( { "x", "y", "z", "w" }, math::vec4{ 0.0f, 0.0f, 0.0f, 0.0f } );
+        auto lCoefficients    = Get( aNode["Rotation"], { "x", "y", "z", "w" }, math::vec4{ 0.0f, 0.0f, 0.0f, 0.0f } );
         aComponent.Rotation.x = lCoefficients.x;
         aComponent.Rotation.y = lCoefficients.y;
         aComponent.Rotation.z = lCoefficients.z;
         aComponent.Rotation.w = lCoefficients.w;
     }
 
-    static math::mat4 ReadMatrix( ConfigurationNode &aNode )
+    static math::mat4 ReadMatrix( YAML::Node const &aNode )
     {
         std::vector<float> lMatrixEntries{};
-        aNode.ForEach( [&]( ConfigurationNode &aNode ) { lMatrixEntries.push_back( aNode.As<float>( 0.0f ) ); } );
+        for( YAML::const_iterator it = aNode.begin(); it != aNode.end(); ++it ) lMatrixEntries.push_back( Get( *it, 0.0f ) );
+        // aNode.ForEach( [&]( YAML::Node &aNode ) { lMatrixEntries.push_back( aNode.As<float>( 0.0f ) ); } );
 
         math::mat4 lMatrix;
         for( uint32_t c = 0; c < 4; c++ )
@@ -117,113 +152,132 @@ namespace SE::Core
         return lMatrix;
     }
 
-    void ReadComponent( sNodeTransformComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sNodeTransformComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
         aComponent.mMatrix = ReadMatrix( aNode["mMatrix"] );
     }
 
-    void ReadComponent( sTransformMatrixComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sTransformMatrixComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
         aComponent.Matrix = ReadMatrix( aNode["mMatrix"] );
     }
 
-    void ReadComponent( sStaticMeshComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sStaticMeshComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
         aComponent.mVertexBuffer = nullptr;
         aComponent.mIndexBuffer  = nullptr;
-        aComponent.mVertexOffset = aNode["mVertexOffset"].As<uint32_t>( 0 );
-        aComponent.mVertexCount  = aNode["mVertexCount"].As<uint32_t>( 0 );
-        aComponent.mIndexOffset  = aNode["mIndexOffset"].As<uint32_t>( 0 );
-        aComponent.mIndexCount   = aNode["mIndexCount"].As<uint32_t>( 0 );
+        aComponent.mVertexOffset = Get( aNode["mVertexOffset"], uint32_t{ 0 } );
+        aComponent.mVertexCount  = Get( aNode["mVertexCount"], uint32_t{ 0 } );
+        aComponent.mIndexOffset  = Get( aNode["mIndexOffset"], uint32_t{ 0 } );
+        aComponent.mIndexCount   = Get( aNode["mIndexCount"], uint32_t{ 0 } );
     }
 
-    void ReadComponent( sParticleSystemComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sParticleSystemComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
         //
     }
 
-    void ReadComponent( sParticleShaderComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sParticleShaderComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
         //
     }
 
-    void ReadComponent( sWireframeComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sWireframeComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
         //
     }
 
-    void ReadComponent( sWireframeMeshComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sWireframeMeshComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
         //
     }
 
-    void ReadComponent( sBoundingBoxComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sBoundingBoxComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
         //
     }
 
-    void ReadComponent( sSkeletonComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sSkeletonComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
-        std::vector<Entity> lBones{};
-        aNode["Bones"].ForEach(
-            [&]( ConfigurationNode &aNode )
-            {
-                auto lUUID = aNode.As<std::string>( "" );
-                if( lUUID.empty() ) return;
+        auto const &lBonesNode = aNode["Bones"];
+        for( YAML::const_iterator it = lBonesNode.begin(); it != lBonesNode.end(); ++it )
+        {
+            auto lUUID = Get( *it, std::string{ "" } );
+            if( lUUID.empty() ) return;
 
-                aComponent.Bones.push_back( aReadConext.mEntities[lUUID] );
-            } );
+            aComponent.Bones.push_back( aReadConext.mEntities[lUUID] );
+        }
 
-        aNode["InverseBindMatrices"].ForEach( [&]( ConfigurationNode &aNode )
-                                              { aComponent.InverseBindMatrices.push_back( ReadMatrix( aNode ) ); } );
+        auto const &lInverseBindMatrices = aNode["InverseBindMatrices"];
+        for( YAML::const_iterator it = lInverseBindMatrices.begin(); it != lInverseBindMatrices.end(); ++it )
+        {
+            aComponent.InverseBindMatrices.push_back( ReadMatrix( *it ) );
+        }
 
-        aNode["JointMatrices"].ForEach( [&]( ConfigurationNode &aNode )
-                                        { aComponent.JointMatrices.push_back( ReadMatrix( aNode ) ); } );
+        auto const &lJointMatrices = aNode["JointMatrices"];
+        for( YAML::const_iterator it = lJointMatrices.begin(); it != lJointMatrices.end(); ++it )
+        {
+            aComponent.JointMatrices.push_back( ReadMatrix( *it ) );
+        }
+
+        // aNode["Bones"].ForEach(
+        //     [&]( YAML::Node &aNode )
+        //     {
+        //         auto lUUID = aNode.As<std::string>( "" );
+        //         if( lUUID.empty() ) return;
+
+        //         aComponent.Bones.push_back( aReadConext.mEntities[lUUID] );
+        //     } );
+
+        // aNode["InverseBindMatrices"].ForEach( [&]( YAML::Node &aNode )
+        //                                       { aComponent.InverseBindMatrices.push_back( ReadMatrix( aNode ) ); } );
+
+        // aNode["JointMatrices"].ForEach( [&]( YAML::Node &aNode ) { aComponent.JointMatrices.push_back( ReadMatrix( aNode ) ); } );
 
         aComponent.BoneCount = aComponent.Bones.size();
     }
 
-    void ReadComponent( sRayTracingTargetComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sRayTracingTargetComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
         aComponent.Transform = ReadMatrix( aNode["Transform"] );
     }
 
-    void ReadComponent( sMaterialComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sMaterialComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
-        aComponent.mMaterialID = aNode["mMaterialPath"].As<uint32_t>( 0 );
+        aComponent.mMaterialID = 0;//Get( aNode["mMaterialPath"], std::string{ "" } );
     }
 
-    void ReadComponent( sMaterialShaderComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sMaterialShaderComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
-        aComponent.Type              = static_cast<eCMaterialType>( aNode["Type"].As<uint8_t>( 0 ) );
-        aComponent.IsTwoSided        = aNode["IsTwoSided"].As<bool>( true );
-        aComponent.UseAlphaMask      = aNode["UseAlphaMask"].As<bool>( true );
-        aComponent.LineWidth         = aNode["LineWidth"].As<float>( 1.0f );
-        aComponent.AlphaMaskTheshold = aNode["AlphaMaskTheshold"].As<float>( .5f );
+        aComponent.Type              = static_cast<eCMaterialType>( Get( aNode["Type"], uint8_t{0} ));
+        aComponent.IsTwoSided        = Get( aNode["IsTwoSided"], true );
+        aComponent.UseAlphaMask      = Get( aNode["UseAlphaMask"], true );
+        aComponent.LineWidth         = Get( aNode["LineWidth"], 1.0f );
+        aComponent.AlphaMaskTheshold = Get( aNode["AlphaMaskTheshold"], 0.5f );
     }
 
-    void ReadComponent( sBackgroundComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sBackgroundComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
-        aComponent.Color = aNode["Color"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+        aComponent.Color = Get(aNode["Color"], { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
     }
 
-    void ReadComponent( sAmbientLightingComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sAmbientLightingComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
-        aComponent.Color     = aNode["Color"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
-        aComponent.Intensity = aNode["Intensity"].As<float>( .0005f );
+        aComponent.Color     = Get( aNode["Color"], { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+        aComponent.Intensity = Get( aNode["Intensity"], 0.0005f );
     }
 
-    void ReadComponent( sLightComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sLightComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
         std::unordered_map<std::string, eLightType> lLightTypeLookup = { { "DIRECTIONAL", eLightType::DIRECTIONAL },
                                                                          { "SPOTLIGHT", eLightType::SPOTLIGHT },
                                                                          { "POINT_LIGHT", eLightType::POINT_LIGHT },
                                                                          { "", eLightType::POINT_LIGHT } };
 
-        aComponent.mType      = lLightTypeLookup[aNode["mType"].As<std::string>( "" )];
-        aComponent.mColor     = aNode["mColor"].Vec( { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
-        aComponent.mIntensity = aNode["mIntensity"].As<float>( .0005f );
-        aComponent.mCone      = aNode["mCone"].As<float>( .0005f );
+        aComponent.mType      = lLightTypeLookup[Get( aNode["mType"], std::string{ "" } )];
+        aComponent.mColor     = Get( aNode["mColor"], { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+        aComponent.mIntensity = Get( aNode["mIntensity"], 0.0005f );
+        aComponent.mCone      = Get( aNode["mCone"], 0.0005f );
     }
 
     template <typename _Ty>

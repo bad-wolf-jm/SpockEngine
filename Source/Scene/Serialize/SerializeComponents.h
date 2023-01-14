@@ -27,11 +27,12 @@ namespace SE::Core
 
     std::string const &GetTypeTag( std::string const &aTypeName );
 
+
     template <typename _Ty>
-    bool HasTypeTag( ConfigurationNode const &aNode )
+    bool HasTypeTag( YAML::Node const &aNode )
     {
         auto lInternalTypeName = std::string( typeid( _Ty ).name() );
-        return ( !aNode[GetTypeTag( lInternalTypeName )].IsNull() );
+        return static_cast<bool>( aNode[GetTypeTag( lInternalTypeName )] );
     }
 
     template <typename _Ty>
@@ -41,28 +42,40 @@ namespace SE::Core
         return ( GetTypeTag( lInternalTypeName ) );
     }
 
-    void ReadComponent( sTag &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sCameraComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sActorComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sAnimationChooser &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sAnimationComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext,
+    template <typename _Ty>
+    _Ty Get( YAML::Node const &aNode, _Ty aDefault )
+    {
+        if( aNode.IsNull() ) return aDefault;
+
+        return aNode.as<_Ty>();
+    }
+
+    math::vec2 Get( YAML::Node const &aNode, std::array<std::string, 2> const &aKeys, math::vec2 const &aDefault );
+    math::vec3 Get( YAML::Node const &aNode, std::array<std::string, 3> const &aKeys, math::vec3 const &aDefault );
+    math::vec4 Get( YAML::Node const &aNode, std::array<std::string, 4> const &aKeys, math::vec4 const &aDefault );
+
+    void ReadComponent( sTag &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sCameraComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sActorComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sAnimationChooser &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sAnimationComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext,
                         std::vector<sImportedAnimationSampler> &aInterpolationData );
-    void ReadComponent( sAnimatedTransformComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sNodeTransformComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sTransformMatrixComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sStaticMeshComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sParticleSystemComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sParticleShaderComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sWireframeComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sWireframeMeshComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sBoundingBoxComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sSkeletonComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sRayTracingTargetComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sMaterialComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sMaterialShaderComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sBackgroundComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sAmbientLightingComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sLightComponent &aComponent, ConfigurationNode const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sAnimatedTransformComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sNodeTransformComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sTransformMatrixComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sStaticMeshComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sParticleSystemComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sParticleShaderComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sWireframeComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sWireframeMeshComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sBoundingBoxComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sSkeletonComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sRayTracingTargetComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sMaterialComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sMaterialShaderComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sBackgroundComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sAmbientLightingComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sLightComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
 
     void WriteComponent( ConfigurationWriter &aOut, sTag const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sRelationshipComponent const &aComponent );

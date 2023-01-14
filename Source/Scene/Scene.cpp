@@ -11,6 +11,8 @@
 #include <stack>
 #include <unordered_map>
 
+#include "yaml-cpp/yaml.h"
+
 #include "Core/Logging.h"
 #include "Core/Memory.h"
 #include "Core/Profiling/BlockTimer.h"
@@ -329,74 +331,147 @@ namespace SE::Core
             }
         }
 
+        auto lRootNode = YAML::LoadFile( aScenarioPath.string() );
+
         auto lScenarioDescription = ConfigurationReader( aScenarioPath );
 
         sReadContext                                 lReadContext{};
         std::unordered_map<std::string, std::string> lParentEntityLUT{};
 
-        auto &lSceneRoot = lScenarioDescription.GetRoot()["scene"];
+        auto &lSceneRoot = lRootNode["scene"];
+        auto &lNodesRoot = lSceneRoot["nodes"];
 
         std::vector<std::tuple<std::string, sStaticMeshComponent, std::string>> lBufferLoadQueue{};
 
         std::map<std::string, std::set<std::string>> lMaterialLoadQueue{};
-        lSceneRoot["nodes"].ForEach<std::string>(
-            [&]( auto const &aKey, auto const &lEntityConfiguration )
+        for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
+        {
+            auto const &lKey                 = it->first.as<std::string>();
+            auto       &lEntityConfiguration = it->second;
+
+            auto lEntity = mRegistry.CreateEntity( sUUID( lKey ) );
+            auto lUUID   = lEntity.Get<sUUID>().mValue;
+
+            lReadContext.mEntities[lKey] = lEntity;
+
+            if( HasTypeTag<sRelationshipComponent>( lEntityConfiguration ) )
             {
-                auto lEntity = mRegistry.CreateEntity( sUUID( aKey ) );
-                auto lUUID   = lEntity.Get<sUUID>().mValue;
-
-                lReadContext.mEntities[aKey] = lEntity;
-
-                if( HasTypeTag<sRelationshipComponent>( lEntityConfiguration ) )
+                if( !( lEntityConfiguration[TypeTag<sRelationshipComponent>()]["mParent"].IsNull() ) )
                 {
-                    if( !( lEntityConfiguration[TypeTag<sRelationshipComponent>()]["mParent"].IsNull() ) )
-                    {
-                        auto lParentUUIDStr = lEntityConfiguration[TypeTag<sRelationshipComponent>()]["mParent"].As<std::string>( "" );
-                        auto lParentUUID    = UUIDv4::UUID::fromStrFactory( lParentUUIDStr );
-                        lParentEntityLUT[aKey] = lParentUUIDStr;
-                    }
+                    auto lParentUUIDStr = Get( lEntityConfiguration[TypeTag<sRelationshipComponent>()]["mParent"], std::string{ "" } );
+                    auto lParentUUID    = UUIDv4::UUID::fromStrFactory( lParentUUIDStr );
+                    lParentEntityLUT[lKey] = lParentUUIDStr;
                 }
+            }
 
-                if( HasTypeTag<sStaticMeshComponent>( lEntityConfiguration ) )
-                {
-                    auto &[lEntityID, lComponent, lBufferID] = lBufferLoadQueue.emplace_back();
+            if( HasTypeTag<sStaticMeshComponent>( lEntityConfiguration ) )
+            {
+                auto &[lEntityID, lComponent, lBufferID] = lBufferLoadQueue.emplace_back();
 
-                    lEntityID = aKey;
-                    lBufferID = lEntityConfiguration[TypeTag<sStaticMeshComponent>()]["mMeshData"].As<std::string>( "" );
-                    ReadComponent( lComponent, lEntityConfiguration[TypeTag<sStaticMeshComponent>()], lReadContext );
-                }
+                lEntityID = lKey;
+                lBufferID = Get( lEntityConfiguration[TypeTag<sStaticMeshComponent>()]["mMeshData"], std::string{ "" } );
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sStaticMeshComponent>()], lReadContext );
+            }
 
-                if( HasTypeTag<sMaterialComponent>( lEntityConfiguration ) )
-                {
-                    auto &lMaterialID = lEntityConfiguration[TypeTag<sMaterialComponent>()]["mMaterialPath"].As<std::string>( "" );
-                    if( lMaterialLoadQueue.find( lMaterialID ) == lMaterialLoadQueue.end() )
-                        lMaterialLoadQueue.emplace( lMaterialID, std::set<std::string>{ aKey } );
-                    else
-                        lMaterialLoadQueue[lMaterialID].emplace( aKey );
-                }
+            if( HasTypeTag<sMaterialComponent>( lEntityConfiguration ) )
+            {
+                auto &lMaterialID = Get( lEntityConfiguration[TypeTag<sMaterialComponent>()]["mMaterialPath"], std::string{ "" } );
+                if( lMaterialLoadQueue.find( lMaterialID ) == lMaterialLoadQueue.end() )
+                    lMaterialLoadQueue.emplace( lMaterialID, std::set<std::string>{ lKey } );
+                else
+                    lMaterialLoadQueue[lMaterialID].emplace( lKey );
+            }
 
-                // if( HasTypeTag<sAnimationComponent>( lEntityConfiguration ) )
-                // {
-                //     auto &lComponent = lEntity.Add<sAnimationComponent>();
+            if( HasTypeTag<sTag>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sTag>();
 
-                //     ReadComponent( lComponent, lEntityConfiguration[TypeTag<sAnimationComponent>()], lReadContext,
-                //                    lInterpolationData );
-                // }
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sTag>()], lReadContext );
+            }
 
-                ReadAndAddComponent<sTag>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sCameraComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sAnimationChooser>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sAnimatedTransformComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sNodeTransformComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sTransformMatrixComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sSkeletonComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sRayTracingTargetComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sMaterialShaderComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sBackgroundComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sAmbientLightingComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sLightComponent>( lEntity, lEntityConfiguration, lReadContext );
-                ReadAndAddComponent<sActorComponent>( lEntity, lEntityConfiguration, lReadContext );
-            } );
+            if( HasTypeTag<sCameraComponent>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sCameraComponent>();
+
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sCameraComponent>()], lReadContext );
+            }
+
+            if( HasTypeTag<sAnimationChooser>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sAnimationChooser>();
+
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sAnimationChooser>()], lReadContext );
+            }
+
+            if( HasTypeTag<sAnimatedTransformComponent>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sAnimatedTransformComponent>();
+
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sAnimatedTransformComponent>()], lReadContext );
+            }
+
+            if( HasTypeTag<sNodeTransformComponent>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sNodeTransformComponent>();
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sNodeTransformComponent>()], lReadContext );
+            }
+
+            if( HasTypeTag<sTransformMatrixComponent>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sTransformMatrixComponent>();
+
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sTransformMatrixComponent>()], lReadContext );
+            }
+
+            if( HasTypeTag<sSkeletonComponent>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sSkeletonComponent>();
+
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sSkeletonComponent>()], lReadContext );
+            }
+
+            if( HasTypeTag<sRayTracingTargetComponent>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sRayTracingTargetComponent>();
+
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sRayTracingTargetComponent>()], lReadContext );
+            }
+
+            if( HasTypeTag<sMaterialShaderComponent>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sMaterialShaderComponent>();
+
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sMaterialShaderComponent>()], lReadContext );
+            }
+
+            if( HasTypeTag<sBackgroundComponent>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sBackgroundComponent>();
+
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sBackgroundComponent>()], lReadContext );
+            }
+
+            if( HasTypeTag<sAmbientLightingComponent>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sAmbientLightingComponent>();
+
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sAmbientLightingComponent>()], lReadContext );
+            }
+
+            if( HasTypeTag<sLightComponent>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sLightComponent>();
+
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sLightComponent>()], lReadContext );
+            }
+
+            if( HasTypeTag<sActorComponent>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sActorComponent>();
+
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sActorComponent>()], lReadContext );
+            }
+        }
 
         std::mutex lMaterialSystemLock;
         uint32_t   lMaterialIndex = 0;
@@ -469,47 +544,50 @@ namespace SE::Core
                 SE::Logging::Info( "{}", lEntityID );
             } );
 
-        lSceneRoot["nodes"].ForEach<std::string>(
-            [&]( auto const &aKey, auto const &lEntityConfiguration )
+        for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
+        {
+            auto const &lKey                 = it->first.as<std::string>();
+            auto       &lEntityConfiguration = it->second;
+
+            auto &lEntity = lReadContext.mEntities[lKey];
+
+            if( !lEntity ) return;
+
+            if( lParentEntityLUT.find( lKey ) != lParentEntityLUT.end() )
+                mRegistry.SetParent( lEntity, lReadContext.mEntities[lParentEntityLUT[lKey]] );
+        }
+
+        for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
+        {
+            auto const &lKey                 = it->first.as<std::string>();
+            auto       &lEntityConfiguration = it->second;
+
+            auto &lEntity = lReadContext.mEntities[lKey];
+
+            if( !lEntity ) return;
+
+            if( HasTypeTag<sAnimationComponent>( lEntityConfiguration ) )
             {
-                auto &lEntity = lReadContext.mEntities[aKey];
+                auto &lComponent = lEntity.Add<sAnimationComponent>();
 
-                if( !lEntity ) return;
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sAnimationComponent>()], lReadContext, lInterpolationData );
+            }
+        }
 
-                if( lParentEntityLUT.find( aKey ) != lParentEntityLUT.end() )
-                    mRegistry.SetParent( lEntity, lReadContext.mEntities[lParentEntityLUT[aKey]] );
-            } );
-
-        lSceneRoot["nodes"].ForEach<std::string>(
-            [&]( auto const &aKey, auto const &lEntityConfiguration )
-            {
-                auto &lEntity = lReadContext.mEntities[aKey];
-
-                if( !lEntity ) return;
-
-                if( HasTypeTag<sAnimationComponent>( lEntityConfiguration ) )
-                {
-                    auto &lComponent = lEntity.Add<sAnimationComponent>();
-
-                    ReadComponent( lComponent, lEntityConfiguration[TypeTag<sAnimationComponent>()], lReadContext,
-                                   lInterpolationData );
-                }
-            } );
-
-        auto lRootNodeUUIDStr = lSceneRoot["root"].As<std::string>( "" );
+        auto lRootNodeUUIDStr = Get( lSceneRoot["root"], std::string{ "" } );
         auto lRootNodeUUID    = UUIDv4::UUID::fromStrFactory( lRootNodeUUIDStr );
         Root                  = lReadContext.mEntities[lRootNodeUUIDStr];
         SE::Logging::Info( "Created root", lRootNodeUUIDStr );
 
-        auto lEnvironmentNodeUUID = lSceneRoot["environment"].As<std::string>( "" );
+        auto lEnvironmentNodeUUID = Get( lSceneRoot["environment"], std::string{ "" } );
         Environment               = lReadContext.mEntities[lEnvironmentNodeUUID];
         SE::Logging::Info( "Created environment", lEnvironmentNodeUUID );
 
-        auto lCurrentCameraUUID = lSceneRoot["current_camera"].As<std::string>( "" );
+        auto lCurrentCameraUUID = Get( lSceneRoot["current_camera"], std::string{ "" } );
         CurrentCamera           = lReadContext.mEntities[lCurrentCameraUUID];
         SE::Logging::Info( "Created camera", lCurrentCameraUUID );
 
-        auto lDefaultCameraUUID = lSceneRoot["default_camera"].As<std::string>( "" );
+        auto lDefaultCameraUUID = Get( lSceneRoot["default_camera"], std::string{ "" } );
         DefaultCamera           = lReadContext.mEntities[lDefaultCameraUUID];
         SE::Logging::Info( "Created camera", lDefaultCameraUUID );
 
