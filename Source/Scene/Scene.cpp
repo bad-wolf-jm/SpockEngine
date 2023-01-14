@@ -483,69 +483,33 @@ namespace SE::Core
                        {
                            auto &[lMaterialID, lEntities] = aElement;
 
-                           BinaryAsset lBinaryDataFile( lScenarioRoot / lMaterialID );
+                           auto &lNewMaterial = mMaterialSystem->CreateMaterial( lScenarioRoot / lMaterialID );
 
-                           sMaterial lMaterialData;
-
-                           uint32_t lTextureCount = lBinaryDataFile.CountAssets() - 1;
-                           lBinaryDataFile.Retrieve( 0, lMaterialData );
-
-                           std::vector<uint32_t> lTextureIds{};
-                           for( uint32_t i = 0; i < lTextureCount; i++ )
-                           {
-                               auto &[lTextureData, lTextureSampler] = lBinaryDataFile.Retrieve( i + 1 );
-
-                               lTextureIds.push_back( mMaterialSystem->CreateTexture( lTextureData, lTextureSampler ) );
-                           }
-
-                           auto lGetTexID = [&]( uint32_t aID, uint32_t aDefault ) {
-                               return ( ( aID == std::numeric_limits<uint32_t>::max() ) || ( lTextureCount == 0 ) ) ? aDefault
-                                                                                                                    : lTextureIds[aID];
-                           };
-                           {
-                               std::lock_guard<std::mutex> guard( lMaterialSystemLock );
-
-                               auto &lNewMaterial                         = mMaterialSystem->CreateMaterial( lMaterialData );
-                               lNewMaterial.mID                           = lMaterialIndex++;
-                               lNewMaterial.mBaseColorTexture.mTextureID  = lGetTexID( lNewMaterial.mBaseColorTexture.mTextureID, 1 );
-                               lNewMaterial.mEmissiveTexture.mTextureID   = lGetTexID( lNewMaterial.mEmissiveTexture.mTextureID, 0 );
-                               lNewMaterial.mMetalRoughTexture.mTextureID = lGetTexID( lNewMaterial.mMetalRoughTexture.mTextureID, 0 );
-                               lNewMaterial.mOcclusionTexture.mTextureID  = lGetTexID( lNewMaterial.mOcclusionTexture.mTextureID, 1 );
-                               lNewMaterial.mNormalsTexture.mTextureID    = lGetTexID( lNewMaterial.mNormalsTexture.mTextureID, 0 );
-
-                               for( auto &lEntity : lEntities )
-                                   lReadContext.mEntities[lEntity].AddOrReplace<sMaterialComponent>( lNewMaterial.mID );
-                           }
+                           for( auto &lEntity : lEntities )
+                               lReadContext.mEntities[lEntity].AddOrReplace<sMaterialComponent>( lNewMaterial.mID );
                        } );
 
         std::mutex lBufferLock;
-        std::for_each(
-            std::execution::seq, lBufferLoadQueue.begin(), lBufferLoadQueue.end(),
-            [&]( auto &aElement )
-            {
-                auto &[lEntityID, lComponent, lBufferID] = aElement;
+        std::for_each( std::execution::seq, lBufferLoadQueue.begin(), lBufferLoadQueue.end(),
+                       [&]( auto &aElement )
+                       {
+                           auto &[lEntityID, lComponent, lBufferID] = aElement;
 
-                BinaryAsset lBinaryDataFile( lScenarioRoot / lBufferID );
+                           BinaryAsset lBinaryDataFile( lScenarioRoot / lBufferID );
 
-                std::vector<VertexData> lVertexBuffer;
-                std::vector<uint32_t>   lIndexBuffer;
-                lBinaryDataFile.Retrieve( 0, lVertexBuffer, lIndexBuffer );
+                           std::vector<VertexData> lVertexBuffer;
+                           std::vector<uint32_t>   lIndexBuffer;
+                           lBinaryDataFile.Retrieve( 0, lVertexBuffer, lIndexBuffer );
 
-                {
-                    std::lock_guard<std::mutex> guard( lBufferLock );
+                           lComponent.mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, lVertexBuffer, eBufferType::VERTEX_BUFFER,
+                                                                        false, false, true, true );
+                           lComponent.mIndexBuffer =
+                               New<VkGpuBuffer>( mGraphicContext, lIndexBuffer, eBufferType::INDEX_BUFFER, false, false, true, true );
+                           lComponent.mTransformedBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false,
+                                                                             true, true, lComponent.mVertexBuffer->SizeAs<uint8_t>() );
 
-                    lComponent.mVertexBuffer =
-                        New<VkGpuBuffer>( mGraphicContext, lVertexBuffer, eBufferType::VERTEX_BUFFER, false, false, true, true );
-                    lComponent.mIndexBuffer =
-                        New<VkGpuBuffer>( mGraphicContext, lIndexBuffer, eBufferType::INDEX_BUFFER, false, false, true, true );
-                    lComponent.mTransformedBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true,
-                                                                      true, lComponent.mVertexBuffer->SizeAs<uint8_t>() );
-
-                    lReadContext.mEntities[lEntityID].AddOrReplace<sStaticMeshComponent>( lComponent );
-                }
-
-                SE::Logging::Info( "{}", lEntityID );
-            } );
+                           lReadContext.mEntities[lEntityID].AddOrReplace<sStaticMeshComponent>( lComponent );
+                       } );
 
         for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
         {

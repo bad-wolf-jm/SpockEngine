@@ -1,5 +1,8 @@
 #include "MaterialSystem.h"
 #include "Core/Logging.h"
+
+#include "Scene/Serialize/AssetFile.h"
+
 namespace SE::Core
 {
     MaterialSystem::MaterialSystem( Ref<VkGraphicContext> aGraphicContext )
@@ -132,6 +135,37 @@ namespace SE::Core
         mMaterials.push_back( aMaterial );
 
         mDirty = true;
+
+        return mMaterials.back();
+    }
+
+    sMaterial &MaterialSystem::CreateMaterial( fs::path const &aMaterialPath )
+    {
+        BinaryAsset lBinaryDataFile( aMaterialPath );
+
+        sMaterial lMaterialData;
+
+        uint32_t lTextureCount = lBinaryDataFile.CountAssets() - 1;
+        lBinaryDataFile.Retrieve( 0, lMaterialData );
+
+        std::vector<uint32_t> lTextureIds{};
+        for( uint32_t i = 0; i < lTextureCount; i++ )
+        {
+            auto &[lTextureData, lTextureSampler] = lBinaryDataFile.Retrieve( i + 1 );
+
+            lTextureIds.push_back( CreateTexture( lTextureData, lTextureSampler ) );
+        }
+
+        auto lGetTexID = [&]( uint32_t aID, uint32_t aDefault )
+        { return ( ( aID == std::numeric_limits<uint32_t>::max() ) || ( lTextureCount == 0 ) ) ? aDefault : lTextureIds[aID]; };
+
+        auto &lNewMaterial                         = CreateMaterial( lMaterialData );
+        lNewMaterial.mID                           = mMaterials.size() - 1;
+        lNewMaterial.mBaseColorTexture.mTextureID  = lGetTexID( lNewMaterial.mBaseColorTexture.mTextureID, 1 );
+        lNewMaterial.mEmissiveTexture.mTextureID   = lGetTexID( lNewMaterial.mEmissiveTexture.mTextureID, 0 );
+        lNewMaterial.mMetalRoughTexture.mTextureID = lGetTexID( lNewMaterial.mMetalRoughTexture.mTextureID, 0 );
+        lNewMaterial.mOcclusionTexture.mTextureID  = lGetTexID( lNewMaterial.mOcclusionTexture.mTextureID, 1 );
+        lNewMaterial.mNormalsTexture.mTextureID    = lGetTexID( lNewMaterial.mNormalsTexture.mTextureID, 0 );
 
         return mMaterials.back();
     }

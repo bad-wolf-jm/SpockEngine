@@ -103,6 +103,7 @@ namespace SE::Core
 
         sMaterial                 &CreateMaterial();
         sMaterial                 &CreateMaterial( sMaterial const &aMaterialData );
+        sMaterial                 &CreateMaterial( fs::path const &aMaterialData );
         sMaterial                 &GetMaterialByID( uint32_t aID );
         Ref<Graphics::VkSampler2D> GetTextureByID( uint32_t aID );
 
