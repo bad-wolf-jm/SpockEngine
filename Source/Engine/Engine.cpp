@@ -71,12 +71,12 @@ namespace SE::Core
 
         if( lRequestQuit ) return false;
 
-        // // Run the update delegate to update the state of the various elements
-        // // of the simulation.
+        // Run the update delegate to update the state of the various elements
+        // of the simulation.
         if( UpdateDelegate ) UpdateDelegate( timestep );
 
-        // // Finally, render the main screen.
-        // if( RenderDelegate ) RenderDelegate();
+        // Finally, render the main screen.
+        if( RenderDelegate ) RenderDelegate();
 
         // Render the UI on top of the background
         mImGUIOverlay->EndFrame( m_SwapChainRenderContext );

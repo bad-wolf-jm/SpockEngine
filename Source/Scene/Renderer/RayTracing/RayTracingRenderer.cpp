@@ -63,6 +63,11 @@ namespace SE::Core
 
         std::vector<sRaygenRecord> lRaygenRecords =
             mShaderBindingTable->NewRecordType<sRaygenRecord>( mOptixModule->mRayGenProgramGroups );
+
+        mRaygenRecordsBuffer.Dispose();
+        mMissRecordsBuffer.Dispose();
+        mHitgroupRecordsBuffer.Dispose();
+
         mRaygenRecordsBuffer = GPUMemory::Create( lRaygenRecords );
         mShaderBindingTable->BindRayGenRecordTable( mRaygenRecordsBuffer.RawDevicePtr() );
 
@@ -106,9 +111,6 @@ namespace SE::Core
     /*! render one frame */
     void RayTracingRenderer::Render()
     {
-        // if( !mScene->mIndexBuffer ) return;
-        // if( !mScene->mTransformedVertexBuffer ) return;
-
         if( mRayTracingParameters.mFrame.mSize.x == 0 ) return;
 
         if( !accumulate ) mRayTracingParameters.mFrame.mFrameID = 0;
@@ -116,9 +118,6 @@ namespace SE::Core
 
         mRayTracingParameters.mNumLightSamples = 1;
         mRayTracingParameters.mNumPixelSamples = 1;
-
-        // mRayTracingParameters.mIndexBuffer  = mScene->mIndexBuffer->DataAs<math::uvec3>();
-        // mRayTracingParameters.mVertexBuffer = mScene->mTransformedVertexBuffer->DataAs<VertexData>();
 
         mRayTracingParameters.mTextures  = mScene->GetMaterialSystem()->GetCudaTextures().DataAs<Cuda::TextureSampler2D::DeviceData>();
         mRayTracingParameters.mMaterials = mScene->GetMaterialSystem()->GetCudaMaterials().DataAs<sShaderMaterial>();
@@ -133,13 +132,6 @@ namespace SE::Core
 
         OptixDenoiserParams denoiserParams;
         denoiserParams.denoiseAlpha = OPTIX_DENOISER_ALPHA_MODE_ALPHA_AS_AOV;
-
-#if OPTIX_VERSION >= 70300
-        if( denoiserIntensity.SizeAs<uint8_t>() != sizeof( float ) )
-        {
-            denoiserIntensity.Resize( sizeof( float ) );
-        };
-#endif
 
         denoiserParams.hdrIntensity = denoiserIntensity.RawDevicePtr();
         if( accumulate )
@@ -184,30 +176,23 @@ namespace SE::Core
                                                         (CUdeviceptr)denoiserScratch.RawDevicePtr(),
                                                         denoiserScratch.SizeAs<uint8_t>() ) );
 
-#if OPTIX_VERSION >= 70300
-            OptixDenoiserGuideLayer denoiserGuideLayer = {};
-            denoiserGuideLayer.albedo                  = inputLayer[1];
-            denoiserGuideLayer.normal                  = inputLayer[2];
+            OptixDenoiserGuideLayer denoiserGuideLayer{};
+            denoiserGuideLayer.albedo = inputLayer[1];
+            denoiserGuideLayer.normal = inputLayer[2];
 
-            OptixDenoiserLayer denoiserLayer = {};
-            denoiserLayer.input              = inputLayer[0];
-            denoiserLayer.output             = outputLayer;
+            OptixDenoiserLayer denoiserLayer{};
+            denoiserLayer.input  = inputLayer[0];
+            denoiserLayer.output = outputLayer;
 
             OPTIX_CHECK( optixDenoiserInvoke( denoiser, 0, &denoiserParams, denoiserState.RawDevicePtr(),
                                               denoiserState.SizeAs<uint8_t>(), &denoiserGuideLayer, &denoiserLayer, 1, 0, 0,
                                               denoiserScratch.RawDevicePtr(), denoiserScratch.SizeAs<uint8_t>() ) );
-#else
-            OPTIX_CHECK( optixDenoiserInvoke( denoiser, 0, &denoiserParams, denoiserState.RawDevicePtr(),
-                                              denoiserState.SizeAs<uint8_t>(), &inputLayer[0], 2, 0, 0, &outputLayer,
-                                              denoiserScratch.RawDevicePtr(), denoiserScratch.SizeAs<uint8_t>() ) );
-#endif
         }
         else
         {
             cudaMemcpy( (void *)outputLayer.data, (void *)inputLayer[0].data,
                         outputLayer.width * outputLayer.height * sizeof( float4 ), cudaMemcpyDeviceToDevice );
         }
-
         computeFinalPixelColors( mRayTracingParameters, mDenoisedBuffer, *mOutputBuffer );
 
         CUDA_SYNC_CHECK();

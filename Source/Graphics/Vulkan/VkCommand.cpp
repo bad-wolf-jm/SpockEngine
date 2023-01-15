@@ -24,7 +24,11 @@ namespace SE::Graphics
         mSubmitFence = mContext->CreateFence();
     }
 
-    sVkCommandBufferObject::~sVkCommandBufferObject() { mContext->DestroyCommandBuffer( mVkObject ); }
+    sVkCommandBufferObject::~sVkCommandBufferObject()
+    {
+        mContext->DestroyCommandBuffer( mVkObject );
+        mContext->DestroyFence( mSubmitFence );
+    }
 
     void sVkCommandBufferObject::Begin() { Begin( 0 ); }
 
