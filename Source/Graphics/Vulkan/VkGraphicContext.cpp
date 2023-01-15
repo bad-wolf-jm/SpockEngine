@@ -523,13 +523,6 @@ namespace SE::Graphics
         if( mVkInstance != VK_NULL_HANDLE ) vkDestroyInstance( mVkInstance, nullptr );
     }
 
-    // Ref<ITexture2D> VkGraphicContext::NewTexture2D( sTextureCreateInfo const &aCreateInfo, uint8_t aSampleCount, bool aIsHostVisible,
-    //                                                 bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
-    // {
-    //     return New<VkTexture2D>( this, aCreateInfo, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
-    //                              aIsTransferDestination );
-    // }
-
     VkDeviceMemory VkGraphicContext::AllocateMemory( VkImage aVkImageObject, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable,
                                                      size_t *aAllocatedSize )
     {
@@ -617,12 +610,12 @@ namespace SE::Graphics
 
         VK_CHECK_RESULT( vkAllocateCommandBuffers( mVkLogicalDevice, &lCommandBufferAllocInfo, lNewCommandBuffers.data() ) );
 
-        return lNewCommandBuffers;
+        for( auto &lX : lNewCommandBuffers ) mCommandBuffers.emplace( lX );
+        return std::move( lNewCommandBuffers );
     }
 
     void VkGraphicContext::DestroyCommandBuffer( VkCommandBuffer aBuffer )
     {
-
         if( mCommandBuffers.find( aBuffer ) != mCommandBuffers.end() )
         {
             mCommandBuffers.erase( aBuffer );
