@@ -12,9 +12,9 @@ namespace SE::Graphics
 
     std::vector<sPushConstantRange> ParticleSystemRenderer::GetPushConstantLayout() { return {}; };
 
-    ParticleSystemRenderer::ParticleSystemRenderer( Ref<VkGraphicContext> a_GraphicContext, ARenderContext &aRenderContext,
+    ParticleSystemRenderer::ParticleSystemRenderer( Ref<VkGraphicContext> aGraphicContext, ARenderContext &aRenderContext,
                                                     ParticleRendererCreateInfo aCreateInfo )
-        : SceneRenderPipeline<PositionData>( a_GraphicContext )
+        : SceneRenderPipeline<PositionData>( aGraphicContext )
         , Spec{ aCreateInfo }
     {
         mCameraBuffer =
@@ -48,19 +48,19 @@ namespace SE::Graphics
             New<VkGpuBuffer>( mGraphicContext, l_IndexBufferData, eBufferType::INDEX_BUFFER, false, false, false, true );
     }
 
-    void ParticleSystemRenderer::Render( math::mat4 a_Projection, math::mat4 a_View, ARenderContext &aRenderContext,
-                                         ParticleData &a_ParticleData )
+    void ParticleSystemRenderer::Render( math::mat4 aProjection, math::mat4 aView, ARenderContext &aRenderContext,
+                                         ParticleData &aParticleData )
     {
-        if( a_ParticleData.Particles == nullptr ) return;
+        if( aParticleData.Particles == nullptr ) return;
 
-        CameraViewUniforms l_View{ a_ParticleData.Model, a_View, a_Projection, a_ParticleData.ParticleSize };
+        CameraViewUniforms l_View{ aParticleData.Model, aView, aProjection, aParticleData.ParticleSize };
 
         mCameraBuffer->Write( l_View );
         aRenderContext.Bind( Pipeline );
         aRenderContext.Bind( mCameraDescriptors, 0, -1 );
         aRenderContext.Bind( mParticleVertices, mParticleIndices, 0 );
-        aRenderContext.Bind( a_ParticleData.Particles, 1 );
-        aRenderContext.Draw( 6, 0, 0, a_ParticleData.ParticleCount, 0 );
+        aRenderContext.Bind( aParticleData.Particles, 1 );
+        aRenderContext.Draw( 6, 0, 0, aParticleData.ParticleCount, 0 );
     }
 
 } // namespace SE::Graphics

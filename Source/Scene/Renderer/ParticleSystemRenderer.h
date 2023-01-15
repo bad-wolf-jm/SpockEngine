@@ -79,15 +79,15 @@ namespace SE::Graphics
 
         ParticleSystemRenderer() = default;
 
-        ParticleSystemRenderer( Ref<VkGraphicContext> a_GraphicContext, ARenderContext &a_RenderContext,
-                                ParticleRendererCreateInfo a_CreateInfo );
+        ParticleSystemRenderer( Ref<VkGraphicContext> aGraphicContext, ARenderContext &aRenderContext,
+                                ParticleRendererCreateInfo aCreateInfo );
 
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
         std::vector<sPushConstantRange>       GetPushConstantLayout();
 
         ~ParticleSystemRenderer() = default;
 
-        void Render( math::mat4 a_Projection, math::mat4 a_View, ARenderContext &aRenderContext, ParticleData &a_ParticleData );
+        void Render( math::mat4 aProjection, math::mat4 aView, ARenderContext &aRenderContext, ParticleData &aParticleData );
 
       protected:
         Ref<VkGpuBuffer>   mParticleVertices  = nullptr;

@@ -16,13 +16,13 @@ namespace SE::Core
 
     Ref<DescriptorSetLayout> MeshRenderer::GetCameraSetLayout( Ref<VkGraphicContext> aGraphicContext )
     {
-        DescriptorSetLayoutCreateInfo l_CameraBindLayout{};
-        l_CameraBindLayout.Bindings = {
+        DescriptorSetLayoutCreateInfo lCameraBindLayout{};
+        lCameraBindLayout.Bindings = {
             DescriptorBindingInfo{
                 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX, eShaderStageTypeFlags::FRAGMENT } },
             DescriptorBindingInfo{ 1, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } } };
 
-        return New<DescriptorSetLayout>( aGraphicContext, l_CameraBindLayout );
+        return New<DescriptorSetLayout>( aGraphicContext, lCameraBindLayout );
     }
 
     Ref<DescriptorSetLayout> MeshRenderer::GetTextureSetLayout( Ref<VkGraphicContext> aGraphicContext )
@@ -37,9 +37,9 @@ namespace SE::Core
 
     Ref<DescriptorSetLayout> MeshRenderer::GetNodeSetLayout( Ref<VkGraphicContext> aGraphicContext )
     {
-        DescriptorSetLayoutCreateInfo l_NodeBindLayout{};
-        l_NodeBindLayout.Bindings = { DescriptorBindingInfo{ 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } } };
-        return New<DescriptorSetLayout>( aGraphicContext, l_NodeBindLayout );
+        DescriptorSetLayoutCreateInfo lNodeBindLayout{};
+        lNodeBindLayout.Bindings = { DescriptorBindingInfo{ 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } } };
+        return New<DescriptorSetLayout>( aGraphicContext, lNodeBindLayout );
     }
 
     std::vector<Ref<DescriptorSetLayout>> MeshRenderer::GetDescriptorSetLayout()
