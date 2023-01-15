@@ -139,50 +139,50 @@ namespace SE::Core
         else
             denoiserParams.blendFactor = 0.0f;
 
-        OptixImage2D inputLayer[3];
-        inputLayer[0].data               = fbColor.RawDevicePtr();
-        inputLayer[0].width              = mRayTracingParameters.mFrame.mSize.x;
-        inputLayer[0].height             = mRayTracingParameters.mFrame.mSize.y;
-        inputLayer[0].rowStrideInBytes   = mRayTracingParameters.mFrame.mSize.x * sizeof( float4 );
-        inputLayer[0].pixelStrideInBytes = sizeof( float4 );
-        inputLayer[0].format             = OPTIX_PIXEL_FORMAT_FLOAT4;
+        OptixImage2D lInputLayer[3];
+        lInputLayer[0].data               = fbColor.RawDevicePtr();
+        lInputLayer[0].width              = mRayTracingParameters.mFrame.mSize.x;
+        lInputLayer[0].height             = mRayTracingParameters.mFrame.mSize.y;
+        lInputLayer[0].rowStrideInBytes   = mRayTracingParameters.mFrame.mSize.x * sizeof( float4 );
+        lInputLayer[0].pixelStrideInBytes = sizeof( float4 );
+        lInputLayer[0].format             = OPTIX_PIXEL_FORMAT_FLOAT4;
 
-        inputLayer[2].data               = fbNormal.RawDevicePtr();
-        inputLayer[2].width              = mRayTracingParameters.mFrame.mSize.x;
-        inputLayer[2].height             = mRayTracingParameters.mFrame.mSize.y;
-        inputLayer[2].rowStrideInBytes   = mRayTracingParameters.mFrame.mSize.x * sizeof( float4 );
-        inputLayer[2].pixelStrideInBytes = sizeof( float4 );
-        inputLayer[2].format             = OPTIX_PIXEL_FORMAT_FLOAT4;
+        lInputLayer[2].data               = fbNormal.RawDevicePtr();
+        lInputLayer[2].width              = mRayTracingParameters.mFrame.mSize.x;
+        lInputLayer[2].height             = mRayTracingParameters.mFrame.mSize.y;
+        lInputLayer[2].rowStrideInBytes   = mRayTracingParameters.mFrame.mSize.x * sizeof( float4 );
+        lInputLayer[2].pixelStrideInBytes = sizeof( float4 );
+        lInputLayer[2].format             = OPTIX_PIXEL_FORMAT_FLOAT4;
 
-        inputLayer[1].data               = fbAlbedo.RawDevicePtr();
-        inputLayer[1].width              = mRayTracingParameters.mFrame.mSize.x;
-        inputLayer[1].height             = mRayTracingParameters.mFrame.mSize.y;
-        inputLayer[1].rowStrideInBytes   = mRayTracingParameters.mFrame.mSize.x * sizeof( float4 );
-        inputLayer[1].pixelStrideInBytes = sizeof( float4 );
-        inputLayer[1].format             = OPTIX_PIXEL_FORMAT_FLOAT4;
+        lInputLayer[1].data               = fbAlbedo.RawDevicePtr();
+        lInputLayer[1].width              = mRayTracingParameters.mFrame.mSize.x;
+        lInputLayer[1].height             = mRayTracingParameters.mFrame.mSize.y;
+        lInputLayer[1].rowStrideInBytes   = mRayTracingParameters.mFrame.mSize.x * sizeof( float4 );
+        lInputLayer[1].pixelStrideInBytes = sizeof( float4 );
+        lInputLayer[1].format             = OPTIX_PIXEL_FORMAT_FLOAT4;
 
-        OptixImage2D outputLayer;
-        outputLayer.data               = mDenoisedBuffer.RawDevicePtr();
-        outputLayer.width              = mRayTracingParameters.mFrame.mSize.x;
-        outputLayer.height             = mRayTracingParameters.mFrame.mSize.y;
-        outputLayer.rowStrideInBytes   = mRayTracingParameters.mFrame.mSize.x * sizeof( float4 );
-        outputLayer.pixelStrideInBytes = sizeof( float4 );
-        outputLayer.format             = OPTIX_PIXEL_FORMAT_FLOAT4;
+        OptixImage2D lOutputLayer;
+        lOutputLayer.data               = mDenoisedBuffer.RawDevicePtr();
+        lOutputLayer.width              = mRayTracingParameters.mFrame.mSize.x;
+        lOutputLayer.height             = mRayTracingParameters.mFrame.mSize.y;
+        lOutputLayer.rowStrideInBytes   = mRayTracingParameters.mFrame.mSize.x * sizeof( float4 );
+        lOutputLayer.pixelStrideInBytes = sizeof( float4 );
+        lOutputLayer.format             = OPTIX_PIXEL_FORMAT_FLOAT4;
 
         // -------------------------------------------------------
         if( denoiserOn )
         {
-            OPTIX_CHECK( optixDenoiserComputeIntensity( denoiser, 0, &inputLayer[0], (CUdeviceptr)denoiserIntensity.RawDevicePtr(),
+            OPTIX_CHECK( optixDenoiserComputeIntensity( denoiser, 0, &lInputLayer[0], (CUdeviceptr)denoiserIntensity.RawDevicePtr(),
                                                         (CUdeviceptr)denoiserScratch.RawDevicePtr(),
                                                         denoiserScratch.SizeAs<uint8_t>() ) );
 
             OptixDenoiserGuideLayer denoiserGuideLayer{};
-            denoiserGuideLayer.albedo = inputLayer[1];
-            denoiserGuideLayer.normal = inputLayer[2];
+            denoiserGuideLayer.albedo = lInputLayer[1];
+            denoiserGuideLayer.normal = lInputLayer[2];
 
             OptixDenoiserLayer denoiserLayer{};
-            denoiserLayer.input  = inputLayer[0];
-            denoiserLayer.output = outputLayer;
+            denoiserLayer.input  = lInputLayer[0];
+            denoiserLayer.output = lOutputLayer;
 
             OPTIX_CHECK( optixDenoiserInvoke( denoiser, 0, &denoiserParams, denoiserState.RawDevicePtr(),
                                               denoiserState.SizeAs<uint8_t>(), &denoiserGuideLayer, &denoiserLayer, 1, 0, 0,
@@ -190,16 +190,18 @@ namespace SE::Core
         }
         else
         {
-            cudaMemcpy( (void *)outputLayer.data, (void *)inputLayer[0].data,
-                        outputLayer.width * outputLayer.height * sizeof( float4 ), cudaMemcpyDeviceToDevice );
+            cudaMemcpy( (void *)lOutputLayer.data, (void *)lInputLayer[0].data,
+                        lOutputLayer.width * lOutputLayer.height * sizeof( float4 ), cudaMemcpyDeviceToDevice );
         }
         computeFinalPixelColors( mRayTracingParameters, mDenoisedBuffer, *mOutputBuffer );
 
         CUDA_SYNC_CHECK();
 
+#if 0
         mOutputTexture->TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
         mOutputTexture->SetPixelData( mOutputBuffer );
         mOutputTexture->TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
+#endif
     }
 
     /*! set camera to render with */
@@ -230,29 +232,14 @@ namespace SE::Core
         // ------------------------------------------------------------------
         // create the denoiser:
         OptixDenoiserOptions denoiserOptions = {};
-#if OPTIX_VERSION >= 70300
         OPTIX_CHECK( optixDenoiserCreate( mOptixContext->mOptixObject, OPTIX_DENOISER_MODEL_KIND_LDR, &denoiserOptions, &denoiser ) );
-#else
-        denoiserOptions.inputKind = OPTIX_DENOISER_INPUT_RGB_ALBEDO;
-#    if OPTIX_VERSION < 70100
-        // these only exist in 7.0, not 7.1
-        denoiserOptions.pixelFormat = OPTIX_PIXEL_FORMAT_FLOAT4;
-#    endif
-
-        OPTIX_CHECK( optixDenoiserCreate( mOptixContext->mOptixObject, &denoiserOptions, &denoiser ) );
-        OPTIX_CHECK( optixDenoiserSetModel( denoiser, OPTIX_DENOISER_MODEL_KIND_LDR, NULL, 0 ) );
-#endif
 
         // .. then compute and allocate memory resources for the denoiser
         OptixDenoiserSizes denoiserReturnSizes;
         OPTIX_CHECK( optixDenoiserComputeMemoryResources( denoiser, aOutputWidth, aOutputHeight, &denoiserReturnSizes ) );
 
-#if OPTIX_VERSION < 70100
-        denoiserScratch.Resize( denoiserReturnSizes.recommendedScratchSizeInBytes );
-#else
         denoiserScratch.Resize(
             std::max( denoiserReturnSizes.withOverlapScratchSizeInBytes, denoiserReturnSizes.withoutOverlapScratchSizeInBytes ) );
-#endif
         denoiserState.Resize( denoiserReturnSizes.stateSizeInBytes );
 
         // ------------------------------------------------------------------

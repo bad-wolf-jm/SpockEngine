@@ -58,6 +58,8 @@ namespace SE::Core
         Ref<VkGpuBuffer> mCameraUniformBuffer    = nullptr;
         Ref<VkGpuBuffer> mShaderParametersBuffer = nullptr;
 
+        std::map<std::string, Ref<Graphics::VkSampler2D>> mGeometrySamplers = {};
+
         Ref<DescriptorSetLayout> mLightingTextureLayout = nullptr;
         Ref<DescriptorSet>       mLightingPassTextures  = nullptr;
         Ref<DescriptorSetLayout> mLightingCameraLayout  = nullptr;

@@ -91,19 +91,21 @@ namespace SE::Core
         mLightingRendererCI.RenderPass = mLightingContext.GetRenderPass();
         mLightingRenderer              = DeferredLightingRenderer( mGraphicContext, mLightingRendererCI );
 
-        mLightingPassTextures->Write(
-            New<Graphics::VkSampler2D>( mGraphicContext, mGeometryRenderTarget->GetAttachment( "POSITION" ), sTextureSamplingInfo{} ),
-            0 );
-        mLightingPassTextures->Write(
-            New<Graphics::VkSampler2D>( mGraphicContext, mGeometryRenderTarget->GetAttachment( "NORMALS" ), sTextureSamplingInfo{} ),
-            1 );
-        mLightingPassTextures->Write(
-            New<Graphics::VkSampler2D>( mGraphicContext, mGeometryRenderTarget->GetAttachment( "ALBEDO" ), sTextureSamplingInfo{} ),
-            2 );
-        mLightingPassTextures->Write( New<Graphics::VkSampler2D>( mGraphicContext,
-                                                                  mGeometryRenderTarget->GetAttachment( "AO_METAL_ROUGH" ),
-                                                                  sTextureSamplingInfo{} ),
-                                      3 );
+        mGeometrySamplers["POSITION"] =
+            New<Graphics::VkSampler2D>( mGraphicContext, mGeometryRenderTarget->GetAttachment( "POSITION" ), sTextureSamplingInfo{} );
+        mLightingPassTextures->Write( mGeometrySamplers["POSITION"], 0 );
+
+        mGeometrySamplers["NORMALS"] =
+            New<Graphics::VkSampler2D>( mGraphicContext, mGeometryRenderTarget->GetAttachment( "NORMALS" ), sTextureSamplingInfo{} );
+        mLightingPassTextures->Write( mGeometrySamplers["NORMALS"], 1 );
+
+        mGeometrySamplers["ALBEDO"] =
+            New<Graphics::VkSampler2D>( mGraphicContext, mGeometryRenderTarget->GetAttachment( "ALBEDO" ), sTextureSamplingInfo{} );
+        mLightingPassTextures->Write( mGeometrySamplers["ALBEDO"], 2 );
+
+        mGeometrySamplers["AO_METAL_ROUGH"] = New<Graphics::VkSampler2D>(
+            mGraphicContext, mGeometryRenderTarget->GetAttachment( "AO_METAL_ROUGH" ), sTextureSamplingInfo{} );
+        mLightingPassTextures->Write( mGeometrySamplers["AO_METAL_ROUGH"], 3 );
 
         CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
         lCoordinateGridRendererCreateInfo.RenderPass = mLightingContext.GetRenderPass();
@@ -238,7 +240,7 @@ namespace SE::Core
             for( auto &lMeshInformation : lPipelineData.second )
             {
                 auto &lStaticMeshData = lMeshInformation.Get<sStaticMeshComponent>();
-                if (!lStaticMeshData.mTransformedBuffer || !lStaticMeshData.mIndexBuffer) continue;
+                if( !lStaticMeshData.mTransformedBuffer || !lStaticMeshData.mIndexBuffer ) continue;
                 mGeometryContext.Bind( lStaticMeshData.mTransformedBuffer, lStaticMeshData.mIndexBuffer );
                 if( lMeshInformation.Has<NodeDescriptorComponent>() )
                     mGeometryContext.Bind( lMeshInformation.Get<NodeDescriptorComponent>().Descriptors, 2, -1 );

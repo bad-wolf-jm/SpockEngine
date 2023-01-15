@@ -42,7 +42,7 @@ namespace SE::Graphics
                      VkImage aExternalImage );
 
         /** @brief */
-        ~VkTexture2D() = default;
+        ~VkTexture2D();
 
         void GetPixelData( TextureData2D &mTextureData );
         void SetPixelData( Ref<IGraphicBuffer> a_Buffer );

@@ -25,7 +25,7 @@ namespace SE::Graphics
         VkSampler2D( Ref<VkGraphicContext> aGraphicContext, Ref<VkTexture2D> aTextureData, sTextureSamplingInfo const &aSamplingSpec );
 
         /** @brief */
-        ~VkSampler2D() = default;
+        ~VkSampler2D();
 
         Ref<ITexture2D> GetTexture() { return mTextureData; }
         VkImageView      GetImageView() { return mVkImageView; }

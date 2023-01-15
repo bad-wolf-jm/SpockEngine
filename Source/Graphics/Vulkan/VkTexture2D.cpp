@@ -60,6 +60,12 @@ namespace SE::Graphics
             mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
     }
 
+    VkTexture2D::~VkTexture2D()
+    {
+        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->DestroyImage( mVkImage );
+        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->FreeMemory( mVkMemory );
+    }
+
     void VkTexture2D::CreateImage()
     {
         mVkImage =
