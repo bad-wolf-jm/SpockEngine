@@ -187,28 +187,7 @@ namespace SE::Core
         DefaultCamera = lClonedEntities[aSource->DefaultCamera.Get<sUUID>().mValue.str()];
         CurrentCamera = lClonedEntities[aSource->CurrentCamera.Get<sUUID>().mValue.str()];
 
-        uint32_t lTransformCount = 0;
-        aSource->ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
-
-        uint32_t lStaticMeshCount = 0;
-        aSource->ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aUUID ) { lStaticMeshCount++; } );
-
-        uint32_t lJointMatrixCount = 0;
-        uint32_t lJointOffsetCount = 0;
-        ForEach<sSkeletonComponent>(
-            [&]( auto lElementToProcess, auto &s )
-            {
-                lJointMatrixCount += s.JointMatrices.size();
-                lJointOffsetCount += 1;
-            } );
-
-        mTransforms         = GPUMemory::Create<math::mat4>( lTransformCount );
-        mVertexBuffers      = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
-        mTransformedBuffers = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
-        mVertexOffsets      = GPUMemory::Create<uint32_t>( lStaticMeshCount );
-        mVertexCounts       = GPUMemory::Create<uint32_t>( lStaticMeshCount );
-        mJointTransforms    = GPUMemory::Create<math::mat4>( lJointMatrixCount );
-        mJointOffsets       = GPUMemory::Create<uint32_t>( lJointOffsetCount );
+        ResizeCUDABuffers();
 
         mIsClone = true;
     }
@@ -218,6 +197,35 @@ namespace SE::Core
         mTransforms.Dispose();
         mVertexOffsets.Dispose();
         mVertexCounts.Dispose();
+    }
+
+    void Scene::ResizeCUDABuffers()
+    {
+        const std::array<GPUMemory *, 7> lBuffers = { &mTransforms,   &mVertexBuffers,   &mTransformedBuffers, &mVertexOffsets,
+                                                      &mVertexCounts, &mJointTransforms, &mJointOffsets };
+        for( auto const &lP : lBuffers ) lP->Dispose();
+
+        uint32_t lTransformCount = 0;
+        ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
+        mTransforms = GPUMemory::Create<math::mat4>( lTransformCount );
+
+        uint32_t lStaticMeshCount = 0;
+        ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aUUID ) { lStaticMeshCount++; } );
+        mVertexBuffers      = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
+        mTransformedBuffers = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
+        mVertexOffsets      = GPUMemory::Create<uint32_t>( lStaticMeshCount );
+        mVertexCounts       = GPUMemory::Create<uint32_t>( lStaticMeshCount );
+
+        uint32_t lJointMatrixCount = 0;
+        uint32_t lJointOffsetCount = 0;
+        ForEach<sSkeletonComponent>(
+            [&]( auto lElementToProcess, auto &s )
+            {
+                lJointMatrixCount += s.JointMatrices.size();
+                lJointOffsetCount += 1;
+            } );
+        mJointTransforms = GPUMemory::Create<math::mat4>( lJointMatrixCount );
+        mJointOffsets    = GPUMemory::Create<uint32_t>( lJointOffsetCount );
     }
 
     math::mat4 Scene::GetView()
@@ -557,28 +565,7 @@ namespace SE::Core
         DefaultCamera           = lReadContext.mEntities[lDefaultCameraUUID];
         SE::Logging::Info( "Created camera", lDefaultCameraUUID );
 
-        uint32_t lTransformCount = 0;
-        ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
-
-        uint32_t lStaticMeshCount = 0;
-        ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aUUID ) { lStaticMeshCount++; } );
-
-        uint32_t lJointMatrixCount = 0;
-        uint32_t lJointOffsetCount = 0;
-        ForEach<sSkeletonComponent>(
-            [&]( auto lElementToProcess, auto &s )
-            {
-                lJointMatrixCount += s.JointMatrices.size();
-                lJointOffsetCount += 1;
-            } );
-
-        mTransforms         = GPUMemory::Create<math::mat4>( static_cast<uint32_t>( lTransformCount ) );
-        mVertexBuffers      = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
-        mTransformedBuffers = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
-        mVertexOffsets      = GPUMemory::Create<uint32_t>( static_cast<uint32_t>( lStaticMeshCount ) );
-        mVertexCounts       = GPUMemory::Create<uint32_t>( static_cast<uint32_t>( lStaticMeshCount ) );
-        mJointTransforms    = GPUMemory::Create<math::mat4>( lJointMatrixCount );
-        mJointOffsets       = GPUMemory::Create<uint32_t>( lJointOffsetCount );
+        ResizeCUDABuffers();
 
         RebuildAccelerationStructure();
     }
@@ -683,18 +670,6 @@ namespace SE::Core
             lMeshes.push_back( lMeshEntity );
         }
 
-        uint32_t lTransformCount = 0;
-        ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
-
-        uint32_t lStaticMeshCount = 0;
-        ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aUUID ) { lStaticMeshCount++; } );
-
-        mTransforms         = GPUMemory::Create<math::mat4>( lTransformCount );
-        mVertexBuffers      = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
-        mTransformedBuffers = GPUMemory::Create<VkGpuBuffer>( lStaticMeshCount );
-        mVertexOffsets      = GPUMemory::Create<uint32_t>( lStaticMeshCount );
-        mVertexCounts       = GPUMemory::Create<uint32_t>( lStaticMeshCount );
-
         std::vector<Element> lNodes = {};
         for( auto &lNode : aModelData->mNodes )
         {
@@ -746,18 +721,6 @@ namespace SE::Core
             }
         }
 
-        uint32_t lJointMatrixCount = 0;
-        uint32_t lJointOffsetCount = 0;
-        ForEach<sSkeletonComponent>(
-            [&]( auto lElementToProcess, auto &s )
-            {
-                lJointMatrixCount += s.JointMatrices.size();
-                lJointOffsetCount += 1;
-            } );
-
-        mJointTransforms = GPUMemory::Create<math::mat4>( lJointMatrixCount );
-        mJointOffsets    = GPUMemory::Create<uint32_t>( lJointOffsetCount );
-
         if( aModelData->mAnimations.size() > 0 ) lAssetEntity.Add<sAnimationChooser>();
 
         for( auto &lAnimation : aModelData->mAnimations )
@@ -783,6 +746,8 @@ namespace SE::Core
                 lAnimationComponent.mChannels.push_back( lAnimationChannel );
             }
         }
+
+        ResizeCUDABuffers();
 
         return lAssetEntity;
     }
@@ -853,6 +818,68 @@ namespace SE::Core
         mState = eSceneState::EDITING;
     }
 
+    void Scene::UpdateAnimation( Entity &aEntity, Timestep const &ts )
+    {
+        auto &lAnimation = aEntity.Get<sAnimationComponent>();
+
+        lAnimation.CurrentTime += ( ts / 1000.0f );
+        if( lAnimation.CurrentTime > lAnimation.Duration )
+        {
+            lAnimation.CurrentTime -= lAnimation.Duration;
+            lAnimation.CurrentTick = 0;
+        }
+
+        for( auto &lChannel : lAnimation.mChannels )
+        {
+            auto &lAnimatedTransform = lChannel.mTargetNode.Get<sAnimatedTransformComponent>();
+            if( lAnimation.CurrentTick >= lChannel.mInterpolation.mInputs.size() ) continue;
+
+            float dt = lAnimation.CurrentTime - lChannel.mInterpolation.mInputs[lAnimation.CurrentTick];
+            if( lAnimation.CurrentTime >
+                lChannel.mInterpolation.mInputs[( lAnimation.CurrentTick + 1 ) % lChannel.mInterpolation.mInputs.size()] )
+            {
+                lAnimation.CurrentTick += 1;
+                lAnimation.CurrentTick %= ( lChannel.mInterpolation.mInputs.size() - 1 );
+                dt = lAnimation.CurrentTime - lChannel.mInterpolation.mInputs[lAnimation.CurrentTick];
+            }
+
+            switch( lChannel.mChannelID )
+            {
+            case sImportedAnimationChannel::Channel::ROTATION:
+            {
+                glm::quat q1;
+                q1.x = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick].x;
+                q1.y = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick].y;
+                q1.z = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick].z;
+                q1.w = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick].w;
+
+                glm::quat q2;
+                q2.x = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1].x;
+                q2.y = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1].y;
+                q2.z = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1].z;
+                q2.w = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1].w;
+
+                lAnimatedTransform.Rotation = glm::normalize( glm::slerp( q1, q2, dt ) );
+                break;
+            }
+            case sImportedAnimationChannel::Channel::TRANSLATION:
+            {
+                lAnimatedTransform.Translation =
+                    math::vec3( glm::mix( lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick],
+                                          lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1], dt ) );
+                break;
+            }
+            case sImportedAnimationChannel::Channel::SCALE:
+            {
+                lAnimatedTransform.Scaling =
+                    math::vec3( glm::mix( lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick],
+                                          lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1], dt ) );
+                break;
+            }
+            }
+        }
+    }
+
     void Scene::Update( Timestep ts )
     {
         SE_PROFILE_FUNCTION();
@@ -861,96 +888,36 @@ namespace SE::Core
         if( mState == eSceneState::RUNNING )
         {
             ForEach<sBehaviourComponent>(
-                [=]( auto lEntity, auto &lComponent )
+                [=]( auto aEntity, auto &aComponent )
                 {
-                    if( lComponent.ControllerInstance ) lComponent.ControllerInstance->OnUpdate( ts );
+                    if( aComponent.ControllerInstance ) aComponent.ControllerInstance->OnUpdate( ts );
                 } );
 
             ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnUpdate( ts ); } );
 
             // Update animations
-            ForEach<sAnimationChooser>(
-                [=]( auto lEntity, auto &lComponent )
-                {
-                    auto &lAnimation = lComponent.Animations[0].Get<sAnimationComponent>();
-                    lAnimation.CurrentTime += ( ts / 1000.0f );
-                    if( lAnimation.CurrentTime > lAnimation.Duration )
-                    {
-                        lAnimation.CurrentTime -= lAnimation.Duration;
-                        lAnimation.CurrentTick = 0;
-                    }
-
-                    for( auto &lChannel : lAnimation.mChannels )
-                    {
-                        auto &lAnimatedTransform = lChannel.mTargetNode.Get<sAnimatedTransformComponent>();
-                        if( lAnimation.CurrentTick >= lChannel.mInterpolation.mInputs.size() ) continue;
-
-                        float dt = lAnimation.CurrentTime - lChannel.mInterpolation.mInputs[lAnimation.CurrentTick];
-                        if( lAnimation.CurrentTime >
-                            lChannel.mInterpolation.mInputs[( lAnimation.CurrentTick + 1 ) % lChannel.mInterpolation.mInputs.size()] )
-                        {
-                            lAnimation.CurrentTick += 1;
-                            lAnimation.CurrentTick %= ( lChannel.mInterpolation.mInputs.size() - 1 );
-                            dt = lAnimation.CurrentTime - lChannel.mInterpolation.mInputs[lAnimation.CurrentTick];
-                        }
-
-                        switch( lChannel.mChannelID )
-                        {
-                        case sImportedAnimationChannel::Channel::ROTATION:
-                        {
-                            glm::quat q1;
-                            q1.x = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick].x;
-                            q1.y = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick].y;
-                            q1.z = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick].z;
-                            q1.w = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick].w;
-
-                            glm::quat q2;
-                            q2.x = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1].x;
-                            q2.y = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1].y;
-                            q2.z = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1].z;
-                            q2.w = lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1].w;
-
-                            lAnimatedTransform.Rotation = glm::normalize( glm::slerp( q1, q2, dt ) );
-                            break;
-                        }
-                        case sImportedAnimationChannel::Channel::TRANSLATION:
-                        {
-                            lAnimatedTransform.Translation =
-                                math::vec3( glm::mix( lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick],
-                                                      lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1], dt ) );
-                            break;
-                        }
-                        case sImportedAnimationChannel::Channel::SCALE:
-                        {
-                            lAnimatedTransform.Scaling =
-                                math::vec3( glm::mix( lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick],
-                                                      lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1], dt ) );
-                            break;
-                        }
-                        }
-                    }
-                } );
+            ForEach<sAnimationChooser>( [=]( auto aEntity, auto &aComponent ) { UpdateAnimation( aComponent.Animations[0], ts ); } );
 
             ForEach<sAnimatedTransformComponent>(
-                [&]( auto lElementToProcess, auto &lComponent )
+                [&]( auto aEntity, auto &aComponent )
                 {
-                    math::mat4 lRotation    = math::mat4( lComponent.Rotation );
-                    math::mat4 lTranslation = math::Translation( lComponent.Translation );
-                    math::mat4 lScale       = math::Scaling( lComponent.Scaling );
+                    math::mat4 lRotation    = math::mat4( aComponent.Rotation );
+                    math::mat4 lTranslation = math::Translation( aComponent.Translation );
+                    math::mat4 lScale       = math::Scaling( aComponent.Scaling );
 
-                    lElementToProcess.AddOrReplace<sNodeTransformComponent>( lTranslation * lRotation * lScale );
+                    aEntity.AddOrReplace<sNodeTransformComponent>( lTranslation * lRotation * lScale );
                 } );
         }
 
         mTransformCache.clear();
         ForEach<sUUID, sNodeTransformComponent>(
-            [&]( auto lEntity, auto &aUUID, auto &aTransformComponent )
+            [&]( auto aEntity, auto &aUUID, auto &aTransformComponent )
             {
                 if( mTransformCache.find( aUUID.mValue ) != mTransformCache.end() ) return;
 
                 math::mat4 lAccumulator = aTransformComponent.mMatrix;
 
-                auto lCurrentEntity = lEntity.Get<sRelationshipComponent>().mParent;
+                auto lCurrentEntity = aEntity.Get<sRelationshipComponent>().mParent;
                 while( lCurrentEntity )
                 {
                     lAccumulator   = lCurrentEntity.Get<sNodeTransformComponent>().mMatrix * lAccumulator;

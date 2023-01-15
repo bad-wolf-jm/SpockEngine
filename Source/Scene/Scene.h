@@ -78,6 +78,7 @@ namespace SE::Core
         math::vec3 GetCameraPosition();
 
         void Update( Timestep ts );
+        void UpdateAnimation( Entity &aAnimation, Timestep const &ts );
         void Render();
 
         Element CurrentCamera;
@@ -131,6 +132,8 @@ namespace SE::Core
         void DestroyEntity( Element entity );
         void ConnectSignalHandlers();
 
+        void ResizeCUDABuffers();
+
         GPUMemory mTransforms{};
         GPUMemory mVertexBuffers{};
         GPUMemory mTransformedBuffers{};
@@ -145,8 +148,6 @@ namespace SE::Core
         friend class Element;
 
         std::unordered_map<UUIDv4::UUID, math::mat4> mTransformCache{};
-
-
     };
 
 } // namespace SE::Core
