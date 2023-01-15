@@ -62,18 +62,18 @@ namespace SE::Core
 
         if( !m_SwapChainRenderContext.BeginRender() ) return true;
 
-        bool requestQuit = false;
+        bool lRequestQuit = false;
         mImGUIOverlay->BeginFrame();
 
         // First run the UI delegate so any state that needs updating for this frame
         // gets updated. If the delegate indicates that we should quit, we return immediately
-        if( UIDelegate ) requestQuit = UIDelegate( mImGUIOverlay->GetIO() );
+        if( UIDelegate ) lRequestQuit = UIDelegate( mImGUIOverlay->GetIO() );
 
-        if( requestQuit ) return false;
+        if( lRequestQuit ) return false;
 
         // // Run the update delegate to update the state of the various elements
         // // of the simulation.
-        // if( UpdateDelegate ) UpdateDelegate( timestep );
+        if( UpdateDelegate ) UpdateDelegate( timestep );
 
         // // Finally, render the main screen.
         // if( RenderDelegate ) RenderDelegate();

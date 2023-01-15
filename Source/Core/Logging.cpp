@@ -13,7 +13,7 @@ namespace SE::Logging
             gLogFile << aLine;
     }
 
-    static std::vector<LogMessage> s_LogMessages = {};
+    static std::vector<LogMessage> sLogMessages = {};
 
     void _Log( LogLevel a_Level, std::string a_Message )
     {
@@ -21,10 +21,10 @@ namespace SE::Logging
         l_NewMessage.Level     = a_Level;
         l_NewMessage.Timestamp = 0;
         l_NewMessage.Message   = a_Message;
-        s_LogMessages.push_back( l_NewMessage );
+        // sLogMessages.push_back( l_NewMessage );
     }
 
-    std::vector<LogMessage> &GetLogMessages() { return s_LogMessages; }
+    std::vector<LogMessage> &GetLogMessages() { return sLogMessages; }
 
     void SetLogOutputFile( fs::path aFilePath ) {}
 

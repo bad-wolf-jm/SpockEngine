@@ -118,19 +118,19 @@ namespace SE::Core::UI
         return l_Value;
     }
 
-    void Image( SE::Core::UI::ImageHandle a_Texture, math::vec2 a_Size, math::vec4 a_Rect )
+    void Image( SE::Core::UI::ImageHandle &a_Texture, math::vec2 a_Size, math::vec4 a_Rect )
     {
         ImGui::Image( (ImTextureID)a_Texture.Handle->GetVkDescriptorSet(), ImVec2{ a_Size.x, a_Size.y }, ImVec2{ a_Rect.x, a_Rect.y },
             ImVec2{ a_Rect.z, a_Rect.w } );
     }
 
-    void Image( SE::Core::UI::ImageHandle a_Texture, math::vec2 a_Size )
+    void Image( SE::Core::UI::ImageHandle &a_Texture, math::vec2 a_Size )
     {
         ImGui::Image(
             (ImTextureID)a_Texture.Handle->GetVkDescriptorSet(), ImVec2{ a_Size.x, a_Size.y }, ImVec2{ 0, 0 }, ImVec2{ 1, 1 } );
     }
 
-    void Image( SE::Core::UI::ImageHandle a_Texture, math::ivec2 a_Size )
+    void Image( SE::Core::UI::ImageHandle &a_Texture, math::ivec2 a_Size )
     {
         ImGui::Image( (ImTextureID)a_Texture.Handle->GetVkDescriptorSet(), ImVec2{ (float)a_Size.x, (float)a_Size.y }, ImVec2{ 0, 0 },
             ImVec2{ 1, 1 } );

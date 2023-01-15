@@ -49,6 +49,7 @@ namespace SE::Logging
     template <typename... ArgTypes> void Info( std::string aString, ArgTypes &&...aArgList )
     {
         std::string s = fmt::format( aString, std::forward<ArgTypes>( aArgList )... );
+        _Log(LogLevel::INFO, s);
         fmt::print( "[ INFO ] {}\n", s );
         LogLine(fmt::format( "[ INFO ] {}\n", s ));
     }

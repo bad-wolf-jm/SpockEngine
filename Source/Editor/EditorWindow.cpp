@@ -626,8 +626,6 @@ namespace SE::Editor
         }
         ImGui::End();
 
-        if( lRequestQuit ) return true;
-
         ImGui::PushStyleColor( ImGuiCol_WindowBg, ImVec4{ 102.0f / 255.0f, 0.0f, 204.0f / 255.0f, 1.0f } );
         ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, 0.0f );
         ImGui::PushStyleVar( ImGuiStyleVar_WindowBorderSize, 0.0f );
@@ -650,7 +648,7 @@ namespace SE::Editor
         }
         ImGui::End();
 
-        return false;
+        return lRequestQuit;
     }
 
     bool EditorWindow::RenderMainMenu()
@@ -741,8 +739,6 @@ namespace SE::Editor
 
     void EditorWindow::Workspace( int32_t width, int32_t height )
     {
-        static bool s_DisplayCameraSettings = false;
-
         auto &lIO = ImGui::GetIO();
 
         math::vec2 l_WorkspacePosition = UI::GetCurrentCursorScreenPosition();
@@ -752,14 +748,6 @@ namespace SE::Editor
         ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 1.0f, 1.0f, 1.0f, 0.01f } );
         ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 1.0f, 1.0f, 1.0f, 0.02f } );
 
-        // UI::SetCursorPosition( l_CursorPosition );
-        // if( ImGui::ImageButton( (ImTextureID)m_CameraIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
-        //                         ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
-        //                         ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f } ) )
-        // {
-        //     s_DisplayCameraSettings = !s_DisplayCameraSettings;
-        // }
-        // UI::SameLine();
         float                   l_SliderSize0            = 150.0f;
         static ManipulationType lCurrentManipulationType = ManipulationType::ROTATION;
         ManipulationTypeChooser lManipulationTypeChooser( "##FOO_2" );

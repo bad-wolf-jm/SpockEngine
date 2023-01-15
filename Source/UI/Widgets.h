@@ -44,9 +44,9 @@ namespace SE::Core::UI
     bool MenuItem( const char *label, const char *shortcut );
     bool SelectionMenuItem( const char *label, const char *shortcut, bool *selected );
 
-    void Image( SE::Core::UI::ImageHandle a_Texture, math::vec2 a_Size, math::vec4 a_Rect );
-    void Image( ImageHandle texture, math::vec2 size );
-    void Image( ImageHandle texture, math::ivec2 size );
+    void Image( SE::Core::UI::ImageHandle &a_Texture, math::vec2 a_Size, math::vec4 a_Rect );
+    void Image( ImageHandle &texture, math::vec2 size );
+    void Image( ImageHandle &texture, math::ivec2 size );
 
     void Menu( const char *a_Label, std::function<void()> a_Elements );
 
