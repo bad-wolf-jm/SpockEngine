@@ -17,23 +17,6 @@ using namespace std;
 
 namespace SE::Core
 {
-    namespace
-    {
-        static std::vector<std::string> SplitString( const std::string &aString, char aDelimiter )
-        {
-            vector<std::string> result;
-            std::stringstream   ss( aString );
-            std::string         item;
-
-            while( std::getline( ss, item, aDelimiter ) )
-            {
-                result.push_back( item );
-            }
-
-            return result;
-        }
-    } // namespace
-
     ConfigurationWriter::ConfigurationWriter( fs::path const &aFileName )
         : mFileName{ aFileName }
     {
@@ -110,101 +93,5 @@ namespace SE::Core
     }
 
     void ConfigurationWriter::WriteNull() { mOut << YAML::Null; }
-
-    ConfigurationReader::ConfigurationReader( fs::path const &aFileName )
-        : mFileName{ aFileName }
-    {
-        mRootNode = YAML::LoadFile( aFileName.string() );
-    }
-
-    ConfigurationReader::ConfigurationReader( std::string const &aString )
-        : mFileName{ "" }
-    {
-        mRootNode = YAML::Load( aString );
-    }
-
-    ConfigurationReader::ConfigurationReader( YAML::Node const &aConfigurationRoot )
-        : mFileName{ "" }
-    {
-        mRootNode = YAML::Clone( aConfigurationRoot );
-    }
-
-    ConfigurationNode::ConfigurationNode( YAML::Node const &aNode )
-        : mNode{ YAML::Clone( aNode ) } {};
-
-    ConfigurationNode ConfigurationReader::GetRoot() { return ConfigurationNode( mRootNode ); }
-
-    bool ConfigurationNode::HasAll( std::vector<std::string> const &aKeys )
-    {
-        for( auto &lKey : aKeys )
-        {
-            if( ( ( *this )[lKey] ).IsNull() ) return false;
-        }
-        return true;
-    }
-
-    ConfigurationNode ConfigurationNode::operator[]( const std::string &aKey )
-    {
-        if( mNode.IsNull() ) return ConfigurationNode( YAML::Clone( mNode ) );
-
-        std::vector<std::string> lComponents = SplitString( aKey, '.' );
-
-        YAML::Node lCurrentNode = YAML::Clone( mNode );
-        for( auto &i : lComponents ) lCurrentNode = lCurrentNode[i];
-
-        return ConfigurationNode( lCurrentNode );
-    }
-
-    ConfigurationNode ConfigurationNode::operator[]( const std::string &aKey ) const
-    {
-        if( mNode.IsNull() ) return ConfigurationNode( YAML::Clone( mNode ) );
-
-        std::vector<std::string> lComponents = SplitString( aKey, '.' );
-
-        YAML::Node lCurrentNode = YAML::Clone( mNode );
-        for( auto &i : lComponents ) lCurrentNode = lCurrentNode[i];
-
-        return ConfigurationNode( lCurrentNode );
-    }
-
-    ConfigurationNode &ConfigurationNode::operator=( ConfigurationNode const &aKey ) 
-    {
-        mNode = YAML::Clone( aKey.mNode );
-
-        return *this;
-    }
-
-    math::vec2 ConfigurationNode::Vec( std::array<std::string, 2> const &aKeys, math::vec2 const &aDefault )
-    {
-        if( !HasAll( aKeys ) ) return aDefault;
-
-        return math::vec2{ ( ( *this )[aKeys[0]] ).As<float>( aDefault.x ), ( ( *this )[aKeys[1]] ).As<float>( aDefault.y ) };
-    }
-
-    math::vec3 ConfigurationNode::Vec( std::array<std::string, 3> const &aKeys, math::vec3 const &aDefault )
-    {
-        if( !HasAll( aKeys ) ) return aDefault;
-
-        return math::vec3{ ( *this )[aKeys[0]].As<float>( aDefault.x ), ( *this )[aKeys[1]].As<float>( aDefault.y ),
-            ( *this )[aKeys[2]].As<float>( aDefault.z ) };
-    }
-
-    math::vec4 ConfigurationNode::Vec( std::array<std::string, 4> const &aKeys, math::vec4 const &aDefault )
-    {
-        if( !HasAll( aKeys ) ) return aDefault;
-
-        return math::vec4{ ( *this )[aKeys[0]].As<float>( aDefault.x ), ( *this )[aKeys[1]].As<float>( aDefault.y ),
-            ( *this )[aKeys[2]].As<float>( aDefault.z ), ( *this )[aKeys[3]].As<float>( aDefault.w ) };
-    }
-
-    void ConfigurationNode::ForEach( std::function<void( ConfigurationNode & )> aFunc )
-    {
-        for( YAML::iterator it = mNode.begin(); it != mNode.end(); ++it ) aFunc( ConfigurationNode( *it ) );
-    }
-
-    void ConfigurationNode::ForEach( std::function<void( ConfigurationNode & )> aFunc ) const
-    {
-        for( YAML::const_iterator it = mNode.begin(); it != mNode.end(); ++it ) aFunc( ConfigurationNode( *it ) );
-    }
 
 } // namespace SE::Core

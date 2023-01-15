@@ -300,17 +300,6 @@ namespace SE::Core
         return LoadModel( aModelData, aTransform, "MODEL" );
     }
 
-    template <typename _Ty>
-    void ReadAndAddComponent( Entity aEntity, ConfigurationNode const &aNode, sReadContext &aEntities )
-    {
-        if( HasTypeTag<_Ty>( aNode ) )
-        {
-            auto &lComponent = aEntity.Add<_Ty>();
-
-            ReadComponent( lComponent, aNode[TypeTag<_Ty>()], aEntities );
-        }
-    }
-
     void Scene::LoadScenario( fs::path aScenarioPath )
     {
         mRegistry.Clear();
@@ -331,8 +320,6 @@ namespace SE::Core
         }
 
         auto lRootNode = YAML::LoadFile( aScenarioPath.string() );
-
-        auto lScenarioDescription = ConfigurationReader( aScenarioPath );
 
         sReadContext                                 lReadContext{};
         std::unordered_map<std::string, std::string> lParentEntityLUT{};
