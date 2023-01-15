@@ -104,7 +104,6 @@ namespace SE::Core
             auto lClonedEntity = lClonedEntities[lUUID];
 
             CopyComponent<sNodeTransformComponent>( lEntity, lClonedEntity );
-            CopyComponent<sTransformMatrixComponent>( lEntity, lClonedEntity );
             CopyComponent<sAnimatedTransformComponent>( lEntity, lClonedEntity );
 
             CopyComponent<sStaticMeshComponent>( lEntity, lClonedEntity );
@@ -398,7 +397,6 @@ namespace SE::Core
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sCameraComponent>()], lReadContext );
             }
 
-
             if( HasTypeTag<sAnimatedTransformComponent>( lEntityConfiguration ) )
             {
                 auto &lComponent = lEntity.Add<sAnimatedTransformComponent>();
@@ -411,13 +409,6 @@ namespace SE::Core
                 auto &lComponent = lEntity.Add<sNodeTransformComponent>();
 
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sNodeTransformComponent>()], lReadContext );
-            }
-
-            if( HasTypeTag<sTransformMatrixComponent>( lEntityConfiguration ) )
-            {
-                auto &lComponent = lEntity.Add<sTransformMatrixComponent>();
-
-                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sTransformMatrixComponent>()], lReadContext );
             }
 
             if( HasTypeTag<sRayTracingTargetComponent>( lEntityConfiguration ) )
@@ -545,8 +536,6 @@ namespace SE::Core
             }
         }
 
-
-
         for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
         {
             auto const &lKey                 = it->first.as<std::string>();
@@ -563,8 +552,6 @@ namespace SE::Core
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sAnimationChooser>()], lReadContext );
             }
         }
-
-
 
         auto lRootNodeUUIDStr = Get( lSceneRoot["root"], std::string{ "" } );
         auto lRootNodeUUID    = UUIDv4::UUID::fromStrFactory( lRootNodeUUIDStr );
@@ -968,44 +955,35 @@ namespace SE::Core
                 } );
         }
 
-        std::queue<Entity> lUpdateQueue{};
-        lUpdateQueue.push( Root );
-        while( !lUpdateQueue.empty() )
-        {
-            auto lElementToProcess = lUpdateQueue.front();
-            lUpdateQueue.pop();
-
-            for( auto lChild : lElementToProcess.Get<sRelationshipComponent>().mChildren ) lUpdateQueue.push( lChild );
-
-            if( lElementToProcess.Has<sNodeTransformComponent>() )
-                lElementToProcess.AddOrReplace<sTransformMatrixComponent>( lElementToProcess.Get<sNodeTransformComponent>().mMatrix );
-
-            if( !( lElementToProcess.Get<sRelationshipComponent>().mParent ) ) continue;
-
-            if( !( lElementToProcess.Get<sRelationshipComponent>().mParent.Has<sTransformMatrixComponent>() ) ) continue;
-
-            auto lParent = lElementToProcess.Get<sRelationshipComponent>().mParent;
-            if( !( lElementToProcess.Has<sNodeTransformComponent>() ) && !( lElementToProcess.Has<sAnimatedTransformComponent>() ) )
+        mTransformCache.clear();
+        ForEach<sUUID, sNodeTransformComponent>(
+            [&]( auto lEntity, auto &aUUID, auto &aTransformComponent )
             {
-                lElementToProcess.AddOrReplace<sTransformMatrixComponent>( lParent.Get<sTransformMatrixComponent>().Matrix );
-            }
-            else
-            {
-                lElementToProcess.AddOrReplace<sTransformMatrixComponent>( lParent.Get<sTransformMatrixComponent>().Matrix *
-                                                                           lElementToProcess.Get<sTransformMatrixComponent>().Matrix );
-            }
-        }
+                if( mTransformCache.find( aUUID.mValue ) != mTransformCache.end() ) return;
 
-        ForEach<sSkeletonComponent, sTransformMatrixComponent>(
-            [&]( auto lElementToProcess, auto &s, auto &t )
+                math::mat4 lAccumulator = aTransformComponent.mMatrix;
+
+                auto lCurrentEntity = lEntity.Get<sRelationshipComponent>().mParent;
+                while( lCurrentEntity )
+                {
+                    lAccumulator   = lCurrentEntity.Get<sNodeTransformComponent>().mMatrix * lAccumulator;
+                    lCurrentEntity = lCurrentEntity.Get<sRelationshipComponent>().mParent;
+                }
+
+                mTransformCache[aUUID.mValue] = lAccumulator;
+            } );
+
+        ForEach<sUUID, sSkeletonComponent>(
+            [&]( auto lElementToProcess, auto &aUUID, auto &aSkeleton )
             {
-                math::mat4 lInverseTransform = math::Inverse( lElementToProcess.Get<sTransformMatrixComponent>().Matrix );
+                if( mTransformCache.find( aUUID.mValue ) == mTransformCache.end() ) return;
+                math::mat4 lInverseTransform = math::Inverse( mTransformCache[aUUID.mValue] );
 
                 for( uint32_t lJointID = 0; lJointID < lElementToProcess.Get<sSkeletonComponent>().Bones.size(); lJointID++ )
                 {
                     Element    lJoint             = lElementToProcess.Get<sSkeletonComponent>().Bones[lJointID];
                     math::mat4 lInverseBindMatrix = lElementToProcess.Get<sSkeletonComponent>().InverseBindMatrices[lJointID];
-                    math::mat4 lJointMatrix       = lJoint.TryGet<sTransformMatrixComponent>( sTransformMatrixComponent{} ).Matrix;
+                    math::mat4 lJointMatrix       = mTransformCache[lJoint.Get<sUUID>().mValue];
                     lJointMatrix                  = lInverseTransform * lJointMatrix * lInverseBindMatrix;
 
                     lElementToProcess.Get<sSkeletonComponent>().JointMatrices[lJointID] = lJointMatrix;
@@ -1021,12 +999,13 @@ namespace SE::Core
             std::vector<uint32_t>   lVertexCounts{};
             std::vector<math::mat4> lObjectToWorldTransforms{};
             uint32_t                lMaxVertexCount = 0;
-            ForEach<sStaticMeshComponent, sTransformMatrixComponent>(
-                [&]( auto aEntiy, auto &aMesh, auto &aTransform )
+            ForEach<sUUID, sStaticMeshComponent>(
+                [&]( auto aEntiy, auto &aUUID, auto &aMesh )
                 {
                     if( aEntiy.Has<sSkeletonComponent>() ) return;
+                    if( mTransformCache.find( aUUID.mValue ) == mTransformCache.end() ) return;
 
-                    lObjectToWorldTransforms.push_back( aTransform.Matrix );
+                    lObjectToWorldTransforms.push_back( mTransformCache[aUUID.mValue] );
                     lVertexBuffers.push_back( *aMesh.mVertexBuffer );
                     lOutVertexBuffers.push_back( *aMesh.mTransformedBuffer );
                     lVertexOffsets.push_back( aMesh.mVertexOffset );
@@ -1057,10 +1036,12 @@ namespace SE::Core
             std::vector<math::mat4> lJointTransforms{};
             std::vector<uint32_t>   lJointOffsets{};
             uint32_t                lMaxVertexCount = 0;
-            ForEach<sStaticMeshComponent, sTransformMatrixComponent, sSkeletonComponent>(
-                [&]( auto aEntiy, auto &aMesh, auto &aTransform, auto &aSkeleton )
+            ForEach<sUUID, sStaticMeshComponent, sSkeletonComponent>(
+                [&]( auto aEntiy, auto &aUUID, auto &aMesh, auto &aSkeleton )
                 {
-                    lObjectToWorldTransforms.push_back( aTransform.Matrix );
+                    if( mTransformCache.find( aUUID.mValue ) == mTransformCache.end() ) return;
+
+                    lObjectToWorldTransforms.push_back( mTransformCache[aUUID.mValue] );
                     lVertexBuffers.push_back( *aMesh.mVertexBuffer );
                     lOutVertexBuffers.push_back( *aMesh.mTransformedBuffer );
                     lVertexOffsets.push_back( aMesh.mVertexOffset );
@@ -1087,7 +1068,6 @@ namespace SE::Core
         }
 
         CUDA_SYNC_CHECK();
-        // }
 
         UpdateRayTracingComponents();
     }
@@ -1097,12 +1077,14 @@ namespace SE::Core
         SE_PROFILE_FUNCTION();
 
         bool lRebuildAS = false;
-        ForEach<sTransformMatrixComponent, sStaticMeshComponent, sRayTracingTargetComponent>(
-            [&]( auto aEntity, auto &aTransformComponent, auto &aMeshComponent, auto &aRTComponent )
+        ForEach<sUUID, sStaticMeshComponent, sRayTracingTargetComponent>(
+            [&]( auto aEntity, auto &aUUID, auto &aMeshComponent, auto &aRTComponent )
             {
-                if( !glm::all( glm::equal( aTransformComponent.Matrix, aRTComponent.Transform, 0.0001 ) ) )
+                if( mTransformCache.find( aUUID.mValue ) == mTransformCache.end() ) return;
+
+                if( !glm::all( glm::equal( mTransformCache[aUUID.mValue], aRTComponent.Transform, 0.0001 ) ) )
                 {
-                    aRTComponent.Transform = aTransformComponent.Matrix;
+                    aRTComponent.Transform = mTransformCache[aUUID.mValue];
                     lRebuildAS             = true;
                 }
             } );
@@ -1181,7 +1163,6 @@ namespace SE::Core
 
             if( aEntity.Has<sAnimatedTransformComponent>() ) WriteComponent( lOut, aEntity.Get<sAnimatedTransformComponent>() );
             if( aEntity.Has<sNodeTransformComponent>() ) WriteComponent( lOut, aEntity.Get<sNodeTransformComponent>() );
-            if( aEntity.Has<sTransformMatrixComponent>() ) WriteComponent( lOut, aEntity.Get<sTransformMatrixComponent>() );
             if( aEntity.Has<sStaticMeshComponent>() )
                 WriteComponent( lOut, aEntity.Get<sStaticMeshComponent>(), aMeshDataMap[aUUID.mValue.str()] );
             if( aEntity.Has<sParticleSystemComponent>() ) WriteComponent( lOut, aEntity.Get<sParticleSystemComponent>() );

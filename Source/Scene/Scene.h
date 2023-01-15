@@ -143,6 +143,10 @@ namespace SE::Core
 
       private:
         friend class Element;
+
+        std::unordered_map<UUIDv4::UUID, math::mat4> mTransformCache{};
+
+
     };
 
 } // namespace SE::Core

@@ -28,10 +28,10 @@ namespace SE::Graphics
             VertexData  lVertex            = aVertices[blockIdx.x].DataAs<VertexData>()[lObjectOffset + lVertexID];
             VertexData *lTransformedVertex = aOutTransformedVertices[blockIdx.x].DataAs<VertexData>();
 
-            math::mat4 lSkinTransform = lVertex.Weights.x * aJointMatrices[int( lVertex.Bones.x )] +
-                                        lVertex.Weights.y * aJointMatrices[int( lVertex.Bones.y )] +
-                                        lVertex.Weights.z * aJointMatrices[int( lVertex.Bones.z )] +
-                                        lVertex.Weights.w * aJointMatrices[int( lVertex.Bones.w )];
+            math::mat4 lSkinTransform = lVertex.Weights.x * aJointMatrices[lObjectJointOffset + int( lVertex.Bones.x )] +
+                                        lVertex.Weights.y * aJointMatrices[lObjectJointOffset + int( lVertex.Bones.y )] +
+                                        lVertex.Weights.z * aJointMatrices[lObjectJointOffset + int( lVertex.Bones.z )] +
+                                        lVertex.Weights.w * aJointMatrices[lObjectJointOffset + int( lVertex.Bones.w )];
 
             math::mat4 lFinalTransform = lTransform * lSkinTransform;
 
