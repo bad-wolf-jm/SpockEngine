@@ -71,21 +71,20 @@ namespace SE::Core
 
         if( requestQuit ) return false;
 
-        // Run the update delegate to update the state of the various elements
-        // of the simulation.
-        if( UpdateDelegate ) UpdateDelegate( timestep );
+        // // Run the update delegate to update the state of the various elements
+        // // of the simulation.
+        // if( UpdateDelegate ) UpdateDelegate( timestep );
 
-        // Finally, render the main screen.
-        if( RenderDelegate ) RenderDelegate();
+        // // Finally, render the main screen.
+        // if( RenderDelegate ) RenderDelegate();
 
         // Render the UI on top of the background
         mImGUIOverlay->EndFrame( m_SwapChainRenderContext );
 
-        // Send the draw commands to the screen.
+        // // Send the draw commands to the screen.
         m_SwapChainRenderContext.EndRender();
         m_SwapChainRenderContext.Present();
 
-        // mGraphicContext.WaitIdle();
         mGraphicContext->WaitIdle();
 
         return true;

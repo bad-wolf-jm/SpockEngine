@@ -88,7 +88,7 @@ namespace SE::Editor
 
     bool BaseEditorApplication::RenderUI( ImGuiIO &io )
     {
-        bool o_RequestQuit = false;
+        bool lRequestQuit = false;
         if( mShouldRebuildViewport )
         {
             RebuildOutputFramebuffer();
@@ -98,21 +98,18 @@ namespace SE::Editor
         mEditorWindow.WorldRenderer = mForwardRenderer;
         mEditorWindow.DefRenderer   = mDeferredRenderer;
         mEditorWindow.RTRenderer    = mRayTracingRenderer;
-        // mEditorWindow.mGraphicContext = SE::Core::Engine::GetInstance()->GetGraphicContext();
 
-        o_RequestQuit = mEditorWindow.Display();
+        lRequestQuit = mEditorWindow.Display();
 
-        auto l_WorkspaceAreaSize = mEditorWindow.GetWorkspaceAreaSize();
-        if( ( mViewportWidth != l_WorkspaceAreaSize.x ) || ( mViewportHeight != l_WorkspaceAreaSize.y ) )
+        auto lWorkspaceAreaSize = mEditorWindow.GetWorkspaceAreaSize();
+        if( ( mViewportWidth != lWorkspaceAreaSize.x ) || ( mViewportHeight != lWorkspaceAreaSize.y ) )
         {
-            mViewportWidth         = l_WorkspaceAreaSize.x;
-            mViewportHeight        = l_WorkspaceAreaSize.y;
+            mViewportWidth         = lWorkspaceAreaSize.x;
+            mViewportHeight        = lWorkspaceAreaSize.y;
             mShouldRebuildViewport = true;
         }
 
-        if( o_RequestQuit ) return true;
-
-        return false;
+        return lRequestQuit;
     }
 
     void BaseEditorApplication::Init()
