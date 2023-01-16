@@ -130,7 +130,7 @@ namespace SE::Core
         std::vector<math::vec3>  mPositions  = {};
         std::vector<math::vec3>  mNormals    = {};
         std::vector<math::vec2>  mUV0        = {};
-        std::vector<math::vec2>  mUV1        = {};
+        // std::vector<math::vec2>  mUV1        = {};
         std::vector<math::uvec4> mJoints     = {};
         std::vector<math::vec4>  mWeights    = {};
     };

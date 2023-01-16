@@ -644,7 +644,6 @@ namespace SE::Core
                 lVertices[i].Position    = lMesh.mPositions[i];
                 lVertices[i].Normal      = lMesh.mNormals[i];
                 lVertices[i].TexCoords_0 = lMesh.mUV0[i];
-                lVertices[i].TexCoords_1 = lMesh.mUV1[i];
                 lVertices[i].Bones       = lMesh.mJoints[i];
                 lVertices[i].Weights     = lMesh.mWeights[i];
             }

@@ -325,9 +325,9 @@ namespace SE::Core
                 if( lNewImportedMesh.mUV0.size() == 0 )
                     lNewImportedMesh.mUV0 = std::vector<math::vec2>( lNewImportedMesh.mPositions.size() );
 
-                RetrievePrimitiveAttribute<math::vec2>( lPrimitive, "TEXCOORD_1", lNewImportedMesh.mUV1 );
-                if( lNewImportedMesh.mUV1.size() == 0 )
-                    lNewImportedMesh.mUV1 = std::vector<math::vec2>( lNewImportedMesh.mPositions.size() );
+                // RetrievePrimitiveAttribute<math::vec2>( lPrimitive, "TEXCOORD_1", lNewImportedMesh.mUV1 );
+                // if( lNewImportedMesh.mUV1.size() == 0 )
+                //     lNewImportedMesh.mUV1 = std::vector<math::vec2>( lNewImportedMesh.mPositions.size() );
 
                 RetrievePrimitiveAttribute<math::vec4>( lPrimitive, "WEIGHTS_0", lNewImportedMesh.mWeights );
                 if( lNewImportedMesh.mWeights.size() == 0 )

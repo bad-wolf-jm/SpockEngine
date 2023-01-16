@@ -26,7 +26,6 @@ namespace SE::Core
         vec3 Position    = { 0.0f, 0.0f, 0.0f };
         vec3 Normal      = { 0.0f, 0.0f, 0.0f };
         vec2 TexCoords_0 = { 0.0f, 0.0f };
-        vec2 TexCoords_1 = { 0.0f, 0.0f };
         vec4 Bones       = { 0.0f, 0.0f, 0.0f, 0.0f };
         vec4 Weights     = { 0.0f, 0.0f, 0.0f, 0.0f };
 
@@ -38,9 +37,8 @@ namespace SE::Core
                 { "Position",   eBufferDataType::VEC3, 0, 0 },
                 { "Normal",     eBufferDataType::VEC3, 0, 1 },
                 { "TexCoord_0", eBufferDataType::VEC2, 0, 2 },
-                { "TexCoord_1", eBufferDataType::VEC2, 0, 3 },
-                { "Bones",      eBufferDataType::VEC4, 0, 4 },
-                { "Weights",    eBufferDataType::VEC4, 0, 5 } };
+                { "Bones",      eBufferDataType::VEC4, 0, 3 },
+                { "Weights",    eBufferDataType::VEC4, 0, 4 } };
         }
         // clang-format on
 #endif

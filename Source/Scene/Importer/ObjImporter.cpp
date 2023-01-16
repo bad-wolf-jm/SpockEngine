@@ -30,7 +30,7 @@ namespace SE::Core
         }
 
         aMesh.mUV0.resize( aMesh.mPositions.size() );
-        aMesh.mUV1.resize( aMesh.mPositions.size() );
+        // aMesh.mUV1.resize( aMesh.mPositions.size() );
         aMesh.mJoints.resize( aMesh.mPositions.size() );
         aMesh.mWeights.resize( aMesh.mPositions.size() );
         aMesh.mNormals.resize( aMesh.mPositions.size() );
