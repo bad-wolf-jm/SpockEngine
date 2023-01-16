@@ -178,23 +178,21 @@ namespace SE::Core
         SE_PROFILE_FUNCTION();
 
         if( !mScene ) return;
-        UpdateDescriptorSets();
+
         mScene->GetMaterialSystem()->UpdateDescriptors();
 
         std::unordered_map<MeshRendererCreateInfo, std::vector<Entity>, MeshRendererCreateInfoHash> lOpaqueMeshQueue{};
         mScene->ForEach<sStaticMeshComponent, sMaterialShaderComponent>(
             [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterialData )
             {
-                auto &l_PipelineCreateInfo = GetRenderPipelineCreateInfo( aMaterialData );
-                if( lOpaqueMeshQueue.find( l_PipelineCreateInfo ) == lOpaqueMeshQueue.end() )
-                    lOpaqueMeshQueue[l_PipelineCreateInfo] = std::vector<Entity>{};
-                lOpaqueMeshQueue[l_PipelineCreateInfo].push_back( aEntity );
+                auto &lPipelineCreateInfo = GetRenderPipelineCreateInfo( aMaterialData );
+                if( lOpaqueMeshQueue.find( lPipelineCreateInfo ) == lOpaqueMeshQueue.end() )
+                    lOpaqueMeshQueue[lPipelineCreateInfo] = std::vector<Entity>{};
+                lOpaqueMeshQueue[lPipelineCreateInfo].push_back( aEntity );
             } );
 
         mGeometryContext.BeginRender();
-        // if( mScene->mVertexBuffer && mScene->mIndexBuffer )
-        // {
-        //     mGeometryContext.Bind( mScene->mTransformedVertexBuffer, mScene->mIndexBuffer );
+
         for( auto &lPipelineData : lOpaqueMeshQueue )
         {
             auto &lPipeline = GetRenderPipeline( lPipelineData.first );
@@ -210,20 +208,17 @@ namespace SE::Core
                 auto &lStaticMeshData = lMeshInformation.Get<sStaticMeshComponent>();
                 if( !lStaticMeshData.mTransformedBuffer || !lStaticMeshData.mIndexBuffer ) continue;
                 mGeometryContext.Bind( lStaticMeshData.mTransformedBuffer, lStaticMeshData.mIndexBuffer );
-                if( lMeshInformation.Has<NodeDescriptorComponent>() )
-                    mGeometryContext.Bind( lMeshInformation.Get<NodeDescriptorComponent>().Descriptors, 2, -1 );
 
-                MeshRenderer::MaterialPushConstants l_MaterialPushConstants{};
-                l_MaterialPushConstants.mMaterialID = lMeshInformation.Get<sMaterialComponent>().mMaterialID;
+                MeshRenderer::MaterialPushConstants lMaterialPushConstants{};
+                lMaterialPushConstants.mMaterialID = lMeshInformation.Get<sMaterialComponent>().mMaterialID;
 
-                mGeometryContext.PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, l_MaterialPushConstants );
+                mGeometryContext.PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
 
-                auto &l_StaticMeshComponent = lMeshInformation.Get<sStaticMeshComponent>();
-                mGeometryContext.Draw( l_StaticMeshComponent.mIndexCount, l_StaticMeshComponent.mIndexOffset,
-                                       l_StaticMeshComponent.mVertexOffset, 1, 0 );
+                auto &lStaticMeshComponent = lMeshInformation.Get<sStaticMeshComponent>();
+                mGeometryContext.Draw( lStaticMeshComponent.mIndexCount, lStaticMeshComponent.mIndexOffset,
+                                       lStaticMeshComponent.mVertexOffset, 1, 0 );
             }
         }
-        // }
 
         mScene->ForEach<sParticleSystemComponent, sParticleShaderComponent>(
             [&]( auto aEntity, auto &aParticleSystemComponent, auto &aParticleShaderComponent )
@@ -277,39 +272,4 @@ namespace SE::Core
         //
         return mGeometryRenderTarget->GetAttachment( "OUTPUT" );
     }
-
-    void ForwardSceneRenderer::UpdateDescriptorSets()
-    {
-        SE_PROFILE_FUNCTION();
-
-        mScene->ForEach<sTransformMatrixComponent>(
-            [&]( auto aEntity, auto &aComponent )
-            {
-                if( !( aEntity.Has<NodeDescriptorComponent>() ) )
-                {
-                    auto &lNodeDescriptor = aEntity.Add<NodeDescriptorComponent>();
-                    lNodeDescriptor.Descriptors =
-                        New<DescriptorSet>( mGraphicContext, MeshRenderer::GetNodeSetLayout( mGraphicContext ) );
-                    lNodeDescriptor.UniformBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true,
-                                                                      true, sizeof( NodeMatrixDataComponent ) );
-
-                    lNodeDescriptor.Descriptors->Write( lNodeDescriptor.UniformBuffer, false, 0, sizeof( NodeMatrixDataComponent ),
-                                                        0 );
-                }
-
-                NodeMatrixDataComponent lNodeTransform{};
-                lNodeTransform.Transform = aComponent.Matrix;
-                aEntity.IfExists<sSkeletonComponent>(
-                    [&]( auto &l_SkeletonComponent )
-                    {
-                        lNodeTransform.JointCount = l_SkeletonComponent.BoneCount;
-                        for( uint32_t i = 0; i < l_SkeletonComponent.BoneCount; i++ )
-                            lNodeTransform.Joints[i] = l_SkeletonComponent.JointMatrices[i];
-                    } );
-
-                auto &lNodeDescriptor = aEntity.Get<NodeDescriptorComponent>();
-                lNodeDescriptor.UniformBuffer->Write( lNodeTransform );
-            } );
-    }
-
 } // namespace SE::Core

@@ -9,11 +9,12 @@
 #include "Scene/Components.h"
 #include "Scene/Scene.h"
 
-#include "ASceneRenderer.h"
+#include "Renderer/ASceneRenderer.h"
+#include "Renderer/SceneRenderData.h"
+
 #include "CoordinateGridRenderer.h"
 #include "MeshRenderer.h"
 #include "ParticleSystemRenderer.h"
-#include "SceneRenderData.h"
 #include "VisualHelperRenderer.h"
 
 namespace SE::Core
@@ -71,9 +72,6 @@ namespace SE::Core
             mParticleRenderers = {};
 
         std::unordered_map<Entity, Ref<DescriptorSet>> mMaterials = {};
-
-      protected:
-        void UpdateDescriptorSets();
     };
 
 } // namespace SE::Core

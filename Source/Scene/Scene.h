@@ -77,6 +77,8 @@ namespace SE::Core
         math::mat4 GetProjection();
         math::vec3 GetCameraPosition();
 
+        math::mat4 GetFinalTransformMatrix(Element aElement);
+
         void Update( Timestep ts );
         void UpdateAnimation( Entity &aAnimation, Timestep const &ts );
         void Render();

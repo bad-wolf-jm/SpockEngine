@@ -5,11 +5,12 @@
 #include "Graphics/Vulkan/VkRenderTarget.h"
 #include "Graphics/Vulkan/DescriptorSet.h"
 
-#include "ASceneRenderer.h"
+#include "Renderer/ASceneRenderer.h"
+#include "Renderer/SceneRenderData.h"
+
 #include "CoordinateGridRenderer.h"
 #include "DeferredLightingRenderer.h"
 #include "MeshRenderer.h"
-#include "SceneRenderData.h"
 #include "VisualHelperRenderer.h"
 
 namespace SE::Core
@@ -42,9 +43,6 @@ namespace SE::Core
         MeshRenderer              &GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification );
         MeshRenderer              &GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification );
         ParticleSystemRenderer    &GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification );
-
-      private:
-        void UpdateDescriptorSets();
 
       private:
         ARenderContext           mGeometryContext{};

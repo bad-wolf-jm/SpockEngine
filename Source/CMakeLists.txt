@@ -58,6 +58,9 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Interface/ISampler2D.cpp
     Graphics/Interface/IRenderTarget.cpp
 
+    Renderer/ASceneRenderer.cpp
+    Renderer/SceneRenderData.cpp
+
     Scene/Primitives/Primitives.cpp
     Scene/Primitives/Arrow.cpp
     Scene/Visualizers/Wall2D.cpp
@@ -65,13 +68,10 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/VertexTransform.cu
     Scene/MaterialSystem/MaterialSystem.cpp
     Scene/Components/VisualHelpers.cpp
-    Scene/Renderer/ASceneRenderer.cpp
     Scene/Renderer/MeshRenderer.cpp
     Scene/Renderer/CoordinateGridRenderer.cpp
     Scene/Renderer/ParticleSystemRenderer.cpp
     Scene/Renderer/VisualHelperLineRenderer.cpp
-    Scene/Renderer/SceneRenderData.cpp
-    # Scene/Renderer/SceneRenderer.cpp
     Scene/Renderer/ForwardSceneRenderer.cpp
     Scene/Renderer/DeferredSceneRenderer.cpp
     Scene/Renderer/DeferredLightingRenderer.cpp

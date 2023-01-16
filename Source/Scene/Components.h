@@ -355,7 +355,7 @@ namespace SE::Core::EntityComponentSystem::Components
         sAmbientLightingComponent( const sAmbientLightingComponent & ) = default;
     };
 
-    enum class eLightType : uint32_t
+    enum class eLightType : uint8_t
     {
         DIRECTIONAL = 0,
         SPOTLIGHT   = 1,

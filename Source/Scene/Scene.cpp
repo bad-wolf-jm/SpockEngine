@@ -269,6 +269,13 @@ namespace SE::Core
         return l_CameraPosition;
     }
 
+    math::mat4 Scene::GetFinalTransformMatrix( Element aElement )
+    {
+        auto &lUUID = aElement.Get<sUUID>().mValue;
+        if( mTransformCache.find( lUUID ) != mTransformCache.end() ) return mTransformCache[lUUID];
+        return math::mat4( 1.0f );
+    }
+
     Scene::Element Scene::Create( std::string a_Name, Element a_Parent ) { return mRegistry.CreateEntity( a_Parent, a_Name ); }
 
     Scene::Element Scene::CreateEntity() { return mRegistry.CreateEntity(); }

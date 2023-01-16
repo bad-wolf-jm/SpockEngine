@@ -13,7 +13,7 @@
 #include "Core/Optix/OptixModule.h"
 #include "Core/Optix/OptixShaderBindingTable.h"
 
-#include "Scene/Renderer/ASceneRenderer.h"
+#include "Renderer/ASceneRenderer.h"
 
 /*! \namespace osc - Optix Siggraph Course */
 namespace SE::Core

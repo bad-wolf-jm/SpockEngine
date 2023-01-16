@@ -51,16 +51,6 @@ layout( set = 0, binding = 0 ) uniform UBO
 }
 ubo;
 
-#define MAX_NUM_JOINTS 256
-
-layout( set = 2, binding = 0 ) uniform UBONode
-{
-    mat4 matrix;
-    mat4 jointMatrix[MAX_NUM_JOINTS];
-    float jointCount;
-}
-node;
-
 layout( location = 0 ) out vec3 outWorldPos;
 layout( location = 1 ) out vec3 outNormal;
 layout( location = 2 ) out vec2 outUV0;
