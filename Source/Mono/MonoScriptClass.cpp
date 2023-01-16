@@ -17,7 +17,7 @@
 #ifdef WIN32_LEAN_AND_MEAN
 #    undef WIN32_LEAN_AND_MEAN
 #endif
-#include <FileWatch.hpp>
+#include "Core/FileWatch.hpp"
 
 #include "EntityRegistry.h"
 #include "InternalCalls.h"
