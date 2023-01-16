@@ -8,7 +8,6 @@
 
 namespace SE::Core
 {
-
     class ASceneRenderer
     {
       public:
@@ -57,6 +56,11 @@ namespace SE::Core
         float      mExposure     = 4.5f;
         float      mGamma        = 2.2f;
         math::vec4 mAmbientLight = { 1.0f, 1.0f, 1.0f, 0.0001f };
+
+      private:
+        std::vector<sLightVisualizationHelper> mLightGizmos{};
+
+        std::unordered_map<MaterialShaderCreateInfo, std::vector<sStaticMeshComponent>, MaterialShaderCreateInfoHash> mOpaqueMeshQueue{};
     };
 
 } // namespace SE::Core

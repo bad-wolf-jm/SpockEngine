@@ -14,8 +14,8 @@
 #include "Core/Logging.h"
 #include "Core/Resource.h"
 
-#include "MeshRenderer.h"
-#include "ParticleSystemRenderer.h"
+// #include "MeshRenderer.h"
+// #include "ParticleSystemRenderer.h"
 
 namespace SE::Core
 {
@@ -46,4 +46,12 @@ namespace SE::Core
         Intensity       = aSpec.mIntensity;
         Cone            = math::cos( math::radians( aSpec.mCone / 2 ) );
     }
+
+    sLightVisualizationHelper::sLightVisualizationHelper( eLightType aType, uint64_t aLightDataIndex, math::mat4 aMatrix )
+        : mType{ aType }
+        , mLightDataIndex{ aLightDataIndex }
+        , mMatrix{ aMatrix }
+    {
+    }
+
 } // namespace SE::Core
