@@ -44,6 +44,25 @@ namespace SE::Core
         mOutputHeight = aOutputHeight;
     }
 
+    void ASceneRenderer::AddLightGizmo( mat4 const &aTransform, sLightComponent &aLightComponent )
+    {
+        switch( aLightComponent.mType )
+        {
+        case eLightType::DIRECTIONAL:
+            mDirectionalLights.emplace_back( aLightComponent, aTransform );
+            mLightGizmos.emplace_back( eLightType::DIRECTIONAL, mDirectionalLights.size() - 1, aTransform );
+            break;
+        case eLightType::POINT_LIGHT:
+            mPointLights.emplace_back( aLightComponent, aTransform );
+            mLightGizmos.emplace_back( eLightType::POINT_LIGHT, mPointLights.size() - 1, aTransform );
+            break;
+        case eLightType::SPOTLIGHT:
+            mSpotlights.emplace_back( aLightComponent, aTransform );
+            mLightGizmos.emplace_back( eLightType::SPOTLIGHT, mSpotlights.size() - 1, aTransform );
+            break;
+        }
+    }
+
     void ASceneRenderer::Update( Ref<Scene> aScene )
     {
         SE_PROFILE_FUNCTION( "FOO" );
@@ -67,27 +86,7 @@ namespace SE::Core
             {
                 mat4 lTransformMatrix = mScene->GetFinalTransformMatrix( aEntity );
 
-                switch( aComponent.mType )
-                {
-                case eLightType::DIRECTIONAL:
-                {
-                    mDirectionalLights.emplace_back( aComponent, lTransformMatrix );
-                    mLightGizmos.emplace_back( eLightType::DIRECTIONAL, mDirectionalLights.size() - 1, lTransformMatrix );
-                    break;
-                }
-                case eLightType::POINT_LIGHT:
-                {
-                    mPointLights.emplace_back( aComponent, lTransformMatrix );
-                    mLightGizmos.emplace_back( eLightType::POINT_LIGHT, mPointLights.size() - 1, lTransformMatrix );
-                    break;
-                }
-                case eLightType::SPOTLIGHT:
-                {
-                    mSpotlights.emplace_back( aComponent, lTransformMatrix );
-                    mLightGizmos.emplace_back( eLightType::SPOTLIGHT, mSpotlights.size() - 1, lTransformMatrix );
-                    break;
-                }
-                }
+                AddLightGizmo( lTransformMatrix, aComponent );
             } );
 
         mOpaqueMeshQueue.clear();

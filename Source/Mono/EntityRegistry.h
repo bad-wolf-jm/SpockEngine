@@ -97,9 +97,6 @@ namespace SE::Core
     MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sNodeTransformComponent &aComponent );
     void               UnmarshallComponent( MonoScriptInstance &aMonoType, sNodeTransformComponent &aComponent );
 
-    MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sTransformMatrixComponent &aComponent );
-    void               UnmarshallComponent( MonoScriptInstance &aMonoType, sTransformMatrixComponent &aComponent );
-
     MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sTag &aComponent );
     void               UnmarshallComponent( MonoScriptInstance &aMonoType, sTag &aComponent );
 

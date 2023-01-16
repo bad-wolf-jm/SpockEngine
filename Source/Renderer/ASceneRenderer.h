@@ -58,10 +58,18 @@ namespace SE::Core
         math::vec4 mAmbientLight = { 1.0f, 1.0f, 1.0f, 0.0001f };
 
       protected:
-        std::vector<sLightGizmo>         mLightGizmos{};
-        std::vector<sMeshRenderData>     mOpaqueMeshQueue{};
-        std::vector<sMeshRenderData>     mTransparentMeshQueue{};
+        // Helpers for light position and intensity
+        std::vector<sLightGizmo> mLightGizmos{};
+
+        // Mesh queues
+        std::vector<sMeshRenderData> mOpaqueMeshQueue{};
+        std::vector<sMeshRenderData> mTransparentMeshQueue{};
+
+        // Point cloud visualizer queue
         std::vector<sParticleRenderData> mParticleQueue{};
+
+      private:
+        void AddLightGizmo(math::mat4 const& aTransform, sLightComponent &aLightComponent);
     };
 
 } // namespace SE::Core

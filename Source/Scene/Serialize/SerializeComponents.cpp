@@ -13,7 +13,6 @@ namespace SE::Core
         { typeid(sActorComponent).name(),             "ACTOR" },
         { typeid(sAnimatedTransformComponent).name(), "ANIMATED_TRANSFORM" },
         { typeid(sNodeTransformComponent).name(),     "NODE_TRANSFORM" },
-        { typeid(sTransformMatrixComponent).name(),   "TRANSFORM_MATRIX" },
         { typeid(sStaticMeshComponent).name(),        "STATIC_MESH" },
         { typeid(sParticleSystemComponent).name(),    "PARTICLE_SYSTEM" },
         { typeid(sParticleShaderComponent).name(),    "PARTICLE_SHADER" },
@@ -157,10 +156,10 @@ namespace SE::Core
         aComponent.mMatrix = ReadMatrix( aNode["mMatrix"] );
     }
 
-    void ReadComponent( sTransformMatrixComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
-    {
-        aComponent.Matrix = ReadMatrix( aNode["mMatrix"] );
-    }
+    // void ReadComponent( sTransformMatrixComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
+    // {
+    //     aComponent.Matrix = ReadMatrix( aNode["mMatrix"] );
+    // }
 
     void ReadComponent( sStaticMeshComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
@@ -366,16 +365,16 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void WriteComponent( ConfigurationWriter &aOut, sTransformMatrixComponent const &aComponent )
-    {
-        WriteTypeTag<sTransformMatrixComponent>( aOut );
-        aOut.BeginMap( true );
-        {
-            aOut.WriteKey( "mMatrix" );
-            aOut.Write( aComponent.Matrix );
-        }
-        aOut.EndMap();
-    }
+    // void WriteComponent( ConfigurationWriter &aOut, sTransformMatrixComponent const &aComponent )
+    // {
+    //     WriteTypeTag<sTransformMatrixComponent>( aOut );
+    //     aOut.BeginMap( true );
+    //     {
+    //         aOut.WriteKey( "mMatrix" );
+    //         aOut.Write( aComponent.Matrix );
+    //     }
+    //     aOut.EndMap();
+    // }
 
     void WriteComponent( ConfigurationWriter &aOut, sStaticMeshComponent const &aComponent, std::string const &aMeshPath )
     {

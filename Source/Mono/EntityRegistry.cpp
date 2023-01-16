@@ -25,18 +25,6 @@ namespace SE::Core
         aComponent = sNodeTransformComponent( lFieldValue );
     }
 
-    MonoScriptInstance MarshallComponent( MonoScriptClass &lMonoType, sTransformMatrixComponent &aComponent )
-    {
-        return lMonoType.Instantiate( aComponent.Matrix );
-    }
-
-    void UnmarshallComponent( MonoScriptInstance &aMonoType, sTransformMatrixComponent &aComponent )
-    {
-        math::mat4 lFieldValue = aMonoType.GetFieldValue<math::mat4>( "mMatrix" );
-
-        aComponent = sTransformMatrixComponent( lFieldValue );
-    }
-
     MonoScriptInstance MarshallComponent( MonoScriptClass &lMonoType, sTag &aComponent )
     {
         MonoString *lManagedSTagValue = MonoScriptEngine::NewString( aComponent.mValue );

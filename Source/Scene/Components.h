@@ -209,15 +209,6 @@ namespace SE::Core::EntityComponentSystem::Components
         sLocalTransformComponent( math::mat4 a_Matrix ) { mMatrix = a_Matrix; };
     };
 
-    struct sTransformMatrixComponent
-    {
-        math::mat4 Matrix = math::mat4( 1.0f );
-
-        sTransformMatrixComponent()                                    = default;
-        sTransformMatrixComponent( const sTransformMatrixComponent & ) = default;
-        sTransformMatrixComponent( math::mat4 a_Matrix ) { Matrix = a_Matrix; };
-    };
-
     struct sStaticTransformComponent
     {
         math::mat4 Matrix = math::mat4( 1.0f );

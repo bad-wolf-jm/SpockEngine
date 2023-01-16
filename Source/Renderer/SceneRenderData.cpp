@@ -41,7 +41,7 @@ namespace SE::Core
         LookAtDirection = mat3( aTransform ) * vec3{ 0.0f, -1.0f, 0.0f };
         Color           = aSpec.mColor;
         Intensity       = aSpec.mIntensity;
-        Cone            = cos( radians( aSpec.mCone / 2 ) );
+        Cone            = math::cos( radians( aSpec.mCone / 2 ) );
     }
 
     sLightGizmo::sLightGizmo( eLightType aType, uint64_t aLightDataIndex, mat4 aMatrix )

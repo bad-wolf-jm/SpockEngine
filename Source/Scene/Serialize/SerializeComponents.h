@@ -62,7 +62,6 @@ namespace SE::Core
                         std::vector<sImportedAnimationSampler> &aInterpolationData );
     void ReadComponent( sAnimatedTransformComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sNodeTransformComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sTransformMatrixComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sStaticMeshComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sParticleSystemComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sParticleShaderComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
@@ -84,7 +83,6 @@ namespace SE::Core
     void WriteComponent( ConfigurationWriter &aOut, sActorComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sAnimatedTransformComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sNodeTransformComponent const &aComponent );
-    void WriteComponent( ConfigurationWriter &aOut, sTransformMatrixComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sStaticMeshComponent const &aComponent, std::string const &aMeshPath );
     void WriteComponent( ConfigurationWriter &aOut, sParticleSystemComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sParticleShaderComponent const &aComponent );
