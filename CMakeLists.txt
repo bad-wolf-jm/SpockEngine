@@ -103,15 +103,6 @@ FetchContent_MakeAvailable(sol2)
 include_directories(${sol2_SOURCE_DIR}/include)
 set(SE_EXTRA_INCLUDES ${sol2_SOURCE_DIR}/include ${SE_EXTRA_INCLUDES})
 
-set (BuildTests OFF CACHE INTERNAL "Turn off tests")
-FetchContent_Declare(
-  filewatch
-  GIT_REPOSITORY https://github.com/ThomasMonkman/filewatch.git
-  GIT_TAG        master )
-FetchContent_MakeAvailable(filewatch)
-include_directories(${filewatch_SOURCE_DIR})
-set(SE_EXTRA_INCLUDES ${filewatch_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
-
 FetchContent_Declare(
   tinygltf
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git

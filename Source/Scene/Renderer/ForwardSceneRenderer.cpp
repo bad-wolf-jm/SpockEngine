@@ -115,7 +115,6 @@ namespace SE::Core
         CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
         lCoordinateGridRendererCreateInfo.RenderPass = mGeometryContext.GetRenderPass();
         mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mGeometryContext, lCoordinateGridRendererCreateInfo );
-        mVisualHelperRenderer   = New<VisualHelperRenderer>( mGraphicContext, mGeometryContext.GetRenderPass() );
     }
 
     MeshRenderer &ForwardSceneRenderer::GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification )

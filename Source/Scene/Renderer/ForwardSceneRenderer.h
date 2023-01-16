@@ -15,7 +15,6 @@
 #include "CoordinateGridRenderer.h"
 #include "MeshRenderer.h"
 #include "ParticleSystemRenderer.h"
-#include "VisualHelperRenderer.h"
 
 namespace SE::Core
 {
@@ -60,7 +59,6 @@ namespace SE::Core
         ARenderContext     mGeometryContext{};
 
         Ref<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;
-        Ref<VisualHelperRenderer>   mVisualHelperRenderer   = nullptr;
 
         Ref<VkGpuBuffer> mCameraUniformBuffer    = nullptr;
         Ref<VkGpuBuffer> mShaderParametersBuffer = nullptr;

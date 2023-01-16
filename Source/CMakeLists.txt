@@ -47,7 +47,6 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Vulkan/VkGpuBuffer.cpp
     Graphics/Vulkan/VkTexture2D.cpp
     Graphics/Vulkan/VkSampler2D.cpp
-    # Graphics/Vulkan/VkRenderTarget.cpp
     Graphics/Vulkan/VkGraphicContext.cpp
     Graphics/Vulkan/VkPipeline.cpp
     Graphics/Vulkan/VkCommand.cpp
@@ -67,16 +66,12 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/Scene.cpp
     Scene/VertexTransform.cu
     Scene/MaterialSystem/MaterialSystem.cpp
-    Scene/Components/VisualHelpers.cpp
     Scene/Renderer/MeshRenderer.cpp
     Scene/Renderer/CoordinateGridRenderer.cpp
     Scene/Renderer/ParticleSystemRenderer.cpp
-    Scene/Renderer/VisualHelperLineRenderer.cpp
     Scene/Renderer/ForwardSceneRenderer.cpp
     Scene/Renderer/DeferredSceneRenderer.cpp
     Scene/Renderer/DeferredLightingRenderer.cpp
-    Scene/Renderer/VisualHelperRenderer.cpp
-    Scene/Renderer/VisualHelperMeshRenderer.cpp
     Scene/Serialize/FileIO.cpp
     Scene/Serialize/AssetFile.cpp
     Scene/Serialize/SerializeComponents.cpp

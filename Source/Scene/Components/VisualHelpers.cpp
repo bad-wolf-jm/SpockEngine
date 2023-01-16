@@ -38,12 +38,12 @@ namespace SE::Core::EntityComponentSystem::Components
 
     void CubeMeshData::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )
     {
-        math::mat4 l_ScalingTransform = math::Scale( math::mat4( 1.0f ), math::vec3{ SideLength, SideLength, SideLength } );
-        SE::Core::Primitives::VertexBufferData l_Cube           = SE::Core::Primitives::CreateCube();
-        std::vector<SimpleVertexData>          l_CubeVertexData = ToSimpleVertex( l_Cube.Vertices, l_ScalingTransform );
+        math::mat4 lScalingTransform = math::Scale( math::mat4( 1.0f ), math::vec3{ SideLength, SideLength, SideLength } );
+        SE::Core::Primitives::VertexBufferData lCube           = SE::Core::Primitives::CreateCube();
+        std::vector<SimpleVertexData>          lCubeVertexData = ToSimpleVertex( lCube.Vertices, lScalingTransform );
 
-        Mesh.Vertices = New<VkGpuBuffer>( a_GraphicContext, l_CubeVertexData, eBufferType::VERTEX_BUFFER, false, true, true, true );
-        Mesh.Indices  = New<VkGpuBuffer>( a_GraphicContext, l_Cube.Indices, eBufferType::INDEX_BUFFER, false, true, true, true );
+        Mesh.Vertices = New<VkGpuBuffer>( a_GraphicContext, lCubeVertexData, eBufferType::VERTEX_BUFFER, false, true, true, true );
+        Mesh.Indices  = New<VkGpuBuffer>( a_GraphicContext, lCube.Indices, eBufferType::INDEX_BUFFER, false, true, true, true );
     }
 
     void ConeMeshData::UpdateMesh( Ref<VkGraphicContext> a_GraphicContext )

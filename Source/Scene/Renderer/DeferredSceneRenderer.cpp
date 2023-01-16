@@ -110,7 +110,6 @@ namespace SE::Core
         CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
         lCoordinateGridRendererCreateInfo.RenderPass = mLightingContext.GetRenderPass();
         mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mLightingContext, lCoordinateGridRendererCreateInfo );
-        mVisualHelperRenderer   = New<VisualHelperRenderer>( mGraphicContext, mLightingContext.GetRenderPass() );
     }
 
     Ref<VkTexture2D> DeferredRenderer::GetOutputImage()
