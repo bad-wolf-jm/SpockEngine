@@ -65,7 +65,7 @@ namespace SE::Core
 
     void ASceneRenderer::Update( Ref<Scene> aScene )
     {
-        SE_PROFILE_FUNCTION( "FOO" );
+        SE_PROFILE_SCOPE( "FOO" );
 
         mScene = aScene;
 
