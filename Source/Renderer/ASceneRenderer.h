@@ -69,7 +69,7 @@ namespace SE::Core
         std::vector<sParticleRenderData> mParticleQueue{};
 
       private:
-        void AddLightGizmo(math::mat4 const& aTransform, sLightComponent &aLightComponent);
+        void AddLight(math::mat4 const& aTransform, sLightComponent &aLightComponent);
     };
 
 } // namespace SE::Core
