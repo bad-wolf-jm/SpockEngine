@@ -108,31 +108,6 @@ namespace SE::Core
         sLightVisualizationHelper( eLightType aType, uint64_t aLightDataIndex, math::mat4 aMatrix );
     };
 
-// #define MAX_NUM_JOINTS 512
-    struct NodeMatrixDataComponent
-    {
-        math::mat4 Transform = math::mat4( 1.0f );
-        // math::mat4 Joints[MAX_NUM_JOINTS]{};
-        // float      JointCount = 0;
-    };
-
-    struct NodeDescriptorComponent
-    {
-        Ref<VkGpuBuffer>   UniformBuffer = nullptr;
-        Ref<DescriptorSet> Descriptors   = nullptr;
-
-        NodeDescriptorComponent()                                  = default;
-        NodeDescriptorComponent( const NodeDescriptorComponent & ) = default;
-    };
-
-    struct MaterialDescriptorComponent
-    {
-        Ref<DescriptorSet> Descriptors = nullptr;
-
-        MaterialDescriptorComponent()                                      = default;
-        MaterialDescriptorComponent( const MaterialDescriptorComponent & ) = default;
-    };
-
     struct MaterialShaderCreateInfo
     {
         bool  Opaque     = false;

@@ -14,9 +14,6 @@
 #include "Core/Logging.h"
 #include "Core/Resource.h"
 
-// #include "MeshRenderer.h"
-// #include "ParticleSystemRenderer.h"
-
 namespace SE::Core
 {
 
