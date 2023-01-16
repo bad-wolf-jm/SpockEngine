@@ -31,23 +31,23 @@ namespace SE::Graphics
         math::mat4 Projection = math::mat4( 1.0f );
 
         VisualHelperRenderer() = default;
-        VisualHelperRenderer( Ref<VkGraphicContext> a_GraphicContext, Ref<sVkAbstractRenderPassObject> aRenderPass );
+        VisualHelperRenderer( Ref<VkGraphicContext> aGraphicContext, Ref<sVkAbstractRenderPassObject> aRenderPass );
 
         ~VisualHelperRenderer() = default;
 
-        void Render( math::mat4 a_Transform, ArrowMeshData &a_Arrow, math::vec3 a_Color, ARenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, ConeMeshData &a_Arrow, math::vec3 a_Color, ARenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, CircleMeshData &a_Arrow, math::vec3 a_Color, ARenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, CubeMeshData &a_Arrow, math::vec3 a_Color, ARenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, PyramidMeshData &a_Arrow, math::vec3 a_Color, ARenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, SurfaceMeshData &a_Arrow, math::vec3 a_Color, ARenderContext &aRenderContext );
+        void Render( math::mat4 aTransform, ArrowMeshData &aArrow, math::vec3 aColor, ARenderContext &aRenderContext );
+        void Render( math::mat4 aTransform, ConeMeshData &aArrow, math::vec3 aColor, ARenderContext &aRenderContext );
+        void Render( math::mat4 aTransform, CircleMeshData &aArrow, math::vec3 aColor, ARenderContext &aRenderContext );
+        void Render( math::mat4 aTransform, CubeMeshData &aArrow, math::vec3 aColor, ARenderContext &aRenderContext );
+        void Render( math::mat4 aTransform, PyramidMeshData &aArrow, math::vec3 aColor, ARenderContext &aRenderContext );
+        void Render( math::mat4 aTransform, SurfaceMeshData &aArrow, math::vec3 aColor, ARenderContext &aRenderContext );
 
-        void Render( math::mat4 a_Transform, AxesComponent &a_AxesComponent, ARenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, PointLightHelperComponent &a_AxesComponent, ARenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, DirectionalLightHelperComponent &a_AxesComponent, ARenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, SpotlightHelperComponent &a_AxesComponent, ARenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, FieldOfViewHelperComponent &a_AxesComponent, ARenderContext &aRenderContext );
-        void Render( math::mat4 a_Transform, CameraHelperComponent &a_AxesComponent, ARenderContext &aRenderContext );
+        void Render( math::mat4 aTransform, AxesComponent &aAxesComponent, ARenderContext &aRenderContext );
+        void Render( math::mat4 aTransform, PointLightHelperComponent &aAxesComponent, ARenderContext &aRenderContext );
+        void Render( math::mat4 aTransform, DirectionalLightHelperComponent &aAxesComponent, ARenderContext &aRenderContext );
+        void Render( math::mat4 aTransform, SpotlightHelperComponent &aAxesComponent, ARenderContext &aRenderContext );
+        void Render( math::mat4 aTransform, FieldOfViewHelperComponent &aAxesComponent, ARenderContext &aRenderContext );
+        void Render( math::mat4 aTransform, CameraHelperComponent &aAxesComponent, ARenderContext &aRenderContext );
 
       private:
         Ref<VkGraphicContext> mGraphicContext;

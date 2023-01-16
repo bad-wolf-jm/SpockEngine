@@ -9,9 +9,9 @@ namespace SE::Core
 
     std::vector<sPushConstantRange> CoordinateGridRenderer::GetPushConstantLayout() { return {}; };
 
-    CoordinateGridRenderer::CoordinateGridRenderer( Ref<VkGraphicContext> a_GraphicContext, ARenderContext &aRenderContext,
+    CoordinateGridRenderer::CoordinateGridRenderer( Ref<VkGraphicContext> aGraphicContext, ARenderContext &aRenderContext,
                                                     CoordinateGridRendererCreateInfo aCreateInfo )
-        : SceneRenderPipeline<EmptyVertexData>( a_GraphicContext )
+        : SceneRenderPipeline<EmptyVertexData>( aGraphicContext )
         , Spec{ aCreateInfo }
     {
         SceneRenderPipelineCreateInfo lCreateInfo{};
@@ -30,13 +30,13 @@ namespace SE::Core
 
         mCameraBuffer =
             New<VkGpuBuffer>( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraViewUniforms ) );
-        mCameraDescriptors = New<DescriptorSet>( a_GraphicContext, PipelineLayout );
+        mCameraDescriptors = New<DescriptorSet>( aGraphicContext, PipelineLayout );
         mCameraDescriptors->Write( mCameraBuffer, false, 0, sizeof( CameraViewUniforms ), 0 );
     }
 
-    void CoordinateGridRenderer::Render( math::mat4 a_Projection, math::mat4 a_View, ARenderContext &aRenderContext )
+    void CoordinateGridRenderer::Render( math::mat4 aProjection, math::mat4 aView, ARenderContext &aRenderContext )
     {
-        CameraViewUniforms l_View{ a_View, a_Projection };
+        CameraViewUniforms l_View{ aView, aProjection };
 
         mCameraBuffer->Write( l_View );
         aRenderContext.Bind( Pipeline );

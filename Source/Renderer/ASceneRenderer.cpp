@@ -20,23 +20,23 @@ namespace SE::Core
     {
     }
 
-    void ASceneRenderer::SetProjection( math::mat4 aProjectionMatrix )
+    void ASceneRenderer::SetProjection( mat4 aProjectionMatrix )
     {
         mProjectionMatrix = aProjectionMatrix;
         mProjectionMatrix[1][1] *= -1.0f;
     }
 
-    void ASceneRenderer::SetView( math::mat4 aViewMatrix )
+    void ASceneRenderer::SetView( mat4 aViewMatrix )
     {
         mViewMatrix     = aViewMatrix;
-        mCameraPosition = math::vec3( math::Inverse( mViewMatrix )[3] );
+        mCameraPosition = vec3( Inverse( mViewMatrix )[3] );
     }
 
     void ASceneRenderer::SetGamma( float aGamma ) { mGamma = aGamma; }
 
     void ASceneRenderer::SetExposure( float aExposure ) { mExposure = aExposure; }
 
-    void ASceneRenderer::SetAmbientLighting( math::vec4 aAmbientLight ) { mAmbientLight = aAmbientLight; }
+    void ASceneRenderer::SetAmbientLighting( vec4 aAmbientLight ) { mAmbientLight = aAmbientLight; }
 
     void ASceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
@@ -55,7 +55,7 @@ namespace SE::Core
         if( mScene->Environment.Has<sAmbientLightingComponent>() )
         {
             auto &lAmbientLightComponent = mScene->Environment.Get<sAmbientLightingComponent>();
-            SetAmbientLighting( math::vec4( lAmbientLightComponent.Color, lAmbientLightComponent.Intensity ) );
+            SetAmbientLighting( vec4( lAmbientLightComponent.Color, lAmbientLightComponent.Intensity ) );
         }
 
         mDirectionalLights.clear();

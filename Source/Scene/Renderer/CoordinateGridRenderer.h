@@ -34,11 +34,11 @@ namespace SE::Core
     class CoordinateGridRenderer : public SE::Core::SceneRenderPipeline<EmptyVertexData>
     {
       public:
-        CoordinateGridRenderer( Ref<VkGraphicContext> mGraphicContext, ARenderContext &a_RenderContext,
-                                CoordinateGridRendererCreateInfo a_CreateInfo );
+        CoordinateGridRenderer( Ref<VkGraphicContext> mGraphicContext, ARenderContext &aRenderContext,
+                                CoordinateGridRendererCreateInfo aCreateInfo );
         ~CoordinateGridRenderer() = default;
 
-        void Render( math::mat4 a_Projection, math::mat4 a_View, ARenderContext &aRenderContext );
+        void Render( math::mat4 aProjection, math::mat4 aView, ARenderContext &aRenderContext );
 
         CoordinateGridRendererCreateInfo Spec;
         Ref<DescriptorSetLayout>         PipelineLayout;
