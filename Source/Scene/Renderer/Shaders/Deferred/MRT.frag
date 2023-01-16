@@ -7,7 +7,6 @@
 layout( location = 0 ) in vec3 inWorldPos;
 layout( location = 1 ) in vec3 inNormal;
 layout( location = 2 ) in vec2 inUV0;
-layout( location = 3 ) in vec2 inUV1;
 
 // layout (location = 0) in vec3 inNormal;
 // layout (location = 1) in vec2 inUV;
@@ -142,18 +141,18 @@ void main()
     if( lMaterial.mNormalTextureID == 0 )
         tnorm = normalize( inNormal );
     else
-        tnorm = getNormalFromMap( gTextures[lMaterial.mNormalTextureID], lMaterial.mNormalUVChannel == 0 ? inUV0 : inUV1 );
+        tnorm = getNormalFromMap( gTextures[lMaterial.mNormalTextureID], inUV0 );
 
-    vec4  lSampledValue = texture( gTextures[lMaterial.mMetalnessTextureID], lMaterial.mMetalnessUVChannel == 0 ? inUV0 : inUV1 );
+    vec4  lSampledValue = texture( gTextures[lMaterial.mMetalnessTextureID], inUV0 );
     float metallic      = lSampledValue.r * clamp( lMaterial.mMetallicFactor, 0.0, 1.0 );
     float roughness     = lSampledValue.g * clamp( lMaterial.mRoughnessFactor, c_MinRoughness, 1.0 );
-    float ao = texture( gTextures[lMaterial.mOcclusionTextureID], ( lMaterial.mOcclusionUVChannel == 0 ? inUV0 : inUV1 ) ).r *
+    float ao = texture( gTextures[lMaterial.mOcclusionTextureID], inUV0 ).r *
                lMaterial.mOcclusionStrength;
     metallic  = lSampledValue.r * lMaterial.mMetallicFactor;
     roughness = lSampledValue.g * lMaterial.mRoughnessFactor;
 
     outNormal = vec4( tnorm, 1.0 );
-    outAlbedo = texture( gTextures[lMaterial.mBaseColorTextureID], lMaterial.mBaseColorUVChannel == 0 ? inUV0 : inUV1 ) *
+    outAlbedo = texture( gTextures[lMaterial.mBaseColorTextureID], inUV0) *
                 lMaterial.mBaseColorFactor;
     // outAlbedo = outNormal;
     outOcclusionMetalRough = vec4( ao, metallic, roughness, lMaterial.mOcclusionStrength );

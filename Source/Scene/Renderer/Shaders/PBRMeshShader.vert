@@ -73,7 +73,6 @@ void main()
     outWorldPos = vec3(inPos);
     outNormal   = inNormal;
     outUV0      = inUV0;
-    outUV1      = inUV1;
 
     gl_Position = ubo.projection * ubo.view * vec4(inPos, 1.0);
 }

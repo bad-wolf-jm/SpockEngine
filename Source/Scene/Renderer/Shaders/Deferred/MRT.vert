@@ -72,5 +72,4 @@ void main()
     outWorldPos = inPos;
     outNormal   = inNormal;
     outUV0      = inUV0;
-    outUV1      = inUV1;
 }

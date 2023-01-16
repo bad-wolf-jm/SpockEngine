@@ -4,7 +4,6 @@
 layout( location = 0 ) in vec3 inWorldPos;
 layout( location = 1 ) in vec3 inNormal;
 layout( location = 2 ) in vec2 inUV0;
-layout( location = 3 ) in vec2 inUV1;
 
 #define MAX_NUM_LIGHTS 64
 
@@ -242,25 +241,25 @@ void main()
 
     vec4 lBaseColor = lMaterial.mBaseColorFactor;
     lBaseColor =
-        SRGBtoLINEAR( texture( gTextures[lMaterial.mBaseColorTextureID], lMaterial.mBaseColorUVChannel == 0 ? inUV0 : inUV1 ) ) *
+        SRGBtoLINEAR( texture( gTextures[lMaterial.mBaseColorTextureID], inUV0 ) ) *
         lMaterial.mBaseColorFactor;
 
     float metallic      = clamp( lMaterial.mMetallicFactor, 0.0, 1.0 );
     float roughness     = clamp( lMaterial.mRoughnessFactor, c_MinRoughness, 1.0 );
-    vec4  lSampledValue = texture( gTextures[lMaterial.mMetalnessTextureID], lMaterial.mMetalnessUVChannel == 0 ? inUV0 : inUV1 );
+    vec4  lSampledValue = texture( gTextures[lMaterial.mMetalnessTextureID], inUV0 );
     metallic            = lSampledValue.r * lMaterial.mMetallicFactor;
     roughness           = lSampledValue.g * lMaterial.mRoughnessFactor;
 
     vec3 emissive = vec3( lMaterial.mEmissiveFactor );
     emissive =
-        SRGBtoLINEAR( texture( gTextures[lMaterial.mEmissiveTextureID], lMaterial.mEmissiveUVChannel == 0 ? inUV0 : inUV1 ) ).rgb *
+        SRGBtoLINEAR( texture( gTextures[lMaterial.mEmissiveTextureID], inUV0 ) ).rgb *
         vec3( lMaterial.mEmissiveFactor );
 
     vec3 N;
     if( lMaterial.mNormalTextureID == 0 )
         N = normalize( inNormal );
     else
-        N = getNormalFromMap( gTextures[lMaterial.mNormalTextureID], lMaterial.mNormalUVChannel == 0 ? inUV0 : inUV1 );
+        N = getNormalFromMap( gTextures[lMaterial.mNormalTextureID], inUV0 );
 
     vec3 V = normalize( ubo.camPos - inWorldPos );
 
@@ -303,7 +302,7 @@ void main()
     vec3 ambient   = uboParams.AmbientLightIntensity * uboParams.AmbientLightColor.rgb * lBaseColor.xyz;
     vec3 hdr_color = ambient + Lo;
 
-    float ao  = texture( gTextures[lMaterial.mOcclusionTextureID], ( lMaterial.mOcclusionUVChannel == 0 ? inUV0 : inUV1 ) ).r;
+    float ao  = texture( gTextures[lMaterial.mOcclusionTextureID], inUV0 ).r;
     hdr_color = mix( hdr_color, hdr_color * ao, lMaterial.mOcclusionStrength );
 
     hdr_color = hdr_color + emissive;
