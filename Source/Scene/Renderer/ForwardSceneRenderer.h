@@ -44,11 +44,16 @@ namespace SE::Core
 
       protected:
         MeshRendererCreateInfo     GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification );
+        MeshRendererCreateInfo     GetRenderPipelineCreateInfo( sMeshRenderData &aPipelineSpecification );
         ParticleRendererCreateInfo GetRenderPipelineCreateInfo( sParticleShaderComponent &aPipelineSpecification );
+        ParticleRendererCreateInfo GetRenderPipelineCreateInfo( sParticleRenderData &aPipelineSpecification );
 
         MeshRenderer           &GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification );
+        MeshRenderer           &GetRenderPipeline( sMeshRenderData &aPipelineSpecification );
         MeshRenderer           &GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification );
         ParticleSystemRenderer &GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification );
+        ParticleSystemRenderer &GetRenderPipeline( sParticleRenderData &aPipelineSpecification );
+        ParticleSystemRenderer &GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification );
 
       protected:
         Ref<VkRenderTarget> mGeometryRenderTarget = nullptr;

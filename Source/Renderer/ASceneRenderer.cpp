@@ -52,6 +52,12 @@ namespace SE::Core
 
         if( !mScene ) return;
 
+        if( mScene->Environment.Has<sAmbientLightingComponent>() )
+        {
+            auto &lAmbientLightComponent = mScene->Environment.Get<sAmbientLightingComponent>();
+            SetAmbientLighting( math::vec4( lAmbientLightComponent.Color, lAmbientLightComponent.Intensity ) );
+        }
+
         mDirectionalLights.clear();
         mPointLights.clear();
         mSpotlights.clear();

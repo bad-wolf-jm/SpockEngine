@@ -57,10 +57,10 @@ namespace SE::Core
         float      mGamma        = 2.2f;
         math::vec4 mAmbientLight = { 1.0f, 1.0f, 1.0f, 0.0001f };
 
-      private:
-        std::vector<sLightGizmo>     mLightGizmos{};
-        std::vector<sMeshRenderData> mOpaqueMeshQueue{};
-        std::vector<sMeshRenderData> mTransparentMeshQueue{};
+      protected:
+        std::vector<sLightGizmo>         mLightGizmos{};
+        std::vector<sMeshRenderData>     mOpaqueMeshQueue{};
+        std::vector<sMeshRenderData>     mTransparentMeshQueue{};
         std::vector<sParticleRenderData> mParticleQueue{};
     };
 

@@ -52,6 +52,20 @@ namespace SE::Core
         return lCreateInfo;
     }
 
+    MeshRendererCreateInfo ForwardSceneRenderer::GetRenderPipelineCreateInfo( sMeshRenderData &aPipelineSpecification )
+    {
+        MeshRendererCreateInfo lCreateInfo;
+
+        lCreateInfo.Opaque         = aPipelineSpecification.mOpaque;
+        lCreateInfo.IsTwoSided     = aPipelineSpecification.mIsTwoSided;
+        lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
+        lCreateInfo.VertexShader   = "Shaders\\PBRMeshShader.vert.spv";
+        lCreateInfo.FragmentShader = "Shaders\\PBRMeshShader.frag.spv";
+        lCreateInfo.RenderPass     = mGeometryContext.GetRenderPass();
+
+        return lCreateInfo;
+    }
+
     void ForwardSceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
         sRenderTargetDescription lRenderTargetSpec{};
@@ -119,14 +133,34 @@ namespace SE::Core
         return GetRenderPipeline( lCreateInfo );
     }
 
+    MeshRenderer &ForwardSceneRenderer::GetRenderPipeline( sMeshRenderData &aPipelineSpecification )
+    {
+        MeshRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
+
+        return GetRenderPipeline( lCreateInfo );
+    }
+
+    ParticleSystemRenderer &ForwardSceneRenderer::GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification )
+    {
+        if( mParticleRenderers.find( aPipelineSpecification ) == mParticleRenderers.end() )
+            mParticleRenderers[aPipelineSpecification] =
+                ParticleSystemRenderer( mGraphicContext, mGeometryContext, aPipelineSpecification );
+
+        return mParticleRenderers[aPipelineSpecification];
+    }
+
     ParticleSystemRenderer &ForwardSceneRenderer::GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification )
     {
         ParticleRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 
-        if( mParticleRenderers.find( lCreateInfo ) == mParticleRenderers.end() )
-            mParticleRenderers[lCreateInfo] = ParticleSystemRenderer( mGraphicContext, mGeometryContext, lCreateInfo );
+        return GetRenderPipeline( lCreateInfo );
+    }
 
-        return mParticleRenderers[lCreateInfo];
+    ParticleSystemRenderer &ForwardSceneRenderer::GetRenderPipeline( sParticleRenderData &aPipelineSpecification )
+    {
+        ParticleRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
+
+        return GetRenderPipeline( lCreateInfo );
     }
 
     ParticleRendererCreateInfo ForwardSceneRenderer::GetRenderPipelineCreateInfo( sParticleShaderComponent &aPipelineSpecification )
@@ -140,15 +174,20 @@ namespace SE::Core
         return lCreateInfo;
     }
 
+    ParticleRendererCreateInfo ForwardSceneRenderer::GetRenderPipelineCreateInfo( sParticleRenderData &aPipelineSpecification )
+    {
+        ParticleRendererCreateInfo lCreateInfo;
+        lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
+        lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
+        lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
+        lCreateInfo.RenderPass     = mGeometryContext.GetRenderPass();
+
+        return lCreateInfo;
+    }
+
     void ForwardSceneRenderer::Update( Ref<Scene> aWorld )
     {
         ASceneRenderer::Update( aWorld );
-
-        if( aWorld->Environment.Has<sAmbientLightingComponent>() )
-        {
-            auto &l_AmbientLightComponent = aWorld->Environment.Get<sAmbientLightingComponent>();
-            SetAmbientLighting( math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
-        }
 
         View.PointLightCount = mPointLights.size();
         for( uint32_t i = 0; i < View.PointLightCount; i++ ) View.PointLights[i] = mPointLights[i];
@@ -170,6 +209,8 @@ namespace SE::Core
 
         mCameraUniformBuffer->Write( View );
         mShaderParametersBuffer->Write( Settings );
+
+        // Update pipelines
     }
 
     void ForwardSceneRenderer::Render()
@@ -180,21 +221,10 @@ namespace SE::Core
 
         mScene->GetMaterialSystem()->UpdateDescriptors();
 
-        std::unordered_map<MeshRendererCreateInfo, std::vector<Entity>, MeshRendererCreateInfoHash> lOpaqueMeshQueue{};
-        mScene->ForEach<sStaticMeshComponent, sMaterialShaderComponent>(
-            [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterialData )
-            {
-                auto &lPipelineCreateInfo = GetRenderPipelineCreateInfo( aMaterialData );
-                if( lOpaqueMeshQueue.find( lPipelineCreateInfo ) == lOpaqueMeshQueue.end() )
-                    lOpaqueMeshQueue[lPipelineCreateInfo] = std::vector<Entity>{};
-                lOpaqueMeshQueue[lPipelineCreateInfo].push_back( aEntity );
-            } );
-
         mGeometryContext.BeginRender();
-
-        for( auto &lPipelineData : lOpaqueMeshQueue )
+        for( auto &lPipelineData : mOpaqueMeshQueue )
         {
-            auto &lPipeline = GetRenderPipeline( lPipelineData.first );
+            auto &lPipeline = GetRenderPipeline( lPipelineData );
             if( lPipeline.Pipeline )
                 mGeometryContext.Bind( lPipeline.Pipeline );
             else
@@ -202,64 +232,50 @@ namespace SE::Core
             mGeometryContext.Bind( mSceneDescriptors, 0, -1 );
             mGeometryContext.Bind( mScene->GetMaterialSystem()->GetDescriptorSet(), 1, -1 );
 
-            for( auto &lMeshInformation : lPipelineData.second )
-            {
-                auto &lStaticMeshData = lMeshInformation.Get<sStaticMeshComponent>();
-                if( !lStaticMeshData.mTransformedBuffer || !lStaticMeshData.mIndexBuffer ) continue;
-                mGeometryContext.Bind( lStaticMeshData.mTransformedBuffer, lStaticMeshData.mIndexBuffer );
+            if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
+            mGeometryContext.Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
 
-                MeshRenderer::MaterialPushConstants lMaterialPushConstants{};
-                lMaterialPushConstants.mMaterialID = lMeshInformation.Get<sMaterialComponent>().mMaterialID;
+            MeshRenderer::MaterialPushConstants lMaterialPushConstants{};
+            lMaterialPushConstants.mMaterialID = lPipelineData.mMaterialID;
 
-                mGeometryContext.PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
+            mGeometryContext.PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
 
-                auto &lStaticMeshComponent = lMeshInformation.Get<sStaticMeshComponent>();
-                mGeometryContext.Draw( lStaticMeshComponent.mIndexCount, lStaticMeshComponent.mIndexOffset,
-                                       lStaticMeshComponent.mVertexOffset, 1, 0 );
-            }
+            mGeometryContext.Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
         }
 
-        mScene->ForEach<sParticleSystemComponent, sParticleShaderComponent>(
-            [&]( auto aEntity, auto &aParticleSystemComponent, auto &aParticleShaderComponent )
-            {
-                auto &lPipeline = GetRenderPipeline( aParticleShaderComponent );
-
-                ParticleSystemRenderer::ParticleData lParticleData{};
-                lParticleData.Model         = math::mat4( 1.0f );
-                lParticleData.ParticleCount = aParticleSystemComponent.ParticleCount;
-                lParticleData.ParticleSize  = aParticleSystemComponent.ParticleSize;
-                lParticleData.Particles     = aParticleSystemComponent.Particles;
-
-                lPipeline.Render( View.Projection, View.View, mGeometryContext, lParticleData );
-            } );
-
-        if( RenderGizmos )
+        for( auto &lParticleSystem : mParticleQueue )
         {
-            mVisualHelperRenderer->View       = View.View;
-            mVisualHelperRenderer->Projection = View.Projection;
-            mScene->ForEach<DirectionalLightHelperComponent>(
-                [&]( auto aEntity, auto &aDirectionalLightHelperComponent )
-                {
-                    math::mat4 lTransform = math::mat4( 1.0f );
-                    if( aEntity.Has<sTransformMatrixComponent>() ) lTransform = aEntity.Get<sTransformMatrixComponent>().Matrix;
-                    mVisualHelperRenderer->Render( lTransform, aDirectionalLightHelperComponent, mGeometryContext );
-                } );
+            auto &lPipeline = GetRenderPipeline( lParticleSystem );
 
-            mScene->ForEach<SpotlightHelperComponent>(
-                [&]( auto aEntity, auto &aSpotlightHelperComponent )
-                {
-                    math::mat4 lTransform = math::mat4( 1.0f );
-                    if( aEntity.Has<sTransformMatrixComponent>() ) lTransform = aEntity.Get<sTransformMatrixComponent>().Matrix;
-                    mVisualHelperRenderer->Render( lTransform, aSpotlightHelperComponent, mGeometryContext );
-                } );
+            ParticleSystemRenderer::ParticleData lParticleData{};
+            lParticleData.Model         = lParticleSystem.mModel;
+            lParticleData.ParticleCount = lParticleSystem.mParticleCount;
+            lParticleData.ParticleSize  = lParticleSystem.mParticleSize;
+            lParticleData.Particles     = lParticleSystem.mParticles;
 
-            mScene->ForEach<PointLightHelperComponent>(
-                [&]( auto aEntity, auto &aPointLightHelperComponent )
-                {
-                    math::mat4 lTransform = math::mat4( 1.0f );
-                    if( aEntity.Has<sTransformMatrixComponent>() ) lTransform = aEntity.Get<sTransformMatrixComponent>().Matrix;
-                    mVisualHelperRenderer->Render( lTransform, aPointLightHelperComponent, mGeometryContext );
-                } );
+            lPipeline.Render( View.Projection, View.View, mGeometryContext, lParticleData );
+        }
+
+        for( auto const &lLightGizmo : mLightGizmos )
+        {
+            switch( lLightGizmo.mType )
+            {
+            case eLightType::DIRECTIONAL:
+            {
+                // mVisualHelperRenderer->Render( lLightGizmo.mMatrix, aDirectionalLightHelperComponent, mGeometryContext );
+                break;
+            }
+            case eLightType::POINT_LIGHT:
+            {
+                // mVisualHelperRenderer->Render( lLightGizmo.mMatrix, aPointLightHelperComponent, mGeometryContext );
+                break;
+            }
+            case eLightType::SPOTLIGHT:
+            {
+                // mVisualHelperRenderer->Render( lLightGizmo.mMatrix, aSpotlightHelperComponent, mGeometryContext );
+                break;
+            }
+            }
         }
 
         if( RenderCoordinateGrid ) mCoordinateGridRenderer->Render( View.Projection, View.View, mGeometryContext );

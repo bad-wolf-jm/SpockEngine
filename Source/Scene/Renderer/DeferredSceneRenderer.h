@@ -2,8 +2,8 @@
 
 #include "Core/Memory.h"
 #include "Graphics/Vulkan/ARenderContext.h"
-#include "Graphics/Vulkan/VkRenderTarget.h"
 #include "Graphics/Vulkan/DescriptorSet.h"
+#include "Graphics/Vulkan/VkRenderTarget.h"
 
 #include "Renderer/ASceneRenderer.h"
 #include "Renderer/SceneRenderData.h"
@@ -39,10 +39,16 @@ namespace SE::Core
         Ref<VkTexture2D> GetOutputImage();
 
         MeshRendererCreateInfo     GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification );
+        MeshRendererCreateInfo     GetRenderPipelineCreateInfo( sMeshRenderData &aPipelineSpecification );
         ParticleRendererCreateInfo GetRenderPipelineCreateInfo( sParticleShaderComponent &aPipelineSpecification );
-        MeshRenderer              &GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification );
-        MeshRenderer              &GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification );
-        ParticleSystemRenderer    &GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification );
+        ParticleRendererCreateInfo GetRenderPipelineCreateInfo( sParticleRenderData &aPipelineSpecification );
+
+        MeshRenderer           &GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification );
+        MeshRenderer           &GetRenderPipeline( sMeshRenderData &aPipelineSpecification );
+        MeshRenderer           &GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification );
+        ParticleSystemRenderer &GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification );
+        ParticleSystemRenderer &GetRenderPipeline( sParticleRenderData &aPipelineSpecification );
+        ParticleSystemRenderer &GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification );
 
       private:
         ARenderContext           mGeometryContext{};

@@ -110,10 +110,13 @@ namespace SE::Core
 
     struct sMeshRenderData
     {
-        bool             mOpaque       = false;
-        bool             mIsTwoSided   = false;
-        float            mLineWidth    = 1.0f;
-        uint32_t         mMaterialID   = 0;
+        // Shader data
+        bool     mOpaque     = false;
+        bool     mIsTwoSided = false;
+        float    mLineWidth  = 1.0f;
+        uint32_t mMaterialID = 0;
+
+        // Buffer data
         Ref<VkGpuBuffer> mVertexBuffer = nullptr;
         Ref<VkGpuBuffer> mIndexBuffer  = nullptr;
         uint32_t         mVertexOffset = 0;
