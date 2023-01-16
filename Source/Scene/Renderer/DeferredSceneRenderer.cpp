@@ -171,7 +171,6 @@ namespace SE::Core
 
     void DeferredRenderer::Update( Ref<Scene> aWorld )
     {
-        //
         ASceneRenderer::Update( aWorld );
 
         if( aWorld->Environment.Has<sAmbientLightingComponent>() )

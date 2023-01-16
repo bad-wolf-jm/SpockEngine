@@ -142,7 +142,6 @@ namespace SE::Core
 
     void ForwardSceneRenderer::Update( Ref<Scene> aWorld )
     {
-        //
         ASceneRenderer::Update( aWorld );
 
         if( aWorld->Environment.Has<sAmbientLightingComponent>() )

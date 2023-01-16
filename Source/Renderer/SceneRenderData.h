@@ -96,40 +96,44 @@ namespace SE::Core
         float RenderGrayscale                      = 0.0f;
     };
 
-    struct sLightVisualizationHelper
+    struct sLightGizmo
     {
         eLightType mType;
         uint64_t   mLightDataIndex = 0;
         math::mat4 mMatrix{};
 
-        sLightVisualizationHelper()  = default;
-        ~sLightVisualizationHelper() = default;
+        sLightGizmo()  = default;
+        ~sLightGizmo() = default;
 
-        sLightVisualizationHelper( eLightType aType, uint64_t aLightDataIndex, math::mat4 aMatrix );
+        sLightGizmo( eLightType aType, uint64_t aLightDataIndex, math::mat4 aMatrix );
     };
 
-    struct MaterialShaderCreateInfo
+    struct sMeshRenderData
     {
-        bool  Opaque     = false;
-        bool  IsTwoSided = false;
-        float LineWidth  = 1.0f;
+        bool             mOpaque       = false;
+        bool             mIsTwoSided   = false;
+        float            mLineWidth    = 1.0f;
+        uint32_t         mMaterialID   = 0;
+        Ref<VkGpuBuffer> mVertexBuffer = nullptr;
+        Ref<VkGpuBuffer> mIndexBuffer  = nullptr;
+        uint32_t         mVertexOffset = 0;
+        uint32_t         mVertexCount  = 0;
+        uint32_t         mIndexOffset  = 0;
+        uint32_t         mIndexCount   = 0;
 
-        bool operator==( const MaterialShaderCreateInfo &p ) const
-        {
-            return ( IsTwoSided == p.IsTwoSided ) && ( LineWidth == p.LineWidth );
-        }
+        sMeshRenderData( sStaticMeshComponent const &aMesh, sMaterialComponent const &aMaterialID,
+                         sMaterialShaderComponent const &aShader );
     };
 
-    struct MaterialShaderCreateInfoHash
+    struct sParticleRenderData
     {
-        std::size_t operator()( const MaterialShaderCreateInfo &node ) const
-        {
-            std::size_t h1 = std::hash<bool>()( node.Opaque );
-            std::size_t h2 = std::hash<bool>()( node.IsTwoSided );
-            std::size_t h3 = std::hash<float>()( node.LineWidth );
+        bool             mModel         = false;
+        bool             mParticleCount = false;
+        float            mLineWidth     = 1.0f;
+        float            mParticleSize  = 1.0f;
+        Ref<VkGpuBuffer> mParticles     = nullptr;
 
-            return h1 ^ h2 ^ h3;
-        }
+        sParticleRenderData( sParticleSystemComponent const &aParticles, sParticleShaderComponent const &aShader );
     };
 
 } // namespace SE::Core

@@ -46,17 +46,16 @@ namespace SE::Core
 
     void ASceneRenderer::Update( Ref<Scene> aScene )
     {
-        SE_PROFILE_FUNCTION();
+        SE_PROFILE_FUNCTION( "FOO" );
 
         mScene = aScene;
 
-        if( !aScene ) return;
+        if( !mScene ) return;
 
         mDirectionalLights.clear();
         mPointLights.clear();
         mSpotlights.clear();
         mLightGizmos.clear();
-
         mScene->ForEach<sLightComponent>(
             [&]( auto aEntity, auto &aComponent )
             {
@@ -85,33 +84,15 @@ namespace SE::Core
                 }
             } );
 
-        mOpaqueMeshQueue.clear();
-        mScene->ForEach<sStaticMeshComponent, sMaterialShaderComponent>(
-            [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterialData )
-            {
-                MaterialShaderCreateInfo lMaterialShaderCreateInfo{};
-                lMaterialShaderCreateInfo.Opaque     = ( aMaterialData.Type == eCMaterialType::Opaque );
-                lMaterialShaderCreateInfo.IsTwoSided = aMaterialData.IsTwoSided;
-                lMaterialShaderCreateInfo.LineWidth  = aMaterialData.LineWidth;
+        mStaticMeshQueue.clear();
+        mScene->ForEach<sStaticMeshComponent, sMaterialComponent, sMaterialShaderComponent>(
+            [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterial, auto &aMaterialData )
+            { mStaticMeshQueue.emplace_back( aStaticMeshComponent, aMaterial, aMaterialData ); } );
 
-                if( mOpaqueMeshQueue.find( lMaterialShaderCreateInfo ) == mOpaqueMeshQueue.end() )
-                    mOpaqueMeshQueue[lMaterialShaderCreateInfo] = std::vector<sStaticMeshComponent>{};
-                mOpaqueMeshQueue[lMaterialShaderCreateInfo].push_back( aStaticMeshComponent );
-            } );
-
+        mParticleQueue.clear();
         mScene->ForEach<sParticleSystemComponent, sParticleShaderComponent>(
             [&]( auto aEntity, auto &aParticleSystemComponent, auto &aParticleShaderComponent )
-            {
-                // auto &lPipeline = GetRenderPipeline( aParticleShaderComponent );
-
-                // ParticleSystemRenderer::ParticleData lParticleData{};
-                // lParticleData.Model         = math::mat4( 1.0f );
-                // lParticleData.ParticleCount = aParticleSystemComponent.ParticleCount;
-                // lParticleData.ParticleSize  = aParticleSystemComponent.ParticleSize;
-                // lParticleData.Particles     = aParticleSystemComponent.Particles;
-
-                // lPipeline.Render( View.Projection, View.View, mGeometryContext, lParticleData );
-            } );
+            { mParticleQueue.emplace_back( aParticleSystemComponent, aParticleShaderComponent ); } );
     }
 
     void ASceneRenderer::Render() {}

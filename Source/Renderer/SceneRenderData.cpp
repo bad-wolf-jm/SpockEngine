@@ -44,11 +44,35 @@ namespace SE::Core
         Cone            = math::cos( math::radians( aSpec.mCone / 2 ) );
     }
 
-    sLightVisualizationHelper::sLightVisualizationHelper( eLightType aType, uint64_t aLightDataIndex, math::mat4 aMatrix )
+    sLightGizmo::sLightGizmo( eLightType aType, uint64_t aLightDataIndex, math::mat4 aMatrix )
         : mType{ aType }
         , mLightDataIndex{ aLightDataIndex }
         , mMatrix{ aMatrix }
     {
     }
 
+    sMeshRenderData::sMeshRenderData( sStaticMeshComponent const &aMesh, sMaterialComponent const &aMaterialID,
+                                      sMaterialShaderComponent const &aShader )
+        : mOpaque{ ( aShader.Type == eCMaterialType::Opaque ) }
+        , mIsTwoSided{ aShader.IsTwoSided }
+        , mLineWidth{ aShader.LineWidth }
+        , mMaterialID{ aMaterialID.mMaterialID }
+        , mIndexBuffer{ aMesh.mIndexBuffer }
+        , mVertexBuffer{ aMesh.mTransformedBuffer }
+        , mVertexOffset{ aMesh.mVertexOffset }
+        , mVertexCount{ aMesh.mVertexCount }
+        , mIndexOffset{ aMesh.mIndexOffset }
+        , mIndexCount{ aMesh.mIndexCount }
+    {
+    }
+
+    sParticleRenderData::sParticleRenderData( sParticleSystemComponent const &aParticles, sParticleShaderComponent const &aShader )
+        : mModel{ math::mat4( 1.0f ) }
+        , mParticleCount{ aParticles.ParticleCount }
+        , mLineWidth{ aShader.LineWidth }
+        , mParticleSize{ aParticles.ParticleSize }
+        , mParticles{ aParticles.Particles }
+
+    {
+    }
 } // namespace SE::Core

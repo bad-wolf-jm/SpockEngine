@@ -58,9 +58,9 @@ namespace SE::Core
         math::vec4 mAmbientLight = { 1.0f, 1.0f, 1.0f, 0.0001f };
 
       private:
-        std::vector<sLightVisualizationHelper> mLightGizmos{};
-
-        std::unordered_map<MaterialShaderCreateInfo, std::vector<sStaticMeshComponent>, MaterialShaderCreateInfoHash> mOpaqueMeshQueue{};
+        std::vector<sLightGizmo>     mLightGizmos{};
+        std::vector<sMeshRenderData> mStaticMeshQueue{};
+        std::vector<sParticleRenderData> mParticleQueue{};
     };
 
 } // namespace SE::Core
