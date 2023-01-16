@@ -59,7 +59,8 @@ namespace SE::Core
 
       private:
         std::vector<sLightGizmo>     mLightGizmos{};
-        std::vector<sMeshRenderData> mStaticMeshQueue{};
+        std::vector<sMeshRenderData> mOpaqueMeshQueue{};
+        std::vector<sMeshRenderData> mTransparentMeshQueue{};
         std::vector<sParticleRenderData> mParticleQueue{};
     };
 

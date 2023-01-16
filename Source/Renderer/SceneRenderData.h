@@ -127,8 +127,8 @@ namespace SE::Core
 
     struct sParticleRenderData
     {
-        bool             mModel         = false;
-        bool             mParticleCount = false;
+        math::mat4       mModel         = math::mat4( 1.0f );
+        uint32_t         mParticleCount = 0;
         float            mLineWidth     = 1.0f;
         float            mParticleSize  = 1.0f;
         Ref<VkGpuBuffer> mParticles     = nullptr;

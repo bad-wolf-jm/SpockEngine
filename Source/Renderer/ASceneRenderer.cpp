@@ -84,10 +84,16 @@ namespace SE::Core
                 }
             } );
 
-        mStaticMeshQueue.clear();
+        mOpaqueMeshQueue.clear();
+        mTransparentMeshQueue.clear();
         mScene->ForEach<sStaticMeshComponent, sMaterialComponent, sMaterialShaderComponent>(
             [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterial, auto &aMaterialData )
-            { mStaticMeshQueue.emplace_back( aStaticMeshComponent, aMaterial, aMaterialData ); } );
+            {
+                if( aMaterialData.Type == eCMaterialType::Opaque )
+                    mOpaqueMeshQueue.emplace_back( aStaticMeshComponent, aMaterial, aMaterialData );
+                else
+                    mTransparentMeshQueue.emplace_back( aStaticMeshComponent, aMaterial, aMaterialData );
+            } );
 
         mParticleQueue.clear();
         mScene->ForEach<sParticleSystemComponent, sParticleShaderComponent>(
