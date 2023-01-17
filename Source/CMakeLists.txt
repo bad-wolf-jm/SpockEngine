@@ -220,7 +220,8 @@ target_link_libraries(LTSimulationEngineRuntime PRIVATE
     lua::lua
     Zep
     ${ASSIMP_LIBRARIES}
-    glfw)
+    glfw
+    pmp )
 
 target_compile_definitions(LTSimulationEngineRuntime PRIVATE)
 target_compile_options(LTSimulationEngineRuntime PRIVATE

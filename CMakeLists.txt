@@ -132,6 +132,19 @@ FetchContent_MakeAvailable(glslang)
 include_directories(${glslang_SOURCE_DIR}/glslang/Public)
 set(SE_EXTRA_INCLUDES ${glslang_SOURCE_DIR}/glslang/Public ${SE_EXTRA_INCLUDES})
 
+set (PMP_BUILD_EXAMPLES  OFF CACHE INTERNAL "No examples")
+set (PMP_BUILD_DOCS OFF CACHE INTERNAL "No documentation")
+set (PMP_BUILD_VIS OFF CACHE INTERNAL "No visualization")
+set (PMP_INSTALL  OFF CACHE INTERNAL "No installation")
+FetchContent_Declare(
+  pmp
+  GIT_REPOSITORY https://github.com/pmp-library/pmp-library.git
+  GIT_TAG        main
+  GIT_PROGRESS   TRUE )
+FetchContent_MakeAvailable(pmp)
+include_directories(${pmp_SOURCE_DIR}/src)
+set(SE_EXTRA_INCLUDES ${pmp_SOURCE_DIR}/src ${SE_EXTRA_INCLUDES})
+
 
 set(SE_EXTRA_INCLUDES ${SE_EXTRA_INCLUDES} PARENT_SCOPE)
 set(EXTERNAL_LIBRARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty)

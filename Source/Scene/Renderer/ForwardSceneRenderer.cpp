@@ -14,6 +14,8 @@
 #include "Core/Logging.h"
 #include "Core/Resource.h"
 
+#include "UI/UI.h"
+
 #include "MeshRenderer.h"
 #include "ParticleSystemRenderer.h"
 
@@ -255,28 +257,37 @@ namespace SE::Core
             lPipeline.Render( View.Projection, View.View, mGeometryContext, lParticleData );
         }
 
-        for( auto const &lLightGizmo : mLightGizmos )
+        if( RenderGizmos )
         {
-            switch( lLightGizmo.mType )
+            for( auto const &lLightGizmo : mLightGizmos )
             {
-            case eLightType::DIRECTIONAL:
-            {
-                // mVisualHelperRenderer->Render( lLightGizmo.mMatrix, aDirectionalLightHelperComponent, mGeometryContext );
-                break;
-            }
-            case eLightType::POINT_LIGHT:
-            {
-                // mVisualHelperRenderer->Render( lLightGizmo.mMatrix, aPointLightHelperComponent, mGeometryContext );
-                break;
-            }
-            case eLightType::SPOTLIGHT:
-            {
-                // mVisualHelperRenderer->Render( lLightGizmo.mMatrix, aSpotlightHelperComponent, mGeometryContext );
-                break;
-            }
+                switch( lLightGizmo.mType )
+                {
+                case eLightType::DIRECTIONAL:
+                {
+                    // static bool p_open_2 = true;
+                    // if( ImGui::Begin( "D_LIGHT", &p_open_2, ImGuiWindowFlags_None ) )
+                    // {
+                    //     UI::Text( "FOO" );
+                    // }
+                    // ImGui::End();
+
+                    // mVisualHelperRenderer->Render( lLightGizmo.mMatrix, aDirectionalLightHelperComponent, mGeometryContext );
+                    break;
+                }
+                case eLightType::POINT_LIGHT:
+                {
+                    // mVisualHelperRenderer->Render( lLightGizmo.mMatrix, aPointLightHelperComponent, mGeometryContext );
+                    break;
+                }
+                case eLightType::SPOTLIGHT:
+                {
+                    // mVisualHelperRenderer->Render( lLightGizmo.mMatrix, aSpotlightHelperComponent, mGeometryContext );
+                    break;
+                }
+                }
             }
         }
-
         if( RenderCoordinateGrid ) mCoordinateGridRenderer->Render( View.Projection, View.View, mGeometryContext );
         mGeometryContext.EndRender();
     }
