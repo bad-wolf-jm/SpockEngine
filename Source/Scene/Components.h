@@ -362,10 +362,10 @@ namespace SE::Core::EntityComponentSystem::Components
         float mY               = 0.0f;
         float mWidth           = 100.0f;
         float mHeight          = 100.0f;
-        vec4  mFillColor       = { 1.0f, 0.0f, 0.0f, 0.5f };
-        vec4  mBorderColor     = { 1.0f, 1.0f, 0.0f, 1.0f };
-        float mBorderThickness = 5.0f;
-        float mRounding        = 10.0f;
+        vec4  mFillColor       = { 0.0f, 0.0f, 0.0f, 0.5f };
+        vec4  mBorderColor     = { 1.0f, 1.0f, 1.0f, 0.75f };
+        float mBorderThickness = 2.0f;
+        float mRounding        = 5.0f;
 
         std::string        mClassFullName = "";
         MonoScriptClass    mClass;
