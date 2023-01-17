@@ -268,10 +268,10 @@ namespace SE::Core
 
     void ReadComponent( sHUDComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
-        aComponent.mX               = Get( aNode["mX"], 0 );
-        aComponent.mY               = Get( aNode["mY"], 0 );
-        aComponent.mWidth           = Get( aNode["mWidth"], 0 );
-        aComponent.mHeight          = Get( aNode["mHeight"], 0 );
+        aComponent.mX               = Get( aNode["mX"], 0.0f );
+        aComponent.mY               = Get( aNode["mY"], 0.0f );
+        aComponent.mWidth           = Get( aNode["mWidth"], 0.0f );
+        aComponent.mHeight          = Get( aNode["mHeight"], 0.0f );
         aComponent.mClassFullName   = Get( aNode["mClassFullName"], std::string{ "" } );
         aComponent.mFillColor       = Get( aNode["mFillColor"], { "r", "g", "b", "a" }, math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f } );
         aComponent.mBorderColor     = Get( aNode["mBorderColor"], { "r", "g", "b", "a" }, math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f } );

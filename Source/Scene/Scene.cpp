@@ -922,6 +922,32 @@ namespace SE::Core
                 } );
         }
 
+        ForEach<sHUDComponent>(
+            [=]( auto aEntity, auto &aComponent )
+            {
+                static ImGuiWindowFlags lFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+
+                ImGui::SetWindowPos( ImVec2{ aComponent.mX, aComponent.mY } );
+                ImGui::SetWindowSize( ImVec2{ aComponent.mWidth, aComponent.mHeight } );
+
+                ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, aComponent.mRounding );
+                ImGui::PushStyleVar( ImGuiStyleVar_WindowBorderSize, aComponent.mBorderThickness );
+
+                auto &lFillColor = aComponent.mFillColor;
+                ImGui::PushStyleColor( ImGuiCol_WindowBg, ImVec4{ lFillColor.x, lFillColor.y, lFillColor.z, lFillColor.w } );
+
+                auto &lBorderColor = aComponent.mBorderColor;
+                ImGui::PushStyleColor( ImGuiCol_Border, ImVec4{ lBorderColor.x, lBorderColor.y, lBorderColor.z, lBorderColor.w } );
+
+                auto lWindowID = fmt::format( "##{}", aEntity.Get<sUUID>().mValue.str() );
+                if( ImGui::Begin( lWindowID.c_str(), NULL, lFlags ) )
+                {
+                }
+                ImGui::End();
+                ImGui::PopStyleColor( 2 );
+                ImGui::PopStyleVar( 2 );
+            } );
+
         mTransformCache.clear();
         ForEach<sUUID, sNodeTransformComponent>(
             [&]( auto aEntity, auto &aUUID, auto &aTransformComponent )

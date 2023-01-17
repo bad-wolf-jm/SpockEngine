@@ -358,18 +358,68 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct sHUDComponent
     {
-        uint32_t mX               = 100;
-        uint32_t mY               = 100;
-        uint32_t mWidth           = 100;
-        uint32_t mHeight          = 100;
-        vec4     mFillColor       = { 1.0f, 0.0f, 0.0f, 0.75f };
-        vec4     mBorderColor     = { 1.0f, 1.0f, 1.0f, 1.0f };
-        float    mBorderThickness = 1.0f;
+        float mX               = 100;
+        float mY               = 100;
+        float mWidth           = 100;
+        float mHeight          = 100;
+        vec4  mFillColor       = { 1.0f, 0.0f, 0.0f, 0.65f };
+        vec4  mBorderColor     = { 1.0f, 1.0f, 0.0f, 1.0f };
+        float mBorderThickness = 5.0f;
+        float mRounding        = 10.0f;
 
-        std::string mClassFullName = "";
+        std::string        mClassFullName = "";
+        MonoScriptClass    mClass;
+        MonoScriptInstance mInstance;
+        MonoScriptInstance mEntityInstance;
 
         sHUDComponent()                        = default;
         sHUDComponent( const sHUDComponent & ) = default;
+
+        ~sHUDComponent() = default;
+
+        sHUDComponent( const std::string &aClassFullName )
+            : mClassFullName{ aClassFullName }
+
+        {
+            size_t      lSeparatorPos   = aClassFullName.find_last_of( '.' );
+            std::string lClassNamespace = aClassFullName.substr( 0, lSeparatorPos );
+            std::string lClassName      = aClassFullName.substr( lSeparatorPos + 1 );
+
+            mClass = MonoScriptClass( lClassNamespace, lClassName, false );
+        }
+
+        template <typename T>
+        T &Get()
+        {
+            return mEntity.Get<T>();
+        }
+
+        void Initialize( Entity aEntity ) { mEntity = aEntity; }
+
+        void OnCreate()
+        {
+            // Create Mono side entity object
+            auto lEntityID    = static_cast<uint32_t>( mEntity );
+            auto lRegistryID  = (size_t)mEntity.GetRegistry();
+            auto lEntityClass = MonoScriptClass( "SpockEngine", "Entity", true );
+            mEntityInstance   = lEntityClass.Instantiate( lEntityID, lRegistryID );
+
+            // Instantiate the Mono actor class with the entity object as parameter
+            mInstance = mClass.Instantiate();
+            mInstance.CallMethod( "Initialize", (size_t)mEntityInstance.GetInstance() );
+            mInstance.InvokeMethod( "BeginScenario", 0, nullptr );
+        }
+
+        void OnDestroy() { mInstance.InvokeMethod( "EndScenario", 0, nullptr ); }
+
+        void OnUpdate( Timestep ts ) { mInstance.CallMethod( "DrawContent", ts.GetMilliseconds() ); }
+
+        Entity GetControlledEntity() const { return mEntity; };
+
+      private:
+        Entity mEntity;
+
+        MonoScriptMehod mOnUpdate{};
     };
 
 } // namespace SE::Core::EntityComponentSystem::Components
