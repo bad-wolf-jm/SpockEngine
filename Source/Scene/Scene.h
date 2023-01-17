@@ -112,6 +112,8 @@ namespace SE::Core
 
         void ClearScene();
 
+        void SetViewport(math::vec2 aPosition, math::vec2 aSize);
+
         Ref<VkGpuBuffer> mVertexBuffer            = nullptr;
         Ref<VkGpuBuffer> mIndexBuffer             = nullptr;
         Ref<VkGpuBuffer> mTransformedVertexBuffer = nullptr;
@@ -145,6 +147,9 @@ namespace SE::Core
         GPUMemory mJointOffsets{};
 
         bool mIsClone = false;
+
+        math::vec2 mViewportPosition{};
+        math::vec2 mViewportSize{};
 
       private:
         friend class Element;

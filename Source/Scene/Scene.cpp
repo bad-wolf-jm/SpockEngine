@@ -199,6 +199,12 @@ namespace SE::Core
         mVertexCounts.Dispose();
     }
 
+    void Scene::SetViewport(math::vec2 aPosition, math::vec2 aSize)
+    {
+        mViewportPosition = aPosition;
+        mViewportSize = aSize;
+    }
+
     void Scene::ResizeCUDABuffers()
     {
         const std::array<GPUMemory *, 7> lBuffers = { &mTransforms,   &mVertexBuffers,   &mTransformedBuffers, &mVertexOffsets,
@@ -927,7 +933,9 @@ namespace SE::Core
             {
                 static ImGuiWindowFlags lFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 
-                ImGui::SetNextWindowPos( ImVec2{ aComponent.mX, aComponent.mY }, ImGuiCond_Always );
+                ImVec2 lPosition = ImVec2{ aComponent.mX, aComponent.mY } + ImVec2{ mViewportPosition.x, mViewportPosition.y };
+
+                ImGui::SetNextWindowPos( lPosition, ImGuiCond_Always );
                 ImGui::SetNextWindowSize( ImVec2{ aComponent.mWidth, aComponent.mHeight }, ImGuiCond_Always );
 
                 ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, aComponent.mRounding );
@@ -942,7 +950,7 @@ namespace SE::Core
                 auto lWindowID = fmt::format( "##{}", aEntity.Get<sUUID>().mValue.str() );
                 if( ImGui::Begin( lWindowID.c_str(), NULL, lFlags ) )
                 {
-                    // If the scene is in a running state, call the scripted function to populate the window 
+                    // If the scene is in a running state, call the scripted function to populate the window
                     // and interact with it.
                     if( mState == eSceneState::RUNNING ) aComponent.OnUpdate( ts );
                 }

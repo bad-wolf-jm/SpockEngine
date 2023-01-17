@@ -358,11 +358,11 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct sHUDComponent
     {
-        float mX               = 100.0f;
-        float mY               = 100.0f;
+        float mX               = 0.0f;
+        float mY               = 0.0f;
         float mWidth           = 100.0f;
         float mHeight          = 100.0f;
-        vec4  mFillColor       = { 1.0f, 0.0f, 0.0f, 0.65f };
+        vec4  mFillColor       = { 1.0f, 0.0f, 0.0f, 0.5f };
         vec4  mBorderColor     = { 1.0f, 1.0f, 0.0f, 1.0f };
         float mBorderThickness = 5.0f;
         float mRounding        = 10.0f;

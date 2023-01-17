@@ -712,9 +712,10 @@ namespace SE::Editor
 
         // auto lModelName = aPath.stem().string();
         // if( !fs::exists( mModelsPath / lModelName ) ) fs::create_directories( mModelsPath / lModelName );
-        // if( !fs::exists( mModelsPath / lModelName / "Materials" ) ) fs::create_directories( mModelsPath / lModelName / "Materials" );
-        // if( !fs::exists( mModelsPath / lModelName / "Meshes" ) ) fs::create_directories( mModelsPath / lModelName / "Meshes" );
-        // if( !fs::exists( mModelsPath / lModelName / "Animations" ) ) fs::create_directories( mModelsPath / lModelName / "Animations" );
+        // if( !fs::exists( mModelsPath / lModelName / "Materials" ) ) fs::create_directories( mModelsPath / lModelName / "Materials"
+        // ); if( !fs::exists( mModelsPath / lModelName / "Meshes" ) ) fs::create_directories( mModelsPath / lModelName / "Meshes" );
+        // if( !fs::exists( mModelsPath / lModelName / "Animations" ) ) fs::create_directories( mModelsPath / lModelName / "Animations"
+        // );
 
         // for( auto &lMaterial : lModelData->mMaterials )
         // {
@@ -1018,6 +1019,9 @@ namespace SE::Editor
         ImGui::PopStyleColor();
         ImGui::PopStyleColor();
         ImGui::PopStyleColor();
+
+        ActiveWorld->SetViewport( l3DViewPosition,
+                                  math::vec2{ static_cast<float>( l3DViewSize.x ), static_cast<float>( l3DViewSize.y ) } );
 
         if( m_SceneViewport.Handle )
         {
