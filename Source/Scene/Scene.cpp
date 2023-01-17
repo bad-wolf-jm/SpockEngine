@@ -454,6 +454,13 @@ namespace SE::Core
 
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sActorComponent>()], lReadContext );
             }
+
+            if( HasTypeTag<sHUDComponent>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sHUDComponent>();
+
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sHUDComponent>()], lReadContext );
+            }
         }
 
         std::mutex lMaterialSystemLock;
@@ -1138,6 +1145,7 @@ namespace SE::Core
             if( aEntity.Has<sBackgroundComponent>() ) WriteComponent( lOut, aEntity.Get<sBackgroundComponent>() );
             if( aEntity.Has<sAmbientLightingComponent>() ) WriteComponent( lOut, aEntity.Get<sAmbientLightingComponent>() );
             if( aEntity.Has<sLightComponent>() ) WriteComponent( lOut, aEntity.Get<sLightComponent>() );
+            if( aEntity.Has<sHUDComponent>() ) WriteComponent( lOut, aEntity.Get<sHUDComponent>() );
         }
         lOut.EndMap();
     }

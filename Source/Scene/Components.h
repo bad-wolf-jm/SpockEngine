@@ -356,4 +356,20 @@ namespace SE::Core::EntityComponentSystem::Components
         sLightComponent( const sLightComponent & ) = default;
     };
 
+    struct sHUDComponent
+    {
+        uint32_t mX               = 100;
+        uint32_t mY               = 100;
+        uint32_t mWidth           = 100;
+        uint32_t mHeight          = 100;
+        vec4     mFillColor       = { 1.0f, 0.0f, 0.0f, 0.75f };
+        vec4     mBorderColor     = { 1.0f, 1.0f, 1.0f, 1.0f };
+        float    mBorderThickness = 1.0f;
+
+        std::string mClassFullName = "";
+
+        sHUDComponent()                        = default;
+        sHUDComponent( const sHUDComponent & ) = default;
+    };
+
 } // namespace SE::Core::EntityComponentSystem::Components

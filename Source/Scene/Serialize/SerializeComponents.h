@@ -75,6 +75,7 @@ namespace SE::Core
     void ReadComponent( sBackgroundComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sAmbientLightingComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sLightComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sHUDComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
 
     void WriteComponent( ConfigurationWriter &aOut, sTag const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sRelationshipComponent const &aComponent );
@@ -96,4 +97,5 @@ namespace SE::Core
     void WriteComponent( ConfigurationWriter &aOut, sBackgroundComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sAmbientLightingComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sLightComponent const &aComponent );
+    void WriteComponent( ConfigurationWriter &aOut, sHUDComponent const &aComponent );
 } // namespace SE::Core

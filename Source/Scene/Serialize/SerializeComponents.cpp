@@ -25,7 +25,8 @@ namespace SE::Core
         { typeid(sMaterialShaderComponent).name(),    "MATERIAL_SHADER" },
         { typeid(sBackgroundComponent).name(),        "BACKGROUND" },
         { typeid(sAmbientLightingComponent).name(),   "AMBIENT_LIGHTING" },
-        { typeid(sLightComponent).name(),             "LIGHT" }
+        { typeid(sLightComponent).name(),             "LIGHT" },
+        { typeid(sHUDComponent).name(),               "HUD" }
     };
     // clang-format on
 
@@ -229,7 +230,7 @@ namespace SE::Core
 
     void ReadComponent( sMaterialComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
-        aComponent.mMaterialID = 0; 
+        aComponent.mMaterialID = 0;
     }
 
     void ReadComponent( sMaterialShaderComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
@@ -263,6 +264,18 @@ namespace SE::Core
         aComponent.mColor     = Get( aNode["mColor"], { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
         aComponent.mIntensity = Get( aNode["mIntensity"], 0.0005f );
         aComponent.mCone      = Get( aNode["mCone"], 0.0005f );
+    }
+
+    void ReadComponent( sHUDComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
+    {
+        aComponent.mX               = Get( aNode["mX"], 0 );
+        aComponent.mY               = Get( aNode["mY"], 0 );
+        aComponent.mWidth           = Get( aNode["mWidth"], 0 );
+        aComponent.mHeight          = Get( aNode["mHeight"], 0 );
+        aComponent.mClassFullName   = Get( aNode["mClassFullName"], std::string{ "" } );
+        aComponent.mFillColor       = Get( aNode["mFillColor"], { "r", "g", "b", "a" }, math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f } );
+        aComponent.mBorderColor     = Get( aNode["mBorderColor"], { "r", "g", "b", "a" }, math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f } );
+        aComponent.mBorderThickness = Get( aNode["mBorderThickness"], 1.0f );
     }
 
     template <typename _Ty>
@@ -364,17 +377,6 @@ namespace SE::Core
         }
         aOut.EndMap();
     }
-
-    // void WriteComponent( ConfigurationWriter &aOut, sTransformMatrixComponent const &aComponent )
-    // {
-    //     WriteTypeTag<sTransformMatrixComponent>( aOut );
-    //     aOut.BeginMap( true );
-    //     {
-    //         aOut.WriteKey( "mMatrix" );
-    //         aOut.Write( aComponent.Matrix );
-    //     }
-    //     aOut.EndMap();
-    // }
 
     void WriteComponent( ConfigurationWriter &aOut, sStaticMeshComponent const &aComponent, std::string const &aMeshPath )
     {
@@ -523,4 +525,24 @@ namespace SE::Core
         }
         aOut.EndMap();
     }
+
+    void WriteComponent( ConfigurationWriter &aOut, sHUDComponent const &aComponent )
+    {
+        WriteTypeTag<sHUDComponent>( aOut );
+        aOut.BeginMap( true );
+        {
+            aOut.WriteKey( "mX", aComponent.mX );
+            aOut.WriteKey( "mY", aComponent.mY );
+            aOut.WriteKey( "mWidth", aComponent.mWidth );
+            aOut.WriteKey( "mHeight", aComponent.mHeight );
+            aOut.WriteKey( "mClassFullName", aComponent.mClassFullName );
+            aOut.WriteKey( "mFillColor" );
+            aOut.Write( aComponent.mFillColor, { "r", "g", "b", "a" } );
+            aOut.WriteKey( "mBorderColor" );
+            aOut.Write( aComponent.mBorderColor, { "r", "g", "b", "a" } );
+            aOut.WriteKey( "mBorderThickness", aComponent.mBorderThickness );
+        }
+        aOut.EndMap();
+    }
+
 } // namespace SE::Core

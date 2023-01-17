@@ -276,7 +276,6 @@ namespace SE::Editor
             if( ImGui::MenuItem( "Light component", NULL, false, !ElementToEdit.Has<sLightComponent>() ) )
             {
                 ElementToEdit.Add<sLightComponent>();
-                // lComponent.Light = World->Create( "Light", ElementToEdit );
             }
             ImGui::Separator();
             if( ImGui::MenuItem( "Particle system", NULL, false, !ElementToEdit.Has<sParticleSystemComponent>() ) )
@@ -288,6 +287,11 @@ namespace SE::Editor
 
                 ParticleRendererCreateInfo l_RendererCreateInfo{};
                 l_RendererCreateInfo.LineWidth = l_ParticleShaderConfiguration.LineWidth;
+            }
+            ImGui::Separator();
+            if( ImGui::MenuItem( "HUD Component", NULL, false, !ElementToEdit.Has<sHUDComponent>() ) )
+            {
+                ElementToEdit.Add<sHUDComponent>();
             }
             ImGui::EndPopup();
         }
