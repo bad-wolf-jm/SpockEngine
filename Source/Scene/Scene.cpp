@@ -927,8 +927,8 @@ namespace SE::Core
             {
                 static ImGuiWindowFlags lFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 
-                ImGui::SetWindowPos( ImVec2{ aComponent.mX, aComponent.mY } );
-                ImGui::SetWindowSize( ImVec2{ aComponent.mWidth, aComponent.mHeight } );
+                ImGui::SetNextWindowPos( ImVec2{ aComponent.mX, aComponent.mY }, ImGuiCond_Always );
+                ImGui::SetNextWindowSize( ImVec2{ aComponent.mWidth, aComponent.mHeight }, ImGuiCond_Always );
 
                 ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, aComponent.mRounding );
                 ImGui::PushStyleVar( ImGuiStyleVar_WindowBorderSize, aComponent.mBorderThickness );
@@ -942,6 +942,9 @@ namespace SE::Core
                 auto lWindowID = fmt::format( "##{}", aEntity.Get<sUUID>().mValue.str() );
                 if( ImGui::Begin( lWindowID.c_str(), NULL, lFlags ) )
                 {
+                    // If the scene is in a running state, call the scripted function to populate the window 
+                    // and interact with it.
+                    if( mState == eSceneState::RUNNING ) aComponent.OnUpdate( ts );
                 }
                 ImGui::End();
                 ImGui::PopStyleColor( 2 );
