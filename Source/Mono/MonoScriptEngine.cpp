@@ -44,6 +44,9 @@ namespace SE::Core
         MonoScriptClass                                       mBaseControllerClass;
         std::unordered_map<std::string, Ref<MonoScriptClass>> mControllerClasses;
 
+        MonoScriptClass                                       mBaseHUDClass;
+        std::unordered_map<std::string, Ref<MonoScriptClass>> mHUDClasses;
+
         MonoScriptClass                                       mBaseComponentClass;
         std::unordered_map<std::string, Ref<MonoScriptClass>> mComponentClasses;
 
@@ -76,6 +79,7 @@ namespace SE::Core
 
         sData->mBaseApplicationClass = MonoScriptClass( "SpockEngine", "SEApplication", true );
         sData->mBaseControllerClass  = MonoScriptClass( "SpockEngine", "ActorComponent", true );
+        sData->mBaseHUDClass  = MonoScriptClass( "SpockEngine", "HUDComponent", true );
         sData->mBaseComponentClass   = MonoScriptClass( "SpockEngine", "Component", true );
 
         // Mono::Utils::PrintAssemblyTypes( sData->mCoreAssembly );
@@ -276,6 +280,7 @@ namespace SE::Core
             MonoClass *lMonoClass = mono_class_from_name( sData->mAppAssemblyImage, lNameSpace, lClassName );
             if( lMonoClass == sData->mBaseApplicationClass.mMonoClass ) continue;
             if( lMonoClass == sData->mBaseControllerClass.mMonoClass ) continue;
+            if( lMonoClass == sData->mBaseHUDClass.mMonoClass ) continue;
             if( lMonoClass == sData->mBaseComponentClass.mMonoClass ) continue;
 
             auto lNewScriptClass = New<MonoScriptClass>( lNameSpace, lClassName );
@@ -287,6 +292,10 @@ namespace SE::Core
             bool lIsControllerClass =
                 mono_class_is_subclass_of( lNewScriptClass->mMonoClass, sData->mBaseControllerClass.mMonoClass, false );
             if( lIsControllerClass ) sData->mControllerClasses[lFullName] = lNewScriptClass;
+
+            bool lIsHUDClass =
+                mono_class_is_subclass_of( lNewScriptClass->mMonoClass, sData->mBaseHUDClass.mMonoClass, false );
+            if( lIsHUDClass ) sData->mHUDClasses[lFullName] = lNewScriptClass;
 
             bool lIsComponentClass =
                 mono_class_is_subclass_of( lNewScriptClass->mMonoClass, sData->mBaseComponentClass.mMonoClass, false );

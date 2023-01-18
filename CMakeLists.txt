@@ -17,6 +17,8 @@ find_package(CUDAToolkit REQUIRED)
 Include(FetchContent)
 # cmake_policy(SET CMP0002 OLD)
 
+set (test OFF CACHE INTERNAL "Turn off tests")
+set (benchmark OFF CACHE INTERNAL "Turn off tests")
 FetchContent_Declare(
   uuid_v4
   GIT_REPOSITORY https://github.com/crashoz/uuid_v4.git
