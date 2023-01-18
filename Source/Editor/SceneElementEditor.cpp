@@ -108,39 +108,25 @@ namespace SE::Editor
 
     static bool EditComponent( sActorComponent &aComponent )
     {
-        UI::Text( "Static mesh" );
+        UI::Text( "Component class:" );
         UI::Text( "{}", aComponent.mClassFullName );
 
-        // auto &entityFields = ScriptEngine::GetScriptFieldMap( entity );
         for( const auto &[name, field] : aComponent.mClass.GetFields() )
         {
             UI::Text( "{}", name );
-            // // Field has been set in editor
-            // if( entityFields.find( name ) != entityFields.end() )
-            // {
-            //     ScriptFieldInstance &scriptField = entityFields.at( name );
+        }
 
-            //     // Display control to set it maybe
-            //     if( field.Type == ScriptFieldType::Float )
-            //     {
-            //         float data = scriptField.GetValue<float>();
-            //         if( ImGui::DragFloat( name.c_str(), &data ) ) scriptField.SetValue( data );
-            //     }
-            // }
-            // else
-            // {
-            //     // Display control to set it maybe
-            //     if( field.Type == ScriptFieldType::Float )
-            //     {
-            //         float data = 0.0f;
-            //         if( ImGui::DragFloat( name.c_str(), &data ) )
-            //         {
-            //             ScriptFieldInstance &fieldInstance = entityFields[name];
-            //             fieldInstance.Field                = field;
-            //             fieldInstance.SetValue( data );
-            //         }
-            //     }
-            // }
+        return false;
+    }
+
+    static bool EditComponent( sHUDComponent &aComponent )
+    {
+        UI::Text( "Component class:" );
+        UI::Text( "{}", aComponent.mClassFullName );
+
+        for( const auto &[name, field] : aComponent.mClass.GetFields() )
+        {
+            UI::Text( "{}", name );
         }
 
         return false;
@@ -309,6 +295,11 @@ namespace SE::Editor
         if( ImGui::CollapsingHeader( "Script", lFlags ) )
         {
             ElementToEdit.IfExists<sActorComponent>( [&]( auto &lComponent ) { EditComponent( lComponent ); } );
+        }
+
+        if( ImGui::CollapsingHeader( "HUD", lFlags ) )
+        {
+            ElementToEdit.IfExists<sHUDComponent>( [&]( auto &lComponent ) { EditComponent( lComponent ); } );
         }
 
         if( ImGui::CollapsingHeader( "Transform", lFlags ) )
