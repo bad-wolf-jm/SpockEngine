@@ -202,7 +202,7 @@ namespace SE::Graphics
     void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, VkImage aDestination, sImageRegion const &aBufferRegion,
                                              sImageRegion const &aImageRegion )
     {
-        CopyBuffer( aSource, aDestination, { aBufferRegion }, aImageRegion );
+        CopyBuffer( aSource, aDestination, std::vector<sImageRegion>{ aBufferRegion }, aImageRegion );
     }
 
     void sVkCommandBufferObject::CopyBuffer( VkBuffer aSource, VkImage aDestination, std::vector<sImageRegion> aBufferRegions,

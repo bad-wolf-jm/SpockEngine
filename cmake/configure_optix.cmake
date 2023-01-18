@@ -51,7 +51,7 @@ find_program(BIN2C bin2c
 #    'output_var', which can then be added to cmake targets.
 macro(cuda_compile_and_embed output_var cuda_file)
   set(c_var_name ${output_var})
-  cuda_compile_ptx(ptx_files ${cuda_file} OPTIONS --generate-line-info -use_fast_math --keep --expt-relaxed-constexpr -std=c++17 -Xcudafe "--display_error_number" -Xcudafe "--diag_suppress=20012")
+  cuda_compile_ptx(ptx_files ${cuda_file} OPTIONS --generate-line-info -use_fast_math --keep --expt-relaxed-constexpr -std=c++17 -Xcudafe "--display_error_number" -Xcudafe "--diag_suppress=\"20012,20044\"")
   list(GET ptx_files 0 ptx_file)
   set(embedded_file ${ptx_file}_embedded.c)
 

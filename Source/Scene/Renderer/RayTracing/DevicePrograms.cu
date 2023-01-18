@@ -98,86 +98,86 @@ namespace SE::Core
         return normalize( aInNormal );
     }
 
-    constexpr float PI = 3.14159265359;
+    // constexpr float PI = 3.14159265359;
 
-    static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF float DistributionGGX( vec3 N, vec3 H, float roughness )
-    {
-        float a      = roughness * roughness;
-        float a2     = a * a;
-        float NdotH  = max( dot( N, H ), 0.0 );
-        float NdotH2 = NdotH * NdotH;
+    // static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF float DistributionGGX( vec3 N, vec3 H, float roughness )
+    // {
+    //     float a      = roughness * roughness;
+    //     float a2     = a * a;
+    //     float NdotH  = max( dot( N, H ), 0.0 );
+    //     float NdotH2 = NdotH * NdotH;
 
-        float nom   = a2;
-        float denom = ( NdotH2 * ( a2 - 1.0 ) + 1.0 );
-        denom       = PI * denom * denom;
+    //     float nom   = a2;
+    //     float denom = ( NdotH2 * ( a2 - 1.0 ) + 1.0 );
+    //     denom       = PI * denom * denom;
 
-        return nom / denom;
-    }
+    //     return nom / denom;
+    // }
 
-    static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF float GeometrySchlickGGX( float NdotV, float roughness )
-    {
-        float r     = ( roughness + 1.0 );
-        float k     = ( r * r ) / 8.0;
-        float nom   = NdotV;
-        float denom = NdotV * ( 1.0 - k ) + k;
+    // static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF float GeometrySchlickGGX( float NdotV, float roughness )
+    // {
+    //     float r     = ( roughness + 1.0 );
+    //     float k     = ( r * r ) / 8.0;
+    //     float nom   = NdotV;
+    //     float denom = NdotV * ( 1.0 - k ) + k;
 
-        return nom / denom;
-    }
+    //     return nom / denom;
+    // }
 
-    static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF float GeometrySmith( vec3 N, vec3 V, vec3 L, float roughness )
-    {
-        float NdotV = max( dot( N, V ), 0.0 );
-        float NdotL = max( dot( N, L ), 0.0 );
-        float ggx2  = GeometrySchlickGGX( NdotV, roughness );
-        float ggx1  = GeometrySchlickGGX( NdotL, roughness );
+    // static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF float GeometrySmith( vec3 N, vec3 V, vec3 L, float roughness )
+    // {
+    //     float NdotV = max( dot( N, V ), 0.0 );
+    //     float NdotL = max( dot( N, L ), 0.0 );
+    //     float ggx2  = GeometrySchlickGGX( NdotV, roughness );
+    //     float ggx1  = GeometrySchlickGGX( NdotL, roughness );
 
-        return ggx1 * ggx2;
-    }
+    //     return ggx1 * ggx2;
+    // }
 
-    static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF math::vec3 FresnelSchlick( float cosTheta, math::vec3 F0 )
-    {
-        return F0 + ( math::vec3( 1.0 ) - F0 ) * pow( clampf( 1.0f - cosTheta, 0.0f, 1.0f ), 5.0f );
-    }
+    // static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF math::vec3 FresnelSchlick( float cosTheta, math::vec3 F0 )
+    // {
+    //     return F0 + ( math::vec3( 1.0 ) - F0 ) * pow( clampf( 1.0f - cosTheta, 0.0f, 1.0f ), 5.0f );
+    // }
 
-    static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF math::vec3 CookTorrance( math::vec3 F0, math::vec3 N, math::vec3 L, math::vec3 V,
-                                                                               math::vec3 H, float roughness )
-    {
-        float NDF = DistributionGGX( N, H, roughness );
-        float G   = GeometrySmith( N, V, L, roughness );
-        vec3  F   = FresnelSchlick( max( dot( H, V ), 0.0f ), F0 );
-        return ( NDF * G * F ) / ( 4 * max( dot( N, V ), 0.0f ) * max( dot( N, L ), 0.0f ) + 0.0001f );
-    }
+    // static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF math::vec3 CookTorrance( math::vec3 F0, math::vec3 N, math::vec3 L, math::vec3 V,
+    //                                                                            math::vec3 H, float roughness )
+    // {
+    //     float NDF = DistributionGGX( N, H, roughness );
+    //     float G   = GeometrySmith( N, V, L, roughness );
+    //     vec3  F   = FresnelSchlick( max( dot( H, V ), 0.0f ), F0 );
+    //     return ( NDF * G * F ) / ( 4 * max( dot( N, V ), 0.0f ) * max( dot( N, L ), 0.0f ) + 0.0001f );
+    // }
 
-    static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF math::vec3
-    ComputeLightContribution( math::vec3 aBaseColor, math::vec3 aSurfaceNormal, math::vec3 aEyeDirection, math::vec3 aLightDirection,
-                              math::vec3 aRadiance, float aMetal, float aRough )
-    {
-        // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0
-        // of 0.04 and if it's a metal, use the base color as F0 (metallic workflow)
-        math::vec3 lF0 = math::mix( math::vec3( 0.04 ), aBaseColor, aMetal );
+    // static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF math::vec3
+    // ComputeLightContribution( math::vec3 aBaseColor, math::vec3 aSurfaceNormal, math::vec3 aEyeDirection, math::vec3 aLightDirection,
+    //                           math::vec3 aRadiance, float aMetal, float aRough )
+    // {
+    //     // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0
+    //     // of 0.04 and if it's a metal, use the base color as F0 (metallic workflow)
+    //     math::vec3 lF0 = math::mix( math::vec3( 0.04 ), aBaseColor, aMetal );
 
-        math::vec3 H = normalize( aEyeDirection + aLightDirection );
+    //     math::vec3 H = normalize( aEyeDirection + aLightDirection );
 
-        // Cook-Torrance BRDF
-        math::vec3 lSpecular = CookTorrance( lF0, aSurfaceNormal, aLightDirection, aEyeDirection, H, aRough );
+    //     // Cook-Torrance BRDF
+    //     math::vec3 lSpecular = CookTorrance( lF0, aSurfaceNormal, aLightDirection, aEyeDirection, H, aRough );
 
-        // kS is equal to Fresnel
-        math::vec3 kS = FresnelSchlick( max( dot( H, aEyeDirection ), 0.0 ), lF0 );
+    //     // kS is equal to Fresnel
+    //     math::vec3 kS = FresnelSchlick( max( dot( H, aEyeDirection ), 0.0 ), lF0 );
 
-        // for energy conservation, the diffuse and specular light can't be above 1.0 (unless the surface emits light); to preserve
-        // this relationship the diffuse component (kD) should equal 1.0 - kS.
-        math::vec3 kD = vec3( 1.0 ) - kS;
+    //     // for energy conservation, the diffuse and specular light can't be above 1.0 (unless the surface emits light); to preserve
+    //     // this relationship the diffuse component (kD) should equal 1.0 - kS.
+    //     math::vec3 kD = vec3( 1.0 ) - kS;
 
-        // multiply kD by the inverse metalness such that only non-metals have diffuse lighting, or a linear blend if partly metal
-        // (pure metals have no diffuse light).
-        kD *= ( 1.0 - aMetal );
+    //     // multiply kD by the inverse metalness such that only non-metals have diffuse lighting, or a linear blend if partly metal
+    //     // (pure metals have no diffuse light).
+    //     kD *= ( 1.0 - aMetal );
 
-        // scale light by NdotL
-        float NdotL = max( dot( aSurfaceNormal, aLightDirection ), 0.0 );
+    //     // scale light by NdotL
+    //     float NdotL = max( dot( aSurfaceNormal, aLightDirection ), 0.0 );
 
-        // add to outgoing radiance Lo
-        return ( kD * aBaseColor / PI + lSpecular ) * aRadiance * NdotL;
-    }
+    //     // add to outgoing radiance Lo
+    //     return ( kD * aBaseColor / PI + lSpecular ) * aRadiance * NdotL;
+    // }
 
     extern "C" CUDA_KERNEL_DEFINITION void __closesthit__radiance()
     {
@@ -227,11 +227,11 @@ namespace SE::Core
         // start with some ambient term
         math::vec3 pixelColor = ( 0.1f + 0.2f * fabsf( dot( Ns, rayDir ) ) ) * diffuseColor;
 
-        math::vec3 lTNorm;
-        if( lMaterialData.mNormalTextureID == 0 )
-            lTNorm = normalize( Ns );
-        else
-            lTNorm = GetNormalFromMap( Ns, optixLaunchParams.mTextures[lMaterialData.mNormalTextureID].mTextureObject, tc );
+        // math::vec3 lTNorm;
+        // if( lMaterialData.mNormalTextureID == 0 )
+        //     lTNorm = normalize( Ns );
+        // else
+        //     lTNorm = GetNormalFromMap( Ns, optixLaunchParams.mTextures[lMaterialData.mNormalTextureID].mTextureObject, tc );
 
         const float cMinRoughness = 0.04;
         auto lMetalRough = tex2D<float4>( optixLaunchParams.mTextures[lMaterialData.mMetalnessTextureID].mTextureObject, tc.x, tc.y );

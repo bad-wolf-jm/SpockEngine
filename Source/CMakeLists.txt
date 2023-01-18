@@ -202,8 +202,8 @@ target_link_libraries(LTSimulationEngineRuntime PRIVATE
 
 target_compile_definitions(LTSimulationEngineRuntime PRIVATE)
 target_compile_options(LTSimulationEngineRuntime PRIVATE
-    $<$<COMPILE_LANGUAGE:CUDA>: --expt-relaxed-constexpr -Xcudafe "--display_error_number --diag_suppress=20012">
-    $<$<COMPILE_LANGUAGE:CXX>:/bigobj>)
+    $<$<COMPILE_LANGUAGE:CUDA>: --expt-relaxed-constexpr -Xcudafe "--display_error_number --diag_suppress=\"20012,20044\"">
+    $<$<COMPILE_LANGUAGE:CXX>:/bigobj /wd4068>)
 
 
 

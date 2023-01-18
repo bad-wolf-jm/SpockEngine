@@ -124,7 +124,7 @@ namespace SE::Core::Internal
             {
                 mParentRegistry->mRegistry.emplace<T>( mEntityHandle );
 
-                return T{};
+                return std::move(T{});
             }
             else
             {

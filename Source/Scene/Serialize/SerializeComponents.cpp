@@ -34,7 +34,7 @@ namespace SE::Core
     {
         if( gTypeTags.find( aTypeName ) != gTypeTags.end() ) return gTypeTags[aTypeName];
 
-        return "VOID";
+        return std::move(std::string{"VOID"});
     }
 
     template <uint32_t N>
