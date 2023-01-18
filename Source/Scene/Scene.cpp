@@ -199,10 +199,10 @@ namespace SE::Core
         mVertexCounts.Dispose();
     }
 
-    void Scene::SetViewport(math::vec2 aPosition, math::vec2 aSize)
+    void Scene::SetViewport( math::vec2 aPosition, math::vec2 aSize )
     {
         mViewportPosition = aPosition;
-        mViewportSize = aSize;
+        mViewportSize     = aSize;
     }
 
     void Scene::ResizeCUDABuffers()
@@ -952,7 +952,10 @@ namespace SE::Core
                 {
                     // If the scene is in a running state, call the scripted function to populate the window
                     // and interact with it.
-                    if( mState == eSceneState::RUNNING ) aComponent.OnUpdate( ts );
+                    if( mState == eSceneState::RUNNING )
+                        aComponent.OnUpdate( ts );
+                    else
+                        aComponent.OnPreviewUpdate( ts );
                 }
                 ImGui::End();
                 ImGui::PopStyleColor( 2 );

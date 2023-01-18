@@ -412,7 +412,15 @@ namespace SE::Core::EntityComponentSystem::Components
 
         void OnDestroy() { mInstance.InvokeMethod( "EndScenario", 0, nullptr ); }
 
-        void OnUpdate( Timestep ts ) { mInstance.CallMethod( "DrawContent", ts.GetMilliseconds() ); }
+        void OnUpdate( Timestep ts )
+        {
+            if( mInstance ) mInstance.CallMethod( "DrawContent", ts.GetMilliseconds() );
+        }
+
+        void OnPreviewUpdate( Timestep ts )
+        {
+            if( mInstance ) mInstance.CallMethod( "DrawPreviewContent", ts.GetMilliseconds() );
+        }
 
         Entity GetControlledEntity() const { return mEntity; };
 

@@ -15,5 +15,7 @@ namespace SpockEngine
         public virtual void EndScenario() { }
 
         public virtual void DrawContent(float aTs) { }
+        
+        public virtual void DrawPreviewContent(float aTs) { }
     }
 }

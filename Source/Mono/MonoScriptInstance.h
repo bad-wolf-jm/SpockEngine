@@ -45,6 +45,8 @@ namespace SE::Core
             return lValue;
         }
 
+        operator bool() const { return ( mInstance != nullptr ) && ( mMonoClass != nullptr ); }
+
       private:
         MonoClass  *mMonoClass = nullptr;
         MonoObject *mInstance  = nullptr;
