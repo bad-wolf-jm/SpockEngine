@@ -42,6 +42,45 @@ namespace Test
         }
     }
 
+    public class TestHUDComponent : HUDComponent
+    {
+        public float mTestField0;
+        // private float mTestField2;
+
+        public TestHUDComponent() : base() {}
+
+        override public void BeginScenario() 
+        {
+            base.BeginScenario();
+            mTestField0 = 0.0f;
+
+            Console.WriteLine("HUD Component Destroyed!!!");
+        }
+
+        override public void EndScenario()
+        {
+            base.EndScenario();
+
+            Console.WriteLine("HUD Component Destroyed!!!");
+        }
+
+        override public void DrawContent(float aTs )
+        {
+            base.DrawContent(aTs);
+
+            UI.Text("HUD element draws text");          
+
+        }
+
+        override public void DrawPreviewContent(float aTs )
+        {
+            base.DrawContent(aTs);
+
+            UI.Text("HUD element draws previewtext");          
+
+        }
+    }
+
     public class TestApplication : SEApplication
     {
         override public void BeginScenario() 
