@@ -45,15 +45,15 @@ namespace Test
     public class TestHUDComponent : HUDComponent
     {
         public float mTestField0;
-        // private float mTestField2;
+        public bool  mButtonClicked;
 
-        public TestHUDComponent() : base() {}
+        public TestHUDComponent() : base() { mButtonClicked = false; }
 
         override public void BeginScenario() 
         {
             base.BeginScenario();
             mTestField0 = 0.0f;
-
+            mButtonClicked = false;
             Console.WriteLine("HUD Component Destroyed!!!");
         }
 
@@ -69,6 +69,11 @@ namespace Test
             base.DrawContent(aTs);
 
             UI.Text("HUD element draws text");          
+            if (UI.Button("Button"))
+            {
+                mButtonClicked = !mButtonClicked;
+            }
+            if (mButtonClicked) UI.Text("HUD element draws text after button clicked");          
 
         }
 

@@ -8,5 +8,10 @@ namespace SpockEngine
         {
             CppCall.UI_Text(aText);
         }
+ 
+        public static bool Button(string aText)
+        {
+            return CppCall.UI_Button(aText);
+        }
     };
 }

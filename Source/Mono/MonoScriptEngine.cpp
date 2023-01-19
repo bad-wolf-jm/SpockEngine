@@ -210,6 +210,7 @@ namespace SE::Core
         SE_ADD_INTERNAL_CALL( OpNode_HCat );
 
         SE_ADD_INTERNAL_CALL( UI_Text );
+        SE_ADD_INTERNAL_CALL( UI_Button );
     }
 
     void MonoScriptEngine::Shutdown()

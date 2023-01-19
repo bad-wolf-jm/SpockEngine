@@ -27,7 +27,6 @@ namespace SE::Core
 
     std::string const &GetTypeTag( std::string const &aTypeName );
 
-
     template <typename _Ty>
     bool HasTypeTag( YAML::Node const &aNode )
     {
@@ -45,7 +44,7 @@ namespace SE::Core
     template <typename _Ty>
     _Ty Get( YAML::Node const &aNode, _Ty aDefault )
     {
-        if( aNode.IsNull() ) return aDefault;
+        if( ( !aNode ) || ( aNode.IsNull() ) ) return aDefault;
 
         return aNode.as<_Ty>();
     }

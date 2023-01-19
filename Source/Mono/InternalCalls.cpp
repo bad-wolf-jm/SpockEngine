@@ -7,6 +7,7 @@
 #include "Core/Logging.h"
 
 #include "UI/UI.h"
+#include "UI/Widgets.h"
 
 #include "MonoScriptEngine.h"
 #include "MonoScriptUtils.h"
@@ -865,5 +866,10 @@ namespace SE::MonoInternalCalls
     void UI_Text( MonoString *aString )
     {
         UI::Text( std::string( mono_string_to_utf8( aString ) ) );
+    }
+
+    bool UI_Button( MonoString *aText )
+    {
+        return UI::Button( mono_string_to_utf8( aText ), math::vec2(100, 30));
     }
 } // namespace SE::MonoInternalCalls
