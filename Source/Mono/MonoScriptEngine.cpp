@@ -208,6 +208,8 @@ namespace SE::Core
         SE_ADD_INTERNAL_CALL( OpNode_Shift );
         SE_ADD_INTERNAL_CALL( OpNode_Conv1D );
         SE_ADD_INTERNAL_CALL( OpNode_HCat );
+
+        SE_ADD_INTERNAL_CALL( UI_Text );
     }
 
     void MonoScriptEngine::Shutdown()

@@ -212,5 +212,8 @@ namespace SpockEngine
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static uint OpNode_HCat(Scope aScope, OpNode aArray0, OpNode aArray1);
 
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint UI_Text(string aString);
+
     }
 }

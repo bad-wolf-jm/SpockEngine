@@ -6,7 +6,7 @@ namespace SpockEngine
     {
         public static void Text(string aText)
         {
-            Console.WriteLine(aText);
+            CppCall.UI_Text(aText);
         }
     };
 }

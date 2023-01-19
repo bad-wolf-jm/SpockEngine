@@ -6,6 +6,8 @@
 
 #include "Core/Logging.h"
 
+#include "UI/UI.h"
+
 #include "MonoScriptEngine.h"
 #include "MonoScriptUtils.h"
 
@@ -201,7 +203,7 @@ namespace SE::MonoInternalCalls
         case eScriptFieldType::Float: return CreateConstantMultiTensor<float>( lScope, lShape, aInitializer );
         case eScriptFieldType::Double: return CreateConstantMultiTensor<double>( lScope, lShape, aInitializer );
         case eScriptFieldType::Bool: return CreateConstantMultiTensor<uint8_t>( lScope, lShape, aInitializer );
-        case eScriptFieldType::Char:return CreateConstantMultiTensor<uint8_t>( lScope, lShape, aInitializer );
+        case eScriptFieldType::Char: return CreateConstantMultiTensor<uint8_t>( lScope, lShape, aInitializer );
         case eScriptFieldType::Byte: return CreateConstantMultiTensor<int8_t>( lScope, lShape, aInitializer );
         case eScriptFieldType::Short: return CreateConstantMultiTensor<int16_t>( lScope, lShape, aInitializer );
         case eScriptFieldType::Int: return CreateConstantMultiTensor<int32_t>( lScope, lShape, aInitializer );
@@ -860,4 +862,8 @@ namespace SE::MonoInternalCalls
         return static_cast<uint32_t>( lNode );
     }
 
+    void UI_Text( MonoString *aString )
+    {
+        UI::Text( std::string( mono_string_to_utf8( aString ) ) );
+    }
 } // namespace SE::MonoInternalCalls

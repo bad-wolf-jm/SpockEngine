@@ -97,4 +97,6 @@ namespace SE::MonoInternalCalls
     uint32_t OpNode_Conv1D( MonoObject *aScope, MonoObject *aArray0, MonoObject *aArray1 );
     uint32_t OpNode_HCat( MonoObject *aScope, MonoObject *aArray0, MonoObject *aArray1 );
 
+    void UI_Text( MonoString *aScope );
+
 } // namespace SE::MonoInternalCalls
