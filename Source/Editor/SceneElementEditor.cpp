@@ -159,6 +159,14 @@ namespace SE::Editor
         lPrimitiveChooser.Labels = { "Point light", "Spotlight", "Directional light" };
         lPrimitiveChooser.Values = { eLightType::POINT_LIGHT, eLightType::SPOTLIGHT, eLightType::DIRECTIONAL };
 
+        switch( aComponent.mType )
+        {
+        case eLightType::POINT_LIGHT: lPrimitiveChooser.CurrentItem = 0; break;
+        case eLightType::SPOTLIGHT: lPrimitiveChooser.CurrentItem = 1; break;
+        case eLightType::DIRECTIONAL:
+        default: lPrimitiveChooser.CurrentItem = 2; break;
+        };
+
         lPrimitiveChooser.Display();
 
         float lLabelSize = 175.0f;
