@@ -121,6 +121,8 @@ namespace SE::Editor
         }
 
         mDeferredRenderer->mRenderCoordinateGrid = true;
+
+
         mDeferredRenderer->View.CameraPosition   = math::vec3( 0.0f, 1.0f, 7.5f );
         mDeferredRenderer->View.ModelFraming     = math::mat4( 0.5f );
         mDeferredRenderer->View.View = math::Inverse( math::Translate( math::mat4( 1.0f ), mDeferredRenderer->View.CameraPosition ) );

@@ -253,7 +253,6 @@ namespace SE::Editor
                 ImGui::SetNextItemWidth( l_WindowSize.x - l_LabelSize );
                 UI::Slider( "##camera_fov", "%.2f", 1.0f, 180.0f, &lFoVX );
 
-                // DefRenderer->SetProjection( math::Perspective( math::radians( lFoVX ), lAspect, 0.01f, 100000.0f ) );
                 WorldRenderer->SetProjection( math::Perspective( math::radians( lFoVX ), lAspect, 0.01f, 100000.0f ) );
             }
 
@@ -268,7 +267,6 @@ namespace SE::Editor
                 ImGui::SetNextItemWidth( l_WindowSize.x - l_LabelSize );
                 UI::Slider( "##ambient_intensity", "%.2f", 0.0f, 0.2f, &l_AmbientLightComponent.Intensity );
 
-                // DefRenderer->SetAmbientLighting( math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
                 WorldRenderer->SetAmbientLighting( math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
             }
 
@@ -276,9 +274,6 @@ namespace SE::Editor
             static float lGamma    = 2.2f;
             ImGui::SliderFloat( "Exposure", &lExposure, 0.1f, 10.0f );
             ImGui::SliderFloat( "Gamma", &lGamma, 0.1f, 4.0f );
-
-            // DefRenderer->SetExposure( lExposure );
-            // DefRenderer->SetGamma( lGamma );
 
             WorldRenderer->SetExposure( lExposure );
             WorldRenderer->SetGamma( lGamma );
@@ -1028,22 +1023,22 @@ namespace SE::Editor
                 ImGui::EndDragDropTarget();
             }
 
-            math::mat4 lCameraView     = math::Inverse( WorldRenderer->View.View );
+            math::mat4 lCameraView     = math::Inverse( World->mEditorView );
             math::vec3 lCameraPosition = math::Translation( lCameraView );
             math::mat3 lRotationMatrix = math::Rotation( lCameraView );
 
             float lRotationSpeed = 2.5_degf;
             float lPanningSpeed  = 0.25f;
 
-            bool lViewLanipulate = ViewManipulate( WorldRenderer->View.CameraPosition, WorldRenderer->View.View,
-                                                   l3DViewPosition + math::vec2{ l3DViewSize.x - 125.0f, 35.0f } );
+            bool lViewLanipulate =
+                ViewManipulate( lCameraPosition, World->mEditorView, l3DViewPosition + math::vec2{ l3DViewSize.x - 125.0f, 35.0f } );
 
-            WorldRenderer->SetView( WorldRenderer->View.View );
+            WorldRenderer->SetView( World->mEditorView );
 
             ManipulationConfig l_Manipulator{};
             l_Manipulator.Type             = lCurrentManipulationType;
             l_Manipulator.Projection       = WorldRenderer->View.Projection;
-            l_Manipulator.WorldTransform   = WorldRenderer->View.View;
+            l_Manipulator.WorldTransform   = World->mEditorView;
             l_Manipulator.ViewportPosition = l3DViewPosition;
             l_Manipulator.ViewportSize     = l3DViewSize;
 
@@ -1065,27 +1060,27 @@ namespace SE::Editor
                         math::mat3 lNewRotation =
                             math::mat3( math::Rotation( -lDragDelta.x, lRotationMatrix * math::vec3{ 0.0f, 1.0f, 0.0f } ) ) *
                             lRotationMatrix;
-                        WorldRenderer->View.View = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
+                        World->mEditorView = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
 
-                        WorldRenderer->SetView( WorldRenderer->View.View );
+                        WorldRenderer->SetView( World->mEditorView );
                     }
                     else if( lIO.KeyAlt )
                     {
                         math::mat3 lNewRotation =
                             math::mat3( math::Rotation( -lDragDelta.y, lRotationMatrix * math::vec3{ 1.0f, 0.0f, 0.0f } ) ) *
                             lRotationMatrix;
-                        WorldRenderer->View.View = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
+                        World->mEditorView = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
 
-                        WorldRenderer->SetView( WorldRenderer->View.View );
+                        WorldRenderer->SetView( World->mEditorView );
                     }
                     else if( lIO.KeyCtrl )
                     {
                         math::mat3 lNewRotation =
                             math::mat3( math::Rotation( -lDragDelta.x, lRotationMatrix * math::vec3{ 0.0f, 0.0f, 1.0f } ) ) *
                             lRotationMatrix;
-                        WorldRenderer->View.View = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
+                        World->mEditorView = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
 
-                        WorldRenderer->SetView( WorldRenderer->View.View );
+                        WorldRenderer->SetView( World->mEditorView );
                     }
                     else
                     {
@@ -1093,10 +1088,10 @@ namespace SE::Editor
                             math::mat3( math::Rotation( -lDragDelta.x, lRotationMatrix * math::vec3{ 0.0f, 1.0f, 0.0f } ) );
                         math::mat3 lNewRotationY =
                             math::mat3( math::Rotation( -lDragDelta.y, lRotationMatrix * math::vec3{ 1.0f, 0.0f, 0.0f } ) );
-                        WorldRenderer->View.View =
+                        World->mEditorView =
                             math::Inverse( math::FromComponents( lNewRotationX * lNewRotationY * lRotationMatrix, lCameraPosition ) );
 
-                        WorldRenderer->SetView( WorldRenderer->View.View );
+                        WorldRenderer->SetView( World->mEditorView );
                     }
                     ImGui::ResetMouseDragDelta( ImGuiMouseButton_Left );
                 }
@@ -1109,11 +1104,11 @@ namespace SE::Editor
                     lDragDelta = math::Inverse( WorldRenderer->View.Projection ) * lDragDelta;
                     lDragDelta = lDragDelta / lDragDelta.w;
 
-                    math::vec3 lPanAmount    = lRotationMatrix * math::vec3{ -lDragDelta.x, -lDragDelta.y, 0.0f };
-                    math::vec3 lNewPosition  = lCameraPosition + lPanAmount;
-                    WorldRenderer->View.View = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
+                    math::vec3 lPanAmount   = lRotationMatrix * math::vec3{ -lDragDelta.x, -lDragDelta.y, 0.0f };
+                    math::vec3 lNewPosition = lCameraPosition + lPanAmount;
+                    World->mEditorView      = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
 
-                    WorldRenderer->SetView( WorldRenderer->View.View );
+                    WorldRenderer->SetView( World->mEditorView );
 
                     ImGui::ResetMouseDragDelta( ImGuiMouseButton_Right );
                 }
@@ -1125,53 +1120,53 @@ namespace SE::Editor
                 {
                     if( lIO.KeyShift )
                     {
-                        math::vec3 lPanAmount    = lRotationMatrix * math::vec3{ 0.0f, lPanningSpeed, 0.0f };
-                        math::vec3 lNewPosition  = lCameraPosition + lPanAmount;
-                        WorldRenderer->View.View = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
+                        math::vec3 lPanAmount   = lRotationMatrix * math::vec3{ 0.0f, lPanningSpeed, 0.0f };
+                        math::vec3 lNewPosition = lCameraPosition + lPanAmount;
+                        World->mEditorView      = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
 
-                        WorldRenderer->SetView( WorldRenderer->View.View );
+                        WorldRenderer->SetView( World->mEditorView );
                     }
                     else
                     {
-                        math::vec3 lPanAmount    = lRotationMatrix * math::vec3{ 0.0f, 0.0f, -lPanningSpeed };
-                        math::vec3 lNewPosition  = lCameraPosition + lPanAmount;
-                        WorldRenderer->View.View = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
+                        math::vec3 lPanAmount   = lRotationMatrix * math::vec3{ 0.0f, 0.0f, -lPanningSpeed };
+                        math::vec3 lNewPosition = lCameraPosition + lPanAmount;
+                        World->mEditorView      = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
 
-                        WorldRenderer->SetView( WorldRenderer->View.View );
+                        WorldRenderer->SetView( World->mEditorView );
                     }
                 }
                 else if( ImGui::IsKeyPressed( ImGuiKey_DownArrow ) )
                 {
                     if( lIO.KeyShift )
                     {
-                        math::vec3 lPanAmount    = lRotationMatrix * math::vec3{ 0.0f, -lPanningSpeed, 0.0f };
-                        math::vec3 lNewPosition  = lCameraPosition + lPanAmount;
-                        WorldRenderer->View.View = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
+                        math::vec3 lPanAmount   = lRotationMatrix * math::vec3{ 0.0f, -lPanningSpeed, 0.0f };
+                        math::vec3 lNewPosition = lCameraPosition + lPanAmount;
+                        World->mEditorView      = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
 
-                        WorldRenderer->SetView( WorldRenderer->View.View );
+                        WorldRenderer->SetView( World->mEditorView );
                     }
                     else
                     {
-                        math::vec3 lPanAmount    = lRotationMatrix * math::vec3{ 0.0f, 0.0f, lPanningSpeed };
-                        math::vec3 lNewPosition  = lCameraPosition + lPanAmount;
-                        WorldRenderer->View.View = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
+                        math::vec3 lPanAmount   = lRotationMatrix * math::vec3{ 0.0f, 0.0f, lPanningSpeed };
+                        math::vec3 lNewPosition = lCameraPosition + lPanAmount;
+                        World->mEditorView      = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
 
-                        WorldRenderer->SetView( WorldRenderer->View.View );
+                        WorldRenderer->SetView( World->mEditorView );
                     }
                 }
                 else if( ImGui::IsKeyPressed( ImGuiKey_LeftArrow ) )
                 {
-                    math::vec3 lNewPosition  = lCameraPosition + lRotationMatrix * math::vec3{ -lPanningSpeed, 0.0f, 0.0f };
-                    WorldRenderer->View.View = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
+                    math::vec3 lNewPosition = lCameraPosition + lRotationMatrix * math::vec3{ -lPanningSpeed, 0.0f, 0.0f };
+                    World->mEditorView      = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
 
-                    WorldRenderer->SetView( WorldRenderer->View.View );
+                    WorldRenderer->SetView( World->mEditorView );
                 }
                 else if( ImGui::IsKeyPressed( ImGuiKey_RightArrow ) )
                 {
-                    math::vec3 lNewPosition  = lCameraPosition + lRotationMatrix * math::vec3{ lPanningSpeed, 0.0f, 0.0f };
-                    WorldRenderer->View.View = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
+                    math::vec3 lNewPosition = lCameraPosition + lRotationMatrix * math::vec3{ lPanningSpeed, 0.0f, 0.0f };
+                    World->mEditorView      = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
 
-                    WorldRenderer->SetView( WorldRenderer->View.View );
+                    WorldRenderer->SetView( World->mEditorView );
                 }
 
                 if( ImGui::IsKeyPressed( ImGuiKey_W ) )
@@ -1179,36 +1174,36 @@ namespace SE::Editor
                     math::mat3 lNewRotation =
                         math::mat3( math::Rotation( -lRotationSpeed, lRotationMatrix * math::vec3{ 1.0f, 0.0f, 0.0f } ) ) *
                         lRotationMatrix;
-                    WorldRenderer->View.View = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
+                    World->mEditorView = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
 
-                    WorldRenderer->SetView( WorldRenderer->View.View );
+                    WorldRenderer->SetView( World->mEditorView );
                 }
                 else if( ImGui::IsKeyPressed( ImGuiKey_S ) )
                 {
                     math::mat3 lNewRotation =
                         math::mat3( math::Rotation( lRotationSpeed, lRotationMatrix * math::vec3{ 1.0f, 0.0f, 0.0f } ) ) *
                         lRotationMatrix;
-                    WorldRenderer->View.View = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
+                    World->mEditorView = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
 
-                    WorldRenderer->SetView( WorldRenderer->View.View );
+                    WorldRenderer->SetView( World->mEditorView );
                 }
                 else if( ImGui::IsKeyPressed( ImGuiKey_A ) )
                 {
                     math::mat3 lNewRotation =
                         math::mat3( math::Rotation( lRotationSpeed, lRotationMatrix * math::vec3{ 0.0f, 1.0f, 0.0f } ) ) *
                         lRotationMatrix;
-                    WorldRenderer->View.View = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
+                    World->mEditorView = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
 
-                    WorldRenderer->SetView( WorldRenderer->View.View );
+                    WorldRenderer->SetView( World->mEditorView );
                 }
                 else if( ImGui::IsKeyPressed( ImGuiKey_D ) )
                 {
                     math::mat3 lNewRotation =
                         math::mat3( math::Rotation( -lRotationSpeed, lRotationMatrix * math::vec3{ 0.0f, 1.0f, 0.0f } ) ) *
                         lRotationMatrix;
-                    WorldRenderer->View.View = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
+                    World->mEditorView = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
 
-                    WorldRenderer->SetView( WorldRenderer->View.View );
+                    WorldRenderer->SetView( World->mEditorView );
                 }
             }
         }

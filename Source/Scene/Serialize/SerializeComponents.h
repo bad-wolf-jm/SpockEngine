@@ -41,6 +41,8 @@ namespace SE::Core
         return ( GetTypeTag( lInternalTypeName ) );
     }
 
+    math::mat4 ReadMatrix( YAML::Node const &aNode );
+
     template <typename _Ty>
     _Ty Get( YAML::Node const &aNode, _Ty aDefault )
     {

@@ -139,7 +139,7 @@ namespace SE::Core
         aComponent.Rotation.w = lCoefficients.w;
     }
 
-    static math::mat4 ReadMatrix( YAML::Node const &aNode )
+    math::mat4 ReadMatrix( YAML::Node const &aNode )
     {
         std::vector<float> lMatrixEntries{};
         for( YAML::const_iterator it = aNode.begin(); it != aNode.end(); ++it ) lMatrixEntries.push_back( Get( *it, 0.0f ) );

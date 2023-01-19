@@ -118,6 +118,9 @@ namespace SE::Core
         Ref<VkGpuBuffer> mIndexBuffer             = nullptr;
         Ref<VkGpuBuffer> mTransformedVertexBuffer = nullptr;
 
+        math::mat4 mEditorView;
+
+
       private:
         eSceneState           mState = eSceneState::EDITING;
         Ref<VkGraphicContext> mGraphicContext;
@@ -150,6 +153,7 @@ namespace SE::Core
 
         math::vec2 mViewportPosition{};
         math::vec2 mViewportSize{};
+
 
       private:
         friend class Element;

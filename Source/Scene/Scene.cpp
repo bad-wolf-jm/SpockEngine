@@ -47,6 +47,8 @@ namespace SE::Core
     {
         mMaterialSystem = New<MaterialSystem>( a_GraphicContext );
 
+        mEditorView = math::Translate( math::mat4( 1.0f ), -math::vec3( 0.0f, 1.0f, 7.5f ) );
+
         DefaultCamera                = mRegistry.CreateEntity( "DefaultCamera" );
         auto &lCameraComponent       = DefaultCamera.Add<sCameraComponent>();
         lCameraComponent.Position    = math::vec3{ 0.0f, 0.0f, 0.0f };
@@ -81,6 +83,7 @@ namespace SE::Core
     {
         mGraphicContext = aSource->mGraphicContext;
         mMaterialSystem = aSource->mMaterialSystem;
+        mEditorView     = aSource->mEditorView;
 
         InitializeRayTracing();
         ConnectSignalHandlers();
@@ -597,6 +600,8 @@ namespace SE::Core
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sAnimationChooser>()], lReadContext );
             }
         }
+
+        mEditorView =  ReadMatrix( lSceneRoot["editor_view"] );
 
         auto lRootNodeUUIDStr = Get( lSceneRoot["root"], std::string{ "" } );
         auto lRootNodeUUID    = UUIDv4::UUID::fromStrFactory( lRootNodeUUIDStr );
@@ -1319,6 +1324,8 @@ namespace SE::Core
             lOut.WriteKey( "environment", Environment.Get<sUUID>().mValue.str() );
             lOut.WriteKey( "default_camera", DefaultCamera.Get<sUUID>().mValue.str() );
             lOut.WriteKey( "current_camera", CurrentCamera.Get<sUUID>().mValue.str() );
+            lOut.WriteKey( "editor_view" );
+            lOut.Write( mEditorView );
             lOut.WriteKey( "nodes" );
             {
                 lOut.BeginMap();
