@@ -45,14 +45,6 @@ namespace SE::Core
 
             if( !lData ) return sImageData{};
 
-            for( int y = 0; y < lHeight / 2; y++ )
-            {
-                uint32_t *line_y     = (uint32_t *)lData + y * lWidth;
-                uint32_t *mirrored_y = (uint32_t *)lData + ( lHeight - 1 - y ) * lWidth;
-                int       mirror_y   = lHeight - 1 - y;
-                for( int x = 0; x < lWidth; x++ ) std::swap( line_y[x], mirrored_y[x] );
-            }
-
             lImageData.mFormat    = eColorFormat::RGBA32_FLOAT;
             lImageData.mPixelData = std::vector<uint8_t>( (uint8_t*)lData, ((uint8_t*)lData )+ ( lWidth * lHeight * sizeof( float ) ) );
         }
@@ -63,14 +55,6 @@ namespace SE::Core
             stbi_uc *lData = stbi_load( aPath.string().c_str(), &lWidth, &lHeight, &lActualComponentCount, lComponentCount );
 
             if( !lData ) return sImageData{};
-
-            for( int y = 0; y < lHeight / 2; y++ )
-            {
-                uint32_t *line_y     = (uint32_t *)lData + y * lWidth;
-                uint32_t *mirrored_y = (uint32_t *)lData + ( lHeight - 1 - y ) * lWidth;
-                int       mirror_y   = lHeight - 1 - y;
-                for( int x = 0; x < lWidth; x++ ) std::swap( line_y[x], mirrored_y[x] );
-            }
 
             lImageData.mFormat    = eColorFormat::RGBA8_UNORM;
             lImageData.mPixelData = std::vector<uint8_t>( lData, lData + ( lWidth * lHeight * sizeof( float ) ) );

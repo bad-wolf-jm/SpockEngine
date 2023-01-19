@@ -232,8 +232,6 @@ namespace SE::Graphics
         lImageDataStruct.mByteSize  = lByteSize;
         lImageDataStruct.mPixelData = std::vector<uint8_t>( lPixelData, lPixelData + lByteSize );
 
-        Core::sTextureCreateInfo lTextureCreateInfo{};
-        lTextureCreateInfo.mMipLevels = 1;
-        mTextureData                  = TextureData2D( lTextureCreateInfo, lImageDataStruct );
+        mTextureData = TextureData2D( mSpec, lImageDataStruct );
     }
 } // namespace SE::Graphics

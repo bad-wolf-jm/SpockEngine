@@ -1263,23 +1263,23 @@ namespace SE::Core
 
                 lNewMaterial.mBaseColorTexture = lDefaultTexture;
                 if( lMaterial.mBaseColorTexture.mTextureID >= 2 )
-                    lNewMaterial.mBaseColorTexture = sTextureReference{ lCurrentTextureID++, 0 };
+                    lNewMaterial.mBaseColorTexture = sTextureReference{ 0, lCurrentTextureID++ };
 
                 lNewMaterial.mNormalsTexture = lDefaultTexture;
                 if( lMaterial.mNormalsTexture.mTextureID >= 2 )
-                    lNewMaterial.mNormalsTexture = sTextureReference{ lCurrentTextureID++, 0 };
+                    lNewMaterial.mNormalsTexture = sTextureReference{ 0, lCurrentTextureID++ };
 
                 lNewMaterial.mMetalRoughTexture = lDefaultTexture;
                 if( lMaterial.mMetalRoughTexture.mTextureID >= 2 )
-                    lNewMaterial.mMetalRoughTexture = sTextureReference{ lCurrentTextureID++, 0 };
+                    lNewMaterial.mMetalRoughTexture = sTextureReference{ 0, lCurrentTextureID++ };
 
                 lNewMaterial.mOcclusionTexture = lDefaultTexture;
                 if( lMaterial.mOcclusionTexture.mTextureID >= 2 )
-                    lNewMaterial.mOcclusionTexture = sTextureReference{ lCurrentTextureID++, 0 };
+                    lNewMaterial.mOcclusionTexture = sTextureReference{ 0, lCurrentTextureID++ };
 
                 lNewMaterial.mEmissiveTexture = lDefaultTexture;
                 if( lMaterial.mEmissiveTexture.mTextureID >= 2 )
-                    lNewMaterial.mEmissiveTexture = sTextureReference{ lCurrentTextureID++, 0 };
+                    lNewMaterial.mEmissiveTexture = sTextureReference{ 0, lCurrentTextureID++ };
 
                 lBinaryDataFile.Package( lNewMaterial );
 
