@@ -69,12 +69,10 @@ namespace SE::Editor
         fs::path mMaterialsPath = "";
         fs::path mModelsPath    = "";
 
-        Ref<Engine>               mEngineLoop   = nullptr;
-        Ref<Scene>                World         = nullptr;
-        Ref<Scene>                ActiveWorld   = nullptr;
-        Ref<ForwardSceneRenderer> WorldRenderer = nullptr;
-        Ref<DeferredRenderer>     DefRenderer   = nullptr;
-        Ref<RayTracingRenderer>   RTRenderer    = nullptr;
+        Ref<Engine>           mEngineLoop   = nullptr;
+        Ref<Scene>            World         = nullptr;
+        Ref<Scene>            ActiveWorld   = nullptr;
+        Ref<DeferredRenderer> WorldRenderer = nullptr;
 
         Entity Sensor{};
         Entity ActiveSensor{};

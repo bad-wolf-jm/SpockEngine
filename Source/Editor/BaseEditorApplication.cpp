@@ -31,8 +31,6 @@ namespace SE::Editor
     void BaseEditorApplication::RenderScene()
     {
         mDeferredRenderer->Render();
-        mForwardRenderer->Render();
-        mRayTracingRenderer->Render();
     }
 
     void BaseEditorApplication::Update( Timestep ts )
@@ -40,8 +38,6 @@ namespace SE::Editor
         mEditorWindow.ActiveWorld->Update( ts );
         mEditorWindow.UpdateFramerate( ts );
         mDeferredRenderer->Update( mEditorWindow.ActiveWorld );
-        mForwardRenderer->Update( mEditorWindow.ActiveWorld );
-        mRayTracingRenderer->Update( mEditorWindow.ActiveWorld );
     }
 
     void BaseEditorApplication::RebuildOutputFramebuffer()
@@ -49,15 +45,13 @@ namespace SE::Editor
         if( mViewportWidth == 0 || mViewportHeight == 0 ) return;
 
         mDeferredRenderer->ResizeOutput( mViewportWidth, mViewportHeight );
-        mForwardRenderer->ResizeOutput( mViewportWidth, mViewportHeight );
-        mRayTracingRenderer->ResizeOutput( mViewportWidth, mViewportHeight );
 
         sTextureSamplingInfo lSamplingInfo{};
         lSamplingInfo.mNormalizedCoordinates = true;
         lSamplingInfo.mNormalizedValues      = true;
 
         mOffscreenRenderTargetTexture = New<VkSampler2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
-                                                          mForwardRenderer->GetOutputImage(), lSamplingInfo );
+                                                          mDeferredRenderer->GetOutputImage(), lSamplingInfo );
 
         if( !mOffscreenRenderTargetDisplayHandle.Handle )
         {
@@ -68,21 +62,6 @@ namespace SE::Editor
         else
         {
             mOffscreenRenderTargetDisplayHandle.Handle->Write( mOffscreenRenderTargetTexture, 0 );
-        }
-
-        mDeferredRenderTargetTexture = New<VkSampler2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
-                                                         mRayTracingRenderer->GetOutputImage(), lSamplingInfo );
-        if( !mDeferredRenderTargetTexture ) return;
-
-        if( !mDeferredRenderTargetDisplayHandle.Handle )
-        {
-            mDeferredRenderTargetDisplayHandle =
-                SE::Core::Engine::GetInstance()->UIContext()->CreateTextureHandle( mDeferredRenderTargetTexture );
-            mEditorWindow.UpdateSceneViewport_deferred( mDeferredRenderTargetDisplayHandle );
-        }
-        else
-        {
-            mDeferredRenderTargetDisplayHandle.Handle->Write( mDeferredRenderTargetTexture, 0 );
         }
     }
 
@@ -95,9 +74,7 @@ namespace SE::Editor
             mShouldRebuildViewport = false;
         }
 
-        mEditorWindow.WorldRenderer = mForwardRenderer;
-        mEditorWindow.DefRenderer   = mDeferredRenderer;
-        mEditorWindow.RTRenderer    = mRayTracingRenderer;
+        mEditorWindow.WorldRenderer = mDeferredRenderer;
 
         lRequestQuit = mEditorWindow.Display();
 
@@ -121,15 +98,9 @@ namespace SE::Editor
         mWorld = New<Scene>( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
         mDeferredRenderer =
             New<DeferredRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
-        mForwardRenderer =
-            New<ForwardSceneRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 4 );
-
-        mRayTracingRenderer = New<RayTracingRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext() );
         RebuildOutputFramebuffer();
 
-        mForwardRenderer->Update( mWorld );
         mDeferredRenderer->Update( mWorld );
-        mRayTracingRenderer->Update( mWorld );
 
         mEditorWindow.World       = mWorld;
         mEditorWindow.ActiveWorld = mWorld;
@@ -149,9 +120,9 @@ namespace SE::Editor
             mEditorWindow.ActiveSensor = mEditorWindow.Sensor;
         }
 
-        mForwardRenderer->RenderCoordinateGrid = true;
-        mForwardRenderer->View.CameraPosition  = math::vec3( 0.0f, 1.0f, 7.5f );
-        mForwardRenderer->View.ModelFraming    = math::mat4( 0.5f );
-        mForwardRenderer->View.View = math::Inverse( math::Translate( math::mat4( 1.0f ), mForwardRenderer->View.CameraPosition ) );
+        mDeferredRenderer->mRenderCoordinateGrid = true;
+        mDeferredRenderer->View.CameraPosition   = math::vec3( 0.0f, 1.0f, 7.5f );
+        mDeferredRenderer->View.ModelFraming     = math::mat4( 0.5f );
+        mDeferredRenderer->View.View = math::Inverse( math::Translate( math::mat4( 1.0f ), mDeferredRenderer->View.CameraPosition ) );
     }
 } // namespace SE::Editor

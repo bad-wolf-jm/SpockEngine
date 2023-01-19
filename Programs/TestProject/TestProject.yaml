@@ -1,5 +1,5 @@
 project:
   assembly_path: "C:\\GitLab\\SpockEngine\\Programs\\TestProject\\Build\\Debug\\Test.dll"
   # default_scenario: "C:\\GitLab\\SpockEngine\\Programs\\TestProject\\Saved\\TEST_2\\SCENE\\Scene.yaml"  
-  default_scenario: "C:\\GitLab\\SpockEngine\\Saved\\TEST\\SCENE\\SceneDefinition.yaml"
-  # default_scenario: ~
+  # default_scenario: "C:\\GitLab\\SpockEngine\\Saved\\TEST\\SCENE\\SceneDefinition.yaml"
+  default_scenario: ~
