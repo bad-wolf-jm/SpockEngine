@@ -261,9 +261,9 @@ namespace SE::Core
                                                                          { "", eLightType::POINT_LIGHT } };
 
         aComponent.mType      = lLightTypeLookup[Get( aNode["mType"], std::string{ "" } )];
-        aComponent.mColor     = Get( aNode["mColor"], { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+        aComponent.mColor     = Get( aNode["mColor"], { "r", "g", "b" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
         aComponent.mIntensity = Get( aNode["mIntensity"], 0.0005f );
-        aComponent.mCone      = Get( aNode["mCone"], 0.0005f );
+        aComponent.mCone      = Get( aNode["mCone"], 0.0f );
     }
 
     void ReadComponent( sHUDComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )

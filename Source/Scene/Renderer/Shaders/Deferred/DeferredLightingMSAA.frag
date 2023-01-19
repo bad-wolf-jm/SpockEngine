@@ -213,6 +213,7 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
     {
         vec3 radiance = ubo.DirectionalLights[lDirectionalLightIndex].Color * ubo.DirectionalLights[lDirectionalLightIndex].Intensity;
         vec3 lLightDirection = normalize( ubo.DirectionalLights[lDirectionalLightIndex].Direction );
+
         Lo += ComputeLightContribution( lBaseColor.xyz, N, V, lLightDirection, radiance, metallic, roughness );
     }
 
@@ -277,4 +278,7 @@ void main()
         outFragcolor = vec4( vec3( dot( outColor, vec3( 0.2126, 0.7152, 0.0722 ) ) ), 1.0f );
     else
         outFragcolor = vec4( outColor, 1.0 );
+
+    // outFragcolor = vec4( normal, 1.0 );
+
 }
