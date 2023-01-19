@@ -89,21 +89,30 @@ namespace SE::Core::EntityComponentSystem::Components
             return mEntity.Get<T>();
         }
 
-        void Initialize( Entity aEntity ) { mEntity = aEntity; }
-
-        void OnCreate()
+        void Initialize( Entity aEntity )
         {
+            mEntity = aEntity;
+
             // Create Mono side entity object
             auto lEntityID    = static_cast<uint32_t>( mEntity );
             auto lRegistryID  = (size_t)mEntity.GetRegistry();
             auto lEntityClass = MonoScriptClass( "SpockEngine", "Entity", true );
             mEntityInstance   = lEntityClass.Instantiate( lEntityID, lRegistryID );
 
+            if( mClassFullName.empty() ) return;
+
+            size_t      lSeparatorPos   = mClassFullName.find_last_of( '.' );
+            std::string lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
+            std::string lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
+
+            mClass = MonoScriptClass( lClassNamespace, lClassName, false );
+
             // Instantiate the Mono actor class with the entity object as parameter
             mInstance = mClass.Instantiate();
             mInstance.CallMethod( "Initialize", (size_t)mEntityInstance.GetInstance() );
-            mInstance.InvokeMethod( "BeginScenario", 0, nullptr );
         }
+
+        void OnCreate() { mInstance.InvokeMethod( "BeginScenario", 0, nullptr ); }
 
         void OnDestroy() { mInstance.InvokeMethod( "EndScenario", 0, nullptr ); }
 
@@ -367,9 +376,13 @@ namespace SE::Core::EntityComponentSystem::Components
         float mBorderThickness = 2.0f;
         float mRounding        = 5.0f;
 
+        bool mDisplayInEditor = true;
+        bool mPreview         = true;
+
         std::string        mClassFullName = "";
         MonoScriptClass    mClass;
         MonoScriptInstance mInstance;
+        MonoScriptInstance mPreviewInstance;
         MonoScriptInstance mEntityInstance;
 
         sHUDComponent()                        = default;
@@ -381,11 +394,6 @@ namespace SE::Core::EntityComponentSystem::Components
             : mClassFullName{ aClassFullName }
 
         {
-            size_t      lSeparatorPos   = aClassFullName.find_last_of( '.' );
-            std::string lClassNamespace = aClassFullName.substr( 0, lSeparatorPos );
-            std::string lClassName      = aClassFullName.substr( lSeparatorPos + 1 );
-
-            mClass = MonoScriptClass( lClassNamespace, lClassName, false );
         }
 
         template <typename T>
@@ -394,23 +402,44 @@ namespace SE::Core::EntityComponentSystem::Components
             return mEntity.Get<T>();
         }
 
-        void Initialize( Entity aEntity ) { mEntity = aEntity; }
-
-        void OnCreate()
+        void Initialize( Entity aEntity )
         {
-            // Create Mono side entity object
+            mEntity           = aEntity; // Create Mono side entity object
             auto lEntityID    = static_cast<uint32_t>( mEntity );
             auto lRegistryID  = (size_t)mEntity.GetRegistry();
             auto lEntityClass = MonoScriptClass( "SpockEngine", "Entity", true );
             mEntityInstance   = lEntityClass.Instantiate( lEntityID, lRegistryID );
 
+            if( mClassFullName.empty() ) return;
+
+            size_t      lSeparatorPos   = mClassFullName.find_last_of( '.' );
+            std::string lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
+            std::string lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
+
+            mClass = MonoScriptClass( lClassNamespace, lClassName, false );
+
+            if( mDisplayInEditor && mPreview )
+            {
+                mPreviewInstance = mClass.Instantiate();
+                mPreviewInstance.CallMethod( "Initialize", (size_t)mEntityInstance.GetInstance() );
+            }
+        }
+
+        void OnCreate()
+        {
             // Instantiate the Mono actor class with the entity object as parameter
+            if( mClassFullName.empty() ) return;
+
             mInstance = mClass.Instantiate();
             mInstance.CallMethod( "Initialize", (size_t)mEntityInstance.GetInstance() );
             mInstance.InvokeMethod( "BeginScenario", 0, nullptr );
         }
 
-        void OnDestroy() { mInstance.InvokeMethod( "EndScenario", 0, nullptr ); }
+        void OnDestroy()
+        {
+            mInstance.InvokeMethod( "EndScenario", 0, nullptr );
+            mInstance = MonoScriptInstance{};
+        }
 
         void OnUpdate( Timestep ts )
         {
@@ -419,7 +448,7 @@ namespace SE::Core::EntityComponentSystem::Components
 
         void OnPreviewUpdate( Timestep ts )
         {
-            if( mInstance ) mInstance.CallMethod( "DrawPreviewContent", ts.GetMilliseconds() );
+            if( mPreviewInstance ) mPreviewInstance.CallMethod( "DrawPreviewContent", ts.GetMilliseconds() );
         }
 
         Entity GetControlledEntity() const { return mEntity; };

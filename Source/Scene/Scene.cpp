@@ -68,6 +68,7 @@ namespace SE::Core
         Root.Add<sNodeTransformComponent>();
 
         InitializeRayTracing();
+        ConnectSignalHandlers();
     }
 
     template <typename _Component>
@@ -82,6 +83,7 @@ namespace SE::Core
         mMaterialSystem = aSource->mMaterialSystem;
 
         InitializeRayTracing();
+        ConnectSignalHandlers();
 
         std::unordered_map<std::string, Entity> lSourceEntities{};
         std::unordered_map<std::string, Entity> lClonedEntities{};
@@ -131,6 +133,8 @@ namespace SE::Core
 
                 lNewScriptComponent.Initialize( lClonedEntity );
             }
+
+            CopyComponent<sHUDComponent>( lEntity, lClonedEntity );
 
             CopyComponent<PointLightHelperComponent>( lEntity, lClonedEntity );
             CopyComponent<DirectionalLightHelperComponent>( lEntity, lClonedEntity );
@@ -316,6 +320,29 @@ namespace SE::Core
         Root.Add<sNodeTransformComponent>();
     }
 
+    void Scene::ConnectSignalHandlers()
+    {
+        // clang-format off
+        mRegistry.OnComponentAdded<sActorComponent>( 
+            [&]( auto aEntity, auto &aComponent ) { 
+                aComponent.Initialize( aEntity ); 
+        } );
+
+        mRegistry.OnComponentUpdated<sActorComponent>( 
+            [&]( auto aEntity, auto &aComponent ) { 
+                aComponent.Initialize( aEntity ); 
+        } );
+
+        mRegistry.OnComponentAdded<sHUDComponent>( [&]( auto aEntity, auto &aComponent ) { 
+                aComponent.Initialize( aEntity ); 
+        } );
+
+        mRegistry.OnComponentUpdated<sHUDComponent>( [&]( auto aEntity, auto &aComponent ) { 
+                aComponent.Initialize( aEntity ); 
+        } );
+        // clang-format on
+    }
+
     Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform )
     {
         return LoadModel( aModelData, aTransform, "MODEL" );
@@ -325,6 +352,8 @@ namespace SE::Core
     {
         mRegistry.Clear();
         mMaterialSystem->Wipe();
+
+        ConnectSignalHandlers();
 
         auto lScenarioRoot = aScenarioPath.parent_path();
 
@@ -463,9 +492,10 @@ namespace SE::Core
 
             if( HasTypeTag<sHUDComponent>( lEntityConfiguration ) )
             {
-                auto &lComponent = lEntity.Add<sHUDComponent>();
+                sHUDComponent lComponent{};
 
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sHUDComponent>()], lReadContext );
+                lEntity.Add<sHUDComponent>( lComponent );
             }
         }
 
@@ -783,8 +813,6 @@ namespace SE::Core
     void Scene::AttachScript( Element aElement, std::string aClassName )
     {
         auto &lNewScriptComponent = aElement.Add<sActorComponent>( aClassName );
-
-        lNewScriptComponent.Initialize( aElement );
     }
 
     void Scene::BeginScenario()
@@ -808,6 +836,7 @@ namespace SE::Core
             } );
 
         ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnCreate(); } );
+        ForEach<sHUDComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnCreate(); } );
 
         mState = eSceneState::RUNNING;
     }
@@ -931,6 +960,8 @@ namespace SE::Core
         ForEach<sHUDComponent>(
             [=]( auto aEntity, auto &aComponent )
             {
+                if( ( mState != eSceneState::RUNNING ) && !aComponent.mDisplayInEditor ) return;
+
                 static ImGuiWindowFlags lFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 
                 ImVec2 lPosition = ImVec2{ aComponent.mX, aComponent.mY } + ImVec2{ mViewportPosition.x, mViewportPosition.y };
@@ -954,7 +985,7 @@ namespace SE::Core
                     // and interact with it.
                     if( mState == eSceneState::RUNNING )
                         aComponent.OnUpdate( ts );
-                    else
+                    else if( aComponent.mPreview )
                         aComponent.OnPreviewUpdate( ts );
                 }
                 ImGui::End();

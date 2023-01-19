@@ -228,7 +228,7 @@ namespace SE::Core
         /// @param aHandler Function to call when a new component is added.
         ///
         template <typename Component>
-        void OnComponentAdded( std::function<void( Internal::Entity<EntityRegistry *> const &, Component const & )> aHandler )
+        void OnComponentAdded( std::function<void( Internal::Entity<EntityRegistry *> &, Component & )> aHandler )
         {
             if( !mAddSignalHandlers.Has<SignalHandler<Component>>() )
             {
@@ -249,7 +249,7 @@ namespace SE::Core
         /// @param aHandler Function to call when a new component is updated.
         ///
         template <typename Component>
-        void OnComponentUpdated( std::function<void( Internal::Entity<EntityRegistry *> const &, Component const & )> aHandler )
+        void OnComponentUpdated( std::function<void( Internal::Entity<EntityRegistry *> &, Component & )> aHandler )
         {
             if( !mUpdateSignalHandlers.Has<SignalHandler<Component>>() )
             {
@@ -270,7 +270,7 @@ namespace SE::Core
         /// @param aHandler Function to call when a new component is destroyed.
         ///
         template <typename Component>
-        void OnComponentDestroyed( std::function<void( Internal::Entity<EntityRegistry *> const &, Component const & )> aHandler )
+        void OnComponentDestroyed( std::function<void( Internal::Entity<EntityRegistry *> &, Component & )> aHandler )
         {
             if( !mDestroySignalHandlers.Has<SignalHandler<Component>>() )
             {

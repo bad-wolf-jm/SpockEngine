@@ -34,7 +34,7 @@ namespace SE::Core
     {
         if( gTypeTags.find( aTypeName ) != gTypeTags.end() ) return gTypeTags[aTypeName];
 
-        return std::move(std::string{"VOID"});
+        return std::move( std::string{ "VOID" } );
     }
 
     template <uint32_t N>
@@ -276,6 +276,8 @@ namespace SE::Core
         aComponent.mFillColor       = Get( aNode["mFillColor"], { "r", "g", "b", "a" }, math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f } );
         aComponent.mBorderColor     = Get( aNode["mBorderColor"], { "r", "g", "b", "a" }, math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f } );
         aComponent.mBorderThickness = Get( aNode["mBorderThickness"], 1.0f );
+        aComponent.mDisplayInEditor = Get( aNode["mDisplayInEditor"], true );
+        aComponent.mPreview         = Get( aNode["mPreview"], false );
     }
 
     template <typename _Ty>
@@ -541,6 +543,8 @@ namespace SE::Core
             aOut.WriteKey( "mBorderColor" );
             aOut.Write( aComponent.mBorderColor, { "r", "g", "b", "a" } );
             aOut.WriteKey( "mBorderThickness", aComponent.mBorderThickness );
+            aOut.WriteKey( "mDisplayInEditor", aComponent.mDisplayInEditor );
+            aOut.WriteKey( "mPreview", aComponent.mPreview );
         }
         aOut.EndMap();
     }
