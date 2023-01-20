@@ -11,6 +11,7 @@
 #include "CoordinateGridRenderer.h"
 #include "DeferredLightingRenderer.h"
 #include "MeshRenderer.h"
+#include "ShadowSceneRenderer.h"
 
 namespace SE::Core
 {
@@ -73,6 +74,7 @@ namespace SE::Core
         DeferredLightingRenderer mLightingRenderer;
 
         Ref<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;
+        Ref<ShadowSceneRenderer>    mShadowSceneRenderer    = nullptr;
 
         std::unordered_map<MeshRendererCreateInfo, MeshRenderer, MeshRendererCreateInfoHash> mMeshRenderers = {};
         std::unordered_map<ParticleRendererCreateInfo, ParticleSystemRenderer, ParticleSystemRendererCreateInfoHash>

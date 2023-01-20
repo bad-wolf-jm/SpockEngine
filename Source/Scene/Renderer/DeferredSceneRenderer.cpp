@@ -110,6 +110,7 @@ namespace SE::Core
         CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
         lCoordinateGridRendererCreateInfo.RenderPass = mLightingContext.GetRenderPass();
         mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mLightingContext, lCoordinateGridRendererCreateInfo );
+        mShadowSceneRenderer    = New<ShadowSceneRenderer>( mGraphicContext );
     }
 
     Ref<VkTexture2D> DeferredRenderer::GetOutputImage()
@@ -216,6 +217,7 @@ namespace SE::Core
     void DeferredRenderer::Update( Ref<Scene> aWorld )
     {
         ASceneRenderer::Update( aWorld );
+        mShadowSceneRenderer->Update( aWorld );
 
         View.PointLightCount = mPointLights.size();
         for( uint32_t i = 0; i < View.PointLightCount; i++ ) View.PointLights[i] = mPointLights[i];
@@ -270,6 +272,7 @@ namespace SE::Core
         }
         mGeometryContext.EndRender();
 
+        mShadowSceneRenderer->Render();
         // Lighting pass
         mLightingContext.BeginRender();
         {

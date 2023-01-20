@@ -70,6 +70,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/Renderer/CoordinateGridRenderer.cpp
     Scene/Renderer/ParticleSystemRenderer.cpp
     Scene/Renderer/ForwardSceneRenderer.cpp
+    Scene/Renderer/ShadowSceneRenderer.cpp
     Scene/Renderer/DeferredSceneRenderer.cpp
     Scene/Renderer/DeferredLightingRenderer.cpp
     Scene/Serialize/FileIO.cpp
@@ -124,6 +125,8 @@ function(add_shader TARGET SHADER)
     set_source_files_properties(${CURRENT_OUTPUT_PATH} PROPERTIES GENERATED TRUE)
     target_sources(${TARGET} PRIVATE ${CURRENT_OUTPUT_PATH})
 endfunction(add_shader)
+
+add_shader(LTSimulationEngineRuntime "shadow.vert")
 
 add_shader(LTSimulationEngineRuntime "filtercube.vert")
 add_shader(LTSimulationEngineRuntime "irradiancecube.frag")

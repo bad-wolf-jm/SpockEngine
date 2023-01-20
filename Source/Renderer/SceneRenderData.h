@@ -85,6 +85,16 @@ namespace SE::Core
         WorldMatrices( const WorldMatrices & ) = default;
     };
 
+    struct ShadowMatrices
+    {
+        math::mat4 mMVP;
+
+        ShadowMatrices()  = default;
+        ~ShadowMatrices() = default;
+
+        ShadowMatrices( const ShadowMatrices & ) = default;
+    };
+
     struct CameraSettings
     {
         float Exposure                             = 4.5f;

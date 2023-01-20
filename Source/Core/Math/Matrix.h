@@ -25,6 +25,8 @@ namespace math
 
     inline mat4 LookAt( vec3 const &aEye, vec3 const &aCenter, vec3 const &aUp ) { return glm::lookAt( aEye, aCenter, aUp ); }
 
+    inline mat4 Orthogonal( vec2 const& aXSpan, vec2 const& aYSpan, vec2 const& aDepth ) { return glm::ortho( aXSpan.x, aXSpan.y, aYSpan.x, aYSpan.y, aDepth.x, aDepth.y ); }
+
     inline mat4 Orthogonal( float aWidth, float aHeight ) { return glm::ortho( 0.f, aWidth, 0.f, aHeight, -1.f, 1.f ); }
 
     inline mat4 Orthogonal( vec2 const &aSize ) { return glm::ortho( 0.f, aSize.x, 0.f, aSize.y, -1.f, 1.f ); }

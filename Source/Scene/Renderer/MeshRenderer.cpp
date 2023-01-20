@@ -58,11 +58,11 @@ namespace SE::Core
     {
 
         SceneRenderPipelineCreateInfo lCreateInfo{};
-        lCreateInfo.Opaque         = aCreateInfo.Opaque;
-        lCreateInfo.LineWidth      = aCreateInfo.LineWidth;
-        lCreateInfo.VertexShader   = aCreateInfo.VertexShader;
-        lCreateInfo.FragmentShader = aCreateInfo.FragmentShader;
-        lCreateInfo.RenderPass     = aCreateInfo.RenderPass;
+        lCreateInfo.Opaque         = Spec.Opaque;
+        lCreateInfo.LineWidth      = Spec.LineWidth;
+        lCreateInfo.VertexShader   = Spec.VertexShader;
+        lCreateInfo.FragmentShader = Spec.FragmentShader;
+        lCreateInfo.RenderPass     = Spec.RenderPass;
 
         CameraSetLayout  = GetCameraSetLayout( mGraphicContext );
         TextureSetLayout = GetTextureSetLayout( mGraphicContext );
