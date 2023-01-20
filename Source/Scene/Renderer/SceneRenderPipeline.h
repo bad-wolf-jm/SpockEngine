@@ -55,12 +55,16 @@ namespace SE::Core
             Ref<ShaderModule> lVertexShaderModule =
                 New<ShaderModule>( mGraphicContext, lVertexShaderFiles, eShaderStageTypeFlags::VERTEX );
 
-            std::string       l_FragmentShaderFiles = GetResourcePath( aCreateInfo.FragmentShader ).string();
-            Ref<ShaderModule> l_FragmentShaderModule =
-                New<ShaderModule>( mGraphicContext, l_FragmentShaderFiles, eShaderStageTypeFlags::FRAGMENT );
-
+            Ref<ShaderModule> lFragmentShaderModule = nullptr;
+            if( !aCreateInfo.FragmentShader.empty() )
+            {
+                std::string lFragmentShaderFiles = GetResourcePath( aCreateInfo.FragmentShader ).string();
+                lFragmentShaderModule = New<ShaderModule>( mGraphicContext, lFragmentShaderFiles, eShaderStageTypeFlags::FRAGMENT );
+            }
             GraphicsPipelineCreateInfo lPipelineCreateInfo{};
-            lPipelineCreateInfo.mShaderStages        = { { lVertexShaderModule, "main" }, { l_FragmentShaderModule, "main" } };
+            lPipelineCreateInfo.mShaderStages = { { lVertexShaderModule, "main" } };
+            if( lFragmentShaderModule )
+                lPipelineCreateInfo.mShaderStages.push_back( sShader{ lFragmentShaderModule, "main" } );
             lPipelineCreateInfo.InputBufferLayout    = _VertexType::GetDefaultLayout();
             lPipelineCreateInfo.InstanceBufferLayout = aCreateInfo.InstanceBufferLayout;
             lPipelineCreateInfo.Topology             = Spec.Topology;
