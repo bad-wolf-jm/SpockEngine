@@ -52,7 +52,7 @@ namespace SE::Core
     class ShadowSceneRenderer : public ASceneRenderer
     {
       public:
-        ShadowMatrices  View;
+        ShadowMatrices View;
 
       public:
         ShadowSceneRenderer() = default;
@@ -68,8 +68,7 @@ namespace SE::Core
         void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
       protected:
-        std::vector<Ref<VkRenderTarget>> mDirectionalShadowMaps             = {};
-        std::vector<ARenderContext>      mDirectionalShadowMapRenderContext = {};
+        std::vector<ARenderContext> mDirectionalShadowMapRenderContext = {};
 
         std::vector<Ref<VkRenderTarget>> mPointLightShadowMaps = {};
         std::vector<Ref<VkRenderTarget>> mSpotlightShadowMaps  = {};

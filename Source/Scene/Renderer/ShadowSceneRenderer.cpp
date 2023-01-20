@@ -68,35 +68,29 @@ namespace SE::Core
     {
         ASceneRenderer::Update( aWorld );
 
-        // View.PointLightCount = mPointLights.size();
-        // for( uint32_t i = 0; i < View.PointLightCount; i++ ) View.PointLights[i] = mPointLights[i];
-
-        // View.DirectionalLightCount = mDirectionalLights.size();
-        if( mDirectionalLights.size() != mDirectionalShadowMaps.size() )
+        if( mDirectionalLights.size() != mDirectionalShadowMapRenderContext.size() )
         {
-            mDirectionalShadowMaps.clear();
+            // mDirectionalShadowMaps.clear();
+            mDirectionalShadowMapRenderContext.clear();
             for( uint32_t i = 0; i < mDirectionalLights.size(); i++ )
             {
                 sRenderTargetDescription lRenderTargetSpec{};
                 lRenderTargetSpec.mWidth       = 1024;
                 lRenderTargetSpec.mHeight      = 1024;
                 lRenderTargetSpec.mSampleCount = 1;
-                mDirectionalShadowMaps.emplace_back();
-                mDirectionalShadowMaps.back() = New<VkRenderTarget>( mGraphicContext, lRenderTargetSpec );
+                auto lDirectionalShadowMaps    = New<VkRenderTarget>( mGraphicContext, lRenderTargetSpec );
 
                 sAttachmentDescription lAttachmentCreateInfo{};
                 lAttachmentCreateInfo.mIsSampled   = true;
                 lAttachmentCreateInfo.mIsPresented = false;
                 lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
                 lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
+                lAttachmentCreateInfo.mType        = eAttachmentType::DEPTH;
+                lAttachmentCreateInfo.mClearColor  = { 1.0f, 0.0f, 0.0f, 0.0f };
+                lDirectionalShadowMaps->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
+                lDirectionalShadowMaps->Finalize();
 
-                lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
-                lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
-                mDirectionalShadowMaps.back()->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
-
-                mDirectionalShadowMaps.back()->Finalize();
-
-                mDirectionalShadowMapRenderContext.emplace_back( mGraphicContext, mDirectionalShadowMaps.back() );
+                mDirectionalShadowMapRenderContext.emplace_back( mGraphicContext, lDirectionalShadowMaps );
             }
         }
 
@@ -106,9 +100,6 @@ namespace SE::Core
             lCreateInfo.RenderPass = mDirectionalShadowMapRenderContext.back().GetRenderPass();
             mRenderPipeline        = ShadowMeshRenderer( mGraphicContext, lCreateInfo );
         }
-
-        // View.SpotlightCount = mSpotlights.size();
-        // for( uint32_t i = 0; i < View.SpotlightCount; i++ ) View.Spotlights[i] = mSpotlights[i];
     }
 
     void ShadowSceneRenderer::Render()
@@ -127,8 +118,8 @@ namespace SE::Core
             // clang-format on
 
             math::mat4 lProjection =
-                math::Orthogonal( math::vec2{ -10.0f, 10.0f }, math::vec2{ -10.0f, 10.0f }, math::vec2{ 0.0f, 10.0f } );
-            math::mat4 lView = math::LookAt( -mDirectionalLights[lLightIndex].Direction, math::vec3{ 0.0f, 0.0f, 0.0f },
+                math::Orthogonal( math::vec2{ -10.0f, 10.0f }, math::vec2{ -10.0f, 10.0f }, math::vec2{ -10.0f, 10.0f } );
+            math::mat4 lView = math::LookAt( mDirectionalLights[lLightIndex].Direction * 5.0f, math::vec3{ 0.0f, 0.0f, 0.0f },
                                              math::vec3{ 0.0f, 1.0f, 0.0f } );
             View.mMVP        = lClip * lProjection * lView;
             mCameraUniformBuffer->Write( View );
@@ -136,15 +127,13 @@ namespace SE::Core
             lContext.BeginRender();
             for( auto &lPipelineData : mOpaqueMeshQueue )
             {
+                if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
+
                 lContext.Bind( mRenderPipeline.Pipeline );
                 lContext.Bind( mSceneDescriptors, 0, -1 );
-
-                if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
                 lContext.Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
-
                 lContext.Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
             }
-
             lContext.EndRender();
             lLightIndex++;
         }
