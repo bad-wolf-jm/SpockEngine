@@ -72,6 +72,7 @@ namespace SE::Core
         {
             // mDirectionalShadowMaps.clear();
             mDirectionalShadowMapRenderContext.clear();
+            mDirectionalShadowMapSamplers.clear();
             for( uint32_t i = 0; i < mDirectionalLights.size(); i++ )
             {
                 sRenderTargetDescription lRenderTargetSpec{};
@@ -87,8 +88,12 @@ namespace SE::Core
                 lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
                 lAttachmentCreateInfo.mType        = eAttachmentType::DEPTH;
                 lAttachmentCreateInfo.mClearColor  = { 1.0f, 0.0f, 0.0f, 0.0f };
-                lDirectionalShadowMaps->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
+                lDirectionalShadowMaps->AddAttachment( "SHADOW_MAP", lAttachmentCreateInfo );
                 lDirectionalShadowMaps->Finalize();
+
+                mDirectionalShadowMapSamplers.emplace_back();
+                mDirectionalShadowMapSamplers.back() = New<Graphics::VkSampler2D>(
+                    mGraphicContext, lDirectionalShadowMaps->GetAttachment( "SHADOW_MAP" ), sTextureSamplingInfo{} );
 
                 mDirectionalShadowMapRenderContext.emplace_back( mGraphicContext, lDirectionalShadowMaps );
             }

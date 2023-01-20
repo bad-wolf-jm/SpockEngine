@@ -69,6 +69,7 @@ namespace SE::Core
 
       protected:
         std::vector<ARenderContext> mDirectionalShadowMapRenderContext = {};
+        std::vector<Ref<Graphics::VkSampler2D>> mDirectionalShadowMapSamplers = {};
 
         std::vector<Ref<VkRenderTarget>> mPointLightShadowMaps = {};
         std::vector<Ref<VkRenderTarget>> mSpotlightShadowMaps  = {};
