@@ -26,6 +26,17 @@ namespace SE::Core
         Direction = mat3( aTransform ) * vec3{ 0.0f, 1.0f, 0.0f };
         Color     = aSpec.mColor;
         Intensity = aSpec.mIntensity;
+
+        // clang-format off
+        const float aEntries[] = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f };
+        math::mat4  lClip = math::MakeMat4( aEntries );
+        // clang-format on
+
+        math::mat4 lProjection =
+            math::Orthogonal( math::vec2{ -10.0f, 10.0f }, math::vec2{ -10.0f, 10.0f }, math::vec2{ -10.0f, 10.0f } );
+        math::mat4 lView = math::LookAt( Direction * 5.0f, math::vec3{ 0.0f, 0.0f, 0.0f },
+                                         math::vec3{ 0.0f, 1.0f, 0.0f } );
+        Transform        = lClip * lProjection * lView;
     }
 
     PointLightData::PointLightData( const sLightComponent &aSpec, mat4 aTransform )

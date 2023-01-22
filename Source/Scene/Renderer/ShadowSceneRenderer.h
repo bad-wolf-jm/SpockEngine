@@ -67,9 +67,13 @@ namespace SE::Core
 
         void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
+        static Ref<DescriptorSet> GetDirectionalShadowMapsLayout();
+
+        std::vector<Ref<Graphics::VkSampler2D>> &GetDirectionalShadowMapSamplers() { return mDirectionalShadowMapSamplers; };
+
       protected:
-        std::vector<ARenderContext> mDirectionalShadowMapRenderContext = {};
-        std::vector<Ref<Graphics::VkSampler2D>> mDirectionalShadowMapSamplers = {};
+        std::vector<ARenderContext>             mDirectionalShadowMapRenderContext = {};
+        std::vector<Ref<Graphics::VkSampler2D>> mDirectionalShadowMapSamplers      = {};
 
         std::vector<Ref<VkRenderTarget>> mPointLightShadowMaps = {};
         std::vector<Ref<VkRenderTarget>> mSpotlightShadowMaps  = {};
@@ -86,6 +90,9 @@ namespace SE::Core
 
         Ref<DescriptorSet> mSceneDescriptors = nullptr;
         Ref<DescriptorSet> mNodeDescriptors  = nullptr;
+
+        Ref<DescriptorSetLayout> mShadowMapDescriptorLayout = nullptr;
+        Ref<DescriptorSet>       mShadowMapDescriptorSet    = nullptr;
 
         ShadowMeshRenderer mRenderPipeline{};
     };

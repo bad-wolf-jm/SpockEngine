@@ -27,6 +27,9 @@ namespace SE::Core
 
         mLightingTextureLayout = DeferredLightingRenderer::GetTextureSetLayout( mGraphicContext );
         mLightingPassTextures  = New<DescriptorSet>( mGraphicContext, mLightingTextureLayout );
+
+        mLightingDirectionalShadowLayout   = DeferredLightingRenderer::GetDirectionalShadowSetLayout( mGraphicContext );
+        mLightingPassDirectionalShadowMaps = New<DescriptorSet>( mGraphicContext, mLightingDirectionalShadowLayout, 1024 );
     }
 
     void DeferredRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
@@ -249,6 +252,8 @@ namespace SE::Core
         // Geometry pass
         mScene->GetMaterialSystem()->UpdateDescriptors();
 
+
+
         mGeometryContext.BeginRender();
         for( auto &lPipelineData : mOpaqueMeshQueue )
         {
@@ -273,12 +278,15 @@ namespace SE::Core
         mGeometryContext.EndRender();
 
         mShadowSceneRenderer->Render();
+        mLightingPassDirectionalShadowMaps->Write(mShadowSceneRenderer->GetDirectionalShadowMapSamplers(), 0);
+
         // Lighting pass
         mLightingContext.BeginRender();
         {
             mLightingContext.Bind( mLightingRenderer.Pipeline );
             mLightingContext.Bind( mLightingPassCamera, 0, -1 );
             mLightingContext.Bind( mLightingPassTextures, 1, -1 );
+            mLightingContext.Bind( mLightingPassDirectionalShadowMaps, 2, -1 );
             mLightingContext.Draw( 6, 0, 0, 1, 0 );
 
             for( auto &lParticleSystem : mParticleQueue )

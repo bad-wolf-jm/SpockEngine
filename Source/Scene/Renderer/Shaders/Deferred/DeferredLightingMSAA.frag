@@ -1,4 +1,5 @@
 #version 460
+#extension GL_EXT_nonuniform_qualifier : enable
 
 layout( location = 0 ) in vec2 inUV;
 
@@ -6,6 +7,9 @@ layout( set = 1, binding = 0 ) uniform sampler2D samplerPosition;
 layout( set = 1, binding = 1 ) uniform sampler2D samplerNormal;
 layout( set = 1, binding = 2 ) uniform sampler2D samplerAlbedo;
 layout( set = 1, binding = 3 ) uniform sampler2D samplerOcclusionMetalRough;
+
+layout( set = 2, binding = 0 ) uniform sampler2D gDirectionallShadowMaps[];
+
 
 layout( location = 0 ) out vec4 outFragcolor;
 
@@ -16,6 +20,7 @@ struct DirectionalLightData
     vec3  Direction;
     vec3  Color;
     float Intensity;
+    mat4  Transform;
 };
 
 struct PointLightData
@@ -199,6 +204,50 @@ vec3 ComputeRadiance( vec3 aLightPosition, vec3 aObjectPosition, vec3 aLightColo
     return aLightColor * aLightIntensity * lAttenuation;
 }
 
+float textureProj(sampler2D shadowMap, vec4 shadowCoord, vec2 off)
+{
+    float shadow = 1.0;
+    if ( shadowCoord.z > -1.0 && shadowCoord.z < 1.0 ) 
+    {
+        float dist = texture( shadowMap, shadowCoord.st + off ).r;
+        if ( shadowCoord.w > 0.0 && dist < shadowCoord.z ) 
+        {
+            shadow = uboParams.AmbientLightIntensity;
+        }
+    }
+    return shadow;
+}
+
+
+float filterPCF(sampler2D shadowMap, vec4 sc)
+{
+    ivec2 texDim = textureSize(shadowMap, 0);
+    float scale = 1.5;
+    float dx = scale * 1.0 / float(texDim.x);
+    float dy = scale * 1.0 / float(texDim.y);
+
+    float shadowFactor = 0.0;
+    int count = 0;
+    int range = 1;
+    
+    for (int x = -range; x <= range; x++)
+    {
+        for (int y = -range; y <= range; y++)
+        {
+            shadowFactor += textureProj(shadowMap, sc, vec2(dx*x, dy*y));
+            count++;
+        }
+    
+    }
+    return shadowFactor / count;
+}
+
+const mat4 biasMat = mat4( 
+    0.5, 0.0, 0.0, 0.0,
+    0.0, 0.5, 0.0, 0.0,
+    0.0, 0.0, 1.0, 0.0,
+    0.5, 0.5, 0.0, 1.0 );
+
 vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalrough, vec4 emissive )
 {
     float metallic  = aometalrough.g;
@@ -214,7 +263,13 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
         vec3 radiance = ubo.DirectionalLights[lDirectionalLightIndex].Color * ubo.DirectionalLights[lDirectionalLightIndex].Intensity;
         vec3 lLightDirection = normalize( ubo.DirectionalLights[lDirectionalLightIndex].Direction );
 
-        Lo += ComputeLightContribution( lBaseColor.xyz, N, V, lLightDirection, radiance, metallic, roughness );
+        vec3 lLightContribution = ComputeLightContribution( lBaseColor.xyz, N, V, lLightDirection, radiance, metallic, roughness );
+        int enablePCF = 1;
+
+        vec4 lShadowNormalizedCoordinates = biasMat * ubo.DirectionalLights[lDirectionalLightIndex].Transform * vec4(inWorldPos, 1.0f);
+        float lShadow = (enablePCF == 1) ? filterPCF(gDirectionallShadowMaps[lDirectionalLightIndex], lShadowNormalizedCoordinates) : textureProj(gDirectionallShadowMaps[lDirectionalLightIndex], lShadowNormalizedCoordinates, vec2(0.0));
+
+        Lo += (lLightContribution * lShadow);
     }
 
     for( int lPointLightIndex = 0; lPointLightIndex < ubo.PointLightCount; lPointLightIndex++ )
@@ -280,5 +335,5 @@ void main()
         outFragcolor = vec4( outColor, 1.0 );
 
     // outFragcolor = vec4( normal, 1.0 );
-
+    // outFragcolor = texture( gDirectionallShadowMaps[0], inUV );
 }

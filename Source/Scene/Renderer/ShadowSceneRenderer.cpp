@@ -60,6 +60,13 @@ namespace SE::Core
         mCameraUniformBuffer =
             New<VkGpuBuffer>( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( ShadowMatrices ) );
         mSceneDescriptors->Write( mCameraUniformBuffer, false, 0, sizeof( ShadowMatrices ), 0 );
+
+        DescriptorSetLayoutCreateInfo lmShadowMapLayout{};
+        lmShadowMapLayout.Bindings = {
+            DescriptorBindingInfo{ 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
+
+        // mShadowMapDescriptorLayout = New<DescriptorSetLayout>( mGraphicContext, lmShadowMapLayout, true );
+        // mShadowMapDescriptorSet    = New<DescriptorSet>( mGraphicContext, mShadowMapDescriptorLayout, 1024 );
     }
 
     void ShadowSceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight ) {}
@@ -70,7 +77,6 @@ namespace SE::Core
 
         if( mDirectionalLights.size() != mDirectionalShadowMapRenderContext.size() )
         {
-            // mDirectionalShadowMaps.clear();
             mDirectionalShadowMapRenderContext.clear();
             mDirectionalShadowMapSamplers.clear();
             for( uint32_t i = 0; i < mDirectionalLights.size(); i++ )
@@ -97,6 +103,7 @@ namespace SE::Core
 
                 mDirectionalShadowMapRenderContext.emplace_back( mGraphicContext, lDirectionalShadowMaps );
             }
+            // mShadowMapDescriptorSet->Write( mDirectionalShadowMapSamplers, 0 );
         }
 
         if( mDirectionalShadowMapRenderContext.size() > 0 )
@@ -117,16 +124,7 @@ namespace SE::Core
         uint32_t lLightIndex = 0;
         for( auto &lContext : mDirectionalShadowMapRenderContext )
         {
-            // clang-format off
-            const float aEntries[] = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f };
-            math::mat4  lClip = math::MakeMat4( aEntries );
-            // clang-format on
-
-            math::mat4 lProjection =
-                math::Orthogonal( math::vec2{ -10.0f, 10.0f }, math::vec2{ -10.0f, 10.0f }, math::vec2{ -10.0f, 10.0f } );
-            math::mat4 lView = math::LookAt( mDirectionalLights[lLightIndex].Direction * 5.0f, math::vec3{ 0.0f, 0.0f, 0.0f },
-                                             math::vec3{ 0.0f, 1.0f, 0.0f } );
-            View.mMVP        = lClip * lProjection * lView;
+            View.mMVP        = mDirectionalLights[lLightIndex].Transform;
             mCameraUniformBuffer->Write( View );
 
             lContext.BeginRender();
