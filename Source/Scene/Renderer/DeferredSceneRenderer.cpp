@@ -31,7 +31,7 @@ namespace SE::Core
         mLightingDirectionalShadowLayout   = DeferredLightingRenderer::GetDirectionalShadowSetLayout( mGraphicContext );
         mLightingPassDirectionalShadowMaps = New<DescriptorSet>( mGraphicContext, mLightingDirectionalShadowLayout, 1024 );
 
-        mLightingSpotlightShadowLayout   = DeferredLightingRenderer::GetDirectionalShadowSetLayout( mGraphicContext );
+        mLightingSpotlightShadowLayout   = DeferredLightingRenderer::GetSpotlightShadowSetLayout( mGraphicContext );
         mLightingPassSpotlightShadowMaps = New<DescriptorSet>( mGraphicContext, mLightingSpotlightShadowLayout, 1024 );
     }
 
@@ -279,10 +279,12 @@ namespace SE::Core
         mGeometryContext.EndRender();
 
         mShadowSceneRenderer->Render();
-        mLightingPassDirectionalShadowMaps->Write( mShadowSceneRenderer->GetDirectionalShadowMapSamplers(), 0 );
-
+        if (mShadowSceneRenderer->GetDirectionalShadowMapSamplers().size() > 0)
+            mLightingPassDirectionalShadowMaps->Write( mShadowSceneRenderer->GetDirectionalShadowMapSamplers(), 0 );
+            
         if (mShadowSceneRenderer->GetSpotlightShadowMapSamplers().size() > 0)
             mLightingPassSpotlightShadowMaps->Write( mShadowSceneRenderer->GetSpotlightShadowMapSamplers(), 0 );
+
 
         // Lighting pass
         mLightingContext.BeginRender();
