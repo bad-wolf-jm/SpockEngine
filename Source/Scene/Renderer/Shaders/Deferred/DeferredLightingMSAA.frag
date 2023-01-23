@@ -296,13 +296,11 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
         vec3 lRadiance = ComputeRadiance( ubo.Spotlights[lSpotlightIndex].WorldPosition, inWorldPos,
                                           ubo.Spotlights[lSpotlightIndex].Color, ubo.Spotlights[lSpotlightIndex].Intensity );
 
-        Lo += ComputeLightContribution( lBaseColor.xyz, N, V, L, lRadiance, metallic, roughness );
+        vec3 lLightContribution = ComputeLightContribution( lBaseColor.xyz, N, V, L, lRadiance, metallic, roughness );
+        vec4 lShadowNormalizedCoordinates = biasMat * ubo.Spotlights[lSpotlightIndex].Transform * vec4(inWorldPos, 1.0f);
+        float lShadow = (enablePCF == 1) ? filterPCF(gSpotlightShadowMaps[lSpotlightIndex], lShadowNormalizedCoordinates) : textureProj(gSpotlightShadowMaps[lSpotlightIndex], lShadowNormalizedCoordinates, vec2(0.0));
 
-        // vec3 lLightContribution = ComputeLightContribution( lBaseColor.xyz, N, V, L, lRadiance, metallic, roughness );
-        // vec4 lShadowNormalizedCoordinates = biasMat * ubo.Spotlights[lSpotlightIndex].Transform * vec4(inWorldPos, 1.0f);
-        // float lShadow = (enablePCF == 1) ? filterPCF(gSpotlightShadowMaps[lSpotlightIndex], lShadowNormalizedCoordinates) : textureProj(gSpotlightShadowMaps[lSpotlightIndex], lShadowNormalizedCoordinates, vec2(0.0));
-
-        // Lo += (lLightContribution * lShadow);
+        Lo += (lLightContribution * lShadow);
     }
 
     return Lo;
