@@ -258,6 +258,7 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
 
     vec3 V = normalize( ubo.camPos - inWorldPos );
 
+    int enablePCF = 1;
 
     // reflectance equation
     vec3 Lo = vec3( 0.0f );
@@ -268,6 +269,12 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
         vec3 lLightDirection = normalize( ubo.DirectionalLights[i].Direction );
 
         vec3 lLightContribution = ComputeLightContribution( lBaseColor.xyz, N, V, lLightDirection, radiance, metallic, roughness );
+        vec4 lShadowNormalizedCoordinates = biasMat * ubo.DirectionalLights[i].Transform * vec4(inWorldPos, 1.0f);
+        lShadowNormalizedCoordinates /= lShadowNormalizedCoordinates.w;
+
+        float lShadow = (enablePCF == 1) ? filterPCF(gDirectionalShadowMaps[i], lShadowNormalizedCoordinates) : textureProj(gDirectionalShadowMaps[i], lShadowNormalizedCoordinates, vec2(0.0));
+
+        lLightContribution *= lShadow;
 
         Lo += lLightContribution;
     }
@@ -295,7 +302,13 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
 
         vec3 lLightContribution = ComputeLightContribution( lBaseColor.xyz, N, V, L, lRadiance, metallic, roughness );
 
-        Lo += lLightContribution;// * lShadow);
+        vec4 lShadowNormalizedCoordinates = biasMat * ubo.Spotlights[i].Transform * vec4(inWorldPos, 1.0f);
+        lShadowNormalizedCoordinates /= lShadowNormalizedCoordinates.w;
+
+        float lShadow = (enablePCF == 1) ? filterPCF(gSpotlightShadowMaps[i], lShadowNormalizedCoordinates) : textureProj(gSpotlightShadowMaps[i], lShadowNormalizedCoordinates, vec2(0.0));
+
+
+        Lo += lLightContribution * lShadow;
     }
 
     return Lo;
@@ -359,7 +372,7 @@ void main()
     hdr_color      = mix( hdr_color, hdr_color * ao, aoStrength );
     hdr_color      = hdr_color + emissive.xyz;
 
-    hdr_color = shadow(hdr_color, pos);
+    // hdr_color = shadow(hdr_color, pos);
 
     vec3 outColor = tonemap( hdr_color );
 
