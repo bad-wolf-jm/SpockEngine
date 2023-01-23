@@ -313,6 +313,8 @@ vec3 shadow(vec3 fragcolor, vec3 inWorldPos)
 {
     int enablePCF = 1;
 
+    float lShadowCoefficient = 1.0f;
+
     for( int i = 0; i < ubo.DirectionalLightCount; i++ )
     {
         vec4 lShadowNormalizedCoordinates = biasMat * ubo.DirectionalLights[i].Transform * vec4(inWorldPos, 1.0f);
@@ -320,7 +322,7 @@ vec3 shadow(vec3 fragcolor, vec3 inWorldPos)
 
         float lShadow = (enablePCF == 1) ? filterPCF(gDirectionalShadowMaps[i], lShadowNormalizedCoordinates) : textureProj(gDirectionalShadowMaps[i], lShadowNormalizedCoordinates, vec2(0.0));
 
-        fragcolor *= lShadow;
+        lShadowCoefficient *= lShadow;
     }
 
     for( int i = 0; i < ubo.SpotlightCount; i++ )
@@ -330,10 +332,10 @@ vec3 shadow(vec3 fragcolor, vec3 inWorldPos)
 
         float lShadow = (enablePCF == 1) ? filterPCF(gSpotlightShadowMaps[i], lShadowNormalizedCoordinates) : textureProj(gSpotlightShadowMaps[i], lShadowNormalizedCoordinates, vec2(0.0));
 
-        fragcolor *= lShadow;
+        lShadowCoefficient *= lShadow;
     }
 
-    return fragcolor;
+    return fragcolor * lShadowCoefficient;
 }
 
 
