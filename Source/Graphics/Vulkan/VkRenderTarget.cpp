@@ -110,9 +110,6 @@ namespace SE::Graphics
         mVkFramebuffer    = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
                              ->CreateFramebuffer( mVkImageViews, mSpec.mWidth, mSpec.mHeight, 1, mRenderPassObject->mVkObject );
 
-        // mFramebufferObject = New<VkRenderTarget>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), mSpec.mWidth,
-        //                                           mSpec.mHeight, 1, mRenderPassObject->mVkObject, lAttachments );
-
         InitializeCommandBuffers();
     }
 
