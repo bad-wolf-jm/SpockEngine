@@ -75,9 +75,11 @@ namespace SE::Core
       protected:
         std::vector<ARenderContext>             mDirectionalShadowMapRenderContext = {};
         std::vector<Ref<Graphics::VkSampler2D>> mDirectionalShadowMapSamplers      = {};
+        ShadowMeshRenderer mRenderPipeline{};
 
         std::vector<ARenderContext>             mSpotlightShadowMapRenderContext = {};
         std::vector<Ref<Graphics::VkSampler2D>> mSpotlightShadowMapSamplers      = {};
+        ShadowMeshRenderer mSpotlightRenderPipeline{};
 
         std::vector<Ref<VkRenderTarget>> mPointLightShadowMaps = {};
         std::vector<Ref<VkRenderTarget>> mSpotlightShadowMaps  = {};
@@ -98,7 +100,7 @@ namespace SE::Core
         Ref<DescriptorSetLayout> mShadowMapDescriptorLayout = nullptr;
         Ref<DescriptorSet>       mShadowMapDescriptorSet    = nullptr;
 
-        ShadowMeshRenderer mRenderPipeline{};
+        // ShadowMeshRenderer mRenderPipeline{};
     };
 
 } // namespace SE::Core

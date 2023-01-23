@@ -250,6 +250,7 @@ const mat4 biasMat = mat4(
     0.0, 0.0, 1.0, 0.0,
     0.5, 0.5, 0.0, 1.0 );
 
+
 vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalrough, vec4 emissive )
 {
     float metallic  = aometalrough.g;
@@ -257,50 +258,44 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
 
     vec3 V = normalize( ubo.camPos - inWorldPos );
 
-    int enablePCF = 1;
 
     // reflectance equation
     vec3 Lo = vec3( 0.0f );
 
-    for( int lDirectionalLightIndex = 0; lDirectionalLightIndex < ubo.DirectionalLightCount; lDirectionalLightIndex++ )
+    for( int i = 0; i < ubo.DirectionalLightCount; i++ )
     {
-        vec3 radiance = ubo.DirectionalLights[lDirectionalLightIndex].Color * ubo.DirectionalLights[lDirectionalLightIndex].Intensity;
-        vec3 lLightDirection = normalize( ubo.DirectionalLights[lDirectionalLightIndex].Direction );
+        vec3 radiance = ubo.DirectionalLights[i].Color * ubo.DirectionalLights[i].Intensity;
+        vec3 lLightDirection = normalize( ubo.DirectionalLights[i].Direction );
 
         vec3 lLightContribution = ComputeLightContribution( lBaseColor.xyz, N, V, lLightDirection, radiance, metallic, roughness );
 
-        vec4 lShadowNormalizedCoordinates = biasMat * ubo.DirectionalLights[lDirectionalLightIndex].Transform * vec4(inWorldPos, 1.0f);
-        float lShadow = (enablePCF == 1) ? filterPCF(gDirectionalShadowMaps[lDirectionalLightIndex], lShadowNormalizedCoordinates) : textureProj(gDirectionalShadowMaps[lDirectionalLightIndex], lShadowNormalizedCoordinates, vec2(0.0));
-
-        Lo += (lLightContribution * lShadow);
+        Lo += lLightContribution;
     }
 
-    for( int lPointLightIndex = 0; lPointLightIndex < ubo.PointLightCount; lPointLightIndex++ )
+    for( int i = 0; i < ubo.PointLightCount; i++ )
     {
-        vec3 lLightPosition  = ubo.PointLights[lPointLightIndex].WorldPosition;
+        vec3 lLightPosition  = ubo.PointLights[i].WorldPosition;
         vec3 lLightDirection = normalize( lLightPosition - inWorldPos );
 
-        vec3 lRadiance = ComputeRadiance( ubo.PointLights[lPointLightIndex].WorldPosition, inWorldPos,
-                                          ubo.PointLights[lPointLightIndex].Color, ubo.PointLights[lPointLightIndex].Intensity );
+        vec3 lRadiance = ComputeRadiance( ubo.PointLights[i].WorldPosition, inWorldPos,
+                                          ubo.PointLights[i].Color, ubo.PointLights[i].Intensity );
         Lo += ComputeLightContribution( lBaseColor.xyz, N, V, lLightDirection, lRadiance, metallic, roughness );
     }
 
-    for( int lSpotlightIndex = 0; lSpotlightIndex < ubo.SpotlightCount; lSpotlightIndex++ )
+    for( int i = 0; i < ubo.SpotlightCount; i++ )
     {
-        vec3  L                   = normalize( ubo.Spotlights[lSpotlightIndex].WorldPosition - inWorldPos );
-        vec3  lLightDirection     = normalize( ubo.Spotlights[lSpotlightIndex].LookAtDirection );
+        vec3  L                   = normalize( ubo.Spotlights[i].WorldPosition - inWorldPos );
+        vec3  lLightDirection     = normalize( ubo.Spotlights[i].LookAtDirection );
         float lAngleToLightOrigin = dot( L, normalize( -lLightDirection ) );
 
-        if( lAngleToLightOrigin < ubo.Spotlights[lSpotlightIndex].Cone ) continue;
+        if( lAngleToLightOrigin < ubo.Spotlights[i].Cone ) continue;
 
-        vec3 lRadiance = ComputeRadiance( ubo.Spotlights[lSpotlightIndex].WorldPosition, inWorldPos,
-                                          ubo.Spotlights[lSpotlightIndex].Color, ubo.Spotlights[lSpotlightIndex].Intensity );
+        vec3 lRadiance = ComputeRadiance( ubo.Spotlights[i].WorldPosition, inWorldPos,
+                                          ubo.Spotlights[i].Color, ubo.Spotlights[i].Intensity );
 
         vec3 lLightContribution = ComputeLightContribution( lBaseColor.xyz, N, V, L, lRadiance, metallic, roughness );
-        vec4 lShadowNormalizedCoordinates = biasMat * ubo.Spotlights[lSpotlightIndex].Transform * vec4(inWorldPos, 1.0f);
-        float lShadow = (enablePCF == 1) ? filterPCF(gSpotlightShadowMaps[lSpotlightIndex], lShadowNormalizedCoordinates) : textureProj(gSpotlightShadowMaps[lSpotlightIndex], lShadowNormalizedCoordinates, vec2(0.0));
 
-        Lo += (lLightContribution * lShadow);
+        Lo += lLightContribution;// * lShadow);
     }
 
     return Lo;
@@ -312,6 +307,35 @@ vec4 SRGBtoLINEAR( vec4 srgbIn )
     vec3 linOut = mix( srgbIn.xyz / vec3( 12.92 ), pow( ( srgbIn.xyz + vec3( 0.055 ) ) / vec3( 1.055 ), vec3( 2.4 ) ), bLess );
     return vec4( linOut, srgbIn.w );
 }
+
+
+vec3 shadow(vec3 fragcolor, vec3 inWorldPos) 
+{
+    int enablePCF = 1;
+
+    for( int i = 0; i < ubo.DirectionalLightCount; i++ )
+    {
+        vec4 lShadowNormalizedCoordinates = biasMat * ubo.DirectionalLights[i].Transform * vec4(inWorldPos, 1.0f);
+        lShadowNormalizedCoordinates /= lShadowNormalizedCoordinates.w;
+
+        float lShadow = (enablePCF == 1) ? filterPCF(gDirectionalShadowMaps[i], lShadowNormalizedCoordinates) : textureProj(gDirectionalShadowMaps[i], lShadowNormalizedCoordinates, vec2(0.0));
+
+        fragcolor *= lShadow;
+    }
+
+    for( int i = 0; i < ubo.SpotlightCount; i++ )
+    {
+        vec4 lShadowNormalizedCoordinates = biasMat * ubo.Spotlights[i].Transform * vec4(inWorldPos, 1.0f);
+        lShadowNormalizedCoordinates /= lShadowNormalizedCoordinates.w;
+
+        float lShadow = (enablePCF == 1) ? filterPCF(gSpotlightShadowMaps[i], lShadowNormalizedCoordinates) : textureProj(gSpotlightShadowMaps[i], lShadowNormalizedCoordinates, vec2(0.0));
+
+        fragcolor *= lShadow;
+    }
+
+    return fragcolor;
+}
+
 
 void main()
 {
@@ -332,6 +356,8 @@ void main()
     vec3 hdr_color = ambient + fragColor;
     hdr_color      = mix( hdr_color, hdr_color * ao, aoStrength );
     hdr_color      = hdr_color + emissive.xyz;
+
+    hdr_color = shadow(hdr_color, pos);
 
     vec3 outColor = tonemap( hdr_color );
 

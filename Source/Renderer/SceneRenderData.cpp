@@ -58,7 +58,7 @@ namespace SE::Core
         math::mat4  lClip = math::MakeMat4( aEntries );
         // clang-format on
 
-        math::mat4 lProjection = math::Perspective( math::radians( aSpec.mCone ), 1.0f, 0.0001f, 10.0f );
+        math::mat4 lProjection = math::Perspective( math::radians( aSpec.mCone ), 1.0f, .5001f, 100.0f );
         math::mat4 lView       = math::LookAt( WorldPosition, WorldPosition + LookAtDirection, math::vec3{ 0.0f, 1.0f, 0.0f } );
 
         Transform = lClip * lProjection * lView;
