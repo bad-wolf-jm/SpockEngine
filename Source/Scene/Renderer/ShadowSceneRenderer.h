@@ -73,13 +73,17 @@ namespace SE::Core
         std::vector<Ref<Graphics::VkSampler2D>> &GetSpotlightShadowMapSamplers() { return mSpotlightShadowMapSamplers; };
 
       protected:
-        std::vector<ARenderContext>             mDirectionalShadowMapRenderContext = {};
-        std::vector<Ref<Graphics::VkSampler2D>> mDirectionalShadowMapSamplers      = {};
-        ShadowMeshRenderer mRenderPipeline{};
+        std::vector<ARenderContext>             mDirectionalShadowMapRenderContext    = {};
+        std::vector<Ref<Graphics::VkSampler2D>> mDirectionalShadowMapSamplers         = {};
+        std::vector<Ref<VkGpuBuffer>>           mDirectionalShadowCameraUniformBuffer = {};
+        std::vector<Ref<DescriptorSet>>         mDirectionalShadowSceneDescriptors    = {};
+        ShadowMeshRenderer                      mRenderPipeline{};
 
-        std::vector<ARenderContext>             mSpotlightShadowMapRenderContext = {};
-        std::vector<Ref<Graphics::VkSampler2D>> mSpotlightShadowMapSamplers      = {};
-        ShadowMeshRenderer mSpotlightRenderPipeline{};
+        std::vector<ARenderContext>             mSpotlightShadowMapRenderContext    = {};
+        std::vector<Ref<Graphics::VkSampler2D>> mSpotlightShadowMapSamplers         = {};
+        std::vector<Ref<VkGpuBuffer>>           mSpotlightShadowCameraUniformBuffer = {};
+        std::vector<Ref<DescriptorSet>>         mSpotlightShadowSceneDescriptors    = {};
+        ShadowMeshRenderer                      mSpotlightRenderPipeline{};
 
         std::vector<Ref<VkRenderTarget>> mPointLightShadowMaps = {};
         std::vector<Ref<VkRenderTarget>> mSpotlightShadowMaps  = {};
