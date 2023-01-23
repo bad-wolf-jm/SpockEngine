@@ -30,6 +30,9 @@ namespace SE::Core
 
         mLightingDirectionalShadowLayout   = DeferredLightingRenderer::GetDirectionalShadowSetLayout( mGraphicContext );
         mLightingPassDirectionalShadowMaps = New<DescriptorSet>( mGraphicContext, mLightingDirectionalShadowLayout, 1024 );
+
+        mLightingSpotlightShadowLayout   = DeferredLightingRenderer::GetDirectionalShadowSetLayout( mGraphicContext );
+        mLightingPassSpotlightShadowMaps = New<DescriptorSet>( mGraphicContext, mLightingSpotlightShadowLayout, 1024 );
     }
 
     void DeferredRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
@@ -252,8 +255,6 @@ namespace SE::Core
         // Geometry pass
         mScene->GetMaterialSystem()->UpdateDescriptors();
 
-
-
         mGeometryContext.BeginRender();
         for( auto &lPipelineData : mOpaqueMeshQueue )
         {
@@ -278,7 +279,10 @@ namespace SE::Core
         mGeometryContext.EndRender();
 
         mShadowSceneRenderer->Render();
-        mLightingPassDirectionalShadowMaps->Write(mShadowSceneRenderer->GetDirectionalShadowMapSamplers(), 0);
+        mLightingPassDirectionalShadowMaps->Write( mShadowSceneRenderer->GetDirectionalShadowMapSamplers(), 0 );
+
+        if (mShadowSceneRenderer->GetSpotlightShadowMapSamplers().size() > 0)
+            mLightingPassSpotlightShadowMaps->Write( mShadowSceneRenderer->GetSpotlightShadowMapSamplers(), 0 );
 
         // Lighting pass
         mLightingContext.BeginRender();
@@ -287,6 +291,7 @@ namespace SE::Core
             mLightingContext.Bind( mLightingPassCamera, 0, -1 );
             mLightingContext.Bind( mLightingPassTextures, 1, -1 );
             mLightingContext.Bind( mLightingPassDirectionalShadowMaps, 2, -1 );
+            mLightingContext.Bind( mLightingPassSpotlightShadowMaps, 3, -1 );
             mLightingContext.Draw( 6, 0, 0, 1, 0 );
 
             for( auto &lParticleSystem : mParticleQueue )

@@ -70,10 +70,14 @@ namespace SE::Core
         static Ref<DescriptorSet> GetDirectionalShadowMapsLayout();
 
         std::vector<Ref<Graphics::VkSampler2D>> &GetDirectionalShadowMapSamplers() { return mDirectionalShadowMapSamplers; };
+        std::vector<Ref<Graphics::VkSampler2D>> &GetSpotlightShadowMapSamplers() { return mSpotlightShadowMapSamplers; };
 
       protected:
         std::vector<ARenderContext>             mDirectionalShadowMapRenderContext = {};
         std::vector<Ref<Graphics::VkSampler2D>> mDirectionalShadowMapSamplers      = {};
+
+        std::vector<ARenderContext>             mSpotlightShadowMapRenderContext = {};
+        std::vector<Ref<Graphics::VkSampler2D>> mSpotlightShadowMapSamplers      = {};
 
         std::vector<Ref<VkRenderTarget>> mPointLightShadowMaps = {};
         std::vector<Ref<VkRenderTarget>> mSpotlightShadowMaps  = {};

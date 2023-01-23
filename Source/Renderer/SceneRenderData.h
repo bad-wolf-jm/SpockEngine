@@ -56,6 +56,7 @@ namespace SE::Core
         alignas( 16 ) math::vec3 Color           = math::vec3( 0.0f );
         alignas( 4 ) float Intensity             = 0.0f;
         alignas( 4 ) float Cone                  = 0.0f;
+        alignas( 16 ) math::mat4 Transform       = math::mat4( 0.0f );
 
         SpotlightData()  = default;
         ~SpotlightData() = default;

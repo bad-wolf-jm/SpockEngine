@@ -34,8 +34,7 @@ namespace SE::Core
 
         math::mat4 lProjection =
             math::Orthogonal( math::vec2{ -10.0f, 10.0f }, math::vec2{ -10.0f, 10.0f }, math::vec2{ -10.0f, 10.0f } );
-        math::mat4 lView = math::LookAt( Direction * 5.0f, math::vec3{ 0.0f, 0.0f, 0.0f },
-                                         math::vec3{ 0.0f, 1.0f, 0.0f } );
+        math::mat4 lView = math::LookAt( Direction * 5.0f, math::vec3{ 0.0f, 0.0f, 0.0f }, math::vec3{ 0.0f, 1.0f, 0.0f } );
         Transform        = lClip * lProjection * lView;
     }
 
@@ -48,11 +47,21 @@ namespace SE::Core
 
     SpotlightData::SpotlightData( const sLightComponent &aSpec, mat4 aTransform )
     {
-        WorldPosition   = vec3( aTransform[3] ); // * vec4( aSpec.Position, 1.0f );
-        LookAtDirection = mat3( aTransform ) * vec3{ 0.0f, -1.0f, 0.0f };
+        WorldPosition   = vec3( aTransform[3] );
+        LookAtDirection = -vec3{ aTransform[0][2], aTransform[1][2], aTransform[2][2] };
         Color           = aSpec.mColor;
         Intensity       = aSpec.mIntensity;
         Cone            = math::cos( radians( aSpec.mCone / 2 ) );
+
+        // clang-format off
+        const float aEntries[] = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f };
+        math::mat4  lClip = math::MakeMat4( aEntries );
+        // clang-format on
+
+        math::mat4 lProjection = math::Perspective( math::radians( aSpec.mCone ), 1.0f, 0.0001f, 10.0f );
+        math::mat4 lView       = math::LookAt( WorldPosition, WorldPosition + LookAtDirection, math::vec3{ 0.0f, 1.0f, 0.0f } );
+
+        Transform = lClip * lProjection * lView;
     }
 
     sLightGizmo::sLightGizmo( eLightType aType, uint64_t aLightDataIndex, mat4 aMatrix )

@@ -43,6 +43,7 @@ namespace SE::Core
         Ref<DescriptorSetLayout> TextureSetLayout = nullptr;
 
         Ref<DescriptorSetLayout> DirectionalShadowSetLayout = nullptr;
+        Ref<DescriptorSetLayout> SpotlightShadowSetLayout = nullptr;
 
       public:
         DeferredLightingRenderer() = default;
@@ -51,6 +52,7 @@ namespace SE::Core
         static Ref<DescriptorSetLayout> GetCameraSetLayout( Ref<VkGraphicContext> aGraphicContext );
         static Ref<DescriptorSetLayout> GetTextureSetLayout( Ref<VkGraphicContext> aGraphicContext );
         static Ref<DescriptorSetLayout> GetDirectionalShadowSetLayout( Ref<VkGraphicContext> aGraphicContext );
+        static Ref<DescriptorSetLayout> GetSpotlightShadowSetLayout( Ref<VkGraphicContext> aGraphicContext );
 
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
         std::vector<sPushConstantRange>       GetPushConstantLayout();

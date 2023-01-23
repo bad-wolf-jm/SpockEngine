@@ -72,6 +72,9 @@ namespace SE::Core
         Ref<DescriptorSetLayout> mLightingDirectionalShadowLayout   = nullptr;
         Ref<DescriptorSet>       mLightingPassDirectionalShadowMaps = nullptr;
 
+        Ref<DescriptorSetLayout> mLightingSpotlightShadowLayout   = nullptr;
+        Ref<DescriptorSet>       mLightingPassSpotlightShadowMaps = nullptr;
+
         Ref<VkRenderTarget> mLightingRenderTarget = nullptr;
 
         DeferredLightingRenderer mLightingRenderer;

@@ -61,9 +61,9 @@ namespace SE::Core
             New<VkGpuBuffer>( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( ShadowMatrices ) );
         mSceneDescriptors->Write( mCameraUniformBuffer, false, 0, sizeof( ShadowMatrices ), 0 );
 
-        DescriptorSetLayoutCreateInfo lmShadowMapLayout{};
-        lmShadowMapLayout.Bindings = {
-            DescriptorBindingInfo{ 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
+        // DescriptorSetLayoutCreateInfo lmShadowMapLayout{};
+        // lmShadowMapLayout.Bindings = {
+        //     DescriptorBindingInfo{ 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
 
         // mShadowMapDescriptorLayout = New<DescriptorSetLayout>( mGraphicContext, lmShadowMapLayout, true );
         // mShadowMapDescriptorSet    = New<DescriptorSet>( mGraphicContext, mShadowMapDescriptorLayout, 1024 );
@@ -103,7 +103,36 @@ namespace SE::Core
 
                 mDirectionalShadowMapRenderContext.emplace_back( mGraphicContext, lDirectionalShadowMaps );
             }
-            // mShadowMapDescriptorSet->Write( mDirectionalShadowMapSamplers, 0 );
+        }
+
+        if( mSpotlights.size() != mSpotlightShadowMapRenderContext.size() )
+        {
+            mSpotlightShadowMapRenderContext.clear();
+            mSpotlightShadowMapSamplers.clear();
+            for( uint32_t i = 0; i < mDirectionalLights.size(); i++ )
+            {
+                sRenderTargetDescription lRenderTargetSpec{};
+                lRenderTargetSpec.mWidth       = 1024;
+                lRenderTargetSpec.mHeight      = 1024;
+                lRenderTargetSpec.mSampleCount = 1;
+                auto lShadowMaps    = New<VkRenderTarget>( mGraphicContext, lRenderTargetSpec );
+
+                sAttachmentDescription lAttachmentCreateInfo{};
+                lAttachmentCreateInfo.mIsSampled   = true;
+                lAttachmentCreateInfo.mIsPresented = false;
+                lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
+                lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
+                lAttachmentCreateInfo.mType        = eAttachmentType::DEPTH;
+                lAttachmentCreateInfo.mClearColor  = { 1.0f, 0.0f, 0.0f, 0.0f };
+                lShadowMaps->AddAttachment( "SHADOW_MAP", lAttachmentCreateInfo );
+                lShadowMaps->Finalize();
+
+                mSpotlightShadowMapSamplers.emplace_back();
+                mSpotlightShadowMapSamplers.back() = New<Graphics::VkSampler2D>(
+                    mGraphicContext, lShadowMaps->GetAttachment( "SHADOW_MAP" ), sTextureSamplingInfo{} );
+
+                mSpotlightShadowMapRenderContext.emplace_back( mGraphicContext, lShadowMaps );
+            }
         }
 
         if( mDirectionalShadowMapRenderContext.size() > 0 )
@@ -124,7 +153,27 @@ namespace SE::Core
         uint32_t lLightIndex = 0;
         for( auto &lContext : mDirectionalShadowMapRenderContext )
         {
-            View.mMVP        = mDirectionalLights[lLightIndex].Transform;
+            View.mMVP = mDirectionalLights[lLightIndex].Transform;
+            mCameraUniformBuffer->Write( View );
+
+            lContext.BeginRender();
+            for( auto &lPipelineData : mOpaqueMeshQueue )
+            {
+                if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
+
+                lContext.Bind( mRenderPipeline.Pipeline );
+                lContext.Bind( mSceneDescriptors, 0, -1 );
+                lContext.Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
+                lContext.Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
+            }
+            lContext.EndRender();
+            lLightIndex++;
+        }
+
+        lLightIndex = 0;
+        for( auto &lContext : mSpotlightShadowMapRenderContext )
+        {
+            View.mMVP = mSpotlights[lLightIndex].Transform;
             mCameraUniformBuffer->Write( View );
 
             lContext.BeginRender();
