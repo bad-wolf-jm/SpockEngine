@@ -42,9 +42,9 @@ namespace SE::Graphics
     }
 
     /** @brief */
-    VkSamplerCubeMap::VkSamplerCubeMap( Ref<VkGraphicContext> aGraphicContext, Ref<VkTexture2D> aTextureData,
+    VkSamplerCubeMap::VkSamplerCubeMap( Ref<VkGraphicContext> aGraphicContext, Ref<VkTextureCubeMap> aTextureData,
                               sTextureSamplingInfo const &aSamplingSpec )
-        : ISampler2D( aGraphicContext, aTextureData, aSamplingSpec )
+        : ISamplerCubeMap( aGraphicContext, aTextureData, aSamplingSpec )
     {
         constexpr VkComponentMapping lSwizzles{ VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY,
                                                 VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY };
@@ -57,7 +57,7 @@ namespace SE::Graphics
 
         mVkImageView =
             std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-                ->CreateImageView( std::reinterpret_pointer_cast<VkTexture2D>( mTextureData )->mVkImage, mTextureData->mSpec.mLayers,
+                ->CreateImageView( std::reinterpret_pointer_cast<VkTextureCubeMap>( mTextureData )->mVkImage, mTextureData->mSpec.mLayers,
                                    VK_IMAGE_VIEW_TYPE_2D, ToVkFormat( mTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
 
         mVkImageSampler = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )

@@ -4,73 +4,64 @@
 
 #include <vulkan/vulkan.h>
 
-#include "Core/ColorFormat.h"
 #include "Core/Memory.h"
-#include "Core/TextureData.h"
+#include "Core/Types.h"
 
-#include <gli/gli.hpp>
+#include "VkGpuBuffer.h"
+#include "VkGraphicContext.h"
 
-#include "Buffer.h"
-#include "GraphicContext.h"
-#include "Texture2D.h"
+#include "Graphics/Interface/ITextureCubeMap.h"
 
-namespace LTSE::Graphics
+namespace SE::Graphics
 {
-
-    // front, back, up, down, right, left
-
-    enum class CubeMapDirection : size_t
-    {
-        FRONT  = 0,
-        BACK   = 1,
-        TOP    = 2,
-        BOTTOM = 3,
-        RIGHT  = 4,
-        LEFT   = 5,
-    };
-
-    struct CubeMapFace
-    {
-        CubeMapDirection Direction;
-        TextureData FaceData;
-    };
+    using namespace SE::Core;
 
     /** @brief */
-    class VkTextureCubeMap
+    class VkTextureCubeMap : public ITextureCubeMap
     {
+        friend class VkSamplerCubeMap;
+
       public:
-        TextureDescription Spec; /**!< */
+        /** @brief */
+        VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription, uint8_t aSampleCount,
+                     bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
 
         /** @brief */
-        VkTextureCubeMap( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription );
-        VkTextureCubeMap( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription, gli::texture_cube &a_CubeMapData );
+        VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, TextureData2D &aCubeMapData )
+            : VkTextureCubeMap( aGraphicContext, aCubeMapData, 1, false, true, true )
+        {
+        }
 
         /** @brief */
-        ~VkTextureCubeMap() = default;
-
-        TextureData GetImageData();
-
-        /** @brief */
-        inline VkImageView GetImageView() { return m_TextureView->mVkObject; }
+        VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, TextureData2D &aCubeMapData, uint8_t aSampleCount, bool aIsHostVisible,
+                     bool aIsGraphicsOnly, bool aIsTransferSource );
 
         /** @brief */
-        inline VkImage GetImage() { return m_TextureImageObject->mVkObject; }
+        VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+                     VkImage aExternalImage );
 
         /** @brief */
-        inline VkSampler GetSampler() { return m_TextureSamplerObject->mVkObject; }
+        ~VkTextureCubeMap();
 
-        void TransitionImageLayout( VkImageLayout oldLayout, VkImageLayout newLayout );
+        void GetPixelData( TextureData2D &mTextureData );
+        void SetPixelData( Ref<IGraphicBuffer> a_Buffer );
+        void TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout );
 
       private:
-        void CopyBufferToImage( Buffer &a_Buffer, gli::texture_cube &a_CubeMapData );
-        void CreateImageView();
-        void CreateImageSampler();
+        void ConfigureExternalMemoryHandle();
+
+        VkMemoryPropertyFlags MemoryProperties();
+        VkImageUsageFlags     ImageUsage();
+
+        void CreateImage();
+        void AllocateMemory();
+        void BindMemory();
 
       private:
-        GraphicContext mGraphicContext{};
+        VkImage        mVkImage    = VK_NULL_HANDLE;
+        VkDeviceMemory mVkMemory   = VK_NULL_HANDLE;
+        size_t         mMemorySize = 0;
 
-        Ref<Internal::sVkImageObject> m_TextureImageObject          = nullptr;
-        Ref<Internal::sVkImageSamplerObject> m_TextureSamplerObject = nullptr;
-        Ref<Internal::sVkImageViewObject> m_TextureView             = nullptr;
+        cudaExternalMemory_t mExternalMemoryHandle = nullptr;
     };
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics

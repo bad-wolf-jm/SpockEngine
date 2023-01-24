@@ -19,8 +19,7 @@ namespace SE::Graphics
     /** @brief */
     class ITextureCubeMap : public IGraphicResource, public Cuda::Texture2D
     {
-        friend class ISampler2D;
-        friend class IRenderTarget;
+        friend class ISamplerCubeMap;
 
       public:
         /** @brief */

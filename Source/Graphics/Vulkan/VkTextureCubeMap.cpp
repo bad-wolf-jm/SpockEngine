@@ -1,121 +1,237 @@
-#include "TextureCubeMap.h"
-#include "Buffer.h"
-#include "Core/Memory.h"
-#include "Developer/Core/Vulkan/VkCoreMacros.h"
+#include "VkTextureCubeMap.h"
 
+#include "Core/Core.h"
 #include "Core/Logging.h"
+#include "Core/Memory.h"
 
-namespace LTSE::Graphics
+#include "Graphics/Vulkan/VkCoreMacros.h"
+
+#include "Core/CUDA/Array/CudaBuffer.h"
+#include "Core/CUDA/CudaAssert.h"
+
+#include "VkCommand.h"
+#include "VkGpuBuffer.h"
+
+namespace SE::Graphics
 {
-    static VkMemoryPropertyFlags ToVkMemoryFlag( TextureDescription const &a_BufferDescription )
+    /** @brief */
+    VkTextureCubeMap::VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, TextureData2D &mTextureData, uint8_t aSampleCount,
+                              bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
+        : ITextureCubeMap( aGraphicContext, mTextureData.mSpec, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, false )
     {
-        VkMemoryPropertyFlags l_Flags = 0;
-        if( a_BufferDescription.IsHostVisible )
-            l_Flags |= ( VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT );
-        else
-            l_Flags |= VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+        if( mSpec.mIsDepthTexture )
+            mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
 
-        return l_Flags;
-    }
+        CreateImage();
+        AllocateMemory();
+        BindMemory();
+        ConfigureExternalMemoryHandle();
 
-    TextureCubeMap::TextureCubeMap( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription )
-        : mGraphicContext( a_GraphicContext )
-        , Spec( a_BufferDescription )
-    {
-        m_TextureImageObject =
-            New<Internal::sVkImageObject>( mGraphicContext.mContext, static_cast<uint32_t>( Spec.MipLevels[0].Width ), static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1,
-                                           static_cast<uint32_t>( Spec.MipLevels.size() ), 6, VK_SAMPLE_COUNT_VALUE( a_BufferDescription.SampleCount ), true,
-                                           ToVkFormat( Spec.Format ), ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
-
-        CreateImageView();
-        CreateImageSampler();
-    }
-
-    TextureCubeMap::TextureCubeMap( GraphicContext &a_GraphicContext, TextureDescription &a_BufferDescription, gli::texture_cube &a_CubeMapData )
-        : mGraphicContext( a_GraphicContext )
-        , Spec( a_BufferDescription )
-    {
-
-        for( uint32_t l_MipLevel = 0; l_MipLevel < a_CubeMapData.levels(); l_MipLevel++ )
-        {
-            Spec.MipLevels.push_back( { static_cast<uint32_t>( a_CubeMapData[0][l_MipLevel].extent().x ), static_cast<uint32_t>( a_CubeMapData[0][l_MipLevel].extent().y ),
-                                        l_MipLevel, a_CubeMapData[0][l_MipLevel].size() } );
-        }
-
-        Buffer l_StagingBuffer( mGraphicContext, reinterpret_cast<uint8_t *>( a_CubeMapData.data() ), a_CubeMapData.size(), eBufferBindType::UNKNOWN, true, false, true, false );
-
-        m_TextureImageObject =
-            New<Internal::sVkImageObject>( mGraphicContext.mContext, static_cast<uint32_t>( Spec.MipLevels[0].Width ), static_cast<uint32_t>( Spec.MipLevels[0].Height ), 1,
-                                           static_cast<uint32_t>( Spec.MipLevels.size() ), 6, VK_SAMPLE_COUNT_VALUE( a_BufferDescription.SampleCount ), true,
-                                           ToVkFormat( Spec.Format ), ToVkMemoryFlag( Spec ), (VkImageUsageFlags)Spec.Usage );
-
+        sImageData &lImageData = mTextureData.GetImageData();
+        auto        lStagingBuffer =
+            New<VkGpuBuffer>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), lImageData.mPixelData.data(),
+                              lImageData.mByteSize, eBufferType::UNKNOWN, true, false, true, false );
         TransitionImageLayout( VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
-        CopyBufferToImage( l_StagingBuffer, a_CubeMapData );
+        SetPixelData( lStagingBuffer );
         TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
-
-        CreateImageView();
-        CreateImageSampler();
     }
 
-    void TextureCubeMap::CopyBufferToImage( Buffer &a_Buffer, gli::texture_cube &a_CubeMapData )
+    VkTextureCubeMap::VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+                              uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
+                              bool aIsTransferDestination )
+        : ITextureCubeMap( aGraphicContext, aTextureImageDescription, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
+                      aIsTransferDestination )
     {
-        Ref<Internal::sVkCommandBufferObject> l_CommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
+        if( mSpec.mIsDepthTexture )
+            mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
 
-        std::vector<Internal::sImageRegion> l_BufferCopyRegions;
-        uint32_t offset = 0;
+        CreateImage();
+        AllocateMemory();
+        BindMemory();
+        ConfigureExternalMemoryHandle();
+    }
 
-        for( uint32_t face = 0; face < 6; face++ )
+    VkTextureCubeMap::VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+                              VkImage aExternalImage )
+        : ITextureCubeMap( aGraphicContext, aTextureImageDescription, 1, false, true, false, false )
+        , mVkImage{ aExternalImage }
+    {
+        if( mSpec.mIsDepthTexture )
+            mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
+    }
+
+    VkTextureCubeMap::~VkTextureCubeMap()
+    {
+        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->DestroyImage( mVkImage );
+        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->FreeMemory( mVkMemory );
+    }
+
+    void VkTextureCubeMap::CreateImage()
+    {
+        mVkImage =
+            std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
+                ->CreateImage( mSpec.mWidth, mSpec.mHeight, mSpec.mDepth, mSpec.mMipLevels, mSpec.mLayers,
+                               VK_SAMPLE_COUNT_VALUE( mSampleCount ), !mIsGraphicsOnly, false,
+                               mSpec.mIsDepthTexture ? ToVkFormat( mGraphicContext->GetDepthFormat() ) : ToVkFormat( mSpec.mFormat ),
+                               MemoryProperties(), ImageUsage() );
+    }
+
+    void VkTextureCubeMap::AllocateMemory()
+    {
+        mVkMemory = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
+                        ->AllocateMemory( mVkImage, 0, mIsHostVisible, !mIsGraphicsOnly, &mMemorySize );
+    }
+
+    void VkTextureCubeMap::BindMemory()
+    {
+        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->BindMemory( mVkImage, mVkMemory );
+    }
+
+    VkMemoryPropertyFlags VkTextureCubeMap::MemoryProperties()
+    {
+        VkMemoryPropertyFlags lProperties = 0;
+        if( mIsHostVisible )
+            lProperties |= ( VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT );
+        else
+            lProperties |= VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+
+        return lProperties;
+    }
+
+    VkImageUsageFlags VkTextureCubeMap::ImageUsage()
+    {
+        VkImageUsageFlags lUsage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+        if( mIsTransferSource ) lUsage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+        if( mIsTransferDestination ) lUsage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+
+        if( mSpec.mIsDepthTexture )
+            lUsage |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+        else
+            lUsage |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+        return lUsage;
+    }
+
+    void VkTextureCubeMap::ConfigureExternalMemoryHandle()
+    {
+        if( mIsGraphicsOnly ) return;
+
+        cudaExternalMemoryHandleDesc lCudaExternalMemoryHandleDesc{};
+        lCudaExternalMemoryHandleDesc.type  = cudaExternalMemoryHandleTypeOpaqueWin32;
+        lCudaExternalMemoryHandleDesc.size  = mMemorySize;
+        lCudaExternalMemoryHandleDesc.flags = 0;
+        lCudaExternalMemoryHandleDesc.handle.win32.handle =
+            (HANDLE)std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetSharedMemoryHandle( mVkMemory );
+        CUDA_ASSERT( cudaImportExternalMemory( &mExternalMemoryHandle, &lCudaExternalMemoryHandleDesc ) );
+
+        cudaExternalMemoryMipmappedArrayDesc lExternalMemoryMipmappedArrayDesc{};
+        lExternalMemoryMipmappedArrayDesc.formatDesc = Cuda::ToCudaChannelDesc( mSpec.mFormat );
+
+        lExternalMemoryMipmappedArrayDesc.extent.width  = mSpec.mWidth;
+        lExternalMemoryMipmappedArrayDesc.extent.height = mSpec.mHeight;
+        lExternalMemoryMipmappedArrayDesc.extent.depth  = 0;
+        lExternalMemoryMipmappedArrayDesc.numLevels     = mSpec.mMipLevels;
+        lExternalMemoryMipmappedArrayDesc.flags         = 0;
+        CUDA_ASSERT( cudaExternalMemoryGetMappedMipmappedArray( &mInternalCudaMipmappedArray, mExternalMemoryHandle,
+                                                                &lExternalMemoryMipmappedArrayDesc ) );
+        CUDA_ASSERT( cudaGetMipmappedArrayLevel( &mInternalCudaArray, mInternalCudaMipmappedArray, 0 ) );
+    }
+
+    void VkTextureCubeMap::SetPixelData( Ref<IGraphicBuffer> aBuffer )
+    {
+        Ref<sVkCommandBufferObject> lCommandBufferObject =
+            SE::Core::New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ) );
+        lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
+
+        std::vector<sImageRegion> lBufferCopyRegions;
+        uint32_t                  lOffset = 0;
+
+        for( uint32_t i = 0; i < mSpec.mMipLevels; i++ )
         {
-            for( uint32_t level = 0; level < Spec.MipLevels.size(); level++ )
-            {
+            sImageRegion lBufferCopyRegion{};
+            lBufferCopyRegion.mBaseLayer     = 0;
+            lBufferCopyRegion.mLayerCount    = 1;
+            lBufferCopyRegion.mBaseMipLevel  = i;
+            lBufferCopyRegion.mMipLevelCount = 1;
+            lBufferCopyRegion.mWidth         = mSpec.mWidth >> i;
+            lBufferCopyRegion.mHeight        = mSpec.mHeight >> i;
+            lBufferCopyRegion.mDepth         = 1;
+            lBufferCopyRegion.mOffset        = lOffset;
 
-                Internal::sImageRegion bufferCopyRegion{};
-                bufferCopyRegion.mBaseLayer     = 0;
-                bufferCopyRegion.mLayerCount    = 1;
-                bufferCopyRegion.mBaseMipLevel  = level;
-                bufferCopyRegion.mMipLevelCount = 1;
-                bufferCopyRegion.mWidth         = static_cast<uint32_t>( a_CubeMapData[face][level].extent().x );
-                bufferCopyRegion.mHeight        = static_cast<uint32_t>( a_CubeMapData[face][level].extent().y );
-                bufferCopyRegion.mDepth         = 1;
-                bufferCopyRegion.mOffset        = offset;
-
-                l_BufferCopyRegions.push_back( bufferCopyRegion );
-                offset += a_CubeMapData[face][level].size();
-            }
+            lBufferCopyRegions.push_back( lBufferCopyRegion );
+            lOffset += static_cast<uint32_t>( ( mSpec.mWidth >> i ) * ( mSpec.mHeight >> i ) * sizeof( uint32_t ) );
         }
 
-        Internal::sImageRegion imageCopyRegion{};
-        imageCopyRegion.mBaseMipLevel  = 0;
-        imageCopyRegion.mMipLevelCount = Spec.MipLevels.size();
-        imageCopyRegion.mLayerCount    = 6;
+        sImageRegion lImageCopyRegion{};
+        lImageCopyRegion.mBaseMipLevel  = 0;
+        lImageCopyRegion.mMipLevelCount = mSpec.mMipLevels;
+        lImageCopyRegion.mLayerCount    = 1;
 
-        l_CommandBufferObject->CopyBuffer( a_Buffer.mVkObject, m_TextureImageObject, l_BufferCopyRegions, imageCopyRegion );
+        lCommandBufferObject->CopyBuffer( std::reinterpret_pointer_cast<VkGpuBuffer>( aBuffer )->mVkBuffer, mVkImage,
+                                          lBufferCopyRegions, lImageCopyRegion );
 
-        mGraphicContext.EndSingleTimeCommands( l_CommandBufferObject );
+        lCommandBufferObject->End();
+        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
+            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
     }
 
-    void TextureCubeMap::TransitionImageLayout( VkImageLayout oldLayout, VkImageLayout newLayout )
+    void VkTextureCubeMap::TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout )
     {
-        Ref<Internal::sVkCommandBufferObject> l_CommandBufferObject = mGraphicContext.BeginSingleTimeCommands();
-
-        l_CommandBufferObject->ImageMemoryBarrier( m_TextureImageObject, oldLayout, newLayout, Spec.MipLevels.size(), 6 );
-
-        mGraphicContext.EndSingleTimeCommands( l_CommandBufferObject );
+        Ref<sVkCommandBufferObject> lCommandBufferObject =
+            SE::Core::New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ) );
+        lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
+        lCommandBufferObject->ImageMemoryBarrier( mVkImage, aOldLayout, aNewLayout, mSpec.mMipLevels, 1 );
+        lCommandBufferObject->End();
+        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
+            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
     }
 
-    void TextureCubeMap::CreateImageView()
+    void VkTextureCubeMap::GetPixelData( TextureData2D &mTextureData )
     {
-        m_TextureView = New<Internal::sVkImageViewObject>( mGraphicContext.mContext, m_TextureImageObject, 6, VK_IMAGE_VIEW_TYPE_CUBE, ToVkFormat( Spec.Format ),
-                                                           (VkImageAspectFlags)Spec.AspectMask,
-                                                           VkComponentMapping{ (VkComponentSwizzle)Spec.ComponentSwizzle[0], (VkComponentSwizzle)Spec.ComponentSwizzle[1],
-                                                                               (VkComponentSwizzle)Spec.ComponentSwizzle[2], (VkComponentSwizzle)Spec.ComponentSwizzle[3] } );
-    }
+        uint32_t    lByteSize = mSpec.mWidth * mSpec.mHeight * sizeof( uint32_t );
+        VkGpuBuffer lStagingBuffer( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), eBufferType::UNKNOWN, true,
+                                    false, false, true, lByteSize );
 
-    void TextureCubeMap::CreateImageSampler()
-    {
-        if( !Spec.Sampled )
-            return;
-        m_TextureSamplerObject = New<Internal::sVkImageSamplerObject>( mGraphicContext.mContext, (VkFilter)Spec.MinificationFilter, (VkFilter)Spec.MagnificationFilter,
-                                                                       (VkSamplerAddressMode)Spec.WrappingMode, (VkSamplerMipmapMode)Spec.MipmapMode );
+        std::vector<sImageRegion> lBufferCopyRegions;
+        uint32_t                  lBufferByteOffset = 0;
+        for( uint32_t i = 0; i < mSpec.mMipLevels; i++ )
+        {
+            sImageRegion lBufferCopyRegion{};
+            lBufferCopyRegion.mBaseLayer     = 0;
+            lBufferCopyRegion.mLayerCount    = 1;
+            lBufferCopyRegion.mBaseMipLevel  = i;
+            lBufferCopyRegion.mMipLevelCount = 1;
+            lBufferCopyRegion.mWidth         = mSpec.mWidth >> i;
+            lBufferCopyRegion.mHeight        = mSpec.mHeight >> i;
+            lBufferCopyRegion.mDepth         = 1;
+            lBufferCopyRegion.mOffset        = lBufferByteOffset;
+
+            lBufferCopyRegions.push_back( lBufferCopyRegion );
+            lBufferByteOffset += static_cast<uint32_t>( ( mSpec.mWidth >> i ) * ( mSpec.mHeight >> i ) * sizeof( uint32_t ) );
+        }
+
+        TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL );
+        Ref<sVkCommandBufferObject> lCommandBufferObject =
+            SE::Core::New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ) );
+        lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
+        lCommandBufferObject->CopyImage( mVkImage, lStagingBuffer.mVkBuffer, lBufferCopyRegions, 0 );
+        lCommandBufferObject->End();
+        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
+            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+        TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
+
+        uint8_t *lPixelData = lStagingBuffer.Map<uint8_t>( lByteSize, 0 );
+
+        sImageData lImageDataStruct{};
+        lImageDataStruct.mFormat    = mSpec.mFormat;
+        lImageDataStruct.mWidth     = mSpec.mWidth;
+        lImageDataStruct.mHeight    = mSpec.mHeight;
+        lImageDataStruct.mByteSize  = lByteSize;
+        lImageDataStruct.mPixelData = std::vector<uint8_t>( lPixelData, lPixelData + lByteSize );
+
+        mTextureData = TextureData2D( mSpec, lImageDataStruct );
     }
-} // namespace LTSE::Graphics
+} // namespace SE::Graphics
