@@ -220,6 +220,7 @@ namespace SE::Editor
 
         if( ImGui::Begin( "LIGHT PANEL", NULL, ImGuiWindowFlags_None ) )
         {
+            auto lWorkspaceAreaSize = UI::GetAvailableContentSpace();
             ActiveWorld->ForEach<sLightComponent>(
                 [&]( auto aEntity, auto &aComponent )
                 {

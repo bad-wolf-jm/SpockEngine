@@ -29,6 +29,8 @@ namespace SE::Core
         alignas( 4 ) float Intensity       = 0.0f;
         alignas( 16 ) math::mat4 Transform = math::mat4( 0.0f );
 
+        uint32_t mIsOn = 1u;
+
         DirectionalLightData()  = default;
         ~DirectionalLightData() = default;
 
@@ -41,6 +43,8 @@ namespace SE::Core
         alignas( 16 ) math::vec3 WorldPosition = math::vec3( 0.0f );
         alignas( 16 ) math::vec3 Color         = math::vec3( 0.0f );
         alignas( 4 ) float Intensity           = 0.0f;
+
+        uint32_t mIsOn = 1u;
 
         PointLightData()  = default;
         ~PointLightData() = default;
@@ -57,6 +61,8 @@ namespace SE::Core
         alignas( 4 ) float Intensity             = 0.0f;
         alignas( 4 ) float Cone                  = 0.0f;
         alignas( 16 ) math::mat4 Transform       = math::mat4( 0.0f );
+
+        uint32_t mIsOn = 1u;
 
         SpotlightData()  = default;
         ~SpotlightData() = default;

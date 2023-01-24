@@ -264,6 +264,7 @@ namespace SE::Core
         aComponent.mColor     = Get( aNode["mColor"], { "r", "g", "b" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
         aComponent.mIntensity = Get( aNode["mIntensity"], 0.0005f );
         aComponent.mCone      = Get( aNode["mCone"], 0.0f );
+        aComponent.mIsOn      = Get( aNode["mIsOn"], true );
     }
 
     void ReadComponent( sHUDComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
@@ -524,6 +525,7 @@ namespace SE::Core
             aOut.Write( aComponent.mColor, { "r", "g", "b" } );
             aOut.WriteKey( "mIntensity", aComponent.mIntensity );
             aOut.WriteKey( "mCone", aComponent.mCone );
+            aOut.WriteKey( "mIsOn", aComponent.mIsOn );
         }
         aOut.EndMap();
     }

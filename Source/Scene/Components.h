@@ -357,6 +357,7 @@ namespace SE::Core::EntityComponentSystem::Components
     {
         eLightType mType = eLightType::POINT_LIGHT;
 
+        bool  mIsOn      = true;
         float mIntensity = 100.0f;
         vec3  mColor     = { 1.0f, 1.0f, 1.0f };
         float mCone      = 60.0f;

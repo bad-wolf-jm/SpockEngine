@@ -22,6 +22,7 @@ struct DirectionalLightData
     vec3  Color;
     float Intensity;
     mat4  Transform;
+    int   IsOn;
 };
 
 struct PointLightData
@@ -29,6 +30,7 @@ struct PointLightData
     vec3  WorldPosition;
     vec3  Color;
     float Intensity;
+    int   IsOn;
 };
 
 struct SpotlightData
@@ -39,6 +41,7 @@ struct SpotlightData
     float Intensity;
     float Cone;
     mat4  Transform;
+    int   IsOn;
 };
 
 struct sShaderMaterial
@@ -264,6 +267,8 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
 
     for( int i = 0; i < ubo.DirectionalLightCount; i++ )
     {
+        if (ubo.DirectionalLights[i].IsOn == 0) continue;
+        
         vec3 radiance = ubo.DirectionalLights[i].Color * ubo.DirectionalLights[i].Intensity;
         vec3 lLightDirection = normalize( ubo.DirectionalLights[i].Direction );
 
@@ -282,6 +287,8 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
 
     for( int i = 0; i < ubo.PointLightCount; i++ )
     {
+        if (ubo.PointLights[i].IsOn == 0) continue;
+
         vec3 lLightPosition  = ubo.PointLights[i].WorldPosition;
         vec3 lLightDirection = normalize( lLightPosition - inWorldPos );
 
@@ -292,6 +299,8 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
 
     for( int i = 0; i < ubo.SpotlightCount; i++ )
     {
+        if (ubo.Spotlights[i].IsOn == 0) continue;
+
         vec3  L                   = normalize( ubo.Spotlights[i].WorldPosition - inWorldPos );
         vec3  lLightDirection     = normalize( ubo.Spotlights[i].LookAtDirection );
         float lAngleToLightOrigin = dot( L, normalize( -lLightDirection ) );
