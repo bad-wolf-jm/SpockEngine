@@ -28,8 +28,8 @@ namespace SE::Graphics
         ~VkSampler2D();
 
         Ref<ITexture2D> GetTexture() { return mTextureData; }
-        VkImageView      GetImageView() { return mVkImageView; }
-        VkSampler        GetSampler() { return mVkImageSampler; }
+        VkImageView     GetImageView() { return mVkImageView; }
+        VkSampler       GetSampler() { return mVkImageSampler; }
 
       private:
         VkImageView mVkImageView    = VK_NULL_HANDLE;
