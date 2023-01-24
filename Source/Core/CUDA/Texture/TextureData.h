@@ -163,16 +163,33 @@ namespace SE::Core
          *
          */
         TextureSampler2D( TextureData2D const &aTexture, sTextureSamplingInfo const &aSamplingInfo );
+    };
 
-        /** @brief Retrieve a value from the texture.
-         *
-         * Note that texture coordinates always have valkues between 0.0f and 1.0f.  The scaling parameter pass in the
-         * sTextureSamplingInfo structure maps the texture coordinates to a rectangle of arbitrary width and height.
-         *
-         * @param x x coordinate of the texel to retrieve. this value should be between 0.0f and mSamplingSpec.Scaling[0]
-         * @param y y coordinate of the texel to retrieve. this value should be between 0.0f and mSamplingSpec.Scaling[1]
-         */
-        std::array<float, 4> Fetch( float x, float y );
+    using sCubeMapImageData     = std::array<sImageData, 6>;
+    using sCubeMapImagePathData = std::array<fs::path, 6>;
+
+    class TextureDataCubeMap : public TextureData
+    {
+      public:
+        friend class TextureSampler2D;
+
+        /** @brief Default constructor */
+        TextureDataCubeMap() = default;
+
+        /** @brief Default destructor */
+        ~TextureDataCubeMap() = default;
+
+        TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo );
+        TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, sCubeMapImageData const &aImageData );
+        TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, fs::path const &aKTXImagePath );
+        TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, sCubeMapImagePathData const &aImagePaths );
+        TextureDataCubeMap( std::vector<uint8_t> aKTXData, uint32_t aSize );
+        TextureDataCubeMap( std::array<std::vector<uint8_t>, 6> aKTXData, uint32_t aSize );
+
+        sCubeMapImageData GetImageData();
+
+      protected:
+        gli::texture_cube mInternalTextureCubeMap{};
     };
 
 } // namespace SE::Core

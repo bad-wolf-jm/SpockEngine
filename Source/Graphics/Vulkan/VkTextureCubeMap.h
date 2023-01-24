@@ -45,7 +45,9 @@ namespace SE::Graphics
         ~VkTextureCubeMap();
 
         void GetPixelData( TextureDataCubeMap &mTextureData );
-        void SetPixelData( Ref<IGraphicBuffer> a_Buffer );
+        void GetPixelData( TextureDataCubeMap &mTextureData, eCubeFace aFace );
+        void SetPixelData( Ref<IGraphicBuffer> aBuffer );
+        void SetPixelData( eCubeFace aFace, Ref<IGraphicBuffer> aBuffer );
         void TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout );
 
       private:

@@ -20,9 +20,6 @@ namespace SE::Graphics
         : ITextureCubeMap( aGraphicContext, mTextureData.mSpec, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                            false )
     {
-        if( mSpec.mIsDepthTexture )
-            mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
-
         CreateImage();
         AllocateMemory();
         BindMemory();
@@ -43,9 +40,6 @@ namespace SE::Graphics
         : ITextureCubeMap( aGraphicContext, aTextureImageDescription, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                            aIsTransferDestination )
     {
-        if( mSpec.mIsDepthTexture )
-            mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
-
         CreateImage();
         AllocateMemory();
         BindMemory();
@@ -57,8 +51,6 @@ namespace SE::Graphics
         : ITextureCubeMap( aGraphicContext, aTextureImageDescription, 1, false, true, false, false )
         , mVkImage{ aExternalImage }
     {
-        if( mSpec.mIsDepthTexture )
-            mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
     }
 
     VkTextureCubeMap::~VkTextureCubeMap()
@@ -235,4 +227,52 @@ namespace SE::Graphics
 
         mTextureData = TextureDataCubeMap( mSpec, lImageDataStruct );
     }
+
+    void VkTextureCubeMap::GetPixelData( TextureDataCubeMap &mTextureData, eCubeFace aFace )
+    {
+        uint32_t    lByteSize = mSpec.mWidth * mSpec.mHeight * sizeof( uint32_t );
+        VkGpuBuffer lStagingBuffer( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), eBufferType::UNKNOWN, true,
+                                    false, false, true, lByteSize );
+
+        std::vector<sImageRegion> lBufferCopyRegions;
+        uint32_t                  lBufferByteOffset = 0;
+        for( uint32_t i = 0; i < mSpec.mMipLevels; i++ )
+        {
+            sImageRegion lBufferCopyRegion{};
+            lBufferCopyRegion.mBaseLayer     = 0;
+            lBufferCopyRegion.mLayerCount    = 1;
+            lBufferCopyRegion.mBaseMipLevel  = i;
+            lBufferCopyRegion.mMipLevelCount = 1;
+            lBufferCopyRegion.mWidth         = mSpec.mWidth >> i;
+            lBufferCopyRegion.mHeight        = mSpec.mHeight >> i;
+            lBufferCopyRegion.mDepth         = 1;
+            lBufferCopyRegion.mOffset        = lBufferByteOffset;
+
+            lBufferCopyRegions.push_back( lBufferCopyRegion );
+            lBufferByteOffset += static_cast<uint32_t>( ( mSpec.mWidth >> i ) * ( mSpec.mHeight >> i ) * sizeof( uint32_t ) );
+        }
+
+        TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL );
+        Ref<sVkCommandBufferObject> lCommandBufferObject =
+            SE::Core::New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ) );
+        lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
+        lCommandBufferObject->CopyImage( mVkImage, lStagingBuffer.mVkBuffer, lBufferCopyRegions, 0 );
+        lCommandBufferObject->End();
+        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
+            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+        TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
+
+        uint8_t *lPixelData = lStagingBuffer.Map<uint8_t>( lByteSize, 0 );
+
+        sImageData lImageDataStruct{};
+        lImageDataStruct.mFormat    = mSpec.mFormat;
+        lImageDataStruct.mWidth     = mSpec.mWidth;
+        lImageDataStruct.mHeight    = mSpec.mHeight;
+        lImageDataStruct.mByteSize  = lByteSize;
+        lImageDataStruct.mPixelData = std::vector<uint8_t>( lPixelData, lPixelData + lByteSize );
+
+        mTextureData = TextureDataCubeMap( mSpec, lImageDataStruct );
+    }
+
 } // namespace SE::Graphics

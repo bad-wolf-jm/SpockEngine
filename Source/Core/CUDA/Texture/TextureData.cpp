@@ -319,11 +319,43 @@ namespace SE::Core
     {
     }
 
-    std::array<float, 4> TextureSampler2D::Fetch( float x, float y )
+    TextureDataCubeMap::TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo )
+        : TextureData( aCreateInfo )
     {
-        gli::vec4 lColor = texture_lod(
-            gli::sampler2d<float>::normalized_type( x / mSamplingSpec.mScaling[0], y / mSamplingSpec.mScaling[1] ), 0.0f );
-        return std::array<float, 4>{ lColor.x, lColor.y, lColor.z, lColor.w };
+        mInternalTextureCubeMap = gli::texture_cube( mInternalTexture );
     }
+
+    TextureDataCubeMap::TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, sCubeMapImageData const &aImageData )
+        : TextureData( aCreateInfo )
+    {
+        mInternalTextureCubeMap = gli::texture_cube( mInternalTexture );
+    }
+
+    TextureDataCubeMap::TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, fs::path const &aImagePath )
+        : TextureData( aCreateInfo, aImagePath )
+    {
+        mInternalTextureCubeMap = gli::texture_cube( mInternalTexture );
+    }
+
+    TextureDataCubeMap::TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, sCubeMapImagePathData const &aImagePath )
+        : TextureData( aCreateInfo )
+    {
+        mInternalTextureCubeMap = gli::texture_cube( mInternalTexture );
+    }
+
+    TextureDataCubeMap::TextureDataCubeMap( std::vector<uint8_t> aKTXData, uint32_t aSize )
+        : TextureData( (const char*)aKTXData.data(), aSize )
+    {
+        mInternalTextureCubeMap = gli::texture_cube( mInternalTexture );
+    }
+
+    sCubeMapImageData TextureDataCubeMap::GetImageData()
+    {
+        sCubeMapImageData lImageData{};
+
+        return std::move(lImageData);
+    }
+
+
 
 } // namespace SE::Core

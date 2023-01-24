@@ -41,10 +41,11 @@ namespace SE::Graphics
         /** @brief */
         ~ITextureCubeMap() = default;
 
-        virtual void GetPixelData( TextureDataCubeMap &aTextureData ) = 0;
-        virtual void GetPixelData( TextureData2D &aTextureData, uint8_t aFace ) = 0;
+        virtual void GetPixelData( TextureDataCubeMap &aTextureData )             = 0;
+        virtual void GetPixelData( TextureData2D &aTextureData, eCubeFace aFace ) = 0;
 
-        virtual void SetPixelData( uint8_t aFace, Ref<IGraphicBuffer> aBuffer )     = 0;
+        virtual void SetPixelData( Ref<IGraphicBuffer> aBuffer )                  = 0;
+        virtual void SetPixelData( eCubeFace aFace, Ref<IGraphicBuffer> aBuffer ) = 0;
 
       protected:
         uint8_t mSampleCount = 1;
