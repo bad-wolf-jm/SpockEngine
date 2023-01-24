@@ -6,6 +6,7 @@
 
 #include "Graphics/Vulkan/VkCoreMacros.h"
 
+#include "Core/CUDA/Texture/Conversion.h"
 #include "Core/CUDA/Array/CudaBuffer.h"
 #include "Core/CUDA/CudaAssert.h"
 

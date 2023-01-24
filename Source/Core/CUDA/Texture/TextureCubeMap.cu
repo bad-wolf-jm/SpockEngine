@@ -1,4 +1,4 @@
-/// @file   Texture2D.cu
+/// @file   TextureCubeMap.cu
 ///
 /// @brief  Implementation file for cuda textures
 ///
@@ -7,12 +7,12 @@
 /// @copyright (c) 2021 LeddarTech Inc. All rights reserved.
 
 #include "Conversion.h"
-#include "Texture2D.h"
+#include "TextureCubeMap.h"
 
 using namespace SE::Core;
 namespace SE::Cuda
 {
-    Texture2D::Texture2D( sTextureCreateInfo &aSpec, std::vector<uint8_t> aData )
+    TextureCubeMap::TextureCubeMap( sTextureCreateInfo &aSpec, std::vector<uint8_t> aData )
         : mSpec( aSpec )
     {
         cudaChannelFormatDesc lTextureFormat = ToCudaChannelDesc( mSpec.mFormat );
@@ -23,7 +23,7 @@ namespace SE::Cuda
                                         cudaMemcpyHostToDevice ) );
     }
 
-    Texture2D::Texture2D( sTextureCreateInfo &aSpec, uint8_t *aData, size_t aSize )
+    TextureCubeMap::TextureCubeMap( sTextureCreateInfo &aSpec, uint8_t *aData, size_t aSize )
         : mSpec( aSpec )
     {
         cudaChannelFormatDesc lTextureFormat = ToCudaChannelDesc( mSpec.mFormat );
@@ -33,7 +33,7 @@ namespace SE::Cuda
         CUDA_ASSERT( cudaMemcpyToArray( mInternalCudaArray, 0, 0, reinterpret_cast<void *>( aData ), aSize, cudaMemcpyHostToDevice ) );
     }
 
-    Texture2D::Texture2D( sTextureCreateInfo &aSpec, sImageData &aImageData )
+    TextureCubeMap::TextureCubeMap( sTextureCreateInfo &aSpec, sImageData &aImageData )
         : mSpec( aSpec )
     {
         mSpec.mFormat = aImageData.mFormat;
@@ -48,7 +48,7 @@ namespace SE::Cuda
                                         cudaMemcpyHostToDevice ) );
     }
 
-    Texture2D::Texture2D( sTextureCreateInfo &aSpec, void *aExternalBuffer, size_t aImageMemorySize )
+    TextureCubeMap::TextureCubeMap( sTextureCreateInfo &aSpec, void *aExternalBuffer, size_t aImageMemorySize )
         : mSpec( aSpec )
         , mImageMemorySize{ aImageMemorySize }
     {
@@ -71,7 +71,7 @@ namespace SE::Cuda
         CUDA_ASSERT( cudaGetMipmappedArrayLevel( &mInternalCudaArray, mInternalCudaMipmappedArray, 0 ) );
     }
 
-    Texture2D::~Texture2D()
+    TextureCubeMap::~TextureCubeMap()
     {
         if( ( nullptr != ( (void *)mInternalCudaArray ) ) ) CUDA_ASSERT( cudaFreeArray( mInternalCudaArray ) );
         mInternalCudaArray = nullptr;
@@ -84,14 +84,14 @@ namespace SE::Cuda
         mExternalMemoryHandle = nullptr;
     }
 
-    TextureSampler2D::TextureSampler2D( Ref<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingSpec )
+    TextureSamplerCubeMap::TextureSamplerCubeMap( Ref<TextureCubeMap> &aTexture, const sTextureSamplingInfo &aSamplingSpec )
         : mTexture{ aTexture }
         , mSpec{ aSamplingSpec }
     {
         InitializeTextureSampler();
     }
 
-    void TextureSampler2D::InitializeTextureSampler()
+    void TextureSamplerCubeMap::InitializeTextureSampler()
     {
         cudaResourceDesc lResourceDescription{};
         memset( &lResourceDescription, 0, sizeof( cudaResourceDesc ) );

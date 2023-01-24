@@ -21,6 +21,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/CUDA/Array/MultiTensor.cu
     Core/CUDA/Array/MemoryPool.cu
     Core/CUDA/Texture/Texture2D.cu
+    Core/CUDA/Texture/Conversion.cpp
+    Core/CUDA/Texture/TextureCubeMap.cu
     Core/CUDA/Texture/ColorFormat.cpp
     Core/CUDA/Texture/TextureData.cpp
     

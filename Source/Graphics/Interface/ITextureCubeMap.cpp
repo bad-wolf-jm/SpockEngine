@@ -7,12 +7,12 @@
 namespace SE::Graphics
 {
     /** @brief */
-    ITextureCubeMap::ITextureCubeMap( Ref<IGraphicContext> aGraphicContext, TextureDataCubeMap &mTextureData, uint8_t aSampleCount,
+    ITextureCubeMap::ITextureCubeMap( Ref<IGraphicContext> aGraphicContext, TextureDataCubeMap &aCubeMapData, uint8_t aSampleCount,
                                       bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
         : IGraphicResource( aGraphicContext, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, false, 0 )
         , mSampleCount{ aSampleCount }
     {
-        mSpec = mTextureData.mSpec;
+        mSpec = aCubeMapData.mSpec;
     }
 
     ITextureCubeMap::ITextureCubeMap( Ref<IGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,

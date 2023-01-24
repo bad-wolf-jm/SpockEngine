@@ -1,4 +1,4 @@
-/// @file   Texture2D.h
+/// @file   TextureCubeMap.h
 ///
 /// @brief  Basic definitions for Cuda textures and samplers
 ///
@@ -26,9 +26,9 @@ namespace SE::Cuda
 
     using namespace SE::Core;
 
-    class TextureSampler2D;
+    class TextureSamplerCubeMap;
 
-    /** \class Texture2D
+    /** \class TextureCubeMap
      *
      * @brief Abstraction class for Cuda textures.
      *
@@ -40,9 +40,9 @@ namespace SE::Cuda
      *
      * The texture along with all associated data is automatically destroyed when the object is deleted.
      */
-    class Texture2D
+    class TextureCubeMap
     {
-        friend class TextureSampler2D;
+        friend class TextureSamplerCubeMap;
 
       public:
         sTextureCreateInfo mSpec; //!< Copy of the specification structure used to create the texture
@@ -54,7 +54,7 @@ namespace SE::Cuda
          * @param aSpec Texture specification
          * @param aData Texture data
          */
-        Texture2D() = default;
+        TextureCubeMap() = default;
 
         /** @brief Constructor
          *
@@ -63,7 +63,7 @@ namespace SE::Cuda
          * @param aSpec Texture specification
          * @param aData Texture data
          */
-        Texture2D( sTextureCreateInfo &aSpec, std::vector<uint8_t> aData );
+        TextureCubeMap( sTextureCreateInfo &aSpec, std::vector<uint8_t> aData );
 
         /** @brief Constructor
          *
@@ -73,7 +73,7 @@ namespace SE::Cuda
          * @param aData Texture data
          * @param aSize Data size, in bytes
          */
-        Texture2D( sTextureCreateInfo &aSpec, uint8_t *aData, size_t aSize );
+        TextureCubeMap( sTextureCreateInfo &aSpec, uint8_t *aData, size_t aSize );
 
         /** @brief Constructor
          *
@@ -82,7 +82,7 @@ namespace SE::Cuda
          * @param aSpec      Texture specification
          * @param aImageData Texture image data
          */
-        Texture2D( sTextureCreateInfo &aSpec, sImageData &aImageData );
+        TextureCubeMap( sTextureCreateInfo &aSpec, sImageData &aImageData );
 
         /** @brief Constructor
          *
@@ -91,7 +91,7 @@ namespace SE::Cuda
          * @param aSpec      Texture specification
          * @param aImageData Texture image data
          */
-        Texture2D( sTextureCreateInfo &aSpec, void *aExternalBuffer, size_t aImageMemorySize );
+        TextureCubeMap( sTextureCreateInfo &aSpec, void *aExternalBuffer, size_t aImageMemorySize );
 
         /** @brief Constructor
          *
@@ -100,10 +100,10 @@ namespace SE::Cuda
          * @param aSpec      Texture specification
          * @param aImageData Texture image data
          */
-        // Texture2D( sTextureCreateInfo &aSpec, Graphics::Texture2D &aImageData );
+        // TextureCubeMap( sTextureCreateInfo &aSpec, Graphics::TextureCubeMap &aImageData );
 
         /** @brief Destructor */
-        ~Texture2D();
+        ~TextureCubeMap();
 
       protected:
         size_t               mImageMemorySize            = 0;
@@ -112,7 +112,7 @@ namespace SE::Cuda
         cudaExternalMemory_t mExternalMemoryHandle       = nullptr;
     };
 
-    /** \class TextureSampler2D
+    /** \class TextureSamplerCubeMap
      *
      * @brief Sampler structure for CUDA textures.
      *
@@ -121,11 +121,11 @@ namespace SE::Cuda
      * represent data in arbitrary rectangles, we add a scaling parameter which allow sampling parameters
      * in more general rectangles.
      */
-    class TextureSampler2D
+    class TextureSamplerCubeMap
     {
       public:
         sTextureSamplingInfo mSpec{};            //!< Copy of the specification structure used to create the texture
-        Ref<Texture2D>       mTexture = nullptr; //!< Reference to the parent texture
+        Ref<TextureCubeMap>  mTexture = nullptr; //!< Reference to the parent texture
 
         struct DeviceData
         {
@@ -148,18 +148,21 @@ namespace SE::Cuda
         } mDeviceData;
 
         /** @brief Default constructor */
-        TextureSampler2D() = default;
+        TextureSamplerCubeMap() = default;
 
         /** @brief Default destructor */
-        ~TextureSampler2D() = default;
+        ~TextureSamplerCubeMap() = default;
 
         /** @brief Create a new sampler for the given texture and configuration
          *
          * @param aTexture Texture to sample
          * @param aSamplingInfo Sampling data
          */
-        TextureSampler2D( Ref<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingInfo );
+        TextureSamplerCubeMap( Ref<TextureCubeMap> &aTexture, const sTextureSamplingInfo &aSamplingInfo );
 
         void InitializeTextureSampler();
     };
+
+    cudaChannelFormatDesc ToCudaChannelDesc( eColorFormat aColorFormat );
+
 } // namespace SE::Cuda

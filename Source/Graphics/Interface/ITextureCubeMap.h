@@ -4,7 +4,7 @@
 #include "Core/Types.h"
 
 #include "Core/CUDA/Texture/ColorFormat.h"
-#include "Core/CUDA/Texture/Texture2D.h"
+#include "Core/CUDA/Texture/TextureCubeMap.h"
 #include "Core/CUDA/Texture/TextureData.h"
 #include "Core/CUDA/Texture/TextureTypes.h"
 
@@ -19,7 +19,7 @@ namespace SE::Graphics
     using TextureDataCubeMap = TextureData2D;
 
     /** @brief */
-    class ITextureCubeMap : public IGraphicResource, public Cuda::Texture2D
+    class ITextureCubeMap : public IGraphicResource, public Cuda::TextureCubeMap
     {
         friend class ISamplerCubeMap;
 
@@ -42,7 +42,9 @@ namespace SE::Graphics
         ~ITextureCubeMap() = default;
 
         virtual void GetPixelData( TextureDataCubeMap &aTextureData ) = 0;
-        virtual void SetPixelData( Ref<IGraphicBuffer> aBuffer )     = 0;
+        virtual void GetPixelData( TextureData2D &aTextureData, uint8_t aFace ) = 0;
+
+        virtual void SetPixelData( uint8_t aFace, Ref<IGraphicBuffer> aBuffer )     = 0;
 
       protected:
         uint8_t mSampleCount = 1;
