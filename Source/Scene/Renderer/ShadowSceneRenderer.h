@@ -65,7 +65,8 @@ namespace SE::Core
         void Update( Ref<Scene> aWorld );
         void Render();
 
-        void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
+        void                ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
+        Ref<VkRenderTarget> NewRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
         static Ref<DescriptorSet> GetDirectionalShadowMapsLayout();
 
@@ -83,10 +84,10 @@ namespace SE::Core
         std::vector<Ref<Graphics::VkSampler2D>> mSpotlightShadowMapSamplers         = {};
         std::vector<Ref<VkGpuBuffer>>           mSpotlightShadowCameraUniformBuffer = {};
         std::vector<Ref<DescriptorSet>>         mSpotlightShadowSceneDescriptors    = {};
-        ShadowMeshRenderer                      mSpotlightRenderPipeline{};
 
-        std::vector<Ref<VkRenderTarget>> mPointLightShadowMaps = {};
-        std::vector<Ref<VkRenderTarget>> mSpotlightShadowMaps  = {};
+        std::vector<ARenderContext>     mPointLightsShadowMapRenderContext    = {};
+        std::vector<Ref<VkGpuBuffer>>   mPointLightsShadowCameraUniformBuffer = {};
+        std::vector<Ref<DescriptorSet>> mPointLightsShadowSceneDescriptors    = {};
 
         Ref<VkRenderTarget> mGeometryRenderTarget = nullptr;
         ARenderContext      mGeometryContext{};
