@@ -15,9 +15,10 @@
 namespace SE::Graphics
 {
     /** @brief */
-    VkTextureCubeMap::VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, TextureData2D &mTextureData, uint8_t aSampleCount,
-                              bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
-        : ITextureCubeMap( aGraphicContext, mTextureData.mSpec, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, false )
+    VkTextureCubeMap::VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, TextureDataCubeMap &mTextureData, uint8_t aSampleCount,
+                                        bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
+        : ITextureCubeMap( aGraphicContext, mTextureData.mSpec, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
+                           false )
     {
         if( mSpec.mIsDepthTexture )
             mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
@@ -37,10 +38,10 @@ namespace SE::Graphics
     }
 
     VkTextureCubeMap::VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
-                              uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
-                              bool aIsTransferDestination )
+                                        uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
+                                        bool aIsTransferDestination )
         : ITextureCubeMap( aGraphicContext, aTextureImageDescription, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
-                      aIsTransferDestination )
+                           aIsTransferDestination )
     {
         if( mSpec.mIsDepthTexture )
             mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
@@ -52,7 +53,7 @@ namespace SE::Graphics
     }
 
     VkTextureCubeMap::VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
-                              VkImage aExternalImage )
+                                        VkImage aExternalImage )
         : ITextureCubeMap( aGraphicContext, aTextureImageDescription, 1, false, true, false, false )
         , mVkImage{ aExternalImage }
     {
@@ -188,7 +189,7 @@ namespace SE::Graphics
             ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
     }
 
-    void VkTextureCubeMap::GetPixelData( TextureData2D &mTextureData )
+    void VkTextureCubeMap::GetPixelData( TextureDataCubeMap &mTextureData )
     {
         uint32_t    lByteSize = mSpec.mWidth * mSpec.mHeight * sizeof( uint32_t );
         VkGpuBuffer lStagingBuffer( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), eBufferType::UNKNOWN, true,
@@ -232,6 +233,6 @@ namespace SE::Graphics
         lImageDataStruct.mByteSize  = lByteSize;
         lImageDataStruct.mPixelData = std::vector<uint8_t>( lPixelData, lPixelData + lByteSize );
 
-        mTextureData = TextureData2D( mSpec, lImageDataStruct );
+        mTextureData = TextureDataCubeMap( mSpec, lImageDataStruct );
     }
 } // namespace SE::Graphics

@@ -7,8 +7,8 @@
 namespace SE::Graphics
 {
     /** @brief */
-    ITextureCubeMap::ITextureCubeMap( Ref<IGraphicContext> aGraphicContext, TextureData2D &mTextureData, uint8_t aSampleCount,
-                            bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
+    ITextureCubeMap::ITextureCubeMap( Ref<IGraphicContext> aGraphicContext, TextureDataCubeMap &mTextureData, uint8_t aSampleCount,
+                                      bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
         : IGraphicResource( aGraphicContext, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, false, 0 )
         , mSampleCount{ aSampleCount }
     {
@@ -16,8 +16,8 @@ namespace SE::Graphics
     }
 
     ITextureCubeMap::ITextureCubeMap( Ref<IGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
-                            uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
-                            bool aIsTransferDestination )
+                                      uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
+                                      bool aIsTransferDestination )
         : IGraphicResource( aGraphicContext, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination, 0 )
         , mSampleCount{ aSampleCount }
     {

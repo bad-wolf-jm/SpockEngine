@@ -15,9 +15,9 @@
 namespace SE::Graphics
 {
     /** @brief */
-    VkTexture2D::VkTexture2D( Ref<VkGraphicContext> aGraphicContext, TextureData2D &mTextureData, uint8_t aSampleCount,
+    VkTexture2D::VkTexture2D( Ref<VkGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount,
                               bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
-        : ITexture2D( aGraphicContext, mTextureData.mSpec, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, false )
+        : ITexture2D( aGraphicContext, aTextureData.mSpec, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, false )
     {
         if( mSpec.mIsDepthTexture )
             mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
@@ -27,7 +27,7 @@ namespace SE::Graphics
         BindMemory();
         ConfigureExternalMemoryHandle();
 
-        sImageData &lImageData = mTextureData.GetImageData();
+        sImageData &lImageData = aTextureData.GetImageData();
         auto        lStagingBuffer =
             New<VkGpuBuffer>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), lImageData.mPixelData.data(),
                               lImageData.mByteSize, eBufferType::UNKNOWN, true, false, true, false );
@@ -71,7 +71,7 @@ namespace SE::Graphics
         mVkImage =
             std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
                 ->CreateImage( mSpec.mWidth, mSpec.mHeight, mSpec.mDepth, mSpec.mMipLevels, mSpec.mLayers,
-                               VK_SAMPLE_COUNT_VALUE( mSampleCount ), !mIsGraphicsOnly, false,
+                               VK_SAMPLE_COUNT_VALUE( mSampleCount ), !mIsGraphicsOnly, true,
                                mSpec.mIsDepthTexture ? ToVkFormat( mGraphicContext->GetDepthFormat() ) : ToVkFormat( mSpec.mFormat ),
                                MemoryProperties(), ImageUsage() );
     }
@@ -188,7 +188,7 @@ namespace SE::Graphics
             ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
     }
 
-    void VkTexture2D::GetPixelData( TextureData2D &mTextureData )
+    void VkTexture2D::GetPixelData( TextureData2D &aTextureData )
     {
         uint32_t    lByteSize = mSpec.mWidth * mSpec.mHeight * sizeof( uint32_t );
         VkGpuBuffer lStagingBuffer( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), eBufferType::UNKNOWN, true,
@@ -232,6 +232,6 @@ namespace SE::Graphics
         lImageDataStruct.mByteSize  = lByteSize;
         lImageDataStruct.mPixelData = std::vector<uint8_t>( lPixelData, lPixelData + lByteSize );
 
-        mTextureData = TextureData2D( mSpec, lImageDataStruct );
+        aTextureData = TextureData2D( mSpec, lImageDataStruct );
     }
 } // namespace SE::Graphics

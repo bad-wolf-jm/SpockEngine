@@ -16,6 +16,8 @@ namespace SE::Graphics
 {
     using namespace SE::Core;
 
+    using TextureDataCubeMap = TextureData2D;
+
     /** @brief */
     class ITextureCubeMap : public IGraphicResource, public Cuda::Texture2D
     {
@@ -27,20 +29,20 @@ namespace SE::Graphics
                          bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
 
         /** @brief */
-        ITextureCubeMap( Ref<IGraphicContext> aGraphicContext, TextureData2D &aCubeMapData )
+        ITextureCubeMap( Ref<IGraphicContext> aGraphicContext, TextureDataCubeMap &aCubeMapData )
             : ITextureCubeMap( aGraphicContext, aCubeMapData, 1, false, true, true )
         {
         }
 
         /** @brief */
-        ITextureCubeMap( Ref<IGraphicContext> aGraphicContext, TextureData2D &aCubeMapData, uint8_t aSampleCount, bool aIsHostVisible,
-                         bool aIsGraphicsOnly, bool aIsTransferSource );
+        ITextureCubeMap( Ref<IGraphicContext> aGraphicContext, TextureDataCubeMap &aCubeMapData, uint8_t aSampleCount,
+                         bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource );
 
         /** @brief */
         ~ITextureCubeMap() = default;
 
-        virtual void GetPixelData( TextureData2D &mTextureData )  = 0;
-        virtual void SetPixelData( Ref<IGraphicBuffer> a_Buffer ) = 0;
+        virtual void GetPixelData( TextureDataCubeMap &aTextureData ) = 0;
+        virtual void SetPixelData( Ref<IGraphicBuffer> aBuffer )     = 0;
 
       protected:
         uint8_t mSampleCount = 1;

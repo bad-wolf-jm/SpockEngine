@@ -23,27 +23,28 @@ namespace SE::Graphics
 
       public:
         /** @brief */
-        VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription, uint8_t aSampleCount,
-                     bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
+        VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+                          uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
+                          bool aIsTransferDestination );
 
         /** @brief */
-        VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, TextureData2D &aCubeMapData )
+        VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, TextureDataCubeMap &aCubeMapData )
             : VkTextureCubeMap( aGraphicContext, aCubeMapData, 1, false, true, true )
         {
         }
 
         /** @brief */
-        VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, TextureData2D &aCubeMapData, uint8_t aSampleCount, bool aIsHostVisible,
-                     bool aIsGraphicsOnly, bool aIsTransferSource );
+        VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, TextureDataCubeMap &aCubeMapData, uint8_t aSampleCount,
+                          bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource );
 
         /** @brief */
         VkTextureCubeMap( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
-                     VkImage aExternalImage );
+                          VkImage aExternalImage );
 
         /** @brief */
         ~VkTextureCubeMap();
 
-        void GetPixelData( TextureData2D &mTextureData );
+        void GetPixelData( TextureDataCubeMap &mTextureData );
         void SetPixelData( Ref<IGraphicBuffer> a_Buffer );
         void TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout );
 

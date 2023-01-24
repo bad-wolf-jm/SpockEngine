@@ -28,13 +28,13 @@ namespace SE::Graphics
                      bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
 
         /** @brief */
-        VkTexture2D( Ref<VkGraphicContext> aGraphicContext, TextureData2D &aCubeMapData )
-            : VkTexture2D( aGraphicContext, aCubeMapData, 1, false, true, true )
+        VkTexture2D( Ref<VkGraphicContext> aGraphicContext, TextureData2D &aTextureData )
+            : VkTexture2D( aGraphicContext, aTextureData, 1, false, true, true )
         {
         }
 
         /** @brief */
-        VkTexture2D( Ref<VkGraphicContext> aGraphicContext, TextureData2D &aCubeMapData, uint8_t aSampleCount, bool aIsHostVisible,
+        VkTexture2D( Ref<VkGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount, bool aIsHostVisible,
                      bool aIsGraphicsOnly, bool aIsTransferSource );
 
         /** @brief */
