@@ -166,14 +166,8 @@ add_shader(LTSimulationEngineRuntime "Unlit.frag")
 add_shader(LTSimulationEngineRuntime "Deferred/DeferredLightingMSAA.vert")
 add_shader(LTSimulationEngineRuntime "Deferred/DeferredLightingMSAA.frag")
 
-add_shader(LTSimulationEngineRuntime "Deferred/DEferredLightingShadow.vert")
-add_shader(LTSimulationEngineRuntime "Deferred/DEferredLightingShadow.frag")
-
 add_shader(LTSimulationEngineRuntime "Deferred/MRT.vert")
 add_shader(LTSimulationEngineRuntime "Deferred/MRT.frag")
-
-add_shader(LTSimulationEngineRuntime "Deferred/Shadow.vert")
-add_shader(LTSimulationEngineRuntime "Deferred/Shadow.geom")
 
 target_link_libraries(LTSimulationEngineRuntime PRIVATE
     Vulkan::Vulkan
