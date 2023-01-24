@@ -147,6 +147,7 @@ namespace SE::Core
             mPointLightsShadowMapRenderContext.clear();
             mPointLightsShadowCameraUniformBuffer.clear();
             mPointLightsShadowSceneDescriptors.clear();
+
             for( uint32_t i = 0; i < mPointLights.size(); i++ )
             {
                 mPointLightsShadowMapRenderContext.emplace_back();
@@ -235,27 +236,22 @@ namespace SE::Core
                 math::mat4  lClip = math::MakeMat4( aEntries );
                 // clang-format on
 
-                math::mat4                lProjection  = lClip * math::Perspective( math::radians( 90.0f ), 1.0f, .5f, 100.0f );
+                math::mat4 lProjection = lClip * math::Perspective( math::radians( 90.0f ), 1.0f, .5f, 100.0f );
+
+                // clang-format off
                 std::array<math::mat4, 6> lMVPMatrices = {
-                    // POSITIVE_X
-                    math::Rotation( math::radians( 180.0f ), math::vec3( 1.0f, 0.0f, 0.0f ) ) *
-                        math::Rotation( math::radians( 90.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
-                    // NEGATIVE_X
-                    math::Rotation( math::radians( 180.0f ), math::vec3( 1.0f, 0.0f, 0.0f ) ) *
-                        math::Rotation( math::radians( -90.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
-                    // POSITIVE_Y
-                    math::Rotation( math::radians( -90.0f ), math::vec3( 1.0f, 0.0f, 0.0f ) ),
-                    // NEGATIVE_Y
-                    math::Rotation( math::radians( 90.0f ), math::vec3( 1.0f, 0.0f, 0.0f ) ),
-                    // POSITIVE_Z
-                    math::Rotation( math::radians( 180.0f ), math::vec3( 1.0f, 0.0f, 0.0f ) ),
-                    // NEGATIVE_Z
-                    math::Rotation( math::radians( 180.0f ), math::vec3( 0.0f, 0.0f, 1.0f ) ),
+                    /* POSITIVE_X */ math::Rotation( math::radians( 180.0f ), math::vec3( 1.0f, 0.0f, 0.0f ) ) * math::Rotation( math::radians( 90.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
+                    /* NEGATIVE_X */ math::Rotation( math::radians( 180.0f ), math::vec3( 1.0f, 0.0f, 0.0f ) ) * math::Rotation( math::radians( -90.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
+                    /* POSITIVE_Y */ math::Rotation( math::radians( -90.0f ), math::vec3( 1.0f, 0.0f, 0.0f ) ),
+                    /* NEGATIVE_Y */ math::Rotation( math::radians(  90.0f ), math::vec3( 1.0f, 0.0f, 0.0f ) ),
+                    /* POSITIVE_Z */ math::Rotation( math::radians( 180.0f ), math::vec3( 1.0f, 0.0f, 0.0f ) ),
+                    /* NEGATIVE_Z */ math::Rotation( math::radians( 180.0f ), math::vec3( 0.0f, 0.0f, 1.0f ) ),
                 };
+                // clang-format off
 
                 for( uint32_t f = 0; f < 6; f++ )
                 {
-                    View.mMVP = lProjection * math::Translate(lMVPMatrices[f], mPointLights[lLightIndex].WorldPosition);
+                    View.mMVP = lProjection * math::Translate( lMVPMatrices[f], mPointLights[lLightIndex].WorldPosition );
                     mPointLightsShadowCameraUniformBuffer[lLightIndex][f]->Write( View );
 
                     lContext[f].BeginRender();
