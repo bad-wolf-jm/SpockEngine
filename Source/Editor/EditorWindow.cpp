@@ -218,6 +218,17 @@ namespace SE::Editor
         }
         ImGui::End();
 
+        if( ImGui::Begin( "LIGHT PANEL", NULL, ImGuiWindowFlags_None ) )
+        {
+            ActiveWorld->ForEach<sLightComponent>(
+                [&]( auto aEntity, auto &aComponent )
+                {
+                    Text( aEntity.Get<sTag>().mValue );
+                    //
+                } );
+        }
+        ImGui::End();
+
         static bool p_open_4 = true;
         if( ImGui::Begin( "OBSERVER CAMERA", &p_open_4, ImGuiWindowFlags_None ) )
         {
