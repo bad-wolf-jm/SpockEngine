@@ -85,9 +85,9 @@ namespace SE::Core
         std::vector<Ref<VkGpuBuffer>>           mSpotlightShadowCameraUniformBuffer = {};
         std::vector<Ref<DescriptorSet>>         mSpotlightShadowSceneDescriptors    = {};
 
-        std::vector<ARenderContext>     mPointLightsShadowMapRenderContext    = {};
-        std::vector<Ref<VkGpuBuffer>>   mPointLightsShadowCameraUniformBuffer = {};
-        std::vector<Ref<DescriptorSet>> mPointLightsShadowSceneDescriptors    = {};
+        std::vector<std::array<ARenderContext, 6>>     mPointLightsShadowMapRenderContext    = {};
+        std::vector<std::array<Ref<VkGpuBuffer>, 6>>   mPointLightsShadowCameraUniformBuffer = {};
+        std::vector<std::array<Ref<DescriptorSet>, 6>> mPointLightsShadowSceneDescriptors    = {};
 
         Ref<VkRenderTarget> mGeometryRenderTarget = nullptr;
         ARenderContext      mGeometryContext{};

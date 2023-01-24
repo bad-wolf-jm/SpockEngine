@@ -119,6 +119,7 @@ namespace SE::Core
         {
             mSpotlightShadowMapRenderContext.clear();
             mSpotlightShadowMapSamplers.clear();
+
             for( uint32_t i = 0; i < mSpotlights.size(); i++ )
             {
                 auto lShadowMaps = NewRenderTarget( 1024, 1024 );
@@ -144,23 +145,27 @@ namespace SE::Core
         if( mPointLights.size() != mPointLightsShadowMapRenderContext.size() )
         {
             mPointLightsShadowMapRenderContext.clear();
+            mPointLightsShadowCameraUniformBuffer.clear();
+            mPointLightsShadowSceneDescriptors.clear();
             for( uint32_t i = 0; i < mPointLights.size(); i++ )
             {
+                mPointLightsShadowMapRenderContext.emplace_back();
+                mPointLightsShadowSceneDescriptors.emplace_back();
+                mPointLightsShadowCameraUniformBuffer.emplace_back();
+
                 for( uint32_t f = 0; f < 6; f++ )
                 {
                     auto lShadowMaps = NewRenderTarget( 1024, 1024 );
 
-                    mPointLightsShadowMapRenderContext.emplace_back( mGraphicContext, lShadowMaps );
-
-                    mPointLightsShadowSceneDescriptors.emplace_back();
-                    mPointLightsShadowSceneDescriptors.back() =
+                    mPointLightsShadowMapRenderContext.back()[f] = ARenderContext( mGraphicContext, lShadowMaps );
+                    mPointLightsShadowSceneDescriptors.back()[f] =
                         New<DescriptorSet>( mGraphicContext, ShadowMeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
-                    mPointLightsShadowCameraUniformBuffer.emplace_back();
-                    mPointLightsShadowCameraUniformBuffer.back() = New<VkGpuBuffer>(
+                    mPointLightsShadowCameraUniformBuffer.back()[f] = New<VkGpuBuffer>(
                         mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( ShadowMatrices ) );
-                    mPointLightsShadowSceneDescriptors.back()->Write( mPointLightsShadowCameraUniformBuffer.back(), false, 0,
-                                                                      sizeof( ShadowMatrices ), 0 );
+
+                    mPointLightsShadowSceneDescriptors.back()[f]->Write( mPointLightsShadowCameraUniformBuffer.back()[f], false, 0,
+                                                                         sizeof( ShadowMatrices ), 0 );
                 }
             }
         }
@@ -218,6 +223,54 @@ namespace SE::Core
                     lContext.Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
                 }
                 lContext.EndRender();
+                lLightIndex++;
+            }
+
+            lLightIndex = 0;
+            for( auto &lContext : mPointLightsShadowMapRenderContext )
+            {
+
+                // clang-format off
+                const float aEntries[] = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f };
+                math::mat4  lClip = math::MakeMat4( aEntries );
+                // clang-format on
+
+                math::mat4                lProjection  = lClip * math::Perspective( math::radians( 90.0f ), 1.0f, .5f, 100.0f );
+                std::array<math::mat4, 6> lMVPMatrices = {
+                    // POSITIVE_X
+                    math::Rotation( math::radians( 180.0f ), math::vec3( 1.0f, 0.0f, 0.0f ) ) *
+                        math::Rotation( math::radians( 90.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
+                    // NEGATIVE_X
+                    math::Rotation( math::radians( 180.0f ), math::vec3( 1.0f, 0.0f, 0.0f ) ) *
+                        math::Rotation( math::radians( -90.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
+                    // POSITIVE_Y
+                    math::Rotation( math::radians( -90.0f ), math::vec3( 1.0f, 0.0f, 0.0f ) ),
+                    // NEGATIVE_Y
+                    math::Rotation( math::radians( 90.0f ), math::vec3( 1.0f, 0.0f, 0.0f ) ),
+                    // POSITIVE_Z
+                    math::Rotation( math::radians( 180.0f ), math::vec3( 1.0f, 0.0f, 0.0f ) ),
+                    // NEGATIVE_Z
+                    math::Rotation( math::radians( 180.0f ), math::vec3( 0.0f, 0.0f, 1.0f ) ),
+                };
+
+                for( uint32_t f = 0; f < 6; f++ )
+                {
+                    View.mMVP = lProjection * math::Translate(lMVPMatrices[f], mPointLights[lLightIndex].WorldPosition);
+                    mPointLightsShadowCameraUniformBuffer[lLightIndex][f]->Write( View );
+
+                    lContext[f].BeginRender();
+                    for( auto &lPipelineData : mOpaqueMeshQueue )
+                    {
+                        if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
+
+                        lContext[f].Bind( mRenderPipeline.Pipeline );
+                        lContext[f].Bind( mPointLightsShadowSceneDescriptors[lLightIndex][f], 0, -1 );
+                        lContext[f].Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
+                        lContext[f].Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
+                    }
+                    lContext[f].EndRender();
+                }
+
                 lLightIndex++;
             }
         }
