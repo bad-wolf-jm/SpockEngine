@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Graphics/Vulkan/VkSampler2D.h"
+#include "Graphics/Vulkan/VkSamplerCubeMap.h"
 // #include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "Core/Memory.h"
@@ -69,6 +70,9 @@ namespace SE::Graphics
 
         void Write( Ref<VkSampler2D> aBuffer, uint32_t aBinding );
         void Write( std::vector<Ref<VkSampler2D>> aBuffer, uint32_t aBinding );
+
+        void Write( Ref<VkSamplerCubeMap> aBuffer, uint32_t aBinding );
+        void Write( std::vector<Ref<VkSamplerCubeMap>> aBuffer, uint32_t aBinding );
 
         VkDescriptorSet GetVkDescriptorSet() { return mDescriptorSetObject->mVkObject; }
 

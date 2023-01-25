@@ -43,8 +43,25 @@ namespace SE::Graphics
 
         mDescriptorSetObject->Write( lImages );
     }
-
     void DescriptorSet::Write( Ref<VkSampler2D> aBuffer, uint32_t aBinding ) { Write( std::vector{ aBuffer }, aBinding ); }
+
+    void DescriptorSet::Write( std::vector<Ref<VkSamplerCubeMap>> aWriteOperations, uint32_t aBinding )
+    {
+        if( aWriteOperations.size() == 0 ) return;
+
+        sVkDescriptorSetObject::sImageBindInfo lImages{};
+
+        for( auto &lBuffer : aWriteOperations )
+        {
+            lImages.mSampler.push_back( lBuffer->GetSampler() );
+            lImages.mImageView.push_back( lBuffer->GetImageView() );
+        }
+        lImages.mBinding = aBinding;
+
+        mDescriptorSetObject->Write( lImages );
+    }
+    void DescriptorSet::Write( Ref<VkSamplerCubeMap> aBuffer, uint32_t aBinding ) { Write( std::vector{ aBuffer }, aBinding ); }
+
 
     DescriptorBindingInfo::operator VkDescriptorSetLayoutBinding() const
     {

@@ -10,6 +10,7 @@ layout( set = 1, binding = 3 ) uniform sampler2D samplerOcclusionMetalRough;
 
 layout( set = 2, binding = 0 ) uniform sampler2D gDirectionalShadowMaps[];
 layout( set = 3, binding = 0 ) uniform sampler2D gSpotlightShadowMaps[];
+layout( set = 4, binding = 0 ) uniform samplerCube gPointLightShadowMaps[];
 
 
 layout( location = 0 ) out vec4 outFragcolor;
@@ -217,7 +218,7 @@ float textureProj(sampler2D shadowMap, vec4 shadowCoord, vec2 off)
         float dist = texture( shadowMap, shadowCoord.st + off ).r;
         if ( shadowCoord.w > 0.0 && dist < shadowCoord.z ) 
         {
-            shadow = uboParams.AmbientLightIntensity / (ubo.SpotlightCount + ubo.DirectionalLightCount);
+            shadow = uboParams.AmbientLightIntensity;
         }
     }
     return shadow;
@@ -252,6 +253,8 @@ const mat4 biasMat = mat4(
     0.0, 0.5, 0.0, 0.0,
     0.0, 0.0, 1.0, 0.0,
     0.5, 0.5, 0.0, 1.0 );
+
+#define EPSILON 0.15
 
 vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalrough, vec4 emissive )
 {
@@ -294,7 +297,25 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
 
         vec3 lRadiance = ComputeRadiance( ubo.PointLights[i].WorldPosition, inWorldPos,
                                           ubo.PointLights[i].Color, ubo.PointLights[i].Intensity );
-        Lo += ComputeLightContribution( lBaseColor.xyz, N, V, lLightDirection, lRadiance, metallic, roughness );
+        // Lo += ComputeLightContribution( lBaseColor.xyz, N, V, lLightDirection, lRadiance, metallic, roughness );
+
+        vec3 lLightContribution = ComputeLightContribution( lBaseColor.xyz, N, V, lLightDirection, lRadiance, metallic, roughness );
+        vec4 lShadowNormalizedCoordinates = biasMat * ubo.Spotlights[i].Transform * vec4(inWorldPos, 1.0f);
+        lShadowNormalizedCoordinates /= lShadowNormalizedCoordinates.w;
+
+        float lShadowFactor = 1.0f;
+        vec3 lightVec = lLightPosition - inWorldPos;
+        float sampledDist = texture(gPointLightShadowMaps[i], lightVec).r;
+        // float dist = length(lightVec);
+        // lShadowFactor = (dist <= sampledDist + EPSILON) ? 1.0 : uboParams.AmbientLightIntensity;
+        // if (enablePCF == 1) 
+        //     lShadowFactor = filterPCF(gSpotlightShadowMaps[i], lShadowNormalizedCoordinates);
+        // else 
+        //     lShadowFactor = textureProj(gSpotlightShadowMaps[i], lShadowNormalizedCoordinates, vec2(0.0));
+
+        Lo += (lLightContribution * lShadowFactor);
+
+
     }
 
     for( int i = 0; i < ubo.SpotlightCount; i++ )

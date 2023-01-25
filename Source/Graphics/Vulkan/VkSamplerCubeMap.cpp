@@ -57,7 +57,7 @@ namespace SE::Graphics
 
         mVkImageView = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
                            ->CreateImageView( std::reinterpret_pointer_cast<VkTextureCubeMap>( mTextureData )->mVkImage,
-                                              mTextureData->mSpec.mLayers, VK_IMAGE_VIEW_TYPE_CUBE,
+                                              6, VK_IMAGE_VIEW_TYPE_CUBE,
                                               ToVkFormat( mTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
 
         mVkImageSampler = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )

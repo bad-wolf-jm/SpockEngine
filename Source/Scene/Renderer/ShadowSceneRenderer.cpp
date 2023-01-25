@@ -156,14 +156,17 @@ namespace SE::Core
             lCreateInfo.mFormat         = eColorFormat::D32_SFLOAT;
             lCreateInfo.mIsDepthTexture = true;
 
-            auto lShadowMap = New<VkTextureCubeMap>( mGraphicContext, lCreateInfo, 1, false, true, false, false );
-
             for( uint32_t i = 0; i < mPointLights.size(); i++ )
             {
                 mPointLightsShadowMapRenderContext.emplace_back();
                 mPointLightsShadowSceneDescriptors.emplace_back();
                 mPointLightsShadowCameraUniformBuffer.emplace_back();
 
+                auto lShadowMap = New<VkTextureCubeMap>( mGraphicContext, lCreateInfo, 1, false, true, false, false );
+                mPointLightShadowMapSamplers.emplace_back();
+                mPointLightShadowMapSamplers.back() =
+                    New<Graphics::VkSamplerCubeMap>( mGraphicContext, lShadowMap, sTextureSamplingInfo{} );
+                    
                 for( uint32_t f = 0; f < 6; f++ )
                 {
                     sRenderTargetDescription lRenderTargetSpec{};

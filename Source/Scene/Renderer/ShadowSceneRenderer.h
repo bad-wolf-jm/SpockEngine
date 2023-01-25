@@ -70,8 +70,9 @@ namespace SE::Core
 
         static Ref<DescriptorSet> GetDirectionalShadowMapsLayout();
 
-        std::vector<Ref<Graphics::VkSampler2D>> &GetDirectionalShadowMapSamplers() { return mDirectionalShadowMapSamplers; };
-        std::vector<Ref<Graphics::VkSampler2D>> &GetSpotlightShadowMapSamplers() { return mSpotlightShadowMapSamplers; };
+        std::vector<Ref<Graphics::VkSampler2D>>      &GetDirectionalShadowMapSamplers() { return mDirectionalShadowMapSamplers; };
+        std::vector<Ref<Graphics::VkSampler2D>>      &GetSpotlightShadowMapSamplers() { return mSpotlightShadowMapSamplers; };
+        std::vector<Ref<Graphics::VkSamplerCubeMap>> &GetPointLightShadowMapSamplers() { return mPointLightShadowMapSamplers; };
 
       protected:
         std::vector<ARenderContext>             mDirectionalShadowMapRenderContext    = {};
@@ -86,6 +87,7 @@ namespace SE::Core
         std::vector<Ref<DescriptorSet>>         mSpotlightShadowSceneDescriptors    = {};
 
         std::vector<std::array<ARenderContext, 6>>     mPointLightsShadowMapRenderContext    = {};
+        std::vector<Ref<Graphics::VkSamplerCubeMap>>        mPointLightShadowMapSamplers          = {};
         std::vector<std::array<Ref<VkGpuBuffer>, 6>>   mPointLightsShadowCameraUniformBuffer = {};
         std::vector<std::array<Ref<DescriptorSet>, 6>> mPointLightsShadowSceneDescriptors    = {};
 

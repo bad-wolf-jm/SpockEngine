@@ -52,9 +52,18 @@ namespace SE::Core
         return New<DescriptorSetLayout>( aGraphicContext, lShadowMapLayout, true );
     }
 
+    Ref<DescriptorSetLayout> DeferredLightingRenderer::GetPointLightShadowSetLayout( Ref<VkGraphicContext> aGraphicContext )
+    {
+        DescriptorSetLayoutCreateInfo lShadowMapLayout{};
+        lShadowMapLayout.Bindings = {
+            DescriptorBindingInfo{ 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
+
+        return New<DescriptorSetLayout>( aGraphicContext, lShadowMapLayout, true );
+    }
+
     std::vector<Ref<DescriptorSetLayout>> DeferredLightingRenderer::GetDescriptorSetLayout()
     {
-        return { CameraSetLayout, TextureSetLayout, DirectionalShadowSetLayout, SpotlightShadowSetLayout };
+        return { CameraSetLayout, TextureSetLayout, DirectionalShadowSetLayout, SpotlightShadowSetLayout, PointLightShadowSetLayout };
     }
 
     std::vector<sPushConstantRange> DeferredLightingRenderer::GetPushConstantLayout()
@@ -78,6 +87,7 @@ namespace SE::Core
         TextureSetLayout           = GetTextureSetLayout( mGraphicContext );
         DirectionalShadowSetLayout = GetDirectionalShadowSetLayout( mGraphicContext );
         SpotlightShadowSetLayout   = GetSpotlightShadowSetLayout( mGraphicContext );
+        PointLightShadowSetLayout  = GetPointLightShadowSetLayout( mGraphicContext );
 
         Initialize( lCreateInfo );
     }

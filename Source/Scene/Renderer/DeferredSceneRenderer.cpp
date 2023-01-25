@@ -33,6 +33,9 @@ namespace SE::Core
 
         mLightingSpotlightShadowLayout   = DeferredLightingRenderer::GetSpotlightShadowSetLayout( mGraphicContext );
         mLightingPassSpotlightShadowMaps = New<DescriptorSet>( mGraphicContext, mLightingSpotlightShadowLayout, 1024 );
+
+        mLightingPointLightShadowLayout   = DeferredLightingRenderer::GetPointLightShadowSetLayout( mGraphicContext );
+        mLightingPassPointLightShadowMaps = New<DescriptorSet>( mGraphicContext, mLightingPointLightShadowLayout, 1024 );
     }
 
     void DeferredRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
@@ -285,6 +288,9 @@ namespace SE::Core
         if (mShadowSceneRenderer->GetSpotlightShadowMapSamplers().size() > 0)
             mLightingPassSpotlightShadowMaps->Write( mShadowSceneRenderer->GetSpotlightShadowMapSamplers(), 0 );
 
+        if (mShadowSceneRenderer->GetPointLightShadowMapSamplers().size() > 0)
+            mLightingPassPointLightShadowMaps->Write( mShadowSceneRenderer->GetPointLightShadowMapSamplers(), 0 );
+
 
         // Lighting pass
         mLightingContext.BeginRender();
@@ -294,6 +300,7 @@ namespace SE::Core
             mLightingContext.Bind( mLightingPassTextures, 1, -1 );
             mLightingContext.Bind( mLightingPassDirectionalShadowMaps, 2, -1 );
             mLightingContext.Bind( mLightingPassSpotlightShadowMaps, 3, -1 );
+            mLightingContext.Bind( mLightingPassPointLightShadowMaps, 4, -1 );
             mLightingContext.Draw( 6, 0, 0, 1, 0 );
 
             for( auto &lParticleSystem : mParticleQueue )
