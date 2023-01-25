@@ -63,8 +63,8 @@ namespace SE::Graphics
 
     struct sAttachmentResource
     {
-        ITexture *mTexture = nullptr;
-        eCubeFace mFace    = eCubeFace::NEGATIVE_Z;
+        Ref<ITexture> mTexture = nullptr;
+        eCubeFace     mFace    = eCubeFace::NEGATIVE_Z;
     };
 
     class IRenderTarget
@@ -104,7 +104,7 @@ namespace SE::Graphics
         std::vector<sAttachmentDescription> mAttachmentInfo = {};
         std::vector<std::string>            mAttachmentIDs  = {};
 
-        std::unordered_map<std::string, Ref<ITexture>> mAttachments     = {};
-        std::unordered_map<std::string, eCubeFace>     mAttachmentFaces = {};
+        std::unordered_map<std::string, sAttachmentResource> mAttachments = {};
+        // std::unordered_map<std::string, eCubeFace>     mAttachmentFaces = {};
     };
 } // namespace SE::Graphics

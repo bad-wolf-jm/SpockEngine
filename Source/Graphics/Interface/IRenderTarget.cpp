@@ -23,8 +23,7 @@ namespace SE::Graphics
 
         if( aCreateInfo.mType == eAttachmentType::DEPTH ) mAttachmentInfo.back().mFormat = mGraphicContext->GetDepthFormat();
 
-        mAttachments[aAttachmentID]     = aFramebufferImage;
-        mAttachmentFaces[aAttachmentID] = aFace;
+        mAttachments[aAttachmentID] = sAttachmentResource{ aFramebufferImage, aFace };
     }
 
     void IRenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
@@ -46,7 +45,7 @@ namespace SE::Graphics
     Ref<ITexture> IRenderTarget::GetAttachment( std::string const &aKey )
     {
         //
-        return mAttachments[aKey];
+        return mAttachments[aKey].mTexture;
     }
 
     bool IRenderTarget::BeginRender() { return true; }

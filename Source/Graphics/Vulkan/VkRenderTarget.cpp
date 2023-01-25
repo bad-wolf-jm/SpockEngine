@@ -96,7 +96,7 @@ namespace SE::Graphics
         {   
             auto lAttachment = mAttachments[lAttachmentID];
 
-            lAttachments.push_back( std::static_pointer_cast<VkTexture2D>( lAttachment ) );
+            lAttachments.push_back( std::static_pointer_cast<VkTexture2D>( lAttachment.mTexture ) );
         }
 
         for( auto lTextureData : lAttachments )
@@ -214,7 +214,7 @@ namespace SE::Graphics
     Ref<VkTexture2D> VkRenderTarget::GetAttachment( std::string const &aKey )
     {
         //
-        return std::static_pointer_cast<VkTexture2D>( mAttachments[aKey] );
+        return std::static_pointer_cast<VkTexture2D>( mAttachments[aKey].mTexture );
     }
 
     bool VkRenderTarget::BeginRender() { return true; }
