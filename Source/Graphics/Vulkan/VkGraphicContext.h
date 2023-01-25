@@ -45,6 +45,8 @@ namespace SE::Graphics
 
         VkImageView CreateImageView( VkImage aImageObject, uint32_t aLayerCount, VkImageViewType aViewType, VkFormat aImageFormat,
                                      VkImageAspectFlags aAspectMask, VkComponentMapping aComponentSwizzle );
+        VkImageView CreateImageView( VkImage aImageObject, uint32_t aBaseLayer, uint32_t aLayerCount, VkImageViewType aViewType,
+                                     VkFormat aImageFormat, VkImageAspectFlags aAspectMask, VkComponentMapping aComponentSwizzle );
         void        DestroyImageView( VkImageView aImage );
 
         VkRenderPass CreateRenderPass( std::vector<VkAttachmentDescription> aAttachments, std::vector<VkSubpassDescription> aSubpasses,

@@ -20,6 +20,7 @@ namespace SE::Graphics
     class VkTextureCubeMap : public ITextureCubeMap
     {
         friend class VkSamplerCubeMap;
+        friend class VkRenderTarget;
 
       public:
         /** @brief */

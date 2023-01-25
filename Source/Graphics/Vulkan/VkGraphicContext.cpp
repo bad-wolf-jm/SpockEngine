@@ -741,6 +741,13 @@ namespace SE::Graphics
                                                    VkFormat aImageFormat, VkImageAspectFlags aAspectMask,
                                                    VkComponentMapping aComponentSwizzle )
     {
+        return CreateImageView( aImageObject, 0, aLayerCount, aViewType, aImageFormat, aAspectMask, aComponentSwizzle );
+    }
+
+    VkImageView VkGraphicContext::CreateImageView( VkImage aImageObject, uint32_t aBaseLayer, uint32_t aLayerCount,
+                                                   VkImageViewType aViewType, VkFormat aImageFormat, VkImageAspectFlags aAspectMask,
+                                                   VkComponentMapping aComponentSwizzle )
+    {
         VkImageViewCreateInfo lImageViewCreateInfo{};
         lImageViewCreateInfo.sType                           = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         lImageViewCreateInfo.image                           = aImageObject;
@@ -749,7 +756,7 @@ namespace SE::Graphics
         lImageViewCreateInfo.subresourceRange.aspectMask     = aAspectMask;
         lImageViewCreateInfo.subresourceRange.baseMipLevel   = 0;
         lImageViewCreateInfo.subresourceRange.levelCount     = 1;
-        lImageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
+        lImageViewCreateInfo.subresourceRange.baseArrayLayer = aBaseLayer;
         lImageViewCreateInfo.subresourceRange.layerCount     = aLayerCount;
         lImageViewCreateInfo.components                      = aComponentSwizzle;
 

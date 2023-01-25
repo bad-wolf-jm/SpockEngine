@@ -20,6 +20,9 @@ namespace SE::Graphics
         : ITextureCubeMap( aGraphicContext, mTextureData.mSpec, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                            false )
     {
+        if( mSpec.mIsDepthTexture )
+            mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
+
         CreateImage();
         AllocateMemory();
         BindMemory();
@@ -40,6 +43,9 @@ namespace SE::Graphics
         : ITextureCubeMap( aGraphicContext, aTextureImageDescription, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                            aIsTransferDestination )
     {
+        if( mSpec.mIsDepthTexture )
+            mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
+
         CreateImage();
         AllocateMemory();
         BindMemory();

@@ -150,10 +150,11 @@ namespace SE::Core
             mPointLightsShadowSceneDescriptors.clear();
 
             sTextureCreateInfo lCreateInfo{};
-            lCreateInfo.mWidth  = 1024;
-            lCreateInfo.mHeight = 1024;
-            lCreateInfo.mDepth  = 1;
-            lCreateInfo.mFormat = eColorFormat::D32_SFLOAT;
+            lCreateInfo.mWidth          = 1024;
+            lCreateInfo.mHeight         = 1024;
+            lCreateInfo.mDepth          = 1;
+            lCreateInfo.mFormat         = eColorFormat::D32_SFLOAT;
+            lCreateInfo.mIsDepthTexture = true;
 
             auto lShadowMap = New<VkTextureCubeMap>( mGraphicContext, lCreateInfo, 1, false, true, false, false );
 
@@ -165,9 +166,23 @@ namespace SE::Core
 
                 for( uint32_t f = 0; f < 6; f++ )
                 {
-                    auto lShadowMaps = NewRenderTarget( 1024, 1024 );
+                    sRenderTargetDescription lRenderTargetSpec{};
+                    lRenderTargetSpec.mWidth       = 1024;
+                    lRenderTargetSpec.mHeight      = 1024;
+                    lRenderTargetSpec.mSampleCount = 1;
+                    auto lRenderTarget             = New<VkRenderTarget>( mGraphicContext, lRenderTargetSpec );
 
-                    mPointLightsShadowMapRenderContext.back()[f] = ARenderContext( mGraphicContext, lShadowMaps );
+                    sAttachmentDescription lAttachmentCreateInfo{};
+                    lAttachmentCreateInfo.mIsSampled   = true;
+                    lAttachmentCreateInfo.mIsPresented = false;
+                    lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
+                    lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
+                    lAttachmentCreateInfo.mType        = eAttachmentType::DEPTH;
+                    lAttachmentCreateInfo.mClearColor  = { 1.0f, 0.0f, 0.0f, 0.0f };
+                    lRenderTarget->AddAttachment( "SHADOW_MAP", lAttachmentCreateInfo, lShadowMap, static_cast<eCubeFace>( f ) );
+                    lRenderTarget->Finalize();
+
+                    mPointLightsShadowMapRenderContext.back()[f] = ARenderContext( mGraphicContext, lRenderTarget );
                     mPointLightsShadowSceneDescriptors.back()[f] =
                         New<DescriptorSet>( mGraphicContext, ShadowMeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
