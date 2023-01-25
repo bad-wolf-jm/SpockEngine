@@ -9,7 +9,7 @@ namespace SE::Graphics
     /** @brief */
     ITextureCubeMap::ITextureCubeMap( Ref<IGraphicContext> aGraphicContext, TextureDataCubeMap &aCubeMapData, uint8_t aSampleCount,
                                       bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
-        : ITexture( aGraphicContext, eTextureType::TEXTURE_CUBE_MAP, sTextureCreateInfo{}, aIsHostVisible, aSampleCount,
+        : ITexture( aGraphicContext, eTextureType::TEXTURE_CUBE_MAP, sTextureCreateInfo{}, aSampleCount, aIsHostVisible,
                     aIsGraphicsOnly, aIsTransferSource, false )
     {
         mSpec = mCreateInfo;
@@ -18,8 +18,8 @@ namespace SE::Graphics
     ITextureCubeMap::ITextureCubeMap( Ref<IGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
                                       uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                                       bool aIsTransferDestination )
-        : ITexture( aGraphicContext, eTextureType::TEXTURE_CUBE_MAP, sTextureCreateInfo{}, aIsHostVisible, aSampleCount,
-                    aIsGraphicsOnly, aIsTransferSource, false )
+        : ITexture( aGraphicContext, eTextureType::TEXTURE_CUBE_MAP, aTextureImageDescription, aSampleCount, aIsHostVisible,
+                    aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination )
     {
         mSpec = mCreateInfo;
     }

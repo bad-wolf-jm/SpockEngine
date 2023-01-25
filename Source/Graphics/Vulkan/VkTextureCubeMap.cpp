@@ -63,8 +63,8 @@ namespace SE::Graphics
     {
         mVkImage =
             std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-                ->CreateImage( mSpec.mWidth, mSpec.mHeight, mSpec.mDepth, mSpec.mMipLevels, mSpec.mLayers,
-                               VK_SAMPLE_COUNT_VALUE( mSampleCount ), !mIsGraphicsOnly, false,
+                ->CreateImage( mSpec.mWidth, mSpec.mHeight, mSpec.mDepth, mSpec.mMipLevels, 6,
+                               VK_SAMPLE_COUNT_VALUE( mSampleCount ), !mIsGraphicsOnly, true,
                                mSpec.mIsDepthTexture ? ToVkFormat( mGraphicContext->GetDepthFormat() ) : ToVkFormat( mSpec.mFormat ),
                                MemoryProperties(), ImageUsage() );
     }
@@ -131,6 +131,45 @@ namespace SE::Graphics
     }
 
     void VkTextureCubeMap::SetPixelData( Ref<IGraphicBuffer> aBuffer )
+    {
+        Ref<sVkCommandBufferObject> lCommandBufferObject =
+            SE::Core::New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ) );
+        lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
+
+        std::vector<sImageRegion> lBufferCopyRegions;
+        uint32_t                  lOffset = 0;
+
+        for( uint32_t i = 0; i < mSpec.mMipLevels; i++ )
+        {
+            sImageRegion lBufferCopyRegion{};
+            lBufferCopyRegion.mBaseLayer     = 0;
+            lBufferCopyRegion.mLayerCount    = 1;
+            lBufferCopyRegion.mBaseMipLevel  = i;
+            lBufferCopyRegion.mMipLevelCount = 1;
+            lBufferCopyRegion.mWidth         = mSpec.mWidth >> i;
+            lBufferCopyRegion.mHeight        = mSpec.mHeight >> i;
+            lBufferCopyRegion.mDepth         = 1;
+            lBufferCopyRegion.mOffset        = lOffset;
+
+            lBufferCopyRegions.push_back( lBufferCopyRegion );
+            lOffset += static_cast<uint32_t>( ( mSpec.mWidth >> i ) * ( mSpec.mHeight >> i ) * sizeof( uint32_t ) );
+        }
+
+        sImageRegion lImageCopyRegion{};
+        lImageCopyRegion.mBaseMipLevel  = 0;
+        lImageCopyRegion.mMipLevelCount = mSpec.mMipLevels;
+        lImageCopyRegion.mLayerCount    = 1;
+
+        lCommandBufferObject->CopyBuffer( std::reinterpret_pointer_cast<VkGpuBuffer>( aBuffer )->mVkBuffer, mVkImage,
+                                          lBufferCopyRegions, lImageCopyRegion );
+
+        lCommandBufferObject->End();
+        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
+            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+    }
+
+    void VkTextureCubeMap::SetPixelData( eCubeFace aFace, Ref<IGraphicBuffer> aBuffer )
     {
         Ref<sVkCommandBufferObject> lCommandBufferObject =
             SE::Core::New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ) );
