@@ -44,6 +44,7 @@ namespace SE::Graphics
         lTextureCreateInfo.mWidth          = mSpec.mWidth;
         lTextureCreateInfo.mHeight         = mSpec.mHeight;
         lTextureCreateInfo.mDepth          = 1;
+        lTextureCreateInfo.mMipLevels      = 1;
         lTextureCreateInfo.mIsDepthTexture = ( aCreateInfo.mType == eAttachmentType::DEPTH );
         uint32_t lSampleCount              = ( aCreateInfo.mType == eAttachmentType::MSAA_RESOLVE ) ? 1 : mSpec.mSampleCount;
 
@@ -92,7 +93,11 @@ namespace SE::Graphics
     {
         std::vector<Ref<VkTexture2D>> lAttachments{};
         for( auto const &lAttachmentID : mAttachmentIDs )
-            lAttachments.push_back( std::reinterpret_pointer_cast<VkTexture2D>( mAttachments[lAttachmentID] ) );
+        {   
+            auto lAttachment = mAttachments[lAttachmentID];
+
+            lAttachments.push_back( std::static_pointer_cast<VkTexture2D>( lAttachment ) );
+        }
 
         for( auto lTextureData : lAttachments )
         {
@@ -209,7 +214,7 @@ namespace SE::Graphics
     Ref<VkTexture2D> VkRenderTarget::GetAttachment( std::string const &aKey )
     {
         //
-        return std::reinterpret_pointer_cast<VkTexture2D>( mAttachments[aKey] );
+        return std::static_pointer_cast<VkTexture2D>( mAttachments[aKey] );
     }
 
     bool VkRenderTarget::BeginRender() { return true; }
