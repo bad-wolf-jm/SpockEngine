@@ -4,6 +4,7 @@
 #include <gli/gli.hpp>
 
 #include "Graphics/Vulkan/VkPipeline.h"
+#include "Graphics/Vulkan/VkTextureCubeMap.h"
 
 #include "Scene/Components/VisualHelpers.h"
 #include "Scene/Primitives/Primitives.h"
@@ -147,6 +148,14 @@ namespace SE::Core
             mPointLightsShadowMapRenderContext.clear();
             mPointLightsShadowCameraUniformBuffer.clear();
             mPointLightsShadowSceneDescriptors.clear();
+
+            sTextureCreateInfo lCreateInfo{};
+            lCreateInfo.mWidth  = 1024;
+            lCreateInfo.mHeight = 1024;
+            lCreateInfo.mDepth  = 1;
+            lCreateInfo.mFormat = eColorFormat::D32_SFLOAT;
+
+            auto lShadowMap = New<VkTextureCubeMap>( mGraphicContext, lCreateInfo, 1, false, true, false, false );
 
             for( uint32_t i = 0; i < mPointLights.size(); i++ )
             {
