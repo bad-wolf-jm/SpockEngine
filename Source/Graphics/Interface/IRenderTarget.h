@@ -3,7 +3,8 @@
 #include "Core/Memory.h"
 
 #include "IGraphicContext.h"
-#include "ITexture2D.h"
+#include "ITexture.h"
+#include "ITextureCubeMap.h"
 
 namespace SE::Graphics
 {
@@ -60,6 +61,12 @@ namespace SE::Graphics
         sAttachmentDescription( sAttachmentDescription const & ) = default;
     };
 
+    struct sAttachmentResource
+    {
+        Ref<ITexture> mTexture = nullptr;
+        eCubeFace     mFace    = eCubeFace::NEGATIVE_Z;
+    };
+
     class IRenderTarget
     {
       public:
@@ -73,18 +80,21 @@ namespace SE::Graphics
         uint32_t GetImageCount() { return mImageCount; }
 
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-                            Ref<ITexture2D> aFramebufferImage );
+                            Ref<ITexture> aFramebufferImage );
+
+        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+                            Ref<ITexture> aFramebufferImage, eCubeFace aFace );
 
         void AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
                             bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp,
-                            Ref<ITexture2D> aFramebufferImage );
+                            Ref<ITexture> aFramebufferImage );
 
         virtual void Finalize();
         virtual bool BeginRender();
         virtual void EndRender();
         virtual void Present();
 
-        Ref<ITexture2D> GetAttachment( std::string const &aKey );
+        Ref<ITexture> GetAttachment( std::string const &aKey );
 
       protected:
         Ref<IGraphicContext> mGraphicContext{};
@@ -94,6 +104,7 @@ namespace SE::Graphics
         std::vector<sAttachmentDescription> mAttachmentInfo = {};
         std::vector<std::string>            mAttachmentIDs  = {};
 
-        std::unordered_map<std::string, Ref<ITexture2D>> mAttachments = {};
+        std::unordered_map<std::string, Ref<ITexture>> mAttachments     = {};
+        std::unordered_map<std::string, eCubeFace>     mAttachmentFaces = {};
     };
 } // namespace SE::Graphics

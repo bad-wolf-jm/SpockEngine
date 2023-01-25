@@ -10,7 +10,7 @@ namespace SE::Graphics
     VkRenderTarget::~VkRenderTarget()
     {
         std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->DestroyFramebuffer( mVkFramebuffer );
-        
+
         for( auto &lImageView : mVkImageViews )
             std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->DestroyImageView( lImageView );
     }
@@ -53,14 +53,20 @@ namespace SE::Graphics
     }
 
     void VkRenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-                                       Ref<VkTexture2D> aFramebufferImage )
+                                        Ref<VkTexture2D> aFramebufferImage )
     {
         IRenderTarget::AddAttachment( aAttachmentID, aCreateInfo, aFramebufferImage );
     }
 
+    void VkRenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+                                        Ref<VkTextureCubeMap> aFramebufferImage, eCubeFace aFace )
+    {
+        IRenderTarget::AddAttachment( aAttachmentID, aCreateInfo, aFramebufferImage, aFace );
+    }
+
     void VkRenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
-                                       math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
-                                       eAttachmentStoreOp eStoreOp )
+                                        math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
+                                        eAttachmentStoreOp eStoreOp )
     {
         sAttachmentDescription lCreateInfo{};
         lCreateInfo.mType        = aType;
@@ -75,8 +81,8 @@ namespace SE::Graphics
     }
 
     void VkRenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
-                                       math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
-                                       eAttachmentStoreOp eStoreOp, Ref<VkTexture2D> aFramebufferImage )
+                                        math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
+                                        eAttachmentStoreOp eStoreOp, Ref<VkTexture2D> aFramebufferImage )
     {
         IRenderTarget::AddAttachment( aAttachmentID, aType, aFormat, aClearColor, aIsSampled, aIsPresented, aLoadOp, eStoreOp,
                                       aFramebufferImage );

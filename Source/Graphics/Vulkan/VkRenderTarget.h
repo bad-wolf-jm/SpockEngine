@@ -12,6 +12,7 @@
 #include "Graphics/Vulkan/VkCoreMacros.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Graphics/Vulkan/VkTexture2D.h"
+#include "Graphics/Vulkan/VkTextureCubeMap.h"
 
 namespace SE::Graphics
 {
@@ -28,8 +29,12 @@ namespace SE::Graphics
         uint32_t GetImageCount() { return mImageCount; }
 
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
+
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
                             Ref<VkTexture2D> aFramebufferImage );
+
+        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+                            Ref<VkTextureCubeMap> aFramebufferImage, eCubeFace aFace );
 
         void AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
                             bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp );
