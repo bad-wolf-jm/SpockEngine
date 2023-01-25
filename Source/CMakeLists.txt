@@ -57,6 +57,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Vulkan/VkAbstractRenderPass.cpp
 
     Graphics/Interface/IWindow.cpp
+    Graphics/Interface/ITexture.cpp
     Graphics/Interface/ITexture2D.cpp
     Graphics/Interface/ITextureCubeMap.cpp
     Graphics/Interface/ISampler2D.cpp
