@@ -11,13 +11,14 @@
 #include "IGraphicBuffer.h"
 #include "IGraphicContext.h"
 #include "IGraphicResource.h"
+#include "ITexture.h"
 
 namespace SE::Graphics
 {
     using namespace SE::Core;
 
     /** @brief */
-    class ITexture2D : public IGraphicResource, public Cuda::Texture2D
+    class ITexture2D : public ITexture, public Cuda::Texture2D
     {
         friend class ISampler2D;
         friend class IRenderTarget;
@@ -28,13 +29,13 @@ namespace SE::Graphics
                     bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
 
         /** @brief */
-        ITexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aCubeMapData )
-            : ITexture2D( aGraphicContext, aCubeMapData, 1, false, true, true )
+        ITexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData )
+            : ITexture2D( aGraphicContext, aTextureData, 1, false, true, true )
         {
         }
 
         /** @brief */
-        ITexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aCubeMapData, uint8_t aSampleCount, bool aIsHostVisible,
+        ITexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount, bool aIsHostVisible,
                     bool aIsGraphicsOnly, bool aIsTransferSource );
 
         /** @brief */

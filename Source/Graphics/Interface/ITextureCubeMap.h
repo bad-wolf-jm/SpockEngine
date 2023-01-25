@@ -11,6 +11,7 @@
 #include "IGraphicBuffer.h"
 #include "IGraphicContext.h"
 #include "IGraphicResource.h"
+#include "ITexture.h"
 
 namespace SE::Graphics
 {
@@ -19,7 +20,7 @@ namespace SE::Graphics
     using TextureDataCubeMap = TextureData2D;
 
     /** @brief */
-    class ITextureCubeMap : public IGraphicResource, public Cuda::TextureCubeMap
+    class ITextureCubeMap : public ITexture, public Cuda::TextureCubeMap
     {
         friend class ISamplerCubeMap;
 

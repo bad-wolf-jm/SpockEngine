@@ -18,7 +18,6 @@ namespace fs = std::filesystem;
 
 namespace SE::Core
 {
-
     /** @brief Minification and magnification filters */
     enum class eSamplerFilter : uint8_t
     {
@@ -67,9 +66,10 @@ namespace SE::Core
     /** @brief */
     enum class eTextureType : uint8_t
     {
-        TEXTURE_2D       = 0, //!< The texture is an ordinary 2 dimensional image
-        TEXTURE_3D       = 1, //!< The texture is an 3 dimensional image, //!< The texture is an ordinary 2 dimensional image
-        TEXTURE_CUBE_MAP = 2  //!< The texture is an 3 dimensional image
+        UNKNOWN          = 0,
+        TEXTURE_2D       = 1, //!< The texture is an ordinary 2 dimensional image
+        TEXTURE_3D       = 2, //!< The texture is an 3 dimensional image, //!< The texture is an ordinary 2 dimensional image
+        TEXTURE_CUBE_MAP = 3  //!< The texture is an 3 dimensional image
     };
 
     /** \struct sImageData
