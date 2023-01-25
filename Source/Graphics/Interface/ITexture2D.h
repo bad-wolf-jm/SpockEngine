@@ -43,8 +43,5 @@ namespace SE::Graphics
 
         virtual void GetPixelData( TextureData2D &mTextureData )  = 0;
         virtual void SetPixelData( Ref<IGraphicBuffer> a_Buffer ) = 0;
-
-      protected:
-        uint8_t mSampleCount = 1;
     };
 } // namespace SE::Graphics

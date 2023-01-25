@@ -63,8 +63,8 @@ namespace SE::Graphics
 
     struct sAttachmentResource
     {
-        Ref<ITexture> mTexture = nullptr;
-        eCubeFace     mFace    = eCubeFace::NEGATIVE_Z;
+        ITexture *mTexture = nullptr;
+        eCubeFace mFace    = eCubeFace::NEGATIVE_Z;
     };
 
     class IRenderTarget

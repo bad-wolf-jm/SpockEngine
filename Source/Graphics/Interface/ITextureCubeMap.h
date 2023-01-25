@@ -47,8 +47,5 @@ namespace SE::Graphics
 
         virtual void SetPixelData( Ref<IGraphicBuffer> aBuffer )                  = 0;
         virtual void SetPixelData( eCubeFace aFace, Ref<IGraphicBuffer> aBuffer ) = 0;
-
-      protected:
-        uint8_t mSampleCount = 1;
     };
 } // namespace SE::Graphics
