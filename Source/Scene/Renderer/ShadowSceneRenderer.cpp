@@ -195,7 +195,8 @@ namespace SE::Core
             }
         }
 
-        if( ( mDirectionalShadowMapRenderContext.size() > 0 ) || ( mSpotlightShadowMapRenderContext.size() > 0 ) )
+        if( ( mDirectionalShadowMapRenderContext.size() > 0 ) || ( mSpotlightShadowMapRenderContext.size() > 0 ) ||
+            ( mPointLightsShadowMapRenderContext.size() > 0 ) )
         {
             ShadowMeshRendererCreateInfo lCreateInfo{};
             lCreateInfo.RenderPass = mDirectionalShadowMapRenderContext.back().GetRenderPass();
