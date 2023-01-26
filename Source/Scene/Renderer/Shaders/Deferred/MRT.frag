@@ -1,18 +1,9 @@
 #version 460
 #extension GL_EXT_nonuniform_qualifier : enable
 
-// layout( binding = 1 ) uniform sampler2D samplerColor;
-// layout( binding = 2 ) uniform sampler2D samplerNormalMap;
-
 layout( location = 0 ) in vec3 inWorldPos;
 layout( location = 1 ) in vec3 inNormal;
 layout( location = 2 ) in vec2 inUV0;
-
-// layout (location = 0) in vec3 inNormal;
-// layout (location = 1) in vec2 inUV;
-// layout (location = 2) in vec3 inColor;
-// layout (location = 3) in vec3 inWorldPos;
-// layout( location = 4 ) in vec3 inTangent;
 
 #define MAX_NUM_LIGHTS 64
 
@@ -130,31 +121,6 @@ vec3 getNormalFromMap( sampler2D aNormalSampler, vec2 aCoords )
 
     return normalize( mat3( T * invmax, B * invmax, inNormal ) * tangentNormal );
 }
-
-
-
-// vec3 getNormalFromMap( sampler2D aNormalSampler, vec2 aCoords )
-// {
-//     // // Perturb normal, see http://www.thetenthplanet.de/archives/1180
-//     // if( material.normalTextureSet == -1.0 )
-//     //     return normalize( inNormal );
-
-//     vec3 tangentNormal = texture( aNormalSampler, aCoords ).xyz * 2.0 - vec3( 1.0 );
-
-//     vec3 q1  = dFdx( inWorldPos );
-//     vec3 q2  = dFdy( inWorldPos );
-//     vec2 st1 = dFdx( inUV0 );
-//     vec2 st2 = dFdy( inUV0 );
-
-//     vec3 N   = normalize( inNormal );
-//     vec3 T   = normalize( q1 * st2.t - q2 * st1.t );
-//     vec3 B   = -normalize( cross( N, T ) );
-//     mat3 TBN = mat3( T, B, N );
-
-//     return normalize( TBN * tangentNormal );
-//     // return normalize( inNormal );
-// }
-
 void main()
 {
     sShaderMaterial lMaterial = gMaterials.mArray[material.mMaterialID];
@@ -178,6 +144,5 @@ void main()
     outNormal = vec4( tnorm, 1.0 );
     outAlbedo = texture( gTextures[lMaterial.mBaseColorTextureID], inUV0) *
                 lMaterial.mBaseColorFactor;
-    // outAlbedo = outNormal;
     outOcclusionMetalRough = vec4( ao, metallic, roughness, lMaterial.mOcclusionStrength );
 }

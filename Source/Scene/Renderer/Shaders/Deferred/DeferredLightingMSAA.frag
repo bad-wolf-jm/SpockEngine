@@ -254,7 +254,7 @@ const mat4 biasMat = mat4(
     0.0, 0.0, 1.0, 0.0,
     0.5, 0.5, 0.0, 1.0 );
 
-#define EPSILON 0.015
+#define EPSILON 0.15
 
 float linearize_depth(float d,float zNear,float zFar)
 {
@@ -307,10 +307,13 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
 
         float lShadowFactor = 1.0f;
         vec3 lightVec = inWorldPos - lLightPosition;
-        float sampledDist = texture(gPointLightShadowMaps[i], normalize(lightVec)).r;
-        sampledDist = linearize_depth(sampledDist, 0.2, 100);
+        vec3 lTexCoord = lightVec;
+        // lTexCoord.y *= -1.0f;
+
+        float sampledDist = texture(gPointLightShadowMaps[i], normalize(lTexCoord)).r;
+        sampledDist = linearize_depth(sampledDist, .2, 10);
         float dist = length(lightVec);
-        lShadowFactor = (dist <= sampledDist + EPSILON) ? 1.0 : uboParams.AmbientLightIntensity;
+        lShadowFactor = (dist <= sampledDist + EPSILON) ? 1.0 : 0.0f;
 
         Lo += (lLightContribution * lShadowFactor);
         // Lo = vec3(sampledDist);
