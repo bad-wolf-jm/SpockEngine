@@ -69,8 +69,8 @@ namespace SE::Graphics
     {
         mVkImage =
             std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-                ->CreateImage( mSpec.mWidth, mSpec.mHeight, mSpec.mDepth, mSpec.mMipLevels, 6,
-                               VK_SAMPLE_COUNT_VALUE( mSampleCount ), !mIsGraphicsOnly, true,
+                ->CreateImage( mSpec.mWidth, mSpec.mHeight, mSpec.mDepth, mSpec.mMipLevels, 6, VK_SAMPLE_COUNT_VALUE( mSampleCount ),
+                               !mIsGraphicsOnly, true,
                                mSpec.mIsDepthTexture ? ToVkFormat( mGraphicContext->GetDepthFormat() ) : ToVkFormat( mSpec.mFormat ),
                                MemoryProperties(), ImageUsage() );
     }
