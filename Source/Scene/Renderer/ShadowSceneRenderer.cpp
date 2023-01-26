@@ -268,35 +268,35 @@ namespace SE::Core
                 math::mat4 lProjection = math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 10.0f );
                 // lProjection[1][1] *= -1.0f;
 
-                static constexpr math::vec4 lV1{ 1.0f, 0.0f, 0.0f, 0.0f };
-                static constexpr math::vec4 lV2{ 0.0f, 1.0f, 0.0f, 0.0f };
-                static constexpr math::vec4 lV3{ 0.0f, 0.0f, 1.0f, 0.0f };
-                static constexpr math::vec4 lV4{ 0.0f, 0.0f, 0.0f, 1.0f };
-                // clang-format off
-                std::array<math::mat4, 6> lMVPMatrices = {
-                    /* POSITIVE_X */ math::mat4( -lV3, -lV2, -lV1, lV4),
-                    /* NEGATIVE_X */ math::mat4(  lV3, -lV2,  lV1, lV4),
-                    /* POSITIVE_Y */ math::mat4(  lV1, -lV3,  lV2, lV4),
-                    /* NEGATIVE_Y */ math::mat4(  lV1,  lV3, -lV2,  lV4),
-                    /* POSITIVE_Z */ math::mat4(  lV1, -lV2, -lV3, lV4),
-                    /* NEGATIVE_Z */ math::mat4( -lV1, -lV2,  lV3, lV4),
-                };
-                // clang-format off
-
+                // static constexpr math::vec4 lV1{ 1.0f, 0.0f, 0.0f, 0.0f };
+                // static constexpr math::vec4 lV2{ 0.0f, 1.0f, 0.0f, 0.0f };
+                // static constexpr math::vec4 lV3{ 0.0f, 0.0f, 1.0f, 0.0f };
+                // static constexpr math::vec4 lV4{ 0.0f, 0.0f, 0.0f, 1.0f };
                 // // clang-format off
                 // std::array<math::mat4, 6> lMVPMatrices = {
-                //     /* POSITIVE_X */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 1.0f, 0.0f, 0.0f ), math::vec3( 0.0f, -1.0f, 0.0f )  ),
-                //     /* NEGATIVE_X */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( -1.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
-                //     /* POSITIVE_Y */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 1.0f, 0.0f ), math::vec3( 0.0f, 0.0f, 1.0f ) ),
-                //     /* NEGATIVE_Y */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, -1.0f, 0.0f ), math::vec3( 0.0f, 0.0f, 1.0f ) ),
-                //     /* POSITIVE_Z */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 0.0f, 1.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
-                //     /* NEGATIVE_Z */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 0.0f, -1.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
+                //     /* POSITIVE_X */ math::mat4( -lV3, -lV2, -lV1, lV4),
+                //     /* NEGATIVE_X */ math::mat4(  lV3, -lV2,  lV1, lV4),
+                //     /* POSITIVE_Y */ math::mat4(  lV1, -lV3,  lV2, lV4),
+                //     /* NEGATIVE_Y */ math::mat4(  lV1,  lV3, -lV2,  lV4),
+                //     /* POSITIVE_Z */ math::mat4(  lV1, -lV2, -lV3, lV4),
+                //     /* NEGATIVE_Z */ math::mat4( -lV1, -lV2,  lV3, lV4),
                 // };
                 // // clang-format off
 
+                // clang-format off
+                std::array<math::mat4, 6> lMVPMatrices = {
+                    /* POSITIVE_X */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 1.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 1.0f, 0.0f )  ),
+                    /* NEGATIVE_X */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( -1.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
+                    /* POSITIVE_Y */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 1.0f, 0.0f ), math::vec3( 0.0f, 0.0f, -1.0f ) ),
+                    /* NEGATIVE_Y */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, -1.0f, 0.0f ), math::vec3( 0.0f, 0.0f, 1.0f ) ),
+                    /* POSITIVE_Z */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 0.0f, 1.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
+                    /* NEGATIVE_Z */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 0.0f, -1.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
+                };
+                // clang-format off
+
                 for( uint32_t f = 0; f < 6; f++ )
                 {
-                    View.mMVP = lClip * lProjection * math::Translate( lMVPMatrices[f], -mPointLights[lLightIndex].WorldPosition );
+                    View.mMVP = lProjection * math::Translate( lMVPMatrices[f], -mPointLights[lLightIndex].WorldPosition );
                     mPointLightsShadowCameraUniformBuffer[lLightIndex][f]->Write( View );
 
                     lContext[f].BeginRender();
