@@ -23,6 +23,7 @@ namespace SE::Core
 
     DirectionalLightData::DirectionalLightData( const sLightComponent &aSpec, mat4 aTransform )
     {
+        mIsOn = aSpec.mIsOn;
         Direction = mat3( aTransform ) * vec3{ 0.0f, 1.0f, 0.0f };
         Color     = aSpec.mColor;
         Intensity = aSpec.mIntensity;
@@ -40,6 +41,7 @@ namespace SE::Core
 
     PointLightData::PointLightData( const sLightComponent &aSpec, mat4 aTransform )
     {
+        mIsOn = aSpec.mIsOn;
         WorldPosition = vec3( aTransform[3] );
         Color         = aSpec.mColor;
         Intensity     = aSpec.mIntensity;
@@ -47,6 +49,7 @@ namespace SE::Core
 
     SpotlightData::SpotlightData( const sLightComponent &aSpec, mat4 aTransform )
     {
+        mIsOn = aSpec.mIsOn;
         WorldPosition   = vec3( aTransform[3] );
         LookAtDirection = -vec3{ aTransform[0][2], aTransform[1][2], aTransform[2][2] };
         Color           = aSpec.mColor;

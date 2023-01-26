@@ -221,11 +221,14 @@ namespace SE::Editor
         if( ImGui::Begin( "LIGHT PANEL", NULL, ImGuiWindowFlags_None ) )
         {
             auto lWorkspaceAreaSize = UI::GetAvailableContentSpace();
+            uint32_t i=0;
             ActiveWorld->ForEach<sLightComponent>(
                 [&]( auto aEntity, auto &aComponent )
                 {
                     Text( aEntity.Get<sTag>().mValue );
-                    //
+                    UI::SameLine();
+                    auto x = fmt::format("##{}", i++);
+                    UI::Checkbox(x.c_str(), &aComponent.mIsOn);
                 } );
         }
         ImGui::End();

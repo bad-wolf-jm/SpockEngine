@@ -264,7 +264,8 @@ namespace SE::Core
                 math::mat4  lClip = math::MakeMat4( aEntries );
                 // clang-format on
 
-                math::mat4 lProjection = lClip * math::Perspective( math::radians( 90.0f ), 1.0f, .5f, 100.0f );
+                // math::mat4 lProjection = lClip * math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 100.0f );
+                math::mat4 lProjection = math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 100.0f );
 
                 // clang-format off
                 std::array<math::mat4, 6> lMVPMatrices = {
@@ -279,7 +280,7 @@ namespace SE::Core
 
                 for( uint32_t f = 0; f < 6; f++ )
                 {
-                    View.mMVP = lProjection * math::Translate( lMVPMatrices[f], mPointLights[lLightIndex].WorldPosition );
+                    View.mMVP = lProjection * math::Translate( lMVPMatrices[f], -mPointLights[lLightIndex].WorldPosition );
                     mPointLightsShadowCameraUniformBuffer[lLightIndex][f]->Write( View );
 
                     lContext[f].BeginRender();
