@@ -2,13 +2,9 @@
 
 #extension GL_ARB_separate_shader_objects : enable
 #extension GL_ARB_shading_language_420pack : enable
+#extension GL_GOOGLE_include_directive : require
 
-layout( location = 0 ) in vec3 inPos;
-layout( location = 1 ) in vec3 inNormal;
-layout( location = 2 ) in vec2 inUV0;
-layout( location = 3 ) in vec2 inUV1;
-layout( location = 4 ) in vec4 inJoint0;
-layout( location = 5 ) in vec4 inWeight0;
+#include "VertexLayout.h"
 
 layout( binding = 0 ) uniform UBO
 {
