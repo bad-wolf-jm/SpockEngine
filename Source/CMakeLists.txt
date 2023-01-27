@@ -135,6 +135,9 @@ endfunction(add_shader)
 
 add_shader(LTSimulationEngineRuntime "shadow.vert")
 
+add_shader(LTSimulationEngineRuntime "OmniShadow.vert")
+add_shader(LTSimulationEngineRuntime "OmniShadow.frag")
+
 add_shader(LTSimulationEngineRuntime "filtercube.vert")
 add_shader(LTSimulationEngineRuntime "irradiancecube.frag")
 add_shader(LTSimulationEngineRuntime "prefilterenvmap.frag")

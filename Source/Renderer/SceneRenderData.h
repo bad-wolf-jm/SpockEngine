@@ -103,6 +103,18 @@ namespace SE::Core
         ShadowMatrices( const ShadowMatrices & ) = default;
     };
 
+
+    struct OmniShadowMatrices
+    {
+        math::mat4 mMVP;
+	    math::vec4 mLightPos;
+
+        OmniShadowMatrices()  = default;
+        ~OmniShadowMatrices() = default;
+
+        OmniShadowMatrices( const OmniShadowMatrices & ) = default;
+    };
+
     struct CameraSettings
     {
         float Exposure                             = 4.5f;

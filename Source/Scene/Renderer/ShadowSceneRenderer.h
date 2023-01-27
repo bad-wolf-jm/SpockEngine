@@ -49,10 +49,33 @@ namespace SE::Core
         ~ShadowMeshRenderer() = default;
     };
 
+    class OmniShadowMeshRenderer : public SceneRenderPipeline<VertexData>
+    {
+
+      public:
+        ShadowMeshRendererCreateInfo Spec = {};
+
+        Ref<DescriptorSetLayout> CameraSetLayout = nullptr;
+        Ref<DescriptorSetLayout> NodeSetLayout   = nullptr;
+
+      public:
+        OmniShadowMeshRenderer() = default;
+        OmniShadowMeshRenderer( Ref<VkGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo );
+
+        static Ref<DescriptorSetLayout> GetCameraSetLayout( Ref<VkGraphicContext> aGraphicContext );
+        static Ref<DescriptorSetLayout> GetNodeSetLayout( Ref<VkGraphicContext> aGraphicContext );
+
+        std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
+        std::vector<sPushConstantRange>       GetPushConstantLayout();
+
+        ~OmniShadowMeshRenderer() = default;
+    };
+
     class ShadowSceneRenderer : public ASceneRenderer
     {
       public:
         ShadowMatrices View;
+        OmniShadowMatrices mOmniView;
 
       public:
         ShadowSceneRenderer() = default;
@@ -87,9 +110,10 @@ namespace SE::Core
         std::vector<Ref<DescriptorSet>>         mSpotlightShadowSceneDescriptors    = {};
 
         std::vector<std::array<ARenderContext, 6>>     mPointLightsShadowMapRenderContext    = {};
-        std::vector<Ref<Graphics::VkSamplerCubeMap>>        mPointLightShadowMapSamplers          = {};
+        std::vector<Ref<Graphics::VkSamplerCubeMap>>   mPointLightShadowMapSamplers          = {};
         std::vector<std::array<Ref<VkGpuBuffer>, 6>>   mPointLightsShadowCameraUniformBuffer = {};
         std::vector<std::array<Ref<DescriptorSet>, 6>> mPointLightsShadowSceneDescriptors    = {};
+        OmniShadowMeshRenderer                         mOmniRenderPipeline{};
 
         Ref<VkRenderTarget> mGeometryRenderTarget = nullptr;
         ARenderContext      mGeometryContext{};

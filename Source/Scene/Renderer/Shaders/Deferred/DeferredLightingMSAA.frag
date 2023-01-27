@@ -290,7 +290,7 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
         else 
             lShadowFactor = textureProj(gDirectionalShadowMaps[i], lShadowNormalizedCoordinates, vec2(0.0));
 
-        // Lo += (lLightContribution * lShadowFactor);
+        Lo += (lLightContribution * lShadowFactor);
     }
 
     for( int i = 0; i < ubo.PointLightCount; i++ )
@@ -307,16 +307,13 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
 
         float lShadowFactor = 1.0f;
         vec3 lightVec = inWorldPos - lLightPosition;
-        vec3 lTexCoord = lightVec;
-        // lTexCoord.y *= -1.0f;
+        vec3 lTexCoord = normalize(lightVec);
 
-        float sampledDist = texture(gPointLightShadowMaps[i], normalize(lTexCoord)).r;
-        sampledDist = linearize_depth(sampledDist, .2, 10);
+        float sampledDist = texture(gPointLightShadowMaps[i], lTexCoord).r;
         float dist = length(lightVec);
-        lShadowFactor = (dist <= sampledDist + EPSILON) ? 1.0 : 0.0f;
+        lShadowFactor = (dist <= sampledDist + EPSILON) ? 1.0 : uboParams.AmbientLightIntensity;
 
         Lo += (lLightContribution * lShadowFactor);
-        // Lo = vec3(sampledDist);
     }
 
     for( int i = 0; i < ubo.SpotlightCount; i++ )
@@ -342,7 +339,7 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
         else 
             lShadowFactor = textureProj(gSpotlightShadowMaps[i], lShadowNormalizedCoordinates, vec2(0.0));
 
-        // Lo += (lLightContribution * lShadowFactor);
+        Lo += (lLightContribution * lShadowFactor);
     }
 
     return Lo ;

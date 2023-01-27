@@ -53,6 +53,36 @@ namespace SE::Core
         Initialize( lCreateInfo );
     }
 
+    Ref<DescriptorSetLayout> OmniShadowMeshRenderer::GetCameraSetLayout( Ref<VkGraphicContext> aGraphicContext )
+    {
+        DescriptorSetLayoutCreateInfo lCameraBindLayout{};
+        lCameraBindLayout.Bindings = {
+            DescriptorBindingInfo{ 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } } };
+
+        return New<DescriptorSetLayout>( aGraphicContext, lCameraBindLayout );
+    }
+
+    std::vector<Ref<DescriptorSetLayout>> OmniShadowMeshRenderer::GetDescriptorSetLayout() { return { CameraSetLayout }; }
+
+    std::vector<sPushConstantRange> OmniShadowMeshRenderer::GetPushConstantLayout() { return {}; };
+
+    OmniShadowMeshRenderer::OmniShadowMeshRenderer( Ref<VkGraphicContext>               aGraphicContext,
+                                                    ShadowMeshRendererCreateInfo const &aCreateInfo )
+        : SceneRenderPipeline<VertexData>( aGraphicContext )
+    {
+
+        SceneRenderPipelineCreateInfo lCreateInfo{};
+        lCreateInfo.Opaque         = true;
+        lCreateInfo.LineWidth      = 1.0f;
+        lCreateInfo.VertexShader   = "Shaders\\OmniShadow.vert.spv";
+        lCreateInfo.FragmentShader = "Shaders\\OmniShadow.frag.spv";
+        lCreateInfo.RenderPass     = aCreateInfo.RenderPass;
+
+        CameraSetLayout = GetCameraSetLayout( mGraphicContext );
+
+        Initialize( lCreateInfo );
+    }
+
     ShadowSceneRenderer::ShadowSceneRenderer( Ref<VkGraphicContext> aGraphicContext )
         : ASceneRenderer( aGraphicContext, eColorFormat::UNDEFINED, 1 )
     {
@@ -150,11 +180,10 @@ namespace SE::Core
             mPointLightsShadowSceneDescriptors.clear();
 
             sTextureCreateInfo lCreateInfo{};
-            lCreateInfo.mWidth          = 1024;
-            lCreateInfo.mHeight         = 1024;
-            lCreateInfo.mDepth          = 1;
-            lCreateInfo.mFormat         = eColorFormat::D32_SFLOAT;
-            lCreateInfo.mIsDepthTexture = true;
+            lCreateInfo.mFormat = eColorFormat::R32_FLOAT;
+            lCreateInfo.mWidth  = 1024;
+            lCreateInfo.mHeight = 1024;
+            lCreateInfo.mDepth  = 1;
 
             for( uint32_t i = 0; i < mPointLights.size(); i++ )
             {
@@ -176,34 +205,50 @@ namespace SE::Core
                     auto lRenderTarget             = New<VkRenderTarget>( mGraphicContext, lRenderTargetSpec );
 
                     sAttachmentDescription lAttachmentCreateInfo{};
+                    lAttachmentCreateInfo.mFormat      = eColorFormat::R32_FLOAT;
                     lAttachmentCreateInfo.mIsSampled   = true;
+                    lAttachmentCreateInfo.mIsPresented = false;
+                    lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
+                    lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
+                    lAttachmentCreateInfo.mType        = eAttachmentType::COLOR;
+                    lAttachmentCreateInfo.mClearColor  = { 0.0f, 0.0f, 0.0f, 1.0f };
+                    lRenderTarget->AddAttachment( "SHADOW_MAP", lAttachmentCreateInfo, lShadowMap, static_cast<eCubeFace>( f ) );
+
+                    lAttachmentCreateInfo              = sAttachmentDescription{};
+                    lAttachmentCreateInfo.mIsSampled   = false;
                     lAttachmentCreateInfo.mIsPresented = false;
                     lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
                     lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
                     lAttachmentCreateInfo.mType        = eAttachmentType::DEPTH;
                     lAttachmentCreateInfo.mClearColor  = { 1.0f, 0.0f, 0.0f, 0.0f };
-                    lRenderTarget->AddAttachment( "SHADOW_MAP", lAttachmentCreateInfo, lShadowMap, static_cast<eCubeFace>( f ) );
+                    lRenderTarget->AddAttachment( "DEPTH", lAttachmentCreateInfo );
                     lRenderTarget->Finalize();
 
                     mPointLightsShadowMapRenderContext.back()[f] = ARenderContext( mGraphicContext, lRenderTarget );
                     mPointLightsShadowSceneDescriptors.back()[f] =
-                        New<DescriptorSet>( mGraphicContext, ShadowMeshRenderer::GetCameraSetLayout( mGraphicContext ) );
+                        New<DescriptorSet>( mGraphicContext, OmniShadowMeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
                     mPointLightsShadowCameraUniformBuffer.back()[f] = New<VkGpuBuffer>(
-                        mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( ShadowMatrices ) );
+                        mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( OmniShadowMatrices ) );
 
                     mPointLightsShadowSceneDescriptors.back()[f]->Write( mPointLightsShadowCameraUniformBuffer.back()[f], false, 0,
-                                                                         sizeof( ShadowMatrices ), 0 );
+                                                                         sizeof( OmniShadowMatrices ), 0 );
                 }
             }
         }
 
-        if( ( mDirectionalShadowMapRenderContext.size() > 0 ) || ( mSpotlightShadowMapRenderContext.size() > 0 ) ||
-            ( mPointLightsShadowMapRenderContext.size() > 0 ) )
+        if( ( mDirectionalShadowMapRenderContext.size() > 0 ) || ( mSpotlightShadowMapRenderContext.size() > 0 ) )
         {
             ShadowMeshRendererCreateInfo lCreateInfo{};
             lCreateInfo.RenderPass = mDirectionalShadowMapRenderContext.back().GetRenderPass();
             mRenderPipeline        = ShadowMeshRenderer( mGraphicContext, lCreateInfo );
+        }
+
+        if( mPointLightsShadowMapRenderContext.size() > 0 )
+        {
+            ShadowMeshRendererCreateInfo lCreateInfo{};
+            lCreateInfo.RenderPass = mPointLightsShadowMapRenderContext.back()[0].GetRenderPass();
+            mOmniRenderPipeline    = OmniShadowMeshRenderer( mGraphicContext, lCreateInfo );
         }
     }
 
@@ -265,23 +310,7 @@ namespace SE::Core
                 // clang-format on
 
                 // math::mat4 lProjection = lClip * math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 100.0f );
-                math::mat4 lProjection = math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 10.0f );
-                // lProjection[1][1] *= -1.0f;
-
-                // static constexpr math::vec4 lV1{ 1.0f, 0.0f, 0.0f, 0.0f };
-                // static constexpr math::vec4 lV2{ 0.0f, 1.0f, 0.0f, 0.0f };
-                // static constexpr math::vec4 lV3{ 0.0f, 0.0f, 1.0f, 0.0f };
-                // static constexpr math::vec4 lV4{ 0.0f, 0.0f, 0.0f, 1.0f };
-                // // clang-format off
-                // std::array<math::mat4, 6> lMVPMatrices = {
-                //     /* POSITIVE_X */ math::mat4( -lV3, -lV2, -lV1, lV4),
-                //     /* NEGATIVE_X */ math::mat4(  lV3, -lV2,  lV1, lV4),
-                //     /* POSITIVE_Y */ math::mat4(  lV1, -lV3,  lV2, lV4),
-                //     /* NEGATIVE_Y */ math::mat4(  lV1,  lV3, -lV2,  lV4),
-                //     /* POSITIVE_Z */ math::mat4(  lV1, -lV2, -lV3, lV4),
-                //     /* NEGATIVE_Z */ math::mat4( -lV1, -lV2,  lV3, lV4),
-                // };
-                // // clang-format off
+                math::mat4 lProjection = math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 100.0f );
 
                 // clang-format off
                 std::array<math::mat4, 6> lMVPMatrices = {
@@ -292,19 +321,46 @@ namespace SE::Core
                     /* POSITIVE_Z */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 0.0f, 1.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
                     /* NEGATIVE_Z */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 0.0f, -1.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
                 };
-                // clang-format off
+                // clang-format on
 
                 for( uint32_t f = 0; f < 6; f++ )
                 {
-                    View.mMVP = lProjection * math::Translate( lMVPMatrices[f], -mPointLights[lLightIndex].WorldPosition );
-                    mPointLightsShadowCameraUniformBuffer[lLightIndex][f]->Write( View );
+
+                    glm::mat4 viewMatrix = glm::mat4( 1.0f );
+                    switch( f )
+                    {
+                    case 0: // POSITIVE_X
+                        viewMatrix = glm::rotate( viewMatrix, glm::radians( 90.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
+                        viewMatrix = glm::rotate( viewMatrix, glm::radians( 180.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
+                        break;
+                    case 1: // NEGATIVE_X
+                        viewMatrix = glm::rotate( viewMatrix, glm::radians( -90.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
+                        viewMatrix = glm::rotate( viewMatrix, glm::radians( 180.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
+                        break;
+                    case 2: // POSITIVE_Y
+                        viewMatrix = glm::rotate( viewMatrix, glm::radians( -90.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
+                        break;
+                    case 3: // NEGATIVE_Y
+                        viewMatrix = glm::rotate( viewMatrix, glm::radians( 90.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
+                        break;
+                    case 4: // POSITIVE_Z
+                        viewMatrix = glm::rotate( viewMatrix, glm::radians( 180.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
+                        break;
+                    case 5: // NEGATIVE_Z
+                        viewMatrix = glm::rotate( viewMatrix, glm::radians( 180.0f ), glm::vec3( 0.0f, 0.0f, 1.0f ) );
+                        break;
+                    }
+
+                    mOmniView.mMVP      = lProjection * math::Translate( viewMatrix, -mPointLights[lLightIndex].WorldPosition );;
+                    mOmniView.mLightPos = math::vec4( mPointLights[lLightIndex].WorldPosition, 0.0f );
+                    mPointLightsShadowCameraUniformBuffer[lLightIndex][f]->Write( mOmniView );
 
                     lContext[f].BeginRender();
                     for( auto &lPipelineData : mOpaqueMeshQueue )
                     {
                         if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
 
-                        lContext[f].Bind( mRenderPipeline.Pipeline );
+                        lContext[f].Bind( mOmniRenderPipeline.Pipeline );
                         lContext[f].Bind( mPointLightsShadowSceneDescriptors[lLightIndex][f], 0, -1 );
                         lContext[f].Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
                         lContext[f].Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
