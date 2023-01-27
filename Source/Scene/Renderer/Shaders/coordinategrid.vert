@@ -29,7 +29,7 @@ void main()
 {
     vec3 p      = gridPlane[gl_VertexIndex].xyz;
     near        = 0.01;
-    far         = 100.0f;
+    far         = 25.0f;
     fragView    = view.view;
     fragProj    = view.proj;
     nearPoint   = UnprojectPoint( p.x, p.y, 0.0, view.view, view.proj ).xyz; // unprojecting on the near plane
