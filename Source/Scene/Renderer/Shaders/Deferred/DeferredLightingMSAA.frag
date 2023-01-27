@@ -376,10 +376,14 @@ void main()
 
     vec3 outColor = tonemap( hdr_color );
 
+    float lLuma = dot( outColor, vec3( 0.2126, 0.7152, 0.0722 ) );
+
+    int lLumaAsAlpha = 0;
+
     if( uboParams.grayscaleRendering == 1.0f )
-        outFragcolor = vec4( vec3( dot( outColor, vec3( 0.2126, 0.7152, 0.0722 ) ) ), 1.0f );
+        outFragcolor = vec4( vec3(lLuma), (lLumaAsAlpha == 0 ) ? 1.0 : lLuma);
     else
-        outFragcolor = vec4( outColor, 1.0 );
+        outFragcolor = vec4( outColor, (lLumaAsAlpha == 0 ) ? 1.0 : lLuma );
 
     // outFragcolor = vec4( normal, 1.0 );
     // outFragcolor = texture( gDirectionalShadowMaps[0], inUV );

@@ -133,6 +133,8 @@ function(add_shader TARGET SHADER)
     target_sources(${TARGET} PRIVATE ${CURRENT_OUTPUT_PATH})
 endfunction(add_shader)
 
+add_shader(LTSimulationEngineRuntime "fxaa.frag")
+
 add_shader(LTSimulationEngineRuntime "shadow.vert")
 
 add_shader(LTSimulationEngineRuntime "OmniShadow.vert")

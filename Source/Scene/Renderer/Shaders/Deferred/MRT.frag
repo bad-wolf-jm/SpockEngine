@@ -121,6 +121,7 @@ vec3 getNormalFromMap( sampler2D aNormalSampler, vec2 aCoords )
 
     return normalize( mat3( T * invmax, B * invmax, inNormal ) * tangentNormal );
 }
+
 void main()
 {
     sShaderMaterial lMaterial = gMaterials.mArray[material.mMaterialID];
