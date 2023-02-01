@@ -34,13 +34,13 @@ void main()
     // For everything but 360, just use the same input here as for "tex".
     // For 360, same texture, just alias with a 2nd sampler.
     // This sampler needs to have an exponent bias of -1.
-    // FxaaTex fxaaConsole360TexExpBiasNegOne = sImage;
+    // // FxaaTex fxaaConsole360TexExpBiasNegOne = sImage;
 
     // Only used on the optimized 360 version of FXAA Console.
     // For everything but 360, just use the same input here as for "tex".
     // For 360, same texture, just alias with a 3nd sampler.
     // This sampler needs to have an exponent bias of -2.
-    // FxaaTex fxaaConsole360TexExpBiasNegTwo = sImage;
+    // // FxaaTex fxaaConsole360TexExpBiasNegTwo = sImage;
 
     // Only used on FXAA Quality.
     // This must be from a constant/uniform.
