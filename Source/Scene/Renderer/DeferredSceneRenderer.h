@@ -10,6 +10,7 @@
 
 #include "CoordinateGridRenderer.h"
 #include "DeferredLightingRenderer.h"
+#include "EffectProcessor.h"
 #include "MeshRenderer.h"
 #include "ShadowSceneRenderer.h"
 
@@ -24,6 +25,7 @@ namespace SE::Core
         bool mRenderCoordinateGrid = true;
         bool mRenderGizmos         = false;
         bool mGrayscaleRendering   = false;
+        bool mUseFXAA              = false;
 
       public:
         DeferredRenderer() = default;
@@ -84,6 +86,11 @@ namespace SE::Core
 
         Ref<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;
         Ref<ShadowSceneRenderer>    mShadowSceneRenderer    = nullptr;
+
+        Ref<EffectProcessor>       mFxaaRenderer     = nullptr;
+        Ref<Graphics::VkSampler2D> mFxaaSampler      = nullptr;
+        Ref<VkRenderTarget>        mFxaaRenderTarget = nullptr;
+        ARenderContext             mFxaaContext{};
 
         std::unordered_map<MeshRendererCreateInfo, MeshRenderer, MeshRendererCreateInfoHash> mMeshRenderers = {};
         std::unordered_map<ParticleRendererCreateInfo, ParticleSystemRenderer, ParticleSystemRendererCreateInfoHash>

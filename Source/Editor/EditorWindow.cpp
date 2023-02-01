@@ -220,15 +220,15 @@ namespace SE::Editor
 
         if( ImGui::Begin( "LIGHT PANEL", NULL, ImGuiWindowFlags_None ) )
         {
-            auto lWorkspaceAreaSize = UI::GetAvailableContentSpace();
-            uint32_t i=0;
+            auto     lWorkspaceAreaSize = UI::GetAvailableContentSpace();
+            uint32_t i                  = 0;
             ActiveWorld->ForEach<sLightComponent>(
                 [&]( auto aEntity, auto &aComponent )
                 {
                     Text( aEntity.Get<sTag>().mValue );
                     UI::SameLine();
-                    auto x = fmt::format("##{}", i++);
-                    UI::Checkbox(x.c_str(), &aComponent.mIsOn);
+                    auto x = fmt::format( "##{}", i++ );
+                    UI::Checkbox( x.c_str(), &aComponent.mIsOn );
                 } );
         }
         ImGui::End();
@@ -1010,6 +1010,15 @@ namespace SE::Editor
         {
             WorldRenderer->mGrayscaleRendering = !WorldRenderer->mGrayscaleRendering;
         }
+        UI::SameLine();
+
+        ImGui::PushStyleColor( ImGuiCol_Text,
+                               WorldRenderer->mUseFXAA ? ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f } : ImVec4{ 1.0f, 1.0f, 1.0f, .2f } );
+        if( UI::Button( "FXAA", math::vec2{ 65.0f, 24.0f } ) )
+        {
+            WorldRenderer->mUseFXAA = !WorldRenderer->mUseFXAA;
+        }
+        ImGui::PopStyleColor();
         ImGui::PopStyleColor();
         ImGui::PopStyleColor();
         ImGui::PopStyleColor();

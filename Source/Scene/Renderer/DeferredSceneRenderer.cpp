@@ -116,10 +116,29 @@ namespace SE::Core
             mGraphicContext, mGeometryRenderTarget->GetAttachment( "AO_METAL_ROUGH" ), sTextureSamplingInfo{} );
         mLightingPassTextures->Write( mGeometrySamplers["AO_METAL_ROUGH"], 3 );
 
+        sRenderTargetDescription lFxaaSpec{};
+        lFxaaSpec.mWidth       = aOutputWidth;
+        lFxaaSpec.mHeight      = aOutputHeight;
+        lFxaaSpec.mSampleCount = mOutputSampleCount;
+        mFxaaRenderTarget      = New<VkRenderTarget>( mGraphicContext, lLightingSpec );
+
+        lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
+        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA16_FLOAT;
+        lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+        lAttachmentCreateInfo.mLoadOp     = eAttachmentLoadOp::CLEAR;
+        lAttachmentCreateInfo.mStoreOp    = eAttachmentStoreOp::STORE;
+        mFxaaRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
+        mFxaaRenderTarget->Finalize();
+        mFxaaContext = ARenderContext( mGraphicContext, mFxaaRenderTarget );
+
         CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
         lCoordinateGridRendererCreateInfo.RenderPass = mLightingContext.GetRenderPass();
         mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mLightingContext, lCoordinateGridRendererCreateInfo );
         mShadowSceneRenderer    = New<ShadowSceneRenderer>( mGraphicContext );
+
+        EffectProcessorCreateInfo lEffectProcessorCreateInfo{};
+        lEffectProcessorCreateInfo.RenderPass = mFxaaContext.GetRenderPass();
+        mFxaaRenderer = New<EffectProcessor>( mGraphicContext, mFxaaContext, lEffectProcessorCreateInfo );
     }
 
     Ref<VkTexture2D> DeferredRenderer::GetOutputImage()
@@ -282,15 +301,14 @@ namespace SE::Core
         mGeometryContext.EndRender();
 
         mShadowSceneRenderer->Render();
-        if (mShadowSceneRenderer->GetDirectionalShadowMapSamplers().size() > 0)
+        if( mShadowSceneRenderer->GetDirectionalShadowMapSamplers().size() > 0 )
             mLightingPassDirectionalShadowMaps->Write( mShadowSceneRenderer->GetDirectionalShadowMapSamplers(), 0 );
-            
-        if (mShadowSceneRenderer->GetSpotlightShadowMapSamplers().size() > 0)
+
+        if( mShadowSceneRenderer->GetSpotlightShadowMapSamplers().size() > 0 )
             mLightingPassSpotlightShadowMaps->Write( mShadowSceneRenderer->GetSpotlightShadowMapSamplers(), 0 );
 
-        if (mShadowSceneRenderer->GetPointLightShadowMapSamplers().size() > 0)
+        if( mShadowSceneRenderer->GetPointLightShadowMapSamplers().size() > 0 )
             mLightingPassPointLightShadowMaps->Write( mShadowSceneRenderer->GetPointLightShadowMapSamplers(), 0 );
-
 
         // Lighting pass
         mLightingContext.BeginRender();

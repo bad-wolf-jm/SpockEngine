@@ -10,15 +10,15 @@ namespace SE::Core
     std::vector<sPushConstantRange> EffectProcessor::GetPushConstantLayout() { return {}; };
 
     EffectProcessor::EffectProcessor( Ref<VkGraphicContext> aGraphicContext, ARenderContext &aRenderContext,
-                                                    EffectProcessorCreateInfo aCreateInfo )
+                                      EffectProcessorCreateInfo aCreateInfo )
         : SceneRenderPipeline<EmptyVertexData>( aGraphicContext )
         , Spec{ aCreateInfo }
     {
         SceneRenderPipelineCreateInfo lCreateInfo{};
         lCreateInfo.IsTwoSided     = true;
         lCreateInfo.LineWidth      = 1.0f;
-        lCreateInfo.VertexShader   = "Shaders\\coordinategrid.vert.spv";
-        lCreateInfo.FragmentShader = "Shaders\\coordinategrid.frag.spv";
+        lCreateInfo.VertexShader   = "Shaders\\fxaa.vert.spv";
+        lCreateInfo.FragmentShader = "Shaders\\fxaa.frag.spv";
         lCreateInfo.RenderPass     = aRenderContext.GetRenderPass();
 
         DescriptorSetLayoutCreateInfo lPipelineLayoutCI{};
@@ -29,14 +29,14 @@ namespace SE::Core
         Initialize( lCreateInfo );
 
         mCameraBuffer =
-            New<VkGpuBuffer>( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraViewUniforms ) );
+            New<VkGpuBuffer>( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( sCameraViewUniforms ) );
         mCameraDescriptors = New<DescriptorSet>( aGraphicContext, PipelineLayout );
-        mCameraDescriptors->Write( mCameraBuffer, false, 0, sizeof( CameraViewUniforms ), 0 );
+        mCameraDescriptors->Write( mCameraBuffer, false, 0, sizeof( sCameraViewUniforms ), 0 );
     }
 
     void EffectProcessor::Render( math::mat4 aProjection, math::mat4 aView, ARenderContext &aRenderContext )
     {
-        CameraViewUniforms l_View{ aView, aProjection };
+        sCameraViewUniforms l_View{ aView, aProjection };
 
         mCameraBuffer->Write( l_View );
         aRenderContext.Bind( Pipeline );

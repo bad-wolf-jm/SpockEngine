@@ -20,7 +20,7 @@ namespace SE::Core
 
     using namespace SE::Graphics;
 
-    struct CameraViewUniforms
+    struct sCameraViewUniforms
     {
         math::mat4 View;
         math::mat4 Projection;
@@ -35,13 +35,13 @@ namespace SE::Core
     {
       public:
         EffectProcessor( Ref<VkGraphicContext> mGraphicContext, ARenderContext &aRenderContext,
-                                EffectProcessorCreateInfo aCreateInfo );
+                         EffectProcessorCreateInfo aCreateInfo );
         ~EffectProcessor() = default;
 
         void Render( math::mat4 aProjection, math::mat4 aView, ARenderContext &aRenderContext );
 
         EffectProcessorCreateInfo Spec;
-        Ref<DescriptorSetLayout>         PipelineLayout;
+        Ref<DescriptorSetLayout>  PipelineLayout;
 
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
         std::vector<sPushConstantRange>       GetPushConstantLayout();
