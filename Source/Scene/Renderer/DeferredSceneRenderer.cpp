@@ -116,6 +116,9 @@ namespace SE::Core
             mGraphicContext, mGeometryRenderTarget->GetAttachment( "AO_METAL_ROUGH" ), sTextureSamplingInfo{} );
         mLightingPassTextures->Write( mGeometrySamplers["AO_METAL_ROUGH"], 3 );
 
+        mFxaaSampler =
+            New<Graphics::VkSampler2D>( mGraphicContext, mLightingRenderTarget->GetAttachment( "OUTPUT" ), sTextureSamplingInfo{} );
+
         sRenderTargetDescription lFxaaSpec{};
         lFxaaSpec.mWidth       = aOutputWidth;
         lFxaaSpec.mHeight      = aOutputHeight;
@@ -364,17 +367,19 @@ namespace SE::Core
                 }
             }
 
-            if( mUseFXAA )
-            {
-                mFxaaRenderer->Render( mFxaaContext );
-            }
-            else
-            {
-                mCopyRenderer->Render( mFxaaContext );
-            }
-
             if( mRenderCoordinateGrid ) mCoordinateGridRenderer->Render( View.Projection, View.View, mLightingContext );
         }
         mLightingContext.EndRender();
+
+        mFxaaContext.BeginRender();
+        if( mUseFXAA )
+        {
+            mFxaaRenderer->Render( mFxaaSampler, mFxaaContext );
+        }
+        else
+        {
+            mCopyRenderer->Render( mFxaaSampler, mFxaaContext );
+        }
+        mFxaaContext.EndRender();
     }
 } // namespace SE::Core

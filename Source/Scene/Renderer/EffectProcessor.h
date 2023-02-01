@@ -35,10 +35,11 @@ namespace SE::Core
                          EffectProcessorCreateInfo aCreateInfo );
         ~EffectProcessor() = default;
 
-        void Render( ARenderContext &aRenderContext );
+        void Render( Ref<Graphics::VkSampler2D> aImageSampler, ARenderContext &aRenderContext );
 
         EffectProcessorCreateInfo Spec;
-        Ref<DescriptorSetLayout>  PipelineLayout;
+        Ref<DescriptorSetLayout>  PipelineLayout = nullptr;
+        Ref<DescriptorSet>        mTextures       = nullptr;
 
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
         std::vector<sPushConstantRange>       GetPushConstantLayout();

@@ -87,10 +87,10 @@ namespace SE::Core
         Ref<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;
         Ref<ShadowSceneRenderer>    mShadowSceneRenderer    = nullptr;
 
-        Ref<EffectProcessor>       mCopyRenderer     = nullptr;
-        Ref<EffectProcessor>       mFxaaRenderer     = nullptr;
-        Ref<Graphics::VkSampler2D> mFxaaSampler      = nullptr;
-        Ref<VkRenderTarget>        mFxaaRenderTarget = nullptr;
+        Ref<EffectProcessor>       mCopyRenderer      = nullptr;
+        Ref<EffectProcessor>       mFxaaRenderer      = nullptr;
+        Ref<Graphics::VkSampler2D> mFxaaSampler       = nullptr;
+        Ref<VkRenderTarget>        mFxaaRenderTarget  = nullptr;
         ARenderContext             mFxaaContext{};
 
         std::unordered_map<MeshRendererCreateInfo, MeshRenderer, MeshRendererCreateInfoHash> mMeshRenderers = {};

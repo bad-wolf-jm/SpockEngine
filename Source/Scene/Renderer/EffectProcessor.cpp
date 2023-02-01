@@ -27,13 +27,17 @@ namespace SE::Core
         lPipelineLayoutCI.Bindings = {
             DescriptorBindingInfo{ 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
         PipelineLayout = New<DescriptorSetLayout>( mGraphicContext, lPipelineLayoutCI );
+        mTextures      = New<DescriptorSet>( mGraphicContext, PipelineLayout );
 
         Initialize( lCreateInfo );
     }
 
-    void EffectProcessor::Render( ARenderContext &aRenderContext )
+    void EffectProcessor::Render( Ref<Graphics::VkSampler2D> aImageSampler, ARenderContext &aRenderContext )
     {
+        mTextures->Write(aImageSampler, 0);
+
         aRenderContext.Bind( Pipeline );
+        aRenderContext.Bind( mTextures, 0, -1  );
         aRenderContext.ResetBuffers();
         aRenderContext.Draw( 6, 0, 0, 1, 0 );
     }
