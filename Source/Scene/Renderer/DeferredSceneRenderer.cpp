@@ -137,14 +137,22 @@ namespace SE::Core
         mShadowSceneRenderer    = New<ShadowSceneRenderer>( mGraphicContext );
 
         EffectProcessorCreateInfo lEffectProcessorCreateInfo{};
-        lEffectProcessorCreateInfo.RenderPass = mFxaaContext.GetRenderPass();
-        mFxaaRenderer = New<EffectProcessor>( mGraphicContext, mFxaaContext, lEffectProcessorCreateInfo );
+        lEffectProcessorCreateInfo.mVertexShader   = "Shaders/fxaa.vert.spv";
+        lEffectProcessorCreateInfo.mFragmentShader = "Shaders/fxaa.frag.spv";
+        lEffectProcessorCreateInfo.RenderPass      = mFxaaContext.GetRenderPass();
+        mFxaaRenderer                              = New<EffectProcessor>( mGraphicContext, mFxaaContext, lEffectProcessorCreateInfo );
+
+        EffectProcessorCreateInfo lCopyCreateInfo{};
+        lCopyCreateInfo.mVertexShader   = "Shaders/fxaa.vert.spv";
+        lCopyCreateInfo.mFragmentShader = "Shaders/copy.frag.spv";
+        lCopyCreateInfo.RenderPass      = mFxaaContext.GetRenderPass();
+        mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lEffectProcessorCreateInfo );
     }
 
     Ref<VkTexture2D> DeferredRenderer::GetOutputImage()
     {
         //
-        return mLightingRenderTarget->GetAttachment( "OUTPUT" );
+        return mFxaaRenderTarget->GetAttachment( "OUTPUT" );
     }
 
     MeshRendererCreateInfo DeferredRenderer::GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification )
@@ -354,6 +362,15 @@ namespace SE::Core
                     break;
                 }
                 }
+            }
+
+            if( mUseFXAA )
+            {
+                mFxaaRenderer->Render( mFxaaContext );
+            }
+            else
+            {
+                mCopyRenderer->Render( mFxaaContext );
             }
 
             if( mRenderCoordinateGrid ) mCoordinateGridRenderer->Render( View.Projection, View.View, mLightingContext );

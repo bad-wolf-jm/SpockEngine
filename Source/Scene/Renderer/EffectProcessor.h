@@ -20,14 +20,17 @@ namespace SE::Core
 
     using namespace SE::Graphics;
 
-    struct sCameraViewUniforms
-    {
-        math::mat4 View;
-        math::mat4 Projection;
-    };
+    // struct sCameraViewUniforms
+    // {
+    //     math::mat4 View;
+    //     math::mat4 Projection;
+    // };
 
     struct EffectProcessorCreateInfo
     {
+        std::string mVertexShader   = "";
+        std::string mFragmentShader = "";
+
         Ref<sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
@@ -38,7 +41,7 @@ namespace SE::Core
                          EffectProcessorCreateInfo aCreateInfo );
         ~EffectProcessor() = default;
 
-        void Render( math::mat4 aProjection, math::mat4 aView, ARenderContext &aRenderContext );
+        void Render( ARenderContext &aRenderContext );
 
         EffectProcessorCreateInfo Spec;
         Ref<DescriptorSetLayout>  PipelineLayout;
