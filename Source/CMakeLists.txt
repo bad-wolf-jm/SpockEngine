@@ -75,6 +75,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/MaterialSystem/MaterialSystem.cpp
     Scene/Renderer/MeshRenderer.cpp
     Scene/Renderer/CoordinateGridRenderer.cpp
+    Scene/Renderer/EffectProcessor.cpp
     Scene/Renderer/ParticleSystemRenderer.cpp
     Scene/Renderer/ForwardSceneRenderer.cpp
     Scene/Renderer/ShadowSceneRenderer.cpp
@@ -134,6 +135,7 @@ function(add_shader TARGET SHADER)
 endfunction(add_shader)
 
 add_shader(LTSimulationEngineRuntime "fxaa.frag")
+add_shader(LTSimulationEngineRuntime "fxaa.vert")
 
 add_shader(LTSimulationEngineRuntime "shadow.vert")
 
