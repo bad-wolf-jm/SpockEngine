@@ -2,7 +2,7 @@
 
 #extension GL_GOOGLE_include_directive : require
 
-#include "VertexLayout.h"
+#include "Common/VertexLayout.h"
 
 layout (binding = 0) uniform UBO 
 {

@@ -2,7 +2,7 @@
 
 #extension GL_GOOGLE_include_directive : require
 
-#include "VertexLayout.h"
+#include "Common/VertexLayout.h"
 
 layout (location = 0) out vec4 outPos;
 layout (location = 1) out vec3 outLightPos;

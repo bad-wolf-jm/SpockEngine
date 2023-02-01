@@ -2,7 +2,7 @@
 
 #extension GL_GOOGLE_include_directive : require
 
-#include "../VertexLayout.h"
+#include "../Common/VertexLayout.h"
 
 #define MAX_NUM_LIGHTS 64
 
