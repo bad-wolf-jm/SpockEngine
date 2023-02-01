@@ -5,7 +5,9 @@
 layout( location = 0 ) in vec2 inUV;
 layout( location = 1 ) in vec4 inConsoleUV;
 
-layout( set = 1, binding = 0 ) uniform sampler2D sImage;
+layout( set = 0, binding = 0 ) uniform sampler2D sImage;
+
+layout( location = 0 ) out vec4 outFragcolor;
 
 #define FXAA_PC 1
 #define FXAA_GLSL_130 1
@@ -171,7 +173,7 @@ void main()
     // {xyzw} = float4(1.0, -1.0, 0.25, -0.25)
     FxaaFloat4 fxaaConsole360ConstDir = vec4(0.0, 0.0, 0.0, 0.0);
 
-    vec4 lOutColor = FxaaPixelShader(
+    outFragcolor = FxaaPixelShader(
         pos, 
         fxaaConsolePosPos, 
         sImage, 

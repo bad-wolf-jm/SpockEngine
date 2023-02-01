@@ -20,12 +20,6 @@ namespace SE::Core
 
     using namespace SE::Graphics;
 
-    // struct sCameraViewUniforms
-    // {
-    //     math::mat4 View;
-    //     math::mat4 Projection;
-    // };
-
     struct EffectProcessorCreateInfo
     {
         std::string mVertexShader   = "";

@@ -19,11 +19,13 @@ namespace SE::Core
         lCreateInfo.LineWidth      = 1.0f;
         lCreateInfo.VertexShader   = aCreateInfo.mVertexShader;
         lCreateInfo.FragmentShader = aCreateInfo.mFragmentShader;
+        lCreateInfo.DepthTest      = false;
+        lCreateInfo.DepthWrite     = false;
         lCreateInfo.RenderPass     = aRenderContext.GetRenderPass();
 
         DescriptorSetLayoutCreateInfo lPipelineLayoutCI{};
         lPipelineLayoutCI.Bindings = {
-            DescriptorBindingInfo{ 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } } };
+            DescriptorBindingInfo{ 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
         PipelineLayout = New<DescriptorSetLayout>( mGraphicContext, lPipelineLayoutCI );
 
         Initialize( lCreateInfo );

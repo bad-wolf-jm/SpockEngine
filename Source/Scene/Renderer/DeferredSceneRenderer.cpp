@@ -146,7 +146,7 @@ namespace SE::Core
         lCopyCreateInfo.mVertexShader   = "Shaders/fxaa.vert.spv";
         lCopyCreateInfo.mFragmentShader = "Shaders/copy.frag.spv";
         lCopyCreateInfo.RenderPass      = mFxaaContext.GetRenderPass();
-        mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lEffectProcessorCreateInfo );
+        mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lCopyCreateInfo );
     }
 
     Ref<VkTexture2D> DeferredRenderer::GetOutputImage()

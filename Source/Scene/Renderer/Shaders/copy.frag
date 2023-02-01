@@ -5,9 +5,11 @@
 layout( location = 0 ) in vec2 inUV;
 layout( location = 1 ) in vec4 inConsoleUV;
 
-layout( set = 1, binding = 0 ) uniform sampler2D sImage;
+layout( set = 0, binding = 0 ) uniform sampler2D sImage;
+
+layout( location = 0 ) out vec4 outFragcolor;
 
 void main()
 {
-    vec4 lOutColor = texture(sImage, inUV);
+    outFragcolor = texture(sImage, inUV);
 }

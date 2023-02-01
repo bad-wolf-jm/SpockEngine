@@ -78,8 +78,8 @@ namespace SE::Core
             lPipelineCreateInfo.SampleCount      = Spec.RenderPass->mSampleCount;
             lPipelineCreateInfo.LineWidth        = Spec.LineWidth;
             lPipelineCreateInfo.RenderPass       = Spec.RenderPass;
-            lPipelineCreateInfo.DepthWriteEnable = Spec.DepthTest;
-            lPipelineCreateInfo.DepthTestEnable  = Spec.DepthWrite;
+            lPipelineCreateInfo.DepthWriteEnable = Spec.DepthWrite;
+            lPipelineCreateInfo.DepthTestEnable  = Spec.DepthTest;
             lPipelineCreateInfo.DepthComparison  = eDepthCompareOperation::LESS_OR_EQUAL;
             lPipelineCreateInfo.PushConstants    = GetPushConstantLayout();
             lPipelineCreateInfo.SetLayouts       = GetDescriptorSetLayout();
