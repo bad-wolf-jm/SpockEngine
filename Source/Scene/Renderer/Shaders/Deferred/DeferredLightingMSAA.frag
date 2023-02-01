@@ -119,7 +119,7 @@ vec3 tonemap( vec3 color )
 {
     vec3 outcol = Uncharted2Tonemap( color.rgb * uboParams.exposure );
     outcol      = outcol * ( 1.0f / Uncharted2Tonemap( vec3( 11.2f ) ) );
-    return pow( outcol, vec3( 1.0f / uboParams.gamma ) );
+    return outcol;
 }
 
 // ----------------------------------------------------------------------------
@@ -375,8 +375,10 @@ void main()
     hdr_color      = hdr_color + emissive.xyz;
 
     vec3 outColor = tonemap( hdr_color );
+    outColor = pow( outColor, vec3( 1.0f / uboParams.gamma ) );
 
-    float lLuma = dot( outColor, vec3( 0.2126, 0.7152, 0.0722 ) );
+    // float lLuma = dot( outColor, vec3( 0.2126, 0.7152, 0.0722 ) );
+    float lLuma = dot( outColor, vec3( 0.299, 0.587, 0.114 ) );
 
     int lLumaAsAlpha = 0;
 

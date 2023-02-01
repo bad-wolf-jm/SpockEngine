@@ -3,6 +3,7 @@
 #extension GL_GOOGLE_include_directive : require
 
 layout( location = 0 ) in vec2 inUV;
+layout( location = 1 ) in vec4 inConsoleUV;
 
 layout( set = 1, binding = 0 ) uniform sampler2D sImage;
 
@@ -22,7 +23,7 @@ void main()
     // Use noperspective interpolation here (turn off perspective interpolation).
     // {xy__} = upper left of pixel
     // {__zw} = lower right of pixel
-    FxaaFloat4 fxaaConsolePosPos = vec4(0.0, 0.0, 0.0, 0.0);
+    FxaaFloat4 fxaaConsolePosPos = inConsoleUV;
 
     // Input color texture.
     // {rgb_} = color in linear or perceptual color space
