@@ -58,7 +58,7 @@ namespace SE::Core
         mGeometryRenderTarget->AddAttachment( "POSITION", lAttachmentCreateInfo );
         mGeometryRenderTarget->AddAttachment( "NORMALS", lAttachmentCreateInfo );
 
-        lAttachmentCreateInfo.mFormat = eColorFormat::RGBA8_UNORM;
+        lAttachmentCreateInfo.mFormat = eColorFormat::RGBA32_FLOAT;
         mGeometryRenderTarget->AddAttachment( "ALBEDO", lAttachmentCreateInfo );
         mGeometryRenderTarget->AddAttachment( "AO_METAL_ROUGH", lAttachmentCreateInfo );
 
