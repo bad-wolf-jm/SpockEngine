@@ -1,9 +1,0 @@
-asset:
-  name: tile_1_reduction
-  type: reduction_pattern
-  data:
-    reduction_pattern_data:
-      reduction_0:
-        texture: kernel_data.ktx
-        size: { x: 10.0, y: 10.0 }
-        peak_position: { x: 5.0, y: 5.0 }
