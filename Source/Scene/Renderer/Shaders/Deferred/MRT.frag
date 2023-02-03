@@ -97,6 +97,7 @@ layout( location = 0 ) out vec4 outPosition;
 layout( location = 1 ) out vec4 outNormal;
 layout( location = 2 ) out vec4 outAlbedo;
 layout( location = 3 ) out vec4 outOcclusionMetalRough;
+layout( location = 4 ) out float outObjectID;
 
 const float c_MinRoughness = 0.04;
 
@@ -126,4 +127,5 @@ void main()
     outAlbedo = texture( gTextures[lMaterial.mBaseColorTextureID], inUV0) *
                 lMaterial.mBaseColorFactor;
     outOcclusionMetalRough = vec4( ao, metallic, roughness, lMaterial.mOcclusionStrength );
+    outObjectID = 0.0f;
 }

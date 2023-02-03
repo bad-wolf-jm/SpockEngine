@@ -62,8 +62,8 @@ namespace SE::Core
         mGeometryRenderTarget->AddAttachment( "ALBEDO", lAttachmentCreateInfo );
         mGeometryRenderTarget->AddAttachment( "AO_METAL_ROUGH", lAttachmentCreateInfo );
 
-        // lAttachmentCreateInfo.mFormat = eColorFormat::R32_FLOAT;
-        // mGeometryRenderTarget->AddAttachment( "OBJECT_ID", lAttachmentCreateInfo );
+        lAttachmentCreateInfo.mFormat = eColorFormat::R32_FLOAT;
+        mGeometryRenderTarget->AddAttachment( "OBJECT_ID", lAttachmentCreateInfo );
 
         lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
         lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
