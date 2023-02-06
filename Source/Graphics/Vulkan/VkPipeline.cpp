@@ -6,6 +6,7 @@
 #include <unordered_set>
 
 #include "Core/Memory.h"
+#include "Core/File.h"
 #include "Graphics/Vulkan/VkCoreMacros.h"
 
 namespace SE::Graphics
@@ -18,22 +19,6 @@ namespace SE::Graphics
     }
 
     sVkShaderModuleObject::~sVkShaderModuleObject() { mContext->DestroyShaderModule( mVkObject ); }
-
-    static std::vector<char> ReadFile( const std::string &filename )
-    {
-        std::ifstream lFileObject( filename, std::ios::ate | std::ios::binary );
-
-        if( !lFileObject.is_open() ) throw std::runtime_error( "failed to open file!" );
-
-        size_t            lFileSize = (size_t)lFileObject.tellg();
-        std::vector<char> lBuffer( lFileSize );
-
-        lFileObject.seekg( 0 );
-        lFileObject.read( lBuffer.data(), lFileSize );
-        lFileObject.close();
-
-        return lBuffer;
-    }
 
     static std::vector<uint32_t> LoadShaderModuleBytecode( std::string aFilePaths )
     {
@@ -60,27 +45,27 @@ namespace SE::Graphics
 
     VkPipelineShaderStageCreateInfo ShaderModule::GetShaderStage()
     {
-        VkPipelineShaderStageCreateInfo shaderStages;
-        shaderStages.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+        VkPipelineShaderStageCreateInfo lShaderStages;
+        lShaderStages.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 
         switch( Type )
         {
-        case eShaderStageTypeFlags::VERTEX: shaderStages.stage = VK_SHADER_STAGE_VERTEX_BIT; break;
-        case eShaderStageTypeFlags::GEOMETRY: shaderStages.stage = VK_SHADER_STAGE_GEOMETRY_BIT; break;
-        case eShaderStageTypeFlags::FRAGMENT: shaderStages.stage = VK_SHADER_STAGE_FRAGMENT_BIT; break;
-        case eShaderStageTypeFlags::TESSELATION_CONTROL: shaderStages.stage = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT; break;
-        case eShaderStageTypeFlags::TESSELATION_EVALUATION: shaderStages.stage = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT; break;
-        case eShaderStageTypeFlags::COMPUTE: shaderStages.stage = VK_SHADER_STAGE_COMPUTE_BIT; break;
+        case eShaderStageTypeFlags::VERTEX: lShaderStages.stage = VK_SHADER_STAGE_VERTEX_BIT; break;
+        case eShaderStageTypeFlags::GEOMETRY: lShaderStages.stage = VK_SHADER_STAGE_GEOMETRY_BIT; break;
+        case eShaderStageTypeFlags::FRAGMENT: lShaderStages.stage = VK_SHADER_STAGE_FRAGMENT_BIT; break;
+        case eShaderStageTypeFlags::TESSELATION_CONTROL: lShaderStages.stage = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT; break;
+        case eShaderStageTypeFlags::TESSELATION_EVALUATION: lShaderStages.stage = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT; break;
+        case eShaderStageTypeFlags::COMPUTE: lShaderStages.stage = VK_SHADER_STAGE_COMPUTE_BIT; break;
         case eShaderStageTypeFlags::DEFAULT:
         default: throw std::runtime_error( "Unknown shader type" );
         }
 
-        shaderStages.module              = mShaderModuleObject->mVkObject;
-        shaderStages.pName               = "main";
-        shaderStages.flags               = 0;
-        shaderStages.pNext               = nullptr;
-        shaderStages.pSpecializationInfo = nullptr;
-        return shaderStages;
+        lShaderStages.module              = mShaderModuleObject->mVkObject;
+        lShaderStages.pName               = "main";
+        lShaderStages.flags               = 0;
+        lShaderStages.pNext               = nullptr;
+        lShaderStages.pSpecializationInfo = nullptr;
+        return lShaderStages;
     }
 
     sVkDescriptorSetLayoutObject::sVkDescriptorSetLayoutObject( Ref<VkGraphicContext>                     aContext,
