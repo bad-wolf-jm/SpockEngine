@@ -1,9 +1,9 @@
 #pragma once
 #include "MonoScriptUtils.h"
 #include <filesystem>
-#include <unordered_map>
-#include <string>
 #include <fstream>
+#include <string>
+#include <unordered_map>
 
 #include "Core/Logging.h"
 
@@ -78,16 +78,19 @@ namespace SE::Core::Mono::Utils
 
             const char *lNameSpace = mono_metadata_string_heap( lImage, lCols[MONO_TYPEDEF_NAMESPACE] );
             const char *lName      = mono_metadata_string_heap( lImage, lCols[MONO_TYPEDEF_NAME] );
-            SE::Logging::Info( "{}.{}", lNameSpace, lName );
+            if( strlen( lNameSpace ) != 0 )
+                SE::Logging::Info( "{}.{}", lNameSpace, lName );
+            else
+                SE::Logging::Info( "{}", lName );
         }
     }
 
     eScriptFieldType MonoTypeToScriptFieldType( MonoType *aMonoType )
     {
         std::string typeName = mono_type_get_name( aMonoType );
-        auto it = sScriptFieldTypeMap.find( typeName );
+        auto        it       = sScriptFieldTypeMap.find( typeName );
         if( it == sScriptFieldTypeMap.end() ) return eScriptFieldType::None;
 
         return it->second;
     }
-} // namespace Mono::Utils
+} // namespace SE::Core::Mono::Utils
