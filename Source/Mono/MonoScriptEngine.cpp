@@ -64,7 +64,8 @@ namespace SE::Core
     MonoObject *MonoScriptEngine::InstantiateClass( MonoClass *aMonoClass, bool aIsCore )
     {
         MonoObject *aInstance = mono_object_new( sData->mAppDomain, aMonoClass );
-        mono_runtime_object_init( aInstance );
+        
+        // mono_runtime_object_init( aInstance );
         return aInstance;
     }
 
