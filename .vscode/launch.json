@@ -20,6 +20,14 @@
             "program": "${workspaceFolder}/Build/Tests/lste_cuda_test.exe",
             "cwd": "${workspaceFolder}/Programs/TestProject",
             "stopAtEntry": false
+        },
+        {
+            "name": "MonoExfo",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Build/Programs/TestMonoExfo/test_mono_exfo.exe",
+            "cwd": "${workspaceFolder}/Programs/TestProject",
+            "stopAtEntry": false
         }
 
     ]

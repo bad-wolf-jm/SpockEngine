@@ -10,6 +10,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Resource.cpp
     Core/Logging.cpp
     
+    Mono/MonoRuntime.cpp
     Mono/MonoscriptEngine.cpp
     Mono/MonoScriptClass.cpp
     Mono/MonoScriptInstance.cpp

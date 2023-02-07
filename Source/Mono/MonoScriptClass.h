@@ -4,8 +4,8 @@
 #include <map>
 #include <string>
 
-#include "MonoTypedefs.h"
 #include "MonoScriptInstance.h"
+#include "MonoTypedefs.h"
 
 namespace SE::Core
 {
@@ -38,16 +38,25 @@ namespace SE::Core
         MonoScriptClass() = default;
         MonoScriptClass( MonoType *aMonoClass );
         MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, bool aIsCore = false );
+        MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage* aImage );
 
         MonoScriptInstance Instantiate();
 
         template <typename... _ArgTypes>
         MonoScriptInstance Instantiate( _ArgTypes... aArgs )
         {
-            void *lParameters[] = { (void *)&aArgs... };
-
             auto lNewInstance = Instantiate();
-            lNewInstance.InvokeMethod( ".ctor", sizeof...( _ArgTypes ), lParameters );
+
+            if constexpr( sizeof...( _ArgTypes ) == 0 )
+            {
+                lNewInstance.InvokeMethod( ".ctor", 0, NULL );
+            }
+            else
+            {
+                void *lParameters[] = { (void *)&aArgs... };
+
+                lNewInstance.InvokeMethod( ".ctor", sizeof...( _ArgTypes ), lParameters );
+            }
 
             return lNewInstance;
         }
@@ -66,7 +75,7 @@ namespace SE::Core
 
         const std::map<std::string, sScriptField> &GetFields() const { return mFields; }
 
-        MonoClass * Class() { return mMonoClass; }
+        MonoClass *Class() { return mMonoClass; }
 
       private:
         std::string mClassNamespace;
