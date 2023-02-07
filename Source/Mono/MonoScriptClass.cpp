@@ -53,9 +53,10 @@ namespace SE::Core
         }
     }
 
-    MonoScriptClass::MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage )
+    MonoScriptClass::MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage, fs::path const& aDllPPath )
         : mClassNamespace( aClassNamespace )
         , mClassName( aClassName )
+        , mDllPath{ aDllPPath}
     {
         mMonoClass = mono_class_from_name( aImage, aClassNamespace.c_str(), aClassName.c_str() );
 

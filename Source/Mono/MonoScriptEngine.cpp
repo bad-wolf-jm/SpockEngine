@@ -64,7 +64,7 @@ namespace SE::Core
     MonoObject *MonoScriptEngine::InstantiateClass( MonoClass *aMonoClass, bool aIsCore )
     {
         MonoObject *aInstance = mono_object_new( sData->mAppDomain, aMonoClass );
-        
+
         // mono_runtime_object_init( aInstance );
         return aInstance;
     }
@@ -269,17 +269,13 @@ namespace SE::Core
             const char *lNameSpace = mono_metadata_string_heap( sData->mAppAssemblyImage, lCols[MONO_TYPEDEF_NAMESPACE] );
             const char *lClassName = mono_metadata_string_heap( sData->mAppAssemblyImage, lCols[MONO_TYPEDEF_NAME] );
 
+            if( std::strncmp( lClassName, "<Module>", 8 ) ) continue;
+
             std::string lFullName;
             if( strlen( lNameSpace ) != 0 )
-            {
                 lFullName = fmt::format( "{}.{}", lNameSpace, lClassName );
-            }
             else
-            {
-                if( std::strncmp( lClassName, "<Module>", 8 ) ) continue;
-
                 lFullName = lClassName;
-            }
 
             MonoClass *lMonoClass = mono_class_from_name( sData->mAppAssemblyImage, lNameSpace, lClassName );
             if( lMonoClass == sData->mBaseApplicationClass.mMonoClass ) continue;

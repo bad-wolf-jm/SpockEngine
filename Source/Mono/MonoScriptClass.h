@@ -7,6 +7,8 @@
 #include "MonoScriptInstance.h"
 #include "MonoTypedefs.h"
 
+namespace fs = std::filesystem;
+
 namespace SE::Core
 {
     enum class eScriptFieldType
@@ -38,7 +40,7 @@ namespace SE::Core
         MonoScriptClass() = default;
         MonoScriptClass( MonoType *aMonoClass );
         MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, bool aIsCore = false );
-        MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage* aImage );
+        MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage, fs::path const& aDllPPath );
 
         MonoScriptInstance Instantiate();
 
@@ -78,6 +80,10 @@ namespace SE::Core
         MonoClass *Class() { return mMonoClass; }
 
       private:
+        fs::path                       mDllPath;
+        MonoScriptClass               *mParent;
+        std::vector<MonoScriptClass *> mDerived;
+
         std::string mClassNamespace;
         std::string mClassName;
 

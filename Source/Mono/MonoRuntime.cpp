@@ -237,9 +237,9 @@ namespace SE::Core
         sRuntimeData->mClasses = {};
         if( sRuntimeData->mAppAssemblyImage.empty() ) return;
 
-        for( auto const &lAssemblyImageEntry : sRuntimeData->mAppAssemblyImage )
+        for( auto const &lAssemblyPath : sRuntimeData->mAppAssemblyFiles )
         {
-            const auto &[lAssemblyPathy, lAssemblyImage] = lAssemblyImageEntry;
+            const auto lAssemblyImage = sRuntimeData->mAppAssemblyImage[lAssemblyPath.string()];
 
             const MonoTableInfo *lTypeDefinitionsTable = mono_image_get_table_info( lAssemblyImage, MONO_TABLE_TYPEDEF );
             int32_t              lTypesCount           = mono_table_info_get_rows( lTypeDefinitionsTable );
@@ -252,20 +252,16 @@ namespace SE::Core
                 const char *lNameSpace = mono_metadata_string_heap( lAssemblyImage, lCols[MONO_TYPEDEF_NAMESPACE] );
                 const char *lClassName = mono_metadata_string_heap( lAssemblyImage, lCols[MONO_TYPEDEF_NAME] );
 
+                if( !std::strncmp( lClassName, "<", 1 ) ) continue;
+
                 std::string lFullName;
                 if( strlen( lNameSpace ) != 0 )
-                {
                     lFullName = fmt::format( "{}.{}", lNameSpace, lClassName );
-                }
                 else
-                {
-                    if( !std::strncmp( lClassName, "<", 1 ) ) continue;
-
                     lFullName = lClassName;
-                }
 
                 if( mono_class_from_name( lAssemblyImage, lNameSpace, lClassName ) )
-                    sRuntimeData->mClasses[lFullName] = MonoScriptClass( lNameSpace, lClassName, lAssemblyImage );
+                    sRuntimeData->mClasses[lFullName] = MonoScriptClass( lNameSpace, lClassName, lAssemblyImage, lAssemblyPath );
             }
         }
     }
@@ -292,11 +288,8 @@ namespace SE::Core
         // RegisterComponentTypes();
 
         sRuntimeData->mAssemblyReloadPending = false;
-        for( auto const &[lKey, lValue] : sRuntimeData->mClasses ) SE::Logging::Info( "Class: {}", lKey );
+        for( auto const &[lKey, lValue] : sRuntimeData->mClasses ) SE::Logging::Info( "Class: {} --- ", lKey );
     }
 
-    MonoScriptClass &MonoRuntime::GetClassType( const std::string &aClassName )
-    {
-        return sRuntimeData->mClasses[aClassName];
-    }
+    MonoScriptClass &MonoRuntime::GetClassType( const std::string &aClassName ) { return sRuntimeData->mClasses[aClassName]; }
 } // namespace SE::Core
