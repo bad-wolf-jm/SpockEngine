@@ -220,8 +220,6 @@ namespace SE::Core
         sRuntimeData->mRootDomain = nullptr;
     }
 
-    MonoImage *MonoRuntime::GetCoreAssemblyImage() { return sRuntimeData->mCoreAssemblyImage; }
-
     MonoString *MonoRuntime::NewString( std::string const &aString )
     {
         return mono_string_new( sRuntimeData->mAppDomain, aString.c_str() );
@@ -289,4 +287,15 @@ namespace SE::Core
     }
 
     MonoScriptClass &MonoRuntime::GetClassType( const std::string &aClassName ) { return sRuntimeData->mClasses[aClassName]; }
+
+    MonoType *MonoRuntime::GetTypeFromName( std::string &aName )
+    {
+        MonoType *lMonoType = mono_reflection_type_from_name( aName.data(), sRuntimeData->mCoreAssemblyImage );
+        if( !lMonoType )
+        {
+            SE::Logging::Info( "Could not find type '{}'", aName );
+            return nullptr;
+        }
+    }
+
 } // namespace SE::Core

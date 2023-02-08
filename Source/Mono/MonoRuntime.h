@@ -4,8 +4,8 @@
 #include <map>
 #include <string>
 
-#include "MonoTypedefs.h"
 #include "MonoScriptClass.h"
+#include "MonoTypedefs.h"
 
 namespace SE::Core
 {
@@ -21,12 +21,11 @@ namespace SE::Core
         static void AddAppAssemblyPath( const std::filesystem::path &aFilepath );
         static void ReloadAssemblies();
 
-        static MonoImage *GetCoreAssemblyImage();
-
         static MonoString *NewString( std::string const &aString );
         static std::string NewString( MonoString *aString );
 
         static MonoScriptClass &GetClassType( const std::string &aClassName );
+        static MonoType        *GetTypeFromName( std::string &aName );
 
         // static void *GetSceneContext();
 

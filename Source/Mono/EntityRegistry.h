@@ -38,14 +38,7 @@ namespace SE::Core
             std::string_view lStructName   = GetTypeName<_Ty>();
             std::string      lMonoTypeName = fmt::format( "{}.{}", aNamespace, lStructName );
 
-            MonoType *lMonoType = mono_reflection_type_from_name( lMonoTypeName.data(), MonoRuntime::GetCoreAssemblyImage() );
-            if( !lMonoType )
-            {
-                SE::Logging::Info( "Could not find type '{}'", lMonoTypeName );
-                return nullptr;
-            }
-
-            return lMonoType;
+            return MonoRuntime::GetTypeFromName(lMonoTypeName);
         }
 
         template <typename _Ty>
