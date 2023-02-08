@@ -44,11 +44,15 @@ namespace SE::MonoInternalCalls
     size_t OpNode_NewScope( uint32_t aMemorySize );
     void   OpNode_DestroyScope( Scope *aTensorShape );
 
-    uint32_t OpNode_CreateMultiTensor_Constant_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoObject *aInitializer, MonoObject *aShape );
-    uint32_t OpNode_CreateMultiTensor_Vector_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoArray *aInitializer, MonoObject *aShape );
-    uint32_t OpNode_CreateMultiTensor_Data_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoArray *aInitializer, MonoObject *aShape );
+    uint32_t OpNode_CreateMultiTensor_Constant_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoObject *aInitializer,
+                                                            MonoObject *aShape );
+    uint32_t OpNode_CreateMultiTensor_Vector_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoArray *aInitializer,
+                                                          MonoObject *aShape );
+    uint32_t OpNode_CreateMultiTensor_Data_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoArray *aInitializer,
+                                                        MonoObject *aShape );
     uint32_t OpNode_CreateMultiTensor_Random_Uniform_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoObject *aShape );
-    uint32_t OpNode_CreateMultiTensor_Random_Normal_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoObject *aMean, MonoObject *aStd, MonoObject *aShape );
+    uint32_t OpNode_CreateMultiTensor_Random_Normal_Initializer( MonoObject *aScope, MonoReflectionType *aType, MonoObject *aMean,
+                                                                 MonoObject *aStd, MonoObject *aShape );
     uint32_t OpNode_CreateVector( MonoObject *aScope, MonoArray *aValues );
     uint32_t OpNode_CreateScalarVector( MonoObject *aScope, MonoReflectionType *aType, MonoArray *aValues );
     uint32_t OpNode_CreateScalarValue( MonoObject *aScope, MonoReflectionType *aType, MonoObject *aInitializer );
@@ -63,7 +67,8 @@ namespace SE::MonoInternalCalls
     uint32_t OpNode_BitwiseAnd( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight );
     uint32_t OpNode_BitwiseOr( MonoObject *aScope, MonoObject *aLeft, MonoObject *aRight );
     uint32_t OpNode_BitwiseNot( MonoObject *aScope, MonoObject *aOperand );
-    uint32_t OpNode_InInterval( MonoObject *aScope, MonoObject *aX, MonoObject *aLower, MonoObject *aUpper, bool aStrictLower, bool aStrictUpper );
+    uint32_t OpNode_InInterval( MonoObject *aScope, MonoObject *aX, MonoObject *aLower, MonoObject *aUpper, bool aStrictLower,
+                                bool aStrictUpper );
     uint32_t OpNode_Equal( MonoObject *aScope, MonoObject *aX, MonoObject *aY );
     uint32_t OpNode_LessThan( MonoObject *aScope, MonoObject *aX, MonoObject *aY );
     uint32_t OpNode_LessThanOrEqual( MonoObject *aScope, MonoObject *aX, MonoObject *aY );
@@ -93,7 +98,7 @@ namespace SE::MonoInternalCalls
     uint32_t OpNode_Sqrt( MonoObject *aScope, MonoObject *aArray );
     uint32_t OpNode_Round( MonoObject *aScope, MonoObject *aArray );
     uint32_t OpNode_Diff( MonoObject *aScope, MonoObject *aArray, uint32_t aCount );
-    uint32_t OpNode_Shift( MonoObject *aScope, MonoObject *aArray,  int32_t aCount, MonoObject *aFillValue );
+    uint32_t OpNode_Shift( MonoObject *aScope, MonoObject *aArray, int32_t aCount, MonoObject *aFillValue );
     uint32_t OpNode_Conv1D( MonoObject *aScope, MonoObject *aArray0, MonoObject *aArray1 );
     uint32_t OpNode_HCat( MonoObject *aScope, MonoObject *aArray0, MonoObject *aArray1 );
 

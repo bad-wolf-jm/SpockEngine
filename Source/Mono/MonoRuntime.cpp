@@ -27,27 +27,25 @@ namespace fs = std::filesystem;
 
 namespace SE::Core
 {
-    using PathList             = std::vector<fs::path>;
-    using FileWatchMapping     = std::map<fs::path, std::unique_ptr<filewatch::FileWatch<std::string>>>;
-    using AssemblyMapping      = std::map<fs::path, MonoAssembly *>;
-    using AssemblyImageMapping = std::map<fs::path, MonoImage *>;
-    using ClassMapping         = std::map<std::string, MonoScriptClass>;
+    using PathList         = std::vector<fs::path>;
+    using FileWatchMapping = std::map<fs::path, std::unique_ptr<filewatch::FileWatch<std::string>>>;
+    using AssemblyMapping  = std::map<fs::path, MonoAssembly *>;
+    using ImageMapping     = std::map<fs::path, MonoImage *>;
+    using ClassMapping     = std::map<std::string, MonoScriptClass>;
 
     struct sMonoRuntimeData
     {
-        MonoDomain *mRootDomain = nullptr;
-        MonoDomain *mAppDomain  = nullptr;
-
-        fs::path      mCoreAssemblyFilepath = "";
-        MonoAssembly *mCoreAssembly         = nullptr;
-        MonoImage    *mCoreAssemblyImage    = nullptr;
-        ClassMapping  mCoreClasses          = {};
-
-        PathList             mAppAssemblyFiles       = {};
-        FileWatchMapping     mAppAssemblyFileWatcher = {};
-        AssemblyMapping      mAppAssembly            = {};
-        AssemblyImageMapping mAppAssemblyImage       = {};
-        ClassMapping         mClasses                = {};
+        MonoDomain      *mRootDomain             = nullptr;
+        MonoDomain      *mAppDomain              = nullptr;
+        fs::path         mCoreAssemblyFilepath   = "";
+        MonoAssembly    *mCoreAssembly           = nullptr;
+        MonoImage       *mCoreAssemblyImage      = nullptr;
+        ClassMapping     mCoreClasses            = {};
+        PathList         mAppAssemblyFiles       = {};
+        FileWatchMapping mAppAssemblyFileWatcher = {};
+        AssemblyMapping  mAppAssembly            = {};
+        ImageMapping     mAppAssemblyImage       = {};
+        ClassMapping     mClasses                = {};
 
         bool mAssemblyReloadPending = false;
     };
@@ -164,84 +162,6 @@ namespace SE::Core
         RegisterComponentType<sLightComponent>();
     }
 
-    void MonoRuntime::RegisterInternalCppFunctions()
-    {
-        using namespace MonoInternalCalls;
-
-        SE_ADD_INTERNAL_CALL( Entity_Create );
-        SE_ADD_INTERNAL_CALL( Entity_IsValid );
-        SE_ADD_INTERNAL_CALL( Entity_Has );
-        SE_ADD_INTERNAL_CALL( Entity_Get );
-        SE_ADD_INTERNAL_CALL( Entity_Add );
-        SE_ADD_INTERNAL_CALL( Entity_Replace );
-
-        SE_ADD_INTERNAL_CALL( OpNode_NewTensorShape );
-        SE_ADD_INTERNAL_CALL( OpNode_DestroyTensorShape );
-        SE_ADD_INTERNAL_CALL( OpNode_CountLayers );
-        SE_ADD_INTERNAL_CALL( OpNode_GetDimension );
-        SE_ADD_INTERNAL_CALL( OpNode_Trim );
-        SE_ADD_INTERNAL_CALL( OpNode_Flatten );
-        SE_ADD_INTERNAL_CALL( OpNode_InsertDimension );
-
-        SE_ADD_INTERNAL_CALL( OpNode_NewScope );
-        SE_ADD_INTERNAL_CALL( OpNode_DestroyScope );
-        SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Constant_Initializer );
-        SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Vector_Initializer );
-        SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Data_Initializer );
-        SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Random_Uniform_Initializer );
-        SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Random_Normal_Initializer );
-        SE_ADD_INTERNAL_CALL( OpNode_CreateVector );
-        SE_ADD_INTERNAL_CALL( OpNode_CreateScalarVector );
-        SE_ADD_INTERNAL_CALL( OpNode_CreateScalarValue );
-
-        SE_ADD_INTERNAL_CALL( OpNode_Add );
-        SE_ADD_INTERNAL_CALL( OpNode_Subtract );
-        SE_ADD_INTERNAL_CALL( OpNode_Divide );
-        SE_ADD_INTERNAL_CALL( OpNode_Multiply );
-        SE_ADD_INTERNAL_CALL( OpNode_And );
-        SE_ADD_INTERNAL_CALL( OpNode_Or );
-        SE_ADD_INTERNAL_CALL( OpNode_Not );
-        SE_ADD_INTERNAL_CALL( OpNode_BitwiseAnd );
-        SE_ADD_INTERNAL_CALL( OpNode_BitwiseOr );
-        SE_ADD_INTERNAL_CALL( OpNode_BitwiseNot );
-        SE_ADD_INTERNAL_CALL( OpNode_InInterval );
-        SE_ADD_INTERNAL_CALL( OpNode_Equal );
-        SE_ADD_INTERNAL_CALL( OpNode_LessThan );
-        SE_ADD_INTERNAL_CALL( OpNode_LessThanOrEqual );
-        SE_ADD_INTERNAL_CALL( OpNode_GreaterThan );
-        SE_ADD_INTERNAL_CALL( OpNode_GreaterThanOrEqual );
-        SE_ADD_INTERNAL_CALL( OpNode_Where );
-        SE_ADD_INTERNAL_CALL( OpNode_Mix );
-        SE_ADD_INTERNAL_CALL( OpNode_AffineTransform );
-        SE_ADD_INTERNAL_CALL( OpNode_ARange );
-        SE_ADD_INTERNAL_CALL( OpNode_LinearSpace );
-        SE_ADD_INTERNAL_CALL( OpNode_Repeat );
-        SE_ADD_INTERNAL_CALL( OpNode_Tile );
-        SE_ADD_INTERNAL_CALL( OpNode_Sample2D );
-        SE_ADD_INTERNAL_CALL( OpNode_Collapse );
-        SE_ADD_INTERNAL_CALL( OpNode_Expand );
-        SE_ADD_INTERNAL_CALL( OpNode_Reshape );
-        SE_ADD_INTERNAL_CALL( OpNode_Relayout );
-        SE_ADD_INTERNAL_CALL( OpNode_FlattenNode );
-        SE_ADD_INTERNAL_CALL( OpNode_Slice );
-        SE_ADD_INTERNAL_CALL( OpNode_Summation );
-        SE_ADD_INTERNAL_CALL( OpNode_CountTrue );
-        SE_ADD_INTERNAL_CALL( OpNode_CountNonZero );
-        SE_ADD_INTERNAL_CALL( OpNode_CountZero );
-        SE_ADD_INTERNAL_CALL( OpNode_Floor );
-        SE_ADD_INTERNAL_CALL( OpNode_Ceil );
-        SE_ADD_INTERNAL_CALL( OpNode_Abs );
-        SE_ADD_INTERNAL_CALL( OpNode_Sqrt );
-        SE_ADD_INTERNAL_CALL( OpNode_Round );
-        SE_ADD_INTERNAL_CALL( OpNode_Diff );
-        SE_ADD_INTERNAL_CALL( OpNode_Shift );
-        SE_ADD_INTERNAL_CALL( OpNode_Conv1D );
-        SE_ADD_INTERNAL_CALL( OpNode_HCat );
-
-        SE_ADD_INTERNAL_CALL( UI_Text );
-        SE_ADD_INTERNAL_CALL( UI_Button );
-    }
-
     void MonoRuntime::Shutdown()
     {
         ShutdownMono();
@@ -355,4 +275,81 @@ namespace SE::Core
         }
     }
 
+    void MonoRuntime::RegisterInternalCppFunctions()
+    {
+        using namespace MonoInternalCalls;
+
+        SE_ADD_INTERNAL_CALL( Entity_Create );
+        SE_ADD_INTERNAL_CALL( Entity_IsValid );
+        SE_ADD_INTERNAL_CALL( Entity_Has );
+        SE_ADD_INTERNAL_CALL( Entity_Get );
+        SE_ADD_INTERNAL_CALL( Entity_Add );
+        SE_ADD_INTERNAL_CALL( Entity_Replace );
+
+        SE_ADD_INTERNAL_CALL( OpNode_NewTensorShape );
+        SE_ADD_INTERNAL_CALL( OpNode_DestroyTensorShape );
+        SE_ADD_INTERNAL_CALL( OpNode_CountLayers );
+        SE_ADD_INTERNAL_CALL( OpNode_GetDimension );
+        SE_ADD_INTERNAL_CALL( OpNode_Trim );
+        SE_ADD_INTERNAL_CALL( OpNode_Flatten );
+        SE_ADD_INTERNAL_CALL( OpNode_InsertDimension );
+
+        SE_ADD_INTERNAL_CALL( OpNode_NewScope );
+        SE_ADD_INTERNAL_CALL( OpNode_DestroyScope );
+        SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Constant_Initializer );
+        SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Vector_Initializer );
+        SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Data_Initializer );
+        SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Random_Uniform_Initializer );
+        SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Random_Normal_Initializer );
+        SE_ADD_INTERNAL_CALL( OpNode_CreateVector );
+        SE_ADD_INTERNAL_CALL( OpNode_CreateScalarVector );
+        SE_ADD_INTERNAL_CALL( OpNode_CreateScalarValue );
+
+        SE_ADD_INTERNAL_CALL( OpNode_Add );
+        SE_ADD_INTERNAL_CALL( OpNode_Subtract );
+        SE_ADD_INTERNAL_CALL( OpNode_Divide );
+        SE_ADD_INTERNAL_CALL( OpNode_Multiply );
+        SE_ADD_INTERNAL_CALL( OpNode_And );
+        SE_ADD_INTERNAL_CALL( OpNode_Or );
+        SE_ADD_INTERNAL_CALL( OpNode_Not );
+        SE_ADD_INTERNAL_CALL( OpNode_BitwiseAnd );
+        SE_ADD_INTERNAL_CALL( OpNode_BitwiseOr );
+        SE_ADD_INTERNAL_CALL( OpNode_BitwiseNot );
+        SE_ADD_INTERNAL_CALL( OpNode_InInterval );
+        SE_ADD_INTERNAL_CALL( OpNode_Equal );
+        SE_ADD_INTERNAL_CALL( OpNode_LessThan );
+        SE_ADD_INTERNAL_CALL( OpNode_LessThanOrEqual );
+        SE_ADD_INTERNAL_CALL( OpNode_GreaterThan );
+        SE_ADD_INTERNAL_CALL( OpNode_GreaterThanOrEqual );
+        SE_ADD_INTERNAL_CALL( OpNode_Where );
+        SE_ADD_INTERNAL_CALL( OpNode_Mix );
+        SE_ADD_INTERNAL_CALL( OpNode_AffineTransform );
+        SE_ADD_INTERNAL_CALL( OpNode_ARange );
+        SE_ADD_INTERNAL_CALL( OpNode_LinearSpace );
+        SE_ADD_INTERNAL_CALL( OpNode_Repeat );
+        SE_ADD_INTERNAL_CALL( OpNode_Tile );
+        SE_ADD_INTERNAL_CALL( OpNode_Sample2D );
+        SE_ADD_INTERNAL_CALL( OpNode_Collapse );
+        SE_ADD_INTERNAL_CALL( OpNode_Expand );
+        SE_ADD_INTERNAL_CALL( OpNode_Reshape );
+        SE_ADD_INTERNAL_CALL( OpNode_Relayout );
+        SE_ADD_INTERNAL_CALL( OpNode_FlattenNode );
+        SE_ADD_INTERNAL_CALL( OpNode_Slice );
+        SE_ADD_INTERNAL_CALL( OpNode_Summation );
+        SE_ADD_INTERNAL_CALL( OpNode_CountTrue );
+        SE_ADD_INTERNAL_CALL( OpNode_CountNonZero );
+        SE_ADD_INTERNAL_CALL( OpNode_CountZero );
+        SE_ADD_INTERNAL_CALL( OpNode_Floor );
+        SE_ADD_INTERNAL_CALL( OpNode_Ceil );
+        SE_ADD_INTERNAL_CALL( OpNode_Abs );
+        SE_ADD_INTERNAL_CALL( OpNode_Sqrt );
+        SE_ADD_INTERNAL_CALL( OpNode_Round );
+        SE_ADD_INTERNAL_CALL( OpNode_Diff );
+        SE_ADD_INTERNAL_CALL( OpNode_Shift );
+        SE_ADD_INTERNAL_CALL( OpNode_Conv1D );
+        SE_ADD_INTERNAL_CALL( OpNode_HCat );
+
+        SE_ADD_INTERNAL_CALL( UI_Text );
+        SE_ADD_INTERNAL_CALL( UI_Button );
+    }
 } // namespace SE::Core
