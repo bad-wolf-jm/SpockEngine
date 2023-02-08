@@ -25,9 +25,8 @@ namespace SE::Core
         static std::string NewString( MonoString *aString );
 
         static MonoScriptClass &GetClassType( const std::string &aClassName );
-        static MonoType        *GetTypeFromName( std::string &aName );
 
-        // static void *GetSceneContext();
+        static MonoType *GetCoreTypeFromName( std::string &aName );
 
       private:
         static void RegisterComponentTypes();
@@ -39,6 +38,7 @@ namespace SE::Core
 
         static MonoObject *InstantiateClass( MonoClass *aMonoClass, bool aIsCore = false );
         static void        LoadAssemblyClasses();
+        static void        RecreateClassTree();
 
         friend class MonoScriptClass;
     };

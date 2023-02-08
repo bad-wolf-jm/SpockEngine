@@ -38,7 +38,7 @@ namespace SE::Core
             std::string_view lStructName   = GetTypeName<_Ty>();
             std::string      lMonoTypeName = fmt::format( "{}.{}", aNamespace, lStructName );
 
-            return MonoRuntime::GetTypeFromName(lMonoTypeName);
+            return MonoRuntime::GetCoreTypeFromName( lMonoTypeName );
         }
 
         template <typename _Ty>

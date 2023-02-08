@@ -93,7 +93,7 @@ namespace SE::Core
         MonoClass *mMonoClass = nullptr;
         bool       mIsCore    = false;
 
-        friend class MonoScriptEngine;
+        friend class MonoRuntime;
     };
 
 } // namespace SE::Core

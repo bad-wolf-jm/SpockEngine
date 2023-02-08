@@ -27,6 +27,11 @@ namespace fs = std::filesystem;
 
 namespace SE::Core
 {
+    using PathList             = std::vector<fs::path>;
+    using FileWatchMapping     = std::map<fs::path, std::unique_ptr<filewatch::FileWatch<std::string>>>;
+    using AssemblyMapping      = std::map<fs::path, MonoAssembly *>;
+    using AssemblyImageMapping = std::map<fs::path, MonoImage *>;
+    using ClassMapping         = std::map<std::string, MonoScriptClass>;
 
     struct sMonoRuntimeData
     {
@@ -36,12 +41,7 @@ namespace SE::Core
         fs::path      mCoreAssemblyFilepath = "";
         MonoAssembly *mCoreAssembly         = nullptr;
         MonoImage    *mCoreAssemblyImage    = nullptr;
-
-        using PathList             = std::vector<fs::path>;
-        using FileWatchMapping     = std::map<fs::path, std::unique_ptr<filewatch::FileWatch<std::string>>>;
-        using AssemblyMapping      = std::map<fs::path, MonoAssembly *>;
-        using AssemblyImageMapping = std::map<fs::path, MonoImage *>;
-        using ClassMapping         = std::map<fs::path, MonoScriptClass>;
+        ClassMapping  mCoreClasses          = {};
 
         PathList             mAppAssemblyFiles       = {};
         FileWatchMapping     mAppAssemblyFileWatcher = {};
@@ -53,6 +53,53 @@ namespace SE::Core
     };
 
     static sMonoRuntimeData *sRuntimeData = nullptr;
+
+    namespace
+    {
+        template <typename _Tx, typename _Ty>
+        void MergeMaps( std::map<_Tx, _Ty> &aDest, std::map<_Tx, _Ty> const &aSrc )
+        {
+            for( auto &[lKey, lValue] : aSrc )
+            {
+                if( aDest.find( lKey ) == aDest.end() )
+                    aDest[lKey] = lValue;
+                else
+                    aDest[lKey] = lValue;
+            }
+        }
+
+        std::map<std::string, MonoScriptClass> LoadImageClasses( MonoImage *aImage, fs::path aPath )
+        {
+            std::map<std::string, MonoScriptClass> lClasses{};
+
+            if( !aImage ) return lClasses;
+
+            const MonoTableInfo *lTypeDefinitionsTable = mono_image_get_table_info( aImage, MONO_TABLE_TYPEDEF );
+            int32_t              lTypesCount           = mono_table_info_get_rows( lTypeDefinitionsTable );
+
+            for( int32_t i = 0; i < lTypesCount; i++ )
+            {
+                uint32_t lCols[MONO_TYPEDEF_SIZE];
+                mono_metadata_decode_row( lTypeDefinitionsTable, i, lCols, MONO_TYPEDEF_SIZE );
+
+                const char *lNameSpace = mono_metadata_string_heap( aImage, lCols[MONO_TYPEDEF_NAMESPACE] );
+                const char *lClassName = mono_metadata_string_heap( aImage, lCols[MONO_TYPEDEF_NAME] );
+
+                if( !std::strncmp( lClassName, "<", 1 ) ) continue;
+
+                std::string lFullName;
+                if( strlen( lNameSpace ) != 0 )
+                    lFullName = fmt::format( "{}.{}", lNameSpace, lClassName );
+                else
+                    lFullName = lClassName;
+
+                if( mono_class_from_name( aImage, lNameSpace, lClassName ) )
+                    lClasses[lFullName] = MonoScriptClass( lNameSpace, lClassName, aImage, aPath );
+            }
+
+            return lClasses;
+        }
+    } // namespace
 
     MonoObject *MonoRuntime::InstantiateClass( MonoClass *aMonoClass, bool aIsCore )
     {
@@ -69,6 +116,9 @@ namespace SE::Core
         sRuntimeData->mCoreAssemblyFilepath = aFilepath;
         sRuntimeData->mCoreAssembly         = Mono::Utils::LoadMonoAssembly( aFilepath );
         sRuntimeData->mCoreAssemblyImage    = mono_assembly_get_image( sRuntimeData->mCoreAssembly );
+
+        sRuntimeData->mCoreClasses = {};
+        MergeMaps( sRuntimeData->mCoreClasses, LoadImageClasses( sRuntimeData->mCoreAssemblyImage, aFilepath ) );
     }
 
     static void OnAppAssemblyFileSystemEvent( const std::string &path, const filewatch::Event change_type )
@@ -197,6 +247,7 @@ namespace SE::Core
         ShutdownMono();
 
         delete sRuntimeData;
+
         sRuntimeData = nullptr;
     }
 
@@ -236,28 +287,32 @@ namespace SE::Core
         {
             const auto lAssemblyImage = sRuntimeData->mAppAssemblyImage[lAssemblyPath];
 
-            const MonoTableInfo *lTypeDefinitionsTable = mono_image_get_table_info( lAssemblyImage, MONO_TABLE_TYPEDEF );
-            int32_t              lTypesCount           = mono_table_info_get_rows( lTypeDefinitionsTable );
+            MergeMaps( sRuntimeData->mClasses, LoadImageClasses( lAssemblyImage, lAssemblyPath ) );
+        }
+    }
 
-            for( int32_t i = 0; i < lTypesCount; i++ )
-            {
-                uint32_t lCols[MONO_TYPEDEF_SIZE];
-                mono_metadata_decode_row( lTypeDefinitionsTable, i, lCols, MONO_TYPEDEF_SIZE );
+    void MonoRuntime::RecreateClassTree()
+    {
+        std::map<MonoClass *, MonoScriptClass *> lLookupTable;
 
-                const char *lNameSpace = mono_metadata_string_heap( lAssemblyImage, lCols[MONO_TYPEDEF_NAMESPACE] );
-                const char *lClassName = mono_metadata_string_heap( lAssemblyImage, lCols[MONO_TYPEDEF_NAME] );
+        for( auto &[lKey, lValue] : sRuntimeData->mClasses )
+        {
+            lValue.mDerived.clear();
+            lLookupTable[lValue.Class()] = &lValue;
+        }
 
-                if( !std::strncmp( lClassName, "<", 1 ) ) continue;
+        for( auto &[lKey, lValue] : sRuntimeData->mCoreClasses )
+        {
+            lValue.mDerived.clear();
+            lLookupTable[lValue.Class()] = &lValue;
+        }
 
-                std::string lFullName;
-                if( strlen( lNameSpace ) != 0 )
-                    lFullName = fmt::format( "{}.{}", lNameSpace, lClassName );
-                else
-                    lFullName = lClassName;
+        for( auto &[lKey, lValue] : sRuntimeData->mClasses )
+        {
+            auto *lParentClass = mono_class_get_parent( lValue.Class() );
 
-                if( mono_class_from_name( lAssemblyImage, lNameSpace, lClassName ) )
-                    sRuntimeData->mClasses[lFullName] = MonoScriptClass( lNameSpace, lClassName, lAssemblyImage, lAssemblyPath );
-            }
+            lValue.mParent = lLookupTable[lParentClass];
+            lLookupTable[lParentClass]->mDerived.push_back( &lValue );
         }
     }
 
@@ -280,20 +335,22 @@ namespace SE::Core
         }
 
         LoadAssemblyClasses();
+        RecreateClassTree();
+
         RegisterComponentTypes();
 
         sRuntimeData->mAssemblyReloadPending = false;
-        // for( auto const &[lKey, lValue] : sRuntimeData->mClasses ) SE::Logging::Info( "Class: {} --- ", lKey );
     }
 
     MonoScriptClass &MonoRuntime::GetClassType( const std::string &aClassName ) { return sRuntimeData->mClasses[aClassName]; }
 
-    MonoType *MonoRuntime::GetTypeFromName( std::string &aName )
+    MonoType *MonoRuntime::GetCoreTypeFromName( std::string &aName )
     {
         MonoType *lMonoType = mono_reflection_type_from_name( aName.data(), sRuntimeData->mCoreAssemblyImage );
         if( !lMonoType )
         {
             SE::Logging::Info( "Could not find type '{}'", aName );
+
             return nullptr;
         }
     }
