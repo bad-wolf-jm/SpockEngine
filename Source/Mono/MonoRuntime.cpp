@@ -38,10 +38,10 @@ namespace SE::Core
         MonoImage    *mCoreAssemblyImage    = nullptr;
 
         using PathList             = std::vector<fs::path>;
-        using FileWatchMapping     = std::map<std::string, std::unique_ptr<filewatch::FileWatch<std::string>>>;
-        using AssemblyMapping      = std::map<std::string, MonoAssembly *>;
-        using AssemblyImageMapping = std::map<std::string, MonoImage *>;
-        using ClassMapping         = std::map<std::string, MonoScriptClass>;
+        using FileWatchMapping     = std::map<fs::path, std::unique_ptr<filewatch::FileWatch<std::string>>>;
+        using AssemblyMapping      = std::map<fs::path, MonoAssembly *>;
+        using AssemblyImageMapping = std::map<fs::path, MonoImage *>;
+        using ClassMapping         = std::map<fs::path, MonoScriptClass>;
 
         PathList             mAppAssemblyFiles       = {};
         FileWatchMapping     mAppAssemblyFileWatcher = {};
@@ -90,7 +90,7 @@ namespace SE::Core
         sRuntimeData->mAppAssemblyFiles.push_back( aFilepath );
 
         sRuntimeData->mAssemblyReloadPending = true;
-        sRuntimeData->mAppAssemblyFileWatcher[aFilepath.string()] =
+        sRuntimeData->mAppAssemblyFileWatcher[aFilepath] =
             std::make_unique<filewatch::FileWatch<std::string>>( aFilepath.string(), OnAppAssemblyFileSystemEvent );
     }
 
@@ -236,7 +236,7 @@ namespace SE::Core
 
         for( auto const &lAssemblyPath : sRuntimeData->mAppAssemblyFiles )
         {
-            const auto lAssemblyImage = sRuntimeData->mAppAssemblyImage[lAssemblyPath.string()];
+            const auto lAssemblyImage = sRuntimeData->mAppAssemblyImage[lAssemblyPath];
 
             const MonoTableInfo *lTypeDefinitionsTable = mono_image_get_table_info( lAssemblyImage, MONO_TABLE_TYPEDEF );
             int32_t              lTypesCount           = mono_table_info_get_rows( lTypeDefinitionsTable );
@@ -277,8 +277,8 @@ namespace SE::Core
 
         for( auto const &lFile : sRuntimeData->mAppAssemblyFiles )
         {
-            sRuntimeData->mAppAssembly[lFile.string()]      = Mono::Utils::LoadMonoAssembly( lFile );
-            sRuntimeData->mAppAssemblyImage[lFile.string()] = mono_assembly_get_image( sRuntimeData->mAppAssembly[lFile.string()] );
+            sRuntimeData->mAppAssembly[lFile]      = Mono::Utils::LoadMonoAssembly( lFile );
+            sRuntimeData->mAppAssemblyImage[lFile] = mono_assembly_get_image( sRuntimeData->mAppAssembly[lFile] );
         }
 
         LoadAssemblyClasses();
