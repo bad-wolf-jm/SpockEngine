@@ -282,7 +282,7 @@ namespace SE::Core
         }
 
         LoadAssemblyClasses();
-        // RegisterComponentTypes();
+        RegisterComponentTypes();
 
         sRuntimeData->mAssemblyReloadPending = false;
         // for( auto const &[lKey, lValue] : sRuntimeData->mClasses ) SE::Logging::Info( "Class: {} --- ", lKey );

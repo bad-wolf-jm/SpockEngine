@@ -22,7 +22,6 @@ namespace SE::Core
         static void ReloadAssemblies();
 
         static MonoImage *GetCoreAssemblyImage();
-        static MonoImage *GetAppAssemblyImage();
 
         static MonoString *NewString( std::string const &aString );
         static std::string NewString( MonoString *aString );
