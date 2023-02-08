@@ -22,61 +22,56 @@
 #include "EntityRegistry.h"
 #include "InternalCalls.h"
 
-#include "MonoScriptUtils.h"
 #include "MonoRuntime.h"
+#include "MonoScriptUtils.h"
 
 namespace SE::Core
 {
-    MonoScriptClass::MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage, fs::path const& aDllPPath )
+
+    namespace
+    {
+        std::map<std::string, sScriptField> GetClassFields( MonoClass *aMonoClass )
+        {
+            std::map<std::string, sScriptField> lFields{};
+
+            if( !aMonoClass ) return lFields;
+
+            int lFieldCount = mono_class_num_fields( aMonoClass );
+
+            void *lIterator = nullptr;
+            while( MonoClassField *lField = mono_class_get_fields( aMonoClass, &lIterator ) )
+            {
+                const char *lFieldName = mono_field_get_name( lField );
+                uint32_t    lFlags     = mono_field_get_flags( lField );
+
+                if( lFlags & FIELD_ATTRIBUTE_PUBLIC )
+                {
+                    MonoType        *lMonoFieldType = mono_field_get_type( lField );
+                    eScriptFieldType lFieldType     = Mono::Utils::MonoTypeToScriptFieldType( lMonoFieldType );
+
+                    lFields[lFieldName] = { lFieldType, lFieldName, lField };
+                }
+            }
+
+            return lFields;
+        }
+    } // namespace
+
+    MonoScriptClass::MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
+                                      fs::path const &aDllPPath )
         : mClassNamespace( aClassNamespace )
         , mClassName( aClassName )
-        , mDllPath{ aDllPPath}
+        , mDllPath{ aDllPPath }
     {
-        mMonoClass = mono_class_from_name( aImage, aClassNamespace.c_str(), aClassName.c_str() );
-
-        if (!mMonoClass)
-        {
-            mFields = {};
-            return;
-        }
-
-        int   lFieldCount = mono_class_num_fields( mMonoClass );
-        void *lIterator   = nullptr;
-        while( MonoClassField *lField = mono_class_get_fields( mMonoClass, &lIterator ) )
-        {
-            const char *lFieldName = mono_field_get_name( lField );
-            uint32_t    lFlags     = mono_field_get_flags( lField );
-
-            if( lFlags & FIELD_ATTRIBUTE_PUBLIC )
-            {
-                MonoType        *lMonoFieldType = mono_field_get_type( lField );
-                eScriptFieldType lFieldType     = Mono::Utils::MonoTypeToScriptFieldType( lMonoFieldType );
-
-                mFields[lFieldName] = { lFieldType, lFieldName, lField };
-            }
-        }
-
-        mClassFullName = fmt::format("{}.{}", mClassNamespace, mClassName);
+        mMonoClass     = mono_class_from_name( aImage, aClassNamespace.c_str(), aClassName.c_str() );
+        mFields        = GetClassFields( mMonoClass );
+        mClassFullName = fmt::format( "{}.{}", mClassNamespace, mClassName );
     }
 
     MonoScriptClass::MonoScriptClass( MonoType *aMonoClass )
         : mMonoClass{ mono_class_from_mono_type( aMonoClass ) }
     {
-        int   lFieldCount = mono_class_num_fields( mMonoClass );
-        void *lIterator   = nullptr;
-        while( MonoClassField *lField = mono_class_get_fields( mMonoClass, &lIterator ) )
-        {
-            const char *lFieldName = mono_field_get_name( lField );
-            uint32_t    lFlags     = mono_field_get_flags( lField );
-
-            if( lFlags & FIELD_ATTRIBUTE_PUBLIC )
-            {
-                MonoType        *lMonoFieldType = mono_field_get_type( lField );
-                eScriptFieldType lFieldType     = Mono::Utils::MonoTypeToScriptFieldType( lMonoFieldType );
-
-                mFields[lFieldName] = { lFieldType, lFieldName, lField };
-            }
-        }
+        mFields = GetClassFields( mMonoClass );
     }
 
     MonoScriptInstance MonoScriptClass::DoInstantiate()
