@@ -11,7 +11,7 @@
 #include "Core/EntityRegistry/Registry.h"
 #include "Core/Logging.h"
 
-#include "Mono/MonoScriptEngine.h"
+#include "Mono/MonoRuntime.h"
 
 #include "Scene/Components.h"
 
@@ -37,13 +37,13 @@ void InitializeMonoscripting()
     fs::path lMonoPath          = "C:\\Program Files\\Mono\\lib\\mono\\4.5";
     fs::path lCoreScriptingPath = "c:\\GitLab\\SpockEngine\\Source\\ScriptCore\\Build\\Debug\\SE_Core.dll";
 
-    MonoScriptEngine::Initialize( lMonoPath, lCoreScriptingPath );
+    MonoRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 }
 
 void InitializeMonoscripting( fs::path aAppAssemblyPath )
 {
     InitializeMonoscripting();
-    MonoScriptEngine::SetAppAssemblyPath( aAppAssemblyPath );
+    MonoRuntime::AddAppAssemblyPath( aAppAssemblyPath );
 }
 
 // TEST_CASE( "Initialize scripting engine", "[MONO_SCRIPTING]" )
@@ -405,7 +405,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 
 //     REQUIRE( CallMethodHelper<bool, MonoObject *>( lEntityTest, "TestHasTag", lEntityInstance.GetInstance() ) );
 
-//     MonoString *lManagedSTagValue = MonoScriptEngine::NewString( lEntity.Get<sTag>().mValue );
+//     MonoString *lManagedSTagValue = MonoRuntime::NewString( lEntity.Get<sTag>().mValue );
 //     REQUIRE( CallMethodHelper<bool, MonoObject *, MonoString *>( lEntityTest, "TestTagValue", lEntityInstance.GetInstance(),
 //                                                                  lManagedSTagValue ) );
 // }
@@ -423,7 +423,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 //     auto lEntityClass    = MonoScriptClass( "SpockEngine", "Entity", true );
 //     auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
 
-//     MonoString *lManagedSTagValue = MonoScriptEngine::NewString( "TAG_1" );
+//     MonoString *lManagedSTagValue = MonoRuntime::NewString( "TAG_1" );
 //     CallMethodHelper<bool, MonoObject *, MonoString *>( lEntityTest, "AddTagValue", lEntityInstance.GetInstance(), lManagedSTagValue
 //     );
 
@@ -552,7 +552,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 // TEST_CASE( "Create Full Tensor Shape", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+//     auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
 //     auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
 
@@ -574,7 +574,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 // TEST_CASE( "C++ Tensor Shape", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+//     auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
 //     auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
 
@@ -589,7 +589,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 // TEST_CASE( "Create rank 1 Tensor Shape", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+//     auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
 //     auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
 
@@ -608,7 +608,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 // TEST_CASE( "C++ Tensor Shape has correct layer count", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+//     auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
 //     auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
 
@@ -627,7 +627,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 // TEST_CASE( "C++ Tensor Shape has correct dimension", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+//     auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
 //     auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
 
@@ -679,7 +679,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 // TEST_CASE( "C++ Tensor Shape has correct dimension after trimming", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+//     auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
 //     auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
 
@@ -756,7 +756,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 // TEST_CASE( "C++ Tensor Shape has correct dimension after flattening", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+//     auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
 //     auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
 
@@ -836,7 +836,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 // TEST_CASE( "C++ Tensor Shape has correct dimension after inserting", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+//     auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
 //     auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
 
@@ -959,7 +959,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 // TEST_CASE( "Create Scope in C#", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+//     auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
 //     auto lScopeClass = MonoScriptClass( "SpockEngine", "Scope", true );
 
@@ -974,7 +974,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 // TEST_CASE( "Create scope in C++", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+//     auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
 //     auto lScopeClass = MonoScriptClass( "SpockEngine", "Scope", true );
 //     auto lNode       = Scope( 1024 );
@@ -990,10 +990,10 @@ TEST_CASE( "Create constant multitensor", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateConstantMultiTensor", (size_t)&lScope );
-    auto lNodeClass = MonoScriptClass( "SpockEngine", "OpNode", true );
+    auto lNodeClass = MonoRuntime::GetClassType("SpockEngine.OpNode");
     auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
 
     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
@@ -1010,10 +1010,10 @@ TEST_CASE( "Create layered multitensor", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateLayeredConstantMultiTensor", (size_t)&lScope );
-    auto lNodeClass = MonoScriptClass( "SpockEngine", "OpNode", true );
+    auto lNodeClass = MonoRuntime::GetClassType("SpockEngine.OpNode");
     auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
 
     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
@@ -1037,10 +1037,10 @@ TEST_CASE( "Create multitensor with initial data", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateDataMultiTensor", (size_t)&lScope );
-    auto lNodeClass = MonoScriptClass( "SpockEngine", "OpNode", true );
+    auto lNodeClass = MonoRuntime::GetClassType("SpockEngine.OpNode");
     auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
 
     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
@@ -1057,10 +1057,10 @@ TEST_CASE( "Create multitensor with random uniform initial data", "[MONO_SCRIPTI
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateRandomUniformMultiTensor", (size_t)&lScope );
-    auto lNodeClass = MonoScriptClass( "SpockEngine", "OpNode", true );
+    auto lNodeClass = MonoRuntime::GetClassType("SpockEngine.OpNode");
     auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
 
     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
@@ -1077,10 +1077,10 @@ TEST_CASE( "Create multitensor with random normal initial data", "[MONO_SCRIPTIN
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateRandomNormalMultiTensor", (size_t)&lScope );
-    auto lNodeClass = MonoScriptClass( "SpockEngine", "OpNode", true );
+    auto lNodeClass = MonoRuntime::GetClassType("SpockEngine.OpNode");
     auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
 
     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
@@ -1097,10 +1097,10 @@ TEST_CASE( "Create scalar arrays", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateScalarVector", (size_t)&lScope );
-    auto lNodeClass = MonoScriptClass( "SpockEngine", "OpNode", true );
+    auto lNodeClass = MonoRuntime::GetClassType("SpockEngine.OpNode");
     auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
 
     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
@@ -1116,10 +1116,10 @@ TEST_CASE( "Create scalar constant", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateScalarValue", (size_t)&lScope );
-    auto lNodeClass = MonoScriptClass( "SpockEngine", "OpNode", true );
+    auto lNodeClass = MonoRuntime::GetClassType("SpockEngine.OpNode");
     auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
 
     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
@@ -1161,7 +1161,7 @@ static MonoArray *MakeBoolArray( uint32_t aSize )
 
 static OpNode ConvertCSOpNode( Scope &aScope, MonoObject *aOpNode )
 {
-    auto lNodeClass = MonoScriptClass( "SpockEngine", "OpNode", true );
+    auto lNodeClass = MonoRuntime::GetClassType("SpockEngine.OpNode");
     auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), aOpNode );
 
     auto lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
@@ -1209,7 +1209,7 @@ TEST_CASE( "ADD", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1229,7 +1229,7 @@ TEST_CASE( "MULTIPLY", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1249,7 +1249,7 @@ TEST_CASE( "SUBTRACT", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1269,7 +1269,7 @@ TEST_CASE( "DIVIDE", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1289,7 +1289,7 @@ TEST_CASE( "AND", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1309,7 +1309,7 @@ TEST_CASE( "OR", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1329,7 +1329,7 @@ TEST_CASE( "NOT", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1347,7 +1347,7 @@ TEST_CASE( "BITWISE_AND", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1367,7 +1367,7 @@ TEST_CASE( "BITWISE_OR", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1387,7 +1387,7 @@ TEST_CASE( "BITWISE_NOT", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1406,7 +1406,7 @@ TEST_CASE( "IN_INTERVAL", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1427,7 +1427,7 @@ TEST_CASE( "EQUAL", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1447,7 +1447,7 @@ TEST_CASE( "LESS_THAN", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1467,7 +1467,7 @@ TEST_CASE( "LESS_THAN_OR_EQUAL", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1487,7 +1487,7 @@ TEST_CASE( "GREATER_THAN", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1507,7 +1507,7 @@ TEST_CASE( "GREATER_THAN_OR_EQUAL", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1527,7 +1527,7 @@ TEST_CASE( "WHERE", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1548,7 +1548,7 @@ TEST_CASE( "MIX", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1569,7 +1569,7 @@ TEST_CASE( "AFFINE_TRANSFORM", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1590,7 +1590,7 @@ TEST_CASE( "ARANGE", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1602,7 +1602,7 @@ TEST_CASE( "LINEAR_SPACE", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1614,7 +1614,7 @@ TEST_CASE( "REPEAT", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1626,7 +1626,7 @@ TEST_CASE( "TILE", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1638,7 +1638,7 @@ TEST_CASE( "SAMPLE_2D", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1650,7 +1650,7 @@ TEST_CASE( "COLLAPSE", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestCollapsableTensorShape();
 
@@ -1668,7 +1668,7 @@ TEST_CASE( "EXPAND", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestExpandableTensorShape();
 
@@ -1686,7 +1686,7 @@ TEST_CASE( "RESHAPE", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1698,7 +1698,7 @@ TEST_CASE( "RELAYOUT", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1710,7 +1710,7 @@ TEST_CASE( "FLATTEN", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1727,7 +1727,7 @@ TEST_CASE( "SLICE", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1739,7 +1739,7 @@ TEST_CASE( "SUMMATION_1", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1751,7 +1751,7 @@ TEST_CASE( "SUMMATION_2", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1763,7 +1763,7 @@ TEST_CASE( "COUNT_TRUE", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1780,7 +1780,7 @@ TEST_CASE( "COUNT_NON_ZERO", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1797,7 +1797,7 @@ TEST_CASE( "COUNT_ZERO", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1814,7 +1814,7 @@ TEST_CASE( "FLOOR", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1831,7 +1831,7 @@ TEST_CASE( "CEIL", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1848,7 +1848,7 @@ TEST_CASE( "ABS", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1865,7 +1865,7 @@ TEST_CASE( "SQRT", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 
@@ -1882,7 +1882,7 @@ TEST_CASE( "ROUND", "[MONO_SCRIPTING]" )
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = MonoScriptClass( "SEUnitTest", "TensorOpsTest", false );
+    auto lEntityTest = MonoRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
     auto [lSize, lShape] = TestTensorShape();
 

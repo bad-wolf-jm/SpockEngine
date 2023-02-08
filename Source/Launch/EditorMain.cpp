@@ -24,7 +24,7 @@
 
 #include "Editor/BaseEditorApplication.h"
 
-#include "Mono/MonoScriptEngine.h"
+#include "Mono/MonoRuntime.h"
 
 using namespace SE::Core;
 using namespace SE::Graphics;
@@ -256,7 +256,7 @@ int main( int argc, char **argv )
     if( auto lCoreScriptingPathOverride = lProgramArguments->present<std::string>( "--script_core" ) )
         if( fs ::exists( lCoreScriptingPathOverride.value() ) ) lCoreScriptingPath = lCoreScriptingPathOverride.value();
 
-    MonoScriptEngine::Initialize( lMonoPath, lCoreScriptingPath );
+    MonoRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 
     SE::Editor::BaseEditorApplication lEditorApplication;
     lEditorApplication.Init();
@@ -274,7 +274,7 @@ int main( int argc, char **argv )
 
         YAML::Node &lAssemblyPath = lRootNode["project"]["assembly_path"];
         if( !lAssemblyPath.IsNull() && fs::exists( lAssemblyPath.as<std::string>() ) )
-            MonoScriptEngine::SetAppAssemblyPath( lAssemblyPath.as<std::string>() );
+            MonoRuntime::AddAppAssemblyPath( lAssemblyPath.as<std::string>() );
 
         YAML::Node &lDefaultScenarioPath = lRootNode["project"]["default_scenario"];
         if( (!lDefaultScenarioPath.IsNull()) && fs::exists( lDefaultScenarioPath.as<std::string>() ) )
@@ -287,7 +287,7 @@ int main( int argc, char **argv )
 
     SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
 
-    MonoScriptEngine::Shutdown();
+    MonoRuntime::Shutdown();
     SE::Core::Engine::Shutdown();
 
     return 0;

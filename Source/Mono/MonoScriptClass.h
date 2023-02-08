@@ -39,7 +39,6 @@ namespace SE::Core
       public:
         MonoScriptClass() = default;
         MonoScriptClass( MonoType *aMonoClass );
-        MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, bool aIsCore = false );
         MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
                          fs::path const &aDllPPath );
 

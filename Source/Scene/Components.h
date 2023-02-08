@@ -23,7 +23,7 @@
 
 #include "Primitives/Primitives.h"
 
-#include "Mono/MonoScriptEngine.h"
+#include "Mono/MonoRuntime.h"
 #include "Mono/MonoScriptMethod.h"
 
 #include "Core/Profiling/BlockTimer.h"
@@ -80,7 +80,7 @@ namespace SE::Core::EntityComponentSystem::Components
             std::string lClassNamespace = aClassFullName.substr( 0, lSeparatorPos );
             std::string lClassName      = aClassFullName.substr( lSeparatorPos + 1 );
 
-            mClass = MonoScriptClass( lClassNamespace, lClassName, false );
+            mClass = MonoRuntime::GetClassType( mClassFullName );
         }
 
         template <typename T>
@@ -96,7 +96,7 @@ namespace SE::Core::EntityComponentSystem::Components
             // Create Mono side entity object
             auto lEntityID    = static_cast<uint32_t>( mEntity );
             auto lRegistryID  = (size_t)mEntity.GetRegistry();
-            auto lEntityClass = MonoScriptClass( "SpockEngine", "Entity", true );
+            auto lEntityClass = MonoRuntime::GetClassType( "SpockEngine.Entity" );
             mEntityInstance   = lEntityClass.Instantiate( &lEntityID, &lRegistryID );
 
             if( mClassFullName.empty() ) return;
@@ -105,7 +105,7 @@ namespace SE::Core::EntityComponentSystem::Components
             std::string lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
             std::string lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
 
-            mClass = MonoScriptClass( lClassNamespace, lClassName, false );
+            mClass = MonoRuntime::GetClassType( mClassFullName );
 
             // Instantiate the Mono actor class with the entity object as parameter
             mInstance = mClass.Instantiate();
@@ -408,7 +408,7 @@ namespace SE::Core::EntityComponentSystem::Components
             mEntity           = aEntity; // Create Mono side entity object
             auto lEntityID    = static_cast<uint32_t>( mEntity );
             auto lRegistryID  = (size_t)mEntity.GetRegistry();
-            auto lEntityClass = MonoScriptClass( "SpockEngine", "Entity", true );
+            auto lEntityClass = MonoRuntime::GetClassType( "SpockEngine.Entity" );
             mEntityInstance   = lEntityClass.Instantiate( &lEntityID, &lRegistryID );
 
             if( mClassFullName.empty() ) return;
@@ -417,7 +417,7 @@ namespace SE::Core::EntityComponentSystem::Components
             std::string lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
             std::string lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
 
-            mClass = MonoScriptClass( lClassNamespace, lClassName, false );
+            mClass = MonoRuntime::GetClassType( mClassFullName );
 
             if( mDisplayInEditor && mPreview )
             {

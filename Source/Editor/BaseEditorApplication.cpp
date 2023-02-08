@@ -19,7 +19,7 @@
 #include "Scene/Components.h"
 #include "Scene/Importer/glTFImporter.h"
 
-#include "Mono/MonoScriptEngine.h"
+#include "Mono/MonoRuntime.h"
 
 namespace SE::Editor
 {

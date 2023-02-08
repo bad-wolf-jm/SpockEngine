@@ -27,7 +27,7 @@ namespace SE::Core
 
     MonoScriptInstance MarshallComponent( MonoScriptClass &lMonoType, sTag &aComponent )
     {
-        MonoString *lManagedSTagValue = MonoScriptEngine::NewString( aComponent.mValue );
+        MonoString *lManagedSTagValue = MonoRuntime::NewString( aComponent.mValue );
 
         auto lNewObject = lMonoType.Instantiate( lManagedSTagValue );
 
@@ -38,7 +38,7 @@ namespace SE::Core
     {
         auto lFieldValue = aMonoType.GetFieldValue<MonoString *>( "mValue" );
 
-        aComponent = sTag( MonoScriptEngine::NewString( lFieldValue ) );
+        aComponent = sTag( MonoRuntime::NewString( lFieldValue ) );
     }
 
     MonoScriptInstance MarshallComponent( MonoScriptClass &lMonoType, sLightComponent &aComponent )

@@ -9,7 +9,7 @@
 #include "UI/UI.h"
 #include "UI/Widgets.h"
 
-#include "MonoScriptEngine.h"
+#include "MonoRuntime.h"
 #include "MonoScriptUtils.h"
 
 namespace SE::MonoInternalCalls
@@ -135,7 +135,7 @@ namespace SE::MonoInternalCalls
 
     static Scope *ToScope( MonoObject *aScope )
     {
-        auto lScopeClass = MonoScriptClass( "SpockEngine", "Scope", true );
+        auto lScopeClass = MonoRuntime::GetClassType( "SpockEngine.Scope" );
         auto lScope      = MonoScriptInstance( lScopeClass.Class(), aScope );
 
         Scope *lRetVal = lScope.GetFieldValue<Scope *>( "mInternalScope" );
@@ -146,7 +146,7 @@ namespace SE::MonoInternalCalls
 
     static Cuda::sTensorShape *ToShape( MonoObject *aShape )
     {
-        auto lTensorShapeClass = MonoScriptClass( "SpockEngine", "sTensorShape", true );
+        auto lTensorShapeClass = MonoRuntime::GetClassType( "SpockEngine.sTensorShape" );
         auto lTensorShape      = MonoScriptInstance( lTensorShapeClass.Class(), aShape );
 
         Cuda::sTensorShape *lRetVal = lTensorShape.GetFieldValue<Cuda::sTensorShape *>( "mInternalTensorShape" );
@@ -155,7 +155,7 @@ namespace SE::MonoInternalCalls
 
     static OpNode ToOpNode( MonoObject *aNode )
     {
-        auto lOpNodeClass = MonoScriptClass( "SpockEngine", "OpNode", true );
+        auto lOpNodeClass = MonoRuntime::GetClassType( "SpockEngine.OpNode" );
         auto lOpNode      = MonoScriptInstance( lOpNodeClass.Class(), aNode );
 
         auto  lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );

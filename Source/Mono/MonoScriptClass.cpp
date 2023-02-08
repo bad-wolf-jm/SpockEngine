@@ -22,37 +22,11 @@
 #include "EntityRegistry.h"
 #include "InternalCalls.h"
 
-#include "MonoScriptEngine.h"
 #include "MonoScriptUtils.h"
 #include "MonoRuntime.h"
 
 namespace SE::Core
 {
-    MonoScriptClass::MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, bool aIsCore )
-        : mClassNamespace( aClassNamespace )
-        , mClassName( aClassName )
-    {
-        mMonoClass =
-            mono_class_from_name( aIsCore ? MonoScriptEngine::GetCoreAssemblyImage() : MonoScriptEngine::GetAppAssemblyImage(),
-                                  aClassNamespace.c_str(), aClassName.c_str() );
-
-        int   lFieldCount = mono_class_num_fields( mMonoClass );
-        void *lIterator   = nullptr;
-        while( MonoClassField *lField = mono_class_get_fields( mMonoClass, &lIterator ) )
-        {
-            const char *lFieldName = mono_field_get_name( lField );
-            uint32_t    lFlags     = mono_field_get_flags( lField );
-
-            if( lFlags & FIELD_ATTRIBUTE_PUBLIC )
-            {
-                MonoType        *lMonoFieldType = mono_field_get_type( lField );
-                eScriptFieldType lFieldType     = Mono::Utils::MonoTypeToScriptFieldType( lMonoFieldType );
-
-                mFields[lFieldName] = { lFieldType, lFieldName, lField };
-            }
-        }
-    }
-
     MonoScriptClass::MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage, fs::path const& aDllPPath )
         : mClassNamespace( aClassNamespace )
         , mClassName( aClassName )

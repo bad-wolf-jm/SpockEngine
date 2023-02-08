@@ -220,10 +220,7 @@ namespace SE::Core
         sRuntimeData->mRootDomain = nullptr;
     }
 
-    // MonoImage *MonoRuntime::GetCoreAssemblyImage() { return sRuntimeData->mCoreAssemblyImage; }
-    // MonoImage *MonoRuntime::GetAppAssemblyImage() { return sRuntimeData->mAppAssemblyImage; }
-
-    // void *MonoRuntime::GetSceneContext() { return sRuntimeData->mSceneContext; }
+    MonoImage *MonoRuntime::GetCoreAssemblyImage() { return sRuntimeData->mCoreAssemblyImage; }
 
     MonoString *MonoRuntime::NewString( std::string const &aString )
     {

@@ -9,7 +9,7 @@
 #include "Core/EntityRegistry/Registry.h"
 #include "Scene/Components.h"
 
-#include "MonoScriptEngine.h"
+#include "MonoRuntime.h"
 
 namespace SE::Core
 {
@@ -38,7 +38,7 @@ namespace SE::Core
             std::string_view lStructName   = GetTypeName<_Ty>();
             std::string      lMonoTypeName = fmt::format( "{}.{}", aNamespace, lStructName );
 
-            MonoType *lMonoType = mono_reflection_type_from_name( lMonoTypeName.data(), MonoScriptEngine::GetCoreAssemblyImage() );
+            MonoType *lMonoType = mono_reflection_type_from_name( lMonoTypeName.data(), MonoRuntime::GetCoreAssemblyImage() );
             if( !lMonoType )
             {
                 SE::Logging::Info( "Could not find type '{}'", lMonoTypeName );
