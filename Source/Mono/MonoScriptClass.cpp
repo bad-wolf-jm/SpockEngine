@@ -106,5 +106,4 @@ namespace SE::Core
 
         return InvokeMethod( lMethod, aParameters );
     }
-
 } // namespace SE::Core
