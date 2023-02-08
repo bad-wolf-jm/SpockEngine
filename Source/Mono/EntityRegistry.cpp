@@ -15,7 +15,7 @@ namespace SE::Core
 
     MonoScriptInstance MarshallComponent( MonoScriptClass &lMonoType, sNodeTransformComponent &aComponent )
     {
-        return lMonoType.Instantiate( aComponent.mMatrix );
+        return lMonoType.Instantiate( &aComponent.mMatrix );
     }
 
     void UnmarshallComponent( MonoScriptInstance &aMonoType, sNodeTransformComponent &aComponent )
@@ -43,7 +43,7 @@ namespace SE::Core
 
     MonoScriptInstance MarshallComponent( MonoScriptClass &lMonoType, sLightComponent &aComponent )
     {
-        auto lNewObject = lMonoType.Instantiate( aComponent.mType, aComponent.mIntensity, aComponent.mColor, aComponent.mCone );
+        auto lNewObject = lMonoType.Instantiate( &aComponent.mType, &aComponent.mIntensity, &aComponent.mColor, &aComponent.mCone );
 
         return lNewObject;
     }

@@ -40,24 +40,26 @@ namespace SE::Core
         MonoScriptClass() = default;
         MonoScriptClass( MonoType *aMonoClass );
         MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, bool aIsCore = false );
-        MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage, fs::path const& aDllPPath );
+        MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
+                         fs::path const &aDllPPath );
 
-        MonoScriptInstance Instantiate();
+        MonoScriptInstance DoInstantiate();
 
         template <typename... _ArgTypes>
-        MonoScriptInstance Instantiate( _ArgTypes... aArgs )
+        MonoScriptInstance Instantiate( _ArgTypes*... aArgs )
         {
-            auto lNewInstance = Instantiate();
+            auto lNewInstance = DoInstantiate();
+            
 
-            if constexpr( sizeof...( _ArgTypes ) == 0 )
+            if constexpr( sizeof...( _ArgTypes ) != 0 )
             {
-                lNewInstance.InvokeMethod( ".ctor", 0, NULL );
+                void *lParameters[] = { (void *)aArgs... };
+
+                lNewInstance.InvokeMethod( ".ctor", sizeof...( _ArgTypes ), lParameters );
             }
             else
             {
-                void *lParameters[] = { (void *)&aArgs... };
-
-                lNewInstance.InvokeMethod( ".ctor", sizeof...( _ArgTypes ), lParameters );
+                lNewInstance.InvokeMethod( ".ctor", 0, NULL );
             }
 
             return lNewInstance;

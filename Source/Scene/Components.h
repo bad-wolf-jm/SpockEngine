@@ -97,7 +97,7 @@ namespace SE::Core::EntityComponentSystem::Components
             auto lEntityID    = static_cast<uint32_t>( mEntity );
             auto lRegistryID  = (size_t)mEntity.GetRegistry();
             auto lEntityClass = MonoScriptClass( "SpockEngine", "Entity", true );
-            mEntityInstance   = lEntityClass.Instantiate( lEntityID, lRegistryID );
+            mEntityInstance   = lEntityClass.Instantiate( &lEntityID, &lRegistryID );
 
             if( mClassFullName.empty() ) return;
 
@@ -409,7 +409,7 @@ namespace SE::Core::EntityComponentSystem::Components
             auto lEntityID    = static_cast<uint32_t>( mEntity );
             auto lRegistryID  = (size_t)mEntity.GetRegistry();
             auto lEntityClass = MonoScriptClass( "SpockEngine", "Entity", true );
-            mEntityInstance   = lEntityClass.Instantiate( lEntityID, lRegistryID );
+            mEntityInstance   = lEntityClass.Instantiate( &lEntityID, &lRegistryID );
 
             if( mClassFullName.empty() ) return;
 

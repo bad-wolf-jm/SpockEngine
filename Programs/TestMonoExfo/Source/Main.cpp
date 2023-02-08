@@ -275,23 +275,29 @@ int main( int argc, char **argv )
 
     //     YAML::Node &lAssemblyPath = lRootNode["project"]["assembly_path"];
     //     if( !lAssemblyPath.IsNull() && fs::exists( lAssemblyPath.as<std::string>() ) )
-    const fs::path METRINO_ASSEMBLY_PATH = "D:\\EXFO\\GitLab\\EXFO\\Build\\Debug";
-    fs::path       lAssemblyPath         = METRINO_ASSEMBLY_PATH / "Metrino.Otdr.Instrument.dll";
-    MonoRuntime::AddAppAssemblyPath( METRINO_ASSEMBLY_PATH / "Metrino.Kernos.dll" );
-    MonoRuntime::AddAppAssemblyPath( METRINO_ASSEMBLY_PATH / "Metrino.Kernos.Platform.dll" );
-    MonoRuntime::AddAppAssemblyPath( METRINO_ASSEMBLY_PATH / "Metrino.Kernos.Instrument.dll" );
-    MonoRuntime::AddAppAssemblyPath( METRINO_ASSEMBLY_PATH / "Metrino.Otdr.dll" );
-    MonoRuntime::AddAppAssemblyPath( METRINO_ASSEMBLY_PATH / "Metrino.Otdr.SignalProcessing.dll" );
-    MonoRuntime::AddAppAssemblyPath( METRINO_ASSEMBLY_PATH / "Metrino.Otdr.Simulation.dll" );
-    MonoRuntime::AddAppAssemblyPath( METRINO_ASSEMBLY_PATH / "Metrino.Otdr.Instrument.dll" );
-    MonoRuntime::AddAppAssemblyPath( METRINO_ASSEMBLY_PATH / "Metrino.Otdr.FileConverter.dll" );
-    MonoRuntime::AddAppAssemblyPath( METRINO_ASSEMBLY_PATH / "Metrino.Olm.dll" );
-    MonoRuntime::AddAppAssemblyPath( METRINO_ASSEMBLY_PATH / "Metrino.Olm.SignalProcessing.dll" );
-    MonoRuntime::AddAppAssemblyPath( METRINO_ASSEMBLY_PATH / "Metrino.Olm.Instrument.dll" );
+    const fs::path METRINO_PATH = "D:\\EXFO\\GitLab\\EXFO\\Build\\Debug";
+
+    MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Kernos.dll" );
+    MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Kernos.Platform.dll" );
+    MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Kernos.Instrument.dll" );
+    MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr.dll" );
+    MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr.SignalProcessing.dll" );
+    MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr.Simulation.dll" );
+    MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr.Instrument.dll" );
+    MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr.FileConverter.dll" );
+    MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Olm.dll" );
+    MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Olm.SignalProcessing.dll" );
+    MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Olm.Instrument.dll" );
     MonoRuntime::ReloadAssemblies();
 
     auto lKernosInstrumentContext = MonoRuntime::GetClassType( "Metrino.Kernos.Instrument.Context" ).Instantiate();
-    auto lInstrumentClass         = MonoRuntime::GetClassType( "Metrino.Otdr.Instrument.Instrument7000" ).Instantiate();
+
+    MonoString *lAddress = MonoRuntime::NewString( "simulator:" );
+    auto  lInstrumentClass = MonoRuntime::GetClassType( "Metrino.Otdr.Instrument.Instrument7000" )
+                                .Instantiate( lAddress, lKernosInstrumentContext.GetInstance() );
+
+    double lTimeout = 10.0;
+    lInstrumentClass.CallMethod( "WaitForReady", &lTimeout );
     //     YAML::Node &lDefaultScenarioPath = lRootNode["project"]["default_scenario"];
     //     if( (!lDefaultScenarioPath.IsNull()) && fs::exists( lDefaultScenarioPath.as<std::string>() ) )
     //         lEditorApplication.mEditorWindow.World->LoadScenario( lDefaultScenarioPath.as<std::string>() );

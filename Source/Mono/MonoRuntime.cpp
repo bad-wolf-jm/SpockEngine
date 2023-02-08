@@ -270,7 +270,7 @@ namespace SE::Core
     {
         if( !sRuntimeData->mAssemblyReloadPending ) return;
 
-        mono_domain_set( mono_get_root_domain(), false );
+        mono_domain_set( mono_get_root_domain(), true );
         if( sRuntimeData->mAppDomain != nullptr ) mono_domain_unload( sRuntimeData->mAppDomain );
 
         sRuntimeData->mAppAssembly      = {};
@@ -288,7 +288,7 @@ namespace SE::Core
         // RegisterComponentTypes();
 
         sRuntimeData->mAssemblyReloadPending = false;
-        for( auto const &[lKey, lValue] : sRuntimeData->mClasses ) SE::Logging::Info( "Class: {} --- ", lKey );
+        // for( auto const &[lKey, lValue] : sRuntimeData->mClasses ) SE::Logging::Info( "Class: {} --- ", lKey );
     }
 
     MonoScriptClass &MonoRuntime::GetClassType( const std::string &aClassName ) { return sRuntimeData->mClasses[aClassName]; }

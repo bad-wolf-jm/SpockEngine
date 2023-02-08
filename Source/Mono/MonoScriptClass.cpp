@@ -103,7 +103,7 @@ namespace SE::Core
         }
     }
 
-    MonoScriptInstance MonoScriptClass::Instantiate()
+    MonoScriptInstance MonoScriptClass::DoInstantiate()
     {
         MonoObject *lInstance = MonoRuntime::InstantiateClass( mMonoClass, mIsCore );
 
