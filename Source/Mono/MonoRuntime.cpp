@@ -213,26 +213,32 @@ namespace SE::Core
 
     void MonoRuntime::RecreateClassTree()
     {
-        std::map<MonoClass *, MonoScriptClass *> lLookupTable;
+        std::map<std::string, MonoScriptClass *> lLookupTable;
 
         for( auto &[lKey, lValue] : sRuntimeData->mClasses )
         {
             lValue.mDerived.clear();
-            lLookupTable[lValue.Class()] = &lValue;
+            lLookupTable[lValue.FullName()] = &lValue;
         }
 
         for( auto &[lKey, lValue] : sRuntimeData->mCoreClasses )
         {
             lValue.mDerived.clear();
-            lLookupTable[lValue.Class()] = &lValue;
+            lLookupTable[lValue.FullName()] = &lValue;
         }
 
         for( auto &[lKey, lValue] : sRuntimeData->mClasses )
         {
             auto *lParentClass = mono_class_get_parent( lValue.Class() );
+            if( !lParentClass ) continue;
 
-            lValue.mParent = lLookupTable[lParentClass];
-            lLookupTable[lParentClass]->mDerived.push_back( &lValue );
+            auto lParentClassFullName = std::string( mono_class_get_name( lParentClass ) );
+
+            if( lLookupTable.find( lParentClassFullName ) != lLookupTable.end() )
+            {
+                lValue.mParent = lLookupTable[lParentClassFullName];
+                lLookupTable[lParentClassFullName]->mDerived.push_back( &lValue );
+            }
         }
     }
 

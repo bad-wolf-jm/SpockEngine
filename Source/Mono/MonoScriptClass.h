@@ -45,10 +45,9 @@ namespace SE::Core
         MonoScriptInstance DoInstantiate();
 
         template <typename... _ArgTypes>
-        MonoScriptInstance Instantiate( _ArgTypes*... aArgs )
+        MonoScriptInstance Instantiate( _ArgTypes *...aArgs )
         {
             auto lNewInstance = DoInstantiate();
-            
 
             if constexpr( sizeof...( _ArgTypes ) != 0 )
             {
@@ -78,7 +77,8 @@ namespace SE::Core
 
         const std::map<std::string, sScriptField> &GetFields() const { return mFields; }
 
-        MonoClass *Class() { return mMonoClass; }
+        MonoClass   *Class() { return mMonoClass; }
+        std::string &FullName() { return mClassFullName; }
 
       private:
         fs::path                       mDllPath;
@@ -87,6 +87,7 @@ namespace SE::Core
 
         std::string mClassNamespace;
         std::string mClassName;
+        std::string mClassFullName;
 
         std::map<std::string, sScriptField> mFields;
 

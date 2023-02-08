@@ -55,6 +55,8 @@ namespace SE::Core
                 mFields[lFieldName] = { lFieldType, lFieldName, lField };
             }
         }
+
+        mClassFullName = fmt::format("{}.{}", mClassNamespace, mClassName);
     }
 
     MonoScriptClass::MonoScriptClass( MonoType *aMonoClass )
