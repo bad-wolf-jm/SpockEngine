@@ -109,6 +109,7 @@ namespace SE::Core
     void MonoRuntime::LoadCoreAssembly( const fs::path &aFilepath )
     {
         sRuntimeData->mAppDomain = mono_domain_create_appdomain( "SE_Runtime", nullptr );
+        mono_domain_set_config (sRuntimeData->mAppDomain, ".", "XXX");
         mono_domain_set( sRuntimeData->mAppDomain, true );
 
         sRuntimeData->mCoreAssemblyFilepath = aFilepath;
