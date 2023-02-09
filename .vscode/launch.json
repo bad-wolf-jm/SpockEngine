@@ -14,6 +14,15 @@
             "stopAtEntry": false
         },
         {
+            "name": "OTDR_Run Debug",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Build/Source/OTDR_Run.exe",
+            "args": [ "--project", "TestProject", "--res_x", "2900", "--res_y", "1350" ],
+            "cwd": "${workspaceFolder}/Programs/TestProject",
+            "stopAtEntry": false
+        },
+        {
             "name": "SE_Test Debug",
             "type": "cppvsdbg",
             "request": "launch",
