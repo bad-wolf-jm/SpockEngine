@@ -22,7 +22,7 @@
 #include "Engine/Engine.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 
-#include "Editor/BaseEditorApplication.h"
+#include "OtdrEditor/BaseOtdrApplication.h"
 
 #include "Mono/MonoRuntime.h"
 
@@ -113,9 +113,9 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
         .help( "Specify input file" )
         .default_value( std::string{ "" } );
 
-    lProgramArguments->add_argument( "-s", "--instrument-setup" )
-        .help( "Specify input file" )
-        .default_value( std::string{ "" } );
+    // lProgramArguments->add_argument( "-s", "--instrument-setup" )
+    //     .help( "Specify input file" )
+    //     .default_value( std::string{ "" } );
 
     lProgramArguments->add_argument( "-x", "--pos_x" )
         .help( "Specify output file" )
@@ -147,7 +147,7 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
 
     // clang-format on
 
-    try 
+    try
     {
         lProgramArguments->parse_args( argc, argv );
 
@@ -254,25 +254,50 @@ int main( int argc, char **argv )
 
     MonoRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 
-    SE::Editor::BaseEditorApplication lEditorApplication;
+    SE::Editor::BaseOtdrApplication lEditorApplication;
     lEditorApplication.Init();
 
-    SE::Core::Engine::GetInstance()->UpdateDelegate.connect<&SE::Editor::BaseEditorApplication::Update>( lEditorApplication );
-    SE::Core::Engine::GetInstance()->RenderDelegate.connect<&SE::Editor::BaseEditorApplication::RenderScene>( lEditorApplication );
-    SE::Core::Engine::GetInstance()->UIDelegate.connect<&SE::Editor::BaseEditorApplication::RenderUI>( lEditorApplication );
+    SE::Core::Engine::GetInstance()->UpdateDelegate.connect<&SE::Editor::BaseOtdrApplication::Update>( lEditorApplication );
+    // SE::Core::Engine::GetInstance()->RenderDelegate.connect<&SE::Editor::BaseOtdrApplication::RenderScene>( lEditorApplication );
+    SE::Core::Engine::GetInstance()->UIDelegate.connect<&SE::Editor::BaseOtdrApplication::RenderUI>( lEditorApplication );
+
+    YAML::Node lRootNode = YAML::LoadFile( lProjectConfigurationPath.string() );
+    
+    // Load Metrino assembblies
+    {
+        fs::path    lMetrinoPath         = "D:\\EXFO\\GitLab\\EXFO\\Build\\Debug";
+        YAML::Node &lMetrinoPathOverride = lRootNode["project"]["metrino_path"];
+        if( !lMetrinoPathOverride.IsNull() && fs::exists( lMetrinoPathOverride.as<std::string>() ) )
+
+            if( auto lMetrinoPathOverride = lProgramArguments->present<std::string>( "--metrino-binary-path" ) )
+                if( fs ::exists( lMetrinoPathOverride.value() ) ) lMetrinoPath = lMetrinoPathOverride.value();
+
+        // clang-format off
+        const std::vector<std::string> lAssemblies = { "Metrino.Otdr", "Metrino.Otdr.SignalProcessing", 
+            "Metrino.Otdr.Simulation", "Metrino.Otdr.Instrument", "Metrino.Otdr.FileConverter", "Metrino.Olm", 
+            "Metrino.Olm.SignalProcessing", "Metrino.Olm.Instrument" };
+        // clang-format on
+
+        for( auto const &lAssemblyName : lAssemblies )
+        {
+            auto lAssemblyDllName = fmt::format( "{}.dll", lAssemblyName );
+            MonoRuntime::AddAppAssemblyPath( lMetrinoPath / lAssemblyName / "Debug" / lAssemblyDllName );
+        }
+    }
 
     // Load the application assembly and the default scenario file
     {
-        YAML::Node lRootNode = YAML::LoadFile( lProjectConfigurationPath.string() );
 
         YAML::Node &lAssemblyPath = lRootNode["project"]["assembly_path"];
         if( !lAssemblyPath.IsNull() && fs::exists( lAssemblyPath.as<std::string>() ) )
             MonoRuntime::AddAppAssemblyPath( lAssemblyPath.as<std::string>() );
 
-        YAML::Node &lDefaultScenarioPath = lRootNode["project"]["default_scenario"];
-        if( (!lDefaultScenarioPath.IsNull()) && fs::exists( lDefaultScenarioPath.as<std::string>() ) )
-            lEditorApplication.mEditorWindow.World->LoadScenario( lDefaultScenarioPath.as<std::string>() );
+        // YAML::Node &lDefaultScenarioPath = lRootNode["project"]["default_scenario"];
+        // if( (!lDefaultScenarioPath.IsNull()) && fs::exists( lDefaultScenarioPath.as<std::string>() ) )
+        //     lEditorApplication.mEditorWindow.World->LoadScenario( lDefaultScenarioPath.as<std::string>() );
     }
+
+    MonoRuntime::ReloadAssemblies();
 
     while( SE::Core::Engine::GetInstance()->Tick() )
     {

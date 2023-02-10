@@ -99,6 +99,9 @@ add_library(LTSimulationEngineRuntime STATIC
     Editor/SceneHierarchyPanel.cpp
     Editor/SceneElementEditor.cpp
 
+    OtdrEditor/OtdrWindow.cpp
+    OtdrEditor/BaseOtdrApplication.cpp
+
     ProcessingNodes/HitRecordProcessorKernels.cu
     ProcessingNodes/HitRecordProcessor.cpp
 
