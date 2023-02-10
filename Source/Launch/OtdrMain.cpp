@@ -262,15 +262,15 @@ int main( int argc, char **argv )
     SE::Core::Engine::GetInstance()->UIDelegate.connect<&SE::Editor::BaseOtdrApplication::RenderUI>( lEditorApplication );
 
     YAML::Node lRootNode = YAML::LoadFile( lProjectConfigurationPath.string() );
-    
+
     // Load Metrino assembblies
     {
-        fs::path    lMetrinoPath         = "D:\\EXFO\\GitLab\\EXFO\\Build\\Debug";
+        fs::path    lMetrinoPath         = "D:\\EXFO\\GitLab\\EXFO\\Build";
         YAML::Node &lMetrinoPathOverride = lRootNode["project"]["metrino_path"];
         if( !lMetrinoPathOverride.IsNull() && fs::exists( lMetrinoPathOverride.as<std::string>() ) )
-
-            if( auto lMetrinoPathOverride = lProgramArguments->present<std::string>( "--metrino-binary-path" ) )
-                if( fs ::exists( lMetrinoPathOverride.value() ) ) lMetrinoPath = lMetrinoPathOverride.value();
+            lMetrinoPath = lMetrinoPathOverride.as<std::string>();
+        if( auto lMetrinoPathOverride = lProgramArguments->present<std::string>( "--metrino-binary-path" ) )
+            if( fs ::exists( lMetrinoPathOverride.value() ) ) lMetrinoPath = lMetrinoPathOverride.value();
 
         // clang-format off
         const std::vector<std::string> lAssemblies = { "Metrino.Otdr", "Metrino.Otdr.SignalProcessing", 
