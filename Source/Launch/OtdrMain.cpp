@@ -198,10 +198,6 @@ int main( int argc, char **argv )
 
     SE::Logging::Info( "Current working directory is: '{}'", lProjectRoot.string() );
 
-    // // Create Assets, Assets/Materials, Assets/Models
-    // if( !fs::exists( lProjectRoot / "Assets" / "Materials" ) ) fs::create_directories( lProjectRoot / "Assets" / "Materials" );
-    // if( !fs::exists( lProjectRoot / "Assets" / "Models" ) ) fs::create_directories( lProjectRoot / "Assets" / "Models" );
-
     // Create Saved, Saved/Logs
     if( !fs::exists( lProjectRoot / "Saved" / "Logs" ) ) fs::create_directories( lProjectRoot / "Saved" / "Logs" );
 
@@ -239,9 +235,6 @@ int main( int argc, char **argv )
 
     SE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lProjectRoot / "Saved" / "imgui.ini", lUIConfiguration );
 
-    // auto lScenario = fs::path( lProgramArguments->get<std::string>( "--scenario" ) );
-    // if( !fs::exists( lScenario ) ) SE::Logging::Info( "Scenario file '{}' does not exist", lScenario.string() );
-
     SE::Graphics::OptixDeviceContextObject::Initialize();
 
     // Retrieve the Mono runtime
@@ -263,9 +256,6 @@ int main( int argc, char **argv )
 
     SE::Editor::BaseEditorApplication lEditorApplication;
     lEditorApplication.Init();
-
-    // lEditorApplication.mEditorWindow.mMaterialsPath = lProjectRoot / "Assets" / "Materials";
-    // lEditorApplication.mEditorWindow.mModelsPath = lProjectRoot / "Assets" / "Models";
 
     SE::Core::Engine::GetInstance()->UpdateDelegate.connect<&SE::Editor::BaseEditorApplication::Update>( lEditorApplication );
     SE::Core::Engine::GetInstance()->RenderDelegate.connect<&SE::Editor::BaseEditorApplication::RenderScene>( lEditorApplication );
