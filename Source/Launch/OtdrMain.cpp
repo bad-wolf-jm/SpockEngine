@@ -113,10 +113,6 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
         .help( "Specify input file" )
         .default_value( std::string{ "" } );
 
-    // lProgramArguments->add_argument( "-s", "--instrument-setup" )
-    //     .help( "Specify input file" )
-    //     .default_value( std::string{ "" } );
-
     lProgramArguments->add_argument( "-x", "--pos_x" )
         .help( "Specify output file" )
         .scan<'i', int>();

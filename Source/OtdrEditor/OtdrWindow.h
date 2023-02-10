@@ -11,29 +11,12 @@
 
 #include "Graphics/Vulkan/VkSampler2D.h"
 
-// #include "Scene/Renderer/DeferredSceneRenderer.h"
-// #include "Scene/Renderer/ForwardSceneRenderer.h"
-// #include "Scene/Renderer/RayTracing/RayTracingRenderer.h"
-// #include "Scene/Scene.h"
-
 #include "UI/UI.h"
 
-// #include "Scene/EnvironmentSampler/EnvironmentSampler.h"
-// #include "Scene/EnvironmentSampler/PointCloudVisualizer.h"
-
 #include "Editor/ContentBrowser.h"
-// #include "SceneElementEditor.h"
-// #include "SceneHierarchyPanel.h"
 
 namespace SE::Editor
 {
-
-    struct OtdrMenuItem
-    {
-        std::string           Icon  = "";
-        std::string           Title = "MENU_TITLE";
-        std::function<bool()> Action;
-    };
 
     class OtdrWindow
     {
@@ -44,23 +27,6 @@ namespace SE::Editor
             RUN
         };
 
-        enum SidePanelID
-        {
-            SENSOR_CONFIGURATION,
-            SCENE_HIERARCHY,
-            SETTINGS
-        };
-
-        enum PropertyPanelID
-        {
-            NONE,
-            SCENE_ELEMENT_EDITOR,
-            TILE_PROPERTY_EDITOR,
-            TILE_LAYOUT_EDITOR,
-            SENSOR_COMPONENT_EDITOR,
-            SENSOR_ASSET_EDITOR
-        };
-
       public:
         std::string ApplicationIcon = "";
         std::string ApplicationName = "";
@@ -69,15 +35,7 @@ namespace SE::Editor
         fs::path mMaterialsPath = "";
         fs::path mModelsPath    = "";
 
-        Ref<Engine>           mEngineLoop   = nullptr;
-        // Ref<Scene>            World         = nullptr;
-        // Ref<Scene>            ActiveWorld   = nullptr;
-        // Ref<DeferredRenderer> WorldRenderer = nullptr;
-
-        // Entity Sensor{};
-        // Entity ActiveSensor{};
-
-        PropertyPanelID CurrentPropertyPanel = PropertyPanelID::NONE;
+        Ref<Engine> mEngineLoop = nullptr;
 
       public:
         float HeaderHeight       = 31.0f;
@@ -98,54 +56,27 @@ namespace SE::Editor
         bool        RenderMainMenu();
         math::ivec2 GetWorkspaceAreaSize();
 
-        OtdrWindow &AddMenuItem( std::string l_Icon, std::string l_Title, std::function<bool()> l_Action );
-
-        // void ClearScene();
-        // void LoadScenario( fs::path aPath );
-        // void ImportModel( fs::path aPath );
-
         void Workspace( int32_t width, int32_t height );
         void Console( int32_t width, int32_t height );
         void UpdateFramerate( Timestep ts );
-
-        // void UpdateSceneViewport( ImageHandle a_SceneViewport );
-        // void UpdateSceneViewport_deferred( ImageHandle a_SceneViewport );
 
       private:
         void ConfigureUI();
 
       private:
         Ref<VkGraphicContext> mGraphicContext;
+        Ref<UIContext>        mUIOverlay;
 
-        Ref<UIContext> mUIOverlay;
+        uint32_t mFrameCounter = 0;
+        float    mFpsTimer     = 0.0f;
+        uint32_t mLastFPS      = 0;
 
-        std::vector<OtdrMenuItem> m_MainMenuItems;
+        math::ivec2      mWorkspaceAreaSize = { 0, 0 };
+        Ref<VkSampler2D> mPlayIcon;
+        ImageHandle      mPlayIconHandle;
+        Ref<VkSampler2D> mPauseIcon;
+        ImageHandle      mPauseIconHandle;
 
-        uint32_t m_FrameCounter = 0;
-        float    m_FpsTimer     = 0.0f;
-        uint32_t m_LastFPS      = 0;
-
-        math::ivec2      m_WorkspaceAreaSize = { 0, 0 };
-        Ref<VkSampler2D> m_PlayIcon;
-        ImageHandle      m_PlayIconHandle;
-        Ref<VkSampler2D> m_PauseIcon;
-        ImageHandle      m_PauseIconHandle;
-        Ref<VkSampler2D> m_CameraIcon;
-        ImageHandle      m_CameraIconHandle;
-        Ref<VkSampler2D> m_DefaultTextureImage;
-        ImageHandle      m_DefaultTextureImageHandle;
-
-        SimulationState mState         = SimulationState::EDIT;
-        SidePanelID     m_CurrentPanel = SidePanelID::SENSOR_CONFIGURATION;
-
-        // SceneHierarchyPanel m_SceneHierarchyPanel;
-        // SceneElementEditor  m_SceneElementEditor;
-        // ContentBrowser      mContentBrowser;
-
-      private:
-        // ImageHandle m_SceneViewport{};
-        // ImageHandle m_SceneViewport_deferred{};
-
-        // std::vector<uint8_t> mTestTile;
+        SimulationState mState = SimulationState::EDIT;
     };
 } // namespace SE::Editor

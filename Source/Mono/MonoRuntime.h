@@ -21,6 +21,13 @@ namespace SE::Core
         static void AddAppAssemblyPath( const std::filesystem::path &aFilepath );
         static void ReloadAssemblies();
 
+        static uint32_t CountAssemblies();
+        static void GetAssemblies(std::vector<fs::path> &lOut);
+        static bool AssembliesNeedReloading();
+
+        static MonoImage *GetCoreAssemblyImage();
+        static MonoImage *GetAppAssemblyImage();
+
         static MonoString *NewString( std::string const &aString );
         static std::string NewString( MonoString *aString );
 

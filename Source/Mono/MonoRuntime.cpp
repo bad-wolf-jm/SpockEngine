@@ -98,6 +98,16 @@ namespace SE::Core
             return lClasses;
         }
     } // namespace
+    uint32_t MonoRuntime::CountAssemblies() { return sRuntimeData->mAppAssemblyFiles.size(); }
+    bool MonoRuntime::AssembliesNeedReloading() { return sRuntimeData->mAssemblyReloadPending; }
+
+    void MonoRuntime::GetAssemblies( std::vector<fs::path> &lOut )
+    {
+        lOut.resize(sRuntimeData->mAppAssemblyFiles.size());
+
+        uint32_t i = 0;
+        for( auto const &lFile : sRuntimeData->mAppAssemblyFiles ) lOut[i++] = lFile.string();
+    }
 
     MonoObject *MonoRuntime::InstantiateClass( MonoClass *aMonoClass, bool aIsCore )
     {
