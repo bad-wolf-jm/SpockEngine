@@ -113,7 +113,7 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
         .help( "Specify input file" )
         .default_value( std::string{ "" } );
 
-    lProgramArguments->add_argument( "-s", "--scenario" )
+    lProgramArguments->add_argument( "-s", "--instrument-setup" )
         .help( "Specify input file" )
         .default_value( std::string{ "" } );
 
@@ -133,10 +133,13 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
         .help( "Specify output file" )
         .scan<'i', int>();
 
-    lProgramArguments->add_argument( "-M", "--mono_runtime" )
+    lProgramArguments->add_argument( "-M", "--mono-runtime-path" )
         .help( "Specify output file" );
 
-    lProgramArguments->add_argument( "-S", "--script_core" )
+    lProgramArguments->add_argument( "-S", "--script-core-binary-path" )
+        .help( "Specify output file" );
+
+    lProgramArguments->add_argument( "-S", "--metrino-binary-path" )
         .help( "Specify output file" );
 
     lProgramArguments->add_argument( "-L", "--log_level" )
@@ -144,7 +147,7 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
 
     // clang-format on
 
-    try
+    try 
     {
         lProgramArguments->parse_args( argc, argv );
 
@@ -195,9 +198,9 @@ int main( int argc, char **argv )
 
     SE::Logging::Info( "Current working directory is: '{}'", lProjectRoot.string() );
 
-    // Create Assets, Assets/Materials, Assets/Models
-    if( !fs::exists( lProjectRoot / "Assets" / "Materials" ) ) fs::create_directories( lProjectRoot / "Assets" / "Materials" );
-    if( !fs::exists( lProjectRoot / "Assets" / "Models" ) ) fs::create_directories( lProjectRoot / "Assets" / "Models" );
+    // // Create Assets, Assets/Materials, Assets/Models
+    // if( !fs::exists( lProjectRoot / "Assets" / "Materials" ) ) fs::create_directories( lProjectRoot / "Assets" / "Materials" );
+    // if( !fs::exists( lProjectRoot / "Assets" / "Models" ) ) fs::create_directories( lProjectRoot / "Assets" / "Models" );
 
     // Create Saved, Saved/Logs
     if( !fs::exists( lProjectRoot / "Saved" / "Logs" ) ) fs::create_directories( lProjectRoot / "Saved" / "Logs" );
@@ -236,8 +239,8 @@ int main( int argc, char **argv )
 
     SE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lProjectRoot / "Saved" / "imgui.ini", lUIConfiguration );
 
-    auto lScenario = fs::path( lProgramArguments->get<std::string>( "--scenario" ) );
-    if( !fs::exists( lScenario ) ) SE::Logging::Info( "Scenario file '{}' does not exist", lScenario.string() );
+    // auto lScenario = fs::path( lProgramArguments->get<std::string>( "--scenario" ) );
+    // if( !fs::exists( lScenario ) ) SE::Logging::Info( "Scenario file '{}' does not exist", lScenario.string() );
 
     SE::Graphics::OptixDeviceContextObject::Initialize();
 
@@ -247,13 +250,13 @@ int main( int argc, char **argv )
     if( lPath && fs::exists( lPath ) )
     {
         lMonoPath = lPath;
-        if( auto lMonoPathOverride = lProgramArguments->present<std::string>( "--mono_runtime" ) )
+        if( auto lMonoPathOverride = lProgramArguments->present<std::string>( "--mono-runtime-path" ) )
             if( fs ::exists( lMonoPathOverride.value() ) ) lMonoPath = lMonoPathOverride.value();
     }
 
     // Retrieve the Mono core assembly path
     fs::path lCoreScriptingPath = "c:/GitLab/SpockEngine/Source/ScriptCore/Build/Debug/SE_Core.dll";
-    if( auto lCoreScriptingPathOverride = lProgramArguments->present<std::string>( "--script_core" ) )
+    if( auto lCoreScriptingPathOverride = lProgramArguments->present<std::string>( "--script-core-binary-path" ) )
         if( fs ::exists( lCoreScriptingPathOverride.value() ) ) lCoreScriptingPath = lCoreScriptingPathOverride.value();
 
     MonoRuntime::Initialize( lMonoPath, lCoreScriptingPath );
@@ -261,8 +264,8 @@ int main( int argc, char **argv )
     SE::Editor::BaseEditorApplication lEditorApplication;
     lEditorApplication.Init();
 
-    lEditorApplication.mEditorWindow.mMaterialsPath = lProjectRoot / "Assets" / "Materials";
-    lEditorApplication.mEditorWindow.mModelsPath = lProjectRoot / "Assets" / "Models";
+    // lEditorApplication.mEditorWindow.mMaterialsPath = lProjectRoot / "Assets" / "Materials";
+    // lEditorApplication.mEditorWindow.mModelsPath = lProjectRoot / "Assets" / "Models";
 
     SE::Core::Engine::GetInstance()->UpdateDelegate.connect<&SE::Editor::BaseEditorApplication::Update>( lEditorApplication );
     SE::Core::Engine::GetInstance()->RenderDelegate.connect<&SE::Editor::BaseEditorApplication::RenderScene>( lEditorApplication );
