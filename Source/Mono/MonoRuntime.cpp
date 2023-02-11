@@ -368,7 +368,7 @@ namespace SE::Core
 
             UI::SetCursorPositionX( 10.0f );
             auto lPos = UI::GetCurrentCursorPosition();
-            Text( "{}", lCategory );
+            UI::Text( "{}", lCategory );
             if( lCategoryAllFilesExist && lNeedsReload )
                 ImGui::PopStyleColor();
             else if( !lCategoryAllFilesExist )
@@ -376,13 +376,13 @@ namespace SE::Core
 
             UI::SetCursorPosition( math::vec2{ lWindowSize.x - 20.0f, ImGui::GetCursorPos().y - 12.0f } );
             if( lCategoryAllFilesExist && lNeedsReload )
-                lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 5,
+                lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 4,
                                             IM_COL32( 255, 229, 159, 255 ), 16 );
             else if( !lCategoryAllFilesExist )
-                lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 5,
+                lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 4,
                                             IM_COL32( 160, 69, 55, 255 ), 16 );
             else
-                lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 5,
+                lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 4,
                                             IM_COL32( 255, 255, 255, 255 ), 16 );
             UI::SetCursorPosition( lPos + math::vec2{ 0.0f, lFontSize } );
 
@@ -399,14 +399,14 @@ namespace SE::Core
                 {
                     UI::SameLine();
                     UI::SetCursorPositionX( lWindowSize.x - 20.0f );
-                    Text( "M" );
+                    UI::Text( "M" );
                     ImGui::PopStyleColor();
                 }
                 else if( !lAssembly->mFileExists )
                 {
                     UI::SameLine();
                     UI::SetCursorPositionX( lWindowSize.x - 20.0f );
-                    Text( "D" );
+                    UI::Text( "D" );
                     ImGui::PopStyleColor();
                     lAllFilesExist = false;
                 }
