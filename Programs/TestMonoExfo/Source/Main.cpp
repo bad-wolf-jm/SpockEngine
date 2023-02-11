@@ -61,7 +61,7 @@ int main( int argc, char **argv )
     MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr" / "Debug" / "Metrino.Otdr.dll" );
     MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr.Instrument" / "Debug" / "Metrino.Otdr.Instrument.dll" );
     // MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr.FileConverter.dll" );
-    // MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Olm.dll" );
+    // MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Olm.dlqQQQQQl" );
     // MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Olm.SignalProcessing.dll" );
     // MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Olm.Instrument.dll" );
     MonoRuntime::ReloadAssemblies();

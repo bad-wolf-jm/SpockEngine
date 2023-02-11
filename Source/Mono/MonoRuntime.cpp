@@ -28,26 +28,38 @@ namespace fs = std::filesystem;
 namespace SE::Core
 {
     using PathList         = std::vector<fs::path>;
-    using FileWatchMapping = std::map<fs::path, std::unique_ptr<filewatch::FileWatch<std::string>>>;
-    using AssemblyMapping  = std::map<fs::path, MonoAssembly *>;
-    using ImageMapping     = std::map<fs::path, MonoImage *>;
     using ClassMapping     = std::map<std::string, MonoScriptClass>;
+
+    struct sAssemblyData
+    {
+        fs::path      mPath           = "";
+        std::string   mCategory       = "";
+        MonoAssembly *mAssembly       = nullptr;
+        MonoImage    *mImage          = nullptr;
+        bool          mNeedsReloading = false;
+        bool          mFileExists     = false;
+
+        std::vector<std::string> mClasses{};
+
+        std::shared_ptr<filewatch::FileWatch<std::string>> mWatcher{};
+
+        sAssemblyData()                        = default;
+        sAssemblyData( const sAssemblyData & ) = default;
+    };
+
+    using AssemblyMapping = std::map<fs::path, sAssemblyData>;
 
     struct sMonoRuntimeData
     {
-        MonoDomain      *mRootDomain             = nullptr;
-        MonoDomain      *mAppDomain              = nullptr;
-        fs::path         mCoreAssemblyFilepath   = "";
-        MonoAssembly    *mCoreAssembly           = nullptr;
-        MonoImage       *mCoreAssemblyImage      = nullptr;
-        ClassMapping     mCoreClasses            = {};
-        PathList         mAppAssemblyFiles       = {};
-        FileWatchMapping mAppAssemblyFileWatcher = {};
-        AssemblyMapping  mAppAssembly            = {};
-        ImageMapping     mAppAssemblyImage       = {};
-        ClassMapping     mClasses                = {};
+        MonoDomain     *mRootDomain = nullptr;
+        MonoDomain     *mAppDomain  = nullptr;
+        sAssemblyData   mCoreAssembly{};
+        ClassMapping    mCoreClasses      = {};
+        PathList        mAppAssemblyFiles = {};
+        AssemblyMapping mAssemblies       = {};
+        ClassMapping    mClasses          = {};
 
-        bool mAssemblyReloadPending = false;
+        std::map<std::string, sAssemblyData *> mCategories;
     };
 
     static sMonoRuntimeData *sRuntimeData = nullptr;
@@ -100,12 +112,17 @@ namespace SE::Core
     } // namespace
 
     uint32_t MonoRuntime::CountAssemblies() { return sRuntimeData->mAppAssemblyFiles.size(); }
-    
-    bool MonoRuntime::AssembliesNeedReloading() { return sRuntimeData->mAssemblyReloadPending; }
+
+    bool MonoRuntime::AssembliesNeedReloading()
+    {
+        for( auto const &[lKey, lValue] : sRuntimeData->mAssemblies )
+            if( lValue.mNeedsReloading ) return true;
+        return false;
+    }
 
     void MonoRuntime::GetAssemblies( std::vector<fs::path> &lOut )
     {
-        lOut.resize(sRuntimeData->mAppAssemblyFiles.size());
+        lOut.resize( sRuntimeData->mAppAssemblyFiles.size() );
 
         uint32_t i = 0;
         for( auto const &lFile : sRuntimeData->mAppAssemblyFiles ) lOut[i++] = lFile.string();
@@ -121,23 +138,25 @@ namespace SE::Core
     void MonoRuntime::LoadCoreAssembly( const fs::path &aFilepath )
     {
         sRuntimeData->mAppDomain = mono_domain_create_appdomain( "SE_Runtime", nullptr );
-        mono_domain_set_config (sRuntimeData->mAppDomain, ".", "XXX");
+        mono_domain_set_config( sRuntimeData->mAppDomain, ".", "XXX" );
         mono_domain_set( sRuntimeData->mAppDomain, true );
 
-        sRuntimeData->mCoreAssemblyFilepath = aFilepath;
-        sRuntimeData->mCoreAssembly         = Mono::Utils::LoadMonoAssembly( aFilepath );
-        sRuntimeData->mCoreAssemblyImage    = mono_assembly_get_image( sRuntimeData->mCoreAssembly );
+        sRuntimeData->mCoreAssembly.mPath       = aFilepath;
+        sRuntimeData->mCoreAssembly.mCategory   = "CORE";
+        sRuntimeData->mCoreAssembly.mFileExists = fs::exists( aFilepath );
+        sRuntimeData->mCoreAssembly.mAssembly   = Mono::Utils::LoadMonoAssembly( aFilepath );
+        sRuntimeData->mCoreAssembly.mImage      = mono_assembly_get_image( sRuntimeData->mCoreAssembly.mAssembly );
+
+        sRuntimeData->mCoreAssembly.mNeedsReloading = false;
 
         sRuntimeData->mCoreClasses = {};
-        MergeMaps( sRuntimeData->mCoreClasses, LoadImageClasses( sRuntimeData->mCoreAssemblyImage, aFilepath ) );
+        MergeMaps( sRuntimeData->mCoreClasses, LoadImageClasses( sRuntimeData->mCoreAssembly.mImage, aFilepath ) );
     }
 
     static void OnAppAssemblyFileSystemEvent( const std::string &path, const filewatch::Event change_type )
     {
-        if( !sRuntimeData->mAssemblyReloadPending && change_type == filewatch::Event::modified )
-        {
-            sRuntimeData->mAssemblyReloadPending = true;
-        }
+        if( !sRuntimeData->mAssemblies[path].mNeedsReloading && change_type == filewatch::Event::modified )
+            sRuntimeData->mAssemblies[path].mNeedsReloading = true;
     }
 
     void MonoRuntime::AddAppAssemblyPath( const fs::path &aFilepath )
@@ -150,9 +169,9 @@ namespace SE::Core
 
         sRuntimeData->mAppAssemblyFiles.push_back( aFilepath );
 
-        sRuntimeData->mAssemblyReloadPending = true;
-        sRuntimeData->mAppAssemblyFileWatcher[aFilepath] =
-            std::make_unique<filewatch::FileWatch<std::string>>( aFilepath.string(), OnAppAssemblyFileSystemEvent );
+        // sRuntimeData->mAssemblyReloadPending = true;
+        sRuntimeData->mAssemblies[aFilepath].mWatcher =
+            std::make_shared<filewatch::FileWatch<std::string>>( aFilepath.string(), OnAppAssemblyFileSystemEvent );
     }
 
     void MonoRuntime::Initialize( fs::path &aMonoPath, const fs::path &aCoreAssemblyPath )
@@ -214,11 +233,11 @@ namespace SE::Core
     void MonoRuntime::LoadAssemblyClasses()
     {
         sRuntimeData->mClasses = {};
-        if( sRuntimeData->mAppAssemblyImage.empty() ) return;
+        if( sRuntimeData->mAssemblies.empty() ) return;
 
         for( auto const &lAssemblyPath : sRuntimeData->mAppAssemblyFiles )
         {
-            const auto lAssemblyImage = sRuntimeData->mAppAssemblyImage[lAssemblyPath];
+            const auto lAssemblyImage = sRuntimeData->mAssemblies[lAssemblyPath].mImage;
 
             MergeMaps( sRuntimeData->mClasses, LoadImageClasses( lAssemblyImage, lAssemblyPath ) );
         }
@@ -257,41 +276,47 @@ namespace SE::Core
 
     void MonoRuntime::ReloadAssemblies()
     {
-        if( !sRuntimeData->mAssemblyReloadPending ) return;
+        if( !AssembliesNeedReloading() ) return;
 
         mono_domain_set( mono_get_root_domain(), true );
         if( sRuntimeData->mAppDomain != nullptr ) mono_domain_unload( sRuntimeData->mAppDomain );
 
-        sRuntimeData->mAppAssembly      = {};
-        sRuntimeData->mAppAssemblyImage = {};
+        sRuntimeData->mAssemblies = {};
 
-        LoadCoreAssembly( sRuntimeData->mCoreAssemblyFilepath );
+        LoadCoreAssembly( sRuntimeData->mCoreAssembly.mPath );
 
         for( auto const &lFile : sRuntimeData->mAppAssemblyFiles )
         {
-            sRuntimeData->mAppAssembly[lFile]      = Mono::Utils::LoadMonoAssembly( lFile );
-            sRuntimeData->mAppAssemblyImage[lFile] = mono_assembly_get_image( sRuntimeData->mAppAssembly[lFile] );
+            sRuntimeData->mAssemblies[lFile] = sAssemblyData{};
+
+            sRuntimeData->mAssemblies[lFile].mPath       = lFile;
+            sRuntimeData->mAssemblies[lFile].mFileExists = fs::exists( lFile );
+            sRuntimeData->mAssemblies[lFile].mCategory   = "";
+            sRuntimeData->mAssemblies[lFile].mAssembly   = Mono::Utils::LoadMonoAssembly( lFile );
+            sRuntimeData->mAssemblies[lFile].mImage      = mono_assembly_get_image( sRuntimeData->mAssemblies[lFile].mAssembly );
+
+            sRuntimeData->mAssemblies[lFile].mNeedsReloading = false;
         }
 
         LoadAssemblyClasses();
         RecreateClassTree();
 
         RegisterComponentTypes();
-
-        sRuntimeData->mAssemblyReloadPending = false;
     }
 
     MonoScriptClass &MonoRuntime::GetClassType( const std::string &aClassName ) { return sRuntimeData->mClasses[aClassName]; }
 
     MonoType *MonoRuntime::GetCoreTypeFromName( std::string &aName )
     {
-        MonoType *lMonoType = mono_reflection_type_from_name( aName.data(), sRuntimeData->mCoreAssemblyImage );
+        MonoType *lMonoType = mono_reflection_type_from_name( aName.data(), sRuntimeData->mCoreAssembly.mImage );
         if( !lMonoType )
         {
             SE::Logging::Info( "Could not find type '{}'", aName );
 
             return nullptr;
         }
+
+        return lMonoType;
     }
 
     void MonoRuntime::RegisterInternalCppFunctions()
