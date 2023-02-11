@@ -140,13 +140,7 @@ namespace SE::Editor
 
         if( ImGui::Begin( "ASSEMBLIES", NULL, ImGuiWindowFlags_None ) )
         {
-            std::vector<fs::path> lList;
-            MonoRuntime::GetAssemblies( lList );
-
-            if( MonoRuntime::AssembliesNeedReloading() )
-                if( UI::Button( "Reload assemblies", { 150.0f, 30.0f } ) ) MonoRuntime::ReloadAssemblies();
-
-            for( auto const &lFile : lList ) Text( lFile.filename().stem().string() );
+            MonoRuntime::DisplayAssemblies();
         }
         ImGui::End();
 

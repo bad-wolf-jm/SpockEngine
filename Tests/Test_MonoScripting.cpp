@@ -43,7 +43,7 @@ void InitializeMonoscripting()
 void InitializeMonoscripting( fs::path aAppAssemblyPath )
 {
     InitializeMonoscripting();
-    MonoRuntime::AddAppAssemblyPath( aAppAssemblyPath );
+    MonoRuntime::AddAppAssemblyPath( aAppAssemblyPath, "TEST" );
 }
 
 // TEST_CASE( "Initialize scripting engine", "[MONO_SCRIPTING]" )

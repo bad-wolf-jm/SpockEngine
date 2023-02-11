@@ -5,7 +5,7 @@
 
 #include "Engine/Engine.h"
 
-#include "Scene/Scene.h"
+// #include "Scene/Scene.h"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
@@ -18,6 +18,9 @@
 #    undef WIN32_LEAN_AND_MEAN
 #endif
 #include "Core/FileWatch.hpp"
+
+#include "UI/UI.h"
+#include "UI/Widgets.h"
 
 #include "EntityRegistry.h"
 #include "InternalCalls.h"
@@ -33,6 +36,7 @@ namespace SE::Core
     struct sAssemblyData
     {
         fs::path      mPath           = "";
+        fs::path      mFilename       = "";
         std::string   mCategory       = "";
         MonoAssembly *mAssembly       = nullptr;
         MonoImage    *mImage          = nullptr;
@@ -59,7 +63,7 @@ namespace SE::Core
         AssemblyMapping mAssemblies       = {};
         ClassMapping    mClasses          = {};
 
-        std::map<std::string, sAssemblyData *> mCategories;
+        std::map<std::string, std::vector<sAssemblyData *>> mCategories;
     };
 
     static sMonoRuntimeData *sRuntimeData = nullptr;
@@ -141,7 +145,8 @@ namespace SE::Core
         mono_domain_set_config( sRuntimeData->mAppDomain, ".", "XXX" );
         mono_domain_set( sRuntimeData->mAppDomain, true );
 
-        sRuntimeData->mCoreAssembly.mPath       = aFilepath;
+        sRuntimeData->mCoreAssembly.mPath       = aFilepath.parent_path();
+        sRuntimeData->mCoreAssembly.mFilename   = aFilepath.filename();
         sRuntimeData->mCoreAssembly.mCategory   = "CORE";
         sRuntimeData->mCoreAssembly.mFileExists = fs::exists( aFilepath );
         sRuntimeData->mCoreAssembly.mAssembly   = Mono::Utils::LoadMonoAssembly( aFilepath );
@@ -153,13 +158,18 @@ namespace SE::Core
         MergeMaps( sRuntimeData->mCoreClasses, LoadImageClasses( sRuntimeData->mCoreAssembly.mImage, aFilepath ) );
     }
 
-    static void OnAppAssemblyFileSystemEvent( const std::string &path, const filewatch::Event change_type )
+    static void OnAppAssemblyFileSystemEvent( const fs::path &path, const filewatch::Event change_type )
     {
-        if( !sRuntimeData->mAssemblies[path].mNeedsReloading && change_type == filewatch::Event::modified )
-            sRuntimeData->mAssemblies[path].mNeedsReloading = true;
+        switch( change_type )
+        {
+        case filewatch::Event::modified: sRuntimeData->mAssemblies[path].mNeedsReloading = true; break;
+        case filewatch::Event::removed: sRuntimeData->mAssemblies[path].mFileExists = false; break;
+        case filewatch::Event::added: sRuntimeData->mAssemblies[path].mFileExists = true; break;
+        default: break;
+        }
     }
 
-    void MonoRuntime::AddAppAssemblyPath( const fs::path &aFilepath )
+    void MonoRuntime::AddAppAssemblyPath( const fs::path &aFilepath, std::string const &aCategory )
     {
         if( std::find( sRuntimeData->mAppAssemblyFiles.begin(), sRuntimeData->mAppAssemblyFiles.end(), aFilepath ) !=
             sRuntimeData->mAppAssemblyFiles.end() )
@@ -169,13 +179,21 @@ namespace SE::Core
 
         sRuntimeData->mAppAssemblyFiles.push_back( aFilepath );
 
-        // sRuntimeData->mAssemblyReloadPending = true;
-        sRuntimeData->mAssemblies[aFilepath] = sAssemblyData{};
+        sRuntimeData->mAssemblies.emplace( aFilepath, sAssemblyData{} );
 
+        sRuntimeData->mAssemblies[aFilepath].mPath       = aFilepath.parent_path();
+        sRuntimeData->mAssemblies[aFilepath].mFilename   = aFilepath.filename();
         sRuntimeData->mAssemblies[aFilepath].mFileExists = fs::exists( aFilepath );
-        sRuntimeData->mAssemblies[aFilepath].mCategory   = "";
-        sRuntimeData->mAssemblies[aFilepath].mWatcher =
-            std::make_shared<filewatch::FileWatch<std::string>>( aFilepath.string(), OnAppAssemblyFileSystemEvent );
+        sRuntimeData->mAssemblies[aFilepath].mCategory   = aCategory;
+
+        Ref<fs::path> lAssemblyFilePath               = New<fs::path>( aFilepath );
+        sRuntimeData->mAssemblies[aFilepath].mWatcher = std::make_shared<filewatch::FileWatch<std::string>>(
+            aFilepath.string(), [lAssemblyFilePath]( const std::string &path, const filewatch::Event change_type )
+            { OnAppAssemblyFileSystemEvent( *lAssemblyFilePath, change_type ); } );
+
+        if( sRuntimeData->mCategories.find( aCategory ) == sRuntimeData->mCategories.end() )
+            sRuntimeData->mCategories[aCategory] = std::vector<sAssemblyData *>{};
+        sRuntimeData->mCategories[aCategory].push_back( &sRuntimeData->mAssemblies[aFilepath] );
     }
 
     void MonoRuntime::Initialize( fs::path &aMonoPath, const fs::path &aCoreAssemblyPath )
@@ -285,21 +303,19 @@ namespace SE::Core
         mono_domain_set( mono_get_root_domain(), true );
         if( sRuntimeData->mAppDomain != nullptr ) mono_domain_unload( sRuntimeData->mAppDomain );
 
-        sRuntimeData->mAssemblies = {};
+        LoadCoreAssembly( sRuntimeData->mCoreAssembly.mPath / sRuntimeData->mCoreAssembly.mFilename );
 
-        LoadCoreAssembly( sRuntimeData->mCoreAssembly.mPath );
-
-        for( auto const &lFile : sRuntimeData->mAppAssemblyFiles )
+        for( auto &[lFile, lData] : sRuntimeData->mAssemblies )
         {
-            sRuntimeData->mAssemblies[lFile] = sAssemblyData{};
+            if( !lData.mNeedsReloading ) continue;
 
-            sRuntimeData->mAssemblies[lFile].mPath       = lFile;
-            sRuntimeData->mAssemblies[lFile].mFileExists = fs::exists( lFile );
-            sRuntimeData->mAssemblies[lFile].mCategory   = "";
-            sRuntimeData->mAssemblies[lFile].mAssembly   = Mono::Utils::LoadMonoAssembly( lFile );
-            sRuntimeData->mAssemblies[lFile].mImage      = mono_assembly_get_image( sRuntimeData->mAssemblies[lFile].mAssembly );
-
-            sRuntimeData->mAssemblies[lFile].mNeedsReloading = false;
+            lData.mFileExists = fs::exists( lFile );
+            if( lData.mFileExists )
+            {
+                lData.mAssembly = Mono::Utils::LoadMonoAssembly( lData.mPath / lData.mFilename );
+                lData.mImage    = mono_assembly_get_image( lData.mAssembly );
+            }
+            lData.mNeedsReloading = false;
         }
 
         LoadAssemblyClasses();
@@ -321,6 +337,84 @@ namespace SE::Core
         }
 
         return lMonoType;
+    }
+
+    void MonoRuntime::DisplayAssemblies()
+    {
+        bool        lAllFilesExist = true;
+        math::vec2  lWindowSize    = UI::GetAvailableContentSpace();
+        auto        lDrawList      = ImGui::GetWindowDrawList();
+        const float lFontSize      = lDrawList->_Data->FontSize;
+        float       lCircleXOffset = ImGui::CalcTextSize( "M" ).x / 2.0f;
+
+        for( auto const &[lCategory, lAssemblies] : sRuntimeData->mCategories )
+        {
+            bool lCategoryAllFilesExist = true;
+            for( auto const &lAssembly : lAssemblies ) lCategoryAllFilesExist &= lAssembly->mFileExists;
+
+            bool lNeedsReload = false;
+            for( auto const &lAssembly : lAssemblies ) lNeedsReload |= lAssembly->mNeedsReloading;
+
+            if( lCategoryAllFilesExist && lNeedsReload )
+                ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 255.0f / 255.0f, 229.0f / 255.0f, 159.0f / 255.0f, 1.0f } );
+            else if( !lCategoryAllFilesExist )
+                ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 160.0f / 255.0f, 69.0f / 255.0f, 55.0f / 255.0f, 1.0f } );
+
+            UI::SetCursorPositionX( 10.0f );
+            auto lPos = UI::GetCurrentCursorPosition();
+            Text( "{}", lCategory );
+            if( lCategoryAllFilesExist && lNeedsReload )
+                ImGui::PopStyleColor();
+            else if( !lCategoryAllFilesExist )
+                ImGui::PopStyleColor();
+
+            UI::SetCursorPosition( math::vec2{ lWindowSize.x - 20.0f, ImGui::GetCursorPos().y - 12.0f } );
+            if( lCategoryAllFilesExist && lNeedsReload )
+            {
+                lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 5,
+                                            IM_COL32( 255, 229, 159, 255 ), 16 );
+            }
+            else if( !lCategoryAllFilesExist )
+            {
+                lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 5,
+                                            IM_COL32( 160, 69, 55, 255 ), 16 );
+            }
+            else
+            {
+                lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 5,
+                                            IM_COL32( 255, 255, 255, 255 ), 16 );
+            }
+            UI::SetCursorPosition( lPos + math::vec2{ 0.0f, lFontSize } );
+
+            for( auto const &lAssembly : lAssemblies )
+            {
+                UI::SetCursorPositionX( 30.0f );
+                if( lAssembly->mNeedsReloading && lAssembly->mFileExists )
+                    ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 255.0f / 255.0f, 229.0f / 255.0f, 159.0f / 255.0f, 1.0f } );
+                else if( !lAssembly->mFileExists )
+                    ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 160.0f / 255.0f, 69.0f / 255.0f, 55.0f / 255.0f, 1.0f } );
+
+                Text( lAssembly->mFilename.stem().string() );
+                if( lAssembly->mNeedsReloading && lAssembly->mFileExists )
+                {
+                    UI::SameLine();
+                    UI::SetCursorPositionX( lWindowSize.x - 20.0f );
+                    Text( "M" );
+                    ImGui::PopStyleColor();
+                }
+                else if( !lAssembly->mFileExists )
+                {
+                    UI::SameLine();
+                    UI::SetCursorPositionX( lWindowSize.x - 20.0f );
+                    Text( "D" );
+                    ImGui::PopStyleColor();
+                    lAllFilesExist = false;
+                }
+            }
+        }
+
+        if( MonoRuntime::AssembliesNeedReloading() )
+            if( UI::Button( "Reload assemblies", { 150.0f, 30.0f } ) ) MonoRuntime::ReloadAssemblies();
     }
 
     void MonoRuntime::RegisterInternalCppFunctions()

@@ -274,7 +274,7 @@ int main( int argc, char **argv )
 
         YAML::Node &lAssemblyPath = lRootNode["project"]["assembly_path"];
         if( !lAssemblyPath.IsNull() && fs::exists( lAssemblyPath.as<std::string>() ) )
-            MonoRuntime::AddAppAssemblyPath( lAssemblyPath.as<std::string>() );
+            MonoRuntime::AddAppAssemblyPath( lAssemblyPath.as<std::string>(), "" );
 
         YAML::Node &lDefaultScenarioPath = lRootNode["project"]["default_scenario"];
         if( (!lDefaultScenarioPath.IsNull()) && fs::exists( lDefaultScenarioPath.as<std::string>() ) )

@@ -18,12 +18,12 @@ namespace SE::Core
         static void Initialize( std::filesystem::path &aMonoPath, const std::filesystem::path &aCoreAssemblyPath );
         static void Shutdown();
 
-        static void AddAppAssemblyPath( const std::filesystem::path &aFilepath );
+        static void AddAppAssemblyPath( const std::filesystem::path &aFilepath, std::string const &aCategory );
         static void ReloadAssemblies();
 
         static uint32_t CountAssemblies();
-        static void GetAssemblies(std::vector<fs::path> &lOut);
-        static bool AssembliesNeedReloading();
+        static void     GetAssemblies( std::vector<fs::path> &lOut );
+        static bool     AssembliesNeedReloading();
 
         static MonoString *NewString( std::string const &aString );
         static std::string NewString( MonoString *aString );
@@ -31,6 +31,8 @@ namespace SE::Core
         static MonoScriptClass &GetClassType( const std::string &aClassName );
 
         static MonoType *GetCoreTypeFromName( std::string &aName );
+
+        static void DisplayAssemblies();
 
       private:
         static void RegisterComponentTypes();
