@@ -27,8 +27,8 @@ namespace fs = std::filesystem;
 
 namespace SE::Core
 {
-    using PathList         = std::vector<fs::path>;
-    using ClassMapping     = std::map<std::string, MonoScriptClass>;
+    using PathList     = std::vector<fs::path>;
+    using ClassMapping = std::map<std::string, MonoScriptClass>;
 
     struct sAssemblyData
     {
@@ -170,6 +170,10 @@ namespace SE::Core
         sRuntimeData->mAppAssemblyFiles.push_back( aFilepath );
 
         // sRuntimeData->mAssemblyReloadPending = true;
+        sRuntimeData->mAssemblies[aFilepath] = sAssemblyData{};
+
+        sRuntimeData->mAssemblies[aFilepath].mFileExists = fs::exists( aFilepath );
+        sRuntimeData->mAssemblies[aFilepath].mCategory   = "";
         sRuntimeData->mAssemblies[aFilepath].mWatcher =
             std::make_shared<filewatch::FileWatch<std::string>>( aFilepath.string(), OnAppAssemblyFileSystemEvent );
     }
