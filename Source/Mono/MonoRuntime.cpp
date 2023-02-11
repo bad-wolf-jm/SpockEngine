@@ -175,21 +175,27 @@ namespace SE::Core
             sRuntimeData->mAppAssemblyFiles.end() )
             return;
 
-        if( !fs::exists( aFilepath ) ) return;
+        if( !fs::exists( aFilepath.parent_path() ) ) return;
 
         sRuntimeData->mAppAssemblyFiles.push_back( aFilepath );
 
         sRuntimeData->mAssemblies.emplace( aFilepath, sAssemblyData{} );
-
         sRuntimeData->mAssemblies[aFilepath].mPath       = aFilepath.parent_path();
         sRuntimeData->mAssemblies[aFilepath].mFilename   = aFilepath.filename();
         sRuntimeData->mAssemblies[aFilepath].mFileExists = fs::exists( aFilepath );
         sRuntimeData->mAssemblies[aFilepath].mCategory   = aCategory;
 
-        Ref<fs::path> lAssemblyFilePath               = New<fs::path>( aFilepath );
+        Ref<fs::path> lAssemblyFilePath = New<fs::path>( aFilepath );
+
         sRuntimeData->mAssemblies[aFilepath].mWatcher = std::make_shared<filewatch::FileWatch<std::string>>(
-            aFilepath.string(), [lAssemblyFilePath]( const std::string &path, const filewatch::Event change_type )
-            { OnAppAssemblyFileSystemEvent( *lAssemblyFilePath, change_type ); } );
+            aFilepath.parent_path().string(),
+            [lAssemblyFilePath]( const std::string &path, const filewatch::Event change_type )
+            {
+                if( lAssemblyFilePath->filename().string() == path )
+                {
+                    OnAppAssemblyFileSystemEvent( *lAssemblyFilePath, change_type );
+                }
+            } );
 
         if( sRuntimeData->mCategories.find( aCategory ) == sRuntimeData->mCategories.end() )
             sRuntimeData->mCategories[aCategory] = std::vector<sAssemblyData *>{};
@@ -370,20 +376,14 @@ namespace SE::Core
 
             UI::SetCursorPosition( math::vec2{ lWindowSize.x - 20.0f, ImGui::GetCursorPos().y - 12.0f } );
             if( lCategoryAllFilesExist && lNeedsReload )
-            {
                 lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 5,
                                             IM_COL32( 255, 229, 159, 255 ), 16 );
-            }
             else if( !lCategoryAllFilesExist )
-            {
                 lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 5,
                                             IM_COL32( 160, 69, 55, 255 ), 16 );
-            }
             else
-            {
                 lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 5,
                                             IM_COL32( 255, 255, 255, 255 ), 16 );
-            }
             UI::SetCursorPosition( lPos + math::vec2{ 0.0f, lFontSize } );
 
             for( auto const &lAssembly : lAssemblies )
