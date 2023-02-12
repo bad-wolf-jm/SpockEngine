@@ -180,10 +180,11 @@ namespace SE::Core
         sRuntimeData->mAppAssemblyFiles.push_back( aFilepath );
 
         sRuntimeData->mAssemblies.emplace( aFilepath, sAssemblyData{} );
-        sRuntimeData->mAssemblies[aFilepath].mPath       = aFilepath.parent_path();
-        sRuntimeData->mAssemblies[aFilepath].mFilename   = aFilepath.filename();
-        sRuntimeData->mAssemblies[aFilepath].mFileExists = fs::exists( aFilepath );
-        sRuntimeData->mAssemblies[aFilepath].mCategory   = aCategory;
+        sRuntimeData->mAssemblies[aFilepath].mPath           = aFilepath.parent_path();
+        sRuntimeData->mAssemblies[aFilepath].mFilename       = aFilepath.filename();
+        sRuntimeData->mAssemblies[aFilepath].mFileExists     = fs::exists( aFilepath );
+        sRuntimeData->mAssemblies[aFilepath].mCategory       = aCategory;
+        sRuntimeData->mAssemblies[aFilepath].mNeedsReloading = true;
 
         Ref<fs::path> lAssemblyFilePath = New<fs::path>( aFilepath );
 
