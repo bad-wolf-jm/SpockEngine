@@ -25,50 +25,50 @@ namespace SE::Core
     ///
     /// @brief Abstraction for `entt`'s registry type.
     ///
-    class EntityRegistry
+    class EntityCollection
     {
       public:
-        friend class Internal::Entity<EntityRegistry *>;
+        friend class Internal::Entity<EntityCollection *>;
 
         template <typename _ComponentType>
         struct SignalHandler
         {
             // entt::sigh<void( Internal::Entity<EntityRegistry *>, _ComponentType & )> Signal;
-            std::vector<std::function<void( Internal::Entity<EntityRegistry *>, _ComponentType & )>> mHandlers;
+            std::vector<std::function<void( Internal::Entity<EntityCollection *>, _ComponentType & )>> mHandlers;
 
             SignalHandler()                        = default;
             SignalHandler( const SignalHandler & ) = default;
         };
 
         /// @brief Constructs an empty registry
-        EntityRegistry()
+        EntityCollection()
         {
             mAddSignalHandlers     = CreateEntity();
             mUpdateSignalHandlers  = CreateEntity();
             mDestroySignalHandlers = CreateEntity();
         };
 
-        EntityRegistry( const EntityRegistry & ) = delete;
-        EntityRegistry( EntityRegistry &&other ) = delete;
-        EntityRegistry &operator=( EntityRegistry &&other ) = delete;
-        EntityRegistry &operator=( const EntityRegistry & ) = delete;
+        EntityCollection( const EntityCollection & ) = delete;
+        EntityCollection( EntityCollection &&other ) = delete;
+        EntityCollection &operator=( EntityCollection &&other ) = delete;
+        EntityCollection &operator=( const EntityCollection & ) = delete;
 
         /// @brief Default destructor
-        ~EntityRegistry() = default;
+        ~EntityCollection() = default;
 
         /// @brief Create a new entity in the registry.
         ///
         /// The new entity initially has no components.
         ///
-        Internal::Entity<EntityRegistry *> CreateRawEntity() { return { mRegistry.create(), this }; };
+        Internal::Entity<EntityCollection *> CreateRawEntity() { return { mRegistry.create(), this }; };
 
         /// @brief Create a new entity in the registry.
         ///
         /// The new entity initially has no components.
         ///
-        Internal::Entity<EntityRegistry *> CreateEntity()
+        Internal::Entity<EntityCollection *> CreateEntity()
         {
-            Internal::Entity<EntityRegistry *> l_NewEntity = CreateRawEntity();
+            Internal::Entity<EntityCollection *> l_NewEntity = CreateRawEntity();
             l_NewEntity.Add<sUUID>();
 
             return l_NewEntity;
@@ -78,33 +78,33 @@ namespace SE::Core
         ///
         /// The new entity initially has no components.
         ///
-        Internal::Entity<EntityRegistry *> CreateEntity( sUUID const &aUUID )
+        Internal::Entity<EntityCollection *> CreateEntity( sUUID const &aUUID )
         {
-            Internal::Entity<EntityRegistry *> l_NewEntity = CreateRawEntity();
+            Internal::Entity<EntityCollection *> l_NewEntity = CreateRawEntity();
             l_NewEntity.Add<sUUID>( aUUID );
 
             return l_NewEntity;
         };
 
         /// @brief Wrap en existing `entt` ID into our registry class.
-        Internal::Entity<EntityRegistry *> WrapEntity( entt::entity const aEntity ) { return { aEntity, this }; };
+        Internal::Entity<EntityCollection *> WrapEntity( entt::entity const aEntity ) { return { aEntity, this }; };
 
         /// @brief Create a new entity and add a `Tag` component with the given name.
         ///
         /// @param a_Name The name tag to add to the entity.
         ///
-        Internal::Entity<EntityRegistry *> CreateEntity( std::string const &aName )
+        Internal::Entity<EntityCollection *> CreateEntity( std::string const &aName )
         {
-            Internal::Entity<EntityRegistry *> l_NewEntity = CreateEntity();
+            Internal::Entity<EntityCollection *> l_NewEntity = CreateEntity();
             l_NewEntity.Add<sTag>( aName.empty() ? "Unnamed_Entity" : aName );
             return l_NewEntity;
         }
 
         /// @brief Create a new entity and add a `sRelationship` component.
-        Internal::Entity<EntityRegistry *> CreateEntityWithRelationship()
+        Internal::Entity<EntityCollection *> CreateEntityWithRelationship()
         {
-            Internal::Entity<EntityRegistry *> l_NewEntity = CreateEntity();
-            l_NewEntity.Add<sRelationship<EntityRegistry *>>();
+            Internal::Entity<EntityCollection *> l_NewEntity = CreateEntity();
+            l_NewEntity.Add<sRelationship<EntityCollection *>>();
             return l_NewEntity;
         }
 
@@ -112,10 +112,10 @@ namespace SE::Core
         ///
         /// @param a_Name The name tag to add to the entity.
         ///
-        Internal::Entity<EntityRegistry *> CreateEntityWithRelationship( std::string const &aName )
+        Internal::Entity<EntityCollection *> CreateEntityWithRelationship( std::string const &aName )
         {
-            Internal::Entity<EntityRegistry *> l_NewEntity = CreateEntity( aName );
-            l_NewEntity.Add<sRelationship<EntityRegistry *>>();
+            Internal::Entity<EntityCollection *> l_NewEntity = CreateEntity( aName );
+            l_NewEntity.Add<sRelationship<EntityCollection *>>();
             return l_NewEntity;
         }
 
@@ -126,10 +126,10 @@ namespace SE::Core
         /// @param aParentEntity The parent entity.
         /// @param aName The name tag to add to the entity.
         ///
-        Internal::Entity<EntityRegistry *> CreateEntity(
-            Internal::Entity<EntityRegistry *> const &aParentEntity, std::string const &aName )
+        Internal::Entity<EntityCollection *> CreateEntity(
+            Internal::Entity<EntityCollection *> const &aParentEntity, std::string const &aName )
         {
-            Internal::Entity<EntityRegistry *> l_NewEntity = CreateEntityWithRelationship( aName );
+            Internal::Entity<EntityCollection *> l_NewEntity = CreateEntityWithRelationship( aName );
             SetParent( l_NewEntity, aParentEntity );
             return l_NewEntity;
         }
@@ -138,14 +138,14 @@ namespace SE::Core
         ///
         /// @param aEntity Entity to remove.
         ///
-        void DestroyEntity( Internal::Entity<EntityRegistry *> const &aEntity ) { mRegistry.destroy( aEntity ); }
+        void DestroyEntity( Internal::Entity<EntityCollection *> const &aEntity ) { mRegistry.destroy( aEntity ); }
 
         /// @brief Iterate over all entities containing the listed components.
         ///
         /// @param aApplyFunction Function to apply to each of the listed elements.
         ///
         template <typename... Args>
-        void ForEach( std::function<void( Internal::Entity<EntityRegistry *>, Args &... )> aApplyFunction )
+        void ForEach( std::function<void( Internal::Entity<EntityCollection *>, Args &... )> aApplyFunction )
         {
             mRegistry.view<Args...>().each( [this, &aApplyFunction]( const entt::entity entity, Args &...args )
                 { aApplyFunction( WrapEntity( entity ), std::forward<Args>( args )... ); } );
@@ -166,7 +166,7 @@ namespace SE::Core
         /// @param aCompareFunction Comparison function.
         ///
         template <typename Component>
-        void Sort( std::function<bool( Internal::Entity<EntityRegistry *> const &c1, Internal::Entity<EntityRegistry *> const &c2 )>
+        void Sort( std::function<bool( Internal::Entity<EntityCollection *> const &c1, Internal::Entity<EntityCollection *> const &c2 )>
                 aCompareFunction )
         {
             mRegistry.sort<Component>( [&]( entt::entity const lhs, entt::entity const rhs )
@@ -180,41 +180,41 @@ namespace SE::Core
         /// @param aEntity The entity.
         /// @param aParentEntity The parent entity.
         ///
-        void SetParent( Internal::Entity<EntityRegistry *> const &aEntity, Internal::Entity<EntityRegistry *> const &aParentEntity )
+        void SetParent( Internal::Entity<EntityCollection *> const &aEntity, Internal::Entity<EntityCollection *> const &aParentEntity )
         {
             if( !aEntity ) return;
 
-            if( aEntity.Has<sRelationship<EntityRegistry *>>() )
+            if( aEntity.Has<sRelationship<EntityCollection *>>() )
             {
-                auto &lMyRelationship = aEntity.Get<sRelationship<EntityRegistry *>>();
+                auto &lMyRelationship = aEntity.Get<sRelationship<EntityCollection *>>();
 
                 if( lMyRelationship.mParent )
                 {
                     if( lMyRelationship.mParent == aParentEntity ) return;
 
-                    auto &lSiblings = lMyRelationship.mParent.Get<sRelationship<EntityRegistry *>>().mChildren;
+                    auto &lSiblings = lMyRelationship.mParent.Get<sRelationship<EntityCollection *>>().mChildren;
 
                     auto &lPositionInSibling = std::find( lSiblings.begin(), lSiblings.end(), aEntity );
                     if( lPositionInSibling != lSiblings.end() ) lSiblings.erase( lPositionInSibling );
                 }
 
                 lMyRelationship.mParent = aParentEntity;
-                aEntity.Replace<sRelationship<EntityRegistry *>>( lMyRelationship );
+                aEntity.Replace<sRelationship<EntityCollection *>>( lMyRelationship );
             }
             else
             {
-                sRelationship<EntityRegistry *> lNewRelationship{ aParentEntity, {} };
+                sRelationship<EntityCollection *> lNewRelationship{ aParentEntity, {} };
 
-                aEntity.Add<sRelationship<EntityRegistry *>>( lNewRelationship );
+                aEntity.Add<sRelationship<EntityCollection *>>( lNewRelationship );
             }
 
             if( aParentEntity )
             {
-                auto &lParentRelationship = aParentEntity.TryAdd<sRelationship<EntityRegistry *>>();
+                auto &lParentRelationship = aParentEntity.TryAdd<sRelationship<EntityCollection *>>();
 
                 lParentRelationship.mChildren.push_back( aEntity );
 
-                aParentEntity.Replace<sRelationship<EntityRegistry *>>( lParentRelationship );
+                aParentEntity.Replace<sRelationship<EntityCollection *>>( lParentRelationship );
             }
         }
 
@@ -228,12 +228,12 @@ namespace SE::Core
         /// @param aHandler Function to call when a new component is added.
         ///
         template <typename Component>
-        void OnComponentAdded( std::function<void( Internal::Entity<EntityRegistry *> &, Component & )> aHandler )
+        void OnComponentAdded( std::function<void( Internal::Entity<EntityCollection *> &, Component & )> aHandler )
         {
             if( !mAddSignalHandlers.Has<SignalHandler<Component>>() )
             {
                 mAddSignalHandlers.Add<SignalHandler<Component>>();
-                mRegistry.on_construct<Component>().connect<&EntityRegistry::OnComponentAdded_Implementation<Component>>( *this );
+                mRegistry.on_construct<Component>().connect<&EntityCollection::OnComponentAdded_Implementation<Component>>( *this );
             }
 
             mAddSignalHandlers.Get<SignalHandler<Component>>().mHandlers.push_back( aHandler );
@@ -249,12 +249,12 @@ namespace SE::Core
         /// @param aHandler Function to call when a new component is updated.
         ///
         template <typename Component>
-        void OnComponentUpdated( std::function<void( Internal::Entity<EntityRegistry *> &, Component & )> aHandler )
+        void OnComponentUpdated( std::function<void( Internal::Entity<EntityCollection *> &, Component & )> aHandler )
         {
             if( !mUpdateSignalHandlers.Has<SignalHandler<Component>>() )
             {
                 mUpdateSignalHandlers.Add<SignalHandler<Component>>();
-                mRegistry.on_update<Component>().connect<&EntityRegistry::OnComponentUpdated_Implementation<Component>>( *this );
+                mRegistry.on_update<Component>().connect<&EntityCollection::OnComponentUpdated_Implementation<Component>>( *this );
             }
 
             mUpdateSignalHandlers.Get<SignalHandler<Component>>().mHandlers.push_back( aHandler );
@@ -270,12 +270,12 @@ namespace SE::Core
         /// @param aHandler Function to call when a new component is destroyed.
         ///
         template <typename Component>
-        void OnComponentDestroyed( std::function<void( Internal::Entity<EntityRegistry *> &, Component & )> aHandler )
+        void OnComponentDestroyed( std::function<void( Internal::Entity<EntityCollection *> &, Component & )> aHandler )
         {
             if( !mDestroySignalHandlers.Has<SignalHandler<Component>>() )
             {
                 mDestroySignalHandlers.Add<SignalHandler<Component>>();
-                mRegistry.on_destroy<Component>().connect<&EntityRegistry::OnComponentDestroyed_Implementation<Component>>( *this );
+                mRegistry.on_destroy<Component>().connect<&EntityCollection::OnComponentDestroyed_Implementation<Component>>( *this );
             }
 
             mDestroySignalHandlers.Get<SignalHandler<Component>>().mHandlers.push_back( aHandler );
@@ -291,9 +291,9 @@ namespace SE::Core
             mDestroySignalHandlers = CreateEntity();
         }
 
-        std::unordered_map<UUIDv4::UUID, Internal::Entity<EntityRegistry *>> GetEntityMap()
+        std::unordered_map<UUIDv4::UUID, Internal::Entity<EntityCollection *>> GetEntityMap()
         {
-            std::unordered_map<UUIDv4::UUID, Internal::Entity<EntityRegistry *>> lResult;
+            std::unordered_map<UUIDv4::UUID, Internal::Entity<EntityCollection *>> lResult;
             ForEach<sUUID>( [&]( auto aEntity, auto &aComponent ) { lResult[aComponent.mValue] = aEntity; } );
 
             return lResult;
@@ -302,14 +302,14 @@ namespace SE::Core
       private:
         entt::registry mRegistry;
 
-        Internal::Entity<EntityRegistry *> mAddSignalHandlers;
-        Internal::Entity<EntityRegistry *> mUpdateSignalHandlers;
-        Internal::Entity<EntityRegistry *> mDestroySignalHandlers;
+        Internal::Entity<EntityCollection *> mAddSignalHandlers;
+        Internal::Entity<EntityCollection *> mUpdateSignalHandlers;
+        Internal::Entity<EntityCollection *> mDestroySignalHandlers;
 
       private:
         template <typename Component>
         void OnSignal_Implementation(
-            entt::registry const &aRegistry, Internal::Entity<EntityRegistry *> const &aHandlers, entt::entity const aEntity )
+            entt::registry const &aRegistry, Internal::Entity<EntityCollection *> const &aHandlers, entt::entity const aEntity )
         {
             if( aHandlers.Has<SignalHandler<Component>>() )
             {
@@ -343,22 +343,22 @@ namespace SE::Core
     };
 
     /// @brief Instanciated entity type bound to this registry
-    using Entity = Internal::Entity<EntityRegistry *>;
+    using Entity = Internal::Entity<EntityCollection *>;
 
     /// @brief Instanciated component type bound to this registry
-    using sBehaviourComponent = Internal::sBehaviourComponent<EntityRegistry *>;
+    using sBehaviourComponent = Internal::sBehaviourComponent<EntityCollection *>;
 
     /// @brief Instanciated component type bound to this registry
-    using sBehaviourController = Internal::BehaviourController<EntityRegistry *>;
+    using sBehaviourController = Internal::BehaviourController<EntityCollection *>;
 
     /// @brief Instanciated component type bound to this registry
-    using sRelationshipComponent = sRelationship<EntityRegistry *>;
+    using sRelationshipComponent = sRelationship<EntityCollection *>;
 
-    using sActorComponent = sMonoActor<EntityRegistry *>;
+    using sActorComponent = sMonoActor<EntityCollection *>;
 
     /// @brief
     template <typename _Ty>
-    using sJoinComponent = Internal::Entity<EntityRegistry *>::sJoin<_Ty>;
+    using sJoinComponent = Internal::Entity<EntityCollection *>::sJoin<_Ty>;
 
 } // namespace SE::Core
 

@@ -77,10 +77,10 @@ namespace SE::TensorOps
         void Run( std::vector<OpNode> const &aNode );
 
         /// @brief Access the underlying nodes registry
-        SE::Core::EntityRegistry &GetNodesRegistry() { return mNodesRegistry; };
+        SE::Core::EntityCollection &GetNodesRegistry() { return mNodesRegistry; };
 
       private:
-        SE::Core::EntityRegistry   mNodesRegistry{};     //!< Underlying node database
+        SE::Core::EntityCollection   mNodesRegistry{};     //!< Underlying node database
         std::optional<std::string> mName = std::nullopt; //!< If this is set, the next node will be stored under the given value
         std::unordered_map<std::string, OpNode> mNamedNodes = {}; //!< Mapping of node names to OpNodes
     };

@@ -132,7 +132,7 @@ namespace SE::Core
         std::vector<sActorComponent> mActorComponents;
 
       protected:
-        SE::Core::EntityRegistry mRegistry;
+        SE::Core::EntityCollection mRegistry;
 
         void InitializeRayTracing();
         void RebuildAccelerationStructure();

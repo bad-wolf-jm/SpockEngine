@@ -39,14 +39,14 @@ struct ComponentD
 
 TEST_CASE( "Create registry", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityCollection lRegistry{};
 
     REQUIRE( true );
 }
 
 TEST_CASE( "Create entities without a name", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityCollection lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
     auto lEntity1 = lRegistry.CreateEntity();
@@ -67,7 +67,7 @@ TEST_CASE( "Create entities without a name", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Create entities with a name", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityCollection lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity( "NAME" );
 
@@ -77,7 +77,7 @@ TEST_CASE( "Create entities with a name", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Add components 1", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityCollection lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
     REQUIRE( !lEntity0.Has<ComponentA>() );
@@ -95,7 +95,7 @@ TEST_CASE( "Add components 1", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Create entities with relationship", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityCollection lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntityWithRelationship();
     auto lEntity1 = lRegistry.CreateEntityWithRelationship( "NAME" );
@@ -109,7 +109,7 @@ TEST_CASE( "Create entities with relationship", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Create entities with a parent", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityCollection lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
     auto lEntity1 = lRegistry.CreateEntity( lEntity0, "NAME" );
@@ -126,7 +126,7 @@ TEST_CASE( "Create entities with a parent", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Destroy entities", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityCollection lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
     lRegistry.DestroyEntity( lEntity0 );
@@ -136,7 +136,7 @@ TEST_CASE( "Destroy entities", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Adding components twice throws exception", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityCollection lRegistry{};
 
     auto  lEntity0    = lRegistry.CreateEntity();
     auto &lComponentA = lEntity0.Add<ComponentA>();
@@ -145,7 +145,7 @@ TEST_CASE( "Adding components twice throws exception", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Removing component that is not there throws exception", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityCollection lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
     REQUIRE_THROWS( ( lEntity0.Remove<ComponentA>() ) );
@@ -153,7 +153,7 @@ TEST_CASE( "Removing component that is not there throws exception", "[CORE_ENTIT
 
 TEST_CASE( "TryRemove", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityCollection lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
 
@@ -167,7 +167,7 @@ TEST_CASE( "TryRemove", "[CORE_ENTITIES]" )
 
 TEST_CASE( "OnComponentAdded event", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityCollection lRegistry{};
 
     bool lComponentAddedCalled = false;
     lRegistry.OnComponentAdded<ComponentA>( [&]( auto lEntity, auto &lComponent ) { lComponentAddedCalled = true; } );
@@ -183,7 +183,7 @@ TEST_CASE( "OnComponentAdded event", "[CORE_ENTITIES]" )
 
 TEST_CASE( "OnComponentUpdated event", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityCollection lRegistry{};
 
     bool lComponentUpdatedCalled = false;
     lRegistry.OnComponentUpdated<ComponentA>( [&]( auto lEntity, auto &lComponent ) { lComponentUpdatedCalled = true; } );
@@ -200,7 +200,7 @@ TEST_CASE( "OnComponentUpdated event", "[CORE_ENTITIES]" )
 
 TEST_CASE( "OnComponentDestroyed event", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityCollection lRegistry{};
 
     bool lComponentDestroyedCalled = false;
     lRegistry.OnComponentDestroyed<ComponentA>( [&]( auto lEntity, auto &lComponent ) { lComponentDestroyedCalled = true; } );
@@ -222,7 +222,7 @@ struct sTagComponent
 // Tag
 TEST_CASE( "Tag Entity", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityCollection lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
     lEntity0.Add<sTagComponent>();
@@ -236,7 +236,7 @@ TEST_CASE( "Tag Entity", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Update components 1", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityCollection lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
 
@@ -253,7 +253,7 @@ TEST_CASE( "Update components 1", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Update components 2", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry{};
+    EntityCollection lRegistry{};
 
     auto lEntity0 = lRegistry.CreateEntity();
 
@@ -267,7 +267,7 @@ TEST_CASE( "Update components 2", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Iterate Entities 1", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry0{};
+    EntityCollection lRegistry0{};
 
     auto lEntity0 = lRegistry0.CreateEntity();
     lEntity0.Add<ComponentA>();
@@ -295,7 +295,7 @@ TEST_CASE( "Iterate Entities 1", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Sort Entities 1", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry0{};
+    EntityCollection lRegistry0{};
 
     auto lEntity0 = lRegistry0.CreateEntity();
     lEntity0.Add<ComponentA>( 1.0f );
@@ -325,7 +325,7 @@ TEST_CASE( "Sort Entities 1", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Sort Entities 2", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry0{};
+    EntityCollection lRegistry0{};
 
     auto lEntity0 = lRegistry0.CreateEntity();
     lEntity0.Add<ComponentA>( 1.0f );
@@ -355,7 +355,7 @@ TEST_CASE( "Sort Entities 2", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Test components", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry0{};
+    EntityCollection lRegistry0{};
 
     auto lEntity0 = lRegistry0.CreateEntity();
     lEntity0.Add<ComponentA>( 1.0f );
@@ -373,7 +373,7 @@ TEST_CASE( "Test components", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Adjoin components", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry0{};
+    EntityCollection lRegistry0{};
 
     auto lEntity0 = lRegistry0.CreateEntity();
     auto lEntity1 = lRegistry0.CreateEntity();
@@ -388,7 +388,7 @@ TEST_CASE( "Adjoin components", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Relationships", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry0{};
+    EntityCollection lRegistry0{};
 
     auto lEntity0 = lRegistry0.CreateEntity();
     auto lEntity1 = lRegistry0.CreateEntity();
@@ -408,7 +408,7 @@ TEST_CASE( "Relationships", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Removing parent removes from siblings", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry0{};
+    EntityCollection lRegistry0{};
 
     auto lEntity0 = lRegistry0.CreateEntity();
     auto lEntity1 = lRegistry0.CreateEntity();
@@ -429,7 +429,7 @@ TEST_CASE( "Removing parent removes from siblings", "[CORE_ENTITIES]" )
 
 TEST_CASE( "Ability to set parent to NULL", "[CORE_ENTITIES]" )
 {
-    EntityRegistry lRegistry0{};
+    EntityCollection lRegistry0{};
 
     auto lEntity0 = lRegistry0.CreateEntity();
     auto lEntity1 = lRegistry0.CreateEntity();

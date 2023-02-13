@@ -379,7 +379,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 
 // TEST_CASE( "Entity is valid when first created", "[MONO_SCRIPTING]" )
 // {
-//     SE::Core::EntityRegistry lRegistry;
+//     SE::Core::EntityCollection lRegistry;
 
 //     auto lEntity         = lRegistry.CreateEntity();
 //     auto lEntityID       = static_cast<uint32_t>( lEntity );
@@ -395,7 +395,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = MonoScriptClass( "SEUnitTest", "EntityTest", false );
 
-//     SE::Core::EntityRegistry lRegistry;
+//     SE::Core::EntityCollection lRegistry;
 
 //     auto lEntity         = lRegistry.CreateEntity( "TAG_0" );
 //     auto lEntityID       = static_cast<uint32_t>( lEntity );
@@ -415,7 +415,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = MonoScriptClass( "SEUnitTest", "EntityTest", false );
 
-//     SE::Core::EntityRegistry lRegistry;
+//     SE::Core::EntityCollection lRegistry;
 
 //     auto lEntity         = lRegistry.CreateEntity();
 //     auto lEntityID       = static_cast<uint32_t>( lEntity );
@@ -436,7 +436,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = MonoScriptClass( "SEUnitTest", "EntityTest", false );
 
-//     SE::Core::EntityRegistry lRegistry;
+//     SE::Core::EntityCollection lRegistry;
 
 //     auto lEntity = lRegistry.CreateEntity( "TAG_0" );
 //     lEntity.Add<sNodeTransformComponent>( RandomMat4() );
@@ -456,7 +456,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = MonoScriptClass( "SEUnitTest", "EntityTest", false );
 
-//     SE::Core::EntityRegistry lRegistry;
+//     SE::Core::EntityCollection lRegistry;
 
 //     auto lEntity         = lRegistry.CreateEntity();
 //     auto lEntityID       = static_cast<uint32_t>( lEntity );
@@ -477,7 +477,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = MonoScriptClass( "SEUnitTest", "EntityTest", false );
 
-//     SE::Core::EntityRegistry lRegistry;
+//     SE::Core::EntityCollection lRegistry;
 
 //     auto lEntity = lRegistry.CreateEntity( "TAG_0" );
 //     lEntity.Add<sTransformMatrixComponent>( RandomMat4() );
@@ -497,7 +497,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = MonoScriptClass( "SEUnitTest", "EntityTest", false );
 
-//     SE::Core::EntityRegistry lRegistry;
+//     SE::Core::EntityCollection lRegistry;
 
 //     auto lEntity         = lRegistry.CreateEntity();
 //     auto lEntityID       = static_cast<uint32_t>( lEntity );
@@ -518,7 +518,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = MonoScriptClass( "SEUnitTest", "EntityTest", false );
 
-//     SE::Core::EntityRegistry lRegistry;
+//     SE::Core::EntityCollection lRegistry;
 
 //     auto lEntity = lRegistry.CreateEntity( "TAG_0" );
 //     lEntity.Add<sLightComponent>();
@@ -536,7 +536,7 @@ inline _RetType CallMethodHelper( MonoScriptClass &aVectorTest, std::string cons
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = MonoScriptClass( "SEUnitTest", "EntityTest", false );
 
-//     SE::Core::EntityRegistry lRegistry;
+//     SE::Core::EntityCollection lRegistry;
 
 //     auto lEntity         = lRegistry.CreateEntity();
 //     auto lEntityID       = static_cast<uint32_t>( lEntity );

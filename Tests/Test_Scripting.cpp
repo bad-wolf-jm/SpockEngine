@@ -498,7 +498,7 @@ TEST_CASE( "LUA Create registry", "[CORE_SCRIPTING]" )
 {
     ScriptingEngine lScriptingEngine{};
 
-    lScriptingEngine.Execute( "value = EntityRegistry.Registry.new()" );
+    lScriptingEngine.Execute( "value = EntityCollection.Registry.new()" );
     REQUIRE( true );
 }
 
@@ -507,7 +507,7 @@ TEST_CASE( "LUA Create entity", "[CORE_SCRIPTING]" )
     ScriptingEngine lScriptingEngine{};
 
     lScriptingEngine.Execute( R"(
-registry = EntityRegistry.Registry.new()
+registry = EntityCollection.Registry.new()
 entity0 = registry:create_entity()
 entity1 = registry:create_entity("NAME")
 entity2 = registry:create_entity(entity0, "NAME_0")
@@ -535,7 +535,7 @@ TEST_CASE( "LUA create entity with relationship", "[CORE_SCRIPTING]" )
     ScriptingEngine lScriptingEngine{};
 
     lScriptingEngine.Execute( R"(
-registry = EntityRegistry.Registry.new()
+registry = EntityCollection.Registry.new()
 entity0 = registry:create_entity_with_relationship()
 entity1 = registry:create_entity_with_relationship("NAME_0")
 )" );
@@ -555,7 +555,7 @@ TEST_CASE( "LUA Destroy entity", "[CORE_SCRIPTING]" )
     ScriptingEngine lScriptingEngine{};
 
     lScriptingEngine.Execute( R"(
-registry = EntityRegistry.Registry.new()
+registry = EntityCollection.Registry.new()
 entity0 = registry:create_entity("NAME")
 registry:destroy_entity(entity0)
 )" );
@@ -568,7 +568,7 @@ TEST_CASE( "LUA set parent entity", "[CORE_SCRIPTING]" )
     ScriptingEngine lScriptingEngine{};
 
     lScriptingEngine.Execute( R"(
-registry = EntityRegistry.Registry.new()
+registry = EntityCollection.Registry.new()
 entity0 = registry:create_entity()
 entity1 = registry:create_entity()
 registry:set_parent(entity1, entity0)
@@ -589,7 +589,7 @@ TEST_CASE( "LUA Relationships", "[CORE_SCRIPTING]" )
 {
     ScriptingEngine lScriptingEngine{};
     lScriptingEngine.Execute( R"(
-registry = EntityRegistry.Registry.new()
+registry = EntityCollection.Registry.new()
 entity0 = registry:create_entity()
 entity1 = registry:create_entity()
 entity2 = registry:create_entity()
@@ -614,7 +614,7 @@ TEST_CASE( "LUA Removing parent removes from siblings", "[CORE_SCRIPTING]" )
 {
     ScriptingEngine lScriptingEngine{};
     lScriptingEngine.Execute( R"(
-registry = EntityRegistry.Registry.new()
+registry = EntityCollection.Registry.new()
 entity0 = registry:create_entity()
 entity1 = registry:create_entity()
 entity2 = registry:create_entity()
@@ -641,7 +641,7 @@ TEST_CASE( "LUA Ability to set parent to NULL", "[CORE_SCRIPTING]" )
 {
     ScriptingEngine lScriptingEngine{};
     lScriptingEngine.Execute( R"(
-registry = EntityRegistry.Registry.new()
+registry = EntityCollection.Registry.new()
 entity0 = registry:create_entity()
 entity1 = registry:create_entity()
 entity2 = registry:create_entity()
@@ -649,7 +649,7 @@ entity3 = registry:create_entity()
 registry:set_parent(entity1, entity0)
 registry:set_parent(entity2, entity0)
 registry:set_parent(entity3, entity0)
-registry:set_parent(entity3, EntityRegistry.Entity.new())
+registry:set_parent(entity3, EntityCollection.Entity.new())
 )" );
 
     auto lEntity0 = lScriptingEngine.Get<Entity>( "entity0" );
@@ -680,7 +680,7 @@ TEST_CASE( "LUA add component", "[CORE_SCRIPTING]" )
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
 
     lScriptingEngine.Execute( R"(
-registry = EntityRegistry.Registry.new()
+registry = EntityCollection.Registry.new()
 entity0 = registry:create_entity()
 entity0:add(dtypes.ComponentA())
 entity1 = registry:create_entity()
@@ -703,7 +703,7 @@ TEST_CASE( "LUA remove component", "[CORE_SCRIPTING]" )
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
 
     lScriptingEngine.Execute( R"(
-registry = EntityRegistry.Registry.new()
+registry = EntityCollection.Registry.new()
 entity0 = registry:create_entity()
 )" );
 
@@ -723,7 +723,7 @@ TEST_CASE( "LUA replace component", "[CORE_SCRIPTING]" )
     x[sol::call_constructor] = sol::factories( []() { return ComponentA{}; }, []( float x ) { return ComponentA{ x }; } );
 
     lScriptingEngine.Execute( R"(
-registry = EntityRegistry.Registry.new()
+registry = EntityCollection.Registry.new()
 entity0 = registry:create_entity()
 )" );
 
@@ -737,7 +737,7 @@ entity0 = registry:create_entity()
 
 TEST_CASE( "LUA test external registry", "[CORE_SCRIPTING]" )
 {
-    EntityRegistry  lRegistry{};
+    EntityCollection  lRegistry{};
     ScriptingEngine lScriptingEngine{};
 
     lScriptingEngine.Define( "registry0", &lRegistry );
@@ -749,7 +749,7 @@ TEST_CASE( "LUA test external registry", "[CORE_SCRIPTING]" )
 
 TEST_CASE( "LUA test external entity", "[CORE_SCRIPTING]" )
 {
-    EntityRegistry lRegistry{};
+    EntityCollection lRegistry{};
     auto           lEntity0 = lRegistry.CreateEntity();
 
     ScriptingEngine lScriptingEngine{};
@@ -774,7 +774,7 @@ TEST_CASE( "LUA test external entity", "[CORE_SCRIPTING]" )
 //     auto x = lScriptingEngine.RegisterTagComponentType<TagComponent>( "TagComponent" );
 
 //     lScriptingEngine.Execute( R"(
-// registry = EntityRegistry.Registry.new()
+// registry = EntityCollection.Registry.new()
 // entity0 = registry:create_entity()
 // entity0:tag(TagComponent)
 // )" );
@@ -787,7 +787,7 @@ TEST_CASE( "LUA test external entity", "[CORE_SCRIPTING]" )
 
 TEST_CASE( "LUA OnComponentAdded event", "[CORE_ENTITIES]" )
 {
-    EntityRegistry  lRegistry{};
+    EntityCollection  lRegistry{};
     ScriptingEngine lScriptingEngine{};
     auto            x        = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
@@ -806,7 +806,7 @@ TEST_CASE( "LUA OnComponentAdded event", "[CORE_ENTITIES]" )
 
 TEST_CASE( "LUA OnComponentUpdated event", "[CORE_ENTITIES]" )
 {
-    EntityRegistry  lRegistry{};
+    EntityCollection  lRegistry{};
     ScriptingEngine lScriptingEngine{};
     auto            x        = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;
@@ -828,7 +828,7 @@ entity0:add(dtypes.ComponentA())
 
 TEST_CASE( "LUA OnComponentDestroyed event", "[CORE_ENTITIES]" )
 {
-    EntityRegistry  lRegistry{};
+    EntityCollection  lRegistry{};
     ScriptingEngine lScriptingEngine{};
     auto            x        = lScriptingEngine.RegisterPrimitiveType<ComponentA>( "ComponentA" );
     x["a"]                   = &ComponentA::a;

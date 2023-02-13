@@ -20,7 +20,7 @@ namespace SE::Core::Internal
     /// This class maintains a pointer to its parent registry so as to be self contained
     /// when trying to access components.
     ///
-    /// @tparam ParentType Always set to `SE::Core::EntityRegistry`
+    /// @tparam ParentType Always set to `SE::Core::EntityCollection`
     ///
     template <typename ParentType>
     class Entity

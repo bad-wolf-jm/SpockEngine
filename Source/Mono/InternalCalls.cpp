@@ -14,7 +14,7 @@
 
 namespace SE::MonoInternalCalls
 {
-    uint32_t Entity_Create( EntityRegistry *aRegistry, MonoString *aName, uint32_t aEntityID )
+    uint32_t Entity_Create( EntityCollection *aRegistry, MonoString *aName, uint32_t aEntityID )
     {
         auto lName      = std::string( mono_string_to_utf8( aName ) );
         auto lNewEntity = aRegistry->CreateEntity( aRegistry->WrapEntity( static_cast<entt::entity>( aEntityID ) ), lName );
@@ -22,12 +22,12 @@ namespace SE::MonoInternalCalls
         return static_cast<uint32_t>( lNewEntity );
     }
 
-    bool Entity_IsValid( uint32_t aEntityID, EntityRegistry *aRegistry )
+    bool Entity_IsValid( uint32_t aEntityID, EntityCollection *aRegistry )
     {
         return aRegistry->WrapEntity( static_cast<entt::entity>( aEntityID ) ).IsValid();
     }
 
-    bool Entity_Has( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType )
+    bool Entity_Has( uint32_t aEntityID, EntityCollection *aRegistry, MonoReflectionType *aComponentType )
     {
         MonoType *lMonoType = mono_reflection_type_get_type( aComponentType );
 
@@ -38,7 +38,7 @@ namespace SE::MonoInternalCalls
         return lMaybeAny.cast<bool>();
     }
 
-    MonoObject *Entity_Get( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType )
+    MonoObject *Entity_Get( uint32_t aEntityID, EntityCollection *aRegistry, MonoReflectionType *aComponentType )
     {
         MonoType *lMonoType = mono_reflection_type_get_type( aComponentType );
 
@@ -49,7 +49,7 @@ namespace SE::MonoInternalCalls
         return lMaybeAny.cast<MonoScriptInstance>().GetInstance();
     }
 
-    void Entity_Replace( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType, MonoObject *aNewComponent )
+    void Entity_Replace( uint32_t aEntityID, EntityCollection *aRegistry, MonoReflectionType *aComponentType, MonoObject *aNewComponent )
     {
         MonoType  *lMonoType  = mono_reflection_type_get_type( aComponentType );
         MonoClass *lMonoClass = mono_class_from_mono_type( lMonoType );
@@ -59,7 +59,7 @@ namespace SE::MonoInternalCalls
                                   MonoScriptInstance( lMonoClass, aNewComponent ) );
     }
 
-    void Entity_Add( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType, MonoObject *aNewComponent )
+    void Entity_Add( uint32_t aEntityID, EntityCollection *aRegistry, MonoReflectionType *aComponentType, MonoObject *aNewComponent )
     {
         MonoType  *lMonoType  = mono_reflection_type_get_type( aComponentType );
         MonoClass *lMonoClass = mono_class_from_mono_type( lMonoType );
@@ -69,7 +69,7 @@ namespace SE::MonoInternalCalls
                                   MonoScriptInstance( lMonoClass, aNewComponent ) );
     }
 
-    void Entity_Remove( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType )
+    void Entity_Remove( uint32_t aEntityID, EntityCollection *aRegistry, MonoReflectionType *aComponentType )
     {
         MonoType *lMonoType = mono_reflection_type_get_type( aComponentType );
 

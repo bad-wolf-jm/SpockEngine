@@ -18,19 +18,19 @@ namespace SE::MonoInternalCalls
     using namespace SE::Core;
     using namespace SE::TensorOps;
 
-    uint32_t Entity_Create( EntityRegistry *aRegistry, MonoString *aName, uint32_t aParentEntityID );
+    uint32_t Entity_Create( EntityCollection *aRegistry, MonoString *aName, uint32_t aParentEntityID );
 
-    bool Entity_IsValid( uint32_t aEntityID, EntityRegistry *aRegistry );
+    bool Entity_IsValid( uint32_t aEntityID, EntityCollection *aRegistry );
 
-    bool Entity_Has( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType );
+    bool Entity_Has( uint32_t aEntityID, EntityCollection *aRegistry, MonoReflectionType *aComponentType );
 
-    MonoObject *Entity_Get( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType );
+    MonoObject *Entity_Get( uint32_t aEntityID, EntityCollection *aRegistry, MonoReflectionType *aComponentType );
 
-    void Entity_Add( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType, MonoObject *aNewComponent );
+    void Entity_Add( uint32_t aEntityID, EntityCollection *aRegistry, MonoReflectionType *aComponentType, MonoObject *aNewComponent );
 
-    void Entity_Remove( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType );
+    void Entity_Remove( uint32_t aEntityID, EntityCollection *aRegistry, MonoReflectionType *aComponentType );
 
-    void Entity_Replace( uint32_t aEntityID, EntityRegistry *aRegistry, MonoReflectionType *aComponentType,
+    void Entity_Replace( uint32_t aEntityID, EntityCollection *aRegistry, MonoReflectionType *aComponentType,
                          MonoObject *aNewComponent );
 
     size_t     OpNode_NewTensorShape( MonoArray *aShape, uint32_t aRank, uint32_t aLayers, uint32_t aElementSize );
