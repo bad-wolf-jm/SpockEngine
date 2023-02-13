@@ -15,8 +15,9 @@
 #include "UI/UI.h"
 
 #include "Editor/ContentBrowser.h"
+#include "SceneHierarchyPanel.h"
 
-namespace SE::Editor
+namespace SE::OtdrEditor
 {
 
     class OtdrWindow
@@ -68,6 +69,9 @@ namespace SE::Editor
         void ConfigureUI();
 
       private:
+        OtdrSceneHierarchyPanel mSceneHierarchyPanel;
+
+      private:
         Ref<VkGraphicContext> mGraphicContext;
         Ref<UIContext>        mUIOverlay;
 
@@ -83,4 +87,4 @@ namespace SE::Editor
 
         SimulationState mState = SimulationState::EDIT;
     };
-} // namespace SE::Editor
+} // namespace SE::OtdrEditor

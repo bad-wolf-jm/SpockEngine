@@ -31,7 +31,7 @@
 
 // #include "ShortWaveformDisplay.h"
 
-namespace SE::Editor
+namespace SE::OtdrEditor
 {
 
     using namespace SE::Core;
@@ -268,9 +268,10 @@ namespace SE::Editor
 
         if( ( ImGui::Begin( "SCENE HIERARCHY", &p_open, ImGuiWindowFlags_None ) ) )
         {
-            // auto l_WindowPropertiesSize = UI::GetAvailableContentSpace();
-            // m_SceneHierarchyPanel.World = ActiveWorld;
-            // m_SceneHierarchyPanel.Display( l_WindowPropertiesSize.x, l_WindowPropertiesSize.y );
+            auto lWindowPropertiesSize = UI::GetAvailableContentSpace();
+            
+            mSceneHierarchyPanel.World = mActiveWorld;
+            mSceneHierarchyPanel.Display( lWindowPropertiesSize.x, lWindowPropertiesSize.y );
         }
         ImGui::End();
 
@@ -282,8 +283,8 @@ namespace SE::Editor
 
         if( ImGui::Begin( "PROPERTIES", &p_open, ImGuiWindowFlags_None ) )
         {
-            // auto l_WindowPropertiesSize = UI::GetAvailableContentSpace();
-            // m_SceneHierarchyPanel.ElementEditor.Display( l_WindowPropertiesSize.x, l_WindowPropertiesSize.y );
+            // auto lWindowPropertiesSize = UI::GetAvailableContentSpace();
+            // m_SceneHierarchyPanel.ElementEditor.Display( lWindowPropertiesSize.x, lWindowPropertiesSize.y );
         }
         ImGui::End();
 

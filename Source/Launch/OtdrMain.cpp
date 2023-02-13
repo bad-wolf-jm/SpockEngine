@@ -250,12 +250,12 @@ int main( int argc, char **argv )
 
     MonoRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 
-    SE::Editor::BaseOtdrApplication lEditorApplication;
+    SE::OtdrEditor::BaseOtdrApplication lEditorApplication;
     lEditorApplication.Init();
 
-    SE::Core::Engine::GetInstance()->UpdateDelegate.connect<&SE::Editor::BaseOtdrApplication::Update>( lEditorApplication );
+    SE::Core::Engine::GetInstance()->UpdateDelegate.connect<&SE::OtdrEditor::BaseOtdrApplication::Update>( lEditorApplication );
     // SE::Core::Engine::GetInstance()->RenderDelegate.connect<&SE::Editor::BaseOtdrApplication::RenderScene>( lEditorApplication );
-    SE::Core::Engine::GetInstance()->UIDelegate.connect<&SE::Editor::BaseOtdrApplication::RenderUI>( lEditorApplication );
+    SE::Core::Engine::GetInstance()->UIDelegate.connect<&SE::OtdrEditor::BaseOtdrApplication::RenderUI>( lEditorApplication );
 
     YAML::Node lRootNode = YAML::LoadFile( lProjectConfigurationPath.string() );
 

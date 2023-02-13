@@ -16,7 +16,7 @@
 
 #include "OtdrWindow.h"
 
-namespace SE::Editor
+namespace SE::OtdrEditor
 {
     namespace fs = std::filesystem;
 

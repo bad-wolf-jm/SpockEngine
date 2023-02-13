@@ -14,7 +14,7 @@
 
 #include "Mono/MonoRuntime.h"
 
-namespace SE::Editor
+namespace SE::OtdrEditor
 {
 
     using namespace SE::Core;
