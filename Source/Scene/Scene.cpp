@@ -601,7 +601,7 @@ namespace SE::Core
             }
         }
 
-        mEditorView =  ReadMatrix( lSceneRoot["editor_view"] );
+        mEditorView = ReadMatrix( lSceneRoot["editor_view"] );
 
         auto lRootNodeUUIDStr = Get( lSceneRoot["root"], std::string{ "" } );
         auto lRootNodeUUID    = UUIDv4::UUID::fromStrFactory( lRootNodeUUIDStr );
