@@ -153,6 +153,7 @@ namespace SE::Editor
 
         if( ImGui::Begin( "CONNECTED MODULES", NULL, ImGuiWindowFlags_None ) )
         {
+            static auto lFirstRun = true;
             static auto lLastTime =
                 std::chrono::time_point_cast<std::chrono::microseconds>( std::chrono::high_resolution_clock::now() )
                     .time_since_epoch()
@@ -167,7 +168,7 @@ namespace SE::Editor
             static uint32_t                 lNumConnectedModules  = 0;
             static std::vector<std::string> lConnectedModuleNames = {};
 
-            if( ( lCurrentTime - lLastTime ) > 1000000 )
+            if( lFirstRun || (( lCurrentTime - lLastTime ) > 1500000) )
             {
                 lConnectedModuleNames.clear();
                 lLastTime                  = lCurrentTime;
@@ -182,6 +183,8 @@ namespace SE::Editor
                     auto lInstance        = MonoScriptInstance( lModuleDescription.Class(), lConnectedModule );
                     lConnectedModuleNames.push_back( MonoRuntime::NewString( lInstance.GetFieldValue<MonoString *>( "mName" ) ) );
                 }
+
+                lFirstRun = false;
             }
 
             if( lNumConnectedModules == 0 )
