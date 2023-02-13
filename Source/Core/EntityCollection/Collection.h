@@ -14,7 +14,7 @@
 
 #include "Components.h"
 #include "Entity.h"
-#include "ScriptableEntity.h"
+// #include "ScriptableEntity.h"
 
 #include <unordered_map>
 
@@ -354,7 +354,7 @@ namespace SE::Core
     /// @brief Instanciated component type bound to this registry
     using sRelationshipComponent = sRelationship<EntityCollection *>;
 
-    using sActorComponent = sMonoActor<EntityCollection *>;
+    using sActorComponent = Internal::sMonoActor<EntityCollection *>;
 
     /// @brief
     template <typename _Ty>

@@ -69,71 +69,125 @@ namespace SE::Core
         sRelationship( const sRelationship & ) = default;
     };
 
-    template <typename ParentType>
-    struct sMonoActor
+    namespace Internal
     {
-        std::string mClassFullName = "";
-
-        MonoScriptClass    mClass;
-        MonoScriptInstance mInstance;
-        MonoScriptInstance mEntityInstance;
-
-        sMonoActor()                     = default;
-        sMonoActor( const sMonoActor & ) = default;
-
-        ~sMonoActor() = default;
-
-        sMonoActor( const std::string &aClassFullName )
-            : mClassFullName{ aClassFullName }
-
+        template <typename ParentType>
+        class BehaviourController
         {
-            size_t      lSeparatorPos   = aClassFullName.find_last_of( '.' );
-            std::string lClassNamespace = aClassFullName.substr( 0, lSeparatorPos );
-            std::string lClassName      = aClassFullName.substr( lSeparatorPos + 1 );
+          public:
+            virtual ~BehaviourController() = default;
 
-            mClass = MonoRuntime::GetClassType( mClassFullName );
-        }
+            template <typename T>
+            T &Get()
+            {
+                return mEntity.Get<T>();
+            }
+            template <typename T>
+            bool Has()
+            {
+                return mEntity.Has<T>();
+            }
 
-        template <typename T>
-        T &Get()
+            virtual void Initialize( Internal::Entity<ParentType> aEntity ) { mEntity = aEntity; }
+
+            virtual void OnCreate() {}
+            virtual void OnDestroy() {}
+            virtual void OnUpdate( Timestep ts ) {}
+
+            Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };
+
+          private:
+            Internal::Entity<ParentType> mEntity;
+        };
+
+        template <typename ParentType>
+        struct sBehaviourComponent
         {
-            return mEntity.Get<T>();
-        }
+            BehaviourController<ParentType> *ControllerInstance = nullptr;
 
-        void Initialize( Internal::Entity<ParentType> aEntity )
+            std::function<BehaviourController<ParentType> *()>       InstantiateController;
+            std::function<void( sBehaviourComponent<ParentType> * )> DestroyController;
+
+            template <typename T, typename... Args>
+            void Bind( Args &&...args )
+            {
+                InstantiateController = [&]()
+                { return reinterpret_cast<BehaviourController<ParentType> *>( new T( std::forward<Args>( args )... ) ); };
+
+                DestroyController = [&]( sBehaviourComponent<ParentType> *aNsc )
+                {
+                    delete aNsc->ControllerInstance;
+                    aNsc->ControllerInstance = nullptr;
+                };
+            }
+        };
+
+        template <typename ParentType>
+        struct sMonoActor
         {
-            mEntity = aEntity;
+            std::string mClassFullName = "";
 
-            // Create Mono side entity object
-            auto lEntityID    = static_cast<uint32_t>( mEntity );
-            auto lRegistryID  = (size_t)mEntity.GetRegistry();
-            auto lEntityClass = MonoRuntime::GetClassType( "SpockEngine.Entity" );
-            mEntityInstance   = lEntityClass.Instantiate( &lEntityID, &lRegistryID );
+            MonoScriptClass    mClass;
+            MonoScriptInstance mInstance;
+            MonoScriptInstance mEntityInstance;
 
-            if( mClassFullName.empty() ) return;
+            sMonoActor()                     = default;
+            sMonoActor( const sMonoActor & ) = default;
 
-            size_t      lSeparatorPos   = mClassFullName.find_last_of( '.' );
-            std::string lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
-            std::string lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
+            ~sMonoActor() = default;
 
-            mClass = MonoRuntime::GetClassType( mClassFullName );
+            sMonoActor( const std::string &aClassFullName )
+                : mClassFullName{ aClassFullName }
 
-            // Instantiate the Mono actor class with the entity object as parameter
-            mInstance = mClass.Instantiate();
-            mInstance.CallMethod( "Initialize", (size_t)mEntityInstance.GetInstance() );
-        }
+            {
+                size_t      lSeparatorPos   = aClassFullName.find_last_of( '.' );
+                std::string lClassNamespace = aClassFullName.substr( 0, lSeparatorPos );
+                std::string lClassName      = aClassFullName.substr( lSeparatorPos + 1 );
 
-        void OnCreate() { mInstance.InvokeMethod( "BeginScenario", 0, nullptr ); }
+                mClass = MonoRuntime::GetClassType( mClassFullName );
+            }
 
-        void OnDestroy() { mInstance.InvokeMethod( "EndScenario", 0, nullptr ); }
+            template <typename T>
+            T &Get()
+            {
+                return mEntity.Get<T>();
+            }
 
-        void OnUpdate( Timestep ts ) { mInstance.CallMethod( "Tick", ts.GetMilliseconds() ); }
+            void Initialize( Internal::Entity<ParentType> aEntity )
+            {
+                mEntity = aEntity;
 
-        Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };
+                // Create Mono side entity object
+                auto lEntityID    = static_cast<uint32_t>( mEntity );
+                auto lRegistryID  = (size_t)mEntity.GetRegistry();
+                auto lEntityClass = MonoRuntime::GetClassType( "SpockEngine.Entity" );
+                mEntityInstance   = lEntityClass.Instantiate( &lEntityID, &lRegistryID );
 
-      private:
-        Internal::Entity<ParentType> mEntity;
+                if( mClassFullName.empty() ) return;
 
-        MonoScriptMehod mOnUpdate{};
-    };
+                size_t      lSeparatorPos   = mClassFullName.find_last_of( '.' );
+                std::string lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
+                std::string lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
+
+                mClass = MonoRuntime::GetClassType( mClassFullName );
+
+                // Instantiate the Mono actor class with the entity object as parameter
+                mInstance = mClass.Instantiate();
+                mInstance.CallMethod( "Initialize", (size_t)mEntityInstance.GetInstance() );
+            }
+
+            void OnCreate() { mInstance.InvokeMethod( "BeginScenario", 0, nullptr ); }
+
+            void OnDestroy() { mInstance.InvokeMethod( "EndScenario", 0, nullptr ); }
+
+            void OnUpdate( Timestep ts ) { mInstance.CallMethod( "Tick", ts.GetMilliseconds() ); }
+
+            Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };
+
+          private:
+            Internal::Entity<ParentType> mEntity;
+
+            MonoScriptMehod mOnUpdate{};
+        };
+    } // namespace Internal
 } // namespace SE::Core
