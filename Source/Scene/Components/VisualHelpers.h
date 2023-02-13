@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/EntityRegistry/Registry.h"
+#include "Core/EntityCollection/Collection.h"
 #include "Core/Memory.h"
 
 #include "Graphics/Vulkan/VkGpuBuffer.h"

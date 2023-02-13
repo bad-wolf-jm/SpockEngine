@@ -2,7 +2,7 @@
 
 #include <type_traits>
 
-#include "Core/EntityRegistry/Registry.h"
+#include "Core/EntityCollection/Collection.h"
 
 namespace SE::Core
 {

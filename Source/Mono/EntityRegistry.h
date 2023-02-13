@@ -6,7 +6,7 @@
 #include "mono/metadata/tabledefs.h"
 
 #include "Core/Logging.h"
-#include "Core/EntityRegistry/Registry.h"
+#include "Core/EntityCollection/Collection.h"
 #include "Scene/Components.h"
 
 #include "MonoRuntime.h"

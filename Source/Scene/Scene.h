@@ -18,7 +18,7 @@
 #include "VertexData.h"
 
 #include "Core/CUDA/Texture/TextureTypes.h"
-#include "Core/EntityRegistry/Registry.h"
+#include "Core/EntityCollection/Collection.h"
 
 #include "Core/Optix/OptixAccelerationStructure.h"
 #include "Core/Optix/OptixContext.h"

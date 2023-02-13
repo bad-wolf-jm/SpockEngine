@@ -16,7 +16,7 @@
 
 #include "Scene/Importer/ImporterData.h"
 
-#include "Core/EntityRegistry/Registry.h"
+#include "Core/EntityCollection/Collection.h"
 
 #include "Renderer/MeshRenderer.h"
 #include "Renderer/ParticleSystemRenderer.h"
@@ -57,73 +57,6 @@ namespace SE::Core::EntityComponentSystem::Components
 
         sCameraComponent()                           = default;
         sCameraComponent( const sCameraComponent & ) = default;
-    };
-
-    struct sActorComponent
-    {
-        std::string mClassFullName = "";
-
-        MonoScriptClass    mClass;
-        MonoScriptInstance mInstance;
-        MonoScriptInstance mEntityInstance;
-
-        sActorComponent()                          = default;
-        sActorComponent( const sActorComponent & ) = default;
-
-        ~sActorComponent() = default;
-
-        sActorComponent( const std::string &aClassFullName )
-            : mClassFullName{ aClassFullName }
-
-        {
-            size_t      lSeparatorPos   = aClassFullName.find_last_of( '.' );
-            std::string lClassNamespace = aClassFullName.substr( 0, lSeparatorPos );
-            std::string lClassName      = aClassFullName.substr( lSeparatorPos + 1 );
-
-            mClass = MonoRuntime::GetClassType( mClassFullName );
-        }
-
-        template <typename T>
-        T &Get()
-        {
-            return mEntity.Get<T>();
-        }
-
-        void Initialize( Entity aEntity )
-        {
-            mEntity = aEntity;
-
-            // Create Mono side entity object
-            auto lEntityID    = static_cast<uint32_t>( mEntity );
-            auto lRegistryID  = (size_t)mEntity.GetRegistry();
-            auto lEntityClass = MonoRuntime::GetClassType( "SpockEngine.Entity" );
-            mEntityInstance   = lEntityClass.Instantiate( &lEntityID, &lRegistryID );
-
-            if( mClassFullName.empty() ) return;
-
-            size_t      lSeparatorPos   = mClassFullName.find_last_of( '.' );
-            std::string lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
-            std::string lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
-
-            mClass = MonoRuntime::GetClassType( mClassFullName );
-
-            // Instantiate the Mono actor class with the entity object as parameter
-            mInstance = mClass.Instantiate();
-            mInstance.CallMethod( "Initialize", (size_t)mEntityInstance.GetInstance() );
-        }
-
-        void OnCreate() { mInstance.InvokeMethod( "BeginScenario", 0, nullptr ); }
-
-        void OnDestroy() { mInstance.InvokeMethod( "EndScenario", 0, nullptr ); }
-
-        void OnUpdate( Timestep ts ) { mInstance.CallMethod( "Tick", ts.GetMilliseconds() ); }
-
-        Entity GetControlledEntity() const { return mEntity; };
-
-      private:
-        Entity mEntity;
-
-        MonoScriptMehod mOnUpdate{};
     };
 
     struct sAnimationChannel

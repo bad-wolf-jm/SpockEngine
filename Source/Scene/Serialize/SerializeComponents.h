@@ -2,7 +2,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "Core/EntityRegistry/Registry.h"
+#include "Core/EntityCollection/Collection.h"
 
 #include "Graphics/Vulkan/DescriptorSet.h"
 #include "Graphics/Vulkan/GraphicsPipeline.h"

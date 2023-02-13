@@ -10,7 +10,7 @@
 
 #include "Core/Math/Types.h"
 
-#include "Core/EntityRegistry/Registry.h"
+#include "Core/EntityCollection/Collection.h"
 
 #include "Core/CUDA/Array/MemoryPool.h"
 #include "Core/CUDA/Array/MultiTensor.h"

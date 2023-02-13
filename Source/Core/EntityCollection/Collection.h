@@ -354,6 +354,8 @@ namespace SE::Core
     /// @brief Instanciated component type bound to this registry
     using sRelationshipComponent = sRelationship<EntityRegistry *>;
 
+    using sActorComponent = sMonoActor<EntityRegistry *>;
+
     /// @brief
     template <typename _Ty>
     using sJoinComponent = Internal::Entity<EntityRegistry *>::sJoin<_Ty>;
