@@ -29,8 +29,6 @@
 #include "mono/metadata/object.h"
 #include "mono/metadata/tabledefs.h"
 
-// #include "ShortWaveformDisplay.h"
-
 namespace SE::OtdrEditor
 {
 

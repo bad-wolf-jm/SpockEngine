@@ -7,6 +7,7 @@
 #include "Scene/Components.h"
 
 #include "Scene/Components/VisualHelpers.h"
+#include "Core/EntityCollection/EditComponent.h"
 
 using namespace SE::Core::EntityComponentSystem::Components;
 
@@ -106,33 +107,7 @@ namespace SE::Editor
         }
     };
 
-    static bool EditComponent( sActorComponent &aComponent )
-    {
-        UI::Text( "Component class:" );
-        UI::Text( "{}", aComponent.mClassFullName );
-
-        for( const auto &[name, field] : aComponent.mClass.GetFields() )
-        {
-            UI::Text( "{}", name );
-        }
-
-        return false;
-    }
-
-    static bool EditComponent( sHUDComponent &aComponent )
-    {
-        UI::Text( "Component class:" );
-        UI::Text( "{}", aComponent.mClassFullName );
-
-        for( const auto &[name, field] : aComponent.mClass.GetFields() )
-        {
-            UI::Text( "{}", name );
-        }
-
-        return false;
-    }
-
-    static bool EditComponent( sStaticMeshComponent &aComponent )
+   static bool EditComponent( sStaticMeshComponent &aComponent )
     {
         UI::Text( "Class:" );
         UI::Text( "{}", aComponent.mName );

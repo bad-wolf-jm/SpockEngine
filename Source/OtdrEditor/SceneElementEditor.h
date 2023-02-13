@@ -19,7 +19,6 @@ namespace SE::OtdrEditor
     {
       public:
         Entity ElementToEdit{};
-        // Ref<Scene> World;
 
       public:
         SceneElementEditor() = default;
