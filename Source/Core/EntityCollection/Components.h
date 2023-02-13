@@ -24,6 +24,7 @@
 #endif
 #include <uuid_v4.h>
 
+using namespace math;
 namespace SE::Core
 {
 
@@ -83,7 +84,6 @@ namespace SE::Core
             sJoin( const sJoin & ) = default;
         };
 
-
         template <typename ParentType>
         struct sBehaviourController
         {
@@ -118,7 +118,7 @@ namespace SE::Core
         {
             sBehaviourController<ParentType> *ControllerInstance = nullptr;
 
-            std::function<sBehaviourController<ParentType> *()>       InstantiateController;
+            std::function<sBehaviourController<ParentType> *()>      InstantiateController;
             std::function<void( sBehaviourComponent<ParentType> * )> DestroyController;
 
             template <typename T, typename... Args>
@@ -202,5 +202,101 @@ namespace SE::Core
 
             MonoScriptMehod mOnUpdate{};
         };
+
+        template <typename ParentType>
+        struct sMonoHUDComponent
+        {
+            float mX               = 0.0f;
+            float mY               = 0.0f;
+            float mWidth           = 100.0f;
+            float mHeight          = 100.0f;
+            vec4  mFillColor       = { 0.0f, 0.0f, 0.0f, 0.5f };
+            vec4  mBorderColor     = { 1.0f, 1.0f, 1.0f, 0.75f };
+            float mBorderThickness = 2.0f;
+            float mRounding        = 5.0f;
+
+            bool mDisplayInEditor = true;
+            bool mPreview         = true;
+
+            std::string        mClassFullName = "";
+            MonoScriptClass    mClass;
+            MonoScriptInstance mInstance;
+            MonoScriptInstance mPreviewInstance;
+            MonoScriptInstance mEntityInstance;
+
+            sMonoHUDComponent()                            = default;
+            sMonoHUDComponent( const sMonoHUDComponent & ) = default;
+
+            ~sMonoHUDComponent() = default;
+
+            sMonoHUDComponent( const std::string &aClassFullName )
+                : mClassFullName{ aClassFullName }
+
+            {
+            }
+
+            template <typename T>
+            T &Get()
+            {
+                return mEntity.Get<T>();
+            }
+
+            void Initialize( Internal::Entity<ParentType> aEntity )
+            {
+                mEntity           = aEntity; // Create Mono side entity object
+                auto lEntityID    = static_cast<uint32_t>( mEntity );
+                auto lRegistryID  = (size_t)mEntity.GetRegistry();
+                auto lEntityClass = MonoRuntime::GetClassType( "SpockEngine.Entity" );
+                mEntityInstance   = lEntityClass.Instantiate( &lEntityID, &lRegistryID );
+
+                if( mClassFullName.empty() ) return;
+
+                size_t      lSeparatorPos   = mClassFullName.find_last_of( '.' );
+                std::string lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
+                std::string lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
+
+                mClass = MonoRuntime::GetClassType( mClassFullName );
+
+                if( mDisplayInEditor && mPreview )
+                {
+                    mPreviewInstance = mClass.Instantiate();
+                    mPreviewInstance.CallMethod( "Initialize", (size_t)mEntityInstance.GetInstance() );
+                }
+            }
+
+            void OnCreate()
+            {
+                // Instantiate the Mono actor class with the entity object as parameter
+                if( mClassFullName.empty() ) return;
+
+                mInstance = mClass.Instantiate();
+                mInstance.CallMethod( "Initialize", (size_t)mEntityInstance.GetInstance() );
+                mInstance.InvokeMethod( "BeginScenario", 0, nullptr );
+            }
+
+            void OnDestroy()
+            {
+                mInstance.InvokeMethod( "EndScenario", 0, nullptr );
+                mInstance = MonoScriptInstance{};
+            }
+
+            void OnUpdate( Timestep ts )
+            {
+                if( mInstance ) mInstance.CallMethod( "DrawContent", ts.GetMilliseconds() );
+            }
+
+            void OnPreviewUpdate( Timestep ts )
+            {
+                if( mPreviewInstance ) mPreviewInstance.CallMethod( "DrawPreviewContent", ts.GetMilliseconds() );
+            }
+
+            Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };
+
+          private:
+            Internal::Entity<ParentType> mEntity;
+
+            MonoScriptMehod mOnUpdate{};
+        };
+
     } // namespace Internal
 } // namespace SE::Core

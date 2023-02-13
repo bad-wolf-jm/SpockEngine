@@ -362,6 +362,8 @@ namespace SE::Core
 
     using sActorComponent = Internal::sMonoActor<EntityCollection *>;
 
+    using sHUDComponent = Internal::sMonoHUDComponent<EntityCollection *>;
+
     /// @brief
     template <typename _Ty>
     using sJoinComponent = Internal::sJoin<EntityCollection *, _Ty>;
