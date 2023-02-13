@@ -168,7 +168,7 @@ namespace SE::Editor
             static uint32_t                 lNumConnectedModules  = 0;
             static std::vector<std::string> lConnectedModuleNames = {};
 
-            if( lFirstRun || (( lCurrentTime - lLastTime ) > 1500000) )
+            if( lFirstRun || ( ( lCurrentTime - lLastTime ) > 1500000 ) )
             {
                 lConnectedModuleNames.clear();
                 lLastTime                  = lCurrentTime;
@@ -363,14 +363,48 @@ namespace SE::Editor
     {
         auto &lIO = ImGui::GetIO();
 
-        math::vec2 l_WorkspacePosition = UI::GetCurrentCursorScreenPosition();
-        math::vec2 l_CursorPosition    = UI::GetCurrentCursorPosition();
+        math::vec2 lWorkspacePosition = UI::GetCurrentCursorScreenPosition();
+        math::vec2 lCursorPosition    = UI::GetCurrentCursorPosition();
+
+        // UI::SameLine();
+        ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f } );
+        ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 1.0f, 1.0f, 1.0f, 0.01f } );
+        ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 1.0f, 1.0f, 1.0f, 0.02f } );
+
+        if( true )
+        {
+
+            if( ImGui::ImageButton( (ImTextureID)mPlayIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
+                                    ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
+                                    ImVec4{ 0.0f, 1.0f, 0.0f, 0.8f } ) )
+            {
+                // if( OnBeginScenario ) OnBeginScenario();
+
+                // ActiveWorld = New<Scene>( World );
+                // ActiveWorld->BeginScenario();
+            }
+        }
+        else
+        {
+            if( ImGui::ImageButton( (ImTextureID)mPauseIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
+                                    ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
+                                    ImVec4{ 1.0f, .2f, 0.0f, 0.8f } ) )
+            {
+                // if( OnEndScenario ) OnEndScenario();
+
+                // ActiveWorld->EndScenario();
+                // ActiveWorld  = World;
+                // ActiveSensor = Sensor;
+            }
+        }
+
+        ImGui::PopStyleColor();
+        ImGui::PopStyleColor();
+        ImGui::PopStyleColor();
 
         math::vec2  l3DViewPosition = UI::GetCurrentCursorScreenPosition();
         math::ivec2 l3DViewSize     = UI::GetAvailableContentSpace();
         mWorkspaceAreaSize          = l3DViewSize;
-
-        UI::SameLine();
     }
 
     void OtdrWindow::Console( int32_t width, int32_t height )
