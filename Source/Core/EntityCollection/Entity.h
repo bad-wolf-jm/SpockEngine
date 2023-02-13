@@ -26,28 +26,6 @@ namespace SE::Core::Internal
     class Entity
     {
       public:
-        /// @struct sJoin
-        ///
-        /// Joins an entity `A` to another entity `B` via component `_Ty`. As a result, Entity `A` can
-        /// access the value of component `_Ty` held bu entity `B`, and have changes automatically reflected
-        /// when entity `B` gets updated. This is preferable to a copy of a component in many instance.
-        /// As an example, since entities can only have one component of any given type, joining an entity
-        /// allows to have  multiple components of the same type accessible to an entity (the joined component
-        /// has to be  unique though).
-        ///
-        template <typename _Ty>
-        struct sJoin
-        {
-            Entity mJoinEntity{}; //!< Handle to the joined entity
-
-            /// @brief Retrieves a reference to the joined component
-            _Ty &JoinedComponent() { return mJoinEntity.Get<_Ty>(); }
-
-            sJoin()                = default;
-            sJoin( const sJoin & ) = default;
-        };
-
-      public:
         /// @brief Default constructor.
         Entity() = default;
 
@@ -337,7 +315,7 @@ namespace SE::Core::Internal
 
             if( !( aEntityToBind.Has<_ComponentType>() ) ) return;
 
-            AddOrReplace<sJoin<_ComponentType>>( aEntityToBind );
+            AddOrReplace<sJoin<ParentType, _ComponentType>>( aEntityToBind );
         }
 
         /// @brief Checks whether an entity is valid.

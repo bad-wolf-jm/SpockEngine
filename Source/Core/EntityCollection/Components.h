@@ -59,23 +59,36 @@ namespace SE::Core
         }
     };
 
-    template <typename ParentType>
-    struct sRelationship
-    {
-        Internal::Entity<ParentType>              mParent{ entt::null, nullptr };
-        std::vector<Internal::Entity<ParentType>> mChildren = {};
-
-        sRelationship()                        = default;
-        sRelationship( const sRelationship & ) = default;
-    };
-
     namespace Internal
     {
         template <typename ParentType>
-        class BehaviourController
+        struct sRelationship
+        {
+            Internal::Entity<ParentType>              mParent{ entt::null, nullptr };
+            std::vector<Internal::Entity<ParentType>> mChildren = {};
+
+            sRelationship()                        = default;
+            sRelationship( const sRelationship & ) = default;
+        };
+
+        template <typename ParentType, typename _Ty>
+        struct sJoin
+        {
+            Internal::Entity<ParentType> mJoinEntity{}; //!< Handle to the joined entity
+
+            /// @brief Retrieves a reference to the joined component
+            _Ty &JoinedComponent() { return mJoinEntity.Get<_Ty>(); }
+
+            sJoin()                = default;
+            sJoin( const sJoin & ) = default;
+        };
+
+
+        template <typename ParentType>
+        struct sBehaviourController
         {
           public:
-            virtual ~BehaviourController() = default;
+            virtual ~sBehaviourController() = default;
 
             template <typename T>
             T &Get()
@@ -103,16 +116,16 @@ namespace SE::Core
         template <typename ParentType>
         struct sBehaviourComponent
         {
-            BehaviourController<ParentType> *ControllerInstance = nullptr;
+            sBehaviourController<ParentType> *ControllerInstance = nullptr;
 
-            std::function<BehaviourController<ParentType> *()>       InstantiateController;
+            std::function<sBehaviourController<ParentType> *()>       InstantiateController;
             std::function<void( sBehaviourComponent<ParentType> * )> DestroyController;
 
             template <typename T, typename... Args>
             void Bind( Args &&...args )
             {
                 InstantiateController = [&]()
-                { return reinterpret_cast<BehaviourController<ParentType> *>( new T( std::forward<Args>( args )... ) ); };
+                { return reinterpret_cast<sBehaviourController<ParentType> *>( new T( std::forward<Args>( args )... ) ); };
 
                 DestroyController = [&]( sBehaviourComponent<ParentType> *aNsc )
                 {

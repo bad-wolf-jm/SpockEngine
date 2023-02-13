@@ -104,7 +104,7 @@ namespace SE::Core
         Internal::Entity<EntityCollection *> CreateEntityWithRelationship()
         {
             Internal::Entity<EntityCollection *> l_NewEntity = CreateEntity();
-            l_NewEntity.Add<sRelationship<EntityCollection *>>();
+            l_NewEntity.Add<Internal::sRelationship<EntityCollection *>>();
             return l_NewEntity;
         }
 
@@ -115,7 +115,7 @@ namespace SE::Core
         Internal::Entity<EntityCollection *> CreateEntityWithRelationship( std::string const &aName )
         {
             Internal::Entity<EntityCollection *> l_NewEntity = CreateEntity( aName );
-            l_NewEntity.Add<sRelationship<EntityCollection *>>();
+            l_NewEntity.Add<Internal::sRelationship<EntityCollection *>>();
             return l_NewEntity;
         }
 
@@ -184,37 +184,37 @@ namespace SE::Core
         {
             if( !aEntity ) return;
 
-            if( aEntity.Has<sRelationship<EntityCollection *>>() )
+            if( aEntity.Has<Internal::sRelationship<EntityCollection *>>() )
             {
-                auto &lMyRelationship = aEntity.Get<sRelationship<EntityCollection *>>();
+                auto &lMyRelationship = aEntity.Get<Internal::sRelationship<EntityCollection *>>();
 
                 if( lMyRelationship.mParent )
                 {
                     if( lMyRelationship.mParent == aParentEntity ) return;
 
-                    auto &lSiblings = lMyRelationship.mParent.Get<sRelationship<EntityCollection *>>().mChildren;
+                    auto &lSiblings = lMyRelationship.mParent.Get<Internal::sRelationship<EntityCollection *>>().mChildren;
 
                     auto &lPositionInSibling = std::find( lSiblings.begin(), lSiblings.end(), aEntity );
                     if( lPositionInSibling != lSiblings.end() ) lSiblings.erase( lPositionInSibling );
                 }
 
                 lMyRelationship.mParent = aParentEntity;
-                aEntity.Replace<sRelationship<EntityCollection *>>( lMyRelationship );
+                aEntity.Replace<Internal::sRelationship<EntityCollection *>>( lMyRelationship );
             }
             else
             {
-                sRelationship<EntityCollection *> lNewRelationship{ aParentEntity, {} };
+                Internal::sRelationship<EntityCollection *> lNewRelationship{ aParentEntity, {} };
 
-                aEntity.Add<sRelationship<EntityCollection *>>( lNewRelationship );
+                aEntity.Add<Internal::sRelationship<EntityCollection *>>( lNewRelationship );
             }
 
             if( aParentEntity )
             {
-                auto &lParentRelationship = aParentEntity.TryAdd<sRelationship<EntityCollection *>>();
+                auto &lParentRelationship = aParentEntity.TryAdd<Internal::sRelationship<EntityCollection *>>();
 
                 lParentRelationship.mChildren.push_back( aEntity );
 
-                aParentEntity.Replace<sRelationship<EntityCollection *>>( lParentRelationship );
+                aParentEntity.Replace<Internal::sRelationship<EntityCollection *>>( lParentRelationship );
             }
         }
 
@@ -349,16 +349,16 @@ namespace SE::Core
     using sBehaviourComponent = Internal::sBehaviourComponent<EntityCollection *>;
 
     /// @brief Instanciated component type bound to this registry
-    using sBehaviourController = Internal::BehaviourController<EntityCollection *>;
+    using sBehaviourController = Internal::sBehaviourController<EntityCollection *>;
 
     /// @brief Instanciated component type bound to this registry
-    using sRelationshipComponent = sRelationship<EntityCollection *>;
+    using sRelationshipComponent = Internal::sRelationship<EntityCollection *>;
 
     using sActorComponent = Internal::sMonoActor<EntityCollection *>;
 
     /// @brief
     template <typename _Ty>
-    using sJoinComponent = Internal::Entity<EntityCollection *>::sJoin<_Ty>;
+    using sJoinComponent = Internal::sJoin<EntityCollection *, _Ty>;
 
 } // namespace SE::Core
 
