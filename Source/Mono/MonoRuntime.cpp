@@ -314,14 +314,18 @@ namespace SE::Core
 
         for( auto &[lFile, lData] : sRuntimeData->mAssemblies )
         {
-            if( !lData.mNeedsReloading ) continue;
-
             lData.mFileExists = fs::exists( lFile );
             if( lData.mFileExists )
             {
                 lData.mAssembly = Mono::Utils::LoadMonoAssembly( lData.mPath / lData.mFilename );
                 lData.mImage    = mono_assembly_get_image( lData.mAssembly );
             }
+            else
+            {
+                lData.mAssembly = nullptr;
+                lData.mImage    = nullptr;
+            }
+
             lData.mNeedsReloading = false;
         }
 

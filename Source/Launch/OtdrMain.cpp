@@ -271,7 +271,7 @@ int main( int argc, char **argv )
         // clang-format off
         const std::vector<std::string> lAssemblies = { "Metrino.Otdr", "Metrino.Otdr.SignalProcessing", 
             "Metrino.Otdr.Simulation", "Metrino.Otdr.Instrument", "Metrino.Otdr.FileConverter", "Metrino.Olm", 
-            "Metrino.Olm.SignalProcessing", "Metrino.Olm.Instrument" };
+            "Metrino.Olm.SignalProcessing", "Metrino.Olm.Instrument", "Metrino.Mono" };
         // clang-format on
 
         for( auto const &lAssemblyName : lAssemblies )
