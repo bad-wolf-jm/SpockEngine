@@ -52,5 +52,5 @@ namespace SE::Editor
 
         mEditorWindow.mWorld       = mWorld;
         mEditorWindow.mActiveWorld = mWorld;
-\    }
+    }
 } // namespace SE::Editor
