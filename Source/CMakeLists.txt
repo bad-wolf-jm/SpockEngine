@@ -92,6 +92,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/Importer/glTFImporter.cpp
     Scene/Importer/ObjImporter.cpp
 
+    OtdrScene/OtdrScene.cpp
+
     Editor/PopupWindow.cpp
     Editor/EditorWindow.cpp
     Editor/ContentBrowser.cpp
