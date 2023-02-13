@@ -10,13 +10,7 @@
 #include "Core/GraphicContext//UI/UIContext.h"
 #include "Engine/Engine.h"
 
-// #include "Graphics/Vulkan/VkGraphicContext.h"
-// #include "Scene/EnvironmentSampler/EnvironmentSampler.h"
-// #include "Scene/EnvironmentSampler/PointCloudVisualizer.h"
-// #include "Scene/Renderer/DeferredSceneRenderer.h"
-// #include "Scene/Renderer/ForwardSceneRenderer.h"
-// #include "Scene/Renderer/RayTracing/RayTracingRenderer.h"
-// #include "Scene/Scene.h"
+#include "OtdrScene/OtdrScene.h"
 
 #include "TensorOps/Scope.h"
 
@@ -61,19 +55,8 @@ namespace SE::Editor
         uint32_t mViewportHeight        = 1;
         uint32_t mViewportWidth         = 1;
         bool     mShouldRebuildViewport = true;
-        // Ref<Scene> mWorld                 = nullptr;
 
-        // Ref<DeferredRenderer>     mDeferredRenderer   = nullptr;
-        // Ref<ForwardSceneRenderer> mForwardRenderer    = nullptr;
-        // Ref<RayTracingRenderer>   mRayTracingRenderer = nullptr;
-
-        // Ref<VkSampler2D> mOffscreenRenderTargetTexture = nullptr;
-        // ImageHandle      mOffscreenRenderTargetDisplayHandle{};
-
-        // Ref<VkSampler2D> mDeferredRenderTargetTexture = nullptr;
-        // ImageHandle      mDeferredRenderTargetDisplayHandle{};
-
-        // Entity m_SensorEntity{};
+        Ref<OtdrScene> mWorld = nullptr;
     };
 
 } // namespace SE::Editor

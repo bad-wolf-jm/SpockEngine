@@ -29,7 +29,12 @@ namespace SE::Core
     using namespace SE::Graphics;
     using namespace SE::Cuda;
 
-    OtdrScene::OtdrScene( Ref<VkGraphicContext> aGraphicContext, Ref<SE::Core::UIContext> aUI ) { ConnectSignalHandlers(); }
+    OtdrScene::OtdrScene()
+    {
+        Root = mRegistry.CreateEntityWithRelationship( "WorldRoot" );
+
+        ConnectSignalHandlers();
+    }
 
     template <typename _Component>
     static void CopyComponent( Entity &aSource, Entity &aDestination )
@@ -303,10 +308,7 @@ namespace SE::Core
             } );
     }
 
-    static void WriteNode( ConfigurationWriter &lOut, Entity const &aEntity, sUUID const &aUUID,
-                           std::vector<sImportedAnimationSampler>       &lInterpolationData,
-                           std::unordered_map<std::string, std::string> &aMaterialMap,
-                           std::unordered_map<std::string, std::string> &aMeshDataMap )
+    static void WriteNode( ConfigurationWriter &lOut, Entity const &aEntity, sUUID const &aUUID )
     {
         lOut.WriteKey( aUUID.mValue.str() );
         lOut.BeginMap();
@@ -328,9 +330,6 @@ namespace SE::Core
         if( !fs::exists( aPath ) ) fs::create_directories( aPath );
         if( !fs::is_directory( aPath ) ) return;
 
-        std::unordered_map<std::string, std::string> lMaterialMap{};
-        std::unordered_map<std::string, std::string> lMeshPathDB{};
-
         auto lOut = ConfigurationWriter( aPath / "SceneDefinition.yaml" );
 
         std::vector<sImportedAnimationSampler> lInterpolationData;
@@ -344,8 +343,7 @@ namespace SE::Core
             lOut.WriteKey( "nodes" );
             {
                 lOut.BeginMap();
-                ForEach<sUUID>( [&]( auto aEntity, auto &aUUID )
-                                { WriteNode( lOut, aEntity, aUUID, lInterpolationData, lMaterialMap, lMeshPathDB ); } );
+                ForEach<sUUID>( [&]( auto aEntity, auto &aUUID ) { WriteNode( lOut, aEntity, aUUID ); } );
                 lOut.EndMap();
             }
             lOut.EndMap();

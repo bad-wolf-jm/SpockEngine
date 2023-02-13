@@ -8,8 +8,9 @@
 #include "Core/Memory.h"
 
 #include "Graphics/Vulkan/VkGraphicContext.h"
-
 #include "Graphics/Vulkan/VkSampler2D.h"
+
+#include "OtdrScene/OtdrScene.h"
 
 #include "UI/UI.h"
 
@@ -36,6 +37,9 @@ namespace SE::Editor
         fs::path mModelsPath    = "";
 
         Ref<Engine> mEngineLoop = nullptr;
+
+        Ref<OtdrScene> mWorld       = nullptr;
+        Ref<OtdrScene> mActiveWorld = nullptr;
 
       public:
         float HeaderHeight       = 31.0f;

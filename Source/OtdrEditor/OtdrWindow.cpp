@@ -371,17 +371,17 @@ namespace SE::Editor
         ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 1.0f, 1.0f, 1.0f, 0.01f } );
         ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 1.0f, 1.0f, 1.0f, 0.02f } );
 
-        if( true )
+        if( mActiveWorld->GetState() == OtdrScene::eSceneState::EDITING )
         {
 
             if( ImGui::ImageButton( (ImTextureID)mPlayIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
                                     ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
                                     ImVec4{ 0.0f, 1.0f, 0.0f, 0.8f } ) )
             {
-                // if( OnBeginScenario ) OnBeginScenario();
+                if( OnBeginScenario ) OnBeginScenario();
 
-                // ActiveWorld = New<Scene>( World );
-                // ActiveWorld->BeginScenario();
+                mActiveWorld = New<OtdrScene>( mWorld );
+                mActiveWorld->BeginScenario();
             }
         }
         else
@@ -390,11 +390,10 @@ namespace SE::Editor
                                     ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
                                     ImVec4{ 1.0f, .2f, 0.0f, 0.8f } ) )
             {
-                // if( OnEndScenario ) OnEndScenario();
+                if( OnEndScenario ) OnEndScenario();
 
-                // ActiveWorld->EndScenario();
-                // ActiveWorld  = World;
-                // ActiveSensor = Sensor;
+                mActiveWorld->EndScenario();
+                mActiveWorld = mWorld;
             }
         }
 

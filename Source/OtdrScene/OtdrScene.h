@@ -36,13 +36,12 @@ namespace SE::Core
 
         typedef Entity Element;
 
-        OtdrScene( Ref<VkGraphicContext> a_GraphicContext, Ref<SE::Core::UIContext> a_UI );
+        OtdrScene();
         OtdrScene( Ref<OtdrScene> aSource );
         OtdrScene( OtdrScene & ) = delete;
         ~OtdrScene();
 
         Element Create( std::string a_Name, Element a_Parent );
-
         Element CreateEntity();
         Element CreateEntity( std::string a_Name );
 
@@ -79,8 +78,6 @@ namespace SE::Core
 
         void DestroyEntity( Element entity );
         void ConnectSignalHandlers();
-
-        void ResizeCUDABuffers();
 
         bool mIsClone = false;
 
