@@ -283,7 +283,6 @@ int main( int argc, char **argv )
 
     // Load the application assembly and the default scenario file
     {
-
         YAML::Node &lAssemblyPath = lRootNode["project"]["assembly_path"];
         if( !lAssemblyPath.IsNull() && fs::exists( lAssemblyPath.as<std::string>() ) )
             MonoRuntime::AddAppAssemblyPath( lAssemblyPath.as<std::string>(), "SYSTEM UNDER TEST" );

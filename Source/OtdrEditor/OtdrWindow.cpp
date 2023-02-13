@@ -22,6 +22,13 @@
 #include "Scene/Serialize/AssetFile.h"
 #include "Scene/Serialize/FileIO.h"
 
+#include "Mono/MonoRuntime.h"
+
+#include "mono/jit/jit.h"
+#include "mono/metadata/assembly.h"
+#include "mono/metadata/object.h"
+#include "mono/metadata/tabledefs.h"
+
 // #include "ShortWaveformDisplay.h"
 
 namespace SE::Editor
@@ -141,6 +148,53 @@ namespace SE::Editor
         if( ImGui::Begin( "ASSEMBLIES", NULL, ImGuiWindowFlags_None ) )
         {
             MonoRuntime::DisplayAssemblies();
+        }
+        ImGui::End();
+
+        if( ImGui::Begin( "CONNECTED MODULES", NULL, ImGuiWindowFlags_None ) )
+        {
+            static auto lLastTime =
+                std::chrono::time_point_cast<std::chrono::microseconds>( std::chrono::high_resolution_clock::now() )
+                    .time_since_epoch()
+                    .count();
+            auto lCurrentTime = std::chrono::time_point_cast<std::chrono::microseconds>( std::chrono::high_resolution_clock::now() )
+                                    .time_since_epoch()
+                                    .count();
+
+            static auto &lMonoGlue          = MonoRuntime::GetClassType( "Metrino.Mono.Instruments" );
+            static auto &lModuleDescription = MonoRuntime::GetClassType( "Metrino.Mono.ModuleDescription" );
+
+            static uint32_t                 lNumConnectedModules  = 0;
+            static std::vector<std::string> lConnectedModuleNames = {};
+
+            if( ( lCurrentTime - lLastTime ) > 1000000 )
+            {
+                lConnectedModuleNames.clear();
+                lLastTime                  = lCurrentTime;
+                auto lConnectedModulesList = lMonoGlue.CallMethod( "GetConnectedModules" );
+
+                lNumConnectedModules = static_cast<uint32_t>( mono_array_length( (MonoArray *)lConnectedModulesList ) );
+
+                std::vector<MonoObject *> lConnectedModules( lNumConnectedModules );
+                for( uint32_t i = 0; i < lNumConnectedModules; i++ )
+                {
+                    auto lConnectedModule = *( mono_array_addr( (MonoArray *)lConnectedModulesList, MonoObject *, i ) );
+                    auto lInstance        = MonoScriptInstance( lModuleDescription.Class(), lConnectedModule );
+                    lConnectedModuleNames.push_back( MonoRuntime::NewString( lInstance.GetFieldValue<MonoString *>( "mName" ) ) );
+                }
+            }
+
+            if( lNumConnectedModules == 0 )
+            {
+                UI::Text( "No connected modules", lNumConnectedModules );
+            }
+            else
+            {
+                for( uint32_t i = 0; i < lNumConnectedModules; i++ )
+                {
+                    Text( "{} {}", ICON_FA_USB, lConnectedModuleNames[i] );
+                }
+            }
         }
         ImGui::End();
 
