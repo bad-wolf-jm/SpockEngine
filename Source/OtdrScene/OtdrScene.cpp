@@ -29,10 +29,7 @@ namespace SE::Core
     using namespace SE::Graphics;
     using namespace SE::Cuda;
 
-    OtdrScene::OtdrScene( Ref<VkGraphicContext> aGraphicContext, Ref<SE::Core::UIContext> aUI )
-    {
-        ConnectSignalHandlers();
-    }
+    OtdrScene::OtdrScene( Ref<VkGraphicContext> aGraphicContext, Ref<SE::Core::UIContext> aUI ) { ConnectSignalHandlers(); }
 
     template <typename _Component>
     static void CopyComponent( Entity &aSource, Entity &aDestination )
@@ -82,16 +79,13 @@ namespace SE::Core
         mIsClone = true;
     }
 
-    OtdrScene::~OtdrScene()
-    {
-    }
+    OtdrScene::~OtdrScene() {}
 
     void OtdrScene::SetViewport( math::vec2 aPosition, math::vec2 aSize )
     {
         mViewportPosition = aPosition;
         mViewportSize     = aSize;
     }
-
 
     OtdrScene::Element OtdrScene::Create( std::string aName, Element aParent ) { return mRegistry.CreateEntity( aParent, aName ); }
 
@@ -109,22 +103,20 @@ namespace SE::Core
     void OtdrScene::ConnectSignalHandlers()
     {
         // clang-format off
-        mRegistry.OnComponentAdded<sActorComponent>( 
-            [&]( auto aEntity, auto &aComponent ) { 
-                aComponent.Initialize( aEntity ); 
+        mRegistry.OnComponentAdded<sActorComponent>( [&]( auto aEntity, auto &aComponent ) { 
+            aComponent.Initialize( aEntity ); 
         } );
 
-        mRegistry.OnComponentUpdated<sActorComponent>( 
-            [&]( auto aEntity, auto &aComponent ) { 
-                aComponent.Initialize( aEntity ); 
+        mRegistry.OnComponentUpdated<sActorComponent>( [&]( auto aEntity, auto &aComponent ) { 
+            aComponent.Initialize( aEntity ); 
         } );
 
         mRegistry.OnComponentAdded<sHUDComponent>( [&]( auto aEntity, auto &aComponent ) { 
-                aComponent.Initialize( aEntity ); 
+            aComponent.Initialize( aEntity ); 
         } );
 
         mRegistry.OnComponentUpdated<sHUDComponent>( [&]( auto aEntity, auto &aComponent ) { 
-                aComponent.Initialize( aEntity ); 
+            aComponent.Initialize( aEntity ); 
         } );
         // clang-format on
     }
@@ -309,7 +301,6 @@ namespace SE::Core
                 ImGui::PopStyleColor( 2 );
                 ImGui::PopStyleVar( 2 );
             } );
-
     }
 
     static void WriteNode( ConfigurationWriter &lOut, Entity const &aEntity, sUUID const &aUUID,
