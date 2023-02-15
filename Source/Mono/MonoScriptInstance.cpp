@@ -11,14 +11,22 @@ namespace SE::Core
         : mMonoClass{ aMonoClass }
         , mInstance{ aInstance }
     {
-        mGCHandle = mono_gchandle_new(aInstance, true);
     }
 
-    MonoScriptInstance::~MonoScriptInstance()
+    MonoScriptInstance::~MonoScriptInstance() {}
+
+    void MonoScriptInstance::Grab()
     {
-        mono_gchandle_free(mGCHandle);
+        if( mGCHandle != 0 ) return;
+        
+        mGCHandle = mono_gchandle_new( mInstance, true );
     }
-    
+
+    void MonoScriptInstance::Release()
+    {
+        if( mGCHandle != 0 ) mono_gchandle_free( mGCHandle );
+    }
+
     MonoMethod *MonoScriptInstance::GetMethod( const std::string &aName, int aParameterCount )
     {
         MonoClass  *lClass  = mMonoClass;

@@ -163,6 +163,7 @@ namespace SE::OtdrEditor
                     if( UI::Button( lScriptClass->FullName().c_str(), math::vec2{ 100.0f, 30.0f } ) )
                     {
                         lInstance = lScriptClass->Instantiate();
+                        lInstance.Grab();
                         lInstance.CallMethod( "BeginScenario" );
                     }
                 }
