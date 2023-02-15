@@ -116,96 +116,14 @@ namespace SE::Core
             aComponent.Initialize( aEntity ); 
         } );
 
-        mRegistry.OnComponentAdded<sHUDComponent>( [&]( auto aEntity, auto &aComponent ) { 
+        mRegistry.OnComponentAdded<sUIComponent>( [&]( auto aEntity, auto &aComponent ) { 
             aComponent.Initialize( aEntity ); 
         } );
 
-        mRegistry.OnComponentUpdated<sHUDComponent>( [&]( auto aEntity, auto &aComponent ) { 
+        mRegistry.OnComponentUpdated<sUIComponent>( [&]( auto aEntity, auto &aComponent ) { 
             aComponent.Initialize( aEntity ); 
         } );
         // clang-format on
-    }
-
-    void OtdrScene::LoadScenario( fs::path aScenarioPath )
-    {
-        mRegistry.Clear();
-
-        ConnectSignalHandlers();
-
-        auto lScenarioRoot = aScenarioPath.parent_path();
-
-        auto lRootNode = YAML::LoadFile( aScenarioPath.string() );
-
-        sReadContext                                 lReadContext{};
-        std::unordered_map<std::string, std::string> lParentEntityLUT{};
-
-        auto &lSceneRoot = lRootNode["scene"];
-        auto &lNodesRoot = lSceneRoot["nodes"];
-
-        std::vector<std::tuple<std::string, sStaticMeshComponent, std::string>> lBufferLoadQueue{};
-
-        std::map<std::string, std::set<std::string>> lMaterialLoadQueue{};
-        for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
-        {
-            auto const &lKey                 = it->first.as<std::string>();
-            auto       &lEntityConfiguration = it->second;
-
-            auto lEntity = mRegistry.CreateEntity( sUUID( lKey ) );
-            auto lUUID   = lEntity.Get<sUUID>().mValue;
-
-            lReadContext.mEntities[lKey] = lEntity;
-
-            if( HasTypeTag<sRelationshipComponent>( lEntityConfiguration ) )
-            {
-                if( !( lEntityConfiguration[TypeTag<sRelationshipComponent>()]["mParent"].IsNull() ) )
-                {
-                    auto lParentUUIDStr = Get( lEntityConfiguration[TypeTag<sRelationshipComponent>()]["mParent"], std::string{ "" } );
-
-                    auto lParentUUID       = UUIDv4::UUID::fromStrFactory( lParentUUIDStr );
-                    lParentEntityLUT[lKey] = lParentUUIDStr;
-                }
-            }
-
-            if( HasTypeTag<sTag>( lEntityConfiguration ) )
-            {
-                auto &lComponent = lEntity.Add<sTag>();
-
-                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sTag>()], lReadContext );
-            }
-
-            if( HasTypeTag<sActorComponent>( lEntityConfiguration ) )
-            {
-                auto &lComponent = lEntity.Add<sActorComponent>();
-
-                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sActorComponent>()], lReadContext );
-            }
-
-            if( HasTypeTag<sHUDComponent>( lEntityConfiguration ) )
-            {
-                sHUDComponent lComponent{};
-
-                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sHUDComponent>()], lReadContext );
-                lEntity.Add<sHUDComponent>( lComponent );
-            }
-        }
-
-        for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
-        {
-            auto const &lKey                 = it->first.as<std::string>();
-            auto       &lEntityConfiguration = it->second;
-
-            auto &lEntity = lReadContext.mEntities[lKey];
-
-            if( !lEntity ) return;
-
-            if( lParentEntityLUT.find( lKey ) != lParentEntityLUT.end() )
-                mRegistry.SetParent( lEntity, lReadContext.mEntities[lParentEntityLUT[lKey]] );
-        }
-
-        auto lRootNodeUUIDStr = Get( lSceneRoot["root"], std::string{ "" } );
-        auto lRootNodeUUID    = UUIDv4::UUID::fromStrFactory( lRootNodeUUIDStr );
-        Root                  = lReadContext.mEntities[lRootNodeUUIDStr];
-        SE::Logging::Info( "Created root", lRootNodeUUIDStr );
     }
 
     void OtdrScene::AttachScript( Element aElement, std::string aClassName )
@@ -223,13 +141,14 @@ namespace SE::Core
                 if( !lComponent.ControllerInstance && lComponent.InstantiateController )
                 {
                     lComponent.ControllerInstance = lComponent.InstantiateController();
+
                     lComponent.ControllerInstance->Initialize( mRegistry.WrapEntity( lEntity ) );
-                    lComponent.ControllerInstance->OnCreate();
+                    lComponent.ControllerInstance->OnBeginScenario();
                 }
             } );
 
-        ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnCreate(); } );
-        ForEach<sHUDComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnCreate(); } );
+        ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnBeginScenario(); } );
+        ForEach<sUIComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnBeginScenario(); } );
 
         mState = eSceneState::RUNNING;
     }
@@ -244,13 +163,13 @@ namespace SE::Core
             {
                 if( lComponent.ControllerInstance )
                 {
-                    lComponent.ControllerInstance->OnDestroy();
+                    lComponent.ControllerInstance->OnEndScenario();
                     lComponent.DestroyController( &lComponent );
                 }
             } );
 
         // Destroy Lua scripts
-        ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnDestroy(); } );
+        ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnEndScenario(); } );
 
         mState = eSceneState::EDITING;
     }
@@ -265,13 +184,13 @@ namespace SE::Core
             ForEach<sBehaviourComponent>(
                 [=]( auto aEntity, auto &aComponent )
                 {
-                    if( aComponent.ControllerInstance ) aComponent.ControllerInstance->OnUpdate( ts );
+                    if( aComponent.ControllerInstance ) aComponent.ControllerInstance->OnTick( ts );
                 } );
 
-            ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnUpdate( ts ); } );
+            ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnTick( ts ); } );
         }
 
-        ForEach<sHUDComponent>(
+        ForEach<sUIComponent>(
             [=]( auto aEntity, auto &aComponent )
             {
                 if( ( mState != eSceneState::RUNNING ) && !aComponent.mDisplayInEditor ) return;
@@ -313,13 +232,10 @@ namespace SE::Core
         lOut.WriteKey( aUUID.mValue.str() );
         lOut.BeginMap();
         {
-            if( aEntity.Has<sTag>() )
-            {
-                WriteComponent( lOut, aEntity.Get<sTag>() );
-            }
+            if( aEntity.Has<sTag>() ) WriteComponent( lOut, aEntity.Get<sTag>() );
             if( aEntity.Has<sRelationshipComponent>() ) WriteComponent( lOut, aEntity.Get<sRelationshipComponent>() );
             if( aEntity.Has<sActorComponent>() ) WriteComponent( lOut, aEntity.Get<sActorComponent>() );
-            if( aEntity.Has<sHUDComponent>() ) WriteComponent( lOut, aEntity.Get<sHUDComponent>() );
+            if( aEntity.Has<sUIComponent>() ) WriteComponent( lOut, aEntity.Get<sUIComponent>() );
         }
         lOut.EndMap();
     }
@@ -350,4 +266,84 @@ namespace SE::Core
         }
         lOut.EndMap();
     }
+
+    void OtdrScene::Load( fs::path aScenarioPath )
+    {
+        mRegistry.Clear();
+
+        ConnectSignalHandlers();
+
+        auto lScenarioRoot = aScenarioPath.parent_path();
+
+        auto lRootNode = YAML::LoadFile( aScenarioPath.string() );
+
+        sReadContext                                 lReadContext{};
+        std::unordered_map<std::string, std::string> lParentEntityLUT{};
+
+        auto &lSceneRoot = lRootNode["scene"];
+        auto &lNodesRoot = lSceneRoot["nodes"];
+
+        for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
+        {
+            auto const &lKey                 = it->first.as<std::string>();
+            auto       &lEntityConfiguration = it->second;
+
+            auto lEntity = mRegistry.CreateEntity( sUUID( lKey ) );
+            auto lUUID   = lEntity.Get<sUUID>().mValue;
+
+            lReadContext.mEntities[lKey] = lEntity;
+
+            if( HasTypeTag<sRelationshipComponent>( lEntityConfiguration ) )
+            {
+                if( !( lEntityConfiguration[TypeTag<sRelationshipComponent>()]["mParent"].IsNull() ) )
+                {
+                    auto lParentUUIDStr = Get( lEntityConfiguration[TypeTag<sRelationshipComponent>()]["mParent"], std::string{ "" } );
+
+                    auto lParentUUID       = UUIDv4::UUID::fromStrFactory( lParentUUIDStr );
+                    lParentEntityLUT[lKey] = lParentUUIDStr;
+                }
+            }
+
+            if( HasTypeTag<sTag>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sTag>();
+
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sTag>()], lReadContext );
+            }
+
+            if( HasTypeTag<sActorComponent>( lEntityConfiguration ) )
+            {
+                auto &lComponent = lEntity.Add<sActorComponent>();
+
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sActorComponent>()], lReadContext );
+            }
+
+            if( HasTypeTag<sUIComponent>( lEntityConfiguration ) )
+            {
+                sUIComponent lComponent{};
+
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sUIComponent>()], lReadContext );
+                lEntity.Add<sUIComponent>( lComponent );
+            }
+        }
+
+        for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
+        {
+            auto const &lKey                 = it->first.as<std::string>();
+            auto       &lEntityConfiguration = it->second;
+
+            auto &lEntity = lReadContext.mEntities[lKey];
+
+            if( !lEntity ) return;
+
+            if( lParentEntityLUT.find( lKey ) != lParentEntityLUT.end() )
+                mRegistry.SetParent( lEntity, lReadContext.mEntities[lParentEntityLUT[lKey]] );
+        }
+
+        auto lRootNodeUUIDStr = Get( lSceneRoot["root"], std::string{ "" } );
+        auto lRootNodeUUID    = UUIDv4::UUID::fromStrFactory( lRootNodeUUIDStr );
+        Root                  = lReadContext.mEntities[lRootNodeUUIDStr];
+        SE::Logging::Info( "Created root", lRootNodeUUIDStr );
+    }
+
 } // namespace SE::Core

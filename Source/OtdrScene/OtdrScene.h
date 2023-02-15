@@ -45,15 +45,12 @@ namespace SE::Core
         Element CreateEntity();
         Element CreateEntity( std::string a_Name );
 
-        void LoadScenario( fs::path aScenarioPath );
-
+        void Load( fs::path aScenarioPath );
         void SaveAs( fs::path aPath );
 
         void BeginScenario();
         void EndScenario();
-
         void AttachScript( Element aElement, std::string aScriptPath );
-
         void Update( Timestep ts );
 
         Element Root;
