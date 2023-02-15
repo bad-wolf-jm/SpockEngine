@@ -48,5 +48,6 @@ std::optional<std::string> FileDialogs::SaveFile( GLFWwindow *owner, const char 
 
     if( GetSaveFileNameA( &ofn ) == TRUE )
         return ofn.lpstrFile;
+        
     return std::nullopt;
 }
