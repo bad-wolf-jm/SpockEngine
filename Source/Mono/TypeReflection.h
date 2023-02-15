@@ -6,20 +6,6 @@
 
 namespace SE::Core
 {
-    template <typename T>
-    [[nodiscard]] entt::id_type DeduceType( T &&aObject )
-    {
-        switch( aObject.get_type() )
-        {
-        case sol::type::number:
-            return aObject.as<entt::id_type>();
-        case sol::type::table:
-            return GetTypeID( aObject );
-        }
-        assert( false );
-        return -1;
-    }
-
     template <typename... Args>
     inline auto InvokeMetaFunction( entt::meta_type aMetaType, entt::id_type aFunctionID, Args &&...aArgs )
     {
@@ -30,6 +16,7 @@ namespace SE::Core
         else
         {
             auto lMetaFunction = aMetaType.func( aFunctionID );
+            
             if( lMetaFunction ) return lMetaFunction.invoke( {}, std::forward<Args>( aArgs )... );
         }
         return entt::meta_any{};

@@ -85,6 +85,7 @@ namespace SE::OtdrEditor
         Ref<VkSampler2D> mPauseIcon;
         ImageHandle      mPauseIconHandle;
 
-        SimulationState mState = SimulationState::EDIT;
+        SimulationState mState       = SimulationState::EDIT;
+        fs::path        mCurrentPath = "";
     };
 } // namespace SE::OtdrEditor

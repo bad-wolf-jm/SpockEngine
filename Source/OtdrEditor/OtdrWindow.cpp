@@ -149,6 +149,17 @@ namespace SE::OtdrEditor
         }
         ImGui::End();
 
+        if( ImGui::Begin( "SCRIPTS", NULL, ImGuiWindowFlags_None ) )
+        {
+            auto lScriptBaseClass = MonoRuntime::GetClassType("SpockEngine.Script");
+
+            for (auto const& lScriptClass : lScriptBaseClass.DerivedClasses())
+            {
+                UI::Text("{} {}", ICON_FA_ARROW_CIRCLE_O_RIGHT, lScriptClass->FullName());
+            }
+        }
+        ImGui::End();
+
         if( ImGui::Begin( "CONNECTED MODULES", NULL, ImGuiWindowFlags_None ) )
         {
             static auto lFirstRun = true;
@@ -267,7 +278,7 @@ namespace SE::OtdrEditor
         if( ( ImGui::Begin( "SCENE HIERARCHY", &p_open, ImGuiWindowFlags_None ) ) )
         {
             auto lWindowPropertiesSize = UI::GetAvailableContentSpace();
-            
+
             mSceneHierarchyPanel.World = mActiveWorld;
             mSceneHierarchyPanel.Display( lWindowPropertiesSize.x, lWindowPropertiesSize.y );
         }
@@ -313,47 +324,51 @@ namespace SE::OtdrEditor
 
     bool OtdrWindow::RenderMainMenu()
     {
-        ImVec2 l_MenuSize = ImGui::GetWindowSize();
-
         UI::Text( ApplicationIcon.c_str() );
 
-        bool l_RequestQuit = false;
+        bool lRequestQuit = false;
 
         if( ImGui::BeginMenu( "File" ) )
         {
-            if( UI::MenuItem( fmt::format( "{} Load scene", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
+            if( UI::MenuItem( fmt::format( "{} Load", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
             {
                 auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
-                                                        "glTf Files (*.gltf)\0*.gltf\0All Files (*.*)\0*.*\0" );
-                // if( lFilePath.has_value() ) LoadScenario( lFilePath.value() );
-            }
-            if( UI::MenuItem( fmt::format( "{} New material", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
-            {
-                // m_NewMaterial.Visible = true;
-            }
-            if( UI::MenuItem( fmt::format( "{} Import model...", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
-            {
-                auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
-                                                        "glTf Files (*.gltf)\0*.gltf\0All Files (*.*)\0*.*\0" );
-                // if( lFilePath.has_value() ) ImportModel( lFilePath.value() );
-            }
-            if( UI::MenuItem( fmt::format( "{} Save Scene", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
-            {
-                // m_NewMaterial.Visible = true;
-                // World->SaveAs( fs::path( "C:\\GitLab\\SpockEngine\\Saved" ) / "TEST" / "SCENE" );
+                                                        "YAML Files (*.yaml)\0*.yaml\0All Files (*.*)\0*.*\0" );
+                mWorld->Load( fs::path( lFilePath.value() ) );
             }
 
-            if( UI::MenuItem( fmt::format( "{} Load Scenario Scene", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
+            if( UI::MenuItem( fmt::format( "{} Save", ICON_FA_ARCHIVE ).c_str(), NULL ) )
             {
-                // m_NewMaterial.Visible = true;
-                // World->LoadScenario( fs::path( "C:\\GitLab\\SpockEngine\\Saved" ) / "TEST" / "SCENE" / "Scene.yaml" );
+                if( mCurrentPath.empty() )
+                {
+                    auto lFilePath = FileDialogs::SaveFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
+                                                            "YAML Files (*.yaml)\0*.yaml\0All Files (*.*)\0*.*\0" );
+
+                    if( lFilePath.has_value() )
+                    {
+                        mCurrentPath = fs::path( lFilePath.value() );
+                        mWorld->SaveAs( mCurrentPath );
+                    }
+                }
+                else
+                {
+                    mWorld->SaveAs( mCurrentPath );
+                }
             }
 
-            l_RequestQuit = UI::MenuItem( fmt::format( "{} Exit", ICON_FA_WINDOW_CLOSE_O ).c_str(), NULL );
+            if( UI::MenuItem( fmt::format( "{} Save as...", ICON_FA_ARCHIVE ).c_str(), NULL ) )
+            {
+                auto lFilePath = FileDialogs::SaveFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
+                                                        "YAML Files (*.yaml)\0*.yaml\0All Files (*.*)\0*.*\0" );
+                mCurrentPath   = fs::path( lFilePath.value() );
+                mWorld->SaveAs( mCurrentPath );
+            }
+
+            lRequestQuit = UI::MenuItem( fmt::format( "{} Exit", ICON_FA_WINDOW_CLOSE_O ).c_str(), NULL );
             ImGui::EndMenu();
         }
 
-        return l_RequestQuit;
+        return lRequestQuit;
     }
 
     math::ivec2 OtdrWindow::GetWorkspaceAreaSize() { return mWorkspaceAreaSize; }
@@ -407,8 +422,8 @@ namespace SE::OtdrEditor
 
     void OtdrWindow::Console( int32_t width, int32_t height )
     {
-        const float           TEXT_BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
-        const ImGuiTableFlags flags            = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY |
+        const float           lTextBaseHeight = ImGui::GetTextLineHeightWithSpacing();
+        const ImGuiTableFlags flags           = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY |
                                       ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_Resizable |
                                       ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
 
@@ -417,7 +432,7 @@ namespace SE::OtdrEditor
         if( ImGui::BeginTable( "table_scrolly", 3, flags, outer_size ) )
         {
             ImGui::TableSetupScrollFreeze( 2, 1 );
-            ImGui::TableSetupColumn( "", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_HEIGHT );
+            ImGui::TableSetupColumn( "", ImGuiTableColumnFlags_WidthFixed, lTextBaseHeight );
             ImGui::TableSetupColumn( "Time", ImGuiTableColumnFlags_None, 150 );
             ImGui::TableSetupColumn( "Message", ImGuiTableColumnFlags_WidthStretch );
             ImGui::TableHeadersRow();
@@ -449,4 +464,4 @@ namespace SE::OtdrEditor
         }
     }
 
-} // namespace SE::Editor
+} // namespace SE::OtdrEditor
