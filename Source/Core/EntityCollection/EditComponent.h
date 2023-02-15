@@ -5,5 +5,5 @@
 namespace SE::Core
 {
     bool EditComponent( sActorComponent &aComponent );
-    bool EditComponent( sHUDComponent &aComponent );
+    bool EditComponent( sUIComponent &aComponent );
 } // namespace SE::Core

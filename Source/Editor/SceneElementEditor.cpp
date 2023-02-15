@@ -258,9 +258,9 @@ namespace SE::Editor
                 l_RendererCreateInfo.LineWidth = l_ParticleShaderConfiguration.LineWidth;
             }
             ImGui::Separator();
-            if( ImGui::MenuItem( "HUD Component", NULL, false, !ElementToEdit.Has<sHUDComponent>() ) )
+            if( ImGui::MenuItem( "HUD Component", NULL, false, !ElementToEdit.Has<sUIComponent>() ) )
             {
-                ElementToEdit.Add<sHUDComponent>();
+                ElementToEdit.Add<sUIComponent>();
             }
             ImGui::EndPopup();
         }
@@ -282,7 +282,7 @@ namespace SE::Editor
 
         if( ImGui::CollapsingHeader( "HUD", lFlags ) )
         {
-            ElementToEdit.IfExists<sHUDComponent>( [&]( auto &lComponent ) { EditComponent( lComponent ); } );
+            ElementToEdit.IfExists<sUIComponent>( [&]( auto &lComponent ) { EditComponent( lComponent ); } );
         }
 
         if( ImGui::CollapsingHeader( "Transform", lFlags ) )

@@ -362,7 +362,7 @@ namespace SE::Core
 
     using sActorComponent = Internal::sMonoActor<EntityCollection *>;
 
-    using sHUDComponent = Internal::sMonoHUDComponent<EntityCollection *>;
+    using sUIComponent = Internal::sMonoUIComponent<EntityCollection *>;
 
     /// @brief
     template <typename _Ty>

@@ -18,7 +18,7 @@ namespace SE::Core
         return false;
     }
 
-    bool EditComponent( sHUDComponent &aComponent )
+    bool EditComponent( sUIComponent &aComponent )
     {
         UI::Text( "Component class:" );
         UI::Text( "{}", aComponent.mClassFullName );

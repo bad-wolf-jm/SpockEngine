@@ -27,7 +27,6 @@
 using namespace math;
 namespace SE::Core
 {
-
     struct sTag
     {
         std::string mValue;
@@ -103,9 +102,9 @@ namespace SE::Core
 
             virtual void Initialize( Internal::Entity<ParentType> aEntity ) { mEntity = aEntity; }
 
-            virtual void OnCreate() {}
-            virtual void OnDestroy() {}
-            virtual void OnUpdate( Timestep ts ) {}
+            virtual void OnBeginScenario() {}
+            virtual void OnEndScenario() {}
+            virtual void OnTick( Timestep ts ) {}
 
             Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };
 
@@ -189,11 +188,11 @@ namespace SE::Core
                 mInstance.CallMethod( "Initialize", (size_t)mEntityInstance.GetInstance() );
             }
 
-            void OnCreate() { mInstance.InvokeMethod( "BeginScenario", 0, nullptr ); }
+            void OnBeginScenario() { mInstance.InvokeMethod( "BeginScenario", 0, nullptr ); }
 
-            void OnDestroy() { mInstance.InvokeMethod( "EndScenario", 0, nullptr ); }
+            void OnEndScenario() { mInstance.InvokeMethod( "EndScenario", 0, nullptr ); }
 
-            void OnUpdate( Timestep ts ) { mInstance.CallMethod( "Tick", ts.GetMilliseconds() ); }
+            void OnTick( Timestep ts ) { mInstance.CallMethod( "Tick", ts.GetMilliseconds() ); }
 
             Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };
 
@@ -204,7 +203,7 @@ namespace SE::Core
         };
 
         template <typename ParentType>
-        struct sMonoHUDComponent
+        struct sMonoUIComponent
         {
             float mX               = 0.0f;
             float mY               = 0.0f;
@@ -224,12 +223,12 @@ namespace SE::Core
             MonoScriptInstance mPreviewInstance;
             MonoScriptInstance mEntityInstance;
 
-            sMonoHUDComponent()                            = default;
-            sMonoHUDComponent( const sMonoHUDComponent & ) = default;
+            sMonoUIComponent()                           = default;
+            sMonoUIComponent( const sMonoUIComponent & ) = default;
 
-            ~sMonoHUDComponent() = default;
+            ~sMonoUIComponent() = default;
 
-            sMonoHUDComponent( const std::string &aClassFullName )
+            sMonoUIComponent( const std::string &aClassFullName )
                 : mClassFullName{ aClassFullName }
 
             {
@@ -243,7 +242,7 @@ namespace SE::Core
 
             void Initialize( Internal::Entity<ParentType> aEntity )
             {
-                mEntity           = aEntity; // Create Mono side entity object
+                mEntity           = aEntity;
                 auto lEntityID    = static_cast<uint32_t>( mEntity );
                 auto lRegistryID  = (size_t)mEntity.GetRegistry();
                 auto lEntityClass = MonoRuntime::GetClassType( "SpockEngine.Entity" );
@@ -264,17 +263,18 @@ namespace SE::Core
                 }
             }
 
-            void OnCreate()
+            void OnBeginScenario()
             {
                 // Instantiate the Mono actor class with the entity object as parameter
                 if( mClassFullName.empty() ) return;
 
                 mInstance = mClass.Instantiate();
+
                 mInstance.CallMethod( "Initialize", (size_t)mEntityInstance.GetInstance() );
                 mInstance.InvokeMethod( "BeginScenario", 0, nullptr );
             }
 
-            void OnDestroy()
+            void OnEndScenario()
             {
                 mInstance.InvokeMethod( "EndScenario", 0, nullptr );
                 mInstance = MonoScriptInstance{};
