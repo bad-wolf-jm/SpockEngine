@@ -47,9 +47,9 @@ namespace SE::Core
         /// @brief Constructs an empty registry
         EntityCollection()
         {
-            mAddSignalHandlers     = CreateEntity();
-            mUpdateSignalHandlers  = CreateEntity();
-            mDestroySignalHandlers = CreateEntity();
+            mAddSignalHandlers     = CreateRawEntity();
+            mUpdateSignalHandlers  = CreateRawEntity();
+            mDestroySignalHandlers = CreateRawEntity();
         };
 
         EntityCollection( const EntityCollection & )            = delete;
