@@ -87,11 +87,11 @@ namespace SE::Core
         }
     } // namespace
 
-    MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sNodeTransformComponent &aComponent );
-    void               UnmarshallComponent( MonoScriptInstance &aMonoType, sNodeTransformComponent &aComponent );
-
     MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sTag &aComponent );
     void               UnmarshallComponent( MonoScriptInstance &aMonoType, sTag &aComponent );
+
+    MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sNodeTransformComponent &aComponent );
+    void               UnmarshallComponent( MonoScriptInstance &aMonoType, sNodeTransformComponent &aComponent );
 
     MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sLightComponent &aComponent );
     void               UnmarshallComponent( MonoScriptInstance &aMonoType, sLightComponent &aComponent );

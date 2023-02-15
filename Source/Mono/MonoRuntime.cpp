@@ -154,8 +154,8 @@ namespace SE::Core
 
         sRuntimeData->mCoreAssembly.mNeedsReloading = false;
 
-        sRuntimeData->mCoreClasses = {};
-        MergeMaps( sRuntimeData->mCoreClasses, LoadImageClasses( sRuntimeData->mCoreAssembly.mImage, aFilepath ) );
+        sRuntimeData->mClasses = {};
+        MergeMaps( sRuntimeData->mClasses, LoadImageClasses( sRuntimeData->mCoreAssembly.mImage, aFilepath ) );
     }
 
     static void OnAppAssemblyFileSystemEvent( const fs::path &path, const filewatch::Event change_type )
@@ -261,7 +261,6 @@ namespace SE::Core
 
     void MonoRuntime::LoadAssemblyClasses()
     {
-        sRuntimeData->mClasses = {};
         if( sRuntimeData->mAssemblies.empty() ) return;
 
         for( auto const &lAssemblyPath : sRuntimeData->mAppAssemblyFiles )
@@ -278,22 +277,24 @@ namespace SE::Core
 
         for( auto &[lKey, lValue] : sRuntimeData->mClasses )
         {
-            lValue.mDerived.clear();
-            lLookupTable[lValue.FullName()] = &lValue;
-        }
-
-        for( auto &[lKey, lValue] : sRuntimeData->mCoreClasses )
-        {
+            lValue.mParent = nullptr;
             lValue.mDerived.clear();
             lLookupTable[lValue.FullName()] = &lValue;
         }
 
         for( auto &[lKey, lValue] : sRuntimeData->mClasses )
         {
+            if( lKey == "Test.TestScript" )
+            {
+                SE::Logging::Info( "FOO" );
+            }
+
             auto *lParentClass = mono_class_get_parent( lValue.Class() );
             if( !lParentClass ) continue;
 
-            auto lParentClassFullName = std::string( mono_class_get_name( lParentClass ) );
+            auto lParentClassNamespace = std::string( mono_class_get_namespace( lParentClass ) );
+            auto lParentClassName      = std::string( mono_class_get_name( lParentClass ) );
+            auto lParentClassFullName  = fmt::format( "{}.{}", lParentClassNamespace, lParentClassName );
 
             if( lLookupTable.find( lParentClassFullName ) != lLookupTable.end() )
             {
