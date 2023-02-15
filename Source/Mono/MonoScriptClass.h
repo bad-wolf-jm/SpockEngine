@@ -87,6 +87,8 @@ namespace SE::Core
         MonoClass   *Class() { return mMonoClass; }
         std::string &FullName() { return mClassFullName; }
 
+        std::vector<MonoScriptClass *> &DerivedClasses() { return mDerived; }
+
       private:
         fs::path                       mDllPath;
         MonoScriptClass               *mParent;

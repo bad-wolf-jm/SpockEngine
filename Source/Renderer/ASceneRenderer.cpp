@@ -91,7 +91,7 @@ namespace SE::Core
         mTransparentMeshQueue.clear();
         mScene->ForEach<sStaticMeshComponent, sMaterialComponent, sMaterialShaderComponent>(
             [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterial, auto &aMaterialData ) {
-                if( aMaterialData.Type == eCMaterialType::Opaque )
+                if( aMaterialData.Type == eMaterialType::Opaque )
                     mOpaqueMeshQueue.emplace_back( aStaticMeshComponent, aMaterial, aMaterialData );
                 else
                     mTransparentMeshQueue.emplace_back( aStaticMeshComponent, aMaterial, aMaterialData );

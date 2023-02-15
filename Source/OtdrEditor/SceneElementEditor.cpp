@@ -39,9 +39,9 @@ namespace SE::OtdrEditor
 
         if( ImGui::BeginPopup( "##add_component" ) )
         {
-            if( ImGui::MenuItem( "HUD Component", NULL, false, !ElementToEdit.Has<sHUDComponent>() ) )
+            if( ImGui::MenuItem( "HUD Component", NULL, false, !ElementToEdit.Has<sUIComponent>() ) )
             {
-                ElementToEdit.Add<sHUDComponent>();
+                ElementToEdit.Add<sUIComponent>();
             }
             if( ImGui::MenuItem( "Actor Component", NULL, false, !ElementToEdit.Has<sActorComponent>() ) )
             {
@@ -57,7 +57,7 @@ namespace SE::OtdrEditor
 
         if( ImGui::CollapsingHeader( "HUD", lFlags ) )
         {
-            if( ElementToEdit.Has<sHUDComponent>() ) EditComponent( ElementToEdit.Get<sHUDComponent>() );
+            if( ElementToEdit.Has<sUIComponent>() ) EditComponent( ElementToEdit.Get<sUIComponent>() );
         }
     }
 

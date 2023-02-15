@@ -28,6 +28,8 @@
 
 #include "Core/Profiling/BlockTimer.h"
 
+#include "MaterialSystem/MaterialSystem.h"
+
 namespace SE::Core::EntityComponentSystem::Components
 {
 
@@ -243,20 +245,13 @@ namespace SE::Core::EntityComponentSystem::Components
         sMaterialComponent( const sMaterialComponent & ) = default;
     };
 
-    enum class eCMaterialType : uint8_t
-    {
-        Opaque,
-        Mask,
-        Blend
-    };
-
     struct sMaterialShaderComponent
     {
-        eCMaterialType Type              = eCMaterialType::Opaque;
-        bool           IsTwoSided        = false;
-        bool           UseAlphaMask      = true;
-        float          LineWidth         = 1.0f;
-        float          AlphaMaskTheshold = 0.5;
+        eMaterialType Type              = eMaterialType::Opaque;
+        bool          IsTwoSided        = false;
+        bool          UseAlphaMask      = true;
+        float         LineWidth         = 1.0f;
+        float         AlphaMaskTheshold = 0.5;
 
         sMaterialShaderComponent()                                   = default;
         sMaterialShaderComponent( const sMaterialShaderComponent & ) = default;
@@ -298,6 +293,5 @@ namespace SE::Core::EntityComponentSystem::Components
         sLightComponent()                          = default;
         sLightComponent( const sLightComponent & ) = default;
     };
-
 
 } // namespace SE::Core::EntityComponentSystem::Components

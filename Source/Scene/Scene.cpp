@@ -137,7 +137,7 @@ namespace SE::Core
                 lNewScriptComponent.Initialize( lClonedEntity );
             }
 
-            CopyComponent<sHUDComponent>( lEntity, lClonedEntity );
+            CopyComponent<sUIComponent>( lEntity, lClonedEntity );
 
             CopyComponent<PointLightHelperComponent>( lEntity, lClonedEntity );
             CopyComponent<DirectionalLightHelperComponent>( lEntity, lClonedEntity );
@@ -336,11 +336,11 @@ namespace SE::Core
                 aComponent.Initialize( aEntity ); 
         } );
 
-        mRegistry.OnComponentAdded<sHUDComponent>( [&]( auto aEntity, auto &aComponent ) { 
+        mRegistry.OnComponentAdded<sUIComponent>( [&]( auto aEntity, auto &aComponent ) { 
                 aComponent.Initialize( aEntity ); 
         } );
 
-        mRegistry.OnComponentUpdated<sHUDComponent>( [&]( auto aEntity, auto &aComponent ) { 
+        mRegistry.OnComponentUpdated<sUIComponent>( [&]( auto aEntity, auto &aComponent ) { 
                 aComponent.Initialize( aEntity ); 
         } );
         // clang-format on
@@ -493,12 +493,12 @@ namespace SE::Core
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sActorComponent>()], lReadContext );
             }
 
-            if( HasTypeTag<sHUDComponent>( lEntityConfiguration ) )
+            if( HasTypeTag<sUIComponent>( lEntityConfiguration ) )
             {
-                sHUDComponent lComponent{};
+                sUIComponent lComponent{};
 
-                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sHUDComponent>()], lReadContext );
-                lEntity.Add<sHUDComponent>( lComponent );
+                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sUIComponent>()], lReadContext );
+                lEntity.Add<sUIComponent>( lComponent );
             }
         }
 
@@ -673,7 +673,7 @@ namespace SE::Core
             lMaterialIds.push_back( lNewMaterial.mID );
 
             sMaterialShaderComponent lMaterialShader{};
-            lMaterialShader.Type              = eCMaterialType::Opaque;
+            lMaterialShader.Type              = eMaterialType::Opaque;
             lMaterialShader.IsTwoSided        = lMaterial.mConstants.mIsTwoSided;
             lMaterialShader.UseAlphaMask      = true;
             lMaterialShader.LineWidth         = 1.0f;
@@ -836,12 +836,12 @@ namespace SE::Core
                 {
                     lComponent.ControllerInstance = lComponent.InstantiateController();
                     lComponent.ControllerInstance->Initialize( mRegistry.WrapEntity( lEntity ) );
-                    lComponent.ControllerInstance->OnCreate();
+                    lComponent.ControllerInstance->OnBeginScenario();
                 }
             } );
 
-        ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnCreate(); } );
-        ForEach<sHUDComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnCreate(); } );
+        ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnBeginScenario(); } );
+        ForEach<sUIComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnBeginScenario(); } );
 
         mState = eSceneState::RUNNING;
     }
@@ -860,13 +860,13 @@ namespace SE::Core
             {
                 if( lComponent.ControllerInstance )
                 {
-                    lComponent.ControllerInstance->OnDestroy();
+                    lComponent.ControllerInstance->OnEndScenario();
                     lComponent.DestroyController( &lComponent );
                 }
             } );
 
         // Destroy Lua scripts
-        ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnDestroy(); } );
+        ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnEndScenario(); } );
 
         mState = eSceneState::EDITING;
     }
@@ -943,10 +943,10 @@ namespace SE::Core
             ForEach<sBehaviourComponent>(
                 [=]( auto aEntity, auto &aComponent )
                 {
-                    if( aComponent.ControllerInstance ) aComponent.ControllerInstance->OnUpdate( ts );
+                    if( aComponent.ControllerInstance ) aComponent.ControllerInstance->OnTick( ts );
                 } );
 
-            ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnUpdate( ts ); } );
+            ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnTick( ts ); } );
 
             // Update animations
             ForEach<sAnimationChooser>( [=]( auto aEntity, auto &aComponent ) { UpdateAnimation( aComponent.Animations[0], ts ); } );
@@ -962,7 +962,7 @@ namespace SE::Core
                 } );
         }
 
-        ForEach<sHUDComponent>(
+        ForEach<sUIComponent>(
             [=]( auto aEntity, auto &aComponent )
             {
                 if( ( mState != eSceneState::RUNNING ) && !aComponent.mDisplayInEditor ) return;
@@ -1221,7 +1221,7 @@ namespace SE::Core
             if( aEntity.Has<sBackgroundComponent>() ) WriteComponent( lOut, aEntity.Get<sBackgroundComponent>() );
             if( aEntity.Has<sAmbientLightingComponent>() ) WriteComponent( lOut, aEntity.Get<sAmbientLightingComponent>() );
             if( aEntity.Has<sLightComponent>() ) WriteComponent( lOut, aEntity.Get<sLightComponent>() );
-            if( aEntity.Has<sHUDComponent>() ) WriteComponent( lOut, aEntity.Get<sHUDComponent>() );
+            if( aEntity.Has<sUIComponent>() ) WriteComponent( lOut, aEntity.Get<sUIComponent>() );
         }
         lOut.EndMap();
     }

@@ -76,7 +76,7 @@ namespace SE::Core
 
     sMeshRenderData::sMeshRenderData( sStaticMeshComponent const &aMesh, sMaterialComponent const &aMaterialID,
                                       sMaterialShaderComponent const &aShader )
-        : mOpaque{ ( aShader.Type == eCMaterialType::Opaque ) }
+        : mOpaque{ ( aShader.Type == eMaterialType::Opaque ) }
         , mIsTwoSided{ aShader.IsTwoSided }
         , mLineWidth{ aShader.LineWidth }
         , mMaterialID{ aMaterialID.mMaterialID }

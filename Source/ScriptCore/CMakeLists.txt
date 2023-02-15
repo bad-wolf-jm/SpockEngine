@@ -15,6 +15,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/Component.cs
     Source/Entity.cs
     Source/ActorComponent.cs
+    Source/Script.cs
     Source/HUDComponent.cs
     Source/TensorOps.cs
     Source/SEApplication.cs

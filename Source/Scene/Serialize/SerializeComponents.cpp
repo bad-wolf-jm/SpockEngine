@@ -26,7 +26,7 @@ namespace SE::Core
         { typeid(sBackgroundComponent).name(),        "BACKGROUND" },
         { typeid(sAmbientLightingComponent).name(),   "AMBIENT_LIGHTING" },
         { typeid(sLightComponent).name(),             "LIGHT" },
-        { typeid(sHUDComponent).name(),               "HUD" }
+        { typeid(sUIComponent).name(),               "HUD" }
     };
     // clang-format on
 
@@ -235,7 +235,7 @@ namespace SE::Core
 
     void ReadComponent( sMaterialShaderComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
-        aComponent.Type              = static_cast<eCMaterialType>( Get( aNode["Type"], uint8_t{ 0 } ) );
+        aComponent.Type              = static_cast<eMaterialType>( Get( aNode["Type"], uint8_t{ 0 } ) );
         aComponent.IsTwoSided        = Get( aNode["IsTwoSided"], true );
         aComponent.UseAlphaMask      = Get( aNode["UseAlphaMask"], true );
         aComponent.LineWidth         = Get( aNode["LineWidth"], 1.0f );
@@ -267,7 +267,7 @@ namespace SE::Core
         aComponent.mIsOn      = Get( aNode["mIsOn"], true );
     }
 
-    void ReadComponent( sHUDComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sUIComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
         aComponent.mX               = Get( aNode["mX"], 0.0f );
         aComponent.mY               = Get( aNode["mY"], 0.0f );
@@ -530,9 +530,9 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void WriteComponent( ConfigurationWriter &aOut, sHUDComponent const &aComponent )
+    void WriteComponent( ConfigurationWriter &aOut, sUIComponent const &aComponent )
     {
-        WriteTypeTag<sHUDComponent>( aOut );
+        WriteTypeTag<sUIComponent>( aOut );
         aOut.BeginMap( true );
         {
             aOut.WriteKey( "mX", aComponent.mX );
