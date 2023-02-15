@@ -13,6 +13,8 @@ namespace SE::Core
       public:
         MonoScriptInstance() = default;
         MonoScriptInstance( MonoClass *aMonoClass, MonoObject *aInstance );
+        
+        ~MonoScriptInstance();
 
         MonoObject *GetInstance() { return mInstance; };
         MonoMethod *GetMethod( const std::string &aName, int aParameterCount );
@@ -50,6 +52,7 @@ namespace SE::Core
       private:
         MonoClass  *mMonoClass = nullptr;
         MonoObject *mInstance  = nullptr;
+        uint32_t    mGCHandle  = 0;
 
         friend class MonoScriptEngine;
     };
