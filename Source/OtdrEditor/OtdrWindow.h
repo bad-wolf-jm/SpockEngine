@@ -14,6 +14,7 @@
 
 #include "UI/UI.h"
 
+#include "Mono/MonoScriptInstance.h"
 #include "Editor/ContentBrowser.h"
 #include "SceneHierarchyPanel.h"
 
@@ -42,6 +43,9 @@ namespace SE::OtdrEditor
         Ref<OtdrScene> mWorld       = nullptr;
         Ref<OtdrScene> mActiveWorld = nullptr;
 
+        MonoScriptInstance mCurrentScript{};
+        bool mCurrentScriptIsRunning{};
+
       public:
         float HeaderHeight       = 31.0f;
         float StatusBarHeight    = 31.0f;
@@ -50,6 +54,8 @@ namespace SE::OtdrEditor
 
         entt::delegate<void( void )> OnBeginScenario{};
         entt::delegate<void( void )> OnEndScenario{};
+
+        void Update(Timestep aTs);
 
       public:
         OtdrWindow() = default;

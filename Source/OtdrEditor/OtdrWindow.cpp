@@ -156,21 +156,9 @@ namespace SE::OtdrEditor
 
             for( auto const &lScriptClass : lScriptBaseClass.DerivedClasses() )
             {
-                UI::Text( "{} {}", ICON_FA_ARROW_CIRCLE_O_RIGHT, lScriptClass->FullName() );
-
-                if( !lInstance )
+                if( UI::Button( lScriptClass->FullName().c_str(), math::vec2{ 100.0f, 30.0f } ) )
                 {
-                    if( UI::Button( lScriptClass->FullName().c_str(), math::vec2{ 100.0f, 30.0f } ) )
-                    {
-                        lInstance = lScriptClass->Instantiate();
-                        lInstance.Grab();
-                        lInstance.CallMethod( "BeginScenario" );
-                    }
-                }
-                else
-                {
-                    float lTs = 0;
-                    lInstance.CallMethod( "Tick", &lTs );
+                    mCurrentScript = lScriptClass->Instantiate();
                 }
             }
         }
@@ -389,7 +377,19 @@ namespace SE::OtdrEditor
 
     math::ivec2 OtdrWindow::GetWorkspaceAreaSize() { return mWorkspaceAreaSize; }
 
-    void OtdrWindow::Workspace( int32_t width, int32_t height )
+    void OtdrWindow::Update( Timestep aTs )
+    {
+        mActiveWorld->Update( aTs );
+
+        if( mCurrentScriptIsRunning )
+        {
+            mCurrentScript.CallMethod( "Tick", &aTs );
+        }
+
+        UpdateFramerate( aTs );
+    }
+
+    void OtdrWindow::Workspace( int32_t aWidth, int32_t height )
     {
         auto &lIO = ImGui::GetIO();
 
@@ -401,7 +401,32 @@ namespace SE::OtdrEditor
         ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 1.0f, 1.0f, 1.0f, 0.01f } );
         ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 1.0f, 1.0f, 1.0f, 0.02f } );
 
-        if( mActiveWorld->GetState() == OtdrScene::eSceneState::EDITING )
+        if( mCurrentScript )
+        {
+            if( !mCurrentScriptIsRunning )
+            {
+                if( ImGui::ImageButton( (ImTextureID)mPlayIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
+                                        ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
+                                        ImVec4{ 0.0f, 1.0f, 0.0f, 0.8f } ) )
+                {
+                    mCurrentScript.Grab();
+                    mCurrentScript.CallMethod( "BeginScenario" );
+                    mCurrentScriptIsRunning = true;
+                }
+            }
+            else
+            {
+                if( ImGui::ImageButton( (ImTextureID)mPauseIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
+                                        ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
+                                        ImVec4{ 1.0f, .2f, 0.0f, 0.8f } ) )
+                {
+                    mCurrentScript.CallMethod( "EndScenario" );
+                    mCurrentScript.Release();
+                    mCurrentScriptIsRunning = false;
+                }
+            }
+        }
+        else if( mActiveWorld->GetState() == OtdrScene::eSceneState::EDITING )
         {
 
             if( ImGui::ImageButton( (ImTextureID)mPlayIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
@@ -436,7 +461,7 @@ namespace SE::OtdrEditor
         mWorkspaceAreaSize          = l3DViewSize;
     }
 
-    void OtdrWindow::Console( int32_t width, int32_t height )
+    void OtdrWindow::Console( int32_t aWidth, int32_t height )
     {
         const float           lTextBaseHeight = ImGui::GetTextLineHeightWithSpacing();
         const ImGuiTableFlags flags           = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY |

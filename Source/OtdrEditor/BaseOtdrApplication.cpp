@@ -21,8 +21,7 @@ namespace SE::OtdrEditor
 
     void BaseOtdrApplication::Update( Timestep ts )
     {
-        mEditorWindow.mActiveWorld->Update( ts );
-        mEditorWindow.UpdateFramerate( ts );
+        mEditorWindow.Update( ts );
     }
 
     bool BaseOtdrApplication::RenderUI( ImGuiIO &io )
