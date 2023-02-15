@@ -149,13 +149,28 @@ namespace SE::OtdrEditor
         }
         ImGui::End();
 
+        static MonoScriptInstance lInstance;
         if( ImGui::Begin( "SCRIPTS", NULL, ImGuiWindowFlags_None ) )
         {
-            auto lScriptBaseClass = MonoRuntime::GetClassType("SpockEngine.Script");
+            auto lScriptBaseClass = MonoRuntime::GetClassType( "SpockEngine.Script" );
 
-            for (auto const& lScriptClass : lScriptBaseClass.DerivedClasses())
+            for( auto const &lScriptClass : lScriptBaseClass.DerivedClasses() )
             {
-                UI::Text("{} {}", ICON_FA_ARROW_CIRCLE_O_RIGHT, lScriptClass->FullName());
+                UI::Text( "{} {}", ICON_FA_ARROW_CIRCLE_O_RIGHT, lScriptClass->FullName() );
+
+                if( !lInstance )
+                {
+                    if( UI::Button( lScriptClass->FullName().c_str(), math::vec2{ 100.0f, 30.0f } ) )
+                    {
+                        lInstance = lScriptClass->Instantiate();
+                        lInstance.CallMethod( "BeginScenario" );
+                    }
+                }
+                else
+                {
+                    float lTs = 0;
+                    lInstance.CallMethod( "Tick", &lTs );
+                }
             }
         }
         ImGui::End();
