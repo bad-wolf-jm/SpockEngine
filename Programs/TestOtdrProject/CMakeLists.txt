@@ -58,6 +58,7 @@ set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_DOTNET_REFERENCES
     "C:/GitLab/SpockEngine/Source/ScriptCore/Build/Debug/SE_Core.dll"
     D:/EXFO/GitLab/EXFO/Build/Metrino.Mono/Debug/Metrino.Mono.dll
     D:/EXFO/GitLab/EXFO/Build/Metrino.Otdr/Debug/Metrino.Otdr.dll
+    D:/EXFO/GitLab/EXFO/Build/Metrino.Otdr.SignalProcessing/Debug/Metrino.Otdr.SignalProcessing.dll
     D:/EXFO/GitLab/EXFO/Build/Metrino.Otdr.Instrument/Debug/Metrino.Otdr.Instrument.dll
     ${DOTNET_REFERENCE_PATH}
 )

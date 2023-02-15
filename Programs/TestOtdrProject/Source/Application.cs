@@ -2,7 +2,9 @@ using System;
 
 using SpockEngine;
 
+using Metrino.Otdr;
 using Metrino.Otdr.Instrument;
+using Metrino.Otdr.SignalProcessing;
 
 using Metrino.Mono;
 
@@ -16,6 +18,8 @@ namespace Test
 
         private bool mSourceStarted;
         private bool mPowerMeterStarted;
+
+        private BlinkDetection mBlinkDetection;
 
 
         public TestScript() : base() { }
@@ -43,11 +47,19 @@ namespace Test
                         mPowerMeter = lPowerMeter;
                 }
             }
+
+            mBlinkDetection = new BlinkDetection(new Interval(1.0, 0.1), new Interval(1.0, 0.1));
         }
 
         override public void EndScenario()
         {
             base.EndScenario();
+
+            if (mSource != null)
+                mSource.Dispose();
+                
+            if (mPowerMeter != null)
+                mPowerMeter.Dispose();
         }
 
         override public void Tick(float aTs)
@@ -82,7 +94,12 @@ namespace Test
                 return;
 
             Metrino.Otdr.Value.Photocurrent lPowerValue = mPowerMeter.PowerValue;
-            System.Console.WriteLine(lPowerValue);
+
+            BlinkState lIsBlinking;
+            mBlinkDetection.DetectHightestToneAndBlink(lPowerValue, out lIsBlinking);
+            var valueLink = lPowerValue.Tag as Metrino.Otdr.PowerValue.ValueLink;
+
+            System.Console.WriteLine($"{valueLink.Timestamp.Millisecond} -- {lPowerValue.Value} -- {lIsBlinking}");
         }
     }
 }
