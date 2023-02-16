@@ -12,7 +12,6 @@ namespace SE::Core
     {
       public:
         UIImage() = default;
-
         UIImage( Ref<UIContext> aUIContext, fs::path const &aImagePath, math::vec2 aSize );
 
       private:
