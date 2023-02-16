@@ -35,7 +35,7 @@ namespace SE::Core
         return *this;
     }
 
-    UIImageButton &UIImageButton::SetSize( float aWidth, float aHeignt )
+    UIImageButton &UIImageButton::SetSize( float aWidth, float aHeight )
     {
         mSize = ImVec2{ aWidth, aHeight };
 
