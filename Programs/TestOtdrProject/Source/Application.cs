@@ -57,10 +57,14 @@ namespace Test
             base.EndScenario();
 
             if (mSource != null)
-                mSource.Dispose();
+                mSource.Stop();
                 
             if (mPowerMeter != null)
-                mPowerMeter.Dispose();
+                mPowerMeter.Stop();
+
+            mSource = null;
+            mPowerMeter = null;
+            mBlinkDetection = null;
         }
 
         override public void Tick(float aTs)
@@ -78,7 +82,6 @@ namespace Test
 
                 mSource.StartSourceMode(lSourceConfiguration);
                 mSourceStarted = true;
-
 
                 System.Console.WriteLine("Started power source");
             }
