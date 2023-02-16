@@ -76,7 +76,16 @@ namespace Test
             if (!mSourceStarted && (mSource.State == Metrino.Kernos.Instrument.State.Ready))
             {
                 Configuration7000 lSourceConfiguration = new Configuration7000();
-                lSourceConfiguration.SourceWavelength = mSource.SettingsValidator.Wavelengths.ElementAt(0).Wavelength;
+
+                foreach(var lWL in mSource.SettingsValidator.Wavelengths)
+                {
+                    if (PhysicalFiberCharacteristics.IsMultiModeFiber(lWL.FiberCode))
+                    {
+                        lSourceConfiguration.SourceWavelength = lWL.Wavelength;
+                        break;
+                    }
+                }
+
                 lSourceConfiguration.SourceModulation = false;
                 lSourceConfiguration.SourceBlinkModulation = false;
 
