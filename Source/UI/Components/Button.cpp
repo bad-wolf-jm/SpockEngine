@@ -2,6 +2,17 @@
 
 namespace SE::Core
 {
+    UIButton::UIButton( std::string const &aText )
+        : mText{ aText }
+    {
+    }
+
+    UIButton::UIButton( std::string const &aText, std::function<void()> aOnClick )
+        : mText{ aText }
+        , mOnClick{ aOnClick }
+    {
+    }
+
     void UIButton::PushStyles() {}
     void UIButton::PopStyles() {}
 
@@ -9,15 +20,16 @@ namespace SE::Core
     {
         if( !aEnabled )
         {
-            ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f } );
-            ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f } );
-            ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f } );
+            ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.3f, 0.3f, 0.3f, .2f } );
+            ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.1f, 0.1f, 0.1f, .2f } );
+            ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 0.1f, 0.1f, 0.1f, .2f } );
+            ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.1f, 0.1f, .2f } );
         }
     }
 
     void UIButton::PopStyles( bool aEnabled )
     {
-        if( !aEnabled ) ImGui::PopStyleColor( 3 );
+        if( !aEnabled ) ImGui::PopStyleColor( 4 );
     }
 
     ImVec2 UIButton::RequiredSize()
