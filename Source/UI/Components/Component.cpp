@@ -1,4 +1,4 @@
-#include "UIComponent.h"
+#include "Component.h"
 
 namespace SE::Core
 {
@@ -16,4 +16,7 @@ namespace SE::Core
 
         if( !mAllowDragDrop || !mIsEnabled ) return;
     }
+
+    bool IsHovered() { return ImGui::IsItemHovered(); }
+
 } // namespace SE::Core

@@ -35,7 +35,7 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/UI.cpp
     UI/TreeNode.cpp
     UI/CanvasView.cpp
-    UI/UIComponent.cpp
+    UI/Components/Component.cpp
     
     Core/Optix/OptixContext.cpp
     Core/Optix/OptixModule.cpp
