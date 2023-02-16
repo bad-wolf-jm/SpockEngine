@@ -383,7 +383,7 @@ namespace SE::OtdrEditor
 
         if( mCurrentScriptIsRunning )
         {
-            mCurrentScript.CallMethod( "Tick", &aTs );
+            mCurrentScript->CallMethod( "Tick", &aTs );
         }
 
         UpdateFramerate( aTs );
@@ -409,8 +409,7 @@ namespace SE::OtdrEditor
                                         ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
                                         ImVec4{ 0.0f, 1.0f, 0.0f, 0.8f } ) )
                 {
-                    mCurrentScript.Grab();
-                    mCurrentScript.CallMethod( "BeginScenario" );
+                    mCurrentScript->CallMethod( "BeginScenario" );
                     mCurrentScriptIsRunning = true;
                 }
             }
@@ -420,8 +419,7 @@ namespace SE::OtdrEditor
                                         ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
                                         ImVec4{ 1.0f, .2f, 0.0f, 0.8f } ) )
                 {
-                    mCurrentScript.CallMethod( "EndScenario" );
-                    mCurrentScript.Release();
+                    mCurrentScript->CallMethod( "EndScenario" );
                     mCurrentScriptIsRunning = false;
                 }
             }

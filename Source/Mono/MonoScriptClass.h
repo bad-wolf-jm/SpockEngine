@@ -4,6 +4,8 @@
 #include <map>
 #include <string>
 
+#include "Core/Memory.h"
+
 #include "MonoScriptInstance.h"
 #include "MonoTypedefs.h"
 
@@ -42,10 +44,10 @@ namespace SE::Core
         MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
                          fs::path const &aDllPPath );
 
-        MonoScriptInstance DoInstantiate();
+        Ref<MonoScriptInstance> DoInstantiate();
 
         template <typename... _ArgTypes>
-        MonoScriptInstance Instantiate( _ArgTypes *...aArgs )
+        Ref<MonoScriptInstance> Instantiate( _ArgTypes *...aArgs )
         {
             auto lNewInstance = DoInstantiate();
 
@@ -53,11 +55,11 @@ namespace SE::Core
             {
                 void *lParameters[] = { (void *)aArgs... };
 
-                lNewInstance.InvokeMethod( ".ctor", sizeof...( _ArgTypes ), lParameters );
+                lNewInstance->InvokeMethod( ".ctor", sizeof...( _ArgTypes ), lParameters );
             }
             else
             {
-                lNewInstance.InvokeMethod( ".ctor", 0, NULL );
+                lNewInstance->InvokeMethod( ".ctor", 0, NULL );
             }
 
             return lNewInstance;

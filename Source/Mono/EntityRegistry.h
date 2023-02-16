@@ -5,8 +5,8 @@
 #include "mono/metadata/object.h"
 #include "mono/metadata/tabledefs.h"
 
-#include "Core/Logging.h"
 #include "Core/EntityCollection/Collection.h"
+#include "Core/Logging.h"
 #include "Scene/Components.h"
 
 #include "MonoRuntime.h"
@@ -54,7 +54,7 @@ namespace SE::Core
         }
 
         template <typename _Ty>
-        MonoScriptInstance Get( Entity &aEntity, MonoScriptClass &aMonoType )
+        Ref<MonoScriptInstance> Get( Entity &aEntity, MonoScriptClass &aMonoType )
         {
             auto &aComponent = aEntity.Get<_Ty>();
             auto  lInstance  = MarshallComponent( aMonoType, aComponent );
@@ -63,7 +63,7 @@ namespace SE::Core
         }
 
         template <typename _Ty>
-        void Replace( Entity &aEntity, MonoScriptInstance &aNewComponent )
+        void Replace( Entity &aEntity, Ref<MonoScriptInstance> aNewComponent )
         {
             _Ty lInstance;
             UnmarshallComponent( aNewComponent, lInstance );
@@ -72,7 +72,7 @@ namespace SE::Core
         }
 
         template <typename _Ty>
-        void Add( Entity &aEntity, MonoScriptInstance &aNewComponent )
+        void Add( Entity &aEntity, Ref<MonoScriptInstance> aNewComponent )
         {
             _Ty lInstance;
             UnmarshallComponent( aNewComponent, lInstance );
@@ -87,14 +87,14 @@ namespace SE::Core
         }
     } // namespace
 
-    MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sTag &aComponent );
-    void               UnmarshallComponent( MonoScriptInstance &aMonoType, sTag &aComponent );
+    Ref<MonoScriptInstance> MarshallComponent( MonoScriptClass &aMonoType, sTag &aComponent );
+    void                    UnmarshallComponent( Ref<MonoScriptInstance> aMonoType, sTag &aComponent );
 
-    MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sNodeTransformComponent &aComponent );
-    void               UnmarshallComponent( MonoScriptInstance &aMonoType, sNodeTransformComponent &aComponent );
+    Ref<MonoScriptInstance> MarshallComponent( MonoScriptClass &aMonoType, sNodeTransformComponent &aComponent );
+    void                    UnmarshallComponent( Ref<MonoScriptInstance> aMonoType, sNodeTransformComponent &aComponent );
 
-    MonoScriptInstance MarshallComponent( MonoScriptClass &aMonoType, sLightComponent &aComponent );
-    void               UnmarshallComponent( MonoScriptInstance &aMonoType, sLightComponent &aComponent );
+    Ref<MonoScriptInstance> MarshallComponent( MonoScriptClass &aMonoType, sLightComponent &aComponent );
+    void                    UnmarshallComponent( Ref<MonoScriptInstance> aMonoType, sLightComponent &aComponent );
 
     entt::meta_type GetMetaType( MonoType *aObject );
 

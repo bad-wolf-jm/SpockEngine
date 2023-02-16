@@ -13,19 +13,19 @@ namespace SE::Core
         return entt::resolve( (uint32_t)( lHashValue & 0xFFFFFFFF ) );
     }
 
-    MonoScriptInstance MarshallComponent( MonoScriptClass &lMonoType, sNodeTransformComponent &aComponent )
+    Ref<MonoScriptInstance> MarshallComponent( MonoScriptClass &lMonoType, sNodeTransformComponent &aComponent )
     {
         return lMonoType.Instantiate( &aComponent.mMatrix );
     }
 
-    void UnmarshallComponent( MonoScriptInstance &aMonoType, sNodeTransformComponent &aComponent )
+    void UnmarshallComponent( Ref<MonoScriptInstance> aMonoType, sNodeTransformComponent &aComponent )
     {
-        math::mat4 lFieldValue = aMonoType.GetFieldValue<math::mat4>( "mMatrix" );
+        math::mat4 lFieldValue = aMonoType->GetFieldValue<math::mat4>( "mMatrix" );
 
         aComponent = sNodeTransformComponent( lFieldValue );
     }
 
-    MonoScriptInstance MarshallComponent( MonoScriptClass &lMonoType, sTag &aComponent )
+    Ref<MonoScriptInstance> MarshallComponent( MonoScriptClass &lMonoType, sTag &aComponent )
     {
         MonoString *lManagedSTagValue = MonoRuntime::NewString( aComponent.mValue );
 
@@ -34,26 +34,26 @@ namespace SE::Core
         return lNewObject;
     }
 
-    void UnmarshallComponent( MonoScriptInstance &aMonoType, sTag &aComponent )
+    void UnmarshallComponent( Ref<MonoScriptInstance> aMonoType, sTag &aComponent )
     {
-        auto lFieldValue = aMonoType.GetFieldValue<MonoString *>( "mValue" );
+        auto lFieldValue = aMonoType->GetFieldValue<MonoString *>( "mValue" );
 
         aComponent = sTag( MonoRuntime::NewString( lFieldValue ) );
     }
 
-    MonoScriptInstance MarshallComponent( MonoScriptClass &lMonoType, sLightComponent &aComponent )
+    Ref<MonoScriptInstance> MarshallComponent( MonoScriptClass &lMonoType, sLightComponent &aComponent )
     {
         auto lNewObject = lMonoType.Instantiate( &aComponent.mType, &aComponent.mIntensity, &aComponent.mColor, &aComponent.mCone );
 
         return lNewObject;
     }
 
-    void UnmarshallComponent( MonoScriptInstance &aMonoType, sLightComponent &aComponent )
+    void UnmarshallComponent( Ref<MonoScriptInstance> aMonoType, sLightComponent &aComponent )
     {
-        aComponent.mType      = aMonoType.GetFieldValue<eLightType>( "mType" );
-        aComponent.mIntensity = aMonoType.GetFieldValue<float>( "mIntensity" );
-        aComponent.mColor     = aMonoType.GetFieldValue<math::vec3>( "mColor" );
-        aComponent.mCone      = aMonoType.GetFieldValue<float>( "mCone" );
+        aComponent.mType      = aMonoType->GetFieldValue<eLightType>( "mType" );
+        aComponent.mIntensity = aMonoType->GetFieldValue<float>( "mIntensity" );
+        aComponent.mColor     = aMonoType->GetFieldValue<math::vec3>( "mColor" );
+        aComponent.mCone      = aMonoType->GetFieldValue<float>( "mCone" );
     }
 
 } // namespace SE::Core

@@ -139,9 +139,9 @@ namespace SE::Core
         {
             std::string mClassFullName = "";
 
-            MonoScriptClass    mClass;
-            MonoScriptInstance mInstance;
-            MonoScriptInstance mEntityInstance;
+            MonoScriptClass         mClass;
+            Ref<MonoScriptInstance> mInstance;
+            Ref<MonoScriptInstance> mEntityInstance;
 
             sMonoActor()                     = default;
             sMonoActor( const sMonoActor & ) = default;
@@ -185,14 +185,14 @@ namespace SE::Core
 
                 // Instantiate the Mono actor class with the entity object as parameter
                 mInstance = mClass.Instantiate();
-                mInstance.CallMethod( "Initialize", (size_t)mEntityInstance.GetInstance() );
+                mInstance->CallMethod( "Initialize", (size_t)mEntityInstance->GetInstance() );
             }
 
-            void OnBeginScenario() { mInstance.InvokeMethod( "BeginScenario", 0, nullptr ); }
+            void OnBeginScenario() { mInstance->InvokeMethod( "BeginScenario", 0, nullptr ); }
 
-            void OnEndScenario() { mInstance.InvokeMethod( "EndScenario", 0, nullptr ); }
+            void OnEndScenario() { mInstance->InvokeMethod( "EndScenario", 0, nullptr ); }
 
-            void OnTick( Timestep ts ) { mInstance.CallMethod( "Tick", ts.GetMilliseconds() ); }
+            void OnTick( Timestep ts ) { mInstance->CallMethod( "Tick", ts.GetMilliseconds() ); }
 
             Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };
 
@@ -217,11 +217,11 @@ namespace SE::Core
             bool mDisplayInEditor = true;
             bool mPreview         = true;
 
-            std::string        mClassFullName = "";
-            MonoScriptClass    mClass;
-            MonoScriptInstance mInstance;
-            MonoScriptInstance mPreviewInstance;
-            MonoScriptInstance mEntityInstance;
+            std::string             mClassFullName = "";
+            MonoScriptClass         mClass;
+            Ref<MonoScriptInstance> mInstance;
+            Ref<MonoScriptInstance> mPreviewInstance;
+            Ref<MonoScriptInstance> mEntityInstance;
 
             sMonoUIComponent()                           = default;
             sMonoUIComponent( const sMonoUIComponent & ) = default;
@@ -259,7 +259,7 @@ namespace SE::Core
                 if( mDisplayInEditor && mPreview )
                 {
                     mPreviewInstance = mClass.Instantiate();
-                    mPreviewInstance.CallMethod( "Initialize", (size_t)mEntityInstance.GetInstance() );
+                    mPreviewInstance->CallMethod( "Initialize", (size_t)mEntityInstance->GetInstance() );
                 }
             }
 
@@ -270,24 +270,24 @@ namespace SE::Core
 
                 mInstance = mClass.Instantiate();
 
-                mInstance.CallMethod( "Initialize", (size_t)mEntityInstance.GetInstance() );
-                mInstance.InvokeMethod( "BeginScenario", 0, nullptr );
+                mInstance->CallMethod( "Initialize", (size_t)mEntityInstance->GetInstance() );
+                mInstance->InvokeMethod( "BeginScenario", 0, nullptr );
             }
 
             void OnEndScenario()
             {
-                mInstance.InvokeMethod( "EndScenario", 0, nullptr );
+                mInstance->InvokeMethod( "EndScenario", 0, nullptr );
                 mInstance = MonoScriptInstance{};
             }
 
             void OnUpdate( Timestep ts )
             {
-                if( mInstance ) mInstance.CallMethod( "DrawContent", ts.GetMilliseconds() );
+                if( mInstance ) mInstance->CallMethod( "DrawContent", ts.GetMilliseconds() );
             }
 
             void OnPreviewUpdate( Timestep ts )
             {
-                if( mPreviewInstance ) mPreviewInstance.CallMethod( "DrawPreviewContent", ts.GetMilliseconds() );
+                if( mPreviewInstance ) mPreviewInstance->CallMethod( "DrawPreviewContent", ts.GetMilliseconds() );
             }
 
             Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };

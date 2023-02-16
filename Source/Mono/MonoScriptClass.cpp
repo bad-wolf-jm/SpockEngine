@@ -74,11 +74,11 @@ namespace SE::Core
         mFields = GetClassFields( mMonoClass );
     }
 
-    MonoScriptInstance MonoScriptClass::DoInstantiate()
+    Ref<MonoScriptInstance> MonoScriptClass::DoInstantiate()
     {
         MonoObject *lInstance = MonoRuntime::InstantiateClass( mMonoClass, mIsCore );
 
-        return MonoScriptInstance( mMonoClass, lInstance );
+        return New<MonoScriptInstance>( mMonoClass, lInstance );
     }
 
     MonoMethod *MonoScriptClass::GetMethod( const std::string &aName, int aParameterCount )

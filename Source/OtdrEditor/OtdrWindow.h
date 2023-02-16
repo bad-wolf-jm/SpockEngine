@@ -43,7 +43,7 @@ namespace SE::OtdrEditor
         Ref<OtdrScene> mWorld       = nullptr;
         Ref<OtdrScene> mActiveWorld = nullptr;
 
-        MonoScriptInstance mCurrentScript{};
+        Ref<MonoScriptInstance> mCurrentScript{};
         bool mCurrentScriptIsRunning{};
 
       public:
