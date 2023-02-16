@@ -1,6 +1,6 @@
 #pragma once
 
-#include "UI.h"
+#include "UI/UI.h"
 
 namespace SE::Core
 {
@@ -20,8 +20,11 @@ namespace SE::Core
         virtual void PushStyles()   = 0;
         virtual void PopStyles()    = 0;
         virtual void RequiredSize() = 0;
-
+   
       protected:
         virtual void DrawContent( ImVec2 aPosition, ImVec2 aSize ) = 0;
+
+        bool IsHovered();
+
     };
 } // namespace SE::Core
