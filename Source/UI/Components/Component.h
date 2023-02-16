@@ -17,14 +17,12 @@ namespace SE::Core
 
         void Update( ImVec2 aPosition, ImVec2 aSize );
 
-        virtual void PushStyles()   = 0;
-        virtual void PopStyles()    = 0;
-        virtual void RequiredSize() = 0;
-   
       protected:
-        virtual void DrawContent( ImVec2 aPosition, ImVec2 aSize ) = 0;
+        virtual void   PushStyles()                                  = 0;
+        virtual void   PopStyles()                                   = 0;
+        virtual ImVec2 RequiredSize()                                = 0;
+        virtual void   DrawContent( ImVec2 aPosition, ImVec2 aSize ) = 0;
 
         bool IsHovered();
-
     };
 } // namespace SE::Core
