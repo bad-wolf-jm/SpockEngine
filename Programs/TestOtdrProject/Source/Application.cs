@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 using SpockEngine;
 
@@ -71,13 +72,13 @@ namespace Test
             if (!mSourceStarted && (mSource.State == Metrino.Kernos.Instrument.State.Ready))
             {
                 Configuration7000 lSourceConfiguration = new Configuration7000();
-                lSourceConfiguration.SourceWavelength = 0.0;
-                lSourceConfiguration.SourceFrequency = 0.0;
-                lSourceConfiguration.SourceModulation = true;
-                lSourceConfiguration.SourceBlinkModulation = true;
+                lSourceConfiguration.SourceWavelength = mSource.SettingsValidator.Wavelengths.ElementAt(0).Wavelength;
+                lSourceConfiguration.SourceModulation = false;
+                lSourceConfiguration.SourceBlinkModulation = false;
 
                 mSource.StartSourceMode(lSourceConfiguration);
                 mSourceStarted = true;
+
 
                 System.Console.WriteLine("Started power source");
             }
@@ -99,7 +100,7 @@ namespace Test
             mBlinkDetection.DetectHightestToneAndBlink(lPowerValue, out lIsBlinking);
             var valueLink = lPowerValue.Tag as Metrino.Otdr.PowerValue.ValueLink;
 
-            System.Console.WriteLine($"{valueLink.Timestamp.Millisecond} -- {lPowerValue.Value} -- {lIsBlinking}");
+            System.Console.WriteLine($"{valueLink.Timestamp.Millisecond} -- {lPowerValue.Value} -- {lPowerValue.Power} -- {lIsBlinking}");
         }
     }
 }
