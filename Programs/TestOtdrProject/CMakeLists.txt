@@ -5,6 +5,7 @@ set(LIBRARY_NAME Test)
 
 add_library(${LIBRARY_NAME} SHARED
     Source/Application.cs
+    Source/PowerMeter.cs
 )
 
 set(NUGET_PACKAGE_ROOT "D:/EXFO/GitLab/EXFO/.nuget/packages")
