@@ -68,6 +68,8 @@ namespace SE::Core
         ImageHandle        CreateTextureHandle( Ref<Graphics::VkSampler2D> aTexture );
         Ref<DescriptorSet> AddTexture( Ref<Graphics::VkSampler2D> aTexture );
 
+        Ref<VkGraphicContext> GraphicContext() {return mGraphicContext;}
+        
         ImFont *mMonoFont;
         ImFont *mMainFont;
         ImFont *mBoldFont;

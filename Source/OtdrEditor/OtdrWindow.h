@@ -13,6 +13,7 @@
 #include "OtdrScene/OtdrScene.h"
 
 #include "UI/UI.h"
+#include "UI/Components/Button.h"
 
 #include "Mono/MonoScriptInstance.h"
 #include "Editor/ContentBrowser.h"
@@ -74,6 +75,8 @@ namespace SE::OtdrEditor
         void LoadIOlmData(fs::path aPath);
 
       private:
+        UIButton mTestButton;
+
         void ConfigureUI();
 
       private:

@@ -37,6 +37,7 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/CanvasView.cpp
     UI/Components/Component.cpp
     UI/Components/Button.cpp
+    UI/Components/ImageButton.cpp
     
     Core/Optix/OptixContext.cpp
     Core/Optix/OptixModule.cpp
