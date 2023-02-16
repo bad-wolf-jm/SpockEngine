@@ -17,22 +17,9 @@ namespace SE::Core
         UIImageButton( Ref<UIContext> aUIContext, fs::path const &aImagePath, math::vec2 aSize, std::function<void()> aOnClick );
 
         UIImageButton &OnClick( std::function<void()> aOnClick );
-        // UIImageButton &SetImage( fs::path const &aImagePath );
-        // UIImageButton &SetSize( float aWidth, float aHeight );
-        // UIImageButton &SetBackgroundColor( math::vec4 aColor );
-        // UIImageButton &SetTintColor( math::vec4 aColor );
 
       private:
-        // Ref<UIContext>        mUIContext;
-        // fs::path              mImagePath;
         std::function<void()> mOnClick;
-
-        // Ref<VkSampler2D> mImage;
-        // ImageHandle      mHandle;
-
-        // ImVec2 mSize{};
-        // ImVec4 mBackgroundColor{ 0.0f, 0.0f, 0.0f, 0.0f };
-        // ImVec4 mTintColor{ 1.0f, 1.0f, 1.0f, 1.0f };
 
       private:
         void PushStyles();
