@@ -7,6 +7,8 @@ namespace SE::Core
     class UIButton : public UIComponent
     {
       public:
+        UIButton() = default;
+
         UIButton( std::string const &aText );
         UIButton( std::string const &aText, std::function<void()> aOnClick );
 

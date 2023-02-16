@@ -7,7 +7,6 @@
 
 #include "Core/Profiling/BlockTimer.h"
 
-#include "UI/UI.h"
 #include "UI/Widgets.h"
 
 #include "Scene/Components.h"
@@ -64,6 +63,13 @@ namespace SE::OtdrEditor
 
     void OtdrWindow::ConfigureUI()
     {
+        mTestButton = UIButton( "Test button...",
+                                [&]()
+                                {
+                                    //
+                                    SE::Logging::Info( "ClickedOnTest" );
+                                } );
+
         {
             SE::Core::sTextureCreateInfo lTextureCreateInfo{};
             TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Play.png" );
@@ -133,6 +139,12 @@ namespace SE::OtdrEditor
             ImGui::EndMainMenuBar();
         }
         ImGui::PopStyleVar();
+        ImGui::End();
+
+        if( ImGui::Begin( "WIDGET TEST", NULL, ImGuiWindowFlags_None ) )
+        {
+            mTestButton.Update( ImVec2{ 0.0f, 0.0f }, ImVec2{ 100.0f, 100.0f } );
+        }
         ImGui::End();
 
         static bool p_open_3 = true;
