@@ -16,6 +16,7 @@ namespace SE::Core
         UIImageButton( Ref<UIContext> aUIContext, fs::path const &aImagePath, math::vec2 aSize );
         UIImageButton( Ref<UIContext> aUIContext, fs::path const &aImagePath, math::vec2 aSize, std::function<void()> aOnClick );
 
+        UIImageButton &OnClick( std::function<void()> aOnClick );
         UIImageButton &SetImage( fs::path const &aImagePath );
         UIImageButton &SetSize( float aWidth, float aHeight );
         UIImageButton &SetBackgroundColor( math::vec4 aColor );

@@ -20,6 +20,13 @@ namespace SE::Core
     void UIImageButton::PushStyles() {}
     void UIImageButton::PopStyles() {}
 
+    UIImageButton &UIImageButton::OnClick( std::function<void()> aOnClick )
+    {
+        mOnClick = aOnClick;
+
+        return *this;
+    }
+
     UIImageButton &UIImageButton::SetImage( fs::path const &aImagePath )
     {
         SE::Core::sTextureCreateInfo lTextureCreateInfo{};
