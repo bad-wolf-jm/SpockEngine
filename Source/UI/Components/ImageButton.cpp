@@ -2,81 +2,72 @@
 
 namespace SE::Core
 {
-    UIImageButton::UIImageButton( Ref<UIContext> aUIContext, fs::path const &aImagePath )
+    UIImageButton::UIImageButton( Ref<UIContext> aUIContext, fs::path const &aImagePath, math::vec2 aSize,
+                                  std::function<void()> aOnClick )
         : mImagePath{ aImagePath }
         , mUIContext{ aUIContext }
-
-    {
-        SE::Core::sTextureCreateInfo lTextureCreateInfo{};
-        TextureData2D                lTextureData( lTextureCreateInfo, aImagePath );
-        sTextureSamplingInfo         lSamplingInfo{};
-        SE::Core::TextureSampler2D   lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
-
-        auto lTexture = New<VkTexture2D>( mUIContext->GraphicContext(), lTextureData );
-        mImage        = New<VkSampler2D>( mUIContext->GraphicContext(), lTexture, lSamplingInfo );
-        mImageHandle  = mUIContext->CreateTextureHandle( mImage );
-    }
-
-    UIImageButton::UIImageButton( Ref<UIContext> aUIContext, fs::path const &aImagePath, std::function<void()> aOnClick )
-        : mImagePath{ aImagePath }
-        , mUIContext{ aUIContext }
+        , mSize{ aSize.x, aSize.y }
         , mOnClick{ aOnClick }
     {
-        SE::Core::sTextureCreateInfo lTextureCreateInfo{};
-        TextureData2D                lTextureData( lTextureCreateInfo, aImagePath );
-        sTextureSamplingInfo         lSamplingInfo{};
-        SE::Core::TextureSampler2D   lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
+        SetImage( aImagePath );
+    }
 
-        auto lTexture = New<VkTexture2D>( mUIContext->GraphicContext(), lTextureData );
-        mImage        = New<VkSampler2D>( mUIContext->GraphicContext(), lTexture, lSamplingInfo );
-        mImageHandle  = mUIContext->CreateTextureHandle( mImage );
+    UIImageButton::UIImageButton( Ref<UIContext> aUIContext, fs::path const &aImagePath, math::vec2 aSize )
+        : UIImageButton( aUIContext, aImagePath, aSize, std::function<void()>{} )
+    {
     }
 
     void UIImageButton::PushStyles() {}
     void UIImageButton::PopStyles() {}
 
-    void UIImageButton::PushStyles( bool aEnabled )
+    UIImageButton &UIImageButton::SetImage( fs::path const &aImagePath )
     {
-        if( !aEnabled )
-        {
-            ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.3f, 0.3f, 0.3f, .2f } );
-            ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.1f, 0.1f, 0.1f, .2f } );
-            ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 0.1f, 0.1f, 0.1f, .2f } );
-            ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.1f, 0.1f, .2f } );
-        }
+        SE::Core::sTextureCreateInfo lTextureCreateInfo{};
+        TextureData2D                lTextureData( lTextureCreateInfo, aImagePath );
+        sTextureSamplingInfo         lSamplingInfo{};
+        SE::Core::TextureSampler2D   lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
+
+        auto lTexture = New<VkTexture2D>( mUIContext->GraphicContext(), lTextureData );
+        mImage        = New<VkSampler2D>( mUIContext->GraphicContext(), lTexture, lSamplingInfo );
+        mHandle       = mUIContext->CreateTextureHandle( mImage );
+        mImagePath    = aImagePath;
+
+        return *this;
     }
 
-    void UIImageButton::PopStyles( bool aEnabled )
+    UIImageButton &UIImageButton::SetSize( float aWidth, float aHeignt )
     {
-        if( !aEnabled ) ImGui::PopStyleColor( 4 );
+        mSize = ImVec2{ aWidth, aHeight };
+
+        return *this;
     }
 
-    ImVec2 UIImageButton::RequiredSize()
+    UIImageButton &UIImageButton::SetBackgroundColor( math::vec4 aColor )
     {
-        // PushStyles( mIsEnabled );
+        mBackgroundColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w };
 
-        // auto lTextSize = ImGui::CalcTextSize( mText.c_str() );
-
-        // PopStyles( mIsEnabled );
-
-        // return lTextSize + ImGui::GetStyle().FramePadding * 2.0f;
-        return ImVec2{};
+        return *this;
     }
+
+    UIImageButton &UIImageButton::SetTintColor( math::vec4 aColor )
+    {
+        mTintColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w };
+
+        return *this;
+    }
+
+    ImVec2 UIImageButton::RequiredSize() { return mSize; }
 
     void UIImageButton::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
         bool lEnabled = mIsEnabled;
 
-        PushStyles( lEnabled );
-
         ImGui::SetCursorPos( aPosition );
 
-        bool lClicked =
-            ImGui::ImageButton( (ImTextureID)mImageHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f }, ImVec2{ 0.0f, 0.0f },
-                                ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f }, ImVec4{ 0.0f, 1.0f, 0.0f, 0.8f } );
-        if( lClicked && mOnClick && lEnabled ) mOnClick();
+        bool lClicked = ImGui::ImageButton( (ImTextureID)mHandle.Handle->GetVkDescriptorSet(), mSize, ImVec2{ 0.0f, 0.0f },
+                                            ImVec2{ 1.0f, 1.0f }, 0, mBackgroundColor, mTintColor );
 
-        PopStyles( lEnabled );
+        if( lClicked && mOnClick && lEnabled ) mOnClick();
     }
 
 } // namespace SE::Core
