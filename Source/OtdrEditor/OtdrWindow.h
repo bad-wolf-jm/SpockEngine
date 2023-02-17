@@ -12,12 +12,12 @@
 
 #include "OtdrScene/OtdrScene.h"
 
-#include "UI/UI.h"
 #include "UI/Components/Button.h"
 #include "UI/Layouts/BoxLayout.h"
+#include "UI/UI.h"
 
-#include "Mono/MonoScriptInstance.h"
 #include "Editor/ContentBrowser.h"
+#include "Mono/MonoScriptInstance.h"
 #include "SceneHierarchyPanel.h"
 
 namespace SE::OtdrEditor
@@ -46,7 +46,7 @@ namespace SE::OtdrEditor
         Ref<OtdrScene> mActiveWorld = nullptr;
 
         Ref<MonoScriptInstance> mCurrentScript{};
-        bool mCurrentScriptIsRunning{};
+        bool                    mCurrentScriptIsRunning{};
 
       public:
         float HeaderHeight       = 31.0f;
@@ -57,11 +57,11 @@ namespace SE::OtdrEditor
         entt::delegate<void( void )> OnBeginScenario{};
         entt::delegate<void( void )> OnEndScenario{};
 
-        void Update(Timestep aTs);
+        void Update( Timestep aTs );
 
       public:
-        OtdrWindow() = default;
-        OtdrWindow(OtdrWindow const&) = default;
+        OtdrWindow()                     = default;
+        OtdrWindow( OtdrWindow const & ) = default;
         OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> mUIOverlay );
 
         ~OtdrWindow() = default;
@@ -73,7 +73,7 @@ namespace SE::OtdrEditor
         void Workspace( int32_t width, int32_t height );
         void Console( int32_t width, int32_t height );
         void UpdateFramerate( Timestep ts );
-        
+
         void ConfigureUI();
 
         void LoadIOlmData(fs::path aPath);
@@ -82,9 +82,9 @@ namespace SE::OtdrEditor
         UIButton mTestButton0;
         UIButton mTestButton1;
         UIButton mTestButton2;
+        UILabel  mTestArea;
 
         BoxLayout mTestLayout;
-
 
       private:
         OtdrSceneHierarchyPanel mSceneHierarchyPanel;
