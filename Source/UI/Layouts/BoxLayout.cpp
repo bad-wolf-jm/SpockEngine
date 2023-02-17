@@ -35,11 +35,11 @@ namespace SE::Core
 
         if( mOrientation == eBoxLayoutOrientation::HORIZONTAL )
         {
-            lExpandedSize = ImVec2{ aSize.x / lExpandCount, aSize.y };
+            lExpandedSize = ImVec2{ ( aSize.x - lTaken ) / lExpandCount, aSize.y };
         }
         else
         {
-            lExpandedSize = ImVec2{ aSize.x, aSize.y / lExpandCount };
+            lExpandedSize = ImVec2{ aSize.x, ( aSize.y - lTaken ) / lExpandCount };
         }
 
         ImVec2 lCurrentPosition = aPosition;
