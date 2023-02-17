@@ -13,10 +13,10 @@ namespace SE::Core
 
         UILabel &SetText( std::string const &aText );
 
-      private:
+      protected:
         std::string mText;
 
-      private:
+      protected:
         void PushStyles();
         void PopStyles();
 
