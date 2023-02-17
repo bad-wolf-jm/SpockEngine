@@ -49,7 +49,8 @@ namespace Test
                 }
             }
 
-            mBlinkDetection = new BlinkDetection(new Interval(1.3, 0.05), new Interval(.65, 0.05));
+            // mBlinkDetection = new BlinkDetection(new Interval(1.3, 0.05), new Interval(.65, 0.05));
+            mBlinkDetection = new BlinkDetection();
         }
 
         override public void EndScenario()

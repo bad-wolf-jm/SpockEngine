@@ -43,7 +43,8 @@ namespace Test
                 }
             }
 
-            mBlinkDetection = new BlinkDetection(new Interval(1.0, 0.1), new Interval(1.0, 0.1));
+            // mBlinkDetection = new BlinkDetection(new Interval(1.0, 0.1), new Interval(1.0, 0.1));
+            mBlinkDetection = new BlinkDetection();
             mStartTime = DateTime.Now;
         }
 
@@ -83,7 +84,7 @@ namespace Test
             var lFrequency = mBlinkDetection.DetectHightestToneAndBlink(lPowerValue, out lIsBlinking);
             var valueLink = lPowerValue.Tag as Metrino.Otdr.PowerValue.ValueLink;
 
-            System.Console.WriteLine($"{(valueLink.Timestamp - mStartTime).TotalMilliseconds} -- {lPowerValue.Value} -- {lPowerValue.Power} -- {lFrequency.Value} -- {lIsBlinking}");
+            // System.Console.WriteLine($"{(valueLink.Timestamp - mStartTime).TotalMilliseconds} -- {lPowerValue.Value} -- {lPowerValue.Power} -- {lFrequency.Value} -- {lIsBlinking}");
         }
     }
 }
