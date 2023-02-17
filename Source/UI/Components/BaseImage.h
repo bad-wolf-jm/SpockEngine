@@ -14,6 +14,7 @@ namespace SE::Core
         UIBaseImage() = default;
 
         UIBaseImage( Ref<UIContext> aUIContext, fs::path const &aImagePath, math::vec2 aSize );
+        UIBaseImage( Ref<UIContext> aUIContext, Ref<VkSampler2D> aImage, math::vec2 aSize );
 
         UIBaseImage &SetImage( fs::path const &aImagePath );
         UIBaseImage &SetSize( float aWidth, float aHeight );

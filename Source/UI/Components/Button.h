@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Component.h"
+#include "Label.h"
 
 namespace SE::Core
 {
-    class UIButton : public UIComponent
+    class UIButton : public UILabel
     {
       public:
         UIButton() = default;
@@ -16,7 +17,6 @@ namespace SE::Core
         UIButton &SetText( std::string const &aText );
 
       private:
-        std::string           mText;
         std::function<void()> mOnClick;
 
       private:

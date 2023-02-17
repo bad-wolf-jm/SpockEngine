@@ -10,6 +10,16 @@ namespace SE::Core
         SetImage( aImagePath );
     }
 
+    UIBaseImage::UIBaseImage( Ref<UIContext> aUIContext, Ref<VkSampler2D> aImage, math::vec2 aSize )
+        : mImagePath{ "sampler://" }
+        , mImage{ aImage }
+        , mUIContext{ aUIContext }
+        , mSize{ aSize.x, aSize.y }
+    {
+
+        mHandle = mUIContext->CreateTextureHandle( mImage );
+    }
+
     void UIBaseImage::PushStyles() {}
     void UIBaseImage::PopStyles() {}
 
@@ -37,7 +47,7 @@ namespace SE::Core
 
     UIBaseImage &UIBaseImage::SetRect( math::vec2 aTopLeft, math::vec2 aBottomRight )
     {
-        mTopLeft = ImVec2{ aTopLeft.x, aTopLeft.y };
+        mTopLeft     = ImVec2{ aTopLeft.x, aTopLeft.y };
         mBottomRight = ImVec2{ aBottomRight.x, aBottomRight.y };
 
         return *this;
@@ -59,8 +69,6 @@ namespace SE::Core
 
     ImVec2 UIBaseImage::RequiredSize() { return mSize; }
 
-    void UIBaseImage::DrawContent( ImVec2 aPosition, ImVec2 aSize )
-    {
-    }
+    void UIBaseImage::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
 
 } // namespace SE::Core
