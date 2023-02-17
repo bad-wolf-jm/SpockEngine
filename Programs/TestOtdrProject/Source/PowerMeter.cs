@@ -20,6 +20,8 @@ namespace Test
 
         private BlinkDetection mBlinkDetection;
 
+        private DateTime mStartTime;
+
 
         public TestPowerMeter() : base() { }
 
@@ -42,6 +44,7 @@ namespace Test
             }
 
             mBlinkDetection = new BlinkDetection(new Interval(1.0, 0.1), new Interval(1.0, 0.1));
+            mStartTime = DateTime.Now;
         }
 
         override public void EndScenario()
@@ -49,7 +52,9 @@ namespace Test
             base.EndScenario();
 
             if (mPowerMeter != null)
+            {
                 mPowerMeter.Stop();
+            }
 
             mPowerMeter = null;
             mBlinkDetection = null;
@@ -75,10 +80,10 @@ namespace Test
             Metrino.Otdr.Value.Photocurrent lPowerValue = mPowerMeter.PowerValue;
 
             BlinkState lIsBlinking;
-            mBlinkDetection.DetectHightestToneAndBlink(lPowerValue, out lIsBlinking);
+            var lFrequency = mBlinkDetection.DetectHightestToneAndBlink(lPowerValue, out lIsBlinking);
             var valueLink = lPowerValue.Tag as Metrino.Otdr.PowerValue.ValueLink;
 
-            System.Console.WriteLine($"{valueLink.Timestamp.Millisecond} -- {lPowerValue.Value} -- {lPowerValue.Power} -- {lIsBlinking}");
+            System.Console.WriteLine($"{(valueLink.Timestamp - mStartTime).TotalMilliseconds} -- {lPowerValue.Value} -- {lPowerValue.Power} -- {lFrequency.Value} -- {lIsBlinking}");
         }
     }
 }

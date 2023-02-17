@@ -49,7 +49,7 @@ namespace Test
                 }
             }
 
-            mBlinkDetection = new BlinkDetection(new Interval(1.0, 0.1), new Interval(1.0, 0.1));
+            mBlinkDetection = new BlinkDetection(new Interval(1.3, 0.05), new Interval(.65, 0.05));
         }
 
         override public void EndScenario()
@@ -75,19 +75,21 @@ namespace Test
 
             if (!mSourceStarted && (mSource.State == Metrino.Kernos.Instrument.State.Ready))
             {
-                Configuration7000 lSourceConfiguration = new Configuration7000();
+                Configuration7000 lSourceConfiguration = (Configuration7000)mSource.OtdrCurrentConfiguration.Clone();
 
                 foreach(var lWL in mSource.SettingsValidator.Wavelengths)
                 {
-                    if (PhysicalFiberCharacteristics.IsMultiModeFiber(lWL.FiberCode))
+                    if (PhysicalFiberCharacteristics.IsMonoModeFiber(lWL.FiberCode))
                     {
                         lSourceConfiguration.SourceWavelength = lWL.Wavelength;
                         break;
                     }
                 }
 
-                lSourceConfiguration.SourceModulation = false;
+                lSourceConfiguration.SourceModulation = true;
+                lSourceConfiguration.SourceModulationValue = 1000;
                 lSourceConfiguration.SourceBlinkModulation = false;
+                lSourceConfiguration.SourceBlinkModulationValue = 1;
 
                 mSource.StartSourceMode(lSourceConfiguration);
                 mSourceStarted = true;
@@ -109,10 +111,10 @@ namespace Test
             Metrino.Otdr.Value.Photocurrent lPowerValue = mPowerMeter.PowerValue;
 
             BlinkState lIsBlinking;
-            mBlinkDetection.DetectHightestToneAndBlink(lPowerValue, out lIsBlinking);
+            var lFrequency = mBlinkDetection.DetectHightestToneAndBlink(lPowerValue, out lIsBlinking);
             var valueLink = lPowerValue.Tag as Metrino.Otdr.PowerValue.ValueLink;
 
-            System.Console.WriteLine($"{valueLink.Timestamp.Millisecond} -- {lPowerValue.Value} -- {lPowerValue.Power} -- {lIsBlinking}");
+            // System.Console.WriteLine($"{valueLink.Timestamp} -- {lPowerValue.Value} -- {lPowerValue.Power} -- {lFrequency.Value} -- {lIsBlinking}");
         }
     }
 }
