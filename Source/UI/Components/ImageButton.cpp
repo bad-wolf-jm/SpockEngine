@@ -17,11 +17,9 @@ namespace SE::Core
     void UIImageButton::PushStyles() {}
     void UIImageButton::PopStyles() {}
 
-    UIImageButton &UIImageButton::OnClick( std::function<void()> aOnClick )
+    void UIImageButton::OnClick( std::function<void()> aOnClick )
     {
         mOnClick = aOnClick;
-
-        return *this;
     }
 
     ImVec2 UIImageButton::RequiredSize() { return mSize; }

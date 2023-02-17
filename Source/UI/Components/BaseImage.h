@@ -16,11 +16,11 @@ namespace SE::Core
         UIBaseImage( Ref<UIContext> aUIContext, fs::path const &aImagePath, math::vec2 aSize );
         UIBaseImage( Ref<UIContext> aUIContext, Ref<VkSampler2D> aImage, math::vec2 aSize );
 
-        UIBaseImage &SetImage( fs::path const &aImagePath );
-        UIBaseImage &SetSize( float aWidth, float aHeight );
-        UIBaseImage &SetRect( math::vec2 aTopLeft, math::vec2 aBottomRight );
-        UIBaseImage &SetBackgroundColor( math::vec4 aColor );
-        UIBaseImage &SetTintColor( math::vec4 aColor );
+        void SetImage( fs::path const &aImagePath );
+        void SetSize( float aWidth, float aHeight );
+        void SetRect( math::vec2 aTopLeft, math::vec2 aBottomRight );
+        void SetBackgroundColor( math::vec4 aColor );
+        void SetTintColor( math::vec4 aColor );
 
       protected:
         Ref<UIContext> mUIContext;

@@ -10,12 +10,7 @@ namespace SE::Core
     void UILabel::PushStyles() {}
     void UILabel::PopStyles() {}
 
-    UILabel &UILabel::SetText( std::string const &aText )
-    {
-        mText = aText;
-        
-        return *this;
-    }
+    void UILabel::SetText( std::string const &aText ) { mText = aText; }
 
     ImVec2 UILabel::RequiredSize()
     {

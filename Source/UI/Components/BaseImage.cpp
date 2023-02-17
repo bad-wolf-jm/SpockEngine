@@ -23,7 +23,7 @@ namespace SE::Core
     void UIBaseImage::PushStyles() {}
     void UIBaseImage::PopStyles() {}
 
-    UIBaseImage &UIBaseImage::SetImage( fs::path const &aImagePath )
+    void UIBaseImage::SetImage( fs::path const &aImagePath )
     {
         SE::Core::sTextureCreateInfo lTextureCreateInfo{};
         TextureData2D                lTextureData( lTextureCreateInfo, aImagePath );
@@ -34,38 +34,19 @@ namespace SE::Core
         mImage        = New<VkSampler2D>( mUIContext->GraphicContext(), lTexture, lSamplingInfo );
         mHandle       = mUIContext->CreateTextureHandle( mImage );
         mImagePath    = aImagePath;
-
-        return *this;
     }
 
-    UIBaseImage &UIBaseImage::SetSize( float aWidth, float aHeight )
-    {
-        mSize = ImVec2{ aWidth, aHeight };
+    void UIBaseImage::SetSize( float aWidth, float aHeight ) { mSize = ImVec2{ aWidth, aHeight }; }
 
-        return *this;
-    }
-
-    UIBaseImage &UIBaseImage::SetRect( math::vec2 aTopLeft, math::vec2 aBottomRight )
+    void UIBaseImage::SetRect( math::vec2 aTopLeft, math::vec2 aBottomRight )
     {
         mTopLeft     = ImVec2{ aTopLeft.x, aTopLeft.y };
         mBottomRight = ImVec2{ aBottomRight.x, aBottomRight.y };
-
-        return *this;
     }
 
-    UIBaseImage &UIBaseImage::SetBackgroundColor( math::vec4 aColor )
-    {
-        mBackgroundColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w };
+    void UIBaseImage::SetBackgroundColor( math::vec4 aColor ) { mBackgroundColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
 
-        return *this;
-    }
-
-    UIBaseImage &UIBaseImage::SetTintColor( math::vec4 aColor )
-    {
-        mTintColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w };
-
-        return *this;
-    }
+    void UIBaseImage::SetTintColor( math::vec4 aColor ) { mTintColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
 
     ImVec2 UIBaseImage::RequiredSize() { return mSize; }
 

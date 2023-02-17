@@ -13,8 +13,8 @@ namespace SE::Core
         UIButton( std::string const &aText );
         UIButton( std::string const &aText, std::function<void()> aOnClick );
 
-        UIButton &OnClick( std::function<void()> aOnClick );
-        UIButton &SetText( std::string const &aText );
+        void OnClick( std::function<void()> aOnClick );
+        void SetText( std::string const &aText );
 
       private:
         std::function<void()> mOnClick;

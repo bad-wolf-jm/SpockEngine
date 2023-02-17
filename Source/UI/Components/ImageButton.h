@@ -16,7 +16,7 @@ namespace SE::Core
         UIImageButton( Ref<UIContext> aUIContext, fs::path const &aImagePath, math::vec2 aSize );
         UIImageButton( Ref<UIContext> aUIContext, fs::path const &aImagePath, math::vec2 aSize, std::function<void()> aOnClick );
 
-        UIImageButton &OnClick( std::function<void()> aOnClick );
+        void OnClick( std::function<void()> aOnClick );
 
       private:
         std::function<void()> mOnClick;
