@@ -63,33 +63,15 @@ namespace SE::OtdrEditor
 
     void OtdrWindow::ConfigureUI()
     {
-        mTestButton0 = UIButton( "Test button 0...",
-                                [&]()
-                                {
-                                    //
-                                    SE::Logging::Info( "ClickedOnTest" );
-                                } );
+        mTestButton0 = UIButton( "Test button 0...", [&]() { SE::Logging::Info( "ClickedOnTest" ); } );
+        mTestButton1 = UIButton( "Test button 1...", [&]() { SE::Logging::Info( "ClickedOnTest" ); } );
+        mTestButton2 = UIButton( "Test button 2...", [&]() { SE::Logging::Info( "ClickedOnTest" ); } );
 
-        mTestButton1 = UIButton( "Test button 1...",
-                                [&]()
-                                {
-                                    //
-                                    SE::Logging::Info( "ClickedOnTest" );
-                                } );
-
-        mTestButton2 = UIButton( "Test button 2...",
-                                [&]()
-                                {
-                                    //
-                                    SE::Logging::Info( "ClickedOnTest" );
-                                } );
-
-        mTestLayout = BoxLayout(eBoxLayoutOrientation::VERTICAL);
-        mTestLayout
-            .SetItemSpacing(5.0f)
-            .Add(&mTestButton0, true, true)
-            .Add(&mTestButton1, true, false)
-            .Add(&mTestButton2, true, true);
+        mTestLayout = BoxLayout( eBoxLayoutOrientation::VERTICAL );
+        mTestLayout.SetItemSpacing( 5.0f );
+        mTestLayout.Add( &mTestButton0, true, true );
+        mTestLayout.Add( &mTestButton1, true, false );
+        mTestLayout.Add( &mTestButton2, true, true );
 
         {
             SE::Core::sTextureCreateInfo lTextureCreateInfo{};

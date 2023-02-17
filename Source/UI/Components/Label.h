@@ -11,7 +11,7 @@ namespace SE::Core
 
         UILabel( std::string const &aText );
 
-        UILabel &SetText( std::string const &aText );
+        void SetText( std::string const &aText );
 
       protected:
         std::string mText;
