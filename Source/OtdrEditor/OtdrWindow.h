@@ -14,6 +14,7 @@
 
 #include "UI/UI.h"
 #include "UI/Components/Button.h"
+#include "UI/Layouts/BoxLayout.h"
 
 #include "Mono/MonoScriptInstance.h"
 #include "Editor/ContentBrowser.h"
@@ -60,6 +61,7 @@ namespace SE::OtdrEditor
 
       public:
         OtdrWindow() = default;
+        OtdrWindow(OtdrWindow const&) = default;
         OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> mUIOverlay );
 
         ~OtdrWindow() = default;
@@ -71,13 +73,18 @@ namespace SE::OtdrEditor
         void Workspace( int32_t width, int32_t height );
         void Console( int32_t width, int32_t height );
         void UpdateFramerate( Timestep ts );
+        
+        void ConfigureUI();
 
         void LoadIOlmData(fs::path aPath);
 
       private:
-        UIButton mTestButton;
+        UIButton mTestButton0;
+        UIButton mTestButton1;
+        UIButton mTestButton2;
 
-        void ConfigureUI();
+        BoxLayout mTestLayout;
+
 
       private:
         OtdrSceneHierarchyPanel mSceneHierarchyPanel;

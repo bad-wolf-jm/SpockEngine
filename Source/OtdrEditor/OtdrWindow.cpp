@@ -63,12 +63,32 @@ namespace SE::OtdrEditor
 
     void OtdrWindow::ConfigureUI()
     {
-        mTestButton = UIButton( "Test button...",
+        mTestButton0 = UIButton( "Test button 0...",
                                 [&]()
                                 {
                                     //
                                     SE::Logging::Info( "ClickedOnTest" );
                                 } );
+
+        mTestButton1 = UIButton( "Test button 1...",
+                                [&]()
+                                {
+                                    //
+                                    SE::Logging::Info( "ClickedOnTest" );
+                                } );
+
+        mTestButton2 = UIButton( "Test button 2...",
+                                [&]()
+                                {
+                                    //
+                                    SE::Logging::Info( "ClickedOnTest" );
+                                } );
+
+        mTestLayout = BoxLayout(eBoxLayoutOrientation::VERTICAL);
+        mTestLayout
+            .Add(&mTestButton0, false, true)
+            .Add(&mTestButton1, false, false)
+            .Add(&mTestButton2, false, true);
 
         {
             SE::Core::sTextureCreateInfo lTextureCreateInfo{};
@@ -97,7 +117,7 @@ namespace SE::OtdrEditor
         : mGraphicContext{ aGraphicContext }
         , mUIOverlay{ aUIOverlay }
     {
-        ConfigureUI();
+        // ConfigureUI();
     }
 
     // OtdrWindow &OtdrWindow::AddMenuItem( std::string l_Icon, std::string l_Title, std::function<bool()> l_Action )
@@ -143,7 +163,7 @@ namespace SE::OtdrEditor
 
         if( ImGui::Begin( "WIDGET TEST", NULL, ImGuiWindowFlags_None ) )
         {
-            mTestButton.Update( ImVec2{ 0.0f, 0.0f }, ImVec2{ 100.0f, 100.0f } );
+            mTestLayout.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
         }
         ImGui::End();
 

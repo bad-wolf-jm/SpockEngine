@@ -4,6 +4,12 @@
 
 namespace SE::Core
 {
+
+    enum eBoxLayoutOrientation : uint8_t
+    {
+        HORIZONTAL,
+        VERTICAL
+    };
     struct BoxLayoutItem
     {
         UIComponent *mItem = nullptr;
@@ -11,11 +17,21 @@ namespace SE::Core
         float mFixedSize = 0.0f;
         bool  mExpand    = true;
         bool  mFill      = true;
+
+        BoxLayoutItem()                        = default;
+        BoxLayoutItem( BoxLayoutItem const & ) = default;
+
+        ~BoxLayoutItem() = default;
     };
 
-    class BoxLayout : UIComponent
+    class BoxLayout : public UIComponent
     {
-        BoxLayout()  = default;
+      public:
+        BoxLayout() = default;
+        BoxLayout( eBoxLayoutOrientation aOrientation );
+
+        BoxLayout( BoxLayout const & ) = default;
+
         ~BoxLayout() = default;
 
         BoxLayout &Add( UIComponent *aChild, bool aExpand, bool aFill );
@@ -23,6 +39,7 @@ namespace SE::Core
 
       protected:
         std::vector<BoxLayoutItem> mChildren;
+        eBoxLayoutOrientation      mOrientation;
 
       protected:
         void PushStyles();
