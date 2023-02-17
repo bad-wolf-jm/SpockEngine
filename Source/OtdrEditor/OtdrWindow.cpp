@@ -67,9 +67,17 @@ namespace SE::OtdrEditor
         mTestButton1 = UIButton( "Test button 1...", [&]() { SE::Logging::Info( "ClickedOnTest" ); } );
         mTestButton2 = UIButton( "Test button 2...", [&]() { SE::Logging::Info( "ClickedOnTest" ); } );
 
+        mTestArea.SetPadding( 10, 15, 20, 25 );
+        mTestArea.SetBorderThickness( 5, 6, 7, 8 );
+        mTestArea.SetBorderRadius( 5, 8, 7, 4 );
+        mTestArea.SetBorderColor( math::vec4{ 1.0f, 0.0f, 0.0f, 1.0f }, math::vec4{ 1.0f, 1.0f, 0.0f, 1.0f },
+                                  math::vec4{ 1.0f, 0.0f, 1.0f, 1.0f }, math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f } );
+        mTestArea.SetBackgroundColor( math::vec4{ 1.0f, 1.0f, 0.0f, .8f } );
+
         mTestLayout = BoxLayout( eBoxLayoutOrientation::VERTICAL );
         mTestLayout.SetItemSpacing( 5.0f );
         mTestLayout.Add( &mTestButton0, true, true );
+        mTestLayout.Add( &mTestArea, true, false );
         mTestLayout.Add( &mTestButton1, true, false );
         mTestLayout.Add( &mTestButton2, true, true );
 
