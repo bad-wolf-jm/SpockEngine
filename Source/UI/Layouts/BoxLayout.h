@@ -34,12 +34,15 @@ namespace SE::Core
 
         ~BoxLayout() = default;
 
+        BoxLayout &SetItemSpacing( float aItemSpacing );
+
         BoxLayout &Add( UIComponent *aChild, bool aExpand, bool aFill );
         BoxLayout &Add( UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill );
 
       protected:
         std::vector<BoxLayoutItem> mChildren;
         eBoxLayoutOrientation      mOrientation;
+        float                      mItemSpacing = 0.0f;
 
       protected:
         void PushStyles();

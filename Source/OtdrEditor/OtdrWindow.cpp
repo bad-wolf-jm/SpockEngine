@@ -86,9 +86,10 @@ namespace SE::OtdrEditor
 
         mTestLayout = BoxLayout(eBoxLayoutOrientation::VERTICAL);
         mTestLayout
-            .Add(&mTestButton0, false, true)
-            .Add(&mTestButton1, false, false)
-            .Add(&mTestButton2, false, true);
+            .SetItemSpacing(5.0f)
+            .Add(&mTestButton0, true, true)
+            .Add(&mTestButton1, true, false)
+            .Add(&mTestButton2, true, true);
 
         {
             SE::Core::sTextureCreateInfo lTextureCreateInfo{};
