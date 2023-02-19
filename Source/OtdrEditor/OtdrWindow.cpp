@@ -67,19 +67,21 @@ namespace SE::OtdrEditor
         mTestButton1 = UIButton( "Test button 1...", [&]() { SE::Logging::Info( "ClickedOnTest" ); } );
         mTestButton2 = UIButton( "Test button 2...", [&]() { SE::Logging::Info( "ClickedOnTest" ); } );
 
-        mTestArea.SetPadding( 10, 15, 20, 25 );
-        mTestArea.SetBorderThickness( 5, 6, 7, 8 );
-        mTestArea.SetBorderRadius( 5, 8, 7, 4 );
-        mTestArea.SetBorderColor( math::vec4{ 1.0f, 0.0f, 0.0f, 1.0f }, math::vec4{ 1.0f, 1.0f, 0.0f, 1.0f },
-                                  math::vec4{ 1.0f, 0.0f, 1.0f, 1.0f }, math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f } );
-        mTestArea.SetBackgroundColor( math::vec4{ 1.0f, 1.0f, 0.0f, .8f } );
+        mTestLabel0 = UILabel( "LABEL 1" );
+        mTestLabel1 = UILabel( "LABEL 2" );
+        mTestLabel2 = UILabel( "LABEL 3" );
 
-        mTestLayout = BoxLayout( eBoxLayoutOrientation::VERTICAL );
-        mTestLayout.SetItemSpacing( 5.0f );
-        mTestLayout.Add( &mTestButton0, true, true );
-        mTestLayout.Add( &mTestArea, true, false );
-        mTestLayout.Add( &mTestButton1, true, false );
-        mTestLayout.Add( &mTestButton2, true, true );
+        mTestLayout1 = BoxLayout( eBoxLayoutOrientation::HORIZONTAL );
+        mTestLayout1.Add( &mTestLabel0, true, true );
+        mTestLayout1.Add( &mTestLabel1, true, true );
+        mTestLayout1.Add( &mTestLabel2, true, true );
+
+        mTestLayout0 = BoxLayout( eBoxLayoutOrientation::VERTICAL );
+        mTestLayout0.SetItemSpacing( 5.0f );
+        mTestLayout0.Add( &mTestButton0, true, true );
+        mTestLayout0.Add( &mTestLayout1, true, true );
+        mTestLayout0.Add( &mTestButton1, true, false );
+        mTestLayout0.Add( &mTestButton2, true, true );
 
         {
             SE::Core::sTextureCreateInfo lTextureCreateInfo{};
@@ -154,7 +156,7 @@ namespace SE::OtdrEditor
 
         if( ImGui::Begin( "WIDGET TEST", NULL, ImGuiWindowFlags_None ) )
         {
-            mTestLayout.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+            mTestLayout0.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
         }
         ImGui::End();
 

@@ -4,6 +4,20 @@
 
 namespace SE::Core
 {
+    enum class eHorizontalAlignment : uint8_t
+    {
+        LEFT,
+        RIGHT,
+        CENTER
+    };
+
+    enum class eVerticalAlignment : uint8_t
+    {
+        TOP,
+        BOTTOM,
+        CENTER
+    };
+
     class UIComponent
     {
       public:
@@ -19,36 +33,43 @@ namespace SE::Core
 
         virtual ImVec2 RequiredSize() = 0;
 
-        void SetMargin( float aMarginAll );
-        void SetMargin( float aMarginTopBottom, float aMarginLeftRight );
-        void SetMargin( float aMarginTop, float aMarginBottom, float aMarginLeft, float aMarginRight );
+        // void SetMargin( float aMarginAll );
+        // void SetMargin( float aMarginTopBottom, float aMarginLeftRight );
+        // void SetMargin( float aMarginTop, float aMarginBottom, float aMarginLeft, float aMarginRight );
 
         void SetPadding( float aPaddingAll );
         void SetPadding( float aPaddingTopBottom, float aPaddingLeftRight );
         void SetPadding( float aPaddingTop, float aPaddingBottom, float aPaddingLeft, float aPaddingRight );
 
-        void SetBorderColor( math::vec4 aBorderColor );
-        void SetBorderColor( math::vec4 aTopBottom, math::vec4 aLeftRight );
-        void SetBorderColor( math::vec4 aTop, math::vec4 aBottom, math::vec4 aLeft, math::vec4 aRight );
+        void SetAlignment( eHorizontalAlignment const &aHAlignment, eVerticalAlignment const &aVAlignment );
+        void SetHorizontalAlignment( eHorizontalAlignment const &aAlignment );
+        void SetVerticalAlignment( eVerticalAlignment const &aAlignment );
 
-        void SetBackgroundColor( math::vec4 aColor );
+        // void SetBorderColor( math::vec4 aBorderColor );
+        // void SetBorderColor( math::vec4 aTopBottom, math::vec4 aLeftRight );
+        // void SetBorderColor( math::vec4 aTop, math::vec4 aBottom, math::vec4 aLeft, math::vec4 aRight );
 
-        void SetBorderThickness( float aPaddingAll );
-        void SetBorderThickness( float aPaddingTopBottom, float aPaddingLeftRight );
-        void SetBorderThickness( float aPaddingTop, float aPaddingBottom, float aPaddingLeft, float aPaddingRight );
+        // void SetBackgroundColor( math::vec4 aColor );
 
-        void SetBorderRadius( float aPaddingAll );
-        void SetBorderRadius( float aPaddingTopBottom, float aPaddingLeftRight );
-        void SetBorderRadius( float aPaddingTop, float aPaddingBottom, float aPaddingLeft, float aPaddingRight );
+        // void SetBorderThickness( float aPaddingAll );
+        // void SetBorderThickness( float aPaddingTopBottom, float aPaddingLeftRight );
+        // void SetBorderThickness( float aPaddingTop, float aPaddingBottom, float aPaddingLeft, float aPaddingRight );
+
+        // void SetBorderRadius( float aPaddingAll );
+        // void SetBorderRadius( float aPaddingTopBottom, float aPaddingLeftRight );
+        // void SetBorderRadius( float aPaddingTop, float aPaddingBottom, float aPaddingLeft, float aPaddingRight );
 
       protected:
-        math::vec4 mMargin{};
+        // math::vec4 mMargin{};
         math::vec4 mPadding{};
-        math::vec4 mBorderThickness{};
-        math::vec4 mBorderRadius{};
-        math::vec4 mBackgroundColor{};
 
-        std::array<math::vec4, 4> mBorderColor{};
+        eHorizontalAlignment mHAlign = eHorizontalAlignment::CENTER;
+        eVerticalAlignment mVAlign = eVerticalAlignment::CENTER;
+        // math::vec4 mBorderThickness{};
+        // math::vec4 mBorderRadius{};
+        // math::vec4 mBackgroundColor{};
+
+        // std::array<math::vec4, 4> mBorderColor{};
 
       protected:
         virtual void PushStyles() = 0;
@@ -58,8 +79,10 @@ namespace SE::Core
         float  GetContentOffsetY();
         ImVec2 GetContentOffset();
 
-        void DrawBackground();
-        void DrawBorder();
+        ImVec2 GetContentAlignedposition(ImVec2 aPosition, ImVec2 aContentSize, ImVec2 aSize);
+
+        // void DrawBackground(ImVec2 aPosition, ImVec2 aSize);
+        // void DrawBorder(ImVec2 aPosition, ImVec2 aSize);
 
         virtual void DrawContent( ImVec2 aPosition, ImVec2 aSize ) = 0;
 
