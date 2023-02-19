@@ -82,9 +82,12 @@ namespace SE::OtdrEditor
         UIButton mTestButton0;
         UIButton mTestButton1;
         UIButton mTestButton2;
-        UILabel  mTestArea;
+        UILabel  mTestLabel0;
+        UILabel  mTestLabel1;
+        UILabel  mTestLabel2;
 
-        BoxLayout mTestLayout;
+        BoxLayout mTestLayout0;
+        BoxLayout mTestLayout1;
 
       private:
         OtdrSceneHierarchyPanel mSceneHierarchyPanel;

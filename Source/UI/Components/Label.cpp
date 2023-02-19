@@ -2,6 +2,7 @@
 
 namespace SE::Core
 {
+
     UILabel::UILabel( std::string const &aText )
         : mText{ aText }
     {
@@ -21,7 +22,7 @@ namespace SE::Core
 
     void UILabel::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        ImGui::SetCursorPos( aPosition );
+        ImGui::SetCursorPos( GetContentAlignedposition(aPosition, ImGui::CalcTextSize( mText.c_str() ), aSize) );
 
         ImGui::Text( mText.c_str(), aSize );
     }
