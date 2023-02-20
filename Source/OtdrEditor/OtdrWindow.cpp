@@ -76,11 +76,16 @@ namespace SE::OtdrEditor
         mTestLayout1.Add( &mTestLabel1, true, true );
         mTestLayout1.Add( &mTestLabel2, true, true );
 
+        mTestLayout2 = BoxLayout( eBoxLayoutOrientation::HORIZONTAL );
+        mTestLayout2.Add( &mTestCheckBox0, true, true );
+        mTestLayout2.Add( &mTestCheckBox1, true, true );
+
         mTestLayout0 = BoxLayout( eBoxLayoutOrientation::VERTICAL );
         mTestLayout0.SetItemSpacing( 5.0f );
         mTestLayout0.Add( &mTestButton0, true, true );
         mTestLayout0.Add( &mTestLayout1, true, true );
-        mTestLayout0.Add( &mTestButton1, true, false );
+        mTestLayout0.Add( &mTestButton1, true, false, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        mTestLayout0.Add( &mTestLayout2, true, true );
         mTestLayout0.Add( &mTestButton2, true, true );
 
         {
@@ -318,6 +323,8 @@ namespace SE::OtdrEditor
             // mContentBrowser.Display();
         }
         ImGui::End();
+
+        ImGui::ShowDemoWindow();
 
         if( ImGui::Begin( "PROPERTIES", &p_open, ImGuiWindowFlags_None ) )
         {
