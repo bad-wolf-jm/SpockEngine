@@ -64,7 +64,7 @@ namespace SE::Core
         math::vec4 mPadding{};
 
         eHorizontalAlignment mHAlign = eHorizontalAlignment::CENTER;
-        eVerticalAlignment mVAlign = eVerticalAlignment::CENTER;
+        eVerticalAlignment   mVAlign = eVerticalAlignment::CENTER;
         // math::vec4 mBorderThickness{};
         // math::vec4 mBorderRadius{};
         // math::vec4 mBackgroundColor{};
@@ -79,7 +79,8 @@ namespace SE::Core
         float  GetContentOffsetY();
         ImVec2 GetContentOffset();
 
-        ImVec2 GetContentAlignedposition(ImVec2 aPosition, ImVec2 aContentSize, ImVec2 aSize);
+        ImVec2 GetContentAlignedposition( eHorizontalAlignment const &aHAlignment, eVerticalAlignment const &aVAlignment,
+                                          ImVec2 aPosition, ImVec2 aContentSize, ImVec2 aSize );
 
         // void DrawBackground(ImVec2 aPosition, ImVec2 aSize);
         // void DrawBorder(ImVec2 aPosition, ImVec2 aSize);
