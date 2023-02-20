@@ -21,7 +21,6 @@ namespace SE::Core
         return SetPadding( aTopBottom, aTopBottom, aLeftRight, aLeftRight );
     }
 
-
     void UIComponent::SetAlignment( eHorizontalAlignment const &aHAlignment, eVerticalAlignment const &aVAlignment )
     {
         SetHorizontalAlignment( aHAlignment );
@@ -30,8 +29,6 @@ namespace SE::Core
 
     void UIComponent::SetHorizontalAlignment( eHorizontalAlignment const &aAlignment ) { mHAlign = aAlignment; }
     void UIComponent::SetVerticalAlignment( eVerticalAlignment const &aAlignment ) { mVAlign = aAlignment; }
-
-
 
     void UIComponent::SetPadding( float aTop, float aBottom, float aLeft, float aRight )
     {
@@ -109,9 +106,10 @@ namespace SE::Core
     //     else
     //     {
     //         lDrawList->PathArcToFast( ImVec2( lTopLeft.x + mBorderRadius.x, lTopLeft.y + mBorderRadius.x ), mBorderRadius.x, 6, 9 );
-    //         lDrawList->PathArcToFast( ImVec2( lBottomRight.x - mBorderRadius.y, lTopLeft.y + mBorderRadius.y ), mBorderRadius.y, 9, 12 );
-    //         lDrawList->PathArcToFast( ImVec2( lBottomRight.x - mBorderRadius.z, lBottomRight.y - mBorderRadius.z ), mBorderRadius.z, 0, 3 );
-    //         lDrawList->PathArcToFast( ImVec2( lTopLeft.x + mBorderRadius.w, lBottomRight.y - mBorderRadius.w ), mBorderRadius.w, 3, 6 );
+    //         lDrawList->PathArcToFast( ImVec2( lBottomRight.x - mBorderRadius.y, lTopLeft.y + mBorderRadius.y ), mBorderRadius.y, 9,
+    //         12 ); lDrawList->PathArcToFast( ImVec2( lBottomRight.x - mBorderRadius.z, lBottomRight.y - mBorderRadius.z ),
+    //         mBorderRadius.z, 0, 3 ); lDrawList->PathArcToFast( ImVec2( lTopLeft.x + mBorderRadius.w, lBottomRight.y -
+    //         mBorderRadius.w ), mBorderRadius.w, 3, 6 );
     //     }
 
     //     // PathStroke( IM_COL32( 255, 255, 255, 255 ), ImDrawFlags_Closed, mBorderThickness.x );
@@ -123,10 +121,11 @@ namespace SE::Core
     //     //
     // }
 
-    ImVec2 UIComponent::GetContentAlignedposition(ImVec2 aPosition, ImVec2 aContentSize, ImVec2 aSize)
+    ImVec2 UIComponent::GetContentAlignedposition( eHorizontalAlignment const &aHAlignment, eVerticalAlignment const &aVAlignment,
+                                                   ImVec2 aPosition, ImVec2 aContentSize, ImVec2 aSize )
     {
         ImVec2 lContentPosition{};
-        switch( mHAlign )
+        switch( aHAlignment )
         {
         case eHorizontalAlignment::LEFT: lContentPosition.x = aPosition.x; break;
         case eHorizontalAlignment::RIGHT: lContentPosition.x = aPosition.x + ( aSize.x - aContentSize.x ); break;
@@ -134,7 +133,7 @@ namespace SE::Core
         default: lContentPosition.x = aPosition.x + ( aSize.x - aContentSize.x ) / 2.0f; break;
         }
 
-        switch( mVAlign )
+        switch( aVAlignment )
         {
         case eVerticalAlignment::TOP: lContentPosition.y = aPosition.y; break;
         case eVerticalAlignment::BOTTOM: lContentPosition.y = aPosition.y + ( aSize.y - aContentSize.y ); break;
@@ -143,7 +142,6 @@ namespace SE::Core
         }
 
         return lContentPosition;
-
     }
 
     void UIComponent::Update( ImVec2 aPosition, ImVec2 aSize )
