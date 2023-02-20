@@ -28,7 +28,7 @@ namespace SE::Core
     {
         bool lEnabled = mIsEnabled;
 
-        ImGui::SetCursorPos( aPosition );
+        ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, RequiredSize(), aSize ) );
 
         bool lClicked = ImGui::ImageButton( (ImTextureID)mHandle.Handle->GetVkDescriptorSet(), mSize, mTopLeft, mBottomRight, 0,
                                             mBackgroundColor, mTintColor );

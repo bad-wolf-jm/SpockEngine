@@ -76,9 +76,14 @@ namespace SE::OtdrEditor
         mTestLayout1.Add( &mTestLabel1, true, true );
         mTestLayout1.Add( &mTestLabel2, true, true );
 
+        mImage0 = UIImage( mUIOverlay, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Play.png", math::vec2{ 50, 50 } );
+        mImage1 = UIImage( mUIOverlay, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Pause.png", math::vec2{ 25, 25 } );
+
         mTestLayout2 = BoxLayout( eBoxLayoutOrientation::HORIZONTAL );
         mTestLayout2.Add( &mTestCheckBox0, true, true );
         mTestLayout2.Add( &mTestCheckBox1, true, true );
+        mTestLayout2.Add( &mImage0, true, false );
+        mTestLayout2.Add( &mImage1, true, false );
 
         mTestLayout0 = BoxLayout( eBoxLayoutOrientation::VERTICAL );
         mTestLayout0.SetItemSpacing( 5.0f );

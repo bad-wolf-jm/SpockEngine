@@ -14,6 +14,7 @@
 
 #include "UI/Components/Checkbox.h"
 #include "UI/Components/Button.h"
+#include "UI/Components/Image.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/UI.h"
 
@@ -89,6 +90,9 @@ namespace SE::OtdrEditor
 
         UICheckBox  mTestCheckBox0;
         UICheckBox  mTestCheckBox1;
+
+        UIImage mImage0;
+        UIImage mImage1;
 
         BoxLayout mTestLayout0;
         BoxLayout mTestLayout1;
