@@ -6,6 +6,9 @@ namespace SE::Core
         : mImagePath{ aImagePath }
         , mUIContext{ aUIContext }
         , mSize{ aSize.x, aSize.y }
+        , mTopLeft{0.0f, 0.0f}
+        , mBottomRight{1.0f, 1.0f}
+
     {
         SetImage( aImagePath );
     }
@@ -15,6 +18,8 @@ namespace SE::Core
         , mImage{ aImage }
         , mUIContext{ aUIContext }
         , mSize{ aSize.x, aSize.y }
+        , mTopLeft{0.0f, 0.0f}
+        , mBottomRight{1.0f, 1.0f}
     {
 
         mHandle = mUIContext->CreateTextureHandle( mImage );

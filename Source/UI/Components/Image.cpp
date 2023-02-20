@@ -11,10 +11,10 @@ namespace SE::Core
 
     void UIImage::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        ImGui::SetCursorPos( aPosition );
+        ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, RequiredSize(), aSize ) );
 
-        ImGui::Image( (ImTextureID)mHandle.Handle->GetVkDescriptorSet(), aSize, mTopLeft, mBottomRight,
-                      mBackgroundColor, mTintColor );
+        ImGui::Image( (ImTextureID)mHandle.Handle->GetVkDescriptorSet(), mSize, mTopLeft, mBottomRight,
+                      mTintColor, ImVec4{} );
     }
 
 } // namespace SE::Core
