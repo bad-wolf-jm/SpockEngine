@@ -31,8 +31,8 @@ namespace SE::Core
     ImVec2 UICheckBox::RequiredSize()
     {
         const float lSize = ImGui::GetFrameHeight();
-        
-        return ImVec2{lSize, lSize};
+
+        return ImVec2{ lSize, lSize };
     }
 
     void UICheckBox::DrawContent( ImVec2 aPosition, ImVec2 aSize )
@@ -41,7 +41,7 @@ namespace SE::Core
 
         PushStyles( lEnabled );
 
-        ImGui::SetCursorPos( aPosition );
+        ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, RequiredSize(), aSize ) );
 
         if( ImGui::Checkbox( "", &mIsChecked ) && mOnClick && lEnabled ) mOnClick();
 
