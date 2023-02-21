@@ -16,15 +16,9 @@ namespace SE::Core
     void UIButton::PushStyles() {}
     void UIButton::PopStyles() {}
 
-    void UIButton::OnClick( std::function<void()> aOnClick )
-    {
-        mOnClick = aOnClick;
-    }
+    void UIButton::OnClick( std::function<void()> aOnClick ) { mOnClick = aOnClick; }
 
-    void UIButton::SetText( std::string const &aText )
-    {
-        UILabel::SetText( aText );
-    }
+    void UIButton::SetText( std::string const &aText ) { UILabel::SetText( aText ); }
 
     void UIButton::PushStyles( bool aEnabled )
     {
