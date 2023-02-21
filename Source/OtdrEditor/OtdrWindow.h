@@ -15,6 +15,7 @@
 #include "UI/Components/Checkbox.h"
 #include "UI/Components/Button.h"
 #include "UI/Components/Image.h"
+#include "UI/Components/TextToggleButton.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/UI.h"
 
@@ -91,12 +92,17 @@ namespace SE::OtdrEditor
         UICheckBox  mTestCheckBox0;
         UICheckBox  mTestCheckBox1;
 
+        UITextToggleButton mTestTextToggleButton0;
+        UITextToggleButton mTestTextToggleButton1;
+        UITextToggleButton mTestTextToggleButton2;
+
         UIImage mImage0;
         UIImage mImage1;
 
         BoxLayout mTestLayout0;
         BoxLayout mTestLayout1;
         BoxLayout mTestLayout2;
+        BoxLayout mTestLayout3;
 
       private:
         OtdrSceneHierarchyPanel mSceneHierarchyPanel;
