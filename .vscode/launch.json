@@ -23,6 +23,15 @@
             "stopAtEntry": false
         },
         {
+            "name": "OTDR_ScriptRun Debug",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Build/Tools/RunScript/RunScript.exe",
+            "args": [ "--project", "TestOtdrProject", "--script", "Test.TestPowerMeter" ],
+            "cwd": "${workspaceFolder}/Programs/TestOtdrProject",
+            "stopAtEntry": false
+        },
+        {
             "name": "SE_Test Debug",
             "type": "cppvsdbg",
             "request": "launch",
