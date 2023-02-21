@@ -85,6 +85,15 @@ namespace SE::OtdrEditor
         mTestLayout2.Add( &mImage0, true, false );
         mTestLayout2.Add( &mImage1, true, false );
 
+        mTestTextToggleButton0 = UITextToggleButton( "Test toggle 0", [&](bool v) { SE::Logging::Info( "ClickedOnTest" ); } );
+        mTestTextToggleButton1 = UITextToggleButton( "Test toggle 1", [&](bool v) { SE::Logging::Info( "ClickedOnTest" ); } );
+        mTestTextToggleButton2 = UITextToggleButton( "Test toggle 2", [&](bool v) { SE::Logging::Info( "ClickedOnTest" ); } );
+
+        mTestLayout3 = BoxLayout( eBoxLayoutOrientation::HORIZONTAL );
+        mTestLayout3.Add( &mTestTextToggleButton0, true, true );
+        mTestLayout3.Add( &mTestTextToggleButton1, true, true );
+        mTestLayout3.Add( &mTestTextToggleButton2, true, true );
+
         mTestLayout0 = BoxLayout( eBoxLayoutOrientation::VERTICAL );
         mTestLayout0.SetItemSpacing( 5.0f );
         mTestLayout0.Add( &mTestButton0, true, true );
@@ -92,6 +101,7 @@ namespace SE::OtdrEditor
         mTestLayout0.Add( &mTestButton1, true, false, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         mTestLayout0.Add( &mTestLayout2, true, true );
         mTestLayout0.Add( &mTestButton2, true, true );
+        mTestLayout0.Add( &mTestLayout3, true, true );
 
         {
             SE::Core::sTextureCreateInfo lTextureCreateInfo{};
