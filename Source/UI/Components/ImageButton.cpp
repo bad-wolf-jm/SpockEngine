@@ -2,15 +2,26 @@
 
 namespace SE::Core
 {
-    UIImageButton::UIImageButton( Ref<UIContext> aUIContext, fs::path const &aImagePath, math::vec2 aSize,
+    UIImageButton::UIImageButton( fs::path const &aImagePath, math::vec2 aSize,
                                   std::function<void()> aOnClick )
-        : UIBaseImage( aUIContext, aImagePath, aSize )
+        : UIBaseImage( aImagePath, aSize )
         , mOnClick{ aOnClick }
     {
     }
 
-    UIImageButton::UIImageButton( Ref<UIContext> aUIContext, fs::path const &aImagePath, math::vec2 aSize )
-        : UIImageButton( aUIContext, aImagePath, aSize, std::function<void()>{} )
+    UIImageButton::UIImageButton( fs::path const &aImagePath, math::vec2 aSize )
+        : UIImageButton( aImagePath, aSize, std::function<void()>{} )
+    {
+    }
+
+    UIImageButton::UIImageButton( Ref<VkSampler2D> aImage, math::vec2 aSize )
+        : UIImageButton( aImage, aSize, std::function<void()>{} )
+    {
+    }
+
+    UIImageButton::UIImageButton( Ref<VkSampler2D> aImage, math::vec2 aSize, std::function<void()> aOnClick )
+        : UIBaseImage( aImage, aSize )
+        , mOnClick{ aOnClick }
     {
     }
 

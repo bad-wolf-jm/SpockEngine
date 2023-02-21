@@ -12,7 +12,8 @@ namespace SE::Core
     {
       public:
         UIImage() = default;
-        UIImage( Ref<UIContext> aUIContext, fs::path const &aImagePath, math::vec2 aSize );
+        UIImage( fs::path const &aImagePath, math::vec2 aSize );
+        UIImage( Ref<VkSampler2D> aImage, math::vec2 aSize );
 
       private:
         ImVec2 RequiredSize();

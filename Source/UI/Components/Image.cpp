@@ -2,8 +2,13 @@
 
 namespace SE::Core
 {
-    UIImage::UIImage( Ref<UIContext> aUIContext, fs::path const &aImagePath, math::vec2 aSize )
-        : UIBaseImage(aUIContext, aImagePath, aSize)
+    UIImage::UIImage( fs::path const &aImagePath, math::vec2 aSize )
+        : UIBaseImage(aImagePath, aSize)
+    {
+    }
+
+    UIImage::UIImage( Ref<VkSampler2D> aImage, math::vec2 aSize )
+        : UIBaseImage(aImage, aSize)
     {
     }
 
