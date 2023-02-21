@@ -1,28 +1,27 @@
 #include "BaseImage.h"
 
+#include "Engine/Engine.h"
+
 namespace SE::Core
 {
-    UIBaseImage::UIBaseImage( Ref<UIContext> aUIContext, fs::path const &aImagePath, math::vec2 aSize )
+    UIBaseImage::UIBaseImage( fs::path const &aImagePath, math::vec2 aSize )
         : mImagePath{ aImagePath }
-        , mUIContext{ aUIContext }
         , mSize{ aSize.x, aSize.y }
-        , mTopLeft{0.0f, 0.0f}
-        , mBottomRight{1.0f, 1.0f}
+        , mTopLeft{ 0.0f, 0.0f }
+        , mBottomRight{ 1.0f, 1.0f }
 
     {
         SetImage( aImagePath );
     }
 
-    UIBaseImage::UIBaseImage( Ref<UIContext> aUIContext, Ref<VkSampler2D> aImage, math::vec2 aSize )
+    UIBaseImage::UIBaseImage( Ref<VkSampler2D> aImage, math::vec2 aSize )
         : mImagePath{ "sampler://" }
         , mImage{ aImage }
-        , mUIContext{ aUIContext }
         , mSize{ aSize.x, aSize.y }
-        , mTopLeft{0.0f, 0.0f}
-        , mBottomRight{1.0f, 1.0f}
+        , mTopLeft{ 0.0f, 0.0f }
+        , mBottomRight{ 1.0f, 1.0f }
     {
-
-        mHandle = mUIContext->CreateTextureHandle( mImage );
+        mHandle = SE::Core::Engine::GetInstance()->UIContext()->CreateTextureHandle( mImage );
     }
 
     void UIBaseImage::PushStyles() {}
@@ -35,9 +34,9 @@ namespace SE::Core
         sTextureSamplingInfo         lSamplingInfo{};
         SE::Core::TextureSampler2D   lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-        auto lTexture = New<VkTexture2D>( mUIContext->GraphicContext(), lTextureData );
-        mImage        = New<VkSampler2D>( mUIContext->GraphicContext(), lTexture, lSamplingInfo );
-        mHandle       = mUIContext->CreateTextureHandle( mImage );
+        auto lTexture = New<VkTexture2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(), lTextureData );
+        mImage        = New<VkSampler2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(), lTexture, lSamplingInfo );
+        mHandle       = SE::Core::Engine::GetInstance()->UIContext()->CreateTextureHandle( mImage );
         mImagePath    = aImagePath;
     }
 

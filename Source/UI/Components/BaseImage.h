@@ -13,8 +13,8 @@ namespace SE::Core
       public:
         UIBaseImage() = default;
 
-        UIBaseImage( Ref<UIContext> aUIContext, fs::path const &aImagePath, math::vec2 aSize );
-        UIBaseImage( Ref<UIContext> aUIContext, Ref<VkSampler2D> aImage, math::vec2 aSize );
+        UIBaseImage( fs::path const &aImagePath, math::vec2 aSize );
+        UIBaseImage( Ref<VkSampler2D> aImage, math::vec2 aSize );
 
         void SetImage( fs::path const &aImagePath );
         void SetSize( float aWidth, float aHeight );
@@ -23,7 +23,7 @@ namespace SE::Core
         void SetTintColor( math::vec4 aColor );
 
       protected:
-        Ref<UIContext> mUIContext;
+        // Ref<UIContext> mUIContext;
         fs::path       mImagePath;
 
         Ref<VkSampler2D> mImage;
