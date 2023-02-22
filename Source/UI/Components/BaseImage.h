@@ -23,6 +23,7 @@ namespace SE::Core
         void SetTintColor( math::vec4 aColor );
 
         ImTextureID TextureID();
+        ImVec2 Size();
 
       protected:
         fs::path       mImagePath;

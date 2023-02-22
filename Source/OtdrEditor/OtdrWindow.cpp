@@ -95,9 +95,9 @@ namespace SE::OtdrEditor
 
         mTestLayout3 = BoxLayout( eBoxLayoutOrientation::HORIZONTAL );
         mTestLayout3.Add( &mTestTextToggleButton0, true, true );
+        mTestLayout3.Add( &mTestImageToggleButton0, false, false );
         mTestLayout3.Add( &mTestTextToggleButton1, true, true );
         mTestLayout3.Add( &mTestTextToggleButton2, true, true );
-        mTestLayout3.Add( &mTestImageToggleButton0, false, false );
 
         mTestLayout0 = BoxLayout( eBoxLayoutOrientation::VERTICAL );
         mTestLayout0.SetItemSpacing( 5.0f );
@@ -468,7 +468,7 @@ namespace SE::OtdrEditor
         math::vec2 lWorkspacePosition = UI::GetCurrentCursorScreenPosition();
         math::vec2 lCursorPosition    = UI::GetCurrentCursorPosition();
 
-        // UI::SameLine();
+        // UI::SameLine(); 
         ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f } );
         ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 1.0f, 1.0f, 1.0f, 0.01f } );
         ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 1.0f, 1.0f, 1.0f, 0.02f } );
