@@ -59,12 +59,14 @@ namespace SE::Core
         bool lEnabled = mIsEnabled;
 
         PushStyles( lEnabled );
+        
+        auto lRequiredSize = RequiredSize();
 
-        ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, RequiredSize(), aSize ) );
+        ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, lRequiredSize, aSize ) );
 
         auto lImage = mActivated ? mActiveImage : mInactiveImage;
 
-        if( ImGui::ImageButton( lImage.TextureID(), aSize ) && mOnChange && lEnabled )
+        if( ImGui::ImageButton( lImage.TextureID(), lRequiredSize ) && mOnChange && lEnabled )
         {
             mActivated = !mActivated;
             mOnChange( mActivated );

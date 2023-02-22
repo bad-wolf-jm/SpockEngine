@@ -95,7 +95,7 @@ namespace SE::OtdrEditor
 
         mTestLayout3 = BoxLayout( eBoxLayoutOrientation::HORIZONTAL );
         mTestLayout3.Add( &mTestTextToggleButton0, true, true );
-        mTestLayout3.Add( &mTestImageToggleButton0, false, false );
+        mTestLayout3.Add( &mTestImageToggleButton0, false, true, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER  );
         mTestLayout3.Add( &mTestTextToggleButton1, true, true );
         mTestLayout3.Add( &mTestTextToggleButton2, true, true );
 
