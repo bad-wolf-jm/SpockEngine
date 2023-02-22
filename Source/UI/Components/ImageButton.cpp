@@ -41,7 +41,7 @@ namespace SE::Core
 
         ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, RequiredSize(), aSize ) );
 
-        bool lClicked = ImGui::ImageButton( (ImTextureID)mHandle.Handle->GetVkDescriptorSet(), mSize, mTopLeft, mBottomRight, 0,
+        bool lClicked = ImGui::ImageButton( TextureID(), mSize, mTopLeft, mBottomRight, 0,
                                             mBackgroundColor, mTintColor );
 
         if( lClicked && mOnClick && lEnabled ) mOnClick();
