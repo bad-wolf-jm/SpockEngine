@@ -54,6 +54,8 @@ namespace SE::Core
 
     ImTextureID UIBaseImage::TextureID() { return static_cast<ImTextureID>( mHandle.Handle->GetVkDescriptorSet() ); }
 
+    ImVec2 UIBaseImage::Size() { return mSize; }
+
     ImVec2 UIBaseImage::RequiredSize() { return mSize; }
 
     void UIBaseImage::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}

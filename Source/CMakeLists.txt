@@ -46,6 +46,7 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/Components/TextToggleButton.cpp
     UI/Components/ImageToggleButton.cpp
     UI/Layouts/BoxLayout.cpp
+    UI/Form.cpp
     
     Core/Optix/OptixContext.cpp
     Core/Optix/OptixModule.cpp
