@@ -89,10 +89,15 @@ namespace SE::OtdrEditor
         mTestTextToggleButton1 = UITextToggleButton( "Test toggle 1", [&](bool v) { SE::Logging::Info( "ClickedOnTest" ); } );
         mTestTextToggleButton2 = UITextToggleButton( "Test toggle 2", [&](bool v) { SE::Logging::Info( "ClickedOnTest" ); } );
 
+        mTestImageToggleButton0.SetActiveImage(mImage0);
+        mTestImageToggleButton0.SetInactiveImage(mImage1);
+        mTestImageToggleButton0.OnChange([&](bool) {});
+
         mTestLayout3 = BoxLayout( eBoxLayoutOrientation::HORIZONTAL );
         mTestLayout3.Add( &mTestTextToggleButton0, true, true );
         mTestLayout3.Add( &mTestTextToggleButton1, true, true );
         mTestLayout3.Add( &mTestTextToggleButton2, true, true );
+        mTestLayout3.Add( &mTestImageToggleButton0, false, false );
 
         mTestLayout0 = BoxLayout( eBoxLayoutOrientation::VERTICAL );
         mTestLayout0.SetItemSpacing( 5.0f );

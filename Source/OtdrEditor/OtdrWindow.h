@@ -16,6 +16,7 @@
 #include "UI/Components/Button.h"
 #include "UI/Components/Image.h"
 #include "UI/Components/TextToggleButton.h"
+#include "UI/Components/ImageToggleButton.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/UI.h"
 
@@ -95,6 +96,7 @@ namespace SE::OtdrEditor
         UITextToggleButton mTestTextToggleButton0;
         UITextToggleButton mTestTextToggleButton1;
         UITextToggleButton mTestTextToggleButton2;
+        UIImageToggleButton mTestImageToggleButton0;
 
         UIImage mImage0;
         UIImage mImage1;
