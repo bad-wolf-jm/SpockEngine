@@ -52,6 +52,8 @@ namespace SE::Core
 
     void UIBaseImage::SetTintColor( math::vec4 aColor ) { mTintColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
 
+    ImTextureID UIBaseImage::TextureID() { return static_cast<ImTextureID>( mHandle.Handle->GetVkDescriptorSet() ); }
+
     ImVec2 UIBaseImage::RequiredSize() { return mSize; }
 
     void UIBaseImage::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
