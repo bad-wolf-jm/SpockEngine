@@ -22,8 +22,9 @@ namespace SE::Core
         void SetBackgroundColor( math::vec4 aColor );
         void SetTintColor( math::vec4 aColor );
 
+        ImTextureID TextureID();
+
       protected:
-        // Ref<UIContext> mUIContext;
         fs::path       mImagePath;
 
         Ref<VkSampler2D> mImage;
