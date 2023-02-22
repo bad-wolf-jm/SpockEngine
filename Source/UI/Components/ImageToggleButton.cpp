@@ -2,7 +2,7 @@
 
 namespace SE::Core
 {
-    UIImageToggleButton::UIImageToggleButton( std::function<void( bool )> aOnChange )
+    UIImageToggleButton::UIImageToggleButton( std::function<bool( bool )> aOnChange )
         : mOnChange{ aOnChange }
     {
     }
@@ -10,7 +10,7 @@ namespace SE::Core
     void UIImageToggleButton::PushStyles() {}
     void UIImageToggleButton::PopStyles() {}
 
-    void UIImageToggleButton::OnChange( std::function<void( bool )> aOnChange ) { mOnChange = aOnChange; }
+    void UIImageToggleButton::OnChange( std::function<bool( bool )> aOnChange ) { mOnChange = aOnChange; }
 
     void UIImageToggleButton::SetActiveImage( UIBaseImage const &aImage ) { mActiveImage = aImage; }
 
@@ -59,18 +59,14 @@ namespace SE::Core
         bool lEnabled = mIsEnabled;
 
         PushStyles( lEnabled );
-        
+
         auto lRequiredSize = RequiredSize();
 
         ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, lRequiredSize, aSize ) );
 
         auto lImage = mActivated ? mActiveImage : mInactiveImage;
 
-        if( ImGui::ImageButton( lImage.TextureID(), lRequiredSize ) && mOnChange && lEnabled )
-        {
-            mActivated = !mActivated;
-            mOnChange( mActivated );
-        }
+        if( ImGui::ImageButton( lImage.TextureID(), lRequiredSize ) && mOnChange && lEnabled ) mActivated = mOnChange( mActivated );
 
         PopStyles( lEnabled );
     }

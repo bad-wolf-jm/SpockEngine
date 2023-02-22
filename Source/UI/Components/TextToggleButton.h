@@ -11,16 +11,16 @@ namespace SE::Core
         UITextToggleButton() = default;
 
         UITextToggleButton( std::string const &aText );
-        UITextToggleButton( std::string const &aText, std::function<void( bool )> aOnClick );
+        UITextToggleButton( std::string const &aText, std::function<bool( bool )> aOnClick );
 
-        void OnChange( std::function<void( bool )> aOnClick );
+        void OnChange( std::function<bool( bool )> aOnClick );
 
         void SetText( std::string const &aText );
         void SetActiveColor( math::vec4 const &aColor );
         void SetInactiveColor( math::vec4 const &aColor );
 
       private:
-        std::function<void(bool)> mOnChange;
+        std::function<bool(bool)> mOnChange;
 
         bool   mActivated     = false;
         ImVec4 mActiveColor   = ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f };
