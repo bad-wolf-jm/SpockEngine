@@ -7,7 +7,7 @@ namespace SE::Core
     {
     }
 
-    UITextToggleButton::UITextToggleButton( std::string const &aText, std::function<void( bool )> aOnChange )
+    UITextToggleButton::UITextToggleButton( std::string const &aText, std::function<bool( bool )> aOnChange )
         : UILabel{ aText }
         , mOnChange{ aOnChange }
     {
@@ -16,7 +16,7 @@ namespace SE::Core
     void UITextToggleButton::PushStyles() {}
     void UITextToggleButton::PopStyles() {}
 
-    void UITextToggleButton::OnChange( std::function<void( bool )> aOnChange ) { mOnChange = aOnChange; }
+    void UITextToggleButton::OnChange( std::function<bool( bool )> aOnChange ) { mOnChange = aOnChange; }
 
     void UITextToggleButton::SetText( std::string const &aText ) { UILabel::SetText( aText ); }
 
@@ -27,7 +27,7 @@ namespace SE::Core
 
     void UITextToggleButton::SetInactiveColor( math::vec4 const &aColor )
     {
-        mInactiveColor = ImVec4 { aColor.x, aColor.y, aColor.z, aColor.w };
+        mInactiveColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w };
     }
 
     void UITextToggleButton::PushStyles( bool aEnabled )
@@ -76,11 +76,7 @@ namespace SE::Core
         ImGui::SetCursorPos( aPosition );
 
         ImGui::PushStyleColor( ImGuiCol_Text, mActivated ? mActiveColor : mInactiveColor );
-        if( ImGui::Button( mText.c_str(), aSize ) && mOnChange && lEnabled )
-        {
-            mActivated = !mActivated;
-            mOnChange( mActivated );
-        }
+        if( ImGui::Button( mText.c_str(), aSize ) && mOnChange && lEnabled ) mActivated = mOnChange( mActivated );
         ImGui::PopStyleColor();
 
         PopStyles( lEnabled );

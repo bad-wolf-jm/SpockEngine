@@ -85,17 +85,32 @@ namespace SE::OtdrEditor
         mTestLayout2.Add( &mImage0, true, false );
         mTestLayout2.Add( &mImage1, true, false );
 
-        mTestTextToggleButton0 = UITextToggleButton( "Test toggle 0", [&](bool v) { SE::Logging::Info( "ClickedOnTest" ); } );
-        mTestTextToggleButton1 = UITextToggleButton( "Test toggle 1", [&](bool v) { SE::Logging::Info( "ClickedOnTest" ); } );
-        mTestTextToggleButton2 = UITextToggleButton( "Test toggle 2", [&](bool v) { SE::Logging::Info( "ClickedOnTest" ); } );
+        mTestTextToggleButton0 = UITextToggleButton( "Test toggle 0",
+                                                     [&]( bool v )
+                                                     {
+                                                         SE::Logging::Info( "ClickedOnTest" );
+                                                         return true;
+                                                     } );
+        mTestTextToggleButton1 = UITextToggleButton( "Test toggle 1",
+                                                     [&]( bool v )
+                                                     {
+                                                         SE::Logging::Info( "ClickedOnTest" );
+                                                         return true;
+                                                     } );
+        mTestTextToggleButton2 = UITextToggleButton( "Test toggle 2",
+                                                     [&]( bool v )
+                                                     {
+                                                         SE::Logging::Info( "ClickedOnTest" );
+                                                         return true;
+                                                     } );
 
-        mTestImageToggleButton0.SetActiveImage(mImage0);
-        mTestImageToggleButton0.SetInactiveImage(mImage1);
-        mTestImageToggleButton0.OnChange([&](bool) {});
+        mTestImageToggleButton0.SetActiveImage( mImage0 );
+        mTestImageToggleButton0.SetInactiveImage( mImage1 );
+        mTestImageToggleButton0.OnChange( [&]( bool ) { return true; } );
 
         mTestLayout3 = BoxLayout( eBoxLayoutOrientation::HORIZONTAL );
         mTestLayout3.Add( &mTestTextToggleButton0, true, true );
-        mTestLayout3.Add( &mTestImageToggleButton0, false, true, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER  );
+        mTestLayout3.Add( &mTestImageToggleButton0, false, true, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
         mTestLayout3.Add( &mTestTextToggleButton1, true, true );
         mTestLayout3.Add( &mTestTextToggleButton2, true, true );
 
@@ -468,7 +483,7 @@ namespace SE::OtdrEditor
         math::vec2 lWorkspacePosition = UI::GetCurrentCursorScreenPosition();
         math::vec2 lCursorPosition    = UI::GetCurrentCursorPosition();
 
-        // UI::SameLine(); 
+        // UI::SameLine();
         ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f } );
         ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 1.0f, 1.0f, 1.0f, 0.01f } );
         ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 1.0f, 1.0f, 1.0f, 0.02f } );

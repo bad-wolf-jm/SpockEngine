@@ -10,15 +10,15 @@ namespace SE::Core
       public:
         UIImageToggleButton() = default;
 
-        UIImageToggleButton( std::function<void( bool )> aOnClick );
+        UIImageToggleButton( std::function<bool( bool )> aOnClick );
 
-        void OnChange( std::function<void( bool )> aOnClick );
+        void OnChange( std::function<bool( bool )> aOnClick );
 
         void SetActiveImage( UIBaseImage const &aImage );
         void SetInactiveImage( UIBaseImage const &aImage );
 
       private:
-        std::function<void( bool )> mOnChange;
+        std::function<bool( bool )> mOnChange;
 
         bool        mActivated = false;
         UIBaseImage mActiveImage;
