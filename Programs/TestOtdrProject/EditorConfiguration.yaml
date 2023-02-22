@@ -1,5 +1,5 @@
 application:
-  window_properties: {width: 2920, height: 1360, x: 100, y: 100}
+  window_properties: {width: 1920, height: 1080, x: 100, y: 100}
   ui:
     font_size: 14
     icon_font: "C:\\GitLab\\SpockEngine\\Resources\\fonts\\fontawesome-webfont.ttf"
