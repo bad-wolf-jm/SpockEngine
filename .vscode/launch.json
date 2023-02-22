@@ -18,7 +18,7 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/Build/Source/OTDR_Run.exe",
-            "args": [ "--project", "TestOtdrProject", "--res_x", "2900", "--res_y", "1350" ],
+            "args": [ "--project", "TestOtdrProject", "--res_x", "1920", "--res_y", "1080" ],
             "cwd": "${workspaceFolder}/Programs/TestOtdrProject",
             "stopAtEntry": false
         },
