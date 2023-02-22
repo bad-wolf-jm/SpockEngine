@@ -78,6 +78,7 @@ namespace SE::Core
             ImVec2 lItemSize{};
             ImVec2 lItemPosition{};
             float  lPositionStep = 0.0f;
+            
             if( lItem.mExpand )
             {
                 lItemSize     = lItem.mFill ? lExpandedSize : lItem.mItem->RequiredSize();
