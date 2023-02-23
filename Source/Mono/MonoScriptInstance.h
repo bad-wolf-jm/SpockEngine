@@ -21,9 +21,6 @@ namespace SE::Core
         MonoObject *InvokeMethod( MonoMethod *aMethod, void **aParameters = nullptr );
         MonoObject *InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters = nullptr );
 
-        // void Grab();
-        // void Release();
-
         template <typename... _ArgTypes>
         MonoObject *CallMethod( const std::string &aName, _ArgTypes... aArgs )
         {
