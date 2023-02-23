@@ -33,10 +33,6 @@ namespace SE::Core
 
         virtual ImVec2 RequiredSize() = 0;
 
-        // void SetMargin( float aMarginAll );
-        // void SetMargin( float aMarginTopBottom, float aMarginLeftRight );
-        // void SetMargin( float aMarginTop, float aMarginBottom, float aMarginLeft, float aMarginRight );
-
         void SetPadding( float aPaddingAll );
         void SetPadding( float aPaddingTopBottom, float aPaddingLeftRight );
         void SetPadding( float aPaddingTop, float aPaddingBottom, float aPaddingLeft, float aPaddingRight );
@@ -45,31 +41,11 @@ namespace SE::Core
         void SetHorizontalAlignment( eHorizontalAlignment const &aAlignment );
         void SetVerticalAlignment( eVerticalAlignment const &aAlignment );
 
-        // void SetBorderColor( math::vec4 aBorderColor );
-        // void SetBorderColor( math::vec4 aTopBottom, math::vec4 aLeftRight );
-        // void SetBorderColor( math::vec4 aTop, math::vec4 aBottom, math::vec4 aLeft, math::vec4 aRight );
-
-        // void SetBackgroundColor( math::vec4 aColor );
-
-        // void SetBorderThickness( float aPaddingAll );
-        // void SetBorderThickness( float aPaddingTopBottom, float aPaddingLeftRight );
-        // void SetBorderThickness( float aPaddingTop, float aPaddingBottom, float aPaddingLeft, float aPaddingRight );
-
-        // void SetBorderRadius( float aPaddingAll );
-        // void SetBorderRadius( float aPaddingTopBottom, float aPaddingLeftRight );
-        // void SetBorderRadius( float aPaddingTop, float aPaddingBottom, float aPaddingLeft, float aPaddingRight );
-
       protected:
-        // math::vec4 mMargin{};
         math::vec4 mPadding{};
 
         eHorizontalAlignment mHAlign = eHorizontalAlignment::CENTER;
         eVerticalAlignment   mVAlign = eVerticalAlignment::CENTER;
-        // math::vec4 mBorderThickness{};
-        // math::vec4 mBorderRadius{};
-        // math::vec4 mBackgroundColor{};
-
-        // std::array<math::vec4, 4> mBorderColor{};
 
       protected:
         virtual void PushStyles() = 0;
@@ -78,12 +54,10 @@ namespace SE::Core
         float  GetContentOffsetX();
         float  GetContentOffsetY();
         ImVec2 GetContentOffset();
+        ImVec2 GetContentPadding();
 
         ImVec2 GetContentAlignedposition( eHorizontalAlignment const &aHAlignment, eVerticalAlignment const &aVAlignment,
                                           ImVec2 aPosition, ImVec2 aContentSize, ImVec2 aSize );
-
-        // void DrawBackground(ImVec2 aPosition, ImVec2 aSize);
-        // void DrawBorder(ImVec2 aPosition, ImVec2 aSize);
 
         virtual void DrawContent( ImVec2 aPosition, ImVec2 aSize ) = 0;
 
