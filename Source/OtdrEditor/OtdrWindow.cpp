@@ -71,7 +71,7 @@ namespace SE::OtdrEditor
         mTestLabel1 = UILabel( "LABEL 2" );
         mTestLabel2 = UILabel( "LABEL 3" );
 
-        mTestLayout1 = BoxLayout( eBoxLayoutOrientation::HORIZONTAL );
+        mTestLayout1 = UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
         mTestLayout1.Add( &mTestLabel0, true, true );
         mTestLayout1.Add( &mTestLabel1, true, true );
         mTestLayout1.Add( &mTestLabel2, true, true );
@@ -79,7 +79,7 @@ namespace SE::OtdrEditor
         mImage0 = UIImage( "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Play.png", math::vec2{ 50, 50 } );
         mImage1 = UIImage( "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Pause.png", math::vec2{ 25, 25 } );
 
-        mTestLayout2 = BoxLayout( eBoxLayoutOrientation::HORIZONTAL );
+        mTestLayout2 = UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
         mTestLayout2.Add( &mTestCheckBox0, true, true );
         mTestLayout2.Add( &mTestCheckBox1, true, true );
         mTestLayout2.Add( &mImage0, true, false );
@@ -108,13 +108,13 @@ namespace SE::OtdrEditor
         mTestImageToggleButton0.SetInactiveImage( mImage1 );
         mTestImageToggleButton0.OnChange( [&]( bool ) { return true; } );
 
-        mTestLayout3 = BoxLayout( eBoxLayoutOrientation::HORIZONTAL );
+        mTestLayout3 = UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
         mTestLayout3.Add( &mTestTextToggleButton0, true, true );
         mTestLayout3.Add( &mTestImageToggleButton0, false, true, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
         mTestLayout3.Add( &mTestTextToggleButton1, true, true );
         mTestLayout3.Add( &mTestTextToggleButton2, true, true );
 
-        mTestLayout0 = BoxLayout( eBoxLayoutOrientation::VERTICAL );
+        mTestLayout0 = UIBoxLayout( eBoxLayoutOrientation::VERTICAL );
         mTestLayout0.SetItemSpacing( 5.0f );
         mTestLayout0.Add( &mTestButton0, true, true );
         mTestLayout0.Add( &mTestLayout1, true, true );
@@ -145,8 +145,8 @@ namespace SE::OtdrEditor
             mPauseIconHandle = mUIOverlay->CreateTextureHandle( mPauseIcon );
         }
 
-        mTestForm3.SetTitle("TEST_FORM");
-        mTestForm3.SetContent(&mTestLayout0);
+        mTestForm3.SetTitle( "TEST_FORM" );
+        mTestForm3.SetContent( &mTestLayout0 );
     }
 
     OtdrWindow::OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )

@@ -27,15 +27,15 @@ namespace SE::Core
         ~BoxLayoutItem() = default;
     };
 
-    class BoxLayout : public UIComponent
+    class UIBoxLayout : public UIComponent
     {
       public:
-        BoxLayout() = default;
-        BoxLayout( eBoxLayoutOrientation aOrientation );
+        UIBoxLayout() = default;
+        UIBoxLayout( eBoxLayoutOrientation aOrientation );
 
-        BoxLayout( BoxLayout const & ) = default;
+        UIBoxLayout( UIBoxLayout const & ) = default;
 
-        ~BoxLayout() = default;
+        ~UIBoxLayout() = default;
 
         void SetItemSpacing( float aItemSpacing );
 

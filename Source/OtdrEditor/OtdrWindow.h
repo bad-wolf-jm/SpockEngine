@@ -102,10 +102,10 @@ namespace SE::OtdrEditor
         UIImage mImage0;
         UIImage mImage1;
 
-        BoxLayout mTestLayout0;
-        BoxLayout mTestLayout1;
-        BoxLayout mTestLayout2;
-        BoxLayout mTestLayout3;
+        UIBoxLayout mTestLayout0;
+        UIBoxLayout mTestLayout1;
+        UIBoxLayout mTestLayout2;
+        UIBoxLayout mTestLayout3;
 
         UIForm mTestForm3;
 
