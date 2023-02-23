@@ -80,8 +80,9 @@ namespace Test
 
             Metrino.Otdr.Value.Photocurrent lPowerValue = mPowerMeter.PowerValue;
 
-            BlinkState lIsBlinking;
+            BlinkDetection.BlinkState lIsBlinking;
             var lFrequency = mBlinkDetection.DetectHightestToneAndBlink(lPowerValue, out lIsBlinking);
+
             var valueLink = lPowerValue.Tag as Metrino.Otdr.PowerValue.ValueLink;
 
             // System.Console.WriteLine($"{(valueLink.Timestamp - mStartTime).TotalMilliseconds} -- {lPowerValue.Value} -- {lPowerValue.Power} -- {lFrequency.Value} -- {lIsBlinking}");

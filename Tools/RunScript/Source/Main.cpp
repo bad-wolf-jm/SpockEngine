@@ -175,11 +175,11 @@ int main( int argc, char **argv )
     auto lScriptToRun = lProgramArguments->present<std::string>( "--script" );
     if( lScriptToRun )
     {
-        auto lScriptClass = MonoRuntime::GetClassType( lScriptToRun.value() );
+        auto lScriptClass         = MonoRuntime::GetClassType( lScriptToRun.value() );
         auto lScriptClassInstance = lScriptClass.Instantiate();
         lScriptClassInstance->CallMethod( "BeginScenario" );
 
-        while (true)
+        while( true )
         {
             Timestep aTs;
             lScriptClassInstance->CallMethod( "Tick", &aTs );
