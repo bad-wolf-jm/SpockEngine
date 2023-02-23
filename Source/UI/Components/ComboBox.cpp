@@ -5,6 +5,8 @@ namespace SE::Core
     UIComboBox::UIComboBox( std::vector<std::string> const &aItems )
         : mItems{ aItems } {};
 
+    ImVec2 UIComboBox::RequiredSize() { return ImVec2{}; }
+
     void UIComboBox::PushStyles() {}
     void UIComboBox::PopStyles() {}
 
@@ -20,7 +22,13 @@ namespace SE::Core
 
         if( mCurrentItem >= mItems.size() ) mCurrentItem = mItems.size() - 1;
 
-        if( ImGui::BeginCombo( "##", mItems[mCurrentItem].c_str() ) )
+        bool lBeginCombo = false;
+
+        if( ( mItems.size() == 0 ) )
+        {
+            if( ImGui::BeginCombo( "##", "No Items" ) ) ImGui::EndCombo();
+        }
+        else if( ImGui::BeginCombo( "##", mItems[mCurrentItem].c_str() ) )
         {
             bool lChanged = false;
 
@@ -36,8 +44,6 @@ namespace SE::Core
             }
 
             if( lChanged && mOnChange && lEnabled ) mOnChange( mCurrentItem );
-
-            ImGui::EndCombo();
         }
     }
 } // namespace SE::Core
