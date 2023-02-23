@@ -15,6 +15,8 @@ namespace SE::Core
         void SetTitle( std::string const &aText );
         void SetContent( UIComponent *aContent );
 
+        void Update();
+
       protected:
         std::string  mTitle;
         UIComponent *mContent;

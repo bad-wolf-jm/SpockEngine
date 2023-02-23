@@ -19,6 +19,7 @@
 #include "UI/Components/ImageToggleButton.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/UI.h"
+#include "UI/Form.h"
 
 #include "Editor/ContentBrowser.h"
 #include "Mono/MonoScriptInstance.h"
@@ -105,6 +106,8 @@ namespace SE::OtdrEditor
         BoxLayout mTestLayout1;
         BoxLayout mTestLayout2;
         BoxLayout mTestLayout3;
+
+        UIForm mTestForm3;
 
       private:
         OtdrSceneHierarchyPanel mSceneHierarchyPanel;

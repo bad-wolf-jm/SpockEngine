@@ -20,18 +20,20 @@ namespace SE::Core
         return ImVec2{ 100, 100 };
     }
 
-    void UIForm::DrawContent( ImVec2 aPosition, ImVec2 aSize )
+    void UIForm::Update()
     {
-        ImGui::SetNextWindowPos( aPosition );
-        ImGui::SetNextWindowSize( aSize );
+        if( !mIsVisible ) return;
 
         if( ImGui::Begin( mTitle.c_str(), NULL, ImGuiWindowFlags_None ) )
         {
-            ImVec2 lContentSize = ImGui::GetContentRegionAvail();
+            ImVec2 lContentSize     = ImGui::GetContentRegionAvail();
+            ImVec2 lContentPosition = ImGui::GetCursorPos();
 
-            if( mContent != nullptr ) return mContent->Update( ImVec2{ 0.0f, 0.0f }, lContentSize );
+            if( mContent != nullptr ) mContent->Update( lContentPosition, lContentSize );
         }
         ImGui::End();
     }
+
+    void UIForm::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
 
 } // namespace SE::Core

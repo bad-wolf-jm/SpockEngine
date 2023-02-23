@@ -144,6 +144,9 @@ namespace SE::OtdrEditor
             mPauseIcon       = New<VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
             mPauseIconHandle = mUIOverlay->CreateTextureHandle( mPauseIcon );
         }
+
+        mTestForm3.SetTitle("TEST_FORM");
+        mTestForm3.SetContent(&mTestLayout0);
     }
 
     OtdrWindow::OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
@@ -194,11 +197,13 @@ namespace SE::OtdrEditor
         ImGui::PopStyleVar();
         ImGui::End();
 
-        if( ImGui::Begin( "WIDGET TEST", NULL, ImGuiWindowFlags_None ) )
-        {
-            mTestLayout0.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
-        }
-        ImGui::End();
+        // if( ImGui::Begin( "WIDGET TEST", NULL, ImGuiWindowFlags_None ) )
+        // {
+        //     mTestLayout0.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+        // }
+        // ImGui::End();
+
+        mTestForm3.Update();
 
         static bool p_open_3 = true;
         if( ImGui::Begin( "3D VIEW", &p_open_3, ImGuiWindowFlags_None ) )
