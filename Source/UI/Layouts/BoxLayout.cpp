@@ -3,41 +3,41 @@
 namespace SE::Core
 {
 
-    BoxLayout::BoxLayout( eBoxLayoutOrientation aOrientation )
+    UIBoxLayout::UIBoxLayout( eBoxLayoutOrientation aOrientation )
         : mOrientation{ aOrientation }
     {
     }
 
-    void BoxLayout::PushStyles() {}
-    void BoxLayout::PopStyles() {}
+    void UIBoxLayout::PushStyles() {}
+    void UIBoxLayout::PopStyles() {}
 
-    ImVec2 BoxLayout::RequiredSize() { return ImVec2{}; }
+    ImVec2 UIBoxLayout::RequiredSize() { return ImVec2{}; }
 
-    void BoxLayout::SetItemSpacing( float aItemSpacing ) { mItemSpacing = aItemSpacing; }
+    void UIBoxLayout::SetItemSpacing( float aItemSpacing ) { mItemSpacing = aItemSpacing; }
 
-    void BoxLayout::Add( UIComponent *aChild, bool aExpand, bool aFill )
+    void UIBoxLayout::Add( UIComponent *aChild, bool aExpand, bool aFill )
     {
         Add( aChild, 0.0f, aExpand, aFill, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
     }
 
-    void BoxLayout::Add( UIComponent *aChild, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
-                         eVerticalAlignment const &aVAlignment )
+    void UIBoxLayout::Add( UIComponent *aChild, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
+                           eVerticalAlignment const &aVAlignment )
     {
         Add( aChild, 0.0f, aExpand, aFill, aHAlignment, aVAlignment );
     }
 
-    void BoxLayout::Add( UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill )
+    void UIBoxLayout::Add( UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill )
     {
         Add( aChild, 0.0f, aExpand, aFill, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
     }
 
-    void BoxLayout::Add( UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
-                         eVerticalAlignment const &aVAlignment )
+    void UIBoxLayout::Add( UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
+                           eVerticalAlignment const &aVAlignment )
     {
         mChildren.push_back( BoxLayoutItem{ aChild, 0.0f, aExpand, aFill, aHAlignment, aVAlignment } );
     }
 
-    void BoxLayout::DrawContent( ImVec2 aPosition, ImVec2 aSize )
+    void UIBoxLayout::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
         uint32_t lExpandCount = 0;
         float    lTaken       = mItemSpacing * ( mChildren.size() - 1 );
