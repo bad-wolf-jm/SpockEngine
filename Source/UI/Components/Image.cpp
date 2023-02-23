@@ -3,12 +3,12 @@
 namespace SE::Core
 {
     UIImage::UIImage( fs::path const &aImagePath, math::vec2 aSize )
-        : UIBaseImage(aImagePath, aSize)
+        : UIBaseImage( aImagePath, aSize )
     {
     }
 
     UIImage::UIImage( Ref<VkSampler2D> aImage, math::vec2 aSize )
-        : UIBaseImage(aImage, aSize)
+        : UIBaseImage( aImage, aSize )
     {
     }
 
@@ -18,8 +18,7 @@ namespace SE::Core
     {
         ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, RequiredSize(), aSize ) );
 
-        ImGui::Image( (ImTextureID)mHandle.Handle->GetVkDescriptorSet(), mSize, mTopLeft, mBottomRight,
-                      mTintColor, ImVec4{} );
+        ImGui::Image( TextureID(), mSize, mTopLeft, mBottomRight, mTintColor, ImVec4{} );
     }
 
 } // namespace SE::Core
