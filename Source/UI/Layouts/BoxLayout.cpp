@@ -13,35 +13,28 @@ namespace SE::Core
 
     ImVec2 BoxLayout::RequiredSize() { return ImVec2{}; }
 
-    BoxLayout &BoxLayout::SetItemSpacing( float aItemSpacing )
-    {
-        mItemSpacing = aItemSpacing;
+    void BoxLayout::SetItemSpacing( float aItemSpacing ) { mItemSpacing = aItemSpacing; }
 
-        return *this;
+    void BoxLayout::Add( UIComponent *aChild, bool aExpand, bool aFill )
+    {
+        Add( aChild, 0.0f, aExpand, aFill, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
     }
 
-    BoxLayout &BoxLayout::Add( UIComponent *aChild, bool aExpand, bool aFill )
+    void BoxLayout::Add( UIComponent *aChild, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
+                         eVerticalAlignment const &aVAlignment )
     {
-        return Add( aChild, 0.0f, aExpand, aFill, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
+        Add( aChild, 0.0f, aExpand, aFill, aHAlignment, aVAlignment );
     }
 
-    BoxLayout &BoxLayout::Add( UIComponent *aChild, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
-                               eVerticalAlignment const &aVAlignment )
+    void BoxLayout::Add( UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill )
     {
-        return Add( aChild, 0.0f, aExpand, aFill, aHAlignment, aVAlignment );
+        Add( aChild, 0.0f, aExpand, aFill, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
     }
 
-    BoxLayout &BoxLayout::Add( UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill )
-    {
-        return Add( aChild, 0.0f, aExpand, aFill, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
-    }
-
-    BoxLayout &BoxLayout::Add( UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill,
-                               eHorizontalAlignment const &aHAlignment, eVerticalAlignment const &aVAlignment )
+    void BoxLayout::Add( UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
+                         eVerticalAlignment const &aVAlignment )
     {
         mChildren.push_back( BoxLayoutItem{ aChild, 0.0f, aExpand, aFill, aHAlignment, aVAlignment } );
-
-        return *this;
     }
 
     void BoxLayout::DrawContent( ImVec2 aPosition, ImVec2 aSize )
@@ -78,7 +71,7 @@ namespace SE::Core
             ImVec2 lItemSize{};
             ImVec2 lItemPosition{};
             float  lPositionStep = 0.0f;
-            
+
             if( lItem.mExpand )
             {
                 lItemSize     = lItem.mFill ? lExpandedSize : lItem.mItem->RequiredSize();

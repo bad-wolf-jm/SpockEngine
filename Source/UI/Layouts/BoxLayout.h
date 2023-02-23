@@ -37,14 +37,14 @@ namespace SE::Core
 
         ~BoxLayout() = default;
 
-        BoxLayout &SetItemSpacing( float aItemSpacing );
+        void SetItemSpacing( float aItemSpacing );
 
-        BoxLayout &Add( UIComponent *aChild, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
-                        eVerticalAlignment const &aVAlignment );
-        BoxLayout &Add( UIComponent *aChild, bool aExpand, bool aFill );
-        BoxLayout &Add( UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill );
-        BoxLayout &Add( UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
-                        eVerticalAlignment const &aVAlignment );
+        void Add( UIComponent *aChild, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
+                  eVerticalAlignment const &aVAlignment );
+        void Add( UIComponent *aChild, bool aExpand, bool aFill );
+        void Add( UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill );
+        void Add( UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
+                  eVerticalAlignment const &aVAlignment );
 
       protected:
         std::vector<BoxLayoutItem> mChildren;
