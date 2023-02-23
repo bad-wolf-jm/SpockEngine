@@ -19,7 +19,7 @@ namespace SE::Core
 
       protected:
         std::string  mTitle;
-        UIComponent *mContent;
+        UIComponent *mContent = nullptr;
 
       protected:
         void PushStyles();

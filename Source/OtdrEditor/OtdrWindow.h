@@ -24,6 +24,7 @@
 #include "Editor/ContentBrowser.h"
 #include "Mono/MonoScriptInstance.h"
 #include "SceneHierarchyPanel.h"
+#include "Workspace.h"
 
 namespace SE::OtdrEditor
 {
@@ -108,6 +109,8 @@ namespace SE::OtdrEditor
         UIBoxLayout mTestLayout3;
 
         UIForm mTestForm3;
+
+        OtdrWorkspaceWindow mWorkspaceArea;
 
       private:
         OtdrSceneHierarchyPanel mSceneHierarchyPanel;

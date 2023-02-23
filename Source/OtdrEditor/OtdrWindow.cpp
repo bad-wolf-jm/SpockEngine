@@ -147,6 +147,8 @@ namespace SE::OtdrEditor
 
         mTestForm3.SetTitle( "TEST_FORM" );
         mTestForm3.SetContent( &mTestLayout0 );
+
+        mWorkspaceArea.ConfigureUI();
     }
 
     OtdrWindow::OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
@@ -204,14 +206,15 @@ namespace SE::OtdrEditor
         // ImGui::End();
 
         mTestForm3.Update();
+        mWorkspaceArea.Update();
 
-        static bool p_open_3 = true;
-        if( ImGui::Begin( "3D VIEW", &p_open_3, ImGuiWindowFlags_None ) )
-        {
-            auto lWorkspaceAreaSize = UI::GetAvailableContentSpace();
-            Workspace( lWorkspaceAreaSize.x, lWorkspaceAreaSize.y );
-        }
-        ImGui::End();
+        // static bool p_open_3 = true;
+        // if( ImGui::Begin( "3D VIEW", &p_open_3, ImGuiWindowFlags_None ) )
+        // {
+        //     auto lWorkspaceAreaSize = UI::GetAvailableContentSpace();
+        //     Workspace( lWorkspaceAreaSize.x, lWorkspaceAreaSize.y );
+        // }
+        // ImGui::End();
 
         if( ImGui::Begin( "ASSEMBLIES", NULL, ImGuiWindowFlags_None ) )
         {
@@ -219,20 +222,20 @@ namespace SE::OtdrEditor
         }
         ImGui::End();
 
-        static MonoScriptInstance lInstance;
-        if( ImGui::Begin( "SCRIPTS", NULL, ImGuiWindowFlags_None ) )
-        {
-            auto lScriptBaseClass = MonoRuntime::GetClassType( "SpockEngine.Script" );
+        // static MonoScriptInstance lInstance;
+        // if( ImGui::Begin( "SCRIPTS", NULL, ImGuiWindowFlags_None ) )
+        // {
+        //     auto lScriptBaseClass = MonoRuntime::GetClassType( "SpockEngine.Script" );
 
-            for( auto const &lScriptClass : lScriptBaseClass.DerivedClasses() )
-            {
-                if( UI::Button( lScriptClass->FullName().c_str(), math::vec2{ 100.0f, 30.0f } ) )
-                {
-                    mCurrentScript = lScriptClass->Instantiate();
-                }
-            }
-        }
-        ImGui::End();
+        //     for( auto const &lScriptClass : lScriptBaseClass.DerivedClasses() )
+        //     {
+        //         if( UI::Button( lScriptClass->FullName().c_str(), math::vec2{ 100.0f, 30.0f } ) )
+        //         {
+        //             mCurrentScript = lScriptClass->Instantiate();
+        //         }
+        //     }
+        // }
+        // ImGui::End();
 
         if( ImGui::Begin( "CONNECTED MODULES", NULL, ImGuiWindowFlags_None ) )
         {
@@ -284,12 +287,12 @@ namespace SE::OtdrEditor
         }
         ImGui::End();
 
-        if( ImGui::Begin( "LOGS", &p_open, ImGuiWindowFlags_None ) )
-        {
-            math::vec2 l_WindowConsoleSize = UI::GetAvailableContentSpace();
-            Console( l_WindowConsoleSize.x, l_WindowConsoleSize.y );
-        }
-        ImGui::End();
+        // if( ImGui::Begin( "LOGS", &p_open, ImGuiWindowFlags_None ) )
+        // {
+        //     math::vec2 l_WindowConsoleSize = UI::GetAvailableContentSpace();
+        //     Console( l_WindowConsoleSize.x, l_WindowConsoleSize.y );
+        // }
+        // ImGui::End();
 
         if( ImGui::Begin( "PROFILING", &p_open, ImGuiWindowFlags_None ) )
         {
@@ -358,20 +361,20 @@ namespace SE::OtdrEditor
         }
         ImGui::End();
 
-        if( ImGui::Begin( "CONTENT BROWSER", &p_open, ImGuiWindowFlags_None ) )
-        {
-            // mContentBrowser.Display();
-        }
-        ImGui::End();
+        // if( ImGui::Begin( "CONTENT BROWSER", &p_open, ImGuiWindowFlags_None ) )
+        // {
+        //     // mContentBrowser.Display();
+        // }
+        // ImGui::End();
 
         ImGui::ShowDemoWindow();
 
-        if( ImGui::Begin( "PROPERTIES", &p_open, ImGuiWindowFlags_None ) )
-        {
-            // auto lWindowPropertiesSize = UI::GetAvailableContentSpace();
-            // m_SceneHierarchyPanel.ElementEditor.Display( lWindowPropertiesSize.x, lWindowPropertiesSize.y );
-        }
-        ImGui::End();
+        // if( ImGui::Begin( "PROPERTIES", &p_open, ImGuiWindowFlags_None ) )
+        // {
+        //     // auto lWindowPropertiesSize = UI::GetAvailableContentSpace();
+        //     // m_SceneHierarchyPanel.ElementEditor.Display( lWindowPropertiesSize.x, lWindowPropertiesSize.y );
+        // }
+        // ImGui::End();
 
         ImGui::PushStyleColor( ImGuiCol_WindowBg, ImVec4{ 102.0f / 255.0f, 0.0f, 204.0f / 255.0f, 1.0f } );
         ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, 0.0f );
