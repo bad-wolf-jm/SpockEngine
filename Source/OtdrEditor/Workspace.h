@@ -19,7 +19,6 @@
 
 namespace SE::OtdrEditor
 {
-
     class OtdrWorkspaceWindow : public UIForm
     {
       public:
