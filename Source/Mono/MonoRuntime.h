@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <map>
 #include <string>
+#include <functional>
 
 #include "MonoScriptClass.h"
 #include "MonoTypedefs.h"
@@ -34,11 +35,14 @@ namespace SE::Core
 
         static void DisplayAssemblies();
 
+        static void OnConsoleOut(std::function<void(std::string const&)> aFunction);
+
       private:
         static void RegisterComponentTypes();
         static void RegisterInternalCppFunctions();
         static void InitMono( std::filesystem::path &aMonoPath );
         static void ShutdownMono();
+        static void ConsoleWrite(MonoString *aBuffer);
 
         static void LoadCoreAssembly( const std::filesystem::path &aFilepath );
 

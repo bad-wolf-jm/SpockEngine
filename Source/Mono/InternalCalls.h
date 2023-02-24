@@ -18,6 +18,9 @@ namespace SE::MonoInternalCalls
     using namespace SE::Core;
     using namespace SE::TensorOps;
 
+    // void Console_Initialize();
+    // void Console_Write( MonoString *aBuffer );
+
     uint32_t Entity_Create( EntityCollection *aRegistry, MonoString *aName, uint32_t aParentEntityID );
 
     bool Entity_IsValid( uint32_t aEntityID, EntityCollection *aRegistry );

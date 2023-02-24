@@ -3,6 +3,7 @@
 #include "TypeReflection.h"
 #include <iostream>
 #include <string>
+#include <list>
 
 #include "Core/Logging.h"
 
@@ -14,6 +15,21 @@
 
 namespace SE::MonoInternalCalls
 {
+    // std::list<std::string> sConsoleLines;
+
+    // std::list<std::string> &Console_GetLines( )
+    // {
+    //     return sConsoleLines;
+    // }
+
+    // void Console_Write( MonoString *aBuffer )
+    // {
+    //     auto lString = MonoRuntime::NewString(aBuffer);
+
+
+    //     SE::Logging::Info("{}", MonoRuntime::NewString(aBuffer));
+    // }
+
     uint32_t Entity_Create( EntityCollection *aRegistry, MonoString *aName, uint32_t aEntityID )
     {
         auto lName      = std::string( mono_string_to_utf8( aName ) );

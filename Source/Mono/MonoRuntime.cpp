@@ -63,6 +63,8 @@ namespace SE::Core
         AssemblyMapping mAssemblies       = {};
         ClassMapping    mClasses          = {};
 
+        std::function<void( std::string )> mConsoleOut;
+
         std::map<std::string, std::vector<sAssemblyData *>> mCategories;
     };
 
@@ -423,9 +425,18 @@ namespace SE::Core
             if( UI::Button( "Reload assemblies", { 150.0f, 30.0f } ) ) MonoRuntime::ReloadAssemblies();
     }
 
+    void MonoRuntime::OnConsoleOut( std::function<void( std::string const & )> aFunction ) { sRuntimeData->mConsoleOut = aFunction; }
+
+    void MonoRuntime::ConsoleWrite( MonoString *aBuffer )
+    {
+        if( sRuntimeData->mConsoleOut ) sRuntimeData->mConsoleOut( MonoRuntime::NewString( aBuffer ) );
+    }
+
     void MonoRuntime::RegisterInternalCppFunctions()
     {
         using namespace MonoInternalCalls;
+
+        mono_add_internal_call( "SpockEngine.CppCall::Console_Write", ConsoleWrite );
 
         SE_ADD_INTERNAL_CALL( Entity_Create );
         SE_ADD_INTERNAL_CALL( Entity_IsValid );
