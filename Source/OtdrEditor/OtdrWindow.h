@@ -12,14 +12,14 @@
 
 #include "OtdrScene/OtdrScene.h"
 
-#include "UI/Components/Checkbox.h"
 #include "UI/Components/Button.h"
+#include "UI/Components/Checkbox.h"
 #include "UI/Components/Image.h"
-#include "UI/Components/TextToggleButton.h"
 #include "UI/Components/ImageToggleButton.h"
+#include "UI/Components/TextToggleButton.h"
+#include "UI/Form.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/UI.h"
-#include "UI/Form.h"
 
 #include "Editor/ContentBrowser.h"
 #include "Mono/MonoScriptInstance.h"
@@ -85,30 +85,25 @@ namespace SE::OtdrEditor
         void LoadIOlmData(fs::path aPath);
 
       private:
-        UIButton mTestButton0;
-        UIButton mTestButton1;
-        UIButton mTestButton2;
-        UILabel  mTestLabel0;
-        UILabel  mTestLabel1;
-        UILabel  mTestLabel2;
-
-        UICheckBox  mTestCheckBox0;
-        UICheckBox  mTestCheckBox1;
-
-        UITextToggleButton mTestTextToggleButton0;
-        UITextToggleButton mTestTextToggleButton1;
-        UITextToggleButton mTestTextToggleButton2;
-        UIImageToggleButton mTestImageToggleButton0;
-
-        UIImage mImage0;
-        UIImage mImage1;
-
-        UIBoxLayout mTestLayout0;
-        UIBoxLayout mTestLayout1;
-        UIBoxLayout mTestLayout2;
-        UIBoxLayout mTestLayout3;
-
-        UIForm mTestForm3;
+        // UIButton mTestButton0;
+        // UIButton mTestButton1;
+        // UIButton mTestButton2;
+        // UILabel  mTestLabel0;
+        // UILabel  mTestLabel1;
+        // UILabel  mTestLabel2;
+        // UICheckBox  mTestCheckBox0;
+        // UICheckBox  mTestCheckBox1;
+        // UITextToggleButton mTestTextToggleButton0;
+        // UITextToggleButton mTestTextToggleButton1;
+        // UITextToggleButton mTestTextToggleButton2;
+        // UIImageToggleButton mTestImageToggleButton0;
+        // UIImage mImage0;
+        // UIImage mImage1;
+        // UIBoxLayout mTestLayout0;
+        // UIBoxLayout mTestLayout1;
+        // UIBoxLayout mTestLayout2;
+        // UIBoxLayout mTestLayout3;
+        // UIForm mTestForm3;
 
         OtdrWorkspaceWindow mWorkspaceArea;
 
