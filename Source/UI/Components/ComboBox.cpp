@@ -53,6 +53,8 @@ namespace SE::Core
             }
 
             if( lChanged && mOnChange && lEnabled ) mOnChange( mCurrentItem );
+
+            ImGui::EndCombo();
         }
     }
 } // namespace SE::Core

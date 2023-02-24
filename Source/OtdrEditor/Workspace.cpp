@@ -31,13 +31,13 @@ namespace SE::OtdrEditor
 
         mStartOrStopCurrentScript.SetInactiveImage( mPlayIcon );
         mStartOrStopCurrentScript.SetActiveImage( mPauseIcon );
-        mStartOrStopCurrentScript.OnChange( [&]( bool ) { return true; } );
+        mStartOrStopCurrentScript.OnChange( [&]( bool ) { return StartCurrentScript( true ); } );
 
-        mShowLogs = UITextToggleButton("Logs");
+        mShowLogs = UITextToggleButton( "Logs" );
 
         mTopBarLayout = UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
         mTopBarLayout.Add( &mStartOrStopCurrentScript, 45.0f, false, true );
-        mTopBarLayout.Add( &mScriptChooser, 145.0f, false, true );
+        mTopBarLayout.Add( &mScriptChooser, false, true );
         mTopBarLayout.Add( nullptr, true, true );
         mTopBarLayout.Add( &mShowLogs, false, true );
 
@@ -49,6 +49,46 @@ namespace SE::OtdrEditor
 
         SetTitle( "WORKSPACE" );
         SetContent( &mMainLayout );
+    }
+
+    void OtdrWorkspaceWindow::Tick()
+    {
+        if( mCurrentScript && mCurrentScriptIsRunning )
+        {
+            Timestep aTs;
+            mCurrentScript->CallMethod( "Tick", &aTs );
+        }
+
+        std::vector<std::string> lScriptNames;
+        mScripts.clear();
+
+        auto lScriptBaseClass = MonoRuntime::GetClassType( "SpockEngine.Script" );
+
+        for( auto const &lScriptClass : lScriptBaseClass.DerivedClasses() )
+        {
+            lScriptNames.push_back( lScriptClass->FullName() );
+            mScripts.push_back( lScriptClass );
+        }
+
+        mScriptChooser.SetItemList( lScriptNames );
+    }
+
+    bool OtdrWorkspaceWindow::StartCurrentScript( bool aState )
+    {
+        if( mCurrentScriptIsRunning )
+        {
+            mCurrentScript->CallMethod( "EndScenario" );
+            mCurrentScriptIsRunning = false;
+            mCurrentScript          = nullptr;
+        }
+        else
+        {
+            mCurrentScript = mScripts[mScriptChooser.Current()]->Instantiate();
+            mCurrentScript->CallMethod( "BeginScenario" );
+            mCurrentScriptIsRunning = true;
+        }
+
+        return mCurrentScriptIsRunning;
     }
 
 } // namespace SE::OtdrEditor

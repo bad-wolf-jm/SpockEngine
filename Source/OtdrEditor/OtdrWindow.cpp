@@ -476,115 +476,117 @@ namespace SE::OtdrEditor
     {
         mActiveWorld->Update( aTs );
 
-        if( mCurrentScriptIsRunning )
-        {
-            mCurrentScript->CallMethod( "Tick", &aTs );
-        }
+        mWorkspaceArea.Tick();
+
+        // if( mCurrentScriptIsRunning )
+        // {
+        //     mCurrentScript->CallMethod( "Tick", &aTs );
+        // }
 
         UpdateFramerate( aTs );
     }
 
-    void OtdrWindow::Workspace( int32_t aWidth, int32_t height )
-    {
-        auto &lIO = ImGui::GetIO();
+    // void OtdrWindow::Workspace( int32_t aWidth, int32_t height )
+    // {
+    //     auto &lIO = ImGui::GetIO();
 
-        math::vec2 lWorkspacePosition = UI::GetCurrentCursorScreenPosition();
-        math::vec2 lCursorPosition    = UI::GetCurrentCursorPosition();
+    //     math::vec2 lWorkspacePosition = UI::GetCurrentCursorScreenPosition();
+    //     math::vec2 lCursorPosition    = UI::GetCurrentCursorPosition();
 
-        // UI::SameLine();
-        ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f } );
-        ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 1.0f, 1.0f, 1.0f, 0.01f } );
-        ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 1.0f, 1.0f, 1.0f, 0.02f } );
+    //     // UI::SameLine();
+    //     ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f } );
+    //     ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 1.0f, 1.0f, 1.0f, 0.01f } );
+    //     ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 1.0f, 1.0f, 1.0f, 0.02f } );
 
-        if( mCurrentScript )
-        {
-            if( !mCurrentScriptIsRunning )
-            {
-                if( ImGui::ImageButton( (ImTextureID)mPlayIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
-                                        ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
-                                        ImVec4{ 0.0f, 1.0f, 0.0f, 0.8f } ) )
-                {
-                    mCurrentScript->CallMethod( "BeginScenario" );
-                    mCurrentScriptIsRunning = true;
-                }
-            }
-            else
-            {
-                if( ImGui::ImageButton( (ImTextureID)mPauseIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
-                                        ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
-                                        ImVec4{ 1.0f, .2f, 0.0f, 0.8f } ) )
-                {
-                    mCurrentScript->CallMethod( "EndScenario" );
-                    mCurrentScriptIsRunning = false;
-                }
-            }
-        }
-        else if( mActiveWorld->GetState() == OtdrScene::eSceneState::EDITING )
-        {
+    //     if( mCurrentScript )
+    //     {
+    //         if( !mCurrentScriptIsRunning )
+    //         {
+    //             if( ImGui::ImageButton( (ImTextureID)mPlayIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
+    //                                     ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
+    //                                     ImVec4{ 0.0f, 1.0f, 0.0f, 0.8f } ) )
+    //             {
+    //                 mCurrentScript->CallMethod( "BeginScenario" );
+    //                 mCurrentScriptIsRunning = true;
+    //             }
+    //         }
+    //         else
+    //         {
+    //             if( ImGui::ImageButton( (ImTextureID)mPauseIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
+    //                                     ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
+    //                                     ImVec4{ 1.0f, .2f, 0.0f, 0.8f } ) )
+    //             {
+    //                 mCurrentScript->CallMethod( "EndScenario" );
+    //                 mCurrentScriptIsRunning = false;
+    //             }
+    //         }
+    //     }
+    //     else if( mActiveWorld->GetState() == OtdrScene::eSceneState::EDITING )
+    //     {
 
-            if( ImGui::ImageButton( (ImTextureID)mPlayIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
-                                    ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
-                                    ImVec4{ 0.0f, 1.0f, 0.0f, 0.8f } ) )
-            {
-                if( OnBeginScenario ) OnBeginScenario();
+    //         if( ImGui::ImageButton( (ImTextureID)mPlayIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
+    //                                 ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
+    //                                 ImVec4{ 0.0f, 1.0f, 0.0f, 0.8f } ) )
+    //         {
+    //             if( OnBeginScenario ) OnBeginScenario();
 
-                mActiveWorld = New<OtdrScene>( mWorld );
-                mActiveWorld->BeginScenario();
-            }
-        }
-        else
-        {
-            if( ImGui::ImageButton( (ImTextureID)mPauseIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
-                                    ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
-                                    ImVec4{ 1.0f, .2f, 0.0f, 0.8f } ) )
-            {
-                if( OnEndScenario ) OnEndScenario();
+    //             mActiveWorld = New<OtdrScene>( mWorld );
+    //             mActiveWorld->BeginScenario();
+    //         }
+    //     }
+    //     else
+    //     {
+    //         if( ImGui::ImageButton( (ImTextureID)mPauseIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
+    //                                 ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
+    //                                 ImVec4{ 1.0f, .2f, 0.0f, 0.8f } ) )
+    //         {
+    //             if( OnEndScenario ) OnEndScenario();
 
-                mActiveWorld->EndScenario();
-                mActiveWorld = mWorld;
-            }
-        }
+    //             mActiveWorld->EndScenario();
+    //             mActiveWorld = mWorld;
+    //         }
+    //     }
 
-        ImGui::PopStyleColor();
-        ImGui::PopStyleColor();
-        ImGui::PopStyleColor();
+    //     ImGui::PopStyleColor();
+    //     ImGui::PopStyleColor();
+    //     ImGui::PopStyleColor();
 
-        math::vec2  l3DViewPosition = UI::GetCurrentCursorScreenPosition();
-        math::ivec2 l3DViewSize     = UI::GetAvailableContentSpace();
-        mWorkspaceAreaSize          = l3DViewSize;
-    }
+    //     math::vec2  l3DViewPosition = UI::GetCurrentCursorScreenPosition();
+    //     math::ivec2 l3DViewSize     = UI::GetAvailableContentSpace();
+    //     mWorkspaceAreaSize          = l3DViewSize;
+    // }
 
-    void OtdrWindow::Console( int32_t aWidth, int32_t height )
-    {
-        const float           lTextBaseHeight = ImGui::GetTextLineHeightWithSpacing();
-        const ImGuiTableFlags flags           = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY |
-                                      ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_Resizable |
-                                      ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
+    // void OtdrWindow::Console( int32_t aWidth, int32_t height )
+    // {
+    //     const float           lTextBaseHeight = ImGui::GetTextLineHeightWithSpacing();
+    //     const ImGuiTableFlags flags           = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY |
+    //                                   ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_Resizable |
+    //                                   ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
 
-        auto  &l_Logs     = SE::Logging::GetLogMessages();
-        ImVec2 outer_size = ImVec2( 0.0f, height );
-        if( ImGui::BeginTable( "table_scrolly", 3, flags, outer_size ) )
-        {
-            ImGui::TableSetupScrollFreeze( 2, 1 );
-            ImGui::TableSetupColumn( "", ImGuiTableColumnFlags_WidthFixed, lTextBaseHeight );
-            ImGui::TableSetupColumn( "Time", ImGuiTableColumnFlags_None, 150 );
-            ImGui::TableSetupColumn( "Message", ImGuiTableColumnFlags_WidthStretch );
-            ImGui::TableHeadersRow();
+    //     auto  &l_Logs     = SE::Logging::GetLogMessages();
+    //     ImVec2 outer_size = ImVec2( 0.0f, height );
+    //     if( ImGui::BeginTable( "table_scrolly", 3, flags, outer_size ) )
+    //     {
+    //         ImGui::TableSetupScrollFreeze( 2, 1 );
+    //         ImGui::TableSetupColumn( "", ImGuiTableColumnFlags_WidthFixed, lTextBaseHeight );
+    //         ImGui::TableSetupColumn( "Time", ImGuiTableColumnFlags_None, 150 );
+    //         ImGui::TableSetupColumn( "Message", ImGuiTableColumnFlags_WidthStretch );
+    //         ImGui::TableHeadersRow();
 
-            ImGuiListClipper clipper;
-            clipper.Begin( l_Logs.size() );
-            while( clipper.Step() )
-            {
-                ImGui::TableNextRow();
-                for( int row = clipper.DisplayStart; row < clipper.DisplayEnd; row++ )
-                {
-                    ImGui::TableSetColumnIndex( 2 );
-                    Text( l_Logs[row].Message );
-                }
-            }
-            ImGui::EndTable();
-        }
-    }
+    //         ImGuiListClipper clipper;
+    //         clipper.Begin( l_Logs.size() );
+    //         while( clipper.Step() )
+    //         {
+    //             ImGui::TableNextRow();
+    //             for( int row = clipper.DisplayStart; row < clipper.DisplayEnd; row++ )
+    //             {
+    //                 ImGui::TableSetColumnIndex( 2 );
+    //                 Text( l_Logs[row].Message );
+    //             }
+    //         }
+    //         ImGui::EndTable();
+    //     }
+    // }
 
     void OtdrWindow::UpdateFramerate( Timestep ts )
     {
