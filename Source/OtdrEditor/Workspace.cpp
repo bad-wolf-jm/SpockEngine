@@ -45,10 +45,18 @@ namespace SE::OtdrEditor
         mMainLayout.Add( &mTopBarLayout, 45.0f, false, true );
 
         mTestLabel0 = UILabel( "SCRIPT GUI GOES HERE" );
-        mMainLayout.Add( &mTestLabel0, true, true );
+        mMainLayout.Add( &mConsoleTextOverlay, true, true );
 
         SetTitle( "WORKSPACE" );
         SetContent( &mMainLayout );
+
+        MonoRuntime::OnConsoleOut( std::bind( &OtdrWorkspaceWindow::ConsoleOut, this, std::placeholders::_1 ) );
+    }
+
+    void OtdrWorkspaceWindow::ConsoleOut( std::string const &aString )
+    {
+        //
+        mConsoleTextOverlay.AddText( aString );
     }
 
     void OtdrWorkspaceWindow::Tick()

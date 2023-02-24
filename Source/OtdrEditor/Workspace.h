@@ -12,6 +12,7 @@
 #include "UI/Components/Image.h"
 #include "UI/Components/ImageToggleButton.h"
 #include "UI/Components/TextToggleButton.h"
+#include "UI/Components/TextOverlay.h"
 #include "UI/Form.h"
 #include "UI/Layouts/BoxLayout.h"
 
@@ -40,6 +41,7 @@ namespace SE::OtdrEditor
         UIBoxLayout         mTopBarLayout;
         UIBoxLayout         mMainLayout;
         UILabel  mTestLabel0;
+        UITextOverlay  mConsoleTextOverlay;
 
         private:
           std::vector<SE::Core::MonoScriptClass*> mScripts;
@@ -49,5 +51,6 @@ namespace SE::OtdrEditor
         Ref<MonoScriptInstance> mCurrentScript{};
         bool                    mCurrentScriptIsRunning{};
 
+        void ConsoleOut(std::string const& aString);
     };
 } // namespace SE::OtdrEditor

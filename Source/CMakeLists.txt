@@ -39,6 +39,7 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/Components/Button.cpp
     UI/Components/CheckBox.cpp
     UI/Components/Label.cpp
+    UI/Components/TextOverlay.cpp
     UI/Components/BaseImage.cpp
     UI/Components/Image.cpp
     UI/Components/ImageButton.cpp
