@@ -6,6 +6,9 @@ namespace SpockEngine
     public static class CppCall
     {
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static uint Console_Write(string buffer);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static uint Entity_Create(ulong aRegistry, string aName, uint aParentEntityID);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
