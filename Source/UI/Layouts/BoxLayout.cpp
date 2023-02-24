@@ -18,9 +18,10 @@ namespace SE::Core
 
         for( auto const &lItem : mChildren )
         {
+            ImVec2 lRequiredSize{};
             if( lItem.mFixedSize > 0.0f )
             {
-                auto lRequiredSize = lItem.mItem->RequiredSize();
+                if( lItem.mItem ) lRequiredSize = lItem.mItem->RequiredSize();
 
                 if( mOrientation == eBoxLayoutOrientation::HORIZONTAL )
                 {
@@ -35,7 +36,8 @@ namespace SE::Core
             }
             else
             {
-                auto lRequiredSize = lItem.mItem->RequiredSize();
+
+                if( lItem.mItem ) lRequiredSize = lItem.mItem->RequiredSize();
 
                 if( mOrientation == eBoxLayoutOrientation::HORIZONTAL )
                 {

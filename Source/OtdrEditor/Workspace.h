@@ -33,6 +33,7 @@ namespace SE::OtdrEditor
         UIImage mPlayIcon;
         UIImage mPauseIcon;
         UIImageToggleButton mStartOrStopCurrentScript;
+        UITextToggleButton mShowLogs;
         UIComboBox          mScriptChooser;
         UIBoxLayout         mTopBarLayout;
         UIBoxLayout         mMainLayout;

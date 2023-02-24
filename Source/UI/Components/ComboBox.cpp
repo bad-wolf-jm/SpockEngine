@@ -32,6 +32,7 @@ namespace SE::Core
 
         bool lBeginCombo = false;
 
+        ImGui::SetNextItemWidth( RequiredSize().x );
         if( ( mItems.size() == 0 ) )
         {
             if( ImGui::BeginCombo( "##", "No Items" ) ) ImGui::EndCombo();
