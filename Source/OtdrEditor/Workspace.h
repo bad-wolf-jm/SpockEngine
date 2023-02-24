@@ -7,11 +7,6 @@
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 
-// #include "Graphics/Vulkan/VkGraphicContext.h"
-// #include "Graphics/Vulkan/VkSampler2D.h"
-
-// #include "OtdrScene/OtdrScene.h"
-
 #include "UI/Components/Button.h"
 #include "UI/Components/ComboBox.h"
 #include "UI/Components/Image.h"
@@ -19,66 +14,19 @@
 #include "UI/Components/TextToggleButton.h"
 #include "UI/Form.h"
 #include "UI/Layouts/BoxLayout.h"
-// #include "UI/UI.h"
 
-// #include "Editor/ContentBrowser.h"
 #include "Mono/MonoScriptInstance.h"
-// #include "SceneHierarchyPanel.h"
 
 namespace SE::OtdrEditor
 {
 
     class OtdrWorkspaceWindow : public UIForm
     {
-        //   public:
-        //     enum SimulationState
-        //     {
-        //         EDIT,
-        //         RUN
-        //     };
-
-    //   public:
-        // std::string ApplicationIcon = "";
-        // std::string ApplicationName = "";
-        // std::string DocumentName    = "";
-
-        // fs::path mMaterialsPath = "";
-        // fs::path mModelsPath    = "";
-
-        // Ref<Engine> mEngineLoop = nullptr;
-
-        // Ref<OtdrScene> mWorld       = nullptr;
-        // Ref<OtdrScene> mActiveWorld = nullptr;
-
-        // Ref<MonoScriptInstance> mCurrentScript{};
-        // bool                    mCurrentScriptIsRunning{};
-
-    //   public:
-        // float HeaderHeight       = 31.0f;
-        // float StatusBarHeight    = 31.0f;
-        // float SeparatorThickness = 2.0f;
-        // float SideMenuWidth      = 45.0f;
-
-        // entt::delegate<void( void )> OnBeginScenario{};
-        // entt::delegate<void( void )> OnEndScenario{};
-
-        // void Update( Timestep aTs );
-
       public:
         OtdrWorkspaceWindow() = default;
         OtdrWorkspaceWindow( OtdrWorkspaceWindow const & ) = default;
 
-        // OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> mUIOverlay );
-
         ~OtdrWorkspaceWindow() = default;
-
-        // bool        Display();
-        // bool        RenderMainMenu();
-        // math::ivec2 GetWorkspaceAreaSize();
-
-        // void Workspace( int32_t width, int32_t height );
-        // void Console( int32_t width, int32_t height );
-        // void UpdateFramerate( Timestep ts );
 
         void ConfigureUI();
 
@@ -90,46 +38,5 @@ namespace SE::OtdrEditor
         UIBoxLayout         mTopBarLayout;
         UIBoxLayout         mMainLayout;
         UILabel  mTestLabel0;
-
-        // UIButton mTestButton0;
-        // UIButton mTestButton1;
-        // UIButton mTestButton2;
-        // UILabel  mTestLabel0;
-        // UILabel  mTestLabel1;
-        // UILabel  mTestLabel2;
-
-        // UICheckBox  mTestCheckBox0;
-        // UICheckBox  mTestCheckBox1;
-
-        // UITextToggleButton mTestTextToggleButton0;
-        // UITextToggleButton mTestTextToggleButton1;
-        // UITextToggleButton mTestTextToggleButton2;
-
-
-        // UIBoxLayout mTestLayout1;
-        // UIBoxLayout mTestLayout2;
-        // UIBoxLayout mTestLayout3;
-
-        // UIForm mTestForm3;
-
-    //   private:
-        // OtdrSceneHierarchyPanel mSceneHierarchyPanel;
-
-    //   private:
-        // Ref<VkGraphicContext> mGraphicContext;
-        // Ref<UIContext>        mUIOverlay;
-
-        // uint32_t mFrameCounter = 0;
-        // float    mFpsTimer     = 0.0f;
-        // uint32_t mLastFPS      = 0;
-
-        // math::ivec2      mWorkspaceAreaSize = { 0, 0 };
-        // Ref<VkSampler2D> mPlayIcon;
-        // ImageHandle      mPlayIconHandle;
-        // Ref<VkSampler2D> mPauseIcon;
-        // ImageHandle      mPauseIconHandle;
-
-        // SimulationState mState       = SimulationState::EDIT;
-        // fs::path        mCurrentPath = "";
     };
 } // namespace SE::OtdrEditor
