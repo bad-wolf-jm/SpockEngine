@@ -11,7 +11,47 @@ namespace SE::Core
     void UIBoxLayout::PushStyles() {}
     void UIBoxLayout::PopStyles() {}
 
-    ImVec2 UIBoxLayout::RequiredSize() { return ImVec2{}; }
+    ImVec2 UIBoxLayout::RequiredSize()
+    {
+        float lWidth  = 0.0f;
+        float lHeight = 0.0f;
+
+        for( auto const &lItem : mChildren )
+        {
+            if( lItem.mFixedSize > 0.0f )
+            {
+                auto lRequiredSize = lItem.mItem->RequiredSize();
+
+                if( mOrientation == eBoxLayoutOrientation::HORIZONTAL )
+                {
+                    lWidth += lItem.mFixedSize;
+                    lHeight = math::max( lHeight, lRequiredSize.y );
+                }
+                else
+                {
+                    lHeight += lItem.mFixedSize;
+                    lWidth = math::max( lWidth, lRequiredSize.x );
+                }
+            }
+            else
+            {
+                auto lRequiredSize = lItem.mItem->RequiredSize();
+
+                if( mOrientation == eBoxLayoutOrientation::HORIZONTAL )
+                {
+                    lWidth += lRequiredSize.x;
+                    lHeight = math::max( lHeight, lRequiredSize.y );
+                }
+                else
+                {
+                    lHeight += lRequiredSize.y;
+                    lWidth = math::max( lWidth, lRequiredSize.x );
+                }
+            }
+        }
+
+        return ImVec2{ lWidth, lHeight };
+    }
 
     void UIBoxLayout::SetItemSpacing( float aItemSpacing ) { mItemSpacing = aItemSpacing; }
 
