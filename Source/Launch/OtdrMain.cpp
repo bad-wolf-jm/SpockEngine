@@ -294,6 +294,9 @@ int main( int argc, char **argv )
 
     MonoRuntime::ReloadAssemblies();
 
+    auto &lInitializationClass = MonoRuntime::GetClassType("SpockEngine.IO");
+    lInitializationClass.CallMethod("Initialize");
+
     while( SE::Core::Engine::GetInstance()->Tick() )
     {
     }
