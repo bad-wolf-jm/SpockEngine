@@ -5,7 +5,15 @@ namespace SE::Core
     UIComboBox::UIComboBox( std::vector<std::string> const &aItems )
         : mItems{ aItems } {};
 
-    ImVec2 UIComboBox::RequiredSize() { return ImVec2{}; }
+    ImVec2 UIComboBox::RequiredSize()
+    {
+        float lTextWidth = 0.0f;
+
+        for( auto const &lItem : mItems ) lTextWidth = math::max( ImGui::CalcTextSize( lItem.c_str() ).x, lTextWidth );
+
+        const float lArrowSize = ImGui::GetFrameHeight();
+        return ImVec2{ lTextWidth + lArrowSize, ImGui::GetFrameHeight() };
+    }
 
     void UIComboBox::PushStyles() {}
     void UIComboBox::PopStyles() {}
@@ -18,7 +26,7 @@ namespace SE::Core
     {
         bool lEnabled = mIsEnabled;
 
-        ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, ImGui::CalcTextSize( "mText.c_str()" ), aSize ) );
+        ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, RequiredSize(), aSize ) );
 
         if( mCurrentItem >= mItems.size() ) mCurrentItem = mItems.size() - 1;
 

@@ -16,17 +16,22 @@ namespace SE::Core
         UIBaseImage( fs::path const &aImagePath, math::vec2 aSize );
         UIBaseImage( Ref<VkSampler2D> aImage, math::vec2 aSize );
 
-        void SetImage( fs::path const &aImagePath );
-        void SetSize( float aWidth, float aHeight );
-        void SetRect( math::vec2 aTopLeft, math::vec2 aBottomRight );
-        void SetBackgroundColor( math::vec4 aColor );
-        void SetTintColor( math::vec4 aColor );
+        void   SetImage( fs::path const &aImagePath );
+        void   SetSize( float aWidth, float aHeight );
+        void   SetRect( math::vec2 aTopLeft, math::vec2 aBottomRight );
+        ImVec2 TopLeft();
+        ImVec2 BottomRight();
+
+        void   SetBackgroundColor( math::vec4 aColor );
+        ImVec4 BackgroundColor();
+        void   SetTintColor( math::vec4 aColor );
+        ImVec4 TintColor();
 
         ImTextureID TextureID();
-        ImVec2 Size();
+        ImVec2      Size();
 
       protected:
-        fs::path       mImagePath;
+        fs::path mImagePath;
 
         Ref<VkSampler2D> mImage;
         ImageHandle      mHandle;

@@ -66,7 +66,10 @@ namespace SE::Core
 
         auto lImage = mActivated ? mActiveImage : mInactiveImage;
 
-        if( ImGui::ImageButton( lImage.TextureID(), lRequiredSize ) && mOnChange && lEnabled ) mActivated = mOnChange( mActivated );
+        if( ImGui::ImageButton( lImage.TextureID(), lRequiredSize, lImage.TopLeft(), lImage.BottomRight(), 0, lImage.BackgroundColor(),
+                                lImage.TintColor() ) &&
+            mOnChange && lEnabled )
+            mActivated = mOnChange( mActivated );
 
         PopStyles( lEnabled );
     }
