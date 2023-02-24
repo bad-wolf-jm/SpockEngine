@@ -11,12 +11,13 @@ namespace SE::Core
 
         UIComboBox( std::vector<std::string> const &aItems );
 
-        void SetItemList(std::vector<std::string> aItems);
+        void SetItemList( std::vector<std::string> aItems );
 
-      void OnChange( std::function<void(int aIndex)> aOnChange );
-      
+        void OnChange( std::function<void( int aIndex )> aOnChange );
+        int  Current() { return mCurrentItem; }
+
       private:
-        std::function<void(int aIndex)> mOnChange;
+        std::function<void( int aIndex )> mOnChange;
 
       protected:
         uint32_t                 mCurrentItem = 0;
@@ -28,8 +29,6 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-
     };
 
 } // namespace SE::Core

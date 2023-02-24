@@ -15,6 +15,7 @@
 #include "UI/Form.h"
 #include "UI/Layouts/BoxLayout.h"
 
+#include "Mono/MonoScriptClass.h"
 #include "Mono/MonoScriptInstance.h"
 
 namespace SE::OtdrEditor
@@ -28,6 +29,7 @@ namespace SE::OtdrEditor
         ~OtdrWorkspaceWindow() = default;
 
         void ConfigureUI();
+        void Tick();
 
       private:
         UIImage mPlayIcon;
@@ -38,5 +40,14 @@ namespace SE::OtdrEditor
         UIBoxLayout         mTopBarLayout;
         UIBoxLayout         mMainLayout;
         UILabel  mTestLabel0;
+
+        private:
+          std::vector<SE::Core::MonoScriptClass*> mScripts;
+
+      private:
+        bool StartCurrentScript(bool aState);
+        Ref<MonoScriptInstance> mCurrentScript{};
+        bool                    mCurrentScriptIsRunning{};
+
     };
 } // namespace SE::OtdrEditor
