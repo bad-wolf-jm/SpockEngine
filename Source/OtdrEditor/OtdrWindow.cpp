@@ -63,65 +63,65 @@ namespace SE::OtdrEditor
 
     void OtdrWindow::ConfigureUI()
     {
-        mTestButton0 = UIButton( "Test button 0...", [&]() { SE::Logging::Info( "ClickedOnTest" ); } );
-        mTestButton1 = UIButton( "Test button 1...", [&]() { SE::Logging::Info( "ClickedOnTest" ); } );
-        mTestButton2 = UIButton( "Test button 2...", [&]() { SE::Logging::Info( "ClickedOnTest" ); } );
+        // mTestButton0 = UIButton( "Test button 0...", [&]() { SE::Logging::Info( "ClickedOnTest" ); } );
+        // mTestButton1 = UIButton( "Test button 1...", [&]() { SE::Logging::Info( "ClickedOnTest" ); } );
+        // mTestButton2 = UIButton( "Test button 2...", [&]() { SE::Logging::Info( "ClickedOnTest" ); } );
 
-        mTestLabel0 = UILabel( "LABEL 1" );
-        mTestLabel1 = UILabel( "LABEL 2" );
-        mTestLabel2 = UILabel( "LABEL 3" );
+        // mTestLabel0 = UILabel( "LABEL 1" );
+        // mTestLabel1 = UILabel( "LABEL 2" );
+        // mTestLabel2 = UILabel( "LABEL 3" );
 
-        mTestLayout1 = UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
-        mTestLayout1.Add( &mTestLabel0, true, true );
-        mTestLayout1.Add( &mTestLabel1, true, true );
-        mTestLayout1.Add( &mTestLabel2, true, true );
+        // mTestLayout1 = UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
+        // mTestLayout1.Add( &mTestLabel0, true, true );
+        // mTestLayout1.Add( &mTestLabel1, true, true );
+        // mTestLayout1.Add( &mTestLabel2, true, true );
 
-        mImage0 = UIImage( "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Play.png", math::vec2{ 50, 50 } );
-        mImage1 = UIImage( "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Pause.png", math::vec2{ 25, 25 } );
+        // mImage0 = UIImage( "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Play.png", math::vec2{ 50, 50 } );
+        // mImage1 = UIImage( "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Pause.png", math::vec2{ 25, 25 } );
 
-        mTestLayout2 = UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
-        mTestLayout2.Add( &mTestCheckBox0, true, true );
-        mTestLayout2.Add( &mTestCheckBox1, true, true );
-        mTestLayout2.Add( &mImage0, true, false );
-        mTestLayout2.Add( &mImage1, true, false );
+        // mTestLayout2 = UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
+        // mTestLayout2.Add( &mTestCheckBox0, true, true );
+        // mTestLayout2.Add( &mTestCheckBox1, true, true );
+        // mTestLayout2.Add( &mImage0, true, false );
+        // mTestLayout2.Add( &mImage1, true, false );
 
-        mTestTextToggleButton0 = UITextToggleButton( "Test toggle 0",
-                                                     [&]( bool v )
-                                                     {
-                                                         SE::Logging::Info( "ClickedOnTest" );
-                                                         return true;
-                                                     } );
-        mTestTextToggleButton1 = UITextToggleButton( "Test toggle 1",
-                                                     [&]( bool v )
-                                                     {
-                                                         SE::Logging::Info( "ClickedOnTest" );
-                                                         return true;
-                                                     } );
-        mTestTextToggleButton2 = UITextToggleButton( "Test toggle 2",
-                                                     [&]( bool v )
-                                                     {
-                                                         SE::Logging::Info( "ClickedOnTest" );
-                                                         return true;
-                                                     } );
+        // mTestTextToggleButton0 = UITextToggleButton( "Test toggle 0",
+        //                                              [&]( bool v )
+        //                                              {
+        //                                                  SE::Logging::Info( "ClickedOnTest" );
+        //                                                  return true;
+        //                                              } );
+        // mTestTextToggleButton1 = UITextToggleButton( "Test toggle 1",
+        //                                              [&]( bool v )
+        //                                              {
+        //                                                  SE::Logging::Info( "ClickedOnTest" );
+        //                                                  return true;
+        //                                              } );
+        // mTestTextToggleButton2 = UITextToggleButton( "Test toggle 2",
+        //                                              [&]( bool v )
+        //                                              {
+        //                                                  SE::Logging::Info( "ClickedOnTest" );
+        //                                                  return true;
+        //                                              } );
 
-        mTestImageToggleButton0.SetActiveImage( mImage0 );
-        mTestImageToggleButton0.SetInactiveImage( mImage1 );
-        mTestImageToggleButton0.OnChange( [&]( bool ) { return true; } );
+        // mTestImageToggleButton0.SetActiveImage( mImage0 );
+        // mTestImageToggleButton0.SetInactiveImage( mImage1 );
+        // mTestImageToggleButton0.OnChange( [&]( bool ) { return true; } );
 
-        mTestLayout3 = UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
-        mTestLayout3.Add( &mTestTextToggleButton0, true, true );
-        mTestLayout3.Add( &mTestImageToggleButton0, false, true, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
-        mTestLayout3.Add( &mTestTextToggleButton1, true, true );
-        mTestLayout3.Add( &mTestTextToggleButton2, true, true );
+        // mTestLayout3 = UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
+        // mTestLayout3.Add( &mTestTextToggleButton0, true, true );
+        // mTestLayout3.Add( &mTestImageToggleButton0, false, true, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
+        // mTestLayout3.Add( &mTestTextToggleButton1, true, true );
+        // mTestLayout3.Add( &mTestTextToggleButton2, true, true );
 
-        mTestLayout0 = UIBoxLayout( eBoxLayoutOrientation::VERTICAL );
-        mTestLayout0.SetItemSpacing( 5.0f );
-        mTestLayout0.Add( &mTestLayout2, false, true );
-        mTestLayout0.Add( &mTestButton0, true, true );
-        mTestLayout0.Add( &mTestLayout1, true, true );
-        mTestLayout0.Add( &mTestButton1, true, false, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
-        mTestLayout0.Add( &mTestButton2, true, true );
-        mTestLayout0.Add( &mTestLayout3, true, true );
+        // mTestLayout0 = UIBoxLayout( eBoxLayoutOrientation::VERTICAL );
+        // mTestLayout0.SetItemSpacing( 5.0f );
+        // mTestLayout0.Add( &mTestLayout2, false, true );
+        // mTestLayout0.Add( &mTestButton0, true, true );
+        // mTestLayout0.Add( &mTestLayout1, true, true );
+        // mTestLayout0.Add( &mTestButton1, true, false, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        // mTestLayout0.Add( &mTestButton2, true, true );
+        // mTestLayout0.Add( &mTestLayout3, true, true );
 
         {
             SE::Core::sTextureCreateInfo lTextureCreateInfo{};
@@ -145,9 +145,8 @@ namespace SE::OtdrEditor
             mPauseIconHandle = mUIOverlay->CreateTextureHandle( mPauseIcon );
         }
 
-        mTestForm3.SetTitle( "TEST_FORM" );
-        mTestForm3.SetContent( &mTestLayout0 );
-
+        // mTestForm3.SetTitle( "TEST_FORM" );
+        // mTestForm3.SetContent( &mTestLayout0 );
         mWorkspaceArea.ConfigureUI();
     }
 
@@ -205,7 +204,7 @@ namespace SE::OtdrEditor
         // }
         // ImGui::End();
 
-        mTestForm3.Update();
+        // mTestForm3.Update();
         mWorkspaceArea.Update();
 
         // static bool p_open_3 = true;
