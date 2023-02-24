@@ -116,10 +116,10 @@ namespace SE::OtdrEditor
 
         mTestLayout0 = UIBoxLayout( eBoxLayoutOrientation::VERTICAL );
         mTestLayout0.SetItemSpacing( 5.0f );
+        mTestLayout0.Add( &mTestLayout2, false, true );
         mTestLayout0.Add( &mTestButton0, true, true );
         mTestLayout0.Add( &mTestLayout1, true, true );
         mTestLayout0.Add( &mTestButton1, true, false, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
-        mTestLayout0.Add( &mTestLayout2, true, true );
         mTestLayout0.Add( &mTestButton2, true, true );
         mTestLayout0.Add( &mTestLayout3, true, true );
 

@@ -48,9 +48,14 @@ namespace SE::Core
         mBottomRight = ImVec2{ aBottomRight.x, aBottomRight.y };
     }
 
-    void UIBaseImage::SetBackgroundColor( math::vec4 aColor ) { mBackgroundColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
+    ImVec2 UIBaseImage::TopLeft() { return mTopLeft; }
+    ImVec2 UIBaseImage::BottomRight() { return mBottomRight; }
 
-    void UIBaseImage::SetTintColor( math::vec4 aColor ) { mTintColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
+    void UIBaseImage::SetBackgroundColor( math::vec4 aColor ) { mBackgroundColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
+    ImVec4 UIBaseImage::BackgroundColor() { return mBackgroundColor; }
+
+    void   UIBaseImage::SetTintColor( math::vec4 aColor ) { mTintColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
+    ImVec4 UIBaseImage::TintColor() { return mTintColor; }
 
     ImTextureID UIBaseImage::TextureID() { return static_cast<ImTextureID>( mHandle.Handle->GetVkDescriptorSet() ); }
 
