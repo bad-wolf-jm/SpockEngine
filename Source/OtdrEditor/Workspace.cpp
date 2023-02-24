@@ -33,9 +33,13 @@ namespace SE::OtdrEditor
         mStartOrStopCurrentScript.SetActiveImage( mPauseIcon );
         mStartOrStopCurrentScript.OnChange( [&]( bool ) { return true; } );
 
+        mShowLogs = UITextToggleButton("Logs");
+
         mTopBarLayout = UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
         mTopBarLayout.Add( &mStartOrStopCurrentScript, 45.0f, false, true );
         mTopBarLayout.Add( &mScriptChooser, 145.0f, false, true );
+        mTopBarLayout.Add( nullptr, true, true );
+        mTopBarLayout.Add( &mShowLogs, false, true );
 
         mMainLayout = UIBoxLayout( eBoxLayoutOrientation::VERTICAL );
         mMainLayout.Add( &mTopBarLayout, 45.0f, false, true );
