@@ -23,6 +23,7 @@ namespace SE::Core
       protected:
         uint32_t mLineCount = 0;
         std::list<sTextLine> mLines;
+        std::string mLeftOver;
 
       protected:
         void PushStyles();
