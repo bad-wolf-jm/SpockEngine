@@ -82,13 +82,20 @@ namespace SE::Core
 
     void UITextOverlay::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
+        auto lDrawList = ImGui::GetWindowDrawList();
         ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, ImGui::CalcTextSize( "mText.c_str()" ), aSize ) );
+
+        auto lTagWidth = ImGui::CalcTextSize("9999").x;
 
         for( auto const &lLine : mLines )
         {
+            auto lScreenPosition = ImGui::GetCursorScreenPos();
+            lDrawList->AddRectFilled(lScreenPosition, lScreenPosition + ImVec2{lTagWidth, 10}, ImColor(32, 32, 32, 128), 5);
+
             ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.9f, 0.9f, 0.9f, .4f } );
             ImGui::Text( fmt::format( "{}", lLine.mRepetitions ).c_str() );
             ImGui::PopStyleColor();
+
             ImGui::SameLine();
             SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONO );
             ImGui::Text( lLine.mLine.c_str() );
