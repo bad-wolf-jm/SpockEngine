@@ -82,16 +82,20 @@ namespace SE::Core
         auto lTagTextSize = ImGui::CalcTextSize( "9999" );
         auto lTagWidth    = lTagTextSize.x + lRadius * 2.0f;
 
-        return ImVec2{lTagWidth, lHeight};
+        return ImVec2{ lTagWidth, lHeight };
     }
 
     void UITextOverlay::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        if (!mIsVisible) return;
-        
-        ImGui::SetCursorPos( aPosition );
+        if( !mIsVisible ) return;
 
         auto lDrawList = ImGui::GetWindowDrawList();
+
+        ImGui::SetCursorPos( aPosition );
+
+        auto lScreenPosition = ImGui::GetCursorScreenPos();
+        lDrawList->AddRectFilled( lScreenPosition, lScreenPosition + aSize, ImColor( 0, 0, 0, 200 ),
+                                  0.0f );
 
         SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONO );
         auto lHeight = ImGui::GetFontSize();
