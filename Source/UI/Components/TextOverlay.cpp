@@ -98,8 +98,8 @@ namespace SE::Core
             lDrawList->AddRectFilled( lScreenPosition, lScreenPosition + ImVec2{ lTagWidth, lHeight }, ImColor( 32, 32, 32, 128 ),
                                       lRadius );
 
-            auto   lLinePosition    = ImGui::GetCursorPos();
             auto   lTagText         = fmt::format( "{}", lLine.mRepetitions );
+            auto   lLinePosition    = ImGui::GetCursorPos();
             auto   lTagTextRealSize = ImGui::CalcTextSize( lTagText.c_str() );
             ImVec2 lTagTextposition = ( ImVec2{ lTagWidth, lHeight } - lTagTextRealSize ) * 0.5f;
 
