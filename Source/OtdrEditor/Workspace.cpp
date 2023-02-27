@@ -38,13 +38,13 @@ namespace SE::OtdrEditor
         mShowLogs.OnChange( [&]( bool aValue ) { return mConsoleTextOverlay.mIsVisible = !aValue; } );
 
         mTopBarLayout = UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
-        mTopBarLayout.Add( &mStartOrStopCurrentScript, 45.0f, false, true );
-        mTopBarLayout.Add( &mScriptChooser, false, true );
+        mTopBarLayout.Add( &mStartOrStopCurrentScript, 40.0f, false, true );
+        mTopBarLayout.Add( &mScriptChooser, 350.0f, false, true );
         mTopBarLayout.Add( nullptr, true, true );
         mTopBarLayout.Add( &mShowLogs, false, true );
 
         mMainLayout = UIBoxLayout( eBoxLayoutOrientation::VERTICAL );
-        mMainLayout.Add( &mTopBarLayout, 45.0f, false, true );
+        mMainLayout.Add( &mTopBarLayout, 40.0f, false, true );
         mMainLayout.Add( &mWorkspaceLayout, true, true );
 
         mWorkspaceBackground = UIImage( "C:\\GitLab\\SpockEngine\\Programs\\TestOtdrProject\\Resources\\Global-Fiber-Optic-Network-JBL-Communications.jpg", math::vec2{ 1300, 765 } );
