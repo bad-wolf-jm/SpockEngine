@@ -35,8 +35,8 @@ namespace SE::Core
         void Add( UIComponent *aChild, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
                   eVerticalAlignment const &aVAlignment );
         void Add( UIComponent *aChild, bool aExpand, bool aFill );
-        void Add( UIComponent *aChild, math::vec2 aFixedSize, bool aExpand, bool aFill );
-        void Add( UIComponent *aChild, math::vec2 aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
+        void Add( UIComponent *aChild, math::vec2 aSize, math::vec2 aPosition, bool aExpand, bool aFill );
+        void Add( UIComponent *aChild, math::vec2 aSize, math::vec2 aPosition, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
                   eVerticalAlignment const &aVAlignment );
 
       protected:

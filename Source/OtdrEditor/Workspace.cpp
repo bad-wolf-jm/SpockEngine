@@ -44,15 +44,19 @@ namespace SE::OtdrEditor
         mTopBarLayout.Add( &mShowLogs, false, true );
 
         mMainLayout = UIBoxLayout( eBoxLayoutOrientation::VERTICAL );
+        mMainLayout.SetItemSpacing( 15.0f );
         mMainLayout.Add( &mTopBarLayout, 40.0f, false, true );
         mMainLayout.Add( &mWorkspaceLayout, true, true );
 
-        mWorkspaceBackground = UIImage( "C:\\GitLab\\SpockEngine\\Programs\\TestOtdrProject\\Resources\\Global-Fiber-Optic-Network-JBL-Communications.jpg", math::vec2{ 1300, 765 } );
+        mWorkspaceBackground = UIImage(
+            "C:\\GitLab\\SpockEngine\\Programs\\TestOtdrProject\\Resources\\Global-Fiber-Optic-Network-JBL-Communications.jpg",
+            math::vec2{ 1300, 765 } );
+        mWorkspaceBackground.mIsVisible = false;
 
         mTestLabel0 = UILabel( "SCRIPT GUI GOES HERE" );
-        mWorkspaceLayout.Add(&mWorkspaceBackground, true, true);
-        mWorkspaceLayout.Add(&mTestLabel0, true, true);
-        mWorkspaceLayout.Add(&mConsoleTextOverlay, true, true);
+        mWorkspaceLayout.Add( &mWorkspaceBackground, true, true );
+        mWorkspaceLayout.Add( &mTestLabel0, true, true );
+        mWorkspaceLayout.Add( &mConsoleTextOverlay, math::vec2{ 1.0f, 0.5f }, math::vec2{ 0.0f, 0.5f }, false, true );
 
         mConsoleTextOverlay.mIsVisible = mShowLogs.IsActive();
 
