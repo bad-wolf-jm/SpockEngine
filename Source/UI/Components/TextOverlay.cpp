@@ -58,7 +58,7 @@ namespace SE::Core
                         {
                             mLines.emplace_back( sTextLine{ 0, lLine, false } );
 
-                            if( mLineCount >= 25 )
+                            if( mLineCount >= mMaxLineCount )
                                 mLines.pop_front();
                             else
                                 mLineCount++;
