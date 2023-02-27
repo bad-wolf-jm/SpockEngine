@@ -70,13 +70,13 @@ namespace SE::Core
 
     void UIBoxLayout::Add( UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill )
     {
-        Add( aChild, 0.0f, aExpand, aFill, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
+        Add( aChild, aFixedSize, aExpand, aFill, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
     }
 
     void UIBoxLayout::Add( UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
                            eVerticalAlignment const &aVAlignment )
     {
-        mChildren.push_back( BoxLayoutItem{ aChild, 0.0f, aExpand, aFill, aHAlignment, aVAlignment } );
+        mChildren.push_back( BoxLayoutItem{ aChild, aFixedSize, aExpand, aFill, aHAlignment, aVAlignment } );
     }
 
     void UIBoxLayout::DrawContent( ImVec2 aPosition, ImVec2 aSize )
@@ -125,9 +125,9 @@ namespace SE::Core
             else if( lItem.mFixedSize > 0.0f )
             {
                 if( mOrientation == eBoxLayoutOrientation::VERTICAL )
-                    lItemSize = ImVec2{ lItem.mFixedSize, aSize.y };
-                else
                     lItemSize = ImVec2{ aSize.x, lItem.mFixedSize };
+                else
+                    lItemSize = ImVec2{ lItem.mFixedSize, aSize.y };
 
                 lItemSize     = lItem.mFill ? lItemSize : lItem.mItem->RequiredSize();
                 lItemPosition = lItem.mFill ? lCurrentPosition
