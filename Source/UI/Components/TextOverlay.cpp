@@ -94,8 +94,7 @@ namespace SE::Core
         ImGui::SetCursorPos( aPosition );
 
         auto lScreenPosition = ImGui::GetCursorScreenPos();
-        lDrawList->AddRectFilled( lScreenPosition, lScreenPosition + aSize, ImColor( 0, 0, 0, 200 ),
-                                  0.0f );
+        lDrawList->AddRectFilled( lScreenPosition, lScreenPosition + aSize, ImColor( 0, 0, 0, 225 ), 0.0f );
 
         SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONO );
         auto lHeight = ImGui::GetFontSize();
