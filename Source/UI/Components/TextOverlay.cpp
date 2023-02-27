@@ -87,6 +87,8 @@ namespace SE::Core
 
     void UITextOverlay::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
+        if (!mIsVisible) return;
+        
         ImGui::SetCursorPos( aPosition );
 
         auto lDrawList = ImGui::GetWindowDrawList();

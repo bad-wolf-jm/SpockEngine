@@ -18,7 +18,10 @@ namespace SE::Core
 
     void UITextToggleButton::OnChange( std::function<bool( bool )> aOnChange ) { mOnChange = aOnChange; }
 
+    bool UITextToggleButton::IsActive() { return mActivated; }
+
     void UITextToggleButton::SetText( std::string const &aText ) { UILabel::SetText( aText ); }
+    void UITextToggleButton::SetActive( bool aValue ) { mActivated = aValue; }
 
     void UITextToggleButton::SetActiveColor( math::vec4 const &aColor )
     {
