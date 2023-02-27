@@ -45,9 +45,13 @@ namespace SE::OtdrEditor
 
         mMainLayout = UIBoxLayout( eBoxLayoutOrientation::VERTICAL );
         mMainLayout.Add( &mTopBarLayout, 45.0f, false, true );
+        mMainLayout.Add( &mWorkspaceLayout, true, true );
 
         mTestLabel0 = UILabel( "SCRIPT GUI GOES HERE" );
-        mMainLayout.Add( &mConsoleTextOverlay, true, true );
+        mWorkspaceLayout.Add(&mTestLabel0, true, true);
+        mWorkspaceLayout.Add(&mConsoleTextOverlay, true, true);
+
+        // mMainLayout.Add( &mConsoleTextOverlay, true, true );
 
         mConsoleTextOverlay.mIsVisible = mShowLogs.IsActive();
 

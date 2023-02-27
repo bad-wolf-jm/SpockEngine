@@ -15,6 +15,7 @@
 #include "UI/Components/TextOverlay.h"
 #include "UI/Form.h"
 #include "UI/Layouts/BoxLayout.h"
+#include "UI/Layouts/ZLayout.h"
 
 #include "Mono/MonoScriptClass.h"
 #include "Mono/MonoScriptInstance.h"
@@ -42,6 +43,8 @@ namespace SE::OtdrEditor
         UIBoxLayout         mMainLayout;
         UILabel  mTestLabel0;
         UITextOverlay  mConsoleTextOverlay;
+
+        UIZLayout mWorkspaceLayout;
 
         private:
           std::vector<SE::Core::MonoScriptClass*> mScripts;
