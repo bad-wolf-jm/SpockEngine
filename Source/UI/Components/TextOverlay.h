@@ -25,7 +25,7 @@ namespace SE::Core
         std::list<sTextLine> mLines;
         std::string mLeftOver;
 
-        uint32_t mMaxLineCount = 100;
+        uint32_t mMaxLineCount = 1000;
 
       protected:
         void PushStyles();
