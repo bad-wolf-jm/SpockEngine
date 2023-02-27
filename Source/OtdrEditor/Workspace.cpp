@@ -47,11 +47,12 @@ namespace SE::OtdrEditor
         mMainLayout.Add( &mTopBarLayout, 45.0f, false, true );
         mMainLayout.Add( &mWorkspaceLayout, true, true );
 
+        mWorkspaceBackground = UIImage( "C:\\GitLab\\SpockEngine\\Programs\\TestOtdrProject\\Resources\\Global-Fiber-Optic-Network-JBL-Communications.jpg", math::vec2{ 1300, 765 } );
+
         mTestLabel0 = UILabel( "SCRIPT GUI GOES HERE" );
+        mWorkspaceLayout.Add(&mWorkspaceBackground, true, true);
         mWorkspaceLayout.Add(&mTestLabel0, true, true);
         mWorkspaceLayout.Add(&mConsoleTextOverlay, true, true);
-
-        // mMainLayout.Add( &mConsoleTextOverlay, true, true );
 
         mConsoleTextOverlay.mIsVisible = mShowLogs.IsActive();
 

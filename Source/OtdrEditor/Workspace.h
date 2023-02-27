@@ -45,6 +45,7 @@ namespace SE::OtdrEditor
         UITextOverlay  mConsoleTextOverlay;
 
         UIZLayout mWorkspaceLayout;
+        UIImage mWorkspaceBackground;
 
         private:
           std::vector<SE::Core::MonoScriptClass*> mScripts;
