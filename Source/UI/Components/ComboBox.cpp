@@ -26,13 +26,15 @@ namespace SE::Core
     {
         bool lEnabled = mIsEnabled;
 
-        ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, RequiredSize(), aSize ) );
+        auto lItemSize = ImVec2{ aSize.x, RequiredSize().y };
+
+        ImGui::SetCursorPos( GetContentAlignedposition( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER, aPosition, lItemSize, aSize ) );
 
         if( mCurrentItem >= mItems.size() ) mCurrentItem = mItems.size() - 1;
 
         bool lBeginCombo = false;
 
-        ImGui::SetNextItemWidth( RequiredSize().x );
+        ImGui::SetNextItemWidth( aSize.x );
         if( ( mItems.size() == 0 ) )
         {
             if( ImGui::BeginCombo( "##", "No Items" ) ) ImGui::EndCombo();
