@@ -31,24 +31,25 @@ namespace SE::Core
 
     void UIZLayout::Add( UIComponent *aChild, bool aExpand, bool aFill )
     {
-        Add( aChild, math::vec2{}, aExpand, aFill, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
+        Add( aChild, math::vec2{-1.0f, -1.0f}, math::vec2{-1.0f, -1.0f}, aExpand, aFill, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
     }
 
     void UIZLayout::Add( UIComponent *aChild, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
                          eVerticalAlignment const &aVAlignment )
     {
-        Add( aChild, math::vec2{}, aExpand, aFill, aHAlignment, aVAlignment );
+        Add( aChild, math::vec2{-1.0f, -1.0f}, math::vec2{-1.0f, -1.0f}, aExpand, aFill, aHAlignment, aVAlignment );
     }
 
-    void UIZLayout::Add( UIComponent *aChild, math::vec2 aFixedSize, bool aExpand, bool aFill )
+    void UIZLayout::Add( UIComponent *aChild, math::vec2 aSize, math::vec2 aPosition, bool aExpand, bool aFill )
     {
-        Add( aChild, aFixedSize, aExpand, aFill, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
+        Add( aChild, aSize, aPosition, aExpand, aFill, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
     }
 
-    void UIZLayout::Add( UIComponent *aChild, math::vec2 aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
-                         eVerticalAlignment const &aVAlignment )
+    void UIZLayout::Add( UIComponent *aChild, math::vec2 aSize, math::vec2 aPosition, bool aExpand, bool aFill,
+                         eHorizontalAlignment const &aHAlignment, eVerticalAlignment const &aVAlignment )
     {
-        mChildren.push_back( ZLayoutItem{ aChild, ImVec2{ aFixedSize.x, aFixedSize.y }, ImVec2{}, aExpand, aFill, aHAlignment, aVAlignment } );
+        mChildren.push_back( ZLayoutItem{ aChild, ImVec2{ aSize.x, aSize.y }, ImVec2{ aPosition.x, aPosition.y }, aExpand, aFill,
+                                          aHAlignment, aVAlignment } );
     }
 
     void UIZLayout::DrawContent( ImVec2 aPosition, ImVec2 aSize )
@@ -61,18 +62,37 @@ namespace SE::Core
             if( lItem.mExpand )
             {
                 lItemSize = lItem.mFill ? aSize : lItem.mItem->RequiredSize();
-                lItemPosition =
-                    lItem.mFill ? aPosition : GetContentAlignedposition( lItem.mHalign, lItem.mValign, aPosition, lItemSize, aSize );
             }
-            else if( ( lItem.mSize.x > 0.0f ) && ( lItem.mSize.y > 0.0f ) )
+            else if( ( lItem.mSize.x > 1.0f ) && ( lItem.mSize.y > 1.0f ) )
             {
                 lItemSize = lItem.mFill ? lItem.mSize : lItem.mItem->RequiredSize();
-                lItemPosition =
-                    lItem.mFill ? aPosition : GetContentAlignedposition( lItem.mHalign, lItem.mValign, aPosition, lItemSize, aSize );
+            }
+            else if( ( lItem.mSize.x >= 0.0f ) && ( lItem.mSize.y >= 0.0f ) && ( lItem.mSize.x <= 1.0f ) && ( lItem.mSize.y <= 1.0f ) )
+            {
+                lItemSize = lItem.mSize * aSize;
             }
             else
             {
                 lItemSize = lItem.mFill ? aSize : lItem.mItem->RequiredSize();
+            }
+
+            if( lItem.mExpand )
+            {
+                lItemPosition =
+                    lItem.mFill ? aPosition : GetContentAlignedposition( lItem.mHalign, lItem.mValign, aPosition, lItemSize, aSize );
+            }
+            else if( ( lItem.mPosition.x > 1.0f ) && ( lItem.mPosition.y > 1.0f ) )
+            {
+                lItemPosition =
+                    lItem.mFill ? aPosition : GetContentAlignedposition( lItem.mHalign, lItem.mValign, aPosition, lItemSize, aSize );
+            }
+            else if( ( lItem.mPosition.x >= 0.0f ) && ( lItem.mPosition.y >= 0.0f ) && ( lItem.mPosition.x <= 1.0f ) &&
+                     ( lItem.mPosition.y <= 1.0f ) )
+            {
+                lItemPosition = aPosition + lItem.mPosition * aSize;
+            }
+            else
+            {
                 lItemPosition =
                     lItem.mFill ? aPosition : GetContentAlignedposition( lItem.mHalign, lItem.mValign, aPosition, lItemSize, aSize );
             }
