@@ -34,6 +34,8 @@ namespace SE::OtdrEditor
         mStartOrStopCurrentScript.OnChange( [&]( bool ) { return StartCurrentScript( true ); } );
 
         mShowLogs = UITextToggleButton( "Logs" );
+        mShowLogs.SetActive( true );
+        mShowLogs.OnChange( [&]( bool aValue ) { return mConsoleTextOverlay.mIsVisible = !aValue; } );
 
         mTopBarLayout = UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
         mTopBarLayout.Add( &mStartOrStopCurrentScript, 45.0f, false, true );
@@ -46,6 +48,8 @@ namespace SE::OtdrEditor
 
         mTestLabel0 = UILabel( "SCRIPT GUI GOES HERE" );
         mMainLayout.Add( &mConsoleTextOverlay, true, true );
+
+        mConsoleTextOverlay.mIsVisible = mShowLogs.IsActive();
 
         SetTitle( "WORKSPACE" );
         SetContent( &mMainLayout );

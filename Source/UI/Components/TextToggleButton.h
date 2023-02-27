@@ -12,6 +12,9 @@ namespace SE::Core
 
         UITextToggleButton( std::string const &aText );
         UITextToggleButton( std::string const &aText, std::function<bool( bool )> aOnClick );
+  
+        bool IsActive();
+        void SetActive( bool aValue );
 
         void OnChange( std::function<bool( bool )> aOnClick );
 
