@@ -75,15 +75,21 @@ namespace SE::Core
 
     ImVec2 UITextOverlay::RequiredSize()
     {
-        auto lTextSize = ImGui::CalcTextSize( "mText.c_str() " );
+        SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONO );
+        auto lHeight = ImGui::GetFontSize();
+        auto lRadius = lHeight * 0.5f;
+        SE::Core::Engine::GetInstance()->UIContext()->PopFont();
+        auto lTagTextSize = ImGui::CalcTextSize( "9999" );
+        auto lTagWidth    = lTagTextSize.x + lRadius * 2.0f;
 
-        return lTextSize;
+        return ImVec2{lTagWidth, lHeight};
     }
 
     void UITextOverlay::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
+        ImGui::SetCursorPos( aPosition );
+
         auto lDrawList = ImGui::GetWindowDrawList();
-        ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, ImGui::CalcTextSize( "mText.c_str()" ), aSize ) );
 
         SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONO );
         auto lHeight = ImGui::GetFontSize();
