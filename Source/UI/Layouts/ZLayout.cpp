@@ -31,13 +31,14 @@ namespace SE::Core
 
     void UIZLayout::Add( UIComponent *aChild, bool aExpand, bool aFill )
     {
-        Add( aChild, math::vec2{-1.0f, -1.0f}, math::vec2{-1.0f, -1.0f}, aExpand, aFill, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
+        Add( aChild, math::vec2{ -1.0f, -1.0f }, math::vec2{ -1.0f, -1.0f }, aExpand, aFill, eHorizontalAlignment::CENTER,
+             eVerticalAlignment::CENTER );
     }
 
     void UIZLayout::Add( UIComponent *aChild, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
                          eVerticalAlignment const &aVAlignment )
     {
-        Add( aChild, math::vec2{-1.0f, -1.0f}, math::vec2{-1.0f, -1.0f}, aExpand, aFill, aHAlignment, aVAlignment );
+        Add( aChild, math::vec2{ -1.0f, -1.0f }, math::vec2{ -1.0f, -1.0f }, aExpand, aFill, aHAlignment, aVAlignment );
     }
 
     void UIZLayout::Add( UIComponent *aChild, math::vec2 aSize, math::vec2 aPosition, bool aExpand, bool aFill )
@@ -54,6 +55,7 @@ namespace SE::Core
 
     void UIZLayout::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
+        uint32_t lChildID = 0;
         for( auto const &lItem : mChildren )
         {
             ImVec2 lItemSize{};
@@ -97,7 +99,13 @@ namespace SE::Core
                     lItem.mFill ? aPosition : GetContentAlignedposition( lItem.mHalign, lItem.mValign, aPosition, lItemSize, aSize );
             }
 
-            if( lItem.mItem ) lItem.mItem->Update( lItemPosition, lItemSize );
+            if( lItem.mItem )
+            {
+                // auto lID = fmt::format( "{}-{}", (uint64_t)lItem.mItem, lChildID );
+                // if( ImGui::BeginChild( lID.c_str(), lItemSize ) ) 
+                lItem.mItem->Update( lItemPosition, lItemSize );
+                // ImGui::EndChild();
+            }
         }
     }
 } // namespace SE::Core
