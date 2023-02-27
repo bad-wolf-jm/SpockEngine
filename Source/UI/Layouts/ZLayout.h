@@ -4,19 +4,15 @@
 
 namespace SE::Core
 {
-
-    // enum eZLayoutOrientation : uint8_t
-    // {
-    //     HORIZONTAL,
-    //     VERTICAL
-    // };
     struct ZLayoutItem
     {
         UIComponent *mItem = nullptr;
 
-        ImVec2 mFixedSize{};
-        bool   mExpand = true;
-        bool   mFill   = true;
+        ImVec2 mSize{};
+        ImVec2 mPosition{};
+
+        bool mExpand = true;
+        bool mFill   = true;
 
         eHorizontalAlignment mHalign = eHorizontalAlignment::CENTER;
         eVerticalAlignment   mValign = eVerticalAlignment::CENTER;

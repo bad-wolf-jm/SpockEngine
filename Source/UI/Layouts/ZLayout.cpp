@@ -12,10 +12,10 @@ namespace SE::Core
 
         for( auto const &lItem : mChildren )
         {
-            if( ( lItem.mFixedSize.x > 0.0f ) && ( lItem.mFixedSize.y > 0.0f ) )
+            if( ( lItem.mSize.x > 0.0f ) && ( lItem.mSize.y > 0.0f ) )
             {
-                lWidth  = math::max( lWidth, lItem.mFixedSize.x );
-                lHeight = math::max( lHeight, lItem.mFixedSize.y );
+                lWidth  = math::max( lWidth, lItem.mSize.x );
+                lHeight = math::max( lHeight, lItem.mSize.y );
             }
             else
             {
@@ -48,7 +48,7 @@ namespace SE::Core
     void UIZLayout::Add( UIComponent *aChild, math::vec2 aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
                          eVerticalAlignment const &aVAlignment )
     {
-        mChildren.push_back( ZLayoutItem{ aChild, ImVec2{ aFixedSize.x, aFixedSize.y }, aExpand, aFill, aHAlignment, aVAlignment } );
+        mChildren.push_back( ZLayoutItem{ aChild, ImVec2{ aFixedSize.x, aFixedSize.y }, ImVec2{}, aExpand, aFill, aHAlignment, aVAlignment } );
     }
 
     void UIZLayout::DrawContent( ImVec2 aPosition, ImVec2 aSize )
@@ -64,9 +64,9 @@ namespace SE::Core
                 lItemPosition =
                     lItem.mFill ? aPosition : GetContentAlignedposition( lItem.mHalign, lItem.mValign, aPosition, lItemSize, aSize );
             }
-            else if( ( lItem.mFixedSize.x > 0.0f ) && ( lItem.mFixedSize.y > 0.0f ) )
+            else if( ( lItem.mSize.x > 0.0f ) && ( lItem.mSize.y > 0.0f ) )
             {
-                lItemSize = lItem.mFill ? lItem.mFixedSize : lItem.mItem->RequiredSize();
+                lItemSize = lItem.mFill ? lItem.mSize : lItem.mItem->RequiredSize();
                 lItemPosition =
                     lItem.mFill ? aPosition : GetContentAlignedposition( lItem.mHalign, lItem.mValign, aPosition, lItemSize, aSize );
             }
