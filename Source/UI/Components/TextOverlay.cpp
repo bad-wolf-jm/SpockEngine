@@ -85,18 +85,31 @@ namespace SE::Core
         auto lDrawList = ImGui::GetWindowDrawList();
         ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, ImGui::CalcTextSize( "mText.c_str()" ), aSize ) );
 
-        auto lTagWidth = ImGui::CalcTextSize("9999").x;
+        SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONO );
+        auto lHeight = ImGui::GetFontSize();
+        auto lRadius = lHeight * 0.5f;
+        SE::Core::Engine::GetInstance()->UIContext()->PopFont();
+        auto lTagTextSize = ImGui::CalcTextSize( "9999" );
+        auto lTagWidth    = lTagTextSize.x + lRadius * 2.0f;
 
         for( auto const &lLine : mLines )
         {
             auto lScreenPosition = ImGui::GetCursorScreenPos();
-            lDrawList->AddRectFilled(lScreenPosition, lScreenPosition + ImVec2{lTagWidth, 10}, ImColor(32, 32, 32, 128), 5);
+            lDrawList->AddRectFilled( lScreenPosition, lScreenPosition + ImVec2{ lTagWidth, lHeight }, ImColor( 32, 32, 32, 128 ),
+                                      lRadius );
+
+            auto   lLinePosition    = ImGui::GetCursorPos();
+            auto   lTagText         = fmt::format( "{}", lLine.mRepetitions );
+            auto   lTagTextRealSize = ImGui::CalcTextSize( lTagText.c_str() );
+            ImVec2 lTagTextposition = ( ImVec2{ lTagWidth, lHeight } - lTagTextRealSize ) * 0.5f;
 
             ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.9f, 0.9f, 0.9f, .4f } );
-            ImGui::Text( fmt::format( "{}", lLine.mRepetitions ).c_str() );
+            ImGui::SetCursorPos( lLinePosition + lTagTextposition );
+            ImGui::Text( lTagText.c_str() );
             ImGui::PopStyleColor();
 
-            ImGui::SameLine();
+            ImGui::SetCursorPos( lLinePosition + ImVec2{ lTagWidth + 5.0f, 0.0f } );
+
             SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONO );
             ImGui::Text( lLine.mLine.c_str() );
             SE::Core::Engine::GetInstance()->UIContext()->PopFont();
