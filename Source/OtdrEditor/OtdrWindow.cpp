@@ -326,6 +326,17 @@ namespace SE::OtdrEditor
         return lRequestQuit;
     }
 
+    void OtdrWindow::LoadIOlmData( fs::path aPath )
+    {
+        static auto &lFileLoader = MonoRuntime::GetClassType( "Metrino.Mono.FileLoader" );
+        static auto &lFileClass = MonoRuntime::GetClassType( "Metrino.Mono.OlmFIle" );
+
+        MonoString *lFilePath   = MonoRuntime::NewString( aPath.string() );
+        MonoObject *lDataObject = lFileLoader.CallMethod( "LoadOlmData", lFilePath );
+
+        Ref<MonoScriptInstance> lDataInstance = New<MonoScriptInstance>( lFileClass.Class(), lDataObject );
+    }
+
     bool OtdrWindow::RenderMainMenu()
     {
         UI::Text( ApplicationIcon.c_str() );
@@ -339,6 +350,15 @@ namespace SE::OtdrEditor
                 auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
                                                         "YAML Files (*.yaml)\0*.yaml\0All Files (*.*)\0*.*\0" );
                 mWorld->Load( fs::path( lFilePath.value() ) );
+            }
+
+            if( UI::MenuItem( fmt::format( "{} Load iOlm", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
+            {
+                auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
+                                                        "OLM Files (*.iolm)\0*.iolm\0All Files (*.*)\0*.*\0" );
+
+                LoadIOlmData( fs::path( lFilePath.value() ) );
+                // mWorld->Load( fs::path( lFilePath.value() ) );
             }
 
             if( UI::MenuItem( fmt::format( "{} Save", ICON_FA_ARCHIVE ).c_str(), NULL ) )

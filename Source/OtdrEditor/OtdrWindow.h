@@ -71,6 +71,8 @@ namespace SE::OtdrEditor
         void Console( int32_t width, int32_t height );
         void UpdateFramerate( Timestep ts );
 
+        void LoadIOlmData(fs::path aPath);
+
       private:
         void ConfigureUI();
 
