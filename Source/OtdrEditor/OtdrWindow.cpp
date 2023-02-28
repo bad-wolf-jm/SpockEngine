@@ -43,110 +43,9 @@ namespace SE::OtdrEditor
         return lItemPathStr;
     }
 
-    static bool EditButton( Entity a_Node, math::vec2 a_Size )
-    {
-        char l_OnLabel[128];
-        sprintf( l_OnLabel, "%s##%d", ICON_FA_PENCIL_SQUARE_O, (uint32_t)a_Node );
-
-        ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.0, 0.0, 0.0, 0.0 } );
-        ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 1.0, 1.0, 1.0, 0.10 } );
-        ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 1.0, 1.0, 1.0, 0.20 } );
-
-        bool l_IsVisible;
-        bool l_DoEdit = UI::Button( l_OnLabel, a_Size );
-
-        ImGui::PopStyleColor();
-        ImGui::PopStyleColor();
-        ImGui::PopStyleColor();
-        return l_DoEdit;
-    }
 
     void OtdrWindow::ConfigureUI()
     {
-        // mTestButton0 = UIButton( "Test button 0...", [&]() { SE::Logging::Info( "ClickedOnTest" ); } );
-        // mTestButton1 = UIButton( "Test button 1...", [&]() { SE::Logging::Info( "ClickedOnTest" ); } );
-        // mTestButton2 = UIButton( "Test button 2...", [&]() { SE::Logging::Info( "ClickedOnTest" ); } );
-
-        // mTestLabel0 = UILabel( "LABEL 1" );
-        // mTestLabel1 = UILabel( "LABEL 2" );
-        // mTestLabel2 = UILabel( "LABEL 3" );
-
-        // mTestLayout1 = UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
-        // mTestLayout1.Add( &mTestLabel0, true, true );
-        // mTestLayout1.Add( &mTestLabel1, true, true );
-        // mTestLayout1.Add( &mTestLabel2, true, true );
-
-        // mImage0 = UIImage( "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Play.png", math::vec2{ 50, 50 } );
-        // mImage1 = UIImage( "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Pause.png", math::vec2{ 25, 25 } );
-
-        // mTestLayout2 = UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
-        // mTestLayout2.Add( &mTestCheckBox0, true, true );
-        // mTestLayout2.Add( &mTestCheckBox1, true, true );
-        // mTestLayout2.Add( &mImage0, true, false );
-        // mTestLayout2.Add( &mImage1, true, false );
-
-        // mTestTextToggleButton0 = UITextToggleButton( "Test toggle 0",
-        //                                              [&]( bool v )
-        //                                              {
-        //                                                  SE::Logging::Info( "ClickedOnTest" );
-        //                                                  return true;
-        //                                              } );
-        // mTestTextToggleButton1 = UITextToggleButton( "Test toggle 1",
-        //                                              [&]( bool v )
-        //                                              {
-        //                                                  SE::Logging::Info( "ClickedOnTest" );
-        //                                                  return true;
-        //                                              } );
-        // mTestTextToggleButton2 = UITextToggleButton( "Test toggle 2",
-        //                                              [&]( bool v )
-        //                                              {
-        //                                                  SE::Logging::Info( "ClickedOnTest" );
-        //                                                  return true;
-        //                                              } );
-
-        // mTestImageToggleButton0.SetActiveImage( mImage0 );
-        // mTestImageToggleButton0.SetInactiveImage( mImage1 );
-        // mTestImageToggleButton0.OnChange( [&]( bool ) { return true; } );
-
-        // mTestLayout3 = UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
-        // mTestLayout3.Add( &mTestTextToggleButton0, true, true );
-        // mTestLayout3.Add( &mTestImageToggleButton0, false, true, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
-        // mTestLayout3.Add( &mTestTextToggleButton1, true, true );
-        // mTestLayout3.Add( &mTestTextToggleButton2, true, true );
-
-        // mTestLayout0 = UIBoxLayout( eBoxLayoutOrientation::VERTICAL );
-        // mTestLayout0.SetItemSpacing( 5.0f );
-        // mTestLayout0.Add( &mTestLayout2, false, true );
-        // mTestLayout0.Add( &mTestButton0, true, true );
-        // mTestLayout0.Add( &mTestLayout1, true, true );
-        // mTestLayout0.Add( &mTestButton1, true, false, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
-        // mTestLayout0.Add( &mTestButton2, true, true );
-        // mTestLayout0.Add( &mTestLayout3, true, true );
-
-        {
-            SE::Core::sTextureCreateInfo lTextureCreateInfo{};
-            TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Play.png" );
-            sTextureSamplingInfo lSamplingInfo{};
-            SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
-
-            auto lTexture   = New<VkTexture2D>( mGraphicContext, lTextureData );
-            mPlayIcon       = New<VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
-            mPlayIconHandle = mUIOverlay->CreateTextureHandle( mPlayIcon );
-        }
-
-        {
-            SE::Core::sTextureCreateInfo lTextureCreateInfo{};
-            TextureData2D        lTextureData( lTextureCreateInfo, "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Pause.png" );
-            sTextureSamplingInfo lSamplingInfo{};
-            SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
-
-            auto lTexture    = New<VkTexture2D>( mGraphicContext, lTextureData );
-            mPauseIcon       = New<VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
-            mPauseIconHandle = mUIOverlay->CreateTextureHandle( mPauseIcon );
-        }
-
-        // mTestForm3.SetTitle( "TEST_FORM" );
-        // mTestForm3.SetContent( &mTestLayout0 );
         mWorkspaceArea.ConfigureUI();
     }
 
@@ -154,14 +53,7 @@ namespace SE::OtdrEditor
         : mGraphicContext{ aGraphicContext }
         , mUIOverlay{ aUIOverlay }
     {
-        // ConfigureUI();
     }
-
-    // OtdrWindow &OtdrWindow::AddMenuItem( std::string l_Icon, std::string l_Title, std::function<bool()> l_Action )
-    // {
-    //     m_MainMenuItems.push_back( { l_Icon, l_Title, l_Action } );
-    //     return *this;
-    // }
 
     bool OtdrWindow::Display()
     {
@@ -198,43 +90,13 @@ namespace SE::OtdrEditor
         ImGui::PopStyleVar();
         ImGui::End();
 
-        // if( ImGui::Begin( "WIDGET TEST", NULL, ImGuiWindowFlags_None ) )
-        // {
-        //     mTestLayout0.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
-        // }
-        // ImGui::End();
-
-        // mTestForm3.Update();
         mWorkspaceArea.Update();
-
-        // static bool p_open_3 = true;
-        // if( ImGui::Begin( "3D VIEW", &p_open_3, ImGuiWindowFlags_None ) )
-        // {
-        //     auto lWorkspaceAreaSize = UI::GetAvailableContentSpace();
-        //     Workspace( lWorkspaceAreaSize.x, lWorkspaceAreaSize.y );
-        // }
-        // ImGui::End();
 
         if( ImGui::Begin( "ASSEMBLIES", NULL, ImGuiWindowFlags_None ) )
         {
             MonoRuntime::DisplayAssemblies();
         }
         ImGui::End();
-
-        // static MonoScriptInstance lInstance;
-        // if( ImGui::Begin( "SCRIPTS", NULL, ImGuiWindowFlags_None ) )
-        // {
-        //     auto lScriptBaseClass = MonoRuntime::GetClassType( "SpockEngine.Script" );
-
-        //     for( auto const &lScriptClass : lScriptBaseClass.DerivedClasses() )
-        //     {
-        //         if( UI::Button( lScriptClass->FullName().c_str(), math::vec2{ 100.0f, 30.0f } ) )
-        //         {
-        //             mCurrentScript = lScriptClass->Instantiate();
-        //         }
-        //     }
-        // }
-        // ImGui::End();
 
         if( ImGui::Begin( "CONNECTED MODULES", NULL, ImGuiWindowFlags_None ) )
         {
@@ -360,20 +222,7 @@ namespace SE::OtdrEditor
         }
         ImGui::End();
 
-        // if( ImGui::Begin( "CONTENT BROWSER", &p_open, ImGuiWindowFlags_None ) )
-        // {
-        //     // mContentBrowser.Display();
-        // }
-        // ImGui::End();
-
         ImGui::ShowDemoWindow();
-
-        // if( ImGui::Begin( "PROPERTIES", &p_open, ImGuiWindowFlags_None ) )
-        // {
-        //     // auto lWindowPropertiesSize = UI::GetAvailableContentSpace();
-        //     // m_SceneHierarchyPanel.ElementEditor.Display( lWindowPropertiesSize.x, lWindowPropertiesSize.y );
-        // }
-        // ImGui::End();
 
         ImGui::PushStyleColor( ImGuiCol_WindowBg, ImVec4{ 102.0f / 255.0f, 0.0f, 204.0f / 255.0f, 1.0f } );
         ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, 0.0f );
@@ -477,115 +326,8 @@ namespace SE::OtdrEditor
 
         mWorkspaceArea.Tick();
 
-        // if( mCurrentScriptIsRunning )
-        // {
-        //     mCurrentScript->CallMethod( "Tick", &aTs );
-        // }
-
         UpdateFramerate( aTs );
     }
-
-    // void OtdrWindow::Workspace( int32_t aWidth, int32_t height )
-    // {
-    //     auto &lIO = ImGui::GetIO();
-
-    //     math::vec2 lWorkspacePosition = UI::GetCurrentCursorScreenPosition();
-    //     math::vec2 lCursorPosition    = UI::GetCurrentCursorPosition();
-
-    //     // UI::SameLine();
-    //     ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f } );
-    //     ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 1.0f, 1.0f, 1.0f, 0.01f } );
-    //     ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 1.0f, 1.0f, 1.0f, 0.02f } );
-
-    //     if( mCurrentScript )
-    //     {
-    //         if( !mCurrentScriptIsRunning )
-    //         {
-    //             if( ImGui::ImageButton( (ImTextureID)mPlayIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
-    //                                     ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
-    //                                     ImVec4{ 0.0f, 1.0f, 0.0f, 0.8f } ) )
-    //             {
-    //                 mCurrentScript->CallMethod( "BeginScenario" );
-    //                 mCurrentScriptIsRunning = true;
-    //             }
-    //         }
-    //         else
-    //         {
-    //             if( ImGui::ImageButton( (ImTextureID)mPauseIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
-    //                                     ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
-    //                                     ImVec4{ 1.0f, .2f, 0.0f, 0.8f } ) )
-    //             {
-    //                 mCurrentScript->CallMethod( "EndScenario" );
-    //                 mCurrentScriptIsRunning = false;
-    //             }
-    //         }
-    //     }
-    //     else if( mActiveWorld->GetState() == OtdrScene::eSceneState::EDITING )
-    //     {
-
-    //         if( ImGui::ImageButton( (ImTextureID)mPlayIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
-    //                                 ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
-    //                                 ImVec4{ 0.0f, 1.0f, 0.0f, 0.8f } ) )
-    //         {
-    //             if( OnBeginScenario ) OnBeginScenario();
-
-    //             mActiveWorld = New<OtdrScene>( mWorld );
-    //             mActiveWorld->BeginScenario();
-    //         }
-    //     }
-    //     else
-    //     {
-    //         if( ImGui::ImageButton( (ImTextureID)mPauseIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
-    //                                 ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
-    //                                 ImVec4{ 1.0f, .2f, 0.0f, 0.8f } ) )
-    //         {
-    //             if( OnEndScenario ) OnEndScenario();
-
-    //             mActiveWorld->EndScenario();
-    //             mActiveWorld = mWorld;
-    //         }
-    //     }
-
-    //     ImGui::PopStyleColor();
-    //     ImGui::PopStyleColor();
-    //     ImGui::PopStyleColor();
-
-    //     math::vec2  l3DViewPosition = UI::GetCurrentCursorScreenPosition();
-    //     math::ivec2 l3DViewSize     = UI::GetAvailableContentSpace();
-    //     mWorkspaceAreaSize          = l3DViewSize;
-    // }
-
-    // void OtdrWindow::Console( int32_t aWidth, int32_t height )
-    // {
-    //     const float           lTextBaseHeight = ImGui::GetTextLineHeightWithSpacing();
-    //     const ImGuiTableFlags flags           = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY |
-    //                                   ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_Resizable |
-    //                                   ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
-
-    //     auto  &l_Logs     = SE::Logging::GetLogMessages();
-    //     ImVec2 outer_size = ImVec2( 0.0f, height );
-    //     if( ImGui::BeginTable( "table_scrolly", 3, flags, outer_size ) )
-    //     {
-    //         ImGui::TableSetupScrollFreeze( 2, 1 );
-    //         ImGui::TableSetupColumn( "", ImGuiTableColumnFlags_WidthFixed, lTextBaseHeight );
-    //         ImGui::TableSetupColumn( "Time", ImGuiTableColumnFlags_None, 150 );
-    //         ImGui::TableSetupColumn( "Message", ImGuiTableColumnFlags_WidthStretch );
-    //         ImGui::TableHeadersRow();
-
-    //         ImGuiListClipper clipper;
-    //         clipper.Begin( l_Logs.size() );
-    //         while( clipper.Step() )
-    //         {
-    //             ImGui::TableNextRow();
-    //             for( int row = clipper.DisplayStart; row < clipper.DisplayEnd; row++ )
-    //             {
-    //                 ImGui::TableSetColumnIndex( 2 );
-    //                 Text( l_Logs[row].Message );
-    //             }
-    //         }
-    //         ImGui::EndTable();
-    //     }
-    // }
 
     void OtdrWindow::UpdateFramerate( Timestep ts )
     {

@@ -51,7 +51,7 @@ namespace SE::OtdrEditor
         mWorkspaceBackground = UIImage(
             "C:\\GitLab\\SpockEngine\\Programs\\TestOtdrProject\\Resources\\Global-Fiber-Optic-Network-JBL-Communications.jpg",
             math::vec2{ 1300, 765 } );
-        // mWorkspaceBackground.mIsVisible = false;
+        mWorkspaceBackground.mIsVisible = false;
 
         mTestLabel0 = UILabel( "SCRIPT GUI GOES HERE" );
         mWorkspaceLayout.Add( &mWorkspaceBackground, true, true );
@@ -66,11 +66,7 @@ namespace SE::OtdrEditor
         MonoRuntime::OnConsoleOut( std::bind( &OtdrWorkspaceWindow::ConsoleOut, this, std::placeholders::_1 ) );
     }
 
-    void OtdrWorkspaceWindow::ConsoleOut( std::string const &aString )
-    {
-        //
-        mConsoleTextOverlay.AddText( aString );
-    }
+    void OtdrWorkspaceWindow::ConsoleOut( std::string const &aString ) { mConsoleTextOverlay.AddText( aString ); }
 
     void OtdrWorkspaceWindow::Tick()
     {
