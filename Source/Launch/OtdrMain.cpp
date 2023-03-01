@@ -261,7 +261,7 @@ int main( int argc, char **argv )
 
     // Load Metrino assembblies
     {
-        fs::path    lMetrinoPath         = "D:\\Build\\CMake";
+        fs::path    lMetrinoPath         = "D:\\Build\\Lib";
         YAML::Node &lMetrinoPathOverride = lRootNode["project"]["metrino_path"];
         if( !lMetrinoPathOverride.IsNull() && fs::exists( lMetrinoPathOverride.as<std::string>() ) )
             lMetrinoPath = lMetrinoPathOverride.as<std::string>();
@@ -277,7 +277,7 @@ int main( int argc, char **argv )
         for( auto const &lAssemblyName : lAssemblies )
         {
             auto lAssemblyDllName = fmt::format( "{}.dll", lAssemblyName );
-            MonoRuntime::AddAppAssemblyPath( lMetrinoPath / lAssemblyName / "Debug" / lAssemblyDllName, "METRINO" );
+            MonoRuntime::AddAppAssemblyPath( lMetrinoPath / "debug" / lAssemblyName / lAssemblyDllName, "METRINO" );
         }
     }
 
