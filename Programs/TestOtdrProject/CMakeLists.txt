@@ -50,16 +50,14 @@ set(DOTNET_REFERENCE_PATH
     ${DOTNET_SYSTEM_ASSEMBLIES}
 )
 
-
-
 set_property(TARGET ${LIBRARY_NAME} PROPERTY DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.2")
 set_property(TARGET ${LIBRARY_NAME} PROPERTY WIN32_EXECUTABLE FALSE)
 set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_CONFIGURATION_TYPE ClassLibrary)
 set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_DOTNET_REFERENCES 
     "C:/GitLab/SpockEngine/Source/ScriptCore/Build/Debug/SE_Core.dll"
-    D:/EXFO/GitLab/EXFO/Build/Metrino.Mono/Debug/Metrino.Mono.dll
-    D:/EXFO/GitLab/EXFO/Build/Metrino.Otdr/Debug/Metrino.Otdr.dll
-    D:/EXFO/GitLab/EXFO/Build/Metrino.Otdr.SignalProcessing/Debug/Metrino.Otdr.SignalProcessing.dll
-    D:/EXFO/GitLab/EXFO/Build/Metrino.Otdr.Instrument/Debug/Metrino.Otdr.Instrument.dll
+    D:/Build/CMake/Metrino.Mono/Debug/Metrino.Mono.dll
+    D:/Build/CMake/Metrino.Otdr/Debug/Metrino.Otdr.dll
+    D:/Build/CMake/Metrino.Otdr.SignalProcessing/Debug/Metrino.Otdr.SignalProcessing.dll
+    D:/Build/CMake/Metrino.Otdr.Instrument/Debug/Metrino.Otdr.Instrument.dll
     ${DOTNET_REFERENCE_PATH}
 )
