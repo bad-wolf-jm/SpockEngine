@@ -43,11 +43,7 @@ namespace SE::OtdrEditor
         return lItemPathStr;
     }
 
-
-    void OtdrWindow::ConfigureUI()
-    {
-        mWorkspaceArea.ConfigureUI();
-    }
+    void OtdrWindow::ConfigureUI() { mWorkspaceArea.ConfigureUI(); }
 
     OtdrWindow::OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
         : mGraphicContext{ aGraphicContext }
@@ -222,6 +218,7 @@ namespace SE::OtdrEditor
         }
         ImGui::End();
 
+        ImPlot::ShowDemoWindow();
         ImGui::ShowDemoWindow();
 
         ImGui::PushStyleColor( ImGuiCol_WindowBg, ImVec4{ 102.0f / 255.0f, 0.0f, 204.0f / 255.0f, 1.0f } );
