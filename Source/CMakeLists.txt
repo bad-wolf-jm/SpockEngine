@@ -46,6 +46,9 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/Components/ComboBox.cpp
     UI/Components/TextToggleButton.cpp
     UI/Components/ImageToggleButton.cpp
+    UI/Components/Table.cpp
+    UI/Components/Plot.cpp
+    UI/Components/HexViewer.cpp
     UI/Layouts/BoxLayout.cpp
     UI/Layouts/ZLayout.cpp
     UI/Form.cpp
