@@ -34,6 +34,7 @@ namespace LTSE::Editor
         sprintf( lString, "%s%s%s%s", lHexCodes[aData[0]], lHexCodes[aData[1]], lHexCodes[aData[2]], lHexCodes[aData[3]] );
         UI::Text( lString );
     }
+
     inline void DisplayU16( uint8_t *aData )
     {
         char lString[9];
@@ -41,7 +42,8 @@ namespace LTSE::Editor
         UI::Text( lString );
     }
 
-    inline void UnpackHeader( uint32_t aHeader, uint32_t &aID, uint32_t &aVersion, uint32_t &aDetectionCount, uint32_t &aMaxDetectionCount, uint32_t &aSampleCount )
+    inline void UnpackHeader( uint32_t aHeader, uint32_t &aID, uint32_t &aVersion, uint32_t &aDetectionCount,
+                              uint32_t &aMaxDetectionCount, uint32_t &aSampleCount )
     {
         aID                = ( aHeader >> 0 ) & 0x0000000F;
         aVersion           = ( aHeader >> 4 ) & 0x0000000F;
@@ -50,7 +52,8 @@ namespace LTSE::Editor
         aDetectionCount    = ( aHeader >> 26 ) & 0x0000003F;
     }
 
-    inline void UnpackIDValues( uint32_t aHeader, uint32_t &aConfigurationID, uint32_t &aFrameID, uint32_t &aOpticalID, uint32_t &aAcquisitionID )
+    inline void UnpackIDValues( uint32_t aHeader, uint32_t &aConfigurationID, uint32_t &aFrameID, uint32_t &aOpticalID,
+                                uint32_t &aAcquisitionID )
     {
         aConfigurationID = ( aHeader & 0xF0000000 ) >> 28;
         aFrameID         = ( aHeader & 0x0F000000 ) >> 24;
@@ -58,7 +61,8 @@ namespace LTSE::Editor
         aAcquisitionID   = ( aHeader & 0x0003FFC0 ) >> 6;
     }
 
-    inline void UnpackPDLaserAngle( uint32_t aHeader, uint32_t &aPD, uint32_t &aLaserAngle, uint32_t &aIsRemoved, uint32_t &aFrameNumber )
+    inline void UnpackPDLaserAngle( uint32_t aHeader, uint32_t &aPD, uint32_t &aLaserAngle, uint32_t &aIsRemoved,
+                                    uint32_t &aFrameNumber )
     {
         aIsRemoved   = ( aHeader >> 31 ) & 0x00000001;
         aLaserAngle  = ( aHeader >> 22 ) & 0x000001FF;
@@ -123,11 +127,11 @@ namespace LTSE::Editor
 
                 ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.8f, 0.1f, 0.25f, 1.0f } );
                 uint32_t lShortWaveformStart = lR * lPacketSize;
-                auto lHeader0                = *(uint32_t *)&( aTileData.data()[lShortWaveformStart + 0] );
-                auto lHeader1                = *(uint32_t *)&( aTileData.data()[lShortWaveformStart + 4] );
-                auto lHeader2                = *(uint32_t *)&( aTileData.data()[lShortWaveformStart + 8] );
-                auto lHeader3                = *(uint32_t *)&( aTileData.data()[lShortWaveformStart + 12] );
-                auto lHeader4                = *(uint32_t *)&( aTileData.data()[lShortWaveformStart + 16] );
+                auto     lHeader0            = *(uint32_t *)&( aTileData.data()[lShortWaveformStart + 0] );
+                auto     lHeader1            = *(uint32_t *)&( aTileData.data()[lShortWaveformStart + 4] );
+                auto     lHeader2            = *(uint32_t *)&( aTileData.data()[lShortWaveformStart + 8] );
+                auto     lHeader3            = *(uint32_t *)&( aTileData.data()[lShortWaveformStart + 12] );
+                auto     lHeader4            = *(uint32_t *)&( aTileData.data()[lShortWaveformStart + 16] );
                 uint32_t lID, lVersion, lDetectionCount, lMaxDetectionCount, lSampleCount;
                 UnpackHeader( lHeader0, lID, lVersion, lDetectionCount, lMaxDetectionCount, lSampleCount );
                 uint32_t lPD, lLaserAngle, lHasLeftovers, lFrameIndex;
@@ -219,7 +223,7 @@ namespace LTSE::Editor
                 ImGui::PopStyleColor();
 
                 uint32_t lDetectionStart = lShortWaveformStart + 20;
-                auto lPos                = ImGui::GetCursorPosX();
+                auto     lPos            = ImGui::GetCursorPosX();
                 for( uint32_t i = 0; i < 5; i++ )
                 {
                     // Stack detections vertically
@@ -231,7 +235,7 @@ namespace LTSE::Editor
                     auto lValue2 = *(uint32_t *)&( aTileData.data()[lDetectionStart + 8] );
                     auto lValue3 = *(uint32_t *)&( aTileData.data()[lDetectionStart + 12] );
 
-                    float lDistance;
+                    float   lDistance;
                     int32_t lLastUnsaturatedSample;
                     UnpackDetectionDistance( lValue0, lDistance, lLastUnsaturatedSample );
 
@@ -239,14 +243,13 @@ namespace LTSE::Editor
                     int32_t lBaselineAfter;
                     UnpackBaselines( lValue1, lBaselineBefore, lBaselineAfter );
 
-                    uint8_t lPulseIsSaturated;
+                    uint8_t  lPulseIsSaturated;
                     uint32_t lDetectionIndex;
                     uint32_t lDetectionOffset;
                     UnpackDetectionInfo( lValue3, lPulseIsSaturated, lDetectionIndex, lDetectionOffset );
 
                     float lDimmedColor = 1.0f;
-                    if( *(uint32_t *)&( aTileData.data()[lDetectionStart + 0] ) == 0 )
-                        lDimmedColor = .1f;
+                    if( *(uint32_t *)&( aTileData.data()[lDetectionStart + 0] ) == 0 ) lDimmedColor = .1f;
 
                     if( lPulseIsSaturated )
                         ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 1.0f, 0.0f, 0.1f, 1.0f } );
@@ -264,7 +267,7 @@ namespace LTSE::Editor
                         if( lPulseIsSaturated )
                             UI::Text( "Saturation length: {}", lValue2 );
                         else
-                            UI::Text( "Amplitude: {}", static_cast<int32_t>(lValue2) );
+                            UI::Text( "Amplitude: {}", static_cast<int32_t>( lValue2 ) );
                         UI::Text( "Pulse is saturated: {}", lPulseIsSaturated );
                         UI::Text( "Detection index: {}", lDetectionIndex );
                         UI::Text( "Trace offset: {}", lDetectionOffset );
@@ -304,7 +307,7 @@ namespace LTSE::Editor
                         if( lPulseIsSaturated )
                             UI::Text( "Saturation length: {}", lValue2 );
                         else
-                            UI::Text( "Amplitude: {}", static_cast<int32_t>(lValue2) );
+                            UI::Text( "Amplitude: {}", static_cast<int32_t>( lValue2 ) );
                         ImGui::EndTooltip();
                     }
                     UI::SameLine();
@@ -327,10 +330,10 @@ namespace LTSE::Editor
                     if( ImGui::IsItemHovered() )
                     {
                         ImGui::BeginTooltip();
-                        float lValues0[11];
-                        float lMinValue  = 0;
-                        float lMaxValue  = 100;
-                        int16_t *lValues = (int16_t *)&( aTileData.data()[lTraceStart] );
+                        float    lValues0[11];
+                        float    lMinValue = 0;
+                        float    lMaxValue = 100;
+                        int16_t *lValues   = (int16_t *)&( aTileData.data()[lTraceStart] );
                         for( uint32_t j = 0; j < 11; j++ )
                         {
                             lValues0[j] = static_cast<float>( lValues[j] );
@@ -373,10 +376,10 @@ namespace LTSE::Editor
                     if( ImGui::IsItemHovered() )
                     {
                         ImGui::BeginTooltip();
-                        float lValues0[11];
-                        float lMinValue  = 0;
-                        float lMaxValue  = 100;
-                        int16_t *lValues = (int16_t *)&( aTileData.data()[lThresholdStart] );
+                        float    lValues0[11];
+                        float    lMinValue = 0;
+                        float    lMaxValue = 100;
+                        int16_t *lValues   = (int16_t *)&( aTileData.data()[lThresholdStart] );
                         for( uint32_t j = 0; j < 11; j++ )
                         {
                             lValues0[j] = static_cast<float>( lValues[j] );
@@ -406,8 +409,7 @@ namespace LTSE::Editor
                     {
                         DisplayU16( &( aTileData.data()[lThresholdStart + j * sizeof( uint16_t )] ) );
 
-                        if( j < 10 )
-                            UI::SameLine();
+                        if( j < 10 ) UI::SameLine();
                     }
                     ImGui::PopStyleColor();
                     lDetectionStart += ( 4 * sizeof( uint32_t ) + 22 * sizeof( uint16_t ) );
