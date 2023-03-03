@@ -251,7 +251,6 @@ target_compile_definitions(SE_Run PRIVATE VK_USE_PLATFORM_WIN32_KHR)
 target_link_libraries( SE_Run LTSimulationEngineRuntime lua::lua)
 set_target_properties( SE_Run PROPERTIES LINK_FLAGS /SUBSYSTEM:CONSOLE )
 
-
 add_executable(OTDR_Run WIN32 Launch/OtdrMain.cpp)
 target_include_directories(OTDR_Run PRIVATE Source ${SE_EXTRA_INCLUDES})
 target_compile_definitions(OTDR_Run PRIVATE VK_USE_PLATFORM_WIN32_KHR)
