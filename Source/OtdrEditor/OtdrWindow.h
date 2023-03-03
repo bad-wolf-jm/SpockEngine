@@ -84,26 +84,9 @@ namespace SE::OtdrEditor
 
         void LoadIOlmData(fs::path aPath);
 
+        Ref<MonoScriptInstance> mDataInstance = nullptr;
+        
       private:
-        // UIButton mTestButton0;
-        // UIButton mTestButton1;
-        // UIButton mTestButton2;
-        // UILabel  mTestLabel0;
-        // UILabel  mTestLabel1;
-        // UILabel  mTestLabel2;
-        // UICheckBox  mTestCheckBox0;
-        // UICheckBox  mTestCheckBox1;
-        // UITextToggleButton mTestTextToggleButton0;
-        // UITextToggleButton mTestTextToggleButton1;
-        // UITextToggleButton mTestTextToggleButton2;
-        // UIImageToggleButton mTestImageToggleButton0;
-        // UIImage mImage0;
-        // UIImage mImage1;
-        // UIBoxLayout mTestLayout0;
-        // UIBoxLayout mTestLayout1;
-        // UIBoxLayout mTestLayout2;
-        // UIBoxLayout mTestLayout3;
-        // UIForm mTestForm3;
 
         OtdrWorkspaceWindow mWorkspaceArea;
 

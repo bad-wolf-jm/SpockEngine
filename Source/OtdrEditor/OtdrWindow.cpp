@@ -94,6 +94,29 @@ namespace SE::OtdrEditor
         }
         ImGui::End();
 
+        if( mDataInstance )
+        {
+            static bool pOpen = true;
+            if( ImGui::Begin( "iOlmData", &pOpen, ImGuiWindowFlags_None ) )
+            {
+                ImGui::PushID( 0 );
+                ImPlot::PushStyleVar( ImPlotStyleVar_PlotPadding, ImVec2( 0, 0 ) );
+                if( ImPlot::BeginPlot( "##spark_0", ImGui::GetContentRegionAvail(), ImPlotFlags_Crosshairs | ImPlotFlags_NoChild ) )
+                {
+                    ImPlot::SetupAxes( 0, 0, ImPlotAxisFlags_NoDecorations, ImPlotAxisFlags_None );
+                    ImPlot::PushStyleColor( ImPlotCol_Line, ImPlot::GetColormapColor( 0 ) );
+                    // ImPlot::PlotLine( "##spark_0", lValues0, 11, 1, 0, 0 );
+                    ImPlot::PopStyleColor();
+                    ImPlot::EndPlot();
+                }
+                ImPlot::PopStyleVar();
+                ImGui::PopID();
+            }
+            ImGui::End();
+
+            if( !pOpen ) mDataInstance = nullptr;
+        }
+
         if( ImGui::Begin( "CONNECTED MODULES", NULL, ImGuiWindowFlags_None ) )
         {
             static auto lFirstRun = true;
@@ -249,12 +272,12 @@ namespace SE::OtdrEditor
     void OtdrWindow::LoadIOlmData( fs::path aPath )
     {
         static auto &lFileLoader = MonoRuntime::GetClassType( "Metrino.Mono.FileLoader" );
-        static auto &lFileClass = MonoRuntime::GetClassType( "Metrino.Mono.OlmFIle" );
+        static auto &lFileClass  = MonoRuntime::GetClassType( "Metrino.Mono.OlmFIle" );
 
         MonoString *lFilePath   = MonoRuntime::NewString( aPath.string() );
         MonoObject *lDataObject = lFileLoader.CallMethod( "LoadOlmData", lFilePath );
 
-        Ref<MonoScriptInstance> lDataInstance = New<MonoScriptInstance>( lFileClass.Class(), lDataObject );
+        mDataInstance = New<MonoScriptInstance>( lFileClass.Class(), lDataObject );
     }
 
     bool OtdrWindow::RenderMainMenu()
