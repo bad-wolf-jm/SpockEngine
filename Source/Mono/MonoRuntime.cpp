@@ -11,6 +11,7 @@
 #include "mono/metadata/assembly.h"
 #include "mono/metadata/object.h"
 #include "mono/metadata/tabledefs.h"
+#include "mono/metadata/mono-config.h"
 
 #include <unordered_map>
 
@@ -66,6 +67,7 @@ namespace SE::Core
         std::function<void( std::string )> mConsoleOut;
 
         std::map<std::string, std::vector<sAssemblyData *>> mCategories;
+        HINSTANCE mMonoPosixHelper;
     };
 
     static sMonoRuntimeData *sRuntimeData = nullptr;
@@ -211,6 +213,8 @@ namespace SE::Core
 
         sRuntimeData = new sMonoRuntimeData();
 
+        sRuntimeData->mMonoPosixHelper = LoadLibrary("C:\\GitLab\\SpockEngine\\ThirdParty\\mono\\bin\\Debug\\MonoPosixHelper.dll");
+
         InitMono( aMonoPath );
 
         RegisterInternalCppFunctions();
@@ -237,6 +241,7 @@ namespace SE::Core
     void MonoRuntime::InitMono( fs::path &aMonoPath )
     {
         mono_set_assemblies_path( aMonoPath.string().c_str() );
+        mono_config_parse (NULL);
 
         MonoDomain *lRootDomain = mono_jit_init( "SpockEngineRuntime" );
 
