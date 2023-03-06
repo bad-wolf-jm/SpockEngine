@@ -99,27 +99,120 @@ namespace SE::OtdrEditor
             static bool pOpen = true;
             if( ImGui::Begin( "iOlmData", &pOpen, ImGuiWindowFlags_None ) )
             {
-                mTracePlot.Update(ImGui::GetCursorPos(), ImGui::GetContentRegionAvail());
+                mTracePlot.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+            }
+            ImGui::End();
 
-                // ImGui::PushID( 0 );
-                // ImPlot::PushStyleVar( ImPlotStyleVar_PlotPadding, ImVec2( 0, 0 ) );
-                // if( ImPlot::BeginPlot( "##spark_0", ImGui::GetContentRegionAvail(), ImPlotFlags_Crosshairs | ImPlotFlags_NoChild ) )
-                // {
-                //     // ImPlot::SetupAxes( 0, 0, ImPlotAxisFlags_NoDecorations, ImPlotAxisFlags_NoDecorations );
-                //     // ImPlot::PushStyleColor( ImPlotCol_Line, ImPlot::GetColormapColor( 0 ) );
-                //     int i = 0;
-                //     for( auto const &lTrace : mTraceData )
-                //     {
-                //         auto lPlotName =
-                //             fmt::format( "{:.0f} nm - {} ({} samples)##{}", lTrace.mWavelength * 1e9, i, lTrace.mX.size(), i );
-                //         ImPlot::PlotLine( lPlotName.c_str(), lTrace.mX.data(), lTrace.mY.data(), lTrace.mX.size(), 0 );
-                //         i++;
-                //     }
-                //     // ImPlot::PopStyleColor();
-                //     ImPlot::EndPlot();
-                // }
-                // ImPlot::PopStyleVar();
-                // ImGui::PopID();
+            if( ImGui::Begin( "iOlmEvents", &pOpen, ImGuiWindowFlags_None ) )
+            {
+                const ImGuiTableFlags flags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY |
+                                              ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_Resizable |
+                                              ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
+                if( ImGui::BeginTable( "table_scrolly", 14, flags, ImGui::GetContentRegionAvail() ) )
+                {
+                    ImGui::TableSetupColumn( "", ImGuiTableColumnFlags_WidthFixed, 15 );
+                    ImGui::TableSetupColumn( "mRowIndex", ImGuiTableColumnFlags_None, 75 );
+                    ImGui::TableSetupColumn( "mEventType", ImGuiTableColumnFlags_None, 75 );
+                    ImGui::TableSetupColumn( "mEventStatus", ImGuiTableColumnFlags_None, 75 );
+                    ImGui::TableSetupColumn( "mReflectanceType", ImGuiTableColumnFlags_None, 75 );
+                    ImGui::TableSetupColumn( "mWavelength", ImGuiTableColumnFlags_None, 75 );
+                    ImGui::TableSetupColumn( "mPosition", ImGuiTableColumnFlags_None, 75 );
+                    ImGui::TableSetupColumn( "mCursorA", ImGuiTableColumnFlags_None, 75 );
+                    ImGui::TableSetupColumn( "mCursorB", ImGuiTableColumnFlags_None, 75 );
+                    ImGui::TableSetupColumn( "mSubCursorA", ImGuiTableColumnFlags_None, 75 );
+                    ImGui::TableSetupColumn( "mSubCursorB", ImGuiTableColumnFlags_None, 75 );
+                    ImGui::TableSetupColumn( "mLoss", ImGuiTableColumnFlags_None, 75 );
+                    ImGui::TableSetupColumn( "mReflectance", ImGuiTableColumnFlags_None, 75 );
+                    ImGui::TableSetupColumn( "mCurveLevel", ImGuiTableColumnFlags_None, 75 );
+                    ImGui::TableHeadersRow();
+
+                    ImGuiListClipper clipper;
+                    clipper.Begin( mEventDataVector.size() );
+                    ImGui::TableNextRow();
+                    while( clipper.Step() )
+                    {
+                        for( int row = clipper.DisplayStart; row < clipper.DisplayEnd; row++ )
+                        {
+                            std::string lEventType;
+                            std::string lEventStatus;
+                            std::string lReflectanceType;
+                            ImGui::TableNextRow();
+                            ImGui::TableSetColumnIndex( 1 );
+                            Text( "{}", mEventDataVector[row].mRowIndex );
+                            ImGui::TableSetColumnIndex( 2 );
+                            switch( mEventDataVector[row].mEventType )
+                            {
+                            case Unknown: lEventType = "Unknown"; break;
+                            case PositiveSplice: lEventType = "PositiveSplice"; break;
+                            case NegativeSplice: lEventType = "NegativeSplice"; break;
+                            case Reflection: lEventType = "Reflection"; break;
+                            case EndOfAnalysis: lEventType = "EndOfAnalysis"; break;
+                            case ContinuousFiber: lEventType = "ContinuousFiber";
+                            default: break;
+                            }
+                            Text( "{}", lEventType );
+                            ImGui::TableSetColumnIndex( 3 );
+                            switch( mEventDataVector[row].mEventStatus )
+                            {
+                            case None: lEventStatus = "None"; break;
+                            case Echo: lEventStatus = "Echo"; break;
+                            case PossibleEcho: lEventStatus = "PossibleEcho"; break;
+                            case EndOfFiber: lEventStatus = "EndOfFiber"; break;
+                            case LaunchLevel: lEventStatus = "LaunchLevel"; break;
+                            case Saturated: lEventStatus = "Saturated"; break;
+                            case AddedByUser: lEventStatus = "AddedByUser"; break;
+                            case SpanStart: lEventStatus = "SpanStart"; break;
+                            case SpanEnd: lEventStatus = "SpanEnd"; break;
+                            case NewWhileTemplating: lEventStatus = "NewWhileTemplating"; break;
+                            case AddedForSpan: lEventStatus = "AddedForSpan"; break;
+                            case AddedFromReference: lEventStatus = "AddedFromReference"; break;
+                            case Bidir: lEventStatus = "Bidir"; break;
+                            case Splitter: lEventStatus = "Splitter"; break;
+                            case PreviousSectionEcho: lEventStatus = "PreviousSectionEcho"; break;
+                            case UnderEstimatedLoss: lEventStatus = "UnderEstimatedLoss"; break;
+                            case UnderEstimatedReflectance: lEventStatus = "UnderEstimatedReflectance"; break;
+                            case LoopStart: lEventStatus = "LoopStart"; break;
+                            case LoopEnd: lEventStatus = "LoopEnd"; break;
+                            case CouplerPort: lEventStatus = "CouplerPort"; break;
+                            case Reference: lEventStatus = "Reference"; break;
+                            case OverEstimatedReflectance: lEventStatus = "OverEstimatedReflectance"; break;
+                            case InjectionReference: lEventStatus = "InjectionReference"; break;
+                            case OverEstimatedLoss: lEventStatus = "OverEstimatedLoss";
+                            default: break;
+                            }
+                            Text( "{}", lEventStatus );
+                            ImGui::TableSetColumnIndex( 4 );
+
+                            switch( mEventDataVector[row].mReflectanceType )
+                            {
+                            case Bidirectional: lReflectanceType = "Bidirectional"; break;
+                            case UnidirectionalForward: lReflectanceType = "UnidirectionalForward"; break;
+                            case UnidirectionalBackward: lReflectanceType = "UnidirectionalBackward"; 
+                            default: break;
+                            }
+                            Text( "{}", lReflectanceType );
+                            ImGui::TableSetColumnIndex( 5 );
+                            Text( "{:.1f} nm", mEventDataVector[row].mWavelength );
+                            ImGui::TableSetColumnIndex( 6 );
+                            Text( "{:.3f} km", mEventDataVector[row].mPosition / 1000.0f );
+                            ImGui::TableSetColumnIndex( 7 );
+                            Text( "{:.3f} km", mEventDataVector[row].mCursorA / 1000.0f );
+                            ImGui::TableSetColumnIndex( 8 );
+                            Text( "{:.3f} km", mEventDataVector[row].mCursorB / 1000.0f );
+                            ImGui::TableSetColumnIndex( 9 );
+                            Text( "{:.3f} km", mEventDataVector[row].mSubCursorA / 1000.0f );
+                            ImGui::TableSetColumnIndex( 10 );
+                            Text( "{:.3f} km", mEventDataVector[row].mSubCursorB / 1000.0f );
+                            ImGui::TableSetColumnIndex( 11 );
+                            Text( "{:.1f} dB", mEventDataVector[row].mLoss );
+                            ImGui::TableSetColumnIndex( 12 );
+                            Text( "{:.1f} dB", mEventDataVector[row].mReflectance );
+                            ImGui::TableSetColumnIndex( 13 );
+                            Text( "{:.1f} dB", mEventDataVector[row].mCurveLevel );
+                        }
+                    }
+                    ImGui::EndTable();
+                }
             }
             ImGui::End();
 
@@ -307,7 +400,7 @@ namespace SE::OtdrEditor
         std::vector<MonoObject *> lTraceDataVector = AsVector<MonoObject *>( lTraceData );
 
         static auto &lTraceDataStructure = MonoRuntime::GetClassType( "Metrino.Mono.TracePlotData" );
-        
+
         mTracePlot.Clear();
         for( int i = 0; i < lTraceDataVector.size(); i++ )
         {
@@ -315,10 +408,14 @@ namespace SE::OtdrEditor
             auto lPlot     = New<sFloat64LinePlot>();
             lPlot->mX      = AsVector<double>( lInstance.GetFieldValue<MonoObject *>( "mX" ) );
             lPlot->mY      = AsVector<double>( lInstance.GetFieldValue<MonoObject *>( "mY" ) );
-            lPlot->mLegend = fmt::format( "{:.0f} nm - {} ({} samples)", lInstance.GetFieldValue<double>( "mWavelength" ) * 1e9, i, lPlot->mX.size() );
+            lPlot->mLegend = fmt::format( "{:.0f} nm - {} ({} samples)", lInstance.GetFieldValue<double>( "mWavelength" ) * 1e9, i,
+                                          lPlot->mX.size() );
 
-            mTracePlot.Add(lPlot);
+            mTracePlot.Add( lPlot );
         }
+
+        MonoObject *lEventData = mDataInstance->CallMethod( "GetEvents" );
+        mEventDataVector       = AsVector<sEvent>( lEventData );
     }
 
     bool OtdrWindow::RenderMainMenu()
