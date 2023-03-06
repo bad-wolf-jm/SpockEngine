@@ -99,18 +99,27 @@ namespace SE::OtdrEditor
             static bool pOpen = true;
             if( ImGui::Begin( "iOlmData", &pOpen, ImGuiWindowFlags_None ) )
             {
-                ImGui::PushID( 0 );
-                ImPlot::PushStyleVar( ImPlotStyleVar_PlotPadding, ImVec2( 0, 0 ) );
-                if( ImPlot::BeginPlot( "##spark_0", ImGui::GetContentRegionAvail(), ImPlotFlags_Crosshairs | ImPlotFlags_NoChild ) )
-                {
-                    ImPlot::SetupAxes( 0, 0, ImPlotAxisFlags_NoDecorations, ImPlotAxisFlags_None );
-                    ImPlot::PushStyleColor( ImPlotCol_Line, ImPlot::GetColormapColor( 0 ) );
-                    // ImPlot::PlotLine( "##spark_0", lValues0, 11, 1, 0, 0 );
-                    ImPlot::PopStyleColor();
-                    ImPlot::EndPlot();
-                }
-                ImPlot::PopStyleVar();
-                ImGui::PopID();
+                mTracePlot.Update(ImGui::GetCursorPos(), ImGui::GetContentRegionAvail());
+
+                // ImGui::PushID( 0 );
+                // ImPlot::PushStyleVar( ImPlotStyleVar_PlotPadding, ImVec2( 0, 0 ) );
+                // if( ImPlot::BeginPlot( "##spark_0", ImGui::GetContentRegionAvail(), ImPlotFlags_Crosshairs | ImPlotFlags_NoChild ) )
+                // {
+                //     // ImPlot::SetupAxes( 0, 0, ImPlotAxisFlags_NoDecorations, ImPlotAxisFlags_NoDecorations );
+                //     // ImPlot::PushStyleColor( ImPlotCol_Line, ImPlot::GetColormapColor( 0 ) );
+                //     int i = 0;
+                //     for( auto const &lTrace : mTraceData )
+                //     {
+                //         auto lPlotName =
+                //             fmt::format( "{:.0f} nm - {} ({} samples)##{}", lTrace.mWavelength * 1e9, i, lTrace.mX.size(), i );
+                //         ImPlot::PlotLine( lPlotName.c_str(), lTrace.mX.data(), lTrace.mY.data(), lTrace.mX.size(), 0 );
+                //         i++;
+                //     }
+                //     // ImPlot::PopStyleColor();
+                //     ImPlot::EndPlot();
+                // }
+                // ImPlot::PopStyleVar();
+                // ImGui::PopID();
             }
             ImGui::End();
 
@@ -269,15 +278,47 @@ namespace SE::OtdrEditor
         return lRequestQuit;
     }
 
+    template <typename _Ty>
+    std::vector<_Ty> AsVector( MonoObject *aObject )
+    {
+        uint32_t lArrayLength = static_cast<uint32_t>( mono_array_length( (MonoArray *)aObject ) );
+
+        std::vector<_Ty> lVector( lArrayLength );
+        for( uint32_t i = 0; i < lArrayLength; i++ )
+        {
+            auto lElement = *( mono_array_addr( (MonoArray *)aObject, _Ty, i ) );
+            lVector[i]    = lElement;
+        }
+
+        return lVector;
+    }
+
     void OtdrWindow::LoadIOlmData( fs::path aPath )
     {
         static auto &lFileLoader = MonoRuntime::GetClassType( "Metrino.Mono.FileLoader" );
-        static auto &lFileClass  = MonoRuntime::GetClassType( "Metrino.Mono.OlmFIle" );
+        static auto &lFileClass  = MonoRuntime::GetClassType( "Metrino.Mono.OlmFile" );
 
         MonoString *lFilePath   = MonoRuntime::NewString( aPath.string() );
         MonoObject *lDataObject = lFileLoader.CallMethod( "LoadOlmData", lFilePath );
 
         mDataInstance = New<MonoScriptInstance>( lFileClass.Class(), lDataObject );
+
+        MonoObject               *lTraceData       = mDataInstance->CallMethod( "GetAllTraces" );
+        std::vector<MonoObject *> lTraceDataVector = AsVector<MonoObject *>( lTraceData );
+
+        static auto &lTraceDataStructure = MonoRuntime::GetClassType( "Metrino.Mono.TracePlotData" );
+        
+        mTracePlot.Clear();
+        for( int i = 0; i < lTraceDataVector.size(); i++ )
+        {
+            auto lInstance = MonoScriptInstance( lTraceDataStructure.Class(), lTraceDataVector[i] );
+            auto lPlot     = New<sFloat64LinePlot>();
+            lPlot->mX      = AsVector<double>( lInstance.GetFieldValue<MonoObject *>( "mX" ) );
+            lPlot->mY      = AsVector<double>( lInstance.GetFieldValue<MonoObject *>( "mY" ) );
+            lPlot->mLegend = fmt::format( "{:.0f} nm - {} ({} samples)", lInstance.GetFieldValue<double>( "mWavelength" ) * 1e9, i, lPlot->mX.size() );
+
+            mTracePlot.Add(lPlot);
+        }
     }
 
     bool OtdrWindow::RenderMainMenu()

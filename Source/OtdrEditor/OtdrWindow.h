@@ -16,6 +16,7 @@
 #include "UI/Components/Checkbox.h"
 #include "UI/Components/Image.h"
 #include "UI/Components/ImageToggleButton.h"
+#include "UI/Components/Plot.h"
 #include "UI/Components/TextToggleButton.h"
 #include "UI/Form.h"
 #include "UI/Layouts/BoxLayout.h"
@@ -82,12 +83,12 @@ namespace SE::OtdrEditor
 
         void ConfigureUI();
 
-        void LoadIOlmData(fs::path aPath);
+        void LoadIOlmData( fs::path aPath );
 
         Ref<MonoScriptInstance> mDataInstance = nullptr;
-        
-      private:
+        UIPlot                  mTracePlot;
 
+      private:
         OtdrWorkspaceWindow mWorkspaceArea;
 
       private:
