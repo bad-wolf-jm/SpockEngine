@@ -1254,9 +1254,9 @@ namespace SE::Editor
             clipper.Begin( l_Logs.size() );
             while( clipper.Step() )
             {
-                ImGui::TableNextRow();
                 for( int row = clipper.DisplayStart; row < clipper.DisplayEnd; row++ )
                 {
+                    ImGui::TableNextRow();
                     ImGui::TableSetColumnIndex( 2 );
                     Text( l_Logs[row].Message );
                 }
