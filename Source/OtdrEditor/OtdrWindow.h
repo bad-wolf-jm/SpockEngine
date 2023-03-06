@@ -95,6 +95,16 @@ namespace SE::OtdrEditor
         double           mLoss;
         double           mReflectance;
         double           mCurveLevel;
+        double           mLossAtA;
+        double           mLossAtB;
+        double           mEstimatedCurveLevel;
+        double           mEstimatedLoss;
+        double           mEstimatedEndLevel;
+        double           mEndNoiseLevel;
+        double           mPeakPulseWidth;
+        double           mPeakPower;
+        double           mPeakSNR;
+        bool             mConsiderAsPossibleEcho;
     };
 
     class OtdrWindow
