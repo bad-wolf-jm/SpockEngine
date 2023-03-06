@@ -183,26 +183,27 @@ namespace SE::Core
         ImGuiViewport *lMainViewport    = ImGui::GetMainViewport();
         lMainViewport->RendererUserData = nullptr;
 
+        static ImWchar lCharRanges[] = { 0x0020, 0x00FF, 0x2070, 0x208e, 0x2200, 0x2300, 0x2A00, 0x2AFF, 0 };
         static ImWchar lRanges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
         ImFontConfig   lFontConfig;
         lFontConfig.MergeMode        = true;
         lFontConfig.PixelSnapH       = true;
         lFontConfig.GlyphMinAdvanceX = 10.0f;
 
-        mMonoFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mMonoFont.string().c_str(), aUIConfiguration.mFontSize );
+        mMonoFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mMonoFont.string().c_str(), aUIConfiguration.mFontSize, 0, lCharRanges );
         io.Fonts->AddFontFromFileTTF( aUIConfiguration.mIconFont.string().c_str(), aUIConfiguration.mFontSize, &lFontConfig, lRanges );
 
-        mMainFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mMainFont.string().c_str(), aUIConfiguration.mFontSize );
+        mMainFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mMainFont.string().c_str(), aUIConfiguration.mFontSize, 0, lCharRanges );
         io.Fonts->AddFontFromFileTTF( aUIConfiguration.mIconFont.string().c_str(), aUIConfiguration.mFontSize, &lFontConfig, lRanges );
 
-        mBoldFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mBoldFont.string().c_str(), aUIConfiguration.mFontSize );
+        mBoldFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mBoldFont.string().c_str(), aUIConfiguration.mFontSize, 0, lCharRanges );
         io.Fonts->AddFontFromFileTTF( aUIConfiguration.mIconFont.string().c_str(), aUIConfiguration.mFontSize, &lFontConfig, lRanges );
 
-        mObliqueFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mItalicFont.string().c_str(), aUIConfiguration.mFontSize );
+        mObliqueFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mItalicFont.string().c_str(), aUIConfiguration.mFontSize, 0, lCharRanges );
         io.Fonts->AddFontFromFileTTF( aUIConfiguration.mIconFont.string().c_str(), aUIConfiguration.mFontSize, &lFontConfig, lRanges );
 
         mBoldObliqueFont =
-            io.Fonts->AddFontFromFileTTF( aUIConfiguration.mBoldItalicFont.string().c_str(), aUIConfiguration.mFontSize );
+            io.Fonts->AddFontFromFileTTF( aUIConfiguration.mBoldItalicFont.string().c_str(), aUIConfiguration.mFontSize, 0, lCharRanges );
         io.Fonts->AddFontFromFileTTF( aUIConfiguration.mIconFont.string().c_str(), aUIConfiguration.mFontSize, &lFontConfig, lRanges );
 
         mUIStyle = UIStyle{ true };

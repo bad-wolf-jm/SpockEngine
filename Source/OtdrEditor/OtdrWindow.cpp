@@ -1,5 +1,6 @@
 #include "OtdrWindow.h"
 
+#include <cmath>
 #include <fmt/core.h>
 #include <fstream>
 #include <iostream>
@@ -108,7 +109,7 @@ namespace SE::OtdrEditor
                 const ImGuiTableFlags flags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY |
                                               ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_Resizable |
                                               ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
-                if( ImGui::BeginTable( "table_scrolly", 14, flags, ImGui::GetContentRegionAvail() ) )
+                if( ImGui::BeginTable( "table_scrolly", 24, flags, ImGui::GetContentRegionAvail() ) )
                 {
                     ImGui::TableSetupColumn( "", ImGuiTableColumnFlags_WidthFixed, 15 );
                     ImGui::TableSetupColumn( "mRowIndex", ImGuiTableColumnFlags_None, 75 );
@@ -117,13 +118,24 @@ namespace SE::OtdrEditor
                     ImGui::TableSetupColumn( "mReflectanceType", ImGuiTableColumnFlags_None, 75 );
                     ImGui::TableSetupColumn( "mWavelength", ImGuiTableColumnFlags_None, 75 );
                     ImGui::TableSetupColumn( "mPosition", ImGuiTableColumnFlags_None, 75 );
-                    ImGui::TableSetupColumn( "mCursorA", ImGuiTableColumnFlags_None, 75 );
-                    ImGui::TableSetupColumn( "mCursorB", ImGuiTableColumnFlags_None, 75 );
-                    ImGui::TableSetupColumn( "mSubCursorA", ImGuiTableColumnFlags_None, 75 );
-                    ImGui::TableSetupColumn( "mSubCursorB", ImGuiTableColumnFlags_None, 75 );
-                    ImGui::TableSetupColumn( "mLoss", ImGuiTableColumnFlags_None, 75 );
-                    ImGui::TableSetupColumn( "mReflectance", ImGuiTableColumnFlags_None, 75 );
-                    ImGui::TableSetupColumn( "mCurveLevel", ImGuiTableColumnFlags_None, 75 );
+                    ImGui::TableSetupColumn( "mCursorA", ImGuiTableColumnFlags_None, 70 );
+                    ImGui::TableSetupColumn( "mCursorB", ImGuiTableColumnFlags_None, 70 );
+                    ImGui::TableSetupColumn( "mSubCursorA", ImGuiTableColumnFlags_None, 70 );
+                    ImGui::TableSetupColumn( "mSubCursorB", ImGuiTableColumnFlags_None, 70 );
+                    ImGui::TableSetupColumn( "mLoss", ImGuiTableColumnFlags_None, 55 );
+                    ImGui::TableSetupColumn( "mReflectance", ImGuiTableColumnFlags_None, 55 );
+                    ImGui::TableSetupColumn( "mCurveLevel", ImGuiTableColumnFlags_None, 55 );
+                    ImGui::TableSetupColumn( "mLossAtA", ImGuiTableColumnFlags_None, 55 );
+                    ImGui::TableSetupColumn( "mLossAtB", ImGuiTableColumnFlags_None, 55 );
+                    ImGui::TableSetupColumn( "mEstimatedLoss", ImGuiTableColumnFlags_None, 55 );
+                    ImGui::TableSetupColumn( "mCurveLevel", ImGuiTableColumnFlags_None, 55 );
+                    ImGui::TableSetupColumn( "mEstimatedEndLevel", ImGuiTableColumnFlags_None, 55 );
+                    ImGui::TableSetupColumn( "mEndNoiseLevel", ImGuiTableColumnFlags_None, 55 );
+                    ImGui::TableSetupColumn( "mPeakPulseWidth", ImGuiTableColumnFlags_None, 55 );
+                    ImGui::TableSetupColumn( "mPeakPower", ImGuiTableColumnFlags_None, 55 );
+                    ImGui::TableSetupColumn( "mPeakSNR", ImGuiTableColumnFlags_None, 55 );
+                    ImGui::TableSetupColumn( "mConsiderAsPossibleEcho", ImGuiTableColumnFlags_None, 55 );
+
                     ImGui::TableHeadersRow();
 
                     ImGuiListClipper clipper;
@@ -139,15 +151,16 @@ namespace SE::OtdrEditor
                             ImGui::TableNextRow();
                             ImGui::TableSetColumnIndex( 1 );
                             Text( "{}", mEventDataVector[row].mRowIndex );
+
                             ImGui::TableSetColumnIndex( 2 );
                             switch( mEventDataVector[row].mEventType )
                             {
                             case Unknown: lEventType = "Unknown"; break;
-                            case PositiveSplice: lEventType = "PositiveSplice"; break;
-                            case NegativeSplice: lEventType = "NegativeSplice"; break;
+                            case PositiveSplice: lEventType = "Positive Splice"; break;
+                            case NegativeSplice: lEventType = "Negative Splice"; break;
                             case Reflection: lEventType = "Reflection"; break;
-                            case EndOfAnalysis: lEventType = "EndOfAnalysis"; break;
-                            case ContinuousFiber: lEventType = "ContinuousFiber"; break;
+                            case EndOfAnalysis: lEventType = "End Of Analysis"; break;
+                            case ContinuousFiber: lEventType = "Continuous Fiber"; break;
                             default: lEventType = "N/A"; break;
                             }
                             Text( "{}", lEventType );
@@ -156,59 +169,137 @@ namespace SE::OtdrEditor
                             {
                             case None: lEventStatus = "None"; break;
                             case Echo: lEventStatus = "Echo"; break;
-                            case PossibleEcho: lEventStatus = "PossibleEcho"; break;
-                            case EndOfFiber: lEventStatus = "EndOfFiber"; break;
-                            case LaunchLevel: lEventStatus = "LaunchLevel"; break;
+                            case PossibleEcho: lEventStatus = "Possible Echo"; break;
+                            case EndOfFiber: lEventStatus = "End Of Fiber"; break;
+                            case LaunchLevel: lEventStatus = "Launch Level"; break;
                             case Saturated: lEventStatus = "Saturated"; break;
-                            case AddedByUser: lEventStatus = "AddedByUser"; break;
-                            case SpanStart: lEventStatus = "SpanStart"; break;
-                            case SpanEnd: lEventStatus = "SpanEnd"; break;
-                            case NewWhileTemplating: lEventStatus = "NewWhileTemplating"; break;
-                            case AddedForSpan: lEventStatus = "AddedForSpan"; break;
-                            case AddedFromReference: lEventStatus = "AddedFromReference"; break;
+                            case AddedByUser: lEventStatus = "Added B yUser"; break;
+                            case SpanStart: lEventStatus = "Span Start"; break;
+                            case SpanEnd: lEventStatus = "Span End"; break;
+                            case NewWhileTemplating: lEventStatus = "New While Templating"; break;
+                            case AddedForSpan: lEventStatus = "Added For Span"; break;
+                            case AddedFromReference: lEventStatus = "Added From Reference"; break;
                             case Bidir: lEventStatus = "Bidir"; break;
                             case Splitter: lEventStatus = "Splitter"; break;
-                            case PreviousSectionEcho: lEventStatus = "PreviousSectionEcho"; break;
-                            case UnderEstimatedLoss: lEventStatus = "UnderEstimatedLoss"; break;
-                            case UnderEstimatedReflectance: lEventStatus = "UnderEstimatedReflectance"; break;
-                            case LoopStart: lEventStatus = "LoopStart"; break;
-                            case LoopEnd: lEventStatus = "LoopEnd"; break;
-                            case CouplerPort: lEventStatus = "CouplerPort"; break;
+                            case PreviousSectionEcho: lEventStatus = "Previous Section Echo"; break;
+                            case UnderEstimatedLoss: lEventStatus = "Under Estimated Loss"; break;
+                            case UnderEstimatedReflectance: lEventStatus = "Under Estimated Reflectance"; break;
+                            case LoopStart: lEventStatus = "Loop Start"; break;
+                            case LoopEnd: lEventStatus = "Loop End"; break;
+                            case CouplerPort: lEventStatus = "Coupler Port"; break;
                             case Reference: lEventStatus = "Reference"; break;
-                            case OverEstimatedReflectance: lEventStatus = "OverEstimatedReflectance"; break;
-                            case InjectionReference: lEventStatus = "InjectionReference"; break;
-                            case OverEstimatedLoss: lEventStatus = "OverEstimatedLoss"; break;
+                            case OverEstimatedReflectance: lEventStatus = "Over Estimated Reflectance"; break;
+                            case InjectionReference: lEventStatus = "Injection Reference"; break;
+                            case OverEstimatedLoss: lEventStatus = "Over Estimated Loss"; break;
                             default: lEventStatus = "N/A"; break;
                             }
                             Text( "{}", lEventStatus );
+
                             ImGui::TableSetColumnIndex( 4 );
 
                             switch( mEventDataVector[row].mReflectanceType )
                             {
                             case Bidirectional: lReflectanceType = "Bidirectional"; break;
-                            case UnidirectionalForward: lReflectanceType = "UnidirectionalForward"; break;
-                            case UnidirectionalBackward: lReflectanceType = "UnidirectionalBackward"; break;
+                            case UnidirectionalForward: lReflectanceType = "Unidirectional Forward"; break;
+                            case UnidirectionalBackward: lReflectanceType = "Unidirectional Backward"; break;
                             default: lReflectanceType = "N/A"; break;
                             }
                             Text( "{}", lReflectanceType );
+
                             ImGui::TableSetColumnIndex( 5 );
                             Text( "{:.1f} nm", mEventDataVector[row].mWavelength );
+
                             ImGui::TableSetColumnIndex( 6 );
                             Text( "{:.3f} km", mEventDataVector[row].mPosition / 1000.0f );
+
                             ImGui::TableSetColumnIndex( 7 );
                             Text( "{:.3f} km", mEventDataVector[row].mCursorA / 1000.0f );
+
                             ImGui::TableSetColumnIndex( 8 );
                             Text( "{:.3f} km", mEventDataVector[row].mCursorB / 1000.0f );
+
                             ImGui::TableSetColumnIndex( 9 );
                             Text( "{:.3f} km", mEventDataVector[row].mSubCursorA / 1000.0f );
+
                             ImGui::TableSetColumnIndex( 10 );
                             Text( "{:.3f} km", mEventDataVector[row].mSubCursorB / 1000.0f );
+
                             ImGui::TableSetColumnIndex( 11 );
-                            Text( "{:.1f} dB", mEventDataVector[row].mLoss );
+                            if( std::isnan( mEventDataVector[row].mLoss ) )
+                                Text( "-\xe2\x88\x9e dB" );
+                            else
+                                Text( "{:.1f} dB", mEventDataVector[row].mLoss );
+
                             ImGui::TableSetColumnIndex( 12 );
-                            Text( "{:.1f} dB", mEventDataVector[row].mReflectance );
+                            if( std::isnan( mEventDataVector[row].mReflectance ) )
+                                Text( "-\xe2\x88\x9e dB" );
+                            else
+                                Text( "{:.1f} dB", mEventDataVector[row].mReflectance );
+
                             ImGui::TableSetColumnIndex( 13 );
-                            Text( "{:.1f} dB", mEventDataVector[row].mCurveLevel );
+                            if( std::isnan( mEventDataVector[row].mCurveLevel ) )
+                                Text( "-\xe2\x88\x9e dB" );
+                            else
+                                Text( "{:.1f} dB", mEventDataVector[row].mCurveLevel );
+
+                            ImGui::TableSetColumnIndex( 14 );
+                            if( std::isnan( mEventDataVector[row].mLossAtA ) )
+                                Text( "-\xe2\x88\x9e dB" );
+                            else
+                                Text( "{:.1f} dB", mEventDataVector[row].mLossAtA );
+
+                            ImGui::TableSetColumnIndex( 15 );
+                            if( std::isnan( mEventDataVector[row].mLossAtB ) )
+                                Text( "-\xe2\x88\x9e dB" );
+                            else
+                                Text( "{:.1f} dB", mEventDataVector[row].mLossAtB );
+
+                            ImGui::TableSetColumnIndex( 16 );
+                            if( std::isnan( mEventDataVector[row].mEstimatedCurveLevel ) )
+                                Text( "-\xe2\x88\x9e dB" );
+                            else
+                                Text( "{:.1f} dB", mEventDataVector[row].mEstimatedCurveLevel );
+
+                            ImGui::TableSetColumnIndex( 17 );
+                            if( std::isnan( mEventDataVector[row].mEstimatedLoss ) )
+                                Text( "-\xe2\x88\x9e dB" );
+                            else
+                                Text( "{:.1f} dB", mEventDataVector[row].mEstimatedLoss );
+
+                            ImGui::TableSetColumnIndex( 18 );
+                            if( std::isnan( mEventDataVector[row].mEstimatedEndLevel ) )
+                                Text( "-\xe2\x88\x9e dB" );
+                            else
+                                Text( "{:.1f} dB", mEventDataVector[row].mEstimatedEndLevel );
+
+                            ImGui::TableSetColumnIndex( 19 );
+                            if( std::isnan( mEventDataVector[row].mEndNoiseLevel ) )
+                                Text( "-\xe2\x88\x9e dB" );
+                            else
+                                Text( "{:.1f} dB", mEventDataVector[row].mEndNoiseLevel );
+
+                            ImGui::TableSetColumnIndex( 20 );
+                            if( std::isnan( mEventDataVector[row].mPeakPulseWidth ) )
+                                Text( "-\xe2\x88\x9e dB" );
+                            else
+                                Text( "{:.1f} dB", mEventDataVector[row].mPeakPulseWidth );
+
+                            ImGui::TableSetColumnIndex( 21 );
+                            if( std::isnan( mEventDataVector[row].mPeakPower ) )
+                                Text( "-\xe2\x88\x9e dB" );
+                            else
+                                Text( "{:.1f} dB", mEventDataVector[row].mPeakPower );
+
+                            ImGui::TableSetColumnIndex( 22 );
+                            if( std::isnan( mEventDataVector[row].mPeakSNR ) )
+                                Text( "-\xe2\x88\x9e dB" );
+                            else
+                                Text( "{:.1f} dB", mEventDataVector[row].mPeakSNR );
+
+                            ImGui::TableSetColumnIndex( 23 );
+                            Text( "{}", mEventDataVector[row].mConsiderAsPossibleEcho );
+
+
                         }
                     }
                     ImGui::EndTable();
