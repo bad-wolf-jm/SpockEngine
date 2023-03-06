@@ -147,8 +147,8 @@ namespace SE::OtdrEditor
                             case NegativeSplice: lEventType = "NegativeSplice"; break;
                             case Reflection: lEventType = "Reflection"; break;
                             case EndOfAnalysis: lEventType = "EndOfAnalysis"; break;
-                            case ContinuousFiber: lEventType = "ContinuousFiber";
-                            default: break;
+                            case ContinuousFiber: lEventType = "ContinuousFiber"; break;
+                            default: lEventType = "N/A"; break;
                             }
                             Text( "{}", lEventType );
                             ImGui::TableSetColumnIndex( 3 );
@@ -177,8 +177,8 @@ namespace SE::OtdrEditor
                             case Reference: lEventStatus = "Reference"; break;
                             case OverEstimatedReflectance: lEventStatus = "OverEstimatedReflectance"; break;
                             case InjectionReference: lEventStatus = "InjectionReference"; break;
-                            case OverEstimatedLoss: lEventStatus = "OverEstimatedLoss";
-                            default: break;
+                            case OverEstimatedLoss: lEventStatus = "OverEstimatedLoss"; break;
+                            default: lEventStatus = "N/A"; break;
                             }
                             Text( "{}", lEventStatus );
                             ImGui::TableSetColumnIndex( 4 );
@@ -187,8 +187,8 @@ namespace SE::OtdrEditor
                             {
                             case Bidirectional: lReflectanceType = "Bidirectional"; break;
                             case UnidirectionalForward: lReflectanceType = "UnidirectionalForward"; break;
-                            case UnidirectionalBackward: lReflectanceType = "UnidirectionalBackward"; 
-                            default: break;
+                            case UnidirectionalBackward: lReflectanceType = "UnidirectionalBackward"; break;
+                            default: lReflectanceType = "N/A"; break;
                             }
                             Text( "{}", lReflectanceType );
                             ImGui::TableSetColumnIndex( 5 );
