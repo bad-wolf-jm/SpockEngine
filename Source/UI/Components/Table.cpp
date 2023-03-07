@@ -10,8 +10,6 @@ namespace SE::Core
 
     void UITable::AddColumn( Ref<sTableColumn> aColumn ) { mColumns.push_back( aColumn ); }
 
-    void UITable::SetData( Ref<sTableData> aData ) { mData = aData; }
-
     ImVec2 UITable::RequiredSize() { return ImVec2{}; }
 
     void UITable::DrawContent( ImVec2 aPosition, ImVec2 aSize )
@@ -31,8 +29,11 @@ namespace SE::Core
 
             ImGui::TableHeadersRow();
 
+            auto lRowCount = std::numeric_limits<uint32_t>::max();
+            for( const auto &lColumn : mColumns ) lRowCount = std::min( lRowCount, lColumn->Size() );
+
             ImGuiListClipper lRowClipping;
-            lRowClipping.Begin( mData->CountRows() );
+            lRowClipping.Begin( lRowCount );
             ImGui::TableNextRow();
             while( lRowClipping.Step() )
             {
@@ -45,15 +46,28 @@ namespace SE::Core
                     {
                         ImGui::TableSetColumnIndex( lColumn );
 
-                        float lWidth  = lThisTable->Columns[lColumn].ItemWidth;
-                        float lHeight = 30.0f;
+                        float lWidth  = lThisTable->Columns[lColumn].WorkMaxX - lThisTable->Columns[lColumn].WorkMinX;
 
-                        lColumnData->Render( mData->Get( lRow, lColumn ), ImVec2{ lWidth, lHeight } );
+                        lColumnData->Render( lRow, ImVec2{ lWidth, mRowHeight } );
+
+                        lColumn++;
                     }
                 }
             }
             ImGui::EndTable();
         }
+    }
+
+    uint32_t sFloat64Column::Size() { return mData.size(); }
+
+    void sFloat64Column::Render( int aRow, ImVec2 aSize )
+    {
+        auto const &lText     = fmt::format( mFormat, mData[aRow] );
+        auto const &lTextSize = ImGui::CalcTextSize( lText.c_str() );
+
+        ImVec2 lPos = ImGui::GetCursorPos() + ImVec2{ aSize.x - lTextSize.x, ( aSize.y - lTextSize.y ) * 0.5f };
+        ImGui::SetCursorPos( lPos );
+        ImGui::Text( lText.c_str() );
     }
 
 } // namespace SE::Core

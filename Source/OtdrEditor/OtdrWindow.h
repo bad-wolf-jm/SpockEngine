@@ -17,6 +17,7 @@
 #include "UI/Components/Image.h"
 #include "UI/Components/ImageToggleButton.h"
 #include "UI/Components/Plot.h"
+#include "UI/Components/Table.h"
 #include "UI/Components/TextToggleButton.h"
 #include "UI/Form.h"
 #include "UI/Layouts/BoxLayout.h"
@@ -164,7 +165,13 @@ namespace SE::OtdrEditor
 
         Ref<MonoScriptInstance> mDataInstance = nullptr;
         UIPlot                  mTracePlot;
-        std::vector<sEvent>     mEventDataVector;
+
+        UITable             mEventTable;
+        Ref<sFloat64Column> mPositionColumn;
+        Ref<sFloat64Column> mLossColumn;
+        Ref<sFloat64Column> mReflectanceColumn;
+
+        std::vector<sEvent> mEventDataVector;
 
       private:
         OtdrWorkspaceWindow mWorkspaceArea;
