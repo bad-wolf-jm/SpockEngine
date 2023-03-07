@@ -24,10 +24,11 @@
 #include "UI/UI.h"
 
 #include "Editor/ContentBrowser.h"
+#include "Enums.h"
+#include "LinkElementTable.h"
 #include "Mono/MonoScriptInstance.h"
 #include "SceneHierarchyPanel.h"
 #include "Workspace.h"
-#include "Enums.h"
 
 namespace SE::OtdrEditor
 {
@@ -143,6 +144,8 @@ namespace SE::OtdrEditor
         Ref<sFloat64Column> mPeakSNR;
 
         std::vector<sEvent> mEventDataVector;
+
+        UILinkElementTable mLinkElementTable;
 
       private:
         OtdrWorkspaceWindow mWorkspaceArea;

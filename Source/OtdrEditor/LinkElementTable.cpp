@@ -19,6 +19,9 @@ namespace SE::OtdrEditor
     {
         SetRowHeight( 20.0f );
 
+        mType = New<sFloat64Column>( "Position", 75.0f, "{:.3f} km", "\xe2\x88\x9e km" );
+        AddColumn( mType );
+
         mPositionColumn = New<sFloat64Column>( "Position", 75.0f, "{:.3f} km", "\xe2\x88\x9e km" );
         AddColumn( mPositionColumn );
 

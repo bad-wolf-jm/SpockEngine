@@ -241,6 +241,12 @@ namespace SE::OtdrEditor
             }
             ImGui::End();
 
+            if( ImGui::Begin( "iOlmData_LinkElements", &pOpen, ImGuiWindowFlags_None ) )
+            {
+                mLinkElementTable.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+            }
+            ImGui::End();
+
             // if( ImGui::Begin( "iOlmEvents", &pOpen, ImGuiWindowFlags_None ) )
             // {
             //     const ImGuiTableFlags flags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY |
@@ -703,6 +709,10 @@ namespace SE::OtdrEditor
 
         mPeakSNR->mData.clear();
         for( auto const &lE : mEventDataVector ) mPeakSNR->mData.push_back( lE.mPeakSNR );
+
+        MonoObject *lLinkElementData   = mDataInstance->CallMethod( "GetLinkElements" );
+        auto        lLinkElementVector = AsVector<sLinkElement>( lLinkElementData );
+        mLinkElementTable.SetData(lLinkElementVector);
     }
 
     bool OtdrWindow::RenderMainMenu()
