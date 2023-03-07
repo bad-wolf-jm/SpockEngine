@@ -16,6 +16,7 @@ namespace SE::Core
     struct sFloat64Column : public sTableColumn
     {
         std::string mFormat;
+        std::string mNaNFormat;
         std::vector<double> mData;
 
         uint32_t Size();

@@ -46,7 +46,7 @@ namespace SE::Core
                     {
                         ImGui::TableSetColumnIndex( lColumn );
 
-                        float lWidth  = lThisTable->Columns[lColumn].WorkMaxX - lThisTable->Columns[lColumn].WorkMinX;
+                        float lWidth = lThisTable->Columns[lColumn].WorkMaxX - lThisTable->Columns[lColumn].WorkMinX;
 
                         lColumnData->Render( lRow, ImVec2{ lWidth, mRowHeight } );
 
@@ -62,7 +62,12 @@ namespace SE::Core
 
     void sFloat64Column::Render( int aRow, ImVec2 aSize )
     {
-        auto const &lText     = fmt::format( mFormat, mData[aRow] );
+        std::string lText;
+        if( std::isnan( mData[aRow] ) )
+            lText = fmt::format( mNaNFormat, mData[aRow] );
+        else
+            lText = fmt::format( mFormat, mData[aRow] );
+
         auto const &lTextSize = ImGui::CalcTextSize( lText.c_str() );
 
         ImVec2 lPos = ImGui::GetCursorPos() + ImVec2{ aSize.x - lTextSize.x, ( aSize.y - lTextSize.y ) * 0.5f };
