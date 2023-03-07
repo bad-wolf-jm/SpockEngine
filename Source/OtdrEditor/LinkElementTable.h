@@ -57,6 +57,8 @@ namespace SE::OtdrEditor
 
         ~UILinkElementTable() = default;
 
+        void SetData(std::vector<sLinkElement> const& aData);
+
       protected:
         Ref<sFloat64Column> mType;
         Ref<sFloat64Column> mStatus;
