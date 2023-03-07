@@ -169,7 +169,22 @@ namespace SE::OtdrEditor
         UITable             mEventTable;
         Ref<sFloat64Column> mPositionColumn;
         Ref<sFloat64Column> mLossColumn;
+        Ref<sFloat64Column> mEstimatedLossColumn;
         Ref<sFloat64Column> mReflectanceColumn;
+        Ref<sFloat64Column> mWavelengthColumn;
+        Ref<sFloat64Column> mCursorAColumn;
+        Ref<sFloat64Column> mCursorBColumn;
+        Ref<sFloat64Column> mSubCursorAColumn;
+        Ref<sFloat64Column> mSubCursorBColumn;
+        Ref<sFloat64Column> mCurveLevelColumn;
+        Ref<sFloat64Column> mLossAtAColumn;
+        Ref<sFloat64Column> mLossAtBColumn;
+        Ref<sFloat64Column> mEstimatedCurveLevelColumn;
+        Ref<sFloat64Column> mEstimatedEndLevelColumn;
+        Ref<sFloat64Column> mEndNoiseLevelColumn;
+        Ref<sFloat64Column> mPeakPulseWidth;
+        Ref<sFloat64Column> mPeakPower;
+        Ref<sFloat64Column> mPeakSNR;
 
         std::vector<sEvent> mEventDataVector;
 
