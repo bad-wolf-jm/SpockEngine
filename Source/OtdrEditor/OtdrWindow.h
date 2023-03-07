@@ -79,6 +79,42 @@ namespace SE::OtdrEditor
         UnidirectionalBackward = 2
     };
 
+    enum eLinkElementStatus
+    {
+        None                   = 0,
+        OtdrConnectorFail      = 1,
+        LinkStart              = 2,
+        LinkEnd                = 4,
+        EndOfFiber             = 8,
+        NotOnLink              = 16,
+        AddedByUser            = 32,
+        SpecifiedSplitterRatio = 64,
+        AddedForMacrobend      = 128,
+        LoopStart              = 256,
+        LoopEnd                = 512,
+        SignatureStart         = 1024,
+        SignatureEnd           = 2048,
+        NewMonitoringEvent     = 4096,
+        InternalEvent          = 8192
+    };
+
+    enum eLinkElementType
+    {
+        Unknown            = 0,
+        Connector          = 1,
+        Splice             = 2,
+        Splitter           = 3,
+        OutOfRange         = 4,
+        Macrobend          = 5,
+        CouplerPort        = 6,
+        Switch             = 7,
+        Tam                = 8,
+        Unexpected         = 9,
+        Coupler            = 10,
+        TestEquipment      = 11,
+        UnbalancedSplitter = 12,
+    };
+
     struct sEvent
     {
         int              mRowIndex;
