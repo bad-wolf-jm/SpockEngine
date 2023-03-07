@@ -15,10 +15,7 @@
 
 namespace SE::OtdrEditor
 {
-
     using namespace SE::Core;
-    // using namespace SE::Core::EntityComponentSystem::Components;
-
     struct sLinkElement
     {
         int                mRowIndex;
