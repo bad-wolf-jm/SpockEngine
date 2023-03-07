@@ -9,7 +9,17 @@ namespace SE::Core
         std::string mHeader;
         float       mInitialSize = 10.0f;
 
-        virtual void Render( void *aDataToRender, ImVec2 aCellSize ) = 0;
+        virtual uint32_t Size() = 0;
+        virtual void Render( int aRow, ImVec2 aCellSize ) = 0;
+    };
+
+    struct sFloat64Column : public sTableColumn
+    {
+        std::string mFormat;
+        std::vector<double> mData;
+
+        uint32_t Size();
+        void Render( int aRow, ImVec2 aCellSize );
     };
 
     struct sTableData
@@ -27,7 +37,6 @@ namespace SE::Core
         UITable( std::string const &aText );
 
         void AddColumn( Ref<sTableColumn> aColumn );
-        void SetData( Ref<sTableData> aData );
         void SetRowHeight( float aRowHeight );
 
       protected:

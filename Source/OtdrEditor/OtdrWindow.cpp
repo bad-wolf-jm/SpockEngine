@@ -44,7 +44,31 @@ namespace SE::OtdrEditor
         return lItemPathStr;
     }
 
-    void OtdrWindow::ConfigureUI() { mWorkspaceArea.ConfigureUI(); }
+    void OtdrWindow::ConfigureUI()
+    {
+        mWorkspaceArea.ConfigureUI();
+
+        mEventTable.SetRowHeight( 20.0f );
+
+        mPositionColumn               = New<sFloat64Column>();
+        mPositionColumn->mHeader      = "Position";
+        mPositionColumn->mInitialSize = 75.0f;
+        mPositionColumn->mFormat      = "{:.3f} km";
+
+        mLossColumn               = New<sFloat64Column>();
+        mLossColumn->mHeader      = "Loss";
+        mLossColumn->mInitialSize = 75.0f;
+        mLossColumn->mFormat      = "{:.1f} dB";
+
+        mReflectanceColumn               = New<sFloat64Column>();
+        mReflectanceColumn->mHeader      = "Reflectance";
+        mReflectanceColumn->mInitialSize = 75.0f;
+        mReflectanceColumn->mFormat      = "{:.1f} dB";
+
+        mEventTable.AddColumn( mPositionColumn );
+        mEventTable.AddColumn( mLossColumn );
+        mEventTable.AddColumn( mReflectanceColumn );
+    }
 
     OtdrWindow::OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
         : mGraphicContext{ aGraphicContext }
@@ -101,6 +125,12 @@ namespace SE::OtdrEditor
             if( ImGui::Begin( "iOlmData", &pOpen, ImGuiWindowFlags_None ) )
             {
                 mTracePlot.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+            }
+            ImGui::End();
+
+            if( ImGui::Begin( "iOlmData_XXX", &pOpen, ImGuiWindowFlags_None ) )
+            {
+                mEventTable.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
             }
             ImGui::End();
 
@@ -298,8 +328,6 @@ namespace SE::OtdrEditor
 
                             ImGui::TableSetColumnIndex( 23 );
                             Text( "{}", mEventDataVector[row].mConsiderAsPossibleEcho );
-
-
                         }
                     }
                     ImGui::EndTable();
@@ -307,7 +335,11 @@ namespace SE::OtdrEditor
             }
             ImGui::End();
 
-            if( !pOpen ) mDataInstance = nullptr;
+            if( !pOpen )
+            {
+                mDataInstance = nullptr;
+                pOpen         = true;
+            }
         }
 
         if( ImGui::Begin( "CONNECTED MODULES", NULL, ImGuiWindowFlags_None ) )
@@ -507,6 +539,15 @@ namespace SE::OtdrEditor
 
         MonoObject *lEventData = mDataInstance->CallMethod( "GetEvents" );
         mEventDataVector       = AsVector<sEvent>( lEventData );
+
+        mPositionColumn->mData.clear();
+        for( auto const &lE : mEventDataVector ) mPositionColumn->mData.push_back( lE.mPosition * 0.001f );
+
+        mLossColumn->mData.clear();
+        for( auto const &lE : mEventDataVector ) mLossColumn->mData.push_back( lE.mLoss );
+
+        mReflectanceColumn->mData.clear();
+        for( auto const &lE : mEventDataVector ) mReflectanceColumn->mData.push_back( lE.mReflectance );
     }
 
     bool OtdrWindow::RenderMainMenu()
