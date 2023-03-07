@@ -9,18 +9,19 @@ namespace SE::Core
         std::string mHeader;
         float       mInitialSize = 10.0f;
 
-        virtual uint32_t Size() = 0;
-        virtual void Render( int aRow, ImVec2 aCellSize ) = 0;
+        virtual uint32_t Size()                               = 0;
+        virtual void     Render( int aRow, ImVec2 aCellSize ) = 0;
     };
 
     struct sFloat64Column : public sTableColumn
     {
         std::string mFormat;
         std::string mNaNFormat;
+
         std::vector<double> mData;
 
         uint32_t Size();
-        void Render( int aRow, ImVec2 aCellSize );
+        void     Render( int aRow, ImVec2 aCellSize );
     };
 
     struct sTableData
