@@ -9,6 +9,11 @@ namespace SE::Core
         std::string mHeader;
         float       mInitialSize = 10.0f;
 
+        sTableColumn() = default;
+        sTableColumn(std::string aHeader, float aInitialSize);
+
+        ~sTableColumn() = default;
+
         virtual uint32_t Size()                               = 0;
         virtual void     Render( int aRow, ImVec2 aCellSize ) = 0;
     };
@@ -19,6 +24,10 @@ namespace SE::Core
         std::string mNaNFormat;
 
         std::vector<double> mData;
+
+        sFloat64Column() = default;
+        sFloat64Column( std::string aHeader, float aInitialSize, std::string aFormat, std::string aNaNFormat );
+        ~sFloat64Column() = default;
 
         uint32_t Size();
         void     Render( int aRow, ImVec2 aCellSize );

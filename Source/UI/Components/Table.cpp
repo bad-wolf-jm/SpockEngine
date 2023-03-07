@@ -2,6 +2,11 @@
 
 namespace SE::Core
 {
+    sTableColumn::sTableColumn( std::string aHeader, float aInitialSize )
+        : mHeader{ aHeader }
+        , mInitialSize{ aInitialSize }
+    {
+    }
 
     void UITable::PushStyles() {}
     void UITable::PopStyles() {}
@@ -56,6 +61,13 @@ namespace SE::Core
             }
             ImGui::EndTable();
         }
+    }
+
+    sFloat64Column::sFloat64Column( std::string aHeader, float aInitialSize, std::string aFormat, std::string aNaNFormat )
+        : sTableColumn{ aHeader, aInitialSize }
+        , mFormat{ aFormat }
+        , mNaNFormat{ aNaNFormat }
+    {
     }
 
     uint32_t sFloat64Column::Size() { return mData.size(); }
