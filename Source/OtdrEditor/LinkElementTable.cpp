@@ -19,7 +19,7 @@ namespace SE::OtdrEditor
     {
         SetRowHeight( 20.0f );
 
-        mType = New<sFloat64Column>( "Type", 75.0f, "{:.3f} km", "N.a.N." );
+        mType = New<sStringColumn>( "Type", 75.0f );
         AddColumn( mType );
 
         mStatus = New<sFloat64Column>( "Status", 75.0f, "{:.3f}", "N.a.N." );
@@ -68,13 +68,13 @@ namespace SE::OtdrEditor
         mPositionTolerance = New<sFloat64Column>( "mPositionTolerance", 75.0f, "{:.3f} km", "N.a.N.m" );
         AddColumn( mPositionTolerance );
 
-        mEventType = New<sFloat64Column>( "mEventType", 75.0f, "{:.3f}", "N.a.N." );
+        mEventType = New<sStringColumn>( "mEventType", 75.0f );
         AddColumn( mEventType );
 
         mEventStatus = New<sFloat64Column>( "mEventStatus", 75.0f, "{:.3f}", "N.a.N." );
         AddColumn( mEventStatus );
 
-        mReflectanceType = New<sFloat64Column>( "mReflectanceType", 75.0f, "{:.3f}", "N.a.N." );
+        mReflectanceType = New<sStringColumn>( "mReflectanceType", 75.0f );
         AddColumn( mReflectanceType );
     }
 
@@ -83,7 +83,7 @@ namespace SE::OtdrEditor
         mEventDataVector = std::move( aData );
 
         mType->mData.clear();
-        for( auto const &lE : mEventDataVector ) mType->mData.push_back( 0.0f );
+        for( auto const &lE : mEventDataVector ) mType->mData.push_back( ToString(lE.mType) );
 
         mStatus->mData.clear();
         for( auto const &lE : mEventDataVector ) mStatus->mData.push_back( 0.0f );
@@ -133,13 +133,13 @@ namespace SE::OtdrEditor
         for( auto const &lE : mEventDataVector ) mPositionTolerance->mData.push_back( lE.mPositionTolerance );
 
         mEventType->mData.clear();
-        for( auto const &lE : mEventDataVector ) mEventType->mData.push_back( 0.0f );
+        for( auto const &lE : mEventDataVector ) mEventType->mData.push_back( ToString(lE.mEventType) );
 
         mEventStatus->mData.clear();
         for( auto const &lE : mEventDataVector ) mEventStatus->mData.push_back( 0.0f );
 
         mReflectanceType->mData.clear();
-        for( auto const &lE : mEventDataVector ) mReflectanceType->mData.push_back( 0.0f );
+        for( auto const &lE : mEventDataVector ) mReflectanceType->mData.push_back(ToString(lE.mReflectanceType) );
     }
 
 } // namespace SE::OtdrEditor

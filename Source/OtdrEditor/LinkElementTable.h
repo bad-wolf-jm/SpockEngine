@@ -57,7 +57,7 @@ namespace SE::OtdrEditor
         void SetData(std::vector<sLinkElement> const& aData);
 
       protected:
-        Ref<sFloat64Column> mType;
+        Ref<sStringColumn> mType;
         Ref<sFloat64Column> mStatus;
         Ref<sFloat64Column> mDiagnosicCount;
         Ref<sFloat64Column> mPositionColumn;
@@ -73,9 +73,9 @@ namespace SE::OtdrEditor
         Ref<sFloat64Column> mReflectancePassFail;
         Ref<sFloat64Column> mCurveLevelColumn;
         Ref<sFloat64Column> mPositionTolerance;
-        Ref<sFloat64Column> mEventType;
+        Ref<sStringColumn> mEventType;
         Ref<sFloat64Column> mEventStatus;
-        Ref<sFloat64Column> mReflectanceType;
+        Ref<sStringColumn> mReflectanceType;
 
         std::vector<sLinkElement> mEventDataVector;
     };
