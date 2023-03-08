@@ -33,6 +33,18 @@ namespace SE::Core
         void     Render( int aRow, ImVec2 aCellSize );
     };
 
+    struct sStringColumn : public sTableColumn
+    {
+        std::vector<std::string> mData;
+
+        sStringColumn() = default;
+        sStringColumn( std::string aHeader, float aInitialSize );
+        ~sStringColumn() = default;
+
+        uint32_t Size();
+        void     Render( int aRow, ImVec2 aCellSize );
+    };
+
     struct sTableData
     {
         virtual int CountRows() = 0;

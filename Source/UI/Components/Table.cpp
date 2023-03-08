@@ -87,4 +87,21 @@ namespace SE::Core
         ImGui::Text( lText.c_str() );
     }
 
+
+    sStringColumn::sStringColumn( std::string aHeader, float aInitialSize )
+        : sTableColumn{ aHeader, aInitialSize }
+    {
+    }
+
+    uint32_t sStringColumn::Size() { return mData.size(); }
+
+    void sStringColumn::Render( int aRow, ImVec2 aSize )
+    {
+        auto const &lTextSize = ImGui::CalcTextSize( mData[aRow].c_str() );
+
+        // ImVec2 lPos = ImGui::GetCursorPos() + ImVec2{ aSize.x - lTextSize.x, ( aSize.y - lTextSize.y ) * 0.5f };
+        // ImGui::SetCursorPos( lPos );
+        ImGui::Text( mData[aRow].c_str() );
+    }
+
 } // namespace SE::Core
