@@ -48,13 +48,6 @@ namespace SE::Core
         void     Render( int aRow, ImVec2 aCellSize );
     };
 
-    struct sTableData
-    {
-        virtual int CountRows() = 0;
-
-        virtual void *Get( int row, int column ) = 0;
-    };
-
     class UITable : public UIComponent
     {
       public:
@@ -69,7 +62,6 @@ namespace SE::Core
 
       protected:
         std::vector<Ref<sTableColumn>> mColumns;
-        Ref<sTableData>                mData;
 
       protected:
         float mRowHeight = 15.0f;
