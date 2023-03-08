@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 namespace SE::OtdrEditor
 {
     enum class eEventType : int32_t
@@ -11,6 +14,7 @@ namespace SE::OtdrEditor
         EndOfAnalysis   = 4,
         ContinuousFiber = 5
     };
+    std::string ToString(eEventType aType);
 
     enum class eEventStatus : int32_t
     {
@@ -39,6 +43,7 @@ namespace SE::OtdrEditor
         InjectionReference        = 1 << 21,
         OverEstimatedLoss         = 1 << 22 //
     };
+    std::vector<std::string> ToString(int32_t aStatus);
 
     enum class eReflectanceType : int32_t
     {
@@ -46,6 +51,7 @@ namespace SE::OtdrEditor
         UnidirectionalForward  = 1,
         UnidirectionalBackward = 2
     };
+    std::string ToString(eReflectanceType aStatus);
 
     enum class eLinkElementStatus : int32_t
     {
@@ -65,6 +71,8 @@ namespace SE::OtdrEditor
         NewMonitoringEvent     = 4096,
         InternalEvent          = 8192
     };
+    
+    std::vector<std::string> LinkStatusToString(int32_t aStatus);
 
     enum class eLinkElementType : int32_t
     {
@@ -82,6 +90,7 @@ namespace SE::OtdrEditor
         TestEquipment      = 11,
         UnbalancedSplitter = 12
     };
+    std::string ToString(eLinkElementType aStatus);
 
     enum ePassFail
     {
