@@ -46,6 +46,9 @@ namespace SE::Core
                 {
                     ImGui::TableNextRow();
 
+                    if( mRowBackgroundColor.size() > 0 )
+                        ImGui::TableSetBgColor( ImGuiTableBgTarget_RowBg0, mRowBackgroundColor[lRow] );
+
                     int lColumn = 0;
                     for( const auto &lColumnData : mColumns )
                     {
@@ -53,7 +56,14 @@ namespace SE::Core
 
                         float lWidth = lThisTable->Columns[lColumn].WorkMaxX - lThisTable->Columns[lColumn].WorkMinX;
 
+                        if( lThisTable->RowCellDataCurrent < 0 ||
+                            lThisTable->RowCellData[lThisTable->RowCellDataCurrent].Column != lThisTable->CurrentColumn )
+                            lThisTable->RowCellDataCurrent++;
+                        auto lBgColor = lThisTable->RowCellData[lThisTable->RowCellDataCurrent].BgColor;
+                        if( lColumnData->mBackgroundColor.size() > 0 )
+                            ImGui::TableSetBgColor( ImGuiTableBgTarget_CellBg, lColumnData->mBackgroundColor[lRow] );
                         lColumnData->Render( lRow, ImVec2{ lWidth, mRowHeight } );
+                        if( lColumnData->mBackgroundColor.size() > 0 ) ImGui::TableSetBgColor( ImGuiTableBgTarget_CellBg, lBgColor );
 
                         lColumn++;
                     }
@@ -86,7 +96,6 @@ namespace SE::Core
         ImGui::SetCursorPos( lPos );
         ImGui::Text( lText.c_str() );
     }
-
 
     sStringColumn::sStringColumn( std::string aHeader, float aInitialSize )
         : sTableColumn{ aHeader, aInitialSize }
