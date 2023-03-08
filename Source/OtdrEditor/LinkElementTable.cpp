@@ -10,13 +10,12 @@
 
 namespace SE::OtdrEditor
 {
-
     using namespace SE::Core;
 
     UILinkElementTable::UILinkElementTable()
         : UITable()
     {
-        SetRowHeight( 30.0f );
+        SetRowHeight( 20.0f );
 
         mWavelength = New<sFloat64Column>( "Wavelength", 75.0f, "{:.1f} nm", "N.a.N." );
         AddColumn( mWavelength );
@@ -33,35 +32,14 @@ namespace SE::OtdrEditor
         mDiagnosicCount = New<sFloat64Column>( "\xef\x86\x88", 75.0f, "{:.3f}", "N.a.N." );
         AddColumn( mDiagnosicCount );
 
-        mPreviousFiberSectionA = New<sFloat64Column>( "mPreviousFiberSectionA", 75.0f, "{:.3f} km", "N.a.N." );
-        AddColumn( mPreviousFiberSectionA );
-
-        mPreviousFiberSectionB = New<sFloat64Column>( "mPreviousFiberSectionB", 75.0f, "{:.3f} km", "N.a.N." );
-        AddColumn( mPreviousFiberSectionB );
-
-        mPreviousFiberSectionLength = New<sFloat64Column>( "mPreviousFiberSectionLength", 75.0f, "{:.3f} km", "N.a.N." );
-        AddColumn( mPreviousFiberSectionLength );
-
-        mPreviousFiberSectionLoss = New<sFloat64Column>( "mPreviousFiberSectionLoss", 75.0f, "{:.3f} km", "N.a.N." );
-        AddColumn( mPreviousFiberSectionLoss );
-
-        mPreviousFiberSectionAttenuation = New<sFloat64Column>( "mPreviousFiberSectionAttenuation", 75.0f, "{:.3f} dB/km", "N.a.N." );
-        AddColumn( mPreviousFiberSectionAttenuation );
-
         mLoss = New<sFloat64Column>( "Loss", 75.0f, "{:.3f} dB", "N.a.N." );
         AddColumn( mLoss );
-
-        // mLossPassFail = New<sFloat64Column>( "LossPF", 75.0f, "{:.3f}", "N.a.N." );
-        // AddColumn( mLossPassFail );
 
         mLossError = New<sFloat64Column>( "Loss Error", 75.0f, "{:.3f} dB", "N.a.N." );
         AddColumn( mLossError );
 
         mReflectance = New<sFloat64Column>( "Reflectance", 75.0f, "{:.3f} dB", "N.a.N." );
         AddColumn( mReflectance );
-
-        // mReflectancePassFail = New<sFloat64Column>( "ReflectancePF", 75.0f, "{:.3f}", "N.a.N." );
-        // AddColumn( mReflectancePassFail );
 
         mCurveLevelColumn = New<sFloat64Column>( "Level", 75.0f, "{:.3f} dB", "N.a.N." );
         AddColumn( mCurveLevelColumn );
@@ -100,23 +78,6 @@ namespace SE::OtdrEditor
 
         mPositionColumn->mData.clear();
         for( auto const &lE : mEventDataVector ) mPositionColumn->mData.push_back( lE.mPosition * 0.001f );
-
-        mPreviousFiberSectionA->mData.clear();
-        for( auto const &lE : mEventDataVector ) mPreviousFiberSectionA->mData.push_back( lE.mPreviousFiberSectionA * 0.001f );
-
-        mPreviousFiberSectionB->mData.clear();
-        for( auto const &lE : mEventDataVector ) mPreviousFiberSectionB->mData.push_back( lE.mPreviousFiberSectionB * 0.001f );
-
-        mPreviousFiberSectionLength->mData.clear();
-        for( auto const &lE : mEventDataVector )
-            mPreviousFiberSectionLength->mData.push_back( lE.mPreviousFiberSectionLength * 0.001f );
-
-        mPreviousFiberSectionLoss->mData.clear();
-        for( auto const &lE : mEventDataVector ) mPreviousFiberSectionLoss->mData.push_back( lE.mPreviousFiberSectionLoss * 0.001f );
-
-        mPreviousFiberSectionAttenuation->mData.clear();
-        for( auto const &lE : mEventDataVector )
-            mPreviousFiberSectionAttenuation->mData.push_back( lE.mPreviousFiberSectionAttenuation * 0.001f );
 
         mLoss->mData.clear();
         for( auto const &lE : mEventDataVector )
@@ -162,5 +123,4 @@ namespace SE::OtdrEditor
         mReflectanceType->mData.clear();
         for( auto const &lE : mEventDataVector ) mReflectanceType->mData.push_back( ToString( lE.mReflectanceType ) );
     }
-
 } // namespace SE::OtdrEditor
