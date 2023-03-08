@@ -18,33 +18,33 @@ namespace SE::OtdrEditor
     using namespace SE::Core;
     struct sLinkElement
     {
-        int                mRowIndex;
-        int                mLinkIndex;
-        int                mEventIndex;
-        eLinkElementType   mType;
-        eLinkElementStatus mStatus;
-        int                mDiagnosicCount;
-        double             mPosition;
-        double             mWavelength;
-        bool               mIsTwoByNSplitter;
-        int                mSplitterRatio;
-        double             mRatio;
-        bool               mChanged;
-        double             mPreviousFiberSectionA;
-        double             mPreviousFiberSectionB;
-        double             mPreviousFiberSectionLength;
-        double             mPreviousFiberSectionLoss;
-        double             mPreviousFiberSectionAttenuation;
-        double             mLoss;
-        double             mLossError;
-        double             mReflectance;
-        double             mCurveLevel;
-        double             mPositionTolerance;
-        eEventType         mEventType;
-        eEventStatus       mEventStatus;
-        eReflectanceType   mReflectanceType;
-        ePassFail          mLossPassFail;
-        ePassFail          mReflectancePassFail;
+        int              mRowIndex;
+        int              mLinkIndex;
+        int              mEventIndex;
+        eLinkElementType mType;
+        int32_t          mStatus;
+        int              mDiagnosicCount;
+        double           mPosition;
+        double           mWavelength;
+        bool             mIsTwoByNSplitter;
+        int              mSplitterRatio;
+        double           mRatio;
+        bool             mChanged;
+        double           mPreviousFiberSectionA;
+        double           mPreviousFiberSectionB;
+        double           mPreviousFiberSectionLength;
+        double           mPreviousFiberSectionLoss;
+        double           mPreviousFiberSectionAttenuation;
+        double           mLoss;
+        double           mLossError;
+        double           mReflectance;
+        double           mCurveLevel;
+        double           mPositionTolerance;
+        eEventType       mEventType;
+        int32_t          mEventStatus;
+        eReflectanceType mReflectanceType;
+        ePassFail        mLossPassFail;
+        ePassFail        mReflectancePassFail;
     };
 
     class UILinkElementTable : public UITable
@@ -59,7 +59,7 @@ namespace SE::OtdrEditor
 
       protected:
         Ref<sStringColumn>  mType;
-        Ref<sFloat64Column> mStatus;
+        Ref<sStringColumn>  mStatus;
         Ref<sFloat64Column> mDiagnosicCount;
         Ref<sFloat64Column> mWavelength;
         Ref<sFloat64Column> mPositionColumn;
@@ -76,7 +76,7 @@ namespace SE::OtdrEditor
         Ref<sFloat64Column> mCurveLevelColumn;
         Ref<sFloat64Column> mPositionTolerance;
         Ref<sStringColumn>  mEventType;
-        Ref<sFloat64Column> mEventStatus;
+        Ref<sStringColumn>  mEventStatus;
         Ref<sStringColumn>  mReflectanceType;
 
         std::vector<sLinkElement> mEventDataVector;
