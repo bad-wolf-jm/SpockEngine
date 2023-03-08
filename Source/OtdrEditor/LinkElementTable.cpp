@@ -17,16 +17,16 @@ namespace SE::OtdrEditor
     UILinkElementTable::UILinkElementTable()
         : UITable()
     {
-        SetRowHeight( 20.0f );
+        SetRowHeight( 25.0f );
+
+        mWavelength = New<sFloat64Column>( "Wavelength", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mWavelength );
 
         mType = New<sStringColumn>( "Type", 75.0f );
         AddColumn( mType );
 
         mStatus = New<sFloat64Column>( "Status", 75.0f, "{:.3f}", "N.a.N." );
         AddColumn( mStatus );
-
-        mWavelength = New<sFloat64Column>( "Wavelength", 75.0f, "{:.1f} nm", "N.a.N." );
-        AddColumn( mWavelength );
 
         mPositionColumn = New<sFloat64Column>( "Position", 75.0f, "{:.3f} km", "N.a.N." );
         AddColumn( mPositionColumn );
@@ -84,6 +84,10 @@ namespace SE::OtdrEditor
     void UILinkElementTable::SetData( std::vector<sLinkElement> const &aData )
     {
         mEventDataVector = std::move( aData );
+
+        mRowBackgroundColor.clear();
+        for( auto const &lE : mEventDataVector ) 
+            mRowBackgroundColor.push_back( IM_COL32(10,10,10,255 * (lE.mLinkIndex % 2)) );
 
         mType->mData.clear();
         for( auto const &lE : mEventDataVector ) mType->mData.push_back( ToString(lE.mType) );

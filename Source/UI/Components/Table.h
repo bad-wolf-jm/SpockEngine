@@ -9,8 +9,10 @@ namespace SE::Core
         std::string mHeader;
         float       mInitialSize = 10.0f;
 
+        std::vector<uint32_t> mBackgroundColor;
+
         sTableColumn() = default;
-        sTableColumn(std::string aHeader, float aInitialSize);
+        sTableColumn( std::string aHeader, float aInitialSize );
 
         ~sTableColumn() = default;
 
@@ -61,6 +63,8 @@ namespace SE::Core
 
         void AddColumn( Ref<sTableColumn> aColumn );
         void SetRowHeight( float aRowHeight );
+
+        std::vector<uint32_t> mRowBackgroundColor;
 
       protected:
         std::vector<Ref<sTableColumn>> mColumns;
