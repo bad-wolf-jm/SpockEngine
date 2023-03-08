@@ -235,11 +235,11 @@ namespace SE::OtdrEditor
             }
             ImGui::End();
 
-            if( ImGui::Begin( "iOlmData_XXX", &pOpen, ImGuiWindowFlags_None ) )
-            {
-                mEventTable.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
-            }
-            ImGui::End();
+            // if( ImGui::Begin( "iOlmData_XXX", &pOpen, ImGuiWindowFlags_None ) )
+            // {
+            //     mEventTable.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+            // }
+            // ImGui::End();
 
             if( ImGui::Begin( "iOlmData_LinkElements", &pOpen, ImGuiWindowFlags_None ) )
             {

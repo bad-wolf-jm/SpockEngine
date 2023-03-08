@@ -14,7 +14,7 @@ namespace SE::OtdrEditor
         EndOfAnalysis   = 4,
         ContinuousFiber = 5
     };
-    std::string ToString(eEventType aType);
+    std::string ToString( eEventType aType );
 
     enum class eEventStatus : int32_t
     {
@@ -43,7 +43,7 @@ namespace SE::OtdrEditor
         InjectionReference        = 1 << 21,
         OverEstimatedLoss         = 1 << 22 //
     };
-    std::vector<std::string> ToString(int32_t aStatus);
+    std::vector<std::string> ToString( int32_t aStatus );
 
     enum class eReflectanceType : int32_t
     {
@@ -51,7 +51,7 @@ namespace SE::OtdrEditor
         UnidirectionalForward  = 1,
         UnidirectionalBackward = 2
     };
-    std::string ToString(eReflectanceType aStatus);
+    std::string ToString( eReflectanceType aStatus );
 
     enum class eLinkElementStatus : int32_t
     {
@@ -71,8 +71,8 @@ namespace SE::OtdrEditor
         NewMonitoringEvent     = 4096,
         InternalEvent          = 8192
     };
-    
-    std::vector<std::string> LinkStatusToString(int32_t aStatus);
+
+    std::vector<std::string> LinkStatusToString( int32_t aStatus );
 
     enum class eLinkElementType : int32_t
     {
@@ -90,12 +90,16 @@ namespace SE::OtdrEditor
         TestEquipment      = 11,
         UnbalancedSplitter = 12
     };
-    std::string ToString(eLinkElementType aStatus);
+    std::string ToString( eLinkElementType aStatus );
 
-    enum ePassFail
+    enum class ePassFail : int32_t
     {
+        NONE,
+        RISK,
         PASS,
-        FAIL
+        PASS_WITH_RISK,
+        FAIL,
+        FAIL_WITH_RISK
     };
 
 } // namespace SE::OtdrEditor
