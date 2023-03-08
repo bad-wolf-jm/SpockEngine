@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <locale>
+#include <numeric>
 
 #include "Core/Profiling/BlockTimer.h"
 
@@ -23,7 +24,7 @@ namespace SE::OtdrEditor
         mType = New<sStringColumn>( "Type", 75.0f );
         AddColumn( mType );
 
-        mStatus = New<sFloat64Column>( "Status", 75.0f, "{:.3f}", "N.a.N." );
+        mStatus = New<sStringColumn>( "Status", 75.0f );
         AddColumn( mStatus );
 
         mPositionColumn = New<sFloat64Column>( "Position", 75.0f, "{:.3f} km", "N.a.N." );
@@ -35,22 +36,16 @@ namespace SE::OtdrEditor
         mLoss = New<sFloat64Column>( "Loss", 75.0f, "{:.3f} dB", "N.a.N." );
         AddColumn( mLoss );
 
-        mLossError = New<sFloat64Column>( "Loss Error", 75.0f, "{:.3f} dB", "N.a.N." );
-        AddColumn( mLossError );
-
         mReflectance = New<sFloat64Column>( "Reflectance", 75.0f, "{:.3f} dB", "N.a.N." );
         AddColumn( mReflectance );
 
         mCurveLevelColumn = New<sFloat64Column>( "Level", 75.0f, "{:.3f} dB", "N.a.N." );
         AddColumn( mCurveLevelColumn );
 
-        mPositionTolerance = New<sFloat64Column>( "mPositionTolerance", 75.0f, "{:.3f} km", "N.a.N.m" );
-        AddColumn( mPositionTolerance );
-
         mEventType = New<sStringColumn>( "mEventType", 75.0f );
         AddColumn( mEventType );
 
-        mEventStatus = New<sFloat64Column>( "mEventStatus", 75.0f, "{:.3f}", "N.a.N." );
+        mEventStatus = New<sStringColumn>( "mEventStatus", 75.0f );
         AddColumn( mEventStatus );
 
         mReflectanceType = New<sStringColumn>( "mReflectanceType", 75.0f );
@@ -61,6 +56,14 @@ namespace SE::OtdrEditor
     {
         mEventDataVector = std::move( aData );
 
+        auto StringJoin = []( std::vector<std::string> aList )
+        {
+            return aList.empty() ? "N/A"
+                                 : std::accumulate( aList.begin(), aList.end(), std::string(),
+                                                    []( const std::string &a, const std::string &b ) -> std::string
+                                                    { return a + ( a.length() > 0 ? ", " : "" ) + b; } );
+        };
+
         mRowBackgroundColor.clear();
         for( auto const &lE : mEventDataVector ) mRowBackgroundColor.push_back( IM_COL32( 10, 10, 10, 255 * ( lE.mLinkIndex % 2 ) ) );
 
@@ -68,7 +71,7 @@ namespace SE::OtdrEditor
         for( auto const &lE : mEventDataVector ) mType->mData.push_back( ToString( lE.mType ) );
 
         mStatus->mData.clear();
-        for( auto const &lE : mEventDataVector ) mStatus->mData.push_back( 0.0f );
+        for( auto const &lE : mEventDataVector ) mStatus->mData.push_back( StringJoin( ToString( lE.mStatus ) ) );
 
         mDiagnosicCount->mData.clear();
         for( auto const &lE : mEventDataVector ) mDiagnosicCount->mData.push_back( lE.mDiagnosicCount );
@@ -86,15 +89,11 @@ namespace SE::OtdrEditor
 
             if( lE.mLossPassFail == ePassFail::PASS )
                 mLoss->mForegroundColor.emplace_back( IM_COL32( 0, 255, 0, 200 ) );
-            else if ( lE.mLossPassFail == ePassFail::FAIL )
+            else if( lE.mLossPassFail == ePassFail::FAIL )
                 mLoss->mForegroundColor.emplace_back( IM_COL32( 255, 0, 0, 200 ) );
             else
                 mLoss->mForegroundColor.emplace_back( IM_COL32( 0, 0, 0, 0 ) );
-
         }
-
-        mLossError->mData.clear();
-        for( auto const &lE : mEventDataVector ) mLossError->mData.push_back( 0.0f );
 
         mReflectance->mData.clear();
         for( auto const &lE : mEventDataVector )
@@ -102,7 +101,7 @@ namespace SE::OtdrEditor
             mReflectance->mData.push_back( lE.mReflectance );
             if( lE.mReflectancePassFail == ePassFail::PASS )
                 mReflectance->mForegroundColor.emplace_back( IM_COL32( 0, 255, 0, 200 ) );
-            else if ( lE.mReflectancePassFail == ePassFail::FAIL )
+            else if( lE.mReflectancePassFail == ePassFail::FAIL )
                 mReflectance->mForegroundColor.emplace_back( IM_COL32( 255, 0, 0, 200 ) );
             else
                 mReflectance->mForegroundColor.emplace_back( IM_COL32( 0, 0, 0, 0 ) );
@@ -111,14 +110,11 @@ namespace SE::OtdrEditor
         mCurveLevelColumn->mData.clear();
         for( auto const &lE : mEventDataVector ) mCurveLevelColumn->mData.push_back( lE.mCurveLevel );
 
-        mPositionTolerance->mData.clear();
-        for( auto const &lE : mEventDataVector ) mPositionTolerance->mData.push_back( lE.mPositionTolerance );
-
         mEventType->mData.clear();
         for( auto const &lE : mEventDataVector ) mEventType->mData.push_back( ToString( lE.mEventType ) );
 
         mEventStatus->mData.clear();
-        for( auto const &lE : mEventDataVector ) mEventStatus->mData.push_back( 0.0f );
+        for( auto const &lE : mEventDataVector ) mEventStatus->mData.push_back( StringJoin( ToString( lE.mEventStatus ) ) );
 
         mReflectanceType->mData.clear();
         for( auto const &lE : mEventDataVector ) mReflectanceType->mData.push_back( ToString( lE.mReflectanceType ) );
