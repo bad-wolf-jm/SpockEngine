@@ -315,66 +315,6 @@ namespace SE::OtdrEditor
             mTracePlot.Add( lPlot );
         }
 
-        MonoObject *lEventData = mDataInstance->CallMethod( "GetEvents" );
-        mEventDataVector       = AsVector<sEvent>( lEventData );
-
-        mPositionColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mPositionColumn->mData.push_back( lE.mPosition * 0.001f );
-
-        mLossColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mLossColumn->mData.push_back( lE.mLoss );
-
-        mReflectanceColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mReflectanceColumn->mData.push_back( lE.mReflectance );
-
-        mEstimatedLossColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mEstimatedLossColumn->mData.push_back( lE.mEstimatedLoss );
-
-        mReflectanceColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mReflectanceColumn->mData.push_back( lE.mReflectance );
-
-        mWavelengthColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mWavelengthColumn->mData.push_back( lE.mWavelength );
-
-        mCursorAColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mCursorAColumn->mData.push_back( lE.mCursorA * 0.001f );
-
-        mCursorBColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mCursorBColumn->mData.push_back( lE.mCursorB * 0.001f );
-
-        mSubCursorAColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mSubCursorAColumn->mData.push_back( lE.mSubCursorA * 0.001f );
-
-        mSubCursorBColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mSubCursorBColumn->mData.push_back( lE.mSubCursorB * 0.001f );
-
-        mCurveLevelColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mCurveLevelColumn->mData.push_back( lE.mCurveLevel );
-
-        mLossAtAColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mLossAtAColumn->mData.push_back( lE.mLossAtA );
-
-        mLossAtBColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mLossAtBColumn->mData.push_back( lE.mLossAtB );
-
-        mEstimatedCurveLevelColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mEstimatedCurveLevelColumn->mData.push_back( lE.mEstimatedCurveLevel );
-
-        mEstimatedEndLevelColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mEstimatedEndLevelColumn->mData.push_back( lE.mEstimatedEndLevel );
-
-        mEndNoiseLevelColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mEndNoiseLevelColumn->mData.push_back( lE.mEndNoiseLevel );
-
-        mPeakPulseWidth->mData.clear();
-        for( auto const &lE : mEventDataVector ) mPeakPulseWidth->mData.push_back( lE.mPeakPulseWidth );
-
-        mPeakPower->mData.clear();
-        for( auto const &lE : mEventDataVector ) mPeakPower->mData.push_back( lE.mPeakPower );
-
-        mPeakSNR->mData.clear();
-        for( auto const &lE : mEventDataVector ) mPeakSNR->mData.push_back( lE.mPeakSNR );
-
         MonoObject *lLinkElementData   = mDataInstance->CallMethod( "GetLinkElements" );
         auto        lLinkElementVector = AsVector<sLinkElement>( lLinkElementData );
         mLinkElementTable.SetData(lLinkElementVector);
@@ -401,7 +341,6 @@ namespace SE::OtdrEditor
                                                         "OLM Files (*.iolm)\0*.iolm\0All Files (*.*)\0*.*\0" );
 
                 LoadIOlmData( fs::path( lFilePath.value() ) );
-                // mWorld->Load( fs::path( lFilePath.value() ) );
             }
 
             if( UI::MenuItem( fmt::format( "{} Save", ICON_FA_ARCHIVE ).c_str(), NULL ) )
