@@ -23,8 +23,11 @@ namespace SE::OtdrEditor
         AddColumn( mType );
 
         mStatus = New<sFloat64Column>( "Status", 75.0f, "{:.3f}", "N.a.N." );
-
         AddColumn( mStatus );
+
+        mWavelength = New<sFloat64Column>( "Wavelength", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mWavelength );
+
         mPositionColumn = New<sFloat64Column>( "Position", 75.0f, "{:.3f} km", "N.a.N." );
         AddColumn( mPositionColumn );
 
@@ -90,6 +93,9 @@ namespace SE::OtdrEditor
 
         mDiagnosicCount->mData.clear();
         for( auto const &lE : mEventDataVector ) mDiagnosicCount->mData.push_back( lE.mDiagnosicCount );
+
+        mWavelength->mData.clear();
+        for( auto const &lE : mEventDataVector ) mWavelength->mData.push_back( lE.mWavelength * 1e9 );
 
         mPositionColumn->mData.clear();
         for( auto const &lE : mEventDataVector ) mPositionColumn->mData.push_back( lE.mPosition * 0.001f );
