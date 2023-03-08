@@ -10,6 +10,7 @@ namespace SE::Core
         float       mInitialSize = 10.0f;
 
         std::vector<uint32_t> mBackgroundColor;
+        std::vector<uint32_t> mForegroundColor;
 
         sTableColumn() = default;
         sTableColumn( std::string aHeader, float aInitialSize );

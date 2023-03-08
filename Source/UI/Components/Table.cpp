@@ -45,7 +45,6 @@ namespace SE::Core
                 for( int lRow = lRowClipping.DisplayStart; lRow < lRowClipping.DisplayEnd; lRow++ )
                 {
                     ImGui::TableNextRow();
-
                     if( mRowBackgroundColor.size() > 0 )
                         ImGui::TableSetBgColor( ImGuiTableBgTarget_RowBg0, mRowBackgroundColor[lRow] );
 
@@ -92,9 +91,18 @@ namespace SE::Core
 
         auto const &lTextSize = ImGui::CalcTextSize( lText.c_str() );
 
-        ImVec2 lPos = ImGui::GetCursorPos() + ImVec2{ aSize.x - lTextSize.x, ( aSize.y - lTextSize.y ) * 0.5f };
+        ImVec2 lPrevPos = ImGui::GetCursorPos();
+        ImVec2 lPos     = ImGui::GetCursorPos() + ImVec2{ aSize.x - lTextSize.x, ( aSize.y - lTextSize.y ) * 0.5f };
         ImGui::SetCursorPos( lPos );
+
+        if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) )
+            ImGui::PushStyleColor( ImGuiCol_Text, mForegroundColor[aRow] );
         ImGui::Text( lText.c_str() );
+        if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) ) ImGui::PopStyleColor();
+
+        ImVec2 lNewPos = ImGui::GetCursorPos();
+        lNewPos.y      = lPrevPos.y + aSize.y;
+        ImGui::SetCursorPos( lNewPos );
     }
 
     sStringColumn::sStringColumn( std::string aHeader, float aInitialSize )
@@ -108,9 +116,18 @@ namespace SE::Core
     {
         auto const &lTextSize = ImGui::CalcTextSize( mData[aRow].c_str() );
 
-        // ImVec2 lPos = ImGui::GetCursorPos() + ImVec2{ aSize.x - lTextSize.x, ( aSize.y - lTextSize.y ) * 0.5f };
-        // ImGui::SetCursorPos( lPos );
+        ImVec2 lPrevPos = ImGui::GetCursorPos();
+        ImVec2 lPos     = ImGui::GetCursorPos() + ImVec2{ 0.0f, ( aSize.y - lTextSize.y ) * 0.5f };
+        ImGui::SetCursorPos( lPos );
+
+        if( ( mForegroundColor.size() > 0 ) && ( mForegroundColor[aRow] != 0u ) )
+            ImGui::PushStyleColor( ImGuiCol_Text, mForegroundColor[aRow] );
         ImGui::Text( mData[aRow].c_str() );
+        if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) ) ImGui::PopStyleColor();
+
+        ImVec2 lNewPos = ImGui::GetCursorPos();
+        lNewPos.y      = lPrevPos.y + aSize.y;
+        ImGui::SetCursorPos( lNewPos );
     }
 
 } // namespace SE::Core

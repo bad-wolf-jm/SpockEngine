@@ -12,12 +12,11 @@ namespace SE::OtdrEditor
 {
 
     using namespace SE::Core;
-    // using namespace SE::Core::EntityComponentSystem::Components;
 
     UILinkElementTable::UILinkElementTable()
         : UITable()
     {
-        SetRowHeight( 25.0f );
+        SetRowHeight( 30.0f );
 
         mWavelength = New<sFloat64Column>( "Wavelength", 75.0f, "{:.1f} nm", "N.a.N." );
         AddColumn( mWavelength );
@@ -31,7 +30,7 @@ namespace SE::OtdrEditor
         mPositionColumn = New<sFloat64Column>( "Position", 75.0f, "{:.3f} km", "N.a.N." );
         AddColumn( mPositionColumn );
 
-        mDiagnosicCount = New<sFloat64Column>( "Diagnostic", 75.0f, "{:.3f}",  "N.a.N." );
+        mDiagnosicCount = New<sFloat64Column>( "\xef\x86\x88", 75.0f, "{:.3f}", "N.a.N." );
         AddColumn( mDiagnosicCount );
 
         mPreviousFiberSectionA = New<sFloat64Column>( "mPreviousFiberSectionA", 75.0f, "{:.3f} km", "N.a.N." );
@@ -46,15 +45,14 @@ namespace SE::OtdrEditor
         mPreviousFiberSectionLoss = New<sFloat64Column>( "mPreviousFiberSectionLoss", 75.0f, "{:.3f} km", "N.a.N." );
         AddColumn( mPreviousFiberSectionLoss );
 
-        mPreviousFiberSectionAttenuation =
-            New<sFloat64Column>( "mPreviousFiberSectionAttenuation", 75.0f, "{:.3f} dB/km", "N.a.N." );
+        mPreviousFiberSectionAttenuation = New<sFloat64Column>( "mPreviousFiberSectionAttenuation", 75.0f, "{:.3f} dB/km", "N.a.N." );
         AddColumn( mPreviousFiberSectionAttenuation );
 
         mLoss = New<sFloat64Column>( "Loss", 75.0f, "{:.3f} dB", "N.a.N." );
         AddColumn( mLoss );
 
-        mLossPassFail = New<sFloat64Column>( "LossPF", 75.0f, "{:.3f}", "N.a.N." );
-        AddColumn( mLossPassFail );
+        // mLossPassFail = New<sFloat64Column>( "LossPF", 75.0f, "{:.3f}", "N.a.N." );
+        // AddColumn( mLossPassFail );
 
         mLossError = New<sFloat64Column>( "Loss Error", 75.0f, "{:.3f} dB", "N.a.N." );
         AddColumn( mLossError );
@@ -62,8 +60,8 @@ namespace SE::OtdrEditor
         mReflectance = New<sFloat64Column>( "Reflectance", 75.0f, "{:.3f} dB", "N.a.N." );
         AddColumn( mReflectance );
 
-        mReflectancePassFail = New<sFloat64Column>( "ReflectancePF", 75.0f, "{:.3f}", "N.a.N." );
-        AddColumn( mReflectancePassFail );
+        // mReflectancePassFail = New<sFloat64Column>( "ReflectancePF", 75.0f, "{:.3f}", "N.a.N." );
+        // AddColumn( mReflectancePassFail );
 
         mCurveLevelColumn = New<sFloat64Column>( "Level", 75.0f, "{:.3f} dB", "N.a.N." );
         AddColumn( mCurveLevelColumn );
@@ -86,11 +84,10 @@ namespace SE::OtdrEditor
         mEventDataVector = std::move( aData );
 
         mRowBackgroundColor.clear();
-        for( auto const &lE : mEventDataVector ) 
-            mRowBackgroundColor.push_back( IM_COL32(10,10,10,255 * (lE.mLinkIndex % 2)) );
+        for( auto const &lE : mEventDataVector ) mRowBackgroundColor.push_back( IM_COL32( 10, 10, 10, 255 * ( lE.mLinkIndex % 2 ) ) );
 
         mType->mData.clear();
-        for( auto const &lE : mEventDataVector ) mType->mData.push_back( ToString(lE.mType) );
+        for( auto const &lE : mEventDataVector ) mType->mData.push_back( ToString( lE.mType ) );
 
         mStatus->mData.clear();
         for( auto const &lE : mEventDataVector ) mStatus->mData.push_back( 0.0f );
@@ -122,19 +119,33 @@ namespace SE::OtdrEditor
             mPreviousFiberSectionAttenuation->mData.push_back( lE.mPreviousFiberSectionAttenuation * 0.001f );
 
         mLoss->mData.clear();
-        for( auto const &lE : mEventDataVector ) mLoss->mData.push_back( lE.mLoss * 0.001f );
+        for( auto const &lE : mEventDataVector )
+        {
+            mLoss->mData.push_back( lE.mLoss );
 
-        mLossPassFail->mData.clear();
-        for( auto const &lE : mEventDataVector ) mLossPassFail->mData.push_back( 0.0f );
+            if( lE.mLossPassFail == ePassFail::PASS )
+                mLoss->mForegroundColor.emplace_back( IM_COL32( 0, 255, 0, 200 ) );
+            else if ( lE.mLossPassFail == ePassFail::FAIL )
+                mLoss->mForegroundColor.emplace_back( IM_COL32( 255, 0, 0, 200 ) );
+            else
+                mLoss->mForegroundColor.emplace_back( IM_COL32( 0, 0, 0, 0 ) );
+
+        }
 
         mLossError->mData.clear();
         for( auto const &lE : mEventDataVector ) mLossError->mData.push_back( 0.0f );
 
         mReflectance->mData.clear();
-        for( auto const &lE : mEventDataVector ) mReflectance->mData.push_back( lE.mReflectance );
-
-        mReflectancePassFail->mData.clear();
-        for( auto const &lE : mEventDataVector ) mReflectancePassFail->mData.push_back( 0.0f );
+        for( auto const &lE : mEventDataVector )
+        {
+            mReflectance->mData.push_back( lE.mReflectance );
+            if( lE.mReflectancePassFail == ePassFail::PASS )
+                mReflectance->mForegroundColor.emplace_back( IM_COL32( 0, 255, 0, 200 ) );
+            else if ( lE.mReflectancePassFail == ePassFail::FAIL )
+                mReflectance->mForegroundColor.emplace_back( IM_COL32( 255, 0, 0, 200 ) );
+            else
+                mReflectance->mForegroundColor.emplace_back( IM_COL32( 0, 0, 0, 0 ) );
+        }
 
         mCurveLevelColumn->mData.clear();
         for( auto const &lE : mEventDataVector ) mCurveLevelColumn->mData.push_back( lE.mCurveLevel );
@@ -143,13 +154,13 @@ namespace SE::OtdrEditor
         for( auto const &lE : mEventDataVector ) mPositionTolerance->mData.push_back( lE.mPositionTolerance );
 
         mEventType->mData.clear();
-        for( auto const &lE : mEventDataVector ) mEventType->mData.push_back( ToString(lE.mEventType) );
+        for( auto const &lE : mEventDataVector ) mEventType->mData.push_back( ToString( lE.mEventType ) );
 
         mEventStatus->mData.clear();
         for( auto const &lE : mEventDataVector ) mEventStatus->mData.push_back( 0.0f );
 
         mReflectanceType->mData.clear();
-        for( auto const &lE : mEventDataVector ) mReflectanceType->mData.push_back(ToString(lE.mReflectanceType) );
+        for( auto const &lE : mEventDataVector ) mReflectanceType->mData.push_back( ToString( lE.mReflectanceType ) );
     }
 
 } // namespace SE::OtdrEditor
