@@ -19,62 +19,62 @@ namespace SE::OtdrEditor
     {
         SetRowHeight( 20.0f );
 
-        mType = New<sFloat64Column>( "Position", 75.0f, "{:.3f} km", "\xe2\x88\x9e km" );
+        mType = New<sFloat64Column>( "Type", 75.0f, "{:.3f} km", "N.a.N." );
         AddColumn( mType );
 
-        mPositionColumn = New<sFloat64Column>( "Position", 75.0f, "{:.3f} km", "\xe2\x88\x9e km" );
+        mStatus = New<sFloat64Column>( "Status", 75.0f, "{:.3f}", "N.a.N." );
+
+        AddColumn( mStatus );
+        mPositionColumn = New<sFloat64Column>( "Position", 75.0f, "{:.3f} km", "N.a.N." );
         AddColumn( mPositionColumn );
 
-        mStatus = New<sFloat64Column>( "Status", 75.0f, "{:.3f}", "NaN" );
-        AddColumn( mStatus );
-
-        mDiagnosicCount = New<sFloat64Column>( "Diagnostic", 75.0f, "{:.3f}", "NaN" );
+        mDiagnosicCount = New<sFloat64Column>( "Diagnostic", 75.0f, "{:.3f}",  "N.a.N." );
         AddColumn( mDiagnosicCount );
 
-        mPreviousFiberSectionA = New<sFloat64Column>( "mPreviousFiberSectionA", 75.0f, "{:.3f} km", "\xe2\x88\x9e km" );
+        mPreviousFiberSectionA = New<sFloat64Column>( "mPreviousFiberSectionA", 75.0f, "{:.3f} km", "N.a.N." );
         AddColumn( mPreviousFiberSectionA );
 
-        mPreviousFiberSectionB = New<sFloat64Column>( "mPreviousFiberSectionB", 75.0f, "{:.3f} km", "\xe2\x88\x9e km" );
+        mPreviousFiberSectionB = New<sFloat64Column>( "mPreviousFiberSectionB", 75.0f, "{:.3f} km", "N.a.N." );
         AddColumn( mPreviousFiberSectionB );
 
-        mPreviousFiberSectionLength = New<sFloat64Column>( "mPreviousFiberSectionLength", 75.0f, "{:.3f} km", "\xe2\x88\x9e km" );
+        mPreviousFiberSectionLength = New<sFloat64Column>( "mPreviousFiberSectionLength", 75.0f, "{:.3f} km", "N.a.N." );
         AddColumn( mPreviousFiberSectionLength );
 
-        mPreviousFiberSectionLoss = New<sFloat64Column>( "mPreviousFiberSectionLoss", 75.0f, "{:.3f} km", "\xe2\x88\x9e km" );
+        mPreviousFiberSectionLoss = New<sFloat64Column>( "mPreviousFiberSectionLoss", 75.0f, "{:.3f} km", "N.a.N." );
         AddColumn( mPreviousFiberSectionLoss );
 
         mPreviousFiberSectionAttenuation =
-            New<sFloat64Column>( "mPreviousFiberSectionAttenuation", 75.0f, "{:.3f} dB/km", "\xe2\x88\x9e km" );
+            New<sFloat64Column>( "mPreviousFiberSectionAttenuation", 75.0f, "{:.3f} dB/km", "N.a.N." );
         AddColumn( mPreviousFiberSectionAttenuation );
 
-        mLoss = New<sFloat64Column>( "Loss", 75.0f, "{:.3f} dB/km", "\xe2\x88\x9e km" );
+        mLoss = New<sFloat64Column>( "Loss", 75.0f, "{:.3f} dB", "N.a.N." );
         AddColumn( mLoss );
 
-        mLossPassFail = New<sFloat64Column>( "LossPF", 75.0f, "{:.3f} dB/km", "\xe2\x88\x9e km" );
+        mLossPassFail = New<sFloat64Column>( "LossPF", 75.0f, "{:.3f}", "N.a.N." );
         AddColumn( mLossPassFail );
 
-        mLossError = New<sFloat64Column>( "LossPF", 75.0f, "{:.3f} dB/km", "\xe2\x88\x9e km" );
+        mLossError = New<sFloat64Column>( "Loss Error", 75.0f, "{:.3f} dB", "N.a.N." );
         AddColumn( mLossError );
 
-        mReflectance = New<sFloat64Column>( "Reflectance", 75.0f, "{:.3f} dB/km", "\xe2\x88\x9e km" );
+        mReflectance = New<sFloat64Column>( "Reflectance", 75.0f, "{:.3f} dB", "N.a.N." );
         AddColumn( mReflectance );
 
-        mReflectancePassFail = New<sFloat64Column>( "Reflectance", 75.0f, "{:.3f} dB/km", "\xe2\x88\x9e km" );
+        mReflectancePassFail = New<sFloat64Column>( "ReflectancePF", 75.0f, "{:.3f}", "N.a.N." );
         AddColumn( mReflectancePassFail );
 
-        mCurveLevelColumn = New<sFloat64Column>( "Level", 75.0f, "{:.3f} dB/km", "\xe2\x88\x9e km" );
+        mCurveLevelColumn = New<sFloat64Column>( "Level", 75.0f, "{:.3f} dB", "N.a.N." );
         AddColumn( mCurveLevelColumn );
 
-        mPositionTolerance = New<sFloat64Column>( "mPositionTolerance", 75.0f, "{:.3f} dB/km", "\xe2\x88\x9e km" );
+        mPositionTolerance = New<sFloat64Column>( "mPositionTolerance", 75.0f, "{:.3f} km", "N.a.N.m" );
         AddColumn( mPositionTolerance );
 
-        mEventType = New<sFloat64Column>( "mEventType", 75.0f, "{:.3f} dB/km", "\xe2\x88\x9e km" );
+        mEventType = New<sFloat64Column>( "mEventType", 75.0f, "{:.3f}", "N.a.N." );
         AddColumn( mEventType );
 
-        mEventStatus = New<sFloat64Column>( "mEventStatus", 75.0f, "{:.3f} dB/km", "\xe2\x88\x9e km" );
+        mEventStatus = New<sFloat64Column>( "mEventStatus", 75.0f, "{:.3f}", "N.a.N." );
         AddColumn( mEventStatus );
 
-        mReflectanceType = New<sFloat64Column>( "mReflectanceType", 75.0f, "{:.3f} dB/km", "\xe2\x88\x9e km" );
+        mReflectanceType = New<sFloat64Column>( "mReflectanceType", 75.0f, "{:.3f}", "N.a.N." );
         AddColumn( mReflectanceType );
     }
 
@@ -89,7 +89,7 @@ namespace SE::OtdrEditor
         for( auto const &lE : mEventDataVector ) mStatus->mData.push_back( 0.0f );
 
         mDiagnosicCount->mData.clear();
-        for( auto const &lE : mEventDataVector ) mDiagnosicCount->mData.push_back( 0.0f );
+        for( auto const &lE : mEventDataVector ) mDiagnosicCount->mData.push_back( lE.mDiagnosicCount );
 
         mPositionColumn->mData.clear();
         for( auto const &lE : mEventDataVector ) mPositionColumn->mData.push_back( lE.mPosition * 0.001f );
