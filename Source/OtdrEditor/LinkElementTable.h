@@ -25,6 +25,7 @@ namespace SE::OtdrEditor
         eLinkElementStatus mStatus;
         int                mDiagnosicCount;
         double             mPosition;
+        double             mWavelength;
         bool               mIsTwoByNSplitter;
         int                mSplitterRatio;
         double             mRatio;
@@ -60,6 +61,7 @@ namespace SE::OtdrEditor
         Ref<sStringColumn> mType;
         Ref<sFloat64Column> mStatus;
         Ref<sFloat64Column> mDiagnosicCount;
+        Ref<sFloat64Column> mWavelength;
         Ref<sFloat64Column> mPositionColumn;
         Ref<sFloat64Column> mPreviousFiberSectionA;
         Ref<sFloat64Column> mPreviousFiberSectionB;
