@@ -71,7 +71,7 @@ namespace SE::OtdrEditor
         for( auto const &lE : mEventDataVector ) mType->mData.push_back( ToString( lE.mType ) );
 
         mStatus->mData.clear();
-        for( auto const &lE : mEventDataVector ) mStatus->mData.push_back( StringJoin( ToString( lE.mStatus ) ) );
+        for( auto const &lE : mEventDataVector ) mStatus->mData.push_back( StringJoin( LinkStatusToString( lE.mStatus ) ) );
 
         mDiagnosicCount->mData.clear();
         for( auto const &lE : mEventDataVector ) mDiagnosicCount->mData.push_back( lE.mDiagnosicCount );
