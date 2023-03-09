@@ -6,7 +6,7 @@ namespace SE::OtdrEditor
         : UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL )
     {
         mName  = New<UILabel>( aName );
-        mValue = New<UILabel>();
+        mValue = New<UILabel>( "N/A" );
 
         Add( mName.get(), true, false, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         Add( mValue.get(), true, false, eHorizontalAlignment::RIGHT, eVerticalAlignment::CENTER );
@@ -39,6 +39,47 @@ namespace SE::OtdrEditor
         mMeasurementConfigurationPropertyLayout = New<UIBoxLayout>( eBoxLayoutOrientation::VERTICAL );
         mMeasurementConfigurationLayout->Add( nullptr, 25.0f, false, false );
         mMeasurementConfigurationLayout->Add( mMeasurementConfigurationPropertyLayout.get(), true, true );
+        mLaunchFiberLength = New<PropertyValue>( "Launch fiber length:" );
+        mMeasurementConfigurationPropertyLayout->Add( mLaunchFiberLength.get(), 20.0f, false, true );
+        mConditioner = New<PropertyValue>( "Conditioner:" );
+        mMeasurementConfigurationPropertyLayout->Add( mConditioner.get(), 20.0f, false, true );
+        mReceiveFiberLength = New<PropertyValue>( "Receive fiber length:" );
+        mMeasurementConfigurationPropertyLayout->Add( mReceiveFiberLength.get(), 20.0f, false, true );
+        mLoopLength = New<PropertyValue>( "Loop length:" );
+        mMeasurementConfigurationPropertyLayout->Add( mLoopLength.get(), 20.0f, false, true );
+        mConfigurationFiberCode = New<PropertyValue>( "Fiber code:" );
+        mMeasurementConfigurationPropertyLayout->Add( mConfigurationFiberCode.get(), 20.0f, false, true );
+        mIOR = New<PropertyValue>( "IOR:" );
+        mMeasurementConfigurationPropertyLayout->Add( mIOR.get(), 20.0f, false, true );
+        mRBS = New<PropertyValue>( "RBS:" );
+        mMeasurementConfigurationPropertyLayout->Add( mRBS.get(), 20.0f, false, true );
+        mAttenuation = New<PropertyValue>( "Attenuation:" );
+        mMeasurementConfigurationPropertyLayout->Add( mAttenuation.get(), 20.0f, false, true );
+        mWavelengths = New<PropertyValue>( "Wavelengths:" );
+        mMeasurementConfigurationPropertyLayout->Add( mWavelengths.get(), 20.0f, false, true );
+        mDirection = New<PropertyValue>( "Direction:" );
+        mMeasurementConfigurationPropertyLayout->Add( mDirection.get(), 20.0f, false, true );
+        mLoopbackExtract = New<PropertyValue>( "Loopback extract:" );
+        mMeasurementConfigurationPropertyLayout->Add( mLoopbackExtract.get(), 20.0f, false, true );
+        mExpectedLinkElements = New<PropertyValue>( "Exoected link elements:" );
+        mMeasurementConfigurationPropertyLayout->Add( mExpectedLinkElements.get(), 20.0f, false, true );
+        mTopology = New<PropertyValue>( "Topology:" );
+        mMeasurementConfigurationPropertyLayout->Add( mTopology.get(), 20.0f, false, true );
+        mMeasurementType = New<PropertyValue>( "Measurement type:" );
+        mMeasurementConfigurationPropertyLayout->Add( mMeasurementType.get(), 20.0f, false, true );
+        mSequenceType = New<PropertyValue>( "Sequence type:" );
+        mMeasurementConfigurationPropertyLayout->Add( mSequenceType.get(), 20.0f, false, true );
+        mMacrobendThreshold = New<PropertyValue>( "Macrobend threshold:" );
+        mMeasurementConfigurationPropertyLayout->Add( mMacrobendThreshold.get(), 20.0f, false, true );
+        mComment = New<PropertyValue>( "Comment:" );
+        mMeasurementConfigurationPropertyLayout->Add( mComment.get(), 20.0f, false, true );
+        mAdvisorMode = New<PropertyValue>( "Advisor mode:" );
+        mMeasurementConfigurationPropertyLayout->Add( mAdvisorMode.get(), 20.0f, false, true );
+        mDuration = New<PropertyValue>( "Duration:" );
+        mMeasurementConfigurationPropertyLayout->Add( mDuration.get(), 20.0f, false, true );
+        mDate = New<PropertyValue>( "Date:" );
+        mMeasurementConfigurationPropertyLayout->Add( mDate.get(), 20.0f, false, true );
+        Add( mMeasurementConfigurationLayout.get(), false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
 
         mAnalysisResultTitle = New<UILabel>( "Analysis result" );
         mAnalysisResultTitle->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
@@ -109,9 +150,9 @@ namespace SE::OtdrEditor
         mHardwarePropertyLayout->Add( mPCBVersion.get(), 20.0f, false, true );
         mPCBSerialNumber = New<PropertyValue>( "PCB serial number:" );
         mHardwarePropertyLayout->Add( mPCBSerialNumber.get(), 20.0f, false, true );
-        mCPUPCBVersion = New<PropertyValue>( "CPUPCB version:" );
+        mCPUPCBVersion = New<PropertyValue>( "CPU PCB version:" );
         mHardwarePropertyLayout->Add( mCPUPCBVersion.get(), 20.0f, false, true );
-        mCPUPCBSerialNumber = New<PropertyValue>( "CPUPCB serial number:" );
+        mCPUPCBSerialNumber = New<PropertyValue>( "CPU PCB serial number:" );
         mHardwarePropertyLayout->Add( mCPUPCBSerialNumber.get(), 20.0f, false, true );
         mPowerMeterVersion = New<PropertyValue>( "PM version:" );
         mHardwarePropertyLayout->Add( mPowerMeterVersion.get(), 20.0f, false, true );

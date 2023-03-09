@@ -31,29 +31,49 @@ namespace SE::OtdrEditor
         ~MeasurementOverview() = default;
 
       protected:
-        Ref<UILabel> mMeasurementResultTitle;
-        Ref<UIBoxLayout> mMeasurementResultLayout;
-        Ref<UIBoxLayout> mMeasurementResultPropertyLayout;
+        Ref<UILabel>       mMeasurementResultTitle;
+        Ref<UIBoxLayout>   mMeasurementResultLayout;
+        Ref<UIBoxLayout>   mMeasurementResultPropertyLayout;
         Ref<PropertyValue> mOverviewLength;
         Ref<PropertyValue> mLinkLength;
         Ref<PropertyValue> mCompletionStatus;
 
-        Ref<UILabel> mMeasurementConfigurationTitle;
-        Ref<UIBoxLayout> mMeasurementConfigurationLayout;
-        Ref<UIBoxLayout> mMeasurementConfigurationPropertyLayout;
+        Ref<UILabel>       mMeasurementConfigurationTitle;
+        Ref<UIBoxLayout>   mMeasurementConfigurationLayout;
+        Ref<UIBoxLayout>   mMeasurementConfigurationPropertyLayout;
+        Ref<PropertyValue> mLaunchFiberLength;
+        Ref<PropertyValue> mConditioner;
+        Ref<PropertyValue> mReceiveFiberLength;
+        Ref<PropertyValue> mLoopLength;
+        Ref<PropertyValue> mConfigurationFiberCode;
+        Ref<PropertyValue> mIOR;
+        Ref<PropertyValue> mRBS;
+        Ref<PropertyValue> mAttenuation;
+        Ref<PropertyValue> mWavelengths;
+        Ref<PropertyValue> mDirection;
+        Ref<PropertyValue> mLoopbackExtract;
+        Ref<PropertyValue> mExpectedLinkElements;
+        Ref<PropertyValue> mTopology;
+        Ref<PropertyValue> mMeasurementType;
+        Ref<PropertyValue> mSequenceType;
+        Ref<PropertyValue> mMacrobendThreshold;
+        Ref<PropertyValue> mComment;
+        Ref<PropertyValue> mAdvisorMode;
+        Ref<PropertyValue> mDuration;
+        Ref<PropertyValue> mDate;
 
-        Ref<UILabel> mAnalysisResultTitle;
-        Ref<UIBoxLayout> mAnalysisResultLayout;
-        Ref<UIBoxLayout> mAnalysisResultPropertyLayout;
+        Ref<UILabel>       mAnalysisResultTitle;
+        Ref<UIBoxLayout>   mAnalysisResultLayout;
+        Ref<UIBoxLayout>   mAnalysisResultPropertyLayout;
         Ref<PropertyValue> mEOLLinkLoss;
         Ref<PropertyValue> mEOLPosition;
         Ref<PropertyValue> mProcessingTime;
 
         Ref<UILabel> mTestFibersTitle;
 
-        Ref<UILabel> mSoftwareVersionsTitle;
-        Ref<UIBoxLayout> mSoftwareVersionsLayout;
-        Ref<UIBoxLayout> mSoftwareVersionsPropertyLayout;
+        Ref<UILabel>       mSoftwareVersionsTitle;
+        Ref<UIBoxLayout>   mSoftwareVersionsLayout;
+        Ref<UIBoxLayout>   mSoftwareVersionsPropertyLayout;
         Ref<PropertyValue> mOtdrInstrumentVersion;
         Ref<PropertyValue> mOtdrSignalProcessingVersion;
         Ref<PropertyValue> mOtdrSimulationVersion;
@@ -61,9 +81,9 @@ namespace SE::OtdrEditor
         Ref<PropertyValue> mOlmSignalProcessingVersion;
         Ref<PropertyValue> mIOlmKit;
 
-        Ref<UILabel> mHardwareTitle;
-        Ref<UIBoxLayout> mHardwareLayout;
-        Ref<UIBoxLayout> mHardwarePropertyLayout;
+        Ref<UILabel>       mHardwareTitle;
+        Ref<UIBoxLayout>   mHardwareLayout;
+        Ref<UIBoxLayout>   mHardwarePropertyLayout;
         Ref<PropertyValue> mModelName;
         Ref<PropertyValue> mSerialNumber;
         Ref<PropertyValue> mOtdrFamily;
