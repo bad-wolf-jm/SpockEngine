@@ -116,7 +116,7 @@ namespace SE::Core
 
             if( lItem.mExpand )
             {
-                lItemSize     = lItem.mFill ? lExpandedSize : lItem.mItem->RequiredSize();
+                lItemSize     = lItem.mFill ? lExpandedSize : (lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{});
                 lItemPosition = lItem.mFill ? lCurrentPosition
                                             : GetContentAlignedposition( lItem.mHalign, lItem.mValign, lCurrentPosition, lItemSize,
                                                                          lExpandedSize );
@@ -129,10 +129,10 @@ namespace SE::Core
                 else
                     lItemSize = ImVec2{ lItem.mFixedSize, aSize.y };
 
-                lItemSize     = lItem.mFill ? lItemSize : lItem.mItem->RequiredSize();
+                lItemSize     = lItem.mFill ? lItemSize : (lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{});
                 lItemPosition = lItem.mFill ? lCurrentPosition
                                             : GetContentAlignedposition( lItem.mHalign, lItem.mValign, lCurrentPosition,
-                                                                         lItem.mItem->RequiredSize(), lItemSize );
+                                                                         (lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{}), lItemSize );
                 lPositionStep = lItem.mFixedSize;
             }
             else
@@ -144,10 +144,10 @@ namespace SE::Core
                 else
                     lItemSize.y = aSize.y;
 
-                lItemSize     = lItem.mFill ? lItemSize : lItem.mItem->RequiredSize();
+                lItemSize     = lItem.mFill ? lItemSize : (lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{});
                 lItemPosition = lItem.mFill ? lCurrentPosition
                                             : GetContentAlignedposition( lItem.mHalign, lItem.mValign, lCurrentPosition,
-                                                                         lItem.mItem->RequiredSize(), lItemSize );
+                                                                         (lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{}), lItemSize );
                 lPositionStep = ( mOrientation == eBoxLayoutOrientation::VERTICAL ) ? lItemSize.y : lItemSize.x;
             }
 
