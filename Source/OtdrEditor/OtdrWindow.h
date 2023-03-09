@@ -26,6 +26,7 @@
 #include "Editor/ContentBrowser.h"
 #include "Enums.h"
 #include "LinkElementTable.h"
+#include "MeasurementOverview.h"
 #include "Mono/MonoScriptInstance.h"
 #include "SceneHierarchyPanel.h"
 #include "Workspace.h"
@@ -146,6 +147,7 @@ namespace SE::OtdrEditor
         std::vector<sEvent> mEventDataVector;
 
         UILinkElementTable mLinkElementTable;
+        MeasurementOverview mMeasurementOverview;
 
       private:
         OtdrWorkspaceWindow mWorkspaceArea;
