@@ -36,10 +36,10 @@ namespace SE::OtdrEditor
         mLoss = New<sFloat64Column>( "Loss", 75.0f, "{:.3f} dB", "N.a.N." );
         AddColumn( mLoss );
 
-        mReflectance = New<sFloat64Column>( "Reflectance", 75.0f, "{:.3f} dB", "N.a.N." );
+        mReflectance = New<sFloat64Column>( "Reflectance", 75.0f, "{:.2f} dB", "N.a.N." );
         AddColumn( mReflectance );
 
-        mCurveLevelColumn = New<sFloat64Column>( "Level", 75.0f, "{:.3f} dB", "N.a.N." );
+        mCurveLevelColumn = New<sFloat64Column>( "Level", 75.0f, "{:.2f} dB", "N.a.N." );
         AddColumn( mCurveLevelColumn );
 
         mEventType = New<sStringColumn>( "mEventType", 75.0f );
@@ -68,7 +68,21 @@ namespace SE::OtdrEditor
         for( auto const &lE : mEventDataVector ) mRowBackgroundColor.push_back( IM_COL32( 10, 10, 10, 255 * ( lE.mLinkIndex % 2 ) ) );
 
         mType->mData.clear();
-        for( auto const &lE : mEventDataVector ) mType->mData.push_back( ToString( lE.mType ) );
+        for( auto const &lE : mEventDataVector )
+        {
+            // auto const& lType = ;
+            // std::string lSplitterConfiguration;
+            std::string lSplitterSource = lE.mIsTwoByNSplitter ? "2" : "1";
+            if (lE.mType == eLinkElementType::Splitter)
+            {
+                auto lSplitterConfiguration = fmt::format("{} ({}\xC3\x97{})", ToString( lE.mType ), lSplitterSource, lE.mSplitterRatio);
+                mType->mData.push_back( lSplitterConfiguration );
+            }
+            else
+            {
+                mType->mData.push_back( ToString( lE.mType ) );
+            }
+        }
 
         mStatus->mData.clear();
         for( auto const &lE : mEventDataVector ) mStatus->mData.push_back( StringJoin( LinkStatusToString( lE.mStatus ) ) );
