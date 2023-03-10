@@ -5,17 +5,19 @@
 #include "UI/Components/Label.h"
 #include "UI/Layouts/BoxLayout.h"
 
+#include "Mono/MonoScriptInstance.h"
+
 namespace SE::OtdrEditor
 {
     using namespace SE::Core;
 
-    class PropertyValue : public UIBoxLayout
+    class UIPropertyValue : public UIBoxLayout
     {
       public:
-        PropertyValue()  = default;
-        ~PropertyValue() = default;
+        UIPropertyValue()  = default;
+        ~UIPropertyValue() = default;
 
-        PropertyValue( std::string aName );
+        UIPropertyValue( std::string aName );
 
         void SetValue( std::string aValue );
 
@@ -30,77 +32,79 @@ namespace SE::OtdrEditor
         MeasurementOverview();
         ~MeasurementOverview() = default;
 
+        void SetData(Ref<MonoScriptInstance> aMeasurementOverview);
+
       protected:
-        Ref<UILabel>       mMeasurementResultTitle;
-        Ref<UIBoxLayout>   mMeasurementResultLayout;
-        Ref<UIBoxLayout>   mMeasurementResultPropertyLayout;
-        Ref<PropertyValue> mOverviewLength;
-        Ref<PropertyValue> mLinkLength;
-        Ref<PropertyValue> mCompletionStatus;
+        Ref<UILabel>         mMeasurementResultTitle;
+        Ref<UIBoxLayout>     mMeasurementResultLayout;
+        Ref<UIBoxLayout>     mMeasurementResultPropertyLayout;
+        Ref<UIPropertyValue> mOverviewLength;
+        Ref<UIPropertyValue> mLinkLength;
+        Ref<UIPropertyValue> mCompletionStatus;
 
-        Ref<UILabel>       mMeasurementConfigurationTitle;
-        Ref<UIBoxLayout>   mMeasurementConfigurationLayout;
-        Ref<UIBoxLayout>   mMeasurementConfigurationPropertyLayout;
-        Ref<PropertyValue> mLaunchFiberLength;
-        Ref<PropertyValue> mConditioner;
-        Ref<PropertyValue> mReceiveFiberLength;
-        Ref<PropertyValue> mLoopLength;
-        Ref<PropertyValue> mConfigurationFiberCode;
-        Ref<PropertyValue> mIOR;
-        Ref<PropertyValue> mRBS;
-        Ref<PropertyValue> mAttenuation;
-        Ref<PropertyValue> mWavelengths;
-        Ref<PropertyValue> mDirection;
-        Ref<PropertyValue> mLoopbackExtract;
-        Ref<PropertyValue> mExpectedLinkElements;
-        Ref<PropertyValue> mTopology;
-        Ref<PropertyValue> mMeasurementType;
-        Ref<PropertyValue> mSequenceType;
-        Ref<PropertyValue> mMacrobendThreshold;
-        Ref<PropertyValue> mComment;
-        Ref<PropertyValue> mAdvisorMode;
-        Ref<PropertyValue> mDuration;
-        Ref<PropertyValue> mDate;
+        Ref<UILabel>         mMeasurementConfigurationTitle;
+        Ref<UIBoxLayout>     mMeasurementConfigurationLayout;
+        Ref<UIBoxLayout>     mMeasurementConfigurationPropertyLayout;
+        Ref<UIPropertyValue> mLaunchFiberLength;
+        Ref<UIPropertyValue> mConditioner;
+        Ref<UIPropertyValue> mReceiveFiberLength;
+        Ref<UIPropertyValue> mLoopLength;
+        Ref<UIPropertyValue> mConfigurationFiberCode;
+        Ref<UIPropertyValue> mIOR;
+        Ref<UIPropertyValue> mRBS;
+        Ref<UIPropertyValue> mAttenuation;
+        Ref<UIPropertyValue> mWavelengths;
+        Ref<UIPropertyValue> mDirection;
+        Ref<UIPropertyValue> mLoopbackExtract;
+        Ref<UIPropertyValue> mExpectedLinkElements;
+        Ref<UIPropertyValue> mTopology;
+        Ref<UIPropertyValue> mMeasurementType;
+        Ref<UIPropertyValue> mSequenceType;
+        Ref<UIPropertyValue> mMacrobendThreshold;
+        Ref<UIPropertyValue> mComment;
+        Ref<UIPropertyValue> mAdvisorMode;
+        Ref<UIPropertyValue> mDuration;
+        Ref<UIPropertyValue> mDate;
 
-        Ref<UILabel>       mAnalysisResultTitle;
-        Ref<UIBoxLayout>   mAnalysisResultLayout;
-        Ref<UIBoxLayout>   mAnalysisResultPropertyLayout;
-        Ref<PropertyValue> mEOLLinkLoss;
-        Ref<PropertyValue> mEOLPosition;
-        Ref<PropertyValue> mProcessingTime;
+        Ref<UILabel>         mAnalysisResultTitle;
+        Ref<UIBoxLayout>     mAnalysisResultLayout;
+        Ref<UIBoxLayout>     mAnalysisResultPropertyLayout;
+        Ref<UIPropertyValue> mEOLLinkLoss;
+        Ref<UIPropertyValue> mEOLPosition;
+        Ref<UIPropertyValue> mProcessingTime;
 
         Ref<UILabel> mTestFibersTitle;
 
-        Ref<UILabel>       mSoftwareVersionsTitle;
-        Ref<UIBoxLayout>   mSoftwareVersionsLayout;
-        Ref<UIBoxLayout>   mSoftwareVersionsPropertyLayout;
-        Ref<PropertyValue> mOtdrInstrumentVersion;
-        Ref<PropertyValue> mOtdrSignalProcessingVersion;
-        Ref<PropertyValue> mOtdrSimulationVersion;
-        Ref<PropertyValue> mOlmInstrumentVersion;
-        Ref<PropertyValue> mOlmSignalProcessingVersion;
-        Ref<PropertyValue> mIOlmKit;
+        Ref<UILabel>         mSoftwareVersionsTitle;
+        Ref<UIBoxLayout>     mSoftwareVersionsLayout;
+        Ref<UIBoxLayout>     mSoftwareVersionsPropertyLayout;
+        Ref<UIPropertyValue> mOtdrInstrumentVersion;
+        Ref<UIPropertyValue> mOtdrSignalProcessingVersion;
+        Ref<UIPropertyValue> mOtdrSimulationVersion;
+        Ref<UIPropertyValue> mOlmInstrumentVersion;
+        Ref<UIPropertyValue> mOlmSignalProcessingVersion;
+        Ref<UIPropertyValue> mIOlmKit;
 
-        Ref<UILabel>       mHardwareTitle;
-        Ref<UIBoxLayout>   mHardwareLayout;
-        Ref<UIBoxLayout>   mHardwarePropertyLayout;
-        Ref<PropertyValue> mModelName;
-        Ref<PropertyValue> mSerialNumber;
-        Ref<PropertyValue> mOtdrFamily;
-        Ref<PropertyValue> mModelType;
-        Ref<PropertyValue> mProductVersion;
-        Ref<PropertyValue> mPowerLevel;
-        Ref<PropertyValue> mFiberCode;
-        Ref<PropertyValue> mOutputPorts;
-        Ref<PropertyValue> mFPGAversion;
-        Ref<PropertyValue> mPCBVersion;
-        Ref<PropertyValue> mPCBSerialNumber;
-        Ref<PropertyValue> mCPUPCBVersion;
-        Ref<PropertyValue> mCPUPCBSerialNumber;
-        Ref<PropertyValue> mPowerMeterVersion;
-        Ref<PropertyValue> mPowerMeterSerialNumber;
-        Ref<PropertyValue> mManufacturingDate;
-        Ref<PropertyValue> mLastCalibrationDate;
-        Ref<PropertyValue> mUserLastCalibrationDate;
+        Ref<UILabel>         mHardwareTitle;
+        Ref<UIBoxLayout>     mHardwareLayout;
+        Ref<UIBoxLayout>     mHardwarePropertyLayout;
+        Ref<UIPropertyValue> mModelName;
+        Ref<UIPropertyValue> mSerialNumber;
+        Ref<UIPropertyValue> mOtdrFamily;
+        Ref<UIPropertyValue> mModelType;
+        Ref<UIPropertyValue> mProductVersion;
+        Ref<UIPropertyValue> mPowerLevel;
+        Ref<UIPropertyValue> mFiberCode;
+        Ref<UIPropertyValue> mOutputPorts;
+        Ref<UIPropertyValue> mFPGAversion;
+        Ref<UIPropertyValue> mPCBVersion;
+        Ref<UIPropertyValue> mPCBSerialNumber;
+        Ref<UIPropertyValue> mCPUPCBVersion;
+        Ref<UIPropertyValue> mCPUPCBSerialNumber;
+        Ref<UIPropertyValue> mPowerMeterVersion;
+        Ref<UIPropertyValue> mPowerMeterSerialNumber;
+        Ref<UIPropertyValue> mManufacturingDate;
+        Ref<UIPropertyValue> mLastCalibrationDate;
+        Ref<UIPropertyValue> mUserLastCalibrationDate;
     };
 } // namespace SE::OtdrEditor
