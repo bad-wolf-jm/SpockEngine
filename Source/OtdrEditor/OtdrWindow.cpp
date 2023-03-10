@@ -121,6 +121,12 @@ namespace SE::OtdrEditor
             }
             ImGui::End();
 
+            if( ImGui::Begin( "iOlmData_AcquisitionDataOverview", &pOpen, ImGuiWindowFlags_None ) )
+            {
+                mAcquisitionDataOverview.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+            }
+            ImGui::End();
+
             if( ImGui::Begin( "iOlmData_LinkElements", &pOpen, ImGuiWindowFlags_None ) )
             {
                 mLinkElementTable.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
