@@ -12,13 +12,40 @@ namespace SE::OtdrEditor
 {
     using namespace SE::Core;
 
+    class SectionOverview : public UIBoxLayout
+    {
+      public:
+        SectionOverview(std::string const& aTitle);
+        ~SectionOverview() = default;
+
+        void SetData(Ref<MonoScriptInstance> aRbsData);
+
+      protected:
+        Ref<UILabel>         mSectionTitle;
+        Ref<UIBoxLayout>     mSectionLayout;
+        Ref<UIBoxLayout>     mSectionPropertyLayout;
+        Ref<UIPropertyValue> mRbsTrace;
+        Ref<UIPropertyValue> mRbsNoise;
+        Ref<UIPropertyValue> mRbsSaturation;
+        Ref<UIPropertyValue> mLsaRange;
+        Ref<UIPropertyValue> mLsaSlope;
+        Ref<UIPropertyValue> mLsaOffset;
+        Ref<UIPropertyValue> mLsaMean;
+        Ref<UIPropertyValue> mLsaSlopeError;
+        Ref<UIPropertyValue> mLsaLinear;
+        Ref<UIPropertyValue> mLsaError;
+        Ref<UIPropertyValue> mLsaCrossings;
+        Ref<UIPropertyValue> mLsaSections;
+    };
+
+
     class EventOverview : public UIBoxLayout
     {
       public:
         EventOverview();
         ~EventOverview() = default;
 
-        void SetData(Ref<MonoScriptInstance> aEventOverview);
+        void SetData( Ref<MonoScriptInstance> aEventOverview, Ref<MonoScriptInstance> aAttributes );
 
       protected:
         Ref<UILabel>         mEventOverview;
@@ -40,36 +67,7 @@ namespace SE::OtdrEditor
         Ref<UIPropertyValue> mFresnelCorrection;
         Ref<UIPropertyValue> mUseSinglePulse;
 
-        Ref<UILabel>         mPreviousSectionTitle;
-        Ref<UIBoxLayout>     mPreviousSectionLayout;
-        Ref<UIBoxLayout>     mPreviousSectionPropertyLayout;
-        Ref<UIPropertyValue> mPreviousRbsTrace;
-        Ref<UIPropertyValue> mPreviousRbsNoise;
-        Ref<UIPropertyValue> mPreviousRbsSaturation;
-        Ref<UIPropertyValue> mPreviousLsaRange;
-        Ref<UIPropertyValue> mPreviousLsaSlope;
-        Ref<UIPropertyValue> mPreviousLsaOffset;
-        Ref<UIPropertyValue> mPreviousLsaMean;
-        Ref<UIPropertyValue> mPreviousLsaSlopeError;
-        Ref<UIPropertyValue> mPreviousLsaLinear;
-        Ref<UIPropertyValue> mPreviousLsaError;
-        Ref<UIPropertyValue> mPreviousLsaCrossings;
-        Ref<UIPropertyValue> mPreviousLsaSections;
-
-        Ref<UILabel>         mNextSectionTitle;
-        Ref<UIBoxLayout>     mNextSectionLayout;
-        Ref<UIBoxLayout>     mNextSectionPropertyLayout;
-        Ref<UIPropertyValue> mNextRbsTrace;
-        Ref<UIPropertyValue> mNextRbsNoise;
-        Ref<UIPropertyValue> mNextRbsSaturation;
-        Ref<UIPropertyValue> mNextLsaRange;
-        Ref<UIPropertyValue> mNextLsaSlope;
-        Ref<UIPropertyValue> mNextLsaOffset;
-        Ref<UIPropertyValue> mNextLsaMean;
-        Ref<UIPropertyValue> mNextLsaSlopeError;
-        Ref<UIPropertyValue> mNextLsaLinear;
-        Ref<UIPropertyValue> mNextLsaError;
-        Ref<UIPropertyValue> mNextLsaCrossings;
-        Ref<UIPropertyValue> mNextLsaSections;
+        Ref<SectionOverview> mPreviousSectionLayout;
+        Ref<SectionOverview> mNextSectionLayout;
     };
 } // namespace SE::OtdrEditor

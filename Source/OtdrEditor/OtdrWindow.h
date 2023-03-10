@@ -27,6 +27,7 @@
 #include "Enums.h"
 #include "LinkElementTable.h"
 #include "MeasurementOverview.h"
+#include "EventOverview.h"
 #include "Mono/MonoScriptInstance.h"
 #include "SceneHierarchyPanel.h"
 #include "Workspace.h"
@@ -148,6 +149,7 @@ namespace SE::OtdrEditor
 
         UILinkElementTable mLinkElementTable;
         MeasurementOverview mMeasurementOverview;
+        EventOverview mEventOverview;
 
       private:
         OtdrWorkspaceWindow mWorkspaceArea;

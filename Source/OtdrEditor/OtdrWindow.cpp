@@ -115,6 +115,12 @@ namespace SE::OtdrEditor
             }
             ImGui::End();
 
+            if( ImGui::Begin( "iOlmData_EventOverview", &pOpen, ImGuiWindowFlags_None ) )
+            {
+                mEventOverview.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+            }
+            ImGui::End();
+
             if( ImGui::Begin( "iOlmData_LinkElements", &pOpen, ImGuiWindowFlags_None ) )
             {
                 mLinkElementTable.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
@@ -317,10 +323,19 @@ namespace SE::OtdrEditor
 
         MonoObject *lLinkElementData   = mDataInstance->CallMethod( "GetLinkElements" );
         auto        lLinkElementVector = AsVector<sLinkElement>( lLinkElementData );
-        mLinkElementTable.SetData(lLinkElementVector);
+        mLinkElementTable.SetData( lLinkElementVector );
 
-        auto lMeasurementData = mDataInstance->GetPropertyValue("Measurement", "Metrino.Olm.OlmMeasurement");
-        mMeasurementOverview.SetData(lMeasurementData);
+        auto lMeasurementData = mDataInstance->GetPropertyValue( "Measurement", "Metrino.Olm.OlmMeasurement" );
+        mMeasurementOverview.SetData( lMeasurementData );
+
+        static auto &lOlmMeasurementClass = MonoRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
+        auto         lPhysicalEvent =
+            New<MonoScriptInstance>( &lOlmMeasurementClass, lOlmMeasurementClass.Class(), lLinkElementVector[0].mPhysicalEvent );
+
+        static auto &lOlmAttributeClass = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
+        auto         lAttributes =
+            New<MonoScriptInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), lLinkElementVector[0].mAttributes );
+        mEventOverview.SetData( lPhysicalEvent, lAttributes );
     }
 
     bool OtdrWindow::RenderMainMenu()
