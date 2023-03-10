@@ -13,29 +13,7 @@ namespace fs = std::filesystem;
 
 namespace SE::Core
 {
-    enum class eScriptFieldType
-    {
-        None = 0,
-        Float,
-        Double,
-        Bool,
-        Char,
-        Byte,
-        Short,
-        Int,
-        Long,
-        UByte,
-        UShort,
-        UInt,
-        ULong
-    };
-    struct sScriptField
-    {
-        eScriptFieldType mType;
-        std::string      mName;
-        MonoClassField  *mClassField;
-    };
-
+    
     class MonoScriptClass
     {
       public:
@@ -86,8 +64,9 @@ namespace SE::Core
 
         const std::map<std::string, sScriptField> &GetFields() const { return mFields; }
 
-        MonoClass   *Class() { return mMonoClass; }
-        std::string &FullName() { return mClassFullName; }
+        MonoClass       *Class() { return mMonoClass; }
+        sScriptProperty &GetProperty( std::string const& aName ) { return mProperties[aName]; }
+        std::string     &FullName() { return mClassFullName; }
 
         std::vector<MonoScriptClass *> &DerivedClasses() { return mDerived; }
 
@@ -100,7 +79,8 @@ namespace SE::Core
         std::string mClassName;
         std::string mClassFullName;
 
-        std::map<std::string, sScriptField> mFields;
+        std::map<std::string, sScriptField>    mFields;
+        std::map<std::string, sScriptProperty> mProperties;
 
         MonoClass *mMonoClass = nullptr;
         bool       mIsCore    = false;

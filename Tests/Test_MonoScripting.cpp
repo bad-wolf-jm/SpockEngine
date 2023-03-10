@@ -994,7 +994,7 @@ TEST_CASE( "Create constant multitensor", "[MONO_SCRIPTING]" )
 
     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateConstantMultiTensor", (size_t)&lScope );
     auto lNodeClass = MonoRuntime::GetClassType("SpockEngine.OpNode");
-    auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
+    auto lOpNode    = MonoScriptInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
 
     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
     OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
@@ -1014,7 +1014,7 @@ TEST_CASE( "Create layered multitensor", "[MONO_SCRIPTING]" )
 
     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateLayeredConstantMultiTensor", (size_t)&lScope );
     auto lNodeClass = MonoRuntime::GetClassType("SpockEngine.OpNode");
-    auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
+    auto lOpNode    = MonoScriptInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
 
     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
     OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
@@ -1041,7 +1041,7 @@ TEST_CASE( "Create multitensor with initial data", "[MONO_SCRIPTING]" )
 
     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateDataMultiTensor", (size_t)&lScope );
     auto lNodeClass = MonoRuntime::GetClassType("SpockEngine.OpNode");
-    auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
+    auto lOpNode    = MonoScriptInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
 
     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
     OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
@@ -1061,7 +1061,7 @@ TEST_CASE( "Create multitensor with random uniform initial data", "[MONO_SCRIPTI
 
     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateRandomUniformMultiTensor", (size_t)&lScope );
     auto lNodeClass = MonoRuntime::GetClassType("SpockEngine.OpNode");
-    auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
+    auto lOpNode    = MonoScriptInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
 
     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
     OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
@@ -1081,7 +1081,7 @@ TEST_CASE( "Create multitensor with random normal initial data", "[MONO_SCRIPTIN
 
     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateRandomNormalMultiTensor", (size_t)&lScope );
     auto lNodeClass = MonoRuntime::GetClassType("SpockEngine.OpNode");
-    auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
+    auto lOpNode    = MonoScriptInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
 
     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
     OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
@@ -1101,7 +1101,7 @@ TEST_CASE( "Create scalar arrays", "[MONO_SCRIPTING]" )
 
     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateScalarVector", (size_t)&lScope );
     auto lNodeClass = MonoRuntime::GetClassType("SpockEngine.OpNode");
-    auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
+    auto lOpNode    = MonoScriptInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
 
     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
     OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
@@ -1120,7 +1120,7 @@ TEST_CASE( "Create scalar constant", "[MONO_SCRIPTING]" )
 
     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateScalarValue", (size_t)&lScope );
     auto lNodeClass = MonoRuntime::GetClassType("SpockEngine.OpNode");
-    auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), lRetValue );
+    auto lOpNode    = MonoScriptInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
 
     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
     OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
@@ -1162,7 +1162,7 @@ static MonoArray *MakeBoolArray( uint32_t aSize )
 static OpNode ConvertCSOpNode( Scope &aScope, MonoObject *aOpNode )
 {
     auto lNodeClass = MonoRuntime::GetClassType("SpockEngine.OpNode");
-    auto lOpNode    = MonoScriptInstance( lNodeClass.Class(), aOpNode );
+    auto lOpNode    = MonoScriptInstance( &lNodeClass, lNodeClass.Class(), aOpNode );
 
     auto lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
     return aScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
