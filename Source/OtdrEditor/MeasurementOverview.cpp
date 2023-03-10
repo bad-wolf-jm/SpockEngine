@@ -17,6 +17,9 @@ namespace SE::OtdrEditor
     MeasurementOverview::MeasurementOverview()
         : UIBoxLayout( eBoxLayoutOrientation::VERTICAL )
     {
+
+        const float lItemHeight = 20.0f;
+
         mMeasurementResultTitle = New<UILabel>( "Measurement results" );
         mMeasurementResultTitle->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         Add( mMeasurementResultTitle.get(), 30.0f, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
@@ -25,11 +28,11 @@ namespace SE::OtdrEditor
         mMeasurementResultLayout->Add( nullptr, 25.0f, false, false );
         mMeasurementResultLayout->Add( mMeasurementResultPropertyLayout.get(), true, true );
         mOverviewLength = New<UIPropertyValue>( "Overview length:" );
-        mMeasurementResultPropertyLayout->Add( mOverviewLength.get(), 20.0f, false, true );
+        mMeasurementResultPropertyLayout->Add( mOverviewLength.get(), lItemHeight, false, true );
         mLinkLength = New<UIPropertyValue>( "Link length:" );
-        mMeasurementResultPropertyLayout->Add( mLinkLength.get(), 20.0f, false, true );
+        mMeasurementResultPropertyLayout->Add( mLinkLength.get(), lItemHeight, false, true );
         mCompletionStatus = New<UIPropertyValue>( "Completion:" );
-        mMeasurementResultPropertyLayout->Add( mCompletionStatus.get(), 20.0f, false, true );
+        mMeasurementResultPropertyLayout->Add( mCompletionStatus.get(), lItemHeight, false, true );
         Add( mMeasurementResultLayout.get(), false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
 
         mMeasurementConfigurationTitle = New<UILabel>( "Configuration" );
@@ -40,45 +43,45 @@ namespace SE::OtdrEditor
         mMeasurementConfigurationLayout->Add( nullptr, 25.0f, false, false );
         mMeasurementConfigurationLayout->Add( mMeasurementConfigurationPropertyLayout.get(), true, true );
         mLaunchFiberLength = New<UIPropertyValue>( "Launch fiber length:" );
-        mMeasurementConfigurationPropertyLayout->Add( mLaunchFiberLength.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mLaunchFiberLength.get(), lItemHeight, false, true );
         mConditioner = New<UIPropertyValue>( "Conditioner:" );
-        mMeasurementConfigurationPropertyLayout->Add( mConditioner.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mConditioner.get(), lItemHeight, false, true );
         mReceiveFiberLength = New<UIPropertyValue>( "Receive fiber length:" );
-        mMeasurementConfigurationPropertyLayout->Add( mReceiveFiberLength.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mReceiveFiberLength.get(), lItemHeight, false, true );
         mLoopLength = New<UIPropertyValue>( "Loop length:" );
-        mMeasurementConfigurationPropertyLayout->Add( mLoopLength.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mLoopLength.get(), lItemHeight, false, true );
         mConfigurationFiberCode = New<UIPropertyValue>( "Fiber code:" );
-        mMeasurementConfigurationPropertyLayout->Add( mConfigurationFiberCode.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mConfigurationFiberCode.get(), lItemHeight, false, true );
         mIOR = New<UIPropertyValue>( "IOR:" );
-        mMeasurementConfigurationPropertyLayout->Add( mIOR.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mIOR.get(), lItemHeight, false, true );
         mRBS = New<UIPropertyValue>( "RBS:" );
-        mMeasurementConfigurationPropertyLayout->Add( mRBS.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mRBS.get(), lItemHeight, false, true );
         mAttenuation = New<UIPropertyValue>( "Attenuation:" );
-        mMeasurementConfigurationPropertyLayout->Add( mAttenuation.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mAttenuation.get(), lItemHeight, false, true );
         mWavelengths = New<UIPropertyValue>( "Wavelengths:" );
-        mMeasurementConfigurationPropertyLayout->Add( mWavelengths.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mWavelengths.get(), lItemHeight, false, true );
         mDirection = New<UIPropertyValue>( "Direction:" );
-        mMeasurementConfigurationPropertyLayout->Add( mDirection.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mDirection.get(), lItemHeight, false, true );
         mLoopbackExtract = New<UIPropertyValue>( "Loopback extract:" );
-        mMeasurementConfigurationPropertyLayout->Add( mLoopbackExtract.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mLoopbackExtract.get(), lItemHeight, false, true );
         mExpectedLinkElements = New<UIPropertyValue>( "Exoected link elements:" );
-        mMeasurementConfigurationPropertyLayout->Add( mExpectedLinkElements.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mExpectedLinkElements.get(), lItemHeight, false, true );
         mTopology = New<UIPropertyValue>( "Topology:" );
-        mMeasurementConfigurationPropertyLayout->Add( mTopology.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mTopology.get(), lItemHeight, false, true );
         mMeasurementType = New<UIPropertyValue>( "Measurement type:" );
-        mMeasurementConfigurationPropertyLayout->Add( mMeasurementType.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mMeasurementType.get(), lItemHeight, false, true );
         mSequenceType = New<UIPropertyValue>( "Sequence type:" );
-        mMeasurementConfigurationPropertyLayout->Add( mSequenceType.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mSequenceType.get(), lItemHeight, false, true );
         mMacrobendThreshold = New<UIPropertyValue>( "Macrobend threshold:" );
-        mMeasurementConfigurationPropertyLayout->Add( mMacrobendThreshold.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mMacrobendThreshold.get(), lItemHeight, false, true );
         mComment = New<UIPropertyValue>( "Comment:" );
-        mMeasurementConfigurationPropertyLayout->Add( mComment.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mComment.get(), lItemHeight, false, true );
         mAdvisorMode = New<UIPropertyValue>( "Advisor mode:" );
-        mMeasurementConfigurationPropertyLayout->Add( mAdvisorMode.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mAdvisorMode.get(), lItemHeight, false, true );
         mDuration = New<UIPropertyValue>( "Duration:" );
-        mMeasurementConfigurationPropertyLayout->Add( mDuration.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mDuration.get(), lItemHeight, false, true );
         mDate = New<UIPropertyValue>( "Date:" );
-        mMeasurementConfigurationPropertyLayout->Add( mDate.get(), 20.0f, false, true );
+        mMeasurementConfigurationPropertyLayout->Add( mDate.get(), lItemHeight, false, true );
         Add( mMeasurementConfigurationLayout.get(), false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
 
         mAnalysisResultTitle = New<UILabel>( "Analysis result" );
@@ -89,11 +92,11 @@ namespace SE::OtdrEditor
         mAnalysisResultLayout->Add( nullptr, 25.0f, false, false );
         mAnalysisResultLayout->Add( mAnalysisResultPropertyLayout.get(), true, true );
         mEOLLinkLoss = New<UIPropertyValue>( "EOL Link Loss:" );
-        mAnalysisResultPropertyLayout->Add( mEOLLinkLoss.get(), 20.0f, false, true );
+        mAnalysisResultPropertyLayout->Add( mEOLLinkLoss.get(), lItemHeight, false, true );
         mEOLPosition = New<UIPropertyValue>( "EOL Position:" );
-        mAnalysisResultPropertyLayout->Add( mEOLPosition.get(), 20.0f, false, true );
+        mAnalysisResultPropertyLayout->Add( mEOLPosition.get(), lItemHeight, false, true );
         mProcessingTime = New<UIPropertyValue>( "ProcessingTime:" );
-        mAnalysisResultPropertyLayout->Add( mProcessingTime.get(), 20.0f, false, true );
+        mAnalysisResultPropertyLayout->Add( mProcessingTime.get(), lItemHeight, false, true );
         Add( mAnalysisResultLayout.get(), false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
 
         mTestFibersTitle = New<UILabel>( "Test fibers" );
@@ -108,17 +111,17 @@ namespace SE::OtdrEditor
         mSoftwareVersionsLayout->Add( nullptr, 25.0f, false, false );
         mSoftwareVersionsLayout->Add( mSoftwareVersionsPropertyLayout.get(), true, true );
         mOtdrInstrumentVersion = New<UIPropertyValue>( "Otdr.Instrument:" );
-        mSoftwareVersionsPropertyLayout->Add( mOtdrInstrumentVersion.get(), 20.0f, false, true );
+        mSoftwareVersionsPropertyLayout->Add( mOtdrInstrumentVersion.get(), lItemHeight, false, true );
         mOtdrSignalProcessingVersion = New<UIPropertyValue>( "Otdr.SignalProcessing:" );
-        mSoftwareVersionsPropertyLayout->Add( mOtdrSignalProcessingVersion.get(), 20.0f, false, true );
+        mSoftwareVersionsPropertyLayout->Add( mOtdrSignalProcessingVersion.get(), lItemHeight, false, true );
         mOtdrSimulationVersion = New<UIPropertyValue>( "Otdr.Simulation:" );
-        mSoftwareVersionsPropertyLayout->Add( mOtdrSimulationVersion.get(), 20.0f, false, true );
+        mSoftwareVersionsPropertyLayout->Add( mOtdrSimulationVersion.get(), lItemHeight, false, true );
         mOlmInstrumentVersion = New<UIPropertyValue>( "Olm.Instrument:" );
-        mSoftwareVersionsPropertyLayout->Add( mOlmInstrumentVersion.get(), 20.0f, false, true );
+        mSoftwareVersionsPropertyLayout->Add( mOlmInstrumentVersion.get(), lItemHeight, false, true );
         mOlmSignalProcessingVersion = New<UIPropertyValue>( "Olm.SignalProcessing:" );
-        mSoftwareVersionsPropertyLayout->Add( mOlmSignalProcessingVersion.get(), 20.0f, false, true );
+        mSoftwareVersionsPropertyLayout->Add( mOlmSignalProcessingVersion.get(), lItemHeight, false, true );
         mIOlmKit = New<UIPropertyValue>( "LLKitiOlm:" );
-        mSoftwareVersionsPropertyLayout->Add( mIOlmKit.get(), 20.0f, false, true );
+        mSoftwareVersionsPropertyLayout->Add( mIOlmKit.get(), lItemHeight, false, true );
         Add( mSoftwareVersionsLayout.get(), false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
 
         mHardwareTitle = New<UILabel>( "Hardware" );
@@ -129,41 +132,41 @@ namespace SE::OtdrEditor
         mHardwareLayout->Add( nullptr, 25.0f, false, false );
         mHardwareLayout->Add( mHardwarePropertyLayout.get(), true, true );
         mModelName = New<UIPropertyValue>( "Model name:" );
-        mHardwarePropertyLayout->Add( mModelName.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mModelName.get(), lItemHeight, false, true );
         mSerialNumber = New<UIPropertyValue>( "Serial number:" );
-        mHardwarePropertyLayout->Add( mSerialNumber.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mSerialNumber.get(), lItemHeight, false, true );
         mOtdrFamily = New<UIPropertyValue>( "OTDR Family:" );
-        mHardwarePropertyLayout->Add( mOtdrFamily.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mOtdrFamily.get(), lItemHeight, false, true );
         mModelType = New<UIPropertyValue>( "Model type:" );
-        mHardwarePropertyLayout->Add( mModelType.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mModelType.get(), lItemHeight, false, true );
         mProductVersion = New<UIPropertyValue>( "Product version:" );
-        mHardwarePropertyLayout->Add( mProductVersion.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mProductVersion.get(), lItemHeight, false, true );
         mPowerLevel = New<UIPropertyValue>( "Power level:" );
-        mHardwarePropertyLayout->Add( mPowerLevel.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mPowerLevel.get(), lItemHeight, false, true );
         mFiberCode = New<UIPropertyValue>( "Fiber code:" );
-        mHardwarePropertyLayout->Add( mFiberCode.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mFiberCode.get(), lItemHeight, false, true );
         mOutputPorts = New<UIPropertyValue>( "Output ports:" );
-        mHardwarePropertyLayout->Add( mOutputPorts.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mOutputPorts.get(), lItemHeight, false, true );
         mFPGAversion = New<UIPropertyValue>( "FPGA version:" );
-        mHardwarePropertyLayout->Add( mFPGAversion.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mFPGAversion.get(), lItemHeight, false, true );
         mPCBVersion = New<UIPropertyValue>( "PCB version:" );
-        mHardwarePropertyLayout->Add( mPCBVersion.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mPCBVersion.get(), lItemHeight, false, true );
         mPCBSerialNumber = New<UIPropertyValue>( "PCB serial number:" );
-        mHardwarePropertyLayout->Add( mPCBSerialNumber.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mPCBSerialNumber.get(), lItemHeight, false, true );
         mCPUPCBVersion = New<UIPropertyValue>( "CPU PCB version:" );
-        mHardwarePropertyLayout->Add( mCPUPCBVersion.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mCPUPCBVersion.get(), lItemHeight, false, true );
         mCPUPCBSerialNumber = New<UIPropertyValue>( "CPU PCB serial number:" );
-        mHardwarePropertyLayout->Add( mCPUPCBSerialNumber.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mCPUPCBSerialNumber.get(), lItemHeight, false, true );
         mPowerMeterVersion = New<UIPropertyValue>( "Power meter version:" );
-        mHardwarePropertyLayout->Add( mPowerMeterVersion.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mPowerMeterVersion.get(), lItemHeight, false, true );
         mPowerMeterSerialNumber = New<UIPropertyValue>( "Power meter serial number:" );
-        mHardwarePropertyLayout->Add( mPowerMeterSerialNumber.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mPowerMeterSerialNumber.get(), lItemHeight, false, true );
         mManufacturingDate = New<UIPropertyValue>( "Manufacturing date:" );
-        mHardwarePropertyLayout->Add( mManufacturingDate.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mManufacturingDate.get(), lItemHeight, false, true );
         mLastCalibrationDate = New<UIPropertyValue>( "Calibration Date:" );
-        mHardwarePropertyLayout->Add( mLastCalibrationDate.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mLastCalibrationDate.get(), lItemHeight, false, true );
         mUserLastCalibrationDate = New<UIPropertyValue>( "User Calibration Date:" );
-        mHardwarePropertyLayout->Add( mUserLastCalibrationDate.get(), 20.0f, false, true );
+        mHardwarePropertyLayout->Add( mUserLastCalibrationDate.get(), lItemHeight, false, true );
         Add( mHardwareLayout.get(), true, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
     }
 
@@ -194,6 +197,5 @@ namespace SE::OtdrEditor
         // Software versions
 
         // Hardware versions
-        
     }
 } // namespace SE::OtdrEditor
