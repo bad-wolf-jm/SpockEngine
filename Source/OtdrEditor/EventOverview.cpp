@@ -2,6 +2,86 @@
 
 namespace SE::OtdrEditor
 {
+    SectionOverview::SectionOverview( std::string const &aTitle )
+        : UIBoxLayout( eBoxLayoutOrientation::VERTICAL )
+    {
+        const float lItemHeight = 20.0f;
+
+        mSectionTitle = New<UILabel>( aTitle );
+        mSectionTitle->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        Add( mSectionTitle.get(), 30.0f, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        mSectionLayout         = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
+        mSectionPropertyLayout = New<UIBoxLayout>( eBoxLayoutOrientation::VERTICAL );
+        mSectionLayout->Add( nullptr, 25.0f, false, false );
+        mSectionLayout->Add( mSectionPropertyLayout.get(), true, true );
+        mRbsTrace = New<UIPropertyValue>( "Trace:" );
+        mSectionPropertyLayout->Add( mRbsTrace.get(), lItemHeight, false, true );
+        mRbsNoise = New<UIPropertyValue>( "Noise:" );
+        mSectionPropertyLayout->Add( mRbsNoise.get(), lItemHeight, false, true );
+        mRbsSaturation = New<UIPropertyValue>( "Saturation:" );
+        mSectionPropertyLayout->Add( mRbsSaturation.get(), lItemHeight, false, true );
+        mLsaRange = New<UIPropertyValue>( "LSA range:" );
+        mSectionPropertyLayout->Add( mLsaRange.get(), lItemHeight, false, true );
+        mLsaSlope = New<UIPropertyValue>( "Lsa slope:" );
+        mSectionPropertyLayout->Add( mLsaSlope.get(), lItemHeight, false, true );
+        mLsaOffset = New<UIPropertyValue>( "Lsa offset:" );
+        mSectionPropertyLayout->Add( mLsaOffset.get(), lItemHeight, false, true );
+        mLsaMean = New<UIPropertyValue>( "lsa mean:" );
+        mSectionPropertyLayout->Add( mLsaMean.get(), lItemHeight, false, true );
+        mLsaSlopeError = New<UIPropertyValue>( "Lsa slope error:" );
+        mSectionPropertyLayout->Add( mLsaSlopeError.get(), lItemHeight, false, true );
+        mLsaLinear = New<UIPropertyValue>( "LSA linear:" );
+        mSectionPropertyLayout->Add( mLsaLinear.get(), lItemHeight, false, true );
+        mLsaError = New<UIPropertyValue>( "LSA error:" );
+        mSectionPropertyLayout->Add( mLsaError.get(), lItemHeight, false, true );
+        mLsaCrossings = New<UIPropertyValue>( "LSA crossings:" );
+        mSectionPropertyLayout->Add( mLsaCrossings.get(), lItemHeight, false, true );
+        mLsaSections = New<UIPropertyValue>( "LSA sections:" );
+        mSectionPropertyLayout->Add( mLsaSections.get(), lItemHeight, false, true );
+        Add( mSectionLayout.get(), false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+    }
+
+    void SectionOverview::SetData( Ref<MonoScriptInstance> aRbsData )
+    {
+        auto        lTrace      = aRbsData->GetPropertyValue( "Trace", "Metrino.Otdr.SinglePulseTrace" );
+        std::string lPulse      = fmt::format( "{} ns", lTrace->GetPropertyValue<double>( "Pulse" ) * 1e9 );
+        std::string lPulseWidth = fmt::format( "{:.3f} m", lTrace->GetPropertyValue<double>( "PulseWidth" ) );
+        std::string lFormat         = fmt::format( "{} - {}", lPulse, lPulseWidth );
+        mRbsTrace->SetValue( lFormat );
+
+        std::string lRbsNoise= fmt::format( "{:.2f} dB", aRbsData->GetPropertyValue<double>( "NoiseLevel" ) );
+        mRbsNoise->SetValue( lRbsNoise );
+
+        std::string lRbsSaturation = fmt::format( "{:.2f} dB", aRbsData->GetPropertyValue<double>( "SaturationLevel" ) );
+        mRbsSaturation->SetValue( lRbsSaturation );
+
+        auto lLsaData = aRbsData->GetPropertyValue( "Lsa", "Metrino.Olm.SignalProcessing.RbsLsa" );
+
+        std::string lLsaRange = fmt::format("[{:.3f}, {:.3f}]", lLsaData->GetPropertyValue<double>("StartPosition"),  lLsaData->GetPropertyValue<double>("EndPosition"));
+        mLsaRange->SetValue( lLsaRange );
+
+        std::string lLsaSlope = fmt::format("{:.3f} dB/km", lLsaData->GetPropertyValue<double>("Slope") * 1000);
+        mLsaSlope->SetValue( lLsaSlope );
+
+        std::string lLsaOffset = fmt::format("{:.3f} dB", lLsaData->GetPropertyValue<double>("Offset"));
+        mLsaOffset->SetValue( lLsaOffset );
+
+        std::string lLsaMean = fmt::format("{:.3f} dB", lLsaData->GetPropertyValue<double>("Mean"));
+        mLsaMean->SetValue( lLsaMean );
+
+        std::string lLsaSlopeError = fmt::format("{:.3f} dB/km", lLsaData->GetPropertyValue<double>("SlopeError"));
+        mLsaSlopeError->SetValue( lLsaSlopeError );
+
+        std::string lLsaLinear = fmt::format("{}", lLsaData->GetPropertyValue<double>("FitOnLinearData"));
+        mLsaLinear->SetValue( lLsaLinear );
+
+        std::string lLsaError = fmt::format("{:.3f} dB", lLsaData->GetPropertyValue<double>("RmsError"));
+        mLsaError->SetValue( lLsaError );
+
+        std::string lLsaCrossings = fmt::format("{}", lLsaData->GetPropertyValue<double>("Crossings"));
+        mLsaCrossings->SetValue( lLsaCrossings );
+    }
+
     EventOverview::EventOverview()
         : UIBoxLayout( eBoxLayoutOrientation::VERTICAL )
     {
@@ -15,111 +95,108 @@ namespace SE::OtdrEditor
         mEventOverviewPropertyLayout = New<UIBoxLayout>( eBoxLayoutOrientation::VERTICAL );
         mEventOverviewLayout->Add( nullptr, 25.0f, false, false );
         mEventOverviewLayout->Add( mEventOverviewPropertyLayout.get(), true, true );
-        mWavelength = New<UIPropertyValue>( "Overview length:" );
+        mWavelength = New<UIPropertyValue>( "Wavelength:" );
         mEventOverviewPropertyLayout->Add( mWavelength.get(), lItemHeight, false, true );
-        mDetectionTrace = New<UIPropertyValue>( "Link length:" );
+        mDetectionTrace = New<UIPropertyValue>( "Detection trace:" );
         mEventOverviewPropertyLayout->Add( mDetectionTrace.get(), lItemHeight, false, true );
-        mPositionTolerance = New<UIPropertyValue>( "Completion:" );
+        mPositionTolerance = New<UIPropertyValue>( "Position tolerance:" );
         mEventOverviewPropertyLayout->Add( mPositionTolerance.get(), lItemHeight, false, true );
-        mCurveLevel = New<UIPropertyValue>( "Overview length:" );
+        mCurveLevel = New<UIPropertyValue>( "Curve level:" );
         mEventOverviewPropertyLayout->Add( mCurveLevel.get(), lItemHeight, false, true );
-        mEndOrNoiseLevel = New<UIPropertyValue>( "Link length:" );
+        mEndOrNoiseLevel = New<UIPropertyValue>( "Noise level:" );
         mEventOverviewPropertyLayout->Add( mEndOrNoiseLevel.get(), lItemHeight, false, true );
-        mEstimatedCurveLevel = New<UIPropertyValue>( "Completion:" );
+        mEstimatedCurveLevel = New<UIPropertyValue>( "Estimated curve level:" );
         mEventOverviewPropertyLayout->Add( mEstimatedCurveLevel.get(), lItemHeight, false, true );
-        mEstimatedEndLevel = New<UIPropertyValue>( "Overview length:" );
+        mEstimatedEndLevel = New<UIPropertyValue>( "Estimated end level:" );
         mEventOverviewPropertyLayout->Add( mEstimatedEndLevel.get(), lItemHeight, false, true );
-        mEstimatedLoss = New<UIPropertyValue>( "Link length:" );
+        mEstimatedLoss = New<UIPropertyValue>( "Estimated loss:" );
         mEventOverviewPropertyLayout->Add( mEstimatedLoss.get(), lItemHeight, false, true );
-        mPeakSNR = New<UIPropertyValue>( "Completion:" );
+        mPeakSNR = New<UIPropertyValue>( "Peak SNR:" );
         mEventOverviewPropertyLayout->Add( mPeakSNR.get(), lItemHeight, false, true );
-        mPeakTrace = New<UIPropertyValue>( "Overview length:" );
+        mPeakTrace = New<UIPropertyValue>( "Peak trace:" );
         mEventOverviewPropertyLayout->Add( mPeakTrace.get(), lItemHeight, false, true );
-        mPeakPosition = New<UIPropertyValue>( "Link length:" );
+        mPeakPosition = New<UIPropertyValue>( "Peak position:" );
         mEventOverviewPropertyLayout->Add( mPeakPosition.get(), lItemHeight, false, true );
-        mPeakPower = New<UIPropertyValue>( "Completion:" );
+        mPeakPower = New<UIPropertyValue>( "Peak power:" );
         mEventOverviewPropertyLayout->Add( mPeakPower.get(), lItemHeight, false, true );
-        mPeakSaturation = New<UIPropertyValue>( "Overview length:" );
+        mPeakSaturation = New<UIPropertyValue>( "Peak saturation:" );
         mEventOverviewPropertyLayout->Add( mPeakSaturation.get(), lItemHeight, false, true );
-        mFresnelCorrection = New<UIPropertyValue>( "Link length:" );
+        mFresnelCorrection = New<UIPropertyValue>( "Fresnel correction:" );
         mEventOverviewPropertyLayout->Add( mFresnelCorrection.get(), lItemHeight, false, true );
-        mUseSinglePulse = New<UIPropertyValue>( "Completion:" );
+        mUseSinglePulse = New<UIPropertyValue>( "Use single-pulse measurement:" );
         mEventOverviewPropertyLayout->Add( mUseSinglePulse.get(), lItemHeight, false, true );
         Add( mEventOverviewLayout.get(), false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
 
-        mPreviousSectionTitle = New<UILabel>( "Previous section" );
-        mPreviousSectionTitle->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
-        Add( mPreviousSectionTitle.get(), 30.0f, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
-        mPreviousSectionLayout         = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
-        mPreviousSectionPropertyLayout = New<UIBoxLayout>( eBoxLayoutOrientation::VERTICAL );
-        mPreviousSectionLayout->Add( nullptr, 25.0f, false, false );
-        mPreviousSectionLayout->Add( mPreviousSectionPropertyLayout.get(), true, true );
-        mPreviousRbsTrace = New<UIPropertyValue>( "Trace:" );
-        mPreviousSectionPropertyLayout->Add( mPreviousRbsTrace.get(), lItemHeight, false, true );
-        mPreviousRbsNoise = New<UIPropertyValue>( "Noise:" );
-        mPreviousSectionPropertyLayout->Add( mPreviousRbsNoise.get(), lItemHeight, false, true );
-        mPreviousRbsSaturation = New<UIPropertyValue>( "Saturation:" );
-        mPreviousSectionPropertyLayout->Add( mPreviousRbsSaturation.get(), lItemHeight, false, true );
-        mPreviousLsaRange = New<UIPropertyValue>( "LSA range:" );
-        mPreviousSectionPropertyLayout->Add( mPreviousLsaRange.get(), lItemHeight, false, true );
-        mPreviousLsaSlope = New<UIPropertyValue>( "Lsa slope:" );
-        mPreviousSectionPropertyLayout->Add( mPreviousLsaSlope.get(), lItemHeight, false, true );
-        mPreviousLsaOffset = New<UIPropertyValue>( "Lsa offset:" );
-        mPreviousSectionPropertyLayout->Add( mPreviousLsaOffset.get(), lItemHeight, false, true );
-        mPreviousLsaMean = New<UIPropertyValue>( "lsa mean:" );
-        mPreviousSectionPropertyLayout->Add( mPreviousLsaMean.get(), lItemHeight, false, true );
-        mPreviousLsaSlopeError = New<UIPropertyValue>( "Lsa slope error:" );
-        mPreviousSectionPropertyLayout->Add( mPreviousLsaSlopeError.get(), lItemHeight, false, true );
-        mPreviousLsaLinear = New<UIPropertyValue>( "LSA linear:" );
-        mPreviousSectionPropertyLayout->Add( mPreviousLsaLinear.get(), lItemHeight, false, true );
-        mPreviousLsaError = New<UIPropertyValue>( "LSA error:" );
-        mPreviousSectionPropertyLayout->Add( mPreviousLsaError.get(), lItemHeight, false, true );
-        mPreviousLsaCrossings = New<UIPropertyValue>( "LSA crossings:" );
-        mPreviousSectionPropertyLayout->Add( mPreviousLsaCrossings.get(), lItemHeight, false, true );
-        mPreviousLsaSections = New<UIPropertyValue>( "LSA sections:" );
-        mPreviousSectionPropertyLayout->Add( mPreviousLsaSections.get(), lItemHeight, false, true );
+        mPreviousSectionLayout = New<SectionOverview>( "Previous section" );
         Add( mPreviousSectionLayout.get(), false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
 
-        mNextSectionTitle = New<UILabel>( "Previous section" );
-        mNextSectionTitle->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
-        Add( mNextSectionTitle.get(), 30.0f, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
-        mNextSectionLayout         = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
-        mNextSectionPropertyLayout = New<UIBoxLayout>( eBoxLayoutOrientation::VERTICAL );
-        mNextSectionLayout->Add( nullptr, 25.0f, false, false );
-        mNextSectionLayout->Add( mNextSectionPropertyLayout.get(), true, true );
-        mNextRbsTrace = New<UIPropertyValue>( "Trace:" );
-        mNextSectionPropertyLayout->Add( mPreviousRbsTrace.get(), lItemHeight, false, true );
-        mNextRbsNoise = New<UIPropertyValue>( "Noise:" );
-        mNextSectionPropertyLayout->Add( mPreviousRbsNoise.get(), lItemHeight, false, true );
-        mNextRbsSaturation = New<UIPropertyValue>( "Saturation:" );
-        mNextSectionPropertyLayout->Add( mPreviousRbsSaturation.get(), lItemHeight, false, true );
-        mNextLsaRange = New<UIPropertyValue>( "LSA range:" );
-        mNextSectionPropertyLayout->Add( mPreviousLsaRange.get(), lItemHeight, false, true );
-        mNextLsaSlope = New<UIPropertyValue>( "Lsa slope:" );
-        mNextSectionPropertyLayout->Add( mPreviousLsaSlope.get(), lItemHeight, false, true );
-        mNextLsaOffset = New<UIPropertyValue>( "Lsa offset:" );
-        mNextSectionPropertyLayout->Add( mPreviousLsaOffset.get(), lItemHeight, false, true );
-        mNextLsaMean = New<UIPropertyValue>( "lsa mean:" );
-        mNextSectionPropertyLayout->Add( mPreviousLsaMean.get(), lItemHeight, false, true );
-        mNextLsaSlopeError = New<UIPropertyValue>( "Lsa slope error:" );
-        mNextSectionPropertyLayout->Add( mPreviousLsaSlopeError.get(), lItemHeight, false, true );
-        mNextLsaLinear = New<UIPropertyValue>( "LSA linear:" );
-        mNextSectionPropertyLayout->Add( mPreviousLsaLinear.get(), lItemHeight, false, true );
-        mNextLsaError = New<UIPropertyValue>( "LSA error:" );
-        mNextSectionPropertyLayout->Add( mPreviousLsaError.get(), lItemHeight, false, true );
-        mNextLsaCrossings = New<UIPropertyValue>( "LSA crossings:" );
-        mNextSectionPropertyLayout->Add( mPreviousLsaCrossings.get(), lItemHeight, false, true );
-        mNextLsaSections = New<UIPropertyValue>( "LSA sections:" );
-        mNextSectionPropertyLayout->Add( mPreviousLsaSections.get(), lItemHeight, false, true );
+        mNextSectionLayout = New<SectionOverview>( "Next section" );
         Add( mNextSectionLayout.get(), true, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
     }
 
-    void EventOverview::SetData( Ref<MonoScriptInstance> aEventOverview )
+    void EventOverview::SetData( Ref<MonoScriptInstance> aPhysicalEvent, Ref<MonoScriptInstance> aAttributes )
     {
+        auto lOtdrPhysicalEvent = aPhysicalEvent->GetPropertyValue( "PhysicalEvent", "Metrino.Otdr.PhysicalEvent" );
+
         // Overview
+        std::string lWavelength = fmt::format( "{:.0f} nm", aPhysicalEvent->GetPropertyValue<double>( "Wavelength" ) * 1e9 );
+        mWavelength->SetValue( lWavelength );
+
+        auto        lDetectionTrace          = aAttributes->GetPropertyValue( "DetectionTrace", "Metrino.Otdr.SinglePulseTrace" );
+        std::string lDetectionTracePeakPulse = fmt::format( "{} ns", lDetectionTrace->GetPropertyValue<double>( "Pulse" ) * 1e9 );
+        std::string lDetectionTracePeakPulseWidth =
+            fmt::format( "{:.3f} m", lDetectionTrace->GetPropertyValue<double>( "PulseWidth" ) );
+        std::string lDetectionTraceFormat = fmt::format( "{} - {}", lDetectionTracePeakPulse, lDetectionTracePeakPulseWidth );
+        mDetectionTrace->SetValue( lDetectionTraceFormat );
+
+        std::string lPositionTolerance = fmt::format( "{:.4f} nm", aPhysicalEvent->GetPropertyValue<double>( "PositionTolerance" ) );
+        mPositionTolerance->SetValue( lPositionTolerance );
+
+        std::string lCurveLevel = fmt::format( "{:.2f} dB", lOtdrPhysicalEvent->GetPropertyValue<double>( "CurveLevel" ) );
+        mCurveLevel->SetValue( lCurveLevel );
+
+        std::string lNoiseLevel = fmt::format( "{:.2f} dB", lOtdrPhysicalEvent->GetPropertyValue<double>( "LocalNoise" ) );
+        mEndOrNoiseLevel->SetValue( lNoiseLevel );
+
+        std::string lEstimatedCurveLevel = fmt::format( "{:.2f} dB", aAttributes->GetPropertyValue<double>( "EstimatedCurveLevel" ) );
+        mEstimatedCurveLevel->SetValue( lEstimatedCurveLevel );
+
+        std::string lEstimatedEndLevel = fmt::format( "{:.2f} dB", aAttributes->GetPropertyValue<double>( "EstimatedEndLevel" ) );
+        mEstimatedEndLevel->SetValue( lEstimatedEndLevel );
+
+        std::string lEstimatedLoss = fmt::format( "{:.2f} dB", aAttributes->GetPropertyValue<double>( "EstimatedLoss" ) );
+        mEstimatedLoss->SetValue( lEstimatedLoss );
+
+        std::string lPeakSNR = fmt::format( "{:.2f} dB", aAttributes->GetPropertyValue<double>( "PeakSnr" ) );
+        mPeakSNR->SetValue( lPeakSNR );
+
+        auto        lPeakTrace      = aAttributes->GetPropertyValue( "PeakTrace", "Metrino.Otdr.SinglePulseTrace" );
+        std::string lPeakPulse      = fmt::format( "{} ns", lPeakTrace->GetPropertyValue<double>( "Pulse" ) * 1e9 );
+        std::string lPeakPulseWidth = fmt::format( "{:.3f} m", lPeakTrace->GetPropertyValue<double>( "PulseWidth" ) );
+        std::string lFormat         = fmt::format( "{} - {}", lPeakPulse, lPeakPulseWidth );
+        mPeakTrace->SetValue( lFormat );
+
+        std::string lPeakPosition = fmt::format( "{:.2f} km", aAttributes->GetPropertyValue<double>( "PeakPosition" ) );
+        mPeakPosition->SetValue( lPeakPosition );
+
+        std::string lPeakPower = fmt::format( "{:.2f} dB", aAttributes->GetPropertyValue<double>( "PeakPower" ) );
+        mPeakPower->SetValue( lPeakPower );
+
+        std::string lPeakSaturation = fmt::format( "{:.2f} dB", aAttributes->GetPropertyValue<double>( "PeakSaturationLevel" ) );
+        mPeakSaturation->SetValue( lPeakSaturation );
+
+        std::string lFresnelCorrection = fmt::format( "{:.2f} dB", aAttributes->GetPropertyValue<double>( "FresnelCorrection" ) );
+        mFresnelCorrection->SetValue( lFresnelCorrection );
+
+        std::string lUseSinglePulse =
+            fmt::format( "{}", aAttributes->GetPropertyValue<double>( "UseSinglePulseNextRbsForMeasurement" ) );
+        mUseSinglePulse->SetValue( lUseSinglePulse );
 
         // Previous section
-
+        auto lPreviousRbs = aAttributes->GetPropertyValue( "PreviousRbs", "Metrino.Olm.SignalProcessing.RbsAttribute" );
+        mPreviousSectionLayout->SetData( lPreviousRbs );
         // Next section
+        auto lNextRbs = aAttributes->GetPropertyValue( "NextRbs", "Metrino.Olm.SignalProcessing.RbsAttribute" );
+        mNextSectionLayout->SetData( lNextRbs );
     }
 } // namespace SE::OtdrEditor

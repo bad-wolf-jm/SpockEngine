@@ -38,6 +38,8 @@ namespace SE::OtdrEditor
         eReflectanceType mReflectanceType;
         ePassFail        mLossPassFail;
         ePassFail        mReflectancePassFail;
+        void            *mPhysicalEvent;
+        void            *mAttributes;
     };
 
     class UILinkElementTable : public UITable

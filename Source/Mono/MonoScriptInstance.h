@@ -9,10 +9,9 @@
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
+#include "mono/metadata/mono-config.h"
 #include "mono/metadata/object.h"
 #include "mono/metadata/tabledefs.h"
-#include "mono/metadata/mono-config.h"
-
 
 namespace SE::Core
 {
@@ -23,6 +22,10 @@ namespace SE::Core
       public:
         MonoScriptInstance() = default;
         MonoScriptInstance( MonoScriptClass *aScriptClass, MonoClass *aMonoClass, MonoObject *aInstance );
+        MonoScriptInstance( MonoScriptClass *aScriptClass, MonoClass *aMonoClass, void *aInstance )
+            : MonoScriptInstance( aScriptClass, aMonoClass, (MonoObject *)aInstance )
+        {
+        }
         MonoScriptInstance( MonoClass *aMonoClass, MonoObject *aInstance )
             : MonoScriptInstance( nullptr, aMonoClass, aInstance )
         {
@@ -86,8 +89,8 @@ namespace SE::Core
 
         friend class MonoScriptEngine;
 
-    private:
-        sScriptProperty &GetProperty(std::string const& aName);
+      private:
+        sScriptProperty &GetProperty( std::string const &aName );
     };
 
 } // namespace SE::Core
