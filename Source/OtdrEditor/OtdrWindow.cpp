@@ -295,7 +295,7 @@ namespace SE::OtdrEditor
         MonoString *lFilePath   = MonoRuntime::NewString( aPath.string() );
         MonoObject *lDataObject = lFileLoader.CallMethod( "LoadOlmData", lFilePath );
 
-        mDataInstance = New<MonoScriptInstance>( lFileClass.Class(), lDataObject );
+        mDataInstance = New<MonoScriptInstance>( &lFileClass, lFileClass.Class(), lDataObject );
 
         MonoObject               *lTraceData       = mDataInstance->CallMethod( "GetAllTraces" );
         std::vector<MonoObject *> lTraceDataVector = AsVector<MonoObject *>( lTraceData );
@@ -318,6 +318,9 @@ namespace SE::OtdrEditor
         MonoObject *lLinkElementData   = mDataInstance->CallMethod( "GetLinkElements" );
         auto        lLinkElementVector = AsVector<sLinkElement>( lLinkElementData );
         mLinkElementTable.SetData(lLinkElementVector);
+
+        auto lMeasurementData = mDataInstance->GetPropertyValue("Measurement", "Metrino.Olm.OlmMeasurement");
+        mMeasurementOverview.SetData(lMeasurementData);
     }
 
     bool OtdrWindow::RenderMainMenu()
