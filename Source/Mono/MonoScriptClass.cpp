@@ -55,6 +55,26 @@ namespace SE::Core
 
             return lFields;
         }
+
+        std::map<std::string, sScriptProperty> GetClassProperties( MonoClass *aMonoClass )
+        {
+            std::map<std::string, sScriptProperty> lProperties{};
+
+            if( !aMonoClass ) return lProperties;
+
+            int lFieldCount = mono_class_num_properties( aMonoClass );
+
+            void *lIterator = nullptr;
+            while( MonoProperty *lProperty = mono_class_get_properties( aMonoClass, &lIterator ) )
+            {
+                const char *lPropertyName = mono_property_get_name( lProperty );
+                uint32_t    lFlags        = mono_property_get_flags( lProperty );
+
+                lProperties[lPropertyName] = { lPropertyName, lProperty };
+            }
+
+            return lProperties;
+        }
     } // namespace
 
     MonoScriptClass::MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
@@ -65,20 +85,22 @@ namespace SE::Core
     {
         mMonoClass     = mono_class_from_name( aImage, aClassNamespace.c_str(), aClassName.c_str() );
         mFields        = GetClassFields( mMonoClass );
+        mProperties    = GetClassProperties( mMonoClass );
         mClassFullName = fmt::format( "{}.{}", mClassNamespace, mClassName );
     }
 
     MonoScriptClass::MonoScriptClass( MonoType *aMonoClass )
         : mMonoClass{ mono_class_from_mono_type( aMonoClass ) }
     {
-        mFields = GetClassFields( mMonoClass );
+        mFields     = GetClassFields( mMonoClass );
+        mProperties = GetClassProperties( mMonoClass );
     }
 
     Ref<MonoScriptInstance> MonoScriptClass::DoInstantiate()
     {
         MonoObject *lInstance = MonoRuntime::InstantiateClass( mMonoClass, mIsCore );
 
-        return New<MonoScriptInstance>( mMonoClass, lInstance );
+        return New<MonoScriptInstance>( this, mMonoClass, lInstance );
     }
 
     MonoMethod *MonoScriptClass::GetMethod( const std::string &aName, int aParameterCount )
@@ -106,4 +128,4 @@ namespace SE::Core
 
         return InvokeMethod( lMethod, aParameters );
     }
-} // namespace SE::Core
+ } // namespace SE::Core

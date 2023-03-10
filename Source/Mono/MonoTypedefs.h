@@ -12,4 +12,35 @@ extern "C"
     typedef struct _MonoAssembly   MonoAssembly;
     typedef struct _MonoImage      MonoImage;
     typedef struct _MonoClassField MonoClassField;
+    typedef struct _MonoProperty   MonoProperty;
+
+    enum class eScriptFieldType
+    {
+        None = 0,
+        Float,
+        Double,
+        Bool,
+        Char,
+        Byte,
+        Short,
+        Int,
+        Long,
+        UByte,
+        UShort,
+        UInt,
+        ULong
+    };
+
+    struct sScriptField
+    {
+        eScriptFieldType mType;
+        std::string      mName;
+        MonoClassField  *mClassField;
+    };
+
+    struct sScriptProperty
+    {
+        std::string   mName;
+        MonoProperty *mProperty;
+    };
 }

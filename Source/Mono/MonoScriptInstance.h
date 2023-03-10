@@ -1,19 +1,33 @@
 #pragma once
 
+#include "Core/Memory.h"
 #include <filesystem>
 #include <map>
 #include <string>
 
 #include "MonoTypedefs.h"
 
+#include "mono/jit/jit.h"
+#include "mono/metadata/assembly.h"
+#include "mono/metadata/object.h"
+#include "mono/metadata/tabledefs.h"
+#include "mono/metadata/mono-config.h"
+
+
 namespace SE::Core
 {
+    class MonoScriptClass;
+
     class MonoScriptInstance
     {
       public:
         MonoScriptInstance() = default;
-        MonoScriptInstance( MonoClass *aMonoClass, MonoObject *aInstance );
-        
+        MonoScriptInstance( MonoScriptClass *aScriptClass, MonoClass *aMonoClass, MonoObject *aInstance );
+        MonoScriptInstance( MonoClass *aMonoClass, MonoObject *aInstance )
+            : MonoScriptInstance( nullptr, aMonoClass, aInstance )
+        {
+        }
+
         ~MonoScriptInstance();
 
         MonoObject *GetInstance() { return mInstance; };
@@ -47,14 +61,33 @@ namespace SE::Core
             return lValue;
         }
 
+        Ref<MonoScriptInstance> GetPropertyValue( std::string const &aName, std::string const &aClassName );
+
+        template <typename _Ty>
+        _Ty GetPropertyValue( std::string const &aName )
+        {
+            if( mScriptClass == nullptr ) return _Ty{};
+
+            sScriptProperty &lProperty       = GetProperty( aName );
+            MonoMethod      *lPropertyGetter = mono_property_get_get_method( lProperty.mProperty );
+
+            MonoObject *lValue = mono_runtime_invoke( lPropertyGetter, mInstance, nullptr, nullptr );
+
+            return *(_Ty *)mono_object_unbox( lValue );
+        }
+
         operator bool() const { return ( mInstance != nullptr ) && ( mMonoClass != nullptr ); }
 
       private:
-        MonoClass  *mMonoClass = nullptr;
-        MonoObject *mInstance  = nullptr;
-        uint32_t    mGCHandle  = 0;
+        MonoScriptClass *mScriptClass = nullptr;
+        MonoClass       *mMonoClass   = nullptr;
+        MonoObject      *mInstance    = nullptr;
+        uint32_t         mGCHandle    = 0;
 
         friend class MonoScriptEngine;
+
+    private:
+        sScriptProperty &GetProperty(std::string const& aName);
     };
 
 } // namespace SE::Core
