@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <map>
 #include <string>
+#include <type_traits>
 
 #include "MonoTypedefs.h"
 
@@ -76,7 +77,10 @@ namespace SE::Core
 
             MonoObject *lValue = mono_runtime_invoke( lPropertyGetter, mInstance, nullptr, nullptr );
 
-            return *(_Ty *)mono_object_unbox( lValue );
+            if constexpr( std::is_same<_Ty, MonoString *>::value || std::is_same<_Ty, MonoObject *>::value )
+                return (_Ty)lValue;
+            else
+                return *(_Ty *)mono_object_unbox( lValue );
         }
 
         operator bool() const { return ( mInstance != nullptr ) && ( mMonoClass != nullptr ); }

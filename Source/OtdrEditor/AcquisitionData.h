@@ -18,7 +18,8 @@ namespace SE::OtdrEditor
         AcquisitionData();
         ~AcquisitionData() = default;
 
-        void SetData(Ref<MonoScriptInstance> aRbsData);
+        void SetData( Ref<MonoScriptInstance> aSinglePulseTrace, Ref<MonoScriptInstance> aAcquisitionData,
+                      Ref<MonoScriptInstance> aFiberInfo );
 
       protected:
         Ref<UILabel>         mSectionTitle;
@@ -55,6 +56,7 @@ namespace SE::OtdrEditor
         Ref<UIPropertyValue> mFresnelSaturation;
         Ref<UIPropertyValue> mSpeckeNoise;
         Ref<UIPropertyValue> mSaturationMaskRatio;
+        Ref<UIPropertyValue> mSaturationMaskDuration;
         Ref<UIPropertyValue> mApdID;
         Ref<UIPropertyValue> mRiseTime;
         Ref<UIPropertyValue> mFallTime;

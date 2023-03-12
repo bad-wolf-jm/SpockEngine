@@ -312,7 +312,23 @@ namespace SE::OtdrEditor
         MonoObject               *lTraceData       = mDataInstance->CallMethod( "GetAllTraces" );
         std::vector<MonoObject *> lTraceDataVector = AsVector<MonoObject *>( lTraceData );
 
-        static auto &lTraceDataStructure = MonoRuntime::GetClassType( "Metrino.Mono.TracePlotData" );
+        static auto &lTraceDataStructure        = MonoRuntime::GetClassType( "Metrino.Mono.TracePlotData" );
+        static auto &lSinglePulseTraceClassType = MonoRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
+        static auto &lAcquisitionDataClassType  = MonoRuntime::GetClassType( "Metrino.Otdr.AcquisitionData" );
+
+        auto &lTraceDataInstance = MonoScriptInstance( &lTraceDataStructure, lTraceDataStructure.Class(), lTraceDataVector[0] );
+
+        auto lSinglePulseTrace = lTraceDataInstance.GetFieldValue<MonoObject *>( "mTrace" );
+        auto lSinglePulseTraceInstance =
+            New<MonoScriptInstance>( &lSinglePulseTraceClassType, lSinglePulseTraceClassType.Class(), lSinglePulseTrace );
+
+        auto lAcquisitionData = lTraceDataInstance.GetFieldValue<MonoObject *>( "mAcquisitionData" );
+        auto lAcquisitionDataInstance =
+            New<MonoScriptInstance>( &lAcquisitionDataClassType, lAcquisitionDataClassType.Class(), lAcquisitionData );
+
+        auto lFiberInfo = lTraceDataInstance.GetPropertyValue("FiberInfo", "Metrino.Otdr.PhysicalFiberCharacteristics");
+
+        mAcquisitionDataOverview.SetData( lSinglePulseTraceInstance, lAcquisitionDataInstance, lFiberInfo );
 
         mTracePlot.Clear();
         for( int i = 0; i < lTraceDataVector.size(); i++ )
