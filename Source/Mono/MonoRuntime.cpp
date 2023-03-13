@@ -9,9 +9,9 @@
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
+#include "mono/metadata/mono-config.h"
 #include "mono/metadata/object.h"
 #include "mono/metadata/tabledefs.h"
-#include "mono/metadata/mono-config.h"
 
 #include <unordered_map>
 
@@ -67,7 +67,7 @@ namespace SE::Core
         std::function<void( std::string )> mConsoleOut;
 
         std::map<std::string, std::vector<sAssemblyData *>> mCategories;
-        HINSTANCE mMonoPosixHelper;
+        HINSTANCE                                           mMonoPosixHelper;
     };
 
     static sMonoRuntimeData *sRuntimeData = nullptr;
@@ -111,8 +111,29 @@ namespace SE::Core
                 else
                     lFullName = lClassName;
 
-                if( mono_class_from_name( aImage, lNameSpace, lClassName ) )
+                MonoClass *lClass = mono_class_from_name( aImage, lNameSpace, lClassName );
+                if( lClass != nullptr )
+                {
                     lClasses[lFullName] = MonoScriptClass( lNameSpace, lClassName, aImage, aPath );
+
+                    lClass = mono_class_get_parent( lClass );
+                    while( lClass != nullptr )
+                    {
+                        const char *lNameSpace = mono_class_get_namespace( lClass );
+                        const char *lClassName = mono_class_get_name( lClass );
+
+                        std::string lFullName;
+                        if( strlen( lNameSpace ) != 0 )
+                            lFullName = fmt::format( "{}.{}", lNameSpace, lClassName );
+                        else
+                            lFullName = lClassName;
+
+                        if( lClasses.find( lFullName ) == lClasses.end() )
+                            lClasses[lFullName] = MonoScriptClass( lClass, lNameSpace, lClassName, aImage, aPath );
+
+                        lClass = mono_class_get_parent( lClass );
+                    }
+                }
             }
 
             return lClasses;
@@ -213,7 +234,7 @@ namespace SE::Core
 
         sRuntimeData = new sMonoRuntimeData();
 
-        sRuntimeData->mMonoPosixHelper = LoadLibrary("C:\\GitLab\\SpockEngine\\ThirdParty\\mono\\bin\\Debug\\MonoPosixHelper.dll");
+        sRuntimeData->mMonoPosixHelper = LoadLibrary( "C:\\GitLab\\SpockEngine\\ThirdParty\\mono\\bin\\Debug\\MonoPosixHelper.dll" );
 
         InitMono( aMonoPath );
 
@@ -241,7 +262,7 @@ namespace SE::Core
     void MonoRuntime::InitMono( fs::path &aMonoPath )
     {
         mono_set_assemblies_path( aMonoPath.string().c_str() );
-        mono_config_parse (NULL);
+        mono_config_parse( NULL );
 
         MonoDomain *lRootDomain = mono_jit_init( "SpockEngineRuntime" );
 

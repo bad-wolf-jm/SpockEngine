@@ -20,6 +20,8 @@ namespace SE::Core
         MonoScriptClass( MonoType *aMonoClass );
         MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
                          fs::path const &aDllPPath );
+        MonoScriptClass( MonoClass *aClass, const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
+                         fs::path const &aDllPPath );
 
         Ref<MonoScriptInstance> DoInstantiate();
 

@@ -96,6 +96,18 @@ namespace SE::Core
         mClassFullName = fmt::format( "{}.{}", mClassNamespace, mClassName );
     }
 
+    MonoScriptClass::MonoScriptClass( MonoClass* aClass, const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
+                                      fs::path const &aDllPPath )
+        : mClassNamespace( aClassNamespace )
+        , mClassName( aClassName )
+        , mDllPath{ aDllPPath }
+    {
+        mMonoClass     = aClass;
+        mFields        = GetClassFields( mMonoClass );
+        mProperties    = GetClassProperties( mMonoClass );
+        mClassFullName = fmt::format( "{}.{}", mClassNamespace, mClassName );
+    }
+
     MonoScriptClass::MonoScriptClass( MonoType *aMonoClass )
         : mMonoClass{ mono_class_from_mono_type( aMonoClass ) }
     {
