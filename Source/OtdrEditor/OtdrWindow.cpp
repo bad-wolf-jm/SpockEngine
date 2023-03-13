@@ -347,8 +347,8 @@ namespace SE::OtdrEditor
         auto        lLinkElementVector = AsVector<sLinkElement>( lLinkElementData );
         mLinkElementTable.SetData( lLinkElementVector );
 
-        auto lMeasurementData = mDataInstance->GetPropertyValue( "Measurement", "Metrino.Olm.OlmMeasurement" );
-        mMeasurementOverview.SetData( lMeasurementData );
+        // auto lMeasurementData = mDataInstance->GetPropertyValue( "Measurement", "Metrino.Olm.OlmMeasurement" );
+        mMeasurementOverview.SetData( mDataInstance );
 
         static auto &lOlmMeasurementClass = MonoRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
         auto         lPhysicalEvent =
