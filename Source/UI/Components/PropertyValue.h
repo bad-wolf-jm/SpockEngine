@@ -21,6 +21,13 @@ namespace SE::OtdrEditor
 
         void SetValue( std::string aValue );
 
+        template <typename... _Ty>
+        void SetValue( std::string aFormat, _Ty &&...aArgList )
+        {
+            std::string lValue = fmt::format( aFormat, std::forward<_Ty>( aArgList )... );
+            SetValue( lValue );
+        }
+
       protected:
         Ref<UILabel> mName;
         Ref<UILabel> mValue;

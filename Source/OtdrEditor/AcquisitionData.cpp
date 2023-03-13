@@ -106,8 +106,7 @@ namespace SE::OtdrEditor
     void AcquisitionData::SetData( Ref<MonoScriptInstance> aSinglePulseTrace, Ref<MonoScriptInstance> aAcquisitionData,
                                    Ref<MonoScriptInstance> aFiberInfo )
     {
-        std::string lWavelength = fmt::format( "{:.0f} nm", aSinglePulseTrace->GetPropertyValue<double>( "Wavelength" ) * 1e9 );
-        mWavelength->SetValue( lWavelength );
+        mWavelength->SetValue( "{:.0f} nm", aSinglePulseTrace->GetPropertyValue<double>( "Wavelength" ) * 1e9 );
 
         std::string lPulse       = fmt::format( "{:.3} \xCE\xBCs", aSinglePulseTrace->GetPropertyValue<double>( "Pulse" ) * 1e6 );
         std::string lPulseWidth  = fmt::format( "{:.3f} m", aSinglePulseTrace->GetPropertyValue<double>( "PulseWidth" ) );
@@ -119,17 +118,16 @@ namespace SE::OtdrEditor
         std::string lRangeFormat = fmt::format( "[{}, {}] \xCE\xBCs", lRange, lRangeWidth );
         mRange->SetValue( lRangeFormat );
 
-        std::string lStitchRange = fmt::format( "{:.3f}", aAcquisitionData->GetPropertyValue<double>( "StitchComputationStart" ) * 1e6 );
+        std::string lStitchRange =
+            fmt::format( "{:.3f}", aAcquisitionData->GetPropertyValue<double>( "StitchComputationStart" ) * 1e6 );
         std::string lStitchRangeWidth =
             fmt::format( "{:.3f}", aAcquisitionData->GetPropertyValue<double>( "StitchComputationEnd" ) * 1e6 );
         std::string lStitchRangeFormat = fmt::format( "[{}, {}] \xCE\xBCs", lStitchRange, lStitchRangeWidth );
         mStitchRange->SetValue( lStitchRangeFormat );
 
-        std::string lLocalErrorType = fmt::format( "{}", aAcquisitionData->GetPropertyValue<uint32_t>( "LocalErrorType" ) );
-        mLocalError->SetValue( lLocalErrorType );
+        mLocalError->SetValue( "{}", aAcquisitionData->GetPropertyValue<uint32_t>( "LocalErrorType" ) );
 
-        std::string lAverages = fmt::format( "{}", aAcquisitionData->GetPropertyValue<uint32_t>( "NumberOfAverages" ) );
-        mAverages->SetValue( lAverages );
+        mAverages->SetValue( "{}", aAcquisitionData->GetPropertyValue<uint32_t>( "NumberOfAverages" ) );
 
         std::string lDecimation =
             fmt::format( "{}", aAcquisitionData->GetPropertyValue<uint32_t>( "NumberOfAddedSamplesDecimation" ) );
@@ -137,31 +135,21 @@ namespace SE::OtdrEditor
         std::string lDecimationsOverPhases = fmt::format( "{} / {}", lDecimation, lPhases );
         mDecimationsPhases->SetValue( lDecimationsOverPhases );
 
-        std::string lDeltaT = fmt::format( "{:.3f} ns", aAcquisitionData->GetPropertyValue<double>( "DeltaT" ) * 1e9 );
-        mDeltaT->SetValue( lDeltaT );
+        mDeltaT->SetValue( "{:.3f} ns", aAcquisitionData->GetPropertyValue<double>( "DeltaT" ) * 1e9 );
 
-        std::string lTimeToOutputConnector =
-            fmt::format( "{:.1} ns", aAcquisitionData->GetPropertyValue<double>( "TimeToOutputConnector" ) * 1e9 );
-        mTimeToOutput->SetValue( lTimeToOutputConnector );
+        mTimeToOutput->SetValue( "{:.1} ns", aAcquisitionData->GetPropertyValue<double>( "TimeToOutputConnector" ) * 1e9 );
 
-        std::string lTimeFromLaserToOutputConnector =
-            fmt::format( "{:.1f} ns", aAcquisitionData->GetPropertyValue<double>( "TimeFromLaserToOutputConnector" ) * 1e9 );
-        mTimeLASToOutput->SetValue( lTimeFromLaserToOutputConnector );
+        mTimeLASToOutput->SetValue( "{:.1f} ns",
+                                    aAcquisitionData->GetPropertyValue<double>( "TimeFromLaserToOutputConnector" ) * 1e9 );
 
-        std::string lTimeToOutputConnectorInternalSamples =
-            fmt::format( "{:.1f} ns", aAcquisitionData->GetPropertyValue<double>( "TimeToOutputConnectorInternalSamples" ) * 1e9 );
-        mTTOInternalSampling->SetValue( lTimeToOutputConnectorInternalSamples );
+        mTTOInternalSampling->SetValue( "{:.1f} ns",
+                                        aAcquisitionData->GetPropertyValue<double>( "TimeToOutputConnectorInternalSamples" ) * 1e9 );
 
-        std::string lInternalModuleReflection =
-            fmt::format( "{:.1} dB", aAcquisitionData->GetPropertyValue<double>( "InternalModuleReflection" ) );
-        mInternalReflectance->SetValue( lInternalModuleReflection );
+        mInternalReflectance->SetValue( "{:.1} dB", aAcquisitionData->GetPropertyValue<double>( "InternalModuleReflection" ) );
 
-        std::string lPulseSamplingDelay =
-            fmt::format( "{:.3f} s", aAcquisitionData->GetPropertyValue<double>( "PulseSamplingDelay" ) );
-        mSamplingDelay->SetValue( lPulseSamplingDelay );
+        mSamplingDelay->SetValue( "{:.3f} s", aAcquisitionData->GetPropertyValue<double>( "PulseSamplingDelay" ) );
 
-        std::string lRepetitionPeriod = fmt::format( "{:.3f} s", aAcquisitionData->GetPropertyValue<double>( "RepetitionPeriod" ) );
-        mRepetitionPeriod->SetValue( lRepetitionPeriod );
+        mRepetitionPeriod->SetValue( "{:.3f} s", aAcquisitionData->GetPropertyValue<double>( "RepetitionPeriod" ) );
 
         auto lAcquisitionTime = aAcquisitionData->GetPropertyValue<uint32_t>( "NumberOfAverages" ) *
                                 aAcquisitionData->GetPropertyValue<uint32_t>( "NumberOfPhases" ) *
@@ -170,11 +158,9 @@ namespace SE::OtdrEditor
         std::string lAcquisitionTimeStr = fmt::format( "{} s", lAcquisitionTime );
         mAcquisitionTime->SetValue( lAcquisitionTimeStr );
 
-        std::string lTzCode = fmt::format( "{}", aAcquisitionData->GetPropertyValue<uint32_t>( "TzCode" ) );
-        mTzCode->SetValue( lTzCode );
+        mTzCode->SetValue( "{}", aAcquisitionData->GetPropertyValue<uint32_t>( "TzCode" ) );
 
-        std::string lBandwidth = fmt::format( "{:.3f} KHz", aAcquisitionData->GetPropertyValue<double>( "Bandwidth" ) * 0.001f );
-        mBandwidth->SetValue( lBandwidth );
+        mBandwidth->SetValue( "{:.3f} KHz", aAcquisitionData->GetPropertyValue<double>( "Bandwidth" ) * 0.001f );
 
         std::string lTypicalAnalogGain =
             fmt::format( "{:.3f} dBo", aAcquisitionData->GetPropertyValue<double>( "TypicalAnalogGain" ) );
@@ -183,63 +169,40 @@ namespace SE::OtdrEditor
         std::string lTypicalApdGain = fmt::format( "{:.3f} dBo", aAcquisitionData->GetPropertyValue<double>( "TypicalApdGain" ) );
         mApdGain->SetValue( lTypicalApdGain );
 
-        std::string lNormalizationGainAppliedForStitch =
-            fmt::format( "{:.3f} dBo", aAcquisitionData->GetPropertyValue<double>( "NormalizationGainAppliedForStitch" ) );
-        mStitchGain->SetValue( lNormalizationGainAppliedForStitch );
+        mStitchGain->SetValue( "{:.3f} dBo", aAcquisitionData->GetPropertyValue<double>( "NormalizationGainAppliedForStitch" ) );
 
         std::string lFresnelCorrection = fmt::format( "{:.3f}", aAcquisitionData->GetPropertyValue<double>( "FresnelCorrection" ) );
         mFresnelCorrection->SetValue( lFresnelCorrection );
 
-        std::string lNormalizationFactor =
-            fmt::format( "{:.3f}", aAcquisitionData->GetPropertyValue<double>( "NormalizationFactor" ) );
-        mNormalizationFactor->SetValue( lNormalizationFactor );
+        mNormalizationFactor->SetValue( "{:.3f}", aAcquisitionData->GetPropertyValue<double>( "NormalizationFactor" ) );
 
-        std::string lHighBandwidthFilter =
-            fmt::format( "{:.3f} GHz", aAcquisitionData->GetPropertyValue<double>( "HighBandwidthFilter" ) * 1e-9 );
-        mHighBandwidthFilter->SetValue( lHighBandwidthFilter );
+        mHighBandwidthFilter->SetValue( "{:.3f} GHz", aAcquisitionData->GetPropertyValue<double>( "HighBandwidthFilter" ) * 1e-9 );
 
-        std::string lUnfilteredRmsNoise =
-            fmt::format( "{:.3f} dB", aAcquisitionData->GetPropertyValue<double>( "UnfilteredRmsNoise" ) );
-        mUnfilteredRmsNoise->SetValue( lUnfilteredRmsNoise );
+        mUnfilteredRmsNoise->SetValue( "{:.3f} dB", aAcquisitionData->GetPropertyValue<double>( "UnfilteredRmsNoise" ) );
 
-        std::string lLowBandwidthFilteredRmsNoise =
-            fmt::format( "{:.3f} dB", aAcquisitionData->GetPropertyValue<double>( "LowBandwidthFilteredRmsNoise" ) );
-        mLowBandwidthFilterNoise->SetValue( lLowBandwidthFilteredRmsNoise );
+        mLowBandwidthFilterNoise->SetValue( "{:.3f} dB",
+                                            aAcquisitionData->GetPropertyValue<double>( "LowBandwidthFilteredRmsNoise" ) );
 
-        std::string lHighBandwidthFilteredRmsNoise =
-            fmt::format( "{:.3f} dB", aAcquisitionData->GetPropertyValue<double>( "HighBandwidthFilteredRmsNoise" ) );
-        mHighBandwidthFiltedNoise->SetValue( lHighBandwidthFilteredRmsNoise );
+        mHighBandwidthFiltedNoise->SetValue( "{:.3f} dB",
+                                             aAcquisitionData->GetPropertyValue<double>( "HighBandwidthFilteredRmsNoise" ) );
 
-        std::string lExpectedInjection = fmt::format( "{:.3f} dB", aAcquisitionData->GetPropertyValue<double>( "ExpectedInjection" ) );
-        mExpectedInjection->SetValue( lExpectedInjection );
+        mExpectedInjection->SetValue( "{:.3f} dB", aAcquisitionData->GetPropertyValue<double>( "ExpectedInjection" ) );
 
-        std::string lSaturationLevel = fmt::format( "{:.3f} dB", aAcquisitionData->GetPropertyValue<double>( "SaturationLevel" ) );
-        mSaturationLevel->SetValue( lSaturationLevel );
+        mSaturationLevel->SetValue( "{:.3f} dB", aAcquisitionData->GetPropertyValue<double>( "SaturationLevel" ) );
 
-        std::string lFresnelSaturationLevel =
-            fmt::format( "{:.3f} dB", aAcquisitionData->GetPropertyValue<double>( "FresnelSaturationLevel" ) );
-        mFresnelSaturation->SetValue( lFresnelSaturationLevel );
+        mFresnelSaturation->SetValue( "{:.3f} dB", aAcquisitionData->GetPropertyValue<double>( "FresnelSaturationLevel" ) );
 
-        std::string lSpeckleNoiseFor10nsPulse =
-            fmt::format( "{:.3f}", aAcquisitionData->GetPropertyValue<double>( "SpeckleNoiseFor10nsPulse" ) );
-        mSpeckeNoise->SetValue( lSpeckleNoiseFor10nsPulse );
+        mSpeckeNoise->SetValue( "{:.3f}", aAcquisitionData->GetPropertyValue<double>( "SpeckleNoiseFor10nsPulse" ) );
 
-        std::string lSaturationMaskingRatio =
-            fmt::format( "{}", aAcquisitionData->GetPropertyValue<double>( "SaturationMaskingRatio" ) );
-        mSaturationMaskRatio->SetValue( lSaturationMaskingRatio );
+        mSaturationMaskRatio->SetValue( "{}", aAcquisitionData->GetPropertyValue<double>( "SaturationMaskingRatio" ) );
 
-        std::string lSaturationMaskingDuration =
-            fmt::format( "{}", aAcquisitionData->GetPropertyValue<double>( "SaturationMaskingDuration" ) );
-        mSaturationMaskDuration->SetValue( lSaturationMaskingDuration );
+        mSaturationMaskDuration->SetValue( "{}", aAcquisitionData->GetPropertyValue<double>( "SaturationMaskingDuration" ) );
 
-        std::string lApdId = fmt::format( "{}", aAcquisitionData->GetPropertyValue<double>( "ApdId" ) );
-        mApdID->SetValue( lApdId );
+        mApdID->SetValue( "{}", aAcquisitionData->GetPropertyValue<double>( "ApdId" ) );
 
-        std::string lRiseTime = fmt::format( "{:.3f} ns", aAcquisitionData->GetPropertyValue<double>( "PulseRiseTime" ) * 1e9 );
-        mRiseTime->SetValue( lRiseTime );
+        mRiseTime->SetValue( "{:.3f} ns", aAcquisitionData->GetPropertyValue<double>( "PulseRiseTime" ) * 1e9 );
 
-        std::string lFallTime = fmt::format( "{:.3f} ns", aAcquisitionData->GetPropertyValue<double>( "PulseFallTime" ) * 1e9 );
-        mFallTime->SetValue( lFallTime );
+        mFallTime->SetValue( "{:.3f} ns", aAcquisitionData->GetPropertyValue<double>( "PulseFallTime" ) * 1e9 );
 
         auto lEventAnalysisType = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.EventAnalysis" );
         auto lPositionTolerance = lEventAnalysisType.CallMethod( "ComputeEventPositionTolerance", aSinglePulseTrace->GetInstance() );
@@ -252,18 +215,12 @@ namespace SE::OtdrEditor
         auto        lFiberType   = fmt::format( "{} ({} \xCE\xBCm)", lCodes[lFiberCode], lDiameters[lFiberCode] );
         mFiberCode->SetValue( lFiberType );
 
-        std::string lIOR = fmt::format( "{:.3f}", aFiberInfo->GetPropertyValue<double>( "Ior" ) );
-        mIOR->SetValue( lIOR );
+        mIOR->SetValue( "{:.3f}", aFiberInfo->GetPropertyValue<double>( "Ior" ) );
 
-        std::string lRbs = fmt::format( "{:.3f} dB", aFiberInfo->GetPropertyValue<double>( "Rbs" ) );
-        mRBS->SetValue( lRbs );
+        mRBS->SetValue( "{:.3f} dB", aFiberInfo->GetPropertyValue<double>( "Rbs" ) );
 
-        std::string lTypicalFiberAttenuation =
-            fmt::format( "{:.3f} dB/km", aFiberInfo->GetPropertyValue<double>( "TypicalFiberAttenuation" ) * 1000 );
-        mAttenuation->SetValue( lTypicalFiberAttenuation );
+        mAttenuation->SetValue( "{:.3f} dB/km", aFiberInfo->GetPropertyValue<double>( "TypicalFiberAttenuation" ) * 1000 );
 
-        // std::string lSpansOrl = fmt::format( "{} dB", aSinglePulseTrace->GetPropertyValue<double>( "SpansOrl" ) );
-        // mSpanOrl->SetValue( lSpansOrl );
         auto *lSequenceType    = aSinglePulseTrace->GetPropertyValue<MonoString *>( "SequenceType" );
         auto  lSequenceTypeStr = MonoRuntime::NewString( lSequenceType );
         mSequenceType->SetValue( lSequenceTypeStr );
