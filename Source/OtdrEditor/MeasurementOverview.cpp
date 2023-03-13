@@ -1,5 +1,5 @@
 #include "MeasurementOverview.h"
-
+#include "Mono/MonoRuntime.h"
 namespace SE::OtdrEditor
 {
     MeasurementOverview::MeasurementOverview()
@@ -160,30 +160,88 @@ namespace SE::OtdrEditor
 
     void MeasurementOverview::SetData( Ref<MonoScriptInstance> aMeasurementOverview )
     {
+        auto lMeasurementOverview = aMeasurementOverview->GetPropertyValue( "Measurement", "Metrino.Olm.OlmMeasurement" );
+
         // Overview
         std::string lMeasurementLength =
-            fmt::format( "{:.4f} km", aMeasurementOverview->GetPropertyValue<double>( "OverviewLength" ) * 0.001f );
+            fmt::format( "{:.4f} km", lMeasurementOverview->GetPropertyValue<double>( "OverviewLength" ) * 0.001f );
         mOverviewLength->SetValue( lMeasurementLength );
 
-        std::string lLinkLength = fmt::format( "{:.4f} km", aMeasurementOverview->GetPropertyValue<double>( "LinkLength" ) * 0.001f );
+        std::string lLinkLength = fmt::format( "{:.4f} km", lMeasurementOverview->GetPropertyValue<double>( "LinkLength" ) * 0.001f );
         mLinkLength->SetValue( lLinkLength );
 
         // Configuration
         std::string lLaunchFiberLength =
-            fmt::format( "{:.4f} km", aMeasurementOverview->GetPropertyValue<double>( "LaunchFiberLength" ) * 0.001f );
+            fmt::format( "{:.4f} km", lMeasurementOverview->GetPropertyValue<double>( "LaunchFiberLength" ) * 0.001f );
         mLaunchFiberLength->SetValue( lLaunchFiberLength );
 
+        std::string lLaunchConditioner =
+            fmt::format( "{} ENUM", lMeasurementOverview->GetPropertyValue<int>( "EfLaunchConditioner" ) );
+        mConditioner->SetValue( lLaunchConditioner );
+
         std::string lReceiveFiberLength =
-            fmt::format( "{:.4f} km", aMeasurementOverview->GetPropertyValue<double>( "ReceiveFiberLength" ) * 0.001f );
+            fmt::format( "{:.4f} km", lMeasurementOverview->GetPropertyValue<double>( "ReceiveFiberLength" ) * 0.001f );
         mReceiveFiberLength->SetValue( lReceiveFiberLength );
 
-        std::string lLoopLength = fmt::format( "{:.4f} km", aMeasurementOverview->GetPropertyValue<double>( "LoopLength" ) * 0.001f );
+        std::string lLoopLength = fmt::format( "{:.4f} km", lMeasurementOverview->GetPropertyValue<double>( "LoopLength" ) * 0.001f );
         mLoopLength->SetValue( lLoopLength );
+
+        auto lOtdrParameters = aMeasurementOverview->GetPropertyValue( "OtdrParameters", "Metrino.Olm.OtdrParameters" );
+        auto lFiberInfo      = aMeasurementOverview->GetPropertyValue( "FiberInfo", "Metrino.Otdr.PhysicalFiberCharacteristics" );
+        auto lWavelength     = lOtdrParameters->GetPropertyValue<double>( "Wavelength" );
+
+        const char *lCodes[]     = { "Unknown", "A", "B", "C", "D", "E", "F", "G" };
+        const char *lDiameters[] = { "N/A", "N/A", "9", "50", "62.5", "125", "N/A", "N/A" };
+        auto        lFiberCode   = lFiberInfo->GetPropertyValue<int32_t>( "FiberCode" );
+        auto        lFiberType   = fmt::format( "{} ({} \xCE\xBCm)", lCodes[lFiberCode], lDiameters[lFiberCode] );
+        mConfigurationFiberCode->SetValue( lFiberType );
+
+        std::string lIOR = fmt::format( "{:.3f}", lFiberInfo->GetPropertyValue<double>( "Ior" ) );
+        mIOR->SetValue( lIOR );
+
+        std::string lRbs = fmt::format( "{:.3f} dB", lFiberInfo->GetPropertyValue<double>( "Rbs" ) );
+        mRBS->SetValue( lRbs );
+
+        std::string lTypicalFiberAttenuation =
+            fmt::format( "{:.3f} dB/km", lFiberInfo->GetPropertyValue<double>( "TypicalFiberAttenuation" ) * 1000 );
+        mAttenuation->SetValue( lTypicalFiberAttenuation );
+
+        std::string lDirection = fmt::format( "{}", " A\xE2\x86\x92 B (Not Implemented)" );
+        mDirection->SetValue( lDirection );
+
+        std::string lLoopbackExtract = fmt::format( "{}", lMeasurementOverview->GetPropertyValue<bool>( "LoopbackExtract" ) );
+        mLoopbackExtract->SetValue( lLoopbackExtract );
 
         // Analysis results
 
         // Software versions
 
         // Hardware versions
+        auto lUnitInfo = lMeasurementOverview->GetPropertyValue( "UnitA", "Metrino.Kernos.Optical.UnitInformation" );
+
+        // auto lModelName    = lUnitInfo->GetPropertyValue<MonoString *>( "ModelName" );
+        // auto lModelNameStr = MonoRuntime::NewString( lModelName );
+        mModelName->SetValue( "!!!TODO!!!" );
+
+        // auto lSeriualNumber    = lUnitInfo->GetPropertyValue<MonoString *>( "SerialNumber" );
+        // auto lSeriualNumberStr = MonoRuntime::NewString( lSeriualNumber );
+        mSerialNumber->SetValue( "!!!TODO!!!" );
+
+        mOtdrFamily->SetValue( "!!!TODO!!!" );
+        mModelType->SetValue( "!!!TODO!!!" );
+        mProductVersion->SetValue( "!!!TODO!!!" );
+        mPowerLevel->SetValue( "!!!TODO!!!" );
+        mFiberCode->SetValue( "!!!TODO!!!" );
+        mOutputPorts->SetValue( "!!!TODO!!!" );
+        mFPGAversion->SetValue( "!!!TODO!!!" );
+        mPCBVersion->SetValue( "!!!TODO!!!" );
+        mPCBSerialNumber->SetValue( "!!!TODO!!!" );
+        mCPUPCBVersion->SetValue( "!!!TODO!!!" );
+        mCPUPCBSerialNumber->SetValue( "!!!TODO!!!" );
+        mPowerMeterVersion->SetValue( "!!!TODO!!!" );
+        mPowerMeterSerialNumber->SetValue( "!!!TODO!!!" );
+        mManufacturingDate->SetValue( "!!!TODO!!!" );
+        mLastCalibrationDate->SetValue( "!!!TODO!!!" );
+        mUserLastCalibrationDate->SetValue( "!!!TODO!!!" );
     }
 } // namespace SE::OtdrEditor
