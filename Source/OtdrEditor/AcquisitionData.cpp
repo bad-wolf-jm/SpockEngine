@@ -159,7 +159,6 @@ namespace SE::OtdrEditor
         mAcquisitionTime->SetValue( lAcquisitionTimeStr );
 
         mTzCode->SetValue( "{}", aAcquisitionData->GetPropertyValue<uint32_t>( "TzCode" ) );
-
         mBandwidth->SetValue( "{:.3f} KHz", aAcquisitionData->GetPropertyValue<double>( "Bandwidth" ) * 0.001f );
 
         std::string lTypicalAnalogGain =
@@ -168,40 +167,26 @@ namespace SE::OtdrEditor
 
         std::string lTypicalApdGain = fmt::format( "{:.3f} dBo", aAcquisitionData->GetPropertyValue<double>( "TypicalApdGain" ) );
         mApdGain->SetValue( lTypicalApdGain );
-
         mStitchGain->SetValue( "{:.3f} dBo", aAcquisitionData->GetPropertyValue<double>( "NormalizationGainAppliedForStitch" ) );
 
         std::string lFresnelCorrection = fmt::format( "{:.3f}", aAcquisitionData->GetPropertyValue<double>( "FresnelCorrection" ) );
         mFresnelCorrection->SetValue( lFresnelCorrection );
 
         mNormalizationFactor->SetValue( "{:.3f}", aAcquisitionData->GetPropertyValue<double>( "NormalizationFactor" ) );
-
         mHighBandwidthFilter->SetValue( "{:.3f} GHz", aAcquisitionData->GetPropertyValue<double>( "HighBandwidthFilter" ) * 1e-9 );
-
         mUnfilteredRmsNoise->SetValue( "{:.3f} dB", aAcquisitionData->GetPropertyValue<double>( "UnfilteredRmsNoise" ) );
-
         mLowBandwidthFilterNoise->SetValue( "{:.3f} dB",
                                             aAcquisitionData->GetPropertyValue<double>( "LowBandwidthFilteredRmsNoise" ) );
-
         mHighBandwidthFiltedNoise->SetValue( "{:.3f} dB",
-                                             aAcquisitionData->GetPropertyValue<double>( "HighBandwidthFilteredRmsNoise" ) );
-
+                                            aAcquisitionData->GetPropertyValue<double>( "HighBandwidthFilteredRmsNoise" ) );
         mExpectedInjection->SetValue( "{:.3f} dB", aAcquisitionData->GetPropertyValue<double>( "ExpectedInjection" ) );
-
         mSaturationLevel->SetValue( "{:.3f} dB", aAcquisitionData->GetPropertyValue<double>( "SaturationLevel" ) );
-
         mFresnelSaturation->SetValue( "{:.3f} dB", aAcquisitionData->GetPropertyValue<double>( "FresnelSaturationLevel" ) );
-
         mSpeckeNoise->SetValue( "{:.3f}", aAcquisitionData->GetPropertyValue<double>( "SpeckleNoiseFor10nsPulse" ) );
-
         mSaturationMaskRatio->SetValue( "{}", aAcquisitionData->GetPropertyValue<double>( "SaturationMaskingRatio" ) );
-
         mSaturationMaskDuration->SetValue( "{}", aAcquisitionData->GetPropertyValue<double>( "SaturationMaskingDuration" ) );
-
         mApdID->SetValue( "{}", aAcquisitionData->GetPropertyValue<double>( "ApdId" ) );
-
         mRiseTime->SetValue( "{:.3f} ns", aAcquisitionData->GetPropertyValue<double>( "PulseRiseTime" ) * 1e9 );
-
         mFallTime->SetValue( "{:.3f} ns", aAcquisitionData->GetPropertyValue<double>( "PulseFallTime" ) * 1e9 );
 
         auto lEventAnalysisType = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.EventAnalysis" );
@@ -216,7 +201,6 @@ namespace SE::OtdrEditor
         mFiberCode->SetValue( lFiberType );
 
         mIOR->SetValue( "{:.3f}", aFiberInfo->GetPropertyValue<double>( "Ior" ) );
-
         mRBS->SetValue( "{:.3f} dB", aFiberInfo->GetPropertyValue<double>( "Rbs" ) );
 
         mAttenuation->SetValue( "{:.3f} dB/km", aFiberInfo->GetPropertyValue<double>( "TypicalFiberAttenuation" ) * 1000 );
