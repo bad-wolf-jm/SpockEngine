@@ -5,7 +5,6 @@ namespace SE::OtdrEditor
     MeasurementOverview::MeasurementOverview()
         : UIBoxLayout( eBoxLayoutOrientation::VERTICAL )
     {
-
         const float lItemHeight = 20.0f;
 
         mMeasurementResultTitle = New<UILabel>( "Measurement results" );
@@ -123,6 +122,8 @@ namespace SE::OtdrEditor
         mHardwarePropertyLayout->Add( mModelName.get(), lItemHeight, false, true );
         mSerialNumber = New<UIPropertyValue>( "Serial number:" );
         mHardwarePropertyLayout->Add( mSerialNumber.get(), lItemHeight, false, true );
+
+#if 0
         mOtdrFamily = New<UIPropertyValue>( "OTDR Family:" );
         mHardwarePropertyLayout->Add( mOtdrFamily.get(), lItemHeight, false, true );
         mModelType = New<UIPropertyValue>( "Model type:" );
@@ -155,6 +156,7 @@ namespace SE::OtdrEditor
         mHardwarePropertyLayout->Add( mLastCalibrationDate.get(), lItemHeight, false, true );
         mUserLastCalibrationDate = New<UIPropertyValue>( "User Calibration Date:" );
         mHardwarePropertyLayout->Add( mUserLastCalibrationDate.get(), lItemHeight, false, true );
+#endif
         Add( mHardwareLayout.get(), true, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
     }
 
@@ -219,14 +221,15 @@ namespace SE::OtdrEditor
         // Hardware versions
         auto lUnitInfo = lMeasurementOverview->GetPropertyValue( "UnitA", "Metrino.Kernos.Optical.UnitInformation" );
 
-        // auto lModelName    = lUnitInfo->GetPropertyValue<MonoString *>( "ModelName" );
-        // auto lModelNameStr = MonoRuntime::NewString( lModelName );
-        mModelName->SetValue( "!!!TODO!!!" );
+        auto lModelName    = lUnitInfo->GetPropertyValue<MonoString *>( "ModelName" );
+        auto lModelNameStr = MonoRuntime::NewString( lModelName );
+        mModelName->SetValue( lModelNameStr );
 
-        // auto lSeriualNumber    = lUnitInfo->GetPropertyValue<MonoString *>( "SerialNumber" );
-        // auto lSeriualNumberStr = MonoRuntime::NewString( lSeriualNumber );
-        mSerialNumber->SetValue( "!!!TODO!!!" );
+        auto lSeriualNumber    = lUnitInfo->GetPropertyValue<MonoString *>( "SerialNumber" );
+        auto lSeriualNumberStr = MonoRuntime::NewString( lSeriualNumber );
+        mSerialNumber->SetValue( lSeriualNumberStr );
 
+#if 0
         mOtdrFamily->SetValue( "!!!TODO!!!" );
         mModelType->SetValue( "!!!TODO!!!" );
         mProductVersion->SetValue( "!!!TODO!!!" );
@@ -243,5 +246,6 @@ namespace SE::OtdrEditor
         mManufacturingDate->SetValue( "!!!TODO!!!" );
         mLastCalibrationDate->SetValue( "!!!TODO!!!" );
         mUserLastCalibrationDate->SetValue( "!!!TODO!!!" );
+#endif
     }
 } // namespace SE::OtdrEditor
