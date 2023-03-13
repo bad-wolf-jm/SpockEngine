@@ -13,7 +13,6 @@ namespace fs = std::filesystem;
 
 namespace SE::Core
 {
-    
     class MonoScriptClass
     {
       public:
@@ -65,8 +64,14 @@ namespace SE::Core
         const std::map<std::string, sScriptField> &GetFields() const { return mFields; }
 
         MonoClass       *Class() { return mMonoClass; }
-        sScriptProperty &GetProperty( std::string const& aName ) { return mProperties[aName]; }
-        std::string     &FullName() { return mClassFullName; }
+        sScriptProperty &GetProperty( std::string const &aName )
+        {
+            if( mProperties.find( aName ) != mProperties.end() )
+                return mProperties[aName];
+            else
+                return sScriptProperty{ "", nullptr };
+        }
+        std::string &FullName() { return mClassFullName; }
 
         std::vector<MonoScriptClass *> &DerivedClasses() { return mDerived; }
 
