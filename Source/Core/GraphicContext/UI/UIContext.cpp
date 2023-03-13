@@ -183,7 +183,7 @@ namespace SE::Core
         ImGuiViewport *lMainViewport    = ImGui::GetMainViewport();
         lMainViewport->RendererUserData = nullptr;
 
-        static ImWchar lCharRanges[] = { 0x0020, 0x00FF, 0x2070, 0x208e, 0x2200, 0x2300, 0x2A00, 0x2AFF, 0x370, 0x3ff, 0 };
+        static ImWchar lCharRanges[] = { 0x0020, 0x00FF, 0x2070, 0x208e, 0x2100, 0x21FF, 0x2200, 0x2300, 0x2A00, 0x2AFF, 0x370, 0x3ff, 0 };
         static ImWchar lRanges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
         ImFontConfig   lFontConfig;
         lFontConfig.MergeMode        = true;
