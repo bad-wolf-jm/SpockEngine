@@ -150,8 +150,8 @@ namespace SE::OtdrEditor
                                     .time_since_epoch()
                                     .count();
 
-            static auto &lMonoGlue          = MonoRuntime::GetClassType( "Metrino.Mono.Instruments" );
-            static auto &lModuleDescription = MonoRuntime::GetClassType( "Metrino.Mono.ModuleDescription" );
+            static auto &lMonoGlue          = MonoRuntime::GetClassType( "Metrino.Interop.Instruments" );
+            static auto &lModuleDescription = MonoRuntime::GetClassType( "Metrino.Interop.ModuleDescription" );
 
             static uint32_t                 lNumConnectedModules  = 0;
             static std::vector<std::string> lConnectedModuleNames = {};
@@ -301,8 +301,8 @@ namespace SE::OtdrEditor
 
     void OtdrWindow::LoadIOlmData( fs::path aPath )
     {
-        static auto &lFileLoader = MonoRuntime::GetClassType( "Metrino.Mono.FileLoader" );
-        static auto &lFileClass  = MonoRuntime::GetClassType( "Metrino.Mono.OlmFile" );
+        static auto &lFileLoader = MonoRuntime::GetClassType( "Metrino.Interop.FileLoader" );
+        static auto &lFileClass  = MonoRuntime::GetClassType( "Metrino.Interop.OlmFile" );
 
         MonoString *lFilePath   = MonoRuntime::NewString( aPath.string() );
         MonoObject *lDataObject = lFileLoader.CallMethod( "LoadOlmData", lFilePath );
@@ -312,7 +312,7 @@ namespace SE::OtdrEditor
         MonoObject               *lTraceData       = mDataInstance->CallMethod( "GetAllTraces" );
         std::vector<MonoObject *> lTraceDataVector = AsVector<MonoObject *>( lTraceData );
 
-        static auto &lTraceDataStructure        = MonoRuntime::GetClassType( "Metrino.Mono.TracePlotData" );
+        static auto &lTraceDataStructure        = MonoRuntime::GetClassType( "Metrino.Interop.TracePlotData" );
         static auto &lSinglePulseTraceClassType = MonoRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
         static auto &lAcquisitionDataClassType  = MonoRuntime::GetClassType( "Metrino.Otdr.AcquisitionData" );
 
