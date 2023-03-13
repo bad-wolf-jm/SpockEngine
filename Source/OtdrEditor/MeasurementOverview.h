@@ -18,7 +18,7 @@ namespace SE::OtdrEditor
         MeasurementOverview();
         ~MeasurementOverview() = default;
 
-        void SetData(Ref<MonoScriptInstance> aMeasurementOverview);
+        void SetData( Ref<MonoScriptInstance> aMeasurementOverview );
 
       protected:
         Ref<UILabel>         mMeasurementResultTitle;
@@ -76,6 +76,8 @@ namespace SE::OtdrEditor
         Ref<UIBoxLayout>     mHardwarePropertyLayout;
         Ref<UIPropertyValue> mModelName;
         Ref<UIPropertyValue> mSerialNumber;
+
+#if 0
         Ref<UIPropertyValue> mOtdrFamily;
         Ref<UIPropertyValue> mModelType;
         Ref<UIPropertyValue> mProductVersion;
@@ -92,5 +94,6 @@ namespace SE::OtdrEditor
         Ref<UIPropertyValue> mManufacturingDate;
         Ref<UIPropertyValue> mLastCalibrationDate;
         Ref<UIPropertyValue> mUserLastCalibrationDate;
+#endif
     };
 } // namespace SE::OtdrEditor
