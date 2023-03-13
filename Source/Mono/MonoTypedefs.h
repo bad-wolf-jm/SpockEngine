@@ -42,5 +42,7 @@ extern "C"
     {
         std::string   mName;
         MonoProperty *mProperty;
+
+        operator bool() { return mProperty != nullptr; }
     };
 }

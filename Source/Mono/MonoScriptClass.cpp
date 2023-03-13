@@ -62,15 +62,22 @@ namespace SE::Core
 
             if( !aMonoClass ) return lProperties;
 
-            int lFieldCount = mono_class_num_properties( aMonoClass );
-
-            void *lIterator = nullptr;
-            while( MonoProperty *lProperty = mono_class_get_properties( aMonoClass, &lIterator ) )
+            MonoClass *lClass = aMonoClass;
+            while( lClass != NULL )
             {
-                const char *lPropertyName = mono_property_get_name( lProperty );
-                uint32_t    lFlags        = mono_property_get_flags( lProperty );
+                int lFieldCount = mono_class_num_properties( lClass );
 
-                lProperties[lPropertyName] = { lPropertyName, lProperty };
+                void *lIterator = nullptr;
+                while( MonoProperty *lProperty = mono_class_get_properties( lClass, &lIterator ) )
+                {
+                    const char *lPropertyName = mono_property_get_name( lProperty );
+                    uint32_t    lFlags        = mono_property_get_flags( lProperty );
+
+                    if( lProperties.find( lPropertyName ) == lProperties.end() )
+                        lProperties[lPropertyName] = { lPropertyName, lProperty };
+                }
+
+                lClass = mono_class_get_parent( lClass );
             }
 
             return lProperties;
@@ -128,4 +135,4 @@ namespace SE::Core
 
         return InvokeMethod( lMethod, aParameters );
     }
- } // namespace SE::Core
+} // namespace SE::Core
