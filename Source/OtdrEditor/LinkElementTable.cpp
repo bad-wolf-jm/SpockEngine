@@ -8,6 +8,7 @@
 #include <numeric>
 
 #include "Core/Profiling/BlockTimer.h"
+#include "Mono/MonoRuntime.h"
 
 namespace SE::OtdrEditor
 {
@@ -54,6 +55,8 @@ namespace SE::OtdrEditor
 
     void UILinkElementTable::SetData( std::vector<sLinkElement> const &aData )
     {
+        Clear();
+
         mEventDataVector = std::move( aData );
 
         auto StringJoin = []( std::vector<std::string> aList )
@@ -64,42 +67,39 @@ namespace SE::OtdrEditor
                                                     { return a + ( a.length() > 0 ? ", " : "" ) + b; } );
         };
 
-        mRowBackgroundColor.clear();
-        for( auto const &lE : mEventDataVector ) mRowBackgroundColor.push_back( IM_COL32( 10, 10, 10, 255 * ( lE.mLinkIndex % 2 ) ) );
+        static auto &lBaseLinkElementClass  = MonoRuntime::GetClassType( "Metrino.Olm.BaseLinkElement" );
+        static auto &lOlmPhysicalEventClass = MonoRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
+        static auto &lOlmAttributeClass     = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
 
-        mType->mData.clear();
         for( auto const &lE : mEventDataVector )
         {
-            // auto const& lType = ;
-            // std::string lSplitterConfiguration;
-            std::string lSplitterSource = lE.mIsTwoByNSplitter ? "2" : "1";
-            if (lE.mType == eLinkElementType::Splitter)
+            mRowBackgroundColor.push_back( IM_COL32( 10, 10, 10, 255 * ( lE.mLinkIndex % 2 ) ) );
+
+            auto lLinkElement   = MonoScriptInstance( &lBaseLinkElementClass, lBaseLinkElementClass.Class(), lE.mLinkElement );
+            auto lPhysicalEvent = MonoScriptInstance( &lOlmPhysicalEventClass, lOlmPhysicalEventClass.Class(), lE.mPhysicalEvent );
+            auto lAttributes    = MonoScriptInstance( &lOlmAttributeClass, lOlmAttributeClass.Class(), lE.mAttributes );
+
+            auto lOtdrPhysicalEvent = lPhysicalEvent.GetPropertyValue( "PhysicalEvent", "Metrino.Otdr.PhysicalEvent" );
+
+            std::string lSplitterSource = lLinkElement.GetPropertyValue<bool>( "TwoByNSplitter" ) ? "2" : "1";
+            if( lLinkElement.GetPropertyValue<eLinkElementType>( "Type" ) == eLinkElementType::Splitter )
             {
-                auto lSplitterConfiguration = fmt::format("{} ({}\xC3\x97{})", ToString( lE.mType ), lSplitterSource, lE.mSplitterRatio);
+                auto lSplitterConfiguration =
+                    fmt::format( "{} ({}\xC3\x97{})", ToString( lLinkElement.GetPropertyValue<eLinkElementType>( "Type" ) ),
+                                 lSplitterSource, lLinkElement.GetPropertyValue<int>( "SplitterRatio" ) );
                 mType->mData.push_back( lSplitterConfiguration );
             }
             else
             {
-                mType->mData.push_back( ToString( lE.mType ) );
+                mType->mData.push_back( ToString( lLinkElement.GetPropertyValue<eLinkElementType>( "Type" ) ) );
             }
-        }
+            mStatus->mData.push_back( StringJoin( LinkStatusToString( lLinkElement.GetPropertyValue<int>( "Status" ) ) ) );
 
-        mStatus->mData.clear();
-        for( auto const &lE : mEventDataVector ) mStatus->mData.push_back( StringJoin( LinkStatusToString( lE.mStatus ) ) );
-
-        mDiagnosicCount->mData.clear();
-        for( auto const &lE : mEventDataVector ) mDiagnosicCount->mData.push_back( lE.mDiagnosicCount );
-
-        mWavelength->mData.clear();
-        for( auto const &lE : mEventDataVector ) mWavelength->mData.push_back( lE.mWavelength * 1e9 );
-
-        mPositionColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mPositionColumn->mData.push_back( lE.mPosition * 0.001f );
-
-        mLoss->mData.clear();
-        for( auto const &lE : mEventDataVector )
-        {
-            mLoss->mData.push_back( lE.mLoss );
+            
+            mDiagnosicCount->mData.push_back( 1000);//lE.mDiagnosicCount );
+            mWavelength->mData.push_back( lPhysicalEvent.GetPropertyValue<double>( "Wavelength" ) * 1e9 );
+            mPositionColumn->mData.push_back( lLinkElement.GetPropertyValue<double>( "Position" ) * 0.001f );
+            mLoss->mData.push_back( lOtdrPhysicalEvent->GetPropertyValue<double>( "Loss" ) );
 
             if( lE.mLossPassFail == ePassFail::PASS )
                 mLoss->mForegroundColor.emplace_back( IM_COL32( 0, 255, 0, 200 ) );
@@ -107,30 +107,36 @@ namespace SE::OtdrEditor
                 mLoss->mForegroundColor.emplace_back( IM_COL32( 255, 0, 0, 200 ) );
             else
                 mLoss->mForegroundColor.emplace_back( IM_COL32( 0, 0, 0, 0 ) );
-        }
 
-        mReflectance->mData.clear();
-        for( auto const &lE : mEventDataVector )
-        {
-            mReflectance->mData.push_back( lE.mReflectance );
+            mReflectance->mData.push_back( lOtdrPhysicalEvent->GetPropertyValue<double>( "Reflectance" ) );
             if( lE.mReflectancePassFail == ePassFail::PASS )
                 mReflectance->mForegroundColor.emplace_back( IM_COL32( 0, 255, 0, 200 ) );
             else if( lE.mReflectancePassFail == ePassFail::FAIL )
                 mReflectance->mForegroundColor.emplace_back( IM_COL32( 255, 0, 0, 200 ) );
             else
                 mReflectance->mForegroundColor.emplace_back( IM_COL32( 0, 0, 0, 0 ) );
+
+            mCurveLevelColumn->mData.push_back( lOtdrPhysicalEvent->GetPropertyValue<double>( "CurveLevel" ) );
+            mEventType->mData.push_back( ToString( lOtdrPhysicalEvent->GetPropertyValue<eEventType>( "Type" ) ) );
+            mEventStatus->mData.push_back( StringJoin( ToString( lOtdrPhysicalEvent->GetPropertyValue<int>( "Status" ) ) ) );
+            mReflectanceType->mData.push_back(
+                ToString( lOtdrPhysicalEvent->GetPropertyValue<eReflectanceType>( "ReflectanceType" ) ) );
         }
+    }
 
+    void UILinkElementTable::Clear()
+    {
+        mRowBackgroundColor.clear();
+        mType->mData.clear();
+        mStatus->mData.clear();
+        mDiagnosicCount->mData.clear();
+        mWavelength->mData.clear();
+        mPositionColumn->mData.clear();
+        mLoss->mData.clear();
+        mReflectance->mData.clear();
         mCurveLevelColumn->mData.clear();
-        for( auto const &lE : mEventDataVector ) mCurveLevelColumn->mData.push_back( lE.mCurveLevel );
-
         mEventType->mData.clear();
-        for( auto const &lE : mEventDataVector ) mEventType->mData.push_back( ToString( lE.mEventType ) );
-
         mEventStatus->mData.clear();
-        for( auto const &lE : mEventDataVector ) mEventStatus->mData.push_back( StringJoin( ToString( lE.mEventStatus ) ) );
-
         mReflectanceType->mData.clear();
-        for( auto const &lE : mEventDataVector ) mReflectanceType->mData.push_back( ToString( lE.mReflectanceType ) );
     }
 } // namespace SE::OtdrEditor

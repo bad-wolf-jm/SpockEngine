@@ -18,28 +18,15 @@ namespace SE::OtdrEditor
     using namespace SE::Core;
     struct sLinkElement
     {
-        int              mRowIndex;
-        int              mLinkIndex;
-        int              mEventIndex;
-        eLinkElementType mType;
-        int32_t          mStatus;
-        int              mDiagnosicCount;
-        double           mPosition;
-        double           mWavelength;
-        bool             mIsTwoByNSplitter;
-        int              mSplitterRatio;
-        double           mRatio;
-        bool             mChanged;
-        double           mLoss;
-        double           mReflectance;
-        double           mCurveLevel;
-        eEventType       mEventType;
-        int32_t          mEventStatus;
-        eReflectanceType mReflectanceType;
-        ePassFail        mLossPassFail;
-        ePassFail        mReflectancePassFail;
-        void            *mPhysicalEvent;
-        void            *mAttributes;
+        int       mRowIndex;
+        int       mLinkIndex;
+        int       mEventIndex;
+        int       mDiagnosicCount;
+        ePassFail mLossPassFail;
+        ePassFail mReflectancePassFail;
+        void     *mLinkElement;
+        void     *mPhysicalEvent;
+        void     *mAttributes;
     };
 
     class UILinkElementTable : public UITable
@@ -50,7 +37,9 @@ namespace SE::OtdrEditor
 
         ~UILinkElementTable() = default;
 
+        void Clear();
         void SetData( std::vector<sLinkElement> const &aData );
+        // void SetData( std::vector<Ref<MonoScriptInstance>> const &aData );
 
       protected:
         Ref<sStringColumn>  mType;
@@ -68,5 +57,6 @@ namespace SE::OtdrEditor
         Ref<sStringColumn>  mReflectanceType;
 
         std::vector<sLinkElement> mEventDataVector;
+        // std::vector<Ref<MonoScriptInstance>> mEventDataVector0;
     };
 } // namespace SE::OtdrEditor
