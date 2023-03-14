@@ -2,9 +2,9 @@
 
 #include "Core/EntityCollection/Collection.h"
 
-#include "Core/CUDA/Array/MultiTensor.h"
+// #include "Core/CUDA/Array/MultiTensor.h"
 
-#include "TensorOps/Scope.h"
+// #include "TensorOps/Scope.h"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
@@ -16,8 +16,10 @@
 namespace SE::MonoInternalCalls
 {
     using namespace SE::Core;
-    using namespace SE::TensorOps;
 
+#ifdef CUDA_INTEROP
+    using namespace SE::TensorOps;
+#endif
     // void Console_Initialize();
     // void Console_Write( MonoString *aBuffer );
 
@@ -36,6 +38,7 @@ namespace SE::MonoInternalCalls
     void Entity_Replace( uint32_t aEntityID, EntityCollection *aRegistry, MonoReflectionType *aComponentType,
                          MonoObject *aNewComponent );
 
+#ifdef CUDA_INTEROP
     size_t     OpNode_NewTensorShape( MonoArray *aShape, uint32_t aRank, uint32_t aLayers, uint32_t aElementSize );
     void       OpNode_DestroyTensorShape( Cuda::sTensorShape *aTensorShape );
     uint32_t   OpNode_CountLayers( Cuda::sTensorShape *aTensorShape );
@@ -104,6 +107,7 @@ namespace SE::MonoInternalCalls
     uint32_t OpNode_Shift( MonoObject *aScope, MonoObject *aArray, int32_t aCount, MonoObject *aFillValue );
     uint32_t OpNode_Conv1D( MonoObject *aScope, MonoObject *aArray0, MonoObject *aArray1 );
     uint32_t OpNode_HCat( MonoObject *aScope, MonoObject *aArray0, MonoObject *aArray1 );
+#endif
 
     void UI_Text( MonoString *aText );
     bool UI_Button( MonoString *aText );

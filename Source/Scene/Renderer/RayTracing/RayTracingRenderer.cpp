@@ -1,5 +1,6 @@
-#include "Core/CUDA/CudaAssert.h"
-
+#ifdef CUDA_INTEROP
+#    include "Core/CUDA/CudaAssert.h"
+#endif
 #include "LaunchParams.h"
 #include "RayTracingRenderer.h"
 

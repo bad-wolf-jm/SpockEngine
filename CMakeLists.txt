@@ -1,19 +1,20 @@
 cmake_minimum_required(VERSION 3.20)
-project(LTSimulationEngine LANGUAGES CUDA CXX C)
+# project(LTSimulationEngine LANGUAGES CUDA CXX C)
+project(LTSimulationEngine LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(PROGRAM_FILES "C:\\Users\\jalbe")
+# set(PROGRAM_FILES "C:\\Users\\jalbe")
 
 include_directories("ThirdParty/mono/include")
+message(STATUS ${CMAKE_SIZEOF_VOID_P})
 
+# include(cmake/configure_optix.cmake)
+# include_directories(${OptiX_INCLUDE})
 
-include(cmake/configure_optix.cmake)
-include_directories(${OptiX_INCLUDE})
+# find_package(CUDAToolkit REQUIRED)
 
 find_package(Vulkan REQUIRED FATAL_ERROR)
-find_package(CUDAToolkit REQUIRED)
-
 Include(FetchContent)
 # cmake_policy(SET CMP0002 OLD)
 
@@ -173,5 +174,5 @@ add_compile_definitions(ZEP_FEATURE_CPP_FILE_SYSTEM=1)
 add_subdirectory(ThirdParty)
 add_subdirectory(Source)
 add_subdirectory(Tools)
-add_subdirectory(Tests)
+# add_subdirectory(Tests)
 add_subdirectory(Programs)

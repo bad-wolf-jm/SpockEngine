@@ -234,7 +234,7 @@ int main( int argc, char **argv )
     SE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lLocalConfigFolder / "OtdrTool" / "Config" / "imgui.ini",
                                   lUIConfiguration );
 
-    SE::Graphics::OptixDeviceContextObject::Initialize();
+    // SE::Graphics::OptixDeviceContextObject::Initialize();
 
     // Retrieve the Mono runtime
     fs::path    lMonoPath = "C:\\Program Files\\Mono\\lib\\mono\\4.5";

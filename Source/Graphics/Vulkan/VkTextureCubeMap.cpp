@@ -6,8 +6,10 @@
 
 #include "Graphics/Vulkan/VkCoreMacros.h"
 
-#include "Core/CUDA/Array/CudaBuffer.h"
-#include "Core/CUDA/CudaAssert.h"
+#ifdef CUDA_INTEROP
+#    include "Core/CUDA/Array/CudaBuffer.h"
+#    include "Core/CUDA/CudaAssert.h"
+#endif
 
 #include "VkCommand.h"
 #include "VkGpuBuffer.h"
@@ -113,6 +115,7 @@ namespace SE::Graphics
 
     void VkTextureCubeMap::ConfigureExternalMemoryHandle()
     {
+#ifdef CUDA_INTEROP
         if( mIsGraphicsOnly ) return;
 
         cudaExternalMemoryHandleDesc lCudaExternalMemoryHandleDesc{};
@@ -134,6 +137,7 @@ namespace SE::Graphics
         CUDA_ASSERT( cudaExternalMemoryGetMappedMipmappedArray( &mInternalCudaMipmappedArray, mExternalMemoryHandle,
                                                                 &lExternalMemoryMipmappedArrayDesc ) );
         CUDA_ASSERT( cudaGetMipmappedArrayLevel( &mInternalCudaArray, mInternalCudaMipmappedArray, 0 ) );
+#endif
     }
 
     void VkTextureCubeMap::SetPixelData( Ref<IGraphicBuffer> aBuffer )

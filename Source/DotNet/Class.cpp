@@ -5,7 +5,7 @@
 
 #include "Engine/Engine.h"
 
-#include "Scene/Scene.h"
+// #include "Scene/Scene.h"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"

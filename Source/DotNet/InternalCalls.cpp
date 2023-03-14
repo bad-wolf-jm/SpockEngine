@@ -78,7 +78,7 @@ namespace SE::MonoInternalCalls
         const entt::meta_any  lMaybeAny =
             Core::InvokeMetaFunction( lMetaType, "Remove"_hs, aRegistry->WrapEntity( static_cast<entt::entity>( aEntityID ) ) );
     }
-
+#ifdef CUDA_INTEROP
     size_t OpNode_NewTensorShape( MonoArray *aShape, uint32_t aRank, uint32_t aLayers, uint32_t aElementSize )
     {
         std::vector<std::vector<uint32_t>> lShape{};
@@ -863,7 +863,7 @@ namespace SE::MonoInternalCalls
 
         return static_cast<uint32_t>( lNode );
     }
-
+#endif 
     void UI_Text( MonoString *aString ) { UI::Text( std::string( mono_string_to_utf8( aString ) ) ); }
 
     bool UI_Button( MonoString *aText ) { return UI::Button( mono_string_to_utf8( aText ), math::vec2( 100, 30 ) ); }

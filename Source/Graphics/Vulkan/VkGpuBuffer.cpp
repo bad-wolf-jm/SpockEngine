@@ -73,6 +73,7 @@ namespace SE::Graphics
 
         if( !mIsGraphicsOnly )
         {
+#ifdef CUDA_INTEROP
             cudaExternalMemoryHandleDesc lExternalMemoryHandleDesc{};
             lExternalMemoryHandleDesc.type                = cudaExternalMemoryHandleTypeOpaqueWin32;
             lExternalMemoryHandleDesc.size                = mSizeAligned;
@@ -85,6 +86,7 @@ namespace SE::Graphics
             lExternalMemBufferDesc.size   = mSizeAligned;
             CUDA_ASSERT(
                 cudaExternalMemoryGetMappedBuffer( (void **)&mDevicePointer, mExternalMemoryHandle, &lExternalMemBufferDesc ) );
+#endif
         }
     }
 

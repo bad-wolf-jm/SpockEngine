@@ -14,14 +14,14 @@
 
 #include "entt/entt.hpp"
 
-#include "Core/Optix/OptixContext.h"
+// #include "Core/Optix/OptixContext.h"
 #include "Graphics/Interface/IWindow.h"
 #include "Graphics/Vulkan/SwapChain.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "Core/GraphicContext//UI/UIContext.h"
 
-#include "Core/Optix/OptixContext.h"
+// #include "Core/Optix/OptixContext.h"
 /** @brief */
 namespace SE::Core
 {
