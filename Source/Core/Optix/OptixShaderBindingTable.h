@@ -1,12 +1,14 @@
 #pragma once
 
 #include "Core/Memory.h"
+
 #include "Optix7.h"
 #include "OptixProgramGroup.h"
 
 namespace SE::Graphics
 {
     using namespace SE::Core;
+    using namespace SE::Cuda;
 
     struct OptixShaderBindingTableObject
     {
@@ -36,10 +38,10 @@ namespace SE::Graphics
             return lNewRecordTypes;
         }
 
-        void BindRayGenRecordTable( CUdeviceptr aDevicePointer ) { mOptixObject.raygenRecord = aDevicePointer; }
+        void BindRayGenRecordTable( RawPointer aDevicePointer ) { mOptixObject.raygenRecord = aDevicePointer; }
 
         template <typename _RecordType>
-        void BindMissRecordTable( CUdeviceptr aDevicePointer, size_t aSize )
+        void BindMissRecordTable( RawPointer aDevicePointer, size_t aSize )
         {
             mOptixObject.missRecordBase          = aDevicePointer;
             mOptixObject.missRecordStrideInBytes = sizeof( _RecordType );
@@ -47,7 +49,7 @@ namespace SE::Graphics
         }
 
         template <typename _RecordType>
-        void BindHitRecordTable( CUdeviceptr aDevicePointer, size_t aSize )
+        void BindHitRecordTable( RawPointer aDevicePointer, size_t aSize )
         {
             mOptixObject.hitgroupRecordBase          = aDevicePointer;
             mOptixObject.hitgroupRecordStrideInBytes = sizeof( _RecordType );

@@ -17,7 +17,7 @@
 #pragma once
 
 // optix 7
-#include <cuda_runtime.h>
+#include "Core/CUDA/Cuda.h"
 #include <optix.h>
 #include <optix_stubs.h>
 #include <sstream>

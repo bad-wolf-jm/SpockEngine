@@ -172,8 +172,8 @@ namespace SE::Core
         // -------------------------------------------------------
         if( denoiserOn )
         {
-            OPTIX_CHECK( optixDenoiserComputeIntensity( denoiser, 0, &lInputLayer[0], (CUdeviceptr)denoiserIntensity.RawDevicePtr(),
-                                                        (CUdeviceptr)denoiserScratch.RawDevicePtr(),
+            OPTIX_CHECK( optixDenoiserComputeIntensity( denoiser, 0, &lInputLayer[0], (RawPointer)denoiserIntensity.RawDevicePtr(),
+                                                        (RawPointer)denoiserScratch.RawDevicePtr(),
                                                         denoiserScratch.SizeAs<uint8_t>() ) );
 
             OptixDenoiserGuideLayer denoiserGuideLayer{};
@@ -195,7 +195,7 @@ namespace SE::Core
         }
         computeFinalPixelColors( mRayTracingParameters, mDenoisedBuffer, *mOutputBuffer );
 
-        CUDA_SYNC_CHECK();
+        SyncDevice();
 
         mOutputTexture->TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
         mOutputTexture->SetPixelData( mOutputBuffer );

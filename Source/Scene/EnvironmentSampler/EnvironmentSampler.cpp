@@ -71,7 +71,7 @@ namespace SE::SensorModel::Dev
             mLaunchParamsBuffer.Upload( mLaunchParams );
             mRayTracingPipeline->Launch( 0, mLaunchParamsBuffer.RawDevicePtr(), mLaunchParamsBuffer.Size(), mSBT,
                                          math::uvec3{ a_Azimuths.SizeAs<float>(), 1, 1 } );
-            CUDA_SYNC_CHECK();
+            SyncDevice();
         }
     }
 

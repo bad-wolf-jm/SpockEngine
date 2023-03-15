@@ -10,7 +10,7 @@
 
 #include <vector>
 
-#include "Core/CUDA/CudaAssert.h"
+#include "Core/CUDA/Cuda.h"
 
 #include "Core/CUDA/Texture/ColorFormat.h"
 #include "Core/CUDA/Texture/TextureTypes.h"

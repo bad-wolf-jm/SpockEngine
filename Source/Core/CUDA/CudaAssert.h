@@ -26,7 +26,6 @@ inline void __CUDA_ASSERT( cudaError_t aErr, const char *aFile, const int aLine 
     throw std::runtime_error( "CUDA_ASSERT()" );
 }
 
-#    define CUDA_SYNC_CHECK() CUDA_ASSERT( cudaDeviceSynchronize() )
 #endif
 
 #ifdef __CUDACC__

@@ -11,10 +11,10 @@ namespace SE::Graphics
     void OptixScene::AddGeometry( VkGpuBuffer &aVertices, VkGpuBuffer &aIndices, uint32_t aVertexOffset, uint32_t aVertexCount,
                                   uint32_t aIndexOffset, uint32_t aIndexCount )
     {
-        mVertexBuffers.push_back( (CUdeviceptr)( aVertices.DataAs<VertexData>() + aVertexOffset ) );
+        mVertexBuffers.push_back( (RawPointer)( aVertices.DataAs<VertexData>() + aVertexOffset ) );
         mVertexCounts.push_back( (int)aVertexCount );
         mVertexStrides.push_back( sizeof( VertexData ) );
-        mIndexBuffers.push_back( (CUdeviceptr)( aIndices.DataAs<uint32_t>() + aIndexOffset ) );
+        mIndexBuffers.push_back( (RawPointer)( aIndices.DataAs<uint32_t>() + aIndexOffset ) );
         mIndexCounts.push_back( (int)( aIndexCount / 3 ) );
     }
 
@@ -69,7 +69,7 @@ namespace SE::Graphics
         OPTIX_CHECK( optixAccelBuild( mRayTracingContext->mOptixObject, 0, &lAccelOptions, mTriangleInput.data(),
                                       (int)mTriangleInput.size(), lTempBuffer.RawDevicePtr(), lTempBuffer.Size(),
                                       lOutputBuffer.RawDevicePtr(), lOutputBuffer.Size(), &mOptixObject, &lEmitDesc, 1 ) );
-        CUDA_SYNC_CHECK();
+        SyncDevice();
 
         uint64_t lCompactedSize = lCompactedSizeBuffer.Fetch<uint64_t>()[0];
 
@@ -77,7 +77,7 @@ namespace SE::Graphics
         OPTIX_CHECK( optixAccelCompact( mRayTracingContext->mOptixObject, 0, mOptixObject, mAccelerationStructureBuffer.RawDevicePtr(),
                                         mAccelerationStructureBuffer.Size(), &mOptixObject ) );
 
-        CUDA_SYNC_CHECK();
+        SyncDevice();
 
         lTempBuffer.Dispose();
         lOutputBuffer.Dispose();

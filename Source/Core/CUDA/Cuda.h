@@ -43,6 +43,8 @@ namespace SE::Cuda
     using ExternalMemory = std::conditional<CUDA_INTEROP, cudaExternalMemory_t, void *>::type;
     using TextureObject  = std::conditional<CUDA_INTEROP, cudaTextureObject_t, void *>::type;
 
+    void SyncDevice();
+
     void Malloc( void **aDestination, size_t aSize );
     void Free( void **aDestination );
     void MemCopyHostToDevice( void *aDestination, void *aSource, size_t aSize );
@@ -57,7 +59,7 @@ namespace SE::Cuda
     void DestroyExternalMemory( ExternalMemory *aDestination );
 
     void GetMappedMipmappedArray( MipmappedArray *aDestination, ExternalMemory aExternalMemoryHandle, eColorFormat aFormat,
-                                  int32_t aWidth, int32_t aHeight, size_t aSize );
+                                  int32_t aWidth, int32_t aHeight );
     void GeMipmappedArrayLevel( Array *aDestination, MipmappedArray aMipMappedArray, uint32_t aLevel );
     void FreeMipmappedArray( MipmappedArray *aDestination );
 

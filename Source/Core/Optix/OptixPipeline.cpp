@@ -24,19 +24,19 @@ namespace SE::Graphics
                                           &mOptixObject ) );
 
         if( lLogStringSize > 1 ) SE::Logging::Info( "{}", lLogString );
-        
+
         OPTIX_CHECK( optixPipelineSetStackSize( mOptixObject, 2 * 1024, 2 * 1024, 2 * 1024, 1 ) );
     }
 
     OptixPipelineObject::~OptixPipelineObject() { OPTIX_CHECK_NO_EXCEPT( optixPipelineDestroy( mOptixObject ) ); }
 
-    void OptixPipelineObject::Launch( CUstream aStream, CUdeviceptr aLaunchParamsBuffer, size_t aLaunchParamBufferSize,
+    void OptixPipelineObject::Launch( CUstream aStream, RawPointer aLaunchParamsBuffer, size_t aLaunchParamBufferSize,
                                       Ref<OptixShaderBindingTableObject> aShaderBindingTable, math::uvec3 aLaunchDimensions )
     {
         OPTIX_CHECK( optixLaunch( mOptixObject, aStream, aLaunchParamsBuffer, aLaunchParamBufferSize,
                                   &aShaderBindingTable->mOptixObject, aLaunchDimensions.x, aLaunchDimensions.y,
                                   aLaunchDimensions.z ) );
-        CUDA_SYNC_CHECK();
+        SyncDevice();
     }
 
 } // namespace SE::Graphics

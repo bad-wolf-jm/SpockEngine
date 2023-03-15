@@ -11,6 +11,7 @@
 namespace SE::Graphics
 {
     using namespace SE::Core;
+    using namespace SE::Cuda;
 
     struct OptixModuleObject
     {

@@ -16,6 +16,7 @@
 namespace SE::Graphics
 {
     using namespace SE::Core;
+    using namespace SE::Cuda;
 
     struct OptixPipelineObject
     {
@@ -25,7 +26,7 @@ namespace SE::Graphics
         OptixPipelineObject( OptixPipelineLinkOptions aPipelineLinkOptions, OptixPipelineCompileOptions aPipelineCompileOptions,
                              std::vector<Ref<OptixProgramGroupObject>> aProgramGroups, Ref<OptixDeviceContextObject> aRTContext );
 
-        void Launch( CUstream aStream, CUdeviceptr aLaunchParamsBuffer, size_t aLaunchParamBufferSize,
+        void Launch( CUstream aStream, RawPointer aLaunchParamsBuffer, size_t aLaunchParamBufferSize,
                      Ref<OptixShaderBindingTableObject> aShaderBindingTable, math::uvec3 aLaunchDimensions );
 
         ~OptixPipelineObject();

@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include <cuda.h>
-#include <cuda_runtime_api.h>
+#include "Core/CUDA/Cuda.h"
 #include <vector>
 
 #include "Core/CUDA/CudaAssert.h"
@@ -24,9 +23,9 @@ namespace SE::Cuda::Internal
 
     /// @struct sGPUDevicePointerView
     ///
-    /// @brief Simple wrapper around a CUdeviceptr
+    /// @brief Simple wrapper around a RawPointer
     ///
-    /// Implements a thin abstraction layer around a raw @code{.cpp} CUdeviceptr @endcode.
+    /// Implements a thin abstraction layer around a raw @code{.cpp} RawPointer @endcode.
     /// The purpose of this class is to wrap existing Cuda device pointers, and the size of
     /// the memory allocated to them. All sizes are in bytes, and we provide a set of templated
     /// functions to transfer data between the host to the GPU using standard library containers.
@@ -37,7 +36,7 @@ namespace SE::Cuda::Internal
     ///
     struct sGPUDevicePointerView
     {
-        CUdeviceptr mDevicePointer = 0; //!< Pointer to an area of GPU memory
+        RawPointer mDevicePointer = 0; //!< Pointer to an area of GPU memory
 
         /// @brief Default constructor
         sGPUDevicePointerView() = default;
@@ -91,7 +90,7 @@ namespace SE::Cuda::Internal
         sGPUDevicePointerView( size_t aSize, void *aDevicePointer )
             : mSize{ aSize }
         {
-            mDevicePointer = (CUdeviceptr)aDevicePointer;
+            mDevicePointer = (RawPointer)aDevicePointer;
         }
 
         /// @brief Upload data to the device at a given offset.
@@ -114,8 +113,7 @@ namespace SE::Cuda::Internal
                                  aOffset, aArray.size(), mSize / sizeof( _Ty ) )
                         .c_str() );
 
-            CUDA_ASSERT( cudaMemcpy( (void *)( DataAs<_Ty>() + aOffset ), (void *)aArray.data(), aArray.size() * sizeof( _Ty ),
-                                     cudaMemcpyHostToDevice ) );
+            MemCopyHostToDevice( (void *)( DataAs<_Ty>() + aOffset ), (void *)aArray.data(), aArray.size() * sizeof( _Ty ) );
         }
 
         template <typename _Ty>
@@ -127,8 +125,7 @@ namespace SE::Cuda::Internal
                                  aOffset, aArray.size(), mSize / sizeof( _Ty ) )
                         .c_str() );
 
-            CUDA_ASSERT( cudaMemcpy( (void *)( DataAs<_Ty>() + aOffset ), (void *)aArray.data(), aArray.size() * sizeof( _Ty ),
-                                     cudaMemcpyHostToDevice ) );
+            MemCopyHostToDevice( (void *)( DataAs<_Ty>() + aOffset ), (void *)aArray.data(), aArray.size() * sizeof( _Ty ) );
         }
 
         /// @brief Overloaded member provided for convenience
@@ -178,7 +175,7 @@ namespace SE::Cuda::Internal
                     fmt::format( "Upload upper boundary (offset) + (size) = ({}) + ({}) is greater than parent buffer boundary ({})",
                                  aOffset, aByteSize, Size() )
                         .c_str() );
-            CUDA_ASSERT( cudaMemcpy( (void *)( DataAs<uint8_t>() + aOffset ), aData, aByteSize, cudaMemcpyHostToDevice ) );
+            MemCopyHostToDevice( (void *)( DataAs<uint8_t>() + aOffset ), (void *)aData, aByteSize );
         }
 
         /// @brief Overloaded member provided for convenience
@@ -227,9 +224,8 @@ namespace SE::Cuda::Internal
                 throw std::runtime_error(
                     fmt::format( "Attempted to fetch an array of size {} from a buffer of size {}", aSize, Size() ).c_str() );
             std::vector<_Ty> lHostArray( aSize );
-            CUDA_ASSERT( cudaMemcpy( reinterpret_cast<void *>( lHostArray.data() ),
-                                     reinterpret_cast<void *>( DataAs<_Ty>() + aOffset ), aSize * sizeof( _Ty ),
-                                     cudaMemcpyDeviceToHost ) );
+            MemCopyDeviceToHost( reinterpret_cast<void *>( lHostArray.data() ), reinterpret_cast<void *>( DataAs<_Ty>() + aOffset ),
+                                 aSize * sizeof( _Ty ) );
             return lHostArray;
         }
 
@@ -288,7 +284,7 @@ namespace SE::Cuda::Internal
         }
 
         /// @brief Number of elements in the buffer.
-        CUdeviceptr RawDevicePtr() const { return mDevicePointer; }
+        RawPointer RawDevicePtr() const { return mDevicePointer; }
 
       protected:
         size_t mSize = 0;
@@ -302,7 +298,7 @@ namespace SE::Cuda::Internal
 
     /// @struct sGPUDevicePointer
     ///
-    /// @brief Simple wrapper around a CUdeviceptr which can allocate memory on the device.
+    /// @brief Simple wrapper around a RawPointer which can allocate memory on the device.
     ///
     struct sGPUDevicePointer : public sGPUDevicePointerView
     {

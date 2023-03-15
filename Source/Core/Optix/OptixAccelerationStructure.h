@@ -36,10 +36,10 @@ namespace SE::Graphics
         void AddGeometry( GPUMemory &aVertices, GPUMemory &aIndices, uint32_t aVertexOffset, uint32_t aVertexCount,
                           uint32_t aIndexOffset, uint32_t aIndexCount )
         {
-            mVertexBuffers.push_back( (CUdeviceptr)( aVertices.DataAs<_VertexStructType>() + aVertexOffset ) );
+            mVertexBuffers.push_back( (RawPointer)( aVertices.DataAs<_VertexStructType>() + aVertexOffset ) );
             mVertexCounts.push_back( (int)aVertexCount );
             mVertexStrides.push_back( sizeof( _VertexStructType ) );
-            mIndexBuffers.push_back( (CUdeviceptr)( aIndices.DataAs<uint32_t>() + aIndexOffset ) );
+            mIndexBuffers.push_back( (RawPointer)( aIndices.DataAs<uint32_t>() + aIndexOffset ) );
             mIndexCounts.push_back( (int)( aIndexCount / 3 ) );
         }
 
@@ -58,11 +58,11 @@ namespace SE::Graphics
         std::vector<OptixBuildInput> mTriangleInput = {};
         std::vector<uint32_t>        mInputFlags    = {};
 
-        std::vector<CUdeviceptr> mVertexBuffers = {};
-        std::vector<int32_t>     mVertexCounts  = {};
-        std::vector<int32_t>     mVertexStrides = {};
-        std::vector<CUdeviceptr> mIndexBuffers  = {};
-        std::vector<int32_t>     mIndexCounts   = {};
+        std::vector<RawPointer> mVertexBuffers = {};
+        std::vector<int32_t>    mVertexCounts  = {};
+        std::vector<int32_t>    mVertexStrides = {};
+        std::vector<RawPointer> mIndexBuffers  = {};
+        std::vector<int32_t>    mIndexCounts   = {};
 
         GPUMemory mAccelerationStructureBuffer;
     };

@@ -1,6 +1,6 @@
-#include "Core/CUDA/CudaAssert.h"
+#include "Core/CUDA/Cuda.h"
 
-#include <cuda_runtime.h>
+// #include <cuda_runtime.h>
 #include <optix_device.h>
 
 #include "Core/CUDA/Random.h"
@@ -139,7 +139,8 @@ namespace SE::Core
     //     return F0 + ( math::vec3( 1.0 ) - F0 ) * pow( clampf( 1.0f - cosTheta, 0.0f, 1.0f ), 5.0f );
     // }
 
-    // static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF math::vec3 CookTorrance( math::vec3 F0, math::vec3 N, math::vec3 L, math::vec3 V,
+    // static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF math::vec3 CookTorrance( math::vec3 F0, math::vec3 N, math::vec3 L, math::vec3
+    // V,
     //                                                                            math::vec3 H, float roughness )
     // {
     //     float NDF = DistributionGGX( N, H, roughness );
@@ -149,7 +150,8 @@ namespace SE::Core
     // }
 
     // static SE_CUDA_INLINE SE_CUDA_DEVICE_FUNCTION_DEF math::vec3
-    // ComputeLightContribution( math::vec3 aBaseColor, math::vec3 aSurfaceNormal, math::vec3 aEyeDirection, math::vec3 aLightDirection,
+    // ComputeLightContribution( math::vec3 aBaseColor, math::vec3 aSurfaceNormal, math::vec3 aEyeDirection, math::vec3
+    // aLightDirection,
     //                           math::vec3 aRadiance, float aMetal, float aRough )
     // {
     //     // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0

@@ -117,7 +117,7 @@ namespace SE::TensorOps
 
             lComponent.mControllerInstance->Run();
         }
-        CUDA_SYNC_CHECK();
+        SyncDevice();
     }
 
     OpNode CreateMultiTensor( Scope &aScope, sTensorShape const &aShape )

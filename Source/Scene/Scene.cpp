@@ -1110,7 +1110,7 @@ namespace SE::Core
                                     mVertexCounts.DataAs<uint32_t>(), lMaxVertexCount );
         }
 
-        CUDA_SYNC_CHECK();
+        SyncDevice();
 
         UpdateRayTracingComponents();
     }

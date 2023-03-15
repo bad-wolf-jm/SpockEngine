@@ -2,8 +2,7 @@
 
 #pragma once
 
-#include <cuda.h>
-#include <cuda_runtime_api.h>
+#include "Core/CUDA/Cuda.h"
 #include <vector>
 
 #include <fmt/core.h>
@@ -70,9 +69,9 @@ namespace SE::Cuda
             return lOut;
         }
 
-        CUdeviceptr RawDevicePtr() { return mDevicePointer; }
+        RawPointer RawDevicePtr() { return mDevicePointer; }
 
-        CUdeviceptr *RawDevicePtrP() { return &( mDevicePointer ); }
+        RawPointer *RawDevicePtrP() { return &( mDevicePointer ); }
     };
 
 } // namespace SE::Cuda

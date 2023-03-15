@@ -24,10 +24,10 @@ namespace SE::Cuda
         SE::Logging::Error( "CUDA_ASSERT() API error = {} \"{}\" from file <{}>, line {}.\n", aErr, errorStr, aFile, aLine );
         throw std::runtime_error( "CUDA_ASSERT()" );
     }
-
-#        define CUDA_SYNC_CHECK() CUDA_ASSERT( cudaDeviceSynchronize() )
 #    endif
 #endif
+
+    void SyncDevice() { CUDA_ASSERT( cudaDeviceSynchronize() ); }
 
     void Malloc( void **aDestination, size_t aSize ) { CUDA_ASSERT( cudaMalloc( aDestination, aSize ) ); }
 
@@ -89,13 +89,13 @@ namespace SE::Cuda
 
     void DestroyExternalMemory( ExternalMemory *aDestination )
     {
-        if( nullptr != aDestination ) CUDA_ASSERT( cudaDestroyExternalMemory( *aDestination ) );
+        if( nullptr != *aDestination ) CUDA_ASSERT( cudaDestroyExternalMemory( *aDestination ) );
 
         *aDestination = nullptr;
     }
 
     void GetMappedMipmappedArray( MipmappedArray *aDestination, ExternalMemory aExternalMemoryHandle, eColorFormat aFormat,
-                                  int32_t aWidth, int32_t aHeight, size_t aSize )
+                                  int32_t aWidth, int32_t aHeight )
     {
 #ifdef CUDA_INTEROP
         cudaExternalMemoryMipmappedArrayDesc lExternalMemoryMipmappedArrayDesc{};
@@ -113,7 +113,8 @@ namespace SE::Cuda
 
     void FreeMipmappedArray( MipmappedArray *aDestination )
     {
-        if( nullptr != aDestination ) CUDA_ASSERT( cudaFreeMipmappedArray( reinterpret_cast<cudaMipmappedArray_t>( *aDestination ) ) );
+        if( nullptr != *aDestination )
+            CUDA_ASSERT( cudaFreeMipmappedArray( reinterpret_cast<cudaMipmappedArray_t>( *aDestination ) ) );
 
         *aDestination = nullptr;
     }
@@ -163,7 +164,7 @@ namespace SE::Cuda
 
     void FreeTextureObject( TextureObject *aDestination )
     {
-        if( 0 != aDestination ) CUDA_ASSERT( cudaDestroyTextureObject( *aDestination ) );
+        if( 0 != *aDestination ) CUDA_ASSERT( cudaDestroyTextureObject( *aDestination ) );
 
         *aDestination = 0;
     }
