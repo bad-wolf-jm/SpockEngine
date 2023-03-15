@@ -192,7 +192,11 @@ namespace SE::Core
 
             void OnEndScenario() { mInstance->InvokeMethod( "EndScenario", 0, nullptr ); }
 
-            void OnTick( Timestep ts ) { mInstance->CallMethod( "Tick", ts.GetMilliseconds() ); }
+            void OnTick( Timestep ts )
+            {
+                float lTs = ts.GetMilliseconds();
+                mInstance->CallMethod( "Tick", &lTs );
+            }
 
             Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };
 
@@ -282,12 +286,14 @@ namespace SE::Core
 
             void OnUpdate( Timestep ts )
             {
-                if( mInstance ) mInstance->CallMethod( "DrawContent", ts.GetMilliseconds() );
+                float lTs = ts.GetMilliseconds();
+                if( mInstance ) mInstance->CallMethod( "DrawContent", &lTs );
             }
 
             void OnPreviewUpdate( Timestep ts )
             {
-                if( mPreviewInstance ) mPreviewInstance->CallMethod( "DrawPreviewContent", ts.GetMilliseconds() );
+                float lTs = ts.GetMilliseconds();
+                if( mPreviewInstance ) mPreviewInstance->CallMethod( "DrawPreviewContent", &lTs );
             }
 
             Internal::Entity<ParentType> GetControlledEntity() const { return mEntity; };
