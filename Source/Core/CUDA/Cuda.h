@@ -2,6 +2,14 @@
 
 #include <fmt/core.h>
 #include <stdexcept>
+#include <type_traits>
+
+#define CUDA_INTEROP true
+
+#ifdef CUDA_INTEROP
+#    include <cuda.h>
+#    include <cuda_runtime_api.h>
+#endif
 
 #include "Core/Logging.h"
 #include "Texture/ColorFormat.h"
@@ -29,24 +37,30 @@ namespace SE::Cuda
 {
     using namespace SE::Core;
 
+    using RawPointer     = std::conditional<CUDA_INTEROP, CUdeviceptr, void *>::type;
+    using Array          = std::conditional<CUDA_INTEROP, cudaArray_t, void *>::type;
+    using MipmappedArray = std::conditional<CUDA_INTEROP, cudaMipmappedArray_t, void *>::type;
+    using ExternalMemory = std::conditional<CUDA_INTEROP, cudaExternalMemory_t, void *>::type;
+    using TextureObject  = std::conditional<CUDA_INTEROP, cudaTextureObject_t, void *>::type;
+
     void Malloc( void **aDestination, size_t aSize );
     void Free( void **aDestination );
     void MemCopyHostToDevice( void *aDestination, void *aSource, size_t aSize );
     void MemCopyDeviceToHost( void *aDestination, void *aSource, size_t aSize );
 
-    void MallocArray( void **aDestination, eColorFormat aFormat, size_t aWidth, size_t aHeight );
-    void FreeArray( void **aDestination );
-    void ArrayCopyHostToDevice( void *aDestination, size_t aWidthOffset, size_t aHeightOffset, void *aSource, size_t aSize );
-    void ArrayCopyDeviceToHost( void *aDestination, void *aSource, size_t aWidthOffset, size_t aHeightOffset, size_t aSize );
+    void MallocArray( Array *aDestination, eColorFormat aFormat, size_t aWidth, size_t aHeight );
+    void FreeArray( Array *aDestination );
+    void ArrayCopyHostToDevice( Array aDestination, size_t aWidthOffset, size_t aHeightOffset, void *aSource, size_t aSize );
+    void ArrayCopyDeviceToHost( Array aDestination, void *aSource, size_t aWidthOffset, size_t aHeightOffset, size_t aSize );
 
-    void ImportExternalMemory( void **aDestination, void *aExternalBuffer, size_t aSize );
-    void DestroyExternalMemory( void **aDestination, size_t aSize );
+    void ImportExternalMemory( ExternalMemory *aDestination, void *aExternalBuffer, size_t aSize );
+    void DestroyExternalMemory( ExternalMemory *aDestination );
 
-    void GetMappedMipmappedArray( void **aDestination, void *aExternalMemoryHandle, eColorFormat aFormat, int32_t aWidth,
-                                  int32_t aHeight, size_t aSize );
-    void GeMipmappedArrayLevel( void **aDestination, void *aMipMappedArray, uint32_t aLevel );
-    void FreeMipmappedArray( void **aDestination );
+    void GetMappedMipmappedArray( MipmappedArray *aDestination, ExternalMemory aExternalMemoryHandle, eColorFormat aFormat,
+                                  int32_t aWidth, int32_t aHeight, size_t aSize );
+    void GeMipmappedArrayLevel( Array *aDestination, MipmappedArray aMipMappedArray, uint32_t aLevel );
+    void FreeMipmappedArray( MipmappedArray *aDestination );
 
-    void CreateTextureObject( void **aDestination, void *aDataArray, sTextureSamplingInfo aSpec );
-    void FreeTextureObject( void **aDestination );
+    void CreateTextureObject( TextureObject *aDestination, Array aDataArray, sTextureSamplingInfo aSpec );
+    void FreeTextureObject( TextureObject *aDestination );
 } // namespace SE::Cuda

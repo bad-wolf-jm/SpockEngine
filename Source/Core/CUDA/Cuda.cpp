@@ -1,13 +1,5 @@
 #include "Cuda.h"
 
-#define CUDA_INTEROP
-// #define CUDA_INTEROP
-
-#ifdef CUDA_INTEROP
-#    include <cuda.h>
-#    include <cuda_runtime_api.h>
-#endif
-
 #include "Texture/Conversion.h"
 
 namespace SE::Cuda
@@ -56,36 +48,33 @@ namespace SE::Cuda
         CUDA_ASSERT( cudaMemcpy( aDestination, aSource, aSize, cudaMemcpyDeviceToHost ) );
     }
 
-    void MallocArray( void **aDestination, eColorFormat aFormat, size_t aWidth, size_t aHeight )
+    void MallocArray( Array *aDestination, eColorFormat aFormat, size_t aWidth, size_t aHeight )
     {
 #ifdef CUDA_INTEROP
         cudaChannelFormatDesc lTextureFormat = ToCudaChannelDesc( aFormat );
-        CUDA_ASSERT(
-            cudaMallocArray( reinterpret_cast<cudaArray_t *>( aDestination ), &lTextureFormat, aWidth, aHeight, cudaArrayDefault ) );
+        CUDA_ASSERT( cudaMallocArray( aDestination, &lTextureFormat, aWidth, aHeight, cudaArrayDefault ) );
 #endif
     }
 
-    void FreeArray( void **aDestination )
+    void FreeArray( Array *aDestination )
     {
-        if( nullptr != aDestination ) CUDA_ASSERT( cudaFreeArray( reinterpret_cast<cudaArray_t>( *aDestination ) ) );
+        if( nullptr != aDestination ) CUDA_ASSERT( cudaFreeArray( *aDestination ) );
 
         *aDestination = nullptr;
     }
 
-    void ArrayCopyHostToDevice( void *aDestination, size_t aWidthOffset, size_t aHeightOffset, void *aSource, size_t aSize )
+    void ArrayCopyHostToDevice( Array aDestination, size_t aWidthOffset, size_t aHeightOffset, void *aSource, size_t aSize )
     {
-        CUDA_ASSERT( cudaMemcpyToArray( reinterpret_cast<cudaArray_t>( aDestination ), aWidthOffset, aHeightOffset, aSource, aSize,
-                                        cudaMemcpyHostToDevice ) );
+        CUDA_ASSERT( cudaMemcpyToArray( aDestination, aWidthOffset, aHeightOffset, aSource, aSize, cudaMemcpyHostToDevice ) );
     }
 
-    void ArrayCopyDeviceToHost( void *aDestination, void *aSource, size_t aWidthOffset, size_t aHeightOffset, size_t aSize )
+    void ArrayCopyDeviceToHost( Array aDestination, void *aSource, size_t aWidthOffset, size_t aHeightOffset, size_t aSize )
     {
-        CUDA_ASSERT( cudaMemcpyFromArray( reinterpret_cast<cudaArray_t>( aDestination ),
-                                          reinterpret_cast<cudaArray_const_t>( aSource ), aWidthOffset, aHeightOffset, aSize,
-                                          cudaMemcpyDeviceToHost ) );
+        CUDA_ASSERT( cudaMemcpyFromArray( aDestination, reinterpret_cast<cudaArray_const_t>( aSource ), aWidthOffset, aHeightOffset,
+                                          aSize, cudaMemcpyDeviceToHost ) );
     }
 
-    void ImportExternalMemory( void **aDestination, void *aExternalBuffer, size_t aSize )
+    void ImportExternalMemory( ExternalMemory *aDestination, void *aExternalBuffer, size_t aSize )
     {
 #ifdef CUDA_INTEROP
         cudaExternalMemoryHandleDesc lCudaExternalMemoryHandleDesc{};
@@ -94,21 +83,19 @@ namespace SE::Cuda
         lCudaExternalMemoryHandleDesc.flags               = 0;
         lCudaExternalMemoryHandleDesc.handle.win32.handle = aExternalBuffer;
 
-        CUDA_ASSERT(
-            cudaImportExternalMemory( reinterpret_cast<cudaExternalMemory_t *>( aDestination ), &lCudaExternalMemoryHandleDesc ) );
+        CUDA_ASSERT( cudaImportExternalMemory( aDestination, &lCudaExternalMemoryHandleDesc ) );
 #endif
     }
 
-    void DestroyExternalMemory( void **aDestination )
+    void DestroyExternalMemory( ExternalMemory *aDestination )
     {
-        if( nullptr != aDestination )
-            CUDA_ASSERT( cudaDestroyExternalMemory( reinterpret_cast<cudaExternalMemory_t>( *aDestination ) ) );
+        if( nullptr != aDestination ) CUDA_ASSERT( cudaDestroyExternalMemory( *aDestination ) );
 
         *aDestination = nullptr;
     }
 
-    void GetMappedMipmappedArray( void **aDestination, void *aExternalMemoryHandle, eColorFormat aFormat, int32_t aWidth,
-                                  int32_t aHeight, size_t aSize )
+    void GetMappedMipmappedArray( MipmappedArray *aDestination, ExternalMemory aExternalMemoryHandle, eColorFormat aFormat,
+                                  int32_t aWidth, int32_t aHeight, size_t aSize )
     {
 #ifdef CUDA_INTEROP
         cudaExternalMemoryMipmappedArrayDesc lExternalMemoryMipmappedArrayDesc{};
@@ -119,26 +106,24 @@ namespace SE::Cuda
         lExternalMemoryMipmappedArrayDesc.numLevels     = 1;
         lExternalMemoryMipmappedArrayDesc.flags         = 0;
 
-        CUDA_ASSERT( cudaExternalMemoryGetMappedMipmappedArray( reinterpret_cast<cudaMipmappedArray_t *>( aDestination ),
-                                                                reinterpret_cast<cudaExternalMemory_t>( aExternalMemoryHandle ),
-                                                                &lExternalMemoryMipmappedArrayDesc ) );
+        CUDA_ASSERT(
+            cudaExternalMemoryGetMappedMipmappedArray( aDestination, aExternalMemoryHandle, &lExternalMemoryMipmappedArrayDesc ) );
 #endif
     }
 
-    void FreeMipmappedArray( void **aDestination )
+    void FreeMipmappedArray( MipmappedArray *aDestination )
     {
         if( nullptr != aDestination ) CUDA_ASSERT( cudaFreeMipmappedArray( reinterpret_cast<cudaMipmappedArray_t>( *aDestination ) ) );
 
         *aDestination = nullptr;
     }
 
-    void GeMipmappedArrayLevel( void **aDestination, void *aMipMappedArray, uint32_t aLevel )
+    void GeMipmappedArrayLevel( Array *aDestination, MipmappedArray aMipMappedArray, uint32_t aLevel )
     {
-        CUDA_ASSERT( cudaGetMipmappedArrayLevel( reinterpret_cast<cudaArray_t *>( aDestination ),
-                                                 reinterpret_cast<cudaMipmappedArray_t>( aMipMappedArray ), aLevel ) );
+        CUDA_ASSERT( cudaGetMipmappedArrayLevel( aDestination, aMipMappedArray, aLevel ) );
     }
 
-    void CreateTextureObject( void **aDestination, void *aDataArray, sTextureSamplingInfo aSpec )
+    void CreateTextureObject( TextureObject *aDestination, Array aDataArray, sTextureSamplingInfo aSpec )
     {
 #ifdef CUDA_INTEROP
         cudaResourceDesc lResourceDescription{};
@@ -172,19 +157,15 @@ namespace SE::Cuda
         lTextureDescription.minMipmapLevelClamp = 0.0f;
         lTextureDescription.maxMipmapLevelClamp = 1.0f;
 
-        CUDA_ASSERT( cudaCreateTextureObject( reinterpret_cast<cudaTextureObject_t *>( aDestination ), &lResourceDescription,
-                                              &lTextureDescription, NULL ) );
+        CUDA_ASSERT( cudaCreateTextureObject( aDestination, &lResourceDescription, &lTextureDescription, NULL ) );
 #endif
     }
 
-    void FreeTextureObject( void **aDestination )
+    void FreeTextureObject( TextureObject *aDestination )
     {
-        if( nullptr != aDestination )
-            CUDA_ASSERT( cudaDestroyTextureObject( reinterpret_cast<cudaTextureObject_t>( *aDestination ) ) );
+        if( 0 != aDestination ) CUDA_ASSERT( cudaDestroyTextureObject( *aDestination ) );
 
-        *aDestination = nullptr;
-
-        // CUDA_ASSERT( cudaMalloc( reinterpret_cast<void **>( aDestination ), aSize * sizeof( _Ty ) ) );
+        *aDestination = 0;
     }
 
 } // namespace SE::Cuda
