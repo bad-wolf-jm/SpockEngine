@@ -22,13 +22,13 @@ namespace SE::OtdrEditor
         mSectionPropertyLayout->Add( mRbsSaturation.get(), lItemHeight, false, true );
         mLsaRange = New<UIPropertyValue>( "LSA range:" );
         mSectionPropertyLayout->Add( mLsaRange.get(), lItemHeight, false, true );
-        mLsaSlope = New<UIPropertyValue>( "Lsa slope:" );
+        mLsaSlope = New<UIPropertyValue>( "LSA slope:" );
         mSectionPropertyLayout->Add( mLsaSlope.get(), lItemHeight, false, true );
-        mLsaOffset = New<UIPropertyValue>( "Lsa offset:" );
+        mLsaOffset = New<UIPropertyValue>( "LSA offset:" );
         mSectionPropertyLayout->Add( mLsaOffset.get(), lItemHeight, false, true );
-        mLsaMean = New<UIPropertyValue>( "lsa mean:" );
+        mLsaMean = New<UIPropertyValue>( "LSA mean:" );
         mSectionPropertyLayout->Add( mLsaMean.get(), lItemHeight, false, true );
-        mLsaSlopeError = New<UIPropertyValue>( "Lsa slope error:" );
+        mLsaSlopeError = New<UIPropertyValue>( "LSA slope error:" );
         mSectionPropertyLayout->Add( mLsaSlopeError.get(), lItemHeight, false, true );
         mLsaLinear = New<UIPropertyValue>( "LSA linear:" );
         mSectionPropertyLayout->Add( mLsaLinear.get(), lItemHeight, false, true );
