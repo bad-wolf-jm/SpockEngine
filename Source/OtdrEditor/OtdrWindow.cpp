@@ -326,7 +326,7 @@ namespace SE::OtdrEditor
         auto lAcquisitionDataInstance =
             New<MonoScriptInstance>( &lAcquisitionDataClassType, lAcquisitionDataClassType.Class(), lAcquisitionData );
 
-        auto lFiberInfo = lTraceDataInstance.GetPropertyValue("FiberInfo", "Metrino.Otdr.PhysicalFiberCharacteristics");
+        auto lFiberInfo = lTraceDataInstance.GetPropertyValue( "FiberInfo", "Metrino.Otdr.PhysicalFiberCharacteristics" );
 
         mAcquisitionDataOverview.SetData( lSinglePulseTraceInstance, lAcquisitionDataInstance, lFiberInfo );
 
@@ -343,7 +343,8 @@ namespace SE::OtdrEditor
             mTracePlot.Add( lPlot );
         }
 
-        MonoObject *lLinkElementData   = mDataInstance->CallMethod( "GetLinkElements" );
+        bool        lReanalyze         = false;
+        MonoObject *lLinkElementData   = mDataInstance->CallMethod( "GetLinkElements", &lReanalyze );
         auto        lLinkElementVector = AsVector<sLinkElement>( lLinkElementData );
         mLinkElementTable.SetData( lLinkElementVector );
 

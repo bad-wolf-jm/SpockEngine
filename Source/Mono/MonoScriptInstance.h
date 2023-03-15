@@ -48,7 +48,7 @@ namespace SE::Core
             }
             else
             {
-                void *lParameters[] = { (void *)&aArgs... };
+                void *lParameters[] = { (void *)aArgs... };
 
                 return InvokeMethod( aName, sizeof...( _ArgTypes ), lParameters );
             }
