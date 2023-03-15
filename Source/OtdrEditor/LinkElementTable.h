@@ -39,7 +39,6 @@ namespace SE::OtdrEditor
 
         void Clear();
         void SetData( std::vector<sLinkElement> const &aData );
-        // void SetData( std::vector<Ref<MonoScriptInstance>> const &aData );
 
       protected:
         Ref<sStringColumn>  mType;
@@ -57,6 +56,5 @@ namespace SE::OtdrEditor
         Ref<sStringColumn>  mReflectanceType;
 
         std::vector<sLinkElement> mEventDataVector;
-        // std::vector<Ref<MonoScriptInstance>> mEventDataVector0;
     };
 } // namespace SE::OtdrEditor
