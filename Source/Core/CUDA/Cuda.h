@@ -4,7 +4,8 @@
 #include <stdexcept>
 #include <type_traits>
 
-#define CUDA_INTEROP true
+// #define CUDA_INTEROP
+#define CUDA_INTEROP_TYPE false
 
 #ifdef CUDA_INTEROP
 #    include <cuda.h>
@@ -37,12 +38,19 @@ namespace SE::Cuda
 {
     using namespace SE::Core;
 
-    using RawPointer     = std::conditional<CUDA_INTEROP, CUdeviceptr, void *>::type;
-    using Array          = std::conditional<CUDA_INTEROP, cudaArray_t, void *>::type;
-    using MipmappedArray = std::conditional<CUDA_INTEROP, cudaMipmappedArray_t, void *>::type;
-    using ExternalMemory = std::conditional<CUDA_INTEROP, cudaExternalMemory_t, void *>::type;
-    using TextureObject  = std::conditional<CUDA_INTEROP, cudaTextureObject_t, void *>::type;
-
+#ifdef CUDA_INTEROP
+    using RawPointer     = CUdeviceptr;
+    using Array          = cudaArray_t;
+    using MipmappedArray = cudaMipmappedArray_t;
+    using ExternalMemory = cudaExternalMemory_t;
+    using TextureObject  = cudaTextureObject_t;
+#else
+    using RawPointer     = char *;
+    using Array          = char *;
+    using MipmappedArray = char *;
+    using ExternalMemory = char *;
+    using TextureObject  = uint64_t;
+#endif
     void SyncDevice();
 
     void Malloc( void **aDestination, size_t aSize );

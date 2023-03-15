@@ -106,10 +106,10 @@ namespace SE::Cuda
         ~TextureCubeMap();
 
       protected:
-        size_t               mImageMemorySize            = 0;
-        cudaArray_t          mInternalCudaArray          = nullptr;
-        cudaMipmappedArray_t mInternalCudaMipmappedArray = nullptr;
-        cudaExternalMemory_t mExternalMemoryHandle       = nullptr;
+        size_t         mImageMemorySize            = 0;
+        Array          mInternalCudaArray          = nullptr;
+        MipmappedArray mInternalCudaMipmappedArray = nullptr;
+        ExternalMemory mExternalMemoryHandle       = nullptr;
     };
 
     /** \class TextureSamplerCubeMap
@@ -129,7 +129,7 @@ namespace SE::Cuda
 
         struct DeviceData
         {
-            cudaTextureObject_t mTextureObject = 0; //!< Cuda-side sampler object
+            TextureObject mTextureObject = 0; //!< Cuda-side sampler object
 
             math::vec2 mScaling = { 1.0f, 1.0f };
             math::vec2 mOffset  = { 0.0f, 0.0f };
@@ -163,6 +163,6 @@ namespace SE::Cuda
         void InitializeTextureSampler();
     };
 
-    cudaChannelFormatDesc ToCudaChannelDesc( eColorFormat aColorFormat );
+    // cudaChannelFormatDesc ToCudaChannelDesc( eColorFormat aColorFormat );
 
 } // namespace SE::Cuda

@@ -110,12 +110,10 @@ namespace SE::Cuda
 #endif
 
       protected:
-#ifdef CUDA_INTEROP
-        size_t               mImageMemorySize            = 0;
-        cudaArray_t          mInternalCudaArray          = nullptr;
-        cudaMipmappedArray_t mInternalCudaMipmappedArray = nullptr;
-        cudaExternalMemory_t mExternalMemoryHandle       = nullptr;
-#endif
+        size_t         mImageMemorySize            = 0;
+        Array          mInternalCudaArray          = nullptr;
+        MipmappedArray mInternalCudaMipmappedArray = nullptr;
+        ExternalMemory mExternalMemoryHandle       = nullptr;
     };
 
     /** \class TextureSampler2D
@@ -135,11 +133,9 @@ namespace SE::Cuda
 
         struct DeviceData
         {
-#ifdef CUDA_INTEROP
-            cudaTextureObject_t mTextureObject = 0; //!< Cuda-side sampler object
-#endif
-            math::vec2 mScaling = { 1.0f, 1.0f };
-            math::vec2 mOffset  = { 0.0f, 0.0f };
+            TextureObject mTextureObject = 0; //!< Cuda-side sampler object
+            math::vec2    mScaling       = { 1.0f, 1.0f };
+            math::vec2    mOffset        = { 0.0f, 0.0f };
 
             /** @brief Retrieve en element from the texture
              *
@@ -166,11 +162,8 @@ namespace SE::Cuda
          * @param aSamplingInfo Sampling data
          */
         TextureSampler2D( Ref<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingInfo );
-
-#ifdef CUDA_INTEROP
+// #ifdef CUDA_INTEROP
         void InitializeTextureSampler();
-#else
-        void InitializeTextureSampler() {}
-#endif
+// #endif
     };
 } // namespace SE::Cuda

@@ -13,12 +13,12 @@
 #    include <cuda.h>
 #    include <cuda_runtime_api.h>
 #else
-typedef void* cudaExternalMemory_t;
+typedef void    *cudaExternalMemory_t;
 typedef uint64_t cudaError_t;
 typedef uint64_t cudaChannelFormatDesc;
-typedef void* cudaMipmappedArray_t;
-typedef void* cudaArray_t;
-typedef void* cudaTextureObject_t;
+typedef void    *cudaMipmappedArray_t;
+typedef void    *cudaArray_t;
+typedef void    *cudaTextureObject_t;
 #endif
 #include <fmt/core.h>
 #include <stdexcept>
@@ -46,6 +46,7 @@ inline void __CUDA_ASSERT( cudaError_t aErr, const char *aFile, const int aLine 
 #        endif
 }
 
+#    endif
 #endif
 
 #ifdef __CUDACC__

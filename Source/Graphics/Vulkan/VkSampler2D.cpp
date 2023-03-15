@@ -65,8 +65,9 @@ namespace SE::Graphics
                                                Convert( mSpec.mMipFilter ) );
 
         if( mTextureData->mIsGraphicsOnly ) return;
-
+#ifdef CUDA_INTEROP
         InitializeTextureSampler();
+#endif
     }
 
     VkSampler2D::~VkSampler2D()

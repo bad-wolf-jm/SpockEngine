@@ -24,8 +24,9 @@
 namespace SE::Cuda
 {
     using namespace SE::Core;
-
+#ifdef CUDA_INTEROP
     cudaChannelFormatDesc  ToCudaChannelDesc( eColorFormat aColorFormat );
     cudaTextureAddressMode ToCudaAddressMode( eSamplerWrapping aAddressMode );
     cudaTextureFilterMode  ToCudaFilterMode( eSamplerFilter aFilterMode );
+#endif
 } // namespace SE::Cuda
