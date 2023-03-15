@@ -4,7 +4,6 @@
 
 namespace SE::Cuda
 {
-
 #ifndef CUDA_INTEROP
 #    ifndef CUDA_ASSERT
 #        define CUDA_ASSERT( err ) \
