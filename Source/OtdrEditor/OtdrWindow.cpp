@@ -343,7 +343,7 @@ namespace SE::OtdrEditor
             mTracePlot.Add( lPlot );
         }
 
-        bool        lReanalyze         = false;
+        bool        lReanalyze         = true;
         MonoObject *lLinkElementData   = mDataInstance->CallMethod( "GetLinkElements", &lReanalyze );
         auto        lLinkElementVector = AsVector<sLinkElement>( lLinkElementData );
         mLinkElementTable.SetData( lLinkElementVector );
