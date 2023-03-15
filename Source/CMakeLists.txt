@@ -20,6 +20,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Mono/InternalCalls.cpp
     Mono/EntityRegistry.cpp
     
+    Core/CUDA/Cuda.cpp
     Core/CUDA/Array/MultiTensor.cu
     Core/CUDA/Array/MemoryPool.cu
     Core/CUDA/Texture/Texture2D.cu
