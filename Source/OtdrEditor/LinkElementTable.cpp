@@ -95,8 +95,8 @@ namespace SE::OtdrEditor
             }
             mStatus->mData.push_back( StringJoin( LinkStatusToString( lLinkElement.GetPropertyValue<int>( "Status" ) ) ) );
 
-            
-            mDiagnosicCount->mData.push_back( 1000);//lE.mDiagnosicCount );
+
+            mDiagnosicCount->mData.push_back( lE.mDiagnosicCount );
             mWavelength->mData.push_back( lPhysicalEvent.GetPropertyValue<double>( "Wavelength" ) * 1e9 );
             mPositionColumn->mData.push_back( lLinkElement.GetPropertyValue<double>( "Position" ) * 0.001f );
             mLoss->mData.push_back( lOtdrPhysicalEvent->GetPropertyValue<double>( "Loss" ) );
