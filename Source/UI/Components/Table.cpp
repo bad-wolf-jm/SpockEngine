@@ -27,6 +27,7 @@ namespace SE::Core
 
         if( ImGui::BeginTable( "##", mColumns.size(), lTableFlags, aSize ) )
         {
+            ImGui::TableSetupScrollFreeze( 0, 1 );
             ImGuiTable *lThisTable = ImGui::GetCurrentContext()->CurrentTable;
 
             for( const auto &lColumn : mColumns )
