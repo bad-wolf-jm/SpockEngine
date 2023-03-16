@@ -60,6 +60,17 @@ namespace SE::OtdrEditor
 
         mLossError = New<sFloat64Column>( "Loss Error", 75.0f, "{:.5f} dB", "N.a.N." );
         AddColumn( mLossError );
+
+        UITable::OnRowClicked(
+            [&]( uint32_t aRow )
+            {
+                if( mOnElementClicked ) mOnElementClicked( mEventDataVector[aRow] );
+            } );
+    }
+
+    void UILinkElementTable::OnElementClicked( std::function<void( sLinkElement const & )> const &aOnRowClicked )
+    {
+        mOnElementClicked = aOnRowClicked;
     }
 
     void UILinkElementTable::SetData( std::vector<sLinkElement> const &aData )
@@ -82,7 +93,10 @@ namespace SE::OtdrEditor
 
         for( auto const &lE : mEventDataVector )
         {
-            mRowBackgroundColor.push_back( IM_COL32( 10, 10, 10, 255 * ( lE.mLinkIndex % 2 ) ) );
+            if( lE.mLinkIndex % 2 )
+                mRowBackgroundColor.push_back( IM_COL32( 2, 2, 2, 255 ) );
+            else
+                mRowBackgroundColor.push_back( IM_COL32( 9, 9, 9, 255 ) );
 
             auto lLinkElement   = MonoScriptInstance( &lBaseLinkElementClass, lBaseLinkElementClass.Class(), lE.mLinkElement );
             auto lPhysicalEvent = MonoScriptInstance( &lOlmPhysicalEventClass, lOlmPhysicalEventClass.Class(), lE.mPhysicalEvent );
@@ -155,5 +169,8 @@ namespace SE::OtdrEditor
         mEventType->mData.clear();
         mEventStatus->mData.clear();
         mReflectanceType->mData.clear();
+        mEventSpan->mData.clear();
+        mPositionTolerance->mData.clear();
+        mLossError->mData.clear();
     }
 } // namespace SE::OtdrEditor

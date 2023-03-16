@@ -17,13 +17,15 @@ namespace SE::Core
 
     ImVec2 UITable::RequiredSize() { return ImVec2{}; }
 
+    void UITable::OnRowClicked( std::function<void( uint32_t )> const &aOnRowClicked ) { mOnRowClicked = aOnRowClicked; }
+
     void UITable::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
         ImGui::SetCursorPos( aPosition );
 
         const ImGuiTableFlags lTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY |
                                             ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_Resizable |
-                                            ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
+                                            ImGuiTableFlags_RowBg;
 
         if( ImGui::BeginTable( "##", mColumns.size(), lTableFlags, aSize ) )
         {
@@ -63,6 +65,7 @@ namespace SE::Core
                         if( lColumnData->mBackgroundColor.size() > 0 )
                             ImGui::TableSetBgColor( ImGuiTableBgTarget_CellBg, lColumnData->mBackgroundColor[lRow] );
                         lColumnData->Render( lRow, ImVec2{ lWidth, mRowHeight } );
+                        if( mOnRowClicked && ImGui::IsItemClicked() ) mOnRowClicked( lRow );
                         if( lColumnData->mBackgroundColor.size() > 0 ) ImGui::TableSetBgColor( ImGuiTableBgTarget_CellBg, lBgColor );
 
                         lColumn++;

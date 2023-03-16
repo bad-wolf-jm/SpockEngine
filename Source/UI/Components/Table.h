@@ -58,10 +58,13 @@ namespace SE::Core
         void AddColumn( Ref<sTableColumn> aColumn );
         void SetRowHeight( float aRowHeight );
 
+        void OnRowClicked( std::function<void( uint32_t )> const &aOnRowClicked );
+
         std::vector<uint32_t> mRowBackgroundColor;
 
       protected:
-        std::vector<Ref<sTableColumn>> mColumns;
+        std::vector<Ref<sTableColumn>>  mColumns;
+        std::function<void( uint32_t )> mOnRowClicked;
 
       protected:
         float mRowHeight = 15.0f;

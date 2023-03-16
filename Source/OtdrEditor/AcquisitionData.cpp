@@ -178,7 +178,7 @@ namespace SE::OtdrEditor
         mLowBandwidthFilterNoise->SetValue( "{:.3f} dB",
                                             aAcquisitionData->GetPropertyValue<double>( "LowBandwidthFilteredRmsNoise" ) );
         mHighBandwidthFiltedNoise->SetValue( "{:.3f} dB",
-                                            aAcquisitionData->GetPropertyValue<double>( "HighBandwidthFilteredRmsNoise" ) );
+                                             aAcquisitionData->GetPropertyValue<double>( "HighBandwidthFilteredRmsNoise" ) );
         mExpectedInjection->SetValue( "{:.3f} dB", aAcquisitionData->GetPropertyValue<double>( "ExpectedInjection" ) );
         mSaturationLevel->SetValue( "{:.3f} dB", aAcquisitionData->GetPropertyValue<double>( "SaturationLevel" ) );
         mFresnelSaturation->SetValue( "{:.3f} dB", aAcquisitionData->GetPropertyValue<double>( "FresnelSaturationLevel" ) );

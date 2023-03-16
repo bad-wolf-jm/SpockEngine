@@ -143,7 +143,7 @@ namespace SE::OtdrEditor
         mWavelength->SetValue( lWavelength );
 
         auto        lDetectionTrace          = aAttributes->GetPropertyValue( "DetectionTrace", "Metrino.Otdr.SinglePulseTrace" );
-        std::string lDetectionTracePeakPulse = fmt::format( "{} ns", lDetectionTrace->GetPropertyValue<double>( "Pulse" ) * 1e9 );
+        std::string lDetectionTracePeakPulse = fmt::format( "{:.3f} ns", lDetectionTrace->GetPropertyValue<double>( "Pulse" ) * 1e9 );
         std::string lDetectionTracePeakPulseWidth =
             fmt::format( "{:.3f} m", lDetectionTrace->GetPropertyValue<double>( "PulseWidth" ) );
         std::string lDetectionTraceFormat = fmt::format( "{} - {}", lDetectionTracePeakPulse, lDetectionTracePeakPulseWidth );
@@ -171,7 +171,7 @@ namespace SE::OtdrEditor
         mPeakSNR->SetValue( lPeakSNR );
 
         auto        lPeakTrace      = aAttributes->GetPropertyValue( "PeakTrace", "Metrino.Otdr.SinglePulseTrace" );
-        std::string lPeakPulse      = fmt::format( "{} ns", lPeakTrace->GetPropertyValue<double>( "Pulse" ) * 1e9 );
+        std::string lPeakPulse      = fmt::format( "{:.3f} ns", lPeakTrace->GetPropertyValue<double>( "Pulse" ) * 1e9 );
         std::string lPeakPulseWidth = fmt::format( "{:.3f} m", lPeakTrace->GetPropertyValue<double>( "PulseWidth" ) );
         std::string lFormat         = fmt::format( "{} - {}", lPeakPulse, lPeakPulseWidth );
         mPeakTrace->SetValue( lFormat );

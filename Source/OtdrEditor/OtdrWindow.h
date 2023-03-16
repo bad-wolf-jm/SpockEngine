@@ -23,12 +23,12 @@
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/UI.h"
 
+#include "AcquisitionData.h"
 #include "Editor/ContentBrowser.h"
 #include "Enums.h"
+#include "EventOverview.h"
 #include "LinkElementTable.h"
 #include "MeasurementOverview.h"
-#include "AcquisitionData.h"
-#include "EventOverview.h"
 #include "Mono/MonoScriptInstance.h"
 #include "SceneHierarchyPanel.h"
 #include "Workspace.h"
@@ -148,10 +148,10 @@ namespace SE::OtdrEditor
 
         std::vector<sEvent> mEventDataVector;
 
-        UILinkElementTable mLinkElementTable;
-        MeasurementOverview mMeasurementOverview;
-        EventOverview mEventOverview;
-        AcquisitionData mAcquisitionDataOverview;
+        Ref<UILinkElementTable> mLinkElementTable;
+        MeasurementOverview     mMeasurementOverview;
+        EventOverview           mEventOverview;
+        AcquisitionData         mAcquisitionDataOverview;
 
       private:
         OtdrWorkspaceWindow mWorkspaceArea;
