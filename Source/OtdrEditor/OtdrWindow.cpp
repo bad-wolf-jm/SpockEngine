@@ -47,14 +47,26 @@ namespace SE::OtdrEditor
     void OtdrWindow::ConfigureUI()
     {
         mWorkspaceArea.ConfigureUI();
-
         mEventTable.SetRowHeight( 20.0f );
+        mLinkElementTable->OnElementClicked(
+            [&]( sLinkElement const &aElement )
+            {
+                static auto &lOlmMeasurementClass = MonoRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
+                static auto &lOlmAttributeClass = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
+
+                auto lPhysicalEvent = New<MonoScriptInstance>( &lOlmMeasurementClass, lOlmMeasurementClass.Class(),
+                                                               aElement.mPhysicalEvent );
+                auto lAttributes    = New<MonoScriptInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), aElement.mAttributes );
+
+                mEventOverview.SetData( lPhysicalEvent, lAttributes );
+            } );
     }
 
     OtdrWindow::OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
         : mGraphicContext{ aGraphicContext }
         , mUIOverlay{ aUIOverlay }
     {
+        mLinkElementTable = New<UILinkElementTable>();
     }
 
     bool OtdrWindow::Display()
@@ -129,7 +141,7 @@ namespace SE::OtdrEditor
 
             if( ImGui::Begin( "iOlmData_LinkElements", &pOpen, ImGuiWindowFlags_None ) )
             {
-                mLinkElementTable.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+                mLinkElementTable->Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
             }
             ImGui::End();
             if( !pOpen )
@@ -346,7 +358,7 @@ namespace SE::OtdrEditor
         bool        lReanalyze         = true;
         MonoObject *lLinkElementData   = mDataInstance->CallMethod( "GetLinkElements", &lReanalyze );
         auto        lLinkElementVector = AsVector<sLinkElement>( lLinkElementData );
-        mLinkElementTable.SetData( lLinkElementVector );
+        mLinkElementTable->SetData( lLinkElementVector );
 
         mMeasurementOverview.SetData( mDataInstance );
 

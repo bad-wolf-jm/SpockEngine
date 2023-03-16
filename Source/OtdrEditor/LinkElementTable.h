@@ -39,6 +39,7 @@ namespace SE::OtdrEditor
 
         void Clear();
         void SetData( std::vector<sLinkElement> const &aData );
+        void OnElementClicked( std::function<void(sLinkElement const&)> const &aOnRowClicked );
 
       protected:
         Ref<sStringColumn>  mType;
@@ -59,5 +60,10 @@ namespace SE::OtdrEditor
         Ref<sFloat64Column> mLossError;
 
         std::vector<sLinkElement> mEventDataVector;
+
+      private:
+        std::function<void(sLinkElement const& )> mOnElementClicked;
+        void UILinkElementTable::DoSelectElement( uint32_t aRow );
+
     };
 } // namespace SE::OtdrEditor
