@@ -54,6 +54,9 @@ namespace SE::OtdrEditor
         Ref<sStringColumn>  mEventType;
         Ref<sStringColumn>  mEventStatus;
         Ref<sStringColumn>  mReflectanceType;
+        Ref<sStringColumn>  mEventSpan;
+        Ref<sFloat64Column> mPositionTolerance;
+        Ref<sFloat64Column> mLossError;
 
         std::vector<sLinkElement> mEventDataVector;
     };

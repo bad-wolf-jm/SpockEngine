@@ -51,6 +51,15 @@ namespace SE::OtdrEditor
 
         mReflectanceType = New<sStringColumn>( "mReflectanceType", 75.0f );
         AddColumn( mReflectanceType );
+
+        mEventSpan = New<sStringColumn>( "Range", 75.0f );
+        AddColumn( mEventSpan );
+
+        mPositionTolerance = New<sFloat64Column>( "Tolerance", 75.0f, "{:.3f} m", "N.a.N." );
+        AddColumn( mPositionTolerance );
+
+        mLossError = New<sFloat64Column>( "Loss Error", 75.0f, "{:.5f} dB", "N.a.N." );
+        AddColumn( mLossError );
     }
 
     void UILinkElementTable::SetData( std::vector<sLinkElement> const &aData )
@@ -95,7 +104,6 @@ namespace SE::OtdrEditor
             }
             mStatus->mData.push_back( StringJoin( LinkStatusToString( lLinkElement.GetPropertyValue<int>( "Status" ) ) ) );
 
-
             mDiagnosicCount->mData.push_back( lE.mDiagnosicCount );
             mWavelength->mData.push_back( lPhysicalEvent.GetPropertyValue<double>( "Wavelength" ) * 1e9 );
             mPositionColumn->mData.push_back( lLinkElement.GetPropertyValue<double>( "Position" ) * 0.001f );
@@ -121,6 +129,15 @@ namespace SE::OtdrEditor
             mEventStatus->mData.push_back( StringJoin( ToString( lOtdrPhysicalEvent->GetPropertyValue<int>( "Status" ) ) ) );
             mReflectanceType->mData.push_back(
                 ToString( lOtdrPhysicalEvent->GetPropertyValue<eReflectanceType>( "ReflectanceType" ) ) );
+
+            auto lEventSpanStart = lOtdrPhysicalEvent->GetPropertyValue<double>( "CursorA" ) * 0.001f;
+            auto lEventSpanEnd   = lOtdrPhysicalEvent->GetPropertyValue<double>( "CursorB" ) * 0.001f;
+            auto lEventRange     = fmt::format( "[{:.4f}, {:.4f}] km", lEventSpanStart, lEventSpanEnd );
+            mEventSpan->mData.push_back( lEventRange );
+
+            mPositionTolerance->mData.push_back( lPhysicalEvent.GetPropertyValue<double>( "PositionTolerance" ) );
+
+            mLossError->mData.push_back( lAttributes.GetPropertyValue<double>( "LossError" ) );
         }
     }
 
