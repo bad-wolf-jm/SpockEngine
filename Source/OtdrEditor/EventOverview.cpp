@@ -149,7 +149,7 @@ namespace SE::OtdrEditor
         std::string lDetectionTraceFormat = fmt::format( "{} - {}", lDetectionTracePeakPulse, lDetectionTracePeakPulseWidth );
         mDetectionTrace->SetValue( lDetectionTraceFormat );
 
-        std::string lPositionTolerance = fmt::format( "{:.4f} nm", aPhysicalEvent->GetPropertyValue<double>( "PositionTolerance" ) );
+        std::string lPositionTolerance = fmt::format( "{:.4f} m", aPhysicalEvent->GetPropertyValue<double>( "PositionTolerance" ) );
         mPositionTolerance->SetValue( lPositionTolerance );
 
         std::string lCurveLevel = fmt::format( "{:.2f} dB", lOtdrPhysicalEvent->GetPropertyValue<double>( "CurveLevel" ) );
