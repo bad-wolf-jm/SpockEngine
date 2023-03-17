@@ -1,4 +1,4 @@
-#include "DotNetRuntime.h"
+#include "Runtime.h"
 
 #include "Core/Logging.h"
 #include "Core/Memory.h"

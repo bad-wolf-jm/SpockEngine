@@ -1,5 +1,5 @@
 #include "AcquisitionData.h"
-#include "DotNet/DotNetRuntime.h"
+#include "DotNet/Runtime.h"
 namespace SE::OtdrEditor
 {
     AcquisitionData::AcquisitionData()

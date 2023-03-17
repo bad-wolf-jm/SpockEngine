@@ -5,7 +5,7 @@
 #include <string>
 
 
-#include "DotNetInstance.h"
+#include "Instance.h"
 #include "Typedefs.h"
 
 namespace SE::Core

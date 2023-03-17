@@ -5,7 +5,7 @@
 #include <map>
 #include <string>
 
-#include "DotNetClass.h"
+#include "Class.h"
 #include "Typedefs.h"
 
 namespace SE::Core

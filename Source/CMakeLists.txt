@@ -12,10 +12,10 @@ add_library(LTSimulationEngineRuntime STATIC
 
     Core/EntityCollection/EditComponent.cpp
     
-    DotNet/DotNetRuntime.cpp
-    DotNet/DotNetClass.cpp
-    DotNet/DotNetInstance.cpp
-    DotNet/DotNetMethod.cpp
+    DotNet/Runtime.cpp
+    DotNet/Class.cpp
+    DotNet/Instance.cpp
+    DotNet/Method.cpp
     DotNet/Utils.cpp
     DotNet/InternalCalls.cpp
     DotNet/EntityRegistry.cpp

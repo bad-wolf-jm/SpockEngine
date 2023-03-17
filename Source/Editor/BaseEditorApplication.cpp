@@ -19,7 +19,7 @@
 #include "Scene/Components.h"
 #include "Scene/Importer/glTFImporter.h"
 
-#include "DotNet/DotNetRuntime.h"
+#include "DotNet/Runtime.h"
 
 namespace SE::Editor
 {

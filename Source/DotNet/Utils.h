@@ -2,7 +2,7 @@
 
 #include <filesystem>
 #include "Typedefs.h"
-#include "DotNetClass.h"
+#include "Class.h"
 
 namespace SE::Core::Mono::Utils
 {
