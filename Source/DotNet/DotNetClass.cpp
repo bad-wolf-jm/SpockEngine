@@ -1,4 +1,4 @@
-#include "MonoScriptClass.h"
+#include "DotNetClass.h"
 
 #include "Core/Logging.h"
 #include "Core/Memory.h"
@@ -22,8 +22,8 @@
 #include "EntityRegistry.h"
 #include "InternalCalls.h"
 
-#include "MonoRuntime.h"
-#include "MonoScriptUtils.h"
+#include "DotNetRuntime.h"
+#include "Utils.h"
 
 namespace SE::Core
 {

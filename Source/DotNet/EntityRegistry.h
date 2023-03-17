@@ -9,7 +9,7 @@
 #include "Core/Logging.h"
 #include "Scene/Components.h"
 
-#include "MonoRuntime.h"
+#include "DotNetRuntime.h"
 
 namespace SE::Core
 {

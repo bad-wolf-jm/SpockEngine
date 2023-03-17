@@ -6,8 +6,8 @@
 
 #include "Core/Memory.h"
 
-#include "MonoScriptInstance.h"
-#include "MonoTypedefs.h"
+#include "DotNetInstance.h"
+#include "Typedefs.h"
 
 namespace fs = std::filesystem;
 

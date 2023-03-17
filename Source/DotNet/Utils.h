@@ -1,8 +1,8 @@
 #pragma once
 
 #include <filesystem>
-#include "MonoTypedefs.h"
-#include "MonoScriptClass.h"
+#include "Typedefs.h"
+#include "DotNetClass.h"
 
 namespace SE::Core::Mono::Utils
 {
