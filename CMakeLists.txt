@@ -111,7 +111,7 @@ FetchContent_Declare(
   GIT_TAG        release
   GIT_PROGRESS   TRUE )
 FetchContent_MakeAvailable(tinygltf)
-include_directories(${tinygltf_SOURCE_DIR})
+include_directories(${tinygltf_SOURCE_DIR}/include)
 set(SE_EXTRA_INCLUDES ${tinygltf_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
 
 FetchContent_Declare(

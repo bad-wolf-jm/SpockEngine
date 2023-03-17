@@ -5,7 +5,7 @@
 #include "UI/Components/Label.h"
 #include "UI/Layouts/BoxLayout.h"
 
-#include "Mono/MonoScriptInstance.h"
+#include "DotNet/DotNetInstance.h"
 
 namespace SE::OtdrEditor
 {

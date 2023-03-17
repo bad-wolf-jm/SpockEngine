@@ -24,7 +24,7 @@
 
 #include "Editor/BaseEditorApplication.h"
 
-#include "Mono/MonoRuntime.h"
+#include "DotNet/DotNetRuntime.h"
 
 using namespace SE::Core;
 using namespace SE::Graphics;

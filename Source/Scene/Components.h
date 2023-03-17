@@ -23,8 +23,8 @@
 
 #include "Primitives/Primitives.h"
 
-#include "Mono/MonoRuntime.h"
-#include "Mono/MonoScriptMethod.h"
+#include "DotNet/DotNetRuntime.h"
+#include "DotNet/DotNetMethod.h"
 
 #include "Core/Profiling/BlockTimer.h"
 

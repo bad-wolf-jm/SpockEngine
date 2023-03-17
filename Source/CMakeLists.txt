@@ -12,13 +12,13 @@ add_library(LTSimulationEngineRuntime STATIC
 
     Core/EntityCollection/EditComponent.cpp
     
-    Mono/MonoRuntime.cpp
-    Mono/MonoScriptClass.cpp
-    Mono/MonoScriptInstance.cpp
-    Mono/MonoScriptMethod.cpp
-    Mono/MonoScriptUtils.cpp
-    Mono/InternalCalls.cpp
-    Mono/EntityRegistry.cpp
+    DotNet/DotNetRuntime.cpp
+    DotNet/DotNetClass.cpp
+    DotNet/DotNetInstance.cpp
+    DotNet/DotNetMethod.cpp
+    DotNet/Utils.cpp
+    DotNet/InternalCalls.cpp
+    DotNet/EntityRegistry.cpp
     
     Core/CUDA/Cuda.cpp
     Core/CUDA/Array/MultiTensor.cu
