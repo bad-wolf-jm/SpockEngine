@@ -42,7 +42,6 @@ namespace SE::Core
 
             ImGuiListClipper lRowClipping;
             lRowClipping.Begin( lRowCount );
-            // ImGui::TableNextRow();
             while( lRowClipping.Step() )
             {
                 for( int lRow = lRowClipping.DisplayStart; lRow < lRowClipping.DisplayEnd; lRow++ )
