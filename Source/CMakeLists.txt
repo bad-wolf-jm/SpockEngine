@@ -132,6 +132,7 @@ add_library(LTSimulationEngineRuntime STATIC
     OtdrEditor/AcquisitionData.cpp
     OtdrEditor/EventOverview.cpp
     OtdrEditor/MeasurementOverview.cpp
+    OtdrEditor/LinkElementTracePlot.cpp
 
     ProcessingNodes/HitRecordProcessorKernels.cu
     ProcessingNodes/HitRecordProcessor.cpp
