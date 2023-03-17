@@ -48,7 +48,6 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/Components/ImageToggleButton.cpp
     UI/Components/Table.cpp
     UI/Components/Plot.cpp
-    UI/Components/HexViewer.cpp
     UI/Components/PropertyValue.cpp
     UI/Layouts/BoxLayout.cpp
     UI/Layouts/ZLayout.cpp
@@ -129,6 +128,7 @@ add_library(LTSimulationEngineRuntime STATIC
     OtdrEditor/Workspace.cpp
     OtdrEditor/Enums.cpp
     OtdrEditor/LinkElementTable.cpp
+    OtdrEditor/MultiPulseEventTable.cpp
     OtdrEditor/AcquisitionData.cpp
     OtdrEditor/EventOverview.cpp
     OtdrEditor/MeasurementOverview.cpp
