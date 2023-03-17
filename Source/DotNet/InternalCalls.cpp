@@ -10,8 +10,8 @@
 #include "UI/UI.h"
 #include "UI/Widgets.h"
 
-#include "MonoRuntime.h"
-#include "MonoScriptUtils.h"
+#include "DotNetRuntime.h"
+#include "Utils.h"
 
 namespace SE::MonoInternalCalls
 {

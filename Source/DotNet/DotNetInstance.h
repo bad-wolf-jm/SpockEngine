@@ -6,7 +6,7 @@
 #include <string>
 #include <type_traits>
 
-#include "MonoTypedefs.h"
+#include "Typedefs.h"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"

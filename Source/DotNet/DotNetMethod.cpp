@@ -1,4 +1,4 @@
-#include "MonoScriptMethod.h"
+#include "DotNetMethod.h"
 
 namespace SE::Core
 {

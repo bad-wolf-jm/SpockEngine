@@ -5,8 +5,8 @@
 #include <map>
 #include <string>
 
-#include "MonoScriptClass.h"
-#include "MonoTypedefs.h"
+#include "DotNetClass.h"
+#include "Typedefs.h"
 
 namespace SE::Core
 {

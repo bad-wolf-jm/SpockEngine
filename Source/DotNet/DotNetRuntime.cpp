@@ -1,4 +1,4 @@
-#include "MonoRuntime.h"
+#include "DotNetRuntime.h"
 
 #include "Core/Logging.h"
 #include "Core/Memory.h"
@@ -25,7 +25,7 @@
 
 #include "EntityRegistry.h"
 #include "InternalCalls.h"
-#include "MonoScriptUtils.h"
+#include "Utils.h"
 
 #include "UI/Components/BaseImage.h"
 #include "UI/Components/Button.h"

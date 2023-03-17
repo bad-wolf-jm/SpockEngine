@@ -1,12 +1,12 @@
-#include "MonoScriptInstance.h"
+#include "DotNetInstance.h"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
 #include "mono/metadata/object.h"
 #include "mono/metadata/tabledefs.h"
 
-#include "MonoRuntime.h"
-#include "MonoScriptClass.h"
+#include "DotNetRuntime.h"
+#include "DotNetClass.h"
 
 namespace SE::Core
 {
