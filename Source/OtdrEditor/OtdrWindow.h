@@ -40,35 +40,6 @@ namespace SE::OtdrEditor
     using namespace SE::Core;
     using namespace SE::Core::EntityComponentSystem::Components;
 
-    struct sEvent
-    {
-        int              mRowIndex;
-        int              mEventIndex;
-        int              mSubEventIndex;
-        eEventType       mEventType;
-        eEventStatus     mEventStatus;
-        eReflectanceType mReflectanceType;
-        double           mWavelength;
-        double           mPosition;
-        double           mCursorA;
-        double           mCursorB;
-        double           mSubCursorA;
-        double           mSubCursorB;
-        double           mLoss;
-        double           mReflectance;
-        double           mCurveLevel;
-        double           mLossAtA;
-        double           mLossAtB;
-        double           mEstimatedCurveLevel;
-        double           mEstimatedLoss;
-        double           mEstimatedEndLevel;
-        double           mEndNoiseLevel;
-        double           mPeakPulseWidth;
-        double           mPeakPower;
-        double           mPeakSNR;
-        bool             mConsiderAsPossibleEcho;
-    };
-
     class OtdrWindow
     {
       public:
@@ -128,26 +99,6 @@ namespace SE::OtdrEditor
         UIPlot                  mTracePlot;
 
         Ref<UIMultiPulseEventTable> mEventTable;
-        // Ref<sFloat64Column>    mPositionColumn;
-        // Ref<sFloat64Column>    mLossColumn;
-        // Ref<sFloat64Column>    mEstimatedLossColumn;
-        // Ref<sFloat64Column>    mReflectanceColumn;
-        // Ref<sFloat64Column>    mWavelengthColumn;
-        // Ref<sFloat64Column>    mCursorAColumn;
-        // Ref<sFloat64Column>    mCursorBColumn;
-        // Ref<sFloat64Column>    mSubCursorAColumn;
-        // Ref<sFloat64Column>    mSubCursorBColumn;
-        // Ref<sFloat64Column>    mCurveLevelColumn;
-        // Ref<sFloat64Column>    mLossAtAColumn;
-        // Ref<sFloat64Column>    mLossAtBColumn;
-        // Ref<sFloat64Column>    mEstimatedCurveLevelColumn;
-        // Ref<sFloat64Column>    mEstimatedEndLevelColumn;
-        // Ref<sFloat64Column>    mEndNoiseLevelColumn;
-        // Ref<sFloat64Column>    mPeakPulseWidth;
-        // Ref<sFloat64Column>    mPeakPower;
-        // Ref<sFloat64Column>    mPeakSNR;
-
-        // std::vector<sEvent> mEventDataVector;
 
         Ref<UILinkElementTable> mLinkElementTable;
         MeasurementOverview     mMeasurementOverview;
