@@ -45,8 +45,8 @@ namespace SE::Core::UI
         colors[ImGuiCol_ButtonActive]  = ImVec4( 0.76f, 0.76f, 0.76f, 1.0f );
 
         colors[ImGuiCol_Header]        = ImVec4( 0.01f, 0.01f, 0.01f, 1.0f );
-        colors[ImGuiCol_HeaderHovered] = ImVec4( 0.02f, 0.02f, 0.02f, 1.0f );
-        colors[ImGuiCol_HeaderActive]  = ImVec4( 0.02f, 0.02f, 0.02f, 1.0f );
+        colors[ImGuiCol_HeaderHovered] = ImVec4( 0.02f, 0.02f, 0.02f, .01f );
+        colors[ImGuiCol_HeaderActive]  = ImVec4( 0.02f, 0.02f, 0.02f, .01f );
 
         colors[ImGuiCol_Separator]        = ImVec4( 0.2f, 0.2f, 0.2f, 1.f );
         colors[ImGuiCol_SeparatorHovered] = ImVec4( 0.2f, 0.2f, 0.4f, 1.f );
