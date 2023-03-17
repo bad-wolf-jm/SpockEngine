@@ -23,6 +23,8 @@ namespace SE::Core
         mPadding = math::vec4{ aTop, aBottom, aLeft, aRight };
     }
 
+    void UIComponent::SetBackgroundColor( math::vec4 aColor ) { mBackgroundColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
+
     ImVec2 UIComponent::RequiredSize()
     {
         float lWidth  = ( mPadding.z + mPadding.w );
@@ -53,7 +55,7 @@ namespace SE::Core
         case eHorizontalAlignment::LEFT: lContentPosition.x = aPosition.x; break;
         case eHorizontalAlignment::RIGHT: lContentPosition.x = aPosition.x + ( aSize.x - aContentSize.x ); break;
         case eHorizontalAlignment::CENTER:
-        default: lContentPosition.x = aPosition.x + ( aSize.x - aContentSize.x ) / 2.0f; break;
+        default: lContentPosition.x = aPosition.x + ( aSize.x - aContentSize.x ) * 0.5f; break;
         }
 
         switch( aVAlignment )
@@ -61,7 +63,7 @@ namespace SE::Core
         case eVerticalAlignment::TOP: lContentPosition.y = aPosition.y; break;
         case eVerticalAlignment::BOTTOM: lContentPosition.y = aPosition.y + ( aSize.y - aContentSize.y ); break;
         case eVerticalAlignment::CENTER:
-        default: lContentPosition.y = aPosition.y + ( aSize.y - aContentSize.y ) / 2.0f; break;
+        default: lContentPosition.y = aPosition.y + ( aSize.y - aContentSize.y ) * 0.5f; break;
         }
 
         return lContentPosition;
@@ -72,6 +74,15 @@ namespace SE::Core
         if( !mIsVisible ) return;
 
         ImGui::PushID( (void *)this );
+
+        ImGui::SetCursorPos( aPosition );
+        if( ( mBackgroundColor.x != 0.0f ) || ( mBackgroundColor.y != 0.0f ) || ( mBackgroundColor.z != 0.0f ) ||
+            ( mBackgroundColor.w != 0.0f ) )
+        {
+            auto lDrawList       = ImGui::GetWindowDrawList();
+            auto lScreenPosition = ImGui::GetCursorScreenPos();
+            lDrawList->AddRectFilled( lScreenPosition, lScreenPosition + aSize, ImColor( mBackgroundColor ), 0.0f );
+        }
 
         PushStyles();
 

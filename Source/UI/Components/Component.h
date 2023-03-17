@@ -41,8 +41,11 @@ namespace SE::Core
         void SetHorizontalAlignment( eHorizontalAlignment const &aAlignment );
         void SetVerticalAlignment( eVerticalAlignment const &aAlignment );
 
+        void SetBackgroundColor( math::vec4 aColor );
+
       protected:
         math::vec4 mPadding{};
+        ImVec4     mBackgroundColor{};
 
         eHorizontalAlignment mHAlign = eHorizontalAlignment::CENTER;
         eVerticalAlignment   mVAlign = eVerticalAlignment::CENTER;
