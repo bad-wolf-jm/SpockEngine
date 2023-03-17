@@ -68,6 +68,7 @@ namespace SE::Core
 
       protected:
         float mRowHeight = 15.0f;
+        int32_t mHoveredRow = -1;
 
       protected:
         void PushStyles();
