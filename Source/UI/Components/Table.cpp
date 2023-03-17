@@ -48,7 +48,9 @@ namespace SE::Core
                 for( int lRow = lRowClipping.DisplayStart; lRow < lRowClipping.DisplayEnd; lRow++ )
                 {
                     ImGui::TableNextRow();
-                    if( mRowBackgroundColor.size() > 0 )
+                    if( mHoveredRow == lRow )
+                        ImGui::TableSetBgColor( ImGuiTableBgTarget_RowBg0, IM_COL32(0x51, 0x08, 0x7E, 200) );
+                    else if( mRowBackgroundColor.size() > 0 )
                         ImGui::TableSetBgColor( ImGuiTableBgTarget_RowBg0, mRowBackgroundColor[lRow] );
 
                     int lColumn = 0;
@@ -65,6 +67,7 @@ namespace SE::Core
                         if( lColumnData->mBackgroundColor.size() > 0 )
                             ImGui::TableSetBgColor( ImGuiTableBgTarget_CellBg, lColumnData->mBackgroundColor[lRow] );
                         lColumnData->Render( lRow, ImVec2{ lWidth, mRowHeight } );
+                        if( ImGui::IsItemHovered() ) mHoveredRow = lRow;
                         if( mOnRowClicked && ImGui::IsItemClicked() ) mOnRowClicked( lRow );
                         if( lColumnData->mBackgroundColor.size() > 0 ) ImGui::TableSetBgColor( ImGuiTableBgTarget_CellBg, lBgColor );
 
