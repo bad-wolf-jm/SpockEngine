@@ -10,7 +10,7 @@
 #include "Core/File.h"
 #include "Core/Logging.h"
 
-#include "DotNet/DotNetRuntime.h"
+#include "DotNet/Runtime.h"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"

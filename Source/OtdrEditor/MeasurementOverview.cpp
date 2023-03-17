@@ -1,5 +1,5 @@
 #include "MeasurementOverview.h"
-#include "DotNet/DotNetRuntime.h"
+#include "DotNet/Runtime.h"
 namespace SE::OtdrEditor
 {
     MeasurementOverview::MeasurementOverview()

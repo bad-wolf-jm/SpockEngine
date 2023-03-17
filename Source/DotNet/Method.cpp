@@ -1,4 +1,4 @@
-#include "DotNetMethod.h"
+#include "Method.h"
 
 namespace SE::Core
 {

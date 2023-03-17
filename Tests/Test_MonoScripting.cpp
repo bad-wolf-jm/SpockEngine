@@ -11,7 +11,7 @@
 #include "Core/EntityCollection/Collection.h"
 #include "Core/Logging.h"
 
-#include "DotNet/DotNetRuntime.h"
+#include "DotNet/Runtime.h"
 
 #include "Scene/Components.h"
 

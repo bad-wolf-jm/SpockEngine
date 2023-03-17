@@ -8,7 +8,7 @@
 #include <numeric>
 
 #include "Core/Profiling/BlockTimer.h"
-#include "DotNet/DotNetRuntime.h"
+#include "DotNet/Runtime.h"
 
 namespace SE::OtdrEditor
 {

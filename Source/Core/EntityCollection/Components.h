@@ -16,8 +16,8 @@
 #include "Core/Math/Types.h"
 
 #include "Entity.h"
-#include "DotNet/DotNetRuntime.h"
-#include "DotNet/DotNetMethod.h"
+#include "DotNet/Runtime.h"
+#include "DotNet/Method.h"
 
 #ifdef LITTLEENDIAN
 #    undef LITTLEENDIAN

@@ -6,7 +6,7 @@
 #include "UI/Components/PropertyValue.h"
 #include "UI/Layouts/BoxLayout.h"
 
-#include "DotNet/DotNetInstance.h"
+#include "DotNet/Instance.h"
 
 namespace SE::OtdrEditor
 {

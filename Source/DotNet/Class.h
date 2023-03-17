@@ -6,7 +6,7 @@
 
 #include "Core/Memory.h"
 
-#include "DotNetInstance.h"
+#include "Instance.h"
 #include "Typedefs.h"
 
 namespace fs = std::filesystem;

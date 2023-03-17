@@ -10,7 +10,7 @@
 #include "UI/UI.h"
 #include "UI/Widgets.h"
 
-#include "DotNetRuntime.h"
+#include "Runtime.h"
 #include "Utils.h"
 
 namespace SE::MonoInternalCalls

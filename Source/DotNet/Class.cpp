@@ -1,4 +1,4 @@
-#include "DotNetClass.h"
+#include "Class.h"
 
 #include "Core/Logging.h"
 #include "Core/Memory.h"
@@ -22,7 +22,7 @@
 #include "EntityRegistry.h"
 #include "InternalCalls.h"
 
-#include "DotNetRuntime.h"
+#include "Runtime.h"
 #include "Utils.h"
 
 namespace SE::Core
