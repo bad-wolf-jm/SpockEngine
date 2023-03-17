@@ -24,7 +24,7 @@
 
 #include "Editor/BaseEditorApplication.h"
 
-#include "Mono/MonoRuntime.h"
+#include "DotNet/DotNetRuntime.h"
 // #include "Mono/MonoScriptEngine.h"
 
 using namespace SE::Core;

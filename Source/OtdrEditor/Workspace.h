@@ -17,8 +17,8 @@
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/Layouts/ZLayout.h"
 
-#include "Mono/MonoScriptClass.h"
-#include "Mono/MonoScriptInstance.h"
+#include "DotNet/DotNetClass.h"
+#include "DotNet/DotNetInstance.h"
 
 namespace SE::OtdrEditor
 {

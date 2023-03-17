@@ -1,5 +1,5 @@
 #include "AcquisitionData.h"
-#include "Mono/MonoRuntime.h"
+#include "DotNet/DotNetRuntime.h"
 namespace SE::OtdrEditor
 {
     AcquisitionData::AcquisitionData()
