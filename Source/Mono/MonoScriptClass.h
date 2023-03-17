@@ -13,7 +13,7 @@ namespace fs = std::filesystem;
 
 namespace SE::Core
 {
-    class MonoScriptClass
+    class DotNetClass
     {
       public:
         MonoScriptClass() = default;
@@ -23,10 +23,10 @@ namespace SE::Core
         MonoScriptClass( MonoClass *aClass, const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
                          fs::path const &aDllPPath, bool aIsNested = false );
 
-        Ref<MonoScriptInstance> DoInstantiate();
+        Ref<DotNetInstance> DoInstantiate();
 
         template <typename... _ArgTypes>
-        Ref<MonoScriptInstance> Instantiate( _ArgTypes *...aArgs )
+        Ref<DotNetInstance> Instantiate( _ArgTypes *...aArgs )
         {
             auto lNewInstance = DoInstantiate();
 
@@ -80,8 +80,8 @@ namespace SE::Core
 
       private:
         fs::path                       mDllPath;
-        MonoScriptClass               *mParent;
-        std::vector<MonoScriptClass *> mDerived;
+        DotNetClass               *mParent;
+        std::vector<DotNetClass *> mDerived;
 
         std::string mClassNamespace;
         std::string mClassName;
@@ -94,7 +94,7 @@ namespace SE::Core
         bool       mIsCore    = false;
         bool       mIsNested  = false;
 
-        friend class MonoRuntime;
+        friend class DotNetRuntime;
     };
 
 } // namespace SE::Core

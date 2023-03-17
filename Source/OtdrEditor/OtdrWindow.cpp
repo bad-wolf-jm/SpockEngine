@@ -44,8 +44,8 @@ namespace SE::OtdrEditor
         mLinkElementTable->OnElementClicked(
             [&]( sLinkElement const &aElement )
             {
-                static auto &lOlmMeasurementClass = MonoRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
-                static auto &lOlmAttributeClass = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
+                static auto &lOlmMeasurementClass = DotNetRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
+                static auto &lOlmAttributeClass = DotNetRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
 
                 auto lPhysicalEvent =
                     New<MonoScriptInstance>( &lOlmMeasurementClass, lOlmMeasurementClass.Class(), aElement.mPhysicalEvent );
@@ -143,7 +143,7 @@ namespace SE::OtdrEditor
 
         if( ImGui::Begin( "ASSEMBLIES", NULL, ImGuiWindowFlags_None ) )
         {
-            MonoRuntime::DisplayAssemblies();
+            DotNetRuntime::DisplayAssemblies();
         }
         ImGui::End();
 
@@ -222,8 +222,8 @@ namespace SE::OtdrEditor
                                     .time_since_epoch()
                                     .count();
 
-            static auto &lMonoGlue          = MonoRuntime::GetClassType( "Metrino.Interop.Instruments" );
-            static auto &lModuleDescription = MonoRuntime::GetClassType( "Metrino.Interop.ModuleDescription" );
+            static auto &lMonoGlue          = DotNetRuntime::GetClassType( "Metrino.Interop.Instruments" );
+            static auto &lModuleDescription = DotNetRuntime::GetClassType( "Metrino.Interop.ModuleDescription" );
 
             static uint32_t                 lNumConnectedModules  = 0;
             static std::vector<std::string> lConnectedModuleNames = {};
@@ -240,8 +240,8 @@ namespace SE::OtdrEditor
                 for( uint32_t i = 0; i < lNumConnectedModules; i++ )
                 {
                     auto lConnectedModule = *( mono_array_addr( (MonoArray *)lConnectedModulesList, MonoObject *, i ) );
-                    auto lInstance        = MonoScriptInstance( lModuleDescription.Class(), lConnectedModule );
-                    lConnectedModuleNames.push_back( MonoRuntime::NewString( lInstance.GetFieldValue<MonoString *>( "mName" ) ) );
+                    auto lInstance        = DotNetInstance( lModuleDescription.Class(), lConnectedModule );
+                    lConnectedModuleNames.push_back( DotNetRuntime::NewString( lInstance.GetFieldValue<MonoString *>( "mName" ) ) );
                 }
 
                 lFirstRun = false;
@@ -348,13 +348,13 @@ namespace SE::OtdrEditor
 
     void OtdrWindow::LoadIOlmData( fs::path aPath, bool aReanalyse )
     {
-        static auto &lFileLoader = MonoRuntime::GetClassType( "Metrino.Interop.FileLoader" );
-        static auto &lFileClass  = MonoRuntime::GetClassType( "Metrino.Interop.OlmFile" );
+        static auto &lFileLoader = DotNetRuntime::GetClassType( "Metrino.Interop.FileLoader" );
+        static auto &lFileClass  = DotNetRuntime::GetClassType( "Metrino.Interop.OlmFile" );
 
-        MonoString *lFilePath   = MonoRuntime::NewString( aPath.string() );
+        MonoString *lFilePath   = DotNetRuntime::NewString( aPath.string() );
         MonoObject *lDataObject = lFileLoader.CallMethod( "LoadOlmData", lFilePath );
 
-        mDataInstance = New<MonoScriptInstance>( &lFileClass, lFileClass.Class(), lDataObject );
+        mDataInstance = New<DotNetInstance>( &lFileClass, lFileClass.Class(), lDataObject );
 
         MonoObject               *lTraceData       = mDataInstance->CallMethod( "GetAllTraces" );
         std::vector<MonoObject *> lTraceDataVector = MonoRuntime::AsVector<MonoObject *>( lTraceData );

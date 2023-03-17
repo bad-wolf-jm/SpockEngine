@@ -18,7 +18,7 @@ namespace SE::OtdrEditor
         MeasurementOverview();
         ~MeasurementOverview() = default;
 
-        void SetData( Ref<MonoScriptInstance> aMeasurementOverview );
+        void SetData( Ref<DotNetInstance> aMeasurementOverview );
 
       protected:
         Ref<UILabel>         mMeasurementResultTitle;

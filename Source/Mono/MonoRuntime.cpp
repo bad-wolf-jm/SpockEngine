@@ -46,7 +46,7 @@ namespace fs = std::filesystem;
 namespace SE::Core
 {
     using PathList     = std::vector<fs::path>;
-    using ClassMapping = std::map<std::string, MonoScriptClass>;
+    using ClassMapping = std::map<std::string, DotNetClass>;
 
     struct sAssemblyData
     {
@@ -100,9 +100,9 @@ namespace SE::Core
             }
         }
 
-        std::map<std::string, MonoScriptClass> LoadImageClasses( MonoImage *aImage, fs::path aPath )
+        std::map<std::string, DotNetClass> LoadImageClasses( MonoImage *aImage, fs::path aPath )
         {
-            std::map<std::string, MonoScriptClass> lClasses{};
+            std::map<std::string, DotNetClass> lClasses{};
 
             if( !aImage ) return lClasses;
 
@@ -139,10 +139,10 @@ namespace SE::Core
                         auto lNestedClassName = fmt::format( "{}.{}", lFullName, lClassName );
 
                         if( lClasses.find( lNestedClassName ) == lClasses.end() )
-                            lClasses[lNestedClassName] = MonoScriptClass( lNestedClass, lFullName, lClassName, aImage, aPath, true );
+                            lClasses[lNestedClassName] = DotNetClass( lNestedClass, lFullName, lClassName, aImage, aPath, true );
                     }
 
-                    lClasses[lFullName] = MonoScriptClass( lNameSpace, lClassName, aImage, aPath );
+                    lClasses[lFullName] = DotNetClass( lNameSpace, lClassName, aImage, aPath );
 
                     lClass = mono_class_get_parent( lClass );
                     while( lClass != nullptr )
@@ -157,7 +157,7 @@ namespace SE::Core
                             lFullName = lClassName;
 
                         if( lClasses.find( lFullName ) == lClasses.end() )
-                            lClasses[lFullName] = MonoScriptClass( lClass, lNameSpace, lClassName, aImage, aPath );
+                            lClasses[lFullName] = DotNetClass( lClass, lNameSpace, lClassName, aImage, aPath );
 
                         lClass = mono_class_get_parent( lClass );
                     }
@@ -168,7 +168,7 @@ namespace SE::Core
         }
     } // namespace
 
-    uint32_t MonoRuntime::CountAssemblies() { return sRuntimeData->mAppAssemblyFiles.size(); }
+    uint32_t DotNetRuntime::CountAssemblies() { return sRuntimeData->mAppAssemblyFiles.size(); }
 
     std::vector<std::string> MonoRuntime::GetClassNames()
     {
@@ -190,7 +190,7 @@ namespace SE::Core
         return false;
     }
 
-    void MonoRuntime::GetAssemblies( std::vector<fs::path> &lOut )
+    void DotNetRuntime::GetAssemblies( std::vector<fs::path> &lOut )
     {
         lOut.resize( sRuntimeData->mAppAssemblyFiles.size() );
 
@@ -198,14 +198,14 @@ namespace SE::Core
         for( auto const &lFile : sRuntimeData->mAppAssemblyFiles ) lOut[i++] = lFile.string();
     }
 
-    MonoObject *MonoRuntime::InstantiateClass( MonoClass *aMonoClass, bool aIsCore )
+    MonoObject *DotNetRuntime::InstantiateClass( MonoClass *aMonoClass, bool aIsCore )
     {
         MonoObject *aInstance = mono_object_new( sRuntimeData->mAppDomain, aMonoClass );
 
         return aInstance;
     }
 
-    void MonoRuntime::LoadCoreAssembly( const fs::path &aFilepath )
+    void DotNetRuntime::LoadCoreAssembly( const fs::path &aFilepath )
     {
         sRuntimeData->mAppDomain = mono_domain_create_appdomain( "SE_Runtime", nullptr );
         mono_domain_set_config( sRuntimeData->mAppDomain, ".", "XXX" );
@@ -235,7 +235,7 @@ namespace SE::Core
         }
     }
 
-    void MonoRuntime::AddAppAssemblyPath( const fs::path &aFilepath, std::string const &aCategory )
+    void DotNetRuntime::AddAppAssemblyPath( const fs::path &aFilepath, std::string const &aCategory )
     {
         if( std::find( sRuntimeData->mAppAssemblyFiles.begin(), sRuntimeData->mAppAssemblyFiles.end(), aFilepath ) !=
             sRuntimeData->mAppAssemblyFiles.end() )
@@ -269,7 +269,7 @@ namespace SE::Core
         sRuntimeData->mCategories[aCategory].push_back( &sRuntimeData->mAssemblies[aFilepath] );
     }
 
-    void MonoRuntime::Initialize( fs::path &aMonoPath, const fs::path &aCoreAssemblyPath )
+    void DotNetRuntime::Initialize( fs::path &aMonoPath, const fs::path &aCoreAssemblyPath )
     {
         if( sRuntimeData != nullptr ) return;
 
@@ -284,14 +284,14 @@ namespace SE::Core
         LoadCoreAssembly( aCoreAssemblyPath );
     }
 
-    void MonoRuntime::RegisterComponentTypes()
+    void DotNetRuntime::RegisterComponentTypes()
     {
         RegisterComponentType<sTag>();
         RegisterComponentType<sNodeTransformComponent>();
         RegisterComponentType<sLightComponent>();
     }
 
-    void MonoRuntime::Shutdown()
+    void DotNetRuntime::Shutdown()
     {
         ShutdownMono();
 
@@ -300,7 +300,7 @@ namespace SE::Core
         sRuntimeData = nullptr;
     }
 
-    void MonoRuntime::InitMono( fs::path &aMonoPath )
+    void DotNetRuntime::InitMono( fs::path &aMonoPath )
     {
         mono_set_assemblies_path( aMonoPath.string().c_str() );
         mono_config_parse( NULL );
@@ -310,7 +310,7 @@ namespace SE::Core
         sRuntimeData->mRootDomain = lRootDomain;
     }
 
-    void MonoRuntime::ShutdownMono()
+    void DotNetRuntime::ShutdownMono()
     {
         mono_domain_set( mono_get_root_domain(), false );
 
@@ -321,14 +321,14 @@ namespace SE::Core
         sRuntimeData->mRootDomain = nullptr;
     }
 
-    MonoString *MonoRuntime::NewString( std::string const &aString )
+    MonoString *DotNetRuntime::NewString( std::string const &aString )
     {
         return mono_string_new( sRuntimeData->mAppDomain, aString.c_str() );
     }
 
-    std::string MonoRuntime::NewString( MonoString *aString ) { return std::string( mono_string_to_utf8( aString ) ); }
+    std::string DotNetRuntime::NewString( MonoString *aString ) { return std::string( mono_string_to_utf8( aString ) ); }
 
-    void MonoRuntime::LoadAssemblyClasses()
+    void DotNetRuntime::LoadAssemblyClasses()
     {
         if( sRuntimeData->mAssemblies.empty() ) return;
 
@@ -340,9 +340,9 @@ namespace SE::Core
         }
     }
 
-    void MonoRuntime::RecreateClassTree()
+    void DotNetRuntime::RecreateClassTree()
     {
-        std::map<std::string, MonoScriptClass *> lLookupTable;
+        std::map<std::string, DotNetClass *> lLookupTable;
 
         for( auto &[lKey, lValue] : sRuntimeData->mClasses )
         {
@@ -373,7 +373,7 @@ namespace SE::Core
         }
     }
 
-    void MonoRuntime::ReloadAssemblies()
+    void DotNetRuntime::ReloadAssemblies()
     {
         if( !AssembliesNeedReloading() ) return;
 
@@ -405,9 +405,9 @@ namespace SE::Core
         RegisterComponentTypes();
     }
 
-    MonoScriptClass &MonoRuntime::GetClassType( const std::string &aClassName ) { return sRuntimeData->mClasses[aClassName]; }
+    DotNetClass &DotNetRuntime::GetClassType( const std::string &aClassName ) { return sRuntimeData->mClasses[aClassName]; }
 
-    MonoType *MonoRuntime::GetCoreTypeFromName( std::string &aName )
+    MonoType *DotNetRuntime::GetCoreTypeFromName( std::string &aName )
     {
         MonoType *lMonoType = mono_reflection_type_from_name( aName.data(), sRuntimeData->mCoreAssembly.mImage );
         if( !lMonoType )
@@ -420,7 +420,7 @@ namespace SE::Core
         return lMonoType;
     }
 
-    void MonoRuntime::DisplayAssemblies()
+    void DotNetRuntime::DisplayAssemblies()
     {
         bool        lAllFilesExist = true;
         math::vec2  lWindowSize    = UI::GetAvailableContentSpace();
@@ -488,18 +488,18 @@ namespace SE::Core
             }
         }
 
-        if( MonoRuntime::AssembliesNeedReloading() )
-            if( UI::Button( "Reload assemblies", { 150.0f, 30.0f } ) ) MonoRuntime::ReloadAssemblies();
+        if( DotNetRuntime::AssembliesNeedReloading() )
+            if( UI::Button( "Reload assemblies", { 150.0f, 30.0f } ) ) DotNetRuntime::ReloadAssemblies();
     }
 
-    void MonoRuntime::OnConsoleOut( std::function<void( std::string const & )> aFunction ) { sRuntimeData->mConsoleOut = aFunction; }
+    void DotNetRuntime::OnConsoleOut( std::function<void( std::string const & )> aFunction ) { sRuntimeData->mConsoleOut = aFunction; }
 
-    void MonoRuntime::ConsoleWrite( MonoString *aBuffer )
+    void DotNetRuntime::ConsoleWrite( MonoString *aBuffer )
     {
-        if( sRuntimeData->mConsoleOut ) sRuntimeData->mConsoleOut( MonoRuntime::NewString( aBuffer ) );
+        if( sRuntimeData->mConsoleOut ) sRuntimeData->mConsoleOut( DotNetRuntime::NewString( aBuffer ) );
     }
 
-    void MonoRuntime::RegisterInternalCppFunctions()
+    void DotNetRuntime::RegisterInternalCppFunctions()
     {
         using namespace MonoInternalCalls;
 

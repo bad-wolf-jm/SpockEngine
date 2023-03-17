@@ -10,11 +10,11 @@
 
 namespace SE::Core
 {
-    class MonoRuntime
+    class DotNetRuntime
     {
       public:
-        MonoRuntime()  = default;
-        ~MonoRuntime() = default;
+        DotNetRuntime()  = default;
+        ~DotNetRuntime() = default;
 
         static void Initialize( std::filesystem::path &aMonoPath, const std::filesystem::path &aCoreAssemblyPath );
         static void Shutdown();
@@ -68,6 +68,6 @@ namespace SE::Core
         static void        LoadAssemblyClasses();
         static void        RecreateClassTree();
 
-        friend class MonoScriptClass;
+        friend class DotNetClass;
     };
 } // namespace SE::Core

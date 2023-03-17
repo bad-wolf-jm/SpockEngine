@@ -63,7 +63,7 @@ namespace SE::OtdrEditor
         SetTitle( "WORKSPACE" );
         SetContent( &mMainLayout );
 
-        MonoRuntime::OnConsoleOut( std::bind( &OtdrWorkspaceWindow::ConsoleOut, this, std::placeholders::_1 ) );
+        DotNetRuntime::OnConsoleOut( std::bind( &OtdrWorkspaceWindow::ConsoleOut, this, std::placeholders::_1 ) );
     }
 
     void OtdrWorkspaceWindow::ConsoleOut( std::string const &aString ) { mConsoleTextOverlay.AddText( aString ); }
@@ -79,7 +79,7 @@ namespace SE::OtdrEditor
         std::vector<std::string> lScriptNames;
         mScripts.clear();
 
-        auto lScriptBaseClass = MonoRuntime::GetClassType( "SpockEngine.Script" );
+        auto lScriptBaseClass = DotNetRuntime::GetClassType( "SpockEngine.Script" );
 
         for( auto const &lScriptClass : lScriptBaseClass.DerivedClasses() )
         {

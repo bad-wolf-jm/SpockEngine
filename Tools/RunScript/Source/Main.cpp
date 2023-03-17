@@ -132,7 +132,7 @@ int main( int argc, char **argv )
     if( auto lCoreScriptingPathOverride = lProgramArguments->present<std::string>( "--script-core-binary-path" ) )
         if( fs ::exists( lCoreScriptingPathOverride.value() ) ) lCoreScriptingPath = lCoreScriptingPathOverride.value();
 
-    MonoRuntime::Initialize( lMonoPath, lCoreScriptingPath );
+    DotNetRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 
     // SE::OtdrEditor::BaseOtdrApplication lEditorApplication;
     // lEditorApplication.Init();
@@ -157,7 +157,7 @@ int main( int argc, char **argv )
         for( auto const &lAssemblyName : lAssemblies )
         {
             auto lAssemblyDllName = fmt::format( "{}.dll", lAssemblyName );
-            MonoRuntime::AddAppAssemblyPath( lMetrinoPath / lAssemblyName / "Debug" / lAssemblyDllName, "METRINO" );
+            DotNetRuntime::AddAppAssemblyPath( lMetrinoPath / lAssemblyName / "Debug" / lAssemblyDllName, "METRINO" );
         }
     }
 
@@ -165,17 +165,17 @@ int main( int argc, char **argv )
     {
         YAML::Node &lAssemblyPath = lRootNode["project"]["assembly_path"];
         if( !lAssemblyPath.IsNull() && fs::exists( lAssemblyPath.as<std::string>() ) )
-            MonoRuntime::AddAppAssemblyPath( lAssemblyPath.as<std::string>(), "SYSTEM UNDER TEST" );
+            DotNetRuntime::AddAppAssemblyPath( lAssemblyPath.as<std::string>(), "SYSTEM UNDER TEST" );
     }
 
-    MonoRuntime::ReloadAssemblies();
+    DotNetRuntime::ReloadAssemblies();
 
-    auto lScriptBaseClass = MonoRuntime::GetClassType( "SpockEngine.Script" );
+    auto lScriptBaseClass = DotNetRuntime::GetClassType( "SpockEngine.Script" );
 
     auto lScriptToRun = lProgramArguments->present<std::string>( "--script" );
     if( lScriptToRun )
     {
-        auto lScriptClass         = MonoRuntime::GetClassType( lScriptToRun.value() );
+        auto lScriptClass         = DotNetRuntime::GetClassType( lScriptToRun.value() );
         auto lScriptClassInstance = lScriptClass.Instantiate();
         lScriptClassInstance->CallMethod( "BeginScenario" );
 
@@ -188,7 +188,7 @@ int main( int argc, char **argv )
         lScriptClassInstance->CallMethod( "EndScenario" );
     }
 
-    MonoRuntime::Shutdown();
+    DotNetRuntime::Shutdown();
 
     return 0;
 }

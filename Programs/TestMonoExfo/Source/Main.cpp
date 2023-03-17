@@ -47,35 +47,35 @@ int main( int argc, char **argv )
     fs::path lMonoPath = "C:\\Program Files\\Mono\\lib\\mono\\4.5";
     fs::path lCoreScriptingPath = "c:/GitLab/SpockEngine/Source/ScriptCore/Build/Debug/SE_Core.dll";
 
-    MonoRuntime::Initialize( lMonoPath, lCoreScriptingPath );
+    DotNetRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 
     const fs::path METRINO_PATH = "D:\\EXFO\\GitLab\\EXFO\\Build";
 
-    // MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Kernos.dll" );
-    // MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Kernos.Platform.dll" );
-    // MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Kernos.Instrument.dll" );
-    // MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr.dll" );
-    // MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr.SignalProcessing.dll" );
-    // MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr.Simulation.dll" );
-    // MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr" / "Debug" / "fr" / "Metrino.Otdr.resources.dll" );
-    MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr" / "Debug" / "Metrino.Otdr.dll", "" );
-    MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Mono" / "Debug" / "Metrino.Interop.dll", "" );
-    // MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr.FileConverter.dll" );
-    // MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Olm.dlqQQQQQl" );
-    // MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Olm.SignalProcessing.dll" );
-    // MonoRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Olm.Instrument.dll" );
-    MonoRuntime::ReloadAssemblies();
+    // DotNetRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Kernos.dll" );
+    // DotNetRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Kernos.Platform.dll" );
+    // DotNetRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Kernos.Instrument.dll" );
+    // DotNetRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr.dll" );
+    // DotNetRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr.SignalProcessing.dll" );
+    // DotNetRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr.Simulation.dll" );
+    // DotNetRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr" / "Debug" / "fr" / "Metrino.Otdr.resources.dll" );
+    DotNetRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr" / "Debug" / "Metrino.Otdr.dll", "" );
+    DotNetRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Mono" / "Debug" / "Metrino.Interop.dll", "" );
+    // DotNetRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Otdr.FileConverter.dll" );
+    // DotNetRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Olm.dlqQQQQQl" );
+    // DotNetRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Olm.SignalProcessing.dll" );
+    // DotNetRuntime::AddAppAssemblyPath( METRINO_PATH / "Metrino.Olm.Instrument.dll" );
+    DotNetRuntime::ReloadAssemblies();
 
-    auto lDetector = MonoRuntime::GetClassType( "Metrino.Interop.Instruments" );
+    auto lDetector = DotNetRuntime::GetClassType( "Metrino.Interop.Instruments" );
     lDetector.CallMethod("PrintConnectedModules");
 
-    // auto lKernosInstrumentContext = MonoRuntime::GetClassType( "Metrino.Kernos.Instrument.Context" ).Instantiate();
-    // MonoString *lAddress = MonoRuntime::NewString( "simulator:" );
-    // auto  lInstrumentClass = MonoRuntime::GetClassType( "Metrino.Otdr.Instrument.Instrument7000" )
+    // auto lKernosInstrumentContext = DotNetRuntime::GetClassType( "Metrino.Kernos.Instrument.Context" ).Instantiate();
+    // MonoString *lAddress = DotNetRuntime::NewString( "simulator:" );
+    // auto  lInstrumentClass = DotNetRuntime::GetClassType( "Metrino.Otdr.Instrument.Instrument7000" )
     //                             .Instantiate( lAddress, lKernosInstrumentContext.GetInstance() );
     // double lTimeout = 10.0;
     // lInstrumentClass.CallMethod( "WaitForReady", &lTimeout );
-    // MonoRuntime::Shutdown();
+    // DotNetRuntime::Shutdown();
 
     return 0;
 }

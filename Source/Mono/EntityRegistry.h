@@ -38,7 +38,7 @@ namespace SE::Core
             std::string_view lStructName   = GetTypeName<_Ty>();
             std::string      lMonoTypeName = fmt::format( "{}.{}", aNamespace, lStructName );
 
-            return MonoRuntime::GetCoreTypeFromName( lMonoTypeName );
+            return DotNetRuntime::GetCoreTypeFromName( lMonoTypeName );
         }
 
         template <typename _Ty>
@@ -54,7 +54,7 @@ namespace SE::Core
         }
 
         template <typename _Ty>
-        Ref<MonoScriptInstance> Get( Entity &aEntity, MonoScriptClass &aMonoType )
+        Ref<DotNetInstance> Get( Entity &aEntity, DotNetClass &aMonoType )
         {
             auto &aComponent = aEntity.Get<_Ty>();
             auto  lInstance  = MarshallComponent( aMonoType, aComponent );
@@ -63,7 +63,7 @@ namespace SE::Core
         }
 
         template <typename _Ty>
-        void Replace( Entity &aEntity, Ref<MonoScriptInstance> aNewComponent )
+        void Replace( Entity &aEntity, Ref<DotNetInstance> aNewComponent )
         {
             _Ty lInstance;
             UnmarshallComponent( aNewComponent, lInstance );
@@ -72,7 +72,7 @@ namespace SE::Core
         }
 
         template <typename _Ty>
-        void Add( Entity &aEntity, Ref<MonoScriptInstance> aNewComponent )
+        void Add( Entity &aEntity, Ref<DotNetInstance> aNewComponent )
         {
             _Ty lInstance;
             UnmarshallComponent( aNewComponent, lInstance );
@@ -87,14 +87,14 @@ namespace SE::Core
         }
     } // namespace
 
-    Ref<MonoScriptInstance> MarshallComponent( MonoScriptClass &aMonoType, sTag &aComponent );
-    void                    UnmarshallComponent( Ref<MonoScriptInstance> aMonoType, sTag &aComponent );
+    Ref<DotNetInstance> MarshallComponent( DotNetClass &aMonoType, sTag &aComponent );
+    void                    UnmarshallComponent( Ref<DotNetInstance> aMonoType, sTag &aComponent );
 
-    Ref<MonoScriptInstance> MarshallComponent( MonoScriptClass &aMonoType, sNodeTransformComponent &aComponent );
-    void                    UnmarshallComponent( Ref<MonoScriptInstance> aMonoType, sNodeTransformComponent &aComponent );
+    Ref<DotNetInstance> MarshallComponent( DotNetClass &aMonoType, sNodeTransformComponent &aComponent );
+    void                    UnmarshallComponent( Ref<DotNetInstance> aMonoType, sNodeTransformComponent &aComponent );
 
-    Ref<MonoScriptInstance> MarshallComponent( MonoScriptClass &aMonoType, sLightComponent &aComponent );
-    void                    UnmarshallComponent( Ref<MonoScriptInstance> aMonoType, sLightComponent &aComponent );
+    Ref<DotNetInstance> MarshallComponent( DotNetClass &aMonoType, sLightComponent &aComponent );
+    void                    UnmarshallComponent( Ref<DotNetInstance> aMonoType, sLightComponent &aComponent );
 
     entt::meta_type GetMetaType( MonoType *aObject );
 

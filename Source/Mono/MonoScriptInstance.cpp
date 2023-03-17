@@ -10,7 +10,7 @@
 
 namespace SE::Core
 {
-    MonoScriptInstance::MonoScriptInstance( MonoScriptClass *aScriptClass, MonoClass *aMonoClass, MonoObject *aInstance )
+    DotNetInstance::DotNetInstance( DotNetClass *aScriptClass, MonoClass *aMonoClass, MonoObject *aInstance )
         : mScriptClass{ aScriptClass }
         , mMonoClass{ aMonoClass }
         , mInstance{ aInstance }
@@ -18,9 +18,9 @@ namespace SE::Core
         mGCHandle = mono_gchandle_new( mInstance, true );
     }
 
-    MonoScriptInstance::~MonoScriptInstance() { mono_gchandle_free( mGCHandle ); }
+    DotNetInstance::~DotNetInstance() { mono_gchandle_free( mGCHandle ); }
 
-    MonoMethod *MonoScriptInstance::GetMethod( const std::string &aName, int aParameterCount )
+    MonoMethod *DotNetInstance::GetMethod( const std::string &aName, int aParameterCount )
     {
         MonoClass  *lClass  = mMonoClass;
         MonoMethod *lMethod = NULL;
@@ -33,7 +33,7 @@ namespace SE::Core
         return lMethod;
     }
 
-    MonoObject *MonoScriptInstance::InvokeMethod( MonoMethod *aMethod, void **aParameters )
+    MonoObject *DotNetInstance::InvokeMethod( MonoMethod *aMethod, void **aParameters )
     {
         MonoObject *lException = nullptr;
         MonoObject *lValue     = mono_runtime_invoke( aMethod, mInstance, aParameters, &lException );
@@ -43,13 +43,13 @@ namespace SE::Core
         return nullptr;
     }
 
-    MonoObject *MonoScriptInstance::InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters )
+    MonoObject *DotNetInstance::InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters )
     {
         auto lMethod = GetMethod( aName, aParameterCount );
         return InvokeMethod( lMethod, aParameters );
     }
 
-    Ref<MonoScriptInstance> MonoScriptInstance::GetPropertyValue( std::string const &aName, std::string const &aClassName )
+    Ref<DotNetInstance> DotNetInstance::GetPropertyValue( std::string const &aName, std::string const &aClassName )
     {
         if( mScriptClass == nullptr ) return nullptr;
         if( mInstance == nullptr ) return nullptr;
@@ -57,7 +57,7 @@ namespace SE::Core
         sScriptProperty &aProperty       = mScriptClass->GetProperty( aName );
         MonoMethod      *lPropertyGetter = mono_property_get_get_method( aProperty.mProperty );
 
-        MonoScriptClass &lClass = MonoRuntime::GetClassType( aClassName );
+        DotNetClass &lClass = DotNetRuntime::GetClassType( aClassName );
 
         MonoObject *lException = nullptr;
         MonoObject *lValue = mono_runtime_invoke( lPropertyGetter, mInstance, nullptr, &lException );
@@ -67,6 +67,6 @@ namespace SE::Core
         return nullptr;
     }
 
-    sScriptProperty &MonoScriptInstance::GetProperty( std::string const &aName ) { return mScriptClass->GetProperty( aName ); }
+    sScriptProperty &DotNetInstance::GetProperty( std::string const &aName ) { return mScriptClass->GetProperty( aName ); }
 
 } // namespace SE::Core

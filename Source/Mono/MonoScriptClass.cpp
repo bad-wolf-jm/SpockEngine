@@ -110,21 +110,21 @@ namespace SE::Core
         mClassFullName = fmt::format( "{}.{}", mClassNamespace, mClassName );
     }
 
-    MonoScriptClass::MonoScriptClass( MonoType *aMonoClass )
+    DotNetClass::DotNetClass( MonoType *aMonoClass )
         : mMonoClass{ mono_class_from_mono_type( aMonoClass ) }
     {
         mFields     = GetClassFields( mMonoClass );
         mProperties = GetClassProperties( mMonoClass );
     }
 
-    Ref<MonoScriptInstance> MonoScriptClass::DoInstantiate()
+    Ref<DotNetInstance> DotNetClass::DoInstantiate()
     {
-        MonoObject *lInstance = MonoRuntime::InstantiateClass( mMonoClass, mIsCore );
+        MonoObject *lInstance = DotNetRuntime::InstantiateClass( mMonoClass, mIsCore );
 
-        return New<MonoScriptInstance>( this, mMonoClass, lInstance );
+        return New<DotNetInstance>( this, mMonoClass, lInstance );
     }
 
-    MonoMethod *MonoScriptClass::GetMethod( const std::string &aName, int aParameterCount )
+    MonoMethod *DotNetClass::GetMethod( const std::string &aName, int aParameterCount )
     {
         MonoClass  *lClass  = mMonoClass;
         MonoMethod *lMethod = NULL;
@@ -138,7 +138,7 @@ namespace SE::Core
         return lMethod;
     }
 
-    MonoObject *MonoScriptClass::InvokeMethod( MonoMethod *aMethod, void **aParameters )
+    MonoObject *DotNetClass::InvokeMethod( MonoMethod *aMethod, void **aParameters )
     {
         MonoObject *lException = nullptr;
         MonoObject *lValue     = mono_runtime_invoke( aMethod, nullptr, aParameters, &lException );
@@ -148,7 +148,7 @@ namespace SE::Core
         return nullptr;
     }
 
-    MonoObject *MonoScriptClass::InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters )
+    MonoObject *DotNetClass::InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters )
     {
         auto lMethod = GetMethod( aName, aParameterCount );
 

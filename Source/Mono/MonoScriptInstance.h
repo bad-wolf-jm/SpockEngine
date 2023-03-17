@@ -16,23 +16,23 @@
 
 namespace SE::Core
 {
-    class MonoScriptClass;
+    class DotNetClass;
 
-    class MonoScriptInstance
+    class DotNetInstance
     {
       public:
-        MonoScriptInstance() = default;
-        MonoScriptInstance( MonoScriptClass *aScriptClass, MonoClass *aMonoClass, MonoObject *aInstance );
-        MonoScriptInstance( MonoScriptClass *aScriptClass, MonoClass *aMonoClass, void *aInstance )
-            : MonoScriptInstance( aScriptClass, aMonoClass, (MonoObject *)aInstance )
+        DotNetInstance() = default;
+        DotNetInstance( DotNetClass *aScriptClass, MonoClass *aMonoClass, MonoObject *aInstance );
+        DotNetInstance( DotNetClass *aScriptClass, MonoClass *aMonoClass, void *aInstance )
+            : DotNetInstance( aScriptClass, aMonoClass, (MonoObject *)aInstance )
         {
         }
-        MonoScriptInstance( MonoClass *aMonoClass, MonoObject *aInstance )
-            : MonoScriptInstance( nullptr, aMonoClass, aInstance )
+        DotNetInstance( MonoClass *aMonoClass, MonoObject *aInstance )
+            : DotNetInstance( nullptr, aMonoClass, aInstance )
         {
         }
 
-        ~MonoScriptInstance();
+        ~DotNetInstance();
 
         MonoObject *GetInstance() { return mInstance; };
         MonoMethod *GetMethod( const std::string &aName, int aParameterCount );
@@ -65,7 +65,7 @@ namespace SE::Core
             return lValue;
         }
 
-        Ref<MonoScriptInstance> GetPropertyValue( std::string const &aName, std::string const &aClassName );
+        Ref<DotNetInstance> GetPropertyValue( std::string const &aName, std::string const &aClassName );
 
         template <typename _Ty>
         _Ty GetPropertyValue( std::string const &aName )
@@ -87,7 +87,7 @@ namespace SE::Core
         operator bool() const { return ( mInstance != nullptr ) && ( mMonoClass != nullptr ); }
 
       private:
-        MonoScriptClass *mScriptClass = nullptr;
+        DotNetClass *mScriptClass = nullptr;
         MonoClass       *mMonoClass   = nullptr;
         MonoObject      *mInstance    = nullptr;
         uint32_t         mGCHandle    = 0;

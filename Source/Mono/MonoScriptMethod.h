@@ -10,13 +10,13 @@
 
 namespace SE::Core
 {
-    class MonoScriptInstance;
+    class DotNetInstance;
 
-    class MonoScriptMehod
+    class DotNetMehod
     {
       public:
-        MonoScriptMehod() = default;
-        MonoScriptMehod( MonoMethod *aMonoMethod, MonoScriptInstance *aInstance );
+        DotNetMehod() = default;
+        DotNetMehod( MonoMethod *aMonoMethod, DotNetInstance *aInstance );
 
         template <typename... _ArgTypes>
         MonoObject *operator()( _ArgTypes... aArgs )
@@ -28,6 +28,6 @@ namespace SE::Core
 
       private:
         MonoMethod         *mMonoMethod;
-        MonoScriptInstance *mInstance;
+        DotNetInstance *mInstance;
     };
 } // namespace SE::Core

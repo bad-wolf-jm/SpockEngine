@@ -18,8 +18,8 @@ namespace SE::OtdrEditor
         AcquisitionData();
         ~AcquisitionData() = default;
 
-        void SetData( Ref<MonoScriptInstance> aSinglePulseTrace, Ref<MonoScriptInstance> aAcquisitionData,
-                      Ref<MonoScriptInstance> aFiberInfo );
+        void SetData( Ref<DotNetInstance> aSinglePulseTrace, Ref<DotNetInstance> aAcquisitionData,
+                      Ref<DotNetInstance> aFiberInfo );
 
       protected:
         Ref<UILabel>         mSectionTitle;
