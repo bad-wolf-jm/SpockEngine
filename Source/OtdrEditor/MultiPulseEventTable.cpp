@@ -1,4 +1,4 @@
-#include "LinkElementTable.h"
+#include "MultiPulseEventTable.h"
 
 #include <cmath>
 #include <fmt/core.h>
@@ -14,58 +14,64 @@ namespace SE::OtdrEditor
 {
     using namespace SE::Core;
 
-    UIMultiPulseEventTable::UIMultiPulseEventTable()
+    UIMultiPulseEventTable::UIMultiPulseEventTable()a
         : UITable()
     {
         SetRowHeight( 20.0f );
 
-        // mWavelength = New<sFloat64Column>( "Wavelength", 75.0f, "{:.1f} nm", "N.a.N." );
-        // AddColumn( mWavelength );
+        mPositionColumn = New<sFloat64Column>( "Position", 75.0f, "{:.3f} km", "N.a.N." );
+        AddColumn( mPositionColumn );
 
-        // mType = New<sStringColumn>( "Type", 75.0f );
-        // AddColumn( mType );
+        mLossColumn = New<sFloat64Column>( "Loss", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mLossColumn );
 
-        // mStatus = New<sStringColumn>( "Status", 75.0f );
-        // AddColumn( mStatus );
+        mEstimatedLossColumn = New<sFloat64Column>( "Est. Loss", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mEstimatedLossColumn );
 
-        // mPositionColumn = New<sFloat64Column>( "Position", 75.0f, "{:.3f} km", "N.a.N." );
-        // AddColumn( mPositionColumn );
+        mReflectanceColumn = New<sFloat64Column>( "Reflectance", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mReflectanceColumn );
 
-        // mDiagnosicCount = New<sFloat64Column>( "\xef\x86\x88", 75.0f, "{:.3f}", "N.a.N." );
-        // AddColumn( mDiagnosicCount );
+        mWavelengthColumn = New<sFloat64Column>( "Wavelength", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mWavelengthColumn );
 
-        // mLoss = New<sFloat64Column>( "Loss", 75.0f, "{:.3f} dB", "N.a.N." );
-        // AddColumn( mLoss );
+        mSubCursorAColumn = New<sFloat64Column>( "a", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mSubCursorAColumn );
 
-        // mReflectance = New<sFloat64Column>( "Reflectance", 75.0f, "{:.2f} dB", "N.a.N." );
-        // AddColumn( mReflectance );
+        mCursorAColumn = New<sFloat64Column>( "A", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mCursorAColumn );
 
-        // mCurveLevelColumn = New<sFloat64Column>( "Level", 75.0f, "{:.2f} dB", "N.a.N." );
-        // AddColumn( mCurveLevelColumn );
+        mCursorBColumn = New<sFloat64Column>( "B", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mCursorBColumn );
 
-        // mEventType = New<sStringColumn>( "mEventType", 75.0f );
-        // AddColumn( mEventType );
+        mSubCursorBColumn = New<sFloat64Column>( "b", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mSubCursorBColumn );
 
-        // mEventStatus = New<sStringColumn>( "mEventStatus", 75.0f );
-        // AddColumn( mEventStatus );
+        mCurveLevelColumn = New<sFloat64Column>( "Level", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mCurveLevelColumn );
 
-        // mReflectanceType = New<sStringColumn>( "mReflectanceType", 75.0f );
-        // AddColumn( mReflectanceType );
+        mLossAtAColumn = New<sFloat64Column>( "Loss@A", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mLossAtAColumn );
 
-        // mEventSpan = New<sStringColumn>( "Range", 75.0f );
-        // AddColumn( mEventSpan );
+        mLossAtBColumn = New<sFloat64Column>( "Loss@B", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mLossAtBColumn );
 
-        // mPositionTolerance = New<sFloat64Column>( "Tolerance", 75.0f, "{:.3f} m", "N.a.N." );
-        // AddColumn( mPositionTolerance );
+        mEstimatedCurveLevelColumn = New<sFloat64Column>( "Est. Level", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mEstimatedCurveLevelColumn );
 
-        // mLossError = New<sFloat64Column>( "Loss Error", 75.0f, "{:.5f} dB", "N.a.N." );
-        // AddColumn( mLossError );
+        mEstimatedEndLevelColumn = New<sFloat64Column>( "Est. End Level", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mEstimatedEndLevelColumn );
 
-        // UITable::OnRowClicked(
-        //     [&]( uint32_t aRow )
-        //     {
-        //         if( mOnElementClicked ) mOnElementClicked( mEventDataVector[aRow] );
-        //     } );
+        mEndNoiseLevelColumn = New<sFloat64Column>( "Est. Noise Level", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mEndNoiseLevelColumn );
+
+        mPeakPulseWidth = New<sFloat64Column>( "Pulse width", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mPeakPulseWidth );
+
+        mPeakPower = New<sFloat64Column>( "Peak power", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mPeakPower );
+
+        mPeakPower = New<sFloat64Column>( "Peak SNR", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mPeakPower );
     }
 
     void UIMultiPulseEventTable::OnEventClicked( std::function<void( sMultiPulseEvent const & )> const &aOnRowClicked )
@@ -157,20 +163,23 @@ namespace SE::OtdrEditor
 
     void UIMultiPulseEventTable::Clear()
     {
-        // mRowBackgroundColor.clear();
-        // mType->mData.clear();
-        // mStatus->mData.clear();
-        // mDiagnosicCount->mData.clear();
-        // mWavelength->mData.clear();
-        // mPositionColumn->mData.clear();
-        // mLoss->mData.clear();
-        // mReflectance->mData.clear();
-        // mCurveLevelColumn->mData.clear();
-        // mEventType->mData.clear();
-        // mEventStatus->mData.clear();
-        // mReflectanceType->mData.clear();
-        // mEventSpan->mData.clear();
-        // mPositionTolerance->mData.clear();
-        // mLossError->mData.clear();
+        mPositionColumn.Clear();
+        mLossColumn.Clear();
+        mEstimatedLossColumn.Clear();
+        mReflectanceColumn.Clear();
+        mWavelengthColumn.Clear();
+        mCursorAColumn.Clear();
+        mCursorBColumn.Clear();
+        mSubCursorAColumn.Clear();
+        mSubCursorBColumn.Clear();
+        mCurveLevelColumn.Clear();
+        mLossAtAColumn.Clear();
+        mLossAtBColumn.Clear();
+        mEstimatedCurveLevelColumn.Clear();
+        mEstimatedEndLevelColumn.Clear();
+        mEndNoiseLevelColumn.Clear();
+        mPeakPulseWidth.Clear();
+        mPeakPower.Clear();
+        mPeakSNR.Clear();
     }
 } // namespace SE::OtdrEditor
