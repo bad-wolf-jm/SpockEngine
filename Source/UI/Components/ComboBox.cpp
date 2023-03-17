@@ -28,7 +28,8 @@ namespace SE::Core
 
         auto lItemSize = ImVec2{ aSize.x, RequiredSize().y };
 
-        ImGui::SetCursorPos( GetContentAlignedposition( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER, aPosition, lItemSize, aSize ) );
+        ImGui::SetCursorPos(
+            GetContentAlignedposition( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER, aPosition, lItemSize, aSize ) );
 
         if( mCurrentItem >= mItems.size() ) mCurrentItem = mItems.size() - 1;
 

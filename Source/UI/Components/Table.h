@@ -67,7 +67,7 @@ namespace SE::Core
         std::function<void( uint32_t )> mOnRowClicked;
 
       protected:
-        float mRowHeight = 15.0f;
+        float   mRowHeight  = 15.0f;
         int32_t mHoveredRow = -1;
 
       protected:

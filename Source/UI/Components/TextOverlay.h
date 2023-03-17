@@ -21,9 +21,9 @@ namespace SE::Core
         void AddText( std::string const &aText );
 
       protected:
-        uint32_t mLineCount = 0;
+        uint32_t             mLineCount = 0;
         std::list<sTextLine> mLines;
-        std::string mLeftOver;
+        std::string          mLeftOver;
 
         uint32_t mMaxLineCount = 1000;
 

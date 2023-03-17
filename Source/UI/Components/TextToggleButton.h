@@ -12,7 +12,7 @@ namespace SE::Core
 
         UITextToggleButton( std::string const &aText );
         UITextToggleButton( std::string const &aText, std::function<bool( bool )> aOnClick );
-  
+
         bool IsActive();
         void SetActive( bool aValue );
 
@@ -23,7 +23,7 @@ namespace SE::Core
         void SetInactiveColor( math::vec4 const &aColor );
 
       private:
-        std::function<bool(bool)> mOnChange;
+        std::function<bool( bool )> mOnChange;
 
         bool   mActivated     = false;
         ImVec4 mActiveColor   = ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f };
