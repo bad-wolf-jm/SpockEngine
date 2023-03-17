@@ -12,7 +12,7 @@ namespace SE::OtdrEditor
         mSectionTitle = New<UILabel>( aTitle );
         mSectionTitle->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         mSectionTitle->SetBackgroundColor( lTitleBgColor );
-        Add( mSectionTitle.get(), 30.0f, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        Add( mSectionTitle.get(), lTitleHeight, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         mSectionLayout         = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
         mSectionPropertyLayout = New<UIBoxLayout>( eBoxLayoutOrientation::VERTICAL );
         mSectionLayout->Add( nullptr, lTitleHeight, false, false );
@@ -96,7 +96,7 @@ namespace SE::OtdrEditor
         mEventOverview = New<UILabel>( "Event properties" );
         mEventOverview->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         mEventOverview->SetBackgroundColor( lTitleBgColor );
-        Add( mEventOverview.get(), 30.0f, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        Add( mEventOverview.get(), lTitleHeight, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         mEventOverviewLayout         = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
         mEventOverviewPropertyLayout = New<UIBoxLayout>( eBoxLayoutOrientation::VERTICAL );
         mEventOverviewLayout->Add( nullptr, 25.0f, false, false );

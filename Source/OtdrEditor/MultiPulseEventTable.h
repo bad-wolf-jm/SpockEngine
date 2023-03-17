@@ -18,31 +18,9 @@ namespace SE::OtdrEditor
     using namespace SE::Core;
     struct sMultiPulseEvent
     {
-        int              mRowIndex;
-        int              mEventIndex;
-        int              mSubEventIndex;
-        eEventType       mEventType;
-        eEventStatus     mEventStatus;
-        eReflectanceType mReflectanceType;
-        double           mWavelength;
-        double           mPosition;
-        double           mCursorA;
-        double           mCursorB;
-        double           mSubCursorA;
-        double           mSubCursorB;
-        double           mLoss;
-        double           mReflectance;
-        double           mCurveLevel;
-        double           mLossAtA;
-        double           mLossAtB;
-        double           mEstimatedCurveLevel;
-        double           mEstimatedLoss;
-        double           mEstimatedEndLevel;
-        double           mEndNoiseLevel;
-        double           mPeakPulseWidth;
-        double           mPeakPower;
-        double           mPeakSNR;
-        bool             mConsiderAsPossibleEcho;
+        int   mRowIndex;
+        int   mEventIndex;
+        void *mPhysicalEvent;
     };
 
     class UIMultiPulseEventTable : public UITable
@@ -77,10 +55,11 @@ namespace SE::OtdrEditor
         Ref<sFloat64Column> mPeakPower;
         Ref<sFloat64Column> mPeakSNR;
 
-        std::vector<sEvent> mEventDataVector;
+        std::vector<sMultiPulseEvent> mEventDataVector;
 
       private:
         std::function<void( sMultiPulseEvent const & )> mOnElementClicked;
-        void                                            UIMultiPulseEventTable::DoSelectElement( uint32_t aRow );
+
+        void UIMultiPulseEventTable::DoSelectElement( uint32_t aRow );
     };
 } // namespace SE::OtdrEditor
