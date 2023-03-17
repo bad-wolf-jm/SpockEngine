@@ -60,9 +60,9 @@ namespace SE::MonoInternalCalls
 
         const entt::meta_type lMetaType = Core::GetMetaType( lMonoType );
         const entt::meta_any  lMaybeAny = Core::InvokeMetaFunction(
-            lMetaType, "Get"_hs, aRegistry->WrapEntity( static_cast<entt::entity>( aEntityID ) ), MonoScriptClass( lMonoType ) );
+            lMetaType, "Get"_hs, aRegistry->WrapEntity( static_cast<entt::entity>( aEntityID ) ), DotNetClass( lMonoType ) );
 
-        return lMaybeAny.cast<MonoScriptInstance>().GetInstance();
+        return lMaybeAny.cast<DotNetInstance>().GetInstance();
     }
 
     void Entity_Replace( uint32_t aEntityID, EntityCollection *aRegistry, MonoReflectionType *aComponentType, MonoObject *aNewComponent )
@@ -72,7 +72,7 @@ namespace SE::MonoInternalCalls
 
         const entt::meta_type lMetaType = Core::GetMetaType( lMonoType );
         Core::InvokeMetaFunction( lMetaType, "Replace"_hs, aRegistry->WrapEntity( static_cast<entt::entity>( aEntityID ) ),
-                                  MonoScriptInstance( lMonoClass, aNewComponent ) );
+                                  DotNetInstance( lMonoClass, aNewComponent ) );
     }
 
     void Entity_Add( uint32_t aEntityID, EntityCollection *aRegistry, MonoReflectionType *aComponentType, MonoObject *aNewComponent )
@@ -82,7 +82,7 @@ namespace SE::MonoInternalCalls
 
         const entt::meta_type lMetaType = Core::GetMetaType( lMonoType );
         Core::InvokeMetaFunction( lMetaType, "Add"_hs, aRegistry->WrapEntity( static_cast<entt::entity>( aEntityID ) ),
-                                  MonoScriptInstance( lMonoClass, aNewComponent ) );
+                                  DotNetInstance( lMonoClass, aNewComponent ) );
     }
 
     void Entity_Remove( uint32_t aEntityID, EntityCollection *aRegistry, MonoReflectionType *aComponentType )
@@ -151,8 +151,8 @@ namespace SE::MonoInternalCalls
 
     static Scope *ToScope( MonoObject *aScope )
     {
-        auto lScopeClass = MonoRuntime::GetClassType( "SpockEngine.Scope" );
-        auto lScope      = MonoScriptInstance( lScopeClass.Class(), aScope );
+        auto lScopeClass = DotNetRuntime::GetClassType( "SpockEngine.Scope" );
+        auto lScope      = DotNetInstance( lScopeClass.Class(), aScope );
 
         Scope *lRetVal = lScope.GetFieldValue<Scope *>( "mInternalScope" );
         return lRetVal;
@@ -162,8 +162,8 @@ namespace SE::MonoInternalCalls
 
     static Cuda::sTensorShape *ToShape( MonoObject *aShape )
     {
-        auto lTensorShapeClass = MonoRuntime::GetClassType( "SpockEngine.sTensorShape" );
-        auto lTensorShape      = MonoScriptInstance( lTensorShapeClass.Class(), aShape );
+        auto lTensorShapeClass = DotNetRuntime::GetClassType( "SpockEngine.sTensorShape" );
+        auto lTensorShape      = DotNetInstance( lTensorShapeClass.Class(), aShape );
 
         Cuda::sTensorShape *lRetVal = lTensorShape.GetFieldValue<Cuda::sTensorShape *>( "mInternalTensorShape" );
         return lRetVal;
@@ -171,8 +171,8 @@ namespace SE::MonoInternalCalls
 
     static OpNode ToOpNode( MonoObject *aNode )
     {
-        auto lOpNodeClass = MonoRuntime::GetClassType( "SpockEngine.OpNode" );
-        auto lOpNode      = MonoScriptInstance( lOpNodeClass.Class(), aNode );
+        auto lOpNodeClass = DotNetRuntime::GetClassType( "SpockEngine.OpNode" );
+        auto lOpNode      = DotNetInstance( lOpNodeClass.Class(), aNode );
 
         auto  lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
         auto *lScope    = ToScope( lOpNode.GetFieldValue<MonoObject *>( "mScope" ) );

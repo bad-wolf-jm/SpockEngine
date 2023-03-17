@@ -106,8 +106,8 @@ namespace SE::OtdrEditor
         Add( mSectionLayout.get(), false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
     }
 
-    void AcquisitionData::SetData( Ref<MonoScriptInstance> aSinglePulseTrace, Ref<MonoScriptInstance> aAcquisitionData,
-                                   Ref<MonoScriptInstance> aFiberInfo )
+    void AcquisitionData::SetData( Ref<DotNetInstance> aSinglePulseTrace, Ref<DotNetInstance> aAcquisitionData,
+                                   Ref<DotNetInstance> aFiberInfo )
     {
         mWavelength->SetValue( "{:.0f} nm", aSinglePulseTrace->GetPropertyValue<double>( "Wavelength" ) * 1e9 );
 
@@ -192,7 +192,7 @@ namespace SE::OtdrEditor
         mRiseTime->SetValue( "{:.3f} ns", aAcquisitionData->GetPropertyValue<double>( "PulseRiseTime" ) * 1e9 );
         mFallTime->SetValue( "{:.3f} ns", aAcquisitionData->GetPropertyValue<double>( "PulseFallTime" ) * 1e9 );
 
-        auto lEventAnalysisType = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.EventAnalysis" );
+        auto lEventAnalysisType = DotNetRuntime::GetClassType( "Metrino.Olm.SignalProcessing.EventAnalysis" );
         auto lPositionTolerance = lEventAnalysisType.CallMethod( "ComputeEventPositionTolerance", aSinglePulseTrace->GetInstance() );
         std::string lPositionToleranceStr = fmt::format( "{:.3f} m", *(double *)mono_object_unbox( lPositionTolerance ) );
         mPositionTolerance->SetValue( lPositionToleranceStr );
@@ -209,7 +209,7 @@ namespace SE::OtdrEditor
         mAttenuation->SetValue( "{:.3f} dB/km", aFiberInfo->GetPropertyValue<double>( "TypicalFiberAttenuation" ) * 1000 );
 
         auto *lSequenceType    = aSinglePulseTrace->GetPropertyValue<MonoString *>( "SequenceType" );
-        auto  lSequenceTypeStr = MonoRuntime::NewString( lSequenceType );
+        auto  lSequenceTypeStr = DotNetRuntime::NewString( lSequenceType );
         mSequenceType->SetValue( lSequenceTypeStr );
     }
 

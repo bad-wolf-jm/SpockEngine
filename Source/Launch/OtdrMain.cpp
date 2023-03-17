@@ -252,7 +252,7 @@ int main( int argc, char **argv )
     if( auto lCoreScriptingPathOverride = lProgramArguments->present<std::string>( "--script-core-binary-path" ) )
         if( fs ::exists( lCoreScriptingPathOverride.value() ) ) lCoreScriptingPath = lCoreScriptingPathOverride.value();
 
-    MonoRuntime::Initialize( lMonoPath, lCoreScriptingPath );
+    DotNetRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 
 
     YAML::Node lRootNode = YAML::LoadFile( lProjectConfigurationPath.string() );
@@ -275,7 +275,7 @@ int main( int argc, char **argv )
         for( auto const &lAssemblyName : lAssemblies )
         {
             auto lAssemblyDllName = fmt::format( "{}.dll", lAssemblyName );
-            MonoRuntime::AddAppAssemblyPath( lMetrinoPath / "debug" / lAssemblyName / lAssemblyDllName, "METRINO" );
+            DotNetRuntime::AddAppAssemblyPath( lMetrinoPath / "debug" / lAssemblyName / lAssemblyDllName, "METRINO" );
         }
     }
 
@@ -283,12 +283,12 @@ int main( int argc, char **argv )
     {
         YAML::Node &lAssemblyPath = lRootNode["project"]["assembly_path"];
         if( !lAssemblyPath.IsNull() && fs::exists( lAssemblyPath.as<std::string>() ) )
-            MonoRuntime::AddAppAssemblyPath( lAssemblyPath.as<std::string>(), "SYSTEM UNDER TEST" );
+            DotNetRuntime::AddAppAssemblyPath( lAssemblyPath.as<std::string>(), "SYSTEM UNDER TEST" );
     }
 
-    MonoRuntime::ReloadAssemblies();
+    DotNetRuntime::ReloadAssemblies();
 
-    auto &lInitializationClass = MonoRuntime::GetClassType("SpockEngine.IO");
+    auto &lInitializationClass = DotNetRuntime::GetClassType("SpockEngine.IO");
     lInitializationClass.CallMethod("Initialize");
 
     SE::OtdrEditor::BaseOtdrApplication lEditorApplication;
@@ -305,7 +305,7 @@ int main( int argc, char **argv )
     lEditorApplication.Shutdown();
     SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
 
-    MonoRuntime::Shutdown();
+    DotNetRuntime::Shutdown();
     SE::Core::Engine::Shutdown();
 
     return 0;

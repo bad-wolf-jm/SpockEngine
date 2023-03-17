@@ -167,7 +167,7 @@ namespace SE::OtdrEditor
         Add( mHardwareLayout.get(), true, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
     }
 
-    void MeasurementOverview::SetData( Ref<MonoScriptInstance> aMeasurementOverview )
+    void MeasurementOverview::SetData( Ref<DotNetInstance> aMeasurementOverview )
     {
         auto lMeasurementOverview = aMeasurementOverview->GetPropertyValue( "Measurement", "Metrino.Olm.OlmMeasurement" );
 
@@ -231,11 +231,11 @@ namespace SE::OtdrEditor
         auto lUnitInfo = lMeasurementOverview->GetPropertyValue( "UnitA", "Metrino.Kernos.Optical.UnitInformation" );
 
         auto lModelName    = lUnitInfo->GetPropertyValue<MonoString *>( "ModelName" );
-        auto lModelNameStr = MonoRuntime::NewString( lModelName );
+        auto lModelNameStr = DotNetRuntime::NewString( lModelName );
         mModelName->SetValue( lModelNameStr );
 
         auto lSeriualNumber    = lUnitInfo->GetPropertyValue<MonoString *>( "SerialNumber" );
-        auto lSeriualNumberStr = MonoRuntime::NewString( lSeriualNumber );
+        auto lSeriualNumberStr = DotNetRuntime::NewString( lSeriualNumber );
         mSerialNumber->SetValue( lSeriualNumberStr );
 
 #if 0

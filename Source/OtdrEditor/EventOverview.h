@@ -18,7 +18,7 @@ namespace SE::OtdrEditor
         SectionOverview(std::string const& aTitle);
         ~SectionOverview() = default;
 
-        void SetData(Ref<MonoScriptInstance> aRbsData);
+        void SetData(Ref<DotNetInstance> aRbsData);
 
       protected:
         Ref<UILabel>         mSectionTitle;
@@ -45,7 +45,7 @@ namespace SE::OtdrEditor
         EventOverview();
         ~EventOverview() = default;
 
-        void SetData( Ref<MonoScriptInstance> aEventOverview, Ref<MonoScriptInstance> aAttributes );
+        void SetData( Ref<DotNetInstance> aEventOverview, Ref<DotNetInstance> aAttributes );
 
       protected:
         Ref<UILabel>         mEventOverview;

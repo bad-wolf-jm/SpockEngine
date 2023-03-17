@@ -93,9 +93,9 @@ namespace SE::OtdrEditor
                                                     { return a + ( a.length() > 0 ? ", " : "" ) + b; } );
         };
 
-        static auto &lBaseLinkElementClass  = MonoRuntime::GetClassType( "Metrino.Olm.BaseLinkElement" );
-        static auto &lOlmPhysicalEventClass = MonoRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
-        static auto &lOlmAttributeClass     = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
+        static auto &lBaseLinkElementClass  = DotNetRuntime::GetClassType( "Metrino.Olm.BaseLinkElement" );
+        static auto &lOlmPhysicalEventClass = DotNetRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
+        static auto &lOlmAttributeClass     = DotNetRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
 
         for( auto const &lE : mEventDataVector )
         {
@@ -106,9 +106,9 @@ namespace SE::OtdrEditor
             else
                 mRowBackgroundColor.push_back( IM_COL32( 9, 9, 9, 255 ) );
 
-            auto lLinkElement   = MonoScriptInstance( &lBaseLinkElementClass, lBaseLinkElementClass.Class(), lE.mLinkElement );
-            auto lPhysicalEvent = MonoScriptInstance( &lOlmPhysicalEventClass, lOlmPhysicalEventClass.Class(), lE.mPhysicalEvent );
-            auto lAttributes    = MonoScriptInstance( &lOlmAttributeClass, lOlmAttributeClass.Class(), lE.mAttributes );
+            auto lLinkElement   = DotNetInstance( &lBaseLinkElementClass, lBaseLinkElementClass.Class(), lE.mLinkElement );
+            auto lPhysicalEvent = DotNetInstance( &lOlmPhysicalEventClass, lOlmPhysicalEventClass.Class(), lE.mPhysicalEvent );
+            auto lAttributes    = DotNetInstance( &lOlmAttributeClass, lOlmAttributeClass.Class(), lE.mAttributes );
 
             auto lOtdrPhysicalEvent = lPhysicalEvent.GetPropertyValue( "PhysicalEvent", "Metrino.Otdr.PhysicalEvent" );
 

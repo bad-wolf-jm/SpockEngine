@@ -48,11 +48,11 @@ namespace SE::OtdrEditor
         UIImage mWorkspaceBackground;
 
         private:
-          std::vector<SE::Core::MonoScriptClass*> mScripts;
+          std::vector<SE::Core::DotNetClass*> mScripts;
 
       private:
         bool StartCurrentScript(bool aState);
-        Ref<MonoScriptInstance> mCurrentScript{};
+        Ref<DotNetInstance> mCurrentScript{};
         bool                    mCurrentScriptIsRunning{};
 
         void ConsoleOut(std::string const& aString);

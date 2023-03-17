@@ -44,7 +44,7 @@ namespace SE::OtdrEditor
         Add( mSectionLayout.get(), false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
     }
 
-    void SectionOverview::SetData( Ref<MonoScriptInstance> aRbsData )
+    void SectionOverview::SetData( Ref<DotNetInstance> aRbsData )
     {
 
         if (!*aRbsData)
@@ -184,7 +184,7 @@ namespace SE::OtdrEditor
         Add( mNextSectionLayout.get(), true, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
     }
 
-    void EventOverview::SetData( Ref<MonoScriptInstance> aPhysicalEvent, Ref<MonoScriptInstance> aAttributes )
+    void EventOverview::SetData( Ref<DotNetInstance> aPhysicalEvent, Ref<DotNetInstance> aAttributes )
     {
 
         // Overview

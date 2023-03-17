@@ -2,7 +2,7 @@
 
 namespace SE::Core
 {
-    MonoScriptMehod::MonoScriptMehod( MonoMethod *aMonoMethod, MonoScriptInstance *aInstance )
+    DotNetMehod::DotNetMehod( MonoMethod *aMonoMethod, DotNetInstance *aInstance )
         : mMonoMethod{ aMonoMethod }
         , mInstance{ aInstance }
     {

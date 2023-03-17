@@ -13,42 +13,42 @@ namespace SE::Core
         return entt::resolve( (uint32_t)( lHashValue & 0xFFFFFFFF ) );
     }
 
-    Ref<MonoScriptInstance> MarshallComponent( MonoScriptClass &lMonoType, sNodeTransformComponent &aComponent )
+    Ref<DotNetInstance> MarshallComponent( DotNetClass &lMonoType, sNodeTransformComponent &aComponent )
     {
         return lMonoType.Instantiate( &aComponent.mMatrix );
     }
 
-    void UnmarshallComponent( Ref<MonoScriptInstance> aMonoType, sNodeTransformComponent &aComponent )
+    void UnmarshallComponent( Ref<DotNetInstance> aMonoType, sNodeTransformComponent &aComponent )
     {
         math::mat4 lFieldValue = aMonoType->GetFieldValue<math::mat4>( "mMatrix" );
 
         aComponent = sNodeTransformComponent( lFieldValue );
     }
 
-    Ref<MonoScriptInstance> MarshallComponent( MonoScriptClass &lMonoType, sTag &aComponent )
+    Ref<DotNetInstance> MarshallComponent( DotNetClass &lMonoType, sTag &aComponent )
     {
-        MonoString *lManagedSTagValue = MonoRuntime::NewString( aComponent.mValue );
+        MonoString *lManagedSTagValue = DotNetRuntime::NewString( aComponent.mValue );
 
         auto lNewObject = lMonoType.Instantiate( lManagedSTagValue );
 
         return lNewObject;
     }
 
-    void UnmarshallComponent( Ref<MonoScriptInstance> aMonoType, sTag &aComponent )
+    void UnmarshallComponent( Ref<DotNetInstance> aMonoType, sTag &aComponent )
     {
         auto lFieldValue = aMonoType->GetFieldValue<MonoString *>( "mValue" );
 
-        aComponent = sTag( MonoRuntime::NewString( lFieldValue ) );
+        aComponent = sTag( DotNetRuntime::NewString( lFieldValue ) );
     }
 
-    Ref<MonoScriptInstance> MarshallComponent( MonoScriptClass &lMonoType, sLightComponent &aComponent )
+    Ref<DotNetInstance> MarshallComponent( DotNetClass &lMonoType, sLightComponent &aComponent )
     {
         auto lNewObject = lMonoType.Instantiate( &aComponent.mType, &aComponent.mIntensity, &aComponent.mColor, &aComponent.mCone );
 
         return lNewObject;
     }
 
-    void UnmarshallComponent( Ref<MonoScriptInstance> aMonoType, sLightComponent &aComponent )
+    void UnmarshallComponent( Ref<DotNetInstance> aMonoType, sLightComponent &aComponent )
     {
         aComponent.mType      = aMonoType->GetFieldValue<eLightType>( "mType" );
         aComponent.mIntensity = aMonoType->GetFieldValue<float>( "mIntensity" );

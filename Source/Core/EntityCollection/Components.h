@@ -139,9 +139,9 @@ namespace SE::Core
         {
             std::string mClassFullName = "";
 
-            MonoScriptClass         mClass;
-            Ref<MonoScriptInstance> mInstance;
-            Ref<MonoScriptInstance> mEntityInstance;
+            DotNetClass         mClass;
+            Ref<DotNetInstance> mInstance;
+            Ref<DotNetInstance> mEntityInstance;
 
             sMonoActor()                     = default;
             sMonoActor( const sMonoActor & ) = default;
@@ -156,7 +156,7 @@ namespace SE::Core
                 std::string lClassNamespace = aClassFullName.substr( 0, lSeparatorPos );
                 std::string lClassName      = aClassFullName.substr( lSeparatorPos + 1 );
 
-                mClass = MonoRuntime::GetClassType( mClassFullName );
+                mClass = DotNetRuntime::GetClassType( mClassFullName );
             }
 
             template <typename T>
@@ -172,7 +172,7 @@ namespace SE::Core
                 // Create Mono side entity object
                 auto lEntityID    = static_cast<uint32_t>( mEntity );
                 auto lRegistryID  = (size_t)mEntity.GetRegistry();
-                auto lEntityClass = MonoRuntime::GetClassType( "SpockEngine.Entity" );
+                auto lEntityClass = DotNetRuntime::GetClassType( "SpockEngine.Entity" );
                 mEntityInstance   = lEntityClass.Instantiate( &lEntityID, &lRegistryID );
 
                 if( mClassFullName.empty() ) return;
@@ -181,7 +181,7 @@ namespace SE::Core
                 std::string lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
                 std::string lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
 
-                mClass = MonoRuntime::GetClassType( mClassFullName );
+                mClass = DotNetRuntime::GetClassType( mClassFullName );
 
                 // Instantiate the Mono actor class with the entity object as parameter
                 mInstance = mClass.Instantiate();
@@ -203,7 +203,7 @@ namespace SE::Core
           private:
             Internal::Entity<ParentType> mEntity;
 
-            MonoScriptMehod mOnUpdate{};
+            DotNetMehod mOnUpdate{};
         };
 
         template <typename ParentType>
@@ -222,10 +222,10 @@ namespace SE::Core
             bool mPreview         = true;
 
             std::string             mClassFullName = "";
-            MonoScriptClass         mClass;
-            Ref<MonoScriptInstance> mInstance;
-            Ref<MonoScriptInstance> mPreviewInstance;
-            Ref<MonoScriptInstance> mEntityInstance;
+            DotNetClass         mClass;
+            Ref<DotNetInstance> mInstance;
+            Ref<DotNetInstance> mPreviewInstance;
+            Ref<DotNetInstance> mEntityInstance;
 
             sMonoUIComponent()                           = default;
             sMonoUIComponent( const sMonoUIComponent & ) = default;
@@ -249,7 +249,7 @@ namespace SE::Core
                 mEntity           = aEntity;
                 auto lEntityID    = static_cast<uint32_t>( mEntity );
                 auto lRegistryID  = (size_t)mEntity.GetRegistry();
-                auto lEntityClass = MonoRuntime::GetClassType( "SpockEngine.Entity" );
+                auto lEntityClass = DotNetRuntime::GetClassType( "SpockEngine.Entity" );
                 mEntityInstance   = lEntityClass.Instantiate( &lEntityID, &lRegistryID );
 
                 if( mClassFullName.empty() ) return;
@@ -258,7 +258,7 @@ namespace SE::Core
                 std::string lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
                 std::string lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
 
-                mClass = MonoRuntime::GetClassType( mClassFullName );
+                mClass = DotNetRuntime::GetClassType( mClassFullName );
 
                 if( mDisplayInEditor && mPreview )
                 {
@@ -281,7 +281,7 @@ namespace SE::Core
             void OnEndScenario()
             {
                 mInstance->InvokeMethod( "EndScenario", 0, nullptr );
-                mInstance = MonoScriptInstance{};
+                mInstance = DotNetInstance{};
             }
 
             void OnUpdate( Timestep ts )
@@ -301,7 +301,7 @@ namespace SE::Core
           private:
             Internal::Entity<ParentType> mEntity;
 
-            MonoScriptMehod mOnUpdate{};
+            DotNetMehod mOnUpdate{};
         };
 
     } // namespace Internal
