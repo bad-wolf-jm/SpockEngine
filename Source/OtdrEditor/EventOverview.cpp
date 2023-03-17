@@ -5,14 +5,17 @@ namespace SE::OtdrEditor
     SectionOverview::SectionOverview( std::string const &aTitle )
         : UIBoxLayout( eBoxLayoutOrientation::VERTICAL )
     {
-        const float lItemHeight = 20.0f;
+        const float      lTitleHeight = 30.0f;
+        const float      lItemHeight  = 20.0f;
+        const math::vec4 lTitleBgColor{ 1.0f, 1.0f, 1.0f, 0.02f };
 
         mSectionTitle = New<UILabel>( aTitle );
         mSectionTitle->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        mSectionTitle->SetBackgroundColor( lTitleBgColor );
         Add( mSectionTitle.get(), 30.0f, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         mSectionLayout         = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
         mSectionPropertyLayout = New<UIBoxLayout>( eBoxLayoutOrientation::VERTICAL );
-        mSectionLayout->Add( nullptr, 25.0f, false, false );
+        mSectionLayout->Add( nullptr, lTitleHeight, false, false );
         mSectionLayout->Add( mSectionPropertyLayout.get(), true, true );
         mRbsTrace = New<UIPropertyValue>( "Trace:" );
         mSectionPropertyLayout->Add( mRbsTrace.get(), lItemHeight, false, true );
@@ -46,10 +49,10 @@ namespace SE::OtdrEditor
         auto        lTrace      = aRbsData->GetPropertyValue( "Trace", "Metrino.Otdr.SinglePulseTrace" );
         std::string lPulse      = fmt::format( "{} ns", lTrace->GetPropertyValue<double>( "Pulse" ) * 1e9 );
         std::string lPulseWidth = fmt::format( "{:.3f} m", lTrace->GetPropertyValue<double>( "PulseWidth" ) );
-        std::string lFormat         = fmt::format( "{} - {}", lPulse, lPulseWidth );
+        std::string lFormat     = fmt::format( "{} - {}", lPulse, lPulseWidth );
         mRbsTrace->SetValue( lFormat );
 
-        std::string lRbsNoise= fmt::format( "{:.2f} dB", aRbsData->GetPropertyValue<double>( "NoiseLevel" ) );
+        std::string lRbsNoise = fmt::format( "{:.2f} dB", aRbsData->GetPropertyValue<double>( "NoiseLevel" ) );
         mRbsNoise->SetValue( lRbsNoise );
 
         std::string lRbsSaturation = fmt::format( "{:.2f} dB", aRbsData->GetPropertyValue<double>( "SaturationLevel" ) );
@@ -57,39 +60,42 @@ namespace SE::OtdrEditor
 
         auto lLsaData = aRbsData->GetPropertyValue( "Lsa", "Metrino.Olm.SignalProcessing.RbsLsa" );
 
-        std::string lLsaRange = fmt::format("[{:.3f}, {:.3f}]", lLsaData->GetPropertyValue<double>("StartPosition"),  lLsaData->GetPropertyValue<double>("EndPosition"));
+        std::string lLsaRange = fmt::format( "[{:.3f}, {:.3f}]", lLsaData->GetPropertyValue<double>( "StartPosition" ),
+                                             lLsaData->GetPropertyValue<double>( "EndPosition" ) );
         mLsaRange->SetValue( lLsaRange );
 
-        std::string lLsaSlope = fmt::format("{:.3f} dB/km", lLsaData->GetPropertyValue<double>("Slope") * 1000);
+        std::string lLsaSlope = fmt::format( "{:.3f} dB/km", lLsaData->GetPropertyValue<double>( "Slope" ) * 1000 );
         mLsaSlope->SetValue( lLsaSlope );
 
-        std::string lLsaOffset = fmt::format("{:.3f} dB", lLsaData->GetPropertyValue<double>("Offset"));
+        std::string lLsaOffset = fmt::format( "{:.3f} dB", lLsaData->GetPropertyValue<double>( "Offset" ) );
         mLsaOffset->SetValue( lLsaOffset );
 
-        std::string lLsaMean = fmt::format("{:.3f} dB", lLsaData->GetPropertyValue<double>("Mean"));
+        std::string lLsaMean = fmt::format( "{:.3f} dB", lLsaData->GetPropertyValue<double>( "Mean" ) );
         mLsaMean->SetValue( lLsaMean );
 
-        std::string lLsaSlopeError = fmt::format("{:.3f} dB/km", lLsaData->GetPropertyValue<double>("SlopeError"));
+        std::string lLsaSlopeError = fmt::format( "{:.3f} dB/km", lLsaData->GetPropertyValue<double>( "SlopeError" ) );
         mLsaSlopeError->SetValue( lLsaSlopeError );
 
-        std::string lLsaLinear = fmt::format("{}", lLsaData->GetPropertyValue<double>("FitOnLinearData"));
+        std::string lLsaLinear = fmt::format( "{}", lLsaData->GetPropertyValue<double>( "FitOnLinearData" ) );
         mLsaLinear->SetValue( lLsaLinear );
 
-        std::string lLsaError = fmt::format("{:.3f} dB", lLsaData->GetPropertyValue<double>("RmsError"));
+        std::string lLsaError = fmt::format( "{:.3f} dB", lLsaData->GetPropertyValue<double>( "RmsError" ) );
         mLsaError->SetValue( lLsaError );
 
-        std::string lLsaCrossings = fmt::format("{}", lLsaData->GetPropertyValue<double>("Crossings"));
+        std::string lLsaCrossings = fmt::format( "{}", lLsaData->GetPropertyValue<double>( "Crossings" ) );
         mLsaCrossings->SetValue( lLsaCrossings );
     }
 
     EventOverview::EventOverview()
         : UIBoxLayout( eBoxLayoutOrientation::VERTICAL )
     {
-
-        const float lItemHeight = 20.0f;
+        const float      lTitleHeight = 30.0f;
+        const float      lItemHeight  = 20.0f;
+        const math::vec4 lTitleBgColor{ 1.0f, 1.0f, 1.0f, 0.02f };
 
         mEventOverview = New<UILabel>( "Event properties" );
         mEventOverview->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        mEventOverview->SetBackgroundColor( lTitleBgColor );
         Add( mEventOverview.get(), 30.0f, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         mEventOverviewLayout         = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
         mEventOverviewPropertyLayout = New<UIBoxLayout>( eBoxLayoutOrientation::VERTICAL );

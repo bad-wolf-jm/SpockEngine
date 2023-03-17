@@ -5,10 +5,13 @@ namespace SE::OtdrEditor
     AcquisitionData::AcquisitionData()
         : UIBoxLayout( eBoxLayoutOrientation::VERTICAL )
     {
-        const float lItemHeight = 20.0f;
+        const float lTitleHeight = 30.0f;
+        const float lItemHeight  = 20.0f;
+        const math::vec4 lTitleBgColor{ 1.0f, 1.0f, 1.0f, 0.02f };
 
         mSectionTitle = New<UILabel>( "Acquisition data" );
         mSectionTitle->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        mSectionTitle->SetBackgroundColor( lTitleBgColor );
         Add( mSectionTitle.get(), 30.0f, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         mSectionLayout         = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
         mSectionPropertyLayout = New<UIBoxLayout>( eBoxLayoutOrientation::VERTICAL );

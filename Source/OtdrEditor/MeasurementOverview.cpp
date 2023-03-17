@@ -5,11 +5,14 @@ namespace SE::OtdrEditor
     MeasurementOverview::MeasurementOverview()
         : UIBoxLayout( eBoxLayoutOrientation::VERTICAL )
     {
-        const float lItemHeight = 20.0f;
+        const float      lTitleHeight = 30.0f;
+        const float      lItemHeight  = 20.0f;
+        const math::vec4 lTitleBgColor{ 1.0f, 1.0f, 1.0f, 0.02f };
 
         mMeasurementResultTitle = New<UILabel>( "Measurement results" );
         mMeasurementResultTitle->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
-        Add( mMeasurementResultTitle.get(), 30.0f, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        mMeasurementResultTitle->SetBackgroundColor( lTitleBgColor );
+        Add( mMeasurementResultTitle.get(), lTitleHeight, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         mMeasurementResultLayout         = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
         mMeasurementResultPropertyLayout = New<UIBoxLayout>( eBoxLayoutOrientation::VERTICAL );
         mMeasurementResultLayout->Add( nullptr, 25.0f, false, false );
@@ -24,7 +27,8 @@ namespace SE::OtdrEditor
 
         mMeasurementConfigurationTitle = New<UILabel>( "Configuration" );
         mMeasurementConfigurationTitle->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
-        Add( mMeasurementConfigurationTitle.get(), 30.0f, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        mMeasurementConfigurationTitle->SetBackgroundColor( lTitleBgColor );
+        Add( mMeasurementConfigurationTitle.get(), lTitleHeight, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         mMeasurementConfigurationLayout         = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
         mMeasurementConfigurationPropertyLayout = New<UIBoxLayout>( eBoxLayoutOrientation::VERTICAL );
         mMeasurementConfigurationLayout->Add( nullptr, 25.0f, false, false );
@@ -73,7 +77,8 @@ namespace SE::OtdrEditor
 
         mAnalysisResultTitle = New<UILabel>( "Analysis result" );
         mAnalysisResultTitle->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
-        Add( mAnalysisResultTitle.get(), 30.0f, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        mAnalysisResultTitle->SetBackgroundColor( lTitleBgColor );
+        Add( mAnalysisResultTitle.get(), lTitleHeight, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         mAnalysisResultLayout         = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
         mAnalysisResultPropertyLayout = New<UIBoxLayout>( eBoxLayoutOrientation::VERTICAL );
         mAnalysisResultLayout->Add( nullptr, 25.0f, false, false );
@@ -88,11 +93,12 @@ namespace SE::OtdrEditor
 
         mTestFibersTitle = New<UILabel>( "Test fibers" );
         mTestFibersTitle->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
-        Add( mTestFibersTitle.get(), 30.0f, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        Add( mTestFibersTitle.get(), lTitleHeight, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
 
         mSoftwareVersionsTitle = New<UILabel>( "Software versions" );
         mSoftwareVersionsTitle->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
-        Add( mSoftwareVersionsTitle.get(), 30.0f, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        mSoftwareVersionsTitle->SetBackgroundColor( lTitleBgColor );
+        Add( mSoftwareVersionsTitle.get(), lTitleHeight, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         mSoftwareVersionsLayout         = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
         mSoftwareVersionsPropertyLayout = New<UIBoxLayout>( eBoxLayoutOrientation::VERTICAL );
         mSoftwareVersionsLayout->Add( nullptr, 25.0f, false, false );
@@ -113,7 +119,8 @@ namespace SE::OtdrEditor
 
         mHardwareTitle = New<UILabel>( "Hardware" );
         mHardwareTitle->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
-        Add( mHardwareTitle.get(), 30.0f, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        mHardwareTitle->SetBackgroundColor( lTitleBgColor );
+        Add( mHardwareTitle.get(), lTitleHeight, false, true, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         mHardwareLayout         = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
         mHardwarePropertyLayout = New<UIBoxLayout>( eBoxLayoutOrientation::VERTICAL );
         mHardwareLayout->Add( nullptr, 25.0f, false, false );
