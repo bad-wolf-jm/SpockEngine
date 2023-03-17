@@ -15,7 +15,7 @@ namespace SE::Core
 
       private:
         std::function<void()> mOnClick;
-        bool mIsChecked = false;
+        bool                  mIsChecked = false;
 
       private:
         void PushStyles();

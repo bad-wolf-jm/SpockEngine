@@ -48,7 +48,7 @@ namespace SE::Core
                 {
                     ImGui::TableNextRow();
                     if( mHoveredRow == lRow )
-                        ImGui::TableSetBgColor( ImGuiTableBgTarget_RowBg0, IM_COL32(0x51, 0x08, 0x7E, 128) );
+                        ImGui::TableSetBgColor( ImGuiTableBgTarget_RowBg0, IM_COL32( 0x51, 0x08, 0x7E, 128 ) );
                     else if( mRowBackgroundColor.size() > 0 )
                         ImGui::TableSetBgColor( ImGuiTableBgTarget_RowBg0, mRowBackgroundColor[lRow] );
 
@@ -66,11 +66,11 @@ namespace SE::Core
                         if( lColumnData->mBackgroundColor.size() > 0 )
                             ImGui::TableSetBgColor( ImGuiTableBgTarget_CellBg, lColumnData->mBackgroundColor[lRow] );
                         auto lPos = ImGui::GetCursorPos();
-                        ImGui::Dummy(ImVec2{ lWidth, mRowHeight });
+                        ImGui::Dummy( ImVec2{ lWidth, mRowHeight } );
                         if( ImGui::IsItemHovered() ) mHoveredRow = lRow;
-                        ImGui::SetCursorPos(lPos);
+                        ImGui::SetCursorPos( lPos );
                         lColumnData->Render( lRow, ImVec2{ lWidth, mRowHeight } );
-                        
+
                         if( mOnRowClicked && ImGui::IsItemClicked() ) mOnRowClicked( lRow );
                         if( lColumnData->mBackgroundColor.size() > 0 ) ImGui::TableSetBgColor( ImGuiTableBgTarget_CellBg, lBgColor );
 

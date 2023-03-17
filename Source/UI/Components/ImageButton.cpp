@@ -2,8 +2,7 @@
 
 namespace SE::Core
 {
-    UIImageButton::UIImageButton( fs::path const &aImagePath, math::vec2 aSize,
-                                  std::function<void()> aOnClick )
+    UIImageButton::UIImageButton( fs::path const &aImagePath, math::vec2 aSize, std::function<void()> aOnClick )
         : UIBaseImage( aImagePath, aSize )
         , mOnClick{ aOnClick }
     {
@@ -28,10 +27,7 @@ namespace SE::Core
     void UIImageButton::PushStyles() {}
     void UIImageButton::PopStyles() {}
 
-    void UIImageButton::OnClick( std::function<void()> aOnClick )
-    {
-        mOnClick = aOnClick;
-    }
+    void UIImageButton::OnClick( std::function<void()> aOnClick ) { mOnClick = aOnClick; }
 
     ImVec2 UIImageButton::RequiredSize() { return mSize; }
 
@@ -41,8 +37,7 @@ namespace SE::Core
 
         ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, RequiredSize(), aSize ) );
 
-        bool lClicked = ImGui::ImageButton( TextureID(), mSize, mTopLeft, mBottomRight, 0,
-                                            mBackgroundColor, mTintColor );
+        bool lClicked = ImGui::ImageButton( TextureID(), mSize, mTopLeft, mBottomRight, 0, mBackgroundColor, mTintColor );
 
         if( lClicked && mOnClick && lEnabled ) mOnClick();
     }

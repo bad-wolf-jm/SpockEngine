@@ -22,7 +22,7 @@ namespace SE::Core
 
     void UIHexViewer::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        ImGui::SetCursorPos( GetContentAlignedposition(mHAlign, mVAlign, aPosition, ImGui::CalcTextSize( mText.c_str() ), aSize) );
+        ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, ImGui::CalcTextSize( mText.c_str() ), aSize ) );
 
         ImGui::Text( mText.c_str(), aSize );
     }
