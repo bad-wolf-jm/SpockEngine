@@ -47,7 +47,6 @@ namespace SE::OtdrEditor
     void OtdrWindow::ConfigureUI()
     {
         mWorkspaceArea.ConfigureUI();
-        mEventTable.SetRowHeight( 20.0f );
         mLinkElementTable->OnElementClicked(
             [&]( sLinkElement const &aElement )
             {
@@ -58,7 +57,7 @@ namespace SE::OtdrEditor
                                                                aElement.mPhysicalEvent );
                 auto lAttributes    = New<MonoScriptInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), aElement.mAttributes );
 
-                mEventOverview.SetData( lPhysicalEvent, lAttributes );
+                // mEventOverview.SetData( lPhysicalEvent, lAttributes );
             } );
     }
 
@@ -67,6 +66,7 @@ namespace SE::OtdrEditor
         , mUIOverlay{ aUIOverlay }
     {
         mLinkElementTable = New<UILinkElementTable>();
+        mEventTable = New<UIMultiPulseEventTable>();
     }
 
     bool OtdrWindow::Display()
@@ -144,6 +144,13 @@ namespace SE::OtdrEditor
                 mLinkElementTable->Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
             }
             ImGui::End();
+
+            if( ImGui::Begin( "iOlmData_Events", &pOpen, ImGuiWindowFlags_None ) )
+            {
+                mEventTable->Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+            }
+            ImGui::End();
+
             if( !pOpen )
             {
                 mDataInstance = nullptr;
@@ -355,10 +362,15 @@ namespace SE::OtdrEditor
             mTracePlot.Add( lPlot );
         }
 
-        bool        lReanalyze         = true;
+        bool        lReanalyze         = false;
         MonoObject *lLinkElementData   = mDataInstance->CallMethod( "GetLinkElements", &lReanalyze );
         auto        lLinkElementVector = AsVector<sLinkElement>( lLinkElementData );
         mLinkElementTable->SetData( lLinkElementVector );
+
+        // bool        lReanalyze         = false;
+        MonoObject *lEventData   = mDataInstance->CallMethod( "GetEvents" );
+        auto        lEventVector = AsVector<sMultiPulseEvent>( lEventData );
+        mEventTable->SetData( lEventVector );
 
         mMeasurementOverview.SetData( mDataInstance );
 
@@ -366,10 +378,10 @@ namespace SE::OtdrEditor
         auto         lPhysicalEvent =
             New<MonoScriptInstance>( &lOlmMeasurementClass, lOlmMeasurementClass.Class(), lLinkElementVector[0].mPhysicalEvent );
 
-        static auto &lOlmAttributeClass = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
-        auto         lAttributes =
-            New<MonoScriptInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), lLinkElementVector[0].mAttributes );
-        mEventOverview.SetData( lPhysicalEvent, lAttributes );
+        // static auto &lOlmAttributeClass = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
+        // auto         lAttributes =
+        //     New<MonoScriptInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), lLinkElementVector[0].mAttributes );
+        // mEventOverview.SetData( lPhysicalEvent, lAttributes );
     }
 
     bool OtdrWindow::RenderMainMenu()
