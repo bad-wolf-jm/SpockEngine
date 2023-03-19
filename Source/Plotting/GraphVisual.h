@@ -30,8 +30,8 @@
 #include <sstream>
 #include <vector>
 
-namespace morph
 {
+namespace morph
 
     //! What shape for the graph markers?
     enum class markerstyle
