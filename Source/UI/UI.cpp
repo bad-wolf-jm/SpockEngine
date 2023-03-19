@@ -74,9 +74,9 @@ namespace SE::Core::UI
         colors[ImGuiCol_NavWindowingHighlight] = ImVec4( 1.0f, 1.0f, 1.0f, 0.70f );
         colors[ImGuiCol_NavWindowingDimBg]     = ImVec4( 0.80f, 0.80f, 0.80f, 0.20f );
 
-        colors[ImGuiCol_TableHeaderBg]    = ImVec4( 0.02f, 0.02f, 0.02f, 1.0f );
-        colors[ImGuiCol_TableRowBg]    = ImVec4( 0.0f, 0.0f, 0.0f, 0.70f );
-        colors[ImGuiCol_TableRowBgAlt] = ImVec4( 0.1f, 0.1f, 0.1f, 0.70f );
+        colors[ImGuiCol_TableHeaderBg] = ImVec4( 0.02f, 0.02f, 0.02f, 1.0f );
+        colors[ImGuiCol_TableRowBg]    = ImVec4( 0.0f, 0.0f, 0.0f, 1.0f );
+        colors[ImGuiCol_TableRowBgAlt] = ImVec4( 0.02f, 0.02f, 0.02f, 1.0f );
 
         colors[ImGuiCol_DockingEmptyBg] = ImVec4( 0.0f, 0.0f, 0.0f, 0.0f );
         style.PopupRounding             = 0;

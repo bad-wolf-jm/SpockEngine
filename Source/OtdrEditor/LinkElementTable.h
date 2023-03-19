@@ -26,6 +26,7 @@ namespace SE::OtdrEditor
         ePassFail mReflectancePassFail;
         void     *mLinkElement;
         void     *mPhysicalEvent;
+        void     *mPeakTrace;
         void     *mAttributes;
     };
 
