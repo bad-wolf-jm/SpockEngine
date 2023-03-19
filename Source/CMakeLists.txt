@@ -92,6 +92,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Renderer/ASceneRenderer.cpp
     Renderer/SceneRenderData.cpp
 
+    Plotting/Figure.cpp
+
     Scene/Primitives/Primitives.cpp
     Scene/Primitives/Arrow.cpp
     Scene/Visualizers/Wall2D.cpp
