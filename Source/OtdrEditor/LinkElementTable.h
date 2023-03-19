@@ -42,6 +42,8 @@ namespace SE::OtdrEditor
         void SetData( std::vector<sLinkElement> const &aData );
         void OnElementClicked( std::function<void(sLinkElement const&)> const &aOnRowClicked );
 
+        std::vector<sLinkElement> GetElementsByIndex(uint32_t aElementIndex);
+
       protected:
         Ref<sStringColumn>  mType;
         Ref<sStringColumn>  mStatus;

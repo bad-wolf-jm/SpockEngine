@@ -57,7 +57,9 @@ namespace SE::OtdrEditor
                                                                aElement.mPhysicalEvent );
                 auto lAttributes    = New<MonoScriptInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), aElement.mAttributes );
 
-                // mEventOverview.SetData( lPhysicalEvent, lAttributes );
+                mEventOverview.SetData( lPhysicalEvent, lAttributes );
+
+                mTracePlot.SetEventData( mLinkElementTable->GetElementsByIndex(aElement.mLinkIndex));
             } );
     }
 
