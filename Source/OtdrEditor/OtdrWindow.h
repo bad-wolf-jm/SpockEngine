@@ -28,9 +28,10 @@
 #include "Enums.h"
 #include "EventOverview.h"
 #include "LinkElementTable.h"
-#include "MultiPulseEventTable.h"
+#include "LinkElementTracePlot.h"
 #include "MeasurementOverview.h"
 #include "Mono/MonoScriptInstance.h"
+#include "MultiPulseEventTable.h"
 #include "SceneHierarchyPanel.h"
 #include "Workspace.h"
 
@@ -96,7 +97,9 @@ namespace SE::OtdrEditor
         void LoadIOlmData( fs::path aPath );
 
         Ref<MonoScriptInstance> mDataInstance = nullptr;
-        UIPlot                  mTracePlot;
+        // UIPlot                  mTracePlot;
+
+        UILinkElementTracePlot mTracePlot;
 
         Ref<UIMultiPulseEventTable> mEventTable;
 

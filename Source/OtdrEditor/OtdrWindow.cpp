@@ -349,28 +349,18 @@ namespace SE::OtdrEditor
 
         mAcquisitionDataOverview.SetData( lSinglePulseTraceInstance, lAcquisitionDataInstance, lFiberInfo );
 
-        mTracePlot.Clear();
-        for( int i = 0; i < lTraceDataVector.size(); i++ )
-        {
-            auto lInstance = MonoScriptInstance( lTraceDataStructure.Class(), lTraceDataVector[i] );
-            auto lPlot     = New<sFloat64LinePlot>();
-            lPlot->mX      = AsVector<double>( lInstance.GetFieldValue<MonoObject *>( "mX" ) );
-            lPlot->mY      = AsVector<double>( lInstance.GetFieldValue<MonoObject *>( "mY" ) );
-            lPlot->mLegend = fmt::format( "{:.0f} nm - {} ({} samples)", lInstance.GetFieldValue<double>( "mWavelength" ) * 1e9, i,
-                                          lPlot->mX.size() );
-
-            mTracePlot.Add( lPlot );
-        }
+        // mTracePlot.SetData(lTraceDataVector);
 
         bool        lReanalyze         = false;
         MonoObject *lLinkElementData   = mDataInstance->CallMethod( "GetLinkElements", &lReanalyze );
         auto        lLinkElementVector = AsVector<sLinkElement>( lLinkElementData );
         mLinkElementTable->SetData( lLinkElementVector );
+        mTracePlot.SetEventData(lLinkElementVector);
 
         // bool        lReanalyze         = false;
-        MonoObject *lEventData   = mDataInstance->CallMethod( "GetEvents" );
-        auto        lEventVector = AsVector<sMultiPulseEvent>( lEventData );
-        mEventTable->SetData( lEventVector );
+        // MonoObject *lEventData   = mDataInstance->CallMethod( "GetEvents" );
+        // auto        lEventVector = AsVector<sMultiPulseEvent>( lEventData );
+        // mEventTable->SetData( lEventVector );
 
         mMeasurementOverview.SetData( mDataInstance );
 
