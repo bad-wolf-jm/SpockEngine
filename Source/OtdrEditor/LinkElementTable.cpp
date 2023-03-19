@@ -173,4 +173,15 @@ namespace SE::OtdrEditor
         mPositionTolerance->mData.clear();
         mLossError->mData.clear();
     }
+
+    std::vector<sLinkElement> UILinkElementTable::GetElementsByIndex(uint32_t aElementIndex)
+    {
+        std::vector<sLinkElement> lResult;
+
+        for(auto const& x : mEventDataVector)
+            if(x.mLinkIndex == aElementIndex)
+                lResult.push_back(x);
+
+        return std::move(lResult);
+    }
 } // namespace SE::OtdrEditor

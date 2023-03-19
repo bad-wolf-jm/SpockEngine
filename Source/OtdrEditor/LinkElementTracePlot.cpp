@@ -56,11 +56,10 @@ namespace SE::OtdrEditor
 
     void UILinkElementTracePlot::SetEventData( sLinkElement &lEventDataVector )
     {
-        static auto &lTraceDataStructure = MonoRuntime::GetClassType( "Metrino.Interop.TracePlotData" );
-
+        static auto &lSinglePulseTraceClass = MonoRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
+        
         Clear();
 
-        static auto &lSinglePulseTraceClass = MonoRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
         auto lTrace   = MonoScriptInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), lEventDataVector.mPeakTrace );
         auto lSamples = lTrace.GetPropertyValue<MonoObject *>( "Samples" );
         auto lDeltaX  = lTrace.GetPropertyValue<double>( "SamplingPeriod" );
@@ -75,7 +74,6 @@ namespace SE::OtdrEditor
 
     void UILinkElementTracePlot::SetEventData( std::vector<sLinkElement> &lEventDataVector )
     {
-        static auto &lTraceDataStructure    = MonoRuntime::GetClassType( "Metrino.Interop.TracePlotData" );
         static auto &lSinglePulseTraceClass = MonoRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
 
         Clear();
@@ -98,19 +96,6 @@ namespace SE::OtdrEditor
             for( uint32_t i = 0; i < lPlot->mX.size(); i++ ) lPlot->mX[i] = i * lDeltaX;
 
             Add( lPlot );
-
-            // auto lTrace        = lEventDataVector[i].mPhysicalEvent->GetPropertyValue( "PeakTrace", "Metrino.Otdr.SinglePulseTrace"
-            // ); auto lSamples      = lTrace->GetPropertyValue<MonoObject *>( "Samples" ); auto lSampleVector = AsVector<double>(
-            // lSamples );
-
-            // // auto lInstance = MonoScriptInstance( &lTraceDataStructure, lTraceDataStructure.Class(), lTraceDataVector[i] );
-            // auto lPlot = New<sFloat64LinePlot>();
-            // lPlot->mX      = AsVector<double>( lInstance.GetFieldValue<MonoObject *>( "mX" ) );
-            // lPlot->mY      = AsVector<double>( lInstance.GetFieldValue<MonoObject *>( "mY" ) );
-            // lPlot->mLegend = fmt::format( "{:.0f} nm - {} ({} samples)", lInstance.GetFieldValue<double>( "mWavelength" ) * 1e9, i,
-            //                               lPlot->mX.size() );
-
-            // Add( lPlot );
         }
     }
 
