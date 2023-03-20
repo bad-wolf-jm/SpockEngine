@@ -27,24 +27,39 @@ namespace SE::Core
         bool       mOppositeSide = false;
     };
 
-    template <typename _Ty>
-    struct sXYPlot
+    struct sPlotData
     {
         std::string mLegend;
 
         UIPlotAxis mXAxis = UIPlotAxis::X1;
         UIPlotAxis mYAxis = UIPlotAxis::Y1;
 
+        virtual void Render( UIPlot *aParentPlot ) = 0;
+    };
+
+    template <typename _Ty>
+    struct sXYPlot : public sPlotData
+    {
         std::vector<_Ty> mX;
         std::vector<_Ty> mY;
         int32_t          mOffset = 0;
         int32_t          mStride = 1;
-
-        virtual void Render( UIPlot *aParentPlot ) = 0;
     };
 
     struct sFloat64LinePlot : public sXYPlot<double>
     {
+        void Render( UIPlot *aParentPlot );
+    };
+
+    struct sVLine : public sPlotData
+    {
+        std::vector<double> mX;
+
+        sVLine( std::vector<double> const &x )
+            : mX{ x }
+        {
+        }
+
         void Render( UIPlot *aParentPlot );
     };
 
@@ -53,13 +68,13 @@ namespace SE::Core
       public:
         UIPlot();
 
-        void Add( Ref<sFloat64LinePlot> aPlot );
+        void Add( Ref<sPlotData> aPlot );
         void Clear();
 
         void ConfigureLegend( math::vec2 aLegendPadding, math::vec2 aLegendInnerPadding, math::vec2 aLegendSpacing );
 
       protected:
-        std::vector<Ref<sFloat64LinePlot>> mElements;
+        std::vector<Ref<sPlotData>> mElements;
 
         ImPlotLocation mLegendPosition = ImPlotLocation_NorthEast;
 
