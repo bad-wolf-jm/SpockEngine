@@ -62,6 +62,7 @@ namespace SE::OtdrEditor
                 // mEventOverview.SetData( lPhysicalEvent, lAttributes );
 
                 // mTracePlot.SetEventData( mLinkElementTable->GetElementsByIndex( aElement.mLinkIndex ) );
+                mTracePlot.Clear();
                 mTracePlot.SetEventData( aElement );
             } );
 
