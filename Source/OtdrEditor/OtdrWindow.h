@@ -33,6 +33,7 @@
 #include "Mono/MonoScriptInstance.h"
 #include "MultiPulseEventTable.h"
 #include "SceneHierarchyPanel.h"
+#include "TestFailResultTable.h"
 #include "Workspace.h"
 
 namespace SE::OtdrEditor
@@ -95,6 +96,7 @@ namespace SE::OtdrEditor
         void ConfigureUI();
 
         void LoadIOlmData( fs::path aPath );
+        void LoadTestReport( fs::path aPath );
 
         Ref<MonoScriptInstance> mDataInstance = nullptr;
         // UIPlot                  mTracePlot;
@@ -102,11 +104,12 @@ namespace SE::OtdrEditor
         UILinkElementTracePlot mTracePlot;
 
         Ref<UIMultiPulseEventTable> mEventTable;
+        Ref<UILinkElementTable>     mLinkElementTable;
+        Ref<UITestFailResultTable>  mTestFailResultTable;
 
-        Ref<UILinkElementTable> mLinkElementTable;
-        MeasurementOverview     mMeasurementOverview;
-        EventOverview           mEventOverview;
-        AcquisitionData         mAcquisitionDataOverview;
+        MeasurementOverview mMeasurementOverview;
+        EventOverview       mEventOverview;
+        AcquisitionData     mAcquisitionDataOverview;
 
       private:
         OtdrWorkspaceWindow mWorkspaceArea;

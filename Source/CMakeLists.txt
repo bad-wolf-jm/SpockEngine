@@ -128,6 +128,7 @@ add_library(LTSimulationEngineRuntime STATIC
     OtdrEditor/Workspace.cpp
     OtdrEditor/Enums.cpp
     OtdrEditor/LinkElementTable.cpp
+    OtdrEditor/TestFailResultTable.cpp
     OtdrEditor/MultiPulseEventTable.cpp
     OtdrEditor/AcquisitionData.cpp
     OtdrEditor/EventOverview.cpp
@@ -242,6 +243,7 @@ target_link_libraries(LTSimulationEngineRuntime PRIVATE
     yaml-cpp
     tinygltf
     tinyobjloader
+    pugixml
     lua::lua
     Zep
     ${ASSIMP_LIBRARIES}
