@@ -59,7 +59,7 @@ namespace SE::OtdrEditor
                     New<MonoScriptInstance>( &lOlmMeasurementClass, lOlmMeasurementClass.Class(), aElement.mPhysicalEvent );
                 auto lAttributes = New<MonoScriptInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), aElement.mAttributes );
 
-                mEventOverview.SetData( lPhysicalEvent, lAttributes );
+                // mEventOverview.SetData( lPhysicalEvent, lAttributes );
 
                 mTracePlot.SetEventData( mLinkElementTable->GetElementsByIndex( aElement.mLinkIndex ) );
             } );
@@ -410,14 +410,16 @@ namespace SE::OtdrEditor
                 auto  lFail    = lFailInfo.child( "FailInfo" );
                 auto &lNewData = lTableRows.emplace_back();
 
+                lNewData.mTestName              = std::string( lTestName );
+                lNewData.mTestDate              = std::string( lTestDate );
                 lNewData.mFilename              = std::string( lFileName );
                 lNewData.mLinkElementIndex      = std::string( lFail.child( "LinkElementIndex" ).child_value() );
                 lNewData.mSubLinkElementIndex   = std::string( lFail.child( "SubLinkElementIndex" ).child_value() );
                 lNewData.mPhysicalEventIndex    = std::string( lFail.child( "PhysicalEventIndex" ).child_value() );
-                lNewData.mLinkElementPosition   = std::string( lFail.child( "LinkElementPosition" ).child_value() );
+                lNewData.mLinkElementPosition   = std::stod( lFail.child( "LinkElementPosition" ).child_value() );
                 lNewData.mIsSubElement          = std::string( lFail.child( "IsSubElement" ).child_value() );
-                lNewData.mWavelength            = std::string( lFail.child( "Wavelength" ).child_value() );
-                lNewData.mPhysicalEventPosition = std::string( lFail.child( "PhysicalEventPosition" ).child_value() );
+                lNewData.mWavelength            = std::stod( lFail.child( "Wavelength" ).child_value() );
+                lNewData.mPhysicalEventPosition = std::stod( lFail.child( "PhysicalEventPosition" ).child_value() );
                 lNewData.mSinglePulseTraceIndex = std::string( lFail.child( "SinglePulseTraceIndex" ).child_value() );
                 lNewData.mMessage               = std::string( lFail.child( "Message" ).child_value() );
                 // lNewData.mIsChecked             = std::string( lFail.child( "IsChecked" ).child_value() );

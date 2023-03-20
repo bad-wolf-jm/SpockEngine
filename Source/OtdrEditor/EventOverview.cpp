@@ -148,12 +148,21 @@ namespace SE::OtdrEditor
         std::string lWavelength = fmt::format( "{:.0f} nm", aPhysicalEvent->GetPropertyValue<double>( "Wavelength" ) * 1e9 );
         mWavelength->SetValue( lWavelength );
 
-        auto        lDetectionTrace          = aAttributes->GetPropertyValue( "DetectionTrace", "Metrino.Otdr.SinglePulseTrace" );
-        std::string lDetectionTracePeakPulse = fmt::format( "{:.3f} ns", lDetectionTrace->GetPropertyValue<double>( "Pulse" ) * 1e9 );
-        std::string lDetectionTracePeakPulseWidth =
-            fmt::format( "{:.3f} m", lDetectionTrace->GetPropertyValue<double>( "PulseWidth" ) );
-        std::string lDetectionTraceFormat = fmt::format( "{} - {}", lDetectionTracePeakPulse, lDetectionTracePeakPulseWidth );
-        mDetectionTrace->SetValue( lDetectionTraceFormat );
+        auto lDetectionTrace = aAttributes->GetPropertyValue( "DetectionTrace", "Metrino.Otdr.SinglePulseTrace" );
+
+        if( lDetectionTrace )
+        {
+            std::string lDetectionTracePeakPulse =
+                fmt::format( "{:.3f} ns", lDetectionTrace->GetPropertyValue<double>( "Pulse" ) * 1e9 );
+            std::string lDetectionTracePeakPulseWidth =
+                fmt::format( "{:.3f} m", lDetectionTrace->GetPropertyValue<double>( "PulseWidth" ) );
+            std::string lDetectionTraceFormat = fmt::format( "{} - {}", lDetectionTracePeakPulse, lDetectionTracePeakPulseWidth );
+            mDetectionTrace->SetValue( lDetectionTraceFormat );
+        }
+        else
+        {
+            mDetectionTrace->SetValue( "N/A" );
+        }
 
         std::string lPositionTolerance = fmt::format( "{:.4f} m", aPhysicalEvent->GetPropertyValue<double>( "PositionTolerance" ) );
         mPositionTolerance->SetValue( lPositionTolerance );
