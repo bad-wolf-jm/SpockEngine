@@ -126,7 +126,7 @@ set(SE_EXTRA_INCLUDES ${tinyobjloader_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
 FetchContent_Declare(
   glslang
   GIT_REPOSITORY https://github.com/KhronosGroup/glslang.git
-  GIT_TAG        master
+  GIT_TAG        main
   GIT_PROGRESS   TRUE )
 FetchContent_MakeAvailable(glslang)
 include_directories(${glslang_SOURCE_DIR}/glslang/Public)
