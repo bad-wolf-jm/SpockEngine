@@ -19,6 +19,12 @@ namespace SE::OtdrEditor
     {
         SetRowHeight( 20.0f );
 
+        mTestName = New<sStringColumn>( "mTestName", 75.0f );
+        AddColumn( mTestName );
+
+        mTestDate = New<sStringColumn>( "mTestDate", 75.0f );
+        AddColumn( mTestDate );
+ 
         mFilename = New<sStringColumn>( "mFilename", 75.0f );
         AddColumn( mFilename );
 
@@ -70,6 +76,9 @@ namespace SE::OtdrEditor
 
         for( auto const &lDataRow : mEventDataVector )
         {
+            mTestName->mData.push_back( lDataRow.mTestName );
+            mTestDate->mData.push_back( lDataRow.mTestDate );
+
             mFilename->mData.push_back( fs::path(lDataRow.mFilename).filename().string() );
             mLinkElementIndex->mData.push_back( lDataRow.mLinkElementIndex );
             mSubLinkElementIndex->mData.push_back( lDataRow.mSubLinkElementIndex );
@@ -86,6 +95,8 @@ namespace SE::OtdrEditor
     void UITestFailResultTable::Clear()
     {
         mRowBackgroundColor.clear();
+        mTestName->mData.clear();
+        mTestDate->mData.clear();
         mFilename->mData.clear();
         mLinkElementIndex->mData.clear();
         mSubLinkElementIndex->mData.clear();
