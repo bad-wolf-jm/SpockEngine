@@ -50,14 +50,14 @@ namespace SE::OtdrEditor
         Ref<sStringColumn> mTestName;
         Ref<sStringColumn> mTestDate;
         Ref<sStringColumn> mFilename;
-        Ref<sStringColumn> mLinkElementIndex;
-        Ref<sStringColumn> mSubLinkElementIndex;
-        Ref<sStringColumn> mPhysicalEventIndex;
+        // Ref<sStringColumn> mLinkElementIndex;
+        // Ref<sStringColumn> mSubLinkElementIndex;
+        // Ref<sStringColumn> mPhysicalEventIndex;
         Ref<sFloat64Column> mLinkElementPosition;
-        Ref<sStringColumn> mIsSubElement;
+        // Ref<sStringColumn> mIsSubElement;
         Ref<sFloat64Column> mWavelength;
         Ref<sFloat64Column> mPhysicalEventPosition;
-        Ref<sStringColumn> mSinglePulseTraceIndex;
+        // Ref<sStringColumn> mSinglePulseTraceIndex;
         Ref<sStringColumn> mMessage;
 
         std::vector<sTestFailElement> mEventDataVector;
