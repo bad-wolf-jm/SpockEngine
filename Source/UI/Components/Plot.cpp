@@ -19,7 +19,7 @@ namespace SE::Core
     void UIPlot::PushStyles() {}
     void UIPlot::PopStyles() {}
 
-    void UIPlot::Add( Ref<sFloat64LinePlot> aPlot ) { mElements.push_back( aPlot ); };
+    void UIPlot::Add( Ref<sPlotData> aPlot ) { mElements.push_back( aPlot ); };
     void UIPlot::Clear() { mElements.clear(); };
     void UIPlot::ConfigureLegend( math::vec2 aLegendPadding, math::vec2 aLegendInnerPadding, math::vec2 aLegendSpacing )
     {
@@ -77,4 +77,15 @@ namespace SE::Core
         ImPlot::SetAxes( static_cast<ImAxis>( mXAxis ), static_cast<ImAxis>( mYAxis ) );
         ImPlot::PlotLine( mLegend.c_str(), mX.data(), mY.data(), mX.size() / lDownSample, mOffset, sizeof( double ) * lDownSample );
     }
+
+    void sVLine::Render( UIPlot *aParentPlot )
+    {
+        auto lPlotName = fmt::format( "{}##{}", mLegend, static_cast<void *>( this ) );
+
+        ImPlot::SetAxes( static_cast<ImAxis>( mXAxis ), static_cast<ImAxis>( mYAxis ) );
+
+        ImPlot::PlotVLines( lPlotName.c_str(), mX.data(), mX.size(), 0 );
+
+    }
+
 } // namespace SE::Core
