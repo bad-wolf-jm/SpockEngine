@@ -58,16 +58,17 @@ namespace SE::OtdrEditor
     {
         static auto &lSinglePulseTraceClass = MonoRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
 
-        Clear();
-
-        auto lTrace   = MonoScriptInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), aLinkElement.mPeakTrace );
+        auto lTrace = MonoScriptInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), aLinkElement.mPeakTrace );
+        if( !lTrace ) return;
+        
         auto lSamples = lTrace.GetPropertyValue<MonoObject *>( "Samples" );
         auto lDeltaX  = lTrace.GetPropertyValue<double>( "SamplingPeriod" );
         auto lPlot    = New<sFloat64LinePlot>();
 
         static const double lSpeedOfLight = 299792458.0;
-        lPlot->mY                         = AsVector<double>( lSamples );
-        lPlot->mX                         = std::vector<double>( lPlot->mY.size() );
+
+        lPlot->mY = AsVector<double>( lSamples );
+        lPlot->mX = std::vector<double>( lPlot->mY.size() );
         for( uint32_t i = 0; i < lPlot->mX.size(); i++ )
         {
             lPlot->mX[i] = ( i * lDeltaX ) * lSpeedOfLight * 0.5 * 0.001;
@@ -120,25 +121,9 @@ namespace SE::OtdrEditor
     {
         static auto &lSinglePulseTraceClass = MonoRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
 
-        Clear();
-
         for( int i = 0; i < aLinkElement.size(); i++ )
         {
-            auto lTrace = MonoScriptInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), aLinkElement[i].mPeakTrace );
-            if( lTrace.GetInstance() == nullptr ) continue;
-
-            auto lSamples = lTrace.GetPropertyValue<MonoObject *>( "Samples" );
-            auto lDeltaX  = lTrace.GetPropertyValue<double>( "SamplingPeriod" );
-            auto lPlot    = New<sFloat64LinePlot>();
-
-            lPlot->mY      = AsVector<double>( lSamples );
-            lPlot->mX      = std::vector<double>( lPlot->mY.size() );
-            lPlot->mLegend = fmt::format( "{:.0f} nm - {} ({} samples)", lTrace.GetPropertyValue<double>( "Wavelength" ) * 1e9, i,
-                                          lPlot->mX.size() );
-
-            for( uint32_t i = 0; i < lPlot->mX.size(); i++ ) lPlot->mX[i] = i * lDeltaX;
-
-            Add( lPlot );
+            SetEventData( aLinkElement[i] );
         }
     }
 
