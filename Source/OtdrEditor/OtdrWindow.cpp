@@ -63,6 +63,12 @@ namespace SE::OtdrEditor
 
                 mTracePlot.SetEventData( mLinkElementTable->GetElementsByIndex( aElement.mLinkIndex ) );
             } );
+
+        mTestFailResultTable->OnElementClicked(
+            [&]( sTestFailElement const &aElement )
+            {
+                LoadIOlmData(aElement.mFilename);
+            } );
     }
 
     OtdrWindow::OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
@@ -391,22 +397,20 @@ namespace SE::OtdrEditor
 
         std::vector<sTestFailElement> lTableRows;
 
-        for (auto const& lFile : std::filesystem::directory_iterator(aPath))
+        for( auto const &lFile : std::filesystem::directory_iterator( aPath ) )
         {
             pugi::xml_document     doc;
             pugi::xml_parse_result result = doc.load_file( lFile.path().c_str() );
 
-
             if( !result ) continue;
 
-            auto                          lRoot     = doc.child( "TestDataFailInfo" );
-            auto                          lTestName = lRoot.child( "TestName" ).child_value();
-            auto                          lTestDate = lRoot.child( "DateString" ).child_value();
-
+            auto lRoot           = doc.child( "TestDataFailInfo" );
+            auto lTestName       = lRoot.child( "TestName" ).child_value();
+            auto lTestDate       = lRoot.child( "DateString" ).child_value();
             auto lFailesFileList = lRoot.child( "FailedFiles" );
+
             for( pugi::xml_node lInfo : lFailesFileList.children( "FailedFileInfo" ) )
             {
-                // auto  lInfo     = lFailedFile.child( "FailedFileInfo" );
                 auto *lFileName = lInfo.child( "Filename" ).child_value();
 
                 for( pugi::xml_node lFailInfo : lInfo.children( "FailInfos" ) )
@@ -426,12 +430,9 @@ namespace SE::OtdrEditor
                     lNewData.mPhysicalEventPosition = std::stod( lFail.child( "PhysicalEventPosition" ).child_value() );
                     lNewData.mSinglePulseTraceIndex = std::string( lFail.child( "SinglePulseTraceIndex" ).child_value() );
                     lNewData.mMessage               = std::string( lFail.child( "Message" ).child_value() );
-                    // lNewData.mIsChecked             = std::string( lFail.child( "IsChecked" ).child_value() );
-                    // lNewData.mFlag                  = std::string( lFail.child( "Flag" ).child_value() );
                 }
             }
         }
-
 
         mTestFailResultTable->SetData( lTableRows );
     }
