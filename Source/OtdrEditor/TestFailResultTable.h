@@ -18,14 +18,16 @@ namespace SE::OtdrEditor
     using namespace SE::Core;
     struct sTestFailElement
     {
+        std::string mTestName;
+        std::string mTestDate;
         std::string mFilename;
         std::string mLinkElementIndex;
         std::string mSubLinkElementIndex;
         std::string mPhysicalEventIndex;
-        std::string mLinkElementPosition;
+        double mLinkElementPosition;
         std::string mIsSubElement;
-        std::string mWavelength;
-        std::string mPhysicalEventPosition;
+        double mWavelength;
+        double mPhysicalEventPosition;
         std::string mSinglePulseTraceIndex;
         std::string mMessage;
     };
@@ -49,10 +51,10 @@ namespace SE::OtdrEditor
         Ref<sStringColumn> mLinkElementIndex;
         Ref<sStringColumn> mSubLinkElementIndex;
         Ref<sStringColumn> mPhysicalEventIndex;
-        Ref<sStringColumn> mLinkElementPosition;
+        Ref<sFloat64Column> mLinkElementPosition;
         Ref<sStringColumn> mIsSubElement;
-        Ref<sStringColumn> mWavelength;
-        Ref<sStringColumn> mPhysicalEventPosition;
+        Ref<sFloat64Column> mWavelength;
+        Ref<sFloat64Column> mPhysicalEventPosition;
         Ref<sStringColumn> mSinglePulseTraceIndex;
         Ref<sStringColumn> mMessage;
 

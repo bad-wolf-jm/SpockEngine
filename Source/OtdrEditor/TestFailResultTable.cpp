@@ -25,7 +25,7 @@ namespace SE::OtdrEditor
         mMessage = New<sStringColumn>( "mMessage", 75.0f );
         AddColumn( mMessage );
 
-        mPhysicalEventPosition = New<sStringColumn>( "mPhysicalEventPosition", 75.0f );
+        mPhysicalEventPosition = New<sFloat64Column>( "mPhysicalEventPosition", 75.0f, "{:.4f} km", "N.a.N.");
         AddColumn( mPhysicalEventPosition );
 
         mLinkElementIndex = New<sStringColumn>( "mLinkElementIndex", 75.0f );
@@ -37,13 +37,13 @@ namespace SE::OtdrEditor
         mPhysicalEventIndex = New<sStringColumn>( "mPhysicalEventIndex", 75.0f );
         AddColumn( mPhysicalEventIndex );
 
-        mLinkElementPosition = New<sStringColumn>( "mLinkElementPosition", 75.0f );
+        mLinkElementPosition = New<sFloat64Column>( "mLinkElementPosition", 75.0f, "{:.4f} km", "N.a.N." );
         AddColumn( mLinkElementPosition );
 
         mIsSubElement = New<sStringColumn>( "mIsSubElement", 75.0f );
         AddColumn( mIsSubElement );
 
-        mWavelength = New<sStringColumn>( "mWavelength", 75.0f );
+        mWavelength = New<sFloat64Column>( "mWavelength", 75.0f, "{:.1f} nm", "N.a.N." );
         AddColumn( mWavelength );
 
 
@@ -70,14 +70,14 @@ namespace SE::OtdrEditor
 
         for( auto const &lDataRow : mEventDataVector )
         {
-            mFilename->mData.push_back( lDataRow.mFilename );
+            mFilename->mData.push_back( fs::path(lDataRow.mFilename).filename().string() );
             mLinkElementIndex->mData.push_back( lDataRow.mLinkElementIndex );
             mSubLinkElementIndex->mData.push_back( lDataRow.mSubLinkElementIndex );
             mPhysicalEventIndex->mData.push_back( lDataRow.mPhysicalEventIndex );
-            mLinkElementPosition->mData.push_back( lDataRow.mLinkElementPosition );
+            mLinkElementPosition->mData.push_back( lDataRow.mLinkElementPosition * 0.001f );
             mIsSubElement->mData.push_back( lDataRow.mIsSubElement );
-            mWavelength->mData.push_back( lDataRow.mWavelength );
-            mPhysicalEventPosition->mData.push_back( lDataRow.mPhysicalEventPosition );
+            mWavelength->mData.push_back( lDataRow.mWavelength * 1e9 );
+            mPhysicalEventPosition->mData.push_back( lDataRow.mPhysicalEventPosition * 0.001f );
             mSinglePulseTraceIndex->mData.push_back( lDataRow.mSinglePulseTraceIndex );
             mMessage->mData.push_back( lDataRow.mMessage );
         }
