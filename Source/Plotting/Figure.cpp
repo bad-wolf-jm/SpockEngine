@@ -22,7 +22,7 @@ namespace SE::Core
         sAttachmentDescription lAttachmentCreateInfo{};
         lAttachmentCreateInfo.mType        = eAttachmentType::COLOR;
         lAttachmentCreateInfo.mFormat      = eColorFormat::RGBA8_UNORM;
-        lAttachmentCreateInfo.mClearColor  = { 1.0f, 0.0f, 0.0f, 1.0f };
+        lAttachmentCreateInfo.mClearColor  = { 0.0f, 0.0f, 0.0f, 1.0f };
         lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
         lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
         lAttachmentCreateInfo.mIsSampled   = true;
