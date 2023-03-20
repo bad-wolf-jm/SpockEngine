@@ -61,14 +61,11 @@ namespace SE::OtdrEditor
 
                 // mEventOverview.SetData( lPhysicalEvent, lAttributes );
 
-                mTracePlot.SetEventData( mLinkElementTable->GetElementsByIndex( aElement.mLinkIndex ) );
+                // mTracePlot.SetEventData( mLinkElementTable->GetElementsByIndex( aElement.mLinkIndex ) );
+                mTracePlot.SetEventData( aElement );
             } );
 
-        mTestFailResultTable->OnElementClicked(
-            [&]( sTestFailElement const &aElement )
-            {
-                LoadIOlmData(aElement.mFilename);
-            } );
+        mTestFailResultTable->OnElementClicked( [&]( sTestFailElement const &aElement ) { LoadIOlmData( aElement.mFilename ); } );
     }
 
     OtdrWindow::OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )

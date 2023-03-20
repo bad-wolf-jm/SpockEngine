@@ -54,34 +54,77 @@ namespace SE::OtdrEditor
         }
     }
 
-    void UILinkElementTracePlot::SetEventData( sLinkElement &lEventDataVector )
+    void UILinkElementTracePlot::SetEventData( sLinkElement const &aLinkElement )
     {
         static auto &lSinglePulseTraceClass = MonoRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
-        
+
         Clear();
 
-        auto lTrace   = MonoScriptInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), lEventDataVector.mPeakTrace );
+        auto lTrace   = MonoScriptInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), aLinkElement.mPeakTrace );
         auto lSamples = lTrace.GetPropertyValue<MonoObject *>( "Samples" );
         auto lDeltaX  = lTrace.GetPropertyValue<double>( "SamplingPeriod" );
         auto lPlot    = New<sFloat64LinePlot>();
 
-        lPlot->mY = AsVector<double>( lSamples );
-        lPlot->mX = std::vector<double>( lPlot->mY.size() );
-        for( uint32_t i = 0; i < lPlot->mX.size(); i++ ) lPlot->mX[i] = i * lDeltaX;
+        static const double lSpeedOfLight = 299792458.0;
+        lPlot->mY                         = AsVector<double>( lSamples );
+        lPlot->mX                         = std::vector<double>( lPlot->mY.size() );
+        for( uint32_t i = 0; i < lPlot->mX.size(); i++ )
+        {
+            lPlot->mX[i] = ( i * lDeltaX ) * lSpeedOfLight * 0.5 * 0.001;
+        }
 
         Add( lPlot );
+
+        static auto &lBaseLinkElementClass  = MonoRuntime::GetClassType( "Metrino.Olm.BaseLinkElement" );
+        static auto &lOlmPhysicalEventClass = MonoRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
+        static auto &lOlmAttributeClass     = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
+
+        auto lLinkElement = MonoScriptInstance( &lBaseLinkElementClass, lBaseLinkElementClass.Class(), aLinkElement.mLinkElement );
+        auto lPhysicalEvent =
+            MonoScriptInstance( &lOlmPhysicalEventClass, lOlmPhysicalEventClass.Class(), aLinkElement.mPhysicalEvent );
+        auto lAttributes = MonoScriptInstance( &lOlmAttributeClass, lOlmAttributeClass.Class(), aLinkElement.mAttributes );
+
+        auto lOtdrPhysicalEvent = lPhysicalEvent.GetPropertyValue( "PhysicalEvent", "Metrino.Otdr.PhysicalEvent" );
+        auto lEventSpanStart    = lOtdrPhysicalEvent->GetPropertyValue<double>( "CursorA" ) * 0.001f;
+        auto lEventSpanEnd      = lOtdrPhysicalEvent->GetPropertyValue<double>( "CursorB" ) * 0.001f;
+        auto lElementPosition   = lLinkElement.GetPropertyValue<double>( "Position" ) * 0.001f;
+
+        Add( New<sVLine>( std::vector<double>{ lEventSpanStart, lEventSpanEnd } ) );
+        Add( New<sVLine>( std::vector<double>{ lElementPosition } ) );
+
+        auto lPreviousRbs        = lAttributes.GetPropertyValue( "PreviousRbs", "Metrino.Olm.SignalProcessing.RbsAttribute" );
+        auto lPreviousRbsLsaData = lPreviousRbs->GetPropertyValue( "Lsa", "Metrino.Olm.SignalProcessing.RbsLsa" );
+        auto lPreviousRbsSlope   = lPreviousRbsLsaData->GetPropertyValue<double>( "Slope" );
+        auto lPreviousRbsOffset  = lPreviousRbsLsaData->GetPropertyValue<double>( "Offset" );
+        auto lPreviousRbsPlot    = New<sFloat64LinePlot>();
+        auto lPreviousX0         = lPreviousRbsLsaData->GetPropertyValue<double>( "StartPosition" );
+        auto lPreviousX1         = lPreviousRbsLsaData->GetPropertyValue<double>( "EndPosition" );
+        lPreviousRbsPlot->mX     = std::vector<double>{ lPreviousX0 * 0.001, lPreviousX1 * 0.001 };
+        lPreviousRbsPlot->mY =
+            std::vector<double>{ lPreviousRbsOffset, ( lPreviousX1 - lPreviousX0 ) * lPreviousRbsSlope + lPreviousRbsOffset };
+        Add( lPreviousRbsPlot );
+
+        auto lNextRbs        = lAttributes.GetPropertyValue( "NextRbs", "Metrino.Olm.SignalProcessing.RbsAttribute" );
+        auto lNextRbsLsaData = lNextRbs->GetPropertyValue( "Lsa", "Metrino.Olm.SignalProcessing.RbsLsa" );
+        auto lNextRbsSlope   = lNextRbsLsaData->GetPropertyValue<double>( "Slope" );
+        auto lNextRbsOffset  = lNextRbsLsaData->GetPropertyValue<double>( "Offset" );
+        auto lNextRbsPlot    = New<sFloat64LinePlot>();
+        auto lNextX0         = lNextRbsLsaData->GetPropertyValue<double>( "StartPosition" );
+        auto lNextX1         = lNextRbsLsaData->GetPropertyValue<double>( "EndPosition" );
+        lNextRbsPlot->mX     = std::vector<double>{ lNextX0 * 0.001, lNextX1 * 0.001 };
+        lNextRbsPlot->mY     = std::vector<double>{ lNextRbsOffset, ( lNextX1 - lNextX0 ) * lNextRbsSlope + lNextRbsOffset };
+        Add( lNextRbsPlot );
     }
 
-    void UILinkElementTracePlot::SetEventData( std::vector<sLinkElement> &lEventDataVector )
+    void UILinkElementTracePlot::SetEventData( std::vector<sLinkElement> &aLinkElement )
     {
         static auto &lSinglePulseTraceClass = MonoRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
 
         Clear();
 
-        for( int i = 0; i < lEventDataVector.size(); i++ )
+        for( int i = 0; i < aLinkElement.size(); i++ )
         {
-            auto lTrace =
-                MonoScriptInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), lEventDataVector[i].mPeakTrace );
+            auto lTrace = MonoScriptInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), aLinkElement[i].mPeakTrace );
             if( lTrace.GetInstance() == nullptr ) continue;
 
             auto lSamples = lTrace.GetPropertyValue<MonoObject *>( "Samples" );
