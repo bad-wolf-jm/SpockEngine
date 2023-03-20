@@ -6,6 +6,8 @@
 #include <iostream>
 #include <locale>
 
+#include "pugixml.hpp"
+
 #include "Core/Profiling/BlockTimer.h"
 
 #include "UI/Widgets.h"
@@ -53,13 +55,13 @@ namespace SE::OtdrEditor
                 static auto &lOlmMeasurementClass = MonoRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
                 static auto &lOlmAttributeClass = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
 
-                auto lPhysicalEvent = New<MonoScriptInstance>( &lOlmMeasurementClass, lOlmMeasurementClass.Class(),
-                                                               aElement.mPhysicalEvent );
-                auto lAttributes    = New<MonoScriptInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), aElement.mAttributes );
+                auto lPhysicalEvent =
+                    New<MonoScriptInstance>( &lOlmMeasurementClass, lOlmMeasurementClass.Class(), aElement.mPhysicalEvent );
+                auto lAttributes = New<MonoScriptInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), aElement.mAttributes );
 
                 mEventOverview.SetData( lPhysicalEvent, lAttributes );
 
-                mTracePlot.SetEventData( mLinkElementTable->GetElementsByIndex(aElement.mLinkIndex));
+                mTracePlot.SetEventData( mLinkElementTable->GetElementsByIndex( aElement.mLinkIndex ) );
             } );
     }
 
@@ -67,8 +69,9 @@ namespace SE::OtdrEditor
         : mGraphicContext{ aGraphicContext }
         , mUIOverlay{ aUIOverlay }
     {
-        mLinkElementTable = New<UILinkElementTable>();
-        mEventTable = New<UIMultiPulseEventTable>();
+        mLinkElementTable    = New<UILinkElementTable>();
+        mEventTable          = New<UIMultiPulseEventTable>();
+        mTestFailResultTable = New<UITestFailResultTable>();
     }
 
     bool OtdrWindow::Display()
@@ -159,6 +162,12 @@ namespace SE::OtdrEditor
                 pOpen         = true;
             }
         }
+
+        if( ImGui::Begin( "Test results", NULL, ImGuiWindowFlags_None ) )
+        {
+            mTestFailResultTable->Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+        }
+        ImGui::End();
 
         if( ImGui::Begin( "CONNECTED MODULES", NULL, ImGuiWindowFlags_None ) )
         {
@@ -357,7 +366,7 @@ namespace SE::OtdrEditor
         MonoObject *lLinkElementData   = mDataInstance->CallMethod( "GetLinkElements", &lReanalyze );
         auto        lLinkElementVector = AsVector<sLinkElement>( lLinkElementData );
         mLinkElementTable->SetData( lLinkElementVector );
-        mTracePlot.SetEventData(lLinkElementVector);
+        mTracePlot.SetEventData( lLinkElementVector );
 
         // bool        lReanalyze         = false;
         // MonoObject *lEventData   = mDataInstance->CallMethod( "GetEvents" );
@@ -370,10 +379,53 @@ namespace SE::OtdrEditor
         auto         lPhysicalEvent =
             New<MonoScriptInstance>( &lOlmMeasurementClass, lOlmMeasurementClass.Class(), lLinkElementVector[0].mPhysicalEvent );
 
-        // static auto &lOlmAttributeClass = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
-        // auto         lAttributes =
-        //     New<MonoScriptInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), lLinkElementVector[0].mAttributes );
-        // mEventOverview.SetData( lPhysicalEvent, lAttributes );
+        static auto &lOlmAttributeClass = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
+        auto         lAttributes =
+            New<MonoScriptInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), lLinkElementVector[0].mAttributes );
+        mEventOverview.SetData( lPhysicalEvent, lAttributes );
+    }
+
+    void OtdrWindow::LoadTestReport( fs::path aPath )
+    {
+        pugi::xml_document     doc;
+        pugi::xml_parse_result result = doc.load_file( aPath.c_str() );
+
+        mTestFailResultTable->Clear();
+
+        if( !result ) return;
+
+        std::vector<sTestFailElement> lTableRows;
+        auto                          lRoot     = doc.child( "TestDataFailInfo" );
+        auto                          lTestName = lRoot.child( "TestName" ).child_value();
+        auto                          lTestDate = lRoot.child( "DateString" ).child_value();
+
+        auto lFailesFileList = lRoot.child( "FailedFiles" );
+        for( pugi::xml_node lInfo : lFailesFileList.children( "FailedFileInfo" ) )
+        {
+            // auto  lInfo     = lFailedFile.child( "FailedFileInfo" );
+            auto *lFileName = lInfo.child( "Filename" ).child_value();
+
+            for( pugi::xml_node lFailInfo : lInfo.children( "FailInfos" ) )
+            {
+                auto  lFail    = lFailInfo.child( "FailInfo" );
+                auto &lNewData = lTableRows.emplace_back();
+
+                lNewData.mFilename              = std::string( lFileName );
+                lNewData.mLinkElementIndex      = std::string( lFail.child( "LinkElementIndex" ).child_value() );
+                lNewData.mSubLinkElementIndex   = std::string( lFail.child( "SubLinkElementIndex" ).child_value() );
+                lNewData.mPhysicalEventIndex    = std::string( lFail.child( "PhysicalEventIndex" ).child_value() );
+                lNewData.mLinkElementPosition   = std::string( lFail.child( "LinkElementPosition" ).child_value() );
+                lNewData.mIsSubElement          = std::string( lFail.child( "IsSubElement" ).child_value() );
+                lNewData.mWavelength            = std::string( lFail.child( "Wavelength" ).child_value() );
+                lNewData.mPhysicalEventPosition = std::string( lFail.child( "PhysicalEventPosition" ).child_value() );
+                lNewData.mSinglePulseTraceIndex = std::string( lFail.child( "SinglePulseTraceIndex" ).child_value() );
+                lNewData.mMessage               = std::string( lFail.child( "Message" ).child_value() );
+                // lNewData.mIsChecked             = std::string( lFail.child( "IsChecked" ).child_value() );
+                // lNewData.mFlag                  = std::string( lFail.child( "Flag" ).child_value() );
+            }
+        }
+
+        mTestFailResultTable->SetData( lTableRows );
     }
 
     bool OtdrWindow::RenderMainMenu()
@@ -397,6 +449,14 @@ namespace SE::OtdrEditor
                                                         "OLM Files (*.iolm)\0*.iolm\0All Files (*.*)\0*.*\0" );
 
                 LoadIOlmData( fs::path( lFilePath.value() ) );
+            }
+
+            if( UI::MenuItem( fmt::format( "{} Load test report", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
+            {
+                auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
+                                                        "XML Files (*.xml)\0*.xml\0All Files (*.*)\0*.*\0" );
+
+                LoadTestReport( fs::path( lFilePath.value() ) );
             }
 
             if( UI::MenuItem( fmt::format( "{} Save", ICON_FA_ARCHIVE ).c_str(), NULL ) )
