@@ -62,8 +62,10 @@ namespace SE::OtdrEditor
 
     void OtdrWindow::ConfigureUI()
     {
-        // mTestDialog = New<UIDialog>( "Test", math::vec2{ 640, 480 } );
-        // mWorkspaceArea.ConfigureUI();
+        mTestFigure = New<Figure>( mGraphicContext );
+        mTestFigure->ResizeOutput( 10, 10 );
+
+        mWorkspaceArea.ConfigureUI();
         // mLinkElementTable->OnElementClicked(
         //     [&]( sLinkElement const &aElement )
         //     {
@@ -134,6 +136,8 @@ namespace SE::OtdrEditor
 
     bool OtdrWindow::Display()
     {
+        mTestFigure->Render();
+
         ImGuizmo::SetOrthographic( false );
         static bool                  p_open          = true;
         constexpr ImGuiDockNodeFlags lDockSpaceFlags = ImGuiDockNodeFlags_PassthruCentralNode;
@@ -177,11 +181,39 @@ namespace SE::OtdrEditor
 
         // mWorkspaceArea.Update();
 
-        // if( ImGui::Begin( "WS", NULL, ImGuiWindowFlags_None ) )
-        // {
-        //     mDocumentArea.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
-        // }
-        // ImGui::End();
+        if( ImGui::Begin( "Test Figure", NULL, ImGuiWindowFlags_None ) )
+        {
+            auto lSize = ImGui::GetContentRegionAvail();
+            if( ( lSize.x != mFigureSize.x ) || ( lSize.y != mFigureSize.y ) )
+            {
+                mFigureSize = lSize;
+                mTestFigure->ResizeOutput( std::max( lSize.x, 1.0f ), std::max( lSize.y, 1.0f ) );
+
+                sTextureSamplingInfo lSamplingInfo{};
+                lSamplingInfo.mNormalizedCoordinates = true;
+                lSamplingInfo.mNormalizedValues      = true;
+                mFigureTexture = New<VkSampler2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(), mTestFigure->GetOutputImage(),
+                                                   lSamplingInfo );
+
+                if( !mSceneViewport.Handle )
+                {
+                    mSceneViewport = SE::Core::Engine::GetInstance()->UIContext()->CreateTextureHandle( mFigureTexture );
+                }
+                else
+                {
+                    mSceneViewport.Handle->Write( mFigureTexture,0 );
+                }
+            }
+
+            UI::Image( mSceneViewport, math::vec2{mFigureSize.x, mFigureSize.y} );
+        }
+        ImGui::End();
+
+        if( ImGui::Begin( "ASSEMBLIES", NULL, ImGuiWindowFlags_None ) )
+        {
+            DotNetRuntime::DisplayAssemblies();
+        }
+        ImGui::End();
 
         // mTestDialog->Update();
 

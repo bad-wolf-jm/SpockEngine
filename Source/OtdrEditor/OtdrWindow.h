@@ -28,6 +28,8 @@
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/UI.h"
 
+#include "Plotting/Figure.h"
+
 #include "AcquisitionData.h"
 #include "DotNet/Instance.h"
 #include "Editor/ContentBrowser.h"
@@ -123,6 +125,8 @@ namespace SE::OtdrEditor
 
         UIMenu mMainMenu;
 
+        Ref<Figure> mTestFigure;
+
       private:
         // OtdrWorkspaceWindow mWorkspaceArea;
         MonoClassHierarchy  mMonoClasses;
@@ -144,5 +148,9 @@ namespace SE::OtdrEditor
         // SimulationState mState       = SimulationState::EDIT;
         // fs::path        mCurrentPath = "";
         bool            mRequestQuit = false;
+
+        Ref<VkSampler2D> mFigureTexture = nullptr;
+        ImageHandle      mSceneViewport{};
+        ImVec2           mFigureSize{};
     };
 } // namespace SE::OtdrEditor
