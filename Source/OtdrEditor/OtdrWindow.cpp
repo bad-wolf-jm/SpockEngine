@@ -387,45 +387,51 @@ namespace SE::OtdrEditor
 
     void OtdrWindow::LoadTestReport( fs::path aPath )
     {
-        pugi::xml_document     doc;
-        pugi::xml_parse_result result = doc.load_file( aPath.c_str() );
-
         mTestFailResultTable->Clear();
 
-        if( !result ) return;
-
         std::vector<sTestFailElement> lTableRows;
-        auto                          lRoot     = doc.child( "TestDataFailInfo" );
-        auto                          lTestName = lRoot.child( "TestName" ).child_value();
-        auto                          lTestDate = lRoot.child( "DateString" ).child_value();
 
-        auto lFailesFileList = lRoot.child( "FailedFiles" );
-        for( pugi::xml_node lInfo : lFailesFileList.children( "FailedFileInfo" ) )
+        for (auto const& lFile : std::filesystem::directory_iterator(aPath))
         {
-            // auto  lInfo     = lFailedFile.child( "FailedFileInfo" );
-            auto *lFileName = lInfo.child( "Filename" ).child_value();
+            pugi::xml_document     doc;
+            pugi::xml_parse_result result = doc.load_file( lFile.path().c_str() );
 
-            for( pugi::xml_node lFailInfo : lInfo.children( "FailInfos" ) )
+
+            if( !result ) continue;
+
+            auto                          lRoot     = doc.child( "TestDataFailInfo" );
+            auto                          lTestName = lRoot.child( "TestName" ).child_value();
+            auto                          lTestDate = lRoot.child( "DateString" ).child_value();
+
+            auto lFailesFileList = lRoot.child( "FailedFiles" );
+            for( pugi::xml_node lInfo : lFailesFileList.children( "FailedFileInfo" ) )
             {
-                auto  lFail    = lFailInfo.child( "FailInfo" );
-                auto &lNewData = lTableRows.emplace_back();
+                // auto  lInfo     = lFailedFile.child( "FailedFileInfo" );
+                auto *lFileName = lInfo.child( "Filename" ).child_value();
 
-                lNewData.mTestName              = std::string( lTestName );
-                lNewData.mTestDate              = std::string( lTestDate );
-                lNewData.mFilename              = std::string( lFileName );
-                lNewData.mLinkElementIndex      = std::string( lFail.child( "LinkElementIndex" ).child_value() );
-                lNewData.mSubLinkElementIndex   = std::string( lFail.child( "SubLinkElementIndex" ).child_value() );
-                lNewData.mPhysicalEventIndex    = std::string( lFail.child( "PhysicalEventIndex" ).child_value() );
-                lNewData.mLinkElementPosition   = std::stod( lFail.child( "LinkElementPosition" ).child_value() );
-                lNewData.mIsSubElement          = std::string( lFail.child( "IsSubElement" ).child_value() );
-                lNewData.mWavelength            = std::stod( lFail.child( "Wavelength" ).child_value() );
-                lNewData.mPhysicalEventPosition = std::stod( lFail.child( "PhysicalEventPosition" ).child_value() );
-                lNewData.mSinglePulseTraceIndex = std::string( lFail.child( "SinglePulseTraceIndex" ).child_value() );
-                lNewData.mMessage               = std::string( lFail.child( "Message" ).child_value() );
-                // lNewData.mIsChecked             = std::string( lFail.child( "IsChecked" ).child_value() );
-                // lNewData.mFlag                  = std::string( lFail.child( "Flag" ).child_value() );
+                for( pugi::xml_node lFailInfo : lInfo.children( "FailInfos" ) )
+                {
+                    auto  lFail    = lFailInfo.child( "FailInfo" );
+                    auto &lNewData = lTableRows.emplace_back();
+
+                    lNewData.mTestName              = std::string( lTestName );
+                    lNewData.mTestDate              = std::string( lTestDate );
+                    lNewData.mFilename              = std::string( lFileName );
+                    lNewData.mLinkElementIndex      = std::string( lFail.child( "LinkElementIndex" ).child_value() );
+                    lNewData.mSubLinkElementIndex   = std::string( lFail.child( "SubLinkElementIndex" ).child_value() );
+                    lNewData.mPhysicalEventIndex    = std::string( lFail.child( "PhysicalEventIndex" ).child_value() );
+                    lNewData.mLinkElementPosition   = std::stod( lFail.child( "LinkElementPosition" ).child_value() );
+                    lNewData.mIsSubElement          = std::string( lFail.child( "IsSubElement" ).child_value() );
+                    lNewData.mWavelength            = std::stod( lFail.child( "Wavelength" ).child_value() );
+                    lNewData.mPhysicalEventPosition = std::stod( lFail.child( "PhysicalEventPosition" ).child_value() );
+                    lNewData.mSinglePulseTraceIndex = std::string( lFail.child( "SinglePulseTraceIndex" ).child_value() );
+                    lNewData.mMessage               = std::string( lFail.child( "Message" ).child_value() );
+                    // lNewData.mIsChecked             = std::string( lFail.child( "IsChecked" ).child_value() );
+                    // lNewData.mFlag                  = std::string( lFail.child( "Flag" ).child_value() );
+                }
             }
         }
+
 
         mTestFailResultTable->SetData( lTableRows );
     }
@@ -458,7 +464,7 @@ namespace SE::OtdrEditor
                 auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
                                                         "XML Files (*.xml)\0*.xml\0All Files (*.*)\0*.*\0" );
 
-                LoadTestReport( fs::path( lFilePath.value() ) );
+                LoadTestReport( fs::path( lFilePath.value() ).parent_path() );
             }
 
             if( UI::MenuItem( fmt::format( "{} Save", ICON_FA_ARCHIVE ).c_str(), NULL ) )
