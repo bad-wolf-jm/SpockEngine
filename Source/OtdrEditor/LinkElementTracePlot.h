@@ -31,7 +31,7 @@ namespace SE::OtdrEditor
         ~UILinkElementTracePlot() = default;
 
         void SetData( std::vector<MonoObject *> &lTraceDataVector );
-        void SetEventData( sLinkElement &lEventDataVector );
+        void SetEventData( sLinkElement const &lEventDataVector );
         void SetEventData( std::vector<sLinkElement> &lEventDataVector );
     };
 } // namespace SE::OtdrEditor
