@@ -106,7 +106,18 @@ namespace SE::OtdrEditor
             mLossColumn->mData.push_back( lPhysicalEvent.GetPropertyValue<double>( "Loss" ) );
             mEstimatedLossColumn->mData.push_back( lAttributes->GetPropertyValue<double>( "EstimatedLoss" ) );
             mReflectanceColumn->mData.push_back( lPhysicalEvent.GetPropertyValue<double>( "Reflectance" ) );
-            mWavelengthColumn->mData.push_back( lPeakTrace->GetPropertyValue<double>( "Wavelength" ) * 1e9 );
+
+            if (*lPeakTrace)
+            {
+                mPeakPulseWidth->mData.push_back( lPeakTrace->GetPropertyValue<double>( "Pulse" ) * 1e9 );
+                mWavelengthColumn->mData.push_back( lPeakTrace->GetPropertyValue<double>( "Wavelength" ) * 1e9 );
+            }
+            else
+            {
+                mPeakPulseWidth->mData.push_back( nan("") );
+                mWavelengthColumn->mData.push_back( nan("") );
+            }
+
             mCursorAColumn->mData.push_back( lPhysicalEvent.GetPropertyValue<double>( "CursorA" ) );
             mCursorBColumn->mData.push_back( lPhysicalEvent.GetPropertyValue<double>( "CursorB" ) );
             mSubCursorAColumn->mData.push_back( lPhysicalEvent.GetPropertyValue<double>( "SubCursorA" ) );
@@ -117,7 +128,6 @@ namespace SE::OtdrEditor
             mEstimatedCurveLevelColumn->mData.push_back( lAttributes->GetPropertyValue<double>( "EstimatedCurveLevel" ) );
             mEstimatedEndLevelColumn->mData.push_back( lAttributes->GetPropertyValue<double>( "EstimatedEndLevel" ) );
             mEndNoiseLevelColumn->mData.push_back( lAttributes->GetPropertyValue<double>( "EndNoiseLevel" ) );
-            mPeakPulseWidth->mData.push_back( lPeakTrace->GetPropertyValue<double>( "Pulse" ) * 1e9 );
             mPeakPower->mData.push_back( lAttributes->GetPropertyValue<double>( "PeakPower" ) );
             mPeakSNR->mData.push_back( lAttributes->GetPropertyValue<double>( "PeakSnr" ) );
         }

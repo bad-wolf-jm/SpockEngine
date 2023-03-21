@@ -115,7 +115,7 @@ namespace SE::OtdrEditor
         {
             auto lPreviousRbs        = lAttributes.GetPropertyValue( "PreviousRbs", "Metrino.Olm.SignalProcessing.RbsAttribute" );
             auto lPreviousRbsLsaData = lPreviousRbs->GetPropertyValue( "Lsa", "Metrino.Olm.SignalProcessing.RbsLsa" );
-            if( lPreviousRbsLsaData )
+            if( *lPreviousRbsLsaData )
             {
                 auto lPreviousRbsSlope  = lPreviousRbsLsaData->GetPropertyValue<double>( "Slope" );
                 auto lPreviousRbsOffset = lPreviousRbsLsaData->GetPropertyValue<double>( "Offset" );
@@ -133,7 +133,7 @@ namespace SE::OtdrEditor
 
             auto lNextRbs        = lAttributes.GetPropertyValue( "NextRbs", "Metrino.Olm.SignalProcessing.RbsAttribute" );
             auto lNextRbsLsaData = lNextRbs->GetPropertyValue( "Lsa", "Metrino.Olm.SignalProcessing.RbsLsa" );
-            if( lNextRbsLsaData )
+            if( *lNextRbsLsaData )
             {
                 auto lNextRbsSlope  = lNextRbsLsaData->GetPropertyValue<double>( "Slope" );
                 auto lNextRbsOffset = lNextRbsLsaData->GetPropertyValue<double>( "Offset" );
@@ -156,7 +156,7 @@ namespace SE::OtdrEditor
 
             auto lPreviousRbs        = lAttributes.GetPropertyValue( "PreviousRbs", "Metrino.Olm.SignalProcessing.RbsAttribute" );
             auto lPreviousRbsLsaData = lPreviousRbs->GetPropertyValue( "Lsa", "Metrino.Olm.SignalProcessing.RbsLsa" );
-            if( lPreviousRbsLsaData )
+            if( *lPreviousRbsLsaData )
             {
                 mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMin =
                     lPreviousRbsLsaData->GetPropertyValue<double>( "StartPosition" ) * 0.001;
@@ -164,7 +164,7 @@ namespace SE::OtdrEditor
 
             auto lNextRbs        = lAttributes.GetPropertyValue( "NextRbs", "Metrino.Olm.SignalProcessing.RbsAttribute" );
             auto lNextRbsLsaData = lNextRbs->GetPropertyValue( "Lsa", "Metrino.Olm.SignalProcessing.RbsLsa" );
-            if( lNextRbsLsaData )
+            if( *lNextRbsLsaData )
             {
                 mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMax =
                     lNextRbsLsaData->GetPropertyValue<double>( "EndPosition" ) * 0.001;
@@ -190,7 +190,7 @@ namespace SE::OtdrEditor
                         lAxisMaxSet ? std::max( static_cast<float>( lPlot->mY[i] ),
                                                 mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMax )
                                     : static_cast<float>( lPlot->mY[i] );
-                                    
+
                     lAxisMinSet = true;
                     lAxisMaxSet = true;
                 }
