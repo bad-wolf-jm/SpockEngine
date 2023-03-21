@@ -30,6 +30,7 @@ namespace SE::Core
     struct sPlotData
     {
         std::string mLegend;
+        math::vec4  mColor = {0.0f, 0.0f, 0.0f, -1.0f};
 
         UIPlotAxis mXAxis = UIPlotAxis::X1;
         UIPlotAxis mYAxis = UIPlotAxis::Y1;
