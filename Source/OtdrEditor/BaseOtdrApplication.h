@@ -10,8 +10,6 @@
 #include "Core/GraphicContext//UI/UIContext.h"
 #include "Engine/Engine.h"
 
-#include "OtdrScene/OtdrScene.h"
-
 #include "TensorOps/Scope.h"
 
 #include "OtdrWindow.h"
@@ -44,19 +42,13 @@ namespace SE::OtdrEditor
 
         void Init();
 
-        // void RenderScene();
         void Update( Timestep ts );
         bool RenderUI( ImGuiIO &io );
-
-      protected:
-        // void RebuildOutputFramebuffer();
 
       protected:
         uint32_t mViewportHeight        = 1;
         uint32_t mViewportWidth         = 1;
         bool     mShouldRebuildViewport = true;
-
-        Ref<OtdrScene> mWorld = nullptr;
     };
 
-} // namespace SE::Editor
+} // namespace SE::OtdrEditor

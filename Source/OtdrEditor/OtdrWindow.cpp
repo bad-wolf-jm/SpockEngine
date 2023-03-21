@@ -12,17 +12,9 @@
 
 #include "UI/Widgets.h"
 
-#include "Scene/Components.h"
-#include "Scene/Importer/ObjImporter.h"
-#include "Scene/Importer/glTFImporter.h"
-
 #include "Core/CUDA/Texture/TextureData.h"
 #include "Core/File.h"
 #include "Core/Logging.h"
-
-#include "Scene/Components.h"
-#include "Scene/Serialize/AssetFile.h"
-#include "Scene/Serialize/FileIO.h"
 
 #include "Mono/MonoRuntime.h"
 
@@ -35,7 +27,7 @@ namespace SE::OtdrEditor
 {
 
     using namespace SE::Core;
-    using namespace SE::Core::EntityComponentSystem::Components;
+    // using namespace SE::Core::EntityComponentSystem::Components;
 
     static std::string UTF16ToAscii( const char *aPayloadData, size_t aSize )
     {
@@ -308,16 +300,6 @@ namespace SE::OtdrEditor
                     UI::Text( "{} ----> {} us", lEntry.first, lEntry.second );
                 }
             }
-            // Console( l_WindowConsoleSize.x, l_WindowConsoleSize.y );
-        }
-        ImGui::End();
-
-        if( ( ImGui::Begin( "SCENE HIERARCHY", &p_open, ImGuiWindowFlags_None ) ) )
-        {
-            auto lWindowPropertiesSize = UI::GetAvailableContentSpace();
-
-            mSceneHierarchyPanel.World = mActiveWorld;
-            mSceneHierarchyPanel.Display( lWindowPropertiesSize.x, lWindowPropertiesSize.y );
         }
         ImGui::End();
 
@@ -489,13 +471,6 @@ namespace SE::OtdrEditor
 
         if( ImGui::BeginMenu( "File" ) )
         {
-            if( UI::MenuItem( fmt::format( "{} Load", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
-            {
-                auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
-                                                        "YAML Files (*.yaml)\0*.yaml\0All Files (*.*)\0*.*\0" );
-                mWorld->Load( fs::path( lFilePath.value() ) );
-            }
-
             if( UI::MenuItem( fmt::format( "{} Load iOlm", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
             {
                 auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
@@ -511,34 +486,6 @@ namespace SE::OtdrEditor
 
                 LoadTestReport( fs::path( lFilePath.value() ).parent_path() );
             }
-
-            if( UI::MenuItem( fmt::format( "{} Save", ICON_FA_ARCHIVE ).c_str(), NULL ) )
-            {
-                if( mCurrentPath.empty() )
-                {
-                    auto lFilePath = FileDialogs::SaveFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
-                                                            "YAML Files (*.yaml)\0*.yaml\0All Files (*.*)\0*.*\0" );
-
-                    if( lFilePath.has_value() )
-                    {
-                        mCurrentPath = fs::path( lFilePath.value() );
-                        mWorld->SaveAs( mCurrentPath );
-                    }
-                }
-                else
-                {
-                    mWorld->SaveAs( mCurrentPath );
-                }
-            }
-
-            if( UI::MenuItem( fmt::format( "{} Save as...", ICON_FA_ARCHIVE ).c_str(), NULL ) )
-            {
-                auto lFilePath = FileDialogs::SaveFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
-                                                        "YAML Files (*.yaml)\0*.yaml\0All Files (*.*)\0*.*\0" );
-                mCurrentPath   = fs::path( lFilePath.value() );
-                mWorld->SaveAs( mCurrentPath );
-            }
-
             lRequestQuit = UI::MenuItem( fmt::format( "{} Exit", ICON_FA_WINDOW_CLOSE_O ).c_str(), NULL );
             ImGui::EndMenu();
         }
@@ -550,8 +497,6 @@ namespace SE::OtdrEditor
 
     void OtdrWindow::Update( Timestep aTs )
     {
-        mActiveWorld->Update( aTs );
-
         mWorkspaceArea.Tick();
 
         UpdateFramerate( aTs );
