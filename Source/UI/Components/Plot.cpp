@@ -77,9 +77,11 @@ namespace SE::Core
 
         ImPlot::SetAxes( static_cast<ImAxis>( mXAxis ), static_cast<ImAxis>( mYAxis ) );
 
+        if( mThickness != -1.0f ) ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
         ImPlot::PushStyleColor( ImPlotCol_Line, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w } );
         ImPlot::PlotLine( mLegend.c_str(), mX.data(), mY.data(), mX.size() / lDownSample, mOffset, sizeof( double ) * lDownSample );
         ImPlot::PopStyleColor();
+        if( mThickness != -1.0f ) ImPlot::PopStyleVar();
     }
 
     void sVLine::Render( UIPlot *aParentPlot )
@@ -87,10 +89,12 @@ namespace SE::Core
         auto lPlotName = fmt::format( "{}##{}", mLegend, static_cast<void *>( this ) );
 
         ImPlot::SetAxes( static_cast<ImAxis>( mXAxis ), static_cast<ImAxis>( mYAxis ) );
-        
+
+        if( mThickness != -1.0f ) ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
         ImPlot::PushStyleColor( ImPlotCol_Line, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w } );
         ImPlot::PlotVLines( lPlotName.c_str(), mX.data(), mX.size(), 0 );
         ImPlot::PopStyleColor();
+        if( mThickness != -1.0f ) ImPlot::PopStyleVar();
     }
 
 } // namespace SE::Core
