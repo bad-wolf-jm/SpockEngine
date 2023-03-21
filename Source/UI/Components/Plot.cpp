@@ -1,4 +1,5 @@
 #include "Plot.h"
+#include "implot_internal.h"
 
 namespace SE::Core
 {
@@ -50,7 +51,7 @@ namespace SE::Core
             mAxisConfiguration[static_cast<int>( lPlotElement->mYAxis )].mInUse = true;
         }
 
-        if( ImPlot::BeginPlot( "##", aSize, ImPlotFlags_Crosshairs | ImPlotFlags_NoChild | ImPlotFlags_AntiAliased) )
+        if( ImPlot::BeginPlot( "##", aSize, ImPlotFlags_Crosshairs | ImPlotFlags_NoChild | ImPlotFlags_AntiAliased ) )
         {
             for( auto const &lAxis : mAxisConfiguration )
             {
@@ -75,7 +76,10 @@ namespace SE::Core
         lDownSample     = ( lDownSample < 1 ) ? 1 : lDownSample;
 
         ImPlot::SetAxes( static_cast<ImAxis>( mXAxis ), static_cast<ImAxis>( mYAxis ) );
+
+        ImPlot::PushStyleColor( ImPlotCol_Line, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w } );
         ImPlot::PlotLine( mLegend.c_str(), mX.data(), mY.data(), mX.size() / lDownSample, mOffset, sizeof( double ) * lDownSample );
+        ImPlot::PopStyleColor();
     }
 
     void sVLine::Render( UIPlot *aParentPlot )
@@ -83,9 +87,10 @@ namespace SE::Core
         auto lPlotName = fmt::format( "{}##{}", mLegend, static_cast<void *>( this ) );
 
         ImPlot::SetAxes( static_cast<ImAxis>( mXAxis ), static_cast<ImAxis>( mYAxis ) );
-
+        
+        ImPlot::PushStyleColor( ImPlotCol_Line, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w } );
         ImPlot::PlotVLines( lPlotName.c_str(), mX.data(), mX.size(), 0 );
-
+        ImPlot::PopStyleColor();
     }
 
 } // namespace SE::Core
