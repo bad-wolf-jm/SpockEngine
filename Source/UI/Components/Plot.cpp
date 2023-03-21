@@ -50,7 +50,7 @@ namespace SE::Core
             mAxisConfiguration[static_cast<int>( lPlotElement->mYAxis )].mInUse = true;
         }
 
-        if( ImPlot::BeginPlot( "##", aSize, ImPlotFlags_Crosshairs | ImPlotFlags_NoChild ) )
+        if( ImPlot::BeginPlot( "##", aSize, ImPlotFlags_Crosshairs | ImPlotFlags_NoChild | ImPlotFlags_AntiAliased) )
         {
             for( auto const &lAxis : mAxisConfiguration )
             {
