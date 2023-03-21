@@ -190,6 +190,7 @@ namespace SE::OtdrEditor
                         lAxisMaxSet ? std::max( static_cast<float>( lPlot->mY[i] ),
                                                 mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMax )
                                     : static_cast<float>( lPlot->mY[i] );
+                                    
                     lAxisMinSet = true;
                     lAxisMaxSet = true;
                 }
