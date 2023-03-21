@@ -61,6 +61,7 @@ namespace SE::OtdrEditor
         Ref<sStringColumn>  mEventSpan;
         Ref<sFloat64Column> mPositionTolerance;
         Ref<sFloat64Column> mLossError;
+        Ref<sFloat64Column> mPeakPower;
 
         std::vector<sLinkElement> mEventDataVector;
 

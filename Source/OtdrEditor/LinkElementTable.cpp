@@ -61,6 +61,9 @@ namespace SE::OtdrEditor
         mLossError = New<sFloat64Column>( "Loss Error", 75.0f, "{:.5f} dB", "N.a.N." );
         AddColumn( mLossError );
 
+        mPeakPower = New<sFloat64Column>( "Peak power", 75.0f, "{:.2f} dB", "N.a.N." );
+        AddColumn( mPeakPower );
+
         UITable::OnRowClicked(
             [&]( uint32_t aRow )
             {
@@ -152,6 +155,7 @@ namespace SE::OtdrEditor
             mPositionTolerance->mData.push_back( lPhysicalEvent.GetPropertyValue<double>( "PositionTolerance" ) );
 
             mLossError->mData.push_back( lAttributes.GetPropertyValue<double>( "LossError" ) );
+            mPeakPower->mData.push_back( lAttributes.GetPropertyValue<double>( "PeakPower" ) );
         }
     }
 
