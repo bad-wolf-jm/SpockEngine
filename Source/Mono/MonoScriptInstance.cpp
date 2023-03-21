@@ -47,6 +47,7 @@ namespace SE::Core
     Ref<MonoScriptInstance> MonoScriptInstance::GetPropertyValue( std::string const &aName, std::string const &aClassName )
     {
         if( mScriptClass == nullptr ) return nullptr;
+        if( mInstance == nullptr ) return nullptr;
 
         sScriptProperty &aProperty       = mScriptClass->GetProperty( aName );
         MonoMethod      *lPropertyGetter = mono_property_get_get_method( aProperty.mProperty );
