@@ -60,19 +60,28 @@ namespace SE::OtdrEditor
 
         auto lTrace = MonoScriptInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), aLinkElement.mPeakTrace );
         if( !lTrace ) return;
-        
+
         auto lSamples = lTrace.GetPropertyValue<MonoObject *>( "Samples" );
         auto lDeltaX  = lTrace.GetPropertyValue<double>( "SamplingPeriod" );
-        auto lPlot    = New<sFloat64LinePlot>();
+
+        // auto lDeltaX  = lTrace.GetPropertyValue<double>( "SamplingPeriod" );
+        auto lPlot = New<sFloat64LinePlot>();
 
         static const double lSpeedOfLight = 299792458.0;
 
         lPlot->mY = AsVector<double>( lSamples );
         lPlot->mX = std::vector<double>( lPlot->mY.size() );
+
+        uint32_t lFirst         = 0;
+        auto     lStartPosition = lTrace.CallMethod( "ConvertSampleIndexToPosition", &lFirst );
+        double   lX0            = *(double *)mono_object_unbox( lStartPosition );
+
+        uint32_t lLast        = lPlot->mY.size() - 1;
+        auto     lEndPosition = lTrace.CallMethod( "ConvertSampleIndexToPosition", &lLast );
+        double   lX1          = *(double *)mono_object_unbox( lEndPosition );
+
         for( uint32_t i = 0; i < lPlot->mX.size(); i++ )
-        {
-            lPlot->mX[i] = ( i * lDeltaX ) * lSpeedOfLight * 0.5 * 0.001;
-        }
+            lPlot->mX[i] = ( ( static_cast<float>( i ) / static_cast<float>( lLast ) ) * ( lX1 - lX0 ) + lX0 ) * 0.001;
 
         Add( lPlot );
 
@@ -95,26 +104,31 @@ namespace SE::OtdrEditor
 
         auto lPreviousRbs        = lAttributes.GetPropertyValue( "PreviousRbs", "Metrino.Olm.SignalProcessing.RbsAttribute" );
         auto lPreviousRbsLsaData = lPreviousRbs->GetPropertyValue( "Lsa", "Metrino.Olm.SignalProcessing.RbsLsa" );
-        auto lPreviousRbsSlope   = lPreviousRbsLsaData->GetPropertyValue<double>( "Slope" );
-        auto lPreviousRbsOffset  = lPreviousRbsLsaData->GetPropertyValue<double>( "Offset" );
-        auto lPreviousRbsPlot    = New<sFloat64LinePlot>();
-        auto lPreviousX0         = lPreviousRbsLsaData->GetPropertyValue<double>( "StartPosition" );
-        auto lPreviousX1         = lPreviousRbsLsaData->GetPropertyValue<double>( "EndPosition" );
-        lPreviousRbsPlot->mX     = std::vector<double>{ lPreviousX0 * 0.001, lPreviousX1 * 0.001 };
-        lPreviousRbsPlot->mY =
-            std::vector<double>{ lPreviousRbsOffset, ( lPreviousX1 - lPreviousX0 ) * lPreviousRbsSlope + lPreviousRbsOffset };
-        Add( lPreviousRbsPlot );
-
+        if( lPreviousRbsLsaData )
+        {
+            auto lPreviousRbsSlope  = lPreviousRbsLsaData->GetPropertyValue<double>( "Slope" );
+            auto lPreviousRbsOffset = lPreviousRbsLsaData->GetPropertyValue<double>( "Offset" );
+            auto lPreviousRbsPlot   = New<sFloat64LinePlot>();
+            auto lPreviousX0        = lPreviousRbsLsaData->GetPropertyValue<double>( "StartPosition" );
+            auto lPreviousX1        = lPreviousRbsLsaData->GetPropertyValue<double>( "EndPosition" );
+            lPreviousRbsPlot->mX    = std::vector<double>{ lPreviousX0 * 0.001, lPreviousX1 * 0.001 };
+            lPreviousRbsPlot->mY =
+                std::vector<double>{ lPreviousRbsOffset, ( lPreviousX1 - lPreviousX0 ) * lPreviousRbsSlope + lPreviousRbsOffset };
+            Add( lPreviousRbsPlot );
+        }
         auto lNextRbs        = lAttributes.GetPropertyValue( "NextRbs", "Metrino.Olm.SignalProcessing.RbsAttribute" );
         auto lNextRbsLsaData = lNextRbs->GetPropertyValue( "Lsa", "Metrino.Olm.SignalProcessing.RbsLsa" );
-        auto lNextRbsSlope   = lNextRbsLsaData->GetPropertyValue<double>( "Slope" );
-        auto lNextRbsOffset  = lNextRbsLsaData->GetPropertyValue<double>( "Offset" );
-        auto lNextRbsPlot    = New<sFloat64LinePlot>();
-        auto lNextX0         = lNextRbsLsaData->GetPropertyValue<double>( "StartPosition" );
-        auto lNextX1         = lNextRbsLsaData->GetPropertyValue<double>( "EndPosition" );
-        lNextRbsPlot->mX     = std::vector<double>{ lNextX0 * 0.001, lNextX1 * 0.001 };
-        lNextRbsPlot->mY     = std::vector<double>{ lNextRbsOffset, ( lNextX1 - lNextX0 ) * lNextRbsSlope + lNextRbsOffset };
-        Add( lNextRbsPlot );
+        if( lNextRbsLsaData )
+        {
+            auto lNextRbsSlope  = lNextRbsLsaData->GetPropertyValue<double>( "Slope" );
+            auto lNextRbsOffset = lNextRbsLsaData->GetPropertyValue<double>( "Offset" );
+            auto lNextRbsPlot   = New<sFloat64LinePlot>();
+            auto lNextX0        = lNextRbsLsaData->GetPropertyValue<double>( "StartPosition" );
+            auto lNextX1        = lNextRbsLsaData->GetPropertyValue<double>( "EndPosition" );
+            lNextRbsPlot->mX    = std::vector<double>{ lNextX0 * 0.001, lNextX1 * 0.001 };
+            lNextRbsPlot->mY    = std::vector<double>{ lNextRbsOffset, ( lNextX1 - lNextX0 ) * lNextRbsSlope + lNextRbsOffset };
+            Add( lNextRbsPlot );
+        }
     }
 
     void UILinkElementTracePlot::SetEventData( std::vector<sLinkElement> &aLinkElement )
