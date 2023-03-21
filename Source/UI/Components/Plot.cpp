@@ -55,7 +55,12 @@ namespace SE::Core
         {
             for( auto const &lAxis : mAxisConfiguration )
             {
-                if( lAxis.mInUse ) ImPlot::SetupAxis( static_cast<ImAxis>( lAxis.mAxis ), NULL, ImPlotAxisFlags_None );
+                if( lAxis.mInUse )
+                {
+                    ImPlot::SetupAxis( static_cast<ImAxis>( lAxis.mAxis ), NULL, ImPlotAxisFlags_None );
+                    if( ( lAxis.mMin != 0.0f ) && ( lAxis.mMax != 0.0f ) )
+                        ImPlot::SetupAxisLimits( static_cast<ImAxis>( lAxis.mAxis ), lAxis.mMin, lAxis.mMax, ImPlotCond_Always );
+                }
             }
 
             ImPlotLegendFlags flags = ImPlotLegendFlags_None;

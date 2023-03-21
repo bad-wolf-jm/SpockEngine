@@ -20,6 +20,8 @@ namespace SE::Core
     struct sPlotAxisConfiguration
     {
         std::string mTitle;
+        float       mMin = 0.0f;
+        float       mMax = 0.0f;
 
         UIPlotAxis mAxis         = UIPlotAxis::X1;
         bool       mInUse        = false;
