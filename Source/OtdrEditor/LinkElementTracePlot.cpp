@@ -54,7 +54,8 @@ namespace SE::OtdrEditor
         }
     }
 
-    void UILinkElementTracePlot::SetEventData( sLinkElement const &aLinkElement, bool aDisplayEventBounds, bool aDisplayLsaFit )
+    void UILinkElementTracePlot::SetEventData( sLinkElement const &aLinkElement, bool aDisplayEventBounds, bool aDisplayLsaFit,
+                                               bool aAdjustAxisScale )
     {
         static auto &lSinglePulseTraceClass = MonoRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
 
@@ -145,6 +146,28 @@ namespace SE::OtdrEditor
                 lNextRbsPlot->mColor = math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
                 lNextRbsPlot->mThickness = 2.0f;
                 Add( lNextRbsPlot );
+            }
+        }
+
+        if( aAdjustAxisScale )
+        {
+            mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMin = lPlot->mX[0];
+            mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMax = lPlot->mX[lPlot->mX.size() - 1];
+
+            auto lPreviousRbs        = lAttributes.GetPropertyValue( "PreviousRbs", "Metrino.Olm.SignalProcessing.RbsAttribute" );
+            auto lPreviousRbsLsaData = lPreviousRbs->GetPropertyValue( "Lsa", "Metrino.Olm.SignalProcessing.RbsLsa" );
+            if( lPreviousRbsLsaData )
+            {
+                mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMin =
+                    lPreviousRbsLsaData->GetPropertyValue<double>( "StartPosition" ) * 0.001;
+            }
+
+            auto lNextRbs        = lAttributes.GetPropertyValue( "NextRbs", "Metrino.Olm.SignalProcessing.RbsAttribute" );
+            auto lNextRbsLsaData = lNextRbs->GetPropertyValue( "Lsa", "Metrino.Olm.SignalProcessing.RbsLsa" );
+            if( lNextRbsLsaData )
+            {
+                mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMax =
+                    lNextRbsLsaData->GetPropertyValue<double>( "EndPosition" ) * 0.001;
             }
         }
     }
