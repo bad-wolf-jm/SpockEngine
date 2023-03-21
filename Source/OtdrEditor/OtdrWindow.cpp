@@ -63,7 +63,7 @@ namespace SE::OtdrEditor
 
                 // mTracePlot.SetEventData( mLinkElementTable->GetElementsByIndex( aElement.mLinkIndex ) );
                 mTracePlot.Clear();
-                mTracePlot.SetEventData( aElement );
+                mTracePlot.SetEventData( aElement, true, true );
             } );
 
         mTestFailResultTable->OnElementClicked( [&]( sTestFailElement const &aElement ) { LoadIOlmData( aElement.mFilename ); } );
