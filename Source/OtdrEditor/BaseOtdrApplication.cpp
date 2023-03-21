@@ -47,10 +47,5 @@ namespace SE::OtdrEditor
             OtdrWindow( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
         mEditorWindow.ConfigureUI();
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
-
-        mWorld = New<OtdrScene>();
-
-        mEditorWindow.mWorld       = mWorld;
-        mEditorWindow.mActiveWorld = mWorld;
     }
 } // namespace SE::Editor

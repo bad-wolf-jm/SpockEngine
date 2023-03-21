@@ -112,8 +112,6 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/Importer/glTFImporter.cpp
     Scene/Importer/ObjImporter.cpp
 
-    OtdrScene/OtdrScene.cpp
-
     Editor/PopupWindow.cpp
     Editor/EditorWindow.cpp
     Editor/ContentBrowser.cpp
@@ -123,8 +121,6 @@ add_library(LTSimulationEngineRuntime STATIC
 
     OtdrEditor/OtdrWindow.cpp
     OtdrEditor/BaseOtdrApplication.cpp
-    OtdrEditor/SceneElementEditor.cpp
-    OtdrEditor/SceneHierarchyPanel.cpp
     OtdrEditor/Workspace.cpp
     OtdrEditor/Enums.cpp
     OtdrEditor/LinkElementTable.cpp

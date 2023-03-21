@@ -32,7 +32,6 @@
 #include "MeasurementOverview.h"
 #include "Mono/MonoScriptInstance.h"
 #include "MultiPulseEventTable.h"
-#include "SceneHierarchyPanel.h"
 #include "TestFailResultTable.h"
 #include "Workspace.h"
 
@@ -40,7 +39,6 @@ namespace SE::OtdrEditor
 {
 
     using namespace SE::Core;
-    using namespace SE::Core::EntityComponentSystem::Components;
 
     class OtdrWindow
     {
@@ -60,9 +58,6 @@ namespace SE::OtdrEditor
         fs::path mModelsPath    = "";
 
         Ref<Engine> mEngineLoop = nullptr;
-
-        Ref<OtdrScene> mWorld       = nullptr;
-        Ref<OtdrScene> mActiveWorld = nullptr;
 
         Ref<MonoScriptInstance> mCurrentScript{};
         bool                    mCurrentScriptIsRunning{};
@@ -99,7 +94,6 @@ namespace SE::OtdrEditor
         void LoadTestReport( fs::path aPath );
 
         Ref<MonoScriptInstance> mDataInstance = nullptr;
-        // UIPlot                  mTracePlot;
 
         UILinkElementTracePlot mTracePlot;
 
@@ -115,9 +109,6 @@ namespace SE::OtdrEditor
 
       private:
         OtdrWorkspaceWindow mWorkspaceArea;
-
-      private:
-        OtdrSceneHierarchyPanel mSceneHierarchyPanel;
 
       private:
         Ref<VkGraphicContext> mGraphicContext;
