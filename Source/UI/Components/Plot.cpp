@@ -53,13 +53,20 @@ namespace SE::Core
 
         if( ImPlot::BeginPlot( "##", aSize, ImPlotFlags_Crosshairs | ImPlotFlags_NoChild | ImPlotFlags_AntiAliased ) )
         {
-            for( auto const &lAxis : mAxisConfiguration )
+            auto *lPlot = ImPlot::GetCurrentPlot();
+            for( auto &lAxis : mAxisConfiguration )
             {
                 if( lAxis.mInUse )
                 {
                     ImPlot::SetupAxis( static_cast<ImAxis>( lAxis.mAxis ), NULL, ImPlotAxisFlags_None );
                     if( ( lAxis.mMin != 0.0f ) && ( lAxis.mMax != 0.0f ) )
-                        ImPlot::SetupAxisLimits( static_cast<ImAxis>( lAxis.mAxis ), lAxis.mMin, lAxis.mMax, ImPlotCond_Always );
+                    {
+                        lPlot->Axes[static_cast<ImAxis>( lAxis.mAxis )].SetMin(lAxis.mMin);
+                        lPlot->Axes[static_cast<ImAxis>( lAxis.mAxis )].SetMax(lAxis.mMax);
+
+                        lAxis.mMin = 0.0f;
+                        lAxis.mMax = 0.0f;
+                    }
                 }
             }
 
