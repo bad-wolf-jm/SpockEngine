@@ -95,7 +95,7 @@ namespace SE::OtdrEditor
 
         void ConfigureUI();
 
-        void LoadIOlmData( fs::path aPath );
+        void LoadIOlmData( fs::path aPath, bool aReanalyse = false );
         void LoadTestReport( fs::path aPath );
 
         Ref<MonoScriptInstance> mDataInstance = nullptr;
@@ -104,7 +104,9 @@ namespace SE::OtdrEditor
         UILinkElementTracePlot mTracePlot;
 
         Ref<UIMultiPulseEventTable> mEventTable;
+        Ref<UIMultiPulseEventTable> mEventTable1;
         Ref<UILinkElementTable>     mLinkElementTable;
+        Ref<UILinkElementTable>     mLinkElementTable1;
         Ref<UITestFailResultTable>  mTestFailResultTable;
 
         MeasurementOverview mMeasurementOverview;

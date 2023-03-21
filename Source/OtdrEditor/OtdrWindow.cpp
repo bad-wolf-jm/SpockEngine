@@ -66,6 +66,23 @@ namespace SE::OtdrEditor
                 mTracePlot.SetEventData( aElement, true, true );
             } );
 
+        // mLinkElementTable1->OnElementClicked(
+        //     [&]( sLinkElement const &aElement )
+        //     {
+        //         static auto &lOlmMeasurementClass = MonoRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
+        //         static auto &lOlmAttributeClass = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
+
+        //         auto lPhysicalEvent =
+        //             New<MonoScriptInstance>( &lOlmMeasurementClass, lOlmMeasurementClass.Class(), aElement.mPhysicalEvent );
+        //         auto lAttributes = New<MonoScriptInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), aElement.mAttributes );
+
+        //         // mEventOverview.SetData( lPhysicalEvent, lAttributes );
+
+        //         // mTracePlot.SetEventData( mLinkElementTable->GetElementsByIndex( aElement.mLinkIndex ) );
+        //         mTracePlot.Clear();
+        //         mTracePlot.SetEventData( aElement, true, true );
+        //     } );
+
         mTestFailResultTable->OnElementClicked( [&]( sTestFailElement const &aElement ) { LoadIOlmData( aElement.mFilename ); } );
     }
 
@@ -74,7 +91,9 @@ namespace SE::OtdrEditor
         , mUIOverlay{ aUIOverlay }
     {
         mLinkElementTable    = New<UILinkElementTable>();
+        mLinkElementTable1   = New<UILinkElementTable>();
         mEventTable          = New<UIMultiPulseEventTable>();
+        mEventTable1         = New<UIMultiPulseEventTable>();
         mTestFailResultTable = New<UITestFailResultTable>();
     }
 
@@ -154,11 +173,23 @@ namespace SE::OtdrEditor
             }
             ImGui::End();
 
+            // if( ImGui::Begin( "iOlmData_LinkElements1", &pOpen, ImGuiWindowFlags_None ) )
+            // {
+            //     mLinkElementTable1->Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+            // }
+            // ImGui::End();
+
             if( ImGui::Begin( "iOlmData_Events", &pOpen, ImGuiWindowFlags_None ) )
             {
                 mEventTable->Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
             }
             ImGui::End();
+
+            // if( ImGui::Begin( "iOlmData_Events1", &pOpen, ImGuiWindowFlags_None ) )
+            // {
+            //     mEventTable1->Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+            // }
+            // ImGui::End();
 
             if( !pOpen )
             {
@@ -333,7 +364,7 @@ namespace SE::OtdrEditor
         return lVector;
     }
 
-    void OtdrWindow::LoadIOlmData( fs::path aPath )
+    void OtdrWindow::LoadIOlmData( fs::path aPath, bool aReanalyse )
     {
         static auto &lFileLoader = MonoRuntime::GetClassType( "Metrino.Interop.FileLoader" );
         static auto &lFileClass  = MonoRuntime::GetClassType( "Metrino.Interop.OlmFile" );
@@ -365,28 +396,43 @@ namespace SE::OtdrEditor
         mAcquisitionDataOverview.SetData( lSinglePulseTraceInstance, lAcquisitionDataInstance, lFiberInfo );
 
         // mTracePlot.SetData(lTraceDataVector);
+        {
+            bool        lX                 = false;
+            MonoObject *lLinkElementData   = mDataInstance->CallMethod( "GetLinkElements", &lX );
+            auto        lLinkElementVector = AsVector<sLinkElement>( lLinkElementData );
+            mLinkElementTable->SetData( lLinkElementVector );
+            mTracePlot.SetEventData( lLinkElementVector );
 
-        bool        lReanalyze         = false;
-        MonoObject *lLinkElementData   = mDataInstance->CallMethod( "GetLinkElements", &lReanalyze );
-        auto        lLinkElementVector = AsVector<sLinkElement>( lLinkElementData );
-        mLinkElementTable->SetData( lLinkElementVector );
-        mTracePlot.SetEventData( lLinkElementVector );
+            mMeasurementOverview.SetData( mDataInstance );
 
-        // bool        lReanalyze         = false;
-        // MonoObject *lEventData   = mDataInstance->CallMethod( "GetEvents" );
-        // auto        lEventVector = AsVector<sMultiPulseEvent>( lEventData );
-        // mEventTable->SetData( lEventVector );
+            static auto &lOlmMeasurementClass = MonoRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
+            auto         lPhysicalEvent =
+                New<MonoScriptInstance>( &lOlmMeasurementClass, lOlmMeasurementClass.Class(), lLinkElementVector[0].mPhysicalEvent );
 
-        mMeasurementOverview.SetData( mDataInstance );
+            static auto &lOlmAttributeClass = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
+            auto         lAttributes =
+                New<MonoScriptInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), lLinkElementVector[0].mAttributes );
+            mEventOverview.SetData( lPhysicalEvent, lAttributes );
 
-        static auto &lOlmMeasurementClass = MonoRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
-        auto         lPhysicalEvent =
-            New<MonoScriptInstance>( &lOlmMeasurementClass, lOlmMeasurementClass.Class(), lLinkElementVector[0].mPhysicalEvent );
+            MonoObject *lEventData   = mDataInstance->CallMethod( "GetEvents", &lX );
+            auto        lEventVector = AsVector<sMultiPulseEvent>( lEventData );
+            mEventTable->SetData( lEventVector );
+        }
 
-        static auto &lOlmAttributeClass = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
-        auto         lAttributes =
-            New<MonoScriptInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), lLinkElementVector[0].mAttributes );
-        mEventOverview.SetData( lPhysicalEvent, lAttributes );
+        // {
+        //     MonoString *lFilePath     = MonoRuntime::NewString( aPath.string() );
+        //     MonoObject *lDataObject   = lFileLoader.CallMethod( "LoadOlmData", lFilePath );
+        //     auto        lDataInstance = New<MonoScriptInstance>( &lFileClass, lFileClass.Class(), lDataObject );
+
+        //     bool        lX                  = true;
+        //     MonoObject *lLinkElementData11  = lDataInstance->CallMethod( "GetLinkElements", &lX );
+        //     auto        lLinkElementVector1 = AsVector<sLinkElement>( lLinkElementData11 );
+        //     mLinkElementTable1->SetData( lLinkElementVector1 );
+
+        //     MonoObject *lEventData   = mDataInstance->CallMethod( "GetEvents", &lX );
+        //     auto        lEventVector = AsVector<sMultiPulseEvent>( lEventData );
+        //     mEventTable1->SetData( lEventVector );
+        // } 
     }
 
     void OtdrWindow::LoadTestReport( fs::path aPath )
