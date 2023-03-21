@@ -169,6 +169,31 @@ namespace SE::OtdrEditor
                 mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMax =
                     lNextRbsLsaData->GetPropertyValue<double>( "EndPosition" ) * 0.001;
             }
+
+            mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMin = 0.0f;
+            mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMax = 0.0f;
+
+            bool lAxisMinSet = false;
+            bool lAxisMaxSet = false;
+
+            for( uint32_t i = 0; i < lPlot->mX.size(); i++ )
+            {
+                if( ( lPlot->mX[i] >= mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMin ) &&
+                    ( lPlot->mX[i] <= mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMax ) )
+                {
+                    mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMin =
+                        lAxisMinSet ? std::min( static_cast<float>( lPlot->mY[i] ),
+                                                mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMin )
+                                    : static_cast<float>( lPlot->mY[i] );
+
+                    mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMax =
+                        lAxisMaxSet ? std::max( static_cast<float>( lPlot->mY[i] ),
+                                                mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMax )
+                                    : static_cast<float>( lPlot->mY[i] );
+                    lAxisMinSet = true;
+                    lAxisMaxSet = true;
+                }
+            }
         }
     }
 
