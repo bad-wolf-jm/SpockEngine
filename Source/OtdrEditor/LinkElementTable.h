@@ -31,6 +31,8 @@ namespace SE::OtdrEditor
         void     *mPhysicalEvent;
         void     *mPeakTrace;
         void     *mAttributes;
+        void     *mAcquisitionData;
+        void     *mFiberInfo;
     };
 
     class UILinkElementTable : public UITable
