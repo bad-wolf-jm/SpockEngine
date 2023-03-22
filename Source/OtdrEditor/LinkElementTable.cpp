@@ -19,6 +19,9 @@ namespace SE::OtdrEditor
     {
         SetRowHeight( 20.0f );
 
+        mIndex = New<sStringColumn>( "ID", 75.0f );
+        AddColumn( mIndex );
+
         mWavelength = New<sFloat64Column>( "Wavelength", 75.0f, "{:.1f} nm", "N.a.N." );
         AddColumn( mWavelength );
 
@@ -96,10 +99,13 @@ namespace SE::OtdrEditor
 
         for( auto const &lE : mEventDataVector )
         {
+            mIndex->mData.push_back(fmt::format("{}", lE.mLinkIndex));
             if( lE.mLinkIndex % 2 )
                 mRowBackgroundColor.push_back( IM_COL32( 2, 2, 2, 255 ) );
             else
                 mRowBackgroundColor.push_back( IM_COL32( 9, 9, 9, 255 ) );
+
+
 
             auto lLinkElement   = MonoScriptInstance( &lBaseLinkElementClass, lBaseLinkElementClass.Class(), lE.mLinkElement );
             auto lPhysicalEvent = MonoScriptInstance( &lOlmPhysicalEventClass, lOlmPhysicalEventClass.Class(), lE.mPhysicalEvent );
