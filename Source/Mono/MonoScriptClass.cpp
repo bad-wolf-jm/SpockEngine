@@ -85,10 +85,11 @@ namespace SE::Core
     } // namespace
 
     MonoScriptClass::MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
-                                      fs::path const &aDllPPath )
+                                      fs::path const &aDllPPath, bool aIsNested )
         : mClassNamespace( aClassNamespace )
         , mClassName( aClassName )
         , mDllPath{ aDllPPath }
+        , mIsNested{ aIsNested }
     {
         mMonoClass     = mono_class_from_name( aImage, aClassNamespace.c_str(), aClassName.c_str() );
         mFields        = GetClassFields( mMonoClass );
@@ -96,11 +97,12 @@ namespace SE::Core
         mClassFullName = fmt::format( "{}.{}", mClassNamespace, mClassName );
     }
 
-    MonoScriptClass::MonoScriptClass( MonoClass* aClass, const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
-                                      fs::path const &aDllPPath )
+    MonoScriptClass::MonoScriptClass( MonoClass *aClass, const std::string &aClassNamespace, const std::string &aClassName,
+                                      MonoImage *aImage, fs::path const &aDllPPath, bool aIsNested )
         : mClassNamespace( aClassNamespace )
         , mClassName( aClassName )
         , mDllPath{ aDllPPath }
+        , mIsNested{ aIsNested }
     {
         mMonoClass     = aClass;
         mFields        = GetClassFields( mMonoClass );

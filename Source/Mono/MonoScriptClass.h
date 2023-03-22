@@ -19,9 +19,9 @@ namespace SE::Core
         MonoScriptClass() = default;
         MonoScriptClass( MonoType *aMonoClass );
         MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
-                         fs::path const &aDllPPath );
+                         fs::path const &aDllPPath, bool aIsNested = false );
         MonoScriptClass( MonoClass *aClass, const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
-                         fs::path const &aDllPPath );
+                         fs::path const &aDllPPath, bool aIsNested = false );
 
         Ref<MonoScriptInstance> DoInstantiate();
 
@@ -91,6 +91,7 @@ namespace SE::Core
 
         MonoClass *mMonoClass = nullptr;
         bool       mIsCore    = false;
+        bool       mIsNested    = false;
 
         friend class MonoRuntime;
     };
