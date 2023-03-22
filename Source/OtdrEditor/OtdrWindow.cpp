@@ -51,7 +51,8 @@ namespace SE::OtdrEditor
                     New<MonoScriptInstance>( &lOlmMeasurementClass, lOlmMeasurementClass.Class(), aElement.mPhysicalEvent );
                 auto lAttributes = New<MonoScriptInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), aElement.mAttributes );
 
-                mEventOverview.SetData( lPhysicalEvent, lAttributes );
+                if (*lPhysicalEvent && *lAttributes)
+                    mEventOverview.SetData( lPhysicalEvent, lAttributes );
 
                 static auto &lAcquisitionDataClassType = MonoRuntime::GetClassType( "Metrino.Otdr.AcquisitionData" );
                 auto lAcquisitionDataInstance = New<MonoScriptInstance>( &lAcquisitionDataClassType, lAcquisitionDataClassType.Class(),
