@@ -126,6 +126,7 @@ namespace SE::OtdrEditor
                 lPreviousRbsPlot->mX = std::vector<double>{ lPreviousX0 * 0.001, lPreviousX1 * 0.001 };
                 lPreviousRbsPlot->mY =
                     std::vector<double>{ lPreviousRbsOffset, ( lPreviousX1 - lPreviousX0 ) * lPreviousRbsSlope + lPreviousRbsOffset };
+                lPreviousRbsPlot->mLegend    = "Previous Section";
                 lPreviousRbsPlot->mColor     = math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
                 lPreviousRbsPlot->mThickness = 2.0f;
                 Add( lPreviousRbsPlot );
@@ -141,9 +142,10 @@ namespace SE::OtdrEditor
                 auto lNextX0        = lNextRbsLsaData->GetPropertyValue<double>( "StartPosition" );
                 auto lNextX1        = lNextRbsLsaData->GetPropertyValue<double>( "EndPosition" );
 
-                lNextRbsPlot->mX     = std::vector<double>{ lNextX0 * 0.001, lNextX1 * 0.001 };
-                lNextRbsPlot->mY     = std::vector<double>{ lNextRbsOffset, ( lNextX1 - lNextX0 ) * lNextRbsSlope + lNextRbsOffset };
-                lNextRbsPlot->mColor = math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
+                lNextRbsPlot->mX      = std::vector<double>{ lNextX0 * 0.001, lNextX1 * 0.001 };
+                lNextRbsPlot->mY      = std::vector<double>{ lNextRbsOffset, ( lNextX1 - lNextX0 ) * lNextRbsSlope + lNextRbsOffset };
+                lNextRbsPlot->mLegend = "Next Section";
+                lNextRbsPlot->mColor  = math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
                 lNextRbsPlot->mThickness = 2.0f;
                 Add( lNextRbsPlot );
             }

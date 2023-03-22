@@ -20,7 +20,10 @@ namespace SE::OtdrEditor
     {
         int       mRowIndex;
         int       mLinkIndex;
+        int       mSubLinkIndex;
         int       mEventIndex;
+        int       mSubEventIndex;
+        bool      mIsSubElement;
         int       mDiagnosicCount;
         ePassFail mLossPassFail;
         ePassFail mReflectancePassFail;
@@ -40,9 +43,9 @@ namespace SE::OtdrEditor
 
         void Clear();
         void SetData( std::vector<sLinkElement> const &aData );
-        void OnElementClicked( std::function<void(sLinkElement const&)> const &aOnRowClicked );
+        void OnElementClicked( std::function<void( sLinkElement const & )> const &aOnRowClicked );
 
-        std::vector<sLinkElement> GetElementsByIndex(uint32_t aElementIndex);
+        std::vector<sLinkElement> GetElementsByIndex( uint32_t aElementIndex );
 
       protected:
         Ref<sStringColumn>  mIndex;
@@ -67,8 +70,7 @@ namespace SE::OtdrEditor
         std::vector<sLinkElement> mEventDataVector;
 
       private:
-        std::function<void(sLinkElement const& )> mOnElementClicked;
-        void UILinkElementTable::DoSelectElement( uint32_t aRow );
-
+        std::function<void( sLinkElement const & )> mOnElementClicked;
+        void                                        UILinkElementTable::DoSelectElement( uint32_t aRow );
     };
 } // namespace SE::OtdrEditor

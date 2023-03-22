@@ -165,23 +165,11 @@ namespace SE::OtdrEditor
             }
             ImGui::End();
 
-            // if( ImGui::Begin( "iOlmData_LinkElements1", &pOpen, ImGuiWindowFlags_None ) )
-            // {
-            //     mLinkElementTable1->Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
-            // }
-            // ImGui::End();
-
             if( ImGui::Begin( "iOlmData_Events", &pOpen, ImGuiWindowFlags_None ) )
             {
                 mEventTable->Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
             }
             ImGui::End();
-
-            // if( ImGui::Begin( "iOlmData_Events1", &pOpen, ImGuiWindowFlags_None ) )
-            // {
-            //     mEventTable1->Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
-            // }
-            // ImGui::End();
 
             if( !pOpen )
             {
