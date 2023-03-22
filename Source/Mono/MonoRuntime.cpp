@@ -114,6 +114,20 @@ namespace SE::Core
                 MonoClass *lClass = mono_class_from_name( aImage, lNameSpace, lClassName );
                 if( lClass != nullptr )
                 {
+                    // Add nested classes
+                    void* lIterator = nullptr;
+                    while (MonoClass* lNestedClass = mono_class_get_nested_types(lClass, &lIterator))
+                    {
+                        const char *lClassName = mono_class_get_name( lNestedClass );
+                        
+                        if( !std::strncmp( lClassName, "<", 1 ) ) continue;
+
+                        auto lNestedClassName = fmt::format("{}.{}", lFullName, lClassName);
+
+                        if( lClasses.find( lNestedClassName ) == lClasses.end() )
+                            lClasses[lNestedClassName] = MonoScriptClass( lNestedClass, lFullName, lClassName, aImage, aPath, true );
+                    }
+
                     lClasses[lFullName] = MonoScriptClass( lNameSpace, lClassName, aImage, aPath );
 
                     lClass = mono_class_get_parent( lClass );
