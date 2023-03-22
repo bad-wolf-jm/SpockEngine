@@ -34,6 +34,7 @@
 #include "MultiPulseEventTable.h"
 #include "TestFailResultTable.h"
 #include "Workspace.h"
+#include "MonoClassHierarchy.h"
 
 namespace SE::OtdrEditor
 {
@@ -109,6 +110,7 @@ namespace SE::OtdrEditor
 
       private:
         OtdrWorkspaceWindow mWorkspaceArea;
+        MonoClassHierarchy mMonoClasses;
 
       private:
         Ref<VkGraphicContext> mGraphicContext;

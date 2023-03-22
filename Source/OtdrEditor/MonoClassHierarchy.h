@@ -1,8 +1,6 @@
 #pragma once
 #include <string>
 
-// #include "SidePanel.h"
-
 #include "Core/EntityCollection/Collection.h"
 #include "Core/Memory.h"
 
@@ -19,22 +17,19 @@ namespace SE::OtdrEditor
         bool mLocked = true;
     };
 
-    class OtdrSceneHierarchyPanel
+    class MonoClassHierarchy
     {
       public:
-        Ref<OtdrScene> World = nullptr;
-        Entity SelectedElement{};
-        // SceneElementEditor ElementEditor{};
-        bool RequestEditSceneElement = false;
-
-      public:
-        OtdrSceneHierarchyPanel()  = default;
-        ~OtdrSceneHierarchyPanel() = default;
+        MonoClassHierarchy() = default;
+        ~MonoClassHierarchy() = default;
 
         void Display( int32_t width, int32_t height );
 
       private:
-        void DisplayNode( OtdrScene::Element a_Node, float a_Width );
+        void DisplayNode( MonoScriptClass &aClass, float a_Width );
+
+      private:
+        std::vector<std::string> mClassNames;
     };
 
 } // namespace SE::Editor

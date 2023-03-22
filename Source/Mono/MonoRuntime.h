@@ -37,6 +37,9 @@ namespace SE::Core
 
         static void OnConsoleOut(std::function<void(std::string const&)> aFunction);
 
+        static std::vector<std::string> GetClassNames();
+        static std::map<std::string, MonoScriptClass> &GetClasses();
+
       private:
         static void RegisterComponentTypes();
         static void RegisterInternalCppFunctions();
