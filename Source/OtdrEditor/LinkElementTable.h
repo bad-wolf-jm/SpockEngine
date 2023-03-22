@@ -45,6 +45,7 @@ namespace SE::OtdrEditor
         std::vector<sLinkElement> GetElementsByIndex(uint32_t aElementIndex);
 
       protected:
+        Ref<sStringColumn>  mIndex;
         Ref<sStringColumn>  mType;
         Ref<sStringColumn>  mStatus;
         Ref<sFloat64Column> mDiagnosicCount;
