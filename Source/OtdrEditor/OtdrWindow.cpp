@@ -148,6 +148,13 @@ namespace SE::OtdrEditor
         }
         ImGui::End();
 
+        if( ImGui::Begin( "CLASSES", NULL, ImGuiWindowFlags_None ) )
+        {
+            math::vec2  l_WindowConsoleSize     = UI::GetAvailableContentSpace();
+            mMonoClasses.Display(l_WindowConsoleSize.x, l_WindowConsoleSize.y);
+        }
+        ImGui::End();
+
         if( mDataInstance )
         {
             static bool pOpen = true;

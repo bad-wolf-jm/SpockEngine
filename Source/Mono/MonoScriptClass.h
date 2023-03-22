@@ -76,6 +76,7 @@ namespace SE::Core
         std::string &FullName() { return mClassFullName; }
 
         std::vector<MonoScriptClass *> &DerivedClasses() { return mDerived; }
+        MonoScriptClass                *ParentClass() { return mParent; }
 
       private:
         fs::path                       mDllPath;
@@ -91,7 +92,7 @@ namespace SE::Core
 
         MonoClass *mMonoClass = nullptr;
         bool       mIsCore    = false;
-        bool       mIsNested    = false;
+        bool       mIsNested  = false;
 
         friend class MonoRuntime;
     };

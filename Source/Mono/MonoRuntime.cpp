@@ -156,6 +156,21 @@ namespace SE::Core
 
     uint32_t MonoRuntime::CountAssemblies() { return sRuntimeData->mAppAssemblyFiles.size(); }
 
+    std::vector<std::string> MonoRuntime::GetClassNames() { 
+        std::vector<std::string> lResult;
+        for (auto const& [lName, lValue] : sRuntimeData->mClasses)
+        {
+            lResult.push_back(lName);
+        }
+
+        return lResult;
+     }
+
+    std::map<std::string, MonoScriptClass> &MonoRuntime::GetClasses()
+    {
+        return sRuntimeData->mClasses;
+    }
+
     bool MonoRuntime::AssembliesNeedReloading()
     {
         for( auto const &[lKey, lValue] : sRuntimeData->mAssemblies )
