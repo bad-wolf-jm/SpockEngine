@@ -31,7 +31,7 @@ namespace SE::OtdrEditor
         mStatus = New<sStringColumn>( "Status", 75.0f );
         AddColumn( mStatus );
 
-        mPositionColumn = New<sFloat64Column>( "Position", 75.0f, "{:.3f} km", "N.a.N." );
+        mPositionColumn = New<sFloat64Column>( "Position", 75.0f, "{:.4f} km", "N.a.N." );
         AddColumn( mPositionColumn );
 
         mDiagnosicCount = New<sFloat64Column>( "\xef\x86\x88", 75.0f, "{:.3f}", "N.a.N." );
@@ -99,7 +99,7 @@ namespace SE::OtdrEditor
 
         for( auto const &lE : mEventDataVector )
         {
-            mIndex->mData.push_back(fmt::format("{}", lE.mLinkIndex));
+            mIndex->mData.push_back(fmt::format("{} - {} - {} - {}", lE.mLinkIndex, lE.mSubLinkIndex, lE.mEventIndex, lE.mIsSubElement));
             if( lE.mLinkIndex % 2 )
                 mRowBackgroundColor.push_back( IM_COL32( 2, 2, 2, 255 ) );
             else
