@@ -51,8 +51,7 @@ namespace SE::OtdrEditor
                     New<MonoScriptInstance>( &lOlmMeasurementClass, lOlmMeasurementClass.Class(), aElement.mPhysicalEvent );
                 auto lAttributes = New<MonoScriptInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), aElement.mAttributes );
 
-                if (*lPhysicalEvent && *lAttributes)
-                    mEventOverview.SetData( lPhysicalEvent, lAttributes );
+                if( *lPhysicalEvent && *lAttributes ) mEventOverview.SetData( lPhysicalEvent, lAttributes );
 
                 static auto &lAcquisitionDataClassType = MonoRuntime::GetClassType( "Metrino.Otdr.AcquisitionData" );
                 auto lAcquisitionDataInstance = New<MonoScriptInstance>( &lAcquisitionDataClassType, lAcquisitionDataClassType.Class(),
@@ -456,21 +455,23 @@ namespace SE::OtdrEditor
 
                 for( pugi::xml_node lFailInfo : lInfo.children( "FailInfos" ) )
                 {
-                    auto  lFail    = lFailInfo.child( "FailInfo" );
-                    auto &lNewData = lTableRows.emplace_back();
+                    for( pugi::xml_node lFail : lFailInfo.children( "FailInfo" ) )
+                    {
+                        auto &lNewData = lTableRows.emplace_back();
 
-                    lNewData.mTestName              = std::string( lTestName );
-                    lNewData.mTestDate              = std::string( lTestDate );
-                    lNewData.mFilename              = std::string( lFileName );
-                    lNewData.mLinkElementIndex      = std::string( lFail.child( "LinkElementIndex" ).child_value() );
-                    lNewData.mSubLinkElementIndex   = std::string( lFail.child( "SubLinkElementIndex" ).child_value() );
-                    lNewData.mPhysicalEventIndex    = std::string( lFail.child( "PhysicalEventIndex" ).child_value() );
-                    lNewData.mLinkElementPosition   = std::stod( lFail.child( "LinkElementPosition" ).child_value() );
-                    lNewData.mIsSubElement          = std::string( lFail.child( "IsSubElement" ).child_value() );
-                    lNewData.mWavelength            = std::stod( lFail.child( "Wavelength" ).child_value() );
-                    lNewData.mPhysicalEventPosition = std::stod( lFail.child( "PhysicalEventPosition" ).child_value() );
-                    lNewData.mSinglePulseTraceIndex = std::string( lFail.child( "SinglePulseTraceIndex" ).child_value() );
-                    lNewData.mMessage               = std::string( lFail.child( "Message" ).child_value() );
+                        lNewData.mTestName              = std::string( lTestName );
+                        lNewData.mTestDate              = std::string( lTestDate );
+                        lNewData.mFilename              = std::string( lFileName );
+                        lNewData.mLinkElementIndex      = std::string( lFail.child( "LinkElementIndex" ).child_value() );
+                        lNewData.mSubLinkElementIndex   = std::string( lFail.child( "SubLinkElementIndex" ).child_value() );
+                        lNewData.mPhysicalEventIndex    = std::string( lFail.child( "PhysicalEventIndex" ).child_value() );
+                        lNewData.mLinkElementPosition   = std::stod( lFail.child( "LinkElementPosition" ).child_value() );
+                        lNewData.mIsSubElement          = std::string( lFail.child( "IsSubElement" ).child_value() );
+                        lNewData.mWavelength            = std::stod( lFail.child( "Wavelength" ).child_value() );
+                        lNewData.mPhysicalEventPosition = std::stod( lFail.child( "PhysicalEventPosition" ).child_value() );
+                        lNewData.mSinglePulseTraceIndex = std::string( lFail.child( "SinglePulseTraceIndex" ).child_value() );
+                        lNewData.mMessage               = std::string( lFail.child( "Message" ).child_value() );
+                    }
                 }
             }
         }
