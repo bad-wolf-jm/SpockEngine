@@ -150,8 +150,8 @@ namespace SE::OtdrEditor
 
         if( ImGui::Begin( "CLASSES", NULL, ImGuiWindowFlags_None ) )
         {
-            math::vec2  l_WindowConsoleSize     = UI::GetAvailableContentSpace();
-            mMonoClasses.Display(l_WindowConsoleSize.x, l_WindowConsoleSize.y);
+            math::vec2 l_WindowConsoleSize = UI::GetAvailableContentSpace();
+            mMonoClasses.Display( l_WindowConsoleSize.x, l_WindowConsoleSize.y );
         }
         ImGui::End();
 
