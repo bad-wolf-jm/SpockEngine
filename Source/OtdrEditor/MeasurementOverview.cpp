@@ -171,6 +171,8 @@ namespace SE::OtdrEditor
     {
         auto lMeasurementOverview = aMeasurementOverview->GetPropertyValue( "Measurement", "Metrino.Olm.OlmMeasurement" );
 
+        if (!*lMeasurementOverview) return;
+
         // Overview
         std::string lMeasurementLength =
             fmt::format( "{:.4f} km", lMeasurementOverview->GetPropertyValue<double>( "OverviewLength" ) * 0.001f );
