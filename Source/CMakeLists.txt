@@ -49,6 +49,7 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/Components/Table.cpp
     UI/Components/Plot.cpp
     UI/Components/PropertyValue.cpp
+    UI/Components/Workspace.cpp
     UI/Layouts/BoxLayout.cpp
     UI/Layouts/ZLayout.cpp
     UI/Form.cpp
