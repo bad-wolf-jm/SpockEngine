@@ -391,7 +391,7 @@ namespace SE::OtdrEditor
         // auto lFiberInfo = MonoScriptInstance( &lFiberInfoClassType, lFiberInfoClassType.Class(), lTraceDataVector[0] );
 
         // mTracePlot.SetData(lTraceDataVector);
-        {
+        {    
             bool        lX                 = false;
             MonoObject *lLinkElementData   = mDataInstance->CallMethod( "GetLinkElements", &lX );
             auto        lLinkElementVector = AsVector<sLinkElement>( lLinkElementData );
