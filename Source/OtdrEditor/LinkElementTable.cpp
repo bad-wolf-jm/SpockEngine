@@ -99,13 +99,12 @@ namespace SE::OtdrEditor
 
         for( auto const &lE : mEventDataVector )
         {
-            mIndex->mData.push_back(fmt::format("{} - {} - {} - {}", lE.mLinkIndex, lE.mSubLinkIndex, lE.mEventIndex, lE.mIsSubElement));
+            mIndex->mData.push_back(
+                fmt::format( "{} - {} - {} - {}", lE.mLinkIndex, lE.mSubLinkIndex, lE.mEventIndex, lE.mIsSubElement ) );
             if( lE.mLinkIndex % 2 )
                 mRowBackgroundColor.push_back( IM_COL32( 2, 2, 2, 255 ) );
             else
                 mRowBackgroundColor.push_back( IM_COL32( 9, 9, 9, 255 ) );
-
-
 
             auto lLinkElement   = MonoScriptInstance( &lBaseLinkElementClass, lBaseLinkElementClass.Class(), lE.mLinkElement );
             auto lPhysicalEvent = MonoScriptInstance( &lOlmPhysicalEventClass, lOlmPhysicalEventClass.Class(), lE.mPhysicalEvent );
@@ -160,8 +159,16 @@ namespace SE::OtdrEditor
 
             mPositionTolerance->mData.push_back( lPhysicalEvent.GetPropertyValue<double>( "PositionTolerance" ) );
 
-            mLossError->mData.push_back( lAttributes.GetPropertyValue<double>( "LossError" ) );
-            mPeakPower->mData.push_back( lAttributes.GetPropertyValue<double>( "PeakPower" ) );
+            if( lAttributes )
+            {
+                mLossError->mData.push_back( lAttributes.GetPropertyValue<double>( "LossError" ) );
+                mPeakPower->mData.push_back( lAttributes.GetPropertyValue<double>( "PeakPower" ) );
+            }
+            else
+            {
+                mLossError->mData.push_back( nan("") );
+                mPeakPower->mData.push_back( nan("") );
+            }
         }
     }
 
@@ -184,14 +191,13 @@ namespace SE::OtdrEditor
         mLossError->mData.clear();
     }
 
-    std::vector<sLinkElement> UILinkElementTable::GetElementsByIndex(uint32_t aElementIndex)
+    std::vector<sLinkElement> UILinkElementTable::GetElementsByIndex( uint32_t aElementIndex )
     {
         std::vector<sLinkElement> lResult;
 
-        for(auto const& x : mEventDataVector)
-            if(x.mLinkIndex == aElementIndex)
-                lResult.push_back(x);
+        for( auto const &x : mEventDataVector )
+            if( x.mLinkIndex == aElementIndex ) lResult.push_back( x );
 
-        return std::move(lResult);
+        return std::move( lResult );
     }
 } // namespace SE::OtdrEditor
