@@ -57,7 +57,7 @@ set_property(TARGET ${LIBRARY_NAME} PROPERTY WIN32_EXECUTABLE FALSE)
 set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_CONFIGURATION_TYPE ClassLibrary)
 set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_DOTNET_REFERENCES 
     "C:/GitLab/SpockEngine/Source/ScriptCore/Build/Debug/SE_Core.dll"
-    ${REFERENCE_PATH}/Metrino.Mono/Metrino.Interop.dll
+    ${REFERENCE_PATH}/Metrino.Interop/Metrino.Interop.dll
     ${REFERENCE_PATH}/Metrino.Otdr/Metrino.Otdr.dll
     ${REFERENCE_PATH}/Metrino.Otdr.SignalProcessing/Metrino.Otdr.SignalProcessing.dll
     ${REFERENCE_PATH}/Metrino.Otdr.Instrument/Metrino.Otdr.Instrument.dll

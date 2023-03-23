@@ -41,7 +41,9 @@ namespace SE::OtdrEditor
         ~BaseOtdrApplication() = default;
 
         void Init();
+        void Shutdown();
 
+        void RenderScene() {}
         void Update( Timestep ts );
         bool RenderUI( ImGuiIO &io );
 
@@ -49,6 +51,8 @@ namespace SE::OtdrEditor
         uint32_t mViewportHeight        = 1;
         uint32_t mViewportWidth         = 1;
         bool     mShouldRebuildViewport = true;
+
+        Ref<MonoScriptInstance> mApplicationInstance = nullptr;
     };
 
 } // namespace SE::OtdrEditor

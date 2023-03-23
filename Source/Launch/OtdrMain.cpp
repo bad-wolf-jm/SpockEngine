@@ -250,12 +250,6 @@ int main( int argc, char **argv )
 
     MonoRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 
-    SE::OtdrEditor::BaseOtdrApplication lEditorApplication;
-    lEditorApplication.Init();
-
-    SE::Core::Engine::GetInstance()->UpdateDelegate.connect<&SE::OtdrEditor::BaseOtdrApplication::Update>( lEditorApplication );
-    // SE::Core::Engine::GetInstance()->RenderDelegate.connect<&SE::Editor::BaseOtdrApplication::RenderScene>( lEditorApplication );
-    SE::Core::Engine::GetInstance()->UIDelegate.connect<&SE::OtdrEditor::BaseOtdrApplication::RenderUI>( lEditorApplication );
 
     YAML::Node lRootNode = YAML::LoadFile( lProjectConfigurationPath.string() );
 
@@ -297,10 +291,18 @@ int main( int argc, char **argv )
     auto &lInitializationClass = MonoRuntime::GetClassType("SpockEngine.IO");
     lInitializationClass.CallMethod("Initialize");
 
+    SE::OtdrEditor::BaseOtdrApplication lEditorApplication;
+    lEditorApplication.Init();
+
+    SE::Core::Engine::GetInstance()->UpdateDelegate.connect<&SE::OtdrEditor::BaseOtdrApplication::Update>( lEditorApplication );
+    SE::Core::Engine::GetInstance()->RenderDelegate.connect<&SE::OtdrEditor::BaseOtdrApplication::RenderScene>( lEditorApplication );
+    SE::Core::Engine::GetInstance()->UIDelegate.connect<&SE::OtdrEditor::BaseOtdrApplication::RenderUI>( lEditorApplication );
+
     while( SE::Core::Engine::GetInstance()->Tick() )
     {
     }
 
+    lEditorApplication.Shutdown();
     SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
 
     MonoRuntime::Shutdown();

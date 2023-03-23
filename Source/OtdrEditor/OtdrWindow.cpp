@@ -492,7 +492,8 @@ namespace SE::OtdrEditor
                 auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
                                                         "OLM Files (*.iolm)\0*.iolm\0All Files (*.*)\0*.*\0" );
 
-                LoadIOlmData( fs::path( lFilePath.value() ) );
+                if (lFilePath.has_value())
+                    LoadIOlmData( fs::path( lFilePath.value() ) );
             }
 
             if( UI::MenuItem( fmt::format( "{} Load test report", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
@@ -500,7 +501,8 @@ namespace SE::OtdrEditor
                 auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
                                                         "XML Files (*.xml)\0*.xml\0All Files (*.*)\0*.*\0" );
 
-                LoadTestReport( fs::path( lFilePath.value() ).parent_path() );
+                if (lFilePath.has_value())
+                    LoadTestReport( fs::path( lFilePath.value() ).parent_path() );
             }
             lRequestQuit = UI::MenuItem( fmt::format( "{} Exit", ICON_FA_WINDOW_CLOSE_O ).c_str(), NULL );
             ImGui::EndMenu();

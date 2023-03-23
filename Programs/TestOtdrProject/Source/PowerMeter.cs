@@ -7,7 +7,7 @@ using Metrino.Otdr;
 using Metrino.Otdr.Instrument;
 using Metrino.Otdr.SignalProcessing;
 
-using Metrino.Mono;
+using Metrino.Interop;
 
 namespace Test
 {
