@@ -140,7 +140,12 @@ namespace SE::Core
 
     MonoObject *MonoScriptClass::InvokeMethod( MonoMethod *aMethod, void **aParameters )
     {
-        return mono_runtime_invoke( aMethod, nullptr, aParameters, nullptr );
+        MonoObject *lException = nullptr;
+        MonoObject *lValue     = mono_runtime_invoke( aMethod, nullptr, aParameters, &lException );
+
+        if( lException == nullptr ) return lValue;
+
+        return nullptr;
     }
 
     MonoObject *MonoScriptClass::InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters )

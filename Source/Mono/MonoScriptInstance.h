@@ -75,12 +75,13 @@ namespace SE::Core
             sScriptProperty &lProperty       = GetProperty( aName );
             MonoMethod      *lPropertyGetter = mono_property_get_get_method( lProperty.mProperty );
 
-            MonoObject *lValue = mono_runtime_invoke( lPropertyGetter, mInstance, nullptr, nullptr );
+            MonoObject *lException = nullptr;
+            MonoObject *lValue     = mono_runtime_invoke( lPropertyGetter, mInstance, nullptr, &lException );
 
             if constexpr( std::is_same<_Ty, MonoString *>::value || std::is_same<_Ty, MonoObject *>::value )
-                return (_Ty)lValue;
+                return ( lException == nullptr ) ? (_Ty)lValue : nullptr;
             else
-                return *(_Ty *)mono_object_unbox( lValue );
+                return ( lException == nullptr ) ? *(_Ty *)mono_object_unbox( lValue ) : _Ty{};
         }
 
         operator bool() const { return ( mInstance != nullptr ) && ( mMonoClass != nullptr ); }
