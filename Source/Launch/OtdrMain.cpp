@@ -113,6 +113,10 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
         .help( "Specify input file" )
         .default_value( std::string{ "" } );
 
+    lProgramArguments->add_argument( "-a", "--application" )
+        .help( "Specify input file" )
+        .default_value( std::string{ "" } );
+
     lProgramArguments->add_argument( "-x", "--pos_x" )
         .help( "Specify output file" )
         .scan<'i', int>();
@@ -280,10 +284,6 @@ int main( int argc, char **argv )
         YAML::Node &lAssemblyPath = lRootNode["project"]["assembly_path"];
         if( !lAssemblyPath.IsNull() && fs::exists( lAssemblyPath.as<std::string>() ) )
             MonoRuntime::AddAppAssemblyPath( lAssemblyPath.as<std::string>(), "SYSTEM UNDER TEST" );
-
-        // YAML::Node &lDefaultScenarioPath = lRootNode["project"]["default_scenario"];
-        // if( (!lDefaultScenarioPath.IsNull()) && fs::exists( lDefaultScenarioPath.as<std::string>() ) )
-        //     lEditorApplication.mEditorWindow.World->LoadScenario( lDefaultScenarioPath.as<std::string>() );
     }
 
     MonoRuntime::ReloadAssemblies();
