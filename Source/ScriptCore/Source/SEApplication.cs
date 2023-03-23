@@ -4,23 +4,14 @@ namespace SpockEngine
 {
     public class SEApplication
     {
-        public SEApplication()
-        {
-        }
+        public SEApplication() { }
 
-        public virtual void BeginScenario()
-        {
+        public virtual void Initialize() { }
 
-        }
+        public virtual void Shutdown() { }
 
-        public virtual void EndScenario()
-        {
+        public virtual void Update(float aTs) { }
 
-        }
-
-        public virtual void Update(float aTs)
-        {
-
-        }
+        public virtual void UpdateUI(float aTs) { }
     }
 }
