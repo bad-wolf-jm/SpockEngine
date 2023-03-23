@@ -57,34 +57,62 @@ namespace SE::OtdrEditor
     void UILinkElementTracePlot::SetEventData( sLinkElement const &aLinkElement, bool aDisplayEventBounds, bool aDisplayLsaFit,
                                                bool aAdjustAxisScale )
     {
-        static auto &lSinglePulseTraceClass = MonoRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
-
-        auto lTrace = MonoScriptInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), aLinkElement.mPeakTrace );
-        if( !lTrace ) return;
-
-        auto lSamples = lTrace.GetPropertyValue<MonoObject *>( "Samples" );
-        auto lDeltaX  = lTrace.GetPropertyValue<double>( "SamplingPeriod" );
-
-        auto lPlot = New<sFloat64LinePlot>();
-
         static const double lSpeedOfLight = 299792458.0;
 
-        lPlot->mY      = AsVector<double>( lSamples );
-        lPlot->mX      = std::vector<double>( lPlot->mY.size() );
-        lPlot->mLegend = fmt::format( "Trace##{}", (size_t)aLinkElement.mPeakTrace );
+        static auto &lSinglePulseTraceClass = MonoRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
 
-        uint32_t lFirst         = 0;
-        auto     lStartPosition = lTrace.CallMethod( "ConvertSampleIndexToPosition", &lFirst );
-        double   lX0            = *(double *)mono_object_unbox( lStartPosition );
+        auto lPeakPlot = New<sFloat64LinePlot>();
+        {
+            auto lTrace = MonoScriptInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), aLinkElement.mPeakTrace );
+            if( lTrace )
+            {
+                auto lSamples      = lTrace.GetPropertyValue<MonoObject *>( "Samples" );
+                auto lDeltaX       = lTrace.GetPropertyValue<double>( "SamplingPeriod" );
+                lPeakPlot->mY      = AsVector<double>( lSamples );
+                lPeakPlot->mX      = std::vector<double>( lPeakPlot->mY.size() );
+                lPeakPlot->mLegend = fmt::format( "Peak Trace##{}", (size_t)aLinkElement.mPeakTrace );
 
-        uint32_t lLast        = lPlot->mY.size() - 1;
-        auto     lEndPosition = lTrace.CallMethod( "ConvertSampleIndexToPosition", &lLast );
-        double   lX1          = *(double *)mono_object_unbox( lEndPosition );
+                uint32_t lFirst         = 0;
+                auto     lStartPosition = lTrace.CallMethod( "ConvertSampleIndexToPosition", &lFirst );
+                double   lX0            = *(double *)mono_object_unbox( lStartPosition );
 
-        for( uint32_t i = 0; i < lPlot->mX.size(); i++ )
-            lPlot->mX[i] = ( ( static_cast<float>( i ) / static_cast<float>( lLast ) ) * ( lX1 - lX0 ) + lX0 ) * 0.001;
+                uint32_t lLast        = lPeakPlot->mY.size() - 1;
+                auto     lEndPosition = lTrace.CallMethod( "ConvertSampleIndexToPosition", &lLast );
+                double   lX1          = *(double *)mono_object_unbox( lEndPosition );
 
-        Add( lPlot );
+                for( uint32_t i = 0; i < lPeakPlot->mX.size(); i++ )
+                    lPeakPlot->mX[i] = ( ( static_cast<float>( i ) / static_cast<float>( lLast ) ) * ( lX1 - lX0 ) + lX0 ) * 0.001;
+
+                Add( lPeakPlot );
+            }
+        }
+
+        auto lDetectionPlot = New<sFloat64LinePlot>();
+        {
+            auto lTrace = MonoScriptInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), aLinkElement.mDetectionTrace );
+            if( lTrace )
+            {
+                auto lSamples           = lTrace.GetPropertyValue<MonoObject *>( "Samples" );
+                auto lDeltaX            = lTrace.GetPropertyValue<double>( "SamplingPeriod" );
+                lDetectionPlot->mY      = AsVector<double>( lSamples );
+                lDetectionPlot->mX      = std::vector<double>( lDetectionPlot->mY.size() );
+                lDetectionPlot->mLegend = fmt::format( "Detection Trace##{}", (size_t)aLinkElement.mDetectionTrace );
+
+                uint32_t lFirst         = 0;
+                auto     lStartPosition = lTrace.CallMethod( "ConvertSampleIndexToPosition", &lFirst );
+                double   lX0            = *(double *)mono_object_unbox( lStartPosition );
+
+                uint32_t lLast        = lDetectionPlot->mY.size() - 1;
+                auto     lEndPosition = lTrace.CallMethod( "ConvertSampleIndexToPosition", &lLast );
+                double   lX1          = *(double *)mono_object_unbox( lEndPosition );
+
+                for( uint32_t i = 0; i < lDetectionPlot->mX.size(); i++ )
+                    lDetectionPlot->mX[i] =
+                        ( ( static_cast<float>( i ) / static_cast<float>( lLast ) ) * ( lX1 - lX0 ) + lX0 ) * 0.001;
+
+                Add( lDetectionPlot );
+            }
+        }
 
         static auto &lBaseLinkElementClass  = MonoRuntime::GetClassType( "Metrino.Olm.BaseLinkElement" );
         static auto &lOlmPhysicalEventClass = MonoRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
@@ -96,22 +124,25 @@ namespace SE::OtdrEditor
         auto lAttributes = MonoScriptInstance( &lOlmAttributeClass, lOlmAttributeClass.Class(), aLinkElement.mAttributes );
 
         auto lOtdrPhysicalEvent = lPhysicalEvent.GetPropertyValue( "PhysicalEvent", "Metrino.Otdr.PhysicalEvent" );
-        auto lEventSpanStart    = lOtdrPhysicalEvent->GetPropertyValue<double>( "CursorA" );
-        auto lEventSpanEnd      = lOtdrPhysicalEvent->GetPropertyValue<double>( "CursorB" );
-        auto lElementPosition   = lLinkElement.GetPropertyValue<double>( "Position" );
-
-        if( aDisplayEventBounds )
+        if( lOtdrPhysicalEvent && *lOtdrPhysicalEvent )
         {
-            auto lEventSpanLine    = New<sVLine>( std::vector<double>{ lEventSpanStart * 0.001, lEventSpanEnd * 0.001 } );
-            lEventSpanLine->mColor = math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
-            Add( lEventSpanLine );
+            auto lEventSpanStart  = lOtdrPhysicalEvent->GetPropertyValue<double>( "CursorA" );
+            auto lEventSpanEnd    = lOtdrPhysicalEvent->GetPropertyValue<double>( "CursorB" );
+            auto lElementPosition = lLinkElement.GetPropertyValue<double>( "Position" );
 
-            auto lEventPositionLine    = New<sVLine>( std::vector<double>{ lElementPosition * 0.001 } );
-            lEventPositionLine->mColor = math::vec4{ 1.0f, .0f, .0f, 1.0f };
-            Add( lEventPositionLine );
+            if( aDisplayEventBounds )
+            {
+                auto lEventSpanLine    = New<sVLine>( std::vector<double>{ lEventSpanStart * 0.001, lEventSpanEnd * 0.001 } );
+                lEventSpanLine->mColor = math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
+                Add( lEventSpanLine );
+
+                auto lEventPositionLine    = New<sVLine>( std::vector<double>{ lElementPosition * 0.001 } );
+                lEventPositionLine->mColor = math::vec4{ 1.0f, .0f, .0f, 1.0f };
+                Add( lEventPositionLine );
+            }
         }
 
-        if( aDisplayLsaFit )
+        if( aDisplayLsaFit && lAttributes )
         {
             auto lPreviousRbs        = lAttributes.GetPropertyValue( "PreviousRbs", "Metrino.Olm.SignalProcessing.RbsAttribute" );
             auto lPreviousRbsLsaData = lPreviousRbs->GetPropertyValue( "Lsa", "Metrino.Olm.SignalProcessing.RbsLsa" );
@@ -151,10 +182,10 @@ namespace SE::OtdrEditor
             }
         }
 
-        if( aAdjustAxisScale )
+        if( aAdjustAxisScale && lAttributes )
         {
-            mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMin = lPlot->mX[0];
-            mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMax = lPlot->mX[lPlot->mX.size() - 1];
+            mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMin = lPeakPlot->mX[0];
+            mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMax = lPeakPlot->mX[lPeakPlot->mX.size() - 1];
 
             auto lPreviousRbs        = lAttributes.GetPropertyValue( "PreviousRbs", "Metrino.Olm.SignalProcessing.RbsAttribute" );
             auto lPreviousRbsLsaData = lPreviousRbs->GetPropertyValue( "Lsa", "Metrino.Olm.SignalProcessing.RbsLsa" );
@@ -178,20 +209,20 @@ namespace SE::OtdrEditor
             bool lAxisMinSet = false;
             bool lAxisMaxSet = false;
 
-            for( uint32_t i = 0; i < lPlot->mX.size(); i++ )
+            for( uint32_t i = 0; i < lPeakPlot->mX.size(); i++ )
             {
-                if( ( lPlot->mX[i] >= mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMin ) &&
-                    ( lPlot->mX[i] <= mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMax ) )
+                if( ( lPeakPlot->mX[i] >= mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMin ) &&
+                    ( lPeakPlot->mX[i] <= mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMax ) )
                 {
                     mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMin =
-                        lAxisMinSet ? std::min( static_cast<float>( lPlot->mY[i] ),
+                        lAxisMinSet ? std::min( static_cast<float>( lPeakPlot->mY[i] ),
                                                 mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMin )
-                                    : static_cast<float>( lPlot->mY[i] );
+                                    : static_cast<float>( lPeakPlot->mY[i] );
 
                     mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMax =
-                        lAxisMaxSet ? std::max( static_cast<float>( lPlot->mY[i] ),
+                        lAxisMaxSet ? std::max( static_cast<float>( lPeakPlot->mY[i] ),
                                                 mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMax )
-                                    : static_cast<float>( lPlot->mY[i] );
+                                    : static_cast<float>( lPeakPlot->mY[i] );
 
                     lAxisMinSet = true;
                     lAxisMaxSet = true;

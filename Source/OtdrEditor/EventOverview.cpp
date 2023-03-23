@@ -46,10 +46,28 @@ namespace SE::OtdrEditor
 
     void SectionOverview::SetData( Ref<MonoScriptInstance> aRbsData )
     {
+
+        if (!*aRbsData)
+        {
+            mRbsTrace->SetValue( "N/A" );
+            mRbsNoise->SetValue( "N/A" );
+            mRbsSaturation->SetValue( "N/A" );
+            mLsaRange->SetValue( "N/A" );
+            mLsaSlope->SetValue( "N/A" );
+            mLsaOffset->SetValue( "N/A" );
+            mLsaMean->SetValue( "N/A" );
+            mLsaSlopeError->SetValue( "N/A" );
+            mLsaLinear->SetValue( "N/A" );
+            mLsaError->SetValue( "N/A" );
+            mLsaCrossings->SetValue( "N/A" );
+
+            return;
+        }
+
         auto lTrace = aRbsData->GetPropertyValue( "Trace", "Metrino.Otdr.SinglePulseTrace" );
 
         std::string lFormat;
-        if( *lTrace )
+        if( lTrace && *lTrace )
         {
             std::string lPulse      = fmt::format( "{:.3f} ns", lTrace->GetPropertyValue<double>( "Pulse" ) * 1e9 );
             std::string lPulseWidth = fmt::format( "{:.3f} m", lTrace->GetPropertyValue<double>( "PulseWidth" ) );
@@ -78,7 +96,7 @@ namespace SE::OtdrEditor
         std::string lLsaError;
         std::string lLsaCrossings;
 
-        if( *lLsaData )
+        if( lLsaData && *lLsaData )
         {
             lLsaRange      = fmt::format( "[{:.5f}, {:.5f}] km", lLsaData->GetPropertyValue<double>( "StartPosition" ) * 0.001,
                                           lLsaData->GetPropertyValue<double>( "EndPosition" ) * 0.001 );
@@ -168,7 +186,6 @@ namespace SE::OtdrEditor
 
     void EventOverview::SetData( Ref<MonoScriptInstance> aPhysicalEvent, Ref<MonoScriptInstance> aAttributes )
     {
-        auto lOtdrPhysicalEvent = aPhysicalEvent->GetPropertyValue( "PhysicalEvent", "Metrino.Otdr.PhysicalEvent" );
 
         // Overview
         std::string lWavelength = fmt::format( "{:.0f} nm", aPhysicalEvent->GetPropertyValue<double>( "Wavelength" ) * 1e9 );
@@ -176,7 +193,7 @@ namespace SE::OtdrEditor
 
         auto lDetectionTrace = aAttributes->GetPropertyValue( "DetectionTrace", "Metrino.Otdr.SinglePulseTrace" );
 
-        if( *lDetectionTrace )
+        if( lDetectionTrace && *lDetectionTrace )
         {
             std::string lDetectionTracePeakPulse =
                 fmt::format( "{:.3f} ns", lDetectionTrace->GetPropertyValue<double>( "Pulse" ) * 1e9 );
@@ -193,10 +210,21 @@ namespace SE::OtdrEditor
         std::string lPositionTolerance = fmt::format( "{:.4f} m", aPhysicalEvent->GetPropertyValue<double>( "PositionTolerance" ) );
         mPositionTolerance->SetValue( lPositionTolerance );
 
-        std::string lCurveLevel = fmt::format( "{:.2f} dB", lOtdrPhysicalEvent->GetPropertyValue<double>( "CurveLevel" ) );
-        mCurveLevel->SetValue( lCurveLevel );
 
-        std::string lNoiseLevel = fmt::format( "{:.2f} dB", lOtdrPhysicalEvent->GetPropertyValue<double>( "LocalNoise" ) );
+        auto lOtdrPhysicalEvent = aPhysicalEvent->GetPropertyValue( "PhysicalEvent", "Metrino.Otdr.PhysicalEvent" );
+        std::string lCurveLevel;
+        std::string lNoiseLevel;
+        if (lOtdrPhysicalEvent && *lOtdrPhysicalEvent)
+        {
+            lCurveLevel = fmt::format( "{:.2f} dB", lOtdrPhysicalEvent->GetPropertyValue<double>( "CurveLevel" ) );
+            lNoiseLevel = fmt::format( "{:.2f} dB", lOtdrPhysicalEvent->GetPropertyValue<double>( "LocalNoise" ) );
+        }
+        else
+        {
+            lCurveLevel = "N/A";
+            lNoiseLevel = "N/A";
+        }
+        mCurveLevel->SetValue( lCurveLevel );
         mEndOrNoiseLevel->SetValue( lNoiseLevel );
 
         std::string lEstimatedCurveLevel = fmt::format( "{:.2f} dB", aAttributes->GetPropertyValue<double>( "EstimatedCurveLevel" ) );
@@ -214,7 +242,7 @@ namespace SE::OtdrEditor
         auto lPeakTrace = aAttributes->GetPropertyValue( "PeakTrace", "Metrino.Otdr.SinglePulseTrace" );
 
         std::string lFormat;
-        if( *lPeakTrace )
+        if( lPeakTrace && *lPeakTrace )
         {
             std::string lPeakPulse      = fmt::format( "{:.3f} ns", lPeakTrace->GetPropertyValue<double>( "Pulse" ) * 1e9 );
             std::string lPeakPulseWidth = fmt::format( "{:.3f} m", lPeakTrace->GetPropertyValue<double>( "PulseWidth" ) );
