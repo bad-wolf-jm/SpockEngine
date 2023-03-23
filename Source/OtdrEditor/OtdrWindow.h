@@ -95,6 +95,8 @@ namespace SE::OtdrEditor
         void LoadTestReport( fs::path aPath );
 
         Ref<MonoScriptInstance> mDataInstance = nullptr;
+        std::vector<sLinkElement> mLinkElementVector;
+        std::vector<sMultiPulseEvent> mEventVector;
 
         UILinkElementTracePlot mTracePlot;
 

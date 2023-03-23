@@ -101,10 +101,7 @@ namespace SE::Core
 
             if( lItem.mItem )
             {
-                // auto lID = fmt::format( "{}-{}", (uint64_t)lItem.mItem, lChildID );
-                // if( ImGui::BeginChild( lID.c_str(), lItemSize ) ) 
                 lItem.mItem->Update( lItemPosition, lItemSize );
-                // ImGui::EndChild();
             }
         }
     }

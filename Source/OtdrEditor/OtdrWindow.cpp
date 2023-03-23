@@ -159,6 +159,11 @@ namespace SE::OtdrEditor
             static bool pOpen = true;
             if( ImGui::Begin( "iOlmData", &pOpen, ImGuiWindowFlags_None ) )
             {
+                if( ImGui::Button( "All Traces" ) )
+                {
+                    mTracePlot.Clear();
+                    mTracePlot.SetEventData( mLinkElementVector );
+                }
                 mTracePlot.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
             }
             ImGui::End();
@@ -388,47 +393,24 @@ namespace SE::OtdrEditor
             auto lFiberInfo = lTraceDataInstance.GetPropertyValue( "FiberInfo", "Metrino.Otdr.PhysicalFiberCharacteristics" );
             mAcquisitionDataOverview.SetData( lSinglePulseTraceInstance, lAcquisitionDataInstance, lFiberInfo );
         }
-        // auto lFiberInfo = MonoScriptInstance( &lFiberInfoClassType, lFiberInfoClassType.Class(), lTraceDataVector[0] );
 
-        // mTracePlot.SetData(lTraceDataVector);
-        {    
-            bool        lX                 = false;
-            MonoObject *lLinkElementData   = mDataInstance->CallMethod( "GetLinkElements", &lX );
-            auto        lLinkElementVector = AsVector<sLinkElement>( lLinkElementData );
-            mLinkElementTable->SetData( lLinkElementVector );
-            mTracePlot.SetEventData( lLinkElementVector );
-
-            mMeasurementOverview.SetData( mDataInstance );
-
-            // static auto &lOlmMeasurementClass = MonoRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
-            // auto         lPhysicalEvent =
-            //     New<MonoScriptInstance>( &lOlmMeasurementClass, lOlmMeasurementClass.Class(), lLinkElementVector[0].mPhysicalEvent
-            //     );
-
-            // static auto &lOlmAttributeClass = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
-            // auto         lAttributes =
-            //     New<MonoScriptInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), lLinkElementVector[0].mAttributes );
-            // mEventOverview.SetData( lPhysicalEvent, lAttributes );
-
-            MonoObject *lEventData   = mDataInstance->CallMethod( "GetEvents", &lX );
-            auto        lEventVector = AsVector<sMultiPulseEvent>( lEventData );
-            mEventTable->SetData( lEventVector );
+        {
+            bool        lX         = true;
+            MonoObject *lEventData = mDataInstance->CallMethod( "GetEvents", &lX );
+            mEventVector           = AsVector<sMultiPulseEvent>( lEventData );
+            mEventTable->SetData( mEventVector );
         }
 
-        // {
-        //     MonoString *lFilePath     = MonoRuntime::NewString( aPath.string() );
-        //     MonoObject *lDataObject   = lFileLoader.CallMethod( "LoadOlmData", lFilePath );
-        //     auto        lDataInstance = New<MonoScriptInstance>( &lFileClass, lFileClass.Class(), lDataObject );
+        {
+            bool        lX               = true;
+            MonoObject *lLinkElementData = mDataInstance->CallMethod( "GetLinkElements", &lX );
+            mLinkElementVector           = AsVector<sLinkElement>( lLinkElementData );
 
-        //     bool        lX                  = true;
-        //     MonoObject *lLinkElementData11  = lDataInstance->CallMethod( "GetLinkElements", &lX );
-        //     auto        lLinkElementVector1 = AsVector<sLinkElement>( lLinkElementData11 );
-        //     mLinkElementTable1->SetData( lLinkElementVector1 );
+            mLinkElementTable->SetData( mLinkElementVector );
+            mTracePlot.SetEventData( mLinkElementVector );
 
-        //     MonoObject *lEventData   = mDataInstance->CallMethod( "GetEvents", &lX );
-        //     auto        lEventVector = AsVector<sMultiPulseEvent>( lEventData );
-        //     mEventTable1->SetData( lEventVector );
-        // }
+            mMeasurementOverview.SetData( mDataInstance );
+        }
     }
 
     void OtdrWindow::LoadTestReport( fs::path aPath )
@@ -492,8 +474,7 @@ namespace SE::OtdrEditor
                 auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
                                                         "OLM Files (*.iolm)\0*.iolm\0All Files (*.*)\0*.*\0" );
 
-                if (lFilePath.has_value())
-                    LoadIOlmData( fs::path( lFilePath.value() ) );
+                if( lFilePath.has_value() ) LoadIOlmData( fs::path( lFilePath.value() ) );
             }
 
             if( UI::MenuItem( fmt::format( "{} Load test report", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
@@ -501,8 +482,7 @@ namespace SE::OtdrEditor
                 auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
                                                         "XML Files (*.xml)\0*.xml\0All Files (*.*)\0*.*\0" );
 
-                if (lFilePath.has_value())
-                    LoadTestReport( fs::path( lFilePath.value() ).parent_path() );
+                if( lFilePath.has_value() ) LoadTestReport( fs::path( lFilePath.value() ).parent_path() );
             }
             lRequestQuit = UI::MenuItem( fmt::format( "{} Exit", ICON_FA_WINDOW_CLOSE_O ).c_str(), NULL );
             ImGui::EndMenu();
