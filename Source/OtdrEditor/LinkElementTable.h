@@ -30,6 +30,7 @@ namespace SE::OtdrEditor
         void     *mLinkElement;
         void     *mPhysicalEvent;
         void     *mPeakTrace;
+        void     *mDetectionTrace;
         void     *mAttributes;
         void     *mAcquisitionData;
         void     *mFiberInfo;
