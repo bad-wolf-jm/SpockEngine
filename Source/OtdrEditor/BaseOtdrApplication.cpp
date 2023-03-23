@@ -22,6 +22,11 @@ namespace SE::OtdrEditor
     void BaseOtdrApplication::Update( Timestep ts )
     {
         mEditorWindow.Update( ts );
+        if( mApplicationInstance )
+        {
+            float lTs = ts.GetMilliseconds();
+            mApplicationInstance->CallMethod( "Update", &lTs );
+        }
     }
 
     bool BaseOtdrApplication::RenderUI( ImGuiIO &io )
@@ -38,6 +43,12 @@ namespace SE::OtdrEditor
             mShouldRebuildViewport = true;
         }
 
+        if( mApplicationInstance )
+        {
+            float lTs = 0.0f;
+            mApplicationInstance->CallMethod( "UpdateUI", &lTs );
+        }
+
         return lRequestQuit;
     }
 
@@ -47,5 +58,18 @@ namespace SE::OtdrEditor
             OtdrWindow( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
         mEditorWindow.ConfigureUI();
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
+
+        static auto &lApplicationType    = MonoRuntime::GetClassType( "SpockEngine.SEApplication" );
+        auto &lApplicationClasses = lApplicationType.DerivedClasses();
+        if( lApplicationClasses.size() > 0 )
+        {
+            mApplicationInstance = lApplicationClasses[0]->Instantiate();
+            mApplicationInstance->CallMethod( "Initialize" );
+        }
     }
-} // namespace SE::Editor
+
+    void BaseOtdrApplication::Shutdown()
+    {
+        if( mApplicationInstance ) mApplicationInstance->CallMethod( "Shutdown" );
+    }
+} // namespace SE::OtdrEditor

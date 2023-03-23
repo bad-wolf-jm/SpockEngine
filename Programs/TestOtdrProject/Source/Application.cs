@@ -7,10 +7,30 @@ using Metrino.Otdr;
 using Metrino.Otdr.Instrument;
 using Metrino.Otdr.SignalProcessing;
 
-using Metrino.Mono;
+using Metrino.Interop;
 
 namespace Test
 {
+    public class App : SEApplication
+    {
+        public App() { }
+
+        public void Initialize() { }
+
+        public void Shutdown() { }
+
+        public void Update(float aTs)
+        {
+            // Console.WriteLine("Update");
+        }
+
+        public void UpdateUI(float aTs)
+        {
+            // Console.WriteLine("Update");
+
+        }
+    }
+
     public class TestScript : Script
     {
 
@@ -58,7 +78,7 @@ namespace Test
 
             // if (mSource != null)
             //     mSource.Stop();
-                
+
             // if (mPowerMeter != null)
             //     mPowerMeter.Stop();
 
