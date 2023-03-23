@@ -35,7 +35,12 @@ namespace SE::Core
 
     MonoObject *MonoScriptInstance::InvokeMethod( MonoMethod *aMethod, void **aParameters )
     {
-        return mono_runtime_invoke( aMethod, mInstance, aParameters, nullptr );
+        MonoObject *lException = nullptr;
+        MonoObject *lValue     = mono_runtime_invoke( aMethod, mInstance, aParameters, &lException );
+
+        if( lException == nullptr ) return lValue;
+
+        return nullptr;
     }
 
     MonoObject *MonoScriptInstance::InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters )
@@ -54,9 +59,12 @@ namespace SE::Core
 
         MonoScriptClass &lClass = MonoRuntime::GetClassType( aClassName );
 
-        MonoObject *lValue = mono_runtime_invoke( lPropertyGetter, mInstance, nullptr, nullptr );
+        MonoObject *lException = nullptr;
+        MonoObject *lValue = mono_runtime_invoke( lPropertyGetter, mInstance, nullptr, &lException );
 
-        return New<MonoScriptInstance>( &lClass, lClass.Class(), lValue );
+        if( lException == nullptr ) return New<MonoScriptInstance>( &lClass, lClass.Class(), lValue );
+
+        return nullptr;
     }
 
     sScriptProperty &MonoScriptInstance::GetProperty( std::string const &aName ) { return mScriptClass->GetProperty( aName ); }
