@@ -4,14 +4,14 @@
 
 namespace SE::Core
 {
-    enum class eHorizontalAlignment : uint8_t
+    enum class eHorizontalAlignment : int32_t
     {
         LEFT,
         RIGHT,
         CENTER
     };
 
-    enum class eVerticalAlignment : uint8_t
+    enum class eVerticalAlignment : int32_t
     {
         TOP,
         BOTTOM,

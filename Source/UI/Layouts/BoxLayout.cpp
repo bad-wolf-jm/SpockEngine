@@ -116,7 +116,7 @@ namespace SE::Core
 
             if( lItem.mExpand )
             {
-                lItemSize     = lItem.mFill ? lExpandedSize : (lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{});
+                lItemSize     = lItem.mFill ? lExpandedSize : ( lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{} );
                 lItemPosition = lItem.mFill ? lCurrentPosition
                                             : GetContentAlignedposition( lItem.mHalign, lItem.mValign, lCurrentPosition, lItemSize,
                                                                          lExpandedSize );
@@ -129,10 +129,11 @@ namespace SE::Core
                 else
                     lItemSize = ImVec2{ lItem.mFixedSize, aSize.y };
 
-                lItemSize     = lItem.mFill ? lItemSize : (lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{});
-                lItemPosition = lItem.mFill ? lCurrentPosition
-                                            : GetContentAlignedposition( lItem.mHalign, lItem.mValign, lCurrentPosition,
-                                                                         (lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{}), lItemSize );
+                lItemSize     = lItem.mFill ? lItemSize : ( lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{} );
+                lItemPosition = lItem.mFill
+                                    ? lCurrentPosition
+                                    : GetContentAlignedposition( lItem.mHalign, lItem.mValign, lCurrentPosition,
+                                                                 ( lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{} ), lItemSize );
                 lPositionStep = lItem.mFixedSize;
             }
             else
@@ -144,10 +145,11 @@ namespace SE::Core
                 else
                     lItemSize.y = aSize.y;
 
-                lItemSize     = lItem.mFill ? lItemSize : (lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{});
-                lItemPosition = lItem.mFill ? lCurrentPosition
-                                            : GetContentAlignedposition( lItem.mHalign, lItem.mValign, lCurrentPosition,
-                                                                         (lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{}), lItemSize );
+                lItemSize     = lItem.mFill ? lItemSize : ( lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{} );
+                lItemPosition = lItem.mFill
+                                    ? lCurrentPosition
+                                    : GetContentAlignedposition( lItem.mHalign, lItem.mValign, lCurrentPosition,
+                                                                 ( lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{} ), lItemSize );
                 lPositionStep = ( mOrientation == eBoxLayoutOrientation::VERTICAL ) ? lItemSize.y : lItemSize.x;
             }
 
@@ -158,5 +160,55 @@ namespace SE::Core
             else
                 lCurrentPosition.x += ( lPositionStep + mItemSpacing );
         }
+    }
+
+    void *UIBoxLayout::UIBoxLayout_CreateWithOrientation( eBoxLayoutOrientation aOrientation )
+    {
+        auto lNewLayout = new UIBoxLayout( aOrientation );
+
+        return static_cast<void *>( lNewLayout );
+    }
+
+    void UIBoxLayout::UIBoxLayout_Destroy( void *aInstance ) { delete static_cast<UIBoxLayout *>( aInstance ); }
+
+    void UIBoxLayout::UIBoxLayout_AddAlignedNonFixed( void *aInstance, void *aChild, bool aExpand, bool aFill,
+                                                      eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
+    {
+        auto lInstance = static_cast<UIBoxLayout *>( aInstance );
+        auto lChild    = static_cast<UIComponent *>( aChild );
+
+        lInstance->Add( lChild, aExpand, aFill, aHAlignment, aVAlignment );
+    }
+
+    void UIBoxLayout::UIBoxLayout_AddNonAlignedNonFixed( void *aInstance, void *aChild, bool aExpand, bool aFill )
+    {
+        auto lInstance = static_cast<UIBoxLayout *>( aInstance );
+        auto lChild    = static_cast<UIComponent *>( aChild );
+
+        lInstance->Add( lChild, aExpand, aFill );
+    }
+
+    void UIBoxLayout::UIBoxLayout_AddAlignedFixed( void *aInstance, void *aChild, float aFixedSize, bool aExpand, bool aFill,
+                                                   eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
+    {
+        auto lInstance = static_cast<UIBoxLayout *>( aInstance );
+        auto lChild    = static_cast<UIComponent *>( aChild );
+
+        lInstance->Add( lChild, aFixedSize, aExpand, aFill, aHAlignment, aVAlignment );
+    }
+
+    void UIBoxLayout::UIBoxLayout_AddNonAlignedFixed( void *aInstance, void *aChild, float aFixedSize, bool aExpand, bool aFill )
+    {
+        auto lInstance = static_cast<UIBoxLayout *>( aInstance );
+        auto lChild    = static_cast<UIComponent *>( aChild );
+
+        lInstance->Add( lChild, aFixedSize, aExpand, aFill );
+    }
+
+    void UIBoxLayout::UIBoxLayout_SetItemSpacing( void *aInstance, float aItemSpacing )
+    {
+        auto lInstance = static_cast<UIBoxLayout *>( aInstance );
+
+        lInstance->SetItemSpacing( aItemSpacing );
     }
 } // namespace SE::Core

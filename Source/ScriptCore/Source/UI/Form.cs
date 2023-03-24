@@ -13,7 +13,7 @@ namespace SpockEngine
 
         public void SetContent(UIComponent aContent) { UIForm_SetContent(mInstance, aContent.Instance); }
 
-        public override void Update() { UIForm_Update(mInstance); }
+        public void Update() { UIForm_Update(mInstance); }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIForm_Create();
