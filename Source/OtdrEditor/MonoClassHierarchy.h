@@ -6,8 +6,6 @@
 
 #include "OtdrScene/OtdrScene.h"
 
-#include "SceneElementEditor.h"
-
 namespace SE::OtdrEditor
 {
     using namespace SE::Core;
