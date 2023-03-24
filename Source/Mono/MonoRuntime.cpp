@@ -30,6 +30,7 @@
 #include "UI/Form.h"
 #include "UI/Components/Label.h"
 #include "UI/Components/Button.h"
+#include "UI/Components/CheckBox.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/Layouts/ZLayout.h"
 
@@ -588,6 +589,12 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIButton::UIButton_CreateWithText", UIButton::UIButton_CreateWithText );
         mono_add_internal_call( "SpockEngine.UIButton::UIButton_Destroy", UIButton::UIButton_Destroy );
         mono_add_internal_call( "SpockEngine.UIButton::UIButton_SetText", UIButton::UIButton_SetText );
+
+        mono_add_internal_call( "SpockEngine.UICheckBox::UICheckBox_Create", UICheckBox::UICheckBox_Create );
+        mono_add_internal_call( "SpockEngine.UICheckBox::UICheckBox_Destroy", UICheckBox::UICheckBox_Destroy );
+        mono_add_internal_call( "SpockEngine.UICheckBox::UICheckBox_OnClick", UICheckBox::UICheckBox_OnClick );
+        mono_add_internal_call( "SpockEngine.UICheckBox::UICheckBox_IsChecked", UICheckBox::UICheckBox_IsChecked );
+        mono_add_internal_call( "SpockEngine.UICheckBox::UICheckBox_SetIsChecked", UICheckBox::UICheckBox_SetIsChecked );
 
         mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_CreateWithOrientation", UIBoxLayout::UIBoxLayout_CreateWithOrientation );
         mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_Destroy", UIBoxLayout::UIBoxLayout_Destroy );
