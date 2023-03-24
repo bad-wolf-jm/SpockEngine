@@ -14,8 +14,6 @@ namespace SpockEngine
 
         public void SetTextColor(Math.vec4 aColor) { UILabel_SetTextColor(mInstance, aColor); }
 
-        // public override void Update() { UILabel_Update(mInstance); }
-
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UILabel_Create();
 
