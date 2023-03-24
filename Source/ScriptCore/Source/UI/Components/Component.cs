@@ -1,5 +1,19 @@
 namespace SpockEngine
 {
+    public enum eHorizontalAlignment
+    {
+        LEFT,
+        RIGHT,
+        CENTER
+    }
+
+    public enum eVerticalAlignment
+    {
+        TOP,
+        BOTTOM,
+        CENTER
+    }
+
     public abstract class UIComponent
     {
         protected ulong mInstance;
@@ -8,6 +22,6 @@ namespace SpockEngine
         public UIComponent() { mInstance = 0; }
         public UIComponent(ulong aInstance) { mInstance = aInstance; }
 
-        public abstract void Update();        
+        // public abstract void Update();        
     }
 }

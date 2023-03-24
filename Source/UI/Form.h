@@ -18,11 +18,11 @@ namespace SE::Core
         void Update();
 
       public:
-        static void* UIForm_Create();
-        static void UIForm_Destroy(void* aInstance);
-        static void UIForm_SetTitle(void* aInstance, void* aTitle);
-        static void UIForm_SetContent(void* aInstance, void* aContent);
-        static void UIForm_Update(void* aInstance);
+        static void *UIForm_Create();
+        static void  UIForm_Destroy( void *aInstance );
+        static void  UIForm_SetTitle( void *aInstance, void *aTitle );
+        static void  UIForm_SetContent( void *aInstance, void *aContent );
+        static void  UIForm_Update( void *aInstance );
 
       protected:
         std::string  mTitle;

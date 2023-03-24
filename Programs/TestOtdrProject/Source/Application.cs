@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 
 using SpockEngine;
+using SpockEngine.Math;
 
 using Metrino.Otdr;
 using Metrino.Otdr.Instrument;
@@ -14,12 +15,18 @@ namespace Test
     public class App : SEApplication
     {
         UIForm mMainForm;
+        UILabel mLabel0;
 
         public App() { }
 
-        public void Initialize() { 
+        public void Initialize()
+        {
             mMainForm = new UIForm();
+            mLabel0 = new UILabel("Test label");
+            mLabel0.SetTextColor(new vec4(1.0f, 0.0f, 1.0f, 1.0f));
+
             mMainForm.SetTitle("This is a test!!");
+            mMainForm.SetContent(mLabel0);
         }
 
         public void Shutdown() { }

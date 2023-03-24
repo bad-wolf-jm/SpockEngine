@@ -44,10 +44,7 @@ namespace SE::Core
         return static_cast<void *>( lNewForm );
     }
 
-    void UIForm::UIForm_Destroy( void *aInstance ) 
-    { 
-        delete static_cast<UIForm *>( aInstance ); 
-    }
+    void UIForm::UIForm_Destroy( void *aInstance ) { delete static_cast<UIForm *>( aInstance ); }
 
     void UIForm::UIForm_SetTitle( void *aInstance, void *aTitle )
     {

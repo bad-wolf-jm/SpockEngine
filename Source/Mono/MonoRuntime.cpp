@@ -27,6 +27,10 @@
 #include "InternalCalls.h"
 #include "MonoScriptUtils.h"
 
+#include "UI/Form.h"
+#include "UI/Components/Label.h"
+#include "UI/Layouts/BoxLayout.h"
+
 namespace fs = std::filesystem;
 
 namespace SE::Core
@@ -565,5 +569,27 @@ namespace SE::Core
 
         SE_ADD_INTERNAL_CALL( UI_Text );
         SE_ADD_INTERNAL_CALL( UI_Button );
+
+        mono_add_internal_call( "SpockEngine.UIForm::UIForm_Create", UIForm::UIForm_Create );
+        mono_add_internal_call( "SpockEngine.UIForm::UIForm_Destroy", UIForm::UIForm_Destroy );
+        mono_add_internal_call( "SpockEngine.UIForm::UIForm_SetTitle", UIForm::UIForm_SetTitle );
+        mono_add_internal_call( "SpockEngine.UIForm::UIForm_SetContent", UIForm::UIForm_SetContent );
+        mono_add_internal_call( "SpockEngine.UIForm::UIForm_Update", UIForm::UIForm_Update );
+
+        mono_add_internal_call( "SpockEngine.UILabel::UILabel_Create", UILabel::UILabel_Create );
+        mono_add_internal_call( "SpockEngine.UILabel::UILabel_CreateWithText", UILabel::UILabel_CreateWithText );
+        mono_add_internal_call( "SpockEngine.UILabel::UILabel_Destroy", UILabel::UILabel_Destroy );
+        mono_add_internal_call( "SpockEngine.UILabel::UILabel_SetText", UILabel::UILabel_SetText );
+        mono_add_internal_call( "SpockEngine.UILabel::UILabel_SetTextColor", UILabel::UILabel_SetTextColor );
+        mono_add_internal_call( "SpockEngine.UILabel::UILabel_Update", UILabel::UILabel_Update );
+
+        mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_CreateWithOrientation", UIBoxLayout::UIBoxLayout_CreateWithOrientation );
+        mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_Destroy", UIBoxLayout::UIBoxLayout_Destroy );
+        mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_AddAlignedNonFixed", UIBoxLayout::UIBoxLayout_AddAlignedNonFixed );
+        mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_AddNonAlignedNonFixed", UIBoxLayout::UIBoxLayout_AddNonAlignedNonFixed );
+        mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_AddAlignedFixed", UIBoxLayout::UIBoxLayout_AddAlignedFixed );
+        mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_AddNonAlignedFixed", UIBoxLayout::UIBoxLayout_AddNonAlignedFixed );
+        mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_SetItemSpacing", UIBoxLayout::UIBoxLayout_SetItemSpacing );
+
     }
 } // namespace SE::Core
