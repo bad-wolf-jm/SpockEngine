@@ -8,10 +8,6 @@
 #include "Core/EntityCollection/Collection.h"
 #include "Core/EntityCollection/Components.h"
 
-// #include "OtdrScene/Components.h"
-
-using namespace SE::Core::EntityComponentSystem::Components;
-
 namespace SE::OtdrEditor
 {
     void MonoClassHierarchy::DisplayNode( MonoScriptClass &aClass, float aWidth )
