@@ -2,12 +2,6 @@
 
 namespace SE::Core
 {
-
-    UIWorkspace::UIWorkspace( std::string const &aText )
-        : mText{ aText }
-    {
-    }
-
     void UIWorkspace::PushStyles() {}
     void UIWorkspace::PopStyles() {}
 
@@ -24,10 +18,10 @@ namespace SE::Core
         if( ImGui::BeginTabBar( "##tabs", lTabBarFlags ) )
         {
             // if( opt_reorderable ) NotifyOfDocumentsClosedElsewhere( app );
-            for( int doc_n = 0; doc_n < mDocuments.Size; doc_n++ )
+            for( int doc_n = 0; doc_n < mDocuments.size(); doc_n++ )
             {
                 auto &doc = mDocuments[doc_n];
-                if( !doc->mOpen && doc->mOpenPrev ) ImGui::SetTabItemClosed( doc->mName );
+                if( !doc->mOpen && doc->mOpenPrev ) ImGui::SetTabItemClosed( doc->mName.c_str() );
                 doc->mOpenPrev = doc->mOpen;
             }
 
@@ -39,7 +33,7 @@ namespace SE::Core
 
                 ImGuiTabItemFlags lCurrentTabFlags = ( doc->mDirty ? ImGuiTabItemFlags_UnsavedDocument : 0 );
 
-                bool lVisible = ImGui::BeginTabItem( doc->Name, &doc->Open, lCurrentTabFlags );
+                bool lVisible = ImGui::BeginTabItem( doc->mName.c_str(), &doc->mOpen, lCurrentTabFlags );
 
                 // Cancel attempt to close when unsaved add to save queue so we can display a popup.
                 if( !doc->mOpen && doc->mDirty )
@@ -52,7 +46,7 @@ namespace SE::Core
                 if( lVisible )
                 {
                     doc->Update( aPosition, aSize );
-                    MyDocument::DisplayContents( doc );
+                    // MyDocument::DisplayContents( doc );
                     ImGui::EndTabItem();
                 }
             }
@@ -60,16 +54,15 @@ namespace SE::Core
             ImGui::EndTabBar();
         }
 
-        
         if( mCloseQueue.empty() )
         {
             // Close queue is locked once we started a popup
-            for( int doc_n = 0; doc_n < mDocuments.Size; doc_n++ )
+            for( int doc_n = 0; doc_n < mDocuments.size(); doc_n++ )
             {
-                MyDocument *doc = &mDocuments[doc_n];
-                if( doc->WantClose )
+                auto doc = mDocuments[doc_n];
+                if( doc->mWantClose )
                 {
-                    doc->WantClose = false;
+                    doc->mWantClose = false;
                     mCloseQueue.push_back( doc );
                 }
             }
@@ -80,7 +73,7 @@ namespace SE::Core
         {
             int close_queue_unsaved_documents = 0;
             for( int n = 0; n < mCloseQueue.size(); n++ )
-                if( mCloseQueue[n]->Dirty ) close_queue_unsaved_documents++;
+                if( mCloseQueue[n]->mDirty ) close_queue_unsaved_documents++;
 
             if( close_queue_unsaved_documents == 0 )
             {
@@ -98,7 +91,7 @@ namespace SE::Core
                     if( ImGui::BeginChildFrame( ImGui::GetID( "frame" ), ImVec2( -FLT_MIN, 6.25f * item_height ) ) )
                     {
                         for( int n = 0; n < mCloseQueue.size(); n++ )
-                            if( mCloseQueue[n]->Dirty ) ImGui::Text( "%s", mCloseQueue[n]->Name );
+                            if( mCloseQueue[n]->mDirty ) ImGui::Text( "%s", mCloseQueue[n]->mName );
                         ImGui::EndChildFrame();
                     }
 
@@ -107,7 +100,7 @@ namespace SE::Core
                     {
                         for( int n = 0; n < mCloseQueue.size(); n++ )
                         {
-                            if( mCloseQueue[n]->Dirty ) mCloseQueue[n]->DoSave();
+                            if( mCloseQueue[n]->mDirty ) mCloseQueue[n]->DoSave();
                             mCloseQueue[n]->DoForceClose();
                         }
                         mCloseQueue.clear();
@@ -130,5 +123,5 @@ namespace SE::Core
                 }
             }
         }
-
-    } // namespace SE::Core
+    }
+} // namespace SE::Core
