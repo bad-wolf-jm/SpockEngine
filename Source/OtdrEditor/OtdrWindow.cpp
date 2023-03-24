@@ -349,6 +349,8 @@ namespace SE::OtdrEditor
     template <typename _Ty>
     std::vector<_Ty> AsVector( MonoObject *aObject )
     {
+        if( aObject == nullptr ) return std::vector<_Ty>( 0 );
+
         uint32_t lArrayLength = static_cast<uint32_t>( mono_array_length( (MonoArray *)aObject ) );
 
         std::vector<_Ty> lVector( lArrayLength );
@@ -395,18 +397,19 @@ namespace SE::OtdrEditor
         }
 
         {
-            bool        lX         = true;
+            bool        lX         = false;
             MonoObject *lEventData = mDataInstance->CallMethod( "GetEvents", &lX );
             mEventVector           = AsVector<sMultiPulseEvent>( lEventData );
             mEventTable->SetData( mEventVector );
         }
 
         {
-            bool        lX               = true;
+            bool        lX               = false;
             MonoObject *lLinkElementData = mDataInstance->CallMethod( "GetLinkElements", &lX );
             mLinkElementVector           = AsVector<sLinkElement>( lLinkElementData );
 
             mLinkElementTable->SetData( mLinkElementVector );
+            mTracePlot.Clear();
             mTracePlot.SetEventData( mLinkElementVector );
 
             mMeasurementOverview.SetData( mDataInstance );

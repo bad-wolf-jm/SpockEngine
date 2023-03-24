@@ -63,7 +63,7 @@ namespace SE::OtdrEditor
             mTestName->mData.push_back( lDataRow.mTestName );
             mTestDate->mData.push_back( lDataRow.mTestDate );
 
-            mFilename->mData.push_back( fs::path(lDataRow.mFilename).filename().string() );
+            mFilename->mData.push_back( fs::path(lDataRow.mFilename).string() );
             mLinkElementPosition->mData.push_back( lDataRow.mLinkElementPosition * 0.001f );
             mWavelength->mData.push_back( lDataRow.mWavelength * 1e9 );
             mPhysicalEventPosition->mData.push_back( lDataRow.mPhysicalEventPosition * 0.001f );
