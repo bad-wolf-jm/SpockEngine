@@ -70,12 +70,4 @@ namespace SE::Core
 
         lInstance->SetTextColor( *aTextColor );
     }
-
-    void UILabel::UILabel_Update( void *aInstance, math::vec2 *aPosition, math::vec2 *aSize )
-    {
-        auto lInstance = static_cast<UILabel *>( aInstance );
-
-        lInstance->Update( *(ImVec2 *)aPosition, *(ImVec2 *)aSize );
-    }
-
 } // namespace SE::Core

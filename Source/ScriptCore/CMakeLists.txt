@@ -6,11 +6,16 @@ set(LIBRARY_NAME SE_Core)
 add_library(${LIBRARY_NAME} SHARED
     Source/Math/mat4.cs
     Source/Math/mat3.cs
+    Source/Math/vec2.cs
     Source/Math/vec3.cs
     Source/Math/vec4.cs
     Source/Math/quaternion.cs
     Source/Math/functions.cs
     Source/UI/Components/Component.cs
+    Source/UI/Components/Button.cs
+    Source/UI/Layouts/BoxLayout.cs
+    Source/UI/Components/Label.cs
+    Source/UI/Layouts/ZLayout.cs
     Source/UI/UI.cs
     Source/UI/Form.cs
     Source/CppCalls.cs

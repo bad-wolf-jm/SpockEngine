@@ -31,6 +31,5 @@ namespace SE::Core
         static void  UILabel_Destroy( void *aInstance );
         static void  UILabel_SetText( void *aInstance, void *aText );
         static void  UILabel_SetTextColor( void *aInstance, math::vec4 *aTextColor );
-        static void  UILabel_Update( void *aInstance, math::vec2 *aPosition, math::vec2 *aSize );
     };
 } // namespace SE::Core
