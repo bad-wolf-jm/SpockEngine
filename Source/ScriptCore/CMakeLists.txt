@@ -11,6 +11,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/Math/vec4.cs
     Source/Math/quaternion.cs
     Source/Math/functions.cs
+
     Source/UI/Components/Component.cs
     Source/UI/Components/Button.cs
     Source/UI/Layouts/BoxLayout.cs
@@ -18,6 +19,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/Layouts/ZLayout.cs
     Source/UI/UI.cs
     Source/UI/Form.cs
+    
     Source/CppCalls.cs
     Source/Component.cs
     Source/Entity.cs
