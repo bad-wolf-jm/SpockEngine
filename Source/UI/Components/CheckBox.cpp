@@ -48,4 +48,34 @@ namespace SE::Core
         PopStyles( lEnabled );
     }
 
+    void *UICheckBox::UICheckBox_Create()
+    {
+        auto lNewLabel = new UICheckBox();
+
+        return static_cast<void *>( lNewLabel );
+    }
+
+    void UICheckBox::UICheckBox_Destroy( void *aInstance ) { delete static_cast<UICheckBox *>( aInstance ); }
+
+    void UICheckBox::UICheckBox_OnClick( void *aInstance, math::vec4 *aTextColor )
+    {
+        auto lInstance = static_cast<UICheckBox *>( aInstance );
+
+        // lInstance->SetTextColor( *aTextColor );
+    }
+
+    bool UICheckBox::UICheckBox_IsChecked( void *aInstance )
+    {
+        auto lInstance = static_cast<UICheckBox *>( aInstance );
+
+        return lInstance->IsChecked();
+    }
+
+    void UICheckBox::UICheckBox_SetIsChecked( void *aInstance, bool aValue )
+    {
+        auto lInstance = static_cast<UICheckBox *>( aInstance );
+
+        lInstance->SetIsChecked( aValue );
+    }
+
 } // namespace SE::Core
