@@ -13,15 +13,21 @@ namespace Test
 {
     public class App : SEApplication
     {
+        UIForm mMainForm;
+
         public App() { }
 
-        public void Initialize() { }
+        public void Initialize() { 
+            mMainForm = new UIForm();
+            mMainForm.SetTitle("This is a test!!");
+        }
 
         public void Shutdown() { }
 
         public void Update(float aTs)
         {
             // Console.WriteLine("Update");
+            mMainForm.Update();
         }
 
         public void UpdateUI(float aTs)
@@ -48,80 +54,16 @@ namespace Test
         override public void BeginScenario()
         {
             base.BeginScenario();
-
-            // var lConnectedModules = Instruments.GetConnectedModules();
-
-            // mSource = null;
-            // mPowerMeter = null;
-            // foreach (ModuleDescription lModule in lConnectedModules)
-            // {
-            //     // if (lModule.mName.StartsWith("FTB"))
-            //     // {
-            //     //     mSource = lModule.Connect();
-            //     // }
-
-            //     if (lModule.mName.StartsWith("OX1"))
-            //     {
-            //         var lPowerMeter = lModule.Connect();
-
-            //         if (lPowerMeter.PowerMeterModeSupported)
-            //             mPowerMeter = lPowerMeter;
-            //     }
-            // }
-
-            // // mBlinkDetection = new BlinkDetection(new Interval(1.0, 0.1), new Interval(1.0, 0.1));
         }
 
         override public void EndScenario()
         {
             base.EndScenario();
-
-            // if (mSource != null)
-            //     mSource.Stop();
-
-            // if (mPowerMeter != null)
-            //     mPowerMeter.Stop();
-
-            // mSource = null;
-            // mPowerMeter = null;
-            // mBlinkDetection = null;
         }
 
         override public void Tick(float aTs)
         {
             base.Tick(aTs);
-
-            // if ((mSource == null) || (mPowerMeter == null)) return;
-
-            // if (!mSourceStarted && (mSource.State == Metrino.Kernos.Instrument.State.Ready))
-            // {
-            //     Configuration7000 lSourceConfiguration = new Configuration7000();
-            //     lSourceConfiguration.SourceWavelength = mSource.SettingsValidator.Wavelengths.ElementAt(0).Wavelength;
-            //     lSourceConfiguration.SourceModulation = false;
-            //     lSourceConfiguration.SourceBlinkModulation = false;
-
-            //     mSource.StartSourceMode(lSourceConfiguration);
-            //     mSourceStarted = true;
-
-            //     System.Console.WriteLine("Started power source");
-            // }
-
-            // if (!mPowerMeterStarted && (mPowerMeter.State == Metrino.Kernos.Instrument.State.Ready))
-            // {
-            //     mPowerMeter.StartPowerMeterMode();
-            //     mPowerMeterStarted = true;
-
-            //     System.Console.WriteLine("Started power meter");
-            // }
-
-            // if (!mSourceStarted || !mPowerMeterStarted)
-            //     return;
-
-            // Metrino.Otdr.Value.Photocurrent lPowerValue = mPowerMeter.PowerValue;
-
-            // BlinkState lIsBlinking;
-            // mBlinkDetection.DetectHightestToneAndBlink(lPowerValue, out lIsBlinking);
-            // var valueLink = lPowerValue.Tag as Metrino.Otdr.PowerValue.ValueLink;
 
             System.Console.WriteLine($"{DateTime.UtcNow} --");
         }
