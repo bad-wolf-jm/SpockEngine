@@ -31,5 +31,13 @@ namespace SE::OtdrEditor
       protected:
         Ref<UILabel> mName;
         Ref<UILabel> mValue;
+
+      public:
+        static void *UIPropertyValue_Create();
+        static void *UIPropertyValue_CreateWithText( void *aText );
+        static void  UIPropertyValue_Destroy( void *aInstance );
+        static void  UIPropertyValue_SetValue( void *aInstance, void *aText );
+
+
     };
 } // namespace SE::OtdrEditor
