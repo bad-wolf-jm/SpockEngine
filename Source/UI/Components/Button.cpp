@@ -1,5 +1,5 @@
 #include "Button.h"
-
+#include "Mono/MonoRuntime.h"
 namespace SE::Core
 {
     UIButton::UIButton( std::string const &aText )
@@ -60,4 +60,36 @@ namespace SE::Core
         PopStyles( lEnabled );
     }
 
+
+    void *UIButton::UIButton_Create()
+    {
+        auto lNewButton = new UIButton();
+
+        return static_cast<void *>( lNewButton );
+    }
+
+    void *UIButton::UIButton_CreateWithText( void *aText )
+    {
+        auto lString   = MonoRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lNewButton = new UILabel( lString );
+
+        return static_cast<void *>( lNewButton );
+    }
+
+    void UIButton::UIButton_Destroy( void *aInstance ) { delete static_cast<UILabel *>( aInstance ); }
+
+    void UIButton::UIButton_SetText( void *aInstance, void *aText )
+    {
+        auto lInstance = static_cast<UILabel *>( aInstance );
+        auto lString   = MonoRuntime::NewString( static_cast<MonoString *>( aText ) );
+
+        lInstance->SetText( lString );
+    }
+
+    void UIButton::UIButton_OnClick( void *aInstance, math::vec4 *aTextColor )
+    {
+        auto lInstance = static_cast<UILabel *>( aInstance );
+
+        lInstance->SetTextColor( *aTextColor );
+    }
 } // namespace SE::Core
