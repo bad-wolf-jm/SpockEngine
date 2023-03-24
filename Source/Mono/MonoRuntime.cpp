@@ -31,6 +31,7 @@
 #include "UI/Components/Label.h"
 #include "UI/Components/Button.h"
 #include "UI/Components/CheckBox.h"
+#include "UI/Components/Table.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/Layouts/ZLayout.h"
 
@@ -610,5 +611,27 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIZLayout::UIZLayout_AddNonAlignedNonFixed", UIZLayout::UIZLayout_AddNonAlignedNonFixed );
         mono_add_internal_call( "SpockEngine.UIZLayout::UIZLayout_AddAlignedFixed", UIZLayout::UIZLayout_AddAlignedFixed );
         mono_add_internal_call( "SpockEngine.UIZLayout::UIZLayout_AddNonAlignedFixed", UIZLayout::UIZLayout_AddNonAlignedFixed );
+
+        mono_add_internal_call( "SpockEngine.UIFloat64Column::UIFloat64Column_Create", sFloat64Column::UIFloat64Column_Create );
+        mono_add_internal_call( "SpockEngine.UIFloat64Column::UIFloat64Column_CreateFull", sFloat64Column::UIFloat64Column_CreateFull );
+        mono_add_internal_call( "SpockEngine.UIFloat64Column::UIFloat64Column_Destroy", sFloat64Column::UIFloat64Column_Destroy );
+        mono_add_internal_call( "SpockEngine.UIFloat64Column::UIFloat64Column_Clear", sFloat64Column::UIFloat64Column_Clear );
+        mono_add_internal_call( "SpockEngine.UIFloat64Column::UIFloat64Column_SetData", sFloat64Column::UIFloat64Column_SetData );
+        mono_add_internal_call( "SpockEngine.UIFloat64Column::UIFloat64Column_SetDataWithForegroundColor", sFloat64Column::UIFloat64Column_SetDataWithForegroundColor );
+        mono_add_internal_call( "SpockEngine.UIFloat64Column::UIFloat64Column_SetDataWithForegroundAndBackgroundColor", sFloat64Column::UIFloat64Column_SetDataWithForegroundAndBackgroundColor );
+
+        mono_add_internal_call( "SpockEngine.UIStringColumn::UIStringColumn_Create", sStringColumn::UIStringColumn_Create );
+        mono_add_internal_call( "SpockEngine.UIStringColumn::UIStringColumn_CreateFull", sStringColumn::UIStringColumn_CreateFull );
+        mono_add_internal_call( "SpockEngine.UIStringColumn::UIStringColumn_Destroy", sStringColumn::UIStringColumn_Destroy );
+        mono_add_internal_call( "SpockEngine.UIStringColumn::UIStringColumn_Clear", sStringColumn::UIStringColumn_Clear );
+        mono_add_internal_call( "SpockEngine.UIStringColumn::UIStringColumn_SetData", sStringColumn::UIStringColumn_SetData );
+        mono_add_internal_call( "SpockEngine.UIStringColumn::UIStringColumn_SetDataWithForegroundColor", sStringColumn::UIStringColumn_SetDataWithForegroundColor );
+        mono_add_internal_call( "SpockEngine.UIStringColumn::UIStringColumn_SetDataWithForegroundAndBackgroundColor", sStringColumn::UIStringColumn_SetDataWithForegroundAndBackgroundColor );
+
+        mono_add_internal_call( "SpockEngine.UITable::UITable_Create", UITable::UITable_Create );
+        mono_add_internal_call( "SpockEngine.UITable::UITable_Destroy", UITable::UITable_Destroy );
+        mono_add_internal_call( "SpockEngine.UITable::UITable_AddColumn", UITable::UITable_AddColumn );
+        mono_add_internal_call( "SpockEngine.UITable::UITable_SetRowHeight", UITable::UITable_SetRowHeight );
+
     }
 } // namespace SE::Core
