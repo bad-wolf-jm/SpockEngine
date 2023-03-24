@@ -71,7 +71,7 @@ namespace SE::Core
     void *UIButton::UIButton_CreateWithText( void *aText )
     {
         auto lString   = MonoRuntime::NewString( static_cast<MonoString *>( aText ) );
-        auto lNewButton = new UILabel( lString );
+        auto lNewButton = new UIButton( lString );
 
         return static_cast<void *>( lNewButton );
     }
