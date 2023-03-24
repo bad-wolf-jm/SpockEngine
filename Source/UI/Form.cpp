@@ -1,4 +1,5 @@
 #include "Form.h"
+#include "Mono/MonoRuntime.h"
 
 namespace SE::Core
 {
@@ -35,5 +36,40 @@ namespace SE::Core
     }
 
     void UIForm::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
+
+    void *UIForm::UIForm_Create()
+    {
+        auto lNewForm = new UIForm();
+
+        return static_cast<void *>( lNewForm );
+    }
+
+    void UIForm::UIForm_Destroy( void *aInstance ) 
+    { 
+        delete static_cast<UIForm *>( aInstance ); 
+    }
+
+    void UIForm::UIForm_SetTitle( void *aInstance, void *aTitle )
+    {
+        auto lInstance = static_cast<UIForm *>( aInstance );
+        auto lString   = MonoRuntime::NewString( static_cast<MonoString *>( aTitle ) );
+
+        lInstance->SetTitle( lString );
+    }
+
+    void UIForm::UIForm_SetContent( void *aInstance, void *aContent )
+    {
+        auto lInstance = static_cast<UIForm *>( aInstance );
+        auto lContent  = static_cast<UIComponent *>( aContent );
+
+        lInstance->SetContent( lContent );
+    }
+
+    void UIForm::UIForm_Update( void *aInstance )
+    {
+        auto lInstance = static_cast<UIForm *>( aInstance );
+
+        lInstance->Update();
+    }
 
 } // namespace SE::Core

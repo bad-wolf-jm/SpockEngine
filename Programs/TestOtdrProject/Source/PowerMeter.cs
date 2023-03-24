@@ -43,7 +43,6 @@ namespace Test
                 }
             }
 
-            // mBlinkDetection = new BlinkDetection(new Interval(1.0, 0.1), new Interval(1.0, 0.1));
             mBlinkDetection = new BlinkDetection();
             mStartTime = DateTime.Now;
         }
