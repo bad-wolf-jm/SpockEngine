@@ -16,6 +16,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/Components/Button.cs
     Source/UI/Components/Label.cs
     Source/UI/Components/PropertyValue.cs
+    Source/UI/Components/Table.cs
     Source/UI/Layouts/BoxLayout.cs
     Source/UI/Layouts/ZLayout.cs
     Source/UI/UI.cs

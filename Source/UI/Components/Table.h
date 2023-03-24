@@ -34,6 +34,16 @@ namespace SE::Core
 
         uint32_t Size();
         void     Render( int aRow, ImVec2 aCellSize );
+
+      public:
+        static void *UIFloat64Column_Create();
+        static void *UIFloat64Column_CreateFull( void *aHeader, float aInitialSize, void *aFormat, void *aNaNFormat );
+        static void  UIFloat64Column_Destroy( void *aSelf );
+        static void  UIFloat64Column_Clear( void *aSelf );
+        static void  UIFloat64Column_SetData( void *aSelf, void *aValue );
+        static void  UIFloat64Column_SetDataWithForegroundColor( void *aSelf, void *aValue, void *aForegroundColor );
+        static void  UIFloat64Column_SetDataWithForegroundAndBackgroundColor( void *aSelf, void *aValue, void *aForegroundColor,
+                                                                              void *aBackroundColor );
     };
 
     struct sStringColumn : public sTableColumn
@@ -46,6 +56,16 @@ namespace SE::Core
 
         uint32_t Size();
         void     Render( int aRow, ImVec2 aCellSize );
+
+      public:
+        static void *UIStringColumn_Create();
+        static void *UIStringColumn_CreateFull( void *aHeader, float aInitialSize );
+        static void  UIStringColumn_Destroy( void *aSelf );
+        static void  UIStringColumn_Clear( void *aSelf );
+        static void  UIStringColumn_SetData( void *aSelf, void *aValue );
+        static void  UIStringColumn_SetDataWithForegroundColor( void *aSelf, void *aValue, void *aForegroundColor );
+        static void  UIStringColumn_SetDataWithForegroundAndBackgroundColor( void *aSelf, void *aValue, void *aForegroundColor,
+                                                                             void *aBackroundColor );
     };
 
     class UITable : public UIComponent
@@ -53,9 +73,10 @@ namespace SE::Core
       public:
         UITable() = default;
 
-        UITable( std::string const &aText );
+        // UITable( std::string const &aText );
 
         void AddColumn( Ref<sTableColumn> aColumn );
+        void AddColumn( sTableColumn *aColumn );
         void SetRowHeight( float aRowHeight );
 
         void OnRowClicked( std::function<void( uint32_t )> const &aOnRowClicked );
@@ -63,12 +84,12 @@ namespace SE::Core
         std::vector<uint32_t> mRowBackgroundColor;
 
       protected:
-        std::vector<Ref<sTableColumn>>  mColumns;
+        std::vector<sTableColumn *>     mColumns;
         std::function<void( uint32_t )> mOnRowClicked;
 
       protected:
-        float   mRowHeight  = 15.0f;
-        int32_t mHoveredRow = -1;
+        float   mRowHeight   = 15.0f;
+        int32_t mHoveredRow  = -1;
         int32_t mSelectedRow = -1;
 
       protected:
@@ -77,5 +98,11 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+
+      public:
+        static void *UITable_Create();
+        static void  UITable_Destroy( void *aSelf );
+        static void  UITable_AddColumn( void *aSelf, void *aColumn );
+        static void  UITable_SetRowHeight( void *aSelf, float aRowHeight );
     };
 } // namespace SE::Core

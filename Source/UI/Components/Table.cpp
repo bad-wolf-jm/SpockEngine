@@ -1,5 +1,7 @@
 #include "Table.h"
 
+#include "Mono/MonoRuntime.h"
+
 namespace SE::Core
 {
     sTableColumn::sTableColumn( std::string aHeader, float aInitialSize )
@@ -13,7 +15,8 @@ namespace SE::Core
 
     void UITable::SetRowHeight( float aRowHeight ) { mRowHeight = aRowHeight; }
 
-    void UITable::AddColumn( Ref<sTableColumn> aColumn ) { mColumns.push_back( aColumn ); }
+    void UITable::AddColumn( Ref<sTableColumn> aColumn ) { mColumns.push_back( aColumn.get() ); }
+    void UITable::AddColumn( sTableColumn *aColumn ) { mColumns.push_back( aColumn ); }
 
     ImVec2 UITable::RequiredSize() { return ImVec2{}; }
 
@@ -85,6 +88,30 @@ namespace SE::Core
         }
     }
 
+    void *UITable::UITable_Create()
+    {
+        auto lNewTable = new UITable();
+
+        return static_cast<void *>( lNewTable );
+    }
+
+    void UITable::UITable_Destroy( void *aSelf ) { delete static_cast<UITable *>( aSelf ); }
+
+    void UITable::UITable_AddColumn( void *aSelf, void *aColumn )
+    {
+        auto lInstance = static_cast<UITable *>( aSelf );
+        auto lColumn   = static_cast<sTableColumn *>( aColumn );
+
+        lInstance->AddColumn( lColumn );
+    }
+
+    void UITable::UITable_SetRowHeight( void *aSelf, float aRowHeight )
+    {
+        auto lInstance = static_cast<UITable *>( aSelf );
+
+        lInstance->SetRowHeight( aRowHeight );
+    }
+
     sFloat64Column::sFloat64Column( std::string aHeader, float aInitialSize, std::string aFormat, std::string aNaNFormat )
         : sTableColumn{ aHeader, aInitialSize }
         , mFormat{ aFormat }
@@ -118,6 +145,82 @@ namespace SE::Core
         ImGui::SetCursorPos( lNewPos );
     }
 
+    template <typename _Ty>
+    static std::vector<_Ty> AsVector( MonoObject *aObject )
+    {
+        if( aObject == nullptr ) return std::vector<_Ty>( 0 );
+
+        uint32_t lArrayLength = static_cast<uint32_t>( mono_array_length( (MonoArray *)aObject ) );
+
+        std::vector<_Ty> lVector( lArrayLength );
+        for( uint32_t i = 0; i < lArrayLength; i++ )
+        {
+            auto lElement = *( mono_array_addr( (MonoArray *)aObject, _Ty, i ) );
+            lVector[i]    = lElement;
+        }
+
+        return lVector;
+    }
+
+    void *sFloat64Column::UIFloat64Column_Create()
+    {
+        auto lNewColumn = new sFloat64Column();
+
+        return static_cast<void *>( lNewColumn );
+    }
+
+    void *sFloat64Column::UIFloat64Column_CreateFull( void *aHeader, float aInitialSize, void *aFormat, void *aNaNFormat )
+    {
+        auto lHeader    = MonoRuntime::NewString( static_cast<MonoString *>( aHeader ) );
+        auto lFormat    = MonoRuntime::NewString( static_cast<MonoString *>( aFormat ) );
+        auto lNaNFormat = MonoRuntime::NewString( static_cast<MonoString *>( aNaNFormat ) );
+        auto lNewColumn = new sFloat64Column( lHeader, aInitialSize, lFormat, lNaNFormat );
+
+        return static_cast<void *>( lNewColumn );
+    }
+
+    void sFloat64Column::UIFloat64Column_Destroy( void *aSelf ) { delete static_cast<sFloat64Column *>( aSelf ); }
+
+    void sFloat64Column::UIFloat64Column_Clear( void *aSelf )
+    {
+        auto lSelf = static_cast<sFloat64Column *>( aSelf );
+
+        lSelf->mData.clear();
+    }
+
+    void sFloat64Column::UIFloat64Column_SetData( void *aSelf, void *aValue )
+    {
+        auto lSelf = static_cast<sFloat64Column *>( aSelf );
+
+        lSelf->mData = AsVector<double>( static_cast<MonoObject *>( aValue ) );
+    }
+
+    void sFloat64Column::UIFloat64Column_SetDataWithForegroundColor( void *aSelf, void *aValue, void *aForegroundColor )
+    {
+        auto lSelf = static_cast<sFloat64Column *>( aSelf );
+
+        lSelf->mData = AsVector<double>( static_cast<MonoObject *>( aValue ) );
+        lSelf->mForegroundColor.clear();
+        for( auto const &x : AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
+            lSelf->mForegroundColor.push_back( ImColor( x ) );
+    }
+
+    void sFloat64Column::UIFloat64Column_SetDataWithForegroundAndBackgroundColor( void *aSelf, void *aValue, void *aForegroundColor,
+                                                                                  void *aBackroundColor )
+    {
+        auto lSelf = static_cast<sFloat64Column *>( aSelf );
+
+        lSelf->mData = AsVector<double>( static_cast<MonoObject *>( aValue ) );
+
+        lSelf->mForegroundColor.clear();
+        for( auto const &x : AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
+            lSelf->mForegroundColor.push_back( ImColor( x ) );
+
+        lSelf->mBackgroundColor.clear();
+        for( auto const &x : AsVector<ImVec4>( static_cast<MonoObject *>( aBackroundColor ) ) )
+            lSelf->mBackgroundColor.push_back( ImColor( x ) );
+    }
+
     sStringColumn::sStringColumn( std::string aHeader, float aInitialSize )
         : sTableColumn{ aHeader, aInitialSize }
     {
@@ -141,6 +244,70 @@ namespace SE::Core
         ImVec2 lNewPos = ImGui::GetCursorPos();
         lNewPos.y      = lPrevPos.y + aSize.y;
         ImGui::SetCursorPos( lNewPos );
+    }
+
+    void *sStringColumn::UIStringColumn_Create()
+    {
+        auto lNewColumn = new sStringColumn();
+
+        return static_cast<void *>( lNewColumn );
+    }
+
+    void *sStringColumn::UIStringColumn_CreateFull( void *aHeader, float aInitialSize )
+    {
+        auto lHeader    = MonoRuntime::NewString( static_cast<MonoString *>( aHeader ) );
+        auto lNewColumn = new sStringColumn( lHeader, aInitialSize );
+
+        return static_cast<void *>( lNewColumn );
+    }
+
+    void sStringColumn::UIStringColumn_Destroy( void *aSelf ) { delete static_cast<sStringColumn *>( aSelf ); }
+
+    void sStringColumn::UIStringColumn_Clear( void *aSelf )
+    {
+        auto lSelf = static_cast<sStringColumn *>( aSelf );
+
+        lSelf->mData.clear();
+    }
+
+    void sStringColumn::UIStringColumn_SetData( void *aSelf, void *aValue )
+    {
+        auto lSelf = static_cast<sStringColumn *>( aSelf );
+
+        lSelf->mData.clear();
+        for( auto const &x : AsVector<MonoString *>( static_cast<MonoObject *>( aValue ) ) )
+            lSelf->mData.push_back(MonoRuntime::NewString(x));
+    }
+
+    void sStringColumn::UIStringColumn_SetDataWithForegroundColor( void *aSelf, void *aValue, void *aForegroundColor )
+    {
+        auto lSelf = static_cast<sStringColumn *>( aSelf );
+
+        lSelf->mData.clear();
+        for( auto const &x : AsVector<MonoString *>( static_cast<MonoObject *>( aValue ) ) )
+            lSelf->mData.push_back(MonoRuntime::NewString(x));
+
+        lSelf->mForegroundColor.clear();
+        for( auto const &x : AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
+            lSelf->mForegroundColor.push_back( ImColor( x ) );
+    }
+
+    void sStringColumn::UIStringColumn_SetDataWithForegroundAndBackgroundColor( void *aSelf, void *aValue, void *aForegroundColor,
+                                                                                void *aBackroundColor )
+    {
+        auto lSelf = static_cast<sStringColumn *>( aSelf );
+
+        lSelf->mData.clear();
+        for( auto const &x : AsVector<MonoString *>( static_cast<MonoObject *>( aValue ) ) )
+            lSelf->mData.push_back(MonoRuntime::NewString(x));
+
+        lSelf->mForegroundColor.clear();
+        for( auto const &x : AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
+            lSelf->mForegroundColor.push_back( ImColor( x ) );
+
+        lSelf->mBackgroundColor.clear();
+        for( auto const &x : AsVector<ImVec4>( static_cast<MonoObject *>( aBackroundColor ) ) )
+            lSelf->mBackgroundColor.push_back( ImColor( x ) );
     }
 
 } // namespace SE::Core
