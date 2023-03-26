@@ -32,6 +32,9 @@
 #include "UI/Components/Button.h"
 #include "UI/Components/CheckBox.h"
 #include "UI/Components/Table.h"
+#include "UI/Components/BaseImage.h"
+#include "UI/Components/Image.h"
+#include "UI/Components/ImageButton.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/Layouts/ZLayout.h"
 
@@ -585,6 +588,23 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UILabel::UILabel_Destroy", UILabel::UILabel_Destroy );
         mono_add_internal_call( "SpockEngine.UILabel::UILabel_SetText", UILabel::UILabel_SetText );
         mono_add_internal_call( "SpockEngine.UILabel::UILabel_SetTextColor", UILabel::UILabel_SetTextColor );
+
+        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_Create", UIBaseImage::UIBaseImage_Create );
+        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_CreateWithPath", UIBaseImage::UIBaseImage_CreateWithPath );
+        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_Destroy", UIBaseImage::UIBaseImage_Destroy );
+        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetImage", UIBaseImage::UIBaseImage_SetImage );
+        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetSize", UIBaseImage::UIBaseImage_SetSize );
+        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetRect", UIBaseImage::UIBaseImage_SetRect );
+        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetBackgroundColor", UIBaseImage::UIBaseImage_SetBackgroundColor );
+        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetTintColor", UIBaseImage::UIBaseImage_SetTintColor );
+
+        mono_add_internal_call( "SpockEngine.UIImage::UIImage_Create", UIImage::UIImage_Create );
+        mono_add_internal_call( "SpockEngine.UIImage::UIImage_CreateWithPath", UIImage::UIImage_CreateWithPath );
+        mono_add_internal_call( "SpockEngine.UIImage::UIImage_Destroy", UIImage::UIImage_Destroy );
+
+        mono_add_internal_call( "SpockEngine.UIImageButton::UIImageButton_Create", UIImageButton::UIImageButton_Create );
+        mono_add_internal_call( "SpockEngine.UIImageButton::UIImageButton_CreateWithPath", UIImageButton::UIImageButton_CreateWithPath );
+        mono_add_internal_call( "SpockEngine.UIImageButton::UIImageButton_Destroy", UIImageButton::UIImageButton_Destroy );
 
         mono_add_internal_call( "SpockEngine.UIButton::UIButton_Create", UIButton::UIButton_Create );
         mono_add_internal_call( "SpockEngine.UIButton::UIButton_CreateWithText", UIButton::UIButton_CreateWithText );

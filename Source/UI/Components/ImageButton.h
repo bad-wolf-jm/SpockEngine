@@ -29,5 +29,10 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+
+      public:
+        static void *UIImageButton_Create();
+        static void *UIImageButton_CreateWithPath( void* aText, math::vec2 *aSize );
+        static void  UIImageButton_Destroy( void *aInstance );
     };
 } // namespace SE::Core

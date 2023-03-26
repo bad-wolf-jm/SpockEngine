@@ -1,4 +1,5 @@
 #include "BaseImage.h"
+#include "Mono/MonoRuntime.h"
 
 #include "Engine/Engine.h"
 
@@ -64,5 +65,58 @@ namespace SE::Core
     ImVec2 UIBaseImage::RequiredSize() { return mSize; }
 
     void UIBaseImage::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
+
+    void *UIBaseImage::UIBaseImage_Create()
+    {
+        auto lNewImage = new UIBaseImage();
+
+        return static_cast<void *>( lNewImage );
+    }
+
+    void *UIBaseImage::UIBaseImage_CreateWithPath( void *aText, math::vec2 *aSize )
+    {
+        auto lString   = MonoRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lNewImage = new UIBaseImage( lString, *aSize );
+
+        return static_cast<void *>( lNewImage );
+    }
+
+    void UIBaseImage::UIBaseImage_Destroy( void *aInstance ) { delete static_cast<UIBaseImage *>( aInstance ); }
+
+    void UIBaseImage::UIBaseImage_SetImage( void *aInstance, void *aPath )
+    {
+        auto lInstance = static_cast<UIBaseImage *>( aInstance );
+        auto lString   = MonoRuntime::NewString( static_cast<MonoString *>( aPath ) );
+
+        lInstance->SetImage( lString );
+    }
+
+    void UIBaseImage::UIBaseImage_SetSize( void *aInstance, float aWidth, float aHeight )
+    {
+        auto lInstance = static_cast<UIBaseImage *>( aInstance );
+
+        lInstance->SetSize( aWidth, aHeight );
+    }
+
+    void UIBaseImage::UIBaseImage_SetRect( void *aInstance, math::vec2 *aTopLeft, math::vec2 *aBottomRight )
+    {
+        auto lInstance = static_cast<UIBaseImage *>( aInstance );
+
+        lInstance->SetRect( *aTopLeft, *aBottomRight );
+    }
+
+    void UIBaseImage::UIBaseImage_SetBackgroundColor( void *aInstance, math::vec4 *aColor )
+    {
+        auto lInstance = static_cast<UIBaseImage *>( aInstance );
+
+        lInstance->SetBackgroundColor( *aColor );
+    }
+
+    void UIBaseImage::UIBaseImage_SetTintColor( void *aInstance, math::vec4 *aColor )
+    {
+        auto lInstance = static_cast<UIBaseImage *>( aInstance );
+
+        lInstance->SetTintColor( *aColor );
+    }
 
 } // namespace SE::Core
