@@ -24,7 +24,7 @@ namespace SE::OtdrEditor
         void Display( int32_t width, int32_t height );
 
       private:
-        void DisplayNode( MonoScriptClass &aClass, float a_Width );
+        void DisplayNode( DotNetClass &aClass, float a_Width );
 
       private:
         std::vector<std::string> mClassNames;

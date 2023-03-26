@@ -1,6 +1,6 @@
 #include "PropertyValue.h"
 
-#include "Mono/MonoRuntime.h"
+#include "DotNet/Runtime.h"
 namespace SE::OtdrEditor
 {
     UIPropertyValue::UIPropertyValue( std::string aName )
@@ -24,7 +24,7 @@ namespace SE::OtdrEditor
 
     void *UIPropertyValue::UIPropertyValue_CreateWithText( void *aText )
     {
-        auto lString   = MonoRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
         auto lNewLabel = new UIPropertyValue( lString );
 
         return static_cast<void *>( lNewLabel );
@@ -35,7 +35,7 @@ namespace SE::OtdrEditor
     void UIPropertyValue::UIPropertyValue_SetValue( void *aInstance, void *aText )
     {
         auto lInstance = static_cast<UIPropertyValue *>( aInstance );
-        auto lString   = MonoRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
         lInstance->SetValue( lString );
     }

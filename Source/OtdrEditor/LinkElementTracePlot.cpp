@@ -12,7 +12,7 @@
 #include "Core/File.h"
 #include "Core/Logging.h"
 
-#include "Mono/MonoRuntime.h"
+#include "DotNet/Runtime.h"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
@@ -23,15 +23,15 @@ namespace SE::OtdrEditor
 {
     void UILinkElementTracePlot::SetData( std::vector<MonoObject *> &lTraceDataVector )
     {
-        static auto &lTraceDataStructure = MonoRuntime::GetClassType( "Metrino.Interop.TracePlotData" );
+        static auto &lTraceDataStructure = DotNetRuntime::GetClassType( "Metrino.Interop.TracePlotData" );
 
         Clear();
         for( int i = 0; i < lTraceDataVector.size(); i++ )
         {
-            auto lInstance = MonoScriptInstance( &lTraceDataStructure, lTraceDataStructure.Class(), lTraceDataVector[i] );
+            auto lInstance = DotNetInstance( &lTraceDataStructure, lTraceDataStructure.Class(), lTraceDataVector[i] );
             auto lPlot     = New<sFloat64LinePlot>();
-            lPlot->mX      = MonoRuntime::AsVector<double>( lInstance.GetFieldValue<MonoObject *>( "mX" ) );
-            lPlot->mY      = MonoRuntime::AsVector<double>( lInstance.GetFieldValue<MonoObject *>( "mY" ) );
+            lPlot->mX      = DotNetRuntime::AsVector<double>( lInstance.GetFieldValue<MonoObject *>( "mX" ) );
+            lPlot->mY      = DotNetRuntime::AsVector<double>( lInstance.GetFieldValue<MonoObject *>( "mY" ) );
             lPlot->mLegend = fmt::format( "{:.0f} nm - {} ({} samples)", lInstance.GetFieldValue<double>( "mWavelength" ) * 1e9, i,
                                           lPlot->mX.size() );
 
@@ -44,16 +44,16 @@ namespace SE::OtdrEditor
     {
         static const double lSpeedOfLight = 299792458.0;
 
-        static auto &lSinglePulseTraceClass = MonoRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
+        static auto &lSinglePulseTraceClass = DotNetRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
 
         auto lPeakPlot = New<sFloat64LinePlot>();
         {
-            auto lTrace = MonoScriptInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), aLinkElement.mPeakTrace );
+            auto lTrace = DotNetInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), aLinkElement.mPeakTrace );
             if( lTrace )
             {
                 auto lSamples      = lTrace.GetPropertyValue<MonoObject *>( "Samples" );
                 auto lDeltaX       = lTrace.GetPropertyValue<double>( "SamplingPeriod" );
-                lPeakPlot->mY      = MonoRuntime::AsVector<double>( lSamples );
+                lPeakPlot->mY      = DotNetRuntime::AsVector<double>( lSamples );
                 lPeakPlot->mX      = std::vector<double>( lPeakPlot->mY.size() );
                 lPeakPlot->mLegend = fmt::format( "Peak Trace##{}", (size_t)aLinkElement.mPeakTrace );
 
@@ -74,12 +74,12 @@ namespace SE::OtdrEditor
 
         auto lDetectionPlot = New<sFloat64LinePlot>();
         {
-            auto lTrace = MonoScriptInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), aLinkElement.mDetectionTrace );
+            auto lTrace = DotNetInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), aLinkElement.mDetectionTrace );
             if( lTrace )
             {
                 auto lSamples           = lTrace.GetPropertyValue<MonoObject *>( "Samples" );
                 auto lDeltaX            = lTrace.GetPropertyValue<double>( "SamplingPeriod" );
-                lDetectionPlot->mY      = MonoRuntime::AsVector<double>( lSamples );
+                lDetectionPlot->mY      = DotNetRuntime::AsVector<double>( lSamples );
                 lDetectionPlot->mX      = std::vector<double>( lDetectionPlot->mY.size() );
                 lDetectionPlot->mLegend = fmt::format( "Detection Trace##{}", (size_t)aLinkElement.mDetectionTrace );
 
@@ -99,14 +99,14 @@ namespace SE::OtdrEditor
             }
         }
 
-        static auto &lBaseLinkElementClass  = MonoRuntime::GetClassType( "Metrino.Olm.BaseLinkElement" );
-        static auto &lOlmPhysicalEventClass = MonoRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
-        static auto &lOlmAttributeClass     = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
+        static auto &lBaseLinkElementClass  = DotNetRuntime::GetClassType( "Metrino.Olm.BaseLinkElement" );
+        static auto &lOlmPhysicalEventClass = DotNetRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
+        static auto &lOlmAttributeClass     = DotNetRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
 
-        auto lLinkElement = MonoScriptInstance( &lBaseLinkElementClass, lBaseLinkElementClass.Class(), aLinkElement.mLinkElement );
+        auto lLinkElement = DotNetInstance( &lBaseLinkElementClass, lBaseLinkElementClass.Class(), aLinkElement.mLinkElement );
         auto lPhysicalEvent =
-            MonoScriptInstance( &lOlmPhysicalEventClass, lOlmPhysicalEventClass.Class(), aLinkElement.mPhysicalEvent );
-        auto lAttributes = MonoScriptInstance( &lOlmAttributeClass, lOlmAttributeClass.Class(), aLinkElement.mAttributes );
+            DotNetInstance( &lOlmPhysicalEventClass, lOlmPhysicalEventClass.Class(), aLinkElement.mPhysicalEvent );
+        auto lAttributes = DotNetInstance( &lOlmAttributeClass, lOlmAttributeClass.Class(), aLinkElement.mAttributes );
 
         auto lOtdrPhysicalEvent = lPhysicalEvent.GetPropertyValue( "PhysicalEvent", "Metrino.Otdr.PhysicalEvent" );
         if( lOtdrPhysicalEvent && *lOtdrPhysicalEvent )
@@ -218,7 +218,7 @@ namespace SE::OtdrEditor
 
     void UILinkElementTracePlot::SetEventData( std::vector<sLinkElement> &aLinkElement )
     {
-        static auto &lSinglePulseTraceClass = MonoRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
+        static auto &lSinglePulseTraceClass = DotNetRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
 
         for( int i = 0; i < aLinkElement.size(); i++ )
         {

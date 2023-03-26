@@ -16,11 +16,11 @@ namespace SE::Core
     class DotNetClass
     {
       public:
-        MonoScriptClass() = default;
-        MonoScriptClass( MonoType *aMonoClass );
-        MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
+        DotNetClass() = default;
+        DotNetClass( MonoType *aMonoClass );
+        DotNetClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
                          fs::path const &aDllPPath, bool aIsNested = false );
-        MonoScriptClass( MonoClass *aClass, const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
+        DotNetClass( MonoClass *aClass, const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
                          fs::path const &aDllPPath, bool aIsNested = false );
 
         Ref<DotNetInstance> DoInstantiate();
@@ -75,8 +75,8 @@ namespace SE::Core
         }
         std::string &FullName() { return mClassFullName; }
 
-        std::vector<MonoScriptClass *> &DerivedClasses() { return mDerived; }
-        MonoScriptClass                *ParentClass() { return mParent; }
+        std::vector<DotNetClass *> &DerivedClasses() { return mDerived; }
+        DotNetClass                *ParentClass() { return mParent; }
 
       private:
         fs::path                       mDllPath;

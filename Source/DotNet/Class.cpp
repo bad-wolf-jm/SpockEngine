@@ -84,7 +84,7 @@ namespace SE::Core
         }
     } // namespace
 
-    MonoScriptClass::MonoScriptClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
+    DotNetClass::DotNetClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
                                       fs::path const &aDllPPath, bool aIsNested )
         : mClassNamespace( aClassNamespace )
         , mClassName( aClassName )
@@ -97,7 +97,7 @@ namespace SE::Core
         mClassFullName = fmt::format( "{}.{}", mClassNamespace, mClassName );
     }
 
-    MonoScriptClass::MonoScriptClass( MonoClass *aClass, const std::string &aClassNamespace, const std::string &aClassName,
+    DotNetClass::DotNetClass( MonoClass *aClass, const std::string &aClassNamespace, const std::string &aClassName,
                                       MonoImage *aImage, fs::path const &aDllPPath, bool aIsNested )
         : mClassNamespace( aClassNamespace )
         , mClassName( aClassName )

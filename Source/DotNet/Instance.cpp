@@ -62,7 +62,7 @@ namespace SE::Core
         MonoObject *lException = nullptr;
         MonoObject *lValue = mono_runtime_invoke( lPropertyGetter, mInstance, nullptr, &lException );
 
-        if( lException == nullptr ) return New<MonoScriptInstance>( &lClass, lClass.Class(), lValue );
+        if( lException == nullptr ) return New<DotNetInstance>( &lClass, lClass.Class(), lValue );
 
         return nullptr;
     }

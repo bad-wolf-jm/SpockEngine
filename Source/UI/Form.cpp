@@ -1,5 +1,5 @@
 #include "Form.h"
-#include "Mono/MonoRuntime.h"
+#include "DotNet/Runtime.h"
 
 namespace SE::Core
 {
@@ -49,7 +49,7 @@ namespace SE::Core
     void UIForm::UIForm_SetTitle( void *aInstance, void *aTitle )
     {
         auto lInstance = static_cast<UIForm *>( aInstance );
-        auto lString   = MonoRuntime::NewString( static_cast<MonoString *>( aTitle ) );
+        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aTitle ) );
 
         lInstance->SetTitle( lString );
     }

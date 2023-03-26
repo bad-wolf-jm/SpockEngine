@@ -1,5 +1,5 @@
 #include "TextToggleButton.h"
-#include "Mono/MonoRuntime.h"
+#include "DotNet/Runtime.h"
 
 namespace SE::Core
 {
@@ -95,7 +95,7 @@ namespace SE::Core
 
     void *UITextToggleButton::UITextToggleButton_CreateWithText( void *aText )
     {
-        auto lString    = MonoRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString    = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
         auto lNewButton = new UITextToggleButton( lString );
 
         return static_cast<void *>( lNewButton );

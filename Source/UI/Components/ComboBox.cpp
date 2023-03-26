@@ -1,5 +1,5 @@
 #include "ComboBox.h"
-#include "Mono/MonoRuntime.h"
+#include "DotNet/Runtime.h"
 
 namespace SE::Core
 {
@@ -72,8 +72,8 @@ namespace SE::Core
     void *UIComboBox::UIComboBox_CreateWithItems( void *aItems )
     {
         std::vector<std::string> lItemVector;
-        for( auto const &x : MonoRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aItems ) ) )
-            lItemVector.emplace_back( MonoRuntime::NewString( x ) );
+        for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aItems ) ) )
+            lItemVector.emplace_back( DotNetRuntime::NewString( x ) );
 
         auto lNewComboBox = new UIComboBox( lItemVector );
 
@@ -101,8 +101,8 @@ namespace SE::Core
         auto lInstance = static_cast<UIComboBox *>( aInstance );
 
         std::vector<std::string> lItemVector;
-        for( auto const &x : MonoRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aItems ) ) )
-            lItemVector.emplace_back( MonoRuntime::NewString( x ) );
+        for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aItems ) ) )
+            lItemVector.emplace_back( DotNetRuntime::NewString( x ) );
 
         lInstance->SetItemList( lItemVector );
     }
