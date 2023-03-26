@@ -35,6 +35,7 @@
 #include "UI/Components/BaseImage.h"
 #include "UI/Components/Image.h"
 #include "UI/Components/ImageButton.h"
+#include "UI/Components/ImageToggleButton.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/Layouts/ZLayout.h"
 
@@ -605,6 +606,11 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIImageButton::UIImageButton_Create", UIImageButton::UIImageButton_Create );
         mono_add_internal_call( "SpockEngine.UIImageButton::UIImageButton_CreateWithPath", UIImageButton::UIImageButton_CreateWithPath );
         mono_add_internal_call( "SpockEngine.UIImageButton::UIImageButton_Destroy", UIImageButton::UIImageButton_Destroy );
+
+        mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_Create", UIImageToggleButton::UIImageToggleButton_Create );
+        mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_Destroy", UIImageToggleButton::UIImageToggleButton_Destroy );
+        mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_SetActiveImage", UIImageToggleButton::UIImageToggleButton_SetActiveImage );
+        mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_SetInactiveImage", UIImageToggleButton::UIImageToggleButton_SetInactiveImage );
 
         mono_add_internal_call( "SpockEngine.UIButton::UIButton_Create", UIButton::UIButton_Create );
         mono_add_internal_call( "SpockEngine.UIButton::UIButton_CreateWithText", UIButton::UIButton_CreateWithText );
