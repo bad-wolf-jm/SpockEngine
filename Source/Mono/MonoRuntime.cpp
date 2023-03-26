@@ -36,6 +36,7 @@
 #include "UI/Components/Image.h"
 #include "UI/Components/ImageButton.h"
 #include "UI/Components/ImageToggleButton.h"
+#include "UI/Components/TextToggleButton.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/Layouts/ZLayout.h"
 
@@ -609,6 +610,8 @@ namespace SE::Core
 
         mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_Create", UIImageToggleButton::UIImageToggleButton_Create );
         mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_Destroy", UIImageToggleButton::UIImageToggleButton_Destroy );
+        mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_IsActive", UIImageToggleButton::UIImageToggleButton_IsActive );
+        mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_SetActive", UIImageToggleButton::UIImageToggleButton_SetActive );
         mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_SetActiveImage", UIImageToggleButton::UIImageToggleButton_SetActiveImage );
         mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_SetInactiveImage", UIImageToggleButton::UIImageToggleButton_SetInactiveImage );
 
@@ -616,6 +619,14 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIButton::UIButton_CreateWithText", UIButton::UIButton_CreateWithText );
         mono_add_internal_call( "SpockEngine.UIButton::UIButton_Destroy", UIButton::UIButton_Destroy );
         mono_add_internal_call( "SpockEngine.UIButton::UIButton_SetText", UIButton::UIButton_SetText );
+
+        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_Create", UITextToggleButton::UITextToggleButton_Create );
+        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_CreateWithText", UITextToggleButton::UITextToggleButton_CreateWithText );
+        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_Destroy", UITextToggleButton::UITextToggleButton_Destroy );
+        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_IsActive", UITextToggleButton::UITextToggleButton_IsActive );
+        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_SetActive", UITextToggleButton::UITextToggleButton_SetActive );
+        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_SetActiveColor", UITextToggleButton::UITextToggleButton_SetActiveColor );
+        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_SetInactiveColor", UITextToggleButton::UITextToggleButton_SetInactiveColor );
 
         mono_add_internal_call( "SpockEngine.UICheckBox::UICheckBox_Create", UICheckBox::UICheckBox_Create );
         mono_add_internal_call( "SpockEngine.UICheckBox::UICheckBox_Destroy", UICheckBox::UICheckBox_Destroy );

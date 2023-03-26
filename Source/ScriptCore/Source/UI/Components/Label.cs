@@ -5,7 +5,9 @@ namespace SpockEngine
 {
     public class UILabel : UIComponent
     {
+
         public UILabel() : base(UILabel_Create()) { }
+        public UILabel(ulong aSelf) : base(aSelf) { }
         public UILabel(string aText) : base(UILabel_CreateWithText(aText)) { }
 
         ~UILabel() { UILabel_Destroy(mInstance); }
