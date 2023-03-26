@@ -16,7 +16,7 @@ namespace SE::Core
         else
         {
             auto lMetaFunction = aMetaType.func( aFunctionID );
-            
+
             if( lMetaFunction ) return lMetaFunction.invoke( {}, std::forward<Args>( aArgs )... );
         }
         return entt::meta_any{};
