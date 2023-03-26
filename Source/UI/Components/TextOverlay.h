@@ -33,5 +33,11 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+
+      public:
+        static void *UITextOverlay_Create();
+        static void  UITextOverlay_Destroy( void *aInstance );
+        static void  UITextOverlay_AddText( void *aInstance, void *aText );
+
     };
 } // namespace SE::Core
