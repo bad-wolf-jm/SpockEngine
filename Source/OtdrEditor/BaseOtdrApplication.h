@@ -7,10 +7,8 @@
 
 #include "UI/UI.h"
 
-#include "Core/GraphicContext//UI/UIContext.h"
+#include "Core/GraphicContext/UI/UIContext.h"
 #include "Engine/Engine.h"
-
-#include "TensorOps/Scope.h"
 
 #include "OtdrWindow.h"
 

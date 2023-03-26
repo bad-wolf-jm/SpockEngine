@@ -10,10 +10,6 @@
 #include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Graphics/Vulkan/VkSampler2D.h"
 
-#include "DotNet/Runtime.h"
-
-#include "OtdrScene/OtdrScene.h"
-
 #include "UI/Components/Button.h"
 #include "UI/Components/Checkbox.h"
 #include "UI/Components/Image.h"

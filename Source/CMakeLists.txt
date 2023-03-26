@@ -108,9 +108,9 @@ add_library(LTSimulationEngineRuntime STATIC
     # Scene/Renderer/ShadowSceneRenderer.cpp
     # Scene/Renderer/DeferredSceneRenderer.cpp
     # Scene/Renderer/DeferredLightingRenderer.cpp
-    Scene/Serialize/FileIO.cpp
-    Scene/Serialize/AssetFile.cpp
-    Scene/Serialize/SerializeComponents.cpp
+    # Scene/Serialize/FileIO.cpp
+    # Scene/Serialize/AssetFile.cpp
+    # Scene/Serialize/SerializeComponents.cpp
     # ${embedded_ptx_code}
     # Scene/Renderer/RayTracing/ToneMap.cu
     # Scene/Renderer/RayTracing/RayTracingRenderer.h
@@ -119,12 +119,12 @@ add_library(LTSimulationEngineRuntime STATIC
     # Scene/Importer/glTFImporter.cpp
     # Scene/Importer/ObjImporter.cpp
 
-    Editor/PopupWindow.cpp
-    Editor/EditorWindow.cpp
-    Editor/ContentBrowser.cpp
-    Editor/BaseEditorApplication.cpp
-    Editor/SceneHierarchyPanel.cpp
-    Editor/SceneElementEditor.cpp
+    # Editor/PopupWindow.cpp
+    # Editor/EditorWindow.cpp
+    # Editor/ContentBrowser.cpp
+    # Editor/BaseEditorApplication.cpp
+    # Editor/SceneHierarchyPanel.cpp
+    # Editor/SceneElementEditor.cpp
 
     OtdrEditor/OtdrWindow.cpp
     OtdrEditor/BaseOtdrApplication.cpp
