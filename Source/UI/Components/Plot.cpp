@@ -1,6 +1,8 @@
 #include "Plot.h"
 #include "implot_internal.h"
 
+#include "DotNet/Runtime.h"
+
 namespace SE::Core
 {
     UIPlot::UIPlot()
@@ -20,8 +22,17 @@ namespace SE::Core
     void UIPlot::PushStyles() {}
     void UIPlot::PopStyles() {}
 
-    void UIPlot::Add( Ref<sPlotData> aPlot ) { mElements.push_back( aPlot ); };
-    void UIPlot::Clear() { mElements.clear(); };
+    void UIPlot::Add( Ref<sPlotData> aPlot )
+    {
+        mElementRefs.push_back( aPlot );
+        mElements.push_back( aPlot.get() );
+    };
+    void UIPlot::Add( sPlotData *aPlot ) { mElements.push_back( aPlot ); };
+    void UIPlot::Clear()
+    {
+        mElements.clear();
+        mElementRefs.clear();
+    };
     void UIPlot::ConfigureLegend( math::vec2 aLegendPadding, math::vec2 aLegendInnerPadding, math::vec2 aLegendSpacing )
     {
         mLegendPadding      = ImVec2{ aLegendPadding.x, aLegendPadding.y };
@@ -61,8 +72,8 @@ namespace SE::Core
                     ImPlot::SetupAxis( static_cast<ImAxis>( lAxis.mAxis ), NULL, ImPlotAxisFlags_None );
                     if( ( lAxis.mMin != 0.0f ) && ( lAxis.mMax != 0.0f ) )
                     {
-                        lPlot->Axes[static_cast<ImAxis>( lAxis.mAxis )].SetMin(lAxis.mMin);
-                        lPlot->Axes[static_cast<ImAxis>( lAxis.mAxis )].SetMax(lAxis.mMax);
+                        lPlot->Axes[static_cast<ImAxis>( lAxis.mAxis )].SetMin( lAxis.mMin );
+                        lPlot->Axes[static_cast<ImAxis>( lAxis.mAxis )].SetMax( lAxis.mMax );
 
                         lAxis.mMin = 0.0f;
                         lAxis.mMax = 0.0f;
@@ -77,6 +88,67 @@ namespace SE::Core
             ImPlot::EndPlot();
         }
         ImPlot::PopStyleVar();
+    }
+
+    void *UIPlot::UIPlot_Create()
+    {
+        auto lNewPlot = new UIPlot();
+
+        return static_cast<void *>( lNewPlot );
+    }
+
+    void UIPlot::UIPlot_Destroy( void *aInstance ) { delete static_cast<UIPlot *>( aInstance ); }
+
+    void UIPlot::UIPlot_Clear( void *aInstance )
+    {
+        auto lSelf = static_cast<UIPlot *>( aInstance );
+
+        lSelf->Clear();
+    }
+
+    void UIPlot::UIPlot_ConfigureLegend( void *aInstance, math::vec2 *aLegendPadding, math::vec2 *aLegendInnerPadding,
+                                         math::vec2 *aLegendSpacing )
+    {
+        auto lSelf = static_cast<UIPlot *>( aInstance );
+
+        lSelf->ConfigureLegend( *aLegendPadding, *aLegendInnerPadding, *aLegendSpacing );
+    }
+
+    void UIPlot::UIPlot_Add( void *aInstance, void *aPlot )
+    {
+        auto lSelf = static_cast<UIPlot *>( aInstance );
+        auto lPlot = static_cast<sPlotData *>( aPlot );
+
+        lSelf->Add( lPlot );
+    }
+
+    void sPlotData::UIPlotData_SetLegend( void *aSelf, void *aText )
+    {
+        auto lSelf   = static_cast<sPlotData *>( aSelf );
+        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+
+        lSelf->mLegend = lString;
+    }
+
+    void sPlotData::UIPlotData_SetColor( void *aSelf, math::vec4 *aColor )
+    {
+        auto lSelf = static_cast<sPlotData *>( aSelf );
+
+        lSelf->mColor = *aColor;
+    }
+
+    void sPlotData::UIPlotData_SetXAxis( void *aSelf, int aAxis )
+    {
+        auto lSelf = static_cast<sPlotData *>( aSelf );
+
+        lSelf->mXAxis = static_cast<UIPlotAxis>( aAxis );
+    }
+
+    void sPlotData::UIPlotData_SetYAxis( void *aSelf, int aAxis )
+    {
+        auto lSelf = static_cast<sPlotData *>( aSelf );
+
+        lSelf->mYAxis = static_cast<UIPlotAxis>( aAxis );
     }
 
     void sFloat64LinePlot::Render( UIPlot *aParentPlot )
@@ -96,6 +168,22 @@ namespace SE::Core
         if( mThickness != -1.0f ) ImPlot::PopStyleVar();
     }
 
+    void sFloat64LinePlot::UIFloat64LinePlot_Destroy( void *aSelf ) { delete static_cast<sFloat64LinePlot *>( aSelf ); }
+
+    void sFloat64LinePlot::UIFloat64LinePlot_SetX( void *aSelf, void *aValue )
+    {
+        auto lSelf = static_cast<sFloat64LinePlot *>( aSelf );
+
+        lSelf->mX = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
+    }
+
+    void sFloat64LinePlot::UIFloat64LinePlot_SetY( void *aSelf, void *aValue )
+    {
+        auto lSelf = static_cast<sFloat64LinePlot *>( aSelf );
+
+        lSelf->mY = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
+    }
+
     void sVLine::Render( UIPlot *aParentPlot )
     {
         auto lPlotName = fmt::format( "{}##{}", mLegend, static_cast<void *>( this ) );
@@ -107,6 +195,15 @@ namespace SE::Core
         ImPlot::PlotVLines( lPlotName.c_str(), mX.data(), mX.size(), 0 );
         ImPlot::PopStyleColor();
         if( mThickness != -1.0f ) ImPlot::PopStyleVar();
+    }
+
+    void sVLine::UIVLinePlot_Destroy( void *aSelf ) { delete static_cast<sVLine *>( aSelf ); }
+
+    void sVLine::UIVLinePlot_SetX( void *aSelf, void *aValue )
+    {
+        auto lSelf = static_cast<sVLine *>( aSelf );
+
+        lSelf->mX = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
     }
 
 } // namespace SE::Core

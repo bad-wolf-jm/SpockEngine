@@ -6,7 +6,7 @@ namespace SE::Core
 {
     class UIPlot;
 
-    enum class UIPlotAxis : uint8_t
+    enum class UIPlotAxis : int32_t
     {
         X1,
         X2,
@@ -39,6 +39,12 @@ namespace SE::Core
         UIPlotAxis mYAxis = UIPlotAxis::Y1;
 
         virtual void Render( UIPlot *aParentPlot ) = 0;
+
+      public:
+        static void UIPlotData_SetLegend( void *aSelf, void *aText );
+        static void UIPlotData_SetColor( void *aSelf, math::vec4 *aColor );
+        static void UIPlotData_SetXAxis( void *aSelf, int aAxis );
+        static void UIPlotData_SetYAxis( void *aSelf, int aAxis );
     };
 
     template <typename _Ty>
@@ -53,6 +59,11 @@ namespace SE::Core
     struct sFloat64LinePlot : public sXYPlot<double>
     {
         void Render( UIPlot *aParentPlot );
+
+        static void *UIFloat64LinePlot_Create();
+        static void  UIFloat64LinePlot_Destroy( void *aSelf );
+        static void  UIFloat64LinePlot_SetX( void *aSelf, void *aValue );
+        static void  UIFloat64LinePlot_SetY( void *aSelf, void *aValue );
     };
 
     struct sVLine : public sPlotData
@@ -65,6 +76,10 @@ namespace SE::Core
         }
 
         void Render( UIPlot *aParentPlot );
+
+        static void *UIVLinePlot_Create();
+        static void  UIVLinePlot_Destroy( void *aSelf );
+        static void  UIVLinePlot_SetX( void *aSelf, void *aValue );
     };
 
     class UIPlot : public UIComponent
@@ -73,12 +88,14 @@ namespace SE::Core
         UIPlot();
 
         void Add( Ref<sPlotData> aPlot );
+        void Add( sPlotData* aPlot );
         void Clear();
 
         void ConfigureLegend( math::vec2 aLegendPadding, math::vec2 aLegendInnerPadding, math::vec2 aLegendSpacing );
 
       protected:
-        std::vector<Ref<sPlotData>> mElements;
+        std::vector<sPlotData*> mElements;
+        std::vector<Ref<sPlotData>> mElementRefs;
 
         ImPlotLocation mLegendPosition = ImPlotLocation_NorthEast;
 
@@ -94,5 +111,13 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+
+      public:
+        static void *UIPlot_Create();
+        static void  UIPlot_Destroy( void *aInstance );
+        static void  UIPlot_Clear( void *aInstance );
+        static void  UIPlot_ConfigureLegend( void *aInstance, math::vec2 *aLegendPadding, math::vec2 *aLegendInnerPadding,
+                                             math::vec2 *aLegendSpacing );
+        static void  UIPlot_Add( void *aInstance, void *aPlot );
     };
 } // namespace SE::Core

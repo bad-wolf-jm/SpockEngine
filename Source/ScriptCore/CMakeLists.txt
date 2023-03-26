@@ -23,6 +23,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/Components/PropertyValue.cs
     Source/UI/Components/ComboBox.cs
     Source/UI/Components/Table.cs
+    Source/UI/Components/Plot.cs
     Source/UI/Layouts/BoxLayout.cs
     Source/UI/Layouts/ZLayout.cs
     Source/UI/UI.cs
