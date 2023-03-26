@@ -15,6 +15,7 @@ namespace SE::Core
 
         void OnChange( std::function<void( int aIndex )> aOnChange );
         int  Current() { return mCurrentItem; }
+        void SetCurrent(int aCurrent) { mCurrentItem = aCurrent; }
 
       private:
         std::function<void( int aIndex )> mOnChange;
@@ -29,6 +30,14 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+
+      public:
+        static void *UIComboBox_Create();
+        static void *UIComboBox_CreateWithItems( void *aItems );
+        static void  UIComboBox_Destroy( void *aInstance );
+        static int   UIComboBox_GetCurrent( void *aInstance );
+        static void  UIComboBox_SetCurrent( void *aInstance, int aValue );
+        static void  UIComboBox_SetItemList( void *aInstance, void *aItems );
     };
 
 } // namespace SE::Core
