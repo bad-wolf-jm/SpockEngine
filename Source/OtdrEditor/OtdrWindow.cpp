@@ -346,23 +346,6 @@ namespace SE::OtdrEditor
         return lRequestQuit;
     }
 
-    template <typename _Ty>
-    std::vector<_Ty> AsVector( MonoObject *aObject )
-    {
-        if( aObject == nullptr ) return std::vector<_Ty>( 0 );
-
-        uint32_t lArrayLength = static_cast<uint32_t>( mono_array_length( (MonoArray *)aObject ) );
-
-        std::vector<_Ty> lVector( lArrayLength );
-        for( uint32_t i = 0; i < lArrayLength; i++ )
-        {
-            auto lElement = *( mono_array_addr( (MonoArray *)aObject, _Ty, i ) );
-            lVector[i]    = lElement;
-        }
-
-        return lVector;
-    }
-
     void OtdrWindow::LoadIOlmData( fs::path aPath, bool aReanalyse )
     {
         static auto &lFileLoader = MonoRuntime::GetClassType( "Metrino.Interop.FileLoader" );
@@ -374,7 +357,7 @@ namespace SE::OtdrEditor
         mDataInstance = New<MonoScriptInstance>( &lFileClass, lFileClass.Class(), lDataObject );
 
         MonoObject               *lTraceData       = mDataInstance->CallMethod( "GetAllTraces" );
-        std::vector<MonoObject *> lTraceDataVector = AsVector<MonoObject *>( lTraceData );
+        std::vector<MonoObject *> lTraceDataVector = MonoRuntime::AsVector<MonoObject *>( lTraceData );
         if( lTraceDataVector.size() != 0 )
         {
             static auto &lTraceDataStructure        = MonoRuntime::GetClassType( "Metrino.Interop.TracePlotData" );
@@ -399,14 +382,14 @@ namespace SE::OtdrEditor
         {
             bool        lX         = false;
             MonoObject *lEventData = mDataInstance->CallMethod( "GetEvents", &lX );
-            mEventVector           = AsVector<sMultiPulseEvent>( lEventData );
+            mEventVector           = MonoRuntime::AsVector<sMultiPulseEvent>( lEventData );
             mEventTable->SetData( mEventVector );
         }
 
         {
             bool        lX               = false;
             MonoObject *lLinkElementData = mDataInstance->CallMethod( "GetLinkElements", &lX );
-            mLinkElementVector           = AsVector<sLinkElement>( lLinkElementData );
+            mLinkElementVector           = MonoRuntime::AsVector<sLinkElement>( lLinkElementData );
 
             mLinkElementTable->SetData( mLinkElementVector );
             mTracePlot.Clear();

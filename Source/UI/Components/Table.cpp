@@ -145,23 +145,6 @@ namespace SE::Core
         ImGui::SetCursorPos( lNewPos );
     }
 
-    template <typename _Ty>
-    static std::vector<_Ty> AsVector( MonoObject *aObject )
-    {
-        if( aObject == nullptr ) return std::vector<_Ty>( 0 );
-
-        uint32_t lArrayLength = static_cast<uint32_t>( mono_array_length( (MonoArray *)aObject ) );
-
-        std::vector<_Ty> lVector( lArrayLength );
-        for( uint32_t i = 0; i < lArrayLength; i++ )
-        {
-            auto lElement = *( mono_array_addr( (MonoArray *)aObject, _Ty, i ) );
-            lVector[i]    = lElement;
-        }
-
-        return lVector;
-    }
-
     void *sFloat64Column::UIFloat64Column_Create()
     {
         auto lNewColumn = new sFloat64Column();
@@ -192,16 +175,16 @@ namespace SE::Core
     {
         auto lSelf = static_cast<sFloat64Column *>( aSelf );
 
-        lSelf->mData = AsVector<double>( static_cast<MonoObject *>( aValue ) );
+        lSelf->mData = MonoRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
     }
 
     void sFloat64Column::UIFloat64Column_SetDataWithForegroundColor( void *aSelf, void *aValue, void *aForegroundColor )
     {
         auto lSelf = static_cast<sFloat64Column *>( aSelf );
 
-        lSelf->mData = AsVector<double>( static_cast<MonoObject *>( aValue ) );
+        lSelf->mData = MonoRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
         lSelf->mForegroundColor.clear();
-        for( auto const &x : AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
+        for( auto const &x : MonoRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
             lSelf->mForegroundColor.push_back( ImColor( x ) );
     }
 
@@ -210,14 +193,14 @@ namespace SE::Core
     {
         auto lSelf = static_cast<sFloat64Column *>( aSelf );
 
-        lSelf->mData = AsVector<double>( static_cast<MonoObject *>( aValue ) );
+        lSelf->mData = MonoRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
 
         lSelf->mForegroundColor.clear();
-        for( auto const &x : AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
+        for( auto const &x : MonoRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
             lSelf->mForegroundColor.push_back( ImColor( x ) );
 
         lSelf->mBackgroundColor.clear();
-        for( auto const &x : AsVector<ImVec4>( static_cast<MonoObject *>( aBackroundColor ) ) )
+        for( auto const &x : MonoRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aBackroundColor ) ) )
             lSelf->mBackgroundColor.push_back( ImColor( x ) );
     }
 
@@ -275,7 +258,7 @@ namespace SE::Core
         auto lSelf = static_cast<sStringColumn *>( aSelf );
 
         lSelf->mData.clear();
-        for( auto const &x : AsVector<MonoString *>( static_cast<MonoObject *>( aValue ) ) )
+        for( auto const &x : MonoRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aValue ) ) )
             lSelf->mData.push_back(MonoRuntime::NewString(x));
     }
 
@@ -284,11 +267,11 @@ namespace SE::Core
         auto lSelf = static_cast<sStringColumn *>( aSelf );
 
         lSelf->mData.clear();
-        for( auto const &x : AsVector<MonoString *>( static_cast<MonoObject *>( aValue ) ) )
+        for( auto const &x : MonoRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aValue ) ) )
             lSelf->mData.push_back(MonoRuntime::NewString(x));
 
         lSelf->mForegroundColor.clear();
-        for( auto const &x : AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
+        for( auto const &x : MonoRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
             lSelf->mForegroundColor.push_back( ImColor( x ) );
     }
 
@@ -298,15 +281,15 @@ namespace SE::Core
         auto lSelf = static_cast<sStringColumn *>( aSelf );
 
         lSelf->mData.clear();
-        for( auto const &x : AsVector<MonoString *>( static_cast<MonoObject *>( aValue ) ) )
+        for( auto const &x : MonoRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aValue ) ) )
             lSelf->mData.push_back(MonoRuntime::NewString(x));
 
         lSelf->mForegroundColor.clear();
-        for( auto const &x : AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
+        for( auto const &x : MonoRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
             lSelf->mForegroundColor.push_back( ImColor( x ) );
 
         lSelf->mBackgroundColor.clear();
-        for( auto const &x : AsVector<ImVec4>( static_cast<MonoObject *>( aBackroundColor ) ) )
+        for( auto const &x : MonoRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aBackroundColor ) ) )
             lSelf->mBackgroundColor.push_back( ImColor( x ) );
     }
 

@@ -21,21 +21,6 @@
 
 namespace SE::OtdrEditor
 {
-    template <typename _Ty>
-    static std::vector<_Ty> AsVector( MonoObject *aObject )
-    {
-        uint32_t lArrayLength = static_cast<uint32_t>( mono_array_length( (MonoArray *)aObject ) );
-
-        std::vector<_Ty> lVector( lArrayLength );
-        for( uint32_t i = 0; i < lArrayLength; i++ )
-        {
-            auto lElement = *( mono_array_addr( (MonoArray *)aObject, _Ty, i ) );
-            lVector[i]    = lElement;
-        }
-
-        return lVector;
-    }
-
     void UILinkElementTracePlot::SetData( std::vector<MonoObject *> &lTraceDataVector )
     {
         static auto &lTraceDataStructure = MonoRuntime::GetClassType( "Metrino.Interop.TracePlotData" );
@@ -45,8 +30,8 @@ namespace SE::OtdrEditor
         {
             auto lInstance = MonoScriptInstance( &lTraceDataStructure, lTraceDataStructure.Class(), lTraceDataVector[i] );
             auto lPlot     = New<sFloat64LinePlot>();
-            lPlot->mX      = AsVector<double>( lInstance.GetFieldValue<MonoObject *>( "mX" ) );
-            lPlot->mY      = AsVector<double>( lInstance.GetFieldValue<MonoObject *>( "mY" ) );
+            lPlot->mX      = MonoRuntime::AsVector<double>( lInstance.GetFieldValue<MonoObject *>( "mX" ) );
+            lPlot->mY      = MonoRuntime::AsVector<double>( lInstance.GetFieldValue<MonoObject *>( "mY" ) );
             lPlot->mLegend = fmt::format( "{:.0f} nm - {} ({} samples)", lInstance.GetFieldValue<double>( "mWavelength" ) * 1e9, i,
                                           lPlot->mX.size() );
 
@@ -68,7 +53,7 @@ namespace SE::OtdrEditor
             {
                 auto lSamples      = lTrace.GetPropertyValue<MonoObject *>( "Samples" );
                 auto lDeltaX       = lTrace.GetPropertyValue<double>( "SamplingPeriod" );
-                lPeakPlot->mY      = AsVector<double>( lSamples );
+                lPeakPlot->mY      = MonoRuntime::AsVector<double>( lSamples );
                 lPeakPlot->mX      = std::vector<double>( lPeakPlot->mY.size() );
                 lPeakPlot->mLegend = fmt::format( "Peak Trace##{}", (size_t)aLinkElement.mPeakTrace );
 
@@ -94,7 +79,7 @@ namespace SE::OtdrEditor
             {
                 auto lSamples           = lTrace.GetPropertyValue<MonoObject *>( "Samples" );
                 auto lDeltaX            = lTrace.GetPropertyValue<double>( "SamplingPeriod" );
-                lDetectionPlot->mY      = AsVector<double>( lSamples );
+                lDetectionPlot->mY      = MonoRuntime::AsVector<double>( lSamples );
                 lDetectionPlot->mX      = std::vector<double>( lDetectionPlot->mY.size() );
                 lDetectionPlot->mLegend = fmt::format( "Detection Trace##{}", (size_t)aLinkElement.mDetectionTrace );
 
