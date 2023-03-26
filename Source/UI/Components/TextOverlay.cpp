@@ -2,6 +2,7 @@
 #include <sstream>
 
 #include "Engine/Engine.h"
+#include "DotNet/Runtime.h"
 
 namespace SE::Core
 {
@@ -127,4 +128,20 @@ namespace SE::Core
         }
     }
 
+    void *UITextOverlay::UITextOverlay_Create()
+    {
+        auto lNewLabel = new UITextOverlay();
+
+        return static_cast<void *>( lNewLabel );
+    }
+
+    void UITextOverlay::UITextOverlay_Destroy( void *aInstance ) { delete static_cast<UITextOverlay *>( aInstance ); }
+
+    void UITextOverlay::UITextOverlay_AddText( void *aInstance, void *aText )
+    {
+        auto lInstance = static_cast<UITextOverlay *>( aInstance );
+        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+
+        lInstance->AddText( lString );
+    }
 } // namespace SE::Core
