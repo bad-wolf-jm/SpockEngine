@@ -9,6 +9,12 @@ namespace SpockEngine
 
         ~UIImageToggleButton() { UIImageToggleButton_Destroy(mInstance); }
 
+        public bool Active 
+        {
+            get { return UIImageToggleButton_IsActive(mInstance); }
+            set { UIImageToggleButton_SetActive(mInstance, value); }
+        }
+
         public void SetActiveImage(UIBaseImage aImage)
         {
             UIImageToggleButton_SetActiveImage(mInstance, aImage.Instance);
@@ -24,6 +30,12 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIImageToggleButton_Destroy(ulong aInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static bool UIImageToggleButton_IsActive(ulong aInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIImageToggleButton_SetActive(ulong aInstance, bool aValue);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIImageToggleButton_SetActiveImage(ulong aInstance, ulong aImage);
