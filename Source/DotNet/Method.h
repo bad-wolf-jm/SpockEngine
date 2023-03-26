@@ -4,7 +4,6 @@
 #include <map>
 #include <string>
 
-
 #include "Instance.h"
 #include "Typedefs.h"
 
@@ -27,7 +26,7 @@ namespace SE::Core
         }
 
       private:
-        MonoMethod         *mMonoMethod;
+        MonoMethod     *mMonoMethod;
         DotNetInstance *mInstance;
     };
 } // namespace SE::Core

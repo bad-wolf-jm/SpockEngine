@@ -52,7 +52,7 @@ namespace SE::Core
 
         static void OnConsoleOut( std::function<void( std::string const & )> aFunction );
 
-        static std::vector<std::string>                GetClassNames();
+        static std::vector<std::string>            GetClassNames();
         static std::map<std::string, DotNetClass> &GetClasses();
 
       private:

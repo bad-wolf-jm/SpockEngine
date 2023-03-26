@@ -85,7 +85,7 @@ namespace SE::Core
     } // namespace
 
     DotNetClass::DotNetClass( const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
-                                      fs::path const &aDllPPath, bool aIsNested )
+                              fs::path const &aDllPPath, bool aIsNested )
         : mClassNamespace( aClassNamespace )
         , mClassName( aClassName )
         , mDllPath{ aDllPPath }
@@ -97,8 +97,8 @@ namespace SE::Core
         mClassFullName = fmt::format( "{}.{}", mClassNamespace, mClassName );
     }
 
-    DotNetClass::DotNetClass( MonoClass *aClass, const std::string &aClassNamespace, const std::string &aClassName,
-                                      MonoImage *aImage, fs::path const &aDllPPath, bool aIsNested )
+    DotNetClass::DotNetClass( MonoClass *aClass, const std::string &aClassNamespace, const std::string &aClassName, MonoImage *aImage,
+                              fs::path const &aDllPPath, bool aIsNested )
         : mClassNamespace( aClassNamespace )
         , mClassName( aClassName )
         , mDllPath{ aDllPPath }
