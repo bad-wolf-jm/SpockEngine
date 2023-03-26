@@ -170,7 +170,7 @@ namespace SE::Core
 
     uint32_t DotNetRuntime::CountAssemblies() { return sRuntimeData->mAppAssemblyFiles.size(); }
 
-    std::vector<std::string> MonoRuntime::GetClassNames()
+    std::vector<std::string> DotNetRuntime::GetClassNames()
     {
         std::vector<std::string> lResult;
         for( auto const &[lName, lValue] : sRuntimeData->mClasses )
@@ -181,9 +181,9 @@ namespace SE::Core
         return lResult;
     }
 
-    std::map<std::string, MonoScriptClass> &MonoRuntime::GetClasses() { return sRuntimeData->mClasses; }
+    std::map<std::string, DotNetClass> &DotNetRuntime::GetClasses() { return sRuntimeData->mClasses; }
 
-    bool MonoRuntime::AssembliesNeedReloading()
+    bool DotNetRuntime::AssembliesNeedReloading()
     {
         for( auto const &[lKey, lValue] : sRuntimeData->mAssemblies )
             if( lValue.mNeedsReloading ) return true;

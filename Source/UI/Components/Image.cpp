@@ -1,5 +1,5 @@
 #include "Image.h"
-#include "Mono/MonoRuntime.h"
+#include "DotNet/Runtime.h"
 
 namespace SE::Core
 {
@@ -31,7 +31,7 @@ namespace SE::Core
 
     void *UIImage::UIImage_CreateWithPath( void *aText, math::vec2 *aSize )
     {
-        auto lString   = MonoRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
         auto lNewImage = new UIImage( lString, *aSize );
 
         return static_cast<void *>( lNewImage );

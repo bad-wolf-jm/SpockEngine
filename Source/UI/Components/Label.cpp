@@ -1,6 +1,6 @@
 #include "Label.h"
 
-#include "Mono/MonoRuntime.h"
+#include "DotNet/Runtime.h"
 
 namespace SE::Core
 {
@@ -48,7 +48,7 @@ namespace SE::Core
 
     void *UILabel::UILabel_CreateWithText( void *aText )
     {
-        auto lString   = MonoRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
         auto lNewLabel = new UILabel( lString );
 
         return static_cast<void *>( lNewLabel );
@@ -59,7 +59,7 @@ namespace SE::Core
     void UILabel::UILabel_SetText( void *aInstance, void *aText )
     {
         auto lInstance = static_cast<UILabel *>( aInstance );
-        auto lString   = MonoRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
         lInstance->SetText( lString );
     }

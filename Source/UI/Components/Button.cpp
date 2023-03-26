@@ -1,5 +1,6 @@
 #include "Button.h"
-#include "Mono/MonoRuntime.h"
+#include "DotNet/Runtime.h"
+
 namespace SE::Core
 {
     UIButton::UIButton( std::string const &aText )
@@ -70,7 +71,7 @@ namespace SE::Core
 
     void *UIButton::UIButton_CreateWithText( void *aText )
     {
-        auto lString   = MonoRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
         auto lNewButton = new UIButton( lString );
 
         return static_cast<void *>( lNewButton );
@@ -81,7 +82,7 @@ namespace SE::Core
     void UIButton::UIButton_SetText( void *aInstance, void *aText )
     {
         auto lInstance = static_cast<UILabel *>( aInstance );
-        auto lString   = MonoRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
         lInstance->SetText( lString );
     }

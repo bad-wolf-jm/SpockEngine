@@ -30,7 +30,7 @@
 #include "LinkElementTable.h"
 #include "LinkElementTracePlot.h"
 #include "MeasurementOverview.h"
-#include "Mono/MonoScriptInstance.h"
+#include "DotNet/Instance.h"
 #include "MultiPulseEventTable.h"
 #include "TestFailResultTable.h"
 #include "Workspace.h"
@@ -60,7 +60,7 @@ namespace SE::OtdrEditor
 
         Ref<Engine> mEngineLoop = nullptr;
 
-        Ref<MonoScriptInstance> mCurrentScript{};
+        Ref<DotNetInstance> mCurrentScript{};
         bool                    mCurrentScriptIsRunning{};
 
       public:
@@ -94,7 +94,7 @@ namespace SE::OtdrEditor
         void LoadIOlmData( fs::path aPath, bool aReanalyse = false );
         void LoadTestReport( fs::path aPath );
 
-        Ref<MonoScriptInstance> mDataInstance = nullptr;
+        Ref<DotNetInstance> mDataInstance = nullptr;
         std::vector<sLinkElement> mLinkElementVector;
         std::vector<sMultiPulseEvent> mEventVector;
 

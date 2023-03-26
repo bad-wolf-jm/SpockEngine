@@ -93,12 +93,12 @@ namespace SE::OtdrEditor
                                                     { return a + ( a.length() > 0 ? ", " : "" ) + b; } );
         };
 
-        static auto &lPhysicalEventClass = MonoRuntime::GetClassType( "Metrino.Otdr.PhysicalEvent" );
-        static auto &lOlmAttributeClass  = MonoRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
+        static auto &lPhysicalEventClass = DotNetRuntime::GetClassType( "Metrino.Otdr.PhysicalEvent" );
+        static auto &lOlmAttributeClass  = DotNetRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
 
         for( auto const &lE : mEventDataVector )
         {
-            auto lPhysicalEvent = MonoScriptInstance( &lPhysicalEventClass, lPhysicalEventClass.Class(), lE.mPhysicalEvent );
+            auto lPhysicalEvent = DotNetInstance( &lPhysicalEventClass, lPhysicalEventClass.Class(), lE.mPhysicalEvent );
             auto lAttributes    = lPhysicalEvent.GetPropertyValue( "Tag", "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
             auto lPeakTrace     = lAttributes->GetPropertyValue( "PeakTrace", "Metrino.Otdr.SinglePulseTrace" );
 

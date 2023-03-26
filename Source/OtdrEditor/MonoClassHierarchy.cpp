@@ -10,7 +10,7 @@
 
 namespace SE::OtdrEditor
 {
-    void MonoClassHierarchy::DisplayNode( MonoScriptClass &aClass, float aWidth )
+    void MonoClassHierarchy::DisplayNode( DotNetClass &aClass, float aWidth )
     {
         ImGuiTreeNodeFlags lFlags = ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_FramePadding |
                                     ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow |
@@ -65,7 +65,7 @@ namespace SE::OtdrEditor
         ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, { 5.0f, 0.0f } );
         ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, { 0.0f, 0.0f } );
 
-        for( auto &[lName, lClass] : MonoRuntime::GetClasses() )
+        for( auto &[lName, lClass] : DotNetRuntime::GetClasses() )
         {
             if( lClass.ParentClass() == nullptr )
             {

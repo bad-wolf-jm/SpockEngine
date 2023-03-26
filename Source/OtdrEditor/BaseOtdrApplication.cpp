@@ -59,7 +59,7 @@ namespace SE::OtdrEditor
         mEditorWindow.ConfigureUI();
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
 
-        static auto &lApplicationType    = MonoRuntime::GetClassType( "SpockEngine.SEApplication" );
+        static auto &lApplicationType    = DotNetRuntime::GetClassType( "SpockEngine.SEApplication" );
         auto &lApplicationClasses = lApplicationType.DerivedClasses();
         if( lApplicationClasses.size() > 0 )
         {

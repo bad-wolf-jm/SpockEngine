@@ -1,5 +1,5 @@
 #include "ImageButton.h"
-#include "Mono/MonoRuntime.h"
+#include "DotNet/Runtime.h"
 namespace SE::Core
 {
     UIImageButton::UIImageButton( fs::path const &aImagePath, math::vec2 aSize, std::function<void()> aOnClick )
@@ -51,7 +51,7 @@ namespace SE::Core
 
     void *UIImageButton::UIImageButton_CreateWithPath( void *aText, math::vec2 *aSize )
     {
-        auto lString   = MonoRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
         auto lNewImage = new UIImageButton( lString, *aSize );
 
         return static_cast<void *>( lNewImage );

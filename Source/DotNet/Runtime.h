@@ -44,7 +44,7 @@ namespace SE::Core
             return lVector;
         }
 
-        static MonoScriptClass &GetClassType( const std::string &aClassName );
+        static DotNetClass &GetClassType( const std::string &aClassName );
 
         static MonoType *GetCoreTypeFromName( std::string &aName );
 
@@ -53,7 +53,7 @@ namespace SE::Core
         static void OnConsoleOut( std::function<void( std::string const & )> aFunction );
 
         static std::vector<std::string>                GetClassNames();
-        static std::map<std::string, MonoScriptClass> &GetClasses();
+        static std::map<std::string, DotNetClass> &GetClasses();
 
       private:
         static void RegisterComponentTypes();

@@ -52,7 +52,7 @@ namespace SE::OtdrEditor
         uint32_t mViewportWidth         = 1;
         bool     mShouldRebuildViewport = true;
 
-        Ref<MonoScriptInstance> mApplicationInstance = nullptr;
+        Ref<DotNetInstance> mApplicationInstance = nullptr;
     };
 
 } // namespace SE::OtdrEditor
