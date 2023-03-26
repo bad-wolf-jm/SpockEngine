@@ -14,6 +14,7 @@ add_library(${LIBRARY_NAME} SHARED
 
     Source/UI/Components/Component.cs
     Source/UI/Components/Button.cs
+    Source/UI/Components/TextToggleButton.cs
     Source/UI/Components/Label.cs
     Source/UI/Components/BaseImage.cs
     Source/UI/Components/Image.cs

@@ -18,7 +18,6 @@ namespace SE::Core
 
         void OnChange( std::function<bool( bool )> aOnClick );
 
-        void SetText( std::string const &aText );
         void SetActiveColor( math::vec4 const &aColor );
         void SetInactiveColor( math::vec4 const &aColor );
 
@@ -38,5 +37,14 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+
+      public:
+        static void *UITextToggleButton_Create();
+        static void *UITextToggleButton_CreateWithText( void* aText );
+        static void  UITextToggleButton_Destroy( void *aInstance );
+        static bool  UITextToggleButton_IsActive( void *aInstance );
+        static void  UITextToggleButton_SetActive( void *aInstance, bool aValue );
+        static void  UITextToggleButton_SetActiveColor( void *aInstance, math::vec4 *aColor );
+        static void  UITextToggleButton_SetInactiveColor( void *aInstance, math::vec4 *aColor );
     };
 } // namespace SE::Core
