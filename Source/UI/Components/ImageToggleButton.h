@@ -14,6 +14,9 @@ namespace SE::Core
 
         void OnChange( std::function<bool( bool )> aOnClick );
 
+        bool IsActive();
+        void SetActive( bool aValue );
+
         void SetActiveImage( UIBaseImage *aImage );
         void SetInactiveImage( UIBaseImage *aImage );
 
@@ -38,6 +41,8 @@ namespace SE::Core
       public:
         static void *UIImageToggleButton_Create();
         static void  UIImageToggleButton_Destroy( void *aInstance );
+        static bool  UIImageToggleButton_IsActive( void *aInstance );
+        static void  UIImageToggleButton_SetActive( void *aInstance, bool aValue );
         static void  UIImageToggleButton_SetActiveImage( void *aInstance, void *aImage );
         static void  UIImageToggleButton_SetInactiveImage( void *aInstance, void *aImage );
     };

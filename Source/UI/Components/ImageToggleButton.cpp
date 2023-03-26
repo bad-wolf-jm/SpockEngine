@@ -16,6 +16,9 @@ namespace SE::Core
 
     void UIImageToggleButton::SetInactiveImage( UIBaseImage *aImage ) { mInactiveImage = aImage; }
 
+    bool UIImageToggleButton::IsActive() { return mActivated; }
+    void UIImageToggleButton::SetActive( bool aValue ) { mActivated = aValue; }
+
     void UIImageToggleButton::PushStyles( bool aEnabled )
     {
         if( !aEnabled )
@@ -82,12 +85,29 @@ namespace SE::Core
         return static_cast<void *>( lNewImage );
     }
 
-    void UIImageToggleButton::UIImageToggleButton_Destroy( void *aInstance ) { delete static_cast<UIImageToggleButton *>( aInstance ); }
+    void UIImageToggleButton::UIImageToggleButton_Destroy( void *aInstance )
+    {
+        delete static_cast<UIImageToggleButton *>( aInstance );
+    }
+
+    bool UIImageToggleButton::UIImageToggleButton_IsActive( void *aInstance )
+    {
+        auto lInstance = static_cast<UIImageToggleButton *>( aInstance );
+
+        return lInstance->IsActive();
+    }
+
+    void UIImageToggleButton::UIImageToggleButton_SetActive( void *aInstance, bool aValue )
+    {
+        auto lInstance = static_cast<UIImageToggleButton *>( aInstance );
+
+        lInstance->SetActive( aValue );
+    }
 
     void UIImageToggleButton::UIImageToggleButton_SetActiveImage( void *aInstance, void *aImage )
     {
         auto lInstance = static_cast<UIImageToggleButton *>( aInstance );
-        auto lImage = static_cast<UIBaseImage *>( aImage );
+        auto lImage    = static_cast<UIBaseImage *>( aImage );
 
         lInstance->SetActiveImage( lImage );
     }
@@ -95,7 +115,7 @@ namespace SE::Core
     void UIImageToggleButton::UIImageToggleButton_SetInactiveImage( void *aInstance, void *aImage )
     {
         auto lInstance = static_cast<UIImageToggleButton *>( aInstance );
-        auto lImage = static_cast<UIBaseImage *>( aImage );
+        auto lImage    = static_cast<UIBaseImage *>( aImage );
 
         lInstance->SetInactiveImage( lImage );
     }
