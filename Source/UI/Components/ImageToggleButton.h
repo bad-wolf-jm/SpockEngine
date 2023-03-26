@@ -14,15 +14,16 @@ namespace SE::Core
 
         void OnChange( std::function<bool( bool )> aOnClick );
 
-        void SetActiveImage( UIBaseImage const &aImage );
-        void SetInactiveImage( UIBaseImage const &aImage );
+        void SetActiveImage( UIBaseImage *aImage );
+        void SetInactiveImage( UIBaseImage *aImage );
 
       private:
         std::function<bool( bool )> mOnChange;
 
-        bool        mActivated = false;
-        UIBaseImage mActiveImage;
-        UIBaseImage mInactiveImage;
+        bool mActivated = false;
+
+        UIBaseImage *mActiveImage   = nullptr;
+        UIBaseImage *mInactiveImage = nullptr;
 
       private:
         void PushStyles();
@@ -33,5 +34,11 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+
+      public:
+        static void *UIImageToggleButton_Create();
+        static void  UIImageToggleButton_Destroy( void *aInstance );
+        static void  UIImageToggleButton_SetActiveImage( void *aInstance, void *aImage );
+        static void  UIImageToggleButton_SetInactiveImage( void *aInstance, void *aImage );
     };
 } // namespace SE::Core

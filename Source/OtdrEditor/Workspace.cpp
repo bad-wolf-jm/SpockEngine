@@ -29,8 +29,8 @@ namespace SE::OtdrEditor
         mPauseIcon = UIImage( "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\Pause.png", math::vec2{ 30, 30 } );
         mPauseIcon.SetTintColor( math::vec4{ 1.0f, .2f, 0.0f, 0.8f } );
 
-        mStartOrStopCurrentScript.SetInactiveImage( mPlayIcon );
-        mStartOrStopCurrentScript.SetActiveImage( mPauseIcon );
+        mStartOrStopCurrentScript.SetInactiveImage( &mPlayIcon );
+        mStartOrStopCurrentScript.SetActiveImage( &mPauseIcon );
         mStartOrStopCurrentScript.OnChange( [&]( bool ) { return StartCurrentScript( true ); } );
 
         mShowLogs = UITextToggleButton( "Logs" );
