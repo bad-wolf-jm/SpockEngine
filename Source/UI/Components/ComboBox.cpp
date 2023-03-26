@@ -1,4 +1,5 @@
 #include "ComboBox.h"
+#include "Mono/MonoRuntime.h"
 
 namespace SE::Core
 {
@@ -59,5 +60,50 @@ namespace SE::Core
 
             ImGui::EndCombo();
         }
+    }
+
+    void *UIComboBox::UIComboBox_Create()
+    {
+        auto lNewComboBox = new UIComboBox();
+
+        return static_cast<void *>( lNewComboBox );
+    }
+
+    void *UIComboBox::UIComboBox_CreateWithItems( void *aItems )
+    {
+        std::vector<std::string> lItemVector;
+        for( auto const &x : MonoRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aItems ) ) )
+            lItemVector.emplace_back( MonoRuntime::NewString( x ) );
+
+        auto lNewComboBox = new UIComboBox( lItemVector );
+
+        return static_cast<void *>( lNewComboBox );
+    }
+
+    void UIComboBox::UIComboBox_Destroy( void *aInstance ) { delete static_cast<UIComboBox *>( aInstance ); }
+
+    int UIComboBox::UIComboBox_GetCurrent( void *aInstance )
+    {
+        auto lInstance = static_cast<UIComboBox *>( aInstance );
+
+        return lInstance->Current();
+    }
+
+    void UIComboBox::UIComboBox_SetCurrent( void *aInstance, int aValue )
+    {
+        auto lInstance = static_cast<UIComboBox *>( aInstance );
+
+        lInstance->SetCurrent( aValue );
+    }
+
+    void UIComboBox::UIComboBox_SetItemList( void *aInstance, void *aItems )
+    {
+        auto lInstance = static_cast<UIComboBox *>( aInstance );
+
+        std::vector<std::string> lItemVector;
+        for( auto const &x : MonoRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aItems ) ) )
+            lItemVector.emplace_back( MonoRuntime::NewString( x ) );
+
+        lInstance->SetItemList( lItemVector );
     }
 } // namespace SE::Core

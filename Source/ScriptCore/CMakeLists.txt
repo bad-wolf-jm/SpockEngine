@@ -21,6 +21,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/Components/ImageButton.cs
     Source/UI/Components/ImageToggleButton.cs
     Source/UI/Components/PropertyValue.cs
+    Source/UI/Components/ComboBox.cs
     Source/UI/Components/Table.cs
     Source/UI/Layouts/BoxLayout.cs
     Source/UI/Layouts/ZLayout.cs
