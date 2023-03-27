@@ -135,23 +135,23 @@ namespace SE::OtdrEditor
 
     void UIMultiPulseEventTable::Clear()
     {
-        mPositionColumn->mData.clear();
-        mLossColumn->mData.clear();
-        mEstimatedLossColumn->mData.clear();
-        mReflectanceColumn->mData.clear();
-        mWavelengthColumn->mData.clear();
-        mCursorAColumn->mData.clear();
-        mCursorBColumn->mData.clear();
-        mSubCursorAColumn->mData.clear();
-        mSubCursorBColumn->mData.clear();
-        mCurveLevelColumn->mData.clear();
-        mLossAtAColumn->mData.clear();
-        mLossAtBColumn->mData.clear();
-        mEstimatedCurveLevelColumn->mData.clear();
-        mEstimatedEndLevelColumn->mData.clear();
-        mEndNoiseLevelColumn->mData.clear();
-        mPeakPulseWidth->mData.clear();
-        mPeakPower->mData.clear();
-        mPeakSNR->mData.clear();
+        mPositionColumn->Clear();
+        mLossColumn->Clear();
+        mEstimatedLossColumn->Clear();
+        mReflectanceColumn->Clear();
+        mWavelengthColumn->Clear();
+        mCursorAColumn->Clear();
+        mCursorBColumn->Clear();
+        mSubCursorAColumn->Clear();
+        mSubCursorBColumn->Clear();
+        mCurveLevelColumn->Clear();
+        mLossAtAColumn->Clear();
+        mLossAtBColumn->Clear();
+        mEstimatedCurveLevelColumn->Clear();
+        mEstimatedEndLevelColumn->Clear();
+        mEndNoiseLevelColumn->Clear();
+        mPeakPulseWidth->Clear();
+        mPeakPower->Clear();
+        mPeakSNR->Clear();
     }
 } // namespace SE::OtdrEditor
