@@ -131,10 +131,17 @@ namespace SE::Core
         lInstance->SetInactiveColor( *aColor );
     }
 
+
     void UITextToggleButton::UITextToggleButton_OnChanged( void *aInstance, void *aDelegate )
     {
         auto lInstance = static_cast<UITextToggleButton *>( aInstance );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
+
+        if (lInstance->mOnChangeDelegate != nullptr)
+            mono_gchandle_free(lInstance->mOnChangeDelegateHandle);
+
+        lInstance->mOnChangeDelegate = aDelegate;
+        lInstance->mOnChangeDelegateHandle = mono_gchandle_new(static_cast<MonoObject *>( aDelegate ), true);
 
         lInstance->OnChange(
             [lInstance, lDelegate]( bool aValue )

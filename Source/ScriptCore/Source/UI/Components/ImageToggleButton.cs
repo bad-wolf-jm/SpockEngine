@@ -31,7 +31,7 @@ namespace SpockEngine
         {
             onChanged = aHandler;
             
-            UIImageToggleButton_OnChanged(mInstance, aHandler);
+            UIImageToggleButton_OnChanged(mInstance, onChanged);
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]

@@ -16,8 +16,8 @@ namespace SpockEngine
         public void OnClick(ClickDelegate aHandler)
         {
             onClick = aHandler;
-            
-            UIImageButton_OnClick(mInstance, aHandler);
+
+            UIImageButton_OnClick(mInstance, onClick);
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]

@@ -102,6 +102,12 @@ namespace SE::Core
         auto lInstance = static_cast<UITable *>( aInstance );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
+        if (lInstance->mOnRowClickDelegate != nullptr)
+            mono_gchandle_free(lInstance->mOnRowClickDelegateHandle);
+
+        lInstance->mOnRowClickDelegate = aDelegate;
+        lInstance->mOnRowClickDelegateHandle = mono_gchandle_new(static_cast<MonoObject *>( aDelegate ), true);
+
         lInstance->OnRowClicked(
             [lInstance, lDelegate]( int aValue )
             {

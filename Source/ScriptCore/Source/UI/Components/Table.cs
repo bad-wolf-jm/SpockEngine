@@ -128,7 +128,7 @@ namespace SpockEngine
         {
             onRowClickedDelegate = aHandler;
             
-            UITable_OnRowClicked(mInstance, aHandler);
+            UITable_OnRowClicked(mInstance, onRowClickedDelegate);
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
