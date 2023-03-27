@@ -22,23 +22,23 @@ namespace SE::OtdrEditor
         mIndex = New<sStringColumn>( "ID", 75.0f );
         AddColumn( mIndex );
 
-        mDiagnosicCount = New<sStringColumn>( "\xef\x86\x88", 15.0f );
-        AddColumn( mDiagnosicCount );
-
         mPositionColumn = New<sFloat64Column>( "Position", 75.0f, "{:.4f} km", "N.a.N." );
         AddColumn( mPositionColumn );
-
-        mWavelength = New<sFloat64Column>( "Wavelength", 75.0f, "{:.1f} nm", "N.a.N." );
-        AddColumn( mWavelength );
 
         mType = New<sStringColumn>( "Type", 75.0f );
         AddColumn( mType );
 
-        mEventType = New<sStringColumn>( "mEventType", 75.0f );
-        AddColumn( mEventType );
-
         mStatus = New<sStringColumn>( "Status", 75.0f );
         AddColumn( mStatus );
+
+        mWavelength = New<sFloat64Column>( "Wavelength", 75.0f, "{:.1f} nm", "N.a.N." );
+        AddColumn( mWavelength );
+
+        mChanged = New<sStringColumn>( "Changed", 75.0f );
+        AddColumn( mChanged );
+
+        mDiagnosicCount = New<sUint32Column>( "\xef\x86\x88", 15.0f );
+        AddColumn( mDiagnosicCount );
 
         mLoss = New<sFloat64Column>( "Loss", 75.0f, "{:.3f} dB", "N.a.N." );
         AddColumn( mLoss );
@@ -46,8 +46,32 @@ namespace SE::OtdrEditor
         mReflectance = New<sFloat64Column>( "Reflectance", 75.0f, "{:.2f} dB", "N.a.N." );
         AddColumn( mReflectance );
 
+        mCurveLevelColumn = New<sFloat64Column>( "Level", 75.0f, "{:.2f} dB", "N.a.N." );
+        AddColumn( mCurveLevelColumn );
+
+        mEventType = New<sStringColumn>( "mEventType", 75.0f );
+        AddColumn( mEventType );
+
+        mEventStatus = New<sStringColumn>( "mEventStatus", 75.0f );
+        AddColumn( mEventStatus );
+
+        mReflectanceType = New<sStringColumn>( "mReflectanceType", 75.0f );
+        AddColumn( mReflectanceType );
+
+        mEventSpan = New<sStringColumn>( "Range", 75.0f );
+        AddColumn( mEventSpan );
+
+        mPositionTolerance = New<sFloat64Column>( "Tolerance", 75.0f, "{:.3f} m", "N.a.N." );
+        AddColumn( mPositionTolerance );
+
+        mLossError = New<sFloat64Column>( "Loss Error", 75.0f, "{:.5f} dB", "N.a.N." );
+        AddColumn( mLossError );
+
         mPeakPower = New<sFloat64Column>( "Peak power", 75.0f, "{:.2f} dB", "N.a.N." );
         AddColumn( mPeakPower );
+
+        mComment = New<sStringColumn>( "Comment", 75.0f );
+        AddColumn( mComment );
 
         UITable::OnRowClicked(
             [&]( uint32_t aRow )
@@ -81,14 +105,14 @@ namespace SE::OtdrEditor
 
         for( auto const &lE : mEventDataVector )
         {
-            auto lLinkElement   = DotNetInstance( &lBaseLinkElementClass, lBaseLinkElementClass.Class(), lE.mLinkElement );
-            auto lPhysicalEvent = DotNetInstance( &lOlmPhysicalEventClass, lOlmPhysicalEventClass.Class(), lE.mPhysicalEvent );
-            auto lAttributes    = DotNetInstance( &lOlmAttributeClass, lOlmAttributeClass.Class(), lE.mAttributes );
-
             if( lE.mLinkIndex % 2 )
                 mRowBackgroundColor.push_back( IM_COL32( 2, 2, 2, 255 ) );
             else
                 mRowBackgroundColor.push_back( IM_COL32( 9, 9, 9, 255 ) );
+
+            auto lLinkElement   = DotNetInstance( &lBaseLinkElementClass, lBaseLinkElementClass.Class(), lE.mLinkElement );
+            auto lPhysicalEvent = DotNetInstance( &lOlmPhysicalEventClass, lOlmPhysicalEventClass.Class(), lE.mPhysicalEvent );
+            auto lAttributes    = DotNetInstance( &lOlmAttributeClass, lOlmAttributeClass.Class(), lE.mAttributes );
 
             auto lHidden    = lLinkElement.GetPropertyValue<bool>( "Hidden" );
             auto lTextColor = lHidden ? ImGui::GetStyleColorVec4( ImGuiCol_TextDisabled ) : ImGui::GetStyleColorVec4( ImGuiCol_Text );
@@ -115,17 +139,14 @@ namespace SE::OtdrEditor
             mStatus->mData.push_back( StringJoin( LinkStatusToString( lLinkElement.GetPropertyValue<int>( "Status" ) ) ) );
             mStatus->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
 
-            // mChanged->mData.push_back( lLinkElement.GetPropertyValue<bool>( "Changed" ) ? "True" : "False" );
-            // mChanged->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
+            mChanged->mData.push_back( lLinkElement.GetPropertyValue<bool>( "Changed" ) ? "True" : "False" );
+            mChanged->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
 
-            // auto lComment = lLinkElement.GetPropertyValue<MonoString *>( "Comment" );
-            // mComment->mData.push_back( DotNetRuntime::NewString( lComment ) );
-            // mComment->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
+            auto lComment = lLinkElement.GetPropertyValue<MonoString *>( "Comment" );
+            mComment->mData.push_back( DotNetRuntime::NewString( lComment ) );
+            mComment->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
 
-            if( lE.mDiagnosicCount > 0 )
-                mDiagnosicCount->mData.push_back( "\xef\x86\x88" );
-            else
-                mDiagnosicCount->mData.push_back( "" );
+            mDiagnosicCount->mData.push_back( lE.mDiagnosicCount );
             mDiagnosicCount->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
 
             mWavelength->mData.push_back( lPhysicalEvent.GetPropertyValue<double>( "Wavelength" ) * 1e9 );
@@ -151,14 +172,40 @@ namespace SE::OtdrEditor
             else
                 mReflectance->mForegroundColor.emplace_back( (uint32_t)ImColor( lTextColor ) );
 
+            mCurveLevelColumn->mData.push_back( lOtdrPhysicalEvent->GetPropertyValue<double>( "CurveLevel" ) );
+            mCurveLevelColumn->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
+
             mEventType->mData.push_back( ToString( lOtdrPhysicalEvent->GetPropertyValue<eEventType>( "Type" ) ) );
             mEventType->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
 
-            if( lAttributes )
-                mPeakPower->mData.push_back( lAttributes.GetPropertyValue<double>( "PeakPower" ) );
-            else
-                mPeakPower->mData.push_back( nan( "" ) );
+            mEventStatus->mData.push_back( StringJoin( ToString( lOtdrPhysicalEvent->GetPropertyValue<int>( "Status" ) ) ) );
+            mEventStatus->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
 
+            mReflectanceType->mData.push_back(
+                ToString( lOtdrPhysicalEvent->GetPropertyValue<eReflectanceType>( "ReflectanceType" ) ) );
+            mReflectanceType->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
+
+            auto lEventSpanStart = lOtdrPhysicalEvent->GetPropertyValue<double>( "CursorA" ) * 0.001f;
+            auto lEventSpanEnd   = lOtdrPhysicalEvent->GetPropertyValue<double>( "CursorB" ) * 0.001f;
+            auto lEventRange     = fmt::format( "[{:.4f}, {:.4f}] km", lEventSpanStart, lEventSpanEnd );
+            mEventSpan->mData.push_back( lEventRange );
+            mEventSpan->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
+
+            mPositionTolerance->mData.push_back( lPhysicalEvent.GetPropertyValue<double>( "PositionTolerance" ) );
+            mPositionTolerance->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
+
+            if( lAttributes )
+            {
+                mLossError->mData.push_back( lAttributes.GetPropertyValue<double>( "LossError" ) );
+                mPeakPower->mData.push_back( lAttributes.GetPropertyValue<double>( "PeakPower" ) );
+            }
+            else
+            {
+                mLossError->mData.push_back( nan( "" ) );
+                mPeakPower->mData.push_back( nan( "" ) );
+            }
+
+            mLossError->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
             mPeakPower->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
         }
     }
@@ -166,36 +213,20 @@ namespace SE::OtdrEditor
     void UILinkElementTable::Clear()
     {
         mRowBackgroundColor.clear();
-
-        mIndex->Clear();
-        mType->Clear();
-        mStatus->Clear();
-        mDiagnosicCount->Clear();
-        mWavelength->Clear();
-        mPositionColumn->Clear();
-        mLoss->Clear();
-        mReflectance->Clear();
-        mPeakPower->Clear();
-        mEventType->Clear();
-        // mComment->Clear();
-
-        // mIndex->mForegroundColor.clear();
-        // mType->mForegroundColor.clear();
-        // mStatus->mForegroundColor.clear();
-        // mDiagnosicCount->mForegroundColor.clear();
-        // mWavelength->mForegroundColor.clear();
-        // mPositionColumn->mForegroundColor.clear();
-        // mLoss->mForegroundColor.clear();
-        // mReflectance->mForegroundColor.clear();
-        // mPeakPower->mForegroundColor.clear();
-        // // mComment->mForegroundColor.clear();
-        // // mCurveLevelColumn->Clear();
-        // mEventType->mForegroundColor.clear();
-        // mEventStatus->Clear();
-        // mReflectanceType->Clear();
-        // mEventSpan->Clear();
-        // mPositionTolerance->Clear();
-        // mLossError->Clear();
+        mType->mData.clear();
+        mStatus->mData.clear();
+        mDiagnosicCount->mData.clear();
+        mWavelength->mData.clear();
+        mPositionColumn->mData.clear();
+        mLoss->mData.clear();
+        mReflectance->mData.clear();
+        mCurveLevelColumn->mData.clear();
+        mEventType->mData.clear();
+        mEventStatus->mData.clear();
+        mReflectanceType->mData.clear();
+        mEventSpan->mData.clear();
+        mPositionTolerance->mData.clear();
+        mLossError->mData.clear();
     }
 
     std::vector<sLinkElement> UILinkElementTable::GetElementsByIndex( uint32_t aElementIndex )
