@@ -19,6 +19,7 @@ namespace SE::Core
 
         virtual uint32_t Size()                               = 0;
         virtual void     Render( int aRow, ImVec2 aCellSize ) = 0;
+        void             Clear();
     };
 
     struct sFloat64Column : public sTableColumn
@@ -34,6 +35,7 @@ namespace SE::Core
 
         uint32_t Size();
         void     Render( int aRow, ImVec2 aCellSize );
+        void     Clear();
 
       public:
         static void *UIFloat64Column_Create();
@@ -46,6 +48,29 @@ namespace SE::Core
                                                                               void *aBackroundColor );
     };
 
+    struct sUint32Column : public sTableColumn
+    {
+        std::vector<uint32_t> mData;
+
+        sUint32Column() = default;
+        sUint32Column( std::string aHeader, float aInitialSize );
+        ~sUint32Column() = default;
+
+        uint32_t Size();
+        void     Render( int aRow, ImVec2 aCellSize );
+        void     Clear();
+
+      public:
+        static void *UIUint32Column_Create();
+        static void *UIUint32Column_CreateFull( void *aHeader, float aInitialSize );
+        static void  UIUint32Column_Destroy( void *aSelf );
+        static void  UIUint32Column_Clear( void *aSelf );
+        static void  UIUint32Column_SetData( void *aSelf, void *aValue );
+        static void  UIUint32Column_SetDataWithForegroundColor( void *aSelf, void *aValue, void *aForegroundColor );
+        static void  UIUint32Column_SetDataWithForegroundAndBackgroundColor( void *aSelf, void *aValue, void *aForegroundColor,
+                                                                             void *aBackroundColor );
+    };
+
     struct sStringColumn : public sTableColumn
     {
         std::vector<std::string> mData;
@@ -56,6 +81,7 @@ namespace SE::Core
 
         uint32_t Size();
         void     Render( int aRow, ImVec2 aCellSize );
+        void     Clear();
 
       public:
         static void *UIStringColumn_Create();
@@ -106,7 +132,7 @@ namespace SE::Core
       public:
         static void *UITable_Create();
         static void  UITable_Destroy( void *aSelf );
-        static void  UITable_OnRowClicked( void *aSelf, void* aHandler );
+        static void  UITable_OnRowClicked( void *aSelf, void *aHandler );
         static void  UITable_AddColumn( void *aSelf, void *aColumn );
         static void  UITable_SetRowHeight( void *aSelf, float aRowHeight );
     };

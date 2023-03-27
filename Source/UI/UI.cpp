@@ -11,7 +11,7 @@ namespace SE::Core::UI
         ImVec4     *colors = style.Colors;
 
         colors[ImGuiCol_Text]           = ImVec4( .6f, .6f, .6f, 1.0f );
-        colors[ImGuiCol_TextDisabled]   = ImVec4( 0.3f, 0.3f, 0.3f, 1.0f );
+        colors[ImGuiCol_TextDisabled]   = ImVec4( 0.1f, 0.1f, 0.1f, 1.0f );
         colors[ImGuiCol_TextSelectedBg] = ImVec4( 0.73f, 0.73f, 0.73f, 0.35f );
 
         colors[ImGuiCol_WindowBg]     = ImVec4( 0.01f, 0.01f, 0.01f, 1.0f );

@@ -90,7 +90,7 @@ namespace SE::OtdrEditor
         //         mTracePlot.SetEventData( aElement, true, true );
         //     } );
 
-        mTestFailResultTable->OnElementClicked( [&]( sTestFailElement const &aElement ) { LoadIOlmData( aElement.mFilename ); } );
+        mTestFailResultTable->OnElementClicked( [&]( sTestFailElement const &aElement ) { LoadIOlmData( aElement.mFilename, true ); } );
     }
 
     OtdrWindow::OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
@@ -147,12 +147,12 @@ namespace SE::OtdrEditor
         }
         ImGui::End();
 
-        if( ImGui::Begin( "CLASSES", NULL, ImGuiWindowFlags_None ) )
-        {
-            math::vec2 l_WindowConsoleSize = UI::GetAvailableContentSpace();
-            mMonoClasses.Display( l_WindowConsoleSize.x, l_WindowConsoleSize.y );
-        }
-        ImGui::End();
+        // if( ImGui::Begin( "CLASSES", NULL, ImGuiWindowFlags_None ) )
+        // {
+        //     math::vec2 l_WindowConsoleSize = UI::GetAvailableContentSpace();
+        //     mMonoClasses.Display( l_WindowConsoleSize.x, l_WindowConsoleSize.y );
+        // }
+        // ImGui::End();
 
         if( mDataInstance )
         {
@@ -379,15 +379,15 @@ namespace SE::OtdrEditor
             mAcquisitionDataOverview.SetData( lSinglePulseTraceInstance, lAcquisitionDataInstance, lFiberInfo );
         }
 
-        {
-            bool        lX         = false;
-            MonoObject *lEventData = mDataInstance->CallMethod( "GetEvents", &lX );
-            mEventVector           = DotNetRuntime::AsVector<sMultiPulseEvent>( lEventData );
-            mEventTable->SetData( mEventVector );
-        }
+        // {
+        //     bool        lX         = false;
+        //     MonoObject *lEventData = mDataInstance->CallMethod( "GetEvents", &lX );
+        //     mEventVector           = DotNetRuntime::AsVector<sMultiPulseEvent>( lEventData );
+        //     mEventTable->SetData( mEventVector );
+        // }
 
         {
-            bool        lX               = false;
+            bool        lX               = aReanalyse;
             MonoObject *lLinkElementData = mDataInstance->CallMethod( "GetLinkElements", &lX );
             mLinkElementVector           = DotNetRuntime::AsVector<sLinkElement>( lLinkElementData );
 
