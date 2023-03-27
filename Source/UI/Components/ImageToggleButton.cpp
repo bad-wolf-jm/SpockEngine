@@ -125,6 +125,12 @@ namespace SE::Core
         auto lInstance = static_cast<UIImageToggleButton *>( aInstance );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
+        if (lInstance->mOnChangeDelegate != nullptr)
+            mono_gchandle_free(lInstance->mOnChangeDelegateHandle);
+
+        lInstance->mOnChangeDelegate = aDelegate;
+        lInstance->mOnChangeDelegateHandle = mono_gchandle_new(static_cast<MonoObject *>( aDelegate ), true);
+
         lInstance->OnChange(
             [lInstance, lDelegate]( bool aValue )
             {

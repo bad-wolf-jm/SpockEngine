@@ -91,6 +91,12 @@ namespace SE::Core
         auto lInstance = static_cast<UIButton *>( aInstance );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
+        if (lInstance->mOnClickDelegate != nullptr)
+            mono_gchandle_free(lInstance->mOnClickDelegateHandle);
+
+        lInstance->mOnClickDelegate = aDelegate;
+        lInstance->mOnClickDelegateHandle = mono_gchandle_new(static_cast<MonoObject *>( aDelegate ), true);
+
         lInstance->OnClick(
             [lInstance, lDelegate]()
             {

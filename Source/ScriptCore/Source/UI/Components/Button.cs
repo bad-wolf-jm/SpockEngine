@@ -18,7 +18,7 @@ namespace SpockEngine
         {
             onClick = aHandler;
 
-            UIButton_OnClick(mInstance, aHandler);
+            UIButton_OnClick(mInstance, onClick);
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]

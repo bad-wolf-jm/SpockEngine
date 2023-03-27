@@ -38,6 +38,10 @@ namespace SE::Core
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
+      private:
+        void *mOnChangeDelegate       = nullptr;
+        int   mOnChangeDelegateHandle = -1;
+
       public:
         static void *UIImageToggleButton_Create();
         static void  UIImageToggleButton_Destroy( void *aInstance );

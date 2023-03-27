@@ -33,7 +33,7 @@ namespace SpockEngine
         {
             onChanged = aHandler;
             
-            UITextToggleButton_OnChanged(mInstance, aHandler);
+            UITextToggleButton_OnChanged(mInstance, onChanged);
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
