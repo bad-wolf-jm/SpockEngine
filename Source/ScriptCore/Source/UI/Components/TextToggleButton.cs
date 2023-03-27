@@ -11,7 +11,7 @@ namespace SpockEngine
 
         ~UITextToggleButton() { UITextToggleButton_Destroy(mInstance); }
 
-        public bool Active 
+        public bool Active
         {
             get { return UITextToggleButton_IsActive(mInstance); }
             set { UITextToggleButton_SetActive(mInstance, value); }
@@ -32,7 +32,7 @@ namespace SpockEngine
         public void OnChanged(OnChangeDelegate aHandler)
         {
             onChanged = aHandler;
-            
+
             UITextToggleButton_OnChanged(mInstance, onChanged);
         }
 
