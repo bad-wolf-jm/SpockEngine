@@ -61,6 +61,55 @@ namespace SpockEngine
         private extern static void UIFloat64Column_SetDataWithForegroundAndBackgroundColor(ulong aInstance, double[] aValue, Math.vec4[] aForegroundColor, Math.vec4[] aBackroundColor);
     }
 
+    public class UIUint32Column : UITableColumn
+    {
+        public UIUint32Column() : base(UIUint32Column_Create()) { }
+        public UIUint32Column(string aHeader, float aInitialSize)
+            : base(UIUint32Column_CreateFull(aHeader, aInitialSize)) { }
+
+        ~UIUint32Column() { UIUint32Column_Destroy(mInstance); }
+
+        public void Clear()
+        {
+            UIUint32Column_Clear(mInstance);
+        }
+
+        public void SetData(double[] aValue)
+        {
+            UIUint32Column_SetData(mInstance, aValue);
+        }
+
+        public void SetData(double[] aValue, Math.vec4[] aForegroundColor)
+        {
+            UIUint32Column_SetDataWithForegroundColor(mInstance, aValue, aForegroundColor);
+        }
+        public void SetData(double[] aValue, Math.vec4[] aForegroundColor, Math.vec4[] aBackroundColor)
+        {
+            UIUint32Column_SetDataWithForegroundAndBackgroundColor(mInstance, aValue, aForegroundColor, aBackroundColor);
+        }
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static ulong UIUint32Column_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static ulong UIUint32Column_CreateFull(string aHeader, float aInitialSize);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIUint32Column_Destroy(ulong aInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIUint32Column_Clear(ulong aInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIUint32Column_SetData(ulong aInstance, double[] aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIUint32Column_SetDataWithForegroundColor(ulong aInstance, double[] aValue, Math.vec4[] aForegroundColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIUint32Column_SetDataWithForegroundAndBackgroundColor(ulong aInstance, double[] aValue, Math.vec4[] aForegroundColor, Math.vec4[] aBackroundColor);
+    }
+
     public class UIStringColumn : UITableColumn
     {
         public UIStringColumn() : base(UIStringColumn_Create()) { }
@@ -127,7 +176,7 @@ namespace SpockEngine
         public void OnRowClicked(OnRowClickedDelegate aHandler)
         {
             onRowClickedDelegate = aHandler;
-            
+
             UITable_OnRowClicked(mInstance, onRowClickedDelegate);
         }
 
