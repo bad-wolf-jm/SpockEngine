@@ -1,5 +1,5 @@
 #include "ImageToggleButton.h"
-
+#include "DotNet/Runtime.h"
 namespace SE::Core
 {
     UIImageToggleButton::UIImageToggleButton( std::function<bool( bool )> aOnChange )
@@ -118,6 +118,24 @@ namespace SE::Core
         auto lImage    = static_cast<UIBaseImage *>( aImage );
 
         lInstance->SetInactiveImage( lImage );
+    }
+
+    void UIImageToggleButton::UIImageToggleButton_OnChanged( void *aInstance, void *aDelegate )
+    {
+        auto lInstance = static_cast<UIImageToggleButton *>( aInstance );
+        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+
+        lInstance->OnChange(
+            [lInstance, lDelegate]( bool aValue )
+            {
+                auto lDelegateClass = mono_object_get_class( lDelegate );
+                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
+
+                void *lParams[] = { (void*)&aValue };
+                auto lValue = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
+
+                return *((bool*) mono_object_unbox(lValue));
+            } );
     }
 
 } // namespace SE::Core

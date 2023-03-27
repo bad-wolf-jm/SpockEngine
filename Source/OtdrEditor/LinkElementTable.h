@@ -53,6 +53,9 @@ namespace SE::OtdrEditor
       protected:
         Ref<sStringColumn>  mIndex;
         Ref<sStringColumn>  mType;
+        Ref<sStringColumn>  mChanged;
+        Ref<sStringColumn>  mComment;
+        Ref<sStringColumn>  mHidden;
         Ref<sStringColumn>  mStatus;
         Ref<sFloat64Column> mDiagnosicCount;
         Ref<sFloat64Column> mWavelength;

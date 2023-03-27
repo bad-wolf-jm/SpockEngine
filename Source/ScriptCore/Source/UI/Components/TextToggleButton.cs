@@ -27,6 +27,15 @@ namespace SpockEngine
             UITextToggleButton_SetInactiveColor(mInstance, aColor);
         }
 
+        public delegate bool OnChangeDelegate(bool aValue);
+        OnChangeDelegate onChanged;
+        public void OnChanged(OnChangeDelegate aHandler)
+        {
+            onChanged = aHandler;
+            
+            UITextToggleButton_OnChanged(mInstance, aHandler);
+        }
+
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UITextToggleButton_Create();
 
@@ -35,6 +44,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UITextToggleButton_Destroy(ulong aInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UITextToggleButton_OnChanged(ulong aInstance, OnChangeDelegate aHandler);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static bool UITextToggleButton_IsActive(ulong aInstance);

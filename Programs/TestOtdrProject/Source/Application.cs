@@ -19,6 +19,8 @@ namespace Test
         UIButton mButton0;
 
         UIBoxLayout mLayout0;
+
+        int count = 0;
         public App() { }
 
         public void Initialize()
@@ -27,7 +29,9 @@ namespace Test
             mLabel0 = new UILabel("Test label");
             mLabel0.SetTextColor(new vec4(1.0f, 0.0f, 1.0f, 1.0f));
 
-            mButton0 = new UIButton("Test Button");
+            mButton0 = new UIButton($"Test Button {count}");
+            UIButton.ClickDelegate lClickAction = () => { count++; mButton0.SetText($"Test Button {count}"); System.Console.WriteLine("Button Clicked!!!"); };
+            mButton0.OnClick(lClickAction);
 
             mLayout0 = new UIBoxLayout(eBoxLayoutOrientation.VERTICAL);
             mLayout0.Add(mLabel0, true, true);
@@ -35,6 +39,13 @@ namespace Test
 
             mMainForm.SetTitle("This is a test!!");
             mMainForm.SetContent(mLayout0);
+        }
+
+        public void TestClickHandler()
+        {
+            count++;
+            mButton0.SetText($"Test Button {count}");
+            System.Console.WriteLine("Button Clicked!!!");
         }
 
         public void Shutdown() { }

@@ -97,6 +97,22 @@ namespace SE::Core
 
     void UITable::UITable_Destroy( void *aSelf ) { delete static_cast<UITable *>( aSelf ); }
 
+    void UITable::UITable_OnRowClicked( void *aInstance, void *aDelegate )
+    {
+        auto lInstance = static_cast<UITable *>( aInstance );
+        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+
+        lInstance->OnRowClicked(
+            [lInstance, lDelegate]( int aValue )
+            {
+                auto lDelegateClass = mono_object_get_class( lDelegate );
+                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
+
+                void *lParams[] = { (void*)&aValue };
+                auto lValue = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
+            } );
+    }
+
     void UITable::UITable_AddColumn( void *aSelf, void *aColumn )
     {
         auto lInstance = static_cast<UITable *>( aSelf );

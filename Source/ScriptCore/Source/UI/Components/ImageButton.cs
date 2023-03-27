@@ -10,6 +10,16 @@ namespace SpockEngine
 
         ~UIImageButton() { UIImageButton_Destroy(mInstance); }
 
+
+        public delegate void ClickDelegate();
+        ClickDelegate onClick;
+        public void OnClick(ClickDelegate aHandler)
+        {
+            onClick = aHandler;
+            
+            UIImageButton_OnClick(mInstance, aHandler);
+        }
+
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIImageButton_Create();
 
@@ -18,5 +28,8 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIImageButton_Destroy(ulong aInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIImageButton_OnClick(ulong aInstance, ClickDelegate aText);
     }
 }

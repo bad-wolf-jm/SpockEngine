@@ -122,11 +122,23 @@ namespace SpockEngine
 
         public void AddColumn(UITableColumn aColumn) { UITable_AddColumn(mInstance, aColumn.Instance); }
 
+        public delegate bool OnRowClickedDelegate(int aRow);
+        OnRowClickedDelegate onRowClickedDelegate;
+        public void OnRowClicked(OnRowClickedDelegate aHandler)
+        {
+            onRowClickedDelegate = aHandler;
+            
+            UITable_OnRowClicked(mInstance, aHandler);
+        }
+
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UITable_Create();
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UITable_Destroy(ulong aInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UITable_OnRowClicked(ulong aInstance, OnRowClickedDelegate aHandler);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UITable_AddColumn(ulong aInstance, ulong aColumnInstance);

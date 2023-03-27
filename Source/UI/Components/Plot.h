@@ -70,6 +70,8 @@ namespace SE::Core
     {
         std::vector<double> mX;
 
+        sVLine( ) = default;
+        
         sVLine( std::vector<double> const &x )
             : mX{ x }
         {
