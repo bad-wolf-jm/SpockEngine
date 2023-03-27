@@ -32,6 +32,8 @@ namespace SE::Core
         template <typename _Ty>
         static std::vector<_Ty> AsVector( MonoObject *aObject )
         {
+            if( aObject == nullptr ) return std::vector<_Ty>( 0 );
+
             uint32_t lArrayLength = static_cast<uint32_t>( mono_array_length( (MonoArray *)aObject ) );
 
             std::vector<_Ty> lVector( lArrayLength );

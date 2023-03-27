@@ -691,6 +691,22 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIFloat64Column::UIFloat64Column_SetDataWithForegroundAndBackgroundColor",
                                 sFloat64Column::UIFloat64Column_SetDataWithForegroundAndBackgroundColor );
 
+
+
+        mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_Create", sUint32Column::UIUint32Column_Create );
+        mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_CreateFull",
+                                sUint32Column::UIUint32Column_CreateFull );
+        mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_Destroy", sUint32Column::UIUint32Column_Destroy );
+        mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_Clear", sUint32Column::UIUint32Column_Clear );
+        mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_SetData", sUint32Column::UIUint32Column_SetData );
+        mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_SetDataWithForegroundColor",
+                                sUint32Column::UIUint32Column_SetDataWithForegroundColor );
+        mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_SetDataWithForegroundAndBackgroundColor",
+                                sUint32Column::UIUint32Column_SetDataWithForegroundAndBackgroundColor );
+
+
+
+
         mono_add_internal_call( "SpockEngine.UIStringColumn::UIStringColumn_Create", sStringColumn::UIStringColumn_Create );
         mono_add_internal_call( "SpockEngine.UIStringColumn::UIStringColumn_CreateFull", sStringColumn::UIStringColumn_CreateFull );
         mono_add_internal_call( "SpockEngine.UIStringColumn::UIStringColumn_Destroy", sStringColumn::UIStringColumn_Destroy );

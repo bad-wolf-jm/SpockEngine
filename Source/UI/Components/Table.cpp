@@ -10,6 +10,12 @@ namespace SE::Core
     {
     }
 
+    void sTableColumn::Clear()
+    {
+        mForegroundColor.clear();
+        mBackgroundColor.clear();
+    }
+
     void UITable::PushStyles() {}
     void UITable::PopStyles() {}
 
@@ -102,11 +108,10 @@ namespace SE::Core
         auto lInstance = static_cast<UITable *>( aInstance );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        if (lInstance->mOnRowClickDelegate != nullptr)
-            mono_gchandle_free(lInstance->mOnRowClickDelegateHandle);
+        if( lInstance->mOnRowClickDelegate != nullptr ) mono_gchandle_free( lInstance->mOnRowClickDelegateHandle );
 
-        lInstance->mOnRowClickDelegate = aDelegate;
-        lInstance->mOnRowClickDelegateHandle = mono_gchandle_new(static_cast<MonoObject *>( aDelegate ), true);
+        lInstance->mOnRowClickDelegate       = aDelegate;
+        lInstance->mOnRowClickDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
 
         lInstance->OnRowClicked(
             [lInstance, lDelegate]( int aValue )
@@ -114,8 +119,8 @@ namespace SE::Core
                 auto lDelegateClass = mono_object_get_class( lDelegate );
                 auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
 
-                void *lParams[] = { (void*)&aValue };
-                auto lValue = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
+                void *lParams[] = { (void *)&aValue };
+                auto  lValue    = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
             } );
     }
 
@@ -167,6 +172,12 @@ namespace SE::Core
         ImGui::SetCursorPos( lNewPos );
     }
 
+    void sFloat64Column::Clear()
+    {
+        sTableColumn::Clear();
+        mData.clear();
+    }
+
     void *sFloat64Column::UIFloat64Column_Create()
     {
         auto lNewColumn = new sFloat64Column();
@@ -190,7 +201,7 @@ namespace SE::Core
     {
         auto lSelf = static_cast<sFloat64Column *>( aSelf );
 
-        lSelf->mData.clear();
+        lSelf->Clear();
     }
 
     void sFloat64Column::UIFloat64Column_SetData( void *aSelf, void *aValue )
@@ -226,6 +237,95 @@ namespace SE::Core
             lSelf->mBackgroundColor.push_back( ImColor( x ) );
     }
 
+    sUint32Column::sUint32Column( std::string aHeader, float aInitialSize )
+        : sTableColumn{ aHeader, aInitialSize }
+    {
+    }
+
+    uint32_t sUint32Column::Size() { return mData.size(); }
+
+    void sUint32Column::Render( int aRow, ImVec2 aSize )
+    {
+        std::string lText     = fmt::format( "{}", mData[aRow] );
+        auto const &lTextSize = ImGui::CalcTextSize( lText.c_str() );
+
+        ImVec2 lPrevPos = ImGui::GetCursorPos();
+        ImVec2 lPos     = ImGui::GetCursorPos() + ImVec2{ aSize.x - lTextSize.x, ( aSize.y - lTextSize.y ) * 0.5f };
+        ImGui::SetCursorPos( lPos );
+
+        if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) )
+            ImGui::PushStyleColor( ImGuiCol_Text, mForegroundColor[aRow] );
+        ImGui::Text( lText.c_str() );
+        if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) ) ImGui::PopStyleColor();
+
+        ImVec2 lNewPos = ImGui::GetCursorPos();
+        lNewPos.y      = lPrevPos.y + aSize.y;
+        ImGui::SetCursorPos( lNewPos );
+    }
+
+    void sUint32Column::Clear()
+    {
+        sTableColumn::Clear();
+        mData.clear();
+    }
+
+    void *sUint32Column::UIUint32Column_Create()
+    {
+        auto lNewColumn = new sUint32Column();
+
+        return static_cast<void *>( lNewColumn );
+    }
+
+    void *sUint32Column::UIUint32Column_CreateFull( void *aHeader, float aInitialSize )
+    {
+        auto lHeader    = DotNetRuntime::NewString( static_cast<MonoString *>( aHeader ) );
+        auto lNewColumn = new sUint32Column( lHeader, aInitialSize );
+
+        return static_cast<void *>( lNewColumn );
+    }
+
+    void sUint32Column::UIUint32Column_Destroy( void *aSelf ) { delete static_cast<sUint32Column *>( aSelf ); }
+
+    void sUint32Column::UIUint32Column_Clear( void *aSelf )
+    {
+        auto lSelf = static_cast<sUint32Column *>( aSelf );
+
+        lSelf->Clear();
+    }
+
+    void sUint32Column::UIUint32Column_SetData( void *aSelf, void *aValue )
+    {
+        auto lSelf = static_cast<sUint32Column *>( aSelf );
+
+        lSelf->mData = DotNetRuntime::AsVector<uint32_t>( static_cast<MonoObject *>( aValue ) );
+    }
+
+    void sUint32Column::UIUint32Column_SetDataWithForegroundColor( void *aSelf, void *aValue, void *aForegroundColor )
+    {
+        auto lSelf = static_cast<sUint32Column *>( aSelf );
+
+        lSelf->mData = DotNetRuntime::AsVector<uint32_t>( static_cast<MonoObject *>( aValue ) );
+        lSelf->mForegroundColor.clear();
+        for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
+            lSelf->mForegroundColor.push_back( ImColor( x ) );
+    }
+
+    void sUint32Column::UIUint32Column_SetDataWithForegroundAndBackgroundColor( void *aSelf, void *aValue, void *aForegroundColor,
+                                                                               void *aBackroundColor )
+    {
+        auto lSelf = static_cast<sUint32Column *>( aSelf );
+
+        lSelf->mData = DotNetRuntime::AsVector<uint32_t>( static_cast<MonoObject *>( aValue ) );
+
+        lSelf->mForegroundColor.clear();
+        for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
+            lSelf->mForegroundColor.push_back( ImColor( x ) );
+
+        lSelf->mBackgroundColor.clear();
+        for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aBackroundColor ) ) )
+            lSelf->mBackgroundColor.push_back( ImColor( x ) );
+    }
+
     sStringColumn::sStringColumn( std::string aHeader, float aInitialSize )
         : sTableColumn{ aHeader, aInitialSize }
     {
@@ -251,6 +351,12 @@ namespace SE::Core
         ImGui::SetCursorPos( lNewPos );
     }
 
+    void sStringColumn::Clear()
+    {
+        sTableColumn::Clear();
+        mData.clear();
+    }
+
     void *sStringColumn::UIStringColumn_Create()
     {
         auto lNewColumn = new sStringColumn();
@@ -272,7 +378,7 @@ namespace SE::Core
     {
         auto lSelf = static_cast<sStringColumn *>( aSelf );
 
-        lSelf->mData.clear();
+        lSelf->Clear();
     }
 
     void sStringColumn::UIStringColumn_SetData( void *aSelf, void *aValue )
@@ -281,7 +387,7 @@ namespace SE::Core
 
         lSelf->mData.clear();
         for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aValue ) ) )
-            lSelf->mData.push_back(DotNetRuntime::NewString(x));
+            lSelf->mData.push_back( DotNetRuntime::NewString( x ) );
     }
 
     void sStringColumn::UIStringColumn_SetDataWithForegroundColor( void *aSelf, void *aValue, void *aForegroundColor )
@@ -290,7 +396,7 @@ namespace SE::Core
 
         lSelf->mData.clear();
         for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aValue ) ) )
-            lSelf->mData.push_back(DotNetRuntime::NewString(x));
+            lSelf->mData.push_back( DotNetRuntime::NewString( x ) );
 
         lSelf->mForegroundColor.clear();
         for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
@@ -304,7 +410,7 @@ namespace SE::Core
 
         lSelf->mData.clear();
         for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aValue ) ) )
-            lSelf->mData.push_back(DotNetRuntime::NewString(x));
+            lSelf->mData.push_back( DotNetRuntime::NewString( x ) );
 
         lSelf->mForegroundColor.clear();
         for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
