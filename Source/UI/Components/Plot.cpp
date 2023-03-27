@@ -168,6 +168,13 @@ namespace SE::Core
         if( mThickness != -1.0f ) ImPlot::PopStyleVar();
     }
 
+    void *sFloat64LinePlot::UIFloat64LinePlot_Create( )
+    {
+        auto lSelf = new sFloat64LinePlot();
+
+        return static_cast<sFloat64LinePlot *>( lSelf );
+    }
+
     void sFloat64LinePlot::UIFloat64LinePlot_Destroy( void *aSelf ) { delete static_cast<sFloat64LinePlot *>( aSelf ); }
 
     void sFloat64LinePlot::UIFloat64LinePlot_SetX( void *aSelf, void *aValue )
@@ -195,6 +202,13 @@ namespace SE::Core
         ImPlot::PlotVLines( lPlotName.c_str(), mX.data(), mX.size(), 0 );
         ImPlot::PopStyleColor();
         if( mThickness != -1.0f ) ImPlot::PopStyleVar();
+    }
+
+    void *sVLine::UIVLinePlot_Create( )
+    {
+        auto lSelf = new sVLine();
+
+        return static_cast<sVLine *>( lSelf );
     }
 
     void sVLine::UIVLinePlot_Destroy( void *aSelf ) { delete static_cast<sVLine *>( aSelf ); }

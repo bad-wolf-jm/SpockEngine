@@ -12,7 +12,14 @@ namespace SpockEngine
 
         public void SetText(string aText) { UIButton_SetText(mInstance, aText); }
 
-        public void OnClick(Math.vec4 aColor) { UIButton_OnClick(mInstance, aColor); }
+        public delegate void ClickDelegate();
+        ClickDelegate onClick;
+        public void OnClick(ClickDelegate aHandler)
+        {
+            onClick = aHandler;
+
+            UIButton_OnClick(mInstance, aHandler);
+        }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIButton_Create();
@@ -27,6 +34,6 @@ namespace SpockEngine
         private extern static void UIButton_SetText(ulong aInstance, string aText);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIButton_OnClick(ulong aInstance, Math.vec4 aText);
+        private extern static void UIButton_OnClick(ulong aInstance, ClickDelegate aText);
     }
 }

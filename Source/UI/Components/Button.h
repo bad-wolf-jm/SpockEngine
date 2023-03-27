@@ -33,7 +33,7 @@ namespace SE::Core
         static void *UIButton_Create();
         static void *UIButton_CreateWithText( void *aText );
         static void  UIButton_Destroy( void *aInstance );
+        static void  UIButton_OnClick( void *aInstance, void *aDelegate );
         static void  UIButton_SetText( void *aInstance, void *aText );
-        static void  UIButton_OnClick( void *aInstance, math::vec4 *aTextColor );
     };
 } // namespace SE::Core

@@ -41,6 +41,7 @@ namespace SE::Core
       public:
         static void *UIImageToggleButton_Create();
         static void  UIImageToggleButton_Destroy( void *aInstance );
+        static void  UIImageToggleButton_OnChanged( void *aInstance, void *aHandler );
         static bool  UIImageToggleButton_IsActive( void *aInstance );
         static void  UIImageToggleButton_SetActive( void *aInstance, bool aValue );
         static void  UIImageToggleButton_SetActiveImage( void *aInstance, void *aImage );

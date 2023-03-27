@@ -102,6 +102,7 @@ namespace SE::Core
       public:
         static void *UITable_Create();
         static void  UITable_Destroy( void *aSelf );
+        static void  UITable_OnRowClicked( void *aSelf, void* aHandler );
         static void  UITable_AddColumn( void *aSelf, void *aColumn );
         static void  UITable_SetRowHeight( void *aSelf, float aRowHeight );
     };

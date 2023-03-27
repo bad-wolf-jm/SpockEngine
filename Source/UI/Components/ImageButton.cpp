@@ -59,4 +59,21 @@ namespace SE::Core
 
     void UIImageButton::UIImageButton_Destroy( void *aInstance ) { delete static_cast<UIImageButton *>( aInstance ); }
 
+    void UIImageButton::UIImageButton_OnClick( void *aInstance, void *aDelegate )
+    {
+        auto lInstance = static_cast<UIImageButton *>( aInstance );
+        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+
+        lInstance->OnClick(
+            [lInstance, lDelegate]()
+            {
+                auto lDelegateClass = mono_object_get_class( lDelegate );
+                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
+
+                mono_runtime_invoke( lInvokeMethod, lDelegate, nullptr, nullptr );
+            } );
+    }
+
+
+
 } // namespace SE::Core

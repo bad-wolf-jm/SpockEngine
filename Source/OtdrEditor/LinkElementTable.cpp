@@ -28,6 +28,11 @@ namespace SE::OtdrEditor
         mType = New<sStringColumn>( "Type", 75.0f );
         AddColumn( mType );
 
+        mChanged = New<sStringColumn>( "Changed", 75.0f );
+        AddColumn( mChanged );
+        mHidden = New<sStringColumn>( "Hidden", 75.0f );
+        AddColumn( mHidden );
+
         mStatus = New<sStringColumn>( "Status", 75.0f );
         AddColumn( mStatus );
 
@@ -66,6 +71,9 @@ namespace SE::OtdrEditor
 
         mPeakPower = New<sFloat64Column>( "Peak power", 75.0f, "{:.2f} dB", "N.a.N." );
         AddColumn( mPeakPower );
+
+        mComment = New<sStringColumn>( "Comment", 75.0f );
+        AddColumn( mComment );
 
         UITable::OnRowClicked(
             [&]( uint32_t aRow )
@@ -125,6 +133,12 @@ namespace SE::OtdrEditor
                 mType->mData.push_back( ToString( lLinkElement.GetPropertyValue<eLinkElementType>( "Type" ) ) );
             }
             mStatus->mData.push_back( StringJoin( LinkStatusToString( lLinkElement.GetPropertyValue<int>( "Status" ) ) ) );
+
+            mChanged->mData.push_back(lLinkElement.GetPropertyValue<bool>( "Changed" ) ? "True" : "False");
+            mHidden->mData.push_back(lLinkElement.GetPropertyValue<bool>( "Hidden" ) ? "True" : "False");
+
+            auto lComment = lLinkElement.GetPropertyValue<MonoString*>( "Comment" );
+            mComment->mData.push_back(DotNetRuntime::NewString(lComment));
 
             mDiagnosicCount->mData.push_back( lE.mDiagnosicCount );
             mWavelength->mData.push_back( lPhysicalEvent.GetPropertyValue<double>( "Wavelength" ) * 1e9 );

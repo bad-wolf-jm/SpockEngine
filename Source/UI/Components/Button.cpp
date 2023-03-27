@@ -61,7 +61,6 @@ namespace SE::Core
         PopStyles( lEnabled );
     }
 
-
     void *UIButton::UIButton_Create()
     {
         auto lNewButton = new UIButton();
@@ -71,7 +70,7 @@ namespace SE::Core
 
     void *UIButton::UIButton_CreateWithText( void *aText )
     {
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString    = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
         auto lNewButton = new UIButton( lString );
 
         return static_cast<void *>( lNewButton );
@@ -87,10 +86,18 @@ namespace SE::Core
         lInstance->SetText( lString );
     }
 
-    void UIButton::UIButton_OnClick( void *aInstance, math::vec4 *aTextColor )
+    void UIButton::UIButton_OnClick( void *aInstance, void *aDelegate )
     {
-        auto lInstance = static_cast<UILabel *>( aInstance );
+        auto lInstance = static_cast<UIButton *>( aInstance );
+        auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        lInstance->SetTextColor( *aTextColor );
+        lInstance->OnClick(
+            [lInstance, lDelegate]()
+            {
+                auto lDelegateClass = mono_object_get_class( lDelegate );
+                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
+
+                mono_runtime_invoke( lInvokeMethod, lDelegate, nullptr, nullptr );
+            } );
     }
 } // namespace SE::Core

@@ -33,9 +33,10 @@
 #include "UI/Components/ImageButton.h"
 #include "UI/Components/ImageToggleButton.h"
 #include "UI/Components/Label.h"
+#include "UI/Components/Plot.h"
 #include "UI/Components/Table.h"
-#include "UI/Components/TextToggleButton.h"
 #include "UI/Components/TextOverlay.h"
+#include "UI/Components/TextToggleButton.h"
 #include "UI/Form.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/Layouts/ZLayout.h"
@@ -607,11 +608,14 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIImageButton::UIImageButton_CreateWithPath",
                                 UIImageButton::UIImageButton_CreateWithPath );
         mono_add_internal_call( "SpockEngine.UIImageButton::UIImageButton_Destroy", UIImageButton::UIImageButton_Destroy );
+        mono_add_internal_call( "SpockEngine.UIImageButton::UIImageButton_OnClick", UIImageButton::UIImageButton_OnClick );
 
         mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_Create",
                                 UIImageToggleButton::UIImageToggleButton_Create );
         mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_Destroy",
                                 UIImageToggleButton::UIImageToggleButton_Destroy );
+        mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_OnChanged",
+                                UIImageToggleButton::UIImageToggleButton_OnChanged );
         mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_IsActive",
                                 UIImageToggleButton::UIImageToggleButton_IsActive );
         mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_SetActive",
@@ -625,6 +629,7 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIButton::UIButton_CreateWithText", UIButton::UIButton_CreateWithText );
         mono_add_internal_call( "SpockEngine.UIButton::UIButton_Destroy", UIButton::UIButton_Destroy );
         mono_add_internal_call( "SpockEngine.UIButton::UIButton_SetText", UIButton::UIButton_SetText );
+        mono_add_internal_call( "SpockEngine.UIButton::UIButton_OnClick", UIButton::UIButton_OnClick );
 
         mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_Create",
                                 UITextToggleButton::UITextToggleButton_Create );
@@ -632,6 +637,8 @@ namespace SE::Core
                                 UITextToggleButton::UITextToggleButton_CreateWithText );
         mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_Destroy",
                                 UITextToggleButton::UITextToggleButton_Destroy );
+        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_OnChanged",
+                                UITextToggleButton::UITextToggleButton_OnChanged );
         mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_IsActive",
                                 UITextToggleButton::UITextToggleButton_IsActive );
         mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_SetActive",
@@ -696,8 +703,31 @@ namespace SE::Core
 
         mono_add_internal_call( "SpockEngine.UITable::UITable_Create", UITable::UITable_Create );
         mono_add_internal_call( "SpockEngine.UITable::UITable_Destroy", UITable::UITable_Destroy );
+        mono_add_internal_call( "SpockEngine.UITable::UITable_OnRowClicked", UITable::UITable_OnRowClicked );
         mono_add_internal_call( "SpockEngine.UITable::UITable_AddColumn", UITable::UITable_AddColumn );
         mono_add_internal_call( "SpockEngine.UITable::UITable_SetRowHeight", UITable::UITable_SetRowHeight );
+
+        mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_Create", UIPlot::UIPlot_Create );
+        mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_Destroy", UIPlot::UIPlot_Destroy );
+        mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_AddColumn", UIPlot::UIPlot_Clear );
+        mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_ConfigureLegend", UIPlot::UIPlot_ConfigureLegend );
+        mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_Add", UIPlot::UIPlot_Add );
+
+        mono_add_internal_call( "SpockEngine.UIPlotData::UIPlotData_SetLegend", sPlotData::UIPlotData_SetLegend );
+        mono_add_internal_call( "SpockEngine.UIPlotData::UIPlotData_SetColor", sPlotData::UIPlotData_SetColor );
+        mono_add_internal_call( "SpockEngine.UIPlotData::UIPlotData_SetXAxis", sPlotData::UIPlotData_SetXAxis );
+        mono_add_internal_call( "SpockEngine.UIPlotData::UIPlotData_SetYAxis", sPlotData::UIPlotData_SetYAxis );
+
+        mono_add_internal_call( "SpockEngine.UIFloat64LinePlot::UIFloat64LinePlot_Create",
+                                sFloat64LinePlot::UIFloat64LinePlot_Create );
+        mono_add_internal_call( "SpockEngine.UIFloat64LinePlot::UIFloat64LinePlot_Destroy",
+                                sFloat64LinePlot::UIFloat64LinePlot_Destroy );
+        mono_add_internal_call( "SpockEngine.UIFloat64LinePlot::UIFloat64LinePlot_SetX", sFloat64LinePlot::UIFloat64LinePlot_SetX );
+        mono_add_internal_call( "SpockEngine.UIFloat64LinePlot::UIFloat64LinePlot_SetY", sFloat64LinePlot::UIFloat64LinePlot_SetY );
+
+        mono_add_internal_call( "SpockEngine.UIVLinePlot::UIVLinePlot_Create", sVLine::UIVLinePlot_Create );
+        mono_add_internal_call( "SpockEngine.UIVLinePlot::UIVLinePlot_Destroy", sVLine::UIVLinePlot_Destroy );
+        mono_add_internal_call( "SpockEngine.UIVLinePlot::UIVLinePlot_SetX", sVLine::UIVLinePlot_SetX );
 
         mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_Create", UITextOverlay::UITextOverlay_Create );
         mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_Destroy", UITextOverlay::UITextOverlay_Destroy );

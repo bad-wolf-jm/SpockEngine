@@ -131,4 +131,22 @@ namespace SE::Core
         lInstance->SetInactiveColor( *aColor );
     }
 
+    void UITextToggleButton::UITextToggleButton_OnChanged( void *aInstance, void *aDelegate )
+    {
+        auto lInstance = static_cast<UITextToggleButton *>( aInstance );
+        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+
+        lInstance->OnChange(
+            [lInstance, lDelegate]( bool aValue )
+            {
+                auto lDelegateClass = mono_object_get_class( lDelegate );
+                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
+
+                void *lParams[] = { (void*)&aValue };
+                auto lValue = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
+
+                return *((bool*) mono_object_unbox(lValue));
+            } );
+    }
+
 } // namespace SE::Core
