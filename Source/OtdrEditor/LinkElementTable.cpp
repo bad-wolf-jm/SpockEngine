@@ -19,10 +19,10 @@ namespace SE::OtdrEditor
     {
         SetRowHeight( 20.0f );
 
-        mIndex = New<sStringColumn>( "ID", 75.0f );
+        mIndex = New<sStringColumn>( "ID", 25.0f );
         AddColumn( mIndex );
 
-        mDiagnosicCount = New<sStringColumn>( "\xef\x86\x88", 15.0f );
+        mDiagnosicCount = New<sStringColumn>( ICON_FA_COMMENTS, 15.0f );
         AddColumn( mDiagnosicCount );
 
         mPositionColumn = New<sFloat64Column>( "Position", 75.0f, "{:.4f} km", "N.a.N." );
@@ -75,15 +75,11 @@ namespace SE::OtdrEditor
                                                     { return a + ( a.length() > 0 ? ", " : "" ) + b; } );
         };
 
-        static auto &lBaseLinkElementClass  = DotNetRuntime::GetClassType( "Metrino.Olm.BaseLinkElement" );
-        static auto &lOlmPhysicalEventClass = DotNetRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
-        static auto &lOlmAttributeClass     = DotNetRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
-
         for( auto const &lE : mEventDataVector )
         {
-            auto lLinkElement   = DotNetInstance( &lBaseLinkElementClass, lBaseLinkElementClass.Class(), lE.mLinkElement );
-            auto lPhysicalEvent = DotNetInstance( &lOlmPhysicalEventClass, lOlmPhysicalEventClass.Class(), lE.mPhysicalEvent );
-            auto lAttributes    = DotNetInstance( &lOlmAttributeClass, lOlmAttributeClass.Class(), lE.mAttributes );
+            auto &lLinkElement   = *lE.mLinkElement;
+            auto &lPhysicalEvent = *lE.mPhysicalEvent;
+            auto &lAttributes    = *lE.mAttributes;
 
             if( lE.mLinkIndex % 2 )
                 mRowBackgroundColor.push_back( IM_COL32( 2, 2, 2, 255 ) );
@@ -122,7 +118,7 @@ namespace SE::OtdrEditor
             else if( lE.mDiagnosicCount > 1 )
                 mDiagnosicCount->mData.push_back( ICON_FA_COMMENTS );
             else
-                mDiagnosicCount->mData.push_back( "" );
+                mDiagnosicCount->mData.push_back( ICON_FA_COMMENT_O );
             mDiagnosicCount->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
 
             mWavelength->mData.push_back( lPhysicalEvent.GetPropertyValue<double>( "Wavelength" ) * 1e9 );

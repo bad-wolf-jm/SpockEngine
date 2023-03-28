@@ -4,6 +4,27 @@
 
 namespace SE::OtdrEditor
 {
+
+    struct sDotNetLinkElement
+    {
+        int       mRowIndex;
+        int       mLinkIndex;
+        int       mSubLinkIndex;
+        int       mEventIndex;
+        int       mSubEventIndex;
+        bool      mIsSubElement;
+        int       mDiagnosicCount;
+        ePassFail mLossPassFail;
+        ePassFail mReflectancePassFail;
+        void     *mLinkElement;
+        void     *mPhysicalEvent;
+        void     *mPeakTrace;
+        void     *mDetectionTrace;
+        void     *mAttributes;
+        void     *mAcquisitionData;
+        void     *mFiberInfo;
+    };
+
     UIIolmDocument::UIIolmDocument( fs::path aPath, bool aReanalyse )
     {
         mOpen  = true;
@@ -59,7 +80,44 @@ namespace SE::OtdrEditor
         {
             MonoObject *lLinkElementData = mDataInstance->CallMethod( "GetLinkElements", &aReanalyse );
 
-            mLinkElementVector = DotNetRuntime::AsVector<sLinkElement>( lLinkElementData );
+            auto lLinkElementVector = DotNetRuntime::AsVector<sDotNetLinkElement>( lLinkElementData );
+
+            mLinkElementVector = std::vector<sLinkElement>();
+
+            for( auto const &x : lLinkElementVector )
+            {
+                auto &lElement = mLinkElementVector.emplace_back();
+
+                lElement.mRowIndex            = x.mRowIndex;
+                lElement.mLinkIndex           = x.mLinkIndex;
+                lElement.mSubLinkIndex        = x.mSubLinkIndex;
+                lElement.mEventIndex          = x.mEventIndex;
+                lElement.mSubEventIndex       = x.mSubEventIndex;
+                lElement.mIsSubElement        = x.mIsSubElement;
+                lElement.mDiagnosicCount      = x.mDiagnosicCount;
+                lElement.mLossPassFail        = x.mLossPassFail;
+                lElement.mReflectancePassFail = x.mReflectancePassFail;
+
+                static auto &lBaseLinkElementClass  = DotNetRuntime::GetClassType( "Metrino.Olm.BaseLinkElement" );
+                static auto &lOlmPhysicalEventClass = DotNetRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
+                static auto &lOlmAttributeClass =
+                    DotNetRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
+                static auto &lAcquisitionDataClassType = DotNetRuntime::GetClassType( "Metrino.Otdr.AcquisitionData" );
+                static auto &lSinglePulseTraceClass    = DotNetRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
+                static auto &lFiberInfoClassType       = DotNetRuntime::GetClassType( "Metrino.Otdr.PhysicalFiberCharacteristics" );
+
+                lElement.mLinkElement = New<DotNetInstance>( &lBaseLinkElementClass, lBaseLinkElementClass.Class(), x.mLinkElement );
+                lElement.mPhysicalEvent =
+                    New<DotNetInstance>( &lOlmPhysicalEventClass, lOlmPhysicalEventClass.Class(), x.mPhysicalEvent );
+                lElement.mPeakTrace = New<DotNetInstance>( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), x.mPeakTrace );
+                lElement.mDetectionTrace =
+                    New<DotNetInstance>( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), x.mDetectionTrace );
+                lElement.mAttributes = New<DotNetInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), x.mAttributes );
+                lElement.mAcquisitionData =
+                    New<DotNetInstance>( &lAcquisitionDataClassType, lAcquisitionDataClassType.Class(), x.mAcquisitionData );
+                lElement.mFiberInfo = New<DotNetInstance>( &lFiberInfoClassType, lFiberInfoClassType.Class(), x.mFiberInfo );
+            }
+
             mLinkElementTable->SetData( mLinkElementVector );
             mTracePlot->Clear();
             mTracePlot->SetEventData( mLinkElementVector );
