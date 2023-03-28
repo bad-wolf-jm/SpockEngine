@@ -255,7 +255,7 @@ namespace SE::OtdrEditor
 
         mPeakTrace->SetValue( lFormat );
 
-        std::string lPeakPosition = fmt::format( "{:.2f} km", aAttributes->GetPropertyValue<double>( "PeakPosition" ) );
+        std::string lPeakPosition = fmt::format( "{:.2f} km", aAttributes->GetPropertyValue<double>( "PeakPosition" ) * 0.001 );
         mPeakPosition->SetValue( lPeakPosition );
 
         std::string lPeakPower = fmt::format( "{:.2f} dB", aAttributes->GetPropertyValue<double>( "PeakPower" ) );

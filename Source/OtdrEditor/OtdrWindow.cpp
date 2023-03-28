@@ -444,6 +444,8 @@ namespace SE::OtdrEditor
             mLinkElementTable->SetData( mLinkElementVector );
             mTracePlot.Clear();
             mTracePlot.SetEventData( mLinkElementVector );
+
+            mMeasurementOverview.SetData(mDataInstance);
         }
     }
 
