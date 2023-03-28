@@ -284,6 +284,18 @@ int main( int argc, char **argv )
         }
     }
 
+    auto lApplicationName = lProgramArguments->get<std::string>( "--application" );
+    if( !lApplicationName.empty() )
+    {
+        auto lApplicationConfigurationPath = lLocalConfigFolder / "OtdrTool" / "Config" / fmt::format( "{}.yaml", lApplicationName );
+        auto lApplicationAssembly =
+            fs::path( "D:\\Build\\Lib" ) / "debug" / lApplicationName / fmt::format( "{}.dll", lApplicationName );
+        if( fs::exists( lApplicationAssembly ) ) DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
+
+        if( !fs::exists( lApplicationConfigurationPath ) )
+            SE::Logging::Info( "Project file '{}' does not exist", lApplicationConfigurationPath.string() );
+    }
+
     auto     lProjectName              = lProgramArguments->get<std::string>( "--project" );
     fs::path lProjectConfigurationPath = lProjectRoot / fmt::format( "{}.yaml", lProjectName );
     if( !fs::exists( lProjectConfigurationPath ) )
@@ -307,7 +319,11 @@ int main( int argc, char **argv )
     lInitializationClass.CallMethod( "Initialize" );
 
     SE::OtdrEditor::BaseOtdrApplication lEditorApplication;
-    lEditorApplication.Init();
+
+    if( !lApplicationName.empty() )
+        lEditorApplication.Init( fmt::format( "{}.{}", lApplicationName, lApplicationName ) );
+    else
+        lEditorApplication.Init();
 
     SE::Core::Engine::GetInstance()->UpdateDelegate.connect<&SE::OtdrEditor::BaseOtdrApplication::Update>( lEditorApplication );
     SE::Core::Engine::GetInstance()->RenderDelegate.connect<&SE::OtdrEditor::BaseOtdrApplication::RenderScene>( lEditorApplication );

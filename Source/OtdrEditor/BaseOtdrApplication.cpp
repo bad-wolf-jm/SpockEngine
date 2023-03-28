@@ -58,13 +58,25 @@ namespace SE::OtdrEditor
             OtdrWindow( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
         mEditorWindow.ConfigureUI();
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
+    }
 
-        static auto &lApplicationType    = DotNetRuntime::GetClassType( "SpockEngine.SEApplication" );
-        auto &lApplicationClasses = lApplicationType.DerivedClasses();
-        if( lApplicationClasses.size() > 0 )
+    void BaseOtdrApplication::Init( std::string aAppClass )
+    {
+        mEditorWindow =
+            OtdrWindow( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
+        mEditorWindow.ConfigureUI();
+        mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
+
+        static auto &lApplicationType = DotNetRuntime::GetClassType( aAppClass );
+
+        if( lApplicationType )
         {
-            mApplicationInstance = lApplicationClasses[0]->Instantiate();
+            mApplicationInstance = lApplicationType.Instantiate();
             mApplicationInstance->CallMethod( "Initialize" );
+        }
+        else
+        {
+            SE::Logging::Info( "Could not load application: class {} does not exist", aAppClass );
         }
     }
 
