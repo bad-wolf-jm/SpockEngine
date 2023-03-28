@@ -691,11 +691,8 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIFloat64Column::UIFloat64Column_SetDataWithForegroundAndBackgroundColor",
                                 sFloat64Column::UIFloat64Column_SetDataWithForegroundAndBackgroundColor );
 
-
-
         mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_Create", sUint32Column::UIUint32Column_Create );
-        mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_CreateFull",
-                                sUint32Column::UIUint32Column_CreateFull );
+        mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_CreateFull", sUint32Column::UIUint32Column_CreateFull );
         mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_Destroy", sUint32Column::UIUint32Column_Destroy );
         mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_Clear", sUint32Column::UIUint32Column_Clear );
         mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_SetData", sUint32Column::UIUint32Column_SetData );
@@ -703,9 +700,6 @@ namespace SE::Core
                                 sUint32Column::UIUint32Column_SetDataWithForegroundColor );
         mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_SetDataWithForegroundAndBackgroundColor",
                                 sUint32Column::UIUint32Column_SetDataWithForegroundAndBackgroundColor );
-
-
-
 
         mono_add_internal_call( "SpockEngine.UIStringColumn::UIStringColumn_Create", sStringColumn::UIStringColumn_Create );
         mono_add_internal_call( "SpockEngine.UIStringColumn::UIStringColumn_CreateFull", sStringColumn::UIStringColumn_CreateFull );
@@ -740,6 +734,15 @@ namespace SE::Core
                                 sFloat64LinePlot::UIFloat64LinePlot_Destroy );
         mono_add_internal_call( "SpockEngine.UIFloat64LinePlot::UIFloat64LinePlot_SetX", sFloat64LinePlot::UIFloat64LinePlot_SetX );
         mono_add_internal_call( "SpockEngine.UIFloat64LinePlot::UIFloat64LinePlot_SetY", sFloat64LinePlot::UIFloat64LinePlot_SetY );
+
+        mono_add_internal_call( "SpockEngine.UIFloat64ScatterPlot::UIFloat64ScatterPlot_Create",
+                                sFloat64ScatterPlot::UIFloat64ScatterPlot_Create );
+        mono_add_internal_call( "SpockEngine.UIFloat64ScatterPlot::UIFloat64ScatterPlot_Destroy",
+                                sFloat64ScatterPlot::UIFloat64ScatterPlot_Destroy );
+        mono_add_internal_call( "SpockEngine.UIFloat64ScatterPlot::UIFloat64ScatterPlot_SetX",
+                                sFloat64ScatterPlot::UIFloat64ScatterPlot_SetX );
+        mono_add_internal_call( "SpockEngine.UIFloat64ScatterPlot::UIFloat64ScatterPlot_SetY",
+                                sFloat64ScatterPlot::UIFloat64ScatterPlot_SetY );
 
         mono_add_internal_call( "SpockEngine.UIVLinePlot::UIVLinePlot_Create", sVLine::UIVLinePlot_Create );
         mono_add_internal_call( "SpockEngine.UIVLinePlot::UIVLinePlot_Destroy", sVLine::UIVLinePlot_Destroy );

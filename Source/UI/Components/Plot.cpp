@@ -191,6 +191,46 @@ namespace SE::Core
         lSelf->mY = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
     }
 
+    void sFloat64ScatterPlot::Render( UIPlot *aParentPlot )
+    {
+        auto lPlotName = fmt::format( "{}##{}", mLegend, static_cast<void *>( this ) );
+        auto lPlotSize = ImPlot::GetPlotSize();
+
+        int lDownSample = static_cast<int>( static_cast<float>( mX.size() ) / lPlotSize.x );
+        lDownSample     = ( lDownSample < 1 ) ? 1 : lDownSample;
+
+        ImPlot::SetAxes( static_cast<ImAxis>( mXAxis ), static_cast<ImAxis>( mYAxis ) );
+
+        if( mThickness != -1.0f ) ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
+        ImPlot::PushStyleColor( ImPlotCol_Line, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w } );
+        ImPlot::PlotScatter( mLegend.c_str(), mX.data(), mY.data(), mX.size() / lDownSample, mOffset, sizeof( double ) * lDownSample );
+        ImPlot::PopStyleColor();
+        if( mThickness != -1.0f ) ImPlot::PopStyleVar();
+    }
+
+    void *sFloat64ScatterPlot::UIFloat64ScatterPlot_Create( )
+    {
+        auto lSelf = new sFloat64ScatterPlot();
+
+        return static_cast<sFloat64ScatterPlot *>( lSelf );
+    }
+
+    void sFloat64ScatterPlot::UIFloat64ScatterPlot_Destroy( void *aSelf ) { delete static_cast<sFloat64ScatterPlot *>( aSelf ); }
+
+    void sFloat64ScatterPlot::UIFloat64ScatterPlot_SetX( void *aSelf, void *aValue )
+    {
+        auto lSelf = static_cast<sFloat64ScatterPlot *>( aSelf );
+
+        lSelf->mX = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
+    }
+
+    void sFloat64ScatterPlot::UIFloat64ScatterPlot_SetY( void *aSelf, void *aValue )
+    {
+        auto lSelf = static_cast<sFloat64ScatterPlot *>( aSelf );
+
+        lSelf->mY = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
+    }
+
     void sVLine::Render( UIPlot *aParentPlot )
     {
         auto lPlotName = fmt::format( "{}##{}", mLegend, static_cast<void *>( this ) );

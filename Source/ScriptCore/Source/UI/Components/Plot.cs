@@ -132,6 +132,58 @@ namespace SpockEngine
         private extern static ulong UIFloat64LinePlot_SetY(ulong aInstance, double[] aValues);
     }
 
+
+
+
+
+
+
+    public class UIFloat64ScatterPlot : UIPlotData
+    {
+        public UIFloat64ScatterPlot() : base(UIFloat64ScatterPlot_Create()) { }
+
+        public UIFloat64ScatterPlot(ulong aInstance) : base(aInstance) { }
+
+        ~UIFloat64ScatterPlot() { UIFloat64ScatterPlot_Destroy(mInstance); }
+
+        private double[] mX;
+
+        private double[] mY;
+
+        public double[] X
+        {
+            get { return mX; }
+            set { mX = value; UIFloat64ScatterPlot_SetX(mInstance, value); }
+        }
+
+        public double[] Y
+        {
+            get { return mY; }
+            set { mY = value; UIFloat64ScatterPlot_SetY(mInstance, value); }
+        }
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static ulong UIFloat64ScatterPlot_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static ulong UIFloat64ScatterPlot_Destroy(ulong aInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static ulong UIFloat64ScatterPlot_SetX(ulong aInstance, double[] aValues);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static ulong UIFloat64ScatterPlot_SetY(ulong aInstance, double[] aValues);
+    }
+
+
+
+
+
+
+
+
+
+
     public class UIPlot : UIComponent
     {
         List<UIPlotData> mPlots;

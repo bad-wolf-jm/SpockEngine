@@ -66,6 +66,16 @@ namespace SE::Core
         static void  UIFloat64LinePlot_SetY( void *aSelf, void *aValue );
     };
 
+    struct sFloat64ScatterPlot : public sXYPlot<double>
+    {
+        void Render( UIPlot *aParentPlot );
+
+        static void *UIFloat64ScatterPlot_Create();
+        static void  UIFloat64ScatterPlot_Destroy( void *aSelf );
+        static void  UIFloat64ScatterPlot_SetX( void *aSelf, void *aValue );
+        static void  UIFloat64ScatterPlot_SetY( void *aSelf, void *aValue );
+    };
+
     struct sVLine : public sPlotData
     {
         std::vector<double> mX;
