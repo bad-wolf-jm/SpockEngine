@@ -198,11 +198,13 @@ int main( int argc, char **argv )
 
     SE::Logging::Info( "Current working directory is: '{}'", lProjectRoot.string() );
 
-    // Create Saved, Saved/Logs
+    // Create Saved, Saved/Logs, Saved/Config
     if( !fs::exists( lProjectRoot / "Saved" / "Logs" ) ) fs::create_directories( lProjectRoot / "Saved" / "Logs" );
-
-    // Create Saved, Saved/Config
     if( !fs::exists( lProjectRoot / "Saved" / "Config" ) ) fs::create_directories( lProjectRoot / "Saved" / "Config" );
+
+    // Create Saved, Saved/Logs, Saved/Config
+    if( !fs::exists( lLocalConfigFolder / "OtdrTool" / "Logs" ) ) fs::create_directories( lLocalConfigFolder / "OtdrTool" / "Logs" );
+    if( !fs::exists( lLocalConfigFolder / "OtdrTool" / "Config" ) ) fs::create_directories( lLocalConfigFolder / "OtdrTool" / "Config" );
 
     // Configure logger to send messages to Saved/Logs/EditorLogs.txt
     auto lOutputLogFile = lProjectRoot / "Saved" / "Logs" / "EditorLogs.txt";
@@ -213,7 +215,7 @@ int main( int argc, char **argv )
     math::ivec2     lWindowPosition = { 100, 100 };
     UIConfiguration lUIConfiguration{};
 
-    fs::path lConfigurationFile = lProjectRoot / "Saved" / "Config" / "EditorConfiguration.yaml";
+    fs::path lConfigurationFile = lLocalConfigFolder / "OtdrTool" / "Config" / "Application.yaml";
     if( fs::exists( lConfigurationFile ) )
         LoadConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
     else
@@ -233,7 +235,7 @@ int main( int argc, char **argv )
         std::exit( 1 );
     }
 
-    SE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lProjectRoot / "Saved" / "imgui.ini", lUIConfiguration );
+    SE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lLocalConfigFolder / "OtdrTool" / "Config" / "imgui.ini", lUIConfiguration );
 
     SE::Graphics::OptixDeviceContextObject::Initialize();
 
