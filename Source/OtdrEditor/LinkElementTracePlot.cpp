@@ -21,6 +21,20 @@
 
 namespace SE::OtdrEditor
 {
+
+    UILinkElementTracePlot::UILinkElementTracePlot()
+        : UIBoxLayout( eBoxLayoutOrientation::VERTICAL )
+    {
+        mTitle    = New<UILabel>( "TITLE" );
+        mPlotArea = New<UIPlot>();
+
+        Add( mTitle.get(), 50, false, true );
+        Add( mPlotArea.get(), true, true );
+    }
+
+    void UILinkElementTracePlot::Clear() { mPlotArea->Clear(); }
+    void UILinkElementTracePlot::SetTitle( std::string aTitle ) { mTitle->SetText( aTitle ); }
+
     void UILinkElementTracePlot::SetData( std::vector<MonoObject *> &lTraceDataVector )
     {
         static auto &lTraceDataStructure = DotNetRuntime::GetClassType( "Metrino.Interop.TracePlotData" );
@@ -35,15 +49,13 @@ namespace SE::OtdrEditor
             lPlot->mLegend = fmt::format( "{:.0f} nm - {} ({} samples)", lInstance.GetFieldValue<double>( "mWavelength" ) * 1e9, i,
                                           lPlot->mX.size() );
 
-            Add( lPlot );
+            mPlotArea->Add( lPlot );
         }
     }
 
     void UILinkElementTracePlot::SetEventData( sLinkElement const &aLinkElement, bool aDisplayEventBounds, bool aDisplayLsaFit,
                                                bool aAdjustAxisScale )
     {
-        static const double lSpeedOfLight = 299792458.0;
-
         static auto &lSinglePulseTraceClass = DotNetRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
 
         auto lPeakPlot = New<sFloat64LinePlot>();
@@ -68,7 +80,7 @@ namespace SE::OtdrEditor
                 for( uint32_t i = 0; i < lPeakPlot->mX.size(); i++ )
                     lPeakPlot->mX[i] = ( ( static_cast<float>( i ) / static_cast<float>( lLast ) ) * ( lX1 - lX0 ) + lX0 ) * 0.001;
 
-                Add( lPeakPlot );
+                mPlotArea->Add( lPeakPlot );
             }
         }
 
@@ -95,7 +107,7 @@ namespace SE::OtdrEditor
                     lDetectionPlot->mX[i] =
                         ( ( static_cast<float>( i ) / static_cast<float>( lLast ) ) * ( lX1 - lX0 ) + lX0 ) * 0.001;
 
-                Add( lDetectionPlot );
+                mPlotArea->Add( lDetectionPlot );
             }
         }
 
@@ -114,11 +126,11 @@ namespace SE::OtdrEditor
             {
                 auto lEventSpanLine    = New<sVLine>( std::vector<double>{ lEventSpanStart * 0.001, lEventSpanEnd * 0.001 } );
                 lEventSpanLine->mColor = math::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
-                Add( lEventSpanLine );
+                mPlotArea->Add( lEventSpanLine );
 
                 auto lEventPositionLine    = New<sVLine>( std::vector<double>{ lElementPosition * 0.001 } );
                 lEventPositionLine->mColor = math::vec4{ 1.0f, .0f, .0f, 1.0f };
-                Add( lEventPositionLine );
+                mPlotArea->Add( lEventPositionLine );
             }
         }
 
@@ -149,14 +161,14 @@ namespace SE::OtdrEditor
                 lPreviousRbsPlot->mLegend    = "Previous Section";
                 lPreviousRbsPlot->mColor     = math::vec4{ 1.0f, 1.0f, .5f, 1.0f };
                 lPreviousRbsPlot->mThickness = 2.0f;
-                Add( lPreviousRbsPlot );
+                mPlotArea->Add( lPreviousRbsPlot );
 
                 auto lPreviousRbsBoundsPlot = New<sFloat64ScatterPlot>();
                 lPreviousRbsBoundsPlot->mX  = std::vector<double>{ lPreviousX0 * 0.001, lPreviousX1 * 0.001 };
                 lPreviousRbsBoundsPlot->mY =
                     std::vector<double>{ lPreviousRbsOffset, ( lPreviousX1 - lPreviousX0 ) * lPreviousRbsSlope + lPreviousRbsOffset };
                 lPreviousRbsBoundsPlot->mColor = math::vec4{ 1.0f, 1.0f, .5f, 1.0f };
-                Add( lPreviousRbsBoundsPlot );
+                mPlotArea->Add( lPreviousRbsBoundsPlot );
             }
 
             if( lNextRbsLsaData && *lNextRbsLsaData )
@@ -179,26 +191,26 @@ namespace SE::OtdrEditor
                 lNextRbsPlot->mLegend    = "Next Section";
                 lNextRbsPlot->mColor     = math::vec4{ 1.0f, .5f, 1.0f, 1.0f };
                 lNextRbsPlot->mThickness = 2.0f;
-                Add( lNextRbsPlot );
+                mPlotArea->Add( lNextRbsPlot );
 
                 auto lNextRbsBoundsPlot = New<sFloat64ScatterPlot>();
                 lNextRbsBoundsPlot->mX  = std::vector<double>{ lNextX0 * 0.001, lNextX1 * 0.001 };
                 lNextRbsBoundsPlot->mY = std::vector<double>{ lNextRbsOffset, ( lNextX1 - lNextX0 ) * lNextRbsSlope + lNextRbsOffset };
                 lNextRbsBoundsPlot->mColor = math::vec4{ 1.0f, .5f, 1.0f, 1.0f };
-                Add( lNextRbsBoundsPlot );
+                mPlotArea->Add( lNextRbsBoundsPlot );
             }
         }
 
         if( aAdjustAxisScale && lAttributes )
         {
-            mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMin = lPeakPlot->mX[0];
-            mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMax = lPeakPlot->mX[lPeakPlot->mX.size() - 1];
+            mPlotArea->mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMin = lPeakPlot->mX[0];
+            mPlotArea->mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMax = lPeakPlot->mX[lPeakPlot->mX.size() - 1];
 
             auto lPreviousRbs        = lAttributes.GetPropertyValue( "PreviousRbs", "Metrino.Olm.SignalProcessing.RbsAttribute" );
             auto lPreviousRbsLsaData = lPreviousRbs->GetPropertyValue( "Lsa", "Metrino.Olm.SignalProcessing.RbsLsa" );
             if( lPreviousRbsLsaData && *lPreviousRbsLsaData )
             {
-                mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMin =
+                mPlotArea->mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMin =
                     lPreviousRbsLsaData->GetPropertyValue<double>( "StartPosition" ) * 0.001;
             }
 
@@ -206,29 +218,29 @@ namespace SE::OtdrEditor
             auto lNextRbsLsaData = lNextRbs->GetPropertyValue( "Lsa", "Metrino.Olm.SignalProcessing.RbsLsa" );
             if( lNextRbsLsaData && *lNextRbsLsaData )
             {
-                mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMax =
+                mPlotArea->mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMax =
                     lNextRbsLsaData->GetPropertyValue<double>( "EndPosition" ) * 0.001;
             }
 
-            mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMin = 0.0f;
-            mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMax = 0.0f;
+            mPlotArea->mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMin = 0.0f;
+            mPlotArea->mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMax = 0.0f;
 
             bool lAxisMinSet = false;
             bool lAxisMaxSet = false;
 
             for( uint32_t i = 0; i < lPeakPlot->mX.size(); i++ )
             {
-                if( ( lPeakPlot->mX[i] >= mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMin ) &&
-                    ( lPeakPlot->mX[i] <= mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMax ) )
+                if( ( lPeakPlot->mX[i] >= mPlotArea->mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMin ) &&
+                    ( lPeakPlot->mX[i] <= mPlotArea->mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mMax ) )
                 {
-                    mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMin =
+                    mPlotArea->mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMin =
                         lAxisMinSet ? std::min( static_cast<float>( lPeakPlot->mY[i] ),
-                                                mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMin )
+                                                mPlotArea->mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMin )
                                     : static_cast<float>( lPeakPlot->mY[i] );
 
-                    mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMax =
+                    mPlotArea->mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMax =
                         lAxisMaxSet ? std::max( static_cast<float>( lPeakPlot->mY[i] ),
-                                                mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMax )
+                                                mPlotArea->mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mMax )
                                     : static_cast<float>( lPeakPlot->mY[i] );
 
                     lAxisMinSet = true;
