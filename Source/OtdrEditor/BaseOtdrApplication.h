@@ -41,6 +41,7 @@ namespace SE::OtdrEditor
         ~BaseOtdrApplication() = default;
 
         void Init();
+        void Init(std::string aAppClass);
         void Shutdown();
 
         void RenderScene() {}

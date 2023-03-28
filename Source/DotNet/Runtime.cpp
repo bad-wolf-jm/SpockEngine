@@ -405,7 +405,11 @@ namespace SE::Core
         RegisterComponentTypes();
     }
 
-    DotNetClass &DotNetRuntime::GetClassType( const std::string &aClassName ) { return sRuntimeData->mClasses[aClassName]; }
+    DotNetClass &DotNetRuntime::GetClassType( const std::string &aClassName )
+    {
+        if( sRuntimeData->mClasses.find( aClassName ) != sRuntimeData->mClasses.end() ) return sRuntimeData->mClasses[aClassName];
+        return DotNetClass{};
+    }
 
     MonoType *DotNetRuntime::GetCoreTypeFromName( std::string &aName )
     {
