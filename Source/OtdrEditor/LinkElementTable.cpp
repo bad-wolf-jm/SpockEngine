@@ -94,8 +94,10 @@ namespace SE::OtdrEditor
             auto lTextColor = lHidden ? ImGui::GetStyleColorVec4( ImGuiCol_TextDisabled ) : ImGui::GetStyleColorVec4( ImGuiCol_Text );
             auto lOtdrPhysicalEvent = lPhysicalEvent.GetPropertyValue( "PhysicalEvent", "Metrino.Otdr.PhysicalEvent" );
 
-            mIndex->mData.push_back(
-                fmt::format( "{} - {} - {} - {}", lE.mLinkIndex, lE.mSubLinkIndex, lE.mEventIndex, lE.mIsSubElement ) );
+            if( lE.mIsSubElement )
+                mIndex->mData.push_back( fmt::format( " {} {}", ICON_FA_ANGLE_RIGHT, lE.mSubLinkIndex ) );
+            else
+                mIndex->mData.push_back( fmt::format( "{}", lE.mLinkIndex ) );
             mIndex->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
 
             std::string lSplitterSource = lLinkElement.GetPropertyValue<bool>( "TwoByNSplitter" ) ? "2" : "1";
@@ -115,8 +117,10 @@ namespace SE::OtdrEditor
             mStatus->mData.push_back( StringJoin( LinkStatusToString( lLinkElement.GetPropertyValue<int>( "Status" ) ) ) );
             mStatus->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
 
-            if( lE.mDiagnosicCount > 0 )
-                mDiagnosicCount->mData.push_back( "\xef\x86\x88" );
+            if( lE.mDiagnosicCount == 1 )
+                mDiagnosicCount->mData.push_back( ICON_FA_COMMENT );
+            else if( lE.mDiagnosicCount > 1 )
+                mDiagnosicCount->mData.push_back( ICON_FA_COMMENTS );
             else
                 mDiagnosicCount->mData.push_back( "" );
             mDiagnosicCount->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
