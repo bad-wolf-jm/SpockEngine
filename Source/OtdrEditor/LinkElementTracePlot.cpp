@@ -138,7 +138,6 @@ namespace SE::OtdrEditor
             {
                 auto lPreviousRbsSlope  = lPreviousRbsLsaData->GetPropertyValue<double>( "Slope" );
                 auto lPreviousRbsOffset = lPreviousRbsLsaData->GetPropertyValue<double>( "Offset" );
-                auto lPreviousRbsPlot   = New<sFloat64LinePlot>();
                 auto lPreviousX0        = lPreviousRbsLsaData->GetPropertyValue<double>( "StartPosition" );
                 auto lPreviousX1        = lPreviousRbsLsaData->GetPropertyValue<double>( "EndPosition" );
 
@@ -148,12 +147,20 @@ namespace SE::OtdrEditor
                 double Y0 = ( X0 - lPreviousX0 ) * lPreviousRbsSlope + lPreviousRbsOffset;
                 double Y1 = ( X1 - lPreviousX0 ) * lPreviousRbsSlope + lPreviousRbsOffset;
 
+                auto lPreviousRbsPlot        = New<sFloat64LinePlot>();
                 lPreviousRbsPlot->mX         = std::vector<double>{ X0 * 0.001, X1 * 0.001 };
                 lPreviousRbsPlot->mY         = std::vector<double>{ Y0, Y1 };
                 lPreviousRbsPlot->mLegend    = "Previous Section";
                 lPreviousRbsPlot->mColor     = math::vec4{ 1.0f, 1.0f, .5f, 1.0f };
                 lPreviousRbsPlot->mThickness = 2.0f;
                 Add( lPreviousRbsPlot );
+
+                auto lPreviousRbsBoundsPlot = New<sFloat64ScatterPlot>();
+                lPreviousRbsBoundsPlot->mX  = std::vector<double>{ lPreviousX0 * 0.001, lPreviousX1 * 0.001 };
+                lPreviousRbsBoundsPlot->mY =
+                    std::vector<double>{ lPreviousRbsOffset, ( lPreviousX1 - lPreviousX0 ) * lPreviousRbsSlope + lPreviousRbsOffset };
+                lPreviousRbsBoundsPlot->mColor = math::vec4{ 1.0f, 1.0f, .5f, 1.0f };
+                Add( lPreviousRbsBoundsPlot );
             }
 
             if( lNextRbsLsaData && *lNextRbsLsaData )
@@ -171,13 +178,18 @@ namespace SE::OtdrEditor
                 double Y0 = ( X0 - lNextX0 ) * lNextRbsSlope + lNextRbsOffset;
                 double Y1 = ( X1 - lNextX0 ) * lNextRbsSlope + lNextRbsOffset;
 
-                lNextRbsPlot->mX = std::vector<double>{ X0 * 0.001, X1 * 0.001 };
-                lNextRbsPlot->mY = std::vector<double>{ Y0, Y1 };
-
+                lNextRbsPlot->mX         = std::vector<double>{ X0 * 0.001, X1 * 0.001 };
+                lNextRbsPlot->mY         = std::vector<double>{ Y0, Y1 };
                 lNextRbsPlot->mLegend    = "Next Section";
                 lNextRbsPlot->mColor     = math::vec4{ 1.0f, .5f, 1.0f, 1.0f };
                 lNextRbsPlot->mThickness = 2.0f;
                 Add( lNextRbsPlot );
+
+                auto lNextRbsBoundsPlot = New<sFloat64ScatterPlot>();
+                lNextRbsBoundsPlot->mX  = std::vector<double>{ lNextX0 * 0.001, lNextX1 * 0.001 };
+                lNextRbsBoundsPlot->mY = std::vector<double>{ lNextRbsOffset, ( lNextX1 - lNextX0 ) * lNextRbsSlope + lNextRbsOffset };
+                lNextRbsBoundsPlot->mColor = math::vec4{ 1.0f, .5f, 1.0f, 1.0f };
+                Add( lNextRbsBoundsPlot );
             }
         }
 
