@@ -2,6 +2,21 @@
 
 namespace SE::Core
 {
+
+    void   UIWorkspaceDocument::PushStyles() {}
+    void   UIWorkspaceDocument::PopStyles() {}
+    ImVec2 UIWorkspaceDocument::RequiredSize() { return ImVec2{}; }
+    void   UIWorkspaceDocument::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
+    void   UIWorkspaceDocument::SetContent( UIComponent *aContent ) { mContent = aContent; }
+
+    void UIWorkspaceDocument::Update()
+    {
+        ImVec2 lContentSize     = ImGui::GetContentRegionAvail();
+        ImVec2 lContentPosition = ImGui::GetCursorPos();
+
+        if( mContent != nullptr ) mContent->Update( lContentPosition, lContentSize );
+    }
+
     void UIWorkspace::PushStyles() {}
     void UIWorkspace::PopStyles() {}
 
@@ -12,41 +27,41 @@ namespace SE::Core
         return lTextSize;
     }
 
+    void UIWorkspace::Add( Ref<UIWorkspaceDocument> aDocument ) { mDocuments.push_back( aDocument ); }
+
     void UIWorkspace::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
         ImGuiTabBarFlags lTabBarFlags = ImGuiTabBarFlags_FittingPolicyDefault_ | ImGuiTabBarFlags_Reorderable;
         if( ImGui::BeginTabBar( "##tabs", lTabBarFlags ) )
         {
-            // if( opt_reorderable ) NotifyOfDocumentsClosedElsewhere( app );
-            for( int doc_n = 0; doc_n < mDocuments.size(); doc_n++ )
+            for( int i = 0; i < mDocuments.size(); i++ )
             {
-                auto &doc = mDocuments[doc_n];
-                if( !doc->mOpen && doc->mOpenPrev ) ImGui::SetTabItemClosed( doc->mName.c_str() );
-                doc->mOpenPrev = doc->mOpen;
+                auto &lDocument = mDocuments[i];
+                if( !lDocument->mOpen && lDocument->mOpenPrev ) ImGui::SetTabItemClosed( lDocument->mName.c_str() );
+                lDocument->mOpenPrev = lDocument->mOpen;
             }
 
             // Submit Tabs
-            for( int doc_n = 0; doc_n < mDocuments.size(); doc_n++ )
+            for( int i = 0; i < mDocuments.size(); i++ )
             {
-                auto doc = mDocuments[doc_n];
-                if( !doc->mOpen ) continue;
+                auto lDocument = mDocuments[i];
+                if( !lDocument->mOpen ) continue;
 
-                ImGuiTabItemFlags lCurrentTabFlags = ( doc->mDirty ? ImGuiTabItemFlags_UnsavedDocument : 0 );
+                ImGuiTabItemFlags lCurrentTabFlags = ( lDocument->mDirty ? ImGuiTabItemFlags_UnsavedDocument : 0 );
 
-                bool lVisible = ImGui::BeginTabItem( doc->mName.c_str(), &doc->mOpen, lCurrentTabFlags );
+                bool lVisible = ImGui::BeginTabItem( lDocument->mName.c_str(), &lDocument->mOpen, lCurrentTabFlags );
 
                 // Cancel attempt to close when unsaved add to save queue so we can display a popup.
-                if( !doc->mOpen && doc->mDirty )
+                if( !lDocument->mOpen && lDocument->mDirty )
                 {
-                    doc->mOpen = true;
-                    doc->DoQueueClose();
+                    lDocument->mOpen = true;
+                    lDocument->DoQueueClose();
                 }
 
-                // MyDocument::DisplayContextMenu( doc );
+                // MyDocument::DisplayContextMenu( lDocument );
                 if( lVisible )
                 {
-                    doc->Update( aPosition, aSize );
-                    // MyDocument::DisplayContents( doc );
+                    lDocument->Update();
                     ImGui::EndTabItem();
                 }
             }
@@ -57,13 +72,13 @@ namespace SE::Core
         if( mCloseQueue.empty() )
         {
             // Close queue is locked once we started a popup
-            for( int doc_n = 0; doc_n < mDocuments.size(); doc_n++ )
+            for( int i = 0; i < mDocuments.size(); i++ )
             {
-                auto doc = mDocuments[doc_n];
-                if( doc->mWantClose )
+                auto lDocument = mDocuments[i];
+                if( lDocument->mWantClose )
                 {
-                    doc->mWantClose = false;
-                    mCloseQueue.push_back( doc );
+                    lDocument->mWantClose = false;
+                    mCloseQueue.push_back( lDocument );
                 }
             }
         }

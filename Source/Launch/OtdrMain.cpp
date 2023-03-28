@@ -71,8 +71,10 @@ void SaveConfiguration( fs::path aConfigurationFile, fs::path aMetrinoPath, math
         lConfigurationOut << YAML::Key << "application" << YAML::Value;
         lConfigurationOut << YAML::BeginMap;
         {
-
-            lConfigurationOut << YAML::Key << "metrino_path" << YAML::Value << aMetrinoPath.string();
+            if( aMetrinoPath.string().empty() )
+                lConfigurationOut << YAML::Key << "metrino_path" << YAML::Value << YAML::Null;
+            else
+                lConfigurationOut << YAML::Key << "metrino_path" << YAML::Value << aMetrinoPath.string();
 
             lConfigurationOut << YAML::Key << "window_properties" << YAML::Value << YAML::Flow;
             lConfigurationOut << YAML::BeginMap;
