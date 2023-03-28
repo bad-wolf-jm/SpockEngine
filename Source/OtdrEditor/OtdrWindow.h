@@ -19,6 +19,7 @@
 #include "UI/Components/Plot.h"
 #include "UI/Components/Table.h"
 #include "UI/Components/TextToggleButton.h"
+#include "UI/Components/Workspace.h"
 #include "UI/Form.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/UI.h"
@@ -99,6 +100,7 @@ namespace SE::OtdrEditor
         std::vector<sMultiPulseEvent> mEventVector;
 
         UILinkElementTracePlot mTracePlot;
+        UIWorkspace mDocumentArea;
 
         Ref<UIMultiPulseEventTable> mEventTable;
         Ref<UIMultiPulseEventTable> mEventTable1;

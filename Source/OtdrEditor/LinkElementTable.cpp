@@ -115,13 +115,6 @@ namespace SE::OtdrEditor
             mStatus->mData.push_back( StringJoin( LinkStatusToString( lLinkElement.GetPropertyValue<int>( "Status" ) ) ) );
             mStatus->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
 
-            // mChanged->mData.push_back( lLinkElement.GetPropertyValue<bool>( "Changed" ) ? "True" : "False" );
-            // mChanged->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
-
-            // auto lComment = lLinkElement.GetPropertyValue<MonoString *>( "Comment" );
-            // mComment->mData.push_back( DotNetRuntime::NewString( lComment ) );
-            // mComment->mForegroundColor.push_back( (uint32_t)ImColor( lTextColor ) );
-
             if( lE.mDiagnosicCount > 0 )
                 mDiagnosicCount->mData.push_back( "\xef\x86\x88" );
             else
@@ -177,25 +170,6 @@ namespace SE::OtdrEditor
         mReflectance->Clear();
         mPeakPower->Clear();
         mEventType->Clear();
-        // mComment->Clear();
-
-        // mIndex->mForegroundColor.clear();
-        // mType->mForegroundColor.clear();
-        // mStatus->mForegroundColor.clear();
-        // mDiagnosicCount->mForegroundColor.clear();
-        // mWavelength->mForegroundColor.clear();
-        // mPositionColumn->mForegroundColor.clear();
-        // mLoss->mForegroundColor.clear();
-        // mReflectance->mForegroundColor.clear();
-        // mPeakPower->mForegroundColor.clear();
-        // // mComment->mForegroundColor.clear();
-        // // mCurveLevelColumn->Clear();
-        // mEventType->mForegroundColor.clear();
-        // mEventStatus->Clear();
-        // mReflectanceType->Clear();
-        // mEventSpan->Clear();
-        // mPositionTolerance->Clear();
-        // mLossError->Clear();
     }
 
     std::vector<sLinkElement> UILinkElementTable::GetElementsByIndex( uint32_t aElementIndex )

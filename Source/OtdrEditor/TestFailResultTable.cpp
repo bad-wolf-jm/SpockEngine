@@ -19,26 +19,26 @@ namespace SE::OtdrEditor
     {
         SetRowHeight( 20.0f );
 
-        mTestName = New<sStringColumn>( "Test", 75.0f );
-        AddColumn( mTestName );
-
-        mTestDate = New<sStringColumn>( "Date", 75.0f );
+        mTestDate = New<sStringColumn>( "Date", 125.0f );
         AddColumn( mTestDate );
- 
-        mFilename = New<sStringColumn>( "File", 75.0f );
-        AddColumn( mFilename );
 
+        mTestName = New<sStringColumn>( "Test", 175.0f );
+        AddColumn( mTestName );
+ 
         mMessage = New<sStringColumn>( "Message", 75.0f );
         AddColumn( mMessage );
 
-        mPhysicalEventPosition = New<sFloat64Column>( "mPhysicalEventPosition", 75.0f, "{:.4f} km", "N.a.N.");
-        AddColumn( mPhysicalEventPosition );
-
-        mLinkElementPosition = New<sFloat64Column>( "mLinkElementPosition", 75.0f, "{:.4f} km", "N.a.N." );
+        mLinkElementPosition = New<sFloat64Column>( "Element Position", 75.0f, "{:.4f} km", "" );
         AddColumn( mLinkElementPosition );
 
-        mWavelength = New<sFloat64Column>( "mWavelength", 75.0f, "{:.1f} nm", "N.a.N." );
+        mPhysicalEventPosition = New<sFloat64Column>( "Physical Event Position", 75.0f, "{:.4f} km", "");
+        AddColumn( mPhysicalEventPosition );
+
+        mWavelength = New<sFloat64Column>( "mWavelength", 75.0f, "{:.1f} nm", "" );
         AddColumn( mWavelength );
+
+        mFilename = New<sStringColumn>( "File", 775.0f );
+        AddColumn( mFilename );
 
         UITable::OnRowClicked(
             [&]( uint32_t aRow )
@@ -62,7 +62,6 @@ namespace SE::OtdrEditor
         {
             mTestName->mData.push_back( lDataRow.mTestName );
             mTestDate->mData.push_back( lDataRow.mTestDate );
-
             mFilename->mData.push_back( fs::path(lDataRow.mFilename).string() );
             mLinkElementPosition->mData.push_back( lDataRow.mLinkElementPosition * 0.001f );
             mWavelength->mData.push_back( lDataRow.mWavelength * 1e9 );

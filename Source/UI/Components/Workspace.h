@@ -6,13 +6,14 @@ namespace SE::Core
 {
     struct UIWorkspaceDocument : public UIComponent
     {
-        std::string mName;      // Document title/
-        bool        mOpen;      // Set when open (we keep an array of all available documents to simplify demo code!)
-        bool        mOpenPrev;  // Copy of Open from last update.
-        bool        mDirty;     // Set when the document has been modified
-        bool        mWantClose; // Set when the document
+        std::string mName;              // Document title/
+        bool        mOpen      = true;  // Set when open (we keep an array of all available documents to simplify demo code!)
+        bool        mOpenPrev  = true;  // Copy of Open from last update.
+        bool        mDirty     = false; // Set when the document has been modified
+        bool        mWantClose = false; // Set when the document
 
-        UIWorkspaceDocument() = default;
+        UIWorkspaceDocument()                              = default;
+        UIWorkspaceDocument( UIWorkspaceDocument const & ) = default;
 
         void DoOpen() { mOpen = true; }
 
@@ -25,6 +26,17 @@ namespace SE::Core
         }
 
         void DoSave() { mDirty = false; }
+
+        void   PushStyles();
+        void   PopStyles();
+        ImVec2 RequiredSize();
+        void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+
+        UIComponent *mContent = nullptr;
+
+        void SetContent( UIComponent *aContent );
+
+        void Update();
     };
 
     class UIWorkspace : public UIComponent
@@ -32,6 +44,8 @@ namespace SE::Core
       public:
         UIWorkspace()  = default;
         ~UIWorkspace() = default;
+
+        void Add( Ref<UIWorkspaceDocument> aDocument );
 
       protected:
         std::vector<Ref<UIWorkspaceDocument>> mDocuments;

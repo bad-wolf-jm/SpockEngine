@@ -23,6 +23,8 @@
 #include "mono/metadata/object.h"
 #include "mono/metadata/tabledefs.h"
 
+#include "IOlmDocument.h"
+
 namespace SE::OtdrEditor
 {
 
@@ -90,7 +92,7 @@ namespace SE::OtdrEditor
         //         mTracePlot.SetEventData( aElement, true, true );
         //     } );
 
-        mTestFailResultTable->OnElementClicked( [&]( sTestFailElement const &aElement ) { LoadIOlmData( aElement.mFilename, true ); } );
+        mTestFailResultTable->OnElementClicked( [&]( sTestFailElement const &aElement ) { LoadIOlmData( aElement.mFilename, false ); } );
     }
 
     OtdrWindow::OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
@@ -153,6 +155,12 @@ namespace SE::OtdrEditor
         //     mMonoClasses.Display( l_WindowConsoleSize.x, l_WindowConsoleSize.y );
         // }
         // ImGui::End();
+
+        if( ImGui::Begin( "WS", NULL, ImGuiWindowFlags_None ) )
+        {
+            mDocumentArea.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+        }
+        ImGui::End();
 
         if( mDataInstance )
         {
@@ -348,6 +356,8 @@ namespace SE::OtdrEditor
 
     void OtdrWindow::LoadIOlmData( fs::path aPath, bool aReanalyse )
     {
+        mDocumentArea.Add(New<UIIolmDocument>(aPath, aReanalyse));
+
         static auto &lFileLoader = DotNetRuntime::GetClassType( "Metrino.Interop.FileLoader" );
         static auto &lFileClass  = DotNetRuntime::GetClassType( "Metrino.Interop.OlmFile" );
 
