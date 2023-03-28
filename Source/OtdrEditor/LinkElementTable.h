@@ -13,27 +13,28 @@
 
 #include "Enums.h"
 
+#include "DotNet/Runtime.h"
 namespace SE::OtdrEditor
 {
     using namespace SE::Core;
     struct sLinkElement
     {
-        int       mRowIndex;
-        int       mLinkIndex;
-        int       mSubLinkIndex;
-        int       mEventIndex;
-        int       mSubEventIndex;
-        bool      mIsSubElement;
-        int       mDiagnosicCount;
-        ePassFail mLossPassFail;
-        ePassFail mReflectancePassFail;
-        void     *mLinkElement;
-        void     *mPhysicalEvent;
-        void     *mPeakTrace;
-        void     *mDetectionTrace;
-        void     *mAttributes;
-        void     *mAcquisitionData;
-        void     *mFiberInfo;
+        int                 mRowIndex;
+        int                 mLinkIndex;
+        int                 mSubLinkIndex;
+        int                 mEventIndex;
+        int                 mSubEventIndex;
+        bool                mIsSubElement;
+        int                 mDiagnosicCount;
+        ePassFail           mLossPassFail;
+        ePassFail           mReflectancePassFail;
+        Ref<DotNetInstance> mLinkElement;
+        Ref<DotNetInstance> mPhysicalEvent;
+        Ref<DotNetInstance> mPeakTrace;
+        Ref<DotNetInstance> mDetectionTrace;
+        Ref<DotNetInstance> mAttributes;
+        Ref<DotNetInstance> mAcquisitionData;
+        Ref<DotNetInstance> mFiberInfo;
     };
 
     class UILinkElementTable : public UITable
@@ -60,13 +61,7 @@ namespace SE::OtdrEditor
         Ref<sFloat64Column> mPositionColumn;
         Ref<sFloat64Column> mLoss;
         Ref<sFloat64Column> mReflectance;
-        // Ref<sFloat64Column> mCurveLevelColumn;
         Ref<sStringColumn>  mEventType;
-        // Ref<sStringColumn>  mEventStatus;
-        // Ref<sStringColumn>  mReflectanceType;
-        // Ref<sStringColumn>  mEventSpan;
-        // Ref<sFloat64Column> mPositionTolerance;
-        // Ref<sFloat64Column> mLossError;
         Ref<sFloat64Column> mPeakPower;
 
         std::vector<sLinkElement> mEventDataVector;

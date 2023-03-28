@@ -48,21 +48,21 @@ namespace SE::OtdrEditor
 
         auto lPeakPlot = New<sFloat64LinePlot>();
         {
-            auto lTrace = DotNetInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), aLinkElement.mPeakTrace );
-            if( lTrace )
+            auto lTrace = aLinkElement.mPeakTrace;// DotNetInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), aLinkElement.mPeakTrace );
+            if( aLinkElement.mPeakTrace && *aLinkElement.mPeakTrace )
             {
-                auto lSamples      = lTrace.GetPropertyValue<MonoObject *>( "Samples" );
-                auto lDeltaX       = lTrace.GetPropertyValue<double>( "SamplingPeriod" );
+                auto lSamples      = lTrace->GetPropertyValue<MonoObject *>( "Samples" );
+                auto lDeltaX       = lTrace->GetPropertyValue<double>( "SamplingPeriod" );
                 lPeakPlot->mY      = DotNetRuntime::AsVector<double>( lSamples );
                 lPeakPlot->mX      = std::vector<double>( lPeakPlot->mY.size() );
-                lPeakPlot->mLegend = fmt::format( "Peak Trace##{}", (size_t)aLinkElement.mPeakTrace );
+                lPeakPlot->mLegend = fmt::format( "Peak Trace##{}", (size_t)aLinkElement.mPeakTrace.get() );
 
                 uint32_t lFirst         = 0;
-                auto     lStartPosition = lTrace.CallMethod( "ConvertSampleIndexToPosition", &lFirst );
+                auto     lStartPosition = lTrace->CallMethod( "ConvertSampleIndexToPosition", &lFirst );
                 double   lX0            = *(double *)mono_object_unbox( lStartPosition );
 
                 uint32_t lLast        = lPeakPlot->mY.size() - 1;
-                auto     lEndPosition = lTrace.CallMethod( "ConvertSampleIndexToPosition", &lLast );
+                auto     lEndPosition = lTrace->CallMethod( "ConvertSampleIndexToPosition", &lLast );
                 double   lX1          = *(double *)mono_object_unbox( lEndPosition );
 
                 for( uint32_t i = 0; i < lPeakPlot->mX.size(); i++ )
@@ -74,21 +74,21 @@ namespace SE::OtdrEditor
 
         auto lDetectionPlot = New<sFloat64LinePlot>();
         {
-            auto lTrace = DotNetInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), aLinkElement.mDetectionTrace );
-            if( lTrace )
+            auto lTrace = aLinkElement.mDetectionTrace;
+            if( lTrace && *lTrace )
             {
-                auto lSamples           = lTrace.GetPropertyValue<MonoObject *>( "Samples" );
-                auto lDeltaX            = lTrace.GetPropertyValue<double>( "SamplingPeriod" );
+                auto lSamples           = lTrace->GetPropertyValue<MonoObject *>( "Samples" );
+                auto lDeltaX            = lTrace->GetPropertyValue<double>( "SamplingPeriod" );
                 lDetectionPlot->mY      = DotNetRuntime::AsVector<double>( lSamples );
                 lDetectionPlot->mX      = std::vector<double>( lDetectionPlot->mY.size() );
-                lDetectionPlot->mLegend = fmt::format( "Detection Trace##{}", (size_t)aLinkElement.mDetectionTrace );
+                lDetectionPlot->mLegend = fmt::format( "Detection Trace##{}", (size_t)aLinkElement.mDetectionTrace.get() );
 
                 uint32_t lFirst         = 0;
-                auto     lStartPosition = lTrace.CallMethod( "ConvertSampleIndexToPosition", &lFirst );
+                auto     lStartPosition = lTrace->CallMethod( "ConvertSampleIndexToPosition", &lFirst );
                 double   lX0            = *(double *)mono_object_unbox( lStartPosition );
 
                 uint32_t lLast        = lDetectionPlot->mY.size() - 1;
-                auto     lEndPosition = lTrace.CallMethod( "ConvertSampleIndexToPosition", &lLast );
+                auto     lEndPosition = lTrace->CallMethod( "ConvertSampleIndexToPosition", &lLast );
                 double   lX1          = *(double *)mono_object_unbox( lEndPosition );
 
                 for( uint32_t i = 0; i < lDetectionPlot->mX.size(); i++ )
@@ -99,13 +99,9 @@ namespace SE::OtdrEditor
             }
         }
 
-        static auto &lBaseLinkElementClass  = DotNetRuntime::GetClassType( "Metrino.Olm.BaseLinkElement" );
-        static auto &lOlmPhysicalEventClass = DotNetRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
-        static auto &lOlmAttributeClass     = DotNetRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
-
-        auto lLinkElement   = DotNetInstance( &lBaseLinkElementClass, lBaseLinkElementClass.Class(), aLinkElement.mLinkElement );
-        auto lPhysicalEvent = DotNetInstance( &lOlmPhysicalEventClass, lOlmPhysicalEventClass.Class(), aLinkElement.mPhysicalEvent );
-        auto lAttributes    = DotNetInstance( &lOlmAttributeClass, lOlmAttributeClass.Class(), aLinkElement.mAttributes );
+        auto &lLinkElement   = *aLinkElement.mLinkElement;
+        auto &lPhysicalEvent = *aLinkElement.mPhysicalEvent;
+        auto &lAttributes    = *aLinkElement.mAttributes;
 
         auto lOtdrPhysicalEvent = lPhysicalEvent.GetPropertyValue( "PhysicalEvent", "Metrino.Otdr.PhysicalEvent" );
         if( lOtdrPhysicalEvent && *lOtdrPhysicalEvent )
@@ -244,7 +240,7 @@ namespace SE::OtdrEditor
 
     void UILinkElementTracePlot::SetEventData( std::vector<sLinkElement> &aLinkElement )
     {
-        static auto &lSinglePulseTraceClass = DotNetRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
+        // static auto &lSinglePulseTraceClass = DotNetRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
 
         for( int i = 0; i < aLinkElement.size(); i++ )
         {
