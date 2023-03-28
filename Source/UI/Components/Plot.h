@@ -105,13 +105,13 @@ namespace SE::Core
 
         void ConfigureLegend( math::vec2 aLegendPadding, math::vec2 aLegendInnerPadding, math::vec2 aLegendSpacing );
 
+        std::array<sPlotAxisConfiguration, 6> mAxisConfiguration;
       protected:
         std::vector<sPlotData*> mElements;
         std::vector<Ref<sPlotData>> mElementRefs;
 
         ImPlotLocation mLegendPosition = ImPlotLocation_NorthEast;
 
-        std::array<sPlotAxisConfiguration, 6> mAxisConfiguration;
 
         ImVec2 mLegendPadding{ 5.0f, 5.0f };
         ImVec2 mLegendInnerPadding{ 5.0f, 5.0f };
