@@ -41,32 +41,9 @@ namespace SE::OtdrEditor
         std::vector<sLinkElement> mLinkElementVector;
 
       private:
-        Ref<UILinkElementTracePlot> mTracePlot;
-        Ref<UILinkElementTable>     mLinkElementTable;
-
         Ref<UIBoxLayout> mMainLayout;
 
-        // UIImage mPlayIcon;
-        // UIImage mPauseIcon;
-        // UIImageToggleButton mStartOrStopCurrentScript;
-        // UITextToggleButton mShowLogs;
-        // UIComboBox          mScriptChooser;
-        // UIBoxLayout         mTopBarLayout;
-        // UIBoxLayout         mMainLayout;
-        // UILabel  mTestLabel0;
-        // UITextOverlay  mConsoleTextOverlay;
-
-        // UIZLayout mWorkspaceLayout;
-        // UIImage mWorkspaceBackground;
-
-        //   private:
-        //     std::vector<SE::Core::DotNetClass *> mScripts;
-
-        //   private:
-        //     bool                StartCurrentScript( bool aState );
-        //     Ref<DotNetInstance> mCurrentScript{};
-        //     bool                mCurrentScriptIsRunning{};
-
-        //     void ConsoleOut( std::string const &aString );
+        Ref<UILinkElementTracePlot> mTracePlot;
+        Ref<UILinkElementTable>     mLinkElementTable;
     };
 } // namespace SE::OtdrEditor

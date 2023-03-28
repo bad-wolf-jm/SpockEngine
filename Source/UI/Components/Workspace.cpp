@@ -1,5 +1,8 @@
 #include "Workspace.h"
 
+#include <algorithm>
+#include <iterator>
+
 namespace SE::Core
 {
 
@@ -71,26 +74,19 @@ namespace SE::Core
 
         if( mCloseQueue.empty() )
         {
-            // Close queue is locked once we started a popup
-            for( int i = 0; i < mDocuments.size(); i++ )
-            {
-                auto lDocument = mDocuments[i];
-                if( lDocument->mWantClose )
-                {
-                    lDocument->mWantClose = false;
-                    mCloseQueue.push_back( lDocument );
-                }
-            }
+            std::copy_if( mDocuments.begin(), mDocuments.end(), std::back_inserter( mCloseQueue ),
+                          []( auto x ) { return x->mWantClose; } );
+            std::for_each( mDocuments.begin(), mDocuments.end(), []( auto x ) { x->mWantClose = false; } );
         }
 
         // Display closing confirmation UI
         if( !mCloseQueue.empty() )
         {
-            int close_queue_unsaved_documents = 0;
-            for( int n = 0; n < mCloseQueue.size(); n++ )
-                if( mCloseQueue[n]->mDirty ) close_queue_unsaved_documents++;
+            int lUnsavedDocumentCount = std::count_if( mCloseQueue.begin(), mCloseQueue.end(), []( auto x ) { return x->mDirty; } );
+            // for( int n = 0; n < mCloseQueue.size(); n++ )
+            //     if( mCloseQueue[n]->mDirty ) lUnsavedDocumentCount++;
 
-            if( close_queue_unsaved_documents == 0 )
+            if( lUnsavedDocumentCount == 0 )
             {
                 // Close documents when all are unsaved
                 for( int n = 0; n < mCloseQueue.size(); n++ ) mCloseQueue[n]->DoForceClose();
@@ -138,5 +134,10 @@ namespace SE::Core
                 }
             }
         }
+
+        std::vector<Ref<UIWorkspaceDocument>> lOpenedDocuments;
+        std::copy_if( mDocuments.begin(), mDocuments.end(), std::back_inserter( lOpenedDocuments ),
+                      []( Ref<UIWorkspaceDocument> x ) { return x->mOpen; } );
+        mDocuments = std::move( lOpenedDocuments );
     }
 } // namespace SE::Core

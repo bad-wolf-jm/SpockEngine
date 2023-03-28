@@ -6,11 +6,11 @@ namespace SE::Core
 {
     struct UIWorkspaceDocument : public UIComponent
     {
-        std::string mName;              // Document title/
-        bool        mOpen      = true;  // Set when open (we keep an array of all available documents to simplify demo code!)
-        bool        mOpenPrev  = true;  // Copy of Open from last update.
-        bool        mDirty     = false; // Set when the document has been modified
-        bool        mWantClose = false; // Set when the document
+        std::string mName;
+        bool        mOpen      = true;
+        bool        mOpenPrev  = true;
+        bool        mDirty     = false;
+        bool        mWantClose = false;
 
         UIWorkspaceDocument()                              = default;
         UIWorkspaceDocument( UIWorkspaceDocument const & ) = default;
