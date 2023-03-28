@@ -48,7 +48,7 @@ namespace SE::OtdrEditor
 
         auto lPeakPlot = New<sFloat64LinePlot>();
         {
-            auto lTrace = aLinkElement.mPeakTrace;// DotNetInstance( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), aLinkElement.mPeakTrace );
+            auto lTrace = aLinkElement.mPeakTrace;
             if( aLinkElement.mPeakTrace && *aLinkElement.mPeakTrace )
             {
                 auto lSamples      = lTrace->GetPropertyValue<MonoObject *>( "Samples" );
