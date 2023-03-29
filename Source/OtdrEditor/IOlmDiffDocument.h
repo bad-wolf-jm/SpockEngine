@@ -14,6 +14,7 @@
 #include "UI/Components/TextOverlay.h"
 #include "UI/Components/TextToggleButton.h"
 #include "UI/Components/Workspace.h"
+#include "UI/Components/PropertyValue.h"
 #include "UI/Form.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/Layouts/ZLayout.h"
@@ -43,6 +44,13 @@ namespace SE::OtdrEditor
         std::vector<sLinkElement> mLinkElementVector1;
 
       private:
+        Ref<UIBoxLayout> mTopLayout;
+
+        Ref<UIPropertyValue> mLaunchFiberLength;
+        Ref<UIPropertyValue> mReceiveFiberLength;
+        Ref<UIPropertyValue> mLinkLength;
+        Ref<UIPropertyValue> mFiberCode;
+
         Ref<UIBoxLayout> mEventLayout;
         Ref<UIBoxLayout> mMainLayout;
 

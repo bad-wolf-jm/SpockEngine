@@ -155,11 +155,11 @@ namespace SE::OtdrEditor
 
         mWorkspaceArea.Update();
 
-        if( ImGui::Begin( "ASSEMBLIES", NULL, ImGuiWindowFlags_None ) )
-        {
-            DotNetRuntime::DisplayAssemblies();
-        }
-        ImGui::End();
+        // if( ImGui::Begin( "ASSEMBLIES", NULL, ImGuiWindowFlags_None ) )
+        // {
+        //     DotNetRuntime::DisplayAssemblies();
+        // }
+        // ImGui::End();
 
         // if( ImGui::Begin( "CLASSES", NULL, ImGuiWindowFlags_None ) )
         // {
@@ -281,62 +281,62 @@ namespace SE::OtdrEditor
         }
         ImGui::End();
 
-        if( ImGui::Begin( "PROFILING", &p_open, ImGuiWindowFlags_None ) )
-        {
-            math::vec2  l_WindowConsoleSize     = UI::GetAvailableContentSpace();
-            static bool lIsProfiling            = false;
-            static bool lProfilingDataAvailable = false;
+        // if( ImGui::Begin( "PROFILING", &p_open, ImGuiWindowFlags_None ) )
+        // {
+        //     math::vec2  l_WindowConsoleSize     = UI::GetAvailableContentSpace();
+        //     static bool lIsProfiling            = false;
+        //     static bool lProfilingDataAvailable = false;
 
-            static std::unordered_map<std::string, float>    lProfilingResults = {};
-            static std::unordered_map<std::string, uint32_t> lProfilingCount   = {};
+        //     static std::unordered_map<std::string, float>    lProfilingResults = {};
+        //     static std::unordered_map<std::string, uint32_t> lProfilingCount   = {};
 
-            std::string lButtonText = lIsProfiling ? "Stop capture" : "Start capture";
-            if( UI::Button( lButtonText.c_str(), { 150.0f, 50.0f } ) )
-            {
-                if( lIsProfiling )
-                {
-                    auto lResults = SE::Core::Instrumentor::Get().EndSession();
-                    SE::Logging::Info( "{}", lResults->mEvents.size() );
-                    lIsProfiling            = false;
-                    lProfilingDataAvailable = true;
-                    lProfilingResults       = {};
-                    for( auto &lEvent : lResults->mEvents )
-                    {
-                        if( lProfilingResults.find( lEvent.mName ) == lProfilingResults.end() )
-                        {
-                            lProfilingResults[lEvent.mName] = lEvent.mElapsedTime;
-                            lProfilingCount[lEvent.mName]   = 1;
-                        }
-                        else
-                        {
-                            lProfilingResults[lEvent.mName] += lEvent.mElapsedTime;
-                            lProfilingCount[lEvent.mName] += 1;
-                        }
-                    }
+        //     std::string lButtonText = lIsProfiling ? "Stop capture" : "Start capture";
+        //     if( UI::Button( lButtonText.c_str(), { 150.0f, 50.0f } ) )
+        //     {
+        //         if( lIsProfiling )
+        //         {
+        //             auto lResults = SE::Core::Instrumentor::Get().EndSession();
+        //             SE::Logging::Info( "{}", lResults->mEvents.size() );
+        //             lIsProfiling            = false;
+        //             lProfilingDataAvailable = true;
+        //             lProfilingResults       = {};
+        //             for( auto &lEvent : lResults->mEvents )
+        //             {
+        //                 if( lProfilingResults.find( lEvent.mName ) == lProfilingResults.end() )
+        //                 {
+        //                     lProfilingResults[lEvent.mName] = lEvent.mElapsedTime;
+        //                     lProfilingCount[lEvent.mName]   = 1;
+        //                 }
+        //                 else
+        //                 {
+        //                     lProfilingResults[lEvent.mName] += lEvent.mElapsedTime;
+        //                     lProfilingCount[lEvent.mName] += 1;
+        //                 }
+        //             }
 
-                    for( auto &lEntry : lProfilingResults )
-                    {
-                        lProfilingResults[lEntry.first] /= lProfilingCount[lEntry.first];
-                    }
-                }
-                else
-                {
-                    SE::Core::Instrumentor::Get().BeginSession( "Session" );
-                    lIsProfiling            = true;
-                    lProfilingDataAvailable = false;
-                    lProfilingResults       = {};
-                }
-            }
+        //             for( auto &lEntry : lProfilingResults )
+        //             {
+        //                 lProfilingResults[lEntry.first] /= lProfilingCount[lEntry.first];
+        //             }
+        //         }
+        //         else
+        //         {
+        //             SE::Core::Instrumentor::Get().BeginSession( "Session" );
+        //             lIsProfiling            = true;
+        //             lProfilingDataAvailable = false;
+        //             lProfilingResults       = {};
+        //         }
+        //     }
 
-            if( lProfilingDataAvailable )
-            {
-                for( auto &lEntry : lProfilingResults )
-                {
-                    UI::Text( "{} ----> {} us", lEntry.first, lEntry.second );
-                }
-            }
-        }
-        ImGui::End();
+        //     if( lProfilingDataAvailable )
+        //     {
+        //         for( auto &lEntry : lProfilingResults )
+        //         {
+        //             UI::Text( "{} ----> {} us", lEntry.first, lEntry.second );
+        //         }
+        //     }
+        // }
+        // ImGui::End();
 
         ImPlot::ShowDemoWindow();
         ImGui::ShowDemoWindow();
