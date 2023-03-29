@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <locale>
+#include <numeric>
 
 #include "Core/Profiling/BlockTimer.h"
 
@@ -25,15 +26,22 @@ namespace SE::OtdrEditor
     UILinkElementTracePlot::UILinkElementTracePlot()
         : UIBoxLayout( eBoxLayoutOrientation::VERTICAL )
     {
-        mTitle    = New<UILabel>( "TITLE" );
+        mTitle    = New<UILabel>( "" );
+        mSubTitle = New<UILabel>( "" );
         mPlotArea = New<UIPlot>();
 
-        Add( mTitle.get(), 50, false, true );
+        mTitle->SetAlignment(eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER);
+
+        mSubTitle->SetTextColor( math::vec4{ 0.5, 0.5, 0.5, 1.0 } );
+        mSubTitle->SetAlignment(eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER);
+        Add( mTitle.get(), 30, false, true );
+        Add( mSubTitle.get(), 30, false, true );
         Add( mPlotArea.get(), true, true );
     }
 
     void UILinkElementTracePlot::Clear() { mPlotArea->Clear(); }
     void UILinkElementTracePlot::SetTitle( std::string aTitle ) { mTitle->SetText( aTitle ); }
+    void UILinkElementTracePlot::SetSubTitle( std::string aTitle ) { mSubTitle->SetText( aTitle ); }
 
     void UILinkElementTracePlot::SetData( std::vector<MonoObject *> &lTraceDataVector )
     {
@@ -56,6 +64,9 @@ namespace SE::OtdrEditor
     void UILinkElementTracePlot::SetEventData( sLinkElement const &aLinkElement, bool aDisplayEventBounds, bool aDisplayLsaFit,
                                                bool aAdjustAxisScale )
     {
+        SetTitle( "Single Event Trace" );
+        std::vector<std::string> lSubTitle;
+
         static auto &lSinglePulseTraceClass = DotNetRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
 
         auto lPeakPlot = New<sFloat64LinePlot>();
@@ -81,6 +92,9 @@ namespace SE::OtdrEditor
                     lPeakPlot->mX[i] = ( ( static_cast<float>( i ) / static_cast<float>( lLast ) ) * ( lX1 - lX0 ) + lX0 ) * 0.001;
 
                 mPlotArea->Add( lPeakPlot );
+
+                lSubTitle.push_back( fmt::format( "Peak trace: samples={}, period={} ns, length={} km", lPeakPlot->mY.size(),
+                                                  lDeltaX * 1e9, ( lEndPosition - lStartPosition ) * 0.001 ) );
             }
         }
 
@@ -108,8 +122,20 @@ namespace SE::OtdrEditor
                         ( ( static_cast<float>( i ) / static_cast<float>( lLast ) ) * ( lX1 - lX0 ) + lX0 ) * 0.001;
 
                 mPlotArea->Add( lDetectionPlot );
+
+                lSubTitle.push_back( fmt::format( "Detection trace: samples={}, period={} ns, length={} km", lPeakPlot->mY.size(),
+                                                  lDeltaX * 1e9, ( lEndPosition - lStartPosition ) * 0.001 ) );
             }
         }
+
+        auto StringJoin = []( std::vector<std::string> aList )
+        {
+            return aList.empty() ? "N/A"
+                                 : std::accumulate( aList.begin(), aList.end(), std::string(),
+                                                    []( const std::string &a, const std::string &b ) -> std::string
+                                                    { return a + ( a.length() > 0 ? " - " : "" ) + b; } );
+        };
+        SetSubTitle( StringJoin( lSubTitle ) );
 
         auto &lLinkElement   = *aLinkElement.mLinkElement;
         auto &lPhysicalEvent = *aLinkElement.mPhysicalEvent;
@@ -252,12 +278,9 @@ namespace SE::OtdrEditor
 
     void UILinkElementTracePlot::SetEventData( std::vector<sLinkElement> &aLinkElement )
     {
-        // static auto &lSinglePulseTraceClass = DotNetRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
-
-        for( int i = 0; i < aLinkElement.size(); i++ )
-        {
-            SetEventData( aLinkElement[i] );
-        }
+        for( int i = 0; i < aLinkElement.size(); i++ ) SetEventData( aLinkElement[i] );
+        SetTitle("All traces");
+        SetSubTitle("");
     }
 
 } // namespace SE::OtdrEditor
