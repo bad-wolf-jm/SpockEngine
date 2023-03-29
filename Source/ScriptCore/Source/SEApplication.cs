@@ -6,9 +6,9 @@ namespace SpockEngine
     {
         public SEApplication() { }
 
-        public virtual void Initialize() { }
+        public virtual void Initialize(string aConfigurationPath) { }
 
-        public virtual void Shutdown() { }
+        public virtual void Shutdown(string aConfigurationPath) { }
 
         public virtual void Update(float aTs) { }
 

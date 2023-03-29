@@ -285,9 +285,10 @@ int main( int argc, char **argv )
     }
 
     auto lApplicationName = lProgramArguments->get<std::string>( "--application" );
+    fs::path lApplicationConfigurationPath = "";
     if( !lApplicationName.empty() )
     {
-        auto lApplicationConfigurationPath = lLocalConfigFolder / "OtdrTool" / "Config" / fmt::format( "{}.yaml", lApplicationName );
+         lApplicationConfigurationPath = lLocalConfigFolder / "OtdrTool" / "Config" / fmt::format( "{}.yaml", lApplicationName );
         auto lApplicationAssembly =
             fs::path( "D:\\Build\\Lib" ) / "debug" / lApplicationName / fmt::format( "{}.dll", lApplicationName );
         if( fs::exists( lApplicationAssembly ) ) DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
@@ -321,7 +322,7 @@ int main( int argc, char **argv )
     SE::OtdrEditor::BaseOtdrApplication lEditorApplication;
 
     if( !lApplicationName.empty() )
-        lEditorApplication.Init( fmt::format( "{}.{}", lApplicationName, lApplicationName ) );
+        lEditorApplication.Init( fmt::format( "{}.{}", lApplicationName, lApplicationName ), lApplicationConfigurationPath );
     else
         lEditorApplication.Init();
 
@@ -333,7 +334,7 @@ int main( int argc, char **argv )
     {
     }
 
-    lEditorApplication.Shutdown();
+    lEditorApplication.Shutdown(lApplicationConfigurationPath);
     SaveConfiguration( lConfigurationFile, lMetrinoPath, lWindowSize, lWindowPosition, lUIConfiguration );
 
     DotNetRuntime::Shutdown();

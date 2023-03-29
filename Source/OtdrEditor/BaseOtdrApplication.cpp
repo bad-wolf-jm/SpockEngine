@@ -60,7 +60,7 @@ namespace SE::OtdrEditor
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
     }
 
-    void BaseOtdrApplication::Init( std::string aAppClass )
+    void BaseOtdrApplication::Init( std::string aAppClass, fs::path aConfigurationPath )
     {
         mEditorWindow =
             OtdrWindow( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
@@ -71,8 +71,9 @@ namespace SE::OtdrEditor
 
         if( lApplicationType )
         {
-            mApplicationInstance = lApplicationType.Instantiate();
-            mApplicationInstance->CallMethod( "Initialize" );
+            mApplicationInstance    = lApplicationType.Instantiate();
+            auto lConfigurationPath = DotNetRuntime::NewString( aConfigurationPath.string() );
+            mApplicationInstance->CallMethod( "Initialize", lConfigurationPath );
         }
         else
         {
@@ -80,8 +81,9 @@ namespace SE::OtdrEditor
         }
     }
 
-    void BaseOtdrApplication::Shutdown()
+    void BaseOtdrApplication::Shutdown( fs::path aConfigurationPath )
     {
-        if( mApplicationInstance ) mApplicationInstance->CallMethod( "Shutdown" );
+        auto lConfigurationPath = DotNetRuntime::NewString( aConfigurationPath.string() );
+        if( mApplicationInstance ) mApplicationInstance->CallMethod( "Shutdown", lConfigurationPath );
     }
 } // namespace SE::OtdrEditor
