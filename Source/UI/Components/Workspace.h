@@ -45,11 +45,15 @@ namespace SE::Core
         UIWorkspace()  = default;
         ~UIWorkspace() = default;
 
+        void Add( UIWorkspaceDocument* aDocument );
         void Add( Ref<UIWorkspaceDocument> aDocument );
 
       protected:
-        std::vector<Ref<UIWorkspaceDocument>> mDocuments;
-        std::vector<Ref<UIWorkspaceDocument>> mCloseQueue;
+        std::vector<UIWorkspaceDocument*> mDocuments;
+        std::vector<UIWorkspaceDocument*> mCloseQueue;
+
+        std::vector<Ref<UIWorkspaceDocument>> mDocumentRefs;
+        std::vector<Ref<UIWorkspaceDocument>> mCloseQueueRefs;
 
       protected:
         void PushStyles();
@@ -57,5 +61,10 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+
+      public:
+        static void *UIWorkspace_Create();
+        static void  UIWorkspace_Destroy( void *aSelf );
+        static void  UIWorkspace_Add( void *aSelf, void *aDocument );
     };
 } // namespace SE::Core

@@ -37,6 +37,7 @@
 #include "UI/Components/Table.h"
 #include "UI/Components/TextOverlay.h"
 #include "UI/Components/TextToggleButton.h"
+#include "UI/Components/Workspace.h"
 #include "UI/Form.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/Layouts/ZLayout.h"
@@ -754,6 +755,11 @@ namespace SE::Core
 
         mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_Create", UITextOverlay::UITextOverlay_Create );
         mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_Destroy", UITextOverlay::UITextOverlay_Destroy );
-        mono_add_internal_call( "SpockEngine.UIUITextOverlayTable::UITextOverlay_AddColumn", UITextOverlay::UITextOverlay_AddText );
+        mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_AddText", UITextOverlay::UITextOverlay_AddText );
+
+        mono_add_internal_call( "SpockEngine.UIWorkspace::UIWorkspace_Create", UIWorkspace::UIWorkspace_Create );
+        mono_add_internal_call( "SpockEngine.UIWorkspace::UIWorkspace_Destroy", UIWorkspace::UIWorkspace_Destroy );
+        mono_add_internal_call( "SpockEngine.UIWorkspace::UIWorkspace_Add", UIWorkspace::UIWorkspace_Add );
+
     }
 } // namespace SE::Core

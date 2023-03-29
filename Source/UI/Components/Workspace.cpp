@@ -30,7 +30,13 @@ namespace SE::Core
         return lTextSize;
     }
 
-    void UIWorkspace::Add( Ref<UIWorkspaceDocument> aDocument ) { mDocuments.push_back( aDocument ); }
+    void UIWorkspace::Add( UIWorkspaceDocument *aDocument ) { mDocuments.push_back( aDocument ); }
+    void UIWorkspace::Add( Ref<UIWorkspaceDocument> aDocument )
+    {
+        Add( aDocument.get() );
+
+        mDocumentRefs.push_back( aDocument );
+    }
 
     void UIWorkspace::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
@@ -135,9 +141,27 @@ namespace SE::Core
             }
         }
 
-        std::vector<Ref<UIWorkspaceDocument>> lOpenedDocuments;
+        std::vector<UIWorkspaceDocument *> lOpenedDocuments;
         std::copy_if( mDocuments.begin(), mDocuments.end(), std::back_inserter( lOpenedDocuments ),
-                      []( Ref<UIWorkspaceDocument> x ) { return x->mOpen; } );
+                      []( UIWorkspaceDocument *x ) { return x->mOpen; } );
         mDocuments = std::move( lOpenedDocuments );
     }
+
+    void *UIWorkspace::UIWorkspace_Create()
+    {
+        auto lNewWorkspace = new UIWorkspace();
+
+        return static_cast<void *>( lNewWorkspace );
+    }
+
+    void UIWorkspace::UIWorkspace_Destroy( void *aSelf ) { delete static_cast<UIWorkspace *>( aSelf ); }
+
+    void UIWorkspace::UIWorkspace_Add( void *aSelf, void *aDocument )
+    {
+        auto lSelf     = static_cast<UIWorkspace *>( aSelf );
+        auto lDocument = static_cast<UIWorkspaceDocument *>( aDocument );
+
+        lSelf->Add( lDocument );
+    }
+
 } // namespace SE::Core
