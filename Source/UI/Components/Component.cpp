@@ -1,5 +1,7 @@
 #include "Component.h"
 
+#include "Engine/Engine.h"
+
 namespace SE::Core
 {
     void UIComponent::SetPadding( float aAll ) { return SetPadding( aAll, aAll, aAll, aAll ); }
@@ -84,6 +86,7 @@ namespace SE::Core
             lDrawList->AddRectFilled( lScreenPosition, lScreenPosition + aSize, ImColor( mBackgroundColor ), 0.0f );
         }
 
+        SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( mFont );
         PushStyles();
 
         ImVec2 lContentSize     = aSize - GetContentPadding();
@@ -92,6 +95,7 @@ namespace SE::Core
         DrawContent( lContentPosition, lContentSize );
 
         PopStyles();
+        SE::Core::Engine::GetInstance()->UIContext()->PopFont();
 
         ImGui::PopID();
 

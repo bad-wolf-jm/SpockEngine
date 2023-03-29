@@ -40,18 +40,26 @@ namespace SE::OtdrEditor
 
         mLaunchFiberLength = New<UIPropertyValue>( "Launch Fiber Length", eBoxLayoutOrientation::VERTICAL );
         mLaunchFiberLength->SetBackgroundColor( math::vec4{ 0.025f, 0.025f, 0.025f, 1.0f } );
+        mLaunchFiberLength->SetValueFont( FontFamilyFlags::DISPLAY );
+        mLaunchFiberLength->SetPadding(10);
         mTopLayout->Add( mLaunchFiberLength.get(), true, true );
 
         mReceiveFiberLength = New<UIPropertyValue>( "Receive Fiber Length", eBoxLayoutOrientation::VERTICAL );
         mReceiveFiberLength->SetBackgroundColor( math::vec4{ 0.025f, 0.025f, 0.025f, 1.0f } );
+        mReceiveFiberLength->SetValueFont( FontFamilyFlags::DISPLAY );
+        mReceiveFiberLength->SetPadding(10);
         mTopLayout->Add( mReceiveFiberLength.get(), true, true );
 
         mLinkLength = New<UIPropertyValue>( "Link Length", eBoxLayoutOrientation::VERTICAL );
         mLinkLength->SetBackgroundColor( math::vec4{ 0.025f, 0.025f, 0.025f, 1.0f } );
+        mLinkLength->SetValueFont( FontFamilyFlags::DISPLAY );
+        mLinkLength->SetPadding(10);
         mTopLayout->Add( mLinkLength.get(), true, true );
 
         mFiberCode = New<UIPropertyValue>( "Fiber Code", eBoxLayoutOrientation::VERTICAL );
         mFiberCode->SetBackgroundColor( math::vec4{ 0.025f, 0.025f, 0.025f, 1.0f } );
+        mFiberCode->SetValueFont( FontFamilyFlags::DISPLAY );
+        mFiberCode->SetPadding(10);
         mTopLayout->Add( mFiberCode.get(), true, true );
 
         mEventLayout = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
@@ -60,7 +68,7 @@ namespace SE::OtdrEditor
 
         mMainLayout = New<UIBoxLayout>( eBoxLayoutOrientation::VERTICAL );
         mMainLayout->SetItemSpacing( 15.0f );
-        mMainLayout->Add( mTopLayout.get(), 50.0f, true, true );
+        mMainLayout->Add( mTopLayout.get(), 60.0f, true, true );
         mMainLayout->Add( mEventLayout.get(), true, true );
         mMainLayout->Add( mTracePlot.get(), true, true );
 
@@ -125,7 +133,8 @@ namespace SE::OtdrEditor
         mFiberCode->SetValue( lFiberType );
 
         {
-            MonoObject *lLinkElementData = mDataInstance->CallMethod( "GetLinkElements", &aReanalyse );
+            auto        lReanalyze       = false;
+            MonoObject *lLinkElementData = mDataInstance->CallMethod( "GetLinkElements", &lReanalyze );
 
             auto lLinkElementVector = DotNetRuntime::AsVector<sDotNetLinkElement>( lLinkElementData );
 

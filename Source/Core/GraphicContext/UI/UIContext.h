@@ -1,5 +1,7 @@
 #pragma once
 
+#include <map>
+
 #include "Graphics/Vulkan/DescriptorSet.h"
 
 #include "Graphics/Vulkan/ARenderContext.h"
@@ -43,12 +45,16 @@ namespace SE::Core
 
     enum class FontFamilyFlags : uint8_t
     {
-        NORMAL = 0,
-        BOLD   = ( 1 << 0 ),
-        ITALIC = ( 1 << 1 ),
-        MONO   = ( 1 << 2 )
+        DISPLAY,
+        H1,
+        H2,
+        H3,
+        EM,
+        NORMAL,
+        SMALL,
+        TINY,
+        MONOSPACE
     };
-    using FontFamily = EnumSet<FontFamilyFlags, 0xff>;
 
     class UIContext
     {
@@ -60,7 +66,7 @@ namespace SE::Core
         void BeginFrame();
         void EndFrame( ARenderContext &aRenderContext );
 
-        void PushFontFamily( FontFamily aFamily );
+        void PushFontFamily( FontFamilyFlags aFamily );
         void PopFont();
 
         ImGuiIO &GetIO();
@@ -68,8 +74,8 @@ namespace SE::Core
         ImageHandle        CreateTextureHandle( Ref<Graphics::VkSampler2D> aTexture );
         Ref<DescriptorSet> AddTexture( Ref<Graphics::VkSampler2D> aTexture );
 
-        Ref<VkGraphicContext> GraphicContext() {return mGraphicContext;}
-        
+        Ref<VkGraphicContext> GraphicContext() { return mGraphicContext; }
+
         ImFont *mMonoFont;
         ImFont *mMainFont;
         ImFont *mBoldFont;
@@ -96,6 +102,10 @@ namespace SE::Core
 
         Ref<VkGpuBuffer> mVertexBuffer;
         Ref<VkGpuBuffer> mIndexBuffer;
+
+        std::map<FontFamilyFlags, ImFont *> mFonts;
+
+        ImFont *LoadFont( fs::path aFontName, fs::path aIconFontName, uint32_t aFontSize );
 
       private:
         void SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData );

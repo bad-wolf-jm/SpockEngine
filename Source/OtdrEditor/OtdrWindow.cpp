@@ -23,8 +23,8 @@
 #include "mono/metadata/object.h"
 #include "mono/metadata/tabledefs.h"
 
-#include "IOlmDocument.h"
 #include "IOlmDiffDocument.h"
+#include "IOlmDocument.h"
 
 namespace SE::OtdrEditor
 {
@@ -104,7 +104,7 @@ namespace SE::OtdrEditor
         //     } );
 
         mTestFailResultTable->OnElementClicked( [&]( sTestFailElement const &aElement )
-                                                { LoadIOlmDiffData( aElement.mFilename, true ); } );
+                                                { LoadIOlmDiffData( aElement.mFilename, true ) } );
     }
 
     OtdrWindow::OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
@@ -451,7 +451,7 @@ namespace SE::OtdrEditor
             mTracePlot.Clear();
             mTracePlot.SetEventData( mLinkElementVector );
 
-            mMeasurementOverview.SetData(mDataInstance);
+            mMeasurementOverview.SetData( mDataInstance );
         }
     }
 
