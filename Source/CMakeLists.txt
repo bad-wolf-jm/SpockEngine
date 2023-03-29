@@ -53,6 +53,7 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/Layouts/BoxLayout.cpp
     UI/Layouts/ZLayout.cpp
     UI/Form.cpp
+    UI/Dialog.cpp
     
     Core/Optix/OptixContext.cpp
     Core/Optix/OptixModule.cpp

@@ -104,7 +104,7 @@ namespace SE::OtdrEditor
         //     } );
 
         mTestFailResultTable->OnElementClicked( [&]( sTestFailElement const &aElement )
-                                                { LoadIOlmDiffData( aElement.mFilename, true ) } );
+                                                { LoadIOlmDiffData( aElement.mFilename, true ); } );
     }
 
     OtdrWindow::OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
