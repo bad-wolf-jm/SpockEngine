@@ -37,6 +37,11 @@ namespace SE::Core
         void SetContent( UIComponent *aContent );
 
         void Update();
+
+        static void *UIWorkspaceDocument_Create();
+        static void  UIWorkspaceDocument_Destroy( void *aInstance );
+        static void  UIWorkspaceDocument_SetContent( void *aInstance, void *aContent );
+        static void  UIWorkspaceDocument_Update( void *aInstance );
     };
 
     class UIWorkspace : public UIComponent
