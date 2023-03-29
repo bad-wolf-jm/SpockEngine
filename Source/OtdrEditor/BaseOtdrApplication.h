@@ -41,8 +41,8 @@ namespace SE::OtdrEditor
         ~BaseOtdrApplication() = default;
 
         void Init();
-        void Init(std::string aAppClass);
-        void Shutdown();
+        void Init(std::string aAppClass, fs::path aConfigurationPath);
+        void Shutdown(fs::path aConfigurationPath);
 
         void RenderScene() {}
         void Update( Timestep ts );
