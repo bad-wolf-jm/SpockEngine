@@ -44,8 +44,6 @@ namespace SE::OtdrEditor
             [&]( sLinkElement const &aElement )
             {
                 auto lWavelength = aElement.mPhysicalEvent->GetPropertyValue<double>( "Wavelength" ) * 1e9;
-                std::string lTitle = fmt::format("Event Trace: {} nm", lWavelength);
-                mTracePlot->SetTitle(lTitle);
                 mTracePlot->Clear();
                 mTracePlot->SetEventData( aElement, true, true, true );
             } );
@@ -122,6 +120,7 @@ namespace SE::OtdrEditor
             }
 
             mLinkElementTable->SetData( mLinkElementVector );
+
             mTracePlot->Clear();
             mTracePlot->SetEventData( mLinkElementVector );
         }

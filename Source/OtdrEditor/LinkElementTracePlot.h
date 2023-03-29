@@ -34,6 +34,7 @@ namespace SE::OtdrEditor
         ~UILinkElementTracePlot() = default;
 
         void SetTitle(std::string aTitle);
+        void SetSubTitle(std::string aTitle);
 
         void SetData( std::vector<MonoObject *> &lTraceDataVector );
         void SetEventData( sLinkElement const &lEventDataVector, bool aDisplayEventBounds = false, bool aDisplayLsaFit = false,
@@ -43,6 +44,7 @@ namespace SE::OtdrEditor
         void Clear();
       private:
         Ref<UILabel> mTitle;
+        Ref<UILabel> mSubTitle;
         Ref<UIPlot>  mPlotArea;
     };
 } // namespace SE::OtdrEditor
