@@ -4,13 +4,26 @@
 namespace SE::OtdrEditor
 {
     UIPropertyValue::UIPropertyValue( std::string aName )
-        : UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL )
+        : UIPropertyValue( aName, eBoxLayoutOrientation::HORIZONTAL )
+    {
+    }
+
+    UIPropertyValue::UIPropertyValue( std::string aName, eBoxLayoutOrientation aOrientation )
+        : UIBoxLayout( aOrientation )
     {
         mName  = New<UILabel>( aName );
         mValue = New<UILabel>( "N/A" );
 
-        Add( mName.get(), true, false, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
-        Add( mValue.get(), true, false, eHorizontalAlignment::RIGHT, eVerticalAlignment::CENTER );
+        if( aOrientation == eBoxLayoutOrientation::HORIZONTAL )
+        {
+            Add( mName.get(), true, false, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+            Add( mValue.get(), true, false, eHorizontalAlignment::RIGHT, eVerticalAlignment::CENTER );
+        }
+        else
+        {
+            Add( mName.get(), true, false, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
+            Add( mValue.get(), true, false, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER );
+        }
     }
 
     void UIPropertyValue::SetValue( std::string aValue ) { mValue->SetText( aValue ); }

@@ -18,6 +18,7 @@ namespace SE::OtdrEditor
         ~UIPropertyValue() = default;
 
         UIPropertyValue( std::string aName );
+        UIPropertyValue( std::string aName, eBoxLayoutOrientation aOrientation );
 
         void SetValue( std::string aValue );
 
