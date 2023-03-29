@@ -76,7 +76,7 @@ namespace SE::Core
 
     ImVec2 UITextOverlay::RequiredSize()
     {
-        SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONO );
+        SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONOSPACE );
         auto lHeight = ImGui::GetFontSize();
         auto lRadius = lHeight * 0.5f;
         SE::Core::Engine::GetInstance()->UIContext()->PopFont();
@@ -97,7 +97,7 @@ namespace SE::Core
         auto lScreenPosition = ImGui::GetCursorScreenPos();
         lDrawList->AddRectFilled( lScreenPosition, lScreenPosition + aSize, ImColor( 0, 0, 0, 225 ), 0.0f );
 
-        SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONO );
+        SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONOSPACE );
         auto lHeight = ImGui::GetFontSize();
         auto lRadius = lHeight * 0.5f;
         SE::Core::Engine::GetInstance()->UIContext()->PopFont();
@@ -122,7 +122,7 @@ namespace SE::Core
 
             ImGui::SetCursorPos( lLinePosition + ImVec2{ lTagWidth + 5.0f, 0.0f } );
 
-            SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONO );
+            SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONOSPACE );
             ImGui::Text( lLine.mLine.c_str() );
             SE::Core::Engine::GetInstance()->UIContext()->PopFont();
         }

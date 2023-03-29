@@ -21,6 +21,8 @@ namespace SE::OtdrEditor
         UIPropertyValue( std::string aName, eBoxLayoutOrientation aOrientation );
 
         void SetValue( std::string aValue );
+        void SetValueFont( FontFamilyFlags aFont );
+        void SetNameFont( FontFamilyFlags aFont );
 
         template <typename... _Ty>
         void SetValue( std::string aFormat, _Ty &&...aArgList )

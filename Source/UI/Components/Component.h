@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/GraphicContext/UI/UIContext.h"
 #include "UI/UI.h"
 
 namespace SE::Core
@@ -21,9 +22,10 @@ namespace SE::Core
     class UIComponent
     {
       public:
-        bool mIsVisible     = true;
-        bool mIsEnabled     = true;
-        bool mAllowDragDrop = true;
+        bool            mIsVisible     = true;
+        bool            mIsEnabled     = true;
+        bool            mAllowDragDrop = true;
+        FontFamilyFlags mFont          = FontFamilyFlags::NORMAL;
 
       public:
         UIComponent()  = default;

@@ -27,6 +27,8 @@ namespace SE::OtdrEditor
     }
 
     void UIPropertyValue::SetValue( std::string aValue ) { mValue->SetText( aValue ); }
+    void UIPropertyValue::SetValueFont( FontFamilyFlags aFont ) { mValue->mFont = aFont; }
+    void UIPropertyValue::SetNameFont( FontFamilyFlags aFont ) { mName->mFont = aFont; }
 
     void *UIPropertyValue::UIPropertyValue_Create()
     {

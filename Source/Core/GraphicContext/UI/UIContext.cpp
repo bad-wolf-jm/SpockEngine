@@ -183,28 +183,32 @@ namespace SE::Core
         ImGuiViewport *lMainViewport    = ImGui::GetMainViewport();
         lMainViewport->RendererUserData = nullptr;
 
-        static ImWchar lCharRanges[] = { 0x0020, 0x00FF, 0x2070, 0x208e, 0x2100, 0x21FF, 0x2200, 0x2300, 0x2A00, 0x2AFF, 0x370, 0x3ff, 0 };
-        static ImWchar lRanges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+        static ImWchar lCharRanges[] = { 0x0020, 0x00FF, 0x2070, 0x208e, 0x2100, 0x21FF, 0x2200,
+                                         0x2300, 0x2A00, 0x2AFF, 0x370,  0x3ff,  0 };
+        static ImWchar lRanges[]     = { ICON_MIN_FA, ICON_MAX_FA, 0 };
         ImFontConfig   lFontConfig;
         lFontConfig.MergeMode        = true;
         lFontConfig.PixelSnapH       = true;
         lFontConfig.GlyphMinAdvanceX = 10.0f;
 
-        mMonoFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mMonoFont.string().c_str(), aUIConfiguration.mFontSize, 0, lCharRanges );
-        io.Fonts->AddFontFromFileTTF( aUIConfiguration.mIconFont.string().c_str(), aUIConfiguration.mFontSize, &lFontConfig, lRanges );
-
-        mMainFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mMainFont.string().c_str(), aUIConfiguration.mFontSize, 0, lCharRanges );
-        io.Fonts->AddFontFromFileTTF( aUIConfiguration.mIconFont.string().c_str(), aUIConfiguration.mFontSize, &lFontConfig, lRanges );
-
-        mBoldFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mBoldFont.string().c_str(), aUIConfiguration.mFontSize, 0, lCharRanges );
-        io.Fonts->AddFontFromFileTTF( aUIConfiguration.mIconFont.string().c_str(), aUIConfiguration.mFontSize, &lFontConfig, lRanges );
-
-        mObliqueFont = io.Fonts->AddFontFromFileTTF( aUIConfiguration.mItalicFont.string().c_str(), aUIConfiguration.mFontSize, 0, lCharRanges );
-        io.Fonts->AddFontFromFileTTF( aUIConfiguration.mIconFont.string().c_str(), aUIConfiguration.mFontSize, &lFontConfig, lRanges );
-
-        mBoldObliqueFont =
-            io.Fonts->AddFontFromFileTTF( aUIConfiguration.mBoldItalicFont.string().c_str(), aUIConfiguration.mFontSize, 0, lCharRanges );
-        io.Fonts->AddFontFromFileTTF( aUIConfiguration.mIconFont.string().c_str(), aUIConfiguration.mFontSize, &lFontConfig, lRanges );
+        mFonts[FontFamilyFlags::DISPLAY] =
+            LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * 2 );
+        mFonts[FontFamilyFlags::H1] =
+            LoadFont( aUIConfiguration.mBoldFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * 1.5f );
+        mFonts[FontFamilyFlags::H2] =
+            LoadFont( aUIConfiguration.mBoldFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * 1.25f );
+        mFonts[FontFamilyFlags::H3] =
+            LoadFont( aUIConfiguration.mItalicFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * 1.25f );
+        mFonts[FontFamilyFlags::EM] =
+            LoadFont( aUIConfiguration.mItalicFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * 1.0f );
+        mFonts[FontFamilyFlags::NORMAL] =
+            LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize );
+        mFonts[FontFamilyFlags::SMALL] =
+            LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * .75f );
+        mFonts[FontFamilyFlags::TINY] =
+            LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * .5f );
+        mFonts[FontFamilyFlags::MONOSPACE] =
+            LoadFont( aUIConfiguration.mMonoFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize );
 
         mUIStyle = UIStyle{ true };
 
@@ -239,6 +243,24 @@ namespace SE::Core
         mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, eBufferType::INDEX_BUFFER, true, true, true, true, 1 );
     }
 
+    ImFont *UIContext::LoadFont( fs::path aFontName, fs::path aIconFontName, uint32_t aFontSize )
+    {
+        static ImWchar      lCharRanges[] = { 0x0020, 0x00FF, 0x2070, 0x208e, 0x2100, 0x21FF, 0x2200,
+                                              0x2300, 0x2A00, 0x2AFF, 0x370,  0x3ff,  0 };
+        static ImWchar      lRanges[]     = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+        static ImFontConfig lFontConfig;
+        lFontConfig.MergeMode        = true;
+        lFontConfig.PixelSnapH       = true;
+        lFontConfig.GlyphMinAdvanceX = 10.0f;
+
+        ImGuiIO &io = ImGui::GetIO();
+
+        ImFont *lFont = io.Fonts->AddFontFromFileTTF( aFontName.string().c_str(), aFontSize, nullptr, lCharRanges );
+        io.Fonts->AddFontFromFileTTF( aIconFontName.string().c_str(), aFontSize, &lFontConfig, lRanges );
+
+        return lFont;
+    }
+
     UIContext::~UIContext()
     {
         ImGui_ImplGlfw_Shutdown();
@@ -253,12 +275,12 @@ namespace SE::Core
         ImGui::NewFrame();
         ImGuizmo::BeginFrame();
         ImGuizmo::AllowAxisFlip( false );
-        ImGui::PushFont( mMainFont );
+        PushFontFamily( FontFamilyFlags::NORMAL );
     }
 
     void UIContext::EndFrame( ARenderContext &aRenderContext )
     {
-        ImGui::PopFont();
+        PopFont();
         ImGui::Render();
         ImDrawData *drawdata = ImGui::GetDrawData();
         RenderDrawData( aRenderContext, drawdata );
@@ -272,18 +294,9 @@ namespace SE::Core
         return ImGui::GetIO();
     }
 
-    void UIContext::PushFontFamily( FontFamily aFamily )
+    void UIContext::PushFontFamily( FontFamilyFlags aFamily )
     {
-        if( ( aFamily & FontFamilyFlags::BOLD ) && ( aFamily & FontFamilyFlags::ITALIC ) )
-            ImGui::PushFont( mBoldObliqueFont );
-        else if( ( aFamily & FontFamilyFlags::BOLD ) )
-            ImGui::PushFont( mBoldFont );
-        else if( ( aFamily & FontFamilyFlags::ITALIC ) )
-            ImGui::PushFont( mObliqueFont );
-        else if( ( aFamily & FontFamilyFlags::MONO ) )
-            ImGui::PushFont( mMonoFont );
-        else
-            ImGui::PushFont( mMainFont );
+        ImGui::PushFont( mFonts[aFamily] );
     }
 
     void UIContext::PopFont() { ImGui::PopFont(); }
