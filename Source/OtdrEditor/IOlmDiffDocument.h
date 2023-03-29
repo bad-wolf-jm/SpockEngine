@@ -27,26 +27,27 @@
 
 namespace SE::OtdrEditor
 {
-    class UIIolmDocument : public UIWorkspaceDocument
+    class UIIolmDiffDocument : public UIWorkspaceDocument
     {
       public:
-        UIIolmDocument() = default;
-        UIIolmDocument( fs::path aPath, bool aReanalyse );
+        UIIolmDiffDocument() = default;
+        UIIolmDiffDocument( fs::path aPath, bool aReanalyse );
 
-        UIIolmDocument( UIIolmDocument const & ) = default;
+        UIIolmDiffDocument( UIIolmDiffDocument const & ) = default;
 
-        ~UIIolmDocument() = default;
+        ~UIIolmDiffDocument() = default;
 
       private:
         Ref<DotNetInstance>       mDataInstance = nullptr;
-        std::vector<sLinkElement> mLinkElementVector;
+        std::vector<sLinkElement> mLinkElementVector0;
+        std::vector<sLinkElement> mLinkElementVector1;
 
       private:
         Ref<UIBoxLayout> mEventLayout;
         Ref<UIBoxLayout> mMainLayout;
 
         Ref<UILinkElementTracePlot> mTracePlot;
-        Ref<UILinkElementTable>     mLinkElementTable;
-        Ref<EventOverview>          mEventOverview;
+        Ref<UILinkElementTable>     mLinkElementTable0;
+        Ref<UILinkElementTable>     mLinkElementTable1;
     };
 } // namespace SE::OtdrEditor
