@@ -32,7 +32,7 @@ namespace SE::OtdrEditor
 
         mTitle->SetAlignment(eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER);
 
-        mSubTitle->SetTextColor( math::vec4{ 0.5, 0.5, 0.5, 1.0 } );
+        mSubTitle->SetTextColor( math::vec4{ 0.3, 0.3, 0.3, 1.0 } );
         mSubTitle->SetAlignment(eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER);
         Add( mTitle.get(), 30, false, true );
         Add( mSubTitle.get(), 30, false, true );

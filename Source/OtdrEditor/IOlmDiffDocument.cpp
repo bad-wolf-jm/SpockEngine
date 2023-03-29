@@ -31,15 +31,36 @@ namespace SE::OtdrEditor
         mDirty = false;
         mName  = aPath.filename().string();
 
-        mTracePlot        = New<UILinkElementTracePlot>();
+        mTracePlot         = New<UILinkElementTracePlot>();
         mLinkElementTable0 = New<UILinkElementTable>();
         mLinkElementTable1 = New<UILinkElementTable>();
+
+        mTopLayout = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
+        mTopLayout->SetItemSpacing( 15.0f );
+
+        mLaunchFiberLength = New<UIPropertyValue>( "Launch Fiber Length", eBoxLayoutOrientation::VERTICAL );
+        mLaunchFiberLength->SetBackgroundColor( math::vec4{ 0.025f, 0.025f, 0.025f, 1.0f } );
+        mTopLayout->Add( mLaunchFiberLength.get(), true, true );
+
+        mReceiveFiberLength = New<UIPropertyValue>( "Receive Fiber Length", eBoxLayoutOrientation::VERTICAL );
+        mReceiveFiberLength->SetBackgroundColor( math::vec4{ 0.025f, 0.025f, 0.025f, 1.0f } );
+        mTopLayout->Add( mReceiveFiberLength.get(), true, true );
+
+        mLinkLength = New<UIPropertyValue>( "Link Length", eBoxLayoutOrientation::VERTICAL );
+        mLinkLength->SetBackgroundColor( math::vec4{ 0.025f, 0.025f, 0.025f, 1.0f } );
+        mTopLayout->Add( mLinkLength.get(), true, true );
+
+        mFiberCode = New<UIPropertyValue>( "Fiber Code", eBoxLayoutOrientation::VERTICAL );
+        mFiberCode->SetBackgroundColor( math::vec4{ 0.025f, 0.025f, 0.025f, 1.0f } );
+        mTopLayout->Add( mFiberCode.get(), true, true );
 
         mEventLayout = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
         mEventLayout->Add( mLinkElementTable0.get(), true, true );
         mEventLayout->Add( mLinkElementTable1.get(), true, true );
 
         mMainLayout = New<UIBoxLayout>( eBoxLayoutOrientation::VERTICAL );
+        mMainLayout->SetItemSpacing( 15.0f );
+        mMainLayout->Add( mTopLayout.get(), 50.0f, true, true );
         mMainLayout->Add( mEventLayout.get(), true, true );
         mMainLayout->Add( mTracePlot.get(), true, true );
 
@@ -82,6 +103,26 @@ namespace SE::OtdrEditor
 
             auto lFiberInfo = lTraceDataInstance.GetPropertyValue( "FiberInfo", "Metrino.Otdr.PhysicalFiberCharacteristics" );
         }
+
+        auto lMeasurementOverview = mDataInstance->GetPropertyValue( "Measurement", "Metrino.Olm.OlmMeasurement" );
+
+        std::string lLinkLength = fmt::format( "{:.4f} km", lMeasurementOverview->GetPropertyValue<double>( "LinkLength" ) * 0.001f );
+        mLinkLength->SetValue( lLinkLength );
+
+        std::string lLaunchFiberLength =
+            fmt::format( "{:.4f} km", lMeasurementOverview->GetPropertyValue<double>( "LaunchFiberLength" ) * 0.001f );
+        mLaunchFiberLength->SetValue( lLaunchFiberLength );
+        std::string lReceiveFiberLength =
+            fmt::format( "{:.4f} km", lMeasurementOverview->GetPropertyValue<double>( "ReceiveFiberLength" ) * 0.001f );
+        mReceiveFiberLength->SetValue( lReceiveFiberLength );
+
+        auto lFiberInfo = mDataInstance->GetPropertyValue( "FiberInfo", "Metrino.Otdr.PhysicalFiberCharacteristics" );
+
+        const char *lCodes[]     = { "Unknown", "A", "B", "C", "D", "E", "F", "G" };
+        const char *lDiameters[] = { "N/A", "N/A", "9", "50", "62.5", "125", "N/A", "N/A" };
+        auto        lFiberCode   = lFiberInfo->GetPropertyValue<int32_t>( "FiberCode" );
+        auto        lFiberType   = fmt::format( "{} ({} \xCE\xBCm)", lCodes[lFiberCode], lDiameters[lFiberCode] );
+        mFiberCode->SetValue( lFiberType );
 
         {
             MonoObject *lLinkElementData = mDataInstance->CallMethod( "GetLinkElements", &aReanalyse );
@@ -130,9 +171,8 @@ namespace SE::OtdrEditor
             mTracePlot->SetEventData( mLinkElementVector0 );
         }
 
-
         {
-            auto lReanalyze = true;
+            auto        lReanalyze       = true;
             MonoObject *lLinkElementData = mDataInstance->CallMethod( "GetLinkElements", &lReanalyze );
 
             auto lLinkElementVector = DotNetRuntime::AsVector<sDotNetLinkElement>( lLinkElementData );
@@ -175,8 +215,6 @@ namespace SE::OtdrEditor
 
             mLinkElementTable1->SetData( mLinkElementVector1 );
         }
-
-
     }
 
 } // namespace SE::OtdrEditor
