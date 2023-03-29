@@ -86,7 +86,7 @@ namespace SE::Core
 
         for( auto const &lItem : mChildren )
         {
-            lExpandCount += lItem.mExpand ? 1 : 0;
+            // lExpandCount += lItem.mExpand ? 1 : 0;
 
             if( lItem.mFixedSize > 0.0f )
             {
@@ -97,6 +97,10 @@ namespace SE::Core
                 auto lRequiredSize = lItem.mItem->RequiredSize();
 
                 lTaken += ( mOrientation == eBoxLayoutOrientation::HORIZONTAL ) ? lRequiredSize.x : lRequiredSize.y;
+            }
+            else
+            {
+                lExpandCount += 1;
             }
         }
 
@@ -114,7 +118,7 @@ namespace SE::Core
             ImVec2 lItemPosition{};
             float  lPositionStep = 0.0f;
 
-            if( lItem.mExpand )
+            if( lItem.mExpand && !(lItem.mFixedSize > 0.0f) )
             {
                 lItemSize     = lItem.mFill ? lExpandedSize : ( lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{} );
                 lItemPosition = lItem.mFill ? lCurrentPosition

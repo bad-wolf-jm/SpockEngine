@@ -24,6 +24,7 @@
 #include "mono/metadata/tabledefs.h"
 
 #include "IOlmDocument.h"
+#include "IOlmDiffDocument.h"
 
 namespace SE::OtdrEditor
 {
@@ -103,7 +104,7 @@ namespace SE::OtdrEditor
         //     } );
 
         mTestFailResultTable->OnElementClicked( [&]( sTestFailElement const &aElement )
-                                                { LoadIOlmData( aElement.mFilename, true ); } );
+                                                { LoadIOlmDiffData( aElement.mFilename, true ); } );
     }
 
     OtdrWindow::OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
@@ -363,6 +364,11 @@ namespace SE::OtdrEditor
         ImGui::End();
 
         return lRequestQuit;
+    }
+
+    void OtdrWindow::LoadIOlmDiffData( fs::path aPath, bool aReanalyse )
+    {
+        mDocumentArea.Add( New<UIIolmDiffDocument>( aPath, aReanalyse ) );
     }
 
     void OtdrWindow::LoadIOlmData( fs::path aPath, bool aReanalyse )

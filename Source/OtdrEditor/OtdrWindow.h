@@ -93,6 +93,7 @@ namespace SE::OtdrEditor
         void ConfigureUI();
 
         void LoadIOlmData( fs::path aPath, bool aReanalyse = false );
+        void LoadIOlmDiffData( fs::path aPath, bool aReanalyse = false );
         void LoadTestReport( fs::path aPath );
 
         Ref<DotNetInstance> mDataInstance = nullptr;
