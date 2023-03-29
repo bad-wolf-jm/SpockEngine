@@ -761,5 +761,13 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIWorkspace::UIWorkspace_Destroy", UIWorkspace::UIWorkspace_Destroy );
         mono_add_internal_call( "SpockEngine.UIWorkspace::UIWorkspace_Add", UIWorkspace::UIWorkspace_Add );
 
+        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_Create",
+                                UIWorkspaceDocument::UIWorkspaceDocument_Create );
+        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_Destroy",
+                                UIWorkspaceDocument::UIWorkspaceDocument_Destroy );
+        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_SetContent",
+                                UIWorkspaceDocument::UIWorkspaceDocument_SetContent );
+        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_Update",
+                                UIWorkspaceDocument::UIWorkspaceDocument_Update );
     }
 } // namespace SE::Core

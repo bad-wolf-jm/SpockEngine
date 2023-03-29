@@ -20,6 +20,30 @@ namespace SE::Core
         if( mContent != nullptr ) mContent->Update( lContentPosition, lContentSize );
     }
 
+    void *UIWorkspaceDocument::UIWorkspaceDocument_Create()
+    {
+        auto lNewDocument = new UIWorkspaceDocument();
+
+        return static_cast<void *>( lNewDocument );
+    }
+
+    void UIWorkspaceDocument::UIWorkspaceDocument_Destroy( void *aInstance ) { delete static_cast<UIWorkspaceDocument *>( aInstance ); }
+
+    void UIWorkspaceDocument::UIWorkspaceDocument_SetContent( void *aInstance, void *aContent )
+    {
+        auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
+        auto lContent  = static_cast<UIComponent *>( aContent );
+
+        lInstance->SetContent( lContent );
+    }
+
+    void UIWorkspaceDocument::UIWorkspaceDocument_Update( void *aInstance )
+    {
+        auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
+
+        lInstance->Update();
+    }
+
     void UIWorkspace::PushStyles() {}
     void UIWorkspace::PopStyles() {}
 
