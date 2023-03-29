@@ -94,7 +94,7 @@ namespace SE::OtdrEditor
                 mPlotArea->Add( lPeakPlot );
 
                 lSubTitle.push_back( fmt::format( "Peak trace: samples={}, period={} ns, length={} km", lPeakPlot->mY.size(),
-                                                  lDeltaX * 1e9, ( lEndPosition - lStartPosition ) * 0.001 ) );
+                                                  lDeltaX * 1e9, ( lX1 - lX0 ) * 0.001 ) );
             }
         }
 
@@ -124,7 +124,7 @@ namespace SE::OtdrEditor
                 mPlotArea->Add( lDetectionPlot );
 
                 lSubTitle.push_back( fmt::format( "Detection trace: samples={}, period={} ns, length={} km", lPeakPlot->mY.size(),
-                                                  lDeltaX * 1e9, ( lEndPosition - lStartPosition ) * 0.001 ) );
+                                                  lDeltaX * 1e9, ( lX1 - lX0 ) * 0.001 ) );
             }
         }
 

@@ -20,7 +20,7 @@ namespace SE::Core
         template <typename... _ArgTypes>
         MonoObject *operator()( _ArgTypes... aArgs )
         {
-            void *lParameters[] = { (void *)&aArgs... };
+            void *lParameters[] = { (void *)aArgs... };
 
             return mInstance->InvokeMethod( mMonoMethod, lParameters );
         }
