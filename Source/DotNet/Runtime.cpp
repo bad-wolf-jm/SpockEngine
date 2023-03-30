@@ -39,6 +39,7 @@
 #include "UI/Components/TextToggleButton.h"
 #include "UI/Components/Workspace.h"
 #include "UI/Form.h"
+#include "UI/Dialog.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/Layouts/ZLayout.h"
 
@@ -588,6 +589,16 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIForm::UIForm_SetTitle", UIForm::UIForm_SetTitle );
         mono_add_internal_call( "SpockEngine.UIForm::UIForm_SetContent", UIForm::UIForm_SetContent );
         mono_add_internal_call( "SpockEngine.UIForm::UIForm_Update", UIForm::UIForm_Update );
+
+        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_Create", UIDialog::UIDialog_Create );
+        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_CreateWithTitleAndSize", UIDialog::UIDialog_CreateWithTitleAndSize );
+        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_Destroy", UIDialog::UIDialog_Destroy );
+        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_SetTitle", UIDialog::UIDialog_SetTitle );
+        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_SetSize", UIDialog::UIDialog_SetSize );
+        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_SetContent", UIDialog::UIDialog_SetContent );
+        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_Open", UIDialog::UIDialog_Open );
+        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_Close", UIDialog::UIDialog_Close );
+        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_Update", UIDialog::UIDialog_Update );
 
         mono_add_internal_call( "SpockEngine.UILabel::UILabel_Create", UILabel::UILabel_Create );
         mono_add_internal_call( "SpockEngine.UILabel::UILabel_CreateWithText", UILabel::UILabel_CreateWithText );
