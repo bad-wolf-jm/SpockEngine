@@ -37,6 +37,7 @@ namespace SE::Core
 
     void UIForm::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
 
+
     void *UIForm::UIForm_Create()
     {
         auto lNewForm = new UIForm();

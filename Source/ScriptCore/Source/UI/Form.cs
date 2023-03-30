@@ -5,7 +5,9 @@ namespace SpockEngine
 {
     public class UIForm : UIComponent
     {
-        public UIForm() : base(UIForm_Create()) { }
+        public UIForm() : this(UIForm_Create()) { }
+
+        public UIForm(ulong aDerived) : base(aDerived) { }
 
         ~UIForm() { UIForm_Destroy(mInstance); }
 
