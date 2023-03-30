@@ -88,6 +88,9 @@ namespace SE::OtdrEditor
 
             auto lHidden    = lLinkElement.GetPropertyValue<bool>( "Hidden" );
             auto lTextColor = lHidden ? ImGui::GetStyleColorVec4( ImGuiCol_TextDisabled ) : ImGui::GetStyleColorVec4( ImGuiCol_Text );
+
+            if( lE.mIsSubElement && !lHidden ) lTextColor = ImVec4{ 159 / 255.0f, 43 / 255.0f, 104 / 255.0f, lTextColor.w };
+
             auto lOtdrPhysicalEvent = lPhysicalEvent.GetPropertyValue( "PhysicalEvent", "Metrino.Otdr.PhysicalEvent" );
 
             if( lE.mIsSubElement )

@@ -9,11 +9,6 @@ namespace SE::Core
     class UIDialog : public UIComponent
     {
       public:
-        bool        Visible = false;
-        std::string Title   = "";
-        math::vec2  Size    = { 0.0f, 0.0f };
-
-      public:
         UIDialog()  = default;
         ~UIDialog() = default;
 
@@ -25,6 +20,8 @@ namespace SE::Core
         void SetContent( UIComponent *aContent );
 
         void Open();
+        void Close();
+        
         void Update();
 
       protected:

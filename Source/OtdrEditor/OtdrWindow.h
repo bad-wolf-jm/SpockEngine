@@ -21,6 +21,7 @@
 #include "UI/Components/TextToggleButton.h"
 #include "UI/Components/Workspace.h"
 #include "UI/Form.h"
+#include "UI/Dialog.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/UI.h"
 
@@ -96,12 +97,15 @@ namespace SE::OtdrEditor
         void LoadIOlmDiffData( fs::path aPath, bool aReanalyse = false );
         void LoadTestReport( fs::path aPath );
 
+
         Ref<DotNetInstance> mDataInstance = nullptr;
         std::vector<sLinkElement> mLinkElementVector;
         std::vector<sMultiPulseEvent> mEventVector;
 
         UILinkElementTracePlot mTracePlot;
         UIWorkspace mDocumentArea;
+
+        Ref<UIDialog> mTestDialog;
 
         Ref<UIMultiPulseEventTable> mEventTable;
         Ref<UIMultiPulseEventTable> mEventTable1;
