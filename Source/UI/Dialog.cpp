@@ -6,6 +6,7 @@ namespace SE::Core
         : mTitle{ aTitle }
         , mSize{ aSize }
     {
+        mIsVisible = false;
     }
 
     void UIDialog::PushStyles() {}
@@ -15,15 +16,30 @@ namespace SE::Core
     void UIDialog::SetSize( math::vec2 aSize ) { mSize = aSize; }
     void UIDialog::SetContent( UIComponent *aContent ) { mContent = aContent; }
 
-    void UIDialog::Open() { ImGui::OpenPopup( mTitle.c_str() ); }
+    void UIDialog::Open()
+    {
+        mIsVisible = true;
+        if( !ImGui::IsPopupOpen( mTitle.c_str() ) ) ImGui::OpenPopup( mTitle.c_str() );
+    }
+
+    void UIDialog::Close()
+    {
+        ImGui::CloseCurrentPopup();
+        mIsVisible = false;
+    }
 
     void UIDialog::Update()
     {
+        if( !mIsVisible ) return;
+
+        if( !ImGui::IsPopupOpen( mTitle.c_str() ) ) ImGui::OpenPopup( mTitle.c_str() );
         ImGui::SetNextWindowSize( ImVec2{ mSize.x, mSize.y } );
         ImGuiWindowFlags lFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoResize |
                                   ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings;
         ImGui::PushStyleVar( ImGuiStyleVar_WindowPadding, ImVec2{} );
-        if( ImGui::BeginPopupModal( mTitle.c_str(), nullptr, lFlags ) )
+
+        bool lOpen = true;
+        if( ImGui::BeginPopupModal( mTitle.c_str(), &lOpen, lFlags ) )
         {
             ImVec2 lContentSize     = ImGui::GetContentRegionAvail();
             ImVec2 lContentPosition = ImGui::GetCursorPos();
@@ -32,7 +48,15 @@ namespace SE::Core
 
             ImGui::EndPopup();
         }
+        if( !lOpen ) Close();
         ImGui::PopStyleVar();
+    }
+
+    ImVec2 UIDialog::RequiredSize()
+    {
+        if( mContent != nullptr ) return mContent->RequiredSize();
+
+        return ImVec2{ 100, 100 };
     }
 
     void UIDialog::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
