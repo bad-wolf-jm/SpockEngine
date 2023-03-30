@@ -19,8 +19,6 @@ namespace SE::Core
 
     void UIDialog::Update()
     {
-        if( !mIsVisible ) return;
-
         ImGui::SetNextWindowSize( ImVec2{ mSize.x, mSize.y } );
         ImGuiWindowFlags lFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoResize |
                                   ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings;
