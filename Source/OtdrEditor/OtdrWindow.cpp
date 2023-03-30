@@ -63,7 +63,7 @@ namespace SE::OtdrEditor
 
     void OtdrWindow::ConfigureUI()
     {
-        mTestDialog = New<UIDialog>("Test", math::vec2{640, 480});
+        mTestDialog = New<UIDialog>( "Test", math::vec2{ 640, 480 } );
         mWorkspaceArea.ConfigureUI();
         mLinkElementTable->OnElementClicked(
             [&]( sLinkElement const &aElement )
@@ -84,25 +84,6 @@ namespace SE::OtdrEditor
                 mTracePlot.Clear();
                 mTracePlot.SetEventData( aElement, true, true, true );
             } );
-
-        // mLinkElementTable1->OnElementClicked(
-        //     [&]( sLinkElement const &aElement )
-        //     {
-        //         static auto &lOlmMeasurementClass = DotNetRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
-        //         static auto &lOlmAttributeClass = DotNetRuntime::GetClassType(
-        //         "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute"
-        //         );
-
-        //         auto lPhysicalEvent =
-        //             New<DotNetInstance>( &lOlmMeasurementClass, lOlmMeasurementClass.Class(), aElement.mPhysicalEvent );
-        //         auto lAttributes = New<DotNetInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), aElement.mAttributes );
-
-        //         // mEventOverview.SetData( lPhysicalEvent, lAttributes );
-
-        //         // mTracePlot.SetEventData( mLinkElementTable->GetElementsByIndex( aElement.mLinkIndex ) );
-        //         mTracePlot.Clear();
-        //         mTracePlot.SetEventData( aElement, true, true );
-        //     } );
 
         mTestFailResultTable->OnElementClicked( [&]( sTestFailElement const &aElement )
                                                 { LoadIOlmDiffData( aElement.mFilename, true ); } );
@@ -155,19 +136,6 @@ namespace SE::OtdrEditor
         ImGui::End();
 
         mWorkspaceArea.Update();
-
-        // if( ImGui::Begin( "ASSEMBLIES", NULL, ImGuiWindowFlags_None ) )
-        // {
-        //     DotNetRuntime::DisplayAssemblies();
-        // }
-        // ImGui::End();
-
-        // if( ImGui::Begin( "CLASSES", NULL, ImGuiWindowFlags_None ) )
-        // {
-        //     math::vec2 l_WindowConsoleSize = UI::GetAvailableContentSpace();
-        //     mMonoClasses.Display( l_WindowConsoleSize.x, l_WindowConsoleSize.y );
-        // }
-        // ImGui::End();
 
         if( ImGui::Begin( "WS", NULL, ImGuiWindowFlags_None ) )
         {
@@ -283,63 +251,6 @@ namespace SE::OtdrEditor
             }
         }
         ImGui::End();
-
-        // if( ImGui::Begin( "PROFILING", &p_open, ImGuiWindowFlags_None ) )
-        // {
-        //     math::vec2  l_WindowConsoleSize     = UI::GetAvailableContentSpace();
-        //     static bool lIsProfiling            = false;
-        //     static bool lProfilingDataAvailable = false;
-
-        //     static std::unordered_map<std::string, float>    lProfilingResults = {};
-        //     static std::unordered_map<std::string, uint32_t> lProfilingCount   = {};
-
-        //     std::string lButtonText = lIsProfiling ? "Stop capture" : "Start capture";
-        //     if( UI::Button( lButtonText.c_str(), { 150.0f, 50.0f } ) )
-        //     {
-        //         if( lIsProfiling )
-        //         {
-        //             auto lResults = SE::Core::Instrumentor::Get().EndSession();
-        //             SE::Logging::Info( "{}", lResults->mEvents.size() );
-        //             lIsProfiling            = false;
-        //             lProfilingDataAvailable = true;
-        //             lProfilingResults       = {};
-        //             for( auto &lEvent : lResults->mEvents )
-        //             {
-        //                 if( lProfilingResults.find( lEvent.mName ) == lProfilingResults.end() )
-        //                 {
-        //                     lProfilingResults[lEvent.mName] = lEvent.mElapsedTime;
-        //                     lProfilingCount[lEvent.mName]   = 1;
-        //                 }
-        //                 else
-        //                 {
-        //                     lProfilingResults[lEvent.mName] += lEvent.mElapsedTime;
-        //                     lProfilingCount[lEvent.mName] += 1;
-        //                 }
-        //             }
-
-        //             for( auto &lEntry : lProfilingResults )
-        //             {
-        //                 lProfilingResults[lEntry.first] /= lProfilingCount[lEntry.first];
-        //             }
-        //         }
-        //         else
-        //         {
-        //             SE::Core::Instrumentor::Get().BeginSession( "Session" );
-        //             lIsProfiling            = true;
-        //             lProfilingDataAvailable = false;
-        //             lProfilingResults       = {};
-        //         }
-        //     }
-
-        //     if( lProfilingDataAvailable )
-        //     {
-        //         for( auto &lEntry : lProfilingResults )
-        //         {
-        //             UI::Text( "{} ----> {} us", lEntry.first, lEntry.second );
-        //         }
-        //     }
-        // }
-        // ImGui::End();
 
         ImPlot::ShowDemoWindow();
         ImGui::ShowDemoWindow();
@@ -536,7 +447,7 @@ namespace SE::OtdrEditor
                                                         "XML Files (*.xml)\0*.xml\0All Files (*.*)\0*.*\0" );
 
                 if( lFilePath.has_value() ) LoadTestReport( fs::path( lFilePath.value() ).parent_path() );
-                        }
+            }
 
             if( UI::MenuItem( fmt::format( "Test dialog", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
             {
