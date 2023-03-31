@@ -20,6 +20,7 @@
 #include "UI/Components/Table.h"
 #include "UI/Components/TextToggleButton.h"
 #include "UI/Components/Workspace.h"
+#include "UI/Components/Menu.h"
 #include "UI/Form.h"
 #include "UI/Dialog.h"
 #include "UI/Layouts/BoxLayout.h"
@@ -117,6 +118,8 @@ namespace SE::OtdrEditor
         EventOverview       mEventOverview;
         AcquisitionData     mAcquisitionDataOverview;
 
+        UIMenu mMainMenu;
+
       private:
         OtdrWorkspaceWindow mWorkspaceArea;
         MonoClassHierarchy mMonoClasses;
@@ -137,5 +140,6 @@ namespace SE::OtdrEditor
 
         SimulationState mState       = SimulationState::EDIT;
         fs::path        mCurrentPath = "";
+        bool mRequestQuit = false;
     };
 } // namespace SE::OtdrEditor

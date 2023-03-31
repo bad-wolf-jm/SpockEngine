@@ -87,6 +87,39 @@ namespace SE::OtdrEditor
 
         mTestFailResultTable->OnElementClicked( [&]( sTestFailElement const &aElement )
                                                 { LoadIOlmDiffData( aElement.mFilename, true ); } );
+
+        mMainMenu = UIMenu( "File" );
+        mMainMenu.AddAction( fmt::format( "{} Load iOlm", ICON_FA_PLUS_CIRCLE ), "" )
+            ->OnTrigger(
+                [&]()
+                {
+                    auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
+                                                            "OLM Files (*.iolm)\0*.iolm\0All Files (*.*)\0*.*\0" );
+
+                    if( lFilePath.has_value() ) LoadIOlmData( fs::path( lFilePath.value() ) );
+                } );
+        mMainMenu.AddAction( fmt::format( "{} Load iOlm Diff", ICON_FA_PLUS_CIRCLE ), "" )
+            ->OnTrigger(
+                [&]()
+                {
+                    auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
+                                                            "OLM Files (*.iolm)\0*.iolm\0All Files (*.*)\0*.*\0" );
+
+                    if( lFilePath.has_value() ) LoadIOlmDiffData( fs::path( lFilePath.value() ) );
+                } );
+
+        mMainMenu.AddSeparator();
+        mMainMenu.AddAction( fmt::format( "{} Load test report", ICON_FA_PLUS_CIRCLE ), "" )
+            ->OnTrigger(
+                [&]()
+                {
+                    auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
+                                                            "OLM Files (*.iolm)\0*.iolm\0All Files (*.*)\0*.*\0" );
+
+                    if( lFilePath.has_value() ) LoadTestReport( fs::path( lFilePath.value() ).parent_path() );
+                } );
+        mMainMenu.AddSeparator();
+        mMainMenu.AddAction( fmt::format( "{} Exit", ICON_FA_WINDOW_CLOSE_O ), "" )->OnTrigger( [&]() { mRequestQuit = true; } );
     }
 
     OtdrWindow::OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
@@ -421,44 +454,9 @@ namespace SE::OtdrEditor
     {
         UI::Text( ApplicationIcon.c_str() );
 
-        bool lRequestQuit = false;
+        mMainMenu.Update( ImGui::GetCursorPos(), ImVec2{} );
 
-        if( ImGui::BeginMenu( "File" ) )
-        {
-            if( UI::MenuItem( fmt::format( "{} Load iOlm", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
-            {
-                auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
-                                                        "OLM Files (*.iolm)\0*.iolm\0All Files (*.*)\0*.*\0" );
-
-                if( lFilePath.has_value() ) LoadIOlmData( fs::path( lFilePath.value() ) );
-            }
-
-            if( UI::MenuItem( fmt::format( "{} Load iOlm Diff", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
-            {
-                auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
-                                                        "OLM Files (*.iolm)\0*.iolm\0All Files (*.*)\0*.*\0" );
-
-                if( lFilePath.has_value() ) LoadIOlmDiffData( fs::path( lFilePath.value() ) );
-            }
-
-            if( UI::MenuItem( fmt::format( "{} Load test report", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
-            {
-                auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
-                                                        "XML Files (*.xml)\0*.xml\0All Files (*.*)\0*.*\0" );
-
-                if( lFilePath.has_value() ) LoadTestReport( fs::path( lFilePath.value() ).parent_path() );
-            }
-
-            if( UI::MenuItem( fmt::format( "Test dialog", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
-            {
-                mTestDialog->Open();
-            }
-
-            lRequestQuit = UI::MenuItem( fmt::format( "{} Exit", ICON_FA_WINDOW_CLOSE_O ).c_str(), NULL );
-            ImGui::EndMenu();
-        }
-
-        return lRequestQuit;
+        return mRequestQuit;
     }
 
     math::ivec2 OtdrWindow::GetWorkspaceAreaSize() { return mWorkspaceAreaSize; }
