@@ -7,8 +7,8 @@ namespace SE::Core
     class UIMenuItem : public UIComponent
     {
       public:
-        UIMenuItem() = default;
-        UIMenuItem(UIMenuItem const&) = default;
+        UIMenuItem()                     = default;
+        UIMenuItem( UIMenuItem const & ) = default;
 
         UIMenuItem( std::string const &aText );
         UIMenuItem( std::string const &aText, std::string const &aShortcut );
@@ -52,8 +52,8 @@ namespace SE::Core
     class UIMenuSeparator : public UIMenuItem
     {
       public:
-        UIMenuSeparator() = default;
-        UIMenuSeparator(UIMenuSeparator const&) = default;
+        UIMenuSeparator()                          = default;
+        UIMenuSeparator( UIMenuSeparator const & ) = default;
 
       protected:
         void PushStyles();
@@ -70,13 +70,15 @@ namespace SE::Core
     class UIMenu : public UIMenuItem
     {
       public:
-        UIMenu() = default;
-        UIMenu(UIMenu const&) = default;
+        UIMenu()                 = default;
+        UIMenu( UIMenu const & ) = default;
         UIMenu( std::string const &aText );
 
         Ref<UIMenuItem> AddAction( std::string const &aText, std::string const &aShortcut );
         Ref<UIMenu>     AddMenu( std::string const &aText );
         Ref<UIMenuItem> AddSeparator();
+
+        void Update();
 
       private:
         UIMenuItem *AddActionRaw( std::string const &aText, std::string const &aShortcut );
@@ -101,5 +103,6 @@ namespace SE::Core
         static void *UIMenu_AddAction( void *aInstance, void *aText, void *aShortcut );
         static void *UIMenu_AddMenu( void *aInstance, void *aText );
         static void *UIMenu_AddSeparator( void *aInstance );
+        static void  UIMenu_Update( void *aInstance );
     };
 } // namespace SE::Core

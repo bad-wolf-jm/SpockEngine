@@ -12,6 +12,8 @@ namespace SpockEngine
 
         public virtual void Update(float aTs) { }
 
+        public virtual bool UpdateMenu() { return false; }
+
         public virtual void UpdateUI(float aTs) { }
     }
 }

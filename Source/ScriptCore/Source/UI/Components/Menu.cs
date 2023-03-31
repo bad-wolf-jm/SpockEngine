@@ -106,6 +106,10 @@ namespace SpockEngine
             return new UIMenuSeparator(UIMenu_AddAction(mInstance, aName, aShortcut));
         }
 
+        public void Update()
+        {
+            UIMenu_Update(mInstance);
+        }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIMenu_Create();
@@ -125,6 +129,8 @@ namespace SpockEngine
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIMenu_AddMenu(ulong aInstance, string aName);
 
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIMenu_Update(ulong aInstance);
     }
 
 

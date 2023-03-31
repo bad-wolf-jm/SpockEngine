@@ -63,7 +63,7 @@ namespace SE::OtdrEditor
     void BaseOtdrApplication::Init( std::string aAppClass, fs::path aConfigurationPath )
     {
         Init();
-        
+
         static auto &lApplicationType = DotNetRuntime::GetClassType( aAppClass );
 
         if( lApplicationType )
@@ -71,6 +71,8 @@ namespace SE::OtdrEditor
             mApplicationInstance    = lApplicationType.Instantiate();
             auto lConfigurationPath = DotNetRuntime::NewString( aConfigurationPath.string() );
             mApplicationInstance->CallMethod( "Initialize", lConfigurationPath );
+
+            mEditorWindow.mApplicationInstance = mApplicationInstance;
         }
         else
         {
