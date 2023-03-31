@@ -162,6 +162,14 @@ namespace SE::OtdrEditor
         {
             ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, ImVec2( 15, 14 ) );
             lRequestQuit = RenderMainMenu();
+
+            if( !lRequestQuit && mApplicationInstance )
+            {
+                bool lDNRequestQuit = false;
+                lDNRequestQuit = *(bool*)mono_object_unbox(mApplicationInstance->CallMethod( "UpdateMenu" ));
+                lRequestQuit = lRequestQuit || lDNRequestQuit;
+            }
+
             ImGui::PopStyleVar();
             ImGui::EndMainMenuBar();
         }
@@ -454,7 +462,7 @@ namespace SE::OtdrEditor
     {
         UI::Text( ApplicationIcon.c_str() );
 
-        mMainMenu.Update( ImGui::GetCursorPos(), ImVec2{} );
+        mMainMenu.Update( );
 
         return mRequestQuit;
     }

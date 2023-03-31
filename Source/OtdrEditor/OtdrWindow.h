@@ -10,34 +10,36 @@
 #include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Graphics/Vulkan/VkSampler2D.h"
 
+#include "DotNet/Runtime.h"
+
 #include "OtdrScene/OtdrScene.h"
 
 #include "UI/Components/Button.h"
 #include "UI/Components/Checkbox.h"
 #include "UI/Components/Image.h"
 #include "UI/Components/ImageToggleButton.h"
+#include "UI/Components/Menu.h"
 #include "UI/Components/Plot.h"
 #include "UI/Components/Table.h"
 #include "UI/Components/TextToggleButton.h"
 #include "UI/Components/Workspace.h"
-#include "UI/Components/Menu.h"
-#include "UI/Form.h"
 #include "UI/Dialog.h"
+#include "UI/Form.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/UI.h"
 
 #include "AcquisitionData.h"
+#include "DotNet/Instance.h"
 #include "Editor/ContentBrowser.h"
 #include "Enums.h"
 #include "EventOverview.h"
 #include "LinkElementTable.h"
 #include "LinkElementTracePlot.h"
 #include "MeasurementOverview.h"
-#include "DotNet/Instance.h"
+#include "MonoClassHierarchy.h"
 #include "MultiPulseEventTable.h"
 #include "TestFailResultTable.h"
 #include "Workspace.h"
-#include "MonoClassHierarchy.h"
 
 namespace SE::OtdrEditor
 {
@@ -64,7 +66,9 @@ namespace SE::OtdrEditor
         Ref<Engine> mEngineLoop = nullptr;
 
         Ref<DotNetInstance> mCurrentScript{};
-        bool                    mCurrentScriptIsRunning{};
+        bool                mCurrentScriptIsRunning{};
+
+        Ref<DotNetInstance> mApplicationInstance = nullptr;
 
       public:
         float HeaderHeight       = 31.0f;
@@ -98,13 +102,12 @@ namespace SE::OtdrEditor
         void LoadIOlmDiffData( fs::path aPath, bool aReanalyse = false );
         void LoadTestReport( fs::path aPath );
 
-
-        Ref<DotNetInstance> mDataInstance = nullptr;
-        std::vector<sLinkElement> mLinkElementVector;
+        Ref<DotNetInstance>           mDataInstance = nullptr;
+        std::vector<sLinkElement>     mLinkElementVector;
         std::vector<sMultiPulseEvent> mEventVector;
 
         UILinkElementTracePlot mTracePlot;
-        UIWorkspace mDocumentArea;
+        UIWorkspace            mDocumentArea;
 
         Ref<UIDialog> mTestDialog;
 
@@ -122,7 +125,7 @@ namespace SE::OtdrEditor
 
       private:
         OtdrWorkspaceWindow mWorkspaceArea;
-        MonoClassHierarchy mMonoClasses;
+        MonoClassHierarchy  mMonoClasses;
 
       private:
         Ref<VkGraphicContext> mGraphicContext;
@@ -140,6 +143,6 @@ namespace SE::OtdrEditor
 
         SimulationState mState       = SimulationState::EDIT;
         fs::path        mCurrentPath = "";
-        bool mRequestQuit = false;
+        bool            mRequestQuit = false;
     };
 } // namespace SE::OtdrEditor

@@ -801,5 +801,6 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_AddAction", UIMenu::UIMenu_AddAction );
         mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_AddMenu", UIMenu::UIMenu_AddMenu );
         mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_AddSeparator", UIMenu::UIMenu_AddSeparator );
+        mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_Update", UIMenu::UIMenu_Update );
     }
 } // namespace SE::Core

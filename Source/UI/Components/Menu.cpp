@@ -217,6 +217,8 @@ namespace SE::Core
         return lNewItem;
     }
 
+    void UIMenu::Update() { UIComponent::Update( ImGui::GetCursorPos(), ImVec2{} ); }
+
     void *UIMenu::UIMenu_Create()
     {
         auto lNewLabel = new UIMenu();
@@ -259,6 +261,13 @@ namespace SE::Core
         auto lNewSeparator = lInstance->AddSeparatorRaw();
 
         return static_cast<void *>( lNewSeparator );
+    }
+
+    void UIMenu::UIMenu_Update( void *aInstance )
+    {
+        auto lInstance = static_cast<UIMenu *>( aInstance );
+
+        lInstance->Update();
     }
 
 } // namespace SE::Core
