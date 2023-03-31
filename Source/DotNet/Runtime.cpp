@@ -33,13 +33,14 @@
 #include "UI/Components/ImageButton.h"
 #include "UI/Components/ImageToggleButton.h"
 #include "UI/Components/Label.h"
+#include "UI/Components/Menu.h"
 #include "UI/Components/Plot.h"
 #include "UI/Components/Table.h"
 #include "UI/Components/TextOverlay.h"
 #include "UI/Components/TextToggleButton.h"
 #include "UI/Components/Workspace.h"
-#include "UI/Form.h"
 #include "UI/Dialog.h"
+#include "UI/Form.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/Layouts/ZLayout.h"
 
@@ -780,5 +781,25 @@ namespace SE::Core
                                 UIWorkspaceDocument::UIWorkspaceDocument_SetContent );
         mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_Update",
                                 UIWorkspaceDocument::UIWorkspaceDocument_Update );
+
+        mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_Create", UIMenuItem::UIMenuItem_Create );
+        mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_CreateWithText", UIMenuItem::UIMenuItem_CreateWithText );
+        mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_CreateWithTextAndShortcut",
+                                UIMenuItem::UIMenuItem_CreateWithTextAndShortcut );
+        mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_Destroy", UIMenuItem::UIMenuItem_Destroy );
+        mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_SetText", UIMenuItem::UIMenuItem_SetText );
+        mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_SetShortcut", UIMenuItem::UIMenuItem_SetShortcut );
+        mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_SetTextColor", UIMenuItem::UIMenuItem_SetTextColor );
+        mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_OnTrigger", UIMenuItem::UIMenuItem_OnTrigger );
+
+        mono_add_internal_call( "SpockEngine.UIMenuSeparator::UIMenuSeparator_Create", UIMenuSeparator::UIMenuSeparator_Create );
+        mono_add_internal_call( "SpockEngine.UIMenuSeparator::UIMenuSeparator_Destroy", UIMenuSeparator::UIMenuSeparator_Destroy );
+
+        mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_Create", UIMenu::UIMenu_Create );
+        mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_CreateWithText", UIMenu::UIMenu_CreateWithText );
+        mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_Destroy", UIMenu::UIMenu_Destroy );
+        mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_AddAction", UIMenu::UIMenu_AddAction );
+        mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_AddMenu", UIMenu::UIMenu_AddMenu );
+        mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_AddSeparator", UIMenu::UIMenu_AddSeparator );
     }
 } // namespace SE::Core
