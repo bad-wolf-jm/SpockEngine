@@ -1,19 +1,23 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace SpockEngine
 {
     public class UIMenuItem : UIComponent
     {
-        public UIMenuItem() : base(UIMenuItem_Create()) { }
+        private bool mDerived = false;
+        public UIMenuItem() : this(UIMenuItem_Create()) { }
 
-        public UIMenuItem(ulong aDerived) : base(aDerived) { }
+        public UIMenuItem(ulong aDerived) : base(aDerived) { mDerived = false; }
+
+        public UIMenuItem(ulong aDerived, bool aIsDerived) : base(aDerived) { mDerived = aIsDerived; }
 
         public UIMenuItem(string aText) : this(UIMenuItem_CreateWithText(aText)) { }
 
         public UIMenuItem(string aText, string aShortcut) : this(UIMenuItem_CreateWithTextAndShortcut(aText, aShortcut)) { }
 
-        ~UIMenuItem() { UIMenuItem_Destroy(mInstance); }
+        ~UIMenuItem() { if (!mDerived) UIMenuItem_Destroy(mInstance); }
 
         public void SetText(string aText)
         {
@@ -36,6 +40,8 @@ namespace SpockEngine
         {
             onTriggered = aHandler;
 
+            Console.WriteLine("555555555555555555555");
+
             UIMenuItem_OnTrigger(mInstance, onTriggered);
         }
 
@@ -49,26 +55,26 @@ namespace SpockEngine
         private extern static ulong UIMenuItem_CreateWithText(string aText);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenuItem_Destroy(ulong aInstance);
+        private extern static void UIMenuItem_Destroy(ulong aInstance);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenuItem_SetText(ulong aInstance, string aText);
+        private extern static void UIMenuItem_SetText(ulong aInstance, string aText);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenuItem_SetShortcut(ulong aInstance, string aShortcut);
+        private extern static void UIMenuItem_SetShortcut(ulong aInstance, string aShortcut);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenuItem_SetTextColor(ulong aInstance, Math.vec4 aColor);
+        private extern static void UIMenuItem_SetTextColor(ulong aInstance, Math.vec4 aColor);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenuItem_OnTrigger(ulong aInstance, TriggeredDelegate aHandler);
+        private extern static void UIMenuItem_OnTrigger(ulong aInstance, TriggeredDelegate aHandler);
     }
 
     public class UIMenuSeparator : UIMenuItem
     {
         public UIMenuSeparator() : this(UIMenuSeparator_Create()) { }
 
-        public UIMenuSeparator(ulong aDerived) : base(aDerived) { }
+        public UIMenuSeparator(ulong aDerived) : base(aDerived, true) { }
 
         ~UIMenuSeparator() { UIMenuSeparator_Destroy(mInstance); }
 
@@ -76,40 +82,48 @@ namespace SpockEngine
         private extern static ulong UIMenuSeparator_Create();
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenuSeparator_Destroy(ulong aInstance);
+        private extern static void UIMenuSeparator_Destroy(ulong aInstance);
     }
 
 
 
     public class UIMenu : UIMenuItem
     {
-        public UIMenu() : base(UIMenu_Create()) { }
+        private List<UIMenuItem> mMenuItems;
 
-        public UIMenu(ulong aDerived) : base(aDerived) { }
+        public UIMenu() : base(UIMenu_Create(), true) { mMenuItems = new List<UIMenuItem>(); }
 
-        public UIMenu(string aText) : this(UIMenu_CreateWithText(aText)) { }
+        public UIMenu(ulong aDerived) : base(aDerived, true) { mMenuItems = new List<UIMenuItem>(); }
+
+        public UIMenu(string aText) : this(UIMenu_CreateWithText(aText)) { mMenuItems = new List<UIMenuItem>(); }
 
         ~UIMenu() { UIMenu_Destroy(mInstance); }
 
         public UIMenu AddMenu(string aName)
         {
-            return new UIMenu(UIMenu_AddMenu(mInstance, aName));
+            var lNewMenu = new UIMenu(UIMenu_AddMenu(mInstance, aName));
+            mMenuItems.Add(lNewMenu);
+
+            return lNewMenu;
         }
 
-        public UIMenuSeparator AddSeparator(string aName)
+        public UIMenuSeparator AddSeparator()
         {
-            return new UIMenuSeparator(UIMenu_AddSeparator(mInstance));
+            var lNewMenu = new UIMenuSeparator(UIMenu_AddSeparator(mInstance));
+            mMenuItems.Add(lNewMenu);
+
+            return lNewMenu;
         }
 
         public UIMenuItem AddAction(string aName, string aShortcut)
         {
-            return new UIMenuSeparator(UIMenu_AddAction(mInstance, aName, aShortcut));
+            var lNewMenu = new UIMenuItem(UIMenu_AddAction(mInstance, aName, aShortcut));
+            mMenuItems.Add(lNewMenu);
+
+            return lNewMenu;
         }
 
-        public void Update()
-        {
-            UIMenu_Update(mInstance);
-        }
+        public void Update() { UIMenu_Update(mInstance); }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIMenu_Create();
@@ -118,7 +132,7 @@ namespace SpockEngine
         private extern static ulong UIMenu_CreateWithText(string aText);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenu_Destroy(ulong aInstance);
+        private extern static void UIMenu_Destroy(ulong aInstance);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIMenu_AddAction(ulong aInstance, string aName, string aShortcut);
