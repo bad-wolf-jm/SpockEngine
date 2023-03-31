@@ -316,8 +316,8 @@ int main( int argc, char **argv )
 
     DotNetRuntime::ReloadAssemblies();
 
-    auto &lInitializationClass = DotNetRuntime::GetClassType( "SpockEngine.IO" );
-    lInitializationClass.CallMethod( "Initialize" );
+    // auto &lInitializationClass = DotNetRuntime::GetClassType( "SpockEngine.IO" );
+    // lInitializationClass.CallMethod( "Initialize" );
 
     SE::OtdrEditor::BaseOtdrApplication lEditorApplication;
 
