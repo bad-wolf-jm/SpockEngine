@@ -122,6 +122,14 @@ namespace SE::Core
         lSelf->Add( lPlot );
     }
 
+    void UIPlot::UIPlot_SetAxisLimits( void *aInstance, int aAxis, double aMin, double aMax )
+    {
+        auto lSelf = static_cast<UIPlot *>( aInstance );
+
+        lSelf->mAxisConfiguration[aAxis].mMin = aMin;
+        lSelf->mAxisConfiguration[aAxis].mMax = aMax;
+    }
+
     void sPlotData::UIPlotData_SetLegend( void *aSelf, void *aText )
     {
         auto lSelf   = static_cast<sPlotData *>( aSelf );
@@ -168,7 +176,7 @@ namespace SE::Core
         if( mThickness != -1.0f ) ImPlot::PopStyleVar();
     }
 
-    void *sFloat64LinePlot::UIFloat64LinePlot_Create( )
+    void *sFloat64LinePlot::UIFloat64LinePlot_Create()
     {
         auto lSelf = new sFloat64LinePlot();
 
@@ -208,7 +216,7 @@ namespace SE::Core
         if( mThickness != -1.0f ) ImPlot::PopStyleVar();
     }
 
-    void *sFloat64ScatterPlot::UIFloat64ScatterPlot_Create( )
+    void *sFloat64ScatterPlot::UIFloat64ScatterPlot_Create()
     {
         auto lSelf = new sFloat64ScatterPlot();
 
@@ -244,7 +252,7 @@ namespace SE::Core
         if( mThickness != -1.0f ) ImPlot::PopStyleVar();
     }
 
-    void *sVLine::UIVLinePlot_Create( )
+    void *sVLine::UIVLinePlot_Create()
     {
         auto lSelf = new sVLine();
 

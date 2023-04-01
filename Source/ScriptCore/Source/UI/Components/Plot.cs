@@ -180,13 +180,49 @@ namespace SpockEngine
 
 
 
+    public class UIPlotAxis
+    {
+        private ulong mPlotInstance;
+        private eUIPlotAxis mAxis;
 
+        public UIPlotAxis(ulong aPlotInstance, eUIPlotAxis aAxis)
+        {
+            mPlotInstance = aPlotInstance;
+            mAxis = aAxis;
+        }
+
+        void SetLimits(double aMin, double aMax)
+        {
+            UIPlot_SetAxisLimits(mPlotInstance, mAxis, aMin, aMax);
+        }
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIPlot_SetAxisLimits(ulong aInstance, eUIPlotAxis aAxis, double aMin, double aMax);
+    }
 
 
 
     public class UIPlot : UIComponent
     {
         List<UIPlotData> mPlots;
+
+        private UIPlotAxis x1;
+        public UIPlotAxis X1 { get { return x1; } }
+
+        private UIPlotAxis x2;
+        public UIPlotAxis X2 { get { return x2; } }
+
+        private UIPlotAxis x3;
+        public UIPlotAxis X3 { get { return x3; } }
+
+        private UIPlotAxis y1;
+        public UIPlotAxis Y1 { get { return y1; } }
+
+        private UIPlotAxis y2;
+        public UIPlotAxis Y2 { get { return y2; } }
+
+        private UIPlotAxis y3;
+        public UIPlotAxis Y3 { get { return y3; } }
 
         public UIPlot() : base(UIPlot_Create())
         {
@@ -196,6 +232,13 @@ namespace SpockEngine
         public UIPlot(ulong aSelf) : base(aSelf)
         {
             mPlots = new List<UIPlotData>();
+
+            x1 = new UIPlotAxis(aSelf, eUIPlotAxis.X1);
+            x2 = new UIPlotAxis(aSelf, eUIPlotAxis.X2);
+            x3 = new UIPlotAxis(aSelf, eUIPlotAxis.X3);
+            y1 = new UIPlotAxis(aSelf, eUIPlotAxis.Y1);
+            y2 = new UIPlotAxis(aSelf, eUIPlotAxis.Y2);
+            y3 = new UIPlotAxis(aSelf, eUIPlotAxis.Y3);
         }
 
         ~UIPlot() { UIPlot_Destroy(mInstance); }

@@ -131,5 +131,6 @@ namespace SE::Core
         static void  UIPlot_ConfigureLegend( void *aInstance, math::vec2 *aLegendPadding, math::vec2 *aLegendInnerPadding,
                                              math::vec2 *aLegendSpacing );
         static void  UIPlot_Add( void *aInstance, void *aPlot );
+        static void  UIPlot_SetAxisLimits( void *aInstance, int aAxis, double aMin, double aMax );
     };
 } // namespace SE::Core
