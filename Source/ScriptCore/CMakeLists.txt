@@ -31,6 +31,8 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/UI.cs
     Source/UI/Form.cs
     Source/UI/Dialog.cs
+    Source/UI/Colors.cs
+    Source/UI/Fonts.cs
     
     Source/CppCalls.cs
     Source/Component.cs

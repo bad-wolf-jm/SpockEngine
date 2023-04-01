@@ -411,6 +411,7 @@ namespace SE::Core
     DotNetClass &DotNetRuntime::GetClassType( const std::string &aClassName )
     {
         if( sRuntimeData->mClasses.find( aClassName ) != sRuntimeData->mClasses.end() ) return sRuntimeData->mClasses[aClassName];
+
         return DotNetClass{};
     }
 
@@ -585,6 +586,8 @@ namespace SE::Core
         SE_ADD_INTERNAL_CALL( UI_Text );
         SE_ADD_INTERNAL_CALL( UI_Button );
 
+        mono_add_internal_call( "SpockEngine.UIColor::GetStyleColor", SE::Core::UI::GetStyleColor );
+
         mono_add_internal_call( "SpockEngine.UIForm::UIForm_Create", UIForm::UIForm_Create );
         mono_add_internal_call( "SpockEngine.UIForm::UIForm_Destroy", UIForm::UIForm_Destroy );
         mono_add_internal_call( "SpockEngine.UIForm::UIForm_SetTitle", UIForm::UIForm_SetTitle );
@@ -733,6 +736,8 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UITable::UITable_OnRowClicked", UITable::UITable_OnRowClicked );
         mono_add_internal_call( "SpockEngine.UITable::UITable_AddColumn", UITable::UITable_AddColumn );
         mono_add_internal_call( "SpockEngine.UITable::UITable_SetRowHeight", UITable::UITable_SetRowHeight );
+        mono_add_internal_call( "SpockEngine.UITable::UITable_SetRowBackgroundColor", UITable::UITable_SetRowBackgroundColor );
+        mono_add_internal_call( "SpockEngine.UITable::UITable_ClearRowBackgroundColor", UITable::UITable_ClearRowBackgroundColor );
 
         mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_Create", UIPlot::UIPlot_Create );
         mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_Destroy", UIPlot::UIPlot_Destroy );

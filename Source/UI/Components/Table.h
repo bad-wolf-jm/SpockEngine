@@ -135,5 +135,7 @@ namespace SE::Core
         static void  UITable_OnRowClicked( void *aSelf, void *aHandler );
         static void  UITable_AddColumn( void *aSelf, void *aColumn );
         static void  UITable_SetRowHeight( void *aSelf, float aRowHeight );
+        static void  UITable_SetRowBackgroundColor( void *aSelf, void *aColors );
+        static void  UITable_ClearRowBackgroundColor( void *aSelf );
     };
 } // namespace SE::Core

@@ -100,6 +100,13 @@ namespace SE::Core::UI
         style.GrabRounding      = 3;
     }
 
+    math::vec4* GetStyleColor(ImGuiCol aColor )
+    {
+        auto const& lColor = ImGui::GetStyleColorVec4( aColor );
+
+        return new math::vec4{lColor.x, lColor.y, lColor.z, lColor.w};
+    }
+
     void Text( const char *a_Text ) { ImGui::Text( a_Text ); }
 
     void Text( std::string a_Text ) { Text( a_Text.c_str() ); }

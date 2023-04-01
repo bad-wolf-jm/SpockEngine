@@ -139,6 +139,22 @@ namespace SE::Core
         lInstance->SetRowHeight( aRowHeight );
     }
 
+    void UITable::UITable_ClearRowBackgroundColor( void *aSelf )
+    {
+        auto lSelf = static_cast<UITable *>( aSelf );
+
+        lSelf->mRowBackgroundColor.clear();
+    }
+
+    void UITable::UITable_SetRowBackgroundColor( void *aSelf, void *aValue )
+    {
+        auto lSelf = static_cast<UITable *>( aSelf );
+
+        lSelf->mRowBackgroundColor.clear();
+        for( auto &x : DotNetRuntime::AsVector<ImVec4 *>( static_cast<MonoObject *>( aValue ) ) )
+            lSelf->mRowBackgroundColor.push_back( ImColor( *x ) );
+    }
+
     sFloat64Column::sFloat64Column( std::string aHeader, float aInitialSize, std::string aFormat, std::string aNaNFormat )
         : sTableColumn{ aHeader, aInitialSize }
         , mFormat{ aFormat }
@@ -311,7 +327,7 @@ namespace SE::Core
     }
 
     void sUint32Column::UIUint32Column_SetDataWithForegroundAndBackgroundColor( void *aSelf, void *aValue, void *aForegroundColor,
-                                                                               void *aBackroundColor )
+                                                                                void *aBackroundColor )
     {
         auto lSelf = static_cast<sUint32Column *>( aSelf );
 
