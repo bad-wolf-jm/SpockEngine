@@ -59,6 +59,11 @@ namespace SpockEngine
             UIComponent_SetBackgroundColor(mInstance, aColor);
         }
 
+        public void SetFont(eFontFamily aFont)
+        {
+            UIComponent_SetFont(mInstance, aFont);
+        }
+
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIComponent_SetPaddingAll(ulong aSelf, float aPaddingAll);
 
@@ -79,5 +84,8 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIComponent_SetBackgroundColor(ulong aSelf, Math.vec4 aColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIComponent_SetFont(ulong aSelf, eFontFamily aFont);
     }
 }
