@@ -191,7 +191,7 @@ namespace SpockEngine
             mAxis = aAxis;
         }
 
-        void SetLimits(double aMin, double aMax)
+        public void SetLimits(double aMin, double aMax)
         {
             UIPlot_SetAxisLimits(mPlotInstance, mAxis, aMin, aMax);
         }
@@ -243,19 +243,19 @@ namespace SpockEngine
 
         ~UIPlot() { UIPlot_Destroy(mInstance); }
 
-        void CLear()
+        public void Clear()
         {
             mPlots.Clear();
 
             UIPlot_Clear(mInstance);
         }
 
-        void ConfigureLegend(Math.vec2 aLegendPadding, Math.vec2 aLegendInnerPadding, Math.vec2 aLegendSpacing)
+        public void ConfigureLegend(Math.vec2 aLegendPadding, Math.vec2 aLegendInnerPadding, Math.vec2 aLegendSpacing)
         {
             UIPlot_ConfigureLegend(mInstance, aLegendPadding, aLegendInnerPadding, aLegendSpacing);
         }
 
-        UIFloat64LinePlot Plot(double[] aX, double[] aY, string aLegend = "", Math.vec4? aColor = null)
+        public UIFloat64LinePlot Plot(double[] aX, double[] aY, string aLegend = "", Math.vec4? aColor = null)
         {
             var lNewPlot = new UIFloat64LinePlot();
             lNewPlot.X = aX;
@@ -270,7 +270,22 @@ namespace SpockEngine
             return lNewPlot;
         }
 
-        UIVLinePlot VLines(double[] aX, string aLegend = "", Math.vec4? aColor = null)
+        public UIFloat64ScatterPlot PlotScatter(double[] aX, double[] aY, string aLegend = "", Math.vec4? aColor = null)
+        {
+            var lNewPlot = new UIFloat64ScatterPlot();
+            lNewPlot.X = aX;
+            lNewPlot.Y = aY;
+            lNewPlot.Legend = aLegend;
+            lNewPlot.Color = aColor.HasValue ? aColor.Value : new Math.vec4(0.0f, 0.0f, 0.0f, -1.0f);
+
+            mPlots.Add(lNewPlot);
+
+            UIPlot_Add(mInstance, lNewPlot.Instance);
+
+            return lNewPlot;
+        }
+
+        public UIVLinePlot VLines(double[] aX, string aLegend = "", Math.vec4? aColor = null)
         {
             var lNewPlot = new UIVLinePlot();
             lNewPlot.X = aX;
