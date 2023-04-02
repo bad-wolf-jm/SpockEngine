@@ -40,8 +40,6 @@ namespace SpockEngine
         {
             onTriggered = aHandler;
 
-            Console.WriteLine("555555555555555555555");
-
             UIMenuItem_OnTrigger(mInstance, onTriggered);
         }
 

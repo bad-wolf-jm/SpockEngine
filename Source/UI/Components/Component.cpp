@@ -27,6 +27,8 @@ namespace SE::Core
 
     void UIComponent::SetBackgroundColor( math::vec4 aColor ) { mBackgroundColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
 
+    void UIComponent::SetFont( FontFamilyFlags aFont ) { mFont = aFont; }
+
     ImVec2 UIComponent::RequiredSize()
     {
         float lWidth  = ( mPadding.z + mPadding.w );
@@ -153,6 +155,13 @@ namespace SE::Core
         auto lSelf = static_cast<UIComponent *>( aSelf );
 
         lSelf->SetBackgroundColor( *aColor );
+    }
+
+    void UIComponent::UIComponent_SetFont( void *aSelf, FontFamilyFlags aFont )
+    {
+        auto lSelf = static_cast<UIComponent *>( aSelf );
+
+        lSelf->SetFont( aFont );
     }
 
 } // namespace SE::Core

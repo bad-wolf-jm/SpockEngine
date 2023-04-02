@@ -46,6 +46,8 @@ namespace SE::Core
         void   SetBackgroundColor( math::vec4 aColor );
         ImVec4 BackgroundColor() { return mBackgroundColor; }
 
+        void SetFont(FontFamilyFlags aFont);
+
       protected:
         math::vec4 mPadding{};
         ImVec4     mBackgroundColor{};
@@ -78,5 +80,6 @@ namespace SE::Core
         static void UIComponent_SetHorizontalAlignment( void *aSelf, eHorizontalAlignment aAlignment );
         static void UIComponent_SetVerticalAlignment( void *aSelf, eVerticalAlignment aAlignment );
         static void UIComponent_SetBackgroundColor( void *aSelf, math::vec4 *aColor );
+        static void UIComponent_SetFont( void *aSelf, FontFamilyFlags aFont );
     };
 } // namespace SE::Core

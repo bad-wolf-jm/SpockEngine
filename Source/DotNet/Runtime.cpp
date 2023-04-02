@@ -601,6 +601,8 @@ namespace SE::Core
                                 UIComponent::UIComponent_SetVerticalAlignment );
         mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetBackgroundColor",
                                 UIComponent::UIComponent_SetBackgroundColor );
+        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetFont",
+                                UIComponent::UIComponent_SetFont );
 
         mono_add_internal_call( "SpockEngine.UIForm::UIForm_Create", UIForm::UIForm_Create );
         mono_add_internal_call( "SpockEngine.UIForm::UIForm_Destroy", UIForm::UIForm_Destroy );
