@@ -11,10 +11,14 @@ namespace SpockEngine
 
     public class UIBoxLayout : UIComponent
     {
+        private bool mDerived = false;
         public UIBoxLayout() { }
 
-        public UIBoxLayout(eBoxLayoutOrientation aOrientation) : base(UIBoxLayout_CreateWithOrientation(aOrientation)) { }
-        ~UIBoxLayout() { UIBoxLayout_Destroy(mInstance); }
+        public UIBoxLayout(ulong aInstance, bool aDerived) : base(aInstance) { mDerived = aDerived; }
+
+        public UIBoxLayout(eBoxLayoutOrientation aOrientation) : this(UIBoxLayout_CreateWithOrientation(aOrientation), false) { }
+
+        ~UIBoxLayout() { if (mDerived) UIBoxLayout_Destroy(mInstance); }
 
         public void SetItemSpacing(float aItemSpacing)
         {

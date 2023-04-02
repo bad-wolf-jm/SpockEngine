@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
+using Math = SpockEngine.Math;
+
 namespace SpockEngine
 {
     public class UITableColumn
@@ -230,12 +232,13 @@ namespace SpockEngine
 
         public void ClearRowBackgroundColors()
         {
-            UITable_ClearRowBackgroundColors(mInstance);
+            UITable_ClearRowBackgroundColor(mInstance);
         }
 
-        public delegate bool OnRowClickedDelegate(int aRow);
-        OnRowClickedDelegate onRowClickedDelegate;
-        public void OnRowClicked(OnRowClickedDelegate aHandler)
+
+        public delegate void RowClickedDelegate(int aRow);
+        RowClickedDelegate onRowClickedDelegate;
+        public void OnRowClicked(RowClickedDelegate aHandler)
         {
             onRowClickedDelegate = aHandler;
 
@@ -249,7 +252,7 @@ namespace SpockEngine
         private extern static void UITable_Destroy(ulong aInstance);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITable_OnRowClicked(ulong aInstance, OnRowClickedDelegate aHandler);
+        private extern static void UITable_OnRowClicked(ulong aInstance, RowClickedDelegate aHandler);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UITable_AddColumn(ulong aInstance, ulong aColumnInstance);
@@ -261,6 +264,6 @@ namespace SpockEngine
         private extern static void UITable_SetRowBackgroundColor(ulong aInstance, Math.vec4[] aColors);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITable_ClearRowBackgroundColors(ulong aInstance);
+        private extern static void UITable_ClearRowBackgroundColor(ulong aInstance);
     }
 }

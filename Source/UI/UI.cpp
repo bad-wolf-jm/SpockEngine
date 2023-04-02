@@ -100,11 +100,11 @@ namespace SE::Core::UI
         style.GrabRounding      = 3;
     }
 
-    math::vec4* GetStyleColor(ImGuiCol aColor )
+    void GetStyleColor( ImGuiCol aColor, math::vec4 *aOut )
     {
-        auto const& lColor = ImGui::GetStyleColorVec4( aColor );
+        auto const &lColor = ImGui::GetStyleColorVec4( aColor );
 
-        return new math::vec4{lColor.x, lColor.y, lColor.z, lColor.w};
+        *aOut = math::vec4{ lColor.x, lColor.y, lColor.z, lColor.w };
     }
 
     void Text( const char *a_Text ) { ImGui::Text( a_Text ); }

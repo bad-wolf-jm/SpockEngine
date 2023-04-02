@@ -151,8 +151,8 @@ namespace SE::Core
         auto lSelf = static_cast<UITable *>( aSelf );
 
         lSelf->mRowBackgroundColor.clear();
-        for( auto &x : DotNetRuntime::AsVector<ImVec4 *>( static_cast<MonoObject *>( aValue ) ) )
-            lSelf->mRowBackgroundColor.push_back( ImColor( *x ) );
+        for( auto &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aValue ) ) )
+            lSelf->mRowBackgroundColor.push_back( ImColor( x ) );
     }
 
     sFloat64Column::sFloat64Column( std::string aHeader, float aInitialSize, std::string aFormat, std::string aNaNFormat )

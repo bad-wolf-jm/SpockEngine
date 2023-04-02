@@ -40,6 +40,7 @@ namespace SE::Core
 
         static void *UIWorkspaceDocument_Create();
         static void  UIWorkspaceDocument_Destroy( void *aInstance );
+        static void  UIWorkspaceDocument_SetName( void *aInstance, void *aName );
         static void  UIWorkspaceDocument_SetContent( void *aInstance, void *aContent );
         static void  UIWorkspaceDocument_Update( void *aInstance );
     };
@@ -50,12 +51,12 @@ namespace SE::Core
         UIWorkspace()  = default;
         ~UIWorkspace() = default;
 
-        void Add( UIWorkspaceDocument* aDocument );
+        void Add( UIWorkspaceDocument *aDocument );
         void Add( Ref<UIWorkspaceDocument> aDocument );
 
       protected:
-        std::vector<UIWorkspaceDocument*> mDocuments;
-        std::vector<UIWorkspaceDocument*> mCloseQueue;
+        std::vector<UIWorkspaceDocument *> mDocuments;
+        std::vector<UIWorkspaceDocument *> mCloseQueue;
 
         std::vector<Ref<UIWorkspaceDocument>> mDocumentRefs;
         std::vector<Ref<UIWorkspaceDocument>> mCloseQueueRefs;

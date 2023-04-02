@@ -36,6 +36,7 @@
 #include "UI/Components/Label.h"
 #include "UI/Components/Menu.h"
 #include "UI/Components/Plot.h"
+#include "UI/Components/PropertyValue.h"
 #include "UI/Components/Table.h"
 #include "UI/Components/TextOverlay.h"
 #include "UI/Components/TextToggleButton.h"
@@ -752,10 +753,10 @@ namespace SE::Core
 
         mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_Create", UIPlot::UIPlot_Create );
         mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_Destroy", UIPlot::UIPlot_Destroy );
-        mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_AddColumn", UIPlot::UIPlot_Clear );
+        mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_Clear", UIPlot::UIPlot_Clear );
         mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_ConfigureLegend", UIPlot::UIPlot_ConfigureLegend );
         mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_Add", UIPlot::UIPlot_Add );
-        mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_SetAxisLimits", UIPlot::UIPlot_SetAxisLimits );
+        mono_add_internal_call( "SpockEngine.UIPlotAxis::UIPlot_SetAxisLimits", UIPlot::UIPlot_SetAxisLimits );
 
         mono_add_internal_call( "SpockEngine.UIPlotData::UIPlotData_SetLegend", sPlotData::UIPlotData_SetLegend );
         mono_add_internal_call( "SpockEngine.UIPlotData::UIPlotData_SetColor", sPlotData::UIPlotData_SetColor );
@@ -798,6 +799,8 @@ namespace SE::Core
                                 UIWorkspaceDocument::UIWorkspaceDocument_SetContent );
         mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_Update",
                                 UIWorkspaceDocument::UIWorkspaceDocument_Update );
+        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_SetName",
+                                UIWorkspaceDocument::UIWorkspaceDocument_SetName );
 
         mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_Create", UIMenuItem::UIMenuItem_Create );
         mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_CreateWithText", UIMenuItem::UIMenuItem_CreateWithText );
@@ -819,5 +822,17 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_AddMenu", UIMenu::UIMenu_AddMenu );
         mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_AddSeparator", UIMenu::UIMenu_AddSeparator );
         mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_Update", UIMenu::UIMenu_Update );
+
+        mono_add_internal_call( "SpockEngine.UIPropertyValue::UIPropertyValue_Create", UIPropertyValue::UIPropertyValue_Create );
+        mono_add_internal_call( "SpockEngine.UIPropertyValue::UIPropertyValue_CreateWithText",
+                                UIPropertyValue::UIPropertyValue_CreateWithText );
+        mono_add_internal_call( "SpockEngine.UIPropertyValue::UIPropertyValue_CreateWithTextAndOrientation",
+                                UIPropertyValue::UIPropertyValue_CreateWithTextAndOrientation );
+        mono_add_internal_call( "SpockEngine.UIPropertyValue::UIPropertyValue_Destroy", UIPropertyValue::UIPropertyValue_Destroy );
+        mono_add_internal_call( "SpockEngine.UIPropertyValue::UIPropertyValue_SetValue", UIPropertyValue::UIPropertyValue_SetValue );
+        mono_add_internal_call( "SpockEngine.UIPropertyValue::UIPropertyValue_SetValueFont",
+                                UIPropertyValue::UIPropertyValue_SetValueFont );
+        mono_add_internal_call( "SpockEngine.UIPropertyValue::UIPropertyValue_SetNameFont",
+                                UIPropertyValue::UIPropertyValue_SetNameFont );
     }
 } // namespace SE::Core

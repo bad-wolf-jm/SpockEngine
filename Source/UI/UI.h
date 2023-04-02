@@ -58,6 +58,7 @@ namespace SE::Core::UI
     void SetNextWindowPosition( math::vec2 a_Position );
     void SetNextWindowSize( math::vec2 a_Size );
 
-    math::vec4 *GetStyleColor(ImGuiCol aColor );
+    // math::vec4 *GetStyleColor(ImGuiCol *aColor );
+    void GetStyleColor(ImGuiCol aColor, math::vec4 *aOut );
 
 } // namespace SE::Core::UI

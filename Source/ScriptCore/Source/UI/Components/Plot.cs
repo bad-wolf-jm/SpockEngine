@@ -227,6 +227,13 @@ namespace SpockEngine
         public UIPlot() : base(UIPlot_Create())
         {
             mPlots = new List<UIPlotData>();
+
+            x1 = new UIPlotAxis(mInstance, eUIPlotAxis.X1);
+            x2 = new UIPlotAxis(mInstance, eUIPlotAxis.X2);
+            x3 = new UIPlotAxis(mInstance, eUIPlotAxis.X3);
+            y1 = new UIPlotAxis(mInstance, eUIPlotAxis.Y1);
+            y2 = new UIPlotAxis(mInstance, eUIPlotAxis.Y2);
+            y3 = new UIPlotAxis(mInstance, eUIPlotAxis.Y3);
         }
 
         public UIPlot(ulong aSelf) : base(aSelf)
