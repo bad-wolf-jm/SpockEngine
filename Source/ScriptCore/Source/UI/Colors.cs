@@ -1,6 +1,8 @@
 using System;
 using System.Runtime.CompilerServices;
 
+using Math = SpockEngine.Math;
+
 namespace SpockEngine
 {
     public enum UIStyleColor
@@ -79,8 +81,16 @@ namespace SpockEngine
             return new Math.vec4(aRed, aGreen, aBlue, aAlpha);
         }
 
+        public static Math.vec4 GetStyleColor(UIStyleColor aColor)
+        {
+            Math.vec4 lOut = new Math.vec4();
+            GetStyleColor((int)aColor, out lOut);
+
+            return lOut;
+        }
+
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        public extern static Math.vec4 GetStyleColor(UIStyleColor aColor);
+        public extern static void GetStyleColor(int aColor, out Math.vec4 aOut);
     }
 
 }

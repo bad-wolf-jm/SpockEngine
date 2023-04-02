@@ -1,4 +1,5 @@
 #include "Workspace.h"
+#include "DotNet/Runtime.h"
 
 #include <algorithm>
 #include <iterator>
@@ -27,7 +28,10 @@ namespace SE::Core
         return static_cast<void *>( lNewDocument );
     }
 
-    void UIWorkspaceDocument::UIWorkspaceDocument_Destroy( void *aInstance ) { delete static_cast<UIWorkspaceDocument *>( aInstance ); }
+    void UIWorkspaceDocument::UIWorkspaceDocument_Destroy( void *aInstance )
+    {
+        delete static_cast<UIWorkspaceDocument *>( aInstance );
+    }
 
     void UIWorkspaceDocument::UIWorkspaceDocument_SetContent( void *aInstance, void *aContent )
     {
@@ -42,6 +46,14 @@ namespace SE::Core
         auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
 
         lInstance->Update();
+    }
+
+    void UIWorkspaceDocument::UIWorkspaceDocument_SetName( void *aInstance, void *aName )
+    {
+        auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
+        auto lName     = DotNetRuntime::NewString( static_cast<MonoString *>( aName ) );
+
+        lInstance->mName = lName;
     }
 
     void UIWorkspace::PushStyles() {}

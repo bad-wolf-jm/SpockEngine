@@ -7,10 +7,8 @@
 
 #include "DotNet/Instance.h"
 
-namespace SE::OtdrEditor
+namespace SE::Core
 {
-    using namespace SE::Core;
-
     class UIPropertyValue : public UIBoxLayout
     {
       public:
@@ -38,9 +36,10 @@ namespace SE::OtdrEditor
       public:
         static void *UIPropertyValue_Create();
         static void *UIPropertyValue_CreateWithText( void *aText );
+        static void *UIPropertyValue_CreateWithTextAndOrientation( void *aText, eBoxLayoutOrientation aOrientation );
         static void  UIPropertyValue_Destroy( void *aInstance );
         static void  UIPropertyValue_SetValue( void *aInstance, void *aText );
-
-
+        static void  UIPropertyValue_SetValueFont( void *aInstance, FontFamilyFlags aFont );
+        static void  UIPropertyValue_SetNameFont( void *aInstance, FontFamilyFlags aFont );
     };
-} // namespace SE::OtdrEditor
+} // namespace SE::Core

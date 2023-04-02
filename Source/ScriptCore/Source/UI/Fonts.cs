@@ -3,6 +3,20 @@ using System.Runtime.CompilerServices;
 
 namespace SpockEngine
 {
+
+    public enum eFontFamily
+    {
+        DISPLAY,
+        H1,
+        H2,
+        H3,
+        EM,
+        NORMAL,
+        SMALL,
+        TINY,
+        MONOSPACE
+    }
+
     public class UIFont
     {
         public class Icons

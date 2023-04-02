@@ -43,7 +43,7 @@ namespace SE::Core
         fs::path mIconFont;
     };
 
-    enum class FontFamilyFlags : uint8_t
+    enum class FontFamilyFlags : int32_t
     {
         DISPLAY,
         H1,
