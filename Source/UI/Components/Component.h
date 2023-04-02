@@ -43,7 +43,8 @@ namespace SE::Core
         void SetHorizontalAlignment( eHorizontalAlignment const &aAlignment );
         void SetVerticalAlignment( eVerticalAlignment const &aAlignment );
 
-        void SetBackgroundColor( math::vec4 aColor );
+        void   SetBackgroundColor( math::vec4 aColor );
+        ImVec4 BackgroundColor() { return mBackgroundColor; }
 
       protected:
         math::vec4 mPadding{};
@@ -67,5 +68,15 @@ namespace SE::Core
         virtual void DrawContent( ImVec2 aPosition, ImVec2 aSize ) = 0;
 
         bool IsHovered();
+
+      public:
+        static void UIComponent_SetPaddingAll( void *aSelf, float aPaddingAll );
+        static void UIComponent_SetPaddingPairs( void *aSelf, float aPaddingTopBottom, float aPaddingLeftRight );
+        static void UIComponent_SetPaddingIndividual( void *aSelf, float aPaddingTop, float aPaddingBottom, float aPaddingLeft,
+                                                      float aPaddingRight );
+        static void UIComponent_SetAlignment( void *aSelf, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment );
+        static void UIComponent_SetHorizontalAlignment( void *aSelf, eHorizontalAlignment aAlignment );
+        static void UIComponent_SetVerticalAlignment( void *aSelf, eVerticalAlignment aAlignment );
+        static void UIComponent_SetBackgroundColor( void *aSelf, math::vec4 *aColor );
     };
 } // namespace SE::Core

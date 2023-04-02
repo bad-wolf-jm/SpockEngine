@@ -22,8 +22,6 @@ namespace SE::Core
         ImVec2 TopLeft();
         ImVec2 BottomRight();
 
-        void   SetBackgroundColor( math::vec4 aColor );
-        ImVec4 BackgroundColor();
         void   SetTintColor( math::vec4 aColor );
         ImVec4 TintColor();
 
@@ -39,7 +37,6 @@ namespace SE::Core
         ImVec2 mSize{};
         ImVec2 mTopLeft{};
         ImVec2 mBottomRight{};
-        ImVec4 mBackgroundColor{ 0.0f, 0.0f, 0.0f, 0.0f };
         ImVec4 mTintColor{ 1.0f, 1.0f, 1.0f, 1.0f };
 
       private:
@@ -56,7 +53,7 @@ namespace SE::Core
         static void  UIBaseImage_SetImage( void *aInstance, void* aPath );
         static void  UIBaseImage_SetSize( void *aInstance, float aWidth, float aHeight );
         static void  UIBaseImage_SetRect( void *aInstance, math::vec2 *aTopLeft, math::vec2 *aBottomRight );
-        static void  UIBaseImage_SetBackgroundColor( void *aInstance, math::vec4 *aColor );
+        // static void  UIBaseImage_SetBackgroundColor( void *aInstance, math::vec4 *aColor );
         static void  UIBaseImage_SetTintColor( void *aInstance, math::vec4 *aColor );
     };
 } // namespace SE::Core

@@ -52,9 +52,6 @@ namespace SE::Core
     ImVec2 UIBaseImage::TopLeft() { return mTopLeft; }
     ImVec2 UIBaseImage::BottomRight() { return mBottomRight; }
 
-    void UIBaseImage::SetBackgroundColor( math::vec4 aColor ) { mBackgroundColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
-    ImVec4 UIBaseImage::BackgroundColor() { return mBackgroundColor; }
-
     void   UIBaseImage::SetTintColor( math::vec4 aColor ) { mTintColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
     ImVec4 UIBaseImage::TintColor() { return mTintColor; }
 
@@ -105,12 +102,12 @@ namespace SE::Core
         lInstance->SetRect( *aTopLeft, *aBottomRight );
     }
 
-    void UIBaseImage::UIBaseImage_SetBackgroundColor( void *aInstance, math::vec4 *aColor )
-    {
-        auto lInstance = static_cast<UIBaseImage *>( aInstance );
+    // void UIBaseImage::UIBaseImage_SetBackgroundColor( void *aInstance, math::vec4 *aColor )
+    // {
+    //     auto lInstance = static_cast<UIBaseImage *>( aInstance );
 
-        lInstance->SetBackgroundColor( *aColor );
-    }
+    //     lInstance->SetBackgroundColor( *aColor );
+    // }
 
     void UIBaseImage::UIBaseImage_SetTintColor( void *aInstance, math::vec4 *aColor )
     {

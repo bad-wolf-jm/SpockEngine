@@ -104,4 +104,55 @@ namespace SE::Core
 
     bool IsHovered() { return ImGui::IsItemHovered(); }
 
+    void UIComponent::UIComponent_SetPaddingAll( void *aSelf, float aPaddingAll )
+    {
+        auto lSelf = static_cast<UIComponent *>( aSelf );
+
+        lSelf->SetPadding( aPaddingAll );
+    }
+
+    void UIComponent::UIComponent_SetPaddingPairs( void *aSelf, float aPaddingTopBottom, float aPaddingLeftRight )
+    {
+        auto lSelf = static_cast<UIComponent *>( aSelf );
+
+        lSelf->SetPadding( aPaddingTopBottom, aPaddingLeftRight );
+    }
+
+    void UIComponent::UIComponent_SetPaddingIndividual( void *aSelf, float aPaddingTop, float aPaddingBottom, float aPaddingLeft,
+                                                        float aPaddingRight )
+
+    {
+        auto lSelf = static_cast<UIComponent *>( aSelf );
+
+        lSelf->SetPadding( aPaddingTop, aPaddingBottom, aPaddingLeft, aPaddingRight );
+    }
+
+    void UIComponent::UIComponent_SetAlignment( void *aSelf, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
+    {
+        auto lSelf = static_cast<UIComponent *>( aSelf );
+
+        lSelf->SetAlignment( aHAlignment, aVAlignment );
+    }
+
+    void UIComponent::UIComponent_SetHorizontalAlignment( void *aSelf, eHorizontalAlignment aAlignment )
+    {
+        auto lSelf = static_cast<UIComponent *>( aSelf );
+
+        lSelf->SetHorizontalAlignment( aAlignment );
+    }
+
+    void UIComponent::UIComponent_SetVerticalAlignment( void *aSelf, eVerticalAlignment aAlignment )
+    {
+        auto lSelf = static_cast<UIComponent *>( aSelf );
+
+        lSelf->SetVerticalAlignment( aAlignment );
+    }
+
+    void UIComponent::UIComponent_SetBackgroundColor( void *aSelf, math::vec4 *aColor )
+    {
+        auto lSelf = static_cast<UIComponent *>( aSelf );
+
+        lSelf->SetBackgroundColor( *aColor );
+    }
+
 } // namespace SE::Core

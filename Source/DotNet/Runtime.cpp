@@ -29,6 +29,7 @@
 #include "UI/Components/Button.h"
 #include "UI/Components/CheckBox.h"
 #include "UI/Components/ComboBox.h"
+#include "UI/Components/Component.h"
 #include "UI/Components/Image.h"
 #include "UI/Components/ImageButton.h"
 #include "UI/Components/ImageToggleButton.h"
@@ -588,6 +589,18 @@ namespace SE::Core
 
         mono_add_internal_call( "SpockEngine.UIColor::GetStyleColor", SE::Core::UI::GetStyleColor );
 
+        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetPaddingAll", UIComponent::UIComponent_SetPaddingAll );
+        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetPaddingPairs", UIComponent::UIComponent_SetPaddingPairs );
+        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetPaddingIndividual",
+                                UIComponent::UIComponent_SetPaddingIndividual );
+        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetAlignment", UIComponent::UIComponent_SetAlignment );
+        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetHorizontalAlignment",
+                                UIComponent::UIComponent_SetHorizontalAlignment );
+        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetVerticalAlignment",
+                                UIComponent::UIComponent_SetVerticalAlignment );
+        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetBackgroundColor",
+                                UIComponent::UIComponent_SetBackgroundColor );
+
         mono_add_internal_call( "SpockEngine.UIForm::UIForm_Create", UIForm::UIForm_Create );
         mono_add_internal_call( "SpockEngine.UIForm::UIForm_Destroy", UIForm::UIForm_Destroy );
         mono_add_internal_call( "SpockEngine.UIForm::UIForm_SetTitle", UIForm::UIForm_SetTitle );
@@ -616,8 +629,6 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetImage", UIBaseImage::UIBaseImage_SetImage );
         mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetSize", UIBaseImage::UIBaseImage_SetSize );
         mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetRect", UIBaseImage::UIBaseImage_SetRect );
-        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetBackgroundColor",
-                                UIBaseImage::UIBaseImage_SetBackgroundColor );
         mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetTintColor", UIBaseImage::UIBaseImage_SetTintColor );
 
         mono_add_internal_call( "SpockEngine.UIImage::UIImage_Create", UIImage::UIImage_Create );

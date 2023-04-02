@@ -15,8 +15,6 @@ namespace SpockEngine
 
         public void SetSize(float aWidth, float aHeight) { UIBaseImage_SetSize(mInstance, aWidth, aHeight); }
 
-        public void SetBackgroundColor(Math.vec4 aColor) { UIBaseImage_SetBackgroundColor(mInstance, aColor); }
-
         public void SetTintColor(Math.vec4 aColor) { UIBaseImage_SetTintColor(mInstance, aColor); }
 
         public void SetRect(Math.vec2 aTopLeft, Math.vec2 aBottomRight) { UIBaseImage_SetRect(mInstance, aTopLeft, aBottomRight); }
@@ -38,9 +36,6 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIBaseImage_SetRect(ulong aInstance, Math.vec2 aTopLeft, Math.vec2 aBottomRight);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBaseImage_SetBackgroundColor(ulong aInstance, Math.vec4 aColor);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIBaseImage_SetTintColor(ulong aInstance, Math.vec4 aColor);
