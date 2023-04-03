@@ -18,7 +18,7 @@ namespace SpockEngine
 
         public UIBoxLayout(eBoxLayoutOrientation aOrientation) : this(UIBoxLayout_CreateWithOrientation(aOrientation), false) { }
 
-        ~UIBoxLayout() { if (mDerived) UIBoxLayout_Destroy(mInstance); }
+        ~UIBoxLayout() { if (!mDerived) UIBoxLayout_Destroy(mInstance); }
 
         public void SetItemSpacing(float aItemSpacing)
         {
