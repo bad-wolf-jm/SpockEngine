@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace SpockEngine
@@ -34,13 +35,17 @@ namespace SpockEngine
 
     public class UIWorkspace : UIComponent
     {
-        public UIWorkspace() : base(UIWorkspace_Create()) { }
-        public UIWorkspace(ulong aSelf) : base(aSelf) { }
+        private List<UIWorkspaceDocument> mDocuments;
+
+        public UIWorkspace() : base(UIWorkspace_Create()) { mDocuments = new List<UIWorkspaceDocument>(); }
+        public UIWorkspace(ulong aSelf) : base(aSelf) { mDocuments = new List<UIWorkspaceDocument>(); }
 
         ~UIWorkspace() { UIWorkspace_Destroy(mInstance); }
 
         public void Add(UIWorkspaceDocument aDocument)
         {
+            mDocuments.Add(aDocument);
+            
             UIWorkspace_Add(mInstance, aDocument.Instance);
         }
 
