@@ -87,7 +87,7 @@ namespace SE::OtdrEditor
         mTestFailResultTable->OnElementClicked( [&]( sTestFailElement const &aElement )
                                                 { LoadIOlmDiffData( aElement.mFilename, true ); } );
 
-        mMainMenu = UIMenu( "File" );
+        // mMainMenu = UIMenu( "File" );
         // mMainMenu.AddAction( fmt::format( "{} Load iOlm", ICON_FA_PLUS_CIRCLE ), "" )
         //     ->OnTrigger(
         //         [&]()
@@ -107,18 +107,18 @@ namespace SE::OtdrEditor
         //             if( lFilePath.has_value() ) LoadIOlmDiffData( fs::path( lFilePath.value() ) );
         //         } );
 
-        mMainMenu.AddSeparator();
-        mMainMenu.AddAction( fmt::format( "{} Load test report", ICON_FA_PLUS_CIRCLE ), "" )
-            ->OnTrigger(
-                [&]()
-                {
-                    auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
-                                                            "OLM Files (*.iolm)\0*.iolm\0All Files (*.*)\0*.*\0" );
+        // mMainMenu.AddSeparator();
+        // mMainMenu.AddAction( fmt::format( "{} Load test report", ICON_FA_PLUS_CIRCLE ), "" )
+        //     ->OnTrigger(
+        //         [&]()
+        //         {
+        //             auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
+        //                                                     "OLM Files (*.iolm)\0*.iolm\0All Files (*.*)\0*.*\0" );
 
-                    if( lFilePath.has_value() ) LoadTestReport( fs::path( lFilePath.value() ).parent_path() );
-                } );
-        mMainMenu.AddSeparator();
-        mMainMenu.AddAction( fmt::format( "{} Exit", ICON_FA_WINDOW_CLOSE_O ), "" )->OnTrigger( [&]() { mRequestQuit = true; } );
+        //             if( lFilePath.has_value() ) LoadTestReport( fs::path( lFilePath.value() ).parent_path() );
+        //         } );
+        // mMainMenu.AddSeparator();
+        // mMainMenu.AddAction( fmt::format( "{} Exit", ICON_FA_WINDOW_CLOSE_O ), "" )->OnTrigger( [&]() { mRequestQuit = true; } );
     }
 
     OtdrWindow::OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
@@ -183,7 +183,7 @@ namespace SE::OtdrEditor
         // }
         // ImGui::End();
 
-        mTestDialog->Update();
+        // mTestDialog->Update();
 
         // if( mDataInstance )
         // {
@@ -409,59 +409,59 @@ namespace SE::OtdrEditor
     //     }
     // }
 
-    void OtdrWindow::LoadTestReport( fs::path aPath )
-    {
-        mTestFailResultTable->Clear();
+    // void OtdrWindow::LoadTestReport( fs::path aPath )
+    // {
+    //     mTestFailResultTable->Clear();
 
-        std::vector<sTestFailElement> lTableRows;
+    //     std::vector<sTestFailElement> lTableRows;
 
-        for( auto const &lFile : std::filesystem::directory_iterator( aPath ) )
-        {
-            pugi::xml_document     doc;
-            pugi::xml_parse_result result = doc.load_file( lFile.path().c_str() );
+    //     for( auto const &lFile : std::filesystem::directory_iterator( aPath ) )
+    //     {
+    //         pugi::xml_document     doc;
+    //         pugi::xml_parse_result result = doc.load_file( lFile.path().c_str() );
 
-            if( !result ) continue;
+    //         if( !result ) continue;
 
-            auto lRoot           = doc.child( "TestDataFailInfo" );
-            auto lTestName       = lRoot.child( "TestName" ).child_value();
-            auto lTestDate       = lRoot.child( "DateString" ).child_value();
-            auto lFailesFileList = lRoot.child( "FailedFiles" );
+    //         auto lRoot           = doc.child( "TestDataFailInfo" );
+    //         auto lTestName       = lRoot.child( "TestName" ).child_value();
+    //         auto lTestDate       = lRoot.child( "DateString" ).child_value();
+    //         auto lFailesFileList = lRoot.child( "FailedFiles" );
 
-            for( pugi::xml_node lInfo : lFailesFileList.children( "FailedFileInfo" ) )
-            {
-                auto *lFileName = lInfo.child( "Filename" ).child_value();
+    //         for( pugi::xml_node lInfo : lFailesFileList.children( "FailedFileInfo" ) )
+    //         {
+    //             auto *lFileName = lInfo.child( "Filename" ).child_value();
 
-                for( pugi::xml_node lFailInfo : lInfo.children( "FailInfos" ) )
-                {
-                    for( pugi::xml_node lFail : lFailInfo.children( "FailInfo" ) )
-                    {
-                        auto &lNewData = lTableRows.emplace_back();
+    //             for( pugi::xml_node lFailInfo : lInfo.children( "FailInfos" ) )
+    //             {
+    //                 for( pugi::xml_node lFail : lFailInfo.children( "FailInfo" ) )
+    //                 {
+    //                     auto &lNewData = lTableRows.emplace_back();
 
-                        lNewData.mTestName              = std::string( lTestName );
-                        lNewData.mTestDate              = std::string( lTestDate );
-                        lNewData.mFilename              = std::string( lFileName );
-                        lNewData.mLinkElementIndex      = std::string( lFail.child( "LinkElementIndex" ).child_value() );
-                        lNewData.mSubLinkElementIndex   = std::string( lFail.child( "SubLinkElementIndex" ).child_value() );
-                        lNewData.mPhysicalEventIndex    = std::string( lFail.child( "PhysicalEventIndex" ).child_value() );
-                        lNewData.mLinkElementPosition   = std::stod( lFail.child( "LinkElementPosition" ).child_value() );
-                        lNewData.mIsSubElement          = std::string( lFail.child( "IsSubElement" ).child_value() );
-                        lNewData.mWavelength            = std::stod( lFail.child( "Wavelength" ).child_value() );
-                        lNewData.mPhysicalEventPosition = std::stod( lFail.child( "PhysicalEventPosition" ).child_value() );
-                        lNewData.mSinglePulseTraceIndex = std::string( lFail.child( "SinglePulseTraceIndex" ).child_value() );
-                        lNewData.mMessage               = std::string( lFail.child( "Message" ).child_value() );
-                    }
-                }
-            }
-        }
+    //                     lNewData.mTestName              = std::string( lTestName );
+    //                     lNewData.mTestDate              = std::string( lTestDate );
+    //                     lNewData.mFilename              = std::string( lFileName );
+    //                     lNewData.mLinkElementIndex      = std::string( lFail.child( "LinkElementIndex" ).child_value() );
+    //                     lNewData.mSubLinkElementIndex   = std::string( lFail.child( "SubLinkElementIndex" ).child_value() );
+    //                     lNewData.mPhysicalEventIndex    = std::string( lFail.child( "PhysicalEventIndex" ).child_value() );
+    //                     lNewData.mLinkElementPosition   = std::stod( lFail.child( "LinkElementPosition" ).child_value() );
+    //                     lNewData.mIsSubElement          = std::string( lFail.child( "IsSubElement" ).child_value() );
+    //                     lNewData.mWavelength            = std::stod( lFail.child( "Wavelength" ).child_value() );
+    //                     lNewData.mPhysicalEventPosition = std::stod( lFail.child( "PhysicalEventPosition" ).child_value() );
+    //                     lNewData.mSinglePulseTraceIndex = std::string( lFail.child( "SinglePulseTraceIndex" ).child_value() );
+    //                     lNewData.mMessage               = std::string( lFail.child( "Message" ).child_value() );
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        mTestFailResultTable->SetData( lTableRows );
-    }
+    //     mTestFailResultTable->SetData( lTableRows );
+    // }
 
     bool OtdrWindow::RenderMainMenu()
     {
         UI::Text( ApplicationIcon.c_str() );
 
-        mMainMenu.Update();
+        // mMainMenu.Update();
 
         return mRequestQuit;
     }
