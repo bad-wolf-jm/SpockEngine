@@ -28,29 +28,28 @@
 
 namespace SE::OtdrEditor
 {
-
     using namespace SE::Core;
     // using namespace SE::Core::EntityComponentSystem::Components;
 
-    struct sDotNetLinkElement
-    {
-        int       mRowIndex;
-        int       mLinkIndex;
-        int       mSubLinkIndex;
-        int       mEventIndex;
-        int       mSubEventIndex;
-        bool      mIsSubElement;
-        int       mDiagnosicCount;
-        ePassFail mLossPassFail;
-        ePassFail mReflectancePassFail;
-        void     *mLinkElement;
-        void     *mPhysicalEvent;
-        void     *mPeakTrace;
-        void     *mDetectionTrace;
-        void     *mAttributes;
-        void     *mAcquisitionData;
-        void     *mFiberInfo;
-    };
+    // struct sDotNetLinkElement
+    // {
+    //     int       mRowIndex;
+    //     int       mLinkIndex;
+    //     int       mSubLinkIndex;
+    //     int       mEventIndex;
+    //     int       mSubEventIndex;
+    //     bool      mIsSubElement;
+    //     int       mDiagnosicCount;
+    //     ePassFail mLossPassFail;
+    //     ePassFail mReflectancePassFail;
+    //     void     *mLinkElement;
+    //     void     *mPhysicalEvent;
+    //     void     *mPeakTrace;
+    //     void     *mDetectionTrace;
+    //     void     *mAttributes;
+    //     void     *mAcquisitionData;
+    //     void     *mFiberInfo;
+    // };
 
     static std::string UTF16ToAscii( const char *aPayloadData, size_t aSize )
     {
@@ -65,48 +64,48 @@ namespace SE::OtdrEditor
     {
         mTestDialog = New<UIDialog>( "Test", math::vec2{ 640, 480 } );
         mWorkspaceArea.ConfigureUI();
-        mLinkElementTable->OnElementClicked(
-            [&]( sLinkElement const &aElement )
-            {
-                static auto &lOlmMeasurementClass = DotNetRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
-                static auto &lOlmAttributeClass =
-                    DotNetRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
+        // mLinkElementTable->OnElementClicked(
+        //     [&]( sLinkElement const &aElement )
+        //     {
+        //         static auto &lOlmMeasurementClass = DotNetRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
+        //         static auto &lOlmAttributeClass =
+        //             DotNetRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
 
-                auto lPhysicalEvent = aElement.mPhysicalEvent;
-                auto lAttributes    = aElement.mAttributes;
+        //         auto lPhysicalEvent = aElement.mPhysicalEvent;
+        //         auto lAttributes    = aElement.mAttributes;
 
-                if( *lPhysicalEvent && *lAttributes ) mEventOverview.SetData( lPhysicalEvent, lAttributes );
+        //         if( *lPhysicalEvent && *lAttributes ) mEventOverview.SetData( lPhysicalEvent, lAttributes );
 
-                auto lAcquisitionDataInstance = aElement.mAcquisitionData;
-                if( aElement.mAcquisitionData && *aElement.mAcquisitionData )
-                    mAcquisitionDataOverview.SetData( aElement.mPeakTrace, aElement.mAcquisitionData, aElement.mFiberInfo );
+        //         auto lAcquisitionDataInstance = aElement.mAcquisitionData;
+        //         if( aElement.mAcquisitionData && *aElement.mAcquisitionData )
+        //             mAcquisitionDataOverview.SetData( aElement.mPeakTrace, aElement.mAcquisitionData, aElement.mFiberInfo );
 
-                mTracePlot.Clear();
-                mTracePlot.SetEventData( aElement, true, true, true );
-            } );
+        //         mTracePlot.Clear();
+        //         mTracePlot.SetEventData( aElement, true, true, true );
+        //     } );
 
         mTestFailResultTable->OnElementClicked( [&]( sTestFailElement const &aElement )
                                                 { LoadIOlmDiffData( aElement.mFilename, true ); } );
 
         mMainMenu = UIMenu( "File" );
-        mMainMenu.AddAction( fmt::format( "{} Load iOlm", ICON_FA_PLUS_CIRCLE ), "" )
-            ->OnTrigger(
-                [&]()
-                {
-                    auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
-                                                            "OLM Files (*.iolm)\0*.iolm\0All Files (*.*)\0*.*\0" );
+        // mMainMenu.AddAction( fmt::format( "{} Load iOlm", ICON_FA_PLUS_CIRCLE ), "" )
+        //     ->OnTrigger(
+        //         [&]()
+        //         {
+        //             auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
+        //                                                     "OLM Files (*.iolm)\0*.iolm\0All Files (*.*)\0*.*\0" );
 
-                    if( lFilePath.has_value() ) LoadIOlmData( fs::path( lFilePath.value() ) );
-                } );
-        mMainMenu.AddAction( fmt::format( "{} Load iOlm Diff", ICON_FA_PLUS_CIRCLE ), "" )
-            ->OnTrigger(
-                [&]()
-                {
-                    auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
-                                                            "OLM Files (*.iolm)\0*.iolm\0All Files (*.*)\0*.*\0" );
+        //             if( lFilePath.has_value() ) LoadIOlmData( fs::path( lFilePath.value() ) );
+        //         } );
+        // mMainMenu.AddAction( fmt::format( "{} Load iOlm Diff", ICON_FA_PLUS_CIRCLE ), "" )
+        //     ->OnTrigger(
+        //         [&]()
+        //         {
+        //             auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
+        //                                                     "OLM Files (*.iolm)\0*.iolm\0All Files (*.*)\0*.*\0" );
 
-                    if( lFilePath.has_value() ) LoadIOlmDiffData( fs::path( lFilePath.value() ) );
-                } );
+        //             if( lFilePath.has_value() ) LoadIOlmDiffData( fs::path( lFilePath.value() ) );
+        //         } );
 
         mMainMenu.AddSeparator();
         mMainMenu.AddAction( fmt::format( "{} Load test report", ICON_FA_PLUS_CIRCLE ), "" )
@@ -166,8 +165,8 @@ namespace SE::OtdrEditor
             if( !lRequestQuit && mApplicationInstance )
             {
                 bool lDNRequestQuit = false;
-                lDNRequestQuit = *(bool*)mono_object_unbox(mApplicationInstance->CallMethod( "UpdateMenu" ));
-                lRequestQuit = lRequestQuit || lDNRequestQuit;
+                lDNRequestQuit      = *(bool *)mono_object_unbox( mApplicationInstance->CallMethod( "UpdateMenu" ) );
+                lRequestQuit        = lRequestQuit || lDNRequestQuit;
             }
 
             ImGui::PopStyleVar();
@@ -178,64 +177,64 @@ namespace SE::OtdrEditor
 
         mWorkspaceArea.Update();
 
-        if( ImGui::Begin( "WS", NULL, ImGuiWindowFlags_None ) )
-        {
-            mDocumentArea.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
-        }
-        ImGui::End();
+        // if( ImGui::Begin( "WS", NULL, ImGuiWindowFlags_None ) )
+        // {
+        //     mDocumentArea.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+        // }
+        // ImGui::End();
 
         mTestDialog->Update();
 
-        if( mDataInstance )
-        {
-            static bool pOpen = true;
-            if( ImGui::Begin( "iOlmData", &pOpen, ImGuiWindowFlags_None ) )
-            {
-                if( ImGui::Button( "All Traces" ) )
-                {
-                    mTracePlot.Clear();
-                    mTracePlot.SetEventData( mLinkElementVector );
-                }
-                mTracePlot.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
-            }
-            ImGui::End();
+        // if( mDataInstance )
+        // {
+        //     static bool pOpen = true;
+        //     if( ImGui::Begin( "iOlmData", &pOpen, ImGuiWindowFlags_None ) )
+        //     {
+        //         if( ImGui::Button( "All Traces" ) )
+        //         {
+        //             mTracePlot.Clear();
+        //             mTracePlot.SetEventData( mLinkElementVector );
+        //         }
+        //         mTracePlot.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+        //     }
+        //     ImGui::End();
 
-            if( ImGui::Begin( "iOlmData_Overview", &pOpen, ImGuiWindowFlags_None ) )
-            {
-                mMeasurementOverview.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
-            }
-            ImGui::End();
+        //     if( ImGui::Begin( "iOlmData_Overview", &pOpen, ImGuiWindowFlags_None ) )
+        //     {
+        //         mMeasurementOverview.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+        //     }
+        //     ImGui::End();
 
-            if( ImGui::Begin( "iOlmData_EventOverview", &pOpen, ImGuiWindowFlags_None ) )
-            {
-                mEventOverview.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
-            }
-            ImGui::End();
+        //     if( ImGui::Begin( "iOlmData_EventOverview", &pOpen, ImGuiWindowFlags_None ) )
+        //     {
+        //         mEventOverview.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+        //     }
+        //     ImGui::End();
 
-            if( ImGui::Begin( "iOlmData_AcquisitionDataOverview", &pOpen, ImGuiWindowFlags_None ) )
-            {
-                mAcquisitionDataOverview.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
-            }
-            ImGui::End();
+        //     if( ImGui::Begin( "iOlmData_AcquisitionDataOverview", &pOpen, ImGuiWindowFlags_None ) )
+        //     {
+        //         mAcquisitionDataOverview.Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+        //     }
+        //     ImGui::End();
 
-            if( ImGui::Begin( "iOlmData_LinkElements", &pOpen, ImGuiWindowFlags_None ) )
-            {
-                mLinkElementTable->Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
-            }
-            ImGui::End();
+        //     if( ImGui::Begin( "iOlmData_LinkElements", &pOpen, ImGuiWindowFlags_None ) )
+        //     {
+        //         mLinkElementTable->Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+        //     }
+        //     ImGui::End();
 
-            if( ImGui::Begin( "iOlmData_Events", &pOpen, ImGuiWindowFlags_None ) )
-            {
-                mEventTable->Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
-            }
-            ImGui::End();
+        //     if( ImGui::Begin( "iOlmData_Events", &pOpen, ImGuiWindowFlags_None ) )
+        //     {
+        //         mEventTable->Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+        //     }
+        //     ImGui::End();
 
-            if( !pOpen )
-            {
-                mDataInstance = nullptr;
-                pOpen         = true;
-            }
-        }
+        //     if( !pOpen )
+        //     {
+        //         mDataInstance = nullptr;
+        //         pOpen         = true;
+        //     }
+        // }
 
         if( ImGui::Begin( "Test results", NULL, ImGuiWindowFlags_None ) )
         {
@@ -326,89 +325,89 @@ namespace SE::OtdrEditor
         mDocumentArea.Add( New<UIIolmDiffDocument>( aPath, aReanalyse ) );
     }
 
-    void OtdrWindow::LoadIOlmData( fs::path aPath, bool aReanalyse )
-    {
-        mDocumentArea.Add( New<UIIolmDocument>( aPath, aReanalyse ) );
+    // void OtdrWindow::LoadIOlmData( fs::path aPath, bool aReanalyse )
+    // {
+    //     mDocumentArea.Add( New<UIIolmDocument>( aPath, aReanalyse ) );
 
-        static auto &lFileLoader = DotNetRuntime::GetClassType( "Metrino.Interop.FileLoader" );
-        static auto &lFileClass  = DotNetRuntime::GetClassType( "Metrino.Interop.OlmFile" );
+    //     static auto &lFileLoader = DotNetRuntime::GetClassType( "Metrino.Interop.FileLoader" );
+    //     static auto &lFileClass  = DotNetRuntime::GetClassType( "Metrino.Interop.OlmFile" );
 
-        MonoString *lFilePath   = DotNetRuntime::NewString( aPath.string() );
-        MonoObject *lDataObject = lFileLoader.CallMethod( "LoadOlmData", lFilePath );
+    //     MonoString *lFilePath   = DotNetRuntime::NewString( aPath.string() );
+    //     MonoObject *lDataObject = lFileLoader.CallMethod( "LoadOlmData", lFilePath );
 
-        mDataInstance = New<DotNetInstance>( &lFileClass, lFileClass.Class(), lDataObject );
+    //     mDataInstance = New<DotNetInstance>( &lFileClass, lFileClass.Class(), lDataObject );
 
-        MonoObject               *lTraceData       = mDataInstance->CallMethod( "GetAllTraces" );
-        std::vector<MonoObject *> lTraceDataVector = DotNetRuntime::AsVector<MonoObject *>( lTraceData );
-        if( lTraceDataVector.size() != 0 )
-        {
-            static auto &lTraceDataStructure        = DotNetRuntime::GetClassType( "Metrino.Interop.TracePlotData" );
-            static auto &lSinglePulseTraceClassType = DotNetRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
-            static auto &lAcquisitionDataClassType  = DotNetRuntime::GetClassType( "Metrino.Otdr.AcquisitionData" );
-            static auto &lFiberInfoClassType        = DotNetRuntime::GetClassType( "Metrino.Otdr.PhysicalFiberCharacteristics" );
+    //     MonoObject               *lTraceData       = mDataInstance->CallMethod( "GetAllTraces" );
+    //     std::vector<MonoObject *> lTraceDataVector = DotNetRuntime::AsVector<MonoObject *>( lTraceData );
+    //     if( lTraceDataVector.size() != 0 )
+    //     {
+    //         static auto &lTraceDataStructure        = DotNetRuntime::GetClassType( "Metrino.Interop.TracePlotData" );
+    //         static auto &lSinglePulseTraceClassType = DotNetRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
+    //         static auto &lAcquisitionDataClassType  = DotNetRuntime::GetClassType( "Metrino.Otdr.AcquisitionData" );
+    //         static auto &lFiberInfoClassType        = DotNetRuntime::GetClassType( "Metrino.Otdr.PhysicalFiberCharacteristics" );
 
-            auto &lTraceDataInstance = DotNetInstance( &lTraceDataStructure, lTraceDataStructure.Class(), lTraceDataVector[0] );
+    //         auto &lTraceDataInstance = DotNetInstance( &lTraceDataStructure, lTraceDataStructure.Class(), lTraceDataVector[0] );
 
-            auto lSinglePulseTrace = lTraceDataInstance.GetFieldValue<MonoObject *>( "mTrace" );
-            auto lSinglePulseTraceInstance =
-                New<DotNetInstance>( &lSinglePulseTraceClassType, lSinglePulseTraceClassType.Class(), lSinglePulseTrace );
+    //         auto lSinglePulseTrace = lTraceDataInstance.GetFieldValue<MonoObject *>( "mTrace" );
+    //         auto lSinglePulseTraceInstance =
+    //             New<DotNetInstance>( &lSinglePulseTraceClassType, lSinglePulseTraceClassType.Class(), lSinglePulseTrace );
 
-            auto lAcquisitionData = lTraceDataInstance.GetFieldValue<MonoObject *>( "mAcquisitionData" );
-            auto lAcquisitionDataInstance =
-                New<DotNetInstance>( &lAcquisitionDataClassType, lAcquisitionDataClassType.Class(), lAcquisitionData );
+    //         auto lAcquisitionData = lTraceDataInstance.GetFieldValue<MonoObject *>( "mAcquisitionData" );
+    //         auto lAcquisitionDataInstance =
+    //             New<DotNetInstance>( &lAcquisitionDataClassType, lAcquisitionDataClassType.Class(), lAcquisitionData );
 
-            auto lFiberInfo = lTraceDataInstance.GetPropertyValue( "FiberInfo", "Metrino.Otdr.PhysicalFiberCharacteristics" );
-            mAcquisitionDataOverview.SetData( lSinglePulseTraceInstance, lAcquisitionDataInstance, lFiberInfo );
-        }
+    //         auto lFiberInfo = lTraceDataInstance.GetPropertyValue( "FiberInfo", "Metrino.Otdr.PhysicalFiberCharacteristics" );
+    //         mAcquisitionDataOverview.SetData( lSinglePulseTraceInstance, lAcquisitionDataInstance, lFiberInfo );
+    //     }
 
-        {
-            MonoObject *lLinkElementData = mDataInstance->CallMethod( "GetLinkElements", &aReanalyse );
+    //     {
+    //         MonoObject *lLinkElementData = mDataInstance->CallMethod( "GetLinkElements", &aReanalyse );
 
-            auto lLinkElementVector = DotNetRuntime::AsVector<sDotNetLinkElement>( lLinkElementData );
+    //         auto lLinkElementVector = DotNetRuntime::AsVector<sDotNetLinkElement>( lLinkElementData );
 
-            mLinkElementVector = std::vector<sLinkElement>();
+    //         mLinkElementVector = std::vector<sLinkElement>();
 
-            for( auto const &x : lLinkElementVector )
-            {
-                auto &lElement = mLinkElementVector.emplace_back();
+    //         for( auto const &x : lLinkElementVector )
+    //         {
+    //             auto &lElement = mLinkElementVector.emplace_back();
 
-                lElement.mRowIndex            = x.mRowIndex;
-                lElement.mLinkIndex           = x.mLinkIndex;
-                lElement.mSubLinkIndex        = x.mSubLinkIndex;
-                lElement.mEventIndex          = x.mEventIndex;
-                lElement.mSubEventIndex       = x.mSubEventIndex;
-                lElement.mIsSubElement        = x.mIsSubElement;
-                lElement.mDiagnosicCount      = x.mDiagnosicCount;
-                lElement.mLossPassFail        = x.mLossPassFail;
-                lElement.mReflectancePassFail = x.mReflectancePassFail;
+    //             lElement.mRowIndex            = x.mRowIndex;
+    //             lElement.mLinkIndex           = x.mLinkIndex;
+    //             lElement.mSubLinkIndex        = x.mSubLinkIndex;
+    //             lElement.mEventIndex          = x.mEventIndex;
+    //             lElement.mSubEventIndex       = x.mSubEventIndex;
+    //             lElement.mIsSubElement        = x.mIsSubElement;
+    //             lElement.mDiagnosicCount      = x.mDiagnosicCount;
+    //             lElement.mLossPassFail        = x.mLossPassFail;
+    //             lElement.mReflectancePassFail = x.mReflectancePassFail;
 
-                static auto &lBaseLinkElementClass  = DotNetRuntime::GetClassType( "Metrino.Olm.BaseLinkElement" );
-                static auto &lOlmPhysicalEventClass = DotNetRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
-                static auto &lOlmAttributeClass =
-                    DotNetRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
-                static auto &lAcquisitionDataClassType = DotNetRuntime::GetClassType( "Metrino.Otdr.AcquisitionData" );
-                static auto &lSinglePulseTraceClass    = DotNetRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
-                static auto &lFiberInfoClassType       = DotNetRuntime::GetClassType( "Metrino.Otdr.PhysicalFiberCharacteristics" );
+    //             static auto &lBaseLinkElementClass  = DotNetRuntime::GetClassType( "Metrino.Olm.BaseLinkElement" );
+    //             static auto &lOlmPhysicalEventClass = DotNetRuntime::GetClassType( "Metrino.Olm.OlmPhysicalEvent" );
+    //             static auto &lOlmAttributeClass =
+    //                 DotNetRuntime::GetClassType( "Metrino.Olm.SignalProcessing.MultiPulseEventAttribute" );
+    //             static auto &lAcquisitionDataClassType = DotNetRuntime::GetClassType( "Metrino.Otdr.AcquisitionData" );
+    //             static auto &lSinglePulseTraceClass    = DotNetRuntime::GetClassType( "Metrino.Otdr.SinglePulseTrace" );
+    //             static auto &lFiberInfoClassType       = DotNetRuntime::GetClassType( "Metrino.Otdr.PhysicalFiberCharacteristics" );
 
-                lElement.mLinkElement = New<DotNetInstance>( &lBaseLinkElementClass, lBaseLinkElementClass.Class(), x.mLinkElement );
-                lElement.mPhysicalEvent =
-                    New<DotNetInstance>( &lOlmPhysicalEventClass, lOlmPhysicalEventClass.Class(), x.mPhysicalEvent );
-                lElement.mPeakTrace = New<DotNetInstance>( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), x.mPeakTrace );
-                lElement.mDetectionTrace =
-                    New<DotNetInstance>( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), x.mDetectionTrace );
-                lElement.mAttributes = New<DotNetInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), x.mAttributes );
-                lElement.mAcquisitionData =
-                    New<DotNetInstance>( &lAcquisitionDataClassType, lAcquisitionDataClassType.Class(), x.mAcquisitionData );
-                lElement.mFiberInfo = New<DotNetInstance>( &lFiberInfoClassType, lFiberInfoClassType.Class(), x.mFiberInfo );
-            }
+    //             lElement.mLinkElement = New<DotNetInstance>( &lBaseLinkElementClass, lBaseLinkElementClass.Class(), x.mLinkElement
+    //             ); lElement.mPhysicalEvent =
+    //                 New<DotNetInstance>( &lOlmPhysicalEventClass, lOlmPhysicalEventClass.Class(), x.mPhysicalEvent );
+    //             lElement.mPeakTrace = New<DotNetInstance>( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), x.mPeakTrace );
+    //             lElement.mDetectionTrace =
+    //                 New<DotNetInstance>( &lSinglePulseTraceClass, lSinglePulseTraceClass.Class(), x.mDetectionTrace );
+    //             lElement.mAttributes = New<DotNetInstance>( &lOlmAttributeClass, lOlmAttributeClass.Class(), x.mAttributes );
+    //             lElement.mAcquisitionData =
+    //                 New<DotNetInstance>( &lAcquisitionDataClassType, lAcquisitionDataClassType.Class(), x.mAcquisitionData );
+    //             lElement.mFiberInfo = New<DotNetInstance>( &lFiberInfoClassType, lFiberInfoClassType.Class(), x.mFiberInfo );
+    //         }
 
-            mLinkElementTable->SetData( mLinkElementVector );
-            mTracePlot.Clear();
-            mTracePlot.SetEventData( mLinkElementVector );
+    //         mLinkElementTable->SetData( mLinkElementVector );
+    //         mTracePlot.Clear();
+    //         mTracePlot.SetEventData( mLinkElementVector );
 
-            mMeasurementOverview.SetData( mDataInstance );
-        }
-    }
+    //         mMeasurementOverview.SetData( mDataInstance );
+    //     }
+    // }
 
     void OtdrWindow::LoadTestReport( fs::path aPath )
     {
@@ -462,7 +461,7 @@ namespace SE::OtdrEditor
     {
         UI::Text( ApplicationIcon.c_str() );
 
-        mMainMenu.Update( );
+        mMainMenu.Update();
 
         return mRequestQuit;
     }
