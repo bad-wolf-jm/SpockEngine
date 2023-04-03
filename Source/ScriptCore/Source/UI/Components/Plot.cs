@@ -32,6 +32,13 @@ namespace SpockEngine
         private eUIPlotAxis mXAxis;
 
         private eUIPlotAxis mYAxis;
+        private float mThickness;
+
+        public float Thickness
+        {
+            get { return mThickness; }
+            set { mThickness = value; UIPlotData_SetThickness(mInstance, value); }
+        }
 
         public string Legend
         {
@@ -56,6 +63,9 @@ namespace SpockEngine
             get { return mYAxis; }
             set { mYAxis = value; UIPlotData_SetYAxis(mInstance, value); }
         }
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static ulong UIPlotData_SetThickness(ulong aInstance, float aThickness);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIPlotData_SetLegend(ulong aInstance, string aText);
@@ -262,12 +272,13 @@ namespace SpockEngine
             UIPlot_ConfigureLegend(mInstance, aLegendPadding, aLegendInnerPadding, aLegendSpacing);
         }
 
-        public UIFloat64LinePlot Plot(double[] aX, double[] aY, string aLegend = "", Math.vec4? aColor = null)
+        public UIFloat64LinePlot Plot(double[] aX, double[] aY, string aLegend = "", float aThickness = 1.0f, Math.vec4? aColor = null)
         {
             var lNewPlot = new UIFloat64LinePlot();
             lNewPlot.X = aX;
             lNewPlot.Y = aY;
             lNewPlot.Legend = aLegend;
+            lNewPlot.Thickness = aThickness;
             lNewPlot.Color = aColor.HasValue ? aColor.Value : new Math.vec4(0.0f, 0.0f, 0.0f, -1.0f);
 
             mPlots.Add(lNewPlot);
