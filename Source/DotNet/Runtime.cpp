@@ -2,6 +2,7 @@
 
 #include "Core/Logging.h"
 #include "Core/Memory.h"
+#include "Core/File.h"
 
 #include "Engine/Engine.h"
 
@@ -331,7 +332,14 @@ namespace SE::Core
         return mono_string_new( sRuntimeData->mAppDomain, aString.c_str() );
     }
 
-    std::string DotNetRuntime::NewString( MonoString *aString ) { return std::string( mono_string_to_utf8( aString ) ); }
+    std::string DotNetRuntime::NewString( MonoString *aString ) 
+    { 
+        auto* lCharacters = mono_string_to_utf8( aString );
+        auto lString =  std::string( mono_string_to_utf8( aString ) ); 
+        mono_free(lCharacters);
+
+        return lString;
+    }
 
     void DotNetRuntime::LoadAssemblyClasses()
     {
@@ -509,11 +517,26 @@ namespace SE::Core
         if( sRuntimeData->mConsoleOut ) sRuntimeData->mConsoleOut( DotNetRuntime::NewString( aBuffer ) );
     }
 
+    static MonoString *OpenFile( MonoString *aFilter )
+    {
+        auto lFilter   = DotNetRuntime::NewString( aFilter );
+        char* lCharacters = lFilter.data();
+
+        for(uint32_t i=0; i < lFilter.size(); i++)
+            lCharacters[i] = (lCharacters[i] == '|') ? '\0' : lCharacters[i];
+        auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(), lFilter.c_str() );
+
+        if( lFilePath.has_value() ) return DotNetRuntime::NewString( lFilePath.value() );
+
+        return DotNetRuntime::NewString( "" );;
+    }
+
     void DotNetRuntime::RegisterInternalCppFunctions()
     {
         using namespace MonoInternalCalls;
 
         mono_add_internal_call( "SpockEngine.CppCall::Console_Write", ConsoleWrite );
+        mono_add_internal_call( "SpockEngine.CppCall::OpenFile", OpenFile );
 
         SE_ADD_INTERNAL_CALL( Entity_Create );
         SE_ADD_INTERNAL_CALL( Entity_IsValid );
@@ -601,8 +624,7 @@ namespace SE::Core
                                 UIComponent::UIComponent_SetVerticalAlignment );
         mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetBackgroundColor",
                                 UIComponent::UIComponent_SetBackgroundColor );
-        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetFont",
-                                UIComponent::UIComponent_SetFont );
+        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetFont", UIComponent::UIComponent_SetFont );
 
         mono_add_internal_call( "SpockEngine.UIForm::UIForm_Create", UIForm::UIForm_Create );
         mono_add_internal_call( "SpockEngine.UIForm::UIForm_Destroy", UIForm::UIForm_Destroy );
@@ -760,6 +782,7 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_Add", UIPlot::UIPlot_Add );
         mono_add_internal_call( "SpockEngine.UIPlotAxis::UIPlot_SetAxisLimits", UIPlot::UIPlot_SetAxisLimits );
 
+        mono_add_internal_call( "SpockEngine.UIPlotData::UIPlotData_SetThickness", sPlotData::UIPlotData_SetThickness );
         mono_add_internal_call( "SpockEngine.UIPlotData::UIPlotData_SetLegend", sPlotData::UIPlotData_SetLegend );
         mono_add_internal_call( "SpockEngine.UIPlotData::UIPlotData_SetColor", sPlotData::UIPlotData_SetColor );
         mono_add_internal_call( "SpockEngine.UIPlotData::UIPlotData_SetXAxis", sPlotData::UIPlotData_SetXAxis );
