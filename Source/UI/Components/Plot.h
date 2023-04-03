@@ -41,6 +41,7 @@ namespace SE::Core
         virtual void Render( UIPlot *aParentPlot ) = 0;
 
       public:
+        static void UIPlotData_SetThickness( void *aSelf, float aThickness );
         static void UIPlotData_SetLegend( void *aSelf, void *aText );
         static void UIPlotData_SetColor( void *aSelf, math::vec4 *aColor );
         static void UIPlotData_SetXAxis( void *aSelf, int aAxis );

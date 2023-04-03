@@ -138,6 +138,13 @@ namespace SE::Core
         lSelf->mLegend = lString;
     }
 
+    void sPlotData::UIPlotData_SetThickness( void *aSelf, float aThickness )
+    {
+        auto lSelf   = static_cast<sPlotData *>( aSelf );
+
+        lSelf->mThickness = aThickness;
+    }
+
     void sPlotData::UIPlotData_SetColor( void *aSelf, math::vec4 *aColor )
     {
         auto lSelf = static_cast<sPlotData *>( aSelf );
