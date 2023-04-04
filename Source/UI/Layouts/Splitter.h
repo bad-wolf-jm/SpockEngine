@@ -38,6 +38,7 @@ namespace SE::Core
 
       protected:
         std::vector<SplitterItem> mChildren;
+        std::vector<float>        mItemSizes;
         eBoxLayoutOrientation     mOrientation;
         float                     mItemSpacing = 0.0f;
 
