@@ -201,6 +201,10 @@ namespace SE::Core
             LoadFont( aUIConfiguration.mItalicFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * 1.25f );
         mFonts[FontFamilyFlags::EM] =
             LoadFont( aUIConfiguration.mItalicFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * 1.0f );
+        mFonts[FontFamilyFlags::HUGE] =
+            LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * 1.5f );
+        mFonts[FontFamilyFlags::LARGE] =
+            LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * 1.25f );
         mFonts[FontFamilyFlags::NORMAL] =
             LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize );
         mFonts[FontFamilyFlags::SMALL] =
