@@ -54,6 +54,7 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/Components/TextInput.cpp
     UI/Layouts/BoxLayout.cpp
     UI/Layouts/ZLayout.cpp
+    UI/Layouts/Splitter.cpp
     UI/Form.cpp
     UI/Dialog.cpp
     
