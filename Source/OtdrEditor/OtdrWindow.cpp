@@ -51,18 +51,18 @@ namespace SE::OtdrEditor
     //     void     *mFiberInfo;
     // };
 
-    static std::string UTF16ToAscii( const char *aPayloadData, size_t aSize )
-    {
-        size_t      lPayloadSize = static_cast<size_t>( aSize / 2 );
-        std::string lItemPathStr( lPayloadSize - 1, '\0' );
-        for( uint32_t i = 0; i < lPayloadSize - 1; i++ ) lItemPathStr[i] = aPayloadData[2 * i];
+    // static std::string UTF16ToAscii( const char *aPayloadData, size_t aSize )
+    // {
+    //     size_t      lPayloadSize = static_cast<size_t>( aSize / 2 );
+    //     std::string lItemPathStr( lPayloadSize - 1, '\0' );
+    //     for( uint32_t i = 0; i < lPayloadSize - 1; i++ ) lItemPathStr[i] = aPayloadData[2 * i];
 
-        return lItemPathStr;
-    }
+    //     return lItemPathStr;
+    // }
 
     void OtdrWindow::ConfigureUI()
     {
-        mTestDialog = New<UIDialog>( "Test", math::vec2{ 640, 480 } );
+        // mTestDialog = New<UIDialog>( "Test", math::vec2{ 640, 480 } );
         mWorkspaceArea.ConfigureUI();
         // mLinkElementTable->OnElementClicked(
         //     [&]( sLinkElement const &aElement )
@@ -84,8 +84,8 @@ namespace SE::OtdrEditor
         //         mTracePlot.SetEventData( aElement, true, true, true );
         //     } );
 
-        mTestFailResultTable->OnElementClicked( [&]( sTestFailElement const &aElement )
-                                                { LoadIOlmDiffData( aElement.mFilename, true ); } );
+        // mTestFailResultTable->OnElementClicked( [&]( sTestFailElement const &aElement )
+                                                // { LoadIOlmDiffData( aElement.mFilename, true ); } );
 
         // mMainMenu = UIMenu( "File" );
         // mMainMenu.AddAction( fmt::format( "{} Load iOlm", ICON_FA_PLUS_CIRCLE ), "" )
@@ -125,11 +125,11 @@ namespace SE::OtdrEditor
         : mGraphicContext{ aGraphicContext }
         , mUIOverlay{ aUIOverlay }
     {
-        mLinkElementTable    = New<UILinkElementTable>();
-        mLinkElementTable1   = New<UILinkElementTable>();
-        mEventTable          = New<UIMultiPulseEventTable>();
-        mEventTable1         = New<UIMultiPulseEventTable>();
-        mTestFailResultTable = New<UITestFailResultTable>();
+        // mLinkElementTable    = New<UILinkElementTable>();
+        // mLinkElementTable1   = New<UILinkElementTable>();
+        // mEventTable          = New<UIMultiPulseEventTable>();
+        // mEventTable1         = New<UIMultiPulseEventTable>();
+        // mTestFailResultTable = New<UITestFailResultTable>();
     }
 
     bool OtdrWindow::Display()
@@ -236,61 +236,61 @@ namespace SE::OtdrEditor
         //     }
         // }
 
-        if( ImGui::Begin( "Test results", NULL, ImGuiWindowFlags_None ) )
-        {
-            mTestFailResultTable->Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
-        }
-        ImGui::End();
+        // if( ImGui::Begin( "Test results", NULL, ImGuiWindowFlags_None ) )
+        // {
+        //     mTestFailResultTable->Update( ImGui::GetCursorPos(), ImGui::GetContentRegionAvail() );
+        // }
+        // ImGui::End();
 
-        if( ImGui::Begin( "CONNECTED MODULES", NULL, ImGuiWindowFlags_None ) )
-        {
-            static auto lFirstRun = true;
-            static auto lLastTime =
-                std::chrono::time_point_cast<std::chrono::microseconds>( std::chrono::high_resolution_clock::now() )
-                    .time_since_epoch()
-                    .count();
-            auto lCurrentTime = std::chrono::time_point_cast<std::chrono::microseconds>( std::chrono::high_resolution_clock::now() )
-                                    .time_since_epoch()
-                                    .count();
+        // if( ImGui::Begin( "CONNECTED MODULES", NULL, ImGuiWindowFlags_None ) )
+        // {
+        //     static auto lFirstRun = true;
+        //     static auto lLastTime =
+        //         std::chrono::time_point_cast<std::chrono::microseconds>( std::chrono::high_resolution_clock::now() )
+        //             .time_since_epoch()
+        //             .count();
+        //     auto lCurrentTime = std::chrono::time_point_cast<std::chrono::microseconds>( std::chrono::high_resolution_clock::now() )
+        //                             .time_since_epoch()
+        //                             .count();
 
-            static auto &lMonoGlue          = DotNetRuntime::GetClassType( "Metrino.Interop.Instruments" );
-            static auto &lModuleDescription = DotNetRuntime::GetClassType( "Metrino.Interop.ModuleDescription" );
+        //     static auto &lMonoGlue          = DotNetRuntime::GetClassType( "Metrino.Interop.Instruments" );
+        //     static auto &lModuleDescription = DotNetRuntime::GetClassType( "Metrino.Interop.ModuleDescription" );
 
-            static uint32_t                 lNumConnectedModules  = 0;
-            static std::vector<std::string> lConnectedModuleNames = {};
+        //     static uint32_t                 lNumConnectedModules  = 0;
+        //     static std::vector<std::string> lConnectedModuleNames = {};
 
-            if( lFirstRun || ( ( lCurrentTime - lLastTime ) > 1500000 ) )
-            {
-                lConnectedModuleNames.clear();
-                lLastTime                  = lCurrentTime;
-                auto lConnectedModulesList = lMonoGlue.CallMethod( "GetConnectedModules" );
+        //     if( lFirstRun || ( ( lCurrentTime - lLastTime ) > 1500000 ) )
+        //     {
+        //         lConnectedModuleNames.clear();
+        //         lLastTime                  = lCurrentTime;
+        //         auto lConnectedModulesList = lMonoGlue.CallMethod( "GetConnectedModules" );
 
-                lNumConnectedModules = static_cast<uint32_t>( mono_array_length( (MonoArray *)lConnectedModulesList ) );
+        //         lNumConnectedModules = static_cast<uint32_t>( mono_array_length( (MonoArray *)lConnectedModulesList ) );
 
-                std::vector<MonoObject *> lConnectedModules( lNumConnectedModules );
-                for( uint32_t i = 0; i < lNumConnectedModules; i++ )
-                {
-                    auto lConnectedModule = *( mono_array_addr( (MonoArray *)lConnectedModulesList, MonoObject *, i ) );
-                    auto lInstance        = DotNetInstance( lModuleDescription.Class(), lConnectedModule );
-                    lConnectedModuleNames.push_back( DotNetRuntime::NewString( lInstance.GetFieldValue<MonoString *>( "mName" ) ) );
-                }
+        //         std::vector<MonoObject *> lConnectedModules( lNumConnectedModules );
+        //         for( uint32_t i = 0; i < lNumConnectedModules; i++ )
+        //         {
+        //             auto lConnectedModule = *( mono_array_addr( (MonoArray *)lConnectedModulesList, MonoObject *, i ) );
+        //             auto lInstance        = DotNetInstance( lModuleDescription.Class(), lConnectedModule );
+        //             lConnectedModuleNames.push_back( DotNetRuntime::NewString( lInstance.GetFieldValue<MonoString *>( "mName" ) ) );
+        //         }
 
-                lFirstRun = false;
-            }
+        //         lFirstRun = false;
+        //     }
 
-            if( lNumConnectedModules == 0 )
-            {
-                UI::Text( "No connected modules", lNumConnectedModules );
-            }
-            else
-            {
-                for( uint32_t i = 0; i < lNumConnectedModules; i++ )
-                {
-                    Text( "{} {}", ICON_FA_USB, lConnectedModuleNames[i] );
-                }
-            }
-        }
-        ImGui::End();
+        //     if( lNumConnectedModules == 0 )
+        //     {
+        //         UI::Text( "No connected modules", lNumConnectedModules );
+        //     }
+        //     else
+        //     {
+        //         for( uint32_t i = 0; i < lNumConnectedModules; i++ )
+        //         {
+        //             Text( "{} {}", ICON_FA_USB, lConnectedModuleNames[i] );
+        //         }
+        //     }
+        // }
+        // ImGui::End();
 
         ImPlot::ShowDemoWindow();
         ImGui::ShowDemoWindow();
@@ -320,10 +320,10 @@ namespace SE::OtdrEditor
         return lRequestQuit;
     }
 
-    void OtdrWindow::LoadIOlmDiffData( fs::path aPath, bool aReanalyse )
-    {
-        mDocumentArea.Add( New<UIIolmDiffDocument>( aPath, aReanalyse ) );
-    }
+    // void OtdrWindow::LoadIOlmDiffData( fs::path aPath, bool aReanalyse )
+    // {
+    //     mDocumentArea.Add( New<UIIolmDiffDocument>( aPath, aReanalyse ) );
+    // }
 
     // void OtdrWindow::LoadIOlmData( fs::path aPath, bool aReanalyse )
     // {

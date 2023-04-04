@@ -98,28 +98,28 @@ namespace SE::OtdrEditor
 
         void ConfigureUI();
 
-        void LoadIOlmData( fs::path aPath, bool aReanalyse = false );
-        void LoadIOlmDiffData( fs::path aPath, bool aReanalyse = false );
-        void LoadTestReport( fs::path aPath );
+        // void LoadIOlmData( fs::path aPath, bool aReanalyse = false );
+        // void LoadIOlmDiffData( fs::path aPath, bool aReanalyse = false );
+        // void LoadTestReport( fs::path aPath );
 
-        Ref<DotNetInstance>           mDataInstance = nullptr;
-        std::vector<sLinkElement>     mLinkElementVector;
-        std::vector<sMultiPulseEvent> mEventVector;
+        // Ref<DotNetInstance>           mDataInstance = nullptr;
+        // std::vector<sLinkElement>     mLinkElementVector;
+        // std::vector<sMultiPulseEvent> mEventVector;
+// 
+        // UILinkElementTracePlot mTracePlot;
+        // UIWorkspace            mDocumentArea;
 
-        UILinkElementTracePlot mTracePlot;
-        UIWorkspace            mDocumentArea;
+        // Ref<UIDialog> mTestDialog;
 
-        Ref<UIDialog> mTestDialog;
-
-        Ref<UIMultiPulseEventTable> mEventTable;
-        Ref<UIMultiPulseEventTable> mEventTable1;
-        Ref<UILinkElementTable>     mLinkElementTable;
-        Ref<UILinkElementTable>     mLinkElementTable1;
-        Ref<UITestFailResultTable>  mTestFailResultTable;
-
-        MeasurementOverview mMeasurementOverview;
-        EventOverview       mEventOverview;
-        AcquisitionData     mAcquisitionDataOverview;
+        // Ref<UIMultiPulseEventTable> mEventTable;
+        // Ref<UIMultiPulseEventTable> mEventTable1;
+        // Ref<UILinkElementTable>     mLinkElementTable;
+        // Ref<UILinkElementTable>     mLinkElementTable1;
+        // Ref<UITestFailResultTable>  mTestFailResultTable;
+// 
+        // MeasurementOverview mMeasurementOverview;
+        // EventOverview       mEventOverview;
+        // AcquisitionData     mAcquisitionDataOverview;
 
         UIMenu mMainMenu;
 
@@ -136,10 +136,10 @@ namespace SE::OtdrEditor
         uint32_t mLastFPS      = 0;
 
         math::ivec2      mWorkspaceAreaSize = { 0, 0 };
-        Ref<VkSampler2D> mPlayIcon;
-        ImageHandle      mPlayIconHandle;
-        Ref<VkSampler2D> mPauseIcon;
-        ImageHandle      mPauseIconHandle;
+        // Ref<VkSampler2D> mPlayIcon;
+        // ImageHandle      mPlayIconHandle;
+        // Ref<VkSampler2D> mPauseIcon;
+        // ImageHandle      mPauseIconHandle;
 
         SimulationState mState       = SimulationState::EDIT;
         fs::path        mCurrentPath = "";
