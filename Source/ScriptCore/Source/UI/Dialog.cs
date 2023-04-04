@@ -5,9 +5,10 @@ namespace SpockEngine
 {
     public class UIDialog : UIComponent
     {
-        public UIDialog() : this(UIDialog_Create()) { }
+        bool mDerived = false;
+        public UIDialog() : this(UIDialog_Create(), false) { }
 
-        public UIDialog(ulong aDerived) : base(aDerived) { }
+        public UIDialog(ulong aInstance, bool aDerived) : base(aInstance) { mDerived = aDerived; }
 
         ~UIDialog() { UIDialog_Destroy(mInstance); }
 

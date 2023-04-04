@@ -70,10 +70,10 @@ namespace SE::Core
         return static_cast<void *>( lNewImage );
     }
 
-    void *UIBaseImage::UIBaseImage_CreateWithPath( void *aText, math::vec2 *aSize )
+    void *UIBaseImage::UIBaseImage_CreateWithPath( void *aText, math::vec2 aSize )
     {
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-        auto lNewImage = new UIBaseImage( lString, *aSize );
+        auto lNewImage = new UIBaseImage( lString, aSize );
 
         return static_cast<void *>( lNewImage );
     }
@@ -95,11 +95,11 @@ namespace SE::Core
         lInstance->SetSize( aWidth, aHeight );
     }
 
-    void UIBaseImage::UIBaseImage_SetRect( void *aInstance, math::vec2 *aTopLeft, math::vec2 *aBottomRight )
+    void UIBaseImage::UIBaseImage_SetRect( void *aInstance, math::vec2 aTopLeft, math::vec2 aBottomRight )
     {
         auto lInstance = static_cast<UIBaseImage *>( aInstance );
 
-        lInstance->SetRect( *aTopLeft, *aBottomRight );
+        lInstance->SetRect( aTopLeft, aBottomRight );
     }
 
     // void UIBaseImage::UIBaseImage_SetBackgroundColor( void *aInstance, math::vec4 *aColor )
@@ -109,11 +109,11 @@ namespace SE::Core
     //     lInstance->SetBackgroundColor( *aColor );
     // }
 
-    void UIBaseImage::UIBaseImage_SetTintColor( void *aInstance, math::vec4 *aColor )
+    void UIBaseImage::UIBaseImage_SetTintColor( void *aInstance, math::vec4 aColor )
     {
         auto lInstance = static_cast<UIBaseImage *>( aInstance );
 
-        lInstance->SetTintColor( *aColor );
+        lInstance->SetTintColor( aColor );
     }
 
 } // namespace SE::Core

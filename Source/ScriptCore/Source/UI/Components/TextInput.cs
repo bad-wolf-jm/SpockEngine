@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace SpockEngine
 {
-    public class UITextInput : UILabel
+    public class UITextInput : UIComponent
     {
         public UITextInput() : base(UITextInput_Create()) { }
 

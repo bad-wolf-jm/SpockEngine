@@ -5,11 +5,12 @@ namespace SpockEngine
 {
     public class UIBaseImage : UIComponent
     {
-        public UIBaseImage() : base(UIBaseImage_Create()) { }
-        public UIBaseImage(ulong aSelf) : base(aSelf) { }
+        bool mDerived = false;
+        public UIBaseImage() : base(UIBaseImage_Create()) { mDerived = false; }
+        public UIBaseImage(ulong aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
         public UIBaseImage(string aText, Math.vec2 aSize) : base(UIBaseImage_CreateWithPath(aText, aSize)) { }
 
-        ~UIBaseImage() { UIBaseImage_Destroy(mInstance); }
+        ~UIBaseImage() { if (!mDerived) UIBaseImage_Destroy(mInstance); }
 
         public void SetImage(string aText) { UIBaseImage_SetImage(mInstance, aText); }
 

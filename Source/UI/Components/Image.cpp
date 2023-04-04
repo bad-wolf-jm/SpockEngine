@@ -29,10 +29,10 @@ namespace SE::Core
         return static_cast<void *>( lNewImage );
     }
 
-    void *UIImage::UIImage_CreateWithPath( void *aText, math::vec2 *aSize )
+    void *UIImage::UIImage_CreateWithPath( void *aText, math::vec2 aSize )
     {
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-        auto lNewImage = new UIImage( lString, *aSize );
+        auto lNewImage = new UIImage( lString, aSize );
 
         return static_cast<void *>( lNewImage );
     }

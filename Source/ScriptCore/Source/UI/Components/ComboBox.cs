@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace SpockEngine
 {
-    public class UIComboBox : UIBaseImage
+    public class UIComboBox : UIComponent
     {
         public UIComboBox() : base(UIComboBox_Create()) { }
         public UIComboBox(string[] aItems) : base(UIComboBox_CreateWithItems(aItems)) { }
