@@ -1,8 +1,8 @@
 #include "Runtime.h"
 
+#include "Core/File.h"
 #include "Core/Logging.h"
 #include "Core/Memory.h"
-#include "Core/File.h"
 
 #include "Engine/Engine.h"
 
@@ -42,6 +42,7 @@
 #include "UI/Components/TextOverlay.h"
 #include "UI/Components/TextToggleButton.h"
 #include "UI/Components/Workspace.h"
+#include "UI/Components/TextInput.h"
 #include "UI/Dialog.h"
 #include "UI/Form.h"
 #include "UI/Layouts/BoxLayout.h"
@@ -332,11 +333,11 @@ namespace SE::Core
         return mono_string_new( sRuntimeData->mAppDomain, aString.c_str() );
     }
 
-    std::string DotNetRuntime::NewString( MonoString *aString ) 
-    { 
-        auto* lCharacters = mono_string_to_utf8( aString );
-        auto lString =  std::string( mono_string_to_utf8( aString ) ); 
-        mono_free(lCharacters);
+    std::string DotNetRuntime::NewString( MonoString *aString )
+    {
+        auto *lCharacters = mono_string_to_utf8( aString );
+        auto  lString     = std::string( mono_string_to_utf8( aString ) );
+        mono_free( lCharacters );
 
         return lString;
     }
@@ -519,16 +520,16 @@ namespace SE::Core
 
     static MonoString *OpenFile( MonoString *aFilter )
     {
-        auto lFilter   = DotNetRuntime::NewString( aFilter );
-        char* lCharacters = lFilter.data();
+        auto  lFilter     = DotNetRuntime::NewString( aFilter );
+        char *lCharacters = lFilter.data();
 
-        for(uint32_t i=0; i < lFilter.size(); i++)
-            lCharacters[i] = (lCharacters[i] == '|') ? '\0' : lCharacters[i];
+        for( uint32_t i = 0; i < lFilter.size(); i++ ) lCharacters[i] = ( lCharacters[i] == '|' ) ? '\0' : lCharacters[i];
         auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(), lFilter.c_str() );
 
         if( lFilePath.has_value() ) return DotNetRuntime::NewString( lFilePath.value() );
 
-        return DotNetRuntime::NewString( "" );;
+        return DotNetRuntime::NewString( "" );
+        ;
     }
 
     void DotNetRuntime::RegisterInternalCppFunctions()
@@ -859,5 +860,15 @@ namespace SE::Core
                                 UIPropertyValue::UIPropertyValue_SetValueFont );
         mono_add_internal_call( "SpockEngine.UIPropertyValue::UIPropertyValue_SetNameFont",
                                 UIPropertyValue::UIPropertyValue_SetNameFont );
+
+        mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_Create", UITextInput::UITextInput_Create );
+        mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_CreateWithText", UITextInput::UITextInput_CreateWithText );
+        mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_Destroy", UITextInput::UITextInput_Destroy );
+        mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_GetText", UITextInput::UITextInput_GetText );
+        mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_SetHintText", UITextInput::UITextInput_SetHintText );
+        mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_SetTextColor", UITextInput::UITextInput_SetTextColor );
+        mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_SetBufferSize", UITextInput::UITextInput_SetBufferSize );
+        mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_OnTextChanged", UITextInput::UITextInput_OnTextChanged );
     }
+
 } // namespace SE::Core
