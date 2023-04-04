@@ -11,6 +11,8 @@ namespace SpockEngine
         H2,
         H3,
         EM,
+        HUGE,
+        LARGE,
         NORMAL,
         SMALL,
         TINY,
