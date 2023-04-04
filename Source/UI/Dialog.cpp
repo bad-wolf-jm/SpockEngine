@@ -3,6 +3,11 @@
 #include "DotNet/Runtime.h"
 namespace SE::Core
 {
+    UIDialog::UIDialog()
+    {
+        mIsVisible = false;
+    }
+
     UIDialog::UIDialog( std::string aTitle, math::vec2 aSize )
         : mTitle{ aTitle }
         , mSize{ aSize }
@@ -87,11 +92,11 @@ namespace SE::Core
         lInstance->SetTitle( lString );
     }
 
-    void UIDialog::UIDialog_SetSize( void *aInstance, math::vec2 *aSize )
+    void UIDialog::UIDialog_SetSize( void *aInstance, math::vec2 aSize )
     {
         auto lInstance = static_cast<UIDialog *>( aInstance );
 
-        lInstance->SetSize( *aSize );
+        lInstance->SetSize( aSize );
     }
 
     void UIDialog::UIDialog_SetContent( void *aInstance, void *aContent )

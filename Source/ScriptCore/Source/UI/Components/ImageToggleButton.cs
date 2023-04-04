@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace SpockEngine
 {
-    public class UIImageToggleButton : UIBaseImage
+    public class UIImageToggleButton : UIComponent
     {
         public UIImageToggleButton() : base(UIImageToggleButton_Create()) { }
 

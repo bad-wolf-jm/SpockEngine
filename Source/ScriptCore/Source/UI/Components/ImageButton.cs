@@ -5,8 +5,8 @@ namespace SpockEngine
 {
     public class UIImageButton : UIBaseImage
     {
-        public UIImageButton() : base(UIImageButton_Create()) { }
-        public UIImageButton(string aText, Math.vec2 aSize) : base(UIImageButton_CreateWithPath(aText, aSize)) { }
+        public UIImageButton() : base(UIImageButton_Create(), true) { }
+        public UIImageButton(string aText, Math.vec2 aSize) : base(UIImageButton_CreateWithPath(aText, aSize), true) { }
 
         ~UIImageButton() { UIImageButton_Destroy(mInstance); }
 

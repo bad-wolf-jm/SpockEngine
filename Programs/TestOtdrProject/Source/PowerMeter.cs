@@ -84,7 +84,7 @@ namespace Test
 
             var valueLink = lPowerValue.Tag as Metrino.Otdr.PowerValue.ValueLink;
 
-            // System.Console.WriteLine($"{(valueLink.Timestamp - mStartTime).TotalMilliseconds} -- {lPowerValue.Value} -- {lPowerValue.Power} -- {lFrequency.Value} -- {lIsBlinking}");
+            System.Console.WriteLine($"{(valueLink.Timestamp - mStartTime).TotalMilliseconds} -- {lPowerValue.Value} -- {lPowerValue.Power} -- {lFrequency.Value} -- {lIsBlinking}");
         }
     }
 }

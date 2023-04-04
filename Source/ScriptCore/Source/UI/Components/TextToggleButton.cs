@@ -5,9 +5,9 @@ namespace SpockEngine
 {
     public class UITextToggleButton : UILabel
     {
-        public UITextToggleButton() : base(UITextToggleButton_Create()) { }
+        public UITextToggleButton() : base(UITextToggleButton_Create(), true) { }
 
-        public UITextToggleButton(string aText) : base(UITextToggleButton_CreateWithText(aText)) { }
+        public UITextToggleButton(string aText) : base(UITextToggleButton_CreateWithText(aText), true) { }
 
         ~UITextToggleButton() { UITextToggleButton_Destroy(mInstance); }
 

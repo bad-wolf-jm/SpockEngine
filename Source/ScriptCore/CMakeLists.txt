@@ -27,6 +27,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/Components/Workspace.cs
     Source/UI/Components/Menu.cs
     Source/UI/Components/TextInput.cs
+    Source/UI/Components/TextOverlay.cs
     Source/UI/Layouts/BoxLayout.cs
     Source/UI/Layouts/ZLayout.cs
     Source/UI/UI.cs

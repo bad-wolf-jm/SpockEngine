@@ -21,7 +21,7 @@ namespace SE::Core
 
       public:
         static void *UIImage_Create();
-        static void *UIImage_CreateWithPath( void* aText, math::vec2 *aSize );
+        static void *UIImage_CreateWithPath( void* aText, math::vec2 aSize );
         static void  UIImage_Destroy( void *aInstance );
     };
 } // namespace SE::Core

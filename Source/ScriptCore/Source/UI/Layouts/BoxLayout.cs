@@ -27,22 +27,26 @@ namespace SpockEngine
 
         public void Add(UIComponent aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment)
         {
-            UIBoxLayout_AddAlignedNonFixed(mInstance, aChild.Instance, aExpand, aFill, aHAlignment, aVAlignment);
+            var lInstance = (aChild != null) ? aChild.Instance : 0;
+            UIBoxLayout_AddAlignedNonFixed(mInstance, lInstance, aExpand, aFill, aHAlignment, aVAlignment);
         }
 
         public void Add(UIComponent aChild, bool aExpand, bool aFill)
         {
-            UIBoxLayout_AddNonAlignedNonFixed(mInstance, aChild.Instance, aExpand, aFill);
+            var lInstance = (aChild != null) ? aChild.Instance : 0;
+            UIBoxLayout_AddNonAlignedNonFixed(mInstance, lInstance, aExpand, aFill);
         }
 
         public void Add(UIComponent aChild, float aFixedSize, bool aExpand, bool aFill)
         {
-            UIBoxLayout_AddNonAlignedFixed(mInstance, aChild.Instance, aFixedSize, aExpand, aFill);
+            var lInstance = (aChild != null) ? aChild.Instance : 0;
+            UIBoxLayout_AddNonAlignedFixed(mInstance,lInstance, aFixedSize, aExpand, aFill);
         }
 
         public void Add(UIComponent aChild, float aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment)
         {
-            UIBoxLayout_AddAlignedFixed(mInstance, aChild.Instance, aFixedSize, aExpand, aFill, aHAlignment, aVAlignment);
+            var lInstance = (aChild != null) ? aChild.Instance : 0;
+            UIBoxLayout_AddAlignedFixed(mInstance, lInstance, aFixedSize, aExpand, aFill, aHAlignment, aVAlignment);
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]

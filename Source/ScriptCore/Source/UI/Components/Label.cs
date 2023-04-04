@@ -5,12 +5,13 @@ namespace SpockEngine
 {
     public class UILabel : UIComponent
     {
+        private bool mDerived = false;
 
-        public UILabel() : base(UILabel_Create()) { }
-        public UILabel(ulong aSelf) : base(aSelf) { }
-        public UILabel(string aText) : base(UILabel_CreateWithText(aText)) { }
+        public UILabel() : this(UILabel_Create(), false) { }
+        public UILabel(ulong aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
+        public UILabel(string aText) : this(UILabel_CreateWithText(aText), false) { }
 
-        ~UILabel() { UILabel_Destroy(mInstance); }
+        ~UILabel() { if (!mDerived) UILabel_Destroy(mInstance); }
 
         public void SetText(string aText) { UILabel_SetText(mInstance, aText); }
 
