@@ -220,6 +220,16 @@ namespace SpockEngine
 
         public void AddColumn(UITableColumn aColumn) { UITable_AddColumn(mInstance, aColumn.Instance); }
 
+        public void SetDisplayedRowIndices(int[] aIndices)
+        {
+            UITable_SetDisplayedRowIndices(mInstance, aIndices);
+        }
+
+        public void SetDisplayedRowIndices(List<int> aIndices)
+        {
+            SetDisplayedRowIndices(aIndices.ToArray());
+        }
+
         public void SetRowBackgroundColor(Math.vec4[] aColors)
         {
             UITable_SetRowBackgroundColor(mInstance, aColors);
@@ -234,7 +244,6 @@ namespace SpockEngine
         {
             UITable_ClearRowBackgroundColor(mInstance);
         }
-
 
         public delegate void RowClickedDelegate(int aRow);
         RowClickedDelegate onRowClickedDelegate;
@@ -265,5 +274,8 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UITable_ClearRowBackgroundColor(ulong aInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UITable_SetDisplayedRowIndices(ulong aInstance, int[] aIndices);
     }
 }

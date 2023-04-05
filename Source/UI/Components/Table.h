@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include "Component.h"
 
 namespace SE::Core
@@ -108,6 +109,7 @@ namespace SE::Core
         void OnRowClicked( std::function<void( uint32_t )> const &aOnRowClicked );
 
         std::vector<uint32_t> mRowBackgroundColor;
+        std::optional<std::vector<int>> mDisplayedRowIndices;
 
       protected:
         std::vector<sTableColumn *>     mColumns;
@@ -136,6 +138,7 @@ namespace SE::Core
         static void  UITable_AddColumn( void *aSelf, void *aColumn );
         static void  UITable_SetRowHeight( void *aSelf, float aRowHeight );
         static void  UITable_SetRowBackgroundColor( void *aSelf, void *aColors );
+        static void  UITable_SetDisplayedRowIndices( void *aSelf, void *aIndices );
         static void  UITable_ClearRowBackgroundColor( void *aSelf );
     };
 } // namespace SE::Core

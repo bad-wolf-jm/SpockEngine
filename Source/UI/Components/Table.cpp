@@ -49,12 +49,20 @@ namespace SE::Core
             auto lRowCount = std::numeric_limits<uint32_t>::max();
             for( const auto &lColumn : mColumns ) lRowCount = std::min( lRowCount, lColumn->Size() );
 
+            int lDisplayedRowCount = lRowCount;
+            if( mDisplayedRowIndices.has_value() ) lDisplayedRowCount = mDisplayedRowIndices.value().size();
+
             ImGuiListClipper lRowClipping;
-            lRowClipping.Begin( lRowCount );
+            lRowClipping.Begin( lDisplayedRowCount );
             while( lRowClipping.Step() )
             {
-                for( int lRow = lRowClipping.DisplayStart; lRow < lRowClipping.DisplayEnd; lRow++ )
+                for( int lRowID = lRowClipping.DisplayStart; lRowID < lRowClipping.DisplayEnd; lRowID++ )
                 {
+                    int lRow = lRowID;
+                    if( mDisplayedRowIndices.has_value() ) lRow = mDisplayedRowIndices.value()[lRowID];
+
+                    if( lRow > lRowCount ) continue;
+
                     ImGui::TableNextRow();
                     if( mSelectedRow == lRow )
                         ImGui::TableSetBgColor( ImGuiTableBgTarget_RowBg0, IM_COL32( 1, 50, 32, 128 ) );
@@ -153,6 +161,15 @@ namespace SE::Core
         lSelf->mRowBackgroundColor.clear();
         for( auto &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aValue ) ) )
             lSelf->mRowBackgroundColor.push_back( ImColor( x ) );
+    }
+
+    void UITable::UITable_SetDisplayedRowIndices( void *aSelf, void *aValue )
+    {
+        auto lSelf = static_cast<UITable *>( aSelf );
+        if( aValue == nullptr )
+            lSelf->mDisplayedRowIndices.reset();
+        else
+            lSelf->mDisplayedRowIndices = DotNetRuntime::AsVector<int>( static_cast<MonoObject *>( aValue ) );
     }
 
     sFloat64Column::sFloat64Column( std::string aHeader, float aInitialSize, std::string aFormat, std::string aNaNFormat )
