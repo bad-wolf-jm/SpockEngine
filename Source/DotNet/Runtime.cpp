@@ -775,6 +775,7 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UITable::UITable_SetRowHeight", UITable::UITable_SetRowHeight );
         mono_add_internal_call( "SpockEngine.UITable::UITable_SetRowBackgroundColor", UITable::UITable_SetRowBackgroundColor );
         mono_add_internal_call( "SpockEngine.UITable::UITable_ClearRowBackgroundColor", UITable::UITable_ClearRowBackgroundColor );
+        mono_add_internal_call( "SpockEngine.UITable::UITable_SetDisplayedRowIndices", UITable::UITable_SetDisplayedRowIndices );
 
         mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_Create", UIPlot::UIPlot_Create );
         mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_Destroy", UIPlot::UIPlot_Destroy );
