@@ -12,6 +12,8 @@ add_library(${LIBRARY_NAME} SHARED
     Source/Math/quaternion.cs
     Source/Math/functions.cs
 
+    Source/ScriptProxy.cs
+
     Source/UI/Components/Component.cs
     Source/UI/Components/Button.cs
     Source/UI/Components/TextToggleButton.cs
