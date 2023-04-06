@@ -17,7 +17,6 @@
 
 #include "Entity.h"
 #include "DotNet/Runtime.h"
-#include "DotNet/Method.h"
 
 #ifdef LITTLEENDIAN
 #    undef LITTLEENDIAN
@@ -203,7 +202,7 @@ namespace SE::Core
           private:
             Internal::Entity<ParentType> mEntity;
 
-            DotNetMehod mOnUpdate{};
+            // DotNetMehod mOnUpdate{};
         };
 
         template <typename ParentType>
@@ -301,7 +300,7 @@ namespace SE::Core
           private:
             Internal::Entity<ParentType> mEntity;
 
-            DotNetMehod mOnUpdate{};
+            // DotNetMehod mOnUpdate{};
         };
 
     } // namespace Internal
