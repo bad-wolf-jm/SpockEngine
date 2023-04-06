@@ -33,14 +33,18 @@ namespace SE::Core
 
         void SetItemSpacing( float aItemSpacing );
 
-        void Add( UIComponent *aChild );
-        void Add( UIComponent *aChild, eHorizontalAlignment const &aHAlignment, eVerticalAlignment const &aVAlignment );
+        void Add1( UIComponent *aChild );
+        void Add2( UIComponent *aChild );
 
       protected:
-        std::vector<SplitterItem> mChildren;
-        std::vector<float>        mItemSizes;
-        eBoxLayoutOrientation     mOrientation;
-        float                     mItemSpacing = 0.0f;
+        UIComponent *mChild1;
+        UIComponent *mChild2;
+
+        float mSize1       = 0.0f;
+        float mSize2       = 0.0f;
+        float mItemSpacing = 0.0f;
+
+        eBoxLayoutOrientation mOrientation;
 
       protected:
         void PushStyles();
@@ -50,12 +54,13 @@ namespace SE::Core
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
       public:
+        static void *UISplitter_Create();
         static void *UISplitter_CreateWithOrientation( eBoxLayoutOrientation aOrientation );
         static void  UISplitter_Destroy( void *aInstance );
 
-        static void UISplitter_AddFill( void *aInstance, void *aChild );
-        static void UISplitter_AddAligned( void *aInstance, void *aChild, eHorizontalAlignment aHAlignment,
-                                           eVerticalAlignment aVAlignment );
+        static void UISplitter_Add1( void *aInstance, void *aChild );
+        static void UISplitter_Add2( void *aInstance, void *aChild );
+
         static void UISplitter_SetItemSpacing( void *aInstance, float aItemSpacing );
     };
 } // namespace SE::Core

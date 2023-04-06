@@ -15,26 +15,21 @@ namespace SE::Core
 
     ImVec2 UISplitter::RequiredSize()
     {
+        ImVec2 lLeftSize  = mChild1 ? mChild1->RequiredSize() : ImVec2{};
+        ImVec2 lRightSize = mChild2 ? mChild2->RequiredSize() : ImVec2{};
+
         float lWidth  = 0.0f;
         float lHeight = 0.0f;
 
-        for( auto const &lItem : mChildren )
+        if( mOrientation == eBoxLayoutOrientation::HORIZONTAL )
         {
-            ImVec2 lRequiredSize{};
-
-            if( lItem.mItem ) lRequiredSize = lItem.mItem->RequiredSize();
-
-            if( mOrientation == eBoxLayoutOrientation::HORIZONTAL )
-            {
-                lWidth += lRequiredSize.x;
-                lHeight = math::max( lHeight, lRequiredSize.y );
-            }
-            else
-            {
-                lHeight += lRequiredSize.y;
-                lWidth = math::max( lWidth, lRequiredSize.x );
-            }
-            // }
+            lWidth  = math::max( lLeftSize.x, lRightSize.x );
+            lHeight = lLeftSize.y + mItemSpacing + lRightSize.y;
+        }
+        else
+        {
+            lWidth  = lLeftSize.x + mItemSpacing + lRightSize.x;
+            lHeight = math::max( lLeftSize.y, lRightSize.y );
         }
 
         return ImVec2{ lWidth, lHeight };
@@ -42,15 +37,9 @@ namespace SE::Core
 
     void UISplitter::SetItemSpacing( float aItemSpacing ) { mItemSpacing = aItemSpacing; }
 
-    void UISplitter::Add( UIComponent *aChild )
-    {
-        mChildren.push_back( SplitterItem{ aChild, true, eHorizontalAlignment::CENTER, eVerticalAlignment::CENTER } );
-    }
+    void UISplitter::Add1( UIComponent *aChild ) { mChild1 = aChild; }
 
-    void UISplitter::Add( UIComponent *aChild, eHorizontalAlignment const &aHAlignment, eVerticalAlignment const &aVAlignment )
-    {
-        mChildren.push_back( SplitterItem{ aChild, false, aHAlignment, aVAlignment } );
-    }
+    void UISplitter::Add2( UIComponent *aChild ) { mChild1 = aChild; }
 
     static bool Splitter( eBoxLayoutOrientation aOrientation, float aThickness, float *aSize1, float *aSize2, float aMinSize1,
                           float aMinSize2 )
@@ -78,39 +67,34 @@ namespace SE::Core
 
     void UISplitter::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        std::vector<float> lCumulativeSizes( mChildren.size() );
+        Splitter( mOrientation, mItemSpacing, &mSize1, &mSize2, 50.0f, 50.0f );
 
-        lCumulativeSizes[mChildren.size() - 1] = mItemSizes[mChildren.size() - 1];
-
-        for( uint32_t i = mChildren.size() - 2; i >= 0; i-- ) lCumulativeSizes[i] = lCumulativeSizes[i + 1] + mItemSizes[i];
-
-        ImVec2 lCurrentPosition = aPosition;
-        for( uint32_t i = 0; i < mChildren.size(); i++ )
+        if( mChild1 )
         {
-            auto  &lItem = mChildren[i];
-            ImVec2 lItemPosition{};
-            float  lPositionStep = 0.0f;
-
-            ImVec2 lItemSize{};
-            if( mOrientation == eBoxLayoutOrientation::VERTICAL )
-                lItemSize = ImVec2{ aSize.x, mItemSizes[i] };
-            else
-                lItemSize = ImVec2{ mItemSizes[i], aSize.y };
-
-            lItemSize     = lItem.mFill ? lItemSize : ( lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{} );
-            lItemPosition = lItem.mFill
-                                ? lCurrentPosition
-                                : GetContentAlignedposition( lItem.mHalign, lItem.mValign, lCurrentPosition,
-                                                             ( lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{} ), lItemSize );
-            lPositionStep = ( mOrientation == eBoxLayoutOrientation::VERTICAL ) ? lItemSize.y : lItemSize.x;
-
-            if( lItem.mItem ) lItem.mItem->Update( lItemPosition, lItemSize );
-
-            if( mOrientation == eBoxLayoutOrientation::VERTICAL )
-                lCurrentPosition.y += ( lPositionStep + mItemSpacing );
-            else
-                lCurrentPosition.x += ( lPositionStep + mItemSpacing );
+            ImVec2 lItemSize =
+                ( mOrientation == eBoxLayoutOrientation::HORIZONTAL ) ? ImVec2{ aSize.x, mSize1 } : ImVec2{ mSize1, aSize.y };
+            mChild1->Update( aPosition, lItemSize );
         }
+
+        ImVec2 lSecondItemPosition{};
+        if( mOrientation == eBoxLayoutOrientation::VERTICAL )
+            lSecondItemPosition.x = mSize1 + mItemSpacing;
+        else
+            lSecondItemPosition.y = mSize1 + mItemSpacing;
+
+        if( mChild2 )
+        {
+            ImVec2 lItemSize =
+                ( mOrientation == eBoxLayoutOrientation::HORIZONTAL ) ? ImVec2{ aSize.x, mSize2 } : ImVec2{ mSize2, aSize.y };
+            mChild2->Update( lSecondItemPosition, lItemSize );
+        }
+    }
+
+    void *UISplitter::UISplitter_Create()
+    {
+        auto lNewLayout = new UISplitter();
+
+        return static_cast<void *>( lNewLayout );
     }
 
     void *UISplitter::UISplitter_CreateWithOrientation( eBoxLayoutOrientation aOrientation )
@@ -122,21 +106,20 @@ namespace SE::Core
 
     void UISplitter::UISplitter_Destroy( void *aInstance ) { delete static_cast<UISplitter *>( aInstance ); }
 
-    void UISplitter::UISplitter_AddFill( void *aInstance, void *aChild )
+    void UISplitter::UISplitter_Add1( void *aInstance, void *aChild )
     {
         auto lInstance = static_cast<UISplitter *>( aInstance );
         auto lChild    = static_cast<UIComponent *>( aChild );
 
-        lInstance->Add( lChild );
+        lInstance->Add1( lChild );
     }
 
-    void UISplitter::UISplitter_AddAligned( void *aInstance, void *aChild, eHorizontalAlignment aHAlignment,
-                                            eVerticalAlignment aVAlignment )
+    void UISplitter::UISplitter_Add2( void *aInstance, void *aChild )
     {
         auto lInstance = static_cast<UISplitter *>( aInstance );
         auto lChild    = static_cast<UIComponent *>( aChild );
 
-        lInstance->Add( lChild, aHAlignment, aVAlignment );
+        lInstance->Add2( lChild );
     }
 
     void UISplitter::UISplitter_SetItemSpacing( void *aInstance, float aItemSpacing )

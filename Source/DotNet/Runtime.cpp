@@ -47,6 +47,7 @@
 #include "UI/Form.h"
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/Layouts/ZLayout.h"
+#include "UI/Layouts/Splitter.h"
 
 namespace fs = std::filesystem;
 
@@ -739,6 +740,13 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIZLayout::UIZLayout_AddNonAlignedNonFixed", UIZLayout::UIZLayout_AddNonAlignedNonFixed );
         mono_add_internal_call( "SpockEngine.UIZLayout::UIZLayout_AddAlignedFixed", UIZLayout::UIZLayout_AddAlignedFixed );
         mono_add_internal_call( "SpockEngine.UIZLayout::UIZLayout_AddNonAlignedFixed", UIZLayout::UIZLayout_AddNonAlignedFixed );
+
+        mono_add_internal_call( "SpockEngine.UISplitter::UISplitter_Create", UISplitter::UISplitter_Create );
+        mono_add_internal_call( "SpockEngine.UISplitter::UISplitter_CreateWithOrientation", UISplitter::UISplitter_CreateWithOrientation );
+        mono_add_internal_call( "SpockEngine.UISplitter::UISplitter_Destroy", UISplitter::UISplitter_Destroy );
+        mono_add_internal_call( "SpockEngine.UISplitter::UISplitter_Add1", UISplitter::UISplitter_Add1 );
+        mono_add_internal_call( "SpockEngine.UISplitter::UISplitter_Add2", UISplitter::UISplitter_Add2 );
+        mono_add_internal_call( "SpockEngine.UISplitter::UISplitter_SetItemSpacing", UISplitter::UISplitter_SetItemSpacing );
 
         mono_add_internal_call( "SpockEngine.UIFloat64Column::UIFloat64Column_Create", sFloat64Column::UIFloat64Column_Create );
         mono_add_internal_call( "SpockEngine.UIFloat64Column::UIFloat64Column_CreateFull",
