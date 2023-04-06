@@ -40,9 +40,10 @@ namespace SE::Core
         UIComponent *mChild1;
         UIComponent *mChild2;
 
-        float mSize1       = 0.0f;
-        float mSize2       = 0.0f;
-        float mItemSpacing = 0.0f;
+        bool  mSizeSet     = false;
+        float mSize1       = 100.0f;
+        float mSize2       = 100.0f;
+        float mItemSpacing = 2.0f;
 
         eBoxLayoutOrientation mOrientation;
 

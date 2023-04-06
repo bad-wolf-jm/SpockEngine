@@ -39,7 +39,7 @@ namespace SE::Core
 
     void UISplitter::Add1( UIComponent *aChild ) { mChild1 = aChild; }
 
-    void UISplitter::Add2( UIComponent *aChild ) { mChild1 = aChild; }
+    void UISplitter::Add2( UIComponent *aChild ) { mChild2 = aChild; }
 
     static bool Splitter( eBoxLayoutOrientation aOrientation, float aThickness, float *aSize1, float *aSize2, float aMinSize1,
                           float aMinSize2 )
@@ -67,6 +67,14 @@ namespace SE::Core
 
     void UISplitter::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
+        if( !mSizeSet )
+        {
+            if( mOrientation == eBoxLayoutOrientation::VERTICAL )
+                mSize1 = mSize2 = ( aSize.x - mItemSpacing ) * 0.5f;
+            else
+                mSize1 = mSize2 = ( aSize.y - mItemSpacing ) * 0.5f;
+            mSizeSet = true;
+        }
         Splitter( mOrientation, mItemSpacing, &mSize1, &mSize2, 50.0f, 50.0f );
 
         if( mChild1 )
@@ -86,7 +94,7 @@ namespace SE::Core
         {
             ImVec2 lItemSize =
                 ( mOrientation == eBoxLayoutOrientation::HORIZONTAL ) ? ImVec2{ aSize.x, mSize2 } : ImVec2{ mSize2, aSize.y };
-            mChild2->Update( lSecondItemPosition, lItemSize );
+            mChild2->Update( aPosition + lSecondItemPosition, lItemSize );
         }
     }
 
