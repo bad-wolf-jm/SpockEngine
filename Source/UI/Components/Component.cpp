@@ -106,6 +106,28 @@ namespace SE::Core
 
     bool IsHovered() { return ImGui::IsItemHovered(); }
 
+    void UIComponent::UIComponent_SetIsVisible( void *aSelf, bool aIsVisible )
+    {
+        auto lSelf = static_cast<UIComponent *>( aSelf );
+
+        lSelf->mIsVisible = aIsVisible;
+    }
+
+    void UIComponent::UIComponent_SetIsEnabled( void *aSelf, bool aIsEnabled )
+    {
+        auto lSelf = static_cast<UIComponent *>( aSelf );
+
+        lSelf->mIsEnabled = aIsEnabled;
+    }
+
+    void UIComponent::UIComponent_SetAllowDragDrop( void *aSelf, bool aAllowDragDrop )
+    {
+        auto lSelf = static_cast<UIComponent *>( aSelf );
+
+        lSelf->mAllowDragDrop = aAllowDragDrop;
+    }
+
+
     void UIComponent::UIComponent_SetPaddingAll( void *aSelf, float aPaddingAll )
     {
         auto lSelf = static_cast<UIComponent *>( aSelf );

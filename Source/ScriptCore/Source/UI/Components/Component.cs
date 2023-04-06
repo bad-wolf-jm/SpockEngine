@@ -24,6 +24,27 @@ namespace SpockEngine
         public UIComponent() { mInstance = 0; }
         public UIComponent(ulong aInstance) { mInstance = aInstance; }
 
+        private bool mIsVisible;
+        public bool IsVisible
+        {
+            get { return mIsVisible; }
+            set { mIsVisible = value; UIComponent_SetIsVisible(mInstance, value); }
+        }
+
+        private bool mIsEnabled;
+        public bool IsEnabled
+        {
+            get { return mIsEnabled; }
+            set { mIsEnabled = value; UIComponent_SetIsEnabled(mInstance, value); }
+        }
+
+        private bool mAllowDragDrop;
+        public bool AllowDragDrop
+        {
+            get { return mAllowDragDrop; }
+            set { mAllowDragDrop = value; UIComponent_SetAllowDragDrop(mInstance, value); }
+        }
+
         public void SetPadding(float aPaddingAll)
         {
             UIComponent_SetPaddingAll(mInstance, aPaddingAll);
@@ -63,6 +84,14 @@ namespace SpockEngine
         {
             UIComponent_SetFont(mInstance, aFont);
         }
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIComponent_SetIsVisible(ulong aSelf, bool aIsVisible);
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIComponent_SetIsEnabled(ulong aSelf, bool aIsEnabled);
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIComponent_SetAllowDragDrop(ulong aSelf, bool aAllowDragDrop);
+
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIComponent_SetPaddingAll(ulong aSelf, float aPaddingAll);

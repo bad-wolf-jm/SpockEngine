@@ -72,6 +72,10 @@ namespace SE::Core
         bool IsHovered();
 
       public:
+        static void UIComponent_SetIsVisible( void *aSelf, bool aIsVisible );
+        static void UIComponent_SetIsEnabled( void *aSelf, bool aIsEnabled );
+        static void UIComponent_SetAllowDragDrop( void *aSelf, bool aAllowDragDrop );
+
         static void UIComponent_SetPaddingAll( void *aSelf, float aPaddingAll );
         static void UIComponent_SetPaddingPairs( void *aSelf, float aPaddingTopBottom, float aPaddingLeftRight );
         static void UIComponent_SetPaddingIndividual( void *aSelf, float aPaddingTop, float aPaddingBottom, float aPaddingLeft,
