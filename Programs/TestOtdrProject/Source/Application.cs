@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.IO;
 
 using SpockEngine;
 using SpockEngine.Math;
@@ -10,85 +11,85 @@ using Metrino.Otdr.SignalProcessing;
 
 using Metrino.Interop;
 
+public class ScriptProxy : MarshalByRefObject, IScriptProxy
+{
+    public void Initialize(StreamWriter aConsoleOut)
+    {
+        if (aConsoleOut != null)
+            Console.SetOut(aConsoleOut);
+
+        Console.WriteLine($"Hello 'World'");
+    }
+
+    public void Shutdown()
+    {
+        Console.WriteLine($"Good bye 'World'");
+    }
+
+    public string[] GetScriptNames()
+    {
+        return new string[] { "Test.TestSorValues" };
+    }
+
+    public IScript Instantiate(string aName)
+    {
+        return (new Test.TestSorValues()) as IScript;
+    }
+}
 namespace Test
 {
-    public class App : SEApplication
+    public class TestScript : MarshalByRefObject, IScript
     {
-        UIForm mMainForm;
-        UILabel mLabel0;
-        UIButton mButton0;
+        public TestScript() { }
 
-        UIBoxLayout mLayout0;
-
-        int count = 0;
-        public App() { }
-
-        public void Initialize()
+        public void Begin()
         {
-            mMainForm = new UIForm();
-            mLabel0 = new UILabel("Test label");
-            mLabel0.SetTextColor(new vec4(1.0f, 0.0f, 1.0f, 1.0f));
-
-            mButton0 = new UIButton($"Test Button {count}");
-            UIButton.ClickDelegate lClickAction = () => { count++; mButton0.SetText($"Test Button {count}"); System.Console.WriteLine("Button Clicked!!!"); };
-            mButton0.OnClick(lClickAction);
-
-            mLayout0 = new UIBoxLayout(eBoxLayoutOrientation.VERTICAL);
-            mLayout0.Add(mLabel0, true, true);
-            mLayout0.Add(mButton0, true, true);
-
-            mMainForm.SetTitle("This is a test!!");
-            mMainForm.SetContent(mLayout0);
+            System.Console.WriteLine($"BEGIN {DateTime.UtcNow}");
         }
 
-        public void TestClickHandler()
+        public void End()
         {
-            count++;
-            mButton0.SetText($"Test Button {count}");
-            System.Console.WriteLine("Button Clicked!!!");
+            System.Console.WriteLine($"END {DateTime.UtcNow}");
         }
 
-        public void Shutdown() { }
-
-        public void Update(float aTs)
+        public void Tick(float aTs)
         {
-            mMainForm.Update();
-        }
-
-        public void UpdateUI(float aTs)
-        {
+            System.Console.WriteLine($"{DateTime.UtcNow}");
         }
     }
 
-    public class TestScript : Script
+    public class TestSorValues : MarshalByRefObject, IScript
     {
+        public TestSorValues() { }
 
-        private Instrument7000 mSource;
-        private Instrument7000 mPowerMeter;
+        OlmFile mFile;
+        SinglePulseTraceCollection mReportingTraces;
 
-        private bool mSourceStarted;
-        private bool mPowerMeterStarted;
-
-        private BlinkDetection mBlinkDetection;
-
-
-        public TestScript() : base() { }
-
-        override public void BeginScenario()
+        public void Begin()
         {
-            base.BeginScenario();
+            var lPath = @"C:\GitLab\SpockEngine\Programs\TestOtdrProject\Resources\TraceFiles\OTDRXPE-835\DUB16-6-1-A-DUB16-L0-A-02-F147.iolm";
+            System.Console.WriteLine($"Loading 'DUB16-6-1-A-DUB16-L0-A-02-F147.iolm'...");
+            mFile = FileLoader.LoadOlmData(lPath);
+            mReportingTraces = mFile.Measurement.ReportingTraces;
+
+            foreach(var lTrace in mReportingTraces)
+            {
+                lTrace.EventTable.Clear();
+                mFile.Measurement.UpdateOtdrEvents(lTrace, true);
+                Console.WriteLine($"Wavelength={lTrace.Wavelength} -- Loss={lTrace.SpansLoss}, ORL={lTrace.SpansOrl}");
+                System.Console.WriteLine($"{lTrace.Wavelength}");
+            }
+
         }
 
-        override public void EndScenario()
+        public void End()
         {
-            base.EndScenario();
         }
 
-        override public void Tick(float aTs)
+        public void Tick(float aTs)
         {
-            base.Tick(aTs);
 
-            System.Console.WriteLine($"{DateTime.UtcNow} --");
         }
     }
+
 }
