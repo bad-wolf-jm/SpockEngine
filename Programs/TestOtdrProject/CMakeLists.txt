@@ -50,7 +50,7 @@ set(DOTNET_REFERENCE_PATH
     ${DOTNET_SYSTEM_ASSEMBLIES}
 )
 
-set(REFERENCE_PATH D:/Build/Lib/debug)
+set(REFERENCE_PATH C:/GitLab/SpockEngine//Programs/TestOtdrProject/Lib/debug)
 
 set_property(TARGET ${LIBRARY_NAME} PROPERTY DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.2")
 set_property(TARGET ${LIBRARY_NAME} PROPERTY WIN32_EXECUTABLE FALSE)
@@ -61,5 +61,7 @@ set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_DOTNET_REFERENCES
     ${REFERENCE_PATH}/Metrino.Otdr/Metrino.Otdr.dll
     ${REFERENCE_PATH}/Metrino.Otdr.SignalProcessing/Metrino.Otdr.SignalProcessing.dll
     ${REFERENCE_PATH}/Metrino.Otdr.Instrument/Metrino.Otdr.Instrument.dll
+    ${REFERENCE_PATH}/Metrino.Olm/Metrino.Olm.dll
+    ${REFERENCE_PATH}/Metrino.Olm.SignalProcessing/Metrino.Olm.SignalProcessing.dll
     ${DOTNET_REFERENCE_PATH}
 )

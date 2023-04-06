@@ -529,7 +529,6 @@ namespace SE::Core
         if( lFilePath.has_value() ) return DotNetRuntime::NewString( lFilePath.value() );
 
         return DotNetRuntime::NewString( "" );
-        ;
     }
 
     void DotNetRuntime::RegisterInternalCppFunctions()
@@ -614,6 +613,10 @@ namespace SE::Core
 
         mono_add_internal_call( "SpockEngine.UIColor::GetStyleColor", SE::Core::UI::GetStyleColor );
 
+
+        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetIsVisible", UIComponent::UIComponent_SetIsVisible );
+        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetIsEnabled", UIComponent::UIComponent_SetIsEnabled );
+        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetAllowDragDrop", UIComponent::UIComponent_SetAllowDragDrop );
         mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetPaddingAll", UIComponent::UIComponent_SetPaddingAll );
         mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetPaddingPairs", UIComponent::UIComponent_SetPaddingPairs );
         mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetPaddingIndividual",
