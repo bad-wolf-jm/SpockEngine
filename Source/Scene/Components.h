@@ -24,7 +24,6 @@
 #include "Primitives/Primitives.h"
 
 #include "DotNet/Runtime.h"
-#include "DotNet/Method.h"
 
 #include "Core/Profiling/BlockTimer.h"
 

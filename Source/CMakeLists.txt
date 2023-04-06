@@ -15,7 +15,6 @@ add_library(LTSimulationEngineRuntime STATIC
     DotNet/Runtime.cpp
     DotNet/Class.cpp
     DotNet/Instance.cpp
-    DotNet/Method.cpp
     DotNet/Utils.cpp
     DotNet/InternalCalls.cpp
     DotNet/EntityRegistry.cpp
