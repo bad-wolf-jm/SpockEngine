@@ -3,12 +3,6 @@ using System.Runtime.CompilerServices;
 
 namespace SpockEngine
 {
-    public enum eBoxLayoutOrientation
-    {
-        HORIZONTAL,
-        VERTICAL
-    }
-
     public class UISplitter : UIComponent
     {
         private bool mDerived = false;

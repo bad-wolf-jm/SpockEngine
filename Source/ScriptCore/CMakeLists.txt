@@ -32,6 +32,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/Components/TextOverlay.cs
     Source/UI/Layouts/BoxLayout.cs
     Source/UI/Layouts/ZLayout.cs
+    Source/UI/Layouts/Splitter.cs
     Source/UI/UI.cs
     Source/UI/Form.cs
     Source/UI/Dialog.cs
