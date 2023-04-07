@@ -42,7 +42,7 @@ namespace SE::Core
         ImGui::SetNextWindowSize( ImVec2{ mSize.x, mSize.y } );
         ImGuiWindowFlags lFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoResize |
                                   ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings;
-        ImGui::PushStyleVar( ImGuiStyleVar_WindowPadding, ImVec2{} );
+        ImGui::PushStyleVar( ImGuiStyleVar_WindowPadding, ImVec2{mPadding.z, mPadding.x} );
 
         bool lOpen = true;
         if( ImGui::BeginPopupModal( mTitle.c_str(), &lOpen, lFlags ) )
