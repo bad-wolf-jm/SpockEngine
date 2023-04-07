@@ -118,7 +118,7 @@ namespace SE::Core
             ImVec2 lItemPosition{};
             float  lPositionStep = 0.0f;
 
-            if( lItem.mExpand && !(lItem.mFixedSize > 0.0f) )
+            if( lItem.mExpand && !( lItem.mFixedSize > 0.0f ) )
             {
                 lItemSize     = lItem.mFill ? lExpandedSize : ( lItem.mItem ? lItem.mItem->RequiredSize() : ImVec2{} );
                 lItemPosition = lItem.mFill ? lCurrentPosition
@@ -157,7 +157,15 @@ namespace SE::Core
                 lPositionStep = ( mOrientation == eBoxLayoutOrientation::VERTICAL ) ? lItemSize.y : lItemSize.x;
             }
 
-            if( lItem.mItem ) lItem.mItem->Update( lItemPosition, lItemSize );
+            if( lItem.mItem )
+            {
+                ImGui::SetCursorPos( lItemPosition );
+                ImGui::PushID( (void *)lItem.mItem  );
+                ImGui::BeginChild( "##BoxLayoutItem", lItemSize );
+                lItem.mItem->Update( ImVec2{}, lItemSize );
+                ImGui::EndChild();
+                ImGui::PopID();
+            }
 
             if( mOrientation == eBoxLayoutOrientation::VERTICAL )
                 lCurrentPosition.y += ( lPositionStep + mItemSpacing );

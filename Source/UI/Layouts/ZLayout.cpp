@@ -101,7 +101,12 @@ namespace SE::Core
 
             if( lItem.mItem )
             {
-                lItem.mItem->Update( lItemPosition, lItemSize );
+                ImGui::SetCursorPos( lItemPosition );
+                ImGui::PushID( (void *)lItem.mItem );
+                ImGui::BeginChild( "##LayoutItem", lItemSize );
+                lItem.mItem->Update( ImVec2{}, lItemSize );
+                ImGui::EndChild();
+                ImGui::PopID();
             }
         }
     }
@@ -141,8 +146,8 @@ namespace SE::Core
         lInstance->Add( lChild, aSize, aPosition, aExpand, aFill, aHAlignment, aVAlignment );
     }
 
-    void UIZLayout::UIZLayout_AddNonAlignedFixed( void *aInstance, void *aChild, math::vec2 aSize, math::vec2 aPosition,
-                                                  bool aExpand, bool aFill )
+    void UIZLayout::UIZLayout_AddNonAlignedFixed( void *aInstance, void *aChild, math::vec2 aSize, math::vec2 aPosition, bool aExpand,
+                                                  bool aFill )
     {
         auto lInstance = static_cast<UIZLayout *>( aInstance );
         auto lChild    = static_cast<UIComponent *>( aChild );
