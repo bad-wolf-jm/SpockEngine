@@ -48,12 +48,12 @@ namespace SE::OtdrEditor
 
     class OtdrWindow
     {
-      public:
-        enum SimulationState
-        {
-            EDIT,
-            RUN
-        };
+    //   public:
+    //     enum SimulationState
+    //     {
+    //         EDIT,
+    //         RUN
+    //     };
 
       public:
         std::string ApplicationIcon = "";
@@ -65,8 +65,8 @@ namespace SE::OtdrEditor
 
         Ref<Engine> mEngineLoop = nullptr;
 
-        Ref<DotNetInstance> mCurrentScript{};
-        bool                mCurrentScriptIsRunning{};
+        // Ref<DotNetInstance> mCurrentScript{};
+        // bool                mCurrentScriptIsRunning{};
 
         Ref<DotNetInstance> mApplicationInstance = nullptr;
 
@@ -76,8 +76,8 @@ namespace SE::OtdrEditor
         float SeparatorThickness = 2.0f;
         float SideMenuWidth      = 45.0f;
 
-        entt::delegate<void( void )> OnBeginScenario{};
-        entt::delegate<void( void )> OnEndScenario{};
+        // entt::delegate<void( void )> OnBeginScenario{};
+        // entt::delegate<void( void )> OnEndScenario{};
 
         void Update( Timestep aTs );
 
@@ -92,8 +92,8 @@ namespace SE::OtdrEditor
         bool        RenderMainMenu();
         math::ivec2 GetWorkspaceAreaSize();
 
-        void Workspace( int32_t width, int32_t height );
-        void Console( int32_t width, int32_t height );
+        // void Workspace( int32_t width, int32_t height );
+        // void Console( int32_t width, int32_t height );
         void UpdateFramerate( Timestep ts );
 
         void ConfigureUI();
@@ -124,7 +124,7 @@ namespace SE::OtdrEditor
         UIMenu mMainMenu;
 
       private:
-        OtdrWorkspaceWindow mWorkspaceArea;
+        // OtdrWorkspaceWindow mWorkspaceArea;
         MonoClassHierarchy  mMonoClasses;
 
       private:
@@ -141,8 +141,8 @@ namespace SE::OtdrEditor
         // Ref<VkSampler2D> mPauseIcon;
         // ImageHandle      mPauseIconHandle;
 
-        SimulationState mState       = SimulationState::EDIT;
-        fs::path        mCurrentPath = "";
+        // SimulationState mState       = SimulationState::EDIT;
+        // fs::path        mCurrentPath = "";
         bool            mRequestQuit = false;
     };
 } // namespace SE::OtdrEditor
