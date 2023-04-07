@@ -25,6 +25,7 @@ namespace SE::Core
     {
         if( !mIsVisible ) return;
 
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{mPadding.z, mPadding.x});
         if( ImGui::Begin( mTitle.c_str(), NULL, ImGuiWindowFlags_None ) )
         {
             ImVec2 lContentSize     = ImGui::GetContentRegionAvail();
@@ -33,6 +34,7 @@ namespace SE::Core
             if( mContent != nullptr ) mContent->Update( lContentPosition, lContentSize );
         }
         ImGui::End();
+        ImGui::PopStyleVar();
     }
 
     void UIForm::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
