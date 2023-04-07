@@ -63,7 +63,7 @@ namespace SE::OtdrEditor
     void OtdrWindow::ConfigureUI()
     {
         // mTestDialog = New<UIDialog>( "Test", math::vec2{ 640, 480 } );
-        mWorkspaceArea.ConfigureUI();
+        // mWorkspaceArea.ConfigureUI();
         // mLinkElementTable->OnElementClicked(
         //     [&]( sLinkElement const &aElement )
         //     {
@@ -175,7 +175,7 @@ namespace SE::OtdrEditor
         ImGui::PopStyleVar();
         ImGui::End();
 
-        mWorkspaceArea.Update();
+        // mWorkspaceArea.Update();
 
         // if( ImGui::Begin( "WS", NULL, ImGuiWindowFlags_None ) )
         // {
@@ -470,7 +470,7 @@ namespace SE::OtdrEditor
 
     void OtdrWindow::Update( Timestep aTs )
     {
-        mWorkspaceArea.Tick();
+        // mWorkspaceArea.Tick();
 
         UpdateFramerate( aTs );
     }
