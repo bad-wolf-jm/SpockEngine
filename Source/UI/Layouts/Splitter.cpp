@@ -77,11 +77,18 @@ namespace SE::Core
         }
         Splitter( mOrientation, mItemSpacing, &mSize1, &mSize2, 50.0f, 50.0f );
 
+        ImVec2 lTopLeft = ImGui::GetCursorScreenPos();
         if( mChild1 )
         {
             ImVec2 lItemSize =
                 ( mOrientation == eBoxLayoutOrientation::HORIZONTAL ) ? ImVec2{ aSize.x, mSize1 } : ImVec2{ mSize1, aSize.y };
-            mChild1->Update( aPosition, lItemSize );
+
+            ImGui::SetCursorPos( aPosition );
+            ImGui::PushID( (void *)mChild1 );
+            ImGui::BeginChild( "##Child_1", lItemSize );
+            mChild1->Update( ImVec2{}, lItemSize );
+            ImGui::EndChild();
+            ImGui::PopID();
         }
 
         ImVec2 lSecondItemPosition{};
@@ -94,7 +101,12 @@ namespace SE::Core
         {
             ImVec2 lItemSize =
                 ( mOrientation == eBoxLayoutOrientation::HORIZONTAL ) ? ImVec2{ aSize.x, mSize2 } : ImVec2{ mSize2, aSize.y };
-            mChild2->Update( aPosition + lSecondItemPosition, lItemSize );
+            ImGui::SetCursorPos( aPosition + lSecondItemPosition );
+            ImGui::PushID( (void *)mChild2 );
+            ImGui::BeginChild( "##Child_2", lItemSize );
+            mChild2->Update( ImVec2{}, lItemSize );
+            ImGui::EndChild();
+            ImGui::PopID();
         }
     }
 
