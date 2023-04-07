@@ -1,0 +1,9 @@
+[submodule "ThirdParty/imgui-node-editor"]
+	path = ThirdParty/imgui-node-editor
+	url = https://github.com/thedmd/imgui-node-editor.git
+[submodule "ThirdParty/implot"]
+	path = ThirdParty/implot
+	url = https://github.com/epezent/implot.git
+[submodule "ThirdParty/gli"]
+	path = ThirdParty/gli
+	url = https://github.com/g-truc/gli.git
