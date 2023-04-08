@@ -8,11 +8,6 @@
 
 #include "Core/Logging.h"
 #include "Core/Memory.h"
-// #ifndef g_optixFunctionTable
-// #    include <optix_function_table_definition.h>
-// #endif
-
-// #include "Socket.h"
 
 namespace SE::Core
 {
