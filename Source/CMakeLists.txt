@@ -68,67 +68,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Interface/ISamplerCubeMap.cpp
     Graphics/Interface/IRenderTarget.cpp
 
-    # Renderer/ASceneRenderer.cpp
-    # Renderer/SceneRenderData.cpp
-
-    # Scene/Primitives/Primitives.cpp
-    # Scene/Primitives/Arrow.cpp
-    # Scene/Visualizers/Wall2D.cpp
-    # Scene/Scene.cpp
-    # Scene/VertexTransform.cu
-    # Scene/MaterialSystem/MaterialSystem.cpp
-    # Scene/Renderer/MeshRenderer.cpp
-    # Scene/Renderer/CoordinateGridRenderer.cpp
-    # Scene/Renderer/EffectProcessor.cpp
-    # Scene/Renderer/ParticleSystemRenderer.cpp
-    # Scene/Renderer/ForwardSceneRenderer.cpp
-    # Scene/Renderer/ShadowSceneRenderer.cpp
-    # Scene/Renderer/DeferredSceneRenderer.cpp
-    # Scene/Renderer/DeferredLightingRenderer.cpp
-    # Scene/Serialize/FileIO.cpp
-    # Scene/Serialize/AssetFile.cpp
-    # Scene/Serialize/SerializeComponents.cpp
-    # ${embedded_ptx_code}
-    # Scene/Renderer/RayTracing/ToneMap.cu
-    # Scene/Renderer/RayTracing/RayTracingRenderer.h
-    # Scene/Renderer/RayTracing/RayTracingRenderer.cpp
-
-    # Scene/Importer/glTFImporter.cpp
-    # Scene/Importer/ObjImporter.cpp
-
-    # Editor/PopupWindow.cpp
-    # Editor/EditorWindow.cpp
-    # Editor/ContentBrowser.cpp
-    # Editor/BaseEditorApplication.cpp
-    # Editor/SceneHierarchyPanel.cpp
-    # Editor/SceneElementEditor.cpp
-
     OtdrEditor/OtdrWindow.cpp
     OtdrEditor/BaseOtdrApplication.cpp
-    # OtdrEditor/Workspace.cpp
-    # OtdrEditor/Enums.cpp
-    # OtdrEditor/LinkElementTable.cpp
-    # OtdrEditor/TestFailResultTable.cpp
-    # OtdrEditor/MultiPulseEventTable.cpp
-    # OtdrEditor/AcquisitionData.cpp
-    # OtdrEditor/EventOverview.cpp
-    # OtdrEditor/MeasurementOverview.cpp
-    # OtdrEditor/LinkElementTracePlot.cpp
-    # OtdrEditor/MonoClassHierarchy.cpp
-    # OtdrEditor/IOlmDocument.cpp
-    # OtdrEditor/IOlmDiffDocument.cpp
-
-    # ProcessingNodes/HitRecordProcessorKernels.cu
-    # ProcessingNodes/HitRecordProcessor.cpp
-
-    # Scene/EnvironmentSampler/PointCloudVisualizer.cu
-    # Scene/EnvironmentSampler/EnvironmentSampler.cpp
-    # ${g_SensorModelEnvironmentSampler}
-
-    # TensorOps/Implementation/KernelLaunchers.cu
-    # TensorOps/NodeControllers.cpp
-    # TensorOps/ScalarTypes.cpp
-    # TensorOps/Scope.cpp
 )
 
 function(add_shader TARGET SHADER)
@@ -153,51 +94,8 @@ function(add_shader TARGET SHADER)
     target_sources(${TARGET} PRIVATE ${CURRENT_OUTPUT_PATH})
 endfunction(add_shader)
 
-# add_shader(LTSimulationEngineRuntime "copy.frag")
-# add_shader(LTSimulationEngineRuntime "fxaa.frag")
-# add_shader(LTSimulationEngineRuntime "fxaa.vert")
-
-# add_shader(LTSimulationEngineRuntime "shadow.vert")
-
-# add_shader(LTSimulationEngineRuntime "OmniShadow.vert")
-# add_shader(LTSimulationEngineRuntime "OmniShadow.frag")
-
-# add_shader(LTSimulationEngineRuntime "filtercube.vert")
-# add_shader(LTSimulationEngineRuntime "irradiancecube.frag")
-# add_shader(LTSimulationEngineRuntime "prefilterenvmap.frag")
-
-# add_shader(LTSimulationEngineRuntime "skybox.vert")
-# add_shader(LTSimulationEngineRuntime "skybox.frag")
-
-# add_shader(LTSimulationEngineRuntime "coordinategrid.vert")
-# add_shader(LTSimulationEngineRuntime "coordinategrid.frag")
-
-# add_shader(LTSimulationEngineRuntime "genbrdflut.vert")
-# add_shader(LTSimulationEngineRuntime "genbrdflut.frag")
-
-# add_shader(LTSimulationEngineRuntime "PBRMeshShader.vert")
-# add_shader(LTSimulationEngineRuntime "PBRMeshShader.frag")
-
 add_shader(LTSimulationEngineRuntime "ui_shader.vert")
 add_shader(LTSimulationEngineRuntime "ui_shader.frag")
-
-# add_shader(LTSimulationEngineRuntime "ParticleSystem.vert")
-# add_shader(LTSimulationEngineRuntime "ParticleSystem.frag")
-
-# add_shader(LTSimulationEngineRuntime "SurfaceShader.vert")
-# add_shader(LTSimulationEngineRuntime "SurfaceShader.frag")
-
-# add_shader(LTSimulationEngineRuntime "WireframeShader.vert")
-# add_shader(LTSimulationEngineRuntime "WireframeShader.frag")
-# 
-# add_shader(LTSimulationEngineRuntime "Unlit.vert")
-# add_shader(LTSimulationEngineRuntime "Unlit.frag")
-
-# add_shader(LTSimulationEngineRuntime "Deferred/DeferredLightingMSAA.vert")
-# add_shader(LTSimulationEngineRuntime "Deferred/DeferredLightingMSAA.frag")
-
-# add_shader(LTSimulationEngineRuntime "Deferred/MRT.vert")
-# add_shader(LTSimulationEngineRuntime "Deferred/MRT.frag")
 
 target_link_libraries(LTSimulationEngineRuntime PRIVATE
     Vulkan::Vulkan
@@ -217,31 +115,16 @@ target_link_libraries(LTSimulationEngineRuntime PRIVATE
     "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/libmini-sgen.lib"
     "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/libgcmonosgen.lib"
     "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/eglib.lib"
-    # ${optix_LIBRARY}
-    # ${CUDA_LIBRARIES}
-    # ${CUDA_CUDA_LIBRARY}
-    # CUDA::curand
     wsock32
     ws2_32
     yaml-cpp
-    # tinygltf
-    # tinyobjloader
     pugixml
-    # lua::lua
-    # Zep
-    # ${ASSIMP_LIBRARIES}
     glfw)
 
 target_compile_definitions(LTSimulationEngineRuntime PRIVATE)
 target_compile_options(LTSimulationEngineRuntime PRIVATE
     $<$<COMPILE_LANGUAGE:CUDA>: --expt-relaxed-constexpr -Xcudafe "--display_error_number --diag_suppress=\"20012,20044\"">
     $<$<COMPILE_LANGUAGE:CXX>:/bigobj /wd4068>)
-
-# add_executable( SE_Run WIN32 Launch/EditorMain.cpp )
-# target_include_directories(SE_Run PRIVATE Source ${SE_EXTRA_INCLUDES})
-# target_compile_definitions(SE_Run PRIVATE VK_USE_PLATFORM_WIN32_KHR)
-# target_link_libraries( SE_Run LTSimulationEngineRuntime lua::lua)
-# set_target_properties( SE_Run PROPERTIES LINK_FLAGS /SUBSYSTEM:CONSOLE )
 
 add_executable(OTDR_Run WIN32 Launch/OtdrMain.cpp)
 target_include_directories(OTDR_Run PRIVATE Source ${SE_EXTRA_INCLUDES})

@@ -56,7 +56,6 @@ namespace SE::OtdrEditor
     {
         mEditorWindow =
             OtdrWindow( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
-        mEditorWindow.ConfigureUI();
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
     }
 

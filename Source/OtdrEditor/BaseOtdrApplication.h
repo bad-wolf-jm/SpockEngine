@@ -18,7 +18,6 @@ namespace SE::OtdrEditor
 
     using namespace SE::Core;
     using namespace SE::Graphics;
-    // using namespace SE::TensorOps;
 
     class BaseOtdrApplication
     {
