@@ -4,7 +4,7 @@
 ///
 /// @author Jean-Martin Albert
 ///
-/// @copyright (c) 2021 LeddarTech Inc. All rights reserved.
+/// @copyright (c) 2023 Jean-Martin Albert All rights reserved.
 
 #include "Conversion.h"
 #include "TextureCubeMap.h"
