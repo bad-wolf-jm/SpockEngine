@@ -32,10 +32,10 @@ add_library(LTSimulationEngineRuntime STATIC
     
     Engine/Engine.cpp
     
-    UI/Widgets.cpp
+    # UI/Widgets.cpps
     UI/UI.cpp
     UI/TreeNode.cpp
-    UI/CanvasView.cpp
+    # UI/CanvasView.cpp
     UI/Components/Component.cpp
     UI/Components/Button.cpp
     UI/Components/CheckBox.cpp

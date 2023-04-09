@@ -50,7 +50,7 @@ namespace SE::Core
 
         static MonoType *GetCoreTypeFromName( std::string &aName );
 
-        static void DisplayAssemblies();
+        // static void DisplayAssemblies();
 
         static void OnConsoleOut( std::function<void( std::string const & )> aFunction );
 

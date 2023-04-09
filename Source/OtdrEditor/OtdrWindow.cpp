@@ -10,7 +10,7 @@
 
 #include "Core/Profiling/BlockTimer.h"
 
-#include "UI/Widgets.h"
+// #include "UI/Widgets.h"
 
 #include "Core/CUDA/Texture/TextureData.h"
 #include "Core/File.h"

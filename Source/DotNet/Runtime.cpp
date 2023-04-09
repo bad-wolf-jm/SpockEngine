@@ -20,7 +20,7 @@
 #include "Core/FileWatch.hpp"
 
 #include "UI/UI.h"
-#include "UI/Widgets.h"
+// #include "UI/Widgets.h"
 
 // #include "EntityRegistry.h"
 // #include "InternalCalls.h"
@@ -440,77 +440,77 @@ namespace SE::Core
         return lMonoType;
     }
 
-    void DotNetRuntime::DisplayAssemblies()
-    {
-        bool        lAllFilesExist = true;
-        math::vec2  lWindowSize    = UI::GetAvailableContentSpace();
-        auto        lDrawList      = ImGui::GetWindowDrawList();
-        const float lFontSize      = lDrawList->_Data->FontSize;
-        float       lCircleXOffset = ImGui::CalcTextSize( "M" ).x / 2.0f;
+    // void DotNetRuntime::DisplayAssemblies()
+    // {
+    //     bool        lAllFilesExist = true;
+    //     math::vec2  lWindowSize    = UI::GetAvailableContentSpace();
+    //     auto        lDrawList      = ImGui::GetWindowDrawList();
+    //     const float lFontSize      = lDrawList->_Data->FontSize;
+    //     float       lCircleXOffset = ImGui::CalcTextSize( "M" ).x / 2.0f;
 
-        for( auto const &[lCategory, lAssemblies] : sRuntimeData->mCategories )
-        {
-            bool lCategoryAllFilesExist = true;
-            for( auto const &lAssembly : lAssemblies ) lCategoryAllFilesExist &= lAssembly->mFileExists;
+    //     for( auto const &[lCategory, lAssemblies] : sRuntimeData->mCategories )
+    //     {
+    //         bool lCategoryAllFilesExist = true;
+    //         for( auto const &lAssembly : lAssemblies ) lCategoryAllFilesExist &= lAssembly->mFileExists;
 
-            bool lNeedsReload = false;
-            for( auto const &lAssembly : lAssemblies ) lNeedsReload |= lAssembly->mNeedsReloading;
+    //         bool lNeedsReload = false;
+    //         for( auto const &lAssembly : lAssemblies ) lNeedsReload |= lAssembly->mNeedsReloading;
 
-            if( lCategoryAllFilesExist && lNeedsReload )
-                ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 255.0f / 255.0f, 229.0f / 255.0f, 159.0f / 255.0f, 1.0f } );
-            else if( !lCategoryAllFilesExist )
-                ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 160.0f / 255.0f, 69.0f / 255.0f, 55.0f / 255.0f, 1.0f } );
+    //         if( lCategoryAllFilesExist && lNeedsReload )
+    //             ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 255.0f / 255.0f, 229.0f / 255.0f, 159.0f / 255.0f, 1.0f } );
+    //         else if( !lCategoryAllFilesExist )
+    //             ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 160.0f / 255.0f, 69.0f / 255.0f, 55.0f / 255.0f, 1.0f } );
 
-            UI::SetCursorPositionX( 10.0f );
-            auto lPos = UI::GetCurrentCursorPosition();
-            UI::Text( "{}", lCategory );
-            if( lCategoryAllFilesExist && lNeedsReload )
-                ImGui::PopStyleColor();
-            else if( !lCategoryAllFilesExist )
-                ImGui::PopStyleColor();
+    //         UI::SetCursorPositionX( 10.0f );
+    //         auto lPos = UI::GetCurrentCursorPosition();
+    //         UI::Text( "{}", lCategory );
+    //         if( lCategoryAllFilesExist && lNeedsReload )
+    //             ImGui::PopStyleColor();
+    //         else if( !lCategoryAllFilesExist )
+    //             ImGui::PopStyleColor();
 
-            UI::SetCursorPosition( math::vec2{ lWindowSize.x - 20.0f, ImGui::GetCursorPos().y - 12.0f } );
-            if( lCategoryAllFilesExist && lNeedsReload )
-                lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 4,
-                                            IM_COL32( 255, 229, 159, 255 ), 16 );
-            else if( !lCategoryAllFilesExist )
-                lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 4,
-                                            IM_COL32( 160, 69, 55, 255 ), 16 );
-            else
-                lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 4,
-                                            IM_COL32( 255, 255, 255, 255 ), 16 );
-            UI::SetCursorPosition( lPos + math::vec2{ 0.0f, lFontSize } );
+    //         UI::SetCursorPosition( math::vec2{ lWindowSize.x - 20.0f, ImGui::GetCursorPos().y - 12.0f } );
+    //         if( lCategoryAllFilesExist && lNeedsReload )
+    //             lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 4,
+    //                                         IM_COL32( 255, 229, 159, 255 ), 16 );
+    //         else if( !lCategoryAllFilesExist )
+    //             lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 4,
+    //                                         IM_COL32( 160, 69, 55, 255 ), 16 );
+    //         else
+    //             lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 4,
+    //                                         IM_COL32( 255, 255, 255, 255 ), 16 );
+    //         UI::SetCursorPosition( lPos + math::vec2{ 0.0f, lFontSize } );
 
-            for( auto const &lAssembly : lAssemblies )
-            {
-                UI::SetCursorPositionX( 30.0f );
-                if( lAssembly->mNeedsReloading && lAssembly->mFileExists )
-                    ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 255.0f / 255.0f, 229.0f / 255.0f, 159.0f / 255.0f, 1.0f } );
-                else if( !lAssembly->mFileExists )
-                    ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 160.0f / 255.0f, 69.0f / 255.0f, 55.0f / 255.0f, 1.0f } );
+    //         for( auto const &lAssembly : lAssemblies )
+    //         {
+    //             UI::SetCursorPositionX( 30.0f );
+    //             if( lAssembly->mNeedsReloading && lAssembly->mFileExists )
+    //                 ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 255.0f / 255.0f, 229.0f / 255.0f, 159.0f / 255.0f, 1.0f } );
+    //             else if( !lAssembly->mFileExists )
+    //                 ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 160.0f / 255.0f, 69.0f / 255.0f, 55.0f / 255.0f, 1.0f } );
 
-                Text( lAssembly->mFilename.stem().string() );
-                if( lAssembly->mNeedsReloading && lAssembly->mFileExists )
-                {
-                    UI::SameLine();
-                    UI::SetCursorPositionX( lWindowSize.x - 20.0f );
-                    UI::Text( "M" );
-                    ImGui::PopStyleColor();
-                }
-                else if( !lAssembly->mFileExists )
-                {
-                    UI::SameLine();
-                    UI::SetCursorPositionX( lWindowSize.x - 20.0f );
-                    UI::Text( "D" );
-                    ImGui::PopStyleColor();
-                    lAllFilesExist = false;
-                }
-            }
-        }
+    //             Text( lAssembly->mFilename.stem().string() );
+    //             if( lAssembly->mNeedsReloading && lAssembly->mFileExists )
+    //             {
+    //                 UI::SameLine();
+    //                 UI::SetCursorPositionX( lWindowSize.x - 20.0f );
+    //                 UI::Text( "M" );
+    //                 ImGui::PopStyleColor();
+    //             }
+    //             else if( !lAssembly->mFileExists )
+    //             {
+    //                 UI::SameLine();
+    //                 UI::SetCursorPositionX( lWindowSize.x - 20.0f );
+    //                 UI::Text( "D" );
+    //                 ImGui::PopStyleColor();
+    //                 lAllFilesExist = false;
+    //             }
+    //         }
+    //     }
 
-        if( DotNetRuntime::AssembliesNeedReloading() )
-            if( UI::Button( "Reload assemblies", { 150.0f, 30.0f } ) ) DotNetRuntime::ReloadAssemblies();
-    }
+    //     if( DotNetRuntime::AssembliesNeedReloading() )
+    //         if( UI::Button( "Reload assemblies", { 150.0f, 30.0f } ) ) DotNetRuntime::ReloadAssemblies();
+    // }
 
     void DotNetRuntime::OnConsoleOut( std::function<void( std::string const & )> aFunction ) { sRuntimeData->mConsoleOut = aFunction; }
 
