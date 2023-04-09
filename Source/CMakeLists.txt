@@ -42,8 +42,8 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/Layouts/StackLayout.cpp
     UI/Form.cpp
     UI/Dialog.cpp
+    UI/UIContext.cpp
     
-    Core/GraphicContext/UI/UIContext.cpp
 
     Graphics/Vulkan/DescriptorSet.cpp
     Graphics/Vulkan/GraphicsPipeline.cpp

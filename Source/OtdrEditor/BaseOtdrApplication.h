@@ -6,8 +6,8 @@
 #include "Core/Memory.h"
 
 #include "UI/UI.h"
+#include "UI/UIContext.h"
 
-#include "Core/GraphicContext/UI/UIContext.h"
 #include "Engine/Engine.h"
 
 #include "OtdrWindow.h"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/GraphicContext/UI/UIContext.h"
+#include "UI/UIContext.h"
 #include "UI/UI.h"
 
 namespace SE::Core

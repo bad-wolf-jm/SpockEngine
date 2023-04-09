@@ -4,7 +4,7 @@
 
 #include "Core/Math/Types.h"
 
-#include "Core/GraphicContext/UI/UIContext.h"
+#include "UI/UIContext.h"
 
 namespace SE::Core
 {
