@@ -292,13 +292,6 @@ namespace SE::Core
         LoadCoreAssembly( aCoreAssemblyPath );
     }
 
-    // void DotNetRuntime::RegisterComponentTypes()
-    // {
-    //     RegisterComponentType<sTag>();
-    //     RegisterComponentType<sNodeTransformComponent>();
-    //     RegisterComponentType<sLightComponent>();
-    // }
-
     void DotNetRuntime::Shutdown()
     {
         ShutdownMono();
@@ -416,8 +409,6 @@ namespace SE::Core
 
         LoadAssemblyClasses();
         RecreateClassTree();
-
-        // RegisterComponentTypes();
     }
 
     DotNetClass &DotNetRuntime::GetClassType( const std::string &aClassName )
@@ -439,78 +430,6 @@ namespace SE::Core
 
         return lMonoType;
     }
-
-    // void DotNetRuntime::DisplayAssemblies()
-    // {
-    //     bool        lAllFilesExist = true;
-    //     math::vec2  lWindowSize    = UI::GetAvailableContentSpace();
-    //     auto        lDrawList      = ImGui::GetWindowDrawList();
-    //     const float lFontSize      = lDrawList->_Data->FontSize;
-    //     float       lCircleXOffset = ImGui::CalcTextSize( "M" ).x / 2.0f;
-
-    //     for( auto const &[lCategory, lAssemblies] : sRuntimeData->mCategories )
-    //     {
-    //         bool lCategoryAllFilesExist = true;
-    //         for( auto const &lAssembly : lAssemblies ) lCategoryAllFilesExist &= lAssembly->mFileExists;
-
-    //         bool lNeedsReload = false;
-    //         for( auto const &lAssembly : lAssemblies ) lNeedsReload |= lAssembly->mNeedsReloading;
-
-    //         if( lCategoryAllFilesExist && lNeedsReload )
-    //             ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 255.0f / 255.0f, 229.0f / 255.0f, 159.0f / 255.0f, 1.0f } );
-    //         else if( !lCategoryAllFilesExist )
-    //             ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 160.0f / 255.0f, 69.0f / 255.0f, 55.0f / 255.0f, 1.0f } );
-
-    //         UI::SetCursorPositionX( 10.0f );
-    //         auto lPos = UI::GetCurrentCursorPosition();
-    //         UI::Text( "{}", lCategory );
-    //         if( lCategoryAllFilesExist && lNeedsReload )
-    //             ImGui::PopStyleColor();
-    //         else if( !lCategoryAllFilesExist )
-    //             ImGui::PopStyleColor();
-
-    //         UI::SetCursorPosition( math::vec2{ lWindowSize.x - 20.0f, ImGui::GetCursorPos().y - 12.0f } );
-    //         if( lCategoryAllFilesExist && lNeedsReload )
-    //             lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 4,
-    //                                         IM_COL32( 255, 229, 159, 255 ), 16 );
-    //         else if( !lCategoryAllFilesExist )
-    //             lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 4,
-    //                                         IM_COL32( 160, 69, 55, 255 ), 16 );
-    //         else
-    //             lDrawList->AddCircleFilled( ImGui::GetCursorScreenPos() + ImVec2{ lCircleXOffset, 0.0f }, 4,
-    //                                         IM_COL32( 255, 255, 255, 255 ), 16 );
-    //         UI::SetCursorPosition( lPos + math::vec2{ 0.0f, lFontSize } );
-
-    //         for( auto const &lAssembly : lAssemblies )
-    //         {
-    //             UI::SetCursorPositionX( 30.0f );
-    //             if( lAssembly->mNeedsReloading && lAssembly->mFileExists )
-    //                 ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 255.0f / 255.0f, 229.0f / 255.0f, 159.0f / 255.0f, 1.0f } );
-    //             else if( !lAssembly->mFileExists )
-    //                 ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 160.0f / 255.0f, 69.0f / 255.0f, 55.0f / 255.0f, 1.0f } );
-
-    //             Text( lAssembly->mFilename.stem().string() );
-    //             if( lAssembly->mNeedsReloading && lAssembly->mFileExists )
-    //             {
-    //                 UI::SameLine();
-    //                 UI::SetCursorPositionX( lWindowSize.x - 20.0f );
-    //                 UI::Text( "M" );
-    //                 ImGui::PopStyleColor();
-    //             }
-    //             else if( !lAssembly->mFileExists )
-    //             {
-    //                 UI::SameLine();
-    //                 UI::SetCursorPositionX( lWindowSize.x - 20.0f );
-    //                 UI::Text( "D" );
-    //                 ImGui::PopStyleColor();
-    //                 lAllFilesExist = false;
-    //             }
-    //         }
-    //     }
-
-    //     if( DotNetRuntime::AssembliesNeedReloading() )
-    //         if( UI::Button( "Reload assemblies", { 150.0f, 30.0f } ) ) DotNetRuntime::ReloadAssemblies();
-    // }
 
     void DotNetRuntime::OnConsoleOut( std::function<void( std::string const & )> aFunction ) { sRuntimeData->mConsoleOut = aFunction; }
 
@@ -534,86 +453,8 @@ namespace SE::Core
 
     void DotNetRuntime::RegisterInternalCppFunctions()
     {
-        // using namespace MonoInternalCalls;
-
-        mono_add_internal_call( "SpockEngine.CppCall::Console_Write", ConsoleWrite );
         mono_add_internal_call( "SpockEngine.CppCall::OpenFile", OpenFile );
-
-        // SE_ADD_INTERNAL_CALL( Entity_Create );
-        // SE_ADD_INTERNAL_CALL( Entity_IsValid );
-        // SE_ADD_INTERNAL_CALL( Entity_Has );
-        // SE_ADD_INTERNAL_CALL( Entity_Get );
-        // SE_ADD_INTERNAL_CALL( Entity_Add );
-        // SE_ADD_INTERNAL_CALL( Entity_Replace );
-
-        // SE_ADD_INTERNAL_CALL( OpNode_NewTensorShape );
-        // SE_ADD_INTERNAL_CALL( OpNode_DestroyTensorShape );
-        // SE_ADD_INTERNAL_CALL( OpNode_CountLayers );
-        // SE_ADD_INTERNAL_CALL( OpNode_GetDimension );
-        // SE_ADD_INTERNAL_CALL( OpNode_Trim );
-        // SE_ADD_INTERNAL_CALL( OpNode_Flatten );
-        // SE_ADD_INTERNAL_CALL( OpNode_InsertDimension );
-
-        // SE_ADD_INTERNAL_CALL( OpNode_NewScope );
-        // SE_ADD_INTERNAL_CALL( OpNode_DestroyScope );
-        // SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Constant_Initializer );
-        // SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Vector_Initializer );
-        // SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Data_Initializer );
-        // SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Random_Uniform_Initializer );
-        // SE_ADD_INTERNAL_CALL( OpNode_CreateMultiTensor_Random_Normal_Initializer );
-        // SE_ADD_INTERNAL_CALL( OpNode_CreateVector );
-        // SE_ADD_INTERNAL_CALL( OpNode_CreateScalarVector );
-        // SE_ADD_INTERNAL_CALL( OpNode_CreateScalarValue );
-
-        // SE_ADD_INTERNAL_CALL( OpNode_Add );
-        // SE_ADD_INTERNAL_CALL( OpNode_Subtract );
-        // SE_ADD_INTERNAL_CALL( OpNode_Divide );
-        // SE_ADD_INTERNAL_CALL( OpNode_Multiply );
-        // SE_ADD_INTERNAL_CALL( OpNode_And );
-        // SE_ADD_INTERNAL_CALL( OpNode_Or );
-        // SE_ADD_INTERNAL_CALL( OpNode_Not );
-        // SE_ADD_INTERNAL_CALL( OpNode_BitwiseAnd );
-        // SE_ADD_INTERNAL_CALL( OpNode_BitwiseOr );
-        // SE_ADD_INTERNAL_CALL( OpNode_BitwiseNot );
-        // SE_ADD_INTERNAL_CALL( OpNode_InInterval );
-        // SE_ADD_INTERNAL_CALL( OpNode_Equal );
-        // SE_ADD_INTERNAL_CALL( OpNode_LessThan );
-        // SE_ADD_INTERNAL_CALL( OpNode_LessThanOrEqual );
-        // SE_ADD_INTERNAL_CALL( OpNode_GreaterThan );
-        // SE_ADD_INTERNAL_CALL( OpNode_GreaterThanOrEqual );
-        // SE_ADD_INTERNAL_CALL( OpNode_Where );
-        // SE_ADD_INTERNAL_CALL( OpNode_Mix );
-        // SE_ADD_INTERNAL_CALL( OpNode_AffineTransform );
-        // SE_ADD_INTERNAL_CALL( OpNode_ARange );
-        // SE_ADD_INTERNAL_CALL( OpNode_LinearSpace );
-        // SE_ADD_INTERNAL_CALL( OpNode_Repeat );
-        // SE_ADD_INTERNAL_CALL( OpNode_Tile );
-        // SE_ADD_INTERNAL_CALL( OpNode_Sample2D );
-        // SE_ADD_INTERNAL_CALL( OpNode_Collapse );
-        // SE_ADD_INTERNAL_CALL( OpNode_Expand );
-        // SE_ADD_INTERNAL_CALL( OpNode_Reshape );
-        // SE_ADD_INTERNAL_CALL( OpNode_Relayout );
-        // SE_ADD_INTERNAL_CALL( OpNode_FlattenNode );
-        // SE_ADD_INTERNAL_CALL( OpNode_Slice );
-        // SE_ADD_INTERNAL_CALL( OpNode_Summation );
-        // SE_ADD_INTERNAL_CALL( OpNode_CountTrue );
-        // SE_ADD_INTERNAL_CALL( OpNode_CountNonZero );
-        // SE_ADD_INTERNAL_CALL( OpNode_CountZero );
-        // SE_ADD_INTERNAL_CALL( OpNode_Floor );
-        // SE_ADD_INTERNAL_CALL( OpNode_Ceil );
-        // SE_ADD_INTERNAL_CALL( OpNode_Abs );
-        // SE_ADD_INTERNAL_CALL( OpNode_Sqrt );
-        // SE_ADD_INTERNAL_CALL( OpNode_Round );
-        // SE_ADD_INTERNAL_CALL( OpNode_Diff );
-        // SE_ADD_INTERNAL_CALL( OpNode_Shift );
-        // SE_ADD_INTERNAL_CALL( OpNode_Conv1D );
-        // SE_ADD_INTERNAL_CALL( OpNode_HCat );
-
-        // SE_ADD_INTERNAL_CALL( UI_Text );
-        // SE_ADD_INTERNAL_CALL( UI_Button );
-
         mono_add_internal_call( "SpockEngine.UIColor::GetStyleColor", SE::Core::UI::GetStyleColor );
-
 
         mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetIsVisible", UIComponent::UIComponent_SetIsVisible );
         mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetIsEnabled", UIComponent::UIComponent_SetIsEnabled );

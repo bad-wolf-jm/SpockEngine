@@ -2,40 +2,23 @@ cmake_minimum_required(VERSION 3.20)
 
 project(LTSimulationEngine LANGUAGES CXX C)
 
-# project(LTSimulationEngine LANGUAGES CUDA CXX C)
-
-# cuda_compile_and_embed(g_SensorModelEnvironmentSampler Scene/EnvironmentSampler/DevicePrograms.cu)
-# cuda_compile_and_embed(embedded_ptx_code Scene/Renderer/RayTracing/DevicePrograms.cu)
-
 add_library(LTSimulationEngineRuntime STATIC
     Core/File.cpp
     Core/Resource.cpp
     Core/Logging.cpp
 
-    # Core/EntityCollection/EditComponent.cpp
-    
     DotNet/Runtime.cpp
     DotNet/Class.cpp
     DotNet/Instance.cpp
     DotNet/Utils.cpp
-    # DotNet/InternalCalls.cpp
-    # DotNet/EntityRegistry.cpp
-    
-    # Core/CUDA/Array/MultiTensor.cu
-    # Core/CUDA/Array/MemoryPool.cu
-    # Core/CUDA/Texture/Texture2D.cu
-    # Core/CUDA/Texture/Conversion.cpp
-    # Core/CUDA/Texture/TextureCubeMap.cu
+
     Core/CUDA/Texture/ColorFormat.cpp
     Core/CUDA/Texture/TextureData.cpp
-    # Core/CUDA/Cuda.cpp
     
     Engine/Engine.cpp
     
-    # UI/Widgets.cpps
     UI/UI.cpp
     UI/TreeNode.cpp
-    # UI/CanvasView.cpp
     UI/Components/Component.cpp
     UI/Components/Button.cpp
     UI/Components/CheckBox.cpp
@@ -59,12 +42,6 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/Layouts/StackLayout.cpp
     UI/Form.cpp
     UI/Dialog.cpp
-    
-    # Core/Optix/OptixContext.cpp
-    # Core/Optix/OptixModule.cpp
-    # Core/Optix/OptixPipeline.cpp
-    # Core/Optix/OptixProgramGroup.cpp
-    # Core/Optix/OptixAccelerationStructure.cpp
     
     Core/GraphicContext/UI/UIContext.cpp
 

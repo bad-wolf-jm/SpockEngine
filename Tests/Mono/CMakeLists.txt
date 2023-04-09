@@ -5,8 +5,8 @@ set(LIBRARY_NAME MonoScriptingTest)
 
 add_library(${LIBRARY_NAME} SHARED
     Source/Test_BaseLibrary.cs
-    Source/Test_Entities.cs
-    Source/Test_TensorOps.cs
+    # Source/Test_Entities.cs
+    # Source/Test_TensorOps.cs
 )
 
 set_property(TARGET ${LIBRARY_NAME} PROPERTY DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1")

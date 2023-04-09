@@ -34,20 +34,12 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/Layouts/ZLayout.cs
     Source/UI/Layouts/Splitter.cs
     Source/UI/Layouts/StackLayout.cs
-    Source/UI/UI.cs
     Source/UI/Form.cs
     Source/UI/Dialog.cs
     Source/UI/Colors.cs
     Source/UI/Fonts.cs
     
-    # Source/CppCalls.cs
-    # Source/Component.cs
-    # Source/Entity.cs
-    Source/Initialization.cs
-    # Source/ActorComponent.cs
     Source/Script.cs
-    # Source/HUDComponent.cs
-    # Source/TensorOps.cs
     Source/SEApplication.cs
 )
 
