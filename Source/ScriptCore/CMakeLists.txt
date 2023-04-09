@@ -13,6 +13,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/Math/functions.cs
 
     Source/ScriptProxy.cs
+    Source/CppCalls.cs
 
     Source/UI/Components/Component.cs
     Source/UI/Components/Button.cs
