@@ -183,7 +183,6 @@ namespace SpockEngine
     {
         private ulong mPlotInstance;
         private eUIPlotAxis mAxis;
-        private string mTitle;
 
         public UIPlotAxis(ulong aPlotInstance, eUIPlotAxis aAxis)
         {

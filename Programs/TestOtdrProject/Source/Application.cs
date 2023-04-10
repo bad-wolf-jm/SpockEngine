@@ -1,6 +1,7 @@
 using System;
-using System.Linq;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 using SpockEngine;
 using SpockEngine.Math;
@@ -13,12 +14,18 @@ using Metrino.Interop;
 
 public class ScriptProxy : MarshalByRefObject, IScriptProxy
 {
+    Dictionary<string, Type> mScripts;
+
     public void Initialize(StreamWriter aConsoleOut)
     {
+        mScripts = new Dictionary<string, Type>();
+        
         if (aConsoleOut != null)
             Console.SetOut(aConsoleOut);
 
         Console.WriteLine($"Hello 'World'");
+        foreach(var x in Utilities.GetAllDerivedTypes<IScript>())
+            mScripts[x.FullName] = x;
     }
 
     public void Shutdown()
@@ -28,12 +35,12 @@ public class ScriptProxy : MarshalByRefObject, IScriptProxy
 
     public string[] GetScriptNames()
     {
-        return new string[] { "Test.TestSorValues" };
+        return mScripts.Keys.ToArray();
     }
 
     public IScript Instantiate(string aName)
     {
-        return (new Test.TestSorValues()) as IScript;
+        return Activator.CreateInstance(mScripts[aName]) as IScript;
     }
 }
 namespace Test
