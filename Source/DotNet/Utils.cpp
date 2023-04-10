@@ -53,7 +53,7 @@ namespace SE::Core::Mono::Utils
         if( lStatus != MONO_IMAGE_OK )
         {
             const char *lErrorMessage = mono_image_strerror( lStatus );
-            
+
             return nullptr;
         }
 
@@ -94,4 +94,24 @@ namespace SE::Core::Mono::Utils
 
         return it->second;
     }
+
+    std::string GetClassFullName( const char *aNameSpace, const char *aClassName )
+    {
+        std::string lFullName;
+        if( strlen( aNameSpace ) != 0 )
+            lFullName = fmt::format( "{}.{}", aNameSpace, aClassName );
+        else
+            lFullName = aClassName;
+
+        return lFullName;
+    }
+
+    std::string GetClassFullName( MonoClass *aClass )
+    {
+        const char *lNameSpace = mono_class_get_namespace( aClass );
+        const char *lClassName = mono_class_get_name( aClass );
+
+        return lNameSpace, lClassName;
+    }
+
 } // namespace SE::Core::Mono::Utils

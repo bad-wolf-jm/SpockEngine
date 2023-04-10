@@ -106,25 +106,6 @@ namespace SE::Core
             }
         }
 
-        std::string GetClassFullName( const char *aNameSpace, const char *aClassName )
-        {
-            std::string lFullName;
-            if( strlen( aNameSpace ) != 0 )
-                lFullName = fmt::format( "{}.{}", aNameSpace, aClassName );
-            else
-                lFullName = aClassName;
-
-            return lFullName;
-        }
-
-        std::string GetClassFullName( MonoClass *aClass )
-        {
-            const char *lNameSpace = mono_class_get_namespace( aClass );
-            const char *lClassName = mono_class_get_name( aClass );
-
-            return lNameSpace, lClassName;
-        }
-
         std::map<std::string, DotNetClass> LoadImageClasses( MonoImage *aImage, fs::path aPath )
         {
             std::map<std::string, DotNetClass> lClasses{};
@@ -147,7 +128,7 @@ namespace SE::Core
                 MonoClass *lClass = mono_class_from_name( aImage, lNameSpace, lClassName );
                 if( lClass != nullptr )
                 {
-                    std::string lFullName = GetClassFullName( lNameSpace, lClassName );
+                    std::string lFullName = Mono::Utils::GetClassFullName( lNameSpace, lClassName );
 
                     // Add nested classes
                     void *lIterator = nullptr;
@@ -168,7 +149,7 @@ namespace SE::Core
                     lClass = mono_class_get_parent( lClass );
                     while( lClass != nullptr )
                     {
-                        std::string lFullName = GetClassFullName( lClass );
+                        std::string lFullName = Mono::Utils::GetClassFullName( lClass );
 
                         if( lClasses.find( lFullName ) == lClasses.end() )
                             lClasses[lFullName] = DotNetClass( lClass, lNameSpace, lClassName, aImage, aPath );
@@ -235,7 +216,7 @@ namespace SE::Core
         sRuntimeData->mCoreAssembly.mNeedsReloading = false;
 
         sRuntimeData->mClasses = {};
-        MergeMaps( sRuntimeData->mClasses, LoadImageClasses( sRuntimeData->mCoreAssembly.mImage, aFilepath ) );
+        // MergeMaps( sRuntimeData->mClasses, LoadImageClasses( sRuntimeData->mCoreAssembly.mImage, aFilepath ) );
     }
 
     static void OnAppAssemblyFileSystemEvent( const fs::path &path, const filewatch::Event change_type )
@@ -346,8 +327,8 @@ namespace SE::Core
     {
         if( sRuntimeData->mAssemblies.empty() ) return;
 
-        for( auto const &[lPath, lAssembly] : sRuntimeData->mAssemblies )
-            MergeMaps( sRuntimeData->mClasses, LoadImageClasses( lAssembly.mImage, lPath ) );
+        // for( auto const &[lPath, lAssembly] : sRuntimeData->mAssemblies )
+        //     MergeMaps( sRuntimeData->mClasses, LoadImageClasses( lAssembly.mImage, lPath ) );
     }
 
     void DotNetRuntime::RecreateClassTree()
@@ -389,7 +370,7 @@ namespace SE::Core
 
         for( auto &[lFile, lData] : sRuntimeData->mAssemblies )
         {
-            if (!fs::exists( lFile )) continue;
+            if( !fs::exists( lFile ) ) continue;
 
             lData.mAssembly = Mono::Utils::LoadMonoAssembly( lData.mPath / lData.mFilename );
             lData.mImage    = mono_assembly_get_image( lData.mAssembly );
@@ -404,6 +385,20 @@ namespace SE::Core
 
         if( sRuntimeData->mClasses.find( aClassName ) != sRuntimeData->mClasses.end() ) return sRuntimeData->mClasses[aClassName];
 
+        for( auto const &[lPath, lAssembly] : sRuntimeData->mAssemblies )
+        {
+            std::size_t lPos       = aClassName.find_last_of( "." );
+            std::string lNameSpace = aClassName.substr( 0, lPos );
+            std::string lClassName = aClassName.substr( lPos + 1 );
+
+            MonoClass *lClass = mono_class_from_name( lAssembly.mImage, lNameSpace.c_str(), lClassName.c_str() );
+            if( lClass != nullptr )
+            {
+                sRuntimeData->mClasses[aClassName] = DotNetClass( lClass, aClassName, lClassName, lAssembly.mImage, lPath, true );
+
+                return sRuntimeData->mClasses[aClassName];
+            }
+        }
         return DotNetClass{};
     }
 
