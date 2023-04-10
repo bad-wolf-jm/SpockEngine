@@ -73,6 +73,7 @@ namespace SE::Core
             else
                 return sScriptProperty{ "", nullptr };
         }
+        
         std::string &FullName() { return mClassFullName; }
 
         std::vector<DotNetClass *> &DerivedClasses() { return mDerived; }

@@ -382,7 +382,6 @@ namespace SE::Core
 
     DotNetClass &DotNetRuntime::GetClassType( const std::string &aClassName )
     {
-
         if( sRuntimeData->mClasses.find( aClassName ) != sRuntimeData->mClasses.end() ) return sRuntimeData->mClasses[aClassName];
 
         for( auto const &[lPath, lAssembly] : sRuntimeData->mAssemblies )

@@ -5,8 +5,8 @@
 #include "mono/metadata/object.h"
 #include "mono/metadata/tabledefs.h"
 
-#include "Runtime.h"
 #include "Class.h"
+#include "Runtime.h"
 
 namespace SE::Core
 {
@@ -27,7 +27,7 @@ namespace SE::Core
         while( lClass != NULL && lMethod == NULL )
         {
             lMethod = mono_class_get_method_from_name( lClass, aName.c_str(), aParameterCount );
-            
+
             if( lMethod == NULL ) lClass = mono_class_get_parent( lClass );
         }
 
@@ -62,7 +62,7 @@ namespace SE::Core
         DotNetClass &lClass = DotNetRuntime::GetClassType( aClassName );
 
         MonoObject *lException = nullptr;
-        MonoObject *lValue = mono_runtime_invoke( lPropertyGetter, mInstance, nullptr, &lException );
+        MonoObject *lValue     = mono_runtime_invoke( lPropertyGetter, mInstance, nullptr, &lException );
 
         if( lException == nullptr ) return New<DotNetInstance>( &lClass, lClass.Class(), lValue );
 
@@ -70,5 +70,16 @@ namespace SE::Core
     }
 
     sScriptProperty &DotNetInstance::GetProperty( std::string const &aName ) { return mScriptClass->GetProperty( aName ); }
+
+    Ref<DotNetInstance> DotNetInstance::As( const char *aClassName )
+    {
+        if( mInstance == nullptr ) return nullptr;
+
+        DotNetClass &lClass = DotNetRuntime::GetClassType( aClassName );
+
+        return New<DotNetInstance>( &lClass, lClass.Class(), mInstance );
+    }
+
+    std::string DotNetInstance::AsString() { return DotNetRuntime::NewString( reinterpret_cast<MonoString *>( mInstance ) ); }
 
 } // namespace SE::Core

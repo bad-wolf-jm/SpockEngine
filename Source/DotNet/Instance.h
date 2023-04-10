@@ -86,6 +86,17 @@ namespace SE::Core
 
         operator bool() const { return ( mInstance != nullptr ) && ( mMonoClass != nullptr ); }
 
+        template <typename _Ty>
+        _Ty As()
+        {
+            if constexpr( std::is_same<_Ty, std::string>::value )
+                return ( mInstance != nullptr ) ? AsString() : std::string();
+            else
+                return ( mInstance != nullptr ) ? *(_Ty *)mono_object_unbox( mInstance ) : _Ty{};
+        }
+
+        Ref<DotNetInstance> As( const char *aClassName );
+
       private:
         DotNetClass *mScriptClass = nullptr;
         MonoClass   *mMonoClass   = nullptr;
@@ -96,6 +107,7 @@ namespace SE::Core
 
       private:
         sScriptProperty &GetProperty( std::string const &aName );
+        std::string AsString( );
     };
 
 } // namespace SE::Core
