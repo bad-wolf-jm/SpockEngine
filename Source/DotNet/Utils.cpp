@@ -53,6 +53,7 @@ namespace SE::Core::Mono::Utils
         if( lStatus != MONO_IMAGE_OK )
         {
             const char *lErrorMessage = mono_image_strerror( lStatus );
+            
             return nullptr;
         }
 

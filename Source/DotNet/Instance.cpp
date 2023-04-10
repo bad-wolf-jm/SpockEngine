@@ -27,6 +27,7 @@ namespace SE::Core
         while( lClass != NULL && lMethod == NULL )
         {
             lMethod = mono_class_get_method_from_name( lClass, aName.c_str(), aParameterCount );
+            
             if( lMethod == NULL ) lClass = mono_class_get_parent( lClass );
         }
 
@@ -46,6 +47,7 @@ namespace SE::Core
     MonoObject *DotNetInstance::InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters )
     {
         auto lMethod = GetMethod( aName, aParameterCount );
+
         return InvokeMethod( lMethod, aParameters );
     }
 

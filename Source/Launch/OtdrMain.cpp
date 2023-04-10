@@ -62,7 +62,7 @@ void LoadConfiguration( fs::path aConfigurationFile, math::ivec2 &aWindowSize, m
     }
 }
 
-void SaveConfiguration( fs::path aConfigurationFile, fs::path aMetrinoPath, math::ivec2 const &aWindowSize,
+void SaveConfiguration( fs::path aConfigurationFile, math::ivec2 const &aWindowSize,
                         math::ivec2 const &aWindowPosition, UIConfiguration &aUIConfiguration )
 {
     YAML::Emitter lConfigurationOut;
@@ -71,11 +71,6 @@ void SaveConfiguration( fs::path aConfigurationFile, fs::path aMetrinoPath, math
         lConfigurationOut << YAML::Key << "application" << YAML::Value;
         lConfigurationOut << YAML::BeginMap;
         {
-            if( aMetrinoPath.string().empty() )
-                lConfigurationOut << YAML::Key << "metrino_path" << YAML::Value << YAML::Null;
-            else
-                lConfigurationOut << YAML::Key << "metrino_path" << YAML::Value << aMetrinoPath.string();
-
             lConfigurationOut << YAML::Key << "window_properties" << YAML::Value << YAML::Flow;
             lConfigurationOut << YAML::BeginMap;
             lConfigurationOut << YAML::Key << "width" << YAML::Value << aWindowSize.x;
@@ -224,7 +219,7 @@ int main( int argc, char **argv )
     if( fs::exists( lConfigurationFile ) )
         LoadConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
     else
-        SaveConfiguration( lConfigurationFile, "", lWindowSize, lWindowPosition, lUIConfiguration );
+        SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
 
     if( auto lResXOverride = lProgramArguments->present<int>( "--res_x" ) ) lWindowSize.x = lResXOverride.value();
     if( auto lResYOverride = lProgramArguments->present<int>( "--res_y" ) ) lWindowSize.y = lResYOverride.value();
@@ -253,37 +248,6 @@ int main( int argc, char **argv )
 
     DotNetRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 
-    // Load Metrino assembblies
-    YAML::Node lRootNode = YAML::LoadFile( lConfigurationFile.string() );
-    fs::path   lMetrinoPath;
-    {
-        lMetrinoPath                     = "D:\\Build\\Lib";
-        YAML::Node &lMetrinoPathOverride = lRootNode["application"]["metrino_path"];
-        if( !lMetrinoPathOverride.IsNull() && fs::exists( lMetrinoPathOverride.as<std::string>() ) )
-            lMetrinoPath = lMetrinoPathOverride.as<std::string>();
-        if( auto lMetrinoPathOverride = lProgramArguments->present<std::string>( "--metrino-binary-path" ) )
-            if( fs ::exists( lMetrinoPathOverride.value() ) ) lMetrinoPath = lMetrinoPathOverride.value();
-
-        // clang-format off
-        const std::vector<std::string> lAssemblies = { 
-            "Metrino.Otdr", 
-            "Metrino.Otdr.SignalProcessing", 
-            "Metrino.Otdr.Simulation", 
-            "Metrino.Otdr.Instrument", 
-            "Metrino.Otdr.FileConverter", 
-            "Metrino.Olm", 
-            "Metrino.Olm.SignalProcessing", 
-            "Metrino.Olm.Instrument", 
-            "Metrino.Interop" };
-        // clang-format on
-
-        for( auto const &lAssemblyName : lAssemblies )
-        {
-            auto lAssemblyDllName = fmt::format( "{}.dll", lAssemblyName );
-            DotNetRuntime::AddAppAssemblyPath( lMetrinoPath / "debug" / "Metrino.Interop" / lAssemblyDllName, "METRINO" );
-        }
-    }
-
     auto lApplicationName = lProgramArguments->get<std::string>( "--application" );
     fs::path lApplicationConfigurationPath = "";
     if( !lApplicationName.empty() )
@@ -297,27 +261,7 @@ int main( int argc, char **argv )
             SE::Logging::Info( "Project file '{}' does not exist", lApplicationConfigurationPath.string() );
     }
 
-    auto     lProjectName              = lProgramArguments->get<std::string>( "--project" );
-    fs::path lProjectConfigurationPath = lProjectRoot / fmt::format( "{}.yaml", lProjectName );
-    if( !fs::exists( lProjectConfigurationPath ) )
-    {
-        SE::Logging::Info( "Project file '{}' does not exist", lProjectConfigurationPath.string() );
-    }
-    else
-    {
-        // Load the application assembly and the default scenario file
-        YAML::Node lProjectRootNode = YAML::LoadFile( lProjectConfigurationPath.string() );
-        {
-            YAML::Node &lAssemblyPath = lProjectRootNode["project"]["assembly_path"];
-            if( !lAssemblyPath.IsNull() && fs::exists( lAssemblyPath.as<std::string>() ) )
-                DotNetRuntime::AddAppAssemblyPath( lAssemblyPath.as<std::string>(), "SYSTEM UNDER TEST" );
-        }
-    }
-
     DotNetRuntime::ReloadAssemblies();
-
-    // auto &lInitializationClass = DotNetRuntime::GetClassType( "SpockEngine.IO" );
-    // lInitializationClass.CallMethod( "Initialize" );
 
     SE::OtdrEditor::BaseOtdrApplication lEditorApplication;
 
@@ -335,7 +279,7 @@ int main( int argc, char **argv )
     }
 
     lEditorApplication.Shutdown(lApplicationConfigurationPath);
-    SaveConfiguration( lConfigurationFile, lMetrinoPath, lWindowSize, lWindowPosition, lUIConfiguration );
+    SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
 
     DotNetRuntime::Shutdown();
     SE::Core::Engine::Shutdown();

@@ -88,9 +88,9 @@ namespace SE::Core
 
       private:
         DotNetClass *mScriptClass = nullptr;
-        MonoClass       *mMonoClass   = nullptr;
-        MonoObject      *mInstance    = nullptr;
-        uint32_t         mGCHandle    = 0;
+        MonoClass   *mMonoClass   = nullptr;
+        MonoObject  *mInstance    = nullptr;
+        uint32_t     mGCHandle    = 0;
 
         friend class MonoScriptEngine;
 

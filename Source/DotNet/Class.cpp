@@ -19,9 +19,6 @@
 #endif
 #include "Core/FileWatch.hpp"
 
-// #include "EntityRegistry.h"
-// #include "InternalCalls.h"
-
 #include "Runtime.h"
 #include "Utils.h"
 
