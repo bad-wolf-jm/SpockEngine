@@ -47,5 +47,15 @@ namespace SpockEngine
 
             }).Select(aType => aType.AsType());
         }
+
+        public static T GetProperty<T>(object aObject, string aName)
+        {
+            if (aObject == null) return default(T);
+
+            var lObjectType = aObject.GetType();
+            var lProperty = lObjectType.GetProperty(aName);
+
+            return (T)lProperty.GetValue(aObject);
+        }
     }
 }

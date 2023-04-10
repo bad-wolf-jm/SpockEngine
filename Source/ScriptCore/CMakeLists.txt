@@ -3,6 +3,8 @@ project(SE_CoreScriping LANGUAGES CSharp)
 
 set(LIBRARY_NAME SE_Core)
 
+set(CMAKE_CSharp_FLAGS "/langversion:latest") 
+
 set(DOTNET_SYSTEM_ASSEMBLIES
     System.dll
     System.Core.dll
