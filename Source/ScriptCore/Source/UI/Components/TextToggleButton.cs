@@ -54,7 +54,6 @@ namespace SpockEngine
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UITextToggleButton_SetActive(ulong aInstance, bool aValue);
 
-
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UITextToggleButton_SetActiveColor(ulong aInstance, Math.vec4 aColor);
 

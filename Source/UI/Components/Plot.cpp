@@ -69,7 +69,8 @@ namespace SE::Core
             {
                 if( lAxis.mInUse )
                 {
-                    ImPlot::SetupAxis( static_cast<ImAxis>( lAxis.mAxis ), NULL, ImPlotAxisFlags_None );
+                    ImPlot::SetupAxis( static_cast<ImAxis>( lAxis.mAxis ), lAxis.mTitle.empty() ? NULL : lAxis.mTitle.c_str(),
+                                       ImPlotAxisFlags_None );
                     if( ( lAxis.mMin != 0.0f ) && ( lAxis.mMax != 0.0f ) )
                     {
                         lPlot->Axes[static_cast<ImAxis>( lAxis.mAxis )].SetMin( lAxis.mMin );
@@ -130,6 +131,20 @@ namespace SE::Core
         lSelf->mAxisConfiguration[aAxis].mMax = aMax;
     }
 
+    void UIPlot::UIPlot_SetAxisTitle( void *aInstance, int aAxis, void *aTitle )
+    {
+        auto lSelf = static_cast<UIPlot *>( aInstance );
+
+        lSelf->mAxisConfiguration[aAxis].mTitle = DotNetRuntime::NewString( static_cast<MonoString *>( aTitle ) );
+    }
+
+    void *UIPlot::UIPlot_GetAxisTitle( void *aInstance, int aAxis )
+    {
+        auto lSelf = static_cast<UIPlot *>( aInstance );
+
+        return DotNetRuntime::NewString( lSelf->mAxisConfiguration[aAxis].mTitle );
+    }
+
     void sPlotData::UIPlotData_SetLegend( void *aSelf, void *aText )
     {
         auto lSelf   = static_cast<sPlotData *>( aSelf );
@@ -140,7 +155,7 @@ namespace SE::Core
 
     void sPlotData::UIPlotData_SetThickness( void *aSelf, float aThickness )
     {
-        auto lSelf   = static_cast<sPlotData *>( aSelf );
+        auto lSelf = static_cast<sPlotData *>( aSelf );
 
         lSelf->mThickness = aThickness;
     }

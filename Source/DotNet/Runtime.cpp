@@ -612,6 +612,8 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_ConfigureLegend", UIPlot::UIPlot_ConfigureLegend );
         mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_Add", UIPlot::UIPlot_Add );
         mono_add_internal_call( "SpockEngine.UIPlotAxis::UIPlot_SetAxisLimits", UIPlot::UIPlot_SetAxisLimits );
+        mono_add_internal_call( "SpockEngine.UIPlotAxis::UIPlot_GetAxisTitle", UIPlot::UIPlot_GetAxisTitle );
+        mono_add_internal_call( "SpockEngine.UIPlotAxis::UIPlot_SetAxisTitle", UIPlot::UIPlot_SetAxisTitle );
 
         mono_add_internal_call( "SpockEngine.UIPlotData::UIPlotData_SetThickness", sPlotData::UIPlotData_SetThickness );
         mono_add_internal_call( "SpockEngine.UIPlotData::UIPlotData_SetLegend", sPlotData::UIPlotData_SetLegend );

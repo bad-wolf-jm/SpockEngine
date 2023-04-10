@@ -81,8 +81,8 @@ namespace SE::Core
     {
         std::vector<double> mX;
 
-        sVLine( ) = default;
-        
+        sVLine() = default;
+
         sVLine( std::vector<double> const &x )
             : mX{ x }
         {
@@ -101,18 +101,18 @@ namespace SE::Core
         UIPlot();
 
         void Add( Ref<sPlotData> aPlot );
-        void Add( sPlotData* aPlot );
+        void Add( sPlotData *aPlot );
         void Clear();
 
         void ConfigureLegend( math::vec2 aLegendPadding, math::vec2 aLegendInnerPadding, math::vec2 aLegendSpacing );
 
         std::array<sPlotAxisConfiguration, 6> mAxisConfiguration;
+
       protected:
-        std::vector<sPlotData*> mElements;
+        std::vector<sPlotData *>    mElements;
         std::vector<Ref<sPlotData>> mElementRefs;
 
         ImPlotLocation mLegendPosition = ImPlotLocation_NorthEast;
-
 
         ImVec2 mLegendPadding{ 5.0f, 5.0f };
         ImVec2 mLegendInnerPadding{ 5.0f, 5.0f };
@@ -133,5 +133,7 @@ namespace SE::Core
                                              math::vec2 *aLegendSpacing );
         static void  UIPlot_Add( void *aInstance, void *aPlot );
         static void  UIPlot_SetAxisLimits( void *aInstance, int aAxis, double aMin, double aMax );
+        static void *UIPlot_GetAxisTitle( void *aInstance, int aAxis );
+        static void  UIPlot_SetAxisTitle( void *aInstance, int aAxis, void *aTitle );
     };
 } // namespace SE::Core

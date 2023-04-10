@@ -142,12 +142,6 @@ namespace SpockEngine
         private extern static ulong UIFloat64LinePlot_SetY(ulong aInstance, double[] aValues);
     }
 
-
-
-
-
-
-
     public class UIFloat64ScatterPlot : UIPlotData
     {
         public UIFloat64ScatterPlot() : base(UIFloat64ScatterPlot_Create()) { }
@@ -185,20 +179,22 @@ namespace SpockEngine
         private extern static ulong UIFloat64ScatterPlot_SetY(ulong aInstance, double[] aValues);
     }
 
-
-
-
-
-
     public class UIPlotAxis
     {
         private ulong mPlotInstance;
         private eUIPlotAxis mAxis;
+        private string mTitle;
 
         public UIPlotAxis(ulong aPlotInstance, eUIPlotAxis aAxis)
         {
             mPlotInstance = aPlotInstance;
             mAxis = aAxis;
+        }
+
+        public string Title 
+        {
+            get { return UIPlot_GetAxisTitle(mPlotInstance, mAxis);}
+            set { UIPlot_SetAxisTitle(mPlotInstance, mAxis, value);}
         }
 
         public void SetLimits(double aMin, double aMax)
@@ -208,6 +204,12 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIPlot_SetAxisLimits(ulong aInstance, eUIPlotAxis aAxis, double aMin, double aMax);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static string UIPlot_GetAxisTitle(ulong aInstance, eUIPlotAxis aAxis);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIPlot_SetAxisTitle(ulong aInstance, eUIPlotAxis aAxis, string aTitle);
     }
 
 
