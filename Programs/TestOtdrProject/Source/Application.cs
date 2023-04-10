@@ -52,9 +52,11 @@ namespace Test
             System.Console.WriteLine($"END {DateTime.UtcNow}");
         }
 
-        public void Tick(float aTs)
+        public bool Tick(float aTs)
         {
             System.Console.WriteLine($"{DateTime.UtcNow}");
+
+            return true;
         }
     }
 
@@ -86,9 +88,9 @@ namespace Test
         {
         }
 
-        public void Tick(float aTs)
+        public bool Tick(float aTs)
         {
-
+            return false;
         }
     }
 

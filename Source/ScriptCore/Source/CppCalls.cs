@@ -8,4 +8,4 @@ namespace SpockEngine
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static string OpenFile(string buffer);
     }
-}
+} 

@@ -11,7 +11,7 @@ using Metrino.Interop;
 
 namespace Test
 {
-    public class TestPowerMeter : Script
+    public class TestPowerMeter :  MarshalByRefObject, IScript
     {
 
         private Instrument7000 mPowerMeter;
@@ -25,10 +25,8 @@ namespace Test
 
         public TestPowerMeter() : base() { }
 
-        override public void BeginScenario()
+        public void Begin()
         {
-            base.BeginScenario();
-
             var lConnectedModules = Instruments.GetConnectedModules();
 
             mPowerMeter = null;
@@ -47,10 +45,8 @@ namespace Test
             mStartTime = DateTime.Now;
         }
 
-        override public void EndScenario()
+        public void End()
         {
-            base.EndScenario();
-
             if (mPowerMeter != null)
             {
                 mPowerMeter.Stop();
@@ -60,11 +56,9 @@ namespace Test
             mBlinkDetection = null;
         }
 
-        override public void Tick(float aTs)
+        public bool Tick(float aTs)
         {
-            base.Tick(aTs);
-
-            if (mPowerMeter == null) return;
+            if (mPowerMeter == null) return false;
 
             if (!mPowerMeterStarted && (mPowerMeter.State == Metrino.Kernos.Instrument.State.Ready))
             {
@@ -75,7 +69,7 @@ namespace Test
             }
 
             if (!mPowerMeterStarted)
-                return;
+                return true;
 
             Metrino.Otdr.Value.Photocurrent lPowerValue = mPowerMeter.PowerValue;
 
@@ -85,6 +79,8 @@ namespace Test
             var valueLink = lPowerValue.Tag as Metrino.Otdr.PowerValue.ValueLink;
 
             System.Console.WriteLine($"{(valueLink.Timestamp - mStartTime).TotalMilliseconds} -- {lPowerValue.Value} -- {lPowerValue.Power} -- {lFrequency.Value} -- {lIsBlinking}");
+
+            return true;
         }
     }
 }
