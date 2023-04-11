@@ -22,9 +22,9 @@ namespace SE::Core
         static void AddAppAssemblyPath( const std::filesystem::path &aFilepath, std::string const &aCategory );
         static void ReloadAssemblies();
 
-        static uint32_t CountAssemblies();
-        static void     GetAssemblies( std::vector<fs::path> &lOut );
-        static bool     AssembliesNeedReloading();
+        // static uint32_t CountAssemblies();
+        // static void     GetAssemblies( std::vector<fs::path> &lOut );
+        // static bool     AssembliesNeedReloading();
 
         static MonoString *NewString( std::string const &aString );
         static std::string NewString( MonoString *aString );
@@ -50,8 +50,8 @@ namespace SE::Core
 
         static MonoType *GetCoreTypeFromName( std::string &aName );
 
-        static std::vector<std::string>            GetClassNames();
-        static std::map<std::string, DotNetClass> &GetClasses();
+        // static std::vector<std::string>            GetClassNames();
+        // static std::map<std::string, DotNetClass> &GetClasses();
 
       private:
         static void RegisterComponentTypes();
@@ -63,8 +63,8 @@ namespace SE::Core
         static void LoadCoreAssembly( const std::filesystem::path &aFilepath );
 
         static MonoObject *InstantiateClass( MonoClass *aMonoClass, bool aIsCore = false );
-        static void        LoadAssemblyClasses();
-        static void        RecreateClassTree();
+        // static void        LoadAssemblyClasses();
+        // static void        RecreateClassTree();
 
         friend class DotNetClass;
     };

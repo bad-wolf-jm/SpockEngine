@@ -80,7 +80,7 @@ namespace SE::Core
         MonoDomain *mAppDomain  = nullptr;
 
         sAssemblyData mCoreAssembly{};
-        ClassMapping  mCoreClasses = {};
+        // ClassMapping  mCoreClasses = {};
 
         PathList        mAppAssemblyFiles = {};
         AssemblyMapping mAssemblies       = {};
@@ -92,107 +92,6 @@ namespace SE::Core
 
     static sMonoRuntimeData *sRuntimeData = nullptr;
 
-    namespace
-    {
-        template <typename _Tx, typename _Ty>
-        void MergeMaps( std::map<_Tx, _Ty> &aDest, std::map<_Tx, _Ty> const &aSrc )
-        {
-            for( auto &[lKey, lValue] : aSrc )
-            {
-                if( aDest.find( lKey ) == aDest.end() )
-                    aDest[lKey] = lValue;
-                else
-                    aDest[lKey] = lValue;
-            }
-        }
-
-        std::map<std::string, DotNetClass> LoadImageClasses( MonoImage *aImage, fs::path aPath )
-        {
-            std::map<std::string, DotNetClass> lClasses{};
-
-            if( !aImage ) return lClasses;
-
-            const MonoTableInfo *lTypeDefinitionsTable = mono_image_get_table_info( aImage, MONO_TABLE_TYPEDEF );
-            int32_t              lTypesCount           = mono_table_info_get_rows( lTypeDefinitionsTable );
-
-            for( int32_t i = 0; i < lTypesCount; i++ )
-            {
-                uint32_t lCols[MONO_TYPEDEF_SIZE];
-                mono_metadata_decode_row( lTypeDefinitionsTable, i, lCols, MONO_TYPEDEF_SIZE );
-
-                const char *lNameSpace = mono_metadata_string_heap( aImage, lCols[MONO_TYPEDEF_NAMESPACE] );
-                const char *lClassName = mono_metadata_string_heap( aImage, lCols[MONO_TYPEDEF_NAME] );
-
-                if( !std::strncmp( lClassName, "<", 1 ) ) continue;
-
-                MonoClass *lClass = mono_class_from_name( aImage, lNameSpace, lClassName );
-                if( lClass != nullptr )
-                {
-                    std::string lFullName = Mono::Utils::GetClassFullName( lNameSpace, lClassName );
-
-                    // Add nested classes
-                    void *lIterator = nullptr;
-                    while( MonoClass *lNestedClass = mono_class_get_nested_types( lClass, &lIterator ) )
-                    {
-                        const char *lClassName = mono_class_get_name( lNestedClass );
-
-                        if( !std::strncmp( lClassName, "<", 1 ) ) continue;
-
-                        auto lNestedClassName = fmt::format( "{}.{}", lFullName, lClassName );
-
-                        if( lClasses.find( lNestedClassName ) == lClasses.end() )
-                            lClasses[lNestedClassName] = DotNetClass( lNestedClass, lFullName, lClassName, aImage, aPath, true );
-                    }
-
-                    lClasses[lFullName] = DotNetClass( lNameSpace, lClassName, aImage, aPath );
-
-                    lClass = mono_class_get_parent( lClass );
-                    while( lClass != nullptr )
-                    {
-                        std::string lFullName = Mono::Utils::GetClassFullName( lClass );
-
-                        if( lClasses.find( lFullName ) == lClasses.end() )
-                            lClasses[lFullName] = DotNetClass( lClass, lNameSpace, lClassName, aImage, aPath );
-
-                        lClass = mono_class_get_parent( lClass );
-                    }
-                }
-            }
-
-            return lClasses;
-        }
-    } // namespace
-
-    uint32_t DotNetRuntime::CountAssemblies() { return sRuntimeData->mAppAssemblyFiles.size(); }
-
-    std::vector<std::string> DotNetRuntime::GetClassNames()
-    {
-        std::vector<std::string> lResult;
-        for( auto const &[lName, lValue] : sRuntimeData->mClasses )
-        {
-            lResult.push_back( lName );
-        }
-
-        return lResult;
-    }
-
-    std::map<std::string, DotNetClass> &DotNetRuntime::GetClasses() { return sRuntimeData->mClasses; }
-
-    bool DotNetRuntime::AssembliesNeedReloading()
-    {
-        for( auto const &[lKey, lValue] : sRuntimeData->mAssemblies )
-            if( lValue.mNeedsReloading ) return true;
-        return false;
-    }
-
-    void DotNetRuntime::GetAssemblies( std::vector<fs::path> &lOut )
-    {
-        lOut.resize( sRuntimeData->mAppAssemblyFiles.size() );
-
-        uint32_t i = 0;
-        for( auto const &lFile : sRuntimeData->mAppAssemblyFiles ) lOut[i++] = lFile.string();
-    }
-
     MonoObject *DotNetRuntime::InstantiateClass( MonoClass *aMonoClass, bool aIsCore )
     {
         MonoObject *aInstance = mono_object_new( sRuntimeData->mAppDomain, aMonoClass );
@@ -202,21 +101,8 @@ namespace SE::Core
 
     void DotNetRuntime::LoadCoreAssembly( const fs::path &aFilepath )
     {
-        sRuntimeData->mAppDomain = mono_domain_create_appdomain( "SE_Runtime", nullptr );
-        mono_domain_set_config( sRuntimeData->mAppDomain, ".", "XXX" );
-        mono_domain_set( sRuntimeData->mAppDomain, true );
-
         sRuntimeData->mCoreAssembly.mPath       = aFilepath.parent_path();
         sRuntimeData->mCoreAssembly.mFilename   = aFilepath.filename();
-        sRuntimeData->mCoreAssembly.mCategory   = "CORE";
-        sRuntimeData->mCoreAssembly.mFileExists = fs::exists( aFilepath );
-        sRuntimeData->mCoreAssembly.mAssembly   = Mono::Utils::LoadMonoAssembly( aFilepath );
-        sRuntimeData->mCoreAssembly.mImage      = mono_assembly_get_image( sRuntimeData->mCoreAssembly.mAssembly );
-
-        sRuntimeData->mCoreAssembly.mNeedsReloading = false;
-
-        sRuntimeData->mClasses = {};
-        // MergeMaps( sRuntimeData->mClasses, LoadImageClasses( sRuntimeData->mCoreAssembly.mImage, aFilepath ) );
     }
 
     static void OnAppAssemblyFileSystemEvent( const fs::path &path, const filewatch::Event change_type )
@@ -243,9 +129,6 @@ namespace SE::Core
         sRuntimeData->mAssemblies.emplace( aFilepath, sAssemblyData{} );
         sRuntimeData->mAssemblies[aFilepath].mPath           = aFilepath.parent_path();
         sRuntimeData->mAssemblies[aFilepath].mFilename       = aFilepath.filename();
-        sRuntimeData->mAssemblies[aFilepath].mFileExists     = fs::exists( aFilepath );
-        sRuntimeData->mAssemblies[aFilepath].mCategory       = aCategory;
-        sRuntimeData->mAssemblies[aFilepath].mNeedsReloading = true;
 
         Ref<fs::path> lAssemblyFilePath = New<fs::path>( aFilepath );
 
@@ -273,9 +156,7 @@ namespace SE::Core
         sRuntimeData->mMonoPosixHelper = LoadLibrary( "C:\\GitLab\\SpockEngine\\ThirdParty\\mono\\bin\\Debug\\MonoPosixHelper.dll" );
 
         InitMono( aMonoPath );
-
         RegisterInternalCppFunctions();
-
         LoadCoreAssembly( aCoreAssemblyPath );
     }
 
@@ -293,19 +174,16 @@ namespace SE::Core
         mono_set_assemblies_path( aMonoPath.string().c_str() );
         mono_config_parse( NULL );
 
-        MonoDomain *lRootDomain = mono_jit_init( "SpockEngineRuntime" );
-
-        sRuntimeData->mRootDomain = lRootDomain;
+        sRuntimeData->mRootDomain = mono_jit_init( "SpockEngineRuntime" );
     }
 
     void DotNetRuntime::ShutdownMono()
     {
         mono_domain_set( mono_get_root_domain(), false );
-
         mono_domain_unload( sRuntimeData->mAppDomain );
-        sRuntimeData->mAppDomain = nullptr;
-
         mono_jit_cleanup( sRuntimeData->mRootDomain );
+
+        sRuntimeData->mAppDomain = nullptr;
         sRuntimeData->mRootDomain = nullptr;
     }
 
@@ -323,50 +201,16 @@ namespace SE::Core
         return lString;
     }
 
-    void DotNetRuntime::LoadAssemblyClasses()
-    {
-        if( sRuntimeData->mAssemblies.empty() ) return;
-
-        // for( auto const &[lPath, lAssembly] : sRuntimeData->mAssemblies )
-        //     MergeMaps( sRuntimeData->mClasses, LoadImageClasses( lAssembly.mImage, lPath ) );
-    }
-
-    void DotNetRuntime::RecreateClassTree()
-    {
-        std::map<std::string, DotNetClass *> lLookupTable;
-
-        for( auto &[lKey, lValue] : sRuntimeData->mClasses )
-        {
-            lValue.mParent = nullptr;
-            lValue.mDerived.clear();
-            lLookupTable[lValue.FullName()] = &lValue;
-        }
-
-        for( auto &[lKey, lValue] : sRuntimeData->mClasses )
-        {
-            auto *lParentClass = mono_class_get_parent( lValue.Class() );
-            if( !lParentClass ) continue;
-
-            auto lParentClassNamespace = std::string( mono_class_get_namespace( lParentClass ) );
-            auto lParentClassName      = std::string( mono_class_get_name( lParentClass ) );
-            auto lParentClassFullName  = fmt::format( "{}.{}", lParentClassNamespace, lParentClassName );
-
-            if( lLookupTable.find( lParentClassFullName ) != lLookupTable.end() )
-            {
-                lValue.mParent = lLookupTable[lParentClassFullName];
-                lLookupTable[lParentClassFullName]->mDerived.push_back( &lValue );
-            }
-        }
-    }
-
     void DotNetRuntime::ReloadAssemblies()
     {
-        if( !AssembliesNeedReloading() ) return;
-
         mono_domain_set( mono_get_root_domain(), true );
         if( sRuntimeData->mAppDomain != nullptr ) mono_domain_unload( sRuntimeData->mAppDomain );
 
-        LoadCoreAssembly( sRuntimeData->mCoreAssembly.mPath / sRuntimeData->mCoreAssembly.mFilename );
+        sRuntimeData->mAppDomain = mono_domain_create_appdomain( "SE_Runtime", nullptr );
+        mono_domain_set_config( sRuntimeData->mAppDomain, ".", "XXX" );
+        mono_domain_set( sRuntimeData->mAppDomain, true );
+        sRuntimeData->mCoreAssembly.mAssembly   = Mono::Utils::LoadMonoAssembly( sRuntimeData->mCoreAssembly.mPath / sRuntimeData->mCoreAssembly.mFilename );
+        sRuntimeData->mCoreAssembly.mImage      = mono_assembly_get_image( sRuntimeData->mCoreAssembly.mAssembly );
 
         for( auto &[lFile, lData] : sRuntimeData->mAssemblies )
         {
@@ -375,9 +219,6 @@ namespace SE::Core
             lData.mAssembly = Mono::Utils::LoadMonoAssembly( lData.mPath / lData.mFilename );
             lData.mImage    = mono_assembly_get_image( lData.mAssembly );
         }
-
-        LoadAssemblyClasses();
-        RecreateClassTree();
     }
 
     DotNetClass &DotNetRuntime::GetClassType( const std::string &aClassName )
