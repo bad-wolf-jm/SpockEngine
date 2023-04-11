@@ -42,7 +42,7 @@ namespace SE::Core
     void UISplitter::Add2( UIComponent *aChild ) { mChild2 = aChild; }
 
     static bool Splitter( eBoxLayoutOrientation aOrientation, float aThickness, float *aSize1, float *aSize2, float aMinSize1,
-                          float aMinSize2 )
+                          float aMinSize2, float aLength = -1.0f )
     {
         using namespace ImGui;
         ImGuiContext &g      = *GImGui;
@@ -53,12 +53,12 @@ namespace SE::Core
         if( aOrientation == eBoxLayoutOrientation::VERTICAL )
         {
             bb.Min = window->DC.CursorPos + ImVec2( *aSize1, 0.0f );
-            bb.Max = bb.Min + CalcItemSize( ImVec2( aThickness, -1.0f ), 0.0f, 0.0f );
+            bb.Max = bb.Min + CalcItemSize( ImVec2( aThickness, aLength ), 0.0f, 0.0f );
         }
         else
         {
             bb.Min = window->DC.CursorPos + ImVec2( 0.0f, *aSize1 );
-            bb.Max = bb.Min + CalcItemSize( ImVec2( -1.0f, aThickness ), 0.0f, 0.0f );
+            bb.Max = bb.Min + CalcItemSize( ImVec2( aLength, aThickness ), 0.0f, 0.0f );
         }
 
         ImGuiAxis lSplitDirection = ( aOrientation == eBoxLayoutOrientation::VERTICAL ) ? ImGuiAxis_X : ImGuiAxis_Y;
@@ -67,23 +67,28 @@ namespace SE::Core
 
     void UISplitter::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
+        auto lSize = aSize - GetContentPadding();
+        auto lPosition = aPosition + GetContentOffset();
+
         if( !mSizeSet )
         {
             if( mOrientation == eBoxLayoutOrientation::VERTICAL )
-                mSize1 = mSize2 = ( aSize.x - mItemSpacing ) * 0.5f;
+                mSize1 = mSize2 = ( lSize.x - mItemSpacing ) * 0.5f;
             else
-                mSize1 = mSize2 = ( aSize.y - mItemSpacing ) * 0.5f;
+                mSize1 = mSize2 = ( lSize.y - mItemSpacing ) * 0.5f;
             mSizeSet = true;
         }
-        Splitter( mOrientation, mItemSpacing, &mSize1, &mSize2, 50.0f, 50.0f );
+
+        ImGui::SetCursorPos( lPosition );
+        Splitter( mOrientation, mItemSpacing, &mSize1, &mSize2, 50.0f, 50.0f, (mOrientation == eBoxLayoutOrientation::VERTICAL) ? lSize.y : lSize.x );
 
         ImVec2 lTopLeft = ImGui::GetCursorScreenPos();
         if( mChild1 )
         {
             ImVec2 lItemSize =
-                ( mOrientation == eBoxLayoutOrientation::HORIZONTAL ) ? ImVec2{ aSize.x, mSize1 } : ImVec2{ mSize1, aSize.y };
+                ( mOrientation == eBoxLayoutOrientation::HORIZONTAL ) ? ImVec2{ lSize.x, mSize1 } : ImVec2{ mSize1, lSize.y };
 
-            ImGui::SetCursorPos( aPosition );
+            ImGui::SetCursorPos( lPosition );
             ImGui::PushID( (void *)mChild1 );
             ImGui::BeginChild( "##Child_1", lItemSize );
             mChild1->Update( ImVec2{}, lItemSize );
@@ -100,8 +105,8 @@ namespace SE::Core
         if( mChild2 )
         {
             ImVec2 lItemSize =
-                ( mOrientation == eBoxLayoutOrientation::HORIZONTAL ) ? ImVec2{ aSize.x, mSize2 } : ImVec2{ mSize2, aSize.y };
-            ImGui::SetCursorPos( aPosition + lSecondItemPosition );
+                ( mOrientation == eBoxLayoutOrientation::HORIZONTAL ) ? ImVec2{ lSize.x, mSize2 } : ImVec2{ mSize2, lSize.y };
+            ImGui::SetCursorPos( lPosition + lSecondItemPosition );
             ImGui::PushID( (void *)mChild2 );
             ImGui::BeginChild( "##Child_2", lItemSize );
             mChild2->Update( ImVec2{}, lItemSize );
