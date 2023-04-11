@@ -21,6 +21,15 @@ namespace SpockEngine
             UIComboBox_SetItemList(mInstance, aItems);
         }
 
+        public delegate void ChangedDelegate(int aIndex);
+        ChangedDelegate onChanged;
+        public void OnChanged(ChangedDelegate aHandler)
+        {
+            onChanged = aHandler;
+
+            UIComboBox_OnChanged(mInstance, onChanged);
+        }
+
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIComboBox_Create();
 
@@ -38,5 +47,8 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIComboBox_SetItemList(ulong aInstance, string[] aItems);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIComboBox_OnChanged(ulong aInstance, ChangedDelegate aHandler);
     }
 }

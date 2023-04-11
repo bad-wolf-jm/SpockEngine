@@ -31,6 +31,10 @@ namespace SE::Core
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
+      private:
+        void *mOnChangeDelegate       = nullptr;
+        int   mOnChangeDelegateHandle = -1;
+
       public:
         static void *UIComboBox_Create();
         static void *UIComboBox_CreateWithItems( void *aItems );
@@ -38,6 +42,7 @@ namespace SE::Core
         static int   UIComboBox_GetCurrent( void *aInstance );
         static void  UIComboBox_SetCurrent( void *aInstance, int aValue );
         static void  UIComboBox_SetItemList( void *aInstance, void *aItems );
+        static void  UIComboBox_OnChanged( void *aInstance, void *aDelegate );
     };
 
 } // namespace SE::Core

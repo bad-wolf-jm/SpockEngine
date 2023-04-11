@@ -377,8 +377,9 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIComboBox::UIComboBox_CreateWithItems", UIComboBox::UIComboBox_CreateWithItems );
         mono_add_internal_call( "SpockEngine.UIComboBox::UIComboBox_Destroy", UIComboBox::UIComboBox_Destroy );
         mono_add_internal_call( "SpockEngine.UIComboBox::UIComboBox_GetCurrent", UIComboBox::UIComboBox_GetCurrent );
-        mono_add_internal_call( "SpockEngine.UICheckBox::UIComboBox_SetCurrent", UIComboBox::UIComboBox_SetCurrent );
+        mono_add_internal_call( "SpockEngine.UIComboBox::UIComboBox_SetCurrent", UIComboBox::UIComboBox_SetCurrent );
         mono_add_internal_call( "SpockEngine.UIComboBox::UIComboBox_SetItemList", UIComboBox::UIComboBox_SetItemList );
+        mono_add_internal_call( "SpockEngine.UIComboBox::UIComboBox_OnChanged", UIComboBox::UIComboBox_OnChanged );
 
         mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_CreateWithOrientation",
                                 UIBoxLayout::UIBoxLayout_CreateWithOrientation );

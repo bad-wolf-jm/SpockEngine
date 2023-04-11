@@ -106,4 +106,28 @@ namespace SE::Core
 
         lInstance->SetItemList( lItemVector );
     }
+
+    void UIComboBox::UIComboBox_OnChanged( void *aInstance, void *aDelegate )
+    {
+        auto lInstance = static_cast<UIComboBox *>( aInstance );
+        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+
+        if (lInstance->mOnChangeDelegate != nullptr)
+            mono_gchandle_free(lInstance->mOnChangeDelegateHandle);
+
+        lInstance->mOnChangeDelegate = aDelegate;
+        lInstance->mOnChangeDelegateHandle = mono_gchandle_new(static_cast<MonoObject *>( aDelegate ), true);
+
+        lInstance->OnChange(
+            [lInstance, lDelegate]( int aValue )
+            {
+                auto lDelegateClass = mono_object_get_class( lDelegate );
+                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
+
+                void *lParams[] = { (void*)&aValue };
+                mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
+            } );
+    }
+
+
 } // namespace SE::Core
