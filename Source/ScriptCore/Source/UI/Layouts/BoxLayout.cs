@@ -40,13 +40,18 @@ namespace SpockEngine
         public void Add(UIComponent aChild, float aFixedSize, bool aExpand, bool aFill)
         {
             var lInstance = (aChild != null) ? aChild.Instance : 0;
-            UIBoxLayout_AddNonAlignedFixed(mInstance,lInstance, aFixedSize, aExpand, aFill);
+            UIBoxLayout_AddNonAlignedFixed(mInstance, lInstance, aFixedSize, aExpand, aFill);
         }
 
         public void Add(UIComponent aChild, float aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment)
         {
             var lInstance = (aChild != null) ? aChild.Instance : 0;
             UIBoxLayout_AddAlignedFixed(mInstance, lInstance, aFixedSize, aExpand, aFill, aHAlignment, aVAlignment);
+        }
+
+        public void Clear()
+        {
+            UIBoxLayout_Clear(mInstance);
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
@@ -69,6 +74,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIBoxLayout_SetItemSpacing(ulong aInstance, float aItemSpacing);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIBoxLayout_Clear(ulong aInstance);
 
     }
 }

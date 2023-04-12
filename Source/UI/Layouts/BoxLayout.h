@@ -47,6 +47,8 @@ namespace SE::Core
         void Add( UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
                   eVerticalAlignment const &aVAlignment );
 
+        void Clear();
+
       protected:
         std::vector<BoxLayoutItem> mChildren;
         eBoxLayoutOrientation      mOrientation;
@@ -62,13 +64,13 @@ namespace SE::Core
       public:
         static void *UIBoxLayout_CreateWithOrientation( eBoxLayoutOrientation aOrientation );
         static void  UIBoxLayout_Destroy( void *aInstance );
-
-        static void UIBoxLayout_AddAlignedNonFixed( void *aInstance, void *aChild, bool aExpand, bool aFill,
-                                                    eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment );
-        static void UIBoxLayout_AddNonAlignedNonFixed( void *aInstance, void *aChild, bool aExpand, bool aFill );
-        static void UIBoxLayout_AddAlignedFixed( void *aInstance, void *aChild, float aFixedSize, bool aExpand, bool aFill,
-                                                 eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment );
-        static void UIBoxLayout_AddNonAlignedFixed( void *aInstance, void *aChild, float aFixedSize, bool aExpand, bool aFill );
-        static void UIBoxLayout_SetItemSpacing( void *aInstance, float aItemSpacing );
+        static void  UIBoxLayout_AddAlignedNonFixed( void *aInstance, void *aChild, bool aExpand, bool aFill,
+                                                     eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment );
+        static void  UIBoxLayout_AddNonAlignedNonFixed( void *aInstance, void *aChild, bool aExpand, bool aFill );
+        static void  UIBoxLayout_AddAlignedFixed( void *aInstance, void *aChild, float aFixedSize, bool aExpand, bool aFill,
+                                                  eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment );
+        static void  UIBoxLayout_AddNonAlignedFixed( void *aInstance, void *aChild, float aFixedSize, bool aExpand, bool aFill );
+        static void  UIBoxLayout_SetItemSpacing( void *aInstance, float aItemSpacing );
+        static void  UIBoxLayout_Clear( void *aInstance );
     };
 } // namespace SE::Core

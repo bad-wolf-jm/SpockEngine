@@ -79,6 +79,8 @@ namespace SE::Core
         mChildren.push_back( BoxLayoutItem{ aChild, aFixedSize, aExpand, aFill, aHAlignment, aVAlignment } );
     }
 
+    void UIBoxLayout::Clear() { mChildren.clear(); }
+
     void UIBoxLayout::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
         uint32_t lExpandCount = 0;
@@ -86,8 +88,6 @@ namespace SE::Core
 
         for( auto const &lItem : mChildren )
         {
-            // lExpandCount += lItem.mExpand ? 1 : 0;
-
             if( lItem.mFixedSize > 0.0f )
             {
                 lTaken += lItem.mFixedSize;
@@ -160,7 +160,7 @@ namespace SE::Core
             if( lItem.mItem )
             {
                 ImGui::SetCursorPos( lItemPosition );
-                ImGui::PushID( (void *)lItem.mItem  );
+                ImGui::PushID( (void *)lItem.mItem );
                 ImGui::BeginChild( "##BoxLayoutItem", lItemSize );
                 lItem.mItem->Update( ImVec2{}, lItemSize );
                 ImGui::EndChild();
@@ -223,4 +223,12 @@ namespace SE::Core
 
         lInstance->SetItemSpacing( aItemSpacing );
     }
+
+    void UIBoxLayout::UIBoxLayout_Clear( void *aInstance )
+    {
+        auto lInstance = static_cast<UIBoxLayout *>( aInstance );
+
+        lInstance->Clear();
+    }
+
 } // namespace SE::Core
