@@ -40,6 +40,7 @@
 
 #include "UI/Layouts/Splitter.h"
 #include "UI/Layouts/ZLayout.h"
+#include "UI/Layouts/StackLayout.h"
 
 #include "UI/Dialog.h"
 #include "UI/Form.h"
@@ -392,6 +393,7 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_AddNonAlignedFixed",
                                 UIBoxLayout::UIBoxLayout_AddNonAlignedFixed );
         mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_SetItemSpacing", UIBoxLayout::UIBoxLayout_SetItemSpacing );
+        mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_Clear", UIBoxLayout::UIBoxLayout_Clear );
 
         mono_add_internal_call( "SpockEngine.UIZLayout::UIZLayout_Create", UIZLayout::UIZLayout_Create );
         mono_add_internal_call( "SpockEngine.UIZLayout::UIZLayout_Destroy", UIZLayout::UIZLayout_Destroy );
@@ -399,6 +401,11 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIZLayout::UIZLayout_AddNonAlignedNonFixed", UIZLayout::UIZLayout_AddNonAlignedNonFixed );
         mono_add_internal_call( "SpockEngine.UIZLayout::UIZLayout_AddAlignedFixed", UIZLayout::UIZLayout_AddAlignedFixed );
         mono_add_internal_call( "SpockEngine.UIZLayout::UIZLayout_AddNonAlignedFixed", UIZLayout::UIZLayout_AddNonAlignedFixed );
+
+        mono_add_internal_call( "SpockEngine.UIStackLayout::UIStackLayout_Create", UIStackLayout::UIStackLayout_Create );
+        mono_add_internal_call( "SpockEngine.UIStackLayout::UIStackLayout_Destroy", UIStackLayout::UIStackLayout_Destroy );
+        mono_add_internal_call( "SpockEngine.UIStackLayout::UIStackLayout_Add", UIStackLayout::UIStackLayout_Add );
+        mono_add_internal_call( "SpockEngine.UIStackLayout::UIStackLayout_SetCurrent", UIStackLayout::UIStackLayout_SetCurrent );
 
         mono_add_internal_call( "SpockEngine.UISplitter::UISplitter_Create", UISplitter::UISplitter_Create );
         mono_add_internal_call( "SpockEngine.UISplitter::UISplitter_CreateWithOrientation",

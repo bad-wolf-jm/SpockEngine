@@ -3,10 +3,10 @@
 
 namespace SE::Core
 {
-    void StackLayout::PushStyles() {}
-    void StackLayout::PopStyles() {}
+    void UIStackLayout::PushStyles() {}
+    void UIStackLayout::PopStyles() {}
 
-    ImVec2 StackLayout::RequiredSize()
+    ImVec2 UIStackLayout::RequiredSize()
     {
         float lWidth  = 0.0f;
         float lHeight = 0.0f;
@@ -22,13 +22,13 @@ namespace SE::Core
         return ImVec2{ lWidth, lHeight };
     }
 
-    void StackLayout::Add( UIComponent *aChild, std::string const &aKey )
+    void UIStackLayout::Add( UIComponent *aChild, std::string const &aKey )
     {
         mChildren[aKey] = aChild;
         if( mCurrent.empty() ) mCurrent = aKey;
     }
 
-    void StackLayout::SetCurrent( std::string const &aKey )
+    void UIStackLayout::SetCurrent( std::string const &aKey )
     {
         if( mChildren.find( aKey ) != mChildren.end() )
             mCurrent = aKey;
@@ -36,7 +36,7 @@ namespace SE::Core
             mCurrent = "";
     }
 
-    void StackLayout::DrawContent( ImVec2 aPosition, ImVec2 aSize )
+    void UIStackLayout::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
         if( mCurrent.empty() ) return;
 
@@ -48,27 +48,27 @@ namespace SE::Core
         ImGui::PopID();
     }
 
-    void *StackLayout::StackLayout_Create()
+    void *UIStackLayout::UIStackLayout_Create()
     {
-        auto lNewLayout = new StackLayout();
+        auto lNewLayout = new UIStackLayout();
 
         return static_cast<void *>( lNewLayout );
     }
 
-    void StackLayout::StackLayout_Destroy( void *aInstance ) { delete static_cast<StackLayout *>( aInstance ); }
+    void UIStackLayout::UIStackLayout_Destroy( void *aInstance ) { delete static_cast<UIStackLayout *>( aInstance ); }
 
-    void StackLayout::StackLayout_Add( void *aInstance, void *aChild, void *aKey )
+    void UIStackLayout::UIStackLayout_Add( void *aInstance, void *aChild, void *aKey )
     {
-        auto lInstance = static_cast<StackLayout *>( aInstance );
+        auto lInstance = static_cast<UIStackLayout *>( aInstance );
         auto lChild    = static_cast<UIComponent *>( aChild );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aKey ) );
 
         lInstance->Add( lChild, lString );
     }
 
-    void StackLayout::StackLayout_SetCurrent( void *aInstance, void *aKey )
+    void UIStackLayout::UIStackLayout_SetCurrent( void *aInstance, void *aKey )
     {
-        auto lInstance = static_cast<StackLayout *>( aInstance );
+        auto lInstance = static_cast<UIStackLayout *>( aInstance );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aKey ) );
 
         lInstance->SetCurrent( lString );

@@ -23,14 +23,14 @@ namespace SE::Core
         ~StackLayoutItem() = default;
     };
 
-    class StackLayout : public UIComponent
+    class UIStackLayout : public UIComponent
     {
       public:
-        StackLayout() = default;
+        UIStackLayout() = default;
 
-        StackLayout( StackLayout const & ) = default;
+        UIStackLayout( UIStackLayout const & ) = default;
 
-        ~StackLayout() = default;
+        ~UIStackLayout() = default;
 
         void Add( UIComponent *aChild, std::string const &aKey );
         void SetCurrent( std::string const &aKey );
@@ -48,10 +48,10 @@ namespace SE::Core
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
       public:
-        static void *StackLayout_Create();
-        static void  StackLayout_Destroy( void *aInstance );
+        static void *UIStackLayout_Create();
+        static void  UIStackLayout_Destroy( void *aInstance );
 
-        static void StackLayout_Add( void *aInstance, void *aChild, void *aKey );
-        static void StackLayout_SetCurrent( void *aInstance, void *aKey );
+        static void UIStackLayout_Add( void *aInstance, void *aChild, void *aKey );
+        static void UIStackLayout_SetCurrent( void *aInstance, void *aKey );
     };
 } // namespace SE::Core
