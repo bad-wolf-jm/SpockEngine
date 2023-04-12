@@ -1,4 +1,5 @@
 #include "Label.h"
+#include "Engine/Engine.h"
 
 #include "DotNet/Runtime.h"
 
@@ -17,8 +18,9 @@ namespace SE::Core
 
     ImVec2 UILabel::RequiredSize()
     {
+        SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( mFont );
         auto lTextSize = ImGui::CalcTextSize( mText.c_str() );
-
+        SE::Core::Engine::GetInstance()->UIContext()->PopFont();
         return lTextSize;
     }
 
