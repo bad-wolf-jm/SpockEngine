@@ -56,6 +56,62 @@ namespace SE::Core
         lInstance->mName = lName;
     }
 
+    bool UIWorkspaceDocument::UIWorkspaceDocument_IsDirty( void *aInstance )
+    {
+        auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
+
+        return lInstance->mDirty;
+    }
+
+    void UIWorkspaceDocument::UIWorkspaceDocument_MarkAsDirty( void *aInstance, bool aDirty )
+    {
+        auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
+
+        lInstance->mDirty = aDirty;
+    }
+
+    void UIWorkspaceDocument::UIWorkspaceDocument_Open( void *aInstance )
+    {
+        auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
+
+        lInstance->DoOpen();
+    }
+
+    void UIWorkspaceDocument::UIWorkspaceDocument_RequestClose( void *aInstance )
+    {
+        auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
+
+        lInstance->DoQueueClose();
+    }
+
+    void UIWorkspaceDocument::UIWorkspaceDocument_ForceClose( void *aInstance )
+    {
+        auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
+
+        lInstance->DoForceClose();
+    }
+
+    void UIWorkspaceDocument::UIWorkspaceDocument_RegisterSaveDelegate( void *aInstance, void *aDelegate )
+    {
+        auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
+        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+
+        if( lInstance->mSaveDelegate != nullptr ) mono_gchandle_free( lInstance->mSaveDelegateHandle );
+
+        lInstance->mSaveDelegate       = aDelegate;
+        lInstance->mSaveDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+
+        lInstance->mDoSave = [lInstance, lDelegate]()
+        {
+            auto lDelegateClass = mono_object_get_class( lDelegate );
+            auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
+
+            auto lValue = mono_runtime_invoke( lInvokeMethod, lDelegate, nullptr, nullptr );
+
+            return *( (bool *)mono_object_unbox( lValue ) );
+        };
+    }
+
     void UIWorkspace::PushStyles() {}
     void UIWorkspace::PopStyles() {}
 
@@ -99,11 +155,10 @@ namespace SE::Core
                 // Cancel attempt to close when unsaved add to save queue so we can display a popup.
                 if( !lDocument->mOpen && lDocument->mDirty )
                 {
-                    lDocument->mOpen = true;
+                    lDocument->DoOpen();
                     lDocument->DoQueueClose();
                 }
 
-                // MyDocument::DisplayContextMenu( lDocument );
                 if( lVisible )
                 {
                     lDocument->Update();
@@ -114,25 +169,20 @@ namespace SE::Core
             ImGui::EndTabBar();
         }
 
-        if( mCloseQueue.empty() )
-        {
-            std::copy_if( mDocuments.begin(), mDocuments.end(), std::back_inserter( mCloseQueue ),
-                          []( auto x ) { return x->mWantClose; } );
-            std::for_each( mDocuments.begin(), mDocuments.end(), []( auto x ) { x->mWantClose = false; } );
-        }
+        std::copy_if( mDocuments.begin(), mDocuments.end(), std::back_inserter( mCloseQueue ),
+                      []( auto x ) { return x->mWantClose; } );
+        std::for_each( mDocuments.begin(), mDocuments.end(), []( auto x ) { x->mWantClose = false; } );
 
         // Display closing confirmation UI
         if( !mCloseQueue.empty() )
         {
             int lUnsavedDocumentCount = std::count_if( mCloseQueue.begin(), mCloseQueue.end(), []( auto x ) { return x->mDirty; } );
-            // for( int n = 0; n < mCloseQueue.size(); n++ )
-            //     if( mCloseQueue[n]->mDirty ) lUnsavedDocumentCount++;
 
             if( lUnsavedDocumentCount == 0 )
             {
                 // Close documents when all are unsaved
                 for( int n = 0; n < mCloseQueue.size(); n++ ) mCloseQueue[n]->DoForceClose();
-                mCloseQueue.clear();
+                UpdateDocumentList();
             }
             else
             {
@@ -153,34 +203,45 @@ namespace SE::Core
                     {
                         for( int n = 0; n < mCloseQueue.size(); n++ )
                         {
-                            if( mCloseQueue[n]->mDirty ) mCloseQueue[n]->DoSave();
+                            mCloseQueue[n]->DoSave();
                             mCloseQueue[n]->DoForceClose();
                         }
-                        mCloseQueue.clear();
+
+                        UpdateDocumentList();
+                        // mCloseQueue.clear();
                         ImGui::CloseCurrentPopup();
                     }
                     ImGui::SameLine();
                     if( ImGui::Button( "No", button_size ) )
                     {
                         for( int n = 0; n < mCloseQueue.size(); n++ ) mCloseQueue[n]->DoForceClose();
-                        mCloseQueue.clear();
+                        UpdateDocumentList();
+                        // mCloseQueue.clear();
                         ImGui::CloseCurrentPopup();
                     }
                     ImGui::SameLine();
                     if( ImGui::Button( "Cancel", button_size ) )
                     {
-                        mCloseQueue.clear();
+                        UpdateDocumentList();
+                        // mCloseQueue.clear();
                         ImGui::CloseCurrentPopup();
                     }
                     ImGui::EndPopup();
                 }
             }
         }
+    }
 
+    void UIWorkspace::UpdateDocumentList()
+    {
         std::vector<UIWorkspaceDocument *> lOpenedDocuments;
         std::copy_if( mDocuments.begin(), mDocuments.end(), std::back_inserter( lOpenedDocuments ),
                       []( UIWorkspaceDocument *x ) { return x->mOpen; } );
+
         mDocuments = std::move( lOpenedDocuments );
+
+        if( mOnCloseDocuments ) mOnCloseDocuments( mCloseQueue );
+        mCloseQueue.clear();
     }
 
     void *UIWorkspace::UIWorkspace_Create()
