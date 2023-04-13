@@ -36,6 +36,7 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/Components/Workspace.cpp
     UI/Components/Menu.cpp
     UI/Components/TextInput.cpp
+    UI/Components/ProgressBar.cpp
     UI/Layouts/BoxLayout.cpp
     UI/Layouts/ZLayout.cpp
     UI/Layouts/Splitter.cpp
