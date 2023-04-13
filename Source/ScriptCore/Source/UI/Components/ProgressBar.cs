@@ -21,6 +21,8 @@ namespace SpockEngine
 
         public void SetProgressColor(Math.vec4 aColor) { UIProgressBar_SetTextColor(mInstance, aColor); }
 
+        public void SetThickness(float aThickness) { UIProgressBar_SetThickness(mInstance, aThickness); }
+
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIProgressBar_Create();
 
@@ -38,5 +40,8 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIProgressBar_SetProgressColor(ulong aInstance, Math.vec4 aColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIProgressBar_SetThickness(ulong aInstance, float aThickness);
     }
 }

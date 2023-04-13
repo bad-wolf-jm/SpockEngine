@@ -30,13 +30,13 @@
 #include "UI/Components/Label.h"
 #include "UI/Components/Menu.h"
 #include "UI/Components/Plot.h"
+#include "UI/Components/ProgressBar.h"
 #include "UI/Components/PropertyValue.h"
 #include "UI/Components/Table.h"
 #include "UI/Components/TextInput.h"
 #include "UI/Components/TextOverlay.h"
 #include "UI/Components/TextToggleButton.h"
 #include "UI/Components/Workspace.h"
-#include "UI/Components/ProgressBar.h"
 #include "UI/UI.h"
 
 #include "UI/Layouts/Splitter.h"
@@ -510,6 +510,18 @@ namespace SE::Core
                                 UIWorkspaceDocument::UIWorkspaceDocument_Update );
         mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_SetName",
                                 UIWorkspaceDocument::UIWorkspaceDocument_SetName );
+        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_IsDirty",
+                                UIWorkspaceDocument::UIWorkspaceDocument_IsDirty );
+        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_MarkAsDirty",
+                                UIWorkspaceDocument::UIWorkspaceDocument_MarkAsDirty );
+        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_Open",
+                                UIWorkspaceDocument::UIWorkspaceDocument_Open );
+        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_RequestClose",
+                                UIWorkspaceDocument::UIWorkspaceDocument_RequestClose );
+        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_ForceClose",
+                                UIWorkspaceDocument::UIWorkspaceDocument_ForceClose );
+        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_RegisterSaveDelegate",
+                                UIWorkspaceDocument::UIWorkspaceDocument_RegisterSaveDelegate );
 
         mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_Create", UIMenuItem::UIMenuItem_Create );
         mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_CreateWithText", UIMenuItem::UIMenuItem_CreateWithText );
@@ -561,6 +573,7 @@ namespace SE::Core
                                 UIProgressBar::UIProgressBar_SetProgressColor );
         mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_SetText", UIProgressBar::UIProgressBar_SetText );
         mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_SetTextColor", UIProgressBar::UIProgressBar_SetTextColor );
+        mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_SetThickness", UIProgressBar::UIProgressBar_SetThickness );
     }
 
 } // namespace SE::Core

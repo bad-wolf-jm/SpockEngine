@@ -13,6 +13,7 @@ namespace SE::Core
 
     void UIProgressBar::SetProgressValue( float aValue ) { mValue = aValue; }
     void UIProgressBar::SetProgressColor( math::vec4 aColor ) { mProgressColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
+    void UIProgressBar::SetThickness( float aValue ) { mThickness = aValue; }
 
     ImVec2 UIProgressBar::RequiredSize()
     {
@@ -75,6 +76,13 @@ namespace SE::Core
         auto lInstance = static_cast<UIProgressBar *>( aInstance );
 
         lInstance->SetTextColor( aTextColor );
+    }
+
+    void UIProgressBar::UIProgressBar_SetThickness( void *aInstance, float aValue )
+    {
+        auto lInstance = static_cast<UIProgressBar *>( aInstance );
+
+        lInstance->SetThickness( aValue );
     }
 
 } // namespace SE::Core
