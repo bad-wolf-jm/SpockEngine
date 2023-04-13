@@ -36,11 +36,12 @@
 #include "UI/Components/TextOverlay.h"
 #include "UI/Components/TextToggleButton.h"
 #include "UI/Components/Workspace.h"
+#include "UI/Components/ProgressBar.h"
 #include "UI/UI.h"
 
 #include "UI/Layouts/Splitter.h"
-#include "UI/Layouts/ZLayout.h"
 #include "UI/Layouts/StackLayout.h"
+#include "UI/Layouts/ZLayout.h"
 
 #include "UI/Dialog.h"
 #include "UI/Form.h"
@@ -102,8 +103,8 @@ namespace SE::Core
 
     void DotNetRuntime::LoadCoreAssembly( const fs::path &aFilepath )
     {
-        sRuntimeData->mCoreAssembly.mPath       = aFilepath.parent_path();
-        sRuntimeData->mCoreAssembly.mFilename   = aFilepath.filename();
+        sRuntimeData->mCoreAssembly.mPath     = aFilepath.parent_path();
+        sRuntimeData->mCoreAssembly.mFilename = aFilepath.filename();
     }
 
     static void OnAppAssemblyFileSystemEvent( const fs::path &path, const filewatch::Event change_type )
@@ -128,8 +129,8 @@ namespace SE::Core
         sRuntimeData->mAppAssemblyFiles.push_back( aFilepath );
 
         sRuntimeData->mAssemblies.emplace( aFilepath, sAssemblyData{} );
-        sRuntimeData->mAssemblies[aFilepath].mPath           = aFilepath.parent_path();
-        sRuntimeData->mAssemblies[aFilepath].mFilename       = aFilepath.filename();
+        sRuntimeData->mAssemblies[aFilepath].mPath     = aFilepath.parent_path();
+        sRuntimeData->mAssemblies[aFilepath].mFilename = aFilepath.filename();
 
         Ref<fs::path> lAssemblyFilePath = New<fs::path>( aFilepath );
 
@@ -184,7 +185,7 @@ namespace SE::Core
         mono_domain_unload( sRuntimeData->mAppDomain );
         mono_jit_cleanup( sRuntimeData->mRootDomain );
 
-        sRuntimeData->mAppDomain = nullptr;
+        sRuntimeData->mAppDomain  = nullptr;
         sRuntimeData->mRootDomain = nullptr;
     }
 
@@ -210,8 +211,9 @@ namespace SE::Core
         sRuntimeData->mAppDomain = mono_domain_create_appdomain( "SE_Runtime", nullptr );
         mono_domain_set_config( sRuntimeData->mAppDomain, ".", "XXX" );
         mono_domain_set( sRuntimeData->mAppDomain, true );
-        sRuntimeData->mCoreAssembly.mAssembly   = Mono::Utils::LoadMonoAssembly( sRuntimeData->mCoreAssembly.mPath / sRuntimeData->mCoreAssembly.mFilename );
-        sRuntimeData->mCoreAssembly.mImage      = mono_assembly_get_image( sRuntimeData->mCoreAssembly.mAssembly );
+        sRuntimeData->mCoreAssembly.mAssembly =
+            Mono::Utils::LoadMonoAssembly( sRuntimeData->mCoreAssembly.mPath / sRuntimeData->mCoreAssembly.mFilename );
+        sRuntimeData->mCoreAssembly.mImage = mono_assembly_get_image( sRuntimeData->mCoreAssembly.mAssembly );
 
         for( auto &[lFile, lData] : sRuntimeData->mAssemblies )
         {
@@ -550,6 +552,15 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_SetTextColor", UITextInput::UITextInput_SetTextColor );
         mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_SetBufferSize", UITextInput::UITextInput_SetBufferSize );
         mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_OnTextChanged", UITextInput::UITextInput_OnTextChanged );
+
+        mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_Create", UIProgressBar::UIProgressBar_Create );
+        mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_Destroy", UIProgressBar::UIProgressBar_Destroy );
+        mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_SetProgressValue",
+                                UIProgressBar::UIProgressBar_SetProgressValue );
+        mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_SetProgressColor",
+                                UIProgressBar::UIProgressBar_SetProgressColor );
+        mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_SetText", UIProgressBar::UIProgressBar_SetText );
+        mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_SetTextColor", UIProgressBar::UIProgressBar_SetTextColor );
     }
 
 } // namespace SE::Core
