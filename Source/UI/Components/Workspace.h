@@ -85,9 +85,13 @@ namespace SE::Core
       private:
         void UpdateDocumentList();
 
+        void *mCloseDocumentDelegate       = nullptr;
+        int   mCloseDocumentDelegateHandle = -1;
+
       public:
         static void *UIWorkspace_Create();
         static void  UIWorkspace_Destroy( void *aSelf );
         static void  UIWorkspace_Add( void *aSelf, void *aDocument );
+        static void  UIWorkspace_RegisterCloseDocumentDelegate( void *aSelf, void *aDelegate );
     };
 } // namespace SE::Core

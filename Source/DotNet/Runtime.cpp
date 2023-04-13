@@ -499,6 +499,8 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIWorkspace::UIWorkspace_Create", UIWorkspace::UIWorkspace_Create );
         mono_add_internal_call( "SpockEngine.UIWorkspace::UIWorkspace_Destroy", UIWorkspace::UIWorkspace_Destroy );
         mono_add_internal_call( "SpockEngine.UIWorkspace::UIWorkspace_Add", UIWorkspace::UIWorkspace_Add );
+        mono_add_internal_call( "SpockEngine.UIWorkspace::UIWorkspace_RegisterCloseDocumentDelegate",
+                                UIWorkspace::UIWorkspace_RegisterCloseDocumentDelegate );
 
         mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_Create",
                                 UIWorkspaceDocument::UIWorkspaceDocument_Create );

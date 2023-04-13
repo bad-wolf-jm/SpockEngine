@@ -261,4 +261,26 @@ namespace SE::Core
         lSelf->Add( lDocument );
     }
 
+    void UIWorkspace::UIWorkspace_RegisterCloseDocumentDelegate( void *aInstance, void *aDelegate )
+    {
+        auto lInstance = static_cast<UIWorkspace *>( aInstance );
+        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+
+        if( lInstance->mCloseDocumentDelegate != nullptr ) mono_gchandle_free( lInstance->mCloseDocumentDelegateHandle );
+
+        lInstance->mCloseDocumentDelegate       = aDelegate;
+        lInstance->mCloseDocumentDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+
+        lInstance->mOnCloseDocuments = [lInstance, lDelegate]( std::vector<UIWorkspaceDocument *> aDocuments )
+        {
+            auto lDelegateClass = mono_object_get_class( lDelegate );
+            auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
+
+            MonoArray *lNewArray = mono_array_new( mono_domain_get(), mono_get_uint64_class(), aDocuments.size() );
+            for( uint32_t i = 0; i < aDocuments.size(); i++ ) mono_array_set( lNewArray, uint64_t, i, (uint64_t)aDocuments[i] );
+            void* lParams[] = {(void*) lNewArray};
+            mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
+        };
+    }
+
 } // namespace SE::Core

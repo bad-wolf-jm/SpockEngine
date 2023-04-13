@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
@@ -9,6 +10,11 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIWorkspaceDocument_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIWorkspaceDocument_RegisterSaveDelegate(ulong aInstance, DocumentSaveDelegate aDelegate);
+        public delegate bool DocumentSaveDelegate();
+
         public UIWorkspaceDocument() : base(UIWorkspaceDocument_Create())
         {
             UIWorkspaceDocument_RegisterSaveDelegate(mInstance, DoSave);
@@ -53,12 +59,8 @@ namespace SpockEngine
         private extern static void UIWorkspaceDocument_ForceClose(ulong aInstance);
         public void ForceClose() { UIWorkspaceDocument_ForceClose(mInstance); }
 
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIWorkspaceDocument_RegisterSaveDelegate(ulong aInstance, DocumentSaveDelegate aDelegate);
-        public delegate bool DocumentSaveDelegate();
         public virtual bool DoSave() { return true; }
     }
-
 
     public class UIWorkspace : UIComponent
     {
@@ -66,7 +68,21 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIWorkspace_Create();
-        public UIWorkspace() : base(UIWorkspace_Create()) { mDocuments = new List<UIWorkspaceDocument>(); }
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIWorkspace_RegisterCloseDocumentDelegate(ulong aInstance, DocumentCloseDelegate aDelegate);
+        public delegate void DocumentCloseDelegate(ulong[] aDocumentList);
+
+        public UIWorkspace() : base(UIWorkspace_Create()) { 
+            mDocuments = new List<UIWorkspaceDocument>(); 
+
+            UIWorkspace_RegisterCloseDocumentDelegate(mInstance, CloseDocuments);
+        }
+
+        private void CloseDocuments(ulong[] aPtrList) 
+        { 
+            mDocuments = mDocuments.FindAll(d => aPtrList.Contains(d.Instance));
+        }
 
         public UIWorkspace(ulong aSelf) : base(aSelf) { mDocuments = new List<UIWorkspaceDocument>(); }
 
