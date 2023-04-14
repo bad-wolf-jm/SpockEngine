@@ -9,7 +9,15 @@ namespace SpockEngine
 
         ~UICheckBox() { UICheckBox_Destroy(mInstance); }
 
-        public void OnClick(Math.vec4 aColor) { UICheckBox_OnClick(mInstance, aColor); }
+
+        public delegate void OnClickDelegate();
+        OnClickDelegate onChanged;
+        public void OnClick(OnClickDelegate aHandler)
+        {
+            onChanged = aHandler;
+            
+            UICheckBox_OnClick(mInstance, onChanged);
+        }
 
         public bool IsChecked
         {
@@ -24,10 +32,10 @@ namespace SpockEngine
         private extern static void UICheckBox_Destroy(ulong aInstance);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UICheckBox_OnClick(ulong aInstance, Math.vec4 aText);
+        private extern static void UICheckBox_OnClick(ulong aInstance, OnClickDelegate aHandler);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UICheckBox_IsChecked(ulong aInstance);
+        private extern static bool UICheckBox_IsChecked(ulong aInstance);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UICheckBox_SetIsChecked(ulong aInstance, bool aValue);

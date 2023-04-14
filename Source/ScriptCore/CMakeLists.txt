@@ -51,6 +51,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/Components/TextInput.cs
     Source/UI/Components/TextOverlay.cs
     Source/UI/Components/ProgressBar.cs
+    Source/UI/Components/CheckBox.cs
 
     Source/UI/Layouts/BoxLayout.cs
     Source/UI/Layouts/ZLayout.cs

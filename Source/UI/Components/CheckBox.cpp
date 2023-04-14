@@ -1,5 +1,5 @@
 #include "CheckBox.h"
-
+#include "DotNet/Runtime.h"
 namespace SE::Core
 {
     UICheckBox::UICheckBox( std::function<void()> aOnClick )
@@ -43,7 +43,10 @@ namespace SE::Core
 
         ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, RequiredSize(), aSize ) );
 
-        if( ImGui::Checkbox( "", &mIsChecked ) && mOnClick && lEnabled ) mOnClick();
+        if( ImGui::Checkbox( "", &mIsChecked ) && mOnClick && lEnabled )
+        {
+            mOnClick();
+        }
 
         PopStyles( lEnabled );
     }
@@ -57,11 +60,24 @@ namespace SE::Core
 
     void UICheckBox::UICheckBox_Destroy( void *aInstance ) { delete static_cast<UICheckBox *>( aInstance ); }
 
-    void UICheckBox::UICheckBox_OnClick( void *aInstance, math::vec4 *aTextColor )
+    void UICheckBox::UICheckBox_OnClick( void *aInstance, void *aDelegate )
     {
         auto lInstance = static_cast<UICheckBox *>( aInstance );
+        auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        // lInstance->SetTextColor( *aTextColor );
+        if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
+
+        lInstance->mOnChangeDelegate       = aDelegate;
+        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+
+        lInstance->OnClick(
+            [lInstance, lDelegate]()
+            {
+                auto lDelegateClass = mono_object_get_class( lDelegate );
+                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
+
+                mono_runtime_invoke( lInvokeMethod, lDelegate, nullptr, nullptr );
+            } );
     }
 
     bool UICheckBox::UICheckBox_IsChecked( void *aInstance )

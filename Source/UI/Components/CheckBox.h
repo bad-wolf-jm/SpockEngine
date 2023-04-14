@@ -14,7 +14,7 @@ namespace SE::Core
         void OnClick( std::function<void()> aOnClick );
 
         bool IsChecked() { return mIsChecked; }
-        void SetIsChecked(bool aValue) { mIsChecked = aValue; }
+        void SetIsChecked( bool aValue ) { mIsChecked = aValue; }
 
       private:
         std::function<void()> mOnClick;
@@ -30,10 +30,14 @@ namespace SE::Core
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
+      private:
+        void *mOnChangeDelegate       = nullptr;
+        int   mOnChangeDelegateHandle = -1;
+
       public:
         static void *UICheckBox_Create();
         static void  UICheckBox_Destroy( void *aInstance );
-        static void  UICheckBox_OnClick( void *aInstance, math::vec4 *aTextColor );
+        static void  UICheckBox_OnClick( void *aInstance, void *aTextColor );
         static bool  UICheckBox_IsChecked( void *aInstance );
         static void  UICheckBox_SetIsChecked( void *aInstance, bool aValue );
     };
