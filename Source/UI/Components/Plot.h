@@ -95,6 +95,54 @@ namespace SE::Core
         static void  UIVLinePlot_SetX( void *aSelf, void *aValue );
     };
 
+    struct sHLine : public sPlotData
+    {
+        std::vector<double> mY;
+
+        sHLine() = default;
+
+        sHLine( std::vector<double> const &y )
+            : mY{ y }
+        {
+        }
+
+        void Render( UIPlot *aParentPlot );
+
+        static void *UIHLinePlot_Create();
+        static void  UIHLinePlot_Destroy( void *aSelf );
+        static void  UIHLinePlot_SetY( void *aSelf, void *aValue );
+    };
+
+    struct sAxisTag : public sPlotData
+    {
+        double      mX;
+        std::string mText;
+        math::vec4  mColor;
+        UIPlotAxis  mAxis = UIPlotAxis::X1;
+
+        sAxisTag() = default;
+
+        sAxisTag( UIPlotAxis aAxis, double aX, std::string const &aText, math::vec4 aColor )
+            : mX{ aX }
+            , mText{ aText }
+            , mColor{ aColor }
+            , mAxis{ aAxis }
+        {
+        }
+
+        void Render( UIPlot *aParentPlot );
+
+        static void      *UIAxisTag_Create();
+        static void      *UIAxisTag_CreateWithTextAndColor( UIPlotAxis aAxis, double aX, void *aText, math::vec4 aColor );
+        static void       UIAxisTag_Destroy( void *aSelf );
+        static void       UIAxisTag_SetX( void *aSelf, double aValue );
+        static void       UIAxisTag_SetText( void *aSelf, void *aText );
+        static math::vec4 UIAxisTag_GetColor( void *aSelf );
+        static void       UIAxisTag_SetColor( void *aSelf, math::vec4 aColor );
+        static int        UIAxisTag_GetAxis( void *aSelf );
+        static void       UIAxisTag_SetAxis( void *aSelf, int aAxis );
+    };
+
     class UIPlot : public UIComponent
     {
       public:

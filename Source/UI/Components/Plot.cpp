@@ -285,4 +285,113 @@ namespace SE::Core
         lSelf->mX = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
     }
 
+    void sHLine::Render( UIPlot *aParentPlot )
+    {
+        auto lPlotName = fmt::format( "{}##{}", mLegend, static_cast<void *>( this ) );
+
+        ImPlot::SetAxes( static_cast<ImAxis>( mXAxis ), static_cast<ImAxis>( mYAxis ) );
+
+        if( mThickness != -1.0f ) ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
+
+        ImPlot::PushStyleColor( ImPlotCol_Line, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w } );
+        ImPlot::PlotHLines( lPlotName.c_str(), mY.data(), mY.size(), 0 );
+        ImPlot::PopStyleColor();
+
+        if( mThickness != -1.0f ) ImPlot::PopStyleVar();
+    }
+
+    void *sHLine::UIHLinePlot_Create()
+    {
+        auto lSelf = new sHLine();
+
+        return static_cast<sHLine *>( lSelf );
+    }
+
+    void sHLine::UIHLinePlot_Destroy( void *aSelf ) { delete static_cast<sHLine *>( aSelf ); }
+
+    void sHLine::UIHLinePlot_SetY( void *aSelf, void *aValue )
+    {
+        auto lSelf = static_cast<sHLine *>( aSelf );
+
+        lSelf->mY = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
+    }
+
+    void sAxisTag::Render( UIPlot *aParentPlot )
+    {
+        auto lPlotName = fmt::format( "{}##{}", mLegend, static_cast<void *>( this ) );
+
+        ImPlot::SetAxes( static_cast<ImAxis>( mXAxis ), static_cast<ImAxis>( mYAxis ) );
+        switch( mAxis )
+        {
+        case UIPlotAxis::X1:
+        case UIPlotAxis::X2:
+        case UIPlotAxis::X3: ImPlot::TagX( mX, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w }, mText.c_str() ); break;
+
+        case UIPlotAxis::Y1:
+        case UIPlotAxis::Y2:
+        case UIPlotAxis::Y3: ImPlot::TagY( mX, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w }, mText.c_str() ); break;
+        }
+    }
+
+    void *sAxisTag::UIAxisTag_Create()
+    {
+        auto lSelf = new sAxisTag();
+
+        return static_cast<sAxisTag *>( lSelf );
+    }
+
+    void *sAxisTag::UIAxisTag_CreateWithTextAndColor( UIPlotAxis aAxis, double aX, void *aText, math::vec4 aColor )
+    {
+        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+
+        auto lSelf = new sAxisTag( aAxis, aX, lString, aColor );
+
+        return static_cast<sAxisTag *>( lSelf );
+    }
+
+    void sAxisTag::UIAxisTag_Destroy( void *aSelf ) { delete static_cast<sAxisTag *>( aSelf ); }
+
+    void sAxisTag::UIAxisTag_SetX( void *aSelf, double aValue )
+    {
+        auto lSelf = static_cast<sAxisTag *>( aSelf );
+
+        lSelf->mX = aValue;
+    }
+
+    void sAxisTag::UIAxisTag_SetText( void *aSelf, void *aText )
+    {
+        auto lSelf   = static_cast<sAxisTag *>( aSelf );
+        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+
+        lSelf->mText = lString;
+    }
+
+    void sAxisTag::UIAxisTag_SetColor( void *aSelf, math::vec4 aColor )
+    {
+        auto lSelf = static_cast<sAxisTag *>( aSelf );
+
+        lSelf->mColor = aColor;
+    }
+
+    math::vec4 sAxisTag::UIAxisTag_GetColor( void *aSelf )
+    {
+        auto lSelf = static_cast<sAxisTag *>( aSelf );
+
+        return lSelf->mColor;
+    }
+
+    void sAxisTag::UIAxisTag_SetAxis( void *aSelf, int aAxis )
+    {
+        auto lSelf = static_cast<sAxisTag *>( aSelf );
+
+        lSelf->mAxis = static_cast<UIPlotAxis>( aAxis );
+    }
+
+    int sAxisTag::UIAxisTag_GetAxis( void *aSelf )
+    {
+        auto lSelf = static_cast<sAxisTag *>( aSelf );
+
+        return static_cast<int>( lSelf->mXAxis );
+    }
+
 } // namespace SE::Core

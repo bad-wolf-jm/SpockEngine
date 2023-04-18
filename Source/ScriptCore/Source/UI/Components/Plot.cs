@@ -16,7 +16,6 @@ namespace SpockEngine
         Y3
     };
 
-
     public class UIPlotData
     {
         protected ulong mInstance;
@@ -105,6 +104,94 @@ namespace SpockEngine
         private extern static ulong UIVLinePlot_SetX(ulong aInstance, double[] aValues);
     }
 
+    public class UIHLinePlot : UIPlotData
+    {
+        public UIHLinePlot() : base(UIHLinePlot_Create()) { }
+
+        public UIHLinePlot(ulong aInstance) : base(aInstance) { }
+
+        ~UIHLinePlot() { UIHLinePlot_Destroy(mInstance); }
+
+        private double[] mY;
+        public double[] Y
+        {
+            get { return mY; }
+            set { mY = value; UIHLinePlot_SetY(mInstance, value); }
+        }
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static ulong UIHLinePlot_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static ulong UIHLinePlot_Destroy(ulong aInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static ulong UIHLinePlot_SetY(ulong aInstance, double[] aValues);
+    }
+
+    public class UIAxisTag : UIPlotData
+    {
+        public UIAxisTag() : base(UIAxisTag_Create()) { }
+        public UIAxisTag(eUIPlotAxis aAxis, double aX, string aText, Math.vec4 aColor) : base(UIAxisTag_CreateWithTextAndColor(aAxis, aX, aText, aColor)) { }
+
+        public UIAxisTag(ulong aInstance) : base(aInstance) { }
+
+        ~UIAxisTag() { UIAxisTag_Destroy(mInstance); }
+
+        private double mX;
+        public double Y
+        {
+            get { return mX; }
+            set { mX = value; UIAxisTag_SetX(mInstance, value); }
+        }
+
+        private string mText;
+        public string Text
+        {
+            get { return mText; }
+            set { mText = value; UIAxisTag_SetText(mInstance, value); }
+        }
+
+        new public Math.vec4 Color
+        {
+            get { return UIAxisTag_GetColor(mInstance); }
+            set { UIAxisTag_SetColor(mInstance, value); }
+        }
+
+        new public eUIPlotAxis Axis
+        {
+            get { return UIAxisTag_GetAxis(mInstance); }
+            set { UIAxisTag_SetAxis(mInstance, value); }
+        }
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static ulong UIAxisTag_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static ulong UIAxisTag_CreateWithTextAndColor(eUIPlotAxis aAxis, double aX, string aText, Math.vec4 aColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIAxisTag_Destroy(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIAxisTag_SetX(ulong aSelf, double aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIAxisTag_SetText(ulong aSelf, string aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static Math.vec4 UIAxisTag_GetColor(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIAxisTag_SetColor(ulong aSelf, Math.vec4 aColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static eUIPlotAxis UIAxisTag_GetAxis(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIAxisTag_SetAxis(ulong aSelf, eUIPlotAxis aColor);
+    }
+
     public class UIFloat64LinePlot : UIPlotData
     {
         public UIFloat64LinePlot() : base(UIFloat64LinePlot_Create()) { }
@@ -190,10 +277,10 @@ namespace SpockEngine
             mAxis = aAxis;
         }
 
-        public string Title 
+        public string Title
         {
-            get { return UIPlot_GetAxisTitle(mPlotInstance, mAxis);}
-            set { UIPlot_SetAxisTitle(mPlotInstance, mAxis, value);}
+            get { return UIPlot_GetAxisTitle(mPlotInstance, mAxis); }
+            set { UIPlot_SetAxisTitle(mPlotInstance, mAxis, value); }
         }
 
         public void SetLimits(double aMin, double aMax)
@@ -206,7 +293,7 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static string UIPlot_GetAxisTitle(ulong aInstance, eUIPlotAxis aAxis);
-        
+
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIPlot_SetAxisTitle(ulong aInstance, eUIPlotAxis aAxis, string aTitle);
     }
@@ -273,6 +360,13 @@ namespace SpockEngine
             UIPlot_ConfigureLegend(mInstance, aLegendPadding, aLegendInnerPadding, aLegendSpacing);
         }
 
+        public void Add(UIPlotData aPlot)
+        {
+            mPlots.Add(aPlot);
+
+            UIPlot_Add(mInstance, aPlot.Instance);
+        }
+
         public UIFloat64LinePlot Plot(double[] aX, double[] aY, string aLegend = "", float aThickness = 1.0f, Math.vec4? aColor = null)
         {
             var lNewPlot = new UIFloat64LinePlot();
@@ -282,9 +376,7 @@ namespace SpockEngine
             lNewPlot.Thickness = aThickness;
             lNewPlot.Color = aColor.HasValue ? aColor.Value : new Math.vec4(0.0f, 0.0f, 0.0f, -1.0f);
 
-            mPlots.Add(lNewPlot);
-
-            UIPlot_Add(mInstance, lNewPlot.Instance);
+            Add(lNewPlot);
 
             return lNewPlot;
         }
@@ -297,9 +389,7 @@ namespace SpockEngine
             lNewPlot.Legend = aLegend;
             lNewPlot.Color = aColor.HasValue ? aColor.Value : new Math.vec4(0.0f, 0.0f, 0.0f, -1.0f);
 
-            mPlots.Add(lNewPlot);
-
-            UIPlot_Add(mInstance, lNewPlot.Instance);
+            Add(lNewPlot);
 
             return lNewPlot;
         }
@@ -311,9 +401,19 @@ namespace SpockEngine
             lNewPlot.Legend = aLegend;
             lNewPlot.Color = aColor.HasValue ? aColor.Value : new Math.vec4(0.0f, 0.0f, 0.0f, -1.0f);
 
-            mPlots.Add(lNewPlot);
+            Add(lNewPlot);
 
-            UIPlot_Add(mInstance, lNewPlot.Instance);
+            return lNewPlot;
+        }
+
+        public UIHLinePlot HLines(double[] aY, string aLegend = "", Math.vec4? aColor = null)
+        {
+            var lNewPlot = new UIHLinePlot();
+            lNewPlot.Y = aY;
+            lNewPlot.Legend = aLegend;
+            lNewPlot.Color = aColor.HasValue ? aColor.Value : new Math.vec4(0.0f, 0.0f, 0.0f, -1.0f);
+
+            Add(lNewPlot);
 
             return lNewPlot;
         }

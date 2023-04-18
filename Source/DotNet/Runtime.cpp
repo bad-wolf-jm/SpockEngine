@@ -497,6 +497,18 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIVLinePlot::UIVLinePlot_Destroy", sVLine::UIVLinePlot_Destroy );
         mono_add_internal_call( "SpockEngine.UIVLinePlot::UIVLinePlot_SetX", sVLine::UIVLinePlot_SetX );
 
+        mono_add_internal_call( "SpockEngine.UIHLinePlot::UIHLinePlot_Create", sHLine::UIHLinePlot_Create );
+        mono_add_internal_call( "SpockEngine.UIHLinePlot::UIHLinePlot_Destroy", sHLine::UIHLinePlot_Destroy );
+        mono_add_internal_call( "SpockEngine.UIHLinePlot::UIHLinePlot_SetY", sHLine::UIHLinePlot_SetY );
+
+        mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_Create", sAxisTag::UIAxisTag_Create );
+        mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_CreateWithTextAndColor", sAxisTag::UIAxisTag_CreateWithTextAndColor );
+        mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_Destroy", sAxisTag::UIAxisTag_Destroy );
+        mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_SetX", sAxisTag::UIAxisTag_SetX );
+        mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_SetText", sAxisTag::UIAxisTag_SetText );
+        mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_GetColor", sAxisTag::UIAxisTag_GetColor );
+        mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_SetColor", sAxisTag::UIAxisTag_SetColor );
+
         mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_Create", UITextOverlay::UITextOverlay_Create );
         mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_Destroy", UITextOverlay::UITextOverlay_Destroy );
         mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_AddText", UITextOverlay::UITextOverlay_AddText );
