@@ -109,8 +109,7 @@ namespace SE::Core
         std::array<sPlotAxisConfiguration, 6> mAxisConfiguration;
 
       protected:
-        std::vector<sPlotData *>    mElements;
-        std::vector<Ref<sPlotData>> mElementRefs;
+        std::vector<sPlotData *> mElements;
 
         ImPlotLocation mLegendPosition = ImPlotLocation_NorthEast;
 

@@ -22,17 +22,9 @@ namespace SE::Core
     void UIPlot::PushStyles() {}
     void UIPlot::PopStyles() {}
 
-    void UIPlot::Add( Ref<sPlotData> aPlot )
-    {
-        mElementRefs.push_back( aPlot );
-        mElements.push_back( aPlot.get() );
-    };
+    void UIPlot::Add( Ref<sPlotData> aPlot ) { mElements.push_back( aPlot.get() ); };
     void UIPlot::Add( sPlotData *aPlot ) { mElements.push_back( aPlot ); };
-    void UIPlot::Clear()
-    {
-        mElements.clear();
-        mElementRefs.clear();
-    };
+    void UIPlot::Clear() { mElements.clear(); };
     void UIPlot::ConfigureLegend( math::vec2 aLegendPadding, math::vec2 aLegendInnerPadding, math::vec2 aLegendSpacing )
     {
         mLegendPadding      = ImVec2{ aLegendPadding.x, aLegendPadding.y };

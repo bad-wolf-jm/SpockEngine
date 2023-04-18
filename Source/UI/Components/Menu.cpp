@@ -196,7 +196,6 @@ namespace SE::Core
     Ref<UIMenuItem> UIMenu::AddAction( std::string const &aText, std::string const &aShortcut )
     {
         Ref<UIMenuItem> lNewItem( AddActionRaw( aText, aShortcut ) );
-        mActionRefs.push_back( lNewItem );
 
         return lNewItem;
     }
@@ -204,7 +203,6 @@ namespace SE::Core
     Ref<UIMenu> UIMenu::AddMenu( std::string const &aText )
     {
         Ref<UIMenu> lNewItem( AddMenuRaw( aText ) );
-        mActionRefs.push_back( lNewItem );
 
         return lNewItem;
     }
@@ -212,7 +210,6 @@ namespace SE::Core
     Ref<UIMenuItem> UIMenu::AddSeparator()
     {
         Ref<UIMenuItem> lNewItem( AddSeparatorRaw() );
-        mActionRefs.push_back( lNewItem );
 
         return lNewItem;
     }
