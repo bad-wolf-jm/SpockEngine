@@ -10,8 +10,6 @@
 
 #include "Core/Profiling/BlockTimer.h"
 
-// #include "UI/Widgets.h"
-
 #include "Core/CUDA/Texture/TextureData.h"
 #include "Core/File.h"
 #include "Core/Logging.h"
@@ -22,9 +20,6 @@
 #include "mono/metadata/assembly.h"
 #include "mono/metadata/object.h"
 #include "mono/metadata/tabledefs.h"
-
-#include "IOlmDiffDocument.h"
-#include "IOlmDocument.h"
 
 namespace SE::OtdrEditor
 {
@@ -95,12 +90,12 @@ namespace SE::OtdrEditor
         ImGui::Begin( "##STATUS_BAR", &p_open, lStatusBarFlags );
         ImGui::PopStyleVar( 3 );
         ImGui::PopStyleColor();
-        auto l_WindowSize = UI::GetAvailableContentSpace();
+
         {
             if( mLastFPS > 0 )
-                Text( "Render: {} fps ({:.2f} ms/frame)", mLastFPS, ( 1000.0f / mLastFPS ) );
+                ImGui::Text( fmt::format("Render: {} fps ({:.2f} ms/frame)", mLastFPS, ( 1000.0f / mLastFPS )).c_str() );
             else
-                Text( "Render: 0 fps (0 ms)" );
+                ImGui::Text( fmt::format("Render: {} fps ({:.2f} ms/frame)", 0, 0).c_str() );
         }
         ImGui::End();
 
@@ -109,7 +104,7 @@ namespace SE::OtdrEditor
 
     bool OtdrWindow::RenderMainMenu()
     {
-        UI::Text( ApplicationIcon.c_str() );
+        ImGui::Text( ApplicationIcon.c_str() );
 
         return mRequestQuit;
     }

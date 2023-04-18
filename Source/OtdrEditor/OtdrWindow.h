@@ -24,17 +24,7 @@
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/UI.h"
 
-#include "AcquisitionData.h"
-#include "DotNet/Instance.h"
-#include "Enums.h"
-#include "EventOverview.h"
-#include "LinkElementTable.h"
-#include "LinkElementTracePlot.h"
-#include "MeasurementOverview.h"
-#include "MonoClassHierarchy.h"
-#include "MultiPulseEventTable.h"
-#include "TestFailResultTable.h"
-#include "Workspace.h"
+#include "DotNet/Runtime.h"
 
 namespace SE::OtdrEditor
 {
@@ -75,9 +65,6 @@ namespace SE::OtdrEditor
         void ConfigureUI();
 
         UIMenu mMainMenu;
-
-      private:
-        MonoClassHierarchy mMonoClasses;
 
       private:
         Ref<VkGraphicContext> mGraphicContext;
