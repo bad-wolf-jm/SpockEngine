@@ -95,7 +95,7 @@ namespace SE::OtdrEditor
             if( mLastFPS > 0 )
                 ImGui::Text( fmt::format("Render: {} fps ({:.2f} ms/frame)", mLastFPS, ( 1000.0f / mLastFPS )).c_str() );
             else
-                ImGui::Text( fmt::format("Render: {} fps ({:.2f} ms/frame)", 0, 0).c_str() );
+                ImGui::Text( fmt::format("Render: {} fps ({:.2f} ms/frame)", 0, 0.0f).c_str() );
         }
         ImGui::End();
 

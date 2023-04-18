@@ -77,7 +77,10 @@ namespace SE::Core
             ImPlotLegendFlags flags = ImPlotLegendFlags_None;
             ImPlot::SetupLegend( mLegendPosition, flags );
             uint32_t lIndex = 0;
-            for( auto const &lPlotElement : mElements ) lPlotElement->Render( this );
+            for( auto const &lPlotElement : mElements )
+            {
+                if( lPlotElement != nullptr ) lPlotElement->Render( this );
+            }
             ImPlot::EndPlot();
         }
         ImPlot::PopStyleVar();
