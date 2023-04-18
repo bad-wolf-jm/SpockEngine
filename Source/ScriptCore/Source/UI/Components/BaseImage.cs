@@ -14,11 +14,29 @@ namespace SpockEngine
 
         public void SetImage(string aText) { UIBaseImage_SetImage(mInstance, aText); }
 
-        public void SetSize(float aWidth, float aHeight) { UIBaseImage_SetSize(mInstance, aWidth, aHeight); }
+        public Math.vec2 Size
+        {
+            get { return UIBaseImage_GetSize(mInstance); }
+            set { UIBaseImage_SetSize(mInstance, value); }
+        }
 
-        public void SetTintColor(Math.vec4 aColor) { UIBaseImage_SetTintColor(mInstance, aColor); }
+        public Math.vec4 TintColor
+        {
+            get { return UIBaseImage_GetTintColor(mInstance); }
+            set { UIBaseImage_SetTintColor(mInstance, value); }
+        }
 
-        public void SetRect(Math.vec2 aTopLeft, Math.vec2 aBottomRight) { UIBaseImage_SetRect(mInstance, aTopLeft, aBottomRight); }
+        public Math.vec2 TopLeft
+        {
+            get { return UIBaseImage_GetTopLeft(mInstance); }
+            set { UIBaseImage_SetTopLeft(mInstance, value); }
+        }
+
+        public Math.vec2 BottomRight
+        {
+            get { return UIBaseImage_GetBottomRight(mInstance); }
+            set { UIBaseImage_SetBottomRight(mInstance, value); }
+        }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIBaseImage_Create();
@@ -33,12 +51,28 @@ namespace SpockEngine
         private extern static void UIBaseImage_SetImage(ulong aInstance, string aPath);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBaseImage_SetSize(ulong aInstance, float aWidth, float aHeight);
+        private extern static void UIBaseImage_SetSize(ulong aInstance, Math.vec2 aSize);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBaseImage_SetRect(ulong aInstance, Math.vec2 aTopLeft, Math.vec2 aBottomRight);
+        private extern static Math.vec2 UIBaseImage_GetSize(ulong aInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIBaseImage_SetTopLeft(ulong aInstance, Math.vec2 aTopLeft);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static Math.vec2 UIBaseImage_GetTopLeft(ulong aInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIBaseImage_SetBottomRight(ulong aInstance, Math.vec2 aBottomRight);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static Math.vec2 UIBaseImage_GetBottomRight(ulong aInstance);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIBaseImage_SetTintColor(ulong aInstance, Math.vec4 aColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static Math.vec4 UIBaseImage_GetTintColor(ulong aInstance);
+
     }
 }

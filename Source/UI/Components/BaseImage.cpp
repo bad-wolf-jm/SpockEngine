@@ -41,23 +41,20 @@ namespace SE::Core
         mImagePath    = aImagePath;
     }
 
-    void UIBaseImage::SetSize( float aWidth, float aHeight ) { mSize = ImVec2{ aWidth, aHeight }; }
-
-    void UIBaseImage::SetRect( math::vec2 aTopLeft, math::vec2 aBottomRight )
-    {
-        mTopLeft     = ImVec2{ aTopLeft.x, aTopLeft.y };
-        mBottomRight = ImVec2{ aBottomRight.x, aBottomRight.y };
-    }
+    ImVec2 UIBaseImage::Size() { return mSize; }
+    void   UIBaseImage::SetSize( math::vec2 aSize ) { mSize = ImVec2{ aSize.x, aSize.y }; }
+    void   UIBaseImage::SetSize( float aWidth, float aHeight ) { SetSize( math::vec2{ aWidth, aHeight } ); }
 
     ImVec2 UIBaseImage::TopLeft() { return mTopLeft; }
-    ImVec2 UIBaseImage::BottomRight() { return mBottomRight; }
+    void   UIBaseImage::SetTopLeft( math::vec2 aTopLeft ) { mTopLeft = ImVec2{ aTopLeft.x, aTopLeft.y }; }
 
-    void   UIBaseImage::SetTintColor( math::vec4 aColor ) { mTintColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
+    ImVec2 UIBaseImage::BottomRight() { return mBottomRight; }
+    void   UIBaseImage::SetBottomRight( math::vec2 aBottomRight ) { mBottomRight = ImVec2{ aBottomRight.x, aBottomRight.y }; }
+
     ImVec4 UIBaseImage::TintColor() { return mTintColor; }
+    void   UIBaseImage::SetTintColor( math::vec4 aColor ) { mTintColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
 
     ImTextureID UIBaseImage::TextureID() { return static_cast<ImTextureID>( mHandle.Handle->GetVkDescriptorSet() ); }
-
-    ImVec2 UIBaseImage::Size() { return mSize; }
 
     ImVec2 UIBaseImage::RequiredSize() { return mSize; }
 
@@ -88,32 +85,64 @@ namespace SE::Core
         lInstance->SetImage( lString );
     }
 
-    void UIBaseImage::UIBaseImage_SetSize( void *aInstance, float aWidth, float aHeight )
+    void UIBaseImage::UIBaseImage_SetSize( void *aInstance, math::vec2 aSize )
     {
         auto lInstance = static_cast<UIBaseImage *>( aInstance );
 
-        lInstance->SetSize( aWidth, aHeight );
+        lInstance->SetSize( aSize );
     }
 
-    void UIBaseImage::UIBaseImage_SetRect( void *aInstance, math::vec2 aTopLeft, math::vec2 aBottomRight )
+    math::vec2  UIBaseImage::UIBaseImage_GetSize( void *aInstance )
+    {
+        auto lInstance = static_cast<UIBaseImage *>( aInstance );
+        auto lV        = lInstance->Size();
+
+        return math::vec2{ lV.y, lV.y };
+    }
+
+    void UIBaseImage::UIBaseImage_SetTopLeft( void *aInstance, math::vec2 aTopLeft )
     {
         auto lInstance = static_cast<UIBaseImage *>( aInstance );
 
-        lInstance->SetRect( aTopLeft, aBottomRight );
+        lInstance->SetTopLeft( aTopLeft );
     }
 
-    // void UIBaseImage::UIBaseImage_SetBackgroundColor( void *aInstance, math::vec4 *aColor )
-    // {
-    //     auto lInstance = static_cast<UIBaseImage *>( aInstance );
+    math::vec2 UIBaseImage::UIBaseImage_GetTopLeft( void *aInstance )
+    {
+        auto lInstance = static_cast<UIBaseImage *>( aInstance );
+        auto lV        = lInstance->TopLeft();
 
-    //     lInstance->SetBackgroundColor( *aColor );
-    // }
+        return math::vec2{ lV.y, lV.y };
+    }
+
+    void UIBaseImage::UIBaseImage_SetBottomRight( void *aInstance, math::vec2 aBottomRight )
+    {
+        auto lInstance = static_cast<UIBaseImage *>( aInstance );
+
+        lInstance->SetBottomRight( aBottomRight );
+    }
+
+    math::vec2 UIBaseImage::UIBaseImage_GetBottomRight( void *aInstance )
+    {
+        auto lInstance = static_cast<UIBaseImage *>( aInstance );
+        auto lV        = lInstance->BottomRight();
+
+        return math::vec2{ lV.x, lV.y };
+    }
 
     void UIBaseImage::UIBaseImage_SetTintColor( void *aInstance, math::vec4 aColor )
     {
         auto lInstance = static_cast<UIBaseImage *>( aInstance );
 
         lInstance->SetTintColor( aColor );
+    }
+
+    math::vec4 UIBaseImage::UIBaseImage_GetTintColor( void *aInstance )
+    {
+        auto lInstance = static_cast<UIBaseImage *>( aInstance );
+        auto lV        = lInstance->TintColor();
+
+        return math::vec4{ lV.x, lV.y, lV.z, lV.w };
     }
 
 } // namespace SE::Core

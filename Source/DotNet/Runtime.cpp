@@ -319,8 +319,13 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_Destroy", UIBaseImage::UIBaseImage_Destroy );
         mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetImage", UIBaseImage::UIBaseImage_SetImage );
         mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetSize", UIBaseImage::UIBaseImage_SetSize );
-        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetRect", UIBaseImage::UIBaseImage_SetRect );
+        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_GetSize", UIBaseImage::UIBaseImage_GetSize );
+        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetTopLeft", UIBaseImage::UIBaseImage_SetTopLeft );
+        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_GetTopLeft", UIBaseImage::UIBaseImage_GetTopLeft );
+        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetBottomRight", UIBaseImage::UIBaseImage_SetBottomRight );
+        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_GetBottomRight", UIBaseImage::UIBaseImage_GetBottomRight );
         mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetTintColor", UIBaseImage::UIBaseImage_SetTintColor );
+        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_GetTintColor", UIBaseImage::UIBaseImage_GetTintColor );
 
         mono_add_internal_call( "SpockEngine.UIImage::UIImage_Create", UIImage::UIImage_Create );
         mono_add_internal_call( "SpockEngine.UIImage::UIImage_CreateWithPath", UIImage::UIImage_CreateWithPath );
