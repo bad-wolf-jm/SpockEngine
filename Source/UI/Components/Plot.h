@@ -136,6 +136,31 @@ namespace SE::Core
         static void   UIVRangePlot_SetMax( void *aSelf, double aValue );
     };
 
+
+    struct sHRange : public sPlotData
+    {
+        double mY0;
+        double mY1;
+
+        sHRange() = default;
+
+        sHRange( double aY0, double aY1 )
+            : mY0{ aY0 }
+            , mY1{ aY1 }
+        {
+        }
+
+        void Render( UIPlot *aParentPlot );
+
+        static void  *UIHRangePlot_Create();
+        static void   UIHRangePlot_Destroy( void *aSelf );
+        static double UIHRangePlot_GetMin( void *aSelf );
+        static void   UIHRangePlot_SetMin( void *aSelf, double aValue );
+        static double UIHRangePlot_GetMax( void *aSelf );
+        static void   UIHRangePlot_SetMax( void *aSelf, double aValue );
+    };
+
+
     struct sAxisTag : public sPlotData
     {
         double      mX;

@@ -453,4 +453,67 @@ namespace SE::Core
 
         return (double)lSelf->mX1;
     }
+
+
+
+    void sHRange::Render( UIPlot *aParentPlot )
+    {
+        ImPlotPlot  *plot     = ImPlot::GetCurrentPlot();
+        ImGuiWindow *Window   = ImGui::GetCurrentWindow();
+        ImDrawList  *DrawList = Window->DrawList;
+
+        auto  M   = plot->Axes[static_cast<ImAxis>( mXAxis )].LinM;
+        auto  P0  = plot->Axes[static_cast<ImAxis>( mXAxis )].PixelMin;
+        auto  D  = plot->Axes[static_cast<ImAxis>( mXAxis )].Range.Min;
+        float lX0 = P0 + M * ( mY0 - D );
+        float lX1 = P0 + M * ( mY1 - D );
+
+        float       lY0 = plot->PlotRect.Min.y;
+        float       lY1 = plot->PlotRect.Max.y;
+        ImVec4      C{ mColor.x, mColor.y, mColor.z, mColor.w };
+        const ImU32 lColor = ImGui::GetColorU32( C );
+
+        ImVec2 lMin{ (float)lX0, lY0 };
+        ImVec2 lMax{ (float)lX1, lY1 };
+
+        DrawList->AddRectFilled( lMin, lMax, lColor );
+    }
+
+    void *sHRange::UIHRangePlot_Create()
+    {
+        auto lSelf = new sHRange();
+
+        return static_cast<sHRange *>( lSelf );
+    }
+
+    void sHRange::UIHRangePlot_Destroy( void *aSelf ) { delete static_cast<sHRange *>( aSelf ); }
+
+    void sHRange::UIHRangePlot_SetMin( void *aSelf, double aValue )
+    {
+        auto lSelf = static_cast<sHRange *>( aSelf );
+
+        lSelf->mY0 = aValue;
+    }
+
+    double sHRange::UIHRangePlot_GetMin( void *aSelf )
+    {
+        auto lSelf = static_cast<sHRange *>( aSelf );
+
+        return (double)lSelf->mY0;
+    }
+
+    void sHRange::UIHRangePlot_SetMax( void *aSelf, double aValue )
+    {
+        auto lSelf = static_cast<sHRange *>( aSelf );
+
+        lSelf->mY1 = aValue;
+    }
+
+    double sHRange::UIHRangePlot_GetMax( void *aSelf )
+    {
+        auto lSelf = static_cast<sHRange *>( aSelf );
+
+        return (double)lSelf->mY1;
+    }
+
 } // namespace SE::Core

@@ -517,6 +517,13 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIVRange::UIVRangePlot_GetMax", sVRange::UIVRangePlot_GetMax );
         mono_add_internal_call( "SpockEngine.UIVRange::UIVRangePlot_SetMax", sVRange::UIVRangePlot_SetMax );
 
+        mono_add_internal_call( "SpockEngine.UIHRange::UIHRangePlot_Create", sHRange::UIHRangePlot_Create );
+        mono_add_internal_call( "SpockEngine.UIHRange::UIHRangePlot_Destroy", sHRange::UIHRangePlot_Destroy );
+        mono_add_internal_call( "SpockEngine.UIHRange::UIHRangePlot_GetMin", sHRange::UIHRangePlot_GetMin );
+        mono_add_internal_call( "SpockEngine.UIHRange::UIHRangePlot_SetMin", sHRange::UIHRangePlot_SetMin );
+        mono_add_internal_call( "SpockEngine.UIHRange::UIHRangePlot_GetMax", sHRange::UIHRangePlot_GetMax );
+        mono_add_internal_call( "SpockEngine.UIHRange::UIHRangePlot_SetMax", sHRange::UIHRangePlot_SetMax );
+
         mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_Create", UITextOverlay::UITextOverlay_Create );
         mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_Destroy", UITextOverlay::UITextOverlay_Destroy );
         mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_AddText", UITextOverlay::UITextOverlay_AddText );

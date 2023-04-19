@@ -231,6 +231,45 @@ namespace SpockEngine
         private extern static void UIVRangePlot_SetMax(ulong aSelf, double aValue);
     }
 
+    public class UIHRange : UIPlotData
+    {
+        public UIHRange() : base(UIHRangePlot_Create()) { }
+
+        public UIHRange(ulong aInstance) : base(aInstance) { }
+
+        ~UIHRange() { UIHRangePlot_Destroy(mInstance); }
+
+        public double Y0
+        {
+            get { return UIHRangePlot_GetMin(mInstance); }
+            set { UIHRangePlot_SetMin(mInstance, value); }
+        }
+
+        public double Y1
+        {
+            get { return UIHRangePlot_GetMax(mInstance); }
+            set { UIHRangePlot_SetMax(mInstance, value); }
+        }
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static ulong UIHRangePlot_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIHRangePlot_Destroy(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static double UIHRangePlot_GetMin(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIHRangePlot_SetMin(ulong aSelf, double aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static double UIHRangePlot_GetMax(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIHRangePlot_SetMax(ulong aSelf, double aValue);
+    }
+
     public class UIFloat64LinePlot : UIPlotData
     {
         public UIFloat64LinePlot() : base(UIFloat64LinePlot_Create()) { }
