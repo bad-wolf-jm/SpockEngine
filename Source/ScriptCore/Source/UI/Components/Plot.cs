@@ -192,6 +192,45 @@ namespace SpockEngine
         private extern static void UIAxisTag_SetAxis(ulong aSelf, eUIPlotAxis aColor);
     }
 
+    public class UIVRange : UIPlotData
+    {
+        public UIVRange() : base(UIVRangePlot_Create()) { }
+
+        public UIVRange(ulong aInstance) : base(aInstance) { }
+
+        ~UIVRange() { UIVRangePlot_Destroy(mInstance); }
+
+        public double X0
+        {
+            get { return UIVRangePlot_GetMin(mInstance); }
+            set { UIVRangePlot_SetMin(mInstance, value); }
+        }
+
+        public double X1
+        {
+            get { return UIVRangePlot_GetMax(mInstance); }
+            set { UIVRangePlot_SetMax(mInstance, value); }
+        }
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static ulong UIVRangePlot_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIVRangePlot_Destroy(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static double UIVRangePlot_GetMin(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIVRangePlot_SetMin(ulong aSelf, double aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static double UIVRangePlot_GetMax(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIVRangePlot_SetMax(ulong aSelf, double aValue);
+    }
+
     public class UIFloat64LinePlot : UIPlotData
     {
         public UIFloat64LinePlot() : base(UIFloat64LinePlot_Create()) { }
@@ -411,6 +450,18 @@ namespace SpockEngine
             var lNewPlot = new UIHLinePlot();
             lNewPlot.Y = aY;
             lNewPlot.Legend = aLegend;
+            lNewPlot.Color = aColor.HasValue ? aColor.Value : new Math.vec4(0.0f, 0.0f, 0.0f, -1.0f);
+
+            Add(lNewPlot);
+
+            return lNewPlot;
+        }
+
+        public UIVRange VRange(double aX0, double aX1, Math.vec4? aColor = null)
+        {
+            var lNewPlot = new UIVRange();
+            lNewPlot.X0 = aX0;
+            lNewPlot.X1 = aX1;
             lNewPlot.Color = aColor.HasValue ? aColor.Value : new Math.vec4(0.0f, 0.0f, 0.0f, -1.0f);
 
             Add(lNewPlot);

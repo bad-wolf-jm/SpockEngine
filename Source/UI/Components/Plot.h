@@ -128,12 +128,12 @@ namespace SE::Core
 
         void Render( UIPlot *aParentPlot );
 
-        static void  *UIVRAngePlot_Create();
-        static void   UIVRAngePlot_Destroy( void *aSelf );
-        static double UIVRAngePlot_GetMin( void *aSelf );
-        static void   UIVRAngePlot_SetMin( void *aSelf, double aValue );
-        static double UIVRAngePlot_GetMax( void *aSelf );
-        static void   UIVRAngePlot_SetMax( void *aSelf, double aValue );
+        static void  *UIVRangePlot_Create();
+        static void   UIVRangePlot_Destroy( void *aSelf );
+        static double UIVRangePlot_GetMin( void *aSelf );
+        static void   UIVRangePlot_SetMin( void *aSelf, double aValue );
+        static double UIVRangePlot_GetMax( void *aSelf );
+        static void   UIVRangePlot_SetMax( void *aSelf, double aValue );
     };
 
     struct sAxisTag : public sPlotData

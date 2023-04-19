@@ -122,8 +122,8 @@ namespace SE::Core
     {
         auto lSelf = static_cast<UIPlot *>( aInstance );
 
-        lSelf->mAxisConfiguration[aAxis].mMin = static_cast<float>(aMin);
-        lSelf->mAxisConfiguration[aAxis].mMax = static_cast<float>(aMax);
+        lSelf->mAxisConfiguration[aAxis].mMin = static_cast<float>( aMin );
+        lSelf->mAxisConfiguration[aAxis].mMax = static_cast<float>( aMax );
     }
 
     void UIPlot::UIPlot_SetAxisTitle( void *aInstance, int aAxis, void *aTitle )
@@ -394,4 +394,63 @@ namespace SE::Core
         return static_cast<int>( lSelf->mXAxis );
     }
 
+    void sVRange::Render( UIPlot *aParentPlot )
+    {
+        ImPlotPlot  *plot     = ImPlot::GetCurrentPlot();
+        ImGuiWindow *Window   = ImGui::GetCurrentWindow();
+        ImDrawList  *DrawList = Window->DrawList;
+
+        auto  M   = plot->Axes[static_cast<ImAxis>( mXAxis )].LinM;
+        auto  P0  = plot->Axes[static_cast<ImAxis>( mXAxis )].PixelMin;
+        auto  D  = plot->Axes[static_cast<ImAxis>( mXAxis )].Range.Min;
+        float lX0 = P0 + M * ( mX0 - D );
+        float lX1 = P0 + M * ( mX1 - D );
+
+        float       lY0 = plot->PlotRect.Min.y;
+        float       lY1 = plot->PlotRect.Max.y;
+        ImVec4      C{ mColor.x, mColor.y, mColor.z, mColor.w };
+        const ImU32 lColor = ImGui::GetColorU32( C );
+
+        ImVec2 lMin{ (float)lX0, lY0 };
+        ImVec2 lMax{ (float)lX1, lY1 };
+
+        DrawList->AddRectFilled( lMin, lMax, lColor );
+    }
+
+    void *sVRange::UIVRangePlot_Create()
+    {
+        auto lSelf = new sVRange();
+
+        return static_cast<sVRange *>( lSelf );
+    }
+
+    void sVRange::UIVRangePlot_Destroy( void *aSelf ) { delete static_cast<sVRange *>( aSelf ); }
+
+    void sVRange::UIVRangePlot_SetMin( void *aSelf, double aValue )
+    {
+        auto lSelf = static_cast<sVRange *>( aSelf );
+
+        lSelf->mX0 = aValue;
+    }
+
+    double sVRange::UIVRangePlot_GetMin( void *aSelf )
+    {
+        auto lSelf = static_cast<sVRange *>( aSelf );
+
+        return (double)lSelf->mX0;
+    }
+
+    void sVRange::UIVRangePlot_SetMax( void *aSelf, double aValue )
+    {
+        auto lSelf = static_cast<sVRange *>( aSelf );
+
+        lSelf->mX1 = aValue;
+    }
+
+    double sVRange::UIVRangePlot_GetMax( void *aSelf )
+    {
+        auto lSelf = static_cast<sVRange *>( aSelf );
+
+        return (double)lSelf->mX1;
+    }
 } // namespace SE::Core
