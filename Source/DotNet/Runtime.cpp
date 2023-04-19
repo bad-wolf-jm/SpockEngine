@@ -509,6 +509,13 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_GetColor", sAxisTag::UIAxisTag_GetColor );
         mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_SetColor", sAxisTag::UIAxisTag_SetColor );
 
+        mono_add_internal_call( "SpockEngine.UIVRange::UIVRangePlot_Create", sVRange::UIVRangePlot_Create );
+        mono_add_internal_call( "SpockEngine.UIVRange::UIVRangePlot_Destroy", sVRange::UIVRangePlot_Destroy );
+        mono_add_internal_call( "SpockEngine.UIVRange::UIVRangePlot_GetMin", sVRange::UIVRangePlot_GetMin );
+        mono_add_internal_call( "SpockEngine.UIVRange::UIVRangePlot_SetMin", sVRange::UIVRangePlot_SetMin );
+        mono_add_internal_call( "SpockEngine.UIVRange::UIVRangePlot_GetMax", sVRange::UIVRangePlot_GetMax );
+        mono_add_internal_call( "SpockEngine.UIVRange::UIVRangePlot_SetMax", sVRange::UIVRangePlot_SetMax );
+
         mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_Create", UITextOverlay::UITextOverlay_Create );
         mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_Destroy", UITextOverlay::UITextOverlay_Destroy );
         mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_AddText", UITextOverlay::UITextOverlay_AddText );

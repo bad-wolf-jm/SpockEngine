@@ -30,6 +30,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/Math/quaternion.cs
     Source/Math/functions.cs
 
+    Source/Colors.cs
     Source/ScriptProxy.cs
     Source/CppCalls.cs
     Source/Utilities.cs
