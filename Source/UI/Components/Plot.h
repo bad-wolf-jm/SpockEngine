@@ -113,6 +113,29 @@ namespace SE::Core
         static void  UIHLinePlot_SetY( void *aSelf, void *aValue );
     };
 
+    struct sVRange : public sPlotData
+    {
+        double mX0;
+        double mX1;
+
+        sVRange() = default;
+
+        sVRange( double aX0, double aX1 )
+            : mX0{ aX0 }
+            , mX1{ aX1 }
+        {
+        }
+
+        void Render( UIPlot *aParentPlot );
+
+        static void  *UIVRAngePlot_Create();
+        static void   UIVRAngePlot_Destroy( void *aSelf );
+        static double UIVRAngePlot_GetMin( void *aSelf );
+        static void   UIVRAngePlot_SetMin( void *aSelf, double aValue );
+        static double UIVRAngePlot_GetMax( void *aSelf );
+        static void   UIVRAngePlot_SetMax( void *aSelf, double aValue );
+    };
+
     struct sAxisTag : public sPlotData
     {
         double      mX;
