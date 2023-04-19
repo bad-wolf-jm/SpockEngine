@@ -10,6 +10,16 @@ namespace SpockEngine.Math
         public float z;
         public float w;
 
+        public static implicit operator vec4(float[] values)
+        {
+            return new vec4(values[0], values[1], values[2], values[3]);
+        }
+
+        public static implicit operator vec4(double[] values)
+        {
+            return new vec4((float)values[0], (float)values[1], (float)values[2], (float)values[3]);
+        }
+
         public vec4(float aX, float aY, float aZ, float aW)
         {
             x = aX;

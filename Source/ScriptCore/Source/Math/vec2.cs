@@ -8,6 +8,16 @@ namespace SpockEngine.Math
         public float x;
         public float y;
 
+        public static implicit operator vec2(float[] values)
+        {
+            return new vec2(values[0], values[1]);
+        }
+
+        public static implicit operator vec2(double[] values)
+        {
+            return new vec2((float)values[0], (float)values[1]);
+        }
+
         public vec2(float aX, float aY)
         {
             x = aX;
