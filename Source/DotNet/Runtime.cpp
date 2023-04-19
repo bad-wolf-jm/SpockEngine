@@ -502,7 +502,8 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIHLinePlot::UIHLinePlot_SetY", sHLine::UIHLinePlot_SetY );
 
         mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_Create", sAxisTag::UIAxisTag_Create );
-        mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_CreateWithTextAndColor", sAxisTag::UIAxisTag_CreateWithTextAndColor );
+        mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_CreateWithTextAndColor",
+                                sAxisTag::UIAxisTag_CreateWithTextAndColor );
         mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_Destroy", sAxisTag::UIAxisTag_Destroy );
         mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_SetX", sAxisTag::UIAxisTag_SetX );
         mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_SetText", sAxisTag::UIAxisTag_SetText );
