@@ -122,8 +122,8 @@ namespace SE::Core
     {
         auto lSelf = static_cast<UIPlot *>( aInstance );
 
-        lSelf->mAxisConfiguration[aAxis].mMin = aMin;
-        lSelf->mAxisConfiguration[aAxis].mMax = aMax;
+        lSelf->mAxisConfiguration[aAxis].mMin = static_cast<float>(aMin);
+        lSelf->mAxisConfiguration[aAxis].mMax = static_cast<float>(aMax);
     }
 
     void UIPlot::UIPlot_SetAxisTitle( void *aInstance, int aAxis, void *aTitle )
@@ -325,11 +325,11 @@ namespace SE::Core
         {
         case UIPlotAxis::X1:
         case UIPlotAxis::X2:
-        case UIPlotAxis::X3: ImPlot::TagX( mX, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w }, mText.c_str() ); break;
+        case UIPlotAxis::X3: ImPlot::TagX( mX, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w }, mText.c_str(), true ); break;
 
         case UIPlotAxis::Y1:
         case UIPlotAxis::Y2:
-        case UIPlotAxis::Y3: ImPlot::TagY( mX, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w }, mText.c_str() ); break;
+        case UIPlotAxis::Y3: ImPlot::TagY( mX, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w }, mText.c_str(), true ); break;
         }
     }
 
