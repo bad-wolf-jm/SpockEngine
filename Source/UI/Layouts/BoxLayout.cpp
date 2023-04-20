@@ -18,6 +18,8 @@ namespace SE::Core
 
         for( auto const &lItem : mChildren )
         {
+            if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) ) continue;
+            
             ImVec2 lRequiredSize{};
             if( lItem.mFixedSize > 0.0f )
             {
@@ -84,10 +86,17 @@ namespace SE::Core
     void UIBoxLayout::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
         uint32_t lExpandCount = 0;
-        float    lTaken       = mItemSpacing * ( mChildren.size() - 1 );
 
-        for( auto const &lItem : mChildren )
+        std::vector<BoxLayoutItem> lVisibleChildren;
+        std::copy_if( mChildren.begin(), mChildren.end(), std::back_inserter( lVisibleChildren ),
+                      []( auto x ) { return (x.mItem != nullptr) && (x.mItem->mIsVisible); } );
+
+        float lTaken = mItemSpacing * ( lVisibleChildren.size() - 1 );
+
+        for( auto const &lItem : lVisibleChildren )
         {
+            if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) ) continue;
+
             if( lItem.mFixedSize > 0.0f )
             {
                 lTaken += lItem.mFixedSize;
@@ -117,6 +126,8 @@ namespace SE::Core
             ImVec2 lItemSize{};
             ImVec2 lItemPosition{};
             float  lPositionStep = 0.0f;
+
+            if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) ) continue;
 
             if( lItem.mExpand && !( lItem.mFixedSize > 0.0f ) )
             {
