@@ -254,7 +254,7 @@ int main( int argc, char **argv )
     {
          lApplicationConfigurationPath = lLocalConfigFolder / "OtdrTool" / "Config" / fmt::format( "{}.yaml", lApplicationName );
         auto lApplicationAssembly =
-            fs::path( "D:\\Build\\Lib" ) / "debug" / lApplicationName / fmt::format( "{}.dll", lApplicationName );
+            fs::path( "D:\\Build\\Lib" ) / "debug" / "develop" / lApplicationName / fmt::format( "{}.dll", lApplicationName );
         if( fs::exists( lApplicationAssembly ) ) DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
 
         if( !fs::exists( lApplicationConfigurationPath ) )
