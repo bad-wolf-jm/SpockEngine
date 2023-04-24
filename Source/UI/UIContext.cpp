@@ -16,7 +16,6 @@
 
 namespace SE::Core
 {
-
     void UIContext::SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData )
     {
         SE_PROFILE_FUNCTION();
@@ -144,7 +143,8 @@ namespace SE::Core
             io.IniFilename = mImGuiConfigPath.c_str();
         else
             io.IniFilename = nullptr;
-        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
+        io.BackendFlags |= ImGuiBackendFlags_RendererHasViewports;
 
         ImGui::StyleColorsDark();
 
@@ -237,8 +237,7 @@ namespace SE::Core
         lSamplingInfo.mWrapping = eSamplerWrapping::REPEAT;
         TextureSampler2D lTextureSampler( lTextureImage, lSamplingInfo );
 
-        auto lFontTexture = New<VkTexture2D>( mGraphicContext, lTextureImage );
-
+        auto lFontTexture  = New<VkTexture2D>( mGraphicContext, lTextureImage );
         mFontTexture       = New<VkSampler2D>( mGraphicContext, lFontTexture, lSamplingInfo );
         mFontDescriptorSet = AddTexture( mFontTexture );
         io.Fonts->TexID    = (ImTextureID)mFontDescriptorSet->GetVkDescriptorSet();
@@ -286,6 +285,7 @@ namespace SE::Core
     {
         PopFont();
         ImGui::Render();
+        ImGui::UpdatePlatformWindows();
         ImDrawData *drawdata = ImGui::GetDrawData();
         RenderDrawData( aRenderContext, drawdata );
     }
@@ -298,10 +298,7 @@ namespace SE::Core
         return ImGui::GetIO();
     }
 
-    void UIContext::PushFontFamily( FontFamilyFlags aFamily )
-    {
-        ImGui::PushFont( mFonts[aFamily] );
-    }
+    void UIContext::PushFontFamily( FontFamilyFlags aFamily ) { ImGui::PushFont( mFonts[aFamily] ); }
 
     void UIContext::PopFont() { ImGui::PopFont(); }
 

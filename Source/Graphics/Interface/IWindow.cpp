@@ -19,21 +19,25 @@ namespace SE::Core
     IWindow::~IWindow()
     {
         glfwDestroyWindow( mWindow );
+        
+    }
+
+    void IWindow::InitializeWindowingBackend()
+    {
+        glfwInit();
+        glfwSetErrorCallback( OnGLFWError );
+        glfwWindowHint( GLFW_CLIENT_API, GLFW_NO_API );
+        glfwWindowHint( GLFW_RESIZABLE, GLFW_TRUE );
+
+    }
+
+    void IWindow::ShutdownWindowingBackend()
+    {
         glfwTerminate();
     }
 
     void IWindow::InitializeWindow()
     {
-        glfwInit();
-
-        // Setup the error callback
-        glfwSetErrorCallback( OnGLFWError );
-
-        // Create window without an OpenGL context attached
-        glfwWindowHint( GLFW_CLIENT_API, GLFW_NO_API );
-
-        // Allow window to be resized
-        glfwWindowHint( GLFW_RESIZABLE, GLFW_TRUE );
 
         mWindow = glfwCreateWindow( mWidth, mHeight, mWindowName.c_str(), nullptr, nullptr );
         if( !mWindow ) throw std::runtime_error( "Failed to create window" );
