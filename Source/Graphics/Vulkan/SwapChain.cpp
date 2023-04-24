@@ -14,20 +14,20 @@ namespace SE::Graphics
         RecreateSwapChain();
     }
 
-    SwapChain::~SwapChain() { std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->DestroyVkSurface( mVkSurface ); }
+    SwapChain::~SwapChain() { GraphicContext<VkGraphicContext>()->DestroyVkSurface( mVkSurface ); }
 
     void SwapChain::RecreateSwapChain()
     {
-        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->WaitIdle();
+        GraphicContext<VkGraphicContext>()->WaitIdle();
         mRenderTargets.clear();
 
-        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->DestroySwapChain( mVkObject );
+        GraphicContext<VkGraphicContext>()->DestroySwapChain( mVkObject );
 
         auto [lSwapChainImageFormat, lSwapChainImageCount, lSwapchainExtent, lNewSwapchain] =
-            std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->CreateSwapChain(mVkSurface);
+            GraphicContext<VkGraphicContext>()->CreateSwapChain( mViewportClient->GetExtent(), mVkSurface);
 
         mVkObject    = lNewSwapchain;
-        auto lImages = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetSwapChainImages( mVkObject );
+        auto lImages = GraphicContext<VkGraphicContext>()->GetSwapChainImages( mVkObject );
 
         mImageCount = lImages.size();
 
@@ -37,9 +37,9 @@ namespace SE::Graphics
 
         for( size_t i = 0; i < mImageCount; i++ )
         {
-            mImageAvailableSemaphores[i] = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->CreateVkSemaphore();
-            mRenderFinishedSemaphores[i] = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->CreateVkSemaphore();
-            mInFlightFences[i]           = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->CreateFence();
+            mImageAvailableSemaphores[i] = GraphicContext<VkGraphicContext>()->CreateVkSemaphore();
+            mRenderFinishedSemaphores[i] = GraphicContext<VkGraphicContext>()->CreateVkSemaphore();
+            mInFlightFences[i]           = GraphicContext<VkGraphicContext>()->CreateFence();
         }
 
         mSpec.mSampleCount = 1;
@@ -54,13 +54,13 @@ namespace SE::Graphics
             lTextureCreateInfo.mHeight = mSpec.mHeight;
 
             auto lFramebufferImage =
-                New<VkTexture2D>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), lTextureCreateInfo, lImages[i] );
+                New<VkTexture2D>( GraphicContext<VkGraphicContext>(), lTextureCreateInfo, lImages[i] );
 
             sRenderTargetDescription lCreateInfo{};
             lCreateInfo.mWidth  = lSwapchainExtent.width;
             lCreateInfo.mHeight = lSwapchainExtent.height;
             auto lSwapChainImage =
-                New<VkRenderTarget>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), lCreateInfo );
+                New<VkRenderTarget>( GraphicContext<VkGraphicContext>(), lCreateInfo );
             lSwapChainImage->AddAttachment( "SWAPCHAIN_OUTPUT", eAttachmentType::COLOR, ToLtseFormat( lSwapChainImageFormat ),
                                             { 0.01f, 0.01f, 0.03f, 1.0f }, false, true, eAttachmentLoadOp::CLEAR,
                                             eAttachmentStoreOp::STORE, lFramebufferImage );
@@ -77,11 +77,11 @@ namespace SE::Graphics
 
     bool SwapChain::BeginRender()
     {
-        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->WaitForFence( mInFlightFences[mCurrentImage] );
+        GraphicContext<VkGraphicContext>()->WaitForFence( mInFlightFences[mCurrentImage] );
 
         uint64_t lTimeout = std::numeric_limits<uint64_t>::max();
         VkResult lBeginRenderResult =
-            std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
+            GraphicContext<VkGraphicContext>()
                 ->AcquireNextImage( mVkObject, lTimeout, mImageAvailableSemaphores[mCurrentImage], &mCurrentImage );
 
         if( lBeginRenderResult == VK_ERROR_OUT_OF_DATE_KHR )
@@ -108,7 +108,7 @@ namespace SE::Graphics
 
     void SwapChain::Present()
     {
-        VkResult lPresentResult = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
+        VkResult lPresentResult = GraphicContext<VkGraphicContext>()
                                       ->Present( mVkObject, mCurrentImage, mRenderFinishedSemaphores[mCurrentImage] );
 
         if( ( lPresentResult == VK_ERROR_OUT_OF_DATE_KHR ) || ( lPresentResult == VK_SUBOPTIMAL_KHR ) ||

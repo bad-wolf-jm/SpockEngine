@@ -29,6 +29,12 @@ namespace SE::Graphics
 
         Ref<ITexture2D> GetTexture() { return mTextureData; }
 
+        template <typename _GCSubtype>
+        Ref<_GCSubtype> GraphicContext()
+        {
+            return std::reinterpret_pointer_cast<_GCSubtype>( mGraphicContext );
+        }
+
       protected:
         Ref<IGraphicContext> mGraphicContext = nullptr;
         Ref<ITexture2D>      mTextureData    = nullptr;
