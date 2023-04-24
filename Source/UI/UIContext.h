@@ -90,15 +90,8 @@ namespace SE::Core
 
         Ref<DescriptorSetLayout> mUIDescriptorSetLayout = nullptr;
 
-        // Ref<ShaderModule>     mUIVertexShader   = nullptr;
-        // Ref<ShaderModule>     mUIFragmentShader = nullptr;
-        // Ref<GraphicsPipeline> mUIRenderPipeline = nullptr;
-
         Ref<Graphics::VkSampler2D> mFontTexture       = nullptr;
         Ref<DescriptorSet>         mFontDescriptorSet = nullptr;
-
-        // Ref<VkGpuBuffer> mVertexBuffer;
-        // Ref<VkGpuBuffer> mIndexBuffer;
 
         std::map<FontFamilyFlags, ImFont *> mFonts;
 
@@ -106,8 +99,6 @@ namespace SE::Core
 
       private:
         Ref<UIWindow> mMainWindow;
-        // void SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData );
-        // void RenderDrawData( ARenderContext &aRenderContext, ImDrawData *aDrawData );
 
         static void Renderer_CreateWindow( ImGuiViewport *vp );
         static void Renderer_DestroyWindow( ImGuiViewport *vp );

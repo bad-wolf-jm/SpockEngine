@@ -28,33 +28,6 @@ namespace SE::Core
     using namespace SE::Graphics;
     using namespace SE::Core::UI;
 
-    // struct UIConfiguration
-    // {
-    //     uint32_t mFontSize;
-
-    //     fs::path mMainFont;
-    //     fs::path mBoldFont;
-    //     fs::path mItalicFont;
-    //     fs::path mBoldItalicFont;
-    //     fs::path mMonoFont;
-    //     fs::path mIconFont;
-    // };
-
-    // enum class FontFamilyFlags : int32_t
-    // {
-    //     DISPLAY,
-    //     H1,
-    //     H2,
-    //     H3,
-    //     EM,
-    //     HUGE,
-    //     LARGE,
-    //     NORMAL,
-    //     SMALL,
-    //     TINY,
-    //     MONOSPACE
-    // };
-
     class UIWindow
     {
       public:
@@ -62,21 +35,8 @@ namespace SE::Core
         UIWindow( Ref<VkGraphicContext> aGraphicContext, ARenderContext &aRenderContext );
         ~UIWindow();
 
-        // void BeginFrame();
-        // void EndFrame( ARenderContext &aRenderContext );
-        // void PushFontFamily( FontFamilyFlags aFamily );
-        // void PopFont();
-        // ImGuiIO &GetIO();
-        // ImageHandle           CreateTextureHandle( Ref<Graphics::VkSampler2D> aTexture );
-        // Ref<DescriptorSet>    AddTexture( Ref<Graphics::VkSampler2D> aTexture );
-
         Ref<VkGraphicContext> GraphicContext() { return mGraphicContext; }
 
-        // ImFont *mMonoFont;
-        // ImFont *mMainFont;
-        // ImFont *mBoldFont;
-        // ImFont *mObliqueFont;
-        // ImFont *mBoldObliqueFont;
         void Render( ARenderContext &aRenderContext, ImDrawData *aDrawData );
         void Render( ImDrawData *aDrawData );
         void EndRender( ImDrawData *aDrawData );
@@ -88,11 +48,6 @@ namespace SE::Core
 
         SE::Graphics::ARenderContext mRenderContext;
 
-        // ImGuiContext  *mImGUIOverlay;
-        // ImPlotContext *mImPlotContext;
-        // std::string    mImGuiConfigPath;
-        // UIStyle mUIStyle;
-        // UIContext                 *mUIContext             = nullptr;
         ImGuiViewport             *mViewport              = nullptr;
         Ref<DescriptorSetLayout>   mUIDescriptorSetLayout = nullptr;
 
@@ -103,9 +58,6 @@ namespace SE::Core
         Ref<DescriptorSet>         mFontDescriptorSet     = nullptr;
         Ref<VkGpuBuffer>           mVertexBuffer          = nullptr;
         Ref<VkGpuBuffer>           mIndexBuffer           = nullptr;
-
-        // std::map<FontFamilyFlags, ImFont *> mFonts;
-        // ImFont *LoadFont( fs::path aFontName, fs::path aIconFontName, uint32_t aFontSize );
 
       private:
         void SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData );
