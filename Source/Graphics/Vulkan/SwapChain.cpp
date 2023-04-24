@@ -9,8 +9,12 @@ namespace SE::Graphics
         : VkRenderTarget( aGraphicContext, sRenderTargetDescription{} )
         , mViewportClient{ aWindow }
     {
+        mVkSurface = aGraphicContext->CreateVkSurface( aWindow );
+
         RecreateSwapChain();
     }
+
+    SwapChain::~SwapChain() { std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->DestroyVkSurface( mVkSurface ); }
 
     void SwapChain::RecreateSwapChain()
     {
@@ -20,7 +24,7 @@ namespace SE::Graphics
         std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->DestroySwapChain( mVkObject );
 
         auto [lSwapChainImageFormat, lSwapChainImageCount, lSwapchainExtent, lNewSwapchain] =
-            std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->CreateSwapChain();
+            std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->CreateSwapChain(mVkSurface);
 
         mVkObject    = lNewSwapchain;
         auto lImages = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetSwapChainImages( mVkObject );
