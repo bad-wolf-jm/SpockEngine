@@ -218,6 +218,10 @@ namespace SE::Core
          */
         IWindow( int aWidth, int aHeight, std::string aTitle );
 
+        IWindow( GLFWwindow *aWindow );
+
+
+
         /** @brief Destructor */
         ~IWindow();
 

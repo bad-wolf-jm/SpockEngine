@@ -20,6 +20,8 @@
 #include <imguizmo.h>
 #include <implot.h>
 
+#include "UIWindow.h"
+
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
@@ -78,11 +80,11 @@ namespace SE::Core
 
         Ref<VkGraphicContext> GraphicContext() { return mGraphicContext; }
 
-        ImFont *mMonoFont;
-        ImFont *mMainFont;
-        ImFont *mBoldFont;
-        ImFont *mObliqueFont;
-        ImFont *mBoldObliqueFont;
+        // ImFont *mMonoFont;
+        // ImFont *mMainFont;
+        // ImFont *mBoldFont;
+        // ImFont *mObliqueFont;
+        // ImFont *mBoldObliqueFont;
 
       private:
         ImGuiContext  *mImGUIOverlay;
@@ -95,22 +97,23 @@ namespace SE::Core
 
         Ref<DescriptorSetLayout> mUIDescriptorSetLayout = nullptr;
 
-        Ref<ShaderModule>     mUIVertexShader   = nullptr;
-        Ref<ShaderModule>     mUIFragmentShader = nullptr;
-        Ref<GraphicsPipeline> mUIRenderPipeline = nullptr;
+        // Ref<ShaderModule>     mUIVertexShader   = nullptr;
+        // Ref<ShaderModule>     mUIFragmentShader = nullptr;
+        // Ref<GraphicsPipeline> mUIRenderPipeline = nullptr;
 
         Ref<Graphics::VkSampler2D> mFontTexture       = nullptr;
         Ref<DescriptorSet>         mFontDescriptorSet = nullptr;
 
-        Ref<VkGpuBuffer> mVertexBuffer;
-        Ref<VkGpuBuffer> mIndexBuffer;
+        // Ref<VkGpuBuffer> mVertexBuffer;
+        // Ref<VkGpuBuffer> mIndexBuffer;
 
         std::map<FontFamilyFlags, ImFont *> mFonts;
 
         ImFont *LoadFont( fs::path aFontName, fs::path aIconFontName, uint32_t aFontSize );
 
       private:
-        void SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData );
-        void RenderDrawData( ARenderContext &aRenderContext, ImDrawData *aDrawData );
+        Ref<UIWindow> mMainWindow;
+        // void SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData );
+        // void RenderDrawData( ARenderContext &aRenderContext, ImDrawData *aDrawData );
     };
 } // namespace SE::Core

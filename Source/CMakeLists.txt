@@ -44,6 +44,7 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/Form.cpp
     UI/Dialog.cpp
     UI/UIContext.cpp
+    UI/UIWindow.cpp
     
 
     Graphics/Vulkan/DescriptorSet.cpp

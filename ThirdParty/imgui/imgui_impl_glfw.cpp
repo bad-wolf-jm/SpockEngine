@@ -835,7 +835,7 @@ static void ImGui_ImplGlfw_WindowSizeCallback(GLFWwindow* window, int, int)
     }
 }
 
-static void ImGui_ImplGlfw_CreateWindow(ImGuiViewport* viewport)
+void ImGui_ImplGlfw_CreateWindow(ImGuiViewport* viewport)
 {
     ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
     ImGui_ImplGlfw_ViewportData* vd = IM_NEW(ImGui_ImplGlfw_ViewportData)();
@@ -879,7 +879,7 @@ static void ImGui_ImplGlfw_CreateWindow(ImGuiViewport* viewport)
     }
 }
 
-static void ImGui_ImplGlfw_DestroyWindow(ImGuiViewport* viewport)
+void ImGui_ImplGlfw_DestroyWindow(ImGuiViewport* viewport)
 {
     ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
     if (ImGui_ImplGlfw_ViewportData* vd = (ImGui_ImplGlfw_ViewportData*)viewport->PlatformUserData)
@@ -925,7 +925,7 @@ static LRESULT CALLBACK WndProcNoInputs(HWND hWnd, UINT msg, WPARAM wParam, LPAR
 }
 #endif
 
-static void ImGui_ImplGlfw_ShowWindow(ImGuiViewport* viewport)
+void ImGui_ImplGlfw_ShowWindow(ImGuiViewport* viewport)
 {
     ImGui_ImplGlfw_ViewportData* vd = (ImGui_ImplGlfw_ViewportData*)viewport->PlatformUserData;
 
@@ -964,7 +964,7 @@ static void ImGui_ImplGlfw_ShowWindow(ImGuiViewport* viewport)
     glfwShowWindow(vd->Window);
 }
 
-static ImVec2 ImGui_ImplGlfw_GetWindowPos(ImGuiViewport* viewport)
+ImVec2 ImGui_ImplGlfw_GetWindowPos(ImGuiViewport* viewport)
 {
     ImGui_ImplGlfw_ViewportData* vd = (ImGui_ImplGlfw_ViewportData*)viewport->PlatformUserData;
     int x = 0, y = 0;
@@ -972,14 +972,14 @@ static ImVec2 ImGui_ImplGlfw_GetWindowPos(ImGuiViewport* viewport)
     return ImVec2((float)x, (float)y);
 }
 
-static void ImGui_ImplGlfw_SetWindowPos(ImGuiViewport* viewport, ImVec2 pos)
+void ImGui_ImplGlfw_SetWindowPos(ImGuiViewport* viewport, ImVec2 pos)
 {
     ImGui_ImplGlfw_ViewportData* vd = (ImGui_ImplGlfw_ViewportData*)viewport->PlatformUserData;
     vd->IgnoreWindowPosEventFrame = ImGui::GetFrameCount();
     glfwSetWindowPos(vd->Window, (int)pos.x, (int)pos.y);
 }
 
-static ImVec2 ImGui_ImplGlfw_GetWindowSize(ImGuiViewport* viewport)
+ImVec2 ImGui_ImplGlfw_GetWindowSize(ImGuiViewport* viewport)
 {
     ImGui_ImplGlfw_ViewportData* vd = (ImGui_ImplGlfw_ViewportData*)viewport->PlatformUserData;
     int w = 0, h = 0;
@@ -987,7 +987,7 @@ static ImVec2 ImGui_ImplGlfw_GetWindowSize(ImGuiViewport* viewport)
     return ImVec2((float)w, (float)h);
 }
 
-static void ImGui_ImplGlfw_SetWindowSize(ImGuiViewport* viewport, ImVec2 size)
+void ImGui_ImplGlfw_SetWindowSize(ImGuiViewport* viewport, ImVec2 size)
 {
     ImGui_ImplGlfw_ViewportData* vd = (ImGui_ImplGlfw_ViewportData*)viewport->PlatformUserData;
 #if __APPLE__ && !GLFW_HAS_OSX_WINDOW_POS_FIX
@@ -1004,13 +1004,13 @@ static void ImGui_ImplGlfw_SetWindowSize(ImGuiViewport* viewport, ImVec2 size)
     glfwSetWindowSize(vd->Window, (int)size.x, (int)size.y);
 }
 
-static void ImGui_ImplGlfw_SetWindowTitle(ImGuiViewport* viewport, const char* title)
+void ImGui_ImplGlfw_SetWindowTitle(ImGuiViewport* viewport, const char* title)
 {
     ImGui_ImplGlfw_ViewportData* vd = (ImGui_ImplGlfw_ViewportData*)viewport->PlatformUserData;
     glfwSetWindowTitle(vd->Window, title);
 }
 
-static void ImGui_ImplGlfw_SetWindowFocus(ImGuiViewport* viewport)
+void ImGui_ImplGlfw_SetWindowFocus(ImGuiViewport* viewport)
 {
 #if GLFW_HAS_FOCUS_WINDOW
     ImGui_ImplGlfw_ViewportData* vd = (ImGui_ImplGlfw_ViewportData*)viewport->PlatformUserData;
@@ -1021,27 +1021,27 @@ static void ImGui_ImplGlfw_SetWindowFocus(ImGuiViewport* viewport)
 #endif
 }
 
-static bool ImGui_ImplGlfw_GetWindowFocus(ImGuiViewport* viewport)
+bool ImGui_ImplGlfw_GetWindowFocus(ImGuiViewport* viewport)
 {
     ImGui_ImplGlfw_ViewportData* vd = (ImGui_ImplGlfw_ViewportData*)viewport->PlatformUserData;
     return glfwGetWindowAttrib(vd->Window, GLFW_FOCUSED) != 0;
 }
 
-static bool ImGui_ImplGlfw_GetWindowMinimized(ImGuiViewport* viewport)
+bool ImGui_ImplGlfw_GetWindowMinimized(ImGuiViewport* viewport)
 {
     ImGui_ImplGlfw_ViewportData* vd = (ImGui_ImplGlfw_ViewportData*)viewport->PlatformUserData;
     return glfwGetWindowAttrib(vd->Window, GLFW_ICONIFIED) != 0;
 }
 
 #if GLFW_HAS_WINDOW_ALPHA
-static void ImGui_ImplGlfw_SetWindowAlpha(ImGuiViewport* viewport, float alpha)
+void ImGui_ImplGlfw_SetWindowAlpha(ImGuiViewport* viewport, float alpha)
 {
     ImGui_ImplGlfw_ViewportData* vd = (ImGui_ImplGlfw_ViewportData*)viewport->PlatformUserData;
     glfwSetWindowOpacity(vd->Window, alpha);
 }
 #endif
 
-static void ImGui_ImplGlfw_RenderWindow(ImGuiViewport* viewport, void*)
+void ImGui_ImplGlfw_RenderWindow(ImGuiViewport* viewport, void*)
 {
     ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
     ImGui_ImplGlfw_ViewportData* vd = (ImGui_ImplGlfw_ViewportData*)viewport->PlatformUserData;
@@ -1049,7 +1049,7 @@ static void ImGui_ImplGlfw_RenderWindow(ImGuiViewport* viewport, void*)
         glfwMakeContextCurrent(vd->Window);
 }
 
-static void ImGui_ImplGlfw_SwapBuffers(ImGuiViewport* viewport, void*)
+void ImGui_ImplGlfw_SwapBuffers(ImGuiViewport* viewport, void*)
 {
     ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
     ImGui_ImplGlfw_ViewportData* vd = (ImGui_ImplGlfw_ViewportData*)viewport->PlatformUserData;
