@@ -17,12 +17,12 @@ namespace SE::Core
 {
     UIWindow::UIWindow( Ref<VkGraphicContext> aGraphicContext, ImGuiViewport *aViewport )
         : mViewport{ aViewport }
+        , mGraphicContext{aGraphicContext}
     {
         // ImGui_ImplGlfw_CreateWindow( aViewport );
         // aViewport->RendererUserData = this;
 
         mWindow         = SE::Core::New<IWindow>( (GLFWwindow *)aViewport->PlatformHandle );
-        mGraphicContext = SE::Core::New<VkGraphicContext>( mWindow, 1, true );
         mSwapChain      = SE::Core::New<SwapChain>( mGraphicContext, mWindow );
         mRenderContext  = SE::Graphics::ARenderContext( mGraphicContext, mSwapChain );
 

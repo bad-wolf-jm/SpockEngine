@@ -10,6 +10,7 @@ namespace SE::Graphics
     {
       public:
         SwapChain( Ref<VkGraphicContext> aGraphicContext, Ref<IWindow> aWindow );
+        ~SwapChain( );
 
         bool BeginRender();
         void EndRender();
@@ -30,6 +31,7 @@ namespace SE::Graphics
         Ref<IWindow> mViewportClient = nullptr;
 
       private:
+        VkSurfaceKHR                     mVkSurface                = VK_NULL_HANDLE;
         VkSwapchainKHR                   mVkObject                 = VK_NULL_HANDLE;
         std::vector<Ref<VkRenderTarget>> mRenderTargets            = {};
         std::vector<VkSemaphore>         mImageAvailableSemaphores = {};

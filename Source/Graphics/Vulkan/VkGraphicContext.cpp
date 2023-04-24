@@ -94,7 +94,7 @@ namespace SE::Graphics
             return IsSubset( lRequestedExtensionsSet, lAvailableExtensionSet );
         }
 
-        std::tuple<uint32_t, uint32_t> GetQueueFamilies( VkPhysicalDevice aVkPhysicalDevice, VkSurfaceKHR aVkSurface )
+        uint32_t GetGraphicsQueueFamilies( VkPhysicalDevice aVkPhysicalDevice )
         {
             uint32_t lQueueFamilyCount = 0;
             vkGetPhysicalDeviceQueueFamilyProperties( aVkPhysicalDevice, &lQueueFamilyCount, nullptr );
@@ -116,20 +116,12 @@ namespace SE::Graphics
                     lGraphicsFamilyHasValue = true;
                 }
 
-                VkBool32 lQueueSupportsPresentation = false;
-                vkGetPhysicalDeviceSurfaceSupportKHR( aVkPhysicalDevice, lCurrentQueueIndex, aVkSurface, &lQueueSupportsPresentation );
-                if( lQueueFamily.queueCount > 0 && lQueueSupportsPresentation )
-                {
-                    lPresentFamily         = lCurrentQueueIndex;
-                    lPresentFamilyHasValue = true;
-                }
-
-                if( lGraphicsFamilyHasValue && lPresentFamilyHasValue ) break;
+                if( lGraphicsFamilyHasValue ) break;
 
                 lCurrentQueueIndex++;
             }
 
-            return { lGraphicsFamily, lPresentFamily };
+            return lGraphicsFamily;
         }
 
         sSwapChainSupportDetails QuerySwapChainSupport( VkPhysicalDevice aVkPhysicalDevice, VkSurfaceKHR aVkSurface )
@@ -160,17 +152,9 @@ namespace SE::Graphics
             return lSwapChainSupportDetails;
         }
 
-        bool DeviceIsSuitable( VkPhysicalDevice aVkPhysicalDevice, VkSurfaceKHR aVkSurface,
-                               std::vector<const char *> aRequestedExtensions )
+        bool DeviceIsSuitable( VkPhysicalDevice aVkPhysicalDevice, std::vector<const char *> aRequestedExtensions )
         {
             bool lRequiredExtensionsAreSupported = CheckRequiredDeviceExtensions( aVkPhysicalDevice, aRequestedExtensions );
-
-            bool lSwapChainIsAdequate = false;
-            if( lRequiredExtensionsAreSupported )
-            {
-                sSwapChainSupportDetails lDetails = QuerySwapChainSupport( aVkPhysicalDevice, aVkSurface );
-                lSwapChainIsAdequate              = !lDetails.mFormats.empty() && !lDetails.mPresentModes.empty();
-            }
 
             VkPhysicalDeviceFeatures lSupportedPhysicalDeviceFeatures;
             vkGetPhysicalDeviceFeatures( aVkPhysicalDevice, &lSupportedPhysicalDeviceFeatures );
@@ -184,14 +168,11 @@ namespace SE::Graphics
             lDeviceFeatures2.pNext = &lIndexingFeatures;
             vkGetPhysicalDeviceFeatures2( aVkPhysicalDevice, &lDeviceFeatures2 );
 
-            auto [GraphicsFamily, PresentFamily] = GetQueueFamilies( aVkPhysicalDevice, aVkSurface );
-
             return ( lIndexingFeatures.descriptorBindingPartiallyBound ) && ( lIndexingFeatures.runtimeDescriptorArray ) &&
-                   ( GraphicsFamily != 0xffffff ) && ( PresentFamily != 0xffffff ) && lSwapChainIsAdequate &&
                    lSupportedPhysicalDeviceFeatures.samplerAnisotropy;
         }
 
-        std::vector<VkPhysicalDevice> EnumeratePhysicalDevices( VkInstance aVkInstance, VkSurfaceKHR aVkSurface )
+        std::vector<VkPhysicalDevice> EnumeratePhysicalDevices( VkInstance aVkInstance )
         {
             uint32_t lPhysicalDeviceCount = 0;
             vkEnumeratePhysicalDevices( aVkInstance, &lPhysicalDeviceCount, nullptr );
@@ -203,14 +184,13 @@ namespace SE::Graphics
             return lPhysicalDeviceObjects;
         }
 
-        VkPhysicalDevice PickPhysicalDevice( VkInstance aVkInstance, VkSurfaceKHR aVkSurface,
-                                             std::vector<const char *> aRequestedExtensions )
+        VkPhysicalDevice PickPhysicalDevice( VkInstance aVkInstance, std::vector<const char *> aRequestedExtensions )
         {
-            std::vector<VkPhysicalDevice> lPhysicalDeviceList = EnumeratePhysicalDevices( aVkInstance, aVkSurface );
+            std::vector<VkPhysicalDevice> lPhysicalDeviceList = EnumeratePhysicalDevices( aVkInstance );
 
             for( const auto &lPhysicalDevice : lPhysicalDeviceList )
             {
-                if( DeviceIsSuitable( lPhysicalDevice, aVkSurface, aRequestedExtensions ) )
+                if( DeviceIsSuitable( lPhysicalDevice, aRequestedExtensions ) )
                 {
                     return lPhysicalDevice;
                 }
@@ -401,8 +381,6 @@ namespace SE::Graphics
                 VK_CHECK_RESULT( VK_ERROR_EXTENSION_NOT_PRESENT );
         }
 
-        VK_CHECK_RESULT( glfwCreateWindowSurface( mVkInstance, aWindow->GetGLFWWindow(), nullptr, &mVkSurface ) );
-
         const std::vector<const char *> lLogicalDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME,
                                                                      VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME,
                                                                      VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME,
@@ -410,14 +388,14 @@ namespace SE::Graphics
                                                                      VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME,
                                                                      VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME };
 
-        mVkPhysicalDevice = PickPhysicalDevice( mVkInstance, mVkSurface, lLogicalDeviceExtensions );
+        mVkPhysicalDevice = PickPhysicalDevice( mVkInstance, lLogicalDeviceExtensions );
         mDepthFormat      = FindDepthFormat( mVkPhysicalDevice );
         vkGetPhysicalDeviceProperties( mVkPhysicalDevice, &mPhysicalDeviceProperties );
 
-        std::tie( mGraphicFamily, mPresentFamily ) = GetQueueFamilies( mVkPhysicalDevice, mVkSurface );
+        mGraphicFamily = GetGraphicsQueueFamilies( mVkPhysicalDevice );
 
         std::vector<VkDeviceQueueCreateInfo> lLogicalDeviceQueueCreateInfos;
-        std::set<uint32_t>                   lUniqueQueueFamilies = { mGraphicFamily, mPresentFamily };
+        std::set<uint32_t>                   lUniqueQueueFamilies = { mGraphicFamily, mGraphicFamily };
 
         float lQueuePriority = 1.0f;
         for( uint32_t lQueueFamily : lUniqueQueueFamilies )
@@ -465,7 +443,7 @@ namespace SE::Graphics
         VK_CHECK_RESULT( vkCreateDevice( mVkPhysicalDevice, &lLogicalDeviceCreateInfo, nullptr, &mVkLogicalDevice ) );
 
         vkGetDeviceQueue( mVkLogicalDevice, mGraphicFamily, 0, &mVkGraphicsQueue );
-        vkGetDeviceQueue( mVkLogicalDevice, mPresentFamily, 0, &mVkPresentQueue );
+        vkGetDeviceQueue( mVkLogicalDevice, mGraphicFamily, 0, &mVkPresentQueue );
 
         VkCommandPoolCreateInfo lGraphicsCommandPoolCreateInfo{};
         lGraphicsCommandPoolCreateInfo.sType            = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -518,10 +496,20 @@ namespace SE::Graphics
 
         if( mVkLogicalDevice != VK_NULL_HANDLE ) vkDestroyDevice( mVkLogicalDevice, nullptr );
 
-        if( mVkSurface != VK_NULL_HANDLE ) vkDestroySurfaceKHR( mVkInstance, mVkSurface, nullptr );
+        // if( mVkSurface != VK_NULL_HANDLE ) vkDestroySurfaceKHR( mVkInstance, mVkSurface, nullptr );
 
         if( mVkInstance != VK_NULL_HANDLE ) vkDestroyInstance( mVkInstance, nullptr );
     }
+
+    VkSurfaceKHR VkGraphicContext::CreateVkSurface( Ref<IWindow> aWindow )
+    {
+        VkSurfaceKHR lNewSurface;
+        VK_CHECK_RESULT( glfwCreateWindowSurface( mVkInstance, aWindow->GetGLFWWindow(), nullptr, &lNewSurface ) );
+
+        return lNewSurface;
+    }
+
+    void VkGraphicContext::DestroyVkSurface( VkSurfaceKHR aSurface ) { vkDestroySurfaceKHR( mVkInstance, aSurface, nullptr ); }
 
     VkDeviceMemory VkGraphicContext::AllocateMemory( VkImage aVkImageObject, size_t aSize, bool aIsHostVisible, bool aIsCudaShareable,
                                                      size_t *aAllocatedSize )
@@ -931,9 +919,9 @@ namespace SE::Graphics
     void VkGraphicContext::WaitForFence( VkFence aFence, uint64_t aTimeout ) { WaitForFences( { aFence }, aTimeout ); }
     void VkGraphicContext::WaitForFence( VkFence aFence ) { WaitForFences( { aFence } ); }
 
-    std::tuple<VkFormat, uint32_t, VkExtent2D, VkSwapchainKHR> VkGraphicContext::CreateSwapChain()
+    std::tuple<VkFormat, uint32_t, VkExtent2D, VkSwapchainKHR> VkGraphicContext::CreateSwapChain(VkSurfaceKHR aSurface)
     {
-        sSwapChainSupportDetails lSwapChainSupport = QuerySwapChainSupport( mVkPhysicalDevice, mVkSurface );
+        sSwapChainSupportDetails lSwapChainSupport = QuerySwapChainSupport( mVkPhysicalDevice, aSurface );
 
         VkSurfaceFormatKHR lSurfaceFormat   = ChooseSwapSurfaceFormat( lSwapChainSupport.mFormats );
         VkPresentModeKHR   lPresentMode     = ChooseSwapPresentMode( lSwapChainSupport.mPresentModes );
@@ -948,29 +936,16 @@ namespace SE::Graphics
 
         VkSwapchainCreateInfoKHR lSwapChainCreateInfo{};
         lSwapChainCreateInfo.sType            = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-        lSwapChainCreateInfo.surface          = mVkSurface;
+        lSwapChainCreateInfo.surface          = aSurface;
         lSwapChainCreateInfo.minImageCount    = lSwapChainImageCount;
         lSwapChainCreateInfo.imageFormat      = lSurfaceFormat.format;
         lSwapChainCreateInfo.imageColorSpace  = lSurfaceFormat.colorSpace;
         lSwapChainCreateInfo.imageExtent      = lSwapchainExtent;
         lSwapChainCreateInfo.imageArrayLayers = 1;
         lSwapChainCreateInfo.imageUsage       = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-
-        uint32_t lQueueFamilyIndices[] = { mGraphicFamily, mPresentFamily };
-
-        if( mGraphicFamily != mPresentFamily )
-        {
-            lSwapChainCreateInfo.imageSharingMode      = VK_SHARING_MODE_CONCURRENT;
-            lSwapChainCreateInfo.queueFamilyIndexCount = 2;
-            lSwapChainCreateInfo.pQueueFamilyIndices   = lQueueFamilyIndices;
-        }
-        else
-        {
-            lSwapChainCreateInfo.imageSharingMode      = VK_SHARING_MODE_EXCLUSIVE;
-            lSwapChainCreateInfo.queueFamilyIndexCount = 0;
-            lSwapChainCreateInfo.pQueueFamilyIndices   = nullptr;
-        }
-
+        lSwapChainCreateInfo.imageSharingMode      = VK_SHARING_MODE_EXCLUSIVE;
+        lSwapChainCreateInfo.queueFamilyIndexCount = 0;
+        lSwapChainCreateInfo.pQueueFamilyIndices   = nullptr;
         lSwapChainCreateInfo.preTransform   = lSwapChainSupport.mCapabilities.currentTransform;
         lSwapChainCreateInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
         lSwapChainCreateInfo.presentMode    = lPresentMode;
