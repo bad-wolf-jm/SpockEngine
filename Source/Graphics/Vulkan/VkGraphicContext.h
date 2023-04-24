@@ -29,7 +29,7 @@ namespace SE::Graphics
         VkGraphicContext() = default;
         ~VkGraphicContext();
 
-        VkGraphicContext( Ref<IWindow> aWindow, uint32_t aSampleCount, bool aEnableValidation );
+        VkGraphicContext( uint32_t aSampleCount, bool aEnableValidation );
 
         VkSurfaceKHR CreateVkSurface( Ref<IWindow> aWindow );
         void         DestroyVkSurface( VkSurfaceKHR aSurface );
@@ -78,7 +78,7 @@ namespace SE::Graphics
         VkDescriptorSetLayout CreateDescriptorSetLayout( std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded );
         void                  DestroyDescriptorSetLayout( VkDescriptorSetLayout aDescriptorSetLayout );
 
-        std::tuple<VkFormat, uint32_t, VkExtent2D, VkSwapchainKHR> CreateSwapChain(VkSurfaceKHR aSurface);
+        std::tuple<VkFormat, uint32_t, VkExtent2D, VkSwapchainKHR> CreateSwapChain(VkExtent2D aSize, VkSurfaceKHR aSurface);
         void                                                       DestroySwapChain( VkSwapchainKHR aSwapchain );
         std::vector<VkImage>                                       GetSwapChainImages( VkSwapchainKHR aSwapChain );
 

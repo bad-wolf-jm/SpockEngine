@@ -323,8 +323,8 @@ namespace SE::Graphics
         }
     } // namespace
 
-    VkGraphicContext::VkGraphicContext( Ref<Core::IWindow> aWindow, uint32_t aSampleCount, bool aEnableValidation )
-        : IGraphicContext( aWindow, aSampleCount )
+    VkGraphicContext::VkGraphicContext( uint32_t aSampleCount, bool aEnableValidation )
+        : IGraphicContext( aSampleCount )
     {
         VkApplicationInfo lApplicationInfo{};
         lApplicationInfo.sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -919,13 +919,13 @@ namespace SE::Graphics
     void VkGraphicContext::WaitForFence( VkFence aFence, uint64_t aTimeout ) { WaitForFences( { aFence }, aTimeout ); }
     void VkGraphicContext::WaitForFence( VkFence aFence ) { WaitForFences( { aFence } ); }
 
-    std::tuple<VkFormat, uint32_t, VkExtent2D, VkSwapchainKHR> VkGraphicContext::CreateSwapChain(VkSurfaceKHR aSurface)
+    std::tuple<VkFormat, uint32_t, VkExtent2D, VkSwapchainKHR> VkGraphicContext::CreateSwapChain(VkExtent2D aSize, VkSurfaceKHR aSurface)
     {
         sSwapChainSupportDetails lSwapChainSupport = QuerySwapChainSupport( mVkPhysicalDevice, aSurface );
 
         VkSurfaceFormatKHR lSurfaceFormat   = ChooseSwapSurfaceFormat( lSwapChainSupport.mFormats );
         VkPresentModeKHR   lPresentMode     = ChooseSwapPresentMode( lSwapChainSupport.mPresentModes );
-        VkExtent2D         lSwapchainExtent = ChooseSwapExtent( mWindow->GetExtent(), lSwapChainSupport.mCapabilities );
+        VkExtent2D         lSwapchainExtent = ChooseSwapExtent( aSize, lSwapChainSupport.mCapabilities );
 
         VkFormat lSwapChainImageFormat = lSurfaceFormat.format;
 
