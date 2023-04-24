@@ -163,7 +163,11 @@ namespace SE::Core
         lPlatformIO.Renderer_SwapBuffers   = Renderer_SwapBuffers;
     }
 
-    void UIContext::Renderer_CreateWindow( ImGuiViewport *vp ) { vp->RendererUserData = new UIWindow( vp ); }
+    void UIContext::Renderer_CreateWindow( ImGuiViewport *vp ) 
+    { 
+        UIWindow* lNewRenderWindow = new UIWindow( vp ); 
+        vp->RendererUserData = lNewRenderWindow;
+    }
 
     void UIContext::Renderer_DestroyWindow( ImGuiViewport *vp )
     {
