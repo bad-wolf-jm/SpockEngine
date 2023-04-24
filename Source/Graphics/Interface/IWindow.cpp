@@ -16,28 +16,26 @@ namespace SE::Core
         InitializeWindow();
     }
 
-    IWindow::~IWindow()
+    IWindow::IWindow( GLFWwindow *aWindow )
+        : mWindow{ aWindow }
     {
-        glfwDestroyWindow( mWindow );
-        
+        glfwGetWindowSize( mWindow, &mWidth, &mHeight );
     }
+
+    IWindow::~IWindow() { glfwDestroyWindow( mWindow ); }
 
     void IWindow::InitializeWindowingBackend()
     {
         glfwInit();
         glfwSetErrorCallback( OnGLFWError );
-        glfwWindowHint( GLFW_CLIENT_API, GLFW_NO_API );
-        glfwWindowHint( GLFW_RESIZABLE, GLFW_TRUE );
-
     }
 
-    void IWindow::ShutdownWindowingBackend()
-    {
-        glfwTerminate();
-    }
+    void IWindow::ShutdownWindowingBackend() { glfwTerminate(); }
 
     void IWindow::InitializeWindow()
     {
+        glfwWindowHint( GLFW_CLIENT_API, GLFW_NO_API );
+        glfwWindowHint( GLFW_RESIZABLE, GLFW_TRUE );
 
         mWindow = glfwCreateWindow( mWidth, mHeight, mWindowName.c_str(), nullptr, nullptr );
         if( !mWindow ) throw std::runtime_error( "Failed to create window" );
