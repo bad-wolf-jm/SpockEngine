@@ -55,14 +55,12 @@ namespace SE::Graphics
         else
             lImageAspect |= VK_IMAGE_ASPECT_COLOR_BIT;
 
-        mVkImageView =
-            std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-                ->CreateImageView( std::reinterpret_pointer_cast<VkTexture2D>( mTextureData )->mVkImage, mTextureData->mSpec.mLayers,
-                                   VK_IMAGE_VIEW_TYPE_2D, ToVkFormat( mTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
+        mVkImageView = GraphicContext<VkGraphicContext>()->CreateImageView(
+            std::reinterpret_pointer_cast<VkTexture2D>( mTextureData )->mVkImage, mTextureData->mSpec.mLayers, VK_IMAGE_VIEW_TYPE_2D,
+            ToVkFormat( mTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
 
-        mVkImageSampler = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-                              ->CreateSampler( Convert( mSpec.mFilter ), Convert( mSpec.mFilter ), Convert( mSpec.mWrapping ),
-                                               Convert( mSpec.mMipFilter ) );
+        mVkImageSampler = GraphicContext<VkGraphicContext>()->CreateSampler( Convert( mSpec.mFilter ), Convert( mSpec.mFilter ),
+                                                                             Convert( mSpec.mWrapping ), Convert( mSpec.mMipFilter ) );
 
         if( mTextureData->mIsGraphicsOnly ) return;
 #ifdef CUDA_INTEROP
@@ -72,8 +70,8 @@ namespace SE::Graphics
 
     VkSampler2D::~VkSampler2D()
     {
-        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->DestroySampler( mVkImageSampler );
-        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->DestroyImageView( mVkImageView );
+        GraphicContext<VkGraphicContext>()->DestroySampler( mVkImageSampler );
+        GraphicContext<VkGraphicContext>()->DestroyImageView( mVkImageView );
     }
 
 } // namespace SE::Graphics

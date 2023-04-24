@@ -21,8 +21,7 @@ namespace SE::Graphics
                               bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
         : ITexture2D( aGraphicContext, aTextureData.mSpec, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, false )
     {
-        if( mSpec.mIsDepthTexture )
-            mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
+        if( mSpec.mIsDepthTexture ) mSpec.mFormat = GraphicContext<VkGraphicContext>()->GetDepthFormat();
 
         CreateImage();
         AllocateMemory();
@@ -30,9 +29,8 @@ namespace SE::Graphics
         ConfigureExternalMemoryHandle();
 
         sImageData &lImageData = aTextureData.GetImageData();
-        auto        lStagingBuffer =
-            New<VkGpuBuffer>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), lImageData.mPixelData.data(),
-                              lImageData.mByteSize, eBufferType::UNKNOWN, true, false, true, false );
+        auto lStagingBuffer = New<VkGpuBuffer>( GraphicContext<VkGraphicContext>(), lImageData.mPixelData.data(), lImageData.mByteSize,
+                                                eBufferType::UNKNOWN, true, false, true, false );
         TransitionImageLayout( VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
         SetPixelData( lStagingBuffer );
         TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
@@ -44,8 +42,7 @@ namespace SE::Graphics
         : ITexture2D( aGraphicContext, aTextureImageDescription, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
                       aIsTransferDestination )
     {
-        if( mSpec.mIsDepthTexture )
-            mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
+        if( mSpec.mIsDepthTexture ) mSpec.mFormat = GraphicContext<VkGraphicContext>()->GetDepthFormat();
 
         CreateImage();
         AllocateMemory();
@@ -58,36 +55,30 @@ namespace SE::Graphics
         : ITexture2D( aGraphicContext, aTextureImageDescription, 1, false, true, false, false )
         , mVkImage{ aExternalImage }
     {
-        if( mSpec.mIsDepthTexture )
-            mSpec.mFormat = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetDepthFormat();
+        if( mSpec.mIsDepthTexture ) mSpec.mFormat = GraphicContext<VkGraphicContext>()->GetDepthFormat();
     }
 
     VkTexture2D::~VkTexture2D()
     {
-        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->DestroyImage( mVkImage );
-        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->FreeMemory( mVkMemory );
+        GraphicContext<VkGraphicContext>()->DestroyImage( mVkImage );
+        GraphicContext<VkGraphicContext>()->FreeMemory( mVkMemory );
     }
 
     void VkTexture2D::CreateImage()
     {
-        mVkImage =
-            std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-                ->CreateImage( mSpec.mWidth, mSpec.mHeight, mSpec.mDepth, mSpec.mMipLevels, mSpec.mLayers,
-                               VK_SAMPLE_COUNT_VALUE( mSampleCount ), !mIsGraphicsOnly, false,
-                               mSpec.mIsDepthTexture ? ToVkFormat( mGraphicContext->GetDepthFormat() ) : ToVkFormat( mSpec.mFormat ),
-                               MemoryProperties(), ImageUsage() );
+        mVkImage = GraphicContext<VkGraphicContext>()->CreateImage(
+            mSpec.mWidth, mSpec.mHeight, mSpec.mDepth, mSpec.mMipLevels, mSpec.mLayers, VK_SAMPLE_COUNT_VALUE( mSampleCount ),
+            !mIsGraphicsOnly, false,
+            mSpec.mIsDepthTexture ? ToVkFormat( mGraphicContext->GetDepthFormat() ) : ToVkFormat( mSpec.mFormat ), MemoryProperties(),
+            ImageUsage() );
     }
 
     void VkTexture2D::AllocateMemory()
     {
-        mVkMemory = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-                        ->AllocateMemory( mVkImage, 0, mIsHostVisible, !mIsGraphicsOnly, &mMemorySize );
+        mVkMemory = GraphicContext<VkGraphicContext>()->AllocateMemory( mVkImage, 0, mIsHostVisible, !mIsGraphicsOnly, &mMemorySize );
     }
 
-    void VkTexture2D::BindMemory()
-    {
-        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->BindMemory( mVkImage, mVkMemory );
-    }
+    void VkTexture2D::BindMemory() { GraphicContext<VkGraphicContext>()->BindMemory( mVkImage, mVkMemory ); }
 
     VkMemoryPropertyFlags VkTexture2D::MemoryProperties()
     {
@@ -124,7 +115,7 @@ namespace SE::Graphics
         lCudaExternalMemoryHandleDesc.size  = mMemorySize;
         lCudaExternalMemoryHandleDesc.flags = 0;
         lCudaExternalMemoryHandleDesc.handle.win32.handle =
-            (HANDLE)std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetSharedMemoryHandle( mVkMemory );
+            (HANDLE)GraphicContext<VkGraphicContext>()->GetSharedMemoryHandle( mVkMemory );
         CUDA_ASSERT( cudaImportExternalMemory( &mExternalMemoryHandle, &lCudaExternalMemoryHandleDesc ) );
 
         cudaExternalMemoryMipmappedArrayDesc lExternalMemoryMipmappedArrayDesc{};
@@ -143,8 +134,7 @@ namespace SE::Graphics
 
     void VkTexture2D::SetPixelData( Ref<IGraphicBuffer> aBuffer )
     {
-        Ref<sVkCommandBufferObject> lCommandBufferObject =
-            SE::Core::New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ) );
+        Ref<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>() );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
 
         std::vector<sImageRegion> lBufferCopyRegions;
@@ -175,28 +165,24 @@ namespace SE::Graphics
                                           lBufferCopyRegions, lImageCopyRegion );
 
         lCommandBufferObject->End();
-        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
-        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+        lCommandBufferObject->SubmitTo( GraphicContext<VkGraphicContext>()->GetGraphicsQueue() );
+        GraphicContext<VkGraphicContext>()->WaitIdle( GraphicContext<VkGraphicContext>()->GetGraphicsQueue() );
     }
 
     void VkTexture2D::TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout )
     {
-        Ref<sVkCommandBufferObject> lCommandBufferObject =
-            SE::Core::New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ) );
+        Ref<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>() );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBufferObject->ImageMemoryBarrier( mVkImage, aOldLayout, aNewLayout, mSpec.mMipLevels, 1 );
         lCommandBufferObject->End();
-        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
-        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+        lCommandBufferObject->SubmitTo( GraphicContext<VkGraphicContext>()->GetGraphicsQueue() );
+        GraphicContext<VkGraphicContext>()->WaitIdle( GraphicContext<VkGraphicContext>()->GetGraphicsQueue() );
     }
 
     void VkTexture2D::GetPixelData( TextureData2D &aTextureData )
     {
         uint32_t    lByteSize = mSpec.mWidth * mSpec.mHeight * sizeof( uint32_t );
-        VkGpuBuffer lStagingBuffer( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), eBufferType::UNKNOWN, true,
-                                    false, false, true, lByteSize );
+        VkGpuBuffer lStagingBuffer( GraphicContext<VkGraphicContext>(), eBufferType::UNKNOWN, true, false, false, true, lByteSize );
 
         std::vector<sImageRegion> lBufferCopyRegions;
         uint32_t                  lBufferByteOffset = 0;
@@ -217,14 +203,12 @@ namespace SE::Graphics
         }
 
         TransitionImageLayout( VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL );
-        Ref<sVkCommandBufferObject> lCommandBufferObject =
-            SE::Core::New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ) );
+        Ref<sVkCommandBufferObject> lCommandBufferObject = SE::Core::New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>() );
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBufferObject->CopyImage( mVkImage, lStagingBuffer.mVkBuffer, lBufferCopyRegions, 0 );
         lCommandBufferObject->End();
-        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
-        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+        lCommandBufferObject->SubmitTo( GraphicContext<VkGraphicContext>()->GetGraphicsQueue() );
+        GraphicContext<VkGraphicContext>()->WaitIdle( GraphicContext<VkGraphicContext>()->GetGraphicsQueue() );
         TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
 
         uint8_t *lPixelData = lStagingBuffer.Map<uint8_t>( lByteSize, 0 );

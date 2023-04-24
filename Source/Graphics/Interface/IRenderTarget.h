@@ -96,6 +96,12 @@ namespace SE::Graphics
 
         Ref<ITexture> GetAttachment( std::string const &aKey );
 
+        template <typename _GCSubtype>
+        Ref<_GCSubtype> GraphicContext()
+        {
+            return std::reinterpret_pointer_cast<_GCSubtype>( mGraphicContext );
+        }
+
       protected:
         Ref<IGraphicContext> mGraphicContext{};
 

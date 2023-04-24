@@ -9,10 +9,9 @@ namespace SE::Graphics
 
     VkRenderTarget::~VkRenderTarget()
     {
-        std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->DestroyFramebuffer( mVkFramebuffer );
+        GraphicContext<VkGraphicContext>()->DestroyFramebuffer( mVkFramebuffer );
 
-        for( auto &lImageView : mVkImageViews )
-            std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->DestroyImageView( lImageView );
+        for( auto &lImageView : mVkImageViews ) GraphicContext<VkGraphicContext>()->DestroyImageView( lImageView );
     }
 
     std::vector<VkClearValue> VkRenderTarget::GetClearValues()
@@ -48,8 +47,8 @@ namespace SE::Graphics
         lTextureCreateInfo.mIsDepthTexture = ( aCreateInfo.mType == eAttachmentType::DEPTH );
         uint32_t lSampleCount              = ( aCreateInfo.mType == eAttachmentType::MSAA_RESOLVE ) ? 1 : mSpec.mSampleCount;
 
-        auto lNewAttachment = New<VkTexture2D>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), lTextureCreateInfo,
-                                                lSampleCount, false, true, true, true );
+        auto lNewAttachment =
+            New<VkTexture2D>( GraphicContext<VkGraphicContext>(), lTextureCreateInfo, lSampleCount, false, true, true, true );
         IRenderTarget::AddAttachment( aAttachmentID, aCreateInfo, lNewAttachment );
     }
 
@@ -115,10 +114,9 @@ namespace SE::Graphics
                 else
                     lImageAspect |= VK_IMAGE_ASPECT_COLOR_BIT;
 
-                auto lVkImageView =
-                    std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-                        ->CreateImageView( lVkTextureData->mVkImage, lVkTextureData->mSpec.mLayers, VK_IMAGE_VIEW_TYPE_2D,
-                                           ToVkFormat( lVkTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
+                auto lVkImageView = GraphicContext<VkGraphicContext>()->CreateImageView(
+                    lVkTextureData->mVkImage, lVkTextureData->mSpec.mLayers, VK_IMAGE_VIEW_TYPE_2D,
+                    ToVkFormat( lVkTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
 
                 mVkImageViews.push_back( lVkImageView );
             }
@@ -133,10 +131,9 @@ namespace SE::Graphics
                 else
                     lImageAspect |= VK_IMAGE_ASPECT_COLOR_BIT;
 
-                auto lVkImageView =
-                    std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-                        ->CreateImageView( lVkTextureData->mVkImage, (uint32_t)lTextureData.mFace, 1, VK_IMAGE_VIEW_TYPE_2D,
-                                           ToVkFormat( lVkTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
+                auto lVkImageView = GraphicContext<VkGraphicContext>()->CreateImageView(
+                    lVkTextureData->mVkImage, (uint32_t)lTextureData.mFace, 1, VK_IMAGE_VIEW_TYPE_2D,
+                    ToVkFormat( lVkTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
 
                 mVkImageViews.push_back( lVkImageView );
             }
@@ -146,8 +143,8 @@ namespace SE::Graphics
         }
 
         mRenderPassObject = CreateDefaultRenderPass();
-        mVkFramebuffer    = std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-                             ->CreateFramebuffer( mVkImageViews, mSpec.mWidth, mSpec.mHeight, 1, mRenderPassObject->mVkObject );
+        mVkFramebuffer    = GraphicContext<VkGraphicContext>()->CreateFramebuffer( mVkImageViews, mSpec.mWidth, mSpec.mHeight, 1,
+                                                                                   mRenderPassObject->mVkObject );
 
         InitializeCommandBuffers();
     }
@@ -175,9 +172,8 @@ namespace SE::Graphics
 
     Ref<sVkAbstractRenderPassObject> VkRenderTarget::CreateDefaultRenderPass()
     {
-        Ref<sVkAbstractRenderPassObject> lNewRenderPass =
-            New<sVkAbstractRenderPassObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), VK_FORMAT_UNDEFINED,
-                                              mSpec.mSampleCount, false, false, math::vec4( 0.0f ) );
+        Ref<sVkAbstractRenderPassObject> lNewRenderPass = New<sVkAbstractRenderPassObject>(
+            GraphicContext<VkGraphicContext>(), VK_FORMAT_UNDEFINED, mSpec.mSampleCount, false, false, math::vec4( 0.0f ) );
 
         std::vector<VkAttachmentDescription> lAttachmentDescriptions{};
         std::vector<VkAttachmentReference>   lColorAttachmentReferences{};
@@ -263,14 +259,12 @@ namespace SE::Graphics
 
     void VkRenderTarget::InitializeCommandBuffers()
     {
-        auto lCommandBuffers =
-            std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->AllocateCommandBuffer( GetImageCount() );
+        auto lCommandBuffers = GraphicContext<VkGraphicContext>()->AllocateCommandBuffer( GetImageCount() );
 
         mCommandBufferObject = {};
 
         for( auto &lCB : lCommandBuffers )
-            mCommandBufferObject.push_back(
-                New<sVkCommandBufferObject>( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext ), lCB ) );
+            mCommandBufferObject.push_back( New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>(), lCB ) );
 
         for( size_t i = 0; i < GetImageCount(); i++ )
         {
