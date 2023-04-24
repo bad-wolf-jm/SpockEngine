@@ -1,5 +1,7 @@
 #include "UIContext.h"
 
+#include "Engine/Engine.h"
+
 #include "Core/CUDA/Texture/ColorFormat.h"
 #include "Core/Logging.h"
 
@@ -165,7 +167,8 @@ namespace SE::Core
 
     void UIContext::Renderer_CreateWindow( ImGuiViewport *vp ) 
     { 
-        UIWindow* lNewRenderWindow = new UIWindow( vp ); 
+        UIWindow* lNewRenderWindow = new UIWindow( Engine::GetInstance()->UIContext()->GraphicContext(), vp ); 
+        
         vp->RendererUserData = lNewRenderWindow;
     }
 
@@ -368,5 +371,12 @@ namespace SE::Core
         lDescriptorSet->Write( aTexture, 0 );
         return lDescriptorSet;
     }
+
+    // Ref<DescriptorSet> UIContext::AddTexture( Ref<VkSampler2D> aTexture, Ref<VkGraphicContext> aGraphicContext,  )
+    // {
+    //     Ref<DescriptorSet> lDescriptorSet = New<DescriptorSet>( mGraphicContext, mUIDescriptorSetLayout );
+    //     lDescriptorSet->Write( aTexture, 0 );
+    //     return lDescriptorSet;
+    // }
 
 } // namespace SE::Core

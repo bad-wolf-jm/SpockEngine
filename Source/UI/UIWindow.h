@@ -58,7 +58,7 @@ namespace SE::Core
     class UIWindow
     {
       public:
-        UIWindow( ImGuiViewport *aViewport );
+        UIWindow( Ref<VkGraphicContext> aGraphicContext, ImGuiViewport *aViewport );
         UIWindow( Ref<VkGraphicContext> aGraphicContext, ARenderContext &aRenderContext );
         ~UIWindow();
 
