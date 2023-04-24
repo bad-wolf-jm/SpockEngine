@@ -80,13 +80,6 @@ namespace SE::Core
 
         Ref<VkGraphicContext> GraphicContext() { return mGraphicContext; }
 
-        // ImFont *mMonoFont;
-        // ImFont *mMainFont;
-        // ImFont *mBoldFont;
-        // ImFont *mObliqueFont;
-        // ImFont *mBoldObliqueFont;
-
-      private:
         ImGuiContext  *mImGUIOverlay;
         ImPlotContext *mImPlotContext;
         std::string    mImGuiConfigPath;

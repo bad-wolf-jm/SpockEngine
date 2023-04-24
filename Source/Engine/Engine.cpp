@@ -26,7 +26,6 @@ namespace SE::Core
 
     void Engine::Init()
     {
-        IWindow::InitializeWindowingBackend();
         mViewportClient         = SE::Core::New<IWindow>( mInitialMainWindowSize.x, mInitialMainWindowSize.y, mApplicationName );
         mGraphicContext         = SE::Core::New<VkGraphicContext>( mViewportClient, 1, true );
         mSwapChain              = SE::Core::New<SwapChain>( mGraphicContext, mViewportClient );
@@ -130,6 +129,8 @@ namespace SE::Core
     void Engine::Initialize( math::ivec2 aInitialMainWindowSize, math::ivec2 aInitialMainWindowPosition, fs::path aImGuiConfigPath,
                              UIConfiguration const &aUIConfiguration )
     {
+        IWindow::InitializeWindowingBackend();
+
         if( mUniqueInstance ) return;
 
         mUniqueInstance = std::make_unique<Engine>();
