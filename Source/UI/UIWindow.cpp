@@ -18,10 +18,10 @@ namespace SE::Core
     UIWindow::UIWindow( ImGuiViewport *aViewport )
         : mViewport{ aViewport }
     {
-        ImGui_ImplGlfw_CreateWindow( aViewport );
-        aViewport->RendererUserData = this;
+        // ImGui_ImplGlfw_CreateWindow( aViewport );
+        // aViewport->RendererUserData = this;
 
-        // mWindow         = SE::Core::New<IWindow>( aViewport->PlatformHandle );
+        mWindow         = SE::Core::New<IWindow>( (GLFWwindow *)aViewport->PlatformHandle );
         mGraphicContext = SE::Core::New<VkGraphicContext>( mWindow, 1, true );
         mSwapChain      = SE::Core::New<SwapChain>( mGraphicContext, mWindow );
         mRenderContext  = SE::Graphics::ARenderContext( mGraphicContext, mSwapChain );
@@ -159,10 +159,10 @@ namespace SE::Core
         // #endif
     }
 
-    UIWindow::UIWindow( Ref<VkGraphicContext> aGraphicContext, ARenderContext& aRenderContext )
+    UIWindow::UIWindow( Ref<VkGraphicContext> aGraphicContext, ARenderContext &aRenderContext )
         : mWindow{ nullptr }
         , mGraphicContext{ aGraphicContext }
-        , mSwapChain{nullptr}
+        , mSwapChain{ nullptr }
         , mViewport{ nullptr }
     {
         // ImGui_ImplGlfw_CreateWindow( aViewport );
@@ -414,6 +414,20 @@ namespace SE::Core
             lGlobalIdxOffset += lImGuiDrawCommands->IdxBuffer.Size;
             lGlobalVtxOffset += lImGuiDrawCommands->VtxBuffer.Size;
         }
+    }
+
+    void UIWindow::Render( ImDrawData *aDrawData )
+    {
+        //
+        mRenderContext.BeginRender();
+        Render( mRenderContext, aDrawData );
+    }
+
+
+    void UIWindow::EndRender(ImDrawData *aDrawData)
+    {
+        mRenderContext.EndRender();
+        mRenderContext.Present();
     }
 
     // ImFont *UIWindow::LoadFont( fs::path aFontName, fs::path aIconFontName, uint32_t aFontSize )

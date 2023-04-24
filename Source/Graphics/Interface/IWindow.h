@@ -303,6 +303,7 @@ namespace SE::Core
 
         int  mWidth;
         int  mHeight;
+        bool mOwning;
         bool mFramebufferWasResized = false;
 
         math::ivec2 mLastMousePosition;

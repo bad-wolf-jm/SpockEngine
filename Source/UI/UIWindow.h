@@ -78,6 +78,8 @@ namespace SE::Core
         // ImFont *mObliqueFont;
         // ImFont *mBoldObliqueFont;
         void Render( ARenderContext &aRenderContext, ImDrawData *aDrawData );
+        void Render( ImDrawData *aDrawData );
+        void EndRender( ImDrawData *aDrawData );
 
       private:
         Ref<IWindow>                 mWindow                 = nullptr;

@@ -12,17 +12,22 @@ namespace SE::Core
         : mWidth{ aWidth }
         , mHeight{ aHeight }
         , mWindowName{ aTitle }
+        , mOwning{ true }
     {
         InitializeWindow();
     }
 
     IWindow::IWindow( GLFWwindow *aWindow )
         : mWindow{ aWindow }
+        , mOwning{ false }
     {
         glfwGetWindowSize( mWindow, &mWidth, &mHeight );
     }
 
-    IWindow::~IWindow() { glfwDestroyWindow( mWindow ); }
+    IWindow::~IWindow()
+    {
+        if( mOwning ) glfwDestroyWindow( mWindow );
+    }
 
     void IWindow::InitializeWindowingBackend()
     {
