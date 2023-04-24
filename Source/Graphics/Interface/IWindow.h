@@ -281,6 +281,9 @@ namespace SE::Core
 
         math::ivec2 GetMousePosition();
 
+        static void InitializeWindowingBackend();
+        static void ShutdownWindowingBackend();
+
       private:
         static void OnFramebufferResize( GLFWwindow *window, int width, int height );
         static void OnWindowClose( GLFWwindow *window );

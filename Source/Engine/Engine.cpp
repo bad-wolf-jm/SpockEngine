@@ -11,7 +11,6 @@
 
 namespace SE::Core
 {
-
     GLFWwindow *Engine::GetMainApplicationWindow() { return mViewportClient->GetGLFWWindow(); }
 
     int64_t Engine::GetTime()
@@ -27,20 +26,18 @@ namespace SE::Core
 
     void Engine::Init()
     {
-
-        mViewportClient = SE::Core::New<IWindow>( mInitialMainWindowSize.x, mInitialMainWindowSize.y, mApplicationName );
-        mGraphicContext = SE::Core::New<VkGraphicContext>( mViewportClient, 1, true );
-
-        m_SwapChain              = SE::Core::New<SwapChain>( mGraphicContext, mViewportClient );
-        m_SwapChainRenderContext = SE::Graphics::ARenderContext( mGraphicContext, m_SwapChain );
-
+        IWindow::InitializeWindowingBackend();
+        mViewportClient         = SE::Core::New<IWindow>( mInitialMainWindowSize.x, mInitialMainWindowSize.y, mApplicationName );
+        mGraphicContext         = SE::Core::New<VkGraphicContext>( mViewportClient, 1, true );
+        mSwapChain              = SE::Core::New<SwapChain>( mGraphicContext, mViewportClient );
+        mSwapChainRenderContext = SE::Graphics::ARenderContext( mGraphicContext, mSwapChain );
         mViewportClient->SetEngineLoop( this );
 
         mMainWindowSize  = mViewportClient->GetMainWindowSize();
         mDpiScaling      = math::vec2( 1.0f, 1.0f );
         mFramebufferSize = mViewportClient->GetFramebufferSize();
         mImGUIOverlay =
-            New<SE::Core::UIContext>( mViewportClient, mGraphicContext, m_SwapChainRenderContext, mImGuiConfigPath, mUIConfiguration );
+            New<SE::Core::UIContext>( mViewportClient, mGraphicContext, mSwapChainRenderContext, mImGuiConfigPath, mUIConfiguration );
 
         mEngineLoopStartTime = GetTime();
         mLastFrameTime       = mEngineLoopStartTime;
@@ -55,7 +52,7 @@ namespace SE::Core
 
         mLastFrameTime = time;
 
-        if( !m_SwapChainRenderContext.BeginRender() ) return true;
+        if( !mSwapChainRenderContext.BeginRender() ) return true;
 
         bool lRequestQuit = false;
         mImGUIOverlay->BeginFrame();
@@ -74,11 +71,11 @@ namespace SE::Core
         if( RenderDelegate ) RenderDelegate();
 
         // Render the UI on top of the background
-        mImGUIOverlay->EndFrame( m_SwapChainRenderContext );
+        mImGUIOverlay->EndFrame( mSwapChainRenderContext );
 
         // // Send the draw commands to the screen.
-        m_SwapChainRenderContext.EndRender();
-        m_SwapChainRenderContext.Present();
+        mSwapChainRenderContext.EndRender();
+        mSwapChainRenderContext.Present();
 
         mGraphicContext->WaitIdle();
 
@@ -144,9 +141,6 @@ namespace SE::Core
         mUniqueInstance->Init();
     }
 
-    void Engine::Shutdown()
-    {
-        //
-    }
+    void Engine::Shutdown() { IWindow::ShutdownWindowingBackend(); }
 
 } // namespace SE::Core
