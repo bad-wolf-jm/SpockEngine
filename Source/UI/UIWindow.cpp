@@ -22,7 +22,7 @@ namespace SE::Core
         // aViewport->RendererUserData = this;
 
         mWindow         = SE::Core::New<IWindow>( (GLFWwindow *)aViewport->PlatformHandle );
-        mGraphicContext = aGraphicContext;//SE::Core::New<VkGraphicContext>( mWindow, 1, true );
+        mGraphicContext = SE::Core::New<VkGraphicContext>( mWindow, 1, true );
         mSwapChain      = SE::Core::New<SwapChain>( mGraphicContext, mWindow );
         mRenderContext  = SE::Graphics::ARenderContext( mGraphicContext, mSwapChain );
 
