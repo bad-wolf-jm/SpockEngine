@@ -115,5 +115,11 @@ namespace SE::Core
         Ref<UIWindow> mMainWindow;
         // void SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData );
         // void RenderDrawData( ARenderContext &aRenderContext, ImDrawData *aDrawData );
+
+        static void Renderer_CreateWindow( ImGuiViewport *vp );
+        static void Renderer_DestroyWindow( ImGuiViewport *vp );
+        static void Renderer_SetWindowSize( ImGuiViewport *vp, ImVec2 size );
+        static void Renderer_RenderWindow( ImGuiViewport *vp, void *render_arg );
+        static void Renderer_SwapBuffers( ImGuiViewport *vp, void *render_arg );
     };
 } // namespace SE::Core
