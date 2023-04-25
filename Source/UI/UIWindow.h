@@ -61,5 +61,6 @@ namespace SE::Core
 
       private:
         void SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData );
+        void CreatePipeline();
     };
 } // namespace SE::Core

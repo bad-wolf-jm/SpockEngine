@@ -105,5 +105,10 @@ namespace SE::Core
         static void Renderer_SetWindowSize( ImGuiViewport *vp, ImVec2 size );
         static void Renderer_RenderWindow( ImGuiViewport *vp, void *render_arg );
         static void Renderer_SwapBuffers( ImGuiViewport *vp, void *render_arg );
+
+      private:
+        void RenderPlatformWindows();
+
+        friend class UIWindow;
     };
 } // namespace SE::Core
