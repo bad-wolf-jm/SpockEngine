@@ -78,7 +78,7 @@ namespace SE::Graphics
         VkDescriptorSetLayout CreateDescriptorSetLayout( std::vector<VkDescriptorSetLayoutBinding> aBindings, bool aUnbounded );
         void                  DestroyDescriptorSetLayout( VkDescriptorSetLayout aDescriptorSetLayout );
 
-        std::tuple<VkFormat, uint32_t, VkExtent2D, VkSwapchainKHR> CreateSwapChain(VkExtent2D aSize, VkSurfaceKHR aSurface);
+        std::tuple<VkFormat, uint32_t, VkExtent2D, VkSwapchainKHR> CreateSwapChain( VkExtent2D aSize, VkSurfaceKHR aSurface );
         void                                                       DestroySwapChain( VkSwapchainKHR aSwapchain );
         std::vector<VkImage>                                       GetSwapChainImages( VkSwapchainKHR aSwapChain );
 
@@ -120,6 +120,7 @@ namespace SE::Graphics
         void *GetSharedMemoryHandle( VkDeviceMemory aVkMemory );
 
         VkQueue GetGraphicsQueue() { return mVkGraphicsQueue; }
+        VkQueue GetTransferQueue() { return mVkTransferQueue; }
         VkQueue GetPresentQueue() { return mVkPresentQueue; }
 
         eColorFormat GetDepthFormat() { return ToLtseFormat( mDepthFormat ); }
@@ -168,11 +169,11 @@ namespace SE::Graphics
 
         VkInstance       mVkInstance            = VK_NULL_HANDLE;
         VkPhysicalDevice mVkPhysicalDevice      = VK_NULL_HANDLE;
-        // VkSurfaceKHR     mVkSurface             = VK_NULL_HANDLE;
         VkDevice         mVkLogicalDevice       = VK_NULL_HANDLE;
         VkQueue          mVkGraphicsQueue       = VK_NULL_HANDLE;
         VkQueue          mVkPresentQueue        = VK_NULL_HANDLE;
         VkQueue          mVkComputeQueue        = VK_NULL_HANDLE;
+        VkQueue          mVkTransferQueue       = VK_NULL_HANDLE;
         VkCommandPool    mVkGraphicsCommandPool = VK_NULL_HANDLE;
 
         VkDebugUtilsMessengerEXT mDebugMessenger = VK_NULL_HANDLE;
@@ -182,8 +183,9 @@ namespace SE::Graphics
       private:
         VkPhysicalDeviceProperties mPhysicalDeviceProperties;
 
-        uint32_t mGraphicFamily = std::numeric_limits<uint32_t>::max();
-        uint32_t mPresentFamily = std::numeric_limits<uint32_t>::max();
+        uint32_t mGraphicFamily  = std::numeric_limits<uint32_t>::max();
+        uint32_t mTransferFamily = std::numeric_limits<uint32_t>::max();
+        uint32_t mPresentFamily  = std::numeric_limits<uint32_t>::max();
 
       private:
         VkDescriptorPool mVkDescriptorPool = VK_NULL_HANDLE;

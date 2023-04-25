@@ -174,9 +174,9 @@ namespace SE::Graphics
                                           lBufferCopyRegions, lImageCopyRegion );
 
         lCommandBufferObject->End();
-        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetTransferQueue() );
         std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetTransferQueue() );
     }
 
     void VkTextureCubeMap::SetPixelData( eCubeFace aFace, Ref<IGraphicBuffer> aBuffer )
@@ -213,9 +213,9 @@ namespace SE::Graphics
                                           lBufferCopyRegions, lImageCopyRegion );
 
         lCommandBufferObject->End();
-        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetTransferQueue() );
         std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetTransferQueue() );
     }
 
     void VkTextureCubeMap::TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout )
@@ -225,9 +225,9 @@ namespace SE::Graphics
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBufferObject->ImageMemoryBarrier( mVkImage, aOldLayout, aNewLayout, mSpec.mMipLevels, 1 );
         lCommandBufferObject->End();
-        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetTransferQueue() );
         std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetTransferQueue() );
     }
 
     void VkTextureCubeMap::GetPixelData( TextureDataCubeMap &mTextureData )
@@ -260,9 +260,9 @@ namespace SE::Graphics
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBufferObject->CopyImage( mVkImage, lStagingBuffer.mVkBuffer, lBufferCopyRegions, 0 );
         lCommandBufferObject->End();
-        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetTransferQueue() );
         std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetTransferQueue() );
         TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
 
         uint8_t *lPixelData = lStagingBuffer.Map<uint8_t>( lByteSize, 0 );
@@ -307,9 +307,9 @@ namespace SE::Graphics
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBufferObject->CopyImage( mVkImage, lStagingBuffer.mVkBuffer, lBufferCopyRegions, 0 );
         lCommandBufferObject->End();
-        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+        lCommandBufferObject->SubmitTo( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetTransferQueue() );
         std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )
-            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
+            ->WaitIdle( std::reinterpret_pointer_cast<VkGraphicContext>( mGraphicContext )->GetTransferQueue() );
         TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
 
         uint8_t *lPixelData = lStagingBuffer.Map<uint8_t>( lByteSize, 0 );

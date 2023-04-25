@@ -124,6 +124,36 @@ namespace SE::Graphics
             return lGraphicsFamily;
         }
 
+        uint32_t GetTransferQueueFamilies( VkPhysicalDevice aVkPhysicalDevice )
+        {
+            uint32_t lQueueFamilyCount = 0;
+            vkGetPhysicalDeviceQueueFamilyProperties( aVkPhysicalDevice, &lQueueFamilyCount, nullptr );
+
+            std::vector<VkQueueFamilyProperties> lAvailableQueueFamilies( lQueueFamilyCount );
+            vkGetPhysicalDeviceQueueFamilyProperties( aVkPhysicalDevice, &lQueueFamilyCount, lAvailableQueueFamilies.data() );
+
+            int lCurrentQueueIndex = 0;
+            int lGraphicsFamily    = std::numeric_limits<uint32_t>::max();
+            int lPresentFamily     = std::numeric_limits<uint32_t>::max();
+
+            bool lGraphicsFamilyHasValue = false;
+            bool lPresentFamilyHasValue  = false;
+            for( const auto &lQueueFamily : lAvailableQueueFamilies )
+            {
+                if( lQueueFamily.queueCount > 0 && lQueueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT )
+                {
+                    lGraphicsFamily         = lCurrentQueueIndex;
+                    lGraphicsFamilyHasValue = true;
+                }
+
+                if( lGraphicsFamilyHasValue ) break;
+
+                lCurrentQueueIndex++;
+            }
+
+            return lGraphicsFamily;
+        }
+
         sSwapChainSupportDetails QuerySwapChainSupport( VkPhysicalDevice aVkPhysicalDevice, VkSurfaceKHR aVkSurface )
         {
             sSwapChainSupportDetails lSwapChainSupportDetails;
@@ -393,9 +423,10 @@ namespace SE::Graphics
         vkGetPhysicalDeviceProperties( mVkPhysicalDevice, &mPhysicalDeviceProperties );
 
         mGraphicFamily = GetGraphicsQueueFamilies( mVkPhysicalDevice );
+        mTransferFamily = GetTransferQueueFamilies( mVkPhysicalDevice );
 
         std::vector<VkDeviceQueueCreateInfo> lLogicalDeviceQueueCreateInfos;
-        std::set<uint32_t>                   lUniqueQueueFamilies = { mGraphicFamily, mGraphicFamily };
+        std::set<uint32_t>                   lUniqueQueueFamilies = { mGraphicFamily, mGraphicFamily, mTransferFamily };
 
         float lQueuePriority = 1.0f;
         for( uint32_t lQueueFamily : lUniqueQueueFamilies )
@@ -444,6 +475,7 @@ namespace SE::Graphics
 
         vkGetDeviceQueue( mVkLogicalDevice, mGraphicFamily, 0, &mVkGraphicsQueue );
         vkGetDeviceQueue( mVkLogicalDevice, mGraphicFamily, 0, &mVkPresentQueue );
+        vkGetDeviceQueue( mVkLogicalDevice, mTransferFamily, 0, &mVkTransferQueue );
 
         VkCommandPoolCreateInfo lGraphicsCommandPoolCreateInfo{};
         lGraphicsCommandPoolCreateInfo.sType            = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -495,8 +527,6 @@ namespace SE::Graphics
         if( mVkGraphicsCommandPool != VK_NULL_HANDLE ) vkDestroyCommandPool( mVkLogicalDevice, mVkGraphicsCommandPool, nullptr );
 
         if( mVkLogicalDevice != VK_NULL_HANDLE ) vkDestroyDevice( mVkLogicalDevice, nullptr );
-
-        // if( mVkSurface != VK_NULL_HANDLE ) vkDestroySurfaceKHR( mVkInstance, mVkSurface, nullptr );
 
         if( mVkInstance != VK_NULL_HANDLE ) vkDestroyInstance( mVkInstance, nullptr );
     }
