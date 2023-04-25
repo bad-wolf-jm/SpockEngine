@@ -105,8 +105,8 @@ namespace SE::Graphics
             lCommandBuffer->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
             lCommandBuffer->CopyBuffer( lStagingBuffer.mVkBuffer, 0, lStagingBuffer.mSize, mVkBuffer, aOffset );
             lCommandBuffer->End();
-            lCommandBuffer->SubmitTo( mVkGraphicContext->GetGraphicsQueue() );
-            mVkGraphicContext->WaitIdle( mVkGraphicContext->GetGraphicsQueue() );
+            lCommandBuffer->SubmitTo( mVkGraphicContext->GetTransferQueue() );
+            mVkGraphicContext->WaitIdle( mVkGraphicContext->GetTransferQueue() );
         }
         else
         {
@@ -126,8 +126,8 @@ namespace SE::Graphics
         lCommandBuffer->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBuffer->CopyBuffer( lSource->mVkBuffer, 0, lSource->mSize, mVkBuffer, aOffset );
         lCommandBuffer->End();
-        lCommandBuffer->SubmitTo( mVkGraphicContext->GetGraphicsQueue() );
-        mVkGraphicContext->WaitIdle( mVkGraphicContext->GetGraphicsQueue() );
+        lCommandBuffer->SubmitTo( mVkGraphicContext->GetTransferQueue() );
+        mVkGraphicContext->WaitIdle( mVkGraphicContext->GetTransferQueue() );
     }
 
     void VkGpuBuffer::Resize( size_t aNewSizeInBytes )

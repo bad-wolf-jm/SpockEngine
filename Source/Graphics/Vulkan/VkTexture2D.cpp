@@ -165,8 +165,8 @@ namespace SE::Graphics
                                           lBufferCopyRegions, lImageCopyRegion );
 
         lCommandBufferObject->End();
-        lCommandBufferObject->SubmitTo( GraphicContext<VkGraphicContext>()->GetGraphicsQueue() );
-        GraphicContext<VkGraphicContext>()->WaitIdle( GraphicContext<VkGraphicContext>()->GetGraphicsQueue() );
+        lCommandBufferObject->SubmitTo( GraphicContext<VkGraphicContext>()->GetTransferQueue() );
+        GraphicContext<VkGraphicContext>()->WaitIdle( GraphicContext<VkGraphicContext>()->GetTransferQueue() );
     }
 
     void VkTexture2D::TransitionImageLayout( VkImageLayout aOldLayout, VkImageLayout aNewLayout )
@@ -175,8 +175,8 @@ namespace SE::Graphics
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBufferObject->ImageMemoryBarrier( mVkImage, aOldLayout, aNewLayout, mSpec.mMipLevels, 1 );
         lCommandBufferObject->End();
-        lCommandBufferObject->SubmitTo( GraphicContext<VkGraphicContext>()->GetGraphicsQueue() );
-        GraphicContext<VkGraphicContext>()->WaitIdle( GraphicContext<VkGraphicContext>()->GetGraphicsQueue() );
+        lCommandBufferObject->SubmitTo( GraphicContext<VkGraphicContext>()->GetTransferQueue() );
+        GraphicContext<VkGraphicContext>()->WaitIdle( GraphicContext<VkGraphicContext>()->GetTransferQueue() );
     }
 
     void VkTexture2D::GetPixelData( TextureData2D &aTextureData )
@@ -207,8 +207,8 @@ namespace SE::Graphics
         lCommandBufferObject->Begin( VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT );
         lCommandBufferObject->CopyImage( mVkImage, lStagingBuffer.mVkBuffer, lBufferCopyRegions, 0 );
         lCommandBufferObject->End();
-        lCommandBufferObject->SubmitTo( GraphicContext<VkGraphicContext>()->GetGraphicsQueue() );
-        GraphicContext<VkGraphicContext>()->WaitIdle( GraphicContext<VkGraphicContext>()->GetGraphicsQueue() );
+        lCommandBufferObject->SubmitTo( GraphicContext<VkGraphicContext>()->GetTransferQueue() );
+        GraphicContext<VkGraphicContext>()->WaitIdle( GraphicContext<VkGraphicContext>()->GetTransferQueue() );
         TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
 
         uint8_t *lPixelData = lStagingBuffer.Map<uint8_t>( lByteSize, 0 );
