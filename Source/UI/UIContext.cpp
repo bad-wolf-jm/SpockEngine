@@ -208,9 +208,9 @@ namespace SE::Core
         mFonts[FontFamilyFlags::NORMAL] =
             LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize );
         mFonts[FontFamilyFlags::SMALL] =
-            LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * .75f );
+            LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * .85f );
         mFonts[FontFamilyFlags::TINY] =
-            LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * .5f );
+            LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * .75f );
         mFonts[FontFamilyFlags::MONOSPACE] =
             LoadFont( aUIConfiguration.mMonoFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize );
 
