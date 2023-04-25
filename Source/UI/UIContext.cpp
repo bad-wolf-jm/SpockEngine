@@ -20,7 +20,7 @@ namespace SE::Core
 {
 
     UIContext::UIContext( Ref<SE::Core::IWindow> aWindow, Ref<VkGraphicContext> aGraphicContext, ARenderContext &aRenderContext,
-                          std::string &aImGuiConfigPath, UIConfiguration const &aUIConfiguration )
+                          std::string &aImGuiConfigPath, UIConfiguration const &aConfig )
         : mGraphicContext{ aGraphicContext }
         , mImGuiConfigPath{ aImGuiConfigPath }
     {
@@ -60,28 +60,17 @@ namespace SE::Core
         lFontConfig.PixelSnapH       = true;
         lFontConfig.GlyphMinAdvanceX = 10.0f;
 
-        mFonts[FontFamilyFlags::DISPLAY] =
-            LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * 2 );
-        mFonts[FontFamilyFlags::H1] =
-            LoadFont( aUIConfiguration.mBoldFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * 1.5f );
-        mFonts[FontFamilyFlags::H2] =
-            LoadFont( aUIConfiguration.mBoldFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * 1.25f );
-        mFonts[FontFamilyFlags::H3] =
-            LoadFont( aUIConfiguration.mItalicFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * 1.25f );
-        mFonts[FontFamilyFlags::EM] =
-            LoadFont( aUIConfiguration.mItalicFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * 1.0f );
-        mFonts[FontFamilyFlags::HUGE] =
-            LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * 1.5f );
-        mFonts[FontFamilyFlags::LARGE] =
-            LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * 1.25f );
-        mFonts[FontFamilyFlags::NORMAL] =
-            LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize );
-        mFonts[FontFamilyFlags::SMALL] =
-            LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * .85f );
-        mFonts[FontFamilyFlags::TINY] =
-            LoadFont( aUIConfiguration.mMainFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize * .75f );
-        mFonts[FontFamilyFlags::MONOSPACE] =
-            LoadFont( aUIConfiguration.mMonoFont, aUIConfiguration.mIconFont, aUIConfiguration.mFontSize );
+        mFonts[FontFamilyFlags::DISPLAY]   = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * 2 );
+        mFonts[FontFamilyFlags::H1]        = LoadFont( aConfig.mBoldFont, aConfig.mIconFont, aConfig.mFontSize * 1.5f );
+        mFonts[FontFamilyFlags::H2]        = LoadFont( aConfig.mBoldFont, aConfig.mIconFont, aConfig.mFontSize * 1.25f );
+        mFonts[FontFamilyFlags::H3]        = LoadFont( aConfig.mItalicFont, aConfig.mIconFont, aConfig.mFontSize * 1.25f );
+        mFonts[FontFamilyFlags::EM]        = LoadFont( aConfig.mItalicFont, aConfig.mIconFont, aConfig.mFontSize * 1.0f );
+        mFonts[FontFamilyFlags::HUGE]      = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * 1.5f );
+        mFonts[FontFamilyFlags::LARGE]     = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * 1.25f );
+        mFonts[FontFamilyFlags::NORMAL]    = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize );
+        mFonts[FontFamilyFlags::SMALL]     = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * .75f );
+        mFonts[FontFamilyFlags::TINY]      = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * .5f );
+        mFonts[FontFamilyFlags::MONOSPACE] = LoadFont( aConfig.mMonoFont, aConfig.mIconFont, aConfig.mFontSize );
 
         mUIStyle = UIStyle{ true };
 
@@ -137,10 +126,10 @@ namespace SE::Core
         lPlatformIO.Renderer_SwapBuffers   = Renderer_SwapBuffers;
     }
 
-    void UIContext::Renderer_CreateWindow( ImGuiViewport *vp ) 
-    { 
-        UIWindow* lNewRenderWindow = new UIWindow( Engine::GetInstance()->UIContext()->GraphicContext(), vp ); 
-        
+    void UIContext::Renderer_CreateWindow( ImGuiViewport *vp )
+    {
+        UIWindow *lNewRenderWindow = new UIWindow( Engine::GetInstance()->UIContext()->GraphicContext(), vp );
+
         vp->RendererUserData = lNewRenderWindow;
     }
 
@@ -201,6 +190,27 @@ namespace SE::Core
         PushFontFamily( FontFamilyFlags::NORMAL );
     }
 
+    void UIContext::RenderPlatformWindows()
+    {
+        ImGuiPlatformIO &lPlatformIO = ImGui::GetPlatformIO();
+
+        for( int i = 1; i < lPlatformIO.Viewports.Size; i++ )
+        {
+            ImGuiViewport *viewport = lPlatformIO.Viewports[i];
+            if( viewport->Flags & ImGuiViewportFlags_Minimized ) continue;
+            if( lPlatformIO.Platform_RenderWindow ) lPlatformIO.Platform_RenderWindow( viewport, this );
+            if( lPlatformIO.Renderer_RenderWindow ) lPlatformIO.Renderer_RenderWindow( viewport, this );
+        }
+
+        for( int i = 1; i < lPlatformIO.Viewports.Size; i++ )
+        {
+            ImGuiViewport *viewport = lPlatformIO.Viewports[i];
+            if( viewport->Flags & ImGuiViewportFlags_Minimized ) continue;
+            if( lPlatformIO.Platform_SwapBuffers ) lPlatformIO.Platform_SwapBuffers( viewport, this );
+            if( lPlatformIO.Renderer_SwapBuffers ) lPlatformIO.Renderer_SwapBuffers( viewport, this );
+        }
+    }
+
     void UIContext::EndFrame( ARenderContext &aRenderContext )
     {
         PopFont();
@@ -208,7 +218,7 @@ namespace SE::Core
         ImGui::UpdatePlatformWindows();
         ImDrawData *drawdata = ImGui::GetDrawData();
         mMainWindow->Render( aRenderContext, drawdata );
-        ImGui::RenderPlatformWindowsDefault();
+        RenderPlatformWindows();
     }
 
     ImageHandle UIContext::CreateTextureHandle( Ref<VkSampler2D> aTexture ) { return ImageHandle{ AddTexture( aTexture ) }; }
