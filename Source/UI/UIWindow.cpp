@@ -114,17 +114,16 @@ namespace SE::Core
         // Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
         int lFramebufferWidth  = (int)( aDrawData->DisplaySize.x * aDrawData->FramebufferScale.x );
         int lFramebufferHeight = (int)( aDrawData->DisplaySize.y * aDrawData->FramebufferScale.y );
-
         if( ( lFramebufferWidth <= 0 ) || ( lFramebufferHeight <= 0 ) ) return;
 
         if( aDrawData->TotalVtxCount > 0 )
         {
             // Create or resize the vertex/index buffers
-            size_t vertex_size = aDrawData->TotalVtxCount * sizeof( ImDrawVert );
-            size_t index_size  = aDrawData->TotalIdxCount * sizeof( ImDrawIdx );
+            size_t lVertexSize = aDrawData->TotalVtxCount * sizeof( ImDrawVert );
+            size_t lIndexSize  = aDrawData->TotalIdxCount * sizeof( ImDrawIdx );
 
-            mVertexBuffer->Resize( vertex_size );
-            mIndexBuffer->Resize( index_size );
+            mVertexBuffer->Resize( lVertexSize );
+            mIndexBuffer->Resize( lIndexSize );
 
             int lVertexOffset = 0;
             int lIndexOffset  = 0;
@@ -133,6 +132,7 @@ namespace SE::Core
                 const ImDrawList *lImGuiDrawCommands = aDrawData->CmdLists[n];
                 mVertexBuffer->Upload( lImGuiDrawCommands->VtxBuffer.Data, lImGuiDrawCommands->VtxBuffer.Size, lVertexOffset );
                 mIndexBuffer->Upload( lImGuiDrawCommands->IdxBuffer.Data, lImGuiDrawCommands->IdxBuffer.Size, lIndexOffset );
+
                 lVertexOffset += lImGuiDrawCommands->VtxBuffer.Size;
                 lIndexOffset += lImGuiDrawCommands->IdxBuffer.Size;
             }
@@ -141,50 +141,47 @@ namespace SE::Core
         // Setup desired Vulkan state
         SetupRenderState( aRenderContext, aDrawData );
 
-        // Will project scissor/clipping rectangles into framebuffer space
-        // clang-format off
-        ImVec4 lOffset = ImVec4{ aDrawData->DisplayPos.x, aDrawData->DisplayPos.y, aDrawData->DisplayPos.x, aDrawData->DisplayPos.y };
-        ImVec4 lScale  = ImVec4{ aDrawData->FramebufferScale.x, aDrawData->FramebufferScale.y, aDrawData->FramebufferScale.x, aDrawData->FramebufferScale.y };
-        // clang-format on
-
         int lGlobalVtxOffset = 0;
         int lGlobalIdxOffset = 0;
         for( int n = 0; n < aDrawData->CmdListsCount; n++ )
         {
             const ImDrawList *lImGuiDrawCommands = aDrawData->CmdLists[n];
-            
-            for( int i = 0; i < lImGuiDrawCommands->CmdBuffer.Size; i++ )
-            {
-                const ImDrawCmd *lPcmd = &lImGuiDrawCommands->CmdBuffer[i];
 
-                // Project scissor/clipping rectangles into framebuffer space
-                ImVec4 lClipRect = ( lPcmd->ClipRect - lOffset ) * lScale;
-
-                if( lClipRect.x < lFramebufferWidth && lClipRect.y < lFramebufferHeight && lClipRect.z >= 0.0f && lClipRect.w >= 0.0f )
-                {
-                    // Negative offsets are illegal for vkCmdSetScissor
-                    if( lClipRect.x < 0.0f ) lClipRect.x = 0.0f;
-                    if( lClipRect.y < 0.0f ) lClipRect.y = 0.0f;
-
-                    aRenderContext.GetCurrentCommandBuffer()->SetScissor(
-                        { (int32_t)( lClipRect.x ), (int32_t)( lClipRect.y ) },
-                        { (uint32_t)( lClipRect.z - lClipRect.x ), (uint32_t)( lClipRect.w - lClipRect.y ) } );
-
-                    // Bind a the descriptor set for the current texture.
-                    if( (VkDescriptorSet)lPcmd->TextureId )
-                    {
-                        VkDescriptorSet lDesc[1] = { (VkDescriptorSet)lPcmd->TextureId };
-                        vkCmdBindDescriptorSets( aRenderContext.GetCurrentCommandBuffer()->mVkObject, VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                                 mUIRenderPipeline->GetVkPipelineLayoutObject()->mVkObject, 0, 1, lDesc, 0, NULL );
-
-                        aRenderContext.Draw( lPcmd->ElemCount, lPcmd->IdxOffset + lGlobalIdxOffset,
-                                             lPcmd->VtxOffset + lGlobalVtxOffset, 1, 0 );
-                    }
-                }
-            }
+            Render( aRenderContext, lImGuiDrawCommands, lGlobalVtxOffset, lGlobalIdxOffset, lFramebufferWidth, lFramebufferHeight,
+                    aDrawData->DisplayPos, aDrawData->FramebufferScale );
 
             lGlobalIdxOffset += lImGuiDrawCommands->IdxBuffer.Size;
             lGlobalVtxOffset += lImGuiDrawCommands->VtxBuffer.Size;
+        }
+    }
+
+    void UIWindow::Render( ARenderContext &aRenderContext, ImDrawList const *aDrawList, int aVertexOffset, int aIndexOffset,
+                           int aFbWidth, int aFbHeight, ImVec2 aPosition, ImVec2 aScale )
+    {
+        ImVec4 lOffset = ImVec4{ aPosition.x, aPosition.y, aPosition.x, aPosition.y };
+        ImVec4 lScale  = ImVec4{ aScale.x, aScale.y, aScale.x, aScale.y };
+
+        for( int i = 0; i < aDrawList->CmdBuffer.Size; i++ )
+        {
+            const ImDrawCmd *lPcmd = &aDrawList->CmdBuffer[i];
+
+            if( !( (VkDescriptorSet)lPcmd->TextureId ) ) continue;
+
+            ImVec4 lClipRect = ( lPcmd->ClipRect - lOffset ) * lScale;
+            if( !( ( lClipRect.x < aFbWidth ) && ( lClipRect.y < aFbHeight ) && ( lClipRect.z >= 0.0f ) && ( lClipRect.w >= 0.0f ) ) )
+                continue;
+
+            if( lClipRect.x < 0.0f ) lClipRect.x = 0.0f;
+            if( lClipRect.y < 0.0f ) lClipRect.y = 0.0f;
+            aRenderContext.GetCurrentCommandBuffer()->SetScissor(
+                { (int32_t)( lClipRect.x ), (int32_t)( lClipRect.y ) },
+                { (uint32_t)( lClipRect.z - lClipRect.x ), (uint32_t)( lClipRect.w - lClipRect.y ) } );
+
+            VkDescriptorSet lDesc[1] = { (VkDescriptorSet)lPcmd->TextureId };
+            vkCmdBindDescriptorSets( aRenderContext.GetCurrentCommandBuffer()->mVkObject, VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                     mUIRenderPipeline->GetVkPipelineLayoutObject()->mVkObject, 0, 1, lDesc, 0, NULL );
+
+            aRenderContext.Draw( lPcmd->ElemCount, lPcmd->IdxOffset + aIndexOffset, lPcmd->VtxOffset + aVertexOffset, 1, 0 );
         }
     }
 

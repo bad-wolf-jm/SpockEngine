@@ -6,8 +6,8 @@
 
 #include "Graphics/Vulkan/ARenderContext.h"
 #include "Graphics/Vulkan/DescriptorSet.h"
-#include "Graphics/Vulkan/SwapChain.h"
 #include "Graphics/Vulkan/GraphicsPipeline.h"
+#include "Graphics/Vulkan/SwapChain.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "Graphics/Vulkan/VkGpuBuffer.h"
@@ -39,25 +39,27 @@ namespace SE::Core
 
         void Render( ARenderContext &aRenderContext, ImDrawData *aDrawData );
         void Render( ImDrawData *aDrawData );
+        void Render( ARenderContext &aRenderContext, ImDrawList const *aDrawData, int aVertexOffset, int aIndexOffset, int aFbWidth,
+                     int aFbHeight, ImVec2 aPosition, ImVec2 aScale );
         void EndRender( ImDrawData *aDrawData );
 
       private:
-        Ref<IWindow>                 mWindow                 = nullptr;
-        Ref<VkGraphicContext>        mGraphicContext         = nullptr;
-        Ref<SwapChain>               mSwapChain              = nullptr;
+        Ref<IWindow>          mWindow         = nullptr;
+        Ref<VkGraphicContext> mGraphicContext = nullptr;
+        Ref<SwapChain>        mSwapChain      = nullptr;
 
         SE::Graphics::ARenderContext mRenderContext;
 
-        ImGuiViewport             *mViewport              = nullptr;
-        Ref<DescriptorSetLayout>   mUIDescriptorSetLayout = nullptr;
+        ImGuiViewport           *mViewport              = nullptr;
+        Ref<DescriptorSetLayout> mUIDescriptorSetLayout = nullptr;
 
-        Ref<ShaderModule>          mUIVertexShader        = nullptr;
-        Ref<ShaderModule>          mUIFragmentShader      = nullptr;
-        Ref<GraphicsPipeline>      mUIRenderPipeline      = nullptr;
-        Ref<Graphics::VkSampler2D> mFontTexture           = nullptr;
-        Ref<DescriptorSet>         mFontDescriptorSet     = nullptr;
-        Ref<VkGpuBuffer>           mVertexBuffer          = nullptr;
-        Ref<VkGpuBuffer>           mIndexBuffer           = nullptr;
+        Ref<ShaderModule>          mUIVertexShader    = nullptr;
+        Ref<ShaderModule>          mUIFragmentShader  = nullptr;
+        Ref<GraphicsPipeline>      mUIRenderPipeline  = nullptr;
+        Ref<Graphics::VkSampler2D> mFontTexture       = nullptr;
+        Ref<DescriptorSet>         mFontDescriptorSet = nullptr;
+        Ref<VkGpuBuffer>           mVertexBuffer      = nullptr;
+        Ref<VkGpuBuffer>           mIndexBuffer       = nullptr;
 
       private:
         void SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData );
