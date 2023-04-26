@@ -56,7 +56,7 @@ namespace SE::Core
             New<ShaderModule>( GraphicContext<VkGraphicContext>(), lUIFragmentShaderFiles, eShaderStageTypeFlags::FRAGMENT );
         GraphicsPipelineCreateInfo lUIPipelineCreateInfo = {};
         lUIPipelineCreateInfo.mShaderStages              = { { mUIVertexShader, "main" }, { mUIFragmentShader, "main" } };
-        lUIPipelineCreateInfo.mInputBufferLayout          = {
+        lUIPipelineCreateInfo.mInputBufferLayout         = {
             { "Position", eBufferDataType::VEC2, 0, 0 },
             { "TextureCoords", eBufferDataType::VEC2, 0, 1 },
             { "Color", eBufferDataType::COLOR, 0, 2 },
@@ -72,6 +72,17 @@ namespace SE::Core
         lUIPipelineCreateInfo.mSetLayouts = { mUIDescriptorSetLayout };
 
         mUIRenderPipeline = New<GraphicsPipeline>( GraphicContext<VkGraphicContext>(), lUIPipelineCreateInfo );
+
+        // mUIRenderPipeline = CreateGraphicsPipeline( mGraphicContext, mRenderContext, ePrimitiveTopology::TRIANGLES );
+        // mUIRenderPipeline->SetShader(eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\ui_shader.frag.spv" ), "main");
+        // mUIRenderPipeline->SetShader(eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders\\ui_shader.frag.spv" ), "main");
+        // mUIRenderPipeline->AddInput("Position", eBufferDataType::VEC2, 0, 0);
+        // mUIRenderPipeline->AddInput("TextureCoords", eBufferDataType::VEC2, 0, 1);
+        // mUIRenderPipeline->AddInput("Color", eBufferDataType::COLOR, 0, 2);
+        // auto &lDescriptorSet = mUIRenderPipeline->AddDescriptorSet();
+        // lDescriptorSet.Add({ eShaderStageTypeFlags::FRAGMENT }, 0, eDescriptorType::COMBINED_IMAGE_SAMPLER );
+        // mUIRenderPipeline->AddPushConstantRange({ eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4);
+        // mUIRenderPipeline->Build();
     }
 
     void UIWindow::SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData )

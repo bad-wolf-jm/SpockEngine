@@ -11,6 +11,21 @@ namespace SE::Graphics
         std::string           mEntryPoint;
     };
 
+    struct sDescriptorBindingInfo
+    {
+        uint32_t        mBindingIndex = 0;
+        eDescriptorType mType         = eDescriptorType::UNIFORM_BUFFER;
+        ShaderStageType mShaderStages = {};
+        bool            mUnbounded    = false;
+    };
+
+    struct sDescriptorSet
+    {
+        std::vector<sDescriptorBindingInfo> mDescriptors = {};
+
+        void Add( uint32_t aBindingIndex, eDescriptorType aType, ShaderStageType aShaderStages, bool aUnbounded );
+    };
+
     class IRenderContext;
 
     class IGraphicsPipeline
@@ -35,6 +50,8 @@ namespace SE::Graphics
             AddPushConstantRange( aShaderStage, aOffset, sizeof( _Ty ) );
         }
 
+        sDescriptorSet &AddDescriptorSet();
+
       private:
         bool mOpaque = false;
 
@@ -52,11 +69,8 @@ namespace SE::Graphics
         bool                   mDepthTestEnable  = false;
         eDepthCompareOperation mDepthComparison  = eDepthCompareOperation::ALWAYS;
 
-        std::vector<sShaderData> mShaderStages = {};
-
-        std::vector<sPushConstantRange>       mPushConstants = {};
-        // std::vector<Ref<DescriptorSetLayout>> mSetLayouts    = {};
-
-        // Ref<sVkAbstractRenderPassObject> mRenderPass = nullptr;
+        std::vector<sShaderData>        mShaderStages     = {};
+        std::vector<sPushConstantRange> mPushConstants    = {};
+        std::vector<sDescriptorSet>     mDescriptorLayout = {};
     };
 } // namespace SE::Graphics
