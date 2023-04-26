@@ -16,26 +16,26 @@
 
 namespace SE::Core
 {
-    UIWindow::UIWindow( Ref<VkGraphicContext> aGraphicContext, ImGuiViewport *aViewport )
+    UIWindow::UIWindow( Ref<IGraphicContext> aGraphicContext, ImGuiViewport *aViewport )
         : mViewport{ aViewport }
         , mGraphicContext{ aGraphicContext }
     {
         mWindow        = SE::Core::New<IWindow>( (GLFWwindow *)aViewport->PlatformHandle );
-        mSwapChain     = SE::Core::New<SwapChain>( mGraphicContext, mWindow );
-        mRenderContext = SE::Graphics::ARenderContext( mGraphicContext, mSwapChain );
+        mSwapChain     = SE::Core::New<SwapChain>( GraphicContext<VkGraphicContext>(), mWindow );
+        mRenderContext = SE::Graphics::ARenderContext( GraphicContext<VkGraphicContext>(), mSwapChain );
 
         DescriptorBindingInfo lDescriptorBinding = {
             0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { Graphics::eShaderStageTypeFlags::FRAGMENT } };
         DescriptorSetLayoutCreateInfo lBindingLayout = { { lDescriptorBinding } };
-        mUIDescriptorSetLayout                       = New<DescriptorSetLayout>( mGraphicContext, lBindingLayout );
+        mUIDescriptorSetLayout                       = New<DescriptorSetLayout>( GraphicContext<VkGraphicContext>(), lBindingLayout );
 
         CreatePipeline();
 
-        mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, true, true, true, true, 1 );
-        mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, eBufferType::INDEX_BUFFER, true, true, true, true, 1 );
+        mVertexBuffer = New<VkGpuBuffer>( GraphicContext<VkGraphicContext>(), eBufferType::VERTEX_BUFFER, true, true, true, true, 1 );
+        mIndexBuffer  = New<VkGpuBuffer>( GraphicContext<VkGraphicContext>(), eBufferType::INDEX_BUFFER, true, true, true, true, 1 );
     }
 
-    UIWindow::UIWindow( Ref<VkGraphicContext> aGraphicContext, ARenderContext &aRenderContext )
+    UIWindow::UIWindow( Ref<IGraphicContext> aGraphicContext, ARenderContext &aRenderContext )
         : mWindow{ nullptr }
         , mGraphicContext{ aGraphicContext }
         , mRenderContext{ aRenderContext }
@@ -46,23 +46,23 @@ namespace SE::Core
         DescriptorBindingInfo lDescriptorBinding = {
             0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { Graphics::eShaderStageTypeFlags::FRAGMENT } };
         DescriptorSetLayoutCreateInfo lBindingLayout = { { lDescriptorBinding } };
-        mUIDescriptorSetLayout                       = New<DescriptorSetLayout>( mGraphicContext, lBindingLayout );
+        mUIDescriptorSetLayout                       = New<DescriptorSetLayout>( GraphicContext<VkGraphicContext>(), lBindingLayout );
 
         CreatePipeline();
 
-        mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, true, true, true, true, 1 );
-        mIndexBuffer  = New<VkGpuBuffer>( mGraphicContext, eBufferType::INDEX_BUFFER, true, true, true, true, 1 );
+        mVertexBuffer = New<VkGpuBuffer>( GraphicContext<VkGraphicContext>(), eBufferType::VERTEX_BUFFER, true, true, true, true, 1 );
+        mIndexBuffer  = New<VkGpuBuffer>( GraphicContext<VkGraphicContext>(), eBufferType::INDEX_BUFFER, true, true, true, true, 1 );
     }
 
     void UIWindow::CreatePipeline()
     {
         std::string lUIVertexShaderFiles = GetResourcePath( "Shaders\\ui_shader.vert.spv" ).string();
         mUIVertexShader =
-            New<Graphics::ShaderModule>( mGraphicContext, lUIVertexShaderFiles, Graphics::eShaderStageTypeFlags::VERTEX );
+            New<Graphics::ShaderModule>( GraphicContext<VkGraphicContext>(), lUIVertexShaderFiles, Graphics::eShaderStageTypeFlags::VERTEX );
 
         std::string lUIFragmentShaderFiles = GetResourcePath( "Shaders\\ui_shader.frag.spv" ).string();
         mUIFragmentShader =
-            New<Graphics::ShaderModule>( mGraphicContext, lUIFragmentShaderFiles, Graphics::eShaderStageTypeFlags::FRAGMENT );
+            New<Graphics::ShaderModule>( GraphicContext<VkGraphicContext>(), lUIFragmentShaderFiles, Graphics::eShaderStageTypeFlags::FRAGMENT );
         GraphicsPipelineCreateInfo lUIPipelineCreateInfo = {};
         lUIPipelineCreateInfo.mShaderStages              = { { mUIVertexShader, "main" }, { mUIFragmentShader, "main" } };
         lUIPipelineCreateInfo.InputBufferLayout          = {
@@ -80,7 +80,7 @@ namespace SE::Core
         };
         lUIPipelineCreateInfo.SetLayouts = { mUIDescriptorSetLayout };
 
-        mUIRenderPipeline = New<GraphicsPipeline>( mGraphicContext, lUIPipelineCreateInfo );
+        mUIRenderPipeline = New<GraphicsPipeline>( GraphicContext<VkGraphicContext>(), lUIPipelineCreateInfo );
     }
 
     void UIWindow::SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData )

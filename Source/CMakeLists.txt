@@ -47,6 +47,7 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/UIWindow.cpp
     
 
+    Graphics/API.cpp
     Graphics/Vulkan/DescriptorSet.cpp
     Graphics/Vulkan/GraphicsPipeline.cpp
     Graphics/Vulkan/ARenderContext.cpp
