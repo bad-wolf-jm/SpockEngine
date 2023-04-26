@@ -46,7 +46,6 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/UIContext.cpp
     UI/UIWindow.cpp
     
-
     Graphics/API.cpp
     Graphics/Vulkan/DescriptorSet.cpp
     Graphics/Vulkan/GraphicsPipeline.cpp
@@ -70,6 +69,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Interface/ISampler2D.cpp
     Graphics/Interface/ISamplerCubeMap.cpp
     Graphics/Interface/IRenderTarget.cpp
+    Graphics/Interface/IGraphicsPipeline.cpp
+    Graphics/Interface/IRenderContext.cpp
 
     OtdrEditor/OtdrWindow.cpp
     OtdrEditor/BaseOtdrApplication.cpp

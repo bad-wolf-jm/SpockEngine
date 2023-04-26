@@ -13,36 +13,37 @@ namespace SE::Graphics
 {
     struct GraphicsPipelineCreateInfo
     {
-        std::vector<sShader>   mShaderStages        = {};
-        sBufferLayout          InputBufferLayout    = {};
-        sBufferLayout          InstanceBufferLayout = {};
-        ePrimitiveTopology     Topology             = ePrimitiveTopology::TRIANGLES;
-        eFaceCulling           Culling              = eFaceCulling::BACK;
-        uint8_t                SampleCount          = 1;
-        float                  LineWidth            = 1.0f;
-        bool                   DepthWriteEnable     = false;
-        bool                   DepthTestEnable      = false;
-        bool                   Opaque               = false;
-        eDepthCompareOperation DepthComparison      = eDepthCompareOperation::ALWAYS;
+        sBufferLayout          mInputBufferLayout    = {};
+        sBufferLayout          mInstanceBufferLayout = {};
+        ePrimitiveTopology     mTopology             = ePrimitiveTopology::TRIANGLES;
+        eFaceCulling           mCulling              = eFaceCulling::BACK;
+        uint8_t                mSampleCount          = 1;
+        float                  mLineWidth            = 1.0f;
+        bool                   mDepthWriteEnable     = false;
+        bool                   mDepthTestEnable      = false;
+        bool                   mOpaque               = false;
+        eDepthCompareOperation mDepthComparison      = eDepthCompareOperation::ALWAYS;
 
-        std::vector<sPushConstantRange>            PushConstants = {};
-        Ref<sVkAbstractRenderPassObject> RenderPass    = nullptr;
-        std::vector<Ref<DescriptorSetLayout>>      SetLayouts    = {};
+        std::vector<sShader> mShaderStages = {};
+
+        std::vector<sPushConstantRange>       mPushConstants = {};
+        Ref<sVkAbstractRenderPassObject>      mRenderPass    = nullptr;
+        std::vector<Ref<DescriptorSetLayout>> mSetLayouts    = {};
     };
 
     class GraphicsPipeline
     {
       public:
-        GraphicsPipeline( Ref<VkGraphicContext> a_GraphicContext, GraphicsPipelineCreateInfo &a_CreateInfo );
+        GraphicsPipeline( Ref<VkGraphicContext> aGraphicContext, GraphicsPipelineCreateInfo &aCreateInfo );
         ~GraphicsPipeline() = default;
 
-        Ref<sVkPipelineObject>       GetVkPipelineObject() { return m_PipelineObject; }
-        Ref<sVkPipelineLayoutObject> GetVkPipelineLayoutObject() { return m_PipelineLayoutObject; }
+        Ref<sVkPipelineObject>       GetVkPipelineObject() { return mPipelineObject; }
+        Ref<sVkPipelineLayoutObject> GetVkPipelineLayoutObject() { return mPipelineLayoutObject; }
 
       private:
-        Ref<VkGraphicContext>                  mGraphicContext{};
-        Ref<sVkPipelineLayoutObject> m_PipelineLayoutObject = nullptr;
-        Ref<sVkPipelineObject>       m_PipelineObject       = nullptr;
+        Ref<VkGraphicContext>        mGraphicContext{};
+        Ref<sVkPipelineLayoutObject> mPipelineLayoutObject = nullptr;
+        Ref<sVkPipelineObject>       mPipelineObject       = nullptr;
     };
 
 } // namespace SE::Graphics

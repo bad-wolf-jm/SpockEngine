@@ -7,28 +7,28 @@
 
 namespace SE::Graphics
 {
-    GraphicsPipeline::GraphicsPipeline( Ref<VkGraphicContext> a_GraphicContext, GraphicsPipelineCreateInfo &a_CreateInfo )
-        : mGraphicContext( a_GraphicContext )
+    GraphicsPipeline::GraphicsPipeline( Ref<VkGraphicContext> aGraphicContext, GraphicsPipelineCreateInfo &aCreateInfo )
+        : mGraphicContext( aGraphicContext )
     {
-        std::vector<Ref<sVkDescriptorSetLayoutObject>> l_DescriptorSetLayouts( a_CreateInfo.SetLayouts.size() );
-        for( uint32_t i = 0; i < a_CreateInfo.SetLayouts.size(); i++ )
-            l_DescriptorSetLayouts[i] = a_CreateInfo.SetLayouts[i]->GetVkDescriptorSetLayoutObject();
+        std::vector<Ref<sVkDescriptorSetLayoutObject>> l_DescriptorSetLayouts( aCreateInfo.mSetLayouts.size() );
+        for( uint32_t i = 0; i < aCreateInfo.mSetLayouts.size(); i++ )
+            l_DescriptorSetLayouts[i] = aCreateInfo.mSetLayouts[i]->GetVkDescriptorSetLayoutObject();
 
-        m_PipelineLayoutObject =
-            SE::Core::New<sVkPipelineLayoutObject>( mGraphicContext, l_DescriptorSetLayouts, a_CreateInfo.PushConstants );
+        mPipelineLayoutObject =
+            SE::Core::New<sVkPipelineLayoutObject>( mGraphicContext, l_DescriptorSetLayouts, aCreateInfo.mPushConstants );
 
         sDepthTesting lDepth{};
-        lDepth.mDepthComparison  = a_CreateInfo.DepthComparison;
-        lDepth.mDepthTestEnable  = a_CreateInfo.DepthTestEnable;
-        lDepth.mDepthWriteEnable = a_CreateInfo.DepthWriteEnable;
+        lDepth.mDepthComparison  = aCreateInfo.mDepthComparison;
+        lDepth.mDepthTestEnable  = aCreateInfo.mDepthTestEnable;
+        lDepth.mDepthWriteEnable = aCreateInfo.mDepthWriteEnable;
 
-        if( a_CreateInfo.Opaque )
+        if( aCreateInfo.mOpaque )
         {
             sBlending lBlending{};
-            m_PipelineObject = SE::Core::New<sVkPipelineObject>(
-                mGraphicContext, a_CreateInfo.SampleCount, a_CreateInfo.InputBufferLayout, a_CreateInfo.InstanceBufferLayout,
-                a_CreateInfo.Topology, a_CreateInfo.Culling, a_CreateInfo.LineWidth, lDepth, lBlending, a_CreateInfo.mShaderStages,
-                m_PipelineLayoutObject, a_CreateInfo.RenderPass );
+            mPipelineObject = SE::Core::New<sVkPipelineObject>(
+                mGraphicContext, aCreateInfo.mSampleCount, aCreateInfo.mInputBufferLayout, aCreateInfo.mInstanceBufferLayout,
+                aCreateInfo.mTopology, aCreateInfo.mCulling, aCreateInfo.mLineWidth, lDepth, lBlending, aCreateInfo.mShaderStages,
+                mPipelineLayoutObject, aCreateInfo.mRenderPass );
         }
         else
         {
@@ -42,10 +42,10 @@ namespace SE::Graphics
             lBlending.mDestAlphaFactor     = eBlendFactor::ONE;
             lBlending.mAlphaBlendOperation = eBlendOperation::MAX;
 
-            m_PipelineObject = SE::Core::New<sVkPipelineObject>(
-                mGraphicContext, a_CreateInfo.SampleCount, a_CreateInfo.InputBufferLayout, a_CreateInfo.InstanceBufferLayout,
-                a_CreateInfo.Topology, a_CreateInfo.Culling, a_CreateInfo.LineWidth, lDepth, lBlending, a_CreateInfo.mShaderStages,
-                m_PipelineLayoutObject, a_CreateInfo.RenderPass );
+            mPipelineObject = SE::Core::New<sVkPipelineObject>(
+                mGraphicContext, aCreateInfo.mSampleCount, aCreateInfo.mInputBufferLayout, aCreateInfo.mInstanceBufferLayout,
+                aCreateInfo.mTopology, aCreateInfo.mCulling, aCreateInfo.mLineWidth, lDepth, lBlending, aCreateInfo.mShaderStages,
+                mPipelineLayoutObject, aCreateInfo.mRenderPass );
         }
     }
 
