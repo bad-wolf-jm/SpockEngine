@@ -20,4 +20,11 @@ namespace SE::Core
     template <typename _Ty> using Ref     = std::shared_ptr<_Ty>;
     template <typename _Ty> using WeakRef = std::weak_ptr<_Ty>;
 
+    template <typename _Ty, typename _Tz>
+    Ref<_Ty> Cast( Ref<_Tz> aElement )
+    {
+        return std::reinterpret_pointer_cast<_Ty>( aElement );
+    }
+
+
 } // namespace SE::Core

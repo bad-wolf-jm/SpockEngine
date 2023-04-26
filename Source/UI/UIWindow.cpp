@@ -31,8 +31,8 @@ namespace SE::Core
 
         CreatePipeline();
 
-        mVertexBuffer = New<VkGpuBuffer>( GraphicContext<VkGraphicContext>(), eBufferType::VERTEX_BUFFER, true, true, true, true, 1 );
-        mIndexBuffer  = New<VkGpuBuffer>( GraphicContext<VkGraphicContext>(), eBufferType::INDEX_BUFFER, true, true, true, true, 1 );
+        mVertexBuffer = CreateBuffer( mGraphicContext, eBufferType::VERTEX_BUFFER, true, true, true, true, 1 );
+        mIndexBuffer  = CreateBuffer( mGraphicContext, eBufferType::INDEX_BUFFER, true, true, true, true, 1 );
     }
 
     UIWindow::UIWindow( Ref<IGraphicContext> aGraphicContext, ARenderContext &aRenderContext )
@@ -50,8 +50,8 @@ namespace SE::Core
 
         CreatePipeline();
 
-        mVertexBuffer = New<VkGpuBuffer>( GraphicContext<VkGraphicContext>(), eBufferType::VERTEX_BUFFER, true, true, true, true, 1 );
-        mIndexBuffer  = New<VkGpuBuffer>( GraphicContext<VkGraphicContext>(), eBufferType::INDEX_BUFFER, true, true, true, true, 1 );
+        mVertexBuffer = CreateBuffer( mGraphicContext, eBufferType::VERTEX_BUFFER, true, true, true, true, 1 );
+        mIndexBuffer  = CreateBuffer( mGraphicContext, eBufferType::INDEX_BUFFER, true, true, true, true, 1 );
     }
 
     void UIWindow::CreatePipeline()
@@ -89,7 +89,7 @@ namespace SE::Core
 
         aRenderContext.Bind( mUIRenderPipeline );
 
-        if( aDrawData->TotalVtxCount > 0 ) aRenderContext.Bind( mVertexBuffer, mIndexBuffer );
+        if( aDrawData->TotalVtxCount > 0 ) aRenderContext.Bind( Cast<VkGpuBuffer>(mVertexBuffer), Cast<VkGpuBuffer>(mIndexBuffer) );
 
         int lFramebufferWidth  = (int)( aDrawData->DisplaySize.x * aDrawData->FramebufferScale.x );
         int lFramebufferHeight = (int)( aDrawData->DisplaySize.y * aDrawData->FramebufferScale.y );

@@ -63,7 +63,7 @@ namespace SE::Core
     class UIContext
     {
       public:
-        UIContext( Ref<SE::Core::IWindow> aWindow, Ref<VkGraphicContext> aDevice, ARenderContext &aRenderContext,
+        UIContext( Ref<SE::Core::IWindow> aWindow, Ref<IGraphicContext> aDevice, ARenderContext &aRenderContext,
                    std::string &aImGuiConfigPath, UIConfiguration const &aUIConfiguration );
         ~UIContext();
 
@@ -78,7 +78,7 @@ namespace SE::Core
         ImageHandle        CreateTextureHandle( Ref<Graphics::VkSampler2D> aTexture );
         Ref<DescriptorSet> AddTexture( Ref<Graphics::VkSampler2D> aTexture );
 
-        Ref<VkGraphicContext> GraphicContext() { return mGraphicContext; }
+        Ref<IGraphicContext> GraphicContext() { return mGraphicContext; }
 
         ImGuiContext  *mImGUIOverlay;
         ImPlotContext *mImPlotContext;
@@ -86,7 +86,7 @@ namespace SE::Core
 
         UIStyle mUIStyle;
 
-        Ref<VkGraphicContext> mGraphicContext{};
+        Ref<IGraphicContext> mGraphicContext{};
 
         Ref<DescriptorSetLayout> mUIDescriptorSetLayout = nullptr;
 
