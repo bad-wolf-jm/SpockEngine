@@ -1,17 +1,13 @@
 #pragma once
 
-// #include "Graphics/Vulkan/IGraphicContext.h"
-// #include "Graphics/Vulkan/IGraphicBuffer.h"
-// #include "GraphicsPipeline.h"
-
 #include "IGraphicBuffer.h"
 #include "IGraphicContext.h"
 #include "IGraphicsPipeline.h"
 #include "IRenderTarget.h"
+#include "IDescriptorSet.h"
 
 namespace SE::Graphics
 {
-    class IDescriptorSet;
     class IRenderContext
     {
       public:
@@ -55,10 +51,6 @@ namespace SE::Graphics
 
         bool mFrameIsStarted = false;
         bool mHasIndex       = false;
-
-        // uint32_t mCurrentCommandBuffer = 0;
-        // std::vector<Ref<sVkCommandBufferObject>> mCommandBufferObject   = {};
-        // Ref<sVkPipelineLayoutObject>             mCurrentPipelineLayout = nullptr;
     };
 
 } // namespace SE::Graphics
