@@ -2,8 +2,6 @@
 
 #include <map>
 
-#include "Graphics/Vulkan/DescriptorSet.h"
-
 #include "Graphics/Vulkan/ARenderContext.h"
 #include "Graphics/Vulkan/DescriptorSet.h"
 #include "Graphics/Vulkan/GraphicsPipeline.h"
@@ -31,11 +29,15 @@ namespace SE::Core
     class UIWindow
     {
       public:
-        UIWindow( Ref<VkGraphicContext> aGraphicContext, ImGuiViewport *aViewport );
-        UIWindow( Ref<VkGraphicContext> aGraphicContext, ARenderContext &aRenderContext );
+        UIWindow( Ref<IGraphicContext> aGraphicContext, ImGuiViewport *aViewport );
+        UIWindow( Ref<IGraphicContext> aGraphicContext, ARenderContext &aRenderContext );
         ~UIWindow();
 
-        Ref<VkGraphicContext> GraphicContext() { return mGraphicContext; }
+        template <typename _Ty>
+        Ref<_Ty> GraphicContext()
+        {
+            return std::reinterpret_pointer_cast<_Ty>( mGraphicContext );
+        }
 
         void Render( ARenderContext &aRenderContext, ImDrawData *aDrawData );
         void Render( ImDrawData *aDrawData );
@@ -44,9 +46,9 @@ namespace SE::Core
         void EndRender( ImDrawData *aDrawData );
 
       private:
-        Ref<IWindow>          mWindow         = nullptr;
-        Ref<VkGraphicContext> mGraphicContext = nullptr;
-        Ref<SwapChain>        mSwapChain      = nullptr;
+        Ref<IWindow>         mWindow         = nullptr;
+        Ref<IGraphicContext> mGraphicContext = nullptr;
+        Ref<SwapChain>       mSwapChain      = nullptr;
 
         SE::Graphics::ARenderContext mRenderContext;
 
