@@ -1,5 +1,6 @@
 #include "API.h"
 
+#include "Vulkan/GraphicsPipeline.h"
 #include "Vulkan/VkGpuBuffer.h"
 
 namespace SE::Graphics
@@ -36,6 +37,20 @@ namespace SE::Graphics
         lNewBuffer->Upload( aData, aSize );
 
         return lNewBuffer;
+    }
+
+    Ref<IGraphicsPipeline> CreateGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
+                                                   ePrimitiveTopology aTopology )
+    {
+        switch( gApi )
+        {
+        case eGraphicsAPI::VULKAN:
+            // return New<VkGraphicsPipeline>( Cast<VkGraphicContext>( aGraphicContext ), Cast<ARenderContext>( aRenderContext ),
+            //                                 aTopology );
+        case eGraphicsAPI::OPENGL:
+        case eGraphicsAPI::DIRECTX:
+        default: return nullptr;
+        }
     }
 
 } // namespace SE::Graphics

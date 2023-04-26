@@ -65,8 +65,6 @@ namespace SE::Graphics
         ~DescriptorSet() = default;
 
         void Write( Ref<VkGpuBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding );
-        // void Write( Ref<Texture2D> aBuffer, uint32_t aBinding );
-        // void Write( std::vector<Ref<Texture2D>> aBuffer, uint32_t aBinding );
 
         void Write( Ref<VkSampler2D> aBuffer, uint32_t aBinding );
         void Write( std::vector<Ref<VkSampler2D>> aBuffer, uint32_t aBinding );
