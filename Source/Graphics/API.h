@@ -36,12 +36,6 @@ namespace SE::Graphics
 
     template <>
     Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, uint8_t *aData, size_t aSize, eBufferType aType,
-                                      bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
-    {
-        auto lNewBuffer =
-            CreateBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination, aSize );
-        lNewBuffer->Upload( aData, aSize );
+                                      bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
 
-        return lNewBuffer;
-    }
 } // namespace SE::Graphics

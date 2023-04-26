@@ -6,12 +6,6 @@ namespace SE::Graphics
 {
     static eGraphicsAPI gApi = eGraphicsAPI::VULKAN;
 
-    template <typename _Ty, typename _Tz>
-    Ref<_Ty> Cast( Ref<_Tz> aGraphicContext )
-    {
-        return std::reinterpret_pointer_cast<_Ty>( aGraphicContext );
-    }
-
     Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible,
                                       bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )
     {
@@ -31,6 +25,17 @@ namespace SE::Graphics
     {
         return CreateBuffer( Cast<VkGraphicContext>( aGraphicContext ), eBufferType::UNKNOWN, aIsHostVisible, aIsGraphicsOnly,
                              aIsTransferSource, aIsTransferDestination, aSize );
+    }
+
+    template <>
+    Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, uint8_t *aData, size_t aSize, eBufferType aType,
+                                      bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination )
+    {
+        auto lNewBuffer =
+            CreateBuffer( aGraphicContext, aType, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, aIsTransferDestination, aSize );
+        lNewBuffer->Upload( aData, aSize );
+
+        return lNewBuffer;
     }
 
 } // namespace SE::Graphics

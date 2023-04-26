@@ -21,6 +21,8 @@
 
 #include <stdexcept>
 
+#include "Graphics/API.h"
+
 namespace SE::Core
 {
     using namespace SE::Graphics;
@@ -46,22 +48,23 @@ namespace SE::Core
         void EndRender( ImDrawData *aDrawData );
 
       private:
-        Ref<IWindow>         mWindow         = nullptr;
+        ImGuiViewport *mViewport = nullptr;
+
         Ref<IGraphicContext> mGraphicContext = nullptr;
-        Ref<SwapChain>       mSwapChain      = nullptr;
 
-        SE::Graphics::ARenderContext mRenderContext;
+        Ref<IWindow>   mWindow    = nullptr;
+        Ref<SwapChain> mSwapChain = nullptr;
+        ARenderContext mRenderContext;
 
-        ImGuiViewport           *mViewport              = nullptr;
-        Ref<DescriptorSetLayout> mUIDescriptorSetLayout = nullptr;
+        Ref<ShaderModule>          mUIVertexShader        = nullptr;
+        Ref<ShaderModule>          mUIFragmentShader      = nullptr;
+        Ref<GraphicsPipeline>      mUIRenderPipeline      = nullptr;
+        Ref<Graphics::VkSampler2D> mFontTexture           = nullptr;
+        Ref<DescriptorSet>         mFontDescriptorSet     = nullptr;
+        Ref<DescriptorSetLayout>   mUIDescriptorSetLayout = nullptr;
 
-        Ref<ShaderModule>          mUIVertexShader    = nullptr;
-        Ref<ShaderModule>          mUIFragmentShader  = nullptr;
-        Ref<GraphicsPipeline>      mUIRenderPipeline  = nullptr;
-        Ref<Graphics::VkSampler2D> mFontTexture       = nullptr;
-        Ref<DescriptorSet>         mFontDescriptorSet = nullptr;
-        Ref<VkGpuBuffer>           mVertexBuffer      = nullptr;
-        Ref<VkGpuBuffer>           mIndexBuffer       = nullptr;
+        Ref<IGraphicBuffer> mVertexBuffer = nullptr;
+        Ref<IGraphicBuffer> mIndexBuffer  = nullptr;
 
       private:
         void SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData );

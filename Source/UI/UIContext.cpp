@@ -19,7 +19,7 @@
 namespace SE::Core
 {
 
-    UIContext::UIContext( Ref<SE::Core::IWindow> aWindow, Ref<VkGraphicContext> aGraphicContext, ARenderContext &aRenderContext,
+    UIContext::UIContext( Ref<SE::Core::IWindow> aWindow, Ref<IGraphicContext> aGraphicContext, ARenderContext &aRenderContext,
                           std::string &aImGuiConfigPath, UIConfiguration const &aConfig )
         : mGraphicContext{ aGraphicContext }
         , mImGuiConfigPath{ aImGuiConfigPath }
@@ -47,7 +47,7 @@ namespace SE::Core
         DescriptorBindingInfo lDescriptorBinding = {
             0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { Graphics::eShaderStageTypeFlags::FRAGMENT } };
         DescriptorSetLayoutCreateInfo lBindingLayout = { { lDescriptorBinding } };
-        mUIDescriptorSetLayout                       = New<DescriptorSetLayout>( mGraphicContext, lBindingLayout );
+        mUIDescriptorSetLayout                       = New<DescriptorSetLayout>( Cast<VkGraphicContext>(mGraphicContext), lBindingLayout );
 
         ImGuiViewport *lMainViewport    = ImGui::GetMainViewport();
         lMainViewport->RendererUserData = nullptr;
@@ -95,8 +95,8 @@ namespace SE::Core
         lSamplingInfo.mWrapping = eSamplerWrapping::REPEAT;
         TextureSampler2D lTextureSampler( lTextureImage, lSamplingInfo );
 
-        auto lFontTexture  = New<VkTexture2D>( mGraphicContext, lTextureImage );
-        mFontTexture       = New<VkSampler2D>( mGraphicContext, lFontTexture, lSamplingInfo );
+        auto lFontTexture  = New<VkTexture2D>( Cast<VkGraphicContext>(mGraphicContext), lTextureImage );
+        mFontTexture       = New<VkSampler2D>( Cast<VkGraphicContext>(mGraphicContext), lFontTexture, lSamplingInfo );
         mFontDescriptorSet = AddTexture( mFontTexture );
         io.Fonts->TexID    = (ImTextureID)mFontDescriptorSet->GetVkDescriptorSet();
 
@@ -235,7 +235,7 @@ namespace SE::Core
 
     Ref<DescriptorSet> UIContext::AddTexture( Ref<VkSampler2D> aTexture )
     {
-        Ref<DescriptorSet> lDescriptorSet = New<DescriptorSet>( mGraphicContext, mUIDescriptorSetLayout );
+        Ref<DescriptorSet> lDescriptorSet = New<DescriptorSet>( Cast<VkGraphicContext>(mGraphicContext), mUIDescriptorSetLayout );
         lDescriptorSet->Write( aTexture, 0 );
         return lDescriptorSet;
     }
