@@ -11,6 +11,7 @@
 
 namespace SE::Graphics
 {
+    class IDescriptorSet;
     class IRenderContext
     {
       public:
@@ -22,7 +23,7 @@ namespace SE::Graphics
         virtual bool BeginRender();
         virtual bool EndRender();
         virtual void Bind( Ref<IGraphicsPipeline> aGraphicPipeline );
-        // virtual void Bind( Ref<DescriptorSet> aDescriptorSet, uint32_t aSetIndex, int32_t aDynamicOffset = -1 );
+        virtual void Bind( Ref<IDescriptorSet> aDescriptorSet, uint32_t aSetIndex, int32_t aDynamicOffset = -1 );
         virtual void Bind( Ref<IGraphicBuffer> aVertexBuffer, uint32_t aBindPoint = 0 );
         virtual void Bind( Ref<IGraphicBuffer> aVertexBuffer, Ref<IGraphicBuffer> aIndexBuffer, uint32_t aBindPoint = 0 );
         virtual void PushConstants( ShaderStageType aShaderStages, uint32_t aOffset, void *aValue, uint32_t aSize );

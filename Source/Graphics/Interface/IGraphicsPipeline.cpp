@@ -2,10 +2,11 @@
 
 namespace SE::Graphics
 {
-    IGraphicsPipeline::IGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext, ePrimitiveTopology aTopology )
+    IGraphicsPipeline::IGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
+                                          ePrimitiveTopology aTopology )
         : mGraphicContext{ aGraphicContext }
         , mRenderContext{ aRenderContext }
-        , mTopology{aTopology}
+        , mTopology{ aTopology }
     {
     }
 
@@ -29,6 +30,13 @@ namespace SE::Graphics
     void IGraphicsPipeline::SetShader( eShaderStageTypeFlags aShaderType, fs::path aPath, std::string aEntryPoint )
     {
         mShaderStages.push_back( sShaderData{ aShaderType, aPath, aEntryPoint } );
+    }
+
+    sDescriptorSet &IGraphicsPipeline::AddDescriptorSet() { return mDescriptorLayout.emplace_back(); }
+
+    void sDescriptorSet::Add( uint32_t aBindingIndex, eDescriptorType aType, ShaderStageType aShaderStages, bool aUnbounded )
+    {
+        mDescriptors.push_back( sDescriptorBindingInfo{ aBindingIndex, aType, aShaderStages, aUnbounded } );
     }
 
 } // namespace SE::Graphics
