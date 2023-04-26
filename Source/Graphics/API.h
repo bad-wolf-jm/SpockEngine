@@ -2,6 +2,7 @@
 
 #include "Interface/IGraphicBuffer.h"
 #include "Interface/IGraphicContext.h"
+#include "Interface/IRenderContext.h"
 
 namespace SE::Graphics
 {
@@ -37,5 +38,8 @@ namespace SE::Graphics
     template <>
     Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, uint8_t *aData, size_t aSize, eBufferType aType,
                                       bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
+
+    Ref<IGraphicsPipeline> CreateGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
+                                                   ePrimitiveTopology aTopology );
 
 } // namespace SE::Graphics
