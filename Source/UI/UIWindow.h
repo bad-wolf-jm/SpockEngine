@@ -56,12 +56,10 @@ namespace SE::Core
         Ref<SwapChain> mSwapChain = nullptr;
         ARenderContext mRenderContext;
 
-        Ref<ShaderModule>          mUIVertexShader        = nullptr;
-        Ref<ShaderModule>          mUIFragmentShader      = nullptr;
-        Ref<GraphicsPipeline>      mUIRenderPipeline      = nullptr;
-        Ref<Graphics::VkSampler2D> mFontTexture           = nullptr;
-        Ref<DescriptorSet>         mFontDescriptorSet     = nullptr;
-        Ref<DescriptorSetLayout>   mUIDescriptorSetLayout = nullptr;
+        Ref<ShaderModule>        mUIVertexShader        = nullptr;
+        Ref<ShaderModule>        mUIFragmentShader      = nullptr;
+        Ref<GraphicsPipeline>    mUIRenderPipeline      = nullptr;
+        Ref<DescriptorSetLayout> mUIDescriptorSetLayout = nullptr;
 
         Ref<IGraphicBuffer> mVertexBuffer = nullptr;
         Ref<IGraphicBuffer> mIndexBuffer  = nullptr;

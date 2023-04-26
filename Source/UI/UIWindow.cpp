@@ -24,11 +24,6 @@ namespace SE::Core
         mSwapChain     = SE::Core::New<SwapChain>( GraphicContext<VkGraphicContext>(), mWindow );
         mRenderContext = SE::Graphics::ARenderContext( GraphicContext<VkGraphicContext>(), mSwapChain );
 
-        DescriptorBindingInfo lDescriptorBinding = {
-            0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { Graphics::eShaderStageTypeFlags::FRAGMENT } };
-        DescriptorSetLayoutCreateInfo lBindingLayout = { { lDescriptorBinding } };
-        mUIDescriptorSetLayout                       = New<DescriptorSetLayout>( GraphicContext<VkGraphicContext>(), lBindingLayout );
-
         CreatePipeline();
 
         mVertexBuffer = CreateBuffer( mGraphicContext, eBufferType::VERTEX_BUFFER, true, true, true, true, 1 );
@@ -42,12 +37,6 @@ namespace SE::Core
         , mSwapChain{ nullptr }
         , mViewport{ nullptr }
     {
-
-        DescriptorBindingInfo lDescriptorBinding = {
-            0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { Graphics::eShaderStageTypeFlags::FRAGMENT } };
-        DescriptorSetLayoutCreateInfo lBindingLayout = { { lDescriptorBinding } };
-        mUIDescriptorSetLayout                       = New<DescriptorSetLayout>( GraphicContext<VkGraphicContext>(), lBindingLayout );
-
         CreatePipeline();
 
         mVertexBuffer = CreateBuffer( mGraphicContext, eBufferType::VERTEX_BUFFER, true, true, true, true, 1 );
@@ -56,29 +45,31 @@ namespace SE::Core
 
     void UIWindow::CreatePipeline()
     {
-        std::string lUIVertexShaderFiles = GetResourcePath( "Shaders\\ui_shader.vert.spv" ).string();
-        mUIVertexShader =
-            New<Graphics::ShaderModule>( GraphicContext<VkGraphicContext>(), lUIVertexShaderFiles, Graphics::eShaderStageTypeFlags::VERTEX );
+        DescriptorBindingInfo lDescriptorBinding = { 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } };
+        DescriptorSetLayoutCreateInfo lBindingLayout = { { lDescriptorBinding } };
+        mUIDescriptorSetLayout                       = New<DescriptorSetLayout>( GraphicContext<VkGraphicContext>(), lBindingLayout );
 
+        std::string lUIVertexShaderFiles = GetResourcePath( "Shaders\\ui_shader.vert.spv" ).string();
+        mUIVertexShader = New<ShaderModule>( GraphicContext<VkGraphicContext>(), lUIVertexShaderFiles, eShaderStageTypeFlags::VERTEX );
         std::string lUIFragmentShaderFiles = GetResourcePath( "Shaders\\ui_shader.frag.spv" ).string();
         mUIFragmentShader =
-            New<Graphics::ShaderModule>( GraphicContext<VkGraphicContext>(), lUIFragmentShaderFiles, Graphics::eShaderStageTypeFlags::FRAGMENT );
+            New<ShaderModule>( GraphicContext<VkGraphicContext>(), lUIFragmentShaderFiles, eShaderStageTypeFlags::FRAGMENT );
         GraphicsPipelineCreateInfo lUIPipelineCreateInfo = {};
         lUIPipelineCreateInfo.mShaderStages              = { { mUIVertexShader, "main" }, { mUIFragmentShader, "main" } };
-        lUIPipelineCreateInfo.InputBufferLayout          = {
+        lUIPipelineCreateInfo.mInputBufferLayout          = {
             { "Position", eBufferDataType::VEC2, 0, 0 },
             { "TextureCoords", eBufferDataType::VEC2, 0, 1 },
             { "Color", eBufferDataType::COLOR, 0, 2 },
         };
-        lUIPipelineCreateInfo.Topology      = ePrimitiveTopology::TRIANGLES;
-        lUIPipelineCreateInfo.Culling       = eFaceCulling::NONE;
-        lUIPipelineCreateInfo.SampleCount   = mRenderContext.GetRenderTarget()->mSpec.mSampleCount;
-        lUIPipelineCreateInfo.LineWidth     = 1.0f;
-        lUIPipelineCreateInfo.RenderPass    = mRenderContext.GetRenderPass();
-        lUIPipelineCreateInfo.PushConstants = {
-            { { Graphics::eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 },
+        lUIPipelineCreateInfo.mTopology      = ePrimitiveTopology::TRIANGLES;
+        lUIPipelineCreateInfo.mCulling       = eFaceCulling::NONE;
+        lUIPipelineCreateInfo.mSampleCount   = mRenderContext.GetRenderTarget()->mSpec.mSampleCount;
+        lUIPipelineCreateInfo.mLineWidth     = 1.0f;
+        lUIPipelineCreateInfo.mRenderPass    = mRenderContext.GetRenderPass();
+        lUIPipelineCreateInfo.mPushConstants = {
+            { { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 },
         };
-        lUIPipelineCreateInfo.SetLayouts = { mUIDescriptorSetLayout };
+        lUIPipelineCreateInfo.mSetLayouts = { mUIDescriptorSetLayout };
 
         mUIRenderPipeline = New<GraphicsPipeline>( GraphicContext<VkGraphicContext>(), lUIPipelineCreateInfo );
     }
@@ -89,7 +80,8 @@ namespace SE::Core
 
         aRenderContext.Bind( mUIRenderPipeline );
 
-        if( aDrawData->TotalVtxCount > 0 ) aRenderContext.Bind( Cast<VkGpuBuffer>(mVertexBuffer), Cast<VkGpuBuffer>(mIndexBuffer) );
+        if( aDrawData->TotalVtxCount > 0 )
+            aRenderContext.Bind( Cast<VkGpuBuffer>( mVertexBuffer ), Cast<VkGpuBuffer>( mIndexBuffer ) );
 
         int lFramebufferWidth  = (int)( aDrawData->DisplaySize.x * aDrawData->FramebufferScale.x );
         int lFramebufferHeight = (int)( aDrawData->DisplaySize.y * aDrawData->FramebufferScale.y );
@@ -102,8 +94,8 @@ namespace SE::Core
         float lT[2];
         lT[0] = -1.0f - aDrawData->DisplayPos.x * lS[0];
         lT[1] = -1.0f - aDrawData->DisplayPos.y * lS[1];
-        aRenderContext.PushConstants( { Graphics::eShaderStageTypeFlags::VERTEX }, 0, lS );
-        aRenderContext.PushConstants( { Graphics::eShaderStageTypeFlags::VERTEX }, sizeof( float ) * 2, lT );
+        aRenderContext.PushConstants( { eShaderStageTypeFlags::VERTEX }, 0, lS );
+        aRenderContext.PushConstants( { eShaderStageTypeFlags::VERTEX }, sizeof( float ) * 2, lT );
     }
 
     // Render function
