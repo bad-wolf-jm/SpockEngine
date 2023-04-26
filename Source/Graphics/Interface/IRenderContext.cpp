@@ -22,9 +22,9 @@ namespace SE::Graphics
     {
         mRenderTarget->EndRender();
 
-        mFrameIsStarted        = false;
+        mFrameIsStarted   = false;
         mGraphicsPipeline = nullptr;
-        mHasIndex              = false;
+        mHasIndex         = false;
 
         return mFrameIsStarted;
     }
@@ -42,10 +42,7 @@ namespace SE::Graphics
             InternalDrawNonIndexed( aVertexCount, aVertexOffset, aVertexBufferOffset, aInstanceCount, aFirstInstance );
     }
 
-    void IRenderContext::Bind( Ref<IGraphicsPipeline> aGraphicPipeline )
-    {
-        mGraphicsPipeline = aGraphicPipeline;
-    }
+    void IRenderContext::Bind( Ref<IGraphicsPipeline> aGraphicPipeline ) { mGraphicsPipeline = aGraphicPipeline; }
 
     void IRenderContext::Bind( Ref<IGraphicBuffer> aVertexBuffer, uint32_t aBindPoint )
     {
@@ -57,7 +54,7 @@ namespace SE::Graphics
     void IRenderContext::Bind( Ref<IGraphicBuffer> aVertexBuffer, Ref<IGraphicBuffer> aIndexBuffer, uint32_t aBindPoint )
     {
         mVertexBuffer = aVertexBuffer;
-        mIndexBuffer = aIndexBuffer;
+        mIndexBuffer  = aIndexBuffer;
 
         mHasIndex = true;
     }
