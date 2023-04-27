@@ -267,7 +267,7 @@ namespace SE::Graphics
       private:
         void CalculateOffsetsAndStride();
 
-      private:
+      public:
         std::vector<sBufferLayoutElement> mElements;
         uint32_t                          mStride = 0;
     };
@@ -342,15 +342,27 @@ namespace SE::Graphics
 
         sVkPipelineObject()                      = default;
         sVkPipelineObject( sVkPipelineObject & ) = default;
-        sVkPipelineObject( Ref<VkGraphicContext> aContext, uint8_t aSampleCount, sBufferLayout aVertexBufferLayout,
-                           sBufferLayout aInstanceBufferLayout, ePrimitiveTopology aTopology, eFaceCulling aCullMode, float aLineWidth,
-                           sDepthTesting aDepthTest, sBlending aBlending, std::vector<sShader> aShaderStages,
-                           Ref<sVkPipelineLayoutObject> aPipelineLayout, Ref<sVkAbstractRenderPassObject> aRenderPass );
+        // sVkPipelineObject( Ref<VkGraphicContext> aContext, uint8_t aSampleCount, sBufferLayout aVertexBufferLayout,
+        //                    sBufferLayout aInstanceBufferLayout, ePrimitiveTopology aTopology, eFaceCulling aCullMode, float aLineWidth,
+        //                    sDepthTesting aDepthTest, sBlending aBlending, std::vector<sShader> aShaderStages,
+        //                    Ref<sVkPipelineLayoutObject> aPipelineLayout, Ref<sVkAbstractRenderPassObject> aRenderPass );
 
-        ~sVkPipelineObject();
+        sVkPipelineObject( Ref<VkGraphicContext> aContext, uint8_t aSampleCount, std::vector<sBufferLayoutElement> aVertexBufferLayout,
+                           std::vector<sBufferLayoutElement> aInstanceBufferLayout, ePrimitiveTopology aTopology,
+                           eFaceCulling aCullMode, float aLineWidth, sDepthTesting aDepthTest, sBlending aBlending,
+                           std::vector<sShader> aShaderStages, Ref<sVkPipelineLayoutObject> aPipelineLayout,
+                           Ref<sVkAbstractRenderPassObject> aRenderPass );
+
+            ~sVkPipelineObject();
 
       private:
         Ref<VkGraphicContext> mContext = nullptr;
+
+        void Compile( std::vector<sBufferLayoutElement> &aVertexBufferLayout, uint32_t aBinding, uint32_t aStride,
+                      VkVertexInputBindingDescription &o_Binding, std::vector<VkVertexInputAttributeDescription> &o_Attributes,
+                      bool aInstanced );
+
+        uint32_t CalculateOffsetsAndStride( std::vector<sBufferLayoutElement> &aVertexBufferLayout );
     };
 
 } // namespace SE::Graphics

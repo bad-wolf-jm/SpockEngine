@@ -26,9 +26,9 @@ namespace SE::Graphics
         {
             sBlending lBlending{};
             mPipelineObject = SE::Core::New<sVkPipelineObject>(
-                mGraphicContext, aCreateInfo.mSampleCount, aCreateInfo.mInputBufferLayout, aCreateInfo.mInstanceBufferLayout,
-                aCreateInfo.mTopology, aCreateInfo.mCulling, aCreateInfo.mLineWidth, lDepth, lBlending, aCreateInfo.mShaderStages,
-                mPipelineLayoutObject, aCreateInfo.mRenderPass );
+                mGraphicContext, aCreateInfo.mSampleCount, aCreateInfo.mInputBufferLayout.mElements,
+                aCreateInfo.mInstanceBufferLayout.mElements, aCreateInfo.mTopology, aCreateInfo.mCulling, aCreateInfo.mLineWidth,
+                lDepth, lBlending, aCreateInfo.mShaderStages, mPipelineLayoutObject, aCreateInfo.mRenderPass );
         }
         else
         {
@@ -43,9 +43,9 @@ namespace SE::Graphics
             lBlending.mAlphaBlendOperation = eBlendOperation::MAX;
 
             mPipelineObject = SE::Core::New<sVkPipelineObject>(
-                mGraphicContext, aCreateInfo.mSampleCount, aCreateInfo.mInputBufferLayout, aCreateInfo.mInstanceBufferLayout,
-                aCreateInfo.mTopology, aCreateInfo.mCulling, aCreateInfo.mLineWidth, lDepth, lBlending, aCreateInfo.mShaderStages,
-                mPipelineLayoutObject, aCreateInfo.mRenderPass );
+                mGraphicContext, aCreateInfo.mSampleCount, aCreateInfo.mInputBufferLayout.mElements,
+                aCreateInfo.mInstanceBufferLayout.mElements, aCreateInfo.mTopology, aCreateInfo.mCulling, aCreateInfo.mLineWidth,
+                lDepth, lBlending, aCreateInfo.mShaderStages, mPipelineLayoutObject, aCreateInfo.mRenderPass );
         }
     }
 
