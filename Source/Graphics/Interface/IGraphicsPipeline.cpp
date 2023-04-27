@@ -32,20 +32,29 @@ namespace SE::Graphics
         mShaderStages.push_back( sShaderData{ aShaderType, aPath, aEntryPoint } );
     }
 
-    sDescriptorSet &IGraphicsPipeline::AddDescriptorSet() { return mDescriptorLayout.emplace_back(); }
-
-    void sDescriptorSet::Add( uint32_t aBindingIndex, eDescriptorType aType, ShaderStageType aShaderStages, bool aUnbounded )
+    sDescriptorSet &IGraphicsPipeline::AddDescriptorSet( bool aUnbounded )
     {
-        mDescriptors.push_back( sDescriptorBindingInfo{ aBindingIndex, aType, aShaderStages, aUnbounded } );
+
+        auto &lDescriptorSet = mDescriptorLayout.emplace_back();
+
+        lDescriptorSet.mIsUnbounded = aUnbounded;
+
+        return lDescriptorSet;
     }
 
-    void IGraphicsPipeline::AddInput( std::string aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation, bool aInstanced )
+    void sDescriptorSet::Add( uint32_t aBindingIndex, eDescriptorType aType, ShaderStageType aShaderStages )
     {
-        auto &lInputDescription = (aInstanced ? mInstancedInputLayout.emplace_back() : mInputLayout.emplace_back());
+        mDescriptors.push_back( sDescriptorBindingInfo{ aBindingIndex, aType, aShaderStages } );
+    }
 
-        lInputDescription.mName = aName;
-        lInputDescription.mType = aType;
-        lInputDescription.mBinding = aBinding;
+    void IGraphicsPipeline::AddInput( std::string aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation,
+                                      bool aInstanced )
+    {
+        auto &lInputDescription = ( aInstanced ? mInstancedInputLayout.emplace_back() : mInputLayout.emplace_back() );
+
+        lInputDescription.mName     = aName;
+        lInputDescription.mType     = aType;
+        lInputDescription.mBinding  = aBinding;
         lInputDescription.mLocation = aLocation;
     }
 

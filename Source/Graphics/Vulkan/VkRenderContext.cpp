@@ -1,4 +1,5 @@
 #include "VkRenderContext.h"
+#include "VkGraphicsPipeline.h"
 
 #include "Core/Logging.h"
 
@@ -18,13 +19,14 @@ namespace SE::Graphics
 
         if( !mFrameIsStarted ) return false;
 
-        float lWidth  = static_cast<float>( mRenderTarget->mSpec.mWidth );
-        float lHeight = static_cast<float>( mRenderTarget->mSpec.mHeight );
+        float lWidth  = static_cast<float>( Cast<VkRenderTarget>( mRenderTarget )->mSpec.mWidth );
+        float lHeight = static_cast<float>( Cast<VkRenderTarget>( mRenderTarget )->mSpec.mHeight );
 
         auto lCommandBuffer = GetCurrentCommandBuffer();
         lCommandBuffer->Begin();
-        lCommandBuffer->BeginRenderPass( mRenderTarget->GetRenderPass(), mRenderTarget->GetFramebuffer(), { lWidth, lHeight },
-                                         mRenderTarget->GetClearValues() );
+        lCommandBuffer->BeginRenderPass( Cast<VkRenderTarget>( mRenderTarget )->GetRenderPass(),
+                                         Cast<VkRenderTarget>( mRenderTarget )->GetFramebuffer(), { lWidth, lHeight },
+                                         Cast<VkRenderTarget>( mRenderTarget )->GetClearValues() );
         lCommandBuffer->SetViewport( { 0.0f, 0.0f }, { lWidth, lHeight } );
         lCommandBuffer->SetScissor( { 0.0f, 0.0f }, { lWidth, lHeight } );
 
@@ -40,26 +42,26 @@ namespace SE::Graphics
         auto lCommandBuffer = GetCurrentCommandBuffer();
         lCommandBuffer->EndRenderPass();
         lCommandBuffer->End();
-        lCommandBuffer->SubmitTo( mGraphicContext->GetGraphicsQueue() );
+        lCommandBuffer->SubmitTo( Cast<VkGraphicContext>( mGraphicContext )->GetGraphicsQueue() );
 
-        mRenderTarget->EndRender();
+        Cast<VkRenderTarget>( mRenderTarget )->EndRender();
 
         return true;
     }
 
-    void VkRenderContext::InternalDrawIndexed( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset = 0,
-                                               uint32_t aInstanceCount = 0, uint32_t aFirstInstance = 0 )
+    void VkRenderContext::InternalDrawIndexed( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset,
+                                               uint32_t aInstanceCount, uint32_t aFirstInstance )
     {
         auto lCommandBuffer = GetCurrentCommandBuffer();
 
         lCommandBuffer->DrawIndexed( aVertexCount, aVertexOffset, aVertexBufferOffset, aInstanceCount, aFirstInstance );
     }
 
-    void VkRenderContext::InternalDrawNonIndexed( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset = 0,
-                                                  uint32_t aInstanceCount = 0, uint32_t aFirstInstance = 0 )
+    void VkRenderContext::InternalDrawNonIndexed( uint32_t aVertexCount, uint32_t aVertexOffset, uint32_t aVertexBufferOffset,
+                                                  uint32_t aInstanceCount, uint32_t aFirstInstance )
     {
         auto lCommandBuffer = GetCurrentCommandBuffer();
-        
+
         lCommandBuffer->Draw( aVertexCount, aVertexOffset, aVertexBufferOffset, aInstanceCount, aFirstInstance );
     }
 
@@ -75,7 +77,7 @@ namespace SE::Graphics
     {
         auto lCommandBuffer = GetCurrentCommandBuffer();
 
-        lCommandBuffer->Bind( Cast<VkGpuBuffer> a( VertexBuffer )->mVkBuffer, aBindPoint );
+        lCommandBuffer->Bind( Cast<VkGpuBuffer>( aVertexBuffer )->mVkBuffer, aBindPoint );
     }
 
     void VkRenderContext::Bind( Ref<IGraphicBuffer> aVertexBuffer, Ref<IGraphicBuffer> aIndexBuffer, uint32_t aBindPoint )
@@ -86,7 +88,7 @@ namespace SE::Graphics
                               aBindPoint );
     }
 
-    void VkRenderContext::Bind( Ref<DescriptorSet> aDescriptorSet, uint32_t aSetIndex, int32_t aDynamicOffset )
+    void VkRenderContext::Bind( Ref<IDescriptorSet> aDescriptorSet, uint32_t aSetIndex, int32_t aDynamicOffset )
     {
         auto lCommandBuffer = GetCurrentCommandBuffer();
 

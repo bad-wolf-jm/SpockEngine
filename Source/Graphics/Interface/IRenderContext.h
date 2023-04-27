@@ -42,7 +42,7 @@ namespace SE::Graphics
         void Present();
         void ResetBuffers();
 
-      private:
+      protected:
         Ref<IGraphicContext>   mGraphicContext   = nullptr;
         Ref<IRenderTarget>     mRenderTarget     = nullptr;
         Ref<IGraphicsPipeline> mGraphicsPipeline = nullptr;

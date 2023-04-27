@@ -1,8 +1,7 @@
 #pragma once
 
+#include "Graphics/Interface/IGraphicContext.h"
 #include "Graphics/Interface/IRenderContext.h"
-
-#include "Graphics/Vulkan/IGraphicContext.h"
 
 #include "Graphics/Vulkan/VkGpuBuffer.h"
 #include "GraphicsPipeline.h"
@@ -23,7 +22,7 @@ namespace SE::Graphics
         uint32_t           GetOutputImageCount();
         Ref<IRenderTarget> GetRenderTarget() { return mRenderTarget; }
 
-        virtual Ref<sVkAbstractRenderPassObject> GetRenderPass() { return mRenderTarget->GetRenderPass(); }
+        virtual Ref<sVkAbstractRenderPassObject> GetRenderPass() { return Cast<VkRenderTarget>( mRenderTarget )->GetRenderPass(); }
 
         bool BeginRender();
         bool EndRender();
@@ -44,7 +43,10 @@ namespace SE::Graphics
         uint32_t                                 mCurrentCommandBuffer  = 0;
         std::vector<Ref<sVkCommandBufferObject>> mCommandBufferObject   = {};
         Ref<sVkPipelineLayoutObject>             mCurrentPipelineLayout = nullptr;
-        Ref<sVkCommandBufferObject>              GetCurrentCommandBuffer() { return mRenderTarget->GetCurrentCommandBuffer(); }
+        Ref<sVkCommandBufferObject>              GetCurrentCommandBuffer()
+        {
+            return Cast<VkRenderTarget>( mRenderTarget )->GetCurrentCommandBuffer();
+        }
     };
 
 } // namespace SE::Graphics
