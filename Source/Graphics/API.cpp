@@ -2,6 +2,8 @@
 
 #include "Vulkan/GraphicsPipeline.h"
 #include "Vulkan/VkGpuBuffer.h"
+#include "Vulkan/VkGraphicsPipeline.h"
+#include "Vulkan/VkRenderContext.h"
 
 namespace SE::Graphics
 {
@@ -45,8 +47,8 @@ namespace SE::Graphics
         switch( gApi )
         {
         case eGraphicsAPI::VULKAN:
-            // return New<VkGraphicsPipeline>( Cast<VkGraphicContext>( aGraphicContext ), Cast<ARenderContext>( aRenderContext ),
-            //                                 aTopology );
+            return New<VkGraphicsPipeline>( Cast<VkGraphicContext>( aGraphicContext ), Cast<VkRenderContext>( aRenderContext ),
+                                            aTopology );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
         default: return nullptr;

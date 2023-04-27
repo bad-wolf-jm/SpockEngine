@@ -32,7 +32,7 @@ namespace SE::Core
     {
       public:
         UIWindow( Ref<IGraphicContext> aGraphicContext, ImGuiViewport *aViewport );
-        UIWindow( Ref<IGraphicContext> aGraphicContext, ARenderContext &aRenderContext );
+        UIWindow( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext );
         ~UIWindow();
 
         template <typename _Ty>
@@ -41,10 +41,10 @@ namespace SE::Core
             return std::reinterpret_pointer_cast<_Ty>( mGraphicContext );
         }
 
-        void Render( ARenderContext &aRenderContext, ImDrawData *aDrawData );
+        void Render( Ref<IRenderContext> aRenderContext, ImDrawData *aDrawData );
         void Render( ImDrawData *aDrawData );
-        void Render( ARenderContext &aRenderContext, ImDrawList const *aDrawData, int aVertexOffset, int aIndexOffset, int aFbWidth,
-                     int aFbHeight, ImVec2 aPosition, ImVec2 aScale );
+        void Render( Ref<IRenderContext> aRenderContext, ImDrawList const *aDrawData, int aVertexOffset, int aIndexOffset,
+                     int aFbWidth, int aFbHeight, ImVec2 aPosition, ImVec2 aScale );
         void EndRender( ImDrawData *aDrawData );
 
       private:
@@ -52,20 +52,20 @@ namespace SE::Core
 
         Ref<IGraphicContext> mGraphicContext = nullptr;
 
-        Ref<IWindow>   mWindow    = nullptr;
-        Ref<SwapChain> mSwapChain = nullptr;
-        ARenderContext mRenderContext;
+        Ref<IWindow>        mWindow        = nullptr;
+        Ref<SwapChain>      mSwapChain     = nullptr;
+        Ref<IRenderContext> mRenderContext = nullptr;
 
         Ref<ShaderModule>        mUIVertexShader        = nullptr;
         Ref<ShaderModule>        mUIFragmentShader      = nullptr;
-        Ref<GraphicsPipeline>    mUIRenderPipeline      = nullptr;
+        Ref<IGraphicsPipeline>    mUIRenderPipeline      = nullptr;
         Ref<DescriptorSetLayout> mUIDescriptorSetLayout = nullptr;
 
         Ref<IGraphicBuffer> mVertexBuffer = nullptr;
         Ref<IGraphicBuffer> mIndexBuffer  = nullptr;
 
       private:
-        void SetupRenderState( ARenderContext &aRenderContext, ImDrawData *aDrawData );
+        void SetupRenderState( Ref<IRenderContext> aRenderContext, ImDrawData *aDrawData );
         void CreatePipeline();
     };
 } // namespace SE::Core

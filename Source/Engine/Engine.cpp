@@ -29,7 +29,7 @@ namespace SE::Core
         mGraphicContext         = SE::Core::New<VkGraphicContext>( 1, true );
         mViewportClient         = SE::Core::New<IWindow>( mInitialMainWindowSize.x, mInitialMainWindowSize.y, mApplicationName );
         mSwapChain              = SE::Core::New<SwapChain>( mGraphicContext, mViewportClient );
-        mSwapChainRenderContext = SE::Graphics::ARenderContext( mGraphicContext, mSwapChain );
+        mSwapChainRenderContext = SE::Core::New<SE::Graphics::VkRenderContext>( mGraphicContext, mSwapChain );
         mViewportClient->SetEngineLoop( this );
 
         mMainWindowSize  = mViewportClient->GetMainWindowSize();
@@ -51,7 +51,7 @@ namespace SE::Core
 
         mLastFrameTime = time;
 
-        if( !mSwapChainRenderContext.BeginRender() ) return true;
+        if( !mSwapChainRenderContext->BeginRender() ) return true;
 
         bool lRequestQuit = false;
         mImGUIOverlay->BeginFrame();
@@ -73,8 +73,8 @@ namespace SE::Core
         mImGUIOverlay->EndFrame( mSwapChainRenderContext );
 
         // // Send the draw commands to the screen.
-        mSwapChainRenderContext.EndRender();
-        mSwapChainRenderContext.Present();
+        mSwapChainRenderContext->EndRender();
+        mSwapChainRenderContext->Present();
 
         mGraphicContext->WaitIdle();
 

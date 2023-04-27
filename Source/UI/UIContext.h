@@ -63,12 +63,12 @@ namespace SE::Core
     class UIContext
     {
       public:
-        UIContext( Ref<SE::Core::IWindow> aWindow, Ref<IGraphicContext> aDevice, ARenderContext &aRenderContext,
+        UIContext( Ref<SE::Core::IWindow> aWindow, Ref<IGraphicContext> aDevice, Ref<IRenderContext> aRenderContext,
                    std::string &aImGuiConfigPath, UIConfiguration const &aUIConfiguration );
         ~UIContext();
 
         void BeginFrame();
-        void EndFrame( ARenderContext &aRenderContext );
+        void EndFrame( Ref<IRenderContext> aRenderContext );
 
         void PushFontFamily( FontFamilyFlags aFamily );
         void PopFont();

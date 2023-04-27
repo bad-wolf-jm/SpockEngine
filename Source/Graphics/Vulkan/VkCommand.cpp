@@ -129,6 +129,23 @@ namespace SE::Graphics
         }
     }
 
+    void sVkCommandBufferObject::Bind( void* aDescriptorSet, VkPipelineBindPoint aBindPoint,
+                                       Ref<sVkPipelineLayoutObject> aPipelineLayout, uint32_t aSetIndex, int32_t aDynamicOffset )
+    {
+        VkDescriptorSet lDescriptorSetArray[1] = { (VkDescriptorSet)aDescriptorSet };
+        if( aDynamicOffset == -1 )
+        {
+            vkCmdBindDescriptorSets( mVkObject, aBindPoint, aPipelineLayout->mVkObject, aSetIndex, 1, lDescriptorSetArray, 0,
+                                     nullptr );
+        }
+        else
+        {
+            const uint32_t l_DynOffset = static_cast<uint32_t>( aDynamicOffset );
+            vkCmdBindDescriptorSets( mVkObject, aBindPoint, aPipelineLayout->mVkObject, aSetIndex, 1, lDescriptorSetArray, 1,
+                                     &l_DynOffset );
+        }
+    }
+
     void sVkCommandBufferObject::ImageMemoryBarrier( VkImage aImage, VkImageLayout aOldLayout, VkImageLayout aNewLayout,
                                                      uint32_t aMipCount, uint32_t aLayerCount )
     {
