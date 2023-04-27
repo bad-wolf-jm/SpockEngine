@@ -45,7 +45,7 @@ namespace SE::Graphics
         void SetDepthParameters( bool aDepthWriteEnable, bool aDepthTestEnable, eDepthCompareOperation aDepthComparison );
         void AddPushConstantRange( ShaderStageType aShaderStage, uint32_t aOffset, uint32_t aSize );
 
-        void AddInput( std::string aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation, bool aInstanced );
+        void AddInput( std::string aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation, bool aInstanced = false );
 
         template <typename _Ty>
         void AddPushConstantRange( ShaderStageType aShaderStage, uint32_t aOffset )
@@ -53,7 +53,7 @@ namespace SE::Graphics
             AddPushConstantRange( aShaderStage, aOffset, sizeof( _Ty ) );
         }
 
-        sDescriptorSet &AddDescriptorSet(bool aUnbounded);
+        sDescriptorSet &AddDescriptorSet(bool aUnbounded = false);
 
       protected:
         bool mOpaque = false;

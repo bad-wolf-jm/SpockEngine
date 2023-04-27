@@ -3,6 +3,7 @@
 #include "Interface/IGraphicBuffer.h"
 #include "Interface/IGraphicContext.h"
 #include "Interface/IRenderContext.h"
+#include "Interface/IGraphicsPipeline.h"
 
 namespace SE::Graphics
 {

@@ -8,7 +8,7 @@
 
 namespace SE::Graphics
 {
-    VkGraphicsPipeline::VkGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
+    VkGraphicsPipeline::VkGraphicsPipeline( Ref<VkGraphicContext> aGraphicContext, Ref<VkRenderContext> aRenderContext,
                                             ePrimitiveTopology aTopology )
         : IGraphicsPipeline( aGraphicContext, aRenderContext, aTopology )
     {

@@ -5,13 +5,14 @@
 #include "Graphics/Interface/IGraphicsPipeline.h"
 
 #include "VkPipeline.h"
+#include "VkRenderContext.h"
 
 namespace SE::Graphics
 {
-    class VkGraphicsPipeline : IGraphicsPipeline
+    class VkGraphicsPipeline : public IGraphicsPipeline
     {
       public:
-        VkGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext, ePrimitiveTopology aTopology );
+        VkGraphicsPipeline( Ref<VkGraphicContext> aGraphicContext, Ref<VkRenderContext> aRenderContext, ePrimitiveTopology aTopology );
         ~VkGraphicsPipeline() = default;
 
         Ref<sVkPipelineObject>       GetVkPipelineObject() { return mPipelineObject; }

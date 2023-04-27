@@ -56,6 +56,7 @@ namespace SE::Graphics
         lInputDescription.mType     = aType;
         lInputDescription.mBinding  = aBinding;
         lInputDescription.mLocation = aLocation;
+        lInputDescription.mSize     = BufferDataTypeSize( aType );
     }
 
 } // namespace SE::Graphics

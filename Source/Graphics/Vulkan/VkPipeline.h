@@ -223,6 +223,8 @@ namespace SE::Graphics
         UVEC4  = VK_FORMAT_R32G32B32A32_UINT
     };
 
+    uint32_t BufferDataTypeSize( eBufferDataType aType );
+    
     /** @brief */
     struct sBufferLayoutElement
     {

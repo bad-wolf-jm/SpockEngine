@@ -201,7 +201,7 @@ namespace SE::Graphics
 
     sVkPipelineLayoutObject::~sVkPipelineLayoutObject() { mContext->DestroyPipelineLayout( mVkObject ); }
 
-    static uint32_t BufferDataTypeSize( eBufferDataType aType )
+    uint32_t BufferDataTypeSize( eBufferDataType aType )
     {
         // clang-format off
         switch( aType )
@@ -295,7 +295,7 @@ namespace SE::Graphics
         VkDynamicState lStates[] = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR, VK_DYNAMIC_STATE_LINE_WIDTH };
         VkPipelineDynamicStateCreateInfo lDynamicState{};
         lDynamicState.sType             = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-        lDynamicState.dynamicStateCount = 2;
+        lDynamicState.dynamicStateCount = 3;
         lDynamicState.pDynamicStates    = lStates;
         aCreateInfo.pDynamicState       = &lDynamicState;
 

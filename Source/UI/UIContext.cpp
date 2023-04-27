@@ -19,7 +19,7 @@
 namespace SE::Core
 {
 
-    UIContext::UIContext( Ref<SE::Core::IWindow> aWindow, Ref<IGraphicContext> aGraphicContext, ARenderContext &aRenderContext,
+    UIContext::UIContext( Ref<SE::Core::IWindow> aWindow, Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
                           std::string &aImGuiConfigPath, UIConfiguration const &aConfig )
         : mGraphicContext{ aGraphicContext }
         , mImGuiConfigPath{ aImGuiConfigPath }
@@ -211,7 +211,7 @@ namespace SE::Core
         }
     }
 
-    void UIContext::EndFrame( ARenderContext &aRenderContext )
+    void UIContext::EndFrame( Ref<IRenderContext> aRenderContext )
     {
         PopFont();
         ImGui::Render();

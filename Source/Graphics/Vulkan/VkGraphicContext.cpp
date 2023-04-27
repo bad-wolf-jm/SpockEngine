@@ -856,7 +856,9 @@ namespace SE::Graphics
     VkPipeline VkGraphicContext::CreatePipeline( VkGraphicsPipelineCreateInfo aCreateInfo )
     {
         VkPipeline lNewPipeline;
-        if( vkCreateGraphicsPipelines( mVkLogicalDevice, VK_NULL_HANDLE, 1, &aCreateInfo, nullptr, &lNewPipeline ) != VK_SUCCESS )
+
+        VkResult X = vkCreateGraphicsPipelines( mVkLogicalDevice, VK_NULL_HANDLE, 1, &aCreateInfo, nullptr, &lNewPipeline );
+        if( X != VK_SUCCESS )
         {
             return VK_NULL_HANDLE;
         }

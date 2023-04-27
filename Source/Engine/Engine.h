@@ -19,8 +19,7 @@
 #include "Graphics/Interface/IWindow.h"
 #include "Graphics/Vulkan/SwapChain.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
-
-
+#include "Graphics/Vulkan/VkRenderContext.h"
 // #include "Core/Optix/OptixContext.h"
 /** @brief */
 namespace SE::Core
@@ -136,8 +135,8 @@ namespace SE::Core
 
         Ref<SE::Core::UIContext> mImGUIOverlay;
 
-        Ref<SE::Graphics::SwapChain> mSwapChain;
-        SE::Graphics::ARenderContext mSwapChainRenderContext;
+        Ref<SE::Graphics::SwapChain>      mSwapChain;
+        Ref<SE::Graphics::IRenderContext> mSwapChainRenderContext;
 
         double mEngineLoopStartTime;
         double mLastFrameTime = 0.0f;
