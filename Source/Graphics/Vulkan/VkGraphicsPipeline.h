@@ -1,14 +1,9 @@
 #pragma once
 
-// #include <vulkan/vulkan.h>
-
 #include "Core/Memory.h"
 
 #include "Graphics/Interface/IGraphicsPipeline.h"
 
-#include "DescriptorSet.h"
-#include "VkAbstractRenderPass.h"
-#include "VkGraphicContext.h"
 #include "VkPipeline.h"
 
 namespace SE::Graphics
