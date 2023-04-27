@@ -244,32 +244,7 @@ namespace SE::Graphics
         sBufferLayout() {}
         sBufferLayout( std::initializer_list<sBufferLayoutElement> aElements );
 
-        sBufferLayout &operator=( std::initializer_list<sBufferLayoutElement> aElements )
-        {
-            mElements = aElements;
-            CalculateOffsetsAndStride();
-            return *this;
-        }
-
-        uint32_t GetStride() const { return mStride; }
-
-        const std::vector<sBufferLayoutElement> &GetElements() const { return mElements; }
-
-        std::vector<sBufferLayoutElement>::iterator begin() { return mElements.begin(); }
-        std::vector<sBufferLayoutElement>::iterator end() { return mElements.end(); }
-
-        std::vector<sBufferLayoutElement>::const_iterator begin() const { return mElements.begin(); }
-        std::vector<sBufferLayoutElement>::const_iterator end() const { return mElements.end(); }
-
-        void Compile( uint32_t aBinding, VkVertexInputBindingDescription &o_Binding,
-                      std::vector<VkVertexInputAttributeDescription> &o_Attributes, bool aInstanced );
-
-      private:
-        void CalculateOffsetsAndStride();
-
-      public:
         std::vector<sBufferLayoutElement> mElements;
-        uint32_t                          mStride = 0;
     };
 
     enum class eDepthCompareOperation : uint32_t
@@ -342,18 +317,13 @@ namespace SE::Graphics
 
         sVkPipelineObject()                      = default;
         sVkPipelineObject( sVkPipelineObject & ) = default;
-        // sVkPipelineObject( Ref<VkGraphicContext> aContext, uint8_t aSampleCount, sBufferLayout aVertexBufferLayout,
-        //                    sBufferLayout aInstanceBufferLayout, ePrimitiveTopology aTopology, eFaceCulling aCullMode, float aLineWidth,
-        //                    sDepthTesting aDepthTest, sBlending aBlending, std::vector<sShader> aShaderStages,
-        //                    Ref<sVkPipelineLayoutObject> aPipelineLayout, Ref<sVkAbstractRenderPassObject> aRenderPass );
-
         sVkPipelineObject( Ref<VkGraphicContext> aContext, uint8_t aSampleCount, std::vector<sBufferLayoutElement> aVertexBufferLayout,
                            std::vector<sBufferLayoutElement> aInstanceBufferLayout, ePrimitiveTopology aTopology,
                            eFaceCulling aCullMode, float aLineWidth, sDepthTesting aDepthTest, sBlending aBlending,
                            std::vector<sShader> aShaderStages, Ref<sVkPipelineLayoutObject> aPipelineLayout,
                            Ref<sVkAbstractRenderPassObject> aRenderPass );
 
-            ~sVkPipelineObject();
+        ~sVkPipelineObject();
 
       private:
         Ref<VkGraphicContext> mContext = nullptr;
