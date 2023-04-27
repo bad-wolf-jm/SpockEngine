@@ -39,4 +39,14 @@ namespace SE::Graphics
         mDescriptors.push_back( sDescriptorBindingInfo{ aBindingIndex, aType, aShaderStages, aUnbounded } );
     }
 
+    void IGraphicsPipeline::AddInput( std::string aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation, bool aInstanced )
+    {
+        auto &lInputDescription = (aInstanced ? mInstancedInputLayout.emplace_back() : mInputLayout.emplace_back());
+
+        lInputDescription.mName = aName;
+        lInputDescription.mType = aType;
+        lInputDescription.mBinding = aBinding;
+        lInputDescription.mLocation = aLocation;
+    }
+
 } // namespace SE::Graphics

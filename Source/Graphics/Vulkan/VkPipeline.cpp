@@ -277,9 +277,45 @@ namespace SE::Graphics
         }
     }
 
-    sVkPipelineObject::sVkPipelineObject( Ref<VkGraphicContext> aContext, uint8_t aSampleCount, sBufferLayout aVertexBufferLayout,
-                                          sBufferLayout aInstanceBufferLayout, ePrimitiveTopology aTopology, eFaceCulling aCullMode,
-                                          float aLineWidth, sDepthTesting aDepthTest, sBlending aBlending,
+    uint32_t sVkPipelineObject::CalculateOffsetsAndStride( std::vector<sBufferLayoutElement> &aVertexBufferLayout )
+    {
+        uint32_t lStride = 0;
+
+        size_t offset = 0;
+        for( auto &lElement : aVertexBufferLayout )
+        {
+            lElement.mOffset = offset;
+            offset += lElement.mSize;
+            lStride += lElement.mSize;
+        }
+
+        return lStride;
+    }
+
+    void sVkPipelineObject::Compile( std::vector<sBufferLayoutElement> &aVertexBufferLayout, uint32_t aBinding, uint32_t aStride,
+                                     VkVertexInputBindingDescription                &aBindingDesc,
+                                     std::vector<VkVertexInputAttributeDescription> &aAttributes, bool aInstanced )
+    {
+        aBindingDesc.binding   = aBinding;
+        aBindingDesc.stride    = aStride;
+        aBindingDesc.inputRate = aInstanced ? VK_VERTEX_INPUT_RATE_INSTANCE : VK_VERTEX_INPUT_RATE_VERTEX;
+
+        aAttributes.resize( aVertexBufferLayout.size() );
+        for( uint32_t i = 0; i < aVertexBufferLayout.size(); i++ )
+        {
+            VkVertexInputAttributeDescription positionAttribute{};
+            positionAttribute.binding  = aBinding;
+            positionAttribute.location = aVertexBufferLayout[i].mLocation;
+            positionAttribute.format   = (VkFormat)aVertexBufferLayout[i].mType;
+            positionAttribute.offset   = aVertexBufferLayout[i].mOffset;
+            aAttributes[i]             = positionAttribute;
+        }
+    }
+
+    sVkPipelineObject::sVkPipelineObject( Ref<VkGraphicContext> aContext, uint8_t aSampleCount,
+                                          std::vector<sBufferLayoutElement> aVertexBufferLayout,
+                                          std::vector<sBufferLayoutElement> aInstanceBufferLayout, ePrimitiveTopology aTopology,
+                                          eFaceCulling aCullMode, float aLineWidth, sDepthTesting aDepthTest, sBlending aBlending,
                                           std::vector<sShader> aShaderStages, Ref<sVkPipelineLayoutObject> aPipelineLayout,
                                           Ref<sVkAbstractRenderPassObject> aRenderPass )
         : mContext{ aContext }
@@ -299,13 +335,15 @@ namespace SE::Graphics
         VkPipelineVertexInputStateCreateInfo lVertexInputInfo{};
         lVertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 
+        uint32_t                                       lStride0 = CalculateOffsetsAndStride( aVertexBufferLayout );
         VkVertexInputBindingDescription                lBindings;
         std::vector<VkVertexInputAttributeDescription> lAttributes;
-        aVertexBufferLayout.Compile( 0, lBindings, lAttributes, false );
+        Compile( aVertexBufferLayout, 0, lStride0, lBindings, lAttributes, false );
 
+        uint32_t                                       lStride1 = CalculateOffsetsAndStride( aInstanceBufferLayout );
         VkVertexInputBindingDescription                lInstanceBindings;
         std::vector<VkVertexInputAttributeDescription> instance_attributes;
-        aInstanceBufferLayout.Compile( 1, lInstanceBindings, instance_attributes, true );
+        Compile( aInstanceBufferLayout, 1, lStride1, lInstanceBindings, instance_attributes, true );
 
         if( lAttributes.size() != 0 )
         {
@@ -445,6 +483,181 @@ namespace SE::Graphics
 
         mVkObject = mContext->CreatePipeline( aCreateInfo );
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // sVkPipelineObject::sVkPipelineObject( Ref<VkGraphicContext> aContext, uint8_t aSampleCount, sBufferLayout aVertexBufferLayout,
+    //                                       sBufferLayout aInstanceBufferLayout, ePrimitiveTopology aTopology, eFaceCulling aCullMode,
+    //                                       float aLineWidth, sDepthTesting aDepthTest, sBlending aBlending,
+    //                                       std::vector<sShader> aShaderStages, Ref<sVkPipelineLayoutObject> aPipelineLayout,
+    //                                       Ref<sVkAbstractRenderPassObject> aRenderPass )
+    //     : mContext{ aContext }
+    // {
+
+    //     VkGraphicsPipelineCreateInfo aCreateInfo{};
+    //     aCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+    //     aCreateInfo.pNext = nullptr;
+
+    //     VkDynamicState lStates[] = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR, VK_DYNAMIC_STATE_LINE_WIDTH };
+    //     VkPipelineDynamicStateCreateInfo lDynamicState{};
+    //     lDynamicState.sType             = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+    //     lDynamicState.dynamicStateCount = 2;
+    //     lDynamicState.pDynamicStates    = lStates;
+    //     aCreateInfo.pDynamicState       = &lDynamicState;
+
+    //     VkPipelineVertexInputStateCreateInfo lVertexInputInfo{};
+    //     lVertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+
+    //     VkVertexInputBindingDescription                lBindings;
+    //     std::vector<VkVertexInputAttributeDescription> lAttributes;
+    //     aVertexBufferLayout.Compile( 0, lBindings, lAttributes, false );
+
+    //     VkVertexInputBindingDescription                lInstanceBindings;
+    //     std::vector<VkVertexInputAttributeDescription> instance_attributes;
+    //     aInstanceBufferLayout.Compile( 1, lInstanceBindings, instance_attributes, true );
+
+    //     if( lAttributes.size() != 0 )
+    //     {
+    //         if( instance_attributes.size() != 0 )
+    //         {
+    //             VkVertexInputBindingDescription lAllBindings[2] = { lBindings, lInstanceBindings };
+    //             lAttributes.insert( lAttributes.end(), instance_attributes.begin(), instance_attributes.end() );
+
+    //             lVertexInputInfo.pVertexAttributeDescriptions    = lAttributes.data();
+    //             lVertexInputInfo.vertexAttributeDescriptionCount = lAttributes.size();
+    //             lVertexInputInfo.pVertexBindingDescriptions      = lAllBindings;
+    //             lVertexInputInfo.vertexBindingDescriptionCount   = 2;
+    //             aCreateInfo.pVertexInputState                    = &lVertexInputInfo;
+    //         }
+    //         else
+    //         {
+    //             VkVertexInputBindingDescription lAllBindings[1]  = { lBindings };
+    //             lVertexInputInfo.pVertexAttributeDescriptions    = lAttributes.data();
+    //             lVertexInputInfo.vertexAttributeDescriptionCount = lAttributes.size();
+    //             lVertexInputInfo.pVertexBindingDescriptions      = lAllBindings;
+    //             lVertexInputInfo.vertexBindingDescriptionCount   = 1;
+    //             aCreateInfo.pVertexInputState                    = &lVertexInputInfo;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         lVertexInputInfo.pVertexAttributeDescriptions    = nullptr;
+    //         lVertexInputInfo.vertexAttributeDescriptionCount = 0;
+    //         lVertexInputInfo.pVertexBindingDescriptions      = nullptr;
+    //         lVertexInputInfo.vertexBindingDescriptionCount   = 0;
+    //         aCreateInfo.pVertexInputState                    = &lVertexInputInfo;
+    //     }
+
+    //     VkPipelineColorBlendAttachmentState lColorBlendAttachment{};
+    //     lColorBlendAttachment.colorWriteMask =
+    //         VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+    //     lColorBlendAttachment.blendEnable         = aBlending.mEnable ? VK_TRUE : VK_FALSE;
+    //     lColorBlendAttachment.srcColorBlendFactor = static_cast<VkBlendFactor>( aBlending.mSourceColorFactor );
+    //     lColorBlendAttachment.dstColorBlendFactor = static_cast<VkBlendFactor>( aBlending.mDestColorFactor );
+    //     lColorBlendAttachment.colorBlendOp        = static_cast<VkBlendOp>( aBlending.mColorBlendOperation );
+    //     lColorBlendAttachment.srcAlphaBlendFactor = static_cast<VkBlendFactor>( aBlending.mSourceAlphaFactor );
+    //     lColorBlendAttachment.dstAlphaBlendFactor = static_cast<VkBlendFactor>( aBlending.mDestAlphaFactor );
+    //     lColorBlendAttachment.alphaBlendOp        = static_cast<VkBlendOp>( aBlending.mAlphaBlendOperation );
+
+    //     std::vector<VkPipelineColorBlendAttachmentState> lBlendAttachments( aRenderPass->GetColorAttachmentCount(),
+    //                                                                         lColorBlendAttachment );
+
+    //     VkPipelineColorBlendStateCreateInfo lColorBlendingInfo{};
+    //     lColorBlendingInfo.sType           = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+    //     lColorBlendingInfo.logicOpEnable   = VK_FALSE;
+    //     lColorBlendingInfo.logicOp         = VK_LOGIC_OP_COPY;
+    //     lColorBlendingInfo.attachmentCount = lBlendAttachments.size();
+    //     lColorBlendingInfo.pAttachments    = lBlendAttachments.data();
+    //     lColorBlendingInfo.pNext           = nullptr;
+    //     aCreateInfo.pColorBlendState       = &lColorBlendingInfo;
+
+    //     VkPipelineMultisampleStateCreateInfo lMultisamplingInfo{};
+    //     lMultisamplingInfo.sType                 = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+    //     lMultisamplingInfo.rasterizationSamples  = (VkSampleCountFlagBits)aSampleCount;
+    //     lMultisamplingInfo.sampleShadingEnable   = VK_FALSE;
+    //     lMultisamplingInfo.minSampleShading      = 1.0f;
+    //     lMultisamplingInfo.pSampleMask           = nullptr;
+    //     lMultisamplingInfo.alphaToCoverageEnable = VK_FALSE;
+    //     lMultisamplingInfo.alphaToOneEnable      = VK_FALSE;
+    //     lMultisamplingInfo.pNext                 = nullptr;
+    //     aCreateInfo.pMultisampleState            = &lMultisamplingInfo;
+
+    //     VkViewport                        lViewportInfo{};
+    //     VkRect2D                          lScissorInfo{};
+    //     VkPipelineViewportStateCreateInfo lViewportState{};
+    //     lViewportState.sType         = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+    //     lViewportState.pNext         = nullptr;
+    //     lViewportState.viewportCount = 1;
+    //     lViewportState.pViewports    = &lViewportInfo;
+    //     lViewportState.scissorCount  = 1;
+    //     lViewportState.pScissors     = &lScissorInfo;
+    //     aCreateInfo.pViewportState   = &lViewportState;
+
+    //     VkPipelineInputAssemblyStateCreateInfo lInputAssemblyInfo{};
+    //     lInputAssemblyInfo.sType                  = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+    //     lInputAssemblyInfo.topology               = (VkPrimitiveTopology)aTopology;
+    //     lInputAssemblyInfo.primitiveRestartEnable = VK_FALSE;
+    //     lInputAssemblyInfo.pNext                  = nullptr;
+    //     aCreateInfo.pInputAssemblyState           = &lInputAssemblyInfo;
+
+    //     VkPipelineRasterizationStateCreateInfo lRasterizationConfig{};
+    //     lRasterizationConfig.sType                   = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+    //     lRasterizationConfig.depthClampEnable        = VK_FALSE;
+    //     lRasterizationConfig.rasterizerDiscardEnable = VK_FALSE;
+    //     lRasterizationConfig.pNext                   = nullptr;
+
+    //     switch( aTopology )
+    //     {
+    //     case ePrimitiveTopology::TRIANGLES: lRasterizationConfig.polygonMode = VK_POLYGON_MODE_FILL; break;
+    //     case ePrimitiveTopology::LINES: lRasterizationConfig.polygonMode = VK_POLYGON_MODE_LINE; break;
+    //     case ePrimitiveTopology::POINTS:
+    //     default: lRasterizationConfig.polygonMode = VK_POLYGON_MODE_POINT; break;
+    //     }
+
+    //     lRasterizationConfig.lineWidth               = aLineWidth;
+    //     lRasterizationConfig.cullMode                = (VkCullModeFlags)aCullMode;
+    //     lRasterizationConfig.frontFace               = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+    //     lRasterizationConfig.depthBiasEnable         = VK_FALSE;
+    //     lRasterizationConfig.depthBiasConstantFactor = 0.0f;
+    //     lRasterizationConfig.depthBiasClamp          = 0.0f;
+    //     lRasterizationConfig.depthBiasSlopeFactor    = 0.0f;
+    //     aCreateInfo.pRasterizationState              = &lRasterizationConfig;
+
+    //     VkPipelineDepthStencilStateCreateInfo lDepthStencilInfo{};
+    //     lDepthStencilInfo.sType                 = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+    //     lDepthStencilInfo.depthTestEnable       = aDepthTest.mDepthTestEnable ? VK_TRUE : VK_FALSE;
+    //     lDepthStencilInfo.depthWriteEnable      = aDepthTest.mDepthWriteEnable ? VK_TRUE : VK_FALSE;
+    //     lDepthStencilInfo.depthCompareOp        = (VkCompareOp)aDepthTest.mDepthComparison;
+    //     lDepthStencilInfo.depthBoundsTestEnable = VK_FALSE;
+    //     lDepthStencilInfo.minDepthBounds        = 0.0f;
+    //     lDepthStencilInfo.maxDepthBounds        = 1.0f;
+    //     lDepthStencilInfo.stencilTestEnable     = VK_FALSE;
+    //     lDepthStencilInfo.pNext                 = nullptr;
+    //     aCreateInfo.pDepthStencilState          = &lDepthStencilInfo;
+
+    //     std::vector<VkPipelineShaderStageCreateInfo> lShaderStages( aShaderStages.size() );
+    //     for( uint32_t i = 0; i < aShaderStages.size(); i++ )
+    //     {
+    //         lShaderStages[i].sType  = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    //         lShaderStages[i].stage  = (VkShaderStageFlagBits)aShaderStages[i].mShaderModule->Type;
+    //         lShaderStages[i].module = aShaderStages[i].mShaderModule->GetVkShaderModule();
+    //         lShaderStages[i].pName  = aShaderStages[i].mEntryPoint.c_str();
+    //         lShaderStages[i].pNext  = nullptr;
+    //     }
+    //     aCreateInfo.stageCount = lShaderStages.size();
+    //     aCreateInfo.pStages    = lShaderStages.data();
+
+    //     aCreateInfo.layout             = aPipelineLayout->mVkObject;
+    //     aCreateInfo.renderPass         = aRenderPass->mVkObject;
+    //     aCreateInfo.subpass            = 0;
+    //     aCreateInfo.basePipelineHandle = VK_NULL_HANDLE;
+
+    //     mVkObject = mContext->CreatePipeline( aCreateInfo );
+    // }
 
     sVkPipelineObject::~sVkPipelineObject() { mContext->DestroyPipeline( mVkObject ); }
 

@@ -7,8 +7,9 @@ namespace SE::Graphics
     struct sShaderData
     {
         eShaderStageTypeFlags mShaderType;
-        fs::path              mPath;
-        std::string           mEntryPoint;
+
+        fs::path    mPath;
+        std::string mEntryPoint;
     };
 
     struct sDescriptorBindingInfo
@@ -44,6 +45,8 @@ namespace SE::Graphics
         void SetDepthParameters( bool aDepthWriteEnable, bool aDepthTestEnable, eDepthCompareOperation aDepthComparison );
         void AddPushConstantRange( ShaderStageType aShaderStage, uint32_t aOffset, uint32_t aSize );
 
+        void AddInput( std::string aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation, bool aInstanced );
+
         template <typename _Ty>
         void AddPushConstantRange( ShaderStageType aShaderStage, uint32_t aOffset )
         {
@@ -69,8 +72,10 @@ namespace SE::Graphics
         bool                   mDepthTestEnable  = false;
         eDepthCompareOperation mDepthComparison  = eDepthCompareOperation::ALWAYS;
 
-        std::vector<sShaderData>        mShaderStages     = {};
-        std::vector<sPushConstantRange> mPushConstants    = {};
-        std::vector<sDescriptorSet>     mDescriptorLayout = {};
+        std::vector<sShaderData>          mShaderStages         = {};
+        std::vector<sBufferLayoutElement> mInputLayout          = {};
+        std::vector<sBufferLayoutElement> mInstancedInputLayout = {};
+        std::vector<sPushConstantRange>   mPushConstants        = {};
+        std::vector<sDescriptorSet>       mDescriptorLayout     = {};
     };
 } // namespace SE::Graphics
