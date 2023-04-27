@@ -1,4 +1,5 @@
 #include "VkGraphicsPipeline.h"
+#include "VkRenderContext.h"
 
 #include "Core/Logging.h"
 #include "Core/Memory.h"
@@ -7,34 +8,76 @@
 
 namespace SE::Graphics
 {
-    VkGraphicsPipeline::VkGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext )
-        : IGraphicsPipeline( aGraphicContext, aRenderContext )
+    VkGraphicsPipeline::VkGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
+                                            ePrimitiveTopology aTopology )
+        : IGraphicsPipeline( aGraphicContext, aRenderContext, aTopology )
     {
     }
 
     void VkGraphicsPipeline::Build()
     {
-        std::vector<Ref<sVkDescriptorSetLayoutObject>> lDescriptorSetLayouts( mSetLayouts.size() );
-        for( uint32_t i = 0; i < mSetLayouts.size(); i++ ) lDescriptorSetLayouts[i] = mSetLayouts[i]->GetVkDescriptorSetLayoutObject();
+        for( uint32_t i = 0; i < mDescriptorLayout.size(); i++ )
+        {
+            auto lDescriptorSet = mDescriptorLayout[i].mDescriptors;
+
+            std::vector<VkDescriptorSetLayoutBinding> lBindings{};
+
+            for( uint32_t j = 0; j < lDescriptorSet.size(); j++ )
+            {
+                VkDescriptorSetLayoutBinding &lNewBinding = lBindings.emplace_back();
+
+                lNewBinding.binding            = lDescriptorSet[i].mBindingIndex;
+                lNewBinding.descriptorCount    = 1;
+                lNewBinding.descriptorType     = (VkDescriptorType)lDescriptorSet[i].mType;
+                lNewBinding.pImmutableSamplers = nullptr;
+
+                if( lDescriptorSet[i].mShaderStages & eShaderStageTypeFlags::VERTEX )
+                    lNewBinding.stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
+
+                if( lDescriptorSet[i].mShaderStages & eShaderStageTypeFlags::COMPUTE )
+                    lNewBinding.stageFlags |= VK_SHADER_STAGE_COMPUTE_BIT;
+
+                if( lDescriptorSet[i].mShaderStages & eShaderStageTypeFlags::GEOMETRY )
+                    lNewBinding.stageFlags |= VK_SHADER_STAGE_GEOMETRY_BIT;
+
+                if( lDescriptorSet[i].mShaderStages & eShaderStageTypeFlags::FRAGMENT )
+                    lNewBinding.stageFlags |= VK_SHADER_STAGE_FRAGMENT_BIT;
+
+                if( lDescriptorSet[i].mShaderStages & eShaderStageTypeFlags::TESSELATION_CONTROL )
+                    lNewBinding.stageFlags |= VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+
+                if( lDescriptorSet[i].mShaderStages & eShaderStageTypeFlags::TESSELATION_EVALUATION )
+                    lNewBinding.stageFlags |= VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+            }
+
+            if( mDescriptorLayout[i].mIsUnbounded ) lBindings[lBindings.size() - 1].descriptorCount = 1024;
+
+            mDescriptorSetLayouts.push_back( New<sVkDescriptorSetLayoutObject>( Cast<VkGraphicContext>( mGraphicContext ), lBindings,
+                                                                                mDescriptorLayout[i].mIsUnbounded ) );
+        }
 
         mPipelineLayoutObject =
-            SE::Core::New<sVkPipelineLayoutObject>( Cast<VkGraphicContext>( mGraphicContext ), lDescriptorSetLayouts, mPushConstants );
+            SE::Core::New<sVkPipelineLayoutObject>( Cast<VkGraphicContext>( mGraphicContext ), mDescriptorSetLayouts, mPushConstants );
 
         sDepthTesting lDepth{};
         lDepth.mDepthComparison  = mDepthComparison;
         lDepth.mDepthTestEnable  = mDepthTestEnable;
         lDepth.mDepthWriteEnable = mDepthWriteEnable;
 
-        if( mOpaque )
+        auto lSampleCount = Cast<VkRenderContext>( mRenderContext )->GetRenderTarget()->mSpec.mSampleCount;
+
+        std::vector<sShader> lShaderStages{};
+        for( auto const &lShader : mShaderStages )
         {
-            sBlending lBlending{};
-            mPipelineObject = SE::Core::New<sVkPipelineObject>(
-                Cast<VkGraphicContext>( mGraphicContext ), mSampleCount, mInputBufferLayout, mInstanceBufferLayout, mTopology,
-                mCulling, mLineWidth, lDepth, lBlending, mShaderStages, mPipelineLayoutObject, mRenderPass );
+            auto lUIVertexShader =
+                New<ShaderModule>( Cast<VkGraphicContext>( mGraphicContext ), lShader.mPath.string(), lShader.mShaderType );
+
+            lShaderStages.push_back( sShader{ lUIVertexShader, lShader.mEntryPoint } );
         }
-        else
+
+        sBlending lBlending{};
+        if( !mOpaque )
         {
-            sBlending lBlending{};
             lBlending.mEnable              = true;
             lBlending.mSourceColorFactor   = eBlendFactor::SRC_ALPHA;
             lBlending.mDestColorFactor     = eBlendFactor::ONE_MINUS_SRC_ALPHA;
@@ -43,10 +86,11 @@ namespace SE::Graphics
             lBlending.mSourceAlphaFactor   = eBlendFactor::ZERO;
             lBlending.mDestAlphaFactor     = eBlendFactor::ONE;
             lBlending.mAlphaBlendOperation = eBlendOperation::MAX;
-
-            mPipelineObject = SE::Core::New<sVkPipelineObject>(
-                Cast<VkGraphicContext>( mGraphicContext ), mSampleCount, mInputBufferLayout, mInstanceBufferLayout, mTopology,
-                mCulling, mLineWidth, lDepth, lBlending, mShaderStages, mPipelineLayoutObject, mRenderPass );
         }
+
+        mPipelineObject =
+            SE::Core::New<sVkPipelineObject>( Cast<VkGraphicContext>( mGraphicContext ), (uint8_t)lSampleCount, mInputLayout,
+                                              mInstancedInputLayout, mTopology, mCulling, mLineWidth, lDepth, lBlending, lShaderStages,
+                                              mPipelineLayoutObject, Cast<VkRenderContext>( mRenderContext )->GetRenderPass() );
     }
 } // namespace SE::Graphics

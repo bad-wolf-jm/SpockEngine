@@ -58,6 +58,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Vulkan/VkSampler2D.cpp
     Graphics/Vulkan/VkSamplerCubeMap.cpp
     Graphics/Vulkan/VkGraphicContext.cpp
+    Graphics/Vulkan/VkRenderContext.cpp
+    Graphics/Vulkan/VkGraphicsPipeline.cpp
     Graphics/Vulkan/VkPipeline.cpp
     Graphics/Vulkan/VkCommand.cpp
     Graphics/Vulkan/VkAbstractRenderPass.cpp

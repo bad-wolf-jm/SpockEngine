@@ -11,7 +11,7 @@ namespace SE::Graphics
     class VkGraphicsPipeline : IGraphicsPipeline
     {
       public:
-        VkGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext );
+        VkGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext, ePrimitiveTopology aTopology );
         ~VkGraphicsPipeline() = default;
 
         Ref<sVkPipelineObject>       GetVkPipelineObject() { return mPipelineObject; }
@@ -20,6 +20,8 @@ namespace SE::Graphics
         void Build();
 
       private:
+        std::vector<Ref<sVkDescriptorSetLayoutObject>> mDescriptorSetLayouts{};
+
         Ref<sVkPipelineLayoutObject> mPipelineLayoutObject = nullptr;
         Ref<sVkPipelineObject>       mPipelineObject       = nullptr;
     };
