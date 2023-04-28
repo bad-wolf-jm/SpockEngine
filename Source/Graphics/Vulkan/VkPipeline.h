@@ -71,7 +71,7 @@ namespace SE::Graphics
          *                     compilation
          * @param aShaderType The type of the shader we are compiling.
          */
-        ShaderModule( Ref<VkGraphicContext> mContext, std::string FilePaths, eShaderStageTypeFlags aShaderType );
+        ShaderModule( Ref<VkGraphicContext> mContext, std::string aFilePaths, eShaderStageTypeFlags aShaderType );
 
         ~ShaderModule() = default;
 

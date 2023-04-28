@@ -10,12 +10,12 @@ namespace SE::Graphics
     GraphicsPipeline::GraphicsPipeline( Ref<VkGraphicContext> aGraphicContext, GraphicsPipelineCreateInfo &aCreateInfo )
         : mGraphicContext( aGraphicContext )
     {
-        std::vector<Ref<sVkDescriptorSetLayoutObject>> l_DescriptorSetLayouts( aCreateInfo.mSetLayouts.size() );
+        std::vector<Ref<sVkDescriptorSetLayoutObject>> lDescriptorSetLayouts( aCreateInfo.mSetLayouts.size() );
         for( uint32_t i = 0; i < aCreateInfo.mSetLayouts.size(); i++ )
-            l_DescriptorSetLayouts[i] = aCreateInfo.mSetLayouts[i]->GetVkDescriptorSetLayoutObject();
+            lDescriptorSetLayouts[i] = aCreateInfo.mSetLayouts[i]->GetVkDescriptorSetLayoutObject();
 
         mPipelineLayoutObject =
-            SE::Core::New<sVkPipelineLayoutObject>( mGraphicContext, l_DescriptorSetLayouts, aCreateInfo.mPushConstants );
+            SE::Core::New<sVkPipelineLayoutObject>( mGraphicContext, lDescriptorSetLayouts, aCreateInfo.mPushConstants );
 
         sDepthTesting lDepth{};
         lDepth.mDepthComparison  = aCreateInfo.mDepthComparison;
