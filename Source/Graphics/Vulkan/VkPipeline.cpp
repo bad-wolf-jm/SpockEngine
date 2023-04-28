@@ -309,15 +309,15 @@ namespace SE::Graphics
 
         uint32_t                                       lStride1 = CalculateOffsetsAndStride( aInstanceBufferLayout );
         VkVertexInputBindingDescription                lInstanceBindings;
-        std::vector<VkVertexInputAttributeDescription> instance_attributes;
-        Compile( aInstanceBufferLayout, 1, lStride1, lInstanceBindings, instance_attributes, true );
+        std::vector<VkVertexInputAttributeDescription> lInstancedttributes;
+        Compile( aInstanceBufferLayout, 1, lStride1, lInstanceBindings, lInstancedttributes, true );
 
         if( lAttributes.size() != 0 )
         {
-            if( instance_attributes.size() != 0 )
+            if( lInstancedttributes.size() != 0 )
             {
                 VkVertexInputBindingDescription lAllBindings[2] = { lBindings, lInstanceBindings };
-                lAttributes.insert( lAttributes.end(), instance_attributes.begin(), instance_attributes.end() );
+                lAttributes.insert( lAttributes.end(), lInstancedttributes.begin(), lInstancedttributes.end() );
 
                 lVertexInputInfo.pVertexAttributeDescriptions    = lAttributes.data();
                 lVertexInputInfo.vertexAttributeDescriptionCount = lAttributes.size();

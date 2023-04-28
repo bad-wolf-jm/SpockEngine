@@ -31,22 +31,22 @@ namespace SE::Graphics
                 lNewBinding.descriptorType     = (VkDescriptorType)lDescriptorSet[i].mType;
                 lNewBinding.pImmutableSamplers = nullptr;
 
-                if( lDescriptorSet[i].mShaderStages & eShaderStageTypeFlags::VERTEX )
+                if( lDescriptorSet[j].mShaderStages & eShaderStageTypeFlags::VERTEX )
                     lNewBinding.stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
 
-                if( lDescriptorSet[i].mShaderStages & eShaderStageTypeFlags::COMPUTE )
+                if( lDescriptorSet[j].mShaderStages & eShaderStageTypeFlags::COMPUTE )
                     lNewBinding.stageFlags |= VK_SHADER_STAGE_COMPUTE_BIT;
 
-                if( lDescriptorSet[i].mShaderStages & eShaderStageTypeFlags::GEOMETRY )
+                if( lDescriptorSet[j].mShaderStages & eShaderStageTypeFlags::GEOMETRY )
                     lNewBinding.stageFlags |= VK_SHADER_STAGE_GEOMETRY_BIT;
 
-                if( lDescriptorSet[i].mShaderStages & eShaderStageTypeFlags::FRAGMENT )
+                if( lDescriptorSet[j].mShaderStages & eShaderStageTypeFlags::FRAGMENT )
                     lNewBinding.stageFlags |= VK_SHADER_STAGE_FRAGMENT_BIT;
 
-                if( lDescriptorSet[i].mShaderStages & eShaderStageTypeFlags::TESSELATION_CONTROL )
+                if( lDescriptorSet[j].mShaderStages & eShaderStageTypeFlags::TESSELATION_CONTROL )
                     lNewBinding.stageFlags |= VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
 
-                if( lDescriptorSet[i].mShaderStages & eShaderStageTypeFlags::TESSELATION_EVALUATION )
+                if( lDescriptorSet[j].mShaderStages & eShaderStageTypeFlags::TESSELATION_EVALUATION )
                     lNewBinding.stageFlags |= VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
             }
 
@@ -81,7 +81,6 @@ namespace SE::Graphics
             lBlending.mSourceColorFactor   = eBlendFactor::SRC_ALPHA;
             lBlending.mDestColorFactor     = eBlendFactor::ONE_MINUS_SRC_ALPHA;
             lBlending.mColorBlendOperation = eBlendOperation::ADD;
-
             lBlending.mSourceAlphaFactor   = eBlendFactor::ZERO;
             lBlending.mDestAlphaFactor     = eBlendFactor::ONE;
             lBlending.mAlphaBlendOperation = eBlendOperation::MAX;
