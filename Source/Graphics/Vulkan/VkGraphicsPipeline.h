@@ -25,6 +25,7 @@ namespace SE::Graphics
 
         Ref<sVkPipelineLayoutObject> mPipelineLayoutObject = nullptr;
         Ref<sVkPipelineObject>       mPipelineObject       = nullptr;
+        std::vector<sShader>         mShaders{};
     };
 
 } // namespace SE::Graphics

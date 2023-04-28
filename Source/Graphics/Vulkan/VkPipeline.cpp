@@ -440,9 +440,8 @@ namespace SE::Graphics
             lShaderStages[i].pName  = aShaderStages[i].mEntryPoint.c_str();
             lShaderStages[i].pNext  = nullptr;
         }
-        aCreateInfo.stageCount = lShaderStages.size();
-        aCreateInfo.pStages    = lShaderStages.data();
-
+        aCreateInfo.stageCount         = lShaderStages.size();
+        aCreateInfo.pStages            = lShaderStages.data();
         aCreateInfo.layout             = aPipelineLayout->mVkObject;
         aCreateInfo.renderPass         = aRenderPass->mVkObject;
         aCreateInfo.subpass            = 0;

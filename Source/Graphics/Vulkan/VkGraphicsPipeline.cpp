@@ -66,13 +66,12 @@ namespace SE::Graphics
 
         auto lSampleCount = Cast<VkRenderContext>( mRenderContext )->GetRenderTarget()->mSpec.mSampleCount;
 
-        std::vector<sShader> lShaderStages{};
         for( auto const &lShader : mShaderStages )
         {
             auto lUIVertexShader =
                 New<ShaderModule>( Cast<VkGraphicContext>( mGraphicContext ), lShader.mPath.string(), lShader.mShaderType );
 
-            lShaderStages.push_back( sShader{ lUIVertexShader, lShader.mEntryPoint } );
+            mShaders.push_back( sShader{ lUIVertexShader, lShader.mEntryPoint } );
         }
 
         sBlending lBlending{};
@@ -90,7 +89,7 @@ namespace SE::Graphics
 
         mPipelineObject =
             SE::Core::New<sVkPipelineObject>( Cast<VkGraphicContext>( mGraphicContext ), (uint8_t)lSampleCount, mInputLayout,
-                                              mInstancedInputLayout, mTopology, mCulling, mLineWidth, lDepth, lBlending, lShaderStages,
+                                              mInstancedInputLayout, mTopology, mCulling, mLineWidth, lDepth, lBlending, mShaders,
                                               mPipelineLayoutObject, Cast<VkRenderContext>( mRenderContext )->GetRenderPass() );
     }
 } // namespace SE::Graphics
