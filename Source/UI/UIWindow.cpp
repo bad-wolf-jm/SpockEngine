@@ -69,15 +69,8 @@ namespace SE::Core
     {
         SE_PROFILE_FUNCTION();
 
-        aRenderContext->Bind( mUIRenderPipeline );
-
-        if( aDrawData->TotalVtxCount > 0 )
-            aRenderContext->Bind( Cast<VkGpuBuffer>( mVertexBuffer ), Cast<VkGpuBuffer>( mIndexBuffer ) );
-
         int lFramebufferWidth  = (int)( aDrawData->DisplaySize.x * aDrawData->FramebufferScale.x );
         int lFramebufferHeight = (int)( aDrawData->DisplaySize.y * aDrawData->FramebufferScale.y );
-
-        aRenderContext->SetViewport( { 0, 0 }, { lFramebufferWidth, lFramebufferHeight } );
 
         float lS[2];
         lS[0] = 2.0f / aDrawData->DisplaySize.x;
@@ -85,23 +78,24 @@ namespace SE::Core
         float lT[2];
         lT[0] = -1.0f - aDrawData->DisplayPos.x * lS[0];
         lT[1] = -1.0f - aDrawData->DisplayPos.y * lS[1];
+
+        aRenderContext->Bind( mUIRenderPipeline );
+        aRenderContext->Bind( Cast<VkGpuBuffer>( mVertexBuffer ), Cast<VkGpuBuffer>( mIndexBuffer ) );
+        aRenderContext->SetViewport( { 0, 0 }, { lFramebufferWidth, lFramebufferHeight } );
         aRenderContext->PushConstants( { eShaderStageTypeFlags::VERTEX }, 0, lS );
         aRenderContext->PushConstants( { eShaderStageTypeFlags::VERTEX }, sizeof( float ) * 2, lT );
     }
 
-    // Render function
     void UIWindow::Render( Ref<IRenderContext> aRenderContext, ImDrawData *aDrawData )
     {
         SE_PROFILE_FUNCTION();
 
-        // Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
         int lFramebufferWidth  = (int)( aDrawData->DisplaySize.x * aDrawData->FramebufferScale.x );
         int lFramebufferHeight = (int)( aDrawData->DisplaySize.y * aDrawData->FramebufferScale.y );
         if( ( lFramebufferWidth <= 0 ) || ( lFramebufferHeight <= 0 ) ) return;
 
         if( aDrawData->TotalVtxCount > 0 )
         {
-            // Create or resize the vertex/index buffers
             size_t lVertexSize = aDrawData->TotalVtxCount * sizeof( ImDrawVert );
             size_t lIndexSize  = aDrawData->TotalIdxCount * sizeof( ImDrawIdx );
 
@@ -121,7 +115,6 @@ namespace SE::Core
             }
         }
 
-        // Setup desired Vulkan state
         SetupRenderState( aRenderContext, aDrawData );
 
         int lGlobalVtxOffset = 0;
