@@ -46,47 +46,21 @@ namespace SE::Core
 
     void UIWindow::CreatePipeline()
     {
-        // DescriptorBindingInfo lDescriptorBinding = { 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT }
-        // }; DescriptorSetLayoutCreateInfo lBindingLayout = { { lDescriptorBinding } };
-        // mUIDescriptorSetLayout = New<DescriptorSetLayout>( GraphicContext<VkGraphicContext>(), lBindingLayout );
-
-        // std::string lUIVertexShaderFiles = GetResourcePath( "Shaders\\ui_shader.vert.spv" ).string();
-        // mUIVertexShader = New<ShaderModule>( GraphicContext<VkGraphicContext>(), lUIVertexShaderFiles, eShaderStageTypeFlags::VERTEX
-        // ); std::string lUIFragmentShaderFiles = GetResourcePath( "Shaders\\ui_shader.frag.spv" ).string(); mUIFragmentShader =
-        //     New<ShaderModule>( GraphicContext<VkGraphicContext>(), lUIFragmentShaderFiles, eShaderStageTypeFlags::FRAGMENT );
-        // GraphicsPipelineCreateInfo lUIPipelineCreateInfo = {};
-        // lUIPipelineCreateInfo.mShaderStages              = { { mUIVertexShader, "main" }, { mUIFragmentShader, "main" } };
-        // lUIPipelineCreateInfo.mInputBufferLayout         = {
-        //     { "Position", eBufferDataType::VEC2, 0, 0 },
-        //     { "TextureCoords", eBufferDataType::VEC2, 0, 1 },
-        //     { "Color", eBufferDataType::COLOR, 0, 2 },
-        // };
-        // lUIPipelineCreateInfo.mTopology      = ePrimitiveTopology::TRIANGLES;
-        // lUIPipelineCreateInfo.mCulling       = eFaceCulling::NONE;
-        // lUIPipelineCreateInfo.mSampleCount   = mRenderContext->GetRenderTarget()->mSpec.mSampleCount;
-        // lUIPipelineCreateInfo.mLineWidth     = 1.0f;
-        // lUIPipelineCreateInfo.mRenderPass    = mRenderContext->GetRenderPass();
-        // lUIPipelineCreateInfo.mPushConstants = {
-        //     { { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 },
-        // };
-        // lUIPipelineCreateInfo.mSetLayouts = { mUIDescriptorSetLayout };
-
-        // mUIRenderPipeline = New<GraphicsPipeline>( GraphicContext<VkGraphicContext>(), lUIPipelineCreateInfo );
-
         mUIRenderPipeline = CreateGraphicsPipeline( mGraphicContext, mRenderContext, ePrimitiveTopology::TRIANGLES );
+
         mUIRenderPipeline->SetCulling( eFaceCulling::NONE );
 
-        mUIRenderPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\ui_shader.frag.spv" ), "main" );
+        mUIRenderPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\ui_shader.vert.spv" ), "main" );
         mUIRenderPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders\\ui_shader.frag.spv" ), "main" );
 
         mUIRenderPipeline->AddInput( "Position", eBufferDataType::VEC2, 0, 0 );
         mUIRenderPipeline->AddInput( "TextureCoords", eBufferDataType::VEC2, 0, 1 );
         mUIRenderPipeline->AddInput( "Color", eBufferDataType::COLOR, 0, 2 );
 
-        // auto &lDescriptorSet = mUIRenderPipeline->AddDescriptorSet();
-        // lDescriptorSet.Add( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        auto &lDescriptorSet = mUIRenderPipeline->AddDescriptorSet();
+        lDescriptorSet.Add( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
 
-        // mUIRenderPipeline->AddPushConstantRange( { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 );
+        mUIRenderPipeline->AddPushConstantRange( { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 );
 
         mUIRenderPipeline->Build();
     }

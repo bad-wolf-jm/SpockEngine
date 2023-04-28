@@ -52,14 +52,10 @@ namespace SE::Core
 
         Ref<IGraphicContext> mGraphicContext = nullptr;
 
-        Ref<IWindow>        mWindow        = nullptr;
-        Ref<SwapChain>      mSwapChain     = nullptr;
-        Ref<IRenderContext> mRenderContext = nullptr;
-
-        Ref<ShaderModule>        mUIVertexShader        = nullptr;
-        Ref<ShaderModule>        mUIFragmentShader      = nullptr;
-        Ref<IGraphicsPipeline>    mUIRenderPipeline      = nullptr;
-        Ref<DescriptorSetLayout> mUIDescriptorSetLayout = nullptr;
+        Ref<IWindow>           mWindow           = nullptr;
+        Ref<SwapChain>         mSwapChain        = nullptr;
+        Ref<IRenderContext>    mRenderContext    = nullptr;
+        Ref<IGraphicsPipeline> mUIRenderPipeline = nullptr;
 
         Ref<IGraphicBuffer> mVertexBuffer = nullptr;
         Ref<IGraphicBuffer> mIndexBuffer  = nullptr;

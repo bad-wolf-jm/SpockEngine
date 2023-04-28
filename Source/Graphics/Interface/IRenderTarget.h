@@ -104,13 +104,11 @@ namespace SE::Graphics
 
       protected:
         Ref<IGraphicContext> mGraphicContext{};
-
         uint32_t mImageCount = 0;
 
         std::vector<sAttachmentDescription> mAttachmentInfo = {};
         std::vector<std::string>            mAttachmentIDs  = {};
 
         std::unordered_map<std::string, sAttachmentResource> mAttachments = {};
-        // std::unordered_map<std::string, eCubeFace>     mAttachmentFaces = {};
     };
 } // namespace SE::Graphics
