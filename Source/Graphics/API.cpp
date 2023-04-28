@@ -1,6 +1,5 @@
 #include "API.h"
 
-#include "Vulkan/GraphicsPipeline.h"
 #include "Vulkan/VkGpuBuffer.h"
 #include "Vulkan/VkGraphicsPipeline.h"
 #include "Vulkan/VkRenderContext.h"

@@ -4,7 +4,6 @@
 #include "Graphics/Interface/IRenderContext.h"
 
 #include "Graphics/Vulkan/VkGpuBuffer.h"
-#include "GraphicsPipeline.h"
 #include "VkRenderTarget.h"
 
 namespace SE::Graphics
