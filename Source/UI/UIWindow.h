@@ -51,7 +51,7 @@ namespace SE::Core
         Ref<IGraphicContext> mGraphicContext = nullptr;
 
         Ref<IWindow>           mWindow           = nullptr;
-        Ref<SwapChain>         mSwapChain        = nullptr;
+        Ref<VkSwapChain>         mSwapChain        = nullptr;
         Ref<IRenderContext>    mRenderContext    = nullptr;
         Ref<IGraphicsPipeline> mUIRenderPipeline = nullptr;
 
