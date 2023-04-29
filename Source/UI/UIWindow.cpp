@@ -22,7 +22,7 @@ namespace SE::Core
         , mGraphicContext{ aGraphicContext }
     {
         mWindow        = SE::Core::New<IWindow>( (GLFWwindow *)aViewport->PlatformHandle );
-        mSwapChain     = SE::Core::New<SwapChain>( GraphicContext<VkGraphicContext>(), mWindow );
+        mSwapChain     = SE::Core::New<VkSwapChain>( GraphicContext<VkGraphicContext>(), mWindow );
         mRenderContext = SE::Core::New<SE::Graphics::VkRenderContext>( GraphicContext<VkGraphicContext>(), mSwapChain );
 
         CreatePipeline();
