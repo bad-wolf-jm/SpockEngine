@@ -9,7 +9,7 @@ namespace SE::Graphics
         : ISwapChain( aGraphicContext, aWindow )
         , mViewportClient{ aWindow }
     {
-        mVkSurface = Cast<VkGraphicContext>(mGraphicContext)->CreateVkSurface( aWindow );
+        mVkSurface = Cast<VkGraphicContext>( mGraphicContext )->CreateVkSurface( aWindow );
 
         RecreateSwapChain();
     }
@@ -68,7 +68,7 @@ namespace SE::Graphics
             mRenderTargets.push_back( lSwapChainImage );
         }
 
-        mRenderPassObject = mRenderTargets[0]->GetRenderPass();
+        // mRenderPassObject = mRenderTargets[0]->GetRenderPass();
 
         InitializeCommandBuffers();
     }
@@ -122,14 +122,14 @@ namespace SE::Graphics
 
     void VkSwapChain::InitializeCommandBuffers()
     {
-        auto lCommandBuffers = GraphicContext<VkGraphicContext>()->AllocateCommandBuffer( GetImageCount() );
+        auto lCommandBuffers = GraphicContext<VkGraphicContext>()->AllocateCommandBuffer( mImageCount );
 
         mCommandBufferObject = {};
 
         for( auto &lCB : lCommandBuffers )
             mCommandBufferObject.push_back( New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>(), lCB ) );
 
-        for( size_t i = 0; i < GetImageCount(); i++ )
+        for( size_t i = 0; i < mImageCount; i++ )
         {
             auto lImageAvailableSemaphore = GetImageAvailableSemaphore( i );
             if( lImageAvailableSemaphore )

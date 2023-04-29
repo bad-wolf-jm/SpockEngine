@@ -39,7 +39,7 @@ namespace SE::Graphics
         void Begin();
         void Begin( VkCommandBufferUsageFlags aUsage );
 
-        void BeginRenderPass( Ref<sVkAbstractRenderPassObject> aRenderPass, VkFramebuffer aFrameBuffer, math::uvec2 aExtent,
+        void BeginRenderPass( Ref<IRenderPass> aRenderPass, VkFramebuffer aFrameBuffer, math::uvec2 aExtent,
                               std::vector<VkClearValue> aClearValues );
         void EndRenderPass();
 

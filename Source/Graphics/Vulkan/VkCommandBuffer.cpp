@@ -39,12 +39,12 @@ namespace SE::Graphics
         VK_CHECK_RESULT( vkBeginCommandBuffer( mVkObject, &lCommandBufferBeginInfo ) );
     }
 
-    void sVkCommandBuffer::BeginRenderPass( Ref<sVkAbstractRenderPassObject> aRenderPass, VkFramebuffer aFrameBuffer,
-                                            math::uvec2 aExtent, std::vector<VkClearValue> aClearValues )
+    void sVkCommandBuffer::BeginRenderPass( Ref<IRenderPass> aRenderPass, VkFramebuffer aFrameBuffer, math::uvec2 aExtent,
+                                            std::vector<VkClearValue> aClearValues )
     {
         VkRenderPassBeginInfo lRenderPassInfo{};
         lRenderPassInfo.sType             = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        lRenderPassInfo.renderPass        = aRenderPass->mVkObject;
+        lRenderPassInfo.renderPass        = Cast<VkAbstractRenderPassObject>( aRenderPass )->mVkObject;
         lRenderPassInfo.framebuffer       = aFrameBuffer;
         lRenderPassInfo.renderArea.offset = { 0, 0 };
         lRenderPassInfo.renderArea.extent = { aExtent.x, aExtent.y };

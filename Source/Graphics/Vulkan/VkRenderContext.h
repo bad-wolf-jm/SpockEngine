@@ -21,7 +21,7 @@ namespace SE::Graphics
         uint32_t           GetOutputImageCount();
         Ref<IRenderTarget> GetRenderTarget() { return mRenderTarget; }
 
-        Ref<sVkAbstractRenderPassObject> GetRenderPass() { return Cast<VkRenderTarget>( mRenderTarget )->GetRenderPass(); }
+        Ref<IRenderPass> GetRenderPass() { return Cast<VkRenderTarget>( mRenderTarget )->GetRenderPass(); }
 
         bool BeginRender();
         bool EndRender();
