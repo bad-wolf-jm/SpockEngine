@@ -5,18 +5,18 @@
 
 namespace SE::Graphics
 {
-    SwapChain::SwapChain( Ref<VkGraphicContext> aGraphicContext, Ref<IWindow> aWindow )
-        : VkRenderTarget( aGraphicContext, sRenderTargetDescription{} )
+    VkSwapChain::VkSwapChain( Ref<IGraphicContext> aGraphicContext, Ref<IWindow> aWindow )
+        : ISwapChain( aGraphicContext, aWindow )
         , mViewportClient{ aWindow }
     {
-        mVkSurface = aGraphicContext->CreateVkSurface( aWindow );
+        mVkSurface = Cast<VkGraphicContext>(mGraphicContext)->CreateVkSurface( aWindow );
 
         RecreateSwapChain();
     }
 
-    SwapChain::~SwapChain() { GraphicContext<VkGraphicContext>()->DestroyVkSurface( mVkSurface ); }
+    VkSwapChain::~VkSwapChain() { GraphicContext<VkGraphicContext>()->DestroyVkSurface( mVkSurface ); }
 
-    void SwapChain::RecreateSwapChain()
+    void VkSwapChain::RecreateSwapChain()
     {
         GraphicContext<VkGraphicContext>()->WaitIdle();
         mRenderTargets.clear();
@@ -24,7 +24,7 @@ namespace SE::Graphics
         GraphicContext<VkGraphicContext>()->DestroySwapChain( mVkObject );
 
         auto [lSwapChainImageFormat, lSwapChainImageCount, lSwapchainExtent, lNewSwapchain] =
-            GraphicContext<VkGraphicContext>()->CreateSwapChain( mViewportClient->GetExtent(), mVkSurface);
+            GraphicContext<VkGraphicContext>()->CreateSwapChain( mViewportClient->GetExtent(), mVkSurface );
 
         mVkObject    = lNewSwapchain;
         auto lImages = GraphicContext<VkGraphicContext>()->GetSwapChainImages( mVkObject );
@@ -53,14 +53,12 @@ namespace SE::Graphics
             lTextureCreateInfo.mWidth  = mSpec.mWidth;
             lTextureCreateInfo.mHeight = mSpec.mHeight;
 
-            auto lFramebufferImage =
-                New<VkTexture2D>( GraphicContext<VkGraphicContext>(), lTextureCreateInfo, lImages[i] );
+            auto lFramebufferImage = New<VkTexture2D>( GraphicContext<VkGraphicContext>(), lTextureCreateInfo, lImages[i] );
 
             sRenderTargetDescription lCreateInfo{};
-            lCreateInfo.mWidth  = lSwapchainExtent.width;
-            lCreateInfo.mHeight = lSwapchainExtent.height;
-            auto lSwapChainImage =
-                New<VkRenderTarget>( GraphicContext<VkGraphicContext>(), lCreateInfo );
+            lCreateInfo.mWidth   = lSwapchainExtent.width;
+            lCreateInfo.mHeight  = lSwapchainExtent.height;
+            auto lSwapChainImage = New<VkRenderTarget>( GraphicContext<VkGraphicContext>(), lCreateInfo );
             lSwapChainImage->AddAttachment( "SWAPCHAIN_OUTPUT", eAttachmentType::COLOR, ToLtseFormat( lSwapChainImageFormat ),
                                             { 0.01f, 0.01f, 0.03f, 1.0f }, false, true, eAttachmentLoadOp::CLEAR,
                                             eAttachmentStoreOp::STORE, lFramebufferImage );
@@ -75,14 +73,13 @@ namespace SE::Graphics
         InitializeCommandBuffers();
     }
 
-    bool SwapChain::BeginRender()
+    bool VkSwapChain::BeginRender()
     {
         GraphicContext<VkGraphicContext>()->WaitForFence( mInFlightFences[mCurrentImage] );
 
-        uint64_t lTimeout = std::numeric_limits<uint64_t>::max();
-        VkResult lBeginRenderResult =
-            GraphicContext<VkGraphicContext>()
-                ->AcquireNextImage( mVkObject, lTimeout, mImageAvailableSemaphores[mCurrentImage], &mCurrentImage );
+        uint64_t lTimeout           = std::numeric_limits<uint64_t>::max();
+        VkResult lBeginRenderResult = GraphicContext<VkGraphicContext>()->AcquireNextImage(
+            mVkObject, lTimeout, mImageAvailableSemaphores[mCurrentImage], &mCurrentImage );
 
         if( lBeginRenderResult == VK_ERROR_OUT_OF_DATE_KHR )
         {
@@ -100,16 +97,16 @@ namespace SE::Graphics
         return mFrameIsStarted;
     }
 
-    void SwapChain::EndRender()
+    void VkSwapChain::EndRender()
     {
         mRenderTargets[mCurrentImage]->EndRender();
         mFrameIsStarted = false;
     }
 
-    void SwapChain::Present()
+    void VkSwapChain::Present()
     {
-        VkResult lPresentResult = GraphicContext<VkGraphicContext>()
-                                      ->Present( mVkObject, mCurrentImage, mRenderFinishedSemaphores[mCurrentImage] );
+        VkResult lPresentResult =
+            GraphicContext<VkGraphicContext>()->Present( mVkObject, mCurrentImage, mRenderFinishedSemaphores[mCurrentImage] );
 
         if( ( lPresentResult == VK_ERROR_OUT_OF_DATE_KHR ) || ( lPresentResult == VK_SUBOPTIMAL_KHR ) ||
             mViewportClient->WindowWasResized() )
@@ -122,4 +119,28 @@ namespace SE::Graphics
             throw std::runtime_error( "failed to present swap chain image!" );
         }
     }
+
+    void VkSwapChain::InitializeCommandBuffers()
+    {
+        auto lCommandBuffers = GraphicContext<VkGraphicContext>()->AllocateCommandBuffer( GetImageCount() );
+
+        mCommandBufferObject = {};
+
+        for( auto &lCB : lCommandBuffers )
+            mCommandBufferObject.push_back( New<sVkCommandBufferObject>( GraphicContext<VkGraphicContext>(), lCB ) );
+
+        for( size_t i = 0; i < GetImageCount(); i++ )
+        {
+            auto lImageAvailableSemaphore = GetImageAvailableSemaphore( i );
+            if( lImageAvailableSemaphore )
+                mCommandBufferObject[i]->AddWaitSemaphore( lImageAvailableSemaphore, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT );
+
+            auto lRenderFinishedSemaphore = GetRenderFinishedSemaphore( i );
+            if( lRenderFinishedSemaphore ) mCommandBufferObject[i]->AddSignalSemaphore( lRenderFinishedSemaphore );
+
+            auto lSubmitFence = GetInFlightFence( i );
+            if( lSubmitFence ) mCommandBufferObject[i]->SetSubmitFence( lSubmitFence );
+        }
+    }
+
 } // namespace SE::Graphics
