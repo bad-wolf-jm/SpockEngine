@@ -26,7 +26,7 @@ namespace SE::Graphics
 
         ~VkRenderTarget();
 
-        uint32_t GetImageCount() { return mImageCount; }
+        uint32_t GetImageCount() { return 1; }
 
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
 
@@ -45,7 +45,7 @@ namespace SE::Graphics
 
         void Finalize();
 
-        Ref<sVkAbstractRenderPassObject> GetRenderPass() { return mRenderPassObject; }
+        Ref<IRenderPass> GetRenderPass() { return mRenderPassObject; }
 
         virtual bool BeginRender();
         virtual void EndRender();

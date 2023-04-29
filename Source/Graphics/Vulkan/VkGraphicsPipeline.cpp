@@ -86,9 +86,9 @@ namespace SE::Graphics
             lBlending.mAlphaBlendOperation = eBlendOperation::MAX;
         }
 
-        mPipelineObject =
-            SE::Core::New<sVkPipelineObject>( Cast<VkGraphicContext>( mGraphicContext ), (uint8_t)lSampleCount, mInputLayout,
-                                              mInstancedInputLayout, mTopology, mCulling, mLineWidth, lDepth, lBlending, mShaders,
-                                              mPipelineLayoutObject, Cast<VkRenderContext>( mRenderContext )->GetRenderPass() );
+        mPipelineObject = SE::Core::New<sVkPipelineObject>(
+            Cast<VkGraphicContext>( mGraphicContext ), (uint8_t)lSampleCount, mInputLayout, mInstancedInputLayout, mTopology, mCulling,
+            mLineWidth, lDepth, lBlending, mShaders, mPipelineLayoutObject,
+            Cast<sVkAbstractRenderPassObject>( Cast<VkRenderContext>( mRenderContext )->GetRenderPass() ) );
     }
 } // namespace SE::Graphics

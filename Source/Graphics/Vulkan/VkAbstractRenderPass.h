@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Math/Types.h"
+#include "Graphics/Interface/IRenderPass.h"
 #include "Graphics/Interface/IWindow.h"
 #include <memory>
 #include <vulkan/vulkan.h>
@@ -13,7 +14,7 @@ namespace SE::Graphics
 {
     using namespace SE::Core;
 
-    struct sVkAbstractRenderPassObject
+    struct sVkAbstractRenderPassObject : public IRenderPass
     {
         VkRenderPass mVkObject    = VK_NULL_HANDLE;
         uint32_t     mSampleCount = 1;

@@ -13,15 +13,14 @@ namespace SE::Graphics
                                                               std::vector<VkAttachmentDescription> aAttachments,
                                                               std::vector<VkSubpassDescription>    aSubpasses,
                                                               std::vector<VkSubpassDependency>     aSubpassDependencies )
-        : mContext{ aContext }
+        : IRenderPass{ aContext, 1 }
     {
-        mVkObject = mContext->CreateRenderPass( aAttachments, aSubpasses, aSubpassDependencies );
+        mVkObject = Cast<VkGraphicContext>( mGraphicContext )->CreateRenderPass( aAttachments, aSubpasses, aSubpassDependencies );
     }
 
     sVkAbstractRenderPassObject::sVkAbstractRenderPassObject( Ref<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount,
                                                               bool aIsSampled, bool aIsPresented, math::vec4 aClearColor )
-        : mSampleCount{ aSampleCount }
-        , mContext{ aContext }
+        : IRenderPass{ aContext, aSampleCount }
     {
     }
 
@@ -39,7 +38,8 @@ namespace SE::Graphics
         lSubpass.pDepthStencilAttachment = aDepthAttachmentReference;
 
         mVkObject =
-            mContext->CreateRenderPass( aAttachments, std::vector<VkSubpassDescription>{ lSubpass }, DefaultSubpassDependencies() );
+            Cast<VkGraphicContext>( mGraphicContext )
+                ->CreateRenderPass( aAttachments, std::vector<VkSubpassDescription>{ lSubpass }, DefaultSubpassDependencies() );
 
         mColorAttachmentCount = aColorAttachmentReferences.size();
     }
@@ -66,7 +66,7 @@ namespace SE::Graphics
         return lSubpassDependencies;
     }
 
-    sVkAbstractRenderPassObject::~sVkAbstractRenderPassObject() { mContext->DestroyRenderPass( mVkObject ); }
+    sVkAbstractRenderPassObject::~sVkAbstractRenderPassObject() { Cast<VkGraphicContext>( mGraphicContext )->DestroyRenderPass( mVkObject ); }
 
     std::vector<VkClearValue> sVkAbstractRenderPassObject::GetClearValues() { return mClearValues; }
 
@@ -106,7 +106,7 @@ namespace SE::Graphics
     {
         VkAttachmentDescription lAttachmentSpec{};
         lAttachmentSpec.samples        = VK_SAMPLE_COUNT_VALUE( aSampleCount );
-        lAttachmentSpec.format         = ToVkFormat( mContext->GetDepthFormat() );
+        lAttachmentSpec.format         = ToVkFormat( mGraphicContext->GetDepthFormat() );
         lAttachmentSpec.loadOp         = aAttachmentLoadOp;
         lAttachmentSpec.storeOp        = aAttachmentStoreOp;
         lAttachmentSpec.stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
