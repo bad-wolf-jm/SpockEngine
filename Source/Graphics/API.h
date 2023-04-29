@@ -2,8 +2,9 @@
 
 #include "Interface/IGraphicBuffer.h"
 #include "Interface/IGraphicContext.h"
-#include "Interface/IRenderContext.h"
 #include "Interface/IGraphicsPipeline.h"
+#include "Interface/IRenderContext.h"
+#include "Interface/ISwapChain.h"
 
 namespace SE::Graphics
 {
@@ -42,5 +43,7 @@ namespace SE::Graphics
 
     Ref<IGraphicsPipeline> CreateGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
                                                    ePrimitiveTopology aTopology );
+
+    Ref<ISwapChain> CreateSwapChain( Ref<IGraphicContext> aGraphicContext, Ref<IWindow> aWindow );
 
 } // namespace SE::Graphics

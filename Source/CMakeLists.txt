@@ -72,6 +72,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Interface/IGraphicsPipeline.cpp
     Graphics/Interface/IRenderContext.cpp
     Graphics/Interface/IDescriptorSet.cpp
+    Graphics/Interface/ISwapChain.cpp
 
     OtdrEditor/OtdrWindow.cpp
     OtdrEditor/BaseOtdrApplication.cpp

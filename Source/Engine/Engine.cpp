@@ -28,8 +28,8 @@ namespace SE::Core
     {
         mGraphicContext         = SE::Core::New<VkGraphicContext>( 1, true );
         mViewportClient         = SE::Core::New<IWindow>( mInitialMainWindowSize.x, mInitialMainWindowSize.y, mApplicationName );
-        mSwapChain              = SE::Core::New<SwapChain>( mGraphicContext, mViewportClient );
-        mSwapChainRenderContext = SE::Core::New<VkRenderContext>( mGraphicContext, mSwapChain );
+        mSwapChain              = SE::Core::New<VkSwapChain>( mGraphicContext, mViewportClient );
+        mSwapChainRenderContext = SE::Core::New<VkRenderContext>( mGraphicContext, Cast<VkSwapChain>(mSwapChain) );
         mViewportClient->SetEngineLoop( this );
 
         mMainWindowSize  = mViewportClient->GetMainWindowSize();

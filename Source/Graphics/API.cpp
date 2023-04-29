@@ -54,4 +54,15 @@ namespace SE::Graphics
         }
     }
 
+    Ref<ISwapChain> CreateSwapChain( Ref<IGraphicContext> aGraphicContext, Ref<IWindow> aWindow )
+    {
+        switch( gApi )
+        {
+        case eGraphicsAPI::VULKAN: //return New<VkSwapChain>( aGraphicContext, aWindow );
+        case eGraphicsAPI::OPENGL:
+        case eGraphicsAPI::DIRECTX:
+        default: return nullptr;
+        }
+    }
+
 } // namespace SE::Graphics

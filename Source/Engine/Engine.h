@@ -135,7 +135,7 @@ namespace SE::Core
 
         Ref<SE::Core::UIContext> mImGUIOverlay;
 
-        Ref<SE::Graphics::SwapChain>      mSwapChain;
+        Ref<SE::Graphics::VkSwapChain>      mSwapChain;
         Ref<SE::Graphics::IRenderContext> mSwapChainRenderContext;
 
         double mEngineLoopStartTime;
