@@ -3,14 +3,17 @@
 #include "VkRenderTarget.h"
 
 #include "Graphics/Vulkan/VkCoreMacros.h"
+#include "Graphics/Vulkan/VkRenderTarget.h"
+
+#include "Graphics/Interface/ISwapChain.h"
 
 namespace SE::Graphics
 {
-    class SwapChain : public VkRenderTarget
+    class VkSwapChain : public ISwapChain
     {
       public:
-        SwapChain( Ref<VkGraphicContext> aGraphicContext, Ref<IWindow> aWindow );
-        ~SwapChain( );
+        VkSwapChain( Ref<IGraphicContext> aGraphicContext, Ref<IWindow> aWindow );
+        ~VkSwapChain();
 
         bool BeginRender();
         void EndRender();
@@ -31,14 +34,18 @@ namespace SE::Graphics
         Ref<IWindow> mViewportClient = nullptr;
 
       private:
-        VkSurfaceKHR                     mVkSurface                = VK_NULL_HANDLE;
-        VkSwapchainKHR                   mVkObject                 = VK_NULL_HANDLE;
-        std::vector<Ref<VkRenderTarget>> mRenderTargets            = {};
-        std::vector<VkSemaphore>         mImageAvailableSemaphores = {};
-        std::vector<VkSemaphore>         mRenderFinishedSemaphores = {};
-        std::vector<VkFence>             mInFlightFences           = {};
+        VkSurfaceKHR                             mVkSurface                = VK_NULL_HANDLE;
+        VkSwapchainKHR                           mVkObject                 = VK_NULL_HANDLE;
+        std::vector<Ref<VkRenderTarget>>         mRenderTargets            = {};
+        std::vector<VkSemaphore>                 mImageAvailableSemaphores = {};
+        std::vector<VkSemaphore>                 mRenderFinishedSemaphores = {};
+        std::vector<VkFence>                     mInFlightFences           = {};
+        std::vector<Ref<sVkCommandBufferObject>> mCommandBufferObject      = {};
+        Ref<sVkAbstractRenderPassObject>         mRenderPassObject         = nullptr;
 
         uint32_t mCurrentImage   = 0;
         bool     mFrameIsStarted = 0;
+
+        void InitializeCommandBuffers();
     };
 } // namespace SE::Graphics
