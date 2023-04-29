@@ -1,49 +1,95 @@
 #pragma once
 
 #include "Core/Memory.h"
-#include "IGraphicContext.h"
-#include "IRenderTarget.h"
 
-#include <vector>
-#include <vulkan/vulkan.h>
+#include "IGraphicContext.h"
+#include "ITexture.h"
+#include "ITextureCubeMap.h"
 
 namespace SE::Graphics
 {
+    enum class eAttachmentLoadOp : uint8_t
+    {
+        UNSPECIFIED = 0,
+        CLEAR       = 1,
+        LOAD        = 2
+    };
+
+    enum class eAttachmentStoreOp : uint8_t
+    {
+        UNSPECIFIED = 0,
+        STORE       = 1
+    };
+
+    enum class eAttachmentType
+    {
+        COLOR        = 0,
+        DEPTH        = 1,
+        MSAA_RESOLVE = 2
+    };
+
+    enum class eAttachmentLayout
+    {
+        SHADER_READ_ONLY = 0,
+        COLOR_ATTACHMENT = 1,
+        DEPTH_STENCIL    = 2
+    };
+
+    struct sAttachmentDescription
+    {
+        eAttachmentType    mType        = eAttachmentType::COLOR;
+        eColorFormat       mFormat      = eColorFormat::RGBA8_UNORM;
+        math::vec4         mClearColor  = { 0.0f, 0.0f, 0.0f, 0.0f };
+        bool               mIsSampled   = false;
+        bool               mIsPresented = false;
+        bool               mIsDefined   = false;
+        eAttachmentLoadOp  mLoadOp      = eAttachmentLoadOp::UNSPECIFIED;
+        eAttachmentStoreOp mStoreOp     = eAttachmentStoreOp::UNSPECIFIED;
+
+        sAttachmentDescription()  = default;
+        ~sAttachmentDescription() = default;
+
+        sAttachmentDescription( sAttachmentDescription const & ) = default;
+    };
+
+    struct sAttachmentResource
+    {
+        Ref<ITexture> mTexture = nullptr;
+        eCubeFace     mFace    = eCubeFace::NEGATIVE_Z;
+    };
+
     class IRenderPass
     {
-        VkRenderPass mVkObject    = VK_NULL_HANDLE;
-        uint32_t     mSampleCount = 1;
+      public:
+        IRenderPass() = default;
+        IRenderPass( Ref<IGraphicContext> aContext, uint32_t aSampleCount );
 
-        IRenderPass()                = default;
         IRenderPass( IRenderPass & ) = default;
-        IRenderPass( Ref<IGraphicContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
-                     std::vector<VkSubpassDescription> aSubpasses, std::vector<VkSubpassDependency> aSubpassDependencies );
 
-        IRenderPass( Ref<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented,
-                     math::vec4 aClearColor );
+        ~IRenderPass() = default;
 
-        ~IRenderPass();
+        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+                            Ref<ITexture> aFramebufferImage );
 
-        VkAttachmentDescription ColorAttachment( VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented,
-                                                 bool aIsDefined, VkAttachmentLoadOp aAttachmentLoadOp,
-                                                 VkAttachmentStoreOp aAttachmentStoreOp );
-        VkAttachmentDescription DepthAttachment( bool aIsDefined, uint32_t aSampleCount, VkAttachmentLoadOp aAttachmentLoadOp,
-                                                 VkAttachmentStoreOp aAttachmentStoreOp );
+        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+                            Ref<ITexture> aFramebufferImage, eCubeFace aFace );
 
-        std::vector<VkClearValue> GetClearValues();
-
-        std::vector<VkSubpassDependency> DefaultSubpassDependencies();
-
-        void CreateUnderlyingRenderpass( std::vector<VkAttachmentDescription> aAttachments,
-                                         std::vector<VkAttachmentReference>   aAttachmentReferences,
-                                         VkAttachmentReference               *aDepthAttachmentReference,
-                                         VkAttachmentReference               *aResolveAttachmentReference );
+        void AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
+                            bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp,
+                            Ref<ITexture> aFramebufferImage );
 
         uint32_t GetColorAttachmentCount() { return mColorAttachmentCount; }
 
       protected:
-        Ref<VkGraphicContext>     mContext              = nullptr;
-        std::vector<VkClearValue> mClearValues          = {};
-        uint32_t                  mColorAttachmentCount = 0;
+        Ref<IGraphicContext> mGraphicContext = nullptr;
+
+        uint32_t mSampleCount = 1;
+
+        std::vector<sAttachmentDescription> mAttachmentInfo = {};
+        std::vector<std::string>            mAttachmentIDs  = {};
+
+        std::unordered_map<std::string, sAttachmentResource> mAttachments = {};
+
+        uint32_t mColorAttachmentCount = 0;
     };
 } // namespace SE::Graphics
