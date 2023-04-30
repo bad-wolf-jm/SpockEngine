@@ -68,8 +68,6 @@ namespace SE::Graphics
             mRenderTargets.push_back( lSwapChainImage );
         }
 
-        // mRenderPassObject = mRenderTargets[0]->GetRenderPass();
-
         InitializeCommandBuffers();
     }
 
