@@ -5,6 +5,7 @@
 
 #include "Graphics/Vulkan/VkPipeline.h"
 #include "Graphics/Vulkan/VkRenderContext.h"
+#include "Graphics/Vulkan/vkSwapChainRenderContext.h"
 
 #include "Core/Profiling/BlockTimer.h"
 #include "Graphics/Interface/IWindow.h"
@@ -22,8 +23,8 @@ namespace SE::Core
         , mGraphicContext{ aGraphicContext }
     {
         mWindow        = SE::Core::New<IWindow>( (GLFWwindow *)aViewport->PlatformHandle );
-        mSwapChain     = SE::Core::New<VkSwapChain>( GraphicContext<VkGraphicContext>(), mWindow );
-        mRenderContext = SE::Core::New<SE::Graphics::VkRenderContext>( GraphicContext<VkGraphicContext>(), mSwapChain );
+        mSwapChain     = CreateSwapChain(mGraphicContext, mWindow);
+        mRenderContext = CreateRenderContext(mGraphicContext, mSwapChain);
 
         CreatePipeline();
 

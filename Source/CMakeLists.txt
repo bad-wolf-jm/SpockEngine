@@ -56,7 +56,9 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Vulkan/VkSampler2D.cpp
     Graphics/Vulkan/VkSamplerCubeMap.cpp
     Graphics/Vulkan/VkGraphicContext.cpp
+    Graphics/Vulkan/VkBaseRenderContext.cpp
     Graphics/Vulkan/VkRenderContext.cpp
+    Graphics/Vulkan/VkSwapChainRenderContext.cpp
     Graphics/Vulkan/VkGraphicsPipeline.cpp
     Graphics/Vulkan/VkPipeline.cpp
     Graphics/Vulkan/VkCommand.cpp
@@ -74,6 +76,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Interface/IDescriptorSet.cpp
     Graphics/Interface/ISwapChain.cpp
     Graphics/Interface/IRenderPass.cpp
+    Graphics/Interface/ICommandBuffer.cpp
 
     OtdrEditor/OtdrWindow.cpp
     OtdrEditor/BaseOtdrApplication.cpp

@@ -15,14 +15,17 @@ namespace SE::Graphics
         VkSwapChain( Ref<IGraphicContext> aGraphicContext, Ref<IWindow> aWindow );
         ~VkSwapChain();
 
-        bool BeginRender();
-        void EndRender();
-        void Present();
+        bool                            BeginRender();
+        void                            EndRender();
+        void                            Present();
+        sRenderTargetDescription const &Spec() { return mRenderTargets[0]->mSpec; }
 
-        std::vector<VkClearValue>           GetClearValues() { return mRenderTargets[mCurrentImage]->GetClearValues(); }
-        VkFramebuffer                       GetFramebuffer() { return mRenderTargets[mCurrentImage]->GetFramebuffer(); }
-        Ref<IRenderPass>                    GetRenderPass() { return mRenderTargets[0]->GetRenderPass(); }
-        virtual Ref<sVkCommandBufferObject> GetCurrentCommandBuffer() { return mCommandBufferObject[mCurrentImage]; }
+        std::vector<VkClearValue> GetClearValues() { return mRenderTargets[mCurrentImage]->GetClearValues(); }
+        VkFramebuffer             GetFramebuffer() { return mRenderTargets[mCurrentImage]->GetFramebuffer(); }
+        Ref<IRenderPass>          GetRenderPass() { return mRenderTargets[0]->GetRenderPass(); }
+        Ref<ICommandBuffer>       GetCommandBuffer() { return mCommandBufferObject[mCurrentImage]; }
+
+        // Ref<sVkCommandBufferObject> GetCurrentCommandBuffer() { return mCommandBufferObject[mCurrentImage]; }
 
         VkSemaphore GetImageAvailableSemaphore( uint32_t i ) { return mImageAvailableSemaphores[i]; }
         VkSemaphore GetRenderFinishedSemaphore( uint32_t i ) { return mRenderFinishedSemaphores[i]; }
@@ -41,11 +44,9 @@ namespace SE::Graphics
         std::vector<VkSemaphore>                 mRenderFinishedSemaphores = {};
         std::vector<VkFence>                     mInFlightFences           = {};
         std::vector<Ref<sVkCommandBufferObject>> mCommandBufferObject      = {};
-        // Ref<sVkAbstractRenderPassObject>         mRenderPassObject         = nullptr;
 
         uint32_t mCurrentImage   = 0;
         bool     mFrameIsStarted = 0;
-        uint32_t mImageCount     = 0;
 
         void InitializeCommandBuffers();
     };
