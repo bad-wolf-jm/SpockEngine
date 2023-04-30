@@ -4,6 +4,8 @@
 
 #include <memory>
 
+#include "Graphics/Interface/ICommandBuffer.h"
+
 #include "Graphics/Vulkan/VkGraphicContext.h"
 // #include "VkImage.h"
 
@@ -25,7 +27,7 @@ namespace SE::Graphics
         uint32_t mDepth         = 0;
     };
 
-    struct sVkCommandBufferObject
+    struct sVkCommandBufferObject : public ICommandBuffer
     {
         VkCommandBuffer mVkObject = VK_NULL_HANDLE;
 
@@ -92,7 +94,6 @@ namespace SE::Graphics
         void SubmitTo( VkQueue aQueue );
 
       private:
-        Ref<VkGraphicContext>             mContext                  = nullptr;
         VkFence                           mSubmitFence              = nullptr;
         std::vector<VkSemaphore>          mSubmitWaitSemaphores     = {};
         std::vector<VkPipelineStageFlags> mSubmitWaitSemaphoreStage = {};

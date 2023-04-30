@@ -6,6 +6,7 @@
 #include "IRenderPass.h"
 #include "ITexture.h"
 #include "ITextureCubeMap.h"
+#include "ICommandBuffer.h"
 
 namespace SE::Graphics
 {
@@ -97,7 +98,7 @@ namespace SE::Graphics
         virtual void Present();
 
         Ref<ITexture> GetAttachment( std::string const &aKey );
-        uint32_t GetColorAttachmentCount() { return mColorAttachmentCount; }
+        uint32_t      GetColorAttachmentCount() { return mColorAttachmentCount; }
 
         template <typename _GCSubtype>
         Ref<_GCSubtype> GraphicContext()
@@ -105,10 +106,15 @@ namespace SE::Graphics
             return std::reinterpret_pointer_cast<_GCSubtype>( mGraphicContext );
         }
 
+        uint32_t GetImageCount() { return mImageCount; }
+        
+        virtual Ref<ICommandBuffer> GetCommandBuffer() = 0;
+
       protected:
         Ref<IGraphicContext> mGraphicContext = nullptr;
 
         uint32_t mSampleCount = 1;
+        uint32_t mImageCount  = 1;
 
         std::vector<sAttachmentDescription> mAttachmentInfo = {};
         std::vector<std::string>            mAttachmentIDs  = {};
@@ -116,6 +122,5 @@ namespace SE::Graphics
         std::unordered_map<std::string, sAttachmentResource> mAttachments = {};
 
         uint32_t mColorAttachmentCount = 0;
-
     };
 } // namespace SE::Graphics
