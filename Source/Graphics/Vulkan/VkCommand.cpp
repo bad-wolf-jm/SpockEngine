@@ -12,29 +12,29 @@ namespace SE::Graphics
 {
 
     sVkCommandBufferObject::sVkCommandBufferObject( Ref<VkGraphicContext> aContext, VkCommandBuffer aCommandBuffer )
-        : mContext{ aContext }
+        : ICommandBuffer( aContext )
         , mVkObject{ aCommandBuffer }
     {
     }
 
     sVkCommandBufferObject::sVkCommandBufferObject( Ref<VkGraphicContext> aContext )
-        : mContext{ aContext }
+        : ICommandBuffer( aContext )
     {
-        mVkObject    = mContext->AllocateCommandBuffer( 1 )[0];
-        mSubmitFence = mContext->CreateFence();
+        mVkObject    = Cast<VkGraphicContext>( mGraphicContext )->AllocateCommandBuffer( 1 )[0];
+        mSubmitFence = Cast<VkGraphicContext>( mGraphicContext )->CreateFence();
     }
 
     sVkCommandBufferObject::~sVkCommandBufferObject()
     {
-        mContext->DestroyCommandBuffer( mVkObject );
-        mContext->DestroyFence( mSubmitFence );
+        Cast<VkGraphicContext>( mGraphicContext )->DestroyCommandBuffer( mVkObject );
+        Cast<VkGraphicContext>( mGraphicContext )->DestroyFence( mSubmitFence );
     }
 
     void sVkCommandBufferObject::Begin() { Begin( 0 ); }
 
     void sVkCommandBufferObject::Begin( VkCommandBufferUsageFlags aUsage )
     {
-        mContext->WaitForFence( mSubmitFence );
+        Cast<VkGraphicContext>( mGraphicContext )->WaitForFence( mSubmitFence );
 
         VkCommandBufferBeginInfo lCommandBufferBeginInfo{};
         lCommandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -43,12 +43,12 @@ namespace SE::Graphics
         VK_CHECK_RESULT( vkBeginCommandBuffer( mVkObject, &lCommandBufferBeginInfo ) );
     }
 
-    void sVkCommandBufferObject::BeginRenderPass( Ref<IRenderPass> aRenderPass, VkFramebuffer aFrameBuffer,
-                                                  math::uvec2 aExtent, std::vector<VkClearValue> aClearValues )
+    void sVkCommandBufferObject::BeginRenderPass( Ref<IRenderPass> aRenderPass, VkFramebuffer aFrameBuffer, math::uvec2 aExtent,
+                                                  std::vector<VkClearValue> aClearValues )
     {
         VkRenderPassBeginInfo lRenderPassInfo{};
         lRenderPassInfo.sType             = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        lRenderPassInfo.renderPass        = Cast<sVkAbstractRenderPassObject>(aRenderPass)->mVkObject;
+        lRenderPassInfo.renderPass        = Cast<sVkAbstractRenderPassObject>( aRenderPass )->mVkObject;
         lRenderPassInfo.framebuffer       = aFrameBuffer;
         lRenderPassInfo.renderArea.offset = { 0, 0 };
         lRenderPassInfo.renderArea.extent = { aExtent.x, aExtent.y };
@@ -129,7 +129,7 @@ namespace SE::Graphics
         }
     }
 
-    void sVkCommandBufferObject::Bind( void* aDescriptorSet, VkPipelineBindPoint aBindPoint,
+    void sVkCommandBufferObject::Bind( void *aDescriptorSet, VkPipelineBindPoint aBindPoint,
                                        Ref<sVkPipelineLayoutObject> aPipelineLayout, uint32_t aSetIndex, int32_t aDynamicOffset )
     {
         VkDescriptorSet lDescriptorSetArray[1] = { (VkDescriptorSet)aDescriptorSet };
@@ -323,7 +323,7 @@ namespace SE::Graphics
 
     void sVkCommandBufferObject::SubmitTo( VkQueue aQueue )
     {
-        mContext->WaitForFences( { mSubmitFence } );
+        Cast<VkGraphicContext>( mGraphicContext )->WaitForFences( { mSubmitFence } );
 
         VkSubmitInfo lQueueSubmitInfo{};
         lQueueSubmitInfo.sType              = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -343,7 +343,7 @@ namespace SE::Graphics
             lQueueSubmitInfo.pSignalSemaphores    = mSubmitSignalSemaphores.data();
         }
 
-        mContext->ResetFence( mSubmitFence );
+        Cast<VkGraphicContext>( mGraphicContext )->ResetFence( mSubmitFence );
         vkQueueSubmit( aQueue, 1, &lQueueSubmitInfo, mSubmitFence );
     }
 } // namespace SE::Graphics
