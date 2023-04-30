@@ -26,8 +26,6 @@ namespace SE::Graphics
 
         ~VkRenderTarget();
 
-        uint32_t GetImageCount() { return 1; }
-
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
 
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
@@ -45,7 +43,8 @@ namespace SE::Graphics
 
         void Finalize();
 
-        Ref<IRenderPass> GetRenderPass() { return mRenderPassObject; }
+        Ref<IRenderPass>    GetRenderPass() { return mRenderPassObject; }
+        Ref<ICommandBuffer> GetCommandBuffer() { return mCommandBufferObject[0]; }
 
         virtual bool BeginRender();
         virtual void EndRender();
@@ -59,7 +58,7 @@ namespace SE::Graphics
 
         virtual uint32_t GetCurrentImage();
 
-        virtual Ref<sVkCommandBufferObject> GetCurrentCommandBuffer() { return mCommandBufferObject[0]; }
+        // virtual Ref<sVkCommandBufferObject> GetCurrentCommandBuffer() { return mCommandBufferObject[0]; }
 
         Ref<VkTexture2D> GetAttachment( std::string const &aKey );
 
