@@ -49,7 +49,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/API.cpp
     Graphics/Vulkan/DescriptorSet.cpp
     Graphics/Vulkan/VkRenderTarget.cpp
-    Graphics/Vulkan/SwapChain.cpp
+    Graphics/Vulkan/VkSwapChain.cpp
     Graphics/Vulkan/VkGpuBuffer.cpp
     Graphics/Vulkan/VkTextureCubeMap.cpp
     Graphics/Vulkan/VkTexture2D.cpp

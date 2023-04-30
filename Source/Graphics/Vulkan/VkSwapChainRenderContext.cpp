@@ -1,7 +1,8 @@
-#include "VkSwapChainRenderContext.h"
-#include "VkGraphicsPipeline.h"
-#include "SwapChain.h"
 #include "Core/Logging.h"
+
+#include "VkGraphicsPipeline.h"
+#include "VkSwapChain.h"
+#include "VkSwapChainRenderContext.h"
 
 namespace SE::Graphics
 {
