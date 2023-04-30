@@ -17,7 +17,7 @@
 
 // #include "Core/Optix/OptixContext.h"
 #include "Graphics/Interface/IWindow.h"
-#include "Graphics/Vulkan/SwapChain.h"
+#include "Graphics/Vulkan/VkSwapChain.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Graphics/Vulkan/VkRenderContext.h"
 #include "Graphics/Vulkan/VkSwapChainRenderContext.h"

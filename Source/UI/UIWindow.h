@@ -3,7 +3,7 @@
 #include <map>
 
 #include "Graphics/Vulkan/DescriptorSet.h"
-#include "Graphics/Vulkan/SwapChain.h"
+#include "Graphics/Vulkan/VkSwapChain.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "Graphics/Vulkan/VkGpuBuffer.h"

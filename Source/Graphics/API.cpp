@@ -2,7 +2,7 @@
 
 #include "Vulkan/VkGpuBuffer.h"
 #include "Vulkan/VkGraphicsPipeline.h"
-#include "Vulkan/SwapChain.h"
+#include "Vulkan/VkSwapChain.h"
 #include "Vulkan/VkRenderContext.h"
 #include "Vulkan/VkRenderContext.h"
 #include "Vulkan/VkSwapChainRenderContext.h"
