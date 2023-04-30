@@ -2,7 +2,10 @@
 
 #include "Vulkan/VkGpuBuffer.h"
 #include "Vulkan/VkGraphicsPipeline.h"
+#include "Vulkan/SwapChain.h"
 #include "Vulkan/VkRenderContext.h"
+#include "Vulkan/VkRenderContext.h"
+#include "Vulkan/VkSwapChainRenderContext.h"
 
 namespace SE::Graphics
 {
@@ -58,7 +61,29 @@ namespace SE::Graphics
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: //return New<VkSwapChain>( aGraphicContext, aWindow );
+        case eGraphicsAPI::VULKAN: return New<VkSwapChain>( aGraphicContext, aWindow );
+        case eGraphicsAPI::OPENGL:
+        case eGraphicsAPI::DIRECTX:
+        default: return nullptr;
+        }
+    }
+
+    Ref<IRenderContext> CreateRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<ISwapChain> aWindow )
+    {
+        switch( gApi )
+        {
+        case eGraphicsAPI::VULKAN: return New<VkSwapChainRenderContext>( aGraphicContext, aWindow );
+        case eGraphicsAPI::OPENGL:
+        case eGraphicsAPI::DIRECTX:
+        default: return nullptr;
+        }
+    }
+
+    Ref<IRenderContext> CreateRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aWindow )
+    {
+        switch( gApi )
+        {
+        case eGraphicsAPI::VULKAN: return New<VkRenderContext>( aGraphicContext, aWindow );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
         default: return nullptr;
