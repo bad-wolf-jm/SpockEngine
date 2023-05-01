@@ -262,10 +262,8 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
     auto  lV = RandomVec4();
 
     REQUIRE( CallMethodHelper<mat4, float>( lVectorTest, "Constructor0", lS ) == mat4( lS ) );
-    REQUIRE( ( CallMethodHelper<mat4, float, float, float, float, float, float, float, float, float, float, float, float, float,
-    float,
-                                float, float>( lVectorTest, "Constructor1", lX[0][0], lX[1][0], lX[2][0], lX[3][0], lX[0][1],
-                                lX[1][1],
+    REQUIRE( ( CallMethodHelper<mat4, float, float, float, float, float, float, float, float, float, float, float, float, float, float,
+                                float, float>( lVectorTest, "Constructor1", lX[0][0], lX[1][0], lX[2][0], lX[3][0], lX[0][1], lX[1][1],
                                                lX[2][1], lX[3][1], lX[0][2], lX[1][2], lX[2][2], lX[3][2], lX[0][3], lX[1][3],
                                                lX[2][3], lX[3][3] ) ) == lX );
     REQUIRE( CallMethodHelper<mat4, mat3>( lVectorTest, "Constructor2", lA ) == mat4( lA ) );
@@ -1354,7 +1352,8 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     auto *lValues0 = MakeU32Array( lSize );
 //     auto *lValues1 = MakeU32Array( lSize );
 //     auto  lRetValue =
-//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestBitwiseAnd", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestBitwiseAnd", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1
+//         );
 
 //     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
@@ -1374,7 +1373,8 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     auto *lValues0 = MakeU32Array( lSize );
 //     auto *lValues1 = MakeU32Array( lSize );
 //     auto  lRetValue =
-//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestBitwiseOr", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestBitwiseOr", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1
+//         );
 
 //     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
@@ -1413,7 +1413,8 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     auto *lValues0 = MakeValueArray( lSize );
 //     auto *lValues1 = MakeValueArray( lSize );
 //     auto *lValues2 = MakeValueArray( lSize );
-//     auto lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestInInterval", (size_t)&lScope, (size_t)&lShape, lValues0,
+//     auto lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestInInterval", (size_t)&lScope, (size_t)&lShape,
+//     lValues0,
 //                                                              lValues1, lValues2 );
 
 //     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
@@ -1494,7 +1495,8 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     auto *lValues0 = MakeValueArray( lSize );
 //     auto *lValues1 = MakeValueArray( lSize );
 //     auto  lRetValue =
-//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestGreaterThan", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestGreaterThan", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1
+//         );
 
 //     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
@@ -1513,7 +1515,8 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 
 //     auto *lValues0  = MakeValueArray( lSize );
 //     auto *lValues1  = MakeValueArray( lSize );
-//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestGreaterThanOrEqual", (size_t)&lScope, (size_t)&lShape,
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestGreaterThanOrEqual", (size_t)&lScope,
+//     (size_t)&lShape,
 //                                                              lValues0, lValues1 );
 
 //     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
@@ -1655,7 +1658,8 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     auto [lSize, lShape] = TestCollapsableTensorShape();
 
 //     auto *lValues0 = MakeValueArray( lSize );
-//     auto lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCollapse", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCollapse", (size_t)&lScope, (size_t)&lShape, lValues0
+//     );
 
 //     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
@@ -1673,7 +1677,8 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     auto [lSize, lShape] = TestExpandableTensorShape();
 
 //     auto *lValues0  = MakeValueArray( lSize );
-//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestExpand", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestExpand", (size_t)&lScope, (size_t)&lShape, lValues0
+//     );
 
 //     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
@@ -1715,7 +1720,8 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     auto [lSize, lShape] = TestTensorShape();
 
 //     auto *lValues0  = MakeValueArray( lSize );
-//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestFlatten", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestFlatten", (size_t)&lScope, (size_t)&lShape, lValues0
+//     );
 
 //     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
@@ -1768,7 +1774,8 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     auto [lSize, lShape] = TestTensorShape();
 
 //     auto *lValues0  = MakeValueArray( lSize );
-//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCountTrue", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCountTrue", (size_t)&lScope, (size_t)&lShape,
+//     lValues0 );
 
 //     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
@@ -1785,7 +1792,8 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     auto [lSize, lShape] = TestTensorShape();
 
 //     auto *lValues0  = MakeValueArray( lSize );
-//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCountNonZero", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCountNonZero", (size_t)&lScope, (size_t)&lShape,
+//     lValues0 );
 
 //     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
@@ -1802,7 +1810,8 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     auto [lSize, lShape] = TestTensorShape();
 
 //     auto *lValues0  = MakeValueArray( lSize );
-//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCountZero", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCountZero", (size_t)&lScope, (size_t)&lShape,
+//     lValues0 );
 
 //     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
@@ -1819,7 +1828,8 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     auto [lSize, lShape] = TestTensorShape();
 
 //     auto *lValues0  = MakeValueArray( lSize );
-//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestFloor", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestFloor", (size_t)&lScope, (size_t)&lShape, lValues0
+//     );
 
 //     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
@@ -1887,7 +1897,8 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     auto [lSize, lShape] = TestTensorShape();
 
 //     auto *lValues0  = MakeValueArray( lSize );
-//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestRound", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestRound", (size_t)&lScope, (size_t)&lShape, lValues0
+//     );
 
 //     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
