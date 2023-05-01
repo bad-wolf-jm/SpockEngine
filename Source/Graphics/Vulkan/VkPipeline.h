@@ -4,7 +4,7 @@
 
 #include "Graphics/Interface/IGraphicBuffer.h"
 
-#include "Graphics/Vulkan/VkAbstractRenderPass.h"
+#include "Graphics/Vulkan/VkRenderPass.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include <memory>
@@ -323,7 +323,7 @@ namespace SE::Graphics
                            std::vector<sBufferLayoutElement> aInstanceBufferLayout, ePrimitiveTopology aTopology,
                            eFaceCulling aCullMode, float aLineWidth, sDepthTesting aDepthTest, sBlending aBlending,
                            std::vector<sShader> aShaderStages, Ref<sVkPipelineLayoutObject> aPipelineLayout,
-                           Ref<sVkAbstractRenderPassObject> aRenderPass );
+                           Ref<VkRenderPassObject> aRenderPass );
 
         ~sVkPipelineObject();
 

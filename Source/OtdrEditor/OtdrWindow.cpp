@@ -24,7 +24,7 @@
 namespace SE::OtdrEditor
 {
     using namespace SE::Core;
-    OtdrWindow::OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
+    OtdrWindow::OtdrWindow( Ref<IGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
         : mGraphicContext{ aGraphicContext }
         , mUIOverlay{ aUIOverlay }
     {

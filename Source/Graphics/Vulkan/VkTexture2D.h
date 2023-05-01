@@ -24,21 +24,21 @@ namespace SE::Graphics
 
       public:
         /** @brief */
-        VkTexture2D( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription, uint8_t aSampleCount,
+        VkTexture2D( Ref<IGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription, uint8_t aSampleCount,
                      bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
 
         /** @brief */
-        VkTexture2D( Ref<VkGraphicContext> aGraphicContext, TextureData2D &aTextureData )
+        VkTexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData )
             : VkTexture2D( aGraphicContext, aTextureData, 1, false, true, true )
         {
         }
 
         /** @brief */
-        VkTexture2D( Ref<VkGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount, bool aIsHostVisible,
+        VkTexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount, bool aIsHostVisible,
                      bool aIsGraphicsOnly, bool aIsTransferSource );
 
         /** @brief */
-        VkTexture2D( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+        VkTexture2D( Ref<IGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
                      VkImage aExternalImage );
 
         /** @brief */

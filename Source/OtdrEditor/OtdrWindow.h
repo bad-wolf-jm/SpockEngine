@@ -7,8 +7,8 @@
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 
-#include "Graphics/Vulkan/VkGraphicContext.h"
-#include "Graphics/Vulkan/VkSampler2D.h"
+#include "Graphics/Interface/IGraphicContext.h"
+#include "Graphics/Interface/ISampler2D.h"
 
 #include "UI/Components/Button.h"
 #include "UI/Components/Checkbox.h"
@@ -52,7 +52,7 @@ namespace SE::OtdrEditor
       public:
         OtdrWindow()                     = default;
         OtdrWindow( OtdrWindow const & ) = default;
-        OtdrWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> mUIOverlay );
+        OtdrWindow( Ref<IGraphicContext> aGraphicContext, Ref<UIContext> mUIOverlay );
 
         ~OtdrWindow() = default;
 
@@ -67,7 +67,7 @@ namespace SE::OtdrEditor
         UIMenu mMainMenu;
 
       private:
-        Ref<VkGraphicContext> mGraphicContext;
+        Ref<IGraphicContext> mGraphicContext;
         Ref<UIContext>        mUIOverlay;
 
         uint32_t mFrameCounter = 0;

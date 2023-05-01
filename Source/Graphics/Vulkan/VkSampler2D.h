@@ -22,7 +22,7 @@ namespace SE::Graphics
     {
       public:
         /** @brief */
-        VkSampler2D( Ref<VkGraphicContext> aGraphicContext, Ref<VkTexture2D> aTextureData, sTextureSamplingInfo const &aSamplingSpec );
+        VkSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<VkTexture2D> aTextureData, sTextureSamplingInfo const &aSamplingSpec );
 
         /** @brief */
         ~VkSampler2D();

@@ -14,21 +14,21 @@ namespace SE::Graphics
 {
     using namespace SE::Core;
 
-    struct sVkAbstractRenderPassObject : public IRenderPass
+    struct VkRenderPassObject : public IRenderPass
     {
         VkRenderPass mVkObject    = VK_NULL_HANDLE;
         uint32_t     mSampleCount = 1;
 
-        sVkAbstractRenderPassObject()                                = default;
-        sVkAbstractRenderPassObject( sVkAbstractRenderPassObject & ) = default;
-        sVkAbstractRenderPassObject( Ref<VkGraphicContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
+        VkRenderPassObject()                                = default;
+        VkRenderPassObject( VkRenderPassObject & ) = default;
+        VkRenderPassObject( Ref<VkGraphicContext> aContext, std::vector<VkAttachmentDescription> aAttachments,
                                      std::vector<VkSubpassDescription> aSubpasses,
                                      std::vector<VkSubpassDependency>  aSubpassDependencies );
 
-        sVkAbstractRenderPassObject( Ref<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
+        VkRenderPassObject( Ref<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
                                      bool aIsPresented, math::vec4 aClearColor );
 
-        ~sVkAbstractRenderPassObject();
+        ~VkRenderPassObject();
 
         VkAttachmentDescription ColorAttachment( VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled, bool aIsPresented,
                                                  bool aIsDefined, VkAttachmentLoadOp aAttachmentLoadOp,

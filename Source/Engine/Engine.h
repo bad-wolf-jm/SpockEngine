@@ -93,13 +93,7 @@ namespace SE::Core
 
         math::ivec2 GetViewportSize() { return mViewportClient->GetFramebufferSize(); }
 
-        SE::Graphics::Ref<VkGraphicContext> GetGraphicContext() { return mGraphicContext; }
-
-        SE::Graphics::Ref<VkGraphicContext> GetDevice() { return mGraphicContext; }
-
-        // Ref<SE::Graphics::SwapChainRenderTarget> GetSwapchainRenderer() { return mSwapChainRenderer; }
-        // SE::Graphics::RenderContext             &GetRenderContext() { return mRenderContext; }
-
+        SE::Graphics::Ref<IGraphicContext> GetGraphicContext() { return mGraphicContext; }
         Ref<SE::Core::UIContext> UIContext() { return mImGUIOverlay; };
 
         void        SetApplicationName( std::string a_Name ) { mApplicationName = a_Name; }
@@ -132,7 +126,7 @@ namespace SE::Core
         std::mutex                         mMainThreadQueueMutex;
 
         Ref<SE::Core::IWindow>              mViewportClient;
-        Ref<SE::Graphics::VkGraphicContext> mGraphicContext = nullptr;
+        Ref<SE::Graphics::IGraphicContext> mGraphicContext = nullptr;
 
         Ref<SE::Core::UIContext> mImGUIOverlay;
 

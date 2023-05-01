@@ -42,7 +42,7 @@ namespace SE::Graphics
     }
 
     /** @brief */
-    VkSampler2D::VkSampler2D( Ref<VkGraphicContext> aGraphicContext, Ref<VkTexture2D> aTextureData,
+    VkSampler2D::VkSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<VkTexture2D> aTextureData,
                               sTextureSamplingInfo const &aSamplingSpec )
         : ISampler2D( aGraphicContext, aTextureData, aSamplingSpec )
     {

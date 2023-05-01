@@ -2,14 +2,24 @@
 
 #include "Vulkan/VkGpuBuffer.h"
 #include "Vulkan/VkGraphicsPipeline.h"
+#include "Vulkan/VkRenderContext.h"
 #include "Vulkan/VkSwapChain.h"
-#include "Vulkan/VkRenderContext.h"
-#include "Vulkan/VkRenderContext.h"
 #include "Vulkan/VkSwapChainRenderContext.h"
 
 namespace SE::Graphics
 {
     static eGraphicsAPI gApi = eGraphicsAPI::VULKAN;
+
+    Ref<IGraphicContext> CreateGraphicContext( uint32_t aSampleCount )
+    {
+        switch( gApi )
+        {
+        case eGraphicsAPI::VULKAN: return New<VkGraphicContext>( aSampleCount, true );
+        case eGraphicsAPI::OPENGL:
+        case eGraphicsAPI::DIRECTX:
+        default: return nullptr;
+        }
+    }
 
     Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible,
                                       bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination, size_t aSize )

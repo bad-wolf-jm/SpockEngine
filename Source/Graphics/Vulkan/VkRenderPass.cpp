@@ -1,4 +1,4 @@
-#include "VkAbstractRenderPass.h"
+#include "VkRenderPass.h"
 
 #include <set>
 #include <unordered_set>
@@ -9,7 +9,7 @@
 namespace SE::Graphics
 {
 
-    sVkAbstractRenderPassObject::sVkAbstractRenderPassObject( Ref<VkGraphicContext>                aContext,
+    VkRenderPassObject::VkRenderPassObject( Ref<VkGraphicContext>                aContext,
                                                               std::vector<VkAttachmentDescription> aAttachments,
                                                               std::vector<VkSubpassDescription>    aSubpasses,
                                                               std::vector<VkSubpassDependency>     aSubpassDependencies )
@@ -18,13 +18,13 @@ namespace SE::Graphics
         mVkObject = Cast<VkGraphicContext>( mGraphicContext )->CreateRenderPass( aAttachments, aSubpasses, aSubpassDependencies );
     }
 
-    sVkAbstractRenderPassObject::sVkAbstractRenderPassObject( Ref<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount,
+    VkRenderPassObject::VkRenderPassObject( Ref<VkGraphicContext> aContext, VkFormat aFormat, uint32_t aSampleCount,
                                                               bool aIsSampled, bool aIsPresented, math::vec4 aClearColor )
         : IRenderPass{ aContext, aSampleCount }
     {
     }
 
-    void sVkAbstractRenderPassObject::CreateUnderlyingRenderpass( std::vector<VkAttachmentDescription> aAttachments,
+    void VkRenderPassObject::CreateUnderlyingRenderpass( std::vector<VkAttachmentDescription> aAttachments,
                                                                   std::vector<VkAttachmentReference>   aColorAttachmentReferences,
                                                                   VkAttachmentReference               *aDepthAttachmentReference,
                                                                   VkAttachmentReference               *aResolveAttachmentReference )
@@ -44,7 +44,7 @@ namespace SE::Graphics
         mColorAttachmentCount = aColorAttachmentReferences.size();
     }
 
-    std::vector<VkSubpassDependency> sVkAbstractRenderPassObject::DefaultSubpassDependencies()
+    std::vector<VkSubpassDependency> VkRenderPassObject::DefaultSubpassDependencies()
     {
         std::vector<VkSubpassDependency> lSubpassDependencies( 2 );
         lSubpassDependencies[0].srcSubpass    = VK_SUBPASS_EXTERNAL;
@@ -66,11 +66,11 @@ namespace SE::Graphics
         return lSubpassDependencies;
     }
 
-    sVkAbstractRenderPassObject::~sVkAbstractRenderPassObject() { Cast<VkGraphicContext>( mGraphicContext )->DestroyRenderPass( mVkObject ); }
+    VkRenderPassObject::~VkRenderPassObject() { Cast<VkGraphicContext>( mGraphicContext )->DestroyRenderPass( mVkObject ); }
 
-    std::vector<VkClearValue> sVkAbstractRenderPassObject::GetClearValues() { return mClearValues; }
+    std::vector<VkClearValue> VkRenderPassObject::GetClearValues() { return mClearValues; }
 
-    VkAttachmentDescription sVkAbstractRenderPassObject::ColorAttachment( VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
+    VkAttachmentDescription VkRenderPassObject::ColorAttachment( VkFormat aFormat, uint32_t aSampleCount, bool aIsSampled,
                                                                           bool aIsPresented, bool aIsDefined,
                                                                           VkAttachmentLoadOp  aAttachmentLoadOp,
                                                                           VkAttachmentStoreOp aAttachmentStoreOp )
@@ -100,7 +100,7 @@ namespace SE::Graphics
         return lAttachmentSpec;
     }
 
-    VkAttachmentDescription sVkAbstractRenderPassObject::DepthAttachment( bool aIsDefined, uint32_t aSampleCount,
+    VkAttachmentDescription VkRenderPassObject::DepthAttachment( bool aIsDefined, uint32_t aSampleCount,
                                                                           VkAttachmentLoadOp  aAttachmentLoadOp,
                                                                           VkAttachmentStoreOp aAttachmentStoreOp )
     {
