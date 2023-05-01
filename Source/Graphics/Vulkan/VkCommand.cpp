@@ -48,7 +48,7 @@ namespace SE::Graphics
     {
         VkRenderPassBeginInfo lRenderPassInfo{};
         lRenderPassInfo.sType             = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        lRenderPassInfo.renderPass        = Cast<sVkAbstractRenderPassObject>( aRenderPass )->mVkObject;
+        lRenderPassInfo.renderPass        = Cast<VkRenderPassObject>( aRenderPass )->mVkObject;
         lRenderPassInfo.framebuffer       = aFrameBuffer;
         lRenderPassInfo.renderArea.offset = { 0, 0 };
         lRenderPassInfo.renderArea.extent = { aExtent.x, aExtent.y };

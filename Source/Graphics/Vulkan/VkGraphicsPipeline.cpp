@@ -89,6 +89,6 @@ namespace SE::Graphics
         mPipelineObject = SE::Core::New<sVkPipelineObject>(
             Cast<VkGraphicContext>( mGraphicContext ), (uint8_t)lSampleCount, mInputLayout, mInstancedInputLayout, mTopology, mCulling,
             mLineWidth, lDepth, lBlending, mShaders, mPipelineLayoutObject,
-            Cast<sVkAbstractRenderPassObject>( Cast<VkRenderContext>( mRenderContext )->GetRenderPass() ) );
+            Cast<VkRenderPassObject>( Cast<VkRenderContext>( mRenderContext )->GetRenderPass() ) );
     }
 } // namespace SE::Graphics

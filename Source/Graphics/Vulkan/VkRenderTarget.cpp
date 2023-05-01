@@ -170,9 +170,9 @@ namespace SE::Graphics
         }
     }
 
-    Ref<sVkAbstractRenderPassObject> VkRenderTarget::CreateDefaultRenderPass()
+    Ref<VkRenderPassObject> VkRenderTarget::CreateDefaultRenderPass()
     {
-        Ref<sVkAbstractRenderPassObject> lNewRenderPass = New<sVkAbstractRenderPassObject>(
+        Ref<VkRenderPassObject> lNewRenderPass = New<VkRenderPassObject>(
             GraphicContext<VkGraphicContext>(), VK_FORMAT_UNDEFINED, mSpec.mSampleCount, false, false, math::vec4( 0.0f ) );
 
         std::vector<VkAttachmentDescription> lAttachmentDescriptions{};

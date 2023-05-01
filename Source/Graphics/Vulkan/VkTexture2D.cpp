@@ -17,7 +17,7 @@
 namespace SE::Graphics
 {
     /** @brief */
-    VkTexture2D::VkTexture2D( Ref<VkGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount,
+    VkTexture2D::VkTexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount,
                               bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
         : ITexture2D( aGraphicContext, aTextureData.mSpec, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource, false )
     {
@@ -36,7 +36,7 @@ namespace SE::Graphics
         TransitionImageLayout( VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
     }
 
-    VkTexture2D::VkTexture2D( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+    VkTexture2D::VkTexture2D( Ref<IGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
                               uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                               bool aIsTransferDestination )
         : ITexture2D( aGraphicContext, aTextureImageDescription, aSampleCount, aIsHostVisible, aIsGraphicsOnly, aIsTransferSource,
@@ -50,7 +50,7 @@ namespace SE::Graphics
         ConfigureExternalMemoryHandle();
     }
 
-    VkTexture2D::VkTexture2D( Ref<VkGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
+    VkTexture2D::VkTexture2D( Ref<IGraphicContext> aGraphicContext, Core::sTextureCreateInfo &aTextureImageDescription,
                               VkImage aExternalImage )
         : ITexture2D( aGraphicContext, aTextureImageDescription, 1, false, true, false, false )
         , mVkImage{ aExternalImage }

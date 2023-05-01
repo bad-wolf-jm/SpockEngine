@@ -17,6 +17,7 @@ namespace SE::Graphics
         }
 
         virtual eColorFormat GetDepthFormat() = 0;
+        virtual void WaitIdle() = 0;
 
       protected:
         uint32_t mSampleCount = 1;

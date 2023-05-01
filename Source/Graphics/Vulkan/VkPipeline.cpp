@@ -284,7 +284,7 @@ namespace SE::Graphics
                                           std::vector<sBufferLayoutElement> aInstanceBufferLayout, ePrimitiveTopology aTopology,
                                           eFaceCulling aCullMode, float aLineWidth, sDepthTesting aDepthTest, sBlending aBlending,
                                           std::vector<sShader> aShaderStages, Ref<sVkPipelineLayoutObject> aPipelineLayout,
-                                          Ref<sVkAbstractRenderPassObject> aRenderPass )
+                                          Ref<VkRenderPassObject> aRenderPass )
         : mContext{ aContext }
     {
 

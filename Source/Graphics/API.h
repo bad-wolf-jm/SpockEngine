@@ -15,6 +15,8 @@ namespace SE::Graphics
         DIRECTX
     };
 
+    Ref<IGraphicContext> CreateGraphicContext( uint32_t aSampleCount );
+
     Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, eBufferType aType, bool aIsHostVisible,
                                       bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination, size_t aSize );
 

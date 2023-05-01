@@ -26,7 +26,7 @@ namespace SE::Core
 
     void Engine::Init()
     {
-        mGraphicContext         = SE::Core::New<VkGraphicContext>( 1, true );
+        mGraphicContext         = CreateGraphicContext( 1 );
         mViewportClient         = SE::Core::New<IWindow>( mInitialMainWindowSize.x, mInitialMainWindowSize.y, mApplicationName );
         mSwapChain              = CreateSwapChain( mGraphicContext, mViewportClient );
         mSwapChainRenderContext = CreateRenderContext( mGraphicContext, mSwapChain );

@@ -62,7 +62,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Vulkan/VkGraphicsPipeline.cpp
     Graphics/Vulkan/VkPipeline.cpp
     Graphics/Vulkan/VkCommand.cpp
-    Graphics/Vulkan/VkAbstractRenderPass.cpp
+    Graphics/Vulkan/VkRenderPass.cpp
 
     Graphics/Interface/IWindow.cpp
     Graphics/Interface/ITexture.cpp

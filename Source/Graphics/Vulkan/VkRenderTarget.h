@@ -63,12 +63,12 @@ namespace SE::Graphics
         Ref<VkTexture2D> GetAttachment( std::string const &aKey );
 
       protected:
-        Ref<sVkAbstractRenderPassObject> CreateDefaultRenderPass();
+        Ref<VkRenderPassObject> CreateDefaultRenderPass();
 
         void InitializeCommandBuffers();
 
         std::vector<VkClearValue>        mClearValues      = {};
-        Ref<sVkAbstractRenderPassObject> mRenderPassObject = nullptr;
+        Ref<VkRenderPassObject> mRenderPassObject = nullptr;
 
         std::vector<Ref<sVkCommandBufferObject>> mCommandBufferObject = {};
 
