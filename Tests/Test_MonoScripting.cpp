@@ -136,246 +136,246 @@ inline _RetType CallMethodHelper( DotNetClass &aVectorTest, std::string const &a
         return lR;
 }
 
-// TEST_CASE( "Vector3 operations", "[MONO_SCRIPTING]" )
-// {
-//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+TEST_CASE( "Vector3 operations", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 
-//     auto lVectorTest = DotNetClass( "SEUnitTest", "Vector3Tests", false );
+    auto lVectorTest = DotNetClass( "SEUnitTest", "Vector3Tests", false );
 
-//     float lS = RandomNumber( -10.0f, 10.0f );
-//     auto  lX = vec3{ 1.2f, 3.4f, 5.6f };
-//     auto  lY = vec3{ 3.4f, 5.6f, 7.8f };
+    float lS = RandomNumber( -10.0f, 10.0f );
+    auto  lX = vec3{ 1.2f, 3.4f, 5.6f };
+    auto  lY = vec3{ 3.4f, 5.6f, 7.8f };
 
-//     REQUIRE( CallMethodHelper<vec3, float, float, float>( lVectorTest, "Constructor", lX.x, lX.y, lX.z ) == lX );
-//     REQUIRE( CallMethodHelper<vec3, vec3, vec3>( lVectorTest, "Add", lX, lY ) == ( lX + lY ) );
-//     REQUIRE( CallMethodHelper<vec3, vec3, vec3>( lVectorTest, "Subtract", lX, lY ) == ( lX - lY ) );
-//     REQUIRE( CallMethodHelper<vec3, vec3, float>( lVectorTest, "Divide0", lX, lS ) == ( lX / lS ) );
-//     REQUIRE( CallMethodHelper<vec3, float, vec3>( lVectorTest, "Divide1", lS, lY ) == ( lS / lY ) );
-//     REQUIRE( CallMethodHelper<vec3, vec3, float>( lVectorTest, "Multiply0", lX, lS ) == ( lX * lS ) );
-//     REQUIRE( CallMethodHelper<vec3, float, vec3>( lVectorTest, "Multiply1", lS, lY ) == ( lS * lY ) );
-//     REQUIRE( CallMethodHelper<vec3, vec3, vec3>( lVectorTest, "Cross", lX, lY ) == ( cross( lX, lY ) ) );
-//     REQUIRE( CallMethodHelper<float, vec3, vec3>( lVectorTest, "Dot", lX, lY ) == ( dot( lX, lY ) ) );
-//     REQUIRE( CallMethodHelper<float, vec3>( lVectorTest, "Length", lX ) == ( length( lX ) ) );
-//     REQUIRE( CallMethodHelper<float, vec3>( lVectorTest, "Norm", lX ) == ( length( lX ) ) );
-//     REQUIRE( CallMethodHelper<float, vec3>( lVectorTest, "Norm1", lX ) ==
-//              ( math::abs( lX.x ) + math::abs( lX.y ) + math::abs( lX.z ) ) );
-//     REQUIRE( CallMethodHelper<float, vec3>( lVectorTest, "Norm2", lX ) == ( length( lX ) ) );
+    REQUIRE( CallMethodHelper<vec3, float, float, float>( lVectorTest, "Constructor", lX.x, lX.y, lX.z ) == lX );
+    REQUIRE( CallMethodHelper<vec3, vec3, vec3>( lVectorTest, "Add", lX, lY ) == ( lX + lY ) );
+    REQUIRE( CallMethodHelper<vec3, vec3, vec3>( lVectorTest, "Subtract", lX, lY ) == ( lX - lY ) );
+    REQUIRE( CallMethodHelper<vec3, vec3, float>( lVectorTest, "Divide0", lX, lS ) == ( lX / lS ) );
+    REQUIRE( CallMethodHelper<vec3, float, vec3>( lVectorTest, "Divide1", lS, lY ) == ( lS / lY ) );
+    REQUIRE( CallMethodHelper<vec3, vec3, float>( lVectorTest, "Multiply0", lX, lS ) == ( lX * lS ) );
+    REQUIRE( CallMethodHelper<vec3, float, vec3>( lVectorTest, "Multiply1", lS, lY ) == ( lS * lY ) );
+    REQUIRE( CallMethodHelper<vec3, vec3, vec3>( lVectorTest, "Cross", lX, lY ) == ( cross( lX, lY ) ) );
+    REQUIRE( CallMethodHelper<float, vec3, vec3>( lVectorTest, "Dot", lX, lY ) == ( dot( lX, lY ) ) );
+    REQUIRE( CallMethodHelper<float, vec3>( lVectorTest, "Length", lX ) == ( length( lX ) ) );
+    REQUIRE( CallMethodHelper<float, vec3>( lVectorTest, "Norm", lX ) == ( length( lX ) ) );
+    REQUIRE( CallMethodHelper<float, vec3>( lVectorTest, "Norm1", lX ) ==
+             ( math::abs( lX.x ) + math::abs( lX.y ) + math::abs( lX.z ) ) );
+    REQUIRE( CallMethodHelper<float, vec3>( lVectorTest, "Norm2", lX ) == ( length( lX ) ) );
 
-//     {
-//         auto lZ = CallMethodHelper<vec3, vec3>( lVectorTest, "Normalized", lX );
-//         REQUIRE( length( lZ - normalize( lX ) ) < 0.0000001f );
-//     }
-// }
+    {
+        auto lZ = CallMethodHelper<vec3, vec3>( lVectorTest, "Normalized", lX );
+        REQUIRE( length( lZ - normalize( lX ) ) < 0.0000001f );
+    }
+}
 
-// TEST_CASE( "Vector4 operations", "[MONO_SCRIPTING]" )
-// {
-//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+TEST_CASE( "Vector4 operations", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 
-//     auto lVectorTest = DotNetClass( "SEUnitTest", "Vector4Tests", false );
+    auto lVectorTest = DotNetClass( "SEUnitTest", "Vector4Tests", false );
 
-//     float lS = RandomNumber( -10.0f, 10.0f );
-//     auto  lX = vec4{ 1.2f, 3.4f, 5.6f, 4.2f };
-//     auto  lY = vec4{ 3.4f, 5.6f, 7.8f, 7.5f };
+    float lS = RandomNumber( -10.0f, 10.0f );
+    auto  lX = vec4{ 1.2f, 3.4f, 5.6f, 4.2f };
+    auto  lY = vec4{ 3.4f, 5.6f, 7.8f, 7.5f };
 
-//     REQUIRE( CallMethodHelper<vec4, float, float, float, float>( lVectorTest, "Constructor0", lX.x, lX.y, lX.z, lX.w ) == lX );
-//     REQUIRE( CallMethodHelper<vec4, vec3, float>( lVectorTest, "Constructor1", vec3( lX ), lX.w ) == lX );
-//     REQUIRE( CallMethodHelper<vec4, vec3>( lVectorTest, "Constructor2", vec3( lX ) ) == vec4( vec3( lX ), 0.0f ) );
-//     REQUIRE( CallMethodHelper<vec3, vec4>( lVectorTest, "Projection", lX ) == vec3( lX ) );
-//     REQUIRE( CallMethodHelper<vec4, vec4, vec4>( lVectorTest, "Add", lX, lY ) == ( lX + lY ) );
-//     REQUIRE( CallMethodHelper<vec4, vec4, vec4>( lVectorTest, "Subtract", lX, lY ) == ( lX - lY ) );
-//     REQUIRE( CallMethodHelper<vec4, vec4, float>( lVectorTest, "Divide0", lX, lS ) == ( lX / lS ) );
-//     REQUIRE( CallMethodHelper<vec4, float, vec4>( lVectorTest, "Divide1", lS, lY ) == ( lS / lY ) );
-//     REQUIRE( CallMethodHelper<vec4, vec4, float>( lVectorTest, "Multiply0", lX, lS ) == ( lX * lS ) );
-//     REQUIRE( CallMethodHelper<vec4, float, vec4>( lVectorTest, "Multiply1", lS, lY ) == ( lS * lY ) );
-//     REQUIRE( CallMethodHelper<float, vec4, vec4>( lVectorTest, "Dot", lX, lY ) == ( dot( lX, lY ) ) );
-//     REQUIRE( CallMethodHelper<float, vec4>( lVectorTest, "Length", lX ) == ( length( lX ) ) );
-//     REQUIRE( CallMethodHelper<float, vec4>( lVectorTest, "Norm", lX ) == ( length( lX ) ) );
-//     REQUIRE( CallMethodHelper<float, vec4>( lVectorTest, "Norm1", lX ) ==
-//              ( math::abs( lX.x ) + math::abs( lX.y ) + math::abs( lX.z ) + math::abs( lX.w ) ) );
-//     REQUIRE( CallMethodHelper<float, vec4>( lVectorTest, "Norm2", lX ) == ( length( lX ) ) );
+    REQUIRE( CallMethodHelper<vec4, float, float, float, float>( lVectorTest, "Constructor0", lX.x, lX.y, lX.z, lX.w ) == lX );
+    REQUIRE( CallMethodHelper<vec4, vec3, float>( lVectorTest, "Constructor1", vec3( lX ), lX.w ) == lX );
+    REQUIRE( CallMethodHelper<vec4, vec3>( lVectorTest, "Constructor2", vec3( lX ) ) == vec4( vec3( lX ), 0.0f ) );
+    REQUIRE( CallMethodHelper<vec3, vec4>( lVectorTest, "Projection", lX ) == vec3( lX ) );
+    REQUIRE( CallMethodHelper<vec4, vec4, vec4>( lVectorTest, "Add", lX, lY ) == ( lX + lY ) );
+    REQUIRE( CallMethodHelper<vec4, vec4, vec4>( lVectorTest, "Subtract", lX, lY ) == ( lX - lY ) );
+    REQUIRE( CallMethodHelper<vec4, vec4, float>( lVectorTest, "Divide0", lX, lS ) == ( lX / lS ) );
+    REQUIRE( CallMethodHelper<vec4, float, vec4>( lVectorTest, "Divide1", lS, lY ) == ( lS / lY ) );
+    REQUIRE( CallMethodHelper<vec4, vec4, float>( lVectorTest, "Multiply0", lX, lS ) == ( lX * lS ) );
+    REQUIRE( CallMethodHelper<vec4, float, vec4>( lVectorTest, "Multiply1", lS, lY ) == ( lS * lY ) );
+    REQUIRE( CallMethodHelper<float, vec4, vec4>( lVectorTest, "Dot", lX, lY ) == ( dot( lX, lY ) ) );
+    REQUIRE( CallMethodHelper<float, vec4>( lVectorTest, "Length", lX ) == ( length( lX ) ) );
+    REQUIRE( CallMethodHelper<float, vec4>( lVectorTest, "Norm", lX ) == ( length( lX ) ) );
+    REQUIRE( CallMethodHelper<float, vec4>( lVectorTest, "Norm1", lX ) ==
+             ( math::abs( lX.x ) + math::abs( lX.y ) + math::abs( lX.z ) + math::abs( lX.w ) ) );
+    REQUIRE( CallMethodHelper<float, vec4>( lVectorTest, "Norm2", lX ) == ( length( lX ) ) );
 
-//     {
-//         auto lZ = CallMethodHelper<vec4, vec4>( lVectorTest, "Normalized", lX );
-//         REQUIRE( length( lZ - normalize( lX ) ) < 0.0000001f );
-//     }
-// }
+    {
+        auto lZ = CallMethodHelper<vec4, vec4>( lVectorTest, "Normalized", lX );
+        REQUIRE( length( lZ - normalize( lX ) ) < 0.0000001f );
+    }
+}
 
-// TEST_CASE( "Matrix3 operations", "[MONO_SCRIPTING]" )
-// {
-//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+TEST_CASE( "Matrix3 operations", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 
-//     auto lVectorTest = DotNetClass( "SEUnitTest", "Matrix3Tests", false );
+    auto lVectorTest = DotNetClass( "SEUnitTest", "Matrix3Tests", false );
 
-//     float lS = RandomNumber( -10.0f, 10.0f );
-//     auto  lA = RandomMat4();
-//     auto  lX = RandomMat3();
-//     auto  lY = RandomMat3();
-//     auto  lV = RandomVec3();
+    float lS = RandomNumber( -10.0f, 10.0f );
+    auto  lA = RandomMat4();
+    auto  lX = RandomMat3();
+    auto  lY = RandomMat3();
+    auto  lV = RandomVec3();
 
-//     REQUIRE( CallMethodHelper<mat3, float>( lVectorTest, "Constructor0", lS ) == mat3( lS ) );
-//     REQUIRE( CallMethodHelper<mat3, float, float, float, float, float, float, float, float, float>(
-//                  lVectorTest, "Constructor1", lX[0][0], lX[1][0], lX[2][0], lX[0][1], lX[1][1], lX[2][1], lX[0][2], lX[1][2],
-//                  lX[2][2] ) == lX );
-//     REQUIRE( CallMethodHelper<mat3, mat4>( lVectorTest, "Constructor2", lA ) == mat3( lA ) );
-//     REQUIRE( CallMethodHelper<vec3, mat3>( lVectorTest, "Column0", lX ) == ( lX[0] ) );
-//     REQUIRE( CallMethodHelper<vec3, mat3>( lVectorTest, "Column1", lX ) == ( lX[1] ) );
-//     REQUIRE( CallMethodHelper<vec3, mat3>( lVectorTest, "Column2", lX ) == ( lX[2] ) );
-//     REQUIRE( CallMethodHelper<mat3, mat3, mat3>( lVectorTest, "Add", lX, lY ) == ( lX + lY ) );
-//     REQUIRE( CallMethodHelper<mat3, mat3, mat3>( lVectorTest, "Subtract", lX, lY ) == ( lX - lY ) );
-//     REQUIRE( CallMethodHelper<mat3, mat3, float>( lVectorTest, "Divide0", lX, lS ) == ( lX / lS ) );
-//     REQUIRE( CallMethodHelper<mat3, float, mat3>( lVectorTest, "Divide1", lS, lY ) == ( lS / lY ) );
-//     REQUIRE( CallMethodHelper<mat3, mat3, float>( lVectorTest, "Multiply0", lX, lS ) == ( lX * lS ) );
-//     REQUIRE( CallMethodHelper<mat3, float, mat3>( lVectorTest, "Multiply1", lS, lY ) == ( lS * lY ) );
-//     REQUIRE( CallMethodHelper<mat3, mat3, mat3>( lVectorTest, "Multiply2", lX, lY ) == ( lX * lY ) );
-//     REQUIRE( CallMethodHelper<vec3, mat3, vec3>( lVectorTest, "Multiply3", lX, lV ) == ( lX * lV ) );
-//     {
-//         auto lI0 = CallMethodHelper<mat3, mat3>( lVectorTest, "Inverse", lX );
-//         auto lI1 = Inverse( lX );
+    REQUIRE( CallMethodHelper<mat3, float>( lVectorTest, "Constructor0", lS ) == mat3( lS ) );
+    REQUIRE( CallMethodHelper<mat3, float, float, float, float, float, float, float, float, float>(
+                 lVectorTest, "Constructor1", lX[0][0], lX[1][0], lX[2][0], lX[0][1], lX[1][1], lX[2][1], lX[0][2], lX[1][2],
+                 lX[2][2] ) == lX );
+    REQUIRE( CallMethodHelper<mat3, mat4>( lVectorTest, "Constructor2", lA ) == mat3( lA ) );
+    REQUIRE( CallMethodHelper<vec3, mat3>( lVectorTest, "Column0", lX ) == ( lX[0] ) );
+    REQUIRE( CallMethodHelper<vec3, mat3>( lVectorTest, "Column1", lX ) == ( lX[1] ) );
+    REQUIRE( CallMethodHelper<vec3, mat3>( lVectorTest, "Column2", lX ) == ( lX[2] ) );
+    REQUIRE( CallMethodHelper<mat3, mat3, mat3>( lVectorTest, "Add", lX, lY ) == ( lX + lY ) );
+    REQUIRE( CallMethodHelper<mat3, mat3, mat3>( lVectorTest, "Subtract", lX, lY ) == ( lX - lY ) );
+    REQUIRE( CallMethodHelper<mat3, mat3, float>( lVectorTest, "Divide0", lX, lS ) == ( lX / lS ) );
+    REQUIRE( CallMethodHelper<mat3, float, mat3>( lVectorTest, "Divide1", lS, lY ) == ( lS / lY ) );
+    REQUIRE( CallMethodHelper<mat3, mat3, float>( lVectorTest, "Multiply0", lX, lS ) == ( lX * lS ) );
+    REQUIRE( CallMethodHelper<mat3, float, mat3>( lVectorTest, "Multiply1", lS, lY ) == ( lS * lY ) );
+    REQUIRE( CallMethodHelper<mat3, mat3, mat3>( lVectorTest, "Multiply2", lX, lY ) == ( lX * lY ) );
+    REQUIRE( CallMethodHelper<vec3, mat3, vec3>( lVectorTest, "Multiply3", lX, lV ) == ( lX * lV ) );
+    {
+        auto lI0 = CallMethodHelper<mat3, mat3>( lVectorTest, "Inverse", lX );
+        auto lI1 = Inverse( lX );
 
-//         REQUIRE_THAT( length2( lI0[0] - lI1[0] ), WithinAbs( 0.0f, 0.000001f ) );
-//         REQUIRE_THAT( length2( lI0[1] - lI1[1] ), WithinAbs( 0.0f, 0.000001f ) );
-//         REQUIRE_THAT( length2( lI0[2] - lI1[2] ), WithinAbs( 0.0f, 0.000001f ) );
-//     }
-//     REQUIRE_THAT( ( CallMethodHelper<float, mat3>( lVectorTest, "Determinant", lX ) ), WithinAbs( Determinant( lX ), 0.001f ) );
-//     REQUIRE( CallMethodHelper<mat3, mat3>( lVectorTest, "Transposed", lX ) == Transpose( lX ) );
-// }
+        REQUIRE_THAT( length2( lI0[0] - lI1[0] ), WithinAbs( 0.0f, 0.000001f ) );
+        REQUIRE_THAT( length2( lI0[1] - lI1[1] ), WithinAbs( 0.0f, 0.000001f ) );
+        REQUIRE_THAT( length2( lI0[2] - lI1[2] ), WithinAbs( 0.0f, 0.000001f ) );
+    }
+    REQUIRE_THAT( ( CallMethodHelper<float, mat3>( lVectorTest, "Determinant", lX ) ), WithinAbs( Determinant( lX ), 0.001f ) );
+    REQUIRE( CallMethodHelper<mat3, mat3>( lVectorTest, "Transposed", lX ) == Transpose( lX ) );
+}
 
-// #define TEST_MAT4_COLUMNS( C1, C2, e )                                  \
-//     do                                                                  \
-//     {                                                                   \
-//         REQUIRE_THAT( length2( C1[0] - C2[0] ), WithinAbs( 0.0f, e ) ); \
-//         REQUIRE_THAT( length2( C1[1] - C2[1] ), WithinAbs( 0.0f, e ) ); \
-//         REQUIRE_THAT( length2( C1[2] - C2[2] ), WithinAbs( 0.0f, e ) ); \
-//         REQUIRE_THAT( length2( C1[3] - C2[3] ), WithinAbs( 0.0f, e ) ); \
-//     } while( 0 )
+#define TEST_MAT4_COLUMNS( C1, C2, e )                                  \
+    do                                                                  \
+    {                                                                   \
+        REQUIRE_THAT( length2( C1[0] - C2[0] ), WithinAbs( 0.0f, e ) ); \
+        REQUIRE_THAT( length2( C1[1] - C2[1] ), WithinAbs( 0.0f, e ) ); \
+        REQUIRE_THAT( length2( C1[2] - C2[2] ), WithinAbs( 0.0f, e ) ); \
+        REQUIRE_THAT( length2( C1[3] - C2[3] ), WithinAbs( 0.0f, e ) ); \
+    } while( 0 )
 
-// TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
-// {
-//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 
-//     auto lVectorTest = DotNetClass( "SEUnitTest", "Matrix4Tests", false );
+    auto lVectorTest = DotNetClass( "SEUnitTest", "Matrix4Tests", false );
 
-//     float lS = RandomNumber( -10.0f, 10.0f );
-//     auto  lA = RandomMat3();
-//     auto  lX = RandomMat4();
-//     auto  lY = RandomMat4();
-//     auto  lV = RandomVec4();
+    float lS = RandomNumber( -10.0f, 10.0f );
+    auto  lA = RandomMat3();
+    auto  lX = RandomMat4();
+    auto  lY = RandomMat4();
+    auto  lV = RandomVec4();
 
-//     REQUIRE( CallMethodHelper<mat4, float>( lVectorTest, "Constructor0", lS ) == mat4( lS ) );
-//     REQUIRE( ( CallMethodHelper<mat4, float, float, float, float, float, float, float, float, float, float, float, float, float,
-//     float,
-//                                 float, float>( lVectorTest, "Constructor1", lX[0][0], lX[1][0], lX[2][0], lX[3][0], lX[0][1],
-//                                 lX[1][1],
-//                                                lX[2][1], lX[3][1], lX[0][2], lX[1][2], lX[2][2], lX[3][2], lX[0][3], lX[1][3],
-//                                                lX[2][3], lX[3][3] ) ) == lX );
-//     REQUIRE( CallMethodHelper<mat4, mat3>( lVectorTest, "Constructor2", lA ) == mat4( lA ) );
-//     REQUIRE( CallMethodHelper<vec4, mat4>( lVectorTest, "Column0", lX ) == ( lX[0] ) );
-//     REQUIRE( CallMethodHelper<vec4, mat4>( lVectorTest, "Column1", lX ) == ( lX[1] ) );
-//     REQUIRE( CallMethodHelper<vec4, mat4>( lVectorTest, "Column2", lX ) == ( lX[2] ) );
-//     REQUIRE( CallMethodHelper<vec4, mat4>( lVectorTest, "Column3", lX ) == ( lX[3] ) );
+    REQUIRE( CallMethodHelper<mat4, float>( lVectorTest, "Constructor0", lS ) == mat4( lS ) );
+    REQUIRE( ( CallMethodHelper<mat4, float, float, float, float, float, float, float, float, float, float, float, float, float,
+    float,
+                                float, float>( lVectorTest, "Constructor1", lX[0][0], lX[1][0], lX[2][0], lX[3][0], lX[0][1],
+                                lX[1][1],
+                                               lX[2][1], lX[3][1], lX[0][2], lX[1][2], lX[2][2], lX[3][2], lX[0][3], lX[1][3],
+                                               lX[2][3], lX[3][3] ) ) == lX );
+    REQUIRE( CallMethodHelper<mat4, mat3>( lVectorTest, "Constructor2", lA ) == mat4( lA ) );
+    REQUIRE( CallMethodHelper<vec4, mat4>( lVectorTest, "Column0", lX ) == ( lX[0] ) );
+    REQUIRE( CallMethodHelper<vec4, mat4>( lVectorTest, "Column1", lX ) == ( lX[1] ) );
+    REQUIRE( CallMethodHelper<vec4, mat4>( lVectorTest, "Column2", lX ) == ( lX[2] ) );
+    REQUIRE( CallMethodHelper<vec4, mat4>( lVectorTest, "Column3", lX ) == ( lX[3] ) );
 
-//     REQUIRE( CallMethodHelper<mat4, mat4, mat4>( lVectorTest, "Add", lX, lY ) == ( lX + lY ) );
-//     REQUIRE( CallMethodHelper<mat4, mat4, mat4>( lVectorTest, "Subtract", lX, lY ) == ( lX - lY ) );
-//     REQUIRE( CallMethodHelper<mat4, mat4, float>( lVectorTest, "Divide0", lX, lS ) == ( lX / lS ) );
-//     REQUIRE( CallMethodHelper<mat4, float, mat4>( lVectorTest, "Divide1", lS, lY ) == ( lS / lY ) );
-//     REQUIRE( CallMethodHelper<mat4, mat4, float>( lVectorTest, "Multiply0", lX, lS ) == ( lX * lS ) );
-//     REQUIRE( CallMethodHelper<mat4, float, mat4>( lVectorTest, "Multiply1", lS, lY ) == ( lS * lY ) );
-//     REQUIRE( CallMethodHelper<mat4, mat4, mat4>( lVectorTest, "Multiply2", lX, lY ) == ( lX * lY ) );
+    REQUIRE( CallMethodHelper<mat4, mat4, mat4>( lVectorTest, "Add", lX, lY ) == ( lX + lY ) );
+    REQUIRE( CallMethodHelper<mat4, mat4, mat4>( lVectorTest, "Subtract", lX, lY ) == ( lX - lY ) );
+    REQUIRE( CallMethodHelper<mat4, mat4, float>( lVectorTest, "Divide0", lX, lS ) == ( lX / lS ) );
+    REQUIRE( CallMethodHelper<mat4, float, mat4>( lVectorTest, "Divide1", lS, lY ) == ( lS / lY ) );
+    REQUIRE( CallMethodHelper<mat4, mat4, float>( lVectorTest, "Multiply0", lX, lS ) == ( lX * lS ) );
+    REQUIRE( CallMethodHelper<mat4, float, mat4>( lVectorTest, "Multiply1", lS, lY ) == ( lS * lY ) );
+    REQUIRE( CallMethodHelper<mat4, mat4, mat4>( lVectorTest, "Multiply2", lX, lY ) == ( lX * lY ) );
 
-//     {
-//         auto lI0 = CallMethodHelper<vec4, mat4, vec4>( lVectorTest, "Multiply3", lX, lV );
-//         auto lI1 = ( lX * lV );
-//         REQUIRE_THAT( length2( lI0 - lI1 ), WithinAbs( 0.0f, 0.000001f ) );
-//     }
+    {
+        auto lI0 = CallMethodHelper<vec4, mat4, vec4>( lVectorTest, "Multiply3", lX, lV );
+        auto lI1 = ( lX * lV );
+        REQUIRE_THAT( length2( lI0 - lI1 ), WithinAbs( 0.0f, 0.000001f ) );
+    }
 
-//     {
-//         auto lI0 = CallMethodHelper<mat4, mat4>( lVectorTest, "Inverse", lX );
-//         auto lI1 = Inverse( lX );
+    {
+        auto lI0 = CallMethodHelper<mat4, mat4>( lVectorTest, "Inverse", lX );
+        auto lI1 = Inverse( lX );
 
-//         TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
-//     }
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
+    }
 
-//     REQUIRE_THAT( ( CallMethodHelper<float, mat4>( lVectorTest, "Determinant", lX ) ), WithinAbs( Determinant( lX ), 0.001f ) );
+    REQUIRE_THAT( ( CallMethodHelper<float, mat4>( lVectorTest, "Determinant", lX ) ), WithinAbs( Determinant( lX ), 0.001f ) );
 
-//     {
-//         auto lI0 = CallMethodHelper<mat4, mat4>( lVectorTest, "Transposed", lX );
-//         auto lI1 = Transpose( lX );
+    {
+        auto lI0 = CallMethodHelper<mat4, mat4>( lVectorTest, "Transposed", lX );
+        auto lI1 = Transpose( lX );
 
-//         TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
-//     }
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
+    }
 
-//     {
-//         float lRho = RandomNumber( -10.0f, 10.0f );
-//         auto  lI0  = CallMethodHelper<mat4, float, vec3>( lVectorTest, "Rotation", lRho, lV );
-//         auto  lI1  = Rotation( lRho, lV );
+    {
+        float lRho = RandomNumber( -10.0f, 10.0f );
+        auto  lI0  = CallMethodHelper<mat4, float, vec3>( lVectorTest, "Rotation", lRho, lV );
+        auto  lI1  = Rotation( lRho, lV );
 
-//         TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
-//     }
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
+    }
 
-//     {
-//         auto lI0 = CallMethodHelper<mat4, vec3>( lVectorTest, "Scaling0", lV );
-//         auto lI1 = Scaling( lV );
+    {
+        auto lI0 = CallMethodHelper<mat4, vec3>( lVectorTest, "Scaling0", lV );
+        auto lI1 = Scaling( lV );
 
-//         TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
-//     }
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
+    }
 
-//     {
-//         auto lI0 = CallMethodHelper<mat4, float>( lVectorTest, "Scaling1", lS );
-//         auto lI1 = Scaling( vec3{ lS, lS, lS } );
+    {
+        auto lI0 = CallMethodHelper<mat4, float>( lVectorTest, "Scaling1", lS );
+        auto lI1 = Scaling( vec3{ lS, lS, lS } );
 
-//         TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
-//     }
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
+    }
 
-//     {
-//         auto lI0 = CallMethodHelper<mat4, vec3>( lVectorTest, "Translation0", vec3( lV ) );
-//         auto lI1 = Translation( vec3( lV ) );
+    {
+        auto lI0 = CallMethodHelper<mat4, vec3>( lVectorTest, "Translation0", vec3( lV ) );
+        auto lI1 = Translation( vec3( lV ) );
 
-//         TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
-//     }
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
+    }
 
-//     {
-//         auto lV0 = vec3{ lV };
-//         auto lI0 = CallMethodHelper<mat4, float, float, float>( lVectorTest, "Translation1", lV0.x, lV0.y, lV0.z );
-//         auto lI1 = Translation( vec3( lV0 ) );
+    {
+        auto lV0 = vec3{ lV };
+        auto lI0 = CallMethodHelper<mat4, float, float, float>( lVectorTest, "Translation1", lV0.x, lV0.y, lV0.z );
+        auto lI1 = Translation( vec3( lV0 ) );
 
-//         TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
-//     }
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
+    }
 
-//     {
-//         auto lV0 = RandomVec4();
-//         auto lV1 = RandomVec4();
-//         auto lV2 = RandomVec4();
-//         auto lI0 = CallMethodHelper<mat4, vec3, vec3, vec3>( lVectorTest, "LookAt", lV0, lV1, lV2 );
-//         auto lI1 = LookAt( lV0, lV1, lV2 );
+    {
+        auto lV0 = RandomVec4();
+        auto lV1 = RandomVec4();
+        auto lV2 = RandomVec4();
+        auto lI0 = CallMethodHelper<mat4, vec3, vec3, vec3>( lVectorTest, "LookAt", lV0, lV1, lV2 );
+        auto lI1 = LookAt( lV0, lV1, lV2 );
 
-//         TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
-//     }
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
+    }
 
-//     {
-//         auto lV0 = RandomNumber( -100.0f, 100.0f );
-//         auto lV1 = RandomNumber( -100.0f, 100.0f );
-//         auto lV2 = RandomNumber( -100.0f, 100.0f );
-//         auto lV3 = RandomNumber( -100.0f, 100.0f );
-//         auto lV4 = RandomNumber( -100.0f, 100.0f );
-//         auto lV5 = RandomNumber( -100.0f, 100.0f );
-//         auto lI0 =
-//             CallMethodHelper<mat4, float, float, float, float, float, float>( lVectorTest, "Ortho0", lV0, lV1, lV2, lV3, lV4, lV5 );
-//         auto lI1 = glm::ortho( lV0, lV1, lV2, lV3, lV4, lV5 );
+    {
+        auto lV0 = RandomNumber( -100.0f, 100.0f );
+        auto lV1 = RandomNumber( -100.0f, 100.0f );
+        auto lV2 = RandomNumber( -100.0f, 100.0f );
+        auto lV3 = RandomNumber( -100.0f, 100.0f );
+        auto lV4 = RandomNumber( -100.0f, 100.0f );
+        auto lV5 = RandomNumber( -100.0f, 100.0f );
+        auto lI0 =
+            CallMethodHelper<mat4, float, float, float, float, float, float>( lVectorTest, "Ortho0", lV0, lV1, lV2, lV3, lV4, lV5 );
+        auto lI1 = glm::ortho( lV0, lV1, lV2, lV3, lV4, lV5 );
 
-//         TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
-//     }
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
+    }
 
-//     {
-//         auto lV0 = RandomNumber( -100.0f, 100.0f );
-//         auto lV1 = RandomNumber( -100.0f, 100.0f );
-//         auto lV2 = RandomNumber( -100.0f, 100.0f );
-//         auto lV3 = RandomNumber( -100.0f, 100.0f );
-//         auto lI0 = CallMethodHelper<mat4, float, float, float, float>( lVectorTest, "Ortho1", lV0, lV1, lV2, lV3 );
-//         auto lI1 = glm::ortho( lV0, lV1, lV2, lV3 );
+    {
+        auto lV0 = RandomNumber( -100.0f, 100.0f );
+        auto lV1 = RandomNumber( -100.0f, 100.0f );
+        auto lV2 = RandomNumber( -100.0f, 100.0f );
+        auto lV3 = RandomNumber( -100.0f, 100.0f );
+        auto lI0 = CallMethodHelper<mat4, float, float, float, float>( lVectorTest, "Ortho1", lV0, lV1, lV2, lV3 );
+        auto lI1 = glm::ortho( lV0, lV1, lV2, lV3 );
 
-//         TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
-//     }
-// }
+        TEST_MAT4_COLUMNS( lI0, lI1, 0.001f );
+    }
+}
 
 // TEST_CASE( "Entity is valid when first created", "[MONO_SCRIPTING]" )
 // {
@@ -985,911 +985,911 @@ inline _RetType CallMethodHelper( DotNetClass &aVectorTest, std::string const &a
 //     REQUIRE( !( lScriptShape.GetFieldValue<bool>( "mIsOwner" ) ) );
 // }
 
-TEST_CASE( "Create constant multitensor", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "Create constant multitensor", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
-
-    auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateConstantMultiTensor", (size_t)&lScope );
-    auto lNodeClass = DotNetRuntime::GetClassType("SpockEngine.OpNode");
-    auto lOpNode    = DotNetInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
-
-    auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
-    OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
-
-    REQUIRE( ( lCppNode.Has<sMultiTensorComponent>() ) );
-    REQUIRE( ( lCppNode.Get<sMultiTensorComponent>().Shape().CountLayers() == 4 ) );
-    REQUIRE( ( lCppNode.Has<sConstantValueInitializerComponent>() ) );
-    REQUIRE( ( std::get<float>( lCppNode.Get<sConstantValueInitializerComponent>().mValue ) == 1234.5f ) );
-}
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+
+//     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateConstantMultiTensor", (size_t)&lScope );
+//     auto lNodeClass = DotNetRuntime::GetClassType("SpockEngine.OpNode");
+//     auto lOpNode    = DotNetInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
+
+//     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
+//     OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
+
+//     REQUIRE( ( lCppNode.Has<sMultiTensorComponent>() ) );
+//     REQUIRE( ( lCppNode.Get<sMultiTensorComponent>().Shape().CountLayers() == 4 ) );
+//     REQUIRE( ( lCppNode.Has<sConstantValueInitializerComponent>() ) );
+//     REQUIRE( ( std::get<float>( lCppNode.Get<sConstantValueInitializerComponent>().mValue ) == 1234.5f ) );
+// }
 
-TEST_CASE( "Create layered multitensor", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "Create layered multitensor", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateLayeredConstantMultiTensor", (size_t)&lScope );
-    auto lNodeClass = DotNetRuntime::GetClassType("SpockEngine.OpNode");
-    auto lOpNode    = DotNetInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
-
-    auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
-    OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
+//     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateLayeredConstantMultiTensor", (size_t)&lScope );
+//     auto lNodeClass = DotNetRuntime::GetClassType("SpockEngine.OpNode");
+//     auto lOpNode    = DotNetInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
+
+//     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
+//     OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
 
-    REQUIRE( ( lCppNode.Has<sMultiTensorComponent>() ) );
-    REQUIRE( ( lCppNode.Get<sMultiTensorComponent>().Shape().CountLayers() == 4 ) );
-    REQUIRE( ( lCppNode.Has<sVectorInitializerComponent>() ) );
+//     REQUIRE( ( lCppNode.Has<sMultiTensorComponent>() ) );
+//     REQUIRE( ( lCppNode.Get<sMultiTensorComponent>().Shape().CountLayers() == 4 ) );
+//     REQUIRE( ( lCppNode.Has<sVectorInitializerComponent>() ) );
 
-    auto lComponent = lCppNode.Get<sVectorInitializerComponent>().mValue;
-    REQUIRE( lComponent.size() == 4 );
+//     auto lComponent = lCppNode.Get<sVectorInitializerComponent>().mValue;
+//     REQUIRE( lComponent.size() == 4 );
 
-    std::vector<float> lRetValues{};
-    std::vector<float> lExpValues = { 1.2f, 3.4f, 4.5f, 6.7f };
-    for( auto &x : lComponent ) lRetValues.push_back( std::get<float>( x ) );
-    REQUIRE( lRetValues == lExpValues );
-}
+//     std::vector<float> lRetValues{};
+//     std::vector<float> lExpValues = { 1.2f, 3.4f, 4.5f, 6.7f };
+//     for( auto &x : lComponent ) lRetValues.push_back( std::get<float>( x ) );
+//     REQUIRE( lRetValues == lExpValues );
+// }
 
-TEST_CASE( "Create multitensor with initial data", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "Create multitensor with initial data", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateDataMultiTensor", (size_t)&lScope );
-    auto lNodeClass = DotNetRuntime::GetClassType("SpockEngine.OpNode");
-    auto lOpNode    = DotNetInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
+//     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateDataMultiTensor", (size_t)&lScope );
+//     auto lNodeClass = DotNetRuntime::GetClassType("SpockEngine.OpNode");
+//     auto lOpNode    = DotNetInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
 
-    auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
-    OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
+//     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
+//     OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
 
-    REQUIRE( ( lCppNode.Has<sMultiTensorComponent>() ) );
-    REQUIRE( ( lCppNode.Get<sMultiTensorComponent>().Shape().CountLayers() == 2 ) );
-    REQUIRE( ( lCppNode.Has<sDataInitializerComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sMultiTensorComponent>() ) );
+//     REQUIRE( ( lCppNode.Get<sMultiTensorComponent>().Shape().CountLayers() == 2 ) );
+//     REQUIRE( ( lCppNode.Has<sDataInitializerComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "Create multitensor with random uniform initial data", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "Create multitensor with random uniform initial data", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateRandomUniformMultiTensor", (size_t)&lScope );
-    auto lNodeClass = DotNetRuntime::GetClassType("SpockEngine.OpNode");
-    auto lOpNode    = DotNetInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
+//     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateRandomUniformMultiTensor", (size_t)&lScope );
+//     auto lNodeClass = DotNetRuntime::GetClassType("SpockEngine.OpNode");
+//     auto lOpNode    = DotNetInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
 
-    auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
-    OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
+//     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
+//     OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
 
-    REQUIRE( ( lCppNode.Has<sMultiTensorComponent>() ) );
-    REQUIRE( ( lCppNode.Get<sMultiTensorComponent>().Shape().CountLayers() == 2 ) );
-    REQUIRE( ( lCppNode.Has<sRandomUniformInitializerComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sMultiTensorComponent>() ) );
+//     REQUIRE( ( lCppNode.Get<sMultiTensorComponent>().Shape().CountLayers() == 2 ) );
+//     REQUIRE( ( lCppNode.Has<sRandomUniformInitializerComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "Create multitensor with random normal initial data", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "Create multitensor with random normal initial data", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateRandomNormalMultiTensor", (size_t)&lScope );
-    auto lNodeClass = DotNetRuntime::GetClassType("SpockEngine.OpNode");
-    auto lOpNode    = DotNetInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
+//     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateRandomNormalMultiTensor", (size_t)&lScope );
+//     auto lNodeClass = DotNetRuntime::GetClassType("SpockEngine.OpNode");
+//     auto lOpNode    = DotNetInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
 
-    auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
-    OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
+//     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
+//     OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
 
-    REQUIRE( ( lCppNode.Has<sMultiTensorComponent>() ) );
-    REQUIRE( ( lCppNode.Get<sMultiTensorComponent>().Shape().CountLayers() == 2 ) );
-    REQUIRE( ( lCppNode.Has<sRandomNormalInitializerComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sMultiTensorComponent>() ) );
+//     REQUIRE( ( lCppNode.Get<sMultiTensorComponent>().Shape().CountLayers() == 2 ) );
+//     REQUIRE( ( lCppNode.Has<sRandomNormalInitializerComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "Create scalar arrays", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "Create scalar arrays", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateScalarVector", (size_t)&lScope );
-    auto lNodeClass = DotNetRuntime::GetClassType("SpockEngine.OpNode");
-    auto lOpNode    = DotNetInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
+//     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateScalarVector", (size_t)&lScope );
+//     auto lNodeClass = DotNetRuntime::GetClassType("SpockEngine.OpNode");
+//     auto lOpNode    = DotNetInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
 
-    auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
-    OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
+//     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
+//     OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
 
-    REQUIRE( ( lCppNode.Has<sVectorValueComponent<float>>() ) );
-    REQUIRE( ( lCppNode.Has<sVectorBufferComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sVectorValueComponent<float>>() ) );
+//     REQUIRE( ( lCppNode.Has<sVectorBufferComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "Create scalar constant", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "Create scalar constant", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateScalarValue", (size_t)&lScope );
-    auto lNodeClass = DotNetRuntime::GetClassType("SpockEngine.OpNode");
-    auto lOpNode    = DotNetInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
+//     auto lRetValue  = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "CreateScalarValue", (size_t)&lScope );
+//     auto lNodeClass = DotNetRuntime::GetClassType("SpockEngine.OpNode");
+//     auto lOpNode    = DotNetInstance( &lNodeClass, lNodeClass.Class(), lRetValue );
 
-    auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
-    OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
+//     auto   lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
+//     OpNode lCppNode  = lScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
 
-    REQUIRE( ( lCppNode.Has<sScalarNodeComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sScalarNodeComponent>() ) );
+//     REQUIRE( false );
+// }
 
-static MonoArray *MakeValueArray( uint32_t aSize )
-{
-    std::vector<float> aArray = RandomNumber( aSize, -1000.0f, 1000.0f );
+// static MonoArray *MakeValueArray( uint32_t aSize )
+// {
+//     std::vector<float> aArray = RandomNumber( aSize, -1000.0f, 1000.0f );
 
-    MonoArray *lNewArray = mono_array_new( mono_domain_get(), mono_get_single_class(), aArray.size() );
-    for( uint32_t i = 0; i < aArray.size(); i++ ) mono_array_set( lNewArray, float, i, aArray[i] );
+//     MonoArray *lNewArray = mono_array_new( mono_domain_get(), mono_get_single_class(), aArray.size() );
+//     for( uint32_t i = 0; i < aArray.size(); i++ ) mono_array_set( lNewArray, float, i, aArray[i] );
 
-    return lNewArray;
-}
+//     return lNewArray;
+// }
 
-static MonoArray *MakeU32Array( uint32_t aSize )
-{
-    std::vector<float> aArray = RandomNumber( aSize, -1000.0f, 1000.0f );
+// static MonoArray *MakeU32Array( uint32_t aSize )
+// {
+//     std::vector<float> aArray = RandomNumber( aSize, -1000.0f, 1000.0f );
 
-    MonoArray *lNewArray = mono_array_new( mono_domain_get(), mono_get_uint32_class(), aArray.size() );
-    for( uint32_t i = 0; i < aArray.size(); i++ ) mono_array_set( lNewArray, uint32_t, i, aArray[i] );
+//     MonoArray *lNewArray = mono_array_new( mono_domain_get(), mono_get_uint32_class(), aArray.size() );
+//     for( uint32_t i = 0; i < aArray.size(); i++ ) mono_array_set( lNewArray, uint32_t, i, aArray[i] );
 
-    return lNewArray;
-}
+//     return lNewArray;
+// }
 
-static MonoArray *MakeBoolArray( uint32_t aSize )
-{
-    std::vector<uint8_t> aArray = RandomBool( aSize );
+// static MonoArray *MakeBoolArray( uint32_t aSize )
+// {
+//     std::vector<uint8_t> aArray = RandomBool( aSize );
 
-    MonoArray *lNewArray = mono_array_new( mono_domain_get(), mono_get_boolean_class(), aArray.size() );
-    for( uint32_t i = 0; i < aArray.size(); i++ ) mono_array_set( lNewArray, uint8_t, i, aArray[i] );
+//     MonoArray *lNewArray = mono_array_new( mono_domain_get(), mono_get_boolean_class(), aArray.size() );
+//     for( uint32_t i = 0; i < aArray.size(); i++ ) mono_array_set( lNewArray, uint8_t, i, aArray[i] );
 
-    return lNewArray;
-}
+//     return lNewArray;
+// }
 
-static OpNode ConvertCSOpNode( Scope &aScope, MonoObject *aOpNode )
-{
-    auto lNodeClass = DotNetRuntime::GetClassType("SpockEngine.OpNode");
-    auto lOpNode    = DotNetInstance( &lNodeClass, lNodeClass.Class(), aOpNode );
+// static OpNode ConvertCSOpNode( Scope &aScope, MonoObject *aOpNode )
+// {
+//     auto lNodeClass = DotNetRuntime::GetClassType("SpockEngine.OpNode");
+//     auto lOpNode    = DotNetInstance( &lNodeClass, lNodeClass.Class(), aOpNode );
 
-    auto lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
-    return aScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
-}
+//     auto lEntityID = lOpNode.GetFieldValue<uint32_t>( "mEntityID" );
+//     return aScope.GetNodesRegistry().WrapEntity( static_cast<entt::entity>( lEntityID ) );
+// }
 
-static std::tuple<uint32_t, sTensorShape> TestTensorShape()
-{
-    std::vector<uint32_t> lDim1{ 2, 4, 3 };
-    std::vector<uint32_t> lDim2{ 3, 2, 6 };
+// static std::tuple<uint32_t, sTensorShape> TestTensorShape()
+// {
+//     std::vector<uint32_t> lDim1{ 2, 4, 3 };
+//     std::vector<uint32_t> lDim2{ 3, 2, 6 };
 
-    uint32_t lSize = 0;
-    lSize += std::accumulate( lDim1.begin(), lDim1.end(), 1, std::multiplies<uint32_t>() );
-    lSize += std::accumulate( lDim2.begin(), lDim2.end(), 1, std::multiplies<uint32_t>() );
+//     uint32_t lSize = 0;
+//     lSize += std::accumulate( lDim1.begin(), lDim1.end(), 1, std::multiplies<uint32_t>() );
+//     lSize += std::accumulate( lDim2.begin(), lDim2.end(), 1, std::multiplies<uint32_t>() );
 
-    return { lSize, sTensorShape( { lDim1, lDim2 }, sizeof( uint32_t ) ) };
-}
+//     return { lSize, sTensorShape( { lDim1, lDim2 }, sizeof( uint32_t ) ) };
+// }
 
-static std::tuple<uint32_t, sTensorShape> TestCollapsableTensorShape()
-{
-    std::vector<uint32_t> lDim1{ 2, 4, 3 };
-    std::vector<uint32_t> lDim2{ 2, 4, 3 };
-    std::vector<uint32_t> lDim3{ 2, 4, 3 };
+// static std::tuple<uint32_t, sTensorShape> TestCollapsableTensorShape()
+// {
+//     std::vector<uint32_t> lDim1{ 2, 4, 3 };
+//     std::vector<uint32_t> lDim2{ 2, 4, 3 };
+//     std::vector<uint32_t> lDim3{ 2, 4, 3 };
 
-    uint32_t lSize = 0;
-    lSize += std::accumulate( lDim1.begin(), lDim1.end(), 1, std::multiplies<uint32_t>() );
-    lSize += std::accumulate( lDim2.begin(), lDim2.end(), 1, std::multiplies<uint32_t>() );
-    lSize += std::accumulate( lDim3.begin(), lDim3.end(), 1, std::multiplies<uint32_t>() );
+//     uint32_t lSize = 0;
+//     lSize += std::accumulate( lDim1.begin(), lDim1.end(), 1, std::multiplies<uint32_t>() );
+//     lSize += std::accumulate( lDim2.begin(), lDim2.end(), 1, std::multiplies<uint32_t>() );
+//     lSize += std::accumulate( lDim3.begin(), lDim3.end(), 1, std::multiplies<uint32_t>() );
 
-    return { lSize, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) ) };
-}
+//     return { lSize, sTensorShape( { lDim1, lDim2, lDim3 }, sizeof( uint32_t ) ) };
+// }
 
-static std::tuple<uint32_t, sTensorShape> TestExpandableTensorShape()
-{
-    std::vector<uint32_t> lDim1{ 5, 4, 3 };
+// static std::tuple<uint32_t, sTensorShape> TestExpandableTensorShape()
+// {
+//     std::vector<uint32_t> lDim1{ 5, 4, 3 };
 
-    uint32_t lSize = 0;
-    lSize += std::accumulate( lDim1.begin(), lDim1.end(), 1, std::multiplies<uint32_t>() );
+//     uint32_t lSize = 0;
+//     lSize += std::accumulate( lDim1.begin(), lDim1.end(), 1, std::multiplies<uint32_t>() );
 
-    return { lSize, sTensorShape(  std::vector< std::vector<uint32_t>>{ lDim1 }, sizeof( uint32_t ) ) };
-}
+//     return { lSize, sTensorShape(  std::vector< std::vector<uint32_t>>{ lDim1 }, sizeof( uint32_t ) ) };
+// }
 
-TEST_CASE( "ADD", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "ADD", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0 = MakeValueArray( lSize );
-    auto *lValues1 = MakeValueArray( lSize );
-    auto  lRetValue =
-        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestAdd", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+//     auto *lValues0 = MakeValueArray( lSize );
+//     auto *lValues1 = MakeValueArray( lSize );
+//     auto  lRetValue =
+//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestAdd", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "MULTIPLY", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "MULTIPLY", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0 = MakeValueArray( lSize );
-    auto *lValues1 = MakeValueArray( lSize );
-    auto  lRetValue =
-        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestMultiply", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+//     auto *lValues0 = MakeValueArray( lSize );
+//     auto *lValues1 = MakeValueArray( lSize );
+//     auto  lRetValue =
+//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestMultiply", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "SUBTRACT", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "SUBTRACT", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0 = MakeValueArray( lSize );
-    auto *lValues1 = MakeValueArray( lSize );
-    auto  lRetValue =
-        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestSubtract", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+//     auto *lValues0 = MakeValueArray( lSize );
+//     auto *lValues1 = MakeValueArray( lSize );
+//     auto  lRetValue =
+//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestSubtract", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "DIVIDE", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "DIVIDE", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0 = MakeValueArray( lSize );
-    auto *lValues1 = MakeValueArray( lSize );
-    auto  lRetValue =
-        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestDivide", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+//     auto *lValues0 = MakeValueArray( lSize );
+//     auto *lValues1 = MakeValueArray( lSize );
+//     auto  lRetValue =
+//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestDivide", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "AND", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "AND", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0 = MakeBoolArray( lSize );
-    auto *lValues1 = MakeBoolArray( lSize );
-    auto  lRetValue =
-        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestAnd", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+//     auto *lValues0 = MakeBoolArray( lSize );
+//     auto *lValues1 = MakeBoolArray( lSize );
+//     auto  lRetValue =
+//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestAnd", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "OR", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "OR", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0 = MakeBoolArray( lSize );
-    auto *lValues1 = MakeBoolArray( lSize );
-    auto  lRetValue =
-        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestOr", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+//     auto *lValues0 = MakeBoolArray( lSize );
+//     auto *lValues1 = MakeBoolArray( lSize );
+//     auto  lRetValue =
+//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestOr", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "NOT", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "NOT", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0  = MakeBoolArray( lSize );
-    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestNot", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto *lValues0  = MakeBoolArray( lSize );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestNot", (size_t)&lScope, (size_t)&lShape, lValues0 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "BITWISE_AND", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "BITWISE_AND", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0 = MakeU32Array( lSize );
-    auto *lValues1 = MakeU32Array( lSize );
-    auto  lRetValue =
-        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestBitwiseAnd", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+//     auto *lValues0 = MakeU32Array( lSize );
+//     auto *lValues1 = MakeU32Array( lSize );
+//     auto  lRetValue =
+//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestBitwiseAnd", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "BITWISE_OR", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "BITWISE_OR", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0 = MakeU32Array( lSize );
-    auto *lValues1 = MakeU32Array( lSize );
-    auto  lRetValue =
-        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestBitwiseOr", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+//     auto *lValues0 = MakeU32Array( lSize );
+//     auto *lValues1 = MakeU32Array( lSize );
+//     auto  lRetValue =
+//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestBitwiseOr", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "BITWISE_NOT", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "BITWISE_NOT", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0 = MakeU32Array( lSize );
-    auto  lRetValue =
-        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestBitwiseNot", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto *lValues0 = MakeU32Array( lSize );
+//     auto  lRetValue =
+//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestBitwiseNot", (size_t)&lScope, (size_t)&lShape, lValues0 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "IN_INTERVAL", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "IN_INTERVAL", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0 = MakeValueArray( lSize );
-    auto *lValues1 = MakeValueArray( lSize );
-    auto *lValues2 = MakeValueArray( lSize );
-    auto lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestInInterval", (size_t)&lScope, (size_t)&lShape, lValues0,
-                                                             lValues1, lValues2 );
+//     auto *lValues0 = MakeValueArray( lSize );
+//     auto *lValues1 = MakeValueArray( lSize );
+//     auto *lValues2 = MakeValueArray( lSize );
+//     auto lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestInInterval", (size_t)&lScope, (size_t)&lShape, lValues0,
+//                                                              lValues1, lValues2 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "EQUAL", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "EQUAL", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0 = MakeValueArray( lSize );
-    auto *lValues1 = MakeValueArray( lSize );
-    auto  lRetValue =
-        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestEqual", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+//     auto *lValues0 = MakeValueArray( lSize );
+//     auto *lValues1 = MakeValueArray( lSize );
+//     auto  lRetValue =
+//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestEqual", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "LESS_THAN", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "LESS_THAN", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0 = MakeValueArray( lSize );
-    auto *lValues1 = MakeValueArray( lSize );
-    auto  lRetValue =
-        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestLessThan", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+//     auto *lValues0 = MakeValueArray( lSize );
+//     auto *lValues1 = MakeValueArray( lSize );
+//     auto  lRetValue =
+//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestLessThan", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "LESS_THAN_OR_EQUAL", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "LESS_THAN_OR_EQUAL", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0  = MakeValueArray( lSize );
-    auto *lValues1  = MakeValueArray( lSize );
-    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestLessThanOrEqual", (size_t)&lScope, (size_t)&lShape,
-                                                             lValues0, lValues1 );
+//     auto *lValues0  = MakeValueArray( lSize );
+//     auto *lValues1  = MakeValueArray( lSize );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestLessThanOrEqual", (size_t)&lScope, (size_t)&lShape,
+//                                                              lValues0, lValues1 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "GREATER_THAN", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "GREATER_THAN", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0 = MakeValueArray( lSize );
-    auto *lValues1 = MakeValueArray( lSize );
-    auto  lRetValue =
-        CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestGreaterThan", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
+//     auto *lValues0 = MakeValueArray( lSize );
+//     auto *lValues1 = MakeValueArray( lSize );
+//     auto  lRetValue =
+//         CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestGreaterThan", (size_t)&lScope, (size_t)&lShape, lValues0, lValues1 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "GREATER_THAN_OR_EQUAL", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "GREATER_THAN_OR_EQUAL", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0  = MakeValueArray( lSize );
-    auto *lValues1  = MakeValueArray( lSize );
-    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestGreaterThanOrEqual", (size_t)&lScope, (size_t)&lShape,
-                                                             lValues0, lValues1 );
+//     auto *lValues0  = MakeValueArray( lSize );
+//     auto *lValues1  = MakeValueArray( lSize );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestGreaterThanOrEqual", (size_t)&lScope, (size_t)&lShape,
+//                                                              lValues0, lValues1 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "WHERE", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "WHERE", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0  = MakeBoolArray( lSize );
-    auto *lValues1  = MakeValueArray( lSize );
-    auto *lValues2  = MakeValueArray( lSize );
-    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestWhere", (size_t)&lScope, (size_t)&lShape, lValues0,
-                                                             lValues1, lValues2 );
+//     auto *lValues0  = MakeBoolArray( lSize );
+//     auto *lValues1  = MakeValueArray( lSize );
+//     auto *lValues2  = MakeValueArray( lSize );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestWhere", (size_t)&lScope, (size_t)&lShape, lValues0,
+//                                                              lValues1, lValues2 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "MIX", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "MIX", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0  = MakeValueArray( lSize );
-    auto *lValues1  = MakeValueArray( lSize );
-    auto *lValues2  = MakeValueArray( lSize );
-    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestMix", (size_t)&lScope, (size_t)&lShape, lValues0,
-                                                             lValues1, lValues2 );
+//     auto *lValues0  = MakeValueArray( lSize );
+//     auto *lValues1  = MakeValueArray( lSize );
+//     auto *lValues2  = MakeValueArray( lSize );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestMix", (size_t)&lScope, (size_t)&lShape, lValues0,
+//                                                              lValues1, lValues2 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "AFFINE_TRANSFORM", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "AFFINE_TRANSFORM", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0  = MakeValueArray( lSize );
-    auto *lValues1  = MakeValueArray( lSize );
-    auto *lValues2  = MakeValueArray( lSize );
-    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestAffineTransform", (size_t)&lScope, (size_t)&lShape,
-                                                             lValues0, lValues1, lValues2 );
+//     auto *lValues0  = MakeValueArray( lSize );
+//     auto *lValues1  = MakeValueArray( lSize );
+//     auto *lValues2  = MakeValueArray( lSize );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestAffineTransform", (size_t)&lScope, (size_t)&lShape,
+//                                                              lValues0, lValues1, lValues2 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "ARANGE", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "ARANGE", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "LINEAR_SPACE", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "LINEAR_SPACE", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "REPEAT", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "REPEAT", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "TILE", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "TILE", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "SAMPLE_2D", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "SAMPLE_2D", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "COLLAPSE", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "COLLAPSE", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestCollapsableTensorShape();
+//     auto [lSize, lShape] = TestCollapsableTensorShape();
 
-    auto *lValues0 = MakeValueArray( lSize );
-    auto lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCollapse", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto *lValues0 = MakeValueArray( lSize );
+//     auto lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCollapse", (size_t)&lScope, (size_t)&lShape, lValues0 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    // REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     // REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "EXPAND", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "EXPAND", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestExpandableTensorShape();
+//     auto [lSize, lShape] = TestExpandableTensorShape();
 
-    auto *lValues0  = MakeValueArray( lSize );
-    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestExpand", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto *lValues0  = MakeValueArray( lSize );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestExpand", (size_t)&lScope, (size_t)&lShape, lValues0 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    // REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
-    REQUIRE( false );
-}
+//     // REQUIRE( ( lCppNode.Has<sGraphOperationComponent>() ) );
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "RESHAPE", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "RESHAPE", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "RELAYOUT", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "RELAYOUT", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "FLATTEN", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "FLATTEN", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0  = MakeValueArray( lSize );
-    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestFlatten", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto *lValues0  = MakeValueArray( lSize );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestFlatten", (size_t)&lScope, (size_t)&lShape, lValues0 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "SLICE", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "SLICE", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "SUMMATION_1", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "SUMMATION_1", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "SUMMATION_2", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "SUMMATION_2", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "COUNT_TRUE", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "COUNT_TRUE", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0  = MakeValueArray( lSize );
-    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCountTrue", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto *lValues0  = MakeValueArray( lSize );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCountTrue", (size_t)&lScope, (size_t)&lShape, lValues0 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "COUNT_NON_ZERO", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "COUNT_NON_ZERO", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0  = MakeValueArray( lSize );
-    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCountNonZero", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto *lValues0  = MakeValueArray( lSize );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCountNonZero", (size_t)&lScope, (size_t)&lShape, lValues0 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "COUNT_ZERO", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "COUNT_ZERO", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0  = MakeValueArray( lSize );
-    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCountZero", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto *lValues0  = MakeValueArray( lSize );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCountZero", (size_t)&lScope, (size_t)&lShape, lValues0 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "FLOOR", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "FLOOR", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0  = MakeValueArray( lSize );
-    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestFloor", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto *lValues0  = MakeValueArray( lSize );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestFloor", (size_t)&lScope, (size_t)&lShape, lValues0 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "CEIL", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "CEIL", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0  = MakeValueArray( lSize );
-    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCeil", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto *lValues0  = MakeValueArray( lSize );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestCeil", (size_t)&lScope, (size_t)&lShape, lValues0 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "ABS", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "ABS", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0  = MakeValueArray( lSize );
-    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestAbs", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto *lValues0  = MakeValueArray( lSize );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestAbs", (size_t)&lScope, (size_t)&lShape, lValues0 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "SQRT", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "SQRT", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0  = MakeValueArray( lSize );
-    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestSqrt", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto *lValues0  = MakeValueArray( lSize );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestSqrt", (size_t)&lScope, (size_t)&lShape, lValues0 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
 
-TEST_CASE( "ROUND", "[MONO_SCRIPTING]" )
-{
-    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-    auto lScope = Scope( 1024 * 1024 );
+// TEST_CASE( "ROUND", "[MONO_SCRIPTING]" )
+// {
+//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+//     auto lScope = Scope( 1024 * 1024 );
 
-    auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
+//     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-    auto [lSize, lShape] = TestTensorShape();
+//     auto [lSize, lShape] = TestTensorShape();
 
-    auto *lValues0  = MakeValueArray( lSize );
-    auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestRound", (size_t)&lScope, (size_t)&lShape, lValues0 );
+//     auto *lValues0  = MakeValueArray( lSize );
+//     auto  lRetValue = CallMethodHelper<MonoObject *, size_t>( lEntityTest, "TestRound", (size_t)&lScope, (size_t)&lShape, lValues0 );
 
-    auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
+//     auto lCppNode = ConvertCSOpNode( lScope, lRetValue );
 
-    REQUIRE( false );
-}
+//     REQUIRE( false );
+// }
