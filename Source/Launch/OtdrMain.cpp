@@ -62,8 +62,8 @@ void LoadConfiguration( fs::path aConfigurationFile, math::ivec2 &aWindowSize, m
     }
 }
 
-void SaveConfiguration( fs::path aConfigurationFile, math::ivec2 const &aWindowSize,
-                        math::ivec2 const &aWindowPosition, UIConfiguration &aUIConfiguration )
+void SaveConfiguration( fs::path aConfigurationFile, math::ivec2 const &aWindowSize, math::ivec2 const &aWindowPosition,
+                        UIConfiguration &aUIConfiguration )
 {
     YAML::Emitter lConfigurationOut;
     lConfigurationOut << YAML::BeginMap;
@@ -108,40 +108,30 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
 
     // clang-format off
 
-    lProgramArguments->add_argument( "-p", "--project" )
-        .help( "Specify input file" )
-        .default_value( std::string{ "" } );
-
     lProgramArguments->add_argument( "-a", "--application" )
         .help( "Specify input file" )
         .default_value( std::string{ "" } );
 
-    lProgramArguments->add_argument( "-x", "--pos_x" )
+    lProgramArguments->add_argument( "-x", "--x" )
         .help( "Specify output file" )
         .scan<'i', int>();
 
-    lProgramArguments->add_argument( "-y", "--pos_y" )
+    lProgramArguments->add_argument( "-y", "--y" )
         .help( "Specify output file" )
         .scan<'i', int>();
 
-    lProgramArguments->add_argument( "-w", "--res_x" )
+    lProgramArguments->add_argument( "-w", "--width" )
         .help( "Specify output file" )
         .scan<'i', int>();
 
-    lProgramArguments->add_argument( "-h", "--res_y" )
+    lProgramArguments->add_argument( "-h", "--height" )
         .help( "Specify output file" )
         .scan<'i', int>();
 
     lProgramArguments->add_argument( "-M", "--mono-runtime-path" )
         .help( "Specify output file" );
 
-    lProgramArguments->add_argument( "-S", "--script-core-binary-path" )
-        .help( "Specify output file" );
-
-    lProgramArguments->add_argument( "-S", "--metrino-binary-path" )
-        .help( "Specify output file" );
-
-    lProgramArguments->add_argument( "-L", "--log_level" )
+    lProgramArguments->add_argument( "-L", "--log-level" )
         .help( "Specify output file" ).scan<'i', int>();
 
     // clang-format on
@@ -179,37 +169,17 @@ int main( int argc, char **argv )
     {
         CHAR    aProfilePath[MAX_PATH];
         HRESULT result = SHGetFolderPathA( NULL, CSIDL_PROFILE, NULL, 0, aProfilePath );
-        if( SUCCEEDED( result ) )
-        {
-            lUserHomeFolder = fs::path( aProfilePath );
-        }
+        if( SUCCEEDED( result ) ) lUserHomeFolder = fs::path( aProfilePath );
 
         CHAR aUserAppData[MAX_PATH];
         result = SHGetFolderPathA( NULL, CSIDL_LOCAL_APPDATA, NULL, 0, aUserAppData );
-        if( SUCCEEDED( result ) )
-        {
-            lLocalConfigFolder = fs::path( aUserAppData );
-        }
+        if( SUCCEEDED( result ) ) lLocalConfigFolder = fs::path( aUserAppData );
     }
-
-    // get cwd
-    fs::path lProjectRoot = GetCwd();
-
-    SE::Logging::Info( "Current working directory is: '{}'", lProjectRoot.string() );
-
-    // Create Saved, Saved/Logs, Saved/Config
-    if( !fs::exists( lProjectRoot / "Saved" / "Logs" ) ) fs::create_directories( lProjectRoot / "Saved" / "Logs" );
-    if( !fs::exists( lProjectRoot / "Saved" / "Config" ) ) fs::create_directories( lProjectRoot / "Saved" / "Config" );
 
     // Create Saved, Saved/Logs, Saved/Config
     if( !fs::exists( lLocalConfigFolder / "OtdrTool" / "Logs" ) ) fs::create_directories( lLocalConfigFolder / "OtdrTool" / "Logs" );
     if( !fs::exists( lLocalConfigFolder / "OtdrTool" / "Config" ) )
         fs::create_directories( lLocalConfigFolder / "OtdrTool" / "Config" );
-
-    // Configure logger to send messages to Saved/Logs/EditorLogs.txt
-    auto lOutputLogFile = lProjectRoot / "Saved" / "Logs" / "EditorLogs.txt";
-    SE::Logging::Info( "Log file will be written to '{}'", lOutputLogFile.string() );
-    SE::Logging::SetLogOutputFile( lProjectRoot / "Saved" / "Logs" / "EditorLogs.txt" );
 
     math::ivec2     lWindowSize     = { 640, 480 };
     math::ivec2     lWindowPosition = { 100, 100 };
@@ -221,15 +191,13 @@ int main( int argc, char **argv )
     else
         SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
 
-    if( auto lResXOverride = lProgramArguments->present<int>( "--res_x" ) ) lWindowSize.x = lResXOverride.value();
-    if( auto lResYOverride = lProgramArguments->present<int>( "--res_y" ) ) lWindowSize.y = lResYOverride.value();
-    if( auto lPosXOverride = lProgramArguments->present<int>( "--pos_x" ) ) lWindowPosition.x = lPosXOverride.value();
-    if( auto lPosYOverride = lProgramArguments->present<int>( "--pos_y" ) ) lWindowPosition.y = lPosYOverride.value();
+    if( auto lResXOverride = lProgramArguments->present<int>( "--width" ) ) lWindowSize.x = lResXOverride.value();
+    if( auto lResYOverride = lProgramArguments->present<int>( "--height" ) ) lWindowSize.y = lResYOverride.value();
+    if( auto lPosXOverride = lProgramArguments->present<int>( "--x" ) ) lWindowPosition.x = lPosXOverride.value();
+    if( auto lPosYOverride = lProgramArguments->present<int>( "--y" ) ) lWindowPosition.y = lPosYOverride.value();
 
     SE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lLocalConfigFolder / "OtdrTool" / "Config" / "imgui.ini",
                                   lUIConfiguration );
-
-    // SE::Graphics::OptixDeviceContextObject::Initialize();
 
     // Retrieve the Mono runtime
     fs::path    lMonoPath = "C:\\Program Files\\Mono\\lib\\mono\\4.5";
@@ -243,16 +211,14 @@ int main( int argc, char **argv )
 
     // Retrieve the Mono core assembly path
     fs::path lCoreScriptingPath = "c:/GitLab/SpockEngine/Source/ScriptCore/Build/Debug/SE_Core.dll";
-    if( auto lCoreScriptingPathOverride = lProgramArguments->present<std::string>( "--script-core-binary-path" ) )
-        if( fs ::exists( lCoreScriptingPathOverride.value() ) ) lCoreScriptingPath = lCoreScriptingPathOverride.value();
 
     DotNetRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 
-    auto lApplicationName = lProgramArguments->get<std::string>( "--application" );
+    auto     lApplicationName              = lProgramArguments->get<std::string>( "--application" );
     fs::path lApplicationConfigurationPath = "";
     if( !lApplicationName.empty() )
     {
-         lApplicationConfigurationPath = lLocalConfigFolder / "OtdrTool" / "Config" / fmt::format( "{}.yaml", lApplicationName );
+        lApplicationConfigurationPath = lLocalConfigFolder / "OtdrTool" / "Config" / fmt::format( "{}.yaml", lApplicationName );
         auto lApplicationAssembly =
             fs::path( "D:\\Build\\Lib" ) / "debug" / "develop" / lApplicationName / fmt::format( "{}.dll", lApplicationName );
         if( fs::exists( lApplicationAssembly ) ) DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
@@ -278,7 +244,7 @@ int main( int argc, char **argv )
     {
     }
 
-    lEditorApplication.Shutdown(lApplicationConfigurationPath);
+    lEditorApplication.Shutdown( lApplicationConfigurationPath );
     SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
 
     DotNetRuntime::Shutdown();
