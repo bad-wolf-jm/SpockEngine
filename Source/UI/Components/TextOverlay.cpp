@@ -1,8 +1,8 @@
 #include "TextOverlay.h"
 #include <sstream>
 
-#include "Engine/Engine.h"
 #include "DotNet/Runtime.h"
+#include "Engine/Engine.h"
 
 namespace SE::Core
 {
@@ -74,6 +74,8 @@ namespace SE::Core
         }
     }
 
+    void UITextOverlay::Clear() { mLines.clear(); }
+
     ImVec2 UITextOverlay::RequiredSize()
     {
         SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONOSPACE );
@@ -94,8 +96,11 @@ namespace SE::Core
 
         ImGui::SetCursorPos( aPosition );
 
+        ImGui::PushID( (void *)this );
+        ImGui::PushStyleColor( ImGuiCol_ChildBg, ImVec4{ 0.01f, 0.01f, 0.01f, .9f } );
+        ImGui::BeginChild( "##TextOverlay", aSize );
+
         auto lScreenPosition = ImGui::GetCursorScreenPos();
-        lDrawList->AddRectFilled( lScreenPosition, lScreenPosition + aSize, ImColor( 0, 0, 0, 225 ), 0.0f );
 
         SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONOSPACE );
         auto lHeight = ImGui::GetFontSize();
@@ -126,6 +131,10 @@ namespace SE::Core
             ImGui::Text( lLine.mLine.c_str() );
             SE::Core::Engine::GetInstance()->UIContext()->PopFont();
         }
+
+        ImGui::EndChild();
+        ImGui::PopStyleColor();
+        ImGui::PopID();
     }
 
     void *UITextOverlay::UITextOverlay_Create()
@@ -144,4 +153,12 @@ namespace SE::Core
 
         lInstance->AddText( lString );
     }
+
+    void UITextOverlay::UITextOverlay_Clear( void *aInstance )
+    {
+        auto lInstance = static_cast<UITextOverlay *>( aInstance );
+
+        lInstance->Clear();
+    }
+
 } // namespace SE::Core
