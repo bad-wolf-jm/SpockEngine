@@ -89,7 +89,7 @@ namespace SE::Core
 
         std::vector<BoxLayoutItem> lVisibleChildren;
         std::copy_if( mChildren.begin(), mChildren.end(), std::back_inserter( lVisibleChildren ),
-                      []( auto x ) { return (x.mItem != nullptr) && (x.mItem->mIsVisible); } );
+                      []( auto x ) { return (x.mItem == nullptr) || (x.mItem->mIsVisible); } );
 
         float lTaken = mItemSpacing * ( lVisibleChildren.size() - 1 );
 
