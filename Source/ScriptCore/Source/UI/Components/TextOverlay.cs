@@ -12,6 +12,7 @@ namespace SpockEngine
         ~UITextOverlay() { UITextOverlay_Destroy(mInstance); }
 
         public void AddText(string aText) { UITextOverlay_AddText(mInstance, aText); }
+        public void Clear() { UITextOverlay_Clear(mInstance); }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UITextOverlay_Create();
@@ -21,5 +22,8 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UITextOverlay_AddText(ulong aInstance, string aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UITextOverlay_Clear(ulong aInstance);
     }
 }
