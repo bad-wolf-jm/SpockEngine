@@ -17,9 +17,9 @@ add_executable(lste_cuda_test WIN32
   Test_AbstractTexture.cpp
   # Test_CudaTexture.cpp
   # Test_CudaBuffer.cpp
-  Test_EntityRegistry.cpp
+#   Test_EntityRegistry.cpp
   # Test_ComputationScope.cpp
-  # Test_MonoScripting.cpp
+  Test_MonoScripting.cpp
   # Test_ConfigurationReader.cpp
   # ${TEST_DATA_FILES}
   # Test_Scripting.cpp

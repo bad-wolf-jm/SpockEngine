@@ -6,16 +6,15 @@
 
 #include "TestUtils.h"
 
-#include "Core/CUDA/Array/MemoryPool.h"
-#include "Core/CUDA/Array/MultiTensor.h"
-#include "Core/EntityCollection/Collection.h"
+// #include "Core/CUDA/Array/MemoryPool.h"
+// #include "Core/CUDA/Array/MultiTensor.h"
+// #include "Core/EntityCollection/Collection.h"
 #include "Core/Logging.h"
 
 #include "DotNet/Runtime.h"
 
-#include "Scene/Components.h"
-
-#include "TensorOps/Scope.h"
+// #include "Scene/Components.h"
+// #include "TensorOps/Scope.h"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
@@ -24,11 +23,11 @@
 
 using namespace Catch::Matchers;
 using namespace SE::Core;
-using namespace SE::Cuda;
-using namespace SE::TensorOps;
+// using namespace SE::Cuda;
+// using namespace SE::TensorOps;
 using namespace TestUtils;
 using namespace math;
-using namespace SE::Core::EntityComponentSystem::Components;
+// using namespace SE::Core::EntityComponentSystem::Components;
 
 namespace fs = std::filesystem;
 
@@ -46,19 +45,19 @@ void InitializeMonoscripting( fs::path aAppAssemblyPath )
     DotNetRuntime::AddAppAssemblyPath( aAppAssemblyPath, "TEST" );
 }
 
-// TEST_CASE( "Initialize scripting engine", "[MONO_SCRIPTING]" )
-// {
-//     InitializeMonoscripting();
+TEST_CASE( "Initialize scripting engine", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting();
 
-//     REQUIRE( true );
-// }
+    REQUIRE( true );
+}
 
-// TEST_CASE( "Set app assembly path", "[MONO_SCRIPTING]" )
-// {
-//     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
+TEST_CASE( "Set app assembly path", "[MONO_SCRIPTING]" )
+{
+    InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 
-//     REQUIRE( true );
-// }
+    REQUIRE( true );
+}
 
 inline float ToFloat( MonoObject *x ) { return *(float *)mono_object_unbox( x ); }
 inline bool  ToBool( MonoObject *x ) { return *(bool *)mono_object_unbox( x ); }
@@ -140,7 +139,7 @@ TEST_CASE( "Vector3 operations", "[MONO_SCRIPTING]" )
 {
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 
-    auto lVectorTest = DotNetClass( "SEUnitTest", "Vector3Tests", false );
+    auto lVectorTest = DotNetRuntime::GetClassType( "SEUnitTest.Vector3Tests" );
 
     float lS = RandomNumber( -10.0f, 10.0f );
     auto  lX = vec3{ 1.2f, 3.4f, 5.6f };
@@ -171,7 +170,7 @@ TEST_CASE( "Vector4 operations", "[MONO_SCRIPTING]" )
 {
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 
-    auto lVectorTest = DotNetClass( "SEUnitTest", "Vector4Tests", false );
+    auto lVectorTest = DotNetRuntime::GetClassType( "SEUnitTest.Vector4Tests" );
 
     float lS = RandomNumber( -10.0f, 10.0f );
     auto  lX = vec4{ 1.2f, 3.4f, 5.6f, 4.2f };
@@ -204,7 +203,7 @@ TEST_CASE( "Matrix3 operations", "[MONO_SCRIPTING]" )
 {
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 
-    auto lVectorTest = DotNetClass( "SEUnitTest", "Matrix3Tests", false );
+    auto lVectorTest = DotNetRuntime::GetClassType( "SEUnitTest.Matrix3Tests" );
 
     float lS = RandomNumber( -10.0f, 10.0f );
     auto  lA = RandomMat4();
@@ -253,7 +252,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 {
     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 
-    auto lVectorTest = DotNetClass( "SEUnitTest", "Matrix4Tests", false );
+    auto lVectorTest = DotNetRuntime::GetClassType( "SEUnitTest.Matrix4Tests" );
 
     float lS = RandomNumber( -10.0f, 10.0f );
     auto  lA = RandomMat3();
@@ -382,7 +381,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     auto lEntity         = lRegistry.CreateEntity();
 //     auto lEntityID       = static_cast<uint32_t>( lEntity );
 //     auto lRegistryID     = (size_t)lEntity.GetRegistry();
-//     auto lEntityClass    = DotNetClass( "SpockEngine", "Entity", true );
+//     auto lEntityClass    = DotNetRuntime::GetClassType( "SpockEngine", "Entity", true );
 //     auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
 
 //     REQUIRE( lEntityInstance.CallMethod( "IsValid" ) );
@@ -391,14 +390,14 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 // TEST_CASE( "Entity tag is reflected in scripting world", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = DotNetClass( "SEUnitTest", "EntityTest", false );
+//     auto lEntityTest = DotNetRuntime::GetClassType( "SEUnitTest.EntityTest", false );
 
 //     SE::Core::EntityCollection lRegistry;
 
 //     auto lEntity         = lRegistry.CreateEntity( "TAG_0" );
 //     auto lEntityID       = static_cast<uint32_t>( lEntity );
 //     auto lRegistryID     = (size_t)lEntity.GetRegistry();
-//     auto lEntityClass    = DotNetClass( "SpockEngine", "Entity", true );
+//     auto lEntityClass    = DotNetRuntime::GetClassType( "SpockEngine", "Entity", true );
 //     auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
 
 //     REQUIRE( CallMethodHelper<bool, MonoObject *>( lEntityTest, "TestHasTag", lEntityInstance.GetInstance() ) );
@@ -411,14 +410,14 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 // TEST_CASE( "Entity tag is reflected in C++ world", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = DotNetClass( "SEUnitTest", "EntityTest", false );
+//     auto lEntityTest = DotNetRuntime::GetClassType( "SEUnitTest.EntityTest", false );
 
 //     SE::Core::EntityCollection lRegistry;
 
 //     auto lEntity         = lRegistry.CreateEntity();
 //     auto lEntityID       = static_cast<uint32_t>( lEntity );
 //     auto lRegistryID     = (size_t)lEntity.GetRegistry();
-//     auto lEntityClass    = DotNetClass( "SpockEngine", "Entity", true );
+//     auto lEntityClass    = DotNetRuntime::GetClassType( "SpockEngine", "Entity", true );
 //     auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
 
 //     MonoString *lManagedSTagValue = DotNetRuntime::NewString( "TAG_1" );
@@ -432,7 +431,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 // TEST_CASE( "Entity transform is reflected in scripting world", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = DotNetClass( "SEUnitTest", "EntityTest", false );
+//     auto lEntityTest = DotNetRuntime::GetClassType( "SEUnitTest.EntityTest", false );
 
 //     SE::Core::EntityCollection lRegistry;
 
@@ -441,7 +440,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 
 //     auto lEntityID    = static_cast<uint32_t>( lEntity );
 //     auto lRegistryID  = (size_t)lEntity.GetRegistry();
-//     auto lEntityClass = DotNetClass( "SpockEngine", "Entity", true );
+//     auto lEntityClass = DotNetRuntime::GetClassType( "SpockEngine", "Entity", true );
 
 //     auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
 //     REQUIRE( CallMethodHelper<bool, MonoObject *>( lEntityTest, "TestHasNodeTransform", lEntityInstance.GetInstance() ) );
@@ -452,14 +451,14 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 // TEST_CASE( "Entity transform is reflected in C++ world", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = DotNetClass( "SEUnitTest", "EntityTest", false );
+//     auto lEntityTest = DotNetRuntime::GetClassType( "SEUnitTest.EntityTest", false );
 
 //     SE::Core::EntityCollection lRegistry;
 
 //     auto lEntity         = lRegistry.CreateEntity();
 //     auto lEntityID       = static_cast<uint32_t>( lEntity );
 //     auto lRegistryID     = (size_t)lEntity.GetRegistry();
-//     auto lEntityClass    = DotNetClass( "SpockEngine", "Entity", true );
+//     auto lEntityClass    = DotNetRuntime::GetClassType( "SpockEngine", "Entity", true );
 //     auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
 
 //     auto lMat4 = RandomMat4();
@@ -473,7 +472,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 // TEST_CASE( "Entity transform matrix is reflected in scripting world", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = DotNetClass( "SEUnitTest", "EntityTest", false );
+//     auto lEntityTest = DotNetRuntime::GetClassType( "SEUnitTest.EntityTest", false );
 
 //     SE::Core::EntityCollection lRegistry;
 
@@ -482,7 +481,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 
 //     auto lEntityID    = static_cast<uint32_t>( lEntity );
 //     auto lRegistryID  = (size_t)lEntity.GetRegistry();
-//     auto lEntityClass = DotNetClass( "SpockEngine", "Entity", true );
+//     auto lEntityClass = DotNetRuntime::GetClassType( "SpockEngine", "Entity", true );
 
 //     auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
 //     REQUIRE( CallMethodHelper<bool, MonoObject *>( lEntityTest, "TestHasTransformMatrix", lEntityInstance.GetInstance() ) );
@@ -493,14 +492,14 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 // TEST_CASE( "Entity transform matrix is reflected in C++ world", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = DotNetClass( "SEUnitTest", "EntityTest", false );
+//     auto lEntityTest = DotNetRuntime::GetClassType( "SEUnitTest.EntityTest", false );
 
 //     SE::Core::EntityCollection lRegistry;
 
 //     auto lEntity         = lRegistry.CreateEntity();
 //     auto lEntityID       = static_cast<uint32_t>( lEntity );
 //     auto lRegistryID     = (size_t)lEntity.GetRegistry();
-//     auto lEntityClass    = DotNetClass( "SpockEngine", "Entity", true );
+//     auto lEntityClass    = DotNetRuntime::GetClassType( "SpockEngine", "Entity", true );
 //     auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
 
 //     auto lMat4 = RandomMat4();
@@ -514,7 +513,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 // TEST_CASE( "Entity light component is reflected in scripting world", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = DotNetClass( "SEUnitTest", "EntityTest", false );
+//     auto lEntityTest = DotNetRuntime::GetClassType( "SEUnitTest.EntityTest", false );
 
 //     SE::Core::EntityCollection lRegistry;
 
@@ -523,7 +522,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 
 //     auto lEntityID    = static_cast<uint32_t>( lEntity );
 //     auto lRegistryID  = (size_t)lEntity.GetRegistry();
-//     auto lEntityClass = DotNetClass( "SpockEngine", "Entity", true );
+//     auto lEntityClass = DotNetRuntime::GetClassType( "SpockEngine", "Entity", true );
 
 //     auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
 //     REQUIRE( CallMethodHelper<bool, MonoObject *>( lEntityTest, "TestHasLight", lEntityInstance.GetInstance() ) );
@@ -532,14 +531,14 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 // TEST_CASE( "Entity light is reflected in C++ world", "[MONO_SCRIPTING]" )
 // {
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
-//     auto lEntityTest = DotNetClass( "SEUnitTest", "EntityTest", false );
+//     auto lEntityTest = DotNetRuntime::GetClassType( "SEUnitTest.EntityTest", false );
 
 //     SE::Core::EntityCollection lRegistry;
 
 //     auto lEntity         = lRegistry.CreateEntity();
 //     auto lEntityID       = static_cast<uint32_t>( lEntity );
 //     auto lRegistryID     = (size_t)lEntity.GetRegistry();
-//     auto lEntityClass    = DotNetClass( "SpockEngine", "Entity", true );
+//     auto lEntityClass    = DotNetRuntime::GetClassType( "SpockEngine", "Entity", true );
 //     auto lEntityInstance = lEntityClass.Instantiate( lEntityID, lRegistryID );
 
 //     CallMethodHelper<bool, MonoObject *>( lEntityTest, "AddLight", lEntityInstance.GetInstance() );
@@ -552,7 +551,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-//     auto lTensorShapeClass = DotNetClass( "SpockEngine", "sTensorShape", true );
+//     auto lTensorShapeClass = DotNetRuntime::GetClassType( "SpockEngine", "sTensorShape", true );
 
 //     auto lRetValue    = CallMethodHelper<MonoObject *, uint32_t>( lEntityTest, "CreateTensorShape", 0 );
 //     auto lRetInstance = DotNetInstance( lTensorShapeClass.Class(), lRetValue );
@@ -574,7 +573,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-//     auto lTensorShapeClass = DotNetClass( "SpockEngine", "sTensorShape", true );
+//     auto lTensorShapeClass = DotNetRuntime::GetClassType( "SpockEngine", "sTensorShape", true );
 
 //     std::vector<uint32_t> lDim1{ 2, 2 };
 //     std::vector<uint32_t> lDim2{ 3, 4 };
@@ -589,7 +588,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-//     auto lTensorShapeClass = DotNetClass( "SpockEngine", "sTensorShape", true );
+//     auto lTensorShapeClass = DotNetRuntime::GetClassType( "SpockEngine", "sTensorShape", true );
 
 //     auto lRetValue    = CallMethodHelper<MonoObject *, uint32_t>( lEntityTest, "CreateRank1TensorShape", 0 );
 //     auto lRetInstance = DotNetInstance( lTensorShapeClass.Class(), lRetValue );
@@ -608,7 +607,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-//     auto lTensorShapeClass = DotNetClass( "SpockEngine", "sTensorShape", true );
+//     auto lTensorShapeClass = DotNetRuntime::GetClassType( "SpockEngine", "sTensorShape", true );
 
 //     std::vector<uint32_t> lDim1{ 2, 2, 4, 3 };
 //     std::vector<uint32_t> lDim2{ 3, 4, 2, 6 };
@@ -627,7 +626,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-//     auto lTensorShapeClass = DotNetClass( "SpockEngine", "sTensorShape", true );
+//     auto lTensorShapeClass = DotNetRuntime::GetClassType( "SpockEngine", "sTensorShape", true );
 
 //     std::vector<uint32_t> lDim1{ 2, 2, 4, 3 };
 //     std::vector<uint32_t> lDim2{ 3, 4, 2, 6 };
@@ -679,7 +678,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-//     auto lTensorShapeClass = DotNetClass( "SpockEngine", "sTensorShape", true );
+//     auto lTensorShapeClass = DotNetRuntime::GetClassType( "SpockEngine", "sTensorShape", true );
 
 //     std::vector<uint32_t> lDim1{ 2, 2, 4, 3 };
 //     std::vector<uint32_t> lDim2{ 3, 4, 2, 6 };
@@ -756,7 +755,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-//     auto lTensorShapeClass = DotNetClass( "SpockEngine", "sTensorShape", true );
+//     auto lTensorShapeClass = DotNetRuntime::GetClassType( "SpockEngine", "sTensorShape", true );
 
 //     std::vector<uint32_t> lDim1{ 2, 2, 4, 3 };
 //     std::vector<uint32_t> lDim2{ 3, 4, 2, 6 };
@@ -836,7 +835,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-//     auto lTensorShapeClass = DotNetClass( "SpockEngine", "sTensorShape", true );
+//     auto lTensorShapeClass = DotNetRuntime::GetClassType( "SpockEngine", "sTensorShape", true );
 
 //     std::vector<uint32_t> lDim1{ 2, 4, 3 };
 //     std::vector<uint32_t> lDim2{ 3, 2, 6 };
@@ -959,7 +958,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-//     auto lScopeClass = DotNetClass( "SpockEngine", "Scope", true );
+//     auto lScopeClass = DotNetRuntime::GetClassType( "SpockEngine", "Scope", true );
 
 //     auto lRetValue    = CallMethodHelper<MonoObject *, uint32_t>( lEntityTest, "CreateScope", 1024 );
 //     auto lRetInstance = DotNetInstance( lScopeClass.Class(), lRetValue );
@@ -974,7 +973,7 @@ TEST_CASE( "Matrix4 operations", "[MONO_SCRIPTING]" )
 //     InitializeMonoscripting( "C:\\GitLab\\SpockEngine\\Tests\\Mono\\Build\\Debug\\MonoscriptingTest.dll" );
 //     auto lEntityTest = DotNetRuntime::GetClassType("SEUnitTest.TensorOpsTest");
 
-//     auto lScopeClass = DotNetClass( "SpockEngine", "Scope", true );
+//     auto lScopeClass = DotNetRuntime::GetClassType( "SpockEngine", "Scope", true );
 //     auto lNode       = Scope( 1024 );
 
 //     auto   lScriptShape = lScopeClass.Instantiate( (size_t)&lNode, true );
