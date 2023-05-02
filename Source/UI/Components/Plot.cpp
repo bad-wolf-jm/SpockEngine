@@ -155,11 +155,11 @@ namespace SE::Core
         lSelf->mThickness = aThickness;
     }
 
-    void sPlotData::UIPlotData_SetColor( void *aSelf, math::vec4 *aColor )
+    void sPlotData::UIPlotData_SetColor( void *aSelf, math::vec4 aColor )
     {
         auto lSelf = static_cast<sPlotData *>( aSelf );
 
-        lSelf->mColor = *aColor;
+        lSelf->mColor = aColor;
     }
 
     void sPlotData::UIPlotData_SetXAxis( void *aSelf, int aAxis )
