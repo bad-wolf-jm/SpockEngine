@@ -25,7 +25,16 @@ namespace SpockEngine
             UIImageToggleButton_SetInactiveImage(mInstance, aImage.Instance);
         }
 
-        public delegate bool OnChangeDelegate(bool aValue);
+        public delegate bool OnClickDelegate(bool aValue);
+        OnClickDelegate onClicked;
+        public void OnClicked(OnClickDelegate aHandler)
+        {
+            onClicked = aHandler;
+            
+            UIImageToggleButton_OnClicked(mInstance, onClicked);
+        }
+
+        public delegate bool OnChangeDelegate();
         OnChangeDelegate onChanged;
         public void OnChanged(OnChangeDelegate aHandler)
         {
@@ -39,6 +48,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIImageToggleButton_Destroy(ulong aInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIImageToggleButton_OnClicked(ulong aInstance, OnClickDelegate aHandler);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIImageToggleButton_OnChanged(ulong aInstance, OnChangeDelegate aHandler);

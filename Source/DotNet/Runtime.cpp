@@ -341,6 +341,8 @@ namespace SE::Core
                                 UIImageToggleButton::UIImageToggleButton_Create );
         mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_Destroy",
                                 UIImageToggleButton::UIImageToggleButton_Destroy );
+        mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_OnClicked",
+                                UIImageToggleButton::UIImageToggleButton_OnClicked );
         mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_OnChanged",
                                 UIImageToggleButton::UIImageToggleButton_OnChanged );
         mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_IsActive",
@@ -364,8 +366,11 @@ namespace SE::Core
                                 UITextToggleButton::UITextToggleButton_CreateWithText );
         mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_Destroy",
                                 UITextToggleButton::UITextToggleButton_Destroy );
+        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_OnClicked",
+                                UITextToggleButton::UITextToggleButton_OnClicked );
         mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_OnChanged",
                                 UITextToggleButton::UITextToggleButton_OnChanged );
+
         mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_IsActive",
                                 UITextToggleButton::UITextToggleButton_IsActive );
         mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_SetActive",

@@ -10,14 +10,15 @@ namespace SE::Core
 
     UITextToggleButton::UITextToggleButton( std::string const &aText, std::function<bool( bool )> aOnChange )
         : UILabel{ aText }
-        , mOnChange{ aOnChange }
+        , mOnClicked{ aOnChange }
     {
     }
 
     void UITextToggleButton::PushStyles() {}
     void UITextToggleButton::PopStyles() {}
 
-    void UITextToggleButton::OnChange( std::function<bool( bool )> aOnChange ) { mOnChange = aOnChange; }
+    void UITextToggleButton::OnClick( std::function<bool( bool )> aOnChange ) { mOnClicked = aOnChange; }
+    void UITextToggleButton::OnChanged( std::function<void()> aOnChanged ) { mOnChanged = aOnChanged; }
 
     bool UITextToggleButton::IsActive() { return mActivated; }
     void UITextToggleButton::SetActive( bool aValue ) { mActivated = aValue; }
@@ -80,7 +81,7 @@ namespace SE::Core
         ImGui::SetCursorPos( aPosition );
 
         ImGui::PushStyleColor( ImGuiCol_Text, mActivated ? mActiveColor : mInactiveColor );
-        if( ImGui::Button( mText.c_str(), aSize ) && mOnChange && lEnabled ) mActivated = mOnChange( mActivated );
+        if( ImGui::Button( mText.c_str(), aSize ) && mOnClicked && lEnabled ) mActivated = mOnClicked( mActivated );
         ImGui::PopStyleColor();
 
         PopStyles( lEnabled );
@@ -132,18 +133,18 @@ namespace SE::Core
     }
 
 
-    void UITextToggleButton::UITextToggleButton_OnChanged( void *aInstance, void *aDelegate )
+    void UITextToggleButton::UITextToggleButton_OnClicked( void *aInstance, void *aDelegate )
     {
         auto lInstance = static_cast<UITextToggleButton *>( aInstance );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        if (lInstance->mOnChangeDelegate != nullptr)
-            mono_gchandle_free(lInstance->mOnChangeDelegateHandle);
+        if (lInstance->mOnClickDelegate != nullptr)
+            mono_gchandle_free(lInstance->mOnClickDelegateHandle);
 
-        lInstance->mOnChangeDelegate = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new(static_cast<MonoObject *>( aDelegate ), true);
+        lInstance->mOnClickDelegate = aDelegate;
+        lInstance->mOnClickDelegateHandle = mono_gchandle_new(static_cast<MonoObject *>( aDelegate ), true);
 
-        lInstance->OnChange(
+        lInstance->OnClick(
             [lInstance, lDelegate]( bool aValue )
             {
                 auto lDelegateClass = mono_object_get_class( lDelegate );
@@ -156,4 +157,24 @@ namespace SE::Core
             } );
     }
 
+    void UITextToggleButton::UITextToggleButton_OnChanged( void *aInstance, void *aDelegate )
+    {
+        auto lInstance = static_cast<UITextToggleButton *>( aInstance );
+        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+
+        if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
+
+        lInstance->mOnChangeDelegate       = aDelegate;
+        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+
+        lInstance->OnChanged(
+            [lInstance, lDelegate]()
+            {
+                auto lDelegateClass = mono_object_get_class( lDelegate );
+                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
+                auto lValue         = mono_runtime_invoke( lInvokeMethod, lDelegate, nullptr, nullptr );
+
+                return *( (bool *)mono_object_unbox( lValue ) );
+            } );
+    }
 } // namespace SE::Core

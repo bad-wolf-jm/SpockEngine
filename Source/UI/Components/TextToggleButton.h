@@ -16,13 +16,15 @@ namespace SE::Core
         bool IsActive();
         void SetActive( bool aValue );
 
-        void OnChange( std::function<bool( bool )> aOnClick );
+        void OnClick( std::function<bool( bool )> aOnClick );
+        void OnChanged( std::function<void()> aOnChanged );
 
         void SetActiveColor( math::vec4 const &aColor );
         void SetInactiveColor( math::vec4 const &aColor );
 
       private:
-        std::function<bool( bool )> mOnChange;
+        std::function<bool( bool )> mOnClicked;
+        std::function<void()>       mOnChanged;
 
         bool   mActivated     = false;
         ImVec4 mActiveColor   = ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f };
@@ -42,10 +44,14 @@ namespace SE::Core
         void *mOnChangeDelegate       = nullptr;
         int   mOnChangeDelegateHandle = -1;
 
+        void *mOnClickDelegate       = nullptr;
+        int   mOnClickDelegateHandle = -1;
+
       public:
         static void *UITextToggleButton_Create();
-        static void *UITextToggleButton_CreateWithText( void* aText );
+        static void *UITextToggleButton_CreateWithText( void *aText );
         static void  UITextToggleButton_Destroy( void *aInstance );
+        static void  UITextToggleButton_OnClicked( void *aInstance, void *aHandler );
         static void  UITextToggleButton_OnChanged( void *aInstance, void *aHandler );
         static bool  UITextToggleButton_IsActive( void *aInstance );
         static void  UITextToggleButton_SetActive( void *aInstance, bool aValue );

@@ -12,7 +12,8 @@ namespace SE::Core
 
         UIImageToggleButton( std::function<bool( bool )> aOnClick );
 
-        void OnChange( std::function<bool( bool )> aOnClick );
+        void OnClick( std::function<bool( bool )> aOnClick );
+        void OnChanged( std::function<void()> aOnChanged );
 
         bool IsActive();
         void SetActive( bool aValue );
@@ -21,7 +22,8 @@ namespace SE::Core
         void SetInactiveImage( UIBaseImage *aImage );
 
       private:
-        std::function<bool( bool )> mOnChange;
+        std::function<bool( bool )> mOnClicked;
+        std::function<void()>       mOnChanged;
 
         bool mActivated = false;
 
@@ -42,9 +44,13 @@ namespace SE::Core
         void *mOnChangeDelegate       = nullptr;
         int   mOnChangeDelegateHandle = -1;
 
+        void *mOnClickDelegate       = nullptr;
+        int   mOnClickDelegateHandle = -1;
+
       public:
         static void *UIImageToggleButton_Create();
         static void  UIImageToggleButton_Destroy( void *aInstance );
+        static void  UIImageToggleButton_OnClicked( void *aInstance, void *aHandler );
         static void  UIImageToggleButton_OnChanged( void *aInstance, void *aHandler );
         static bool  UIImageToggleButton_IsActive( void *aInstance );
         static void  UIImageToggleButton_SetActive( void *aInstance, bool aValue );
