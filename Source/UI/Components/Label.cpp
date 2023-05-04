@@ -66,10 +66,10 @@ namespace SE::Core
         lInstance->SetText( lString );
     }
 
-    void UILabel::UILabel_SetTextColor( void *aInstance, math::vec4 *aTextColor )
+    void UILabel::UILabel_SetTextColor( void *aInstance, math::vec4 aTextColor )
     {
         auto lInstance = static_cast<UILabel *>( aInstance );
 
-        lInstance->SetTextColor( *aTextColor );
+        lInstance->SetTextColor( aTextColor );
     }
 } // namespace SE::Core

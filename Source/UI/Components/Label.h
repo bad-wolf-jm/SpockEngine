@@ -30,6 +30,6 @@ namespace SE::Core
         static void *UILabel_CreateWithText( void *aText );
         static void  UILabel_Destroy( void *aInstance );
         static void  UILabel_SetText( void *aInstance, void *aText );
-        static void  UILabel_SetTextColor( void *aInstance, math::vec4 *aTextColor );
+        static void  UILabel_SetTextColor( void *aInstance, math::vec4 aTextColor );
     };
 } // namespace SE::Core
