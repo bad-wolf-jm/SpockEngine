@@ -45,6 +45,8 @@ namespace SE::Core
         float mSize2       = 100.0f;
         float mItemSpacing = 2.0f;
 
+        ImVec2 mCurrentSize{};
+
         eBoxLayoutOrientation mOrientation;
 
       protected:

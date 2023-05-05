@@ -70,12 +70,23 @@ namespace SE::Core
         auto lSize = aSize - GetContentPadding();
         auto lPosition = aPosition + GetContentOffset();
 
+        if (mSizeSet && ((lSize.x != mCurrentSize.x) || (lSize.y != mCurrentSize.y)))
+        {
+            if( mOrientation == eBoxLayoutOrientation::VERTICAL )
+                mSize2 = lSize.x - mSize1 - mItemSpacing;
+            else
+                mSize2 = lSize.y - mSize1 - mItemSpacing;
+
+            mCurrentSize = lSize;
+        }
+
         if( !mSizeSet )
         {
             if( mOrientation == eBoxLayoutOrientation::VERTICAL )
                 mSize1 = mSize2 = ( lSize.x - mItemSpacing ) * 0.5f;
             else
                 mSize1 = mSize2 = ( lSize.y - mItemSpacing ) * 0.5f;
+
             mSizeSet = true;
         }
 
