@@ -21,6 +21,7 @@ namespace SE::Core
         SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( mFont );
         auto lTextSize = ImGui::CalcTextSize( mText.c_str() );
         SE::Core::Engine::GetInstance()->UIContext()->PopFont();
+        
         return lTextSize;
     }
 

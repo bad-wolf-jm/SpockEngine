@@ -28,6 +28,7 @@ namespace SE::Core
     void UIComponent::SetBackgroundColor( math::vec4 aColor ) { mBackgroundColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
 
     void UIComponent::SetFont( FontFamilyFlags aFont ) { mFont = aFont; }
+    void UIComponent::SetTooltip(UIComponent* aToolTip) { mTooltip = aToolTip; }
 
     ImVec2 UIComponent::RequiredSize()
     {
@@ -95,6 +96,13 @@ namespace SE::Core
         ImVec2 lContentPosition = aPosition + GetContentOffset();
 
         DrawContent( lContentPosition, lContentSize );
+        if( ImGui::IsItemHovered() && (mTooltip != nullptr))
+        {
+            ImGui::BeginTooltip();
+            auto x = mTooltip->RequiredSize();
+            mTooltip->Update(ImVec2{}, mTooltip->RequiredSize());
+            ImGui::EndTooltip();
+        }
 
         PopStyles();
         SE::Core::Engine::GetInstance()->UIContext()->PopFont();
@@ -126,7 +134,6 @@ namespace SE::Core
 
         lSelf->mAllowDragDrop = aAllowDragDrop;
     }
-
 
     void UIComponent::UIComponent_SetPaddingAll( void *aSelf, float aPaddingAll )
     {
@@ -172,11 +179,11 @@ namespace SE::Core
         lSelf->SetVerticalAlignment( aAlignment );
     }
 
-    void UIComponent::UIComponent_SetBackgroundColor( void *aSelf, math::vec4 *aColor )
+    void UIComponent::UIComponent_SetBackgroundColor( void *aSelf, math::vec4 aColor )
     {
         auto lSelf = static_cast<UIComponent *>( aSelf );
 
-        lSelf->SetBackgroundColor( *aColor );
+        lSelf->SetBackgroundColor( aColor );
     }
 
     void UIComponent::UIComponent_SetFont( void *aSelf, FontFamilyFlags aFont )
@@ -184,6 +191,14 @@ namespace SE::Core
         auto lSelf = static_cast<UIComponent *>( aSelf );
 
         lSelf->SetFont( aFont );
+    }
+
+    void UIComponent::UIComponent_SetTooltip( void *aSelf, void *aTooltip )
+    {
+        auto lSelf = static_cast<UIComponent *>( aSelf );
+        auto lTooltip = static_cast<UIComponent *>( aTooltip );
+
+        lSelf->SetTooltip( lTooltip );
     }
 
 } // namespace SE::Core

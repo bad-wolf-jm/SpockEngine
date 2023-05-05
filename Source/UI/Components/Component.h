@@ -48,12 +48,16 @@ namespace SE::Core
 
         void SetFont(FontFamilyFlags aFont);
 
+        void SetTooltip(UIComponent* aToolTip);
+
       protected:
         math::vec4 mPadding{};
         ImVec4     mBackgroundColor{};
 
         eHorizontalAlignment mHAlign = eHorizontalAlignment::CENTER;
         eVerticalAlignment   mVAlign = eVerticalAlignment::CENTER;
+
+        UIComponent* mTooltip = nullptr;
 
       protected:
         virtual void PushStyles() = 0;
@@ -83,7 +87,8 @@ namespace SE::Core
         static void UIComponent_SetAlignment( void *aSelf, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment );
         static void UIComponent_SetHorizontalAlignment( void *aSelf, eHorizontalAlignment aAlignment );
         static void UIComponent_SetVerticalAlignment( void *aSelf, eVerticalAlignment aAlignment );
-        static void UIComponent_SetBackgroundColor( void *aSelf, math::vec4 *aColor );
+        static void UIComponent_SetBackgroundColor( void *aSelf, math::vec4 aColor );
         static void UIComponent_SetFont( void *aSelf, FontFamilyFlags aFont );
+        static void UIComponent_SetTooltip( void *aSelf, void *aTooltip );
     };
 } // namespace SE::Core

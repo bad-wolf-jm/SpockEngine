@@ -45,6 +45,9 @@ namespace SpockEngine
             set { mAllowDragDrop = value; UIComponent_SetAllowDragDrop(mInstance, value); }
         }
 
+        private UIComponent mTooltip;
+        public UIComponent Tooltip { set { mTooltip = value; UIComponent_SetTooltip(mInstance, mTooltip.Instance); } }
+
         public void SetPadding(float aPaddingAll)
         {
             UIComponent_SetPaddingAll(mInstance, aPaddingAll);
@@ -116,5 +119,8 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIComponent_SetFont(ulong aSelf, eFontFamily aFont);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIComponent_SetTooltip(ulong aSelf, ulong aTooltip);
     }
 }
