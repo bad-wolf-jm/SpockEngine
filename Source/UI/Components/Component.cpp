@@ -99,7 +99,6 @@ namespace SE::Core
         if( ImGui::IsItemHovered() && (mTooltip != nullptr))
         {
             ImGui::BeginTooltip();
-            auto x = mTooltip->RequiredSize();
             mTooltip->Update(ImVec2{}, mTooltip->RequiredSize());
             ImGui::EndTooltip();
         }

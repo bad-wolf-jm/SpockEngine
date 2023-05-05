@@ -15,7 +15,7 @@ namespace SE::Core
         auto lSelf = static_cast<sStringColumn *>( aSelf );
 
         lSelf->mToolTip.clear();
-        for( auto const &x : DotNetRuntime::AsVector<UIComponent*>( static_cast<MonoObject *>( aTooptip ) ) )
+        for( auto const &x : DotNetRuntime::AsVector<UIComponent *>( static_cast<MonoObject *>( aTooptip ) ) )
             lSelf->mToolTip.push_back( x );
     }
 
@@ -113,7 +113,17 @@ namespace SE::Core
                             ImGui::TableSetBgColor( ImGuiTableBgTarget_CellBg, lColumnData->mBackgroundColor[lRow] );
                         auto lPos = ImGui::GetCursorPos();
                         ImGui::Dummy( ImVec2{ lWidth, mRowHeight } );
-                        if( ImGui::IsItemHovered() ) mHoveredRow = lRow;
+                        if( ImGui::IsItemHovered() )
+                        {
+                            mHoveredRow = lRow;
+                            
+                            if( lColumnData->mToolTip.size() > 0 )
+                            {
+                                ImGui::BeginTooltip();
+                                mTooltip->Update( ImVec2{}, mTooltip->RequiredSize() );
+                                ImGui::EndTooltip();
+                            }
+                        }
                         if( ImGui::IsItemClicked() ) mSelectedRow = lRow;
                         ImGui::SetCursorPos( lPos );
                         lColumnData->Render( lRow, ImVec2{ lWidth, mRowHeight } );
