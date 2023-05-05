@@ -1,7 +1,7 @@
 #pragma once
 
-#include <optional>
 #include "Component.h"
+#include <optional>
 
 namespace SE::Core
 {
@@ -10,8 +10,9 @@ namespace SE::Core
         std::string mHeader;
         float       mInitialSize = 10.0f;
 
-        std::vector<uint32_t> mBackgroundColor;
-        std::vector<uint32_t> mForegroundColor;
+        std::vector<uint32_t>      mBackgroundColor;
+        std::vector<uint32_t>      mForegroundColor;
+        std::vector<UIComponent *> mToolTip;
 
         sTableColumn() = default;
         sTableColumn( std::string aHeader, float aInitialSize );
@@ -21,6 +22,10 @@ namespace SE::Core
         virtual uint32_t Size()                               = 0;
         virtual void     Render( int aRow, ImVec2 aCellSize ) = 0;
         void             Clear();
+
+        static void UITableColumn_SetTooltip( void *aSelf, void *aTooptip );
+        static void UITableColumn_SetForegroundColor( void *aSelf, void *aForegroundColor );
+        static void UITableColumn_SetBackgroundColor( void *aSelf, void *aBackroundColor );
     };
 
     struct sFloat64Column : public sTableColumn
@@ -44,9 +49,6 @@ namespace SE::Core
         static void  UIFloat64Column_Destroy( void *aSelf );
         static void  UIFloat64Column_Clear( void *aSelf );
         static void  UIFloat64Column_SetData( void *aSelf, void *aValue );
-        static void  UIFloat64Column_SetDataWithForegroundColor( void *aSelf, void *aValue, void *aForegroundColor );
-        static void  UIFloat64Column_SetDataWithForegroundAndBackgroundColor( void *aSelf, void *aValue, void *aForegroundColor,
-                                                                              void *aBackroundColor );
     };
 
     struct sUint32Column : public sTableColumn
@@ -67,9 +69,6 @@ namespace SE::Core
         static void  UIUint32Column_Destroy( void *aSelf );
         static void  UIUint32Column_Clear( void *aSelf );
         static void  UIUint32Column_SetData( void *aSelf, void *aValue );
-        static void  UIUint32Column_SetDataWithForegroundColor( void *aSelf, void *aValue, void *aForegroundColor );
-        static void  UIUint32Column_SetDataWithForegroundAndBackgroundColor( void *aSelf, void *aValue, void *aForegroundColor,
-                                                                             void *aBackroundColor );
     };
 
     struct sStringColumn : public sTableColumn
@@ -90,9 +89,6 @@ namespace SE::Core
         static void  UIStringColumn_Destroy( void *aSelf );
         static void  UIStringColumn_Clear( void *aSelf );
         static void  UIStringColumn_SetData( void *aSelf, void *aValue );
-        static void  UIStringColumn_SetDataWithForegroundColor( void *aSelf, void *aValue, void *aForegroundColor );
-        static void  UIStringColumn_SetDataWithForegroundAndBackgroundColor( void *aSelf, void *aValue, void *aForegroundColor,
-                                                                             void *aBackroundColor );
     };
 
     class UITable : public UIComponent
@@ -100,15 +96,13 @@ namespace SE::Core
       public:
         UITable() = default;
 
-        // UITable( std::string const &aText );
-
         void AddColumn( Ref<sTableColumn> aColumn );
         void AddColumn( sTableColumn *aColumn );
         void SetRowHeight( float aRowHeight );
 
         void OnRowClicked( std::function<void( uint32_t )> const &aOnRowClicked );
 
-        std::vector<uint32_t> mRowBackgroundColor;
+        std::vector<uint32_t>           mRowBackgroundColor;
         std::optional<std::vector<int>> mDisplayedRowIndices;
 
       protected:

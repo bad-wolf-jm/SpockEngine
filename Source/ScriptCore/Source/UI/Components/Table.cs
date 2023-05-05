@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
@@ -13,6 +14,52 @@ namespace SpockEngine
 
         public UITableColumn() { mInstance = 0; }
         public UITableColumn(ulong aInstance) { mInstance = aInstance; }
+
+        private void SetTooltip(ulong[] aTooltips)
+        {
+            UITableColumn_SetTooltip(mInstance, aTooltips);
+        }
+
+        public void SetTooltip(UIComponent[] aTooltips)
+        {
+            var lElements = aTooltips.Select(i => i.Instance).ToArray();
+            SetTooltip(lElements);
+        }
+
+        public void SetTooltip(List<UIComponent> aTooltips)
+        {
+            var lElements = aTooltips.Select(i => i.Instance).ToArray();
+            SetTooltip(lElements);
+        }
+
+        public void SetBackgroundColor(Math.vec4[] aBackgroundColor)
+        {
+            UITableColumn_SetBackgroundColor(mInstance, aBackgroundColor);
+        }
+
+        public void SetBackgroundColor(List<Math.vec4> aBackroundColor)
+        {
+            SetBackgroundColor(aBackroundColor.ToArray());
+        }
+
+        public void SetForegroundColor(Math.vec4[] aForegroundColor)
+        {
+            UITableColumn_SetForegroundColor(mInstance, aForegroundColor);
+        }
+
+        public void SetForegroundColor(List<Math.vec4> aForegroundColor)
+        {
+            SetForegroundColor(aForegroundColor.ToArray());
+        }
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UITableColumn_SetTooltip(ulong aInstance, ulong[] aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UITableColumn_SetBackgroundColor(ulong aInstance, Math.vec4[] aForegroundColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UITableColumn_SetForegroundColor(ulong aInstance, Math.vec4[] aForegroundColor);
     }
 
     public class UIFloat64Column : UITableColumn
@@ -40,22 +87,28 @@ namespace SpockEngine
 
         public void SetData(double[] aValue, Math.vec4[] aForegroundColor)
         {
-            UIFloat64Column_SetDataWithForegroundColor(mInstance, aValue, aForegroundColor);
+            SetData(aValue);
+            SetForegroundColor(aForegroundColor);
         }
 
         public void SetData(List<double> aValue, List<Math.vec4> aForegroundColor)
         {
-            SetData(aValue.ToArray(), aForegroundColor.ToArray());
+            SetData(aValue);
+            SetForegroundColor(aForegroundColor);
         }
 
         public void SetData(double[] aValue, Math.vec4[] aForegroundColor, Math.vec4[] aBackroundColor)
         {
-            UIFloat64Column_SetDataWithForegroundAndBackgroundColor(mInstance, aValue, aForegroundColor, aBackroundColor);
+            SetData(aValue);
+            SetForegroundColor(aForegroundColor);
+            SetBackgroundColor(aBackroundColor);
         }
 
         public void SetData(List<double> aValue, List<Math.vec4> aForegroundColor, List<Math.vec4> aBackroundColor)
         {
-            SetData(aValue.ToArray(), aForegroundColor.ToArray(), aBackroundColor.ToArray());
+            SetData(aValue);
+            SetForegroundColor(aForegroundColor);
+            SetBackgroundColor(aBackroundColor);
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
@@ -72,12 +125,6 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIFloat64Column_SetData(ulong aInstance, double[] aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIFloat64Column_SetDataWithForegroundColor(ulong aInstance, double[] aValue, Math.vec4[] aForegroundColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIFloat64Column_SetDataWithForegroundAndBackgroundColor(ulong aInstance, double[] aValue, Math.vec4[] aForegroundColor, Math.vec4[] aBackroundColor);
     }
 
     public class UIUint32Column : UITableColumn
@@ -104,21 +151,27 @@ namespace SpockEngine
 
         public void SetData(uint[] aValue, Math.vec4[] aForegroundColor)
         {
-            UIUint32Column_SetDataWithForegroundColor(mInstance, aValue, aForegroundColor);
+            SetData(aValue);
+            SetForegroundColor(aForegroundColor);
         }
         public void SetData(List<uint> aValue, List<Math.vec4> aForegroundColor)
         {
-            SetData(aValue.ToArray(), aForegroundColor.ToArray());
+            SetData(aValue);
+            SetForegroundColor(aForegroundColor);
         }
 
         public void SetData(uint[] aValue, Math.vec4[] aForegroundColor, Math.vec4[] aBackroundColor)
         {
-            UIUint32Column_SetDataWithForegroundAndBackgroundColor(mInstance, aValue, aForegroundColor, aBackroundColor);
+            SetData(aValue);
+            SetForegroundColor(aForegroundColor);
+            SetBackgroundColor(aBackroundColor);
         }
 
         public void SetData(List<uint> aValue, List<Math.vec4> aForegroundColor, List<Math.vec4> aBackroundColor)
         {
-            SetData(aValue.ToArray(), aForegroundColor.ToArray(), aBackroundColor.ToArray());
+            SetData(aValue);
+            SetForegroundColor(aForegroundColor);
+            SetBackgroundColor(aBackroundColor);
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
@@ -135,12 +188,6 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIUint32Column_SetData(ulong aInstance, uint[] aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIUint32Column_SetDataWithForegroundColor(ulong aInstance, uint[] aValue, Math.vec4[] aForegroundColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIUint32Column_SetDataWithForegroundAndBackgroundColor(ulong aInstance, uint[] aValue, Math.vec4[] aForegroundColor, Math.vec4[] aBackroundColor);
     }
 
     public class UIStringColumn : UITableColumn
@@ -168,24 +215,29 @@ namespace SpockEngine
 
         public void SetData(string[] aValue, Math.vec4[] aForegroundColor)
         {
-            UIStringColumn_SetDataWithForegroundColor(mInstance, aValue, aForegroundColor);
+            SetData(aValue);
+            SetForegroundColor(aForegroundColor);
         }
 
         public void SetData(List<string> aValue, List<Math.vec4> aForegroundColor)
         {
-            SetData(aValue.ToArray(), aForegroundColor.ToArray());
+            SetData(aValue);
+            SetForegroundColor(aForegroundColor);
         }
 
         public void SetData(string[] aValue, Math.vec4[] aForegroundColor, Math.vec4[] aBackroundColor)
         {
-            UIStringColumn_SetDataWithForegroundAndBackgroundColor(mInstance, aValue, aForegroundColor, aBackroundColor);
+            SetData(aValue);
+            SetForegroundColor(aForegroundColor);
+            SetBackgroundColor(aBackroundColor);
         }
 
         public void SetData(List<string> aValue, List<Math.vec4> aForegroundColor, List<Math.vec4> aBackroundColor)
         {
-            SetData(aValue.ToArray(), aForegroundColor.ToArray(), aBackroundColor.ToArray());
+            SetData(aValue);
+            SetForegroundColor(aForegroundColor);
+            SetBackgroundColor(aBackroundColor);
         }
-
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIStringColumn_Create();
@@ -201,13 +253,6 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIStringColumn_SetData(ulong aInstance, string[] aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIStringColumn_SetDataWithForegroundColor(ulong aInstance, string[] aValue, Math.vec4[] aForegroundColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIStringColumn_SetDataWithForegroundAndBackgroundColor(ulong aInstance, string[] aValue, Math.vec4[] aForegroundColor, Math.vec4[] aBackroundColor);
-
     }
 
     public class UITable : UIComponent

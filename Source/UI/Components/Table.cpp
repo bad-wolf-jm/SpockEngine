@@ -10,6 +10,33 @@ namespace SE::Core
     {
     }
 
+    void sTableColumn::UITableColumn_SetTooltip( void *aSelf, void *aTooptip )
+    {
+        auto lSelf = static_cast<sStringColumn *>( aSelf );
+
+        lSelf->mToolTip.clear();
+        for( auto const &x : DotNetRuntime::AsVector<UIComponent*>( static_cast<MonoObject *>( aTooptip ) ) )
+            lSelf->mToolTip.push_back( x );
+    }
+
+    void sTableColumn::UITableColumn_SetForegroundColor( void *aSelf, void *aForegroundColor )
+    {
+        auto lSelf = static_cast<sStringColumn *>( aSelf );
+
+        lSelf->mForegroundColor.clear();
+        for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
+            lSelf->mForegroundColor.push_back( ImColor( x ) );
+    }
+
+    void sTableColumn::UITableColumn_SetBackgroundColor( void *aSelf, void *aBackroundColor )
+    {
+        auto lSelf = static_cast<sStringColumn *>( aSelf );
+
+        lSelf->mBackgroundColor.clear();
+        for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aBackroundColor ) ) )
+            lSelf->mBackgroundColor.push_back( ImColor( x ) );
+    }
+
     void sTableColumn::Clear()
     {
         mForegroundColor.clear();
@@ -244,32 +271,6 @@ namespace SE::Core
         lSelf->mData = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
     }
 
-    void sFloat64Column::UIFloat64Column_SetDataWithForegroundColor( void *aSelf, void *aValue, void *aForegroundColor )
-    {
-        auto lSelf = static_cast<sFloat64Column *>( aSelf );
-
-        lSelf->mData = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
-        lSelf->mForegroundColor.clear();
-        for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
-            lSelf->mForegroundColor.push_back( ImColor( x ) );
-    }
-
-    void sFloat64Column::UIFloat64Column_SetDataWithForegroundAndBackgroundColor( void *aSelf, void *aValue, void *aForegroundColor,
-                                                                                  void *aBackroundColor )
-    {
-        auto lSelf = static_cast<sFloat64Column *>( aSelf );
-
-        lSelf->mData = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
-
-        lSelf->mForegroundColor.clear();
-        for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
-            lSelf->mForegroundColor.push_back( ImColor( x ) );
-
-        lSelf->mBackgroundColor.clear();
-        for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aBackroundColor ) ) )
-            lSelf->mBackgroundColor.push_back( ImColor( x ) );
-    }
-
     sUint32Column::sUint32Column( std::string aHeader, float aInitialSize )
         : sTableColumn{ aHeader, aInitialSize }
     {
@@ -331,32 +332,6 @@ namespace SE::Core
         auto lSelf = static_cast<sUint32Column *>( aSelf );
 
         lSelf->mData = DotNetRuntime::AsVector<uint32_t>( static_cast<MonoObject *>( aValue ) );
-    }
-
-    void sUint32Column::UIUint32Column_SetDataWithForegroundColor( void *aSelf, void *aValue, void *aForegroundColor )
-    {
-        auto lSelf = static_cast<sUint32Column *>( aSelf );
-
-        lSelf->mData = DotNetRuntime::AsVector<uint32_t>( static_cast<MonoObject *>( aValue ) );
-        lSelf->mForegroundColor.clear();
-        for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
-            lSelf->mForegroundColor.push_back( ImColor( x ) );
-    }
-
-    void sUint32Column::UIUint32Column_SetDataWithForegroundAndBackgroundColor( void *aSelf, void *aValue, void *aForegroundColor,
-                                                                                void *aBackroundColor )
-    {
-        auto lSelf = static_cast<sUint32Column *>( aSelf );
-
-        lSelf->mData = DotNetRuntime::AsVector<uint32_t>( static_cast<MonoObject *>( aValue ) );
-
-        lSelf->mForegroundColor.clear();
-        for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
-            lSelf->mForegroundColor.push_back( ImColor( x ) );
-
-        lSelf->mBackgroundColor.clear();
-        for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aBackroundColor ) ) )
-            lSelf->mBackgroundColor.push_back( ImColor( x ) );
     }
 
     sStringColumn::sStringColumn( std::string aHeader, float aInitialSize )
@@ -422,36 +397,4 @@ namespace SE::Core
         for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aValue ) ) )
             lSelf->mData.push_back( DotNetRuntime::NewString( x ) );
     }
-
-    void sStringColumn::UIStringColumn_SetDataWithForegroundColor( void *aSelf, void *aValue, void *aForegroundColor )
-    {
-        auto lSelf = static_cast<sStringColumn *>( aSelf );
-
-        lSelf->mData.clear();
-        for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aValue ) ) )
-            lSelf->mData.push_back( DotNetRuntime::NewString( x ) );
-
-        lSelf->mForegroundColor.clear();
-        for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
-            lSelf->mForegroundColor.push_back( ImColor( x ) );
-    }
-
-    void sStringColumn::UIStringColumn_SetDataWithForegroundAndBackgroundColor( void *aSelf, void *aValue, void *aForegroundColor,
-                                                                                void *aBackroundColor )
-    {
-        auto lSelf = static_cast<sStringColumn *>( aSelf );
-
-        lSelf->mData.clear();
-        for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aValue ) ) )
-            lSelf->mData.push_back( DotNetRuntime::NewString( x ) );
-
-        lSelf->mForegroundColor.clear();
-        for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
-            lSelf->mForegroundColor.push_back( ImColor( x ) );
-
-        lSelf->mBackgroundColor.clear();
-        for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aBackroundColor ) ) )
-            lSelf->mBackgroundColor.push_back( ImColor( x ) );
-    }
-
 } // namespace SE::Core
