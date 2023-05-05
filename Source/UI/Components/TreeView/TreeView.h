@@ -1,6 +1,6 @@
 #pragma once
 
-#include "UI/Components/LComponent.h"
+#include "UI/Components/Component.h"
 #include "UI/Components/Label.h"
 #include "UI/Components/Image.h"
 
@@ -8,22 +8,19 @@
 
 namespace SE::Core
 {
+    class UITreeView;
+
     class UITreeViewNode : public UIComponent
     {
       public:
         UITreeViewNode() = default;
-        UITreeViewNode(std::string const& aText) = default;
+        UITreeViewNode(UITreeView* aTreeView);
 
         void SetIcon(UIImage* aImage);
-
-        void SetIndent(float aIndent);
-        float GetIndent();
-
         void SetText( std::string const &aText );
         void SetTextColor( math::vec4 aColor );
 
-        void SetActions(std::vector<UIComponent*> aActions);
-        void ClearActions();
+        UITreeViewNode* Add();
 
       protected:
         ImGuiID mID;
@@ -34,6 +31,8 @@ namespace SE::Core
         UILabel* mNode;
         UIBoxLayout* mActions;
         UIBoxLayout* mNodeLayout;
+
+        UITreeView* mTreeView;
 
         std::vector<UITreeViewNode*> mChildren;
 
@@ -50,22 +49,42 @@ namespace SE::Core
         bool IsOpen();
         bool IsLeaf();
         bool RenderNode();
-        void RenderArrow( ImDrawList *aDrawList, ImVec2 aPosition, ImU32 aColor, ImGuiDir aDirection, float aScale )
+        void RenderArrow( ImDrawList *aDrawList, ImVec2 aPosition, ImU32 aColor, ImGuiDir aDirection, float aScale );
 
       public:
         static void *UITreeViewNode_Create();
-        static void *UITreeViewNode_CreateWithText( void *aText );
         static void  UITreeViewNode_Destroy( void *aInstance );        
+        static void  UITreeViewNode_SetIcon( void *aInstance, void *aIcon );
         static void  UITreeViewNode_SetText( void *aInstance, void *aText );
         static void  UITreeViewNode_SetTextColor( void *aInstance, math::vec4 aTextColor );
-        static void  UITreeViewNode_SetIcon( void *aInstance, void *aIcon );
-        static void  UITreeViewNode_SetActions( void *aInstance, void *aActions );
-        static void  UITreeViewNode_ClearActions( void *aInstance, void *aActions );
-        static void  UITreeViewNode_SetIndent(void *aInstance, float aIndent);
-        static float  UITreeViewNode_GetIndent(void *aInstance );
+        static void *UITreeViewNode_Add( void *aInstance );
+    };
 
+    class UITreeView : public UIComponent
+    {
+        public:
+        UITreeView();
 
+        void SetIndent(float aIndent);
+        UITreeViewNode* Add();
 
+        protected:
+            float mIndent = 15.0f;
+            UITreeViewNode* mRoot; 
 
+      protected:
+        void PushStyles();
+        void PopStyles();
+
+        ImVec2 RequiredSize();
+        void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+
+      public:
+        static void *UITreeView_Create();
+        static void  UITreeView_Destroy( void *aInstance );
+        static void  UITreeView_SetIndent( void *aInstance, float aIndent );
+        static void  *UITreeView_Add( void *aInstance );
+
+        friend class UITreeViewNode;
     };
 } // namespace SE::Core

@@ -8,16 +8,30 @@
 
 namespace SE::Core
 {
-    UITreeViewNode::UITreeViewNode( std::string const &aText )
-        : mText{ aText }
+    UITreeViewNode::UITreeViewNode( UITreeView *aTreeView )
+        : mTreeView{ aTreeView }
     {
+        mNode = new UILabel( "" );
+        mNode->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+
+        mNodeLayout = new UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
+        mNodeLayout->Add( mNode, true, true );
     }
 
     void UITreeViewNode::PushStyles() {}
     void UITreeViewNode::PopStyles() {}
 
-    void UITreeViewNode::SetText( std::string const &aText ) { mText = aText; }
-    void UITreeViewNode::SetTextColor( math::vec4 aColor ) { mTextColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
+    UITreeViewNode *UITreeViewNode::Add()
+    {
+        auto lNewChild = new UITreeViewNode( mTreeView );
+        mChildren.push_back( lNewChild );
+
+        return lNewChild;
+    }
+
+    void UITreeViewNode::SetIcon( UIImage *aIcon ) { mIcon = aIcon; }
+    void UITreeViewNode::SetText( std::string const &aText ) { mNode->SetText( aText ); }
+    void UITreeViewNode::SetTextColor( math::vec4 aColor ) { mNode->SetTextColor( aColor ); }
 
     ImVec2 UITreeViewNode::RequiredSize() { return mNodeLayout->RequiredSize(); }
 
@@ -26,7 +40,7 @@ namespace SE::Core
         ImGuiContext &lImGuiContext = *GImGui;
         lImGuiContext.CurrentWindow->DC.TreeDepth++;
 
-        ImGui::Indent( mIndent );
+        ImGui::Indent( mTreeView->mIndent );
         ImGui::PushOverrideID( mID );
     }
 
@@ -35,7 +49,7 @@ namespace SE::Core
         ImGuiContext &lImGuiContext = *GImGui;
         ImGuiWindow  *lWindow       = GImGui->CurrentWindow;
 
-        ImGui::Unindent( mIndent );
+        ImGui::Unindent( mTreeView->mIndent );
 
         lWindow->DC.TreeDepth--;
         ImU32 lTreeDepthMask = ( 1 << lWindow->DC.TreeDepth );
@@ -111,8 +125,10 @@ namespace SE::Core
                      ? style.FramePadding
                      : ImVec2( style.FramePadding.x, ImMin( lWindow->DC.CurrLineTextBaseOffset, style.FramePadding.y ) );
 
-        if( !aLabelEnd ) aLabelEnd = ImGui::FindRenderedTextEnd( aLabel );
-        const ImVec2 lLabelSize = ImGui::CalcTextSize( aLabel, aLabelEnd, false );
+        // if( !aLabelEnd ) aLabelEnd = ImGui::FindRenderedTextEnd( aLabel );
+        const ImVec2 lLabelSize = mNode->RequiredSize();
+
+        // mGui::CalcTextSize( aLabel, aLabelEnd, false );
 
         // We vertically grow up to current line height up the typical widget height.
         const float lFrameHeight = ImMax( ImMin( lWindow->DC.CurrLineSize.y, lImGuiContext.FontSize + style.FramePadding.y * 2 ),
@@ -140,7 +156,7 @@ namespace SE::Core
         // For this purpose we essentially compare if lImGuiContext.NavIdIsAlive went from 0 to 1 between TreeNode() and TreePop().
         // This is currently only support 32 level deep and we are fine with (1 << Depth) overflowing into a zero.
         const bool lNodeIsLeaf = ( mFlags & ImGuiTreeNodeFlags_Leaf ) != 0;
-        bool       lNodeIsOpen = TreeNodeBehaviorIsOpen( mID, mFlags );
+        bool       lNodeIsOpen = IsOpen();
         if( lNodeIsOpen && !lImGuiContext.NavIdIsAlive && ( mFlags & ImGuiTreeNodeFlags_NavLeftJumpsBackHere ) &&
             !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) )
             lWindow->DC.TreeJumpToParentOnPopMask |= ( 1 << lWindow->DC.TreeDepth );
@@ -151,7 +167,7 @@ namespace SE::Core
 
         if( !lItemAdd )
         {
-            if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) ) TreePushOverrideID( mID );
+            if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) ) TreePushOverrideID();
 
             return lNodeIsOpen;
         }
@@ -261,7 +277,7 @@ namespace SE::Core
         ImVec2 lSize{ lWindow->WorkRect.Max.x - lWindow->WorkRect.Min.x, lFrameHeight };
         mNodeLayout->Update( lTextPosition, lSize );
 
-        if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) ) TreePushOverrideID( mID );
+        if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) ) TreePushOverrideID();
 
         return lNodeIsOpen;
     }
@@ -297,12 +313,12 @@ namespace SE::Core
 
     void UITreeViewNode::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        bool lTextColorSet =
-            ( ( mTextColor.x != 0.0f ) || ( mTextColor.y != 0.0f ) || ( mTextColor.z != 0.0f ) || ( mTextColor.w != 0.0f ) );
-        if( lTextColorSet ) ImGui::PushStyleColor( ImGuiCol_Text, mTextColor );
+        // bool lTextColorSet =
+        //     ( ( mTextColor.x != 0.0f ) || ( mTextColor.y != 0.0f ) || ( mTextColor.z != 0.0f ) || ( mTextColor.w != 0.0f ) );
+        // if( lTextColorSet ) ImGui::PushStyleColor( ImGuiCol_Text, mTextColor );
 
-        auto lTextSize     = ImGui::CalcTextSize( mText.c_str() );
-        auto lTextPosition = GetContentAlignedposition( mHAlign, mVAlign, aPosition, lTextSize, aSize );
+        // auto lTextSize     = ImGui::CalcTextSize( mText.c_str() );
+        // auto lTextPosition = GetContentAlignedposition( mHAlign, mVAlign, aPosition, lTextSize, aSize );
 
         ImGui::SetCursorPos( aPosition );
         if( RenderNode() )
@@ -311,20 +327,12 @@ namespace SE::Core
 
             TreePop();
         }
-        if( lTextColorSet ) ImGui::PopStyleColor();
+        // if( lTextColorSet ) ImGui::PopStyleColor();
     }
 
     void *UITreeViewNode::UITreeViewNode_Create()
     {
         auto lNewLabel = new UITreeViewNode();
-
-        return static_cast<void *>( lNewLabel );
-    }
-
-    void *UITreeViewNode::UITreeViewNode_CreateWithText( void *aText )
-    {
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-        auto lNewLabel = new UITreeViewNode( lString );
 
         return static_cast<void *>( lNewLabel );
     }
@@ -339,10 +347,54 @@ namespace SE::Core
         lInstance->SetText( lString );
     }
 
-    void UITreeViewNode::UITreeViewNode_SetTextColor( void *aInstance, math::vec4 *aTextColor )
+    void UITreeViewNode::UITreeViewNode_SetTextColor( void *aInstance, math::vec4 aTextColor )
     {
         auto lInstance = static_cast<UITreeViewNode *>( aInstance );
 
-        lInstance->SetTextColor( *aTextColor );
+        lInstance->SetTextColor( aTextColor );
     }
+
+    void UITreeViewNode::UITreeViewNode_SetIcon( void *aInstance, void *aIcon )
+    {
+        auto lInstance = static_cast<UITreeViewNode *>( aInstance );
+        auto lImage    = static_cast<UIImage *>( aIcon );
+
+        lInstance->SetIcon( lImage );
+    }
+
+    void *UITreeViewNode::UITreeViewNode_Add( void *aInstance )
+    {
+        auto lInstance = static_cast<UITreeViewNode *>( aInstance );
+
+        return static_cast<void *>( lInstance->Add() );
+    }
+
+    UITreeView::UITreeView() { mRoot = new UITreeViewNode( this ); }
+    void            UITreeView::SetIndent( float aIndent ) { mIndent = aIndent; }
+    UITreeViewNode *UITreeView::Add() { return mRoot->Add(); }
+    void            UITreeView::DrawContent( ImVec2 aPosition, ImVec2 aSize ) { mRoot->Update( aPosition, aSize ); }
+
+    void *UITreeView::UITreeView_Create()
+    {
+        auto lNewLabel = new UITreeView();
+
+        return static_cast<void *>( lNewLabel );
+    }
+
+    void UITreeView::UITreeView_Destroy( void *aInstance ) { delete static_cast<UITreeView *>( aInstance ); }
+
+    void UITreeView::UITreeView_SetIndent( void *aInstance, float aIndent )
+    {
+        auto lInstance = static_cast<UITreeView *>( aInstance );
+
+        lInstance->SetIndent( aIndent );
+    }
+
+    void *UITreeView::UITreeView_Add( void *aInstance )
+    {
+        auto lInstance = static_cast<UITreeView *>( aInstance );
+
+        return static_cast<void *>( lInstance->Add() );
+    }
+
 } // namespace SE::Core
