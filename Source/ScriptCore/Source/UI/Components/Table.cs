@@ -15,6 +15,7 @@ namespace SpockEngine
         public UITableColumn() { mInstance = 0; }
         public UITableColumn(ulong aInstance) { mInstance = aInstance; }
 
+        private UIComponent[] mToolTips;
         private void SetTooltip(ulong[] aTooltips)
         {
             UITableColumn_SetTooltip(mInstance, aTooltips);
@@ -22,12 +23,16 @@ namespace SpockEngine
 
         public void SetTooltip(UIComponent[] aTooltips)
         {
+            mToolTips = aTooltips;
+
             var lElements = aTooltips.Select(i => i.Instance).ToArray();
             SetTooltip(lElements);
         }
 
         public void SetTooltip(List<UIComponent> aTooltips)
         {
+            mToolTips = aTooltips.ToArray();
+            
             var lElements = aTooltips.Select(i => i.Instance).ToArray();
             SetTooltip(lElements);
         }

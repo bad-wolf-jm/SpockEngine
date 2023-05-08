@@ -36,6 +36,8 @@ namespace SE::Core
         void Add1( UIComponent *aChild );
         void Add2( UIComponent *aChild );
 
+        ImVec2 RequiredSize();
+        
       protected:
         UIComponent *mChild1;
         UIComponent *mChild2;
@@ -53,7 +55,6 @@ namespace SE::Core
         void PushStyles();
         void PopStyles();
 
-        ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
       public:

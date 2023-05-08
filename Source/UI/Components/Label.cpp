@@ -21,8 +21,8 @@ namespace SE::Core
         SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( mFont );
         auto lTextSize = ImGui::CalcTextSize( mText.c_str() );
         SE::Core::Engine::GetInstance()->UIContext()->PopFont();
-        
-        return lTextSize;
+
+        return lTextSize + UIComponent::RequiredSize();
     }
 
     void UILabel::DrawContent( ImVec2 aPosition, ImVec2 aSize )

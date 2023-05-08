@@ -12,7 +12,7 @@ namespace SE::Core
 
     void sTableColumn::UITableColumn_SetTooltip( void *aSelf, void *aTooptip )
     {
-        auto lSelf = static_cast<sStringColumn *>( aSelf );
+        auto lSelf = static_cast<sTableColumn *>( aSelf );
 
         lSelf->mToolTip.clear();
         for( auto const &x : DotNetRuntime::AsVector<UIComponent *>( static_cast<MonoObject *>( aTooptip ) ) )
@@ -21,7 +21,7 @@ namespace SE::Core
 
     void sTableColumn::UITableColumn_SetForegroundColor( void *aSelf, void *aForegroundColor )
     {
-        auto lSelf = static_cast<sStringColumn *>( aSelf );
+        auto lSelf = static_cast<sTableColumn *>( aSelf );
 
         lSelf->mForegroundColor.clear();
         for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
@@ -30,7 +30,7 @@ namespace SE::Core
 
     void sTableColumn::UITableColumn_SetBackgroundColor( void *aSelf, void *aBackroundColor )
     {
-        auto lSelf = static_cast<sStringColumn *>( aSelf );
+        auto lSelf = static_cast<sTableColumn *>( aSelf );
 
         lSelf->mBackgroundColor.clear();
         for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aBackroundColor ) ) )
@@ -116,11 +116,11 @@ namespace SE::Core
                         if( ImGui::IsItemHovered() )
                         {
                             mHoveredRow = lRow;
-                            
+
                             if( lColumnData->mToolTip.size() > 0 )
                             {
                                 ImGui::BeginTooltip();
-                                mTooltip->Update( ImVec2{}, mTooltip->RequiredSize() );
+                                lColumnData->mToolTip[lRow]->Update( ImVec2{}, lColumnData->mToolTip[lRow]->RequiredSize() );
                                 ImGui::EndTooltip();
                             }
                         }

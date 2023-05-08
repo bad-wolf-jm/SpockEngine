@@ -49,6 +49,8 @@ namespace SE::Core
 
         void Clear();
 
+        ImVec2 RequiredSize();
+        
       protected:
         std::vector<BoxLayoutItem> mChildren;
         eBoxLayoutOrientation      mOrientation;
@@ -58,7 +60,6 @@ namespace SE::Core
         void PushStyles();
         void PopStyles();
 
-        ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
       public:
