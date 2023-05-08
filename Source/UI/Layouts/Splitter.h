@@ -35,6 +35,8 @@ namespace SE::Core
 
         void Add1( UIComponent *aChild );
         void Add2( UIComponent *aChild );
+        
+        ImVec2 RequiredSize();
 
         ImVec2 RequiredSize();
         

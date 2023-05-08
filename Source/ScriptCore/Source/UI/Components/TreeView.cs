@@ -33,9 +33,13 @@ namespace SpockEngine
             UITreeViewNode_SetTextColor(mInstance, aColor);
         }
 
+        List<UITreeViewNode> mChildren = new List<UITreeViewNode>();
         public UITreeViewNode Add()
         {
-            return new UITreeViewNode(UITreeViewNode_Add(mInstance));
+            var lNewChild = new UITreeViewNode(UITreeViewNode_Add(mInstance));
+            mChildren.Add(lNewChild);
+
+            return lNewChild;
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]

@@ -23,7 +23,6 @@ namespace SE::Core
         UITreeViewNode* Add();
 
       protected:
-        ImGuiID mID;
         ImGuiTreeNodeFlags mFlags;
 
         float mIndent = 0.0f;
