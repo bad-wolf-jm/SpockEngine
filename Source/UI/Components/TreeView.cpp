@@ -11,6 +11,7 @@ namespace SE::Core
     UITreeViewNode::UITreeViewNode( UITreeView *aTreeView, UITreeViewNode *aParent )
         : mTreeView{ aTreeView }
         , mParent{ aParent }
+        , mFlags{ 0 }
     {
         mNode = new UILabel( "" );
         mNode->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
@@ -38,11 +39,13 @@ namespace SE::Core
 
     void UITreeViewNode::TreePushOverrideID()
     {
+        ImGuiWindow *lWindow = ImGui::GetCurrentWindow();
+
         ImGuiContext &lImGuiContext = *GImGui;
         lImGuiContext.CurrentWindow->DC.TreeDepth++;
 
         ImGui::Indent( mTreeView->mIndent );
-        ImGui::PushOverrideID( mID );
+        ImGui::PushOverrideID( lWindow->GetID( (void *)this ) );
     }
 
     void UITreeViewNode::TreePop()
@@ -87,16 +90,16 @@ namespace SE::Core
             if( lImGuiContext.NextItemData.OpenCond & ImGuiCond_Always )
             {
                 lNodeIsOpen = lImGuiContext.NextItemData.OpenVal;
-                lWindowStorage->SetInt( mID, lNodeIsOpen );
+                lWindowStorage->SetInt( lWindow->GetID( (void *)this ), lNodeIsOpen );
             }
             else
             {
                 // We treat ImGuiCond_Once and ImGuiCond_FirstUseEver the same because tree node state are not saved persistently.
-                const int lStoredValue = lWindowStorage->GetInt( mID, -1 );
+                const int lStoredValue = lWindowStorage->GetInt( lWindow->GetID( (void *)this ), -1 );
                 if( lStoredValue == -1 )
                 {
                     lNodeIsOpen = lImGuiContext.NextItemData.OpenVal;
-                    lWindowStorage->SetInt( mID, lNodeIsOpen );
+                    lWindowStorage->SetInt( lWindow->GetID( (void *)this ), lNodeIsOpen );
                 }
                 else
                 {
@@ -106,7 +109,8 @@ namespace SE::Core
         }
         else
         {
-            lNodeIsOpen = lWindowStorage->GetInt( mID, ( mFlags & ImGuiTreeNodeFlags_DefaultOpen ) ? 1 : 0 ) != 0;
+            lNodeIsOpen =
+                lWindowStorage->GetInt( lWindow->GetID( (void *)this ), ( mFlags & ImGuiTreeNodeFlags_DefaultOpen ) ? 1 : 0 ) != 0;
         }
 
         return lNodeIsOpen;
@@ -156,19 +160,22 @@ namespace SE::Core
         // Store a flag for the current depth to tell if we will allow closing this node when navigating one of its child.
         // For this purpose we essentially compare if lImGuiContext.NavIdIsAlive went from 0 to 1 between TreeNode() and TreePop().
         // This is currently only support 32 level deep and we are fine with (1 << Depth) overflowing into a zero.
-        const bool lNodeIsLeaf = ( mFlags & ImGuiTreeNodeFlags_Leaf ) != 0;
+        const bool lNodeIsLeaf = IsLeaf();
         bool       lNodeIsOpen = IsOpen();
         if( lNodeIsOpen && !lImGuiContext.NavIdIsAlive && ( mFlags & ImGuiTreeNodeFlags_NavLeftJumpsBackHere ) &&
             !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) )
             lWindow->DC.TreeJumpToParentOnPopMask |= ( 1 << lWindow->DC.TreeDepth );
 
-        bool lItemAdd = ImGui::ItemAdd( lInteractionBoundingBox, mID );
+        bool lItemAdd = ImGui::ItemAdd( lInteractionBoundingBox, lWindow->GetID( (void *)this ) );
         lImGuiContext.LastItemData.StatusFlags |= ImGuiItemStatusFlags_HasDisplayRect;
         lImGuiContext.LastItemData.DisplayRect = lFrameBoundingBox;
 
         if( !lItemAdd )
         {
-            if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) ) TreePushOverrideID();
+            if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) )
+            {
+                TreePushOverrideID();
+            }
 
             return lNodeIsOpen;
         }
@@ -208,14 +215,15 @@ namespace SE::Core
         const bool lWasSelected = lSelected;
 
         bool lIsHovered, lIsHeld;
-        bool lIsPressed = ImGui::ButtonBehavior( lInteractionBoundingBox, mID, &lIsHovered, &lIsHeld, lButtonFlags );
+        bool lIsPressed =
+            ImGui::ButtonBehavior( lInteractionBoundingBox, lWindow->GetID( (void *)this ), &lIsHovered, &lIsHeld, lButtonFlags );
         bool lIsToggled = false;
         if( !lNodeIsLeaf )
         {
-            if( lIsPressed && lImGuiContext.DragDropHoldJustPressedId != mID )
+            if( lIsPressed && lImGuiContext.DragDropHoldJustPressedId != lWindow->GetID( (void *)this ) )
             {
                 if( ( mFlags & ( ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick ) ) == 0 ||
-                    ( lImGuiContext.NavActivateId == mID ) )
+                    ( lImGuiContext.NavActivateId == lWindow->GetID( (void *)this ) ) )
                     lIsToggled = true;
                 if( mFlags & ImGuiTreeNodeFlags_OpenOnArrow )
                     lIsToggled |=
@@ -224,7 +232,7 @@ namespace SE::Core
                 if( ( mFlags & ImGuiTreeNodeFlags_OpenOnDoubleClick ) && lImGuiContext.IO.MouseClickedCount[0] == 2 )
                     lIsToggled = true;
             }
-            else if( lIsPressed && lImGuiContext.DragDropHoldJustPressedId == mID )
+            else if( lIsPressed && lImGuiContext.DragDropHoldJustPressedId == lWindow->GetID( (void *)this ) )
             {
                 IM_ASSERT( lButtonFlags & ImGuiButtonFlags_PressedOnDragDropHold );
                 if( !lNodeIsOpen ) // When using Drag and Drop "hold to open" we keep the node highlighted after opening, but never
@@ -232,12 +240,12 @@ namespace SE::Core
                     lIsToggled = true;
             }
 
-            if( lImGuiContext.NavId == mID && lImGuiContext.NavMoveDir == ImGuiDir_Left && lNodeIsOpen )
+            if( lImGuiContext.NavId == lWindow->GetID( (void *)this ) && lImGuiContext.NavMoveDir == ImGuiDir_Left && lNodeIsOpen )
             {
                 lIsToggled = true;
                 ImGui::NavMoveRequestCancel();
             }
-            if( lImGuiContext.NavId == mID && lImGuiContext.NavMoveDir == ImGuiDir_Right &&
+            if( lImGuiContext.NavId == lWindow->GetID( (void *)this ) && lImGuiContext.NavMoveDir == ImGuiDir_Right &&
                 !lNodeIsOpen ) // If there's something upcoming on the line we may want to give it the priority?
             {
                 lIsToggled = true;
@@ -247,7 +255,7 @@ namespace SE::Core
             if( lIsToggled )
             {
                 lNodeIsOpen = !lNodeIsOpen;
-                lWindow->DC.StateStorage->SetInt( mID, lNodeIsOpen );
+                lWindow->DC.StateStorage->SetInt( lWindow->GetID( (void *)this ), lNodeIsOpen );
                 lImGuiContext.LastItemData.StatusFlags |= ImGuiItemStatusFlags_ToggledOpen;
             }
         }
@@ -269,7 +277,7 @@ namespace SE::Core
                                                                                          : ImGuiCol_Header );
             ImGui::RenderFrame( lFrameBoundingBox.Min, lFrameBoundingBox.Max, lBackgroundColor, false );
         }
-        ImGui::RenderNavHighlight( lFrameBoundingBox, mID, lNavHighlightFlags );
+        ImGui::RenderNavHighlight( lFrameBoundingBox, lWindow->GetID( (void *)this ), lNavHighlightFlags );
         if( !lNodeIsLeaf )
             RenderArrow( lWindow->DrawList,
                          ImVec2( lTextPosition.x - lTextOffsetX + lPadding.x, lTextPosition.y + lImGuiContext.FontSize * 0.16f ),
@@ -315,7 +323,11 @@ namespace SE::Core
     void UITreeViewNode::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
         ImGui::SetCursorPos( aPosition );
-        if( RenderNode() )
+        if( mParent == nullptr )
+        {
+            for( auto lChild : mChildren ) lChild->Update( ImGui::GetCursorPos(), aSize );
+        }
+        else if( RenderNode() )
         {
             for( auto lChild : mChildren ) lChild->Update( ImGui::GetCursorPos(), aSize );
 
@@ -370,7 +382,11 @@ namespace SE::Core
 
     void            UITreeView::SetIndent( float aIndent ) { mIndent = aIndent; }
     UITreeViewNode *UITreeView::Add() { return mRoot->Add(); }
-    void            UITreeView::DrawContent( ImVec2 aPosition, ImVec2 aSize ) { mRoot->Update( aPosition, aSize ); }
+    void            UITreeView::DrawContent( ImVec2 aPosition, ImVec2 aSize )
+    {
+        //
+        mRoot->Update( aPosition, aSize );
+    }
 
     void *UITreeView::UITreeView_Create()
     {

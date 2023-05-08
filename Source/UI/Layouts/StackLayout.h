@@ -35,6 +35,8 @@ namespace SE::Core
         void Add( UIComponent *aChild, std::string const &aKey );
         void SetCurrent( std::string const &aKey );
 
+        ImVec2 RequiredSize();
+        
       protected:
         std::string mCurrent;
 
@@ -44,7 +46,6 @@ namespace SE::Core
         void PushStyles();
         void PopStyles();
 
-        ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
       public:
