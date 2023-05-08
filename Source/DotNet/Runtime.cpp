@@ -38,6 +38,8 @@
 #include "UI/Components/TextOverlay.h"
 #include "UI/Components/TextToggleButton.h"
 #include "UI/Components/Workspace.h"
+#include "UI/Components/TreeView.h"
+
 #include "UI/UI.h"
 
 #include "UI/Layouts/Splitter.h"
@@ -626,6 +628,17 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIContainer::UIContainer_Destroy", UIContainer::UIContainer_Destroy );
         mono_add_internal_call( "SpockEngine.UIContainer::UIContainer_SetContent", UIContainer::UIContainer_SetContent );
 
+        mono_add_internal_call( "SpockEngine.UITreeView::UITreeView_Create", UITreeView::UITreeView_Create );
+        mono_add_internal_call( "SpockEngine.UITreeView::UITreeView_Destroy", UITreeView::UITreeView_Destroy );
+        mono_add_internal_call( "SpockEngine.UITreeView::UITreeView_SetIndent", UITreeView::UITreeView_SetIndent );
+        mono_add_internal_call( "SpockEngine.UITreeView::UITreeView_Add", UITreeView::UITreeView_Add );
+
+        mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_Create", UITreeViewNode::UITreeViewNode_Create );
+        mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_Destroy", UITreeViewNode::UITreeViewNode_Destroy );
+        mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_SetIcon", UITreeViewNode::UITreeViewNode_SetIcon );
+        mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_SetText", UITreeViewNode::UITreeViewNode_SetText );
+        mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_SetTextColor", UITreeViewNode::UITreeViewNode_SetTextColor );
+        mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_Add", UITreeViewNode::UITreeViewNode_Add );
     }
 
 } // namespace SE::Core
