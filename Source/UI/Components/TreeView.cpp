@@ -325,13 +325,39 @@ namespace SE::Core
         ImGui::SetCursorPos( aPosition );
         if( mParent == nullptr )
         {
-            for( auto lChild : mChildren ) lChild->Update( ImGui::GetCursorPos(), aSize );
+            for( auto lChild : mChildren )
+            {
+                lChild->Update( ImGui::GetCursorPos(), aSize );
+            }
         }
         else if( RenderNode() )
         {
-            for( auto lChild : mChildren ) lChild->Update( ImGui::GetCursorPos(), aSize );
+            for( auto lChild : mChildren )
+            {
+                lChild->Update( ImGui::GetCursorPos(), aSize );
+            }
 
             TreePop();
+        }
+        else
+        {
+            ImGuiWindow      *lWindow       = ImGui::GetCurrentWindow();
+            ImGuiContext     &lImGuiContext = *GImGui;
+            const ImGuiStyle &style         = lImGuiContext.Style;
+            const ImVec2      lPadding =
+                ( mFlags & ImGuiTreeNodeFlags_FramePadding )
+                         ? style.FramePadding
+                         : ImVec2( style.FramePadding.x, ImMin( lWindow->DC.CurrLineTextBaseOffset, style.FramePadding.y ) );
+            const ImVec2 lLabelSize = mNode->RequiredSize();
+
+            const float lFrameHeight = ImMax( ImMin( lWindow->DC.CurrLineSize.y, lImGuiContext.FontSize + style.FramePadding.y * 2 ),
+                                              lLabelSize.y + lPadding.y * 2 );
+            ImVec2      lSize{ lWindow->WorkRect.Max.x - lWindow->WorkRect.Min.x, lFrameHeight };
+            const float lTextOffsetX = lImGuiContext.FontSize + lPadding.x * 2;
+            const float lTextOffsetY = ImMax( lPadding.y, lWindow->DC.CurrLineTextBaseOffset );
+            ImVec2      lTextPosition( lWindow->DC.CursorPos.x + lTextOffsetX, lWindow->DC.CursorPos.y + lTextOffsetY );
+
+            mNodeLayout->Update( lTextPosition, lSize );
         }
     }
 
