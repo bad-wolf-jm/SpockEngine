@@ -8,8 +8,9 @@
 
 namespace SE::Core
 {
-    UITreeViewNode::UITreeViewNode( UITreeView *aTreeView )
+    UITreeViewNode::UITreeViewNode( UITreeView *aTreeView, UITreeViewNode *aParent )
         : mTreeView{ aTreeView }
+        , mParent{ aParent }
     {
         mNode = new UILabel( "" );
         mNode->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
@@ -23,7 +24,7 @@ namespace SE::Core
 
     UITreeViewNode *UITreeViewNode::Add()
     {
-        auto lNewChild = new UITreeViewNode( mTreeView );
+        auto lNewChild = new UITreeViewNode( mTreeView, this );
         mChildren.push_back( lNewChild );
 
         return lNewChild;
@@ -313,13 +314,6 @@ namespace SE::Core
 
     void UITreeViewNode::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        // bool lTextColorSet =
-        //     ( ( mTextColor.x != 0.0f ) || ( mTextColor.y != 0.0f ) || ( mTextColor.z != 0.0f ) || ( mTextColor.w != 0.0f ) );
-        // if( lTextColorSet ) ImGui::PushStyleColor( ImGuiCol_Text, mTextColor );
-
-        // auto lTextSize     = ImGui::CalcTextSize( mText.c_str() );
-        // auto lTextPosition = GetContentAlignedposition( mHAlign, mVAlign, aPosition, lTextSize, aSize );
-
         ImGui::SetCursorPos( aPosition );
         if( RenderNode() )
         {
@@ -327,7 +321,6 @@ namespace SE::Core
 
             TreePop();
         }
-        // if( lTextColorSet ) ImGui::PopStyleColor();
     }
 
     void *UITreeViewNode::UITreeViewNode_Create()
@@ -369,7 +362,12 @@ namespace SE::Core
         return static_cast<void *>( lInstance->Add() );
     }
 
-    UITreeView::UITreeView() { mRoot = new UITreeViewNode( this ); }
+    UITreeView::UITreeView() { mRoot = new UITreeViewNode( this, nullptr ); }
+
+    void   UITreeView::PushStyles() {}
+    void   UITreeView::PopStyles() {}
+    ImVec2 UITreeView::RequiredSize() { return ImVec2{}; }
+
     void            UITreeView::SetIndent( float aIndent ) { mIndent = aIndent; }
     UITreeViewNode *UITreeView::Add() { return mRoot->Add(); }
     void            UITreeView::DrawContent( ImVec2 aPosition, ImVec2 aSize ) { mRoot->Update( aPosition, aSize ); }

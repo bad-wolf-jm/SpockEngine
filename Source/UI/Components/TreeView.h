@@ -14,7 +14,7 @@ namespace SE::Core
     {
       public:
         UITreeViewNode() = default;
-        UITreeViewNode(UITreeView* aTreeView);
+        UITreeViewNode(UITreeView* aTreeView, UITreeViewNode *aParent);
 
         void SetIcon(UIImage* aImage);
         void SetText( std::string const &aText );
@@ -33,7 +33,7 @@ namespace SE::Core
         UIBoxLayout* mNodeLayout;
 
         UITreeView* mTreeView;
-
+        UITreeViewNode *mParent;
         std::vector<UITreeViewNode*> mChildren;
 
       protected:
