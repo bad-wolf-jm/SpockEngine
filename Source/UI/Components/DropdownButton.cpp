@@ -12,7 +12,7 @@ namespace SE::Core
         mText->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         mLayout->Add( mImage.get(), 40.0f, false, true );
         mLayout->Add( mText.get(), true, true );
-        mLayout->SetSimple(true);
+        mLayout->SetSimple( true );
     }
 
     void UIDropdownButton::PushStyles() {}
@@ -29,15 +29,14 @@ namespace SE::Core
     {
         if( !mIsVisible ) return;
 
-
         ImGuiWindow *window = ImGui::GetCurrentWindow();
 
-        ImVec2        pos  = ImGui::GetCursorScreenPos();
-        ImVec2        size = aSize;
+        ImVec2 pos  = ImGui::GetCursorScreenPos();
+        ImVec2 size = aSize;
 
         mLayout->Update( aPosition, aSize );
 
-        const ImGuiID id   = window->GetID( (void *)this );
+        const ImGuiID id = window->GetID( (void *)this );
         const ImRect  bb( pos, pos + size );
         bool          hovered, held;
         // ImGui::SetItemAllowOverlap();
@@ -49,14 +48,10 @@ namespace SE::Core
 
         if( ImGui::BeginPopup( "##add_component" ) )
         {
-            if( mContent != nullptr )
-            {
-                mContent->Update( ImVec2{}, mContent->RequiredSize() );
-            }
+            if( mContent != nullptr ) mContent->Update( ImVec2{}, mContent->RequiredSize() );
 
             ImGui::EndPopup();
         }
-
     }
 
     void *UIDropdownButton::UIDropdownButton_Create()
