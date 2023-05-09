@@ -38,8 +38,8 @@ namespace SE::Core
 
         const ImGuiID id = window->GetID( (void *)this );
         const ImRect  bb( pos, pos + size );
-        bool          hovered, held;
-        // ImGui::SetItemAllowOverlap();
+
+        bool hovered, held;
         bool lPressed = ImGui::ButtonBehavior( bb, id, &hovered, &held, ImGuiButtonFlags_MouseButtonLeft );
         if( lPressed )
         {
