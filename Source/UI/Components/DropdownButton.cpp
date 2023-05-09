@@ -41,11 +41,9 @@ namespace SE::Core
 
         bool hovered, held;
         bool lPressed = ImGui::ButtonBehavior( bb, id, &hovered, &held, ImGuiButtonFlags_MouseButtonLeft );
-        if( lPressed )
-        {
-            ImGui::OpenPopup( "##add_component" );
-        }
+        if( lPressed ) ImGui::OpenPopup( "##add_component" );
 
+        ImGui::SetNextWindowPos( ImGui::GetCursorScreenPos() );
         if( ImGui::BeginPopup( "##add_component" ) )
         {
             if( mContent != nullptr ) mContent->Update( ImVec2{}, mContent->RequiredSize() );
