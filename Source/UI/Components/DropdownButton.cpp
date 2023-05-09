@@ -9,6 +9,7 @@ namespace SE::Core
         mText   = New<UILabel>( "" );
         mLayout = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
 
+        mText->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         mLayout->Add( mImage.get(), 40.0f, false, true );
         mLayout->Add( mText.get(), true, true );
     }
@@ -19,9 +20,9 @@ namespace SE::Core
     ImVec2 UIDropdownButton::RequiredSize() { return mLayout->RequiredSize(); }
 
     void UIDropdownButton::SetContent( UIComponent *aContent ) { mContent = aContent; }
-    void UIDropdownButton::SetText( std::string aText ) { mText->SetText(aText); }
-    void UIDropdownButton::SetTextColor( math::vec4 aColor ) { mText->SetTextColor(aColor); }
-    void UIDropdownButton::SetImage( UIBaseImage *aValue ) { mImage->Add(aValue, "IMAGE"); }
+    void UIDropdownButton::SetText( std::string aText ) { mText->SetText( aText ); }
+    void UIDropdownButton::SetTextColor( math::vec4 aColor ) { mText->SetTextColor( aColor ); }
+    void UIDropdownButton::SetImage( UIBaseImage *aValue ) { mImage->Add( aValue, "IMAGE" ); }
 
     void UIDropdownButton::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
@@ -29,20 +30,25 @@ namespace SE::Core
 
         ImGuiWindow *window = ImGui::GetCurrentWindow();
 
-        mLayout->Update( aPosition, aSize );
-
-        ImVec2        pos  = window->DC.CursorPos;
+        ImVec2        pos  = aPosition;
         ImVec2        size = aSize;
-        const ImGuiID id   = window->GetID( (void*) this );
+        const ImGuiID id   = window->GetID( (void *)this );
         const ImRect  bb( pos, pos + size );
         bool          hovered, held;
-        if( ImGui::ButtonBehavior( bb, id, &hovered, &held, ImGuiButtonFlags_None ) ) ImGui::OpenPopup( "##add_component" );
+
+        bool lPressed = ImGui::ButtonBehavior( bb, id, &hovered, &held, ImGuiButtonFlags_MouseButtonLeft );
+        if( lPressed )
+        {
+            ImGui::OpenPopup( "##add_component" );
+        }
 
         if( ImGui::BeginPopup( "##add_component" ) )
         {
-            mContent->Update( ImVec2{}, mContent->RequiredSize() );
+            if( mContent != nullptr ) mContent->Update( ImVec2{}, mContent->RequiredSize() );
             ImGui::EndPopup();
         }
+        
+        mLayout->Update( aPosition, aSize );
     }
 
     void *UIDropdownButton::UIDropdownButton_Create()
@@ -57,7 +63,7 @@ namespace SE::Core
     void UIDropdownButton::UIDropdownButton_SetContent( void *aInstance, void *aContent )
     {
         auto lInstance = static_cast<UIDropdownButton *>( aInstance );
-        auto lContent = static_cast<UIComponent *>( aContent );
+        auto lContent  = static_cast<UIComponent *>( aContent );
 
         return lInstance->SetContent( lContent );
     }
@@ -65,7 +71,7 @@ namespace SE::Core
     void UIDropdownButton::UIDropdownButton_SetImage( void *aInstance, void *aImage )
     {
         auto lInstance = static_cast<UIDropdownButton *>( aInstance );
-        auto lImage = static_cast<UIBaseImage *>( aImage );
+        auto lImage    = static_cast<UIBaseImage *>( aImage );
 
         lInstance->SetImage( lImage );
     }

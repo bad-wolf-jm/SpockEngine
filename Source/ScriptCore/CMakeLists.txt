@@ -53,6 +53,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/Components/TextOverlay.cs
     Source/UI/Components/ProgressBar.cs
     Source/UI/Components/CheckBox.cs
+    Source/UI/Components/DropdownButton.cs
 
     Source/UI/Layouts/BoxLayout.cs
     Source/UI/Layouts/ZLayout.cs

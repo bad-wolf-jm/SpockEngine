@@ -24,6 +24,7 @@
 #include "UI/Components/CheckBox.h"
 #include "UI/Components/ComboBox.h"
 #include "UI/Components/Component.h"
+#include "UI/Components/DropdownButton.h"
 #include "UI/Components/Image.h"
 #include "UI/Components/ImageButton.h"
 #include "UI/Components/ImageToggleButton.h"
@@ -609,6 +610,16 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_SetText", UIProgressBar::UIProgressBar_SetText );
         mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_SetTextColor", UIProgressBar::UIProgressBar_SetTextColor );
         mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_SetThickness", UIProgressBar::UIProgressBar_SetThickness );
+
+        mono_add_internal_call( "SpockEngine.UIDropdownButton::UIDropdownButton_Create", UIDropdownButton::UIDropdownButton_Create );
+        mono_add_internal_call( "SpockEngine.UIDropdownButton::UIDropdownButton_Destroy", UIDropdownButton::UIDropdownButton_Destroy );
+        mono_add_internal_call( "SpockEngine.UIDropdownButton::UIDropdownButton_SetContent",
+                                UIDropdownButton::UIDropdownButton_SetContent );
+        mono_add_internal_call( "SpockEngine.UIDropdownButton::UIDropdownButton_SetImage",
+                                UIDropdownButton::UIDropdownButton_SetImage );
+        mono_add_internal_call( "SpockEngine.UIDropdownButton::UIDropdownButton_SetText", UIDropdownButton::UIDropdownButton_SetText );
+        mono_add_internal_call( "SpockEngine.UIDropdownButton::UIDropdownButton_SetTextColor",
+                                UIDropdownButton::UIDropdownButton_SetTextColor );
     }
 
 } // namespace SE::Core
