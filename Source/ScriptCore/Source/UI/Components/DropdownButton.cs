@@ -3,73 +3,49 @@ using System.Runtime.CompilerServices;
 
 namespace SpockEngine
 {
-    public class UITextToggleButton : UILabel
+    public class UIDropdownButton : UIComponent
     {
-        public UITextToggleButton() : base(UITextToggleButton_Create(), true) { }
+        public UIDropdownButton() : base(UIDropdownButton_Create()) { }
 
-        public UITextToggleButton(string aText) : base(UITextToggleButton_CreateWithText(aText), true) { }
+        ~UIDropdownButton() { UIDropdownButton_Destroy(mInstance); }
 
-        ~UITextToggleButton() { UITextToggleButton_Destroy(mInstance); }
-
-        public bool Active
+        public string Text
         {
-            get { return UITextToggleButton_IsActive(mInstance); }
-            set { UITextToggleButton_SetActive(mInstance, value); }
+            set { UIDropdownButton_SetText(mInstance, value); }
         }
 
-        public void SetActiveColor(Math.vec4 aColor)
+        public UIBaseImage Image
         {
-            UITextToggleButton_SetActiveColor(mInstance, aColor);
+            set { UIDropdownButton_SetImage(mInstance, value); }
         }
 
-        public void SetInactiveColor(Math.vec4 aColor)
+        public Math.vec4 TextColor
         {
-            UITextToggleButton_SetInactiveColor(mInstance, aColor);
+            set { UIDropdownButton_SetTextColor(mInstance, value); }
         }
 
-        public delegate bool OnClickDelegate(bool aValue);
-        OnClickDelegate onClicked;
-        public void OnClicked(OnClickDelegate aHandler)
+        public UIComponent Content
         {
-            onClicked = aHandler;
-
-            UITextToggleButton_OnClicked(mInstance, onClicked);
-        }
-
-        public delegate bool OnChangeDelegate();
-        OnChangeDelegate onChanged;
-        public void OnChanged(OnChangeDelegate aHandler)
-        {
-            onChanged = aHandler;
-            
-            UITextToggleButton_OnChanged(mInstance, onChanged);
+            set { UIDropdownButton_SetContent(mInstance, value); }
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITextToggleButton_Create();
+        private extern static ulong UIDropdownButton_Create();
+
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITextToggleButton_CreateWithText(string aText);
+        private extern static void UIDropdownButton_Destroy(ulong aInstance);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextToggleButton_Destroy(ulong aInstance);
+        private extern static bool UIDropdownButton_SetContent(ulong aInstance, UIComponent aContent);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextToggleButton_OnClicked(ulong aInstance, OnClickDelegate aHandler);
+        private extern static void UIDropdownButton_SetImage(ulong aInstance, UIBaseImage aImage);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextToggleButton_OnChanged(ulong aInstance, OnChangeDelegate aHandler);
+        private extern static void UIDropdownButton_SetText(ulong aInstance, string aText);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static bool UITextToggleButton_IsActive(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextToggleButton_SetActive(ulong aInstance, bool aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextToggleButton_SetActiveColor(ulong aInstance, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextToggleButton_SetInactiveColor(ulong aInstance, Math.vec4 aColor);
+        private extern static void UIDropdownButton_SetTextColor(ulong aInstance, Math.vec4 aColor);
     }
 }
