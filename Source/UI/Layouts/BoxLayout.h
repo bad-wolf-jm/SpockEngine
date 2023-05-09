@@ -25,6 +25,7 @@ namespace SE::Core
         BoxLayoutItem()                        = default;
         BoxLayoutItem( BoxLayoutItem const & ) = default;
 
+
         ~BoxLayoutItem() = default;
     };
 
@@ -39,6 +40,8 @@ namespace SE::Core
         ~UIBoxLayout() = default;
 
         void SetItemSpacing( float aItemSpacing );
+        void SetSimple(bool aSimple) { mSimple = aSimple;}
+        bool IsSimple(bool aSimple) { return mSimple;}
 
         void Add( UIComponent *aChild, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
                   eVerticalAlignment const &aVAlignment );
@@ -50,17 +53,18 @@ namespace SE::Core
         void Clear();
 
         ImVec2 RequiredSize();
-        
+
       protected:
         std::vector<BoxLayoutItem> mChildren;
         eBoxLayoutOrientation      mOrientation;
         float                      mItemSpacing = 0.0f;
+        bool                       mSimple      = false;
 
       protected:
         void PushStyles();
         void PopStyles();
 
-        void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+        void DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
       public:
         static void *UIBoxLayout_CreateWithOrientation( eBoxLayoutOrientation aOrientation );
