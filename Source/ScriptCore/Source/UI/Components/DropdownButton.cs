@@ -17,7 +17,7 @@ namespace SpockEngine
         UIBaseImage mImage;
         public UIBaseImage Image
         {
-            set { mImage = value; UIDropdownButton_SetImage(mInstance, value); }
+            set { mImage = value; UIDropdownButton_SetImage(mInstance, mImage.Instance); }
         }
 
         public Math.vec4 TextColor
@@ -28,21 +28,20 @@ namespace SpockEngine
         UIComponent mContent;
         public UIComponent Content
         {
-            set { mContent = value; UIDropdownButton_SetContent(mInstance, value); }
+            set { mContent = value; UIDropdownButton_SetContent(mInstance, mContent.Instance); }
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIDropdownButton_Create();
 
-
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIDropdownButton_Destroy(ulong aInstance);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static bool UIDropdownButton_SetContent(ulong aInstance, UIComponent aContent);
+        private extern static bool UIDropdownButton_SetContent(ulong aInstance, ulong aContent);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDropdownButton_SetImage(ulong aInstance, UIBaseImage aImage);
+        private extern static void UIDropdownButton_SetImage(ulong aInstance, ulong aImage);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIDropdownButton_SetText(ulong aInstance, string aText);
