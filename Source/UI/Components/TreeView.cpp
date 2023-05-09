@@ -11,7 +11,7 @@ namespace SE::Core
     UITreeViewNode::UITreeViewNode( UITreeView *aTreeView, UITreeViewNode *aParent )
         : mTreeView{ aTreeView }
         , mParent{ aParent }
-        , mFlags{ 0 }
+        , mFlags{ ImGuiTreeNodeFlags_SpanFullWidth }
     {
         mNode = new UILabel( "" );
         mNode->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
@@ -130,10 +130,7 @@ namespace SE::Core
                      ? style.FramePadding
                      : ImVec2( style.FramePadding.x, ImMin( lWindow->DC.CurrLineTextBaseOffset, style.FramePadding.y ) );
 
-        // if( !aLabelEnd ) aLabelEnd = ImGui::FindRenderedTextEnd( aLabel );
         const ImVec2 lLabelSize = mNode->RequiredSize();
-
-        // mGui::CalcTextSize( aLabel, aLabelEnd, false );
 
         // We vertically grow up to current line height up the typical widget height.
         const float lFrameHeight = ImMax( ImMin( lWindow->DC.CurrLineSize.y, lImGuiContext.FontSize + style.FramePadding.y * 2 ),
@@ -145,11 +142,10 @@ namespace SE::Core
         lFrameBoundingBox.Max.y = lWindow->DC.CursorPos.y + lFrameHeight;
 
         const float lTextOffsetX = lImGuiContext.FontSize + lPadding.x * 2;
-        const float lTextOffsetY =
-            ImMax( lPadding.y, lWindow->DC.CurrLineTextBaseOffset ); // Latch before ImGui::CalcTextSize changes it
-        const float lTextWidth =
-            lImGuiContext.FontSize + ( lLabelSize.x > 0.0f ? lLabelSize.x + lPadding.x * 2 : 0.0f ); // Include collapser
-        ImVec2 lTextPosition( lWindow->DC.CursorPos.x + lTextOffsetX, lWindow->DC.CursorPos.y + lTextOffsetY );
+        const float lTextOffsetY = ImMax( lPadding.y, lWindow->DC.CurrLineTextBaseOffset );
+        const float lTextWidth   = lImGuiContext.FontSize + ( lLabelSize.x > 0.0f ? lLabelSize.x + lPadding.x * 2 : 0.0f );
+        ImVec2      lTextPosition( lWindow->DC.CursorPos.x + lTextOffsetX, lWindow->DC.CursorPos.y + lTextOffsetY );
+        // ImGui::ItemSize( ImVec2( lTextWidth, lFrameHeight ), lPadding.y );
         ImGui::ItemSize( ImVec2( lTextWidth, lFrameHeight ), lPadding.y );
 
         // For regular tree nodes, we arbitrary allow to click past 2 worth of ItemSpacing
@@ -284,7 +280,8 @@ namespace SE::Core
                          lArrowColor, lNodeIsOpen ? ImGuiDir_Down : ImGuiDir_Right, 0.8f );
 
         ImVec2 lSize{ lWindow->WorkRect.Max.x - lWindow->WorkRect.Min.x, lFrameHeight };
-        mNodeLayout->Update( lTextPosition, lSize );
+        auto lNodePosition = ImGui::GetCursorPos() + ImVec2{lTextOffsetX,-lFrameHeight };
+        mNodeLayout->Update( lNodePosition, lSize );
 
         if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) ) TreePushOverrideID();
 
@@ -322,42 +319,34 @@ namespace SE::Core
 
     void UITreeViewNode::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        ImGui::SetCursorPos( aPosition );
+        ImGuiWindow      *lWindow       = ImGui::GetCurrentWindow();
+        ImGuiContext     &lImGuiContext = *GImGui;
+        const ImGuiStyle &style         = lImGuiContext.Style;
+        const ImVec2      lPadding =
+            ( mFlags & ImGuiTreeNodeFlags_FramePadding )
+                     ? style.FramePadding
+                     : ImVec2( style.FramePadding.x, ImMin( lWindow->DC.CurrLineTextBaseOffset, style.FramePadding.y ) );
+        const ImVec2 lLabelSize = mNode->RequiredSize();
+
+        const float lFrameHeight = ImMax( ImMin( lWindow->DC.CurrLineSize.y, lImGuiContext.FontSize + style.FramePadding.y * 2 ),
+                                          lLabelSize.y + lPadding.y * 2 );
+        ImVec2      lSize{ lWindow->WorkRect.Max.x - lWindow->WorkRect.Min.x, lFrameHeight };
+
         if( mParent == nullptr )
         {
             for( auto lChild : mChildren )
             {
-                lChild->Update( ImGui::GetCursorPos(), aSize );
+                lChild->Update( ImGui::GetCursorPos(), lSize );
             }
         }
         else if( RenderNode() )
         {
             for( auto lChild : mChildren )
             {
-                lChild->Update( ImGui::GetCursorPos(), aSize );
+                lChild->Update( ImGui::GetCursorPos(), lSize );
             }
 
             TreePop();
-        }
-        else
-        {
-            ImGuiWindow      *lWindow       = ImGui::GetCurrentWindow();
-            ImGuiContext     &lImGuiContext = *GImGui;
-            const ImGuiStyle &style         = lImGuiContext.Style;
-            const ImVec2      lPadding =
-                ( mFlags & ImGuiTreeNodeFlags_FramePadding )
-                         ? style.FramePadding
-                         : ImVec2( style.FramePadding.x, ImMin( lWindow->DC.CurrLineTextBaseOffset, style.FramePadding.y ) );
-            const ImVec2 lLabelSize = mNode->RequiredSize();
-
-            const float lFrameHeight = ImMax( ImMin( lWindow->DC.CurrLineSize.y, lImGuiContext.FontSize + style.FramePadding.y * 2 ),
-                                              lLabelSize.y + lPadding.y * 2 );
-            ImVec2      lSize{ lWindow->WorkRect.Max.x - lWindow->WorkRect.Min.x, lFrameHeight };
-            const float lTextOffsetX = lImGuiContext.FontSize + lPadding.x * 2;
-            const float lTextOffsetY = ImMax( lPadding.y, lWindow->DC.CurrLineTextBaseOffset );
-            ImVec2      lTextPosition( lWindow->DC.CursorPos.x + lTextOffsetX, lWindow->DC.CursorPos.y + lTextOffsetY );
-
-            mNodeLayout->Update( lTextPosition, lSize );
         }
     }
 
@@ -408,7 +397,8 @@ namespace SE::Core
 
     void            UITreeView::SetIndent( float aIndent ) { mIndent = aIndent; }
     UITreeViewNode *UITreeView::Add() { return mRoot->Add(); }
-    void            UITreeView::DrawContent( ImVec2 aPosition, ImVec2 aSize )
+
+    void UITreeView::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
         //
         mRoot->Update( aPosition, aSize );
