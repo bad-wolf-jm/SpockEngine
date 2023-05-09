@@ -39,6 +39,8 @@ namespace SE::Core
         void Add( UIComponent *aChild, math::vec2 aSize, math::vec2 aPosition, bool aExpand, bool aFill,
                   eHorizontalAlignment const &aHAlignment, eVerticalAlignment const &aVAlignment );
 
+        ImVec2 RequiredSize();
+        
       protected:
         std::vector<ZLayoutItem> mChildren;
 
@@ -46,7 +48,6 @@ namespace SE::Core
         void PushStyles();
         void PopStyles();
 
-        ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
       public:
