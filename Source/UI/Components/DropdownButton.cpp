@@ -1,82 +1,48 @@
 #include "DropdownButton.h"
+
 #include "DotNet/Runtime.h"
 namespace SE::Core
 {
-    UIDropdownButton::UIDropdownButton( std::function<bool( bool )> aOnChange )
-        : mOnClicked{ aOnChange }
+    UIDropdownButton::UIDropdownButton()
     {
+        mImage  = New<UIStackLayout>();
+        mText   = New<UILabel>( "" );
+        mLayout = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
+
+        mLayout->Add( mImage.get(), 40.0f, false, true );
+        mLayout->Add( mText.get(), true, true );
     }
 
     void UIDropdownButton::PushStyles() {}
     void UIDropdownButton::PopStyles() {}
 
-    void UIDropdownButton::OnClick( std::function<bool( bool )> aOnChange ) { mOnClicked = aOnChange; }
-    void UIDropdownButton::OnChanged( std::function<void()> aOnChanged ) { mOnChanged = aOnChanged; }
+    ImVec2 UIDropdownButton::RequiredSize() { return mLayout->RequiredSize(); }
 
-    void UIDropdownButton::SetActiveImage( UIBaseImage *aImage ) { mActiveImage = aImage; }
-
-    void UIDropdownButton::SetInactiveImage( UIBaseImage *aImage ) { mInactiveImage = aImage; }
-
-    bool UIDropdownButton::IsActive() { return mActivated; }
-    void UIDropdownButton::SetActive( bool aValue ) { mActivated = aValue; }
-
-    void UIDropdownButton::PushStyles( bool aEnabled )
-    {
-        if( !aEnabled )
-        {
-            ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.1f, 0.1f, 0.1f, .2f } );
-            ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 0.1f, 0.1f, 0.1f, .2f } );
-            ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.1f, 0.1f, .2f } );
-        }
-        else
-        {
-            ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f } );
-            ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 1.0f, 1.0f, 1.0f, 0.01f } );
-            ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 1.0f, 1.0f, 1.0f, 0.02f } );
-        }
-    }
-
-    void UIDropdownButton::PopStyles( bool aEnabled )
-    {
-        if( !aEnabled )
-            ImGui::PopStyleColor( 4 );
-        else
-            ImGui::PopStyleColor( 3 );
-    }
-
-    ImVec2 UIDropdownButton::RequiredSize()
-    {
-        PushStyles( mIsEnabled );
-
-        auto lSize0 = mInactiveImage ? mInactiveImage->Size() : ImVec2{};
-        auto lSize1 = mActiveImage ? mActiveImage->Size() : ImVec2{};
-
-        auto lTextSize = ImVec2{ math::max( lSize0.x, lSize1.x ), math::max( lSize0.y, lSize1.y ) };
-
-        PopStyles( mIsEnabled );
-
-        return lTextSize + ImGui::GetStyle().FramePadding * 2.0f;
-    }
+    void UIDropdownButton::SetContent( UIComponent *aContent ) { mContent = aContent; }
+    void UIDropdownButton::SetText( std::string aText ) { mText->SetText(aText); }
+    void UIDropdownButton::SetTextColor( math::vec4 aColor ) { mText->SetTextColor(aColor); }
+    void UIDropdownButton::SetImage( UIBaseImage *aValue ) { mImage->Add(aValue, "IMAGE"); }
 
     void UIDropdownButton::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        bool lEnabled = mIsEnabled;
+        if( !mIsVisible ) return;
 
-        PushStyles( lEnabled );
+        ImGuiWindow *window = ImGui::GetCurrentWindow();
 
-        auto lRequiredSize = RequiredSize();
+        mLayout->Update( aPosition, aSize );
 
-        ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, lRequiredSize, aSize ) );
+        ImVec2        pos  = window->DC.CursorPos;
+        ImVec2        size = aSize;
+        const ImGuiID id   = window->GetID( (void*) this );
+        const ImRect  bb( pos, pos + size );
+        bool          hovered, held;
+        if( ImGui::ButtonBehavior( bb, id, &hovered, &held, ImGuiButtonFlags_None ) ) ImGui::OpenPopup( "##add_component" );
 
-        auto lImage = mActivated ? mActiveImage : mInactiveImage;
-
-        if( lImage &&
-            ImGui::ImageButton( lImage->TextureID(), lRequiredSize, lImage->TopLeft(), lImage->BottomRight(), 0,
-                                lImage->BackgroundColor(), lImage->TintColor() ) &&
-            mOnClicked && lEnabled )
-            mActivated = mOnClicked( mActivated );
-
-        PopStyles( lEnabled );
+        if( ImGui::BeginPopup( "##add_component" ) )
+        {
+            mContent->Update( ImVec2{}, mContent->RequiredSize() );
+            ImGui::EndPopup();
+        }
     }
 
     void *UIDropdownButton::UIDropdownButton_Create()
@@ -86,83 +52,36 @@ namespace SE::Core
         return static_cast<void *>( lNewImage );
     }
 
-    void UIDropdownButton::UIDropdownButton_Destroy( void *aInstance )
+    void UIDropdownButton::UIDropdownButton_Destroy( void *aInstance ) { delete static_cast<UIDropdownButton *>( aInstance ); }
+
+    void UIDropdownButton::UIDropdownButton_SetContent( void *aInstance, void *aContent )
     {
-        delete static_cast<UIDropdownButton *>( aInstance );
+        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
+        auto lContent = static_cast<UIComponent *>( aContent );
+
+        return lInstance->SetContent( lContent );
     }
 
-    bool UIDropdownButton::UIDropdownButton_IsActive( void *aInstance )
+    void UIDropdownButton::UIDropdownButton_SetImage( void *aInstance, void *aImage )
+    {
+        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
+        auto lImage = static_cast<UIBaseImage *>( aImage );
+
+        lInstance->SetImage( lImage );
+    }
+
+    void UIDropdownButton::UIDropdownButton_SetText( void *aInstance, void *aText )
+    {
+        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
+        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+
+        lInstance->SetText( lString );
+    }
+
+    void UIDropdownButton::UIDropdownButton_SetTextColor( void *aInstance, math::vec4 aColor )
     {
         auto lInstance = static_cast<UIDropdownButton *>( aInstance );
 
-        return lInstance->IsActive();
+        lInstance->SetTextColor( aColor );
     }
-
-    void UIDropdownButton::UIDropdownButton_SetActive( void *aInstance, bool aValue )
-    {
-        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
-
-        lInstance->SetActive( aValue );
-    }
-
-    void UIDropdownButton::UIDropdownButton_SetActiveImage( void *aInstance, void *aImage )
-    {
-        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
-        auto lImage    = static_cast<UIBaseImage *>( aImage );
-
-        lInstance->SetActiveImage( lImage );
-    }
-
-    void UIDropdownButton::UIDropdownButton_SetInactiveImage( void *aInstance, void *aImage )
-    {
-        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
-        auto lImage    = static_cast<UIBaseImage *>( aImage );
-
-        lInstance->SetInactiveImage( lImage );
-    }
-
-    void UIDropdownButton::UIDropdownButton_OnClicked( void *aInstance, void *aDelegate )
-    {
-        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
-
-        if( lInstance->mOnClickDelegate != nullptr ) mono_gchandle_free( lInstance->mOnClickDelegateHandle );
-
-        lInstance->mOnClickDelegate       = aDelegate;
-        lInstance->mOnClickDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
-
-        lInstance->OnClick(
-            [lInstance, lDelegate]( bool aValue )
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-
-                void *lParams[] = { (void *)&aValue };
-                auto  lValue    = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
-
-                return *( (bool *)mono_object_unbox( lValue ) );
-            } );
-    }
-
-    void UIDropdownButton::UIDropdownButton_OnChanged( void *aInstance, void *aDelegate )
-    {
-        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
-
-        if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
-
-        lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
-
-        lInstance->OnChanged(
-            [lInstance, lDelegate]()
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-                auto lValue         = mono_runtime_invoke( lInvokeMethod, lDelegate, nullptr, nullptr );
-
-                return *( (bool *)mono_object_unbox( lValue ) );
-            } );
-    }
-
 } // namespace SE::Core
