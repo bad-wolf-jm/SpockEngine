@@ -19,7 +19,7 @@ namespace SE::Core
         for( auto const &lItem : mChildren )
         {
             if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) ) continue;
-            
+
             ImVec2 lRequiredSize{};
             if( lItem.mFixedSize > 0.0f )
             {
@@ -89,7 +89,7 @@ namespace SE::Core
 
         std::vector<BoxLayoutItem> lVisibleChildren;
         std::copy_if( mChildren.begin(), mChildren.end(), std::back_inserter( lVisibleChildren ),
-                      []( auto x ) { return (x.mItem == nullptr) || (x.mItem->mIsVisible); } );
+                      []( auto x ) { return ( x.mItem == nullptr ) || ( x.mItem->mIsVisible ); } );
 
         float lTaken = mItemSpacing * ( lVisibleChildren.size() - 1 );
 
@@ -170,12 +170,19 @@ namespace SE::Core
 
             if( lItem.mItem )
             {
-                ImGui::SetCursorPos( lItemPosition );
-                ImGui::PushID( (void *)lItem.mItem );
-                ImGui::BeginChild( "##BoxLayoutItem", lItemSize );
-                lItem.mItem->Update( ImVec2{}, lItemSize );
-                ImGui::EndChild();
-                ImGui::PopID();
+                if( !mSimple )
+                {
+                    ImGui::SetCursorPos( lItemPosition );
+                    ImGui::PushID( (void *)lItem.mItem );
+                    ImGui::BeginChild( "##BoxLayoutItem", lItemSize );
+                    lItemPosition = ImVec2{};
+                }
+                lItem.mItem->Update( lItemPosition, lItemSize );
+                if( !mSimple )
+                {
+                    ImGui::EndChild();
+                    ImGui::PopID();
+                }
             }
 
             if( mOrientation == eBoxLayoutOrientation::VERTICAL )
