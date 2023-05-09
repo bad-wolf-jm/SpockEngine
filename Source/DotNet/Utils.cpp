@@ -9,6 +9,7 @@
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
+#include "mono/metadata/mono-debug.h"
 #include "mono/metadata/object.h"
 #include "mono/metadata/tabledefs.h"
 
@@ -57,11 +58,18 @@ namespace SE::Core::Mono::Utils
             return nullptr;
         }
 
+        fs::path lDebuggingInfo = lAssemblyPath;
+        lDebuggingInfo.replace_extension( ".pdb" );
+        char* lPdbFileData = ReadBytes( lDebuggingInfo, &lFileSize );
+        uint32_t lPdbFileSize = 0;
+        mono_debug_open_image_from_memory( lImage, (const mono_byte *)lPdbFileData, lPdbFileSize );
+        delete[] lPdbFileData;
+
         std::string   lPathString = lAssemblyPath.string();
         MonoAssembly *lAssembly   = mono_assembly_load_from_full( lImage, lPathString.c_str(), &lStatus, 0 );
-        mono_image_close( lImage );
-
         delete[] lFileData;
+
+        mono_image_close( lImage );
 
         return lAssembly;
     }

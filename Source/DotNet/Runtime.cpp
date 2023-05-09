@@ -11,6 +11,7 @@
 #include "mono/metadata/mono-config.h"
 #include "mono/metadata/object.h"
 #include "mono/metadata/tabledefs.h"
+#include "mono/metadata/mono-debug.h"
 
 #include <unordered_map>
 
@@ -176,7 +177,15 @@ namespace SE::Core
         mono_set_assemblies_path( aMonoPath.string().c_str() );
         mono_config_parse( NULL );
 
+        const char* argv[] = {
+            "--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=n,loglevel=3",
+            "--soft-breakpoints"
+        };
+        mono_jit_parse_options(2, (char**)argv);
+        mono_debug_init(MONO_DEBUG_FORMAT_MONO);
+
         sRuntimeData->mRootDomain = mono_jit_init( "SpockEngineRuntime" );
+        mono_debug_domain_create(sRuntimeData->mRootDomain);
     }
 
     void DotNetRuntime::ShutdownMono()

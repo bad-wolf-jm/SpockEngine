@@ -46,6 +46,13 @@
             "program": "${workspaceFolder}/Build/Programs/TestMonoExfo/test_mono_exfo.exe",
             "cwd": "${workspaceFolder}/Programs/TestProject",
             "stopAtEntry": false
+        },
+        {
+            "name": "Attach to Mono",
+            "request": "attach",
+            "type": "mono",
+            "address": "localhost",
+            "port": 55555
         }
 
     ]
