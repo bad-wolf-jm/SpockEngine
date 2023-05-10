@@ -178,7 +178,7 @@ namespace SE::Core
         mono_config_parse( NULL );
 
         const char* argv[] = {
-            "--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=n,loglevel=3",
+            "--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=n,loglevel=10",
             "--soft-breakpoints"
         };
         mono_jit_parse_options(2, (char**)argv);
