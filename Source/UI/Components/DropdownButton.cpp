@@ -13,6 +13,8 @@ namespace SE::Core
         mLayout->Add( mImage.get(), 40.0f, false, true );
         mLayout->Add( mText.get(), true, true );
         mLayout->SetSimple( true );
+
+        mImage->mIsVisible = false;
     }
 
     void UIDropdownButton::PushStyles() {}
@@ -21,9 +23,17 @@ namespace SE::Core
     ImVec2 UIDropdownButton::RequiredSize() { return mLayout->RequiredSize(); }
 
     void UIDropdownButton::SetContent( UIComponent *aContent ) { mContent = aContent; }
-    void UIDropdownButton::SetText( std::string aText ) { mText->SetText( aText ); }
+    void UIDropdownButton::SetText( std::string aText )
+    {
+        mText->SetText( aText );
+        mText->mIsVisible = !( aText.empty() );
+    }
     void UIDropdownButton::SetTextColor( math::vec4 aColor ) { mText->SetTextColor( aColor ); }
-    void UIDropdownButton::SetImage( UIBaseImage *aValue ) { mImage->Add( aValue, "IMAGE" ); }
+    void UIDropdownButton::SetImage( UIBaseImage *aValue )
+    {
+        mImage->Add( aValue, "IMAGE" );
+        mImage->mIsVisible = !( aValue == nullptr );
+    }
 
     void UIDropdownButton::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
@@ -31,24 +41,28 @@ namespace SE::Core
 
         ImGuiWindow *window = ImGui::GetCurrentWindow();
 
-        ImVec2 pos  = ImGui::GetCursorScreenPos();
-        ImVec2 size = aSize;
+        ImVec2 lCurrentScreenPosition  = ImGui::GetCursorScreenPos();
 
         mLayout->Update( aPosition, aSize );
 
         const ImGuiID id = window->GetID( (void *)this );
-        const ImRect  bb( pos, pos + size );
+        const ImRect  bb( lCurrentScreenPosition, lCurrentScreenPosition + aSize );
 
         bool hovered, held;
         bool lPressed = ImGui::ButtonBehavior( bb, id, &hovered, &held, ImGuiButtonFlags_MouseButtonLeft );
         if( lPressed ) ImGui::OpenPopup( "##add_component" );
 
-        ImGui::SetNextWindowPos( ImGui::GetCursorScreenPos() );
-        if( ImGui::BeginPopup( "##add_component" ) )
+        if( mContent != nullptr ) 
         {
-            if( mContent != nullptr ) mContent->Update( ImVec2{}, mContent->RequiredSize() );
+            ImGui::SetNextWindowPos( ImGui::GetCursorScreenPos() );
+            ImGui::SetNextWindowSize(mContent->RequiredSize());
 
-            ImGui::EndPopup();
+            if( ImGui::BeginPopup( "##add_component" ) )
+            {
+
+                mContent->Update( ImVec2{}, mContent->RequiredSize() );
+                ImGui::EndPopup();
+            }
         }
     }
 
