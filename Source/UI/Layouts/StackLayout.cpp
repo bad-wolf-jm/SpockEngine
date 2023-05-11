@@ -39,6 +39,7 @@ namespace SE::Core
     void UIStackLayout::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
         if( mCurrent.empty() ) return;
+        if( mChildren[mCurrent] == nullptr ) return;
 
         ImGui::SetCursorPos( aPosition );
         ImGui::PushID( (void *)mChildren[mCurrent] );
