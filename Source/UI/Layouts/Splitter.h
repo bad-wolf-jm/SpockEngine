@@ -38,8 +38,6 @@ namespace SE::Core
         
         ImVec2 RequiredSize();
 
-        ImVec2 RequiredSize();
-        
       protected:
         UIComponent *mChild1;
         UIComponent *mChild2;
