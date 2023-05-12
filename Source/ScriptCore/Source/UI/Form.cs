@@ -14,6 +14,7 @@ namespace SpockEngine
         public void SetTitle(string aTitle) { UIForm_SetTitle(mInstance, aTitle); }
 
         public void SetContent(UIComponent aContent) { UIForm_SetContent(mInstance, aContent.Instance); }
+        public void SetSize(float aWidth, float aHeight) { UIForm_SetSize(mInstance, aWidth, aHeight); }
 
         public void Update() { UIForm_Update(mInstance); }
 
@@ -31,5 +32,8 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIForm_Update(ulong aInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIForm_SetSize(ulong aInstance, float aWidth, float aHeight);
     }
 }

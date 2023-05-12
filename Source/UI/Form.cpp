@@ -13,6 +13,12 @@ namespace SE::Core
 
     void UIForm::SetTitle( std::string const &aTitle ) { mTitle = aTitle; }
     void UIForm::SetContent( UIComponent *aContent ) { mContent = aContent; }
+    void UIForm::SetSize( float aWidth, float aHeight )
+    {
+        mWidth         = aWidth;
+        mHeight        = aHeight;
+        mResizeRequest = true;
+    }
 
     ImVec2 UIForm::RequiredSize()
     {
@@ -25,7 +31,13 @@ namespace SE::Core
     {
         if( !mIsVisible ) return;
 
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{mPadding.z, mPadding.x});
+        ImGui::PushStyleVar( ImGuiStyleVar_WindowPadding, ImVec2{ mPadding.z, mPadding.x } );
+        if( mResizeRequest )
+        {
+            ImGui::SetNextWindowSize( ImVec2{ mWidth, mHeight }, ImGuiCond_Once );
+            mResizeRequest = false;
+        }
+
         if( ImGui::Begin( mTitle.c_str(), NULL, ImGuiWindowFlags_None ) )
         {
             ImVec2 lContentSize     = ImGui::GetContentRegionAvail();
@@ -38,7 +50,6 @@ namespace SE::Core
     }
 
     void UIForm::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
-
 
     void *UIForm::UIForm_Create()
     {
@@ -70,6 +81,13 @@ namespace SE::Core
         auto lInstance = static_cast<UIForm *>( aInstance );
 
         lInstance->Update();
+    }
+
+    void UIForm::UIForm_SetSize( void *aInstance, float aWidth, float aHeight )
+    {
+        auto lInstance = static_cast<UIForm *>( aInstance );
+
+        lInstance->SetSize(aWidth, aHeight);
     }
 
 } // namespace SE::Core

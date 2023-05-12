@@ -19,9 +19,9 @@ namespace SE::Core::UI
         colors[ImGuiCol_FrameBgHovered]        = ImVec4( 0.42f, 0.42f, 0.42f, 0.0f );
         colors[ImGuiCol_FrameBgActive]         = ImVec4( 0.42f, 0.42f, 0.42f, 0.0f );
         colors[ImGuiCol_ScrollbarBg]           = ImVec4( 0.24f, 0.24f, 0.24f, 0.0f );
-        colors[ImGuiCol_TitleBg]               = ImVec4( 0.015f, 0.015f, 0.015f, 0.0f );
-        colors[ImGuiCol_TitleBgActive]         = ImVec4( 0.015f, 0.015f, 0.025f, 0.0f );
-        colors[ImGuiCol_TitleBgCollapsed]      = ImVec4( 0.015f, 0.015f, 0.015f, 0.0f );
+        colors[ImGuiCol_TitleBg]               = ImVec4( 0.015f, 0.015f, 0.015f, 1.0f );
+        colors[ImGuiCol_TitleBgActive]         = ImVec4( 0.025f, 0.025f, 0.025f, 1.0f );
+        colors[ImGuiCol_TitleBgCollapsed]      = ImVec4( 0.015f, 0.015f, 0.015f, 1.0f );
         colors[ImGuiCol_Header]                = ImVec4( 0.01f, 0.01f, 0.01f, 0.0f );
         colors[ImGuiCol_HeaderHovered]         = ImVec4( 0.02f, 0.02f, 0.02f, 0.0f );
         colors[ImGuiCol_HeaderActive]          = ImVec4( 0.02f, 0.02f, 0.02f, 0.0f );
