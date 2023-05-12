@@ -173,5 +173,3 @@ add_compile_definitions(ZEP_FEATURE_CPP_FILE_SYSTEM=1)
 
 add_subdirectory(ThirdParty)
 add_subdirectory(Source)
-# add_subdirectory(Tests)
-# add_subdirectory(Programs)
