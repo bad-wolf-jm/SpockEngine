@@ -18,6 +18,7 @@ namespace SE::Core
         UITreeViewNode(UITreeView* aTreeView, UITreeViewNode *aParent);
 
         void SetIcon(UIImage* aImage);
+        void SetIndicator(UIComponent* aImage);
         void SetText( std::string const &aText );
         void SetTextColor( math::vec4 aColor );
 
@@ -27,6 +28,7 @@ namespace SE::Core
         ImGuiTreeNodeFlags mFlags;
 
         Ref<UIStackLayout> mImage  = nullptr;
+        Ref<UIStackLayout> mIndicator = nullptr;
         Ref<UILabel>       mText   = nullptr;
         Ref<UIBoxLayout>   mLayout = nullptr;
 
@@ -53,6 +55,7 @@ namespace SE::Core
         static void *UITreeViewNode_Create();
         static void  UITreeViewNode_Destroy( void *aInstance );        
         static void  UITreeViewNode_SetIcon( void *aInstance, void *aIcon );
+        static void  UITreeViewNode_SetIndicator( void *aInstance, void *aIndicator );
         static void  UITreeViewNode_SetText( void *aInstance, void *aText );
         static void  UITreeViewNode_SetTextColor( void *aInstance, math::vec4 aTextColor );
         static void *UITreeViewNode_Add( void *aInstance );

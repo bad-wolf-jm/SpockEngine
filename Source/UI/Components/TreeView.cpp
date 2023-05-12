@@ -19,6 +19,9 @@ namespace SE::Core
         mText = New<UILabel>( "" );
         mText->SetPadding( 0.0f );
 
+        mIndicator = New<UIStackLayout>();
+        mIndicator->SetPadding( 0.0f );
+
         mLayout = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
         mLayout->SetSimple( true );
         mLayout->SetPadding( 0.0f );
@@ -26,8 +29,10 @@ namespace SE::Core
         mText->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
         mLayout->Add( mImage.get(), 20.0f, false, true );
         mLayout->Add( mText.get(), true, true );
+        mLayout->Add( mIndicator.get(), 20.0f, false, true );
 
         mImage->mIsVisible = false;
+        mIndicator->mIsVisible = false;
     }
 
     void UITreeViewNode::PushStyles()
@@ -50,6 +55,12 @@ namespace SE::Core
     {
         mImage->Add( aIcon, "IMAGE" );
         mImage->mIsVisible = !( aIcon == nullptr );
+    }
+
+    void UITreeViewNode::SetIndicator( UIComponent *aIcon )
+    {
+        mIndicator->Add( aIcon, "IMAGE" );
+        mIndicator->mIsVisible = !( aIcon == nullptr );
     }
 
     void UITreeViewNode::SetText( std::string const &aText ) { mText->SetText( aText ); }
@@ -402,6 +413,14 @@ namespace SE::Core
         auto lImage    = static_cast<UIImage *>( aIcon );
 
         lInstance->SetIcon( lImage );
+    }
+
+    void UITreeViewNode::UITreeViewNode_SetIndicator( void *aInstance, void *aIndicator )
+    {
+        auto lInstance = static_cast<UITreeViewNode *>( aInstance );
+        auto lImage    = static_cast<UIComponent *>( aIndicator );
+
+        lInstance->SetIndicator( lImage );
     }
 
     void *UITreeViewNode::UITreeViewNode_Add( void *aInstance )

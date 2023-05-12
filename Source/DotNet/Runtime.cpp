@@ -636,6 +636,7 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_Create", UITreeViewNode::UITreeViewNode_Create );
         mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_Destroy", UITreeViewNode::UITreeViewNode_Destroy );
         mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_SetIcon", UITreeViewNode::UITreeViewNode_SetIcon );
+        mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_SetIndicator", UITreeViewNode::UITreeViewNode_SetIndicator );
         mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_SetText", UITreeViewNode::UITreeViewNode_SetText );
         mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_SetTextColor", UITreeViewNode::UITreeViewNode_SetTextColor );
         mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_Add", UITreeViewNode::UITreeViewNode_Add );

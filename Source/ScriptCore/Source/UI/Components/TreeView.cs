@@ -18,10 +18,20 @@ namespace SpockEngine
             UITreeViewNode_Destroy(mInstance);
         }
 
+        private UIComponent mIcon;
         private void SetIcon(UIImage aIcon)
         {
+            mIcon = aIcon;
             UITreeViewNode_SetIcon(mInstance, aIcon.Instance);
         }
+
+        private UIComponent mIndicator;
+        private void SetIndicator(UIComponent aIcon)
+        {
+            mIndicator = aIcon;
+            UITreeViewNode_SetIcon(mInstance, aIcon.Instance);
+        }
+
 
         public void SetText(string aText)
         {
@@ -53,6 +63,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UITreeViewNode_SetIcon(ulong aInstance, ulong aIcon);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UITreeViewNode_SetIndicator(ulong aInstance, ulong aIcon);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UITreeViewNode_Add(ulong aInstance);
