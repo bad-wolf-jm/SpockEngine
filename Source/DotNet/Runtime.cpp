@@ -43,6 +43,7 @@
 #include "UI/Layouts/Splitter.h"
 #include "UI/Layouts/StackLayout.h"
 #include "UI/Layouts/ZLayout.h"
+#include "UI/Layouts/Container.h"
 
 #include "UI/Dialog.h"
 #include "UI/Form.h"
@@ -620,6 +621,11 @@ namespace SE::Core
         mono_add_internal_call( "SpockEngine.UIDropdownButton::UIDropdownButton_SetText", UIDropdownButton::UIDropdownButton_SetText );
         mono_add_internal_call( "SpockEngine.UIDropdownButton::UIDropdownButton_SetTextColor",
                                 UIDropdownButton::UIDropdownButton_SetTextColor );
+
+        mono_add_internal_call( "SpockEngine.UIContainer::UIContainer_Create", UIContainer::UIContainer_Create );
+        mono_add_internal_call( "SpockEngine.UIContainer::UIContainer_Destroy", UIContainer::UIContainer_Destroy );
+        mono_add_internal_call( "SpockEngine.UIContainer::UIContainer_SetContent", UIContainer::UIContainer_SetContent );
+
     }
 
 } // namespace SE::Core

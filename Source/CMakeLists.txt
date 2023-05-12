@@ -18,7 +18,6 @@ add_library(LTSimulationEngineRuntime STATIC
     Engine/Engine.cpp
     
     UI/UI.cpp
-    # UI/Components/TreeView/TreeNode.cpp
     UI/Components/Component.cpp
     UI/Components/Button.cpp
     UI/Components/CheckBox.cpp
@@ -42,6 +41,7 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/Layouts/ZLayout.cpp
     UI/Layouts/Splitter.cpp
     UI/Layouts/StackLayout.cpp
+    UI/Layouts/Container.cpp
     UI/Form.cpp
     UI/Dialog.cpp
     UI/UIContext.cpp

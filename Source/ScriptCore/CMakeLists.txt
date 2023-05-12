@@ -59,6 +59,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/Layouts/ZLayout.cs
     Source/UI/Layouts/Splitter.cs
     Source/UI/Layouts/StackLayout.cs
+    Source/UI/Layouts/Container.cs
     
     Source/UI/Form.cs
     Source/UI/Dialog.cs
