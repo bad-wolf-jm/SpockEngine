@@ -37,15 +37,15 @@
 #include "UI/Components/TextInput.h"
 #include "UI/Components/TextOverlay.h"
 #include "UI/Components/TextToggleButton.h"
-#include "UI/Components/Workspace.h"
 #include "UI/Components/TreeView.h"
+#include "UI/Components/Workspace.h"
 
 #include "UI/UI.h"
 
+#include "UI/Layouts/Container.h"
 #include "UI/Layouts/Splitter.h"
 #include "UI/Layouts/StackLayout.h"
 #include "UI/Layouts/ZLayout.h"
-#include "UI/Layouts/Container.h"
 
 #include "UI/Dialog.h"
 #include "UI/Form.h"
@@ -275,371 +275,323 @@ namespace SE::Core
         return DotNetRuntime::NewString( "" );
     }
 
+    static void ICall( std::string const &aName, void *aFunction )
+    {
+        auto lFullName = fmt::format( "SpockEngine.{}", aName );
+        
+        mono_add_internal_call( lFullName.c_str(), aFunction );
+    }
+
     void DotNetRuntime::RegisterInternalCppFunctions()
     {
-        mono_add_internal_call( "SpockEngine.CppCall::OpenFile", OpenFile );
-        mono_add_internal_call( "SpockEngine.UIColor::GetStyleColor", SE::Core::UI::GetStyleColor );
+        ICall( "CppCall::OpenFile", OpenFile );
+        ICall( "UIColor::GetStyleColor", SE::Core::UI::GetStyleColor );
 
-        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetIsVisible", UIComponent::UIComponent_SetIsVisible );
-        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetIsEnabled", UIComponent::UIComponent_SetIsEnabled );
-        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetAllowDragDrop", UIComponent::UIComponent_SetAllowDragDrop );
-        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetPaddingAll", UIComponent::UIComponent_SetPaddingAll );
-        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetPaddingPairs", UIComponent::UIComponent_SetPaddingPairs );
-        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetPaddingIndividual",
-                                UIComponent::UIComponent_SetPaddingIndividual );
-        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetAlignment", UIComponent::UIComponent_SetAlignment );
-        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetHorizontalAlignment",
-                                UIComponent::UIComponent_SetHorizontalAlignment );
-        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetVerticalAlignment",
-                                UIComponent::UIComponent_SetVerticalAlignment );
-        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetBackgroundColor",
-                                UIComponent::UIComponent_SetBackgroundColor );
-        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetFont", UIComponent::UIComponent_SetFont );
-        mono_add_internal_call( "SpockEngine.UIComponent::UIComponent_SetTooltip", UIComponent::UIComponent_SetTooltip );
+        ICall( "UIComponent::UIComponent_SetIsVisible", UIComponent::UIComponent_SetIsVisible );
+        ICall( "UIComponent::UIComponent_SetIsEnabled", UIComponent::UIComponent_SetIsEnabled );
+        ICall( "UIComponent::UIComponent_SetAllowDragDrop", UIComponent::UIComponent_SetAllowDragDrop );
+        ICall( "UIComponent::UIComponent_SetPaddingAll", UIComponent::UIComponent_SetPaddingAll );
+        ICall( "UIComponent::UIComponent_SetPaddingPairs", UIComponent::UIComponent_SetPaddingPairs );
+        ICall( "UIComponent::UIComponent_SetPaddingIndividual", UIComponent::UIComponent_SetPaddingIndividual );
+        ICall( "UIComponent::UIComponent_SetAlignment", UIComponent::UIComponent_SetAlignment );
+        ICall( "UIComponent::UIComponent_SetHorizontalAlignment", UIComponent::UIComponent_SetHorizontalAlignment );
+        ICall( "UIComponent::UIComponent_SetVerticalAlignment", UIComponent::UIComponent_SetVerticalAlignment );
+        ICall( "UIComponent::UIComponent_SetBackgroundColor", UIComponent::UIComponent_SetBackgroundColor );
+        ICall( "UIComponent::UIComponent_SetFont", UIComponent::UIComponent_SetFont );
+        ICall( "UIComponent::UIComponent_SetTooltip", UIComponent::UIComponent_SetTooltip );
 
-        mono_add_internal_call( "SpockEngine.UIForm::UIForm_Create", UIForm::UIForm_Create );
-        mono_add_internal_call( "SpockEngine.UIForm::UIForm_Destroy", UIForm::UIForm_Destroy );
-        mono_add_internal_call( "SpockEngine.UIForm::UIForm_SetTitle", UIForm::UIForm_SetTitle );
-        mono_add_internal_call( "SpockEngine.UIForm::UIForm_SetContent", UIForm::UIForm_SetContent );
-        mono_add_internal_call( "SpockEngine.UIForm::UIForm_Update", UIForm::UIForm_Update );
+        ICall( "UIForm::UIForm_Create", UIForm::UIForm_Create );
+        ICall( "UIForm::UIForm_Destroy", UIForm::UIForm_Destroy );
+        ICall( "UIForm::UIForm_SetTitle", UIForm::UIForm_SetTitle );
+        ICall( "UIForm::UIForm_SetContent", UIForm::UIForm_SetContent );
+        ICall( "UIForm::UIForm_Update", UIForm::UIForm_Update );
+        ICall( "UIForm::UIForm_SetSize", UIForm::UIForm_SetSize );
 
-        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_Create", UIDialog::UIDialog_Create );
-        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_CreateWithTitleAndSize", UIDialog::UIDialog_CreateWithTitleAndSize );
-        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_Destroy", UIDialog::UIDialog_Destroy );
-        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_SetTitle", UIDialog::UIDialog_SetTitle );
-        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_SetSize", UIDialog::UIDialog_SetSize );
-        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_SetContent", UIDialog::UIDialog_SetContent );
-        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_Open", UIDialog::UIDialog_Open );
-        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_Close", UIDialog::UIDialog_Close );
-        mono_add_internal_call( "SpockEngine.UIDialog::UIDialog_Update", UIDialog::UIDialog_Update );
+        ICall( "UIDialog::UIDialog_Create", UIDialog::UIDialog_Create );
+        ICall( "UIDialog::UIDialog_CreateWithTitleAndSize", UIDialog::UIDialog_CreateWithTitleAndSize );
+        ICall( "UIDialog::UIDialog_Destroy", UIDialog::UIDialog_Destroy );
+        ICall( "UIDialog::UIDialog_SetTitle", UIDialog::UIDialog_SetTitle );
+        ICall( "UIDialog::UIDialog_SetSize", UIDialog::UIDialog_SetSize );
+        ICall( "UIDialog::UIDialog_SetContent", UIDialog::UIDialog_SetContent );
+        ICall( "UIDialog::UIDialog_Open", UIDialog::UIDialog_Open );
+        ICall( "UIDialog::UIDialog_Close", UIDialog::UIDialog_Close );
+        ICall( "UIDialog::UIDialog_Update", UIDialog::UIDialog_Update );
 
-        mono_add_internal_call( "SpockEngine.UILabel::UILabel_Create", UILabel::UILabel_Create );
-        mono_add_internal_call( "SpockEngine.UILabel::UILabel_CreateWithText", UILabel::UILabel_CreateWithText );
-        mono_add_internal_call( "SpockEngine.UILabel::UILabel_Destroy", UILabel::UILabel_Destroy );
-        mono_add_internal_call( "SpockEngine.UILabel::UILabel_SetText", UILabel::UILabel_SetText );
-        mono_add_internal_call( "SpockEngine.UILabel::UILabel_SetTextColor", UILabel::UILabel_SetTextColor );
+        ICall( "UILabel::UILabel_Create", UILabel::UILabel_Create );
+        ICall( "UILabel::UILabel_CreateWithText", UILabel::UILabel_CreateWithText );
+        ICall( "UILabel::UILabel_Destroy", UILabel::UILabel_Destroy );
+        ICall( "UILabel::UILabel_SetText", UILabel::UILabel_SetText );
+        ICall( "UILabel::UILabel_SetTextColor", UILabel::UILabel_SetTextColor );
 
-        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_Create", UIBaseImage::UIBaseImage_Create );
-        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_CreateWithPath", UIBaseImage::UIBaseImage_CreateWithPath );
-        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_Destroy", UIBaseImage::UIBaseImage_Destroy );
-        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetImage", UIBaseImage::UIBaseImage_SetImage );
-        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetSize", UIBaseImage::UIBaseImage_SetSize );
-        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_GetSize", UIBaseImage::UIBaseImage_GetSize );
-        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetTopLeft", UIBaseImage::UIBaseImage_SetTopLeft );
-        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_GetTopLeft", UIBaseImage::UIBaseImage_GetTopLeft );
-        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetBottomRight", UIBaseImage::UIBaseImage_SetBottomRight );
-        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_GetBottomRight", UIBaseImage::UIBaseImage_GetBottomRight );
-        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_SetTintColor", UIBaseImage::UIBaseImage_SetTintColor );
-        mono_add_internal_call( "SpockEngine.UIBaseImage::UIBaseImage_GetTintColor", UIBaseImage::UIBaseImage_GetTintColor );
+        ICall( "UIBaseImage::UIBaseImage_Create", UIBaseImage::UIBaseImage_Create );
+        ICall( "UIBaseImage::UIBaseImage_CreateWithPath", UIBaseImage::UIBaseImage_CreateWithPath );
+        ICall( "UIBaseImage::UIBaseImage_Destroy", UIBaseImage::UIBaseImage_Destroy );
+        ICall( "UIBaseImage::UIBaseImage_SetImage", UIBaseImage::UIBaseImage_SetImage );
+        ICall( "UIBaseImage::UIBaseImage_SetSize", UIBaseImage::UIBaseImage_SetSize );
+        ICall( "UIBaseImage::UIBaseImage_GetSize", UIBaseImage::UIBaseImage_GetSize );
+        ICall( "UIBaseImage::UIBaseImage_SetTopLeft", UIBaseImage::UIBaseImage_SetTopLeft );
+        ICall( "UIBaseImage::UIBaseImage_GetTopLeft", UIBaseImage::UIBaseImage_GetTopLeft );
+        ICall( "UIBaseImage::UIBaseImage_SetBottomRight", UIBaseImage::UIBaseImage_SetBottomRight );
+        ICall( "UIBaseImage::UIBaseImage_GetBottomRight", UIBaseImage::UIBaseImage_GetBottomRight );
+        ICall( "UIBaseImage::UIBaseImage_SetTintColor", UIBaseImage::UIBaseImage_SetTintColor );
+        ICall( "UIBaseImage::UIBaseImage_GetTintColor", UIBaseImage::UIBaseImage_GetTintColor );
 
-        mono_add_internal_call( "SpockEngine.UIImage::UIImage_Create", UIImage::UIImage_Create );
-        mono_add_internal_call( "SpockEngine.UIImage::UIImage_CreateWithPath", UIImage::UIImage_CreateWithPath );
-        mono_add_internal_call( "SpockEngine.UIImage::UIImage_Destroy", UIImage::UIImage_Destroy );
+        ICall( "UIImage::UIImage_Create", UIImage::UIImage_Create );
+        ICall( "UIImage::UIImage_CreateWithPath", UIImage::UIImage_CreateWithPath );
+        ICall( "UIImage::UIImage_Destroy", UIImage::UIImage_Destroy );
 
-        mono_add_internal_call( "SpockEngine.UIImageButton::UIImageButton_Create", UIImageButton::UIImageButton_Create );
-        mono_add_internal_call( "SpockEngine.UIImageButton::UIImageButton_CreateWithPath",
-                                UIImageButton::UIImageButton_CreateWithPath );
-        mono_add_internal_call( "SpockEngine.UIImageButton::UIImageButton_Destroy", UIImageButton::UIImageButton_Destroy );
-        mono_add_internal_call( "SpockEngine.UIImageButton::UIImageButton_OnClick", UIImageButton::UIImageButton_OnClick );
+        ICall( "UIImageButton::UIImageButton_Create", UIImageButton::UIImageButton_Create );
+        ICall( "UIImageButton::UIImageButton_CreateWithPath", UIImageButton::UIImageButton_CreateWithPath );
+        ICall( "UIImageButton::UIImageButton_Destroy", UIImageButton::UIImageButton_Destroy );
+        ICall( "UIImageButton::UIImageButton_OnClick", UIImageButton::UIImageButton_OnClick );
 
-        mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_Create",
-                                UIImageToggleButton::UIImageToggleButton_Create );
-        mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_Destroy",
-                                UIImageToggleButton::UIImageToggleButton_Destroy );
-        mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_OnClicked",
-                                UIImageToggleButton::UIImageToggleButton_OnClicked );
-        mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_OnChanged",
-                                UIImageToggleButton::UIImageToggleButton_OnChanged );
-        mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_IsActive",
-                                UIImageToggleButton::UIImageToggleButton_IsActive );
-        mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_SetActive",
-                                UIImageToggleButton::UIImageToggleButton_SetActive );
-        mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_SetActiveImage",
-                                UIImageToggleButton::UIImageToggleButton_SetActiveImage );
-        mono_add_internal_call( "SpockEngine.UIImageToggleButton::UIImageToggleButton_SetInactiveImage",
-                                UIImageToggleButton::UIImageToggleButton_SetInactiveImage );
+        ICall( "UIImageToggleButton::UIImageToggleButton_Create", UIImageToggleButton::UIImageToggleButton_Create );
+        ICall( "UIImageToggleButton::UIImageToggleButton_Destroy", UIImageToggleButton::UIImageToggleButton_Destroy );
+        ICall( "UIImageToggleButton::UIImageToggleButton_OnClicked", UIImageToggleButton::UIImageToggleButton_OnClicked );
+        ICall( "UIImageToggleButton::UIImageToggleButton_OnChanged", UIImageToggleButton::UIImageToggleButton_OnChanged );
+        ICall( "UIImageToggleButton::UIImageToggleButton_IsActive", UIImageToggleButton::UIImageToggleButton_IsActive );
+        ICall( "UIImageToggleButton::UIImageToggleButton_SetActive", UIImageToggleButton::UIImageToggleButton_SetActive );
+        ICall( "UIImageToggleButton::UIImageToggleButton_SetActiveImage", UIImageToggleButton::UIImageToggleButton_SetActiveImage );
+        ICall( "UIImageToggleButton::UIImageToggleButton_SetInactiveImage",
+               UIImageToggleButton::UIImageToggleButton_SetInactiveImage );
 
-        mono_add_internal_call( "SpockEngine.UIButton::UIButton_Create", UIButton::UIButton_Create );
-        mono_add_internal_call( "SpockEngine.UIButton::UIButton_CreateWithText", UIButton::UIButton_CreateWithText );
-        mono_add_internal_call( "SpockEngine.UIButton::UIButton_Destroy", UIButton::UIButton_Destroy );
-        mono_add_internal_call( "SpockEngine.UIButton::UIButton_SetText", UIButton::UIButton_SetText );
-        mono_add_internal_call( "SpockEngine.UIButton::UIButton_OnClick", UIButton::UIButton_OnClick );
+        ICall( "UIButton::UIButton_Create", UIButton::UIButton_Create );
+        ICall( "UIButton::UIButton_CreateWithText", UIButton::UIButton_CreateWithText );
+        ICall( "UIButton::UIButton_Destroy", UIButton::UIButton_Destroy );
+        ICall( "UIButton::UIButton_SetText", UIButton::UIButton_SetText );
+        ICall( "UIButton::UIButton_OnClick", UIButton::UIButton_OnClick );
 
-        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_Create",
-                                UITextToggleButton::UITextToggleButton_Create );
-        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_CreateWithText",
-                                UITextToggleButton::UITextToggleButton_CreateWithText );
-        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_Destroy",
-                                UITextToggleButton::UITextToggleButton_Destroy );
-        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_OnClicked",
-                                UITextToggleButton::UITextToggleButton_OnClicked );
-        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_OnChanged",
-                                UITextToggleButton::UITextToggleButton_OnChanged );
+        ICall( "UITextToggleButton::UITextToggleButton_Create", UITextToggleButton::UITextToggleButton_Create );
+        ICall( "UITextToggleButton::UITextToggleButton_CreateWithText", UITextToggleButton::UITextToggleButton_CreateWithText );
+        ICall( "UITextToggleButton::UITextToggleButton_Destroy", UITextToggleButton::UITextToggleButton_Destroy );
+        ICall( "UITextToggleButton::UITextToggleButton_OnClicked", UITextToggleButton::UITextToggleButton_OnClicked );
+        ICall( "UITextToggleButton::UITextToggleButton_OnChanged", UITextToggleButton::UITextToggleButton_OnChanged );
 
-        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_IsActive",
-                                UITextToggleButton::UITextToggleButton_IsActive );
-        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_SetActive",
-                                UITextToggleButton::UITextToggleButton_SetActive );
-        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_SetActiveColor",
-                                UITextToggleButton::UITextToggleButton_SetActiveColor );
-        mono_add_internal_call( "SpockEngine.UITextToggleButton::UITextToggleButton_SetInactiveColor",
-                                UITextToggleButton::UITextToggleButton_SetInactiveColor );
+        ICall( "UITextToggleButton::UITextToggleButton_IsActive", UITextToggleButton::UITextToggleButton_IsActive );
+        ICall( "UITextToggleButton::UITextToggleButton_SetActive", UITextToggleButton::UITextToggleButton_SetActive );
+        ICall( "UITextToggleButton::UITextToggleButton_SetActiveColor", UITextToggleButton::UITextToggleButton_SetActiveColor );
+        ICall( "UITextToggleButton::UITextToggleButton_SetInactiveColor", UITextToggleButton::UITextToggleButton_SetInactiveColor );
 
-        mono_add_internal_call( "SpockEngine.UICheckBox::UICheckBox_Create", UICheckBox::UICheckBox_Create );
-        mono_add_internal_call( "SpockEngine.UICheckBox::UICheckBox_Destroy", UICheckBox::UICheckBox_Destroy );
-        mono_add_internal_call( "SpockEngine.UICheckBox::UICheckBox_OnClick", UICheckBox::UICheckBox_OnClick );
-        mono_add_internal_call( "SpockEngine.UICheckBox::UICheckBox_IsChecked", UICheckBox::UICheckBox_IsChecked );
-        mono_add_internal_call( "SpockEngine.UICheckBox::UICheckBox_SetIsChecked", UICheckBox::UICheckBox_SetIsChecked );
+        ICall( "UICheckBox::UICheckBox_Create", UICheckBox::UICheckBox_Create );
+        ICall( "UICheckBox::UICheckBox_Destroy", UICheckBox::UICheckBox_Destroy );
+        ICall( "UICheckBox::UICheckBox_OnClick", UICheckBox::UICheckBox_OnClick );
+        ICall( "UICheckBox::UICheckBox_IsChecked", UICheckBox::UICheckBox_IsChecked );
+        ICall( "UICheckBox::UICheckBox_SetIsChecked", UICheckBox::UICheckBox_SetIsChecked );
 
-        mono_add_internal_call( "SpockEngine.UIComboBox::UIComboBox_Create", UIComboBox::UIComboBox_Create );
-        mono_add_internal_call( "SpockEngine.UIComboBox::UIComboBox_CreateWithItems", UIComboBox::UIComboBox_CreateWithItems );
-        mono_add_internal_call( "SpockEngine.UIComboBox::UIComboBox_Destroy", UIComboBox::UIComboBox_Destroy );
-        mono_add_internal_call( "SpockEngine.UIComboBox::UIComboBox_GetCurrent", UIComboBox::UIComboBox_GetCurrent );
-        mono_add_internal_call( "SpockEngine.UIComboBox::UIComboBox_SetCurrent", UIComboBox::UIComboBox_SetCurrent );
-        mono_add_internal_call( "SpockEngine.UIComboBox::UIComboBox_SetItemList", UIComboBox::UIComboBox_SetItemList );
-        mono_add_internal_call( "SpockEngine.UIComboBox::UIComboBox_OnChanged", UIComboBox::UIComboBox_OnChanged );
+        ICall( "UIComboBox::UIComboBox_Create", UIComboBox::UIComboBox_Create );
+        ICall( "UIComboBox::UIComboBox_CreateWithItems", UIComboBox::UIComboBox_CreateWithItems );
+        ICall( "UIComboBox::UIComboBox_Destroy", UIComboBox::UIComboBox_Destroy );
+        ICall( "UIComboBox::UIComboBox_GetCurrent", UIComboBox::UIComboBox_GetCurrent );
+        ICall( "UIComboBox::UIComboBox_SetCurrent", UIComboBox::UIComboBox_SetCurrent );
+        ICall( "UIComboBox::UIComboBox_SetItemList", UIComboBox::UIComboBox_SetItemList );
+        ICall( "UIComboBox::UIComboBox_OnChanged", UIComboBox::UIComboBox_OnChanged );
 
-        mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_CreateWithOrientation",
-                                UIBoxLayout::UIBoxLayout_CreateWithOrientation );
-        mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_Destroy", UIBoxLayout::UIBoxLayout_Destroy );
-        mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_AddAlignedNonFixed",
-                                UIBoxLayout::UIBoxLayout_AddAlignedNonFixed );
-        mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_AddNonAlignedNonFixed",
-                                UIBoxLayout::UIBoxLayout_AddNonAlignedNonFixed );
-        mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_AddAlignedFixed", UIBoxLayout::UIBoxLayout_AddAlignedFixed );
-        mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_AddNonAlignedFixed",
-                                UIBoxLayout::UIBoxLayout_AddNonAlignedFixed );
-        mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_SetItemSpacing", UIBoxLayout::UIBoxLayout_SetItemSpacing );
-        mono_add_internal_call( "SpockEngine.UIBoxLayout::UIBoxLayout_Clear", UIBoxLayout::UIBoxLayout_Clear );
+        ICall( "UIBoxLayout::UIBoxLayout_CreateWithOrientation", UIBoxLayout::UIBoxLayout_CreateWithOrientation );
+        ICall( "UIBoxLayout::UIBoxLayout_Destroy", UIBoxLayout::UIBoxLayout_Destroy );
+        ICall( "UIBoxLayout::UIBoxLayout_AddAlignedNonFixed", UIBoxLayout::UIBoxLayout_AddAlignedNonFixed );
+        ICall( "UIBoxLayout::UIBoxLayout_AddNonAlignedNonFixed", UIBoxLayout::UIBoxLayout_AddNonAlignedNonFixed );
+        ICall( "UIBoxLayout::UIBoxLayout_AddAlignedFixed", UIBoxLayout::UIBoxLayout_AddAlignedFixed );
+        ICall( "UIBoxLayout::UIBoxLayout_AddNonAlignedFixed", UIBoxLayout::UIBoxLayout_AddNonAlignedFixed );
+        ICall( "UIBoxLayout::UIBoxLayout_SetItemSpacing", UIBoxLayout::UIBoxLayout_SetItemSpacing );
+        ICall( "UIBoxLayout::UIBoxLayout_Clear", UIBoxLayout::UIBoxLayout_Clear );
 
-        mono_add_internal_call( "SpockEngine.UIZLayout::UIZLayout_Create", UIZLayout::UIZLayout_Create );
-        mono_add_internal_call( "SpockEngine.UIZLayout::UIZLayout_Destroy", UIZLayout::UIZLayout_Destroy );
-        mono_add_internal_call( "SpockEngine.UIZLayout::UIZLayout_AddAlignedNonFixed", UIZLayout::UIZLayout_AddAlignedNonFixed );
-        mono_add_internal_call( "SpockEngine.UIZLayout::UIZLayout_AddNonAlignedNonFixed", UIZLayout::UIZLayout_AddNonAlignedNonFixed );
-        mono_add_internal_call( "SpockEngine.UIZLayout::UIZLayout_AddAlignedFixed", UIZLayout::UIZLayout_AddAlignedFixed );
-        mono_add_internal_call( "SpockEngine.UIZLayout::UIZLayout_AddNonAlignedFixed", UIZLayout::UIZLayout_AddNonAlignedFixed );
+        ICall( "UIZLayout::UIZLayout_Create", UIZLayout::UIZLayout_Create );
+        ICall( "UIZLayout::UIZLayout_Destroy", UIZLayout::UIZLayout_Destroy );
+        ICall( "UIZLayout::UIZLayout_AddAlignedNonFixed", UIZLayout::UIZLayout_AddAlignedNonFixed );
+        ICall( "UIZLayout::UIZLayout_AddNonAlignedNonFixed", UIZLayout::UIZLayout_AddNonAlignedNonFixed );
+        ICall( "UIZLayout::UIZLayout_AddAlignedFixed", UIZLayout::UIZLayout_AddAlignedFixed );
+        ICall( "UIZLayout::UIZLayout_AddNonAlignedFixed", UIZLayout::UIZLayout_AddNonAlignedFixed );
 
-        mono_add_internal_call( "SpockEngine.UIStackLayout::UIStackLayout_Create", UIStackLayout::UIStackLayout_Create );
-        mono_add_internal_call( "SpockEngine.UIStackLayout::UIStackLayout_Destroy", UIStackLayout::UIStackLayout_Destroy );
-        mono_add_internal_call( "SpockEngine.UIStackLayout::UIStackLayout_Add", UIStackLayout::UIStackLayout_Add );
-        mono_add_internal_call( "SpockEngine.UIStackLayout::UIStackLayout_SetCurrent", UIStackLayout::UIStackLayout_SetCurrent );
+        ICall( "UIStackLayout::UIStackLayout_Create", UIStackLayout::UIStackLayout_Create );
+        ICall( "UIStackLayout::UIStackLayout_Destroy", UIStackLayout::UIStackLayout_Destroy );
+        ICall( "UIStackLayout::UIStackLayout_Add", UIStackLayout::UIStackLayout_Add );
+        ICall( "UIStackLayout::UIStackLayout_SetCurrent", UIStackLayout::UIStackLayout_SetCurrent );
 
-        mono_add_internal_call( "SpockEngine.UISplitter::UISplitter_Create", UISplitter::UISplitter_Create );
-        mono_add_internal_call( "SpockEngine.UISplitter::UISplitter_CreateWithOrientation",
-                                UISplitter::UISplitter_CreateWithOrientation );
-        mono_add_internal_call( "SpockEngine.UISplitter::UISplitter_Destroy", UISplitter::UISplitter_Destroy );
-        mono_add_internal_call( "SpockEngine.UISplitter::UISplitter_Add1", UISplitter::UISplitter_Add1 );
-        mono_add_internal_call( "SpockEngine.UISplitter::UISplitter_Add2", UISplitter::UISplitter_Add2 );
-        mono_add_internal_call( "SpockEngine.UISplitter::UISplitter_SetItemSpacing", UISplitter::UISplitter_SetItemSpacing );
+        ICall( "UISplitter::UISplitter_Create", UISplitter::UISplitter_Create );
+        ICall( "UISplitter::UISplitter_CreateWithOrientation", UISplitter::UISplitter_CreateWithOrientation );
+        ICall( "UISplitter::UISplitter_Destroy", UISplitter::UISplitter_Destroy );
+        ICall( "UISplitter::UISplitter_Add1", UISplitter::UISplitter_Add1 );
+        ICall( "UISplitter::UISplitter_Add2", UISplitter::UISplitter_Add2 );
+        ICall( "UISplitter::UISplitter_SetItemSpacing", UISplitter::UISplitter_SetItemSpacing );
 
-        mono_add_internal_call( "SpockEngine.UITableColumn::UITableColumn_SetTooltip", sTableColumn::UITableColumn_SetTooltip );
-        mono_add_internal_call( "SpockEngine.UITableColumn::UITableColumn_SetForegroundColor",
-                                sTableColumn::UITableColumn_SetForegroundColor );
-        mono_add_internal_call( "SpockEngine.UITableColumn::UITableColumn_SetBackgroundColor",
-                                sTableColumn::UITableColumn_SetBackgroundColor );
+        ICall( "UITableColumn::UITableColumn_SetTooltip", sTableColumn::UITableColumn_SetTooltip );
+        ICall( "UITableColumn::UITableColumn_SetForegroundColor", sTableColumn::UITableColumn_SetForegroundColor );
+        ICall( "UITableColumn::UITableColumn_SetBackgroundColor", sTableColumn::UITableColumn_SetBackgroundColor );
 
-        mono_add_internal_call( "SpockEngine.UIFloat64Column::UIFloat64Column_Create", sFloat64Column::UIFloat64Column_Create );
-        mono_add_internal_call( "SpockEngine.UIFloat64Column::UIFloat64Column_CreateFull",
-                                sFloat64Column::UIFloat64Column_CreateFull );
-        mono_add_internal_call( "SpockEngine.UIFloat64Column::UIFloat64Column_Destroy", sFloat64Column::UIFloat64Column_Destroy );
-        mono_add_internal_call( "SpockEngine.UIFloat64Column::UIFloat64Column_Clear", sFloat64Column::UIFloat64Column_Clear );
-        mono_add_internal_call( "SpockEngine.UIFloat64Column::UIFloat64Column_SetData", sFloat64Column::UIFloat64Column_SetData );
+        ICall( "UIFloat64Column::UIFloat64Column_Create", sFloat64Column::UIFloat64Column_Create );
+        ICall( "UIFloat64Column::UIFloat64Column_CreateFull", sFloat64Column::UIFloat64Column_CreateFull );
+        ICall( "UIFloat64Column::UIFloat64Column_Destroy", sFloat64Column::UIFloat64Column_Destroy );
+        ICall( "UIFloat64Column::UIFloat64Column_Clear", sFloat64Column::UIFloat64Column_Clear );
+        ICall( "UIFloat64Column::UIFloat64Column_SetData", sFloat64Column::UIFloat64Column_SetData );
 
-        mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_Create", sUint32Column::UIUint32Column_Create );
-        mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_CreateFull", sUint32Column::UIUint32Column_CreateFull );
-        mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_Destroy", sUint32Column::UIUint32Column_Destroy );
-        mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_Clear", sUint32Column::UIUint32Column_Clear );
-        mono_add_internal_call( "SpockEngine.UIUint32Column::UIUint32Column_SetData", sUint32Column::UIUint32Column_SetData );
+        ICall( "UIUint32Column::UIUint32Column_Create", sUint32Column::UIUint32Column_Create );
+        ICall( "UIUint32Column::UIUint32Column_CreateFull", sUint32Column::UIUint32Column_CreateFull );
+        ICall( "UIUint32Column::UIUint32Column_Destroy", sUint32Column::UIUint32Column_Destroy );
+        ICall( "UIUint32Column::UIUint32Column_Clear", sUint32Column::UIUint32Column_Clear );
+        ICall( "UIUint32Column::UIUint32Column_SetData", sUint32Column::UIUint32Column_SetData );
 
-        mono_add_internal_call( "SpockEngine.UIStringColumn::UIStringColumn_Create", sStringColumn::UIStringColumn_Create );
-        mono_add_internal_call( "SpockEngine.UIStringColumn::UIStringColumn_CreateFull", sStringColumn::UIStringColumn_CreateFull );
-        mono_add_internal_call( "SpockEngine.UIStringColumn::UIStringColumn_Destroy", sStringColumn::UIStringColumn_Destroy );
-        mono_add_internal_call( "SpockEngine.UIStringColumn::UIStringColumn_Clear", sStringColumn::UIStringColumn_Clear );
-        mono_add_internal_call( "SpockEngine.UIStringColumn::UIStringColumn_SetData", sStringColumn::UIStringColumn_SetData );
+        ICall( "UIStringColumn::UIStringColumn_Create", sStringColumn::UIStringColumn_Create );
+        ICall( "UIStringColumn::UIStringColumn_CreateFull", sStringColumn::UIStringColumn_CreateFull );
+        ICall( "UIStringColumn::UIStringColumn_Destroy", sStringColumn::UIStringColumn_Destroy );
+        ICall( "UIStringColumn::UIStringColumn_Clear", sStringColumn::UIStringColumn_Clear );
+        ICall( "UIStringColumn::UIStringColumn_SetData", sStringColumn::UIStringColumn_SetData );
 
-        mono_add_internal_call( "SpockEngine.UITable::UITable_Create", UITable::UITable_Create );
-        mono_add_internal_call( "SpockEngine.UITable::UITable_Destroy", UITable::UITable_Destroy );
-        mono_add_internal_call( "SpockEngine.UITable::UITable_OnRowClicked", UITable::UITable_OnRowClicked );
-        mono_add_internal_call( "SpockEngine.UITable::UITable_AddColumn", UITable::UITable_AddColumn );
-        mono_add_internal_call( "SpockEngine.UITable::UITable_SetRowHeight", UITable::UITable_SetRowHeight );
-        mono_add_internal_call( "SpockEngine.UITable::UITable_SetRowBackgroundColor", UITable::UITable_SetRowBackgroundColor );
-        mono_add_internal_call( "SpockEngine.UITable::UITable_ClearRowBackgroundColor", UITable::UITable_ClearRowBackgroundColor );
-        mono_add_internal_call( "SpockEngine.UITable::UITable_SetDisplayedRowIndices", UITable::UITable_SetDisplayedRowIndices );
+        ICall( "UITable::UITable_Create", UITable::UITable_Create );
+        ICall( "UITable::UITable_Destroy", UITable::UITable_Destroy );
+        ICall( "UITable::UITable_OnRowClicked", UITable::UITable_OnRowClicked );
+        ICall( "UITable::UITable_AddColumn", UITable::UITable_AddColumn );
+        ICall( "UITable::UITable_SetRowHeight", UITable::UITable_SetRowHeight );
+        ICall( "UITable::UITable_SetRowBackgroundColor", UITable::UITable_SetRowBackgroundColor );
+        ICall( "UITable::UITable_ClearRowBackgroundColor", UITable::UITable_ClearRowBackgroundColor );
+        ICall( "UITable::UITable_SetDisplayedRowIndices", UITable::UITable_SetDisplayedRowIndices );
 
-        mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_Create", UIPlot::UIPlot_Create );
-        mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_Destroy", UIPlot::UIPlot_Destroy );
-        mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_Clear", UIPlot::UIPlot_Clear );
-        mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_ConfigureLegend", UIPlot::UIPlot_ConfigureLegend );
-        mono_add_internal_call( "SpockEngine.UIPlot::UIPlot_Add", UIPlot::UIPlot_Add );
-        mono_add_internal_call( "SpockEngine.UIPlotAxis::UIPlot_SetAxisLimits", UIPlot::UIPlot_SetAxisLimits );
-        mono_add_internal_call( "SpockEngine.UIPlotAxis::UIPlot_GetAxisTitle", UIPlot::UIPlot_GetAxisTitle );
-        mono_add_internal_call( "SpockEngine.UIPlotAxis::UIPlot_SetAxisTitle", UIPlot::UIPlot_SetAxisTitle );
+        ICall( "UIPlot::UIPlot_Create", UIPlot::UIPlot_Create );
+        ICall( "UIPlot::UIPlot_Destroy", UIPlot::UIPlot_Destroy );
+        ICall( "UIPlot::UIPlot_Clear", UIPlot::UIPlot_Clear );
+        ICall( "UIPlot::UIPlot_ConfigureLegend", UIPlot::UIPlot_ConfigureLegend );
+        ICall( "UIPlot::UIPlot_Add", UIPlot::UIPlot_Add );
+        ICall( "UIPlotAxis::UIPlot_SetAxisLimits", UIPlot::UIPlot_SetAxisLimits );
+        ICall( "UIPlotAxis::UIPlot_GetAxisTitle", UIPlot::UIPlot_GetAxisTitle );
+        ICall( "UIPlotAxis::UIPlot_SetAxisTitle", UIPlot::UIPlot_SetAxisTitle );
 
-        mono_add_internal_call( "SpockEngine.UIPlotData::UIPlotData_SetThickness", sPlotData::UIPlotData_SetThickness );
-        mono_add_internal_call( "SpockEngine.UIPlotData::UIPlotData_SetLegend", sPlotData::UIPlotData_SetLegend );
-        mono_add_internal_call( "SpockEngine.UIPlotData::UIPlotData_SetColor", sPlotData::UIPlotData_SetColor );
-        mono_add_internal_call( "SpockEngine.UIPlotData::UIPlotData_SetXAxis", sPlotData::UIPlotData_SetXAxis );
-        mono_add_internal_call( "SpockEngine.UIPlotData::UIPlotData_SetYAxis", sPlotData::UIPlotData_SetYAxis );
+        ICall( "UIPlotData::UIPlotData_SetThickness", sPlotData::UIPlotData_SetThickness );
+        ICall( "UIPlotData::UIPlotData_SetLegend", sPlotData::UIPlotData_SetLegend );
+        ICall( "UIPlotData::UIPlotData_SetColor", sPlotData::UIPlotData_SetColor );
+        ICall( "UIPlotData::UIPlotData_SetXAxis", sPlotData::UIPlotData_SetXAxis );
+        ICall( "UIPlotData::UIPlotData_SetYAxis", sPlotData::UIPlotData_SetYAxis );
 
-        mono_add_internal_call( "SpockEngine.UIFloat64LinePlot::UIFloat64LinePlot_Create",
-                                sFloat64LinePlot::UIFloat64LinePlot_Create );
-        mono_add_internal_call( "SpockEngine.UIFloat64LinePlot::UIFloat64LinePlot_Destroy",
-                                sFloat64LinePlot::UIFloat64LinePlot_Destroy );
-        mono_add_internal_call( "SpockEngine.UIFloat64LinePlot::UIFloat64LinePlot_SetX", sFloat64LinePlot::UIFloat64LinePlot_SetX );
-        mono_add_internal_call( "SpockEngine.UIFloat64LinePlot::UIFloat64LinePlot_SetY", sFloat64LinePlot::UIFloat64LinePlot_SetY );
+        ICall( "UIFloat64LinePlot::UIFloat64LinePlot_Create", sFloat64LinePlot::UIFloat64LinePlot_Create );
+        ICall( "UIFloat64LinePlot::UIFloat64LinePlot_Destroy", sFloat64LinePlot::UIFloat64LinePlot_Destroy );
+        ICall( "UIFloat64LinePlot::UIFloat64LinePlot_SetX", sFloat64LinePlot::UIFloat64LinePlot_SetX );
+        ICall( "UIFloat64LinePlot::UIFloat64LinePlot_SetY", sFloat64LinePlot::UIFloat64LinePlot_SetY );
 
-        mono_add_internal_call( "SpockEngine.UIFloat64ScatterPlot::UIFloat64ScatterPlot_Create",
-                                sFloat64ScatterPlot::UIFloat64ScatterPlot_Create );
-        mono_add_internal_call( "SpockEngine.UIFloat64ScatterPlot::UIFloat64ScatterPlot_Destroy",
-                                sFloat64ScatterPlot::UIFloat64ScatterPlot_Destroy );
-        mono_add_internal_call( "SpockEngine.UIFloat64ScatterPlot::UIFloat64ScatterPlot_SetX",
-                                sFloat64ScatterPlot::UIFloat64ScatterPlot_SetX );
-        mono_add_internal_call( "SpockEngine.UIFloat64ScatterPlot::UIFloat64ScatterPlot_SetY",
-                                sFloat64ScatterPlot::UIFloat64ScatterPlot_SetY );
+        ICall( "UIFloat64ScatterPlot::UIFloat64ScatterPlot_Create", sFloat64ScatterPlot::UIFloat64ScatterPlot_Create );
+        ICall( "UIFloat64ScatterPlot::UIFloat64ScatterPlot_Destroy", sFloat64ScatterPlot::UIFloat64ScatterPlot_Destroy );
+        ICall( "UIFloat64ScatterPlot::UIFloat64ScatterPlot_SetX", sFloat64ScatterPlot::UIFloat64ScatterPlot_SetX );
+        ICall( "UIFloat64ScatterPlot::UIFloat64ScatterPlot_SetY", sFloat64ScatterPlot::UIFloat64ScatterPlot_SetY );
 
-        mono_add_internal_call( "SpockEngine.UIVLinePlot::UIVLinePlot_Create", sVLine::UIVLinePlot_Create );
-        mono_add_internal_call( "SpockEngine.UIVLinePlot::UIVLinePlot_Destroy", sVLine::UIVLinePlot_Destroy );
-        mono_add_internal_call( "SpockEngine.UIVLinePlot::UIVLinePlot_SetX", sVLine::UIVLinePlot_SetX );
+        ICall( "UIVLinePlot::UIVLinePlot_Create", sVLine::UIVLinePlot_Create );
+        ICall( "UIVLinePlot::UIVLinePlot_Destroy", sVLine::UIVLinePlot_Destroy );
+        ICall( "UIVLinePlot::UIVLinePlot_SetX", sVLine::UIVLinePlot_SetX );
 
-        mono_add_internal_call( "SpockEngine.UIHLinePlot::UIHLinePlot_Create", sHLine::UIHLinePlot_Create );
-        mono_add_internal_call( "SpockEngine.UIHLinePlot::UIHLinePlot_Destroy", sHLine::UIHLinePlot_Destroy );
-        mono_add_internal_call( "SpockEngine.UIHLinePlot::UIHLinePlot_SetY", sHLine::UIHLinePlot_SetY );
+        ICall( "UIHLinePlot::UIHLinePlot_Create", sHLine::UIHLinePlot_Create );
+        ICall( "UIHLinePlot::UIHLinePlot_Destroy", sHLine::UIHLinePlot_Destroy );
+        ICall( "UIHLinePlot::UIHLinePlot_SetY", sHLine::UIHLinePlot_SetY );
 
-        mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_Create", sAxisTag::UIAxisTag_Create );
-        mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_CreateWithTextAndColor",
-                                sAxisTag::UIAxisTag_CreateWithTextAndColor );
-        mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_Destroy", sAxisTag::UIAxisTag_Destroy );
-        mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_SetX", sAxisTag::UIAxisTag_SetX );
-        mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_SetText", sAxisTag::UIAxisTag_SetText );
-        mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_GetColor", sAxisTag::UIAxisTag_GetColor );
-        mono_add_internal_call( "SpockEngine.UIAxisTag::UIAxisTag_SetColor", sAxisTag::UIAxisTag_SetColor );
+        ICall( "UIAxisTag::UIAxisTag_Create", sAxisTag::UIAxisTag_Create );
+        ICall( "UIAxisTag::UIAxisTag_CreateWithTextAndColor", sAxisTag::UIAxisTag_CreateWithTextAndColor );
+        ICall( "UIAxisTag::UIAxisTag_Destroy", sAxisTag::UIAxisTag_Destroy );
+        ICall( "UIAxisTag::UIAxisTag_SetX", sAxisTag::UIAxisTag_SetX );
+        ICall( "UIAxisTag::UIAxisTag_SetText", sAxisTag::UIAxisTag_SetText );
+        ICall( "UIAxisTag::UIAxisTag_GetColor", sAxisTag::UIAxisTag_GetColor );
+        ICall( "UIAxisTag::UIAxisTag_SetColor", sAxisTag::UIAxisTag_SetColor );
 
-        mono_add_internal_call( "SpockEngine.UIVRange::UIVRangePlot_Create", sVRange::UIVRangePlot_Create );
-        mono_add_internal_call( "SpockEngine.UIVRange::UIVRangePlot_Destroy", sVRange::UIVRangePlot_Destroy );
-        mono_add_internal_call( "SpockEngine.UIVRange::UIVRangePlot_GetMin", sVRange::UIVRangePlot_GetMin );
-        mono_add_internal_call( "SpockEngine.UIVRange::UIVRangePlot_SetMin", sVRange::UIVRangePlot_SetMin );
-        mono_add_internal_call( "SpockEngine.UIVRange::UIVRangePlot_GetMax", sVRange::UIVRangePlot_GetMax );
-        mono_add_internal_call( "SpockEngine.UIVRange::UIVRangePlot_SetMax", sVRange::UIVRangePlot_SetMax );
+        ICall( "UIVRange::UIVRangePlot_Create", sVRange::UIVRangePlot_Create );
+        ICall( "UIVRange::UIVRangePlot_Destroy", sVRange::UIVRangePlot_Destroy );
+        ICall( "UIVRange::UIVRangePlot_GetMin", sVRange::UIVRangePlot_GetMin );
+        ICall( "UIVRange::UIVRangePlot_SetMin", sVRange::UIVRangePlot_SetMin );
+        ICall( "UIVRange::UIVRangePlot_GetMax", sVRange::UIVRangePlot_GetMax );
+        ICall( "UIVRange::UIVRangePlot_SetMax", sVRange::UIVRangePlot_SetMax );
 
-        mono_add_internal_call( "SpockEngine.UIHRange::UIHRangePlot_Create", sHRange::UIHRangePlot_Create );
-        mono_add_internal_call( "SpockEngine.UIHRange::UIHRangePlot_Destroy", sHRange::UIHRangePlot_Destroy );
-        mono_add_internal_call( "SpockEngine.UIHRange::UIHRangePlot_GetMin", sHRange::UIHRangePlot_GetMin );
-        mono_add_internal_call( "SpockEngine.UIHRange::UIHRangePlot_SetMin", sHRange::UIHRangePlot_SetMin );
-        mono_add_internal_call( "SpockEngine.UIHRange::UIHRangePlot_GetMax", sHRange::UIHRangePlot_GetMax );
-        mono_add_internal_call( "SpockEngine.UIHRange::UIHRangePlot_SetMax", sHRange::UIHRangePlot_SetMax );
+        ICall( "UIHRange::UIHRangePlot_Create", sHRange::UIHRangePlot_Create );
+        ICall( "UIHRange::UIHRangePlot_Destroy", sHRange::UIHRangePlot_Destroy );
+        ICall( "UIHRange::UIHRangePlot_GetMin", sHRange::UIHRangePlot_GetMin );
+        ICall( "UIHRange::UIHRangePlot_SetMin", sHRange::UIHRangePlot_SetMin );
+        ICall( "UIHRange::UIHRangePlot_GetMax", sHRange::UIHRangePlot_GetMax );
+        ICall( "UIHRange::UIHRangePlot_SetMax", sHRange::UIHRangePlot_SetMax );
 
-        mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_Create", UITextOverlay::UITextOverlay_Create );
-        mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_Destroy", UITextOverlay::UITextOverlay_Destroy );
-        mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_AddText", UITextOverlay::UITextOverlay_AddText );
-        mono_add_internal_call( "SpockEngine.UITextOverlay::UITextOverlay_Clear", UITextOverlay::UITextOverlay_Clear );
+        ICall( "UITextOverlay::UITextOverlay_Create", UITextOverlay::UITextOverlay_Create );
+        ICall( "UITextOverlay::UITextOverlay_Destroy", UITextOverlay::UITextOverlay_Destroy );
+        ICall( "UITextOverlay::UITextOverlay_AddText", UITextOverlay::UITextOverlay_AddText );
+        ICall( "UITextOverlay::UITextOverlay_Clear", UITextOverlay::UITextOverlay_Clear );
 
-        mono_add_internal_call( "SpockEngine.UIWorkspace::UIWorkspace_Create", UIWorkspace::UIWorkspace_Create );
-        mono_add_internal_call( "SpockEngine.UIWorkspace::UIWorkspace_Destroy", UIWorkspace::UIWorkspace_Destroy );
-        mono_add_internal_call( "SpockEngine.UIWorkspace::UIWorkspace_Add", UIWorkspace::UIWorkspace_Add );
-        mono_add_internal_call( "SpockEngine.UIWorkspace::UIWorkspace_RegisterCloseDocumentDelegate",
-                                UIWorkspace::UIWorkspace_RegisterCloseDocumentDelegate );
+        ICall( "UIWorkspace::UIWorkspace_Create", UIWorkspace::UIWorkspace_Create );
+        ICall( "UIWorkspace::UIWorkspace_Destroy", UIWorkspace::UIWorkspace_Destroy );
+        ICall( "UIWorkspace::UIWorkspace_Add", UIWorkspace::UIWorkspace_Add );
+        ICall( "UIWorkspace::UIWorkspace_RegisterCloseDocumentDelegate", UIWorkspace::UIWorkspace_RegisterCloseDocumentDelegate );
 
-        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_Create",
-                                UIWorkspaceDocument::UIWorkspaceDocument_Create );
-        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_Destroy",
-                                UIWorkspaceDocument::UIWorkspaceDocument_Destroy );
-        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_SetContent",
-                                UIWorkspaceDocument::UIWorkspaceDocument_SetContent );
-        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_Update",
-                                UIWorkspaceDocument::UIWorkspaceDocument_Update );
-        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_SetName",
-                                UIWorkspaceDocument::UIWorkspaceDocument_SetName );
-        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_IsDirty",
-                                UIWorkspaceDocument::UIWorkspaceDocument_IsDirty );
-        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_MarkAsDirty",
-                                UIWorkspaceDocument::UIWorkspaceDocument_MarkAsDirty );
-        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_Open",
-                                UIWorkspaceDocument::UIWorkspaceDocument_Open );
-        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_RequestClose",
-                                UIWorkspaceDocument::UIWorkspaceDocument_RequestClose );
-        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_ForceClose",
-                                UIWorkspaceDocument::UIWorkspaceDocument_ForceClose );
-        mono_add_internal_call( "SpockEngine.UIWorkspaceDocument::UIWorkspaceDocument_RegisterSaveDelegate",
-                                UIWorkspaceDocument::UIWorkspaceDocument_RegisterSaveDelegate );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_Create", UIWorkspaceDocument::UIWorkspaceDocument_Create );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_Destroy", UIWorkspaceDocument::UIWorkspaceDocument_Destroy );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_SetContent", UIWorkspaceDocument::UIWorkspaceDocument_SetContent );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_Update", UIWorkspaceDocument::UIWorkspaceDocument_Update );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_SetName", UIWorkspaceDocument::UIWorkspaceDocument_SetName );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_IsDirty", UIWorkspaceDocument::UIWorkspaceDocument_IsDirty );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_MarkAsDirty", UIWorkspaceDocument::UIWorkspaceDocument_MarkAsDirty );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_Open", UIWorkspaceDocument::UIWorkspaceDocument_Open );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_RequestClose", UIWorkspaceDocument::UIWorkspaceDocument_RequestClose );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_ForceClose", UIWorkspaceDocument::UIWorkspaceDocument_ForceClose );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_RegisterSaveDelegate",
+               UIWorkspaceDocument::UIWorkspaceDocument_RegisterSaveDelegate );
 
-        mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_Create", UIMenuItem::UIMenuItem_Create );
-        mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_CreateWithText", UIMenuItem::UIMenuItem_CreateWithText );
-        mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_CreateWithTextAndShortcut",
-                                UIMenuItem::UIMenuItem_CreateWithTextAndShortcut );
-        mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_Destroy", UIMenuItem::UIMenuItem_Destroy );
-        mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_SetText", UIMenuItem::UIMenuItem_SetText );
-        mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_SetShortcut", UIMenuItem::UIMenuItem_SetShortcut );
-        mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_SetTextColor", UIMenuItem::UIMenuItem_SetTextColor );
-        mono_add_internal_call( "SpockEngine.UIMenuItem::UIMenuItem_OnTrigger", UIMenuItem::UIMenuItem_OnTrigger );
+        ICall( "UIMenuItem::UIMenuItem_Create", UIMenuItem::UIMenuItem_Create );
+        ICall( "UIMenuItem::UIMenuItem_CreateWithText", UIMenuItem::UIMenuItem_CreateWithText );
+        ICall( "UIMenuItem::UIMenuItem_CreateWithTextAndShortcut", UIMenuItem::UIMenuItem_CreateWithTextAndShortcut );
+        ICall( "UIMenuItem::UIMenuItem_Destroy", UIMenuItem::UIMenuItem_Destroy );
+        ICall( "UIMenuItem::UIMenuItem_SetText", UIMenuItem::UIMenuItem_SetText );
+        ICall( "UIMenuItem::UIMenuItem_SetShortcut", UIMenuItem::UIMenuItem_SetShortcut );
+        ICall( "UIMenuItem::UIMenuItem_SetTextColor", UIMenuItem::UIMenuItem_SetTextColor );
+        ICall( "UIMenuItem::UIMenuItem_OnTrigger", UIMenuItem::UIMenuItem_OnTrigger );
 
-        mono_add_internal_call( "SpockEngine.UIMenuSeparator::UIMenuSeparator_Create", UIMenuSeparator::UIMenuSeparator_Create );
-        mono_add_internal_call( "SpockEngine.UIMenuSeparator::UIMenuSeparator_Destroy", UIMenuSeparator::UIMenuSeparator_Destroy );
+        ICall( "UIMenuSeparator::UIMenuSeparator_Create", UIMenuSeparator::UIMenuSeparator_Create );
+        ICall( "UIMenuSeparator::UIMenuSeparator_Destroy", UIMenuSeparator::UIMenuSeparator_Destroy );
 
-        mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_Create", UIMenu::UIMenu_Create );
-        mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_CreateWithText", UIMenu::UIMenu_CreateWithText );
-        mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_Destroy", UIMenu::UIMenu_Destroy );
-        mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_AddAction", UIMenu::UIMenu_AddAction );
-        mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_AddMenu", UIMenu::UIMenu_AddMenu );
-        mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_AddSeparator", UIMenu::UIMenu_AddSeparator );
-        mono_add_internal_call( "SpockEngine.UIMenu::UIMenu_Update", UIMenu::UIMenu_Update );
+        ICall( "UIMenu::UIMenu_Create", UIMenu::UIMenu_Create );
+        ICall( "UIMenu::UIMenu_CreateWithText", UIMenu::UIMenu_CreateWithText );
+        ICall( "UIMenu::UIMenu_Destroy", UIMenu::UIMenu_Destroy );
+        ICall( "UIMenu::UIMenu_AddAction", UIMenu::UIMenu_AddAction );
+        ICall( "UIMenu::UIMenu_AddMenu", UIMenu::UIMenu_AddMenu );
+        ICall( "UIMenu::UIMenu_AddSeparator", UIMenu::UIMenu_AddSeparator );
+        ICall( "UIMenu::UIMenu_Update", UIMenu::UIMenu_Update );
 
-        mono_add_internal_call( "SpockEngine.UIPropertyValue::UIPropertyValue_Create", UIPropertyValue::UIPropertyValue_Create );
-        mono_add_internal_call( "SpockEngine.UIPropertyValue::UIPropertyValue_CreateWithText",
-                                UIPropertyValue::UIPropertyValue_CreateWithText );
-        mono_add_internal_call( "SpockEngine.UIPropertyValue::UIPropertyValue_CreateWithTextAndOrientation",
-                                UIPropertyValue::UIPropertyValue_CreateWithTextAndOrientation );
-        mono_add_internal_call( "SpockEngine.UIPropertyValue::UIPropertyValue_Destroy", UIPropertyValue::UIPropertyValue_Destroy );
-        mono_add_internal_call( "SpockEngine.UIPropertyValue::UIPropertyValue_SetValue", UIPropertyValue::UIPropertyValue_SetValue );
-        mono_add_internal_call( "SpockEngine.UIPropertyValue::UIPropertyValue_SetValueFont",
-                                UIPropertyValue::UIPropertyValue_SetValueFont );
-        mono_add_internal_call( "SpockEngine.UIPropertyValue::UIPropertyValue_SetNameFont",
-                                UIPropertyValue::UIPropertyValue_SetNameFont );
+        ICall( "UIPropertyValue::UIPropertyValue_Create", UIPropertyValue::UIPropertyValue_Create );
+        ICall( "UIPropertyValue::UIPropertyValue_CreateWithText", UIPropertyValue::UIPropertyValue_CreateWithText );
+        ICall( "UIPropertyValue::UIPropertyValue_CreateWithTextAndOrientation",
+               UIPropertyValue::UIPropertyValue_CreateWithTextAndOrientation );
+        ICall( "UIPropertyValue::UIPropertyValue_Destroy", UIPropertyValue::UIPropertyValue_Destroy );
+        ICall( "UIPropertyValue::UIPropertyValue_SetValue", UIPropertyValue::UIPropertyValue_SetValue );
+        ICall( "UIPropertyValue::UIPropertyValue_SetValueFont", UIPropertyValue::UIPropertyValue_SetValueFont );
+        ICall( "UIPropertyValue::UIPropertyValue_SetNameFont", UIPropertyValue::UIPropertyValue_SetNameFont );
 
-        mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_Create", UITextInput::UITextInput_Create );
-        mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_CreateWithText", UITextInput::UITextInput_CreateWithText );
-        mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_Destroy", UITextInput::UITextInput_Destroy );
-        mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_GetText", UITextInput::UITextInput_GetText );
-        mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_SetHintText", UITextInput::UITextInput_SetHintText );
-        mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_SetTextColor", UITextInput::UITextInput_SetTextColor );
-        mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_SetBufferSize", UITextInput::UITextInput_SetBufferSize );
-        mono_add_internal_call( "SpockEngine.UITextInput::UITextInput_OnTextChanged", UITextInput::UITextInput_OnTextChanged );
+        ICall( "UITextInput::UITextInput_Create", UITextInput::UITextInput_Create );
+        ICall( "UITextInput::UITextInput_CreateWithText", UITextInput::UITextInput_CreateWithText );
+        ICall( "UITextInput::UITextInput_Destroy", UITextInput::UITextInput_Destroy );
+        ICall( "UITextInput::UITextInput_GetText", UITextInput::UITextInput_GetText );
+        ICall( "UITextInput::UITextInput_SetHintText", UITextInput::UITextInput_SetHintText );
+        ICall( "UITextInput::UITextInput_SetTextColor", UITextInput::UITextInput_SetTextColor );
+        ICall( "UITextInput::UITextInput_SetBufferSize", UITextInput::UITextInput_SetBufferSize );
+        ICall( "UITextInput::UITextInput_OnTextChanged", UITextInput::UITextInput_OnTextChanged );
 
-        mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_Create", UIProgressBar::UIProgressBar_Create );
-        mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_Destroy", UIProgressBar::UIProgressBar_Destroy );
-        mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_SetProgressValue",
-                                UIProgressBar::UIProgressBar_SetProgressValue );
-        mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_SetProgressColor",
-                                UIProgressBar::UIProgressBar_SetProgressColor );
-        mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_SetText", UIProgressBar::UIProgressBar_SetText );
-        mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_SetTextColor", UIProgressBar::UIProgressBar_SetTextColor );
-        mono_add_internal_call( "SpockEngine.UIProgressBar::UIProgressBar_SetThickness", UIProgressBar::UIProgressBar_SetThickness );
+        ICall( "UIProgressBar::UIProgressBar_Create", UIProgressBar::UIProgressBar_Create );
+        ICall( "UIProgressBar::UIProgressBar_Destroy", UIProgressBar::UIProgressBar_Destroy );
+        ICall( "UIProgressBar::UIProgressBar_SetProgressValue", UIProgressBar::UIProgressBar_SetProgressValue );
+        ICall( "UIProgressBar::UIProgressBar_SetProgressColor", UIProgressBar::UIProgressBar_SetProgressColor );
+        ICall( "UIProgressBar::UIProgressBar_SetText", UIProgressBar::UIProgressBar_SetText );
+        ICall( "UIProgressBar::UIProgressBar_SetTextColor", UIProgressBar::UIProgressBar_SetTextColor );
+        ICall( "UIProgressBar::UIProgressBar_SetThickness", UIProgressBar::UIProgressBar_SetThickness );
 
-        mono_add_internal_call( "SpockEngine.UIDropdownButton::UIDropdownButton_Create", UIDropdownButton::UIDropdownButton_Create );
-        mono_add_internal_call( "SpockEngine.UIDropdownButton::UIDropdownButton_Destroy", UIDropdownButton::UIDropdownButton_Destroy );
-        mono_add_internal_call( "SpockEngine.UIDropdownButton::UIDropdownButton_SetContent",
-                                UIDropdownButton::UIDropdownButton_SetContent );
-        mono_add_internal_call( "SpockEngine.UIDropdownButton::UIDropdownButton_SetImage",
-                                UIDropdownButton::UIDropdownButton_SetImage );
-        mono_add_internal_call( "SpockEngine.UIDropdownButton::UIDropdownButton_SetText", UIDropdownButton::UIDropdownButton_SetText );
-        mono_add_internal_call( "SpockEngine.UIDropdownButton::UIDropdownButton_SetTextColor",
-                                UIDropdownButton::UIDropdownButton_SetTextColor );
+        ICall( "UIDropdownButton::UIDropdownButton_Create", UIDropdownButton::UIDropdownButton_Create );
+        ICall( "UIDropdownButton::UIDropdownButton_Destroy", UIDropdownButton::UIDropdownButton_Destroy );
+        ICall( "UIDropdownButton::UIDropdownButton_SetContent", UIDropdownButton::UIDropdownButton_SetContent );
+        ICall( "UIDropdownButton::UIDropdownButton_SetImage", UIDropdownButton::UIDropdownButton_SetImage );
+        ICall( "UIDropdownButton::UIDropdownButton_SetText", UIDropdownButton::UIDropdownButton_SetText );
+        ICall( "UIDropdownButton::UIDropdownButton_SetTextColor", UIDropdownButton::UIDropdownButton_SetTextColor );
 
-        mono_add_internal_call( "SpockEngine.UIContainer::UIContainer_Create", UIContainer::UIContainer_Create );
-        mono_add_internal_call( "SpockEngine.UIContainer::UIContainer_Destroy", UIContainer::UIContainer_Destroy );
-        mono_add_internal_call( "SpockEngine.UIContainer::UIContainer_SetContent", UIContainer::UIContainer_SetContent );
+        ICall( "UIContainer::UIContainer_Create", UIContainer::UIContainer_Create );
+        ICall( "UIContainer::UIContainer_Destroy", UIContainer::UIContainer_Destroy );
+        ICall( "UIContainer::UIContainer_SetContent", UIContainer::UIContainer_SetContent );
 
-        mono_add_internal_call( "SpockEngine.UITreeView::UITreeView_Create", UITreeView::UITreeView_Create );
-        mono_add_internal_call( "SpockEngine.UITreeView::UITreeView_Destroy", UITreeView::UITreeView_Destroy );
-        mono_add_internal_call( "SpockEngine.UITreeView::UITreeView_SetIndent", UITreeView::UITreeView_SetIndent );
-        mono_add_internal_call( "SpockEngine.UITreeView::UITreeView_Add", UITreeView::UITreeView_Add );
+        ICall( "UITreeView::UITreeView_Create", UITreeView::UITreeView_Create );
+        ICall( "UITreeView::UITreeView_Destroy", UITreeView::UITreeView_Destroy );
+        ICall( "UITreeView::UITreeView_SetIndent", UITreeView::UITreeView_SetIndent );
+        ICall( "UITreeView::UITreeView_Add", UITreeView::UITreeView_Add );
 
-        mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_Create", UITreeViewNode::UITreeViewNode_Create );
-        mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_Destroy", UITreeViewNode::UITreeViewNode_Destroy );
-        mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_SetIcon", UITreeViewNode::UITreeViewNode_SetIcon );
-        mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_SetIndicator", UITreeViewNode::UITreeViewNode_SetIndicator );
-        mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_SetText", UITreeViewNode::UITreeViewNode_SetText );
-        mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_SetTextColor", UITreeViewNode::UITreeViewNode_SetTextColor );
-        mono_add_internal_call( "SpockEngine.UITreeViewNode::UITreeViewNode_Add", UITreeViewNode::UITreeViewNode_Add );
+        ICall( "UITreeViewNode::UITreeViewNode_Create", UITreeViewNode::UITreeViewNode_Create );
+        ICall( "UITreeViewNode::UITreeViewNode_Destroy", UITreeViewNode::UITreeViewNode_Destroy );
+        ICall( "UITreeViewNode::UITreeViewNode_SetIcon", UITreeViewNode::UITreeViewNode_SetIcon );
+        ICall( "UITreeViewNode::UITreeViewNode_SetIndicator", UITreeViewNode::UITreeViewNode_SetIndicator );
+        ICall( "UITreeViewNode::UITreeViewNode_SetText", UITreeViewNode::UITreeViewNode_SetText );
+        ICall( "UITreeViewNode::UITreeViewNode_SetTextColor", UITreeViewNode::UITreeViewNode_SetTextColor );
+        ICall( "UITreeViewNode::UITreeViewNode_Add", UITreeViewNode::UITreeViewNode_Add );
     }
 
 } // namespace SE::Core
