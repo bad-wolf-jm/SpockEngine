@@ -13,15 +13,30 @@ namespace SE::Core
         , mParent{ aParent }
         , mFlags{ ImGuiTreeNodeFlags_SpanFullWidth }
     {
-        mNode = new UILabel( "" );
-        mNode->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        mImage = New<UIStackLayout>();
+        mImage->SetPadding( 0.0f );
 
-        mNodeLayout = new UIBoxLayout( eBoxLayoutOrientation::HORIZONTAL );
-        mNodeLayout->Add( mNode, true, true );
+        mText = New<UILabel>( "" );
+        mText->SetPadding( 0.0f );
+
+        mLayout = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
+        mLayout->SetSimple( true );
+        mLayout->SetPadding( 0.0f );
+
+        mText->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        mLayout->Add( mImage.get(), 20.0f, false, true );
+        mLayout->Add( mText.get(), true, true );
+
+        mImage->mIsVisible = false;
     }
 
-    void UITreeViewNode::PushStyles() {}
-    void UITreeViewNode::PopStyles() {}
+    void UITreeViewNode::PushStyles()
+    {
+        ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2{ 0.0f, 0.0f } );
+        ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, ImVec2{ 0.0f, 0.0f } );
+    }
+
+    void UITreeViewNode::PopStyles() { ImGui::PopStyleVar( 2 ); }
 
     UITreeViewNode *UITreeViewNode::Add()
     {
@@ -31,11 +46,16 @@ namespace SE::Core
         return lNewChild;
     }
 
-    void UITreeViewNode::SetIcon( UIImage *aIcon ) { mIcon = aIcon; }
-    void UITreeViewNode::SetText( std::string const &aText ) { mNode->SetText( aText ); }
-    void UITreeViewNode::SetTextColor( math::vec4 aColor ) { mNode->SetTextColor( aColor ); }
+    void UITreeViewNode::SetIcon( UIImage *aIcon )
+    {
+        mImage->Add( aIcon, "IMAGE" );
+        mImage->mIsVisible = !( aIcon == nullptr );
+    }
 
-    ImVec2 UITreeViewNode::RequiredSize() { return mNodeLayout->RequiredSize(); }
+    void UITreeViewNode::SetText( std::string const &aText ) { mText->SetText( aText ); }
+    void UITreeViewNode::SetTextColor( math::vec4 aColor ) { mText->SetTextColor( aColor ); }
+
+    ImVec2 UITreeViewNode::RequiredSize() { return mLayout->RequiredSize(); }
 
     void UITreeViewNode::TreePushOverrideID()
     {
@@ -130,7 +150,7 @@ namespace SE::Core
                      ? style.FramePadding
                      : ImVec2( style.FramePadding.x, ImMin( lWindow->DC.CurrLineTextBaseOffset, style.FramePadding.y ) );
 
-        const ImVec2 lLabelSize = mNode->RequiredSize();
+        const ImVec2 lLabelSize = mLayout->RequiredSize();
 
         // We vertically grow up to current line height up the typical widget height.
         const float lFrameHeight = ImMax( ImMin( lWindow->DC.CurrLineSize.y, lImGuiContext.FontSize + style.FramePadding.y * 2 ),
@@ -145,7 +165,6 @@ namespace SE::Core
         const float lTextOffsetY = ImMax( lPadding.y, lWindow->DC.CurrLineTextBaseOffset );
         const float lTextWidth   = lImGuiContext.FontSize + ( lLabelSize.x > 0.0f ? lLabelSize.x + lPadding.x * 2 : 0.0f );
         ImVec2      lTextPosition( lWindow->DC.CursorPos.x + lTextOffsetX, lWindow->DC.CursorPos.y + lTextOffsetY );
-        // ImGui::ItemSize( ImVec2( lTextWidth, lFrameHeight ), lPadding.y );
         ImGui::ItemSize( ImVec2( lTextWidth, lFrameHeight ), lPadding.y );
 
         // For regular tree nodes, we arbitrary allow to click past 2 worth of ItemSpacing
@@ -275,13 +294,16 @@ namespace SE::Core
         }
         ImGui::RenderNavHighlight( lFrameBoundingBox, lWindow->GetID( (void *)this ), lNavHighlightFlags );
         if( !lNodeIsLeaf )
-            RenderArrow( lWindow->DrawList,
-                         ImVec2( lTextPosition.x - lTextOffsetX + lPadding.x, lTextPosition.y + lImGuiContext.FontSize * 0.16f ),
-                         lArrowColor, lNodeIsOpen ? ImGuiDir_Down : ImGuiDir_Right, 0.8f );
+            RenderArrow(
+                lWindow->DrawList,
+                ImVec2( lTextPosition.x - lTextOffsetX + ( lTextOffsetX - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f,
+                        lTextPosition.y + ( lFrameHeight - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f ),
+                lArrowColor, lNodeIsOpen ? ImGuiDir_Down : ImGuiDir_Right, 0.8f );
 
         ImVec2 lSize{ lWindow->WorkRect.Max.x - lWindow->WorkRect.Min.x, lFrameHeight };
-        auto lNodePosition = ImGui::GetCursorPos() + ImVec2{lTextOffsetX,-lFrameHeight };
-        mNodeLayout->Update( lNodePosition, lSize );
+
+        auto lNodePosition = ImGui::GetCursorPos() + ImVec2{ lTextOffsetX, -lFrameHeight };
+        mLayout->Update( lNodePosition, lSize );
 
         if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) ) TreePushOverrideID();
 
@@ -290,8 +312,8 @@ namespace SE::Core
 
     void UITreeViewNode::RenderArrow( ImDrawList *aDrawList, ImVec2 aPosition, ImU32 aColor, ImGuiDir aDirection, float aScale )
     {
-        const float lHeight = aDrawList->_Data->FontSize * 1.00f;
-        float       lRadius = lHeight * 0.45f * aScale;
+        const float lHeight = aDrawList->_Data->FontSize * .75f;
+        float       lRadius = lHeight * 0.5f * aScale;
         ImVec2      lCenter = aPosition + ImVec2( lHeight * 0.50f, lHeight * 0.50f * aScale );
 
         ImVec2 a, b, c;
@@ -326,7 +348,7 @@ namespace SE::Core
             ( mFlags & ImGuiTreeNodeFlags_FramePadding )
                      ? style.FramePadding
                      : ImVec2( style.FramePadding.x, ImMin( lWindow->DC.CurrLineTextBaseOffset, style.FramePadding.y ) );
-        const ImVec2 lLabelSize = mNode->RequiredSize();
+        const ImVec2 lLabelSize = mLayout->RequiredSize();
 
         const float lFrameHeight = ImMax( ImMin( lWindow->DC.CurrLineSize.y, lImGuiContext.FontSize + style.FramePadding.y * 2 ),
                                           lLabelSize.y + lPadding.y * 2 );
@@ -389,7 +411,11 @@ namespace SE::Core
         return static_cast<void *>( lInstance->Add() );
     }
 
-    UITreeView::UITreeView() { mRoot = new UITreeViewNode( this, nullptr ); }
+    UITreeView::UITreeView()
+    {
+        SetIndent( 9.0f );
+        mRoot = new UITreeViewNode( this, nullptr );
+    }
 
     void   UITreeView::PushStyles() {}
     void   UITreeView::PopStyles() {}

@@ -5,6 +5,7 @@
 #include "UI/Components/Image.h"
 
 #include "UI/Layouts/BoxLayout.h"
+#include "UI/Layouts/StackLayout.h"
 
 namespace SE::Core
 {
@@ -25,11 +26,9 @@ namespace SE::Core
       protected:
         ImGuiTreeNodeFlags mFlags;
 
-        float mIndent = 0.0f;
-        UIImage* mIcon;
-        UILabel* mNode;
-        UIBoxLayout* mActions;
-        UIBoxLayout* mNodeLayout;
+        Ref<UIStackLayout> mImage  = nullptr;
+        Ref<UILabel>       mText   = nullptr;
+        Ref<UIBoxLayout>   mLayout = nullptr;
 
         UITreeView* mTreeView;
         UITreeViewNode *mParent;
@@ -68,7 +67,7 @@ namespace SE::Core
         UITreeViewNode* Add();
 
         protected:
-            float mIndent = 15.0f;
+            float mIndent = 5.0f;
             UITreeViewNode* mRoot; 
 
       protected:

@@ -66,9 +66,13 @@ namespace SpockEngine
 
         public void SetIndent(float aIndent) { UITreeView_SetIndent(mInstance, aIndent); }
 
+        List<UITreeViewNode> mChildren = new List<UITreeViewNode>();
         public UITreeViewNode Add()
         {
-            return new UITreeViewNode(UITreeView_Add(mInstance));
+            var lNewChild = new UITreeViewNode(UITreeView_Add(mInstance));
+            mChildren.Add(lNewChild);
+
+            return lNewChild;
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
