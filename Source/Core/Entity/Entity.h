@@ -46,40 +46,6 @@ namespace SE::Core::Internal
         {
         }
 
-        // ///  @brief Tags an entity with an empty component.
-        // ///
-        // ///  The component type `T` should satisfy `std::is_empty_v<T>()`,
-        // ///  and a compilation error wil be raised if not.
-        // ///
-        // ///  @see @ref Untag()
-        // ///
-        // ///  @tparam T Component type
-        // ///
-        // template <typename T>
-        // void Tag()
-        // {
-        //     static_assert( std::is_empty<T>::value, "sTag components should be empty." );
-        //     if( Has<T>() ) return;
-        //     mParentRegistry->mRegistry.emplace<T>( mEntityHandle );
-        // }
-
-        // /// @brief Untags an entity.
-        // ///
-        // /// The component type `T` should be empty. Does nothing if the entity
-        // /// does not have the component.
-        // ///
-        // /// @see @ref sTag()
-        // ///
-        // /// @tparam T Component type
-        // ///
-        // template <typename T>
-        // void Untag()
-        // {
-        //     static_assert( std::is_empty<T>::value, "sTag components should be empty." );
-        //     if( !Has<T>() ) return;
-        //     mParentRegistry->mRegistry.remove<T>( mEntityHandle );
-        // }
-
         /// @brief Add a component of type `T` to the current entity.
         ///
         /// Attempting to add an empty type as a component will result in an error (use @ref sTag() and
