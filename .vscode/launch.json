@@ -19,7 +19,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/Build/Source/OTDR_Run.exe",
             "args": ["--application", "OlmDevTool", "--width", "2320", "--height", "1340" ],
-            "cwd": "${workspaceFolder}/Programs/TestOtdrProject",
+            "cwd": "d:/TestOtdrProject",
             "stopAtEntry": false
         },
         {
@@ -28,7 +28,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/Build/Tools/RunScript/RunScript.exe",
             "args": [ "--project", "TestOtdrProject", "--script", "Test.TestPowerMeter" ],
-            "cwd": "${workspaceFolder}/Programs/TestOtdrProject",
+            "cwd": "d:/TestOtdrProject",
             "stopAtEntry": false
         },
         {
