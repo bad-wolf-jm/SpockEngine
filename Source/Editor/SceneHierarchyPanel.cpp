@@ -5,7 +5,7 @@
 #include "UI/UI.h"
 #include "UI/Widgets.h"
 
-#include "Core/EntityCollection/Components.h"
+#include "Core/Entity/Components.h"
 #include "Core/Entity/Collection.h"
 
 #include "Scene/Components.h"

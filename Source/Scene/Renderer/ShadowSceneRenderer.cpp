@@ -224,7 +224,7 @@ namespace SE::Core
                     lRenderTarget->AddAttachment( "DEPTH", lAttachmentCreateInfo );
                     lRenderTarget->Finalize();
 
-                    mPointLightsShadowMapRenderContext.back()[f] = ARenderContext( mGraphicContext, lRenderTarget );
+                    mPointLightsShadowMapRenderContext.back()[f] = VkRenderContext( mGraphicContext, lRenderTarget );
                     mPointLightsShadowSceneDescriptors.back()[f] =
                         New<DescriptorSet>( mGraphicContext, OmniShadowMeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 

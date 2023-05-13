@@ -71,7 +71,7 @@ namespace SE::Core
         lAttachmentCreateInfo.mStoreOp    = eAttachmentStoreOp::STORE;
         mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
         mGeometryRenderTarget->Finalize();
-        mGeometryContext = ARenderContext( mGraphicContext, mGeometryRenderTarget );
+        mGeometryContext = VkRenderContext( mGraphicContext, mGeometryRenderTarget );
 
         sRenderTargetDescription lLightingSpec{};
         lLightingSpec.mWidth       = aOutputWidth;
@@ -94,7 +94,7 @@ namespace SE::Core
         mLightingRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo,
                                               mGeometryRenderTarget->GetAttachment( "DEPTH_STENCIL" ) );
         mLightingRenderTarget->Finalize();
-        mLightingContext = ARenderContext( mGraphicContext, mLightingRenderTarget );
+        mLightingContext = VkRenderContext( mGraphicContext, mLightingRenderTarget );
 
         DeferredLightingRendererCreateInfo mLightingRendererCI{};
         mLightingRendererCI.RenderPass = mLightingContext.GetRenderPass();
@@ -132,7 +132,7 @@ namespace SE::Core
         lAttachmentCreateInfo.mStoreOp    = eAttachmentStoreOp::STORE;
         mFxaaRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
         mFxaaRenderTarget->Finalize();
-        mFxaaContext = ARenderContext( mGraphicContext, mFxaaRenderTarget );
+        mFxaaContext = VkRenderContext( mGraphicContext, mFxaaRenderTarget );
 
         CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
         lCoordinateGridRendererCreateInfo.RenderPass = mLightingContext.GetRenderPass();
