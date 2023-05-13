@@ -4,14 +4,14 @@
 
 #include "Graphics/Vulkan/VkGpuBuffer.h"
 
-#include "Graphics/Vulkan/ARenderContext.h"
+#include "Graphics/Vulkan/VkRenderContext.h"
 #include "Graphics/Vulkan/DescriptorSet.h"
 #include "Graphics/Vulkan/VkGraphicsPipeline.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "Scene/VertexData.h"
 
-#include "Graphics/Vulkan/VkAbstractRenderPass.h"
+#include "Graphics/Vulkan/VkRenderPass.h"
 
 #include "SceneRenderPipeline.h"
 
@@ -25,17 +25,17 @@ namespace SE::Core
         std::string mVertexShader   = "";
         std::string mFragmentShader = "";
 
-        Ref<sVkAbstractRenderPassObject> RenderPass = nullptr;
+        Ref<VkRenderPass> RenderPass = nullptr;
     };
 
     class EffectProcessor : public SE::Core::SceneRenderPipeline<EmptyVertexData>
     {
       public:
-        EffectProcessor( Ref<VkGraphicContext> mGraphicContext, ARenderContext &aRenderContext,
+        EffectProcessor( Ref<VkGraphicContext> mGraphicContext, VkRenderContext &aRenderContext,
                          EffectProcessorCreateInfo aCreateInfo );
         ~EffectProcessor() = default;
 
-        void Render( Ref<Graphics::VkSampler2D> aImageSampler, ARenderContext &aRenderContext );
+        void Render( Ref<Graphics::VkSampler2D> aImageSampler, VkRenderContext &aRenderContext );
 
         EffectProcessorCreateInfo Spec;
         Ref<DescriptorSetLayout>  PipelineLayout = nullptr;

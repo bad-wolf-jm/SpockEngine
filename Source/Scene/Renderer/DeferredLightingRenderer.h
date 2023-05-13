@@ -11,7 +11,7 @@
 
 #include "Scene/VertexData.h"
 
-#include "Graphics/Vulkan/VkAbstractRenderPass.h"
+#include "Graphics/Vulkan/VkRenderPass.h"
 #include "SceneRenderPipeline.h"
 
 namespace SE::Core
@@ -25,7 +25,7 @@ namespace SE::Core
     {
         bool Opaque = false;
 
-        Ref<sVkAbstractRenderPassObject> RenderPass = nullptr;
+        Ref<VkRenderPass> RenderPass = nullptr;
     };
 
     class DeferredLightingRenderer : public SceneRenderPipeline<EmptyVertexData>

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Memory.h"
-#include "Graphics/Vulkan/ARenderContext.h"
+#include "Graphics/Vulkan/VkRenderContext.h"
 #include "Graphics/Vulkan/DescriptorSet.h"
 #include "Graphics/Vulkan/VkRenderTarget.h"
 
@@ -53,11 +53,11 @@ namespace SE::Core
         ParticleSystemRenderer &GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification );
 
       private:
-        ARenderContext           mGeometryContext{};
+        VkRenderContext           mGeometryContext{};
         Ref<DescriptorSetLayout> mGeometryCameraLayout = nullptr;
         Ref<DescriptorSet>       mGeometryPassCamera   = nullptr;
 
-        ARenderContext mLightingContext{};
+        VkRenderContext mLightingContext{};
 
         Ref<VkRenderTarget> mGeometryRenderTarget = nullptr;
 
@@ -91,7 +91,7 @@ namespace SE::Core
         Ref<EffectProcessor>       mFxaaRenderer      = nullptr;
         Ref<Graphics::VkSampler2D> mFxaaSampler       = nullptr;
         Ref<VkRenderTarget>        mFxaaRenderTarget  = nullptr;
-        ARenderContext             mFxaaContext{};
+        VkRenderContext             mFxaaContext{};
 
         std::unordered_map<MeshRendererCreateInfo, MeshRenderer, MeshRendererCreateInfoHash> mMeshRenderers = {};
         std::unordered_map<ParticleRendererCreateInfo, ParticleSystemRenderer, ParticleSystemRendererCreateInfoHash>
