@@ -1,13 +1,13 @@
 #include "SceneElementEditor.h"
 
-#include "UI/CanvasView.h"
+// #include "UI/CanvasView.h"
 #include "UI/UI.h"
 #include "UI/Widgets.h"
 
 #include "Scene/Components.h"
 
 #include "Scene/Components/VisualHelpers.h"
-#include "Core/EntityCollection/EditComponent.h"
+#include "Core/Entity/EditComponent.h"
 
 using namespace SE::Core::EntityComponentSystem::Components;
 
