@@ -11,6 +11,8 @@ add_library(LTSimulationEngineRuntime STATIC
     DotNet/Class.cpp
     DotNet/Instance.cpp
     DotNet/Utils.cpp
+    DotNet/EntityRegistry.cpp
+    DotNet/InternalCalls.cpp
 
     Core/CUDA/Texture/ColorFormat.cpp
     Core/CUDA/Texture/TextureData.cpp
