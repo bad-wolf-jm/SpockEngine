@@ -16,7 +16,6 @@ namespace SE::Cuda
     /// @brief Convert our internal color format into a CUDA channel description
     cudaChannelFormatDesc ToCudaChannelDesc( eColorFormat aColorFormat )
     {
-#ifdef CUDA_INTEROP
         switch( aColorFormat )
         {
         case eColorFormat::R32_FLOAT: return cudaCreateChannelDesc( 32, 0, 0, 0, cudaChannelFormatKindFloat );
@@ -29,15 +28,11 @@ namespace SE::Cuda
         case eColorFormat::RGBA8_UNORM:
         default: return cudaCreateChannelDesc( 8, 8, 8, 8, cudaChannelFormatKindUnsigned );
         }
-#else
-        return 0;
-#endif
     }
 
     /// @brief Convert our wrapping descriptor into a CUDA wrapping descriptor
     cudaTextureAddressMode ToCudaAddressMode( eSamplerWrapping aAddressMode )
     {
-#ifdef CUDA_INTEROP
         switch( aAddressMode )
         {
         case eSamplerWrapping::REPEAT: return cudaAddressModeWrap;
@@ -47,23 +42,16 @@ namespace SE::Cuda
         case eSamplerWrapping::MIRROR_CLAMP_TO_BORDER:
         default: return cudaAddressModeBorder;
         }
-#else
-        return 0;
-#endif
     }
 
     /// @brief Convert our filtering descriptor into a CUDA filtering descriptor
     cudaTextureFilterMode ToCudaFilterMode( eSamplerFilter aFilterMode )
     {
-#ifdef CUDA_INTEROP
         switch( aFilterMode )
         {
         case eSamplerFilter::NEAREST: return cudaFilterModePoint;
         case eSamplerFilter::LINEAR:
         default: return cudaFilterModeLinear;
         }
-#else
-        return 0;
-#endif
     }
 } // namespace SE::Cuda

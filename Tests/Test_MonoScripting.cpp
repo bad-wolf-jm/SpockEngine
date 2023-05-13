@@ -8,7 +8,7 @@
 
 // #include "Core/CUDA/Array/MemoryPool.h"
 // #include "Core/CUDA/Array/MultiTensor.h"
-// #include "Core/EntityCollection/Collection.h"
+// #include "Core/Entity/Collection.h"
 #include "Core/Logging.h"
 
 #include "DotNet/Runtime.h"

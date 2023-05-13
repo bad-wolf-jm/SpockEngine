@@ -9,10 +9,9 @@ set(CMAKE_CXX_STANDARD 17)
 include_directories("ThirdParty/mono/include")
 message(STATUS ${CMAKE_SIZEOF_VOID_P})
 
-# include(cmake/configure_optix.cmake)
-# include_directories(${OptiX_INCLUDE})
-
-# find_package(CUDAToolkit REQUIRED)
+include(cmake/configure_optix.cmake)
+include_directories(${OptiX_INCLUDE})
+find_package(CUDAToolkit REQUIRED)
 
 find_package(Vulkan REQUIRED FATAL_ERROR)
 Include(FetchContent)
