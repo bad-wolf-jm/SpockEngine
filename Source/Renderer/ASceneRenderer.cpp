@@ -85,6 +85,7 @@ namespace SE::Core
         mScene->ForEach<sLightComponent>( [&]( auto aEntity, auto &aComponent ) { 
             AddLight( mScene->GetFinalTransformMatrix( aEntity ), aComponent ); 
         } );
+        // clang-format on
 
         // clang-format off
         mOpaqueMeshQueue.clear();
@@ -106,7 +107,6 @@ namespace SE::Core
             } );
         // clang-format on
 
-        // clang-format on
     }
 
     void ASceneRenderer::Render() {}
