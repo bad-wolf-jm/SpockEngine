@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.20)
 
 project(LTSimulationEngine LANGUAGES CXX C)
 
+cuda_compile_and_embed(g_SensorModelEnvironmentSampler Scene/EnvironmentSampler/DevicePrograms.cu)
+cuda_compile_and_embed(embedded_ptx_code Scene/Renderer/RayTracing/DevicePrograms.cu)
+
 add_library(LTSimulationEngineRuntime STATIC
     Core/File.cpp
     Core/Resource.cpp
@@ -14,9 +17,15 @@ add_library(LTSimulationEngineRuntime STATIC
     DotNet/EntityRegistry.cpp
     DotNet/InternalCalls.cpp
 
+    Core/CUDA/Cuda.cpp
+    Core/CUDA/Array/MultiTensor.cu
+    Core/CUDA/Array/MemoryPool.cu
+    Core/CUDA/Texture/Texture2D.cu
+    Core/CUDA/Texture/Conversion.cpp
+    Core/CUDA/Texture/TextureCubeMap.cu
     Core/CUDA/Texture/ColorFormat.cpp
     Core/CUDA/Texture/TextureData.cpp
-    
+
     Engine/Engine.cpp
     
     UI/UI.cpp
@@ -51,6 +60,12 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/UIContext.cpp
     UI/UIWindow.cpp
     
+    Core/Optix/OptixContext.cpp
+    Core/Optix/OptixModule.cpp
+    Core/Optix/OptixPipeline.cpp
+    Core/Optix/OptixProgramGroup.cpp
+    Core/Optix/OptixAccelerationStructure.cpp
+
     Graphics/API.cpp
     Graphics/Vulkan/DescriptorSet.cpp
     Graphics/Vulkan/VkRenderTarget.cpp
@@ -89,6 +104,53 @@ add_library(LTSimulationEngineRuntime STATIC
 
     OtdrEditor/OtdrWindow.cpp
     OtdrEditor/BaseOtdrApplication.cpp
+
+    Renderer/ASceneRenderer.cpp
+    Renderer/SceneRenderData.cpp
+
+    Scene/Primitives/Primitives.cpp
+    Scene/Primitives/Arrow.cpp
+    Scene/Visualizers/Wall2D.cpp
+    Scene/Scene.cpp
+    Scene/VertexTransform.cu
+    Scene/MaterialSystem/MaterialSystem.cpp
+    Scene/Renderer/MeshRenderer.cpp
+    Scene/Renderer/CoordinateGridRenderer.cpp
+    Scene/Renderer/EffectProcessor.cpp
+    Scene/Renderer/ParticleSystemRenderer.cpp
+    Scene/Renderer/ForwardSceneRenderer.cpp
+    Scene/Renderer/ShadowSceneRenderer.cpp
+    Scene/Renderer/DeferredSceneRenderer.cpp
+    Scene/Renderer/DeferredLightingRenderer.cpp
+    Scene/Serialize/FileIO.cpp
+    Scene/Serialize/AssetFile.cpp
+    Scene/Serialize/SerializeComponents.cpp
+    ${embedded_ptx_code}
+    Scene/Renderer/RayTracing/ToneMap.cu
+    Scene/Renderer/RayTracing/RayTracingRenderer.h
+    Scene/Renderer/RayTracing/RayTracingRenderer.cpp
+
+    Scene/Importer/glTFImporter.cpp
+    Scene/Importer/ObjImporter.cpp
+
+    Editor/PopupWindow.cpp
+    Editor/EditorWindow.cpp
+    Editor/ContentBrowser.cpp
+    Editor/BaseEditorApplication.cpp
+    Editor/SceneHierarchyPanel.cpp
+    Editor/SceneElementEditor.cpp
+
+    ProcessingNodes/HitRecordProcessorKernels.cu
+    ProcessingNodes/HitRecordProcessor.cpp
+
+    Scene/EnvironmentSampler/PointCloudVisualizer.cu
+    Scene/EnvironmentSampler/EnvironmentSampler.cpp
+    ${g_SensorModelEnvironmentSampler}
+
+    TensorOps/Implementation/KernelLaunchers.cu
+    TensorOps/NodeControllers.cpp
+    TensorOps/ScalarTypes.cpp
+    TensorOps/Scope.cpp
 )
 
 function(add_shader TARGET SHADER)
@@ -140,6 +202,8 @@ target_link_libraries(LTSimulationEngineRuntime PRIVATE
     ws2_32
     yaml-cpp
     pugixml
+    tinygltf
+    tinyobjloader
     glfw)
 
 target_compile_definitions(LTSimulationEngineRuntime PRIVATE)
@@ -147,6 +211,13 @@ target_compile_options(LTSimulationEngineRuntime PRIVATE
     $<$<COMPILE_LANGUAGE:CUDA>: --expt-relaxed-constexpr -Xcudafe "--display_error_number --diag_suppress=\"20012,20044\"">
     $<$<COMPILE_LANGUAGE:CXX>:/bigobj /wd4068>)
 
+
+add_executable( SE_Run WIN32 Launch/EditorMain.cpp )
+target_include_directories(SE_Run PRIVATE Source ${SE_EXTRA_INCLUDES})
+target_compile_definitions(SE_Run PRIVATE VK_USE_PLATFORM_WIN32_KHR)
+target_link_libraries( SE_Run LTSimulationEngineRuntime lua::lua)
+set_target_properties( SE_Run PROPERTIES LINK_FLAGS /SUBSYSTEM:CONSOLE )
+    
 add_executable(OTDR_Run WIN32 Launch/OtdrMain.cpp)
 target_include_directories(OTDR_Run PRIVATE Source ${SE_EXTRA_INCLUDES})
 target_compile_definitions(OTDR_Run PRIVATE VK_USE_PLATFORM_WIN32_KHR)

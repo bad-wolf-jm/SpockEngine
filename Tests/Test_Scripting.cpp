@@ -15,7 +15,7 @@
 // #include "Scripting/ScriptingEngine.h"
 
 #define ENTT_DISABLE_ASSERT
-#include "Core/EntityCollection/Collection.h"
+#include "Core/Entity/Collection.h"
 
 using namespace math;
 using namespace SE::Core;

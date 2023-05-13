@@ -7,10 +7,8 @@
 // #define CUDA_INTEROP
 #define CUDA_INTEROP_TYPE false
 
-#ifdef CUDA_INTEROP
-#    include <cuda.h>
-#    include <cuda_runtime_api.h>
-#endif
+#include <cuda.h>
+#include <cuda_runtime_api.h>
 
 #include "Core/Logging.h"
 #include "Texture/ColorFormat.h"
@@ -38,19 +36,12 @@ namespace SE::Cuda
 {
     using namespace SE::Core;
 
-#ifdef CUDA_INTEROP
     using RawPointer     = CUdeviceptr;
     using Array          = cudaArray_t;
     using MipmappedArray = cudaMipmappedArray_t;
     using ExternalMemory = cudaExternalMemory_t;
     using TextureObject  = cudaTextureObject_t;
-#else
-    using RawPointer     = char *;
-    using Array          = char *;
-    using MipmappedArray = char *;
-    using ExternalMemory = char *;
-    using TextureObject  = uint64_t;
-#endif
+
     void SyncDevice();
 
     void Malloc( void **aDestination, size_t aSize );

@@ -1,7 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #define ENTT_DISABLE_ASSERT
-#include "Core/EntityCollection/Collection.h"
+#include "Core/Entity/Collection.h"
 
 using namespace SE::Core;
 
