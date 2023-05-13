@@ -53,7 +53,10 @@
 
 #include "Utils.h"
 
+#include "InternalCalls.h"
+
 namespace fs = std::filesystem;
+using namespace SE::MonoInternalCalls;
 
 namespace SE::Core
 {
@@ -282,10 +285,20 @@ namespace SE::Core
         mono_add_internal_call( lFullName.c_str(), aFunction );
     }
 
+    #define SE_ADD_INTERNAL_CALL( Name ) mono_add_internal_call( "SpockEngine.CppCall::" #Name, Name )
+
     void DotNetRuntime::RegisterInternalCppFunctions()
     {
         ICall( "CppCall::OpenFile", OpenFile );
         ICall( "UIColor::GetStyleColor", SE::Core::UI::GetStyleColor );
+
+
+        SE_ADD_INTERNAL_CALL( Entity_Create );
+        SE_ADD_INTERNAL_CALL( Entity_IsValid );
+        SE_ADD_INTERNAL_CALL( Entity_Has );
+        SE_ADD_INTERNAL_CALL( Entity_Get );
+        SE_ADD_INTERNAL_CALL( Entity_Add );
+        SE_ADD_INTERNAL_CALL( Entity_Replace );
 
         ICall( "UIComponent::UIComponent_SetIsVisible", UIComponent::UIComponent_SetIsVisible );
         ICall( "UIComponent::UIComponent_SetIsEnabled", UIComponent::UIComponent_SetIsEnabled );
