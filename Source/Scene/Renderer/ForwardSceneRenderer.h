@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Memory.h"
 
-#include "Graphics/Vulkan/ARenderContext.h"
+#include "Graphics/Vulkan/VkRenderContext.h"
 #include "Graphics/Vulkan/VkRenderTarget.h"
 #include "Graphics/Vulkan/DescriptorSet.h"
 #include "Graphics/Vulkan/VkGraphicsPipeline.h"
@@ -56,7 +56,7 @@ namespace SE::Core
 
       protected:
         Ref<VkRenderTarget> mGeometryRenderTarget = nullptr;
-        ARenderContext     mGeometryContext{};
+        VkRenderContext     mGeometryContext{};
 
         Ref<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;
 

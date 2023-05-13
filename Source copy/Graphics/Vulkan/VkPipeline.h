@@ -4,7 +4,7 @@
 
 #include "Graphics/Interface/IGraphicBuffer.h"
 
-#include "Graphics/Vulkan/VkAbstractRenderPass.h"
+#include "Graphics/Vulkan/VkRenderPass.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include <memory>

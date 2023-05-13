@@ -4,8 +4,8 @@
 
 #include "Core/Math/Types.h"
 
-#include "Graphics/Vulkan/VkAbstractRenderPass.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
+#include "Graphics/Vulkan/VkRenderPass.h"
 
 #include "Graphics/Vulkan/DescriptorSet.h"
 #include "Graphics/Vulkan/VkGraphicsPipeline.h"
@@ -19,17 +19,17 @@ namespace SE::Core
 
     struct SceneRenderPipelineCreateInfo
     {
-        bool                             Opaque               = false;
-        bool                             IsTwoSided           = false;
-        bool                             DepthTest            = true;
-        bool                             DepthWrite           = true;
-        float                            LineWidth            = 1.0f;
-        ePrimitiveTopology               Topology             = ePrimitiveTopology::TRIANGLES;
-        fs::path                         VertexShader         = "";
-        fs::path                         FragmentShader       = "";
-        sBufferLayout                    InputBufferLayout    = {};
-        sBufferLayout                    InstanceBufferLayout = {};
-        Ref<sVkAbstractRenderPassObject> RenderPass           = nullptr;
+        bool               Opaque               = false;
+        bool               IsTwoSided           = false;
+        bool               DepthTest            = true;
+        bool               DepthWrite           = true;
+        float              LineWidth            = 1.0f;
+        ePrimitiveTopology Topology             = ePrimitiveTopology::TRIANGLES;
+        fs::path           VertexShader         = "";
+        fs::path           FragmentShader       = "";
+        sBufferLayout      InputBufferLayout    = {};
+        sBufferLayout      InstanceBufferLayout = {};
+        Ref<VkRenderPass>  RenderPass           = nullptr;
     };
 
     template <typename _VertexType>
@@ -37,7 +37,7 @@ namespace SE::Core
     {
       public:
         SceneRenderPipelineCreateInfo Spec;
-        Ref<GraphicsPipeline>         Pipeline = nullptr;
+        Ref<VkGraphicsPipeline>       Pipeline = nullptr;
 
         SceneRenderPipeline()  = default;
         ~SceneRenderPipeline() = default;
@@ -63,8 +63,7 @@ namespace SE::Core
             }
             GraphicsPipelineCreateInfo lPipelineCreateInfo{};
             lPipelineCreateInfo.mShaderStages = { { lVertexShaderModule, "main" } };
-            if( lFragmentShaderModule )
-                lPipelineCreateInfo.mShaderStages.push_back( sShader{ lFragmentShaderModule, "main" } );
+            if( lFragmentShaderModule ) lPipelineCreateInfo.mShaderStages.push_back( sShader{ lFragmentShaderModule, "main" } );
             lPipelineCreateInfo.InputBufferLayout    = _VertexType::GetDefaultLayout();
             lPipelineCreateInfo.InstanceBufferLayout = aCreateInfo.InstanceBufferLayout;
             lPipelineCreateInfo.Topology             = Spec.Topology;
@@ -84,7 +83,7 @@ namespace SE::Core
             lPipelineCreateInfo.PushConstants    = GetPushConstantLayout();
             lPipelineCreateInfo.SetLayouts       = GetDescriptorSetLayout();
 
-            Pipeline = New<GraphicsPipeline>( mGraphicContext, lPipelineCreateInfo );
+            Pipeline = New<VkGraphicsPipeline>( mGraphicContext, lPipelineCreateInfo );
         }
 
         virtual std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout() = 0;

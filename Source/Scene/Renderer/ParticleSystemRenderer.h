@@ -8,7 +8,7 @@
 
 #include "Graphics/Vulkan/VkGpuBuffer.h"
 
-#include "Graphics/Vulkan/ARenderContext.h"
+#include "Graphics/Vulkan/VkRenderContext.h"
 #include "Graphics/Vulkan/DescriptorSet.h"
 #include "Graphics/Vulkan/VkGraphicsPipeline.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
@@ -16,7 +16,7 @@
 #include "Scene/ParticleData.h"
 #include "Scene/VertexData.h"
 
-#include "Graphics/Vulkan/VkAbstractRenderPass.h"
+#include "Graphics/Vulkan/VkRenderPass.h"
 #include "SceneRenderPipeline.h"
 
 namespace SE::Graphics
@@ -39,7 +39,7 @@ namespace SE::Graphics
         fs::path VertexShader   = "";
         fs::path FragmentShader = "";
 
-        Ref<sVkAbstractRenderPassObject> RenderPass = nullptr;
+        Ref<VkRenderPass> RenderPass = nullptr;
 
         bool operator==( const ParticleRendererCreateInfo &p ) const
         {
@@ -79,7 +79,7 @@ namespace SE::Graphics
 
         ParticleSystemRenderer() = default;
 
-        ParticleSystemRenderer( Ref<VkGraphicContext> aGraphicContext, ARenderContext &aRenderContext,
+        ParticleSystemRenderer( Ref<VkGraphicContext> aGraphicContext, VkRenderContext &aRenderContext,
                                 ParticleRendererCreateInfo aCreateInfo );
 
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
@@ -87,7 +87,7 @@ namespace SE::Graphics
 
         ~ParticleSystemRenderer() = default;
 
-        void Render( math::mat4 aProjection, math::mat4 aView, ARenderContext &aRenderContext, ParticleData &aParticleData );
+        void Render( math::mat4 aProjection, math::mat4 aView, VkRenderContext &aRenderContext, ParticleData &aParticleData );
 
       protected:
         Ref<VkGpuBuffer>   mParticleVertices  = nullptr;

@@ -14,7 +14,7 @@
 
 #include "UI/UI.h"
 
-#include "Core/GraphicContext//UI/UIContext.h"
+#include "UI/UIContext.h"
 #include "VertexData.h"
 
 #include "Core/CUDA/Texture/TextureTypes.h"

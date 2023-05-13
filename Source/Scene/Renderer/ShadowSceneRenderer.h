@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Memory.h"
 
-#include "Graphics/Vulkan/ARenderContext.h"
+#include "Graphics/Vulkan/VkRenderContext.h"
 #include "Graphics/Vulkan/DescriptorSet.h"
 #include "Graphics/Vulkan/VkGraphicsPipeline.h"
 #include "Graphics/Vulkan/VkRenderTarget.h"
@@ -24,7 +24,7 @@ namespace SE::Core
 
     struct ShadowMeshRendererCreateInfo
     {
-        Ref<sVkAbstractRenderPassObject> RenderPass = nullptr;
+        Ref<VkRenderPass> RenderPass = nullptr;
     };
 
     class ShadowMeshRenderer : public SceneRenderPipeline<VertexData>
@@ -98,25 +98,25 @@ namespace SE::Core
         std::vector<Ref<Graphics::VkSamplerCubeMap>> &GetPointLightShadowMapSamplers() { return mPointLightShadowMapSamplers; };
 
       protected:
-        std::vector<ARenderContext>             mDirectionalShadowMapRenderContext    = {};
+        std::vector<VkRenderContext>             mDirectionalShadowMapRenderContext    = {};
         std::vector<Ref<Graphics::VkSampler2D>> mDirectionalShadowMapSamplers         = {};
         std::vector<Ref<VkGpuBuffer>>           mDirectionalShadowCameraUniformBuffer = {};
         std::vector<Ref<DescriptorSet>>         mDirectionalShadowSceneDescriptors    = {};
         ShadowMeshRenderer                      mRenderPipeline{};
 
-        std::vector<ARenderContext>             mSpotlightShadowMapRenderContext    = {};
+        std::vector<VkRenderContext>             mSpotlightShadowMapRenderContext    = {};
         std::vector<Ref<Graphics::VkSampler2D>> mSpotlightShadowMapSamplers         = {};
         std::vector<Ref<VkGpuBuffer>>           mSpotlightShadowCameraUniformBuffer = {};
         std::vector<Ref<DescriptorSet>>         mSpotlightShadowSceneDescriptors    = {};
 
-        std::vector<std::array<ARenderContext, 6>>     mPointLightsShadowMapRenderContext    = {};
+        std::vector<std::array<VkRenderContext, 6>>     mPointLightsShadowMapRenderContext    = {};
         std::vector<Ref<Graphics::VkSamplerCubeMap>>   mPointLightShadowMapSamplers          = {};
         std::vector<std::array<Ref<VkGpuBuffer>, 6>>   mPointLightsShadowCameraUniformBuffer = {};
         std::vector<std::array<Ref<DescriptorSet>, 6>> mPointLightsShadowSceneDescriptors    = {};
         OmniShadowMeshRenderer                         mOmniRenderPipeline{};
 
         Ref<VkRenderTarget> mGeometryRenderTarget = nullptr;
-        ARenderContext      mGeometryContext{};
+        VkRenderContext      mGeometryContext{};
 
         Ref<VkGpuBuffer> mCameraUniformBuffer    = nullptr;
         Ref<VkGpuBuffer> mShaderParametersBuffer = nullptr;

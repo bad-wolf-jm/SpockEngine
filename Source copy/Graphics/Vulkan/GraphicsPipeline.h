@@ -5,7 +5,7 @@
 #include "Core/Memory.h"
 
 #include "DescriptorSet.h"
-#include "Graphics/Vulkan/VkAbstractRenderPass.h"
+#include "Graphics/Vulkan/VkRenderPass.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Graphics/Vulkan/VkPipeline.h"
 

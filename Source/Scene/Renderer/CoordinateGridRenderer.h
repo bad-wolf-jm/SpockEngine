@@ -4,14 +4,14 @@
 
 #include "Graphics/Vulkan/VkGpuBuffer.h"
 
-#include "Graphics/Vulkan/ARenderContext.h"
+#include "Graphics/Vulkan/VkRenderContext.h"
 #include "Graphics/Vulkan/DescriptorSet.h"
 #include "Graphics/Vulkan/VkGraphicsPipeline.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "Scene/VertexData.h"
 
-#include "Graphics/Vulkan/VkAbstractRenderPass.h"
+#include "Graphics/Vulkan/VkRenderPass.h"
 
 #include "SceneRenderPipeline.h"
 
@@ -28,17 +28,17 @@ namespace SE::Core
 
     struct CoordinateGridRendererCreateInfo
     {
-        Ref<sVkAbstractRenderPassObject> RenderPass = nullptr;
+        Ref<VkRenderPass> RenderPass = nullptr;
     };
 
     class CoordinateGridRenderer : public SE::Core::SceneRenderPipeline<EmptyVertexData>
     {
       public:
-        CoordinateGridRenderer( Ref<VkGraphicContext> mGraphicContext, ARenderContext &aRenderContext,
+        CoordinateGridRenderer( Ref<VkGraphicContext> mGraphicContext, VkRenderContext &aRenderContext,
                                 CoordinateGridRendererCreateInfo aCreateInfo );
         ~CoordinateGridRenderer() = default;
 
-        void Render( math::mat4 aProjection, math::mat4 aView, ARenderContext &aRenderContext );
+        void Render( math::mat4 aProjection, math::mat4 aView, VkRenderContext &aRenderContext );
 
         CoordinateGridRendererCreateInfo Spec;
         Ref<DescriptorSetLayout>         PipelineLayout;

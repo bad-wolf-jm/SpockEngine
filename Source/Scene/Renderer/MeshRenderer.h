@@ -10,8 +10,8 @@
 
 #include "Scene/VertexData.h"
 
-#include "Graphics/Vulkan/VkAbstractRenderPass.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
+#include "Graphics/Vulkan/VkRenderPass.h"
 #include "SceneRenderPipeline.h"
 
 namespace SE::Core
@@ -29,7 +29,7 @@ namespace SE::Core
         fs::path VertexShader   = "";
         fs::path FragmentShader = "";
 
-        Ref<sVkAbstractRenderPassObject> RenderPass = nullptr;
+        Ref<VkRenderPass> RenderPass = nullptr;
 
         bool operator==( const MeshRendererCreateInfo &p ) const
         {

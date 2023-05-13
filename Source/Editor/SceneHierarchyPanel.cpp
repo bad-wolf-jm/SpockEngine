@@ -1,6 +1,6 @@
 #include "SceneHierarchyPanel.h"
 
-#include "UI/CanvasView.h"
+// #include "UI/CanvasView.h"
 #include "UI/TreeNode.h"
 #include "UI/UI.h"
 #include "UI/Widgets.h"
