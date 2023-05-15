@@ -40,12 +40,12 @@ namespace SE::Graphics
 
         std::vector<math::vec3> lVertexBufferData = {
             { -.5f, -.5f, 0.0f }, { -.5f, .5f, 0.0f }, { .5f, .5f, 0.0f }, { .5f, -.5f, 0.0f } };
-        std::vector<uint32_t> l_IndexBufferData = { 0, 2, 1, 0, 3, 2 };
+        std::vector<uint32_t> lIndexBufferData = { 0, 2, 1, 0, 3, 2 };
 
         mParticleVertices =
             New<VkGpuBuffer>( mGraphicContext, lVertexBufferData, eBufferType::VERTEX_BUFFER, false, false, false, true );
         mParticleIndices =
-            New<VkGpuBuffer>( mGraphicContext, l_IndexBufferData, eBufferType::INDEX_BUFFER, false, false, false, true );
+            New<VkGpuBuffer>( mGraphicContext, lIndexBufferData, eBufferType::INDEX_BUFFER, false, false, false, true );
     }
 
     void ParticleSystemRenderer::Render( math::mat4 aProjection, math::mat4 aView, VkRenderContext &aRenderContext,

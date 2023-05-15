@@ -40,7 +40,8 @@ namespace SE::Core
         // New<VkGpuBuffer>( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraViewUniforms ) );
         mCameraBuffer =
             CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraViewUniforms ) );
-        mCameraDescriptors = CreateDescriptorSet( mPipeline );
+
+        mCameraDescriptors = mPipeline->GetDescriptorSet(0);
         mCameraDescriptors->Write( mCameraBuffer, false, 0, sizeof( CameraViewUniforms ), 0 );
     }
 
