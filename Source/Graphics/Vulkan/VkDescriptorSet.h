@@ -1,13 +1,12 @@
 #pragma once
 
+#include "Core/Memory.h"
+
 #include "Graphics/Interface/IDescriptorSet.h"
 #include "Graphics/Interface/IDescriptorSetLayout.h"
 
 #include "Graphics/Vulkan/VkSampler2D.h"
 #include "Graphics/Vulkan/VkSamplerCubeMap.h"
-// #include "Graphics/Vulkan/VkGraphicContext.h"
-
-#include "Core/Memory.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Graphics/Vulkan/VkPipeline.h"
 
