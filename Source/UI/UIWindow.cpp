@@ -58,7 +58,7 @@ namespace SE::Core
         mUIRenderPipeline->AddInput( "TextureCoords", eBufferDataType::VEC2, 0, 1 );
         mUIRenderPipeline->AddInput( "Color", eBufferDataType::COLOR, 0, 2 );
 
-        auto lDescriptorSet = CreateDescriptorSet( mGraphicContext );
+        auto lDescriptorSet = CreateDescriptorSetLayout( mGraphicContext );
         lDescriptorSet->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
         lDescriptorSet->Build();
         mUIRenderPipeline->AddDescriptorSet( lDescriptorSet );

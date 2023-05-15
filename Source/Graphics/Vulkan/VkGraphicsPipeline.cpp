@@ -1,5 +1,6 @@
 #include "VkGraphicsPipeline.h"
 #include "VkRenderContext.h"
+#include "VkDescriptorSetLayout.h"
 
 #include "Core/Logging.h"
 #include "Core/Memory.h"
@@ -16,44 +17,10 @@ namespace SE::Graphics
 
     void VkGraphicsPipeline::Build()
     {
-        for( uint32_t i = 0; i < mDescriptorLayout.size(); i++ )
+        for( uint32_t i = 0; i < mDescriptorSets.size(); i++ )
         {
-            auto lDescriptorSet = mDescriptorLayout[i].mDescriptors;
-
-            std::vector<VkDescriptorSetLayoutBinding> lBindings{};
-
-            for( uint32_t j = 0; j < lDescriptorSet.size(); j++ )
-            {
-                VkDescriptorSetLayoutBinding &lNewBinding = lBindings.emplace_back();
-
-                lNewBinding.binding            = lDescriptorSet[i].mBindingIndex;
-                lNewBinding.descriptorCount    = 1;
-                lNewBinding.descriptorType     = (VkDescriptorType)lDescriptorSet[i].mType;
-                lNewBinding.pImmutableSamplers = nullptr;
-
-                if( lDescriptorSet[j].mShaderStages & eShaderStageTypeFlags::VERTEX )
-                    lNewBinding.stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
-
-                if( lDescriptorSet[j].mShaderStages & eShaderStageTypeFlags::COMPUTE )
-                    lNewBinding.stageFlags |= VK_SHADER_STAGE_COMPUTE_BIT;
-
-                if( lDescriptorSet[j].mShaderStages & eShaderStageTypeFlags::GEOMETRY )
-                    lNewBinding.stageFlags |= VK_SHADER_STAGE_GEOMETRY_BIT;
-
-                if( lDescriptorSet[j].mShaderStages & eShaderStageTypeFlags::FRAGMENT )
-                    lNewBinding.stageFlags |= VK_SHADER_STAGE_FRAGMENT_BIT;
-
-                if( lDescriptorSet[j].mShaderStages & eShaderStageTypeFlags::TESSELATION_CONTROL )
-                    lNewBinding.stageFlags |= VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
-
-                if( lDescriptorSet[j].mShaderStages & eShaderStageTypeFlags::TESSELATION_EVALUATION )
-                    lNewBinding.stageFlags |= VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
-            }
-
-            if( mDescriptorLayout[i].mIsUnbounded ) lBindings[lBindings.size() - 1].descriptorCount = 1024;
-
-            mDescriptorSetLayouts.push_back( New<sVkDescriptorSetLayoutObject>( Cast<VkGraphicContext>( mGraphicContext ), lBindings,
-                                                                                mDescriptorLayout[i].mIsUnbounded ) );
+            mDescriptorSetLayouts.push_back(
+                Cast<VkDescriptorSetLayoutObject>( mDescriptorSets[i] )->GetVkDescriptorSetLayoutObject() );
         }
 
         mPipelineLayoutObject =

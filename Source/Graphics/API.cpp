@@ -5,6 +5,7 @@
 #include "Vulkan/VkRenderContext.h"
 #include "Vulkan/VkSwapChain.h"
 #include "Vulkan/VkSwapChainRenderContext.h"
+#include "Vulkan/VkDescriptorSetLayout.h"
 
 namespace SE::Graphics
 {
@@ -100,11 +101,11 @@ namespace SE::Graphics
         }
     }
 
-    Ref<IDescriptorSet> CreateDescriptorSet( Ref<IGraphicContext> aGraphicContext, bool aUnbounded, uint32_t aCount )
+    Ref<IDescriptorSetLayout> CreateDescriptorSetLayout( Ref<IGraphicContext> aGraphicContext, bool aUnbounded, uint32_t aCount )
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkDescriptorSetObject>( aGraphicContext, aUnbounded, aCount );
+        case eGraphicsAPI::VULKAN: return New<VkDescriptorSetLayoutObject>( aGraphicContext, aUnbounded, aCount );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
         default: return nullptr;

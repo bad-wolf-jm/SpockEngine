@@ -65,6 +65,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Vulkan/VkPipeline.cpp
     Graphics/Vulkan/VkCommand.cpp
     Graphics/Vulkan/VkRenderPass.cpp
+    Graphics/Vulkan/VkDescriptorSet.cpp
+    Graphics/Vulkan/VkDescriptorSetLayout.cpp
 
     Graphics/Interface/IWindow.cpp
     Graphics/Interface/ITexture.cpp
@@ -79,6 +81,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Interface/ISwapChain.cpp
     Graphics/Interface/IRenderPass.cpp
     Graphics/Interface/ICommandBuffer.cpp
+    Graphics/Interface/IDescriptorSet.cpp
+    Graphics/Interface/IDescriptorSetLayout.cpp
 
     OtdrEditor/OtdrWindow.cpp
     OtdrEditor/BaseOtdrApplication.cpp

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IDescriptorSet.h"
+#include "IDescriptorSetLayout.h"
 
 namespace SE::Graphics
 {
@@ -11,21 +11,6 @@ namespace SE::Graphics
         fs::path    mPath;
         std::string mEntryPoint;
     };
-
-    // struct sDescriptorBindingInfo
-    // {
-    //     uint32_t        mBindingIndex = 0;
-    //     eDescriptorType mType         = eDescriptorType::UNIFORM_BUFFER;
-    //     ShaderStageType mShaderStages = {};
-    // };
-
-    // struct sDescriptorSet
-    // {
-    //     bool                                mIsUnbounded = false;
-    //     std::vector<sDescriptorBindingInfo> mDescriptors = {};
-
-    //     void Add( uint32_t aBindingIndex, eDescriptorType aType, ShaderStageType aShaderStages );
-    // };
 
     class IRenderContext;
 
@@ -53,8 +38,7 @@ namespace SE::Graphics
             AddPushConstantRange( aShaderStage, aOffset, sizeof( _Ty ) );
         }
 
-        // sDescriptorSet &AddDescriptorSet( bool aUnbounded = false );
-        void AddDescriptorSet( Ref<IDescriptorSet> aDescriptorSet );
+        void AddDescriptorSet( Ref<IDescriptorSetLayout> aDescriptorSet );
 
       protected:
         bool mOpaque = false;
@@ -75,7 +59,6 @@ namespace SE::Graphics
         std::vector<sBufferLayoutElement> mInputLayout          = {};
         std::vector<sBufferLayoutElement> mInstancedInputLayout = {};
         std::vector<sPushConstantRange>   mPushConstants        = {};
-        // std::vector<sDescriptorSet>       mDescriptorLayout     = {};
-        std::vector<IDescriptorSet>       mDescriptorSets       = {};
+        std::vector<Ref<IDescriptorSetLayout>> mDescriptorSets = {};
     };
 } // namespace SE::Graphics
