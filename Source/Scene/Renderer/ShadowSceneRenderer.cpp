@@ -3,15 +3,14 @@
 #include <chrono>
 #include <gli/gli.hpp>
 
-#include "Graphics/Vulkan/VkPipeline.h"
-#include "Graphics/Vulkan/VkTextureCubeMap.h"
+// #include "Graphics/Vulkan/VkPipeline.h"
+// #include "Graphics/Vulkan/VkTextureCubeMap.h"
 
 #include "Scene/Components/VisualHelpers.h"
 #include "Scene/Primitives/Primitives.h"
 #include "Scene/VertexData.h"
 
 #include "Core/Profiling/BlockTimer.h"
-
 #include "Core/Logging.h"
 #include "Core/Resource.h"
 
@@ -25,7 +24,7 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem::Components;
     using namespace SE::Core::Primitives;
 
-    Ref<DescriptorSetLayout> ShadowMeshRenderer::GetCameraSetLayout( Ref<VkGraphicContext> aGraphicContext )
+    Ref<DescriptorSetLayout> ShadowMeshRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
         DescriptorSetLayoutCreateInfo lCameraBindLayout{};
         lCameraBindLayout.Bindings = {
@@ -38,7 +37,7 @@ namespace SE::Core
 
     std::vector<sPushConstantRange> ShadowMeshRenderer::GetPushConstantLayout() { return {}; };
 
-    ShadowMeshRenderer::ShadowMeshRenderer( Ref<VkGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo )
+    ShadowMeshRenderer::ShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo )
         : SceneRenderPipeline<VertexData>( aGraphicContext )
     {
 
@@ -53,7 +52,7 @@ namespace SE::Core
         Initialize( lCreateInfo );
     }
 
-    Ref<DescriptorSetLayout> OmniShadowMeshRenderer::GetCameraSetLayout( Ref<VkGraphicContext> aGraphicContext )
+    Ref<DescriptorSetLayout> OmniShadowMeshRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
         DescriptorSetLayoutCreateInfo lCameraBindLayout{};
         lCameraBindLayout.Bindings = {
@@ -66,7 +65,7 @@ namespace SE::Core
 
     std::vector<sPushConstantRange> OmniShadowMeshRenderer::GetPushConstantLayout() { return {}; };
 
-    OmniShadowMeshRenderer::OmniShadowMeshRenderer( Ref<VkGraphicContext>               aGraphicContext,
+    OmniShadowMeshRenderer::OmniShadowMeshRenderer( Ref<IGraphicContext>               aGraphicContext,
                                                     ShadowMeshRendererCreateInfo const &aCreateInfo )
         : SceneRenderPipeline<VertexData>( aGraphicContext )
     {
@@ -83,7 +82,7 @@ namespace SE::Core
         Initialize( lCreateInfo );
     }
 
-    ShadowSceneRenderer::ShadowSceneRenderer( Ref<VkGraphicContext> aGraphicContext )
+    ShadowSceneRenderer::ShadowSceneRenderer( Ref<IGraphicContext> aGraphicContext )
         : ASceneRenderer( aGraphicContext, eColorFormat::UNDEFINED, 1 )
     {
         mSceneDescriptors = New<DescriptorSet>( mGraphicContext, ShadowMeshRenderer::GetCameraSetLayout( mGraphicContext ) );

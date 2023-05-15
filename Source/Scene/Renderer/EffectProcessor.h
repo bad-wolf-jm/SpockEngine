@@ -2,12 +2,12 @@
 
 #include "Core/Memory.h"
 
-#include "Graphics/Vulkan/VkGpuBuffer.h"
-
-#include "Graphics/Vulkan/VkRenderContext.h"
-#include "Graphics/Vulkan/DescriptorSet.h"
-#include "Graphics/Vulkan/VkGraphicsPipeline.h"
-#include "Graphics/Vulkan/VkGraphicContext.h"
+// #include "Graphics/Vulkan/VkGpuBuffer.h"
+// #include "Graphics/Vulkan/VkRenderContext.h"
+// #include "Graphics/Vulkan/DescriptorSet.h"
+// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
+// #include "Graphics/Vulkan/IGraphicContext.h"
+#include "Graphics/API.h"
 
 #include "Scene/VertexData.h"
 
@@ -31,7 +31,7 @@ namespace SE::Core
     class EffectProcessor : public SE::Core::SceneRenderPipeline<EmptyVertexData>
     {
       public:
-        EffectProcessor( Ref<VkGraphicContext> mGraphicContext, VkRenderContext &aRenderContext,
+        EffectProcessor( Ref<IGraphicContext> mGraphicContext, VkRenderContext &aRenderContext,
                          EffectProcessorCreateInfo aCreateInfo );
         ~EffectProcessor() = default;
 

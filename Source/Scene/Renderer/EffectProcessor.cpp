@@ -9,7 +9,7 @@ namespace SE::Core
 
     std::vector<sPushConstantRange> EffectProcessor::GetPushConstantLayout() { return {}; };
 
-    EffectProcessor::EffectProcessor( Ref<VkGraphicContext> aGraphicContext, VkRenderContext &aRenderContext,
+    EffectProcessor::EffectProcessor( Ref<IGraphicContext> aGraphicContext, VkRenderContext &aRenderContext,
                                       EffectProcessorCreateInfo aCreateInfo )
         : SceneRenderPipeline<EmptyVertexData>( aGraphicContext )
         , Spec{ aCreateInfo }

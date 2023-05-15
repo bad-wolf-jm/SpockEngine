@@ -5,7 +5,7 @@ namespace SE::Core
 {
     using namespace Graphics;
 
-    DeferredRenderer::DeferredRenderer( Ref<VkGraphicContext> aGraphicContext, eColorFormat aOutputFormat,
+    DeferredRenderer::DeferredRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat,
                                         uint32_t aOutputSampleCount )
         : ASceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {

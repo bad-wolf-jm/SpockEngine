@@ -6,17 +6,17 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-#include "Graphics/Vulkan/VkGpuBuffer.h"
-
-#include "Graphics/Vulkan/VkRenderContext.h"
-#include "Graphics/Vulkan/DescriptorSet.h"
-#include "Graphics/Vulkan/VkGraphicsPipeline.h"
-#include "Graphics/Vulkan/VkGraphicContext.h"
+// #include "Graphics/Vulkan/VkGpuBuffer.h"
+// #include "Graphics/Vulkan/VkRenderContext.h"
+// #include "Graphics/Vulkan/DescriptorSet.h"
+// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
+// #include "Graphics/Vulkan/IGraphicContext.h"
+// #include "Graphics/Vulkan/VkRenderPass.h"
+#include "Graphics/API.h"
 
 #include "Scene/ParticleData.h"
 #include "Scene/VertexData.h"
 
-#include "Graphics/Vulkan/VkRenderPass.h"
 #include "SceneRenderPipeline.h"
 
 namespace SE::Graphics
@@ -79,7 +79,7 @@ namespace SE::Graphics
 
         ParticleSystemRenderer() = default;
 
-        ParticleSystemRenderer( Ref<VkGraphicContext> aGraphicContext, VkRenderContext &aRenderContext,
+        ParticleSystemRenderer( Ref<IGraphicContext> aGraphicContext, VkRenderContext &aRenderContext,
                                 ParticleRendererCreateInfo aCreateInfo );
 
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();

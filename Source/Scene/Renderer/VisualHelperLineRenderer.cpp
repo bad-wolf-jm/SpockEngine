@@ -16,7 +16,7 @@ namespace SE::Graphics
         return { { { eShaderStageTypeFlags::VERTEX, eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( CameraViewUniforms ) } };
     };
 
-    VisualHelperLineRenderer::VisualHelperLineRenderer( Ref<VkGraphicContext>              a_GraphicContext,
+    VisualHelperLineRenderer::VisualHelperLineRenderer( Ref<IGraphicContext>              a_GraphicContext,
                                                         VisualHelperLineRendererCreateInfo a_CreateInfo )
         : SceneRenderPipeline<PositionData>( a_GraphicContext )
         , Spec{ a_CreateInfo }

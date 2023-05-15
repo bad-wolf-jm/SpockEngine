@@ -6,14 +6,13 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-#include "Graphics/Vulkan/VkGpuBuffer.h"
-
-#include "Graphics/Vulkan/VkRenderContext.h"
-#include "Graphics/Vulkan/DescriptorSet.h"
-
-#include "Graphics/Vulkan/VkGraphicsPipeline.h"
-#include "Graphics/Vulkan/VkRenderPass.h"
-#include "Graphics/Vulkan/VkGraphicContext.h"
+// #include "Graphics/Vulkan/VkGpuBuffer.h"
+// #include "Graphics/Vulkan/VkRenderContext.h"
+// #include "Graphics/Vulkan/DescriptorSet.h"
+// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
+// #include "Graphics/Vulkan/VkRenderPass.h"
+// #include "Graphics/Vulkan/IGraphicContext.h"
+#include "Graphics/API.h"
 
 #include "Scene/ParticleData.h"
 #include "Scene/VertexData.h"
@@ -46,7 +45,7 @@ namespace SE::Graphics
         VisualHelperMeshRendererCreateInfo Spec;
 
         VisualHelperMeshRenderer() = default;
-        VisualHelperMeshRenderer( Ref<VkGraphicContext> a_GraphicContext, VisualHelperMeshRendererCreateInfo a_CreateInfo );
+        VisualHelperMeshRenderer( Ref<IGraphicContext> a_GraphicContext, VisualHelperMeshRendererCreateInfo a_CreateInfo );
 
         ~VisualHelperMeshRenderer() = default;
 

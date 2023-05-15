@@ -6,15 +6,13 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-#include "Graphics/Vulkan/VkGpuBuffer.h"
-
-#include "Graphics/Vulkan/VkRenderContext.h"
-#include "Graphics/Vulkan/DescriptorSet.h"
-
-#include "Graphics/Vulkan/VkGraphicsPipeline.h"
-#include "Graphics/Vulkan/VkGraphicContext.h"
-
-#include "Graphics/Vulkan/VkRenderPass.h"
+// #include "Graphics/Vulkan/VkGpuBuffer.h"
+// #include "Graphics/Vulkan/VkRenderContext.h"
+// #include "Graphics/Vulkan/DescriptorSet.h"
+// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
+// #include "Graphics/Vulkan/IGraphicContext.h"
+// #include "Graphics/Vulkan/VkRenderPass.h"
+#include "Graphics/API.h"
 
 #include "Scene/VertexData.h"
 
@@ -49,7 +47,7 @@ namespace SE::Graphics
         VisualHelperLineRendererCreateInfo Spec;
 
         VisualHelperLineRenderer() = default;
-        VisualHelperLineRenderer( Ref<VkGraphicContext> a_GraphicContext, VisualHelperLineRendererCreateInfo a_CreateInfo );
+        VisualHelperLineRenderer( Ref<IGraphicContext> a_GraphicContext, VisualHelperLineRendererCreateInfo a_CreateInfo );
         ~VisualHelperLineRenderer() = default;
 
         void Render( math::mat4 a_Model, math::mat4 a_View, math::mat4 a_Projection, math::vec3 a_Color,

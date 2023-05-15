@@ -1,10 +1,11 @@
 #pragma once
 #include "Core/Memory.h"
 
-#include "Graphics/Vulkan/VkRenderContext.h"
-#include "Graphics/Vulkan/VkRenderTarget.h"
-#include "Graphics/Vulkan/DescriptorSet.h"
-#include "Graphics/Vulkan/VkGraphicsPipeline.h"
+// #include "Graphics/Vulkan/VkRenderContext.h"
+// #include "Graphics/Vulkan/VkRenderTarget.h"
+// #include "Graphics/Vulkan/DescriptorSet.h"
+// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
+#include "Graphics/API.h"
 
 #include "Scene/Components.h"
 #include "Scene/Scene.h"
@@ -30,7 +31,7 @@ namespace SE::Core
 
       public:
         ForwardSceneRenderer() = default;
-        ForwardSceneRenderer( Ref<VkGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
+        ForwardSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
 
         ~ForwardSceneRenderer() = default;
 

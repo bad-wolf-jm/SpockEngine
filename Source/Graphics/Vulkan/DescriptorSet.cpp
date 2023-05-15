@@ -6,6 +6,15 @@
 namespace SE::Graphics
 {
 
+    DescriptorSet::DescriptorSet( Ref<IGraphicsPipeline> aGraphicsPipeline, uint32_t aDescriptorCount )
+        : mGraphicContext{ Cast<VkRenderTarget>( aGraphicsPipeline->GetGraphicContext() ) }
+        , mLayout{ Cast<VkGraphicsPipeline>( aGraphicsPipeline )->GetDesciruptorSetLayout() }
+    {
+        mDescriptorSetObject = SE::Core::New<sVkDescriptorSetObject>(
+            mGraphicContext,
+            mGraphicContext->AllocateDescriptorSet( mLayout->GetVkDescriptorSetLayoutObject()->mVkObject, aDescriptorCount ) );
+    }
+
     DescriptorSet::DescriptorSet( Ref<VkGraphicContext> aGraphicContext, Ref<DescriptorSetLayout> aLayout, uint32_t aDescriptorCount )
         : mGraphicContext{ aGraphicContext }
         , mLayout{ aLayout }
@@ -61,7 +70,6 @@ namespace SE::Graphics
         mDescriptorSetObject->Write( lImages );
     }
     void DescriptorSet::Write( Ref<VkSamplerCubeMap> aBuffer, uint32_t aBinding ) { Write( std::vector{ aBuffer }, aBinding ); }
-
 
     DescriptorBindingInfo::operator VkDescriptorSetLayoutBinding() const
     {

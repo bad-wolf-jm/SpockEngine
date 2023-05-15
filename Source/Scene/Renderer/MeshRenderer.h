@@ -5,13 +5,14 @@
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 
-#include "Graphics/Vulkan/DescriptorSet.h"
-#include "Graphics/Vulkan/VkGraphicsPipeline.h"
+// #include "Graphics/Vulkan/DescriptorSet.h"
+// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
+// #include "Graphics/Vulkan/IGraphicContext.h"
+// #include "Graphics/Vulkan/VkRenderPass.h"
+#include "Graphics/API.h"
 
 #include "Scene/VertexData.h"
 
-#include "Graphics/Vulkan/VkGraphicContext.h"
-#include "Graphics/Vulkan/VkRenderPass.h"
 #include "SceneRenderPipeline.h"
 
 namespace SE::Core
@@ -68,11 +69,11 @@ namespace SE::Core
 
       public:
         MeshRenderer() = default;
-        MeshRenderer( Ref<VkGraphicContext> aGraphicContext, MeshRendererCreateInfo const &aCreateInfo );
+        MeshRenderer( Ref<IGraphicContext> aGraphicContext, MeshRendererCreateInfo const &aCreateInfo );
 
-        static Ref<DescriptorSetLayout> GetCameraSetLayout( Ref<VkGraphicContext> aGraphicContext );
-        static Ref<DescriptorSetLayout> GetTextureSetLayout( Ref<VkGraphicContext> aGraphicContext );
-        static Ref<DescriptorSetLayout> GetNodeSetLayout( Ref<VkGraphicContext> aGraphicContext );
+        static Ref<DescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
+        static Ref<DescriptorSetLayout> GetTextureSetLayout( Ref<IGraphicContext> aGraphicContext );
+        static Ref<DescriptorSetLayout> GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext );
 
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
         std::vector<sPushConstantRange>       GetPushConstantLayout();

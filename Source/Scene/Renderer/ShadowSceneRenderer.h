@@ -1,10 +1,11 @@
 #pragma once
 #include "Core/Memory.h"
 
-#include "Graphics/Vulkan/VkRenderContext.h"
-#include "Graphics/Vulkan/DescriptorSet.h"
-#include "Graphics/Vulkan/VkGraphicsPipeline.h"
-#include "Graphics/Vulkan/VkRenderTarget.h"
+// #include "Graphics/Vulkan/VkRenderContext.h"
+// #include "Graphics/Vulkan/DescriptorSet.h"
+// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
+// #include "Graphics/Vulkan/VkRenderTarget.h"
+#include "Graphics/API.h"
 
 #include "Scene/Components.h"
 #include "Scene/Scene.h"
@@ -38,10 +39,10 @@ namespace SE::Core
 
       public:
         ShadowMeshRenderer() = default;
-        ShadowMeshRenderer( Ref<VkGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo );
+        ShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo );
 
-        static Ref<DescriptorSetLayout> GetCameraSetLayout( Ref<VkGraphicContext> aGraphicContext );
-        static Ref<DescriptorSetLayout> GetNodeSetLayout( Ref<VkGraphicContext> aGraphicContext );
+        static Ref<DescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
+        static Ref<DescriptorSetLayout> GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext );
 
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
         std::vector<sPushConstantRange>       GetPushConstantLayout();
@@ -60,10 +61,10 @@ namespace SE::Core
 
       public:
         OmniShadowMeshRenderer() = default;
-        OmniShadowMeshRenderer( Ref<VkGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo );
+        OmniShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo );
 
-        static Ref<DescriptorSetLayout> GetCameraSetLayout( Ref<VkGraphicContext> aGraphicContext );
-        static Ref<DescriptorSetLayout> GetNodeSetLayout( Ref<VkGraphicContext> aGraphicContext );
+        static Ref<DescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
+        static Ref<DescriptorSetLayout> GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext );
 
         std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
         std::vector<sPushConstantRange>       GetPushConstantLayout();
@@ -79,7 +80,7 @@ namespace SE::Core
 
       public:
         ShadowSceneRenderer() = default;
-        ShadowSceneRenderer( Ref<VkGraphicContext> aGraphicContext );
+        ShadowSceneRenderer( Ref<IGraphicContext> aGraphicContext );
 
         ~ShadowSceneRenderer() = default;
 
