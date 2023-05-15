@@ -1,12 +1,8 @@
 #pragma once
 
 #include <map>
+#include <stdexcept>
 
-#include "Graphics/Vulkan/DescriptorSet.h"
-#include "Graphics/Vulkan/VkSwapChain.h"
-#include "Graphics/Vulkan/VkGraphicContext.h"
-
-#include "Graphics/Vulkan/VkGpuBuffer.h"
 #include "UI/UI.h"
 
 #include <imgui.h>
@@ -17,7 +13,6 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-#include <stdexcept>
 
 #include "Graphics/API.h"
 

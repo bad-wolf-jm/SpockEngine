@@ -201,47 +201,44 @@ namespace SE::Graphics
 
     sVkPipelineLayoutObject::~sVkPipelineLayoutObject() { mContext->DestroyPipelineLayout( mVkObject ); }
 
-    uint32_t BufferDataTypeSize( eBufferDataType aType )
+    static VkBlendFactor Convert( eBlendFactor x )
     {
-        // clang-format off
-        switch( aType )
+        switch( x )
         {
-        case eBufferDataType::UINT8:  return 1 * sizeof( uint8_t  );
-        case eBufferDataType::UINT16: return 1 * sizeof( uint16_t );
-        case eBufferDataType::UINT32: return 1 * sizeof( uint32_t );
-        case eBufferDataType::INT8:   return 1 * sizeof( int8_t   );
-        case eBufferDataType::INT16:  return 1 * sizeof( int16_t  );
-        case eBufferDataType::INT32:  return 1 * sizeof( int32_t  );
-        case eBufferDataType::FLOAT:  return 1 * sizeof( float    );
-        case eBufferDataType::COLOR:  return 4 * sizeof( uint8_t  );
-        case eBufferDataType::VEC2:   return 2 * sizeof( float    );
-        case eBufferDataType::VEC3:   return 3 * sizeof( float    );
-        case eBufferDataType::VEC4:   return 4 * sizeof( float    );
-        case eBufferDataType::IVEC2:  return 2 * sizeof( int32_t  );
-        case eBufferDataType::IVEC3:  return 3 * sizeof( int32_t  );
-        case eBufferDataType::IVEC4:  return 4 * sizeof( int32_t  );
-        case eBufferDataType::UVEC2:  return 2 * sizeof( uint32_t );
-        case eBufferDataType::UVEC3:  return 3 * sizeof( uint32_t );
-        case eBufferDataType::UVEC4:  return 4 * sizeof( uint32_t );
+        case eBlendFactor::ZERO: return VK_BLEND_FACTOR_ZERO;
+        case eBlendFactor::ONE: return VK_BLEND_FACTOR_ONE;
+        case eBlendFactor::SRC_COLOR: return VK_BLEND_FACTOR_SRC_COLOR;
+        case eBlendFactor::ONE_MINUS_SRC_COLOR: return VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR;
+        case eBlendFactor::DST_COLOR: return VK_BLEND_FACTOR_DST_COLOR;
+        case eBlendFactor::ONE_MINUS_DST_COLOR: return VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR;
+        case eBlendFactor::SRC_ALPHA: return VK_BLEND_FACTOR_SRC_ALPHA;
+        case eBlendFactor::ONE_MINUS_SRC_ALPHA: return VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+        case eBlendFactor::DST_ALPHA: return VK_BLEND_FACTOR_DST_ALPHA;
+        case eBlendFactor::ONE_MINUS_DST_ALPHA: return VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA;
+        case eBlendFactor::CONSTANT_COLOR: return VK_BLEND_FACTOR_CONSTANT_COLOR;
+        case eBlendFactor::ONE_MINUS_CONSTANT_COLOR: return VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR;
+        case eBlendFactor::CONSTANT_ALPHA: return VK_BLEND_FACTOR_CONSTANT_ALPHA;
+        case eBlendFactor::ONE_MINUS_CONSTANT_ALPHA: return VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA;
+        case eBlendFactor::SRC_ALPHA_SATURATE: return VK_BLEND_FACTOR_SRC_ALPHA_SATURATE;
+        case eBlendFactor::SRC1_COLOR: return VK_BLEND_FACTOR_SRC1_COLOR;
+        case eBlendFactor::ONE_MINUS_SRC1_COLOR: return VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR;
+        case eBlendFactor::SRC1_ALPHA: return VK_BLEND_FACTOR_SRC1_ALPHA;
+        case eBlendFactor::ONE_MINUS_SRC1_ALPHA:
+        default: return VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA;
         }
-        // clang-format on
-        return 0;
-    };
-
-    sBufferLayoutElement::sBufferLayoutElement( const std::string &aName, eBufferDataType aType, uint32_t aBinding,
-                                                uint32_t aLocation )
-        : mName( aName )
-        , mType( aType )
-        , mBinding( aBinding )
-        , mLocation( aLocation )
-        , mSize( BufferDataTypeSize( aType ) )
-        , mOffset( 0 )
-    {
     }
 
-    sBufferLayout::sBufferLayout( std::initializer_list<sBufferLayoutElement> aElements )
-        : mElements( aElements )
+    static VkBlendOp Convert( eBlendOperation x )
     {
+        switch( x )
+        {
+        case eBlendOperation::ADD: return VK_BLEND_OP_ADD;
+        case eBlendOperation::SUBTRACT: return VK_BLEND_OP_SUBTRACT;
+        case eBlendOperation::REVERSE_SUBTRACT: return VK_BLEND_OP_REVERSE_SUBTRACT;
+        case eBlendOperation::MIN: return VK_BLEND_OP_MIN;
+        case eBlendOperation::MAX:
+        default: return VK_BLEND_OP_MAX;
+        }
     }
 
     uint32_t sVkPipelineObject::CalculateOffsetsAndStride( std::vector<sBufferLayoutElement> &aVertexBufferLayout )
@@ -273,9 +270,32 @@ namespace SE::Graphics
             VkVertexInputAttributeDescription positionAttribute{};
             positionAttribute.binding  = aBinding;
             positionAttribute.location = aVertexBufferLayout[i].mLocation;
-            positionAttribute.format   = (VkFormat)aVertexBufferLayout[i].mType;
-            positionAttribute.offset   = aVertexBufferLayout[i].mOffset;
-            aAttributes[i]             = positionAttribute;
+            // positionAttribute.format   = (VkFormat)aVertexBufferLayout[i].mType;
+
+            switch( aVertexBufferLayout[i].mType )
+            {
+            case eBufferDataType::UINT8: positionAttribute.format = VK_FORMAT_R8_UINT; break;
+            case eBufferDataType::UINT16: positionAttribute.format = VK_FORMAT_R16_UINT; break;
+            case eBufferDataType::UINT32: positionAttribute.format = VK_FORMAT_R32_UINT; break;
+            case eBufferDataType::INT8: positionAttribute.format = VK_FORMAT_R8_SINT; break;
+            case eBufferDataType::INT16: positionAttribute.format = VK_FORMAT_R16_SINT; break;
+            case eBufferDataType::INT32: positionAttribute.format = VK_FORMAT_R32_SINT; break;
+            case eBufferDataType::FLOAT: positionAttribute.format = VK_FORMAT_R32_SFLOAT; break;
+            case eBufferDataType::COLOR: positionAttribute.format = VK_FORMAT_R8G8B8A8_UNORM; break;
+            case eBufferDataType::VEC2: positionAttribute.format = VK_FORMAT_R32G32_SFLOAT; break;
+            case eBufferDataType::VEC4: positionAttribute.format = VK_FORMAT_R32G32B32A32_SFLOAT; break;
+            case eBufferDataType::IVEC2: positionAttribute.format = VK_FORMAT_R32G32_SINT; break;
+            case eBufferDataType::IVEC3: positionAttribute.format = VK_FORMAT_R32G32B32_SINT; break;
+            case eBufferDataType::IVEC4: positionAttribute.format = VK_FORMAT_R32G32B32A32_SINT; break;
+            case eBufferDataType::UVEC2: positionAttribute.format = VK_FORMAT_R32G32_UINT; break;
+            case eBufferDataType::UVEC3: positionAttribute.format = VK_FORMAT_R32G32B32_UINT; break;
+            case eBufferDataType::UVEC4: positionAttribute.format = VK_FORMAT_R32G32B32A32_UINT; break;
+            case eBufferDataType::VEC3:
+            default: positionAttribute.format = VK_FORMAT_R32G32B32_SFLOAT; break;
+            }
+
+            positionAttribute.offset = aVertexBufferLayout[i].mOffset;
+            aAttributes[i]           = positionAttribute;
         }
     }
 
@@ -348,12 +368,12 @@ namespace SE::Graphics
         lColorBlendAttachment.colorWriteMask =
             VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
         lColorBlendAttachment.blendEnable         = aBlending.mEnable ? VK_TRUE : VK_FALSE;
-        lColorBlendAttachment.srcColorBlendFactor = static_cast<VkBlendFactor>( aBlending.mSourceColorFactor );
-        lColorBlendAttachment.dstColorBlendFactor = static_cast<VkBlendFactor>( aBlending.mDestColorFactor );
-        lColorBlendAttachment.colorBlendOp        = static_cast<VkBlendOp>( aBlending.mColorBlendOperation );
-        lColorBlendAttachment.srcAlphaBlendFactor = static_cast<VkBlendFactor>( aBlending.mSourceAlphaFactor );
-        lColorBlendAttachment.dstAlphaBlendFactor = static_cast<VkBlendFactor>( aBlending.mDestAlphaFactor );
-        lColorBlendAttachment.alphaBlendOp        = static_cast<VkBlendOp>( aBlending.mAlphaBlendOperation );
+        lColorBlendAttachment.srcColorBlendFactor = Convert( aBlending.mSourceColorFactor );
+        lColorBlendAttachment.dstColorBlendFactor = Convert( aBlending.mDestColorFactor );
+        lColorBlendAttachment.colorBlendOp        = Convert( aBlending.mColorBlendOperation );
+        lColorBlendAttachment.srcAlphaBlendFactor = Convert( aBlending.mSourceAlphaFactor );
+        lColorBlendAttachment.dstAlphaBlendFactor = Convert( aBlending.mDestAlphaFactor );
+        lColorBlendAttachment.alphaBlendOp        = Convert( aBlending.mAlphaBlendOperation );
 
         std::vector<VkPipelineColorBlendAttachmentState> lBlendAttachments( aRenderPass->GetColorAttachmentCount(),
                                                                             lColorBlendAttachment );
@@ -390,8 +410,15 @@ namespace SE::Graphics
         aCreateInfo.pViewportState   = &lViewportState;
 
         VkPipelineInputAssemblyStateCreateInfo lInputAssemblyInfo{};
-        lInputAssemblyInfo.sType                  = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-        lInputAssemblyInfo.topology               = (VkPrimitiveTopology)aTopology;
+        lInputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+        switch( aTopology )
+        {
+        case ePrimitiveTopology::TRIANGLES: lInputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST; break;
+        case ePrimitiveTopology::LINES: lInputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST; break;
+        case ePrimitiveTopology::POINTS:
+        default: lInputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_POINT_LIST; break;
+        }
+
         lInputAssemblyInfo.primitiveRestartEnable = VK_FALSE;
         lInputAssemblyInfo.pNext                  = nullptr;
         aCreateInfo.pInputAssemblyState           = &lInputAssemblyInfo;
@@ -410,8 +437,16 @@ namespace SE::Graphics
         default: lRasterizationConfig.polygonMode = VK_POLYGON_MODE_POINT; break;
         }
 
-        lRasterizationConfig.lineWidth               = aLineWidth;
-        lRasterizationConfig.cullMode                = (VkCullModeFlags)aCullMode;
+        lRasterizationConfig.lineWidth = aLineWidth;
+        switch( aCullMode )
+        {
+        case eFaceCulling::NONE: lRasterizationConfig.cullMode = VK_CULL_MODE_NONE; break;
+        case eFaceCulling::FRONT: lRasterizationConfig.cullMode = VK_CULL_MODE_FRONT_BIT; break;
+        case eFaceCulling::BACK: lRasterizationConfig.cullMode = VK_CULL_MODE_BACK_BIT; break;
+        case eFaceCulling::FRONT_AND_BACK:
+        default: lRasterizationConfig.cullMode = VK_CULL_MODE_FRONT_AND_BACK; break;
+        }
+
         lRasterizationConfig.frontFace               = VK_FRONT_FACE_COUNTER_CLOCKWISE;
         lRasterizationConfig.depthBiasEnable         = VK_FALSE;
         lRasterizationConfig.depthBiasConstantFactor = 0.0f;
@@ -420,10 +455,23 @@ namespace SE::Graphics
         aCreateInfo.pRasterizationState              = &lRasterizationConfig;
 
         VkPipelineDepthStencilStateCreateInfo lDepthStencilInfo{};
-        lDepthStencilInfo.sType                 = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-        lDepthStencilInfo.depthTestEnable       = aDepthTest.mDepthTestEnable ? VK_TRUE : VK_FALSE;
-        lDepthStencilInfo.depthWriteEnable      = aDepthTest.mDepthWriteEnable ? VK_TRUE : VK_FALSE;
-        lDepthStencilInfo.depthCompareOp        = (VkCompareOp)aDepthTest.mDepthComparison;
+        lDepthStencilInfo.sType            = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+        lDepthStencilInfo.depthTestEnable  = aDepthTest.mDepthTestEnable ? VK_TRUE : VK_FALSE;
+        lDepthStencilInfo.depthWriteEnable = aDepthTest.mDepthWriteEnable ? VK_TRUE : VK_FALSE;
+
+        switch( aDepthTest.mDepthComparison )
+        {
+        case eDepthCompareOperation::NEVER: lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_NEVER; break;
+        case eDepthCompareOperation::LESS: lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_LESS; break;
+        case eDepthCompareOperation::EQUAL: lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_EQUAL; break;
+        case eDepthCompareOperation::LESS_OR_EQUAL: lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL; break;
+        case eDepthCompareOperation::GREATER: lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_GREATER; break;
+        case eDepthCompareOperation::NOT_EQUAL: lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_NOT_EQUAL; break;
+        case eDepthCompareOperation::GREATER_OR_EQUAL: lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_GREATER_OR_EQUAL; break;
+        case eDepthCompareOperation::ALWAYS:
+        default: lDepthStencilInfo.depthCompareOp = VK_COMPARE_OP_ALWAYS; break;
+        }
+
         lDepthStencilInfo.depthBoundsTestEnable = VK_FALSE;
         lDepthStencilInfo.minDepthBounds        = 0.0f;
         lDepthStencilInfo.maxDepthBounds        = 1.0f;
@@ -434,8 +482,21 @@ namespace SE::Graphics
         std::vector<VkPipelineShaderStageCreateInfo> lShaderStages( aShaderStages.size() );
         for( uint32_t i = 0; i < aShaderStages.size(); i++ )
         {
-            lShaderStages[i].sType  = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-            lShaderStages[i].stage  = (VkShaderStageFlagBits)aShaderStages[i].mShaderModule->Type;
+            lShaderStages[i].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+
+            switch( aShaderStages[i].mShaderModule->Type )
+            {
+            case eShaderStageTypeFlags::VERTEX: lShaderStages[i].stage = VK_SHADER_STAGE_VERTEX_BIT; break;
+            case eShaderStageTypeFlags::GEOMETRY: lShaderStages[i].stage = VK_SHADER_STAGE_GEOMETRY_BIT; break;
+            case eShaderStageTypeFlags::FRAGMENT: lShaderStages[i].stage = VK_SHADER_STAGE_FRAGMENT_BIT; break;
+            case eShaderStageTypeFlags::TESSELATION_CONTROL: lShaderStages[i].stage = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT; break;
+            case eShaderStageTypeFlags::TESSELATION_EVALUATION:
+                lShaderStages[i].stage = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+                break;
+            case eShaderStageTypeFlags::COMPUTE: lShaderStages[i].stage = VK_SHADER_STAGE_COMPUTE_BIT; break;
+            case eShaderStageTypeFlags::DEFAULT: lShaderStages[i].stage = (VkShaderStageFlagBits)0xffffffff; break;
+            }
+
             lShaderStages[i].module = aShaderStages[i].mShaderModule->GetVkShaderModule();
             lShaderStages[i].pName  = aShaderStages[i].mEntryPoint.c_str();
             lShaderStages[i].pNext  = nullptr;

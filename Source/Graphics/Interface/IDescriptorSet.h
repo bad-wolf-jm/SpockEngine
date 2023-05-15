@@ -9,8 +9,6 @@
 #include <vector>
 #include <vulkan/vulkan.h>
 
-#include "Graphics/Vulkan/VkPipeline.h"
-
 namespace SE::Graphics
 {
     class IDescriptorSet
