@@ -49,11 +49,11 @@ namespace SE::Core
         DeferredLightingRenderer() = default;
         DeferredLightingRenderer( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext );
 
-        // static Ref<DescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
-        // static Ref<DescriptorSetLayout> GetTextureSetLayout( Ref<IGraphicContext> aGraphicContext );
-        // static Ref<DescriptorSetLayout> GetDirectionalShadowSetLayout( Ref<IGraphicContext> aGraphicContext );
-        // static Ref<DescriptorSetLayout> GetSpotlightShadowSetLayout( Ref<IGraphicContext> aGraphicContext );
-        // static Ref<DescriptorSetLayout> GetPointLightShadowSetLayout( Ref<IGraphicContext> aGraphicContext );
+        static Ref<IDescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
+        static Ref<IDescriptorSetLayout> GetTextureSetLayout( Ref<IGraphicContext> aGraphicContext );
+        static Ref<IDescriptorSetLayout> GetDirectionalShadowSetLayout( Ref<IGraphicContext> aGraphicContext );
+        static Ref<IDescriptorSetLayout> GetSpotlightShadowSetLayout( Ref<IGraphicContext> aGraphicContext );
+        static Ref<IDescriptorSetLayout> GetPointLightShadowSetLayout( Ref<IGraphicContext> aGraphicContext );
 
         // std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
         // std::vector<sPushConstantRange>       GetPushConstantLayout();

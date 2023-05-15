@@ -2,7 +2,7 @@
 
 #include "Core/Memory.h"
 // #include "Graphics/Vulkan/VkRenderContext.h"
-// #include "Graphics/Vulkan/DescriptorSet.h"
+// #include "Graphics/Vulkan/IDescriptorSet.h"
 // #include "Graphics/Vulkan/VkRenderTarget.h"
 
 #include "Graphics/API.h"
@@ -55,9 +55,9 @@ namespace SE::Core
         ParticleSystemRenderer &GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification );
 
       private:
-        VkRenderContext           mGeometryContext{};
-        Ref<DescriptorSetLayout> mGeometryCameraLayout = nullptr;
-        Ref<DescriptorSet>       mGeometryPassCamera   = nullptr;
+        VkRenderContext mGeometryContext{};
+        // Ref<DescriptorSetLayout> mGeometryCameraLayout = nullptr;
+        Ref<IDescriptorSet> mGeometryPassCamera = nullptr;
 
         VkRenderContext mLightingContext{};
 
@@ -68,19 +68,16 @@ namespace SE::Core
 
         std::map<std::string, Ref<Graphics::VkSampler2D>> mGeometrySamplers = {};
 
-        Ref<DescriptorSetLayout> mLightingTextureLayout = nullptr;
-        Ref<DescriptorSet>       mLightingPassTextures  = nullptr;
-        Ref<DescriptorSetLayout> mLightingCameraLayout  = nullptr;
-        Ref<DescriptorSet>       mLightingPassCamera    = nullptr;
-
-        Ref<DescriptorSetLayout> mLightingDirectionalShadowLayout   = nullptr;
-        Ref<DescriptorSet>       mLightingPassDirectionalShadowMaps = nullptr;
-
-        Ref<DescriptorSetLayout> mLightingSpotlightShadowLayout   = nullptr;
-        Ref<DescriptorSet>       mLightingPassSpotlightShadowMaps = nullptr;
-
-        Ref<DescriptorSetLayout> mLightingPointLightShadowLayout   = nullptr;
-        Ref<DescriptorSet>       mLightingPassPointLightShadowMaps = nullptr;
+        // Ref<DescriptorSetLayout> mLightingTextureLayout = nullptr;
+        Ref<IDescriptorSet> mLightingPassTextures = nullptr;
+        // Ref<DescriptorSetLayout> mLightingCameraLayout  = nullptr;
+        Ref<IDescriptorSet> mLightingPassCamera = nullptr;
+        // Ref<DescriptorSetLayout> mLightingDirectionalShadowLayout   = nullptr;
+        Ref<IDescriptorSet> mLightingPassDirectionalShadowMaps = nullptr;
+        // Ref<DescriptorSetLayout> mLightingSpotlightShadowLayout   = nullptr;
+        Ref<IDescriptorSet> mLightingPassSpotlightShadowMaps = nullptr;
+        // Ref<DescriptorSetLayout> mLightingPointLightShadowLayout   = nullptr;
+        Ref<IDescriptorSet> mLightingPassPointLightShadowMaps = nullptr;
 
         Ref<VkRenderTarget> mLightingRenderTarget = nullptr;
 
@@ -89,11 +86,11 @@ namespace SE::Core
         Ref<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;
         Ref<ShadowSceneRenderer>    mShadowSceneRenderer    = nullptr;
 
-        Ref<EffectProcessor>       mCopyRenderer      = nullptr;
-        Ref<EffectProcessor>       mFxaaRenderer      = nullptr;
-        Ref<Graphics::VkSampler2D> mFxaaSampler       = nullptr;
-        Ref<VkRenderTarget>        mFxaaRenderTarget  = nullptr;
-        VkRenderContext             mFxaaContext{};
+        Ref<EffectProcessor>       mCopyRenderer     = nullptr;
+        Ref<EffectProcessor>       mFxaaRenderer     = nullptr;
+        Ref<Graphics::VkSampler2D> mFxaaSampler      = nullptr;
+        Ref<VkRenderTarget>        mFxaaRenderTarget = nullptr;
+        VkRenderContext            mFxaaContext{};
 
         std::unordered_map<MeshRendererCreateInfo, MeshRenderer, MeshRendererCreateInfoHash> mMeshRenderers = {};
         std::unordered_map<ParticleRendererCreateInfo, ParticleSystemRenderer, ParticleSystemRendererCreateInfoHash>

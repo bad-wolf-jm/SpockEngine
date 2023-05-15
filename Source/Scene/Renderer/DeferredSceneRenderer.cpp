@@ -5,37 +5,37 @@ namespace SE::Core
 {
     using namespace Graphics;
 
-    DeferredRenderer::DeferredRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat,
-                                        uint32_t aOutputSampleCount )
+    DeferredRenderer::DeferredRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
         : ASceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {
         // Internal uniform buffers
         mCameraUniformBuffer =
-            New<VkGpuBuffer>( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( WorldMatrices ) );
+            CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( WorldMatrices ) );
         mShaderParametersBuffer =
-            New<VkGpuBuffer>( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraSettings ) );
+            CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraSettings ) );
 
         // Layout for the geometry pass
-        mGeometryPassCamera = New<DescriptorSet>( mGraphicContext, MeshRenderer::GetCameraSetLayout( mGraphicContext ) );
+        auto lCameraDescriptorLayout = MeshRenderer::GetCameraSetLayout( mGraphicContext );
+        mGeometryPassCamera          = lCameraDescriptorLayout->Allocate( 1024 );
         mGeometryPassCamera->Write( mCameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
         mGeometryPassCamera->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
 
-        mLightingCameraLayout = DeferredLightingRenderer::GetCameraSetLayout( mGraphicContext );
-        mLightingPassCamera   = New<DescriptorSet>( mGraphicContext, mLightingCameraLayout );
+        auto lLightingCameraLayout = DeferredLightingRenderer::GetCameraSetLayout( mGraphicContext );
+        mLightingPassCamera        = lLightingCameraLayout->Allocate( 1 );
         mLightingPassCamera->Write( mCameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
         mLightingPassCamera->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
 
-        mLightingTextureLayout = DeferredLightingRenderer::GetTextureSetLayout( mGraphicContext );
-        mLightingPassTextures  = New<DescriptorSet>( mGraphicContext, mLightingTextureLayout );
+        auto lLightingTextureLayout = DeferredLightingRenderer::GetTextureSetLayout( mGraphicContext );
+        mLightingPassTextures       = lLightingTextureLayout->Allocate();
 
-        mLightingDirectionalShadowLayout   = DeferredLightingRenderer::GetDirectionalShadowSetLayout( mGraphicContext );
-        mLightingPassDirectionalShadowMaps = New<DescriptorSet>( mGraphicContext, mLightingDirectionalShadowLayout, 1024 );
+        auto lLightingDirectionalShadowLayout = DeferredLightingRenderer::GetDirectionalShadowSetLayout( mGraphicContext );
+        mLightingPassDirectionalShadowMaps    = lLightingDirectionalShadowLayout->Allocate( 1024 );
 
-        mLightingSpotlightShadowLayout   = DeferredLightingRenderer::GetSpotlightShadowSetLayout( mGraphicContext );
-        mLightingPassSpotlightShadowMaps = New<DescriptorSet>( mGraphicContext, mLightingSpotlightShadowLayout, 1024 );
+        auto lLightingSpotlightShadowLayout = DeferredLightingRenderer::GetSpotlightShadowSetLayout( mGraphicContext );
+        mLightingPassSpotlightShadowMaps    = lLightingSpotlightShadowLayout->Allocate( 1024 );
 
-        mLightingPointLightShadowLayout   = DeferredLightingRenderer::GetPointLightShadowSetLayout( mGraphicContext );
-        mLightingPassPointLightShadowMaps = New<DescriptorSet>( mGraphicContext, mLightingPointLightShadowLayout, 1024 );
+        auto lLightingPointLightShadowLayout = DeferredLightingRenderer::GetPointLightShadowSetLayout( mGraphicContext );
+        mLightingPassPointLightShadowMaps    = lLightingPointLightShadowLayout->Allocate( 1024 );
     }
 
     void DeferredRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
