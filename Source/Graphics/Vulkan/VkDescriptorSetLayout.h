@@ -22,7 +22,7 @@ namespace SE::Graphics
 
         void Build();
 
-        Ref<IDescriptorSet> Allocate( uint32_t aDescriptorCount );
+        Ref<IDescriptorSet> Allocate( uint32_t aDescriptorCount=1 );
 
         VkDescriptorSetLayout             GetVkDescriptorSetLayout() { return mLayout->mVkObject; }
         Ref<sVkDescriptorSetLayoutObject> GetVkDescriptorSetLayoutObject() { return mLayout; }

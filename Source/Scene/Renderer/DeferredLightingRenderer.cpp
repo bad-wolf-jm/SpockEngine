@@ -12,58 +12,77 @@
 namespace SE::Core
 {
     using namespace math;
-    // Ref<DescriptorSetLayout> DeferredLightingRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
-    // {
-    //     DescriptorSetLayoutCreateInfo l_CameraBindLayout{};
-    //     l_CameraBindLayout.Bindings = {
-    //         DescriptorBindingInfo{ 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } },
-    //         DescriptorBindingInfo{ 1, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } } };
+    Ref<DescriptorSetLayout> DeferredLightingRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
+    {
+        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
+        lNewLayout.AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        lNewLayout.AddBinding( 1, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        lNewLayout.Build();
 
-    //     return New<DescriptorSetLayout>( aGraphicContext, l_CameraBindLayout );
-    // }
+        return lNewLayout;
+    }
 
-    // Ref<DescriptorSetLayout> DeferredLightingRenderer::GetTextureSetLayout( Ref<IGraphicContext> aGraphicContext )
-    // {
-    //     DescriptorSetLayoutCreateInfo lTextureBindLayout{};
-    //     lTextureBindLayout.Bindings = {
-    //         DescriptorBindingInfo{ 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } },
-    //         DescriptorBindingInfo{ 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } },
-    //         DescriptorBindingInfo{ 2, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } },
-    //         DescriptorBindingInfo{ 3, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
+    Ref<DescriptorSetLayout> DeferredLightingRenderer::GetTextureSetLayout( Ref<IGraphicContext> aGraphicContext )
+    {
+        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
 
-    //     return New<DescriptorSetLayout>( aGraphicContext, lTextureBindLayout, false );
-    // }
+        DescriptorSetLayoutCreateInfo lTextureBindLayout{};
+        // lTextureBindLayout.Bindings = {
+        lNewLayout.AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        lNewLayout.AddBinding( 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        lNewLayout.AddBinding( 2, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        lNewLayout.AddBinding( 3, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        lNewLayout.Build();
 
-    // Ref<DescriptorSetLayout> DeferredLightingRenderer::GetDirectionalShadowSetLayout( Ref<IGraphicContext> aGraphicContext )
-    // {
-    //     DescriptorSetLayoutCreateInfo lShadowMapLayout{};
-    //     lShadowMapLayout.Bindings = {
-    //         DescriptorBindingInfo{ 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
+        return lNewLayout;
+    }
 
-    //     return New<DescriptorSetLayout>( aGraphicContext, lShadowMapLayout, true );
-    // }
+    Ref<DescriptorSetLayout> DeferredLightingRenderer::GetDirectionalShadowSetLayout( Ref<IGraphicContext> aGraphicContext )
+    {
+        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
+        lNewLayout.AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
 
-    // Ref<DescriptorSetLayout> DeferredLightingRenderer::GetSpotlightShadowSetLayout( Ref<IGraphicContext> aGraphicContext )
-    // {
-    //     DescriptorSetLayoutCreateInfo lShadowMapLayout{};
-    //     lShadowMapLayout.Bindings = {
-    //         DescriptorBindingInfo{ 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
+        // DescriptorSetLayoutCreateInfo lShadowMapLayout{};
+        // lShadowMapLayout.Bindings = {
+        //     DescriptorBindingInfo{ 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
 
-    //     return New<DescriptorSetLayout>( aGraphicContext, lShadowMapLayout, true );
-    // }
+        lNewLayout.Build();
 
-    // Ref<DescriptorSetLayout> DeferredLightingRenderer::GetPointLightShadowSetLayout( Ref<IGraphicContext> aGraphicContext )
-    // {
-    //     DescriptorSetLayoutCreateInfo lShadowMapLayout{};
-    //     lShadowMapLayout.Bindings = {
-    //         DescriptorBindingInfo{ 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
+        return lNewLayout;
+    }
 
-    //     return New<DescriptorSetLayout>( aGraphicContext, lShadowMapLayout, true );
-    // }
+    Ref<DescriptorSetLayout> DeferredLightingRenderer::GetSpotlightShadowSetLayout( Ref<IGraphicContext> aGraphicContext )
+    {
+        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
+        lNewLayout.AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+
+        // DescriptorSetLayoutCreateInfo lShadowMapLayout{};
+        // lShadowMapLayout.Bindings = {
+        //     DescriptorBindingInfo{ 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
+
+        lNewLayout.Build();
+
+        return lNewLayout;
+    }
+
+    Ref<DescriptorSetLayout> DeferredLightingRenderer::GetPointLightShadowSetLayout( Ref<IGraphicContext> aGraphicContext )
+    {
+        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
+        lNewLayout.AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+
+        // DescriptorSetLayoutCreateInfo lShadowMapLayout{};
+        // lShadowMapLayout.Bindings = {
+        //     DescriptorBindingInfo{ 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
+
+        lNewLayout.Build();
+
+        return lNewLayout;
+    }
 
     // std::vector<Ref<DescriptorSetLayout>> DeferredLightingRenderer::GetDescriptorSetLayout()
     // {
-    //     return { CameraSetLayout, TextureSetLayout, DirectionalShadowSetLayout, SpotlightShadowSetLayout, PointLightShadowSetLayout };
+    //     return { CameraSetLayout, TextureSetLayout, DirectionalShadowSetLayout, SpotlightShadowSetLayout, PointLightShadowSetLayout
+    //     };
     // }
 
     // std::vector<sPushConstantRange> DeferredLightingRenderer::GetPushConstantLayout()
@@ -84,24 +103,35 @@ namespace SE::Core
                               "main" );
         mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( MaterialPushConstants ) );
 
-        auto &lCameraDescriptorSet = mPipeline->AddDescriptorSet();
-        lCameraDescriptorSet.Add( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
-        lCameraDescriptorSet.Add( 1, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        CameraSetLayout            = GetCameraSetLayout( mGraphicContext );
+        TextureSetLayout           = GetTextureSetLayout( mGraphicContext );
+        DirectionalShadowSetLayout = GetDirectionalShadowSetLayout( mGraphicContext );
+        SpotlightShadowSetLayout   = GetSpotlightShadowSetLayout( mGraphicContext );
+        PointLightShadowSetLayout  = GetPointLightShadowSetLayout( mGraphicContext );
 
-        auto &lTextureDescriptorSet = mPipeline->AddDescriptorSet();
-        lTextureDescriptorSet.Add( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
-        lTextureDescriptorSet.Add( 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
-        lTextureDescriptorSet.Add( 2, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
-        lTextureDescriptorSet.Add( 3, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        mPipeline.AddDescriptorSet( CameraSetLayout );
+        mPipeline.AddDescriptorSet( TextureSetLayout );
+        mPipeline.AddDescriptorSet( DirectionalShadowSetLayout );
+        mPipeline.AddDescriptorSet( SpotlightShadowSetLayout );
+        mPipeline.AddDescriptorSet( PointLightShadowSetLayout );
+        // auto &lCameraDescriptorSet = mPipeline->AddDescriptorSet();
+        // lCameraDescriptorSet.Add( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        // lCameraDescriptorSet.Add( 1, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
 
-        auto &lDirectionalShadowDescriptorSet = mPipeline->AddDescriptorSet();
-        lDirectionalShadowDescriptorSet.Add( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        // auto &lTextureDescriptorSet = mPipeline->AddDescriptorSet();
+        // lTextureDescriptorSet.Add( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        // lTextureDescriptorSet.Add( 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        // lTextureDescriptorSet.Add( 2, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        // lTextureDescriptorSet.Add( 3, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
 
-        auto &lSpotlightShadowDescriptorSet = mPipeline->AddDescriptorSet();
-        lSpotlightShadowDescriptorSet.Add( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        // auto &lDirectionalShadowDescriptorSet = mPipeline->AddDescriptorSet();
+        // lDirectionalShadowDescriptorSet.Add( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
 
-        auto &lPointLightShaadowDescriptorSet = mPipeline->AddDescriptorSet();
-        lPointLightShaadowDescriptorSet.Add( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        // auto &lSpotlightShadowDescriptorSet = mPipeline->AddDescriptorSet();
+        // lSpotlightShadowDescriptorSet.Add( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+
+        // auto &lPointLightShaadowDescriptorSet = mPipeline->AddDescriptorSet();
+        // lPointLightShaadowDescriptorSet.Add( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
 
         mPipeline->Build();
 
@@ -111,12 +141,6 @@ namespace SE::Core
         // lCreateInfo.RenderPass     = aCreateInfo.RenderPass;
         // lCreateInfo.DepthTest      = false;
         // lCreateInfo.DepthWrite     = false;
-
-        // CameraSetLayout            = GetCameraSetLayout( mGraphicContext );
-        // TextureSetLayout           = GetTextureSetLayout( mGraphicContext );
-        // DirectionalShadowSetLayout = GetDirectionalShadowSetLayout( mGraphicContext );
-        // SpotlightShadowSetLayout   = GetSpotlightShadowSetLayout( mGraphicContext );
-        // PointLightShadowSetLayout  = GetPointLightShadowSetLayout( mGraphicContext );
 
         // Initialize( lCreateInfo );
     }
