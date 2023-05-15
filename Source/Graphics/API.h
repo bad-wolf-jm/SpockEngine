@@ -5,6 +5,7 @@
 #include "Interface/IGraphicsPipeline.h"
 #include "Interface/IRenderContext.h"
 #include "Interface/ISwapChain.h"
+#include "Interface/IDescriptorSetLayout.h"
 
 namespace SE::Graphics
 {
@@ -51,6 +52,6 @@ namespace SE::Graphics
     Ref<IRenderContext> CreateRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<ISwapChain> aWindow );
     Ref<IRenderContext> CreateRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aWindow );
 
-    Ref<IDescriptorSet> CreateDescriptorSet(Ref<IGraphicContext> aGraphicContext, bool aUnbounded = false, uint32_t aCount = 1);
+    Ref<IDescriptorSetLayout> CreateDescriptorSetLayout(Ref<IGraphicContext> aGraphicContext, bool aUnbounded = false, uint32_t aCount = 1);
 
 } // namespace SE::Graphics

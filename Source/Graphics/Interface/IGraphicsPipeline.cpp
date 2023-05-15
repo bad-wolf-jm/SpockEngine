@@ -32,22 +32,7 @@ namespace SE::Graphics
         mShaderStages.push_back( sShaderData{ aShaderType, aPath, aEntryPoint } );
     }
 
-    // sDescriptorSet &IGraphicsPipeline::AddDescriptorSet( bool aUnbounded )
-    // {
-
-    //     auto &lDescriptorSet = mDescriptorLayout.emplace_back();
-
-    //     lDescriptorSet.mIsUnbounded = aUnbounded;
-
-    //     return lDescriptorSet;
-    // }
-
-    void IGraphicsPipeline::AddDescriptorSet( Ref<IDescriptorSet> aDescriptorSet ) { mDescriptorSets.push_back( aDescriptorSet ); }
-
-    // void sDescriptorSet::Add( uint32_t aBindingIndex, eDescriptorType aType, ShaderStageType aShaderStages )
-    // {
-    //     mDescriptors.push_back( sDescriptorBindingInfo{ aBindingIndex, aType, aShaderStages } );
-    // }
+    void IGraphicsPipeline::AddDescriptorSet( Ref<IDescriptorSetLayout> aDescriptorSet ) { mDescriptorSets.push_back( aDescriptorSet ); }
 
     void IGraphicsPipeline::AddInput( std::string aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation,
                                       bool aInstanced )
