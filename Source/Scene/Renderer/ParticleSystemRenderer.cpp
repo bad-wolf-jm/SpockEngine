@@ -12,7 +12,7 @@ namespace SE::Graphics
 
     std::vector<sPushConstantRange> ParticleSystemRenderer::GetPushConstantLayout() { return {}; };
 
-    ParticleSystemRenderer::ParticleSystemRenderer( Ref<IGraphicContext> aGraphicContext, VkRenderContext &aRenderContext,
+    ParticleSystemRenderer::ParticleSystemRenderer( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
                                                     ParticleRendererCreateInfo aCreateInfo )
         : SceneRenderPipeline<PositionData>( aGraphicContext )
         , Spec{ aCreateInfo }
@@ -44,11 +44,10 @@ namespace SE::Graphics
 
         mParticleVertices =
             New<VkGpuBuffer>( mGraphicContext, lVertexBufferData, eBufferType::VERTEX_BUFFER, false, false, false, true );
-        mParticleIndices =
-            New<VkGpuBuffer>( mGraphicContext, lIndexBufferData, eBufferType::INDEX_BUFFER, false, false, false, true );
+        mParticleIndices = New<VkGpuBuffer>( mGraphicContext, lIndexBufferData, eBufferType::INDEX_BUFFER, false, false, false, true );
     }
 
-    void ParticleSystemRenderer::Render( math::mat4 aProjection, math::mat4 aView, VkRenderContext &aRenderContext,
+    void ParticleSystemRenderer::Render( math::mat4 aProjection, math::mat4 aView, Ref<IRenderContext> aRenderContext,
                                          ParticleData &aParticleData )
     {
         if( aParticleData.Particles == nullptr ) return;

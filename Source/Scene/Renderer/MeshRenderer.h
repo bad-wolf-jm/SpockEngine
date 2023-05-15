@@ -52,7 +52,7 @@ namespace SE::Core
         }
     };
 
-    class MeshRenderer : public SceneRenderPipeline<VertexData>
+    class MeshRenderer // : public SceneRenderPipeline<VertexData>
     {
 
       public:
@@ -63,22 +63,26 @@ namespace SE::Core
 
         MeshRendererCreateInfo Spec = {};
 
-        Ref<DescriptorSetLayout> CameraSetLayout  = nullptr;
-        Ref<DescriptorSetLayout> NodeSetLayout    = nullptr;
-        Ref<DescriptorSetLayout> TextureSetLayout = nullptr;
+        Ref<IDescriptorSetLayout> CameraSetLayout  = nullptr;
+        Ref<IDescriptorSetLayout> NodeSetLayout    = nullptr;
+        Ref<IDescriptorSetLayout> TextureSetLayout = nullptr;
 
       public:
         MeshRenderer() = default;
         MeshRenderer( Ref<IGraphicContext> aGraphicContext, MeshRendererCreateInfo const &aCreateInfo );
 
-        static Ref<DescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
-        static Ref<DescriptorSetLayout> GetTextureSetLayout( Ref<IGraphicContext> aGraphicContext );
-        static Ref<DescriptorSetLayout> GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext );
+        static Ref<IDescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
+        static Ref<IDescriptorSetLayout> GetTextureSetLayout( Ref<IGraphicContext> aGraphicContext );
+        static Ref<IDescriptorSetLayout> GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext );
 
-        std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
-        std::vector<sPushConstantRange>       GetPushConstantLayout();
+        // std::vector<Ref<IDescriptorSetLayout>> GetDescriptorSetLayout();
+        // std::vector<sPushConstantRange>       GetPushConstantLayout();
 
         ~MeshRenderer() = default;
+
+      private:
+        Ref<IGraphicContext>   mGraphicContext = nullptr;
+        Ref<IGraphicsPipeline> mPipeline       = nullptr;
     };
 
 } // namespace SE::Core

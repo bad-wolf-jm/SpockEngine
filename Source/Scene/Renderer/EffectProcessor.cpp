@@ -9,7 +9,7 @@ namespace SE::Core
 
     std::vector<sPushConstantRange> EffectProcessor::GetPushConstantLayout() { return {}; };
 
-    EffectProcessor::EffectProcessor( Ref<IGraphicContext> aGraphicContext, VkRenderContext &aRenderContext,
+    EffectProcessor::EffectProcessor( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
                                       EffectProcessorCreateInfo aCreateInfo )
         : SceneRenderPipeline<EmptyVertexData>( aGraphicContext )
         , Spec{ aCreateInfo }
@@ -32,12 +32,12 @@ namespace SE::Core
         Initialize( lCreateInfo );
     }
 
-    void EffectProcessor::Render( Ref<Graphics::VkSampler2D> aImageSampler, VkRenderContext &aRenderContext )
+    void EffectProcessor::Render( Ref<Graphics::VkSampler2D> aImageSampler, Ref<IRenderContext> aRenderContext )
     {
-        mTextures->Write(aImageSampler, 0);
+        mTextures->Write( aImageSampler, 0 );
 
         aRenderContext.Bind( Pipeline );
-        aRenderContext.Bind( mTextures, 0, -1  );
+        aRenderContext.Bind( mTextures, 0, -1 );
         aRenderContext.ResetBuffers();
         aRenderContext.Draw( 6, 0, 0, 1, 0 );
     }

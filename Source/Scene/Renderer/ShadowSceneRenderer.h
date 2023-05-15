@@ -34,18 +34,18 @@ namespace SE::Core
       public:
         ShadowMeshRendererCreateInfo Spec = {};
 
-        Ref<DescriptorSetLayout> CameraSetLayout = nullptr;
-        Ref<DescriptorSetLayout> NodeSetLayout   = nullptr;
+        Ref<IDescriptorSetLayout> CameraSetLayout = nullptr;
+        Ref<IDescriptorSetLayout> NodeSetLayout   = nullptr;
 
       public:
         ShadowMeshRenderer() = default;
         ShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo );
 
-        static Ref<DescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
-        static Ref<DescriptorSetLayout> GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext );
+        static Ref<IDescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
+        static Ref<IDescriptorSetLayout> GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext );
 
-        std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
-        std::vector<sPushConstantRange>       GetPushConstantLayout();
+        // std::vector<Ref<IDescriptorSetLayout>> GetDescriptorSetLayout();
+        // std::vector<sPushConstantRange>        GetPushConstantLayout();
 
         ~ShadowMeshRenderer() = default;
     };
@@ -56,18 +56,18 @@ namespace SE::Core
       public:
         ShadowMeshRendererCreateInfo Spec = {};
 
-        Ref<DescriptorSetLayout> CameraSetLayout = nullptr;
-        Ref<DescriptorSetLayout> NodeSetLayout   = nullptr;
+        Ref<IDescriptorSetLayout> CameraSetLayout = nullptr;
+        Ref<IDescriptorSetLayout> NodeSetLayout   = nullptr;
 
       public:
         OmniShadowMeshRenderer() = default;
         OmniShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo );
 
-        static Ref<DescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
-        static Ref<DescriptorSetLayout> GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext );
+        static Ref<IDescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
+        static Ref<IDescriptorSetLayout> GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext );
 
-        std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
-        std::vector<sPushConstantRange>       GetPushConstantLayout();
+        std::vector<Ref<IDescriptorSetLayout>> GetDescriptorSetLayout();
+        std::vector<sPushConstantRange>        GetPushConstantLayout();
 
         ~OmniShadowMeshRenderer() = default;
     };
@@ -122,15 +122,15 @@ namespace SE::Core
         Ref<VkGpuBuffer> mCameraUniformBuffer    = nullptr;
         Ref<VkGpuBuffer> mShaderParametersBuffer = nullptr;
 
-        Ref<DescriptorSetLayout> mCameraSetLayout  = nullptr;
-        Ref<DescriptorSetLayout> mNodeSetLayout    = nullptr;
-        Ref<DescriptorSetLayout> mTextureSetLayout = nullptr;
+        Ref<IDescriptorSetLayout> mCameraSetLayout  = nullptr;
+        Ref<IDescriptorSetLayout> mNodeSetLayout    = nullptr;
+        Ref<IDescriptorSetLayout> mTextureSetLayout = nullptr;
 
         Ref<DescriptorSet> mSceneDescriptors = nullptr;
         Ref<DescriptorSet> mNodeDescriptors  = nullptr;
 
-        Ref<DescriptorSetLayout> mShadowMapDescriptorLayout = nullptr;
-        Ref<DescriptorSet>       mShadowMapDescriptorSet    = nullptr;
+        Ref<IDescriptorSetLayout> mShadowMapDescriptorLayout = nullptr;
+        Ref<DescriptorSet>        mShadowMapDescriptorSet    = nullptr;
 
         // ShadowMeshRenderer mRenderPipeline{};
     };

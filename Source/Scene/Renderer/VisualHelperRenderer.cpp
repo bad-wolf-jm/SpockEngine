@@ -11,55 +11,54 @@ namespace SE::Graphics
     {
         VisualHelperMeshRendererCreateInfo l_CreateInfo{};
         l_CreateInfo.RenderPass = aRenderPass;
-        m_MeshRenderer          = SE::Core::New<VisualHelperMeshRenderer>( aGraphicContext, l_CreateInfo );
+        mMeshRenderer           = SE::Core::New<VisualHelperMeshRenderer>( aGraphicContext, l_CreateInfo );
 
         VisualHelperLineRendererCreateInfo l_GizmoCreateInfo{};
         l_GizmoCreateInfo.LineWidth  = 2.0;
         l_GizmoCreateInfo.RenderPass = aRenderPass;
-        m_VisualHelperLineRenderer   = SE::Core::New<VisualHelperLineRenderer>( aGraphicContext, l_GizmoCreateInfo );
+        mVisualHelperLineRenderer    = SE::Core::New<VisualHelperLineRenderer>( aGraphicContext, l_GizmoCreateInfo );
     }
 
     void VisualHelperRenderer::Render( math::mat4 aTransform, ArrowMeshData &aArrow, math::vec3 aColor,
-                                       VkRenderContext &aRenderContext )
+                                       Ref<iRenderContext> aRenderContext )
     {
-        m_MeshRenderer->Render( aTransform, View, Projection, aColor, aArrow.Mesh.Vertices, aArrow.Mesh.Indices, aRenderContext );
+        mMeshRenderer->Render( aTransform, View, Projection, aColor, aArrow.Mesh.Vertices, aArrow.Mesh.Indices, aRenderContext );
     }
 
     void VisualHelperRenderer::Render( math::mat4 aTransform, ConeMeshData &aCone, math::vec3 aColor,
-                                       VkRenderContext &aRenderContext )
+                                       Ref<iRenderContext> aRenderContext )
     {
-        m_VisualHelperLineRenderer->Render( aTransform, View, Projection, aColor, aCone.Mesh.Vertices, aCone.Mesh.Indices,
-                                            aRenderContext );
+        mVisualHelperLineRenderer->Render( aTransform, View, Projection, aColor, aCone.Mesh.Vertices, aCone.Mesh.Indices,
+                                           aRenderContext );
     }
 
     void VisualHelperRenderer::Render( math::mat4 aTransform, CircleMeshData &aCircle, math::vec3 aColor,
-                                       VkRenderContext &aRenderContext )
+                                       Ref<iRenderContext> aRenderContext )
     {
-        m_VisualHelperLineRenderer->Render( aTransform, View, Projection, aColor, aCircle.Mesh.Vertices, aCircle.Mesh.Indices,
-                                            aRenderContext );
+        mVisualHelperLineRenderer->Render( aTransform, View, Projection, aColor, aCircle.Mesh.Vertices, aCircle.Mesh.Indices,
+                                           aRenderContext );
     }
 
     void VisualHelperRenderer::Render( math::mat4 aTransform, CubeMeshData &aCube, math::vec3 aColor,
-                                       VkRenderContext &aRenderContext )
+                                       Ref<iRenderContext> aRenderContext )
     {
-        m_MeshRenderer->Render( aTransform, View, Projection, aColor, aCube.Mesh.Vertices, aCube.Mesh.Indices, aRenderContext );
+        mMeshRenderer->Render( aTransform, View, Projection, aColor, aCube.Mesh.Vertices, aCube.Mesh.Indices, aRenderContext );
     }
 
     void VisualHelperRenderer::Render( math::mat4 aTransform, PyramidMeshData &aPyramid, math::vec3 aColor,
-                                       VkRenderContext &aRenderContext )
+                                       Ref<iRenderContext> aRenderContext )
     {
-        m_VisualHelperLineRenderer->Render( aTransform, View, Projection, aColor, aPyramid.Mesh.Vertices, aPyramid.Mesh.Indices,
-                                            aRenderContext );
+        mVisualHelperLineRenderer->Render( aTransform, View, Projection, aColor, aPyramid.Mesh.Vertices, aPyramid.Mesh.Indices,
+                                           aRenderContext );
     }
 
     void VisualHelperRenderer::Render( math::mat4 aTransform, SurfaceMeshData &aSurface, math::vec3 aColor,
-                                       VkRenderContext &aRenderContext )
+                                       Ref<iRenderContext> aRenderContext )
     {
-        m_MeshRenderer->Render( aTransform, View, Projection, aColor, aSurface.Mesh.Vertices, aSurface.Mesh.Indices,
-                                aRenderContext );
+        mMeshRenderer->Render( aTransform, View, Projection, aColor, aSurface.Mesh.Vertices, aSurface.Mesh.Indices, aRenderContext );
     }
 
-    void VisualHelperRenderer::Render( math::mat4 aTransform, AxesComponent &aAxesComponent, VkRenderContext &aRenderContext )
+    void VisualHelperRenderer::Render( math::mat4 aTransform, AxesComponent &aAxesComponent, Ref<iRenderContext> aRenderContext )
     {
         Render( aTransform * math::Rotation( -90.0_degf, math::vec3{ 0.0f, 0.0f, 1.0f } ), aAxesComponent.AxisArrow,
                 aAxesComponent.XAxisColor, aRenderContext );
@@ -71,7 +70,7 @@ namespace SE::Graphics
     }
 
     void VisualHelperRenderer::Render( math::mat4 aTransform, PointLightHelperComponent &aPointLightHelperComponent,
-                                       VkRenderContext &aRenderContext )
+                                       Ref<iRenderContext> aRenderContext )
     {
         math::mat4 lTransform{};
 
@@ -86,7 +85,7 @@ namespace SE::Graphics
     }
 
     void VisualHelperRenderer::Render( math::mat4 aTransform, DirectionalLightHelperComponent &aDirectionalLightHelperComponent,
-                                       VkRenderContext &aRenderContext )
+                                       Ref<iRenderContext> aRenderContext )
     {
         Render( aTransform, aDirectionalLightHelperComponent.Direction, math::vec3{ 0.8f, 0.1f, 0.15f }, aRenderContext );
         Render( aTransform * math::Scale( math::mat4( 1.0f ), math::vec3{ 0.05f, 0.05f, 0.05f } ),
@@ -94,7 +93,7 @@ namespace SE::Graphics
     }
 
     void VisualHelperRenderer::Render( math::mat4 aTransform, SpotlightHelperComponent &aSpotlightComponent,
-                                       VkRenderContext &aRenderContext )
+                                       Ref<iRenderContext> aRenderContext )
     {
         math::mat4 lTransform{};
 
@@ -105,14 +104,14 @@ namespace SE::Graphics
     }
 
     void VisualHelperRenderer::Render( math::mat4 aTransform, FieldOfViewHelperComponent &aFieldOfViewHelperComponent,
-                                       VkRenderContext &aRenderContext )
+                                       Ref<iRenderContext> aRenderContext )
     {
         Render( aTransform, aFieldOfViewHelperComponent.Outline, math::vec3{ 0.1f, 0.25f, 0.8f }, aRenderContext );
         Render( aTransform, aFieldOfViewHelperComponent.OuterLimit, math::vec3{ 0.1f, 0.25f, 0.8f }, aRenderContext );
     }
 
     void VisualHelperRenderer::Render( math::mat4 aTransform, CameraHelperComponent &aCameraHelperComponent,
-                                       VkRenderContext &aRenderContext )
+                                       Ref<iRenderContext> aRenderContext )
     {
         Render( aTransform, aCameraHelperComponent.FieldOfView, aRenderContext );
         Render( aTransform * math::Scale( math::mat4( 1.0f ), math::vec3{ 0.05f, 0.05f, 0.05f } ), aCameraHelperComponent.Origin,

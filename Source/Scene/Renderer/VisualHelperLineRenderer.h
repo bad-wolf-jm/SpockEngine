@@ -47,14 +47,14 @@ namespace SE::Graphics
         VisualHelperLineRendererCreateInfo Spec;
 
         VisualHelperLineRenderer() = default;
-        VisualHelperLineRenderer( Ref<IGraphicContext> a_GraphicContext, VisualHelperLineRendererCreateInfo a_CreateInfo );
+        VisualHelperLineRenderer( Ref<IGraphicContext> aGraphicContext, VisualHelperLineRendererCreateInfo aCreateInfo );
         ~VisualHelperLineRenderer() = default;
 
-        void Render( math::mat4 a_Model, math::mat4 a_View, math::mat4 a_Projection, math::vec3 a_Color,
-                     Ref<VkGpuBuffer> a_VertexBuffer, Ref<VkGpuBuffer> a_IndexBuffer, VkRenderContext &aRenderContext );
+        void Render( math::mat4 aModel, math::mat4 aView, math::mat4 aProjection, math::vec3 aColor, Ref<VkGpuBuffer> aVertexBuffer,
+                     Ref<VkGpuBuffer> aIndexBuffer, Ref<iRenderContext> aRenderContext );
 
-        std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
-        std::vector<sPushConstantRange>       GetPushConstantLayout();
+        std::vector<Ref<IDescriptorSetLayout>> GetDescriptorSetLayout();
+        std::vector<sPushConstantRange>        GetPushConstantLayout();
     };
 
 } // namespace SE::Graphics
