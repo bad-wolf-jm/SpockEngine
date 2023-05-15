@@ -3,7 +3,7 @@
 #include <chrono>
 #include <gli/gli.hpp>
 
-#include "Graphics/Vulkan/VkPipeline.h"
+// #include "Graphics/Vulkan/VkPipeline.h"
 
 #include "Scene/Components/VisualHelpers.h"
 #include "Scene/Primitives/Primitives.h"
@@ -24,7 +24,7 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem::Components;
     using namespace SE::Core::Primitives;
 
-    ForwardSceneRenderer::ForwardSceneRenderer( Ref<VkGraphicContext> aGraphicContext, eColorFormat aOutputFormat,
+    ForwardSceneRenderer::ForwardSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat,
                                                 uint32_t aOutputSampleCount )
         : ASceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {

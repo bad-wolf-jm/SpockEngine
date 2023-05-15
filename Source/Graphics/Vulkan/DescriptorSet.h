@@ -3,6 +3,8 @@
 #include "Core/Memory.h"
 
 #include "Graphics/Interface/IDescriptorSetLayout.h"
+#include "Graphics/Interface/IGraphicContext.h"
+#include "Graphics/Interface/IGraphicsPipeline.h"
 
 #include "Graphics/Vulkan/VkSampler2D.h"
 #include "Graphics/Vulkan/VkSamplerCubeMap.h"
@@ -62,11 +64,11 @@ namespace SE::Graphics
     class DescriptorSet
     {
       public:
+        DescriptorSet( Ref<IGraphicsPipeline> aGraphicsPipeline, uint32_t aDescriptorCount = 0 );
         DescriptorSet( Ref<VkGraphicContext> aGraphicContext, Ref<DescriptorSetLayout> aLayout, uint32_t aDescriptorCount = 0 );
         ~DescriptorSet() = default;
 
         void Write( Ref<VkGpuBuffer> aBuffer, bool aDynamicOffset, uint32_t aOffset, uint32_t aSize, uint32_t aBinding );
-
         void Write( Ref<VkSampler2D> aBuffer, uint32_t aBinding );
         void Write( std::vector<Ref<VkSampler2D>> aBuffer, uint32_t aBinding );
 

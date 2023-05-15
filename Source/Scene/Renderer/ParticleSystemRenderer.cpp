@@ -12,7 +12,7 @@ namespace SE::Graphics
 
     std::vector<sPushConstantRange> ParticleSystemRenderer::GetPushConstantLayout() { return {}; };
 
-    ParticleSystemRenderer::ParticleSystemRenderer( Ref<VkGraphicContext> aGraphicContext, VkRenderContext &aRenderContext,
+    ParticleSystemRenderer::ParticleSystemRenderer( Ref<IGraphicContext> aGraphicContext, VkRenderContext &aRenderContext,
                                                     ParticleRendererCreateInfo aCreateInfo )
         : SceneRenderPipeline<PositionData>( aGraphicContext )
         , Spec{ aCreateInfo }

@@ -2,7 +2,7 @@
 
 #include <chrono>
 
-#include "Graphics/Vulkan/VkPipeline.h"
+// #include "Graphics/Vulkan/VkPipeline.h"
 #include "Scene/Primitives/Primitives.h"
 #include "Scene/VertexData.h"
 
@@ -14,7 +14,7 @@ namespace SE::Core
 
     using namespace math;
 
-    Ref<DescriptorSetLayout> MeshRenderer::GetCameraSetLayout( Ref<VkGraphicContext> aGraphicContext )
+    Ref<DescriptorSetLayout> MeshRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
         DescriptorSetLayoutCreateInfo lCameraBindLayout{};
         lCameraBindLayout.Bindings = {
@@ -25,7 +25,7 @@ namespace SE::Core
         return New<DescriptorSetLayout>( aGraphicContext, lCameraBindLayout );
     }
 
-    Ref<DescriptorSetLayout> MeshRenderer::GetTextureSetLayout( Ref<VkGraphicContext> aGraphicContext )
+    Ref<DescriptorSetLayout> MeshRenderer::GetTextureSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
         DescriptorSetLayoutCreateInfo lTextureBindLayout{};
         lTextureBindLayout.Bindings = {
@@ -35,7 +35,7 @@ namespace SE::Core
         return New<DescriptorSetLayout>( aGraphicContext, lTextureBindLayout, true );
     }
 
-    Ref<DescriptorSetLayout> MeshRenderer::GetNodeSetLayout( Ref<VkGraphicContext> aGraphicContext )
+    Ref<DescriptorSetLayout> MeshRenderer::GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
         DescriptorSetLayoutCreateInfo lNodeBindLayout{};
         lNodeBindLayout.Bindings = { DescriptorBindingInfo{ 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } } };
@@ -52,7 +52,7 @@ namespace SE::Core
         return { { { eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( MaterialPushConstants ) } };
     };
 
-    MeshRenderer::MeshRenderer( Ref<VkGraphicContext> aGraphicContext, MeshRendererCreateInfo const &aCreateInfo )
+    MeshRenderer::MeshRenderer( Ref<IGraphicContext> aGraphicContext, MeshRendererCreateInfo const &aCreateInfo )
         : SceneRenderPipeline<VertexData>( aGraphicContext )
         , Spec{ aCreateInfo }
     {

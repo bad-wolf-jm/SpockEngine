@@ -5,13 +5,14 @@
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 
-#include "Graphics/Vulkan/DescriptorSet.h"
-#include "Graphics/Vulkan/VkGraphicsPipeline.h"
-#include "Graphics/Vulkan/VkGraphicContext.h"
+// #include "Graphics/Vulkan/DescriptorSet.h"
+// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
+// #include "Graphics/Vulkan/IGraphicContext.h"
+// #include "Graphics/Vulkan/VkRenderPass.h"
+#include "Graphics/API.h"
 
 #include "Scene/VertexData.h"
 
-#include "Graphics/Vulkan/VkRenderPass.h"
 #include "SceneRenderPipeline.h"
 
 namespace SE::Core
@@ -28,7 +29,7 @@ namespace SE::Core
         Ref<VkRenderPass> RenderPass = nullptr;
     };
 
-    class DeferredLightingRenderer : public SceneRenderPipeline<EmptyVertexData>
+    class DeferredLightingRenderer // : public SceneRenderPipeline<EmptyVertexData>
     {
 
       public:
@@ -37,29 +38,32 @@ namespace SE::Core
             uint32_t mNumSamples;
         };
 
-        DeferredLightingRendererCreateInfo Spec = {};
-
-        Ref<DescriptorSetLayout> CameraSetLayout  = nullptr;
-        Ref<DescriptorSetLayout> TextureSetLayout = nullptr;
-
-        Ref<DescriptorSetLayout> DirectionalShadowSetLayout = nullptr;
-        Ref<DescriptorSetLayout> SpotlightShadowSetLayout = nullptr;
-        Ref<DescriptorSetLayout> PointLightShadowSetLayout = nullptr;
+        // DeferredLightingRendererCreateInfo Spec = {};
+        // Ref<DescriptorSetLayout> CameraSetLayout  = nullptr;
+        // Ref<DescriptorSetLayout> TextureSetLayout = nullptr;
+        // Ref<DescriptorSetLayout> DirectionalShadowSetLayout = nullptr;
+        // Ref<DescriptorSetLayout> SpotlightShadowSetLayout = nullptr;
+        // Ref<DescriptorSetLayout> PointLightShadowSetLayout = nullptr;
 
       public:
         DeferredLightingRenderer() = default;
-        DeferredLightingRenderer( Ref<VkGraphicContext> aGraphicContext, DeferredLightingRendererCreateInfo const &aCreateInfo );
+        DeferredLightingRenderer( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext );
 
-        static Ref<DescriptorSetLayout> GetCameraSetLayout( Ref<VkGraphicContext> aGraphicContext );
-        static Ref<DescriptorSetLayout> GetTextureSetLayout( Ref<VkGraphicContext> aGraphicContext );
-        static Ref<DescriptorSetLayout> GetDirectionalShadowSetLayout( Ref<VkGraphicContext> aGraphicContext );
-        static Ref<DescriptorSetLayout> GetSpotlightShadowSetLayout( Ref<VkGraphicContext> aGraphicContext );
-        static Ref<DescriptorSetLayout> GetPointLightShadowSetLayout( Ref<VkGraphicContext> aGraphicContext );
+        // static Ref<DescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
+        // static Ref<DescriptorSetLayout> GetTextureSetLayout( Ref<IGraphicContext> aGraphicContext );
+        // static Ref<DescriptorSetLayout> GetDirectionalShadowSetLayout( Ref<IGraphicContext> aGraphicContext );
+        // static Ref<DescriptorSetLayout> GetSpotlightShadowSetLayout( Ref<IGraphicContext> aGraphicContext );
+        // static Ref<DescriptorSetLayout> GetPointLightShadowSetLayout( Ref<IGraphicContext> aGraphicContext );
 
-        std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
-        std::vector<sPushConstantRange>       GetPushConstantLayout();
+        // std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
+        // std::vector<sPushConstantRange>       GetPushConstantLayout();
 
         ~DeferredLightingRenderer() = default;
+
+      private:
+        Ref<IGraphicContext>   mGraphicContext    = nullptr;
+        Ref<IGraphicBuffer>    mCameraBuffer = nullptr;
+        Ref<IGraphicsPipeline> mPipeline     = nullptr;
     };
 
 } // namespace SE::Core

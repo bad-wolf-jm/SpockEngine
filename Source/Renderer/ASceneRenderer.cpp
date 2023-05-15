@@ -13,7 +13,7 @@ namespace SE::Core
     using namespace math;
     using namespace SE::Core::EntityComponentSystem::Components;
 
-    ASceneRenderer::ASceneRenderer( Ref<VkGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
+    ASceneRenderer::ASceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
         : mGraphicContext{ aGraphicContext }
         , mOutputFormat{ aOutputFormat }
         , mOutputSampleCount{ aOutputSampleCount }

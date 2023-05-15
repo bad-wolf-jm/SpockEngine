@@ -4,13 +4,13 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-#include "Graphics/Vulkan/VkRenderContext.h"
-#include "Graphics/Vulkan/DescriptorSet.h"
+// #include "Graphics/Vulkan/VkRenderContext.h"
+// #include "Graphics/Vulkan/DescriptorSet.h"
+// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
+// #include "Graphics/Vulkan/IGraphicContext.h"
+// #include "Graphics/Vulkan/VkRenderPass.h"
+#include "Graphics/API.h"
 
-#include "Graphics/Vulkan/VkGraphicsPipeline.h"
-#include "Graphics/Vulkan/VkGraphicContext.h"
-
-#include "Graphics/Vulkan/VkRenderPass.h"
 
 #include "Scene/Components/VisualHelpers.h"
 #include "Scene/VertexData.h"
@@ -31,7 +31,7 @@ namespace SE::Graphics
         math::mat4 Projection = math::mat4( 1.0f );
 
         VisualHelperRenderer() = default;
-        VisualHelperRenderer( Ref<VkGraphicContext> aGraphicContext, Ref<sVkAbstractRenderPassObject> aRenderPass );
+        VisualHelperRenderer( Ref<IGraphicContext> aGraphicContext, Ref<sVkAbstractRenderPassObject> aRenderPass );
 
         ~VisualHelperRenderer() = default;
 
@@ -50,7 +50,7 @@ namespace SE::Graphics
         void Render( math::mat4 aTransform, CameraHelperComponent &aAxesComponent, VkRenderContext &aRenderContext );
 
       private:
-        Ref<VkGraphicContext> mGraphicContext;
+        Ref<IGraphicContext> mGraphicContext;
         Ref<GraphicsPipeline> m_RenderPipeline = nullptr;
 
         Ref<VisualHelperMeshRenderer> m_MeshRenderer             = nullptr;

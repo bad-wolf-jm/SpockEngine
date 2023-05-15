@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Core/Memory.h"
-#include "Graphics/Vulkan/VkRenderContext.h"
-#include "Graphics/Vulkan/DescriptorSet.h"
-#include "Graphics/Vulkan/VkRenderTarget.h"
+// #include "Graphics/Vulkan/VkRenderContext.h"
+// #include "Graphics/Vulkan/DescriptorSet.h"
+// #include "Graphics/Vulkan/VkRenderTarget.h"
+
+#include "Graphics/API.h"
 
 #include "Renderer/ASceneRenderer.h"
 #include "Renderer/SceneRenderData.h"
@@ -29,7 +31,7 @@ namespace SE::Core
 
       public:
         DeferredRenderer() = default;
-        DeferredRenderer( Ref<VkGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
+        DeferredRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
 
         ~DeferredRenderer() = default;
 

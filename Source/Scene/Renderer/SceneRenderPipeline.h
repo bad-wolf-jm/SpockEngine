@@ -4,11 +4,11 @@
 
 #include "Core/Math/Types.h"
 
-#include "Graphics/Vulkan/VkGraphicContext.h"
-#include "Graphics/Vulkan/VkRenderPass.h"
-
-#include "Graphics/Vulkan/DescriptorSet.h"
-#include "Graphics/Vulkan/VkGraphicsPipeline.h"
+// #include "Graphics/Vulkan/IGraphicContext.h"
+// #include "Graphics/Vulkan/VkRenderPass.h"
+// #include "Graphics/Vulkan/DescriptorSet.h"
+// #include "Graphics/Vulkan/IGraphicsPipeline.h"
+#include "Graphics/API.h"
 
 namespace SE::Core
 {
@@ -33,17 +33,17 @@ namespace SE::Core
     };
 
     template <typename _VertexType>
-    class SceneRenderPipeline
+    class SceneRenderPipeline : public IGraphicsPipeline
     {
       public:
-        SceneRenderPipelineCreateInfo Spec;
-        Ref<VkGraphicsPipeline>       Pipeline = nullptr;
+        // SceneRenderPipelineCreateInfo Spec;
+        // Ref<IGraphicsPipeline>        Pipeline = nullptr;
 
         SceneRenderPipeline()  = default;
         ~SceneRenderPipeline() = default;
 
-        SceneRenderPipeline( Ref<VkGraphicContext> a_GraphicContext )
-            : mGraphicContext{ a_GraphicContext }
+        SceneRenderPipeline( Ref<IGraphicContext> aGraphicContext )
+            : mGraphicContext{ aGraphicContext }
         {
         }
 
@@ -83,14 +83,14 @@ namespace SE::Core
             lPipelineCreateInfo.PushConstants    = GetPushConstantLayout();
             lPipelineCreateInfo.SetLayouts       = GetDescriptorSetLayout();
 
-            Pipeline = New<VkGraphicsPipeline>( mGraphicContext, lPipelineCreateInfo );
+            Pipeline = New<IGraphicsPipeline>( mGraphicContext, lPipelineCreateInfo );
         }
 
         virtual std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout() = 0;
         virtual std::vector<sPushConstantRange>       GetPushConstantLayout()  = 0;
 
       protected:
-        Ref<VkGraphicContext> mGraphicContext;
+        Ref<IGraphicContext> mGraphicContext;
     };
 
 } // namespace SE::Core
