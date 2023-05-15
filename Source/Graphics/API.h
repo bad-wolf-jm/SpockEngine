@@ -51,4 +51,6 @@ namespace SE::Graphics
     Ref<IRenderContext> CreateRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<ISwapChain> aWindow );
     Ref<IRenderContext> CreateRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aWindow );
 
+    Ref<IDescriptorSet> CreateDescriptorSet(Ref<IGraphicContext> aGraphicContext, bool aUnbounded = false, uint32_t aCount = 1);
+
 } // namespace SE::Graphics

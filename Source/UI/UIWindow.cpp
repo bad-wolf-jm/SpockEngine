@@ -23,8 +23,8 @@ namespace SE::Core
         , mGraphicContext{ aGraphicContext }
     {
         mWindow        = SE::Core::New<IWindow>( (GLFWwindow *)aViewport->PlatformHandle );
-        mSwapChain     = CreateSwapChain(mGraphicContext, mWindow);
-        mRenderContext = CreateRenderContext(mGraphicContext, mSwapChain);
+        mSwapChain     = CreateSwapChain( mGraphicContext, mWindow );
+        mRenderContext = CreateRenderContext( mGraphicContext, mSwapChain );
 
         CreatePipeline();
 
@@ -58,8 +58,10 @@ namespace SE::Core
         mUIRenderPipeline->AddInput( "TextureCoords", eBufferDataType::VEC2, 0, 1 );
         mUIRenderPipeline->AddInput( "Color", eBufferDataType::COLOR, 0, 2 );
 
-        auto &lDescriptorSet = mUIRenderPipeline->AddDescriptorSet();
-        lDescriptorSet.Add( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        auto lDescriptorSet = CreateDescriptorSet( mGraphicContext );
+        lDescriptorSet->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        lDescriptorSet->Build();
+        mUIRenderPipeline->AddDescriptorSet( lDescriptorSet );
 
         mUIRenderPipeline->AddPushConstantRange( { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 );
 

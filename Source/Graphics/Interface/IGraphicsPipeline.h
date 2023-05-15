@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Vulkan/VkPipeline.h"
+#include "IDescriptorSet.h"
 
 namespace SE::Graphics
 {
@@ -12,20 +12,20 @@ namespace SE::Graphics
         std::string mEntryPoint;
     };
 
-    struct sDescriptorBindingInfo
-    {
-        uint32_t        mBindingIndex = 0;
-        eDescriptorType mType         = eDescriptorType::UNIFORM_BUFFER;
-        ShaderStageType mShaderStages = {};
-    };
+    // struct sDescriptorBindingInfo
+    // {
+    //     uint32_t        mBindingIndex = 0;
+    //     eDescriptorType mType         = eDescriptorType::UNIFORM_BUFFER;
+    //     ShaderStageType mShaderStages = {};
+    // };
 
-    struct sDescriptorSet
-    {
-        bool mIsUnbounded = false;
-        std::vector<sDescriptorBindingInfo> mDescriptors = {};
+    // struct sDescriptorSet
+    // {
+    //     bool                                mIsUnbounded = false;
+    //     std::vector<sDescriptorBindingInfo> mDescriptors = {};
 
-        void Add( uint32_t aBindingIndex, eDescriptorType aType, ShaderStageType aShaderStages );
-    };
+    //     void Add( uint32_t aBindingIndex, eDescriptorType aType, ShaderStageType aShaderStages );
+    // };
 
     class IRenderContext;
 
@@ -53,7 +53,8 @@ namespace SE::Graphics
             AddPushConstantRange( aShaderStage, aOffset, sizeof( _Ty ) );
         }
 
-        sDescriptorSet &AddDescriptorSet(bool aUnbounded = false);
+        // sDescriptorSet &AddDescriptorSet( bool aUnbounded = false );
+        void AddDescriptorSet( Ref<IDescriptorSet> aDescriptorSet );
 
       protected:
         bool mOpaque = false;
@@ -61,10 +62,10 @@ namespace SE::Graphics
         Ref<IGraphicContext> mGraphicContext = nullptr;
         Ref<IRenderContext>  mRenderContext  = nullptr;
 
-        ePrimitiveTopology mTopology             = ePrimitiveTopology::TRIANGLES;
-        eFaceCulling       mCulling              = eFaceCulling::BACK;
-        uint8_t            mSampleCount          = 1;
-        float              mLineWidth            = 1.0f;
+        ePrimitiveTopology mTopology    = ePrimitiveTopology::TRIANGLES;
+        eFaceCulling       mCulling     = eFaceCulling::BACK;
+        uint8_t            mSampleCount = 1;
+        float              mLineWidth   = 1.0f;
 
         bool                   mDepthWriteEnable = false;
         bool                   mDepthTestEnable  = false;
@@ -74,6 +75,7 @@ namespace SE::Graphics
         std::vector<sBufferLayoutElement> mInputLayout          = {};
         std::vector<sBufferLayoutElement> mInstancedInputLayout = {};
         std::vector<sPushConstantRange>   mPushConstants        = {};
-        std::vector<sDescriptorSet>       mDescriptorLayout     = {};
+        // std::vector<sDescriptorSet>       mDescriptorLayout     = {};
+        std::vector<IDescriptorSet>       mDescriptorSets       = {};
     };
 } // namespace SE::Graphics

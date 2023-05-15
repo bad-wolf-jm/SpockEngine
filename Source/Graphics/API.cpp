@@ -100,4 +100,15 @@ namespace SE::Graphics
         }
     }
 
+    Ref<IDescriptorSet> CreateDescriptorSet( Ref<IGraphicContext> aGraphicContext, bool aUnbounded, uint32_t aCount )
+    {
+        switch( gApi )
+        {
+        case eGraphicsAPI::VULKAN: return New<VkDescriptorSetObject>( aGraphicContext, aUnbounded, aCount );
+        case eGraphicsAPI::OPENGL:
+        case eGraphicsAPI::DIRECTX:
+        default: return nullptr;
+        }
+    }
+
 } // namespace SE::Graphics
