@@ -10,10 +10,12 @@
 #include "FontAwesome.h"
 #include "Core/Memory.h"
 #include "Core/Types.h"
-#include "Graphics/Vulkan/DescriptorSet.h"
+#include "Graphics/Interface/IDescriptorSet.h"
 
 namespace SE::Core::UI
 {
+    using namespace SE::Graphics;
+    
     class UIStyle
     {
       public:
@@ -26,7 +28,7 @@ namespace SE::Core::UI
 
     struct ImageHandle
     {
-        Ref<SE::Graphics::DescriptorSet> Handle = nullptr;
+        Ref<IDescriptorSet> Handle = nullptr;
 
         ImageHandle()                      = default;
         ImageHandle( const ImageHandle & ) = default;

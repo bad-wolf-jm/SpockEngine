@@ -15,7 +15,7 @@ namespace SE::Core
         SetImage( aImagePath );
     }
 
-    UIBaseImage::UIBaseImage( Ref<VkSampler2D> aImage, math::vec2 aSize )
+    UIBaseImage::UIBaseImage( Ref<ISampler2D> aImage, math::vec2 aSize )
         : mImagePath{ "sampler://" }
         , mImage{ aImage }
         , mSize{ aSize.x, aSize.y }
@@ -35,8 +35,8 @@ namespace SE::Core
         sTextureSamplingInfo         lSamplingInfo{};
         SE::Core::TextureSampler2D   lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-        auto lTexture = New<VkTexture2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(), lTextureData );
-        mImage        = New<VkSampler2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(), lTexture, lSamplingInfo );
+        auto lTexture = CreateTexture2D( SE::Core::Engine::GetInstance()->GetGraphicContext(), lTextureData );
+        mImage        = CreateSampler2D( SE::Core::Engine::GetInstance()->GetGraphicContext(), lTexture, lSamplingInfo );
         mHandle       = SE::Core::Engine::GetInstance()->UIContext()->CreateTextureHandle( mImage );
         mImagePath    = aImagePath;
     }
@@ -54,7 +54,7 @@ namespace SE::Core
     ImVec4 UIBaseImage::TintColor() { return mTintColor; }
     void   UIBaseImage::SetTintColor( math::vec4 aColor ) { mTintColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
 
-    ImTextureID UIBaseImage::TextureID() { return static_cast<ImTextureID>( mHandle.Handle->GetVkDescriptorSet() ); }
+    ImTextureID UIBaseImage::TextureID() { return static_cast<ImTextureID>( mHandle.Handle->GetID() ); }
 
     ImVec2 UIBaseImage::RequiredSize() { return mSize; }
 
@@ -92,7 +92,7 @@ namespace SE::Core
         lInstance->SetSize( aSize );
     }
 
-    math::vec2  UIBaseImage::UIBaseImage_GetSize( void *aInstance )
+    math::vec2 UIBaseImage::UIBaseImage_GetSize( void *aInstance )
     {
         auto lInstance = static_cast<UIBaseImage *>( aInstance );
         auto lV        = lInstance->Size();

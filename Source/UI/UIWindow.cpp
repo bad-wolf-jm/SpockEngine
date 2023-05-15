@@ -79,7 +79,7 @@ namespace SE::Core
         lT[1] = -1.0f - aDrawData->DisplayPos.y * lS[1];
 
         aRenderContext->Bind( mUIRenderPipeline );
-        aRenderContext->Bind( Cast<VkGpuBuffer>( mVertexBuffer ), Cast<VkGpuBuffer>( mIndexBuffer ) );
+        aRenderContext->Bind( mVertexBuffer, mIndexBuffer );
         aRenderContext->SetViewport( { 0, 0 }, { lFramebufferWidth, lFramebufferHeight } );
         aRenderContext->PushConstants( { eShaderStageTypeFlags::VERTEX }, 0, lS );
         aRenderContext->PushConstants( { eShaderStageTypeFlags::VERTEX }, sizeof( float ) * 2, lT );

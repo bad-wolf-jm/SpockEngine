@@ -2,14 +2,7 @@
 
 #include <map>
 
-#include "Graphics/Vulkan/DescriptorSet.h"
-
-#include "Graphics/Vulkan/DescriptorSet.h"
-#include "Graphics/Vulkan/VkGraphicContext.h"
-
 #include "UI/UI.h"
-
-#include "Graphics/Vulkan/VkGpuBuffer.h"
 
 #include <imgui.h>
 #define IMGUI_DEFINE_MATH_OPERATORS
@@ -73,8 +66,8 @@ namespace SE::Core
 
         ImGuiIO &GetIO();
 
-        ImageHandle        CreateTextureHandle( Ref<Graphics::VkSampler2D> aTexture );
-        Ref<DescriptorSet> AddTexture( Ref<Graphics::VkSampler2D> aTexture );
+        ImageHandle         CreateTextureHandle( Ref<ISampler2D> aTexture );
+        Ref<IDescriptorSet> AddTexture( Ref<ISampler2D> aTexture );
 
         Ref<IGraphicContext> GraphicContext() { return mGraphicContext; }
 
@@ -86,10 +79,10 @@ namespace SE::Core
 
         Ref<IGraphicContext> mGraphicContext{};
 
-        Ref<DescriptorSetLayout> mUIDescriptorSetLayout = nullptr;
+        Ref<IDescriptorSetLayout> mUIDescriptorSetLayout = nullptr;
+        Ref<IDescriptorSet>       mFontDescriptorSet     = nullptr;
 
-        Ref<Graphics::VkSampler2D> mFontTexture       = nullptr;
-        Ref<DescriptorSet>         mFontDescriptorSet = nullptr;
+        Ref<ISampler2D> mFontTexture = nullptr;
 
         std::map<FontFamilyFlags, ImFont *> mFonts;
 

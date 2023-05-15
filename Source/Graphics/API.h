@@ -1,11 +1,11 @@
 #pragma once
 
+#include "Interface/IDescriptorSetLayout.h"
 #include "Interface/IGraphicBuffer.h"
 #include "Interface/IGraphicContext.h"
 #include "Interface/IGraphicsPipeline.h"
 #include "Interface/IRenderContext.h"
 #include "Interface/ISwapChain.h"
-#include "Interface/IDescriptorSetLayout.h"
 
 namespace SE::Graphics
 {
@@ -44,6 +44,18 @@ namespace SE::Graphics
     Ref<IGraphicBuffer> CreateBuffer( Ref<IGraphicContext> aGraphicContext, uint8_t *aData, size_t aSize, eBufferType aType,
                                       bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource, bool aIsTransferDestination );
 
+    Ref<ITexture2D> CreateTexture2D( Ref<IGraphicContext> aGraphicContext, sTextureCreateInfo &aTextureImageDescription,
+                                     uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
+                                     bool aIsTransferDestination );
+
+    Ref<ITexture2D> CreateTexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData );
+
+    Ref<ITexture2D> CreateTexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount,
+                                     bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource );
+
+    Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData,
+                                     sTextureSamplingInfo const &aSamplingSpec );
+
     Ref<IGraphicsPipeline> CreateGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
                                                    ePrimitiveTopology aTopology );
 
@@ -52,6 +64,7 @@ namespace SE::Graphics
     Ref<IRenderContext> CreateRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<ISwapChain> aWindow );
     Ref<IRenderContext> CreateRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aWindow );
 
-    Ref<IDescriptorSetLayout> CreateDescriptorSetLayout(Ref<IGraphicContext> aGraphicContext, bool aUnbounded = false, uint32_t aCount = 1);
+    Ref<IDescriptorSetLayout> CreateDescriptorSetLayout( Ref<IGraphicContext> aGraphicContext, bool aUnbounded = false,
+                                                         uint32_t aCount = 1 );
 
 } // namespace SE::Graphics

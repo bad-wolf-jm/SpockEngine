@@ -2,15 +2,12 @@
 
 #include "Engine/Engine.h"
 
+#include "Core/Profiling/BlockTimer.h"
 #include "Core/CUDA/Texture/ColorFormat.h"
 #include "Core/Logging.h"
 
-#include "Graphics/Vulkan/VkPipeline.h"
-
-#include "Core/Profiling/BlockTimer.h"
 #include "Graphics/Interface/IWindow.h"
 
-// std
 #include <stdexcept>
 
 #include "Core/Resource.h"
@@ -44,11 +41,6 @@ namespace SE::Core
         ImGui_ImplGlfw_InitForVulkan( aWindow->GetGLFWWindow(), true );
         mMainWindow = New<UIWindow>( aGraphicContext, aRenderContext );
 
-        DescriptorBindingInfo lDescriptorBinding = {
-            0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { Graphics::eShaderStageTypeFlags::FRAGMENT } };
-        DescriptorSetLayoutCreateInfo lBindingLayout = { { lDescriptorBinding } };
-        mUIDescriptorSetLayout                       = New<DescriptorSetLayout>( Cast<VkGraphicContext>(mGraphicContext), lBindingLayout );
-
         ImGuiViewport *lMainViewport    = ImGui::GetMainViewport();
         lMainViewport->RendererUserData = nullptr;
 
@@ -74,6 +66,10 @@ namespace SE::Core
 
         mUIStyle = UIStyle{ true };
 
+        mUIDescriptorSetLayout = CreateDescriptorSetLayout( mGraphicContext, false, 1 );
+        mUIDescriptorSetLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { Graphics::eShaderStageTypeFlags::FRAGMENT } );
+        mUIDescriptorSetLayout->Build();
+
         unsigned char *lFontPixelData;
         int            lWidth, lHeight;
         io.Fonts->GetTexDataAsRGBA32( &lFontPixelData, &lWidth, &lHeight );
@@ -93,12 +89,11 @@ namespace SE::Core
         sTextureSamplingInfo lSamplingInfo{};
         lSamplingInfo.mFilter   = eSamplerFilter::LINEAR;
         lSamplingInfo.mWrapping = eSamplerWrapping::REPEAT;
-        TextureSampler2D lTextureSampler( lTextureImage, lSamplingInfo );
 
-        auto lFontTexture  = New<VkTexture2D>( Cast<VkGraphicContext>(mGraphicContext), lTextureImage );
-        mFontTexture       = New<VkSampler2D>( Cast<VkGraphicContext>(mGraphicContext), lFontTexture, lSamplingInfo );
+        auto lFontTexture  = CreateTexture2D( mGraphicContext, lTextureImage );
+        mFontTexture       = CreateSampler2D( mGraphicContext, lFontTexture, lSamplingInfo );
         mFontDescriptorSet = AddTexture( mFontTexture );
-        io.Fonts->TexID    = (ImTextureID)mFontDescriptorSet->GetVkDescriptorSet();
+        io.Fonts->TexID    = (ImTextureID)mFontDescriptorSet->GetID();
 
         auto &lPlatformIO = ImGui::GetPlatformIO();
 
@@ -221,7 +216,7 @@ namespace SE::Core
         RenderPlatformWindows();
     }
 
-    ImageHandle UIContext::CreateTextureHandle( Ref<VkSampler2D> aTexture ) { return ImageHandle{ AddTexture( aTexture ) }; }
+    ImageHandle UIContext::CreateTextureHandle( Ref<ISampler2D> aTexture ) { return ImageHandle{ AddTexture( aTexture ) }; }
 
     ImGuiIO &UIContext::GetIO()
     {
@@ -233,10 +228,11 @@ namespace SE::Core
 
     void UIContext::PopFont() { ImGui::PopFont(); }
 
-    Ref<DescriptorSet> UIContext::AddTexture( Ref<VkSampler2D> aTexture )
+    Ref<IDescriptorSet> UIContext::AddTexture( Ref<ISampler2D> aTexture )
     {
-        Ref<DescriptorSet> lDescriptorSet = New<DescriptorSet>( Cast<VkGraphicContext>(mGraphicContext), mUIDescriptorSetLayout );
+        Ref<IDescriptorSet> lDescriptorSet = mUIDescriptorSetLayout->Allocate(1);
         lDescriptorSet->Write( aTexture, 0 );
+
         return lDescriptorSet;
     }
 } // namespace SE::Core
