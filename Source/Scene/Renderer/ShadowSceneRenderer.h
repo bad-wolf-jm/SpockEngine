@@ -75,7 +75,7 @@ namespace SE::Core
     class ShadowSceneRenderer : public ASceneRenderer
     {
       public:
-        ShadowMatrices View;
+        ShadowMatrices     View;
         OmniShadowMatrices mOmniView;
 
       public:
@@ -99,25 +99,25 @@ namespace SE::Core
         std::vector<Ref<Graphics::VkSamplerCubeMap>> &GetPointLightShadowMapSamplers() { return mPointLightShadowMapSamplers; };
 
       protected:
-        std::vector<VkRenderContext>             mDirectionalShadowMapRenderContext    = {};
+        std::vector<VkRenderContext>            mDirectionalShadowMapRenderContext    = {};
         std::vector<Ref<Graphics::VkSampler2D>> mDirectionalShadowMapSamplers         = {};
         std::vector<Ref<VkGpuBuffer>>           mDirectionalShadowCameraUniformBuffer = {};
         std::vector<Ref<DescriptorSet>>         mDirectionalShadowSceneDescriptors    = {};
         ShadowMeshRenderer                      mRenderPipeline{};
 
-        std::vector<VkRenderContext>             mSpotlightShadowMapRenderContext    = {};
+        std::vector<VkRenderContext>            mSpotlightShadowMapRenderContext    = {};
         std::vector<Ref<Graphics::VkSampler2D>> mSpotlightShadowMapSamplers         = {};
         std::vector<Ref<VkGpuBuffer>>           mSpotlightShadowCameraUniformBuffer = {};
         std::vector<Ref<DescriptorSet>>         mSpotlightShadowSceneDescriptors    = {};
 
-        std::vector<std::array<VkRenderContext, 6>>     mPointLightsShadowMapRenderContext    = {};
+        std::vector<std::array<VkRenderContext, 6>>    mPointLightsShadowMapRenderContext    = {};
         std::vector<Ref<Graphics::VkSamplerCubeMap>>   mPointLightShadowMapSamplers          = {};
         std::vector<std::array<Ref<VkGpuBuffer>, 6>>   mPointLightsShadowCameraUniformBuffer = {};
         std::vector<std::array<Ref<DescriptorSet>, 6>> mPointLightsShadowSceneDescriptors    = {};
         OmniShadowMeshRenderer                         mOmniRenderPipeline{};
 
         Ref<VkRenderTarget> mGeometryRenderTarget = nullptr;
-        VkRenderContext      mGeometryContext{};
+        VkRenderContext     mGeometryContext{};
 
         Ref<VkGpuBuffer> mCameraUniformBuffer    = nullptr;
         Ref<VkGpuBuffer> mShaderParametersBuffer = nullptr;
