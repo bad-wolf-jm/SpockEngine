@@ -2,9 +2,9 @@
 
 #include "Core/Memory.h"
 
-// #include "Graphics/Vulkan/VkGpuBuffer.h"
+// #include "Graphics/Vulkan/IGraphicBuffer.h"
 // #include "Graphics/Vulkan/VkRenderContext.h"
-// #include "Graphics/Vulkan/DescriptorSet.h"
+// #include "Graphics/Vulkan/IDescriptorSet.h"
 // #include "Graphics/Vulkan/VkGraphicsPipeline.h"
 // #include "Graphics/Vulkan/IGraphicContext.h"
 #include "Graphics/API.h"
@@ -28,25 +28,27 @@ namespace SE::Core
         Ref<VkRenderPass> RenderPass = nullptr;
     };
 
-    class EffectProcessor : public SE::Core::SceneRenderPipeline<EmptyVertexData>
+    class EffectProcessor // : public SE::Core::SceneRenderPipeline<EmptyVertexData>
     {
       public:
-        EffectProcessor( Ref<IGraphicContext> mGraphicContext, VkRenderContext &aRenderContext,
+        EffectProcessor( Ref<IGraphicContext> mGraphicContext, Ref<IRenderContext> aRenderContext,
                          EffectProcessorCreateInfo aCreateInfo );
         ~EffectProcessor() = default;
 
-        void Render( Ref<Graphics::VkSampler2D> aImageSampler, VkRenderContext &aRenderContext );
+        void Render( Ref<Graphics::VkSampler2D> aImageSampler, Ref<IRenderContext> aRenderContext );
 
         EffectProcessorCreateInfo Spec;
-        Ref<DescriptorSetLayout>  PipelineLayout = nullptr;
-        Ref<DescriptorSet>        mTextures       = nullptr;
+        Ref<IDescriptorSetLayout> PipelineLayout = nullptr;
+        Ref<IDescriptorSet>       mTextures      = nullptr;
 
-        std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
-        std::vector<sPushConstantRange>       GetPushConstantLayout();
+        std::vector<Ref<IDescriptorSetLayout>> GetDescriptorSetLayout();
+        std::vector<sPushConstantRange>        GetPushConstantLayout();
 
       private:
-        Ref<VkGpuBuffer>   mCameraBuffer      = nullptr;
-        Ref<DescriptorSet> mCameraDescriptors = nullptr;
+        Ref<IGraphicContext>   mGraphicContext    = nullptr;
+        Ref<IGraphicsPipeline> mPipeline          = nullptr;
+        Ref<IGraphicBuffer>    mCameraBuffer      = nullptr;
+        Ref<IDescriptorSet>    mCameraDescriptors = nullptr;
     };
 
 } // namespace SE::Core

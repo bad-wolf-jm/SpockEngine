@@ -44,7 +44,7 @@ namespace SE::Core
         lGeometrySpec.mWidth       = aOutputWidth;
         lGeometrySpec.mHeight      = aOutputHeight;
         lGeometrySpec.mSampleCount = mOutputSampleCount;
-        mGeometryRenderTarget      = New<VkRenderTarget>( mGraphicContext, lGeometrySpec );
+        mGeometryRenderTarget      = CreateRenderTarget( mGraphicContext, lGeometrySpec );
 
         sAttachmentDescription lAttachmentCreateInfo{};
         lAttachmentCreateInfo.mType        = eAttachmentType::COLOR;
@@ -77,7 +77,7 @@ namespace SE::Core
         lLightingSpec.mWidth       = aOutputWidth;
         lLightingSpec.mHeight      = aOutputHeight;
         lLightingSpec.mSampleCount = mOutputSampleCount;
-        mLightingRenderTarget      = New<VkRenderTarget>( mGraphicContext, lLightingSpec );
+        mLightingRenderTarget      = CreateRenderTarget( mGraphicContext, lLightingSpec );
 
         lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
         lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA16_FLOAT;
@@ -94,36 +94,35 @@ namespace SE::Core
         mLightingRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo,
                                               mGeometryRenderTarget->GetAttachment( "DEPTH_STENCIL" ) );
         mLightingRenderTarget->Finalize();
-        mLightingContext = VkRenderContext( mGraphicContext, mLightingRenderTarget );
+        mLightingContext = CreateRenderContext( mGraphicContext, mLightingRenderTarget );
 
         DeferredLightingRendererCreateInfo mLightingRendererCI{};
         mLightingRendererCI.RenderPass = mLightingContext.GetRenderPass();
         mLightingRenderer              = DeferredLightingRenderer( mGraphicContext, mLightingRendererCI );
 
         mGeometrySamplers["POSITION"] =
-            New<Graphics::VkSampler2D>( mGraphicContext, mGeometryRenderTarget->GetAttachment( "POSITION" ), sTextureSamplingInfo{} );
+            CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "POSITION" ), sTextureSamplingInfo{} );
         mLightingPassTextures->Write( mGeometrySamplers["POSITION"], 0 );
 
         mGeometrySamplers["NORMALS"] =
-            New<Graphics::VkSampler2D>( mGraphicContext, mGeometryRenderTarget->GetAttachment( "NORMALS" ), sTextureSamplingInfo{} );
+            CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "NORMALS" ), sTextureSamplingInfo{} );
         mLightingPassTextures->Write( mGeometrySamplers["NORMALS"], 1 );
 
         mGeometrySamplers["ALBEDO"] =
-            New<Graphics::VkSampler2D>( mGraphicContext, mGeometryRenderTarget->GetAttachment( "ALBEDO" ), sTextureSamplingInfo{} );
+            CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "ALBEDO" ), sTextureSamplingInfo{} );
         mLightingPassTextures->Write( mGeometrySamplers["ALBEDO"], 2 );
 
-        mGeometrySamplers["AO_METAL_ROUGH"] = New<Graphics::VkSampler2D>(
-            mGraphicContext, mGeometryRenderTarget->GetAttachment( "AO_METAL_ROUGH" ), sTextureSamplingInfo{} );
+        mGeometrySamplers["AO_METAL_ROUGH"] =
+            CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "AO_METAL_ROUGH" ), sTextureSamplingInfo{} );
         mLightingPassTextures->Write( mGeometrySamplers["AO_METAL_ROUGH"], 3 );
 
-        mFxaaSampler =
-            New<Graphics::VkSampler2D>( mGraphicContext, mLightingRenderTarget->GetAttachment( "OUTPUT" ), sTextureSamplingInfo{} );
+        mFxaaSampler = CreateSampler2D( mGraphicContext, mLightingRenderTarget->GetAttachment( "OUTPUT" ), sTextureSamplingInfo{} );
 
         sRenderTargetDescription lFxaaSpec{};
         lFxaaSpec.mWidth       = aOutputWidth;
         lFxaaSpec.mHeight      = aOutputHeight;
         lFxaaSpec.mSampleCount = mOutputSampleCount;
-        mFxaaRenderTarget      = New<VkRenderTarget>( mGraphicContext, lLightingSpec );
+        mFxaaRenderTarget      = CreateRenderTarget( mGraphicContext, lLightingSpec );
 
         lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
         lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA16_FLOAT;
@@ -132,7 +131,7 @@ namespace SE::Core
         lAttachmentCreateInfo.mStoreOp    = eAttachmentStoreOp::STORE;
         mFxaaRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
         mFxaaRenderTarget->Finalize();
-        mFxaaContext = VkRenderContext( mGraphicContext, mFxaaRenderTarget );
+        mFxaaContext = CreateRenderContext( mGraphicContext, mFxaaRenderTarget );
 
         CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
         lCoordinateGridRendererCreateInfo.RenderPass = mLightingContext.GetRenderPass();

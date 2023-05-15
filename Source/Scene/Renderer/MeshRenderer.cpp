@@ -2,7 +2,6 @@
 
 #include <chrono>
 
-// #include "Graphics/Vulkan/VkPipeline.h"
 #include "Scene/Primitives/Primitives.h"
 #include "Scene/VertexData.h"
 
@@ -14,35 +13,36 @@ namespace SE::Core
 
     using namespace math;
 
-    Ref<DescriptorSetLayout> MeshRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
+    Ref<IDescriptorSetLayout> MeshRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
-        DescriptorSetLayoutCreateInfo lCameraBindLayout{};
-        lCameraBindLayout.Bindings = {
-            DescriptorBindingInfo{
-                0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX, eShaderStageTypeFlags::FRAGMENT } },
-            DescriptorBindingInfo{ 1, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } } };
+        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
+        lNewLayout.AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        lNewLayout.AddBinding( 1, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        lNewLayout.Build();
 
-        return New<DescriptorSetLayout>( aGraphicContext, lCameraBindLayout );
+        return lNewLayout;
     }
 
-    Ref<DescriptorSetLayout> MeshRenderer::GetTextureSetLayout( Ref<IGraphicContext> aGraphicContext )
+    Ref<IDescriptorSetLayout> MeshRenderer::GetTextureSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
-        DescriptorSetLayoutCreateInfo lTextureBindLayout{};
-        lTextureBindLayout.Bindings = {
-            DescriptorBindingInfo{ 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } },
-            DescriptorBindingInfo{ 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
+        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
+        lNewLayout.AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        lNewLayout.AddBinding( 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        lNewLayout.Build();
 
-        return New<DescriptorSetLayout>( aGraphicContext, lTextureBindLayout, true );
+        return lNewLayout;
     }
 
-    Ref<DescriptorSetLayout> MeshRenderer::GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext )
+    Ref<IDescriptorSetLayout> MeshRenderer::GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
-        DescriptorSetLayoutCreateInfo lNodeBindLayout{};
-        lNodeBindLayout.Bindings = { DescriptorBindingInfo{ 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } } };
-        return New<DescriptorSetLayout>( aGraphicContext, lNodeBindLayout );
+        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
+        lNewLayout.AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
+        lNewLayout.Build();
+
+        return lNewLayout;
     }
 
-    std::vector<Ref<DescriptorSetLayout>> MeshRenderer::GetDescriptorSetLayout()
+    std::vector<Ref<IDescriptorSetLayout>> MeshRenderer::GetDescriptorSetLayout()
     {
         return { CameraSetLayout, TextureSetLayout, NodeSetLayout };
     }

@@ -10,8 +10,8 @@
 #include "Scene/Primitives/Primitives.h"
 #include "Scene/VertexData.h"
 
-#include "Core/Profiling/BlockTimer.h"
 #include "Core/Logging.h"
+#include "Core/Profiling/BlockTimer.h"
 #include "Core/Resource.h"
 
 #include "MeshRenderer.h"
@@ -24,16 +24,16 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem::Components;
     using namespace SE::Core::Primitives;
 
-    Ref<DescriptorSetLayout> ShadowMeshRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
+    Ref<IDescriptorSetLayout> ShadowMeshRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
-        DescriptorSetLayoutCreateInfo lCameraBindLayout{};
-        lCameraBindLayout.Bindings = {
-            DescriptorBindingInfo{ 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } } };
+        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
+        lNewLayout.AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
+        lNewLayout.Build();
 
-        return New<DescriptorSetLayout>( aGraphicContext, lCameraBindLayout );
+        return lNewLayout;
     }
 
-    std::vector<Ref<DescriptorSetLayout>> ShadowMeshRenderer::GetDescriptorSetLayout() { return { CameraSetLayout }; }
+    std::vector<Ref<IDescriptorSetLayout>> ShadowMeshRenderer::GetDescriptorSetLayout() { return { CameraSetLayout }; }
 
     std::vector<sPushConstantRange> ShadowMeshRenderer::GetPushConstantLayout() { return {}; };
 
@@ -52,20 +52,20 @@ namespace SE::Core
         Initialize( lCreateInfo );
     }
 
-    Ref<DescriptorSetLayout> OmniShadowMeshRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
+    Ref<IDescriptorSetLayout> OmniShadowMeshRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
         DescriptorSetLayoutCreateInfo lCameraBindLayout{};
         lCameraBindLayout.Bindings = {
             DescriptorBindingInfo{ 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } } };
 
-        return New<DescriptorSetLayout>( aGraphicContext, lCameraBindLayout );
+        return New<IDescriptorSetLayout>( aGraphicContext, lCameraBindLayout );
     }
 
-    std::vector<Ref<DescriptorSetLayout>> OmniShadowMeshRenderer::GetDescriptorSetLayout() { return { CameraSetLayout }; }
+    std::vector<Ref<IDescriptorSetLayout>> OmniShadowMeshRenderer::GetDescriptorSetLayout() { return { CameraSetLayout }; }
 
     std::vector<sPushConstantRange> OmniShadowMeshRenderer::GetPushConstantLayout() { return {}; };
 
-    OmniShadowMeshRenderer::OmniShadowMeshRenderer( Ref<IGraphicContext>               aGraphicContext,
+    OmniShadowMeshRenderer::OmniShadowMeshRenderer( Ref<IGraphicContext>                aGraphicContext,
                                                     ShadowMeshRendererCreateInfo const &aCreateInfo )
         : SceneRenderPipeline<VertexData>( aGraphicContext )
     {
@@ -350,7 +350,8 @@ namespace SE::Core
                         break;
                     }
 
-                    mOmniView.mMVP      = lProjection * math::Translate( viewMatrix, -mPointLights[lLightIndex].WorldPosition );;
+                    mOmniView.mMVP = lProjection * math::Translate( viewMatrix, -mPointLights[lLightIndex].WorldPosition );
+                    ;
                     mOmniView.mLightPos = math::vec4( mPointLights[lLightIndex].WorldPosition, 0.0f );
                     mPointLightsShadowCameraUniformBuffer[lLightIndex][f]->Write( mOmniView );
 

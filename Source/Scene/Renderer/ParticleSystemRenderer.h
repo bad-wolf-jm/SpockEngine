@@ -6,7 +6,7 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-// #include "Graphics/Vulkan/VkGpuBuffer.h"
+// #include "Graphics/Vulkan/IGraphicBuffer.h"
 // #include "Graphics/Vulkan/VkRenderContext.h"
 // #include "Graphics/Vulkan/DescriptorSet.h"
 // #include "Graphics/Vulkan/VkGraphicsPipeline.h"
@@ -68,32 +68,34 @@ namespace SE::Graphics
             uint32_t   ParticleCount = 0;
             float      ParticleSize  = 0.0f;
 
-            Ref<VkGpuBuffer> Particles = nullptr;
+            Ref<IGraphicBuffer> Particles = nullptr;
 
             ParticleData()                       = default;
             ParticleData( const ParticleData & ) = default;
         };
 
         ParticleRendererCreateInfo Spec;
-        Ref<DescriptorSetLayout>   PipelineLayout = nullptr;
+        Ref<IDescriptorSetLayout>  PipelineLayout = nullptr;
 
         ParticleSystemRenderer() = default;
 
-        ParticleSystemRenderer( Ref<IGraphicContext> aGraphicContext, VkRenderContext &aRenderContext,
+        ParticleSystemRenderer( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
                                 ParticleRendererCreateInfo aCreateInfo );
 
-        std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
-        std::vector<sPushConstantRange>       GetPushConstantLayout();
+        std::vector<Ref<IDescriptorSetLayout>> GetDescriptorSetLayout();
+        std::vector<sPushConstantRange>        GetPushConstantLayout();
 
         ~ParticleSystemRenderer() = default;
 
-        void Render( math::mat4 aProjection, math::mat4 aView, VkRenderContext &aRenderContext, ParticleData &aParticleData );
+        void Render( math::mat4 aProjection, math::mat4 aView, Ref<IRenderContext> aRenderContext, ParticleData &aParticleData );
 
       protected:
-        Ref<VkGpuBuffer>   mParticleVertices  = nullptr;
-        Ref<VkGpuBuffer>   mParticleIndices   = nullptr;
-        Ref<VkGpuBuffer>   mCameraBuffer      = nullptr;
-        Ref<DescriptorSet> mCameraDescriptors = nullptr;
+        Ref<IGraphicContext>   mGraphicContext    = nullptr;
+        Ref<IGraphicsPipeline> mPipeline          = nullptr;
+        Ref<IGraphicBuffer>    mParticleVertices  = nullptr;
+        Ref<IGraphicBuffer>    mParticleIndices   = nullptr;
+        Ref<IGraphicBuffer>    mCameraBuffer      = nullptr;
+        Ref<DescriptorSet>     mCameraDescriptors = nullptr;
     };
 
 } // namespace SE::Graphics

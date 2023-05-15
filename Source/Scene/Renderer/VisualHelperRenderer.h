@@ -11,7 +11,6 @@
 // #include "Graphics/Vulkan/VkRenderPass.h"
 #include "Graphics/API.h"
 
-
 #include "Scene/Components/VisualHelpers.h"
 #include "Scene/VertexData.h"
 
@@ -35,26 +34,26 @@ namespace SE::Graphics
 
         ~VisualHelperRenderer() = default;
 
-        void Render( math::mat4 aTransform, ArrowMeshData &aArrow, math::vec3 aColor, VkRenderContext &aRenderContext );
-        void Render( math::mat4 aTransform, ConeMeshData &aArrow, math::vec3 aColor, VkRenderContext &aRenderContext );
-        void Render( math::mat4 aTransform, CircleMeshData &aArrow, math::vec3 aColor, VkRenderContext &aRenderContext );
-        void Render( math::mat4 aTransform, CubeMeshData &aArrow, math::vec3 aColor, VkRenderContext &aRenderContext );
-        void Render( math::mat4 aTransform, PyramidMeshData &aArrow, math::vec3 aColor, VkRenderContext &aRenderContext );
-        void Render( math::mat4 aTransform, SurfaceMeshData &aArrow, math::vec3 aColor, VkRenderContext &aRenderContext );
+        void Render( math::mat4 aTransform, ArrowMeshData &aArrow, math::vec3 aColor, Ref<iRenderContext> aRenderContext );
+        void Render( math::mat4 aTransform, ConeMeshData &aArrow, math::vec3 aColor, Ref<iRenderContext> aRenderContext );
+        void Render( math::mat4 aTransform, CircleMeshData &aArrow, math::vec3 aColor, Ref<iRenderContext> aRenderContext );
+        void Render( math::mat4 aTransform, CubeMeshData &aArrow, math::vec3 aColor, Ref<iRenderContext> aRenderContext );
+        void Render( math::mat4 aTransform, PyramidMeshData &aArrow, math::vec3 aColor, Ref<iRenderContext> aRenderContext );
+        void Render( math::mat4 aTransform, SurfaceMeshData &aArrow, math::vec3 aColor, Ref<iRenderContext> aRenderContext );
 
-        void Render( math::mat4 aTransform, AxesComponent &aAxesComponent, VkRenderContext &aRenderContext );
-        void Render( math::mat4 aTransform, PointLightHelperComponent &aAxesComponent, VkRenderContext &aRenderContext );
-        void Render( math::mat4 aTransform, DirectionalLightHelperComponent &aAxesComponent, VkRenderContext &aRenderContext );
-        void Render( math::mat4 aTransform, SpotlightHelperComponent &aAxesComponent, VkRenderContext &aRenderContext );
-        void Render( math::mat4 aTransform, FieldOfViewHelperComponent &aAxesComponent, VkRenderContext &aRenderContext );
-        void Render( math::mat4 aTransform, CameraHelperComponent &aAxesComponent, VkRenderContext &aRenderContext );
+        void Render( math::mat4 aTransform, AxesComponent &aAxesComponent, Ref<iRenderContext> aRenderContext );
+        void Render( math::mat4 aTransform, PointLightHelperComponent &aAxesComponent, Ref<iRenderContext> aRenderContext );
+        void Render( math::mat4 aTransform, DirectionalLightHelperComponent &aAxesComponent, Ref<iRenderContext> aRenderContext );
+        void Render( math::mat4 aTransform, SpotlightHelperComponent &aAxesComponent, Ref<iRenderContext> aRenderContext );
+        void Render( math::mat4 aTransform, FieldOfViewHelperComponent &aAxesComponent, Ref<iRenderContext> aRenderContext );
+        void Render( math::mat4 aTransform, CameraHelperComponent &aAxesComponent, Ref<iRenderContext> aRenderContext );
 
       private:
-        Ref<IGraphicContext> mGraphicContext;
-        Ref<GraphicsPipeline> m_RenderPipeline = nullptr;
+        Ref<IGraphicContext>   mGraphicContext;
+        Ref<IGraphicsPipeline> mRenderPipeline = nullptr;
 
-        Ref<VisualHelperMeshRenderer> m_MeshRenderer             = nullptr;
-        Ref<VisualHelperLineRenderer> m_VisualHelperLineRenderer = nullptr;
+        Ref<VisualHelperMeshRenderer> mMeshRenderer             = nullptr;
+        Ref<VisualHelperLineRenderer> mVisualHelperLineRenderer = nullptr;
     };
 
 } // namespace SE::Graphics
