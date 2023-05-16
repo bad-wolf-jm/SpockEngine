@@ -7,9 +7,9 @@
 class PopupWindow
 {
   public:
-    bool Visible      = false;
-    std::string Title = "";
-    math::vec2 Size   = { 0.0f, 0.0f };
+    bool        Visible = false;
+    std::string Title   = "";
+    math::vec2  Size    = { 0.0f, 0.0f };
 
   public:
     PopupWindow() = default;
@@ -17,7 +17,7 @@ class PopupWindow
     ~PopupWindow() = default;
 
     virtual void WindowContent() = 0;
-    void Display();
+    void         Display();
 
   private:
 };

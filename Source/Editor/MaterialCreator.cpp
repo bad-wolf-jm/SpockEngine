@@ -11,8 +11,7 @@ namespace SE::Editor
 
     void MaterialCreator::WindowContent()
     {
-        if( !Visible )
-            return;
+        if( !Visible ) return;
         ImVec2 l_PopupSize = ImGui::GetWindowSize();
 
         UI::SetCursorPosition( l_PopupSize - ImVec2{ 150, 40 } - ImVec2{ 15, 15 } );

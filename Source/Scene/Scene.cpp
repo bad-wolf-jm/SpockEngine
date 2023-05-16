@@ -42,7 +42,7 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem;
     using namespace SE::Core::EntityComponentSystem::Components;
 
-    Scene::Scene( Ref<VkGraphicContext> a_GraphicContext, Ref<SE::Core::UIContext> a_UI )
+    Scene::Scene( Ref<IGraphicContext> a_GraphicContext, Ref<SE::Core::UIContext> a_UI )
         : mGraphicContext{ a_GraphicContext }
     {
         mMaterialSystem = New<MaterialSystem>( a_GraphicContext );
@@ -527,12 +527,12 @@ namespace SE::Core
                            std::vector<uint32_t>   lIndexBuffer;
                            lBinaryDataFile.Retrieve( 0, lVertexBuffer, lIndexBuffer );
 
-                           lComponent.mVertexBuffer = New<VkGpuBuffer>( mGraphicContext, lVertexBuffer, eBufferType::VERTEX_BUFFER,
-                                                                        false, false, true, true );
+                           lComponent.mVertexBuffer =
+                               CreateBuffer( mGraphicContext, lVertexBuffer, eBufferType::VERTEX_BUFFER, false, false, true, true );
                            lComponent.mIndexBuffer =
-                               New<VkGpuBuffer>( mGraphicContext, lIndexBuffer, eBufferType::INDEX_BUFFER, false, false, true, true );
-                           lComponent.mTransformedBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false,
-                                                                             true, true, lComponent.mVertexBuffer->SizeAs<uint8_t>() );
+                               CreateBuffer( mGraphicContext, lIndexBuffer, eBufferType::INDEX_BUFFER, false, false, true, true );
+                           lComponent.mTransformedBuffer = CreateBuffer( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false,
+                                                                         true, true, lComponent.mVertexBuffer->SizeAs<uint8_t>() );
 
                            lReadContext.mEntities[lEntityID].AddOrReplace<sStaticMeshComponent>( lComponent );
                        } );
@@ -704,11 +704,11 @@ namespace SE::Core
             }
 
             lMeshComponent.mVertexBuffer =
-                New<VkGpuBuffer>( mGraphicContext, lVertices, eBufferType::VERTEX_BUFFER, false, false, true, true );
+                CreateBuffer( mGraphicContext, lVertices, eBufferType::VERTEX_BUFFER, false, false, true, true );
             lMeshComponent.mIndexBuffer =
-                New<VkGpuBuffer>( mGraphicContext, lMesh.mIndices, eBufferType::INDEX_BUFFER, false, false, true, true );
-            lMeshComponent.mTransformedBuffer = New<VkGpuBuffer>( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true,
-                                                                  true, lMeshComponent.mVertexBuffer->SizeAs<uint8_t>() );
+                CreateBuffer( mGraphicContext, lMesh.mIndices, eBufferType::INDEX_BUFFER, false, false, true, true );
+            lMeshComponent.mTransformedBuffer = CreateBuffer( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false, true, true,
+                                                              lMeshComponent.mVertexBuffer->SizeAs<uint8_t>() );
 
             lMeshComponent.mVertexOffset = 0;
             lMeshComponent.mVertexCount  = lVertices.size();

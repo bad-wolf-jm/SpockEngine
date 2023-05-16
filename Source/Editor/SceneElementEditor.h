@@ -18,7 +18,7 @@ namespace SE::Editor
     class SceneElementEditor
     {
       public:
-        Entity ElementToEdit{};
+        Entity     ElementToEdit{};
         Ref<Scene> World;
 
       public:

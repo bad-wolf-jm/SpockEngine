@@ -9,7 +9,7 @@
 
 #include "Graphics/Vulkan/VkGraphicContext.h"
 
-#include "Graphics/Vulkan/VkSampler2D.h"
+#include "Graphics/Vulkan/ISampler2D.h"
 
 #include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/ForwardSceneRenderer.h"
@@ -125,16 +125,16 @@ namespace SE::Editor
         float    m_FpsTimer     = 0.0f;
         uint32_t m_LastFPS      = 0;
 
-        math::ivec2      m_WorkspaceAreaSize = { 0, 0 };
-        Ref<VkSampler2D> m_PlayIcon;
-        ImageHandle      m_PlayIconHandle;
-        Ref<VkSampler2D> m_PauseIcon;
-        ImageHandle      m_PauseIconHandle;
-        Ref<VkSampler2D> m_CameraIcon;
-        ImageHandle      m_CameraIconHandle;
+        math::ivec2     m_WorkspaceAreaSize = { 0, 0 };
+        Ref<ISampler2D> m_PlayIcon;
+        ImageHandle     m_PlayIconHandle;
+        Ref<ISampler2D> m_PauseIcon;
+        ImageHandle     m_PauseIconHandle;
+        Ref<ISampler2D> m_CameraIcon;
+        ImageHandle     m_CameraIconHandle;
 
-        Ref<VkSampler2D> m_DefaultTextureImage;
-        ImageHandle      m_DefaultTextureImageHandle;
+        Ref<ISampler2D> m_DefaultTextureImage;
+        ImageHandle     m_DefaultTextureImageHandle;
 
         SimulationState mState         = SimulationState::EDIT;
         SidePanelID     m_CurrentPanel = SidePanelID::SENSOR_CONFIGURATION;

@@ -117,8 +117,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture    = New<VkTexture2D>( mGraphicContext, lTextureData );
-            m_PlayIcon       = New<VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture    = New<ITexture2D>( mGraphicContext, lTextureData );
+            m_PlayIcon       = New<ISampler2D>( mGraphicContext, lTexture, lSamplingInfo );
             m_PlayIconHandle = mUIOverlay->CreateTextureHandle( m_PlayIcon );
         }
 
@@ -128,8 +128,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture     = New<VkTexture2D>( mGraphicContext, lTextureData );
-            m_PauseIcon       = New<VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture     = New<ITexture2D>( mGraphicContext, lTextureData );
+            m_PauseIcon       = New<ISampler2D>( mGraphicContext, lTexture, lSamplingInfo );
             m_PauseIconHandle = mUIOverlay->CreateTextureHandle( m_PauseIcon );
         }
 
@@ -139,8 +139,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture               = New<VkTexture2D>( mGraphicContext, lTextureData );
-            m_DefaultTextureImage       = New<VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture               = New<ITexture2D>( mGraphicContext, lTextureData );
+            m_DefaultTextureImage       = New<ISampler2D>( mGraphicContext, lTexture, lSamplingInfo );
             m_DefaultTextureImageHandle = mUIOverlay->CreateTextureHandle( m_PlayIcon );
         }
 
@@ -150,8 +150,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture      = New<VkTexture2D>( mGraphicContext, lTextureData );
-            m_CameraIcon       = New<VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture      = New<ITexture2D>( mGraphicContext, lTextureData );
+            m_CameraIcon       = New<ISampler2D>( mGraphicContext, lTexture, lSamplingInfo );
             m_CameraIconHandle = mUIOverlay->CreateTextureHandle( m_CameraIcon );
         }
     }

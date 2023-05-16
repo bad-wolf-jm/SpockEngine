@@ -9,7 +9,7 @@
 
 namespace SE::Editor
 {
-    ContentBrowser::ContentBrowser( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay, fs::path aRoot )
+    ContentBrowser::ContentBrowser( Ref<IGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay, fs::path aRoot )
         : mGraphicContext{ aGraphicContext }
         , m_CurrentDirectory( aRoot )
         , Root{ aRoot }
@@ -20,8 +20,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             TextureSampler2D     lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture         = New<SE::Graphics::VkTexture2D>( mGraphicContext, lTextureData );
-            m_DirectoryIcon       = New<SE::Graphics::VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture         = New<SE::Graphics::ITexture2D>( mGraphicContext, lTextureData );
+            m_DirectoryIcon       = New<SE::Graphics::ISampler2D>( mGraphicContext, lTexture, lSamplingInfo );
             m_DirectoryIconHandle = aUIOverlay->CreateTextureHandle( m_DirectoryIcon );
         }
 
@@ -31,8 +31,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             TextureSampler2D     lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture    = New<SE::Graphics::VkTexture2D>( mGraphicContext, lTextureData );
-            m_FileIcon       = New<SE::Graphics::VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture    = New<SE::Graphics::ITexture2D>( mGraphicContext, lTextureData );
+            m_FileIcon       = New<SE::Graphics::ISampler2D>( mGraphicContext, lTexture, lSamplingInfo );
             m_FileIconHandle = aUIOverlay->CreateTextureHandle( m_FileIcon );
         }
 
@@ -42,8 +42,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             TextureSampler2D     lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture    = New<SE::Graphics::VkTexture2D>( mGraphicContext, lTextureData );
-            m_BackIcon       = New<SE::Graphics::VkSampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture    = New<SE::Graphics::ITexture2D>( mGraphicContext, lTextureData );
+            m_BackIcon       = New<SE::Graphics::ISampler2D>( mGraphicContext, lTexture, lSamplingInfo );
             m_BackIconHandle = aUIOverlay->CreateTextureHandle( m_BackIcon );
         }
     }
@@ -55,7 +55,7 @@ namespace SE::Editor
         if( lBackButtonDisabled ) ImGui::BeginDisabled();
 
         ImGui::PushStyleColor( ImGuiCol_Button, ImVec4( 0, 0, 0, 0 ) );
-        if( ImGui::ImageButton( (ImTextureID)m_BackIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 15, 15 } ) )
+        if( ImGui::ImageButton( (ImTextureID)m_BackIconHandle.Handle->GetID(), ImVec2{ 15, 15 } ) )
         {
             m_CurrentDirectory = m_CurrentDirectory.parent_path();
         }

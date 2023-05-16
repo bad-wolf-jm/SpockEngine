@@ -2,7 +2,6 @@
 #include "ImGuizmo.h"
 #include <vulkan/vulkan.h>
 
-
 namespace SE::Core::UI
 {
 
@@ -23,9 +22,9 @@ namespace SE::Core::UI
 
     bool ImageButton( SE::Core::UI::ImageHandle a_Texture, math::vec2 a_Size, math::vec4 a_Rect )
     {
-        return ImGui::ImageButton( (ImTextureID)a_Texture.Handle->GetVkDescriptorSet(), ImVec2{ a_Size.x, a_Size.y },
-            ImVec2{ a_Rect.x, a_Rect.y }, ImVec2{ a_Rect.z, a_Rect.w }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
-            ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f } );
+        return ImGui::ImageButton( (ImTextureID)a_Texture.Handle->GetID(), ImVec2{ a_Size.x, a_Size.y }, ImVec2{ a_Rect.x, a_Rect.y },
+                                   ImVec2{ a_Rect.z, a_Rect.w }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
+                                   ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f } );
     }
 
     bool Button( const char *a_Label, math::vec2 a_Size )
@@ -55,8 +54,8 @@ namespace SE::Core::UI
         }
     }
 
-    void ToggleButton(
-        const char *a_OnLabel, const char *a_OffLabel, bool l_State, math::vec2 a_Size, std::function<void( bool )> a_Action )
+    void ToggleButton( const char *a_OnLabel, const char *a_OffLabel, bool l_State, math::vec2 a_Size,
+                       std::function<void( bool )> a_Action )
     {
         ImVec2 l_Size = { a_Size.x, a_Size.y };
         if( l_State )
@@ -72,7 +71,7 @@ namespace SE::Core::UI
     }
 
     void ToggleButton( const char *a_OnLabel, const char *a_OffLabel, ImFont *a_Font, bool l_State, math::vec2 a_Size,
-        std::function<void( bool )> a_Action )
+                       std::function<void( bool )> a_Action )
     {
         ImGui::PushFont( a_Font );
         ToggleButton( a_OnLabel, a_OffLabel, l_State, a_Size, a_Action );
@@ -120,20 +119,19 @@ namespace SE::Core::UI
 
     void Image( SE::Core::UI::ImageHandle &a_Texture, math::vec2 a_Size, math::vec4 a_Rect )
     {
-        ImGui::Image( (ImTextureID)a_Texture.Handle->GetVkDescriptorSet(), ImVec2{ a_Size.x, a_Size.y }, ImVec2{ a_Rect.x, a_Rect.y },
-            ImVec2{ a_Rect.z, a_Rect.w } );
+        ImGui::Image( (ImTextureID)a_Texture.Handle->GetID(), ImVec2{ a_Size.x, a_Size.y }, ImVec2{ a_Rect.x, a_Rect.y },
+                      ImVec2{ a_Rect.z, a_Rect.w } );
     }
 
     void Image( SE::Core::UI::ImageHandle &a_Texture, math::vec2 a_Size )
     {
-        ImGui::Image(
-            (ImTextureID)a_Texture.Handle->GetVkDescriptorSet(), ImVec2{ a_Size.x, a_Size.y }, ImVec2{ 0, 0 }, ImVec2{ 1, 1 } );
+        ImGui::Image( (ImTextureID)a_Texture.Handle->GetID(), ImVec2{ a_Size.x, a_Size.y }, ImVec2{ 0, 0 }, ImVec2{ 1, 1 } );
     }
 
     void Image( SE::Core::UI::ImageHandle &a_Texture, math::ivec2 a_Size )
     {
-        ImGui::Image( (ImTextureID)a_Texture.Handle->GetVkDescriptorSet(), ImVec2{ (float)a_Size.x, (float)a_Size.y }, ImVec2{ 0, 0 },
-            ImVec2{ 1, 1 } );
+        ImGui::Image( (ImTextureID)a_Texture.Handle->GetID(), ImVec2{ (float)a_Size.x, (float)a_Size.y }, ImVec2{ 0, 0 },
+                      ImVec2{ 1, 1 } );
     }
 
     void Menu( const char *a_Label, std::function<void()> a_Elements )
@@ -145,36 +143,36 @@ namespace SE::Core::UI
         }
     }
 
-    bool Slider(
-        std::string a_Title, const char *a_DisplayTemplate, uint16_t a_MinValue, uint16_t a_MaxValue, uint16_t *a_CurrentValue )
+    bool Slider( std::string a_Title, const char *a_DisplayTemplate, uint16_t a_MinValue, uint16_t a_MaxValue,
+                 uint16_t *a_CurrentValue )
     {
-        bool changed = ImGui::SliderScalar(
-            a_Title.c_str(), ImGuiDataType_U16, a_CurrentValue, &a_MinValue, &a_MaxValue, a_DisplayTemplate, 1.0f );
+        bool changed = ImGui::SliderScalar( a_Title.c_str(), ImGuiDataType_U16, a_CurrentValue, &a_MinValue, &a_MaxValue,
+                                            a_DisplayTemplate, 1.0f );
 
         return changed;
     }
 
-    bool Slider(
-        std::string a_Title, const char *a_DisplayTemplate, uint32_t a_MinValue, uint32_t a_MaxValue, uint32_t *a_CurrentValue )
+    bool Slider( std::string a_Title, const char *a_DisplayTemplate, uint32_t a_MinValue, uint32_t a_MaxValue,
+                 uint32_t *a_CurrentValue )
     {
-        bool changed = ImGui::SliderScalar(
-            a_Title.c_str(), ImGuiDataType_U32, a_CurrentValue, &a_MinValue, &a_MaxValue, a_DisplayTemplate, 1.0f );
+        bool changed = ImGui::SliderScalar( a_Title.c_str(), ImGuiDataType_U32, a_CurrentValue, &a_MinValue, &a_MaxValue,
+                                            a_DisplayTemplate, 1.0f );
 
         return changed;
     }
 
     bool Slider( std::string a_Title, const char *a_DisplayTemplate, int32_t a_MinValue, int32_t a_MaxValue, int32_t *a_CurrentValue )
     {
-        bool changed = ImGui::SliderScalar(
-            a_Title.c_str(), ImGuiDataType_S32, a_CurrentValue, &a_MinValue, &a_MaxValue, a_DisplayTemplate, 1.0f );
+        bool changed = ImGui::SliderScalar( a_Title.c_str(), ImGuiDataType_S32, a_CurrentValue, &a_MinValue, &a_MaxValue,
+                                            a_DisplayTemplate, 1.0f );
 
         return changed;
     }
 
     bool Slider( std::string a_Title, const char *a_DisplayTemplate, float a_MinValue, float a_MaxValue, float *a_CurrentValue )
     {
-        bool changed = ImGui::SliderScalar(
-            a_Title.c_str(), ImGuiDataType_Float, a_CurrentValue, &a_MinValue, &a_MaxValue, a_DisplayTemplate, 0 );
+        bool changed = ImGui::SliderScalar( a_Title.c_str(), ImGuiDataType_Float, a_CurrentValue, &a_MinValue, &a_MaxValue,
+                                            a_DisplayTemplate, 0 );
 
         return changed;
     }
@@ -187,22 +185,16 @@ namespace SE::Core::UI
         ImGuizmo::OPERATION l_Op;
         switch( a_Config.Type )
         {
-        case ManipulationType::TRANSLATION:
-            l_Op = ImGuizmo::OPERATION::TRANSLATE;
-            break;
-        case ManipulationType::ROTATION:
-            l_Op = ImGuizmo::OPERATION::ROTATE;
-            break;
-        case ManipulationType::SCALE:
-            l_Op = ImGuizmo::OPERATION::SCALE;
-            break;
+        case ManipulationType::TRANSLATION: l_Op = ImGuizmo::OPERATION::TRANSLATE; break;
+        case ManipulationType::ROTATION: l_Op = ImGuizmo::OPERATION::ROTATE; break;
+        case ManipulationType::SCALE: l_Op = ImGuizmo::OPERATION::SCALE; break;
         }
 
         math::mat4 l_TransformationMatrix = a_Transform;
-        ImGuizmo::SetRect(
-            a_Config.ViewportPosition.x, a_Config.ViewportPosition.y, a_Config.ViewportSize.x, a_Config.ViewportSize.y );
+        ImGuizmo::SetRect( a_Config.ViewportPosition.x, a_Config.ViewportPosition.y, a_Config.ViewportSize.x,
+                           a_Config.ViewportSize.y );
         ImGuizmo::Manipulate( math::ptr( a_Config.WorldTransform ), math::ptr( l_GuizmoProj ), l_Op, ImGuizmo::WORLD,
-            math::ptr( l_TransformationMatrix ), nullptr, nullptr );
+                              math::ptr( l_TransformationMatrix ), nullptr, nullptr );
         if( ImGuizmo::IsUsing() )
         {
             a_Transform = l_TransformationMatrix;
@@ -213,8 +205,8 @@ namespace SE::Core::UI
     {
         auto cameraDistance = math::length( a_CameraPosition );
         cameraDistance      = ( cameraDistance == 0 ) ? 0.0001f : cameraDistance;
-        ImGuizmo::ViewManipulate(
-            math::ptr( a_CameraView ), cameraDistance, ImVec2{ a_Position.x, a_Position.y }, ImVec2{ 100.0f, 100.0f }, 0x88020202 );
+        ImGuizmo::ViewManipulate( math::ptr( a_CameraView ), cameraDistance, ImVec2{ a_Position.x, a_Position.y },
+                                  ImVec2{ 100.0f, 100.0f }, 0x88020202 );
 
         return ImRect( ImVec2{ a_Position.x, a_Position.y }, ImVec2{ a_Position.x, a_Position.y } + ImVec2{ 100.0f, 100.0f } )
             .Contains( ImGui::GetIO().MousePos );
@@ -259,19 +251,19 @@ namespace SE::Core::UI
 
         if( ImGui::BeginPopup( "mypicker", ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove ) )
         {
-            ImGui::ColorPicker4(
-                "##picker", (float *)&c, misc_flags | ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview );
+            ImGui::ColorPicker4( "##picker", (float *)&c,
+                                 misc_flags | ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview );
             ImGui::SameLine();
 
             ImGui::BeginGroup(); // Lock X position
 
             ImGui::Text( "Current" );
-            ImGui::ColorButton(
-                "##current", c, ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_AlphaPreviewHalf, ImVec2( 60, 40 ) );
+            ImGui::ColorButton( "##current", c, ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_AlphaPreviewHalf,
+                                ImVec2( 60, 40 ) );
 
             ImGui::Text( "Previous" );
             if( ImGui::ColorButton( "##previous", backup_color, ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_AlphaPreviewHalf,
-                    ImVec2( 60, 40 ) ) )
+                                    ImVec2( 60, 40 ) ) )
                 c = backup_color;
 
             ImGui::Separator();
@@ -336,8 +328,8 @@ namespace SE::Core::UI
             ImGui::Text( label.c_str() );
             SameLine();
         }
-        SetCursorPosition(
-            ImGui::GetCursorPos() + ImVec2( ( columnWidth - l_TextSize0.x ) + ( l_TextSize0.x > 0.0f ? 10.0f : 0.0f ), 0.0f ) );
+        SetCursorPosition( ImGui::GetCursorPos() +
+                           ImVec2( ( columnWidth - l_TextSize0.x ) + ( l_TextSize0.x > 0.0f ? 10.0f : 0.0f ), 0.0f ) );
 
         float l_ItemWidth = ( l_WindowSize.x - columnWidth - 3 * buttonSize.x - 25.0f ) / 3.0f;
         ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 } );
@@ -414,8 +406,8 @@ namespace SE::Core::UI
             ImGui::Text( label.c_str() );
             SameLine();
         }
-        SetCursorPosition(
-            ImGui::GetCursorPos() + ImVec2( ( columnWidth - l_TextSize0.x ) + ( l_TextSize0.x > 0.0f ? 10.0f : 0.0f ), 0.0f ) );
+        SetCursorPosition( ImGui::GetCursorPos() +
+                           ImVec2( ( columnWidth - l_TextSize0.x ) + ( l_TextSize0.x > 0.0f ? 10.0f : 0.0f ), 0.0f ) );
 
         float l_ItemWidth = ( l_WindowSize.x - columnWidth - 4 * buttonSize.x - 25.0f ) / 4.0f;
         ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 } );
@@ -491,7 +483,7 @@ namespace SE::Core::UI
     }
 
     bool VectorComponentEditor( const std::string &label, uint32_t ID, math::vec2 &values, float a_XMin, float a_XMax, float a_XStep,
-        float a_YMin, float a_YMax, float a_YStep, float resetValue, float columnWidth )
+                                float a_YMin, float a_YMax, float a_YStep, float resetValue, float columnWidth )
     {
         bool     Changed      = false;
         ImGuiIO &io           = ImGui::GetIO();
@@ -510,8 +502,8 @@ namespace SE::Core::UI
             ImGui::Text( label.c_str() );
             SameLine();
         }
-        SetCursorPosition(
-            ImGui::GetCursorPos() + ImVec2( ( columnWidth - l_TextSize0.x ) + ( l_TextSize0.x > 0.0f ? 10.0f : 0.0f ), 0.0f ) );
+        SetCursorPosition( ImGui::GetCursorPos() +
+                           ImVec2( ( columnWidth - l_TextSize0.x ) + ( l_TextSize0.x > 0.0f ? 10.0f : 0.0f ), 0.0f ) );
 
         float l_ItemWidth = ( l_WindowSize.x - columnWidth - 3 * buttonSize.x - 25.0f ) / 2.5f;
         ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 } );

@@ -13,7 +13,7 @@
 
 #include "Graphics/Vulkan/VkRenderPass.h"
 
-#include "SceneRenderPipeline.h"
+// #include "SceneRenderPipeline.h"
 
 namespace SE::Core
 {
@@ -35,14 +35,14 @@ namespace SE::Core
                          EffectProcessorCreateInfo aCreateInfo );
         ~EffectProcessor() = default;
 
-        void Render( Ref<Graphics::VkSampler2D> aImageSampler, Ref<IRenderContext> aRenderContext );
+        void Render( Ref<ISampler2D> aImageSampler, Ref<IRenderContext> aRenderContext );
 
         EffectProcessorCreateInfo Spec;
         Ref<IDescriptorSetLayout> PipelineLayout = nullptr;
         Ref<IDescriptorSet>       mTextures      = nullptr;
 
-        std::vector<Ref<IDescriptorSetLayout>> GetDescriptorSetLayout();
-        std::vector<sPushConstantRange>        GetPushConstantLayout();
+        // std::vector<Ref<IDescriptorSetLayout>> GetDescriptorSetLayout();
+        // std::vector<sPushConstantRange>        GetPushConstantLayout();
 
       private:
         Ref<IGraphicContext>   mGraphicContext    = nullptr;

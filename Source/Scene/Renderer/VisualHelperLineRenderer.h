@@ -16,7 +16,7 @@
 
 #include "Scene/VertexData.h"
 
-#include "SceneRenderPipeline.h"
+// #include "SceneRenderPipeline.h"
 
 namespace SE::Graphics
 {
@@ -30,7 +30,7 @@ namespace SE::Graphics
         Ref<sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
-    class VisualHelperLineRenderer : public SceneRenderPipeline<PositionData>
+    class VisualHelperLineRenderer// : public SceneRenderPipeline<PositionData>
     {
       public:
         struct CameraViewUniforms
