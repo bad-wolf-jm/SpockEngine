@@ -31,6 +31,11 @@ namespace SpockEngine
             set { mContent = value; UIDropdownButton_SetContent(mInstance, mContent.Instance); }
         }
 
+        public Math.vec2 ContentSize
+        {
+            set { UIDropdownButton_SetContentSize(mInstance, value); }
+        }
+
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIDropdownButton_Create();
 
@@ -39,6 +44,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static bool UIDropdownButton_SetContent(ulong aInstance, ulong aContent);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static bool UIDropdownButton_SetContentSize(ulong aInstance, Math.vec2 aSize);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIDropdownButton_SetImage(ulong aInstance, ulong aImage);

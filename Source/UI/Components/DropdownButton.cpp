@@ -23,6 +23,7 @@ namespace SE::Core
     ImVec2 UIDropdownButton::RequiredSize() { return mLayout->RequiredSize(); }
 
     void UIDropdownButton::SetContent( UIComponent *aContent ) { mContent = aContent; }
+    void UIDropdownButton::SetContentSize( math::vec2 aSize ) { mContentSize = ImVec2{ aSize.x, aSize.y }; }
     void UIDropdownButton::SetText( std::string aText )
     {
         mText->SetText( aText );
@@ -56,11 +57,12 @@ namespace SE::Core
         if( mContent != nullptr )
         {
             ImGui::SetNextWindowPos( ImGui::GetCursorScreenPos() );
-            ImGui::SetNextWindowSize( mContent->RequiredSize() );
 
+            auto lContentSize = ( ( mContentSize.x > 0.0 ) && ( mContentSize.y > 0.0 ) ) ? mContentSize : mContent->RequiredSize();
+            ImGui::SetNextWindowSize( lContentSize );
             if( ImGui::BeginPopup( "##add_component" ) )
             {
-                mContent->Update( ImVec2{}, mContent->RequiredSize() );
+                mContent->Update( ImVec2{}, lContentSize );
                 ImGui::EndPopup();
             }
         }
@@ -81,6 +83,13 @@ namespace SE::Core
         auto lContent  = static_cast<UIComponent *>( aContent );
 
         return lInstance->SetContent( lContent );
+    }
+
+    void UIDropdownButton::UIDropdownButton_SetContentSize( void *aInstance, math::vec2 aContentSizse )
+    {
+        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
+
+        return lInstance->SetContentSize( aContentSizse );
     }
 
     void UIDropdownButton::UIDropdownButton_SetImage( void *aInstance, void *aImage )

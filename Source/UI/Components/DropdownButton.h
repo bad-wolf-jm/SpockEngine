@@ -18,7 +18,9 @@ namespace SE::Core
         void SetText( std::string aValue );
         void SetImage( UIBaseImage *aValue );
         void SetContent( UIComponent *aValue );
+        void SetContentSize( math::vec2 aSize );
         void SetTextColor( math::vec4 aColor );
+
         ImVec2 RequiredSize();
 
       private:
@@ -29,6 +31,7 @@ namespace SE::Core
         Ref<UIBoxLayout>   mLayout = nullptr;
 
         UIComponent *mContent = nullptr;
+        ImVec2       mContentSize{};
 
       private:
         void PushStyles();
@@ -39,6 +42,7 @@ namespace SE::Core
         static void *UIDropdownButton_Create();
         static void  UIDropdownButton_Destroy( void *aInstance );
         static void  UIDropdownButton_SetContent( void *aInstance, void *aContent );
+        static void  UIDropdownButton_SetContentSize( void *aInstance, math::vec2 aSize );
         static void  UIDropdownButton_SetImage( void *aInstance, void *aImage );
         static void  UIDropdownButton_SetText( void *aInstance, void *aText );
         static void  UIDropdownButton_SetTextColor( void *aInstance, math::vec4 aColor );
