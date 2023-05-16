@@ -109,11 +109,11 @@ namespace SE::Core
         SpotlightShadowSetLayout   = GetSpotlightShadowSetLayout( mGraphicContext );
         PointLightShadowSetLayout  = GetPointLightShadowSetLayout( mGraphicContext );
 
-        mPipeline.AddDescriptorSet( CameraSetLayout );
-        mPipeline.AddDescriptorSet( TextureSetLayout );
-        mPipeline.AddDescriptorSet( DirectionalShadowSetLayout );
-        mPipeline.AddDescriptorSet( SpotlightShadowSetLayout );
-        mPipeline.AddDescriptorSet( PointLightShadowSetLayout );
+        mPipeline->AddDescriptorSet( CameraSetLayout );
+        mPipeline->AddDescriptorSet( TextureSetLayout );
+        mPipeline->AddDescriptorSet( DirectionalShadowSetLayout );
+        mPipeline->AddDescriptorSet( SpotlightShadowSetLayout );
+        mPipeline->AddDescriptorSet( PointLightShadowSetLayout );
         // auto &lCameraDescriptorSet = mPipeline->AddDescriptorSet();
         // lCameraDescriptorSet.Add( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
         // lCameraDescriptorSet.Add( 1, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );

@@ -17,7 +17,7 @@
 #include "Scene/ParticleData.h"
 #include "Scene/VertexData.h"
 
-#include "SceneRenderPipeline.h"
+// #include "SceneRenderPipeline.h"
 
 namespace SE::Graphics
 {
@@ -31,7 +31,7 @@ namespace SE::Graphics
         Ref<SE::Graphics::sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
-    class VisualHelperMeshRenderer : public SE::Core::SceneRenderPipeline<SimpleVertexData>
+    class VisualHelperMeshRenderer// : public SE::Core::SceneRenderPipeline<SimpleVertexData>
     {
       public:
         struct CameraViewUniforms

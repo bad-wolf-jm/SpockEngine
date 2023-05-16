@@ -67,11 +67,11 @@ namespace SE::Editor
         Ref<ForwardSceneRenderer> mForwardRenderer    = nullptr;
         Ref<RayTracingRenderer>   mRayTracingRenderer = nullptr;
 
-        Ref<VkSampler2D> mOffscreenRenderTargetTexture = nullptr;
-        ImageHandle      mOffscreenRenderTargetDisplayHandle{};
+        Ref<ISampler2D> mOffscreenRenderTargetTexture = nullptr;
+        ImageHandle     mOffscreenRenderTargetDisplayHandle{};
 
-        Ref<VkSampler2D> mDeferredRenderTargetTexture = nullptr;
-        ImageHandle      mDeferredRenderTargetDisplayHandle{};
+        Ref<ISampler2D> mDeferredRenderTargetTexture = nullptr;
+        ImageHandle     mDeferredRenderTargetDisplayHandle{};
 
         Entity m_SensorEntity{};
     };

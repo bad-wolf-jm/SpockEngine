@@ -71,7 +71,7 @@ namespace SE::Core
         lAttachmentCreateInfo.mStoreOp    = eAttachmentStoreOp::STORE;
         mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
         mGeometryRenderTarget->Finalize();
-        mGeometryContext = VkRenderContext( mGraphicContext, mGeometryRenderTarget );
+        mGeometryContext = CreateRenderContext( mGraphicContext, mGeometryRenderTarget );
 
         sRenderTargetDescription lLightingSpec{};
         lLightingSpec.mWidth       = aOutputWidth;
@@ -100,23 +100,18 @@ namespace SE::Core
         mLightingRendererCI.RenderPass = mLightingContext.GetRenderPass();
         mLightingRenderer              = DeferredLightingRenderer( mGraphicContext, mLightingRendererCI );
 
-        mGeometrySamplers["POSITION"] =
-            CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "POSITION" ), sTextureSamplingInfo{} );
-        mLightingPassTextures->Write( mGeometrySamplers["POSITION"], 0 );
-
-        mGeometrySamplers["NORMALS"] =
-            CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "NORMALS" ), sTextureSamplingInfo{} );
-        mLightingPassTextures->Write( mGeometrySamplers["NORMALS"], 1 );
-
-        mGeometrySamplers["ALBEDO"] =
-            CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "ALBEDO" ), sTextureSamplingInfo{} );
-        mLightingPassTextures->Write( mGeometrySamplers["ALBEDO"], 2 );
-
+        mGeometrySamplers["POSITION"] = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "POSITION" ) );
+        mGeometrySamplers["NORMALS"]  = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "NORMALS" ) );
+        mGeometrySamplers["ALBEDO"]   = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "ALBEDO" ) );
         mGeometrySamplers["AO_METAL_ROUGH"] =
-            CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "AO_METAL_ROUGH" ), sTextureSamplingInfo{} );
+            CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "AO_METAL_ROUGH" ) );
+
+        mLightingPassTextures->Write( mGeometrySamplers["POSITION"], 0 );
+        mLightingPassTextures->Write( mGeometrySamplers["NORMALS"], 1 );
+        mLightingPassTextures->Write( mGeometrySamplers["ALBEDO"], 2 );
         mLightingPassTextures->Write( mGeometrySamplers["AO_METAL_ROUGH"], 3 );
 
-        mFxaaSampler = CreateSampler2D( mGraphicContext, mLightingRenderTarget->GetAttachment( "OUTPUT" ), sTextureSamplingInfo{} );
+        mFxaaSampler = CreateSampler2D( mGraphicContext, mLightingRenderTarget->GetAttachment( "OUTPUT" ) );
 
         sRenderTargetDescription lFxaaSpec{};
         lFxaaSpec.mWidth       = aOutputWidth;
@@ -151,7 +146,7 @@ namespace SE::Core
         mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lCopyCreateInfo );
     }
 
-    Ref<VkTexture2D> DeferredRenderer::GetOutputImage()
+    Ref<ITexture2D> DeferredRenderer::GetOutputImage()
     {
         //
         return mFxaaRenderTarget->GetAttachment( "OUTPUT" );
@@ -207,45 +202,45 @@ namespace SE::Core
         return lCreateInfo;
     }
 
-    MeshRenderer &DeferredRenderer::GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification )
+    Ref<MeshRenderer> DeferredRenderer::GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification )
     {
         if( mMeshRenderers.find( aPipelineSpecification ) == mMeshRenderers.end() )
-            mMeshRenderers[aPipelineSpecification] = MeshRenderer( mGraphicContext, aPipelineSpecification );
+            mMeshRenderers[aPipelineSpecification] = New<MeshRenderer>( mGraphicContext, aPipelineSpecification );
 
         return mMeshRenderers[aPipelineSpecification];
     }
 
-    MeshRenderer &DeferredRenderer::GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification )
+    Ref<MeshRenderer> DeferredRenderer::GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification )
     {
         MeshRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 
         return GetRenderPipeline( lCreateInfo );
     }
 
-    MeshRenderer &DeferredRenderer::GetRenderPipeline( sMeshRenderData &aPipelineSpecification )
+    Ref<MeshRenderer> DeferredRenderer::GetRenderPipeline( sMeshRenderData &aPipelineSpecification )
     {
         MeshRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 
         return GetRenderPipeline( lCreateInfo );
     }
 
-    ParticleSystemRenderer &DeferredRenderer::GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification )
+    Ref<ParticleSystemRenderer> DeferredRenderer::GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification )
     {
         if( mParticleRenderers.find( aPipelineSpecification ) == mParticleRenderers.end() )
             mParticleRenderers[aPipelineSpecification] =
-                ParticleSystemRenderer( mGraphicContext, mGeometryContext, aPipelineSpecification );
+                New<ParticleSystemRenderer>( mGraphicContext, mGeometryContext, aPipelineSpecification );
 
         return mParticleRenderers[aPipelineSpecification];
     }
 
-    ParticleSystemRenderer &DeferredRenderer::GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification )
+    Ref<ParticleSystemRenderer> DeferredRenderer::GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification )
     {
         ParticleRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 
         return GetRenderPipeline( lCreateInfo );
     }
 
-    ParticleSystemRenderer &DeferredRenderer::GetRenderPipeline( sParticleRenderData &aPipelineSpecification )
+    Ref<ParticleSystemRenderer> DeferredRenderer::GetRenderPipeline( sParticleRenderData &aPipelineSpecification )
     {
         ParticleRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 

@@ -6,8 +6,8 @@
 
 #include "Scene/Components.h"
 
-#include "Scene/Components/VisualHelpers.h"
 #include "Core/Entity/EditComponent.h"
+#include "Scene/Components/VisualHelpers.h"
 
 using namespace SE::Core::EntityComponentSystem::Components;
 
@@ -107,7 +107,7 @@ namespace SE::Editor
         }
     };
 
-   static bool EditComponent( sStaticMeshComponent &aComponent )
+    static bool EditComponent( sStaticMeshComponent &aComponent )
     {
         UI::Text( "Class:" );
         UI::Text( "{}", aComponent.mName );

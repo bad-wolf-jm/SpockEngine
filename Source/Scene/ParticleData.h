@@ -16,9 +16,9 @@ struct Particle
     math::vec4 Color;
 
 #ifndef __CUDACC__
-    static SE::Graphics::sBufferLayout GetDefaultLayout()
-    {
-        return { { "Position", eBufferDataType::VEC4, 0, 1 }, { "Color", eBufferDataType::VEC4, 0, 2 } };
-    }
+    // static SE::Graphics::sBufferLayout GetDefaultLayout()
+    // {
+    //     return { { "Position", eBufferDataType::VEC4, 0, 1 }, { "Color", eBufferDataType::VEC4, 0, 2 } };
+    // }
 #endif
 };

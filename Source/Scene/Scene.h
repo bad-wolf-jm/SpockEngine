@@ -8,9 +8,9 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-#include "Graphics/Vulkan/DescriptorSet.h"
-#include "Graphics/Vulkan/VkGraphicsPipeline.h"
-#include "Graphics/Vulkan/VkGraphicContext.h"
+// #include "Graphics/Vulkan/DescriptorSet.h"
+// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
+// #include "Graphics/Vulkan/IGraphicContext.h"
 
 #include "UI/UI.h"
 
@@ -50,7 +50,7 @@ namespace SE::Core
 
         typedef Entity Element;
 
-        Scene( Ref<VkGraphicContext> a_GraphicContext, Ref<SE::Core::UIContext> a_UI );
+        Scene( Ref<IGraphicContext> a_GraphicContext, Ref<SE::Core::UIContext> a_UI );
         Scene( Ref<Scene> aSource );
         Scene( Scene & ) = delete;
         ~Scene();
@@ -83,13 +83,12 @@ namespace SE::Core
         void UpdateAnimation( Entity &aAnimation, Timestep const &ts );
         void Render();
 
+        Element Root;
+        Element Environment;
         Element CurrentCamera;
         Element DefaultCamera;
 
-        Element Environment;
-        Element Root;
-
-        Ref<VkGraphicContext> GetGraphicContext() { return mGraphicContext; }
+        Ref<IGraphicContext> GetGraphicContext() { return mGraphicContext; }
 
         template <typename... Args>
         void ForEach( std::function<void( Element, Args &... )> a_ApplyFunction )
@@ -114,16 +113,16 @@ namespace SE::Core
 
         void SetViewport(math::vec2 aPosition, math::vec2 aSize);
 
-        Ref<VkGpuBuffer> mVertexBuffer            = nullptr;
-        Ref<VkGpuBuffer> mIndexBuffer             = nullptr;
-        Ref<VkGpuBuffer> mTransformedVertexBuffer = nullptr;
+        // Ref<VkGpuBuffer> mVertexBuffer            = nullptr;
+        // Ref<VkGpuBuffer> mIndexBuffer             = nullptr;
+        // Ref<VkGpuBuffer> mTransformedVertexBuffer = nullptr;
 
         math::mat4 mEditorView;
 
 
       private:
         eSceneState           mState = eSceneState::EDITING;
-        Ref<VkGraphicContext> mGraphicContext;
+        Ref<IGraphicContext> mGraphicContext;
         Ref<MaterialSystem>   mMaterialSystem;
 
         Ref<OptixDeviceContextObject> mRayTracingContext     = nullptr;

@@ -12,7 +12,8 @@ namespace SE::Editor
 {
     using namespace SE::Core;
 
-    template <typename _SliderType> class Slider
+    template <typename _SliderType>
+    class Slider
     {
       public:
         std::string ID = "";
@@ -38,12 +39,12 @@ namespace SE::Editor
     class TextureCombo
     {
       public:
-        std::string ID       = "";
-        uint32_t CurrentItem = 0;
-        float ThumbnailSize  = 50.0f;
-        bool Changed         = false;
+        std::string          ID            = "";
+        uint32_t             CurrentItem   = 0;
+        float                ThumbnailSize = 50.0f;
+        bool                 Changed       = false;
         UI::ComboBox<Entity> Dropdown;
-        Ref<Scene> g_World = nullptr;
+        Ref<Scene>           g_World = nullptr;
 
       public:
         TextureCombo() = default;
@@ -58,19 +59,17 @@ namespace SE::Editor
             Dropdown.Labels = { "No Texture" };
             Dropdown.Values = { Entity{} };
 
-            if( g_World == nullptr )
-                return;
+            if( g_World == nullptr ) return;
 
             std::vector<Entity> Textures = { Entity{} };
-            uint32_t n                   = 1;
+            uint32_t            n        = 1;
             g_World->ForEach<TextureComponent>(
                 [&]( auto a_Entity, auto &a_Component )
                 {
                     Dropdown.Labels.push_back( a_Entity.Get<sTag>().mValue );
                     Dropdown.Values.push_back( a_Entity );
 
-                    if( (uint32_t)a_Entity == (uint32_t)a_TextureEntity )
-                        Dropdown.CurrentItem = n;
+                    if( (uint32_t)a_Entity == (uint32_t)a_TextureEntity ) Dropdown.CurrentItem = n;
                     n++;
                 } );
             Dropdown.Display();
@@ -82,16 +81,18 @@ namespace SE::Editor
         }
     };
 
-    template <typename _ValueChooserType> class PropertyEditor
+    template <typename _ValueChooserType>
+    class PropertyEditor
     {
       public:
-        std::string Label;
-        float LabelWidth;
+        std::string       Label;
+        float             LabelWidth;
         _ValueChooserType ValueChooser;
 
         PropertyEditor( std::string ID ) { ValueChooser = _ValueChooserType( ID ); }
 
-        template <typename... _ArgTypes> void Display( _ArgTypes... a_ArgList )
+        template <typename... _ArgTypes>
+        void Display( _ArgTypes... a_ArgList )
         {
             float l_Width = UI::GetAvailableContentSpace().x;
             ImGui::AlignTextToFramePadding();
@@ -106,10 +107,10 @@ namespace SE::Editor
     class MaterialTextureChooser
     {
       public:
-        std::string ID = "";
+        std::string  ID = "";
         TextureCombo Dropdown;
-        float ThumbnailSize = 56.0f;
-        bool Changed        = false;
+        float        ThumbnailSize = 56.0f;
+        bool         Changed       = false;
 
       public:
         MaterialTextureChooser() = default;
@@ -120,10 +121,11 @@ namespace SE::Editor
 
         void Display( Entity &a_TextureEntity )
         {
-            auto &l_ItemPosition   = UI::GetCurrentCursorPosition();
-            auto &l_TextPosition   = UI::GetCurrentCursorPosition() + math::vec2( ThumbnailSize + 9.0f, ( ThumbnailSize - 30.0f ) / 2.0f );
+            auto &l_ItemPosition = UI::GetCurrentCursorPosition();
+            auto &l_TextPosition =
+                UI::GetCurrentCursorPosition() + math::vec2( ThumbnailSize + 9.0f, ( ThumbnailSize - 30.0f ) / 2.0f );
             ImDrawList *l_DrawList = ImGui::GetWindowDrawList();
-            ImVec2 pos             = ImGui::GetCursorScreenPos();
+            ImVec2      pos        = ImGui::GetCursorScreenPos();
             if( a_TextureEntity.Has<TextureComponent>() )
             {
                 if( a_TextureEntity.Has<TexturePreviewComponent>() )
@@ -150,7 +152,8 @@ namespace SE::Editor
                 }
                 ImGui::EndDragDropTarget();
             }
-            l_DrawList->AddRect( ImVec2{ pos.x, pos.y }, ImVec2{ pos.x + ThumbnailSize, pos.y + ThumbnailSize }, IM_COL32( 255, 255, 0, 255 ) );
+            l_DrawList->AddRect( ImVec2{ pos.x, pos.y }, ImVec2{ pos.x + ThumbnailSize, pos.y + ThumbnailSize },
+                                 IM_COL32( 255, 255, 0, 255 ) );
 
             UI::SetCursorPosition( l_TextPosition );
             ImGui::SetNextItemWidth( 225.0f );
@@ -164,8 +167,7 @@ namespace SE::Editor
 
     void MaterialEditor::Display( int32_t width, int32_t height )
     {
-        if( !ElementToEdit )
-            return;
+        if( !ElementToEdit ) return;
 
         float l_LabelSize = 175.0f;
 
@@ -213,7 +215,8 @@ namespace SE::Editor
         char buf[128] = { 0 };
         if( ElementToEdit.Has<sTag>() )
         {
-            std::strncpy( buf, ElementToEdit.Get<sTag>().mValue.c_str(), std::min( ElementToEdit.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
+            std::strncpy( buf, ElementToEdit.Get<sTag>().mValue.c_str(),
+                          std::min( ElementToEdit.Get<sTag>().mValue.size(), std::size_t( 128 ) ) );
             if( ImGui::InputText( "##TAG_INPUT", buf, ARRAYSIZE( buf ), ImGuiInputTextFlags_EnterReturnsTrue ) )
             {
                 ElementToEdit.Get<sTag>().mValue = std::string( buf );
@@ -258,12 +261,12 @@ namespace SE::Editor
 
         UI::Text( "TEXTURES" );
 
-        bool l_MaterialTextureChanged = false;
-        auto &l_MaterialTextures      = ElementToEdit.Get<MaterialTexturesComponent>();
-        auto &l_TextureItemPosition   = UI::GetCurrentCursorPosition();
-        l_LabelSize                   = 110.0f;
-        float l_ItemHeight            = 64;
-        float l_LabelHeight           = ImGui::CalcTextSize( "Albedo Map" ).y;
+        bool  l_MaterialTextureChanged = false;
+        auto &l_MaterialTextures       = ElementToEdit.Get<MaterialTexturesComponent>();
+        auto &l_TextureItemPosition    = UI::GetCurrentCursorPosition();
+        l_LabelSize                    = 110.0f;
+        float l_ItemHeight             = 64;
+        float l_LabelHeight            = ImGui::CalcTextSize( "Albedo Map" ).y;
         UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2{ 0.0f, ( l_ItemHeight - l_LabelHeight ) / 2.0f } );
         UI::Text( "Albedo Map" );
         UI::SameLine();

@@ -28,10 +28,7 @@ namespace SE::Editor
     using namespace SE::Cuda;
     using namespace SE::Core::EntityComponentSystem::Components;
 
-    void BaseEditorApplication::RenderScene()
-    {
-        mDeferredRenderer->Render();
-    }
+    void BaseEditorApplication::RenderScene() { mDeferredRenderer->Render(); }
 
     void BaseEditorApplication::Update( Timestep ts )
     {
@@ -50,8 +47,8 @@ namespace SE::Editor
         lSamplingInfo.mNormalizedCoordinates = true;
         lSamplingInfo.mNormalizedValues      = true;
 
-        mOffscreenRenderTargetTexture = New<VkSampler2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
-                                                          mDeferredRenderer->GetOutputImage(), lSamplingInfo );
+        mOffscreenRenderTargetTexture = New<ISampler2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
+                                                         mDeferredRenderer->GetOutputImage(), lSamplingInfo );
 
         if( !mOffscreenRenderTargetDisplayHandle.Handle )
         {
@@ -122,9 +119,8 @@ namespace SE::Editor
 
         mDeferredRenderer->mRenderCoordinateGrid = true;
 
-
-        mDeferredRenderer->View.CameraPosition   = math::vec3( 0.0f, 1.0f, 7.5f );
-        mDeferredRenderer->View.ModelFraming     = math::mat4( 0.5f );
+        mDeferredRenderer->View.CameraPosition = math::vec3( 0.0f, 1.0f, 7.5f );
+        mDeferredRenderer->View.ModelFraming   = math::mat4( 0.5f );
         mDeferredRenderer->View.View = math::Inverse( math::Translate( math::mat4( 1.0f ), mDeferredRenderer->View.CameraPosition ) );
     }
 } // namespace SE::Editor

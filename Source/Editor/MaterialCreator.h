@@ -2,7 +2,6 @@
 
 #include "Core/EntityCollection/Collection.h"
 
-
 #include "PopupWindow.h"
 
 using namespace SE::Core;

@@ -103,11 +103,10 @@ namespace SE::Core
         ShadowMatrices( const ShadowMatrices & ) = default;
     };
 
-
     struct OmniShadowMatrices
     {
         math::mat4 mMVP;
-	    math::vec4 mLightPos;
+        math::vec4 mLightPos;
 
         OmniShadowMatrices()  = default;
         ~OmniShadowMatrices() = default;
@@ -147,12 +146,12 @@ namespace SE::Core
         uint32_t mMaterialID = 0;
 
         // Buffer data
-        Ref<VkGpuBuffer> mVertexBuffer = nullptr;
-        Ref<VkGpuBuffer> mIndexBuffer  = nullptr;
-        uint32_t         mVertexOffset = 0;
-        uint32_t         mVertexCount  = 0;
-        uint32_t         mIndexOffset  = 0;
-        uint32_t         mIndexCount   = 0;
+        Ref<IGraphicBuffer> mVertexBuffer = nullptr;
+        Ref<IGraphicBuffer> mIndexBuffer  = nullptr;
+        uint32_t            mVertexOffset = 0;
+        uint32_t            mVertexCount  = 0;
+        uint32_t            mIndexOffset  = 0;
+        uint32_t            mIndexCount   = 0;
 
         sMeshRenderData( sStaticMeshComponent const &aMesh, sMaterialComponent const &aMaterialID,
                          sMaterialShaderComponent const &aShader );
@@ -160,11 +159,11 @@ namespace SE::Core
 
     struct sParticleRenderData
     {
-        math::mat4       mModel         = math::mat4( 1.0f );
-        uint32_t         mParticleCount = 0;
-        float            mLineWidth     = 1.0f;
-        float            mParticleSize  = 1.0f;
-        Ref<VkGpuBuffer> mParticles     = nullptr;
+        math::mat4          mModel         = math::mat4( 1.0f );
+        uint32_t            mParticleCount = 0;
+        float               mLineWidth     = 1.0f;
+        float               mParticleSize  = 1.0f;
+        Ref<IGraphicBuffer> mParticles     = nullptr;
 
         sParticleRenderData( sParticleSystemComponent const &aParticles, sParticleShaderComponent const &aShader );
     };

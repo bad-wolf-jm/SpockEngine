@@ -12,7 +12,8 @@
 
 #include "Core/CUDA/Array/CudaBuffer.h"
 
-#include "Graphics/Vulkan/VkGpuBuffer.h"
+// #include "Graphics/Vulkan/IGraphicBuffer.h"
+#include "Graphics/API.h"
 
 #include "Scene/Importer/ImporterData.h"
 
@@ -157,14 +158,14 @@ namespace SE::Core::EntityComponentSystem::Components
     {
         std::string mName = "";
 
-        ePrimitiveTopology mPrimitive         = ePrimitiveTopology::TRIANGLES;
-        Ref<VkGpuBuffer>   mVertexBuffer      = nullptr;
-        Ref<VkGpuBuffer>   mIndexBuffer       = nullptr;
-        Ref<VkGpuBuffer>   mTransformedBuffer = nullptr;
-        uint32_t           mVertexOffset      = 0;
-        uint32_t           mVertexCount       = 0;
-        uint32_t           mIndexOffset       = 0;
-        uint32_t           mIndexCount        = 0;
+        ePrimitiveTopology  mPrimitive         = ePrimitiveTopology::TRIANGLES;
+        Ref<IGraphicBuffer> mVertexBuffer      = nullptr;
+        Ref<IGraphicBuffer> mIndexBuffer       = nullptr;
+        Ref<IGraphicBuffer> mTransformedBuffer = nullptr;
+        uint32_t            mVertexOffset      = 0;
+        uint32_t            mVertexCount       = 0;
+        uint32_t            mIndexOffset       = 0;
+        uint32_t            mIndexCount        = 0;
 
         sStaticMeshComponent()                               = default;
         sStaticMeshComponent( const sStaticMeshComponent & ) = default;
@@ -174,9 +175,9 @@ namespace SE::Core::EntityComponentSystem::Components
     {
         std::string Name = "";
 
-        Ref<VkGpuBuffer> Particles     = nullptr;
-        uint32_t         ParticleCount = 0;
-        float            ParticleSize  = 0.0f;
+        Ref<IGraphicBuffer> Particles     = nullptr;
+        uint32_t            ParticleCount = 0;
+        float               ParticleSize  = 0.0f;
 
         sParticleSystemComponent()                                   = default;
         sParticleSystemComponent( const sParticleSystemComponent & ) = default;

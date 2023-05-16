@@ -16,9 +16,9 @@ namespace SE::Core
 
     struct EmptyVertexData
     {
-#ifndef __CUDACC__
-        static SE::Graphics::sBufferLayout GetDefaultLayout() { return {}; }
-#endif
+// #ifndef __CUDACC__
+//         static SE::Graphics::sBufferLayout GetDefaultLayout() { return {}; }
+// #endif
     };
 
     struct VertexData
@@ -29,19 +29,19 @@ namespace SE::Core
         vec4 Bones       = { 0.0f, 0.0f, 0.0f, 0.0f };
         vec4 Weights     = { 0.0f, 0.0f, 0.0f, 0.0f };
 
-#ifndef __CUDACC__
-        // clang-format off
-        static SE::Graphics::sBufferLayout GetDefaultLayout()
-        {
-            return {
-                { "Position",   eBufferDataType::VEC3, 0, 0 },
-                { "Normal",     eBufferDataType::VEC3, 0, 1 },
-                { "TexCoord_0", eBufferDataType::VEC2, 0, 2 },
-                { "Bones",      eBufferDataType::VEC4, 0, 3 },
-                { "Weights",    eBufferDataType::VEC4, 0, 4 } };
-        }
-        // clang-format on
-#endif
+// #ifndef __CUDACC__
+//         // clang-format off
+//         static SE::Graphics::sBufferLayout GetDefaultLayout()
+//         {
+//             return {
+//                 { "Position",   eBufferDataType::VEC3, 0, 0 },
+//                 { "Normal",     eBufferDataType::VEC3, 0, 1 },
+//                 { "TexCoord_0", eBufferDataType::VEC2, 0, 2 },
+//                 { "Bones",      eBufferDataType::VEC4, 0, 3 },
+//                 { "Weights",    eBufferDataType::VEC4, 0, 4 } };
+//         }
+//         // clang-format on
+// #endif
     };
 
     struct SimpleVertexData
@@ -51,13 +51,13 @@ namespace SE::Core
 
 #ifndef __CUDACC__
         // clang-format off
-        static SE::Graphics::sBufferLayout GetDefaultLayout()
-        {
-            return {
-                { "Position", eBufferDataType::VEC3, 0, 0 },
-                { "Normal",   eBufferDataType::VEC3, 0, 1 }
-            };
-        }
+        // static SE::Graphics::sBufferLayout GetDefaultLayout()
+        // {
+        //     return {
+        //         { "Position", eBufferDataType::VEC3, 0, 0 },
+        //         { "Normal",   eBufferDataType::VEC3, 0, 1 }
+        //     };
+        // }
         // clang-format on
 #endif
     };
@@ -67,14 +67,14 @@ namespace SE::Core
         vec3 Position = { 0.0f, 0.0f, 0.0f };
 
 #ifndef __CUDACC__
-        // clang-format off
-        static SE::Graphics::sBufferLayout GetDefaultLayout()
-        {
-            return {
-                { "Position", eBufferDataType::VEC3, 0, 0 }
-            };
-        }
-        // clang-format on
+        // // clang-format off
+        // static SE::Graphics::sBufferLayout GetDefaultLayout()
+        // {
+        //     return {
+        //         { "Position", eBufferDataType::VEC3, 0, 0 }
+        //     };
+        // }
+        // // clang-format on
 #endif
     };
 
@@ -84,15 +84,15 @@ namespace SE::Core
         vec4 Color    = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 #ifndef __CUDACC__
-        // clang-format off
-        static SE::Graphics::sBufferLayout GetDefaultLayout()
-        {
-            return {
-                { "Position", eBufferDataType::VEC3, 0, 0 },
-                { "Color", eBufferDataType::VEC4, 0, 1 }
-            };
-        }
-        // clang-format on
+        // // clang-format off
+        // static SE::Graphics::sBufferLayout GetDefaultLayout()
+        // {
+        //     return {
+        //         { "Position", eBufferDataType::VEC3, 0, 0 },
+        //         { "Color", eBufferDataType::VEC4, 0, 1 }
+        //     };
+        // }
+        // // clang-format on
 #endif
     };
 

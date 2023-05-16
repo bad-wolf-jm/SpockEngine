@@ -22,10 +22,10 @@ namespace SE::Editor
     class SceneHierarchyPanel
     {
       public:
-        Ref<Scene> World = nullptr;
-        Entity SelectedElement{};
+        Ref<Scene>         World = nullptr;
+        Entity             SelectedElement{};
         SceneElementEditor ElementEditor{};
-        bool RequestEditSceneElement = false;
+        bool               RequestEditSceneElement = false;
 
       public:
         SceneHierarchyPanel()  = default;

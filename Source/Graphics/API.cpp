@@ -105,6 +105,11 @@ namespace SE::Graphics
         }
     }
 
+    Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData )
+    {
+        return CreateSampler2D(aGraphicContext, aTextureData, sTextureSamplingInfo{});
+    }
+
     Ref<IGraphicsPipeline> CreateGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
                                                    ePrimitiveTopology aTopology )
     {

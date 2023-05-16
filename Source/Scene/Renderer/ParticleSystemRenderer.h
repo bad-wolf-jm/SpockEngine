@@ -17,7 +17,7 @@
 #include "Scene/ParticleData.h"
 #include "Scene/VertexData.h"
 
-#include "SceneRenderPipeline.h"
+// #include "SceneRenderPipeline.h"
 
 namespace SE::Graphics
 {
@@ -59,7 +59,7 @@ namespace SE::Graphics
         }
     };
 
-    class ParticleSystemRenderer : public SE::Core::SceneRenderPipeline<PositionData>
+    class ParticleSystemRenderer// : public SE::Core::SceneRenderPipeline<PositionData>
     {
       public:
         struct ParticleData

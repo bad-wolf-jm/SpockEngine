@@ -42,33 +42,37 @@ namespace SE::Core
         return lNewLayout;
     }
 
-    std::vector<Ref<IDescriptorSetLayout>> MeshRenderer::GetDescriptorSetLayout()
-    {
-        return { CameraSetLayout, TextureSetLayout, NodeSetLayout };
-    }
+    // std::vector<Ref<IDescriptorSetLayout>> MeshRenderer::GetDescriptorSetLayout()
+    // {
+    //     return { CameraSetLayout, TextureSetLayout, NodeSetLayout };
+    // }
 
-    std::vector<sPushConstantRange> MeshRenderer::GetPushConstantLayout()
-    {
-        return { { { eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( MaterialPushConstants ) } };
-    };
+    // std::vector<sPushConstantRange> MeshRenderer::GetPushConstantLayout()
+    // {
+    //     return { { { eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( MaterialPushConstants ) } };
+    // };
 
     MeshRenderer::MeshRenderer( Ref<IGraphicContext> aGraphicContext, MeshRendererCreateInfo const &aCreateInfo )
-        : SceneRenderPipeline<VertexData>( aGraphicContext )
-        , Spec{ aCreateInfo }
+        : Spec{ aCreateInfo }
     {
 
-        SceneRenderPipelineCreateInfo lCreateInfo{};
-        lCreateInfo.Opaque         = Spec.Opaque;
-        lCreateInfo.LineWidth      = Spec.LineWidth;
-        lCreateInfo.VertexShader   = Spec.VertexShader;
-        lCreateInfo.FragmentShader = Spec.FragmentShader;
-        lCreateInfo.RenderPass     = Spec.RenderPass;
+        mPipeline = CreateGraphicsPipeline( mGraphicContext, aRenderContext, ePrimitiveTopology::TRIANGLES );
+
+        mPipeline->SetCulling( eFaceCulling::BACK );
+        mPipeline->SetLineWidth( Spec.LineWidth );
+        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, Spec.VertexShader, "main" );
+        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, Spec.FragmentShader, "main" );
+        mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( MaterialPushConstants ) );
 
         CameraSetLayout  = GetCameraSetLayout( mGraphicContext );
         TextureSetLayout = GetTextureSetLayout( mGraphicContext );
         NodeSetLayout    = GetNodeSetLayout( mGraphicContext );
 
-        Initialize( lCreateInfo );
+        mPipeline->AddDescriptorSet( CameraSetLayout );
+        mPipeline->AddDescriptorSet( TextureSetLayout );
+        mPipeline->AddDescriptorSet( NodeSetLayout );
+
+        mPipeline->Build();
     }
 
 } // namespace SE::Core

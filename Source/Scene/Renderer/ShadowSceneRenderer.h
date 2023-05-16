@@ -28,7 +28,7 @@ namespace SE::Core
         Ref<VkRenderPass> RenderPass = nullptr;
     };
 
-    class ShadowMeshRenderer : public SceneRenderPipeline<VertexData>
+    class ShadowMeshRenderer //: public SceneRenderPipeline<VertexData>
     {
 
       public:
@@ -41,16 +41,15 @@ namespace SE::Core
         ShadowMeshRenderer() = default;
         ShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo );
 
-        static Ref<IDescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
-        static Ref<IDescriptorSetLayout> GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext );
-
+        // static Ref<IDescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
+        // static Ref<IDescriptorSetLayout> GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext );
         // std::vector<Ref<IDescriptorSetLayout>> GetDescriptorSetLayout();
         // std::vector<sPushConstantRange>        GetPushConstantLayout();
 
         ~ShadowMeshRenderer() = default;
     };
 
-    class OmniShadowMeshRenderer : public SceneRenderPipeline<VertexData>
+    class OmniShadowMeshRenderer// : public SceneRenderPipeline<VertexData>
     {
 
       public:

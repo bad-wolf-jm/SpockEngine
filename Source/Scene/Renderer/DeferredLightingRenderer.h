@@ -13,7 +13,7 @@
 
 #include "Scene/VertexData.h"
 
-#include "SceneRenderPipeline.h"
+// #include "SceneRenderPipeline.h"
 
 namespace SE::Core
 {
