@@ -57,9 +57,9 @@ namespace SE::Core::UI
         colors[ImGuiCol_ButtonHovered] = ImVec4( 0.52f, 0.52f, 0.52f, 0.09f );
         colors[ImGuiCol_ButtonActive]  = ImVec4( 0.76f, 0.76f, 0.76f, 0.0f );
 
-        colors[ImGuiCol_Separator]         = ImVec4( 0.2f, 0.2f, 0.2f, 1.f );
-        colors[ImGuiCol_SeparatorHovered]  = ImVec4( 0.2f, 0.2f, 0.4f, 1.f );
-        colors[ImGuiCol_SeparatorActive]   = ImVec4( 0.4f, 0.2f, 0.4f, 1.f );
+        colors[ImGuiCol_Separator]         = ImVec4( 0.05f, 0.05f, 0.05f, 1.f );
+        colors[ImGuiCol_SeparatorHovered]  = ImVec4( 0.02f, 0.02f, 0.04f, 1.f );
+        colors[ImGuiCol_SeparatorActive]   = ImVec4( 0.02f, 0.02f, 0.02f, 1.f );
         colors[ImGuiCol_ResizeGrip]        = ImVec4( 0.26f, 0.59f, 0.98f, 0.25f );
         colors[ImGuiCol_ResizeGripHovered] = ImVec4( 0.26f, 0.59f, 0.98f, 0.67f );
         colors[ImGuiCol_ResizeGripActive]  = ImVec4( 0.26f, 0.59f, 0.98f, 0.95f );
