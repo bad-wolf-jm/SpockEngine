@@ -128,7 +128,7 @@ namespace SE::Editor
         return false;
     }
 
-    static bool EditComponent( SE::Graphics::Ref<VkGraphicContext> aGraphicContext, sLightComponent &aComponent )
+    static bool EditComponent( SE::Graphics::Ref<IGraphicContext> aGraphicContext, sLightComponent &aComponent )
     {
         static UI::ComboBox<eLightType> lPrimitiveChooser( "##combo_light_type_chooser" );
         lPrimitiveChooser.Labels = { "Point light", "Spotlight", "Directional light" };
@@ -206,7 +206,7 @@ namespace SE::Editor
         return false;
     }
 
-    SceneElementEditor::SceneElementEditor( Ref<VkGraphicContext> aGraphicContext )
+    SceneElementEditor::SceneElementEditor( Ref<IGraphicContext> aGraphicContext )
         : mGraphicContext{ aGraphicContext } {};
 
     void SceneElementEditor::Display( int32_t width, int32_t height )

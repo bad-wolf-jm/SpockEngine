@@ -94,13 +94,13 @@ namespace SE::Core
 
     void ShadowSceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight ) {}
 
-    Ref<VkRenderTarget> ShadowSceneRenderer::NewRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    Ref<IRenderTarget> ShadowSceneRenderer::NewRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
         sRenderTargetDescription lRenderTargetSpec{};
         lRenderTargetSpec.mWidth       = aOutputWidth;
         lRenderTargetSpec.mHeight      = aOutputHeight;
         lRenderTargetSpec.mSampleCount = 1;
-        auto lRenderTarget             = New<VkRenderTarget>( mGraphicContext, lRenderTargetSpec );
+        auto lRenderTarget             = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
 
         sAttachmentDescription lAttachmentCreateInfo{};
         lAttachmentCreateInfo.mIsSampled   = true;
@@ -199,7 +199,7 @@ namespace SE::Core
                     lRenderTargetSpec.mWidth       = 1024;
                     lRenderTargetSpec.mHeight      = 1024;
                     lRenderTargetSpec.mSampleCount = 1;
-                    auto lRenderTarget             = New<VkRenderTarget>( mGraphicContext, lRenderTargetSpec );
+                    auto lRenderTarget             = New<IRenderTarget>( mGraphicContext, lRenderTargetSpec );
 
                     sAttachmentDescription lAttachmentCreateInfo{};
                     lAttachmentCreateInfo.mFormat      = eColorFormat::R32_FLOAT;

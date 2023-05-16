@@ -83,7 +83,7 @@ namespace SE::Core
 
         ~ShadowSceneRenderer() = default;
 
-        Ref<ITexture2D> GetOutputImage();
+        Ref<ITexture> GetOutputImage();
 
         void Update( Ref<Scene> aWorld );
         void Render();

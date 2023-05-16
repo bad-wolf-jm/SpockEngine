@@ -80,6 +80,8 @@ namespace SE::Graphics
 
         ~IRenderTarget() = default;
 
+        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
+
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
                             Ref<ITexture> aFramebufferImage );
 
