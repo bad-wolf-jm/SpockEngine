@@ -20,6 +20,21 @@ namespace SE::Core
         {
             if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) ) continue;
 
+            if( lItem.mIsSeparator )
+            {
+                if( mOrientation == eBoxLayoutOrientation::HORIZONTAL )
+                {
+                    lWidth += 1.0f;
+                    lHeight = math::max( lHeight, 0.0f );
+                }
+                else
+                {
+                    lHeight += 1.0f;
+                    lWidth = math::max( lWidth, 0.0f );
+                }
+                continue;
+            }
+
             ImVec2 lRequiredSize{};
             if( lItem.mFixedSize > 0.0f )
             {
@@ -54,7 +69,7 @@ namespace SE::Core
             }
         }
 
-        return ImVec2{ lWidth, lHeight };
+        return ImVec2{ lWidth, lHeight } + UIComponent::RequiredSize();
     }
 
     void UIBoxLayout::SetItemSpacing( float aItemSpacing ) { mItemSpacing = aItemSpacing; }
@@ -78,14 +93,21 @@ namespace SE::Core
     void UIBoxLayout::Add( UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
                            eVerticalAlignment const &aVAlignment )
     {
-        mChildren.push_back( BoxLayoutItem{ aChild, aFixedSize, aExpand, aFill, aHAlignment, aVAlignment } );
+        mChildren.push_back( BoxLayoutItem{ aChild, aFixedSize, aExpand, aFill, false, aHAlignment, aVAlignment, ImVec4{} } );
+    }
+
+    void UIBoxLayout::AddSeparator()
+    {
+        mChildren.push_back( BoxLayoutItem{ nullptr, 0.0f, false, false, true, eHorizontalAlignment::CENTER,
+                                            eVerticalAlignment::CENTER, ImVec4{ 1.0f, 0.0f, 0.0f, 1.0f } } );
     }
 
     void UIBoxLayout::Clear() { mChildren.clear(); }
 
     void UIBoxLayout::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        uint32_t lExpandCount = 0;
+        auto     lGlobalPosition = ImGui::GetCursorScreenPos();
+        uint32_t lExpandCount    = 0;
 
         std::vector<BoxLayoutItem> lVisibleChildren;
         std::copy_if( mChildren.begin(), mChildren.end(), std::back_inserter( lVisibleChildren ),
@@ -97,7 +119,11 @@ namespace SE::Core
         {
             if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) ) continue;
 
-            if( lItem.mFixedSize > 0.0f )
+            if( lItem.mIsSeparator )
+            {
+                lTaken += 1.0f;
+            }
+            else if( lItem.mFixedSize > 0.0f )
             {
                 lTaken += lItem.mFixedSize;
             }
@@ -121,7 +147,7 @@ namespace SE::Core
             lExpandedSize = ImVec2{ aSize.x, ( aSize.y - lTaken ) / lExpandCount };
 
         ImVec2 lCurrentPosition = aPosition;
-        for( auto const &lItem : mChildren )
+        for( auto const &lItem : lVisibleChildren )
         {
             ImVec2 lItemSize{};
             ImVec2 lItemPosition{};
@@ -136,6 +162,13 @@ namespace SE::Core
                                             : GetContentAlignedposition( lItem.mHalign, lItem.mValign, lCurrentPosition, lItemSize,
                                                                          lExpandedSize );
                 lPositionStep = ( mOrientation == eBoxLayoutOrientation::VERTICAL ) ? lExpandedSize.y : lExpandedSize.x;
+            }
+            else if( lItem.mIsSeparator )
+            {
+                lItemSize.x   = ( mOrientation == eBoxLayoutOrientation::VERTICAL ) ? aSize.x : 1.0;
+                lItemSize.y   = ( mOrientation == eBoxLayoutOrientation::VERTICAL ) ? 1.0 : aSize.y;
+                lItemPosition = lCurrentPosition - aPosition;
+                lPositionStep = 1.0f;
             }
             else if( lItem.mFixedSize > 0.0f )
             {
@@ -182,6 +215,29 @@ namespace SE::Core
                 {
                     ImGui::EndChild();
                     ImGui::PopID();
+                }
+            }
+            else if( lItem.mIsSeparator )
+            {
+                ImGuiContext &g      = *GImGui;
+                ImGuiWindow  *window = g.CurrentWindow;
+                const ImU32 col = ImGui::GetColorU32(ImGuiCol_Separator);
+
+                if( mOrientation == eBoxLayoutOrientation::VERTICAL )
+                {
+                    float separator_min = lGlobalPosition.x + lItemPosition.x;
+                    float separator_max = separator_min + aSize.x;
+
+                    window->DrawList->AddLine( ImVec2( separator_min, lGlobalPosition.y + lItemPosition.y ),
+                                               ImVec2( separator_max, lGlobalPosition.y + lItemPosition.y ), col, 1.0f );
+                }
+                else
+                {
+                    float separator_min = lGlobalPosition.y + lItemPosition.y;
+                    float separator_max = separator_min + aSize.y;
+
+                    window->DrawList->AddLine( ImVec2( lGlobalPosition.x + lItemPosition.x, separator_min ),
+                                               ImVec2( lGlobalPosition.x + lItemPosition.x, separator_max ), col, 1.0f );
                 }
             }
 
@@ -233,6 +289,13 @@ namespace SE::Core
         auto lChild    = static_cast<UIComponent *>( aChild );
 
         lInstance->Add( lChild, aFixedSize, aExpand, aFill );
+    }
+
+    void UIBoxLayout::UIBoxLayout_AddSeparator( void *aInstance )
+    {
+        auto lInstance = static_cast<UIBoxLayout *>( aInstance );
+
+        lInstance->AddSeparator( );
     }
 
     void UIBoxLayout::UIBoxLayout_SetItemSpacing( void *aInstance, float aItemSpacing )

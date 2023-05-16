@@ -55,6 +55,12 @@ namespace SpockEngine
             UIBoxLayout_AddAlignedFixed(mInstance, lInstance, aFixedSize, aExpand, aFill, aHAlignment, aVAlignment);
         }
 
+        public void AddSeparator()
+        {
+            mItems.Add(null);
+            UIBoxLayout_AddSeparator(mInstance);
+        }
+
         public void Clear()
         {
             mItems.Clear();
@@ -75,6 +81,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIBoxLayout_AddNonAlignedFixed(ulong aInstance, ulong aChild, float aFixedSize, bool aExpand, bool aFill);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIBoxLayout_AddSeparator(ulong aInstance);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIBoxLayout_Destroy(ulong aInstance);

@@ -281,17 +281,16 @@ namespace SE::Core
     static void ICall( std::string const &aName, void *aFunction )
     {
         auto lFullName = fmt::format( "SpockEngine.{}", aName );
-        
+
         mono_add_internal_call( lFullName.c_str(), aFunction );
     }
 
-    #define SE_ADD_INTERNAL_CALL( Name ) mono_add_internal_call( "SpockEngine.CppCall::" #Name, Name )
+#define SE_ADD_INTERNAL_CALL( Name ) mono_add_internal_call( "SpockEngine.CppCall::" #Name, Name )
 
     void DotNetRuntime::RegisterInternalCppFunctions()
     {
         ICall( "CppCall::OpenFile", OpenFile );
         ICall( "UIColor::GetStyleColor", SE::Core::UI::GetStyleColor );
-
 
         SE_ADD_INTERNAL_CALL( Entity_Create );
         SE_ADD_INTERNAL_CALL( Entity_IsValid );
@@ -405,6 +404,7 @@ namespace SE::Core
         ICall( "UIBoxLayout::UIBoxLayout_AddNonAlignedNonFixed", UIBoxLayout::UIBoxLayout_AddNonAlignedNonFixed );
         ICall( "UIBoxLayout::UIBoxLayout_AddAlignedFixed", UIBoxLayout::UIBoxLayout_AddAlignedFixed );
         ICall( "UIBoxLayout::UIBoxLayout_AddNonAlignedFixed", UIBoxLayout::UIBoxLayout_AddNonAlignedFixed );
+        ICall( "UIBoxLayout::UIBoxLayout_AddSeparator", UIBoxLayout::UIBoxLayout_AddSeparator );
         ICall( "UIBoxLayout::UIBoxLayout_SetItemSpacing", UIBoxLayout::UIBoxLayout_SetItemSpacing );
         ICall( "UIBoxLayout::UIBoxLayout_Clear", UIBoxLayout::UIBoxLayout_Clear );
 
@@ -585,6 +585,7 @@ namespace SE::Core
         ICall( "UIDropdownButton::UIDropdownButton_Create", UIDropdownButton::UIDropdownButton_Create );
         ICall( "UIDropdownButton::UIDropdownButton_Destroy", UIDropdownButton::UIDropdownButton_Destroy );
         ICall( "UIDropdownButton::UIDropdownButton_SetContent", UIDropdownButton::UIDropdownButton_SetContent );
+        ICall( "UIDropdownButton::UIDropdownButton_SetContentSize", UIDropdownButton::UIDropdownButton_SetContentSize );
         ICall( "UIDropdownButton::UIDropdownButton_SetImage", UIDropdownButton::UIDropdownButton_SetImage );
         ICall( "UIDropdownButton::UIDropdownButton_SetText", UIDropdownButton::UIDropdownButton_SetText );
         ICall( "UIDropdownButton::UIDropdownButton_SetTextColor", UIDropdownButton::UIDropdownButton_SetTextColor );
