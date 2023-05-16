@@ -42,7 +42,7 @@ namespace SE::Core
         void Update( Ref<Scene> aWorld );
         void Render();
 
-        Ref<ITexture2D> GetOutputImage();
+        Ref<ITexture> GetOutputImage();
 
         MeshRendererCreateInfo     GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification );
         MeshRendererCreateInfo     GetRenderPipelineCreateInfo( sMeshRenderData &aPipelineSpecification );

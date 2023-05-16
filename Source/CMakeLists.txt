@@ -68,7 +68,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Optix/OptixAccelerationStructure.cpp
 
     Graphics/API.cpp
-    Graphics/Vulkan/DescriptorSet.cpp
+    # Graphics/Vulkan/DescriptorSet.cpp
     Graphics/Vulkan/VkRenderTarget.cpp
     Graphics/Vulkan/VkSwapChain.cpp
     Graphics/Vulkan/VkGpuBuffer.cpp

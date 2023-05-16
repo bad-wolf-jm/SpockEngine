@@ -31,9 +31,9 @@ namespace SE::Core
         mSceneDescriptors = New<DescriptorSet>( mGraphicContext, MeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
         mCameraUniformBuffer =
-            New<VkGpuBuffer>( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( WorldMatrices ) );
+            CreateBufer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( WorldMatrices ) );
         mShaderParametersBuffer =
-            New<VkGpuBuffer>( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraSettings ) );
+            CreateBufer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraSettings ) );
         mSceneDescriptors->Write( mCameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
         mSceneDescriptors->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
     }
@@ -72,7 +72,7 @@ namespace SE::Core
         lRenderTargetSpec.mWidth       = aOutputWidth;
         lRenderTargetSpec.mHeight      = aOutputHeight;
         lRenderTargetSpec.mSampleCount = mOutputSampleCount;
-        mGeometryRenderTarget          = New<VkRenderTarget>( mGraphicContext, lRenderTargetSpec );
+        mGeometryRenderTarget          = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
 
         sAttachmentDescription lAttachmentCreateInfo{};
         lAttachmentCreateInfo.mIsSampled   = true;
@@ -85,6 +85,7 @@ namespace SE::Core
             lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
             lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
             lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+
             mGeometryRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
 
             lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
@@ -281,7 +282,7 @@ namespace SE::Core
         mGeometryContext->EndRender();
     }
 
-    Ref<VkTexture2D> ForwardSceneRenderer::GetOutputImage()
+    Ref<ITexture> ForwardSceneRenderer::GetOutputImage()
     {
         //
         return mGeometryRenderTarget->GetAttachment( "OUTPUT" );

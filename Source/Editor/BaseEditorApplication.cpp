@@ -19,7 +19,7 @@
 #include "Scene/Components.h"
 #include "Scene/Importer/glTFImporter.h"
 
-#include "Mono/MonoRuntime.h"
+#include "DotNet/Runtime.h"
 
 namespace SE::Editor
 {
@@ -48,7 +48,7 @@ namespace SE::Editor
         lSamplingInfo.mNormalizedValues      = true;
 
         mOffscreenRenderTargetTexture = New<ISampler2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
-                                                         mDeferredRenderer->GetOutputImage(), lSamplingInfo );
+                                                         Cast<ITexture2D>(mDeferredRenderer->GetOutputImage()), lSamplingInfo );
 
         if( !mOffscreenRenderTargetDisplayHandle.Handle )
         {

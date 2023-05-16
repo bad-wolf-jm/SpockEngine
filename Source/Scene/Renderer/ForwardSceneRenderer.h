@@ -35,7 +35,7 @@ namespace SE::Core
 
         ~ForwardSceneRenderer() = default;
 
-        Ref<ITexture2D> GetOutputImage();
+        Ref<ITexture> GetOutputImage();
 
         void Update( Ref<Scene> aWorld );
         void Render();
@@ -61,8 +61,8 @@ namespace SE::Core
 
         Ref<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;
 
-        Ref<VkGpuBuffer> mCameraUniformBuffer    = nullptr;
-        Ref<VkGpuBuffer> mShaderParametersBuffer = nullptr;
+        Ref<IGraphicBuffer> mCameraUniformBuffer    = nullptr;
+        Ref<IGraphicBuffer> mShaderParametersBuffer = nullptr;
 
         Ref<IDescriptorSetLayout> mCameraSetLayout  = nullptr;
         Ref<IDescriptorSetLayout> mNodeSetLayout    = nullptr;

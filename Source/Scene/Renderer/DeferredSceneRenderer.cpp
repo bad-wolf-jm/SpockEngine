@@ -146,7 +146,7 @@ namespace SE::Core
         mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lCopyCreateInfo );
     }
 
-    Ref<ITexture2D> DeferredRenderer::GetOutputImage()
+    Ref<ITexture> DeferredRenderer::GetOutputImage()
     {
         //
         return mFxaaRenderTarget->GetAttachment( "OUTPUT" );
@@ -299,7 +299,7 @@ namespace SE::Core
             MeshRenderer::MaterialPushConstants lMaterialPushConstants{};
             lMaterialPushConstants.mMaterialID = lPipelineData.mMaterialID;
 
-            mGeometryContext.PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
+            mGeometryContext->PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
 
             mGeometryContext->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
         }
@@ -336,7 +336,7 @@ namespace SE::Core
                 lParticleData.ParticleSize  = lParticleSystem.mParticleSize;
                 lParticleData.Particles     = lParticleSystem.mParticles;
 
-                lPipeline.Render( View.Projection, View.View, mGeometryContext, lParticleData );
+                lPipeline->Render( View.Projection, View.View, mGeometryContext, lParticleData );
             }
 
             for( auto const &lLightGizmo : mLightGizmos )

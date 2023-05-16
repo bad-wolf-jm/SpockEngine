@@ -4,7 +4,7 @@
 #include "Core/Entity/Collection.h"
 #include "Core/Memory.h"
 
-#include "Graphics/Vulkan/VkGraphicContext.h"
+#include "Graphics/Api.h"
 #include "Scene/Scene.h"
 
 #include "Engine/Engine.h"
@@ -23,13 +23,13 @@ namespace SE::Editor
 
       public:
         SceneElementEditor() = default;
-        SceneElementEditor( SE::Graphics::Ref<VkGraphicContext> aGraphicContext );
+        SceneElementEditor( Ref<IGraphicContext> aGraphicContext );
         ~SceneElementEditor() = default;
 
         void Display( int32_t width, int32_t height );
 
       private:
-        SE::Graphics::Ref<VkGraphicContext> mGraphicContext;
+        Ref<IGraphicContext> mGraphicContext;
     };
 
 } // namespace SE::Editor

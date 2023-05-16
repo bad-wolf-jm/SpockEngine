@@ -88,7 +88,7 @@ namespace SE::Editor
 
       public:
         EditorWindow() = default;
-        EditorWindow( Ref<VkGraphicContext> aGraphicContext, Ref<UIContext> mUIOverlay );
+        EditorWindow( Ref<IGraphicContext> aGraphicContext, Ref<UIContext> mUIOverlay );
 
         ~EditorWindow() = default;
 
@@ -113,7 +113,7 @@ namespace SE::Editor
         void ConfigureUI();
 
       private:
-        Ref<VkGraphicContext> mGraphicContext;
+        Ref<IGraphicContext> mGraphicContext;
 
         Ref<UIContext> mUIOverlay;
 

@@ -55,8 +55,8 @@ namespace SE::Graphics
     }
 
     Ref<ITexture2D> CreateTexture2D( Ref<IGraphicContext> aGraphicContext, sTextureCreateInfo &aTextureImageDescription,
-                                   uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
-                                   bool aIsTransferDestination )
+                                     uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
+                                     bool aIsTransferDestination )
     {
         switch( gApi )
         {
@@ -81,7 +81,7 @@ namespace SE::Graphics
     }
 
     Ref<ITexture2D> CreateTexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount,
-                                   bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
+                                     bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource )
     {
         switch( gApi )
         {
@@ -94,20 +94,31 @@ namespace SE::Graphics
     }
 
     Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData,
-                                   sTextureSamplingInfo const &aSamplingSpec )
+                                     sTextureSamplingInfo const &aSamplingSpec )
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkSampler2D>( aGraphicContext, Cast<VkTexture2D>(aTextureData), aSamplingSpec );
+        case eGraphicsAPI::VULKAN: return New<VkSampler2D>( aGraphicContext, Cast<VkTexture2D>( aTextureData ), aSamplingSpec );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
         default: return nullptr;
         }
     }
 
+    Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture> aTextureData )
+    {
+        return CreateSampler2D( aGraphicContext, Cast<ITexture2D>( aTextureData ) );
+    }
+
+    Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture> aTextureData,
+                                     sTextureSamplingInfo const &aSamplingSpec )
+    {
+        return CreateSampler2D( aGraphicContext, Cast<ITexture2D>( aTextureData ), aSamplingSpec );
+    }
+
     Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData )
     {
-        return CreateSampler2D(aGraphicContext, aTextureData, sTextureSamplingInfo{});
+        return CreateSampler2D( aGraphicContext, aTextureData, sTextureSamplingInfo{} );
     }
 
     Ref<IGraphicsPipeline> CreateGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
