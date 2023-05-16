@@ -34,7 +34,7 @@ namespace SE::Core
         // lCreateInfo.FragmentShader = aCreateInfo.mFragmentShader;
         // lCreateInfo.DepthTest      = false;
         // lCreateInfo.DepthWrite     = false;
-        // lCreateInfo.RenderPass     = aRenderContext.GetRenderPass();
+        // lCreateInfo.RenderPass     = aRenderContext->GetRenderPass();
 
         // DescriptorSetLayoutCreateInfo lPipelineLayoutCI{};
         // lPipelineLayoutCI.Bindings = {
@@ -48,10 +48,10 @@ namespace SE::Core
     {
         mTextures->Write( aImageSampler, 0 );
 
-        aRenderContext.Bind( Pipeline );
-        aRenderContext.Bind( mTextures, 0, -1 );
-        aRenderContext.ResetBuffers();
-        aRenderContext.Draw( 6, 0, 0, 1, 0 );
+        aRenderContext->Bind( Pipeline );
+        aRenderContext->Bind( mTextures, 0, -1 );
+        aRenderContext->ResetBuffers();
+        aRenderContext->Draw( 6, 0, 0, 1, 0 );
     }
 
 } // namespace SE::Core

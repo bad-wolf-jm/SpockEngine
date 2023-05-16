@@ -77,7 +77,7 @@ namespace SE::Core
         math::mat4 GetProjection();
         math::vec3 GetCameraPosition();
 
-        math::mat4 GetFinalTransformMatrix(Element aElement);
+        math::mat4 GetFinalTransformMatrix( Element aElement );
 
         void Update( Timestep ts );
         void UpdateAnimation( Entity &aAnimation, Timestep const &ts );
@@ -111,7 +111,7 @@ namespace SE::Core
 
         void ClearScene();
 
-        void SetViewport(math::vec2 aPosition, math::vec2 aSize);
+        void SetViewport( math::vec2 aPosition, math::vec2 aSize );
 
         // Ref<VkGpuBuffer> mVertexBuffer            = nullptr;
         // Ref<VkGpuBuffer> mIndexBuffer             = nullptr;
@@ -119,11 +119,10 @@ namespace SE::Core
 
         math::mat4 mEditorView;
 
-
       private:
-        eSceneState           mState = eSceneState::EDITING;
+        eSceneState          mState = eSceneState::EDITING;
         Ref<IGraphicContext> mGraphicContext;
-        Ref<MaterialSystem>   mMaterialSystem;
+        Ref<MaterialSystem>  mMaterialSystem;
 
         Ref<OptixDeviceContextObject> mRayTracingContext     = nullptr;
         Ref<OptixScene>               mAccelerationStructure = nullptr;
@@ -152,7 +151,6 @@ namespace SE::Core
 
         math::vec2 mViewportPosition{};
         math::vec2 mViewportSize{};
-
 
       private:
         friend class Element;

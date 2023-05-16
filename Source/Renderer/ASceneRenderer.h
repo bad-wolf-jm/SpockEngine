@@ -32,7 +32,7 @@ namespace SE::Core
 
         virtual void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
-        virtual Ref<VkTexture2D> GetOutputImage() = 0;
+        virtual Ref<ITexture2D> GetOutputImage() = 0;
 
       protected:
         Ref<IGraphicContext> mGraphicContext{};
@@ -69,7 +69,7 @@ namespace SE::Core
         std::vector<sParticleRenderData> mParticleQueue{};
 
       private:
-        void AddLight(math::mat4 const& aTransform, sLightComponent &aLightComponent);
+        void AddLight( math::mat4 const &aTransform, sLightComponent &aLightComponent );
     };
 
 } // namespace SE::Core

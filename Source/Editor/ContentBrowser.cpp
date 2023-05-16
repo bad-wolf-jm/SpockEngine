@@ -20,8 +20,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             TextureSampler2D     lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture         = New<SE::Graphics::ITexture2D>( mGraphicContext, lTextureData );
-            m_DirectoryIcon       = New<SE::Graphics::ISampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture         = CreateTexture2D( mGraphicContext, lTextureData );
+            m_DirectoryIcon       = CreateSampler2D( mGraphicContext, lTexture, lSamplingInfo );
             m_DirectoryIconHandle = aUIOverlay->CreateTextureHandle( m_DirectoryIcon );
         }
 
@@ -31,8 +31,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             TextureSampler2D     lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture    = New<SE::Graphics::ITexture2D>( mGraphicContext, lTextureData );
-            m_FileIcon       = New<SE::Graphics::ISampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture    = CreateTexture2D( mGraphicContext, lTextureData );
+            m_FileIcon       = CreateSampler2D( mGraphicContext, lTexture, lSamplingInfo );
             m_FileIconHandle = aUIOverlay->CreateTextureHandle( m_FileIcon );
         }
 
@@ -42,8 +42,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             TextureSampler2D     lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture    = New<SE::Graphics::ITexture2D>( mGraphicContext, lTextureData );
-            m_BackIcon       = New<SE::Graphics::ISampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture    = CreateTexture2D( mGraphicContext, lTextureData );
+            m_BackIcon       = CreateSampler2D( mGraphicContext, lTexture, lSamplingInfo );
             m_BackIconHandle = aUIOverlay->CreateTextureHandle( m_BackIcon );
         }
     }

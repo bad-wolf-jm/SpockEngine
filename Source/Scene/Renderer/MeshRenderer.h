@@ -8,7 +8,7 @@
 // #include "Graphics/Vulkan/DescriptorSet.h"
 // #include "Graphics/Vulkan/VkGraphicsPipeline.h"
 // #include "Graphics/Vulkan/IGraphicContext.h"
-// #include "Graphics/Vulkan/VkRenderPass.h"
+// #include "Graphics/Vulkan/IRenderPass.h"
 #include "Graphics/API.h"
 
 #include "Scene/VertexData.h"
@@ -30,7 +30,7 @@ namespace SE::Core
         fs::path VertexShader   = "";
         fs::path FragmentShader = "";
 
-        Ref<VkRenderPass> RenderPass = nullptr;
+        Ref<IRenderPass> RenderPass = nullptr;
 
         bool operator==( const MeshRendererCreateInfo &p ) const
         {

@@ -8,7 +8,7 @@
 // #include "Graphics/Vulkan/DescriptorSet.h"
 // #include "Graphics/Vulkan/VkGraphicsPipeline.h"
 // #include "Graphics/Vulkan/IGraphicContext.h"
-// #include "Graphics/Vulkan/VkRenderPass.h"
+// #include "Graphics/Vulkan/IRenderPass.h"
 #include "Graphics/API.h"
 
 #include "Scene/VertexData.h"
@@ -26,7 +26,7 @@ namespace SE::Core
     {
         bool Opaque = false;
 
-        Ref<VkRenderPass> RenderPass = nullptr;
+        Ref<IRenderPass> RenderPass = nullptr;
     };
 
     class DeferredLightingRenderer // : public SceneRenderPipeline<EmptyVertexData>
@@ -61,9 +61,9 @@ namespace SE::Core
         ~DeferredLightingRenderer() = default;
 
       private:
-        Ref<IGraphicContext>   mGraphicContext    = nullptr;
-        Ref<IGraphicBuffer>    mCameraBuffer = nullptr;
-        Ref<IGraphicsPipeline> mPipeline     = nullptr;
+        Ref<IGraphicContext>   mGraphicContext = nullptr;
+        Ref<IGraphicBuffer>    mCameraBuffer   = nullptr;
+        Ref<IGraphicsPipeline> mPipeline       = nullptr;
     };
 
 } // namespace SE::Core

@@ -3,12 +3,13 @@
 #include "Core/Math/Types.h"
 
 #ifndef __CUDACC__
-#    include "Graphics/Vulkan/DescriptorSet.h"
+// #    include "Graphics/Vulkan/IDescriptorSet.h"
 
-#    include "Graphics/Vulkan/VkGpuBuffer.h"
-#    include "Graphics/Vulkan/VkGraphicContext.h"
-#    include "Graphics/Vulkan/VkSampler2D.h"
-#    include "Graphics/Vulkan/VkTexture2D.h"
+// #    include "Graphics/Vulkan/IGraphicBuffer.h"
+// #    include "Graphics/Vulkan/ISampler2D.h"
+// #    include "Graphics/Vulkan/IGraphicContext.h"
+// #    include "Graphics/Vulkan/VkTexture2D.h"
+#    include "Graphics/API.h"
 #endif
 
 #include "Core/CUDA/Array/CudaBuffer.h"
@@ -99,13 +100,13 @@ namespace SE::Core
         MaterialSystem()  = default;
         ~MaterialSystem() = default;
 
-        MaterialSystem( Ref<VkGraphicContext> aGraphicContext );
+        MaterialSystem( Ref<IGraphicContext> aGraphicContext );
 
-        sMaterial                 &CreateMaterial();
-        sMaterial                 &CreateMaterial( sMaterial const &aMaterialData );
-        sMaterial                 &CreateMaterial( fs::path const &aMaterialData );
-        sMaterial                 &GetMaterialByID( uint32_t aID );
-        Ref<Graphics::VkSampler2D> GetTextureByID( uint32_t aID );
+        sMaterial      &CreateMaterial();
+        sMaterial      &CreateMaterial( sMaterial const &aMaterialData );
+        sMaterial      &CreateMaterial( fs::path const &aMaterialData );
+        sMaterial      &GetMaterialByID( uint32_t aID );
+        Ref<ISampler2D> GetTextureByID( uint32_t aID );
 
         uint32_t CreateTexture( fs::path aFilePath, sTextureSamplingInfo aSamplingInfo );
         uint32_t CreateTexture( Ref<TextureData2D> aTexture, Ref<TextureSampler2D> aTextureSampler );
@@ -113,29 +114,29 @@ namespace SE::Core
 
         void UpdateDescriptors();
 
-        Ref<DescriptorSet> GetDescriptorSet() { return mTextureDescriptorSet; }
+        Ref<IDescriptorSet> GetDescriptorSet() { return mTextureDescriptorSet; }
 
         void Clear();
         void Wipe();
 
-        std::vector<sMaterial> const                  &GetMaterialData() const { return mMaterials; }
-        std::vector<Ref<Graphics::VkSampler2D>> const &GetTextures() const { return mTextureSamplers; }
-        Cuda::GPUMemory const                         &GetCudaTextures() const { return mCudaTextureBuffer; }
-        VkGpuBuffer const                             &GetCudaMaterials() const { return *mShaderMaterials; }
+        std::vector<sMaterial> const       &GetMaterialData() const { return mMaterials; }
+        std::vector<Ref<ISampler2D>> const &GetTextures() const { return mTextureSamplers; }
+        Cuda::GPUMemory const              &GetCudaTextures() const { return mCudaTextureBuffer; }
+        IGraphicBuffer const               &GetCudaMaterials() const { return *mShaderMaterials; }
 
       private:
-        Ref<VkGraphicContext> mGraphicContext;
+        Ref<IGraphicContext> mGraphicContext;
 
-        std::vector<Ref<Graphics::VkSampler2D>> mTextureSamplers = {};
-        std::vector<sMaterial>                  mMaterials       = {};
+        std::vector<Ref<ISampler2D>> mTextureSamplers = {};
+        std::vector<sMaterial>       mMaterials       = {};
 
         Cuda::GPUMemory mCudaTextureBuffer{};
 
-        Ref<VkGpuBuffer> mShaderMaterials = nullptr;
+        Ref<IGraphicBuffer> mShaderMaterials = nullptr;
 
-        bool                     mDirty = false;
-        Ref<DescriptorSetLayout> mTextureDescriptorLayout;
-        Ref<DescriptorSet>       mTextureDescriptorSet;
+        bool                      mDirty = false;
+        Ref<IDescriptorSetLayout> mTextureDescriptorLayout;
+        Ref<IDescriptorSet>       mTextureDescriptorSet;
     };
 
 #endif

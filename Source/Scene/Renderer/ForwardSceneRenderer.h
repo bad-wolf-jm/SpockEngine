@@ -1,9 +1,9 @@
 #pragma once
 #include "Core/Memory.h"
 
-// #include "Graphics/Vulkan/VkRenderContext.h"
-// #include "Graphics/Vulkan/VkRenderTarget.h"
-// #include "Graphics/Vulkan/DescriptorSet.h"
+// #include "Graphics/Vulkan/Ref<IRenderContext>.h"
+// #include "Graphics/Vulkan/IRenderTarget.h"
+// #include "Graphics/Vulkan/IDescriptorSet.h"
 // #include "Graphics/Vulkan/VkGraphicsPipeline.h"
 #include "Graphics/API.h"
 
@@ -35,7 +35,7 @@ namespace SE::Core
 
         ~ForwardSceneRenderer() = default;
 
-        Ref<VkTexture2D> GetOutputImage();
+        Ref<ITexture2D> GetOutputImage();
 
         void Update( Ref<Scene> aWorld );
         void Render();
@@ -56,26 +56,26 @@ namespace SE::Core
         ParticleSystemRenderer &GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification );
 
       protected:
-        Ref<VkRenderTarget> mGeometryRenderTarget = nullptr;
-        VkRenderContext     mGeometryContext{};
+        Ref<IRenderTarget>  mGeometryRenderTarget = nullptr;
+        Ref<IRenderContext> mGeometryContext{};
 
         Ref<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;
 
         Ref<VkGpuBuffer> mCameraUniformBuffer    = nullptr;
         Ref<VkGpuBuffer> mShaderParametersBuffer = nullptr;
 
-        Ref<DescriptorSetLayout> mCameraSetLayout  = nullptr;
-        Ref<DescriptorSetLayout> mNodeSetLayout    = nullptr;
-        Ref<DescriptorSetLayout> mTextureSetLayout = nullptr;
+        Ref<IDescriptorSetLayout> mCameraSetLayout  = nullptr;
+        Ref<IDescriptorSetLayout> mNodeSetLayout    = nullptr;
+        Ref<IDescriptorSetLayout> mTextureSetLayout = nullptr;
 
-        Ref<DescriptorSet> mSceneDescriptors = nullptr;
-        Ref<DescriptorSet> mNodeDescriptors  = nullptr;
+        Ref<IDescriptorSet> mSceneDescriptors = nullptr;
+        Ref<IDescriptorSet> mNodeDescriptors  = nullptr;
 
         std::unordered_map<MeshRendererCreateInfo, MeshRenderer, MeshRendererCreateInfoHash> mMeshRenderers = {};
         std::unordered_map<ParticleRendererCreateInfo, ParticleSystemRenderer, ParticleSystemRendererCreateInfoHash>
             mParticleRenderers = {};
 
-        std::unordered_map<Entity, Ref<DescriptorSet>> mMaterials = {};
+        std::unordered_map<Entity, Ref<IDescriptorSet>> mMaterials = {};
     };
 
 } // namespace SE::Core

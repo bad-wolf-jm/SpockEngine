@@ -11,7 +11,7 @@
 
 #include "Scene/VertexData.h"
 
-#include "Graphics/Vulkan/VkRenderPass.h"
+#include "Graphics/API.h"
 
 // #include "SceneRenderPipeline.h"
 
@@ -25,7 +25,7 @@ namespace SE::Core
         std::string mVertexShader   = "";
         std::string mFragmentShader = "";
 
-        Ref<VkRenderPass> RenderPass = nullptr;
+        Ref<IRenderPass> RenderPass = nullptr;
     };
 
     class EffectProcessor // : public SE::Core::SceneRenderPipeline<EmptyVertexData>

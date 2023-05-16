@@ -47,7 +47,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
         lCreateInfo.VertexShader   = "Shaders\\PBRMeshShader.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\PBRMeshShader.frag.spv";
-        lCreateInfo.RenderPass     = mGeometryContext.GetRenderPass();
+        lCreateInfo.RenderPass     = mGeometryContext->GetRenderPass();
 
         return lCreateInfo;
     }
@@ -61,7 +61,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
         lCreateInfo.VertexShader   = "Shaders\\PBRMeshShader.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\PBRMeshShader.frag.spv";
-        lCreateInfo.RenderPass     = mGeometryContext.GetRenderPass();
+        lCreateInfo.RenderPass     = mGeometryContext->GetRenderPass();
 
         return lCreateInfo;
     }
@@ -113,7 +113,7 @@ namespace SE::Core
         mGeometryContext = ARenderContext( mGraphicContext, mGeometryRenderTarget );
 
         CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
-        lCoordinateGridRendererCreateInfo.RenderPass = mGeometryContext.GetRenderPass();
+        lCoordinateGridRendererCreateInfo.RenderPass = mGeometryContext->GetRenderPass();
         mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mGeometryContext, lCoordinateGridRendererCreateInfo );
     }
 
@@ -168,7 +168,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
         lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
-        lCreateInfo.RenderPass     = mGeometryContext.GetRenderPass();
+        lCreateInfo.RenderPass     = mGeometryContext->GetRenderPass();
 
         return lCreateInfo;
     }
@@ -179,7 +179,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
         lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
-        lCreateInfo.RenderPass     = mGeometryContext.GetRenderPass();
+        lCreateInfo.RenderPass     = mGeometryContext->GetRenderPass();
 
         return lCreateInfo;
     }
@@ -220,26 +220,26 @@ namespace SE::Core
 
         mScene->GetMaterialSystem()->UpdateDescriptors();
 
-        mGeometryContext.BeginRender();
+        mGeometryContext->BeginRender();
         for( auto &lPipelineData : mOpaqueMeshQueue )
         {
             auto &lPipeline = GetRenderPipeline( lPipelineData );
             if( lPipeline.Pipeline )
-                mGeometryContext.Bind( lPipeline.Pipeline );
+                mGeometryContext->Bind( lPipeline.Pipeline );
             else
                 continue;
-            mGeometryContext.Bind( mSceneDescriptors, 0, -1 );
-            mGeometryContext.Bind( mScene->GetMaterialSystem()->GetDescriptorSet(), 1, -1 );
+            mGeometryContext->Bind( mSceneDescriptors, 0, -1 );
+            mGeometryContext->Bind( mScene->GetMaterialSystem()->GetDescriptorSet(), 1, -1 );
 
             if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
-            mGeometryContext.Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
+            mGeometryContext->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
 
             MeshRenderer::MaterialPushConstants lMaterialPushConstants{};
             lMaterialPushConstants.mMaterialID = lPipelineData.mMaterialID;
 
-            mGeometryContext.PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
+            mGeometryContext->PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
 
-            mGeometryContext.Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
+            mGeometryContext->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
         }
 
         for( auto &lParticleSystem : mParticleQueue )
@@ -252,7 +252,7 @@ namespace SE::Core
             lParticleData.ParticleSize  = lParticleSystem.mParticleSize;
             lParticleData.Particles     = lParticleSystem.mParticles;
 
-            lPipeline.Render( View.Projection, View.View, mGeometryContext, lParticleData );
+            lPipeline->Render( View.Projection, View.View, mGeometryContext, lParticleData );
         }
 
         for( auto const &lLightGizmo : mLightGizmos )
@@ -278,7 +278,7 @@ namespace SE::Core
         }
 
         if( RenderCoordinateGrid ) mCoordinateGridRenderer->Render( View.Projection, View.View, mGeometryContext );
-        mGeometryContext.EndRender();
+        mGeometryContext->EndRender();
     }
 
     Ref<VkTexture2D> ForwardSceneRenderer::GetOutputImage()

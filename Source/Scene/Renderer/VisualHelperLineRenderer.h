@@ -11,7 +11,7 @@
 // #include "Graphics/Vulkan/DescriptorSet.h"
 // #include "Graphics/Vulkan/VkGraphicsPipeline.h"
 // #include "Graphics/Vulkan/IGraphicContext.h"
-// #include "Graphics/Vulkan/VkRenderPass.h"
+// #include "Graphics/Vulkan/IRenderPass.h"
 #include "Graphics/API.h"
 
 #include "Scene/VertexData.h"
@@ -30,7 +30,7 @@ namespace SE::Graphics
         Ref<sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
-    class VisualHelperLineRenderer// : public SceneRenderPipeline<PositionData>
+    class VisualHelperLineRenderer // : public SceneRenderPipeline<PositionData>
     {
       public:
         struct CameraViewUniforms

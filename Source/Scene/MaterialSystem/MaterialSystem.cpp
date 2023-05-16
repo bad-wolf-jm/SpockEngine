@@ -5,7 +5,7 @@
 
 namespace SE::Core
 {
-    MaterialSystem::MaterialSystem( Ref<VkGraphicContext> aGraphicContext )
+    MaterialSystem::MaterialSystem( Ref<IGraphicContext> aGraphicContext )
         : mGraphicContext{ aGraphicContext }
         , mDirty{ true }
     {
@@ -14,16 +14,20 @@ namespace SE::Core
         // The material system should be bound to a descriptor set as follows:
         // layout( set = X, binding = 1 ) readonly buffer sShaderMaterials Materials[];
         // layout( set = X, binding = 0 ) uniform sampler2D Textures[];
-        DescriptorSetLayoutCreateInfo lTextureBindLayout{};
-        lTextureBindLayout.Bindings = {
-            DescriptorBindingInfo{ 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } },
-            DescriptorBindingInfo{ 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
+        // DescriptorSetLayoutCreateInfo lTextureBindLayout{};
+        // lTextureBindLayout.Bindings = {
+        //     DescriptorBindingInfo{ 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } },
+        //     DescriptorBindingInfo{ 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
 
         mShaderMaterials =
-            New<VkGpuBuffer>( mGraphicContext, eBufferType::STORAGE_BUFFER, true, true, true, true, sizeof( sShaderMaterial ) );
+            CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, true, true, true, sizeof( sShaderMaterial ) );
 
-        mTextureDescriptorLayout = New<DescriptorSetLayout>( mGraphicContext, lTextureBindLayout, true );
-        mTextureDescriptorSet    = New<DescriptorSet>( mGraphicContext, mTextureDescriptorLayout, 1024 );
+        mTextureDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, lTextureBindLayout, true );
+        mTextureDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        mTextureDescriptorLayout->AddBinding( 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        mTextureDescriptorLayout->Build();
+
+        mTextureDescriptorSet = mTextureDescriptorLayout->Allocate( 1024 );
 
         mTextureDescriptorSet->Write( mShaderMaterials, false, 0, sizeof( sShaderMaterial ), 0 );
     }

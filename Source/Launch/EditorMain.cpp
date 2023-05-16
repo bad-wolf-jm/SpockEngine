@@ -24,7 +24,7 @@
 
 #include "Editor/BaseEditorApplication.h"
 
-#include "Mono/MonoRuntime.h"
+#include "DotNet/Runtime.h"
 
 using namespace SE::Core;
 using namespace SE::Graphics;
@@ -256,13 +256,13 @@ int main( int argc, char **argv )
     if( auto lCoreScriptingPathOverride = lProgramArguments->present<std::string>( "--script_core" ) )
         if( fs ::exists( lCoreScriptingPathOverride.value() ) ) lCoreScriptingPath = lCoreScriptingPathOverride.value();
 
-    MonoRuntime::Initialize( lMonoPath, lCoreScriptingPath );
+    DotNetRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 
     SE::Editor::BaseEditorApplication lEditorApplication;
     lEditorApplication.Init();
 
     lEditorApplication.mEditorWindow.mMaterialsPath = lProjectRoot / "Assets" / "Materials";
-    lEditorApplication.mEditorWindow.mModelsPath = lProjectRoot / "Assets" / "Models";
+    lEditorApplication.mEditorWindow.mModelsPath    = lProjectRoot / "Assets" / "Models";
 
     SE::Core::Engine::GetInstance()->UpdateDelegate.connect<&SE::Editor::BaseEditorApplication::Update>( lEditorApplication );
     SE::Core::Engine::GetInstance()->RenderDelegate.connect<&SE::Editor::BaseEditorApplication::RenderScene>( lEditorApplication );
@@ -274,10 +274,10 @@ int main( int argc, char **argv )
 
         YAML::Node &lAssemblyPath = lRootNode["project"]["assembly_path"];
         if( !lAssemblyPath.IsNull() && fs::exists( lAssemblyPath.as<std::string>() ) )
-            MonoRuntime::AddAppAssemblyPath( lAssemblyPath.as<std::string>(), "" );
+            DotNetRuntime::AddAppAssemblyPath( lAssemblyPath.as<std::string>(), "" );
 
         YAML::Node &lDefaultScenarioPath = lRootNode["project"]["default_scenario"];
-        if( (!lDefaultScenarioPath.IsNull()) && fs::exists( lDefaultScenarioPath.as<std::string>() ) )
+        if( ( !lDefaultScenarioPath.IsNull() ) && fs::exists( lDefaultScenarioPath.as<std::string>() ) )
             lEditorApplication.mEditorWindow.World->LoadScenario( lDefaultScenarioPath.as<std::string>() );
     }
 
@@ -287,7 +287,7 @@ int main( int argc, char **argv )
 
     SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
 
-    MonoRuntime::Shutdown();
+    DotNetRuntime::Shutdown();
     SE::Core::Engine::Shutdown();
 
     return 0;

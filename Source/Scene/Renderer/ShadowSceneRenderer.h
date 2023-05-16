@@ -1,10 +1,10 @@
 #pragma once
 #include "Core/Memory.h"
 
-// #include "Graphics/Vulkan/VkRenderContext.h"
-// #include "Graphics/Vulkan/DescriptorSet.h"
+// #include "Graphics/Vulkan/Ref<IRenderContext>.h"
+// #include "Graphics/Vulkan/IDescriptorSet.h"
 // #include "Graphics/Vulkan/VkGraphicsPipeline.h"
-// #include "Graphics/Vulkan/VkRenderTarget.h"
+// #include "Graphics/Vulkan/IRenderTarget.h"
 #include "Graphics/API.h"
 
 #include "Scene/Components.h"
@@ -25,7 +25,7 @@ namespace SE::Core
 
     struct ShadowMeshRendererCreateInfo
     {
-        Ref<VkRenderPass> RenderPass = nullptr;
+        Ref<IRenderPass> RenderPass = nullptr;
     };
 
     class ShadowMeshRenderer //: public SceneRenderPipeline<VertexData>
@@ -49,7 +49,7 @@ namespace SE::Core
         ~ShadowMeshRenderer() = default;
     };
 
-    class OmniShadowMeshRenderer// : public SceneRenderPipeline<VertexData>
+    class OmniShadowMeshRenderer // : public SceneRenderPipeline<VertexData>
     {
 
       public:
@@ -83,53 +83,53 @@ namespace SE::Core
 
         ~ShadowSceneRenderer() = default;
 
-        Ref<VkTexture2D> GetOutputImage();
+        Ref<ITexture2D> GetOutputImage();
 
         void Update( Ref<Scene> aWorld );
         void Render();
 
-        void                ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
-        Ref<VkRenderTarget> NewRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight );
+        void               ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
+        Ref<IRenderTarget> NewRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
-        static Ref<DescriptorSet> GetDirectionalShadowMapsLayout();
+        static Ref<IDescriptorSet> GetDirectionalShadowMapsLayout();
 
-        std::vector<Ref<Graphics::VkSampler2D>>      &GetDirectionalShadowMapSamplers() { return mDirectionalShadowMapSamplers; };
-        std::vector<Ref<Graphics::VkSampler2D>>      &GetSpotlightShadowMapSamplers() { return mSpotlightShadowMapSamplers; };
-        std::vector<Ref<Graphics::VkSamplerCubeMap>> &GetPointLightShadowMapSamplers() { return mPointLightShadowMapSamplers; };
+        std::vector<Ref<ISampler2D>>      &GetDirectionalShadowMapSamplers() { return mDirectionalShadowMapSamplers; };
+        std::vector<Ref<ISampler2D>>      &GetSpotlightShadowMapSamplers() { return mSpotlightShadowMapSamplers; };
+        std::vector<Ref<ISamplerCubeMap>> &GetPointLightShadowMapSamplers() { return mPointLightShadowMapSamplers; };
 
       protected:
-        std::vector<VkRenderContext>            mDirectionalShadowMapRenderContext    = {};
-        std::vector<Ref<Graphics::VkSampler2D>> mDirectionalShadowMapSamplers         = {};
-        std::vector<Ref<VkGpuBuffer>>           mDirectionalShadowCameraUniformBuffer = {};
-        std::vector<Ref<DescriptorSet>>         mDirectionalShadowSceneDescriptors    = {};
-        ShadowMeshRenderer                      mRenderPipeline{};
+        std::vector<Ref<IRenderContext>> mDirectionalShadowMapRenderContext    = {};
+        std::vector<Ref<ISampler2D>>     mDirectionalShadowMapSamplers         = {};
+        std::vector<Ref<IGraphicBuffer>> mDirectionalShadowCameraUniformBuffer = {};
+        std::vector<Ref<IDescriptorSet>> mDirectionalShadowSceneDescriptors    = {};
+        ShadowMeshRenderer               mRenderPipeline{};
 
-        std::vector<VkRenderContext>            mSpotlightShadowMapRenderContext    = {};
-        std::vector<Ref<Graphics::VkSampler2D>> mSpotlightShadowMapSamplers         = {};
-        std::vector<Ref<VkGpuBuffer>>           mSpotlightShadowCameraUniformBuffer = {};
-        std::vector<Ref<DescriptorSet>>         mSpotlightShadowSceneDescriptors    = {};
+        std::vector<Ref<IRenderContext>> mSpotlightShadowMapRenderContext    = {};
+        std::vector<Ref<ISampler2D>>     mSpotlightShadowMapSamplers         = {};
+        std::vector<Ref<IGraphicBuffer>> mSpotlightShadowCameraUniformBuffer = {};
+        std::vector<Ref<IDescriptorSet>> mSpotlightShadowSceneDescriptors    = {};
 
-        std::vector<std::array<VkRenderContext, 6>>    mPointLightsShadowMapRenderContext    = {};
-        std::vector<Ref<Graphics::VkSamplerCubeMap>>   mPointLightShadowMapSamplers          = {};
-        std::vector<std::array<Ref<VkGpuBuffer>, 6>>   mPointLightsShadowCameraUniformBuffer = {};
-        std::vector<std::array<Ref<DescriptorSet>, 6>> mPointLightsShadowSceneDescriptors    = {};
-        OmniShadowMeshRenderer                         mOmniRenderPipeline{};
+        std::vector<std::array<Ref<IRenderContext>, 6>> mPointLightsShadowMapRenderContext    = {};
+        std::vector<Ref<ISamplerCubeMap>>               mPointLightShadowMapSamplers          = {};
+        std::vector<std::array<Ref<IGraphicBuffer>, 6>> mPointLightsShadowCameraUniformBuffer = {};
+        std::vector<std::array<Ref<IDescriptorSet>, 6>> mPointLightsShadowSceneDescriptors    = {};
+        OmniShadowMeshRenderer                          mOmniRenderPipeline{};
 
-        Ref<VkRenderTarget> mGeometryRenderTarget = nullptr;
-        VkRenderContext     mGeometryContext{};
+        Ref<IRenderTarget>  mGeometryRenderTarget = nullptr;
+        Ref<IRenderContext> mGeometryContext{};
 
-        Ref<VkGpuBuffer> mCameraUniformBuffer    = nullptr;
-        Ref<VkGpuBuffer> mShaderParametersBuffer = nullptr;
+        Ref<IGraphicBuffer> mCameraUniformBuffer    = nullptr;
+        Ref<IGraphicBuffer> mShaderParametersBuffer = nullptr;
 
         Ref<IDescriptorSetLayout> mCameraSetLayout  = nullptr;
         Ref<IDescriptorSetLayout> mNodeSetLayout    = nullptr;
         Ref<IDescriptorSetLayout> mTextureSetLayout = nullptr;
 
-        Ref<DescriptorSet> mSceneDescriptors = nullptr;
-        Ref<DescriptorSet> mNodeDescriptors  = nullptr;
+        Ref<IDescriptorSet> mSceneDescriptors = nullptr;
+        Ref<IDescriptorSet> mNodeDescriptors  = nullptr;
 
         Ref<IDescriptorSetLayout> mShadowMapDescriptorLayout = nullptr;
-        Ref<DescriptorSet>        mShadowMapDescriptorSet    = nullptr;
+        Ref<IDescriptorSet>       mShadowMapDescriptorSet    = nullptr;
 
         // ShadowMeshRenderer mRenderPipeline{};
     };

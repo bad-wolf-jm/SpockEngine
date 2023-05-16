@@ -117,8 +117,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture    = New<ITexture2D>( mGraphicContext, lTextureData );
-            m_PlayIcon       = New<ISampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture    = CreateTexture2D( mGraphicContext, lTextureData );
+            m_PlayIcon       = CreateSampler2D( mGraphicContext, lTexture, lSamplingInfo );
             m_PlayIconHandle = mUIOverlay->CreateTextureHandle( m_PlayIcon );
         }
 
@@ -128,8 +128,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture     = New<ITexture2D>( mGraphicContext, lTextureData );
-            m_PauseIcon       = New<ISampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture     = CreateTexture2D( mGraphicContext, lTextureData );
+            m_PauseIcon       = CreateSampler2D( mGraphicContext, lTexture, lSamplingInfo );
             m_PauseIconHandle = mUIOverlay->CreateTextureHandle( m_PauseIcon );
         }
 
@@ -139,8 +139,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture               = New<ITexture2D>( mGraphicContext, lTextureData );
-            m_DefaultTextureImage       = New<ISampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture               = CreateTexture2D( mGraphicContext, lTextureData );
+            m_DefaultTextureImage       = CreateSampler2D( mGraphicContext, lTexture, lSamplingInfo );
             m_DefaultTextureImageHandle = mUIOverlay->CreateTextureHandle( m_PlayIcon );
         }
 
@@ -150,8 +150,8 @@ namespace SE::Editor
             sTextureSamplingInfo lSamplingInfo{};
             SE::Core::TextureSampler2D lTextureSampler = SE::Core::TextureSampler2D( lTextureData, lSamplingInfo );
 
-            auto lTexture      = New<ITexture2D>( mGraphicContext, lTextureData );
-            m_CameraIcon       = New<ISampler2D>( mGraphicContext, lTexture, lSamplingInfo );
+            auto lTexture      = CreateTexture2D( mGraphicContext, lTextureData );
+            m_CameraIcon       = CreateSampler2D( mGraphicContext, lTexture, lSamplingInfo );
             m_CameraIconHandle = mUIOverlay->CreateTextureHandle( m_CameraIcon );
         }
     }
@@ -962,9 +962,8 @@ namespace SE::Editor
         if( ActiveWorld->GetState() == Scene::eSceneState::EDITING )
         {
 
-            if( ImGui::ImageButton( (ImTextureID)m_PlayIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
-                                    ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
-                                    ImVec4{ 0.0f, 1.0f, 0.0f, 0.8f } ) )
+            if( ImGui::ImageButton( (ImTextureID)m_PlayIconHandle.Handle->GetID(), ImVec2{ 22.0f, 22.0f }, ImVec2{ 0.0f, 0.0f },
+                                    ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f }, ImVec4{ 0.0f, 1.0f, 0.0f, 0.8f } ) )
             {
                 if( OnBeginScenario ) OnBeginScenario();
 
@@ -974,9 +973,8 @@ namespace SE::Editor
         }
         else
         {
-            if( ImGui::ImageButton( (ImTextureID)m_PauseIconHandle.Handle->GetVkDescriptorSet(), ImVec2{ 22.0f, 22.0f },
-                                    ImVec2{ 0.0f, 0.0f }, ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f },
-                                    ImVec4{ 1.0f, .2f, 0.0f, 0.8f } ) )
+            if( ImGui::ImageButton( (ImTextureID)m_PauseIconHandle.Handle->GetID(), ImVec2{ 22.0f, 22.0f }, ImVec2{ 0.0f, 0.0f },
+                                    ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f }, ImVec4{ 1.0f, .2f, 0.0f, 0.8f } ) )
             {
                 if( OnEndScenario ) OnEndScenario();
 
