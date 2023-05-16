@@ -41,7 +41,7 @@ namespace SE::Core
 
         ImGuiWindow *window = ImGui::GetCurrentWindow();
 
-        ImVec2 lCurrentScreenPosition  = ImGui::GetCursorScreenPos();
+        ImVec2 lCurrentScreenPosition = ImGui::GetCursorScreenPos();
 
         mLayout->Update( aPosition, aSize );
 
@@ -50,16 +50,16 @@ namespace SE::Core
 
         bool hovered, held;
         bool lPressed = ImGui::ButtonBehavior( bb, id, &hovered, &held, ImGuiButtonFlags_MouseButtonLeft );
+
         if( lPressed ) ImGui::OpenPopup( "##add_component" );
 
-        if( mContent != nullptr ) 
+        if( mContent != nullptr )
         {
             ImGui::SetNextWindowPos( ImGui::GetCursorScreenPos() );
-            ImGui::SetNextWindowSize(mContent->RequiredSize());
+            ImGui::SetNextWindowSize( mContent->RequiredSize() );
 
             if( ImGui::BeginPopup( "##add_component" ) )
             {
-
                 mContent->Update( ImVec2{}, mContent->RequiredSize() );
                 ImGui::EndPopup();
             }
