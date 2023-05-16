@@ -78,7 +78,7 @@ namespace SE::Core::UI
         style.WindowPadding     = ImVec2( 4, 4 );
         style.FramePadding      = ImVec2( 6, 6 );
         style.ItemSpacing       = ImVec2( 6, 4 );
-        style.ScrollbarSize     = 11;
+        style.ScrollbarSize     = 6;
         style.WindowBorderSize  = 1;
         style.ChildBorderSize   = 0;
         style.PopupBorderSize   = 1;
