@@ -97,7 +97,7 @@ namespace SE::Core
         mLightingContext = CreateRenderContext( mGraphicContext, mLightingRenderTarget );
 
         DeferredLightingRendererCreateInfo mLightingRendererCI{};
-        mLightingRendererCI.RenderPass = mLightingContext.GetRenderPass();
+        mLightingRendererCI.RenderPass = mLightingContext->GetRenderPass();
         mLightingRenderer              = DeferredLightingRenderer( mGraphicContext, mLightingRendererCI );
 
         mGeometrySamplers["POSITION"] = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "POSITION" ) );
@@ -129,20 +129,20 @@ namespace SE::Core
         mFxaaContext = CreateRenderContext( mGraphicContext, mFxaaRenderTarget );
 
         CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
-        lCoordinateGridRendererCreateInfo.RenderPass = mLightingContext.GetRenderPass();
+        lCoordinateGridRendererCreateInfo.RenderPass = mLightingContext->GetRenderPass();
         mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mLightingContext, lCoordinateGridRendererCreateInfo );
         mShadowSceneRenderer    = New<ShadowSceneRenderer>( mGraphicContext );
 
         EffectProcessorCreateInfo lEffectProcessorCreateInfo{};
         lEffectProcessorCreateInfo.mVertexShader   = "Shaders/fxaa.vert.spv";
         lEffectProcessorCreateInfo.mFragmentShader = "Shaders/fxaa.frag.spv";
-        lEffectProcessorCreateInfo.RenderPass      = mFxaaContext.GetRenderPass();
+        lEffectProcessorCreateInfo.RenderPass      = mFxaaContext->GetRenderPass();
         mFxaaRenderer                              = New<EffectProcessor>( mGraphicContext, mFxaaContext, lEffectProcessorCreateInfo );
 
         EffectProcessorCreateInfo lCopyCreateInfo{};
         lCopyCreateInfo.mVertexShader   = "Shaders/fxaa.vert.spv";
         lCopyCreateInfo.mFragmentShader = "Shaders/copy.frag.spv";
-        lCopyCreateInfo.RenderPass      = mFxaaContext.GetRenderPass();
+        lCopyCreateInfo.RenderPass      = mFxaaContext->GetRenderPass();
         mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lCopyCreateInfo );
     }
 
@@ -161,7 +161,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
         lCreateInfo.VertexShader   = "Shaders\\Deferred\\MRT.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\Deferred\\MRT.frag.spv";
-        lCreateInfo.RenderPass     = mGeometryContext.GetRenderPass();
+        lCreateInfo.RenderPass     = mGeometryContext->GetRenderPass();
 
         return lCreateInfo;
     }
@@ -175,7 +175,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
         lCreateInfo.VertexShader   = "Shaders\\Deferred\\MRT.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\Deferred\\MRT.frag.spv";
-        lCreateInfo.RenderPass     = mGeometryContext.GetRenderPass();
+        lCreateInfo.RenderPass     = mGeometryContext->GetRenderPass();
 
         return lCreateInfo;
     }
@@ -186,7 +186,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
         lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
-        lCreateInfo.RenderPass     = mGeometryContext.GetRenderPass();
+        lCreateInfo.RenderPass     = mGeometryContext->GetRenderPass();
 
         return lCreateInfo;
     }
@@ -197,7 +197,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
         lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
-        lCreateInfo.RenderPass     = mGeometryContext.GetRenderPass();
+        lCreateInfo.RenderPass     = mGeometryContext->GetRenderPass();
 
         return lCreateInfo;
     }
@@ -282,28 +282,28 @@ namespace SE::Core
         // Geometry pass
         mScene->GetMaterialSystem()->UpdateDescriptors();
 
-        mGeometryContext.BeginRender();
+        mGeometryContext->BeginRender();
         for( auto &lPipelineData : mOpaqueMeshQueue )
         {
             auto &lPipeline = GetRenderPipeline( lPipelineData );
             if( lPipeline.Pipeline )
-                mGeometryContext.Bind( lPipeline.Pipeline );
+                mGeometryContext->Bind( lPipeline.Pipeline );
             else
                 continue;
-            mGeometryContext.Bind( mGeometryPassCamera, 0, -1 );
-            mGeometryContext.Bind( mScene->GetMaterialSystem()->GetDescriptorSet(), 1, -1 );
+            mGeometryContext->Bind( mGeometryPassCamera, 0, -1 );
+            mGeometryContext->Bind( mScene->GetMaterialSystem()->GetDescriptorSet(), 1, -1 );
 
             if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
-            mGeometryContext.Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
+            mGeometryContext->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
 
             MeshRenderer::MaterialPushConstants lMaterialPushConstants{};
             lMaterialPushConstants.mMaterialID = lPipelineData.mMaterialID;
 
             mGeometryContext.PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
 
-            mGeometryContext.Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
+            mGeometryContext->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
         }
-        mGeometryContext.EndRender();
+        mGeometryContext->EndRender();
 
         mShadowSceneRenderer->Render();
         if( mShadowSceneRenderer->GetDirectionalShadowMapSamplers().size() > 0 )
@@ -316,15 +316,15 @@ namespace SE::Core
             mLightingPassPointLightShadowMaps->Write( mShadowSceneRenderer->GetPointLightShadowMapSamplers(), 0 );
 
         // Lighting pass
-        mLightingContext.BeginRender();
+        mLightingContext->BeginRender();
         {
-            mLightingContext.Bind( mLightingRenderer.Pipeline );
-            mLightingContext.Bind( mLightingPassCamera, 0, -1 );
-            mLightingContext.Bind( mLightingPassTextures, 1, -1 );
-            mLightingContext.Bind( mLightingPassDirectionalShadowMaps, 2, -1 );
-            mLightingContext.Bind( mLightingPassSpotlightShadowMaps, 3, -1 );
-            mLightingContext.Bind( mLightingPassPointLightShadowMaps, 4, -1 );
-            mLightingContext.Draw( 6, 0, 0, 1, 0 );
+            mLightingContext->Bind( mLightingRenderer.Pipeline );
+            mLightingContext->Bind( mLightingPassCamera, 0, -1 );
+            mLightingContext->Bind( mLightingPassTextures, 1, -1 );
+            mLightingContext->Bind( mLightingPassDirectionalShadowMaps, 2, -1 );
+            mLightingContext->Bind( mLightingPassSpotlightShadowMaps, 3, -1 );
+            mLightingContext->Bind( mLightingPassPointLightShadowMaps, 4, -1 );
+            mLightingContext->Draw( 6, 0, 0, 1, 0 );
 
             for( auto &lParticleSystem : mParticleQueue )
             {
@@ -363,9 +363,9 @@ namespace SE::Core
 
             if( mRenderCoordinateGrid ) mCoordinateGridRenderer->Render( View.Projection, View.View, mLightingContext );
         }
-        mLightingContext.EndRender();
+        mLightingContext->EndRender();
 
-        mFxaaContext.BeginRender();
+        mFxaaContext->BeginRender();
         if( mUseFXAA )
         {
             mFxaaRenderer->Render( mFxaaSampler, mFxaaContext );
@@ -374,6 +374,6 @@ namespace SE::Core
         {
             mCopyRenderer->Render( mFxaaSampler, mFxaaContext );
         }
-        mFxaaContext.EndRender();
+        mFxaaContext->EndRender();
     }
 } // namespace SE::Core

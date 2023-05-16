@@ -37,10 +37,10 @@ namespace SE::Graphics
     {
         CameraViewUniforms lView{ aModel, aView, aProjection, math::vec4( aColor, 1.0f ) };
 
-        aRenderContext.Bind( Pipeline );
-        aRenderContext.PushConstants( { eShaderStageTypeFlags::VERTEX, eShaderStageTypeFlags::FRAGMENT }, 0, lView );
-        aRenderContext.Bind( aVertexBuffer, aIndexBuffer, 0 );
-        aRenderContext.Draw( aIndexBuffer->SizeAs<uint32_t>(), 0, 0, 1, 0 );
+        aRenderContext->Bind( Pipeline );
+        aRenderContext->PushConstants( { eShaderStageTypeFlags::VERTEX, eShaderStageTypeFlags::FRAGMENT }, 0, lView );
+        aRenderContext->Bind( aVertexBuffer, aIndexBuffer, 0 );
+        aRenderContext->Draw( aIndexBuffer->SizeAs<uint32_t>(), 0, 0, 1, 0 );
     }
 
 } // namespace SE::Graphics

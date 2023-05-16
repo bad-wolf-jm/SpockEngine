@@ -10,7 +10,7 @@
 // #include "Graphics/Vulkan/VkRenderContext.h"
 // #include "Graphics/Vulkan/DescriptorSet.h"
 // #include "Graphics/Vulkan/VkGraphicsPipeline.h"
-// #include "Graphics/Vulkan/VkRenderPass.h"
+// #include "Graphics/Vulkan/IRenderPass.h"
 // #include "Graphics/Vulkan/IGraphicContext.h"
 #include "Graphics/API.h"
 
@@ -31,7 +31,7 @@ namespace SE::Graphics
         Ref<SE::Graphics::sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
-    class VisualHelperMeshRenderer// : public SE::Core::SceneRenderPipeline<SimpleVertexData>
+    class VisualHelperMeshRenderer // : public SE::Core::SceneRenderPipeline<SimpleVertexData>
     {
       public:
         struct CameraViewUniforms

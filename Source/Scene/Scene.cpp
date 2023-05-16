@@ -42,10 +42,10 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem;
     using namespace SE::Core::EntityComponentSystem::Components;
 
-    Scene::Scene( Ref<IGraphicContext> a_GraphicContext, Ref<SE::Core::UIContext> a_UI )
-        : mGraphicContext{ a_GraphicContext }
+    Scene::Scene( Ref<IGraphicContext> aGraphicContext, Ref<SE::Core::UIContext> aUI )
+        : mGraphicContext{ aGraphicContext }
     {
-        mMaterialSystem = New<MaterialSystem>( a_GraphicContext );
+        mMaterialSystem = New<MaterialSystem>( mGraphicContext );
 
         mEditorView = math::Translate( math::mat4( 1.0f ), -math::vec3( 0.0f, 1.0f, 7.5f ) );
 
@@ -1141,13 +1141,13 @@ namespace SE::Core
 
         mAccelerationStructure = SE::Core::New<OptixScene>( mRayTracingContext );
 
-        ForEach<sRayTracingTargetComponent, sStaticMeshComponent>(
-            [&]( auto aEntity, auto &aRTComponent, auto &aMeshComponent )
-            {
-                mAccelerationStructure->AddGeometry( *aMeshComponent.mTransformedBuffer, *aMeshComponent.mIndexBuffer,
-                                                     aMeshComponent.mVertexOffset, aMeshComponent.mVertexCount,
-                                                     aMeshComponent.mIndexOffset, aMeshComponent.mIndexCount );
-            } );
+        // ForEach<sRayTracingTargetComponent, sStaticMeshComponent>(
+        //     [&]( auto aEntity, auto &aRTComponent, auto &aMeshComponent )
+        //     {
+        //         mAccelerationStructure->AddGeometry( *aMeshComponent.mTransformedBuffer, *aMeshComponent.mIndexBuffer,
+        //                                              aMeshComponent.mVertexOffset, aMeshComponent.mVertexCount,
+        //                                              aMeshComponent.mIndexOffset, aMeshComponent.mIndexCount );
+        //     } );
 
         mAccelerationStructure->Build();
     }

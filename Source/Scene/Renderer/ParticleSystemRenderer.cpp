@@ -25,7 +25,7 @@ namespace SE::Graphics
         lCreateInfo.LineWidth            = aCreateInfo.LineWidth;
         lCreateInfo.VertexShader         = aCreateInfo.VertexShader;
         lCreateInfo.FragmentShader       = aCreateInfo.FragmentShader;
-        lCreateInfo.RenderPass           = aRenderContext.GetRenderPass();
+        lCreateInfo.RenderPass           = aRenderContext->GetRenderPass();
         lCreateInfo.InstanceBufferLayout = Particle::GetDefaultLayout();
 
         DescriptorSetLayoutCreateInfo lPipelineLayoutCI{};
@@ -55,11 +55,11 @@ namespace SE::Graphics
         CameraViewUniforms l_View{ aParticleData.Model, aView, aProjection, aParticleData.ParticleSize };
 
         mCameraBuffer->Write( l_View );
-        aRenderContext.Bind( Pipeline );
-        aRenderContext.Bind( mCameraDescriptors, 0, -1 );
-        aRenderContext.Bind( mParticleVertices, mParticleIndices, 0 );
-        aRenderContext.Bind( aParticleData.Particles, 1 );
-        aRenderContext.Draw( 6, 0, 0, aParticleData.ParticleCount, 0 );
+        aRenderContext->Bind( Pipeline );
+        aRenderContext->Bind( mCameraDescriptors, 0, -1 );
+        aRenderContext->Bind( mParticleVertices, mParticleIndices, 0 );
+        aRenderContext->Bind( aParticleData.Particles, 1 );
+        aRenderContext->Draw( 6, 0, 0, aParticleData.ParticleCount, 0 );
     }
 
 } // namespace SE::Graphics

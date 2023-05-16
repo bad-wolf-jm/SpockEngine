@@ -11,13 +11,15 @@
 #include "Renderer/SceneRenderData.h"
 
 #include "CoordinateGridRenderer.h"
+#include "DeferredLightingRenderer.h"
 #include "EffectProcessor.h"
 #include "MeshRenderer.h"
-#include "Ref<DeferredLightingRenderer>.h"
 #include "ShadowSceneRenderer.h"
 
 namespace SE::Core
 {
+    using namespace SE::Graphics;
+
     class DeferredRenderer : public ASceneRenderer
     {
       public:

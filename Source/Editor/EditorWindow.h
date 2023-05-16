@@ -7,9 +7,7 @@
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 
-#include "Graphics/Vulkan/VkGraphicContext.h"
-
-#include "Graphics/Vulkan/ISampler2D.h"
+#include "Graphics/API.h"
 
 #include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/ForwardSceneRenderer.h"

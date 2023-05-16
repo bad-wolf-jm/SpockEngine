@@ -8,7 +8,7 @@
 // #include "Graphics/Vulkan/DescriptorSet.h"
 // #include "Graphics/Vulkan/VkGraphicsPipeline.h"
 // #include "Graphics/Vulkan/IGraphicContext.h"
-// #include "Graphics/Vulkan/VkRenderPass.h"
+// #include "Graphics/Vulkan/IRenderPass.h"
 #include "Graphics/API.h"
 
 #include "Scene/Components/VisualHelpers.h"
