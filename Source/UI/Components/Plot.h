@@ -23,10 +23,11 @@ namespace SE::Core
         float       mMin = 0.0f;
         float       mMax = 0.0f;
 
-        UIPlotAxis mAxis         = UIPlotAxis::X1;
-        bool       mInUse        = false;
-        bool       mShowGrid     = true;
-        bool       mOppositeSide = false;
+        UIPlotAxis mAxis            = UIPlotAxis::X1;
+        bool       mInUse           = false;
+        bool       mShowGrid        = true;
+        bool       mOppositeSide    = false;
+        bool       mSetLimitRequest = false;
     };
 
     struct sPlotData
@@ -136,7 +137,6 @@ namespace SE::Core
         static void   UIVRangePlot_SetMax( void *aSelf, double aValue );
     };
 
-
     struct sHRange : public sPlotData
     {
         double mY0;
@@ -159,7 +159,6 @@ namespace SE::Core
         static double UIHRangePlot_GetMax( void *aSelf );
         static void   UIHRangePlot_SetMax( void *aSelf, double aValue );
     };
-
 
     struct sAxisTag : public sPlotData
     {

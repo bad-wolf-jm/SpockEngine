@@ -63,19 +63,17 @@ namespace SE::Core
                 {
                     ImPlot::SetupAxis( static_cast<ImAxis>( lAxis.mAxis ), lAxis.mTitle.empty() ? NULL : lAxis.mTitle.c_str(),
                                        ImPlotAxisFlags_None );
-                    if( ( lAxis.mMin != 0.0f ) && ( lAxis.mMax != 0.0f ) )
+                    if( lAxis.mSetLimitRequest )
                     {
-                        lPlot->Axes[static_cast<ImAxis>( lAxis.mAxis )].SetMin( lAxis.mMin );
-                        lPlot->Axes[static_cast<ImAxis>( lAxis.mAxis )].SetMax( lAxis.mMax );
+                        lPlot->Axes[static_cast<ImAxis>( lAxis.mAxis )].SetRange( lAxis.mMin, lAxis.mMax );
 
-                        lAxis.mMin = 0.0f;
-                        lAxis.mMax = 0.0f;
+                        lAxis.mSetLimitRequest = false;
                     }
                 }
             }
 
             ImPlotLegendFlags flags = ImPlotLegendFlags_None;
-            ImPlot::SetupLegend( mLegendPosition, flags );
+            // ImPlot::SetupLegend( mLegendPosition, flags );
             uint32_t lIndex = 0;
             for( auto const &lPlotElement : mElements )
             {
@@ -121,6 +119,8 @@ namespace SE::Core
     void UIPlot::UIPlot_SetAxisLimits( void *aInstance, int aAxis, double aMin, double aMax )
     {
         auto lSelf = static_cast<UIPlot *>( aInstance );
+
+        lSelf->mAxisConfiguration[aAxis].mSetLimitRequest = true;
 
         lSelf->mAxisConfiguration[aAxis].mMin = static_cast<float>( aMin );
         lSelf->mAxisConfiguration[aAxis].mMax = static_cast<float>( aMax );

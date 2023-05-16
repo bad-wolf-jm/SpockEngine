@@ -46,6 +46,7 @@ namespace SE::OtdrEditor
 
         ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, 0.0f );
         ImGui::PushStyleVar( ImGuiStyleVar_WindowBorderSize, 0.0f );
+        ImGui::PushStyleVar( ImGuiStyleVar_FrameBorderSize, 0.0f );
         ImGui::PushStyleVar( ImGuiStyleVar_WindowPadding, ImVec2( 0.0f, 0.0f ) );
         ImGui::Begin( "DockSpace Demo", &p_open, lMainwindowFlags );
         ImGui::PopStyleVar( 3 );
@@ -54,7 +55,9 @@ namespace SE::OtdrEditor
         ImGui::DockSpace( dockspace_id, ImVec2( 0.0f, 0.0f ), lDockSpaceFlags );
 
         bool lRequestQuit = false;
+        ImGui::PushStyleVar( ImGuiStyleVar_WindowBorderSize, 0.0f );
         ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2( 0, 8 ) );
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4{.04f, 0.04f, 0.04f, 1.0f});
         if( ImGui::BeginMainMenuBar() )
         {
             ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, ImVec2( 15, 14 ) );
@@ -71,7 +74,11 @@ namespace SE::OtdrEditor
             ImGui::EndMainMenuBar();
         }
         ImGui::PopStyleVar();
+        ImGui::PopStyleVar();
+        ImGui::PopStyleColor();
         ImGui::End();
+
+        ImGui::PopStyleVar();
 
 
         ImPlot::ShowDemoWindow();
