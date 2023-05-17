@@ -110,7 +110,14 @@ namespace SE::Graphics
     void VkBaseRenderContext::PushConstants( ShaderStageType aShaderStages, uint32_t aOffset, void *aValue, uint32_t aSize )
     {
         auto lCommandBuffer = GetCurrentCommandBuffer();
-        lCommandBuffer->PushConstants( (VkShaderStageFlags)aShaderStages, aOffset, aValue, aSize, mCurrentPipelineLayout );
+
+        VkShaderStageFlags lStageFlags = 0;
+        if( aShaderStages & eShaderStageTypeFlags::FRAGMENT )
+            lStageFlags |= VK_SHADER_STAGE_FRAGMENT_BIT;
+        if( aShaderStages & eShaderStageTypeFlags::VERTEX )
+            lStageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
+
+        lCommandBuffer->PushConstants( lStageFlags, aOffset, aValue, aSize, mCurrentPipelineLayout );
     }
 
 } // namespace SE::Graphics
