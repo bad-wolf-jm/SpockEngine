@@ -40,7 +40,7 @@ namespace SE::Core
         void Render( math::mat4 aProjection, math::mat4 aView, Ref<IRenderContext> aRenderContext );
 
         // CoordinateGridRendererCreateInfo Spec;
-        // Ref<DescriptorSetLayout>         PipelineLayout;
+        Ref<IDescriptorSetLayout>         PipelineLayout;
         // std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
         // std::vector<sPushConstantRange>       GetPushConstantLayout();
 

@@ -58,7 +58,7 @@ namespace SE::Core
 
       private:
         Ref<IRenderContext> mGeometryContext{};
-        // Ref<DescriptorSetLayout> mGeometryCameraLayout = nullptr;
+        Ref<IDescriptorSetLayout> mGeometryCameraLayout = nullptr;
         Ref<IDescriptorSet> mGeometryPassCamera = nullptr;
 
         Ref<IRenderTarget> mGeometryRenderTarget = nullptr;
@@ -68,16 +68,16 @@ namespace SE::Core
 
         std::map<std::string, Ref<ISampler2D>> mGeometrySamplers = {};
 
-        // Ref<DescriptorSetLayout> mLightingTextureLayout = nullptr;
-        // Ref<DescriptorSetLayout> mLightingCameraLayout  = nullptr;
-        // Ref<DescriptorSetLayout> mLightingDirectionalShadowLayout   = nullptr;
-        // Ref<DescriptorSetLayout> mLightingSpotlightShadowLayout   = nullptr;
-        // Ref<DescriptorSetLayout> mLightingPointLightShadowLayout   = nullptr;
-        Ref<IDescriptorSet> mLightingPassTextures              = nullptr;
-        Ref<IDescriptorSet> mLightingPassCamera                = nullptr;
-        Ref<IDescriptorSet> mLightingPassDirectionalShadowMaps = nullptr;
-        Ref<IDescriptorSet> mLightingPassSpotlightShadowMaps   = nullptr;
-        Ref<IDescriptorSet> mLightingPassPointLightShadowMaps  = nullptr;
+        Ref<IDescriptorSetLayout> mLightingTextureLayout             = nullptr;
+        Ref<IDescriptorSetLayout> mLightingCameraLayout              = nullptr;
+        Ref<IDescriptorSetLayout> mLightingDirectionalShadowLayout   = nullptr;
+        Ref<IDescriptorSetLayout> mLightingSpotlightShadowLayout     = nullptr;
+        Ref<IDescriptorSetLayout> mLightingPointLightShadowLayout    = nullptr;
+        Ref<IDescriptorSet>       mLightingPassTextures              = nullptr;
+        Ref<IDescriptorSet>       mLightingPassCamera                = nullptr;
+        Ref<IDescriptorSet>       mLightingPassDirectionalShadowMaps = nullptr;
+        Ref<IDescriptorSet>       mLightingPassSpotlightShadowMaps   = nullptr;
+        Ref<IDescriptorSet>       mLightingPassPointLightShadowMaps  = nullptr;
 
         Ref<DeferredLightingRenderer> mLightingRenderer     = nullptr;
         Ref<IRenderTarget>            mLightingRenderTarget = nullptr;

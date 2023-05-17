@@ -47,6 +47,11 @@ namespace SE::Core
         mPipeline->SetCulling( eFaceCulling::NONE );
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\Shadow.vert.spv" ), "main" );
         mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 );
+        mPipeline->AddInput( "Position", eBufferDataType::VEC3, 0, 0 );
+        mPipeline->AddInput( "Normal", eBufferDataType::VEC3, 0, 1 );
+        mPipeline->AddInput( "TexCoord_0", eBufferDataType::VEC2, 0, 2 );
+        mPipeline->AddInput( "Bones", eBufferDataType::VEC4, 0, 3 );
+        mPipeline->AddInput( "Weights", eBufferDataType::VEC4, 0, 4 );
 
         CameraSetLayout = GetCameraSetLayout( mGraphicContext );
         // auto &lDescriptorSet = CreateDescriptorSet( aGraphicContext );
@@ -335,77 +340,77 @@ namespace SE::Core
                 lLightIndex++;
             }
 
-            lLightIndex = 0;
-            for( auto &lContext : mPointLightsShadowMapRenderContext )
-            {
+            // lLightIndex = 0;
+            // for( auto &lContext : mPointLightsShadowMapRenderContext )
+            // {
 
-                // clang-format off
-                const float aEntries[] = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f };
-                math::mat4  lClip = math::MakeMat4( aEntries );
-                // clang-format on
+            //     // clang-format off
+            //     const float aEntries[] = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f };
+            //     math::mat4  lClip = math::MakeMat4( aEntries );
+            //     // clang-format on
 
-                // math::mat4 lProjection = lClip * math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 100.0f );
-                math::mat4 lProjection = math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 100.0f );
+            //     // math::mat4 lProjection = lClip * math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 100.0f );
+            //     math::mat4 lProjection = math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 100.0f );
 
-                // clang-format off
-                std::array<math::mat4, 6> lMVPMatrices = {
-                    /* POSITIVE_X */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 1.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 1.0f, 0.0f )  ),
-                    /* NEGATIVE_X */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( -1.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
-                    /* POSITIVE_Y */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 1.0f, 0.0f ), math::vec3( 0.0f, 0.0f, -1.0f ) ),
-                    /* NEGATIVE_Y */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, -1.0f, 0.0f ), math::vec3( 0.0f, 0.0f, 1.0f ) ),
-                    /* POSITIVE_Z */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 0.0f, 1.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
-                    /* NEGATIVE_Z */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 0.0f, -1.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
-                };
-                // clang-format on
+            //     // clang-format off
+            //     std::array<math::mat4, 6> lMVPMatrices = {
+            //         /* POSITIVE_X */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 1.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 1.0f, 0.0f )  ),
+            //         /* NEGATIVE_X */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( -1.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
+            //         /* POSITIVE_Y */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 1.0f, 0.0f ), math::vec3( 0.0f, 0.0f, -1.0f ) ),
+            //         /* NEGATIVE_Y */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, -1.0f, 0.0f ), math::vec3( 0.0f, 0.0f, 1.0f ) ),
+            //         /* POSITIVE_Z */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 0.0f, 1.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
+            //         /* NEGATIVE_Z */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 0.0f, -1.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
+            //     };
+            //     // clang-format on
 
-                for( uint32_t f = 0; f < 6; f++ )
-                {
+            //     for( uint32_t f = 0; f < 6; f++ )
+            //     {
 
-                    glm::mat4 viewMatrix = glm::mat4( 1.0f );
-                    switch( f )
-                    {
-                    case 0: // POSITIVE_X
-                        viewMatrix = glm::rotate( viewMatrix, glm::radians( 90.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
-                        viewMatrix = glm::rotate( viewMatrix, glm::radians( 180.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
-                        break;
-                    case 1: // NEGATIVE_X
-                        viewMatrix = glm::rotate( viewMatrix, glm::radians( -90.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
-                        viewMatrix = glm::rotate( viewMatrix, glm::radians( 180.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
-                        break;
-                    case 2: // POSITIVE_Y
-                        viewMatrix = glm::rotate( viewMatrix, glm::radians( -90.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
-                        break;
-                    case 3: // NEGATIVE_Y
-                        viewMatrix = glm::rotate( viewMatrix, glm::radians( 90.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
-                        break;
-                    case 4: // POSITIVE_Z
-                        viewMatrix = glm::rotate( viewMatrix, glm::radians( 180.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
-                        break;
-                    case 5: // NEGATIVE_Z
-                        viewMatrix = glm::rotate( viewMatrix, glm::radians( 180.0f ), glm::vec3( 0.0f, 0.0f, 1.0f ) );
-                        break;
-                    }
+            //         glm::mat4 viewMatrix = glm::mat4( 1.0f );
+            //         switch( f )
+            //         {
+            //         case 0: // POSITIVE_X
+            //             viewMatrix = glm::rotate( viewMatrix, glm::radians( 90.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
+            //             viewMatrix = glm::rotate( viewMatrix, glm::radians( 180.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
+            //             break;
+            //         case 1: // NEGATIVE_X
+            //             viewMatrix = glm::rotate( viewMatrix, glm::radians( -90.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
+            //             viewMatrix = glm::rotate( viewMatrix, glm::radians( 180.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
+            //             break;
+            //         case 2: // POSITIVE_Y
+            //             viewMatrix = glm::rotate( viewMatrix, glm::radians( -90.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
+            //             break;
+            //         case 3: // NEGATIVE_Y
+            //             viewMatrix = glm::rotate( viewMatrix, glm::radians( 90.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
+            //             break;
+            //         case 4: // POSITIVE_Z
+            //             viewMatrix = glm::rotate( viewMatrix, glm::radians( 180.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
+            //             break;
+            //         case 5: // NEGATIVE_Z
+            //             viewMatrix = glm::rotate( viewMatrix, glm::radians( 180.0f ), glm::vec3( 0.0f, 0.0f, 1.0f ) );
+            //             break;
+            //         }
 
-                    mOmniView.mMVP = lProjection * math::Translate( viewMatrix, -mPointLights[lLightIndex].WorldPosition );
-                    ;
-                    mOmniView.mLightPos = math::vec4( mPointLights[lLightIndex].WorldPosition, 0.0f );
-                    mPointLightsShadowCameraUniformBuffer[lLightIndex][f]->Write( mOmniView );
+            //         mOmniView.mMVP = lProjection * math::Translate( viewMatrix, -mPointLights[lLightIndex].WorldPosition );
+            //         ;
+            //         mOmniView.mLightPos = math::vec4( mPointLights[lLightIndex].WorldPosition, 0.0f );
+            //         mPointLightsShadowCameraUniformBuffer[lLightIndex][f]->Write( mOmniView );
 
-                    lContext[f]->BeginRender();
-                    for( auto &lPipelineData : mOpaqueMeshQueue )
-                    {
-                        if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
+            //         lContext[f]->BeginRender();
+            //         for( auto &lPipelineData : mOpaqueMeshQueue )
+            //         {
+            //             if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
 
-                        lContext[f]->Bind( mOmniRenderPipeline->Pipeline() );
-                        lContext[f]->Bind( mPointLightsShadowSceneDescriptors[lLightIndex][f], 0, -1 );
-                        lContext[f]->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
-                        lContext[f]->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
-                    }
-                    lContext[f]->EndRender();
-                }
+            //             lContext[f]->Bind( mOmniRenderPipeline->Pipeline() );
+            //             lContext[f]->Bind( mPointLightsShadowSceneDescriptors[lLightIndex][f], 0, -1 );
+            //             lContext[f]->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
+            //             lContext[f]->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
+            //         }
+            //         lContext[f]->EndRender();
+            //     }
 
-                lLightIndex++;
-            }
+            //     lLightIndex++;
+            // }
         }
     }
 

@@ -20,11 +20,11 @@ namespace SE::Core
         mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders\\coordinategrid.frag.spv" ), "main" );
         mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 );
 
-        auto lDescriptorSet = CreateDescriptorSetLayout( aGraphicContext );
-        lDescriptorSet->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
-        lDescriptorSet->Build();
+        PipelineLayout = CreateDescriptorSetLayout( aGraphicContext );
+        PipelineLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
+        PipelineLayout->Build();
 
-        mPipeline->AddDescriptorSet( lDescriptorSet );
+        mPipeline->AddDescriptorSet( PipelineLayout );
 
         mPipeline->Build();
 
@@ -44,7 +44,7 @@ namespace SE::Core
         mCameraBuffer =
             CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraViewUniforms ) );
 
-        mCameraDescriptors = lDescriptorSet->Allocate();
+        mCameraDescriptors = PipelineLayout->Allocate();
         mCameraDescriptors->Write( mCameraBuffer, false, 0, sizeof( CameraViewUniforms ), 0 );
     }
 
