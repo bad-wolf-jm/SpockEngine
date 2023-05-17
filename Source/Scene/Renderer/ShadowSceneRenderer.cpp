@@ -27,8 +27,8 @@ namespace SE::Core
     Ref<IDescriptorSetLayout> ShadowMeshRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
         auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
-        lNewLayout.AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
-        lNewLayout.Build();
+        lNewLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
+        lNewLayout->Build();
 
         return lNewLayout;
     }
@@ -237,14 +237,14 @@ namespace SE::Core
         if( ( mDirectionalShadowMapRenderContext.size() > 0 ) || ( mSpotlightShadowMapRenderContext.size() > 0 ) )
         {
             ShadowMeshRendererCreateInfo lCreateInfo{};
-            lCreateInfo.RenderPass = mDirectionalShadowMapRenderContext.back()->GetRenderPass();
+            lCreateInfo.RenderPass = mDirectionalShadowMapRenderContext.back();
             mRenderPipeline        = ShadowMeshRenderer( mGraphicContext, lCreateInfo );
         }
 
         if( mPointLightsShadowMapRenderContext.size() > 0 )
         {
             ShadowMeshRendererCreateInfo lCreateInfo{};
-            lCreateInfo.RenderPass = mPointLightsShadowMapRenderContext.back()[0]->GetRenderPass();
+            lCreateInfo.RenderPass = mPointLightsShadowMapRenderContext.back()[0];
             mOmniRenderPipeline    = OmniShadowMeshRenderer( mGraphicContext, lCreateInfo );
         }
     }

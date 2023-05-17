@@ -25,7 +25,7 @@ namespace SE::Core
         std::string mVertexShader   = "";
         std::string mFragmentShader = "";
 
-        Ref<IRenderPass> RenderPass = nullptr;
+        Ref<IRenderContext> RenderPass = nullptr;
     };
 
     class EffectProcessor // : public SE::Core::SceneRenderPipeline<EmptyVertexData>

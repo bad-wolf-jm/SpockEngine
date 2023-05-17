@@ -16,9 +16,9 @@ namespace SE::Core
     Ref<IDescriptorSetLayout> MeshRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
         auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
-        lNewLayout.AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
-        lNewLayout.AddBinding( 1, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
-        lNewLayout.Build();
+        lNewLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        lNewLayout->AddBinding( 1, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        lNewLayout->Build();
 
         return lNewLayout;
     }
@@ -26,9 +26,9 @@ namespace SE::Core
     Ref<IDescriptorSetLayout> MeshRenderer::GetTextureSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
         auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
-        lNewLayout.AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
-        lNewLayout.AddBinding( 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
-        lNewLayout.Build();
+        lNewLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        lNewLayout->AddBinding( 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        lNewLayout->Build();
 
         return lNewLayout;
     }
@@ -36,8 +36,8 @@ namespace SE::Core
     Ref<IDescriptorSetLayout> MeshRenderer::GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
         auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
-        lNewLayout.AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
-        lNewLayout.Build();
+        lNewLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
+        lNewLayout->Build();
 
         return lNewLayout;
     }
@@ -56,7 +56,7 @@ namespace SE::Core
         : Spec{ aCreateInfo }
     {
 
-        mPipeline = CreateGraphicsPipeline( mGraphicContext, aRenderContext, ePrimitiveTopology::TRIANGLES );
+        mPipeline = CreateGraphicsPipeline( mGraphicContext, aCreateInfo.RenderPass, ePrimitiveTopology::TRIANGLES );
 
         mPipeline->SetCulling( eFaceCulling::BACK );
         mPipeline->SetLineWidth( Spec.LineWidth );

@@ -97,8 +97,8 @@ namespace SE::Core
         mLightingContext = CreateRenderContext( mGraphicContext, mLightingRenderTarget );
 
         DeferredLightingRendererCreateInfo mLightingRendererCI{};
-        mLightingRendererCI.RenderPass = mLightingContext->GetRenderPass();
-        mLightingRenderer              = DeferredLightingRenderer( mGraphicContext, mLightingRendererCI );
+        mLightingRendererCI.RenderPass = mLightingContext;
+        mLightingRenderer              = New<DeferredLightingRenderer>( mGraphicContext, mLightingRendererCI );
 
         mGeometrySamplers["POSITION"] = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "POSITION" ) );
         mGeometrySamplers["NORMALS"]  = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "NORMALS" ) );
@@ -128,21 +128,21 @@ namespace SE::Core
         mFxaaRenderTarget->Finalize();
         mFxaaContext = CreateRenderContext( mGraphicContext, mFxaaRenderTarget );
 
-        CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
-        lCoordinateGridRendererCreateInfo.RenderPass = mLightingContext->GetRenderPass();
-        mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mLightingContext, lCoordinateGridRendererCreateInfo );
+        // CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
+        // lCoordinateGridRendererCreateInfo.RenderPass = mLightingContext->GetRenderPass();
+        mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mLightingContext );
         mShadowSceneRenderer    = New<ShadowSceneRenderer>( mGraphicContext );
 
         EffectProcessorCreateInfo lEffectProcessorCreateInfo{};
         lEffectProcessorCreateInfo.mVertexShader   = "Shaders/fxaa.vert.spv";
         lEffectProcessorCreateInfo.mFragmentShader = "Shaders/fxaa.frag.spv";
-        lEffectProcessorCreateInfo.RenderPass      = mFxaaContext->GetRenderPass();
+        lEffectProcessorCreateInfo.RenderPass      = mFxaaContext;//->GetRenderPass();
         mFxaaRenderer                              = New<EffectProcessor>( mGraphicContext, mFxaaContext, lEffectProcessorCreateInfo );
 
         EffectProcessorCreateInfo lCopyCreateInfo{};
         lCopyCreateInfo.mVertexShader   = "Shaders/fxaa.vert.spv";
         lCopyCreateInfo.mFragmentShader = "Shaders/copy.frag.spv";
-        lCopyCreateInfo.RenderPass      = mFxaaContext->GetRenderPass();
+        lCopyCreateInfo.RenderPass      = mFxaaContext;//->GetRenderPass();
         mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lCopyCreateInfo );
     }
 
@@ -161,7 +161,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
         lCreateInfo.VertexShader   = "Shaders\\Deferred\\MRT.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\Deferred\\MRT.frag.spv";
-        lCreateInfo.RenderPass     = mGeometryContext->GetRenderPass();
+        lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
     }
@@ -175,7 +175,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
         lCreateInfo.VertexShader   = "Shaders\\Deferred\\MRT.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\Deferred\\MRT.frag.spv";
-        lCreateInfo.RenderPass     = mGeometryContext->GetRenderPass();
+        lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
     }
@@ -186,7 +186,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
         lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
-        lCreateInfo.RenderPass     = mGeometryContext->GetRenderPass();
+        lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
     }
@@ -197,7 +197,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
         lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
-        lCreateInfo.RenderPass     = mGeometryContext->GetRenderPass();
+        lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
     }

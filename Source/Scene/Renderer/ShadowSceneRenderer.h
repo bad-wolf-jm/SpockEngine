@@ -25,7 +25,7 @@ namespace SE::Core
 
     struct ShadowMeshRendererCreateInfo
     {
-        Ref<IRenderPass> RenderPass = nullptr;
+        Ref<IRenderContext> RenderPass = nullptr;
     };
 
     class ShadowMeshRenderer //: public SceneRenderPipeline<VertexData>
