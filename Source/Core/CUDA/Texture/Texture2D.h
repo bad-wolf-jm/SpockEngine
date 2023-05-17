@@ -93,21 +93,17 @@ namespace SE::Cuda
          */
         Texture2D( sTextureCreateInfo &aSpec, void *aExternalBuffer, size_t aImageMemorySize );
 
-/** @brief Constructor
- *
- * Create a texture from the provided imagedata, according to the requested specification.
- *
- * @param aSpec      Texture specification
- * @param aImageData Texture image data
- */
-// Texture2D( sTextureCreateInfo &aSpec, Graphics::Texture2D &aImageData );
+        /** @brief Constructor
+         *
+         * Create a texture from the provided imagedata, according to the requested specification.
+         *
+         * @param aSpec      Texture specification
+         * @param aImageData Texture image data
+         */
+        // Texture2D( sTextureCreateInfo &aSpec, Graphics::Texture2D &aImageData );
 
-/** @brief Destructor */
-#ifdef CUDA_INTEROP
+        /** @brief Destructor */
         ~Texture2D();
-#else
-        ~Texture2D() = default;
-#endif
 
       protected:
         size_t         mImageMemorySize            = 0;
@@ -162,8 +158,8 @@ namespace SE::Cuda
          * @param aSamplingInfo Sampling data
          */
         TextureSampler2D( Ref<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingInfo );
-// #ifdef CUDA_INTEROP
+        // #ifdef CUDA_INTEROP
         void InitializeTextureSampler();
-// #endif
+        // #endif
     };
 } // namespace SE::Cuda

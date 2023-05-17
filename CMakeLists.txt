@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 # project(LTSimulationEngine LANGUAGES CUDA CXX C)
-project(LTSimulationEngine LANGUAGES CXX C)
+project(LTSimulationEngine LANGUAGES CUDA CXX C)
 
 set(CMAKE_CXX_STANDARD 17)
 
