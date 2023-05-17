@@ -5,7 +5,7 @@
 #include <type_traits>
 
 // #define CUDA_INTEROP
-#define CUDA_INTEROP_TYPE false
+// #define CUDA_INTEROP_TYPE false
 
 #include <cuda.h>
 #include <cuda_runtime_api.h>

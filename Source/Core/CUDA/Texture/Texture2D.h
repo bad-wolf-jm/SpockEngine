@@ -18,6 +18,7 @@
 #include "Core/Memory.h"
 
 #include "Core/Math/Types.h"
+#include "Conversion.h"
 
 /** \namespace SE::Cuda
  */
@@ -158,8 +159,6 @@ namespace SE::Cuda
          * @param aSamplingInfo Sampling data
          */
         TextureSampler2D( Ref<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingInfo );
-        // #ifdef CUDA_INTEROP
         void InitializeTextureSampler();
-        // #endif
     };
 } // namespace SE::Cuda

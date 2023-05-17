@@ -4,12 +4,8 @@
 #include <stdexcept>
 #include <type_traits>
 
-#define CUDA_INTEROP true
-
-#ifdef CUDA_INTEROP
-#    include <cuda.h>
-#    include <cuda_runtime_api.h>
-#endif
+#include <cuda.h>
+#include <cuda_runtime_api.h>
 
 #include "Core/Logging.h"
 #include "Texture/ColorFormat.h"
@@ -33,6 +29,7 @@
         if( !( condition ) ) return; \
     } while( 0 )
 
+const bool CUDA_INTEROP = true;
 namespace SE::Cuda
 {
     using namespace SE::Core;
