@@ -19,13 +19,11 @@
 
 inline void __CUDA_ASSERT( cudaError_t aErr, const char *aFile, const int aLine )
 {
-#    ifdef CUDA_INTEROP
     if( CUDA_SUCCESS == aErr ) return;
 
     const char *errorStr = cudaGetErrorString( aErr );
     SE::Logging::Error( "CUDA_ASSERT() API error = {} \"{}\" from file <{}>, line {}.\n", aErr, errorStr, aFile, aLine );
     throw std::runtime_error( "CUDA_ASSERT()" );
-#    endif
 }
 
 #endif
