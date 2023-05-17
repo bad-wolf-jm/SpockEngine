@@ -31,7 +31,7 @@ namespace SE::Graphics
         void         AddBinding( uint32_t aBindingIndex, eDescriptorType aType, ShaderStageType aShaderStages );
         virtual void Build() = 0;
 
-        virtual Ref<IDescriptorSet> Allocate( uint32_t aDescriptorCount ) = 0;
+        virtual Ref<IDescriptorSet> Allocate( uint32_t aDescriptorCount = 1 ) = 0;
 
       protected:
         Ref<IGraphicContext> mGraphicContext{};
