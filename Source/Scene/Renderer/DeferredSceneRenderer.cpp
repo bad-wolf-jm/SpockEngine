@@ -96,9 +96,9 @@ namespace SE::Core
         mLightingRenderTarget->Finalize();
         mLightingContext = CreateRenderContext( mGraphicContext, mLightingRenderTarget );
 
-        DeferredLightingRendererCreateInfo mLightingRendererCI{};
-        mLightingRendererCI.RenderPass = mLightingContext;
-        mLightingRenderer              = New<DeferredLightingRenderer>( mGraphicContext, mLightingRendererCI );
+        // DeferredLightingRendererCreateInfo mLightingRendererCI{};
+        // mLightingRendererCI.RenderPass = mLightingContext;
+        mLightingRenderer              = New<DeferredLightingRenderer>( mGraphicContext, mLightingContext );
 
         mGeometrySamplers["POSITION"] = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "POSITION" ) );
         mGeometrySamplers["NORMALS"]  = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "NORMALS" ) );
@@ -286,8 +286,8 @@ namespace SE::Core
         for( auto &lPipelineData : mOpaqueMeshQueue )
         {
             auto &lPipeline = GetRenderPipeline( lPipelineData );
-            if( lPipeline.Pipeline )
-                mGeometryContext->Bind( lPipeline.Pipeline );
+            if( lPipeline->Pipeline() )
+                mGeometryContext->Bind( lPipeline->Pipeline() );
             else
                 continue;
             mGeometryContext->Bind( mGeometryPassCamera, 0, -1 );
@@ -318,7 +318,7 @@ namespace SE::Core
         // Lighting pass
         mLightingContext->BeginRender();
         {
-            mLightingContext->Bind( mLightingRenderer.Pipeline );
+            mLightingContext->Bind( mLightingRenderer->Pipeline() );
             mLightingContext->Bind( mLightingPassCamera, 0, -1 );
             mLightingContext->Bind( mLightingPassTextures, 1, -1 );
             mLightingContext->Bind( mLightingPassDirectionalShadowMaps, 2, -1 );

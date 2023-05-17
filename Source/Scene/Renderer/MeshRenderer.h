@@ -75,6 +75,7 @@ namespace SE::Core
         static Ref<IDescriptorSetLayout> GetTextureSetLayout( Ref<IGraphicContext> aGraphicContext );
         static Ref<IDescriptorSetLayout> GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext );
 
+        Ref<IGraphicsPipeline> Pipeline() { return mPipeline; }
         // std::vector<Ref<IDescriptorSetLayout>> GetDescriptorSetLayout();
         // std::vector<sPushConstantRange>       GetPushConstantLayout();
 
