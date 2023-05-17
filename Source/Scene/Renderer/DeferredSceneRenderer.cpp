@@ -16,7 +16,7 @@ namespace SE::Core
 
         // Layout for the geometry pass
         auto lCameraDescriptorLayout = MeshRenderer::GetCameraSetLayout( mGraphicContext );
-        mGeometryPassCamera          = lCameraDescriptorLayout->Allocate( 1024 );
+        mGeometryPassCamera          = lCameraDescriptorLayout->Allocate( );
         mGeometryPassCamera->Write( mCameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
         mGeometryPassCamera->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
 
@@ -29,13 +29,13 @@ namespace SE::Core
         mLightingPassTextures       = lLightingTextureLayout->Allocate();
 
         auto lLightingDirectionalShadowLayout = DeferredLightingRenderer::GetDirectionalShadowSetLayout( mGraphicContext );
-        mLightingPassDirectionalShadowMaps    = lLightingDirectionalShadowLayout->Allocate( 1024 );
+        mLightingPassDirectionalShadowMaps    = lLightingDirectionalShadowLayout->Allocate( 1000 );
 
         auto lLightingSpotlightShadowLayout = DeferredLightingRenderer::GetSpotlightShadowSetLayout( mGraphicContext );
-        mLightingPassSpotlightShadowMaps    = lLightingSpotlightShadowLayout->Allocate( 1024 );
+        mLightingPassSpotlightShadowMaps    = lLightingSpotlightShadowLayout->Allocate( 1001 );
 
         auto lLightingPointLightShadowLayout = DeferredLightingRenderer::GetPointLightShadowSetLayout( mGraphicContext );
-        mLightingPassPointLightShadowMaps    = lLightingPointLightShadowLayout->Allocate( 1024 );
+        mLightingPassPointLightShadowMaps    = lLightingPointLightShadowLayout->Allocate( 1002 );
     }
 
     void DeferredRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
@@ -100,6 +100,8 @@ namespace SE::Core
         // mLightingRendererCI.RenderPass = mLightingContext;
         mLightingRenderer              = New<DeferredLightingRenderer>( mGraphicContext, mLightingContext );
 
+        auto x = mGeometryRenderTarget->GetAttachment( "POSITION" );
+        auto y = Cast<ITexture2D>(x);
         mGeometrySamplers["POSITION"] = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "POSITION" ) );
         mGeometrySamplers["NORMALS"]  = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "NORMALS" ) );
         mGeometrySamplers["ALBEDO"]   = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "ALBEDO" ) );
@@ -146,7 +148,7 @@ namespace SE::Core
         mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lCopyCreateInfo );
     }
 
-    Ref<ITexture> DeferredRenderer::GetOutputImage()
+    Ref<ITexture2D> DeferredRenderer::GetOutputImage()
     {
         //
         return mFxaaRenderTarget->GetAttachment( "OUTPUT" );

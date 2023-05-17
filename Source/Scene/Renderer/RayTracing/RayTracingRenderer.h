@@ -42,7 +42,7 @@ namespace SE::Core
 
         void SetView( math::mat4 aViewMatrix );
 
-        Ref<ITexture> GetOutputImage() { return mOutputTexture; }
+        Ref<ITexture2D> GetOutputImage() { return mOutputTexture; }
 
         bool denoiserOn = true;
         bool accumulate = true;

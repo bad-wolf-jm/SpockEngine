@@ -2,11 +2,11 @@
 
 #include "Core/Memory.h"
 
+#include "ICommandBuffer.h"
 #include "IGraphicContext.h"
 #include "IRenderPass.h"
-#include "ITexture.h"
+#include "ITexture2D.h"
 #include "ITextureCubeMap.h"
-#include "ICommandBuffer.h"
 
 namespace SE::Graphics
 {
@@ -65,8 +65,8 @@ namespace SE::Graphics
 
     struct sAttachmentResource
     {
-        Ref<ITexture> mTexture = nullptr;
-        eCubeFace     mFace    = eCubeFace::NEGATIVE_Z;
+        Ref<ITexture2D> mTexture = nullptr;
+        eCubeFace       mFace    = eCubeFace::NEGATIVE_Z;
     };
 
     class IRenderTarget
@@ -83,14 +83,14 @@ namespace SE::Graphics
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
 
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-                            Ref<ITexture> aFramebufferImage );
+                            Ref<ITexture2D> aFramebufferImage );
 
         void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-                            Ref<ITexture> aFramebufferImage, eCubeFace aFace );
+                            Ref<ITexture2D> aFramebufferImage, eCubeFace aFace );
 
         void AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
                             bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp,
-                            Ref<ITexture> aFramebufferImage );
+                            Ref<ITexture2D> aFramebufferImage );
 
         virtual void             Finalize();
         virtual Ref<IRenderPass> GetRenderPass();
@@ -99,8 +99,8 @@ namespace SE::Graphics
         virtual void EndRender();
         virtual void Present();
 
-        Ref<ITexture> GetAttachment( std::string const &aKey );
-        uint32_t      GetColorAttachmentCount() { return mColorAttachmentCount; }
+        Ref<ITexture2D> GetAttachment( std::string const &aKey );
+        uint32_t        GetColorAttachmentCount() { return mColorAttachmentCount; }
 
         template <typename _GCSubtype>
         Ref<_GCSubtype> GraphicContext()
@@ -109,7 +109,7 @@ namespace SE::Graphics
         }
 
         uint32_t GetImageCount() { return mImageCount; }
-        
+
         virtual Ref<ICommandBuffer> GetCommandBuffer() = 0;
 
       protected:

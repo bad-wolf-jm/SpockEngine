@@ -27,7 +27,7 @@ namespace SE::Core
         mTextureDescriptorLayout->AddBinding( 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
         mTextureDescriptorLayout->Build();
 
-        mTextureDescriptorSet = mTextureDescriptorLayout->Allocate( 1024 );
+        mTextureDescriptorSet = mTextureDescriptorLayout->Allocate();
 
         mTextureDescriptorSet->Write( mShaderMaterials, false, 0, sizeof( sShaderMaterial ), 0 );
     }

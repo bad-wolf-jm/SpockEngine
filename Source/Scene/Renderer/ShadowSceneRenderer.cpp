@@ -232,42 +232,42 @@ namespace SE::Core
 
                 for( uint32_t f = 0; f < 6; f++ )
                 {
-                    sRenderTargetDescription lRenderTargetSpec{};
-                    lRenderTargetSpec.mWidth       = 1024;
-                    lRenderTargetSpec.mHeight      = 1024;
-                    lRenderTargetSpec.mSampleCount = 1;
-                    auto lRenderTarget             = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
+                    // sRenderTargetDescription lRenderTargetSpec{};
+                    // lRenderTargetSpec.mWidth       = 1024;
+                    // lRenderTargetSpec.mHeight      = 1024;
+                    // lRenderTargetSpec.mSampleCount = 1;
+                    // auto lRenderTarget             = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
 
-                    sAttachmentDescription lAttachmentCreateInfo{};
-                    lAttachmentCreateInfo.mFormat      = eColorFormat::R32_FLOAT;
-                    lAttachmentCreateInfo.mIsSampled   = true;
-                    lAttachmentCreateInfo.mIsPresented = false;
-                    lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
-                    lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
-                    lAttachmentCreateInfo.mType        = eAttachmentType::COLOR;
-                    lAttachmentCreateInfo.mClearColor  = { 0.0f, 0.0f, 0.0f, 1.0f };
-                    lRenderTarget->AddAttachment( "SHADOW_MAP", lAttachmentCreateInfo, lShadowMap, static_cast<eCubeFace>( f ) );
+                    // sAttachmentDescription lAttachmentCreateInfo{};
+                    // lAttachmentCreateInfo.mFormat      = eColorFormat::R32_FLOAT;
+                    // lAttachmentCreateInfo.mIsSampled   = true;
+                    // lAttachmentCreateInfo.mIsPresented = false;
+                    // lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
+                    // lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
+                    // lAttachmentCreateInfo.mType        = eAttachmentType::COLOR;
+                    // lAttachmentCreateInfo.mClearColor  = { 0.0f, 0.0f, 0.0f, 1.0f };
+                    // lRenderTarget->AddAttachment( "SHADOW_MAP", lAttachmentCreateInfo, lShadowMap, static_cast<eCubeFace>( f ) );
 
-                    lAttachmentCreateInfo              = sAttachmentDescription{};
-                    lAttachmentCreateInfo.mIsSampled   = false;
-                    lAttachmentCreateInfo.mIsPresented = false;
-                    lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
-                    lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
-                    lAttachmentCreateInfo.mType        = eAttachmentType::DEPTH;
-                    lAttachmentCreateInfo.mClearColor  = { 1.0f, 0.0f, 0.0f, 0.0f };
-                    lRenderTarget->AddAttachment( "DEPTH", lAttachmentCreateInfo );
-                    lRenderTarget->Finalize();
+                    // lAttachmentCreateInfo              = sAttachmentDescription{};
+                    // lAttachmentCreateInfo.mIsSampled   = false;
+                    // lAttachmentCreateInfo.mIsPresented = false;
+                    // lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
+                    // lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
+                    // lAttachmentCreateInfo.mType        = eAttachmentType::DEPTH;
+                    // lAttachmentCreateInfo.mClearColor  = { 1.0f, 0.0f, 0.0f, 0.0f };
+                    // lRenderTarget->AddAttachment( "DEPTH", lAttachmentCreateInfo );
+                    // lRenderTarget->Finalize();
 
-                    mPointLightsShadowMapRenderContext.back()[f] = CreateRenderContext( mGraphicContext, lRenderTarget );
-                    mPointLightsShadowSceneDescriptors.back()[f] =
-                        OmniShadowMeshRenderer::GetCameraSetLayout( mGraphicContext )->Allocate();
-                    // New<DescriptorSet>( mGraphicContext, OmniShadowMeshRenderer::GetCameraSetLayout( mGraphicContext ) );
+                    // mPointLightsShadowMapRenderContext.back()[f] = CreateRenderContext( mGraphicContext, lRenderTarget );
+                    // mPointLightsShadowSceneDescriptors.back()[f] =
+                    //     OmniShadowMeshRenderer::GetCameraSetLayout( mGraphicContext )->Allocate();
+                    // // New<DescriptorSet>( mGraphicContext, OmniShadowMeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
-                    mPointLightsShadowCameraUniformBuffer.back()[f] = CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true,
-                                                                                    true, true, true, sizeof( OmniShadowMatrices ) );
+                    // mPointLightsShadowCameraUniformBuffer.back()[f] = CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true,
+                    //                                                                 true, true, true, sizeof( OmniShadowMatrices ) );
 
-                    mPointLightsShadowSceneDescriptors.back()[f]->Write( mPointLightsShadowCameraUniformBuffer.back()[f], false, 0,
-                                                                         sizeof( OmniShadowMatrices ), 0 );
+                    // mPointLightsShadowSceneDescriptors.back()[f]->Write( mPointLightsShadowCameraUniformBuffer.back()[f], false, 0,
+                    //                                                      sizeof( OmniShadowMatrices ), 0 );
                 }
             }
         }
@@ -279,12 +279,12 @@ namespace SE::Core
             mRenderPipeline        = New<ShadowMeshRenderer>( mGraphicContext, lCreateInfo );
         }
 
-        if( mPointLightsShadowMapRenderContext.size() > 0 )
-        {
-            ShadowMeshRendererCreateInfo lCreateInfo{};
-            lCreateInfo.RenderPass = mPointLightsShadowMapRenderContext.back()[0];
-            mOmniRenderPipeline    = New<OmniShadowMeshRenderer>( mGraphicContext, lCreateInfo );
-        }
+        // if( mPointLightsShadowMapRenderContext.size() > 0 )
+        // {
+        //     ShadowMeshRendererCreateInfo lCreateInfo{};
+        //     lCreateInfo.RenderPass = mPointLightsShadowMapRenderContext.back()[0];
+        //     mOmniRenderPipeline    = New<OmniShadowMeshRenderer>( mGraphicContext, lCreateInfo );
+        // }
     }
 
     void ShadowSceneRenderer::Render()
@@ -409,7 +409,7 @@ namespace SE::Core
         }
     }
 
-    Ref<ITexture> ShadowSceneRenderer::GetOutputImage()
+    Ref<ITexture2D> ShadowSceneRenderer::GetOutputImage()
     {
         //
         return mGeometryRenderTarget->GetAttachment( "OUTPUT" );

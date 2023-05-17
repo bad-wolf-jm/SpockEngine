@@ -283,7 +283,7 @@ namespace SE::Core
         mGeometryContext->EndRender();
     }
 
-    Ref<ITexture> ForwardSceneRenderer::GetOutputImage()
+    Ref<ITexture2D> ForwardSceneRenderer::GetOutputImage()
     {
         //
         return mGeometryRenderTarget->GetAttachment( "OUTPUT" );
