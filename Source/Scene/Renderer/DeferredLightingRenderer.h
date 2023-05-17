@@ -55,6 +55,8 @@ namespace SE::Core
         static Ref<IDescriptorSetLayout> GetSpotlightShadowSetLayout( Ref<IGraphicContext> aGraphicContext );
         static Ref<IDescriptorSetLayout> GetPointLightShadowSetLayout( Ref<IGraphicContext> aGraphicContext );
 
+        Ref<IGraphicsPipeline> Pipeline() { return mPipeline; }
+
         // std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
         // std::vector<sPushConstantRange>       GetPushConstantLayout();
 

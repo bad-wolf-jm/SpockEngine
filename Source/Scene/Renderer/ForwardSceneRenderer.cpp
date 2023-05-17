@@ -113,15 +113,13 @@ namespace SE::Core
 
         mGeometryContext = ARenderContext( mGraphicContext, mGeometryRenderTarget );
 
-        // CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
-        // lCoordinateGridRendererCreateInfo.RenderPass = mGeometryContext;
         mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mGeometryContext );
     }
 
     MeshRenderer &ForwardSceneRenderer::GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification )
     {
         if( mMeshRenderers.find( aPipelineSpecification ) == mMeshRenderers.end() )
-            mMeshRenderers[aPipelineSpecification] = MeshRenderer( mGraphicContext, aPipelineSpecification );
+            mMeshRenderers[aPipelineSpecification] = New<MeshRenderer>( mGraphicContext, aPipelineSpecification );
 
         return mMeshRenderers[aPipelineSpecification];
     }
@@ -144,7 +142,7 @@ namespace SE::Core
     {
         if( mParticleRenderers.find( aPipelineSpecification ) == mParticleRenderers.end() )
             mParticleRenderers[aPipelineSpecification] =
-                ParticleSystemRenderer( mGraphicContext, mGeometryContext, aPipelineSpecification );
+                New<ParticleSystemRenderer>( mGraphicContext, mGeometryContext, aPipelineSpecification );
 
         return mParticleRenderers[aPipelineSpecification];
     }
