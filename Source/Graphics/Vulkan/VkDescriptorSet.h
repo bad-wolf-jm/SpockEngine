@@ -15,15 +15,15 @@
 
 namespace SE::Graphics
 {
-    template <typename _BufType>
-    struct DescriptorBufferInfo
-    {
-        Ref<_BufType> Buffer        = nullptr;
-        bool          DynamicOffset = false;
-        uint32_t      Binding       = 0;
-        uint32_t      Offset        = 0;
-        uint32_t      Size          = 0;
-    };
+    // template <typename _BufType>
+    // struct DescriptorBufferInfo
+    // {
+    //     Ref<_BufType> Buffer        = nullptr;
+    //     bool          DynamicOffset = false;
+    //     uint32_t      Binding       = 0;
+    //     uint32_t      Offset        = 0;
+    //     uint32_t      Size          = 0;
+    // };
 
     class VkDescriptorSetObject : public IDescriptorSet
     {

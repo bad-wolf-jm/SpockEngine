@@ -16,7 +16,8 @@ namespace SE::Core
     Ref<IDescriptorSetLayout> MeshRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
         auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
-        lNewLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        lNewLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER,
+                                { eShaderStageTypeFlags::VERTEX, eShaderStageTypeFlags::FRAGMENT } );
         lNewLayout->AddBinding( 1, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
         lNewLayout->Build();
 
@@ -25,7 +26,7 @@ namespace SE::Core
 
     Ref<IDescriptorSetLayout> MeshRenderer::GetTextureSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
-        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
+        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext, true );
         lNewLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
         lNewLayout->AddBinding( 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
         lNewLayout->Build();
@@ -53,16 +54,22 @@ namespace SE::Core
     // };
 
     MeshRenderer::MeshRenderer( Ref<IGraphicContext> aGraphicContext, MeshRendererCreateInfo const &aCreateInfo )
-        : Spec{ aCreateInfo }
+        : mGraphicContext{ aGraphicContext }
+        , Spec{ aCreateInfo }
     {
 
         mPipeline = CreateGraphicsPipeline( mGraphicContext, aCreateInfo.RenderPass, ePrimitiveTopology::TRIANGLES );
 
         mPipeline->SetCulling( eFaceCulling::BACK );
         mPipeline->SetLineWidth( Spec.LineWidth );
-        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, Spec.VertexShader, "main" );
-        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, Spec.FragmentShader, "main" );
+        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( Spec.VertexShader ), "main" );
+        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( Spec.FragmentShader ), "main" );
         mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( MaterialPushConstants ) );
+        mPipeline->AddInput( "Position", eBufferDataType::VEC3, 0, 0 );
+        mPipeline->AddInput( "Normal", eBufferDataType::VEC3, 0, 1 );
+        mPipeline->AddInput( "TexCoord_0", eBufferDataType::VEC2, 0, 2 );
+        mPipeline->AddInput( "Bones", eBufferDataType::VEC4, 0, 3 );
+        mPipeline->AddInput( "Weights", eBufferDataType::VEC4, 0, 4 );
 
         CameraSetLayout  = GetCameraSetLayout( mGraphicContext );
         TextureSetLayout = GetTextureSetLayout( mGraphicContext );

@@ -15,27 +15,27 @@ namespace SE::Core
             CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraSettings ) );
 
         // Layout for the geometry pass
-        auto lCameraDescriptorLayout = MeshRenderer::GetCameraSetLayout( mGraphicContext );
-        mGeometryPassCamera          = lCameraDescriptorLayout->Allocate( );
+        mGeometryCameraLayout = MeshRenderer::GetCameraSetLayout( mGraphicContext );
+        mGeometryPassCamera   = mGeometryCameraLayout->Allocate();
         mGeometryPassCamera->Write( mCameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
         mGeometryPassCamera->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
 
-        auto lLightingCameraLayout = DeferredLightingRenderer::GetCameraSetLayout( mGraphicContext );
-        mLightingPassCamera        = lLightingCameraLayout->Allocate( 1 );
+        mLightingCameraLayout = DeferredLightingRenderer::GetCameraSetLayout( mGraphicContext );
+        mLightingPassCamera   = mLightingCameraLayout->Allocate();
         mLightingPassCamera->Write( mCameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
         mLightingPassCamera->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
 
-        auto lLightingTextureLayout = DeferredLightingRenderer::GetTextureSetLayout( mGraphicContext );
-        mLightingPassTextures       = lLightingTextureLayout->Allocate();
+        mLightingTextureLayout = DeferredLightingRenderer::GetTextureSetLayout( mGraphicContext );
+        mLightingPassTextures  = mLightingTextureLayout->Allocate();
 
-        auto lLightingDirectionalShadowLayout = DeferredLightingRenderer::GetDirectionalShadowSetLayout( mGraphicContext );
-        mLightingPassDirectionalShadowMaps    = lLightingDirectionalShadowLayout->Allocate( 1000 );
+        mLightingDirectionalShadowLayout   = DeferredLightingRenderer::GetDirectionalShadowSetLayout( mGraphicContext );
+        mLightingPassDirectionalShadowMaps = mLightingDirectionalShadowLayout->Allocate( 1024 );
 
-        auto lLightingSpotlightShadowLayout = DeferredLightingRenderer::GetSpotlightShadowSetLayout( mGraphicContext );
-        mLightingPassSpotlightShadowMaps    = lLightingSpotlightShadowLayout->Allocate( 1001 );
+        mLightingSpotlightShadowLayout   = DeferredLightingRenderer::GetSpotlightShadowSetLayout( mGraphicContext );
+        mLightingPassSpotlightShadowMaps = mLightingSpotlightShadowLayout->Allocate( 1024 );
 
-        auto lLightingPointLightShadowLayout = DeferredLightingRenderer::GetPointLightShadowSetLayout( mGraphicContext );
-        mLightingPassPointLightShadowMaps    = lLightingPointLightShadowLayout->Allocate( 1002 );
+        mLightingPointLightShadowLayout   = DeferredLightingRenderer::GetPointLightShadowSetLayout( mGraphicContext );
+        mLightingPassPointLightShadowMaps = mLightingPointLightShadowLayout->Allocate( 1024 );
     }
 
     void DeferredRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
@@ -98,10 +98,10 @@ namespace SE::Core
 
         // DeferredLightingRendererCreateInfo mLightingRendererCI{};
         // mLightingRendererCI.RenderPass = mLightingContext;
-        mLightingRenderer              = New<DeferredLightingRenderer>( mGraphicContext, mLightingContext );
+        mLightingRenderer = New<DeferredLightingRenderer>( mGraphicContext, mLightingContext );
 
-        auto x = mGeometryRenderTarget->GetAttachment( "POSITION" );
-        auto y = Cast<ITexture2D>(x);
+        auto x                        = mGeometryRenderTarget->GetAttachment( "POSITION" );
+        auto y                        = Cast<ITexture2D>( x );
         mGeometrySamplers["POSITION"] = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "POSITION" ) );
         mGeometrySamplers["NORMALS"]  = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "NORMALS" ) );
         mGeometrySamplers["ALBEDO"]   = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "ALBEDO" ) );
@@ -138,13 +138,13 @@ namespace SE::Core
         EffectProcessorCreateInfo lEffectProcessorCreateInfo{};
         lEffectProcessorCreateInfo.mVertexShader   = "Shaders/fxaa.vert.spv";
         lEffectProcessorCreateInfo.mFragmentShader = "Shaders/fxaa.frag.spv";
-        lEffectProcessorCreateInfo.RenderPass      = mFxaaContext;//->GetRenderPass();
+        lEffectProcessorCreateInfo.RenderPass      = mFxaaContext; //->GetRenderPass();
         mFxaaRenderer                              = New<EffectProcessor>( mGraphicContext, mFxaaContext, lEffectProcessorCreateInfo );
 
         EffectProcessorCreateInfo lCopyCreateInfo{};
         lCopyCreateInfo.mVertexShader   = "Shaders/fxaa.vert.spv";
         lCopyCreateInfo.mFragmentShader = "Shaders/copy.frag.spv";
-        lCopyCreateInfo.RenderPass      = mFxaaContext;//->GetRenderPass();
+        lCopyCreateInfo.RenderPass      = mFxaaContext; //->GetRenderPass();
         mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lCopyCreateInfo );
     }
 

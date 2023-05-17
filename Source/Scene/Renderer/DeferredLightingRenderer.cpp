@@ -24,7 +24,7 @@ namespace SE::Core
 
     Ref<IDescriptorSetLayout> DeferredLightingRenderer::GetTextureSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
-        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext, true );
+        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
 
         DescriptorSetLayoutCreateInfo lTextureBindLayout{};
         // lTextureBindLayout.Bindings = {
