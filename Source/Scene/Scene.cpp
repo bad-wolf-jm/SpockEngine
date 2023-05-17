@@ -1149,7 +1149,7 @@ namespace SE::Core
         //                                              aMeshComponent.mIndexOffset, aMeshComponent.mIndexCount );
         //     } );
 
-        mAccelerationStructure->Build();
+        // mAccelerationStructure->Build();
     }
 
     void Scene::InitializeRayTracing()

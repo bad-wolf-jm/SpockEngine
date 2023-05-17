@@ -47,8 +47,8 @@ namespace SE::Editor
         lSamplingInfo.mNormalizedCoordinates = true;
         lSamplingInfo.mNormalizedValues      = true;
 
-        mOffscreenRenderTargetTexture = New<ISampler2D>( SE::Core::Engine::GetInstance()->GetGraphicContext(),
-                                                         Cast<ITexture2D>(mDeferredRenderer->GetOutputImage()), lSamplingInfo );
+        mOffscreenRenderTargetTexture = CreateSampler2D( SE::Core::Engine::GetInstance()->GetGraphicContext(),
+                                                         mDeferredRenderer->GetOutputImage(), lSamplingInfo );
 
         if( !mOffscreenRenderTargetDisplayHandle.Handle )
         {

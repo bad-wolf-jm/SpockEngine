@@ -35,7 +35,7 @@ namespace SE::Core
 
         ~ForwardSceneRenderer() = default;
 
-        Ref<ITexture> GetOutputImage();
+        Ref<ITexture2D> GetOutputImage();
 
         void Update( Ref<Scene> aWorld );
         void Render();

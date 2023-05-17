@@ -24,7 +24,7 @@ namespace SE::Core
 
     Ref<IDescriptorSetLayout> DeferredLightingRenderer::GetTextureSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
-        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
+        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext, true );
 
         DescriptorSetLayoutCreateInfo lTextureBindLayout{};
         // lTextureBindLayout.Bindings = {
@@ -39,7 +39,7 @@ namespace SE::Core
 
     Ref<IDescriptorSetLayout> DeferredLightingRenderer::GetDirectionalShadowSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
-        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
+        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext, true );
         lNewLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
 
         // DescriptorSetLayoutCreateInfo lShadowMapLayout{};
@@ -53,7 +53,7 @@ namespace SE::Core
 
     Ref<IDescriptorSetLayout> DeferredLightingRenderer::GetSpotlightShadowSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
-        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
+        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext, true );
         lNewLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
 
         // DescriptorSetLayoutCreateInfo lShadowMapLayout{};
@@ -67,7 +67,7 @@ namespace SE::Core
 
     Ref<IDescriptorSetLayout> DeferredLightingRenderer::GetPointLightShadowSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
-        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
+        auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext, true );
         lNewLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
 
         // DescriptorSetLayoutCreateInfo lShadowMapLayout{};

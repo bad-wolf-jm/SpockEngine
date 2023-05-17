@@ -53,10 +53,10 @@ namespace SE::Graphics
     Ref<ITexture2D> CreateTexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount,
                                      bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource );
 
-    Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture> aTextureData );
+    // Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture> aTextureData );
 
-    Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture> aTextureData,
-                                     sTextureSamplingInfo const &aSamplingSpec );
+    // Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture> aTextureData,
+    //                                  sTextureSamplingInfo const &aSamplingSpec );
 
     Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData,
                                      sTextureSamplingInfo const &aSamplingSpec );
@@ -72,15 +72,15 @@ namespace SE::Graphics
     Ref<ITextureCubeMap> CreateTextureCubeMap( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount,
                                           bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource );
 
-    Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture> aTextureData );
+    // Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture> aTextureData );
 
-    Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture> aTextureData,
+    // Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture> aTextureData,
+    //                                       sTextureSamplingInfo const &aSamplingSpec );
+
+    Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITextureCubeMap> aTextureData,
                                           sTextureSamplingInfo const &aSamplingSpec );
 
-    Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData,
-                                          sTextureSamplingInfo const &aSamplingSpec );
-
-    Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData );
+    Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITextureCubeMap> aTextureData );
 
     Ref<IGraphicsPipeline> CreateGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
                                                    ePrimitiveTopology aTopology );

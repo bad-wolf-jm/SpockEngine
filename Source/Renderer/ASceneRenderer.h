@@ -32,7 +32,7 @@ namespace SE::Core
 
         virtual void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
-        virtual Ref<ITexture> GetOutputImage() = 0;
+        virtual Ref<ITexture2D> GetOutputImage() = 0;
 
       protected:
         Ref<IGraphicContext> mGraphicContext{};
