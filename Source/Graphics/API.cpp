@@ -121,7 +121,7 @@ namespace SE::Graphics
         return CreateSampler2D( aGraphicContext, aTextureData, sTextureSamplingInfo{} );
     }
 
-    Ref<ITextureCubeMap> CreateTextureCubemap( Ref<IGraphicContext> aGraphicContext, sTextureCreateInfo &aTextureImageDescription,
+    Ref<ITextureCubeMap> CreateTextureCubeMap( Ref<IGraphicContext> aGraphicContext, sTextureCreateInfo &aTextureImageDescription,
                                                uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
                                                bool aIsTransferDestination )
     {

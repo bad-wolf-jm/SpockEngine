@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(LTSimulationEngine LANGUAGES CXX C)
+project(LTSimulationEngine LANGUAGES CXX CUDA C)
 
 cuda_compile_and_embed(g_SensorModelEnvironmentSampler Scene/EnvironmentSampler/DevicePrograms.cu)
 cuda_compile_and_embed(embedded_ptx_code Scene/Renderer/RayTracing/DevicePrograms.cu)
@@ -9,6 +9,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/File.cpp
     Core/Resource.cpp
     Core/Logging.cpp
+
+    Core/Entity/EditComponent.cpp
 
     DotNet/Runtime.cpp
     DotNet/Class.cpp

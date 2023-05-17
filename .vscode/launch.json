@@ -9,8 +9,8 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/Build/Source/SE_Run.exe",
-            "args": [ "--project", "TestProject", "--width", "2900", "--height", "1350" ],
-            "cwd": "${workspaceFolder}/Programs/TestProject",
+            "args": [ "--project", "TestProject", "--res_x", "2900", "--res_y", "1350" ],
+            "cwd": "d:/TestProject",
             "stopAtEntry": false
         },
         {
