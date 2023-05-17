@@ -63,11 +63,30 @@ namespace SE::Graphics
 
     Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData );
 
+    Ref<ITextureCubeMap> CreateTextureCubeMap( Ref<IGraphicContext> aGraphicContext, sTextureCreateInfo &aTextureImageDescription,
+                                          uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
+                                          bool aIsTransferDestination );
+
+    Ref<ITextureCubeMap> CreateTextureCubeMap( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData );
+
+    Ref<ITextureCubeMap> CreateTextureCubeMap( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount,
+                                          bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource );
+
+    Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture> aTextureData );
+
+    Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture> aTextureData,
+                                          sTextureSamplingInfo const &aSamplingSpec );
+
+    Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData,
+                                          sTextureSamplingInfo const &aSamplingSpec );
+
+    Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData );
+
     Ref<IGraphicsPipeline> CreateGraphicsPipeline( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
                                                    ePrimitiveTopology aTopology );
 
-    Ref<ISwapChain> CreateSwapChain( Ref<IGraphicContext> aGraphicContext, Ref<IWindow> aWindow );
-    Ref<IRenderTarget> CreateRenderTarget( Ref<IGraphicContext> aGraphicContext, sRenderTargetDescription const& aSpec );
+    Ref<ISwapChain>    CreateSwapChain( Ref<IGraphicContext> aGraphicContext, Ref<IWindow> aWindow );
+    Ref<IRenderTarget> CreateRenderTarget( Ref<IGraphicContext> aGraphicContext, sRenderTargetDescription const &aSpec );
 
     Ref<IRenderContext> CreateRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<ISwapChain> aWindow );
     Ref<IRenderContext> CreateRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aWindow );

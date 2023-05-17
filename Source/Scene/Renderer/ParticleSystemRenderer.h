@@ -82,8 +82,8 @@ namespace SE::Graphics
         ParticleSystemRenderer( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
                                 ParticleRendererCreateInfo aCreateInfo );
 
-        std::vector<Ref<IDescriptorSetLayout>> GetDescriptorSetLayout();
-        std::vector<sPushConstantRange>        GetPushConstantLayout();
+        // std::vector<Ref<IDescriptorSetLayout>> GetDescriptorSetLayout();
+        // std::vector<sPushConstantRange>        GetPushConstantLayout();
 
         ~ParticleSystemRenderer() = default;
 
@@ -95,7 +95,7 @@ namespace SE::Graphics
         Ref<IGraphicBuffer>    mParticleVertices  = nullptr;
         Ref<IGraphicBuffer>    mParticleIndices   = nullptr;
         Ref<IGraphicBuffer>    mCameraBuffer      = nullptr;
-        Ref<DescriptorSet>     mCameraDescriptors = nullptr;
+        Ref<IDescriptorSet>    mCameraDescriptors = nullptr;
     };
 
 } // namespace SE::Graphics

@@ -37,7 +37,7 @@ namespace SE::Core
         CoordinateGridRenderer( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext );
         ~CoordinateGridRenderer() = default;
 
-        void Render( math::mat4 aProjection, math::mat4 aView, Ref<IRenderContext> &aRenderContext );
+        void Render( math::mat4 aProjection, math::mat4 aView, Ref<IRenderContext> aRenderContext );
 
         // CoordinateGridRendererCreateInfo Spec;
         // Ref<DescriptorSetLayout>         PipelineLayout;

@@ -28,7 +28,10 @@ namespace SE::Core
                                                 uint32_t aOutputSampleCount )
         : ASceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {
-        mSceneDescriptors = New<DescriptorSet>( mGraphicContext, MeshRenderer::GetCameraSetLayout( mGraphicContext ) );
+        auto lLayout = MeshRenderer::GetCameraSetLayout( mGraphicContext );
+
+        mSceneDescriptors =
+            lLayout->Allocate(); // New<DescriptorSet>( mGraphicContext, MeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
         mCameraUniformBuffer =
             CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( WorldMatrices ) );
@@ -111,12 +114,12 @@ namespace SE::Core
 
         mGeometryRenderTarget->Finalize();
 
-        mGeometryContext = ARenderContext( mGraphicContext, mGeometryRenderTarget );
+        mGeometryContext = CreateRenderContext( mGraphicContext, mGeometryRenderTarget );
 
         mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mGeometryContext );
     }
 
-    MeshRenderer &ForwardSceneRenderer::GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification )
+    Ref<MeshRenderer> ForwardSceneRenderer::GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification )
     {
         if( mMeshRenderers.find( aPipelineSpecification ) == mMeshRenderers.end() )
             mMeshRenderers[aPipelineSpecification] = New<MeshRenderer>( mGraphicContext, aPipelineSpecification );
@@ -124,21 +127,21 @@ namespace SE::Core
         return mMeshRenderers[aPipelineSpecification];
     }
 
-    MeshRenderer &ForwardSceneRenderer::GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification )
+    Ref<MeshRenderer> ForwardSceneRenderer::GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification )
     {
         MeshRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 
         return GetRenderPipeline( lCreateInfo );
     }
 
-    MeshRenderer &ForwardSceneRenderer::GetRenderPipeline( sMeshRenderData &aPipelineSpecification )
+    Ref<MeshRenderer> ForwardSceneRenderer::GetRenderPipeline( sMeshRenderData &aPipelineSpecification )
     {
         MeshRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 
         return GetRenderPipeline( lCreateInfo );
     }
 
-    ParticleSystemRenderer &ForwardSceneRenderer::GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification )
+    Ref<ParticleSystemRenderer> ForwardSceneRenderer::GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification )
     {
         if( mParticleRenderers.find( aPipelineSpecification ) == mParticleRenderers.end() )
             mParticleRenderers[aPipelineSpecification] =
@@ -147,14 +150,14 @@ namespace SE::Core
         return mParticleRenderers[aPipelineSpecification];
     }
 
-    ParticleSystemRenderer &ForwardSceneRenderer::GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification )
+    Ref<ParticleSystemRenderer> ForwardSceneRenderer::GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification )
     {
         ParticleRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 
         return GetRenderPipeline( lCreateInfo );
     }
 
-    ParticleSystemRenderer &ForwardSceneRenderer::GetRenderPipeline( sParticleRenderData &aPipelineSpecification )
+    Ref<ParticleSystemRenderer> ForwardSceneRenderer::GetRenderPipeline( sParticleRenderData &aPipelineSpecification )
     {
         ParticleRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 
@@ -222,9 +225,9 @@ namespace SE::Core
         mGeometryContext->BeginRender();
         for( auto &lPipelineData : mOpaqueMeshQueue )
         {
-            auto &lPipeline = GetRenderPipeline( lPipelineData );
-            if( lPipeline.Pipeline )
-                mGeometryContext->Bind( lPipeline.Pipeline );
+            auto lPipeline = GetRenderPipeline( lPipelineData );
+            if( lPipeline->Pipeline() )
+                mGeometryContext->Bind( lPipeline->Pipeline() );
             else
                 continue;
             mGeometryContext->Bind( mSceneDescriptors, 0, -1 );

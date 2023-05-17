@@ -4,6 +4,7 @@
 
 namespace SE::Core
 {
+    using namespace SE::Graphics;
 
     // std::vector<Ref<DescriptorSetLayout>> EffectProcessor::GetDescriptorSetLayout() { return { PipelineLayout }; }
     // std::vector<sPushConstantRange> EffectProcessor::GetPushConstantLayout() { return {}; };
@@ -15,11 +16,11 @@ namespace SE::Core
         mPipeline = CreateGraphicsPipeline( mGraphicContext, aRenderContext, ePrimitiveTopology::TRIANGLES );
 
         mPipeline->SetCulling( eFaceCulling::BACK );
-        mPipeline->SetLineWidth( Spec.LineWidth );
+        mPipeline->SetLineWidth( 1.0f );
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, Spec.mVertexShader, "main" );
         mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, Spec.mFragmentShader, "main" );
 
-        PipelineLayout = CrerateDescriptorSetLayout( mGraphicContext );
+        PipelineLayout = CreateDescriptorSetLayout( mGraphicContext );
         PipelineLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
         PipelineLayout->Build();
         mPipeline->AddDescriptorSet( PipelineLayout );
@@ -48,7 +49,7 @@ namespace SE::Core
     {
         mTextures->Write( aImageSampler, 0 );
 
-        aRenderContext->Bind( Pipeline );
+        aRenderContext->Bind( mPipeline );
         aRenderContext->Bind( mTextures, 0, -1 );
         aRenderContext->ResetBuffers();
         aRenderContext->Draw( 6, 0, 0, 1, 0 );
