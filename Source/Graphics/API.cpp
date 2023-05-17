@@ -146,6 +146,17 @@ namespace SE::Graphics
         }
     }
 
+    Ref<IRenderTarget> CreateRenderTarget( Ref<IGraphicContext> aGraphicContext, sRenderTargetDescription const& aSpec )
+    {
+        switch( gApi )
+        {
+        case eGraphicsAPI::VULKAN: return New<VkRenderTarget>( Cast<VkGraphicContext>(aGraphicContext), aSpec );
+        case eGraphicsAPI::OPENGL:
+        case eGraphicsAPI::DIRECTX:
+        default: return nullptr;
+        }
+    }
+
     Ref<IRenderContext> CreateRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<ISwapChain> aWindow )
     {
         switch( gApi )

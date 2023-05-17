@@ -31,9 +31,9 @@ namespace SE::Core
         mSceneDescriptors = New<DescriptorSet>( mGraphicContext, MeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
         mCameraUniformBuffer =
-            CreateBufer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( WorldMatrices ) );
+            CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( WorldMatrices ) );
         mShaderParametersBuffer =
-            CreateBufer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraSettings ) );
+            CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraSettings ) );
         mSceneDescriptors->Write( mCameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
         mSceneDescriptors->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
     }
@@ -47,7 +47,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
         lCreateInfo.VertexShader   = "Shaders\\PBRMeshShader.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\PBRMeshShader.frag.spv";
-        lCreateInfo.RenderPass     = mGeometryContext->GetRenderPass();
+        lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
     }
@@ -61,7 +61,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
         lCreateInfo.VertexShader   = "Shaders\\PBRMeshShader.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\PBRMeshShader.frag.spv";
-        lCreateInfo.RenderPass     = mGeometryContext->GetRenderPass();
+        lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
     }
@@ -113,9 +113,9 @@ namespace SE::Core
 
         mGeometryContext = ARenderContext( mGraphicContext, mGeometryRenderTarget );
 
-        CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
-        lCoordinateGridRendererCreateInfo.RenderPass = mGeometryContext->GetRenderPass();
-        mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mGeometryContext, lCoordinateGridRendererCreateInfo );
+        // CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
+        // lCoordinateGridRendererCreateInfo.RenderPass = mGeometryContext;
+        mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mGeometryContext );
     }
 
     MeshRenderer &ForwardSceneRenderer::GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification )
@@ -169,7 +169,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
         lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
-        lCreateInfo.RenderPass     = mGeometryContext->GetRenderPass();
+        lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
     }
@@ -180,7 +180,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
         lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
         lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
-        lCreateInfo.RenderPass     = mGeometryContext->GetRenderPass();
+        lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
     }

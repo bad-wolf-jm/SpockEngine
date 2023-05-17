@@ -67,6 +67,7 @@ namespace SE::Graphics
                                                    ePrimitiveTopology aTopology );
 
     Ref<ISwapChain> CreateSwapChain( Ref<IGraphicContext> aGraphicContext, Ref<IWindow> aWindow );
+    Ref<IRenderTarget> CreateRenderTarget( Ref<IGraphicContext> aGraphicContext, sRenderTargetDescription const& aSpec );
 
     Ref<IRenderContext> CreateRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<ISwapChain> aWindow );
     Ref<IRenderContext> CreateRenderContext( Ref<IGraphicContext> aGraphicContext, Ref<IRenderTarget> aWindow );

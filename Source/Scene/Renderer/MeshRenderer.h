@@ -30,7 +30,7 @@ namespace SE::Core
         fs::path VertexShader   = "";
         fs::path FragmentShader = "";
 
-        Ref<IRenderPass> RenderPass = nullptr;
+        Ref<IRenderContext> RenderPass = nullptr;
 
         bool operator==( const MeshRendererCreateInfo &p ) const
         {
