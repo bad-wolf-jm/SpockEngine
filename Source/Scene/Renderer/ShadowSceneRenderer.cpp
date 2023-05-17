@@ -129,6 +129,8 @@ namespace SE::Core
         mSceneDescriptors =
             lLayout->Allocate(); // New<DescriptorSet>( mGraphicContext, ShadowMeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
+        mCameraSetLayout = ShadowMeshRenderer::GetCameraSetLayout(mGraphicContext);
+
         mCameraUniformBuffer =
             CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( ShadowMatrices ) );
         mSceneDescriptors->Write( mCameraUniformBuffer, false, 0, sizeof( ShadowMatrices ), 0 );
@@ -176,7 +178,7 @@ namespace SE::Core
                 mDirectionalShadowMapRenderContext.push_back( CreateRenderContext( mGraphicContext, lDirectionalShadowMaps ) );
 
                 mDirectionalShadowSceneDescriptors.emplace_back();
-                mDirectionalShadowSceneDescriptors.back() = ShadowMeshRenderer::GetCameraSetLayout( mGraphicContext )->Allocate();
+                mDirectionalShadowSceneDescriptors.back() = mCameraSetLayout->Allocate();
                 // New<DescriptorSet>( mGraphicContext, ShadowMeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
                 mDirectionalShadowCameraUniformBuffer.emplace_back();
@@ -202,7 +204,7 @@ namespace SE::Core
                 mSpotlightShadowMapRenderContext.push_back( CreateRenderContext( mGraphicContext, lShadowMaps ) );
 
                 mSpotlightShadowSceneDescriptors.emplace_back();
-                mSpotlightShadowSceneDescriptors.back() = ShadowMeshRenderer::GetCameraSetLayout( mGraphicContext )->Allocate();
+                mSpotlightShadowSceneDescriptors.back() = mCameraSetLayout->Allocate();
                 // New<DescriptorSet>( mGraphicContext, ShadowMeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
                 mSpotlightShadowCameraUniformBuffer.emplace_back();

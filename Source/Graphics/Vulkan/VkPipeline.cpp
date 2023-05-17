@@ -190,10 +190,17 @@ namespace SE::Graphics
         for( uint32_t i = 0; i < aPushConstantRanges.size(); i++ )
         {
             VkPushConstantRange lPushConstant;
-            lPushConstant.offset     = aPushConstantRanges[i].mOffset;
-            lPushConstant.size       = aPushConstantRanges[i].mSize;
-            lPushConstant.stageFlags = (VkShaderStageFlags)aPushConstantRanges[i].mShaderStages;
-            lPushConstantRanges[i]   = lPushConstant;
+            lPushConstant.offset = aPushConstantRanges[i].mOffset;
+            lPushConstant.size   = aPushConstantRanges[i].mSize;
+
+            lPushConstant.stageFlags = 0;
+            if( aPushConstantRanges[i].mShaderStages & eShaderStageTypeFlags::FRAGMENT )
+                lPushConstant.stageFlags |= VK_SHADER_STAGE_FRAGMENT_BIT;
+            if( aPushConstantRanges[i].mShaderStages & eShaderStageTypeFlags::VERTEX )
+                lPushConstant.stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
+
+            // lPushConstant.stageFlags = (VkShaderStageFlags)aPushConstantRanges[i].mShaderStages;
+            lPushConstantRanges[i] = lPushConstant;
         }
 
         mVkObject = mContext->CreatePipelineLayout( lDescriptorSetLayouts, lPushConstantRanges );
