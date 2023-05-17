@@ -22,7 +22,7 @@ namespace SE::Core
         mShaderMaterials =
             CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, true, true, true, sizeof( sShaderMaterial ) );
 
-        mTextureDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, lTextureBindLayout, true );
+        mTextureDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
         mTextureDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
         mTextureDescriptorLayout->AddBinding( 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
         mTextureDescriptorLayout->Build();
@@ -103,8 +103,8 @@ namespace SE::Core
 
     uint32_t MaterialSystem::CreateTexture( TextureData2D &aTexture, TextureSampler2D &aTextureSampler )
     {
-        auto lNewInteropTexture = New<Graphics::VkTexture2D>( mGraphicContext, aTexture, 1, false, false, true );
-        auto lNewInteropSampler = New<Graphics::VkSampler2D>( mGraphicContext, lNewInteropTexture, aTextureSampler.mSamplingSpec );
+        auto lNewInteropTexture = CreateTexture2D( mGraphicContext, aTexture, 1, false, false, true );
+        auto lNewInteropSampler = CreateSampler2D( mGraphicContext, lNewInteropTexture, aTextureSampler.mSamplingSpec );
         mTextureSamplers.push_back( lNewInteropSampler );
 
         mDirty = true;
@@ -112,7 +112,7 @@ namespace SE::Core
         return mTextureSamplers.size() - 1;
     }
 
-    Ref<Graphics::VkSampler2D> MaterialSystem::GetTextureByID( uint32_t aID ) { return mTextureSamplers[aID]; }
+    Ref<ISampler2D> MaterialSystem::GetTextureByID( uint32_t aID ) { return mTextureSamplers[aID]; }
 
     sMaterial &MaterialSystem::CreateMaterial()
     {
@@ -183,7 +183,7 @@ namespace SE::Core
         if( mShaderMaterials->SizeAs<sShaderMaterial>() < mMaterials.size() )
         {
             auto lBufferSize = std::max( mMaterials.size(), static_cast<size_t>( 1 ) ) * sizeof( sShaderMaterial );
-            mShaderMaterials = New<VkGpuBuffer>( mGraphicContext, eBufferType::STORAGE_BUFFER, true, false, true, true, lBufferSize );
+            mShaderMaterials = CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, false, true, true, lBufferSize );
             mTextureDescriptorSet->Write( mShaderMaterials, false, 0, lBufferSize, 0 );
         }
 

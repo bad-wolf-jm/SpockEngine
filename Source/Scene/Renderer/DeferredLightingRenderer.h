@@ -39,11 +39,11 @@ namespace SE::Core
         };
 
         // DeferredLightingRendererCreateInfo Spec = {};
-        // Ref<DescriptorSetLayout> CameraSetLayout  = nullptr;
-        // Ref<DescriptorSetLayout> TextureSetLayout = nullptr;
-        // Ref<DescriptorSetLayout> DirectionalShadowSetLayout = nullptr;
-        // Ref<DescriptorSetLayout> SpotlightShadowSetLayout = nullptr;
-        // Ref<DescriptorSetLayout> PointLightShadowSetLayout = nullptr;
+        Ref<IDescriptorSetLayout> CameraSetLayout  = nullptr;
+        Ref<IDescriptorSetLayout> TextureSetLayout = nullptr;
+        Ref<IDescriptorSetLayout> DirectionalShadowSetLayout = nullptr;
+        Ref<IDescriptorSetLayout> SpotlightShadowSetLayout = nullptr;
+        Ref<IDescriptorSetLayout> PointLightShadowSetLayout = nullptr;
 
       public:
         DeferredLightingRenderer() = default;

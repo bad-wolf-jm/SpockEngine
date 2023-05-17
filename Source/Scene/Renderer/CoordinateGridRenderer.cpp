@@ -4,7 +4,7 @@
 
 namespace SE::Core
 {
-
+    using namespace SE::Graphics;
     // std::vector<Ref<DescriptorSetLayout>> CoordinateGridRenderer::GetDescriptorSetLayout() { return { PipelineLayout }; }
 
     // std::vector<sPushConstantRange> CoordinateGridRenderer::GetPushConstantLayout() { return {}; };
@@ -20,9 +20,9 @@ namespace SE::Core
         mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders\\coordinategrid.frag.spv" ), "main" );
         mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 );
 
-        auto &lDescriptorSet = CreateDescriptorSet( aGraphicContext );
-        lDescriptorSet.AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
-        lDescriptorSet.Build();
+        auto lDescriptorSet = CreateDescriptorSetLayout( aGraphicContext );
+        lDescriptorSet->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
+        lDescriptorSet->Build();
 
         mPipeline->AddDescriptorSet( lDescriptorSet );
 
@@ -44,7 +44,7 @@ namespace SE::Core
         mCameraBuffer =
             CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraViewUniforms ) );
 
-        mCameraDescriptors = mPipeline->GetDescriptorSet( 0 );
+        mCameraDescriptors = lDescriptorSet->Allocate();
         mCameraDescriptors->Write( mCameraBuffer, false, 0, sizeof( CameraViewUniforms ), 0 );
     }
 

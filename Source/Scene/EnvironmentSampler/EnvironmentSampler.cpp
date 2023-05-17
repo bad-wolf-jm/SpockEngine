@@ -65,8 +65,8 @@ namespace SE::SensorModel::Dev
             mLaunchParams.mIntensities    = a_Intensities.DataAs<float>();
             mLaunchParams.mSamplePoints   = a_SamplePoints.DataAs<sHitRecord>();
 
-            mLaunchParams.mIndexBuffer  = a_Scene->mIndexBuffer->DataAs<math::uvec3>();
-            mLaunchParams.mVertexBuffer = a_Scene->mTransformedVertexBuffer->DataAs<VertexData>();
+            // mLaunchParams.mIndexBuffer  = a_Scene->mIndexBuffer->DataAs<math::uvec3>();
+            // mLaunchParams.mVertexBuffer = a_Scene->mTransformedVertexBuffer->DataAs<VertexData>();
 
             mLaunchParamsBuffer.Upload( mLaunchParams );
             mRayTracingPipeline->Launch( 0, mLaunchParamsBuffer.RawDevicePtr(), mLaunchParamsBuffer.Size(), mSBT,

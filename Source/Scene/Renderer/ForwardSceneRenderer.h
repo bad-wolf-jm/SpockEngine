@@ -48,12 +48,12 @@ namespace SE::Core
         ParticleRendererCreateInfo GetRenderPipelineCreateInfo( sParticleShaderComponent &aPipelineSpecification );
         ParticleRendererCreateInfo GetRenderPipelineCreateInfo( sParticleRenderData &aPipelineSpecification );
 
-        MeshRenderer           &GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification );
-        MeshRenderer           &GetRenderPipeline( sMeshRenderData &aPipelineSpecification );
-        MeshRenderer           &GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification );
-        ParticleSystemRenderer &GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification );
-        ParticleSystemRenderer &GetRenderPipeline( sParticleRenderData &aPipelineSpecification );
-        ParticleSystemRenderer &GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification );
+        Ref<MeshRenderer> GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification );
+        Ref<MeshRenderer> GetRenderPipeline( sMeshRenderData &aPipelineSpecification );
+        Ref<MeshRenderer> GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification );
+        Ref<ParticleSystemRenderer> GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification );
+        Ref<ParticleSystemRenderer> GetRenderPipeline( sParticleRenderData &aPipelineSpecification );
+        Ref<ParticleSystemRenderer> GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification );
 
       protected:
         Ref<IRenderTarget>  mGeometryRenderTarget = nullptr;
@@ -71,8 +71,8 @@ namespace SE::Core
         Ref<IDescriptorSet> mSceneDescriptors = nullptr;
         Ref<IDescriptorSet> mNodeDescriptors  = nullptr;
 
-        std::unordered_map<MeshRendererCreateInfo, MeshRenderer, MeshRendererCreateInfoHash> mMeshRenderers = {};
-        std::unordered_map<ParticleRendererCreateInfo, ParticleSystemRenderer, ParticleSystemRendererCreateInfoHash>
+        std::unordered_map<MeshRendererCreateInfo, Ref<MeshRenderer>, MeshRendererCreateInfoHash> mMeshRenderers = {};
+        std::unordered_map<ParticleRendererCreateInfo, Ref<ParticleSystemRenderer>, ParticleSystemRendererCreateInfoHash>
             mParticleRenderers = {};
 
         std::unordered_map<Entity, Ref<IDescriptorSet>> mMaterials = {};
