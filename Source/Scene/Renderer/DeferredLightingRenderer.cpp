@@ -101,7 +101,6 @@ namespace SE::Core
                               "main" );
         mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders/Deferred/DeferredLightingMSAA.frag.spv" ),
                               "main" );
-        // mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( MaterialPushConstants ) );
 
         CameraSetLayout            = GetCameraSetLayout( mGraphicContext );
         TextureSetLayout           = GetTextureSetLayout( mGraphicContext );

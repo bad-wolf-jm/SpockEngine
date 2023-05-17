@@ -96,12 +96,8 @@ namespace SE::Core
         mLightingRenderTarget->Finalize();
         mLightingContext = CreateRenderContext( mGraphicContext, mLightingRenderTarget );
 
-        // DeferredLightingRendererCreateInfo mLightingRendererCI{};
-        // mLightingRendererCI.RenderPass = mLightingContext;
         mLightingRenderer = New<DeferredLightingRenderer>( mGraphicContext, mLightingContext );
 
-        auto x                        = mGeometryRenderTarget->GetAttachment( "POSITION" );
-        auto y                        = Cast<ITexture2D>( x );
         mGeometrySamplers["POSITION"] = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "POSITION" ) );
         mGeometrySamplers["NORMALS"]  = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "NORMALS" ) );
         mGeometrySamplers["ALBEDO"]   = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "ALBEDO" ) );

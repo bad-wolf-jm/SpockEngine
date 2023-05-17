@@ -6,11 +6,9 @@
 
 #include "Graphics/Vulkan/VkCoreMacros.h"
 
-#ifdef CUDA_INTEROP
-#    include "Core/CUDA/Array/CudaBuffer.h"
-#    include "Core/CUDA/CudaAssert.h"
-#    include "Core/CUDA/Texture/Conversion.h"
-#endif
+#include "Core/CUDA/Array/CudaBuffer.h"
+#include "Core/CUDA/CudaAssert.h"
+#include "Core/CUDA/Texture/Conversion.h"
 #include "VkCommand.h"
 #include "VkGpuBuffer.h"
 
@@ -107,7 +105,6 @@ namespace SE::Graphics
 
     void VkTexture2D::ConfigureExternalMemoryHandle()
     {
-#ifdef CUDA_INTEROP
         if( mIsGraphicsOnly ) return;
 
         cudaExternalMemoryHandleDesc lCudaExternalMemoryHandleDesc{};
@@ -129,7 +126,6 @@ namespace SE::Graphics
         CUDA_ASSERT( cudaExternalMemoryGetMappedMipmappedArray( &mInternalCudaMipmappedArray, mExternalMemoryHandle,
                                                                 &lExternalMemoryMipmappedArrayDesc ) );
         CUDA_ASSERT( cudaGetMipmappedArrayLevel( &mInternalCudaArray, mInternalCudaMipmappedArray, 0 ) );
-#endif
     }
 
     void VkTexture2D::SetPixelData( Ref<IGraphicBuffer> aBuffer )
