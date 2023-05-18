@@ -17,8 +17,8 @@
 #include "Core/Logging.h"
 #include "Core/Memory.h"
 
-#include "Core/Math/Types.h"
 #include "Conversion.h"
+#include "Core/Math/Types.h"
 
 /** \namespace SE::Cuda
  */
@@ -44,6 +44,7 @@ namespace SE::Cuda
     class Texture2D
     {
         friend class TextureSampler2D;
+        friend class TextureSamplerCubeMap;
 
       public:
         sTextureCreateInfo mSpec; //!< Copy of the specification structure used to create the texture

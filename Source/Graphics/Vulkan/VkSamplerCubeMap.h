@@ -11,7 +11,7 @@
 #include "Graphics/Interface/ISamplerCubeMap.h"
 
 #include "VkGraphicContext.h"
-#include "VkTextureCubeMap.h"
+#include "VkTexture2D.h"
 
 namespace SE::Graphics
 {
@@ -22,20 +22,20 @@ namespace SE::Graphics
     {
       public:
         /** @brief */
-        VkSamplerCubeMap( Ref<VkGraphicContext> aGraphicContext, Ref<VkTextureCubeMap> aTextureData,
+        VkSamplerCubeMap( Ref<VkGraphicContext> aGraphicContext, Ref<VkTexture2D> aTextureData,
                           sTextureSamplingInfo const &aSamplingSpec );
 
         /** @brief */
         ~VkSamplerCubeMap();
 
-        Ref<ITextureCubeMap> GetTexture() { return mTextureData; }
-        VkImageView          GetImageView() { return mVkImageView; }
-        VkSampler            GetSampler() { return mVkImageSampler; }
+        Ref<ITexture2D> GetTexture() { return mTextureData; }
+        VkImageView     GetImageView() { return mVkImageView; }
+        VkSampler       GetSampler() { return mVkImageSampler; }
 
       private:
         VkImageView mVkImageView    = VK_NULL_HANDLE;
         VkSampler   mVkImageSampler = VK_NULL_HANDLE;
 
-        friend class VkTextureCubeMap;
+        friend class VkTexture2D;
     };
 } // namespace SE::Graphics

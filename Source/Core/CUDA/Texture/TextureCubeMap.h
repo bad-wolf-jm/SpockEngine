@@ -19,6 +19,8 @@
 
 #include "Core/Math/Types.h"
 
+#include "Texture2D.h"
+
 /** \namespace SE::Cuda
  */
 namespace SE::Cuda
@@ -27,90 +29,6 @@ namespace SE::Cuda
     using namespace SE::Core;
 
     class TextureSamplerCubeMap;
-
-    /** \class TextureCubeMap
-     *
-     * @brief Abstraction class for Cuda textures.
-     *
-     * Textures are 2D or 3D arrays of numbers or vectors. Typically we think of textures as representing
-     * images used for shading in graphics pipelines. In our case, we make use of the built-in interpolation
-     * abilities of textures to represent functions @f$ f:[0, 1]^\ell\to \mathbb{R}^k @f$, where
-     * @f$ \ell\in\{2, 3\} @f$ and  @f$ k\in\{1, 2, 3, 4\} @f$ which have been sampled on a discrete
-     * rectangular lattice @f$ \Lambda \subseteq [0, 1]^\ell @f$.
-     *
-     * The texture along with all associated data is automatically destroyed when the object is deleted.
-     */
-    class TextureCubeMap
-    {
-        friend class TextureSamplerCubeMap;
-
-      public:
-        sTextureCreateInfo mSpec; //!< Copy of the specification structure used to create the texture
-
-        /** @brief Constructor
-         *
-         * Create a texture from the provided raw data, according to the requested specification
-         *
-         * @param aSpec Texture specification
-         * @param aData Texture data
-         */
-        TextureCubeMap() = default;
-
-        /** @brief Constructor
-         *
-         * Create a texture from the provided raw data, according to the requested specification
-         *
-         * @param aSpec Texture specification
-         * @param aData Texture data
-         */
-        TextureCubeMap( sTextureCreateInfo &aSpec, std::vector<uint8_t> aData );
-
-        /** @brief Constructor
-         *
-         * Create a texture from the provided raw data, according to the requested specification
-         *
-         * @param aSpec Texture specification
-         * @param aData Texture data
-         * @param aSize Data size, in bytes
-         */
-        TextureCubeMap( sTextureCreateInfo &aSpec, uint8_t *aData, size_t aSize );
-
-        /** @brief Constructor
-         *
-         * Create a texture from the provided imagedata, according to the requested specification.
-         *
-         * @param aSpec      Texture specification
-         * @param aImageData Texture image data
-         */
-        TextureCubeMap( sTextureCreateInfo &aSpec, sImageData &aImageData );
-
-        /** @brief Constructor
-         *
-         * Create a texture from the provided imagedata, according to the requested specification.
-         *
-         * @param aSpec      Texture specification
-         * @param aImageData Texture image data
-         */
-        TextureCubeMap( sTextureCreateInfo &aSpec, void *aExternalBuffer, size_t aImageMemorySize );
-
-        /** @brief Constructor
-         *
-         * Create a texture from the provided imagedata, according to the requested specification.
-         *
-         * @param aSpec      Texture specification
-         * @param aImageData Texture image data
-         */
-        // TextureCubeMap( sTextureCreateInfo &aSpec, Graphics::TextureCubeMap &aImageData );
-
-        /** @brief Destructor */
-        ~TextureCubeMap();
-
-      protected:
-        size_t         mImageMemorySize            = 0;
-        Array          mInternalCudaArray          = nullptr;
-        MipmappedArray mInternalCudaMipmappedArray = nullptr;
-        ExternalMemory mExternalMemoryHandle       = nullptr;
-    };
 
     /** \class TextureSamplerCubeMap
      *
@@ -125,7 +43,7 @@ namespace SE::Cuda
     {
       public:
         sTextureSamplingInfo mSpec{};            //!< Copy of the specification structure used to create the texture
-        Ref<TextureCubeMap>  mTexture = nullptr; //!< Reference to the parent texture
+        Ref<Texture2D>       mTexture = nullptr; //!< Reference to the parent texture
 
         struct DeviceData
         {
@@ -158,7 +76,7 @@ namespace SE::Cuda
          * @param aTexture Texture to sample
          * @param aSamplingInfo Sampling data
          */
-        TextureSamplerCubeMap( Ref<TextureCubeMap> &aTexture, const sTextureSamplingInfo &aSamplingInfo );
+        TextureSamplerCubeMap( Ref<Texture2D> &aTexture, const sTextureSamplingInfo &aSamplingInfo );
 
         void InitializeTextureSampler();
     };

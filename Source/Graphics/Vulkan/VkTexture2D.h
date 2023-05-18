@@ -20,6 +20,7 @@ namespace SE::Graphics
     class VkTexture2D : public ITexture2D
     {
         friend class VkSampler2D;
+        friend class VkSamplerCubeMap;
         friend class VkRenderTarget;
 
       public:
