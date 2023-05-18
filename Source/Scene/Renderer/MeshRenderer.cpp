@@ -43,16 +43,6 @@ namespace SE::Core
         return lNewLayout;
     }
 
-    // std::vector<Ref<IDescriptorSetLayout>> MeshRenderer::GetDescriptorSetLayout()
-    // {
-    //     return { CameraSetLayout, TextureSetLayout, NodeSetLayout };
-    // }
-
-    // std::vector<sPushConstantRange> MeshRenderer::GetPushConstantLayout()
-    // {
-    //     return { { { eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( MaterialPushConstants ) } };
-    // };
-
     MeshRenderer::MeshRenderer( Ref<IGraphicContext> aGraphicContext, MeshRendererCreateInfo const &aCreateInfo )
         : mGraphicContext{ aGraphicContext }
         , Spec{ aCreateInfo }
@@ -62,7 +52,7 @@ namespace SE::Core
 
         mPipeline->SetCulling( eFaceCulling::BACK );
         mPipeline->SetLineWidth( Spec.LineWidth );
-        mPipeline->SetDepthParameters(true, true, eDepthCompareOperation::LESS_OR_EQUAL);
+        mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( Spec.VertexShader ), "main" );
         mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( Spec.FragmentShader ), "main" );
         mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( MaterialPushConstants ) );

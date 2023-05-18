@@ -1,9 +1,6 @@
 #pragma once
 
 #include "Core/Memory.h"
-// #include "Graphics/Vulkan/Ref<IRenderContext>.h"
-// #include "Graphics/Vulkan/IDescriptorSet.h"
-// #include "Graphics/Vulkan/IRenderTarget.h"
 
 #include "Graphics/API.h"
 
@@ -57,9 +54,9 @@ namespace SE::Core
         Ref<ParticleSystemRenderer> GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification );
 
       private:
-        Ref<IRenderContext> mGeometryContext{};
+        Ref<IRenderContext>       mGeometryContext{};
         Ref<IDescriptorSetLayout> mGeometryCameraLayout = nullptr;
-        Ref<IDescriptorSet> mGeometryPassCamera = nullptr;
+        Ref<IDescriptorSet>       mGeometryPassCamera   = nullptr;
 
         Ref<IRenderTarget> mGeometryRenderTarget = nullptr;
 

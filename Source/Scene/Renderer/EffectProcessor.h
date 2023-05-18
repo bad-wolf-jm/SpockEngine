@@ -2,18 +2,11 @@
 
 #include "Core/Memory.h"
 
-// #include "Graphics/Vulkan/IGraphicBuffer.h"
-// #include "Graphics/Vulkan/VkRenderContext.h"
-// #include "Graphics/Vulkan/IDescriptorSet.h"
-// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
-// #include "Graphics/Vulkan/IGraphicContext.h"
 #include "Graphics/API.h"
 
 #include "Scene/VertexData.h"
 
 #include "Graphics/API.h"
-
-// #include "SceneRenderPipeline.h"
 
 namespace SE::Core
 {
@@ -28,7 +21,7 @@ namespace SE::Core
         Ref<IRenderContext> RenderPass = nullptr;
     };
 
-    class EffectProcessor // : public SE::Core::SceneRenderPipeline<EmptyVertexData>
+    class EffectProcessor
     {
       public:
         EffectProcessor( Ref<IGraphicContext> mGraphicContext, Ref<IRenderContext> aRenderContext,
@@ -40,9 +33,6 @@ namespace SE::Core
         EffectProcessorCreateInfo Spec;
         Ref<IDescriptorSetLayout> PipelineLayout = nullptr;
         Ref<IDescriptorSet>       mTextures      = nullptr;
-
-        // std::vector<Ref<IDescriptorSetLayout>> GetDescriptorSetLayout();
-        // std::vector<sPushConstantRange>        GetPushConstantLayout();
 
       private:
         Ref<IGraphicContext>   mGraphicContext    = nullptr;

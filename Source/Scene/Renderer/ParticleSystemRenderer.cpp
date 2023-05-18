@@ -7,11 +7,6 @@ using namespace SE::Core;
 
 namespace SE::Graphics
 {
-
-    // std::vector<Ref<DescriptorSetLayout>> ParticleSystemRenderer::GetDescriptorSetLayout() { return { PipelineLayout }; }
-
-    // std::vector<sPushConstantRange> ParticleSystemRenderer::GetPushConstantLayout() { return {}; };
-
     ParticleSystemRenderer::ParticleSystemRenderer( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
                                                     ParticleRendererCreateInfo aCreateInfo )
         : mGraphicContext{ aGraphicContext }
@@ -33,21 +28,6 @@ namespace SE::Graphics
 
         mPipeline->AddDescriptorSet( lDescriptorSet );
         mPipeline->Build();
-
-        // SceneRenderPipelineCreateInfo lCreateInfo{};
-        // lCreateInfo.IsTwoSided           = true;
-        // lCreateInfo.LineWidth            = aCreateInfo.LineWidth;
-        // lCreateInfo.VertexShader         = aCreateInfo.VertexShader;
-        // lCreateInfo.FragmentShader       = aCreateInfo.FragmentShader;
-        // lCreateInfo.RenderPass           = aRenderContext->GetRenderPass();
-        // lCreateInfo.InstanceBufferLayout = Particle::GetDefaultLayout();
-
-        // DescriptorSetLayoutCreateInfo lPipelineLayoutCI{};
-        // lPipelineLayoutCI.Bindings = {
-        //     DescriptorBindingInfo{ 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } } };
-        // PipelineLayout = New<DescriptorSetLayout>( mGraphicContext, lPipelineLayoutCI );
-
-        // Initialize( lCreateInfo );
 
         mCameraDescriptors = lDescriptorSet->Allocate(); // New<DescriptorSet>( mGraphicContext, PipelineLayout );
         mCameraDescriptors->Write( mCameraBuffer, false, 0, sizeof( CameraViewUniforms ), 0 );

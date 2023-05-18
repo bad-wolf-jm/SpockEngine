@@ -6,18 +6,10 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-// #include "Graphics/Vulkan/IGraphicBuffer.h"
-// #include "Graphics/Vulkan/VkRenderContext.h"
-// #include "Graphics/Vulkan/DescriptorSet.h"
-// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
-// #include "Graphics/Vulkan/IGraphicContext.h"
-// #include "Graphics/Vulkan/IRenderPass.h"
 #include "Graphics/API.h"
 
 #include "Scene/ParticleData.h"
 #include "Scene/VertexData.h"
-
-// #include "SceneRenderPipeline.h"
 
 namespace SE::Graphics
 {
@@ -59,7 +51,7 @@ namespace SE::Graphics
         }
     };
 
-    class ParticleSystemRenderer // : public SE::Core::SceneRenderPipeline<PositionData>
+    class ParticleSystemRenderer
     {
       public:
         struct ParticleData
@@ -81,9 +73,6 @@ namespace SE::Graphics
 
         ParticleSystemRenderer( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
                                 ParticleRendererCreateInfo aCreateInfo );
-
-        // std::vector<Ref<IDescriptorSetLayout>> GetDescriptorSetLayout();
-        // std::vector<sPushConstantRange>        GetPushConstantLayout();
 
         ~ParticleSystemRenderer() = default;
 

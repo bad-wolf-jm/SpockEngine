@@ -33,10 +33,6 @@ namespace SE::Core
         return lNewLayout;
     }
 
-    // std::vector<Ref<IDescriptorSetLayout>> ShadowMeshRenderer::GetDescriptorSetLayout() { return { CameraSetLayout }; }
-
-    // std::vector<sPushConstantRange> ShadowMeshRenderer::GetPushConstantLayout() { return {}; };
-
     ShadowMeshRenderer::ShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo )
         : mGraphicContext( aGraphicContext )
         , Spec{ aCreateInfo }
@@ -45,6 +41,7 @@ namespace SE::Core
         mPipeline = CreateGraphicsPipeline( mGraphicContext, Spec.RenderPass, ePrimitiveTopology::TRIANGLES );
 
         mPipeline->SetCulling( eFaceCulling::NONE );
+        mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\Shadow.vert.spv" ), "main" );
         mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 );
         mPipeline->AddInput( "Position", eBufferDataType::VEC3, 0, 0 );
@@ -54,21 +51,10 @@ namespace SE::Core
         mPipeline->AddInput( "Weights", eBufferDataType::VEC4, 0, 4 );
 
         CameraSetLayout = GetCameraSetLayout( mGraphicContext );
-        // auto &lDescriptorSet = CreateDescriptorSet( aGraphicContext );
-        // lDescriptorSet.AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
-        // lDescriptorSet.Build();
 
         mPipeline->AddDescriptorSet( CameraSetLayout );
 
         mPipeline->Build();
-
-        // SceneRenderPipelineCreateInfo lCreateInfo{};
-        // lCreateInfo.Opaque       = true;
-        // lCreateInfo.LineWidth    = 1.0f;
-        // lCreateInfo.VertexShader = "Shaders\\Shadow.vert.spv";
-        // lCreateInfo.RenderPass   = aCreateInfo.RenderPass;
-
-        // Initialize( lCreateInfo );
     }
 
     Ref<IDescriptorSetLayout> OmniShadowMeshRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
@@ -78,16 +64,7 @@ namespace SE::Core
         lNewLayout->Build();
 
         return lNewLayout;
-        // DescriptorSetLayoutCreateInfo lCameraBindLayout{};
-        // lCameraBindLayout.Bindings = {
-        //     DescriptorBindingInfo{ 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } } };
-
-        // return New<IDescriptorSetLayout>( aGraphicContext, lCameraBindLayout );
     }
-
-    // std::vector<Ref<IDescriptorSetLayout>> OmniShadowMeshRenderer::GetDescriptorSetLayout() { return { CameraSetLayout }; }
-
-    // std::vector<sPushConstantRange> OmniShadowMeshRenderer::GetPushConstantLayout() { return {}; };
 
     OmniShadowMeshRenderer::OmniShadowMeshRenderer( Ref<IGraphicContext>                aGraphicContext,
                                                     ShadowMeshRendererCreateInfo const &aCreateInfo )
@@ -102,34 +79,19 @@ namespace SE::Core
         mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 );
 
         CameraSetLayout = GetCameraSetLayout( mGraphicContext );
-        // auto &lDescriptorSet = CreateDescriptorSet( aGraphicContext );
-        // lDescriptorSet.AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
-        // lDescriptorSet.Build();
 
         mPipeline->AddDescriptorSet( CameraSetLayout );
 
         mPipeline->Build();
-
-        // SceneRenderPipelineCreateInfo lCreateInfo{};
-        // lCreateInfo.Opaque         = true;
-        // lCreateInfo.LineWidth      = 1.0f;
-        // lCreateInfo.VertexShader   = "Shaders\\OmniShadow.vert.spv";
-        // lCreateInfo.FragmentShader = "Shaders\\OmniShadow.frag.spv";
-        // lCreateInfo.RenderPass     = aCreateInfo.RenderPass;
-
-        // CameraSetLayout = GetCameraSetLayout( mGraphicContext );
-
-        // Initialize( lCreateInfo );
     }
 
     ShadowSceneRenderer::ShadowSceneRenderer( Ref<IGraphicContext> aGraphicContext )
         : ASceneRenderer( aGraphicContext, eColorFormat::UNDEFINED, 1 )
     {
-        auto lLayout = ShadowMeshRenderer::GetCameraSetLayout( mGraphicContext );
-        mSceneDescriptors =
-            lLayout->Allocate(); // New<DescriptorSet>( mGraphicContext, ShadowMeshRenderer::GetCameraSetLayout( mGraphicContext ) );
+        auto lLayout      = ShadowMeshRenderer::GetCameraSetLayout( mGraphicContext );
+        mSceneDescriptors = lLayout->Allocate();
 
-        mCameraSetLayout = ShadowMeshRenderer::GetCameraSetLayout(mGraphicContext);
+        mCameraSetLayout = ShadowMeshRenderer::GetCameraSetLayout( mGraphicContext );
 
         mCameraUniformBuffer =
             CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( ShadowMatrices ) );
@@ -205,7 +167,6 @@ namespace SE::Core
 
                 mSpotlightShadowSceneDescriptors.emplace_back();
                 mSpotlightShadowSceneDescriptors.back() = mCameraSetLayout->Allocate();
-                // New<DescriptorSet>( mGraphicContext, ShadowMeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
                 mSpotlightShadowCameraUniformBuffer.emplace_back();
                 mSpotlightShadowCameraUniformBuffer.back() =
@@ -270,8 +231,10 @@ namespace SE::Core
                     //     OmniShadowMeshRenderer::GetCameraSetLayout( mGraphicContext )->Allocate();
                     // // New<DescriptorSet>( mGraphicContext, OmniShadowMeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
-                    // mPointLightsShadowCameraUniformBuffer.back()[f] = CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true,
-                    //                                                                 true, true, true, sizeof( OmniShadowMatrices ) );
+                    // mPointLightsShadowCameraUniformBuffer.back()[f] = CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER,
+                    // true,
+                    //                                                                 true, true, true, sizeof( OmniShadowMatrices )
+                    //                                                                 );
 
                     // mPointLightsShadowSceneDescriptors.back()[f]->Write( mPointLightsShadowCameraUniformBuffer.back()[f], false, 0,
                     //                                                      sizeof( OmniShadowMatrices ), 0 );
@@ -347,8 +310,8 @@ namespace SE::Core
             // {
 
             //     // clang-format off
-            //     const float aEntries[] = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f };
-            //     math::mat4  lClip = math::MakeMat4( aEntries );
+            //     const float aEntries[] = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f,
+            //     0.0f, 1.0f }; math::mat4  lClip = math::MakeMat4( aEntries );
             //     // clang-format on
 
             //     // math::mat4 lProjection = lClip * math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 100.0f );
@@ -356,12 +319,18 @@ namespace SE::Core
 
             //     // clang-format off
             //     std::array<math::mat4, 6> lMVPMatrices = {
-            //         /* POSITIVE_X */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 1.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 1.0f, 0.0f )  ),
-            //         /* NEGATIVE_X */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( -1.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
-            //         /* POSITIVE_Y */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 1.0f, 0.0f ), math::vec3( 0.0f, 0.0f, -1.0f ) ),
-            //         /* NEGATIVE_Y */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, -1.0f, 0.0f ), math::vec3( 0.0f, 0.0f, 1.0f ) ),
-            //         /* POSITIVE_Z */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 0.0f, 1.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
-            //         /* NEGATIVE_Z */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 0.0f, -1.0f ), math::vec3( 0.0f, 1.0f, 0.0f ) ),
+            //         /* POSITIVE_X */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 1.0f, 0.0f, 0.0f ), math::vec3(
+            //         0.0f, 1.0f, 0.0f )  ),
+            //         /* NEGATIVE_X */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( -1.0f, 0.0f, 0.0f ), math::vec3(
+            //         0.0f, 1.0f, 0.0f ) ),
+            //         /* POSITIVE_Y */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 1.0f, 0.0f ), math::vec3( 0.0f,
+            //         0.0f, -1.0f ) ),
+            //         /* NEGATIVE_Y */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, -1.0f, 0.0f ), math::vec3(
+            //         0.0f, 0.0f, 1.0f ) ),
+            //         /* POSITIVE_Z */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 0.0f, 1.0f ), math::vec3(
+            //         0.0f, 1.0f, 0.0f ) ),
+            //         /* NEGATIVE_Z */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 0.0f, -1.0f ), math::vec3(
+            //         0.0f, 1.0f, 0.0f ) ),
             //     };
             //     // clang-format on
 
@@ -394,7 +363,6 @@ namespace SE::Core
             //         }
 
             //         mOmniView.mMVP = lProjection * math::Translate( viewMatrix, -mPointLights[lLightIndex].WorldPosition );
-            //         ;
             //         mOmniView.mLightPos = math::vec4( mPointLights[lLightIndex].WorldPosition, 0.0f );
             //         mPointLightsShadowCameraUniformBuffer[lLightIndex][f]->Write( mOmniView );
 
@@ -406,7 +374,8 @@ namespace SE::Core
             //             lContext[f]->Bind( mOmniRenderPipeline->Pipeline() );
             //             lContext[f]->Bind( mPointLightsShadowSceneDescriptors[lLightIndex][f], 0, -1 );
             //             lContext[f]->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
-            //             lContext[f]->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
+            //             lContext[f]->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0
+            //             );
             //         }
             //         lContext[f]->EndRender();
             //     }
