@@ -18,6 +18,7 @@ namespace SE::Graphics
         mPipeline = CreateGraphicsPipeline( mGraphicContext, aRenderContext, ePrimitiveTopology::TRIANGLES );
 
         mPipeline->SetCulling( eFaceCulling::NONE );
+        mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( aCreateInfo.VertexShader ), "main" );
         mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( aCreateInfo.FragmentShader ), "main" );
         mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 );
@@ -29,7 +30,7 @@ namespace SE::Graphics
         mPipeline->AddDescriptorSet( lDescriptorSet );
         mPipeline->Build();
 
-        mCameraDescriptors = lDescriptorSet->Allocate(); // New<DescriptorSet>( mGraphicContext, PipelineLayout );
+        mCameraDescriptors = lDescriptorSet->Allocate();
         mCameraDescriptors->Write( mCameraBuffer, false, 0, sizeof( CameraViewUniforms ), 0 );
 
         std::vector<math::vec3> lVertexBufferData = {
