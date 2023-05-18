@@ -8,10 +8,6 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-// #include "Graphics/Vulkan/DescriptorSet.h"
-// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
-// #include "Graphics/Vulkan/IGraphicContext.h"
-
 #include "UI/UI.h"
 
 #include "UI/UIContext.h"
@@ -112,10 +108,6 @@ namespace SE::Core
         void ClearScene();
 
         void SetViewport( math::vec2 aPosition, math::vec2 aSize );
-
-        // Ref<VkGpuBuffer> mVertexBuffer            = nullptr;
-        // Ref<VkGpuBuffer> mIndexBuffer             = nullptr;
-        // Ref<VkGpuBuffer> mTransformedVertexBuffer = nullptr;
 
         math::mat4 mEditorView;
 
