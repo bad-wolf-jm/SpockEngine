@@ -190,7 +190,7 @@ namespace SE::Core
 
     void DotNetRuntime::ShutdownMono()
     {
-        mono_domain_set( mono_get_root_domain(), false );
+        mono_domain_set( sRuntimeData->mRootDomain, true );
         mono_domain_unload( sRuntimeData->mAppDomain );
         mono_jit_cleanup( sRuntimeData->mRootDomain );
 
