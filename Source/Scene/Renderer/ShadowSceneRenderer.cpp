@@ -342,12 +342,6 @@ namespace SE::Core
             lLightIndex = 0;
             for( auto &lContext : mPointLightsShadowMapRenderContext )
             {
-
-                // clang-format off
-                const float aEntries[] = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f,
-                0.0f, 1.0f }; math::mat4  lClip = math::MakeMat4( aEntries );
-                // clang-format on
-
                 math::mat4 lProjection = math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 100.0f );
 
                 for( uint32_t f = 0; f < 6; f++ )
