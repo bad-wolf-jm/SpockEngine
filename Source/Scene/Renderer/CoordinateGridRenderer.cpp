@@ -16,6 +16,7 @@ namespace SE::Core
         mPipeline = CreateGraphicsPipeline( mGraphicContext, aRenderContext, ePrimitiveTopology::TRIANGLES );
 
         mPipeline->SetCulling( eFaceCulling::NONE );
+        mPipeline->SetDepthParameters(true, true, eDepthCompareOperation::LESS_OR_EQUAL);
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\coordinategrid.vert.spv" ), "main" );
         mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders\\coordinategrid.frag.spv" ), "main" );
         mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 );

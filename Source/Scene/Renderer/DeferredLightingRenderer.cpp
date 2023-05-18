@@ -97,6 +97,7 @@ namespace SE::Core
         mPipeline = CreateGraphicsPipeline( mGraphicContext, aRenderContext, ePrimitiveTopology::TRIANGLES );
 
         mPipeline->SetCulling( eFaceCulling::NONE );
+        mPipeline->SetDepthParameters(false, false, eDepthCompareOperation::ALWAYS);
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders/Deferred/DeferredLightingMSAA.vert.spv" ),
                               "main" );
         mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders/Deferred/DeferredLightingMSAA.frag.spv" ),

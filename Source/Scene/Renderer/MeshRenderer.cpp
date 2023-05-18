@@ -62,6 +62,7 @@ namespace SE::Core
 
         mPipeline->SetCulling( eFaceCulling::BACK );
         mPipeline->SetLineWidth( Spec.LineWidth );
+        mPipeline->SetDepthParameters(true, true, eDepthCompareOperation::LESS_OR_EQUAL);
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( Spec.VertexShader ), "main" );
         mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( Spec.FragmentShader ), "main" );
         mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( MaterialPushConstants ) );
