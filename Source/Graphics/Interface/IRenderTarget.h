@@ -6,7 +6,6 @@
 #include "IGraphicContext.h"
 #include "IRenderPass.h"
 #include "ITexture2D.h"
-#include "ITextureCubeMap.h"
 
 namespace SE::Graphics
 {

@@ -105,89 +105,26 @@ namespace SE::Graphics
         }
     }
 
-    // Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture> aTextureData )
-    // {
-    //     auto x = Cast<ITexture2D>( aTextureData );
-    //     return CreateSampler2D( aGraphicContext, Cast<ITexture2D>( aTextureData ) );
-    // }
-
-    // Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture> aTextureData,
-    //                                  sTextureSamplingInfo const &aSamplingSpec )
-    // {
-    //     return CreateSampler2D( aGraphicContext, Cast<ITexture2D>( aTextureData ), aSamplingSpec );
-    // }
-
     Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData )
     {
         return CreateSampler2D( aGraphicContext, aTextureData, sTextureSamplingInfo{} );
     }
 
-    Ref<ITextureCubeMap> CreateTextureCubeMap( Ref<IGraphicContext> aGraphicContext, sTextureCreateInfo &aTextureImageDescription,
-                                               uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource,
-                                               bool aIsTransferDestination )
-    {
-        switch( gApi )
-        {
-        case eGraphicsAPI::VULKAN:
-            return New<VkTextureCubeMap>( Cast<VkGraphicContext>( aGraphicContext ), aTextureImageDescription, aSampleCount, aIsHostVisible, aIsGraphicsOnly,
-                                          aIsTransferSource, aIsTransferDestination );
-        case eGraphicsAPI::OPENGL:
-        case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
-        }
-    }
-
-    Ref<ITextureCubeMap> CreateTextureCubeMap( Ref<IGraphicContext> aGraphicContext, TextureDataCubeMap &aTextureData )
-    {
-        switch( gApi )
-        {
-        case eGraphicsAPI::VULKAN: return New<VkTextureCubeMap>( Cast<VkGraphicContext>( aGraphicContext ), aTextureData );
-        case eGraphicsAPI::OPENGL:
-        case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
-        }
-    }
-
-    Ref<ITextureCubeMap> CreateTextureCubeMap( Ref<IGraphicContext> aGraphicContext, TextureDataCubeMap &aTextureData,
-                                               uint8_t aSampleCount, bool aIsHostVisible, bool aIsGraphicsOnly,
-                                               bool aIsTransferSource )
-    {
-        switch( gApi )
-        {
-        case eGraphicsAPI::VULKAN:
-            return New<VkTextureCubeMap>( Cast<VkGraphicContext>( aGraphicContext ), aTextureData, aSampleCount, aIsHostVisible, aIsGraphicsOnly,
-                                          aIsTransferSource );
-        case eGraphicsAPI::OPENGL:
-        case eGraphicsAPI::DIRECTX:
-        default: return nullptr;
-        }
-    }
-
-    Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITextureCubeMap> aTextureData,
+    Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData,
                                                sTextureSamplingInfo const &aSamplingSpec )
     {
         switch( gApi )
         {
         case eGraphicsAPI::VULKAN:
-            return New<VkSamplerCubeMap>( Cast<VkGraphicContext>( aGraphicContext ), Cast<VkTextureCubeMap>( aTextureData ), aSamplingSpec );
+            return New<VkSamplerCubeMap>( Cast<VkGraphicContext>( aGraphicContext ), Cast<VkTexture2D>( aTextureData ),
+                                          aSamplingSpec );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
         default: return nullptr;
         }
     }
 
-    // Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture> aTextureData )
-    // {
-    //     return CreateSamplerCubeMap( aGraphicContext, Cast<ITextureCubeMap>( aTextureData ) );
-    // }
-
-    // Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture> aTextureData,
-    //                                            sTextureSamplingInfo const &aSamplingSpec )
-    // {
-    //     return CreateSamplerCubeMap( aGraphicContext, Cast<ITextureCubeMap>( aTextureData ), aSamplingSpec );
-    // }
-
-    Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITextureCubeMap> aTextureData )
+    Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData )
     {
         return CreateSamplerCubeMap( aGraphicContext, aTextureData, sTextureSamplingInfo{} );
     }

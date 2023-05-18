@@ -85,6 +85,42 @@ namespace SE::Core
         mPipeline->Build();
     }
 
+    static math::mat4 CreateCubeFaceViewMatrix( int aFace )
+    {
+        glm::mat4 lViewMatrix = glm::mat4( 1.0f );
+        switch( aFace )
+        {
+        case 0:
+            // POSITIVE_X
+            lViewMatrix = glm::rotate( lViewMatrix, glm::radians( 90.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
+            lViewMatrix = glm::rotate( lViewMatrix, glm::radians( 180.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
+            break;
+        case 1:
+            // NEGATIVE_X
+            lViewMatrix = glm::rotate( lViewMatrix, glm::radians( -90.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
+            lViewMatrix = glm::rotate( lViewMatrix, glm::radians( 180.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
+            break;
+        case 2:
+            // POSITIVE_Y
+            lViewMatrix = glm::rotate( lViewMatrix, glm::radians( -90.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
+            break;
+        case 3:
+            // NEGATIVE_Y
+            lViewMatrix = glm::rotate( lViewMatrix, glm::radians( 90.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
+            break;
+        case 4:
+            // POSITIVE_Z
+            lViewMatrix = glm::rotate( lViewMatrix, glm::radians( 180.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
+            break;
+        case 5:
+            // NEGATIVE_Z
+            lViewMatrix = glm::rotate( lViewMatrix, glm::radians( 180.0f ), glm::vec3( 0.0f, 0.0f, 1.0f ) );
+            break;
+        }
+
+        return lViewMatrix;
+    }
+
     ShadowSceneRenderer::ShadowSceneRenderer( Ref<IGraphicContext> aGraphicContext )
         : ASceneRenderer( aGraphicContext, eColorFormat::UNDEFINED, 1 )
     {
@@ -187,6 +223,7 @@ namespace SE::Core
             lCreateInfo.mWidth  = 1024;
             lCreateInfo.mHeight = 1024;
             lCreateInfo.mDepth  = 1;
+            lCreateInfo.mLayers = 6;
 
             for( uint32_t i = 0; i < mPointLights.size(); i++ )
             {
@@ -194,50 +231,47 @@ namespace SE::Core
                 mPointLightsShadowSceneDescriptors.emplace_back();
                 mPointLightsShadowCameraUniformBuffer.emplace_back();
 
-                auto lShadowMap = CreateTextureCubeMap( mGraphicContext, lCreateInfo, 1, false, true, false, false );
+                auto lShadowMap = CreateTexture2D( mGraphicContext, lCreateInfo, 1, false, true, false, false );
                 mPointLightShadowMapSamplers.emplace_back();
                 mPointLightShadowMapSamplers.back() = CreateSamplerCubeMap( mGraphicContext, lShadowMap );
 
                 for( uint32_t f = 0; f < 6; f++ )
                 {
-                    // sRenderTargetDescription lRenderTargetSpec{};
-                    // lRenderTargetSpec.mWidth       = 1024;
-                    // lRenderTargetSpec.mHeight      = 1024;
-                    // lRenderTargetSpec.mSampleCount = 1;
-                    // auto lRenderTarget             = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
+                    sRenderTargetDescription lRenderTargetSpec{};
+                    lRenderTargetSpec.mWidth       = 1024;
+                    lRenderTargetSpec.mHeight      = 1024;
+                    lRenderTargetSpec.mSampleCount = 1;
+                    auto lRenderTarget             = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
 
-                    // sAttachmentDescription lAttachmentCreateInfo{};
-                    // lAttachmentCreateInfo.mFormat      = eColorFormat::R32_FLOAT;
-                    // lAttachmentCreateInfo.mIsSampled   = true;
-                    // lAttachmentCreateInfo.mIsPresented = false;
-                    // lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
-                    // lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
-                    // lAttachmentCreateInfo.mType        = eAttachmentType::COLOR;
-                    // lAttachmentCreateInfo.mClearColor  = { 0.0f, 0.0f, 0.0f, 1.0f };
-                    // lRenderTarget->AddAttachment( "SHADOW_MAP", lAttachmentCreateInfo, lShadowMap, static_cast<eCubeFace>( f ) );
+                    sAttachmentDescription lAttachmentCreateInfo{};
+                    lAttachmentCreateInfo.mFormat      = eColorFormat::R32_FLOAT;
+                    lAttachmentCreateInfo.mIsSampled   = true;
+                    lAttachmentCreateInfo.mIsPresented = false;
+                    lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
+                    lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
+                    lAttachmentCreateInfo.mType        = eAttachmentType::COLOR;
+                    lAttachmentCreateInfo.mClearColor  = { 0.0f, 0.0f, 0.0f, 1.0f };
+                    lRenderTarget->AddAttachment( "SHADOW_MAP", lAttachmentCreateInfo, lShadowMap, static_cast<eCubeFace>( f ) );
 
-                    // lAttachmentCreateInfo              = sAttachmentDescription{};
-                    // lAttachmentCreateInfo.mIsSampled   = false;
-                    // lAttachmentCreateInfo.mIsPresented = false;
-                    // lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
-                    // lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
-                    // lAttachmentCreateInfo.mType        = eAttachmentType::DEPTH;
-                    // lAttachmentCreateInfo.mClearColor  = { 1.0f, 0.0f, 0.0f, 0.0f };
-                    // lRenderTarget->AddAttachment( "DEPTH", lAttachmentCreateInfo );
-                    // lRenderTarget->Finalize();
+                    lAttachmentCreateInfo              = sAttachmentDescription{};
+                    lAttachmentCreateInfo.mIsSampled   = false;
+                    lAttachmentCreateInfo.mIsPresented = false;
+                    lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
+                    lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
+                    lAttachmentCreateInfo.mType        = eAttachmentType::DEPTH;
+                    lAttachmentCreateInfo.mClearColor  = { 1.0f, 0.0f, 0.0f, 0.0f };
+                    lRenderTarget->AddAttachment( "DEPTH", lAttachmentCreateInfo );
+                    lRenderTarget->Finalize();
 
-                    // mPointLightsShadowMapRenderContext.back()[f] = CreateRenderContext( mGraphicContext, lRenderTarget );
-                    // mPointLightsShadowSceneDescriptors.back()[f] =
-                    //     OmniShadowMeshRenderer::GetCameraSetLayout( mGraphicContext )->Allocate();
-                    // // New<DescriptorSet>( mGraphicContext, OmniShadowMeshRenderer::GetCameraSetLayout( mGraphicContext ) );
+                    mPointLightsShadowMapRenderContext.back()[f] = CreateRenderContext( mGraphicContext, lRenderTarget );
+                    mPointLightsShadowSceneDescriptors.back()[f] =
+                        OmniShadowMeshRenderer::GetCameraSetLayout( mGraphicContext )->Allocate();
 
-                    // mPointLightsShadowCameraUniformBuffer.back()[f] = CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER,
-                    // true,
-                    //                                                                 true, true, true, sizeof( OmniShadowMatrices )
-                    //                                                                 );
+                    mPointLightsShadowCameraUniformBuffer.back()[f] = CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true,
+                                                                                    true, true, true, sizeof( OmniShadowMatrices ) );
 
-                    // mPointLightsShadowSceneDescriptors.back()[f]->Write( mPointLightsShadowCameraUniformBuffer.back()[f], false, 0,
-                    //                                                      sizeof( OmniShadowMatrices ), 0 );
+                    mPointLightsShadowSceneDescriptors.back()[f]->Write( mPointLightsShadowCameraUniformBuffer.back()[f], false, 0,
+                                                                         sizeof( OmniShadowMatrices ), 0 );
                 }
             }
         }
@@ -249,12 +283,12 @@ namespace SE::Core
             mRenderPipeline        = New<ShadowMeshRenderer>( mGraphicContext, lCreateInfo );
         }
 
-        // if( mPointLightsShadowMapRenderContext.size() > 0 )
-        // {
-        //     ShadowMeshRendererCreateInfo lCreateInfo{};
-        //     lCreateInfo.RenderPass = mPointLightsShadowMapRenderContext.back()[0];
-        //     mOmniRenderPipeline    = New<OmniShadowMeshRenderer>( mGraphicContext, lCreateInfo );
-        // }
+        if( mPointLightsShadowMapRenderContext.size() > 0 )
+        {
+            ShadowMeshRendererCreateInfo lCreateInfo{};
+            lCreateInfo.RenderPass = mPointLightsShadowMapRenderContext.back()[0];
+            mOmniRenderPipeline    = New<OmniShadowMeshRenderer>( mGraphicContext, lCreateInfo );
+        }
     }
 
     void ShadowSceneRenderer::Render()
@@ -305,83 +339,39 @@ namespace SE::Core
                 lLightIndex++;
             }
 
-            // lLightIndex = 0;
-            // for( auto &lContext : mPointLightsShadowMapRenderContext )
-            // {
+            lLightIndex = 0;
+            for( auto &lContext : mPointLightsShadowMapRenderContext )
+            {
 
-            //     // clang-format off
-            //     const float aEntries[] = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f,
-            //     0.0f, 1.0f }; math::mat4  lClip = math::MakeMat4( aEntries );
-            //     // clang-format on
+                // clang-format off
+                const float aEntries[] = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f,
+                0.0f, 1.0f }; math::mat4  lClip = math::MakeMat4( aEntries );
+                // clang-format on
 
-            //     // math::mat4 lProjection = lClip * math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 100.0f );
-            //     math::mat4 lProjection = math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 100.0f );
+                math::mat4 lProjection = math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 100.0f );
 
-            //     // clang-format off
-            //     std::array<math::mat4, 6> lMVPMatrices = {
-            //         /* POSITIVE_X */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 1.0f, 0.0f, 0.0f ), math::vec3(
-            //         0.0f, 1.0f, 0.0f )  ),
-            //         /* NEGATIVE_X */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( -1.0f, 0.0f, 0.0f ), math::vec3(
-            //         0.0f, 1.0f, 0.0f ) ),
-            //         /* POSITIVE_Y */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 1.0f, 0.0f ), math::vec3( 0.0f,
-            //         0.0f, -1.0f ) ),
-            //         /* NEGATIVE_Y */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, -1.0f, 0.0f ), math::vec3(
-            //         0.0f, 0.0f, 1.0f ) ),
-            //         /* POSITIVE_Z */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 0.0f, 1.0f ), math::vec3(
-            //         0.0f, 1.0f, 0.0f ) ),
-            //         /* NEGATIVE_Z */ math::LookAt( math::vec3( 0.0f, 0.0f, 0.0f ), math::vec3( 0.0f, 0.0f, -1.0f ), math::vec3(
-            //         0.0f, 1.0f, 0.0f ) ),
-            //     };
-            //     // clang-format on
+                for( uint32_t f = 0; f < 6; f++ )
+                {
+                    glm::mat4 viewMatrix = CreateCubeFaceViewMatrix( f );
+                    mOmniView.mMVP       = lProjection * math::Translate( viewMatrix, -mPointLights[lLightIndex].WorldPosition );
+                    mOmniView.mLightPos  = math::vec4( mPointLights[lLightIndex].WorldPosition, 0.0f );
+                    mPointLightsShadowCameraUniformBuffer[lLightIndex][f]->Write( mOmniView );
 
-            //     for( uint32_t f = 0; f < 6; f++ )
-            //     {
+                    lContext[f]->BeginRender();
+                    for( auto &lPipelineData : mOpaqueMeshQueue )
+                    {
+                        if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
 
-            //         glm::mat4 viewMatrix = glm::mat4( 1.0f );
-            //         switch( f )
-            //         {
-            //         case 0: // POSITIVE_X
-            //             viewMatrix = glm::rotate( viewMatrix, glm::radians( 90.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
-            //             viewMatrix = glm::rotate( viewMatrix, glm::radians( 180.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
-            //             break;
-            //         case 1: // NEGATIVE_X
-            //             viewMatrix = glm::rotate( viewMatrix, glm::radians( -90.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
-            //             viewMatrix = glm::rotate( viewMatrix, glm::radians( 180.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
-            //             break;
-            //         case 2: // POSITIVE_Y
-            //             viewMatrix = glm::rotate( viewMatrix, glm::radians( -90.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
-            //             break;
-            //         case 3: // NEGATIVE_Y
-            //             viewMatrix = glm::rotate( viewMatrix, glm::radians( 90.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
-            //             break;
-            //         case 4: // POSITIVE_Z
-            //             viewMatrix = glm::rotate( viewMatrix, glm::radians( 180.0f ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
-            //             break;
-            //         case 5: // NEGATIVE_Z
-            //             viewMatrix = glm::rotate( viewMatrix, glm::radians( 180.0f ), glm::vec3( 0.0f, 0.0f, 1.0f ) );
-            //             break;
-            //         }
+                        lContext[f]->Bind( mOmniRenderPipeline->Pipeline() );
+                        lContext[f]->Bind( mPointLightsShadowSceneDescriptors[lLightIndex][f], 0, -1 );
+                        lContext[f]->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
+                        lContext[f]->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
+                    }
+                    lContext[f]->EndRender();
+                }
 
-            //         mOmniView.mMVP = lProjection * math::Translate( viewMatrix, -mPointLights[lLightIndex].WorldPosition );
-            //         mOmniView.mLightPos = math::vec4( mPointLights[lLightIndex].WorldPosition, 0.0f );
-            //         mPointLightsShadowCameraUniformBuffer[lLightIndex][f]->Write( mOmniView );
-
-            //         lContext[f]->BeginRender();
-            //         for( auto &lPipelineData : mOpaqueMeshQueue )
-            //         {
-            //             if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
-
-            //             lContext[f]->Bind( mOmniRenderPipeline->Pipeline() );
-            //             lContext[f]->Bind( mPointLightsShadowSceneDescriptors[lLightIndex][f], 0, -1 );
-            //             lContext[f]->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
-            //             lContext[f]->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0
-            //             );
-            //         }
-            //         lContext[f]->EndRender();
-            //     }
-
-            //     lLightIndex++;
-            // }
+                lLightIndex++;
+            }
         }
     }
 

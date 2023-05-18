@@ -58,11 +58,11 @@ namespace SE::Graphics
         IRenderTarget::AddAttachment( aAttachmentID, aCreateInfo, aFramebufferImage );
     }
 
-    // void VkRenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
-    //                                     Ref<VkTextureCubeMap> aFramebufferImage, eCubeFace aFace )
-    // {
-    //     IRenderTarget::AddAttachment( aAttachmentID, aCreateInfo, aFramebufferImage, aFace );
-    // }
+    void VkRenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+                                        Ref<VkTexture2D> aFramebufferImage, eCubeFace aFace )
+    {
+        IRenderTarget::AddAttachment( aAttachmentID, aCreateInfo, aFramebufferImage, aFace );
+    }
 
     void VkRenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
                                         math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
@@ -123,19 +123,19 @@ namespace SE::Graphics
             break;
             case eTextureType::TEXTURE_CUBE_MAP:
             {
-                // auto lVkTextureData = std::static_pointer_cast<VkTextureCubeMap>( lTextureData.mTexture );
+                auto lVkTextureData = std::static_pointer_cast<VkTexture2D>( lTextureData.mTexture );
 
-                // VkImageAspectFlags lImageAspect = 0;
-                // if( lVkTextureData->mSpec.mIsDepthTexture )
-                //     lImageAspect |= VK_IMAGE_ASPECT_DEPTH_BIT;
-                // else
-                //     lImageAspect |= VK_IMAGE_ASPECT_COLOR_BIT;
+                VkImageAspectFlags lImageAspect = 0;
+                if( lVkTextureData->mSpec.mIsDepthTexture )
+                    lImageAspect |= VK_IMAGE_ASPECT_DEPTH_BIT;
+                else
+                    lImageAspect |= VK_IMAGE_ASPECT_COLOR_BIT;
 
-                // auto lVkImageView = GraphicContext<VkGraphicContext>()->CreateImageView(
-                //     lVkTextureData->mVkImage, (uint32_t)lTextureData.mFace, 1, VK_IMAGE_VIEW_TYPE_2D,
-                //     ToVkFormat( lVkTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
+                auto lVkImageView = GraphicContext<VkGraphicContext>()->CreateImageView(
+                    lVkTextureData->mVkImage, (uint32_t)lTextureData.mFace, 1, VK_IMAGE_VIEW_TYPE_2D,
+                    ToVkFormat( lVkTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
 
-                // mVkImageViews.push_back( lVkImageView );
+                mVkImageViews.push_back( lVkImageView );
             }
             break;
             default: break;

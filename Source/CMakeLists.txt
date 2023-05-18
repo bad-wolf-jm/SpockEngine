@@ -70,11 +70,9 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/Optix/OptixAccelerationStructure.cpp
 
     Graphics/API.cpp
-    # Graphics/Vulkan/DescriptorSet.cpp
     Graphics/Vulkan/VkRenderTarget.cpp
     Graphics/Vulkan/VkSwapChain.cpp
     Graphics/Vulkan/VkGpuBuffer.cpp
-    Graphics/Vulkan/VkTextureCubeMap.cpp
     Graphics/Vulkan/VkTexture2D.cpp
     Graphics/Vulkan/VkSampler2D.cpp
     Graphics/Vulkan/VkSamplerCubeMap.cpp
@@ -92,7 +90,6 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Interface/IWindow.cpp
     Graphics/Interface/ITexture.cpp
     Graphics/Interface/ITexture2D.cpp
-    Graphics/Interface/ITextureCubeMap.cpp
     Graphics/Interface/ISampler2D.cpp
     Graphics/Interface/ISamplerCubeMap.cpp
     Graphics/Interface/IRenderTarget.cpp

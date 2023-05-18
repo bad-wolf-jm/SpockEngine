@@ -9,7 +9,7 @@
 namespace SE::Graphics
 {
     /** @brief */
-    ISamplerCubeMap::ISamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITextureCubeMap> aTextureData,
+    ISamplerCubeMap::ISamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData,
                                       sTextureSamplingInfo const &aSamplingSpec )
         : mGraphicContext( aGraphicContext )
         , mTextureData{ aTextureData }

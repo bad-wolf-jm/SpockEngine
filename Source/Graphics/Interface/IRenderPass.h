@@ -4,7 +4,6 @@
 
 #include "IGraphicContext.h"
 #include "ITexture.h"
-#include "ITextureCubeMap.h"
 
 namespace SE::Graphics
 {
@@ -20,6 +19,6 @@ namespace SE::Graphics
 
       protected:
         Ref<IGraphicContext> mGraphicContext = nullptr;
-        uint32_t mSampleCount = 1;
+        uint32_t             mSampleCount    = 1;
     };
 } // namespace SE::Graphics

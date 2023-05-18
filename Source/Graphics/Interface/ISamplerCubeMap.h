@@ -11,7 +11,7 @@
 #include "Core/CUDA/Texture/TextureTypes.h"
 
 #include "IGraphicContext.h"
-#include "ITextureCubeMap.h"
+#include "ITexture2D.h"
 
 namespace SE::Graphics
 {
@@ -22,18 +22,18 @@ namespace SE::Graphics
     {
       public:
         /** @brief */
-        ISamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITextureCubeMap> aTextureData,
+        ISamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData,
                          sTextureSamplingInfo const &aSamplingSpec );
 
         /** @brief */
         ~ISamplerCubeMap() = default;
 
-        Ref<ITextureCubeMap> GetTexture() { return mTextureData; }
+        Ref<ITexture2D> GetTexture() { return mTextureData; }
 
       protected:
         Ref<IGraphicContext> mGraphicContext = nullptr;
-        Ref<ITextureCubeMap> mTextureData    = nullptr;
+        Ref<ITexture2D>      mTextureData    = nullptr;
 
-        friend class ITextureCubeMap;
+        friend class ITexture2D;
     };
 } // namespace SE::Graphics
