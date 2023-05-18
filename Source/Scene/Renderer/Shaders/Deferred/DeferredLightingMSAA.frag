@@ -264,7 +264,7 @@ void main()
 
     fragColor += calculateLighting( pos, normal, albedo, metalrough, emissive );
     float ao         = metalrough.r;
-    float aoStrength = metalrough.a;
+    float aoStrength = 0.0f;//metalrough.a;
 
     vec3 ambient   = uboParams.AmbientLightIntensity * uboParams.AmbientLightColor.rgb * albedo.xyz;
     vec3 hdr_color = fragColor + ambient;
@@ -284,6 +284,6 @@ void main()
     else
         outFragcolor = vec4( outColor, (lLumaAsAlpha == 0 ) ? 1.0 : lLuma );
 
-    // outFragcolor = vec4( normal, 1.0 );
+    // outFragcolor = vec4( fragColor, 1.0 );
     // outFragcolor = texture( gDirectionalShadowMaps[0], inUV );
 }
