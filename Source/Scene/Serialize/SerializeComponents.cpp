@@ -249,7 +249,7 @@ namespace SE::Core
 
     void ReadComponent( sAmbientLightingComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
-        aComponent.Color     = Get( aNode["Color"], { "x", "y", "z" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
+        aComponent.Color     = Get( aNode["Color"], { "r", "g", "b" }, math::vec3{ 1.0f, 1.0f, 1.0f } );
         aComponent.Intensity = Get( aNode["Intensity"], 0.0005f );
     }
 

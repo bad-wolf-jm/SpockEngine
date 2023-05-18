@@ -280,7 +280,7 @@ namespace SE::Editor
                 ImVec2 l_CursorPosition = ImGui::GetCursorPos();
                 UI::SetCursorPosition( ImVec2{ l_LabelSize, l_CursorPosition.y } + ImVec2( 0.0f, -5.0f ) );
                 ImGui::SetNextItemWidth( l_WindowSize.x - l_LabelSize );
-                UI::Slider( "##ambient_intensity", "%.2f", 0.0f, 0.2f, &l_AmbientLightComponent.Intensity );
+                UI::Slider( "##ambient_intensity", "%.3f", 0.0f, 0.2f, &l_AmbientLightComponent.Intensity );
 
                 WorldRenderer->SetAmbientLighting( math::vec4( l_AmbientLightComponent.Color, l_AmbientLightComponent.Intensity ) );
             }
