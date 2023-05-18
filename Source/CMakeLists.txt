@@ -115,6 +115,8 @@ endfunction(add_shader)
 add_shader(LTSimulationEngineRuntime "ui_shader.vert")
 add_shader(LTSimulationEngineRuntime "ui_shader.frag")
 
+set(MONO_PATH "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug")
+
 target_link_libraries(LTSimulationEngineRuntime PRIVATE
     Vulkan::Vulkan
     imgui
@@ -125,14 +127,14 @@ target_link_libraries(LTSimulationEngineRuntime PRIVATE
     winmm
     version
     Bcrypt
-    "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/libmono-static-sgen.lib"
-    "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/libmonoruntime-sgen.lib"
-    "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/mono-2.0-sgen.lib"
-    "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/MonoPosixHelper.lib"
-    "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/libmonoutils.lib"
-    "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/libmini-sgen.lib"
-    "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/libgcmonosgen.lib"
-    "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/eglib.lib"
+    ${MONO_PATH}/libmono-static-sgen.lib
+    ${MONO_PATH}/mono-2.0-sgen.lib
+    ${MONO_PATH}/MonoPosixHelper.lib
+    ${MONO_PATH}/libmonoruntime-sgen.lib
+    ${MONO_PATH}/libmonoutils.lib
+    ${MONO_PATH}/libmini-sgen.lib
+    ${MONO_PATH}/libgcmonosgen.lib
+    ${MONO_PATH}/eglib.lib
     wsock32
     ws2_32
     yaml-cpp
