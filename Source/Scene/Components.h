@@ -12,7 +12,6 @@
 
 #include "Core/CUDA/Array/CudaBuffer.h"
 
-// #include "Graphics/Vulkan/IGraphicBuffer.h"
 #include "Graphics/API.h"
 
 #include "Scene/Importer/ImporterData.h"
@@ -25,7 +24,6 @@
 #include "Primitives/Primitives.h"
 
 #include "DotNet/Runtime.h"
-// #include "DotNet/ScriptMethod.h"
 
 #include "Core/Profiling/BlockTimer.h"
 
