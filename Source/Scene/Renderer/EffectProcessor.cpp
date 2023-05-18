@@ -6,9 +6,6 @@ namespace SE::Core
 {
     using namespace SE::Graphics;
 
-    // std::vector<Ref<DescriptorSetLayout>> EffectProcessor::GetDescriptorSetLayout() { return { PipelineLayout }; }
-    // std::vector<sPushConstantRange> EffectProcessor::GetPushConstantLayout() { return {}; };
-
     EffectProcessor::EffectProcessor( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
                                       EffectProcessorCreateInfo aCreateInfo )
         : mGraphicContext{ aGraphicContext }
@@ -18,8 +15,8 @@ namespace SE::Core
 
         mPipeline->SetCulling( eFaceCulling::BACK );
         mPipeline->SetLineWidth( 1.0f );
-        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath(Spec.mVertexShader), "main" );
-        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath(Spec.mFragmentShader), "main" );
+        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( Spec.mVertexShader ), "main" );
+        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( Spec.mFragmentShader ), "main" );
 
         PipelineLayout = CreateDescriptorSetLayout( mGraphicContext );
         PipelineLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
@@ -29,21 +26,6 @@ namespace SE::Core
         mPipeline->Build();
 
         mTextures = PipelineLayout->Allocate();
-        // SceneRenderPipelineCreateInfo lCreateInfo{};
-        // lCreateInfo.IsTwoSided     = true;
-        // lCreateInfo.LineWidth      = 1.0f;
-        // lCreateInfo.VertexShader   = aCreateInfo.mVertexShader;
-        // lCreateInfo.FragmentShader = aCreateInfo.mFragmentShader;
-        // lCreateInfo.DepthTest      = false;
-        // lCreateInfo.DepthWrite     = false;
-        // lCreateInfo.RenderPass     = aRenderContext->GetRenderPass();
-
-        // DescriptorSetLayoutCreateInfo lPipelineLayoutCI{};
-        // lPipelineLayoutCI.Bindings = {
-        //     DescriptorBindingInfo{ 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
-        // PipelineLayout = New<DescriptorSetLayout>( mGraphicContext, lPipelineLayoutCI );
-
-        // Initialize( lCreateInfo );
     }
 
     void EffectProcessor::Render( Ref<ISampler2D> aImageSampler, Ref<IRenderContext> aRenderContext )

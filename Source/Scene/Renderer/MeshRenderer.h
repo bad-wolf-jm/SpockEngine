@@ -5,15 +5,9 @@
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 
-// #include "Graphics/Vulkan/DescriptorSet.h"
-// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
-// #include "Graphics/Vulkan/IGraphicContext.h"
-// #include "Graphics/Vulkan/IRenderPass.h"
 #include "Graphics/API.h"
 
 #include "Scene/VertexData.h"
-
-// #include "SceneRenderPipeline.h"
 
 namespace SE::Core
 {
@@ -52,7 +46,7 @@ namespace SE::Core
         }
     };
 
-    class MeshRenderer // : public SceneRenderPipeline<VertexData>
+    class MeshRenderer
     {
 
       public:
@@ -76,8 +70,6 @@ namespace SE::Core
         static Ref<IDescriptorSetLayout> GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext );
 
         Ref<IGraphicsPipeline> Pipeline() { return mPipeline; }
-        // std::vector<Ref<IDescriptorSetLayout>> GetDescriptorSetLayout();
-        // std::vector<sPushConstantRange>       GetPushConstantLayout();
 
         ~MeshRenderer() = default;
 

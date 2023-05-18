@@ -5,15 +5,9 @@
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
 
-// #include "Graphics/Vulkan/DescriptorSet.h"
-// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
-// #include "Graphics/Vulkan/IGraphicContext.h"
-// #include "Graphics/Vulkan/IRenderPass.h"
 #include "Graphics/API.h"
 
 #include "Scene/VertexData.h"
-
-// #include "SceneRenderPipeline.h"
 
 namespace SE::Core
 {
@@ -29,7 +23,7 @@ namespace SE::Core
         Ref<IRenderContext> RenderPass = nullptr;
     };
 
-    class DeferredLightingRenderer // : public SceneRenderPipeline<EmptyVertexData>
+    class DeferredLightingRenderer
     {
 
       public:
@@ -38,12 +32,11 @@ namespace SE::Core
             uint32_t mNumSamples;
         };
 
-        // DeferredLightingRendererCreateInfo Spec = {};
-        Ref<IDescriptorSetLayout> CameraSetLayout  = nullptr;
-        Ref<IDescriptorSetLayout> TextureSetLayout = nullptr;
+        Ref<IDescriptorSetLayout> CameraSetLayout            = nullptr;
+        Ref<IDescriptorSetLayout> TextureSetLayout           = nullptr;
         Ref<IDescriptorSetLayout> DirectionalShadowSetLayout = nullptr;
-        Ref<IDescriptorSetLayout> SpotlightShadowSetLayout = nullptr;
-        Ref<IDescriptorSetLayout> PointLightShadowSetLayout = nullptr;
+        Ref<IDescriptorSetLayout> SpotlightShadowSetLayout   = nullptr;
+        Ref<IDescriptorSetLayout> PointLightShadowSetLayout  = nullptr;
 
       public:
         DeferredLightingRenderer() = default;
@@ -56,9 +49,6 @@ namespace SE::Core
         static Ref<IDescriptorSetLayout> GetPointLightShadowSetLayout( Ref<IGraphicContext> aGraphicContext );
 
         Ref<IGraphicsPipeline> Pipeline() { return mPipeline; }
-
-        // std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
-        // std::vector<sPushConstantRange>       GetPushConstantLayout();
 
         ~DeferredLightingRenderer() = default;
 

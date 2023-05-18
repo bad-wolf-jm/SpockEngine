@@ -6,17 +6,9 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-// #include "Graphics/Vulkan/VkGpuBuffer.h"
-// #include "Graphics/Vulkan/VkRenderContext.h"
-// #include "Graphics/Vulkan/DescriptorSet.h"
-// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
-// #include "Graphics/Vulkan/IGraphicContext.h"
-// #include "Graphics/Vulkan/IRenderPass.h"
 #include "Graphics/API.h"
 
 #include "Scene/VertexData.h"
-
-// #include "SceneRenderPipeline.h"
 
 namespace SE::Graphics
 {
@@ -30,7 +22,7 @@ namespace SE::Graphics
         Ref<sVkAbstractRenderPassObject> RenderPass = nullptr;
     };
 
-    class VisualHelperLineRenderer // : public SceneRenderPipeline<PositionData>
+    class VisualHelperLineRenderer
     {
       public:
         struct CameraViewUniforms

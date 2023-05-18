@@ -2,17 +2,9 @@
 
 #include "Core/Memory.h"
 
-// #include "Graphics/Vulkan/IGraphicsBuffer.h"
-// #include "Graphics/Vulkan/VkRenderContext.h"
-// #include "Graphics/Vulkan/DescriptorSet.h"
-// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
-// #include "Graphics/Vulkan/IGraphicContext.h"
-// #include "Graphics/Vulkan/IRenderPass.h"
 #include "Graphics/API.h"
 
 #include "Scene/VertexData.h"
-
-// #include "SceneRenderPipeline.h"
 
 namespace SE::Core
 {
@@ -25,13 +17,7 @@ namespace SE::Core
         math::mat4 Projection;
     };
 
-    // struct CoordinateGridRendererCreateInfo
-    // {
-    //     Ref<IRenderPass> RenderPass = nullptr;
-    // };
-
     class CoordinateGridRenderer
-    // : public SE::Core::SceneRenderPipeline<EmptyVertexData>
     {
       public:
         CoordinateGridRenderer( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext );
@@ -39,10 +25,7 @@ namespace SE::Core
 
         void Render( math::mat4 aProjection, math::mat4 aView, Ref<IRenderContext> aRenderContext );
 
-        // CoordinateGridRendererCreateInfo Spec;
-        Ref<IDescriptorSetLayout>         PipelineLayout;
-        // std::vector<Ref<DescriptorSetLayout>> GetDescriptorSetLayout();
-        // std::vector<sPushConstantRange>       GetPushConstantLayout();
+        Ref<IDescriptorSetLayout> PipelineLayout;
 
       private:
         Ref<IGraphicContext>   mGraphicContext    = nullptr;

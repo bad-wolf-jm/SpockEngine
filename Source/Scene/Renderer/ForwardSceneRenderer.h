@@ -1,10 +1,6 @@
 #pragma once
 #include "Core/Memory.h"
 
-// #include "Graphics/Vulkan/Ref<IRenderContext>.h"
-// #include "Graphics/Vulkan/IRenderTarget.h"
-// #include "Graphics/Vulkan/IDescriptorSet.h"
-// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
 #include "Graphics/API.h"
 
 #include "Scene/Components.h"
@@ -48,9 +44,9 @@ namespace SE::Core
         ParticleRendererCreateInfo GetRenderPipelineCreateInfo( sParticleShaderComponent &aPipelineSpecification );
         ParticleRendererCreateInfo GetRenderPipelineCreateInfo( sParticleRenderData &aPipelineSpecification );
 
-        Ref<MeshRenderer> GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification );
-        Ref<MeshRenderer> GetRenderPipeline( sMeshRenderData &aPipelineSpecification );
-        Ref<MeshRenderer> GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification );
+        Ref<MeshRenderer>           GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification );
+        Ref<MeshRenderer>           GetRenderPipeline( sMeshRenderData &aPipelineSpecification );
+        Ref<MeshRenderer>           GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification );
         Ref<ParticleSystemRenderer> GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification );
         Ref<ParticleSystemRenderer> GetRenderPipeline( sParticleRenderData &aPipelineSpecification );
         Ref<ParticleSystemRenderer> GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification );

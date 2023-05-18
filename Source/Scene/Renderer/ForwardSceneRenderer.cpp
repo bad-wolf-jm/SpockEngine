@@ -3,8 +3,6 @@
 #include <chrono>
 #include <gli/gli.hpp>
 
-// #include "Graphics/Vulkan/VkPipeline.h"
-
 #include "Scene/Components/VisualHelpers.h"
 #include "Scene/Primitives/Primitives.h"
 #include "Scene/VertexData.h"
@@ -30,8 +28,7 @@ namespace SE::Core
     {
         auto lLayout = MeshRenderer::GetCameraSetLayout( mGraphicContext );
 
-        mSceneDescriptors =
-            lLayout->Allocate(); // New<DescriptorSet>( mGraphicContext, MeshRenderer::GetCameraSetLayout( mGraphicContext ) );
+        mSceneDescriptors = lLayout->Allocate();
 
         mCameraUniformBuffer =
             CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( WorldMatrices ) );

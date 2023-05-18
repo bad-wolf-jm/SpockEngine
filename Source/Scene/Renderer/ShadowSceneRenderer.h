@@ -1,10 +1,6 @@
 #pragma once
 #include "Core/Memory.h"
 
-// #include "Graphics/Vulkan/Ref<IRenderContext>.h"
-// #include "Graphics/Vulkan/IDescriptorSet.h"
-// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
-// #include "Graphics/Vulkan/IRenderTarget.h"
 #include "Graphics/API.h"
 
 #include "Scene/Components.h"
@@ -28,7 +24,7 @@ namespace SE::Core
         Ref<IRenderContext> RenderPass = nullptr;
     };
 
-    class ShadowMeshRenderer //: public SceneRenderPipeline<VertexData>
+    class ShadowMeshRenderer
     {
 
       public:
@@ -42,23 +38,18 @@ namespace SE::Core
         ShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo );
 
         static Ref<IDescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
-        // static Ref<IDescriptorSetLayout> GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext );
-        // std::vector<Ref<IDescriptorSetLayout>> GetDescriptorSetLayout();
-        // std::vector<sPushConstantRange>        GetPushConstantLayout();
-        Ref<IGraphicsPipeline> Pipeline() { return mPipeline; }
+        Ref<IGraphicsPipeline>           Pipeline() { return mPipeline; }
 
         ~ShadowMeshRenderer() = default;
-
 
       private:
         Ref<IGraphicContext>   mGraphicContext    = nullptr;
         Ref<IGraphicBuffer>    mCameraBuffer      = nullptr;
         Ref<IDescriptorSet>    mCameraDescriptors = nullptr;
         Ref<IGraphicsPipeline> mPipeline          = nullptr;
-
     };
 
-    class OmniShadowMeshRenderer // : public SceneRenderPipeline<VertexData>
+    class OmniShadowMeshRenderer
     {
 
       public:
@@ -74,8 +65,6 @@ namespace SE::Core
         static Ref<IDescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
         static Ref<IDescriptorSetLayout> GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext );
 
-        // std::vector<Ref<IDescriptorSetLayout>> GetDescriptorSetLayout();
-        // std::vector<sPushConstantRange>        GetPushConstantLayout();
         Ref<IGraphicsPipeline> Pipeline() { return mPipeline; }
 
         ~OmniShadowMeshRenderer() = default;
@@ -146,8 +135,6 @@ namespace SE::Core
 
         Ref<IDescriptorSetLayout> mShadowMapDescriptorLayout = nullptr;
         Ref<IDescriptorSet>       mShadowMapDescriptorSet    = nullptr;
-
-        // ShadowMeshRenderer mRenderPipeline{};
     };
 
 } // namespace SE::Core
