@@ -1,4 +1,4 @@
-#include "TreeView.h"
+#include "FileTree.h"
 
 #include "DotNet/Runtime.h"
 
@@ -8,7 +8,7 @@
 
 namespace SE::Core
 {
-    UIFileNode::UIFileNode( UIFileTree *aTreeView, UIFileNode *aParent )
+    UIFileTreeNode::UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent )
         : mTreeView{ aTreeView }
         , mParent{ aParent }
         , mFlags{ ImGuiTreeNodeFlags_SpanFullWidth }
@@ -35,40 +35,40 @@ namespace SE::Core
         mIndicator->mIsVisible = false;
     }
 
-    void UIFileNode::PushStyles()
+    void UIFileTreeNode::PushStyles()
     {
         ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2{ 0.0f, 0.0f } );
         ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, ImVec2{ 0.0f, 0.0f } );
     }
 
-    void UIFileNode::PopStyles() { ImGui::PopStyleVar( 2 ); }
+    void UIFileTreeNode::PopStyles() { ImGui::PopStyleVar( 2 ); }
 
-    UIFileNode *UIFileNode::Add()
+    UIFileTreeNode *UIFileTreeNode::Add()
     {
-        auto lNewChild = new UIFileNode( mTreeView, this );
+        auto lNewChild = new UIFileTreeNode( mTreeView, this );
         mChildren.push_back( lNewChild );
 
         return lNewChild;
     }
 
-    void UIFileNode::SetIcon( UIImage *aIcon )
+    void UIFileTreeNode::SetIcon( UIImage *aIcon )
     {
         mImage->Add( aIcon, "IMAGE" );
         mImage->mIsVisible = !( aIcon == nullptr );
     }
 
-    void UIFileNode::SetIndicator( UIComponent *aIcon )
+    void UIFileTreeNode::SetIndicator( UIComponent *aIcon )
     {
         mIndicator->Add( aIcon, "IMAGE" );
         mIndicator->mIsVisible = !( aIcon == nullptr );
     }
 
-    void UIFileNode::SetText( std::string const &aText ) { mText->SetText( aText ); }
-    void UIFileNode::SetTextColor( math::vec4 aColor ) { mText->SetTextColor( aColor ); }
+    void UIFileTreeNode::SetText( std::string const &aText ) { mText->SetText( aText ); }
+    void UIFileTreeNode::SetTextColor( math::vec4 aColor ) { mText->SetTextColor( aColor ); }
 
-    ImVec2 UIFileNode::RequiredSize() { return mLayout->RequiredSize(); }
+    ImVec2 UIFileTreeNode::RequiredSize() { return mLayout->RequiredSize(); }
 
-    void UIFileNode::TreePushOverrideID()
+    void UIFileTreeNode::TreePushOverrideID()
     {
         ImGuiWindow *lWindow = ImGui::GetCurrentWindow();
 
@@ -79,7 +79,7 @@ namespace SE::Core
         ImGui::PushOverrideID( lWindow->GetID( (void *)this ) );
     }
 
-    void UIFileNode::TreePop()
+    void UIFileTreeNode::TreePop()
     {
         ImGuiContext &lImGuiContext = *GImGui;
         ImGuiWindow  *lWindow       = GImGui->CurrentWindow;
@@ -106,7 +106,7 @@ namespace SE::Core
         ImGui::PopID();
     }
 
-    bool UIFileNode::IsOpen()
+    bool UIFileTreeNode::IsOpen()
     {
         if( mFlags & ImGuiTreeNodeFlags_Leaf ) return true;
 
@@ -147,9 +147,9 @@ namespace SE::Core
         return lNodeIsOpen;
     }
 
-    bool UIFileNode::IsLeaf() { return mChildren.size() == 0; }
+    bool UIFileTreeNode::IsLeaf() { return mChildren.size() == 0; }
 
-    bool UIFileNode::RenderNode()
+    bool UIFileTreeNode::RenderNode()
     {
         ImGuiWindow *lWindow = ImGui::GetCurrentWindow();
         if( lWindow->SkipItems ) return false;
@@ -321,7 +321,7 @@ namespace SE::Core
         return lNodeIsOpen;
     }
 
-    void UIFileNode::RenderArrow( ImDrawList *aDrawList, ImVec2 aPosition, ImU32 aColor, ImGuiDir aDirection, float aScale )
+    void UIFileTreeNode::RenderArrow( ImDrawList *aDrawList, ImVec2 aPosition, ImU32 aColor, ImGuiDir aDirection, float aScale )
     {
         const float lHeight = aDrawList->_Data->FontSize * .75f;
         float       lRadius = lHeight * 0.5f * aScale;
@@ -350,7 +350,7 @@ namespace SE::Core
         aDrawList->AddTriangleFilled( lCenter + a, lCenter + b, lCenter + c, aColor );
     }
 
-    void UIFileNode::DrawContent( ImVec2 aPosition, ImVec2 aSize )
+    void UIFileTreeNode::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
         ImGuiWindow      *lWindow       = ImGui::GetCurrentWindow();
         ImGuiContext     &lImGuiContext = *GImGui;
@@ -383,49 +383,49 @@ namespace SE::Core
         }
     }
 
-    void *UIFileNode::UIFileNode_Create()
+    void *UIFileTreeNode::UIFileTreeNode_Create()
     {
-        auto lNewLabel = new UIFileNode();
+        auto lNewLabel = new UIFileTreeNode();
 
         return static_cast<void *>( lNewLabel );
     }
 
-    void UIFileNode::UIFileNode_Destroy( void *aInstance ) { delete static_cast<UIFileNode *>( aInstance ); }
+    void UIFileTreeNode::UIFileTreeNode_Destroy( void *aInstance ) { delete static_cast<UIFileTreeNode *>( aInstance ); }
 
-    void UIFileNode::UIFileNode_SetText( void *aInstance, void *aText )
+    void UIFileTreeNode::UIFileTreeNode_SetText( void *aInstance, void *aText )
     {
-        auto lInstance = static_cast<UIFileNode *>( aInstance );
+        auto lInstance = static_cast<UIFileTreeNode *>( aInstance );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
         lInstance->SetText( lString );
     }
 
-    void UIFileNode::UIFileNode_SetTextColor( void *aInstance, math::vec4 aTextColor )
+    void UIFileTreeNode::UIFileTreeNode_SetTextColor( void *aInstance, math::vec4 aTextColor )
     {
-        auto lInstance = static_cast<UIFileNode *>( aInstance );
+        auto lInstance = static_cast<UIFileTreeNode *>( aInstance );
 
         lInstance->SetTextColor( aTextColor );
     }
 
-    void UIFileNode::UIFileNode_SetIcon( void *aInstance, void *aIcon )
+    void UIFileTreeNode::UIFileTreeNode_SetIcon( void *aInstance, void *aIcon )
     {
-        auto lInstance = static_cast<UIFileNode *>( aInstance );
+        auto lInstance = static_cast<UIFileTreeNode *>( aInstance );
         auto lImage    = static_cast<UIImage *>( aIcon );
 
         lInstance->SetIcon( lImage );
     }
 
-    void UIFileNode::UIFileNode_SetIndicator( void *aInstance, void *aIndicator )
+    void UIFileTreeNode::UIFileTreeNode_SetIndicator( void *aInstance, void *aIndicator )
     {
-        auto lInstance = static_cast<UIFileNode *>( aInstance );
+        auto lInstance = static_cast<UIFileTreeNode *>( aInstance );
         auto lImage    = static_cast<UIComponent *>( aIndicator );
 
         lInstance->SetIndicator( lImage );
     }
 
-    void *UIFileNode::UIFileNode_Add( void *aInstance )
+    void *UIFileTreeNode::UIFileTreeNode_Add( void *aInstance )
     {
-        auto lInstance = static_cast<UIFileNode *>( aInstance );
+        auto lInstance = static_cast<UIFileTreeNode *>( aInstance );
 
         return static_cast<void *>( lInstance->Add() );
     }
@@ -433,7 +433,7 @@ namespace SE::Core
     UIFileTree::UIFileTree()
     {
         SetIndent( 9.0f );
-        mRoot = new UIFileNode( this, nullptr );
+        mRoot = new UIFileTreeNode( this, nullptr );
     }
 
     void   UIFileTree::PushStyles() {}
@@ -441,7 +441,7 @@ namespace SE::Core
     ImVec2 UIFileTree::RequiredSize() { return ImVec2{}; }
 
     void            UIFileTree::SetIndent( float aIndent ) { mIndent = aIndent; }
-    UIFileNode *UIFileTree::Add() { return mRoot->Add(); }
+    UIFileTreeNode *UIFileTree::Add() { return mRoot->Add(); }
 
     void UIFileTree::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
