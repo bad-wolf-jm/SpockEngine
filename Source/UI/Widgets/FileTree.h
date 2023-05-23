@@ -16,7 +16,7 @@ namespace SE::Core
     {
       public:
         UIFileTreeNode() = default;
-        UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent );
+        UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent, fs::path const &aPath, std::string const &aName );
 
         // void SetIcon(UIImage* aImage);
         // void SetIndicator(UIComponent* aImage);
@@ -25,7 +25,11 @@ namespace SE::Core
 
         UIFileTreeNode *Add();
 
+        std::vector<UITreeViewNode *> const &Children();
+
       protected:
+        fs::path    mPath;
+        std::string mName;
         // ImGuiTreeNodeFlags mFlags;
 
         // Ref<UIStackLayout> mImage  = nullptr;
@@ -55,11 +59,11 @@ namespace SE::Core
       public:
         static void *UIFileTreeNode_Create();
         static void  UIFileTreeNode_Destroy( void *aInstance );
-        static void  UIFileTreeNode_SetIcon( void *aInstance, void *aIcon );
-        static void  UIFileTreeNode_SetIndicator( void *aInstance, void *aIndicator );
-        static void  UIFileTreeNode_SetText( void *aInstance, void *aText );
-        static void  UIFileTreeNode_SetTextColor( void *aInstance, math::vec4 aTextColor );
-        static void *UIFileTreeNode_Add( void *aInstance );
+        // static void  UIFileTreeNode_SetIcon( void *aInstance, void *aIcon );
+        // static void  UIFileTreeNode_SetIndicator( void *aInstance, void *aIndicator );
+        // static void  UIFileTreeNode_SetText( void *aInstance, void *aText );
+        // static void  UIFileTreeNode_SetTextColor( void *aInstance, math::vec4 aTextColor );
+        // static void *UIFileTreeNode_Add( void *aInstance );
     };
 
     class UIFileTree : public UITreeView

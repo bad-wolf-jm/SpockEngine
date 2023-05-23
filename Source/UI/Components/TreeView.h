@@ -22,6 +22,8 @@ namespace SE::Core
         void SetText( std::string const &aText );
         void SetTextColor( math::vec4 aColor );
 
+        virtual std::vector<UITreeViewNode*> const& Children();
+
         UITreeViewNode* Add();
 
       protected:

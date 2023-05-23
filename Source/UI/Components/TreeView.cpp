@@ -31,7 +31,7 @@ namespace SE::Core
         mLayout->Add( mText.get(), true, true );
         mLayout->Add( mIndicator.get(), 20.0f, false, true );
 
-        mImage->mIsVisible = false;
+        mImage->mIsVisible     = false;
         mIndicator->mIsVisible = false;
     }
 
@@ -350,6 +350,8 @@ namespace SE::Core
         aDrawList->AddTriangleFilled( lCenter + a, lCenter + b, lCenter + c, aColor );
     }
 
+    std::vector<UITreeViewNode*> const& UITreeViewNode::Children() { return mChildren; }
+
     void UITreeViewNode::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
         ImGuiWindow      *lWindow       = ImGui::GetCurrentWindow();
@@ -367,14 +369,14 @@ namespace SE::Core
 
         if( mParent == nullptr )
         {
-            for( auto lChild : mChildren )
+            for( auto lChild : Children() )
             {
                 lChild->Update( ImGui::GetCursorPos(), lSize );
             }
         }
         else if( RenderNode() )
         {
-            for( auto lChild : mChildren )
+            for( auto lChild : Children() )
             {
                 lChild->Update( ImGui::GetCursorPos(), lSize );
             }

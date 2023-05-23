@@ -11,8 +11,10 @@ namespace SE::Core
     Ref<UIImage> mOpenFolder  = nullptr;
     Ref<UIImage> mCloseFolder = nullptr;
 
-    UIFileTreeNode::UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent )
+    UIFileTreeNode::UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent, fs::path const &aPath, std::string const &aName )
         : UITreeViewNode( aTreeView, aParent )
+        , mPath{ aPath }
+        , mName{ aName }
     {
         // mImage = New<UIStackLayout>();
         // mImage->SetPadding( 0.0f );
@@ -36,6 +38,21 @@ namespace SE::Core
         // mIndicator->mIsVisible = false;
     }
 
+    std::vector<UITreeViewNode *> const &UIFileTreeNode::Children()
+    {
+        auto const &lFullPath = mPath / mName;
+        if( ( mChildren.size() == 0 ) && fs::is_directory( lFullPath ) )
+        {
+            for( auto const &F : fs::directory_iterator( lFullPath ) )
+            {
+                auto *lNode = new UIFileTreeNode( (UIFileTree *)mTreeView, this, lFullPath, F.path().filename().string() );
+
+                mChildren.push_back( lNode );
+            }
+        }
+
+        return UITreeViewNode::Children();
+    }
     // void UIFileTreeNode::PushStyles()
     // {
     //     ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2{ 0.0f, 0.0f } );
@@ -44,13 +61,13 @@ namespace SE::Core
 
     // void UIFileTreeNode::PopStyles() { ImGui::PopStyleVar( 2 ); }
 
-    UIFileTreeNode *UIFileTreeNode::Add()
-    {
-        auto lNewChild = new UIFileTreeNode( (UIFileTree *)mTreeView, this );
-        mChildren.push_back( lNewChild );
+    // UIFileTreeNode *UIFileTreeNode::Add()
+    // {
+    //     auto lNewChild = new UIFileTreeNode( (UIFileTree *)mTreeView, this );
+    //     mChildren.push_back( lNewChild );
 
-        return lNewChild;
-    }
+    //     return lNewChild;
+    // }
 
     // void UIFileTreeNode::SetIcon( UIImage *aIcon )
     // {
@@ -396,48 +413,48 @@ namespace SE::Core
 
     void UIFileTreeNode::UIFileTreeNode_Destroy( void *aInstance ) { delete static_cast<UIFileTreeNode *>( aInstance ); }
 
-    void UIFileTreeNode::UIFileTreeNode_SetText( void *aInstance, void *aText )
-    {
-        auto lInstance = static_cast<UIFileTreeNode *>( aInstance );
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+    // void UIFileTreeNode::UIFileTreeNode_SetText( void *aInstance, void *aText )
+    // {
+    //     auto lInstance = static_cast<UIFileTreeNode *>( aInstance );
+    //     auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetText( lString );
-    }
+    //     lInstance->SetText( lString );
+    // }
 
-    void UIFileTreeNode::UIFileTreeNode_SetTextColor( void *aInstance, math::vec4 aTextColor )
-    {
-        auto lInstance = static_cast<UIFileTreeNode *>( aInstance );
+    // void UIFileTreeNode::UIFileTreeNode_SetTextColor( void *aInstance, math::vec4 aTextColor )
+    // {
+    //     auto lInstance = static_cast<UIFileTreeNode *>( aInstance );
 
-        lInstance->SetTextColor( aTextColor );
-    }
+    //     lInstance->SetTextColor( aTextColor );
+    // }
 
-    void UIFileTreeNode::UIFileTreeNode_SetIcon( void *aInstance, void *aIcon )
-    {
-        auto lInstance = static_cast<UIFileTreeNode *>( aInstance );
-        auto lImage    = static_cast<UIImage *>( aIcon );
+    // void UIFileTreeNode::UIFileTreeNode_SetIcon( void *aInstance, void *aIcon )
+    // {
+    //     auto lInstance = static_cast<UIFileTreeNode *>( aInstance );
+    //     auto lImage    = static_cast<UIImage *>( aIcon );
 
-        lInstance->SetIcon( lImage );
-    }
+    //     lInstance->SetIcon( lImage );
+    // }
 
-    void UIFileTreeNode::UIFileTreeNode_SetIndicator( void *aInstance, void *aIndicator )
-    {
-        auto lInstance = static_cast<UIFileTreeNode *>( aInstance );
-        auto lImage    = static_cast<UIComponent *>( aIndicator );
+    // void UIFileTreeNode::UIFileTreeNode_SetIndicator( void *aInstance, void *aIndicator )
+    // {
+    //     auto lInstance = static_cast<UIFileTreeNode *>( aInstance );
+    //     auto lImage    = static_cast<UIComponent *>( aIndicator );
 
-        lInstance->SetIndicator( lImage );
-    }
+    //     lInstance->SetIndicator( lImage );
+    // }
 
-    void *UIFileTreeNode::UIFileTreeNode_Add( void *aInstance )
-    {
-        auto lInstance = static_cast<UIFileTreeNode *>( aInstance );
+    // void *UIFileTreeNode::UIFileTreeNode_Add( void *aInstance )
+    // {
+    //     auto lInstance = static_cast<UIFileTreeNode *>( aInstance );
 
-        return static_cast<void *>( lInstance->Add() );
-    }
+    //     return static_cast<void *>( lInstance->Add() );
+    // }
 
     UIFileTree::UIFileTree()
     {
         SetIndent( 9.0f );
-        mRoot = new UIFileTreeNode( this, nullptr );
+        mRoot = new UIFileTreeNode( this, nullptr, "", "" );
     }
 
     // void   UIFileTree::PushStyles() {}
@@ -462,12 +479,12 @@ namespace SE::Core
 
     void UIFileTree::UIFileTree_Destroy( void *aInstance ) { delete static_cast<UIFileTree *>( aInstance ); }
 
-    void UIFileTree::UIFileTree_SetIndent( void *aInstance, float aIndent )
-    {
-        auto lInstance = static_cast<UIFileTree *>( aInstance );
+    // void UIFileTree::UIFileTree_SetIndent( void *aInstance, float aIndent )
+    // {
+    //     auto lInstance = static_cast<UIFileTree *>( aInstance );
 
-        lInstance->SetIndent( aIndent );
-    }
+    //     lInstance->SetIndent( aIndent );
+    // }
 
     void *UIFileTree::UIFileTree_Add( void *aInstance )
     {
