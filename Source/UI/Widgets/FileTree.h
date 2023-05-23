@@ -84,7 +84,7 @@ namespace SE::Core
       public:
         static void *UIFileTree_Create();
         static void  UIFileTree_Destroy( void *aInstance );
-        static void  UIFileTree_SetIndent( void *aInstance, float aIndent );
+        // static void  UIFileTree_SetIndent( void *aInstance, float aIndent );
         static void *UIFileTree_Add( void *aInstance );
 
         friend class UIFileTreeNode;
