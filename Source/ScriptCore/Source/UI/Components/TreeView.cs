@@ -73,9 +73,12 @@ namespace SpockEngine
 
     public class UITreeView : UIComponent
     {
-        public UITreeView() : base(UITreeView_Create()) { }
+        bool mDerived = false;
+        public UITreeView() : this(UITreeView_Create(), false) { }
+        public UITreeView(ulong aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
 
-        ~UITreeView() { UITreeView_Destroy(mInstance); }
+        ~UITreeView() { if (!mDerived) UITreeView_Destroy(mInstance); }
+
 
         public void SetIndent(float aIndent) { UITreeView_SetIndent(mInstance, aIndent); }
 

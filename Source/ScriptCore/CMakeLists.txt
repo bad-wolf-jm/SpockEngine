@@ -58,6 +58,8 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/Components/DropdownButton.cs
     Source/UI/Components/TreeView.cs
 
+    Source/UI/Widgets/FileTree.cs
+
     Source/UI/Layouts/BoxLayout.cs
     Source/UI/Layouts/ZLayout.cs
     Source/UI/Layouts/Splitter.cs
