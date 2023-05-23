@@ -123,4 +123,26 @@ namespace SE::Editor
         mDeferredRenderer->View.ModelFraming   = math::mat4( 0.5f );
         mDeferredRenderer->View.View = math::Inverse( math::Translate( math::mat4( 1.0f ), mDeferredRenderer->View.CameraPosition ) );
     }
+
+    void BaseEditorApplication::Init( std::string aAppClass, fs::path aConfigurationPath )
+    {
+        Init();
+
+        static auto &lApplicationType = DotNetRuntime::GetClassType( aAppClass );
+
+        if( lApplicationType )
+        {
+            mApplicationInstance    = lApplicationType.Instantiate();
+            auto lConfigurationPath = DotNetRuntime::NewString( aConfigurationPath.string() );
+            mApplicationInstance->CallMethod( "Initialize", lConfigurationPath );
+
+            mEditorWindow.mApplicationInstance = mApplicationInstance;
+        }
+        else
+        {
+            SE::Logging::Info( "Could not load application: class {} does not exist", aAppClass );
+        }
+    }
+
+
 } // namespace SE::Editor
