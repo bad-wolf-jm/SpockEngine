@@ -78,6 +78,7 @@ namespace SE::Core
 
         return UITreeViewNode::Children();
     }
+
     // void UIFileTreeNode::PushStyles()
     // {
     //     ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2{ 0.0f, 0.0f } );
@@ -479,6 +480,7 @@ namespace SE::Core
     UIFileTree::UIFileTree()
     {
         SetIndent( 9.0f );
+        
         mRoot = new UIFileTreeNode( this, nullptr, "", "" );
     }
 
