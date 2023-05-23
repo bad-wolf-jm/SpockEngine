@@ -23,13 +23,15 @@ namespace SE::Core
         // void SetText( std::string const &aText );
         // void SetTextColor( math::vec4 aColor );
 
-        UIFileTreeNode *Add();
+        UIFileTreeNode *Add(fs::path const& aPath);
 
         std::vector<UITreeViewNode *> const &Children();
 
       protected:
         fs::path    mPath;
         std::string mName;
+
+        bool IsLeaf();
         // ImGuiTreeNodeFlags mFlags;
 
         // Ref<UIStackLayout> mImage  = nullptr;
@@ -56,9 +58,9 @@ namespace SE::Core
         // bool RenderNode();
         // void RenderArrow( ImDrawList *aDrawList, ImVec2 aPosition, ImU32 aColor, ImGuiDir aDirection, float aScale );
 
-      public:
-        static void *UIFileTreeNode_Create();
-        static void  UIFileTreeNode_Destroy( void *aInstance );
+    //   public:
+    //     static void *UIFileTreeNode_Create();
+    //     static void  UIFileTreeNode_Destroy( void *aInstance );
         // static void  UIFileTreeNode_SetIcon( void *aInstance, void *aIcon );
         // static void  UIFileTreeNode_SetIndicator( void *aInstance, void *aIndicator );
         // static void  UIFileTreeNode_SetText( void *aInstance, void *aText );
@@ -72,7 +74,7 @@ namespace SE::Core
         UIFileTree();
 
         // void SetIndent(float aIndent);
-        UIFileTreeNode *Add();
+        UIFileTreeNode *Add(fs::path const& aPath);
 
       protected:
         // float mIndent = 5.0f;
@@ -89,7 +91,7 @@ namespace SE::Core
         static void *UIFileTree_Create();
         static void  UIFileTree_Destroy( void *aInstance );
         // static void  UIFileTree_SetIndent( void *aInstance, float aIndent );
-        static void *UIFileTree_Add( void *aInstance );
+        static void *UIFileTree_Add( void *aInstance, void* aPath );
 
         friend class UIFileTreeNode;
     };

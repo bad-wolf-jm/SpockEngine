@@ -40,6 +40,8 @@
 #include "UI/Components/TreeView.h"
 #include "UI/Components/Workspace.h"
 
+#include "UI/Widgets/FileTree.h"
+
 #include "UI/UI.h"
 
 #include "UI/Layouts/Container.h"
@@ -606,6 +608,18 @@ namespace SE::Core
         ICall( "UITreeViewNode::UITreeViewNode_SetText", UITreeViewNode::UITreeViewNode_SetText );
         ICall( "UITreeViewNode::UITreeViewNode_SetTextColor", UITreeViewNode::UITreeViewNode_SetTextColor );
         ICall( "UITreeViewNode::UITreeViewNode_Add", UITreeViewNode::UITreeViewNode_Add );
+
+        ICall( "UIFileTree::UIFileTree_Create", UIFileTree::UIFileTree_Create );
+        ICall( "UIFileTree::UIFileTree_Destroy", UIFileTree::UIFileTree_Destroy );
+        ICall( "UIFileTree::UIFileTree_Add", UIFileTree::UIFileTree_Add );
+        // ICall( "UIFileTree::UIFileView_SetIndent", UIFileTree::UITreeView_SetIndent );
+        // ICall( "UIFileTreeNode::UIFileTreeNode_Create", UIFileTreeNode::UITreeViewNode_Create );
+        // ICall( "UIFileTreeNode::UIFileTreeNode_Destroy", UIFileTreeNode::UITreeViewNode_Destroy );
+        // ICall( "UIFileTreeNode::UIFileTreeNode_SetIcon", UIFileTreeNode::UITreeViewNode_SetIcon );
+        // ICall( "UIFileTreeNode::UIFileTreeNode_SetIndicator", UIFileTreeNode::UITreeViewNode_SetIndicator );
+        // ICall( "UIFileTreeNode::UIFileTreeNode_SetText", UIFileTreeNode::UITreeViewNode_SetText );
+        // ICall( "UIFileTreeNode::UIFileTreeNode_SetTextColor", UIFileTreeNode::UITreeViewNode_SetTextColor );
+        // ICall( "UIFileTreeNode::UIFileTreeNode_Add", UIFileTreeNode::UITreeViewNode_Add );
     }
 
 } // namespace SE::Core

@@ -45,13 +45,14 @@ namespace SE::Core
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
-      private:
+      protected:
         void TreePushOverrideID( );
         void TreePop();
         bool IsOpen();
-        bool IsLeaf();
         bool RenderNode();
         void RenderArrow( ImDrawList *aDrawList, ImVec2 aPosition, ImU32 aColor, ImGuiDir aDirection, float aScale );
+        
+        virtual bool IsLeaf();
 
       public:
         static void *UITreeViewNode_Create();
