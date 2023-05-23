@@ -49,6 +49,7 @@ namespace SE::Editor
         ~BaseEditorApplication() = default;
 
         void Init();
+        void Init(std::string aAppClass, fs::path aConfigurationPath);
 
         void RenderScene();
         void Update( Timestep ts );
@@ -74,6 +75,8 @@ namespace SE::Editor
         ImageHandle     mDeferredRenderTargetDisplayHandle{};
 
         Entity m_SensorEntity{};
+
+        Ref<DotNetInstance> mApplicationInstance = nullptr;
     };
 
 } // namespace SE::Editor

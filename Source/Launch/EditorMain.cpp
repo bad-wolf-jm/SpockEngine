@@ -108,6 +108,9 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
     auto lProgramArguments = New<argparse::ArgumentParser>( "bin2ktx" );
 
     // clang-format off
+    lProgramArguments->add_argument( "-a", "--application" )
+        .help( "Specify input file" )
+        .default_value( std::string{ "" } );
 
     lProgramArguments->add_argument( "-p", "--project" )
         .help( "Specify input file" )
@@ -258,8 +261,26 @@ int main( int argc, char **argv )
 
     DotNetRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 
+    auto     lApplicationName              = lProgramArguments->get<std::string>( "--application" );
+    fs::path lApplicationConfigurationPath = "";
+    if( !lApplicationName.empty() )
+    {
+        lApplicationConfigurationPath = lLocalConfigFolder / "SpockEngine" / "Config" / fmt::format( "{}.yaml", lApplicationName );
+        auto lApplicationAssembly =
+            fs::path( "C:\\GitLab\\SpockEngine\\Build\\Programs" ) / lApplicationName / fmt::format( "{}.dll", lApplicationName );
+        if( fs::exists( lApplicationAssembly ) ) DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
+
+        if( !fs::exists( lApplicationConfigurationPath ) )
+            SE::Logging::Info( "Application configuration file '{}' does not exist", lApplicationConfigurationPath.string() );
+    }
+
     SE::Editor::BaseEditorApplication lEditorApplication;
-    lEditorApplication.Init();
+
+    if( !lApplicationName.empty() )
+        lEditorApplication.Init( fmt::format( "{}.{}", lApplicationName, lApplicationName ), lApplicationConfigurationPath );
+    else
+        lEditorApplication.Init();
+
 
     lEditorApplication.mEditorWindow.mMaterialsPath = lProjectRoot / "Assets" / "Materials";
     lEditorApplication.mEditorWindow.mModelsPath    = lProjectRoot / "Assets" / "Models";
