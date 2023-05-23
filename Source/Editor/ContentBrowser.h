@@ -26,20 +26,20 @@ namespace SE::Editor
 
       private:
         Ref<IGraphicContext>  mGraphicContext;
-        std::filesystem::path m_RootDirectory;
-        std::filesystem::path m_CurrentDirectory;
+        std::filesystem::path mRootDirectory;
+        std::filesystem::path mCurrentDirectory;
 
-        Ref<SE::Graphics::ISampler2D> m_DirectoryIcon;
-        ImageHandle                   m_DirectoryIconHandle;
+        Ref<SE::Graphics::ISampler2D> mDirectoryIcon;
+        ImageHandle                   mDirectoryIconHandle;
 
-        Ref<SE::Graphics::ISampler2D> m_FileIcon;
-        ImageHandle                   m_FileIconHandle;
+        Ref<SE::Graphics::ISampler2D> mFileIcon;
+        ImageHandle                   mFileIconHandle;
 
-        Ref<SE::Graphics::ISampler2D> m_BackIcon;
-        ImageHandle                   m_BackIconHandle;
+        Ref<SE::Graphics::ISampler2D> mBackIcon;
+        ImageHandle                   mBackIconHandle;
 
-        float padding       = 5.0f;
-        float thumbnailSize = 30.0f;
-        float textSize      = 125.0f;
+        float mPadding       = 5.0f;
+        float mThumbnailSize = 30.0f;
+        float mTextSize      = 125.0f;
     };
 } // namespace SE::Editor

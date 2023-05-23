@@ -11,7 +11,7 @@ namespace SE::Editor
 {
     ContentBrowser::ContentBrowser( Ref<IGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay, fs::path aRoot )
         : mGraphicContext{ aGraphicContext }
-        , m_CurrentDirectory( aRoot )
+        , mCurrentDirectory( aRoot )
         , Root{ aRoot }
     {
         {
@@ -21,8 +21,8 @@ namespace SE::Editor
             TextureSampler2D     lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
 
             auto lTexture         = CreateTexture2D( mGraphicContext, lTextureData );
-            m_DirectoryIcon       = CreateSampler2D( mGraphicContext, lTexture, lSamplingInfo );
-            m_DirectoryIconHandle = aUIOverlay->CreateTextureHandle( m_DirectoryIcon );
+            mDirectoryIcon       = CreateSampler2D( mGraphicContext, lTexture, lSamplingInfo );
+            mDirectoryIconHandle = aUIOverlay->CreateTextureHandle( mDirectoryIcon );
         }
 
         {
@@ -32,8 +32,8 @@ namespace SE::Editor
             TextureSampler2D     lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
 
             auto lTexture    = CreateTexture2D( mGraphicContext, lTextureData );
-            m_FileIcon       = CreateSampler2D( mGraphicContext, lTexture, lSamplingInfo );
-            m_FileIconHandle = aUIOverlay->CreateTextureHandle( m_FileIcon );
+            mFileIcon       = CreateSampler2D( mGraphicContext, lTexture, lSamplingInfo );
+            mFileIconHandle = aUIOverlay->CreateTextureHandle( mFileIcon );
         }
 
         {
@@ -43,26 +43,26 @@ namespace SE::Editor
             TextureSampler2D     lTextureSampler = TextureSampler2D( lTextureData, lSamplingInfo );
 
             auto lTexture    = CreateTexture2D( mGraphicContext, lTextureData );
-            m_BackIcon       = CreateSampler2D( mGraphicContext, lTexture, lSamplingInfo );
-            m_BackIconHandle = aUIOverlay->CreateTextureHandle( m_BackIcon );
+            mBackIcon       = CreateSampler2D( mGraphicContext, lTexture, lSamplingInfo );
+            mBackIconHandle = aUIOverlay->CreateTextureHandle( mBackIcon );
         }
     }
 
     void ContentBrowser::Display()
     {
-        bool lBackButtonDisabled = m_CurrentDirectory == std::filesystem::path( Root );
+        bool lBackButtonDisabled = mCurrentDirectory == std::filesystem::path( Root );
 
         if( lBackButtonDisabled ) ImGui::BeginDisabled();
 
         ImGui::PushStyleColor( ImGuiCol_Button, ImVec4( 0, 0, 0, 0 ) );
-        if( ImGui::ImageButton( (ImTextureID)m_BackIconHandle.Handle->GetID(), ImVec2{ 15, 15 } ) )
+        if( ImGui::ImageButton( (ImTextureID)mBackIconHandle.Handle->GetID(), ImVec2{ 15, 15 } ) )
         {
-            m_CurrentDirectory = m_CurrentDirectory.parent_path();
+            mCurrentDirectory = mCurrentDirectory.parent_path();
         }
         ImGui::PopStyleColor();
         if( lBackButtonDisabled ) ImGui::EndDisabled();
 
-        float cellSize = thumbnailSize + padding + textSize;
+        float cellSize = mThumbnailSize + mPadding + mTextSize;
 
         float panelWidth  = ImGui::GetContentRegionAvail().x;
         int   columnCount = (int)( panelWidth / cellSize );
@@ -74,7 +74,7 @@ namespace SE::Editor
         std::vector<fs::path> lFolderContent;
         std::vector<fs::path> lFiles;
 
-        for( auto &directoryEntry : std::filesystem::directory_iterator( m_CurrentDirectory ) )
+        for( auto &directoryEntry : std::filesystem::directory_iterator( mCurrentDirectory ) )
         {
             if( directoryEntry.is_directory() )
                 lFolderContent.push_back( directoryEntry );
@@ -91,10 +91,10 @@ namespace SE::Editor
             std::string filenameString = relativePath.filename().string();
 
             ImGui::PushID( filenameString.c_str() );
-            auto icon = std::filesystem::is_directory( directoryEntry ) ? m_DirectoryIconHandle : m_FileIconHandle;
+            auto icon = std::filesystem::is_directory( directoryEntry ) ? mDirectoryIconHandle : mFileIconHandle;
 
             auto lPos0 = UI::GetCurrentCursorPosition();
-            ImGui::Dummy( ImVec2{ cellSize, thumbnailSize } );
+            ImGui::Dummy( ImVec2{ cellSize, mThumbnailSize } );
 
             if( ImGui::BeginDragDropSource( ImGuiDragDropFlags_SourceAllowNullID ) )
             {
@@ -111,14 +111,14 @@ namespace SE::Editor
 
             if( ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked( ImGuiMouseButton_Left ) )
             {
-                if( std::filesystem::is_directory( directoryEntry ) ) m_CurrentDirectory /= path.filename();
+                if( std::filesystem::is_directory( directoryEntry ) ) mCurrentDirectory /= path.filename();
             }
 
             UI::SetCursorPosition( lPos0 );
-            UI::Image( icon, math::vec2{ thumbnailSize, thumbnailSize } );
+            UI::Image( icon, math::vec2{ mThumbnailSize, mThumbnailSize } );
             UI::SameLine();
             auto lTextSize = ImGui::CalcTextSize( filenameString.c_str() );
-            UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2{ 0.0f, ( thumbnailSize - lTextSize.y ) / 2.0f } );
+            UI::SetCursorPosition( UI::GetCurrentCursorPosition() + math::vec2{ 0.0f, ( mThumbnailSize - lTextSize.y ) / 2.0f } );
             ImGui::Text( filenameString.c_str() );
             ImGui::NextColumn();
 
