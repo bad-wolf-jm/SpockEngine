@@ -94,7 +94,8 @@ namespace SE::Editor
 
         mWorld = New<Scene>( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
         mDeferredRenderer =
-            New<DeferredRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
+            New<ForwardSceneRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
+            // New<DeferredRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
         RebuildOutputFramebuffer();
 
         mDeferredRenderer->Update( mWorld );
@@ -119,9 +120,9 @@ namespace SE::Editor
 
         mDeferredRenderer->mRenderCoordinateGrid = true;
 
-        mDeferredRenderer->View.CameraPosition = math::vec3( 0.0f, 1.0f, 7.5f );
-        mDeferredRenderer->View.ModelFraming   = math::mat4( 0.5f );
-        mDeferredRenderer->View.View = math::Inverse( math::Translate( math::mat4( 1.0f ), mDeferredRenderer->View.CameraPosition ) );
+        mDeferredRenderer->mView.CameraPosition = math::vec3( 0.0f, 1.0f, 7.5f );
+        mDeferredRenderer->mView.ModelFraming   = math::mat4( 0.5f );
+        mDeferredRenderer->mView.View = math::Inverse( math::Translate( math::mat4( 1.0f ), mDeferredRenderer->mView.CameraPosition ) );
     }
 
     void BaseEditorApplication::Init( std::string aAppClass, fs::path aConfigurationPath )

@@ -250,27 +250,27 @@ namespace SE::Core
         ASceneRenderer::Update( aWorld );
         mShadowSceneRenderer->Update( aWorld );
 
-        View.PointLightCount = mPointLights.size();
-        for( uint32_t i = 0; i < View.PointLightCount; i++ ) View.PointLights[i] = mPointLights[i];
+        mView.PointLightCount = mPointLights.size();
+        for( uint32_t i = 0; i < mView.PointLightCount; i++ ) mView.PointLights[i] = mPointLights[i];
 
-        View.DirectionalLightCount = mDirectionalLights.size();
-        for( uint32_t i = 0; i < View.DirectionalLightCount; i++ ) View.DirectionalLights[i] = mDirectionalLights[i];
+        mView.DirectionalLightCount = mDirectionalLights.size();
+        for( uint32_t i = 0; i < mView.DirectionalLightCount; i++ ) mView.DirectionalLights[i] = mDirectionalLights[i];
 
-        View.SpotlightCount = mSpotlights.size();
-        for( uint32_t i = 0; i < View.SpotlightCount; i++ ) View.Spotlights[i] = mSpotlights[i];
+        mView.SpotlightCount = mSpotlights.size();
+        for( uint32_t i = 0; i < mView.SpotlightCount; i++ ) mView.Spotlights[i] = mSpotlights[i];
 
-        Settings.AmbientLightIntensity = mAmbientLight.a;
-        Settings.AmbientLightColor     = math::vec4( math::vec3( mAmbientLight ), 0.0 );
-        Settings.Gamma                 = mGamma;
-        Settings.Exposure              = mExposure;
-        Settings.RenderGrayscale       = mGrayscaleRendering ? 1.0f : 0.0f;
+        mSettings.AmbientLightIntensity = mAmbientLight.a;
+        mSettings.AmbientLightColor     = math::vec4( math::vec3( mAmbientLight ), 0.0 );
+        mSettings.Gamma                 = mGamma;
+        mSettings.Exposure              = mExposure;
+        mSettings.RenderGrayscale       = mGrayscaleRendering ? 1.0f : 0.0f;
 
-        View.Projection     = mProjectionMatrix;
-        View.CameraPosition = mCameraPosition;
-        View.View           = mViewMatrix;
+        mView.Projection     = mProjectionMatrix;
+        mView.CameraPosition = mCameraPosition;
+        mView.View           = mViewMatrix;
 
-        mCameraUniformBuffer->Write( View );
-        mShaderParametersBuffer->Write( Settings );
+        mCameraUniformBuffer->Write( mView );
+        mShaderParametersBuffer->Write( mSettings );
     }
 
     void DeferredRenderer::Render()
@@ -334,7 +334,7 @@ namespace SE::Core
                 lParticleData.ParticleSize  = lParticleSystem.mParticleSize;
                 lParticleData.Particles     = lParticleSystem.mParticles;
 
-                lPipeline->Render( View.Projection, View.View, mGeometryContext, lParticleData );
+                lPipeline->Render( mView.Projection, mView.View, mGeometryContext, lParticleData );
             }
 
             for( auto const &lLightGizmo : mLightGizmos )
@@ -359,7 +359,7 @@ namespace SE::Core
                 }
             }
 
-            if( mRenderCoordinateGrid ) mCoordinateGridRenderer->Render( View.Projection, View.View, mLightingContext );
+            if( mRenderCoordinateGrid ) mCoordinateGridRenderer->Render( mView.Projection, mView.View, mLightingContext );
         }
         mLightingContext->EndRender();
 

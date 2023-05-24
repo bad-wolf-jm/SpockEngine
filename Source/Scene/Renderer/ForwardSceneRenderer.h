@@ -9,6 +9,8 @@
 #include "Renderer/ASceneRenderer.h"
 #include "Renderer/SceneRenderData.h"
 
+#include "EffectProcessor.h"
+#include "ShadowSceneRenderer.h"
 #include "CoordinateGridRenderer.h"
 #include "MeshRenderer.h"
 #include "ParticleSystemRenderer.h"
@@ -19,11 +21,12 @@ namespace SE::Core
     class ForwardSceneRenderer : public ASceneRenderer
     {
       public:
-        WorldMatrices  View;
-        CameraSettings Settings;
-        bool           RenderCoordinateGrid = true;
-        bool           RenderGizmos         = false;
-        bool           GrayscaleRendering   = false;
+        WorldMatrices  mView;
+        CameraSettings mSettings;
+        bool           mRenderCoordinateGrid = true;
+        bool           mRenderGizmos         = false;
+        bool           mGrayscaleRendering   = false;
+        bool           mUseFXAA              = false;
 
       public:
         ForwardSceneRenderer() = default;
@@ -56,6 +59,13 @@ namespace SE::Core
         Ref<IRenderContext> mGeometryContext{};
 
         Ref<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;
+        Ref<ShadowSceneRenderer>    mShadowSceneRenderer    = nullptr;
+
+        Ref<EffectProcessor> mCopyRenderer     = nullptr;
+        Ref<EffectProcessor> mFxaaRenderer     = nullptr;
+        Ref<ISampler2D>      mFxaaSampler      = nullptr;
+        Ref<IRenderTarget>   mFxaaRenderTarget = nullptr;
+        Ref<IRenderContext>  mFxaaContext{};
 
         Ref<IGraphicBuffer> mCameraUniformBuffer    = nullptr;
         Ref<IGraphicBuffer> mShaderParametersBuffer = nullptr;
@@ -66,6 +76,13 @@ namespace SE::Core
 
         Ref<IDescriptorSet> mSceneDescriptors = nullptr;
         Ref<IDescriptorSet> mNodeDescriptors  = nullptr;
+
+        Ref<IDescriptorSetLayout> mLightingDirectionalShadowLayout   = nullptr;
+        Ref<IDescriptorSetLayout> mLightingSpotlightShadowLayout     = nullptr;
+        Ref<IDescriptorSetLayout> mLightingPointLightShadowLayout    = nullptr;
+        Ref<IDescriptorSet>       mLightingPassDirectionalShadowMaps = nullptr;
+        Ref<IDescriptorSet>       mLightingPassSpotlightShadowMaps   = nullptr;
+        Ref<IDescriptorSet>       mLightingPassPointLightShadowMaps  = nullptr;
 
         std::unordered_map<MeshRendererCreateInfo, Ref<MeshRenderer>, MeshRendererCreateInfoHash> mMeshRenderers = {};
         std::unordered_map<ParticleRendererCreateInfo, Ref<ParticleSystemRenderer>, ParticleSystemRendererCreateInfoHash>

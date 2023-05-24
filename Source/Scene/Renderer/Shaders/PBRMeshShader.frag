@@ -94,7 +94,7 @@ layout( set = 1, binding = 1 ) uniform sampler2D gTextures[];
 layout( push_constant ) uniform Material { uint mMaterialID; }
 material;
 
-layout( location = 0 ) out vec4 outColor;
+layout( location = 0 ) out vec4 outFragcolor;
 
 const float PI             = 3.14159265359;
 const float M_PI           = 3.141592653589793;
@@ -203,9 +203,20 @@ void main()
 
     hdr_color = hdr_color + emissive;
     // vec3 hdr_color = Lo;
-    vec4 fullcolor = vec4( hdr_color, lBaseColor.a );
+    // vec4 fullcolor = vec4( hdr_color, lBaseColor.a );
 
-    outColor = tonemap( fullcolor );
-    if( uboParams.grayscaleRendering == 1.0f ) outColor = vec4( vec3( dot( outColor.xyz, vec3( 0.2126, 0.7152, 0.0722 ) ) ), lBaseColor.a );
+    vec3 lOutColor = tonemap( hdr_color );
+    lOutColor = pow( lOutColor, vec3( 1.0f / uboParams.gamma ) );
+
+    float lLuma = dot( lOutColor, vec3( 0.299, 0.587, 0.114 ) );
+
+    int lLumaAsAlpha = 0;
+
+    if( uboParams.grayscaleRendering == 1.0f )
+        outFragcolor = vec4( vec3(lLuma), (lLumaAsAlpha == 0 ) ? 1.0 : lLuma);
+    else
+        outFragcolor = vec4( lOutColor, (lLumaAsAlpha == 0 ) ? 1.0 : lLuma );
+
+    // if( uboParams.grayscaleRendering == 1.0f ) outColor = vec4( vec3( dot( outColor.xyz, vec3( 0.2126, 0.7152, 0.0722 ) ) ), lBaseColor.a );
     // outColor = vec4(vec3((length(inWorldPos) - 0.5)), 1.0);
 }
