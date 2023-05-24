@@ -14,6 +14,7 @@
 
 #include "MeshRenderer.h"
 #include "ParticleSystemRenderer.h"
+#include "DeferredLightingRenderer.h"
 
 namespace SE::Core
 {
@@ -36,6 +37,15 @@ namespace SE::Core
             CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraSettings ) );
         mSceneDescriptors->Write( mCameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
         mSceneDescriptors->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
+
+        mLightingDirectionalShadowLayout   = DeferredLightingRenderer::GetDirectionalShadowSetLayout( mGraphicContext );
+        mLightingPassDirectionalShadowMaps = mLightingDirectionalShadowLayout->Allocate( 1024 );
+
+        mLightingSpotlightShadowLayout   = DeferredLightingRenderer::GetSpotlightShadowSetLayout( mGraphicContext );
+        mLightingPassSpotlightShadowMaps = mLightingSpotlightShadowLayout->Allocate( 1024 );
+
+        mLightingPointLightShadowLayout   = DeferredLightingRenderer::GetPointLightShadowSetLayout( mGraphicContext );
+        mLightingPassPointLightShadowMaps = mLightingPointLightShadowLayout->Allocate( 1024 );
     }
 
     MeshRendererCreateInfo ForwardSceneRenderer::GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification )
@@ -110,10 +120,37 @@ namespace SE::Core
         }
 
         mGeometryRenderTarget->Finalize();
-
         mGeometryContext = CreateRenderContext( mGraphicContext, mGeometryRenderTarget );
 
+        mFxaaSampler = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "OUTPUT" ) );
+        sRenderTargetDescription lFxaaSpec{};
+        lFxaaSpec.mWidth                  = aOutputWidth;
+        lFxaaSpec.mHeight                 = aOutputHeight;
+        lFxaaSpec.mSampleCount            = mOutputSampleCount;
+        mFxaaRenderTarget                 = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
+        lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
+        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA16_FLOAT;
+        lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+        lAttachmentCreateInfo.mLoadOp     = eAttachmentLoadOp::CLEAR;
+        lAttachmentCreateInfo.mStoreOp    = eAttachmentStoreOp::STORE;
+        mFxaaRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
+        mFxaaRenderTarget->Finalize();
+        mFxaaContext = CreateRenderContext( mGraphicContext, mFxaaRenderTarget );
+
         mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mGeometryContext );
+        mShadowSceneRenderer    = New<ShadowSceneRenderer>( mGraphicContext );
+
+        EffectProcessorCreateInfo lEffectProcessorCreateInfo{};
+        lEffectProcessorCreateInfo.mVertexShader   = "Shaders/fxaa.vert.spv";
+        lEffectProcessorCreateInfo.mFragmentShader = "Shaders/fxaa.frag.spv";
+        lEffectProcessorCreateInfo.RenderPass      = mFxaaContext; //->GetRenderPass();
+        mFxaaRenderer                              = New<EffectProcessor>( mGraphicContext, mFxaaContext, lEffectProcessorCreateInfo );
+
+        EffectProcessorCreateInfo lCopyCreateInfo{};
+        lCopyCreateInfo.mVertexShader   = "Shaders/fxaa.vert.spv";
+        lCopyCreateInfo.mFragmentShader = "Shaders/copy.frag.spv";
+        lCopyCreateInfo.RenderPass      = mFxaaContext; //->GetRenderPass();
+        mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lCopyCreateInfo );
     }
 
     Ref<MeshRenderer> ForwardSceneRenderer::GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification )
@@ -186,27 +223,29 @@ namespace SE::Core
     void ForwardSceneRenderer::Update( Ref<Scene> aWorld )
     {
         ASceneRenderer::Update( aWorld );
+        mShadowSceneRenderer->Update( aWorld );
 
-        View.PointLightCount = mPointLights.size();
-        for( uint32_t i = 0; i < View.PointLightCount; i++ ) View.PointLights[i] = mPointLights[i];
+        mView.PointLightCount = mPointLights.size();
+        for( uint32_t i = 0; i < mView.PointLightCount; i++ ) mView.PointLights[i] = mPointLights[i];
 
-        View.DirectionalLightCount = mDirectionalLights.size();
-        for( uint32_t i = 0; i < View.DirectionalLightCount; i++ ) View.DirectionalLights[i] = mDirectionalLights[i];
+        mView.DirectionalLightCount = mDirectionalLights.size();
+        for( uint32_t i = 0; i < mView.DirectionalLightCount; i++ ) mView.DirectionalLights[i] = mDirectionalLights[i];
 
-        View.SpotlightCount = mSpotlights.size();
-        for( uint32_t i = 0; i < View.SpotlightCount; i++ ) View.Spotlights[i] = mSpotlights[i];
+        mView.SpotlightCount = mSpotlights.size();
+        for( uint32_t i = 0; i < mView.SpotlightCount; i++ ) mView.Spotlights[i] = mSpotlights[i];
 
-        Settings.AmbientLightIntensity = mAmbientLight.a;
-        Settings.AmbientLightColor     = math::vec4( math::vec3( mAmbientLight ), 0.0 );
-        Settings.Gamma                 = mGamma;
-        Settings.Exposure              = mExposure;
-        Settings.RenderGrayscale       = GrayscaleRendering ? 1.0f : 0.0f;
+        mSettings.AmbientLightIntensity = mAmbientLight.a;
+        mSettings.AmbientLightColor     = math::vec4( math::vec3( mAmbientLight ), 0.0 );
+        mSettings.Gamma                 = mGamma;
+        mSettings.Exposure              = mExposure;
+        mSettings.RenderGrayscale       = mGrayscaleRendering ? 1.0f : 0.0f;
 
-        View.Projection     = mProjectionMatrix;
-        View.CameraPosition = mCameraPosition;
+        mView.Projection     = mProjectionMatrix;
+        mView.CameraPosition = mCameraPosition;
+        mView.View           = mViewMatrix;
 
-        mCameraUniformBuffer->Write( View );
-        mShaderParametersBuffer->Write( Settings );
+        mCameraUniformBuffer->Write( mView );
+        mShaderParametersBuffer->Write( mSettings );
 
         // Update pipelines
     }
@@ -218,6 +257,16 @@ namespace SE::Core
         if( !mScene ) return;
 
         mScene->GetMaterialSystem()->UpdateDescriptors();
+
+        mShadowSceneRenderer->Render();
+        if( mShadowSceneRenderer->GetDirectionalShadowMapSamplers().size() > 0 )
+            mLightingPassDirectionalShadowMaps->Write( mShadowSceneRenderer->GetDirectionalShadowMapSamplers(), 0 );
+
+        if( mShadowSceneRenderer->GetSpotlightShadowMapSamplers().size() > 0 )
+            mLightingPassSpotlightShadowMaps->Write( mShadowSceneRenderer->GetSpotlightShadowMapSamplers(), 0 );
+
+        if( mShadowSceneRenderer->GetPointLightShadowMapSamplers().size() > 0 )
+            mLightingPassPointLightShadowMaps->Write( mShadowSceneRenderer->GetPointLightShadowMapSamplers(), 0 );
 
         mGeometryContext->BeginRender();
         for( auto &lPipelineData : mOpaqueMeshQueue )
@@ -251,7 +300,7 @@ namespace SE::Core
             lParticleData.ParticleSize  = lParticleSystem.mParticleSize;
             lParticleData.Particles     = lParticleSystem.mParticles;
 
-            lPipeline->Render( View.Projection, View.View, mGeometryContext, lParticleData );
+            lPipeline->Render( mView.Projection, mView.View, mGeometryContext, lParticleData );
         }
 
         for( auto const &lLightGizmo : mLightGizmos )
@@ -276,8 +325,19 @@ namespace SE::Core
             }
         }
 
-        if( RenderCoordinateGrid ) mCoordinateGridRenderer->Render( View.Projection, View.View, mGeometryContext );
+        if( mRenderCoordinateGrid ) mCoordinateGridRenderer->Render( mView.Projection, mView.View, mGeometryContext );
         mGeometryContext->EndRender();
+
+        mFxaaContext->BeginRender();
+        if( mUseFXAA )
+        {
+            mFxaaRenderer->Render( mFxaaSampler, mFxaaContext );
+        }
+        else
+        {
+            mCopyRenderer->Render( mFxaaSampler, mFxaaContext );
+        }
+        mFxaaContext->EndRender();
     }
 
     Ref<ITexture2D> ForwardSceneRenderer::GetOutputImage()

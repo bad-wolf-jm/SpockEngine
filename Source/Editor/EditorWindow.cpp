@@ -1060,7 +1060,7 @@ namespace SE::Editor
 
             ManipulationConfig l_Manipulator{};
             l_Manipulator.Type             = lCurrentManipulationType;
-            l_Manipulator.Projection       = WorldRenderer->View.Projection;
+            l_Manipulator.Projection       = WorldRenderer->mView.Projection;
             l_Manipulator.WorldTransform   = World->mEditorView;
             l_Manipulator.ViewportPosition = l3DViewPosition;
             l_Manipulator.ViewportSize     = l3DViewSize;
@@ -1124,7 +1124,7 @@ namespace SE::Editor
 
                     ImVec2     lDragDelta0 = ImGui::GetMouseDragDelta( ImGuiMouseButton_Right );
                     math::vec4 lDragDelta{ lDragDelta0.x, lDragDelta0.y, 0.0f, 1.0f };
-                    lDragDelta = math::Inverse( WorldRenderer->View.Projection ) * lDragDelta;
+                    lDragDelta = math::Inverse( WorldRenderer->mView.Projection ) * lDragDelta;
                     lDragDelta = lDragDelta / lDragDelta.w;
 
                     math::vec3 lPanAmount   = lRotationMatrix * math::vec3{ -lDragDelta.x, -lDragDelta.y, 0.0f };

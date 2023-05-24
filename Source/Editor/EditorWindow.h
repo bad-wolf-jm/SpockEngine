@@ -70,12 +70,13 @@ namespace SE::Editor
         Ref<Engine>           mEngineLoop   = nullptr;
         Ref<Scene>            World         = nullptr;
         Ref<Scene>            ActiveWorld   = nullptr;
-        Ref<DeferredRenderer> WorldRenderer = nullptr;
+        Ref<ForwardSceneRenderer> WorldRenderer = nullptr;
+        // Ref<DeferredRenderer> WorldRenderer = nullptr;
 
         Entity Sensor{};
         Entity ActiveSensor{};
 
-        PropertyPanelID CurrentPropertyPanel = PropertyPanelID::NONE;
+        PropertyPanelID     CurrentPropertyPanel = PropertyPanelID::NONE;
         Ref<DotNetInstance> mApplicationInstance = nullptr;
 
       public:

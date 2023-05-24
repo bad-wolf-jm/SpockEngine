@@ -20,8 +20,8 @@ namespace SE::Core
     class DeferredRenderer : public ASceneRenderer
     {
       public:
-        WorldMatrices  View;
-        CameraSettings Settings;
+        WorldMatrices  mView;
+        CameraSettings mSettings;
 
         bool mRenderCoordinateGrid = true;
         bool mRenderGizmos         = false;

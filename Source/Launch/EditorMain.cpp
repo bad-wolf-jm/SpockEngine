@@ -281,7 +281,7 @@ int main( int argc, char **argv )
     else
         lEditorApplication.Init();
 
-
+    
     lEditorApplication.mEditorWindow.mMaterialsPath = lProjectRoot / "Assets" / "Materials";
     lEditorApplication.mEditorWindow.mModelsPath    = lProjectRoot / "Assets" / "Models";
 
