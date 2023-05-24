@@ -101,7 +101,7 @@ layout( location = 4 ) out float outObjectID;
 
 const float c_MinRoughness = 0.04;
 
-#include "../Common/GetNormalFromMap.glsli"
+#include "../Common/GetNormalFromMap.glsl"
 
 struct MaterialInputs
 {

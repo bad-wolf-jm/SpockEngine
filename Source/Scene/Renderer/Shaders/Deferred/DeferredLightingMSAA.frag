@@ -135,7 +135,7 @@ struct LightData
 const int enablePCF = 1;
 
 
-#include "../Common/ToneMap.glsli"
+#include "../Common/ToneMap.glsl"
 #include "../Common/PBRFunctions.glsl"
 
 
@@ -318,17 +318,22 @@ void main()
     hdr_color      = mix( hdr_color, hdr_color * ao, aoStrength );
     hdr_color      = hdr_color + emissive.xyz;
 
-    vec3 outColor = tonemap( hdr_color );
-    outColor = pow( outColor, vec3( 1.0f / uboParams.gamma ) );
-
-    float lLuma = dot( outColor, vec3( 0.299, 0.587, 0.114 ) );
+    vec3 lTonemappedColor = tonemap( hdr_color );
 
     int lLumaAsAlpha = 0;
+    float lLuma = Luminance( lTonemappedColor );
+    float alpha = (lLumaAsAlpha == 0 ) ? 1.0 : lLuma;
 
     if( uboParams.grayscaleRendering == 1.0f )
-        outFragcolor = vec4( vec3(lLuma), (lLumaAsAlpha == 0 ) ? 1.0 : lLuma);
+    {
+        vec3 outColor = pow( vec3(lLuma), vec3( 1.0f / uboParams.gamma ) );
+        outFragcolor = vec4( outColor, alpha);
+    }
     else
-        outFragcolor = vec4( outColor, (lLumaAsAlpha == 0 ) ? 1.0 : lLuma );
+    {   
+        vec3 outColor = pow( lTonemappedColor, vec3( 1.0f / uboParams.gamma ) );
+        outFragcolor = vec4( outColor, alpha );
+    }
 
     // outFragcolor = vec4( fragColor, 1.0 );
     // outFragcolor = texture( gDirectionalShadowMaps[0], inUV );
