@@ -94,8 +94,8 @@ namespace SE::Editor
 
         mWorld = New<Scene>( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
         mDeferredRenderer =
-            New<ForwardSceneRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
-            // New<DeferredRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
+            // New<ForwardSceneRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
+            New<DeferredRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
         RebuildOutputFramebuffer();
 
         mDeferredRenderer->Update( mWorld );

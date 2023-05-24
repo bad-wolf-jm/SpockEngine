@@ -64,8 +64,8 @@ namespace SE::Editor
         bool       mShouldRebuildViewport = true;
         Ref<Scene> mWorld                 = nullptr;
 
-        // Ref<DeferredRenderer>     mDeferredRenderer   = nullptr;
-        Ref<ForwardSceneRenderer>     mDeferredRenderer   = nullptr;
+        Ref<DeferredRenderer>     mDeferredRenderer   = nullptr;
+        // Ref<ForwardSceneRenderer>     mDeferredRenderer   = nullptr;
         Ref<ForwardSceneRenderer> mForwardRenderer    = nullptr;
         Ref<RayTracingRenderer>   mRayTracingRenderer = nullptr;
 
