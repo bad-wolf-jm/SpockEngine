@@ -103,12 +103,40 @@ uboParams;
 
 const float PI = 3.14159265359;
 
+struct LightData
+{
+    // The color (.rgb) and pre-exposed intensity (.w) of the light. The color is an RGB value in the linear sRGB color space.
+    // The pre-exposed intensity is the intensity of the light multiplied by the camera's exposure value.
+    vec4  mColorIntensity;
+
+    // The normalized light vector, in world space (direction from the current fragment's position to the light).
+    vec3  mL;
+
+    // The dot product of the shading normal (with normal mapping applied) and the light vector. This value is equal to the result of
+    // saturate(dot(getWorldSpaceNormal(), lightData.l)). This value is always between 0.0 and 1.0. When the value is <= 0.0,
+    // the current fragment is not visible from the light and lighting computations can be skipped.
+    float mNdotL;
+
+    // The position of the light in world space.
+    vec3  mWorldPosition;
+
+    // Attenuation of the light based on the distance from the current fragment to the light in world space. This value between 0.0 and 1.0
+    // is computed differently for each type of light (it's always 1.0 for directional lights).
+    float mAttenuation;
+
+    // Visibility factor computed from shadow maps or other occlusion data specific to the light being evaluated. This value is between 0.0 and
+    // 1.0.
+    float mVisibility;    
+};
+
+const int enablePCF = 1;
+
 
 #include "../Common/ToneMap.glsli"
-#include "../Common/PBRFunctions.glsli"
+#include "../Common/PBRFunctions.glsl"
 
 
-float textureProj(sampler2D shadowMap, vec4 shadowCoord, vec2 off)
+float TextureProj(sampler2D shadowMap, vec4 shadowCoord, vec2 off)
 {
     float shadow = 1.0;
     if ( shadowCoord.z > -1.0 && shadowCoord.z < 1.0 ) 
@@ -122,7 +150,7 @@ float textureProj(sampler2D shadowMap, vec4 shadowCoord, vec2 off)
     return shadow;
 }
 
-float filterPCF(sampler2D shadowMap, vec4 sc)
+float FilterPCF(sampler2D shadowMap, vec4 sc)
 {
     ivec2 texDim = textureSize(shadowMap, 0);
     float scale = 1.5;
@@ -137,7 +165,7 @@ float filterPCF(sampler2D shadowMap, vec4 sc)
     {
         for (int y = -range; y <= range; y++)
         {
-            shadowFactor += textureProj(shadowMap, sc, vec2(dx*x, dy*y));
+            shadowFactor += TextureProj(shadowMap, sc, vec2(dx*x, dy*y));
             count++;
         }
     
@@ -158,14 +186,78 @@ float linearize_depth(float d,float zNear,float zFar)
     return zNear * zFar / (zFar + d * (zNear - zFar));
 }
 
-vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalrough, vec4 emissive )
+
+void ComputeDirectionalLightData(vec3 inWorldPos, vec3 aSurfaceNormal, vec3 aEyeDirection, sampler2D aShadowMap, DirectionalLightData aInData, inout LightData aLightData)
+{
+    aLightData.mColorIntensity = vec4(aInData.Color, aInData.Intensity);
+    aLightData.mL = normalize( aInData.Direction );
+    aLightData.mNdotL = max( dot( aSurfaceNormal, aLightData.mL ), 0.0 );
+    aLightData.mWorldPosition = vec3(0.0);
+    aLightData.mAttenuation = 1.0;
+
+    vec4 lShadowNormalizedCoordinates = biasMat * aInData.Transform * vec4(inWorldPos, 1.0f);
+    lShadowNormalizedCoordinates /= lShadowNormalizedCoordinates.w;
+
+    float lShadowFactor = 1.0f;
+    if (enablePCF == 1) 
+        aLightData.mVisibility = FilterPCF(aShadowMap, lShadowNormalizedCoordinates);
+    else 
+        aLightData.mVisibility = TextureProj(aShadowMap, lShadowNormalizedCoordinates, vec2(0.0));
+}
+
+void ComputePointLightData(vec3 inWorldPos, vec3 aSurfaceNormal, vec3 aEyeDirection, samplerCube aShadowMap, PointLightData aInData, inout LightData aLightData)
+{
+    aLightData.mColorIntensity = vec4(aInData.Color, aInData.Intensity);
+    aLightData.mL = normalize( aInData.WorldPosition - inWorldPos );
+    aLightData.mNdotL = max( dot( aSurfaceNormal, aLightData.mL ), 0.0 );
+    aLightData.mWorldPosition = aInData.WorldPosition;
+    aLightData.mVisibility = 1.0;
+
+    float lDistance = length( aLightData.mWorldPosition - inWorldPos );
+    aLightData.mAttenuation = 1.0 / ( lDistance * lDistance );
+
+    vec3 lTexCoord = normalize(-aLightData.mL);
+
+    float sampledDist = texture(aShadowMap, lTexCoord).r;
+    float dist = length(aLightData.mL);
+    aLightData.mVisibility = (dist <= sampledDist + EPSILON) ? aLightData.mVisibility : uboParams.AmbientLightIntensity;
+}
+
+void ComputeSpotLightData(vec3 inWorldPos, vec3 aSurfaceNormal, vec3 aEyeDirection, sampler2D aShadowMap, SpotlightData aInData, inout LightData aLightData)
+{
+    aLightData.mColorIntensity = vec4(aInData.Color, aInData.Intensity);
+    aLightData.mL = normalize( aInData.LookAtDirection );
+    aLightData.mNdotL = max( dot( aSurfaceNormal, aLightData.mL ), 0.0 );
+    aLightData.mWorldPosition = aInData.WorldPosition;
+    aLightData.mVisibility = 1.0;
+
+    float lDistance = length( aLightData.mWorldPosition - inWorldPos );
+    aLightData.mAttenuation = 1.0 / ( lDistance * lDistance );
+
+    vec3  L = normalize( aInData.WorldPosition - inWorldPos );
+    float lAngleToLightOrigin = dot( L, normalize( -aLightData.mL ) );
+
+    if( lAngleToLightOrigin < aInData.Cone ) 
+        aLightData.mAttenuation = 0.0;
+    else
+        aLightData.mAttenuation *= lAngleToLightOrigin;
+
+    vec4 lShadowNormalizedCoordinates = biasMat * aInData.Transform * vec4(inWorldPos, 1.0f);
+    lShadowNormalizedCoordinates /= lShadowNormalizedCoordinates.w;
+
+    float lShadowFactor = 1.0f;
+    if (enablePCF == 1) 
+        aLightData.mVisibility = FilterPCF(aShadowMap, lShadowNormalizedCoordinates);
+    else 
+        aLightData.mVisibility = TextureProj(aShadowMap, lShadowNormalizedCoordinates, vec2(0.0));
+}
+
+vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalrough, vec4 emissive, ShadingData aShadingData )
 {
     float metallic  = aometalrough.g;
     float roughness = aometalrough.b;
 
     vec3 V = normalize( ubo.camPos - inWorldPos );
-
-    int enablePCF = 1;
 
     // reflectance equation
     vec3 Lo = vec3( 0.0f );
@@ -174,81 +266,31 @@ vec3 calculateLighting( vec3 inWorldPos, vec3 N, vec4 lBaseColor, vec4 aometalro
     {
         if (ubo.DirectionalLights[i].IsOn == 0) continue;
         
-        vec3 radiance = ubo.DirectionalLights[i].Color * ubo.DirectionalLights[i].Intensity;
-        vec3 lLightDirection = normalize( ubo.DirectionalLights[i].Direction );
-
-        vec3 lLightContribution = ComputeLightContribution( lBaseColor.xyz, N, V, lLightDirection, radiance, metallic, roughness );
-        vec4 lShadowNormalizedCoordinates = biasMat * ubo.DirectionalLights[i].Transform * vec4(inWorldPos, 1.0f);
-        lShadowNormalizedCoordinates /= lShadowNormalizedCoordinates.w;
-
-        float lShadowFactor = 1.0f;
-        if (enablePCF == 1) 
-            lShadowFactor = filterPCF(gDirectionalShadowMaps[i], lShadowNormalizedCoordinates);
-        else 
-            lShadowFactor = textureProj(gDirectionalShadowMaps[i], lShadowNormalizedCoordinates, vec2(0.0));
-
-        Lo += (lLightContribution * lShadowFactor);
+        LightData lLightData;
+        ComputeDirectionalLightData(inWorldPos, N, V, gDirectionalShadowMaps[i], ubo.DirectionalLights[i], lLightData);
+        Lo += ComputeLightContribution( N, V, aShadingData, lLightData );
     }
 
     for( int i = 0; i < ubo.PointLightCount; i++ )
     {
         if (ubo.PointLights[i].IsOn == 0) continue;
 
-        vec3 lLightPosition  = ubo.PointLights[i].WorldPosition;
-        vec3 lLightDirection = normalize( lLightPosition - inWorldPos );
-
-        vec3 lRadiance = ComputeRadiance( ubo.PointLights[i].WorldPosition, inWorldPos,
-                                          ubo.PointLights[i].Color, ubo.PointLights[i].Intensity );
-
-        vec3 lLightContribution = ComputeLightContribution( lBaseColor.xyz, N, V, lLightDirection, lRadiance, metallic, roughness );
-
-        float lShadowFactor = 1.0f;
-        vec3 lightVec = inWorldPos - lLightPosition;
-        vec3 lTexCoord = normalize(lightVec);
-
-        float sampledDist = texture(gPointLightShadowMaps[i], lTexCoord).r;
-        float dist = length(lightVec);
-        lShadowFactor = (dist <= sampledDist + EPSILON) ? 1.0 : uboParams.AmbientLightIntensity;
-
-        Lo += (lLightContribution * lShadowFactor);
+        LightData lLightData;
+        ComputePointLightData(inWorldPos, N, V, gPointLightShadowMaps[i], ubo.PointLights[i], lLightData);
+        Lo += ComputeLightContribution( N, V, aShadingData, lLightData );
     }
 
     for( int i = 0; i < ubo.SpotlightCount; i++ )
     {
         if (ubo.Spotlights[i].IsOn == 0) continue;
 
-        vec3  L                   = normalize( ubo.Spotlights[i].WorldPosition - inWorldPos );
-        vec3  lLightDirection     = normalize( ubo.Spotlights[i].LookAtDirection );
-        float lAngleToLightOrigin = dot( L, normalize( -lLightDirection ) );
-
-        if( lAngleToLightOrigin < ubo.Spotlights[i].Cone ) continue;
-
-        vec3 lRadiance = ComputeRadiance( ubo.Spotlights[i].WorldPosition, inWorldPos,
-                                          ubo.Spotlights[i].Color, ubo.Spotlights[i].Intensity );
-
-        vec3 lLightContribution = ComputeLightContribution( lBaseColor.xyz, N, V, L, lRadiance, metallic, roughness );
-        vec4 lShadowNormalizedCoordinates = biasMat * ubo.Spotlights[i].Transform * vec4(inWorldPos, 1.0f);
-        lShadowNormalizedCoordinates /= lShadowNormalizedCoordinates.w;
-
-        float lShadowFactor = 1.0f;
-        if (enablePCF == 1) 
-            lShadowFactor = filterPCF(gSpotlightShadowMaps[i], lShadowNormalizedCoordinates);
-        else 
-            lShadowFactor = textureProj(gSpotlightShadowMaps[i], lShadowNormalizedCoordinates, vec2(0.0));
-
-        Lo += (lLightContribution * lShadowFactor);
+        LightData lLightData;
+        ComputeSpotLightData(inWorldPos, N, V, gSpotlightShadowMaps[i], ubo.Spotlights[i], lLightData);
+        Lo += ComputeLightContribution( N, V, aShadingData, lLightData );
     }
 
     return Lo ;
 }
-
-vec4 SRGBtoLINEAR( vec4 srgbIn )
-{
-    vec3 bLess  = step( vec3( 0.04045 ), srgbIn.xyz );
-    vec3 linOut = mix( srgbIn.xyz / vec3( 12.92 ), pow( ( srgbIn.xyz + vec3( 0.055 ) ) / vec3( 1.055 ), vec3( 2.4 ) ), bLess );
-    return vec4( linOut, srgbIn.w );
-}
-
 
 
 void main()
@@ -258,11 +300,14 @@ void main()
 
     vec3 pos    = texture( samplerPosition, inUV ).rgb;
     vec3 normal = texture( samplerNormal, inUV ).rgb;
-    vec4 albedo = SRGBtoLINEAR( texture( samplerAlbedo, inUV ) );
+    vec4 albedo = texture( samplerAlbedo, inUV );
 
     vec4 metalrough = texture( samplerOcclusionMetalRough, inUV );
 
-    fragColor += calculateLighting( pos, normal, albedo, metalrough, emissive );
+    ShadingData lShadingData;
+    ComputeShadingData(albedo.rgb * albedo.a, vec3(0.04), metalrough.g, metalrough.b, lShadingData);
+
+    fragColor += calculateLighting( pos, normal, albedo, metalrough, emissive, lShadingData );
     float ao         = metalrough.r;
     float aoStrength = 0.0f;//metalrough.a;
 
