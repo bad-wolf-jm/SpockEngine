@@ -67,9 +67,9 @@ namespace SE::Editor
         fs::path mMaterialsPath = "";
         fs::path mModelsPath    = "";
 
-        Ref<Engine>           mEngineLoop   = nullptr;
-        Ref<Scene>            World         = nullptr;
-        Ref<Scene>            ActiveWorld   = nullptr;
+        Ref<Engine>               mEngineLoop   = nullptr;
+        Ref<Scene>                World         = nullptr;
+        Ref<Scene>                ActiveWorld   = nullptr;
         Ref<ForwardSceneRenderer> WorldRenderer = nullptr;
         // Ref<DeferredRenderer> WorldRenderer = nullptr;
 
