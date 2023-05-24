@@ -1058,17 +1058,17 @@ namespace SE::Editor
 
             WorldRenderer->SetView( World->mEditorView );
 
-            ManipulationConfig l_Manipulator{};
-            l_Manipulator.Type             = lCurrentManipulationType;
-            l_Manipulator.Projection       = WorldRenderer->mView.Projection;
-            l_Manipulator.WorldTransform   = World->mEditorView;
-            l_Manipulator.ViewportPosition = l3DViewPosition;
-            l_Manipulator.ViewportSize     = l3DViewSize;
+            ManipulationConfig lManipulator{};
+            lManipulator.Type             = lCurrentManipulationType;
+            lManipulator.Projection       = WorldRenderer->mView.Projection;
+            lManipulator.WorldTransform   = World->mEditorView;
+            lManipulator.ViewportPosition = l3DViewPosition;
+            lManipulator.ViewportSize     = l3DViewSize;
 
             if( m_SceneHierarchyPanel.SelectedElement && m_SceneHierarchyPanel.SelectedElement.Has<sNodeTransformComponent>() )
             {
                 auto &lSensorTransform = m_SceneHierarchyPanel.SelectedElement.Get<sNodeTransformComponent>();
-                Manipulate( l_Manipulator, lSensorTransform.mMatrix );
+                Manipulate( lManipulator, lSensorTransform.mMatrix );
                 m_SceneHierarchyPanel.SelectedElement.Replace<sNodeTransformComponent>( lSensorTransform );
             }
 
