@@ -112,6 +112,9 @@ struct LightData
     // The normalized light vector, in world space (direction from the current fragment's position to the light).
     vec3  mL;
 
+    // The normalized light half vector, in world space (direction from the current fragment's position to the light).
+    vec3  mH;
+
     // The dot product of the shading normal (with normal mapping applied) and the light vector. This value is equal to the result of
     // saturate(dot(getWorldSpaceNormal(), lightData.l)). This value is always between 0.0 and 1.0. When the value is <= 0.0,
     // the current fragment is not visible from the light and lighting computations can be skipped.
@@ -144,7 +147,7 @@ float TextureProj(sampler2D shadowMap, vec4 shadowCoord, vec2 off)
         float dist = texture( shadowMap, shadowCoord.st + off ).r;
         if ( shadowCoord.w > 0.0 && dist < shadowCoord.z ) 
         {
-            shadow = uboParams.AmbientLightIntensity;
+            shadow = 0.0;
         }
     }
     return shadow;
@@ -181,24 +184,24 @@ const mat4 biasMat = mat4(
 
 #define EPSILON 0.15
 
-float linearize_depth(float d,float zNear,float zFar)
-{
-    return zNear * zFar / (zFar + d * (zNear - zFar));
-}
+// float linearize_depth(float d,float zNear,float zFar)
+// {
+//     return zNear * zFar / (zFar + d * (zNear - zFar));
+// }
 
 
 void ComputeDirectionalLightData(vec3 inWorldPos, vec3 aSurfaceNormal, vec3 aEyeDirection, sampler2D aShadowMap, DirectionalLightData aInData, inout LightData aLightData)
 {
     aLightData.mColorIntensity = vec4(aInData.Color, aInData.Intensity);
     aLightData.mL = normalize( aInData.Direction );
-    aLightData.mNdotL = max( dot( aSurfaceNormal, aLightData.mL ), 0.0 );
+    aLightData.mH = normalize( aEyeDirection + aLightData.mL );
+    aLightData.mNdotL = clamp( dot( aSurfaceNormal, aLightData.mL ), 0.0, 1.0 );
     aLightData.mWorldPosition = vec3(0.0);
     aLightData.mAttenuation = 1.0;
 
     vec4 lShadowNormalizedCoordinates = biasMat * aInData.Transform * vec4(inWorldPos, 1.0f);
     lShadowNormalizedCoordinates /= lShadowNormalizedCoordinates.w;
 
-    float lShadowFactor = 1.0f;
     if (enablePCF == 1) 
         aLightData.mVisibility = FilterPCF(aShadowMap, lShadowNormalizedCoordinates);
     else 
@@ -209,25 +212,25 @@ void ComputePointLightData(vec3 inWorldPos, vec3 aSurfaceNormal, vec3 aEyeDirect
 {
     aLightData.mColorIntensity = vec4(aInData.Color, aInData.Intensity);
     aLightData.mL = normalize( aInData.WorldPosition - inWorldPos );
-    aLightData.mNdotL = max( dot( aSurfaceNormal, aLightData.mL ), 0.0 );
+    aLightData.mH = normalize( aEyeDirection + aLightData.mL );
+    aLightData.mNdotL = clamp( dot( aSurfaceNormal, aLightData.mL ), 0.0, 1.0 );
     aLightData.mWorldPosition = aInData.WorldPosition;
     aLightData.mVisibility = 1.0;
 
     float lDistance = length( aLightData.mWorldPosition - inWorldPos );
     aLightData.mAttenuation = 1.0 / ( lDistance * lDistance );
 
-    vec3 lTexCoord = normalize(-aLightData.mL);
+    float sampledDist = texture(aShadowMap,  normalize(aLightData.mL)).r;
 
-    float sampledDist = texture(aShadowMap, lTexCoord).r;
-    float dist = length(aLightData.mL);
-    aLightData.mVisibility = (dist <= sampledDist + EPSILON) ? aLightData.mVisibility : uboParams.AmbientLightIntensity;
+    aLightData.mVisibility = (lDistance <= sampledDist + EPSILON) ? 1.0 : 0.0;
 }
 
 void ComputeSpotLightData(vec3 inWorldPos, vec3 aSurfaceNormal, vec3 aEyeDirection, sampler2D aShadowMap, SpotlightData aInData, inout LightData aLightData)
 {
     aLightData.mColorIntensity = vec4(aInData.Color, aInData.Intensity);
-    aLightData.mL = normalize( aInData.LookAtDirection );
-    aLightData.mNdotL = max( dot( aSurfaceNormal, aLightData.mL ), 0.0 );
+    aLightData.mL = -normalize( aInData.LookAtDirection );
+    aLightData.mH = normalize( aEyeDirection + aLightData.mL );
+    aLightData.mNdotL = clamp( dot( aSurfaceNormal, aLightData.mL ), 0.0, 1.0 );
     aLightData.mWorldPosition = aInData.WorldPosition;
     aLightData.mVisibility = 1.0;
 
@@ -235,17 +238,16 @@ void ComputeSpotLightData(vec3 inWorldPos, vec3 aSurfaceNormal, vec3 aEyeDirecti
     aLightData.mAttenuation = 1.0 / ( lDistance * lDistance );
 
     vec3  L = normalize( aInData.WorldPosition - inWorldPos );
-    float lAngleToLightOrigin = dot( L, normalize( -aLightData.mL ) );
+    float lAngleToLightOrigin = clamp(dot( L, normalize( aLightData.mL ) ), 0.0, 1.0);
 
-    if( lAngleToLightOrigin < aInData.Cone ) 
-        aLightData.mAttenuation = 0.0;
-    else
-        aLightData.mAttenuation *= lAngleToLightOrigin;
+    if(lAngleToLightOrigin < aInData.Cone)
+    {
+        aLightData.mAttenuation *= 0.0;
+    }
 
     vec4 lShadowNormalizedCoordinates = biasMat * aInData.Transform * vec4(inWorldPos, 1.0f);
     lShadowNormalizedCoordinates /= lShadowNormalizedCoordinates.w;
 
-    float lShadowFactor = 1.0f;
     if (enablePCF == 1) 
         aLightData.mVisibility = FilterPCF(aShadowMap, lShadowNormalizedCoordinates);
     else 
@@ -319,7 +321,6 @@ void main()
     vec3 outColor = tonemap( hdr_color );
     outColor = pow( outColor, vec3( 1.0f / uboParams.gamma ) );
 
-    // float lLuma = dot( outColor, vec3( 0.2126, 0.7152, 0.0722 ) );
     float lLuma = dot( outColor, vec3( 0.299, 0.587, 0.114 ) );
 
     int lLumaAsAlpha = 0;
