@@ -82,37 +82,6 @@ vec3 CookTorrance( vec3 F0, vec3 N, vec3 L, vec3 V, vec3 H, float roughness )
     return ( NDF * G * F ) / ( 4 * max( dot( N, V ), 0.0 ) * max( dot( N, L ), 0.0 ) + 0.0001 );
 }
 
-// vec3 ComputeLightContribution( vec3 aBaseColor, vec3 aSurfaceNormal, vec3 aEyeDirection, vec3 aLightDirection, vec3 aRadiance,
-//                                float aMetal, float aRough )
-// {
-
-//     // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0
-//     // of 0.04 and if it's a metal, use the base color as F0 (metallic workflow)
-//     vec3 lF0 = mix( vec3( 0.04 ), aBaseColor, aMetal );
-
-//     vec3 H = normalize( aEyeDirection + aLightDirection );
-
-//     // Cook-Torrance BRDF
-//     vec3 lSpecular = CookTorrance( lF0, aSurfaceNormal, aLightDirection, aEyeDirection, H, aRough );
-
-//     // kS is equal to Fresnel
-//     vec3 kS = FresnelSchlick( max( dot( H, aEyeDirection ), 0.0 ), lF0 );
-
-//     // for energy conservation, the diffuse and specular light can't be above 1.0 (unless the surface emits light); to preserve
-//     // this relationship the diffuse component (kD) should equal 1.0 - kS.
-//     vec3 kD = vec3( 1.0 ) - kS;
-
-//     // multiply kD by the inverse metalness such that only non-metals have diffuse lighting, or a linear blend if partly metal
-//     // (pure metals have no diffuse light).
-//     kD *= ( 1.0 - aMetal );
-
-//     // scale light by NdotL
-//     float NdotL = max( dot( aSurfaceNormal, aLightDirection ), 0.0 );
-
-//     // add to outgoing radiance Lo
-//     return ( kD * aBaseColor / PI + lSpecular ) * aRadiance * NdotL;
-// }
-
 vec3 ComputeLightContribution( vec3 aSurfaceNormal, vec3 aEyeDirection, ShadingData aShadingData, LightData aLightData )
 {
     // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0
