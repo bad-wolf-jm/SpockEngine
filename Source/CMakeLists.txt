@@ -29,6 +29,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/CUDA/Texture/TextureData.cpp
 
     Engine/Engine.cpp
+
+    Shader/Compiler.cpp
     
     UI/UI.cpp
     UI/Components/Component.cpp
@@ -235,6 +237,9 @@ target_link_libraries(LTSimulationEngineRuntime PRIVATE
     winmm
     version
     Bcrypt
+    glslang
+    SPIRV 
+    glslang-default-resource-limits
     "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/libmono-static-sgen.lib"
     "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/libmonoruntime-sgen.lib"
     "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug/mono-2.0-sgen.lib"
