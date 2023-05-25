@@ -138,8 +138,8 @@ FetchContent_Declare(
   GIT_TAG        12.2.0
   GIT_PROGRESS   TRUE )
 FetchContent_MakeAvailable(glslang)
-include_directories(${glslang_SOURCE_DIR}/src)
-set(SE_EXTRA_INCLUDES ${glslangl_SOURCE_DIR}/src ${SE_EXTRA_INCLUDES})
+include_directories(${glslang_SOURCE_DIR})
+set(SE_EXTRA_INCLUDES ${glslangl_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
 
 
 set(SE_EXTRA_INCLUDES ${SE_EXTRA_INCLUDES} PARENT_SCOPE)
