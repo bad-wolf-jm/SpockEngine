@@ -132,6 +132,15 @@ FetchContent_MakeAvailable(pugixml)
 include_directories(${pugixml_SOURCE_DIR}/src)
 set(SE_EXTRA_INCLUDES ${pugixml_SOURCE_DIR}/src ${SE_EXTRA_INCLUDES})
 
+FetchContent_Declare(
+  glslang
+  GIT_REPOSITORY https://github.com/KhronosGroup/glslang
+  GIT_TAG        12.2.0
+  GIT_PROGRESS   TRUE )
+FetchContent_MakeAvailable(glslang)
+include_directories(${glslang_SOURCE_DIR}/src)
+set(SE_EXTRA_INCLUDES ${glslangl_SOURCE_DIR}/src ${SE_EXTRA_INCLUDES})
+
 
 set(SE_EXTRA_INCLUDES ${SE_EXTRA_INCLUDES} PARENT_SCOPE)
 set(EXTERNAL_LIBRARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty)

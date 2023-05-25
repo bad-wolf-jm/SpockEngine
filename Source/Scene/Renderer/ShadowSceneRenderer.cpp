@@ -43,7 +43,6 @@ namespace SE::Core
         mPipeline->SetCulling( eFaceCulling::BACK );
         mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\Shadow.vert.spv" ), "main" );
-        mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 );
         mPipeline->AddInput( "Position", eBufferDataType::VEC3, 0, 0 );
         mPipeline->AddInput( "Normal", eBufferDataType::VEC3, 0, 1 );
         mPipeline->AddInput( "TexCoord_0", eBufferDataType::VEC2, 0, 2 );
@@ -86,7 +85,6 @@ namespace SE::Core
         CameraSetLayout = GetCameraSetLayout( mGraphicContext );
 
         mPipeline->AddDescriptorSet( CameraSetLayout );
-
         mPipeline->Build();
     }
 
@@ -223,11 +221,12 @@ namespace SE::Core
             mPointLightsShadowSceneDescriptors.clear();
 
             sTextureCreateInfo lCreateInfo{};
-            lCreateInfo.mFormat = eColorFormat::R32_FLOAT;
-            lCreateInfo.mWidth  = 256;
-            lCreateInfo.mHeight = 256;
+            lCreateInfo.mFormat = eColorFormat::RGBA32_FLOAT;
+            lCreateInfo.mWidth  = 512;
+            lCreateInfo.mHeight = 512;
             lCreateInfo.mDepth  = 1;
             lCreateInfo.mLayers = 6;
+            // lCreateInfo.mIsDepthTexture = true;
 
             for( uint32_t i = 0; i < mPointLights.size(); i++ )
             {
@@ -242,19 +241,20 @@ namespace SE::Core
                 for( uint32_t f = 0; f < 6; f++ )
                 {
                     sRenderTargetDescription lRenderTargetSpec{};
-                    lRenderTargetSpec.mWidth       = 256;
-                    lRenderTargetSpec.mHeight      = 256;
+                    lRenderTargetSpec.mWidth       = 512;
+                    lRenderTargetSpec.mHeight      = 512;
                     lRenderTargetSpec.mSampleCount = 1;
                     auto lRenderTarget             = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
 
                     sAttachmentDescription lAttachmentCreateInfo{};
                     lAttachmentCreateInfo.mFormat      = eColorFormat::R32_FLOAT;
+                    lAttachmentCreateInfo.mFormat      = eColorFormat::RGBA32_FLOAT;
                     lAttachmentCreateInfo.mIsSampled   = false;
                     lAttachmentCreateInfo.mIsPresented = false;
                     lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
                     lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
                     lAttachmentCreateInfo.mType        = eAttachmentType::COLOR;
-                    lAttachmentCreateInfo.mClearColor  = { 0.0f, 0.0f, 0.0f, 1.0f };
+                    lAttachmentCreateInfo.mClearColor  = { .0f, .0f, .0f, 1.f };
                     lRenderTarget->AddAttachment( "SHADOW_MAP", lAttachmentCreateInfo, lShadowMap, static_cast<eCubeFace>( f ) );
 
                     lAttachmentCreateInfo              = sAttachmentDescription{};
@@ -283,14 +283,16 @@ namespace SE::Core
         {
             ShadowMeshRendererCreateInfo lCreateInfo{};
             lCreateInfo.RenderPass = mDirectionalShadowMapRenderContext.back();
-            mRenderPipeline        = New<ShadowMeshRenderer>( mGraphicContext, lCreateInfo );
+
+            mRenderPipeline = New<ShadowMeshRenderer>( mGraphicContext, lCreateInfo );
         }
 
         if( mPointLightsShadowMapRenderContext.size() > 0 )
         {
             ShadowMeshRendererCreateInfo lCreateInfo{};
             lCreateInfo.RenderPass = mPointLightsShadowMapRenderContext.back()[0];
-            mOmniRenderPipeline    = New<OmniShadowMeshRenderer>( mGraphicContext, lCreateInfo );
+
+            mOmniRenderPipeline = New<OmniShadowMeshRenderer>( mGraphicContext, lCreateInfo );
         }
     }
 
@@ -346,12 +348,12 @@ namespace SE::Core
             for( auto &lContext : mPointLightsShadowMapRenderContext )
             {
                 math::mat4 lProjection = math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 1000.0f );
+                mOmniView.mLightPos    = math::vec4( mPointLights[lLightIndex].WorldPosition, 0.0f );
 
                 for( uint32_t f = 0; f < 6; f++ )
                 {
                     glm::mat4 viewMatrix = CreateCubeFaceViewMatrix( f );
                     mOmniView.mMVP       = lProjection * math::Translate( viewMatrix, -mPointLights[lLightIndex].WorldPosition );
-                    mOmniView.mLightPos  = math::vec4( mPointLights[lLightIndex].WorldPosition, 0.0f );
                     mPointLightsShadowCameraUniformBuffer[lLightIndex][f]->Write( mOmniView );
 
                     lContext[f]->BeginRender();
