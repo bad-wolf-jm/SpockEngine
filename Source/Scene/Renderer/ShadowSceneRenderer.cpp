@@ -249,7 +249,7 @@ namespace SE::Core
 
                     sAttachmentDescription lAttachmentCreateInfo{};
                     lAttachmentCreateInfo.mFormat      = eColorFormat::R32_FLOAT;
-                    lAttachmentCreateInfo.mIsSampled   = true;
+                    lAttachmentCreateInfo.mIsSampled   = false;
                     lAttachmentCreateInfo.mIsPresented = false;
                     lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
                     lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
