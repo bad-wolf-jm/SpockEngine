@@ -267,12 +267,14 @@ int main( int argc, char **argv )
     {
         lApplicationConfigurationPath = lLocalConfigFolder / "SpockEngine" / "Config" / fmt::format( "{}.yaml", lApplicationName );
         auto lApplicationAssembly =
-            fs::path( "C:\\GitLab\\SpockEngine\\Build\\Programs" ) / lApplicationName / fmt::format( "{}.dll", lApplicationName );
+            fs::path( "C:\\GitLab\\SpockEngine\\Programs\\Build" ) / lApplicationName / "Debug" / fmt::format( "{}.dll", lApplicationName );
         if( fs::exists( lApplicationAssembly ) ) DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
 
         if( !fs::exists( lApplicationConfigurationPath ) )
             SE::Logging::Info( "Application configuration file '{}' does not exist", lApplicationConfigurationPath.string() );
     }
+
+    DotNetRuntime::ReloadAssemblies();
 
     SE::Editor::BaseEditorApplication lEditorApplication;
 
@@ -293,9 +295,9 @@ int main( int argc, char **argv )
     {
         YAML::Node lRootNode = YAML::LoadFile( lProjectConfigurationPath.string() );
 
-        YAML::Node &lAssemblyPath = lRootNode["project"]["assembly_path"];
-        if( !lAssemblyPath.IsNull() && fs::exists( lAssemblyPath.as<std::string>() ) )
-            DotNetRuntime::AddAppAssemblyPath( lAssemblyPath.as<std::string>(), "" );
+        // YAML::Node &lAssemblyPath = lRootNode["project"]["assembly_path"];
+        // if( !lAssemblyPath.IsNull() && fs::exists( lAssemblyPath.as<std::string>() ) )
+        //     DotNetRuntime::AddAppAssemblyPath( lAssemblyPath.as<std::string>(), "" );
 
         YAML::Node &lDefaultScenarioPath = lRootNode["project"]["default_scenario"];
         if( ( !lDefaultScenarioPath.IsNull() ) && fs::exists( lDefaultScenarioPath.as<std::string>() ) )

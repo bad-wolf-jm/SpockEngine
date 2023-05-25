@@ -35,6 +35,12 @@ namespace SE::Editor
         mEditorWindow.ActiveWorld->Update( ts );
         mEditorWindow.UpdateFramerate( ts );
         mDeferredRenderer->Update( mEditorWindow.ActiveWorld );
+
+        if( mApplicationInstance )
+        {
+            float lTs = ts.GetMilliseconds();
+            mApplicationInstance->CallMethod( "Update", &lTs );
+        }
     }
 
     void BaseEditorApplication::RebuildOutputFramebuffer()
