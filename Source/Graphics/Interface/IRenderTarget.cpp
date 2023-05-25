@@ -30,7 +30,7 @@ namespace SE::Graphics
     void IRenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
                                        Ref<ITexture2D> aFramebufferImage )
     {
-        AddAttachment( aAttachmentID, aCreateInfo, aFramebufferImage, eCubeFace::NEGATIVE_Z );
+        AddAttachment( aAttachmentID, aCreateInfo, aFramebufferImage, eCubeFace::POSITIVE_X );
     }
 
     void IRenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,

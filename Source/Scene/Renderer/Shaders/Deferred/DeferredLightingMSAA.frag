@@ -217,12 +217,12 @@ void ComputePointLightData(vec3 inWorldPos, vec3 aSurfaceNormal, vec3 aEyeDirect
     aLightData.mWorldPosition = aInData.WorldPosition;
     aLightData.mVisibility = 1.0;
 
-    float lDistance = length( aLightData.mWorldPosition - inWorldPos );
-    aLightData.mAttenuation = 1.0 / ( lDistance * lDistance );
-
-    float sampledDist = texture(aShadowMap,  normalize(aLightData.mL)).r;
-
-    aLightData.mVisibility = (lDistance <= sampledDist + EPSILON) ? 1.0 : 0.0;
+    vec3 v = aLightData.mWorldPosition - inWorldPos;
+    float lDistanceSqared = dot(v,v);
+    aLightData.mAttenuation = 1.0 / max(lDistanceSqared, 1e-4);
+    float lShadowDistanceSquared = texture(aShadowMap, aLightData.mL).r;
+    aLightData.mVisibility = (lDistanceSqared <= lShadowDistanceSquared + EPSILON) ? 1.0 : 0.0;
+    // aLightData.mVisibility = 1.0 - lShadowDistanceSquared;
 }
 
 void ComputeSpotLightData(vec3 inWorldPos, vec3 aSurfaceNormal, vec3 aEyeDirection, sampler2D aShadowMap, SpotlightData aInData, inout LightData aLightData)
@@ -234,8 +234,9 @@ void ComputeSpotLightData(vec3 inWorldPos, vec3 aSurfaceNormal, vec3 aEyeDirecti
     aLightData.mWorldPosition = aInData.WorldPosition;
     aLightData.mVisibility = 1.0;
 
-    float lDistance = length( aLightData.mWorldPosition - inWorldPos );
-    aLightData.mAttenuation = 1.0 / ( lDistance * lDistance );
+    vec3 v = aLightData.mWorldPosition - inWorldPos;
+    float lDistanceSqared = dot(v,v);
+    aLightData.mAttenuation = 1.0 / max(lDistanceSqared, 1e-4);
 
     vec3  L = normalize( aInData.WorldPosition - inWorldPos );
     float lAngleToLightOrigin = clamp(dot( L, normalize( aLightData.mL ) ), 0.0, 1.0);

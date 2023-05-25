@@ -40,7 +40,7 @@ namespace SE::Core
 
         mPipeline = CreateGraphicsPipeline( mGraphicContext, Spec.RenderPass, ePrimitiveTopology::TRIANGLES );
 
-        mPipeline->SetCulling( eFaceCulling::NONE );
+        mPipeline->SetCulling( eFaceCulling::BACK );
         mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\Shadow.vert.spv" ), "main" );
         mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 );
@@ -73,10 +73,15 @@ namespace SE::Core
     {
         mPipeline = CreateGraphicsPipeline( mGraphicContext, Spec.RenderPass, ePrimitiveTopology::TRIANGLES );
 
-        mPipeline->SetCulling( eFaceCulling::NONE );
+        mPipeline->SetCulling( eFaceCulling::BACK );
+        mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\OmniShadow.vert.spv" ), "main" );
         mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders\\OmniShadow.frag.spv" ), "main" );
-        mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 );
+        mPipeline->AddInput( "Position", eBufferDataType::VEC3, 0, 0 );
+        mPipeline->AddInput( "Normal", eBufferDataType::VEC3, 0, 1 );
+        mPipeline->AddInput( "TexCoord_0", eBufferDataType::VEC2, 0, 2 );
+        mPipeline->AddInput( "Bones", eBufferDataType::VEC4, 0, 3 );
+        mPipeline->AddInput( "Weights", eBufferDataType::VEC4, 0, 4 );
 
         CameraSetLayout = GetCameraSetLayout( mGraphicContext );
 
@@ -177,7 +182,6 @@ namespace SE::Core
 
                 mDirectionalShadowSceneDescriptors.emplace_back();
                 mDirectionalShadowSceneDescriptors.back() = mCameraSetLayout->Allocate();
-                // New<DescriptorSet>( mGraphicContext, ShadowMeshRenderer::GetCameraSetLayout( mGraphicContext ) );
 
                 mDirectionalShadowCameraUniformBuffer.emplace_back();
                 mDirectionalShadowCameraUniformBuffer.back() =
@@ -220,8 +224,8 @@ namespace SE::Core
 
             sTextureCreateInfo lCreateInfo{};
             lCreateInfo.mFormat = eColorFormat::R32_FLOAT;
-            lCreateInfo.mWidth  = 1024;
-            lCreateInfo.mHeight = 1024;
+            lCreateInfo.mWidth  = 256;
+            lCreateInfo.mHeight = 256;
             lCreateInfo.mDepth  = 1;
             lCreateInfo.mLayers = 6;
 
@@ -238,8 +242,8 @@ namespace SE::Core
                 for( uint32_t f = 0; f < 6; f++ )
                 {
                     sRenderTargetDescription lRenderTargetSpec{};
-                    lRenderTargetSpec.mWidth       = 1024;
-                    lRenderTargetSpec.mHeight      = 1024;
+                    lRenderTargetSpec.mWidth       = 256;
+                    lRenderTargetSpec.mHeight      = 256;
                     lRenderTargetSpec.mSampleCount = 1;
                     auto lRenderTarget             = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
 
@@ -264,8 +268,7 @@ namespace SE::Core
                     lRenderTarget->Finalize();
 
                     mPointLightsShadowMapRenderContext.back()[f] = CreateRenderContext( mGraphicContext, lRenderTarget );
-                    mPointLightsShadowSceneDescriptors.back()[f] =
-                        OmniShadowMeshRenderer::GetCameraSetLayout( mGraphicContext )->Allocate();
+                    mPointLightsShadowSceneDescriptors.back()[f] = mCameraSetLayout->Allocate();
 
                     mPointLightsShadowCameraUniformBuffer.back()[f] = CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true,
                                                                                     true, true, true, sizeof( OmniShadowMatrices ) );
@@ -342,7 +345,7 @@ namespace SE::Core
             lLightIndex = 0;
             for( auto &lContext : mPointLightsShadowMapRenderContext )
             {
-                math::mat4 lProjection = math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 100.0f );
+                math::mat4 lProjection = math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 1000.0f );
 
                 for( uint32_t f = 0; f < 6; f++ )
                 {

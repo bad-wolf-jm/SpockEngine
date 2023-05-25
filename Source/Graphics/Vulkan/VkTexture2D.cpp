@@ -66,7 +66,7 @@ namespace SE::Graphics
     {
         mVkImage = GraphicContext<VkGraphicContext>()->CreateImage(
             mSpec.mWidth, mSpec.mHeight, mSpec.mDepth, mSpec.mMipLevels, mSpec.mLayers, VK_SAMPLE_COUNT_VALUE( mSampleCount ),
-            !mIsGraphicsOnly, false,
+            !mIsGraphicsOnly, (mSpec.mLayers == 6),
             mSpec.mIsDepthTexture ? ToVkFormat( mGraphicContext->GetDepthFormat() ) : ToVkFormat( mSpec.mFormat ), MemoryProperties(),
             ImageUsage() );
     }

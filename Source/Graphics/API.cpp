@@ -93,6 +93,18 @@ namespace SE::Graphics
         }
     }
 
+    Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData, uint32_t aLayer,
+                                     sTextureSamplingInfo const &aSamplingSpec )
+    {
+        switch( gApi )
+        {
+        case eGraphicsAPI::VULKAN: return New<VkSampler2D>( aGraphicContext, Cast<VkTexture2D>( aTextureData ), aLayer, aSamplingSpec );
+        case eGraphicsAPI::OPENGL:
+        case eGraphicsAPI::DIRECTX:
+        default: return nullptr;
+        }
+    }
+
     Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData,
                                      sTextureSamplingInfo const &aSamplingSpec )
     {

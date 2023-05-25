@@ -53,6 +53,9 @@ namespace SE::Graphics
     Ref<ITexture2D> CreateTexture2D( Ref<IGraphicContext> aGraphicContext, TextureData2D &aTextureData, uint8_t aSampleCount,
                                      bool aIsHostVisible, bool aIsGraphicsOnly, bool aIsTransferSource );
 
+    Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData, uint32_t aLayer,
+                                     sTextureSamplingInfo const &aSamplingSpec );
+
     Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData,
                                      sTextureSamplingInfo const &aSamplingSpec );
 
