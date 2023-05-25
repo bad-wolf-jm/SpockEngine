@@ -1,3 +1,6 @@
+#define MIN_PERCEPTUAL_ROUGHNESS 0.045
+#define MIN_ROUGHNESS            0.002025
+
 struct ShadingData
 {
     // The material's diffuse color, as derived from baseColor and metallic.

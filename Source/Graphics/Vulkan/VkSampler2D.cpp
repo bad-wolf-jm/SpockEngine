@@ -44,6 +44,12 @@ namespace SE::Graphics
     /** @brief */
     VkSampler2D::VkSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<VkTexture2D> aTextureData,
                               sTextureSamplingInfo const &aSamplingSpec )
+        : VkSampler2D( aGraphicContext, aTextureData, 0, aSamplingSpec )
+    {
+    }
+
+    VkSampler2D::VkSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<VkTexture2D> aTextureData, uint32_t aLayer, 
+                              sTextureSamplingInfo const &aSamplingSpec )
         : ISampler2D( aGraphicContext, aTextureData, aSamplingSpec )
     {
         constexpr VkComponentMapping lSwizzles{ VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY,
@@ -56,7 +62,7 @@ namespace SE::Graphics
             lImageAspect |= VK_IMAGE_ASPECT_COLOR_BIT;
 
         mVkImageView = GraphicContext<VkGraphicContext>()->CreateImageView(
-            std::reinterpret_pointer_cast<VkTexture2D>( mTextureData )->mVkImage, mTextureData->mSpec.mLayers, VK_IMAGE_VIEW_TYPE_2D,
+            std::reinterpret_pointer_cast<VkTexture2D>( mTextureData )->mVkImage, aLayer, 1, VK_IMAGE_VIEW_TYPE_2D,
             ToVkFormat( mTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
 
         mVkImageSampler = GraphicContext<VkGraphicContext>()->CreateSampler( Convert( mSpec.mFilter ), Convert( mSpec.mFilter ),

@@ -102,44 +102,19 @@ namespace SE::Graphics
                                                 VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY };
         for( auto lTextureData : lAttachments )
         {
-            switch( lTextureData.mTexture->GetTextureType() )
-            {
-            case eTextureType::TEXTURE_2D:
-            {
-                auto lVkTextureData = std::static_pointer_cast<VkTexture2D>( lTextureData.mTexture );
+            auto lVkTextureData = std::static_pointer_cast<VkTexture2D>( lTextureData.mTexture );
 
-                VkImageAspectFlags lImageAspect = 0;
-                if( lVkTextureData->mSpec.mIsDepthTexture )
-                    lImageAspect |= VK_IMAGE_ASPECT_DEPTH_BIT;
-                else
-                    lImageAspect |= VK_IMAGE_ASPECT_COLOR_BIT;
+            VkImageAspectFlags lImageAspect = 0;
+            if( lVkTextureData->mSpec.mIsDepthTexture )
+                lImageAspect |= VK_IMAGE_ASPECT_DEPTH_BIT;
+            else
+                lImageAspect |= VK_IMAGE_ASPECT_COLOR_BIT;
 
-                auto lVkImageView = GraphicContext<VkGraphicContext>()->CreateImageView(
-                    lVkTextureData->mVkImage, lVkTextureData->mSpec.mLayers, VK_IMAGE_VIEW_TYPE_2D,
-                    ToVkFormat( lVkTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
+            auto lVkImageView = GraphicContext<VkGraphicContext>()->CreateImageView(
+                lVkTextureData->mVkImage, (uint32_t)lTextureData.mFace, 1, VK_IMAGE_VIEW_TYPE_2D,
+                ToVkFormat( lVkTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
 
-                mVkImageViews.push_back( lVkImageView );
-            }
-            break;
-            case eTextureType::TEXTURE_CUBE_MAP:
-            {
-                auto lVkTextureData = std::static_pointer_cast<VkTexture2D>( lTextureData.mTexture );
-
-                VkImageAspectFlags lImageAspect = 0;
-                if( lVkTextureData->mSpec.mIsDepthTexture )
-                    lImageAspect |= VK_IMAGE_ASPECT_DEPTH_BIT;
-                else
-                    lImageAspect |= VK_IMAGE_ASPECT_COLOR_BIT;
-
-                auto lVkImageView = GraphicContext<VkGraphicContext>()->CreateImageView(
-                    lVkTextureData->mVkImage, (uint32_t)lTextureData.mFace, 1, VK_IMAGE_VIEW_TYPE_2D,
-                    ToVkFormat( lVkTextureData->mSpec.mFormat ), lImageAspect, lSwizzles );
-
-                mVkImageViews.push_back( lVkImageView );
-            }
-            break;
-            default: break;
-            }
+            mVkImageViews.push_back( lVkImageView );
         }
 
         mRenderPassObject = CreateDefaultRenderPass();
@@ -172,8 +147,8 @@ namespace SE::Graphics
 
     Ref<VkRenderPassObject> VkRenderTarget::CreateDefaultRenderPass()
     {
-        Ref<VkRenderPassObject> lNewRenderPass = New<VkRenderPassObject>(
-            GraphicContext<VkGraphicContext>(), VK_FORMAT_UNDEFINED, mSpec.mSampleCount, false, false, math::vec4( 0.0f ) );
+        Ref<VkRenderPassObject> lNewRenderPass = New<VkRenderPassObject>( GraphicContext<VkGraphicContext>(), VK_FORMAT_UNDEFINED,
+                                                                          mSpec.mSampleCount, false, false, math::vec4( 0.0f ) );
 
         std::vector<VkAttachmentDescription> lAttachmentDescriptions{};
         std::vector<VkAttachmentReference>   lColorAttachmentReferences{};
