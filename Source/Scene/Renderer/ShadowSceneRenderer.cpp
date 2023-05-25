@@ -311,15 +311,17 @@ namespace SE::Core
                 mDirectionalShadowCameraUniformBuffer[lLightIndex]->Write( View );
 
                 lContext->BeginRender();
+                lContext->Bind( mRenderPipeline->Pipeline() );
+                lContext->Bind( mDirectionalShadowSceneDescriptors[lLightIndex], 0, -1 );
+
                 for( auto &lPipelineData : mOpaqueMeshQueue )
                 {
                     if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
 
-                    lContext->Bind( mRenderPipeline->Pipeline() );
-                    lContext->Bind( mDirectionalShadowSceneDescriptors[lLightIndex], 0, -1 );
                     lContext->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
                     lContext->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
                 }
+
                 lContext->EndRender();
                 lLightIndex++;
             }
@@ -331,15 +333,17 @@ namespace SE::Core
                 mSpotlightShadowCameraUniformBuffer[lLightIndex]->Write( View );
 
                 lContext->BeginRender();
+                lContext->Bind( mRenderPipeline->Pipeline() );
+                lContext->Bind( mSpotlightShadowSceneDescriptors[lLightIndex], 0, -1 );
+
                 for( auto &lPipelineData : mOpaqueMeshQueue )
                 {
                     if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
 
-                    lContext->Bind( mRenderPipeline->Pipeline() );
-                    lContext->Bind( mSpotlightShadowSceneDescriptors[lLightIndex], 0, -1 );
                     lContext->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
                     lContext->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
                 }
+
                 lContext->EndRender();
                 lLightIndex++;
             }
@@ -357,15 +361,17 @@ namespace SE::Core
                     mPointLightsShadowCameraUniformBuffer[lLightIndex][f]->Write( mOmniView );
 
                     lContext[f]->BeginRender();
+                    lContext[f]->Bind( mOmniRenderPipeline->Pipeline() );
+                    lContext[f]->Bind( mPointLightsShadowSceneDescriptors[lLightIndex][f], 0, -1 );
+
                     for( auto &lPipelineData : mOpaqueMeshQueue )
                     {
                         if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
 
-                        lContext[f]->Bind( mOmniRenderPipeline->Pipeline() );
-                        lContext[f]->Bind( mPointLightsShadowSceneDescriptors[lLightIndex][f], 0, -1 );
                         lContext[f]->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
                         lContext[f]->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
                     }
+                    
                     lContext[f]->EndRender();
                 }
 
