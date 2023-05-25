@@ -214,6 +214,8 @@ namespace SE::Core
             }
         }
 
+        constexpr int32_t mOmniShadowResolution = 1024;
+
         if( mPointLights.size() != mPointLightsShadowMapRenderContext.size() )
         {
             mPointLightsShadowMapRenderContext.clear();
@@ -222,11 +224,10 @@ namespace SE::Core
 
             sTextureCreateInfo lCreateInfo{};
             lCreateInfo.mFormat = eColorFormat::RGBA32_FLOAT;
-            lCreateInfo.mWidth  = 512;
-            lCreateInfo.mHeight = 512;
+            lCreateInfo.mWidth  = mOmniShadowResolution;
+            lCreateInfo.mHeight = mOmniShadowResolution;
             lCreateInfo.mDepth  = 1;
             lCreateInfo.mLayers = 6;
-            // lCreateInfo.mIsDepthTexture = true;
 
             for( uint32_t i = 0; i < mPointLights.size(); i++ )
             {
@@ -241,8 +242,8 @@ namespace SE::Core
                 for( uint32_t f = 0; f < 6; f++ )
                 {
                     sRenderTargetDescription lRenderTargetSpec{};
-                    lRenderTargetSpec.mWidth       = 512;
-                    lRenderTargetSpec.mHeight      = 512;
+                    lRenderTargetSpec.mWidth       = mOmniShadowResolution;
+                    lRenderTargetSpec.mHeight      = mOmniShadowResolution;
                     lRenderTargetSpec.mSampleCount = 1;
                     auto lRenderTarget             = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
 
@@ -371,7 +372,7 @@ namespace SE::Core
                         lContext[f]->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
                         lContext[f]->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
                     }
-                    
+
                     lContext[f]->EndRender();
                 }
 
