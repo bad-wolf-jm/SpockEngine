@@ -29,6 +29,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Core/CUDA/Texture/TextureData.cpp
 
     Engine/Engine.cpp
+
+    Shader/Compiler.cpp
     
     UI/UI.cpp
     UI/Components/Component.cpp
