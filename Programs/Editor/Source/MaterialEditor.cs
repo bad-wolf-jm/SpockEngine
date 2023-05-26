@@ -47,8 +47,12 @@ namespace SEEditor
     public class UITextureWithPreview : UIBoxLayout
     {
         UIImage mTexturePreview = new UIImage();
+
         public UITextureWithPreview(string aTitle) : base(eBoxLayoutOrientation.HORIZONTAL)
         {
+            SetItemSpacing(10.0f);
+            Add(mTexturePreview, 35, false, true);
+
             var lInfoLayout = new UIBoxLayout(eBoxLayoutOrientation.VERTICAL);
             var lLabel = new UILabel(aTitle);
             lLabel.SetAlignment(eHorizontalAlignment.LEFT, eVerticalAlignment.CENTER);
@@ -65,8 +69,12 @@ namespace SEEditor
             // lInfoLayout.Add(lWrapping, 30.0f, false, true);
 
             Add(lInfoLayout, true, true);
+            mTexturePreview.Size = new Math.vec2(35, 35);
+        }
 
-            Add(mTexturePreview, 75, false, true);
+        public void SetFile(string aPath)
+        {
+            mTexturePreview.SetImage(aPath);
         }
     }
 
@@ -103,8 +111,14 @@ namespace SEEditor
             var lLabel11 = new UILabel("Is two sided");
             mMainLayout.Add(lLabel11, 30.0f, false, true);
 
+            var lLayout2 = new UIBoxLayout(eBoxLayoutOrientation.HORIZONTAL);
             var lLabel12 = new UILabel("Culling");
-            mMainLayout.Add(lLabel12, 30.0f, false, true);
+            lLabel12.SetAlignment(eHorizontalAlignment.LEFT, eVerticalAlignment.CENTER);
+            lLayout2.Add(lLabel12, 100.0f, false, true);
+            UIComboBox lCulling = new UIComboBox();
+            lCulling.SetItemList(new string[] {"Back", "Front", "None"});;
+            lLayout2.Add(lCulling, true, true);
+            mMainLayout.Add(lLayout2, 30.0f, false, true);
 
             var lLabel14 = new UILabel("Use Alpha mask");
             mMainLayout.Add(lLabel14, 30.0f, false, true);
@@ -112,26 +126,51 @@ namespace SEEditor
             var lLabel15 = new UILabel("Alpha mask threshold");
             mMainLayout.Add(lLabel15, 30.0f, false, true);
 
+            var lLayout3 = new UIBoxLayout(eBoxLayoutOrientation.HORIZONTAL);
             var lLabel16 = new UILabel("Blend mode");
-            mMainLayout.Add(lLabel16, 30.0f, false, true);
+            lLabel16.SetAlignment(eHorizontalAlignment.LEFT, eVerticalAlignment.CENTER);
+            lLayout3.Add(lLabel16, 100.0f, false, true);
+            UIComboBox lBlend = new UIComboBox();
+            lBlend.SetItemList(new string[] {"Opaque", "Alpha mask"});;
+            lLayout3.Add(lBlend, true, true);
+            mMainLayout.Add(lLayout3, 30.0f, false, true);
 
-            var lTextureHeight = 75.0f;
+            var lTextureHeight = 35.0f;
 
             var lLabel0 = new UILabel("BASIC PROPERTIES");
             // lLabel0.SetFont(eFontFamily.H2);
             lLabel0.SetAlignment(eHorizontalAlignment.LEFT, eVerticalAlignment.CENTER);
             mMainLayout.Add(lLabel0, 30.0f, false, true);
+            
             var lAlbedoTexture = new UITextureWithPreview("Albedo");
+            lAlbedoTexture.SetFile(@"C:\GitLab\SpockEngine\Resources\Saved\Materials\Layered_Rock\textures\layered-rock2-albedo.png");
             mMainLayout.Add(lAlbedoTexture, lTextureHeight, false, true);
+
             var lNormalsTexture = new UITextureWithPreview("Normals");
+            lNormalsTexture.SetFile(@"C:\GitLab\SpockEngine\Resources\Saved\Materials\Layered_Rock\textures\layered-rock2-normal-ogl.png");
             mMainLayout.Add(lNormalsTexture, lTextureHeight, false, true);
+
             var lMetalRoughTexture = new UITextureWithPreview("Metal/Rough");
+            lMetalRoughTexture.SetFile(@"C:\GitLab\SpockEngine\Resources\Saved\Materials\Layered_Rock\textures\layered-rock2-physical.png");
             mMainLayout.Add(lMetalRoughTexture, lTextureHeight, false, true);
+
+            var lMetalTexture = new UITextureWithPreview("Metal");
+            lMetalTexture.SetFile(@"C:\GitLab\SpockEngine\Resources\Saved\Materials\Layered_Rock\textures\layered-rock2-physical.png");
+            mMainLayout.Add(lMetalTexture, lTextureHeight, false, true);
+
+            var lRoughTexture = new UITextureWithPreview("Rough");
+            lRoughTexture.SetFile(@"C:\GitLab\SpockEngine\Resources\Saved\Materials\Layered_Rock\textures\layered-rock2-physical.png");
+            mMainLayout.Add(lRoughTexture, lTextureHeight, false, true);
+
             var lOcclusionTexture = new UITextureWithPreview("Occlusion");
+            lOcclusionTexture.SetFile(@"C:\GitLab\SpockEngine\Resources\Saved\Materials\Layered_Rock\textures\layered-rock2-ao.png");
             mMainLayout.Add(lOcclusionTexture, lTextureHeight, false, true);
+
             var lOcclusionStrengthTexture = new UITextureWithPreview("Occlusion strength");
             mMainLayout.Add(lOcclusionStrengthTexture, lTextureHeight, false, true);
+
             var lEmissiveTexture = new UITextureWithPreview("Emissive");
+            lEmissiveTexture.SetFile(@"C:\GitLab\SpockEngine\Resources\Saved\Materials\Layered_Rock\textures\layered-rock2-ao.png");
             mMainLayout.Add(lEmissiveTexture, lTextureHeight, false, true);
 
             var lLabel1 = new UILabel("SUBSURFACE PROPERTIES");

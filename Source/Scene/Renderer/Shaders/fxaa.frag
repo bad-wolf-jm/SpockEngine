@@ -11,7 +11,7 @@ layout( location = 0 ) out vec4 outFragcolor;
 
 #define FXAA_PC 1
 #define FXAA_GLSL_130 1
-#define FXAA_QUALITY__PRESET 12
+#define FXAA_QUALITY__PRESET 23
 
 #include "fxaa.h"
 
@@ -49,7 +49,8 @@ void main()
     // This must be from a constant/uniform.
     // {x_} = 1.0/screenWidthInPixels
     // {_y} = 1.0/screenHeightInPixels
-    FxaaFloat2 fxaaQualityRcpFrame = vec2(1.0, 1.0);
+    
+    FxaaFloat2 fxaaQualityRcpFrame = 1.0 / textureSize(sImage, 0);
 
     // Only used on FXAA Console.
     // This must be from a constant/uniform.
@@ -102,7 +103,7 @@ void main()
     //   0.166 - default
     //   0.125 - high quality 
     //   0.063 - overkill (slower)
-    FxaaFloat fxaaQualityEdgeThreshold = 0.166;
+    FxaaFloat fxaaQualityEdgeThreshold = 0.125;
 
     // Only used on FXAA Quality.
     // This used to be the FXAA_QUALITY__EDGE_THRESHOLD_MIN define.
@@ -117,7 +118,7 @@ void main()
     //   will appear very dark in the green channel!
     //   Tune by looking at mostly non-green content,
     //   then start at zero and increase until aliasing is a problem.
-    FxaaFloat fxaaQualityEdgeThresholdMin = 0.0833;
+    FxaaFloat fxaaQualityEdgeThresholdMin = 0.0625;
 
     // Only used on FXAA Console.
     // This used to be the FXAA_CONSOLE__EDGE_SHARPNESS define.
@@ -131,7 +132,7 @@ void main()
     //   8.0 is sharper (default!!!)
     //   4.0 is softer
     //   2.0 is really soft (good only for vector graphics inputs)
-    FxaaFloat fxaaConsoleEdgeSharpness = 8.0;
+    FxaaFloat fxaaConsoleEdgeSharpness = 4.0;
 
     // Only used on FXAA Console.
     // This used to be the FXAA_CONSOLE__EDGE_THRESHOLD define.
@@ -191,4 +192,5 @@ void main()
         fxaaConsoleEdgeThresholdMin, 
         fxaaConsole360ConstDir
     );
+
 }

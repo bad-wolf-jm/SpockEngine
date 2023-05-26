@@ -19,6 +19,9 @@ namespace SE::Core
     {
         ImGui::SetCursorPos( GetContentAlignedposition( mHAlign, mVAlign, aPosition, RequiredSize(), aSize ) );
 
+        auto uv1 = mBottomRight;
+        uv1.y *= -1.0f;
+        
         ImGui::Image( TextureID(), mSize, mTopLeft, mBottomRight, mTintColor, ImVec4{} );
     }
 
