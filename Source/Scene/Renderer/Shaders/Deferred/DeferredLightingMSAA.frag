@@ -1,5 +1,6 @@
 #version 460
 #extension GL_EXT_nonuniform_qualifier : enable
+#extension GL_GOOGLE_include_directive : require
 
 layout( location = 0 ) in vec2 inUV;
 
@@ -135,8 +136,8 @@ struct LightData
 const int enablePCF = 1;
 
 
-#include "../Common/ToneMap.glsl"
-#include "../Common/PBRFunctions.glsl"
+#include "Common/ToneMap.glsl"
+#include "Common/PBRFunctions.glsl"
 
 
 float TextureProj(sampler2D shadowMap, vec4 shadowCoord, vec2 off)

@@ -179,52 +179,52 @@ function(add_shader TARGET SHADER)
     target_sources(${TARGET} PRIVATE ${CURRENT_OUTPUT_PATH})
 endfunction(add_shader)
 
-add_shader(LTSimulationEngineRuntime "ui_shader.vert")
-add_shader(LTSimulationEngineRuntime "ui_shader.frag")
+# add_shader(LTSimulationEngineRuntime "ui_shader.vert")
+# add_shader(LTSimulationEngineRuntime "ui_shader.frag")
 
 
-add_shader(LTSimulationEngineRuntime "copy.frag")
-add_shader(LTSimulationEngineRuntime "fxaa.frag")
-add_shader(LTSimulationEngineRuntime "fxaa.vert")
+# add_shader(LTSimulationEngineRuntime "copy.frag")
+# add_shader(LTSimulationEngineRuntime "fxaa.frag")
+# add_shader(LTSimulationEngineRuntime "fxaa.vert")
 
-add_shader(LTSimulationEngineRuntime "shadow.vert")
+# add_shader(LTSimulationEngineRuntime "shadow.vert")
 
-add_shader(LTSimulationEngineRuntime "OmniShadow.vert")
-add_shader(LTSimulationEngineRuntime "OmniShadow.frag")
+# add_shader(LTSimulationEngineRuntime "OmniShadow.vert")
+# add_shader(LTSimulationEngineRuntime "OmniShadow.frag")
 
-add_shader(LTSimulationEngineRuntime "filtercube.vert")
-add_shader(LTSimulationEngineRuntime "irradiancecube.frag")
-add_shader(LTSimulationEngineRuntime "prefilterenvmap.frag")
+# add_shader(LTSimulationEngineRuntime "filtercube.vert")
+# add_shader(LTSimulationEngineRuntime "irradiancecube.frag")
+# add_shader(LTSimulationEngineRuntime "prefilterenvmap.frag")
 
-add_shader(LTSimulationEngineRuntime "skybox.vert")
-add_shader(LTSimulationEngineRuntime "skybox.frag")
+# add_shader(LTSimulationEngineRuntime "skybox.vert")
+# add_shader(LTSimulationEngineRuntime "skybox.frag")
 
-add_shader(LTSimulationEngineRuntime "coordinategrid.vert")
-add_shader(LTSimulationEngineRuntime "coordinategrid.frag")
+# add_shader(LTSimulationEngineRuntime "coordinategrid.vert")
+# add_shader(LTSimulationEngineRuntime "coordinategrid.frag")
 
-add_shader(LTSimulationEngineRuntime "genbrdflut.vert")
-add_shader(LTSimulationEngineRuntime "genbrdflut.frag")
+# add_shader(LTSimulationEngineRuntime "genbrdflut.vert")
+# add_shader(LTSimulationEngineRuntime "genbrdflut.frag")
 
-add_shader(LTSimulationEngineRuntime "PBRMeshShader.vert")
-add_shader(LTSimulationEngineRuntime "PBRMeshShader.frag")
+# add_shader(LTSimulationEngineRuntime "PBRMeshShader.vert")
+# add_shader(LTSimulationEngineRuntime "PBRMeshShader.frag")
 
-add_shader(LTSimulationEngineRuntime "ParticleSystem.vert")
-add_shader(LTSimulationEngineRuntime "ParticleSystem.frag")
+# add_shader(LTSimulationEngineRuntime "ParticleSystem.vert")
+# add_shader(LTSimulationEngineRuntime "ParticleSystem.frag")
 
-add_shader(LTSimulationEngineRuntime "SurfaceShader.vert")
-add_shader(LTSimulationEngineRuntime "SurfaceShader.frag")
+# add_shader(LTSimulationEngineRuntime "SurfaceShader.vert")
+# add_shader(LTSimulationEngineRuntime "SurfaceShader.frag")
 
-add_shader(LTSimulationEngineRuntime "WireframeShader.vert")
-add_shader(LTSimulationEngineRuntime "WireframeShader.frag")
+# add_shader(LTSimulationEngineRuntime "WireframeShader.vert")
+# add_shader(LTSimulationEngineRuntime "WireframeShader.frag")
 
-add_shader(LTSimulationEngineRuntime "Unlit.vert")
-add_shader(LTSimulationEngineRuntime "Unlit.frag")
+# add_shader(LTSimulationEngineRuntime "Unlit.vert")
+# add_shader(LTSimulationEngineRuntime "Unlit.frag")
 
-add_shader(LTSimulationEngineRuntime "Deferred/DeferredLightingMSAA.vert")
-add_shader(LTSimulationEngineRuntime "Deferred/DeferredLightingMSAA.frag")
+# add_shader(LTSimulationEngineRuntime "Deferred/DeferredLightingMSAA.vert")
+# add_shader(LTSimulationEngineRuntime "Deferred/DeferredLightingMSAA.frag")
 
-add_shader(LTSimulationEngineRuntime "Deferred/MRT.vert")
-add_shader(LTSimulationEngineRuntime "Deferred/MRT.frag")
+# add_shader(LTSimulationEngineRuntime "Deferred/MRT.vert")
+# add_shader(LTSimulationEngineRuntime "Deferred/MRT.frag")
 
 
 target_link_libraries(LTSimulationEngineRuntime PRIVATE

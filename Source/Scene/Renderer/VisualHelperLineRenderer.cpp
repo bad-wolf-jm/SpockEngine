@@ -24,8 +24,8 @@ namespace SE::Graphics
         SceneRenderPipelineCreateInfo l_CreateInfo{};
         l_CreateInfo.Topology       = ePrimitiveTopology::LINES;
         l_CreateInfo.LineWidth      = a_CreateInfo.LineWidth;
-        l_CreateInfo.VertexShader   = "Shaders/WireframeShader.vert.spv";
-        l_CreateInfo.FragmentShader = "Shaders/WireframeShader.frag.spv";
+        l_CreateInfo.VertexShader   = "Shaders/WireframeShader.vert";
+        l_CreateInfo.FragmentShader = "Shaders/WireframeShader.frag";
         l_CreateInfo.RenderPass     = a_CreateInfo.RenderPass;
 
         Initialize( l_CreateInfo );
