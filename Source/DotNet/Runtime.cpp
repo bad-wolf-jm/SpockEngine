@@ -22,6 +22,8 @@
 #include "UI/Components/BaseImage.h"
 #include "UI/Components/Button.h"
 #include "UI/Components/CheckBox.h"
+#include "UI/Components/ColorButton.h"
+#include "UI/Components/Slider.h"
 #include "UI/Components/ComboBox.h"
 #include "UI/Components/Component.h"
 #include "UI/Components/DropdownButton.h"
@@ -39,7 +41,6 @@
 #include "UI/Components/TextToggleButton.h"
 #include "UI/Components/TreeView.h"
 #include "UI/Components/Workspace.h"
-#include "UI/Components/ColorButton.h"
 
 #include "UI/Widgets/FileTree.h"
 
@@ -674,21 +675,11 @@ namespace SE::Core
         ICall( "UITreeViewNode::UITreeViewNode_SetTextColor", UITreeViewNode::UITreeViewNode_SetTextColor );
         ICall( "UITreeViewNode::UITreeViewNode_Add", UITreeViewNode::UITreeViewNode_Add );
 
-        ICall( "UIFileTree::UIFileTree_Create", UIFileTree::UIFileTree_Create );
-        ICall( "UIFileTree::UIFileTree_Destroy", UIFileTree::UIFileTree_Destroy );
-        ICall( "UIFileTree::UIFileTree_Add", UIFileTree::UIFileTree_Add );
-        // ICall( "UIFileTree::UIFileView_SetIndent", UIFileTree::UITreeView_SetIndent );
-        // ICall( "UIFileTreeNode::UIFileTreeNode_Create", UIFileTreeNode::UITreeViewNode_Create );
-        // ICall( "UIFileTreeNode::UIFileTreeNode_Destroy", UIFileTreeNode::UITreeViewNode_Destroy );
-        // ICall( "UIFileTreeNode::UIFileTreeNode_SetIcon", UIFileTreeNode::UITreeViewNode_SetIcon );
-        // ICall( "UIFileTreeNode::UIFileTreeNode_SetIndicator", UIFileTreeNode::UITreeViewNode_SetIndicator );
-        // ICall( "UIFileTreeNode::UIFileTreeNode_SetText", UIFileTreeNode::UITreeViewNode_SetText );
-        // ICall( "UIFileTreeNode::UIFileTreeNode_SetTextColor", UIFileTreeNode::UITreeViewNode_SetTextColor );
-        // ICall( "UIFileTreeNode::UIFileTreeNode_Add", UIFileTreeNode::UITreeViewNode_Add );
-
         ICall( "UIColorButton::UIColorButton_Create", UIColorButton::UIColorButton_Create );
         ICall( "UIColorButton::UIColorButton_Destroy", UIColorButton::UIColorButton_Destroy );
 
+        ICall( "UISlider::UISlider_Create", UISlider::UISlider_Create );
+        ICall( "UISlider::UISlider_Destroy", UISlider::UISlider_Destroy );
     }
 
 } // namespace SE::Core
