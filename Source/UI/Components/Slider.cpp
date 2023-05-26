@@ -10,7 +10,6 @@ namespace SE::Core
         ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4{.03f, 0.03f, 0.03f, 1.0f});
         ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4{.04f, 0.04f, 0.04f, 1.0f});
         ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4{.04f, 0.04f, 0.04f, 1.0f});
-
     }
 
     void UISlider::PopStyles() 
