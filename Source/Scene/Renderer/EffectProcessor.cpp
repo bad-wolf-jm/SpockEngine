@@ -13,7 +13,7 @@ namespace SE::Core
     {
         mPipeline = CreateGraphicsPipeline( mGraphicContext, aRenderContext, ePrimitiveTopology::TRIANGLES );
 
-        mPipeline->SetCulling( eFaceCulling::BACK );
+        mPipeline->SetCulling( eFaceCulling::NONE );
         mPipeline->SetLineWidth( 1.0f );
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( Spec.mVertexShader ), "main" );
         mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( Spec.mFragmentShader ), "main" );

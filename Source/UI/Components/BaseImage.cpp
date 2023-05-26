@@ -54,7 +54,13 @@ namespace SE::Core
     ImVec4 UIBaseImage::TintColor() { return mTintColor; }
     void   UIBaseImage::SetTintColor( math::vec4 aColor ) { mTintColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
 
-    ImTextureID UIBaseImage::TextureID() { return static_cast<ImTextureID>( mHandle.Handle->GetID() ); }
+    ImTextureID UIBaseImage::TextureID() 
+    { 
+        if (mHandle.Handle)
+            return static_cast<ImTextureID>( mHandle.Handle->GetID() ); 
+
+        return 0;
+    }
 
     ImVec2 UIBaseImage::RequiredSize() { return mSize; }
 

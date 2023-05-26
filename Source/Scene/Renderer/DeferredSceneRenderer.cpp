@@ -126,21 +126,19 @@ namespace SE::Core
         mFxaaRenderTarget->Finalize();
         mFxaaContext = CreateRenderContext( mGraphicContext, mFxaaRenderTarget );
 
-        // CoordinateGridRendererCreateInfo lCoordinateGridRendererCreateInfo{};
-        // lCoordinateGridRendererCreateInfo.RenderPass = mLightingContext->GetRenderPass();
         mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mLightingContext );
         mShadowSceneRenderer    = New<ShadowSceneRenderer>( mGraphicContext );
 
         EffectProcessorCreateInfo lEffectProcessorCreateInfo{};
         lEffectProcessorCreateInfo.mVertexShader   = "Shaders/fxaa.vert.spv";
         lEffectProcessorCreateInfo.mFragmentShader = "Shaders/fxaa.frag.spv";
-        lEffectProcessorCreateInfo.RenderPass      = mFxaaContext; //->GetRenderPass();
+        lEffectProcessorCreateInfo.RenderPass      = mFxaaContext;
         mFxaaRenderer                              = New<EffectProcessor>( mGraphicContext, mFxaaContext, lEffectProcessorCreateInfo );
 
         EffectProcessorCreateInfo lCopyCreateInfo{};
         lCopyCreateInfo.mVertexShader   = "Shaders/fxaa.vert.spv";
         lCopyCreateInfo.mFragmentShader = "Shaders/copy.frag.spv";
-        lCopyCreateInfo.RenderPass      = mFxaaContext; //->GetRenderPass();
+        lCopyCreateInfo.RenderPass      = mFxaaContext;
         mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lCopyCreateInfo );
     }
 
