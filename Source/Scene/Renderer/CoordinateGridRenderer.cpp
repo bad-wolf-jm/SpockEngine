@@ -13,8 +13,8 @@ namespace SE::Core
 
         mPipeline->SetCulling( eFaceCulling::NONE );
         mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
-        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\coordinategrid.vert.spv" ), "main" );
-        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders\\coordinategrid.frag.spv" ), "main" );
+        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\coordinategrid.vert" ), "main" );
+        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders\\coordinategrid.frag" ), "main" );
         mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 );
 
         PipelineLayout = CreateDescriptorSetLayout( aGraphicContext );

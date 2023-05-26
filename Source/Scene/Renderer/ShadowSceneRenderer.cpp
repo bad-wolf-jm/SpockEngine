@@ -42,7 +42,7 @@ namespace SE::Core
 
         mPipeline->SetCulling( eFaceCulling::BACK );
         mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
-        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\Shadow.vert.spv" ), "main" );
+        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\Shadow.vert" ), "main" );
         mPipeline->AddInput( "Position", eBufferDataType::VEC3, 0, 0 );
         mPipeline->AddInput( "Normal", eBufferDataType::VEC3, 0, 1 );
         mPipeline->AddInput( "TexCoord_0", eBufferDataType::VEC2, 0, 2 );
@@ -74,8 +74,8 @@ namespace SE::Core
 
         mPipeline->SetCulling( eFaceCulling::BACK );
         mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
-        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\OmniShadow.vert.spv" ), "main" );
-        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders\\OmniShadow.frag.spv" ), "main" );
+        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\OmniShadow.vert" ), "main" );
+        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders\\OmniShadow.frag" ), "main" );
         mPipeline->AddInput( "Position", eBufferDataType::VEC3, 0, 0 );
         mPipeline->AddInput( "Normal", eBufferDataType::VEC3, 0, 1 );
         mPipeline->AddInput( "TexCoord_0", eBufferDataType::VEC2, 0, 2 );
@@ -280,7 +280,7 @@ namespace SE::Core
             }
         }
 
-        if( ( mDirectionalShadowMapRenderContext.size() > 0 ) || ( mSpotlightShadowMapRenderContext.size() > 0 ) )
+        if( mRenderPipeline == nullptr && (( mDirectionalShadowMapRenderContext.size() > 0 ) || ( mSpotlightShadowMapRenderContext.size() > 0 )) )
         {
             ShadowMeshRendererCreateInfo lCreateInfo{};
             lCreateInfo.RenderPass = mDirectionalShadowMapRenderContext.back();
@@ -288,7 +288,7 @@ namespace SE::Core
             mRenderPipeline = New<ShadowMeshRenderer>( mGraphicContext, lCreateInfo );
         }
 
-        if( mPointLightsShadowMapRenderContext.size() > 0 )
+        if( mOmniRenderPipeline == nullptr && mPointLightsShadowMapRenderContext.size() > 0 )
         {
             ShadowMeshRendererCreateInfo lCreateInfo{};
             lCreateInfo.RenderPass = mPointLightsShadowMapRenderContext.back()[0];

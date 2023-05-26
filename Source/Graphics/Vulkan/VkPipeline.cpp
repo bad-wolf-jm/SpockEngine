@@ -7,6 +7,7 @@
 
 #include "Core/Memory.h"
 #include "Graphics/Vulkan/VkCoreMacros.h"
+#include "Shader/Compiler.h"
 
 namespace SE::Graphics
 {
@@ -47,8 +48,17 @@ namespace SE::Graphics
 
     static std::vector<uint32_t> CompileShaderSources( std::string FilePaths, eShaderStageTypeFlags aShaderType )
     {
+        SE::Logging::Info("Compiling shader: '{}'", FilePaths);
+        
         if( IsSPIRV( FilePaths ) ) return LoadShaderModuleBytecode( FilePaths );
-        return std::vector<uint32_t>( 0 );
+
+        auto        lProgram       = ReadFile( FilePaths );
+        std::string lProgramString = std::string( lProgram.begin(), lProgram.end() );
+
+        std::vector<uint32_t> lByteCode( 0 );
+        Compile( aShaderType, lProgramString, lByteCode );
+
+        return lByteCode;
     }
 
     ShaderModule::ShaderModule( Ref<VkGraphicContext> mContext, std::string FilePaths, eShaderStageTypeFlags aShaderType )

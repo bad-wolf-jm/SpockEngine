@@ -155,8 +155,8 @@ namespace SE::Core
         lCreateInfo.Opaque         = ( aPipelineSpecification.Type == eMaterialType::Opaque );
         lCreateInfo.IsTwoSided     = aPipelineSpecification.IsTwoSided;
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
-        lCreateInfo.VertexShader   = "Shaders\\Deferred\\MRT.vert.spv";
-        lCreateInfo.FragmentShader = "Shaders\\Deferred\\MRT.frag.spv";
+        lCreateInfo.VertexShader   = "Shaders\\Deferred\\MRT.vert";
+        lCreateInfo.FragmentShader = "Shaders\\Deferred\\MRT.frag";
         lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
@@ -169,8 +169,8 @@ namespace SE::Core
         lCreateInfo.Opaque         = aPipelineSpecification.mOpaque;
         lCreateInfo.IsTwoSided     = aPipelineSpecification.mIsTwoSided;
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
-        lCreateInfo.VertexShader   = "Shaders\\Deferred\\MRT.vert.spv";
-        lCreateInfo.FragmentShader = "Shaders\\Deferred\\MRT.frag.spv";
+        lCreateInfo.VertexShader   = "Shaders\\Deferred\\MRT.vert";
+        lCreateInfo.FragmentShader = "Shaders\\Deferred\\MRT.frag";
         lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
@@ -180,8 +180,8 @@ namespace SE::Core
     {
         ParticleRendererCreateInfo lCreateInfo;
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
-        lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
-        lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
+        lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert";
+        lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag";
         lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
@@ -191,8 +191,8 @@ namespace SE::Core
     {
         ParticleRendererCreateInfo lCreateInfo;
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
-        lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
-        lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
+        lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert";
+        lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag";
         lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;

@@ -23,8 +23,8 @@ namespace SE::Graphics
         SceneRenderPipelineCreateInfo lCreateInfo{};
         lCreateInfo.IsTwoSided     = true;
         lCreateInfo.LineWidth      = aCreateInfo.LineWidth;
-        lCreateInfo.VertexShader   = "Shaders/Unlit.vert.spv";
-        lCreateInfo.FragmentShader = "Shaders/Unlit.frag.spv";
+        lCreateInfo.VertexShader   = "Shaders/Unlit.vert";
+        lCreateInfo.FragmentShader = "Shaders/Unlit.frag";
         lCreateInfo.RenderPass     = aCreateInfo.RenderPass;
 
         Initialize( lCreateInfo );

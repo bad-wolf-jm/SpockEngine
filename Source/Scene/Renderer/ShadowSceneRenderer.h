@@ -107,7 +107,7 @@ namespace SE::Core
         std::vector<Ref<ISampler2D>>     mDirectionalShadowMapSamplers         = {};
         std::vector<Ref<IGraphicBuffer>> mDirectionalShadowCameraUniformBuffer = {};
         std::vector<Ref<IDescriptorSet>> mDirectionalShadowSceneDescriptors    = {};
-        Ref<ShadowMeshRenderer>          mRenderPipeline{};
+        Ref<ShadowMeshRenderer>          mRenderPipeline = nullptr;
 
         std::vector<Ref<IRenderContext>> mSpotlightShadowMapRenderContext    = {};
         std::vector<Ref<ISampler2D>>     mSpotlightShadowMapSamplers         = {};
@@ -118,7 +118,7 @@ namespace SE::Core
         std::vector<Ref<ISamplerCubeMap>>               mPointLightShadowMapSamplers          = {};
         std::vector<std::array<Ref<IGraphicBuffer>, 6>> mPointLightsShadowCameraUniformBuffer = {};
         std::vector<std::array<Ref<IDescriptorSet>, 6>> mPointLightsShadowSceneDescriptors    = {};
-        Ref<OmniShadowMeshRenderer>                     mOmniRenderPipeline{};
+        Ref<OmniShadowMeshRenderer>                     mOmniRenderPipeline = nullptr;
 
         Ref<IRenderTarget>  mGeometryRenderTarget = nullptr;
         Ref<IRenderContext> mGeometryContext{};

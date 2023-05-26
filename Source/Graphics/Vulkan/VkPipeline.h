@@ -61,6 +61,8 @@ namespace SE::Graphics
          */
         ShaderModule( Ref<VkGraphicContext> mContext, std::string aFilePaths, eShaderStageTypeFlags aShaderType );
 
+        ShaderModule( Ref<VkGraphicContext> mContext, std::vector<uint32_t> aShaderCode, eShaderStageTypeFlags aShaderType );
+
         ~ShaderModule() = default;
 
         /** @brief Retrieves the internal Vulkan shader stage creation structure

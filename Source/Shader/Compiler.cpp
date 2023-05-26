@@ -1,5 +1,7 @@
 #include "Compiler.h"
 
+#include "Core/Logging.h"
+
 #include <iterator>
 
 #include "glslang/Include/glslang_c_interface.h"
@@ -8,6 +10,58 @@
 
 namespace SE::Graphics
 {
+    // typedef struct glsl_include_result_s
+    // {
+    //     /* Header file name or NULL if inclusion failed */
+    //     const char *header_name;
+
+    //     /* Header contents or NULL */
+    //     const char *header_data;
+    //     size_t      header_length;
+
+    // } glsl_include_result_t;
+    // C:\GitLab\SpockEngine\Source\Scene\Renderer\Shaders
+
+    static std::tuple<char *, size_t> ReadFile( const char *header_name )
+    {
+        auto lFullPath = fmt::format("C:\\GitLab\\SpockEngine\\Source\\Scene\\Renderer\\Shaders\\{}", header_name);
+        std::ifstream lFileObject( lFullPath, std::ios::ate | std::ios::binary );
+
+        if( !lFileObject.is_open() ) throw std::runtime_error( "failed to open file!" );
+
+        size_t            lFileSize = (size_t)lFileObject.tellg();
+        std::vector<char> lBuffer( lFileSize );
+
+        lFileObject.seekg( 0 );
+        lFileObject.read( lBuffer.data(), lFileSize );
+        lFileObject.close();
+
+        char *lResult = (char*)malloc( lFileSize );
+
+        memcpy( lResult, lBuffer.data(), lFileSize );
+        return { lResult, lFileSize };
+    }
+
+    static glsl_include_result_t *IncludeLocalFile( void *ctx, const char *header_name, const char *includer_name,
+                                                    size_t include_depth )
+    {
+        auto const [lData, lSize] = ReadFile( header_name );
+
+        return new glsl_include_result_s{ header_name, lData, lSize };
+    }
+
+    /* Callback for system file inclusion */
+    static glsl_include_result_t *IncludeSystemFile( void *ctx, const char *header_name, const char *includer_name,
+                                                     size_t include_depth )
+    {
+        auto const [lData, lSize] = ReadFile( header_name );
+
+        return new glsl_include_result_s{ header_name, lData, lSize };
+    }
+
+    /* Callback for include result destruction */
+    static int FreeIncludeResult( void *ctx, glsl_include_result_t *result ) { free( (void*)result->header_data ); return 0;}
+
     void Compile( eShaderStageTypeFlags aShaderStage, std::string const &aCode, std::vector<uint32_t> &aOutput )
     {
         glslang_input_t lInputDescription{};
@@ -24,18 +78,22 @@ namespace SE::Graphics
         default: lInputDescription.stage = GLSLANG_STAGE_VERTEX; break;
         }
 
-        lInputDescription.stage                             = GLSLANG_STAGE_VERTEX;
+        // lInputDescription.stage                             = GLSLANG_STAGE_VERTEX;
         lInputDescription.client                            = GLSLANG_CLIENT_VULKAN;
         lInputDescription.client_version                    = GLSLANG_TARGET_VULKAN_1_1;
         lInputDescription.target_language                   = GLSLANG_TARGET_SPV;
         lInputDescription.target_language_version           = GLSLANG_TARGET_SPV_1_3;
         lInputDescription.code                              = aCode.c_str();
-        lInputDescription.default_version                   = 100;
+        lInputDescription.default_version                   = 460;
         lInputDescription.default_profile                   = GLSLANG_NO_PROFILE;
         lInputDescription.force_default_version_and_profile = false;
         lInputDescription.forward_compatible                = false;
         lInputDescription.messages                          = GLSLANG_MSG_DEFAULT_BIT;
         lInputDescription.resource                          = glslang_default_resource();
+
+        lInputDescription.callbacks.include_system      = IncludeSystemFile;
+        lInputDescription.callbacks.include_local       = IncludeLocalFile;
+        lInputDescription.callbacks.free_include_result = FreeIncludeResult;
 
         glslang_initialize_process();
 
@@ -43,12 +101,14 @@ namespace SE::Graphics
 
         if( !glslang_shader_preprocess( lNewShader, &lInputDescription ) )
         {
-            // use glslang_shader_get_info_log() and glslang_shader_get_info_debug_log()
+            SE::Logging::Info( "{}", glslang_shader_get_info_log( lNewShader ) );
+            SE::Logging::Info( "{}", glslang_shader_get_info_debug_log( lNewShader ) );
         }
 
         if( !glslang_shader_parse( lNewShader, &lInputDescription ) )
         {
-            // use glslang_shader_get_info_log() and glslang_shader_get_info_debug_log()
+            SE::Logging::Info( "{}", glslang_shader_get_info_log( lNewShader ) );
+            SE::Logging::Info( "{}", glslang_shader_get_info_debug_log( lNewShader ) );
         }
 
         glslang_program_t *lNewProgram = glslang_program_create();
@@ -56,7 +116,8 @@ namespace SE::Graphics
 
         if( !glslang_program_link( lNewProgram, GLSLANG_MSG_SPV_RULES_BIT | GLSLANG_MSG_VULKAN_RULES_BIT ) )
         {
-            // use glslang_program_get_info_log() and glslang_program_get_info_debug_log();
+            SE::Logging::Info( "{}", glslang_program_get_info_log( lNewProgram ) );
+            SE::Logging::Info( "{}", glslang_program_get_info_debug_log( lNewProgram ) );
         }
 
         glslang_program_SPIRV_generate( lNewProgram, lInputDescription.stage );

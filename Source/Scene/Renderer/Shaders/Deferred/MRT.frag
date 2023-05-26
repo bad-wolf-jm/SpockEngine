@@ -1,5 +1,6 @@
 #version 460
 #extension GL_EXT_nonuniform_qualifier : enable
+#extension GL_GOOGLE_include_directive : require
 
 layout( location = 0 ) in vec3 inWorldPos;
 layout( location = 1 ) in vec3 inNormal;
@@ -101,7 +102,7 @@ layout( location = 4 ) out float outObjectID;
 
 const float c_MinRoughness = 0.04;
 
-#include "../Common/GetNormalFromMap.glsl"
+#include "Common/GetNormalFromMap.glsl"
 
 struct MaterialInputs
 {

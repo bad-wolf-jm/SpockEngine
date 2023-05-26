@@ -73,9 +73,9 @@ namespace SE::Core
 
         mPipeline->SetCulling( eFaceCulling::NONE );
         mPipeline->SetDepthParameters( false, false, eDepthCompareOperation::ALWAYS );
-        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders/Deferred/DeferredLightingMSAA.vert.spv" ),
+        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders/Deferred/DeferredLightingMSAA.vert" ),
                               "main" );
-        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders/Deferred/DeferredLightingMSAA.frag.spv" ),
+        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders/Deferred/DeferredLightingMSAA.frag" ),
                               "main" );
 
         CameraSetLayout            = GetCameraSetLayout( mGraphicContext );
