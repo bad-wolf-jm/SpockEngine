@@ -51,6 +51,7 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/Components/ProgressBar.cpp
     UI/Components/DropdownButton.cpp
     UI/Components/TreeView.cpp
+    UI/Components/ColorButton.cpp
     UI/Layouts/BoxLayout.cpp
     UI/Layouts/ZLayout.cpp
     UI/Layouts/Splitter.cpp

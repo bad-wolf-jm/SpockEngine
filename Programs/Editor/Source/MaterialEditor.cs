@@ -69,6 +69,8 @@ namespace SEEditor
             // lInfoLayout.Add(lWrapping, 30.0f, false, true);
 
             Add(lInfoLayout, true, true);
+            Add(new UIColorButton(), 30, true, true);
+
             mTexturePreview.Size = new Math.vec2(35, 35);
         }
 
@@ -107,9 +109,6 @@ namespace SEEditor
 
             var lLabel10 = new UILabel("Line width");
             mMainLayout.Add(lLabel10, 30.0f, false, true);
-
-            var lLabel11 = new UILabel("Is two sided");
-            mMainLayout.Add(lLabel11, 30.0f, false, true);
 
             var lLayout2 = new UIBoxLayout(eBoxLayoutOrientation.HORIZONTAL);
             var lLabel12 = new UILabel("Culling");

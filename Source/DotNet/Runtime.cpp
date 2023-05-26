@@ -39,6 +39,7 @@
 #include "UI/Components/TextToggleButton.h"
 #include "UI/Components/TreeView.h"
 #include "UI/Components/Workspace.h"
+#include "UI/Components/ColorButton.h"
 
 #include "UI/UI.h"
 
@@ -669,6 +670,11 @@ namespace SE::Core
         ICall( "UITreeViewNode::UITreeViewNode_SetText", UITreeViewNode::UITreeViewNode_SetText );
         ICall( "UITreeViewNode::UITreeViewNode_SetTextColor", UITreeViewNode::UITreeViewNode_SetTextColor );
         ICall( "UITreeViewNode::UITreeViewNode_Add", UITreeViewNode::UITreeViewNode_Add );
+
+
+        ICall( "UIColorButton::UIColorButton_Create", UIColorButton::UIColorButton_Create );
+        ICall( "UIColorButton::UIColorButton_Destroy", UIColorButton::UIColorButton_Destroy );
+
     }
 
 } // namespace SE::Core
