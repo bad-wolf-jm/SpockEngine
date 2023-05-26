@@ -49,7 +49,7 @@ namespace SE::Graphics
     static std::vector<uint32_t> CompileShaderSources( std::string FilePaths, eShaderStageTypeFlags aShaderType )
     {
         SE::Logging::Info("Compiling shader: '{}'", FilePaths);
-        
+
         if( IsSPIRV( FilePaths ) ) return LoadShaderModuleBytecode( FilePaths );
 
         auto        lProgram       = ReadFile( FilePaths );
@@ -209,7 +209,6 @@ namespace SE::Graphics
             if( aPushConstantRanges[i].mShaderStages & eShaderStageTypeFlags::VERTEX )
                 lPushConstant.stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
 
-            // lPushConstant.stageFlags = (VkShaderStageFlags)aPushConstantRanges[i].mShaderStages;
             lPushConstantRanges[i] = lPushConstant;
         }
 

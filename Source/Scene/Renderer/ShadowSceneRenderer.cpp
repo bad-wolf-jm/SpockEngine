@@ -166,6 +166,8 @@ namespace SE::Core
 
         if( mDirectionalLights.size() != mDirectionalShadowMapRenderContext.size() )
         {
+            mRenderPipeline = nullptr;
+
             mDirectionalShadowMapRenderContext.clear();
             mDirectionalShadowMapSamplers.clear();
             for( uint32_t i = 0; i < mDirectionalLights.size(); i++ )
@@ -191,6 +193,8 @@ namespace SE::Core
 
         if( mSpotlights.size() != mSpotlightShadowMapRenderContext.size() )
         {
+            mOmniRenderPipeline = nullptr;
+            
             mSpotlightShadowMapRenderContext.clear();
             mSpotlightShadowMapSamplers.clear();
 
