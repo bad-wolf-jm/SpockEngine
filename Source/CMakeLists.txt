@@ -180,8 +180,8 @@ function(add_shader TARGET SHADER)
     target_sources(${TARGET} PRIVATE ${CURRENT_OUTPUT_PATH})
 endfunction(add_shader)
 
-add_shader(LTSimulationEngineRuntime "ui_shader.vert")
-add_shader(LTSimulationEngineRuntime "ui_shader.frag")
+# add_shader(LTSimulationEngineRuntime "ui_shader.vert")
+# add_shader(LTSimulationEngineRuntime "ui_shader.frag")
 
 set(MONO_PATH "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug")
 

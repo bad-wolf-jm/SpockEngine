@@ -55,8 +55,8 @@ namespace SE::Core
         lCreateInfo.Opaque         = ( aPipelineSpecification.Type == eMaterialType::Opaque );
         lCreateInfo.IsTwoSided     = aPipelineSpecification.IsTwoSided;
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
-        lCreateInfo.VertexShader   = "Shaders\\PBRMeshShader.vert.spv";
-        lCreateInfo.FragmentShader = "Shaders\\PBRMeshShader.frag.spv";
+        lCreateInfo.VertexShader   = "Shaders\\PBRMeshShader.vert";
+        lCreateInfo.FragmentShader = "Shaders\\PBRMeshShader.frag";
         lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
@@ -69,8 +69,8 @@ namespace SE::Core
         lCreateInfo.Opaque         = aPipelineSpecification.mOpaque;
         lCreateInfo.IsTwoSided     = aPipelineSpecification.mIsTwoSided;
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
-        lCreateInfo.VertexShader   = "Shaders\\PBRMeshShader.vert.spv";
-        lCreateInfo.FragmentShader = "Shaders\\PBRMeshShader.frag.spv";
+        lCreateInfo.VertexShader   = "Shaders\\PBRMeshShader.vert";
+        lCreateInfo.FragmentShader = "Shaders\\PBRMeshShader.frag";
         lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
@@ -141,14 +141,14 @@ namespace SE::Core
         mShadowSceneRenderer    = New<ShadowSceneRenderer>( mGraphicContext );
 
         EffectProcessorCreateInfo lEffectProcessorCreateInfo{};
-        lEffectProcessorCreateInfo.mVertexShader   = "Shaders/fxaa.vert.spv";
-        lEffectProcessorCreateInfo.mFragmentShader = "Shaders/fxaa.frag.spv";
+        lEffectProcessorCreateInfo.mVertexShader   = "Shaders/fxaa.vert";
+        lEffectProcessorCreateInfo.mFragmentShader = "Shaders/fxaa.frag";
         lEffectProcessorCreateInfo.RenderPass      = mFxaaContext; //->GetRenderPass();
         mFxaaRenderer                              = New<EffectProcessor>( mGraphicContext, mFxaaContext, lEffectProcessorCreateInfo );
 
         EffectProcessorCreateInfo lCopyCreateInfo{};
-        lCopyCreateInfo.mVertexShader   = "Shaders/fxaa.vert.spv";
-        lCopyCreateInfo.mFragmentShader = "Shaders/copy.frag.spv";
+        lCopyCreateInfo.mVertexShader   = "Shaders/fxaa.vert";
+        lCopyCreateInfo.mFragmentShader = "Shaders/copy.frag";
         lCopyCreateInfo.RenderPass      = mFxaaContext; //->GetRenderPass();
         mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lCopyCreateInfo );
     }
@@ -202,8 +202,8 @@ namespace SE::Core
     {
         ParticleRendererCreateInfo lCreateInfo;
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
-        lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
-        lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
+        lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert";
+        lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag";
         lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
@@ -213,8 +213,8 @@ namespace SE::Core
     {
         ParticleRendererCreateInfo lCreateInfo;
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
-        lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert.spv";
-        lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag.spv";
+        lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert";
+        lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag";
         lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
