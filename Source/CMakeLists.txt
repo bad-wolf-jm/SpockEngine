@@ -52,6 +52,7 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/Components/DropdownButton.cpp
     UI/Components/TreeView.cpp
     UI/Widgets/FileTree.cpp
+    UI/Components/ColorButton.cpp
     UI/Layouts/BoxLayout.cpp
     UI/Layouts/ZLayout.cpp
     UI/Layouts/Splitter.cpp
