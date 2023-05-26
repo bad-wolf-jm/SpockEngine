@@ -70,6 +70,7 @@ namespace SEEditor
 
             Add(lInfoLayout, true, true);
             Add(new UIColorButton(), 30, true, true);
+            Add(new UISlider(), true, true);
 
             mTexturePreview.Size = new Math.vec2(35, 35);
         }

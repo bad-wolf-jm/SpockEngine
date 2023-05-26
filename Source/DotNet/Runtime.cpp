@@ -22,6 +22,8 @@
 #include "UI/Components/BaseImage.h"
 #include "UI/Components/Button.h"
 #include "UI/Components/CheckBox.h"
+#include "UI/Components/ColorButton.h"
+#include "UI/Components/Slider.h"
 #include "UI/Components/ComboBox.h"
 #include "UI/Components/Component.h"
 #include "UI/Components/DropdownButton.h"
@@ -39,7 +41,6 @@
 #include "UI/Components/TextToggleButton.h"
 #include "UI/Components/TreeView.h"
 #include "UI/Components/Workspace.h"
-#include "UI/Components/ColorButton.h"
 
 #include "UI/UI.h"
 
@@ -671,10 +672,11 @@ namespace SE::Core
         ICall( "UITreeViewNode::UITreeViewNode_SetTextColor", UITreeViewNode::UITreeViewNode_SetTextColor );
         ICall( "UITreeViewNode::UITreeViewNode_Add", UITreeViewNode::UITreeViewNode_Add );
 
-
         ICall( "UIColorButton::UIColorButton_Create", UIColorButton::UIColorButton_Create );
         ICall( "UIColorButton::UIColorButton_Destroy", UIColorButton::UIColorButton_Destroy );
 
+        ICall( "UISlider::UISlider_Create", UISlider::UISlider_Create );
+        ICall( "UISlider::UISlider_Destroy", UISlider::UISlider_Destroy );
     }
 
 } // namespace SE::Core
