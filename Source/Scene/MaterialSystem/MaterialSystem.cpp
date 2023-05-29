@@ -9,7 +9,6 @@ namespace SE::Core
         : mGraphicContext{ aGraphicContext }
         , mDirty{ true }
     {
-        Clear();
 
         // The material system should be bound to a descriptor set as follows:
         // layout( set = X, binding = 1 ) readonly buffer sShaderMaterials Materials[];
@@ -18,6 +17,9 @@ namespace SE::Core
         // lTextureBindLayout.Bindings = {
         //     DescriptorBindingInfo{ 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } },
         //     DescriptorBindingInfo{ 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } } };
+        mTextureManager = New<TextureManager>( aGraphicContext );
+
+        Clear();
 
         mShaderMaterials =
             CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, true, true, true, sizeof( sShaderMaterial ) );
@@ -27,22 +29,24 @@ namespace SE::Core
         mTextureDescriptorLayout->AddBinding( 1, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
         mTextureDescriptorLayout->Build();
 
-        mTextureDescriptorSet = mTextureDescriptorLayout->Allocate(1024);
+        mTextureDescriptorSet = mTextureDescriptorLayout->Allocate( 1024 );
 
         mTextureDescriptorSet->Write( mShaderMaterials, false, 0, sizeof( sShaderMaterial ), 0 );
     }
 
     void MaterialSystem::Wipe()
     {
-        mMaterials.clear();
 
-        mCudaTextureBuffer.Dispose();
+        mMaterials.clear();
+        mTextureManager->Clear();
+        // mCudaTextureBuffer.Dispose();
     }
 
     void MaterialSystem::Clear()
     {
         mMaterials.clear();
-        mCudaTextureBuffer.Dispose();
+        mTextureManager->Clear();
+        // mCudaTextureBuffer.Dispose();
 
         sImageData lImageDataStruct{};
         lImageDataStruct.mFormat   = eColorFormat::RGBA8_UNORM;
@@ -86,33 +90,22 @@ namespace SE::Core
 
     uint32_t MaterialSystem::CreateTexture( fs::path aFilePath, sTextureSamplingInfo aSamplingInfo )
     {
-        sTextureCreateInfo lTextureCreateInfo{};
-
-        TextureData2D    lTextureImage( lTextureCreateInfo, aFilePath );
-        TextureSampler2D lTextureSampler( lTextureImage, aSamplingInfo );
-
-        return CreateTexture( lTextureImage, lTextureSampler );
+        return mTextureManager->CreateTexture( aFilePath, aSamplingInfo );
     }
 
     uint32_t MaterialSystem::CreateTexture( Ref<TextureData2D> aTexture, Ref<TextureSampler2D> aTextureSampler )
     {
         if( !aTexture || !aTextureSampler ) return 0;
 
-        return CreateTexture( *aTexture, *aTextureSampler );
+        return mTextureManager->CreateTexture( aTexture, aTextureSampler );
     }
 
     uint32_t MaterialSystem::CreateTexture( TextureData2D &aTexture, TextureSampler2D &aTextureSampler )
     {
-        auto lNewInteropTexture = CreateTexture2D( mGraphicContext, aTexture, 1, false, false, true );
-        auto lNewInteropSampler = CreateSampler2D( mGraphicContext, lNewInteropTexture, aTextureSampler.mSamplingSpec );
-        mTextureSamplers.push_back( lNewInteropSampler );
-
-        mDirty = true;
-
-        return mTextureSamplers.size() - 1;
+        return mTextureManager->CreateTexture( aTexture, aTextureSampler );
     }
 
-    Ref<ISampler2D> MaterialSystem::GetTextureByID( uint32_t aID ) { return mTextureSamplers[aID]; }
+    Ref<ISampler2D> MaterialSystem::GetTextureByID( uint32_t aID ) { return mTextureManager->GetTextureByID( aID ); }
 
     sMaterial &MaterialSystem::CreateMaterial()
     {
@@ -178,6 +171,8 @@ namespace SE::Core
 
     void MaterialSystem::UpdateDescriptors()
     {
+        mTextureManager->UpdateDescriptors();
+
         if( !mDirty ) return;
 
         if( mShaderMaterials->SizeAs<sShaderMaterial>() < mMaterials.size() )
@@ -185,15 +180,6 @@ namespace SE::Core
             auto lBufferSize = std::max( mMaterials.size(), static_cast<size_t>( 1 ) ) * sizeof( sShaderMaterial );
             mShaderMaterials = CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, false, true, true, lBufferSize );
             mTextureDescriptorSet->Write( mShaderMaterials, false, 0, lBufferSize, 0 );
-        }
-
-        if( mCudaTextureBuffer.SizeAs<Cuda::TextureSampler2D::DeviceData>() < mTextureSamplers.size() )
-        {
-            mCudaTextureBuffer.Dispose();
-            std::vector<Cuda::TextureSampler2D::DeviceData> lTextureDeviceData{};
-            for( auto const &lCudaTextureSampler : mTextureSamplers ) lTextureDeviceData.push_back( lCudaTextureSampler->mDeviceData );
-
-            mCudaTextureBuffer = Cuda::GPUMemory::Create( lTextureDeviceData );
         }
 
         if( mMaterials.size() > 0 )
@@ -236,7 +222,7 @@ namespace SE::Core
             mShaderMaterials->Upload( lMaterialData );
         }
 
-        mTextureDescriptorSet->Write( mTextureSamplers, 1 );
+        mTextureDescriptorSet->Write( mTextureManager->GetTextures(), 1 );
 
         mDirty = false;
     }
