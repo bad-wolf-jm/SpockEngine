@@ -123,6 +123,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/Scene.cpp
     Scene/VertexTransform.cu
     Scene/MaterialSystem/MaterialSystem.cpp
+    Scene/MaterialSystem/TextureManager.cpp
     Scene/Renderer/MeshRenderer.cpp
     Scene/Renderer/CoordinateGridRenderer.cpp
     Scene/Renderer/EffectProcessor.cpp
