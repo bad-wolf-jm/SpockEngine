@@ -130,14 +130,14 @@ namespace SE::Core
         mShadowSceneRenderer    = New<ShadowSceneRenderer>( mGraphicContext );
 
         EffectProcessorCreateInfo lEffectProcessorCreateInfo{};
-        lEffectProcessorCreateInfo.mVertexShader   = "Shaders/fxaa.vert.spv";
-        lEffectProcessorCreateInfo.mFragmentShader = "Shaders/fxaa.frag.spv";
+        lEffectProcessorCreateInfo.mVertexShader   = "Shaders/fxaa.vert";
+        lEffectProcessorCreateInfo.mFragmentShader = "Shaders/fxaa.frag";
         lEffectProcessorCreateInfo.RenderPass      = mFxaaContext;
         mFxaaRenderer                              = New<EffectProcessor>( mGraphicContext, mFxaaContext, lEffectProcessorCreateInfo );
 
         EffectProcessorCreateInfo lCopyCreateInfo{};
-        lCopyCreateInfo.mVertexShader   = "Shaders/fxaa.vert.spv";
-        lCopyCreateInfo.mFragmentShader = "Shaders/copy.frag.spv";
+        lCopyCreateInfo.mVertexShader   = "Shaders/fxaa.vert";
+        lCopyCreateInfo.mFragmentShader = "Shaders/copy.frag";
         lCopyCreateInfo.RenderPass      = mFxaaContext;
         mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lCopyCreateInfo );
     }
