@@ -57,13 +57,15 @@ namespace SE::Graphics
             fs::path lCacheShaderName = lShaderPath / fmt::format( "{}.spv", lShaderName.string() );
 
             Ref<ShaderModule> lUIVertexShader{};
-            std::filesystem::file_time_type lCachedFileTime = std::filesystem::last_write_time(lCacheShaderName);
-            std::filesystem::file_time_type lShaderSourceFileTime = std::filesystem::last_write_time(lShader.mPath);
 
-            if( fs::exists( lCacheShaderName ) && (lCachedFileTime.time_since_epoch().count() > lShaderSourceFileTime.time_since_epoch().count()) )
+            if( fs::exists( lCacheShaderName ) )
             {
-                lUIVertexShader =
-                    New<ShaderModule>( Cast<VkGraphicContext>( mGraphicContext ), lCacheShaderName.string(), lShader.mShaderType );
+                std::filesystem::file_time_type lCachedFileTime       = std::filesystem::last_write_time( lCacheShaderName );
+                std::filesystem::file_time_type lShaderSourceFileTime = std::filesystem::last_write_time( lShader.mPath );
+
+                if( lCachedFileTime.time_since_epoch().count() > lShaderSourceFileTime.time_since_epoch().count() )
+                    lUIVertexShader =
+                        New<ShaderModule>( Cast<VkGraphicContext>( mGraphicContext ), lCacheShaderName.string(), lShader.mShaderType );
             }
             else
             {
@@ -74,7 +76,7 @@ namespace SE::Graphics
                 Compile( lShader.mShaderType, lProgramString, lByteCode );
 
                 std::ofstream lFileObject( lCacheShaderName, std::ios::out | std::ios::binary );
-                lFileObject.write( (char*)lByteCode.data(), lByteCode.size() * sizeof(uint32_t) );
+                lFileObject.write( (char *)lByteCode.data(), lByteCode.size() * sizeof( uint32_t ) );
                 lFileObject.close();
 
                 lUIVertexShader =

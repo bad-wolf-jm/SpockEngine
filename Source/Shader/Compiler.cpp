@@ -10,22 +10,28 @@
 
 namespace SE::Graphics
 {
-    // typedef struct glsl_include_result_s
-    // {
-    //     /* Header file name or NULL if inclusion failed */
-    //     const char *header_name;
+    static fs::path              gShaderCache       = "";
+    static std::vector<fs::path> gShaderIncludePath = {};
 
-    //     /* Header contents or NULL */
-    //     const char *header_data;
-    //     size_t      header_length;
-
-    // } glsl_include_result_t;
-    // C:\GitLab\SpockEngine\Source\Scene\Renderer\Shaders
+    void SetShaderCacheFolder( std::string const &aPath ) { gShaderCache = aPath; }
+    void AddShaderIncludePath( std::string const &aPath ) { gShaderIncludePath.push_back( aPath ); }
 
     static std::tuple<char *, size_t> ReadFile( const char *header_name )
     {
-        auto lFullPath = fmt::format("C:\\GitLab\\SpockEngine\\Source\\Scene\\Renderer\\Shaders\\{}", header_name);
-        std::ifstream lFileObject( lFullPath, std::ios::ate | std::ios::binary );
+        std::string lHeaderPath = "";
+        for( auto const &lIncludeFolder : gShaderIncludePath )
+        {
+            if( fs::exists( lIncludeFolder / std::string( header_name ) ) )
+            {
+                lHeaderPath = ( lIncludeFolder / std::string( header_name ) ).string();
+
+                break;
+            }
+        }
+
+        if( lHeaderPath.empty() ) return { nullptr, 0 };
+
+        std::ifstream lFileObject( lHeaderPath, std::ios::ate | std::ios::binary );
 
         if( !lFileObject.is_open() ) throw std::runtime_error( "failed to open file!" );
 
@@ -36,7 +42,7 @@ namespace SE::Graphics
         lFileObject.read( lBuffer.data(), lFileSize );
         lFileObject.close();
 
-        char *lResult = (char*)malloc( lFileSize );
+        char *lResult = (char *)malloc( lFileSize );
 
         memcpy( lResult, lBuffer.data(), lFileSize );
         return { lResult, lFileSize };
@@ -60,7 +66,11 @@ namespace SE::Graphics
     }
 
     /* Callback for include result destruction */
-    static int FreeIncludeResult( void *ctx, glsl_include_result_t *result ) { free( (void*)result->header_data ); return 0;}
+    static int FreeIncludeResult( void *ctx, glsl_include_result_t *result )
+    {
+        free( (void *)result->header_data );
+        return 0;
+    }
 
     void Compile( eShaderStageTypeFlags aShaderStage, std::string const &aCode, std::vector<uint32_t> &aOutput )
     {
@@ -78,7 +88,6 @@ namespace SE::Graphics
         default: lInputDescription.stage = GLSLANG_STAGE_VERTEX; break;
         }
 
-        // lInputDescription.stage                             = GLSLANG_STAGE_VERTEX;
         lInputDescription.client                            = GLSLANG_CLIENT_VULKAN;
         lInputDescription.client_version                    = GLSLANG_TARGET_VULKAN_1_1;
         lInputDescription.target_language                   = GLSLANG_TARGET_SPV;
