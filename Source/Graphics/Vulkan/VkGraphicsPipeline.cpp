@@ -32,6 +32,19 @@ namespace SE::Graphics
         return lBuffer;
     }
 
+    static void CompileAndCache( eShaderStageTypeFlags aShaderType, fs::path aShaderPath, fs::path aCachePath )
+    {
+        auto        lProgram       = ReadFile( aShaderPath.string() );
+        std::string lProgramString = std::string( lProgram.begin(), lProgram.end() );
+
+        std::vector<uint32_t> lByteCode( 0 );
+        Compile( aShaderType, lProgramString, lByteCode );
+
+        std::ofstream lFileObject( aCachePath, std::ios::out | std::ios::binary );
+        lFileObject.write( (char *)lByteCode.data(), lByteCode.size() * sizeof( uint32_t ) );
+        lFileObject.close();
+    }
+
     void VkGraphicsPipeline::Build()
     {
         for( uint32_t i = 0; i < mDescriptorSets.size(); i++ )
@@ -58,30 +71,21 @@ namespace SE::Graphics
 
             Ref<ShaderModule> lUIVertexShader{};
 
-            if( fs::exists( lCacheShaderName ) )
+            if( !fs::exists( lCacheShaderName ) )
+            {
+                CompileAndCache( lShader.mShaderType, lShader.mPath, lCacheShaderName );
+            }
+            else
             {
                 std::filesystem::file_time_type lCachedFileTime       = std::filesystem::last_write_time( lCacheShaderName );
                 std::filesystem::file_time_type lShaderSourceFileTime = std::filesystem::last_write_time( lShader.mPath );
 
-                if( lCachedFileTime.time_since_epoch().count() > lShaderSourceFileTime.time_since_epoch().count() )
-                    lUIVertexShader =
-                        New<ShaderModule>( Cast<VkGraphicContext>( mGraphicContext ), lCacheShaderName.string(), lShader.mShaderType );
+                if( lCachedFileTime.time_since_epoch().count() < lShaderSourceFileTime.time_since_epoch().count() )
+                    CompileAndCache( lShader.mShaderType, lShader.mPath, lCacheShaderName );
             }
-            else
-            {
-                auto        lProgram       = ReadFile( lShader.mPath.string() );
-                std::string lProgramString = std::string( lProgram.begin(), lProgram.end() );
 
-                std::vector<uint32_t> lByteCode( 0 );
-                Compile( lShader.mShaderType, lProgramString, lByteCode );
-
-                std::ofstream lFileObject( lCacheShaderName, std::ios::out | std::ios::binary );
-                lFileObject.write( (char *)lByteCode.data(), lByteCode.size() * sizeof( uint32_t ) );
-                lFileObject.close();
-
-                lUIVertexShader =
-                    New<ShaderModule>( Cast<VkGraphicContext>( mGraphicContext ), lCacheShaderName.string(), lShader.mShaderType );
-            }
+            lUIVertexShader =
+                New<ShaderModule>( Cast<VkGraphicContext>( mGraphicContext ), lCacheShaderName.string(), lShader.mShaderType );
 
             mShaders.push_back( sShader{ lUIVertexShader, lShader.mEntryPoint } );
         }
