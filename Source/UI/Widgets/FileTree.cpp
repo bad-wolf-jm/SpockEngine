@@ -12,6 +12,7 @@ namespace SE::Core
 {
     Ref<UIImage> mOpenFolder  = nullptr;
     Ref<UIImage> mCloseFolder = nullptr;
+    Ref<UIImage> mDefaultFile = nullptr;
 
     UIFileTreeNode::UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent, fs::path const &aPath, std::string const &aName )
         : UITreeViewNode( aTreeView, aParent )
@@ -20,29 +21,10 @@ namespace SE::Core
     {
         SetText( aName );
 
-        if (!aName.substr(0,1).compare(".") || !aName.substr(0,2).compare("__"))
-            SetTextColor(math::vec4{0.15,0.15,0.15,1.0});
-        
-        // mImage = New<UIStackLayout>();
-        // mImage->SetPadding( 0.0f );
+        if( !aName.substr( 0, 1 ).compare( "." ) || !aName.substr( 0, 2 ).compare( "__" ) )
+            SetTextColor( math::vec4{ 0.15, 0.15, 0.15, 1.0 } );
 
-        // mText = New<UILabel>( "" );
-        // mText->SetPadding( 0.0f );
-
-        // mIndicator = New<UIStackLayout>();
-        // mIndicator->SetPadding( 0.0f );
-
-        // mLayout = New<UIBoxLayout>( eBoxLayoutOrientation::HORIZONTAL );
-        // mLayout->SetSimple( true );
-        // mLayout->SetPadding( 0.0f );
-
-        // mText->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
-        // mLayout->Add( mImage.get(), 20.0f, false, true );
-        // mLayout->Add( mText.get(), true, true );
-        // mLayout->Add( mIndicator.get(), 20.0f, false, true );
-
-        // mImage->mIsVisible = false;
-        // mIndicator->mIsVisible = false;
+        if( IsLeaf() ) SetIcon( mDefaultFile.get() );
     }
 
     bool UIFileTreeNode::IsLeaf()
@@ -94,8 +76,11 @@ namespace SE::Core
     UIFileTree::UIFileTree()
     {
         SetIndent( 9.0f );
-        
+
         mRoot = new UIFileTreeNode( this, nullptr, "", "" );
+
+        if( mDefaultFile == nullptr )
+            mDefaultFile = New<UIImage>( "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\File.png", math::vec2{ 20, 20 } );
     }
 
     UIFileTreeNode *UIFileTree::Add( fs::path const &aPath ) { return ( (UIFileTreeNode *)mRoot )->Add( aPath ); }

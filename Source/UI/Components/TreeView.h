@@ -29,6 +29,8 @@ namespace SE::Core
       protected:
         ImGuiTreeNodeFlags mFlags;
 
+        UIImage* mIcon = nullptr;
+
         Ref<UIStackLayout> mImage  = nullptr;
         Ref<UIStackLayout> mIndicator = nullptr;
         Ref<UILabel>       mText   = nullptr;
@@ -51,6 +53,7 @@ namespace SE::Core
         bool IsOpen();
         bool RenderNode();
         void RenderArrow( ImDrawList *aDrawList, ImVec2 aPosition, ImU32 aColor, ImGuiDir aDirection, float aScale );
+        void RenderIcon( ImDrawList *aDrawList, ImVec2 aPosition );
         
         virtual bool IsLeaf();
 
