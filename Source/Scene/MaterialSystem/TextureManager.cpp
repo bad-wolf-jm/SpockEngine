@@ -44,11 +44,24 @@ namespace SE::Core
     {
         auto lNewInteropTexture = CreateTexture2D( mGraphicContext, aTexture, 1, false, false, true );
         auto lNewInteropSampler = CreateSampler2D( mGraphicContext, lNewInteropTexture, aTextureSampler.mSamplingSpec );
-        mTextureSamplers.push_back( lNewInteropSampler );
+
+        uint64_t lID = 0;
+        for (auto const& lSampler : mTextureSamplers)
+        {
+            if (lSampler == nullptr)
+                break;
+
+            lID++;
+        }
+
+        if (lID >= mTextureSamplers.size())
+            mTextureSamplers.push_back( lNewInteropSampler );
+        else
+            mTextureSamplers[lID] = lNewInteropSampler;
 
         mDirty = true;
 
-        return mTextureSamplers.size() - 1;
+        return lID;
     }
 
     Ref<ISampler2D> TextureManager::GetTextureByID( uint64_t aID ) { return mTextureSamplers[aID]; }
@@ -66,7 +79,7 @@ namespace SE::Core
             mCudaTextureBuffer = Cuda::GPUMemory::Create( lTextureDeviceData );
         }
 
-        mTextureDescriptorSet->Write( mTextureSamplers, 1 );
+        mTextureDescriptorSet->Write( mTextureSamplers, 0 );
 
         mDirty = false;
     }

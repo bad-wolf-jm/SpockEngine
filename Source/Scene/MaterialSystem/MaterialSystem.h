@@ -14,6 +14,8 @@
 
 #include "Core/CUDA/Array/CudaBuffer.h"
 
+#include "TextureManager.h"
+
 using namespace math::literals;
 
 #ifndef __CUDACC__
@@ -120,17 +122,19 @@ namespace SE::Core
         void Wipe();
 
         std::vector<sMaterial> const       &GetMaterialData() const { return mMaterials; }
-        std::vector<Ref<ISampler2D>> const &GetTextures() const { return mTextureSamplers; }
-        Cuda::GPUMemory const              &GetCudaTextures() const { return mCudaTextureBuffer; }
+        std::vector<Ref<ISampler2D>> const &GetTextures() const { return mTextureManager->GetTextures(); }
+        Cuda::GPUMemory const              &GetCudaTextures() const { return mTextureManager->GetCudaTextures(); }
         IGraphicBuffer const               &GetCudaMaterials() const { return *mShaderMaterials; }
 
       private:
         Ref<IGraphicContext> mGraphicContext;
 
-        std::vector<Ref<ISampler2D>> mTextureSamplers = {};
+        Ref<TextureManager> mTextureManager;
+
+        // std::vector<Ref<ISampler2D>> mTextureSamplers = {};
         std::vector<sMaterial>       mMaterials       = {};
 
-        Cuda::GPUMemory mCudaTextureBuffer{};
+        // Cuda::GPUMemory mCudaTextureBuffer{};
 
         Ref<IGraphicBuffer> mShaderMaterials = nullptr;
 
