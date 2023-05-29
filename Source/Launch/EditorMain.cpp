@@ -23,6 +23,7 @@
 #include "Graphics/Vulkan/VkGraphicContext.h"
 
 #include "Editor/BaseEditorApplication.h"
+#include "Shader/Compiler.h"
 
 #include "DotNet/Runtime.h"
 
@@ -266,8 +267,8 @@ int main( int argc, char **argv )
     if( !lApplicationName.empty() )
     {
         lApplicationConfigurationPath = lLocalConfigFolder / "SpockEngine" / "Config" / fmt::format( "{}.yaml", lApplicationName );
-        auto lApplicationAssembly =
-            fs::path( "C:\\GitLab\\SpockEngine\\Programs\\Build" ) / lApplicationName / "Debug" / fmt::format( "{}.dll", lApplicationName );
+        auto lApplicationAssembly     = fs::path( "C:\\GitLab\\SpockEngine\\Programs\\Build" ) / lApplicationName / "Debug" /
+                                    fmt::format( "{}.dll", lApplicationName );
         if( fs::exists( lApplicationAssembly ) ) DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
 
         if( !fs::exists( lApplicationConfigurationPath ) )
@@ -276,6 +277,8 @@ int main( int argc, char **argv )
 
     DotNetRuntime::ReloadAssemblies();
 
+    SE::Graphics::AddShaderIncludePath( "C:\\GitLab\\SpockEngine\\Source\\Scene\\Renderer\\Shaders" );
+
     SE::Editor::BaseEditorApplication lEditorApplication;
 
     if( !lApplicationName.empty() )
@@ -283,7 +286,6 @@ int main( int argc, char **argv )
     else
         lEditorApplication.Init();
 
-    
     lEditorApplication.mEditorWindow.mMaterialsPath = lProjectRoot / "Assets" / "Materials";
     lEditorApplication.mEditorWindow.mModelsPath    = lProjectRoot / "Assets" / "Models";
 
