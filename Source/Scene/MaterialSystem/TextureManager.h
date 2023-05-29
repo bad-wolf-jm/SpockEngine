@@ -17,6 +17,7 @@ namespace fs = std::filesystem;
 
 namespace SE::Core
 {
+#ifndef __CUDACC__
     class TextureManager
     {
       public:
@@ -51,4 +52,6 @@ namespace SE::Core
 
         bool mDirty = false;
     };
+#endif
+
 } // namespace SE::Core
