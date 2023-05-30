@@ -599,6 +599,7 @@ namespace SE::Core
         ICall( "UITreeView::UITreeView_Create", UITreeView::UITreeView_Create );
         ICall( "UITreeView::UITreeView_Destroy", UITreeView::UITreeView_Destroy );
         ICall( "UITreeView::UITreeView_SetIndent", UITreeView::UITreeView_SetIndent );
+        ICall( "UITreeView::UITreeView_SetIconSpacing", UITreeView::UITreeView_SetIconSpacing );
         ICall( "UITreeView::UITreeView_Add", UITreeView::UITreeView_Add );
 
         ICall( "UITreeViewNode::UITreeViewNode_Create", UITreeViewNode::UITreeViewNode_Create );

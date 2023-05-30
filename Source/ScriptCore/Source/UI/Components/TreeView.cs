@@ -79,8 +79,8 @@ namespace SpockEngine
 
         ~UITreeView() { if (!mDerived) UITreeView_Destroy(mInstance); }
 
-
         public void SetIndent(float aIndent) { UITreeView_SetIndent(mInstance, aIndent); }
+        public void SetIconSpacing(float aSpacing) { UITreeView_SetIconSpacing(mInstance, aSpacing); }
 
         List<UITreeViewNode> mChildren = new List<UITreeViewNode>();
         public UITreeViewNode Add()
@@ -99,6 +99,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UITreeView_SetIndent(ulong aInstance, float aIndent);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UITreeView_SetIconSpacing(ulong aInstance, float aSpacing);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UITreeView_Add(ulong aInstance);

@@ -73,10 +73,12 @@ namespace SE::Core
         UITreeView();
 
         void SetIndent(float aIndent);
+        void SetIconSpacing(float aSpacing);
         UITreeViewNode* Add();
 
         protected:
             float mIndent = 5.0f;
+            float mIconSpacing = 12.0f;
             UITreeViewNode* mRoot; 
 
       protected:
@@ -90,6 +92,7 @@ namespace SE::Core
         static void *UITreeView_Create();
         static void  UITreeView_Destroy( void *aInstance );
         static void  UITreeView_SetIndent( void *aInstance, float aIndent );
+        static void  UITreeView_SetIconSpacing( void *aInstance, float aSpacing );
         static void  *UITreeView_Add( void *aInstance );
 
         friend class UITreeViewNode;
