@@ -171,7 +171,7 @@ namespace SE::Core
         lFrameBoundingBox.Max.x = lWindow->WorkRect.Max.x;
         lFrameBoundingBox.Max.y = lWindow->DC.CursorPos.y + lFrameHeight;
 
-        const float lTextOffsetX = lImGuiContext.FontSize + lPadding.x * 2;
+        const float lTextOffsetX = lImGuiContext.FontSize + lPadding.x * 2 + mTreeView->mIconSpacing;
         const float lTextOffsetY = ImMax( lPadding.y, lWindow->DC.CurrLineTextBaseOffset );
         const float lTextWidth   = lImGuiContext.FontSize + ( lLabelSize.x > 0.0f ? lLabelSize.x + lPadding.x * 2 : 0.0f );
         ImVec2      lTextPosition( lWindow->DC.CursorPos.x + lTextOffsetX, lWindow->DC.CursorPos.y + lTextOffsetY );
@@ -456,6 +456,7 @@ namespace SE::Core
     ImVec2 UITreeView::RequiredSize() { return ImVec2{}; }
 
     void            UITreeView::SetIndent( float aIndent ) { mIndent = aIndent; }
+    void            UITreeView::SetIconSpacing( float aSpacing ) { mIconSpacing = aSpacing; }
     UITreeViewNode *UITreeView::Add() { return mRoot->Add(); }
 
     void UITreeView::DrawContent( ImVec2 aPosition, ImVec2 aSize )
@@ -478,6 +479,13 @@ namespace SE::Core
         auto lInstance = static_cast<UITreeView *>( aInstance );
 
         lInstance->SetIndent( aIndent );
+    }
+
+    void UITreeView::UITreeView_SetIconSpacing( void *aInstance, float aSpacing )
+    {
+        auto lInstance = static_cast<UITreeView *>( aInstance );
+
+        lInstance->SetIconSpacing( aSpacing );
     }
 
     void *UITreeView::UITreeView_Add( void *aInstance )
