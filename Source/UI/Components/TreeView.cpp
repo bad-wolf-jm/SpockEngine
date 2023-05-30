@@ -11,7 +11,7 @@ namespace SE::Core
     UITreeViewNode::UITreeViewNode( UITreeView *aTreeView, UITreeViewNode *aParent )
         : mTreeView{ aTreeView }
         , mParent{ aParent }
-        , mFlags{ ImGuiTreeNodeFlags_SpanFullWidth }
+        , mFlags{ ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_FramePadding }
     {
         mImage = New<UIStackLayout>();
         mImage->SetPadding( 0.0f );
@@ -37,7 +37,7 @@ namespace SE::Core
 
     void UITreeViewNode::PushStyles()
     {
-        ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2{ 0.0f, 0.0f } );
+        ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2{ 0.0f, 3.0f } );
         ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, ImVec2{ 0.0f, 0.0f } );
     }
 
@@ -51,10 +51,7 @@ namespace SE::Core
         return lNewChild;
     }
 
-    void UITreeViewNode::SetIcon( UIImage *aIcon )
-    {
-        mIcon = aIcon;
-    }
+    void UITreeViewNode::SetIcon( UIImage *aIcon ) { mIcon = aIcon; }
 
     void UITreeViewNode::SetIndicator( UIComponent *aIcon )
     {
@@ -306,14 +303,18 @@ namespace SE::Core
         if( !lNodeIsLeaf )
             RenderArrow(
                 lWindow->DrawList,
+
                 ImVec2( lTextPosition.x - lTextOffsetX + ( lTextOffsetX - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f,
-                        lTextPosition.y + ( lFrameHeight - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f ),
+                        lTextPosition.y +
+                            ( lFrameHeight - style.FramePadding.y - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f ),
                 lArrowColor, lNodeIsOpen ? ImGuiDir_Down : ImGuiDir_Right, 0.8f );
         else
             RenderIcon(
                 lWindow->DrawList,
+
                 ImVec2( lTextPosition.x - lTextOffsetX + ( lTextOffsetX - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f,
-                        lTextPosition.y + ( lFrameHeight - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f ) );
+                        lTextPosition.y +
+                            ( lFrameHeight - style.FramePadding.y - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f ) );
         ImVec2 lSize{ lWindow->WorkRect.Max.x - lWindow->WorkRect.Min.x, lFrameHeight };
 
         auto lNodePosition = ImGui::GetCursorPos() + ImVec2{ lTextOffsetX, -lFrameHeight };
@@ -359,7 +360,8 @@ namespace SE::Core
 
         if( mImage != nullptr )
         {
-            aDrawList->AddImage(mIcon->TextureID(), aPosition, aPosition + ImVec2{lHeight,lHeight}, ImVec2{0,0}, ImVec2{1,1});
+            aDrawList->AddImage( mIcon->TextureID(), aPosition, aPosition + ImVec2{ lHeight, lHeight }, ImVec2{ 0, 0 },
+                                 ImVec2{ 1, 1 } );
         }
     }
 
