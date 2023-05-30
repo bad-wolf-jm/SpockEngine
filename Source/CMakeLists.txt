@@ -292,6 +292,9 @@ target_link_libraries(LTSimulationEngineRuntime PRIVATE
     winmm
     version
     Bcrypt
+    glslang
+    SPIRV 
+    glslang-default-resource-limits
     ${MONO_PATH}/libmono-static-sgen.lib
     ${MONO_PATH}/mono-2.0-sgen.lib
     ${MONO_PATH}/MonoPosixHelper.lib
@@ -300,6 +303,10 @@ target_link_libraries(LTSimulationEngineRuntime PRIVATE
     ${MONO_PATH}/libmini-sgen.lib
     ${MONO_PATH}/libgcmonosgen.lib
     ${MONO_PATH}/eglib.lib
+    ${optix_LIBRARY}
+    ${CUDA_LIBRARIES}
+    ${CUDA_CUDA_LIBRARY}
+    CUDA::curand    
     wsock32
     ws2_32
     yaml-cpp
