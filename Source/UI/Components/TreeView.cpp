@@ -39,9 +39,15 @@ namespace SE::Core
     {
         ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2{ 0.0f, 3.0f } );
         ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, ImVec2{ 0.0f, 0.0f } );
+        ImGui::PushStyleColor( ImGuiCol_HeaderActive, ImVec4{ .025f, 0.025f, 0.025f, 1.0f } );
+        ImGui::PushStyleColor( ImGuiCol_HeaderHovered, ImVec4{ .025f, .025f, 0.025f, 1.0f } );
     }
 
-    void UITreeViewNode::PopStyles() { ImGui::PopStyleVar( 2 ); }
+    void UITreeViewNode::PopStyles()
+    {
+        ImGui::PopStyleVar( 2 );
+        ImGui::PopStyleColor( 2 );
+    }
 
     UITreeViewNode *UITreeViewNode::Add()
     {
