@@ -95,6 +95,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Vulkan/VkRenderPass.cpp
     Graphics/Vulkan/VkDescriptorSet.cpp
     Graphics/Vulkan/VkDescriptorSetLayout.cpp
+    Graphics/Vulkan/VkShaderProgram.cpp
 
     Graphics/Interface/IWindow.cpp
     Graphics/Interface/ITexture.cpp
@@ -110,6 +111,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Interface/ICommandBuffer.cpp
     Graphics/Interface/IDescriptorSet.cpp
     Graphics/Interface/IDescriptorSetLayout.cpp
+    Graphics/Interface/IShaderProgram.cpp
 
     OtdrEditor/OtdrWindow.cpp
     OtdrEditor/BaseOtdrApplication.cpp
