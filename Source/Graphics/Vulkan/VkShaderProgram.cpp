@@ -2,17 +2,25 @@
 
 #include "Core/Core.h"
 #include "Core/Memory.h"
-#include "Graphics/Vulkan/VkCoreMacros.h"
+
+#include "VkCoreMacros.h"
 
 #include "Core/Logging.h"
 #include "Shader/Compiler.h"
 
 namespace SE::Graphics
 {
-    VkShaderProgram::VkShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion )
-        : IShaderProgram( aGraphicContext, aShaderType, aVersion )
+    VkShaderProgram::VkShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+                        std::string const &aName, fs::path const &aCacheRoot )
+        : IShaderProgram( aGraphicContext, aShaderType, aVersion, aName, aCacheRoot )
     {
     }
 
-    void VkShaderProgram::Compile() { SE::Graphics::Compile( mShaderType, Program(), mCompiledByteCode ); }
+    void VkShaderProgram::DoCompile() { SE::Graphics::Compile( mShaderType, Program(), mCompiledByteCode ); }
+    void VkShaderProgram::BuildProgram()
+    {
+        auto const &lCachePath = ( mCacheRoot / mCacheFileName ).string();
+
+        mShaderModule = New<ShaderModule>( Cast<VkGraphicContext>( mGraphicContext ), lCachePath, mShaderType );
+    }
 } // namespace SE::Graphics

@@ -5,8 +5,8 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
-#include "IGraphicContext.h"
 #include "Enums.h"
+#include "IGraphicContext.h"
 
 namespace SE::Graphics
 {
@@ -17,7 +17,10 @@ namespace SE::Graphics
     {
       public:
         /** @brief */
-        IShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion = 460 );
+        IShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+                        std::string const &aName );
+        IShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+                        std::string const &aName, fs::path const &aCacheRoot );
 
         /** @brief */
         ~IShaderProgram() = default;
@@ -41,7 +44,9 @@ namespace SE::Graphics
         }
 
         std::string  Program();
-        virtual void Compile() = 0;
+        void         Compile();
+        virtual void DoCompile()    = 0;
+        virtual void BuildProgram() = 0;
         std::string  Hash();
 
       protected:
@@ -53,6 +58,9 @@ namespace SE::Graphics
         std::string mProgram{};
 
         int                   mVersion;
+        std::string           mName;
+        std::string           mCacheFileName;
+        fs::path              mCacheRoot;
         eShaderStageTypeFlags mShaderType;
     };
 } // namespace SE::Graphics

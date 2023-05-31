@@ -8,6 +8,8 @@
 #include "Core/Memory.h"
 #include "Core/Types.h"
 
+#include "VkPipeline.h"
+
 #include "Graphics/Interface/IShaderProgram.h"
 
 namespace SE::Graphics
@@ -19,13 +21,16 @@ namespace SE::Graphics
     {
       public:
         /** @brief */
-        VkShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion );
+        VkShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+                        std::string const &aName, fs::path const &aCacheRoot );
 
         /** @brief */
         ~VkShaderProgram() = default;
 
-        void Compile();
+        void DoCompile();
+        void BuildProgram();
 
       private:
+        Ref<ShaderModule> mShaderModule{};
     };
 } // namespace SE::Graphics

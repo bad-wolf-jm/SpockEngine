@@ -1,15 +1,24 @@
 #include "IShaderProgram.h"
 
 #include <fmt/core.h>
-#include <sstream>
 #include <fstream>
+#include <sstream>
 
 namespace SE::Graphics
 {
-    IShaderProgram::IShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion )
+    IShaderProgram::IShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+                                    std::string const &aName, fs::path const &aCacheRoot )
         : mGraphicContext{ aGraphicContext }
         , mVersion{ aVersion }
-        , mShaderType{aShaderType}
+        , mShaderType{ aShaderType }
+        , mName{ aName }
+        , mCacheRoot{ aCacheRoot }
+    {
+    }
+
+    IShaderProgram::IShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+                                    std::string const &aName )
+        : IShaderProgram( aGraphicContext, aShaderType, aVersion, aName, "" )
     {
     }
 
@@ -55,6 +64,29 @@ namespace SE::Graphics
         stream << std::hex << std::hash<std::string>{}( Program() );
 
         return stream.str();
+    }
+
+    void IShaderProgram::Compile()
+    {
+        mCacheFileName = fmt::format( "shader_{}_{}.spv", mName, Hash() );
+
+        if( fs::exists( mCacheRoot / mCacheFileName ) )
+        {
+            auto lShaderCode  = ReadFile( mCacheRoot / mCacheFileName );
+            mCompiledByteCode = std::vector<uint32_t>( lShaderCode.size() / sizeof( uint32_t ) );
+
+            std::memcpy( mCompiledByteCode.data(), lShaderCode.data(), lShaderCode.size() );
+        }
+        else
+        {
+            DoCompile();
+
+            std::ofstream lFileObject( mCacheRoot / mCacheFileName, std::ios::out | std::ios::binary );
+            lFileObject.write( (char *)mCompiledByteCode.data(), mCompiledByteCode.size() * sizeof( uint32_t ) );
+            lFileObject.close();
+        }
+
+        BuildProgram();
     }
 
 } // namespace SE::Graphics
