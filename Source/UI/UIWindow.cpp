@@ -47,6 +47,17 @@ namespace SE::Core
 
         mUIRenderPipeline->SetCulling( eFaceCulling::NONE );
 
+        fs::path lShaderPath = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
+        auto     lVertexShader =
+            CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "ui_vertex_shader", lShaderPath );
+        lVertexShader->AddFile( GetResourcePath( "Shaders\\ui_shader.vert" ) );
+        lVertexShader->Compile();
+
+        auto lFragmentShader =
+            CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "ui_fragment_shader", lShaderPath );
+        lFragmentShader->AddFile( GetResourcePath( "Shaders\\ui_shader.frag" ) );
+        lFragmentShader->Compile();
+
         mUIRenderPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\ui_shader.vert" ), "main" );
         mUIRenderPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders\\ui_shader.frag" ), "main" );
 

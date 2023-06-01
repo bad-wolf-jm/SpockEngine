@@ -98,7 +98,8 @@ namespace SE::Graphics
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<VkSampler2D>( aGraphicContext, Cast<VkTexture2D>( aTextureData ), aLayer, aSamplingSpec );
+        case eGraphicsAPI::VULKAN:
+            return New<VkSampler2D>( aGraphicContext, Cast<VkTexture2D>( aTextureData ), aLayer, aSamplingSpec );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
         default: return nullptr;
@@ -204,6 +205,30 @@ namespace SE::Graphics
         switch( gApi )
         {
         case eGraphicsAPI::VULKAN: return New<VkDescriptorSetLayoutObject>( aGraphicContext, aUnbounded, aCount );
+        case eGraphicsAPI::OPENGL:
+        case eGraphicsAPI::DIRECTX:
+        default: return nullptr;
+        }
+    }
+
+    Ref<IShaderProgram> CreateShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+                                             std::string const &aName )
+    {
+        switch( gApi )
+        {
+        case eGraphicsAPI::VULKAN: return New<IShaderProgram>( aGraphicContext, aShaderType, aVersion, aName );
+        case eGraphicsAPI::OPENGL:
+        case eGraphicsAPI::DIRECTX:
+        default: return nullptr;
+        }
+    }
+
+    Ref<IShaderProgram> CreateShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+                                             std::string const &aName, fs::path const &aCacheRoot )
+    {
+        switch( gApi )
+        {
+        case eGraphicsAPI::VULKAN: return New<IShaderProgram>( aGraphicContext, aShaderType, aVersion, aName, aCacheRoot );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
         default: return nullptr;

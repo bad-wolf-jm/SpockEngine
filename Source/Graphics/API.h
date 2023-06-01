@@ -62,7 +62,7 @@ namespace SE::Graphics
     Ref<ISampler2D> CreateSampler2D( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData );
 
     Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData,
-                                          sTextureSamplingInfo const &aSamplingSpec );
+                                               sTextureSamplingInfo const &aSamplingSpec );
 
     Ref<ISamplerCubeMap> CreateSamplerCubeMap( Ref<IGraphicContext> aGraphicContext, Ref<ITexture2D> aTextureData );
 
@@ -77,5 +77,10 @@ namespace SE::Graphics
 
     Ref<IDescriptorSetLayout> CreateDescriptorSetLayout( Ref<IGraphicContext> aGraphicContext, bool aUnbounded = false,
                                                          uint32_t aCount = 1 );
+
+    Ref<IShaderProgram> CreateShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+                                             std::string const &aName );
+    Ref<IShaderProgram> CreateShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
+                                             std::string const &aName, fs::path const &aCacheRoot );
 
 } // namespace SE::Graphics

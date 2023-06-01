@@ -14,6 +14,7 @@ namespace SE::Graphics
         , mName{ aName }
         , mCacheRoot{ aCacheRoot }
     {
+        if( mCacheRoot.empty() ) mCacheRoot = fs::temp_directory_path() / "Shaders";
     }
 
     IShaderProgram::IShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
@@ -53,7 +54,10 @@ namespace SE::Graphics
         lOutput << fmt::format( "#version {}\n", mVersion );
         lOutput << "\n";
 
-        for( auto const &lProgramFragment : mCodeBlocks ) lOutput << lProgramFragment;
+        for( auto const &lProgramFragment : mCodeBlocks )
+        {
+            lOutput << lProgramFragment << std::endl;
+        }
 
         return lOutput.str();
     }
@@ -70,7 +74,7 @@ namespace SE::Graphics
     {
         mCacheFileName = fmt::format( "shader_{}_{}.spv", mName, Hash() );
 
-        if( fs::exists( mCacheRoot / mCacheFileName ) )
+        if( !( mCacheRoot.empty() ) && fs::exists( mCacheRoot / mCacheFileName ) )
         {
             auto lShaderCode  = ReadFile( mCacheRoot / mCacheFileName );
             mCompiledByteCode = std::vector<uint32_t>( lShaderCode.size() / sizeof( uint32_t ) );
@@ -81,9 +85,12 @@ namespace SE::Graphics
         {
             DoCompile();
 
-            std::ofstream lFileObject( mCacheRoot / mCacheFileName, std::ios::out | std::ios::binary );
-            lFileObject.write( (char *)mCompiledByteCode.data(), mCompiledByteCode.size() * sizeof( uint32_t ) );
-            lFileObject.close();
+            if( !( mCacheRoot.empty() ) )
+            {
+                std::ofstream lFileObject( mCacheRoot / mCacheFileName, std::ios::out | std::ios::binary );
+                lFileObject.write( (char *)mCompiledByteCode.data(), mCompiledByteCode.size() * sizeof( uint32_t ) );
+                lFileObject.close();
+            }
         }
 
         BuildProgram();
