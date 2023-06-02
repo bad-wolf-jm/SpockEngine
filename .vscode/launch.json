@@ -18,7 +18,7 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/Build/Source/OTDR_Run.exe",
-            "args": ["--application", "OlmDevTool", "--width", "2320", "--height", "1340" ],
+            "args": ["--application", "OlmDevTool", "--width", "1920", "--height", "1000" ],
             "cwd": "d:/TestOtdrProject",
             "stopAtEntry": false
         },

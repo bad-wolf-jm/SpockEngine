@@ -182,7 +182,7 @@ int main( int argc, char **argv )
         fs::create_directories( lLocalConfigFolder / "OtdrTool" / "Config" );
 
     math::ivec2     lWindowSize     = { 640, 480 };
-    math::ivec2     lWindowPosition = { 100, 100 };
+    math::ivec2     lWindowPosition = { 0, 0 };
     UIConfiguration lUIConfiguration{};
 
     fs::path lConfigurationFile = lLocalConfigFolder / "OtdrTool" / "Config" / "Application.yaml";
