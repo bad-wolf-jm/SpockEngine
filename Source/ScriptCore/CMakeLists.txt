@@ -57,6 +57,8 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/Components/CheckBox.cs
     Source/UI/Components/DropdownButton.cs
     Source/UI/Components/TreeView.cs
+    Source/UI/Components/ColorButton.cs
+    Source/UI/Components/Slider.cs
 
     Source/UI/Widgets/FileTree.cs
 

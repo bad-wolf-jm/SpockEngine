@@ -20,6 +20,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Engine/Engine.cpp
     
     UI/UI.cpp
+    
     UI/Components/Component.cpp
     UI/Components/Button.cpp
     UI/Components/CheckBox.cpp
@@ -40,7 +41,11 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/Components/ProgressBar.cpp
     UI/Components/DropdownButton.cpp
     UI/Components/TreeView.cpp
+    UI/Components/ColorButton.cpp
+    UI/Components/Slider.cpp
+
     UI/Widgets/FileTree.cpp
+
     UI/Layouts/BoxLayout.cpp
     UI/Layouts/ZLayout.cpp
     UI/Layouts/Splitter.cpp

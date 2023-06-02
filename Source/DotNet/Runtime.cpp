@@ -22,6 +22,8 @@
 #include "UI/Components/BaseImage.h"
 #include "UI/Components/Button.h"
 #include "UI/Components/CheckBox.h"
+#include "UI/Components/ColorButton.h"
+#include "UI/Components/Slider.h"
 #include "UI/Components/ComboBox.h"
 #include "UI/Components/Component.h"
 #include "UI/Components/DropdownButton.h"
@@ -613,6 +615,14 @@ namespace SE::Core
         ICall( "UIFileTree::UIFileTree_Create", UIFileTree::UIFileTree_Create );
         ICall( "UIFileTree::UIFileTree_Destroy", UIFileTree::UIFileTree_Destroy );
         ICall( "UIFileTree::UIFileTree_Add", UIFileTree::UIFileTree_Add );
+
+        ICall( "UIColorButton::UIColorButton_Create", UIColorButton::UIColorButton_Create );
+        ICall( "UIColorButton::UIColorButton_Destroy", UIColorButton::UIColorButton_Destroy );
+
+        ICall( "UISlider::UISlider_Create", UISlider::UISlider_Create );
+        ICall( "UISlider::UISlider_Destroy", UISlider::UISlider_Destroy );
+
+
         // ICall( "UIFileTree::UIFileView_SetIndent", UIFileTree::UITreeView_SetIndent );
         // ICall( "UIFileTreeNode::UIFileTreeNode_Create", UIFileTreeNode::UITreeViewNode_Create );
         // ICall( "UIFileTreeNode::UIFileTreeNode_Destroy", UIFileTreeNode::UITreeViewNode_Destroy );
