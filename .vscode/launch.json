@@ -23,6 +23,15 @@
             "stopAtEntry": false
         },
         {
+            "name": "CoreCLR host",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Build/Programs/TestCoreCLR/test_coreclr_embedding.exe",
+            "args": [ ],
+            "cwd": "${workspaceFolder}/Programs/TestCoreCLR",
+            "stopAtEntry": false
+        },
+        {
             "name": "OTDR_ScriptRun Debug",
             "type": "cppvsdbg",
             "request": "launch",

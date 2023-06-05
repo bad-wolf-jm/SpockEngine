@@ -17,23 +17,11 @@
 #include <coreclr_delegates.h>
 #include <hostfxr.h>
 
-#ifdef WINDOWS
 #include <Windows.h>
 
 #define STR(s) L ## s
 #define CH(c) L ## c
 #define DIR_SEPARATOR L'\\'
-
-#else
-#include <dlfcn.h>
-#include <limits.h>
-
-#define STR(s) s
-#define CH(c) c
-#define DIR_SEPARATOR '/'
-#define MAX_PATH PATH_MAX
-
-#endif
 
 using string_t = std::basic_string<char_t>;
 
@@ -49,12 +37,16 @@ namespace
     load_assembly_and_get_function_pointer_fn get_dotnet_load_assembly(const char_t *assembly);
 }
 
+//amj32
+
+// 01822 5270400
+
 int main(int argc, char *argv[])
 {
     // Get the current executable's directory
     // This sample assumes the managed assembly to load and its runtime configuration file are next to the host
     char_t host_path[MAX_PATH];
-    auto size = ::GetFullPathNameW(argv[0], sizeof(host_path) / sizeof(char_t), host_path, nullptr);
+    auto size = ::GetFullPathNameW((LPCWSTR)argv[0], sizeof(host_path) / sizeof(char_t), host_path, nullptr);
     assert(size != 0);
 
     string_t root_path = host_path;
@@ -77,12 +69,13 @@ int main(int argc, char *argv[])
     const string_t config_path = root_path + STR("DotNetLib.runtimeconfig.json");
     load_assembly_and_get_function_pointer_fn load_assembly_and_get_function_pointer = nullptr;
     load_assembly_and_get_function_pointer = get_dotnet_load_assembly(config_path.c_str());
+    // load_assembly_and_get_function_pointer = get_dotnet_load_assembly("");
     assert(load_assembly_and_get_function_pointer != nullptr && "Failure: get_dotnet_load_assembly()");
 
     //
     // STEP 3: Load managed assembly and get function pointer to a managed method
     //
-    const string_t dotnetlib_path = root_path + STR("DotNetLib.dll");
+    const string_t dotnetlib_path = root_path + STR("DotNetLib/Build/Debug/DotNetLib.dll");
     const char_t *dotnet_type = STR("DotNetLib.Lib, DotNetLib");
     const char_t *dotnet_type_method = STR("Hello");
     // <SnippetLoadAndGet>
