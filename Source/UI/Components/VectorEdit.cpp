@@ -1,6 +1,4 @@
 #include "VectorEdit.h"
-// #include "ImGuizmo.h"
-// #include <vulkan/vulkan.h>
 
 namespace SE::Core
 {
@@ -17,7 +15,7 @@ namespace SE::Core
                                            ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f } };
 
     static bool EditVectorComponent( const char *aLabel, const char *aFormat, float *aValue, float aResetValue, ImVec2 aButtonSize,
-                                     ImVec2 *aColors )
+                                     float aWidth, ImVec4 const *aColors )
     {
         bool lHasChanged = false;
 
@@ -26,32 +24,36 @@ namespace SE::Core
         ImGui::PushStyleColor( ImGuiCol_ButtonActive, aColors[2] );
         if( ImGui::Button( aLabel, aButtonSize ) )
         {
-            if( *aValues != aResetValue )
+            if( *aValue != aResetValue )
             {
                 lHasChanged = true;
-                *aValues    = aResetValue;
+                *aValue     = aResetValue;
             }
         }
         ImGui::PopStyleColor( 3 );
 
-        SameLine();
+        ImGui::SameLine();
 
         ImGui::PushID( aLabel );
+        ImGui::SetNextItemWidth( aWidth - aButtonSize.x );
         lHasChanged |= ImGui::DragFloat( "##INPUT", aValue, 0.1f, 0.0f, 0.0f, aFormat, ImGuiSliderFlags_AlwaysClamp );
         ImGui::PopID();
     }
 
-    static bool VectorComponentEditor( const char *aFormat, int aDimension, float *aValues, float *aResetValue )
+    static bool VectorComponentEditor( const char *aFormat, int aDimension, float *aValues, float *aResetValue, float aWidth )
     {
         bool   lHasChanged = false;
         float  lLineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
         ImVec2 lButtonSize = { lLineHeight + 3.0f, lLineHeight };
-        auto   lWindowSize = GetAvailableContentSpace();
 
-        if( aDimension >= 1 ) lHasChanged |= EditVectorComponent( "X", aFormat, &aValues[0], aResetValue[0], lButtonSize, gXColors );
-        if( aDimension >= 2 ) lHasChanged |= EditVectorComponent( "Y", aFormat, &aValues[1], aResetValue[1], lButtonSize, gYColors );
-        if( aDimension >= 3 ) lHasChanged |= EditVectorComponent( "Z", aFormat, &aValues[2], aResetValue[2], lButtonSize, gZColors );
-        if( aDimension >= 4 ) lHasChanged |= EditVectorComponent( "W", aFormat, &aValues[3], aResetValue[3], lButtonSize, gWColors );
+        if( aDimension >= 1 )
+            lHasChanged |= EditVectorComponent( "X", aFormat, &aValues[0], aResetValue[0], lButtonSize, aWidth, gXColors );
+        if( aDimension >= 2 )
+            lHasChanged |= EditVectorComponent( "Y", aFormat, &aValues[1], aResetValue[1], lButtonSize, aWidth, gYColors );
+        if( aDimension >= 3 )
+            lHasChanged |= EditVectorComponent( "Z", aFormat, &aValues[2], aResetValue[2], lButtonSize, aWidth, gZColors );
+        if( aDimension >= 4 )
+            lHasChanged |= EditVectorComponent( "W", aFormat, &aValues[3], aResetValue[3], lButtonSize, aWidth, gWColors );
 
         return lHasChanged;
     }
