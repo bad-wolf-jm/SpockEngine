@@ -43,6 +43,7 @@ add_library(LTSimulationEngineRuntime STATIC
     UI/Components/TreeView.cpp
     UI/Components/ColorButton.cpp
     UI/Components/Slider.cpp
+    UI/Components/VectorEdit.cpp
 
     UI/Widgets/FileTree.cpp
 
