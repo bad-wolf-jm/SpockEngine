@@ -6,6 +6,7 @@
 #include "Interface/IGraphicsPipeline.h"
 #include "Interface/IRenderContext.h"
 #include "Interface/ISwapChain.h"
+#include "Interface/IShaderProgram.h"
 
 namespace SE::Graphics
 {

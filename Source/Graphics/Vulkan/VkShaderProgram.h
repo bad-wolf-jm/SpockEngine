@@ -22,7 +22,7 @@ namespace SE::Graphics
       public:
         /** @brief */
         VkShaderProgram( Ref<IGraphicContext> aGraphicContext, eShaderStageTypeFlags aShaderType, int aVersion,
-                        std::string const &aName, fs::path const &aCacheRoot );
+                         std::string const &aName, fs::path const &aCacheRoot );
 
         /** @brief */
         ~VkShaderProgram() = default;

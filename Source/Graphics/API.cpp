@@ -6,6 +6,7 @@
 #include "Vulkan/VkRenderContext.h"
 #include "Vulkan/VkSwapChain.h"
 #include "Vulkan/VkSwapChainRenderContext.h"
+#include "Vulkan/VkShaderProgram.h"
 
 namespace SE::Graphics
 {
@@ -216,7 +217,7 @@ namespace SE::Graphics
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<IShaderProgram>( aGraphicContext, aShaderType, aVersion, aName );
+        case eGraphicsAPI::VULKAN: return New<VkShaderProgram>( aGraphicContext, aShaderType, aVersion, aName, "" );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
         default: return nullptr;
@@ -228,7 +229,7 @@ namespace SE::Graphics
     {
         switch( gApi )
         {
-        case eGraphicsAPI::VULKAN: return New<IShaderProgram>( aGraphicContext, aShaderType, aVersion, aName, aCacheRoot );
+        case eGraphicsAPI::VULKAN: return New<VkShaderProgram>( aGraphicContext, aShaderType, aVersion, aName, aCacheRoot );
         case eGraphicsAPI::OPENGL:
         case eGraphicsAPI::DIRECTX:
         default: return nullptr;
