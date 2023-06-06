@@ -6,14 +6,14 @@ namespace SE::Core
     static constexpr ImVec4 gXColors[] = { ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f }, ImVec4{ 0.9f, 0.2f, 0.2f, 1.0f },
                                            ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f } };
 
-    static constexpr ImVec4 gYColors[] = { ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f }, ImVec4{ 0.3f, 0.8f, 0.3f, 1.0f },
-                                           ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f } };
+    static constexpr ImVec4 gYColors[] = { ImVec4{ 0.2f, 0.5f, 0.2f, 1.0f }, ImVec4{ 0.3f, 0.6f, 0.3f, 1.0f },
+                                           ImVec4{ 0.2f, 0.5f, 0.2f, 1.0f } };
 
     static constexpr ImVec4 gZColors[] = { ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f }, ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f },
                                            ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f } };
 
-    static constexpr ImVec4 gWColors[] = { ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f }, ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f },
-                                           ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f } };
+    static constexpr ImVec4 gWColors[] = { ImVec4{ 0.1f, 0.05f, 0.8f, 1.0f }, ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f },
+                                           ImVec4{ 0.1f, 0.05f, 0.8f, 1.0f } };
 
     static bool EditVectorComponent( const char *aLabel, const char *aFormat, float *aValue, float aResetValue, ImVec2 aButtonSize,
                                      float aWidth, ImVec4 const *aColors )
@@ -69,8 +69,19 @@ namespace SE::Core
     {
     }
 
-    void UIVectorInputBase::PushStyles() {}
-    void UIVectorInputBase::PopStyles() {}
+    void UIVectorInputBase::PushStyles()
+    {
+        ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2{ 2, 2 } );
+        ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 1 } );
+        ImGui::PushStyleColor( ImGuiCol_FrameBg, ImVec4{ .03, 0.03, 0.03, 1.0 } );
+        ImGui::PushStyleColor( ImGuiCol_FrameBgHovered, ImVec4{ .04, 0.04, 0.04, 1.0 } );
+    }
+
+    void UIVectorInputBase::PopStyles()
+    {
+        ImGui::PopStyleColor( 2 );
+        ImGui::PopStyleVar( 2 );
+    }
 
     void UIVectorInputBase::OnChanged( std::function<void( math::vec4 )> aOnChanged ) { mOnChanged = aOnChanged; }
 

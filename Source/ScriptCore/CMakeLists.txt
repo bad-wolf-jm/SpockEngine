@@ -59,6 +59,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/Components/TreeView.cs
     Source/UI/Components/ColorButton.cs
     Source/UI/Components/Slider.cs
+    Source/UI/Components/VectorInput.cs
 
     Source/UI/Widgets/FileTree.cs
 
