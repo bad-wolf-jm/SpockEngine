@@ -38,6 +38,8 @@ namespace SE::Core
         ImGui::SetNextItemWidth( aWidth - aButtonSize.x );
         lHasChanged |= ImGui::DragFloat( "##INPUT", aValue, 0.1f, 0.0f, 0.0f, aFormat, ImGuiSliderFlags_AlwaysClamp );
         ImGui::PopID();
+
+        return lHasChanged;
     }
 
     static bool VectorComponentEditor( const char *aFormat, int aDimension, float *aValues, float *aResetValue, float aWidth )
@@ -58,163 +60,19 @@ namespace SE::Core
         return lHasChanged;
     }
 
-    // bool VectorComponentEditor( const std::string &label, math::vec4 &aValues, float aResetValue, float columnWidth )
-    // {
-    //     bool     lHasChanged      = false;
-    //     ImGuiIO &io           = ImGui::GetIO();
-    //     auto     boldFont     = io.Fonts->Fonts[0];
-    //     float    lLineHeight   = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
-    //     ImVec2   lButtonSize   = { lLineHeight + 3.0f, lLineHeight };
-    //     auto     lWindowSize = GetAvailableContentSpace();
+    UIVectorInputBase::UIVectorInputBase( int aDimension )
+        : mDimension{ aDimension }
+    {
+    }
 
-    //     ImGui::PushID( label.c_str() );
+    void UIVectorInputBase::PushStyles() {}
+    void UIVectorInputBase::PopStyles() {}
 
-    //     auto l_TextSize0 = ImGui::CalcTextSize( label.c_str() );
+    ImVec2 UIVectorInputBase::RequiredSize() { return ImVec2{ 100.0f, ( GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f ) * mDimension }; }
 
-    //     if( !label.empty() )
-    //     {
-    //         ImGui::AlignTextToFramePadding();
-    //         ImGui::Text( label.c_str() );
-    //         SameLine();
-    //     }
-    //     SetCursorPosition( ImGui::GetCursorPos() +
-    //                        ImVec2( ( columnWidth - l_TextSize0.x ) + ( l_TextSize0.x > 0.0f ? 10.0f : 0.0f ), 0.0f ) );
-
-    //     float l_ItemWidth = ( lWindowSize.x - columnWidth - 4 * lButtonSize.x - 25.0f ) / 4.0f;
-    //     ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 } );
-
-    //     ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f } );
-    //     ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 0.9f, 0.2f, 0.2f, 1.0f } );
-    //     ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f } );
-    //     ImGui::PushFont( boldFont );
-    //     if( ImGui::Button( "X", lButtonSize ) )
-    //     {
-    //         if( aValues.x != aResetValue ) lHasChanged = true;
-    //         aValues.x = aResetValue;
-    //     }
-    //     ImGui::PopFont();
-    //     ImGui::PopStyleColor( 3 );
-    //     SameLine();
-    //     ImGui::SetNextItemWidth( l_ItemWidth );
-    //     lHasChanged |= ImGui::DragFloat( "##X", &aValues.x, 0.1f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp );
-    //     SameLine();
-
-    //     ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f } );
-    //     ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 0.3f, 0.8f, 0.3f, 1.0f } );
-    //     ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f } );
-    //     ImGui::PushFont( boldFont );
-    //     if( ImGui::Button( "Y", lButtonSize ) )
-    //     {
-    //         if( aValues.y != aResetValue ) lHasChanged = true;
-    //         aValues.y = aResetValue;
-    //     }
-    //     ImGui::PopFont();
-    //     ImGui::PopStyleColor( 3 );
-    //     SameLine();
-    //     ImGui::SetNextItemWidth( l_ItemWidth );
-    //     lHasChanged |= ImGui::DragFloat( "##Y", &aValues.y, 0.1f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp );
-    //     SameLine();
-
-    //     ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f } );
-    //     ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f } );
-    //     ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f } );
-    //     ImGui::PushFont( boldFont );
-    //     if( ImGui::Button( "Z", lButtonSize ) )
-    //     {
-    //         if( aValues.z != aResetValue ) lHasChanged = true;
-    //         aValues.z = aResetValue;
-    //     }
-    //     ImGui::PopFont();
-    //     ImGui::PopStyleColor( 3 );
-    //     SameLine();
-    //     ImGui::SetNextItemWidth( l_ItemWidth );
-    //     lHasChanged |= ImGui::DragFloat( "##Z", &aValues.z, 0.1f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp );
-
-    //     SameLine();
-
-    //     ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f } );
-    //     ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f } );
-    //     ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f } );
-    //     ImGui::PushFont( boldFont );
-    //     if( ImGui::Button( "W", lButtonSize ) )
-    //     {
-    //         if( aValues.z != aResetValue ) lHasChanged = true;
-    //         aValues.z = aResetValue;
-    //     }
-    //     ImGui::PopFont();
-    //     ImGui::PopStyleColor( 3 );
-    //     SameLine();
-    //     ImGui::SetNextItemWidth( l_ItemWidth );
-    //     lHasChanged |= ImGui::DragFloat( "##Z", &aValues.z, 0.1f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp );
-
-    //     ImGui::PopStyleVar();
-    //     ImGui::PopID();
-
-    //     return lHasChanged;
-    // }
-
-    // bool VectorComponentEditor( const std::string &label, uint32_t ID, math::vec2 &aValues, float a_XMin, float a_XMax, float
-    // a_XStep,
-    //                             float a_YMin, float a_YMax, float a_YStep, float aResetValue, float columnWidth )
-    // {
-    //     bool     lHasChanged      = false;
-    //     ImGuiIO &io           = ImGui::GetIO();
-    //     auto     boldFont     = io.Fonts->Fonts[0];
-    //     float    lLineHeight   = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
-    //     ImVec2   lButtonSize   = { lLineHeight + 3.0f, lLineHeight };
-    //     auto     lWindowSize = GetAvailableContentSpace();
-
-    //     ImGui::PushID( label.c_str() );
-
-    //     auto l_TextSize0 = ImGui::CalcTextSize( label.c_str() );
-
-    //     if( !label.empty() )
-    //     {
-    //         ImGui::AlignTextToFramePadding();
-    //         ImGui::Text( label.c_str() );
-    //         SameLine();
-    //     }
-    //     SetCursorPosition( ImGui::GetCursorPos() +
-    //                        ImVec2( ( columnWidth - l_TextSize0.x ) + ( l_TextSize0.x > 0.0f ? 10.0f : 0.0f ), 0.0f ) );
-
-    //     float l_ItemWidth = ( lWindowSize.x - columnWidth - 3 * lButtonSize.x - 25.0f ) / 2.5f;
-    //     ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 } );
-
-    //     ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f } );
-    //     ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 0.9f, 0.2f, 0.2f, 1.0f } );
-    //     ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f } );
-    //     ImGui::PushFont( boldFont );
-    //     if( ImGui::Button( "X", lButtonSize ) )
-    //     {
-    //         if( aValues.x != aResetValue ) lHasChanged = true;
-    //         aValues.x = aResetValue;
-    //     }
-    //     ImGui::PopFont();
-    //     ImGui::PopStyleColor( 3 );
-    //     SameLine();
-    //     ImGui::SetNextItemWidth( l_ItemWidth );
-    //     lHasChanged |= ImGui::DragFloat( "##X", &aValues.x, .05f, a_XMin, a_XMax, "%.2f", ImGuiSliderFlags_AlwaysClamp );
-    //     SameLine();
-
-    //     ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f } );
-    //     ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 0.3f, 0.8f, 0.3f, 1.0f } );
-    //     ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f } );
-    //     ImGui::PushFont( boldFont );
-    //     if( ImGui::Button( "Y", lButtonSize ) )
-    //     {
-    //         if( aValues.y != aResetValue ) lHasChanged = true;
-    //         aValues.y = aResetValue;
-    //     }
-    //     ImGui::PopFont();
-    //     ImGui::PopStyleColor( 3 );
-    //     SameLine();
-    //     ImGui::SetNextItemWidth( l_ItemWidth );
-    //     lHasChanged |= ImGui::DragFloat( "##Y", &aValues.y, 0.05f, a_YMin, a_YMax, "%.2f", ImGuiSliderFlags_AlwaysClamp );
-
-    //     ImGui::PopStyleVar();
-    //     ImGui::PopID();
-
-    //     return lHasChanged;
-    // }
+    void UIVectorInputBase::DrawContent( ImVec2 aPosition, ImVec2 aSize )
+    {
+        VectorComponentEditor( mFormat.c_str(), mDimension, (float *)&mValues, (float *)&mResetValues, aSize.x );
+    }
 
 } // namespace SE::Core
