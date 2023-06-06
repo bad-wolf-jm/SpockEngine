@@ -50,10 +50,13 @@ namespace SE::Core
 
         if( aDimension >= 1 )
             lHasChanged |= EditVectorComponent( "X", aFormat, &aValues[0], aResetValue[0], lButtonSize, aWidth, gXColors );
+
         if( aDimension >= 2 )
             lHasChanged |= EditVectorComponent( "Y", aFormat, &aValues[1], aResetValue[1], lButtonSize, aWidth, gYColors );
+
         if( aDimension >= 3 )
             lHasChanged |= EditVectorComponent( "Z", aFormat, &aValues[2], aResetValue[2], lButtonSize, aWidth, gZColors );
+            
         if( aDimension >= 4 )
             lHasChanged |= EditVectorComponent( "W", aFormat, &aValues[3], aResetValue[3], lButtonSize, aWidth, gWColors );
 
