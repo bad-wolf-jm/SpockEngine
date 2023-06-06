@@ -22,7 +22,7 @@ namespace SE::Core
         int         mDimension{};
         math::vec4  mValues{};
         math::vec4  mResetValues{};
-        std::string mFormat = ".2f";
+        std::string mFormat = "%.2f";
 
       protected:
         std::function<void( math::vec4 )> mOnChanged;
