@@ -24,21 +24,21 @@ namespace SE::Core
     //     aComponent = sNodeTransformComponent( lFieldValue );
     // }
 
-    // Ref<DotNetInstance> MarshallComponent( DotNetClass &lMonoType, sTag &aComponent )
-    // {
-    //     MonoString *lManagedSTagValue = DotNetRuntime::NewString( aComponent.mValue );
+    Ref<DotNetInstance> MarshallComponent( DotNetClass &lMonoType, sTag &aComponent )
+    {
+        MonoString *lManagedSTagValue = DotNetRuntime::NewString( aComponent.mValue );
 
-    //     auto lNewObject = lMonoType.Instantiate( lManagedSTagValue );
+        auto lNewObject = lMonoType.Instantiate( lManagedSTagValue );
 
-    //     return lNewObject;
-    // }
+        return lNewObject;
+    }
 
-    // void UnmarshallComponent( Ref<DotNetInstance> aMonoType, sTag &aComponent )
-    // {
-    //     auto lFieldValue = aMonoType->GetFieldValue<MonoString *>( "mValue" );
+    void UnmarshallComponent( Ref<DotNetInstance> aMonoType, sTag &aComponent )
+    {
+        auto lFieldValue = aMonoType->GetFieldValue<MonoString *>( "mValue" );
 
-    //     aComponent = sTag( DotNetRuntime::NewString( lFieldValue ) );
-    // }
+        aComponent = sTag( DotNetRuntime::NewString( lFieldValue ) );
+    }
 
     // Ref<DotNetInstance> MarshallComponent( DotNetClass &lMonoType, sLightComponent &aComponent )
     // {

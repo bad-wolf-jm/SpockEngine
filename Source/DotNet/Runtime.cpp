@@ -23,7 +23,6 @@
 #include "UI/Components/Button.h"
 #include "UI/Components/CheckBox.h"
 #include "UI/Components/ColorButton.h"
-#include "UI/Components/Slider.h"
 #include "UI/Components/ComboBox.h"
 #include "UI/Components/Component.h"
 #include "UI/Components/DropdownButton.h"
@@ -35,6 +34,7 @@
 #include "UI/Components/Plot.h"
 #include "UI/Components/ProgressBar.h"
 #include "UI/Components/PropertyValue.h"
+#include "UI/Components/Slider.h"
 #include "UI/Components/Table.h"
 #include "UI/Components/TextInput.h"
 #include "UI/Components/TextOverlay.h"
@@ -69,17 +69,14 @@ namespace SE::Core
 
     struct sAssemblyData
     {
-        fs::path      mPath           = "";
-        fs::path      mFilename       = "";
-        std::string   mCategory       = "";
-        MonoAssembly *mAssembly       = nullptr;
-        MonoImage    *mImage          = nullptr;
-        bool          mNeedsReloading = false;
-        bool          mFileExists     = false;
-
+        fs::path                 mPath           = "";
+        fs::path                 mFilename       = "";
+        std::string              mCategory       = "";
+        MonoAssembly            *mAssembly       = nullptr;
+        MonoImage               *mImage          = nullptr;
+        bool                     mNeedsReloading = false;
+        bool                     mFileExists     = false;
         std::vector<std::string> mClasses{};
-
-        std::shared_ptr<filewatch::FileWatch<std::string>> mWatcher{};
 
         sAssemblyData()                        = default;
         sAssemblyData( const sAssemblyData & ) = default;
@@ -89,12 +86,9 @@ namespace SE::Core
 
     struct sMonoRuntimeData
     {
-        MonoDomain *mRootDomain = nullptr;
-        MonoDomain *mAppDomain  = nullptr;
-
-        sAssemblyData mCoreAssembly{};
-        // ClassMapping  mCoreClasses = {};
-
+        MonoDomain     *mRootDomain = nullptr;
+        MonoDomain     *mAppDomain  = nullptr;
+        sAssemblyData   mCoreAssembly{};
         PathList        mAppAssemblyFiles = {};
         AssemblyMapping mAssemblies       = {};
         ClassMapping    mClasses          = {};
@@ -118,17 +112,6 @@ namespace SE::Core
         sRuntimeData->mCoreAssembly.mFilename = aFilepath.filename();
     }
 
-    static void OnAppAssemblyFileSystemEvent( const fs::path &path, const filewatch::Event change_type )
-    {
-        switch( change_type )
-        {
-        case filewatch::Event::modified: sRuntimeData->mAssemblies[path].mNeedsReloading = true; break;
-        case filewatch::Event::removed: sRuntimeData->mAssemblies[path].mFileExists = false; break;
-        case filewatch::Event::added: sRuntimeData->mAssemblies[path].mFileExists = true; break;
-        default: break;
-        }
-    }
-
     void DotNetRuntime::AddAppAssemblyPath( const fs::path &aFilepath, std::string const &aCategory )
     {
         if( std::find( sRuntimeData->mAppAssemblyFiles.begin(), sRuntimeData->mAppAssemblyFiles.end(), aFilepath ) !=
@@ -144,16 +127,6 @@ namespace SE::Core
         sRuntimeData->mAssemblies[aFilepath].mFilename = aFilepath.filename();
 
         Ref<fs::path> lAssemblyFilePath = New<fs::path>( aFilepath );
-
-        sRuntimeData->mAssemblies[aFilepath].mWatcher = std::make_shared<filewatch::FileWatch<std::string>>(
-            aFilepath.parent_path().string(),
-            [lAssemblyFilePath]( const std::string &path, const filewatch::Event change_type )
-            {
-                if( lAssemblyFilePath->filename().string() == path )
-                {
-                    OnAppAssemblyFileSystemEvent( *lAssemblyFilePath, change_type );
-                }
-            } );
 
         if( sRuntimeData->mCategories.find( aCategory ) == sRuntimeData->mCategories.end() )
             sRuntimeData->mCategories[aCategory] = std::vector<sAssemblyData *>{};
@@ -289,19 +262,17 @@ namespace SE::Core
         mono_add_internal_call( lFullName.c_str(), aFunction );
     }
 
-#define SE_ADD_INTERNAL_CALL( Name ) mono_add_internal_call( "SpockEngine.CppCall::" #Name, Name )
-
     void DotNetRuntime::RegisterInternalCppFunctions()
     {
-        ICall( "CppCall::OpenFile", OpenFile );
         ICall( "UIColor::GetStyleColor", SE::Core::UI::GetStyleColor );
 
-        SE_ADD_INTERNAL_CALL( Entity_Create );
-        SE_ADD_INTERNAL_CALL( Entity_IsValid );
-        SE_ADD_INTERNAL_CALL( Entity_Has );
-        SE_ADD_INTERNAL_CALL( Entity_Get );
-        SE_ADD_INTERNAL_CALL( Entity_Add );
-        SE_ADD_INTERNAL_CALL( Entity_Replace );
+        ICall( "CppCall::OpenFile", OpenFile );
+        ICall( "CppCall::Entity_Create", Entity_Create );
+        ICall( "CppCall::Entity_IsValid", Entity_IsValid );
+        ICall( "CppCall::Entity_Has", Entity_Has );
+        ICall( "CppCall::Entity_Get", Entity_Get );
+        ICall( "CppCall::Entity_Add", Entity_Add );
+        ICall( "CppCall::Entity_Replace", Entity_Replace );
 
         ICall( "UIComponent::UIComponent_SetIsVisible", UIComponent::UIComponent_SetIsVisible );
         ICall( "UIComponent::UIComponent_SetIsEnabled", UIComponent::UIComponent_SetIsEnabled );
@@ -621,16 +592,6 @@ namespace SE::Core
 
         ICall( "UISlider::UISlider_Create", UISlider::UISlider_Create );
         ICall( "UISlider::UISlider_Destroy", UISlider::UISlider_Destroy );
-
-
-        // ICall( "UIFileTree::UIFileView_SetIndent", UIFileTree::UITreeView_SetIndent );
-        // ICall( "UIFileTreeNode::UIFileTreeNode_Create", UIFileTreeNode::UITreeViewNode_Create );
-        // ICall( "UIFileTreeNode::UIFileTreeNode_Destroy", UIFileTreeNode::UITreeViewNode_Destroy );
-        // ICall( "UIFileTreeNode::UIFileTreeNode_SetIcon", UIFileTreeNode::UITreeViewNode_SetIcon );
-        // ICall( "UIFileTreeNode::UIFileTreeNode_SetIndicator", UIFileTreeNode::UITreeViewNode_SetIndicator );
-        // ICall( "UIFileTreeNode::UIFileTreeNode_SetText", UIFileTreeNode::UITreeViewNode_SetText );
-        // ICall( "UIFileTreeNode::UIFileTreeNode_SetTextColor", UIFileTreeNode::UITreeViewNode_SetTextColor );
-        // ICall( "UIFileTreeNode::UIFileTreeNode_Add", UIFileTreeNode::UITreeViewNode_Add );
     }
 
 } // namespace SE::Core
