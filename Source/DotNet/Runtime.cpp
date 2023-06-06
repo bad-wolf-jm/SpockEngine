@@ -41,6 +41,7 @@
 #include "UI/Components/TextToggleButton.h"
 #include "UI/Components/TreeView.h"
 #include "UI/Components/Workspace.h"
+#include "UI/Components/VectorEdit.h"
 
 #include "UI/Widgets/FileTree.h"
 
@@ -592,6 +593,34 @@ namespace SE::Core
 
         ICall( "UISlider::UISlider_Create", UISlider::UISlider_Create );
         ICall( "UISlider::UISlider_Destroy", UISlider::UISlider_Destroy );
+
+        ICall( "UIVec2Input::UIVec3Input_Create", UIVec2Input::UIVec2Input_Create );
+        ICall( "UIVec2Input::UIVec3Input_Destroy", UIVec2Input::UIVec2Input_Destroy );
+        ICall( "UIVec2Input::UIVec3Input_OnChanged", UIVec2Input::UIVec2Input_OnChanged );
+        ICall( "UIVec2Input::UIVec3Input_SetValue", UIVec2Input::UIVec2Input_SetValue );
+        ICall( "UIVec2Input::UIVec3Input_GetValue", UIVec2Input::UIVec2Input_GetValue );
+
+        ICall( "UIVec3Input::UIVec3Input_Create", UIVec3Input::UIVec3Input_Create );
+        ICall( "UIVec3Input::UIVec3Input_Destroy", UIVec3Input::UIVec3Input_Destroy );
+        ICall( "UIVec3Input::UIVec3Input_OnChanged", UIVec3Input::UIVec3Input_OnChanged );
+        ICall( "UIVec3Input::UIVec3Input_SetValue", UIVec3Input::UIVec3Input_SetValue );
+        ICall( "UIVec3Input::UIVec3Input_GetValue", UIVec3Input::UIVec3Input_GetValue );
+
+        ICall( "UIVec4Input::UIVec4Input_Create", UIVec4Input::UIVec4Input_Create );
+        ICall( "UIVec4Input::UIVec4Input_Destroy", UIVec4Input::UIVec4Input_Destroy );
+        ICall( "UIVec4Input::UIVec4Input_OnChanged", UIVec4Input::UIVec4Input_OnChanged );
+        ICall( "UIVec4Input::UIVec4Input_SetValue", UIVec4Input::UIVec4Input_SetValue );
+        ICall( "UIVec4Input::UIVec4Input_GetValue", UIVec4Input::UIVec4Input_GetValue );
+
+
+        // ICall( "UIFileTree::UIFileView_SetIndent", UIFileTree::UITreeView_SetIndent );
+        // ICall( "UIFileTreeNode::UIFileTreeNode_Create", UIFileTreeNode::UITreeViewNode_Create );
+        // ICall( "UIFileTreeNode::UIFileTreeNode_Destroy", UIFileTreeNode::UITreeViewNode_Destroy );
+        // ICall( "UIFileTreeNode::UIFileTreeNode_SetIcon", UIFileTreeNode::UITreeViewNode_SetIcon );
+        // ICall( "UIFileTreeNode::UIFileTreeNode_SetIndicator", UIFileTreeNode::UITreeViewNode_SetIndicator );
+        // ICall( "UIFileTreeNode::UIFileTreeNode_SetText", UIFileTreeNode::UITreeViewNode_SetText );
+        // ICall( "UIFileTreeNode::UIFileTreeNode_SetTextColor", UIFileTreeNode::UITreeViewNode_SetTextColor );
+        // ICall( "UIFileTreeNode::UIFileTreeNode_Add", UIFileTreeNode::UITreeViewNode_Add );
     }
 
 } // namespace SE::Core
