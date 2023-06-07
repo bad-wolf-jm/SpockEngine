@@ -41,12 +41,12 @@ namespace SE::Core
 
         virtual void Render( UIPlot *aParentPlot ) = 0;
 
-      public:
-        static void UIPlotData_SetThickness( void *aSelf, float aThickness );
-        static void UIPlotData_SetLegend( void *aSelf, void *aText );
-        static void UIPlotData_SetColor( void *aSelf, math::vec4 aColor );
-        static void UIPlotData_SetXAxis( void *aSelf, int aAxis );
-        static void UIPlotData_SetYAxis( void *aSelf, int aAxis );
+    //   public:
+    //     static void UIPlotData_SetThickness( void *aSelf, float aThickness );
+    //     static void UIPlotData_SetLegend( void *aSelf, void *aText );
+    //     static void UIPlotData_SetColor( void *aSelf, math::vec4 aColor );
+    //     static void UIPlotData_SetXAxis( void *aSelf, int aAxis );
+    //     static void UIPlotData_SetYAxis( void *aSelf, int aAxis );
     };
 
     template <typename _Ty>
@@ -62,20 +62,20 @@ namespace SE::Core
     {
         void Render( UIPlot *aParentPlot );
 
-        static void *UIFloat64LinePlot_Create();
-        static void  UIFloat64LinePlot_Destroy( void *aSelf );
-        static void  UIFloat64LinePlot_SetX( void *aSelf, void *aValue );
-        static void  UIFloat64LinePlot_SetY( void *aSelf, void *aValue );
+        // static void *UIFloat64LinePlot_Create();
+        // static void  UIFloat64LinePlot_Destroy( void *aSelf );
+        // static void  UIFloat64LinePlot_SetX( void *aSelf, void *aValue );
+        // static void  UIFloat64LinePlot_SetY( void *aSelf, void *aValue );
     };
 
     struct sFloat64ScatterPlot : public sXYPlot<double>
     {
         void Render( UIPlot *aParentPlot );
 
-        static void *UIFloat64ScatterPlot_Create();
-        static void  UIFloat64ScatterPlot_Destroy( void *aSelf );
-        static void  UIFloat64ScatterPlot_SetX( void *aSelf, void *aValue );
-        static void  UIFloat64ScatterPlot_SetY( void *aSelf, void *aValue );
+        // static void *UIFloat64ScatterPlot_Create();
+        // static void  UIFloat64ScatterPlot_Destroy( void *aSelf );
+        // static void  UIFloat64ScatterPlot_SetX( void *aSelf, void *aValue );
+        // static void  UIFloat64ScatterPlot_SetY( void *aSelf, void *aValue );
     };
 
     struct sVLine : public sPlotData
@@ -91,9 +91,9 @@ namespace SE::Core
 
         void Render( UIPlot *aParentPlot );
 
-        static void *UIVLinePlot_Create();
-        static void  UIVLinePlot_Destroy( void *aSelf );
-        static void  UIVLinePlot_SetX( void *aSelf, void *aValue );
+        // static void *UIVLinePlot_Create();
+        // static void  UIVLinePlot_Destroy( void *aSelf );
+        // static void  UIVLinePlot_SetX( void *aSelf, void *aValue );
     };
 
     struct sHLine : public sPlotData
@@ -109,9 +109,9 @@ namespace SE::Core
 
         void Render( UIPlot *aParentPlot );
 
-        static void *UIHLinePlot_Create();
-        static void  UIHLinePlot_Destroy( void *aSelf );
-        static void  UIHLinePlot_SetY( void *aSelf, void *aValue );
+        // static void *UIHLinePlot_Create();
+        // static void  UIHLinePlot_Destroy( void *aSelf );
+        // static void  UIHLinePlot_SetY( void *aSelf, void *aValue );
     };
 
     struct sVRange : public sPlotData
@@ -129,12 +129,12 @@ namespace SE::Core
 
         void Render( UIPlot *aParentPlot );
 
-        static void  *UIVRangePlot_Create();
-        static void   UIVRangePlot_Destroy( void *aSelf );
-        static double UIVRangePlot_GetMin( void *aSelf );
-        static void   UIVRangePlot_SetMin( void *aSelf, double aValue );
-        static double UIVRangePlot_GetMax( void *aSelf );
-        static void   UIVRangePlot_SetMax( void *aSelf, double aValue );
+        // static void  *UIVRangePlot_Create();
+        // static void   UIVRangePlot_Destroy( void *aSelf );
+        // static double UIVRangePlot_GetMin( void *aSelf );
+        // static void   UIVRangePlot_SetMin( void *aSelf, double aValue );
+        // static double UIVRangePlot_GetMax( void *aSelf );
+        // static void   UIVRangePlot_SetMax( void *aSelf, double aValue );
     };
 
     struct sHRange : public sPlotData
@@ -152,12 +152,12 @@ namespace SE::Core
 
         void Render( UIPlot *aParentPlot );
 
-        static void  *UIHRangePlot_Create();
-        static void   UIHRangePlot_Destroy( void *aSelf );
-        static double UIHRangePlot_GetMin( void *aSelf );
-        static void   UIHRangePlot_SetMin( void *aSelf, double aValue );
-        static double UIHRangePlot_GetMax( void *aSelf );
-        static void   UIHRangePlot_SetMax( void *aSelf, double aValue );
+        // static void  *UIHRangePlot_Create();
+        // static void   UIHRangePlot_Destroy( void *aSelf );
+        // static double UIHRangePlot_GetMin( void *aSelf );
+        // static void   UIHRangePlot_SetMin( void *aSelf, double aValue );
+        // static double UIHRangePlot_GetMax( void *aSelf );
+        // static void   UIHRangePlot_SetMax( void *aSelf, double aValue );
     };
 
     struct sAxisTag : public sPlotData
@@ -179,15 +179,15 @@ namespace SE::Core
 
         void Render( UIPlot *aParentPlot );
 
-        static void      *UIAxisTag_Create();
-        static void      *UIAxisTag_CreateWithTextAndColor( UIPlotAxis aAxis, double aX, void *aText, math::vec4 aColor );
-        static void       UIAxisTag_Destroy( void *aSelf );
-        static void       UIAxisTag_SetX( void *aSelf, double aValue );
-        static void       UIAxisTag_SetText( void *aSelf, void *aText );
-        static math::vec4 UIAxisTag_GetColor( void *aSelf );
-        static void       UIAxisTag_SetColor( void *aSelf, math::vec4 aColor );
-        static int        UIAxisTag_GetAxis( void *aSelf );
-        static void       UIAxisTag_SetAxis( void *aSelf, int aAxis );
+        // static void      *UIAxisTag_Create();
+        // static void      *UIAxisTag_CreateWithTextAndColor( UIPlotAxis aAxis, double aX, void *aText, math::vec4 aColor );
+        // static void       UIAxisTag_Destroy( void *aSelf );
+        // static void       UIAxisTag_SetX( void *aSelf, double aValue );
+        // static void       UIAxisTag_SetText( void *aSelf, void *aText );
+        // static math::vec4 UIAxisTag_GetColor( void *aSelf );
+        // static void       UIAxisTag_SetColor( void *aSelf, math::vec4 aColor );
+        // static int        UIAxisTag_GetAxis( void *aSelf );
+        // static void       UIAxisTag_SetAxis( void *aSelf, int aAxis );
     };
 
     class UIPlot : public UIComponent
@@ -219,15 +219,15 @@ namespace SE::Core
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
-      public:
-        static void *UIPlot_Create();
-        static void  UIPlot_Destroy( void *aInstance );
-        static void  UIPlot_Clear( void *aInstance );
-        static void  UIPlot_ConfigureLegend( void *aInstance, math::vec2 *aLegendPadding, math::vec2 *aLegendInnerPadding,
-                                             math::vec2 *aLegendSpacing );
-        static void  UIPlot_Add( void *aInstance, void *aPlot );
-        static void  UIPlot_SetAxisLimits( void *aInstance, int aAxis, double aMin, double aMax );
-        static void *UIPlot_GetAxisTitle( void *aInstance, int aAxis );
-        static void  UIPlot_SetAxisTitle( void *aInstance, int aAxis, void *aTitle );
+    //   public:
+    //     static void *UIPlot_Create();
+    //     static void  UIPlot_Destroy( void *aInstance );
+    //     static void  UIPlot_Clear( void *aInstance );
+    //     static void  UIPlot_ConfigureLegend( void *aInstance, math::vec2 *aLegendPadding, math::vec2 *aLegendInnerPadding,
+    //                                          math::vec2 *aLegendSpacing );
+    //     static void  UIPlot_Add( void *aInstance, void *aPlot );
+    //     static void  UIPlot_SetAxisLimits( void *aInstance, int aAxis, double aMin, double aMax );
+    //     static void *UIPlot_GetAxisTitle( void *aInstance, int aAxis );
+    //     static void  UIPlot_SetAxisTitle( void *aInstance, int aAxis, void *aTitle );
     };
 } // namespace SE::Core

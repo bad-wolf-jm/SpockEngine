@@ -68,50 +68,50 @@ namespace SE::Core
         }
     }
 
-    void *UIDropdownButton::UIDropdownButton_Create()
-    {
-        auto lNewImage = new UIDropdownButton();
+    // void *UIDropdownButton::UIDropdownButton_Create()
+    // {
+    //     auto lNewImage = new UIDropdownButton();
 
-        return static_cast<void *>( lNewImage );
-    }
+    //     return static_cast<void *>( lNewImage );
+    // }
 
-    void UIDropdownButton::UIDropdownButton_Destroy( void *aInstance ) { delete static_cast<UIDropdownButton *>( aInstance ); }
+    // void UIDropdownButton::UIDropdownButton_Destroy( void *aInstance ) { delete static_cast<UIDropdownButton *>( aInstance ); }
 
-    void UIDropdownButton::UIDropdownButton_SetContent( void *aInstance, void *aContent )
-    {
-        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
-        auto lContent  = static_cast<UIComponent *>( aContent );
+    // void UIDropdownButton::UIDropdownButton_SetContent( void *aInstance, void *aContent )
+    // {
+    //     auto lInstance = static_cast<UIDropdownButton *>( aInstance );
+    //     auto lContent  = static_cast<UIComponent *>( aContent );
 
-        return lInstance->SetContent( lContent );
-    }
+    //     return lInstance->SetContent( lContent );
+    // }
 
-    void UIDropdownButton::UIDropdownButton_SetContentSize( void *aInstance, math::vec2 aContentSizse )
-    {
-        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
+    // void UIDropdownButton::UIDropdownButton_SetContentSize( void *aInstance, math::vec2 aContentSizse )
+    // {
+    //     auto lInstance = static_cast<UIDropdownButton *>( aInstance );
 
-        return lInstance->SetContentSize( aContentSizse );
-    }
+    //     return lInstance->SetContentSize( aContentSizse );
+    // }
 
-    void UIDropdownButton::UIDropdownButton_SetImage( void *aInstance, void *aImage )
-    {
-        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
-        auto lImage    = static_cast<UIBaseImage *>( aImage );
+    // void UIDropdownButton::UIDropdownButton_SetImage( void *aInstance, void *aImage )
+    // {
+    //     auto lInstance = static_cast<UIDropdownButton *>( aInstance );
+    //     auto lImage    = static_cast<UIBaseImage *>( aImage );
 
-        lInstance->SetImage( lImage );
-    }
+    //     lInstance->SetImage( lImage );
+    // }
 
-    void UIDropdownButton::UIDropdownButton_SetText( void *aInstance, void *aText )
-    {
-        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+    // void UIDropdownButton::UIDropdownButton_SetText( void *aInstance, void *aText )
+    // {
+    //     auto lInstance = static_cast<UIDropdownButton *>( aInstance );
+    //     auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetText( lString );
-    }
+    //     lInstance->SetText( lString );
+    // }
 
-    void UIDropdownButton::UIDropdownButton_SetTextColor( void *aInstance, math::vec4 aColor )
-    {
-        auto lInstance = static_cast<UIDropdownButton *>( aInstance );
+    // void UIDropdownButton::UIDropdownButton_SetTextColor( void *aInstance, math::vec4 aColor )
+    // {
+    //     auto lInstance = static_cast<UIDropdownButton *>( aInstance );
 
-        lInstance->SetTextColor( aColor );
-    }
+    //     lInstance->SetTextColor( aColor );
+    // }
 } // namespace SE::Core

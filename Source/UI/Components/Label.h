@@ -26,11 +26,11 @@ namespace SE::Core
 
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
-      public:
-        static void *UILabel_Create();
-        static void *UILabel_CreateWithText( void *aText );
-        static void  UILabel_Destroy( void *aInstance );
-        static void  UILabel_SetText( void *aInstance, void *aText );
-        static void  UILabel_SetTextColor( void *aInstance, math::vec4 aTextColor );
+    //   public:
+    //     static void *UILabel_Create();
+    //     static void *UILabel_CreateWithText( void *aText );
+    //     static void  UILabel_Destroy( void *aInstance );
+    //     static void  UILabel_SetText( void *aInstance, void *aText );
+    //     static void  UILabel_SetTextColor( void *aInstance, math::vec4 aTextColor );
     };
 } // namespace SE::Core

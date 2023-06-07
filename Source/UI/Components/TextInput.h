@@ -37,14 +37,14 @@ namespace SE::Core
         void *mOnTextChangedDelegate       = nullptr;
         int   mOnTextChangedDelegateHandle = -1;
 
-      public:
-        static void *UITextInput_Create();
-        static void *UITextInput_CreateWithText( void *aText );
-        static void  UITextInput_Destroy( void *aInstance );
-        static void *UITextInput_GetText( void *aInstance );
-        static void  UITextInput_SetHintText( void *aInstance, void *aText );
-        static void  UITextInput_SetTextColor( void *aInstance, math::vec4 *aTextColor );
-        static void  UITextInput_SetBufferSize( void *aInstance, uint32_t aNewSize );
-        static void  UITextInput_OnTextChanged( void *aInstance, void *aDelegate );
+    //   public:
+    //     static void *UITextInput_Create();
+    //     static void *UITextInput_CreateWithText( void *aText );
+    //     static void  UITextInput_Destroy( void *aInstance );
+    //     static void *UITextInput_GetText( void *aInstance );
+    //     static void  UITextInput_SetHintText( void *aInstance, void *aText );
+    //     static void  UITextInput_SetTextColor( void *aInstance, math::vec4 *aTextColor );
+    //     static void  UITextInput_SetBufferSize( void *aInstance, uint32_t aNewSize );
+    //     static void  UITextInput_OnTextChanged( void *aInstance, void *aDelegate );
     };
 } // namespace SE::Core

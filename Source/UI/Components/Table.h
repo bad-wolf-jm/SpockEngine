@@ -23,9 +23,9 @@ namespace SE::Core
         virtual void     Render( int aRow, ImVec2 aCellSize ) = 0;
         void             Clear();
 
-        static void UITableColumn_SetTooltip( void *aSelf, void *aTooptip );
-        static void UITableColumn_SetForegroundColor( void *aSelf, void *aForegroundColor );
-        static void UITableColumn_SetBackgroundColor( void *aSelf, void *aBackroundColor );
+        // static void UITableColumn_SetTooltip( void *aSelf, void *aTooptip );
+        // static void UITableColumn_SetForegroundColor( void *aSelf, void *aForegroundColor );
+        // static void UITableColumn_SetBackgroundColor( void *aSelf, void *aBackroundColor );
     };
 
     struct sFloat64Column : public sTableColumn
@@ -43,12 +43,12 @@ namespace SE::Core
         void     Render( int aRow, ImVec2 aCellSize );
         void     Clear();
 
-      public:
-        static void *UIFloat64Column_Create();
-        static void *UIFloat64Column_CreateFull( void *aHeader, float aInitialSize, void *aFormat, void *aNaNFormat );
-        static void  UIFloat64Column_Destroy( void *aSelf );
-        static void  UIFloat64Column_Clear( void *aSelf );
-        static void  UIFloat64Column_SetData( void *aSelf, void *aValue );
+    //   public:
+    //     static void *UIFloat64Column_Create();
+    //     static void *UIFloat64Column_CreateFull( void *aHeader, float aInitialSize, void *aFormat, void *aNaNFormat );
+    //     static void  UIFloat64Column_Destroy( void *aSelf );
+    //     static void  UIFloat64Column_Clear( void *aSelf );
+    //     static void  UIFloat64Column_SetData( void *aSelf, void *aValue );
     };
 
     struct sUint32Column : public sTableColumn
@@ -63,12 +63,12 @@ namespace SE::Core
         void     Render( int aRow, ImVec2 aCellSize );
         void     Clear();
 
-      public:
-        static void *UIUint32Column_Create();
-        static void *UIUint32Column_CreateFull( void *aHeader, float aInitialSize );
-        static void  UIUint32Column_Destroy( void *aSelf );
-        static void  UIUint32Column_Clear( void *aSelf );
-        static void  UIUint32Column_SetData( void *aSelf, void *aValue );
+    //   public:
+    //     static void *UIUint32Column_Create();
+    //     static void *UIUint32Column_CreateFull( void *aHeader, float aInitialSize );
+    //     static void  UIUint32Column_Destroy( void *aSelf );
+    //     static void  UIUint32Column_Clear( void *aSelf );
+    //     static void  UIUint32Column_SetData( void *aSelf, void *aValue );
     };
 
     struct sStringColumn : public sTableColumn
@@ -83,12 +83,12 @@ namespace SE::Core
         void     Render( int aRow, ImVec2 aCellSize );
         void     Clear();
 
-      public:
-        static void *UIStringColumn_Create();
-        static void *UIStringColumn_CreateFull( void *aHeader, float aInitialSize );
-        static void  UIStringColumn_Destroy( void *aSelf );
-        static void  UIStringColumn_Clear( void *aSelf );
-        static void  UIStringColumn_SetData( void *aSelf, void *aValue );
+    //   public:
+    //     static void *UIStringColumn_Create();
+    //     static void *UIStringColumn_CreateFull( void *aHeader, float aInitialSize );
+    //     static void  UIStringColumn_Destroy( void *aSelf );
+    //     static void  UIStringColumn_Clear( void *aSelf );
+    //     static void  UIStringColumn_SetData( void *aSelf, void *aValue );
     };
 
     class UITable : public UIComponent
@@ -125,14 +125,14 @@ namespace SE::Core
         void *mOnRowClickDelegate       = nullptr;
         int   mOnRowClickDelegateHandle = -1;
 
-      public:
-        static void *UITable_Create();
-        static void  UITable_Destroy( void *aSelf );
-        static void  UITable_OnRowClicked( void *aSelf, void *aHandler );
-        static void  UITable_AddColumn( void *aSelf, void *aColumn );
-        static void  UITable_SetRowHeight( void *aSelf, float aRowHeight );
-        static void  UITable_SetRowBackgroundColor( void *aSelf, void *aColors );
-        static void  UITable_SetDisplayedRowIndices( void *aSelf, void *aIndices );
-        static void  UITable_ClearRowBackgroundColor( void *aSelf );
+    //   public:
+    //     static void *UITable_Create();
+    //     static void  UITable_Destroy( void *aSelf );
+    //     static void  UITable_OnRowClicked( void *aSelf, void *aHandler );
+    //     static void  UITable_AddColumn( void *aSelf, void *aColumn );
+    //     static void  UITable_SetRowHeight( void *aSelf, float aRowHeight );
+    //     static void  UITable_SetRowBackgroundColor( void *aSelf, void *aColors );
+    //     static void  UITable_SetDisplayedRowIndices( void *aSelf, void *aIndices );
+    //     static void  UITable_ClearRowBackgroundColor( void *aSelf );
     };
 } // namespace SE::Core
