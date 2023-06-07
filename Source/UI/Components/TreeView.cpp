@@ -406,52 +406,52 @@ namespace SE::Core
         }
     }
 
-    void *UITreeViewNode::UITreeViewNode_Create()
-    {
-        auto lNewLabel = new UITreeViewNode();
+    // void *UITreeViewNode::UITreeViewNode_Create()
+    // {
+    //     auto lNewLabel = new UITreeViewNode();
 
-        return static_cast<void *>( lNewLabel );
-    }
+    //     return static_cast<void *>( lNewLabel );
+    // }
 
-    void UITreeViewNode::UITreeViewNode_Destroy( void *aInstance ) { delete static_cast<UITreeViewNode *>( aInstance ); }
+    // void UITreeViewNode::UITreeViewNode_Destroy( void *aInstance ) { delete static_cast<UITreeViewNode *>( aInstance ); }
 
-    void UITreeViewNode::UITreeViewNode_SetText( void *aInstance, void *aText )
-    {
-        auto lInstance = static_cast<UITreeViewNode *>( aInstance );
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+    // void UITreeViewNode::UITreeViewNode_SetText( void *aInstance, void *aText )
+    // {
+    //     auto lInstance = static_cast<UITreeViewNode *>( aInstance );
+    //     auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetText( lString );
-    }
+    //     lInstance->SetText( lString );
+    // }
 
-    void UITreeViewNode::UITreeViewNode_SetTextColor( void *aInstance, math::vec4 aTextColor )
-    {
-        auto lInstance = static_cast<UITreeViewNode *>( aInstance );
+    // void UITreeViewNode::UITreeViewNode_SetTextColor( void *aInstance, math::vec4 aTextColor )
+    // {
+    //     auto lInstance = static_cast<UITreeViewNode *>( aInstance );
 
-        lInstance->SetTextColor( aTextColor );
-    }
+    //     lInstance->SetTextColor( aTextColor );
+    // }
 
-    void UITreeViewNode::UITreeViewNode_SetIcon( void *aInstance, void *aIcon )
-    {
-        auto lInstance = static_cast<UITreeViewNode *>( aInstance );
-        auto lImage    = static_cast<UIImage *>( aIcon );
+    // void UITreeViewNode::UITreeViewNode_SetIcon( void *aInstance, void *aIcon )
+    // {
+    //     auto lInstance = static_cast<UITreeViewNode *>( aInstance );
+    //     auto lImage    = static_cast<UIImage *>( aIcon );
 
-        lInstance->SetIcon( lImage );
-    }
+    //     lInstance->SetIcon( lImage );
+    // }
 
-    void UITreeViewNode::UITreeViewNode_SetIndicator( void *aInstance, void *aIndicator )
-    {
-        auto lInstance = static_cast<UITreeViewNode *>( aInstance );
-        auto lImage    = static_cast<UIComponent *>( aIndicator );
+    // void UITreeViewNode::UITreeViewNode_SetIndicator( void *aInstance, void *aIndicator )
+    // {
+    //     auto lInstance = static_cast<UITreeViewNode *>( aInstance );
+    //     auto lImage    = static_cast<UIComponent *>( aIndicator );
 
-        lInstance->SetIndicator( lImage );
-    }
+    //     lInstance->SetIndicator( lImage );
+    // }
 
-    void *UITreeViewNode::UITreeViewNode_Add( void *aInstance )
-    {
-        auto lInstance = static_cast<UITreeViewNode *>( aInstance );
+    // void *UITreeViewNode::UITreeViewNode_Add( void *aInstance )
+    // {
+    //     auto lInstance = static_cast<UITreeViewNode *>( aInstance );
 
-        return static_cast<void *>( lInstance->Add() );
-    }
+    //     return static_cast<void *>( lInstance->Add() );
+    // }
 
     UITreeView::UITreeView()
     {
@@ -473,34 +473,34 @@ namespace SE::Core
         mRoot->Update( aPosition, aSize );
     }
 
-    void *UITreeView::UITreeView_Create()
-    {
-        auto lNewLabel = new UITreeView();
+    // void *UITreeView::UITreeView_Create()
+    // {
+    //     auto lNewLabel = new UITreeView();
 
-        return static_cast<void *>( lNewLabel );
-    }
+    //     return static_cast<void *>( lNewLabel );
+    // }
 
-    void UITreeView::UITreeView_Destroy( void *aInstance ) { delete static_cast<UITreeView *>( aInstance ); }
+    // void UITreeView::UITreeView_Destroy( void *aInstance ) { delete static_cast<UITreeView *>( aInstance ); }
 
-    void UITreeView::UITreeView_SetIndent( void *aInstance, float aIndent )
-    {
-        auto lInstance = static_cast<UITreeView *>( aInstance );
+    // void UITreeView::UITreeView_SetIndent( void *aInstance, float aIndent )
+    // {
+    //     auto lInstance = static_cast<UITreeView *>( aInstance );
 
-        lInstance->SetIndent( aIndent );
-    }
+    //     lInstance->SetIndent( aIndent );
+    // }
 
-    void UITreeView::UITreeView_SetIconSpacing( void *aInstance, float aSpacing )
-    {
-        auto lInstance = static_cast<UITreeView *>( aInstance );
+    // void UITreeView::UITreeView_SetIconSpacing( void *aInstance, float aSpacing )
+    // {
+    //     auto lInstance = static_cast<UITreeView *>( aInstance );
 
-        lInstance->SetIconSpacing( aSpacing );
-    }
+    //     lInstance->SetIconSpacing( aSpacing );
+    // }
 
-    void *UITreeView::UITreeView_Add( void *aInstance )
-    {
-        auto lInstance = static_cast<UITreeView *>( aInstance );
+    // void *UITreeView::UITreeView_Add( void *aInstance )
+    // {
+    //     auto lInstance = static_cast<UITreeView *>( aInstance );
 
-        return static_cast<void *>( lInstance->Add() );
-    }
+    //     return static_cast<void *>( lInstance->Add() );
+    // }
 
 } // namespace SE::Core

@@ -57,14 +57,14 @@ namespace SE::Core
 
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
-      public:
-        static void *UISplitter_Create();
-        static void *UISplitter_CreateWithOrientation( eBoxLayoutOrientation aOrientation );
-        static void  UISplitter_Destroy( void *aInstance );
+    //   public:
+    //     static void *UISplitter_Create();
+    //     static void *UISplitter_CreateWithOrientation( eBoxLayoutOrientation aOrientation );
+    //     static void  UISplitter_Destroy( void *aInstance );
 
-        static void UISplitter_Add1( void *aInstance, void *aChild );
-        static void UISplitter_Add2( void *aInstance, void *aChild );
+    //     static void UISplitter_Add1( void *aInstance, void *aChild );
+    //     static void UISplitter_Add2( void *aInstance, void *aChild );
 
-        static void UISplitter_SetItemSpacing( void *aInstance, float aItemSpacing );
+    //     static void UISplitter_SetItemSpacing( void *aInstance, float aItemSpacing );
     };
 } // namespace SE::Core

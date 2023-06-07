@@ -26,9 +26,9 @@ namespace SE::Core
 
         void DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
-      public:
-        static void *UIContainer_Create();
-        static void  UIContainer_Destroy( void *aInstance );
-        static void  UIContainer_SetContent( void *aInstance, void *aChild );
+    //   public:
+    //     static void *UIContainer_Create();
+    //     static void  UIContainer_Destroy( void *aInstance );
+    //     static void  UIContainer_SetContent( void *aInstance, void *aChild );
     };
 } // namespace SE::Core

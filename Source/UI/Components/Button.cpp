@@ -61,49 +61,49 @@ namespace SE::Core
         PopStyles( lEnabled );
     }
 
-    void *UIButton::UIButton_Create()
-    {
-        auto lNewButton = new UIButton();
+    // void *UIButton::UIButton_Create()
+    // {
+    //     auto lNewButton = new UIButton();
 
-        return static_cast<void *>( lNewButton );
-    }
+    //     return static_cast<void *>( lNewButton );
+    // }
 
-    void *UIButton::UIButton_CreateWithText( void *aText )
-    {
-        auto lString    = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-        auto lNewButton = new UIButton( lString );
+    // void *UIButton::UIButton_CreateWithText( void *aText )
+    // {
+    //     auto lString    = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+    //     auto lNewButton = new UIButton( lString );
 
-        return static_cast<void *>( lNewButton );
-    }
+    //     return static_cast<void *>( lNewButton );
+    // }
 
-    void UIButton::UIButton_Destroy( void *aInstance ) { delete static_cast<UILabel *>( aInstance ); }
+    // void UIButton::UIButton_Destroy( void *aInstance ) { delete static_cast<UILabel *>( aInstance ); }
 
-    void UIButton::UIButton_SetText( void *aInstance, void *aText )
-    {
-        auto lInstance = static_cast<UILabel *>( aInstance );
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+    // void UIButton::UIButton_SetText( void *aInstance, void *aText )
+    // {
+    //     auto lInstance = static_cast<UILabel *>( aInstance );
+    //     auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetText( lString );
-    }
+    //     lInstance->SetText( lString );
+    // }
 
-    void UIButton::UIButton_OnClick( void *aInstance, void *aDelegate )
-    {
-        auto lInstance = static_cast<UIButton *>( aInstance );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+    // void UIButton::UIButton_OnClick( void *aInstance, void *aDelegate )
+    // {
+    //     auto lInstance = static_cast<UIButton *>( aInstance );
+    //     auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        if (lInstance->mOnClickDelegate != nullptr)
-            mono_gchandle_free(lInstance->mOnClickDelegateHandle);
+    //     if (lInstance->mOnClickDelegate != nullptr)
+    //         mono_gchandle_free(lInstance->mOnClickDelegateHandle);
 
-        lInstance->mOnClickDelegate = aDelegate;
-        lInstance->mOnClickDelegateHandle = mono_gchandle_new(static_cast<MonoObject *>( aDelegate ), true);
+    //     lInstance->mOnClickDelegate = aDelegate;
+    //     lInstance->mOnClickDelegateHandle = mono_gchandle_new(static_cast<MonoObject *>( aDelegate ), true);
 
-        lInstance->OnClick(
-            [lInstance, lDelegate]()
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
+    //     lInstance->OnClick(
+    //         [lInstance, lDelegate]()
+    //         {
+    //             auto lDelegateClass = mono_object_get_class( lDelegate );
+    //             auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
 
-                mono_runtime_invoke( lInvokeMethod, lDelegate, nullptr, nullptr );
-            } );
-    }
+    //             mono_runtime_invoke( lInvokeMethod, lDelegate, nullptr, nullptr );
+    //         } );
+    // }
 } // namespace SE::Core

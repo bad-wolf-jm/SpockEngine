@@ -53,73 +53,73 @@ namespace SE::Core
         if( lTextColorSet ) ImGui::PopStyleColor();
     }
 
-    void *UITextInput::UITextInput_Create()
-    {
-        auto lNewTextInput = new UITextInput();
+    // void *UITextInput::UITextInput_Create()
+    // {
+    //     auto lNewTextInput = new UITextInput();
 
-        return static_cast<void *>( lNewTextInput );
-    }
+    //     return static_cast<void *>( lNewTextInput );
+    // }
 
-    void *UITextInput::UITextInput_CreateWithText( void *aText )
-    {
-        auto lString       = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-        auto lNewTextInput = new UITextInput( lString );
+    // void *UITextInput::UITextInput_CreateWithText( void *aText )
+    // {
+    //     auto lString       = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+    //     auto lNewTextInput = new UITextInput( lString );
 
-        return static_cast<void *>( lNewTextInput );
-    }
+    //     return static_cast<void *>( lNewTextInput );
+    // }
 
-    void UITextInput::UITextInput_Destroy( void *aInstance ) { delete static_cast<UITextInput *>( aInstance ); }
+    // void UITextInput::UITextInput_Destroy( void *aInstance ) { delete static_cast<UITextInput *>( aInstance ); }
 
-    void UITextInput::UITextInput_SetHintText( void *aInstance, void *aText )
-    {
-        auto lInstance = static_cast<UITextInput *>( aInstance );
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+    // void UITextInput::UITextInput_SetHintText( void *aInstance, void *aText )
+    // {
+    //     auto lInstance = static_cast<UITextInput *>( aInstance );
+    //     auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetHintText( lString );
-    }
+    //     lInstance->SetHintText( lString );
+    // }
 
-    void *UITextInput::UITextInput_GetText( void *aInstance )
-    {
-        auto lInstance = static_cast<UITextInput *>( aInstance );
+    // void *UITextInput::UITextInput_GetText( void *aInstance )
+    // {
+    //     auto lInstance = static_cast<UITextInput *>( aInstance );
 
-        return DotNetRuntime::NewString( lInstance->GetText() );
-    }
+    //     return DotNetRuntime::NewString( lInstance->GetText() );
+    // }
 
-    void UITextInput::UITextInput_SetTextColor( void *aInstance, math::vec4 *aTextColor )
-    {
-        auto lInstance = static_cast<UITextInput *>( aInstance );
+    // void UITextInput::UITextInput_SetTextColor( void *aInstance, math::vec4 *aTextColor )
+    // {
+    //     auto lInstance = static_cast<UITextInput *>( aInstance );
 
-        lInstance->SetTextColor( *aTextColor );
-    }
+    //     lInstance->SetTextColor( *aTextColor );
+    // }
 
-    void UITextInput::UITextInput_SetBufferSize( void *aInstance, uint32_t aBufferSize )
-    {
-        auto lInstance = static_cast<UITextInput *>( aInstance );
+    // void UITextInput::UITextInput_SetBufferSize( void *aInstance, uint32_t aBufferSize )
+    // {
+    //     auto lInstance = static_cast<UITextInput *>( aInstance );
 
-        lInstance->SetBuffersize( aBufferSize );
-    }
+    //     lInstance->SetBuffersize( aBufferSize );
+    // }
 
-    void UITextInput::UITextInput_OnTextChanged( void *aInstance, void *aDelegate )
-    {
-        auto lInstance = static_cast<UITextInput *>( aInstance );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+    // void UITextInput::UITextInput_OnTextChanged( void *aInstance, void *aDelegate )
+    // {
+    //     auto lInstance = static_cast<UITextInput *>( aInstance );
+    //     auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        if( lInstance->mOnTextChangedDelegate != nullptr ) mono_gchandle_free( lInstance->mOnTextChangedDelegateHandle );
+    //     if( lInstance->mOnTextChangedDelegate != nullptr ) mono_gchandle_free( lInstance->mOnTextChangedDelegateHandle );
 
-        lInstance->mOnTextChangedDelegate       = aDelegate;
-        lInstance->mOnTextChangedDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+    //     lInstance->mOnTextChangedDelegate       = aDelegate;
+    //     lInstance->mOnTextChangedDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
 
-        lInstance->OnTextChanged(
-            [lInstance, lDelegate]( std::string aText )
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
+    //     lInstance->OnTextChanged(
+    //         [lInstance, lDelegate]( std::string aText )
+    //         {
+    //             auto lDelegateClass = mono_object_get_class( lDelegate );
+    //             auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
 
-                auto  lString   = DotNetRuntime::NewString( aText );
-                void *lParams[] = { (void *)lString };
-                auto  lValue    = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
-                mono_free( lString );
-            } );
-    }
+    //             auto  lString   = DotNetRuntime::NewString( aText );
+    //             void *lParams[] = { (void *)lString };
+    //             auto  lValue    = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
+    //             mono_free( lString );
+    //         } );
+    // }
 
 } // namespace SE::Core

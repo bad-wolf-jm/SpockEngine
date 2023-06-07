@@ -95,156 +95,156 @@ namespace SE::Core
         VectorComponentEditor( mFormat.c_str(), mDimension, (float *)&mValues, (float *)&mResetValues, aSize.x );
     }
 
-    void *UIVec2Input::UIVec2Input_Create()
-    {
-        auto lNewVecInput = new UIVec2Input();
+    // void *UIVec2Input::UIVec2Input_Create()
+    // {
+    //     auto lNewVecInput = new UIVec2Input();
 
-        return static_cast<void *>( lNewVecInput );
-    }
+    //     return static_cast<void *>( lNewVecInput );
+    // }
 
-    void UIVec2Input::UIVec2Input_Destroy( void *aInstance ) { delete static_cast<UIVec2Input *>( aInstance ); }
+    // void UIVec2Input::UIVec2Input_Destroy( void *aInstance ) { delete static_cast<UIVec2Input *>( aInstance ); }
 
-    void UIVec2Input::UIVec2Input_OnChanged( void *aInstance, void *aDelegate )
-    {
-        auto lInstance = static_cast<UIVectorInputBase *>( aInstance );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+    // void UIVec2Input::UIVec2Input_OnChanged( void *aInstance, void *aDelegate )
+    // {
+    //     auto lInstance = static_cast<UIVectorInputBase *>( aInstance );
+    //     auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
+    //     if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
 
-        lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+    //     lInstance->mOnChangeDelegate       = aDelegate;
+    //     lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
 
-        lInstance->OnChanged(
-            [lInstance, lDelegate]( math::vec4 aVector )
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
+    //     lInstance->OnChanged(
+    //         [lInstance, lDelegate]( math::vec4 aVector )
+    //         {
+    //             auto lDelegateClass = mono_object_get_class( lDelegate );
+    //             auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
 
-                math::vec2 lProjection = math::vec2{ aVector.x, aVector.y };
-                void      *lParams[]   = { (void *)&lProjection };
-                auto       lValue      = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
-            } );
-    }
+    //             math::vec2 lProjection = math::vec2{ aVector.x, aVector.y };
+    //             void      *lParams[]   = { (void *)&lProjection };
+    //             auto       lValue      = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
+    //         } );
+    // }
 
-    void UIVec2Input::UIVec2Input_SetValue( void *aInstance, math::vec2 aValue )
-    {
-        static_cast<UIVec2Input *>( aInstance )->SetValue( aValue );
-    }
+    // void UIVec2Input::UIVec2Input_SetValue( void *aInstance, math::vec2 aValue )
+    // {
+    //     static_cast<UIVec2Input *>( aInstance )->SetValue( aValue );
+    // }
 
-    math::vec2 UIVec2Input::UIVec2Input_GetValue( void *aInstance ) { return static_cast<UIVec2Input *>( aInstance )->Value(); }
+    // math::vec2 UIVec2Input::UIVec2Input_GetValue( void *aInstance ) { return static_cast<UIVec2Input *>( aInstance )->Value(); }
 
-    void UIVec2Input::UIVec2Input_SetResetValues( void *aInstance, math::vec2 aValue )
-    {
-        static_cast<UIVec2Input *>( aInstance )->SetResetValues( aValue );
-    }
+    // void UIVec2Input::UIVec2Input_SetResetValues( void *aInstance, math::vec2 aValue )
+    // {
+    //     static_cast<UIVec2Input *>( aInstance )->SetResetValues( aValue );
+    // }
 
-    void UIVec2Input::UIVec2Input_SetFormat( void *aInstance, void *aText )
-    {
-        auto lInstance = static_cast<UIVectorInputBase *>( aInstance );
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+    // void UIVec2Input::UIVec2Input_SetFormat( void *aInstance, void *aText )
+    // {
+    //     auto lInstance = static_cast<UIVectorInputBase *>( aInstance );
+    //     auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetFormat( lString );
-    }
+    //     lInstance->SetFormat( lString );
+    // }
 
-    void *UIVec3Input::UIVec3Input_Create()
-    {
-        auto lNewVecInput = new UIVec3Input();
+    // void *UIVec3Input::UIVec3Input_Create()
+    // {
+    //     auto lNewVecInput = new UIVec3Input();
 
-        return static_cast<void *>( lNewVecInput );
-    }
+    //     return static_cast<void *>( lNewVecInput );
+    // }
 
-    void UIVec3Input::UIVec3Input_Destroy( void *aInstance ) { delete static_cast<UIVec3Input *>( aInstance ); }
+    // void UIVec3Input::UIVec3Input_Destroy( void *aInstance ) { delete static_cast<UIVec3Input *>( aInstance ); }
 
-    void UIVec3Input::UIVec3Input_OnChanged( void *aInstance, void *aDelegate )
-    {
-        auto lInstance = static_cast<UIVectorInputBase *>( aInstance );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+    // void UIVec3Input::UIVec3Input_OnChanged( void *aInstance, void *aDelegate )
+    // {
+    //     auto lInstance = static_cast<UIVectorInputBase *>( aInstance );
+    //     auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
+    //     if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
 
-        lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+    //     lInstance->mOnChangeDelegate       = aDelegate;
+    //     lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
 
-        lInstance->OnChanged(
-            [lInstance, lDelegate]( math::vec4 aVector )
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
+    //     lInstance->OnChanged(
+    //         [lInstance, lDelegate]( math::vec4 aVector )
+    //         {
+    //             auto lDelegateClass = mono_object_get_class( lDelegate );
+    //             auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
 
-                math::vec3 lProjection = math::vec3{ aVector.x, aVector.y, aVector.z };
-                void      *lParams[]   = { (void *)&lProjection };
-                auto       lValue      = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
-            } );
-    }
+    //             math::vec3 lProjection = math::vec3{ aVector.x, aVector.y, aVector.z };
+    //             void      *lParams[]   = { (void *)&lProjection };
+    //             auto       lValue      = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
+    //         } );
+    // }
 
-    void UIVec3Input::UIVec3Input_SetValue( void *aInstance, math::vec3 aValue )
-    {
-        static_cast<UIVec3Input *>( aInstance )->SetValue( aValue );
-    }
+    // void UIVec3Input::UIVec3Input_SetValue( void *aInstance, math::vec3 aValue )
+    // {
+    //     static_cast<UIVec3Input *>( aInstance )->SetValue( aValue );
+    // }
 
-    math::vec3 UIVec3Input::UIVec3Input_GetValue( void *aInstance ) { return static_cast<UIVec3Input *>( aInstance )->Value(); }
+    // math::vec3 UIVec3Input::UIVec3Input_GetValue( void *aInstance ) { return static_cast<UIVec3Input *>( aInstance )->Value(); }
 
-    void UIVec3Input::UIVec3Input_SetResetValues( void *aInstance, math::vec3 aValue )
-    {
-        static_cast<UIVec3Input *>( aInstance )->SetResetValues( aValue );
-    }
+    // void UIVec3Input::UIVec3Input_SetResetValues( void *aInstance, math::vec3 aValue )
+    // {
+    //     static_cast<UIVec3Input *>( aInstance )->SetResetValues( aValue );
+    // }
 
-    void UIVec3Input::UIVec3Input_SetFormat( void *aInstance, void *aText )
-    {
-        auto lInstance = static_cast<UIVectorInputBase *>( aInstance );
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+    // void UIVec3Input::UIVec3Input_SetFormat( void *aInstance, void *aText )
+    // {
+    //     auto lInstance = static_cast<UIVectorInputBase *>( aInstance );
+    //     auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetFormat( lString );
-    }
+    //     lInstance->SetFormat( lString );
+    // }
 
-    void *UIVec4Input::UIVec4Input_Create()
-    {
-        auto lNewVecInput = new UIVec4Input();
+    // void *UIVec4Input::UIVec4Input_Create()
+    // {
+    //     auto lNewVecInput = new UIVec4Input();
 
-        return static_cast<void *>( lNewVecInput );
-    }
+    //     return static_cast<void *>( lNewVecInput );
+    // }
 
-    void UIVec4Input::UIVec4Input_Destroy( void *aInstance ) { delete static_cast<UIVec4Input *>( aInstance ); }
+    // void UIVec4Input::UIVec4Input_Destroy( void *aInstance ) { delete static_cast<UIVec4Input *>( aInstance ); }
 
-    void UIVec4Input::UIVec4Input_OnChanged( void *aInstance, void *aDelegate )
-    {
-        auto lInstance = static_cast<UIVectorInputBase *>( aInstance );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+    // void UIVec4Input::UIVec4Input_OnChanged( void *aInstance, void *aDelegate )
+    // {
+    //     auto lInstance = static_cast<UIVectorInputBase *>( aInstance );
+    //     auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
+    //     if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
 
-        lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+    //     lInstance->mOnChangeDelegate       = aDelegate;
+    //     lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
 
-        lInstance->OnChanged(
-            [lInstance, lDelegate]( math::vec4 aVector )
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
+    //     lInstance->OnChanged(
+    //         [lInstance, lDelegate]( math::vec4 aVector )
+    //         {
+    //             auto lDelegateClass = mono_object_get_class( lDelegate );
+    //             auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
 
-                void *lParams[] = { (void *)&aVector };
-                auto  lValue    = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
-            } );
-    }
+    //             void *lParams[] = { (void *)&aVector };
+    //             auto  lValue    = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
+    //         } );
+    // }
 
-    void UIVec4Input::UIVec4Input_SetValue( void *aInstance, math::vec4 aValue )
-    {
-        static_cast<UIVec4Input *>( aInstance )->SetValue( aValue );
-    }
+    // void UIVec4Input::UIVec4Input_SetValue( void *aInstance, math::vec4 aValue )
+    // {
+    //     static_cast<UIVec4Input *>( aInstance )->SetValue( aValue );
+    // }
 
-    math::vec4 UIVec4Input::UIVec4Input_GetValue( void *aInstance ) { return static_cast<UIVec4Input *>( aInstance )->Value(); }
+    // math::vec4 UIVec4Input::UIVec4Input_GetValue( void *aInstance ) { return static_cast<UIVec4Input *>( aInstance )->Value(); }
 
-    void UIVec4Input::UIVec4Input_SetResetValues( void *aInstance, math::vec4 aValue )
-    {
-        static_cast<UIVec4Input *>( aInstance )->SetResetValues( aValue );
-    }
+    // void UIVec4Input::UIVec4Input_SetResetValues( void *aInstance, math::vec4 aValue )
+    // {
+    //     static_cast<UIVec4Input *>( aInstance )->SetResetValues( aValue );
+    // }
 
-    void UIVec4Input::UIVec4Input_SetFormat( void *aInstance, void *aText )
-    {
-        auto lInstance = static_cast<UIVectorInputBase *>( aInstance );
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+    // void UIVec4Input::UIVec4Input_SetFormat( void *aInstance, void *aText )
+    // {
+    //     auto lInstance = static_cast<UIVectorInputBase *>( aInstance );
+    //     auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetFormat( lString );
-    }
+    //     lInstance->SetFormat( lString );
+    // }
 
 } // namespace SE::Core

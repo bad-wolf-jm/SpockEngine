@@ -28,12 +28,12 @@ namespace SE::Core
         ImGui::SliderFloat("", &mValue, 0.0f, 1.0f, "");
     }
 
-    void *UISlider::UISlider_Create()
-    {
-        auto lNewLabel = new UISlider();
+    // void *UISlider::UISlider_Create()
+    // {
+    //     auto lNewLabel = new UISlider();
 
-        return static_cast<void *>( lNewLabel );
-    }
+    //     return static_cast<void *>( lNewLabel );
+    // }
 
-    void UISlider::UISlider_Destroy( void *aInstance ) { delete static_cast<UISlider *>( aInstance ); }
+    // void UISlider::UISlider_Destroy( void *aInstance ) { delete static_cast<UISlider *>( aInstance ); }
 } // namespace SE::Core

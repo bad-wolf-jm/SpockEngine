@@ -62,72 +62,72 @@ namespace SE::Core
         }
     }
 
-    void *UIComboBox::UIComboBox_Create()
-    {
-        auto lNewComboBox = new UIComboBox();
+    // void *UIComboBox::UIComboBox_Create()
+    // {
+    //     auto lNewComboBox = new UIComboBox();
 
-        return static_cast<void *>( lNewComboBox );
-    }
+    //     return static_cast<void *>( lNewComboBox );
+    // }
 
-    void *UIComboBox::UIComboBox_CreateWithItems( void *aItems )
-    {
-        std::vector<std::string> lItemVector;
-        for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aItems ) ) )
-            lItemVector.emplace_back( DotNetRuntime::NewString( x ) );
+    // void *UIComboBox::UIComboBox_CreateWithItems( void *aItems )
+    // {
+    //     std::vector<std::string> lItemVector;
+    //     for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aItems ) ) )
+    //         lItemVector.emplace_back( DotNetRuntime::NewString( x ) );
 
-        auto lNewComboBox = new UIComboBox( lItemVector );
+    //     auto lNewComboBox = new UIComboBox( lItemVector );
 
-        return static_cast<void *>( lNewComboBox );
-    }
+    //     return static_cast<void *>( lNewComboBox );
+    // }
 
-    void UIComboBox::UIComboBox_Destroy( void *aInstance ) { delete static_cast<UIComboBox *>( aInstance ); }
+    // void UIComboBox::UIComboBox_Destroy( void *aInstance ) { delete static_cast<UIComboBox *>( aInstance ); }
 
-    int UIComboBox::UIComboBox_GetCurrent( void *aInstance )
-    {
-        auto lInstance = static_cast<UIComboBox *>( aInstance );
+    // int UIComboBox::UIComboBox_GetCurrent( void *aInstance )
+    // {
+    //     auto lInstance = static_cast<UIComboBox *>( aInstance );
 
-        return lInstance->Current();
-    }
+    //     return lInstance->Current();
+    // }
 
-    void UIComboBox::UIComboBox_SetCurrent( void *aInstance, int aValue )
-    {
-        auto lInstance = static_cast<UIComboBox *>( aInstance );
+    // void UIComboBox::UIComboBox_SetCurrent( void *aInstance, int aValue )
+    // {
+    //     auto lInstance = static_cast<UIComboBox *>( aInstance );
 
-        lInstance->SetCurrent( aValue );
-    }
+    //     lInstance->SetCurrent( aValue );
+    // }
 
-    void UIComboBox::UIComboBox_SetItemList( void *aInstance, void *aItems )
-    {
-        auto lInstance = static_cast<UIComboBox *>( aInstance );
+    // void UIComboBox::UIComboBox_SetItemList( void *aInstance, void *aItems )
+    // {
+    //     auto lInstance = static_cast<UIComboBox *>( aInstance );
 
-        std::vector<std::string> lItemVector;
-        for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aItems ) ) )
-            lItemVector.emplace_back( DotNetRuntime::NewString( x ) );
+    //     std::vector<std::string> lItemVector;
+    //     for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aItems ) ) )
+    //         lItemVector.emplace_back( DotNetRuntime::NewString( x ) );
 
-        lInstance->SetItemList( lItemVector );
-    }
+    //     lInstance->SetItemList( lItemVector );
+    // }
 
-    void UIComboBox::UIComboBox_OnChanged( void *aInstance, void *aDelegate )
-    {
-        auto lInstance = static_cast<UIComboBox *>( aInstance );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+    // void UIComboBox::UIComboBox_OnChanged( void *aInstance, void *aDelegate )
+    // {
+    //     auto lInstance = static_cast<UIComboBox *>( aInstance );
+    //     auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
-        if (lInstance->mOnChangeDelegate != nullptr)
-            mono_gchandle_free(lInstance->mOnChangeDelegateHandle);
+    //     if (lInstance->mOnChangeDelegate != nullptr)
+    //         mono_gchandle_free(lInstance->mOnChangeDelegateHandle);
 
-        lInstance->mOnChangeDelegate = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new(static_cast<MonoObject *>( aDelegate ), true);
+    //     lInstance->mOnChangeDelegate = aDelegate;
+    //     lInstance->mOnChangeDelegateHandle = mono_gchandle_new(static_cast<MonoObject *>( aDelegate ), true);
 
-        lInstance->OnChange(
-            [lInstance, lDelegate]( int aValue )
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
+    //     lInstance->OnChange(
+    //         [lInstance, lDelegate]( int aValue )
+    //         {
+    //             auto lDelegateClass = mono_object_get_class( lDelegate );
+    //             auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
 
-                void *lParams[] = { (void*)&aValue };
-                mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
-            } );
-    }
+    //             void *lParams[] = { (void*)&aValue };
+    //             mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
+    //         } );
+    // }
 
 
 } // namespace SE::Core

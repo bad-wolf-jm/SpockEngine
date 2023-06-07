@@ -20,8 +20,8 @@ namespace SE::Core
 
         void DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
-      public:
-        static void *UISlider_Create();
-        static void  UISlider_Destroy( void *aInstance );
+    //   public:
+    //     static void *UISlider_Create();
+    //     static void  UISlider_Destroy( void *aInstance );
     };
 } // namespace SE::Core

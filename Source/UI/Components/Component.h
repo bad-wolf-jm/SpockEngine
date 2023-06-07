@@ -75,20 +75,20 @@ namespace SE::Core
 
         bool IsHovered();
 
-      public:
-        static void UIComponent_SetIsVisible( void *aSelf, bool aIsVisible );
-        static void UIComponent_SetIsEnabled( void *aSelf, bool aIsEnabled );
-        static void UIComponent_SetAllowDragDrop( void *aSelf, bool aAllowDragDrop );
+    //   public:
+    //     static void UIComponent_SetIsVisible( void *aSelf, bool aIsVisible );
+    //     static void UIComponent_SetIsEnabled( void *aSelf, bool aIsEnabled );
+    //     static void UIComponent_SetAllowDragDrop( void *aSelf, bool aAllowDragDrop );
 
-        static void UIComponent_SetPaddingAll( void *aSelf, float aPaddingAll );
-        static void UIComponent_SetPaddingPairs( void *aSelf, float aPaddingTopBottom, float aPaddingLeftRight );
-        static void UIComponent_SetPaddingIndividual( void *aSelf, float aPaddingTop, float aPaddingBottom, float aPaddingLeft,
-                                                      float aPaddingRight );
-        static void UIComponent_SetAlignment( void *aSelf, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment );
-        static void UIComponent_SetHorizontalAlignment( void *aSelf, eHorizontalAlignment aAlignment );
-        static void UIComponent_SetVerticalAlignment( void *aSelf, eVerticalAlignment aAlignment );
-        static void UIComponent_SetBackgroundColor( void *aSelf, math::vec4 aColor );
-        static void UIComponent_SetFont( void *aSelf, FontFamilyFlags aFont );
-        static void UIComponent_SetTooltip( void *aSelf, void *aTooltip );
+    //     static void UIComponent_SetPaddingAll( void *aSelf, float aPaddingAll );
+    //     static void UIComponent_SetPaddingPairs( void *aSelf, float aPaddingTopBottom, float aPaddingLeftRight );
+    //     static void UIComponent_SetPaddingIndividual( void *aSelf, float aPaddingTop, float aPaddingBottom, float aPaddingLeft,
+    //                                                   float aPaddingRight );
+    //     static void UIComponent_SetAlignment( void *aSelf, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment );
+    //     static void UIComponent_SetHorizontalAlignment( void *aSelf, eHorizontalAlignment aAlignment );
+    //     static void UIComponent_SetVerticalAlignment( void *aSelf, eVerticalAlignment aAlignment );
+    //     static void UIComponent_SetBackgroundColor( void *aSelf, math::vec4 aColor );
+    //     static void UIComponent_SetFont( void *aSelf, FontFamilyFlags aFont );
+    //     static void UIComponent_SetTooltip( void *aSelf, void *aTooltip );
     };
 } // namespace SE::Core

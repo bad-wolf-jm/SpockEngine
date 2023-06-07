@@ -36,10 +36,10 @@ namespace SE::Core
 
         UIFileTreeNode *Add(fs::path const& aPath);
 
-      public:
-        static void *UIFileTree_Create();
-        static void  UIFileTree_Destroy( void *aInstance );
-        static void *UIFileTree_Add( void *aInstance, void* aPath );
+    //   public:
+    //     static void *UIFileTree_Create();
+    //     static void  UIFileTree_Destroy( void *aInstance );
+    //     static void *UIFileTree_Add( void *aInstance, void* aPath );
 
         friend class UIFileTreeNode;
     };

@@ -48,11 +48,11 @@ namespace SE::Core
 
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
-      public:
-        static void *UIStackLayout_Create();
-        static void  UIStackLayout_Destroy( void *aInstance );
+    //   public:
+    //     static void *UIStackLayout_Create();
+    //     static void  UIStackLayout_Destroy( void *aInstance );
 
-        static void UIStackLayout_Add( void *aInstance, void *aChild, void *aKey );
-        static void UIStackLayout_SetCurrent( void *aInstance, void *aKey );
+    //     static void UIStackLayout_Add( void *aInstance, void *aChild, void *aKey );
+    //     static void UIStackLayout_SetCurrent( void *aInstance, void *aKey );
     };
 } // namespace SE::Core

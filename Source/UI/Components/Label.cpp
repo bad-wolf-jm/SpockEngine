@@ -42,35 +42,35 @@ namespace SE::Core
         if( lTextColorSet ) ImGui::PopStyleColor();
     }
 
-    void *UILabel::UILabel_Create()
-    {
-        auto lNewLabel = new UILabel();
+    // void *UILabel::UILabel_Create()
+    // {
+    //     auto lNewLabel = new UILabel();
 
-        return static_cast<void *>( lNewLabel );
-    }
+    //     return static_cast<void *>( lNewLabel );
+    // }
 
-    void *UILabel::UILabel_CreateWithText( void *aText )
-    {
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-        auto lNewLabel = new UILabel( lString );
+    // void *UILabel::UILabel_CreateWithText( void *aText )
+    // {
+    //     auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+    //     auto lNewLabel = new UILabel( lString );
 
-        return static_cast<void *>( lNewLabel );
-    }
+    //     return static_cast<void *>( lNewLabel );
+    // }
 
-    void UILabel::UILabel_Destroy( void *aInstance ) { delete static_cast<UILabel *>( aInstance ); }
+    // void UILabel::UILabel_Destroy( void *aInstance ) { delete static_cast<UILabel *>( aInstance ); }
 
-    void UILabel::UILabel_SetText( void *aInstance, void *aText )
-    {
-        auto lInstance = static_cast<UILabel *>( aInstance );
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+    // void UILabel::UILabel_SetText( void *aInstance, void *aText )
+    // {
+    //     auto lInstance = static_cast<UILabel *>( aInstance );
+    //     auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetText( lString );
-    }
+    //     lInstance->SetText( lString );
+    // }
 
-    void UILabel::UILabel_SetTextColor( void *aInstance, math::vec4 aTextColor )
-    {
-        auto lInstance = static_cast<UILabel *>( aInstance );
+    // void UILabel::UILabel_SetTextColor( void *aInstance, math::vec4 aTextColor )
+    // {
+    //     auto lInstance = static_cast<UILabel *>( aInstance );
 
-        lInstance->SetTextColor( aTextColor );
-    }
+    //     lInstance->SetTextColor( aTextColor );
+    // }
 } // namespace SE::Core

@@ -22,21 +22,21 @@ namespace SE::Core
         ImGui::Image( TextureID(), mSize, mTopLeft, mBottomRight, mTintColor, ImVec4{} );
     }
 
-    void *UIImage::UIImage_Create()
-    {
-        auto lNewImage = new UIImage();
+    // void *UIImage::UIImage_Create()
+    // {
+    //     auto lNewImage = new UIImage();
 
-        return static_cast<void *>( lNewImage );
-    }
+    //     return static_cast<void *>( lNewImage );
+    // }
 
-    void *UIImage::UIImage_CreateWithPath( void *aText, math::vec2 aSize )
-    {
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-        auto lNewImage = new UIImage( lString, aSize );
+    // void *UIImage::UIImage_CreateWithPath( void *aText, math::vec2 aSize )
+    // {
+    //     auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+    //     auto lNewImage = new UIImage( lString, aSize );
 
-        return static_cast<void *>( lNewImage );
-    }
+    //     return static_cast<void *>( lNewImage );
+    // }
 
-    void UIImage::UIImage_Destroy( void *aInstance ) { delete static_cast<UIImage *>( aInstance ); }
+    // void UIImage::UIImage_Destroy( void *aInstance ) { delete static_cast<UIImage *>( aInstance ); }
 
 } // namespace SE::Core
