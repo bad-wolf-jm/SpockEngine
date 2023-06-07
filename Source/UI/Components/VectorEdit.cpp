@@ -133,6 +133,11 @@ namespace SE::Core
 
     math::vec2 UIVec2Input::UIVec2Input_GetValue( void *aInstance ) { return static_cast<UIVec2Input *>( aInstance )->Value(); }
 
+    void UIVec2Input::UIVec2Input_SetResetValues( void *aInstance, math::vec2 aValue )
+    {
+        static_cast<UIVec2Input *>( aInstance )->SetResetValues( aValue );
+    }
+
     void UIVec2Input::UIVec2Input_SetFormat( void *aInstance, void *aText )
     {
         auto lInstance = static_cast<UIVectorInputBase *>( aInstance );
@@ -179,6 +184,11 @@ namespace SE::Core
 
     math::vec3 UIVec3Input::UIVec3Input_GetValue( void *aInstance ) { return static_cast<UIVec3Input *>( aInstance )->Value(); }
 
+    void UIVec3Input::UIVec3Input_SetResetValues( void *aInstance, math::vec3 aValue )
+    {
+        static_cast<UIVec3Input *>( aInstance )->SetResetValues( aValue );
+    }
+
     void UIVec3Input::UIVec3Input_SetFormat( void *aInstance, void *aText )
     {
         auto lInstance = static_cast<UIVectorInputBase *>( aInstance );
@@ -186,7 +196,6 @@ namespace SE::Core
 
         lInstance->SetFormat( lString );
     }
-
 
     void *UIVec4Input::UIVec4Input_Create()
     {
@@ -224,6 +233,11 @@ namespace SE::Core
     }
 
     math::vec4 UIVec4Input::UIVec4Input_GetValue( void *aInstance ) { return static_cast<UIVec4Input *>( aInstance )->Value(); }
+
+    void UIVec4Input::UIVec4Input_SetResetValues( void *aInstance, math::vec4 aValue )
+    {
+        static_cast<UIVec4Input *>( aInstance )->SetResetValues( aValue );
+    }
 
     void UIVec4Input::UIVec4Input_SetFormat( void *aInstance, void *aText )
     {

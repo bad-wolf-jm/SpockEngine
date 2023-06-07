@@ -27,6 +27,11 @@ namespace SpockEngine
             set { UIVec2Input_SetValue(mInstance, value); }
         }
 
+        public Math.vec2 ResetValue
+        {
+            set { UIVec2Input_SetResetValues(mInstance, value); }
+        }
+
         public string Format
         {
             set { UIVec2Input_SetFormat(mInstance, value); }
@@ -43,6 +48,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIVec2Input_SetValue(ulong aInstance, Math.vec2 aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIVec2Input_SetResetValues(ulong aInstance, Math.vec2 aValue);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static Math.vec2 UIVec2Input_GetValue(ulong aInstance);
@@ -75,6 +83,11 @@ namespace SpockEngine
             set { UIVec3Input_SetValue(mInstance, value); }
         }
 
+        public Math.vec2 ResetValue
+        {
+            set { UIVec3Input_SetResetValues(mInstance, value); }
+        }
+
         public string Format
         {
             set { UIVec3Input_SetFormat(mInstance, value); }
@@ -91,6 +104,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIVec3Input_SetValue(ulong aInstance, Math.vec2 aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIVec3Input_SetResetValues(ulong aInstance, Math.vec2 aValue);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static Math.vec2 UIVec3Input_GetValue(ulong aInstance);
@@ -125,6 +141,12 @@ namespace SpockEngine
             set { UIVec4Input_SetValue(mInstance, value); }
         }
 
+        public Math.vec2 ResetValue
+        {
+            set { UIVec4Input_SetResetValues(mInstance, value); }
+        }
+
+
         public string Format
         {
             set { UIVec4Input_SetFormat(mInstance, value); }
@@ -141,6 +163,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIVec4Input_SetValue(ulong aInstance, Math.vec2 aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIVec4Input_SetResetValues(ulong aInstance, Math.vec2 aValue);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static Math.vec2 UIVec4Input_GetValue(ulong aInstance);
