@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace SpockEngine
 {
@@ -18,7 +19,7 @@ namespace SpockEngine
         {
             onChange = aHandler;
 
-            UIVec2Input_OnChanged(mInstance, onChange);
+            UIVec2Input_OnChanged(mInstance, Marshal.GetFunctionPointerForDelegate(onChange));
         }
 
         public Math.vec2 Value
@@ -44,7 +45,7 @@ namespace SpockEngine
         private extern static ulong UIVec2Input_Destroy(ulong aInstance);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec2Input_OnChanged(ulong aInstance, OnChangeDelegate aDelegate);
+        private extern static void UIVec2Input_OnChanged(ulong aInstance, IntPtr aDelegate);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIVec2Input_SetValue(ulong aInstance, Math.vec2 aValue);
@@ -74,7 +75,7 @@ namespace SpockEngine
         {
             onChange = aHandler;
 
-            UIVec3Input_OnChanged(mInstance, onChange);
+            UIVec3Input_OnChanged(mInstance,  Marshal.GetFunctionPointerForDelegate(onChange));
         }
 
         public Math.vec2 Value
@@ -100,7 +101,7 @@ namespace SpockEngine
         private extern static ulong UIVec3Input_Destroy(ulong aInstance);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec3Input_OnChanged(ulong aInstance, OnChangeDelegate aDelegate);
+        private extern static void UIVec3Input_OnChanged(ulong aInstance, IntPtr aDelegate);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIVec3Input_SetValue(ulong aInstance, Math.vec2 aValue);
@@ -132,7 +133,7 @@ namespace SpockEngine
         {
             onChange = aHandler;
 
-            UIVec4Input_OnChanged(mInstance, onChange);
+            UIVec4Input_OnChanged(mInstance,  Marshal.GetFunctionPointerForDelegate(onChange));
         }
 
         public Math.vec2 Value
@@ -159,7 +160,7 @@ namespace SpockEngine
         private extern static ulong UIVec4Input_Destroy(ulong aInstance);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec4Input_OnChanged(ulong aInstance, OnChangeDelegate aDelegate);
+        private extern static void UIVec4Input_OnChanged(ulong aInstance, IntPtr aDelegate);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UIVec4Input_SetValue(ulong aInstance, Math.vec2 aValue);

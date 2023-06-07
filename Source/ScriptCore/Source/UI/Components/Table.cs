@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 using Math = SpockEngine.Math;
 
@@ -301,7 +302,7 @@ namespace SpockEngine
         {
             onRowClickedDelegate = aHandler;
 
-            UITable_OnRowClicked(mInstance, onRowClickedDelegate);
+            UITable_OnRowClicked(mInstance, Marshal.GetFunctionPointerForDelegate(onRowClickedDelegate));
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
@@ -311,7 +312,7 @@ namespace SpockEngine
         private extern static void UITable_Destroy(ulong aInstance);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITable_OnRowClicked(ulong aInstance, RowClickedDelegate aHandler);
+        private extern static void UITable_OnRowClicked(ulong aInstance, IntPtr aHandler);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static void UITable_AddColumn(ulong aInstance, ulong aColumnInstance);

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace SpockEngine
 {
@@ -40,7 +41,7 @@ namespace SpockEngine
         {
             onTriggered = aHandler;
 
-            UIMenuItem_OnTrigger(mInstance, onTriggered);
+            UIMenuItem_OnTrigger(mInstance, Marshal.GetFunctionPointerForDelegate(onTriggered));
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
@@ -65,7 +66,7 @@ namespace SpockEngine
         private extern static void UIMenuItem_SetTextColor(ulong aInstance, Math.vec4 aColor);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIMenuItem_OnTrigger(ulong aInstance, TriggeredDelegate aHandler);
+        private extern static void UIMenuItem_OnTrigger(ulong aInstance, IntPtr aHandler);
     }
 
     public class UIMenuSeparator : UIMenuItem
