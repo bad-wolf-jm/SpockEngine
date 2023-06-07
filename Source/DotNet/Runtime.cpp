@@ -19,42 +19,40 @@
 #endif
 #include "Core/FileWatch.hpp"
 
-#include "UI/Components/BaseImage.h"
-#include "UI/Components/Button.h"
-#include "UI/Components/CheckBox.h"
-#include "UI/Components/ColorButton.h"
-#include "UI/Components/ComboBox.h"
-#include "UI/Components/Component.h"
-#include "UI/Components/DropdownButton.h"
-#include "UI/Components/Image.h"
-#include "UI/Components/ImageButton.h"
-#include "UI/Components/ImageToggleButton.h"
-#include "UI/Components/Label.h"
-#include "UI/Components/Menu.h"
-#include "UI/Components/Plot.h"
-#include "UI/Components/ProgressBar.h"
-#include "UI/Components/PropertyValue.h"
-#include "UI/Components/Slider.h"
-#include "UI/Components/Table.h"
-#include "UI/Components/TextInput.h"
-#include "UI/Components/TextOverlay.h"
-#include "UI/Components/TextToggleButton.h"
-#include "UI/Components/TreeView.h"
-#include "UI/Components/Workspace.h"
-#include "UI/Components/VectorEdit.h"
+#include "InteropCalls.h"
 
-#include "UI/Widgets/FileTree.h"
-
-#include "UI/UI.h"
-
-#include "UI/Layouts/Container.h"
-#include "UI/Layouts/Splitter.h"
-#include "UI/Layouts/StackLayout.h"
-#include "UI/Layouts/ZLayout.h"
-
-#include "UI/Dialog.h"
-#include "UI/Form.h"
-#include "UI/Layouts/BoxLayout.h"
+// #include "UI/Components/BaseImage.h"
+// #include "UI/Components/Button.h"
+// #include "UI/Components/CheckBox.h"
+// #include "UI/Components/ColorButton.h"
+// #include "UI/Components/ComboBox.h"
+// #include "UI/Components/Component.h"
+// #include "UI/Components/DropdownButton.h"
+// #include "UI/Components/Image.h"
+// #include "UI/Components/ImageButton.h"
+// #include "UI/Components/ImageToggleButton.h"
+// #include "UI/Components/Label.h"
+// #include "UI/Components/Menu.h"
+// #include "UI/Components/Plot.h"
+// #include "UI/Components/ProgressBar.h"
+// #include "UI/Components/PropertyValue.h"
+// #include "UI/Components/Slider.h"
+// #include "UI/Components/Table.h"
+// #include "UI/Components/TextInput.h"
+// #include "UI/Components/TextOverlay.h"
+// #include "UI/Components/TextToggleButton.h"
+// #include "UI/Components/TreeView.h"
+// #include "UI/Components/Workspace.h"
+// #include "UI/Components/VectorEdit.h"
+// #include "UI/Widgets/FileTree.h"
+// #include "UI/UI.h"
+// #include "UI/Layouts/Container.h"
+// #include "UI/Layouts/Splitter.h"
+// #include "UI/Layouts/StackLayout.h"
+// #include "UI/Layouts/ZLayout.h"
+// #include "UI/Dialog.h"
+// #include "UI/Form.h"
+// #include "UI/Layouts/BoxLayout.h"
 
 #include "Utils.h"
 
@@ -265,6 +263,8 @@ namespace SE::Core
 
     void DotNetRuntime::RegisterInternalCppFunctions()
     {
+        using namespace SE::Core::Interop;
+
         ICall( "UIColor::GetStyleColor", SE::Core::UI::GetStyleColor );
 
         ICall( "CppCall::OpenFile", OpenFile );
@@ -275,345 +275,345 @@ namespace SE::Core
         ICall( "CppCall::Entity_Add", Entity_Add );
         ICall( "CppCall::Entity_Replace", Entity_Replace );
 
-        ICall( "UIComponent::UIComponent_SetIsVisible", UIComponent::UIComponent_SetIsVisible );
-        ICall( "UIComponent::UIComponent_SetIsEnabled", UIComponent::UIComponent_SetIsEnabled );
-        ICall( "UIComponent::UIComponent_SetAllowDragDrop", UIComponent::UIComponent_SetAllowDragDrop );
-        ICall( "UIComponent::UIComponent_SetPaddingAll", UIComponent::UIComponent_SetPaddingAll );
-        ICall( "UIComponent::UIComponent_SetPaddingPairs", UIComponent::UIComponent_SetPaddingPairs );
-        ICall( "UIComponent::UIComponent_SetPaddingIndividual", UIComponent::UIComponent_SetPaddingIndividual );
-        ICall( "UIComponent::UIComponent_SetAlignment", UIComponent::UIComponent_SetAlignment );
-        ICall( "UIComponent::UIComponent_SetHorizontalAlignment", UIComponent::UIComponent_SetHorizontalAlignment );
-        ICall( "UIComponent::UIComponent_SetVerticalAlignment", UIComponent::UIComponent_SetVerticalAlignment );
-        ICall( "UIComponent::UIComponent_SetBackgroundColor", UIComponent::UIComponent_SetBackgroundColor );
-        ICall( "UIComponent::UIComponent_SetFont", UIComponent::UIComponent_SetFont );
-        ICall( "UIComponent::UIComponent_SetTooltip", UIComponent::UIComponent_SetTooltip );
+        ICall( "UIComponent::UIComponent_SetIsVisible", UIComponent_SetIsVisible );
+        ICall( "UIComponent::UIComponent_SetIsEnabled", UIComponent_SetIsEnabled );
+        ICall( "UIComponent::UIComponent_SetAllowDragDrop", UIComponent_SetAllowDragDrop );
+        ICall( "UIComponent::UIComponent_SetPaddingAll", UIComponent_SetPaddingAll );
+        ICall( "UIComponent::UIComponent_SetPaddingPairs", UIComponent_SetPaddingPairs );
+        ICall( "UIComponent::UIComponent_SetPaddingIndividual", UIComponent_SetPaddingIndividual );
+        ICall( "UIComponent::UIComponent_SetAlignment", UIComponent_SetAlignment );
+        ICall( "UIComponent::UIComponent_SetHorizontalAlignment", UIComponent_SetHorizontalAlignment );
+        ICall( "UIComponent::UIComponent_SetVerticalAlignment", UIComponent_SetVerticalAlignment );
+        ICall( "UIComponent::UIComponent_SetBackgroundColor", UIComponent_SetBackgroundColor );
+        ICall( "UIComponent::UIComponent_SetFont", UIComponent_SetFont );
+        ICall( "UIComponent::UIComponent_SetTooltip", UIComponent_SetTooltip );
 
-        ICall( "UIForm::UIForm_Create", UIForm::UIForm_Create );
-        ICall( "UIForm::UIForm_Destroy", UIForm::UIForm_Destroy );
-        ICall( "UIForm::UIForm_SetTitle", UIForm::UIForm_SetTitle );
-        ICall( "UIForm::UIForm_SetContent", UIForm::UIForm_SetContent );
-        ICall( "UIForm::UIForm_Update", UIForm::UIForm_Update );
-        ICall( "UIForm::UIForm_SetSize", UIForm::UIForm_SetSize );
+        ICall( "UIForm::UIForm_Create", UIForm_Create );
+        ICall( "UIForm::UIForm_Destroy", UIForm_Destroy );
+        ICall( "UIForm::UIForm_SetTitle", UIForm_SetTitle );
+        ICall( "UIForm::UIForm_SetContent", UIForm_SetContent );
+        ICall( "UIForm::UIForm_Update", UIForm_Update );
+        ICall( "UIForm::UIForm_SetSize", UIForm_SetSize );
 
-        ICall( "UIDialog::UIDialog_Create", UIDialog::UIDialog_Create );
-        ICall( "UIDialog::UIDialog_CreateWithTitleAndSize", UIDialog::UIDialog_CreateWithTitleAndSize );
-        ICall( "UIDialog::UIDialog_Destroy", UIDialog::UIDialog_Destroy );
-        ICall( "UIDialog::UIDialog_SetTitle", UIDialog::UIDialog_SetTitle );
-        ICall( "UIDialog::UIDialog_SetSize", UIDialog::UIDialog_SetSize );
-        ICall( "UIDialog::UIDialog_SetContent", UIDialog::UIDialog_SetContent );
-        ICall( "UIDialog::UIDialog_Open", UIDialog::UIDialog_Open );
-        ICall( "UIDialog::UIDialog_Close", UIDialog::UIDialog_Close );
-        ICall( "UIDialog::UIDialog_Update", UIDialog::UIDialog_Update );
+        ICall( "UIDialog::UIDialog_Create", UIDialog_Create );
+        ICall( "UIDialog::UIDialog_CreateWithTitleAndSize", UIDialog_CreateWithTitleAndSize );
+        ICall( "UIDialog::UIDialog_Destroy", UIDialog_Destroy );
+        ICall( "UIDialog::UIDialog_SetTitle", UIDialog_SetTitle );
+        ICall( "UIDialog::UIDialog_SetSize", UIDialog_SetSize );
+        ICall( "UIDialog::UIDialog_SetContent", UIDialog_SetContent );
+        ICall( "UIDialog::UIDialog_Open", UIDialog_Open );
+        ICall( "UIDialog::UIDialog_Close", UIDialog_Close );
+        ICall( "UIDialog::UIDialog_Update", UIDialog_Update );
 
-        ICall( "UILabel::UILabel_Create", UILabel::UILabel_Create );
-        ICall( "UILabel::UILabel_CreateWithText", UILabel::UILabel_CreateWithText );
-        ICall( "UILabel::UILabel_Destroy", UILabel::UILabel_Destroy );
-        ICall( "UILabel::UILabel_SetText", UILabel::UILabel_SetText );
-        ICall( "UILabel::UILabel_SetTextColor", UILabel::UILabel_SetTextColor );
+        ICall( "UILabel::UILabel_Create", UILabel_Create );
+        ICall( "UILabel::UILabel_CreateWithText", UILabel_CreateWithText );
+        ICall( "UILabel::UILabel_Destroy", UILabel_Destroy );
+        ICall( "UILabel::UILabel_SetText", UILabel_SetText );
+        ICall( "UILabel::UILabel_SetTextColor", UILabel_SetTextColor );
 
-        ICall( "UIBaseImage::UIBaseImage_Create", UIBaseImage::UIBaseImage_Create );
-        ICall( "UIBaseImage::UIBaseImage_CreateWithPath", UIBaseImage::UIBaseImage_CreateWithPath );
-        ICall( "UIBaseImage::UIBaseImage_Destroy", UIBaseImage::UIBaseImage_Destroy );
-        ICall( "UIBaseImage::UIBaseImage_SetImage", UIBaseImage::UIBaseImage_SetImage );
-        ICall( "UIBaseImage::UIBaseImage_SetSize", UIBaseImage::UIBaseImage_SetSize );
-        ICall( "UIBaseImage::UIBaseImage_GetSize", UIBaseImage::UIBaseImage_GetSize );
-        ICall( "UIBaseImage::UIBaseImage_SetTopLeft", UIBaseImage::UIBaseImage_SetTopLeft );
-        ICall( "UIBaseImage::UIBaseImage_GetTopLeft", UIBaseImage::UIBaseImage_GetTopLeft );
-        ICall( "UIBaseImage::UIBaseImage_SetBottomRight", UIBaseImage::UIBaseImage_SetBottomRight );
-        ICall( "UIBaseImage::UIBaseImage_GetBottomRight", UIBaseImage::UIBaseImage_GetBottomRight );
-        ICall( "UIBaseImage::UIBaseImage_SetTintColor", UIBaseImage::UIBaseImage_SetTintColor );
-        ICall( "UIBaseImage::UIBaseImage_GetTintColor", UIBaseImage::UIBaseImage_GetTintColor );
+        ICall( "UIBaseImage::UIBaseImage_Create", UIBaseImage_Create );
+        ICall( "UIBaseImage::UIBaseImage_CreateWithPath", UIBaseImage_CreateWithPath );
+        ICall( "UIBaseImage::UIBaseImage_Destroy", UIBaseImage_Destroy );
+        ICall( "UIBaseImage::UIBaseImage_SetImage", UIBaseImage_SetImage );
+        ICall( "UIBaseImage::UIBaseImage_SetSize", UIBaseImage_SetSize );
+        ICall( "UIBaseImage::UIBaseImage_GetSize", UIBaseImage_GetSize );
+        ICall( "UIBaseImage::UIBaseImage_SetTopLeft", UIBaseImage_SetTopLeft );
+        ICall( "UIBaseImage::UIBaseImage_GetTopLeft", UIBaseImage_GetTopLeft );
+        ICall( "UIBaseImage::UIBaseImage_SetBottomRight", UIBaseImage_SetBottomRight );
+        ICall( "UIBaseImage::UIBaseImage_GetBottomRight", UIBaseImage_GetBottomRight );
+        ICall( "UIBaseImage::UIBaseImage_SetTintColor", UIBaseImage_SetTintColor );
+        ICall( "UIBaseImage::UIBaseImage_GetTintColor", UIBaseImage_GetTintColor );
 
-        ICall( "UIImage::UIImage_Create", UIImage::UIImage_Create );
-        ICall( "UIImage::UIImage_CreateWithPath", UIImage::UIImage_CreateWithPath );
-        ICall( "UIImage::UIImage_Destroy", UIImage::UIImage_Destroy );
+        ICall( "UIImage::UIImage_Create", UIImage_Create );
+        ICall( "UIImage::UIImage_CreateWithPath", UIImage_CreateWithPath );
+        ICall( "UIImage::UIImage_Destroy", UIImage_Destroy );
 
-        ICall( "UIImageButton::UIImageButton_Create", UIImageButton::UIImageButton_Create );
-        ICall( "UIImageButton::UIImageButton_CreateWithPath", UIImageButton::UIImageButton_CreateWithPath );
-        ICall( "UIImageButton::UIImageButton_Destroy", UIImageButton::UIImageButton_Destroy );
-        ICall( "UIImageButton::UIImageButton_OnClick", UIImageButton::UIImageButton_OnClick );
+        ICall( "UIImageButton::UIImageButton_Create", UIImageButton_Create );
+        ICall( "UIImageButton::UIImageButton_CreateWithPath", UIImageButton_CreateWithPath );
+        ICall( "UIImageButton::UIImageButton_Destroy", UIImageButton_Destroy );
+        ICall( "UIImageButton::UIImageButton_OnClick", UIImageButton_OnClick );
 
-        ICall( "UIImageToggleButton::UIImageToggleButton_Create", UIImageToggleButton::UIImageToggleButton_Create );
-        ICall( "UIImageToggleButton::UIImageToggleButton_Destroy", UIImageToggleButton::UIImageToggleButton_Destroy );
-        ICall( "UIImageToggleButton::UIImageToggleButton_OnClicked", UIImageToggleButton::UIImageToggleButton_OnClicked );
-        ICall( "UIImageToggleButton::UIImageToggleButton_OnChanged", UIImageToggleButton::UIImageToggleButton_OnChanged );
-        ICall( "UIImageToggleButton::UIImageToggleButton_IsActive", UIImageToggleButton::UIImageToggleButton_IsActive );
-        ICall( "UIImageToggleButton::UIImageToggleButton_SetActive", UIImageToggleButton::UIImageToggleButton_SetActive );
-        ICall( "UIImageToggleButton::UIImageToggleButton_SetActiveImage", UIImageToggleButton::UIImageToggleButton_SetActiveImage );
+        ICall( "UIImageToggleButton::UIImageToggleButton_Create", UIImageToggleButton_Create );
+        ICall( "UIImageToggleButton::UIImageToggleButton_Destroy", UIImageToggleButton_Destroy );
+        ICall( "UIImageToggleButton::UIImageToggleButton_OnClicked", UIImageToggleButton_OnClicked );
+        ICall( "UIImageToggleButton::UIImageToggleButton_OnChanged", UIImageToggleButton_OnChanged );
+        ICall( "UIImageToggleButton::UIImageToggleButton_IsActive", UIImageToggleButton_IsActive );
+        ICall( "UIImageToggleButton::UIImageToggleButton_SetActive", UIImageToggleButton_SetActive );
+        ICall( "UIImageToggleButton::UIImageToggleButton_SetActiveImage", UIImageToggleButton_SetActiveImage );
         ICall( "UIImageToggleButton::UIImageToggleButton_SetInactiveImage",
-               UIImageToggleButton::UIImageToggleButton_SetInactiveImage );
+               UIImageToggleButton_SetInactiveImage );
 
-        ICall( "UIButton::UIButton_Create", UIButton::UIButton_Create );
-        ICall( "UIButton::UIButton_CreateWithText", UIButton::UIButton_CreateWithText );
-        ICall( "UIButton::UIButton_Destroy", UIButton::UIButton_Destroy );
-        ICall( "UIButton::UIButton_SetText", UIButton::UIButton_SetText );
-        ICall( "UIButton::UIButton_OnClick", UIButton::UIButton_OnClick );
+        ICall( "UIButton::UIButton_Create", UIButton_Create );
+        ICall( "UIButton::UIButton_CreateWithText", UIButton_CreateWithText );
+        ICall( "UIButton::UIButton_Destroy", UIButton_Destroy );
+        ICall( "UIButton::UIButton_SetText", UIButton_SetText );
+        ICall( "UIButton::UIButton_OnClick", UIButton_OnClick );
 
-        ICall( "UITextToggleButton::UITextToggleButton_Create", UITextToggleButton::UITextToggleButton_Create );
-        ICall( "UITextToggleButton::UITextToggleButton_CreateWithText", UITextToggleButton::UITextToggleButton_CreateWithText );
-        ICall( "UITextToggleButton::UITextToggleButton_Destroy", UITextToggleButton::UITextToggleButton_Destroy );
-        ICall( "UITextToggleButton::UITextToggleButton_OnClicked", UITextToggleButton::UITextToggleButton_OnClicked );
-        ICall( "UITextToggleButton::UITextToggleButton_OnChanged", UITextToggleButton::UITextToggleButton_OnChanged );
+        ICall( "UITextToggleButton::UITextToggleButton_Create", UITextToggleButton_Create );
+        ICall( "UITextToggleButton::UITextToggleButton_CreateWithText", UITextToggleButton_CreateWithText );
+        ICall( "UITextToggleButton::UITextToggleButton_Destroy", UITextToggleButton_Destroy );
+        ICall( "UITextToggleButton::UITextToggleButton_OnClicked", UITextToggleButton_OnClicked );
+        ICall( "UITextToggleButton::UITextToggleButton_OnChanged", UITextToggleButton_OnChanged );
 
-        ICall( "UITextToggleButton::UITextToggleButton_IsActive", UITextToggleButton::UITextToggleButton_IsActive );
-        ICall( "UITextToggleButton::UITextToggleButton_SetActive", UITextToggleButton::UITextToggleButton_SetActive );
-        ICall( "UITextToggleButton::UITextToggleButton_SetActiveColor", UITextToggleButton::UITextToggleButton_SetActiveColor );
-        ICall( "UITextToggleButton::UITextToggleButton_SetInactiveColor", UITextToggleButton::UITextToggleButton_SetInactiveColor );
+        ICall( "UITextToggleButton::UITextToggleButton_IsActive", UITextToggleButton_IsActive );
+        ICall( "UITextToggleButton::UITextToggleButton_SetActive", UITextToggleButton_SetActive );
+        ICall( "UITextToggleButton::UITextToggleButton_SetActiveColor", UITextToggleButton_SetActiveColor );
+        ICall( "UITextToggleButton::UITextToggleButton_SetInactiveColor", UITextToggleButton_SetInactiveColor );
 
-        ICall( "UICheckBox::UICheckBox_Create", UICheckBox::UICheckBox_Create );
-        ICall( "UICheckBox::UICheckBox_Destroy", UICheckBox::UICheckBox_Destroy );
-        ICall( "UICheckBox::UICheckBox_OnClick", UICheckBox::UICheckBox_OnClick );
-        ICall( "UICheckBox::UICheckBox_IsChecked", UICheckBox::UICheckBox_IsChecked );
-        ICall( "UICheckBox::UICheckBox_SetIsChecked", UICheckBox::UICheckBox_SetIsChecked );
+        ICall( "UICheckBox::UICheckBox_Create", UICheckBox_Create );
+        ICall( "UICheckBox::UICheckBox_Destroy", UICheckBox_Destroy );
+        ICall( "UICheckBox::UICheckBox_OnClick", UICheckBox_OnClick );
+        ICall( "UICheckBox::UICheckBox_IsChecked", UICheckBox_IsChecked );
+        ICall( "UICheckBox::UICheckBox_SetIsChecked", UICheckBox_SetIsChecked );
 
-        ICall( "UIComboBox::UIComboBox_Create", UIComboBox::UIComboBox_Create );
-        ICall( "UIComboBox::UIComboBox_CreateWithItems", UIComboBox::UIComboBox_CreateWithItems );
-        ICall( "UIComboBox::UIComboBox_Destroy", UIComboBox::UIComboBox_Destroy );
-        ICall( "UIComboBox::UIComboBox_GetCurrent", UIComboBox::UIComboBox_GetCurrent );
-        ICall( "UIComboBox::UIComboBox_SetCurrent", UIComboBox::UIComboBox_SetCurrent );
-        ICall( "UIComboBox::UIComboBox_SetItemList", UIComboBox::UIComboBox_SetItemList );
-        ICall( "UIComboBox::UIComboBox_OnChanged", UIComboBox::UIComboBox_OnChanged );
+        ICall( "UIComboBox::UIComboBox_Create", UIComboBox_Create );
+        ICall( "UIComboBox::UIComboBox_CreateWithItems", UIComboBox_CreateWithItems );
+        ICall( "UIComboBox::UIComboBox_Destroy", UIComboBox_Destroy );
+        ICall( "UIComboBox::UIComboBox_GetCurrent", UIComboBox_GetCurrent );
+        ICall( "UIComboBox::UIComboBox_SetCurrent", UIComboBox_SetCurrent );
+        ICall( "UIComboBox::UIComboBox_SetItemList", UIComboBox_SetItemList );
+        ICall( "UIComboBox::UIComboBox_OnChanged", UIComboBox_OnChanged );
 
-        ICall( "UIBoxLayout::UIBoxLayout_CreateWithOrientation", UIBoxLayout::UIBoxLayout_CreateWithOrientation );
-        ICall( "UIBoxLayout::UIBoxLayout_Destroy", UIBoxLayout::UIBoxLayout_Destroy );
-        ICall( "UIBoxLayout::UIBoxLayout_AddAlignedNonFixed", UIBoxLayout::UIBoxLayout_AddAlignedNonFixed );
-        ICall( "UIBoxLayout::UIBoxLayout_AddNonAlignedNonFixed", UIBoxLayout::UIBoxLayout_AddNonAlignedNonFixed );
-        ICall( "UIBoxLayout::UIBoxLayout_AddAlignedFixed", UIBoxLayout::UIBoxLayout_AddAlignedFixed );
-        ICall( "UIBoxLayout::UIBoxLayout_AddNonAlignedFixed", UIBoxLayout::UIBoxLayout_AddNonAlignedFixed );
-        ICall( "UIBoxLayout::UIBoxLayout_AddSeparator", UIBoxLayout::UIBoxLayout_AddSeparator );
-        ICall( "UIBoxLayout::UIBoxLayout_SetItemSpacing", UIBoxLayout::UIBoxLayout_SetItemSpacing );
-        ICall( "UIBoxLayout::UIBoxLayout_Clear", UIBoxLayout::UIBoxLayout_Clear );
+        ICall( "UIBoxLayout::UIBoxLayout_CreateWithOrientation", UIBoxLayout_CreateWithOrientation );
+        ICall( "UIBoxLayout::UIBoxLayout_Destroy", UIBoxLayout_Destroy );
+        ICall( "UIBoxLayout::UIBoxLayout_AddAlignedNonFixed", UIBoxLayout_AddAlignedNonFixed );
+        ICall( "UIBoxLayout::UIBoxLayout_AddNonAlignedNonFixed", UIBoxLayout_AddNonAlignedNonFixed );
+        ICall( "UIBoxLayout::UIBoxLayout_AddAlignedFixed", UIBoxLayout_AddAlignedFixed );
+        ICall( "UIBoxLayout::UIBoxLayout_AddNonAlignedFixed", UIBoxLayout_AddNonAlignedFixed );
+        ICall( "UIBoxLayout::UIBoxLayout_AddSeparator", UIBoxLayout_AddSeparator );
+        ICall( "UIBoxLayout::UIBoxLayout_SetItemSpacing", UIBoxLayout_SetItemSpacing );
+        ICall( "UIBoxLayout::UIBoxLayout_Clear", UIBoxLayout_Clear );
 
-        ICall( "UIZLayout::UIZLayout_Create", UIZLayout::UIZLayout_Create );
-        ICall( "UIZLayout::UIZLayout_Destroy", UIZLayout::UIZLayout_Destroy );
-        ICall( "UIZLayout::UIZLayout_AddAlignedNonFixed", UIZLayout::UIZLayout_AddAlignedNonFixed );
-        ICall( "UIZLayout::UIZLayout_AddNonAlignedNonFixed", UIZLayout::UIZLayout_AddNonAlignedNonFixed );
-        ICall( "UIZLayout::UIZLayout_AddAlignedFixed", UIZLayout::UIZLayout_AddAlignedFixed );
-        ICall( "UIZLayout::UIZLayout_AddNonAlignedFixed", UIZLayout::UIZLayout_AddNonAlignedFixed );
+        ICall( "UIZLayout::UIZLayout_Create", UIZLayout_Create );
+        ICall( "UIZLayout::UIZLayout_Destroy", UIZLayout_Destroy );
+        ICall( "UIZLayout::UIZLayout_AddAlignedNonFixed", UIZLayout_AddAlignedNonFixed );
+        ICall( "UIZLayout::UIZLayout_AddNonAlignedNonFixed", UIZLayout_AddNonAlignedNonFixed );
+        ICall( "UIZLayout::UIZLayout_AddAlignedFixed", UIZLayout_AddAlignedFixed );
+        ICall( "UIZLayout::UIZLayout_AddNonAlignedFixed", UIZLayout_AddNonAlignedFixed );
 
-        ICall( "UIStackLayout::UIStackLayout_Create", UIStackLayout::UIStackLayout_Create );
-        ICall( "UIStackLayout::UIStackLayout_Destroy", UIStackLayout::UIStackLayout_Destroy );
-        ICall( "UIStackLayout::UIStackLayout_Add", UIStackLayout::UIStackLayout_Add );
-        ICall( "UIStackLayout::UIStackLayout_SetCurrent", UIStackLayout::UIStackLayout_SetCurrent );
+        ICall( "UIStackLayout::UIStackLayout_Create", UIStackLayout_Create );
+        ICall( "UIStackLayout::UIStackLayout_Destroy", UIStackLayout_Destroy );
+        ICall( "UIStackLayout::UIStackLayout_Add", UIStackLayout_Add );
+        ICall( "UIStackLayout::UIStackLayout_SetCurrent", UIStackLayout_SetCurrent );
 
-        ICall( "UISplitter::UISplitter_Create", UISplitter::UISplitter_Create );
-        ICall( "UISplitter::UISplitter_CreateWithOrientation", UISplitter::UISplitter_CreateWithOrientation );
-        ICall( "UISplitter::UISplitter_Destroy", UISplitter::UISplitter_Destroy );
-        ICall( "UISplitter::UISplitter_Add1", UISplitter::UISplitter_Add1 );
-        ICall( "UISplitter::UISplitter_Add2", UISplitter::UISplitter_Add2 );
-        ICall( "UISplitter::UISplitter_SetItemSpacing", UISplitter::UISplitter_SetItemSpacing );
+        ICall( "UISplitter::UISplitter_Create", UISplitter_Create );
+        ICall( "UISplitter::UISplitter_CreateWithOrientation", UISplitter_CreateWithOrientation );
+        ICall( "UISplitter::UISplitter_Destroy", UISplitter_Destroy );
+        ICall( "UISplitter::UISplitter_Add1", UISplitter_Add1 );
+        ICall( "UISplitter::UISplitter_Add2", UISplitter_Add2 );
+        ICall( "UISplitter::UISplitter_SetItemSpacing", UISplitter_SetItemSpacing );
 
-        ICall( "UITableColumn::UITableColumn_SetTooltip", sTableColumn::UITableColumn_SetTooltip );
-        ICall( "UITableColumn::UITableColumn_SetForegroundColor", sTableColumn::UITableColumn_SetForegroundColor );
-        ICall( "UITableColumn::UITableColumn_SetBackgroundColor", sTableColumn::UITableColumn_SetBackgroundColor );
+        ICall( "UITableColumn::UITableColumn_SetTooltip", UITableColumn_SetTooltip );
+        ICall( "UITableColumn::UITableColumn_SetForegroundColor", UITableColumn_SetForegroundColor );
+        ICall( "UITableColumn::UITableColumn_SetBackgroundColor", UITableColumn_SetBackgroundColor );
 
-        ICall( "UIFloat64Column::UIFloat64Column_Create", sFloat64Column::UIFloat64Column_Create );
-        ICall( "UIFloat64Column::UIFloat64Column_CreateFull", sFloat64Column::UIFloat64Column_CreateFull );
-        ICall( "UIFloat64Column::UIFloat64Column_Destroy", sFloat64Column::UIFloat64Column_Destroy );
-        ICall( "UIFloat64Column::UIFloat64Column_Clear", sFloat64Column::UIFloat64Column_Clear );
-        ICall( "UIFloat64Column::UIFloat64Column_SetData", sFloat64Column::UIFloat64Column_SetData );
+        ICall( "UIFloat64Column::UIFloat64Column_Create", UIFloat64Column_Create );
+        ICall( "UIFloat64Column::UIFloat64Column_CreateFull", UIFloat64Column_CreateFull );
+        ICall( "UIFloat64Column::UIFloat64Column_Destroy", UIFloat64Column_Destroy );
+        ICall( "UIFloat64Column::UIFloat64Column_Clear", UIFloat64Column_Clear );
+        ICall( "UIFloat64Column::UIFloat64Column_SetData", UIFloat64Column_SetData );
 
-        ICall( "UIUint32Column::UIUint32Column_Create", sUint32Column::UIUint32Column_Create );
-        ICall( "UIUint32Column::UIUint32Column_CreateFull", sUint32Column::UIUint32Column_CreateFull );
-        ICall( "UIUint32Column::UIUint32Column_Destroy", sUint32Column::UIUint32Column_Destroy );
-        ICall( "UIUint32Column::UIUint32Column_Clear", sUint32Column::UIUint32Column_Clear );
-        ICall( "UIUint32Column::UIUint32Column_SetData", sUint32Column::UIUint32Column_SetData );
+        ICall( "UIUint32Column::UIUint32Column_Create", UIUint32Column_Create );
+        ICall( "UIUint32Column::UIUint32Column_CreateFull", UIUint32Column_CreateFull );
+        ICall( "UIUint32Column::UIUint32Column_Destroy", UIUint32Column_Destroy );
+        ICall( "UIUint32Column::UIUint32Column_Clear", UIUint32Column_Clear );
+        ICall( "UIUint32Column::UIUint32Column_SetData", UIUint32Column_SetData );
 
-        ICall( "UIStringColumn::UIStringColumn_Create", sStringColumn::UIStringColumn_Create );
-        ICall( "UIStringColumn::UIStringColumn_CreateFull", sStringColumn::UIStringColumn_CreateFull );
-        ICall( "UIStringColumn::UIStringColumn_Destroy", sStringColumn::UIStringColumn_Destroy );
-        ICall( "UIStringColumn::UIStringColumn_Clear", sStringColumn::UIStringColumn_Clear );
-        ICall( "UIStringColumn::UIStringColumn_SetData", sStringColumn::UIStringColumn_SetData );
+        ICall( "UIStringColumn::UIStringColumn_Create", UIStringColumn_Create );
+        ICall( "UIStringColumn::UIStringColumn_CreateFull", UIStringColumn_CreateFull );
+        ICall( "UIStringColumn::UIStringColumn_Destroy", UIStringColumn_Destroy );
+        ICall( "UIStringColumn::UIStringColumn_Clear", UIStringColumn_Clear );
+        ICall( "UIStringColumn::UIStringColumn_SetData", UIStringColumn_SetData );
 
-        ICall( "UITable::UITable_Create", UITable::UITable_Create );
-        ICall( "UITable::UITable_Destroy", UITable::UITable_Destroy );
-        ICall( "UITable::UITable_OnRowClicked", UITable::UITable_OnRowClicked );
-        ICall( "UITable::UITable_AddColumn", UITable::UITable_AddColumn );
-        ICall( "UITable::UITable_SetRowHeight", UITable::UITable_SetRowHeight );
-        ICall( "UITable::UITable_SetRowBackgroundColor", UITable::UITable_SetRowBackgroundColor );
-        ICall( "UITable::UITable_ClearRowBackgroundColor", UITable::UITable_ClearRowBackgroundColor );
-        ICall( "UITable::UITable_SetDisplayedRowIndices", UITable::UITable_SetDisplayedRowIndices );
+        ICall( "UITable::UITable_Create", UITable_Create );
+        ICall( "UITable::UITable_Destroy", UITable_Destroy );
+        ICall( "UITable::UITable_OnRowClicked", UITable_OnRowClicked );
+        ICall( "UITable::UITable_AddColumn", UITable_AddColumn );
+        ICall( "UITable::UITable_SetRowHeight", UITable_SetRowHeight );
+        ICall( "UITable::UITable_SetRowBackgroundColor", UITable_SetRowBackgroundColor );
+        ICall( "UITable::UITable_ClearRowBackgroundColor", UITable_ClearRowBackgroundColor );
+        ICall( "UITable::UITable_SetDisplayedRowIndices", UITable_SetDisplayedRowIndices );
 
-        ICall( "UIPlot::UIPlot_Create", UIPlot::UIPlot_Create );
-        ICall( "UIPlot::UIPlot_Destroy", UIPlot::UIPlot_Destroy );
-        ICall( "UIPlot::UIPlot_Clear", UIPlot::UIPlot_Clear );
-        ICall( "UIPlot::UIPlot_ConfigureLegend", UIPlot::UIPlot_ConfigureLegend );
-        ICall( "UIPlot::UIPlot_Add", UIPlot::UIPlot_Add );
-        ICall( "UIPlotAxis::UIPlot_SetAxisLimits", UIPlot::UIPlot_SetAxisLimits );
-        ICall( "UIPlotAxis::UIPlot_GetAxisTitle", UIPlot::UIPlot_GetAxisTitle );
-        ICall( "UIPlotAxis::UIPlot_SetAxisTitle", UIPlot::UIPlot_SetAxisTitle );
+        ICall( "UIPlot::UIPlot_Create", UIPlot_Create );
+        ICall( "UIPlot::UIPlot_Destroy", UIPlot_Destroy );
+        ICall( "UIPlot::UIPlot_Clear", UIPlot_Clear );
+        ICall( "UIPlot::UIPlot_ConfigureLegend", UIPlot_ConfigureLegend );
+        ICall( "UIPlot::UIPlot_Add", UIPlot_Add );
+        ICall( "UIPlotAxis::UIPlot_SetAxisLimits", UIPlot_SetAxisLimits );
+        ICall( "UIPlotAxis::UIPlot_GetAxisTitle", UIPlot_GetAxisTitle );
+        ICall( "UIPlotAxis::UIPlot_SetAxisTitle", UIPlot_SetAxisTitle );
 
-        ICall( "UIPlotData::UIPlotData_SetThickness", sPlotData::UIPlotData_SetThickness );
-        ICall( "UIPlotData::UIPlotData_SetLegend", sPlotData::UIPlotData_SetLegend );
-        ICall( "UIPlotData::UIPlotData_SetColor", sPlotData::UIPlotData_SetColor );
-        ICall( "UIPlotData::UIPlotData_SetXAxis", sPlotData::UIPlotData_SetXAxis );
-        ICall( "UIPlotData::UIPlotData_SetYAxis", sPlotData::UIPlotData_SetYAxis );
+        ICall( "UIPlotData::UIPlotData_SetThickness", UIPlotData_SetThickness );
+        ICall( "UIPlotData::UIPlotData_SetLegend", UIPlotData_SetLegend );
+        ICall( "UIPlotData::UIPlotData_SetColor", UIPlotData_SetColor );
+        ICall( "UIPlotData::UIPlotData_SetXAxis", UIPlotData_SetXAxis );
+        ICall( "UIPlotData::UIPlotData_SetYAxis", UIPlotData_SetYAxis );
 
-        ICall( "UIFloat64LinePlot::UIFloat64LinePlot_Create", sFloat64LinePlot::UIFloat64LinePlot_Create );
-        ICall( "UIFloat64LinePlot::UIFloat64LinePlot_Destroy", sFloat64LinePlot::UIFloat64LinePlot_Destroy );
-        ICall( "UIFloat64LinePlot::UIFloat64LinePlot_SetX", sFloat64LinePlot::UIFloat64LinePlot_SetX );
-        ICall( "UIFloat64LinePlot::UIFloat64LinePlot_SetY", sFloat64LinePlot::UIFloat64LinePlot_SetY );
+        ICall( "UIFloat64LinePlot::UIFloat64LinePlot_Create", UIFloat64LinePlot_Create );
+        ICall( "UIFloat64LinePlot::UIFloat64LinePlot_Destroy", UIFloat64LinePlot_Destroy );
+        ICall( "UIFloat64LinePlot::UIFloat64LinePlot_SetX", UIFloat64LinePlot_SetX );
+        ICall( "UIFloat64LinePlot::UIFloat64LinePlot_SetY", UIFloat64LinePlot_SetY );
 
-        ICall( "UIFloat64ScatterPlot::UIFloat64ScatterPlot_Create", sFloat64ScatterPlot::UIFloat64ScatterPlot_Create );
-        ICall( "UIFloat64ScatterPlot::UIFloat64ScatterPlot_Destroy", sFloat64ScatterPlot::UIFloat64ScatterPlot_Destroy );
-        ICall( "UIFloat64ScatterPlot::UIFloat64ScatterPlot_SetX", sFloat64ScatterPlot::UIFloat64ScatterPlot_SetX );
-        ICall( "UIFloat64ScatterPlot::UIFloat64ScatterPlot_SetY", sFloat64ScatterPlot::UIFloat64ScatterPlot_SetY );
+        ICall( "UIFloat64ScatterPlot::UIFloat64ScatterPlot_Create", UIFloat64ScatterPlot_Create );
+        ICall( "UIFloat64ScatterPlot::UIFloat64ScatterPlot_Destroy", UIFloat64ScatterPlot_Destroy );
+        ICall( "UIFloat64ScatterPlot::UIFloat64ScatterPlot_SetX", UIFloat64ScatterPlot_SetX );
+        ICall( "UIFloat64ScatterPlot::UIFloat64ScatterPlot_SetY", UIFloat64ScatterPlot_SetY );
 
-        ICall( "UIVLinePlot::UIVLinePlot_Create", sVLine::UIVLinePlot_Create );
-        ICall( "UIVLinePlot::UIVLinePlot_Destroy", sVLine::UIVLinePlot_Destroy );
-        ICall( "UIVLinePlot::UIVLinePlot_SetX", sVLine::UIVLinePlot_SetX );
+        ICall( "UIVLinePlot::UIVLinePlot_Create", UIVLinePlot_Create );
+        ICall( "UIVLinePlot::UIVLinePlot_Destroy", UIVLinePlot_Destroy );
+        ICall( "UIVLinePlot::UIVLinePlot_SetX", UIVLinePlot_SetX );
 
-        ICall( "UIHLinePlot::UIHLinePlot_Create", sHLine::UIHLinePlot_Create );
-        ICall( "UIHLinePlot::UIHLinePlot_Destroy", sHLine::UIHLinePlot_Destroy );
-        ICall( "UIHLinePlot::UIHLinePlot_SetY", sHLine::UIHLinePlot_SetY );
+        ICall( "UIHLinePlot::UIHLinePlot_Create", UIHLinePlot_Create );
+        ICall( "UIHLinePlot::UIHLinePlot_Destroy", UIHLinePlot_Destroy );
+        ICall( "UIHLinePlot::UIHLinePlot_SetY", UIHLinePlot_SetY );
 
-        ICall( "UIAxisTag::UIAxisTag_Create", sAxisTag::UIAxisTag_Create );
-        ICall( "UIAxisTag::UIAxisTag_CreateWithTextAndColor", sAxisTag::UIAxisTag_CreateWithTextAndColor );
-        ICall( "UIAxisTag::UIAxisTag_Destroy", sAxisTag::UIAxisTag_Destroy );
-        ICall( "UIAxisTag::UIAxisTag_SetX", sAxisTag::UIAxisTag_SetX );
-        ICall( "UIAxisTag::UIAxisTag_SetText", sAxisTag::UIAxisTag_SetText );
-        ICall( "UIAxisTag::UIAxisTag_GetColor", sAxisTag::UIAxisTag_GetColor );
-        ICall( "UIAxisTag::UIAxisTag_SetColor", sAxisTag::UIAxisTag_SetColor );
+        ICall( "UIAxisTag::UIAxisTag_Create", UIAxisTag_Create );
+        ICall( "UIAxisTag::UIAxisTag_CreateWithTextAndColor", UIAxisTag_CreateWithTextAndColor );
+        ICall( "UIAxisTag::UIAxisTag_Destroy", UIAxisTag_Destroy );
+        ICall( "UIAxisTag::UIAxisTag_SetX", UIAxisTag_SetX );
+        ICall( "UIAxisTag::UIAxisTag_SetText", UIAxisTag_SetText );
+        ICall( "UIAxisTag::UIAxisTag_GetColor", UIAxisTag_GetColor );
+        ICall( "UIAxisTag::UIAxisTag_SetColor", UIAxisTag_SetColor );
 
-        ICall( "UIVRange::UIVRangePlot_Create", sVRange::UIVRangePlot_Create );
-        ICall( "UIVRange::UIVRangePlot_Destroy", sVRange::UIVRangePlot_Destroy );
-        ICall( "UIVRange::UIVRangePlot_GetMin", sVRange::UIVRangePlot_GetMin );
-        ICall( "UIVRange::UIVRangePlot_SetMin", sVRange::UIVRangePlot_SetMin );
-        ICall( "UIVRange::UIVRangePlot_GetMax", sVRange::UIVRangePlot_GetMax );
-        ICall( "UIVRange::UIVRangePlot_SetMax", sVRange::UIVRangePlot_SetMax );
+        ICall( "UIVRange::UIVRangePlot_Create", UIVRangePlot_Create );
+        ICall( "UIVRange::UIVRangePlot_Destroy", UIVRangePlot_Destroy );
+        ICall( "UIVRange::UIVRangePlot_GetMin", UIVRangePlot_GetMin );
+        ICall( "UIVRange::UIVRangePlot_SetMin", UIVRangePlot_SetMin );
+        ICall( "UIVRange::UIVRangePlot_GetMax", UIVRangePlot_GetMax );
+        ICall( "UIVRange::UIVRangePlot_SetMax", UIVRangePlot_SetMax );
 
-        ICall( "UIHRange::UIHRangePlot_Create", sHRange::UIHRangePlot_Create );
-        ICall( "UIHRange::UIHRangePlot_Destroy", sHRange::UIHRangePlot_Destroy );
-        ICall( "UIHRange::UIHRangePlot_GetMin", sHRange::UIHRangePlot_GetMin );
-        ICall( "UIHRange::UIHRangePlot_SetMin", sHRange::UIHRangePlot_SetMin );
-        ICall( "UIHRange::UIHRangePlot_GetMax", sHRange::UIHRangePlot_GetMax );
-        ICall( "UIHRange::UIHRangePlot_SetMax", sHRange::UIHRangePlot_SetMax );
+        ICall( "UIHRange::UIHRangePlot_Create", UIHRangePlot_Create );
+        ICall( "UIHRange::UIHRangePlot_Destroy", UIHRangePlot_Destroy );
+        ICall( "UIHRange::UIHRangePlot_GetMin", UIHRangePlot_GetMin );
+        ICall( "UIHRange::UIHRangePlot_SetMin", UIHRangePlot_SetMin );
+        ICall( "UIHRange::UIHRangePlot_GetMax", UIHRangePlot_GetMax );
+        ICall( "UIHRange::UIHRangePlot_SetMax", UIHRangePlot_SetMax );
 
-        ICall( "UITextOverlay::UITextOverlay_Create", UITextOverlay::UITextOverlay_Create );
-        ICall( "UITextOverlay::UITextOverlay_Destroy", UITextOverlay::UITextOverlay_Destroy );
-        ICall( "UITextOverlay::UITextOverlay_AddText", UITextOverlay::UITextOverlay_AddText );
-        ICall( "UITextOverlay::UITextOverlay_Clear", UITextOverlay::UITextOverlay_Clear );
+        ICall( "UITextOverlay::UITextOverlay_Create", UITextOverlay_Create );
+        ICall( "UITextOverlay::UITextOverlay_Destroy", UITextOverlay_Destroy );
+        ICall( "UITextOverlay::UITextOverlay_AddText", UITextOverlay_AddText );
+        ICall( "UITextOverlay::UITextOverlay_Clear", UITextOverlay_Clear );
 
-        ICall( "UIWorkspace::UIWorkspace_Create", UIWorkspace::UIWorkspace_Create );
-        ICall( "UIWorkspace::UIWorkspace_Destroy", UIWorkspace::UIWorkspace_Destroy );
-        ICall( "UIWorkspace::UIWorkspace_Add", UIWorkspace::UIWorkspace_Add );
-        ICall( "UIWorkspace::UIWorkspace_RegisterCloseDocumentDelegate", UIWorkspace::UIWorkspace_RegisterCloseDocumentDelegate );
+        ICall( "UIWorkspace::UIWorkspace_Create", UIWorkspace_Create );
+        ICall( "UIWorkspace::UIWorkspace_Destroy", UIWorkspace_Destroy );
+        ICall( "UIWorkspace::UIWorkspace_Add", UIWorkspace_Add );
+        ICall( "UIWorkspace::UIWorkspace_RegisterCloseDocumentDelegate", UIWorkspace_RegisterCloseDocumentDelegate );
 
-        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_Create", UIWorkspaceDocument::UIWorkspaceDocument_Create );
-        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_Destroy", UIWorkspaceDocument::UIWorkspaceDocument_Destroy );
-        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_SetContent", UIWorkspaceDocument::UIWorkspaceDocument_SetContent );
-        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_Update", UIWorkspaceDocument::UIWorkspaceDocument_Update );
-        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_SetName", UIWorkspaceDocument::UIWorkspaceDocument_SetName );
-        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_IsDirty", UIWorkspaceDocument::UIWorkspaceDocument_IsDirty );
-        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_MarkAsDirty", UIWorkspaceDocument::UIWorkspaceDocument_MarkAsDirty );
-        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_Open", UIWorkspaceDocument::UIWorkspaceDocument_Open );
-        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_RequestClose", UIWorkspaceDocument::UIWorkspaceDocument_RequestClose );
-        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_ForceClose", UIWorkspaceDocument::UIWorkspaceDocument_ForceClose );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_Create", UIWorkspaceDocument_Create );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_Destroy", UIWorkspaceDocument_Destroy );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_SetContent", UIWorkspaceDocument_SetContent );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_Update", UIWorkspaceDocument_Update );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_SetName", UIWorkspaceDocument_SetName );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_IsDirty", UIWorkspaceDocument_IsDirty );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_MarkAsDirty", UIWorkspaceDocument_MarkAsDirty );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_Open", UIWorkspaceDocument_Open );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_RequestClose", UIWorkspaceDocument_RequestClose );
+        ICall( "UIWorkspaceDocument::UIWorkspaceDocument_ForceClose", UIWorkspaceDocument_ForceClose );
         ICall( "UIWorkspaceDocument::UIWorkspaceDocument_RegisterSaveDelegate",
-               UIWorkspaceDocument::UIWorkspaceDocument_RegisterSaveDelegate );
+               UIWorkspaceDocument_RegisterSaveDelegate );
 
-        ICall( "UIMenuItem::UIMenuItem_Create", UIMenuItem::UIMenuItem_Create );
-        ICall( "UIMenuItem::UIMenuItem_CreateWithText", UIMenuItem::UIMenuItem_CreateWithText );
-        ICall( "UIMenuItem::UIMenuItem_CreateWithTextAndShortcut", UIMenuItem::UIMenuItem_CreateWithTextAndShortcut );
-        ICall( "UIMenuItem::UIMenuItem_Destroy", UIMenuItem::UIMenuItem_Destroy );
-        ICall( "UIMenuItem::UIMenuItem_SetText", UIMenuItem::UIMenuItem_SetText );
-        ICall( "UIMenuItem::UIMenuItem_SetShortcut", UIMenuItem::UIMenuItem_SetShortcut );
-        ICall( "UIMenuItem::UIMenuItem_SetTextColor", UIMenuItem::UIMenuItem_SetTextColor );
-        ICall( "UIMenuItem::UIMenuItem_OnTrigger", UIMenuItem::UIMenuItem_OnTrigger );
+        ICall( "UIMenuItem::UIMenuItem_Create", UIMenuItem_Create );
+        ICall( "UIMenuItem::UIMenuItem_CreateWithText", UIMenuItem_CreateWithText );
+        ICall( "UIMenuItem::UIMenuItem_CreateWithTextAndShortcut", UIMenuItem_CreateWithTextAndShortcut );
+        ICall( "UIMenuItem::UIMenuItem_Destroy", UIMenuItem_Destroy );
+        ICall( "UIMenuItem::UIMenuItem_SetText", UIMenuItem_SetText );
+        ICall( "UIMenuItem::UIMenuItem_SetShortcut", UIMenuItem_SetShortcut );
+        ICall( "UIMenuItem::UIMenuItem_SetTextColor", UIMenuItem_SetTextColor );
+        ICall( "UIMenuItem::UIMenuItem_OnTrigger", UIMenuItem_OnTrigger );
 
-        ICall( "UIMenuSeparator::UIMenuSeparator_Create", UIMenuSeparator::UIMenuSeparator_Create );
-        ICall( "UIMenuSeparator::UIMenuSeparator_Destroy", UIMenuSeparator::UIMenuSeparator_Destroy );
+        ICall( "UIMenuSeparator::UIMenuSeparator_Create", UIMenuSeparator_Create );
+        ICall( "UIMenuSeparator::UIMenuSeparator_Destroy", UIMenuSeparator_Destroy );
 
-        ICall( "UIMenu::UIMenu_Create", UIMenu::UIMenu_Create );
-        ICall( "UIMenu::UIMenu_CreateWithText", UIMenu::UIMenu_CreateWithText );
-        ICall( "UIMenu::UIMenu_Destroy", UIMenu::UIMenu_Destroy );
-        ICall( "UIMenu::UIMenu_AddAction", UIMenu::UIMenu_AddAction );
-        ICall( "UIMenu::UIMenu_AddMenu", UIMenu::UIMenu_AddMenu );
-        ICall( "UIMenu::UIMenu_AddSeparator", UIMenu::UIMenu_AddSeparator );
-        ICall( "UIMenu::UIMenu_Update", UIMenu::UIMenu_Update );
+        ICall( "UIMenu::UIMenu_Create", UIMenu_Create );
+        ICall( "UIMenu::UIMenu_CreateWithText", UIMenu_CreateWithText );
+        ICall( "UIMenu::UIMenu_Destroy", UIMenu_Destroy );
+        ICall( "UIMenu::UIMenu_AddAction", UIMenu_AddAction );
+        ICall( "UIMenu::UIMenu_AddMenu", UIMenu_AddMenu );
+        ICall( "UIMenu::UIMenu_AddSeparator", UIMenu_AddSeparator );
+        ICall( "UIMenu::UIMenu_Update", UIMenu_Update );
 
-        ICall( "UIPropertyValue::UIPropertyValue_Create", UIPropertyValue::UIPropertyValue_Create );
-        ICall( "UIPropertyValue::UIPropertyValue_CreateWithText", UIPropertyValue::UIPropertyValue_CreateWithText );
+        ICall( "UIPropertyValue::UIPropertyValue_Create", UIPropertyValue_Create );
+        ICall( "UIPropertyValue::UIPropertyValue_CreateWithText", UIPropertyValue_CreateWithText );
         ICall( "UIPropertyValue::UIPropertyValue_CreateWithTextAndOrientation",
-               UIPropertyValue::UIPropertyValue_CreateWithTextAndOrientation );
-        ICall( "UIPropertyValue::UIPropertyValue_Destroy", UIPropertyValue::UIPropertyValue_Destroy );
-        ICall( "UIPropertyValue::UIPropertyValue_SetValue", UIPropertyValue::UIPropertyValue_SetValue );
-        ICall( "UIPropertyValue::UIPropertyValue_SetValueFont", UIPropertyValue::UIPropertyValue_SetValueFont );
-        ICall( "UIPropertyValue::UIPropertyValue_SetNameFont", UIPropertyValue::UIPropertyValue_SetNameFont );
+               UIPropertyValue_CreateWithTextAndOrientation );
+        ICall( "UIPropertyValue::UIPropertyValue_Destroy", UIPropertyValue_Destroy );
+        ICall( "UIPropertyValue::UIPropertyValue_SetValue", UIPropertyValue_SetValue );
+        ICall( "UIPropertyValue::UIPropertyValue_SetValueFont", UIPropertyValue_SetValueFont );
+        ICall( "UIPropertyValue::UIPropertyValue_SetNameFont", UIPropertyValue_SetNameFont );
 
-        ICall( "UITextInput::UITextInput_Create", UITextInput::UITextInput_Create );
-        ICall( "UITextInput::UITextInput_CreateWithText", UITextInput::UITextInput_CreateWithText );
-        ICall( "UITextInput::UITextInput_Destroy", UITextInput::UITextInput_Destroy );
-        ICall( "UITextInput::UITextInput_GetText", UITextInput::UITextInput_GetText );
-        ICall( "UITextInput::UITextInput_SetHintText", UITextInput::UITextInput_SetHintText );
-        ICall( "UITextInput::UITextInput_SetTextColor", UITextInput::UITextInput_SetTextColor );
-        ICall( "UITextInput::UITextInput_SetBufferSize", UITextInput::UITextInput_SetBufferSize );
-        ICall( "UITextInput::UITextInput_OnTextChanged", UITextInput::UITextInput_OnTextChanged );
+        ICall( "UITextInput::UITextInput_Create", UITextInput_Create );
+        ICall( "UITextInput::UITextInput_CreateWithText", UITextInput_CreateWithText );
+        ICall( "UITextInput::UITextInput_Destroy", UITextInput_Destroy );
+        ICall( "UITextInput::UITextInput_GetText", UITextInput_GetText );
+        ICall( "UITextInput::UITextInput_SetHintText", UITextInput_SetHintText );
+        ICall( "UITextInput::UITextInput_SetTextColor", UITextInput_SetTextColor );
+        ICall( "UITextInput::UITextInput_SetBufferSize", UITextInput_SetBufferSize );
+        ICall( "UITextInput::UITextInput_OnTextChanged", UITextInput_OnTextChanged );
 
-        ICall( "UIProgressBar::UIProgressBar_Create", UIProgressBar::UIProgressBar_Create );
-        ICall( "UIProgressBar::UIProgressBar_Destroy", UIProgressBar::UIProgressBar_Destroy );
-        ICall( "UIProgressBar::UIProgressBar_SetProgressValue", UIProgressBar::UIProgressBar_SetProgressValue );
-        ICall( "UIProgressBar::UIProgressBar_SetProgressColor", UIProgressBar::UIProgressBar_SetProgressColor );
-        ICall( "UIProgressBar::UIProgressBar_SetText", UIProgressBar::UIProgressBar_SetText );
-        ICall( "UIProgressBar::UIProgressBar_SetTextColor", UIProgressBar::UIProgressBar_SetTextColor );
-        ICall( "UIProgressBar::UIProgressBar_SetThickness", UIProgressBar::UIProgressBar_SetThickness );
+        ICall( "UIProgressBar::UIProgressBar_Create", UIProgressBar_Create );
+        ICall( "UIProgressBar::UIProgressBar_Destroy", UIProgressBar_Destroy );
+        ICall( "UIProgressBar::UIProgressBar_SetProgressValue", UIProgressBar_SetProgressValue );
+        ICall( "UIProgressBar::UIProgressBar_SetProgressColor", UIProgressBar_SetProgressColor );
+        ICall( "UIProgressBar::UIProgressBar_SetText", UIProgressBar_SetText );
+        ICall( "UIProgressBar::UIProgressBar_SetTextColor", UIProgressBar_SetTextColor );
+        ICall( "UIProgressBar::UIProgressBar_SetThickness", UIProgressBar_SetThickness );
 
-        ICall( "UIDropdownButton::UIDropdownButton_Create", UIDropdownButton::UIDropdownButton_Create );
-        ICall( "UIDropdownButton::UIDropdownButton_Destroy", UIDropdownButton::UIDropdownButton_Destroy );
-        ICall( "UIDropdownButton::UIDropdownButton_SetContent", UIDropdownButton::UIDropdownButton_SetContent );
-        ICall( "UIDropdownButton::UIDropdownButton_SetContentSize", UIDropdownButton::UIDropdownButton_SetContentSize );
-        ICall( "UIDropdownButton::UIDropdownButton_SetImage", UIDropdownButton::UIDropdownButton_SetImage );
-        ICall( "UIDropdownButton::UIDropdownButton_SetText", UIDropdownButton::UIDropdownButton_SetText );
-        ICall( "UIDropdownButton::UIDropdownButton_SetTextColor", UIDropdownButton::UIDropdownButton_SetTextColor );
+        ICall( "UIDropdownButton::UIDropdownButton_Create", UIDropdownButton_Create );
+        ICall( "UIDropdownButton::UIDropdownButton_Destroy", UIDropdownButton_Destroy );
+        ICall( "UIDropdownButton::UIDropdownButton_SetContent", UIDropdownButton_SetContent );
+        ICall( "UIDropdownButton::UIDropdownButton_SetContentSize", UIDropdownButton_SetContentSize );
+        ICall( "UIDropdownButton::UIDropdownButton_SetImage", UIDropdownButton_SetImage );
+        ICall( "UIDropdownButton::UIDropdownButton_SetText", UIDropdownButton_SetText );
+        ICall( "UIDropdownButton::UIDropdownButton_SetTextColor", UIDropdownButton_SetTextColor );
 
-        ICall( "UIContainer::UIContainer_Create", UIContainer::UIContainer_Create );
-        ICall( "UIContainer::UIContainer_Destroy", UIContainer::UIContainer_Destroy );
-        ICall( "UIContainer::UIContainer_SetContent", UIContainer::UIContainer_SetContent );
+        ICall( "UIContainer::UIContainer_Create", UIContainer_Create );
+        ICall( "UIContainer::UIContainer_Destroy", UIContainer_Destroy );
+        ICall( "UIContainer::UIContainer_SetContent", UIContainer_SetContent );
 
-        ICall( "UITreeView::UITreeView_Create", UITreeView::UITreeView_Create );
-        ICall( "UITreeView::UITreeView_Destroy", UITreeView::UITreeView_Destroy );
-        ICall( "UITreeView::UITreeView_SetIndent", UITreeView::UITreeView_SetIndent );
-        ICall( "UITreeView::UITreeView_SetIconSpacing", UITreeView::UITreeView_SetIconSpacing );
-        ICall( "UITreeView::UITreeView_Add", UITreeView::UITreeView_Add );
+        ICall( "UITreeView::UITreeView_Create", UITreeView_Create );
+        ICall( "UITreeView::UITreeView_Destroy", UITreeView_Destroy );
+        ICall( "UITreeView::UITreeView_SetIndent", UITreeView_SetIndent );
+        ICall( "UITreeView::UITreeView_SetIconSpacing", UITreeView_SetIconSpacing );
+        ICall( "UITreeView::UITreeView_Add", UITreeView_Add );
 
-        ICall( "UITreeViewNode::UITreeViewNode_Create", UITreeViewNode::UITreeViewNode_Create );
-        ICall( "UITreeViewNode::UITreeViewNode_Destroy", UITreeViewNode::UITreeViewNode_Destroy );
-        ICall( "UITreeViewNode::UITreeViewNode_SetIcon", UITreeViewNode::UITreeViewNode_SetIcon );
-        ICall( "UITreeViewNode::UITreeViewNode_SetIndicator", UITreeViewNode::UITreeViewNode_SetIndicator );
-        ICall( "UITreeViewNode::UITreeViewNode_SetText", UITreeViewNode::UITreeViewNode_SetText );
-        ICall( "UITreeViewNode::UITreeViewNode_SetTextColor", UITreeViewNode::UITreeViewNode_SetTextColor );
-        ICall( "UITreeViewNode::UITreeViewNode_Add", UITreeViewNode::UITreeViewNode_Add );
+        ICall( "UITreeViewNode::UITreeViewNode_Create", UITreeViewNode_Create );
+        ICall( "UITreeViewNode::UITreeViewNode_Destroy", UITreeViewNode_Destroy );
+        ICall( "UITreeViewNode::UITreeViewNode_SetIcon", UITreeViewNode_SetIcon );
+        ICall( "UITreeViewNode::UITreeViewNode_SetIndicator", UITreeViewNode_SetIndicator );
+        ICall( "UITreeViewNode::UITreeViewNode_SetText", UITreeViewNode_SetText );
+        ICall( "UITreeViewNode::UITreeViewNode_SetTextColor", UITreeViewNode_SetTextColor );
+        ICall( "UITreeViewNode::UITreeViewNode_Add", UITreeViewNode_Add );
 
-        ICall( "UIFileTree::UIFileTree_Create", UIFileTree::UIFileTree_Create );
-        ICall( "UIFileTree::UIFileTree_Destroy", UIFileTree::UIFileTree_Destroy );
-        ICall( "UIFileTree::UIFileTree_Add", UIFileTree::UIFileTree_Add );
+        ICall( "UIFileTree::UIFileTree_Create", UIFileTree_Create );
+        ICall( "UIFileTree::UIFileTree_Destroy", UIFileTree_Destroy );
+        ICall( "UIFileTree::UIFileTree_Add", UIFileTree_Add );
 
-        ICall( "UIColorButton::UIColorButton_Create", UIColorButton::UIColorButton_Create );
-        ICall( "UIColorButton::UIColorButton_Destroy", UIColorButton::UIColorButton_Destroy );
+        ICall( "UIColorButton::UIColorButton_Create", UIColorButton_Create );
+        ICall( "UIColorButton::UIColorButton_Destroy", UIColorButton_Destroy );
 
-        ICall( "UISlider::UISlider_Create", UISlider::UISlider_Create );
-        ICall( "UISlider::UISlider_Destroy", UISlider::UISlider_Destroy );
+        ICall( "UISlider::UISlider_Create", UISlider_Create );
+        ICall( "UISlider::UISlider_Destroy", UISlider_Destroy );
 
-        ICall( "UIVec2Input::UIVec2Input_Create", UIVec2Input::UIVec2Input_Create );
-        ICall( "UIVec2Input::UIVec2Input_Destroy", UIVec2Input::UIVec2Input_Destroy );
-        ICall( "UIVec2Input::UIVec2Input_OnChanged", UIVec2Input::UIVec2Input_OnChanged );
-        ICall( "UIVec2Input::UIVec2Input_SetValue", UIVec2Input::UIVec2Input_SetValue );
-        ICall( "UIVec2Input::UIVec2Input_GetValue", UIVec2Input::UIVec2Input_GetValue );
-        ICall( "UIVec2Input::UIVec2Input_SetFormat", UIVec2Input::UIVec2Input_SetFormat );
+        ICall( "UIVec2Input::UIVec2Input_Create", UIVec2Input_Create );
+        ICall( "UIVec2Input::UIVec2Input_Destroy", UIVec2Input_Destroy );
+        ICall( "UIVec2Input::UIVec2Input_OnChanged", UIVec2Input_OnChanged );
+        ICall( "UIVec2Input::UIVec2Input_SetValue", UIVec2Input_SetValue );
+        ICall( "UIVec2Input::UIVec2Input_GetValue", UIVec2Input_GetValue );
+        ICall( "UIVec2Input::UIVec2Input_SetFormat", UIVec2Input_SetFormat );
 
-        ICall( "UIVec3Input::UIVec3Input_Create", UIVec3Input::UIVec3Input_Create );
-        ICall( "UIVec3Input::UIVec3Input_Destroy", UIVec3Input::UIVec3Input_Destroy );
-        ICall( "UIVec3Input::UIVec3Input_OnChanged", UIVec3Input::UIVec3Input_OnChanged );
-        ICall( "UIVec3Input::UIVec3Input_SetValue", UIVec3Input::UIVec3Input_SetValue );
-        ICall( "UIVec3Input::UIVec3Input_GetValue", UIVec3Input::UIVec3Input_GetValue );
-        ICall( "UIVec3Input::UIVec3Input_SetFormat", UIVec3Input::UIVec3Input_SetFormat );
+        ICall( "UIVec3Input::UIVec3Input_Create", UIVec3Input_Create );
+        ICall( "UIVec3Input::UIVec3Input_Destroy", UIVec3Input_Destroy );
+        ICall( "UIVec3Input::UIVec3Input_OnChanged", UIVec3Input_OnChanged );
+        ICall( "UIVec3Input::UIVec3Input_SetValue", UIVec3Input_SetValue );
+        ICall( "UIVec3Input::UIVec3Input_GetValue", UIVec3Input_GetValue );
+        ICall( "UIVec3Input::UIVec3Input_SetFormat", UIVec3Input_SetFormat );
 
-        ICall( "UIVec4Input::UIVec4Input_Create", UIVec4Input::UIVec4Input_Create );
-        ICall( "UIVec4Input::UIVec4Input_Destroy", UIVec4Input::UIVec4Input_Destroy );
-        ICall( "UIVec4Input::UIVec4Input_OnChanged", UIVec4Input::UIVec4Input_OnChanged );
-        ICall( "UIVec4Input::UIVec4Input_SetValue", UIVec4Input::UIVec4Input_SetValue );
-        ICall( "UIVec4Input::UIVec4Input_GetValue", UIVec4Input::UIVec4Input_GetValue );
-        ICall( "UIVec4Input::UIVec4Input_GetValue", UIVec4Input::UIVec4Input_SetFormat );
+        ICall( "UIVec4Input::UIVec4Input_Create", UIVec4Input_Create );
+        ICall( "UIVec4Input::UIVec4Input_Destroy", UIVec4Input_Destroy );
+        ICall( "UIVec4Input::UIVec4Input_OnChanged", UIVec4Input_OnChanged );
+        ICall( "UIVec4Input::UIVec4Input_SetValue", UIVec4Input_SetValue );
+        ICall( "UIVec4Input::UIVec4Input_GetValue", UIVec4Input_GetValue );
+        ICall( "UIVec4Input::UIVec4Input_GetValue", UIVec4Input_SetFormat );
     }
 
 } // namespace SE::Core

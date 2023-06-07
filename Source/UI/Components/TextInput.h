@@ -33,7 +33,7 @@ namespace SE::Core
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
-      private:
+      public:
         void *mOnTextChangedDelegate       = nullptr;
         int   mOnTextChangedDelegateHandle = -1;
 
