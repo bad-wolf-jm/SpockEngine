@@ -44,6 +44,8 @@ namespace SE::Core::Interop
 #define BEGIN_INTERFACE_DEFINITION( name )
 #define END_INTERFACE_DEFINITION
 
+#define __SELF__ void *aSelf
+
 #define CONSTRUCT_WITHOUT_PARAMETERS( _Ty )       \
     void *_Ty##_Create()                          \
     {                                             \
@@ -52,8 +54,9 @@ namespace SE::Core::Interop
     }
 
 #define DESTROY_INTERFACE( _Ty ) \
-    void _Ty##_Destroy( void *aSelf ) { delete static_cast<_Ty *>( aSelf ); }
+    void _Ty##_Destroy( __SELF__ ) { delete SELF( _Ty ); }
 
+#define SELF( _Ty ) static_cast<_Ty *>( aSelf )
     // clang-format off
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -69,70 +72,59 @@ BEGIN_INTERFACE_DEFINITION( name )
 
     DESTROY_INTERFACE( UIBaseImage )
 
-    void UIBaseImage_SetImage( void *aSelf, void *aPath )
+    void UIBaseImage_SetImage( __SELF__, void *aPath )
     {
-        auto lInstance = static_cast<UIBaseImage *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aPath ) );
 
-        lInstance->SetImage( lString );
+        SELF(UIBaseImage)->SetImage( lString );
     }
 
-    void UIBaseImage_SetSize( void *aSelf, vec2 aSize )
+    void UIBaseImage_SetSize( __SELF__, vec2 aSize )
     {
         auto lInstance = static_cast<UIBaseImage *>( aSelf );
 
-        lInstance->SetSize( aSize );
+        SELF(UIBaseImage)->SetSize( aSize );
     }
 
-    vec2 UIBaseImage_GetSize( void *aSelf )
+    vec2 UIBaseImage_GetSize( __SELF__ )
     {
-        auto lInstance = static_cast<UIBaseImage *>( aSelf );
-        auto lV        = lInstance->Size();
+        auto lV        = SELF(UIBaseImage)->Size();
 
         return vec2{ lV.y, lV.y };
     }
 
-    void UIBaseImage_SetTopLeft( void *aSelf, vec2 aTopLeft )
+    void UIBaseImage_SetTopLeft( __SELF__, vec2 aTopLeft )
     {
-        auto lInstance = static_cast<UIBaseImage *>( aSelf );
-
-        lInstance->SetTopLeft( aTopLeft );
+        SELF(UIBaseImage)->SetTopLeft( aTopLeft );
     }
 
-    vec2 UIBaseImage_GetTopLeft( void *aSelf )
+    vec2 UIBaseImage_GetTopLeft( __SELF__ )
     {
-        auto lInstance = static_cast<UIBaseImage *>( aSelf );
-        auto lV        = lInstance->TopLeft();
+        auto lV        = SELF(UIBaseImage)->TopLeft();
 
         return vec2{ lV.y, lV.y };
     }
 
-    void UIBaseImage_SetBottomRight( void *aSelf, vec2 aBottomRight )
+    void UIBaseImage_SetBottomRight( __SELF__, vec2 aBottomRight )
     {
-        auto lInstance = static_cast<UIBaseImage *>( aSelf );
-
-        lInstance->SetBottomRight( aBottomRight );
+        SELF(UIBaseImage)->SetBottomRight( aBottomRight );
     }
 
-    vec2 UIBaseImage_GetBottomRight( void *aSelf )
+    vec2 UIBaseImage_GetBottomRight( __SELF__ )
     {
-        auto lInstance = static_cast<UIBaseImage *>( aSelf );
-        auto lV        = lInstance->BottomRight();
+        auto lV        = SELF(UIBaseImage)->BottomRight();
 
         return vec2{ lV.x, lV.y };
     }
 
-    void UIBaseImage_SetTintColor( void *aSelf, vec4 aColor )
+    void UIBaseImage_SetTintColor( __SELF__, vec4 aColor )
     {
-        auto lInstance = static_cast<UIBaseImage *>( aSelf );
-
-        lInstance->SetTintColor( aColor );
+        SELF(UIBaseImage)->SetTintColor( aColor );
     }
 
-    vec4 UIBaseImage_GetTintColor( void *aSelf )
+    vec4 UIBaseImage_GetTintColor( __SELF__ )
     {
-        auto lInstance = static_cast<UIBaseImage *>( aSelf );
-        auto lV        = lInstance->TintColor();
+        auto lV        = SELF(UIBaseImage)->TintColor();
 
         return vec4{ lV.x, lV.y, lV.z, lV.w };
     }
@@ -150,15 +142,14 @@ BEGIN_INTERFACE_DEFINITION( name )
 
     DESTROY_INTERFACE( UIButton )
 
-    void UIButton_SetText( void *aSelf, void *aText )
+    void UIButton_SetText( __SELF__, void *aText )
     {
-        auto lInstance = static_cast<UILabel *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetText( lString );
+        SELF(UIButton)->SetText( lString );
     }
 
-    void UIButton_OnClick( void *aSelf, void *aDelegate )
+    void UIButton_OnClick( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIButton *>( aSelf );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
@@ -183,7 +174,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
     DESTROY_INTERFACE( UICheckBox )
 
-    void UICheckBox_OnClick( void *aSelf, void *aDelegate )
+    void UICheckBox_OnClick( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UICheckBox *>( aSelf );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
@@ -203,18 +194,14 @@ BEGIN_INTERFACE_DEFINITION( name )
             } );
     }
 
-    bool UICheckBox_IsChecked( void *aSelf )
+    bool UICheckBox_IsChecked( __SELF__ )
     {
-        auto lInstance = static_cast<UICheckBox *>( aSelf );
-
-        return lInstance->IsChecked();
+        return SELF(UICheckBox)->IsChecked();
     }
 
-    void UICheckBox_SetIsChecked( void *aSelf, bool aValue )
+    void UICheckBox_SetIsChecked( __SELF__, bool aValue )
     {
-        auto lInstance = static_cast<UICheckBox *>( aSelf );
-
-        lInstance->SetIsChecked( aValue );
+        SELF(UICheckBox)->SetIsChecked( aValue );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -237,32 +224,28 @@ BEGIN_INTERFACE_DEFINITION( name )
     }
 
 
-    int UIComboBox_GetCurrent( void *aSelf )
+    int UIComboBox_GetCurrent( __SELF__ )
     {
         auto lInstance = static_cast<UIComboBox *>( aSelf );
 
         return lInstance->Current();
     }
 
-    void UIComboBox_SetCurrent( void *aSelf, int aValue )
+    void UIComboBox_SetCurrent( __SELF__, int aValue )
     {
-        auto lInstance = static_cast<UIComboBox *>( aSelf );
-
-        lInstance->SetCurrent( aValue );
+        SELF(UIComboBox)->SetCurrent( aValue );
     }
 
-    void UIComboBox_SetItemList( void *aSelf, void *aItems )
+    void UIComboBox_SetItemList( __SELF__, void *aItems )
     {
-        auto lInstance = static_cast<UIComboBox *>( aSelf );
-
         std::vector<std::string> lItemVector;
         for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aItems ) ) )
             lItemVector.emplace_back( DotNetRuntime::NewString( x ) );
 
-        lInstance->SetItemList( lItemVector );
+        SELF(UIComboBox)->SetItemList( lItemVector );
     }
 
-    void UIComboBox_OnChanged( void *aSelf, void *aDelegate )
+    void UIComboBox_OnChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIComboBox *>( aSelf );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
@@ -284,133 +267,104 @@ BEGIN_INTERFACE_DEFINITION( name )
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
-    void UIComponent_SetIsVisible( void *aSelf, bool aIsVisible )
+    void UIComponent_SetIsVisible( __SELF__, bool aIsVisible )
     {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->mIsVisible = aIsVisible;
+        SELF(UIComponent)->mIsVisible = aIsVisible;
     }
 
-    void UIComponent_SetIsEnabled( void *aSelf, bool aIsEnabled )
+    void UIComponent_SetIsEnabled( __SELF__, bool aIsEnabled )
     {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->mIsEnabled = aIsEnabled;
+       SELF(UIComponent)->mIsEnabled = aIsEnabled;
     }
 
-    void UIComponent_SetAllowDragDrop( void *aSelf, bool aAllowDragDrop )
+    void UIComponent_SetAllowDragDrop( __SELF__, bool aAllowDragDrop )
     {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->mAllowDragDrop = aAllowDragDrop;
+        SELF(UIComponent)->mAllowDragDrop = aAllowDragDrop;
     }
 
-    void UIComponent_SetPaddingAll( void *aSelf, float aPaddingAll )
+    void UIComponent_SetPaddingAll( __SELF__, float aPaddingAll )
     {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->SetPadding( aPaddingAll );
+        SELF(UIComponent)->SetPadding( aPaddingAll );
     }
 
-    void UIComponent_SetPaddingPairs( void *aSelf, float aPaddingTopBottom, float aPaddingLeftRight )
+    void UIComponent_SetPaddingPairs( __SELF__, float aPaddingTopBottom, float aPaddingLeftRight )
     {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->SetPadding( aPaddingTopBottom, aPaddingLeftRight );
+        SELF(UIComponent)->SetPadding( aPaddingTopBottom, aPaddingLeftRight );
     }
 
-    void UIComponent_SetPaddingIndividual( void *aSelf, float aPaddingTop, float aPaddingBottom, float aPaddingLeft,
+    void UIComponent_SetPaddingIndividual( __SELF__, float aPaddingTop, float aPaddingBottom, float aPaddingLeft,
                                            float aPaddingRight )
 
     {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->SetPadding( aPaddingTop, aPaddingBottom, aPaddingLeft, aPaddingRight );
+        SELF(UIComponent)->SetPadding( aPaddingTop, aPaddingBottom, aPaddingLeft, aPaddingRight );
     }
 
-    void UIComponent_SetAlignment( void *aSelf, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
+    void UIComponent_SetAlignment( __SELF__, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
     {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
 
-        lSelf->SetAlignment( aHAlignment, aVAlignment );
+        SELF(UIComponent)->SetAlignment( aHAlignment, aVAlignment );
     }
 
-    void UIComponent_SetHorizontalAlignment( void *aSelf, eHorizontalAlignment aAlignment )
+    void UIComponent_SetHorizontalAlignment( __SELF__, eHorizontalAlignment aAlignment )
     {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->SetHorizontalAlignment( aAlignment );
+        SELF(UIComponent)->SetHorizontalAlignment( aAlignment );
     }
 
-    void UIComponent_SetVerticalAlignment( void *aSelf, eVerticalAlignment aAlignment )
+    void UIComponent_SetVerticalAlignment( __SELF__, eVerticalAlignment aAlignment )
     {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->SetVerticalAlignment( aAlignment );
+        SELF(UIComponent)->SetVerticalAlignment( aAlignment );
     }
 
-    void UIComponent_SetBackgroundColor( void *aSelf, vec4 aColor )
+    void UIComponent_SetBackgroundColor( __SELF__, vec4 aColor )
     {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->SetBackgroundColor( aColor );
+        SELF(UIComponent)->SetBackgroundColor( aColor );
     }
 
-    void UIComponent_SetFont( void *aSelf, FontFamilyFlags aFont )
+    void UIComponent_SetFont( __SELF__, FontFamilyFlags aFont )
     {
-        auto lSelf = static_cast<UIComponent *>( aSelf );
-
-        lSelf->SetFont( aFont );
+        SELF(UIComponent)->SetFont( aFont );
     }
 
-    void UIComponent_SetTooltip( void *aSelf, void *aTooltip )
+    void UIComponent_SetTooltip( __SELF__, void *aTooltip )
     {
-        auto lSelf    = static_cast<UIComponent *>( aSelf );
         auto lTooltip = static_cast<UIComponent *>( aTooltip );
 
-        lSelf->SetTooltip( lTooltip );
+        SELF(UIComponent)->SetTooltip( lTooltip );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIDropdownButton )
     DESTROY_INTERFACE( UIDropdownButton )
 
-    void UIDropdownButton_SetContent( void *aSelf, void *aContent )
+    void UIDropdownButton_SetContent( __SELF__, void *aContent )
     {
-        auto lInstance = static_cast<UIDropdownButton *>( aSelf );
         auto lContent  = static_cast<UIComponent *>( aContent );
 
-        return lInstance->SetContent( lContent );
+        return SELF(UIDropdownButton)->SetContent( lContent );
     }
 
-    void UIDropdownButton_SetContentSize( void *aSelf, vec2 aContentSizse )
+    void UIDropdownButton_SetContentSize( __SELF__, vec2 aContentSizse )
     {
-        auto lInstance = static_cast<UIDropdownButton *>( aSelf );
-
-        return lInstance->SetContentSize( aContentSizse );
+        return SELF(UIDropdownButton)->SetContentSize( aContentSizse );
     }
 
-    void UIDropdownButton_SetImage( void *aSelf, void *aImage )
+    void UIDropdownButton_SetImage( __SELF__, void *aImage )
     {
-        auto lInstance = static_cast<UIDropdownButton *>( aSelf );
         auto lImage    = static_cast<UIBaseImage *>( aImage );
 
-        lInstance->SetImage( lImage );
+        SELF(UIDropdownButton)->SetImage( lImage );
     }
 
-    void UIDropdownButton_SetText( void *aSelf, void *aText )
+    void UIDropdownButton_SetText( __SELF__, void *aText )
     {
-        auto lInstance = static_cast<UIDropdownButton *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetText( lString );
+        SELF(UIDropdownButton)->SetText( lString );
     }
 
-    void UIDropdownButton_SetTextColor( void *aSelf, vec4 aColor )
+    void UIDropdownButton_SetTextColor( __SELF__, vec4 aColor )
     {
-        auto lInstance = static_cast<UIDropdownButton *>( aSelf );
-
-        lInstance->SetTextColor( aColor );
+        SELF(UIDropdownButton)->SetTextColor( aColor );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -437,7 +391,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewImage );
     }
 
-    void UIImageButton_OnClick( void *aSelf, void *aDelegate )
+    void UIImageButton_OnClick( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIImageButton *>( aSelf );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
@@ -461,37 +415,31 @@ BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIImageToggleButton )
     DESTROY_INTERFACE( UIImageToggleButton )
 
-    bool UIImageToggleButton_IsActive( void *aSelf )
+    bool UIImageToggleButton_IsActive( __SELF__ )
     {
-        auto lInstance = static_cast<UIImageToggleButton *>( aSelf );
-
-        return lInstance->IsActive();
+        return SELF(UIImageToggleButton)->IsActive();
     }
 
-    void UIImageToggleButton_SetActive( void *aSelf, bool aValue )
+    void UIImageToggleButton_SetActive( __SELF__, bool aValue )
     {
-        auto lInstance = static_cast<UIImageToggleButton *>( aSelf );
-
-        lInstance->SetActive( aValue );
+        SELF(UIImageToggleButton)->SetActive( aValue );
     }
 
-    void UIImageToggleButton_SetActiveImage( void *aSelf, void *aImage )
+    void UIImageToggleButton_SetActiveImage( __SELF__, void *aImage )
     {
-        auto lInstance = static_cast<UIImageToggleButton *>( aSelf );
         auto lImage    = static_cast<UIBaseImage *>( aImage );
 
-        lInstance->SetActiveImage( lImage );
+        SELF(UIImageToggleButton)->SetActiveImage( lImage );
     }
 
-    void UIImageToggleButton_SetInactiveImage( void *aSelf, void *aImage )
+    void UIImageToggleButton_SetInactiveImage( __SELF__, void *aImage )
     {
-        auto lInstance = static_cast<UIImageToggleButton *>( aSelf );
         auto lImage    = static_cast<UIBaseImage *>( aImage );
 
-        lInstance->SetInactiveImage( lImage );
+        SELF(UIImageToggleButton)->SetInactiveImage( lImage );
     }
 
-    void UIImageToggleButton_OnClicked( void *aSelf, void *aDelegate )
+    void UIImageToggleButton_OnClicked( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIImageToggleButton *>( aSelf );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
@@ -514,7 +462,7 @@ BEGIN_INTERFACE_DEFINITION( name )
             } );
     }
 
-    void UIImageToggleButton_OnChanged( void *aSelf, void *aDelegate )
+    void UIImageToggleButton_OnChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIImageToggleButton *>( aSelf );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
@@ -547,19 +495,16 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewLabel );
     }
 
-    void UILabel_SetText( void *aSelf, void *aText )
+    void UILabel_SetText( __SELF__, void *aText )
     {
-        auto lInstance = static_cast<UILabel *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetText( lString );
+        SELF(UILabel)->SetText( lString );
     }
 
-    void UILabel_SetTextColor( void *aSelf, vec4 aTextColor )
+    void UILabel_SetTextColor( __SELF__, vec4 aTextColor )
     {
-        auto lInstance = static_cast<UILabel *>( aSelf );
-
-        lInstance->SetTextColor( aTextColor );
+        SELF(UILabel)->SetTextColor( aTextColor );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -583,30 +528,26 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewLabel );
     }
 
-    void UIMenuItem_SetText( void *aSelf, void *aText )
+    void UIMenuItem_SetText( __SELF__, void *aText )
     {
-        auto lInstance = static_cast<UIMenuItem *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetText( lString );
+        SELF(UIMenuItem)->SetText( lString );
     }
 
-    void UIMenuItem_SetShortcut( void *aSelf, void *aShortcut )
+    void UIMenuItem_SetShortcut( __SELF__, void *aShortcut )
     {
-        auto lInstance = static_cast<UIMenuItem *>( aSelf );
         auto lShortcut = DotNetRuntime::NewString( static_cast<MonoString *>( aShortcut ) );
 
-        lInstance->SetShortcut( lShortcut );
+        SELF(UIMenuItem)->SetShortcut( lShortcut );
     }
 
-    void UIMenuItem_SetTextColor( void *aSelf, vec4 *aTextColor )
+    void UIMenuItem_SetTextColor( __SELF__, vec4 *aTextColor )
     {
-        auto lInstance = static_cast<UIMenuItem *>( aSelf );
-
-        lInstance->SetTextColor( *aTextColor );
+        SELF(UIMenuItem)->SetTextColor( *aTextColor );
     }
 
-    void UIMenuItem_OnTrigger( void *aSelf, void *aDelegate )
+    void UIMenuItem_OnTrigger( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIMenuItem *>( aSelf );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
@@ -643,34 +584,31 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewLabel );
     }
 
-    void *UIMenu_AddAction( void *aSelf, void *aText, void *aShortcut )
+    void *UIMenu_AddAction( __SELF__, void *aText, void *aShortcut )
     {
-        auto lInstance  = static_cast<UIMenu *>( aSelf );
         auto lString    = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
         auto lShortcut  = DotNetRuntime::NewString( static_cast<MonoString *>( aShortcut ) );
-        auto lNewAction = lInstance->AddActionRaw( lString, lShortcut );
+        auto lNewAction = SELF(UIMenu)->AddActionRaw( lString, lShortcut );
 
         return static_cast<void *>( lNewAction );
     }
 
-    void *UIMenu_AddMenu( void *aSelf, void *aText )
+    void *UIMenu_AddMenu( __SELF__, void *aText )
     {
-        auto lInstance = static_cast<UIMenu *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-        auto lNewMenu  = lInstance->AddMenuRaw( lString );
+        auto lNewMenu  = SELF(UIMenu)->AddMenuRaw( lString );
 
         return static_cast<void *>( lNewMenu );
     }
 
-    void *UIMenu_AddSeparator( void *aSelf )
+    void *UIMenu_AddSeparator( __SELF__ )
     {
-        auto lInstance     = static_cast<UIMenu *>( aSelf );
-        auto lNewSeparator = lInstance->AddSeparatorRaw();
+        auto lNewSeparator = SELF(UIMenu)->AddSeparatorRaw();
 
         return static_cast<void *>( lNewSeparator );
     }
 
-    void UIMenu_Update( void *aSelf )
+    void UIMenu_Update( __SELF__ )
     {
         auto lInstance = static_cast<UIMenu *>( aSelf );
 
@@ -681,88 +619,72 @@ BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIPlot )
     DESTROY_INTERFACE( UIPlot )
 
-    void UIPlot_Clear( void *aSelf )
+    void UIPlot_Clear( __SELF__ )
     {
-        auto lSelf = static_cast<UIPlot *>( aSelf );
-
-        lSelf->Clear();
+        SELF(UIPlot)->Clear();
     }
 
-    void UIPlot_ConfigureLegend( void *aSelf, vec2 *aLegendPadding, vec2 *aLegendInnerPadding,
+    void UIPlot_ConfigureLegend( __SELF__, vec2 *aLegendPadding, vec2 *aLegendInnerPadding,
                                  vec2 *aLegendSpacing )
     {
         auto lSelf = static_cast<UIPlot *>( aSelf );
 
-        lSelf->ConfigureLegend( *aLegendPadding, *aLegendInnerPadding, *aLegendSpacing );
+        SELF(UIPlot)->ConfigureLegend( *aLegendPadding, *aLegendInnerPadding, *aLegendSpacing );
     }
 
-    void UIPlot_Add( void *aSelf, void *aPlot )
+    void UIPlot_Add( __SELF__, void *aPlot )
     {
         auto lSelf = static_cast<UIPlot *>( aSelf );
         auto lPlot = static_cast<sPlotData *>( aPlot );
 
-        lSelf->Add( lPlot );
+        SELF(UIPlot)->Add( lPlot );
     }
 
-    void UIPlot_SetAxisLimits( void *aSelf, int aAxis, double aMin, double aMax )
+    void UIPlot_SetAxisLimits( __SELF__, int aAxis, double aMin, double aMax )
     {
-        auto lSelf = static_cast<UIPlot *>( aSelf );
+        auto lSelf = SELF(UIPlot);
 
         lSelf->mAxisConfiguration[aAxis].mSetLimitRequest = true;
-
         lSelf->mAxisConfiguration[aAxis].mMin = static_cast<float>( aMin );
         lSelf->mAxisConfiguration[aAxis].mMax = static_cast<float>( aMax );
     }
 
-    void UIPlot_SetAxisTitle( void *aSelf, int aAxis, void *aTitle )
+    void UIPlot_SetAxisTitle( __SELF__, int aAxis, void *aTitle )
     {
-        auto lSelf = static_cast<UIPlot *>( aSelf );
-
-        lSelf->mAxisConfiguration[aAxis].mTitle = DotNetRuntime::NewString( static_cast<MonoString *>( aTitle ) );
+        SELF(UIPlot)->mAxisConfiguration[aAxis].mTitle = DotNetRuntime::NewString( static_cast<MonoString *>( aTitle ) );
     }
 
-    void *UIPlot_GetAxisTitle( void *aSelf, int aAxis )
+    void *UIPlot_GetAxisTitle( __SELF__, int aAxis )
     {
-        auto lSelf = static_cast<UIPlot *>( aSelf );
-
-        return DotNetRuntime::NewString( lSelf->mAxisConfiguration[aAxis].mTitle );
+        return DotNetRuntime::NewString( SELF(UIPlot)->mAxisConfiguration[aAxis].mTitle );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
-    void UIPlotData_SetLegend( void *aSelf, void *aText )
+    void UIPlotData_SetLegend( __SELF__, void *aText )
     {
-        auto lSelf   = static_cast<sPlotData *>( aSelf );
         auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lSelf->mLegend = lString;
+        SELF(sPlotData)->mLegend = lString;
     }
 
-    void UIPlotData_SetThickness( void *aSelf, float aThickness )
+    void UIPlotData_SetThickness( __SELF__, float aThickness )
     {
-        auto lSelf = static_cast<sPlotData *>( aSelf );
-
-        lSelf->mThickness = aThickness;
+        SELF(sPlotData)->mThickness = aThickness;
     }
 
-    void UIPlotData_SetColor( void *aSelf, vec4 aColor )
+    void UIPlotData_SetColor( __SELF__, vec4 aColor )
     {
-        auto lSelf = static_cast<sPlotData *>( aSelf );
-
-        lSelf->mColor = aColor;
+        SELF(sPlotData)->mColor = aColor;
     }
 
-    void UIPlotData_SetXAxis( void *aSelf, int aAxis )
+    void UIPlotData_SetXAxis( __SELF__, int aAxis )
     {
-        auto lSelf = static_cast<sPlotData *>( aSelf );
-
-        lSelf->mXAxis = static_cast<UIPlotAxis>( aAxis );
+        SELF(sPlotData)->mXAxis = static_cast<UIPlotAxis>( aAxis );
     }
 
-    void UIPlotData_SetYAxis( void *aSelf, int aAxis )
+    void UIPlotData_SetYAxis( __SELF__, int aAxis )
     {
-        auto lSelf = static_cast<sPlotData *>( aSelf );
-
-        lSelf->mYAxis = static_cast<UIPlotAxis>( aAxis );
+        SELF(sPlotData)->mYAxis = static_cast<UIPlotAxis>( aAxis );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -773,20 +695,16 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<sFloat64LinePlot *>( lSelf );
     }
 
-    void UIFloat64LinePlot_Destroy( void *aSelf ) { delete static_cast<sFloat64LinePlot *>( aSelf ); }
+    void UIFloat64LinePlot_Destroy( __SELF__ ) { delete static_cast<sFloat64LinePlot *>( aSelf ); }
 
-    void UIFloat64LinePlot_SetX( void *aSelf, void *aValue )
+    void UIFloat64LinePlot_SetX( __SELF__, void *aValue )
     {
-        auto lSelf = static_cast<sFloat64LinePlot *>( aSelf );
-
-        lSelf->mX = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
+        SELF(sFloat64LinePlot)->mX = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
     }
 
-    void UIFloat64LinePlot_SetY( void *aSelf, void *aValue )
+    void UIFloat64LinePlot_SetY( __SELF__, void *aValue )
     {
-        auto lSelf = static_cast<sFloat64LinePlot *>( aSelf );
-
-        lSelf->mY = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
+        SELF(sFloat64LinePlot)->mY = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
     }
 
     void *UIFloat64ScatterPlot_Create()
@@ -796,20 +714,16 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<sFloat64ScatterPlot *>( lSelf );
     }
 
-    void UIFloat64ScatterPlot_Destroy( void *aSelf ) { delete static_cast<sFloat64ScatterPlot *>( aSelf ); }
+    void UIFloat64ScatterPlot_Destroy( __SELF__ ) { delete static_cast<sFloat64ScatterPlot *>( aSelf ); }
 
-    void UIFloat64ScatterPlot_SetX( void *aSelf, void *aValue )
+    void UIFloat64ScatterPlot_SetX( __SELF__, void *aValue )
     {
-        auto lSelf = static_cast<sFloat64ScatterPlot *>( aSelf );
-
-        lSelf->mX = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
+        SELF(sFloat64ScatterPlot)->mX = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
     }
 
-    void UIFloat64ScatterPlot_SetY( void *aSelf, void *aValue )
+    void UIFloat64ScatterPlot_SetY( __SELF__, void *aValue )
     {
-        auto lSelf = static_cast<sFloat64ScatterPlot *>( aSelf );
-
-        lSelf->mY = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
+        SELF(sFloat64ScatterPlot)->mY = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -820,13 +734,11 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<sVLine *>( lSelf );
     }
 
-    void UIVLinePlot_Destroy( void *aSelf ) { delete static_cast<sVLine *>( aSelf ); }
+    void UIVLinePlot_Destroy( __SELF__ ) { delete static_cast<sVLine *>( aSelf ); }
 
-    void UIVLinePlot_SetX( void *aSelf, void *aValue )
+    void UIVLinePlot_SetX( __SELF__, void *aValue )
     {
-        auto lSelf = static_cast<sVLine *>( aSelf );
-
-        lSelf->mX = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
+        SELF(sVLine)->mX = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -834,16 +746,14 @@ BEGIN_INTERFACE_DEFINITION( name )
     {
         auto lSelf = new sHLine();
 
-        return static_cast<sHLine *>( lSelf );
+        return static_cast<void *>( lSelf );
     }
 
-    void UIHLinePlot_Destroy( void *aSelf ) { delete static_cast<sHLine *>( aSelf ); }
+    void UIHLinePlot_Destroy( __SELF__ ) { delete static_cast<sHLine *>( aSelf ); }
 
-    void UIHLinePlot_SetY( void *aSelf, void *aValue )
+    void UIHLinePlot_SetY( __SELF__, void *aValue )
     {
-        auto lSelf = static_cast<sHLine *>( aSelf );
-
-        lSelf->mY = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
+        SELF(sHLine)->mY = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -851,7 +761,7 @@ BEGIN_INTERFACE_DEFINITION( name )
     {
         auto lSelf = new sAxisTag();
 
-        return static_cast<sAxisTag *>( lSelf );
+        return static_cast<void *>( lSelf );
     }
 
     void *UIAxisTag_CreateWithTextAndColor( UIPlotAxis aAxis, double aX, void *aText, vec4 aColor )
@@ -860,52 +770,41 @@ BEGIN_INTERFACE_DEFINITION( name )
 
         auto lSelf = new sAxisTag( aAxis, aX, lString, aColor );
 
-        return static_cast<sAxisTag *>( lSelf );
+        return static_cast<void *>( lSelf );
     }
 
-    void UIAxisTag_Destroy( void *aSelf ) { delete static_cast<sAxisTag *>( aSelf ); }
+    void UIAxisTag_Destroy( __SELF__ ) { delete static_cast<sAxisTag *>( aSelf ); }
 
-    void UIAxisTag_SetX( void *aSelf, double aValue )
+    void UIAxisTag_SetX( __SELF__, double aValue )
     {
-        auto lSelf = static_cast<sAxisTag *>( aSelf );
-
-        lSelf->mX = aValue;
+        SELF(sAxisTag)->mX = aValue;
     }
 
-    void UIAxisTag_SetText( void *aSelf, void *aText )
+    void UIAxisTag_SetText( __SELF__, void *aText )
     {
-        auto lSelf   = static_cast<sAxisTag *>( aSelf );
         auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lSelf->mText = lString;
+        SELF(sAxisTag)->mText = lString;
     }
 
-    void UIAxisTag_SetColor( void *aSelf, vec4 aColor )
+    void UIAxisTag_SetColor( __SELF__, vec4 aColor )
     {
-        auto lSelf = static_cast<sAxisTag *>( aSelf );
-
-        lSelf->mColor = aColor;
+        SELF(sAxisTag)->mColor = aColor;
     }
 
-    vec4 UIAxisTag_GetColor( void *aSelf )
+    vec4 UIAxisTag_GetColor( __SELF__ )
     {
-        auto lSelf = static_cast<sAxisTag *>( aSelf );
-
-        return lSelf->mColor;
+        return SELF(sAxisTag)->mColor;
     }
 
-    void UIAxisTag_SetAxis( void *aSelf, int aAxis )
+    void UIAxisTag_SetAxis( __SELF__, int aAxis )
     {
-        auto lSelf = static_cast<sAxisTag *>( aSelf );
-
-        lSelf->mAxis = static_cast<UIPlotAxis>( aAxis );
+        SELF(sAxisTag)->mAxis = static_cast<UIPlotAxis>( aAxis );
     }
 
-    int UIAxisTag_GetAxis( void *aSelf )
+    int UIAxisTag_GetAxis( __SELF__ )
     {
-        auto lSelf = static_cast<sAxisTag *>( aSelf );
-
-        return static_cast<int>( lSelf->mXAxis );
+        return static_cast<int>( SELF(sAxisTag)->mXAxis );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -913,37 +812,29 @@ BEGIN_INTERFACE_DEFINITION( name )
     {
         auto lSelf = new sVRange();
 
-        return static_cast<sVRange *>( lSelf );
+        return static_cast<void *>( lSelf );
     }
 
-    void UIVRangePlot_Destroy( void *aSelf ) { delete static_cast<sVRange *>( aSelf ); }
+    void UIVRangePlot_Destroy( __SELF__ ) { delete static_cast<sVRange *>( aSelf ); }
 
-    void UIVRangePlot_SetMin( void *aSelf, double aValue )
+    void UIVRangePlot_SetMin( __SELF__, double aValue )
     {
-        auto lSelf = static_cast<sVRange *>( aSelf );
-
-        lSelf->mX0 = aValue;
+        SELF(sVRange)->mX0 = aValue;
     }
 
-    double UIVRangePlot_GetMin( void *aSelf )
+    double UIVRangePlot_GetMin( __SELF__ )
     {
-        auto lSelf = static_cast<sVRange *>( aSelf );
-
-        return (double)lSelf->mX0;
+        return (double) SELF(sVRange)->mX0;
     }
 
-    void UIVRangePlot_SetMax( void *aSelf, double aValue )
+    void UIVRangePlot_SetMax( __SELF__, double aValue )
     {
-        auto lSelf = static_cast<sVRange *>( aSelf );
-
-        lSelf->mX1 = aValue;
+         SELF(sVRange)->mX1 = aValue;
     }
 
-    double UIVRangePlot_GetMax( void *aSelf )
+    double UIVRangePlot_GetMax( __SELF__ )
     {
-        auto lSelf = static_cast<sVRange *>( aSelf );
-
-        return (double)lSelf->mX1;
+        return (double) SELF(sVRange)->mX1;
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -954,74 +845,57 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<sHRange *>( lSelf );
     }
 
-    void UIHRangePlot_Destroy( void *aSelf ) { delete static_cast<sHRange *>( aSelf ); }
+    void UIHRangePlot_Destroy( __SELF__ ) { delete static_cast<sHRange *>( aSelf ); }
 
-    void UIHRangePlot_SetMin( void *aSelf, double aValue )
+    void UIHRangePlot_SetMin( __SELF__, double aValue )
     {
-        auto lSelf = static_cast<sHRange *>( aSelf );
-
-        lSelf->mY0 = aValue;
+        SELF(sHRange)->mY0 = aValue;
     }
 
-    double UIHRangePlot_GetMin( void *aSelf )
+    double UIHRangePlot_GetMin( __SELF__ )
     {
-        auto lSelf = static_cast<sHRange *>( aSelf );
-
-        return (double)lSelf->mY0;
+        return (double)SELF(sHRange)->mY0;
     }
 
-    void UIHRangePlot_SetMax( void *aSelf, double aValue )
+    void UIHRangePlot_SetMax( __SELF__, double aValue )
     {
-        auto lSelf = static_cast<sHRange *>( aSelf );
-
-        lSelf->mY1 = aValue;
+        SELF(sHRange)->mY1 = aValue;
     }
 
-    double UIHRangePlot_GetMax( void *aSelf )
+    double UIHRangePlot_GetMax( __SELF__ )
     {
-        auto lSelf = static_cast<sHRange *>( aSelf );
-
-        return (double)lSelf->mY1;
+        return (double)SELF(sHRange)->mY1;
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIProgressBar )
     DESTROY_INTERFACE( UIProgressBar )
 
-    void UIProgressBar_SetProgressValue( void *aSelf, float aValue )
+    void UIProgressBar_SetProgressValue( __SELF__, float aValue )
     {
-        auto lInstance = static_cast<UIProgressBar *>( aSelf );
-
-        lInstance->SetProgressValue( aValue );
+        SELF(UIProgressBar)->SetProgressValue( aValue );
     }
 
-    void UIProgressBar_SetProgressColor( void *aSelf, vec4 aTextColor )
+    void UIProgressBar_SetProgressColor( __SELF__, vec4 aTextColor )
     {
-        auto lInstance = static_cast<UIProgressBar *>( aSelf );
-
-        lInstance->SetProgressColor( aTextColor );
+        SELF(UIProgressBar)->SetProgressColor( aTextColor );
     }
 
-    void UIProgressBar_SetText( void *aSelf, void *aText )
+    void UIProgressBar_SetText( __SELF__, void *aText )
     {
-        auto lInstance = static_cast<UIProgressBar *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetText( lString );
+        SELF(UIProgressBar)->SetText( lString );
     }
 
-    void UIProgressBar_SetTextColor( void *aSelf, vec4 aTextColor )
+    void UIProgressBar_SetTextColor( __SELF__, vec4 aTextColor )
     {
-        auto lInstance = static_cast<UIProgressBar *>( aSelf );
-
-        lInstance->SetTextColor( aTextColor );
+        SELF(UIProgressBar)->SetTextColor( aTextColor );
     }
 
-    void UIProgressBar_SetThickness( void *aSelf, float aValue )
+    void UIProgressBar_SetThickness( __SELF__, float aValue )
     {
-        auto lInstance = static_cast<UIProgressBar *>( aSelf );
-
-        lInstance->SetThickness( aValue );
+        SELF(UIProgressBar)->SetThickness( aValue );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -1044,26 +918,21 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewLabel );
     }
 
-    void UIPropertyValue_SetValue( void *aSelf, void *aText )
+    void UIPropertyValue_SetValue( __SELF__, void *aText )
     {
-        auto lInstance = static_cast<UIPropertyValue *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetValue( lString );
+        SELF(UIPropertyValue)->SetValue( lString );
     }
 
-    void UIPropertyValue_SetValueFont( void *aSelf, FontFamilyFlags aFont )
+    void UIPropertyValue_SetValueFont( __SELF__, FontFamilyFlags aFont )
     {
-        auto lInstance = static_cast<UIPropertyValue *>( aSelf );
-
-        lInstance->SetValueFont( aFont );
+        SELF(UIPropertyValue)->SetValueFont( aFont );
     }
 
-    void UIPropertyValue_SetNameFont( void *aSelf, FontFamilyFlags aFont )
+    void UIPropertyValue_SetNameFont( __SELF__, FontFamilyFlags aFont )
     {
-        auto lInstance = static_cast<UIPropertyValue *>( aSelf );
-
-        lInstance->SetNameFont( aFont );
+        SELF(UIPropertyValue)->SetNameFont( aFont );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -1071,27 +940,27 @@ BEGIN_INTERFACE_DEFINITION( name )
     DESTROY_INTERFACE( UISlider )
 
 BEGIN_INTERFACE_DEFINITION( name )
-    void UITableColumn_SetTooltip( void *aSelf, void *aTooptip )
+    void UITableColumn_SetTooltip( __SELF__, void *aTooptip )
     {
-        auto lSelf = static_cast<sTableColumn *>( aSelf );
+        auto lSelf = SELF(sTableColumn );
 
         lSelf->mToolTip.clear();
         for( auto const &x : DotNetRuntime::AsVector<UIComponent *>( static_cast<MonoObject *>( aTooptip ) ) )
             lSelf->mToolTip.push_back( x );
     }
 
-    void UITableColumn_SetForegroundColor( void *aSelf, void *aForegroundColor )
+    void UITableColumn_SetForegroundColor( __SELF__, void *aForegroundColor )
     {
-        auto lSelf = static_cast<sTableColumn *>( aSelf );
+        auto lSelf = SELF(sTableColumn );
 
         lSelf->mForegroundColor.clear();
         for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aForegroundColor ) ) )
             lSelf->mForegroundColor.push_back( ImColor( x ) );
     }
 
-    void UITableColumn_SetBackgroundColor( void *aSelf, void *aBackroundColor )
+    void UITableColumn_SetBackgroundColor( __SELF__, void *aBackroundColor )
     {
-        auto lSelf = static_cast<sTableColumn *>( aSelf );
+        auto lSelf = SELF(sTableColumn );
 
         lSelf->mBackgroundColor.clear();
         for( auto const &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aBackroundColor ) ) )
@@ -1102,9 +971,9 @@ BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITable )
     DESTROY_INTERFACE( UITable )
 
-    void UITable_OnRowClicked( void *aSelf, void *aDelegate )
+    void UITable_OnRowClicked( __SELF__, void *aDelegate )
     {
-        auto lInstance = static_cast<UITable *>( aSelf );
+        auto lInstance = SELF(UITable );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
         if( lInstance->mOnRowClickDelegate != nullptr ) mono_gchandle_free( lInstance->mOnRowClickDelegateHandle );
@@ -1123,40 +992,35 @@ BEGIN_INTERFACE_DEFINITION( name )
             } );
     }
 
-    void UITable_AddColumn( void *aSelf, void *aColumn )
+    void UITable_AddColumn( __SELF__, void *aColumn )
     {
-        auto lInstance = static_cast<UITable *>( aSelf );
         auto lColumn   = static_cast<sTableColumn *>( aColumn );
 
-        lInstance->AddColumn( lColumn );
+        SELF(UITable )->AddColumn( lColumn );
     }
 
-    void UITable_SetRowHeight( void *aSelf, float aRowHeight )
+    void UITable_SetRowHeight( __SELF__, float aRowHeight )
     {
-        auto lInstance = static_cast<UITable *>( aSelf );
-
-        lInstance->SetRowHeight( aRowHeight );
+        SELF(UITable )->SetRowHeight( aRowHeight );
     }
 
-    void UITable_ClearRowBackgroundColor( void *aSelf )
+    void UITable_ClearRowBackgroundColor( __SELF__ )
     {
-        auto lSelf = static_cast<UITable *>( aSelf );
-
-        lSelf->mRowBackgroundColor.clear();
+        SELF(UITable )->mRowBackgroundColor.clear();
     }
 
-    void UITable_SetRowBackgroundColor( void *aSelf, void *aValue )
+    void UITable_SetRowBackgroundColor( __SELF__, void *aValue )
     {
-        auto lSelf = static_cast<UITable *>( aSelf );
+        auto lSelf = SELF(UITable );
 
         lSelf->mRowBackgroundColor.clear();
         for( auto &x : DotNetRuntime::AsVector<ImVec4>( static_cast<MonoObject *>( aValue ) ) )
             lSelf->mRowBackgroundColor.push_back( ImColor( x ) );
     }
 
-    void UITable_SetDisplayedRowIndices( void *aSelf, void *aValue )
+    void UITable_SetDisplayedRowIndices( __SELF__, void *aValue )
     {
-        auto lSelf = static_cast<UITable *>( aSelf );
+        auto lSelf = SELF(UITable );
         if( aValue == nullptr )
             lSelf->mDisplayedRowIndices.reset();
         else
@@ -1181,20 +1045,16 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewColumn );
     }
 
-    void UIFloat64Column_Destroy( void *aSelf ) { delete static_cast<sFloat64Column *>( aSelf ); }
+    void UIFloat64Column_Destroy( __SELF__ ) { delete SELF(sFloat64Column ); }
 
-    void UIFloat64Column_Clear( void *aSelf )
+    void UIFloat64Column_Clear( __SELF__ )
     {
-        auto lSelf = static_cast<sFloat64Column *>( aSelf );
-
-        lSelf->Clear();
+        SELF(sFloat64Column )->Clear();
     }
 
-    void UIFloat64Column_SetData( void *aSelf, void *aValue )
+    void UIFloat64Column_SetData( __SELF__, void *aValue )
     {
-        auto lSelf = static_cast<sFloat64Column *>( aSelf );
-
-        lSelf->mData = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
+        SELF(sFloat64Column )->mData = DotNetRuntime::AsVector<double>( static_cast<MonoObject *>( aValue ) );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -1213,20 +1073,16 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewColumn );
     }
 
-    void UIUint32Column_Destroy( void *aSelf ) { delete static_cast<sUint32Column *>( aSelf ); }
+    void UIUint32Column_Destroy( __SELF__ ) { delete SELF(sUint32Column); }
 
-    void UIUint32Column_Clear( void *aSelf )
+    void UIUint32Column_Clear( __SELF__ )
     {
-        auto lSelf = static_cast<sUint32Column *>( aSelf );
-
-        lSelf->Clear();
+        SELF(sUint32Column)->Clear();
     }
 
-    void UIUint32Column_SetData( void *aSelf, void *aValue )
+    void UIUint32Column_SetData( __SELF__, void *aValue )
     {
-        auto lSelf = static_cast<sUint32Column *>( aSelf );
-
-        lSelf->mData = DotNetRuntime::AsVector<uint32_t>( static_cast<MonoObject *>( aValue ) );
+        SELF(sUint32Column)->mData = DotNetRuntime::AsVector<uint32_t>( static_cast<MonoObject *>( aValue ) );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -1245,18 +1101,16 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewColumn );
     }
 
-    void UIStringColumn_Destroy( void *aSelf ) { delete static_cast<sStringColumn *>( aSelf ); }
+    void UIStringColumn_Destroy( __SELF__ ) { delete SELF(sStringColumn); }
 
-    void UIStringColumn_Clear( void *aSelf )
+    void UIStringColumn_Clear( __SELF__ )
     {
-        auto lSelf = static_cast<sStringColumn *>( aSelf );
-
-        lSelf->Clear();
+        SELF(sStringColumn)->Clear();
     }
 
-    void UIStringColumn_SetData( void *aSelf, void *aValue )
+    void UIStringColumn_SetData( __SELF__, void *aValue )
     {
-        auto lSelf = static_cast<sStringColumn *>( aSelf );
+        auto lSelf = SELF(sStringColumn);
 
         lSelf->mData.clear();
         for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aValue ) ) )
@@ -1275,38 +1129,31 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewTextInput );
     }
 
-    void UITextInput_SetHintText( void *aSelf, void *aText )
+    void UITextInput_SetHintText( __SELF__, void *aText )
     {
-        auto lInstance = static_cast<UITextInput *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetHintText( lString );
+        SELF(UITextInput)->SetHintText( lString );
     }
 
-    void *UITextInput_GetText( void *aSelf )
+    void *UITextInput_GetText( __SELF__ )
     {
-        auto lInstance = static_cast<UITextInput *>( aSelf );
-
-        return DotNetRuntime::NewString( lInstance->GetText() );
+        return DotNetRuntime::NewString( SELF(UITextInput)->GetText() );
     }
 
-    void UITextInput_SetTextColor( void *aSelf, vec4 *aTextColor )
+    void UITextInput_SetTextColor( __SELF__, vec4 *aTextColor )
     {
-        auto lInstance = static_cast<UITextInput *>( aSelf );
-
-        lInstance->SetTextColor( *aTextColor );
+        SELF(UITextInput)->SetTextColor( *aTextColor );
     }
 
-    void UITextInput_SetBufferSize( void *aSelf, uint32_t aBufferSize )
+    void UITextInput_SetBufferSize( __SELF__, uint32_t aBufferSize )
     {
-        auto lInstance = static_cast<UITextInput *>( aSelf );
-
-        lInstance->SetBuffersize( aBufferSize );
+        SELF(UITextInput)->SetBuffersize( aBufferSize );
     }
 
-    void UITextInput_OnTextChanged( void *aSelf, void *aDelegate )
+    void UITextInput_OnTextChanged( __SELF__, void *aDelegate )
     {
-        auto lInstance = static_cast<UITextInput *>( aSelf );
+        auto lInstance = SELF(UITextInput);
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
         if( lInstance->mOnTextChangedDelegate != nullptr ) mono_gchandle_free( lInstance->mOnTextChangedDelegateHandle );
@@ -1331,19 +1178,16 @@ BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITextOverlay )
     DESTROY_INTERFACE( UITextOverlay )
 
-    void UITextOverlay_AddText( void *aSelf, void *aText )
+    void UITextOverlay_AddText( __SELF__, void *aText )
     {
-        auto lInstance = static_cast<UITextOverlay *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->AddText( lString );
+        SELF(UITextOverlay)->AddText( lString );
     }
 
-    void UITextOverlay_Clear( void *aSelf )
+    void UITextOverlay_Clear( __SELF__ )
     {
-        auto lInstance = static_cast<UITextOverlay *>( aSelf );
-
-        lInstance->Clear();
+        SELF(UITextOverlay)->Clear();
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -1358,37 +1202,29 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewButton );
     }
 
-    bool UITextToggleButton_IsActive( void *aSelf )
+    bool UITextToggleButton_IsActive( __SELF__ )
     {
-        auto lInstance = static_cast<UITextToggleButton *>( aSelf );
-
-        return lInstance->IsActive();
+        return SELF(UITextToggleButton)->IsActive();
     }
 
-    void UITextToggleButton_SetActive( void *aSelf, bool aValue )
+    void UITextToggleButton_SetActive( __SELF__, bool aValue )
     {
-        auto lInstance = static_cast<UITextToggleButton *>( aSelf );
-
-        lInstance->SetActive( aValue );
+        SELF(UITextToggleButton)->SetActive( aValue );
     }
 
-    void UITextToggleButton_SetActiveColor( void *aSelf, vec4 *aColor )
+    void UITextToggleButton_SetActiveColor( __SELF__, vec4 *aColor )
     {
-        auto lInstance = static_cast<UITextToggleButton *>( aSelf );
-
-        lInstance->SetActiveColor( *aColor );
+        SELF(UITextToggleButton)->SetActiveColor( *aColor );
     }
 
-    void UITextToggleButton_SetInactiveColor( void *aSelf, vec4 *aColor )
+    void UITextToggleButton_SetInactiveColor( __SELF__, vec4 *aColor )
     {
-        auto lInstance = static_cast<UITextToggleButton *>( aSelf );
-
-        lInstance->SetInactiveColor( *aColor );
+        SELF(UITextToggleButton)->SetInactiveColor( *aColor );
     }
 
-    void UITextToggleButton_OnClicked( void *aSelf, void *aDelegate )
+    void UITextToggleButton_OnClicked( __SELF__, void *aDelegate )
     {
-        auto lInstance = static_cast<UITextToggleButton *>( aSelf );
+        auto lInstance = SELF(UITextToggleButton);
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
         if( lInstance->mOnClickDelegate != nullptr ) mono_gchandle_free( lInstance->mOnClickDelegateHandle );
@@ -1409,9 +1245,9 @@ BEGIN_INTERFACE_DEFINITION( name )
             } );
     }
 
-    void UITextToggleButton_OnChanged( void *aSelf, void *aDelegate )
+    void UITextToggleButton_OnChanged( __SELF__, void *aDelegate )
     {
-        auto lInstance = static_cast<UITextToggleButton *>( aSelf );
+        auto lInstance = SELF(UITextToggleButton);
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
         if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
@@ -1434,74 +1270,61 @@ BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITreeViewNode )
     DESTROY_INTERFACE( UITreeViewNode )
 
-    void UITreeViewNode_SetText( void *aSelf, void *aText )
+    void UITreeViewNode_SetText( __SELF__, void *aText )
     {
-        auto lInstance = static_cast<UITreeViewNode *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetText( lString );
+        SELF(UITreeViewNode)->SetText( lString );
     }
 
-    void UITreeViewNode_SetTextColor( void *aSelf, vec4 aTextColor )
+    void UITreeViewNode_SetTextColor( __SELF__, vec4 aTextColor )
     {
-        auto lInstance = static_cast<UITreeViewNode *>( aSelf );
-
-        lInstance->SetTextColor( aTextColor );
+        SELF(UITreeViewNode)->SetTextColor( aTextColor );
     }
 
-    void UITreeViewNode_SetIcon( void *aSelf, void *aIcon )
+    void UITreeViewNode_SetIcon( __SELF__, void *aIcon )
     {
-        auto lInstance = static_cast<UITreeViewNode *>( aSelf );
         auto lImage    = static_cast<UIImage *>( aIcon );
 
-        lInstance->SetIcon( lImage );
+        SELF(UITreeViewNode)->SetIcon( lImage );
     }
 
-    void UITreeViewNode_SetIndicator( void *aSelf, void *aIndicator )
+    void UITreeViewNode_SetIndicator( __SELF__, void *aIndicator )
     {
-        auto lInstance = static_cast<UITreeViewNode *>( aSelf );
         auto lImage    = static_cast<UIComponent *>( aIndicator );
 
-        lInstance->SetIndicator( lImage );
+        SELF(UITreeViewNode)->SetIndicator( lImage );
     }
 
-    void *UITreeViewNode_Add( void *aSelf )
+    void *UITreeViewNode_Add( __SELF__ )
     {
-        auto lInstance = static_cast<UITreeViewNode *>( aSelf );
-
-        return static_cast<void *>( lInstance->Add() );
+        return static_cast<void *>( SELF(UITreeViewNode)->Add() );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITreeView )
     DESTROY_INTERFACE( UITreeView )
 
-    void UITreeView_SetIndent( void *aSelf, float aIndent )
+    void UITreeView_SetIndent( __SELF__, float aIndent )
     {
-        auto lInstance = static_cast<UITreeView *>( aSelf );
-
-        lInstance->SetIndent( aIndent );
+        SELF(UITreeView)->SetIndent( aIndent );
     }
 
-    void UITreeView_SetIconSpacing( void *aSelf, float aSpacing )
+    void UITreeView_SetIconSpacing( __SELF__, float aSpacing )
     {
-        auto lInstance = static_cast<UITreeView *>( aSelf );
-
-        lInstance->SetIconSpacing( aSpacing );
+        SELF(UITreeView)->SetIconSpacing( aSpacing );
     }
 
-    void *UITreeView_Add( void *aSelf )
+    void *UITreeView_Add( __SELF__ )
     {
-        auto lInstance = static_cast<UITreeView *>( aSelf );
-
-        return static_cast<void *>( lInstance->Add() );
+        return static_cast<void *>( SELF(UITreeView)->Add() );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIVec2Input )
     DESTROY_INTERFACE( UIVec2Input )
 
-    void UIVec2Input_OnChanged( void *aSelf, void *aDelegate )
+    void UIVec2Input_OnChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIVectorInputBase *>( aSelf );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
@@ -1523,28 +1346,27 @@ BEGIN_INTERFACE_DEFINITION( name )
             } );
     }
 
-    void UIVec2Input_SetValue( void *aSelf, vec2 aValue ) { static_cast<UIVec2Input *>( aSelf )->SetValue( aValue ); }
+    void UIVec2Input_SetValue( __SELF__, vec2 aValue ) { SELF(UIVec2Input)->SetValue( aValue ); }
 
-    vec2 UIVec2Input_GetValue( void *aSelf ) { return static_cast<UIVec2Input *>( aSelf )->Value(); }
+    vec2 UIVec2Input_GetValue( __SELF__ ) { return SELF(UIVec2Input)->Value(); }
 
-    void UIVec2Input_SetResetValues( void *aSelf, vec2 aValue )
+    void UIVec2Input_SetResetValues( __SELF__, vec2 aValue )
     {
-        static_cast<UIVec2Input *>( aSelf )->SetResetValues( aValue );
+        SELF(UIVec2Input)->SetResetValues( aValue );
     }
 
-    void UIVec2Input_SetFormat( void *aSelf, void *aText )
+    void UIVec2Input_SetFormat( __SELF__, void *aText )
     {
-        auto lInstance = static_cast<UIVectorInputBase *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetFormat( lString );
+        SELF(UIVectorInputBase)->SetFormat( lString );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIVec3Input )
     DESTROY_INTERFACE( UIVec3Input )
 
-    void UIVec3Input_OnChanged( void *aSelf, void *aDelegate )
+    void UIVec3Input_OnChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIVectorInputBase *>( aSelf );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
@@ -1566,28 +1388,27 @@ BEGIN_INTERFACE_DEFINITION( name )
             } );
     }
 
-    void UIVec3Input_SetValue( void *aSelf, vec3 aValue ) { static_cast<UIVec3Input *>( aSelf )->SetValue( aValue ); }
+    void UIVec3Input_SetValue( __SELF__, vec3 aValue ) { SELF(UIVec3Input)->SetValue( aValue ); }
 
-    vec3 UIVec3Input_GetValue( void *aSelf ) { return static_cast<UIVec3Input *>( aSelf )->Value(); }
+    vec3 UIVec3Input_GetValue( __SELF__ ) { return SELF(UIVec3Input)->Value(); }
 
-    void UIVec3Input_SetResetValues( void *aSelf, vec3 aValue )
+    void UIVec3Input_SetResetValues( __SELF__, vec3 aValue )
     {
-        static_cast<UIVec3Input *>( aSelf )->SetResetValues( aValue );
+        SELF(UIVec3Input)->SetResetValues( aValue );
     }
 
-    void UIVec3Input_SetFormat( void *aSelf, void *aText )
+    void UIVec3Input_SetFormat( __SELF__, void *aText )
     {
-        auto lInstance = static_cast<UIVectorInputBase *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetFormat( lString );
+        SELF(UIVectorInputBase)->SetFormat( lString );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIVec4Input )
     DESTROY_INTERFACE( UIVec4Input )
 
-    void UIVec4Input_OnChanged( void *aSelf, void *aDelegate )
+    void UIVec4Input_OnChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIVectorInputBase *>( aSelf );
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
@@ -1608,88 +1429,73 @@ BEGIN_INTERFACE_DEFINITION( name )
             } );
     }
 
-    void UIVec4Input_SetValue( void *aSelf, vec4 aValue ) { static_cast<UIVec4Input *>( aSelf )->SetValue( aValue ); }
+    void UIVec4Input_SetValue( __SELF__, vec4 aValue ) { SELF(UIVec4Input)->SetValue( aValue ); }
 
-    vec4 UIVec4Input_GetValue( void *aSelf ) { return static_cast<UIVec4Input *>( aSelf )->Value(); }
+    vec4 UIVec4Input_GetValue( __SELF__ ) { return SELF(UIVec4Input)->Value(); }
 
-    void UIVec4Input_SetResetValues( void *aSelf, vec4 aValue )
+    void UIVec4Input_SetResetValues( __SELF__, vec4 aValue )
     {
-        static_cast<UIVec4Input *>( aSelf )->SetResetValues( aValue );
+        SELF(UIVec4Input)->SetResetValues( aValue );
     }
 
-    void UIVec4Input_SetFormat( void *aSelf, void *aText )
+    void UIVec4Input_SetFormat( __SELF__, void *aText )
     {
-        auto lInstance = static_cast<UIVectorInputBase *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
-        lInstance->SetFormat( lString );
+        SELF(UIVectorInputBase)->SetFormat( lString );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIWorkspaceDocument )
     DESTROY_INTERFACE( UIWorkspaceDocument )
 
-    void UIWorkspaceDocument_SetContent( void *aSelf, void *aContent )
+    void UIWorkspaceDocument_SetContent( __SELF__, void *aContent )
     {
-        auto lInstance = static_cast<UIWorkspaceDocument *>( aSelf );
         auto lContent  = static_cast<UIComponent *>( aContent );
 
-        lInstance->SetContent( lContent );
+        SELF(UIWorkspaceDocument)->SetContent( lContent );
     }
 
-    void UIWorkspaceDocument_Update( void *aSelf )
+    void UIWorkspaceDocument_Update( __SELF__ )
     {
-        auto lInstance = static_cast<UIWorkspaceDocument *>( aSelf );
-
-        lInstance->Update();
+        SELF(UIWorkspaceDocument)->Update();
     }
 
-    void UIWorkspaceDocument_SetName( void *aSelf, void *aName )
+    void UIWorkspaceDocument_SetName( __SELF__, void *aName )
     {
-        auto lInstance = static_cast<UIWorkspaceDocument *>( aSelf );
         auto lName     = DotNetRuntime::NewString( static_cast<MonoString *>( aName ) );
 
-        lInstance->mName = lName;
+        SELF(UIWorkspaceDocument)->mName = lName;
     }
 
-    bool UIWorkspaceDocument_IsDirty( void *aSelf )
+    bool UIWorkspaceDocument_IsDirty( __SELF__ )
     {
-        auto lInstance = static_cast<UIWorkspaceDocument *>( aSelf );
-
-        return lInstance->mDirty;
+        return SELF(UIWorkspaceDocument)->mDirty;
     }
 
-    void UIWorkspaceDocument_MarkAsDirty( void *aSelf, bool aDirty )
+    void UIWorkspaceDocument_MarkAsDirty( __SELF__, bool aDirty )
     {
-        auto lInstance = static_cast<UIWorkspaceDocument *>( aSelf );
-
-        lInstance->mDirty = aDirty;
+        SELF(UIWorkspaceDocument)->mDirty = aDirty;
     }
 
-    void UIWorkspaceDocument_Open( void *aSelf )
+    void UIWorkspaceDocument_Open( __SELF__ )
     {
-        auto lInstance = static_cast<UIWorkspaceDocument *>( aSelf );
-
-        lInstance->DoOpen();
+        SELF(UIWorkspaceDocument)->DoOpen();
     }
 
-    void UIWorkspaceDocument_RequestClose( void *aSelf )
+    void UIWorkspaceDocument_RequestClose( __SELF__ )
     {
-        auto lInstance = static_cast<UIWorkspaceDocument *>( aSelf );
-
-        lInstance->DoQueueClose();
+        SELF(UIWorkspaceDocument)->DoQueueClose();
     }
 
-    void UIWorkspaceDocument_ForceClose( void *aSelf )
+    void UIWorkspaceDocument_ForceClose( __SELF__ )
     {
-        auto lInstance = static_cast<UIWorkspaceDocument *>( aSelf );
-
-        lInstance->DoForceClose();
+        SELF(UIWorkspaceDocument)->DoForceClose();
     }
 
-    void UIWorkspaceDocument_RegisterSaveDelegate( void *aSelf, void *aDelegate )
+    void UIWorkspaceDocument_RegisterSaveDelegate( __SELF__, void *aDelegate )
     {
-        auto lInstance = static_cast<UIWorkspaceDocument *>( aSelf );
+        auto lInstance = SELF(UIWorkspaceDocument);
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
         if( lInstance->mSaveDelegate != nullptr ) mono_gchandle_free( lInstance->mSaveDelegateHandle );
@@ -1712,17 +1518,16 @@ BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIWorkspace )
     DESTROY_INTERFACE( UIWorkspace )
 
-    void UIWorkspace_Add( void *aSelf, void *aDocument )
+    void UIWorkspace_Add( __SELF__, void *aDocument )
     {
-        auto lSelf     = static_cast<UIWorkspace *>( aSelf );
         auto lDocument = static_cast<UIWorkspaceDocument *>( aDocument );
 
-        lSelf->Add( lDocument );
+        SELF(UIWorkspace)->Add( lDocument );
     }
 
-    void UIWorkspace_RegisterCloseDocumentDelegate( void *aSelf, void *aDelegate )
+    void UIWorkspace_RegisterCloseDocumentDelegate( __SELF__, void *aDelegate )
     {
-        auto lInstance = static_cast<UIWorkspace *>( aSelf );
+        auto lInstance = SELF(UIWorkspace);
         auto lDelegate = static_cast<MonoObject *>( aDelegate );
 
         if( lInstance->mCloseDocumentDelegate != nullptr ) mono_gchandle_free( lInstance->mCloseDocumentDelegateHandle );
@@ -1752,71 +1557,62 @@ BEGIN_INTERFACE_DEFINITION( name )
 
     DESTROY_INTERFACE( UIBoxLayout )
 
-    void UIBoxLayout_AddAlignedNonFixed( void *aSelf, void *aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment,
+    void UIBoxLayout_AddAlignedNonFixed( __SELF__, void *aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment,
                                          eVerticalAlignment aVAlignment )
     {
-        auto lInstance = static_cast<UIBoxLayout *>( aSelf );
         auto lChild    = static_cast<UIComponent *>( aChild );
 
-        lInstance->Add( lChild, aExpand, aFill, aHAlignment, aVAlignment );
+        SELF(UIBoxLayout)->Add( lChild, aExpand, aFill, aHAlignment, aVAlignment );
     }
 
-    void UIBoxLayout_AddNonAlignedNonFixed( void *aSelf, void *aChild, bool aExpand, bool aFill )
+    void UIBoxLayout_AddNonAlignedNonFixed( __SELF__, void *aChild, bool aExpand, bool aFill )
     {
-        auto lInstance = static_cast<UIBoxLayout *>( aSelf );
         auto lChild    = static_cast<UIComponent *>( aChild );
 
-        lInstance->Add( lChild, aExpand, aFill );
+        SELF(UIBoxLayout)->Add( lChild, aExpand, aFill );
     }
 
-    void UIBoxLayout_AddAlignedFixed( void *aSelf, void *aChild, float aFixedSize, bool aExpand, bool aFill,
+    void UIBoxLayout_AddAlignedFixed( __SELF__, void *aChild, float aFixedSize, bool aExpand, bool aFill,
                                       eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
     {
-        auto lInstance = static_cast<UIBoxLayout *>( aSelf );
         auto lChild    = static_cast<UIComponent *>( aChild );
 
-        lInstance->Add( lChild, aFixedSize, aExpand, aFill, aHAlignment, aVAlignment );
+        SELF(UIBoxLayout)->Add( lChild, aFixedSize, aExpand, aFill, aHAlignment, aVAlignment );
     }
 
-    void UIBoxLayout_AddNonAlignedFixed( void *aSelf, void *aChild, float aFixedSize, bool aExpand, bool aFill )
+    void UIBoxLayout_AddNonAlignedFixed( __SELF__, void *aChild, float aFixedSize, bool aExpand, bool aFill )
     {
-        auto lInstance = static_cast<UIBoxLayout *>( aSelf );
         auto lChild    = static_cast<UIComponent *>( aChild );
 
-        lInstance->Add( lChild, aFixedSize, aExpand, aFill );
+        SELF(UIBoxLayout)->Add( lChild, aFixedSize, aExpand, aFill );
     }
 
-    void UIBoxLayout_AddSeparator( void *aSelf )
+    void UIBoxLayout_AddSeparator( __SELF__ )
     {
-        auto lInstance = static_cast<UIBoxLayout *>( aSelf );
-
-        lInstance->AddSeparator();
+        SELF(UIBoxLayout)->AddSeparator();
     }
 
-    void UIBoxLayout_SetItemSpacing( void *aSelf, float aItemSpacing )
+    void UIBoxLayout_SetItemSpacing( __SELF__, float aItemSpacing )
     {
-        auto lInstance = static_cast<UIBoxLayout *>( aSelf );
+        auto lInstance = SELF(UIBoxLayout);
 
         lInstance->SetItemSpacing( aItemSpacing );
     }
 
-    void UIBoxLayout_Clear( void *aSelf )
+    void UIBoxLayout_Clear( __SELF__ )
     {
-        auto lInstance = static_cast<UIBoxLayout *>( aSelf );
-
-        lInstance->Clear();
+        SELF(UIBoxLayout)->Clear();
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIContainer )
     DESTROY_INTERFACE( UIContainer )
 
-    void UIContainer_SetContent( void *aSelf, void *aChild )
+    void UIContainer_SetContent( __SELF__, void *aChild )
     {
-        auto lInstance = static_cast<UIContainer *>( aSelf );
         auto lChild    = static_cast<UIComponent *>( aChild );
 
-        lInstance->SetContent( lChild );
+        SELF(UIContainer)->SetContent( lChild );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -1830,99 +1626,88 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewLayout );
     }
 
-    void UISplitter_Add1( void *aSelf, void *aChild )
+    void UISplitter_Add1( __SELF__, void *aChild )
     {
-        auto lInstance = static_cast<UISplitter *>( aSelf );
         auto lChild    = static_cast<UIComponent *>( aChild );
 
-        lInstance->Add1( lChild );
+        SELF(UISplitter)->Add1( lChild );
     }
 
-    void UISplitter_Add2( void *aSelf, void *aChild )
+    void UISplitter_Add2( __SELF__, void *aChild )
     {
-        auto lInstance = static_cast<UISplitter *>( aSelf );
         auto lChild    = static_cast<UIComponent *>( aChild );
 
-        lInstance->Add2( lChild );
+        SELF(UISplitter)->Add2( lChild );
     }
 
-    void UISplitter_SetItemSpacing( void *aSelf, float aItemSpacing )
+    void UISplitter_SetItemSpacing( __SELF__, float aItemSpacing )
     {
-        auto lInstance = static_cast<UISplitter *>( aSelf );
-
-        lInstance->SetItemSpacing( aItemSpacing );
+        SELF(UISplitter)->SetItemSpacing( aItemSpacing );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIStackLayout )
     DESTROY_INTERFACE( UIStackLayout )
 
-    void UIStackLayout_Add( void *aSelf, void *aChild, void *aKey )
+    void UIStackLayout_Add( __SELF__, void *aChild, void *aKey )
     {
-        auto lInstance = static_cast<UIStackLayout *>( aSelf );
         auto lChild    = static_cast<UIComponent *>( aChild );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aKey ) );
 
-        lInstance->Add( lChild, lString );
+        SELF(UIStackLayout)->Add( lChild, lString );
     }
 
-    void UIStackLayout_SetCurrent( void *aSelf, void *aKey )
+    void UIStackLayout_SetCurrent( __SELF__, void *aKey )
     {
-        auto lInstance = static_cast<UIStackLayout *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aKey ) );
 
-        lInstance->SetCurrent( lString );
+        SELF(UIStackLayout)->SetCurrent( lString );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIZLayout )
     DESTROY_INTERFACE( UIZLayout )
 
-    void UIZLayout_AddAlignedNonFixed( void *aSelf, void *aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment,
+    void UIZLayout_AddAlignedNonFixed( __SELF__, void *aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment,
                                        eVerticalAlignment aVAlignment )
     {
-        auto lInstance = static_cast<UIZLayout *>( aSelf );
         auto lChild    = static_cast<UIComponent *>( aChild );
 
-        lInstance->Add( lChild, aExpand, aFill, aHAlignment, aVAlignment );
+        SELF(UIZLayout)->Add( lChild, aExpand, aFill, aHAlignment, aVAlignment );
     }
 
-    void UIZLayout_AddNonAlignedNonFixed( void *aSelf, void *aChild, bool aExpand, bool aFill )
+    void UIZLayout_AddNonAlignedNonFixed( __SELF__, void *aChild, bool aExpand, bool aFill )
     {
-        auto lInstance = static_cast<UIZLayout *>( aSelf );
         auto lChild    = static_cast<UIComponent *>( aChild );
 
-        lInstance->Add( lChild, aExpand, aFill );
+        SELF(UIZLayout)->Add( lChild, aExpand, aFill );
     }
 
-    void UIZLayout_AddAlignedFixed( void *aSelf, void *aChild, vec2 aSize, vec2 aPosition, bool aExpand, bool aFill,
+    void UIZLayout_AddAlignedFixed( __SELF__, void *aChild, vec2 aSize, vec2 aPosition, bool aExpand, bool aFill,
                                     eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
     {
-        auto lInstance = static_cast<UIZLayout *>( aSelf );
         auto lChild    = static_cast<UIComponent *>( aChild );
 
-        lInstance->Add( lChild, aSize, aPosition, aExpand, aFill, aHAlignment, aVAlignment );
+        SELF(UIZLayout)->Add( lChild, aSize, aPosition, aExpand, aFill, aHAlignment, aVAlignment );
     }
 
-    void UIZLayout_AddNonAlignedFixed( void *aSelf, void *aChild, vec2 aSize, vec2 aPosition, bool aExpand,
+    void UIZLayout_AddNonAlignedFixed( __SELF__, void *aChild, vec2 aSize, vec2 aPosition, bool aExpand,
                                        bool aFill )
     {
-        auto lInstance = static_cast<UIZLayout *>( aSelf );
         auto lChild    = static_cast<UIComponent *>( aChild );
 
-        lInstance->Add( lChild, aSize, aPosition, aExpand, aFill );
+        SELF(UIZLayout)->Add( lChild, aSize, aPosition, aExpand, aFill );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIFileTree )
     DESTROY_INTERFACE( UIFileTree )
 
-    void *UIFileTree_Add( void *aSelf, void *aPath )
+    void *UIFileTree_Add( __SELF__, void *aPath )
     {
-        auto lInstance = static_cast<UIFileTree *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aPath ) );
 
-        return static_cast<void *>( lInstance->Add( lString ) );
+        return static_cast<void *>( SELF(UIFileTree)->Add( lString ) );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -1937,82 +1722,66 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewDialog );
     }
 
-    void UIDialog_SetTitle( void *aSelf, void *aTitle )
+    void UIDialog_SetTitle( __SELF__, void *aTitle )
     {
-        auto lInstance = static_cast<UIDialog *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aTitle ) );
 
-        lInstance->SetTitle( lString );
+        SELF(UIDialog)->SetTitle( lString );
     }
 
-    void UIDialog_SetSize( void *aSelf, vec2 aSize )
+    void UIDialog_SetSize( __SELF__, vec2 aSize )
     {
-        auto lInstance = static_cast<UIDialog *>( aSelf );
-
-        lInstance->SetSize( aSize );
+        SELF(UIDialog)->SetSize( aSize );
     }
 
-    void UIDialog_SetContent( void *aSelf, void *aContent )
+    void UIDialog_SetContent( __SELF__, void *aContent )
     {
-        auto lInstance = static_cast<UIDialog *>( aSelf );
         auto lContent  = static_cast<UIComponent *>( aContent );
 
-        lInstance->SetContent( lContent );
+        SELF(UIDialog)->SetContent( lContent );
     }
 
-    void UIDialog_Open( void *aSelf )
+    void UIDialog_Open( __SELF__ )
     {
-        auto lInstance = static_cast<UIDialog *>( aSelf );
-
-        lInstance->Open();
+        SELF(UIDialog)->Open();
     }
 
-    void UIDialog_Close( void *aSelf )
+    void UIDialog_Close( __SELF__ )
     {
-        auto lInstance = static_cast<UIDialog *>( aSelf );
-
-        lInstance->Close();
+        SELF(UIDialog)->Close();
     }
 
-    void UIDialog_Update( void *aSelf )
+    void UIDialog_Update( __SELF__ )
     {
-        auto lInstance = static_cast<UIDialog *>( aSelf );
-
-        lInstance->Update();
+        SELF(UIDialog)->Update();
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIForm )
     DESTROY_INTERFACE( UIForm )
 
-    void UIForm_SetTitle( void *aSelf, void *aTitle )
+    void UIForm_SetTitle( __SELF__, void *aTitle )
     {
-        auto lInstance = static_cast<UIForm *>( aSelf );
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aTitle ) );
 
-        lInstance->SetTitle( lString );
+        SELF(UIForm)->SetTitle( lString );
     }
 
-    void UIForm_SetContent( void *aSelf, void *aContent )
+    void UIForm_SetContent( __SELF__, void *aContent )
     {
-        auto lInstance = static_cast<UIForm *>( aSelf );
         auto lContent  = static_cast<UIComponent *>( aContent );
 
-        lInstance->SetContent( lContent );
+        SELF(UIForm)->SetContent( lContent );
     }
 
-    void UIForm_Update( void *aSelf )
+    void UIForm_Update( __SELF__ )
     {
-        auto lInstance = static_cast<UIForm *>( aSelf );
-
-        lInstance->Update();
+        SELF(UIForm)->Update();
     }
 
-    void UIForm_SetSize( void *aSelf, float aWidth, float aHeight )
+    void UIForm_SetSize( __SELF__, float aWidth, float aHeight )
     {
-        auto lInstance = static_cast<UIForm *>( aSelf );
-
-        lInstance->SetSize( aWidth, aHeight );
+        SELF(UIForm)->SetSize( aWidth, aHeight );
     }
     // clang-format on
 } // namespace SE::Core::Interop
