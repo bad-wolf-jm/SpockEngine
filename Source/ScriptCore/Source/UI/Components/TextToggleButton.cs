@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace SpockEngine
 {
@@ -33,7 +34,7 @@ namespace SpockEngine
         {
             onClicked = aHandler;
 
-            UITextToggleButton_OnClicked(mInstance, onClicked);
+            UITextToggleButton_OnClicked(mInstance, Marshal.GetFunctionPointerForDelegate(onClicked));
         }
 
         public delegate bool OnChangeDelegate();
@@ -42,7 +43,7 @@ namespace SpockEngine
         {
             onChanged = aHandler;
             
-            UITextToggleButton_OnChanged(mInstance, onChanged);
+            UITextToggleButton_OnChanged(mInstance, Marshal.GetFunctionPointerForDelegate(onChanged));
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
@@ -55,10 +56,10 @@ namespace SpockEngine
         private extern static void UITextToggleButton_Destroy(ulong aInstance);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextToggleButton_OnClicked(ulong aInstance, OnClickDelegate aHandler);
+        private extern static void UITextToggleButton_OnClicked(ulong aInstance, IntPtr aHandler);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextToggleButton_OnChanged(ulong aInstance, OnChangeDelegate aHandler);
+        private extern static void UITextToggleButton_OnChanged(ulong aInstance, IntPtr aHandler);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static bool UITextToggleButton_IsActive(ulong aInstance);

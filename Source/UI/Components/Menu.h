@@ -33,20 +33,6 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-      public:
-        void *mOnTriggerDelegate       = nullptr;
-        int   mOnTriggerDelegateHandle = -1;
-
-    //   public:
-    //     static void *UIMenuItem_Create();
-    //     static void *UIMenuItem_CreateWithText( void *aText );
-    //     static void *UIMenuItem_CreateWithTextAndShortcut( void *aText, void *aShortcut );
-    //     static void  UIMenuItem_Destroy( void *aInstance );
-    //     static void  UIMenuItem_SetText( void *aInstance, void *aText );
-    //     static void  UIMenuItem_SetShortcut( void *aInstance, void *aShortcut );
-    //     static void  UIMenuItem_SetTextColor( void *aInstance, math::vec4 *aTextColor );
-    //     static void  UIMenuItem_OnTrigger( void *aInstance, void *aDelegate );
     };
 
     class UIMenuSeparator : public UIMenuItem

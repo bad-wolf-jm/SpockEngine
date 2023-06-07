@@ -420,21 +420,10 @@ BEGIN_INTERFACE_DEFINITION( name )
     void UIMenuItem_OnTrigger( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UIMenuItem );
-        auto lDelegate = CAST( MonoObject, aDelegate );
 
-        if( lInstance->mOnTriggerDelegate != nullptr ) mono_gchandle_free( lInstance->mOnTriggerDelegateHandle );
-
-        lInstance->mOnTriggerDelegate       = aDelegate;
-        lInstance->mOnTriggerDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
-
-        lInstance->OnTrigger(
-            [lInstance, lDelegate]()
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-
-                mono_runtime_invoke( lInvokeMethod, lDelegate, nullptr, nullptr );
-            } );
+        typedef void (*fptr)();
+        fptr lDelegate = (fptr)aDelegate;
+        lInstance->OnTrigger( [lInstance, lDelegate]() { lDelegate(); } );
     }
 END_INTERFACE_DEFINITION
 
@@ -732,22 +721,10 @@ BEGIN_INTERFACE_DEFINITION( name )
     void UITable_OnRowClicked( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UITable );
-        auto lDelegate = CAST( MonoObject, aDelegate );
 
-        if( lInstance->mOnRowClickDelegate != nullptr ) mono_gchandle_free( lInstance->mOnRowClickDelegateHandle );
-
-        lInstance->mOnRowClickDelegate       = aDelegate;
-        lInstance->mOnRowClickDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
-
-        lInstance->OnRowClicked(
-            [lInstance, lDelegate]( int aValue )
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-
-                void *lParams[] = { (void *)&aValue };
-                auto  lValue    = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
-            } );
+        typedef void (*fptr)(int);
+        fptr lDelegate = (fptr)aDelegate;
+        lInstance->OnRowClicked( [lInstance, lDelegate](int i) { lDelegate(i); } );
     }
 
     void UITable_AddColumn( __SELF__, void *aColumn ) { SELF( UITable )->AddColumn( CAST( UITableColumn, aColumn ) ); }
@@ -927,45 +904,19 @@ BEGIN_INTERFACE_DEFINITION( name )
     void UITextToggleButton_OnClicked( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UITextToggleButton );
-        auto lDelegate = CAST( MonoObject, aDelegate );
 
-        if( lInstance->mOnClickDelegate != nullptr ) mono_gchandle_free( lInstance->mOnClickDelegateHandle );
-
-        lInstance->mOnClickDelegate       = aDelegate;
-        lInstance->mOnClickDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
-
-        lInstance->OnClick(
-            [lInstance, lDelegate]( bool aValue )
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-
-                void *lParams[] = { (void *)&aValue };
-                auto  lValue    = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
-
-                return *( (bool *)mono_object_unbox( lValue ) );
-            } );
+        typedef bool (*fptr)(bool);
+        fptr lDelegate = (fptr)aDelegate;
+        lInstance->OnClick( [lInstance, lDelegate](bool i) { return lDelegate(i); } );
     }
 
     void UITextToggleButton_OnChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UITextToggleButton );
-        auto lDelegate = CAST( MonoObject, aDelegate );
 
-        if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
-
-        lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
-
-        lInstance->OnChanged(
-            [lInstance, lDelegate]()
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-                auto lValue         = mono_runtime_invoke( lInvokeMethod, lDelegate, nullptr, nullptr );
-
-                return *( (bool *)mono_object_unbox( lValue ) );
-            } );
+        typedef bool (*fptr)();
+        fptr lDelegate = (fptr)aDelegate;
+        lInstance->OnChanged( [lInstance, lDelegate]() { return lDelegate(); } );
     }
 END_INTERFACE_DEFINITION
 
@@ -1017,23 +968,10 @@ BEGIN_INTERFACE_DEFINITION( name )
     void UIVec2Input_OnChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UIVectorInputBase );
-        auto lDelegate = CAST( MonoObject, aDelegate );
 
-        if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
-
-        lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
-
-        lInstance->OnChanged(
-            [lInstance, lDelegate]( vec4 aVector )
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-
-                vec2  lProjection = vec2{ aVector.x, aVector.y };
-                void *lParams[]   = { (void *)&lProjection };
-                auto  lValue      = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
-            } );
+        typedef void (*fptr)(vec2 aValue);
+        fptr lDelegate = (fptr)aDelegate;
+        lInstance->OnChanged( [lInstance, lDelegate](vec4 aVector) { return lDelegate(vec2{ aVector.x, aVector.y }); } );
     }
 
     void UIVec2Input_SetValue( __SELF__, vec2 aValue ) { SELF( UIVec2Input )->SetValue( aValue ); }
@@ -1057,23 +995,10 @@ BEGIN_INTERFACE_DEFINITION( name )
     void UIVec3Input_OnChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UIVectorInputBase );
-        auto lDelegate = CAST( MonoObject, aDelegate );
 
-        if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
-
-        lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
-
-        lInstance->OnChanged(
-            [lInstance, lDelegate]( vec4 aVector )
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-
-                vec3  lProjection = vec3{ aVector.x, aVector.y, aVector.z };
-                void *lParams[]   = { (void *)&lProjection };
-                auto  lValue      = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
-            } );
+        typedef void (*fptr)(vec3 aValue);
+        fptr lDelegate = (fptr)aDelegate;
+        lInstance->OnChanged( [lInstance, lDelegate](vec4 aVector) { return lDelegate(vec3{ aVector.x, aVector.y, aVector.z  }); } );
     }
 
     void UIVec3Input_SetValue( __SELF__, vec3 aValue ) { SELF( UIVec3Input )->SetValue( aValue ); }
@@ -1097,22 +1022,10 @@ BEGIN_INTERFACE_DEFINITION( name )
     void UIVec4Input_OnChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UIVectorInputBase );
-        auto lDelegate = CAST( MonoObject, aDelegate );
 
-        if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
-
-        lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
-
-        lInstance->OnChanged(
-            [lInstance, lDelegate]( vec4 aVector )
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-
-                void *lParams[] = { (void *)&aVector };
-                auto  lValue    = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
-            } );
+        typedef void (*fptr)(vec4 aValue);
+        fptr lDelegate = (fptr)aDelegate;
+        lInstance->OnChanged( [lInstance, lDelegate](vec4 aVector) { return lDelegate(aVector); } );
     }
 
     void UIVec4Input_SetValue( __SELF__, vec4 aValue ) { SELF( UIVec4Input )->SetValue( aValue ); }
