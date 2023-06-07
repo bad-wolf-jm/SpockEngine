@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace SpockEngine
 {
@@ -15,8 +16,8 @@ namespace SpockEngine
         public void OnClick(OnClickDelegate aHandler)
         {
             onChanged = aHandler;
-            
-            UICheckBox_OnClick(mInstance, onChanged);
+
+            UICheckBox_OnClick(mInstance, Marshal.GetFunctionPointerForDelegate(onChanged));
         }
 
         public bool IsChecked
@@ -32,7 +33,7 @@ namespace SpockEngine
         private extern static void UICheckBox_Destroy(ulong aInstance);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UICheckBox_OnClick(ulong aInstance, OnClickDelegate aHandler);
+        private extern static void UICheckBox_OnClick(ulong aInstance, IntPtr aHandler);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static bool UICheckBox_IsChecked(ulong aInstance);

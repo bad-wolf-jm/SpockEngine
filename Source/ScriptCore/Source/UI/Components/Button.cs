@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace SpockEngine
 {
@@ -18,7 +19,7 @@ namespace SpockEngine
         {
             onClick = aHandler;
 
-            UIButton_OnClick(mInstance, onClick);
+            UIButton_OnClick(mInstance, Marshal.GetFunctionPointerForDelegate(onClick));
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
@@ -34,6 +35,6 @@ namespace SpockEngine
         private extern static void UIButton_SetText(ulong aInstance, string aText);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIButton_OnClick(ulong aInstance, ClickDelegate aText);
+        private extern static void UIButton_OnClick(ulong aInstance, IntPtr aDelegate);
     }
 }

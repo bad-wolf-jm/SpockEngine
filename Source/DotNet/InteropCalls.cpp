@@ -43,24 +43,21 @@ namespace SE::Core::Interop
 
 #define BEGIN_INTERFACE_DEFINITION( name )
 #define END_INTERFACE_DEFINITION
-
 #define __SELF__ void *aSelf
-
 #define CONSTRUCT_WITHOUT_PARAMETERS( _Ty ) \
     void *_Ty##_Create()                    \
     {                                       \
         auto lNewObject = new _Ty();        \
         return CAST( void, lNewObject );    \
     }
-
 #define DESTROY_INTERFACE( _Ty ) \
     void _Ty##_Destroy( __SELF__ ) { delete SELF( _Ty ); }
-
 #define SELF( _Ty ) static_cast<_Ty *>( aSelf )
-
 #define CAST( _Ty, v ) static_cast<_Ty *>( v )
 
-    BEGIN_INTERFACE_DEFINITION( name )
+    // clang-format off
+
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIBaseImage )
 
     void *UIBaseImage_CreateWithPath( void *aText, vec2 aSize )
@@ -115,9 +112,11 @@ namespace SE::Core::Interop
 
         return vec4{ lV.x, lV.y, lV.z, lV.w };
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIButton )
+    DESTROY_INTERFACE( UIButton )
 
     void *UIButton_CreateWithText( void *aText )
     {
@@ -126,8 +125,6 @@ namespace SE::Core::Interop
 
         return CAST( void, lNewButton );
     }
-
-    DESTROY_INTERFACE( UIButton )
 
     void UIButton_SetText( __SELF__, void *aText )
     {
@@ -139,57 +136,37 @@ namespace SE::Core::Interop
     void UIButton_OnClick( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UIButton );
-        auto lDelegate = CAST( MonoObject, aDelegate );
 
-        if( lInstance->mOnClickDelegate != nullptr ) mono_gchandle_free( lInstance->mOnClickDelegateHandle );
-
-        lInstance->mOnClickDelegate       = aDelegate;
-        lInstance->mOnClickDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
-
-        lInstance->OnClick(
-            [lInstance, lDelegate]()
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-
-                mono_runtime_invoke( lInvokeMethod, lDelegate, nullptr, nullptr );
-            } );
+        typedef void (*fptr)();
+        fptr lDelegate = (fptr)aDelegate;
+        lInstance->OnClick( [lInstance, lDelegate]() { lDelegate(); } );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UICheckBox )
-
     DESTROY_INTERFACE( UICheckBox )
 
     void UICheckBox_OnClick( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UICheckBox );
-        auto lDelegate = CAST( MonoObject, aDelegate );
 
-        if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
-
-        lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
-
-        lInstance->OnClick(
-            [lInstance, lDelegate]()
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-
-                mono_runtime_invoke( lInvokeMethod, lDelegate, nullptr, nullptr );
-            } );
+        typedef void (*fptr)();
+        fptr lDelegate = (fptr)aDelegate;
+        lInstance->OnClick( [lInstance, lDelegate]() { lDelegate(); } );
     }
 
     bool UICheckBox_IsChecked( __SELF__ ) { return SELF( UICheckBox )->IsChecked(); }
 
     void UICheckBox_SetIsChecked( __SELF__, bool aValue ) { SELF( UICheckBox )->SetIsChecked( aValue ); }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIColorButton )
     DESTROY_INTERFACE( UIColorButton )
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIComboBox )
     DESTROY_INTERFACE( UIComboBox )
 
@@ -237,8 +214,9 @@ namespace SE::Core::Interop
                 mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
             } );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     void UIComponent_SetIsVisible( __SELF__, bool aIsVisible ) { SELF( UIComponent )->mIsVisible = aIsVisible; }
 
     void UIComponent_SetIsEnabled( __SELF__, bool aIsEnabled ) { SELF( UIComponent )->mIsEnabled = aIsEnabled; }
@@ -253,14 +231,12 @@ namespace SE::Core::Interop
     }
 
     void UIComponent_SetPaddingIndividual( __SELF__, float aPaddingTop, float aPaddingBottom, float aPaddingLeft, float aPaddingRight )
-
     {
         SELF( UIComponent )->SetPadding( aPaddingTop, aPaddingBottom, aPaddingLeft, aPaddingRight );
     }
 
     void UIComponent_SetAlignment( __SELF__, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
     {
-
         SELF( UIComponent )->SetAlignment( aHAlignment, aVAlignment );
     }
 
@@ -284,8 +260,9 @@ namespace SE::Core::Interop
 
         SELF( UIComponent )->SetTooltip( lTooltip );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIDropdownButton )
     DESTROY_INTERFACE( UIDropdownButton )
 
@@ -316,8 +293,9 @@ namespace SE::Core::Interop
     }
 
     void UIDropdownButton_SetTextColor( __SELF__, vec4 aColor ) { SELF( UIDropdownButton )->SetTextColor( aColor ); }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIImage )
     DESTROY_INTERFACE( UIImage )
 
@@ -328,8 +306,9 @@ namespace SE::Core::Interop
 
         return CAST( void, lNewImage );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIImageButton )
     DESTROY_INTERFACE( UIImageButton )
 
@@ -361,7 +340,7 @@ namespace SE::Core::Interop
             } );
     }
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIImageToggleButton )
     DESTROY_INTERFACE( UIImageToggleButton )
 
@@ -426,8 +405,9 @@ namespace SE::Core::Interop
                 return *( (bool *)mono_object_unbox( lValue ) );
             } );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UILabel )
     DESTROY_INTERFACE( UILabel )
 
@@ -447,8 +427,9 @@ namespace SE::Core::Interop
     }
 
     void UILabel_SetTextColor( __SELF__, vec4 aTextColor ) { SELF( UILabel )->SetTextColor( aTextColor ); }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIMenuItem )
     DESTROY_INTERFACE( UIMenuItem )
 
@@ -504,12 +485,14 @@ namespace SE::Core::Interop
                 mono_runtime_invoke( lInvokeMethod, lDelegate, nullptr, nullptr );
             } );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIMenuSeparator )
     DESTROY_INTERFACE( UIMenuSeparator )
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIMenu )
     DESTROY_INTERFACE( UIMenu )
 
@@ -546,8 +529,9 @@ namespace SE::Core::Interop
     }
 
     void UIMenu_Update( __SELF__ ) { SELF( UIMenu )->Update(); }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIPlot )
     DESTROY_INTERFACE( UIPlot )
 
@@ -583,8 +567,9 @@ namespace SE::Core::Interop
     {
         return DotNetRuntime::NewString( SELF( UIPlot )->mAxisConfiguration[aAxis].mTitle );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     void UIPlotData_SetLegend( __SELF__, void *aText )
     {
         auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
@@ -600,7 +585,7 @@ namespace SE::Core::Interop
 
     void UIPlotData_SetYAxis( __SELF__, int aAxis ) { SELF( UIPlotData )->mYAxis = static_cast<UIPlotAxis>( aAxis ); }
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIFloat64LinePlot )
     DESTROY_INTERFACE( UIFloat64LinePlot )
 
@@ -613,8 +598,9 @@ namespace SE::Core::Interop
     {
         SELF( UIFloat64LinePlot )->mY = DotNetRuntime::AsVector<double>( CAST( MonoObject, aValue ) );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIFloat64ScatterPlot )
     DESTROY_INTERFACE( UIFloat64ScatterPlot )
 
@@ -627,8 +613,9 @@ namespace SE::Core::Interop
     {
         SELF( UIFloat64ScatterPlot )->mY = DotNetRuntime::AsVector<double>( CAST( MonoObject, aValue ) );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIVLinePlot )
     DESTROY_INTERFACE( UIVLinePlot )
 
@@ -637,7 +624,7 @@ namespace SE::Core::Interop
         SELF( UIVLinePlot )->mX = DotNetRuntime::AsVector<double>( CAST( MonoObject, aValue ) );
     }
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIHLinePlot )
     DESTROY_INTERFACE( UIHLinePlot )
 
@@ -645,8 +632,9 @@ namespace SE::Core::Interop
     {
         SELF( UIHLinePlot )->mY = DotNetRuntime::AsVector<double>( CAST( MonoObject, aValue ) );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIAxisTag )
     DESTROY_INTERFACE( UIAxisTag )
 
@@ -675,8 +663,9 @@ namespace SE::Core::Interop
     void UIAxisTag_SetAxis( __SELF__, int aAxis ) { SELF( UIAxisTag )->mAxis = static_cast<UIPlotAxis>( aAxis ); }
 
     int UIAxisTag_GetAxis( __SELF__ ) { return static_cast<int>( SELF( UIAxisTag )->mXAxis ); }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIVRangePlot )
     DESTROY_INTERFACE( UIVRangePlot )
 
@@ -688,7 +677,7 @@ namespace SE::Core::Interop
 
     double UIVRangePlot_GetMax( __SELF__ ) { return (double)SELF( UIVRangePlot )->mX1; }
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIHRangePlot )
     DESTROY_INTERFACE( UIHRangePlot )
 
@@ -699,8 +688,9 @@ namespace SE::Core::Interop
     void UIHRangePlot_SetMax( __SELF__, double aValue ) { SELF( UIHRangePlot )->mY1 = aValue; }
 
     double UIHRangePlot_GetMax( __SELF__ ) { return (double)SELF( UIHRangePlot )->mY1; }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIProgressBar )
     DESTROY_INTERFACE( UIProgressBar )
 
@@ -718,8 +708,9 @@ namespace SE::Core::Interop
     void UIProgressBar_SetTextColor( __SELF__, vec4 aTextColor ) { SELF( UIProgressBar )->SetTextColor( aTextColor ); }
 
     void UIProgressBar_SetThickness( __SELF__, float aValue ) { SELF( UIProgressBar )->SetThickness( aValue ); }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIPropertyValue )
     DESTROY_INTERFACE( UIPropertyValue )
 
@@ -750,11 +741,12 @@ namespace SE::Core::Interop
 
     void UIPropertyValue_SetNameFont( __SELF__, FontFamilyFlags aFont ) { SELF( UIPropertyValue )->SetNameFont( aFont ); }
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UISlider )
     DESTROY_INTERFACE( UISlider )
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     void UITableColumn_SetTooltip( __SELF__, void *aTooptip )
     {
         auto lSelf = SELF( UITableColumn );
@@ -780,8 +772,9 @@ namespace SE::Core::Interop
         for( auto const &x : DotNetRuntime::AsVector<ImVec4>( CAST( MonoObject, aBackroundColor ) ) )
             lSelf->mBackgroundColor.push_back( ImColor( x ) );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITable )
     DESTROY_INTERFACE( UITable )
 
@@ -829,8 +822,9 @@ namespace SE::Core::Interop
         else
             lSelf->mDisplayedRowIndices = DotNetRuntime::AsVector<int>( CAST( MonoObject, aValue ) );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIFloat64Column )
     DESTROY_INTERFACE( UIFloat64Column )
 
@@ -850,8 +844,9 @@ namespace SE::Core::Interop
     {
         SELF( UIFloat64Column )->mData = DotNetRuntime::AsVector<double>( CAST( MonoObject, aValue ) );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIUint32Column )
     DESTROY_INTERFACE( UIUint32Column )
 
@@ -869,8 +864,9 @@ namespace SE::Core::Interop
     {
         SELF( UIUint32Column )->mData = DotNetRuntime::AsVector<uint32_t>( CAST( MonoObject, aValue ) );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIStringColumn )
     DESTROY_INTERFACE( UIStringColumn )
 
@@ -892,8 +888,9 @@ namespace SE::Core::Interop
         for( auto const &x : DotNetRuntime::AsVector<MonoString *>( CAST( MonoObject, aValue ) ) )
             lSelf->mData.push_back( DotNetRuntime::NewString( x ) );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITextInput )
     DESTROY_INTERFACE( UITextInput )
 
@@ -940,8 +937,9 @@ namespace SE::Core::Interop
                 mono_free( lString );
             } );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITextOverlay )
     DESTROY_INTERFACE( UITextOverlay )
 
@@ -953,8 +951,9 @@ namespace SE::Core::Interop
     }
 
     void UITextOverlay_Clear( __SELF__ ) { SELF( UITextOverlay )->Clear(); }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITextToggleButton )
     DESTROY_INTERFACE( UITextToggleButton )
 
@@ -1017,8 +1016,9 @@ namespace SE::Core::Interop
                 return *( (bool *)mono_object_unbox( lValue ) );
             } );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITreeViewNode )
     DESTROY_INTERFACE( UITreeViewNode )
 
@@ -1046,8 +1046,9 @@ namespace SE::Core::Interop
     }
 
     void *UITreeViewNode_Add( __SELF__ ) { return CAST( void, SELF( UITreeViewNode )->Add() ); }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITreeView )
     DESTROY_INTERFACE( UITreeView )
 
@@ -1056,8 +1057,9 @@ namespace SE::Core::Interop
     void UITreeView_SetIconSpacing( __SELF__, float aSpacing ) { SELF( UITreeView )->SetIconSpacing( aSpacing ); }
 
     void *UITreeView_Add( __SELF__ ) { return CAST( void, SELF( UITreeView )->Add() ); }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIVec2Input )
     DESTROY_INTERFACE( UIVec2Input )
 
@@ -1095,8 +1097,9 @@ namespace SE::Core::Interop
 
         SELF( UIVectorInputBase )->SetFormat( lString );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIVec3Input )
     DESTROY_INTERFACE( UIVec3Input )
 
@@ -1134,8 +1137,9 @@ namespace SE::Core::Interop
 
         SELF( UIVectorInputBase )->SetFormat( lString );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIVec4Input )
     DESTROY_INTERFACE( UIVec4Input )
 
@@ -1172,8 +1176,9 @@ namespace SE::Core::Interop
 
         SELF( UIVectorInputBase )->SetFormat( lString );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIWorkspaceDocument )
     DESTROY_INTERFACE( UIWorkspaceDocument )
 
@@ -1223,8 +1228,9 @@ namespace SE::Core::Interop
             return *( (bool *)mono_object_unbox( lValue ) );
         };
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIWorkspace )
     DESTROY_INTERFACE( UIWorkspace )
 
@@ -1256,8 +1262,9 @@ namespace SE::Core::Interop
             mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
         };
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     void *UIBoxLayout_CreateWithOrientation( eBoxLayoutOrientation aOrientation )
     {
         auto lNewLayout = new UIBoxLayout( aOrientation );
@@ -1307,8 +1314,9 @@ namespace SE::Core::Interop
     }
 
     void UIBoxLayout_Clear( __SELF__ ) { SELF( UIBoxLayout )->Clear(); }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIContainer )
     DESTROY_INTERFACE( UIContainer )
 
@@ -1318,8 +1326,9 @@ namespace SE::Core::Interop
 
         SELF( UIContainer )->SetContent( lChild );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UISplitter )
     DESTROY_INTERFACE( UISplitter )
 
@@ -1345,8 +1354,9 @@ namespace SE::Core::Interop
     }
 
     void UISplitter_SetItemSpacing( __SELF__, float aItemSpacing ) { SELF( UISplitter )->SetItemSpacing( aItemSpacing ); }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIStackLayout )
     DESTROY_INTERFACE( UIStackLayout )
 
@@ -1364,8 +1374,9 @@ namespace SE::Core::Interop
 
         SELF( UIStackLayout )->SetCurrent( lString );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIZLayout )
     DESTROY_INTERFACE( UIZLayout )
 
@@ -1398,8 +1409,9 @@ namespace SE::Core::Interop
 
         SELF( UIZLayout )->Add( lChild, aSize, aPosition, aExpand, aFill );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIFileTree )
     DESTROY_INTERFACE( UIFileTree )
 
@@ -1409,8 +1421,9 @@ namespace SE::Core::Interop
 
         return CAST( void, SELF( UIFileTree )->Add( lString ) );
     }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIDialog )
     DESTROY_INTERFACE( UIDialog )
 
@@ -1443,8 +1456,9 @@ namespace SE::Core::Interop
     void UIDialog_Close( __SELF__ ) { SELF( UIDialog )->Close(); }
 
     void UIDialog_Update( __SELF__ ) { SELF( UIDialog )->Update(); }
+END_INTERFACE_DEFINITION
 
-    BEGIN_INTERFACE_DEFINITION( name )
+BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIForm )
     DESTROY_INTERFACE( UIForm )
 
@@ -1465,5 +1479,6 @@ namespace SE::Core::Interop
     void UIForm_Update( __SELF__ ) { SELF( UIForm )->Update(); }
 
     void UIForm_SetSize( __SELF__, float aWidth, float aHeight ) { SELF( UIForm )->SetSize( aWidth, aHeight ); }
+END_INTERFACE_DEFINITION
     // clang-format on
 } // namespace SE::Core::Interop

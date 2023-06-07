@@ -29,15 +29,7 @@ namespace SE::Core
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
-      public:
-        void *mOnClickDelegate       = nullptr;
-        int   mOnClickDelegateHandle = -1;
-
     //   public:
-    //     static void *UIButton_Create();
-    //     static void *UIButton_CreateWithText( void *aText );
-    //     static void  UIButton_Destroy( void *aInstance );
-    //     static void  UIButton_OnClick( void *aInstance, void *aDelegate );
-    //     static void  UIButton_SetText( void *aInstance, void *aText );
+        // void ( *mOnClickDelegate )() = nullptr;
     };
 } // namespace SE::Core
