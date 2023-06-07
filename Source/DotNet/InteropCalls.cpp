@@ -46,11 +46,11 @@ namespace SE::Core::Interop
 
 #define __SELF__ void *aSelf
 
-#define CONSTRUCT_WITHOUT_PARAMETERS( _Ty )       \
-    void *_Ty##_Create()                          \
-    {                                             \
-        auto lNewObject = new _Ty();              \
-        return static_cast<void *>( lNewObject ); \
+#define CONSTRUCT_WITHOUT_PARAMETERS( _Ty ) \
+    void *_Ty##_Create()                    \
+    {                                       \
+        auto lNewObject = new _Ty();        \
+        return CAST( void, lNewObject );    \
     }
 
 #define DESTROY_INTERFACE( _Ty ) \
@@ -58,22 +58,24 @@ namespace SE::Core::Interop
 
 #define SELF( _Ty ) static_cast<_Ty *>( aSelf )
 
+#define CAST( _Ty, v ) static_cast<_Ty *>( v )
+
     BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIBaseImage )
 
     void *UIBaseImage_CreateWithPath( void *aText, vec2 aSize )
     {
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
         auto lNewImage = new UIBaseImage( lString, aSize );
 
-        return static_cast<void *>( lNewImage );
+        return CAST( void, lNewImage );
     }
 
     DESTROY_INTERFACE( UIBaseImage )
 
     void UIBaseImage_SetImage( __SELF__, void *aPath )
     {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aPath ) );
+        auto lString = DotNetRuntime::NewString( CAST( MonoString, aPath ) );
 
         SELF( UIBaseImage )->SetImage( lString );
     }
@@ -124,17 +126,17 @@ namespace SE::Core::Interop
 
     void *UIButton_CreateWithText( void *aText )
     {
-        auto lString    = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString    = DotNetRuntime::NewString( CAST( MonoString, aText ) );
         auto lNewButton = new UIButton( lString );
 
-        return static_cast<void *>( lNewButton );
+        return CAST( void, lNewButton );
     }
 
     DESTROY_INTERFACE( UIButton )
 
     void UIButton_SetText( __SELF__, void *aText )
     {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
 
         SELF( UIButton )->SetText( lString );
     }
@@ -142,12 +144,12 @@ namespace SE::Core::Interop
     void UIButton_OnClick( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIButton *>( aSelf );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+        auto lDelegate = CAST( MonoObject, aDelegate );
 
         if( lInstance->mOnClickDelegate != nullptr ) mono_gchandle_free( lInstance->mOnClickDelegateHandle );
 
         lInstance->mOnClickDelegate       = aDelegate;
-        lInstance->mOnClickDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+        lInstance->mOnClickDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
 
         lInstance->OnClick(
             [lInstance, lDelegate]()
@@ -167,12 +169,12 @@ namespace SE::Core::Interop
     void UICheckBox_OnClick( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UICheckBox *>( aSelf );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+        auto lDelegate = CAST( MonoObject, aDelegate );
 
         if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
 
         lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
 
         lInstance->OnClick(
             [lInstance, lDelegate]()
@@ -199,12 +201,12 @@ namespace SE::Core::Interop
     void *UIComboBox_CreateWithItems( void *aItems )
     {
         std::vector<std::string> lItemVector;
-        for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aItems ) ) )
+        for( auto const &x : DotNetRuntime::AsVector<MonoString *>( sCAST( MonoObject, aItems ) ) )
             lItemVector.emplace_back( DotNetRuntime::NewString( x ) );
 
         auto lNewComboBox = new UIComboBox( lItemVector );
 
-        return static_cast<void *>( lNewComboBox );
+        return CAST( void, lNewComboBox );
     }
 
     int UIComboBox_GetCurrent( __SELF__ )
@@ -219,7 +221,7 @@ namespace SE::Core::Interop
     void UIComboBox_SetItemList( __SELF__, void *aItems )
     {
         std::vector<std::string> lItemVector;
-        for( auto const &x : DotNetRuntime::AsVector<MonoString *>( static_cast<MonoObject *>( aItems ) ) )
+        for( auto const &x : DotNetRuntime::AsVector<MonoString *>( sCAST( MonoObject, aItems ) ) )
             lItemVector.emplace_back( DotNetRuntime::NewString( x ) );
 
         SELF( UIComboBox )->SetItemList( lItemVector );
@@ -228,12 +230,12 @@ namespace SE::Core::Interop
     void UIComboBox_OnChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIComboBox *>( aSelf );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+        auto lDelegate = CAST( MonoObject, aDelegate );
 
         if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
 
         lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
 
         lInstance->OnChange(
             [lInstance, lDelegate]( int aValue )
@@ -318,7 +320,7 @@ namespace SE::Core::Interop
 
     void UIDropdownButton_SetText( __SELF__, void *aText )
     {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
 
         SELF( UIDropdownButton )->SetText( lString );
     }
@@ -331,10 +333,10 @@ namespace SE::Core::Interop
 
     void *UIImage_CreateWithPath( void *aText, vec2 aSize )
     {
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
         auto lNewImage = new UIImage( lString, aSize );
 
-        return static_cast<void *>( lNewImage );
+        return CAST( void, lNewImage );
     }
 
     BEGIN_INTERFACE_DEFINITION( name )
@@ -343,21 +345,21 @@ namespace SE::Core::Interop
 
     void *UIImageButton_CreateWithPath( void *aText, vec2 *aSize )
     {
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
         auto lNewImage = new UIImageButton( lString, *aSize );
 
-        return static_cast<void *>( lNewImage );
+        return CAST( void, lNewImage );
     }
 
     void UIImageButton_OnClick( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIImageButton *>( aSelf );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+        auto lDelegate = CAST( MonoObject, aDelegate );
 
         if( lInstance->mOnClickDelegate != nullptr ) mono_gchandle_free( lInstance->mOnClickDelegateHandle );
 
         lInstance->mOnClickDelegate       = aDelegate;
-        lInstance->mOnClickDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+        lInstance->mOnClickDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
 
         lInstance->OnClick(
             [lInstance, lDelegate]()
@@ -394,12 +396,12 @@ namespace SE::Core::Interop
     void UIImageToggleButton_OnClicked( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIImageToggleButton *>( aSelf );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+        auto lDelegate = CAST( MonoObject, aDelegate );
 
         if( lInstance->mOnClickDelegate != nullptr ) mono_gchandle_free( lInstance->mOnClickDelegateHandle );
 
         lInstance->mOnClickDelegate       = aDelegate;
-        lInstance->mOnClickDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+        lInstance->mOnClickDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
 
         lInstance->OnClick(
             [lInstance, lDelegate]( bool aValue )
@@ -417,12 +419,12 @@ namespace SE::Core::Interop
     void UIImageToggleButton_OnChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIImageToggleButton *>( aSelf );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+        auto lDelegate = CAST( MonoObject, aDelegate );
 
         if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
 
         lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
 
         lInstance->OnChanged(
             [lInstance, lDelegate]()
@@ -441,15 +443,15 @@ namespace SE::Core::Interop
 
     void *UILabel_CreateWithText( void *aText )
     {
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
         auto lNewLabel = new UILabel( lString );
 
-        return static_cast<void *>( lNewLabel );
+        return CAST( void, lNewLabel );
     }
 
     void UILabel_SetText( __SELF__, void *aText )
     {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
 
         SELF( UILabel )->SetText( lString );
     }
@@ -462,31 +464,31 @@ namespace SE::Core::Interop
 
     void *UIMenuItem_CreateWithText( void *aText )
     {
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
         auto lNewLabel = new UIMenuItem( lString );
 
-        return static_cast<void *>( lNewLabel );
+        return CAST( void, lNewLabel );
     }
 
     void *UIMenuItem_CreateWithTextAndShortcut( void *aText, void *aShortcut )
     {
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-        auto lShortcut = DotNetRuntime::NewString( static_cast<MonoString *>( aShortcut ) );
+        auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
+        auto lShortcut = DotNetRuntime::NewString( CAST( MonoString, aShortcut ) );
         auto lNewLabel = new UIMenuItem( lString, lShortcut );
 
-        return static_cast<void *>( lNewLabel );
+        return CAST( void, lNewLabel );
     }
 
     void UIMenuItem_SetText( __SELF__, void *aText )
     {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
 
         SELF( UIMenuItem )->SetText( lString );
     }
 
     void UIMenuItem_SetShortcut( __SELF__, void *aShortcut )
     {
-        auto lShortcut = DotNetRuntime::NewString( static_cast<MonoString *>( aShortcut ) );
+        auto lShortcut = DotNetRuntime::NewString( CAST( MonoString, aShortcut ) );
 
         SELF( UIMenuItem )->SetShortcut( lShortcut );
     }
@@ -496,12 +498,12 @@ namespace SE::Core::Interop
     void UIMenuItem_OnTrigger( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIMenuItem *>( aSelf );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+        auto lDelegate = CAST( MonoObject, aDelegate );
 
         if( lInstance->mOnTriggerDelegate != nullptr ) mono_gchandle_free( lInstance->mOnTriggerDelegateHandle );
 
         lInstance->mOnTriggerDelegate       = aDelegate;
-        lInstance->mOnTriggerDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+        lInstance->mOnTriggerDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
 
         lInstance->OnTrigger(
             [lInstance, lDelegate]()
@@ -523,34 +525,34 @@ namespace SE::Core::Interop
 
     void *UIMenu_CreateWithText( void *aText )
     {
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
         auto lNewLabel = new UIMenu( lString );
 
-        return static_cast<void *>( lNewLabel );
+        return CAST( void, lNewLabel );
     }
 
     void *UIMenu_AddAction( __SELF__, void *aText, void *aShortcut )
     {
-        auto lString    = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-        auto lShortcut  = DotNetRuntime::NewString( static_cast<MonoString *>( aShortcut ) );
+        auto lString    = DotNetRuntime::NewString( CAST( MonoString, aText ) );
+        auto lShortcut  = DotNetRuntime::NewString( CAST( MonoString, aShortcut ) );
         auto lNewAction = SELF( UIMenu )->AddActionRaw( lString, lShortcut );
 
-        return static_cast<void *>( lNewAction );
+        return CAST( void, lNewAction );
     }
 
     void *UIMenu_AddMenu( __SELF__, void *aText )
     {
-        auto lString  = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString  = DotNetRuntime::NewString( CAST( MonoString, aText ) );
         auto lNewMenu = SELF( UIMenu )->AddMenuRaw( lString );
 
-        return static_cast<void *>( lNewMenu );
+        return CAST( void, lNewMenu );
     }
 
     void *UIMenu_AddSeparator( __SELF__ )
     {
         auto lNewSeparator = SELF( UIMenu )->AddSeparatorRaw();
 
-        return static_cast<void *>( lNewSeparator );
+        return CAST( void, lNewSeparator );
     }
 
     void UIMenu_Update( __SELF__ )
@@ -603,7 +605,7 @@ namespace SE::Core::Interop
     BEGIN_INTERFACE_DEFINITION( name )
     void UIPlotData_SetLegend( __SELF__, void *aText )
     {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
 
         SELF( sPlotData )->mLegend = lString;
     }
@@ -675,7 +677,7 @@ namespace SE::Core::Interop
     {
         auto lSelf = new sHLine();
 
-        return static_cast<void *>( lSelf );
+        return CAST( void, lSelf );
     }
 
     void UIHLinePlot_Destroy( __SELF__ ) { delete static_cast<sHLine *>( aSelf ); }
@@ -690,16 +692,16 @@ namespace SE::Core::Interop
     {
         auto lSelf = new sAxisTag();
 
-        return static_cast<void *>( lSelf );
+        return CAST( void, lSelf );
     }
 
     void *UIAxisTag_CreateWithTextAndColor( UIPlotAxis aAxis, double aX, void *aText, vec4 aColor )
     {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
 
         auto lSelf = new sAxisTag( aAxis, aX, lString, aColor );
 
-        return static_cast<void *>( lSelf );
+        return CAST( void, lSelf );
     }
 
     void UIAxisTag_Destroy( __SELF__ ) { delete static_cast<sAxisTag *>( aSelf ); }
@@ -708,7 +710,7 @@ namespace SE::Core::Interop
 
     void UIAxisTag_SetText( __SELF__, void *aText )
     {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
 
         SELF( sAxisTag )->mText = lString;
     }
@@ -726,7 +728,7 @@ namespace SE::Core::Interop
     {
         auto lSelf = new sVRange();
 
-        return static_cast<void *>( lSelf );
+        return CAST( void, lSelf );
     }
 
     void UIVRangePlot_Destroy( __SELF__ ) { delete static_cast<sVRange *>( aSelf ); }
@@ -767,7 +769,7 @@ namespace SE::Core::Interop
 
     void UIProgressBar_SetText( __SELF__, void *aText )
     {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
 
         SELF( UIProgressBar )->SetText( lString );
     }
@@ -782,23 +784,23 @@ namespace SE::Core::Interop
 
     void *UIPropertyValue_CreateWithText( void *aText )
     {
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
         auto lNewLabel = new UIPropertyValue( lString );
 
-        return static_cast<void *>( lNewLabel );
+        return CAST( void, lNewLabel );
     }
 
     void *UIPropertyValue_CreateWithTextAndOrientation( void *aText, eBoxLayoutOrientation aOrientation )
     {
-        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
         auto lNewLabel = new UIPropertyValue( lString, aOrientation );
 
-        return static_cast<void *>( lNewLabel );
+        return CAST( void, lNewLabel );
     }
 
     void UIPropertyValue_SetValue( __SELF__, void *aText )
     {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
 
         SELF( UIPropertyValue )->SetValue( lString );
     }
@@ -846,12 +848,12 @@ namespace SE::Core::Interop
     void UITable_OnRowClicked( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UITable );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+        auto lDelegate = CAST( MonoObject, aDelegate );
 
         if( lInstance->mOnRowClickDelegate != nullptr ) mono_gchandle_free( lInstance->mOnRowClickDelegateHandle );
 
         lInstance->mOnRowClickDelegate       = aDelegate;
-        lInstance->mOnRowClickDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+        lInstance->mOnRowClickDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
 
         lInstance->OnRowClicked(
             [lInstance, lDelegate]( int aValue )
@@ -898,7 +900,7 @@ namespace SE::Core::Interop
     {
         auto lNewColumn = new sFloat64Column();
 
-        return static_cast<void *>( lNewColumn );
+        return CAST( void, lNewColumn );
     }
 
     void *UIFloat64Column_CreateFull( void *aHeader, float aInitialSize, void *aFormat, void *aNaNFormat )
@@ -908,7 +910,7 @@ namespace SE::Core::Interop
         auto lNaNFormat = DotNetRuntime::NewString( static_cast<MonoString *>( aNaNFormat ) );
         auto lNewColumn = new sFloat64Column( lHeader, aInitialSize, lFormat, lNaNFormat );
 
-        return static_cast<void *>( lNewColumn );
+        return CAST( void, lNewColumn );
     }
 
     void UIFloat64Column_Destroy( __SELF__ ) { delete SELF( sFloat64Column ); }
@@ -925,7 +927,7 @@ namespace SE::Core::Interop
     {
         auto lNewColumn = new sUint32Column();
 
-        return static_cast<void *>( lNewColumn );
+        return CAST( void, lNewColumn );
     }
 
     void *UIUint32Column_CreateFull( void *aHeader, float aInitialSize )
@@ -933,7 +935,7 @@ namespace SE::Core::Interop
         auto lHeader    = DotNetRuntime::NewString( static_cast<MonoString *>( aHeader ) );
         auto lNewColumn = new sUint32Column( lHeader, aInitialSize );
 
-        return static_cast<void *>( lNewColumn );
+        return CAST( void, lNewColumn );
     }
 
     void UIUint32Column_Destroy( __SELF__ ) { delete SELF( sUint32Column ); }
@@ -950,7 +952,7 @@ namespace SE::Core::Interop
     {
         auto lNewColumn = new sStringColumn();
 
-        return static_cast<void *>( lNewColumn );
+        return CAST( void, lNewColumn );
     }
 
     void *UIStringColumn_CreateFull( void *aHeader, float aInitialSize )
@@ -958,7 +960,7 @@ namespace SE::Core::Interop
         auto lHeader    = DotNetRuntime::NewString( static_cast<MonoString *>( aHeader ) );
         auto lNewColumn = new sStringColumn( lHeader, aInitialSize );
 
-        return static_cast<void *>( lNewColumn );
+        return CAST( void, lNewColumn );
     }
 
     void UIStringColumn_Destroy( __SELF__ ) { delete SELF( sStringColumn ); }
@@ -980,15 +982,15 @@ namespace SE::Core::Interop
 
     void *UITextInput_CreateWithText( void *aText )
     {
-        auto lString       = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString       = DotNetRuntime::NewString( CAST( MonoString, aText ) );
         auto lNewTextInput = new UITextInput( lString );
 
-        return static_cast<void *>( lNewTextInput );
+        return CAST( void, lNewTextInput );
     }
 
     void UITextInput_SetHintText( __SELF__, void *aText )
     {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
 
         SELF( UITextInput )->SetHintText( lString );
     }
@@ -1002,12 +1004,12 @@ namespace SE::Core::Interop
     void UITextInput_OnTextChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UITextInput );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+        auto lDelegate = CAST( MonoObject, aDelegate );
 
         if( lInstance->mOnTextChangedDelegate != nullptr ) mono_gchandle_free( lInstance->mOnTextChangedDelegateHandle );
 
         lInstance->mOnTextChangedDelegate       = aDelegate;
-        lInstance->mOnTextChangedDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+        lInstance->mOnTextChangedDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
 
         lInstance->OnTextChanged(
             [lInstance, lDelegate]( std::string aText )
@@ -1028,7 +1030,7 @@ namespace SE::Core::Interop
 
     void UITextOverlay_AddText( __SELF__, void *aText )
     {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
 
         SELF( UITextOverlay )->AddText( lString );
     }
@@ -1041,10 +1043,10 @@ namespace SE::Core::Interop
 
     void *UITextToggleButton_CreateWithText( void *aText )
     {
-        auto lString    = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString    = DotNetRuntime::NewString( CAST( MonoString, aText ) );
         auto lNewButton = new UITextToggleButton( lString );
 
-        return static_cast<void *>( lNewButton );
+        return CAST( void, lNewButton );
     }
 
     bool UITextToggleButton_IsActive( __SELF__ ) { return SELF( UITextToggleButton )->IsActive(); }
@@ -1058,12 +1060,12 @@ namespace SE::Core::Interop
     void UITextToggleButton_OnClicked( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UITextToggleButton );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+        auto lDelegate = CAST( MonoObject, aDelegate );
 
         if( lInstance->mOnClickDelegate != nullptr ) mono_gchandle_free( lInstance->mOnClickDelegateHandle );
 
         lInstance->mOnClickDelegate       = aDelegate;
-        lInstance->mOnClickDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+        lInstance->mOnClickDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
 
         lInstance->OnClick(
             [lInstance, lDelegate]( bool aValue )
@@ -1081,12 +1083,12 @@ namespace SE::Core::Interop
     void UITextToggleButton_OnChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UITextToggleButton );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+        auto lDelegate = CAST( MonoObject, aDelegate );
 
         if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
 
         lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
 
         lInstance->OnChanged(
             [lInstance, lDelegate]()
@@ -1105,7 +1107,7 @@ namespace SE::Core::Interop
 
     void UITreeViewNode_SetText( __SELF__, void *aText )
     {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
 
         SELF( UITreeViewNode )->SetText( lString );
     }
@@ -1126,7 +1128,7 @@ namespace SE::Core::Interop
         SELF( UITreeViewNode )->SetIndicator( lImage );
     }
 
-    void *UITreeViewNode_Add( __SELF__ ) { return static_cast<void *>( SELF( UITreeViewNode )->Add() ); }
+    void *UITreeViewNode_Add( __SELF__ ) { return CAST( void, SELF( UITreeViewNode )->Add() ); }
 
     BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITreeView )
@@ -1136,7 +1138,7 @@ namespace SE::Core::Interop
 
     void UITreeView_SetIconSpacing( __SELF__, float aSpacing ) { SELF( UITreeView )->SetIconSpacing( aSpacing ); }
 
-    void *UITreeView_Add( __SELF__ ) { return static_cast<void *>( SELF( UITreeView )->Add() ); }
+    void *UITreeView_Add( __SELF__ ) { return CAST( void, SELF( UITreeView )->Add() ); }
 
     BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIVec2Input )
@@ -1145,12 +1147,12 @@ namespace SE::Core::Interop
     void UIVec2Input_OnChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIVectorInputBase *>( aSelf );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+        auto lDelegate = CAST( MonoObject, aDelegate );
 
         if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
 
         lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
 
         lInstance->OnChanged(
             [lInstance, lDelegate]( vec4 aVector )
@@ -1172,7 +1174,7 @@ namespace SE::Core::Interop
 
     void UIVec2Input_SetFormat( __SELF__, void *aText )
     {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
 
         SELF( UIVectorInputBase )->SetFormat( lString );
     }
@@ -1184,12 +1186,12 @@ namespace SE::Core::Interop
     void UIVec3Input_OnChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIVectorInputBase *>( aSelf );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+        auto lDelegate = CAST( MonoObject, aDelegate );
 
         if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
 
         lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
 
         lInstance->OnChanged(
             [lInstance, lDelegate]( vec4 aVector )
@@ -1211,7 +1213,7 @@ namespace SE::Core::Interop
 
     void UIVec3Input_SetFormat( __SELF__, void *aText )
     {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
 
         SELF( UIVectorInputBase )->SetFormat( lString );
     }
@@ -1223,12 +1225,12 @@ namespace SE::Core::Interop
     void UIVec4Input_OnChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = static_cast<UIVectorInputBase *>( aSelf );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+        auto lDelegate = CAST( MonoObject, aDelegate );
 
         if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
 
         lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
 
         lInstance->OnChanged(
             [lInstance, lDelegate]( vec4 aVector )
@@ -1249,7 +1251,7 @@ namespace SE::Core::Interop
 
     void UIVec4Input_SetFormat( __SELF__, void *aText )
     {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+        auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
 
         SELF( UIVectorInputBase )->SetFormat( lString );
     }
@@ -1287,12 +1289,12 @@ namespace SE::Core::Interop
     void UIWorkspaceDocument_RegisterSaveDelegate( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UIWorkspaceDocument );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+        auto lDelegate = CAST( MonoObject, aDelegate );
 
         if( lInstance->mSaveDelegate != nullptr ) mono_gchandle_free( lInstance->mSaveDelegateHandle );
 
         lInstance->mSaveDelegate       = aDelegate;
-        lInstance->mSaveDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+        lInstance->mSaveDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
 
         lInstance->mDoSave = [lInstance, lDelegate]()
         {
@@ -1319,12 +1321,12 @@ namespace SE::Core::Interop
     void UIWorkspace_RegisterCloseDocumentDelegate( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UIWorkspace );
-        auto lDelegate = static_cast<MonoObject *>( aDelegate );
+        auto lDelegate = CAST( MonoObject, aDelegate );
 
         if( lInstance->mCloseDocumentDelegate != nullptr ) mono_gchandle_free( lInstance->mCloseDocumentDelegateHandle );
 
         lInstance->mCloseDocumentDelegate       = aDelegate;
-        lInstance->mCloseDocumentDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
+        lInstance->mCloseDocumentDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
 
         lInstance->mOnCloseDocuments = [lInstance, lDelegate]( std::vector<UIWorkspaceDocument *> aDocuments )
         {
@@ -1343,7 +1345,7 @@ namespace SE::Core::Interop
     {
         auto lNewLayout = new UIBoxLayout( aOrientation );
 
-        return static_cast<void *>( lNewLayout );
+        return CAST( void, lNewLayout );
     }
 
     DESTROY_INTERFACE( UIBoxLayout )
@@ -1408,7 +1410,7 @@ namespace SE::Core::Interop
     {
         auto lNewLayout = new UISplitter( aOrientation );
 
-        return static_cast<void *>( lNewLayout );
+        return CAST( void, lNewLayout );
     }
 
     void UISplitter_Add1( __SELF__, void *aChild )
@@ -1486,9 +1488,9 @@ namespace SE::Core::Interop
 
     void *UIFileTree_Add( __SELF__, void *aPath )
     {
-        auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aPath ) );
+        auto lString = DotNetRuntime::NewString( CAST( MonoString, aPath ) );
 
-        return static_cast<void *>( SELF( UIFileTree )->Add( lString ) );
+        return CAST( void, SELF( UIFileTree )->Add( lString ) );
     }
 
     BEGIN_INTERFACE_DEFINITION( name )
@@ -1500,7 +1502,7 @@ namespace SE::Core::Interop
         auto lString    = DotNetRuntime::NewString( static_cast<MonoString *>( aTitle ) );
         auto lNewDialog = new UIDialog( lString, *aSize );
 
-        return static_cast<void *>( lNewDialog );
+        return CAST( void, lNewDialog );
     }
 
     void UIDialog_SetTitle( __SELF__, void *aTitle )
