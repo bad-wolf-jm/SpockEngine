@@ -51,12 +51,15 @@ namespace SE::Core::Interop
         return static_cast<void *>( lNewObject ); \
     }
 
+#define DESTROY_INTERFACE( _Ty ) \
+    void _Ty##_Destroy( void *aSelf ) { delete static_cast<_Ty *>( aSelf ); }
+
     // clang-format off
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIBaseImage )
 
-    void *UIBaseImage_CreateWithPath( void *aText, math::vec2 aSize )
+    void *UIBaseImage_CreateWithPath( void *aText, vec2 aSize )
     {
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
         auto lNewImage = new UIBaseImage( lString, aSize );
@@ -64,7 +67,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewImage );
     }
 
-    void UIBaseImage_Destroy( void *aSelf ) { delete static_cast<UIBaseImage *>( aSelf ); }
+    DESTROY_INTERFACE( UIBaseImage )
 
     void UIBaseImage_SetImage( void *aSelf, void *aPath )
     {
@@ -74,64 +77,64 @@ BEGIN_INTERFACE_DEFINITION( name )
         lInstance->SetImage( lString );
     }
 
-    void UIBaseImage_SetSize( void *aSelf, math::vec2 aSize )
+    void UIBaseImage_SetSize( void *aSelf, vec2 aSize )
     {
         auto lInstance = static_cast<UIBaseImage *>( aSelf );
 
         lInstance->SetSize( aSize );
     }
 
-    math::vec2 UIBaseImage_GetSize( void *aSelf )
+    vec2 UIBaseImage_GetSize( void *aSelf )
     {
         auto lInstance = static_cast<UIBaseImage *>( aSelf );
         auto lV        = lInstance->Size();
 
-        return math::vec2{ lV.y, lV.y };
+        return vec2{ lV.y, lV.y };
     }
 
-    void UIBaseImage_SetTopLeft( void *aSelf, math::vec2 aTopLeft )
+    void UIBaseImage_SetTopLeft( void *aSelf, vec2 aTopLeft )
     {
         auto lInstance = static_cast<UIBaseImage *>( aSelf );
 
         lInstance->SetTopLeft( aTopLeft );
     }
 
-    math::vec2 UIBaseImage_GetTopLeft( void *aSelf )
+    vec2 UIBaseImage_GetTopLeft( void *aSelf )
     {
         auto lInstance = static_cast<UIBaseImage *>( aSelf );
         auto lV        = lInstance->TopLeft();
 
-        return math::vec2{ lV.y, lV.y };
+        return vec2{ lV.y, lV.y };
     }
 
-    void UIBaseImage_SetBottomRight( void *aSelf, math::vec2 aBottomRight )
+    void UIBaseImage_SetBottomRight( void *aSelf, vec2 aBottomRight )
     {
         auto lInstance = static_cast<UIBaseImage *>( aSelf );
 
         lInstance->SetBottomRight( aBottomRight );
     }
 
-    math::vec2 UIBaseImage_GetBottomRight( void *aSelf )
+    vec2 UIBaseImage_GetBottomRight( void *aSelf )
     {
         auto lInstance = static_cast<UIBaseImage *>( aSelf );
         auto lV        = lInstance->BottomRight();
 
-        return math::vec2{ lV.x, lV.y };
+        return vec2{ lV.x, lV.y };
     }
 
-    void UIBaseImage_SetTintColor( void *aSelf, math::vec4 aColor )
+    void UIBaseImage_SetTintColor( void *aSelf, vec4 aColor )
     {
         auto lInstance = static_cast<UIBaseImage *>( aSelf );
 
         lInstance->SetTintColor( aColor );
     }
 
-    math::vec4 UIBaseImage_GetTintColor( void *aSelf )
+    vec4 UIBaseImage_GetTintColor( void *aSelf )
     {
         auto lInstance = static_cast<UIBaseImage *>( aSelf );
         auto lV        = lInstance->TintColor();
 
-        return math::vec4{ lV.x, lV.y, lV.z, lV.w };
+        return vec4{ lV.x, lV.y, lV.z, lV.w };
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -145,7 +148,8 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewButton );
     }
 
-    void UIButton_Destroy( void *aSelf ) { delete static_cast<UILabel *>( aSelf ); }
+    DESTROY_INTERFACE( UIButton )
+    // void UIButton_Destroy( void *aSelf ) { delete static_cast<UILabel *>( aSelf ); }
 
     void UIButton_SetText( void *aSelf, void *aText )
     {
@@ -178,7 +182,8 @@ BEGIN_INTERFACE_DEFINITION( name )
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UICheckBox )
 
-    void UICheckBox_Destroy( void *aSelf ) { delete static_cast<UICheckBox *>( aSelf ); }
+    DESTROY_INTERFACE( UICheckBox )
+    // void UICheckBox_Destroy( void *aSelf ) { delete static_cast<UICheckBox *>( aSelf ); }
 
     void UICheckBox_OnClick( void *aSelf, void *aDelegate )
     {
@@ -233,7 +238,8 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewComboBox );
     }
 
-    void UIComboBox_Destroy( void *aSelf ) { delete static_cast<UIComboBox *>( aSelf ); }
+    DESTROY_INTERFACE( UIComboBox )
+    // void UIComboBox_Destroy( void *aSelf ) { delete static_cast<UIComboBox *>( aSelf ); }
 
     int UIComboBox_GetCurrent( void *aSelf )
     {
@@ -347,7 +353,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         lSelf->SetVerticalAlignment( aAlignment );
     }
 
-    void UIComponent_SetBackgroundColor( void *aSelf, math::vec4 aColor )
+    void UIComponent_SetBackgroundColor( void *aSelf, vec4 aColor )
     {
         auto lSelf = static_cast<UIComponent *>( aSelf );
 
@@ -372,7 +378,8 @@ BEGIN_INTERFACE_DEFINITION( name )
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIDropdownButton )
 
-    void UIDropdownButton_Destroy( void *aSelf ) { delete static_cast<UIDropdownButton *>( aSelf ); }
+    DESTROY_INTERFACE( UIDropdownButton )
+    // void UIDropdownButton_Destroy( void *aSelf ) { delete static_cast<UIDropdownButton *>( aSelf ); }
 
     void UIDropdownButton_SetContent( void *aSelf, void *aContent )
     {
@@ -382,7 +389,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         return lInstance->SetContent( lContent );
     }
 
-    void UIDropdownButton_SetContentSize( void *aSelf, math::vec2 aContentSizse )
+    void UIDropdownButton_SetContentSize( void *aSelf, vec2 aContentSizse )
     {
         auto lInstance = static_cast<UIDropdownButton *>( aSelf );
 
@@ -405,7 +412,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         lInstance->SetText( lString );
     }
 
-    void UIDropdownButton_SetTextColor( void *aSelf, math::vec4 aColor )
+    void UIDropdownButton_SetTextColor( void *aSelf, vec4 aColor )
     {
         auto lInstance = static_cast<UIDropdownButton *>( aSelf );
 
@@ -415,7 +422,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIImage )
 
-    void *UIImage_CreateWithPath( void *aText, math::vec2 aSize )
+    void *UIImage_CreateWithPath( void *aText, vec2 aSize )
     {
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
         auto lNewImage = new UIImage( lString, aSize );
@@ -423,12 +430,13 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewImage );
     }
 
-    void UIImage_Destroy( void *aSelf ) { delete static_cast<UIImage *>( aSelf ); }
+    DESTROY_INTERFACE( UIImage )
+    // void UIImage_Destroy( void *aSelf ) { delete static_cast<UIImage *>( aSelf ); }
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIImageButton )
 
-    void *UIImageButton_CreateWithPath( void *aText, math::vec2 *aSize )
+    void *UIImageButton_CreateWithPath( void *aText, vec2 *aSize )
     {
         auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
         auto lNewImage = new UIImageButton( lString, *aSize );
@@ -436,7 +444,8 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewImage );
     }
 
-    void UIImageButton_Destroy( void *aSelf ) { delete static_cast<UIImageButton *>( aSelf ); }
+    DESTROY_INTERFACE( UIImageButton )
+    // void UIImageButton_Destroy( void *aSelf ) { delete static_cast<UIImageButton *>( aSelf ); }
 
     void UIImageButton_OnClick( void *aSelf, void *aDelegate )
     {
@@ -461,7 +470,8 @@ BEGIN_INTERFACE_DEFINITION( name )
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIImageToggleButton )
 
-    void UIImageToggleButton_Destroy( void *aSelf ) { delete static_cast<UIImageToggleButton *>( aSelf ); }
+    DESTROY_INTERFACE( UIImageToggleButton )
+    // void UIImageToggleButton_Destroy( void *aSelf ) { delete static_cast<UIImageToggleButton *>( aSelf ); }
 
     bool UIImageToggleButton_IsActive( void *aSelf )
     {
@@ -548,7 +558,8 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewLabel );
     }
 
-    void UILabel_Destroy( void *aSelf ) { delete static_cast<UILabel *>( aSelf ); }
+    DESTROY_INTERFACE( UILabel )
+    // void UILabel_Destroy( void *aSelf ) { delete static_cast<UILabel *>( aSelf ); }
 
     void UILabel_SetText( void *aSelf, void *aText )
     {
@@ -558,7 +569,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         lInstance->SetText( lString );
     }
 
-    void UILabel_SetTextColor( void *aSelf, math::vec4 aTextColor )
+    void UILabel_SetTextColor( void *aSelf, vec4 aTextColor )
     {
         auto lInstance = static_cast<UILabel *>( aSelf );
 
@@ -585,7 +596,8 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewLabel );
     }
 
-    void UIMenuItem_Destroy( void *aSelf ) { delete static_cast<UIMenuItem *>( aSelf ); }
+    DESTROY_INTERFACE( UIMenuItem )
+    // void UIMenuItem_Destroy( void *aSelf ) { delete static_cast<UIMenuItem *>( aSelf ); }
 
     void UIMenuItem_SetText( void *aSelf, void *aText )
     {
@@ -603,7 +615,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         lInstance->SetShortcut( lShortcut );
     }
 
-    void UIMenuItem_SetTextColor( void *aSelf, math::vec4 *aTextColor )
+    void UIMenuItem_SetTextColor( void *aSelf, vec4 *aTextColor )
     {
         auto lInstance = static_cast<UIMenuItem *>( aSelf );
 
@@ -633,7 +645,8 @@ BEGIN_INTERFACE_DEFINITION( name )
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIMenuSeparator )
 
-    void UIMenuSeparator_Destroy( void *aSelf ) { delete static_cast<UIMenuSeparator *>( aSelf ); }
+    DESTROY_INTERFACE( UIMenuSeparator )
+    // void UIMenuSeparator_Destroy( void *aSelf ) { delete static_cast<UIMenuSeparator *>( aSelf ); }
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIMenu )
@@ -646,7 +659,8 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewLabel );
     }
 
-    void UIMenu_Destroy( void *aSelf ) { delete static_cast<UIMenu *>( aSelf ); }
+    DESTROY_INTERFACE( UIMenu )
+    // void UIMenu_Destroy( void *aSelf ) { delete static_cast<UIMenu *>( aSelf ); }
 
     void *UIMenu_AddAction( void *aSelf, void *aText, void *aShortcut )
     {
@@ -684,8 +698,9 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIPlot )
+    DESTROY_INTERFACE( UIPlot )
 
-    void UIPlot_Destroy( void *aSelf ) { delete static_cast<UIPlot *>( aSelf ); }
+    // void UIPlot_Destroy( void *aSelf ) { delete static_cast<UIPlot *>( aSelf ); }
 
     void UIPlot_Clear( void *aSelf )
     {
@@ -694,8 +709,8 @@ BEGIN_INTERFACE_DEFINITION( name )
         lSelf->Clear();
     }
 
-    void UIPlot_ConfigureLegend( void *aSelf, math::vec2 *aLegendPadding, math::vec2 *aLegendInnerPadding,
-                                 math::vec2 *aLegendSpacing )
+    void UIPlot_ConfigureLegend( void *aSelf, vec2 *aLegendPadding, vec2 *aLegendInnerPadding,
+                                 vec2 *aLegendSpacing )
     {
         auto lSelf = static_cast<UIPlot *>( aSelf );
 
@@ -750,7 +765,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         lSelf->mThickness = aThickness;
     }
 
-    void UIPlotData_SetColor( void *aSelf, math::vec4 aColor )
+    void UIPlotData_SetColor( void *aSelf, vec4 aColor )
     {
         auto lSelf = static_cast<sPlotData *>( aSelf );
 
@@ -779,6 +794,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<sFloat64LinePlot *>( lSelf );
     }
 
+    // DESTROY_INTERFACE( UIPlot )
     void UIFloat64LinePlot_Destroy( void *aSelf ) { delete static_cast<sFloat64LinePlot *>( aSelf ); }
 
     void UIFloat64LinePlot_SetX( void *aSelf, void *aValue )
@@ -860,7 +876,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<sAxisTag *>( lSelf );
     }
 
-    void *UIAxisTag_CreateWithTextAndColor( UIPlotAxis aAxis, double aX, void *aText, math::vec4 aColor )
+    void *UIAxisTag_CreateWithTextAndColor( UIPlotAxis aAxis, double aX, void *aText, vec4 aColor )
     {
         auto lString = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
 
@@ -886,14 +902,14 @@ BEGIN_INTERFACE_DEFINITION( name )
         lSelf->mText = lString;
     }
 
-    void UIAxisTag_SetColor( void *aSelf, math::vec4 aColor )
+    void UIAxisTag_SetColor( void *aSelf, vec4 aColor )
     {
         auto lSelf = static_cast<sAxisTag *>( aSelf );
 
         lSelf->mColor = aColor;
     }
 
-    math::vec4 UIAxisTag_GetColor( void *aSelf )
+    vec4 UIAxisTag_GetColor( void *aSelf )
     {
         auto lSelf = static_cast<sAxisTag *>( aSelf );
 
@@ -992,8 +1008,9 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIProgressBar )
+    DESTROY_INTERFACE( UIProgressBar )
 
-    void UIProgressBar_Destroy( void *aSelf ) { delete static_cast<UIProgressBar *>( aSelf ); }
+    // void UIProgressBar_Destroy( void *aSelf ) { delete static_cast<UIProgressBar *>( aSelf ); }
 
     void UIProgressBar_SetProgressValue( void *aSelf, float aValue )
     {
@@ -1002,7 +1019,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         lInstance->SetProgressValue( aValue );
     }
 
-    void UIProgressBar_SetProgressColor( void *aSelf, math::vec4 aTextColor )
+    void UIProgressBar_SetProgressColor( void *aSelf, vec4 aTextColor )
     {
         auto lInstance = static_cast<UIProgressBar *>( aSelf );
 
@@ -1017,7 +1034,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         lInstance->SetText( lString );
     }
 
-    void UIProgressBar_SetTextColor( void *aSelf, math::vec4 aTextColor )
+    void UIProgressBar_SetTextColor( void *aSelf, vec4 aTextColor )
     {
         auto lInstance = static_cast<UIProgressBar *>( aSelf );
 
@@ -1033,6 +1050,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIPropertyValue )
+    DESTROY_INTERFACE( UIPropertyValue )
 
     void *UIPropertyValue_CreateWithText( void *aText )
     {
@@ -1050,7 +1068,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewLabel );
     }
 
-    void UIPropertyValue_Destroy( void *aSelf ) { delete static_cast<UIPropertyValue *>( aSelf ); }
+    // void UIPropertyValue_Destroy( void *aSelf ) { delete static_cast<UIPropertyValue *>( aSelf ); }
 
     void UIPropertyValue_SetValue( void *aSelf, void *aText )
     {
@@ -1076,8 +1094,9 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UISlider )
+    DESTROY_INTERFACE( UISlider )
 
-    void UISlider_Destroy( void *aSelf ) { delete static_cast<UISlider *>( aSelf ); }
+    // void UISlider_Destroy( void *aSelf ) { delete static_cast<UISlider *>( aSelf ); }
 
 BEGIN_INTERFACE_DEFINITION( name )
     void UITableColumn_SetTooltip( void *aSelf, void *aTooptip )
@@ -1109,8 +1128,9 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITable )
+    DESTROY_INTERFACE( UITable )
 
-    void UITable_Destroy( void *aSelf ) { delete static_cast<UITable *>( aSelf ); }
+    // void UITable_Destroy( void *aSelf ) { delete static_cast<UITable *>( aSelf ); }
 
     void UITable_OnRowClicked( void *aSelf, void *aDelegate )
     {
@@ -1276,6 +1296,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITextInput )
+    DESTROY_INTERFACE( UITextInput )
 
     void *UITextInput_CreateWithText( void *aText )
     {
@@ -1285,7 +1306,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewTextInput );
     }
 
-    void UITextInput_Destroy( void *aSelf ) { delete static_cast<UITextInput *>( aSelf ); }
+    // void UITextInput_Destroy( void *aSelf ) { delete static_cast<UITextInput *>( aSelf ); }
 
     void UITextInput_SetHintText( void *aSelf, void *aText )
     {
@@ -1302,7 +1323,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         return DotNetRuntime::NewString( lInstance->GetText() );
     }
 
-    void UITextInput_SetTextColor( void *aSelf, math::vec4 *aTextColor )
+    void UITextInput_SetTextColor( void *aSelf, vec4 *aTextColor )
     {
         auto lInstance = static_cast<UITextInput *>( aSelf );
 
@@ -1341,8 +1362,9 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITextOverlay )
+    DESTROY_INTERFACE( UITextOverlay )
 
-    void UITextOverlay_Destroy( void *aSelf ) { delete static_cast<UITextOverlay *>( aSelf ); }
+    // void UITextOverlay_Destroy( void *aSelf ) { delete static_cast<UITextOverlay *>( aSelf ); }
 
     void UITextOverlay_AddText( void *aSelf, void *aText )
     {
@@ -1361,6 +1383,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITextToggleButton )
+    DESTROY_INTERFACE( UITextToggleButton )
 
     void *UITextToggleButton_CreateWithText( void *aText )
     {
@@ -1370,7 +1393,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewButton );
     }
 
-    void UITextToggleButton_Destroy( void *aSelf ) { delete static_cast<UITextToggleButton *>( aSelf ); }
+    // void UITextToggleButton_Destroy( void *aSelf ) { delete static_cast<UITextToggleButton *>( aSelf ); }
 
     bool UITextToggleButton_IsActive( void *aSelf )
     {
@@ -1386,14 +1409,14 @@ BEGIN_INTERFACE_DEFINITION( name )
         lInstance->SetActive( aValue );
     }
 
-    void UITextToggleButton_SetActiveColor( void *aSelf, math::vec4 *aColor )
+    void UITextToggleButton_SetActiveColor( void *aSelf, vec4 *aColor )
     {
         auto lInstance = static_cast<UITextToggleButton *>( aSelf );
 
         lInstance->SetActiveColor( *aColor );
     }
 
-    void UITextToggleButton_SetInactiveColor( void *aSelf, math::vec4 *aColor )
+    void UITextToggleButton_SetInactiveColor( void *aSelf, vec4 *aColor )
     {
         auto lInstance = static_cast<UITextToggleButton *>( aSelf );
 
@@ -1446,8 +1469,9 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITreeViewNode )
+    DESTROY_INTERFACE( UITreeViewNode )
 
-    void UITreeViewNode_Destroy( void *aSelf ) { delete static_cast<UITreeViewNode *>( aSelf ); }
+    // void UITreeViewNode_Destroy( void *aSelf ) { delete static_cast<UITreeViewNode *>( aSelf ); }
 
     void UITreeViewNode_SetText( void *aSelf, void *aText )
     {
@@ -1457,7 +1481,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         lInstance->SetText( lString );
     }
 
-    void UITreeViewNode_SetTextColor( void *aSelf, math::vec4 aTextColor )
+    void UITreeViewNode_SetTextColor( void *aSelf, vec4 aTextColor )
     {
         auto lInstance = static_cast<UITreeViewNode *>( aSelf );
 
@@ -1489,8 +1513,9 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITreeView )
+    DESTROY_INTERFACE( UITreeView )
 
-    void UITreeView_Destroy( void *aSelf ) { delete static_cast<UITreeView *>( aSelf ); }
+    // void UITreeView_Destroy( void *aSelf ) { delete static_cast<UITreeView *>( aSelf ); }
 
     void UITreeView_SetIndent( void *aSelf, float aIndent )
     {
@@ -1515,8 +1540,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIVec2Input )
-
-    void UIVec2Input_Destroy( void *aSelf ) { delete static_cast<UIVec2Input *>( aSelf ); }
+    DESTROY_INTERFACE( UIVec2Input )
 
     void UIVec2Input_OnChanged( void *aSelf, void *aDelegate )
     {
@@ -1529,22 +1553,22 @@ BEGIN_INTERFACE_DEFINITION( name )
         lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
 
         lInstance->OnChanged(
-            [lInstance, lDelegate]( math::vec4 aVector )
+            [lInstance, lDelegate]( vec4 aVector )
             {
                 auto lDelegateClass = mono_object_get_class( lDelegate );
                 auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
 
-                math::vec2 lProjection = math::vec2{ aVector.x, aVector.y };
+                vec2 lProjection = vec2{ aVector.x, aVector.y };
                 void      *lParams[]   = { (void *)&lProjection };
                 auto       lValue      = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
             } );
     }
 
-    void UIVec2Input_SetValue( void *aSelf, math::vec2 aValue ) { static_cast<UIVec2Input *>( aSelf )->SetValue( aValue ); }
+    void UIVec2Input_SetValue( void *aSelf, vec2 aValue ) { static_cast<UIVec2Input *>( aSelf )->SetValue( aValue ); }
 
-    math::vec2 UIVec2Input_GetValue( void *aSelf ) { return static_cast<UIVec2Input *>( aSelf )->Value(); }
+    vec2 UIVec2Input_GetValue( void *aSelf ) { return static_cast<UIVec2Input *>( aSelf )->Value(); }
 
-    void UIVec2Input_SetResetValues( void *aSelf, math::vec2 aValue )
+    void UIVec2Input_SetResetValues( void *aSelf, vec2 aValue )
     {
         static_cast<UIVec2Input *>( aSelf )->SetResetValues( aValue );
     }
@@ -1559,8 +1583,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIVec3Input )
-
-    void UIVec3Input_Destroy( void *aSelf ) { delete static_cast<UIVec3Input *>( aSelf ); }
+    DESTROY_INTERFACE( UIVec3Input )
 
     void UIVec3Input_OnChanged( void *aSelf, void *aDelegate )
     {
@@ -1573,22 +1596,22 @@ BEGIN_INTERFACE_DEFINITION( name )
         lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
 
         lInstance->OnChanged(
-            [lInstance, lDelegate]( math::vec4 aVector )
+            [lInstance, lDelegate]( vec4 aVector )
             {
                 auto lDelegateClass = mono_object_get_class( lDelegate );
                 auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
 
-                math::vec3 lProjection = math::vec3{ aVector.x, aVector.y, aVector.z };
+                vec3 lProjection = vec3{ aVector.x, aVector.y, aVector.z };
                 void      *lParams[]   = { (void *)&lProjection };
                 auto       lValue      = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
             } );
     }
 
-    void UIVec3Input_SetValue( void *aSelf, math::vec3 aValue ) { static_cast<UIVec3Input *>( aSelf )->SetValue( aValue ); }
+    void UIVec3Input_SetValue( void *aSelf, vec3 aValue ) { static_cast<UIVec3Input *>( aSelf )->SetValue( aValue ); }
 
-    math::vec3 UIVec3Input_GetValue( void *aSelf ) { return static_cast<UIVec3Input *>( aSelf )->Value(); }
+    vec3 UIVec3Input_GetValue( void *aSelf ) { return static_cast<UIVec3Input *>( aSelf )->Value(); }
 
-    void UIVec3Input_SetResetValues( void *aSelf, math::vec3 aValue )
+    void UIVec3Input_SetResetValues( void *aSelf, vec3 aValue )
     {
         static_cast<UIVec3Input *>( aSelf )->SetResetValues( aValue );
     }
@@ -1602,9 +1625,8 @@ BEGIN_INTERFACE_DEFINITION( name )
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
-     CONSTRUCT_WITHOUT_PARAMETERS( UIVec4Input )
-
-    void UIVec4Input_Destroy( void *aSelf ) { delete static_cast<UIVec4Input *>( aSelf ); }
+    CONSTRUCT_WITHOUT_PARAMETERS( UIVec4Input )
+    DESTROY_INTERFACE( UIVec4Input )
 
     void UIVec4Input_OnChanged( void *aSelf, void *aDelegate )
     {
@@ -1617,7 +1639,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         lInstance->mOnChangeDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
 
         lInstance->OnChanged(
-            [lInstance, lDelegate]( math::vec4 aVector )
+            [lInstance, lDelegate]( vec4 aVector )
             {
                 auto lDelegateClass = mono_object_get_class( lDelegate );
                 auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
@@ -1627,11 +1649,11 @@ BEGIN_INTERFACE_DEFINITION( name )
             } );
     }
 
-    void UIVec4Input_SetValue( void *aSelf, math::vec4 aValue ) { static_cast<UIVec4Input *>( aSelf )->SetValue( aValue ); }
+    void UIVec4Input_SetValue( void *aSelf, vec4 aValue ) { static_cast<UIVec4Input *>( aSelf )->SetValue( aValue ); }
 
-    math::vec4 UIVec4Input_GetValue( void *aSelf ) { return static_cast<UIVec4Input *>( aSelf )->Value(); }
+    vec4 UIVec4Input_GetValue( void *aSelf ) { return static_cast<UIVec4Input *>( aSelf )->Value(); }
 
-    void UIVec4Input_SetResetValues( void *aSelf, math::vec4 aValue )
+    void UIVec4Input_SetResetValues( void *aSelf, vec4 aValue )
     {
         static_cast<UIVec4Input *>( aSelf )->SetResetValues( aValue );
     }
@@ -1645,9 +1667,8 @@ BEGIN_INTERFACE_DEFINITION( name )
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
-     CONSTRUCT_WITHOUT_PARAMETERS( UIWorkspaceDocument )
-
-    void UIWorkspaceDocument_Destroy( void *aSelf ) { delete static_cast<UIWorkspaceDocument *>( aSelf ); }
+    CONSTRUCT_WITHOUT_PARAMETERS( UIWorkspaceDocument )
+    DESTROY_INTERFACE( UIWorkspaceDocument )
 
     void UIWorkspaceDocument_SetContent( void *aSelf, void *aContent )
     {
@@ -1730,8 +1751,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIWorkspace )
-
-    void UIWorkspace_Destroy( void *aSelf ) { delete static_cast<UIWorkspace *>( aSelf ); }
+    DESTROY_INTERFACE( UIWorkspace )
 
     void UIWorkspace_Add( void *aSelf, void *aDocument )
     {
@@ -1771,7 +1791,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewLayout );
     }
 
-    void UIBoxLayout_Destroy( void *aSelf ) { delete static_cast<UIBoxLayout *>( aSelf ); }
+    DESTROY_INTERFACE( UIBoxLayout )
 
     void UIBoxLayout_AddAlignedNonFixed( void *aSelf, void *aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment,
                                          eVerticalAlignment aVAlignment )
@@ -1830,8 +1850,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIContainer )
-
-    void UIContainer_Destroy( void *aSelf ) { delete static_cast<UIContainer *>( aSelf ); }
+    DESTROY_INTERFACE( UIContainer )
 
     void UIContainer_SetContent( void *aSelf, void *aChild )
     {
@@ -1843,6 +1862,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UISplitter )
+    DESTROY_INTERFACE( UISplitter )
 
     void *UISplitter_CreateWithOrientation( eBoxLayoutOrientation aOrientation )
     {
@@ -1850,8 +1870,6 @@ BEGIN_INTERFACE_DEFINITION( name )
 
         return static_cast<void *>( lNewLayout );
     }
-
-    void UISplitter_Destroy( void *aSelf ) { delete static_cast<UISplitter *>( aSelf ); }
 
     void UISplitter_Add1( void *aSelf, void *aChild )
     {
@@ -1878,8 +1896,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIStackLayout )
-
-    void UIStackLayout_Destroy( void *aSelf ) { delete static_cast<UIStackLayout *>( aSelf ); }
+    DESTROY_INTERFACE( UIStackLayout )
 
     void UIStackLayout_Add( void *aSelf, void *aChild, void *aKey )
     {
@@ -1900,8 +1917,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIZLayout )
-
-    void UIZLayout_Destroy( void *aSelf ) { delete static_cast<UIZLayout *>( aSelf ); }
+    DESTROY_INTERFACE( UIZLayout )
 
     void UIZLayout_AddAlignedNonFixed( void *aSelf, void *aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment,
                                        eVerticalAlignment aVAlignment )
@@ -1920,7 +1936,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         lInstance->Add( lChild, aExpand, aFill );
     }
 
-    void UIZLayout_AddAlignedFixed( void *aSelf, void *aChild, math::vec2 aSize, math::vec2 aPosition, bool aExpand, bool aFill,
+    void UIZLayout_AddAlignedFixed( void *aSelf, void *aChild, vec2 aSize, vec2 aPosition, bool aExpand, bool aFill,
                                     eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
     {
         auto lInstance = static_cast<UIZLayout *>( aSelf );
@@ -1929,7 +1945,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         lInstance->Add( lChild, aSize, aPosition, aExpand, aFill, aHAlignment, aVAlignment );
     }
 
-    void UIZLayout_AddNonAlignedFixed( void *aSelf, void *aChild, math::vec2 aSize, math::vec2 aPosition, bool aExpand,
+    void UIZLayout_AddNonAlignedFixed( void *aSelf, void *aChild, vec2 aSize, vec2 aPosition, bool aExpand,
                                        bool aFill )
     {
         auto lInstance = static_cast<UIZLayout *>( aSelf );
@@ -1940,8 +1956,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIFileTree )
-
-    void UIFileTree_Destroy( void *aSelf ) { delete static_cast<UIFileTree *>( aSelf ); }
+    DESTROY_INTERFACE( UIFileTree )
 
     void *UIFileTree_Add( void *aSelf, void *aPath )
     {
@@ -1954,7 +1969,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIDialog )
 
-    void *UIDialog_CreateWithTitleAndSize( void *aTitle, math::vec2 *aSize )
+    void *UIDialog_CreateWithTitleAndSize( void *aTitle, vec2 *aSize )
     {
         auto lString    = DotNetRuntime::NewString( static_cast<MonoString *>( aTitle ) );
         auto lNewDialog = new UIDialog( lString, *aSize );
@@ -1972,7 +1987,7 @@ BEGIN_INTERFACE_DEFINITION( name )
         lInstance->SetTitle( lString );
     }
 
-    void UIDialog_SetSize( void *aSelf, math::vec2 aSize )
+    void UIDialog_SetSize( void *aSelf, vec2 aSize )
     {
         auto lInstance = static_cast<UIDialog *>( aSelf );
 
@@ -2010,8 +2025,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIForm )
-
-    void UIForm_Destroy( void *aSelf ) { delete static_cast<UIForm *>( aSelf ); }
+    DESTROY_INTERFACE( UIForm )
 
     void UIForm_SetTitle( void *aSelf, void *aTitle )
     {
@@ -2042,6 +2056,5 @@ BEGIN_INTERFACE_DEFINITION( name )
 
         lInstance->SetSize( aWidth, aHeight );
     }
-
     // clang-format on
 } // namespace SE::Core::Interop
