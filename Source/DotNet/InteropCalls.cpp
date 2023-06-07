@@ -149,7 +149,6 @@ BEGIN_INTERFACE_DEFINITION( name )
     }
 
     DESTROY_INTERFACE( UIButton )
-    // void UIButton_Destroy( void *aSelf ) { delete static_cast<UILabel *>( aSelf ); }
 
     void UIButton_SetText( void *aSelf, void *aText )
     {
@@ -183,7 +182,6 @@ BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UICheckBox )
 
     DESTROY_INTERFACE( UICheckBox )
-    // void UICheckBox_Destroy( void *aSelf ) { delete static_cast<UICheckBox *>( aSelf ); }
 
     void UICheckBox_OnClick( void *aSelf, void *aDelegate )
     {
@@ -221,11 +219,11 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIColorButton )
-
-    void UIColorButton_Destroy( void *aSelf ) { delete static_cast<UIColorButton *>( aSelf ); }
+    DESTROY_INTERFACE( UIColorButton )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIComboBox )
+    DESTROY_INTERFACE( UIComboBox )
 
     void *UIComboBox_CreateWithItems( void *aItems )
     {
@@ -238,8 +236,6 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewComboBox );
     }
 
-    DESTROY_INTERFACE( UIComboBox )
-    // void UIComboBox_Destroy( void *aSelf ) { delete static_cast<UIComboBox *>( aSelf ); }
 
     int UIComboBox_GetCurrent( void *aSelf )
     {
@@ -377,9 +373,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIDropdownButton )
-
     DESTROY_INTERFACE( UIDropdownButton )
-    // void UIDropdownButton_Destroy( void *aSelf ) { delete static_cast<UIDropdownButton *>( aSelf ); }
 
     void UIDropdownButton_SetContent( void *aSelf, void *aContent )
     {
@@ -421,6 +415,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIImage )
+    DESTROY_INTERFACE( UIImage )
 
     void *UIImage_CreateWithPath( void *aText, vec2 aSize )
     {
@@ -430,11 +425,9 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewImage );
     }
 
-    DESTROY_INTERFACE( UIImage )
-    // void UIImage_Destroy( void *aSelf ) { delete static_cast<UIImage *>( aSelf ); }
-
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIImageButton )
+    DESTROY_INTERFACE( UIImageButton )
 
     void *UIImageButton_CreateWithPath( void *aText, vec2 *aSize )
     {
@@ -443,9 +436,6 @@ BEGIN_INTERFACE_DEFINITION( name )
 
         return static_cast<void *>( lNewImage );
     }
-
-    DESTROY_INTERFACE( UIImageButton )
-    // void UIImageButton_Destroy( void *aSelf ) { delete static_cast<UIImageButton *>( aSelf ); }
 
     void UIImageButton_OnClick( void *aSelf, void *aDelegate )
     {
@@ -469,9 +459,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIImageToggleButton )
-
     DESTROY_INTERFACE( UIImageToggleButton )
-    // void UIImageToggleButton_Destroy( void *aSelf ) { delete static_cast<UIImageToggleButton *>( aSelf ); }
 
     bool UIImageToggleButton_IsActive( void *aSelf )
     {
@@ -549,6 +537,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UILabel )
+    DESTROY_INTERFACE( UILabel )
 
     void *UILabel_CreateWithText( void *aText )
     {
@@ -557,9 +546,6 @@ BEGIN_INTERFACE_DEFINITION( name )
 
         return static_cast<void *>( lNewLabel );
     }
-
-    DESTROY_INTERFACE( UILabel )
-    // void UILabel_Destroy( void *aSelf ) { delete static_cast<UILabel *>( aSelf ); }
 
     void UILabel_SetText( void *aSelf, void *aText )
     {
@@ -578,6 +564,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIMenuItem )
+    DESTROY_INTERFACE( UIMenuItem )
 
     void *UIMenuItem_CreateWithText( void *aText )
     {
@@ -595,9 +582,6 @@ BEGIN_INTERFACE_DEFINITION( name )
 
         return static_cast<void *>( lNewLabel );
     }
-
-    DESTROY_INTERFACE( UIMenuItem )
-    // void UIMenuItem_Destroy( void *aSelf ) { delete static_cast<UIMenuItem *>( aSelf ); }
 
     void UIMenuItem_SetText( void *aSelf, void *aText )
     {
@@ -644,12 +628,12 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIMenuSeparator )
-
     DESTROY_INTERFACE( UIMenuSeparator )
-    // void UIMenuSeparator_Destroy( void *aSelf ) { delete static_cast<UIMenuSeparator *>( aSelf ); }
+
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIMenu )
+    DESTROY_INTERFACE( UIMenu )
 
     void *UIMenu_CreateWithText( void *aText )
     {
@@ -658,9 +642,6 @@ BEGIN_INTERFACE_DEFINITION( name )
 
         return static_cast<void *>( lNewLabel );
     }
-
-    DESTROY_INTERFACE( UIMenu )
-    // void UIMenu_Destroy( void *aSelf ) { delete static_cast<UIMenu *>( aSelf ); }
 
     void *UIMenu_AddAction( void *aSelf, void *aText, void *aShortcut )
     {
@@ -699,8 +680,6 @@ BEGIN_INTERFACE_DEFINITION( name )
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIPlot )
     DESTROY_INTERFACE( UIPlot )
-
-    // void UIPlot_Destroy( void *aSelf ) { delete static_cast<UIPlot *>( aSelf ); }
 
     void UIPlot_Clear( void *aSelf )
     {
@@ -794,7 +773,6 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<sFloat64LinePlot *>( lSelf );
     }
 
-    // DESTROY_INTERFACE( UIPlot )
     void UIFloat64LinePlot_Destroy( void *aSelf ) { delete static_cast<sFloat64LinePlot *>( aSelf ); }
 
     void UIFloat64LinePlot_SetX( void *aSelf, void *aValue )
@@ -1010,8 +988,6 @@ BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIProgressBar )
     DESTROY_INTERFACE( UIProgressBar )
 
-    // void UIProgressBar_Destroy( void *aSelf ) { delete static_cast<UIProgressBar *>( aSelf ); }
-
     void UIProgressBar_SetProgressValue( void *aSelf, float aValue )
     {
         auto lInstance = static_cast<UIProgressBar *>( aSelf );
@@ -1068,8 +1044,6 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewLabel );
     }
 
-    // void UIPropertyValue_Destroy( void *aSelf ) { delete static_cast<UIPropertyValue *>( aSelf ); }
-
     void UIPropertyValue_SetValue( void *aSelf, void *aText )
     {
         auto lInstance = static_cast<UIPropertyValue *>( aSelf );
@@ -1095,8 +1069,6 @@ BEGIN_INTERFACE_DEFINITION( name )
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UISlider )
     DESTROY_INTERFACE( UISlider )
-
-    // void UISlider_Destroy( void *aSelf ) { delete static_cast<UISlider *>( aSelf ); }
 
 BEGIN_INTERFACE_DEFINITION( name )
     void UITableColumn_SetTooltip( void *aSelf, void *aTooptip )
@@ -1129,8 +1101,6 @@ BEGIN_INTERFACE_DEFINITION( name )
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITable )
     DESTROY_INTERFACE( UITable )
-
-    // void UITable_Destroy( void *aSelf ) { delete static_cast<UITable *>( aSelf ); }
 
     void UITable_OnRowClicked( void *aSelf, void *aDelegate )
     {
@@ -1194,7 +1164,6 @@ BEGIN_INTERFACE_DEFINITION( name )
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
-    // CONSTRUCT_WITHOUT_PARAMETERS( UITable )
     void *UIFloat64Column_Create()
     {
         auto lNewColumn = new sFloat64Column();
@@ -1306,8 +1275,6 @@ BEGIN_INTERFACE_DEFINITION( name )
         return static_cast<void *>( lNewTextInput );
     }
 
-    // void UITextInput_Destroy( void *aSelf ) { delete static_cast<UITextInput *>( aSelf ); }
-
     void UITextInput_SetHintText( void *aSelf, void *aText )
     {
         auto lInstance = static_cast<UITextInput *>( aSelf );
@@ -1364,8 +1331,6 @@ BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITextOverlay )
     DESTROY_INTERFACE( UITextOverlay )
 
-    // void UITextOverlay_Destroy( void *aSelf ) { delete static_cast<UITextOverlay *>( aSelf ); }
-
     void UITextOverlay_AddText( void *aSelf, void *aText )
     {
         auto lInstance = static_cast<UITextOverlay *>( aSelf );
@@ -1392,8 +1357,6 @@ BEGIN_INTERFACE_DEFINITION( name )
 
         return static_cast<void *>( lNewButton );
     }
-
-    // void UITextToggleButton_Destroy( void *aSelf ) { delete static_cast<UITextToggleButton *>( aSelf ); }
 
     bool UITextToggleButton_IsActive( void *aSelf )
     {
@@ -1471,8 +1434,6 @@ BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITreeViewNode )
     DESTROY_INTERFACE( UITreeViewNode )
 
-    // void UITreeViewNode_Destroy( void *aSelf ) { delete static_cast<UITreeViewNode *>( aSelf ); }
-
     void UITreeViewNode_SetText( void *aSelf, void *aText )
     {
         auto lInstance = static_cast<UITreeViewNode *>( aSelf );
@@ -1514,8 +1475,6 @@ BEGIN_INTERFACE_DEFINITION( name )
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UITreeView )
     DESTROY_INTERFACE( UITreeView )
-
-    // void UITreeView_Destroy( void *aSelf ) { delete static_cast<UITreeView *>( aSelf ); }
 
     void UITreeView_SetIndent( void *aSelf, float aIndent )
     {
@@ -1968,6 +1927,7 @@ BEGIN_INTERFACE_DEFINITION( name )
 
 BEGIN_INTERFACE_DEFINITION( name )
     CONSTRUCT_WITHOUT_PARAMETERS( UIDialog )
+    DESTROY_INTERFACE( UIDialog )
 
     void *UIDialog_CreateWithTitleAndSize( void *aTitle, vec2 *aSize )
     {
@@ -1976,8 +1936,6 @@ BEGIN_INTERFACE_DEFINITION( name )
 
         return static_cast<void *>( lNewDialog );
     }
-
-    void UIDialog_Destroy( void *aSelf ) { delete static_cast<UIDialog *>( aSelf ); }
 
     void UIDialog_SetTitle( void *aSelf, void *aTitle )
     {
