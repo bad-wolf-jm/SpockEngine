@@ -17,6 +17,7 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   OnChanged( std::function<void( math::vec4 )> aOnChanged );
+        void   SetFormat( std::string const &aFormat ) { mFormat = aFormat; }
 
       protected:
         int         mDimension{};
@@ -53,6 +54,7 @@ namespace SE::Core
         static void       UIVec2Input_OnChanged( void *aInstance, void *aDelegate );
         static void       UIVec2Input_SetValue( void *aInstance, math::vec2 aValue );
         static math::vec2 UIVec2Input_GetValue( void *aInstance );
+        static void       UIVec2Input_SetFormat( void *aInstance, void *aFormat );
     };
 
     class UIVec3Input : public UIVectorInputBase
@@ -71,6 +73,7 @@ namespace SE::Core
         static void       UIVec3Input_OnChanged( void *aInstance, void *aDelegate );
         static void       UIVec3Input_SetValue( void *aInstance, math::vec3 aValue );
         static math::vec3 UIVec3Input_GetValue( void *aInstance );
+        static void       UIVec3Input_SetFormat( void *aInstance, void *aFormat );
     };
 
     class UIVec4Input : public UIVectorInputBase
@@ -89,6 +92,7 @@ namespace SE::Core
         static void       UIVec4Input_OnChanged( void *aInstance, void *aDelegate );
         static void       UIVec4Input_SetValue( void *aInstance, math::vec4 aValue );
         static math::vec4 UIVec4Input_GetValue( void *aInstance );
+        static void       UIVec4Input_SetFormat( void *aInstance, void *aFormat );
     };
 
 } // namespace SE::Core

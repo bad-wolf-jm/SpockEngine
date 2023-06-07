@@ -27,6 +27,11 @@ namespace SpockEngine
             set { UIVec2Input_SetValue(mInstance, value); }
         }
 
+        public string Format
+        {
+            set { UIVec2Input_SetFormat(mInstance, value); }
+        }
+
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIVec2Input_Create();
 
@@ -41,6 +46,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static Math.vec2 UIVec2Input_GetValue(ulong aInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIVec2Input_SetFormat(ulong aInstance, string aFormat);
     }
 
     public class UIVec3Input : UIComponent
@@ -67,6 +75,11 @@ namespace SpockEngine
             set { UIVec3Input_SetValue(mInstance, value); }
         }
 
+        public string Format
+        {
+            set { UIVec3Input_SetFormat(mInstance, value); }
+        }
+
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIVec3Input_Create();
 
@@ -81,6 +94,11 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static Math.vec2 UIVec3Input_GetValue(ulong aInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIVec3Input_SetFormat(ulong aInstance, string aFormat);
+
+
     }
 
     public class UIVec4Input : UIComponent
@@ -107,6 +125,11 @@ namespace SpockEngine
             set { UIVec4Input_SetValue(mInstance, value); }
         }
 
+        public string Format
+        {
+            set { UIVec4Input_SetFormat(mInstance, value); }
+        }
+
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static ulong UIVec4Input_Create();
 
@@ -121,6 +144,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern static Math.vec2 UIVec4Input_GetValue(ulong aInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern static void UIVec4Input_SetFormat(ulong aInstance, string aFormat);
     }
 
 

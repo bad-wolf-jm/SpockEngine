@@ -133,6 +133,14 @@ namespace SE::Core
 
     math::vec2 UIVec2Input::UIVec2Input_GetValue( void *aInstance ) { return static_cast<UIVec2Input *>( aInstance )->Value(); }
 
+    void UIVec2Input::UIVec2Input_SetFormat( void *aInstance, void *aText )
+    {
+        auto lInstance = static_cast<UIVectorInputBase *>( aInstance );
+        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+
+        lInstance->SetFormat( lString );
+    }
+
     void *UIVec3Input::UIVec3Input_Create()
     {
         auto lNewVecInput = new UIVec3Input();
@@ -171,6 +179,15 @@ namespace SE::Core
 
     math::vec3 UIVec3Input::UIVec3Input_GetValue( void *aInstance ) { return static_cast<UIVec3Input *>( aInstance )->Value(); }
 
+    void UIVec3Input::UIVec3Input_SetFormat( void *aInstance, void *aText )
+    {
+        auto lInstance = static_cast<UIVectorInputBase *>( aInstance );
+        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+
+        lInstance->SetFormat( lString );
+    }
+
+
     void *UIVec4Input::UIVec4Input_Create()
     {
         auto lNewVecInput = new UIVec4Input();
@@ -207,5 +224,13 @@ namespace SE::Core
     }
 
     math::vec4 UIVec4Input::UIVec4Input_GetValue( void *aInstance ) { return static_cast<UIVec4Input *>( aInstance )->Value(); }
+
+    void UIVec4Input::UIVec4Input_SetFormat( void *aInstance, void *aText )
+    {
+        auto lInstance = static_cast<UIVectorInputBase *>( aInstance );
+        auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
+
+        lInstance->SetFormat( lString );
+    }
 
 } // namespace SE::Core
