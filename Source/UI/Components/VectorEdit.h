@@ -25,7 +25,7 @@ namespace SE::Core
         math::vec4  mResetValues{};
         std::string mFormat = "%.2f";
 
-      protected:
+      public:
         std::function<void( math::vec4 )> mOnChanged;
 
         void *mOnChangeDelegate       = nullptr;
@@ -40,6 +40,7 @@ namespace SE::Core
 
     class UIVec2Input : public UIVectorInputBase
     {
+      public:
         UIVec2Input()
             : UIVectorInputBase( 2 )
         {
@@ -61,6 +62,7 @@ namespace SE::Core
 
     class UIVec3Input : public UIVectorInputBase
     {
+      public:
         UIVec3Input()
             : UIVectorInputBase( 3 )
         {
@@ -82,6 +84,7 @@ namespace SE::Core
 
     class UIVec4Input : public UIVectorInputBase
     {
+      public:
         UIVec4Input()
             : UIVectorInputBase( 4 )
         {
