@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace SpockEngine
 {
@@ -17,7 +18,7 @@ namespace SpockEngine
         {
             onClick = aHandler;
 
-            UIImageButton_OnClick(mInstance, onClick);
+            UIImageButton_OnClick(mInstance,  Marshal.GetFunctionPointerForDelegate(onClick));
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
@@ -30,6 +31,6 @@ namespace SpockEngine
         private extern static void UIImageButton_Destroy(ulong aInstance);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIImageButton_OnClick(ulong aInstance, ClickDelegate aText);
+        private extern static void UIImageButton_OnClick(ulong aInstance, IntPtr aText);
     }
 }

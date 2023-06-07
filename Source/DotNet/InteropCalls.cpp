@@ -311,21 +311,10 @@ BEGIN_INTERFACE_DEFINITION( name )
     void UIImageButton_OnClick( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UIImageButton );
-        auto lDelegate = CAST( MonoObject, aDelegate );
 
-        if( lInstance->mOnClickDelegate != nullptr ) mono_gchandle_free( lInstance->mOnClickDelegateHandle );
-
-        lInstance->mOnClickDelegate       = aDelegate;
-        lInstance->mOnClickDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
-
-        lInstance->OnClick(
-            [lInstance, lDelegate]()
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-
-                mono_runtime_invoke( lInvokeMethod, lDelegate, nullptr, nullptr );
-            } );
+        typedef void (*fptr)();
+        fptr lDelegate = (fptr)aDelegate;
+        lInstance->OnClick( [lInstance, lDelegate]() { lDelegate(); } );
     }
 
 BEGIN_INTERFACE_DEFINITION( name )
@@ -353,45 +342,19 @@ BEGIN_INTERFACE_DEFINITION( name )
     void UIImageToggleButton_OnClicked( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UIImageToggleButton );
-        auto lDelegate = CAST( MonoObject, aDelegate );
 
-        if( lInstance->mOnClickDelegate != nullptr ) mono_gchandle_free( lInstance->mOnClickDelegateHandle );
-
-        lInstance->mOnClickDelegate       = aDelegate;
-        lInstance->mOnClickDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
-
-        lInstance->OnClick(
-            [lInstance, lDelegate]( bool aValue )
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-
-                void *lParams[] = { (void *)&aValue };
-                auto  lValue    = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
-
-                return *( (bool *)mono_object_unbox( lValue ) );
-            } );
+        typedef bool (*fptr)(bool);
+        fptr lDelegate = (fptr)aDelegate;
+        lInstance->OnClick( [lInstance, lDelegate](bool i) { return lDelegate(i); } );
     }
 
     void UIImageToggleButton_OnChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UIImageToggleButton );
-        auto lDelegate = CAST( MonoObject, aDelegate );
 
-        if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
-
-        lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
-
-        lInstance->OnChanged(
-            [lInstance, lDelegate]()
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-                auto lValue         = mono_runtime_invoke( lInvokeMethod, lDelegate, nullptr, nullptr );
-
-                return *( (bool *)mono_object_unbox( lValue ) );
-            } );
+        typedef bool (*fptr)();
+        fptr lDelegate = (fptr)aDelegate;
+        lInstance->OnChanged( [lInstance, lDelegate]() { return lDelegate(); } );
     }
 END_INTERFACE_DEFINITION
 
