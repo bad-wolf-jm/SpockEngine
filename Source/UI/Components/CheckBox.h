@@ -30,15 +30,5 @@ namespace SE::Core
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
-      public:
-        void *mOnChangeDelegate       = nullptr;
-        int   mOnChangeDelegateHandle = -1;
-
-    //   public:
-    //     static void *UICheckBox_Create();
-    //     static void  UICheckBox_Destroy( void *aInstance );
-    //     static void  UICheckBox_OnClick( void *aInstance, void *aTextColor );
-    //     static bool  UICheckBox_IsChecked( void *aInstance );
-    //     static void  UICheckBox_SetIsChecked( void *aInstance, bool aValue );
     };
 } // namespace SE::Core
