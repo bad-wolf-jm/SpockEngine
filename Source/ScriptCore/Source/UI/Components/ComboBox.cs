@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace SpockEngine
 {
@@ -27,7 +28,7 @@ namespace SpockEngine
         {
             onChanged = aHandler;
 
-            UIComboBox_OnChanged(mInstance, onChanged);
+            UIComboBox_OnChanged(mInstance, Marshal.GetFunctionPointerForDelegate(onChanged));
         }
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
@@ -49,6 +50,6 @@ namespace SpockEngine
         private extern static void UIComboBox_SetItemList(ulong aInstance, string[] aItems);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComboBox_OnChanged(ulong aInstance, ChangedDelegate aHandler);
+        private extern static void UIComboBox_OnChanged(ulong aInstance, IntPtr aHandler);
     }
 }

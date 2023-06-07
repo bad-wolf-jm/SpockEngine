@@ -197,22 +197,10 @@ BEGIN_INTERFACE_DEFINITION( name )
     void UIComboBox_OnChanged( __SELF__, void *aDelegate )
     {
         auto lInstance = SELF( UIComboBox );
-        auto lDelegate = CAST( MonoObject, aDelegate );
 
-        if( lInstance->mOnChangeDelegate != nullptr ) mono_gchandle_free( lInstance->mOnChangeDelegateHandle );
-
-        lInstance->mOnChangeDelegate       = aDelegate;
-        lInstance->mOnChangeDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
-
-        lInstance->OnChange(
-            [lInstance, lDelegate]( int aValue )
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-
-                void *lParams[] = { (void *)&aValue };
-                mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
-            } );
+        typedef void (*fptr)(int);
+        fptr lDelegate = (fptr)aDelegate;
+        lInstance->OnChange( [lInstance, lDelegate](int i) { lDelegate(i); } );
     }
 END_INTERFACE_DEFINITION
 
