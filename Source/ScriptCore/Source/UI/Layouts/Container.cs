@@ -15,14 +15,5 @@ namespace SpockEngine
         {
             UIContainer_SetContent(mInstance, aChild.Instance);
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIContainer_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIContainer_Destroy(ulong aInstance);
-        
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIContainer_SetContent(ulong aInstance, ulong aChild);
     }
 }

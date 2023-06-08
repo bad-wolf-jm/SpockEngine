@@ -30,26 +30,5 @@ namespace SpockEngine
 
             UIComboBox_OnChanged(mInstance, Marshal.GetFunctionPointerForDelegate(onChanged));
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIComboBox_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIComboBox_CreateWithItems(string[] aItems);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComboBox_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static int UIComboBox_GetCurrent(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComboBox_SetCurrent(ulong aInstance, int aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComboBox_SetItemList(ulong aInstance, string[] aItems);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComboBox_OnChanged(ulong aInstance, IntPtr aHandler);
     }
 }

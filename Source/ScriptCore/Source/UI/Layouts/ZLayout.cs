@@ -30,23 +30,5 @@ namespace SpockEngine
         {
             UIZLayout_AddAlignedFixed(mInstance, aChild.Instance, aSize, aPosition, aExpand, aFill, aHAlignment, aVAlignment);
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIZLayout_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIZLayout_AddAlignedNonFixed(ulong aInstance, ulong aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIZLayout_AddNonAlignedNonFixed(ulong aInstance, ulong aChild, bool aExpand, bool aFill);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIZLayout_AddAlignedFixed(ulong aInstance, ulong aChild, SpockEngine.Math.vec2 aSize, SpockEngine.Math.vec2 aPosition, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIZLayout_AddNonAlignedFixed(ulong aInstance, ulong aChild, SpockEngine.Math.vec2 aSize, SpockEngine.Math.vec2 aPosition, bool aExpand, bool aFill);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIZLayout_Destroy(ulong aInstance);
     }
 }

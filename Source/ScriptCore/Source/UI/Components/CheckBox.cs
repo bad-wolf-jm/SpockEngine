@@ -25,20 +25,5 @@ namespace SpockEngine
             get { return UICheckBox_IsChecked(mInstance); }
             set { UICheckBox_SetIsChecked(mInstance, value); }
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UICheckBox_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UICheckBox_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UICheckBox_OnClick(ulong aInstance, IntPtr aHandler);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static bool UICheckBox_IsChecked(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UICheckBox_SetIsChecked(ulong aInstance, bool aValue);
     }
 }

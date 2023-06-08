@@ -87,40 +87,5 @@ namespace SpockEngine
         {
             UIComponent_SetFont(mInstance, aFont);
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetIsVisible(ulong aSelf, bool aIsVisible);
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetIsEnabled(ulong aSelf, bool aIsEnabled);
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetAllowDragDrop(ulong aSelf, bool aAllowDragDrop);
-
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetPaddingAll(ulong aSelf, float aPaddingAll);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetPaddingPairs(ulong aSelf, float aPaddingTopBottom, float aPaddingLeftRight);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetPaddingIndividual(ulong aSelf, float aPaddingTop, float aPaddingBottom, float aPaddingLeft, float aPaddingRight);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetAlignment(ulong aSelf, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetHorizontalAlignment(ulong aSelf, eHorizontalAlignment aAlignment);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetVerticalAlignment(ulong aSelf, eVerticalAlignment aAlignment);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetBackgroundColor(ulong aSelf, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetFont(ulong aSelf, eFontFamily aFont);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetTooltip(ulong aSelf, ulong aTooltip);
     }
 }

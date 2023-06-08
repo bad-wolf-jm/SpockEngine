@@ -11,12 +11,5 @@ namespace SpockEngine
         public UIColorButton(ulong aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
 
         ~UIColorButton() { if (!mDerived) UIColorButton_Destroy(mInstance); }
-
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIColorButton_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIColorButton_Destroy(ulong aInstance);
     }
 }

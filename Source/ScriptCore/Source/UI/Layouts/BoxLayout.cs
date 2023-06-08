@@ -66,33 +66,5 @@ namespace SpockEngine
             mItems.Clear();
             UIBoxLayout_Clear(mInstance);
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIBoxLayout_CreateWithOrientation(eBoxLayoutOrientation aOrientation);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_AddAlignedNonFixed(ulong aInstance, ulong aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_AddNonAlignedNonFixed(ulong aInstance, ulong aChild, bool aExpand, bool aFill);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_AddAlignedFixed(ulong aInstance, ulong aChild, float aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_AddNonAlignedFixed(ulong aInstance, ulong aChild, float aFixedSize, bool aExpand, bool aFill);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_AddSeparator(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_SetItemSpacing(ulong aInstance, float aItemSpacing);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_Clear(ulong aInstance);
-
     }
 }

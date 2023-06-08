@@ -21,20 +21,5 @@ namespace SpockEngine
 
             UIButton_OnClick(mInstance, Marshal.GetFunctionPointerForDelegate(onClick));
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIButton_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIButton_CreateWithText(string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIButton_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIButton_SetText(ulong aInstance, string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIButton_OnClick(ulong aInstance, IntPtr aDelegate);
     }
 }

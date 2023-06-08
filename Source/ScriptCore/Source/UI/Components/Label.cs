@@ -16,20 +16,5 @@ namespace SpockEngine
         public void SetText(string aText) { UILabel_SetText(mInstance, aText); }
 
         public void SetTextColor(Math.vec4 aColor) { UILabel_SetTextColor(mInstance, aColor); }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UILabel_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UILabel_CreateWithText(string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UILabel_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UILabel_SetText(ulong aInstance, string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UILabel_SetTextColor(ulong aInstance, Math.vec4 aText);
     }
 }

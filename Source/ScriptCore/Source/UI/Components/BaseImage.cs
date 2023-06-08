@@ -38,41 +38,5 @@ namespace SpockEngine
             set { UIBaseImage_SetBottomRight(mInstance, value); }
         }
 
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIBaseImage_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIBaseImage_CreateWithPath(string aText, Math.vec2 Size);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBaseImage_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBaseImage_SetImage(ulong aInstance, string aPath);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBaseImage_SetSize(ulong aInstance, Math.vec2 aSize);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static Math.vec2 UIBaseImage_GetSize(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBaseImage_SetTopLeft(ulong aInstance, Math.vec2 aTopLeft);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static Math.vec2 UIBaseImage_GetTopLeft(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBaseImage_SetBottomRight(ulong aInstance, Math.vec2 aBottomRight);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static Math.vec2 UIBaseImage_GetBottomRight(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBaseImage_SetTintColor(ulong aInstance, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static Math.vec4 UIBaseImage_GetTintColor(ulong aInstance);
-
     }
 }
