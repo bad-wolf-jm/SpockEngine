@@ -16,7 +16,7 @@ namespace SpockEngine
         private bool mDerived = false;
         public UIBoxLayout() { }
 
-        public UIBoxLayout(ulong aInstance, bool aDerived) : base(aInstance) { mDerived = aDerived; }
+        public UIBoxLayout(IntPtr aInstance, bool aDerived) : base(aInstance) { mDerived = aDerived; }
 
         public UIBoxLayout(eBoxLayoutOrientation aOrientation) : this(Interop.UIBoxLayout_CreateWithOrientation(aOrientation), false) { }
 
@@ -30,28 +30,28 @@ namespace SpockEngine
         public void Add(UIComponent aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment)
         {
             mItems.Add(aChild);
-            var lInstance = (aChild != null) ? aChild.Instance : 0;
+            var lInstance = (aChild != null) ? aChild.Instance : IntPtr.Zero;
             Interop.UIBoxLayout_AddAlignedNonFixed(mInstance, lInstance, aExpand, aFill, aHAlignment, aVAlignment);
         }
 
         public void Add(UIComponent aChild, bool aExpand, bool aFill)
         {
             mItems.Add(aChild);
-            var lInstance = (aChild != null) ? aChild.Instance : 0;
+            var lInstance = (aChild != null) ? aChild.Instance : IntPtr.Zero;
             Interop.UIBoxLayout_AddNonAlignedNonFixed(mInstance, lInstance, aExpand, aFill);
         }
 
         public void Add(UIComponent aChild, float aFixedSize, bool aExpand, bool aFill)
         {
             mItems.Add(aChild);
-            var lInstance = (aChild != null) ? aChild.Instance : 0;
+            var lInstance = (aChild != null) ? aChild.Instance : IntPtr.Zero;
             Interop.UIBoxLayout_AddNonAlignedFixed(mInstance, lInstance, aFixedSize, aExpand, aFill);
         }
 
         public void Add(UIComponent aChild, float aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment)
         {
             mItems.Add(aChild);
-            var lInstance = (aChild != null) ? aChild.Instance : 0;
+            var lInstance = (aChild != null) ? aChild.Instance : IntPtr.Zero;
             Interop.UIBoxLayout_AddAlignedFixed(mInstance, lInstance, aFixedSize, aExpand, aFill, aHAlignment, aVAlignment);
         }
 

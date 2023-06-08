@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 using Math = SpockEngine.Math;
 
@@ -9,9 +10,9 @@ namespace SpockEngine
 {
     public class UITreeViewNode : UIComponent
     {
-        public UITreeViewNode() { mInstance = 0; }
+        public UITreeViewNode() { mInstance = IntPtr.Zero; }
 
-        public UITreeViewNode(ulong aInstance) : base(aInstance) { }
+        public UITreeViewNode(IntPtr aInstance) : base(aInstance) { }
 
         ~UITreeViewNode()
         {
@@ -57,7 +58,7 @@ namespace SpockEngine
     {
         bool mDerived = false;
         public UITreeView() : this(Interop.UITreeView_Create(), false) { }
-        public UITreeView(ulong aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
+        public UITreeView(IntPtr aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
 
         ~UITreeView() { if (!mDerived) Interop.UITreeView_Destroy(mInstance); }
 

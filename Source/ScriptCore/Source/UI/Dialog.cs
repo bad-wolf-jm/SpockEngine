@@ -8,7 +8,7 @@ namespace SpockEngine
         bool mDerived = false;
         public UIDialog() : this(Interop.UIDialog_Create(), false) { }
 
-        public UIDialog(ulong aInstance, bool aDerived) : base(aInstance) { mDerived = aDerived; }
+        public UIDialog(IntPtr aInstance, bool aDerived) : base(aInstance) { mDerived = aDerived; }
 
         ~UIDialog() { Interop.UIDialog_Destroy(mInstance); }
 

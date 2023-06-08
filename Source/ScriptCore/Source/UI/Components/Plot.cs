@@ -18,11 +18,11 @@ namespace SpockEngine
 
     public class UIPlotData
     {
-        protected ulong mInstance;
-        public ulong Instance { get { return mInstance; } }
+        protected IntPtr mInstance;
+        public IntPtr Instance { get { return mInstance; } }
 
-        public UIPlotData() { mInstance = 0; }
-        public UIPlotData(ulong aInstance) { mInstance = aInstance; }
+        public UIPlotData() { mInstance = IntPtr.Zero; }
+        public UIPlotData(IntPtr aInstance) { mInstance = aInstance; }
 
         private string mLegend;
 
@@ -68,7 +68,7 @@ namespace SpockEngine
     {
         public UIVLinePlot() : base(Interop.UIVLinePlot_Create()) { }
 
-        public UIVLinePlot(ulong aInstance) : base(aInstance) { }
+        public UIVLinePlot(IntPtr aInstance) : base(aInstance) { }
 
         ~UIVLinePlot() { Interop.UIVLinePlot_Destroy(mInstance); }
 
@@ -83,17 +83,17 @@ namespace SpockEngine
 
     public class UIHLinePlot : UIPlotData
     {
-        public UIHLinePlot() : base(UIHLinePlot_Create()) { }
+        public UIHLinePlot() : base(Interop.UIHLinePlot_Create()) { }
 
-        public UIHLinePlot(ulong aInstance) : base(aInstance) { }
+        public UIHLinePlot(IntPtr aInstance) : base(aInstance) { }
 
-        ~UIHLinePlot() { UIHLinePlot_Destroy(mInstance); }
+        ~UIHLinePlot() { Interop.UIHLinePlot_Destroy(mInstance); }
 
         private double[] mY;
         public double[] Y
         {
             get { return mY; }
-            set { mY = value; UIHLinePlot_SetY(mInstance, value); }
+            set { mY = value; Interop.UIHLinePlot_SetY(mInstance, value); }
         }
 
     }
@@ -103,7 +103,7 @@ namespace SpockEngine
         public UIAxisTag() : base(Interop.UIAxisTag_Create()) { }
         public UIAxisTag(eUIPlotAxis aAxis, double aX, string aText, Math.vec4 aColor) : base(Interop.UIAxisTag_CreateWithTextAndColor(aAxis, aX, aText, aColor)) { }
 
-        public UIAxisTag(ulong aInstance) : base(aInstance) { }
+        public UIAxisTag(IntPtr aInstance) : base(aInstance) { }
 
         ~UIAxisTag() { Interop.UIAxisTag_Destroy(mInstance); }
 
@@ -139,7 +139,7 @@ namespace SpockEngine
     {
         public UIVRange() : base(Interop.UIVRangePlot_Create()) { }
 
-        public UIVRange(ulong aInstance) : base(aInstance) { }
+        public UIVRange(IntPtr aInstance) : base(aInstance) { }
 
         ~UIVRange() { Interop.UIVRangePlot_Destroy(mInstance); }
 
@@ -160,7 +160,7 @@ namespace SpockEngine
     {
         public UIHRange() : base(Interop.UIHRangePlot_Create()) { }
 
-        public UIHRange(ulong aInstance) : base(aInstance) { }
+        public UIHRange(IntPtr aInstance) : base(aInstance) { }
 
         ~UIHRange() { Interop.UIHRangePlot_Destroy(mInstance); }
 
@@ -181,7 +181,7 @@ namespace SpockEngine
     {
         public UIFloat64LinePlot() : base(Interop.UIFloat64LinePlot_Create()) { }
 
-        public UIFloat64LinePlot(ulong aInstance) : base(aInstance) { }
+        public UIFloat64LinePlot(IntPtr aInstance) : base(aInstance) { }
 
         ~UIFloat64LinePlot() { Interop.UIFloat64LinePlot_Destroy(mInstance); }
 
@@ -206,7 +206,7 @@ namespace SpockEngine
     {
         public UIFloat64ScatterPlot() : base(Interop.UIFloat64ScatterPlot_Create()) { }
 
-        public UIFloat64ScatterPlot(ulong aInstance) : base(aInstance) { }
+        public UIFloat64ScatterPlot(IntPtr aInstance) : base(aInstance) { }
 
         ~UIFloat64ScatterPlot() { Interop.UIFloat64ScatterPlot_Destroy(mInstance); }
 
@@ -229,10 +229,10 @@ namespace SpockEngine
 
     public class UIPlotAxis
     {
-        private ulong mPlotInstance;
+        private IntPtr mPlotInstance;
         private eUIPlotAxis mAxis;
 
-        public UIPlotAxis(ulong aPlotInstance, eUIPlotAxis aAxis)
+        public UIPlotAxis(IntPtr aPlotInstance, eUIPlotAxis aAxis)
         {
             mPlotInstance = aPlotInstance;
             mAxis = aAxis;
@@ -286,7 +286,7 @@ namespace SpockEngine
             y3 = new UIPlotAxis(mInstance, eUIPlotAxis.Y3);
         }
 
-        public UIPlot(ulong aSelf) : base(aSelf)
+        public UIPlot(IntPtr aSelf) : base(aSelf)
         {
             mPlots = new List<UIPlotData>();
 
