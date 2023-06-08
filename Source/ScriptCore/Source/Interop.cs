@@ -3,887 +3,880 @@ using System.Runtime.CompilerServices;
 
 namespace SpockEngine
 {
-    public static class CppCall
+    public static class Interop
     {
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIBaseImage_Create();
+        public extern static ulong UIBaseImage_Create();
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIBaseImage_CreateWithPath(string aText, Math.vec2 Size);
+        public extern static ulong UIBaseImage_CreateWithPath(string aText, Math.vec2 Size);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBaseImage_Destroy(ulong aInstance);
+        public extern static void UIBaseImage_Destroy(IntPtr aSelf);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBaseImage_SetImage(ulong aInstance, string aPath);
+        public extern static void UIBaseImage_SetImage(IntPtr aSelf, string aPath);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBaseImage_SetSize(ulong aInstance, Math.vec2 aSize);
+        public extern static void UIBaseImage_SetSize(IntPtr aSelf, Math.vec2 aSize);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static Math.vec2 UIBaseImage_GetSize(ulong aInstance);
+        public extern static Math.vec2 UIBaseImage_GetSize(IntPtr aSelf);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBaseImage_SetTopLeft(ulong aInstance, Math.vec2 aTopLeft);
+        public extern static void UIBaseImage_SetTopLeft(IntPtr aSelf, Math.vec2 aTopLeft);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static Math.vec2 UIBaseImage_GetTopLeft(ulong aInstance);
+        public extern static Math.vec2 UIBaseImage_GetTopLeft(IntPtr aSelf);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBaseImage_SetBottomRight(ulong aInstance, Math.vec2 aBottomRight);
+        public extern static void UIBaseImage_SetBottomRight(IntPtr aSelf, Math.vec2 aBottomRight);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static Math.vec2 UIBaseImage_GetBottomRight(ulong aInstance);
+        public extern static Math.vec2 UIBaseImage_GetBottomRight(IntPtr aSelf);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBaseImage_SetTintColor(ulong aInstance, Math.vec4 aColor);
+        public extern static void UIBaseImage_SetTintColor(IntPtr aSelf, Math.vec4 aColor);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static Math.vec4 UIBaseImage_GetTintColor(ulong aInstance);
+        public extern static Math.vec4 UIBaseImage_GetTintColor(IntPtr aSelf);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIButton_Create();
+        public extern static ulong UIButton_Create();
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIButton_CreateWithText(string aText);
+        public extern static ulong UIButton_CreateWithText(string aText);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIButton_Destroy(ulong aInstance);
+        public extern static void UIButton_Destroy(IntPtr aSelf);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIButton_SetText(ulong aInstance, string aText);
+        public extern static void UIButton_SetText(IntPtr aSelf, string aText);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIButton_OnClick(ulong aInstance, IntPtr aDelegate);
+        public extern static void UIButton_OnClick(IntPtr aSelf, IntPtr aDelegate);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UICheckBox_Create();
+        public extern static ulong UICheckBox_Create();
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UICheckBox_Destroy(ulong aInstance);
+        public extern static void UICheckBox_Destroy(IntPtr aSelf);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UICheckBox_OnClick(ulong aInstance, IntPtr aHandler);
+        public extern static void UICheckBox_OnClick(IntPtr aSelf, IntPtr aHandler);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static bool UICheckBox_IsChecked(ulong aInstance);
+        public extern static bool UICheckBox_IsChecked(IntPtr aSelf);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UICheckBox_SetIsChecked(ulong aInstance, bool aValue);
+        public extern static void UICheckBox_SetIsChecked(IntPtr aSelf, bool aValue);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIColorButton_Create();
+        public extern static ulong UIColorButton_Create();
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIColorButton_Destroy(ulong aInstance);
+        public extern static void UIColorButton_Destroy(IntPtr aSelf);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIComboBox_Create();
+        public extern static ulong UIComboBox_Create();
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIComboBox_CreateWithItems(string[] aItems);
+        public extern static ulong UIComboBox_CreateWithItems(string[] aItems);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComboBox_Destroy(ulong aInstance);
+        public extern static void UIComboBox_Destroy(IntPtr aSelf);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static int UIComboBox_GetCurrent(ulong aInstance);
+        public extern static int UIComboBox_GetCurrent(IntPtr aSelf);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComboBox_SetCurrent(ulong aInstance, int aValue);
+        public extern static void UIComboBox_SetCurrent(IntPtr aSelf, int aValue);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComboBox_SetItemList(ulong aInstance, string[] aItems);
+        public extern static void UIComboBox_SetItemList(IntPtr aSelf, string[] aItems);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComboBox_OnChanged(ulong aInstance, IntPtr aHandler);
+        public extern static void UIComboBox_OnChanged(IntPtr aSelf, IntPtr aHandler);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetIsVisible(ulong aSelf, bool aIsVisible);
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetIsEnabled(ulong aSelf, bool aIsEnabled);
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetAllowDragDrop(ulong aSelf, bool aAllowDragDrop);
-
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetPaddingAll(ulong aSelf, float aPaddingAll);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetPaddingPairs(ulong aSelf, float aPaddingTopBottom, float aPaddingLeftRight);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetPaddingIndividual(ulong aSelf, float aPaddingTop, float aPaddingBottom, float aPaddingLeft, float aPaddingRight);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetAlignment(ulong aSelf, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetHorizontalAlignment(ulong aSelf, eHorizontalAlignment aAlignment);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetVerticalAlignment(ulong aSelf, eVerticalAlignment aAlignment);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetBackgroundColor(ulong aSelf, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetFont(ulong aSelf, eFontFamily aFont);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIComponent_SetTooltip(ulong aSelf, ulong aTooltip);
-
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIDropdownButton_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDropdownButton_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static bool UIDropdownButton_SetContent(ulong aInstance, ulong aContent);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static bool UIDropdownButton_SetContentSize(ulong aInstance, Math.vec2 aSize);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDropdownButton_SetImage(ulong aInstance, ulong aImage);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDropdownButton_SetText(ulong aInstance, string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDropdownButton_SetTextColor(ulong aInstance, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIImage_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIImage_CreateWithPath(string aText, Math.vec2 Size);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIImage_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIImageButton_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIImageButton_CreateWithPath(string aText, Math.vec2 Size);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIImageButton_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIImageButton_OnClick(ulong aInstance, IntPtr aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIImageToggleButton_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIImageToggleButton_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIImageToggleButton_OnClicked(ulong aInstance, IntPtr aHandler);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIImageToggleButton_OnChanged(ulong aInstance, IntPtr aHandler);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static bool UIImageToggleButton_IsActive(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIImageToggleButton_SetActive(ulong aInstance, bool aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIImageToggleButton_SetActiveImage(ulong aInstance, ulong aImage);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIImageToggleButton_SetInactiveImage(ulong aInstance, ulong aImage);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UILabel_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UILabel_CreateWithText(string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UILabel_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UILabel_SetText(ulong aInstance, string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UILabel_SetTextColor(ulong aInstance, Math.vec4 aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenuItem_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenuItem_CreateWithTextAndShortcut(string aText, string aShortcut);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenuItem_CreateWithText(string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIMenuItem_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIMenuItem_SetText(ulong aInstance, string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIMenuItem_SetShortcut(ulong aInstance, string aShortcut);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIMenuItem_SetTextColor(ulong aInstance, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIMenuItem_OnTrigger(ulong aInstance, IntPtr aHandler);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenuSeparator_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIMenuSeparator_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenu_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenu_CreateWithText(string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIMenu_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenu_AddAction(ulong aInstance, string aName, string aShortcut);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenu_AddSeparator(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenu_AddMenu(ulong aInstance, string aName);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIMenu_Update(ulong aInstance);
-
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlotData_SetThickness(ulong aInstance, float aThickness);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlotData_SetLegend(ulong aInstance, string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlotData_SetColor(ulong aInstance, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlotData_SetXAxis(ulong aInstance, eUIPlotAxis aAxis);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlotData_SetYAxis(ulong aInstance, eUIPlotAxis aAxis);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVLinePlot_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVLinePlot_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVLinePlot_SetX(ulong aInstance, double[] aValues);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIHLinePlot_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIHLinePlot_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIHLinePlot_SetY(ulong aInstance, double[] aValues);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIAxisTag_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIAxisTag_CreateWithTextAndColor(eUIPlotAxis aAxis, double aX, string aText, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIAxisTag_Destroy(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIAxisTag_SetX(ulong aSelf, double aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIAxisTag_SetText(ulong aSelf, string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static Math.vec4 UIAxisTag_GetColor(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIAxisTag_SetColor(ulong aSelf, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static eUIPlotAxis UIAxisTag_GetAxis(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIAxisTag_SetAxis(ulong aSelf, eUIPlotAxis aColor);
-
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVRangePlot_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVRangePlot_Destroy(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static double UIVRangePlot_GetMin(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVRangePlot_SetMin(ulong aSelf, double aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static double UIVRangePlot_GetMax(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVRangePlot_SetMax(ulong aSelf, double aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIHRangePlot_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIHRangePlot_Destroy(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static double UIHRangePlot_GetMin(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIHRangePlot_SetMin(ulong aSelf, double aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static double UIHRangePlot_GetMax(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIHRangePlot_SetMax(ulong aSelf, double aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64LinePlot_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64LinePlot_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64LinePlot_SetX(ulong aInstance, double[] aValues);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64LinePlot_SetY(ulong aInstance, double[] aValues);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64ScatterPlot_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64ScatterPlot_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64ScatterPlot_SetX(ulong aInstance, double[] aValues);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64ScatterPlot_SetY(ulong aInstance, double[] aValues);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIPlot_SetAxisLimits(ulong aInstance, eUIPlotAxis aAxis, double aMin, double aMax);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static string UIPlot_GetAxisTitle(ulong aInstance, eUIPlotAxis aAxis);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIPlot_SetAxisTitle(ulong aInstance, eUIPlotAxis aAxis, string aTitle);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlot_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIPlot_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIPlot_Clear(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlot_ConfigureLegend(ulong aInstance, Math.vec2 aLegendPadding, Math.vec2 aLegendInnerPadding, Math.vec2 aLegendSpacing);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlot_Add(ulong aInstance, ulong aPlot);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlot_PlotVLines(ulong aInstance, double[] a, string aLegend, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIProgressBar_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIProgressBar_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIProgressBar_SetText(ulong aInstance, string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIProgressBar_SetTextColor(ulong aInstance, Math.vec4 aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIProgressBar_SetProgressValue(ulong aInstance, float aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIProgressBar_SetProgressColor(ulong aInstance, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIProgressBar_SetThickness(ulong aInstance, float aThickness);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPropertyValue_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPropertyValue_CreateWithText(string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPropertyValue_CreateWithTextAndOrientation(string aText, eBoxLayoutOrientation aOrientation);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIPropertyValue_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIPropertyValue_SetValue(ulong aInstance, string aText);
-
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIPropertyValue_SetValueFont(ulong aInstance, eFontFamily aFont);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIPropertyValue_SetNameFont(ulong aInstance, eFontFamily aFont);
-
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UISlider_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UISlider_Destroy(ulong aInstance);
-
-                [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITableColumn_SetTooltip(ulong aInstance, ulong[] aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITableColumn_SetBackgroundColor(ulong aInstance, Math.vec4[] aForegroundColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITableColumn_SetForegroundColor(ulong aInstance, Math.vec4[] aForegroundColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64Column_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64Column_CreateFull(string aHeader, float aInitialSize, string aFormat, string aNaNFormat);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIFloat64Column_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIFloat64Column_Clear(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIFloat64Column_SetData(ulong aInstance, double[] aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIUint32Column_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIUint32Column_CreateFull(string aHeader, float aInitialSize);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIUint32Column_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIUint32Column_Clear(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIUint32Column_SetData(ulong aInstance, uint[] aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIStringColumn_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIStringColumn_CreateFull(string aHeader, float aInitialSize);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIStringColumn_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIStringColumn_Clear(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIStringColumn_SetData(ulong aInstance, string[] aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITable_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITable_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITable_OnRowClicked(ulong aInstance, IntPtr aHandler);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITable_AddColumn(ulong aInstance, ulong aColumnInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITable_SetRowHeight(ulong aInstance, float aRowHeight);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITable_SetRowBackgroundColor(ulong aInstance, Math.vec4[] aColors);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITable_ClearRowBackgroundColor(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITable_SetDisplayedRowIndices(ulong aInstance, int[] aIndices);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITextInput_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITextInput_CreateWithText(string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextInput_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static string UITextInput_GetText(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextInput_OnTextChanged(ulong aInstance, OnChangeDelegate aHandler);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextInput_SetHintText(ulong aInstance, string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextInput_SetTextColor(ulong aInstance, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextInput_SetBufferSize(ulong aInstance, uint aSize);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITextOverlay_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextOverlay_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextOverlay_AddText(ulong aInstance, string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextOverlay_Clear(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITextToggleButton_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITextToggleButton_CreateWithText(string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextToggleButton_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextToggleButton_OnClicked(ulong aInstance, IntPtr aHandler);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextToggleButton_OnChanged(ulong aInstance, IntPtr aHandler);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static bool UITextToggleButton_IsActive(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextToggleButton_SetActive(ulong aInstance, bool aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextToggleButton_SetActiveColor(ulong aInstance, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextToggleButton_SetInactiveColor(ulong aInstance, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITreeViewNode_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITreeViewNode_SetText(ulong aInstance, string aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITreeViewNode_SetTextColor(ulong aInstance, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITreeViewNode_SetIcon(ulong aInstance, ulong aIcon);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITreeViewNode_SetIndicator(ulong aInstance, ulong aIcon);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITreeViewNode_Add(ulong aInstance);
-
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITreeView_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITreeView_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITreeView_SetIndent(ulong aInstance, float aIndent);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITreeView_SetIconSpacing(ulong aInstance, float aSpacing);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITreeView_Add(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVec2Input_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVec2Input_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec2Input_OnChanged(ulong aInstance, IntPtr aDelegate);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec2Input_SetValue(ulong aInstance, Math.vec2 aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec2Input_SetResetValues(ulong aInstance, Math.vec2 aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static Math.vec2 UIVec2Input_GetValue(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec2Input_SetFormat(ulong aInstance, string aFormat);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVec3Input_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVec3Input_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec3Input_OnChanged(ulong aInstance, IntPtr aDelegate);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec3Input_SetValue(ulong aInstance, Math.vec2 aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec3Input_SetResetValues(ulong aInstance, Math.vec2 aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static Math.vec2 UIVec3Input_GetValue(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec3Input_SetFormat(ulong aInstance, string aFormat);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVec4Input_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVec4Input_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec4Input_OnChanged(ulong aInstance, IntPtr aDelegate);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec4Input_SetValue(ulong aInstance, Math.vec2 aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec4Input_SetResetValues(ulong aInstance, Math.vec2 aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static Math.vec2 UIVec4Input_GetValue(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec4Input_SetFormat(ulong aInstance, string aFormat);
-
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIWorkspaceDocument_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIWorkspaceDocument_RegisterSaveDelegate(ulong aInstance, DocumentSaveDelegate aDelegate);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIWorkspaceDocument_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIWorkspaceDocument_SetContent(ulong aInstance, ulong aContent);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIWorkspaceDocument_SetName(ulong aInstance, string aName);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIWorkspaceDocument_Update(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static bool UIWorkspaceDocument_IsDirty(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIWorkspaceDocument_MarkAsDirty(ulong aInstance, bool aDirty);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIWorkspaceDocument_Open(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIWorkspaceDocument_ForceClose(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIWorkspace_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIWorkspace_RegisterCloseDocumentDelegate(ulong aInstance, DocumentCloseDelegate aDelegate);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIWorkspace_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIWorkspace_Add(ulong aInstance, ulong aDocument);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIBoxLayout_CreateWithOrientation(eBoxLayoutOrientation aOrientation);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_AddAlignedNonFixed(ulong aInstance, ulong aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_AddNonAlignedNonFixed(ulong aInstance, ulong aChild, bool aExpand, bool aFill);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_AddAlignedFixed(ulong aInstance, ulong aChild, float aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_AddNonAlignedFixed(ulong aInstance, ulong aChild, float aFixedSize, bool aExpand, bool aFill);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_AddSeparator(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_SetItemSpacing(ulong aInstance, float aItemSpacing);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIBoxLayout_Clear(ulong aInstance);
-
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIContainer_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIContainer_Destroy(ulong aInstance);
+        public extern static void UIComponent_SetIsVisible(ulong aSelf, bool aIsVisible);
         
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIContainer_SetContent(ulong aInstance, ulong aChild);
+        public extern static void UIComponent_SetIsEnabled(ulong aSelf, bool aIsEnabled);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UISplitter_Create();
+        public extern static void UIComponent_SetAllowDragDrop(ulong aSelf, bool aAllowDragDrop);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UISplitter_CreateWithOrientation(eBoxLayoutOrientation aOrientation);
+        public extern static void UIComponent_SetPaddingAll(ulong aSelf, float aPaddingAll);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UISplitter_Add1(ulong aInstance, ulong aChild);
+        public extern static void UIComponent_SetPaddingPairs(ulong aSelf, float aPaddingTopBottom, float aPaddingLeftRight);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UISplitter_Add2(ulong aInstance, ulong aChild);
+        public extern static void UIComponent_SetPaddingIndividual(ulong aSelf, float aPaddingTop, float aPaddingBottom, float aPaddingLeft, float aPaddingRight);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UISplitter_Destroy(ulong aInstance);
+        public extern static void UIComponent_SetAlignment(ulong aSelf, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UISplitter_SetItemSpacing(ulong aInstance, float aItemSpacing);
+        public extern static void UIComponent_SetHorizontalAlignment(ulong aSelf, eHorizontalAlignment aAlignment);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIStackLayout_Create();
+        public extern static void UIComponent_SetVerticalAlignment(ulong aSelf, eVerticalAlignment aAlignment);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIStackLayout_Destroy(ulong aInstance);
+        public extern static void UIComponent_SetBackgroundColor(ulong aSelf, Math.vec4 aColor);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIStackLayout_Add(ulong aInstance, ulong aChild, string aKey);
+        public extern static void UIComponent_SetFont(ulong aSelf, eFontFamily aFont);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIStackLayout_SetCurrent(ulong aInstance, string aKey);
+        public extern static void UIComponent_SetTooltip(ulong aSelf, ulong aTooltip);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIZLayout_Create();
+        public extern static ulong UIDropdownButton_Create();
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIZLayout_AddAlignedNonFixed(ulong aInstance, ulong aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
+        public extern static void UIDropdownButton_Destroy(IntPtr aSelf);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIZLayout_AddNonAlignedNonFixed(ulong aInstance, ulong aChild, bool aExpand, bool aFill);
+        public extern static bool UIDropdownButton_SetContent(IntPtr aSelf, ulong aContent);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIZLayout_AddAlignedFixed(ulong aInstance, ulong aChild, SpockEngine.Math.vec2 aSize, SpockEngine.Math.vec2 aPosition, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
+        public extern static bool UIDropdownButton_SetContentSize(IntPtr aSelf, Math.vec2 aSize);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIZLayout_AddNonAlignedFixed(ulong aInstance, ulong aChild, SpockEngine.Math.vec2 aSize, SpockEngine.Math.vec2 aPosition, bool aExpand, bool aFill);
+        public extern static void UIDropdownButton_SetImage(IntPtr aSelf, ulong aImage);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIZLayout_Destroy(ulong aInstance);
+        public extern static void UIDropdownButton_SetText(IntPtr aSelf, string aText);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFileTree_Create();
+        public extern static void UIDropdownButton_SetTextColor(IntPtr aSelf, Math.vec4 aColor);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIFileTree_Destroy(ulong aInstance);
+        public extern static ulong UIImage_Create();
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIFileTree_Add(ulong aInstance, string aText);
+        public extern static ulong UIImage_CreateWithPath(string aText, Math.vec2 Size);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIDialog_Create();
+        public extern static void UIImage_Destroy(IntPtr aSelf);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIDialog_CreateWithTitleAndSize(ulong aInstance, string aTitle, Math.vec2 aSize);
+        public extern static ulong UIImageButton_Create();
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDialog_Destroy(ulong aInstance);
+        public extern static ulong UIImageButton_CreateWithPath(string aText, Math.vec2 Size);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDialog_SetTitle(ulong aInstance, string aTitle);
+        public extern static void UIImageButton_Destroy(IntPtr aSelf);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDialog_SetSize(ulong aInstance, Math.vec2 aSize);
+        public extern static void UIImageButton_OnClick(IntPtr aSelf, IntPtr aText);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDialog_SetContent(ulong aInstance, ulong aContent);
+        public extern static ulong UIImageToggleButton_Create();
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDialog_Update(ulong aInstance);
+        public extern static void UIImageToggleButton_Destroy(IntPtr aSelf);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDialog_Open(ulong aInstance);
+        public extern static void UIImageToggleButton_OnClicked(IntPtr aSelf, IntPtr aHandler);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDialog_Close(ulong aInstance);
+        public extern static void UIImageToggleButton_OnChanged(IntPtr aSelf, IntPtr aHandler);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIForm_Create();
+        public extern static bool UIImageToggleButton_IsActive(IntPtr aSelf);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIForm_Destroy(ulong aInstance);
+        public extern static void UIImageToggleButton_SetActive(IntPtr aSelf, bool aValue);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIForm_SetTitle(ulong aInstance, string aTitle);
+        public extern static void UIImageToggleButton_SetActiveImage(IntPtr aSelf, ulong aImage);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIForm_SetContent(ulong aInstance, ulong aContent);
+        public extern static void UIImageToggleButton_SetInactiveImage(IntPtr aSelf, ulong aImage);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIForm_Update(ulong aInstance);
+        public extern static ulong UILabel_Create();
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIForm_SetSize(ulong aInstance, float aWidth, float aHeight);
+        public extern static ulong UILabel_CreateWithText(string aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UILabel_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UILabel_SetText(IntPtr aSelf, string aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UILabel_SetTextColor(IntPtr aSelf, Math.vec4 aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIMenuItem_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIMenuItem_CreateWithTextAndShortcut(string aText, string aShortcut);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIMenuItem_CreateWithText(string aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIMenuItem_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIMenuItem_SetText(IntPtr aSelf, string aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIMenuItem_SetShortcut(IntPtr aSelf, string aShortcut);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIMenuItem_SetTextColor(IntPtr aSelf, Math.vec4 aColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIMenuItem_OnTrigger(IntPtr aSelf, IntPtr aHandler);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIMenuSeparator_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIMenuSeparator_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIMenu_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIMenu_CreateWithText(string aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIMenu_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIMenu_AddAction(IntPtr aSelf, string aName, string aShortcut);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIMenu_AddSeparator(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIMenu_AddMenu(IntPtr aSelf, string aName);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIMenu_Update(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIPlotData_SetThickness(IntPtr aSelf, float aThickness);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIPlotData_SetLegend(IntPtr aSelf, string aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIPlotData_SetColor(IntPtr aSelf, Math.vec4 aColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIPlotData_SetXAxis(IntPtr aSelf, eUIPlotAxis aAxis);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIPlotData_SetYAxis(IntPtr aSelf, eUIPlotAxis aAxis);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIVLinePlot_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIVLinePlot_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIVLinePlot_SetX(IntPtr aSelf, double[] aValues);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIHLinePlot_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIHLinePlot_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIHLinePlot_SetY(IntPtr aSelf, double[] aValues);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIAxisTag_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIAxisTag_CreateWithTextAndColor(eUIPlotAxis aAxis, double aX, string aText, Math.vec4 aColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIAxisTag_Destroy(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIAxisTag_SetX(ulong aSelf, double aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIAxisTag_SetText(ulong aSelf, string aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static Math.vec4 UIAxisTag_GetColor(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIAxisTag_SetColor(ulong aSelf, Math.vec4 aColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static eUIPlotAxis UIAxisTag_GetAxis(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIAxisTag_SetAxis(ulong aSelf, eUIPlotAxis aColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIVRangePlot_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIVRangePlot_Destroy(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static double UIVRangePlot_GetMin(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIVRangePlot_SetMin(ulong aSelf, double aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static double UIVRangePlot_GetMax(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIVRangePlot_SetMax(ulong aSelf, double aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIHRangePlot_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIHRangePlot_Destroy(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static double UIHRangePlot_GetMin(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIHRangePlot_SetMin(ulong aSelf, double aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static double UIHRangePlot_GetMax(ulong aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIHRangePlot_SetMax(ulong aSelf, double aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIFloat64LinePlot_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIFloat64LinePlot_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIFloat64LinePlot_SetX(IntPtr aSelf, double[] aValues);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIFloat64LinePlot_SetY(IntPtr aSelf, double[] aValues);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIFloat64ScatterPlot_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIFloat64ScatterPlot_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIFloat64ScatterPlot_SetX(IntPtr aSelf, double[] aValues);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIFloat64ScatterPlot_SetY(IntPtr aSelf, double[] aValues);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIPlot_SetAxisLimits(IntPtr aSelf, eUIPlotAxis aAxis, double aMin, double aMax);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static string UIPlot_GetAxisTitle(IntPtr aSelf, eUIPlotAxis aAxis);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIPlot_SetAxisTitle(IntPtr aSelf, eUIPlotAxis aAxis, string aTitle);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIPlot_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIPlot_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIPlot_Clear(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIPlot_ConfigureLegend(IntPtr aSelf, Math.vec2 aLegendPadding, Math.vec2 aLegendInnerPadding, Math.vec2 aLegendSpacing);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIPlot_Add(IntPtr aSelf, ulong aPlot);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIPlot_PlotVLines(IntPtr aSelf, double[] a, string aLegend, Math.vec4 aColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIProgressBar_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIProgressBar_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIProgressBar_SetText(IntPtr aSelf, string aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIProgressBar_SetTextColor(IntPtr aSelf, Math.vec4 aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIProgressBar_SetProgressValue(IntPtr aSelf, float aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIProgressBar_SetProgressColor(IntPtr aSelf, Math.vec4 aColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIProgressBar_SetThickness(IntPtr aSelf, float aThickness);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIPropertyValue_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIPropertyValue_CreateWithText(string aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIPropertyValue_CreateWithTextAndOrientation(string aText, eBoxLayoutOrientation aOrientation);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIPropertyValue_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIPropertyValue_SetValue(IntPtr aSelf, string aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIPropertyValue_SetValueFont(IntPtr aSelf, eFontFamily aFont);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIPropertyValue_SetNameFont(IntPtr aSelf, eFontFamily aFont);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UISlider_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UISlider_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITableColumn_SetTooltip(IntPtr aSelf, ulong[] aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITableColumn_SetBackgroundColor(IntPtr aSelf, Math.vec4[] aForegroundColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITableColumn_SetForegroundColor(IntPtr aSelf, Math.vec4[] aForegroundColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIFloat64Column_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIFloat64Column_CreateFull(string aHeader, float aInitialSize, string aFormat, string aNaNFormat);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIFloat64Column_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIFloat64Column_Clear(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIFloat64Column_SetData(IntPtr aSelf, double[] aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIUint32Column_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIUint32Column_CreateFull(string aHeader, float aInitialSize);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIUint32Column_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIUint32Column_Clear(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIUint32Column_SetData(IntPtr aSelf, uint[] aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIStringColumn_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIStringColumn_CreateFull(string aHeader, float aInitialSize);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIStringColumn_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIStringColumn_Clear(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIStringColumn_SetData(IntPtr aSelf, string[] aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UITable_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITable_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITable_OnRowClicked(IntPtr aSelf, IntPtr aHandler);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITable_AddColumn(IntPtr aSelf, ulong aColumnInstance);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITable_SetRowHeight(IntPtr aSelf, float aRowHeight);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITable_SetRowBackgroundColor(IntPtr aSelf, Math.vec4[] aColors);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITable_ClearRowBackgroundColor(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITable_SetDisplayedRowIndices(IntPtr aSelf, int[] aIndices);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UITextInput_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UITextInput_CreateWithText(string aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITextInput_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static string UITextInput_GetText(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITextInput_OnTextChanged(IntPtr aSelf, OnChangeDelegate aHandler);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITextInput_SetHintText(IntPtr aSelf, string aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITextInput_SetTextColor(IntPtr aSelf, Math.vec4 aColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITextInput_SetBufferSize(IntPtr aSelf, uint aSize);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UITextOverlay_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITextOverlay_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITextOverlay_AddText(IntPtr aSelf, string aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITextOverlay_Clear(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UITextToggleButton_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UITextToggleButton_CreateWithText(string aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITextToggleButton_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITextToggleButton_OnClicked(IntPtr aSelf, IntPtr aHandler);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITextToggleButton_OnChanged(IntPtr aSelf, IntPtr aHandler);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static bool UITextToggleButton_IsActive(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITextToggleButton_SetActive(IntPtr aSelf, bool aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITextToggleButton_SetActiveColor(IntPtr aSelf, Math.vec4 aColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITextToggleButton_SetInactiveColor(IntPtr aSelf, Math.vec4 aColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITreeViewNode_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITreeViewNode_SetText(IntPtr aSelf, string aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITreeViewNode_SetTextColor(IntPtr aSelf, Math.vec4 aColor);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITreeViewNode_SetIcon(IntPtr aSelf, ulong aIcon);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITreeViewNode_SetIndicator(IntPtr aSelf, ulong aIcon);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UITreeViewNode_Add(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UITreeView_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITreeView_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITreeView_SetIndent(IntPtr aSelf, float aIndent);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UITreeView_SetIconSpacing(IntPtr aSelf, float aSpacing);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UITreeView_Add(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIVec2Input_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIVec2Input_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIVec2Input_OnChanged(IntPtr aSelf, IntPtr aDelegate);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIVec2Input_SetValue(IntPtr aSelf, Math.vec2 aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIVec2Input_SetResetValues(IntPtr aSelf, Math.vec2 aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static Math.vec2 UIVec2Input_GetValue(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIVec2Input_SetFormat(IntPtr aSelf, string aFormat);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIVec3Input_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIVec3Input_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIVec3Input_OnChanged(IntPtr aSelf, IntPtr aDelegate);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIVec3Input_SetValue(IntPtr aSelf, Math.vec2 aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIVec3Input_SetResetValues(IntPtr aSelf, Math.vec2 aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static Math.vec2 UIVec3Input_GetValue(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIVec3Input_SetFormat(IntPtr aSelf, string aFormat);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIVec4Input_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIVec4Input_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIVec4Input_OnChanged(IntPtr aSelf, IntPtr aDelegate);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIVec4Input_SetValue(IntPtr aSelf, Math.vec2 aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIVec4Input_SetResetValues(IntPtr aSelf, Math.vec2 aValue);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static Math.vec2 UIVec4Input_GetValue(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIVec4Input_SetFormat(IntPtr aSelf, string aFormat);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIWorkspaceDocument_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIWorkspaceDocument_RegisterSaveDelegate(IntPtr aSelf, DocumentSaveDelegate aDelegate);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIWorkspaceDocument_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIWorkspaceDocument_SetContent(IntPtr aSelf, ulong aContent);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIWorkspaceDocument_SetName(IntPtr aSelf, string aName);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIWorkspaceDocument_Update(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static bool UIWorkspaceDocument_IsDirty(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIWorkspaceDocument_MarkAsDirty(IntPtr aSelf, bool aDirty);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIWorkspaceDocument_Open(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIWorkspaceDocument_ForceClose(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIWorkspace_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIWorkspace_RegisterCloseDocumentDelegate(IntPtr aSelf, DocumentCloseDelegate aDelegate);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIWorkspace_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIWorkspace_Add(IntPtr aSelf, ulong aDocument);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIBoxLayout_CreateWithOrientation(eBoxLayoutOrientation aOrientation);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIBoxLayout_AddAlignedNonFixed(IntPtr aSelf, ulong aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIBoxLayout_AddNonAlignedNonFixed(IntPtr aSelf, ulong aChild, bool aExpand, bool aFill);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIBoxLayout_AddAlignedFixed(IntPtr aSelf, ulong aChild, float aFixedSize, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIBoxLayout_AddNonAlignedFixed(IntPtr aSelf, ulong aChild, float aFixedSize, bool aExpand, bool aFill);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIBoxLayout_AddSeparator(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIBoxLayout_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIBoxLayout_SetItemSpacing(IntPtr aSelf, float aItemSpacing);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIBoxLayout_Clear(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIContainer_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIContainer_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIContainer_SetContent(IntPtr aSelf, ulong aChild);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UISplitter_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UISplitter_CreateWithOrientation(eBoxLayoutOrientation aOrientation);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UISplitter_Add1(IntPtr aSelf, ulong aChild);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UISplitter_Add2(IntPtr aSelf, ulong aChild);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UISplitter_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UISplitter_SetItemSpacing(IntPtr aSelf, float aItemSpacing);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIStackLayout_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIStackLayout_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIStackLayout_Add(IntPtr aSelf, ulong aChild, string aKey);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIStackLayout_SetCurrent(IntPtr aSelf, string aKey);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIZLayout_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIZLayout_AddAlignedNonFixed(IntPtr aSelf, ulong aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIZLayout_AddNonAlignedNonFixed(IntPtr aSelf, ulong aChild, bool aExpand, bool aFill);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIZLayout_AddAlignedFixed(IntPtr aSelf, ulong aChild, SpockEngine.Math.vec2 aSize, SpockEngine.Math.vec2 aPosition, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIZLayout_AddNonAlignedFixed(IntPtr aSelf, ulong aChild, SpockEngine.Math.vec2 aSize, SpockEngine.Math.vec2 aPosition, bool aExpand, bool aFill);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIZLayout_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIFileTree_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIFileTree_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIFileTree_Add(IntPtr aSelf, string aText);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIDialog_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIDialog_CreateWithTitleAndSize(IntPtr aSelf, string aTitle, Math.vec2 aSize);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIDialog_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIDialog_SetTitle(IntPtr aSelf, string aTitle);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIDialog_SetSize(IntPtr aSelf, Math.vec2 aSize);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIDialog_SetContent(IntPtr aSelf, ulong aContent);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIDialog_Update(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIDialog_Open(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIDialog_Close(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static ulong UIForm_Create();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIForm_Destroy(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIForm_SetTitle(IntPtr aSelf, string aTitle);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIForm_SetContent(IntPtr aSelf, ulong aContent);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIForm_Update(IntPtr aSelf);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void UIForm_SetSize(IntPtr aSelf, float aWidth, float aHeight);
 
     }
 }
