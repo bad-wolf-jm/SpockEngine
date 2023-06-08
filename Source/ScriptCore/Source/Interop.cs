@@ -5,10 +5,9 @@ namespace SpockEngine
 {
     public static class Interop
     {
-        // #region UIBaseImage
+        #region UIBaseImage
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIBaseImage_Create();
-        // #end region UIBaseImage
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIBaseImage_CreateWithPath(string aText, Math.vec2 Size);
@@ -42,7 +41,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static Math.vec4 UIBaseImage_GetTintColor(IntPtr aSelf);
+        #endregion
 
+        #region UIButton
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIButton_Create();
 
@@ -57,7 +58,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIButton_OnClick(IntPtr aSelf, IntPtr aDelegate);
+        #endregion
 
+        #region UICheckbox
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UICheckBox_Create();
 
@@ -72,13 +75,17 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UICheckBox_SetIsChecked(IntPtr aSelf, bool aValue);
+        #endregion
 
+        #region UIColorButton
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIColorButton_Create();
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIColorButton_Destroy(IntPtr aSelf);
+        #endregion
 
+        #region UIComboBox
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIComboBox_Create();
 
@@ -99,7 +106,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIComboBox_OnChanged(IntPtr aSelf, IntPtr aHandler);
+        #endregion
 
+        #region UIComponent
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIComponent_SetIsVisible(IntPtr aSelf, bool aIsVisible);
 
@@ -135,7 +144,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIComponent_SetTooltip(IntPtr aSelf, IntPtr aTooltip);
+        #endregion
 
+        #region UIDropdownButton
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIDropdownButton_Create();
 
@@ -156,7 +167,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIDropdownButton_SetTextColor(IntPtr aSelf, Math.vec4 aColor);
+        #endregion
 
+        #region UIImage
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIImage_Create();
 
@@ -165,7 +178,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIImage_Destroy(IntPtr aSelf);
+        #endregion
 
+        #region UIImageButton
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIImageButton_Create();
 
@@ -177,7 +192,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIImageButton_OnClick(IntPtr aSelf, IntPtr aText);
+        #endregion
 
+        #region UIImageToggleButton
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIImageToggleButton_Create();
 
@@ -201,7 +218,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIImageToggleButton_SetInactiveImage(IntPtr aSelf, IntPtr aImage);
+        #endregion
 
+        #region UILabel
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UILabel_Create();
 
@@ -216,7 +235,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UILabel_SetTextColor(IntPtr aSelf, Math.vec4 aText);
+        #endregion
 
+        #region UIMenuItem
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIMenuItem_Create();
 
@@ -240,13 +261,17 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIMenuItem_OnTrigger(IntPtr aSelf, IntPtr aHandler);
+        #endregion
 
+        #region UIMenuSeparator
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIMenuSeparator_Create();
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIMenuSeparator_Destroy(IntPtr aSelf);
+        #endregion
 
+        #region UIMenu
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIMenu_Create();
 
@@ -267,7 +292,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIMenu_Update(IntPtr aSelf);
+        #endregion
 
+        #region UIPlotData
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIPlotData_SetThickness(IntPtr aSelf, float aThickness);
 
@@ -282,7 +309,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIPlotData_SetYAxis(IntPtr aSelf, eUIPlotAxis aAxis);
+        #endregion
 
+        #region UIVLinePlot
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIVLinePlot_Create();
 
@@ -291,7 +320,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIVLinePlot_SetX(IntPtr aSelf, double[] aValues);
+        #endregion
 
+        #region UIHLinPlot
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIHLinePlot_Create();
 
@@ -300,7 +331,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIHLinePlot_SetY(IntPtr aSelf, double[] aValues);
+        #endregion
 
+        #region UIAxisTag
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIAxisTag_Create();
 
@@ -327,7 +360,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIAxisTag_SetAxis(IntPtr aSelf, eUIPlotAxis aColor);
+        #endregion
 
+        #region UIVRangePlot
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIVRangePlot_Create();
 
@@ -345,7 +380,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIVRangePlot_SetMax(IntPtr aSelf, double aValue);
+        #endregion
 
+        #region UIHRangePlot
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIHRangePlot_Create();
 
@@ -357,13 +394,14 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIHRangePlot_SetMin(IntPtr aSelf, double aValue);
-
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static double UIHRangePlot_GetMax(IntPtr aSelf);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIHRangePlot_SetMax(IntPtr aSelf, double aValue);
+        #endregion
 
+        #region UIFloat64LinePlot
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIFloat64LinePlot_Create();
 
@@ -375,7 +413,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIFloat64LinePlot_SetY(IntPtr aSelf, double[] aValues);
+        #endregion
 
+        #region UIFloatScatterPlot
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIFloat64ScatterPlot_Create();
 
@@ -387,7 +427,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIFloat64ScatterPlot_SetY(IntPtr aSelf, double[] aValues);
+        #endregion
 
+        #region UIPlot
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIPlot_SetAxisLimits(IntPtr aSelf, eUIPlotAxis aAxis, double aMin, double aMax);
 
@@ -414,7 +456,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIPlot_PlotVLines(IntPtr aSelf, double[] a, string aLegend, Math.vec4 aColor);
+        #endregion
 
+        #region UIProgressBar
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIProgressBar_Create();
 
@@ -435,7 +479,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIProgressBar_SetThickness(IntPtr aSelf, float aThickness);
+        #endregion
 
+        #region UIPropertyValue
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIPropertyValue_Create();
 
@@ -456,13 +502,17 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIPropertyValue_SetNameFont(IntPtr aSelf, eFontFamily aFont);
+        #endregion
 
+        #region UISlider
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UISlider_Create();
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UISlider_Destroy(IntPtr aSelf);
+        #endregion
 
+        #region UITableColumn
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UITableColumn_SetTooltip(IntPtr aSelf, IntPtr[] aValue);
 
@@ -471,7 +521,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UITableColumn_SetForegroundColor(IntPtr aSelf, Math.vec4[] aForegroundColor);
+        #endregion
 
+        #region UIFloat64Column
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIFloat64Column_Create();
 
@@ -486,7 +538,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIFloat64Column_SetData(IntPtr aSelf, double[] aValue);
+        #endregion
 
+        #region UIUint32Column
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIUint32Column_Create();
 
@@ -501,7 +555,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIUint32Column_SetData(IntPtr aSelf, uint[] aValue);
+        #endregion
 
+        #region UIStringColumn
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIStringColumn_Create();
 
@@ -516,7 +572,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIStringColumn_SetData(IntPtr aSelf, string[] aValue);
+        #endregion
 
+        #region UITable
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UITable_Create();
 
@@ -540,7 +598,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UITable_SetDisplayedRowIndices(IntPtr aSelf, int[] aIndices);
+        #endregion
 
+        #region UITextInput
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UITextInput_Create();
 
@@ -564,7 +624,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UITextInput_SetBufferSize(IntPtr aSelf, uint aSize);
+        #endregion
 
+        #region UITextOverlay
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UITextOverlay_Create();
 
@@ -576,7 +638,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UITextOverlay_Clear(IntPtr aSelf);
+        #endregion
 
+        #region UITextToggleButton
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UITextToggleButton_Create();
 
@@ -603,7 +667,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UITextToggleButton_SetInactiveColor(IntPtr aSelf, Math.vec4 aColor);
+        #endregion
 
+        #region UITreeViewNode
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UITreeViewNode_Destroy(IntPtr aSelf);
 
@@ -621,7 +687,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UITreeViewNode_Add(IntPtr aSelf);
+        #endregion
 
+        #region UITreeView
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UITreeView_Create();
 
@@ -636,7 +704,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UITreeView_Add(IntPtr aSelf);
+        #endregion
 
+        #region UIVec2Input
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIVec2Input_Create();
 
@@ -657,7 +727,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIVec2Input_SetFormat(IntPtr aSelf, string aFormat);
+        #endregion
 
+        #region UIVec3Input
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIVec3Input_Create();
 
@@ -678,7 +750,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIVec3Input_SetFormat(IntPtr aSelf, string aFormat);
+        #endregion
 
+        #region UIVec4Input
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIVec4Input_Create();
 
@@ -699,7 +773,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIVec4Input_SetFormat(IntPtr aSelf, string aFormat);
+        #endregion
 
+        #region UIWorkspaceDocument
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIWorkspaceDocument_Create();
 
@@ -732,7 +808,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIWorkspaceDocument_ForceClose(IntPtr aSelf);
+        #endregion
 
+        #region UIWorkspace
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIWorkspace_Create();
 
@@ -744,7 +822,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIWorkspace_Add(IntPtr aSelf, IntPtr aDocument);
+        #endregion
 
+        #region UIBoxLayout
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIBoxLayout_CreateWithOrientation(eBoxLayoutOrientation aOrientation);
 
@@ -771,7 +851,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIBoxLayout_Clear(IntPtr aSelf);
+        #endregion
 
+        #region UIOContainer
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIContainer_Create();
 
@@ -780,7 +862,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIContainer_SetContent(IntPtr aSelf, IntPtr aChild);
+        #endregion
 
+        #region UISplitter
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UISplitter_Create();
 
@@ -798,7 +882,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UISplitter_SetItemSpacing(IntPtr aSelf, float aItemSpacing);
+        #endregion
 
+        #region UIStackLayout
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIStackLayout_Create();
 
@@ -810,7 +896,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIStackLayout_SetCurrent(IntPtr aSelf, string aKey);
+        #endregion
 
+        #region UIZLayout
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIZLayout_Create();
 
@@ -828,7 +916,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIZLayout_Destroy(IntPtr aSelf);
+        #endregion
 
+        #region UIFileTree
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIFileTree_Create();
 
@@ -837,7 +927,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIFileTree_Add(IntPtr aSelf, string aText);
+        #endregion
 
+        #region UIDialog
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIDialog_Create();
 
@@ -864,7 +956,9 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIDialog_Close(IntPtr aSelf);
+        #endregion
 
+        #region UIForm
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static IntPtr UIForm_Create();
 
@@ -882,6 +976,6 @@ namespace SpockEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void UIForm_SetSize(IntPtr aSelf, float aWidth, float aHeight);
-
+        #endregion
     }
 }
