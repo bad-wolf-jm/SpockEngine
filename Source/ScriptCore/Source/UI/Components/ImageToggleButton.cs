@@ -43,29 +43,5 @@ namespace SpockEngine
             
             UIImageToggleButton_OnChanged(mInstance, Marshal.GetFunctionPointerForDelegate(onChanged));
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIImageToggleButton_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIImageToggleButton_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIImageToggleButton_OnClicked(ulong aInstance, IntPtr aHandler);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIImageToggleButton_OnChanged(ulong aInstance, IntPtr aHandler);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static bool UIImageToggleButton_IsActive(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIImageToggleButton_SetActive(ulong aInstance, bool aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIImageToggleButton_SetActiveImage(ulong aInstance, ulong aImage);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIImageToggleButton_SetInactiveImage(ulong aInstance, ulong aImage);
     }
 }

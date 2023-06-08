@@ -39,29 +39,5 @@ namespace SpockEngine
 
             UITextInput_OnTextChanged(mInstance, onChanged);
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITextInput_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITextInput_CreateWithText(string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextInput_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static string UITextInput_GetText(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextInput_OnTextChanged(ulong aInstance, OnChangeDelegate aHandler);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextInput_SetHintText(ulong aInstance, string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextInput_SetTextColor(ulong aInstance, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITextInput_SetBufferSize(ulong aInstance, uint aSize);
     }
 }

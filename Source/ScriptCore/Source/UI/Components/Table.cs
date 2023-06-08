@@ -57,15 +57,6 @@ namespace SpockEngine
         {
             SetForegroundColor(aForegroundColor.ToArray());
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITableColumn_SetTooltip(ulong aInstance, ulong[] aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITableColumn_SetBackgroundColor(ulong aInstance, Math.vec4[] aForegroundColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITableColumn_SetForegroundColor(ulong aInstance, Math.vec4[] aForegroundColor);
     }
 
     public class UIFloat64Column : UITableColumn
@@ -117,20 +108,6 @@ namespace SpockEngine
             SetBackgroundColor(aBackroundColor);
         }
 
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64Column_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64Column_CreateFull(string aHeader, float aInitialSize, string aFormat, string aNaNFormat);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIFloat64Column_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIFloat64Column_Clear(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIFloat64Column_SetData(ulong aInstance, double[] aValue);
     }
 
     public class UIUint32Column : UITableColumn
@@ -180,20 +157,6 @@ namespace SpockEngine
             SetBackgroundColor(aBackroundColor);
         }
 
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIUint32Column_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIUint32Column_CreateFull(string aHeader, float aInitialSize);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIUint32Column_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIUint32Column_Clear(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIUint32Column_SetData(ulong aInstance, uint[] aValue);
     }
 
     public class UIStringColumn : UITableColumn
@@ -245,20 +208,6 @@ namespace SpockEngine
             SetBackgroundColor(aBackroundColor);
         }
 
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIStringColumn_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIStringColumn_CreateFull(string aHeader, float aInitialSize);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIStringColumn_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIStringColumn_Clear(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIStringColumn_SetData(ulong aInstance, string[] aValue);
     }
 
     public class UITable : UIComponent
@@ -305,28 +254,5 @@ namespace SpockEngine
             UITable_OnRowClicked(mInstance, Marshal.GetFunctionPointerForDelegate(onRowClickedDelegate));
         }
 
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITable_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITable_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITable_OnRowClicked(ulong aInstance, IntPtr aHandler);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITable_AddColumn(ulong aInstance, ulong aColumnInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITable_SetRowHeight(ulong aInstance, float aRowHeight);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITable_SetRowBackgroundColor(ulong aInstance, Math.vec4[] aColors);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITable_ClearRowBackgroundColor(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITable_SetDisplayedRowIndices(ulong aInstance, int[] aIndices);
     }
 }

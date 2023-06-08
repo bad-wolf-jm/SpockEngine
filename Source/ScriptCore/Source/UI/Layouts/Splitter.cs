@@ -32,24 +32,5 @@ namespace SpockEngine
 
             UISplitter_Add2(mInstance, lInstance);
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UISplitter_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UISplitter_CreateWithOrientation(eBoxLayoutOrientation aOrientation);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UISplitter_Add1(ulong aInstance, ulong aChild);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UISplitter_Add2(ulong aInstance, ulong aChild);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UISplitter_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UISplitter_SetItemSpacing(ulong aInstance, float aItemSpacing);
-
     }
 }

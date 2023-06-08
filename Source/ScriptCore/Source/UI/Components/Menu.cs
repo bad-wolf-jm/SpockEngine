@@ -43,30 +43,6 @@ namespace SpockEngine
 
             UIMenuItem_OnTrigger(mInstance, Marshal.GetFunctionPointerForDelegate(onTriggered));
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenuItem_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenuItem_CreateWithTextAndShortcut(string aText, string aShortcut);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenuItem_CreateWithText(string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIMenuItem_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIMenuItem_SetText(ulong aInstance, string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIMenuItem_SetShortcut(ulong aInstance, string aShortcut);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIMenuItem_SetTextColor(ulong aInstance, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIMenuItem_OnTrigger(ulong aInstance, IntPtr aHandler);
     }
 
     public class UIMenuSeparator : UIMenuItem
@@ -76,12 +52,6 @@ namespace SpockEngine
         public UIMenuSeparator(ulong aDerived) : base(aDerived, true) { }
 
         ~UIMenuSeparator() { UIMenuSeparator_Destroy(mInstance); }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenuSeparator_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIMenuSeparator_Destroy(ulong aInstance);
     }
 
 
@@ -123,27 +93,6 @@ namespace SpockEngine
         }
 
         public void Update() { UIMenu_Update(mInstance); }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenu_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenu_CreateWithText(string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIMenu_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenu_AddAction(ulong aInstance, string aName, string aShortcut);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenu_AddSeparator(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIMenu_AddMenu(ulong aInstance, string aName);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIMenu_Update(ulong aInstance);
     }
 
 

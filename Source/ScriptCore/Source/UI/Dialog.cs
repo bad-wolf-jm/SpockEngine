@@ -23,32 +23,5 @@ namespace SpockEngine
         public void Open() { UIDialog_Open(mInstance); }
         
         public void Close() { UIDialog_Close(mInstance); }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIDialog_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIDialog_CreateWithTitleAndSize(ulong aInstance, string aTitle, Math.vec2 aSize);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDialog_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDialog_SetTitle(ulong aInstance, string aTitle);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDialog_SetSize(ulong aInstance, Math.vec2 aSize);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDialog_SetContent(ulong aInstance, ulong aContent);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDialog_Update(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDialog_Open(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIDialog_Close(ulong aInstance);
     }
 }

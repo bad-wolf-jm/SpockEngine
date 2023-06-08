@@ -62,21 +62,6 @@ namespace SpockEngine
             get { return mYAxis; }
             set { mYAxis = value; UIPlotData_SetYAxis(mInstance, value); }
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlotData_SetThickness(ulong aInstance, float aThickness);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlotData_SetLegend(ulong aInstance, string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlotData_SetColor(ulong aInstance, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlotData_SetXAxis(ulong aInstance, eUIPlotAxis aAxis);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlotData_SetYAxis(ulong aInstance, eUIPlotAxis aAxis);
     }
 
     public class UIVLinePlot : UIPlotData
@@ -94,14 +79,6 @@ namespace SpockEngine
             set { mX = value; UIVLinePlot_SetX(mInstance, value); }
         }
 
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVLinePlot_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVLinePlot_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVLinePlot_SetX(ulong aInstance, double[] aValues);
     }
 
     public class UIHLinePlot : UIPlotData
@@ -119,14 +96,6 @@ namespace SpockEngine
             set { mY = value; UIHLinePlot_SetY(mInstance, value); }
         }
 
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIHLinePlot_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIHLinePlot_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIHLinePlot_SetY(ulong aInstance, double[] aValues);
     }
 
     public class UIAxisTag : UIPlotData
@@ -164,32 +133,6 @@ namespace SpockEngine
             set { UIAxisTag_SetAxis(mInstance, value); }
         }
 
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIAxisTag_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIAxisTag_CreateWithTextAndColor(eUIPlotAxis aAxis, double aX, string aText, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIAxisTag_Destroy(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIAxisTag_SetX(ulong aSelf, double aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIAxisTag_SetText(ulong aSelf, string aText);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static Math.vec4 UIAxisTag_GetColor(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIAxisTag_SetColor(ulong aSelf, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static eUIPlotAxis UIAxisTag_GetAxis(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIAxisTag_SetAxis(ulong aSelf, eUIPlotAxis aColor);
     }
 
     public class UIVRange : UIPlotData
@@ -211,24 +154,6 @@ namespace SpockEngine
             get { return UIVRangePlot_GetMax(mInstance); }
             set { UIVRangePlot_SetMax(mInstance, value); }
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVRangePlot_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVRangePlot_Destroy(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static double UIVRangePlot_GetMin(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVRangePlot_SetMin(ulong aSelf, double aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static double UIVRangePlot_GetMax(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVRangePlot_SetMax(ulong aSelf, double aValue);
     }
 
     public class UIHRange : UIPlotData
@@ -250,24 +175,6 @@ namespace SpockEngine
             get { return UIHRangePlot_GetMax(mInstance); }
             set { UIHRangePlot_SetMax(mInstance, value); }
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIHRangePlot_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIHRangePlot_Destroy(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static double UIHRangePlot_GetMin(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIHRangePlot_SetMin(ulong aSelf, double aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static double UIHRangePlot_GetMax(ulong aSelf);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIHRangePlot_SetMax(ulong aSelf, double aValue);
     }
 
     public class UIFloat64LinePlot : UIPlotData
@@ -293,18 +200,6 @@ namespace SpockEngine
             get { return mY; }
             set { mY = value; UIFloat64LinePlot_SetY(mInstance, value); }
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64LinePlot_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64LinePlot_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64LinePlot_SetX(ulong aInstance, double[] aValues);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64LinePlot_SetY(ulong aInstance, double[] aValues);
     }
 
     public class UIFloat64ScatterPlot : UIPlotData
@@ -330,18 +225,6 @@ namespace SpockEngine
             get { return mY; }
             set { mY = value; UIFloat64ScatterPlot_SetY(mInstance, value); }
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64ScatterPlot_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64ScatterPlot_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64ScatterPlot_SetX(ulong aInstance, double[] aValues);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIFloat64ScatterPlot_SetY(ulong aInstance, double[] aValues);
     }
 
     public class UIPlotAxis
@@ -365,15 +248,6 @@ namespace SpockEngine
         {
             UIPlot_SetAxisLimits(mPlotInstance, mAxis, aMin, aMax);
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIPlot_SetAxisLimits(ulong aInstance, eUIPlotAxis aAxis, double aMin, double aMax);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static string UIPlot_GetAxisTitle(ulong aInstance, eUIPlotAxis aAxis);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIPlot_SetAxisTitle(ulong aInstance, eUIPlotAxis aAxis, string aTitle);
     }
 
 
@@ -507,23 +381,5 @@ namespace SpockEngine
 
             return lNewPlot;
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlot_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIPlot_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIPlot_Clear(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlot_ConfigureLegend(ulong aInstance, Math.vec2 aLegendPadding, Math.vec2 aLegendInnerPadding, Math.vec2 aLegendSpacing);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlot_Add(ulong aInstance, ulong aPlot);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIPlot_PlotVLines(ulong aInstance, double[] a, string aLegend, Math.vec4 aColor);
     }
 }

@@ -37,27 +37,6 @@ namespace SpockEngine
         {
             set { UIVec2Input_SetFormat(mInstance, value); }
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVec2Input_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVec2Input_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec2Input_OnChanged(ulong aInstance, IntPtr aDelegate);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec2Input_SetValue(ulong aInstance, Math.vec2 aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec2Input_SetResetValues(ulong aInstance, Math.vec2 aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static Math.vec2 UIVec2Input_GetValue(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec2Input_SetFormat(ulong aInstance, string aFormat);
     }
 
     public class UIVec3Input : UIComponent
@@ -93,29 +72,6 @@ namespace SpockEngine
         {
             set { UIVec3Input_SetFormat(mInstance, value); }
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVec3Input_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVec3Input_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec3Input_OnChanged(ulong aInstance, IntPtr aDelegate);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec3Input_SetValue(ulong aInstance, Math.vec2 aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec3Input_SetResetValues(ulong aInstance, Math.vec2 aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static Math.vec2 UIVec3Input_GetValue(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec3Input_SetFormat(ulong aInstance, string aFormat);
-
-
     }
 
     public class UIVec4Input : UIComponent
@@ -152,27 +108,6 @@ namespace SpockEngine
         {
             set { UIVec4Input_SetFormat(mInstance, value); }
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVec4Input_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UIVec4Input_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec4Input_OnChanged(ulong aInstance, IntPtr aDelegate);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec4Input_SetValue(ulong aInstance, Math.vec2 aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec4Input_SetResetValues(ulong aInstance, Math.vec2 aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static Math.vec2 UIVec4Input_GetValue(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UIVec4Input_SetFormat(ulong aInstance, string aFormat);
     }
 
 

@@ -51,24 +51,6 @@ namespace SpockEngine
 
             return lNewChild;
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITreeViewNode_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITreeViewNode_SetText(ulong aInstance, string aValue);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITreeViewNode_SetTextColor(ulong aInstance, Math.vec4 aColor);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITreeViewNode_SetIcon(ulong aInstance, ulong aIcon);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITreeViewNode_SetIndicator(ulong aInstance, ulong aIcon);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITreeViewNode_Add(ulong aInstance);
     }
 
     public class UITreeView : UIComponent
@@ -90,20 +72,5 @@ namespace SpockEngine
 
             return lNewChild;
         }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITreeView_Create();
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITreeView_Destroy(ulong aInstance);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITreeView_SetIndent(ulong aInstance, float aIndent);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static void UITreeView_SetIconSpacing(ulong aInstance, float aSpacing);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private extern static ulong UITreeView_Add(ulong aInstance);
     }
 }
