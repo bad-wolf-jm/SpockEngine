@@ -144,4 +144,6 @@ namespace SE::Core
 
     void Engine::Shutdown() { IWindow::ShutdownWindowingBackend(); }
 
+    std::unique_ptr<Engine> &Engine::GetInstance() { return mUniqueInstance; };
+
 } // namespace SE::Core
