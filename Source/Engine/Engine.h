@@ -111,7 +111,7 @@ namespace SE::Core
                                 UIConfiguration const &aUIConfiguration );
         static void Shutdown();
 
-        static std::unique_ptr<Engine> &GetInstance() { return mUniqueInstance; };
+        static std::unique_ptr<Engine> &GetInstance();
 
         void SubmitToMainThread( const std::function<void()> &aThunk );
         void ExecuteMainThreadQueue();

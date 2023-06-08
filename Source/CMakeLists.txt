@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.20)
 
 project(LTSimulationEngine LANGUAGES CXX C)
 
-add_library(LTSimulationEngineRuntime STATIC
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
+add_library(LTSimulationEngineRuntime SHARED
     Core/File.cpp
     Core/Resource.cpp
     Core/Logging.cpp
@@ -125,7 +127,7 @@ add_shader(LTSimulationEngineRuntime "ui_shader.frag")
 
 set(MONO_PATH "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug")
 
-target_link_libraries(LTSimulationEngineRuntime PRIVATE
+target_link_libraries(LTSimulationEngineRuntime PUBLIC
     Vulkan::Vulkan
     imgui
     imguizmo
@@ -149,7 +151,7 @@ target_link_libraries(LTSimulationEngineRuntime PRIVATE
     pugixml
     glfw)
 
-target_compile_definitions(LTSimulationEngineRuntime PRIVATE)
+target_compile_definitions(LTSimulationEngineRuntime PUBLIC LTSimulationEngineRuntime )
 target_compile_options(LTSimulationEngineRuntime PRIVATE
     $<$<COMPILE_LANGUAGE:CUDA>: --expt-relaxed-constexpr -Xcudafe "--display_error_number --diag_suppress=\"20012,20044\"">
     $<$<COMPILE_LANGUAGE:CXX>:/bigobj /wd4068>)
@@ -157,5 +159,5 @@ target_compile_options(LTSimulationEngineRuntime PRIVATE
 add_executable(OTDR_Run WIN32 Launch/OtdrMain.cpp)
 target_include_directories(OTDR_Run PRIVATE Source ${SE_EXTRA_INCLUDES})
 target_compile_definitions(OTDR_Run PRIVATE VK_USE_PLATFORM_WIN32_KHR)
-target_link_libraries( OTDR_Run LTSimulationEngineRuntime lua::lua)
+target_link_libraries( OTDR_Run PRIVATE LTSimulationEngineRuntime)
 set_target_properties( OTDR_Run PROPERTIES LINK_FLAGS /SUBSYSTEM:CONSOLE )
