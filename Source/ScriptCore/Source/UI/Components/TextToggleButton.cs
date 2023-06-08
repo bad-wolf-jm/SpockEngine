@@ -6,26 +6,26 @@ namespace SpockEngine
 {
     public class UITextToggleButton : UILabel
     {
-        public UITextToggleButton() : base(UITextToggleButton_Create(), true) { }
+        public UITextToggleButton() : base(Interop.UITextToggleButton_Create(), true) { }
 
-        public UITextToggleButton(string aText) : base(UITextToggleButton_CreateWithText(aText), true) { }
+        public UITextToggleButton(string aText) : base(Interop.UITextToggleButton_CreateWithText(aText), true) { }
 
-        ~UITextToggleButton() { UITextToggleButton_Destroy(mInstance); }
+        ~UITextToggleButton() { Interop.UITextToggleButton_Destroy(mInstance); }
 
         public bool Active
         {
-            get { return UITextToggleButton_IsActive(mInstance); }
-            set { UITextToggleButton_SetActive(mInstance, value); }
+            get { return Interop.UITextToggleButton_IsActive(mInstance); }
+            set { Interop.UITextToggleButton_SetActive(mInstance, value); }
         }
 
         public void SetActiveColor(Math.vec4 aColor)
         {
-            UITextToggleButton_SetActiveColor(mInstance, aColor);
+            Interop.UITextToggleButton_SetActiveColor(mInstance, aColor);
         }
 
         public void SetInactiveColor(Math.vec4 aColor)
         {
-            UITextToggleButton_SetInactiveColor(mInstance, aColor);
+            Interop.UITextToggleButton_SetInactiveColor(mInstance, aColor);
         }
 
         public delegate bool OnClickDelegate(bool aValue);
@@ -34,7 +34,7 @@ namespace SpockEngine
         {
             onClicked = aHandler;
 
-            UITextToggleButton_OnClicked(mInstance, Marshal.GetFunctionPointerForDelegate(onClicked));
+            Interop.UITextToggleButton_OnClicked(mInstance, Marshal.GetFunctionPointerForDelegate(onClicked));
         }
 
         public delegate bool OnChangeDelegate();
@@ -43,7 +43,7 @@ namespace SpockEngine
         {
             onChanged = aHandler;
             
-            UITextToggleButton_OnChanged(mInstance, Marshal.GetFunctionPointerForDelegate(onChanged));
+            Interop.UITextToggleButton_OnChanged(mInstance, Marshal.GetFunctionPointerForDelegate(onChanged));
         }
     }
 }

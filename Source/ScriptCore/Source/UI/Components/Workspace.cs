@@ -9,22 +9,22 @@ namespace SpockEngine
     {
         public delegate bool DocumentSaveDelegate();
 
-        public UIWorkspaceDocument() : base(UIWorkspaceDocument_Create())
+        public UIWorkspaceDocument() : base(Interop.UIWorkspaceDocument_Create())
         {
-            UIWorkspaceDocument_RegisterSaveDelegate(mInstance, DoSave);
+            Interop.UIWorkspaceDocument_RegisterSaveDelegate(mInstance, DoSave);
         }
 
         public bool IsDirty
         {
-            get { return UIWorkspaceDocument_IsDirty(mInstance); }
-            set { UIWorkspaceDocument_MarkAsDirty(mInstance, value); }
+            get { return Interop.UIWorkspaceDocument_IsDirty(mInstance); }
+            set { Interop.UIWorkspaceDocument_MarkAsDirty(mInstance, value); }
         }
 
-        public void Open() { UIWorkspaceDocument_IsDirty(mInstance); }
+        public void Open() { Interop.UIWorkspaceDocument_IsDirty(mInstance); }
 
-        public void RequestClose() { UIWorkspaceDocument_RequestClose(mInstance); }
+        public void RequestClose() { Interop.UIWorkspaceDocument_RequestClose(mInstance); }
 
-        public void ForceClose() { UIWorkspaceDocument_ForceClose(mInstance); }
+        public void ForceClose() { Interop.UIWorkspaceDocument_ForceClose(mInstance); }
 
         public virtual bool DoSave() { return true; }
     }
@@ -35,10 +35,10 @@ namespace SpockEngine
 
         public delegate void DocumentCloseDelegate(ulong[] aDocumentList);
 
-        public UIWorkspace() : base(UIWorkspace_Create()) { 
+        public UIWorkspace() : base(Interop.UIWorkspace_Create()) { 
             mDocuments = new List<UIWorkspaceDocument>(); 
 
-            UIWorkspace_RegisterCloseDocumentDelegate(mInstance, CloseDocuments);
+            Interop.UIWorkspace_RegisterCloseDocumentDelegate(mInstance, CloseDocuments);
         }
 
         private void CloseDocuments(ulong[] aPtrList) 
@@ -48,13 +48,13 @@ namespace SpockEngine
 
         public UIWorkspace(ulong aSelf) : base(aSelf) { mDocuments = new List<UIWorkspaceDocument>(); }
 
-        ~UIWorkspace() { UIWorkspace_Destroy(mInstance); }
+        ~UIWorkspace() { Interop.UIWorkspace_Destroy(mInstance); }
 
         public void Add(UIWorkspaceDocument aDocument)
         {
             mDocuments.Add(aDocument);
 
-            UIWorkspace_Add(mInstance, aDocument.Instance);
+            Interop.UIWorkspace_Add(mInstance, aDocument.Instance);
         }
     }
 }

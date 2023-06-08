@@ -5,18 +5,18 @@ namespace SpockEngine
 {
     public class UIPropertyValue : UIBoxLayout
     {
-        public UIPropertyValue() : base(UIPropertyValue_Create(), true) { }
+        public UIPropertyValue() : base(Interop.UIPropertyValue_Create(), true) { }
 
-        public UIPropertyValue(string aText) : base(UIPropertyValue_CreateWithText(aText), true) { }
+        public UIPropertyValue(string aText) : base(Interop.UIPropertyValue_CreateWithText(aText), true) { }
 
-        public UIPropertyValue(string aText, eBoxLayoutOrientation aOrientation) : base(UIPropertyValue_CreateWithTextAndOrientation(aText, aOrientation), true) { }
+        public UIPropertyValue(string aText, eBoxLayoutOrientation aOrientation) : base(Interop.UIPropertyValue_CreateWithTextAndOrientation(aText, aOrientation), true) { }
 
-        ~UIPropertyValue() { UIPropertyValue_Destroy(mInstance); }
+        ~UIPropertyValue() { Interop.UIPropertyValue_Destroy(mInstance); }
 
-        public void SetValue(string aText) { UIPropertyValue_SetValue(mInstance, aText); }
+        public void SetValue(string aText) { Interop.UIPropertyValue_SetValue(mInstance, aText); }
 
-        public void SetValueFont(eFontFamily aFont) { UIPropertyValue_SetValueFont(mInstance, aFont); }
+        public void SetValueFont(eFontFamily aFont) { Interop.UIPropertyValue_SetValueFont(mInstance, aFont); }
 
-        public void SetNameFont(eFontFamily aFont) { UIPropertyValue_SetNameFont(mInstance, aFont); }
+        public void SetNameFont(eFontFamily aFont) { Interop.UIPropertyValue_SetNameFont(mInstance, aFont); }
     }
 }

@@ -5,10 +5,10 @@ namespace SpockEngine
 {
     public class UIFileTree : UITreeView
     {
-        public UIFileTree() : base(UIFileTree_Create(), true) { }
+        public UIFileTree() : base(Interop.UIFileTree_Create(), true) { }
 
-        ~UIFileTree() { UIFileTree_Destroy(mInstance); }
+        ~UIFileTree() { Interop.UIFileTree_Destroy(mInstance); }
 
-        public void Add(string aText) { UIFileTree_Add(mInstance, aText); }
+        public void Add(string aText) { Interop.UIFileTree_Add(mInstance, aText); }
     }
 }

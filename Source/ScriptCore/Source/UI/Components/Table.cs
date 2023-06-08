@@ -19,7 +19,7 @@ namespace SpockEngine
         private UIComponent[] mToolTips;
         private void SetTooltip(ulong[] aTooltips)
         {
-            UITableColumn_SetTooltip(mInstance, aTooltips);
+            Interop.UITableColumn_SetTooltip(mInstance, aTooltips);
         }
 
         public void SetTooltip(UIComponent[] aTooltips)
@@ -40,7 +40,7 @@ namespace SpockEngine
 
         public void SetBackgroundColor(Math.vec4[] aBackgroundColor)
         {
-            UITableColumn_SetBackgroundColor(mInstance, aBackgroundColor);
+            Interop.UITableColumn_SetBackgroundColor(mInstance, aBackgroundColor);
         }
 
         public void SetBackgroundColor(List<Math.vec4> aBackroundColor)
@@ -50,7 +50,7 @@ namespace SpockEngine
 
         public void SetForegroundColor(Math.vec4[] aForegroundColor)
         {
-            UITableColumn_SetForegroundColor(mInstance, aForegroundColor);
+            Interop.UITableColumn_SetForegroundColor(mInstance, aForegroundColor);
         }
 
         public void SetForegroundColor(List<Math.vec4> aForegroundColor)
@@ -61,20 +61,20 @@ namespace SpockEngine
 
     public class UIFloat64Column : UITableColumn
     {
-        public UIFloat64Column() : base(UIFloat64Column_Create()) { }
+        public UIFloat64Column() : base(Interop.UIFloat64Column_Create()) { }
         public UIFloat64Column(string aHeader, float aInitialSize, string aFormat, string aNaNFormat)
-            : base(UIFloat64Column_CreateFull(aHeader, aInitialSize, aFormat, aNaNFormat)) { }
+            : base(Interop.UIFloat64Column_CreateFull(aHeader, aInitialSize, aFormat, aNaNFormat)) { }
 
-        ~UIFloat64Column() { UIFloat64Column_Destroy(mInstance); }
+        ~UIFloat64Column() { Interop.UIFloat64Column_Destroy(mInstance); }
 
         public void Clear()
         {
-            UIFloat64Column_Clear(mInstance);
+            Interop.UIFloat64Column_Clear(mInstance);
         }
 
         public void SetData(double[] aValue)
         {
-            UIFloat64Column_SetData(mInstance, aValue);
+            Interop.UIFloat64Column_SetData(mInstance, aValue);
         }
 
         public void SetData(List<double> aValue)
@@ -112,20 +112,20 @@ namespace SpockEngine
 
     public class UIUint32Column : UITableColumn
     {
-        public UIUint32Column() : base(UIUint32Column_Create()) { }
+        public UIUint32Column() : base(Interop.UIUint32Column_Create()) { }
         public UIUint32Column(string aHeader, float aInitialSize)
-            : base(UIUint32Column_CreateFull(aHeader, aInitialSize)) { }
+            : base(Interop.UIUint32Column_CreateFull(aHeader, aInitialSize)) { }
 
-        ~UIUint32Column() { UIUint32Column_Destroy(mInstance); }
+        ~UIUint32Column() { Interop.UIUint32Column_Destroy(mInstance); }
 
         public void Clear()
         {
-            UIUint32Column_Clear(mInstance);
+            Interop.UIUint32Column_Clear(mInstance);
         }
 
         public void SetData(uint[] aValue)
         {
-            UIUint32Column_SetData(mInstance, aValue);
+            Interop.UIUint32Column_SetData(mInstance, aValue);
         }
         public void SetData(List<uint> aValue)
         {
@@ -161,20 +161,20 @@ namespace SpockEngine
 
     public class UIStringColumn : UITableColumn
     {
-        public UIStringColumn() : base(UIStringColumn_Create()) { }
+        public UIStringColumn() : base(Interop.UIStringColumn_Create()) { }
         public UIStringColumn(string aHeader, float aInitialSize)
-            : base(UIStringColumn_CreateFull(aHeader, aInitialSize)) { }
+            : base(Interop.UIStringColumn_CreateFull(aHeader, aInitialSize)) { }
 
-        ~UIStringColumn() { UIStringColumn_Destroy(mInstance); }
+        ~UIStringColumn() { Interop.UIStringColumn_Destroy(mInstance); }
 
         public void Clear()
         {
-            UIStringColumn_Clear(mInstance);
+            Interop.UIStringColumn_Clear(mInstance);
         }
 
         public void SetData(string[] aValue)
         {
-            UIStringColumn_SetData(mInstance, aValue);
+            Interop.UIStringColumn_SetData(mInstance, aValue);
         }
 
         public void SetData(List<string> aValue)
@@ -212,17 +212,17 @@ namespace SpockEngine
 
     public class UITable : UIComponent
     {
-        public UITable() : base(UITable_Create()) { }
+        public UITable() : base(Interop.UITable_Create()) { }
 
-        ~UITable() { UITable_Destroy(mInstance); }
+        ~UITable() { Interop.UITable_Destroy(mInstance); }
 
-        public void SetRowHeight(float aRowHeight) { UITable_SetRowHeight(mInstance, aRowHeight); }
+        public void SetRowHeight(float aRowHeight) { Interop.UITable_SetRowHeight(mInstance, aRowHeight); }
 
-        public void AddColumn(UITableColumn aColumn) { UITable_AddColumn(mInstance, aColumn.Instance); }
+        public void AddColumn(UITableColumn aColumn) { Interop.UITable_AddColumn(mInstance, aColumn.Instance); }
 
         public void SetDisplayedRowIndices(int[] aIndices)
         {
-            UITable_SetDisplayedRowIndices(mInstance, aIndices);
+            Interop.UITable_SetDisplayedRowIndices(mInstance, aIndices);
         }
 
         public void SetDisplayedRowIndices(List<int> aIndices)
@@ -232,7 +232,7 @@ namespace SpockEngine
 
         public void SetRowBackgroundColor(Math.vec4[] aColors)
         {
-            UITable_SetRowBackgroundColor(mInstance, aColors);
+            Interop.UITable_SetRowBackgroundColor(mInstance, aColors);
         }
 
         public void SetRowBackgroundColor(List<Math.vec4> aColors)
@@ -242,7 +242,7 @@ namespace SpockEngine
 
         public void ClearRowBackgroundColors()
         {
-            UITable_ClearRowBackgroundColor(mInstance);
+            Interop.UITable_ClearRowBackgroundColor(mInstance);
         }
 
         public delegate void RowClickedDelegate(int aRow);
@@ -251,7 +251,7 @@ namespace SpockEngine
         {
             onRowClickedDelegate = aHandler;
 
-            UITable_OnRowClicked(mInstance, Marshal.GetFunctionPointerForDelegate(onRowClickedDelegate));
+            Interop.UITable_OnRowClicked(mInstance, Marshal.GetFunctionPointerForDelegate(onRowClickedDelegate));
         }
 
     }
