@@ -6,9 +6,9 @@ namespace SpockEngine
 {
     public class UICheckBox : UIComponent
     {
-        public UICheckBox() : base(UICheckBox_Create()) { }
+        public UICheckBox() : base(Interop.UICheckBox_Create()) { }
 
-        ~UICheckBox() { UICheckBox_Destroy(mInstance); }
+        ~UICheckBox() { Interop.UICheckBox_Destroy(mInstance); }
 
 
         public delegate void OnClickDelegate();
@@ -17,13 +17,13 @@ namespace SpockEngine
         {
             onChanged = aHandler;
 
-            UICheckBox_OnClick(mInstance, Marshal.GetFunctionPointerForDelegate(onChanged));
+            Interop.UICheckBox_OnClick(mInstance, Marshal.GetFunctionPointerForDelegate(onChanged));
         }
 
         public bool IsChecked
         {
-            get { return UICheckBox_IsChecked(mInstance); }
-            set { UICheckBox_SetIsChecked(mInstance, value); }
+            get { return Interop.UICheckBox_IsChecked(mInstance); }
+            set { Interop.UICheckBox_SetIsChecked(mInstance, value); }
         }
     }
 }
