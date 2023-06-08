@@ -5,30 +5,30 @@ namespace SpockEngine
 {
     public class UITextInput : UIComponent
     {
-        public UITextInput() : base(UITextInput_Create()) { }
+        public UITextInput() : base(Interop.UITextInput_Create()) { }
 
-        public UITextInput(string aText) : base(UITextInput_CreateWithText(aText)) { }
+        public UITextInput(string aText) : base(Interop.UITextInput_CreateWithText(aText)) { }
 
-        ~UITextInput() { UITextInput_Destroy(mInstance); }
+        ~UITextInput() { Interop.UITextInput_Destroy(mInstance); }
 
         public string Text
         {
-            get { return UITextInput_GetText(mInstance); }
+            get { return Interop.UITextInput_GetText(mInstance); }
         }
 
         public void SetTextColor(Math.vec4 aColor)
         {
-            UITextInput_SetTextColor(mInstance, aColor);
+            Interop.UITextInput_SetTextColor(mInstance, aColor);
         }
 
         public void SetHintText(string aText)
         {
-            UITextInput_SetHintText(mInstance, aText);
+            Interop.UITextInput_SetHintText(mInstance, aText);
         }
 
         public void SetBufferSize(uint aSize)
         {
-            UITextInput_SetBufferSize(mInstance, aSize);
+            Interop.UITextInput_SetBufferSize(mInstance, aSize);
         }
 
         public delegate bool OnChangeDelegate(string aValue);
@@ -37,7 +37,7 @@ namespace SpockEngine
         {
             onChanged = aHandler;
 
-            UITextInput_OnTextChanged(mInstance, onChanged);
+            Interop.UITextInput_OnTextChanged(mInstance, onChanged);
         }
     }
 }

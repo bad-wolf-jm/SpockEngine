@@ -7,13 +7,13 @@ namespace SpockEngine
 {
     public class UIContainer : UIComponent
     {
-        public UIContainer() : base(UIContainer_Create()) { }
+        public UIContainer() : base(Interop.UIContainer_Create()) { }
 
-        ~UIContainer() { UIContainer_Destroy(mInstance); }
+        ~UIContainer() { Interop.UIContainer_Destroy(mInstance); }
 
         public void SetContent(UIComponent aChild)
         {
-            UIContainer_SetContent(mInstance, aChild.Instance);
+            Interop.UIContainer_SetContent(mInstance, aChild.Instance);
         }
     }
 }

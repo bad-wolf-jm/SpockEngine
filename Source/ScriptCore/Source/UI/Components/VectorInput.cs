@@ -8,10 +8,10 @@ namespace SpockEngine
     {
         private bool mDerived = false;
 
-        public UIVec2Input() : this(UIVec2Input_Create(), false) { }
+        public UIVec2Input() : this(Interop.UIVec2Input_Create(), false) { }
         public UIVec2Input(ulong aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
 
-        ~UIVec2Input() { if (!mDerived) UIVec2Input_Destroy(mInstance); }
+        ~UIVec2Input() { if (!mDerived) Interop.UIVec2Input_Destroy(mInstance); }
 
         public delegate void OnChangeDelegate();
         OnChangeDelegate onChange;
@@ -19,23 +19,23 @@ namespace SpockEngine
         {
             onChange = aHandler;
 
-            UIVec2Input_OnChanged(mInstance, Marshal.GetFunctionPointerForDelegate(onChange));
+            Interop.UIVec2Input_OnChanged(mInstance, Marshal.GetFunctionPointerForDelegate(onChange));
         }
 
         public Math.vec2 Value
         {
-            get { return UIVec2Input_GetValue(mInstance); }
-            set { UIVec2Input_SetValue(mInstance, value); }
+            get { return Interop.UIVec2Input_GetValue(mInstance); }
+            set { Interop.UIVec2Input_SetValue(mInstance, value); }
         }
 
         public Math.vec2 ResetValue
         {
-            set { UIVec2Input_SetResetValues(mInstance, value); }
+            set { Interop.UIVec2Input_SetResetValues(mInstance, value); }
         }
 
         public string Format
         {
-            set { UIVec2Input_SetFormat(mInstance, value); }
+            set { Interop.UIVec2Input_SetFormat(mInstance, value); }
         }
     }
 
@@ -43,10 +43,10 @@ namespace SpockEngine
     {
         private bool mDerived = false;
 
-        public UIVec3Input() : this(UIVec3Input_Create(), false) { }
+        public UIVec3Input() : this(Interop.UIVec3Input_Create(), false) { }
         public UIVec3Input(ulong aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
 
-        ~UIVec3Input() { if (!mDerived) UIVec3Input_Destroy(mInstance); }
+        ~UIVec3Input() { if (!mDerived) Interop.UIVec3Input_Destroy(mInstance); }
 
         public delegate void OnChangeDelegate();
         OnChangeDelegate onChange;
@@ -54,23 +54,23 @@ namespace SpockEngine
         {
             onChange = aHandler;
 
-            UIVec3Input_OnChanged(mInstance,  Marshal.GetFunctionPointerForDelegate(onChange));
+            Interop.UIVec3Input_OnChanged(mInstance,  Marshal.GetFunctionPointerForDelegate(onChange));
         }
 
         public Math.vec2 Value
         {
-            get { return UIVec3Input_GetValue(mInstance); }
-            set { UIVec3Input_SetValue(mInstance, value); }
+            get { return Interop.UIVec3Input_GetValue(mInstance); }
+            set { Interop.UIVec3Input_SetValue(mInstance, value); }
         }
 
         public Math.vec2 ResetValue
         {
-            set { UIVec3Input_SetResetValues(mInstance, value); }
+            set { Interop.UIVec3Input_SetResetValues(mInstance, value); }
         }
 
         public string Format
         {
-            set { UIVec3Input_SetFormat(mInstance, value); }
+            set { Interop.UIVec3Input_SetFormat(mInstance, value); }
         }
     }
 
@@ -78,10 +78,10 @@ namespace SpockEngine
     {
         private bool mDerived = false;
 
-        public UIVec4Input() : this(UIVec4Input_Create(), false) { }
+        public UIVec4Input() : this(Interop.UIVec4Input_Create(), false) { }
         public UIVec4Input(ulong aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
 
-        ~UIVec4Input() { if (!mDerived) UIVec4Input_Destroy(mInstance); }
+        ~UIVec4Input() { if (!mDerived) Interop.UIVec4Input_Destroy(mInstance); }
 
         public delegate void OnChangeDelegate();
         OnChangeDelegate onChange;
@@ -89,24 +89,24 @@ namespace SpockEngine
         {
             onChange = aHandler;
 
-            UIVec4Input_OnChanged(mInstance,  Marshal.GetFunctionPointerForDelegate(onChange));
+            Interop.UIVec4Input_OnChanged(mInstance,  Marshal.GetFunctionPointerForDelegate(onChange));
         }
 
         public Math.vec2 Value
         {
-            get { return UIVec4Input_GetValue(mInstance); }
-            set { UIVec4Input_SetValue(mInstance, value); }
+            get { return Interop.UIVec4Input_GetValue(mInstance); }
+            set { Interop.UIVec4Input_SetValue(mInstance, value); }
         }
 
         public Math.vec2 ResetValue
         {
-            set { UIVec4Input_SetResetValues(mInstance, value); }
+            set { Interop.UIVec4Input_SetResetValues(mInstance, value); }
         }
 
 
         public string Format
         {
-            set { UIVec4Input_SetFormat(mInstance, value); }
+            set { Interop.UIVec4Input_SetFormat(mInstance, value); }
         }
     }
 
