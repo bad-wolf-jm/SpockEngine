@@ -6,12 +6,12 @@ namespace SpockEngine
 {
     public class UIButton : UIComponent
     {
-        public UIButton() : base(UIButton_Create()) { }
-        public UIButton(string aText) : base(UIButton_CreateWithText(aText)) { }
+        public UIButton() : base(Interop.UIButton_Create()) { }
+        public UIButton(string aText) : base(Interop.UIButton_CreateWithText(aText)) { }
 
-        ~UIButton() { UIButton_Destroy(mInstance); }
+        ~UIButton() { Interop.UIButton_Destroy(mInstance); }
 
-        public void SetText(string aText) { UIButton_SetText(mInstance, aText); }
+        public void SetText(string aText) { Interop.UIButton_SetText(mInstance, aText); }
 
         public delegate void ClickDelegate();
         ClickDelegate onClick;
@@ -19,7 +19,7 @@ namespace SpockEngine
         {
             onClick = aHandler;
 
-            UIButton_OnClick(mInstance, Marshal.GetFunctionPointerForDelegate(onClick));
+            Interop.UIButton_OnClick(mInstance, Marshal.GetFunctionPointerForDelegate(onClick));
         }
     }
 }

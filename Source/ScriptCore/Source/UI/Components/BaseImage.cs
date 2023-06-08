@@ -6,36 +6,36 @@ namespace SpockEngine
     public class UIBaseImage : UIComponent
     {
         bool mDerived = false;
-        public UIBaseImage() : base(UIBaseImage_Create()) { mDerived = false; }
+        public UIBaseImage() : base(Interop.UIBaseImage_Create()) { mDerived = false; }
         public UIBaseImage(ulong aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
-        public UIBaseImage(string aText, Math.vec2 aSize) : base(UIBaseImage_CreateWithPath(aText, aSize)) { }
+        public UIBaseImage(string aText, Math.vec2 aSize) : base(Interop.UIBaseImage_CreateWithPath(aText, aSize)) { }
 
-        ~UIBaseImage() { if (!mDerived) UIBaseImage_Destroy(mInstance); }
+        ~UIBaseImage() { if (!mDerived) Interop.UIBaseImage_Destroy(mInstance); }
 
-        public void SetImage(string aText) { UIBaseImage_SetImage(mInstance, aText); }
+        public void SetImage(string aText) { Interop.UIBaseImage_SetImage(mInstance, aText); }
 
         public Math.vec2 Size
         {
-            get { return UIBaseImage_GetSize(mInstance); }
-            set { UIBaseImage_SetSize(mInstance, value); }
+            get { return Interop.UIBaseImage_GetSize(mInstance); }
+            set { Interop.UIBaseImage_SetSize(mInstance, value); }
         }
 
         public Math.vec4 TintColor
         {
-            get { return UIBaseImage_GetTintColor(mInstance); }
-            set { UIBaseImage_SetTintColor(mInstance, value); }
+            get { return Interop.UIBaseImage_GetTintColor(mInstance); }
+            set { Interop.UIBaseImage_SetTintColor(mInstance, value); }
         }
 
         public Math.vec2 TopLeft
         {
-            get { return UIBaseImage_GetTopLeft(mInstance); }
-            set { UIBaseImage_SetTopLeft(mInstance, value); }
+            get { return Interop.UIBaseImage_GetTopLeft(mInstance); }
+            set { Interop.UIBaseImage_SetTopLeft(mInstance, value); }
         }
 
         public Math.vec2 BottomRight
         {
-            get { return UIBaseImage_GetBottomRight(mInstance); }
-            set { UIBaseImage_SetBottomRight(mInstance, value); }
+            get { return Interop.UIBaseImage_GetBottomRight(mInstance); }
+            set { Interop.UIBaseImage_SetBottomRight(mInstance, value); }
         }
 
     }

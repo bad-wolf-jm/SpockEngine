@@ -28,64 +28,64 @@ namespace SpockEngine
         public bool IsVisible
         {
             get { return mIsVisible; }
-            set { mIsVisible = value; UIComponent_SetIsVisible(mInstance, value); }
+            set { mIsVisible = value; Interop.UIComponent_SetIsVisible(mInstance, value); }
         }
 
         private bool mIsEnabled;
         public bool IsEnabled
         {
             get { return mIsEnabled; }
-            set { mIsEnabled = value; UIComponent_SetIsEnabled(mInstance, value); }
+            set { mIsEnabled = value; Interop.UIComponent_SetIsEnabled(mInstance, value); }
         }
 
         private bool mAllowDragDrop;
         public bool AllowDragDrop
         {
             get { return mAllowDragDrop; }
-            set { mAllowDragDrop = value; UIComponent_SetAllowDragDrop(mInstance, value); }
+            set { mAllowDragDrop = value; Interop.UIComponent_SetAllowDragDrop(mInstance, value); }
         }
 
         private UIComponent mTooltip;
-        public UIComponent Tooltip { set { mTooltip = value; UIComponent_SetTooltip(mInstance, mTooltip.Instance); } }
+        public UIComponent Tooltip { set { mTooltip = value; Interop.UIComponent_SetTooltip(mInstance, mTooltip.Instance); } }
 
         public void SetPadding(float aPaddingAll)
         {
-            UIComponent_SetPaddingAll(mInstance, aPaddingAll);
+            Interop.UIComponent_SetPaddingAll(mInstance, aPaddingAll);
         }
 
         public void SetPadding(float aPaddingTopBottom, float aPaddingLeftRight)
         {
-            UIComponent_SetPaddingPairs(mInstance, aPaddingTopBottom, aPaddingLeftRight);
+            Interop.UIComponent_SetPaddingPairs(mInstance, aPaddingTopBottom, aPaddingLeftRight);
         }
 
         public void SetPadding(float aPaddingTop, float aPaddingBottom, float aPaddingLeft, float aPaddingRight)
         {
-            UIComponent_SetPaddingIndividual(mInstance, aPaddingTop, aPaddingBottom, aPaddingLeft, aPaddingRight);
+            Interop.UIComponent_SetPaddingIndividual(mInstance, aPaddingTop, aPaddingBottom, aPaddingLeft, aPaddingRight);
         }
 
         public void SetAlignment(eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment)
         {
-            UIComponent_SetAlignment(mInstance, aHAlignment, aVAlignment);
+            Interop.UIComponent_SetAlignment(mInstance, aHAlignment, aVAlignment);
         }
 
         public void SetHorizontalAlignment(eHorizontalAlignment aAlignment)
         {
-            UIComponent_SetHorizontalAlignment(mInstance, aAlignment);
+            Interop.UIComponent_SetHorizontalAlignment(mInstance, aAlignment);
         }
 
         public void SetVerticalAlignment(eVerticalAlignment aAlignment)
         {
-            UIComponent_SetVerticalAlignment(mInstance, aAlignment);
+            Interop.UIComponent_SetVerticalAlignment(mInstance, aAlignment);
         }
 
         public void SetBackgroundColor(Math.vec4 aColor)
         {
-            UIComponent_SetBackgroundColor(mInstance, aColor);
+            Interop.UIComponent_SetBackgroundColor(mInstance, aColor);
         }
 
         public void SetFont(eFontFamily aFont)
         {
-            UIComponent_SetFont(mInstance, aFont);
+            Interop.UIComponent_SetFont(mInstance, aFont);
         }
     }
 }

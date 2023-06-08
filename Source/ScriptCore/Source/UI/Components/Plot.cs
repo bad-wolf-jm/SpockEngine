@@ -36,47 +36,47 @@ namespace SpockEngine
         public float Thickness
         {
             get { return mThickness; }
-            set { mThickness = value; UIPlotData_SetThickness(mInstance, value); }
+            set { mThickness = value; Interop.UIPlotData_SetThickness(mInstance, value); }
         }
 
         public string Legend
         {
             get { return mLegend; }
-            set { mLegend = value; UIPlotData_SetLegend(mInstance, value); }
+            set { mLegend = value; Interop.UIPlotData_SetLegend(mInstance, value); }
         }
 
         public Math.vec4 Color
         {
             get { return mColor; }
-            set { mColor = value; UIPlotData_SetColor(mInstance, value); }
+            set { mColor = value; Interop.UIPlotData_SetColor(mInstance, value); }
         }
 
         public eUIPlotAxis XAxis
         {
             get { return mXAxis; }
-            set { mXAxis = value; UIPlotData_SetXAxis(mInstance, value); }
+            set { mXAxis = value; Interop.UIPlotData_SetXAxis(mInstance, value); }
         }
 
         public eUIPlotAxis YAxis
         {
             get { return mYAxis; }
-            set { mYAxis = value; UIPlotData_SetYAxis(mInstance, value); }
+            set { mYAxis = value; Interop.UIPlotData_SetYAxis(mInstance, value); }
         }
     }
 
     public class UIVLinePlot : UIPlotData
     {
-        public UIVLinePlot() : base(UIVLinePlot_Create()) { }
+        public UIVLinePlot() : base(Interop.UIVLinePlot_Create()) { }
 
         public UIVLinePlot(ulong aInstance) : base(aInstance) { }
 
-        ~UIVLinePlot() { UIVLinePlot_Destroy(mInstance); }
+        ~UIVLinePlot() { Interop.UIVLinePlot_Destroy(mInstance); }
 
         private double[] mX;
         public double[] X
         {
             get { return mX; }
-            set { mX = value; UIVLinePlot_SetX(mInstance, value); }
+            set { mX = value; Interop.UIVLinePlot_SetX(mInstance, value); }
         }
 
     }
@@ -100,90 +100,90 @@ namespace SpockEngine
 
     public class UIAxisTag : UIPlotData
     {
-        public UIAxisTag() : base(UIAxisTag_Create()) { }
-        public UIAxisTag(eUIPlotAxis aAxis, double aX, string aText, Math.vec4 aColor) : base(UIAxisTag_CreateWithTextAndColor(aAxis, aX, aText, aColor)) { }
+        public UIAxisTag() : base(Interop.UIAxisTag_Create()) { }
+        public UIAxisTag(eUIPlotAxis aAxis, double aX, string aText, Math.vec4 aColor) : base(Interop.UIAxisTag_CreateWithTextAndColor(aAxis, aX, aText, aColor)) { }
 
         public UIAxisTag(ulong aInstance) : base(aInstance) { }
 
-        ~UIAxisTag() { UIAxisTag_Destroy(mInstance); }
+        ~UIAxisTag() { Interop.UIAxisTag_Destroy(mInstance); }
 
         private double mX;
         public double Y
         {
             get { return mX; }
-            set { mX = value; UIAxisTag_SetX(mInstance, value); }
+            set { mX = value; Interop.UIAxisTag_SetX(mInstance, value); }
         }
 
         private string mText;
         public string Text
         {
             get { return mText; }
-            set { mText = value; UIAxisTag_SetText(mInstance, value); }
+            set { mText = value; Interop.UIAxisTag_SetText(mInstance, value); }
         }
 
         new public Math.vec4 Color
         {
-            get { return UIAxisTag_GetColor(mInstance); }
-            set { UIAxisTag_SetColor(mInstance, value); }
+            get { return Interop.UIAxisTag_GetColor(mInstance); }
+            set { Interop.UIAxisTag_SetColor(mInstance, value); }
         }
 
         new public eUIPlotAxis Axis
         {
-            get { return UIAxisTag_GetAxis(mInstance); }
-            set { UIAxisTag_SetAxis(mInstance, value); }
+            get { return Interop.UIAxisTag_GetAxis(mInstance); }
+            set { Interop.UIAxisTag_SetAxis(mInstance, value); }
         }
 
     }
 
     public class UIVRange : UIPlotData
     {
-        public UIVRange() : base(UIVRangePlot_Create()) { }
+        public UIVRange() : base(Interop.UIVRangePlot_Create()) { }
 
         public UIVRange(ulong aInstance) : base(aInstance) { }
 
-        ~UIVRange() { UIVRangePlot_Destroy(mInstance); }
+        ~UIVRange() { Interop.UIVRangePlot_Destroy(mInstance); }
 
         public double X0
         {
-            get { return UIVRangePlot_GetMin(mInstance); }
-            set { UIVRangePlot_SetMin(mInstance, value); }
+            get { return Interop.UIVRangePlot_GetMin(mInstance); }
+            set { Interop.UIVRangePlot_SetMin(mInstance, value); }
         }
 
         public double X1
         {
-            get { return UIVRangePlot_GetMax(mInstance); }
-            set { UIVRangePlot_SetMax(mInstance, value); }
+            get { return Interop.UIVRangePlot_GetMax(mInstance); }
+            set { Interop.UIVRangePlot_SetMax(mInstance, value); }
         }
     }
 
     public class UIHRange : UIPlotData
     {
-        public UIHRange() : base(UIHRangePlot_Create()) { }
+        public UIHRange() : base(Interop.UIHRangePlot_Create()) { }
 
         public UIHRange(ulong aInstance) : base(aInstance) { }
 
-        ~UIHRange() { UIHRangePlot_Destroy(mInstance); }
+        ~UIHRange() { Interop.UIHRangePlot_Destroy(mInstance); }
 
         public double Y0
         {
-            get { return UIHRangePlot_GetMin(mInstance); }
-            set { UIHRangePlot_SetMin(mInstance, value); }
+            get { return Interop.UIHRangePlot_GetMin(mInstance); }
+            set { Interop.UIHRangePlot_SetMin(mInstance, value); }
         }
 
         public double Y1
         {
-            get { return UIHRangePlot_GetMax(mInstance); }
-            set { UIHRangePlot_SetMax(mInstance, value); }
+            get { return Interop.UIHRangePlot_GetMax(mInstance); }
+            set { Interop.UIHRangePlot_SetMax(mInstance, value); }
         }
     }
 
     public class UIFloat64LinePlot : UIPlotData
     {
-        public UIFloat64LinePlot() : base(UIFloat64LinePlot_Create()) { }
+        public UIFloat64LinePlot() : base(Interop.UIFloat64LinePlot_Create()) { }
 
         public UIFloat64LinePlot(ulong aInstance) : base(aInstance) { }
 
-        ~UIFloat64LinePlot() { UIFloat64LinePlot_Destroy(mInstance); }
+        ~UIFloat64LinePlot() { Interop.UIFloat64LinePlot_Destroy(mInstance); }
 
         private double[] mX;
 
@@ -192,23 +192,23 @@ namespace SpockEngine
         public double[] X
         {
             get { return mX; }
-            set { mX = value; UIFloat64LinePlot_SetX(mInstance, value); }
+            set { mX = value; Interop.UIFloat64LinePlot_SetX(mInstance, value); }
         }
 
         public double[] Y
         {
             get { return mY; }
-            set { mY = value; UIFloat64LinePlot_SetY(mInstance, value); }
+            set { mY = value; Interop.UIFloat64LinePlot_SetY(mInstance, value); }
         }
     }
 
     public class UIFloat64ScatterPlot : UIPlotData
     {
-        public UIFloat64ScatterPlot() : base(UIFloat64ScatterPlot_Create()) { }
+        public UIFloat64ScatterPlot() : base(Interop.UIFloat64ScatterPlot_Create()) { }
 
         public UIFloat64ScatterPlot(ulong aInstance) : base(aInstance) { }
 
-        ~UIFloat64ScatterPlot() { UIFloat64ScatterPlot_Destroy(mInstance); }
+        ~UIFloat64ScatterPlot() { Interop.UIFloat64ScatterPlot_Destroy(mInstance); }
 
         private double[] mX;
 
@@ -217,13 +217,13 @@ namespace SpockEngine
         public double[] X
         {
             get { return mX; }
-            set { mX = value; UIFloat64ScatterPlot_SetX(mInstance, value); }
+            set { mX = value; Interop.UIFloat64ScatterPlot_SetX(mInstance, value); }
         }
 
         public double[] Y
         {
             get { return mY; }
-            set { mY = value; UIFloat64ScatterPlot_SetY(mInstance, value); }
+            set { mY = value; Interop.UIFloat64ScatterPlot_SetY(mInstance, value); }
         }
     }
 
@@ -240,13 +240,13 @@ namespace SpockEngine
 
         public string Title
         {
-            get { return UIPlot_GetAxisTitle(mPlotInstance, mAxis); }
-            set { UIPlot_SetAxisTitle(mPlotInstance, mAxis, value); }
+            get { return Interop.UIPlot_GetAxisTitle(mPlotInstance, mAxis); }
+            set { Interop.UIPlot_SetAxisTitle(mPlotInstance, mAxis, value); }
         }
 
         public void SetLimits(double aMin, double aMax)
         {
-            UIPlot_SetAxisLimits(mPlotInstance, mAxis, aMin, aMax);
+            Interop.UIPlot_SetAxisLimits(mPlotInstance, mAxis, aMin, aMax);
         }
     }
 
@@ -274,7 +274,7 @@ namespace SpockEngine
         private UIPlotAxis y3;
         public UIPlotAxis Y3 { get { return y3; } }
 
-        public UIPlot() : base(UIPlot_Create())
+        public UIPlot() : base(Interop.UIPlot_Create())
         {
             mPlots = new List<UIPlotData>();
 
@@ -298,25 +298,25 @@ namespace SpockEngine
             y3 = new UIPlotAxis(aSelf, eUIPlotAxis.Y3);
         }
 
-        ~UIPlot() { UIPlot_Destroy(mInstance); }
+        ~UIPlot() { Interop.UIPlot_Destroy(mInstance); }
 
         public void Clear()
         {
             mPlots.Clear();
 
-            UIPlot_Clear(mInstance);
+            Interop.UIPlot_Clear(mInstance);
         }
 
         public void ConfigureLegend(Math.vec2 aLegendPadding, Math.vec2 aLegendInnerPadding, Math.vec2 aLegendSpacing)
         {
-            UIPlot_ConfigureLegend(mInstance, aLegendPadding, aLegendInnerPadding, aLegendSpacing);
+            Interop.UIPlot_ConfigureLegend(mInstance, aLegendPadding, aLegendInnerPadding, aLegendSpacing);
         }
 
         public void Add(UIPlotData aPlot)
         {
             mPlots.Add(aPlot);
 
-            UIPlot_Add(mInstance, aPlot.Instance);
+            Interop.UIPlot_Add(mInstance, aPlot.Instance);
         }
 
         public UIFloat64LinePlot Plot(double[] aX, double[] aY, string aLegend = "", float aThickness = 1.0f, Math.vec4? aColor = null)
