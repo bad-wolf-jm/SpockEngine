@@ -7,7 +7,7 @@ namespace SpockEngine
     {
         bool mDerived = false;
         public UIBaseImage() : base(Interop.UIBaseImage_Create()) { mDerived = false; }
-        public UIBaseImage(ulong aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
+        public UIBaseImage(IntPtr aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
         public UIBaseImage(string aText, Math.vec2 aSize) : base(Interop.UIBaseImage_CreateWithPath(aText, aSize)) { }
 
         ~UIBaseImage() { if (!mDerived) Interop.UIBaseImage_Destroy(mInstance); }

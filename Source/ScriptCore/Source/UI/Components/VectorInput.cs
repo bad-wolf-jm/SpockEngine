@@ -9,7 +9,7 @@ namespace SpockEngine
         private bool mDerived = false;
 
         public UIVec2Input() : this(Interop.UIVec2Input_Create(), false) { }
-        public UIVec2Input(ulong aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
+        public UIVec2Input(IntPtr aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
 
         ~UIVec2Input() { if (!mDerived) Interop.UIVec2Input_Destroy(mInstance); }
 
@@ -44,7 +44,7 @@ namespace SpockEngine
         private bool mDerived = false;
 
         public UIVec3Input() : this(Interop.UIVec3Input_Create(), false) { }
-        public UIVec3Input(ulong aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
+        public UIVec3Input(IntPtr aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
 
         ~UIVec3Input() { if (!mDerived) Interop.UIVec3Input_Destroy(mInstance); }
 
@@ -79,7 +79,7 @@ namespace SpockEngine
         private bool mDerived = false;
 
         public UIVec4Input() : this(Interop.UIVec4Input_Create(), false) { }
-        public UIVec4Input(ulong aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
+        public UIVec4Input(IntPtr aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
 
         ~UIVec4Input() { if (!mDerived) Interop.UIVec4Input_Destroy(mInstance); }
 

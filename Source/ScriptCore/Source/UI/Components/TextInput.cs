@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace SpockEngine
 {
@@ -37,7 +38,7 @@ namespace SpockEngine
         {
             onChanged = aHandler;
 
-            Interop.UITextInput_OnTextChanged(mInstance, onChanged);
+            Interop.UITextInput_OnTextChanged(mInstance, Marshal.GetFunctionPointerForDelegate(onChanged));
         }
     }
 }

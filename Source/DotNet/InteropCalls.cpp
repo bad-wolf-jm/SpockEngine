@@ -842,24 +842,10 @@ BEGIN_INTERFACE_DEFINITION( name )
     void UITextInput_OnTextChanged( UITextInput *aSelf, void *aDelegate )
     {
         auto lInstance = aSelf;
-        auto lDelegate = CAST( MonoObject, aDelegate );
 
-        if( lInstance->mOnTextChangedDelegate != nullptr ) mono_gchandle_free( lInstance->mOnTextChangedDelegateHandle );
-
-        lInstance->mOnTextChangedDelegate       = aDelegate;
-        lInstance->mOnTextChangedDelegateHandle = mono_gchandle_new( CAST( MonoObject, aDelegate ), true );
-
-        lInstance->OnTextChanged(
-            [lInstance, lDelegate]( std::string aText )
-            {
-                auto lDelegateClass = mono_object_get_class( lDelegate );
-                auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-
-                auto  lString   = DotNetRuntime::NewString( aText );
-                void *lParams[] = { (void *)lString };
-                auto  lValue    = mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
-                mono_free( lString );
-            } );
+        typedef void ( *fptr )( char* );
+        fptr lDelegate = (fptr)aDelegate;
+        lInstance->OnTextChanged( [lInstance, lDelegate](std::string aString) { lDelegate(aString.data()); } );
     }
 END_INTERFACE_DEFINITION
 

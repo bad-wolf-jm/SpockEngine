@@ -9,7 +9,7 @@ namespace SpockEngine
 
         public UIProgressBar() : this(Interop.UIProgressBar_Create(), false) { }
 
-        public UIProgressBar(ulong aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
+        public UIProgressBar(IntPtr aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
 
         ~UIProgressBar() { if (!mDerived) Interop.UIProgressBar_Destroy(mInstance); }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 
 namespace SpockEngine
@@ -18,11 +19,11 @@ namespace SpockEngine
 
     public abstract class UIComponent
     {
-        protected ulong mInstance;
-        public ulong Instance { get { return mInstance; } }
+        protected IntPtr mInstance;
+        public IntPtr Instance { get { return mInstance; } }
 
-        public UIComponent() { mInstance = 0; }
-        public UIComponent(ulong aInstance) { mInstance = aInstance; }
+        public UIComponent() { mInstance = IntPtr.Zero; }
+        public UIComponent(IntPtr aInstance) { mInstance = aInstance; }
 
         private bool mIsVisible;
         public bool IsVisible

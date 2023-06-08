@@ -10,9 +10,9 @@ namespace SpockEngine
         private bool mDerived = false;
         public UIMenuItem() : this(Interop.UIMenuItem_Create()) { }
 
-        public UIMenuItem(ulong aDerived) : base(aDerived) { mDerived = false; }
+        public UIMenuItem(IntPtr aDerived) : base(aDerived) { mDerived = false; }
 
-        public UIMenuItem(ulong aDerived, bool aIsDerived) : base(aDerived) { mDerived = aIsDerived; }
+        public UIMenuItem(IntPtr aDerived, bool aIsDerived) : base(aDerived) { mDerived = aIsDerived; }
 
         public UIMenuItem(string aText) : this(Interop.UIMenuItem_CreateWithText(aText)) { }
 
@@ -49,7 +49,7 @@ namespace SpockEngine
     {
         public UIMenuSeparator() : this(Interop.UIMenuSeparator_Create()) { }
 
-        public UIMenuSeparator(ulong aDerived) : base(aDerived, true) { }
+        public UIMenuSeparator(IntPtr aDerived) : base(aDerived, true) { }
 
         ~UIMenuSeparator() { Interop.UIMenuSeparator_Destroy(mInstance); }
     }
@@ -62,7 +62,7 @@ namespace SpockEngine
 
         public UIMenu() : base(Interop.UIMenu_Create(), true) { mMenuItems = new List<UIMenuItem>(); }
 
-        public UIMenu(ulong aDerived) : base(aDerived, true) { mMenuItems = new List<UIMenuItem>(); }
+        public UIMenu(IntPtr aDerived) : base(aDerived, true) { mMenuItems = new List<UIMenuItem>(); }
 
         public UIMenu(string aText) : this(Interop.UIMenu_CreateWithText(aText)) { mMenuItems = new List<UIMenuItem>(); }
 

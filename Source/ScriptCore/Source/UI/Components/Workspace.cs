@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace SpockEngine
 {
@@ -11,7 +12,7 @@ namespace SpockEngine
 
         public UIWorkspaceDocument() : base(Interop.UIWorkspaceDocument_Create())
         {
-            Interop.UIWorkspaceDocument_RegisterSaveDelegate(mInstance, DoSave);
+            Interop.UIWorkspaceDocument_RegisterSaveDelegate(mInstance, Marshal.GetFunctionPointerForDelegate(DoSave));
         }
 
         public bool IsDirty
@@ -20,33 +21,40 @@ namespace SpockEngine
             set { Interop.UIWorkspaceDocument_MarkAsDirty(mInstance, value); }
         }
 
-        public void Open() { Interop.UIWorkspaceDocument_IsDirty(mInstance); }
+        public void Open() { Interop.UIWorkspaceDocument_Open(mInstance); }
 
         public void RequestClose() { Interop.UIWorkspaceDocument_RequestClose(mInstance); }
 
         public void ForceClose() { Interop.UIWorkspaceDocument_ForceClose(mInstance); }
 
         public virtual bool DoSave() { return true; }
+
+        public void SetName(string aName) { Interop.UIWorkspaceDocument_SetName(mInstance, aName); }
+        public void Update() { Interop.UIWorkspaceDocument_Update(mInstance); }
+
+        public void SetContent(UIComponent aContent) { Interop.UIWorkspaceDocument_SetContent(mInstance, aContent.Instance); }
+
     }
 
     public class UIWorkspace : UIComponent
     {
         private List<UIWorkspaceDocument> mDocuments;
 
-        public delegate void DocumentCloseDelegate(ulong[] aDocumentList);
+        public delegate void DocumentCloseDelegate(IntPtr[] aDocumentList);
 
-        public UIWorkspace() : base(Interop.UIWorkspace_Create()) { 
-            mDocuments = new List<UIWorkspaceDocument>(); 
+        public UIWorkspace() : base(Interop.UIWorkspace_Create())
+        {
+            mDocuments = new List<UIWorkspaceDocument>();
 
-            Interop.UIWorkspace_RegisterCloseDocumentDelegate(mInstance, CloseDocuments);
+            Interop.UIWorkspace_RegisterCloseDocumentDelegate(mInstance, Marshal.GetFunctionPointerForDelegate(CloseDocuments));
         }
 
-        private void CloseDocuments(ulong[] aPtrList) 
-        { 
+        private void CloseDocuments(IntPtr[] aPtrList)
+        {
             mDocuments = mDocuments.FindAll(d => aPtrList.Contains(d.Instance));
         }
 
-        public UIWorkspace(ulong aSelf) : base(aSelf) { mDocuments = new List<UIWorkspaceDocument>(); }
+        public UIWorkspace(IntPtr aSelf) : base(aSelf) { mDocuments = new List<UIWorkspaceDocument>(); }
 
         ~UIWorkspace() { Interop.UIWorkspace_Destroy(mInstance); }
 

@@ -33,6 +33,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/Colors.cs
     Source/ScriptProxy.cs
     Source/CppCalls.cs
+    Source/Interop.cs
     Source/Entity.cs
     Source/Component.cs
     Source/Utilities.cs

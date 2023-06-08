@@ -1,4 +1,5 @@
 using System;
+using System.Runtime;
 using System.Runtime.CompilerServices;
 
 namespace SpockEngine
@@ -7,7 +8,7 @@ namespace SpockEngine
     {
         public UIForm() : this(Interop.UIForm_Create()) { }
 
-        public UIForm(ulong aDerived) : base(aDerived) { }
+        public UIForm(IntPtr aDerived) : base(aDerived) { }
 
         ~UIForm() { Interop.UIForm_Destroy(mInstance); }
 

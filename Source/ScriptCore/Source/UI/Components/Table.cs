@@ -10,14 +10,14 @@ namespace SpockEngine
 {
     public class UITableColumn
     {
-        protected ulong mInstance;
-        public ulong Instance { get { return mInstance; } }
+        protected IntPtr mInstance;
+        public IntPtr Instance { get { return mInstance; } }
 
-        public UITableColumn() { mInstance = 0; }
-        public UITableColumn(ulong aInstance) { mInstance = aInstance; }
+        public UITableColumn() { mInstance = IntPtr.Zero; }
+        public UITableColumn(IntPtr aInstance) { mInstance = aInstance; }
 
         private UIComponent[] mToolTips;
-        private void SetTooltip(ulong[] aTooltips)
+        private void SetTooltip(IntPtr[] aTooltips)
         {
             Interop.UITableColumn_SetTooltip(mInstance, aTooltips);
         }

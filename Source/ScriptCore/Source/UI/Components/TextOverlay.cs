@@ -7,7 +7,7 @@ namespace SpockEngine
     {
 
         public UITextOverlay() : base(Interop.UITextOverlay_Create()) { }
-        public UITextOverlay(ulong aSelf) : base(aSelf) { }
+        public UITextOverlay(IntPtr aSelf) : base(aSelf) { }
 
         ~UITextOverlay() { Interop.UITextOverlay_Destroy(mInstance); }
 
