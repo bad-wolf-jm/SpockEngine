@@ -103,7 +103,7 @@ namespace SE::Cuda
         // TextureCubeMap( sTextureCreateInfo &aSpec, Graphics::TextureCubeMap &aImageData );
 
         /** @brief Destructor */
-        ~TextureCubeMap();
+        ~TextureCubeMap() = default;
 
       protected:
         size_t         mImageMemorySize            = 0;
@@ -160,7 +160,7 @@ namespace SE::Cuda
          */
         TextureSamplerCubeMap( Ref<TextureCubeMap> &aTexture, const sTextureSamplingInfo &aSamplingInfo );
 
-        void InitializeTextureSampler();
+        void InitializeTextureSampler() {}
     };
 
     // cudaChannelFormatDesc ToCudaChannelDesc( eColorFormat aColorFormat );
