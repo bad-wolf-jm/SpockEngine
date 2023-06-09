@@ -4,22 +4,22 @@
 #ifndef __DOTENV_HPP__
 #define __DOTENV_HPP__
 
-#include <string>
-#include <map>
 #include <iosfwd>
+#include <map>
+#include <string>
 
 #include "corerun.hpp"
 
 // Implements parsing and loading a .env file based on the format supported by the python-dotenv project
 class dotenv
 {
-private:
-    pal::string_t _dotenvFilePath;
+  private:
+    pal::string_t                      _dotenvFilePath;
     std::map<std::string, std::string> _environmentVariables;
 
-public:
+  public:
     dotenv() = default;
-    dotenv(pal::string_t dotEnvFilePath, std::istream& contents);
+    dotenv( pal::string_t dotEnvFilePath, std::istream &contents );
     void load_into_current_process() const;
 
     static void self_test();
