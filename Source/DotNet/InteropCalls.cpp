@@ -1,6 +1,10 @@
 #include "InteropCalls.h"
 #include "DotNet/Runtime.h"
 
+#include <codecvt>
+#include <locale>
+#include <string>
+
 namespace SE::Core::Interop
 {
     static vec2 vec( CLRVec2 v ) { return vec2{ v.x, v.y }; }
@@ -8,12 +12,32 @@ namespace SE::Core::Interop
     static vec4 vec( CLRVec4 v ) { return vec4{ v.x, v.y, v.z, v.w }; }
 
     static CLRVec2 vec( ImVec2 v ) { return CLRVec2{ v.x, v.y }; }
-    // static vec3 vec( ImVec3 v ) { return vec3{ v.x, v.y, v.z }; }
     static CLRVec4 vec( ImVec4 v ) { return CLRVec4{ v.x, v.y, v.z, v.w }; }
+    static ImVec2  imvec( CLRVec2 v ) { return ImVec2{ v.x, v.y }; }
+    static ImVec4  imvec( CLRVec4 v ) { return ImVec4{ v.x, v.y, v.z, v.w }; }
 
     static CLRVec2 vec( vec2 v ) { return CLRVec2{ v.x, v.y }; }
     static CLRVec3 vec( vec3 v ) { return CLRVec3{ v.x, v.y, v.z }; }
     static CLRVec4 vec( vec4 v ) { return CLRVec4{ v.x, v.y, v.z, v.w }; }
+
+    static std::string make_ascii_string( wchar_t *aCharacters )
+    {
+        std::wstring u16str( aCharacters );
+
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
+        std::string                                                     utf8 = convert.to_bytes( u16str );
+
+        return utf8;
+    }
+
+    std::wstring make_ascii_string( const std::string &utf8 )
+    {
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
+
+        std::wstring utf16 = convert.from_bytes( utf8 );
+
+        return utf16;
+    }
 
     extern "C"
     {
@@ -39,12 +63,7 @@ namespace SE::Core::Interop
 
         DESTROY_INTERFACE( UIBaseImage )
 
-        void UIBaseImage_SetImage( UIBaseImage *aSelf, void *aPath )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aPath ) );
-
-            aSelf->SetImage( lString );
-        }
+        void UIBaseImage_SetImage( UIBaseImage *aSelf, wchar_t *aPath ) { aSelf->SetImage( make_ascii_string( aPath ) ); }
 
         void UIBaseImage_SetSize( UIBaseImage *aSelf, CLRVec2 aSize ) { aSelf->SetSize( vec( aSize ) ); }
 
@@ -67,20 +86,9 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIButton )
         DESTROY_INTERFACE( UIButton )
 
-        void *UIButton_CreateWithText( void *aText )
-        {
-            auto lString    = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-            auto lNewButton = new UIButton( lString );
+        void *UIButton_CreateWithText( wchar_t *aText ) { return CAST( void, new UIButton( make_ascii_string( aText ) ) ); }
 
-            return CAST( void, lNewButton );
-        }
-
-        void UIButton_SetText( UIButton *aSelf, void *aText )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-
-            aSelf->SetText( lString );
-        }
+        void UIButton_SetText( UIButton *aSelf, wchar_t *aText ) { aSelf->SetText( make_ascii_string( aText ) ); }
 
         void UIButton_OnClick( UIButton *aSelf, void *aDelegate )
         {
@@ -119,11 +127,10 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIComboBox )
         DESTROY_INTERFACE( UIComboBox )
 
-        void *UIComboBox_CreateWithItems( void *aItems )
+        void *UIComboBox_CreateWithItems( wchar_t **aItems, int aLength )
         {
             std::vector<std::string> lItemVector;
-            for( auto const &x : DotNetRuntime::AsVector<MonoString *>( CAST( MonoObject, aItems ) ) )
-                lItemVector.emplace_back( DotNetRuntime::NewString( x ) );
+            for( int i = 0; i < aLength; i++ ) lItemVector.emplace_back( make_ascii_string( aItems[i] ) );
 
             auto lNewComboBox = new UIComboBox( lItemVector );
 
@@ -134,11 +141,10 @@ namespace SE::Core::Interop
 
         void UIComboBox_SetCurrent( UIComboBox *aSelf, int aValue ) { aSelf->SetCurrent( aValue ); }
 
-        void UIComboBox_SetItemList( UIComboBox *aSelf, void *aItems )
+        void UIComboBox_SetItemList( UIComboBox *aSelf, wchar_t **aItems, int aLength )
         {
             std::vector<std::string> lItemVector;
-            for( auto const &x : DotNetRuntime::AsVector<MonoString *>( CAST( MonoObject, aItems ) ) )
-                lItemVector.emplace_back( DotNetRuntime::NewString( x ) );
+            for( int i = 0; i < aLength; i++ ) lItemVector.emplace_back( make_ascii_string( aItems[i] ) );
 
             aSelf->SetItemList( lItemVector );
         }
@@ -204,31 +210,16 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIDropdownButton )
         DESTROY_INTERFACE( UIDropdownButton )
 
-        void UIDropdownButton_SetContent( UIDropdownButton *aSelf, void *aContent )
-        {
-            auto lContent = CAST( UIComponent, aContent );
-
-            return aSelf->SetContent( lContent );
-        }
+        void UIDropdownButton_SetContent( UIDropdownButton *aSelf, UIComponent *aContent ) { return aSelf->SetContent( aContent ); }
 
         void UIDropdownButton_SetContentSize( UIDropdownButton *aSelf, CLRVec2 aContentSizse )
         {
             return aSelf->SetContentSize( vec( aContentSizse ) );
         }
 
-        void UIDropdownButton_SetImage( UIDropdownButton *aSelf, void *aImage )
-        {
-            auto lImage = CAST( UIBaseImage, aImage );
+        void UIDropdownButton_SetImage( UIDropdownButton *aSelf, UIImage *aImage ) { aSelf->SetImage( aImage ); }
 
-            aSelf->SetImage( lImage );
-        }
-
-        void UIDropdownButton_SetText( UIDropdownButton *aSelf, void *aText )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-
-            aSelf->SetText( lString );
-        }
+        void UIDropdownButton_SetText( UIDropdownButton *aSelf, wchar_t *aText ) { aSelf->SetText( make_ascii_string( aText ) ); }
 
         void UIDropdownButton_SetTextColor( UIDropdownButton *aSelf, CLRVec4 aColor ) { aSelf->SetTextColor( vec( aColor ) ); }
 #pragma endregion
@@ -237,10 +228,9 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIImage )
         DESTROY_INTERFACE( UIImage )
 
-        void *UIImage_CreateWithPath( void *aText, CLRVec2 aSize )
+        void *UIImage_CreateWithPath( wchar_t *aText, CLRVec2 aSize )
         {
-            auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-            auto lNewImage = new UIImage( lString, vec( aSize ) );
+            auto lNewImage = new UIImage( make_ascii_string( aText ), vec( aSize ) );
 
             return CAST( void, lNewImage );
         }
@@ -250,10 +240,9 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIImageButton )
         DESTROY_INTERFACE( UIImageButton )
 
-        void *UIImageButton_CreateWithPath( char *aText, CLRVec2 aSize )
+        void *UIImageButton_CreateWithPath( wchar_t *aText, CLRVec2 aSize )
         {
-            // auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-            auto lNewImage = new UIImageButton( std::string(aText), vec( aSize ) );
+            auto lNewImage = new UIImageButton( make_ascii_string( aText ), vec( aSize ) );
 
             return CAST( void, lNewImage );
         }
@@ -276,18 +265,11 @@ namespace SE::Core::Interop
 
         void UIImageToggleButton_SetActive( UIImageToggleButton *aSelf, bool aValue ) { aSelf->SetActive( aValue ); }
 
-        void UIImageToggleButton_SetActiveImage( UIImageToggleButton *aSelf, void *aImage )
+        void UIImageToggleButton_SetActiveImage( UIImageToggleButton *aSelf, UIBaseImage *aImage ) { aSelf->SetActiveImage( aImage ); }
+
+        void UIImageToggleButton_SetInactiveImage( UIImageToggleButton *aSelf, UIBaseImage *aImage )
         {
-            auto lImage = CAST( UIBaseImage, aImage );
-
-            aSelf->SetActiveImage( lImage );
-        }
-
-        void UIImageToggleButton_SetInactiveImage( UIImageToggleButton *aSelf, void *aImage )
-        {
-            auto lImage = CAST( UIBaseImage, aImage );
-
-            aSelf->SetInactiveImage( lImage );
+            aSelf->SetInactiveImage( aImage );
         }
 
         void UIImageToggleButton_OnClicked( UIImageToggleButton *aSelf, void *aDelegate )
@@ -313,20 +295,9 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UILabel )
         DESTROY_INTERFACE( UILabel )
 
-        void *UILabel_CreateWithText( void *aText )
-        {
-            auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-            auto lNewLabel = new UILabel( lString );
+        void *UILabel_CreateWithText( wchar_t *aText ) { return CAST( void, new UILabel( make_ascii_string( aText ) ) ); }
 
-            return CAST( void, lNewLabel );
-        }
-
-        void UILabel_SetText( UILabel *aSelf, void *aText )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-
-            aSelf->SetText( lString );
-        }
+        void UILabel_SetText( UILabel *aSelf, wchar_t *aText ) { aSelf->SetText( make_ascii_string( aText ) ); }
 
         void UILabel_SetTextColor( UILabel *aSelf, CLRVec4 aTextColor ) { aSelf->SetTextColor( vec( aTextColor ) ); }
 #pragma endregion
@@ -343,28 +314,14 @@ namespace SE::Core::Interop
             return CAST( void, lNewLabel );
         }
 
-        void *UIMenuItem_CreateWithTextAndShortcut( void *aText, void *aShortcut )
+        void *UIMenuItem_CreateWithTextAndShortcut( wchar_t *aText, wchar_t *aShortcut )
         {
-            auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-            auto lShortcut = DotNetRuntime::NewString( CAST( MonoString, aShortcut ) );
-            auto lNewLabel = new UIMenuItem( lString, lShortcut );
-
-            return CAST( void, lNewLabel );
+            return CAST( void, new UIMenuItem( make_ascii_string( aText ), make_ascii_string( aShortcut ) ) );
         }
 
-        void UIMenuItem_SetText( UIMenuItem *aSelf, void *aText )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
+        void UIMenuItem_SetText( UIMenuItem *aSelf, wchar_t *aText ) { aSelf->SetText( make_ascii_string( aText ) ); }
 
-            aSelf->SetText( lString );
-        }
-
-        void UIMenuItem_SetShortcut( UIMenuItem *aSelf, void *aShortcut )
-        {
-            auto lShortcut = DotNetRuntime::NewString( CAST( MonoString, aShortcut ) );
-
-            aSelf->SetShortcut( lShortcut );
-        }
+        void UIMenuItem_SetShortcut( UIMenuItem *aSelf, wchar_t *aShortcut ) { aSelf->SetShortcut( make_ascii_string( aShortcut ) ); }
 
         void UIMenuItem_SetTextColor( UIMenuItem *aSelf, CLRVec4 aTextColor ) { aSelf->SetTextColor( vec( aTextColor ) ); }
 
@@ -387,37 +344,16 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIMenu )
         DESTROY_INTERFACE( UIMenu )
 
-        void *UIMenu_CreateWithText( void *aText )
-        {
-            auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-            auto lNewLabel = new UIMenu( lString );
+        void *UIMenu_CreateWithText( wchar_t *aText ) { return CAST( void, new UIMenu( make_ascii_string( aText ) ) ); }
 
-            return CAST( void, lNewLabel );
+        void *UIMenu_AddAction( UIMenu *aSelf, wchar_t *aText, wchar_t *aShortcut )
+        {
+            return CAST( void, aSelf->AddActionRaw( make_ascii_string( aText ), make_ascii_string( aShortcut ) ) );
         }
 
-        void *UIMenu_AddAction( UIMenu *aSelf, void *aText, void *aShortcut )
-        {
-            auto lString    = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-            auto lShortcut  = DotNetRuntime::NewString( CAST( MonoString, aShortcut ) );
-            auto lNewAction = aSelf->AddActionRaw( lString, lShortcut );
+        void *UIMenu_AddMenu( UIMenu *aSelf, wchar_t *aText ) { return CAST( void, aSelf->AddMenuRaw( make_ascii_string( aText ) ) ); }
 
-            return CAST( void, lNewAction );
-        }
-
-        void *UIMenu_AddMenu( UIMenu *aSelf, void *aText )
-        {
-            auto lString  = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-            auto lNewMenu = aSelf->AddMenuRaw( lString );
-
-            return CAST( void, lNewMenu );
-        }
-
-        void *UIMenu_AddSeparator( UIMenu *aSelf )
-        {
-            auto lNewSeparator = aSelf->AddSeparatorRaw();
-
-            return CAST( void, lNewSeparator );
-        }
+        void *UIMenu_AddSeparator( UIMenu *aSelf ) { return CAST( void, aSelf->AddSeparatorRaw() ); }
 
         void UIMenu_Update( UIMenu *aSelf ) { aSelf->Update(); }
 #pragma endregion
@@ -444,24 +380,19 @@ namespace SE::Core::Interop
             lSelf->mAxisConfiguration[aAxis].mMax             = static_cast<float>( aMax );
         }
 
-        void UIPlot_SetAxisTitle( UIPlot *aSelf, int aAxis, void *aTitle )
+        void UIPlot_SetAxisTitle( UIPlot *aSelf, int aAxis, wchar_t *aTitle )
         {
-            aSelf->mAxisConfiguration[aAxis].mTitle = DotNetRuntime::NewString( CAST( MonoString, aTitle ) );
+            aSelf->mAxisConfiguration[aAxis].mTitle = make_ascii_string( aTitle );
         }
 
-        void *UIPlot_GetAxisTitle( UIPlot *aSelf, int aAxis )
+        wchar_t *UIPlot_GetAxisTitle( UIPlot *aSelf, int aAxis )
         {
-            return DotNetRuntime::NewString( aSelf->mAxisConfiguration[aAxis].mTitle );
+            return make_ascii_string( aSelf->mAxisConfiguration[aAxis].mTitle.data() ).data();
         }
 #pragma endregion
 
 #pragma region UIPlotData
-        void UIPlotData_SetLegend( UIPlotData *aSelf, void *aText )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-
-            aSelf->mLegend = lString;
-        }
+        void UIPlotData_SetLegend( UIPlotData *aSelf, wchar_t *aText ) { aSelf->mLegend = make_ascii_string( aText ); }
 
         void UIPlotData_SetThickness( UIPlotData *aSelf, float aThickness ) { aSelf->mThickness = aThickness; }
 
@@ -476,14 +407,14 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIFloat64LinePlot )
         DESTROY_INTERFACE( UIFloat64LinePlot )
 
-        void UIFloat64LinePlot_SetX( UIFloat64LinePlot *aSelf, void *aValue )
+        void UIFloat64LinePlot_SetX( UIFloat64LinePlot *aSelf, double *aValue, int aLength )
         {
-            aSelf->mX = DotNetRuntime::AsVector<double>( CAST( MonoObject, aValue ) );
+            aSelf->mX = std::vector<double>( aValue, aValue + aLength );
         }
 
-        void UIFloat64LinePlot_SetY( UIFloat64LinePlot *aSelf, void *aValue )
+        void UIFloat64LinePlot_SetY( UIFloat64LinePlot *aSelf, double *aValue, int aLength )
         {
-            aSelf->mY = DotNetRuntime::AsVector<double>( CAST( MonoObject, aValue ) );
+            aSelf->mY = std::vector<double>( aValue, aValue + aLength );
         }
 #pragma endregion
 
@@ -491,14 +422,14 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIFloat64ScatterPlot )
         DESTROY_INTERFACE( UIFloat64ScatterPlot )
 
-        void UIFloat64ScatterPlot_SetX( UIFloat64ScatterPlot *aSelf, void *aValue )
+        void UIFloat64ScatterPlot_SetX( UIFloat64ScatterPlot *aSelf, double *aValue, int aLength )
         {
-            aSelf->mX = DotNetRuntime::AsVector<double>( CAST( MonoObject, aValue ) );
+            aSelf->mX = std::vector<double>( aValue, aValue + aLength );
         }
 
-        void UIFloat64ScatterPlot_SetY( UIFloat64ScatterPlot *aSelf, void *aValue )
+        void UIFloat64ScatterPlot_SetY( UIFloat64ScatterPlot *aSelf, double *aValue, int aLength )
         {
-            aSelf->mY = DotNetRuntime::AsVector<double>( CAST( MonoObject, aValue ) );
+            aSelf->mY = std::vector<double>( aValue, aValue + aLength );
         }
 #pragma endregion
 
@@ -506,9 +437,9 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIVLinePlot )
         DESTROY_INTERFACE( UIVLinePlot )
 
-        void UIVLinePlot_SetX( UIVLinePlot *aSelf, void *aValue )
+        void UIVLinePlot_SetX( UIVLinePlot *aSelf, double *aValue, int aLength )
         {
-            aSelf->mX = DotNetRuntime::AsVector<double>( CAST( MonoObject, aValue ) );
+            aSelf->mX = std::vector<double>( aValue, aValue + aLength );
         }
 #pragma endregion
 
@@ -516,9 +447,9 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIHLinePlot )
         DESTROY_INTERFACE( UIHLinePlot )
 
-        void UIHLinePlot_SetY( UIHLinePlot *aSelf, void *aValue )
+        void UIHLinePlot_SetY( UIHLinePlot *aSelf, double *aValue, int aLength )
         {
-            aSelf->mY = DotNetRuntime::AsVector<double>( CAST( MonoObject, aValue ) );
+            aSelf->mY = std::vector<double>( aValue, aValue + aLength );
         }
 #pragma endregion
 
@@ -526,23 +457,14 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIAxisTag )
         DESTROY_INTERFACE( UIAxisTag )
 
-        void *UIAxisTag_CreateWithTextAndColor( UIPlotAxis aAxis, double aX, void *aText, CLRVec4 aColor )
+        void *UIAxisTag_CreateWithTextAndColor( UIPlotAxis aAxis, double aX, wchar_t *aText, CLRVec4 aColor )
         {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-
-            auto lSelf = new UIAxisTag( aAxis, aX, lString, vec( aColor ) );
-
-            return CAST( void, lSelf );
+            return CAST( void, new UIAxisTag( aAxis, aX, make_ascii_string( aText ), vec( aColor ) ) );
         }
 
         void UIAxisTag_SetX( UIAxisTag *aSelf, double aValue ) { aSelf->mX = aValue; }
 
-        void UIAxisTag_SetText( UIAxisTag *aSelf, void *aText )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-
-            aSelf->mText = lString;
-        }
+        void UIAxisTag_SetText( UIAxisTag *aSelf, wchar_t *aText ) { aSelf->mText = make_ascii_string( aText ); }
 
         void UIAxisTag_SetColor( UIAxisTag *aSelf, CLRVec4 aColor ) { aSelf->mColor = vec( aColor ); }
 
@@ -590,12 +512,7 @@ namespace SE::Core::Interop
             aSelf->SetProgressColor( vec( aTextColor ) );
         }
 
-        void UIProgressBar_SetText( UIProgressBar *aSelf, void *aText )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-
-            aSelf->SetText( lString );
-        }
+        void UIProgressBar_SetText( UIProgressBar *aSelf, wchar_t *aText ) { aSelf->SetText( make_ascii_string( aText ) ); }
 
         void UIProgressBar_SetTextColor( UIProgressBar *aSelf, CLRVec4 aTextColor ) { aSelf->SetTextColor( vec( aTextColor ) ); }
 
@@ -606,28 +523,17 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIPropertyValue )
         DESTROY_INTERFACE( UIPropertyValue )
 
-        void *UIPropertyValue_CreateWithText( void *aText )
+        void *UIPropertyValue_CreateWithText( wchar_t *aText )
         {
-            auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-            auto lNewLabel = new UIPropertyValue( lString );
-
-            return CAST( void, lNewLabel );
+            return CAST( void, new UIPropertyValue( make_ascii_string( aText ) ) );
         }
 
-        void *UIPropertyValue_CreateWithTextAndOrientation( void *aText, eBoxLayoutOrientation aOrientation )
+        void *UIPropertyValue_CreateWithTextAndOrientation( wchar_t *aText, eBoxLayoutOrientation aOrientation )
         {
-            auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-            auto lNewLabel = new UIPropertyValue( lString, aOrientation );
-
-            return CAST( void, lNewLabel );
+            return CAST( void, new UIPropertyValue( make_ascii_string( aText ), aOrientation ) );
         }
 
-        void UIPropertyValue_SetValue( UIPropertyValue *aSelf, void *aText )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-
-            aSelf->SetValue( lString );
-        }
+        void UIPropertyValue_SetValue( UIPropertyValue *aSelf, wchar_t *aText ) { aSelf->SetValue( make_ascii_string( aText ) ); }
 
         void UIPropertyValue_SetValueFont( UIPropertyValue *aSelf, FontFamilyFlags aFont ) { aSelf->SetValueFont( aFont ); }
 
@@ -640,31 +546,25 @@ namespace SE::Core::Interop
 #pragma endregion
 
 #pragma region UITableColumn
-        void UITableColumn_SetTooltip( UITableColumn *aSelf, void *aTooptip )
+        void UITableColumn_SetTooltip( UITableColumn *aSelf, UIComponent **aTooptip, int aLength )
         {
-            auto lSelf = aSelf;
-
-            lSelf->mToolTip.clear();
-            for( auto const &x : DotNetRuntime::AsVector<UIComponent *>( CAST( MonoObject, aTooptip ) ) )
-                lSelf->mToolTip.push_back( x );
+            aSelf->mToolTip = std::vector( aTooptip, aTooptip + aLength );
         }
 
-        void UITableColumn_SetForegroundColor( UITableColumn *aSelf, void *aForegroundColor )
+        void UITableColumn_SetForegroundColor( UITableColumn *aSelf, CLRVec4 *aForegroundColor, int aLength )
         {
-            auto lSelf = aSelf;
+            std::vector<uint32_t> lColors( aLength );
+            for( int i = 0; i < aLength; i++ ) lColors[i] = ImColor( imvec( aForegroundColor[i] ) );
 
-            lSelf->mForegroundColor.clear();
-            for( auto const &x : DotNetRuntime::AsVector<ImVec4>( CAST( MonoObject, aForegroundColor ) ) )
-                lSelf->mForegroundColor.push_back( ImColor( x ) );
+            aSelf->mForegroundColor = lColors;
         }
 
-        void UITableColumn_SetBackgroundColor( UITableColumn *aSelf, void *aBackroundColor )
+        void UITableColumn_SetBackgroundColor( UITableColumn *aSelf, CLRVec4 *aBackroundColor, int aLength )
         {
-            auto lSelf = aSelf;
+            std::vector<uint32_t> lColors( aLength );
+            for( int i = 0; i < aLength; i++ ) lColors[i] = ImColor( imvec( aBackroundColor[i] ) );
 
-            lSelf->mBackgroundColor.clear();
-            for( auto const &x : DotNetRuntime::AsVector<ImVec4>( CAST( MonoObject, aBackroundColor ) ) )
-                lSelf->mBackgroundColor.push_back( ImColor( x ) );
+            aSelf->mForegroundColor = lColors;
         }
 #pragma endregion
 
@@ -681,28 +581,26 @@ namespace SE::Core::Interop
             lInstance->OnRowClicked( [lInstance, lDelegate]( int i ) { lDelegate( i ); } );
         }
 
-        void UITable_AddColumn( UITable *aSelf, void *aColumn ) { aSelf->AddColumn( CAST( UITableColumn, aColumn ) ); }
+        void UITable_AddColumn( UITable *aSelf, UITableColumn *aColumn ) { aSelf->AddColumn( aColumn ); }
 
         void UITable_SetRowHeight( UITable *aSelf, float aRowHeight ) { aSelf->SetRowHeight( aRowHeight ); }
 
         void UITable_ClearRowBackgroundColor( UITable *aSelf ) { aSelf->mRowBackgroundColor.clear(); }
 
-        void UITable_SetRowBackgroundColor( UITable *aSelf, void *aValue )
+        void UITable_SetRowBackgroundColor( UITable *aSelf, CLRVec4 *aValue, int aLength )
         {
-            auto lSelf = aSelf;
+            std::vector<uint32_t> lColors( aLength );
+            for( int i = 0; i < aLength; i++ ) lColors[i] = ImColor( imvec( aValue[i] ) );
 
-            lSelf->mRowBackgroundColor.clear();
-            for( auto &x : DotNetRuntime::AsVector<ImVec4>( CAST( MonoObject, aValue ) ) )
-                lSelf->mRowBackgroundColor.push_back( ImColor( x ) );
+            aSelf->mRowBackgroundColor = lColors;
         }
 
-        void UITable_SetDisplayedRowIndices( UITable *aSelf, void *aValue )
+        void UITable_SetDisplayedRowIndices( UITable *aSelf, int *aValue, int aLength )
         {
-            auto lSelf = aSelf;
             if( aValue == nullptr )
-                lSelf->mDisplayedRowIndices.reset();
+                aSelf->mDisplayedRowIndices.reset();
             else
-                lSelf->mDisplayedRowIndices = DotNetRuntime::AsVector<int>( CAST( MonoObject, aValue ) );
+                aSelf->mDisplayedRowIndices = std::vector<int>( aValue, aValue + aLength );
         }
 #pragma endregion
 
@@ -710,21 +608,20 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIFloat64Column )
         DESTROY_INTERFACE( UIFloat64Column )
 
-        void *UIFloat64Column_CreateFull( void *aHeader, float aInitialSize, void *aFormat, void *aNaNFormat )
+        void *UIFloat64Column_CreateFull( wchar_t *aHeader, float aInitialSize, wchar_t *aFormat, wchar_t *aNaNFormat )
         {
-            auto lHeader    = DotNetRuntime::NewString( CAST( MonoString, aHeader ) );
-            auto lFormat    = DotNetRuntime::NewString( CAST( MonoString, aFormat ) );
-            auto lNaNFormat = DotNetRuntime::NewString( CAST( MonoString, aNaNFormat ) );
-            auto lNewColumn = new UIFloat64Column( lHeader, aInitialSize, lFormat, lNaNFormat );
+            auto lHeader    = make_ascii_string( aHeader );
+            auto lFormat    = make_ascii_string( aFormat );
+            auto lNaNFormat = make_ascii_string( aNaNFormat );
 
-            return CAST( void, lNewColumn );
+            return CAST( void, new UIFloat64Column( lHeader, aInitialSize, lFormat, lNaNFormat ) );
         }
 
         void UIFloat64Column_Clear( UIFloat64Column *aSelf ) { aSelf->Clear(); }
 
-        void UIFloat64Column_SetData( UIFloat64Column *aSelf, void *aValue )
+        void UIFloat64Column_SetData( UIFloat64Column *aSelf, double *aValue, int aLength )
         {
-            aSelf->mData = DotNetRuntime::AsVector<double>( CAST( MonoObject, aValue ) );
+            aSelf->mData = std::vector( aValue, aValue + aLength );
         }
 #pragma endregion
 
@@ -732,19 +629,16 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIUint32Column )
         DESTROY_INTERFACE( UIUint32Column )
 
-        void *UIUint32Column_CreateFull( void *aHeader, float aInitialSize )
+        void *UIUint32Column_CreateFull( wchar_t *aHeader, float aInitialSize )
         {
-            auto lHeader    = DotNetRuntime::NewString( CAST( MonoString, aHeader ) );
-            auto lNewColumn = new UIUint32Column( lHeader, aInitialSize );
-
-            return CAST( void, lNewColumn );
+            return CAST( void, new UIUint32Column( make_ascii_string( aHeader ), aInitialSize ) );
         }
 
         void UIUint32Column_Clear( UIUint32Column *aSelf ) { aSelf->Clear(); }
 
-        void UIUint32Column_SetData( UIUint32Column *aSelf, void *aValue )
+        void UIUint32Column_SetData( UIUint32Column *aSelf, uint32_t *aValue, int aLength )
         {
-            aSelf->mData = DotNetRuntime::AsVector<uint32_t>( CAST( MonoObject, aValue ) );
+            aSelf->mData = std::vector( aValue, aValue + aLength );
         }
 #pragma endregion
 
@@ -752,23 +646,17 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIStringColumn )
         DESTROY_INTERFACE( UIStringColumn )
 
-        void *UIStringColumn_CreateFull( void *aHeader, float aInitialSize )
+        void *UIStringColumn_CreateFull( wchar_t *aHeader, float aInitialSize )
         {
-            auto lHeader    = DotNetRuntime::NewString( CAST( MonoString, aHeader ) );
-            auto lNewColumn = new UIStringColumn( lHeader, aInitialSize );
-
-            return CAST( void, lNewColumn );
+            return CAST( void, new UIStringColumn( make_ascii_string( aHeader ), aInitialSize ) );
         }
 
         void UIStringColumn_Clear( UIStringColumn *aSelf ) { aSelf->Clear(); }
 
-        void UIStringColumn_SetData( UIStringColumn *aSelf, void *aValue )
+        void UIStringColumn_SetData( UIStringColumn *aSelf, wchar_t **aValue, int aLength )
         {
-            auto lSelf = aSelf;
-
-            lSelf->mData.clear();
-            for( auto const &x : DotNetRuntime::AsVector<MonoString *>( CAST( MonoObject, aValue ) ) )
-                lSelf->mData.push_back( DotNetRuntime::NewString( x ) );
+            aSelf->mData.clear();
+            for( int i = 0; i < aLength; i++ ) aSelf->mData.push_back( make_ascii_string( aValue[i] ) );
         }
 #pragma endregion
 
@@ -776,20 +664,9 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UITextInput )
         DESTROY_INTERFACE( UITextInput )
 
-        void *UITextInput_CreateWithText( void *aText )
-        {
-            auto lString       = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-            auto lNewTextInput = new UITextInput( lString );
+        void *UITextInput_CreateWithText( wchar_t *aText ) { return CAST( void, new UITextInput( make_ascii_string( aText ) ) ); }
 
-            return CAST( void, lNewTextInput );
-        }
-
-        void UITextInput_SetHintText( UITextInput *aSelf, void *aText )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-
-            aSelf->SetHintText( lString );
-        }
+        void UITextInput_SetHintText( UITextInput *aSelf, wchar_t *aText ) { aSelf->SetHintText( make_ascii_string( aText ) ); }
 
         void *UITextInput_GetText( UITextInput *aSelf ) { return DotNetRuntime::NewString( aSelf->GetText() ); }
 
@@ -801,9 +678,10 @@ namespace SE::Core::Interop
         {
             auto lInstance = aSelf;
 
-            typedef void ( *fptr )( char * );
+            typedef void ( *fptr )( wchar_t * );
             fptr lDelegate = (fptr)aDelegate;
-            lInstance->OnTextChanged( [lInstance, lDelegate]( std::string aString ) { lDelegate( aString.data() ); } );
+            lInstance->OnTextChanged( [lInstance, lDelegate]( std::string aString )
+                                      { lDelegate( make_ascii_string( aString ).data() ); } );
         }
 #pragma endregion
 
@@ -811,12 +689,7 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UITextOverlay )
         DESTROY_INTERFACE( UITextOverlay )
 
-        void UITextOverlay_AddText( UITextOverlay *aSelf, void *aText )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-
-            aSelf->AddText( lString );
-        }
+        void UITextOverlay_AddText( UITextOverlay *aSelf, wchar_t *aText ) { aSelf->AddText( make_ascii_string( aText ) ); }
 
         void UITextOverlay_Clear( UITextOverlay *aSelf ) { aSelf->Clear(); }
 #pragma endregion
@@ -825,12 +698,9 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UITextToggleButton )
         DESTROY_INTERFACE( UITextToggleButton )
 
-        void *UITextToggleButton_CreateWithText( void *aText )
+        void *UITextToggleButton_CreateWithText( wchar_t *aText )
         {
-            auto lString    = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-            auto lNewButton = new UITextToggleButton( lString );
-
-            return CAST( void, lNewButton );
+            return CAST( void, new UITextToggleButton( make_ascii_string( aText ) ) );
         }
 
         bool UITextToggleButton_IsActive( UITextToggleButton *aSelf ) { return aSelf->IsActive(); }
@@ -867,28 +737,13 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UITreeViewNode )
         DESTROY_INTERFACE( UITreeViewNode )
 
-        void UITreeViewNode_SetText( UITreeViewNode *aSelf, void *aText )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-
-            aSelf->SetText( lString );
-        }
+        void UITreeViewNode_SetText( UITreeViewNode *aSelf, wchar_t *aText ) { aSelf->SetText( make_ascii_string( aText ) ); }
 
         void UITreeViewNode_SetTextColor( UITreeViewNode *aSelf, CLRVec4 aTextColor ) { aSelf->SetTextColor( vec( aTextColor ) ); }
 
-        void UITreeViewNode_SetIcon( UITreeViewNode *aSelf, void *aIcon )
-        {
-            auto lImage = CAST( UIImage, aIcon );
+        void UITreeViewNode_SetIcon( UITreeViewNode *aSelf, UIImage *aIcon ) { aSelf->SetIcon( aIcon ); }
 
-            aSelf->SetIcon( lImage );
-        }
-
-        void UITreeViewNode_SetIndicator( UITreeViewNode *aSelf, void *aIndicator )
-        {
-            auto lImage = CAST( UIComponent, aIndicator );
-
-            aSelf->SetIndicator( lImage );
-        }
+        void UITreeViewNode_SetIndicator( UITreeViewNode *aSelf, UIComponent *aIndicator ) { aSelf->SetIndicator( aIndicator ); }
 
         void *UITreeViewNode_Add( UITreeViewNode *aSelf ) { return CAST( void, aSelf->Add() ); }
 #pragma endregion
@@ -923,12 +778,7 @@ namespace SE::Core::Interop
 
         void UIVec2Input_SetResetValues( UIVec2Input *aSelf, CLRVec2 aValue ) { aSelf->SetResetValues( vec( aValue ) ); }
 
-        void UIVec2Input_SetFormat( UIVec2Input *aSelf, void *aText )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-
-            aSelf->SetFormat( lString );
-        }
+        void UIVec2Input_SetFormat( UIVec2Input *aSelf, wchar_t *aText ) { aSelf->SetFormat( make_ascii_string( aText ) ); }
 #pragma endregion
 
 #pragma region UIVec3Input
@@ -953,12 +803,7 @@ namespace SE::Core::Interop
 
         void UIVec3Input_SetResetValues( UIVec3Input *aSelf, CLRVec3 aValue ) { aSelf->SetResetValues( vec( aValue ) ); }
 
-        void UIVec3Input_SetFormat( UIVec3Input *aSelf, void *aText )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-
-            aSelf->SetFormat( lString );
-        }
+        void UIVec3Input_SetFormat( UIVec3Input *aSelf, wchar_t *aText ) { aSelf->SetFormat( make_ascii_string( aText ) ); }
 #pragma endregion
 
 #pragma region UIVec4Input
@@ -980,33 +825,18 @@ namespace SE::Core::Interop
 
         void UIVec4Input_SetResetValues( UIVec4Input *aSelf, CLRVec4 aValue ) { aSelf->SetResetValues( vec( aValue ) ); }
 
-        void UIVec4Input_SetFormat( UIVec4Input *aSelf, void *aText )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-
-            aSelf->SetFormat( lString );
-        }
+        void UIVec4Input_SetFormat( UIVec4Input *aSelf, wchar_t *aText ) { aSelf->SetFormat( make_ascii_string( aText ) ); }
 #pragma endregion
 
 #pragma region UIWorkspaceDocument
         CONSTRUCT_WITHOUT_PARAMETERS( UIWorkspaceDocument )
         DESTROY_INTERFACE( UIWorkspaceDocument )
 
-        void UIWorkspaceDocument_SetContent( UIWorkspaceDocument *aSelf, void *aContent )
-        {
-            auto lContent = CAST( UIComponent, aContent );
-
-            aSelf->SetContent( lContent );
-        }
+        void UIWorkspaceDocument_SetContent( UIWorkspaceDocument *aSelf, UIComponent *aContent ) { aSelf->SetContent( aContent ); }
 
         void UIWorkspaceDocument_Update( UIWorkspaceDocument *aSelf ) { aSelf->Update(); }
 
-        void UIWorkspaceDocument_SetName( UIWorkspaceDocument *aSelf, void *aName )
-        {
-            auto lName = DotNetRuntime::NewString( CAST( MonoString, aName ) );
-
-            aSelf->mName = lName;
-        }
+        void UIWorkspaceDocument_SetName( UIWorkspaceDocument *aSelf, wchar_t *aName ) { aSelf->mName = make_ascii_string( aName ); }
 
         bool UIWorkspaceDocument_IsDirty( UIWorkspaceDocument *aSelf ) { return aSelf->mDirty; }
 
@@ -1032,12 +862,7 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIWorkspace )
         DESTROY_INTERFACE( UIWorkspace )
 
-        void UIWorkspace_Add( UIWorkspace *aSelf, void *aDocument )
-        {
-            auto lDocument = CAST( UIWorkspaceDocument, aDocument );
-
-            aSelf->Add( lDocument );
-        }
+        void UIWorkspace_Add( UIWorkspace *aSelf, UIWorkspaceDocument *aDocument ) { aSelf->Add( aDocument ); }
 
         void UIWorkspace_RegisterCloseDocumentDelegate( UIWorkspace *aSelf, void *aDelegate )
         {
@@ -1060,34 +885,26 @@ namespace SE::Core::Interop
 
         DESTROY_INTERFACE( UIBoxLayout )
 
-        void UIBoxLayout_AddAlignedNonFixed( UIBoxLayout *aSelf, void *aChild, bool aExpand, bool aFill,
+        void UIBoxLayout_AddAlignedNonFixed( UIBoxLayout *aSelf, UIComponent *aChild, bool aExpand, bool aFill,
                                              eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
         {
-            auto lChild = CAST( UIComponent, aChild );
-
-            aSelf->Add( lChild, aExpand, aFill, aHAlignment, aVAlignment );
+            aSelf->Add( aChild, aExpand, aFill, aHAlignment, aVAlignment );
         }
 
-        void UIBoxLayout_AddNonAlignedNonFixed( UIBoxLayout *aSelf, void *aChild, bool aExpand, bool aFill )
+        void UIBoxLayout_AddNonAlignedNonFixed( UIBoxLayout *aSelf, UIComponent *aChild, bool aExpand, bool aFill )
         {
-            auto lChild = CAST( UIComponent, aChild );
-
-            aSelf->Add( lChild, aExpand, aFill );
+            aSelf->Add( aChild, aExpand, aFill );
         }
 
-        void UIBoxLayout_AddAlignedFixed( UIBoxLayout *aSelf, void *aChild, float aFixedSize, bool aExpand, bool aFill,
+        void UIBoxLayout_AddAlignedFixed( UIBoxLayout *aSelf, UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill,
                                           eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
         {
-            auto lChild = CAST( UIComponent, aChild );
-
-            aSelf->Add( lChild, aFixedSize, aExpand, aFill, aHAlignment, aVAlignment );
+            aSelf->Add( aChild, aFixedSize, aExpand, aFill, aHAlignment, aVAlignment );
         }
 
-        void UIBoxLayout_AddNonAlignedFixed( UIBoxLayout *aSelf, void *aChild, float aFixedSize, bool aExpand, bool aFill )
+        void UIBoxLayout_AddNonAlignedFixed( UIBoxLayout *aSelf, UIComponent *aChild, float aFixedSize, bool aExpand, bool aFill )
         {
-            auto lChild = CAST( UIComponent, aChild );
-
-            aSelf->Add( lChild, aFixedSize, aExpand, aFill );
+            aSelf->Add( aChild, aFixedSize, aExpand, aFill );
         }
 
         void UIBoxLayout_AddSeparator( UIBoxLayout *aSelf ) { aSelf->AddSeparator(); }
@@ -1106,12 +923,7 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIContainer )
         DESTROY_INTERFACE( UIContainer )
 
-        void UIContainer_SetContent( UIContainer *aSelf, void *aChild )
-        {
-            auto lChild = CAST( UIComponent, aChild );
-
-            aSelf->SetContent( lChild );
-        }
+        void UIContainer_SetContent( UIContainer *aSelf, UIComponent *aChild ) { aSelf->SetContent( aChild ); }
 #pragma endregion
 
 #pragma region UISplitter
@@ -1120,24 +932,12 @@ namespace SE::Core::Interop
 
         void *UISplitter_CreateWithOrientation( eBoxLayoutOrientation aOrientation )
         {
-            auto lNewLayout = new UISplitter( aOrientation );
-
-            return CAST( void, lNewLayout );
+            return CAST( void, new UISplitter( aOrientation ) );
         }
 
-        void UISplitter_Add1( UISplitter *aSelf, void *aChild )
-        {
-            auto lChild = CAST( UIComponent, aChild );
+        void UISplitter_Add1( UISplitter *aSelf, UIComponent *aChild ) { aSelf->Add1( aChild ); }
 
-            aSelf->Add1( lChild );
-        }
-
-        void UISplitter_Add2( UISplitter *aSelf, void *aChild )
-        {
-            auto lChild = CAST( UIComponent, aChild );
-
-            aSelf->Add2( lChild );
-        }
+        void UISplitter_Add2( UISplitter *aSelf, UIComponent *aChild ) { aSelf->Add2( aChild ); }
 
         void UISplitter_SetItemSpacing( UISplitter *aSelf, float aItemSpacing ) { aSelf->SetItemSpacing( aItemSpacing ); }
 #pragma endregion
@@ -1146,54 +946,39 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIStackLayout )
         DESTROY_INTERFACE( UIStackLayout )
 
-        void UIStackLayout_Add( UIStackLayout *aSelf, void *aChild, void *aKey )
+        void UIStackLayout_Add( UIStackLayout *aSelf, UIComponent *aChild, wchar_t *aKey )
         {
-            auto lChild  = CAST( UIComponent, aChild );
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aKey ) );
-
-            aSelf->Add( lChild, lString );
+            aSelf->Add( aChild, make_ascii_string( aKey ) );
         }
 
-        void UIStackLayout_SetCurrent( UIStackLayout *aSelf, void *aKey )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aKey ) );
-
-            aSelf->SetCurrent( lString );
-        }
+        void UIStackLayout_SetCurrent( UIStackLayout *aSelf, wchar_t *aKey ) { aSelf->SetCurrent( make_ascii_string( aKey ) ); }
 #pragma endregion
 
 #pragma region UIZLayout
         CONSTRUCT_WITHOUT_PARAMETERS( UIZLayout )
         DESTROY_INTERFACE( UIZLayout )
 
-        void UIZLayout_AddAlignedNonFixed( UIZLayout *aSelf, void *aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment,
-                                           eVerticalAlignment aVAlignment )
+        void UIZLayout_AddAlignedNonFixed( UIZLayout *aSelf, UIComponent *aChild, bool aExpand, bool aFill,
+                                           eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
         {
-            auto lChild = CAST( UIComponent, aChild );
-
-            aSelf->Add( lChild, aExpand, aFill, aHAlignment, aVAlignment );
+            aSelf->Add( aChild, aExpand, aFill, aHAlignment, aVAlignment );
         }
 
-        void UIZLayout_AddNonAlignedNonFixed( UIZLayout *aSelf, void *aChild, bool aExpand, bool aFill )
+        void UIZLayout_AddNonAlignedNonFixed( UIZLayout *aSelf, UIComponent *aChild, bool aExpand, bool aFill )
         {
-            auto lChild = CAST( UIComponent, aChild );
-
-            aSelf->Add( lChild, aExpand, aFill );
+            aSelf->Add( aChild, aExpand, aFill );
         }
 
-        void UIZLayout_AddAlignedFixed( UIZLayout *aSelf, void *aChild, CLRVec2 aSize, CLRVec2 aPosition, bool aExpand, bool aFill,
-                                        eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
+        void UIZLayout_AddAlignedFixed( UIZLayout *aSelf, UIComponent *aChild, CLRVec2 aSize, CLRVec2 aPosition, bool aExpand,
+                                        bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
         {
-            auto lChild = CAST( UIComponent, aChild );
-
-            aSelf->Add( lChild, vec( aSize ), vec( aPosition ), aExpand, aFill, aHAlignment, aVAlignment );
+            aSelf->Add( aChild, vec( aSize ), vec( aPosition ), aExpand, aFill, aHAlignment, aVAlignment );
         }
 
-        void UIZLayout_AddNonAlignedFixed( UIZLayout *aSelf, void *aChild, CLRVec2 aSize, CLRVec2 aPosition, bool aExpand, bool aFill )
+        void UIZLayout_AddNonAlignedFixed( UIZLayout *aSelf, UIComponent *aChild, CLRVec2 aSize, CLRVec2 aPosition, bool aExpand,
+                                           bool aFill )
         {
-            auto lChild = CAST( UIComponent, aChild );
-
-            aSelf->Add( lChild, vec( aSize ), vec( aPosition ), aExpand, aFill );
+            aSelf->Add( aChild, vec( aSize ), vec( aPosition ), aExpand, aFill );
         }
 #pragma endregion
 
@@ -1201,41 +986,23 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIFileTree )
         DESTROY_INTERFACE( UIFileTree )
 
-        void *UIFileTree_Add( UIFileTree *aSelf, void *aPath )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aPath ) );
-
-            return CAST( void, aSelf->Add( lString ) );
-        }
+        void *UIFileTree_Add( UIFileTree *aSelf, wchar_t *aPath ) { return CAST( void, aSelf->Add( make_ascii_string( aPath ) ) ); }
 #pragma endregion
 
 #pragma region UIDialog
         CONSTRUCT_WITHOUT_PARAMETERS( UIDialog )
         DESTROY_INTERFACE( UIDialog )
 
-        void *UIDialog_CreateWithTitleAndSize( void *aTitle, CLRVec2 aSize )
+        void *UIDialog_CreateWithTitleAndSize( wchar_t *aTitle, CLRVec2 aSize )
         {
-            auto lString    = DotNetRuntime::NewString( CAST( MonoString, aTitle ) );
-            auto lNewDialog = new UIDialog( lString, vec( aSize ) );
-
-            return CAST( void, lNewDialog );
+            return CAST( void, new UIDialog( make_ascii_string( aTitle ), vec( aSize ) ) );
         }
 
-        void UIDialog_SetTitle( UIDialog *aSelf, void *aTitle )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aTitle ) );
-
-            aSelf->SetTitle( lString );
-        }
+        void UIDialog_SetTitle( UIDialog *aSelf, wchar_t *aTitle ) { aSelf->SetTitle( make_ascii_string( aTitle ) ); }
 
         void UIDialog_SetSize( UIDialog *aSelf, CLRVec2 aSize ) { aSelf->SetSize( vec( aSize ) ); }
 
-        void UIDialog_SetContent( UIDialog *aSelf, void *aContent )
-        {
-            auto lContent = CAST( UIComponent, aContent );
-
-            aSelf->SetContent( lContent );
-        }
+        void UIDialog_SetContent( UIDialog *aSelf, UIComponent *aContent ) { aSelf->SetContent( aContent ); }
 
         void UIDialog_Open( UIDialog *aSelf ) { aSelf->Open(); }
 
@@ -1248,19 +1015,9 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIForm )
         DESTROY_INTERFACE( UIForm )
 
-        void UIForm_SetTitle( UIForm *aSelf, void *aTitle )
-        {
-            auto lString = DotNetRuntime::NewString( CAST( MonoString, aTitle ) );
+        void UIForm_SetTitle( UIForm *aSelf, wchar_t *aTitle ) { aSelf->SetTitle( make_ascii_string( aTitle ) ); }
 
-            aSelf->SetTitle( lString );
-        }
-
-        void UIForm_SetContent( UIForm *aSelf, void *aContent )
-        {
-            auto lContent = CAST( UIComponent, aContent );
-
-            aSelf->SetContent( lContent );
-        }
+        void UIForm_SetContent( UIForm *aSelf, UIComponent *aContent ) { aSelf->SetContent( aContent ); }
 
         void UIForm_Update( UIForm *aSelf ) { aSelf->Update(); }
 

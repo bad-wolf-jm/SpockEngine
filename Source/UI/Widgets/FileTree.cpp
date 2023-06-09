@@ -84,21 +84,4 @@ namespace SE::Core
     }
 
     UIFileTreeNode *UIFileTree::Add( fs::path const &aPath ) { return ( (UIFileTreeNode *)mRoot )->Add( aPath ); }
-
-    // void *UIFileTree::UIFileTree_Create()
-    // {
-    //     auto lNewLabel = new UIFileTree();
-
-    //     return static_cast<void *>( lNewLabel );
-    // }
-
-    // void UIFileTree::UIFileTree_Destroy( void *aInstance ) { delete static_cast<UIFileTree *>( aInstance ); }
-
-    // void *UIFileTree::UIFileTree_Add( void *aInstance, void *aPath )
-    // {
-    //     auto lInstance = static_cast<UIFileTree *>( aInstance );
-    //     auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aPath ) );
-
-    //     return static_cast<void *>( lInstance->Add( lString ) );
-    // }
 } // namespace SE::Core
