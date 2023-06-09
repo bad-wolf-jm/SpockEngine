@@ -51,7 +51,9 @@ namespace pal
 
 // #ifdef TARGET_WINDOWS
 #define CDECL __cdecl
-#include <Windows.h>
+#include "CoreCLRHost.h"
+
+// #include <Windows.h>
 
 #define DLL_EXPORT __declspec( dllexport )
 #define MAIN __cdecl wmain
@@ -113,6 +115,7 @@ namespace pal
         BOOL success = ::SetEnvironmentVariableA( var, value.c_str() );
         assert( success );
     }
+
     inline string_t get_exe_path()
     {
         char_t file_name[1024];
@@ -121,6 +124,7 @@ namespace pal
 
         return { file_name };
     }
+
     inline string_t get_absolute_path( const char_t *path )
     {
         DWORD              needed = ::GetFullPathNameW( path, 0, nullptr, nullptr );

@@ -8,8 +8,8 @@
 #    define CORECLR_CALLING_CONVENTION
 #endif
 
+#include "CoreCLRHost.h"
 #include <stdint.h>
-
 // For each hosting API, we define a function prototype and a function pointer
 // The prototype is useful for implicit linking against the dynamic coreclr
 // library and the pointer for explicit dynamic loading (dlopen, LoadLibrary)
@@ -103,18 +103,28 @@ CORECLR_HOSTING_API( coreclr_execute_assembly, void *hostHandle, unsigned int do
 typedef bool( CORECLR_CALLING_CONVENTION BundleProbeFn )( const char *path, int64_t *offset, int64_t *size, int64_t *compressedSize );
 typedef const void *( CORECLR_CALLING_CONVENTION PInvokeOverrideFn )( const char *libraryName, const char *entrypointName );
 
-
 #include "corerun.hpp"
 #include "dotenv.hpp"
 
-#include <fstream>
-#include <argparse/argparse.hpp>
 #include "Core/Memory.h"
+#include <argparse/argparse.hpp>
+#include <codecvt>
+#include <fstream>
+#include <locale>
+#include <string>
 
 using char_t   = pal::char_t;
 using string_t = pal::string_t;
 
 using namespace SE::Core;
+
+static std::string make_ascii_string( string_t u16str )
+{
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
+    std::string                                                     utf8 = convert.to_bytes( u16str );
+
+    return utf8;
+}
 
 struct configuration
 {
@@ -364,93 +374,96 @@ static int run( const configuration &config )
 
     config.dotenv_configuration.load_into_current_process();
 
-    actions.before_coreclr_load();
+    auto x = CoreCLRHost( "FOO", make_ascii_string( exe_path ), make_ascii_string( core_root ), make_ascii_string( core_libs ) );
+    // x.LoadApplicationAssembly( make_ascii_string(config.entry_assembly_fullpath ), "Application" );
+    // actions.before_coreclr_load();
 
-    // Attempt to load CoreCLR.
-    pal::mod_t coreclr_mod;
-    if( !pal::try_load_coreclr( core_root, coreclr_mod ) )
-    {
-        return -1;
-    }
+    // // Attempt to load CoreCLR.
+    // pal::mod_t coreclr_mod;
+    // if( !pal::try_load_coreclr( core_root, coreclr_mod ) )
+    // {
+    //     return -1;
+    // }
 
-    // Get CoreCLR exports
-    coreclr_initialize_ptr       coreclr_init_func      = nullptr;
-    coreclr_execute_assembly_ptr coreclr_execute_func   = nullptr;
-    coreclr_shutdown_2_ptr       coreclr_shutdown2_func = nullptr;
-    if( !try_get_export( coreclr_mod, "coreclr_initialize", (void **)&coreclr_init_func ) ||
-        !try_get_export( coreclr_mod, "coreclr_execute_assembly", (void **)&coreclr_execute_func ) ||
-        !try_get_export( coreclr_mod, "coreclr_shutdown_2", (void **)&coreclr_shutdown2_func ) )
-    {
-        return -1;
-    }
+    // // Get CoreCLR exports
+    // coreclr_initialize_ptr       coreclr_init_func      = nullptr;
+    // coreclr_execute_assembly_ptr coreclr_execute_func   = nullptr;
+    // coreclr_shutdown_2_ptr       coreclr_shutdown2_func = nullptr;
+    // if( !try_get_export( coreclr_mod, "coreclr_initialize", (void **)&coreclr_init_func ) ||
+    //     !try_get_export( coreclr_mod, "coreclr_execute_assembly", (void **)&coreclr_execute_func ) ||
+    //     !try_get_export( coreclr_mod, "coreclr_shutdown_2", (void **)&coreclr_shutdown2_func ) )
+    // {
+    //     return -1;
+    // }
 
-    // Construct CoreCLR properties.
-    pal::string_utf8_t tpa_list_utf8           = pal::convert_to_utf8( tpa_list.c_str() );
-    pal::string_utf8_t app_path_utf8           = pal::convert_to_utf8( app_path.c_str() );
-    pal::string_utf8_t native_search_dirs_utf8 = pal::convert_to_utf8( native_search_dirs.str().c_str() );
+    // // Construct CoreCLR properties.
+    // pal::string_utf8_t tpa_list_utf8           = pal::convert_to_utf8( tpa_list.c_str() );
+    // pal::string_utf8_t app_path_utf8           = pal::convert_to_utf8( app_path.c_str() );
+    // pal::string_utf8_t native_search_dirs_utf8 = pal::convert_to_utf8( native_search_dirs.str().c_str() );
 
-    std::vector<pal::string_utf8_t> user_defined_keys_utf8;
-    std::vector<pal::string_utf8_t> user_defined_values_utf8;
-    for( const string_t &str : config.user_defined_keys ) user_defined_keys_utf8.push_back( pal::convert_to_utf8( str.c_str() ) );
-    for( const string_t &str : config.user_defined_values ) user_defined_values_utf8.push_back( pal::convert_to_utf8( str.c_str() ) );
+    // std::vector<pal::string_utf8_t> user_defined_keys_utf8;
+    // std::vector<pal::string_utf8_t> user_defined_values_utf8;
+    // for( const string_t &str : config.user_defined_keys ) user_defined_keys_utf8.push_back( pal::convert_to_utf8( str.c_str() ) );
+    // for( const string_t &str : config.user_defined_values ) user_defined_values_utf8.push_back( pal::convert_to_utf8( str.c_str() ) );
 
-    // Set base initialization properties.
-    std::vector<const char *> propertyKeys;
-    std::vector<const char *> propertyValues;
+    // // Set base initialization properties.
+    // std::vector<const char *> propertyKeys;
+    // std::vector<const char *> propertyValues;
 
-    // TRUSTED_PLATFORM_ASSEMBLIES
-    // - The list of complete paths to each of the fully trusted assemblies
-    propertyKeys.push_back( "TRUSTED_PLATFORM_ASSEMBLIES" );
-    propertyValues.push_back( tpa_list_utf8.c_str() );
+    // // TRUSTED_PLATFORM_ASSEMBLIES
+    // // - The list of complete paths to each of the fully trusted assemblies
+    // propertyKeys.push_back( "TRUSTED_PLATFORM_ASSEMBLIES" );
+    // propertyValues.push_back( tpa_list_utf8.c_str() );
 
-    // APP_PATHS
-    // - The list of paths which will be probed by the assembly loader
-    propertyKeys.push_back( "APP_PATHS" );
-    propertyValues.push_back( app_path_utf8.c_str() );
+    // // APP_PATHS
+    // // - The list of paths which will be probed by the assembly loader
+    // propertyKeys.push_back( "APP_PATHS" );
+    // propertyValues.push_back( app_path_utf8.c_str() );
 
-    // NATIVE_DLL_SEARCH_DIRECTORIES
-    // - The list of paths that will be probed for native DLLs called by PInvoke
-    propertyKeys.push_back( "NATIVE_DLL_SEARCH_DIRECTORIES" );
-    propertyValues.push_back( native_search_dirs_utf8.c_str() );
+    // // NATIVE_DLL_SEARCH_DIRECTORIES
+    // // - The list of paths that will be probed for native DLLs called by PInvoke
+    // propertyKeys.push_back( "NATIVE_DLL_SEARCH_DIRECTORIES" );
+    // propertyValues.push_back( native_search_dirs_utf8.c_str() );
 
-    // Sanity check before adding user-defined properties
-    assert( propertyKeys.size() == propertyValues.size() );
+    // // Sanity check before adding user-defined properties
+    // assert( propertyKeys.size() == propertyValues.size() );
 
-    // Insert user defined properties
-    for( const pal::string_utf8_t &str : user_defined_keys_utf8 ) propertyKeys.push_back( str.c_str() );
-    for( const pal::string_utf8_t &str : user_defined_values_utf8 ) propertyValues.push_back( str.c_str() );
+    // // Insert user defined properties
+    // for( const pal::string_utf8_t &str : user_defined_keys_utf8 ) propertyKeys.push_back( str.c_str() );
+    // for( const pal::string_utf8_t &str : user_defined_values_utf8 ) propertyValues.push_back( str.c_str() );
 
-    assert( propertyKeys.size() == propertyValues.size() );
-    int propertyCount = (int)propertyKeys.size();
+    // assert( propertyKeys.size() == propertyValues.size() );
+    // int propertyCount = (int)propertyKeys.size();
 
-    // Construct arguments
-    pal::string_utf8_t              exe_path_utf8 = pal::convert_to_utf8( exe_path.c_str() );
-    std::vector<pal::string_utf8_t> argv_lifetime;
-    pal::malloc_ptr<const char *>   argv_utf8{
-        pal::convert_argv_to_utf8( config.entry_assembly_argc, config.entry_assembly_argv, argv_lifetime ) };
+    // // Construct arguments
+    // pal::string_utf8_t              exe_path_utf8 = pal::convert_to_utf8( exe_path.c_str() );
+    // std::vector<pal::string_utf8_t> argv_lifetime;
+    // pal::malloc_ptr<const char *>   argv_utf8{
+    //     pal::convert_argv_to_utf8( config.entry_assembly_argc, config.entry_assembly_argv, argv_lifetime ) };
     pal::string_utf8_t entry_assembly_utf8 = pal::convert_to_utf8( config.entry_assembly_fullpath.c_str() );
 
-    // logger_t logger{
-    //     exe_path_utf8.c_str(),      propertyCount,  propertyKeys.data(), propertyValues.data(), entry_assembly_utf8.c_str(),
-    //     config.entry_assembly_argc, argv_utf8.get() };
+    // // logger_t logger{
+    // //     exe_path_utf8.c_str(),      propertyCount,  propertyKeys.data(), propertyValues.data(), entry_assembly_utf8.c_str(),
+    // //     config.entry_assembly_argc, argv_utf8.get() };
 
     int result;
-    result = coreclr_init_func( exe_path_utf8.c_str(), "corerun", propertyCount, propertyKeys.data(), propertyValues.data(),
-                                &CurrentClrInstance, &CurrentAppDomainId );
-    if( FAILED( result ) )
-    {
-        pal::fprintf( stderr, W( "BEGIN: coreclr_initialize failed - Error: 0x%08x\n" ), result );
-        // logger.dump_details();
-        pal::fprintf( stderr, W( "END: coreclr_initialize failed - Error: 0x%08x\n" ), result );
-        return -1;
-    }
+    // result = coreclr_init_func( exe_path_utf8.c_str(), "corerun", propertyCount, propertyKeys.data(), propertyValues.data(),
+    //                             &CurrentClrInstance, &CurrentAppDomainId );
+    // if( FAILED( result ) )
+    // {
+    //     pal::fprintf( stderr, W( "BEGIN: coreclr_initialize failed - Error: 0x%08x\n" ), result );
+    //     // logger.dump_details();
+    //     pal::fprintf( stderr, W( "END: coreclr_initialize failed - Error: 0x%08x\n" ), result );
+    //     return -1;
+    // }
 
     int exit_code;
     {
         actions.before_execute_assembly( config.entry_assembly_fullpath );
 
-        result = coreclr_execute_func( CurrentClrInstance, CurrentAppDomainId, config.entry_assembly_argc, argv_utf8.get(),
-                                       entry_assembly_utf8.c_str(), (uint32_t *)&exit_code );
+        result = x.Execute(entry_assembly_utf8);
+        // result = coreclr_execute_func( CurrentClrInstance, CurrentAppDomainId, config.entry_assembly_argc, argv_utf8.get(),
+        //                                entry_assembly_utf8.c_str(), (uint32_t *)&exit_code );
         if( FAILED( result ) )
         {
             pal::fprintf( stderr, W( "BEGIN: coreclr_execute_assembly failed - Error: 0x%08x\n" ), result );
@@ -462,15 +475,17 @@ static int run( const configuration &config )
         actions.after_execute_assembly();
     }
 
-    int latched_exit_code = 0;
-    result                = coreclr_shutdown2_func( CurrentClrInstance, CurrentAppDomainId, &latched_exit_code );
-    if( FAILED( result ) )
-    {
-        pal::fprintf( stderr, W( "coreclr_shutdown_2 failed - Error: 0x%08x\n" ), result );
-        exit_code = -1;
-    }
+    x.Shutdown();
 
-    if( exit_code != -1 ) exit_code = latched_exit_code;
+    // int latched_exit_code = 0;
+    // result                = coreclr_shutdown2_func( CurrentClrInstance, CurrentAppDomainId, &latched_exit_code );
+    // if( FAILED( result ) )
+    // {
+    //     pal::fprintf( stderr, W( "coreclr_shutdown_2 failed - Error: 0x%08x\n" ), result );
+    //     exit_code = -1;
+    // }
+
+    // if( exit_code != -1 ) exit_code = latched_exit_code;
 
     return exit_code;
 }
@@ -505,7 +520,6 @@ static void display_usage()
     // clang-format on
 }
 
-
 Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
 {
     auto lProgramArguments = New<argparse::ArgumentParser>( "bin2ktx" );
@@ -534,7 +548,6 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
         return nullptr;
     }
 }
-
 
 // Parse the command line arguments
 static bool parse_args( const int argc, const char_t *argv[], configuration &config )
