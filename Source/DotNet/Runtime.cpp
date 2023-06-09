@@ -208,17 +208,23 @@ namespace SE::Core
         return lMonoType;
     }
 
-    static MonoString *OpenFile( MonoString *aFilter )
+    extern "C" wchar_t *OpenFile( wchar_t *aFilter )
     {
-        auto  lFilter     = DotNetRuntime::NewString( aFilter );
-        char *lCharacters = lFilter.data();
+        auto     lFilter     = std::wstring( aFilter );
+        wchar_t *lCharacters = lFilter.data();
 
         for( uint32_t i = 0; i < lFilter.size(); i++ ) lCharacters[i] = ( lCharacters[i] == '|' ) ? '\0' : lCharacters[i];
         auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(), lFilter.c_str() );
 
-        if( lFilePath.has_value() ) return DotNetRuntime::NewString( lFilePath.value() );
+        if( lFilePath.has_value() )
+        {
+            auto & lStr = lFilePath.value();
+            wchar_t *pszReturn = (wchar_t *)::CoTaskMemAlloc( lStr.size() * sizeof(wchar_t) );
+            wcsncpy( pszReturn, lStr.c_str(), lStr.size()  );
+            return pszReturn;
+        }
 
-        return DotNetRuntime::NewString( "" );
+        return L"";
     }
 
     static void ICall( std::string const &aName, void *aFunction )
@@ -232,14 +238,6 @@ namespace SE::Core
     {
         using namespace SE::Core::Interop;
 
-        ICall( "UIColor::GetStyleColor", SE::Core::UI::GetStyleColor );
-
-        ICall( "CppCall::OpenFile", OpenFile );
-        ICall( "CppCall::Entity_Create", Entity_Create );
-        ICall( "CppCall::Entity_IsValid", Entity_IsValid );
-        ICall( "CppCall::Entity_Has", Entity_Has );
-        ICall( "CppCall::Entity_Get", Entity_Get );
-        ICall( "CppCall::Entity_Add", Entity_Add );
-        ICall( "CppCall::Entity_Replace", Entity_Replace );
+        // ICall( "UIColor::GetStyleColor", SE::Core::UI::GetStyleColor );
     }
 } // namespace SE::Core
