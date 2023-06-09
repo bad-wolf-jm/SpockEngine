@@ -164,6 +164,7 @@ set_target_properties( OTDR_Run PROPERTIES LINK_FLAGS /SUBSYSTEM:CONSOLE )
 
 
 add_executable(CLRHost   
+    Hosting/CoreCLRHost.cpp
     Hosting/corerun.cpp
     Hosting/dotenv.cpp
     # Hosting/native.rc

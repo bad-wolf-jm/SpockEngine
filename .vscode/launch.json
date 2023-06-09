@@ -26,8 +26,8 @@
             "name": "CoreCLR host",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/Build/Programs/TestCoreCLR/test_coreclr_embedding.exe",
-            "args": [ ],
+            "program": "${workspaceFolder}/Build/Source/CLRHost.exe",
+            "args": ["--clr-path", "C:\\Data\\DotNetTest", "D:\\Build\\Lib\\Debug\\develop\\OlmUnitTests_EXE\\OlmUnitTests_EXE.exe" ],
             "cwd": "${workspaceFolder}/Programs/TestCoreCLR",
             "stopAtEntry": false
         },
