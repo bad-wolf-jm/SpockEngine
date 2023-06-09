@@ -1,10 +1,10 @@
 #include "Runtime.h"
 
-#include "Core/File.h"
+// #include "Core/File.h"
 #include "Core/Logging.h"
 #include "Core/Memory.h"
 
-#include "Engine/Engine.h"
+// #include "Engine/Engine.h"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
@@ -206,25 +206,6 @@ namespace SE::Core
         }
 
         return lMonoType;
-    }
-
-    extern "C" wchar_t *OpenFile( wchar_t *aFilter )
-    {
-        auto     lFilter     = std::wstring( aFilter );
-        wchar_t *lCharacters = lFilter.data();
-
-        for( uint32_t i = 0; i < lFilter.size(); i++ ) lCharacters[i] = ( lCharacters[i] == '|' ) ? '\0' : lCharacters[i];
-        auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(), lFilter.c_str() );
-
-        if( lFilePath.has_value() )
-        {
-            auto & lStr = lFilePath.value();
-            wchar_t *pszReturn = (wchar_t *)::CoTaskMemAlloc( lStr.size() * sizeof(wchar_t) );
-            wcsncpy( pszReturn, lStr.c_str(), lStr.size()  );
-            return pszReturn;
-        }
-
-        return L"";
     }
 
     static void ICall( std::string const &aName, void *aFunction )
