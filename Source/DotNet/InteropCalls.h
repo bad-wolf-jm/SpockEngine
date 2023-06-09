@@ -60,6 +60,8 @@ namespace SE::Core::Interop
 
     extern "C" 
     {
+        CLRVec4 UIColors_GetStyleColor( ImGuiCol aColor );
+
         void UIComponent_SetIsVisible( UIComponent *aSelf, bool aIsVisible );
         void UIComponent_SetIsEnabled( UIComponent *aSelf, bool aIsEnabled );
         void UIComponent_SetAllowDragDrop( UIComponent *aSelf, bool aAllowDragDrop );

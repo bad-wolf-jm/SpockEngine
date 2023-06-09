@@ -33,7 +33,4 @@ namespace SE::Core::UI
         ImageHandle()                      = default;
         ImageHandle( const ImageHandle & ) = default;
     };
-
-    void GetStyleColor(ImGuiCol aColor, math::vec4 *aOut );
-
 } // namespace SE::Core::UI

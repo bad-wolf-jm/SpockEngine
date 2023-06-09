@@ -90,11 +90,4 @@ namespace SE::Core::UI
         style.ScrollbarRounding = 2;
         style.GrabRounding      = 3;
     }
-
-    void GetStyleColor( ImGuiCol aColor, math::vec4 *aOut )
-    {
-        auto const &lColor = ImGui::GetStyleColorVec4( aColor );
-
-        *aOut = math::vec4{ lColor.x, lColor.y, lColor.z, lColor.w };
-    }
 } // namespace SE::Core::UI

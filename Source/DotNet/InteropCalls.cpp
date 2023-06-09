@@ -51,6 +51,13 @@ namespace SE::Core::Interop
     void _Ty##_Destroy( _Ty *aSelf ) { delete aSelf; }
 #define CAST( _Ty, v ) static_cast<_Ty *>( v )
 
+        CLRVec4 UIColors_GetStyleColor( ImGuiCol aColor )
+        {
+            auto const &lColor = ImGui::GetStyleColorVec4( aColor );
+
+            return CLRVec4{ lColor.x, lColor.y, lColor.z, lColor.w };
+        }
+
 #pragma region UIBaseImage
         CONSTRUCT_WITHOUT_PARAMETERS( UIBaseImage )
         void *UIBaseImage_CreateWithPath( void *aText, CLRVec2 aSize )

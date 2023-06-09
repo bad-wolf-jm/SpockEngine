@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 using Math = SpockEngine.Math;
 
@@ -83,14 +84,11 @@ namespace SpockEngine
 
         public static Math.vec4 GetStyleColor(UIStyleColor aColor)
         {
-            Math.vec4 lOut = new Math.vec4();
-            GetStyleColor((int)aColor, out lOut);
-
-            return lOut;
+            return UIColors_GetStyleColor((int)aColor);
         }
 
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        public extern static void GetStyleColor(int aColor, out Math.vec4 aOut);
+        [DllImport("LTSimulationEngineRuntime.dll")]
+        public extern static Math.vec4 UIColors_GetStyleColor(int aColor);
     }
 
 }
