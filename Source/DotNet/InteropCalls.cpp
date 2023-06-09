@@ -1,6 +1,9 @@
 #include "InteropCalls.h"
 #include "DotNet/Runtime.h"
 
+#include "Engine/Engine.h"
+#include "Core/File.h"
+
 #include <codecvt>
 #include <locale>
 #include <string>
@@ -56,6 +59,25 @@ namespace SE::Core::Interop
             auto const &lColor = ImGui::GetStyleColorVec4( aColor );
 
             return CLRVec4{ lColor.x, lColor.y, lColor.z, lColor.w };
+        }
+
+        wchar_t *OpenFile( wchar_t *aFilter )
+        {
+            auto     lFilter     = std::wstring( aFilter );
+            wchar_t *lCharacters = lFilter.data();
+
+            for( uint32_t i = 0; i < lFilter.size(); i++ ) lCharacters[i] = ( lCharacters[i] == '|' ) ? '\0' : lCharacters[i];
+            auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(), lFilter.c_str() );
+
+            if( lFilePath.has_value() )
+            {
+                auto    &lStr      = lFilePath.value();
+                wchar_t *pszReturn = (wchar_t *)::CoTaskMemAlloc( lStr.size() * sizeof( wchar_t ) );
+                wcsncpy( pszReturn, lStr.c_str(), lStr.size() );
+                return pszReturn;
+            }
+
+            return nullptr;
         }
 
 #pragma region UIBaseImage

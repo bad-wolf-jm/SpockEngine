@@ -10,10 +10,6 @@
 
 namespace SE::Core
 {
-
-    extern "C" wchar_t *OpenFile( wchar_t *aFilter );
-
-
     class DotNetRuntime
     {
       public:
@@ -25,10 +21,6 @@ namespace SE::Core
 
         static void AddAppAssemblyPath( const std::filesystem::path &aFilepath, std::string const &aCategory );
         static void ReloadAssemblies();
-
-        // static uint32_t CountAssemblies();
-        // static void     GetAssemblies( std::vector<fs::path> &lOut );
-        // static bool     AssembliesNeedReloading();
 
         static MonoString *NewString( std::string const &aString );
         static std::string NewString( MonoString *aString );
