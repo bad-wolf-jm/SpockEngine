@@ -161,3 +161,15 @@ target_include_directories(OTDR_Run PRIVATE Source ${SE_EXTRA_INCLUDES})
 target_compile_definitions(OTDR_Run PRIVATE VK_USE_PLATFORM_WIN32_KHR)
 target_link_libraries( OTDR_Run PRIVATE LTSimulationEngineRuntime)
 set_target_properties( OTDR_Run PROPERTIES LINK_FLAGS /SUBSYSTEM:CONSOLE )
+
+
+add_executable(CLRHost   
+    Hosting/corerun.cpp
+    Hosting/dotenv.cpp
+    # Hosting/native.rc
+)
+
+target_include_directories(CLRHost PRIVATE Source ${SE_EXTRA_INCLUDES} "C:/GitLab/dotnet/src/native")
+target_compile_definitions(CLRHost PRIVATE VK_USE_PLATFORM_WIN32_KHR)
+target_link_libraries( CLRHost PRIVATE LTSimulationEngineRuntime)
+set_target_properties( CLRHost PROPERTIES LINK_FLAGS /SUBSYSTEM:CONSOLE )
