@@ -10,6 +10,10 @@
 
 namespace SE::Core
 {
+
+    extern "C" wchar_t *OpenFile( wchar_t *aFilter );
+
+
     class DotNetRuntime
     {
       public:

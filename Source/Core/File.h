@@ -10,5 +10,6 @@ class FileDialogs
   public:
     // These return empty strings if cancelled
     static std::optional<std::string> OpenFile( GLFWwindow *owner, const char *filter );
+    static std::optional<std::wstring> OpenFile( GLFWwindow *owner, const wchar_t *filter );
     static std::optional<std::string> SaveFile( GLFWwindow *owner, const char *filter );
 };

@@ -1,12 +1,14 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace SpockEngine
 {
     public static class CppCall
     {
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        public extern static string OpenFile(string buffer);
+        [DllImport("LTSimulationEngineRuntime.dll", CharSet = CharSet.Unicode)]
+        [return: MarshalAs(UnmanagedType.LPWStr)]
+        public extern static string OpenFile(string aFilter);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static uint Entity_Create(ulong aRegistry, string aName, uint aParentEntityID);

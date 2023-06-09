@@ -30,6 +30,24 @@ std::optional<std::string> FileDialogs::OpenFile( GLFWwindow *owner, const char 
     return std::nullopt;
 }
 
+std::optional<std::wstring> FileDialogs::OpenFile( GLFWwindow *owner, const wchar_t *filter )
+{
+    OPENFILENAMEW ofn;
+    WCHAR szFile[260] = { 0 };
+    ZeroMemory( &ofn, sizeof( OPENFILENAME ) );
+    ofn.lStructSize  = sizeof( OPENFILENAME );
+    ofn.hwndOwner    = glfwGetWin32Window( owner );
+    ofn.lpstrFile    = szFile;
+    ofn.nMaxFile     = sizeof( szFile );
+    ofn.lpstrFilter  = filter;
+    ofn.nFilterIndex = 1;
+    ofn.Flags        = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+
+    if( GetOpenFileNameW( &ofn ) == TRUE )
+        return ofn.lpstrFile;
+    return std::nullopt;
+}
+
 std::optional<std::string> FileDialogs::SaveFile( GLFWwindow *owner, const char *filter )
 {
     OPENFILENAMEA ofn;
