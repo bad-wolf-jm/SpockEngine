@@ -76,7 +76,7 @@ namespace SpockEngine
         public double[] X
         {
             get { return mX; }
-            set { mX = value; Interop.UIVLinePlot_SetX(mInstance, value); }
+            set { mX = value; Interop.UIVLinePlot_SetX(mInstance, value, value.Length); }
         }
 
     }
@@ -93,7 +93,7 @@ namespace SpockEngine
         public double[] Y
         {
             get { return mY; }
-            set { mY = value; Interop.UIHLinePlot_SetY(mInstance, value); }
+            set { mY = value; Interop.UIHLinePlot_SetY(mInstance, value, value.Length); }
         }
 
     }
@@ -192,13 +192,13 @@ namespace SpockEngine
         public double[] X
         {
             get { return mX; }
-            set { mX = value; Interop.UIFloat64LinePlot_SetX(mInstance, value); }
+            set { mX = value; Interop.UIFloat64LinePlot_SetX(mInstance, value, value.Length); }
         }
 
         public double[] Y
         {
             get { return mY; }
-            set { mY = value; Interop.UIFloat64LinePlot_SetY(mInstance, value); }
+            set { mY = value; Interop.UIFloat64LinePlot_SetY(mInstance, value, value.Length); }
         }
     }
 
@@ -217,13 +217,13 @@ namespace SpockEngine
         public double[] X
         {
             get { return mX; }
-            set { mX = value; Interop.UIFloat64ScatterPlot_SetX(mInstance, value); }
+            set { mX = value; Interop.UIFloat64ScatterPlot_SetX(mInstance, value, value.Length); }
         }
 
         public double[] Y
         {
             get { return mY; }
-            set { mY = value; Interop.UIFloat64ScatterPlot_SetY(mInstance, value); }
+            set { mY = value; Interop.UIFloat64ScatterPlot_SetY(mInstance, value, value.Length); }
         }
     }
 

@@ -19,7 +19,7 @@ namespace SpockEngine
         private UIComponent[] mToolTips;
         private void SetTooltip(IntPtr[] aTooltips)
         {
-            Interop.UITableColumn_SetTooltip(mInstance, aTooltips);
+            Interop.UITableColumn_SetTooltip(mInstance, aTooltips, aTooltips.Length);
         }
 
         public void SetTooltip(UIComponent[] aTooltips)
@@ -40,7 +40,7 @@ namespace SpockEngine
 
         public void SetBackgroundColor(Math.vec4[] aBackgroundColor)
         {
-            Interop.UITableColumn_SetBackgroundColor(mInstance, aBackgroundColor);
+            Interop.UITableColumn_SetBackgroundColor(mInstance, aBackgroundColor, aBackgroundColor.Length);
         }
 
         public void SetBackgroundColor(List<Math.vec4> aBackroundColor)
@@ -50,7 +50,7 @@ namespace SpockEngine
 
         public void SetForegroundColor(Math.vec4[] aForegroundColor)
         {
-            Interop.UITableColumn_SetForegroundColor(mInstance, aForegroundColor);
+            Interop.UITableColumn_SetForegroundColor(mInstance, aForegroundColor, aForegroundColor.Length);
         }
 
         public void SetForegroundColor(List<Math.vec4> aForegroundColor)
@@ -74,7 +74,7 @@ namespace SpockEngine
 
         public void SetData(double[] aValue)
         {
-            Interop.UIFloat64Column_SetData(mInstance, aValue);
+            Interop.UIFloat64Column_SetData(mInstance, aValue, aValue.Length);
         }
 
         public void SetData(List<double> aValue)
@@ -125,7 +125,7 @@ namespace SpockEngine
 
         public void SetData(uint[] aValue)
         {
-            Interop.UIUint32Column_SetData(mInstance, aValue);
+            Interop.UIUint32Column_SetData(mInstance, aValue, aValue.Length);
         }
         public void SetData(List<uint> aValue)
         {
@@ -174,7 +174,7 @@ namespace SpockEngine
 
         public void SetData(string[] aValue)
         {
-            Interop.UIStringColumn_SetData(mInstance, aValue);
+            Interop.UIStringColumn_SetData(mInstance, aValue, aValue.Length);
         }
 
         public void SetData(List<string> aValue)
@@ -222,7 +222,7 @@ namespace SpockEngine
 
         public void SetDisplayedRowIndices(int[] aIndices)
         {
-            Interop.UITable_SetDisplayedRowIndices(mInstance, aIndices);
+            Interop.UITable_SetDisplayedRowIndices(mInstance, aIndices, aIndices.Length);
         }
 
         public void SetDisplayedRowIndices(List<int> aIndices)
@@ -232,7 +232,7 @@ namespace SpockEngine
 
         public void SetRowBackgroundColor(Math.vec4[] aColors)
         {
-            Interop.UITable_SetRowBackgroundColor(mInstance, aColors);
+            Interop.UITable_SetRowBackgroundColor(mInstance, aColors, aColors.Length);
         }
 
         public void SetRowBackgroundColor(List<Math.vec4> aColors)

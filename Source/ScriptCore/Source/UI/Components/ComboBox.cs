@@ -7,7 +7,7 @@ namespace SpockEngine
     public class UIComboBox : UIComponent
     {
         public UIComboBox() : base(Interop.UIComboBox_Create()) { }
-        public UIComboBox(string[] aItems) : base(Interop.UIComboBox_CreateWithItems(aItems)) { }
+        public UIComboBox(string[] aItems) : base(Interop.UIComboBox_CreateWithItems(aItems, aItems.Length)) { }
 
         ~UIComboBox() { Interop.UIComboBox_Destroy(mInstance); }
 
@@ -19,7 +19,7 @@ namespace SpockEngine
 
         public void SetItemList(string[] aItems)
         {
-            Interop.UIComboBox_SetItemList(mInstance, aItems);
+            Interop.UIComboBox_SetItemList(mInstance, aItems, aItems.Length);
         }
 
         public delegate void ChangedDelegate(int aIndex);
