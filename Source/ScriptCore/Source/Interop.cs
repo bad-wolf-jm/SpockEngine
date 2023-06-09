@@ -13,13 +13,13 @@ namespace SpockEngine
         public extern static IntPtr UIBaseImage_Create();
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIBaseImage_CreateWithPath(string aText, Math.vec2 Size);
+        public extern static IntPtr UIBaseImage_CreateWithPath([MarshalAs(UnmanagedType.LPTStr)] string aText, Math.vec2 Size);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIBaseImage_Destroy(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UIBaseImage_SetImage(IntPtr aSelf, string aPath);
+        public extern static void UIBaseImage_SetImage(IntPtr aSelf, [MarshalAs(UnmanagedType.LPTStr)] string aPath);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIBaseImage_SetSize(IntPtr aSelf, Math.vec2 aSize);
@@ -51,13 +51,13 @@ namespace SpockEngine
         public extern static IntPtr UIButton_Create();
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIButton_CreateWithText(string aText);
+        public extern static IntPtr UIButton_CreateWithText([MarshalAs(UnmanagedType.LPTStr)] string aText);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIButton_Destroy(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UIButton_SetText(IntPtr aSelf, string aText);
+        public extern static void UIButton_SetText(IntPtr aSelf, [MarshalAs(UnmanagedType.LPTStr)] string aText);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIButton_OnClick(IntPtr aSelf, IntPtr aDelegate);
@@ -93,7 +93,7 @@ namespace SpockEngine
         public extern static IntPtr UIComboBox_Create();
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIComboBox_CreateWithItems(string[] aItems);
+        public extern static IntPtr UIComboBox_CreateWithItems(string[] aItems, int aLength);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIComboBox_Destroy(IntPtr aSelf);
@@ -105,7 +105,7 @@ namespace SpockEngine
         public extern static void UIComboBox_SetCurrent(IntPtr aSelf, int aValue);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UIComboBox_SetItemList(IntPtr aSelf, string[] aItems);
+        public extern static void UIComboBox_SetItemList(IntPtr aSelf, string[] aItems, int aLength);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIComboBox_OnChanged(IntPtr aSelf, IntPtr aHandler);
@@ -322,7 +322,7 @@ namespace SpockEngine
         public extern static IntPtr UIVLinePlot_Destroy(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIVLinePlot_SetX(IntPtr aSelf, double[] aValues);
+        public extern static IntPtr UIVLinePlot_SetX(IntPtr aSelf, double[] aValues, int aLength);
         #endregion
 
         #region UIHLinPlot
@@ -333,7 +333,7 @@ namespace SpockEngine
         public extern static IntPtr UIHLinePlot_Destroy(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIHLinePlot_SetY(IntPtr aSelf, double[] aValues);
+        public extern static IntPtr UIHLinePlot_SetY(IntPtr aSelf, double[] aValues, int aLength);
         #endregion
 
         #region UIAxisTag
@@ -412,10 +412,10 @@ namespace SpockEngine
         public extern static IntPtr UIFloat64LinePlot_Destroy(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIFloat64LinePlot_SetX(IntPtr aSelf, double[] aValues);
+        public extern static IntPtr UIFloat64LinePlot_SetX(IntPtr aSelf, double[] aValues, int aLength);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIFloat64LinePlot_SetY(IntPtr aSelf, double[] aValues);
+        public extern static IntPtr UIFloat64LinePlot_SetY(IntPtr aSelf, double[] aValues, int aLength);
         #endregion
 
         #region UIFloatScatterPlot
@@ -426,10 +426,10 @@ namespace SpockEngine
         public extern static IntPtr UIFloat64ScatterPlot_Destroy(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIFloat64ScatterPlot_SetX(IntPtr aSelf, double[] aValues);
+        public extern static IntPtr UIFloat64ScatterPlot_SetX(IntPtr aSelf, double[] aValues, int aLength);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIFloat64ScatterPlot_SetY(IntPtr aSelf, double[] aValues);
+        public extern static IntPtr UIFloat64ScatterPlot_SetY(IntPtr aSelf, double[] aValues, int aLength);
         #endregion
 
         #region UIPlot
@@ -517,13 +517,13 @@ namespace SpockEngine
 
         #region UITableColumn
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UITableColumn_SetTooltip(IntPtr aSelf, IntPtr[] aValue);
+        public extern static void UITableColumn_SetTooltip(IntPtr aSelf, IntPtr[] aValue, int aLength);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UITableColumn_SetBackgroundColor(IntPtr aSelf, Math.vec4[] aForegroundColor);
+        public extern static void UITableColumn_SetBackgroundColor(IntPtr aSelf, Math.vec4[] aForegroundColor, int aLength);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UITableColumn_SetForegroundColor(IntPtr aSelf, Math.vec4[] aForegroundColor);
+        public extern static void UITableColumn_SetForegroundColor(IntPtr aSelf, Math.vec4[] aForegroundColor, int aLength);
         #endregion
 
         #region UIFloat64Column
@@ -540,7 +540,7 @@ namespace SpockEngine
         public extern static void UIFloat64Column_Clear(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UIFloat64Column_SetData(IntPtr aSelf, double[] aValue);
+        public extern static void UIFloat64Column_SetData(IntPtr aSelf, double[] aValue, int aLength);
         #endregion
 
         #region UIUint32Column
@@ -557,7 +557,7 @@ namespace SpockEngine
         public extern static void UIUint32Column_Clear(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UIUint32Column_SetData(IntPtr aSelf, uint[] aValue);
+        public extern static void UIUint32Column_SetData(IntPtr aSelf, uint[] aValue, int aLength);
         #endregion
 
         #region UIStringColumn
@@ -574,7 +574,7 @@ namespace SpockEngine
         public extern static void UIStringColumn_Clear(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UIStringColumn_SetData(IntPtr aSelf, string[] aValue);
+        public extern static void UIStringColumn_SetData(IntPtr aSelf, string[] aValue, int aLength);
         #endregion
 
         #region UITable
@@ -594,13 +594,13 @@ namespace SpockEngine
         public extern static void UITable_SetRowHeight(IntPtr aSelf, float aRowHeight);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UITable_SetRowBackgroundColor(IntPtr aSelf, Math.vec4[] aColors);
+        public extern static void UITable_SetRowBackgroundColor(IntPtr aSelf, Math.vec4[] aColors, int aLength);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UITable_ClearRowBackgroundColor(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UITable_SetDisplayedRowIndices(IntPtr aSelf, int[] aIndices);
+        public extern static void UITable_SetDisplayedRowIndices(IntPtr aSelf, int[] aIndices, int aLength);
         #endregion
 
         #region UITextInput
