@@ -37,6 +37,9 @@ namespace SE::Core
         int32_t    lHeight               = 0;
         size_t     lChannelSize          = 0;
 
+        auto x =  aPath.string();
+        auto y =  x.c_str();
+
         if( stbi_is_hdr( aPath.string().c_str() ) )
         {
             lChannelSize = 4;
