@@ -60,6 +60,7 @@ namespace SE::Core::Interop
 
     extern "C" 
     {
+        wchar_t *OpenFile( wchar_t *aFilter );
         CLRVec4 UIColors_GetStyleColor( ImGuiCol aColor );
 
         void UIComponent_SetIsVisible( UIComponent *aSelf, bool aIsVisible );
