@@ -51,7 +51,7 @@ namespace pal
 
 // #ifdef TARGET_WINDOWS
 #define CDECL __cdecl
-#include "CoreCLRHost.h"
+#include "Launch/CoreCLRHost.h"
 
 // #include <Windows.h>
 
