@@ -170,8 +170,9 @@ set_target_properties( OTDR_Run PROPERTIES LINK_FLAGS /SUBSYSTEM:CONSOLE )
 
 add_executable(CLRHost   
     Launch/CoreCLRHost.cpp
-
-    )
+    Hosting/corerun.cpp
+    Hosting/dotenv.cpp
+)
 
 target_include_directories(CLRHost PRIVATE Source ${SE_EXTRA_INCLUDES} "C:/GitLab/dotnet/src/native")
 target_compile_definitions(CLRHost PRIVATE VK_USE_PLATFORM_WIN32_KHR)
