@@ -96,8 +96,8 @@ add_library(LTSimulationEngineRuntime SHARED
     Graphics/Interface/IDescriptorSet.cpp
     Graphics/Interface/IDescriptorSetLayout.cpp
 
-    # OtdrEditor/OtdrWindow.cpp
-    # OtdrEditor/BaseOtdrApplication.cpp
+    OtdrEditor/OtdrWindow.cpp
+    OtdrEditor/BaseOtdrApplication.cpp
 )
 
 function(add_shader TARGET SHADER)
@@ -160,6 +160,7 @@ add_executable(OTDR_Run WIN32
     Launch/OtdrMain.cpp     
     Launch/CoreCLRHost.cpp
     Launch/Delegates.cpp
+    Launch/OtdrWindow.cpp
 )
 target_include_directories(OTDR_Run PRIVATE Source ${SE_EXTRA_INCLUDES})
 target_compile_definitions(OTDR_Run PRIVATE VK_USE_PLATFORM_WIN32_KHR)
@@ -169,9 +170,8 @@ set_target_properties( OTDR_Run PROPERTIES LINK_FLAGS /SUBSYSTEM:CONSOLE )
 
 add_executable(CLRHost   
     Launch/CoreCLRHost.cpp
-    Hosting/corerun.cpp
-    Hosting/dotenv.cpp
-)
+
+    )
 
 target_include_directories(CLRHost PRIVATE Source ${SE_EXTRA_INCLUDES} "C:/GitLab/dotnet/src/native")
 target_compile_definitions(CLRHost PRIVATE VK_USE_PLATFORM_WIN32_KHR)
