@@ -8,7 +8,7 @@
 #    define CORECLR_CALLING_CONVENTION
 #endif
 
-#include "CoreCLRHost.h"
+#include "Launch/CoreCLRHost.h"
 #include <stdint.h>
 // For each hosting API, we define a function prototype and a function pointer
 // The prototype is useful for implicit linking against the dynamic coreclr
@@ -374,7 +374,7 @@ static int run( const configuration &config )
 
     config.dotenv_configuration.load_into_current_process();
 
-    auto x = CoreCLRHost( "FOO", make_ascii_string( exe_path ), make_ascii_string( core_root ), make_ascii_string( core_libs ) );
+    auto x = CoreCLRHost( "CoreCLRHost", make_ascii_string( exe_path ), make_ascii_string( core_root ), make_ascii_string( core_libs ) );
     // x.LoadApplicationAssembly( make_ascii_string(config.entry_assembly_fullpath ), "Application" );
     // actions.before_coreclr_load();
 
