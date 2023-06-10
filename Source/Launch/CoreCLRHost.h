@@ -35,11 +35,11 @@ namespace SE::Core
         void Shutdown();
         int  Execute( std::string const &aAssemblyPath );
 
-        void Configure();
+        void Configure(std::string aConfigPath);
         void Update(float aTimestamp);
         void UpdateUI(float aTimestamp);
         bool UpdateMenu();
-        void Teardown();
+        void Teardown(std::string aConfigPath);
 
       private:
         CORECLR_HOSTING_API_0( CoreclrInitialize, const char *aExePath, const char *aAppDomainFriendlyName, int aPropertyCount,
@@ -74,10 +74,10 @@ namespace SE::Core
         std::string mTrustedPlatformAssemblies;
         std::string mNativeDllSearchDirectories;
 
-        CORECLR_APPLICATION_API( ConfigureDelegate );
+        CORECLR_APPLICATION_API( ConfigureDelegate, char* aConfigPath );
         CORECLR_APPLICATION_API( UpdateDelegate, float aTimestamp );
         CORECLR_APPLICATION_API( UpdateUIDelegate, float aTimestamp );
         CORECLR_APPLICATION_NON_VOID_API( UpdateMenuDelegate, bool );
-        CORECLR_APPLICATION_API( TeardownDelegate );
+        CORECLR_APPLICATION_API( TeardownDelegate, char* aConfigPath );
     };
 } // namespace SE::Core

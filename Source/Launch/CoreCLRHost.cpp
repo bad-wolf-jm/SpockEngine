@@ -216,10 +216,10 @@ namespace SE::Core
         return mCoreclrExecuteAssembly( mHandle, mDomainID, 0, nullptr, aAssemblyPath.c_str(), (uint32_t *)&exit_code );
     }
 
-    void CoreCLRHost::Configure() { mConfigureDelegate(); }
+    void CoreCLRHost::Configure( std::string aConfigPath ) { mConfigureDelegate( aConfigPath.data() ); }
     void CoreCLRHost::Update( float aTimestamp ) { mUpdateDelegate( aTimestamp ); }
     void CoreCLRHost::UpdateUI( float aTimestamp ) { mUpdateUIDelegate( aTimestamp ); }
     bool CoreCLRHost::UpdateMenu() { return mUpdateMenuDelegate(); }
-    void CoreCLRHost::Teardown() { mTeardownDelegate(); }
+    void CoreCLRHost::Teardown( std::string aConfigPath ) { mTeardownDelegate( aConfigPath.data() ); }
 
 } // namespace SE::Core

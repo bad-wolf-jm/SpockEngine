@@ -22,7 +22,7 @@
 #include "Engine/Engine.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 
-#include "OtdrEditor/BaseOtdrApplication.h"
+#include "Delegates.h"
 
 #include "CoreCLRHost.h"
 #include "DotNet/Runtime.h"
@@ -257,7 +257,7 @@ int main( int argc, char **argv )
     SE::OtdrEditor::BaseOtdrApplication lEditorApplication;
 
     if( !lApplicationName.empty() )
-        lEditorApplication.Init( fmt::format( "{}.{}", lApplicationName, lApplicationName ), lApplicationConfigPath );
+        lEditorApplication.Init( lApplicationConfigPath );
     else
         lEditorApplication.Init();
 
