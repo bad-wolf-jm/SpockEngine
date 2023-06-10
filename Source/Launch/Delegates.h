@@ -20,10 +20,10 @@ namespace SE::OtdrEditor
     using namespace SE::Core;
     using namespace SE::Graphics;
 
-    class BaseOtdrApplication
+    class Application
     {
       public:
-        OtdrWindow mEditorWindow;
+        MainWindow mEditorWindow;
         // Ref<Engine> mEngineLoop             = nullptr;
         // fs::path    ConfigurationRoot       = "";
         // fs::path    ConfigurationFile       = "";
@@ -34,9 +34,9 @@ namespace SE::OtdrEditor
         math::ivec2 WindowPosition = { 100, 100 };
 
       public:
-        BaseOtdrApplication() = default;
+        Application() = default;
 
-        ~BaseOtdrApplication() = default;
+        ~Application() = default;
 
         void Init();
         void Init( fs::path aConfigurationPath );
