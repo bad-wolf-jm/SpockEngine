@@ -254,7 +254,7 @@ int main( int argc, char **argv )
 
     // DotNetRuntime::ReloadAssemblies();
 
-    SE::OtdrEditor::BaseOtdrApplication lEditorApplication;
+    SE::OtdrEditor::Application lEditorApplication;
 
     if( !lApplicationName.empty() )
         lEditorApplication.Init( lApplicationConfigPath );
@@ -262,9 +262,9 @@ int main( int argc, char **argv )
         lEditorApplication.Init();
 
     // Hook into the engine's callbacks
-    SE::Core::Engine::GetInstance()->UpdateDelegate.connect<&SE::OtdrEditor::BaseOtdrApplication::Update>( lEditorApplication );
-    SE::Core::Engine::GetInstance()->RenderDelegate.connect<&SE::OtdrEditor::BaseOtdrApplication::RenderScene>( lEditorApplication );
-    SE::Core::Engine::GetInstance()->UIDelegate.connect<&SE::OtdrEditor::BaseOtdrApplication::RenderUI>( lEditorApplication );
+    SE::Core::Engine::GetInstance()->UpdateDelegate.connect<&SE::OtdrEditor::Application::Update>( lEditorApplication );
+    SE::Core::Engine::GetInstance()->RenderDelegate.connect<&SE::OtdrEditor::Application::RenderScene>( lEditorApplication );
+    SE::Core::Engine::GetInstance()->UIDelegate.connect<&SE::OtdrEditor::Application::RenderUI>( lEditorApplication );
 
     while( SE::Core::Engine::GetInstance()->Tick() )
     {

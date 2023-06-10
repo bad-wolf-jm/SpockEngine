@@ -24,13 +24,13 @@
 namespace SE::OtdrEditor
 {
     using namespace SE::Core;
-    OtdrWindow::OtdrWindow( Ref<IGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
+    MainWindow::MainWindow( Ref<IGraphicContext> aGraphicContext, Ref<UIContext> aUIOverlay )
         : mGraphicContext{ aGraphicContext }
         , mUIOverlay{ aUIOverlay }
     {
     }
 
-    bool OtdrWindow::Display()
+    bool MainWindow::Display()
     {
         ImGuizmo::SetOrthographic( false );
         static bool                  p_open          = true;
@@ -110,18 +110,18 @@ namespace SE::OtdrEditor
         return lRequestQuit;
     }
 
-    bool OtdrWindow::RenderMainMenu()
+    bool MainWindow::RenderMainMenu()
     {
         ImGui::Text( ApplicationIcon.c_str() );
 
         return mRequestQuit;
     }
 
-    math::ivec2 OtdrWindow::GetWorkspaceAreaSize() { return mWorkspaceAreaSize; }
+    math::ivec2 MainWindow::GetWorkspaceAreaSize() { return mWorkspaceAreaSize; }
 
-    void OtdrWindow::Update( Timestep aTs ) { UpdateFramerate( aTs ); }
+    void MainWindow::Update( Timestep aTs ) { UpdateFramerate( aTs ); }
 
-    void OtdrWindow::UpdateFramerate( Timestep ts )
+    void MainWindow::UpdateFramerate( Timestep ts )
     {
         mFrameCounter++;
         mFpsTimer += (float)ts;

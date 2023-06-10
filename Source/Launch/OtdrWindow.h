@@ -32,7 +32,7 @@ namespace SE::OtdrEditor
 
     using namespace SE::Core;
 
-    class OtdrWindow
+    class MainWindow
     {
       public:
         std::string ApplicationIcon = "";
@@ -52,11 +52,11 @@ namespace SE::OtdrEditor
         void Update( Timestep aTs );
 
       public:
-        OtdrWindow()                     = default;
-        OtdrWindow( OtdrWindow const & ) = default;
-        OtdrWindow( Ref<IGraphicContext> aGraphicContext, Ref<UIContext> mUIOverlay );
+        MainWindow()                     = default;
+        MainWindow( MainWindow const & ) = default;
+        MainWindow( Ref<IGraphicContext> aGraphicContext, Ref<UIContext> mUIOverlay );
 
-        ~OtdrWindow() = default;
+        ~MainWindow() = default;
 
         bool        Display();
         bool        RenderMainMenu();

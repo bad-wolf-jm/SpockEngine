@@ -1,4 +1,4 @@
-#include "BaseOtdrApplication.h"
+#include "Delegates.h"
 
 #include "Core/File.h"
 #include "yaml-cpp/yaml.h"
@@ -19,13 +19,13 @@ namespace SE::OtdrEditor
 
     using namespace SE::Core;
 
-    void BaseOtdrApplication::Update( Timestep ts )
+    void Application::Update( Timestep ts )
     {
         mEditorWindow.Update( ts );
         if( mManaged ) mManaged->Update( ts.GetMilliseconds() );
     }
 
-    bool BaseOtdrApplication::RenderUI( ImGuiIO &io )
+    bool Application::RenderUI( ImGuiIO &io )
     {
         bool lRequestQuit = false;
 
@@ -48,14 +48,14 @@ namespace SE::OtdrEditor
         return lRequestQuit;
     }
 
-    void BaseOtdrApplication::Init()
+    void Application::Init()
     {
         mEditorWindow =
-            OtdrWindow( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
+            MainWindow( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
     }
 
-    void BaseOtdrApplication::Init( fs::path aConfigurationPath )
+    void Application::Init( fs::path aConfigurationPath )
     {
         Init();
 
@@ -64,14 +64,10 @@ namespace SE::OtdrEditor
             mManaged->Configure( aConfigurationPath.string() );
             mEditorWindow.mManaged = mManaged;
         }
-        else
-        {
-            SE::Logging::Info( "Could not load application: class {} does not exist", aAppClass );
-        }
     }
 
-    void BaseOtdrApplication::Shutdown( fs::path aConfigurationPath )
+    void Application::Shutdown( fs::path aConfigurationPath )
     {
-        if( mManaged ) mApplicationInstance->Teardown( aConfigurationPath.string() );
+        if( mManaged ) mManaged->Teardown( aConfigurationPath.string() );
     }
 } // namespace SE::OtdrEditor
