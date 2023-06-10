@@ -172,27 +172,27 @@ namespace SE::Core
         Initialize();
 
         // Configure delegate
-        mCoreclrCreateDelegate( mHandle, mDomainID, lFile.string().c_str(), aApplicationClass.c_str(), "Configure",
+        mCoreclrCreateDelegate( mHandle, mDomainID, lPath.string().c_str(), aApplicationClass.c_str(), "Configure",
                                 (void **)&mConfigureDelegate );
         if( mConfigureDelegate == nullptr ) mConfigureDelegate = ConfigureDelegateDefault;
 
         // Update delegate
-        mCoreclrCreateDelegate( mHandle, mDomainID, lFile.string().c_str(), aApplicationClass.c_str(), "Update",
+        mCoreclrCreateDelegate( mHandle, mDomainID, lPath.string().c_str(), aApplicationClass.c_str(), "Update",
                                 (void **)&mUpdateDelegate );
         if( mUpdateDelegate == nullptr ) mUpdateDelegate = UpdateDelegateDefault;
 
         // Update delegate
-        mCoreclrCreateDelegate( mHandle, mDomainID, lFile.string().c_str(), aApplicationClass.c_str(), "UpdateUI",
+        mCoreclrCreateDelegate( mHandle, mDomainID, lPath.string().c_str(), aApplicationClass.c_str(), "UpdateUI",
                                 (void **)&mUpdateUIDelegate );
         if( mUpdateUIDelegate == nullptr ) mUpdateUIDelegate = UpdateUIDelegateDefault;
 
         // Update delegate
-        mCoreclrCreateDelegate( mHandle, mDomainID, lFile.string().c_str(), aApplicationClass.c_str(), "UpdateMenu",
+        mCoreclrCreateDelegate( mHandle, mDomainID, lPath.string().c_str(), aApplicationClass.c_str(), "UpdateMenu",
                                 (void **)&mUpdateMenuDelegate );
         if( mUpdateMenuDelegate == nullptr ) mUpdateMenuDelegate = UpdateMenuDelegateDefault;
 
         // Teardown delegate
-        mCoreclrCreateDelegate( mHandle, mDomainID, lFile.string().c_str(), aApplicationClass.c_str(), "Teardown",
+        mCoreclrCreateDelegate( mHandle, mDomainID, lPath.string().c_str(), aApplicationClass.c_str(), "Teardown",
                                 (void **)&mTeardownDelegate );
         if( mTeardownDelegate == nullptr ) mTeardownDelegate = TeardownDelegateDefault;
     }
