@@ -129,7 +129,7 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
         .help( "Specify output file" )
         .scan<'i', int>();
 
-    lProgramArguments->add_argument( "-M", "--mono-runtime-path" )
+    lProgramArguments->add_argument( "-M", "--coreclr-path" )
         .help( "Specify output file" );
 
     lProgramArguments->add_argument( "-L", "--log-level" )
