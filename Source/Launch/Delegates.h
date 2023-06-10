@@ -10,8 +10,8 @@
 
 #include "Engine/Engine.h"
 
-#include "OtdrWindow.h"
 #include "CoreCLRHost.h"
+#include "OtdrWindow.h"
 
 namespace SE::OtdrEditor
 {
@@ -23,15 +23,15 @@ namespace SE::OtdrEditor
     class BaseOtdrApplication
     {
       public:
-        OtdrWindow  mEditorWindow;
+        OtdrWindow mEditorWindow;
         // Ref<Engine> mEngineLoop             = nullptr;
         // fs::path    ConfigurationRoot       = "";
         // fs::path    ConfigurationFile       = "";
         // fs::path    SensorConfigurationFile = "";
         // std::string ApplicationName         = "Sensor Model Editor";
         // std::string ImGuiIniFile            = "imgui_config.ini";
-        math::ivec2 WindowSize              = { 1920, 1080 };
-        math::ivec2 WindowPosition          = { 100, 100 };
+        math::ivec2 WindowSize     = { 1920, 1080 };
+        math::ivec2 WindowPosition = { 100, 100 };
 
       public:
         BaseOtdrApplication() = default;
@@ -39,8 +39,8 @@ namespace SE::OtdrEditor
         ~BaseOtdrApplication() = default;
 
         void Init();
-        void Init(std::string aAppClass, fs::path aConfigurationPath);
-        void Shutdown(fs::path aConfigurationPath);
+        void Init( fs::path aConfigurationPath );
+        void Shutdown( fs::path aConfigurationPath );
 
         void RenderScene() {}
         void Update( Timestep ts );
@@ -51,7 +51,7 @@ namespace SE::OtdrEditor
         uint32_t mViewportWidth         = 1;
         bool     mShouldRebuildViewport = true;
 
-        Ref<DotNetInstance> mApplicationInstance = nullptr;
+        // Ref<DotNetInstance> mApplicationInstance = nullptr;
         CoreCLRHost *mManaged = nullptr;
     };
 
