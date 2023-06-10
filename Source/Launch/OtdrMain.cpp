@@ -24,6 +24,7 @@
 
 #include "OtdrEditor/BaseOtdrApplication.h"
 
+#include "CoreCLRHost.h"
 #include "DotNet/Runtime.h"
 
 using namespace SE::Core;
@@ -164,8 +165,11 @@ int main( int argc, char **argv )
 {
     auto lProgramArguments = ParseCommandLine( argc, argv );
 
-    fs::path lLocalConfigFolder = "";
-    fs::path lUserHomeFolder    = "";
+    // Retrieve the current user's home folder and local configuration folder. This is where we put
+    // all configuration data flr all instances of the application
+    fs::path    lLocalConfigFolder = "";
+    fs::path    lUserHomeFolder    = "";
+    std::string lExePath           = "";
     {
         CHAR    aProfilePath[MAX_PATH];
         HRESULT result = SHGetFolderPathA( NULL, CSIDL_PROFILE, NULL, 0, aProfilePath );
@@ -174,6 +178,10 @@ int main( int argc, char **argv )
         CHAR aUserAppData[MAX_PATH];
         result = SHGetFolderPathA( NULL, CSIDL_LOCAL_APPDATA, NULL, 0, aUserAppData );
         if( SUCCEEDED( result ) ) lLocalConfigFolder = fs::path( aUserAppData );
+
+        CHAR  aExePath[MAX_PATH];
+        DWORD count = GetModuleFileNameA( nullptr, aExePath, ( sizeof( aExePath ) / sizeof( aExePath[0] ) ) );
+        if( SUCCEEDED( ::GetLastError() ) ) lExePath = std::string( aExePath );
     }
 
     // Create Saved, Saved/Logs, Saved/Config
@@ -185,57 +193,75 @@ int main( int argc, char **argv )
     math::ivec2     lWindowPosition = { 0, 0 };
     UIConfiguration lUIConfiguration{};
 
+    // Load the application's configuration.  If the file does not exist, we create a default configuration
+    // and save it for next time
     fs::path lConfigurationFile = lLocalConfigFolder / "OtdrTool" / "Config" / "Application.yaml";
     if( fs::exists( lConfigurationFile ) )
         LoadConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
     else
         SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
 
+    // Override the main window's position and size of provided as command line argumetns
     if( auto lResXOverride = lProgramArguments->present<int>( "--width" ) ) lWindowSize.x = lResXOverride.value();
     if( auto lResYOverride = lProgramArguments->present<int>( "--height" ) ) lWindowSize.y = lResYOverride.value();
     if( auto lPosXOverride = lProgramArguments->present<int>( "--x" ) ) lWindowPosition.x = lPosXOverride.value();
     if( auto lPosYOverride = lProgramArguments->present<int>( "--y" ) ) lWindowPosition.y = lPosYOverride.value();
 
+    // Initialize the engine and load the UI's initialzation file
     SE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lLocalConfigFolder / "OtdrTool" / "Config" / "imgui.ini",
                                   lUIConfiguration );
 
-    // Retrieve the Mono runtime
-    fs::path    lMonoPath = "C:\\Program Files\\Mono\\lib\\mono\\4.5";
-    const char *lPath     = std::getenv( "MONO_PATH" );
-    if( lPath && fs::exists( lPath ) )
+    fs::path lCoreCLRPath = "C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\7.0.3";
+    if( auto lCoreClrPathOverride = lProgramArguments->present<std::string>( "--coreclr-path" ) )
     {
-        lMonoPath = lPath;
-        if( auto lMonoPathOverride = lProgramArguments->present<std::string>( "--mono-runtime-path" ) )
-            if( fs ::exists( lMonoPathOverride.value() ) ) lMonoPath = lMonoPathOverride.value();
+        if( fs::exists( lCoreClrPathOverride.value() ) )
+        {
+            lCoreCLRPath = lCoreClrPathOverride.value();
+        }
     }
+    else
+    {
+        const char *lPathFromEnv = std::getenv( "CORECLR_PATH" );
+        if( lPathFromEnv && fs::exists( lPathFromEnv ) )
+        {
+            lCoreCLRPath = lPathFromEnv;
+        }
+    }
+
+    fs::path    lCoreCLRLibraries = "";
+    CoreCLRHost lCoreCLR( "SEClrHost", lExePath, lCoreCLRPath.string(), lCoreCLRLibraries.string() );
 
     // Retrieve the Mono core assembly path
-    fs::path lCoreScriptingPath = "c:/GitLab/SpockEngine/Source/ScriptCore/Build/Debug/SE_Core.dll";
+    // fs::path lCoreScriptingPath = "c:/GitLab/SpockEngine/Source/ScriptCore/Build/Debug/SE_Core.dll";
 
-    DotNetRuntime::Initialize( lMonoPath, lCoreScriptingPath );
+    // DotNetRuntime::Initialize( lMonoPath, lCoreScriptingPath );
 
-    auto     lApplicationName              = lProgramArguments->get<std::string>( "--application" );
-    fs::path lApplicationConfigurationPath = "";
+    // Load the managed part of the application, whose name is given at the command line
+    auto     lApplicationName       = lProgramArguments->get<std::string>( "--application" );
+    fs::path lApplicationConfigPath = "";
     if( !lApplicationName.empty() )
     {
-        lApplicationConfigurationPath = lLocalConfigFolder / "OtdrTool" / "Config" / fmt::format( "{}.yaml", lApplicationName );
+        lApplicationConfigPath = lLocalConfigFolder / "OtdrTool" / "Config" / fmt::format( "{}.yaml", lApplicationName );
         auto lApplicationAssembly =
             fs::path( "D:\\Build\\Lib" ) / "debug" / "develop" / lApplicationName / fmt::format( "{}.dll", lApplicationName );
-        if( fs::exists( lApplicationAssembly ) ) DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
+        // if( fs::exists( lApplicationAssembly ) ) DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
 
-        if( !fs::exists( lApplicationConfigurationPath ) )
-            SE::Logging::Info( "Project file '{}' does not exist", lApplicationConfigurationPath.string() );
+        if( !fs::exists( lApplicationConfigPath ) )
+            SE::Logging::Info( "Project file '{}' does not exist", lApplicationConfigPath.string() );
+
+        lCoreCLR.LoadApplicationAssembly( lApplicationAssembly.string(), fmt::format( "{}.{}", lApplicationName, lApplicationName ) );
     }
 
-    DotNetRuntime::ReloadAssemblies();
+    // DotNetRuntime::ReloadAssemblies();
 
     SE::OtdrEditor::BaseOtdrApplication lEditorApplication;
 
     if( !lApplicationName.empty() )
-        lEditorApplication.Init( fmt::format( "{}.{}", lApplicationName, lApplicationName ), lApplicationConfigurationPath );
+        lEditorApplication.Init( fmt::format( "{}.{}", lApplicationName, lApplicationName ), lApplicationConfigPath );
     else
         lEditorApplication.Init();
 
+    // Hook into the engine's callbacks
     SE::Core::Engine::GetInstance()->UpdateDelegate.connect<&SE::OtdrEditor::BaseOtdrApplication::Update>( lEditorApplication );
     SE::Core::Engine::GetInstance()->RenderDelegate.connect<&SE::OtdrEditor::BaseOtdrApplication::RenderScene>( lEditorApplication );
     SE::Core::Engine::GetInstance()->UIDelegate.connect<&SE::OtdrEditor::BaseOtdrApplication::RenderUI>( lEditorApplication );
@@ -244,10 +270,10 @@ int main( int argc, char **argv )
     {
     }
 
-    lEditorApplication.Shutdown( lApplicationConfigurationPath );
+    lEditorApplication.Shutdown( lApplicationConfigPath );
     SaveConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
 
-    DotNetRuntime::Shutdown();
+    lCoreCLR.Shutdown();
     SE::Core::Engine::Shutdown();
 
     return 0;

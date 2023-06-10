@@ -172,13 +172,29 @@ namespace SE::Core
         Initialize();
 
         // Configure delegate
-        mCreateDelegate( mHandle, mDomainID, lFile.c_str(), aApplicationClass.c_str(), "Configure", (void **)&mConfigureDelegate );
+        mCoreclrCreateDelegate( mHandle, mDomainID, lFile.string().c_str(), aApplicationClass.c_str(), "Configure",
+                                (void **)&mConfigureDelegate );
+        if( mConfigureDelegate == nullptr ) mConfigureDelegate = ConfigureDelegateDefault;
 
         // Update delegate
-        mCreateDelegate( mHandle, mDomainID, lFile.c_str(), aApplicationClass.c_str(), "Update", (void **)&mUpdateDelegatate );
+        mCoreclrCreateDelegate( mHandle, mDomainID, lFile.string().c_str(), aApplicationClass.c_str(), "Update",
+                                (void **)&mUpdateDelegate );
+        if( mUpdateDelegate == nullptr ) mUpdateDelegate = UpdateDelegateDefault;
+
+        // Update delegate
+        mCoreclrCreateDelegate( mHandle, mDomainID, lFile.string().c_str(), aApplicationClass.c_str(), "UpdateUI",
+                                (void **)&mUpdateUIDelegate );
+        if( mUpdateUIDelegate == nullptr ) mUpdateUIDelegate = UpdateUIDelegateDefault;
+
+        // Update delegate
+        mCoreclrCreateDelegate( mHandle, mDomainID, lFile.string().c_str(), aApplicationClass.c_str(), "UpdateMenu",
+                                (void **)&mUpdateMenuDelegate );
+        if( mUpdateMenuDelegate == nullptr ) mUpdateMenuDelegate = UpdateMenuDelegateDefault;
 
         // Teardown delegate
-        mCreateDelegate( mHandle, mDomainID, lFile.c_str(), aApplicationClass.c_str(), "Teardown", (void **)&mTeardownDelegatate );
+        mCoreclrCreateDelegate( mHandle, mDomainID, lFile.string().c_str(), aApplicationClass.c_str(), "Teardown",
+                                (void **)&mTeardownDelegate );
+        if( mTeardownDelegate == nullptr ) mTeardownDelegate = TeardownDelegateDefault;
     }
 
     int CoreCLRHost::Execute( std::string const &aAssemblyPath )
@@ -199,5 +215,11 @@ namespace SE::Core
 
         return mCoreclrExecuteAssembly( mHandle, mDomainID, 0, nullptr, aAssemblyPath.c_str(), (uint32_t *)&exit_code );
     }
+
+    void CoreCLRHost::Configure() { mConfigureDelegate(); }
+    void CoreCLRHost::Update( float aTimestamp ) { mUpdateDelegate( aTimestamp ); }
+    void CoreCLRHost::UpdateUI( float aTimestamp ) { mUpdateUIDelegate( aTimestamp ); }
+    bool CoreCLRHost::UpdateMenu() { return mUpdateMenuDelegate(); }
+    void CoreCLRHost::Teardown() { mTeardownDelegate(); }
 
 } // namespace SE::Core

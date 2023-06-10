@@ -1,6 +1,8 @@
 #pragma once
 
+#ifndef CDECL
 #define CDECL __cdecl
+#endif
 #include <Windows.h>
 #include <functional>
 #include <string>
@@ -12,9 +14,15 @@ namespace SE::Core
     typedef int( __stdcall * function##_ptr )( __VA_ARGS__ ); \
     function##_ptr m##function = nullptr;
 
-#define CORECLR_APPLICATION_API( function, ... )              \
-    typedef int( __stdcall * function##_ptr )( __VA_ARGS__ ); \
-    function##_ptr m##function = nullptr;
+#define CORECLR_APPLICATION_API( function, ... )               \
+    typedef void( __stdcall * function##_ptr )( __VA_ARGS__ ); \
+    function##_ptr m##function = nullptr;                      \
+    static void __stdcall function##Default( __VA_ARGS__ ) {}
+
+#define CORECLR_APPLICATION_NON_VOID_API( function, return_type, ... ) \
+    typedef return_type( __stdcall *function##_ptr )( __VA_ARGS__ );   \
+    function##_ptr m##function = nullptr;                              \
+    static return_type __stdcall function##Default( __VA_ARGS__ ) { return return_type{}; }
 
     class CoreCLRHost
     {
@@ -25,7 +33,13 @@ namespace SE::Core
         void LoadApplicationAssembly( std::string const &aAssemblyPath, std::string const &aApplicationClass );
         void Initialize();
         void Shutdown();
-        int Execute(std::string const &aAssemblyPath);
+        int  Execute( std::string const &aAssemblyPath );
+
+        void Configure();
+        void Update(float aTimestamp);
+        void UpdateUI(float aTimestamp);
+        bool UpdateMenu();
+        void Teardown();
 
       private:
         CORECLR_HOSTING_API_0( CoreclrInitialize, const char *aExePath, const char *aAppDomainFriendlyName, int aPropertyCount,
@@ -44,7 +58,6 @@ namespace SE::Core
         void        TryLoadCoreCLR();
         void       *TryGetExport( const char *aName );
 
-
       private:
         HMODULE  mCoreCLR         = nullptr;
         void    *mHandle          = nullptr;
@@ -62,7 +75,9 @@ namespace SE::Core
         std::string mNativeDllSearchDirectories;
 
         CORECLR_APPLICATION_API( ConfigureDelegate );
-        CORECLR_APPLICATION_API( UpdateDelegatate, float aTimestamp );
-        CORECLR_APPLICATION_API( TeardownDelegatate );
+        CORECLR_APPLICATION_API( UpdateDelegate, float aTimestamp );
+        CORECLR_APPLICATION_API( UpdateUIDelegate, float aTimestamp );
+        CORECLR_APPLICATION_NON_VOID_API( UpdateMenuDelegate, bool );
+        CORECLR_APPLICATION_API( TeardownDelegate );
     };
 } // namespace SE::Core
