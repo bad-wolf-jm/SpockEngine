@@ -55,15 +55,13 @@ namespace SE::OtdrEditor
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
     }
 
-    void BaseOtdrApplication::Init( std::string aAppClass, fs::path aConfigurationPath )
+    void BaseOtdrApplication::Init( fs::path aConfigurationPath )
     {
         Init();
 
-        // static auto &lApplicationType = DotNetRuntime::GetClassType( aAppClass );
-
         if( mManaged )
         {
-            mManaged->Configure()
+            mManaged->Configure( aConfigurationPath.string() );
             mEditorWindow.mManaged = mManaged;
         }
         else
@@ -74,7 +72,6 @@ namespace SE::OtdrEditor
 
     void BaseOtdrApplication::Shutdown( fs::path aConfigurationPath )
     {
-        // auto lConfigurationPath = DotNetRuntime::NewString( aConfigurationPath.string() );
-        if( mManaged ) mApplicationInstance->Teardown();
+        if( mManaged ) mApplicationInstance->Teardown( aConfigurationPath.string() );
     }
 } // namespace SE::OtdrEditor
