@@ -12,7 +12,7 @@ namespace SpockEngine
 
         public UIWorkspaceDocument() : base(Interop.UIWorkspaceDocument_Create())
         {
-            Interop.UIWorkspaceDocument_RegisterSaveDelegate(mInstance, Marshal.GetFunctionPointerForDelegate(DoSave));
+            // Interop.UIWorkspaceDocument_RegisterSaveDelegate(mInstance, Marshal.GetFunctionPointerForDelegate(DoSave));
         }
 
         public bool IsDirty
@@ -46,7 +46,7 @@ namespace SpockEngine
         {
             mDocuments = new List<UIWorkspaceDocument>();
 
-            Interop.UIWorkspace_RegisterCloseDocumentDelegate(mInstance, Marshal.GetFunctionPointerForDelegate(CloseDocuments));
+            // Interop.UIWorkspace_RegisterCloseDocumentDelegate(mInstance, Marshal.GetFunctionPointerForDelegate(CloseDocuments));
         }
 
         private void CloseDocuments(IntPtr[] aPtrList)

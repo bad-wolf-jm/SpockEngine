@@ -74,10 +74,10 @@ namespace SE::Core
         std::string mTrustedPlatformAssemblies;
         std::string mNativeDllSearchDirectories;
 
-        CORECLR_APPLICATION_API( ConfigureDelegate, char* aConfigPath );
+        CORECLR_APPLICATION_API( ConfigureDelegate );
         CORECLR_APPLICATION_API( UpdateDelegate, float aTimestamp );
         CORECLR_APPLICATION_API( UpdateUIDelegate, float aTimestamp );
         CORECLR_APPLICATION_NON_VOID_API( UpdateMenuDelegate, bool );
-        CORECLR_APPLICATION_API( TeardownDelegate, char* aConfigPath );
+        CORECLR_APPLICATION_API( TeardownDelegate );
     };
 } // namespace SE::Core

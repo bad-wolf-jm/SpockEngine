@@ -96,8 +96,11 @@ add_library(LTSimulationEngineRuntime SHARED
     Graphics/Interface/IDescriptorSet.cpp
     Graphics/Interface/IDescriptorSetLayout.cpp
 
-    OtdrEditor/OtdrWindow.cpp
-    OtdrEditor/BaseOtdrApplication.cpp
+    Launch/CoreCLRHost.cpp
+    Launch/Delegates.cpp
+    Launch/OtdrWindow.cpp
+    # OtdrEditor/OtdrWindow.cpp
+    # OtdrEditor/BaseOtdrApplication.cpp
 )
 
 function(add_shader TARGET SHADER)
@@ -156,11 +159,8 @@ target_compile_options(LTSimulationEngineRuntime PRIVATE
     $<$<COMPILE_LANGUAGE:CUDA>: --expt-relaxed-constexpr -Xcudafe "--display_error_number --diag_suppress=\"20012,20044\"">
     $<$<COMPILE_LANGUAGE:CXX>:/bigobj /wd4068>)
 
-add_executable(OTDR_Run WIN32 
+add_executable(OTDR_Run WIN32
     Launch/OtdrMain.cpp     
-    Launch/CoreCLRHost.cpp
-    Launch/Delegates.cpp
-    Launch/OtdrWindow.cpp
 )
 target_include_directories(OTDR_Run PRIVATE Source ${SE_EXTRA_INCLUDES})
 target_compile_definitions(OTDR_Run PRIVATE VK_USE_PLATFORM_WIN32_KHR)
