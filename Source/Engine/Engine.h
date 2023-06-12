@@ -93,8 +93,8 @@ namespace SE::Core
 
         math::ivec2 GetViewportSize() { return mViewportClient->GetFramebufferSize(); }
 
-        SE::Graphics::Ref<IGraphicContext> GetGraphicContext() { return mGraphicContext; }
-        Ref<SE::Core::UIContext> UIContext() { return mImGUIOverlay; };
+        Ref<IGraphicContext> &GetGraphicContext();// { return mGraphicContext; }
+        Ref<UIContext> &UIContext();// { return mImGUIOverlay; };
 
         void        SetApplicationName( std::string a_Name ) { mApplicationName = a_Name; }
         std::string GetApplicationName() { return mApplicationName; }
@@ -120,7 +120,7 @@ namespace SE::Core
         void IOEvent( UserEvent &a_Event );
 
       private:
-        static std::unique_ptr<Engine> mUniqueInstance;
+        // static std::unique_ptr<Engine> mUniqueInstance;
 
         std::vector<std::function<void()>> mMainThreadQueue;
         std::mutex                         mMainThreadQueueMutex;
