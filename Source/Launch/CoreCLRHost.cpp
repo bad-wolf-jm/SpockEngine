@@ -1,8 +1,11 @@
 #include "CoreCLRHost.h"
 #include "Core/Logging.h"
+#include <codecvt>
 #include <filesystem>
+#include <locale>
 #include <set>
 #include <sstream>
+#include <string>
 
 namespace SE::Core
 {
@@ -211,10 +214,42 @@ namespace SE::Core
         return mCoreclrExecuteAssembly( mHandle, mDomainID, 0, nullptr, aAssemblyPath.c_str(), (uint32_t *)&exit_code );
     }
 
-    void CoreCLRHost::Configure( std::string aConfigPath ) { mConfigureDelegate(); }
+    static std::string make_ascii_string( wchar_t *aCharacters )
+    {
+        std::wstring u16str( aCharacters );
+
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
+        std::string                                                     utf8 = convert.to_bytes( u16str );
+
+        return utf8;
+    }
+
+    std::wstring make_ascii_string( const std::string &utf8 )
+    {
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
+
+        std::wstring utf16 = convert.from_bytes( utf8 );
+
+        return utf16;
+    }
+
+    void CoreCLRHost::Configure( std::string aConfigPath )
+    {
+        char *pszReturn = (char *)::CoTaskMemAlloc( aConfigPath.size() * sizeof( char ) + 1 );
+        strcpy( pszReturn, aConfigPath.c_str() );
+
+        mConfigureDelegate( pszReturn );
+    }
+
     void CoreCLRHost::Update( float aTimestamp ) { mUpdateDelegate( aTimestamp ); }
     void CoreCLRHost::UpdateUI( float aTimestamp ) { mUpdateUIDelegate( aTimestamp ); }
     bool CoreCLRHost::UpdateMenu() { return mUpdateMenuDelegate(); }
-    void CoreCLRHost::Teardown( std::string aConfigPath ) { mTeardownDelegate(); }
+    void CoreCLRHost::Teardown( std::string aConfigPath )
+    {
+        char *pszReturn = (char *)::CoTaskMemAlloc( aConfigPath.size() * sizeof( char ) + 1 );
+        strcpy( pszReturn, aConfigPath.c_str() );
+
+        mTeardownDelegate( pszReturn );
+    }
 
 } // namespace SE::Core
