@@ -124,7 +124,7 @@ namespace SE::Core
 
     std::string Engine::GetImGuiConfigurationFile() { return mImGuiConfigPath; }
 
-    std::unique_ptr<Engine> Engine::mUniqueInstance = nullptr;
+    __declspec(dllexport) std::unique_ptr<Engine> mUniqueInstance = nullptr;
 
     void Engine::Initialize( math::ivec2 aInitialMainWindowSize, math::ivec2 aInitialMainWindowPosition, fs::path aImGuiConfigPath,
                              UIConfiguration const &aUIConfiguration )
@@ -144,6 +144,22 @@ namespace SE::Core
 
     void Engine::Shutdown() { IWindow::ShutdownWindowingBackend(); }
 
-    std::unique_ptr<Engine> &Engine::GetInstance() { return mUniqueInstance; };
+    std::unique_ptr<Engine> &Engine::GetInstance() 
+    { 
+        return mUniqueInstance; 
+    };
+
+    Ref<IGraphicContext> &Engine::GetGraphicContext() 
+    { 
+        //
+        return mGraphicContext; 
+    }
+    Ref<UIContext> &Engine::UIContext() 
+    { 
+        //
+        return mImGUIOverlay; 
+    };
+
+
 
 } // namespace SE::Core

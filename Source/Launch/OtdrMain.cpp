@@ -211,7 +211,7 @@ int main( int argc, char **argv )
     SE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lLocalConfigFolder / "OtdrTool" / "Config" / "imgui.ini",
                                   lUIConfiguration );
 
-    fs::path lCoreCLRPath = "C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\7.0.3";
+    fs::path lCoreCLRPath = "C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\7.0.5";
     if( auto lCoreClrPathOverride = lProgramArguments->present<std::string>( "--coreclr-path" ) )
     {
         if( fs::exists( lCoreClrPathOverride.value() ) )
@@ -254,7 +254,8 @@ int main( int argc, char **argv )
 
     // DotNetRuntime::ReloadAssemblies();
 
-    SE::OtdrEditor::Application lEditorApplication;
+    SE::OtdrEditor::Application lEditorApplication(lCoreCLR);
+    // lEditorApplication.mManaged = &lCoreCLR;
 
     if( !lApplicationName.empty() )
         lEditorApplication.Init( lApplicationConfigPath );

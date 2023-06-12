@@ -161,39 +161,34 @@ namespace SE::Core
     {
         auto lPath = std::filesystem::path( aAssemblyPath );
 
-        mAppPath = lPath.parent_path().string();
+        mAppPath = lPath.parent_path().string() + "\\";
 
         std::stringstream lNativePath;
         lNativePath << mAppPath << ";" << mNativeDllSearchDirectories;
         mNativeDllSearchDirectories = lNativePath.str();
 
-        auto lFile = lPath.filename();
+        auto lFile = "OlmDevTool"; // lPath.filename();
 
         Initialize();
 
         // Configure delegate
-        mCoreclrCreateDelegate( mHandle, mDomainID, lPath.string().c_str(), aApplicationClass.c_str(), "Configure",
-                                (void **)&mConfigureDelegate );
+        mCoreclrCreateDelegate( mHandle, mDomainID, lFile, aApplicationClass.c_str(), "Configure", (void **)&mConfigureDelegate );
         if( mConfigureDelegate == nullptr ) mConfigureDelegate = ConfigureDelegateDefault;
 
         // Update delegate
-        mCoreclrCreateDelegate( mHandle, mDomainID, lPath.string().c_str(), aApplicationClass.c_str(), "Update",
-                                (void **)&mUpdateDelegate );
+        mCoreclrCreateDelegate( mHandle, mDomainID, lFile, aApplicationClass.c_str(), "Update", (void **)&mUpdateDelegate );
         if( mUpdateDelegate == nullptr ) mUpdateDelegate = UpdateDelegateDefault;
 
         // Update delegate
-        mCoreclrCreateDelegate( mHandle, mDomainID, lPath.string().c_str(), aApplicationClass.c_str(), "UpdateUI",
-                                (void **)&mUpdateUIDelegate );
+        mCoreclrCreateDelegate( mHandle, mDomainID, lFile, aApplicationClass.c_str(), "UpdateUI", (void **)&mUpdateUIDelegate );
         if( mUpdateUIDelegate == nullptr ) mUpdateUIDelegate = UpdateUIDelegateDefault;
 
         // Update delegate
-        mCoreclrCreateDelegate( mHandle, mDomainID, lPath.string().c_str(), aApplicationClass.c_str(), "UpdateMenu",
-                                (void **)&mUpdateMenuDelegate );
+        mCoreclrCreateDelegate( mHandle, mDomainID, lFile, aApplicationClass.c_str(), "UpdateMenu", (void **)&mUpdateMenuDelegate );
         if( mUpdateMenuDelegate == nullptr ) mUpdateMenuDelegate = UpdateMenuDelegateDefault;
 
         // Teardown delegate
-        mCoreclrCreateDelegate( mHandle, mDomainID, lPath.string().c_str(), aApplicationClass.c_str(), "Teardown",
-                                (void **)&mTeardownDelegate );
+        mCoreclrCreateDelegate( mHandle, mDomainID, lFile, aApplicationClass.c_str(), "Teardown", (void **)&mTeardownDelegate );
         if( mTeardownDelegate == nullptr ) mTeardownDelegate = TeardownDelegateDefault;
     }
 
@@ -216,10 +211,10 @@ namespace SE::Core
         return mCoreclrExecuteAssembly( mHandle, mDomainID, 0, nullptr, aAssemblyPath.c_str(), (uint32_t *)&exit_code );
     }
 
-    void CoreCLRHost::Configure( std::string aConfigPath ) { mConfigureDelegate( aConfigPath.data() ); }
+    void CoreCLRHost::Configure( std::string aConfigPath ) { mConfigureDelegate(); }
     void CoreCLRHost::Update( float aTimestamp ) { mUpdateDelegate( aTimestamp ); }
     void CoreCLRHost::UpdateUI( float aTimestamp ) { mUpdateUIDelegate( aTimestamp ); }
     bool CoreCLRHost::UpdateMenu() { return mUpdateMenuDelegate(); }
-    void CoreCLRHost::Teardown( std::string aConfigPath ) { mTeardownDelegate( aConfigPath.data() ); }
+    void CoreCLRHost::Teardown( std::string aConfigPath ) { mTeardownDelegate(); }
 
 } // namespace SE::Core

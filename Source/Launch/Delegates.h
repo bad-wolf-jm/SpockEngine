@@ -34,7 +34,8 @@ namespace SE::OtdrEditor
         math::ivec2 WindowPosition = { 100, 100 };
 
       public:
-        Application() = default;
+        Application( CoreCLRHost &aManaged )
+            : mManaged{ &aManaged } {};
 
         ~Application() = default;
 
