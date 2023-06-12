@@ -13,11 +13,13 @@ set(DOTNET_SYSTEM_ASSEMBLIES
     System.ComponentModel.Annotations.dll
     System.ComponentModel.DataAnnotations.dll
     System.Drawing.dll
-    System.Runtime.Serialization.dll
     System.Xml.dll
     System.Xml.Serialization.dll
     System.Xml.Linq.dll
     System.Management.dll
+    System.Reflection.dll
+    System.Runtime.dll
+    System.Runtime.Serialization.dll
 )
 
 
@@ -81,7 +83,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/SEApplication.cs
 )
 
-set_property(TARGET ${LIBRARY_NAME} PROPERTY DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1")
+set_property(TARGET ${LIBRARY_NAME} PROPERTY DOTNET_TARGET_FRAMEWORK "net5.0")
 set_property(TARGET ${LIBRARY_NAME} PROPERTY WIN32_EXECUTABLE FALSE)
 set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_CONFIGURATION_TYPE ClassLibrary)
 set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_DOTNET_REFERENCES 
