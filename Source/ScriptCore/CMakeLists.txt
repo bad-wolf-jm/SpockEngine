@@ -63,6 +63,8 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/Components/VectorInput.cs
 
     Source/UI/Widgets/FileTree.cs
+    Source/UI/Widgets/CheckboxWithLabel.cs
+    Source/UI/Widgets/ComboboxWithLabel.cs
 
     Source/UI/Layouts/BoxLayout.cs
     Source/UI/Layouts/ZLayout.cs
