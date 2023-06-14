@@ -19,6 +19,7 @@ namespace SE::Core
         , mCoreLibraries{ aCoreLibraries }
     {
         BuildTrustedPlatformAssemblies();
+        TryLoadHostPolicy();
 
         std::stringstream lNativeSearchPath;
         if( !mCoreLibraries.empty() ) lNativeSearchPath << mCoreLibraries << ";";
@@ -77,6 +78,36 @@ namespace SE::Core
         {
             Logging::Info( "Failed to pin: '{}'.  - Error: {:#08x}\n", coreclr_path.string(), ::GetLastError() );
         }
+    }
+
+    void CoreCLRHost::TryLoadHostPolicy()
+    {
+        const char *hostpolicyName = "hostpolicy.dll";
+        void       *hMod           = (void *)::GetModuleHandleA( hostpolicyName );
+        if( hMod != nullptr ) return;
+
+        std::filesystem::path hostpolicy_path = std::filesystem::path( mCoreRoot ) / "hostpolicy.dll";
+
+        mHostPolicy = ::LoadLibraryExA( hostpolicy_path.string().c_str(), nullptr,
+                                        LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR | LOAD_LIBRARY_SEARCH_DEFAULT_DIRS );
+        if( mHostPolicy == nullptr )
+        {
+            Logging::Info( "Failed to load: '{}'.  - Error: {:#08x}\n", hostpolicy_path.string(), ::GetLastError() );
+
+            return;
+        }
+
+        // // Check if a hostpolicy exists and if it does, load it.
+        // if( pal::does_file_exist( mock_hostpolicy_value ) )
+        //     hMod = ( pal::mod_t )::LoadLibraryExW( mock_hostpolicy_value.c_str(), nullptr,
+        //                                            LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR | LOAD_LIBRARY_SEARCH_DEFAULT_DIRS );
+
+        // if( hMod == nullptr )
+        //     pal::fprintf( stderr, W( "Failed to load mock hostpolicy at path '%s'. Error: 0x%08x\n" ),
+        //     mock_hostpolicy_value.c_str(),
+        //                   ::GetLastError() );
+
+        // return hMod != nullptr;
     }
 
     void CoreCLRHost::Shutdown()

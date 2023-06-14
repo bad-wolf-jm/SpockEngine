@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef CDECL
-#define CDECL __cdecl
+#    define CDECL __cdecl
 #endif
 #include <Windows.h>
 #include <functional>
@@ -35,11 +35,11 @@ namespace SE::Core
         void Shutdown();
         int  Execute( std::string const &aAssemblyPath );
 
-        void Configure(std::string aConfigPath);
-        void Update(float aTimestamp);
-        void UpdateUI(float aTimestamp);
+        void Configure( std::string aConfigPath );
+        void Update( float aTimestamp );
+        void UpdateUI( float aTimestamp );
         bool UpdateMenu();
-        void Teardown(std::string aConfigPath);
+        void Teardown( std::string aConfigPath );
 
       private:
         CORECLR_HOSTING_API_0( CoreclrInitialize, const char *aExePath, const char *aAppDomainFriendlyName, int aPropertyCount,
@@ -56,10 +56,12 @@ namespace SE::Core
         void        BuildTrustedPlatformAssemblies();
         std::string BuildFileList( const std::string &dir, const char *ext, std::function<bool( const char * )> aShouldAdd );
         void        TryLoadCoreCLR();
+        void        TryLoadHostPolicy();
         void       *TryGetExport( const char *aName );
 
       private:
         HMODULE  mCoreCLR         = nullptr;
+        HMODULE  mHostPolicy      = nullptr;
         void    *mHandle          = nullptr;
         uint32_t mDomainID        = -1;
         int      mLatchedExitCode = 0;
@@ -74,10 +76,10 @@ namespace SE::Core
         std::string mTrustedPlatformAssemblies;
         std::string mNativeDllSearchDirectories;
 
-        CORECLR_APPLICATION_API( ConfigureDelegate, const char* aConfigPath );
+        CORECLR_APPLICATION_API( ConfigureDelegate, const char *aConfigPath );
         CORECLR_APPLICATION_API( UpdateDelegate, float aTimestamp );
         CORECLR_APPLICATION_API( UpdateUIDelegate, float aTimestamp );
         CORECLR_APPLICATION_NON_VOID_API( UpdateMenuDelegate, bool );
-        CORECLR_APPLICATION_API( TeardownDelegate, const char* aConfigPath );
+        CORECLR_APPLICATION_API( TeardownDelegate, const char *aConfigPath );
     };
 } // namespace SE::Core
