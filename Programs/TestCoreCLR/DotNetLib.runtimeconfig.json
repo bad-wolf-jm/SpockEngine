@@ -3,7 +3,7 @@
       "tfm": "net5.0",
       "framework": {
         "name": "Microsoft.NETCore.App",
-        "version": "5.0.17"
+        "version": "7.0.5"
       }
     }
   }
