@@ -7,16 +7,16 @@ set(CMAKE_CSharp_FLAGS "/langversion:latest")
 
 set(DOTNET_SYSTEM_ASSEMBLIES
     # System.dll
-    System.Core.dll
+    # System.Core.dll
     # System.Linq.dll
-    System.Windows.Forms.dll
-    System.ComponentModel.Annotations.dll
-    System.ComponentModel.DataAnnotations.dll
-    System.Drawing.dll
-    System.Xml.dll
-    System.Xml.Serialization.dll
-    System.Xml.Linq.dll
-    System.Management.dll
+    # System.Windows.Forms.dll
+    # System.ComponentModel.Annotations.dll
+    # System.ComponentModel.DataAnnotations.dll
+    # System.Drawing.dll
+    # System.Xml.dll
+    # System.Xml.Serialization.dll
+    # System.Xml.Linq.dll
+    # System.Management.dll
     # System.Reflection.dll
     # System.Runtime.dll
     # System.Runtime.Loader.dll
