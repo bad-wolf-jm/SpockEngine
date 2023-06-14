@@ -3,6 +3,10 @@
 #ifndef CDECL
 #    define CDECL __cdecl
 #endif
+
+#include "coreclr_delegates.h"
+#include "hostfxr.h"
+
 #include <Windows.h>
 #include <functional>
 #include <string>
@@ -42,29 +46,36 @@ namespace SE::Core
         void Teardown( std::string aConfigPath );
 
       private:
-        CORECLR_HOSTING_API_0( CoreclrInitialize, const char *aExePath, const char *aAppDomainFriendlyName, int aPropertyCount,
-                               const char **aPropertyKeys, const char **aPropertyValues, void **aHostHandle, unsigned int *aDomainId );
+        hostfxr_initialize_for_runtime_config_fn mFxrInitialize     = nullptr;
+        hostfxr_get_runtime_delegate_fn          mFxrCreateDelegate = nullptr;
+        hostfxr_close_fn                         mFxrShutdown       = nullptr;
 
-        CORECLR_HOSTING_API_0( CoreclrShutdown, void *aHostHandle, unsigned int aDomainId, int *latchedExitCode );
+        load_assembly_and_get_function_pointer_fn load_assembly_and_get_function_pointer = nullptr;
+        // CORECLR_HOSTING_API_0( CoreclrInitialize, const char *aExePath, const char *aAppDomainFriendlyName, int aPropertyCount,
+        //                        const char **aPropertyKeys, const char **aPropertyValues, void **aHostHandle, unsigned int *aDomainId
+        //                        );
 
-        CORECLR_HOSTING_API_0( CoreclrCreateDelegate, void *aHostHandle, unsigned int aDomainId, const char *aEntryPointAssemblyName,
-                               const char *aEntryPointTypeName, const char *aEntryPointMethodName, void **aDelegate );
+        // CORECLR_HOSTING_API_0( CoreclrShutdown, void *aHostHandle, unsigned int aDomainId, int *latchedExitCode );
 
-        CORECLR_HOSTING_API_0( CoreclrExecuteAssembly, void *hostHandle, unsigned int domainId, int argc, const char **argv,
-                               const char *managedAssemblyPath, unsigned int *exitCode );
+        // CORECLR_HOSTING_API_0( CoreclrCreateDelegate, void *aHostHandle, unsigned int aDomainId, const char
+        // *aEntryPointAssemblyName,
+        //                        const char *aEntryPointTypeName, const char *aEntryPointMethodName, void **aDelegate );
 
-        void        BuildTrustedPlatformAssemblies();
-        std::string BuildFileList( const std::string &dir, const char *ext, std::function<bool( const char * )> aShouldAdd );
+        // CORECLR_HOSTING_API_0( CoreclrExecuteAssembly, void *hostHandle, unsigned int domainId, int argc, const char **argv,
+        //                        const char *managedAssemblyPath, unsigned int *exitCode );
+
+        // void        BuildTrustedPlatformAssemblies();
+        // std::string BuildFileList( const std::string &dir, const char *ext, std::function<bool( const char * )> aShouldAdd );
         void        TryLoadCoreCLR();
-        void        TryLoadHostPolicy();
+        // void        TryLoadHostPolicy();
         void       *TryGetExport( const char *aName );
 
       private:
-        HMODULE  mCoreCLR         = nullptr;
-        HMODULE  mHostPolicy      = nullptr;
-        void    *mHandle          = nullptr;
-        uint32_t mDomainID        = -1;
-        int      mLatchedExitCode = 0;
+        hostfxr_handle mCoreCLR              = nullptr;
+        HMODULE        mNetHostLibraryHandle = nullptr;
+        // void          *mHandle               = nullptr;
+        // uint32_t       mDomainID             = -1;
+        // int            mLatchedExitCode      = 0;
 
         std::string mHostPath      = "";
         std::string mCoreRoot      = "";
