@@ -8,10 +8,8 @@ add_library(LTSimulationEngineRuntime SHARED
     Core/File.cpp
     Core/Resource.cpp
     Core/Logging.cpp
+    Core/String.cpp
 
-    # DotNet/Utils.cpp
-    # DotNet/EntityRegistry.cpp
-    # DotNet/InternalCalls.cpp
     DotNet/InteropCalls.cpp
 
     Core/CUDA/Texture/ColorFormat.cpp
@@ -96,8 +94,6 @@ add_library(LTSimulationEngineRuntime SHARED
     Launch/CoreCLRHost.cpp
     Launch/Delegates.cpp
     Launch/OtdrWindow.cpp
-    # OtdrEditor/OtdrWindow.cpp
-    # OtdrEditor/BaseOtdrApplication.cpp
 )
 
 function(add_shader TARGET SHADER)

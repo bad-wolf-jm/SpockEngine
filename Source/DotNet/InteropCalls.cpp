@@ -1,11 +1,11 @@
 #include "InteropCalls.h"
 
 #include "Core/File.h"
+#include "Core/String.h"
+
 #include "Engine/Engine.h"
 
-#include <codecvt>
-#include <locale>
-#include <string>
+// #include <string>
 
 namespace SE::Core::Interop
 {
@@ -21,25 +21,6 @@ namespace SE::Core::Interop
     static CLRVec2 vec( vec2 v ) { return CLRVec2{ v.x, v.y }; }
     static CLRVec3 vec( vec3 v ) { return CLRVec3{ v.x, v.y, v.z }; }
     static CLRVec4 vec( vec4 v ) { return CLRVec4{ v.x, v.y, v.z, v.w }; }
-
-    static string_t make_ascii_string( wchar_t *aCharacters )
-    {
-        std::wstring u16str( aCharacters );
-
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
-        string_t                                                        utf8 = convert.to_bytes( u16str );
-
-        return utf8;
-    }
-
-    std::wstring make_ascii_string( const string_t &utf8 )
-    {
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
-
-        std::wstring utf16 = convert.from_bytes( utf8 );
-
-        return utf16;
-    }
 
     extern "C"
     {
@@ -70,11 +51,12 @@ namespace SE::Core::Interop
 
             if( lFilePath.has_value() )
             {
-                auto    &lStr      = lFilePath.value();
-                wchar_t *pszReturn = (wchar_t *)::CoTaskMemAlloc( lStr.size() * sizeof( wchar_t ) + 1 );
-                memset( pszReturn, 0, lStr.size() * sizeof( wchar_t ) + 1 );
-                wcsncpy( pszReturn, lStr.c_str(), lStr.size() );
-                return pszReturn;
+                // auto    &lStr      = lFilePath.value();
+                // wchar_t *pszReturn = (wchar_t *)::CoTaskMemAlloc( lStr.size() * sizeof( wchar_t ) + 1 );
+                // memset( pszReturn, 0, lStr.size() * sizeof( wchar_t ) + 1 );
+                // wcsncpy( pszReturn, lStr.c_str(), lStr.size() );
+                // return pszReturn;
+                return CopyCharactersForCoreClr( lFilePath.value() );
             }
 
             return nullptr;
@@ -84,14 +66,14 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIBaseImage )
         void *UIBaseImage_CreateWithPath( wchar_t *aText, CLRVec2 aSize )
         {
-            auto lNewImage = new UIBaseImage( make_ascii_string( aText ), vec( aSize ) );
+            auto lNewImage = new UIBaseImage( ConvertStringForCoreclr( aText ), vec( aSize ) );
 
             return CAST( void, lNewImage );
         }
 
         DESTROY_INTERFACE( UIBaseImage )
 
-        void UIBaseImage_SetImage( UIBaseImage *aSelf, wchar_t *aPath ) { aSelf->SetImage( make_ascii_string( aPath ) ); }
+        void UIBaseImage_SetImage( UIBaseImage *aSelf, wchar_t *aPath ) { aSelf->SetImage( ConvertStringForCoreclr( aPath ) ); }
 
         void UIBaseImage_SetSize( UIBaseImage *aSelf, CLRVec2 aSize ) { aSelf->SetSize( vec( aSize ) ); }
 
@@ -114,9 +96,9 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIButton )
         DESTROY_INTERFACE( UIButton )
 
-        void *UIButton_CreateWithText( wchar_t *aText ) { return CAST( void, new UIButton( make_ascii_string( aText ) ) ); }
+        void *UIButton_CreateWithText( wchar_t *aText ) { return CAST( void, new UIButton( ConvertStringForCoreclr( aText ) ) ); }
 
-        void UIButton_SetText( UIButton *aSelf, wchar_t *aText ) { aSelf->SetText( make_ascii_string( aText ) ); }
+        void UIButton_SetText( UIButton *aSelf, wchar_t *aText ) { aSelf->SetText( ConvertStringForCoreclr( aText ) ); }
 
         void UIButton_OnClick( UIButton *aSelf, void *aDelegate )
         {
@@ -158,7 +140,7 @@ namespace SE::Core::Interop
         void *UIComboBox_CreateWithItems( wchar_t **aItems, int aLength )
         {
             std::vector<string_t> lItemVector;
-            for( int i = 0; i < aLength; i++ ) lItemVector.emplace_back( make_ascii_string( aItems[i] ) );
+            for( int i = 0; i < aLength; i++ ) lItemVector.emplace_back( ConvertStringForCoreclr( aItems[i] ) );
 
             auto lNewComboBox = new UIComboBox( lItemVector );
 
@@ -172,7 +154,7 @@ namespace SE::Core::Interop
         void UIComboBox_SetItemList( UIComboBox *aSelf, wchar_t **aItems, int aLength )
         {
             std::vector<string_t> lItemVector;
-            for( int i = 0; i < aLength; i++ ) lItemVector.emplace_back( make_ascii_string( aItems[i] ) );
+            for( int i = 0; i < aLength; i++ ) lItemVector.emplace_back( ConvertStringForCoreclr( aItems[i] ) );
 
             aSelf->SetItemList( lItemVector );
         }
@@ -247,7 +229,10 @@ namespace SE::Core::Interop
 
         void UIDropdownButton_SetImage( UIDropdownButton *aSelf, UIImage *aImage ) { aSelf->SetImage( aImage ); }
 
-        void UIDropdownButton_SetText( UIDropdownButton *aSelf, wchar_t *aText ) { aSelf->SetText( make_ascii_string( aText ) ); }
+        void UIDropdownButton_SetText( UIDropdownButton *aSelf, wchar_t *aText )
+        {
+            aSelf->SetText( ConvertStringForCoreclr( aText ) );
+        }
 
         void UIDropdownButton_SetTextColor( UIDropdownButton *aSelf, CLRVec4 aColor ) { aSelf->SetTextColor( vec( aColor ) ); }
 #pragma endregion
@@ -258,7 +243,7 @@ namespace SE::Core::Interop
 
         void *UIImage_CreateWithPath( wchar_t *aText, CLRVec2 aSize )
         {
-            auto lNewImage = new UIImage( make_ascii_string( aText ), vec( aSize ) );
+            auto lNewImage = new UIImage( ConvertStringForCoreclr( aText ), vec( aSize ) );
 
             return CAST( void, lNewImage );
         }
@@ -270,7 +255,7 @@ namespace SE::Core::Interop
 
         void *UIImageButton_CreateWithPath( wchar_t *aText, CLRVec2 aSize )
         {
-            auto lNewImage = new UIImageButton( make_ascii_string( aText ), vec( aSize ) );
+            auto lNewImage = new UIImageButton( ConvertStringForCoreclr( aText ), vec( aSize ) );
 
             return CAST( void, lNewImage );
         }
@@ -323,9 +308,9 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UILabel )
         DESTROY_INTERFACE( UILabel )
 
-        void *UILabel_CreateWithText( wchar_t *aText ) { return CAST( void, new UILabel( make_ascii_string( aText ) ) ); }
+        void *UILabel_CreateWithText( wchar_t *aText ) { return CAST( void, new UILabel( ConvertStringForCoreclr( aText ) ) ); }
 
-        void UILabel_SetText( UILabel *aSelf, wchar_t *aText ) { aSelf->SetText( make_ascii_string( aText ) ); }
+        void UILabel_SetText( UILabel *aSelf, wchar_t *aText ) { aSelf->SetText( ConvertStringForCoreclr( aText ) ); }
 
         void UILabel_SetTextColor( UILabel *aSelf, CLRVec4 aTextColor ) { aSelf->SetTextColor( vec( aTextColor ) ); }
 #pragma endregion
@@ -336,19 +321,22 @@ namespace SE::Core::Interop
 
         void *UIMenuItem_CreateWithText( wchar_t *aText )
         {
-            auto lNewLabel = new UIMenuItem( make_ascii_string( aText ) );
+            auto lNewLabel = new UIMenuItem( ConvertStringForCoreclr( aText ) );
 
             return CAST( void, lNewLabel );
         }
 
         void *UIMenuItem_CreateWithTextAndShortcut( wchar_t *aText, wchar_t *aShortcut )
         {
-            return CAST( void, new UIMenuItem( make_ascii_string( aText ), make_ascii_string( aShortcut ) ) );
+            return CAST( void, new UIMenuItem( ConvertStringForCoreclr( aText ), ConvertStringForCoreclr( aShortcut ) ) );
         }
 
-        void UIMenuItem_SetText( UIMenuItem *aSelf, wchar_t *aText ) { aSelf->SetText( make_ascii_string( aText ) ); }
+        void UIMenuItem_SetText( UIMenuItem *aSelf, wchar_t *aText ) { aSelf->SetText( ConvertStringForCoreclr( aText ) ); }
 
-        void UIMenuItem_SetShortcut( UIMenuItem *aSelf, wchar_t *aShortcut ) { aSelf->SetShortcut( make_ascii_string( aShortcut ) ); }
+        void UIMenuItem_SetShortcut( UIMenuItem *aSelf, wchar_t *aShortcut )
+        {
+            aSelf->SetShortcut( ConvertStringForCoreclr( aShortcut ) );
+        }
 
         void UIMenuItem_SetTextColor( UIMenuItem *aSelf, CLRVec4 aTextColor ) { aSelf->SetTextColor( vec( aTextColor ) ); }
 
@@ -371,14 +359,17 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIMenu )
         DESTROY_INTERFACE( UIMenu )
 
-        void *UIMenu_CreateWithText( wchar_t *aText ) { return CAST( void, new UIMenu( make_ascii_string( aText ) ) ); }
+        void *UIMenu_CreateWithText( wchar_t *aText ) { return CAST( void, new UIMenu( ConvertStringForCoreclr( aText ) ) ); }
 
         void *UIMenu_AddAction( UIMenu *aSelf, wchar_t *aText, wchar_t *aShortcut )
         {
-            return CAST( void, aSelf->AddActionRaw( make_ascii_string( aText ), make_ascii_string( aShortcut ) ) );
+            return CAST( void, aSelf->AddActionRaw( ConvertStringForCoreclr( aText ), ConvertStringForCoreclr( aShortcut ) ) );
         }
 
-        void *UIMenu_AddMenu( UIMenu *aSelf, wchar_t *aText ) { return CAST( void, aSelf->AddMenuRaw( make_ascii_string( aText ) ) ); }
+        void *UIMenu_AddMenu( UIMenu *aSelf, wchar_t *aText )
+        {
+            return CAST( void, aSelf->AddMenuRaw( ConvertStringForCoreclr( aText ) ) );
+        }
 
         void *UIMenu_AddSeparator( UIMenu *aSelf ) { return CAST( void, aSelf->AddSeparatorRaw() ); }
 
@@ -409,17 +400,17 @@ namespace SE::Core::Interop
 
         void UIPlot_SetAxisTitle( UIPlot *aSelf, int aAxis, wchar_t *aTitle )
         {
-            aSelf->mAxisConfiguration[aAxis].mTitle = make_ascii_string( aTitle );
+            aSelf->mAxisConfiguration[aAxis].mTitle = ConvertStringForCoreclr( aTitle );
         }
 
         wchar_t *UIPlot_GetAxisTitle( UIPlot *aSelf, int aAxis )
         {
-            return make_ascii_string( aSelf->mAxisConfiguration[aAxis].mTitle.data() ).data();
+            return ConvertStringForCoreclr( aSelf->mAxisConfiguration[aAxis].mTitle.data() ).data();
         }
 #pragma endregion
 
 #pragma region UIPlotData
-        void UIPlotData_SetLegend( UIPlotData *aSelf, wchar_t *aText ) { aSelf->mLegend = make_ascii_string( aText ); }
+        void UIPlotData_SetLegend( UIPlotData *aSelf, wchar_t *aText ) { aSelf->mLegend = ConvertStringForCoreclr( aText ); }
 
         void UIPlotData_SetThickness( UIPlotData *aSelf, float aThickness ) { aSelf->mThickness = aThickness; }
 
@@ -486,12 +477,12 @@ namespace SE::Core::Interop
 
         void *UIAxisTag_CreateWithTextAndColor( UIPlotAxis aAxis, double aX, wchar_t *aText, CLRVec4 aColor )
         {
-            return CAST( void, new UIAxisTag( aAxis, aX, make_ascii_string( aText ), vec( aColor ) ) );
+            return CAST( void, new UIAxisTag( aAxis, aX, ConvertStringForCoreclr( aText ), vec( aColor ) ) );
         }
 
         void UIAxisTag_SetX( UIAxisTag *aSelf, double aValue ) { aSelf->mX = aValue; }
 
-        void UIAxisTag_SetText( UIAxisTag *aSelf, wchar_t *aText ) { aSelf->mText = make_ascii_string( aText ); }
+        void UIAxisTag_SetText( UIAxisTag *aSelf, wchar_t *aText ) { aSelf->mText = ConvertStringForCoreclr( aText ); }
 
         void UIAxisTag_SetColor( UIAxisTag *aSelf, CLRVec4 aColor ) { aSelf->mColor = vec( aColor ); }
 
@@ -539,7 +530,7 @@ namespace SE::Core::Interop
             aSelf->SetProgressColor( vec( aTextColor ) );
         }
 
-        void UIProgressBar_SetText( UIProgressBar *aSelf, wchar_t *aText ) { aSelf->SetText( make_ascii_string( aText ) ); }
+        void UIProgressBar_SetText( UIProgressBar *aSelf, wchar_t *aText ) { aSelf->SetText( ConvertStringForCoreclr( aText ) ); }
 
         void UIProgressBar_SetTextColor( UIProgressBar *aSelf, CLRVec4 aTextColor ) { aSelf->SetTextColor( vec( aTextColor ) ); }
 
@@ -552,15 +543,18 @@ namespace SE::Core::Interop
 
         void *UIPropertyValue_CreateWithText( wchar_t *aText )
         {
-            return CAST( void, new UIPropertyValue( make_ascii_string( aText ) ) );
+            return CAST( void, new UIPropertyValue( ConvertStringForCoreclr( aText ) ) );
         }
 
         void *UIPropertyValue_CreateWithTextAndOrientation( wchar_t *aText, eBoxLayoutOrientation aOrientation )
         {
-            return CAST( void, new UIPropertyValue( make_ascii_string( aText ), aOrientation ) );
+            return CAST( void, new UIPropertyValue( ConvertStringForCoreclr( aText ), aOrientation ) );
         }
 
-        void UIPropertyValue_SetValue( UIPropertyValue *aSelf, wchar_t *aText ) { aSelf->SetValue( make_ascii_string( aText ) ); }
+        void UIPropertyValue_SetValue( UIPropertyValue *aSelf, wchar_t *aText )
+        {
+            aSelf->SetValue( ConvertStringForCoreclr( aText ) );
+        }
 
         void UIPropertyValue_SetValueFont( UIPropertyValue *aSelf, FontFamilyFlags aFont ) { aSelf->SetValueFont( aFont ); }
 
@@ -637,9 +631,9 @@ namespace SE::Core::Interop
 
         void *UIFloat64Column_CreateFull( wchar_t *aHeader, float aInitialSize, wchar_t *aFormat, wchar_t *aNaNFormat )
         {
-            auto lHeader    = make_ascii_string( aHeader );
-            auto lFormat    = make_ascii_string( aFormat );
-            auto lNaNFormat = make_ascii_string( aNaNFormat );
+            auto lHeader    = ConvertStringForCoreclr( aHeader );
+            auto lFormat    = ConvertStringForCoreclr( aFormat );
+            auto lNaNFormat = ConvertStringForCoreclr( aNaNFormat );
 
             return CAST( void, new UIFloat64Column( lHeader, aInitialSize, lFormat, lNaNFormat ) );
         }
@@ -658,7 +652,7 @@ namespace SE::Core::Interop
 
         void *UIUint32Column_CreateFull( wchar_t *aHeader, float aInitialSize )
         {
-            return CAST( void, new UIUint32Column( make_ascii_string( aHeader ), aInitialSize ) );
+            return CAST( void, new UIUint32Column( ConvertStringForCoreclr( aHeader ), aInitialSize ) );
         }
 
         void UIUint32Column_Clear( UIUint32Column *aSelf ) { aSelf->Clear(); }
@@ -675,7 +669,7 @@ namespace SE::Core::Interop
 
         void *UIStringColumn_CreateFull( wchar_t *aHeader, float aInitialSize )
         {
-            return CAST( void, new UIStringColumn( make_ascii_string( aHeader ), aInitialSize ) );
+            return CAST( void, new UIStringColumn( ConvertStringForCoreclr( aHeader ), aInitialSize ) );
         }
 
         void UIStringColumn_Clear( UIStringColumn *aSelf ) { aSelf->Clear(); }
@@ -683,7 +677,7 @@ namespace SE::Core::Interop
         void UIStringColumn_SetData( UIStringColumn *aSelf, wchar_t **aValue, int aLength )
         {
             aSelf->mData.clear();
-            for( int i = 0; i < aLength; i++ ) aSelf->mData.push_back( make_ascii_string( aValue[i] ) );
+            for( int i = 0; i < aLength; i++ ) aSelf->mData.push_back( ConvertStringForCoreclr( aValue[i] ) );
         }
 #pragma endregion
 
@@ -691,18 +685,20 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UITextInput )
         DESTROY_INTERFACE( UITextInput )
 
-        void *UITextInput_CreateWithText( wchar_t *aText ) { return CAST( void, new UITextInput( make_ascii_string( aText ) ) ); }
+        void *UITextInput_CreateWithText( wchar_t *aText )
+        {
+            return CAST( void, new UITextInput( ConvertStringForCoreclr( aText ) ) );
+        }
 
-        void UITextInput_SetHintText( UITextInput *aSelf, wchar_t *aText ) { aSelf->SetHintText( make_ascii_string( aText ) ); }
+        void UITextInput_SetHintText( UITextInput *aSelf, wchar_t *aText ) { aSelf->SetHintText( ConvertStringForCoreclr( aText ) ); }
 
         void *UITextInput_GetText( UITextInput *aSelf )
         {
-            auto    &lStr      = make_ascii_string( aSelf->GetText() );
-            wchar_t *pszReturn = (wchar_t *)::CoTaskMemAlloc( lStr.size() * sizeof( wchar_t ) + 1 );
-            memset( pszReturn, 0, lStr.size() * sizeof( wchar_t ) + 1 );
-            wcsncpy( pszReturn, lStr.c_str(), lStr.size() );
-
-            return pszReturn;
+            // auto    &lStr      = ConvertStringForCoreclr( aSelf->GetText() );
+            // wchar_t *pszReturn = (wchar_t *)::CoTaskMemAlloc( lStr.size() * sizeof( wchar_t ) + 1 );
+            // memset( pszReturn, 0, lStr.size() * sizeof( wchar_t ) + 1 );
+            // wcsncpy( pszReturn, lStr.c_str(), lStr.size() );
+            return CopyCharactersForCoreClr( aSelf->GetText() );
         }
 
         void UITextInput_SetTextColor( UITextInput *aSelf, CLRVec4 aTextColor ) { aSelf->SetTextColor( vec( aTextColor ) ); }
@@ -716,7 +712,7 @@ namespace SE::Core::Interop
             typedef void ( *fptr )( wchar_t * );
             fptr lDelegate = (fptr)aDelegate;
             lInstance->OnTextChanged( [lInstance, lDelegate]( string_t aString )
-                                      { lDelegate( make_ascii_string( aString ).data() ); } );
+                                      { lDelegate( ConvertStringForCoreclr( aString ).data() ); } );
         }
 #pragma endregion
 
@@ -724,7 +720,7 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UITextOverlay )
         DESTROY_INTERFACE( UITextOverlay )
 
-        void UITextOverlay_AddText( UITextOverlay *aSelf, wchar_t *aText ) { aSelf->AddText( make_ascii_string( aText ) ); }
+        void UITextOverlay_AddText( UITextOverlay *aSelf, wchar_t *aText ) { aSelf->AddText( ConvertStringForCoreclr( aText ) ); }
 
         void UITextOverlay_Clear( UITextOverlay *aSelf ) { aSelf->Clear(); }
 #pragma endregion
@@ -735,7 +731,7 @@ namespace SE::Core::Interop
 
         void *UITextToggleButton_CreateWithText( wchar_t *aText )
         {
-            return CAST( void, new UITextToggleButton( make_ascii_string( aText ) ) );
+            return CAST( void, new UITextToggleButton( ConvertStringForCoreclr( aText ) ) );
         }
 
         bool UITextToggleButton_IsActive( UITextToggleButton *aSelf ) { return aSelf->IsActive(); }
@@ -772,7 +768,7 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UITreeViewNode )
         DESTROY_INTERFACE( UITreeViewNode )
 
-        void UITreeViewNode_SetText( UITreeViewNode *aSelf, wchar_t *aText ) { aSelf->SetText( make_ascii_string( aText ) ); }
+        void UITreeViewNode_SetText( UITreeViewNode *aSelf, wchar_t *aText ) { aSelf->SetText( ConvertStringForCoreclr( aText ) ); }
 
         void UITreeViewNode_SetTextColor( UITreeViewNode *aSelf, CLRVec4 aTextColor ) { aSelf->SetTextColor( vec( aTextColor ) ); }
 
@@ -813,7 +809,7 @@ namespace SE::Core::Interop
 
         void UIVec2Input_SetResetValues( UIVec2Input *aSelf, CLRVec2 aValue ) { aSelf->SetResetValues( vec( aValue ) ); }
 
-        void UIVec2Input_SetFormat( UIVec2Input *aSelf, wchar_t *aText ) { aSelf->SetFormat( make_ascii_string( aText ) ); }
+        void UIVec2Input_SetFormat( UIVec2Input *aSelf, wchar_t *aText ) { aSelf->SetFormat( ConvertStringForCoreclr( aText ) ); }
 #pragma endregion
 
 #pragma region UIVec3Input
@@ -838,7 +834,7 @@ namespace SE::Core::Interop
 
         void UIVec3Input_SetResetValues( UIVec3Input *aSelf, CLRVec3 aValue ) { aSelf->SetResetValues( vec( aValue ) ); }
 
-        void UIVec3Input_SetFormat( UIVec3Input *aSelf, wchar_t *aText ) { aSelf->SetFormat( make_ascii_string( aText ) ); }
+        void UIVec3Input_SetFormat( UIVec3Input *aSelf, wchar_t *aText ) { aSelf->SetFormat( ConvertStringForCoreclr( aText ) ); }
 #pragma endregion
 
 #pragma region UIVec4Input
@@ -860,7 +856,7 @@ namespace SE::Core::Interop
 
         void UIVec4Input_SetResetValues( UIVec4Input *aSelf, CLRVec4 aValue ) { aSelf->SetResetValues( vec( aValue ) ); }
 
-        void UIVec4Input_SetFormat( UIVec4Input *aSelf, wchar_t *aText ) { aSelf->SetFormat( make_ascii_string( aText ) ); }
+        void UIVec4Input_SetFormat( UIVec4Input *aSelf, wchar_t *aText ) { aSelf->SetFormat( ConvertStringForCoreclr( aText ) ); }
 #pragma endregion
 
 #pragma region UIWorkspaceDocument
@@ -871,7 +867,10 @@ namespace SE::Core::Interop
 
         void UIWorkspaceDocument_Update( UIWorkspaceDocument *aSelf ) { aSelf->Update(); }
 
-        void UIWorkspaceDocument_SetName( UIWorkspaceDocument *aSelf, wchar_t *aName ) { aSelf->mName = make_ascii_string( aName ); }
+        void UIWorkspaceDocument_SetName( UIWorkspaceDocument *aSelf, wchar_t *aName )
+        {
+            aSelf->mName = ConvertStringForCoreclr( aName );
+        }
 
         bool UIWorkspaceDocument_IsDirty( UIWorkspaceDocument *aSelf ) { return aSelf->mDirty; }
 
@@ -983,10 +982,10 @@ namespace SE::Core::Interop
 
         void UIStackLayout_Add( UIStackLayout *aSelf, UIComponent *aChild, wchar_t *aKey )
         {
-            aSelf->Add( aChild, make_ascii_string( aKey ) );
+            aSelf->Add( aChild, ConvertStringForCoreclr( aKey ) );
         }
 
-        void UIStackLayout_SetCurrent( UIStackLayout *aSelf, wchar_t *aKey ) { aSelf->SetCurrent( make_ascii_string( aKey ) ); }
+        void UIStackLayout_SetCurrent( UIStackLayout *aSelf, wchar_t *aKey ) { aSelf->SetCurrent( ConvertStringForCoreclr( aKey ) ); }
 #pragma endregion
 
 #pragma region UIZLayout
@@ -1021,7 +1020,10 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIFileTree )
         DESTROY_INTERFACE( UIFileTree )
 
-        void *UIFileTree_Add( UIFileTree *aSelf, wchar_t *aPath ) { return CAST( void, aSelf->Add( make_ascii_string( aPath ) ) ); }
+        void *UIFileTree_Add( UIFileTree *aSelf, wchar_t *aPath )
+        {
+            return CAST( void, aSelf->Add( ConvertStringForCoreclr( aPath ) ) );
+        }
 #pragma endregion
 
 #pragma region UIDialog
@@ -1030,10 +1032,10 @@ namespace SE::Core::Interop
 
         void *UIDialog_CreateWithTitleAndSize( wchar_t *aTitle, CLRVec2 aSize )
         {
-            return CAST( void, new UIDialog( make_ascii_string( aTitle ), vec( aSize ) ) );
+            return CAST( void, new UIDialog( ConvertStringForCoreclr( aTitle ), vec( aSize ) ) );
         }
 
-        void UIDialog_SetTitle( UIDialog *aSelf, wchar_t *aTitle ) { aSelf->SetTitle( make_ascii_string( aTitle ) ); }
+        void UIDialog_SetTitle( UIDialog *aSelf, wchar_t *aTitle ) { aSelf->SetTitle( ConvertStringForCoreclr( aTitle ) ); }
 
         void UIDialog_SetSize( UIDialog *aSelf, CLRVec2 aSize ) { aSelf->SetSize( vec( aSize ) ); }
 
@@ -1050,7 +1052,7 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIForm )
         DESTROY_INTERFACE( UIForm )
 
-        void UIForm_SetTitle( UIForm *aSelf, wchar_t *aTitle ) { aSelf->SetTitle( make_ascii_string( aTitle ) ); }
+        void UIForm_SetTitle( UIForm *aSelf, wchar_t *aTitle ) { aSelf->SetTitle( ConvertStringForCoreclr( aTitle ) ); }
 
         void UIForm_SetContent( UIForm *aSelf, UIComponent *aContent ) { aSelf->SetContent( aContent ); }
 
