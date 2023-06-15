@@ -46,11 +46,10 @@ namespace SE::Core
         void Teardown( string_t aConfigPath );
 
       private:
-        Internal::hostfxr_initialize_for_runtime_config_fn mFxrInitialize     = nullptr;
-        Internal::hostfxr_get_runtime_delegate_fn          mFxrCreateDelegate = nullptr;
-        Internal::hostfxr_close_fn                         mFxrShutdown       = nullptr;
-
-        Internal::load_assembly_and_get_function_pointer_fn GetFunctionPointer = nullptr;
+        Internal::hostfxr_initialize_for_runtime_config_fn  mFxrInitialize      = nullptr;
+        Internal::hostfxr_get_runtime_delegate_fn           mFxrCreateDelegate  = nullptr;
+        Internal::hostfxr_close_fn                          mFxrShutdown        = nullptr;
+        Internal::load_assembly_and_get_function_pointer_fn mGetFunctionPointer = nullptr;
 
         void  TryLoadCoreCLR();
         void *TryGetExport( const char *aName );
