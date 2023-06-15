@@ -6,6 +6,8 @@
 #include <string>
 #include <type_traits>
 
+#include "Core/String.h"
+
 #include "Typedefs.h"
 
 #include "mono/jit/jit.h"
@@ -35,12 +37,12 @@ namespace SE::Core
         ~DotNetInstance();
 
         MonoObject *GetInstance() { return mInstance; };
-        MonoMethod *GetMethod( const std::string &aName, int aParameterCount );
+        MonoMethod *GetMethod( const string_t &aName, int aParameterCount );
         MonoObject *InvokeMethod( MonoMethod *aMethod, void **aParameters = nullptr );
-        MonoObject *InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters = nullptr );
+        MonoObject *InvokeMethod( const string_t &aName, int aParameterCount, void **aParameters = nullptr );
 
         template <typename... _ArgTypes>
-        MonoObject *CallMethod( const std::string &aName, _ArgTypes... aArgs )
+        MonoObject *CallMethod( const string_t &aName, _ArgTypes... aArgs )
         {
             if constexpr( sizeof...( _ArgTypes ) == 0 )
             {
@@ -55,7 +57,7 @@ namespace SE::Core
         }
 
         template <typename _Ty>
-        _Ty GetFieldValue( std::string const &aName )
+        _Ty GetFieldValue( string_t const &aName )
         {
             MonoClassField *lClassField = mono_class_get_field_from_name( mMonoClass, aName.c_str() );
 
@@ -65,10 +67,10 @@ namespace SE::Core
             return lValue;
         }
 
-        Ref<DotNetInstance> GetPropertyValue( std::string const &aName, std::string const &aClassName );
+        Ref<DotNetInstance> GetPropertyValue( string_t const &aName, string_t const &aClassName );
 
         template <typename _Ty>
-        _Ty GetPropertyValue( std::string const &aName )
+        _Ty GetPropertyValue( string_t const &aName )
         {
             if( mScriptClass == nullptr ) return _Ty{};
 
@@ -89,8 +91,8 @@ namespace SE::Core
         template <typename _Ty>
         _Ty As()
         {
-            if constexpr( std::is_same<_Ty, std::string>::value )
-                return ( mInstance != nullptr ) ? AsString() : std::string();
+            if constexpr( std::is_same<_Ty, string_t>::value )
+                return ( mInstance != nullptr ) ? AsString() : string_t();
             else
                 return ( mInstance != nullptr ) ? *(_Ty *)mono_object_unbox( mInstance ) : _Ty{};
         }
@@ -106,8 +108,8 @@ namespace SE::Core
         friend class MonoScriptEngine;
 
       private:
-        sScriptProperty &GetProperty( std::string const &aName );
-        std::string AsString( );
+        sScriptProperty &GetProperty( string_t const &aName );
+        string_t AsString( );
     };
 
 } // namespace SE::Core

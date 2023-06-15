@@ -216,7 +216,7 @@ namespace SE::Core
          * @param aHeight The desired height of the window
          * @param aTitle  Window title
          */
-        IWindow( int aWidth, int aHeight, std::string aTitle );
+        IWindow( int aWidth, int aHeight, string_t aTitle );
 
         IWindow( GLFWwindow *aWindow );
 
@@ -281,7 +281,7 @@ namespace SE::Core
         void SetEngineLoop( Engine *aEngineLoop ) { mEngineLoop = aEngineLoop; }
 
         /** @brief */
-        void SetTitle( std::string aTitle ) { glfwSetWindowTitle( mWindow, aTitle.c_str() ); }
+        void SetTitle( string_t aTitle ) { glfwSetWindowTitle( mWindow, aTitle.c_str() ); }
 
         math::ivec2 GetMousePosition();
 
@@ -308,7 +308,7 @@ namespace SE::Core
 
         math::ivec2 mLastMousePosition;
 
-        std::string mWindowName = "";
+        string_t mWindowName = "";
         GLFWwindow *mWindow     = nullptr;
         Engine     *mEngineLoop = nullptr;
     };

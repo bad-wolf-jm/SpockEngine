@@ -59,7 +59,7 @@ namespace SE::OtdrEditor
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
     }
 
-    void BaseOtdrApplication::Init( std::string aAppClass, fs::path aConfigurationPath )
+    void BaseOtdrApplication::Init( string_t aAppClass, fs::path aConfigurationPath )
     {
         Init();
 

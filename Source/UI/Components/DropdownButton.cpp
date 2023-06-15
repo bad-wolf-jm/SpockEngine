@@ -24,7 +24,7 @@ namespace SE::Core
 
     void UIDropdownButton::SetContent( UIComponent *aContent ) { mContent = aContent; }
     void UIDropdownButton::SetContentSize( math::vec2 aSize ) { mContentSize = ImVec2{ aSize.x, aSize.y }; }
-    void UIDropdownButton::SetText( std::string aText )
+    void UIDropdownButton::SetText( string_t aText )
     {
         mText->SetText( aText );
         mText->mIsVisible = !( aText.empty() );

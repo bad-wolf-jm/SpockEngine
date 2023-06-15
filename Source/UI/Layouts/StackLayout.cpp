@@ -22,13 +22,13 @@ namespace SE::Core
         return ImVec2{ lWidth, lHeight };
     }
 
-    void UIStackLayout::Add( UIComponent *aChild, std::string const &aKey )
+    void UIStackLayout::Add( UIComponent *aChild, string_t const &aKey )
     {
         mChildren[aKey] = aChild;
         if( mCurrent.empty() ) mCurrent = aKey;
     }
 
-    void UIStackLayout::SetCurrent( std::string const &aKey )
+    void UIStackLayout::SetCurrent( string_t const &aKey )
     {
         if( mChildren.find( aKey ) != mChildren.end() )
             mCurrent = aKey;

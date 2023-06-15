@@ -19,7 +19,7 @@ namespace SE::Graphics
 
     sVkShaderModuleObject::~sVkShaderModuleObject() { mContext->DestroyShaderModule( mVkObject ); }
 
-    static std::vector<char> ReadFile( const std::string &filename )
+    static std::vector<char> ReadFile( const string_t &filename )
     {
         std::ifstream lFileObject( filename, std::ios::ate | std::ios::binary );
 
@@ -35,7 +35,7 @@ namespace SE::Graphics
         return lBuffer;
     }
 
-    static std::vector<uint32_t> LoadShaderModuleBytecode( std::string aFilePaths )
+    static std::vector<uint32_t> LoadShaderModuleBytecode( string_t aFilePaths )
     {
         auto lCode     = ReadFile( aFilePaths );
         auto lBytecode = std::vector<uint32_t>( lCode.size() / 4 );
@@ -43,15 +43,15 @@ namespace SE::Graphics
         return lBytecode;
     }
 
-    static bool IsSPIRV( std::string aFileName ) { return ( aFileName.substr( aFileName.find_last_of( "." ) + 1 ) == "spv" ); }
+    static bool IsSPIRV( string_t aFileName ) { return ( aFileName.substr( aFileName.find_last_of( "." ) + 1 ) == "spv" ); }
 
-    static std::vector<uint32_t> CompileShaderSources( std::string FilePaths, eShaderStageTypeFlags aShaderType )
+    static std::vector<uint32_t> CompileShaderSources( string_t FilePaths, eShaderStageTypeFlags aShaderType )
     {
         if( IsSPIRV( FilePaths ) ) return LoadShaderModuleBytecode( FilePaths );
         return std::vector<uint32_t>( 0 );
     }
 
-    ShaderModule::ShaderModule( Ref<VkGraphicContext> mContext, std::string FilePaths, eShaderStageTypeFlags aShaderType )
+    ShaderModule::ShaderModule( Ref<VkGraphicContext> mContext, string_t FilePaths, eShaderStageTypeFlags aShaderType )
         : Type{ aShaderType }
     {
         std::vector<uint32_t> lByteCode = CompileShaderSources( FilePaths, aShaderType );

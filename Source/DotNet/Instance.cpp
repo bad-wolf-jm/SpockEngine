@@ -20,7 +20,7 @@ namespace SE::Core
 
     DotNetInstance::~DotNetInstance() { mono_gchandle_free( mGCHandle ); }
 
-    MonoMethod *DotNetInstance::GetMethod( const std::string &aName, int aParameterCount )
+    MonoMethod *DotNetInstance::GetMethod( const string_t &aName, int aParameterCount )
     {
         MonoClass  *lClass  = mMonoClass;
         MonoMethod *lMethod = NULL;
@@ -44,14 +44,14 @@ namespace SE::Core
         return nullptr;
     }
 
-    MonoObject *DotNetInstance::InvokeMethod( const std::string &aName, int aParameterCount, void **aParameters )
+    MonoObject *DotNetInstance::InvokeMethod( const string_t &aName, int aParameterCount, void **aParameters )
     {
         auto lMethod = GetMethod( aName, aParameterCount );
 
         return InvokeMethod( lMethod, aParameters );
     }
 
-    Ref<DotNetInstance> DotNetInstance::GetPropertyValue( std::string const &aName, std::string const &aClassName )
+    Ref<DotNetInstance> DotNetInstance::GetPropertyValue( string_t const &aName, string_t const &aClassName )
     {
         if( mScriptClass == nullptr ) return nullptr;
         if( mInstance == nullptr ) return nullptr;
@@ -69,7 +69,7 @@ namespace SE::Core
         return nullptr;
     }
 
-    sScriptProperty &DotNetInstance::GetProperty( std::string const &aName ) { return mScriptClass->GetProperty( aName ); }
+    sScriptProperty &DotNetInstance::GetProperty( string_t const &aName ) { return mScriptClass->GetProperty( aName ); }
 
     Ref<DotNetInstance> DotNetInstance::As( const char *aClassName )
     {
@@ -80,6 +80,6 @@ namespace SE::Core
         return New<DotNetInstance>( &lClass, lClass.Class(), mInstance );
     }
 
-    std::string DotNetInstance::AsString() { return DotNetRuntime::NewString( reinterpret_cast<MonoString *>( mInstance ) ); }
+    string_t DotNetInstance::AsString() { return DotNetRuntime::NewString( reinterpret_cast<MonoString *>( mInstance ) ); }
 
 } // namespace SE::Core

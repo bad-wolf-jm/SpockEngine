@@ -3,12 +3,12 @@
 
 namespace SE::Core
 {
-    UIMenuItem::UIMenuItem( std::string const &aText )
+    UIMenuItem::UIMenuItem( string_t const &aText )
         : mText{ aText }
     {
     }
 
-    UIMenuItem::UIMenuItem( std::string const &aText, std::string const &aShortcut )
+    UIMenuItem::UIMenuItem( string_t const &aText, string_t const &aShortcut )
         : mText{ aText }
         , mShortcut{ aShortcut }
     {
@@ -17,8 +17,8 @@ namespace SE::Core
     void UIMenuItem::PushStyles() {}
     void UIMenuItem::PopStyles() {}
 
-    void UIMenuItem::SetText( std::string const &aText ) { mText = aText; }
-    void UIMenuItem::SetShortcut( std::string const &aShortcut ) { mShortcut = aShortcut; }
+    void UIMenuItem::SetText( string_t const &aText ) { mText = aText; }
+    void UIMenuItem::SetShortcut( string_t const &aShortcut ) { mShortcut = aShortcut; }
     void UIMenuItem::SetTextColor( math::vec4 aColor ) { mTextColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
 
     void UIMenuItem::OnTrigger( std::function<void()> aOnTrigger ) { mOnTrigger = aOnTrigger; }
@@ -61,7 +61,7 @@ namespace SE::Core
 
     void UIMenuSeparator::DrawContent( ImVec2 aPosition, ImVec2 aSize ) { ImGui::Separator(); }
 
-    UIMenu::UIMenu( std::string const &aText )
+    UIMenu::UIMenu( string_t const &aText )
         : UIMenuItem( aText )
     {
     }
@@ -92,7 +92,7 @@ namespace SE::Core
         if( lTextColorSet ) ImGui::PopStyleColor();
     }
 
-    UIMenuItem *UIMenu::AddActionRaw( std::string const &aText, std::string const &aShortcut )
+    UIMenuItem *UIMenu::AddActionRaw( string_t const &aText, string_t const &aShortcut )
     {
         UIMenuItem *lNewItem = new UIMenuItem( aText, aShortcut );
         mActions.push_back( lNewItem );
@@ -100,7 +100,7 @@ namespace SE::Core
         return lNewItem;
     }
 
-    UIMenu *UIMenu::AddMenuRaw( std::string const &aText )
+    UIMenu *UIMenu::AddMenuRaw( string_t const &aText )
     {
         UIMenu *lNewItem = new UIMenu( aText );
         mActions.push_back( lNewItem );
@@ -116,14 +116,14 @@ namespace SE::Core
         return lNewItem;
     }
 
-    Ref<UIMenuItem> UIMenu::AddAction( std::string const &aText, std::string const &aShortcut )
+    Ref<UIMenuItem> UIMenu::AddAction( string_t const &aText, string_t const &aShortcut )
     {
         Ref<UIMenuItem> lNewItem( AddActionRaw( aText, aShortcut ) );
 
         return lNewItem;
     }
 
-    Ref<UIMenu> UIMenu::AddMenu( std::string const &aText )
+    Ref<UIMenu> UIMenu::AddMenu( string_t const &aText )
     {
         Ref<UIMenu> lNewItem( AddMenuRaw( aText ) );
 

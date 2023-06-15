@@ -59,7 +59,7 @@ namespace SE::Graphics
          *                     compilation
          * @param aShaderType The type of the shader we are compiling.
          */
-        ShaderModule( Ref<VkGraphicContext> mContext, std::string aFilePaths, eShaderStageTypeFlags aShaderType );
+        ShaderModule( Ref<VkGraphicContext> mContext, string_t aFilePaths, eShaderStageTypeFlags aShaderType );
 
         ~ShaderModule() = default;
 
@@ -150,7 +150,7 @@ namespace SE::Graphics
     struct sShader
     {
         Ref<ShaderModule> mShaderModule;
-        std::string       mEntryPoint;
+        string_t       mEntryPoint;
     };
 
     struct sVkPipelineObject

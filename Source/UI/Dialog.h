@@ -13,9 +13,9 @@ namespace SE::Core
         ~UIDialog() = default;
 
         UIDialog( UIDialog const & ) = default;
-        UIDialog( std::string aTitle, math::vec2 aSize );
+        UIDialog( string_t aTitle, math::vec2 aSize );
 
-        void SetTitle( std::string const &aText );
+        void SetTitle( string_t const &aText );
         void SetSize( math::vec2 aSize );
         void SetContent( UIComponent *aContent );
 
@@ -25,7 +25,7 @@ namespace SE::Core
         void Update();
 
       protected:
-        std::string  mTitle;
+        string_t  mTitle;
         UIComponent *mContent = nullptr;
         math::vec2   mSize;
 

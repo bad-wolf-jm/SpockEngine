@@ -4,7 +4,7 @@
 
 namespace SE::Core
 {
-    UITableColumn::UITableColumn( std::string aHeader, float aInitialSize )
+    UITableColumn::UITableColumn( string_t aHeader, float aInitialSize )
         : mHeader{ aHeader }
         , mInitialSize{ aInitialSize }
     {
@@ -112,7 +112,7 @@ namespace SE::Core
         }
     }
 
-    UIFloat64Column::UIFloat64Column( std::string aHeader, float aInitialSize, std::string aFormat, std::string aNaNFormat )
+    UIFloat64Column::UIFloat64Column( string_t aHeader, float aInitialSize, string_t aFormat, string_t aNaNFormat )
         : UITableColumn{ aHeader, aInitialSize }
         , mFormat{ aFormat }
         , mNaNFormat{ aNaNFormat }
@@ -123,7 +123,7 @@ namespace SE::Core
 
     void UIFloat64Column::Render( int aRow, ImVec2 aSize )
     {
-        std::string lText;
+        string_t lText;
         if( std::isnan( mData[aRow] ) )
             lText = fmt::format( mNaNFormat, mData[aRow] );
         else
@@ -151,7 +151,7 @@ namespace SE::Core
         mData.clear();
     }
 
-    UIUint32Column::UIUint32Column( std::string aHeader, float aInitialSize )
+    UIUint32Column::UIUint32Column( string_t aHeader, float aInitialSize )
         : UITableColumn{ aHeader, aInitialSize }
     {
     }
@@ -160,7 +160,7 @@ namespace SE::Core
 
     void UIUint32Column::Render( int aRow, ImVec2 aSize )
     {
-        std::string lText     = fmt::format( "{}", mData[aRow] );
+        string_t lText     = fmt::format( "{}", mData[aRow] );
         auto const &lTextSize = ImGui::CalcTextSize( lText.c_str() );
 
         ImVec2 lPrevPos = ImGui::GetCursorPos();
@@ -183,7 +183,7 @@ namespace SE::Core
         mData.clear();
     }
 
-    UIStringColumn::UIStringColumn( std::string aHeader, float aInitialSize )
+    UIStringColumn::UIStringColumn( string_t aHeader, float aInitialSize )
         : UITableColumn{ aHeader, aInitialSize }
     {
     }

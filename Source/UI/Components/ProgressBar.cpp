@@ -8,7 +8,7 @@ namespace SE::Core
     void UIProgressBar::PushStyles() {}
     void UIProgressBar::PopStyles() {}
 
-    void UIProgressBar::SetText( std::string const &aText ) { mText = aText; }
+    void UIProgressBar::SetText( string_t const &aText ) { mText = aText; }
     void UIProgressBar::SetTextColor( math::vec4 aColor ) { mTextColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
 
     void UIProgressBar::SetProgressValue( float aValue ) { mValue = aValue; }

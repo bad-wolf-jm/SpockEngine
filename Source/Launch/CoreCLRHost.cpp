@@ -13,17 +13,17 @@ namespace SE::Core
 {
     using directory_iterator = std::filesystem::directory_iterator;
 
-    static std::string make_ascii_string( wchar_t *aCharacters )
+    static string_t make_ascii_string( wchar_t *aCharacters )
     {
         std::wstring u16str( aCharacters );
 
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
-        std::string                                                     utf8 = convert.to_bytes( u16str );
+        string_t                                                     utf8 = convert.to_bytes( u16str );
 
         return utf8;
     }
 
-    std::wstring make_ascii_string( const std::string &utf8 )
+    std::wstring make_ascii_string( const string_t &utf8 )
     {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
 
@@ -86,7 +86,7 @@ namespace SE::Core
 
     void CoreCLRHost::Shutdown() {}
 
-    void CoreCLRHost::LoadApplicationAssembly( std::string const &aAssemblyPath, std::string const &aApplicationName )
+    void CoreCLRHost::LoadApplicationAssembly( string_t const &aAssemblyPath, string_t const &aApplicationName )
     {
         Initialize();
 
@@ -128,7 +128,7 @@ namespace SE::Core
         if( mTeardownDelegate == nullptr ) mTeardownDelegate = TeardownDelegateDefault;
     }
 
-    void CoreCLRHost::Configure( std::string aConfigPath )
+    void CoreCLRHost::Configure( string_t aConfigPath )
     {
         char *pszReturn = (char *)::CoTaskMemAlloc( aConfigPath.size() * sizeof( char ) + 1 );
         strcpy( pszReturn, aConfigPath.c_str() );
@@ -139,7 +139,7 @@ namespace SE::Core
     void CoreCLRHost::Update( float aTimestamp ) { mUpdateDelegate( aTimestamp ); }
     void CoreCLRHost::UpdateUI( float aTimestamp ) { mUpdateUIDelegate( aTimestamp ); }
     bool CoreCLRHost::UpdateMenu() { return mUpdateMenuDelegate(); }
-    void CoreCLRHost::Teardown( std::string aConfigPath )
+    void CoreCLRHost::Teardown( string_t aConfigPath )
     {
         char *pszReturn = (char *)::CoTaskMemAlloc( aConfigPath.size() * sizeof( char ) + 1 );
         strcpy( pszReturn, aConfigPath.c_str() );

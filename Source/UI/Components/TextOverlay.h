@@ -9,7 +9,7 @@ namespace SE::Core
     struct sTextLine
     {
         uint32_t    mRepetitions = 0;
-        std::string mLine        = "";
+        string_t mLine        = "";
         bool        mIsPartial   = true;
     };
 
@@ -18,13 +18,13 @@ namespace SE::Core
       public:
         UITextOverlay() = default;
 
-        void AddText( std::string const &aText );
+        void AddText( string_t const &aText );
         void Clear();
 
       protected:
         uint32_t             mLineCount = 0;
         std::list<sTextLine> mLines;
-        std::string          mLeftOver;
+        string_t          mLeftOver;
 
         uint32_t mMaxLineCount = 100000;
 

@@ -96,16 +96,16 @@ namespace SE::Core
         Ref<IGraphicContext> &GetGraphicContext();// { return mGraphicContext; }
         Ref<UIContext> &UIContext();// { return mImGUIOverlay; };
 
-        void        SetApplicationName( std::string a_Name ) { mApplicationName = a_Name; }
-        std::string GetApplicationName() { return mApplicationName; }
+        void        SetApplicationName( string_t a_Name ) { mApplicationName = a_Name; }
+        string_t GetApplicationName() { return mApplicationName; }
 
         void SetInitialWindowPosition( math::ivec2 a_Position );
         void SetInitialWindowSize( math::ivec2 a_Size );
-        void SetImGuiConfigurationFile( std::string a_Path );
+        void SetImGuiConfigurationFile( string_t a_Path );
 
         math::ivec2 GetWindowPosition();
         math::ivec2 GetWindowSize();
-        std::string GetImGuiConfigurationFile();
+        string_t GetImGuiConfigurationFile();
 
         static void Initialize( math::ivec2 aInitialMainWindowSize, math::ivec2 aInitialMainWindowPosition, fs::path aImGuiConfigPath,
                                 UIConfiguration const &aUIConfiguration );
@@ -138,7 +138,7 @@ namespace SE::Core
 
         math::ivec2     mInitialMainWindowSize     = { 1920, 1080 };
         math::ivec2     mInitialMainWindowPosition = { 100, 100 };
-        std::string     mImGuiConfigPath           = "imgui.ini";
+        string_t     mImGuiConfigPath           = "imgui.ini";
         UIConfiguration mUIConfiguration{};
 
         math::ivec2 mMainWindowSize;
@@ -146,7 +146,7 @@ namespace SE::Core
         math::ivec2 mFramebufferSize;
         math::ivec2 mLastMousePosition;
 
-        std::string mApplicationName = "";
+        string_t mApplicationName = "";
     };
 
 } // namespace SE::Core

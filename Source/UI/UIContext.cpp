@@ -17,7 +17,7 @@ namespace SE::Core
 {
 
     UIContext::UIContext( Ref<SE::Core::IWindow> aWindow, Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext,
-                          std::string &aImGuiConfigPath, UIConfiguration const &aConfig )
+                          string_t &aImGuiConfigPath, UIConfiguration const &aConfig )
         : mGraphicContext{ aGraphicContext }
         , mImGuiConfigPath{ aImGuiConfigPath }
     {

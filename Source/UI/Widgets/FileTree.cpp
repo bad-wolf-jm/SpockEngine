@@ -14,7 +14,7 @@ namespace SE::Core
     Ref<UIImage> mCloseFolder = nullptr;
     Ref<UIImage> mDefaultFile = nullptr;
 
-    UIFileTreeNode::UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent, fs::path const &aPath, std::string const &aName )
+    UIFileTreeNode::UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent, fs::path const &aPath, string_t const &aName )
         : UITreeViewNode( aTreeView, aParent )
         , mPath{ aPath }
         , mName{ aName }

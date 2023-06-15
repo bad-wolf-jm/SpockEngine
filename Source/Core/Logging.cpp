@@ -5,9 +5,9 @@ namespace SE::Logging
 {
     static std::ofstream gLogFile;
 
-    void LogToFile( std::string const &aFilePath ) { gLogFile.open( aFilePath ); }
+    void LogToFile( string_t const &aFilePath ) { gLogFile.open( aFilePath ); }
 
-    void LogLine( std::string const &aLine )
+    void LogLine( string_t const &aLine )
     {
         if( gLogFile.is_open() )
             gLogFile << aLine;
@@ -15,7 +15,7 @@ namespace SE::Logging
 
     static std::vector<LogMessage> sLogMessages = {};
 
-    void _Log( LogLevel a_Level, std::string a_Message )
+    void _Log( LogLevel a_Level, string_t a_Message )
     {
         LogMessage l_NewMessage{};
         l_NewMessage.Level     = a_Level;

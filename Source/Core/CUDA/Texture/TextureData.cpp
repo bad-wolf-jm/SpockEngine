@@ -197,8 +197,8 @@ namespace SE::Core
     TextureData::TextureData( sTextureCreateInfo const &aTextureCreateInfo, fs::path const &aImagePath )
         : mSpec{ aTextureCreateInfo }
     {
-        std::string           lExtension     = aImagePath.extension().string();
-        std::set<std::string> lGliExtensions = { ".dds", ".kmg", ".ktx" };
+        string_t           lExtension     = aImagePath.extension().string();
+        std::set<string_t> lGliExtensions = { ".dds", ".kmg", ".ktx" };
 
         if( lGliExtensions.find( lExtension ) != lGliExtensions.end() )
         {
@@ -243,7 +243,7 @@ namespace SE::Core
 
     void TextureData::SaveTo( fs::path const &aImagePath )
     {
-        std::string lExtension = aImagePath.extension().string();
+        string_t lExtension = aImagePath.extension().string();
 
         if( lExtension == ".dds" )
         {

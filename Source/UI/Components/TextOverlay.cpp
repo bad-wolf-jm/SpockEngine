@@ -9,15 +9,15 @@ namespace SE::Core
     void UITextOverlay::PushStyles() {}
     void UITextOverlay::PopStyles() {}
 
-    void UITextOverlay::AddText( std::string const &aText )
+    void UITextOverlay::AddText( string_t const &aText )
     {
-        std::string lText = mLeftOver + aText;
-        std::string lLine;
-        std::string lDelimiter = "\r\n";
+        string_t lText = mLeftOver + aText;
+        string_t lLine;
+        string_t lDelimiter = "\r\n";
 
         size_t lLineBeginPos    = 0;
         size_t lLineEndPosition = lText.find( lDelimiter, lLineBeginPos );
-        if( lLineEndPosition == std::string::npos )
+        if( lLineEndPosition == string_t::npos )
         {
             if( mLines.empty() )
             {
@@ -32,9 +32,9 @@ namespace SE::Core
         }
         else
         {
-            while( lLineEndPosition != std::string::npos )
+            while( lLineEndPosition != string_t::npos )
             {
-                std::string lLine = lText.substr( lLineBeginPos, lLineEndPosition - lLineBeginPos );
+                string_t lLine = lText.substr( lLineBeginPos, lLineEndPosition - lLineBeginPos );
 
                 if( mLines.empty() )
                 {

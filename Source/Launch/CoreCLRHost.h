@@ -29,16 +29,16 @@ namespace SE::Core
       public:
         CoreCLRHost();
 
-        void LoadApplicationAssembly( std::string const &aAssemblyPath, std::string const &aApplicationClass );
+        void LoadApplicationAssembly( string_t const &aAssemblyPath, string_t const &aApplicationClass );
         void Initialize();
         void Shutdown();
-        int  Execute( std::string const &aAssemblyPath );
+        int  Execute( string_t const &aAssemblyPath );
 
-        void Configure( std::string aConfigPath );
+        void Configure( string_t aConfigPath );
         void Update( float aTimestamp );
         void UpdateUI( float aTimestamp );
         bool UpdateMenu();
-        void Teardown( std::string aConfigPath );
+        void Teardown( string_t aConfigPath );
 
       private:
         hostfxr_initialize_for_runtime_config_fn mFxrInitialize     = nullptr;

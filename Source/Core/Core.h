@@ -13,3 +13,5 @@
 #else
 #    define LOG2( X ) ( (unsigned)( 8 * sizeof( uint64_t ) - __builtin_clzll( ( (uint64_t)X ) ) - 1 ) )
 #endif
+
+#include "String.h"

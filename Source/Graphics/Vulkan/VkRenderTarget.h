@@ -26,18 +26,18 @@ namespace SE::Graphics
 
         ~VkRenderTarget();
 
-        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
+        void AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo );
 
-        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+        void AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
                             Ref<VkTexture2D> aFramebufferImage );
 
-        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+        void AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
                             Ref<VkTextureCubeMap> aFramebufferImage, eCubeFace aFace );
 
-        void AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
+        void AddAttachment( string_t const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
                             bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp );
 
-        void AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
+        void AddAttachment( string_t const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
                             bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp,
                             Ref<VkTexture2D> aFramebufferImage );
 
@@ -60,7 +60,7 @@ namespace SE::Graphics
 
         // virtual Ref<sVkCommandBufferObject> GetCurrentCommandBuffer() { return mCommandBufferObject[0]; }
 
-        Ref<VkTexture2D> GetAttachment( std::string const &aKey );
+        Ref<VkTexture2D> GetAttachment( string_t const &aKey );
 
       protected:
         Ref<VkRenderPassObject> CreateDefaultRenderPass();

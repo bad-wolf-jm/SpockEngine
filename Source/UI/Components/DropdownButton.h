@@ -15,7 +15,7 @@ namespace SE::Core
         UIDropdownButton();
         ~UIDropdownButton() = default;
 
-        void SetText( std::string aValue );
+        void SetText( string_t aValue );
         void SetImage( UIBaseImage *aValue );
         void SetContent( UIComponent *aValue );
         void SetContentSize( math::vec2 aSize );

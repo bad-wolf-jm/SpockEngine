@@ -27,11 +27,11 @@ namespace SE::Core
 {
     struct sTag
     {
-        std::string mValue;
+        string_t mValue;
 
         sTag()               = default;
         sTag( const sTag & ) = default;
-        sTag( const std::string &aTag )
+        sTag( const string_t &aTag )
             : mValue( aTag )
         {
         }
@@ -47,7 +47,7 @@ namespace SE::Core
             mValue = lUuidGenerator.getUUID();
         }
         sUUID( const sUUID & ) = default;
-        sUUID( const std::string &aStringUUID )
+        sUUID( const string_t &aStringUUID )
             : mValue{ UUIDv4::UUID::fromStrFactory( aStringUUID ) }
         {
         }
@@ -135,7 +135,7 @@ namespace SE::Core
         template <typename ParentType>
         struct sMonoActor
         {
-            std::string mClassFullName = "";
+            string_t mClassFullName = "";
 
             DotNetClass         mClass;
             Ref<DotNetInstance> mInstance;
@@ -146,13 +146,13 @@ namespace SE::Core
 
             ~sMonoActor() = default;
 
-            sMonoActor( const std::string &aClassFullName )
+            sMonoActor( const string_t &aClassFullName )
                 : mClassFullName{ aClassFullName }
 
             {
                 size_t      lSeparatorPos   = aClassFullName.find_last_of( '.' );
-                std::string lClassNamespace = aClassFullName.substr( 0, lSeparatorPos );
-                std::string lClassName      = aClassFullName.substr( lSeparatorPos + 1 );
+                string_t lClassNamespace = aClassFullName.substr( 0, lSeparatorPos );
+                string_t lClassName      = aClassFullName.substr( lSeparatorPos + 1 );
 
                 mClass = DotNetRuntime::GetClassType( mClassFullName );
             }
@@ -176,8 +176,8 @@ namespace SE::Core
                 if( mClassFullName.empty() ) return;
 
                 size_t      lSeparatorPos   = mClassFullName.find_last_of( '.' );
-                std::string lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
-                std::string lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
+                string_t lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
+                string_t lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
 
                 mClass = DotNetRuntime::GetClassType( mClassFullName );
 
@@ -219,7 +219,7 @@ namespace SE::Core
             bool mDisplayInEditor = true;
             bool mPreview         = true;
 
-            std::string             mClassFullName = "";
+            string_t             mClassFullName = "";
             DotNetClass         mClass;
             Ref<DotNetInstance> mInstance;
             Ref<DotNetInstance> mPreviewInstance;
@@ -230,7 +230,7 @@ namespace SE::Core
 
             ~sMonoUIComponent() = default;
 
-            sMonoUIComponent( const std::string &aClassFullName )
+            sMonoUIComponent( const string_t &aClassFullName )
                 : mClassFullName{ aClassFullName }
 
             {
@@ -253,8 +253,8 @@ namespace SE::Core
                 if( mClassFullName.empty() ) return;
 
                 size_t      lSeparatorPos   = mClassFullName.find_last_of( '.' );
-                std::string lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
-                std::string lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
+                string_t lClassNamespace = mClassFullName.substr( 0, lSeparatorPos );
+                string_t lClassName      = mClassFullName.substr( lSeparatorPos + 1 );
 
                 mClass = DotNetRuntime::GetClassType( mClassFullName );
 
