@@ -49,15 +49,7 @@ namespace SE::Core::Interop
             for( uint32_t i = 0; i < lFilter.size(); i++ ) lCharacters[i] = ( lCharacters[i] == '|' ) ? '\0' : lCharacters[i];
             auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(), lFilter.c_str() );
 
-            if( lFilePath.has_value() )
-            {
-                // auto    &lStr      = lFilePath.value();
-                // wchar_t *pszReturn = (wchar_t *)::CoTaskMemAlloc( lStr.size() * sizeof( wchar_t ) + 1 );
-                // memset( pszReturn, 0, lStr.size() * sizeof( wchar_t ) + 1 );
-                // wcsncpy( pszReturn, lStr.c_str(), lStr.size() );
-                // return pszReturn;
-                return CopyCharactersForCoreClr( lFilePath.value() );
-            }
+            if( lFilePath.has_value() ) return CopyCharactersForCoreClr( lFilePath.value() );
 
             return nullptr;
         }
@@ -692,14 +684,7 @@ namespace SE::Core::Interop
 
         void UITextInput_SetHintText( UITextInput *aSelf, wchar_t *aText ) { aSelf->SetHintText( ConvertStringForCoreclr( aText ) ); }
 
-        void *UITextInput_GetText( UITextInput *aSelf )
-        {
-            // auto    &lStr      = ConvertStringForCoreclr( aSelf->GetText() );
-            // wchar_t *pszReturn = (wchar_t *)::CoTaskMemAlloc( lStr.size() * sizeof( wchar_t ) + 1 );
-            // memset( pszReturn, 0, lStr.size() * sizeof( wchar_t ) + 1 );
-            // wcsncpy( pszReturn, lStr.c_str(), lStr.size() );
-            return CopyCharactersForCoreClr( aSelf->GetText() );
-        }
+        void *UITextInput_GetText( UITextInput *aSelf ) { return CopyCharactersForCoreClr( aSelf->GetText() ); }
 
         void UITextInput_SetTextColor( UITextInput *aSelf, CLRVec4 aTextColor ) { aSelf->SetTextColor( vec( aTextColor ) ); }
 
