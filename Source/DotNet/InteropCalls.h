@@ -79,7 +79,7 @@ namespace SE::Core::Interop
         void UIComponent_SetTooltip( UIComponent *aSelf, void *aTooltip );
 
         void *UIBaseImage_Create();
-        void *UIBaseImage_CreateWithPath( void *aText, CLRVec2 aSize );
+        void *UIBaseImage_CreateWithPath( wchar_t *aText, CLRVec2 aSize );
         void  UIBaseImage_Destroy( UIBaseImage *aSelf );
         void  UIBaseImage_SetImage( UIBaseImage *aSelf, wchar_t *aPath );
 
@@ -148,7 +148,7 @@ namespace SE::Core::Interop
         void  UILabel_SetTextColor( UILabel *aSelf, CLRVec4 aTextColor );
 
         void *UIMenuItem_Create();
-        void *UIMenuItem_CreateWithText( void *aText );
+        void *UIMenuItem_CreateWithText( wchar_t *aText );
         void *UIMenuItem_CreateWithTextAndShortcut( wchar_t *aText, wchar_t *aShortcut );
         void  UIMenuItem_Destroy( UIMenuItem *aSelf );
         void  UIMenuItem_SetText( UIMenuItem *aSelf, wchar_t *aText );

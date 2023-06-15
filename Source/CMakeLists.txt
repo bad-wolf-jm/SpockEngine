@@ -9,12 +9,9 @@ add_library(LTSimulationEngineRuntime SHARED
     Core/Resource.cpp
     Core/Logging.cpp
 
-    DotNet/Runtime.cpp
-    DotNet/Class.cpp
-    DotNet/Instance.cpp
-    DotNet/Utils.cpp
-    DotNet/EntityRegistry.cpp
-    DotNet/InternalCalls.cpp
+    # DotNet/Utils.cpp
+    # DotNet/EntityRegistry.cpp
+    # DotNet/InternalCalls.cpp
     DotNet/InteropCalls.cpp
 
     Core/CUDA/Texture/ColorFormat.cpp

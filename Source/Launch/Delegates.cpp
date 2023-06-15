@@ -12,7 +12,7 @@
 #include "UI/UI.h"
 // #include "UI/Widgets.h"
 
-#include "DotNet/Runtime.h"
+
 
 namespace SE::OtdrEditor
 {

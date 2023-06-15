@@ -1,5 +1,5 @@
 #include "Image.h"
-#include "DotNet/Runtime.h"
+
 
 namespace SE::Core
 {
