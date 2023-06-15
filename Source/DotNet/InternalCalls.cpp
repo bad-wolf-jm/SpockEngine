@@ -14,7 +14,7 @@ namespace SE::MonoInternalCalls
 {
     uint32_t Entity_Create( EntityCollection *aRegistry, MonoString *aName, uint32_t aEntityID )
     {
-        auto lName      = std::string( mono_string_to_utf8( aName ) );
+        auto lName      = string_t( mono_string_to_utf8( aName ) );
         auto lNewEntity = aRegistry->CreateEntity( aRegistry->WrapEntity( static_cast<entt::entity>( aEntityID ) ), lName );
 
         return static_cast<uint32_t>( lNewEntity );

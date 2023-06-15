@@ -31,18 +31,18 @@ using namespace SE::MonoInternalCalls;
 namespace SE::Core
 {
     using PathList     = std::vector<fs::path>;
-    using ClassMapping = std::map<std::string, DotNetClass>;
+    using ClassMapping = std::map<string_t, DotNetClass>;
 
     struct sAssemblyData
     {
         fs::path                 mPath           = "";
         fs::path                 mFilename       = "";
-        std::string              mCategory       = "";
+        string_t              mCategory       = "";
         MonoAssembly            *mAssembly       = nullptr;
         MonoImage               *mImage          = nullptr;
         bool                     mNeedsReloading = false;
         bool                     mFileExists     = false;
-        std::vector<std::string> mClasses{};
+        std::vector<string_t> mClasses{};
 
         sAssemblyData()                        = default;
         sAssemblyData( const sAssemblyData & ) = default;
@@ -59,7 +59,7 @@ namespace SE::Core
         AssemblyMapping mAssemblies       = {};
         ClassMapping    mClasses          = {};
 
-        std::map<std::string, std::vector<sAssemblyData *>> mCategories;
+        std::map<string_t, std::vector<sAssemblyData *>> mCategories;
         HINSTANCE                                           mMonoPosixHelper;
     };
 
@@ -78,7 +78,7 @@ namespace SE::Core
         sRuntimeData->mCoreAssembly.mFilename = aFilepath.filename();
     }
 
-    void DotNetRuntime::AddAppAssemblyPath( const fs::path &aFilepath, std::string const &aCategory )
+    void DotNetRuntime::AddAppAssemblyPath( const fs::path &aFilepath, string_t const &aCategory )
     {
         if( std::find( sRuntimeData->mAppAssemblyFiles.begin(), sRuntimeData->mAppAssemblyFiles.end(), aFilepath ) !=
             sRuntimeData->mAppAssemblyFiles.end() )
@@ -139,15 +139,15 @@ namespace SE::Core
         sRuntimeData->mRootDomain = nullptr;
     }
 
-    MonoString *DotNetRuntime::NewString( std::string const &aString )
+    MonoString *DotNetRuntime::NewString( string_t const &aString )
     {
         return mono_string_new( sRuntimeData->mAppDomain, aString.c_str() );
     }
 
-    std::string DotNetRuntime::NewString( MonoString *aString )
+    string_t DotNetRuntime::NewString( MonoString *aString )
     {
         auto *lCharacters = mono_string_to_utf8( aString );
-        auto  lString     = std::string( mono_string_to_utf8( aString ) );
+        auto  lString     = string_t( mono_string_to_utf8( aString ) );
         mono_free( lCharacters );
 
         return lString;
@@ -174,15 +174,15 @@ namespace SE::Core
         }
     }
 
-    DotNetClass &DotNetRuntime::GetClassType( const std::string &aClassName )
+    DotNetClass &DotNetRuntime::GetClassType( const string_t &aClassName )
     {
         if( sRuntimeData->mClasses.find( aClassName ) != sRuntimeData->mClasses.end() ) return sRuntimeData->mClasses[aClassName];
 
         for( auto const &[lPath, lAssembly] : sRuntimeData->mAssemblies )
         {
             std::size_t lPos       = aClassName.find_last_of( "." );
-            std::string lNameSpace = aClassName.substr( 0, lPos );
-            std::string lClassName = aClassName.substr( lPos + 1 );
+            string_t lNameSpace = aClassName.substr( 0, lPos );
+            string_t lClassName = aClassName.substr( lPos + 1 );
 
             MonoClass *lClass = mono_class_from_name( lAssembly.mImage, lNameSpace.c_str(), lClassName.c_str() );
             if( lClass != nullptr )
@@ -195,7 +195,7 @@ namespace SE::Core
         return DotNetClass{};
     }
 
-    MonoType *DotNetRuntime::GetCoreTypeFromName( std::string &aName )
+    MonoType *DotNetRuntime::GetCoreTypeFromName( string_t &aName )
     {
         MonoType *lMonoType = mono_reflection_type_from_name( aName.data(), sRuntimeData->mCoreAssembly.mImage );
         if( !lMonoType )
@@ -208,7 +208,20 @@ namespace SE::Core
         return lMonoType;
     }
 
-    static void ICall( std::string const &aName, void *aFunction )
+    static MonoString *OpenFile( MonoString *aFilter )
+    {
+        auto  lFilter     = DotNetRuntime::NewString( aFilter );
+        char *lCharacters = lFilter.data();
+
+        for( uint32_t i = 0; i < lFilter.size(); i++ ) lCharacters[i] = ( lCharacters[i] == '|' ) ? '\0' : lCharacters[i];
+        auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(), lFilter.c_str() );
+
+        if( lFilePath.has_value() ) return DotNetRuntime::NewString( lFilePath.value() );
+
+        return DotNetRuntime::NewString( "" );
+    }
+
+    static void ICall( string_t const &aName, void *aFunction )
     {
         auto lFullName = fmt::format( "SpockEngine.{}", aName );
 

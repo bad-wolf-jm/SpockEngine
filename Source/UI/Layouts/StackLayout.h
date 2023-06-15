@@ -32,15 +32,15 @@ namespace SE::Core
 
         ~UIStackLayout() = default;
 
-        void Add( UIComponent *aChild, std::string const &aKey );
-        void SetCurrent( std::string const &aKey );
+        void Add( UIComponent *aChild, string_t const &aKey );
+        void SetCurrent( string_t const &aKey );
 
         ImVec2 RequiredSize();
         
       protected:
-        std::string mCurrent;
+        string_t mCurrent;
 
-        std::unordered_map<std::string, UIComponent *> mChildren;
+        std::unordered_map<string_t, UIComponent *> mChildren;
 
       protected:
         void PushStyles();

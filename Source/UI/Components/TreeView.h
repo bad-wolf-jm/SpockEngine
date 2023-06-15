@@ -19,7 +19,7 @@ namespace SE::Core
 
         void SetIcon(UIImage* aImage);
         void SetIndicator(UIComponent* aImage);
-        void SetText( std::string const &aText );
+        void SetText( string_t const &aText );
         void SetTextColor( math::vec4 aColor );
 
         virtual std::vector<UITreeViewNode*> const& Children();

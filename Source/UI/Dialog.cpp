@@ -8,7 +8,7 @@ namespace SE::Core
         mIsVisible = false;
     }
 
-    UIDialog::UIDialog( std::string aTitle, math::vec2 aSize )
+    UIDialog::UIDialog( string_t aTitle, math::vec2 aSize )
         : mTitle{ aTitle }
         , mSize{ aSize }
     {
@@ -18,7 +18,7 @@ namespace SE::Core
     void UIDialog::PushStyles() {}
     void UIDialog::PopStyles() {}
 
-    void UIDialog::SetTitle( std::string const &aTitle ) { mTitle = aTitle; }
+    void UIDialog::SetTitle( string_t const &aTitle ) { mTitle = aTitle; }
     void UIDialog::SetSize( math::vec2 aSize ) { mSize = aSize; }
     void UIDialog::SetContent( UIComponent *aContent ) { mContent = aContent; }
 

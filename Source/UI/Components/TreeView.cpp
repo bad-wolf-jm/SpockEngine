@@ -65,7 +65,7 @@ namespace SE::Core
         mIndicator->mIsVisible = !( aIcon == nullptr );
     }
 
-    void UITreeViewNode::SetText( std::string const &aText ) { mText->SetText( aText ); }
+    void UITreeViewNode::SetText( string_t const &aText ) { mText->SetText( aText ); }
     void UITreeViewNode::SetTextColor( math::vec4 aColor ) { mText->SetTextColor( aColor ); }
 
     ImVec2 UITreeViewNode::RequiredSize() { return mLayout->RequiredSize(); }

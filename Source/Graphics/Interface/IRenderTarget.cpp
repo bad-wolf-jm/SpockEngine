@@ -8,15 +8,15 @@ namespace SE::Graphics
     {
     }
 
-    Ref<ITexture> IRenderTarget::GetAttachment( std::string const &aKey ) { return mAttachments[aKey].mTexture; }
+    Ref<ITexture> IRenderTarget::GetAttachment( string_t const &aKey ) { return mAttachments[aKey].mTexture; }
 
-    void IRenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+    void IRenderTarget::AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
                                      Ref<ITexture> aFramebufferImage )
     {
         AddAttachment( aAttachmentID, aCreateInfo, aFramebufferImage, eCubeFace::NEGATIVE_Z );
     }
 
-    void IRenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+    void IRenderTarget::AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
                                      Ref<ITexture> aFramebufferImage, eCubeFace aFace )
     {
         mAttachmentInfo.push_back( aCreateInfo );
@@ -27,7 +27,7 @@ namespace SE::Graphics
         mAttachments[aAttachmentID] = sAttachmentResource{ aFramebufferImage, aFace };
     }
 
-    void IRenderTarget::AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
+    void IRenderTarget::AddAttachment( string_t const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat,
                                      math::vec4 aClearColor, bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp,
                                      eAttachmentStoreOp eStoreOp, Ref<ITexture> aFramebufferImage )
     {

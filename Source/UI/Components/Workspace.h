@@ -7,7 +7,7 @@ namespace SE::Core
 {
     struct UIWorkspaceDocument : public UIComponent
     {
-        std::string mName;
+        string_t mName;
 
         bool mOpen      = true;
         bool mOpenPrev  = true;

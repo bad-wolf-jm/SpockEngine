@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Entity/Collection.h"
+#include "Core/String.h"
 
 // #include "Core/CUDA/Array/MultiTensor.h"
 // #include "TensorOps/Scope.h"

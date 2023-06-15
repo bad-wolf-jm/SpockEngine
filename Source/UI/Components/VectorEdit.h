@@ -13,17 +13,17 @@ namespace SE::Core
       public:
         UIVectorInputBase( int aDimension );
 
-        UIVectorInputBase( std::string const &aText );
+        UIVectorInputBase( string_t const &aText );
 
         ImVec2 RequiredSize();
         void   OnChanged( std::function<void( math::vec4 )> aOnChanged );
-        void   SetFormat( std::string const &aFormat ) { mFormat = aFormat; }
+        void   SetFormat( string_t const &aFormat ) { mFormat = aFormat; }
 
       protected:
         int         mDimension{};
         math::vec4  mValues{};
         math::vec4  mResetValues{};
-        std::string mFormat = "%.2f";
+        string_t mFormat = "%.2f";
 
       public:
         std::function<void( math::vec4 )> mOnChanged;

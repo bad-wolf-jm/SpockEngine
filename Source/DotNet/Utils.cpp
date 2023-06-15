@@ -14,7 +14,7 @@
 
 namespace SE::Core::Mono::Utils
 {
-    static std::unordered_map<std::string, eScriptFieldType> sScriptFieldTypeMap = {
+    static std::unordered_map<string_t, eScriptFieldType> sScriptFieldTypeMap = {
         { "System.Single", eScriptFieldType::Float },  { "System.Double", eScriptFieldType::Double },
         { "System.Boolean", eScriptFieldType::Bool },  { "System.Char", eScriptFieldType::Char },
         { "System.Int16", eScriptFieldType::Short },   { "System.Int32", eScriptFieldType::Int },
@@ -57,7 +57,7 @@ namespace SE::Core::Mono::Utils
             return nullptr;
         }
 
-        std::string   lPathString = lAssemblyPath.string();
+        string_t   lPathString = lAssemblyPath.string();
         MonoAssembly *lAssembly   = mono_assembly_load_from_full( lImage, lPathString.c_str(), &lStatus, 0 );
         mono_image_close( lImage );
 
@@ -88,16 +88,16 @@ namespace SE::Core::Mono::Utils
 
     eScriptFieldType MonoTypeToScriptFieldType( MonoType *aMonoType )
     {
-        std::string typeName = mono_type_get_name( aMonoType );
+        string_t typeName = mono_type_get_name( aMonoType );
         auto        it       = sScriptFieldTypeMap.find( typeName );
         if( it == sScriptFieldTypeMap.end() ) return eScriptFieldType::None;
 
         return it->second;
     }
 
-    std::string GetClassFullName( const char *aNameSpace, const char *aClassName )
+    string_t GetClassFullName( const char *aNameSpace, const char *aClassName )
     {
-        std::string lFullName;
+        string_t lFullName;
         if( strlen( aNameSpace ) != 0 )
             lFullName = fmt::format( "{}.{}", aNameSpace, aClassName );
         else
@@ -106,7 +106,7 @@ namespace SE::Core::Mono::Utils
         return lFullName;
     }
 
-    std::string GetClassFullName( MonoClass *aClass )
+    string_t GetClassFullName( MonoClass *aClass )
     {
         const char *lNameSpace = mono_class_get_namespace( aClass );
         const char *lClassName = mono_class_get_name( aClass );

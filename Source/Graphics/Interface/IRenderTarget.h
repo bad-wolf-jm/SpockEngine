@@ -80,13 +80,13 @@ namespace SE::Graphics
 
         ~IRenderTarget() = default;
 
-        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+        void AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
                             Ref<ITexture> aFramebufferImage );
 
-        void AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
+        void AddAttachment( string_t const &aAttachmentID, sAttachmentDescription const &aCreateInfo,
                             Ref<ITexture> aFramebufferImage, eCubeFace aFace );
 
-        void AddAttachment( std::string const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
+        void AddAttachment( string_t const &aAttachmentID, eAttachmentType aType, eColorFormat aFormat, math::vec4 aClearColor,
                             bool aIsSampled, bool aIsPresented, eAttachmentLoadOp aLoadOp, eAttachmentStoreOp eStoreOp,
                             Ref<ITexture> aFramebufferImage );
 
@@ -97,7 +97,7 @@ namespace SE::Graphics
         virtual void EndRender();
         virtual void Present();
 
-        Ref<ITexture> GetAttachment( std::string const &aKey );
+        Ref<ITexture> GetAttachment( string_t const &aKey );
         uint32_t      GetColorAttachmentCount() { return mColorAttachmentCount; }
 
         template <typename _GCSubtype>
@@ -117,9 +117,9 @@ namespace SE::Graphics
         uint32_t mImageCount  = 1;
 
         std::vector<sAttachmentDescription> mAttachmentInfo = {};
-        std::vector<std::string>            mAttachmentIDs  = {};
+        std::vector<string_t>            mAttachmentIDs  = {};
 
-        std::unordered_map<std::string, sAttachmentResource> mAttachments = {};
+        std::unordered_map<string_t, sAttachmentResource> mAttachments = {};
 
         uint32_t mColorAttachmentCount = 0;
     };

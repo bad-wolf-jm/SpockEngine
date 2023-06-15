@@ -9,16 +9,16 @@ namespace SE::Core
       public:
         UIProgressBar() = default;
 
-        UIProgressBar( std::string const &aText );
+        UIProgressBar( string_t const &aText );
 
-        void SetText( std::string const &aValue );
+        void SetText( string_t const &aValue );
         void SetTextColor( math::vec4 aColor );
         void SetProgressValue( float aValue );
         void SetProgressColor( math::vec4 aColor );
         void SetThickness( float aValue );
 
       protected:
-        std::string mText;
+        string_t mText;
         ImVec4      mTextColor;
         float       mValue;
         ImVec4      mProgressColor;

@@ -7,7 +7,7 @@ namespace SE::Core
 {
     struct UITableColumn
     {
-        std::string mHeader;
+        string_t mHeader;
         float       mInitialSize = 10.0f;
 
         std::vector<uint32_t>      mBackgroundColor;
@@ -15,7 +15,7 @@ namespace SE::Core
         std::vector<UIComponent *> mToolTip;
 
         UITableColumn() = default;
-        UITableColumn( std::string aHeader, float aInitialSize );
+        UITableColumn( string_t aHeader, float aInitialSize );
 
         ~UITableColumn() = default;
 
@@ -26,13 +26,13 @@ namespace SE::Core
 
     struct UIFloat64Column : public UITableColumn
     {
-        std::string mFormat;
-        std::string mNaNFormat;
+        string_t mFormat;
+        string_t mNaNFormat;
 
         std::vector<double> mData;
 
         UIFloat64Column() = default;
-        UIFloat64Column( std::string aHeader, float aInitialSize, std::string aFormat, std::string aNaNFormat );
+        UIFloat64Column( string_t aHeader, float aInitialSize, string_t aFormat, string_t aNaNFormat );
         ~UIFloat64Column() = default;
 
         uint32_t Size();
@@ -45,7 +45,7 @@ namespace SE::Core
         std::vector<uint32_t> mData;
 
         UIUint32Column() = default;
-        UIUint32Column( std::string aHeader, float aInitialSize );
+        UIUint32Column( string_t aHeader, float aInitialSize );
         ~UIUint32Column() = default;
 
         uint32_t Size();
@@ -55,10 +55,10 @@ namespace SE::Core
 
     struct UIStringColumn : public UITableColumn
     {
-        std::vector<std::string> mData;
+        std::vector<string_t> mData;
 
         UIStringColumn() = default;
-        UIStringColumn( std::string aHeader, float aInitialSize );
+        UIStringColumn( string_t aHeader, float aInitialSize );
         ~UIStringColumn() = default;
 
         uint32_t Size();

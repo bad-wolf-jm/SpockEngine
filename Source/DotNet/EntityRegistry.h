@@ -7,7 +7,7 @@
 
 #include "Core/Entity/Collection.h"
 #include "Core/Logging.h"
-// #include "Scene/Components.h"
+#include "Core/String.h"
 
 #include "Runtime.h"
 
@@ -33,10 +33,10 @@ namespace SE::Core
         }
 
         template <typename _Ty>
-        MonoType *RetrieveMonoTypeFromNamespace( std::string const &aNamespace )
+        MonoType *RetrieveMonoTypeFromNamespace( string_t const &aNamespace )
         {
             std::string_view lStructName   = GetTypeName<_Ty>();
-            std::string      lMonoTypeName = fmt::format( "{}.{}", aNamespace, lStructName );
+            string_t      lMonoTypeName = fmt::format( "{}.{}", aNamespace, lStructName );
 
             return DotNetRuntime::GetCoreTypeFromName( lMonoTypeName );
         }

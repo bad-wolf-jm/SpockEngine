@@ -52,13 +52,13 @@ void LoadConfiguration( fs::path aConfigurationFile, math::ivec2 &aWindowSize, m
     {
         aUIConfiguration.mFontSize = lUIProperties["font_size"].as<int>();
 
-        aUIConfiguration.mMainFont       = lFontRoot / lUIProperties["main_font"]["regular"].as<std::string>();
-        aUIConfiguration.mBoldFont       = lFontRoot / lUIProperties["main_font"]["bold"].as<std::string>();
-        aUIConfiguration.mItalicFont     = lFontRoot / lUIProperties["main_font"]["italic"].as<std::string>();
-        aUIConfiguration.mBoldItalicFont = lFontRoot / lUIProperties["main_font"]["bold_italic"].as<std::string>();
+        aUIConfiguration.mMainFont       = lFontRoot / lUIProperties["main_font"]["regular"].as<string_t>();
+        aUIConfiguration.mBoldFont       = lFontRoot / lUIProperties["main_font"]["bold"].as<string_t>();
+        aUIConfiguration.mItalicFont     = lFontRoot / lUIProperties["main_font"]["italic"].as<string_t>();
+        aUIConfiguration.mBoldItalicFont = lFontRoot / lUIProperties["main_font"]["bold_italic"].as<string_t>();
 
-        aUIConfiguration.mIconFont = fs::path( lUIProperties["icon_font"].as<std::string>() );
-        aUIConfiguration.mMonoFont = fs::path( lUIProperties["mono_font"].as<std::string>() );
+        aUIConfiguration.mIconFont = fs::path( lUIProperties["icon_font"].as<string_t>() );
+        aUIConfiguration.mMonoFont = fs::path( lUIProperties["mono_font"].as<string_t>() );
     }
 }
 
@@ -110,7 +110,7 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
 
     lProgramArguments->add_argument( "-a", "--application" )
         .help( "Specify input file" )
-        .default_value( std::string{ "" } );
+        .default_value( string_t{ "" } );
 
     lProgramArguments->add_argument( "-x", "--x" )
         .help( "Specify output file" )
@@ -155,7 +155,7 @@ fs::path GetCwd()
 {
     char buff[MAX_PATH];
     _getcwd( buff, MAX_PATH );
-    fs::path lCwd = std::string( buff );
+    fs::path lCwd = string_t( buff );
 
     return lCwd;
 }

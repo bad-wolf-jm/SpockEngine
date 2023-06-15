@@ -9,14 +9,14 @@ namespace SE::Graphics
         eShaderStageTypeFlags mShaderType;
 
         fs::path    mPath;
-        std::string mEntryPoint;
+        string_t mEntryPoint;
     };
 
     uint32_t BufferDataTypeSize( eBufferDataType aType );
 
     struct sBufferLayoutElement
     {
-        std::string     mName;
+        string_t     mName;
         eBufferDataType mType;
         uint32_t        mBinding;
         uint32_t        mLocation;
@@ -24,7 +24,7 @@ namespace SE::Graphics
         size_t          mOffset;
 
         sBufferLayoutElement() = default;
-        sBufferLayoutElement( const std::string &aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation );
+        sBufferLayoutElement( const string_t &aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation );
     };
 
     struct sDepthTesting
@@ -66,13 +66,13 @@ namespace SE::Graphics
         virtual void Build() = 0;
 
       public:
-        void SetShader( eShaderStageTypeFlags aShaderType, fs::path aPath, std::string aEntryPoint );
+        void SetShader( eShaderStageTypeFlags aShaderType, fs::path aPath, string_t aEntryPoint );
         void SetCulling( eFaceCulling aCulling );
         void SetLineWidth( float aLineWidth );
         void SetDepthParameters( bool aDepthWriteEnable, bool aDepthTestEnable, eDepthCompareOperation aDepthComparison );
         void AddPushConstantRange( ShaderStageType aShaderStage, uint32_t aOffset, uint32_t aSize );
 
-        void AddInput( std::string aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation, bool aInstanced = false );
+        void AddInput( string_t aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation, bool aInstanced = false );
 
         template <typename _Ty>
         void AddPushConstantRange( ShaderStageType aShaderStage, uint32_t aOffset )

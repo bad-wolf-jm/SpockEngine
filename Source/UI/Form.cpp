@@ -3,7 +3,7 @@
 
 namespace SE::Core
 {
-    UIForm::UIForm( std::string const &aTitle )
+    UIForm::UIForm( string_t const &aTitle )
         : mTitle{ aTitle }
     {
     }
@@ -11,7 +11,7 @@ namespace SE::Core
     void UIForm::PushStyles() {}
     void UIForm::PopStyles() {}
 
-    void UIForm::SetTitle( std::string const &aTitle ) { mTitle = aTitle; }
+    void UIForm::SetTitle( string_t const &aTitle ) { mTitle = aTitle; }
     void UIForm::SetContent( UIComponent *aContent ) { mContent = aContent; }
     void UIForm::SetSize( float aWidth, float aHeight )
     {

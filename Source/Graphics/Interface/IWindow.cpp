@@ -8,7 +8,7 @@
 namespace SE::Core
 {
 
-    IWindow::IWindow( int aWidth, int aHeight, std::string aTitle )
+    IWindow::IWindow( int aWidth, int aHeight, string_t aTitle )
         : mWidth{ aWidth }
         , mHeight{ aHeight }
         , mWindowName{ aTitle }

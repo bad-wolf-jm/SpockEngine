@@ -55,7 +55,7 @@ namespace SE::Core
     {
       public:
         UIContext( Ref<SE::Core::IWindow> aWindow, Ref<IGraphicContext> aDevice, Ref<IRenderContext> aRenderContext,
-                   std::string &aImGuiConfigPath, UIConfiguration const &aUIConfiguration );
+                   string_t &aImGuiConfigPath, UIConfiguration const &aUIConfiguration );
         ~UIContext();
 
         void BeginFrame();
@@ -73,7 +73,7 @@ namespace SE::Core
 
         ImGuiContext  *mImGUIOverlay;
         ImPlotContext *mImPlotContext;
-        std::string    mImGuiConfigPath;
+        string_t    mImGuiConfigPath;
 
         UIStyle mUIStyle;
 

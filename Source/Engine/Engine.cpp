@@ -90,7 +90,7 @@ namespace SE::Core
 
     void Engine::SetInitialWindowSize( math::ivec2 a_Size ) { mInitialMainWindowSize = a_Size; }
 
-    void Engine::SetImGuiConfigurationFile( std::string a_Path ) { mImGuiConfigPath = a_Path; }
+    void Engine::SetImGuiConfigurationFile( string_t a_Path ) { mImGuiConfigPath = a_Path; }
 
     void Engine::ExecuteMainThreadQueue()
     {
@@ -122,7 +122,7 @@ namespace SE::Core
         return { w, h };
     }
 
-    std::string Engine::GetImGuiConfigurationFile() { return mImGuiConfigPath; }
+    string_t Engine::GetImGuiConfigurationFile() { return mImGuiConfigPath; }
 
     __declspec(dllexport) std::unique_ptr<Engine> mUniqueInstance = nullptr;
 

@@ -9,22 +9,22 @@ namespace SE::Core
       public:
         UITextInput() = default;
 
-        UITextInput( std::string const &aHintText );
+        UITextInput( string_t const &aHintText );
 
-        void SetHintText( std::string const &aHintText );
+        void SetHintText( string_t const &aHintText );
         void SetTextColor( math::vec4 aColor );
 
-        std::string &GetText();
+        string_t &GetText();
         void         SetBuffersize( uint32_t aSize );
-        void         OnTextChanged( std::function<void( std::string aText )> aOnTextChanged );
+        void         OnTextChanged( std::function<void( string_t aText )> aOnTextChanged );
 
       protected:
-        std::string mHintText;
+        string_t mHintText;
         ImVec4      mTextColor;
         uint32_t    mBufferSize = 0;
-        std::string mBuffer;
+        string_t mBuffer;
 
-        std::function<void( std::string aText )> mOnTextChanged;
+        std::function<void( string_t aText )> mOnTextChanged;
 
       protected:
         void PushStyles();

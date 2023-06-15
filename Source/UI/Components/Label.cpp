@@ -5,7 +5,7 @@
 
 namespace SE::Core
 {
-    UILabel::UILabel( std::string const &aText )
+    UILabel::UILabel( string_t const &aText )
         : mText{ aText }
     {
     }
@@ -13,7 +13,7 @@ namespace SE::Core
     void UILabel::PushStyles() {}
     void UILabel::PopStyles() {}
 
-    void UILabel::SetText( std::string const &aText ) { mText = aText; }
+    void UILabel::SetText( string_t const &aText ) { mText = aText; }
     void UILabel::SetTextColor( math::vec4 aColor ) { mTextColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
 
     ImVec2 UILabel::RequiredSize()

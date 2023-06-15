@@ -3,6 +3,7 @@
 #include <type_traits>
 
 #include "Core/Entity/Collection.h"
+#include "Core/String.h"
 
 namespace SE::Core
 {

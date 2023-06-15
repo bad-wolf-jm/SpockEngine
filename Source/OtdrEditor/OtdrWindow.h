@@ -34,8 +34,8 @@ namespace SE::OtdrEditor
     class OtdrWindow
     {
       public:
-        std::string ApplicationIcon = "";
-        std::string ApplicationName = "";
+        string_t ApplicationIcon = "";
+        string_t ApplicationName = "";
 
         Ref<Engine> mEngineLoop = nullptr;
 

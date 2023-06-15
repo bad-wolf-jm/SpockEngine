@@ -27,14 +27,14 @@ namespace SE::Graphics
         mPushConstants.push_back( sPushConstantRange{ aShaderStage, aOffset, aSize } );
     }
 
-    void IGraphicsPipeline::SetShader( eShaderStageTypeFlags aShaderType, fs::path aPath, std::string aEntryPoint )
+    void IGraphicsPipeline::SetShader( eShaderStageTypeFlags aShaderType, fs::path aPath, string_t aEntryPoint )
     {
         mShaderStages.push_back( sShaderData{ aShaderType, aPath, aEntryPoint } );
     }
 
     void IGraphicsPipeline::AddDescriptorSet( Ref<IDescriptorSetLayout> aDescriptorSet ) { mDescriptorSets.push_back( aDescriptorSet ); }
 
-    void IGraphicsPipeline::AddInput( std::string aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation,
+    void IGraphicsPipeline::AddInput( string_t aName, eBufferDataType aType, uint32_t aBinding, uint32_t aLocation,
                                       bool aInstanced )
     {
         auto &lInputDescription = ( aInstanced ? mInstancedInputLayout.emplace_back() : mInputLayout.emplace_back() );
@@ -74,7 +74,7 @@ namespace SE::Graphics
     };
 
 
-    sBufferLayoutElement::sBufferLayoutElement( const std::string &aName, eBufferDataType aType, uint32_t aBinding,
+    sBufferLayoutElement::sBufferLayoutElement( const string_t &aName, eBufferDataType aType, uint32_t aBinding,
                                                 uint32_t aLocation )
         : mName( aName )
         , mType( aType )
