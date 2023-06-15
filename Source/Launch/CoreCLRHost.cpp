@@ -92,40 +92,32 @@ namespace SE::Core
 
         auto lApplicationClassName = fmt::format( "{}.{}", aApplicationName, aApplicationName );
 
-        // Configure delegate
-        std::wstring lDelegateType0 =
-            make_ascii_string( fmt::format( "{}+{}, {}", lApplicationClassName, "ConfigureDelegate", aApplicationName ) );
-        std::wstring lDelegateType1 =
-            make_ascii_string( fmt::format( "{}+{}, {}", lApplicationClassName, "TickDelegate", aApplicationName ) );
-        std::wstring lDelegateType3 =
-            make_ascii_string( fmt::format( "{}+{}, {}", lApplicationClassName, "UpdateDelegate", aApplicationName ) );
-
         std::wstring lAssemblyPath     = make_ascii_string( aAssemblyPath );
         std::wstring lApplicationClass = make_ascii_string( fmt::format( "{}, {}", lApplicationClassName, aApplicationName ) );
 
-        GetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"Configure", lDelegateType0.c_str(), nullptr,
+        std::wstring lConfigureDelegate =
+            make_ascii_string( fmt::format( "{}+{}, {}", lApplicationClassName, "ConfigureDelegate", aApplicationName ) );
+        GetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"Configure", lConfigureDelegate.c_str(), nullptr,
                             (void **)&mConfigureDelegate );
         if( mConfigureDelegate == nullptr ) mConfigureDelegate = ConfigureDelegateDefault;
+        GetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"Teardown", lConfigureDelegate.c_str(), nullptr,
+                            (void **)&mTeardownDelegate );
+        if( mTeardownDelegate == nullptr ) mTeardownDelegate = TeardownDelegateDefault;
 
-        // Update delegate
-        GetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"Update", lDelegateType1.c_str(), nullptr,
+        std::wstring lTickDelegate =
+            make_ascii_string( fmt::format( "{}+{}, {}", lApplicationClassName, "TickDelegate", aApplicationName ) );
+        GetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"Update", lTickDelegate.c_str(), nullptr,
                             (void **)&mUpdateDelegate );
         if( mUpdateDelegate == nullptr ) mUpdateDelegate = UpdateDelegateDefault;
-
-        // Update delegate
-        GetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"UpdateUI", lDelegateType1.c_str(), nullptr,
+        GetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"UpdateUI", lTickDelegate.c_str(), nullptr,
                             (void **)&mUpdateUIDelegate );
         if( mUpdateUIDelegate == nullptr ) mUpdateUIDelegate = UpdateUIDelegateDefault;
 
-        // Update delegate
-        GetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"UpdateMenu", lDelegateType3.c_str(), nullptr,
+        std::wstring lUpdateMenuDelegate =
+            make_ascii_string( fmt::format( "{}+{}, {}", lApplicationClassName, "UpdateDelegate", aApplicationName ) );
+        GetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"UpdateMenu", lUpdateMenuDelegate.c_str(), nullptr,
                             (void **)&mUpdateMenuDelegate );
         if( mUpdateMenuDelegate == nullptr ) mUpdateMenuDelegate = UpdateMenuDelegateDefault;
-
-        // Teardown delegate
-        GetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"Teardown", lDelegateType0.c_str(), nullptr,
-                            (void **)&mTeardownDelegate );
-        if( mTeardownDelegate == nullptr ) mTeardownDelegate = TeardownDelegateDefault;
     }
 
     void CoreCLRHost::Configure( string_t aConfigPath )
