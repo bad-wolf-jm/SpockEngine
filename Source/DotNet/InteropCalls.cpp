@@ -5,8 +5,6 @@
 
 #include "Engine/Engine.h"
 
-// #include <string>
-
 namespace SE::Core::Interop
 {
     static vec2 vec( CLRVec2 v ) { return vec2{ v.x, v.y }; }
