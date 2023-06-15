@@ -32,12 +32,7 @@ namespace SE::Core
         return utf16;
     }
 
-    CoreCLRHost::CoreCLRHost( std::string const &aDomainName, std::string const &aExePath, std::string const &aCoreRoot,
-                              std::string const &aCoreLibraries )
-        : mHostPath{ aExePath }
-        , mDomainName{ aDomainName }
-        , mCoreRoot{ aCoreRoot }
-        , mCoreLibraries{ aCoreLibraries }
+    CoreCLRHost::CoreCLRHost()
     {
         TryLoadCoreCLR();
 
@@ -61,11 +56,9 @@ namespace SE::Core
             return;
         }
 
-        int rc = mFxrCreateDelegate( mCoreCLR, hdt_load_assembly_and_get_function_pointer,
-                                     (void **)&load_assembly_and_get_function_pointer );
+        int rc = mFxrCreateDelegate( mCoreCLR, hdt_load_assembly_and_get_function_pointer, (void **)&GetFunctionPointer );
 
-        if( ( rc != 0 ) || ( load_assembly_and_get_function_pointer == nullptr ) )
-            Logging::Info( "coreclr_initialize failed - Error: {:#08x}\n", rc );
+        if( ( rc != 0 ) || ( GetFunctionPointer == nullptr ) ) Logging::Info( "coreclr_initialize failed - Error: {:#08x}\n", rc );
 
         mFxrShutdown( mCoreCLR );
     }
@@ -91,56 +84,47 @@ namespace SE::Core
         mNetHostLibraryHandle = ::LoadLibraryW( buffer );
     }
 
-    void CoreCLRHost::Shutdown()
+    void CoreCLRHost::Shutdown() {}
+
+    void CoreCLRHost::LoadApplicationAssembly( std::string const &aAssemblyPath, std::string const &aApplicationName )
     {
-    }
-
-    void CoreCLRHost::LoadApplicationAssembly( std::string const &aAssemblyPath, std::string const &aApplicationClass )
-    {
-        auto lPath = std::filesystem::path( aAssemblyPath );
-
-        mAppPath = lPath.parent_path().string() + "\\";
-
-        std::stringstream lNativePath;
-        lNativePath << mAppPath << ";" << mNativeDllSearchDirectories;
-        mNativeDllSearchDirectories = lNativePath.str();
-
-        auto lFile = "OlmDevTool"; // lPath.filename();
-
         Initialize();
+
+        auto lApplicationClassName = fmt::format( "{}.{}", aApplicationName, aApplicationName );
 
         // Configure delegate
         std::wstring lDelegateType0 =
-            make_ascii_string( fmt::format( "{}+{}, {}", aApplicationClass, "ConfigureDelegate", "OlmDevTool" ) );
-        std::wstring lDelegateType1 = make_ascii_string( fmt::format( "{}+{}, {}", aApplicationClass, "TickDelegate", "OlmDevTool" ) );
+            make_ascii_string( fmt::format( "{}+{}, {}", lApplicationClassName, "ConfigureDelegate", aApplicationName ) );
+        std::wstring lDelegateType1 =
+            make_ascii_string( fmt::format( "{}+{}, {}", lApplicationClassName, "TickDelegate", aApplicationName ) );
         std::wstring lDelegateType3 =
-            make_ascii_string( fmt::format( "{}+{}, {}", aApplicationClass, "UpdateDelegate", "OlmDevTool" ) );
+            make_ascii_string( fmt::format( "{}+{}, {}", lApplicationClassName, "UpdateDelegate", aApplicationName ) );
 
         std::wstring lAssemblyPath     = make_ascii_string( aAssemblyPath );
-        std::wstring lApplicationClass = make_ascii_string( fmt::format( "{}, {}", aApplicationClass, "OlmDevTool" ) );
+        std::wstring lApplicationClass = make_ascii_string( fmt::format( "{}, {}", lApplicationClassName, aApplicationName ) );
 
-        load_assembly_and_get_function_pointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"Configure", lDelegateType0.c_str(),
-                                                nullptr, (void **)&mConfigureDelegate );
+        GetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"Configure", lDelegateType0.c_str(), nullptr,
+                            (void **)&mConfigureDelegate );
         if( mConfigureDelegate == nullptr ) mConfigureDelegate = ConfigureDelegateDefault;
 
         // Update delegate
-        load_assembly_and_get_function_pointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"Update", lDelegateType1.c_str(),
-                                                nullptr, (void **)&mUpdateDelegate );
+        GetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"Update", lDelegateType1.c_str(), nullptr,
+                            (void **)&mUpdateDelegate );
         if( mUpdateDelegate == nullptr ) mUpdateDelegate = UpdateDelegateDefault;
 
         // Update delegate
-        load_assembly_and_get_function_pointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"UpdateUI", lDelegateType1.c_str(),
-                                                nullptr, (void **)&mUpdateUIDelegate );
+        GetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"UpdateUI", lDelegateType1.c_str(), nullptr,
+                            (void **)&mUpdateUIDelegate );
         if( mUpdateUIDelegate == nullptr ) mUpdateUIDelegate = UpdateUIDelegateDefault;
 
         // Update delegate
-        load_assembly_and_get_function_pointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"UpdateMenu",
-                                                lDelegateType3.c_str(), nullptr, (void **)&mUpdateMenuDelegate );
+        GetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"UpdateMenu", lDelegateType3.c_str(), nullptr,
+                            (void **)&mUpdateMenuDelegate );
         if( mUpdateMenuDelegate == nullptr ) mUpdateMenuDelegate = UpdateMenuDelegateDefault;
 
         // Teardown delegate
-        load_assembly_and_get_function_pointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"Teardown", lDelegateType0.c_str(),
-                                                nullptr, (void **)&mTeardownDelegate );
+        GetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"Teardown", lDelegateType0.c_str(), nullptr,
+                            (void **)&mTeardownDelegate );
         if( mTeardownDelegate == nullptr ) mTeardownDelegate = TeardownDelegateDefault;
     }
 

@@ -26,7 +26,6 @@
 
 #include "CoreCLRHost.h"
 
-
 using namespace SE::Core;
 using namespace SE::Graphics;
 using namespace SE::Core::UI;
@@ -211,30 +210,7 @@ int main( int argc, char **argv )
     SE::Core::Engine::Initialize( lWindowSize, lWindowPosition, lLocalConfigFolder / "OtdrTool" / "Config" / "imgui.ini",
                                   lUIConfiguration );
 
-    fs::path lCoreCLRPath = "C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\7.0.5";
-    if( auto lCoreClrPathOverride = lProgramArguments->present<std::string>( "--coreclr-path" ) )
-    {
-        if( fs::exists( lCoreClrPathOverride.value() ) )
-        {
-            lCoreCLRPath = lCoreClrPathOverride.value();
-        }
-    }
-    else
-    {
-        const char *lPathFromEnv = std::getenv( "CORECLR_PATH" );
-        if( lPathFromEnv && fs::exists( lPathFromEnv ) )
-        {
-            lCoreCLRPath = lPathFromEnv;
-        }
-    }
-
-    fs::path    lCoreCLRLibraries = "";
-    CoreCLRHost lCoreCLR( "SEClrHost", lExePath, lCoreCLRPath.string(), lCoreCLRLibraries.string() );
-
-    // Retrieve the Mono core assembly path
-    // fs::path lCoreScriptingPath = "c:/GitLab/SpockEngine/Source/ScriptCore/Build/Debug/SE_Core.dll";
-
-    // DotNetRuntime::Initialize( lMonoPath, lCoreScriptingPath );
+    CoreCLRHost lCoreCLR;
 
     // Load the managed part of the application, whose name is given at the command line
     auto     lApplicationName       = lProgramArguments->get<std::string>( "--application" );
@@ -244,18 +220,14 @@ int main( int argc, char **argv )
         lApplicationConfigPath = lLocalConfigFolder / "OtdrTool" / "Config" / fmt::format( "{}.yaml", lApplicationName );
         auto lApplicationAssembly =
             fs::path( "D:\\Build\\Lib" ) / "debug" / "develop" / lApplicationName / fmt::format( "{}.dll", lApplicationName );
-        // if( fs::exists( lApplicationAssembly ) ) DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
 
         if( !fs::exists( lApplicationConfigPath ) )
             SE::Logging::Info( "Project file '{}' does not exist", lApplicationConfigPath.string() );
 
-        lCoreCLR.LoadApplicationAssembly( lApplicationAssembly.string(), fmt::format( "{}.{}", lApplicationName, lApplicationName ) );
+        lCoreCLR.LoadApplicationAssembly( lApplicationAssembly.string(), lApplicationName );
     }
 
-    // DotNetRuntime::ReloadAssemblies();
-
-    SE::OtdrEditor::Application lEditorApplication(lCoreCLR);
-    // lEditorApplication.mManaged = &lCoreCLR;
+    SE::OtdrEditor::Application lEditorApplication( lCoreCLR );
 
     if( !lApplicationName.empty() )
         lEditorApplication.Init( lApplicationConfigPath );
