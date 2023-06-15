@@ -1,12 +1,12 @@
 #pragma once
 
-#include <filesystem>
+#include "Core/String.h"
 
 namespace fs = std::filesystem;
 
 namespace SE::Core
 {
 
-    fs::path GetResourcePath( fs::path a_RelativePath );
+    path_t GetResourcePath( path_t a_RelativePath );
 
 }

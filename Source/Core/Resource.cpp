@@ -3,9 +3,9 @@
 namespace SE::Core
 {
 
-    // static fs::path a_ResourceRoot = "Deps\\LTSimulationEngine\\Resources";
-    static fs::path a_ResourceRoot = "C:\\GitLab\\SpockEngine\\Resources";
+    // static path_t a_ResourceRoot = "Deps\\LTSimulationEngine\\Resources";
+    static path_t a_ResourceRoot = "C:\\GitLab\\SpockEngine\\Resources";
 
-    fs::path GetResourcePath( fs::path a_RelativePath ) { return a_ResourceRoot / a_RelativePath; }
+    path_t GetResourcePath( path_t a_RelativePath ) { return a_ResourceRoot / a_RelativePath; }
 
 } // namespace SE::Core

@@ -14,7 +14,7 @@ namespace SE::Core
     Ref<UIImage> mCloseFolder = nullptr;
     Ref<UIImage> mDefaultFile = nullptr;
 
-    UIFileTreeNode::UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent, fs::path const &aPath, string_t const &aName )
+    UIFileTreeNode::UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent, path_t const &aPath, string_t const &aName )
         : UITreeViewNode( aTreeView, aParent )
         , mPath{ aPath }
         , mName{ aName }
@@ -42,7 +42,7 @@ namespace SE::Core
             fs::directory_iterator lIterator;
 
             lIterator = fs::directory_iterator( lFullPath );
-            std::vector<fs::path> lFolders;
+            std::vector<path_t> lFolders;
             std::copy_if( fs::begin( lIterator ), fs::end( lIterator ), std::back_inserter( lFolders ),
                           [&]( auto const &aPath ) { return fs::is_directory( aPath ); } );
             std::sort( lFolders.begin(), lFolders.end(),
@@ -50,7 +50,7 @@ namespace SE::Core
                        { return s1.filename().string().compare( s2.filename().string() ) <= 0; } );
 
             lIterator = fs::directory_iterator( lFullPath );
-            std::vector<fs::path> lFiles;
+            std::vector<path_t> lFiles;
             std::copy_if( fs::begin( lIterator ), fs::end( lIterator ), std::back_inserter( lFiles ),
                           [&]( auto const &aPath ) { return fs::is_regular_file( aPath ); } );
             std::sort( lFiles.begin(), lFiles.end(),
@@ -65,7 +65,7 @@ namespace SE::Core
         return UITreeViewNode::Children();
     }
 
-    UIFileTreeNode *UIFileTreeNode::Add( fs::path const &aPath )
+    UIFileTreeNode *UIFileTreeNode::Add( path_t const &aPath )
     {
         auto lNewChild = new UIFileTreeNode( (UIFileTree *)mTreeView, this, aPath.parent_path(), aPath.filename().string() );
         mChildren.push_back( lNewChild );
@@ -83,5 +83,22 @@ namespace SE::Core
             mDefaultFile = New<UIImage>( "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\File.png", math::vec2{ 20, 20 } );
     }
 
-    UIFileTreeNode *UIFileTree::Add( fs::path const &aPath ) { return ( (UIFileTreeNode *)mRoot )->Add( aPath ); }
+    UIFileTreeNode *UIFileTree::Add( path_t const &aPath ) { return ( (UIFileTreeNode *)mRoot )->Add( aPath ); }
+
+    // void *UIFileTree::UIFileTree_Create()
+    // {
+    //     auto lNewLabel = new UIFileTree();
+
+    //     return static_cast<void *>( lNewLabel );
+    // }
+
+    // void UIFileTree::UIFileTree_Destroy( void *aInstance ) { delete static_cast<UIFileTree *>( aInstance ); }
+
+    // void *UIFileTree::UIFileTree_Add( void *aInstance, void *aPath )
+    // {
+    //     auto lInstance = static_cast<UIFileTree *>( aInstance );
+    //     auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aPath ) );
+
+    //     return static_cast<void *>( lInstance->Add( lString ) );
+    // }
 } // namespace SE::Core

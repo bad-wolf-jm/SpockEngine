@@ -18,10 +18,10 @@ namespace SE::Core
       public:
         DotNetClass() = default;
         DotNetClass( MonoType *aMonoClass );
-        DotNetClass( const string_t &aClassNamespace, const string_t &aClassName, MonoImage *aImage, fs::path const &aDllPPath,
+        DotNetClass( const string_t &aClassNamespace, const string_t &aClassName, MonoImage *aImage, path_t const &aDllPPath,
                      bool aIsNested = false );
         DotNetClass( MonoClass *aClass, const string_t &aClassNamespace, const string_t &aClassName, MonoImage *aImage,
-                     fs::path const &aDllPPath, bool aIsNested = false );
+                     path_t const &aDllPPath, bool aIsNested = false );
 
         Ref<DotNetInstance> DoInstantiate();
 
@@ -82,7 +82,7 @@ namespace SE::Core
         operator bool() const { return ( mMonoClass != nullptr ); }
 
       private:
-        fs::path                   mDllPath;
+        path_t                   mDllPath;
         DotNetClass               *mParent;
         std::vector<DotNetClass *> mDerived;
 

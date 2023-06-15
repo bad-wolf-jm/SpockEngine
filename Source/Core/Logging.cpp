@@ -26,6 +26,6 @@ namespace SE::Logging
 
     std::vector<LogMessage> &GetLogMessages() { return sLogMessages; }
 
-    void SetLogOutputFile( fs::path aFilePath ) {}
+    void SetLogOutputFile( path_t aFilePath ) {}
 
 } // namespace SE::Logging

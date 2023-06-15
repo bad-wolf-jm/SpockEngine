@@ -8,7 +8,7 @@ namespace SE::Graphics
     {
         eShaderStageTypeFlags mShaderType;
 
-        fs::path    mPath;
+        path_t    mPath;
         string_t mEntryPoint;
     };
 
@@ -66,7 +66,7 @@ namespace SE::Graphics
         virtual void Build() = 0;
 
       public:
-        void SetShader( eShaderStageTypeFlags aShaderType, fs::path aPath, string_t aEntryPoint );
+        void SetShader( eShaderStageTypeFlags aShaderType, path_t aPath, string_t aEntryPoint );
         void SetCulling( eFaceCulling aCulling );
         void SetLineWidth( float aLineWidth );
         void SetDepthParameters( bool aDepthWriteEnable, bool aDepthTestEnable, eDepthCompareOperation aDepthComparison );

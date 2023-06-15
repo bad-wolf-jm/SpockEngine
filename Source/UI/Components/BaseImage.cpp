@@ -5,7 +5,7 @@
 
 namespace SE::Core
 {
-    UIBaseImage::UIBaseImage( fs::path const &aImagePath, math::vec2 aSize )
+    UIBaseImage::UIBaseImage( path_t const &aImagePath, math::vec2 aSize )
         : mImagePath{ aImagePath }
         , mSize{ aSize.x, aSize.y }
         , mTopLeft{ 0.0f, 0.0f }
@@ -28,7 +28,7 @@ namespace SE::Core
     void UIBaseImage::PushStyles() {}
     void UIBaseImage::PopStyles() {}
 
-    void UIBaseImage::SetImage( fs::path const &aImagePath )
+    void UIBaseImage::SetImage( path_t const &aImagePath )
     {
         SE::Core::sTextureCreateInfo lTextureCreateInfo{};
         TextureData2D                lTextureData( lTextureCreateInfo, aImagePath );

@@ -32,13 +32,13 @@ using namespace SE::Core::UI;
 
 namespace fs = std::filesystem;
 
-void LoadConfiguration( fs::path aConfigurationFile, math::ivec2 &aWindowSize, math::ivec2 &aWindowPosition,
+void LoadConfiguration( path_t aConfigurationFile, math::ivec2 &aWindowSize, math::ivec2 &aWindowPosition,
                         UIConfiguration &aUIConfiguration )
 {
     YAML::Node lRootNode = YAML::LoadFile( aConfigurationFile.string() );
     lRootNode            = lRootNode["application"];
 
-    fs::path lFontRoot = "C:\\Windows\\Fonts";
+    path_t lFontRoot = "C:\\Windows\\Fonts";
 
     YAML::Node lWindowProperties = lRootNode["window_properties"];
     if( !lWindowProperties.IsNull() )
@@ -57,12 +57,12 @@ void LoadConfiguration( fs::path aConfigurationFile, math::ivec2 &aWindowSize, m
         aUIConfiguration.mItalicFont     = lFontRoot / lUIProperties["main_font"]["italic"].as<string_t>();
         aUIConfiguration.mBoldItalicFont = lFontRoot / lUIProperties["main_font"]["bold_italic"].as<string_t>();
 
-        aUIConfiguration.mIconFont = fs::path( lUIProperties["icon_font"].as<string_t>() );
-        aUIConfiguration.mMonoFont = fs::path( lUIProperties["mono_font"].as<string_t>() );
+        aUIConfiguration.mIconFont = path_t( lUIProperties["icon_font"].as<string_t>() );
+        aUIConfiguration.mMonoFont = path_t( lUIProperties["mono_font"].as<string_t>() );
     }
 }
 
-void SaveConfiguration( fs::path aConfigurationFile, math::ivec2 const &aWindowSize, math::ivec2 const &aWindowPosition,
+void SaveConfiguration( path_t aConfigurationFile, math::ivec2 const &aWindowSize, math::ivec2 const &aWindowPosition,
                         UIConfiguration &aUIConfiguration )
 {
     YAML::Emitter lConfigurationOut;
@@ -151,11 +151,11 @@ Ref<argparse::ArgumentParser> ParseCommandLine( int argc, char **argv )
     }
 }
 
-fs::path GetCwd()
+path_t GetCwd()
 {
     char buff[MAX_PATH];
     _getcwd( buff, MAX_PATH );
-    fs::path lCwd = string_t( buff );
+    path_t lCwd = string_t( buff );
 
     return lCwd;
 }
@@ -172,7 +172,7 @@ int main( int argc, char **argv )
     {
         CHAR    aProfilePath[MAX_PATH];
         HRESULT result = SHGetFolderPathA( NULL, CSIDL_PROFILE, NULL, 0, aProfilePath );
-        if( SUCCEEDED( result ) ) lUserHomeFolder = fs::path( aProfilePath );
+        if( SUCCEEDED( result ) ) lUserHomeFolder = path_t( aProfilePath );
 
         CHAR aUserAppData[MAX_PATH];
         result = SHGetFolderPathA( NULL, CSIDL_LOCAL_APPDATA, NULL, 0, aUserAppData );
@@ -192,9 +192,7 @@ int main( int argc, char **argv )
     math::ivec2     lWindowPosition = { 0, 0 };
     UIConfiguration lUIConfiguration{};
 
-    // Load the application's configuration.  If the file does not exist, we create a default configuration
-    // and save it for next time
-    fs::path lConfigurationFile = lLocalConfigFolder / "OtdrTool" / "Config" / "Application.yaml";
+    path_t lConfigurationFile = lLocalConfigFolder / "OtdrTool" / "Config" / "Application.yaml";
     if( fs::exists( lConfigurationFile ) )
         LoadConfiguration( lConfigurationFile, lWindowSize, lWindowPosition, lUIConfiguration );
     else

@@ -55,7 +55,7 @@ namespace SE::OtdrEditor
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
     }
 
-    void Application::Init( fs::path aConfigurationPath )
+    void Application::Init( path_t aConfigurationPath )
     {
         Init();
 
@@ -66,7 +66,7 @@ namespace SE::OtdrEditor
         }
     }
 
-    void Application::Shutdown( fs::path aConfigurationPath )
+    void Application::Shutdown( path_t aConfigurationPath )
     {
         if( mManaged ) mManaged->Teardown( aConfigurationPath.string() );
     }

@@ -34,8 +34,8 @@ namespace SE::OtdrEditor
         ~Application() = default;
 
         void Init();
-        void Init( fs::path aConfigurationPath );
-        void Shutdown( fs::path aConfigurationPath );
+        void Init( path_t aConfigurationPath );
+        void Shutdown( path_t aConfigurationPath );
 
         void RenderScene() {}
         void Update( Timestep ts );
