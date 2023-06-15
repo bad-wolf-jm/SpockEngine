@@ -18,7 +18,7 @@ namespace SE::Core
         std::wstring u16str( aCharacters );
 
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
-        string_t                                                     utf8 = convert.to_bytes( u16str );
+        string_t                                                        utf8 = convert.to_bytes( u16str );
 
         return utf8;
     }
@@ -36,9 +36,9 @@ namespace SE::Core
     {
         TryLoadCoreCLR();
 
-        mFxrInitialize     = (hostfxr_initialize_for_runtime_config_fn)TryGetExport( "hostfxr_initialize_for_runtime_config" );
-        mFxrCreateDelegate = (hostfxr_get_runtime_delegate_fn)TryGetExport( "hostfxr_get_runtime_delegate" );
-        mFxrShutdown       = (hostfxr_close_fn)TryGetExport( "hostfxr_close" );
+        mFxrInitialize = (Internal::hostfxr_initialize_for_runtime_config_fn)TryGetExport( "hostfxr_initialize_for_runtime_config" );
+        mFxrCreateDelegate = (Internal::hostfxr_get_runtime_delegate_fn)TryGetExport( "hostfxr_get_runtime_delegate" );
+        mFxrShutdown       = (Internal::hostfxr_close_fn)TryGetExport( "hostfxr_close" );
     }
 
     void CoreCLRHost::Initialize()
@@ -56,7 +56,7 @@ namespace SE::Core
             return;
         }
 
-        int rc = mFxrCreateDelegate( mCoreCLR, hdt_load_assembly_and_get_function_pointer, (void **)&GetFunctionPointer );
+        int rc = mFxrCreateDelegate( mCoreCLR, Internal::hdt_load_assembly_and_get_function_pointer, (void **)&GetFunctionPointer );
 
         if( ( rc != 0 ) || ( GetFunctionPointer == nullptr ) ) Logging::Info( "coreclr_initialize failed - Error: {:#08x}\n", rc );
 
@@ -75,9 +75,9 @@ namespace SE::Core
 
     void CoreCLRHost::TryLoadCoreCLR()
     {
-        char_t buffer[MAX_PATH];
-        size_t buffer_size = sizeof( buffer ) / sizeof( char_t );
-        int    rc          = get_hostfxr_path( buffer, &buffer_size, nullptr );
+        wchar_t buffer[MAX_PATH];
+        size_t  buffer_size = sizeof( buffer ) / sizeof( wchar_t );
+        int     rc          = get_hostfxr_path( buffer, &buffer_size, nullptr );
         if( rc != 0 ) return;
 
         // Load hostfxr and get desired exports
