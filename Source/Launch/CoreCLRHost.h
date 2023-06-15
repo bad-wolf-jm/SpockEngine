@@ -14,10 +14,6 @@
 namespace SE::Core
 {
 
-#define CORECLR_HOSTING_API_0( function, ... )                \
-    typedef int( __stdcall * function##_ptr )( __VA_ARGS__ ); \
-    function##_ptr m##function = nullptr;
-
 #define CORECLR_APPLICATION_API( function, ... )               \
     typedef void( __stdcall * function##_ptr )( __VA_ARGS__ ); \
     function##_ptr m##function = nullptr;                      \
@@ -51,31 +47,13 @@ namespace SE::Core
         hostfxr_close_fn                         mFxrShutdown       = nullptr;
 
         load_assembly_and_get_function_pointer_fn load_assembly_and_get_function_pointer = nullptr;
-        // CORECLR_HOSTING_API_0( CoreclrInitialize, const char *aExePath, const char *aAppDomainFriendlyName, int aPropertyCount,
-        //                        const char **aPropertyKeys, const char **aPropertyValues, void **aHostHandle, unsigned int *aDomainId
-        //                        );
 
-        // CORECLR_HOSTING_API_0( CoreclrShutdown, void *aHostHandle, unsigned int aDomainId, int *latchedExitCode );
-
-        // CORECLR_HOSTING_API_0( CoreclrCreateDelegate, void *aHostHandle, unsigned int aDomainId, const char
-        // *aEntryPointAssemblyName,
-        //                        const char *aEntryPointTypeName, const char *aEntryPointMethodName, void **aDelegate );
-
-        // CORECLR_HOSTING_API_0( CoreclrExecuteAssembly, void *hostHandle, unsigned int domainId, int argc, const char **argv,
-        //                        const char *managedAssemblyPath, unsigned int *exitCode );
-
-        // void        BuildTrustedPlatformAssemblies();
-        // std::string BuildFileList( const std::string &dir, const char *ext, std::function<bool( const char * )> aShouldAdd );
-        void        TryLoadCoreCLR();
-        // void        TryLoadHostPolicy();
-        void       *TryGetExport( const char *aName );
+        void  TryLoadCoreCLR();
+        void *TryGetExport( const char *aName );
 
       private:
         hostfxr_handle mCoreCLR              = nullptr;
         HMODULE        mNetHostLibraryHandle = nullptr;
-        // void          *mHandle               = nullptr;
-        // uint32_t       mDomainID             = -1;
-        // int            mLatchedExitCode      = 0;
 
         std::string mHostPath      = "";
         std::string mCoreRoot      = "";
