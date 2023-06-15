@@ -59,7 +59,7 @@ namespace SE::OtdrEditor
         mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
     }
 
-    void BaseOtdrApplication::Init( string_t aAppClass, fs::path aConfigurationPath )
+    void BaseOtdrApplication::Init( string_t aAppClass, path_t aConfigurationPath )
     {
         Init();
 
@@ -79,7 +79,7 @@ namespace SE::OtdrEditor
         }
     }
 
-    void BaseOtdrApplication::Shutdown( fs::path aConfigurationPath )
+    void BaseOtdrApplication::Shutdown( path_t aConfigurationPath )
     {
         auto lConfigurationPath = DotNetRuntime::NewString( aConfigurationPath.string() );
         if( mApplicationInstance ) mApplicationInstance->CallMethod( "Shutdown", lConfigurationPath );

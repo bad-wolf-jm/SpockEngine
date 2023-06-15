@@ -3,7 +3,7 @@
 
 namespace SE::Core
 {
-    UIImage::UIImage( fs::path const &aImagePath, math::vec2 aSize )
+    UIImage::UIImage( path_t const &aImagePath, math::vec2 aSize )
         : UIBaseImage( aImagePath, aSize )
     {
     }

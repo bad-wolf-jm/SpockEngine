@@ -24,9 +24,9 @@ namespace SE::OtdrEditor
       public:
         OtdrWindow  mEditorWindow;
         Ref<Engine> mEngineLoop             = nullptr;
-        fs::path    ConfigurationRoot       = "";
-        fs::path    ConfigurationFile       = "";
-        fs::path    SensorConfigurationFile = "";
+        path_t    ConfigurationRoot       = "";
+        path_t    ConfigurationFile       = "";
+        path_t    SensorConfigurationFile = "";
         string_t ApplicationName         = "Sensor Model Editor";
         string_t ImGuiIniFile            = "imgui_config.ini";
         math::ivec2 WindowSize              = { 1920, 1080 };
@@ -38,8 +38,8 @@ namespace SE::OtdrEditor
         ~BaseOtdrApplication() = default;
 
         void Init();
-        void Init(string_t aAppClass, fs::path aConfigurationPath);
-        void Shutdown(fs::path aConfigurationPath);
+        void Init(string_t aAppClass, path_t aConfigurationPath);
+        void Shutdown(path_t aConfigurationPath);
 
         void RenderScene() {}
         void Update( Timestep ts );

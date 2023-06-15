@@ -3,6 +3,7 @@
 // #include "Core/File.h"
 #include "Core/Logging.h"
 #include "Core/Memory.h"
+#include "Core/String.h"
 
 // #include "Engine/Engine.h"
 
@@ -30,13 +31,13 @@ using namespace SE::MonoInternalCalls;
 
 namespace SE::Core
 {
-    using PathList     = std::vector<fs::path>;
+    using PathList     = std::vector<path_t>;
     using ClassMapping = std::map<string_t, DotNetClass>;
 
     struct sAssemblyData
     {
-        fs::path                 mPath           = "";
-        fs::path                 mFilename       = "";
+        path_t                 mPath           = "";
+        path_t                 mFilename       = "";
         string_t              mCategory       = "";
         MonoAssembly            *mAssembly       = nullptr;
         MonoImage               *mImage          = nullptr;
@@ -48,7 +49,7 @@ namespace SE::Core
         sAssemblyData( const sAssemblyData & ) = default;
     };
 
-    using AssemblyMapping = std::map<fs::path, sAssemblyData>;
+    using AssemblyMapping = std::map<path_t, sAssemblyData>;
 
     struct sMonoRuntimeData
     {
@@ -72,13 +73,13 @@ namespace SE::Core
         return aInstance;
     }
 
-    void DotNetRuntime::LoadCoreAssembly( const fs::path &aFilepath )
+    void DotNetRuntime::LoadCoreAssembly( const path_t &aFilepath )
     {
         sRuntimeData->mCoreAssembly.mPath     = aFilepath.parent_path();
         sRuntimeData->mCoreAssembly.mFilename = aFilepath.filename();
     }
 
-    void DotNetRuntime::AddAppAssemblyPath( const fs::path &aFilepath, string_t const &aCategory )
+    void DotNetRuntime::AddAppAssemblyPath( const path_t &aFilepath, string_t const &aCategory )
     {
         if( std::find( sRuntimeData->mAppAssemblyFiles.begin(), sRuntimeData->mAppAssemblyFiles.end(), aFilepath ) !=
             sRuntimeData->mAppAssemblyFiles.end() )
@@ -92,14 +93,14 @@ namespace SE::Core
         sRuntimeData->mAssemblies[aFilepath].mPath     = aFilepath.parent_path();
         sRuntimeData->mAssemblies[aFilepath].mFilename = aFilepath.filename();
 
-        Ref<fs::path> lAssemblyFilePath = New<fs::path>( aFilepath );
+        Ref<path_t> lAssemblyFilePath = New<path_t>( aFilepath );
 
         if( sRuntimeData->mCategories.find( aCategory ) == sRuntimeData->mCategories.end() )
             sRuntimeData->mCategories[aCategory] = std::vector<sAssemblyData *>{};
         sRuntimeData->mCategories[aCategory].push_back( &sRuntimeData->mAssemblies[aFilepath] );
     }
 
-    void DotNetRuntime::Initialize( fs::path &aMonoPath, const fs::path &aCoreAssemblyPath )
+    void DotNetRuntime::Initialize( path_t &aMonoPath, const path_t &aCoreAssemblyPath )
     {
         if( sRuntimeData != nullptr ) return;
 
@@ -121,7 +122,7 @@ namespace SE::Core
         sRuntimeData = nullptr;
     }
 
-    void DotNetRuntime::InitMono( fs::path &aMonoPath )
+    void DotNetRuntime::InitMono( path_t &aMonoPath )
     {
         mono_set_assemblies_path( aMonoPath.string().c_str() );
         mono_config_parse( NULL );

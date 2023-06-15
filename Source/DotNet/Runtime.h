@@ -16,14 +16,14 @@ namespace SE::Core
         DotNetRuntime()  = default;
         ~DotNetRuntime() = default;
 
-        static void Initialize( std::filesystem::path &aMonoPath, const std::filesystem::path &aCoreAssemblyPath );
+        static void Initialize( path_t &aMonoPath, const path_t &aCoreAssemblyPath );
         static void Shutdown();
 
-        static void AddAppAssemblyPath( const std::filesystem::path &aFilepath, string_t const &aCategory );
+        static void AddAppAssemblyPath( const path_t &aFilepath, string_t const &aCategory );
         static void ReloadAssemblies();
 
         // static uint32_t CountAssemblies();
-        // static void     GetAssemblies( std::vector<fs::path> &lOut );
+        // static void     GetAssemblies( std::vector<path_t> &lOut );
         // static bool     AssembliesNeedReloading();
 
         static MonoString *NewString( string_t const &aString );
@@ -56,11 +56,11 @@ namespace SE::Core
       private:
         static void RegisterComponentTypes();
         static void RegisterInternalCppFunctions();
-        static void InitMono( std::filesystem::path &aMonoPath );
+        static void InitMono( path_t &aMonoPath );
         static void ShutdownMono();
         static void ConsoleWrite( MonoString *aBuffer );
 
-        static void LoadCoreAssembly( const std::filesystem::path &aFilepath );
+        static void LoadCoreAssembly( const path_t &aFilepath );
 
         static MonoObject *InstantiateClass( MonoClass *aMonoClass, bool aIsCore = false );
         // static void        LoadAssemblyClasses();

@@ -82,7 +82,7 @@ namespace SE::Core
     } // namespace
 
     DotNetClass::DotNetClass( const string_t &aClassNamespace, const string_t &aClassName, MonoImage *aImage,
-                              fs::path const &aDllPPath, bool aIsNested )
+                              path_t const &aDllPPath, bool aIsNested )
         : mClassNamespace( aClassNamespace )
         , mClassName( aClassName )
         , mDllPath{ aDllPPath }
@@ -95,7 +95,7 @@ namespace SE::Core
     }
 
     DotNetClass::DotNetClass( MonoClass *aClass, const string_t &aClassNamespace, const string_t &aClassName, MonoImage *aImage,
-                              fs::path const &aDllPPath, bool aIsNested )
+                              path_t const &aDllPPath, bool aIsNested )
         : mClassNamespace( aClassNamespace )
         , mClassName( aClassName )
         , mDllPath{ aDllPPath }

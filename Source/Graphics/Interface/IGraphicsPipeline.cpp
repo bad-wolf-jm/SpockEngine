@@ -27,7 +27,7 @@ namespace SE::Graphics
         mPushConstants.push_back( sPushConstantRange{ aShaderStage, aOffset, aSize } );
     }
 
-    void IGraphicsPipeline::SetShader( eShaderStageTypeFlags aShaderType, fs::path aPath, string_t aEntryPoint )
+    void IGraphicsPipeline::SetShader( eShaderStageTypeFlags aShaderType, path_t aPath, string_t aEntryPoint )
     {
         mShaderStages.push_back( sShaderData{ aShaderType, aPath, aEntryPoint } );
     }

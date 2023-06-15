@@ -12,6 +12,8 @@
 #include <filesystem>
 #include <memory>
 
+#include "Core/String.h"
+
 #include "ColorFormat.h"
 
 namespace fs = std::filesystem;
@@ -102,7 +104,7 @@ namespace SE::Core
     };
 
     /// @brief Load an image file using stb_image. The image can be in any format that stb_image can handle
-    sImageData LoadImageData( fs::path const &aPath );
+    sImageData LoadImageData( path_t const &aPath );
 
     struct sTextureCreateInfo
     {

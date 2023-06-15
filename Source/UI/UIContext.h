@@ -28,12 +28,12 @@ namespace SE::Core
     {
         uint32_t mFontSize;
 
-        fs::path mMainFont;
-        fs::path mBoldFont;
-        fs::path mItalicFont;
-        fs::path mBoldItalicFont;
-        fs::path mMonoFont;
-        fs::path mIconFont;
+        path_t mMainFont;
+        path_t mBoldFont;
+        path_t mItalicFont;
+        path_t mBoldItalicFont;
+        path_t mMonoFont;
+        path_t mIconFont;
     };
 
     enum class FontFamilyFlags : int32_t
@@ -86,7 +86,7 @@ namespace SE::Core
 
         std::map<FontFamilyFlags, ImFont *> mFonts;
 
-        ImFont *LoadFont( fs::path aFontName, fs::path aIconFontName, uint32_t aFontSize );
+        ImFont *LoadFont( path_t aFontName, path_t aIconFontName, uint32_t aFontSize );
 
       private:
         Ref<UIWindow> mMainWindow;

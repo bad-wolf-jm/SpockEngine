@@ -22,7 +22,7 @@ namespace SE::Core::Mono::Utils
         { "System.UInt16", eScriptFieldType::UShort }, { "System.UInt32", eScriptFieldType::UInt },
         { "System.UInt64", eScriptFieldType::ULong } };
 
-    char *ReadBytes( const std::filesystem::path &aFilepath, uint32_t *aOutSize )
+    char *ReadBytes( const path_t &aFilepath, uint32_t *aOutSize )
     {
         std::ifstream lStream( aFilepath, std::ios::binary | std::ios::ate );
 
@@ -42,7 +42,7 @@ namespace SE::Core::Mono::Utils
         return buffer;
     }
 
-    MonoAssembly *LoadMonoAssembly( const std::filesystem::path &lAssemblyPath )
+    MonoAssembly *LoadMonoAssembly( const path_t &lAssemblyPath )
     {
         uint32_t lFileSize = 0;
         char    *lFileData = ReadBytes( lAssemblyPath, &lFileSize );

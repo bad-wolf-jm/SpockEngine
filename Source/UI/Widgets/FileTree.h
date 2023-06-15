@@ -16,14 +16,14 @@ namespace SE::Core
     {
       public:
         UIFileTreeNode() = default;
-        UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent, fs::path const &aPath, string_t const &aName );
+        UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent, path_t const &aPath, string_t const &aName );
 
-        UIFileTreeNode *Add(fs::path const& aPath);
+        UIFileTreeNode *Add(path_t const& aPath);
 
         std::vector<UITreeViewNode *> const &Children();
 
       protected:
-        fs::path    mPath;
+        path_t    mPath;
         string_t mName;
 
         bool IsLeaf();
@@ -34,7 +34,7 @@ namespace SE::Core
       public:
         UIFileTree();
 
-        UIFileTreeNode *Add(fs::path const& aPath);
+        UIFileTreeNode *Add(path_t const& aPath);
 
     //   public:
     //     static void *UIFileTree_Create();

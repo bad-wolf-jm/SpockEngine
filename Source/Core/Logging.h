@@ -71,6 +71,6 @@ namespace SE::Logging
 
     void LogToFile(string_t const &aFilePath);
     void LogLine(string_t const &aLine);
-    void SetLogOutputFile( fs::path aFilePath );
+    void SetLogOutputFile( path_t aFilePath );
 
 } // namespace SE::Logging

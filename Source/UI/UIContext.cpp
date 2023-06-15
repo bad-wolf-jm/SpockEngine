@@ -150,7 +150,7 @@ namespace SE::Core
         ( (UIWindow *)( vp->RendererUserData ) )->EndRender( vp->DrawData );
     }
 
-    ImFont *UIContext::LoadFont( fs::path aFontName, fs::path aIconFontName, uint32_t aFontSize )
+    ImFont *UIContext::LoadFont( path_t aFontName, path_t aIconFontName, uint32_t aFontSize )
     {
         static ImWchar      lCharRanges[] = { 0x0020, 0x00FF, 0x2070, 0x208e, 0x2100, 0x21FF, 0x2200,
                                               0x2300, 0x2A00, 0x2AFF, 0x370,  0x3ff,  0 };

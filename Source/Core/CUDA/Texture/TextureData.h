@@ -75,11 +75,11 @@ namespace SE::Core
          * @param aCreateInfo Creation structure
          * @param aImagePath  Image file.
          */
-        TextureData( sTextureCreateInfo const &aCreateInfo, fs::path const &aImagePath );
+        TextureData( sTextureCreateInfo const &aCreateInfo, path_t const &aImagePath );
 
         TextureData( char const *aKTXData, uint32_t aSize );
 
-        void SaveTo( fs::path const &aImagePath );
+        void SaveTo( path_t const &aImagePath );
 
         std::vector<char> Serialize() const;
 
@@ -128,7 +128,7 @@ namespace SE::Core
          */
         TextureData2D( sTextureCreateInfo const &aCreateInfo );
         TextureData2D( sTextureCreateInfo const &aCreateInfo, sImageData const &aImageData );
-        TextureData2D( sTextureCreateInfo const &aCreateInfo, fs::path const &aImagePath );
+        TextureData2D( sTextureCreateInfo const &aCreateInfo, path_t const &aImagePath );
         TextureData2D( char const *aKTXData, uint32_t aSize );
 
         sImageData GetImageData();
@@ -166,7 +166,7 @@ namespace SE::Core
     };
 
     using sCubeMapImageData     = std::array<sImageData, 6>;
-    using sCubeMapImagePathData = std::array<fs::path, 6>;
+    using sCubeMapImagePathData = std::array<path_t, 6>;
 
     class TextureDataCubeMap : public TextureData
     {
@@ -181,7 +181,7 @@ namespace SE::Core
 
         TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo );
         TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, sCubeMapImageData const &aImageData );
-        TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, fs::path const &aKTXImagePath );
+        TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, path_t const &aKTXImagePath );
         TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, sCubeMapImagePathData const &aImagePaths );
         TextureDataCubeMap( std::vector<uint8_t> aKTXData, uint32_t aSize );
         TextureDataCubeMap( std::array<std::vector<uint8_t>, 6> aKTXData, uint32_t aSize );

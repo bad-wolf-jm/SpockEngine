@@ -13,10 +13,10 @@ namespace SE::Core
       public:
         UIBaseImage() = default;
 
-        UIBaseImage( fs::path const &aImagePath, math::vec2 aSize );
+        UIBaseImage( path_t const &aImagePath, math::vec2 aSize );
         UIBaseImage( Ref<ISampler2D> aImage, math::vec2 aSize );
 
-        void SetImage( fs::path const &aImagePath );
+        void SetImage( path_t const &aImagePath );
 
         ImVec2 Size();
         void   SetSize( float aWidth, float aHeight );
@@ -34,7 +34,7 @@ namespace SE::Core
         ImTextureID TextureID();
 
       protected:
-        fs::path mImagePath;
+        path_t mImagePath;
 
         Ref<ISampler2D> mImage;
         ImageHandle     mHandle;

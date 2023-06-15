@@ -3,13 +3,13 @@
 
 namespace SE::Core
 {
-    UIImageButton::UIImageButton( fs::path const &aImagePath, math::vec2 aSize, std::function<void()> aOnClick )
+    UIImageButton::UIImageButton( path_t const &aImagePath, math::vec2 aSize, std::function<void()> aOnClick )
         : UIBaseImage( aImagePath, aSize )
         , mOnClick{ aOnClick }
     {
     }
 
-    UIImageButton::UIImageButton( fs::path const &aImagePath, math::vec2 aSize )
+    UIImageButton::UIImageButton( path_t const &aImagePath, math::vec2 aSize )
         : UIImageButton( aImagePath, aSize, std::function<void()>{} )
     {
     }

@@ -27,7 +27,7 @@
 namespace SE::Core
 {
 
-    sImageData LoadImageData( fs::path const &aPath )
+    sImageData LoadImageData( path_t const &aPath )
     {
         constexpr size_t lComponentCount = 4;
 
@@ -194,7 +194,7 @@ namespace SE::Core
         std::memcpy( mInternalTexture.data(), aImageData.mPixelData.data(), aImageData.mByteSize );
     }
 
-    TextureData::TextureData( sTextureCreateInfo const &aTextureCreateInfo, fs::path const &aImagePath )
+    TextureData::TextureData( sTextureCreateInfo const &aTextureCreateInfo, path_t const &aImagePath )
         : mSpec{ aTextureCreateInfo }
     {
         string_t           lExtension     = aImagePath.extension().string();
@@ -241,7 +241,7 @@ namespace SE::Core
         // mSpec.mSwizzles  = ToLtseType( mInternalTexture.swizzles() );
     }
 
-    void TextureData::SaveTo( fs::path const &aImagePath )
+    void TextureData::SaveTo( path_t const &aImagePath )
     {
         string_t lExtension = aImagePath.extension().string();
 
@@ -294,7 +294,7 @@ namespace SE::Core
         }
     }
 
-    TextureData2D::TextureData2D( sTextureCreateInfo const &aCreateInfo, fs::path const &aImagePath )
+    TextureData2D::TextureData2D( sTextureCreateInfo const &aCreateInfo, path_t const &aImagePath )
         : TextureData( aCreateInfo, aImagePath )
     {
         mInternalTexture2d = gli::texture2d( mInternalTexture );
@@ -334,7 +334,7 @@ namespace SE::Core
         mInternalTextureCubeMap = gli::texture_cube( mInternalTexture );
     }
 
-    TextureDataCubeMap::TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, fs::path const &aImagePath )
+    TextureDataCubeMap::TextureDataCubeMap( sTextureCreateInfo const &aCreateInfo, path_t const &aImagePath )
         : TextureData( aCreateInfo, aImagePath )
     {
         mInternalTextureCubeMap = gli::texture_cube( mInternalTexture );

@@ -13,9 +13,9 @@ namespace SE::Core
       public:
         UIImageButton() = default;
 
-        UIImageButton( fs::path const &aImagePath, math::vec2 aSize );
+        UIImageButton( path_t const &aImagePath, math::vec2 aSize );
         UIImageButton( Ref<ISampler2D> aImage, math::vec2 aSize );
-        UIImageButton( fs::path const &aImagePath, math::vec2 aSize, std::function<void()> aOnClick );
+        UIImageButton( path_t const &aImagePath, math::vec2 aSize, std::function<void()> aOnClick );
         UIImageButton( Ref<ISampler2D> aImage, math::vec2 aSize, std::function<void()> aOnClick );
 
         void OnClick( std::function<void()> aOnClick );

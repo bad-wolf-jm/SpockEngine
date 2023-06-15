@@ -126,7 +126,7 @@ namespace SE::Core
 
     __declspec(dllexport) std::unique_ptr<Engine> mUniqueInstance = nullptr;
 
-    void Engine::Initialize( math::ivec2 aInitialMainWindowSize, math::ivec2 aInitialMainWindowPosition, fs::path aImGuiConfigPath,
+    void Engine::Initialize( math::ivec2 aInitialMainWindowSize, math::ivec2 aInitialMainWindowPosition, path_t aImGuiConfigPath,
                              UIConfiguration const &aUIConfiguration )
     {
         IWindow::InitializeWindowingBackend();

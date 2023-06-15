@@ -107,7 +107,7 @@ namespace SE::Core
         math::ivec2 GetWindowSize();
         string_t GetImGuiConfigurationFile();
 
-        static void Initialize( math::ivec2 aInitialMainWindowSize, math::ivec2 aInitialMainWindowPosition, fs::path aImGuiConfigPath,
+        static void Initialize( math::ivec2 aInitialMainWindowSize, math::ivec2 aInitialMainWindowPosition, path_t aImGuiConfigPath,
                                 UIConfiguration const &aUIConfiguration );
         static void Shutdown();
 
