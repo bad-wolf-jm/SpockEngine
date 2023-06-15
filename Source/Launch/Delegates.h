@@ -24,12 +24,6 @@ namespace SE::OtdrEditor
     {
       public:
         MainWindow mEditorWindow;
-        // Ref<Engine> mEngineLoop             = nullptr;
-        // fs::path    ConfigurationRoot       = "";
-        // fs::path    ConfigurationFile       = "";
-        // fs::path    SensorConfigurationFile = "";
-        // std::string ApplicationName         = "Sensor Model Editor";
-        // std::string ImGuiIniFile            = "imgui_config.ini";
         math::ivec2 WindowSize     = { 1920, 1080 };
         math::ivec2 WindowPosition = { 100, 100 };
 
@@ -52,7 +46,6 @@ namespace SE::OtdrEditor
         uint32_t mViewportWidth         = 1;
         bool     mShouldRebuildViewport = true;
 
-        // Ref<DotNetInstance> mApplicationInstance = nullptr;
         CoreCLRHost *mManaged = nullptr;
     };
 

@@ -14,13 +14,6 @@
 #include "Core/File.h"
 #include "Core/Logging.h"
 
-
-
-#include "mono/jit/jit.h"
-#include "mono/metadata/assembly.h"
-#include "mono/metadata/object.h"
-#include "mono/metadata/tabledefs.h"
-
 namespace SE::OtdrEditor
 {
     using namespace SE::Core;
