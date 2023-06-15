@@ -1,5 +1,5 @@
 #include "ImageToggleButton.h"
-#include "DotNet/Runtime.h"
+
 namespace SE::Core
 {
     UIImageToggleButton::UIImageToggleButton( std::function<bool( bool )> aOnChange )

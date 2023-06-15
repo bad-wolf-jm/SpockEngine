@@ -1,6 +1,6 @@
 #include "Dialog.h"
 
-#include "DotNet/Runtime.h"
+
 namespace SE::Core
 {
     UIDialog::UIDialog()

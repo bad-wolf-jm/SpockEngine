@@ -1,5 +1,5 @@
 #include "CheckBox.h"
-#include "DotNet/Runtime.h"
+
 namespace SE::Core
 {
     UICheckBox::UICheckBox( std::function<void()> aOnClick )

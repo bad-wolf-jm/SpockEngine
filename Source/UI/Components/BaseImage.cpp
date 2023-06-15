@@ -1,5 +1,5 @@
 #include "BaseImage.h"
-#include "DotNet/Runtime.h"
+
 
 #include "Engine/Engine.h"
 

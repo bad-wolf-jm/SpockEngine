@@ -1,7 +1,7 @@
 #include "TextOverlay.h"
 #include <sstream>
 
-#include "DotNet/Runtime.h"
+
 #include "Engine/Engine.h"
 
 namespace SE::Core

@@ -1,6 +1,6 @@
 #include "TextInput.h"
 
-#include "DotNet/Runtime.h"
+
 
 namespace SE::Core
 {
