@@ -27,8 +27,7 @@ namespace SE::Core
     class CoreCLRHost
     {
       public:
-        CoreCLRHost( std::string const &aAssemblyName, std::string const &aExePath, std::string const &aCoreRoot,
-                     std::string const &aCoreLibraries );
+        CoreCLRHost();
 
         void LoadApplicationAssembly( std::string const &aAssemblyPath, std::string const &aApplicationClass );
         void Initialize();
@@ -46,7 +45,7 @@ namespace SE::Core
         hostfxr_get_runtime_delegate_fn          mFxrCreateDelegate = nullptr;
         hostfxr_close_fn                         mFxrShutdown       = nullptr;
 
-        load_assembly_and_get_function_pointer_fn load_assembly_and_get_function_pointer = nullptr;
+        load_assembly_and_get_function_pointer_fn GetFunctionPointer = nullptr;
 
         void  TryLoadCoreCLR();
         void *TryGetExport( const char *aName );
@@ -61,10 +60,6 @@ namespace SE::Core
         std::string mDomainName    = "";
 
       private:
-        std::string mAppPath;
-        std::string mTrustedPlatformAssemblies;
-        std::string mNativeDllSearchDirectories;
-
         CORECLR_APPLICATION_API( ConfigureDelegate, const char *aConfigPath );
         CORECLR_APPLICATION_API( UpdateDelegate, float aTimestamp );
         CORECLR_APPLICATION_API( UpdateUIDelegate, float aTimestamp );
