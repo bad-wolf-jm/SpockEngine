@@ -39,7 +39,19 @@ namespace SpockEngine
             var lBaseType = typeof(T);
             TypeInfo lBaseTypeInfo = lBaseType.GetTypeInfo();
 
-            return aAssembly.DefinedTypes.Where(aType =>
+            IEnumerable<TypeInfo> lDefinedTypes;
+            try
+            {
+                lDefinedTypes = aAssembly.DefinedTypes;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+                lDefinedTypes = new TypeInfo[0];
+            }
+
+            return lDefinedTypes.Where(aType =>
             {
                 if (lBaseTypeInfo.IsClass)
                     return aType.IsSubclassOf(lBaseType);
