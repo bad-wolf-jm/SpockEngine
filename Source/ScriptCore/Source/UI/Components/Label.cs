@@ -9,7 +9,10 @@ namespace SpockEngine
 
         public UILabel() : this(Interop.UILabel_Create(), false) { }
         public UILabel(IntPtr aSelf, bool aDerived) : base(aSelf) { mDerived = aDerived; }
-        public UILabel(string aText) : this(Interop.UILabel_CreateWithText(aText), false) { }
+        public UILabel(string aText) : this()
+        {
+            SetText(aText);
+        }
 
         ~UILabel() { if (!mDerived) Interop.UILabel_Destroy(mInstance); }
 

@@ -14,11 +14,14 @@ namespace SpockEngine
     {
         private List<UIComponent> mItems = new List<UIComponent>();
         private bool mDerived = false;
-        public UIBoxLayout() { }
+        public UIBoxLayout() : this(Interop.UIBoxLayout_Create(), false) { }
 
         public UIBoxLayout(IntPtr aInstance, bool aDerived) : base(aInstance) { mDerived = aDerived; }
 
-        public UIBoxLayout(eBoxLayoutOrientation aOrientation) : this(Interop.UIBoxLayout_CreateWithOrientation(aOrientation), false) { }
+        public UIBoxLayout(eBoxLayoutOrientation aOrientation) : this()
+        {
+            SetOrientation(aOrientation);
+        }
 
         ~UIBoxLayout() { if (!mDerived) Interop.UIBoxLayout_Destroy(mInstance); }
 

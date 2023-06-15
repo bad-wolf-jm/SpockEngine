@@ -10,7 +10,10 @@ namespace SpockEngine
 
         public UISplitter(IntPtr aInstance, bool aDerived) : base(aInstance) { mDerived = aDerived; }
 
-        public UISplitter(eBoxLayoutOrientation aOrientation) : this(Interop.UISplitter_CreateWithOrientation(aOrientation), false) { }
+        public UISplitter(eBoxLayoutOrientation aOrientation) : this()
+        {
+            SetOrientation(aOrientation);
+        }
 
         ~UISplitter() { if (!mDerived) Interop.UISplitter_Destroy(mInstance); }
 

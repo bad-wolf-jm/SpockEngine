@@ -7,7 +7,10 @@ namespace SpockEngine
     public class UIComboBox : UIComponent
     {
         public UIComboBox() : base(Interop.UIComboBox_Create()) { }
-        public UIComboBox(string[] aItems) : base(Interop.UIComboBox_CreateWithItems(aItems, aItems.Length)) { }
+        public UIComboBox(string[] aItems) : this()
+        {
+            SetItemList(aItems);
+        }
 
         ~UIComboBox() { Interop.UIComboBox_Destroy(mInstance); }
 

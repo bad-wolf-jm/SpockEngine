@@ -12,8 +12,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIBaseImage_Create();
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIBaseImage_CreateWithPath([MarshalAs(UnmanagedType.LPTStr)] string aText, Math.vec2 Size);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UIBaseImage_CreateWithPath([MarshalAs(UnmanagedType.LPTStr)] string aText, Math.vec2 Size);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIBaseImage_Destroy(IntPtr aSelf);
@@ -50,8 +50,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIButton_Create();
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIButton_CreateWithText([MarshalAs(UnmanagedType.LPTStr)] string aText);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UIButton_CreateWithText([MarshalAs(UnmanagedType.LPTStr)] string aText);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIButton_Destroy(IntPtr aSelf);
@@ -92,8 +92,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIComboBox_Create();
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIComboBox_CreateWithItems(string[] aItems, int aLength);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UIComboBox_CreateWithItems(string[] aItems, int aLength);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIComboBox_Destroy(IntPtr aSelf);
@@ -176,8 +176,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIImage_Create();
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIImage_CreateWithPath(string aText, Math.vec2 Size);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UIImage_CreateWithPath(string aText, Math.vec2 Size);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIImage_Destroy(IntPtr aSelf);
@@ -187,8 +187,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIImageButton_Create();
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIImageButton_CreateWithPath(string aText, Math.vec2 Size);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UIImageButton_CreateWithPath(string aText, Math.vec2 Size);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIImageButton_Destroy(IntPtr aSelf);
@@ -227,8 +227,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UILabel_Create();
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UILabel_CreateWithText(string aText);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UILabel_CreateWithText(string aText);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UILabel_Destroy(IntPtr aSelf);
@@ -244,8 +244,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIMenuItem_Create();
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIMenuItem_CreateWithTextAndShortcut(string aText, string aShortcut);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UIMenuItem_CreateWithTextAndShortcut(string aText, string aShortcut);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIMenuItem_CreateWithText(string aText);
@@ -278,8 +278,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIMenu_Create();
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIMenu_CreateWithText(string aText);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UIMenu_CreateWithText(string aText);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIMenu_Destroy(IntPtr aSelf);
@@ -340,8 +340,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIAxisTag_Create();
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIAxisTag_CreateWithTextAndColor(eUIPlotAxis aAxis, double aX, string aText, Math.vec4 aColor);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UIAxisTag_CreateWithTextAndColor(eUIPlotAxis aAxis, double aX, string aText, Math.vec4 aColor);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIAxisTag_Destroy(IntPtr aSelf);
@@ -489,11 +489,11 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIPropertyValue_Create();
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIPropertyValue_CreateWithText(string aText);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UIPropertyValue_CreateWithText(string aText);
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIPropertyValue_CreateWithTextAndOrientation(string aText, eBoxLayoutOrientation aOrientation);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UIPropertyValue_CreateWithTextAndOrientation(string aText, eBoxLayoutOrientation aOrientation);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIPropertyValue_Destroy(IntPtr aSelf);
@@ -531,8 +531,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIFloat64Column_Create();
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIFloat64Column_CreateFull(string aHeader, float aInitialSize, string aFormat, string aNaNFormat);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UIFloat64Column_CreateFull(string aHeader, float aInitialSize, string aFormat, string aNaNFormat);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIFloat64Column_Destroy(IntPtr aSelf);
@@ -548,8 +548,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIUint32Column_Create();
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIUint32Column_CreateFull(string aHeader, float aInitialSize);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UIUint32Column_CreateFull(string aHeader, float aInitialSize);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIUint32Column_Destroy(IntPtr aSelf);
@@ -565,8 +565,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIStringColumn_Create();
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIStringColumn_CreateFull(string aHeader, float aInitialSize);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UIStringColumn_CreateFull(string aHeader, float aInitialSize);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIStringColumn_Destroy(IntPtr aSelf);
@@ -608,8 +608,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UITextInput_Create();
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UITextInput_CreateWithText(string aText);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UITextInput_CreateWithText(string aText);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UITextInput_Destroy(IntPtr aSelf);
@@ -649,8 +649,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UITextToggleButton_Create();
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UITextToggleButton_CreateWithText(string aText);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UITextToggleButton_CreateWithText(string aText);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UITextToggleButton_Destroy(IntPtr aSelf);
@@ -831,7 +831,9 @@ namespace SpockEngine
 
         #region UIBoxLayout
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIBoxLayout_CreateWithOrientation(eBoxLayoutOrientation aOrientation);
+        public extern static IntPtr UIBoxLayout_Create();
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UIBoxLayout_CreateWithOrientation(eBoxLayoutOrientation aOrientation);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIBoxLayout_AddAlignedNonFixed(IntPtr aSelf, IntPtr aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
@@ -873,8 +875,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UISplitter_Create();
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UISplitter_CreateWithOrientation(eBoxLayoutOrientation aOrientation);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UISplitter_CreateWithOrientation(eBoxLayoutOrientation aOrientation);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UISplitter_Add1(IntPtr aSelf, IntPtr aChild);
@@ -944,8 +946,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIDialog_Create();
 
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static IntPtr UIDialog_CreateWithTitleAndSize(IntPtr aSelf, string aTitle, Math.vec2 aSize);
+        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        // public extern static IntPtr UIDialog_CreateWithTitleAndSize(IntPtr aSelf, string aTitle, Math.vec2 aSize);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIDialog_Destroy(IntPtr aSelf);

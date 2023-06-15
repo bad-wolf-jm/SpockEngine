@@ -33,7 +33,7 @@ namespace SpockEngine
         public void SetTooltip(List<UIComponent> aTooltips)
         {
             mToolTips = aTooltips.ToArray();
-            
+
             var lElements = aTooltips.Select(i => i.Instance).ToArray();
             SetTooltip(lElements);
         }
@@ -63,7 +63,13 @@ namespace SpockEngine
     {
         public UIFloat64Column() : base(Interop.UIFloat64Column_Create()) { }
         public UIFloat64Column(string aHeader, float aInitialSize, string aFormat, string aNaNFormat)
-            : base(Interop.UIFloat64Column_CreateFull(aHeader, aInitialSize, aFormat, aNaNFormat)) { }
+            : this()
+        {
+            SetHeader(aHeader);
+            SetInitialSize(aInitialSize);
+            SetFormat(aFormat);
+            SetNanFormat(aNanFormat);
+        }
 
         ~UIFloat64Column() { Interop.UIFloat64Column_Destroy(mInstance); }
 
@@ -113,8 +119,11 @@ namespace SpockEngine
     public class UIUint32Column : UITableColumn
     {
         public UIUint32Column() : base(Interop.UIUint32Column_Create()) { }
-        public UIUint32Column(string aHeader, float aInitialSize)
-            : base(Interop.UIUint32Column_CreateFull(aHeader, aInitialSize)) { }
+        public UIUint32Column(string aHeader, float aInitialSize) : this()
+        {
+            SetHeader(aHeader);
+            SetInitialSize(aInitialSize);
+        }
 
         ~UIUint32Column() { Interop.UIUint32Column_Destroy(mInstance); }
 
@@ -162,8 +171,11 @@ namespace SpockEngine
     public class UIStringColumn : UITableColumn
     {
         public UIStringColumn() : base(Interop.UIStringColumn_Create()) { }
-        public UIStringColumn(string aHeader, float aInitialSize)
-            : base(Interop.UIStringColumn_CreateFull(aHeader, aInitialSize)) { }
+        public UIStringColumn(string aHeader, float aInitialSize) : this()
+        {
+            SetHeader(aHeader);
+            SetInitialSize(aInitialSize);
+        }
 
         ~UIStringColumn() { Interop.UIStringColumn_Destroy(mInstance); }
 

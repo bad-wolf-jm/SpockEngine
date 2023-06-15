@@ -8,12 +8,16 @@ namespace SpockEngine
     {
         public UITextInput() : base(Interop.UITextInput_Create()) { }
 
-        public UITextInput(string aText) : base(Interop.UITextInput_CreateWithText(aText)) { }
+        public UITextInput(string aText) : this()
+        {
+            Text = aText;
+        }
 
         ~UITextInput() { Interop.UITextInput_Destroy(mInstance); }
 
         public string Text
         {
+            set { return Interop.UITextInput_SetText(mInstance, value); }
             get { return Interop.UITextInput_GetText(mInstance); }
         }
 

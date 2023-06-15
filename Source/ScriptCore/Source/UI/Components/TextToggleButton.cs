@@ -8,7 +8,10 @@ namespace SpockEngine
     {
         public UITextToggleButton() : base(Interop.UITextToggleButton_Create(), true) { }
 
-        public UITextToggleButton(string aText) : base(Interop.UITextToggleButton_CreateWithText(aText), true) { }
+        public UITextToggleButton(string aText) : this()
+        {
+            SetText(aText);
+        }
 
         ~UITextToggleButton() { Interop.UITextToggleButton_Destroy(mInstance); }
 
@@ -42,7 +45,7 @@ namespace SpockEngine
         public void OnChanged(OnChangeDelegate aHandler)
         {
             onChanged = aHandler;
-            
+
             Interop.UITextToggleButton_OnChanged(mInstance, Marshal.GetFunctionPointerForDelegate(onChanged));
         }
     }

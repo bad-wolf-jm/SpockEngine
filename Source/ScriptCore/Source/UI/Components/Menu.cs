@@ -14,9 +14,16 @@ namespace SpockEngine
 
         public UIMenuItem(IntPtr aDerived, bool aIsDerived) : base(aDerived) { mDerived = aIsDerived; }
 
-        public UIMenuItem(string aText) : this(Interop.UIMenuItem_CreateWithText(aText)) { }
+        public UIMenuItem(string aText) : this()
+        {
+            SetText(aText);
+        }
 
-        public UIMenuItem(string aText, string aShortcut) : this(Interop.UIMenuItem_CreateWithTextAndShortcut(aText, aShortcut)) { }
+        public UIMenuItem(string aText, string aShortcut) : this()
+        {
+            SetText(aText);
+            SetShortcut(aShortcut);
+        }
 
         ~UIMenuItem() { if (!mDerived) Interop.UIMenuItem_Destroy(mInstance); }
 

@@ -7,9 +7,16 @@ namespace SpockEngine
     {
         public UIPropertyValue() : base(Interop.UIPropertyValue_Create(), true) { }
 
-        public UIPropertyValue(string aText) : base(Interop.UIPropertyValue_CreateWithText(aText), true) { }
+        public UIPropertyValue(string aText) : this()
+        {
+            SetText(aText);
+        }
 
-        public UIPropertyValue(string aText, eBoxLayoutOrientation aOrientation) : base(Interop.UIPropertyValue_CreateWithTextAndOrientation(aText, aOrientation), true) { }
+        public UIPropertyValue(string aText, eBoxLayoutOrientation aOrientation) : this()
+        {
+            SetText(aText);
+            SetOrientation(aOrientation);
+        }
 
         ~UIPropertyValue() { Interop.UIPropertyValue_Destroy(mInstance); }
 

@@ -7,7 +7,11 @@ namespace SpockEngine
     public class UIImageButton : UIBaseImage
     {
         public UIImageButton() : base(Interop.UIImageButton_Create(), true) { }
-        public UIImageButton(string aText, Math.vec2 aSize) : base(Interop.UIImageButton_CreateWithPath(aText, aSize), true) { }
+        public UIImageButton(string aText, Math.vec2 aSize) : this()
+        {
+            SetImage(aText);
+            Size = aSize;
+        }
 
         ~UIImageButton() { Interop.UIImageButton_Destroy(mInstance); }
 
@@ -18,7 +22,7 @@ namespace SpockEngine
         {
             onClick = aHandler;
 
-            Interop.UIImageButton_OnClick(mInstance,  Marshal.GetFunctionPointerForDelegate(onClick));
+            Interop.UIImageButton_OnClick(mInstance, Marshal.GetFunctionPointerForDelegate(onClick));
         }
     }
 }
