@@ -4,12 +4,17 @@
 #    define CDECL __cdecl
 #endif
 
-#include "coreclr_delegates.h"
-#include "hostfxr.h"
-
 #include <Windows.h>
 #include <functional>
 #include <string>
+
+#include "Core/String.h"
+
+namespace Internal
+{
+#include "coreclr_delegates.h"
+#include "hostfxr.h"
+} // namespace Internal
 
 namespace SE::Core
 {
@@ -41,18 +46,18 @@ namespace SE::Core
         void Teardown( string_t aConfigPath );
 
       private:
-        hostfxr_initialize_for_runtime_config_fn mFxrInitialize     = nullptr;
-        hostfxr_get_runtime_delegate_fn          mFxrCreateDelegate = nullptr;
-        hostfxr_close_fn                         mFxrShutdown       = nullptr;
+        Internal::hostfxr_initialize_for_runtime_config_fn mFxrInitialize     = nullptr;
+        Internal::hostfxr_get_runtime_delegate_fn          mFxrCreateDelegate = nullptr;
+        Internal::hostfxr_close_fn                         mFxrShutdown       = nullptr;
 
-        load_assembly_and_get_function_pointer_fn GetFunctionPointer = nullptr;
+        Internal::load_assembly_and_get_function_pointer_fn GetFunctionPointer = nullptr;
 
         void  TryLoadCoreCLR();
         void *TryGetExport( const char *aName );
 
       private:
-        hostfxr_handle mCoreCLR              = nullptr;
-        HMODULE        mNetHostLibraryHandle = nullptr;
+        Internal::hostfxr_handle mCoreCLR              = nullptr;
+        HMODULE                  mNetHostLibraryHandle = nullptr;
 
       private:
         CORECLR_APPLICATION_API( ConfigureDelegate, const char *aConfigPath );

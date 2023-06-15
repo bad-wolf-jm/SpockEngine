@@ -166,9 +166,9 @@ int main( int argc, char **argv )
 
     // Retrieve the current user's home folder and local configuration folder. This is where we put
     // all configuration data flr all instances of the application
-    fs::path    lLocalConfigFolder = "";
-    fs::path    lUserHomeFolder    = "";
-    std::string lExePath           = "";
+    path_t   lLocalConfigFolder = "";
+    path_t   lUserHomeFolder    = "";
+    string_t lExePath           = "";
     {
         CHAR    aProfilePath[MAX_PATH];
         HRESULT result = SHGetFolderPathA( NULL, CSIDL_PROFILE, NULL, 0, aProfilePath );
@@ -176,11 +176,11 @@ int main( int argc, char **argv )
 
         CHAR aUserAppData[MAX_PATH];
         result = SHGetFolderPathA( NULL, CSIDL_LOCAL_APPDATA, NULL, 0, aUserAppData );
-        if( SUCCEEDED( result ) ) lLocalConfigFolder = fs::path( aUserAppData );
+        if( SUCCEEDED( result ) ) lLocalConfigFolder = path_t( aUserAppData );
 
         CHAR  aExePath[MAX_PATH];
         DWORD count = GetModuleFileNameA( nullptr, aExePath, ( sizeof( aExePath ) / sizeof( aExePath[0] ) ) );
-        if( SUCCEEDED( ::GetLastError() ) ) lExePath = std::string( aExePath );
+        if( SUCCEEDED( ::GetLastError() ) ) lExePath = string_t( aExePath );
     }
 
     // Create Saved, Saved/Logs, Saved/Config
@@ -211,13 +211,13 @@ int main( int argc, char **argv )
     CoreCLRHost lCoreCLR;
 
     // Load the managed part of the application, whose name is given at the command line
-    auto     lApplicationName       = lProgramArguments->get<std::string>( "--application" );
-    fs::path lApplicationConfigPath = "";
+    auto   lApplicationName       = lProgramArguments->get<string_t>( "--application" );
+    path_t lApplicationConfigPath = "";
     if( !lApplicationName.empty() )
     {
         lApplicationConfigPath = lLocalConfigFolder / "OtdrTool" / "Config" / fmt::format( "{}.yaml", lApplicationName );
         auto lApplicationAssembly =
-            fs::path( "D:\\Build\\Lib" ) / "debug" / "develop" / lApplicationName / fmt::format( "{}.dll", lApplicationName );
+            path_t( "D:\\Build\\Lib" ) / "debug" / "develop" / lApplicationName / fmt::format( "{}.dll", lApplicationName );
 
         if( !fs::exists( lApplicationConfigPath ) )
             SE::Logging::Info( "Project file '{}' does not exist", lApplicationConfigPath.string() );

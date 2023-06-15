@@ -22,17 +22,17 @@ namespace SE::Core::Interop
     static CLRVec3 vec( vec3 v ) { return CLRVec3{ v.x, v.y, v.z }; }
     static CLRVec4 vec( vec4 v ) { return CLRVec4{ v.x, v.y, v.z, v.w }; }
 
-    static std::string make_ascii_string( wchar_t *aCharacters )
+    static string_t make_ascii_string( wchar_t *aCharacters )
     {
         std::wstring u16str( aCharacters );
 
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
-        std::string                                                     utf8 = convert.to_bytes( u16str );
+        string_t                                                        utf8 = convert.to_bytes( u16str );
 
         return utf8;
     }
 
-    std::wstring make_ascii_string( const std::string &utf8 )
+    std::wstring make_ascii_string( const string_t &utf8 )
     {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
 
@@ -157,7 +157,7 @@ namespace SE::Core::Interop
 
         void *UIComboBox_CreateWithItems( wchar_t **aItems, int aLength )
         {
-            std::vector<std::string> lItemVector;
+            std::vector<string_t> lItemVector;
             for( int i = 0; i < aLength; i++ ) lItemVector.emplace_back( make_ascii_string( aItems[i] ) );
 
             auto lNewComboBox = new UIComboBox( lItemVector );
@@ -171,7 +171,7 @@ namespace SE::Core::Interop
 
         void UIComboBox_SetItemList( UIComboBox *aSelf, wchar_t **aItems, int aLength )
         {
-            std::vector<std::string> lItemVector;
+            std::vector<string_t> lItemVector;
             for( int i = 0; i < aLength; i++ ) lItemVector.emplace_back( make_ascii_string( aItems[i] ) );
 
             aSelf->SetItemList( lItemVector );
@@ -336,7 +336,7 @@ namespace SE::Core::Interop
 
         void *UIMenuItem_CreateWithText( wchar_t *aText )
         {
-            auto lNewLabel = new UIMenuItem( make_ascii_string(aText) );
+            auto lNewLabel = new UIMenuItem( make_ascii_string( aText ) );
 
             return CAST( void, lNewLabel );
         }
@@ -715,7 +715,7 @@ namespace SE::Core::Interop
 
             typedef void ( *fptr )( wchar_t * );
             fptr lDelegate = (fptr)aDelegate;
-            lInstance->OnTextChanged( [lInstance, lDelegate]( std::string aString )
+            lInstance->OnTextChanged( [lInstance, lDelegate]( string_t aString )
                                       { lDelegate( make_ascii_string( aString ).data() ); } );
         }
 #pragma endregion

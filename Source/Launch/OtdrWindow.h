@@ -24,7 +24,6 @@
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/UI.h"
 
-
 #include "CoreCLRHost.h"
 
 namespace SE::OtdrEditor
@@ -35,8 +34,8 @@ namespace SE::OtdrEditor
     class MainWindow
     {
       public:
-        std::string ApplicationIcon = "";
-        std::string ApplicationName = "";
+        string_t ApplicationIcon = "";
+        string_t ApplicationName = "";
 
         Ref<Engine> mEngineLoop = nullptr;
 
