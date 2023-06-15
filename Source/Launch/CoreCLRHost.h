@@ -54,11 +54,6 @@ namespace SE::Core
         hostfxr_handle mCoreCLR              = nullptr;
         HMODULE        mNetHostLibraryHandle = nullptr;
 
-        std::string mHostPath      = "";
-        std::string mCoreRoot      = "";
-        std::string mCoreLibraries = "";
-        std::string mDomainName    = "";
-
       private:
         CORECLR_APPLICATION_API( ConfigureDelegate, const char *aConfigPath );
         CORECLR_APPLICATION_API( UpdateDelegate, float aTimestamp );
