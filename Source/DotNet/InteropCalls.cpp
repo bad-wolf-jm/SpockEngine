@@ -1,8 +1,7 @@
 #include "InteropCalls.h"
-#include "DotNet/Runtime.h"
 
-#include "Engine/Engine.h"
 #include "Core/File.h"
+#include "Engine/Engine.h"
 
 #include <codecvt>
 #include <locale>
@@ -72,7 +71,8 @@ namespace SE::Core::Interop
             if( lFilePath.has_value() )
             {
                 auto    &lStr      = lFilePath.value();
-                wchar_t *pszReturn = (wchar_t *)::CoTaskMemAlloc( lStr.size() * sizeof( wchar_t ) );
+                wchar_t *pszReturn = (wchar_t *)::CoTaskMemAlloc( lStr.size() * sizeof( wchar_t ) + 1 );
+                memset( pszReturn, 0, lStr.size() * sizeof( wchar_t ) + 1 );
                 wcsncpy( pszReturn, lStr.c_str(), lStr.size() );
                 return pszReturn;
             }
@@ -82,10 +82,9 @@ namespace SE::Core::Interop
 
 #pragma region UIBaseImage
         CONSTRUCT_WITHOUT_PARAMETERS( UIBaseImage )
-        void *UIBaseImage_CreateWithPath( void *aText, CLRVec2 aSize )
+        void *UIBaseImage_CreateWithPath( wchar_t *aText, CLRVec2 aSize )
         {
-            auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-            auto lNewImage = new UIBaseImage( lString, vec( aSize ) );
+            auto lNewImage = new UIBaseImage( make_ascii_string( aText ), vec( aSize ) );
 
             return CAST( void, lNewImage );
         }
@@ -335,10 +334,9 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIMenuItem )
         DESTROY_INTERFACE( UIMenuItem )
 
-        void *UIMenuItem_CreateWithText( void *aText )
+        void *UIMenuItem_CreateWithText( wchar_t *aText )
         {
-            auto lString   = DotNetRuntime::NewString( CAST( MonoString, aText ) );
-            auto lNewLabel = new UIMenuItem( lString );
+            auto lNewLabel = new UIMenuItem( make_ascii_string(aText) );
 
             return CAST( void, lNewLabel );
         }
@@ -697,7 +695,15 @@ namespace SE::Core::Interop
 
         void UITextInput_SetHintText( UITextInput *aSelf, wchar_t *aText ) { aSelf->SetHintText( make_ascii_string( aText ) ); }
 
-        void *UITextInput_GetText( UITextInput *aSelf ) { return DotNetRuntime::NewString( aSelf->GetText() ); }
+        void *UITextInput_GetText( UITextInput *aSelf )
+        {
+            auto    &lStr      = make_ascii_string( aSelf->GetText() );
+            wchar_t *pszReturn = (wchar_t *)::CoTaskMemAlloc( lStr.size() * sizeof( wchar_t ) + 1 );
+            memset( pszReturn, 0, lStr.size() * sizeof( wchar_t ) + 1 );
+            wcsncpy( pszReturn, lStr.c_str(), lStr.size() );
+
+            return pszReturn;
+        }
 
         void UITextInput_SetTextColor( UITextInput *aSelf, CLRVec4 aTextColor ) { aSelf->SetTextColor( vec( aTextColor ) ); }
 

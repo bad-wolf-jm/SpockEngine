@@ -25,7 +25,7 @@
 #include "Delegates.h"
 
 #include "CoreCLRHost.h"
-#include "DotNet/Runtime.h"
+
 
 using namespace SE::Core;
 using namespace SE::Graphics;

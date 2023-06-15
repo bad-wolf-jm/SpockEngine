@@ -1,7 +1,7 @@
 #include "Plot.h"
 #include "implot_internal.h"
 
-#include "DotNet/Runtime.h"
+
 
 namespace SE::Core
 {

@@ -24,7 +24,7 @@
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/UI.h"
 
-#include "DotNet/Runtime.h"
+
 #include "CoreCLRHost.h"
 
 namespace SE::OtdrEditor

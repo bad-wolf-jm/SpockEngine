@@ -1,6 +1,6 @@
 #include "PropertyValue.h"
 
-#include "DotNet/Runtime.h"
+
 namespace SE::Core
 {
     UIPropertyValue::UIPropertyValue( std::string aName )

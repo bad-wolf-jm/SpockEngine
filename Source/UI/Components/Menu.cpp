@@ -1,6 +1,6 @@
 #include "Menu.h"
 
-#include "DotNet/Runtime.h"
+
 namespace SE::Core
 {
     UIMenuItem::UIMenuItem( std::string const &aText )

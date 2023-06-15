@@ -11,7 +11,7 @@
 // #include "Core/EntityCollection/Collection.h"
 #include "Core/Logging.h"
 
-#include "DotNet/Runtime.h"
+// #include "DotNet/Runtime.h"
 
 // #include "Scene/Components.h"
 // #include "TensorOps/Scope.h"
