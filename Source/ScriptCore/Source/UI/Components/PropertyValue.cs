@@ -21,6 +21,7 @@ namespace SpockEngine
         ~UIPropertyValue() { Interop.UIPropertyValue_Destroy(mInstance); }
 
         public void SetText(string aText) { Interop.UIPropertyValue_SetText(mInstance, aText); }
+        
         public void SetOrientation(eBoxLayoutOrientation aOrientation) { Interop.UIPropertyValue_SetOrientation(mInstance, aOrientation); }
 
         public void SetValue(string aText) { Interop.UIPropertyValue_SetValue(mInstance, aText); }

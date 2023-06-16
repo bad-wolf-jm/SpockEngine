@@ -25,7 +25,6 @@ namespace SE::Core
         mLayout->SetPadding( 0.0f );
 
         mText->SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
-        // mLayout->Add( mImage.get(), 20.0f, false, true );
         mLayout->Add( mText.get(), true, true );
         mLayout->Add( mIndicator.get(), 20.0f, false, true );
 
@@ -425,7 +424,6 @@ namespace SE::Core
 
     void UITreeView::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        //
         mRoot->Update( aPosition, aSize );
     }
 } // namespace SE::Core

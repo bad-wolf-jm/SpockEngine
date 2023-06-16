@@ -110,48 +110,4 @@ namespace SE::Core
             }
         }
     }
-
-    // void *UIZLayout::UIZLayout_Create()
-    // {
-    //     auto lNewLayout = new UIZLayout();
-
-    //     return static_cast<void *>( lNewLayout );
-    // }
-
-    // void UIZLayout::UIZLayout_Destroy( void *aInstance ) { delete static_cast<UIZLayout *>( aInstance ); }
-
-    // void UIZLayout::UIZLayout_AddAlignedNonFixed( void *aInstance, void *aChild, bool aExpand, bool aFill,
-    //                                               eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
-    // {
-    //     auto lInstance = static_cast<UIZLayout *>( aInstance );
-    //     auto lChild    = static_cast<UIComponent *>( aChild );
-
-    //     lInstance->Add( lChild, aExpand, aFill, aHAlignment, aVAlignment );
-    // }
-
-    // void UIZLayout::UIZLayout_AddNonAlignedNonFixed( void *aInstance, void *aChild, bool aExpand, bool aFill )
-    // {
-    //     auto lInstance = static_cast<UIZLayout *>( aInstance );
-    //     auto lChild    = static_cast<UIComponent *>( aChild );
-
-    //     lInstance->Add( lChild, aExpand, aFill );
-    // }
-
-    // void UIZLayout::UIZLayout_AddAlignedFixed( void *aInstance, void *aChild, math::vec2 aSize, math::vec2 aPosition, bool aExpand,
-    //                                            bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment )
-    // {
-    //     auto lInstance = static_cast<UIZLayout *>( aInstance );
-    //     auto lChild    = static_cast<UIComponent *>( aChild );
-
-    //     lInstance->Add( lChild, aSize, aPosition, aExpand, aFill, aHAlignment, aVAlignment );
-    // }
-
-    // void UIZLayout::UIZLayout_AddNonAlignedFixed( void *aInstance, void *aChild, math::vec2 aSize, math::vec2 aPosition, bool aExpand,
-    //                                               bool aFill )
-    // {
-    //     auto lInstance = static_cast<UIZLayout *>( aInstance );
-    //     auto lChild    = static_cast<UIComponent *>( aChild );
-
-    //     lInstance->Add( lChild, aSize, aPosition, aExpand, aFill );
-    // }
 } // namespace SE::Core

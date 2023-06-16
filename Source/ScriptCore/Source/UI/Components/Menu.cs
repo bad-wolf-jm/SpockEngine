@@ -71,7 +71,10 @@ namespace SpockEngine
 
         public UIMenu(IntPtr aDerived) : base(aDerived, true) { mMenuItems = new List<UIMenuItem>(); }
 
-        public UIMenu(string aText) : this(Interop.UIMenu_CreateWithText(aText)) { mMenuItems = new List<UIMenuItem>(); }
+        public UIMenu(string aText) : this()
+        {
+            SetText(aText);
+        }
 
         ~UIMenu() { Interop.UIMenu_Destroy(mInstance); }
 

@@ -47,10 +47,6 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-        //   public:
-        //     static void *UIMenuSeparator_Create();
-        //     static void  UIMenuSeparator_Destroy( void *aInstance );
     };
 
     class UIMenu : public UIMenuItem

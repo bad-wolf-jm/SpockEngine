@@ -17,7 +17,7 @@ namespace SpockEngine
 
         public string Text
         {
-            set { return Interop.UITextInput_SetText(mInstance, value); }
+            set { Interop.UITextInput_SetText(mInstance, value); }
             get { return Interop.UITextInput_GetText(mInstance); }
         }
 

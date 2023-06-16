@@ -14,6 +14,7 @@ namespace SE::Core
         void SetHintText( string_t const &aHintText );
         void SetTextColor( math::vec4 aColor );
 
+        void      SetText(string_t const& aText);
         string_t &GetText();
         void      SetBuffersize( uint32_t aSize );
         void      OnTextChanged( std::function<void( string_t aText )> aOnTextChanged );

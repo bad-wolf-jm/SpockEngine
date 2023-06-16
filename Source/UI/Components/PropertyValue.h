@@ -10,7 +10,7 @@ namespace SE::Core
     class UIPropertyValue : public UIBoxLayout
     {
       public:
-        UIPropertyValue()  = default;
+        UIPropertyValue();
         ~UIPropertyValue() = default;
 
         UIPropertyValue( string_t aName );

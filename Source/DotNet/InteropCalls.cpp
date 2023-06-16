@@ -477,7 +477,11 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIPropertyValue )
         DESTROY_INTERFACE( UIPropertyValue )
 
-        void UIPropertyValue_SetText( UIPropertyValue *aSelf, wchar_t *aText ) { aSelf->SetText( ConvertStringForCoreclr( aText ) ); }
+        void UIPropertyValue_SetText( UIPropertyValue *aSelf, wchar_t *aText )
+        {
+            //
+            aSelf->SetText( ConvertStringForCoreclr( aText ) );
+        }
 
         void UIPropertyValue_SetOrientation( UIPropertyValue *aSelf, eBoxLayoutOrientation aOrientation )
         {
@@ -500,6 +504,10 @@ namespace SE::Core::Interop
 #pragma endregion
 
 #pragma region UITableColumn
+        void UITableColumn_SetHeader( UITableColumn *aSelf, wchar_t *aHeader ) { aSelf->mHeader = ConvertStringForCoreclr( aHeader ); }
+
+        void UITableColumn_SetInitialSize( UITableColumn *aSelf, float aValue ) { aSelf->mInitialSize = aValue; }
+
         void UITableColumn_SetTooltip( UITableColumn *aSelf, UIComponent **aTooptip, int aLength )
         {
             aSelf->mToolTip = std::vector( aTooptip, aTooptip + aLength );
@@ -564,6 +572,16 @@ namespace SE::Core::Interop
 
         void UIFloat64Column_Clear( UIFloat64Column *aSelf ) { aSelf->Clear(); }
 
+        void UIFloat64Column_SetFormat( UIFloat64Column *aSelf, wchar_t *aValue )
+        {
+            aSelf->mFormat = ConvertStringForCoreclr( aValue );
+        }
+
+        void UIFloat64Column_SetNanFormat( UIFloat64Column *aSelf, wchar_t *aValue )
+        {
+            aSelf->mNaNFormat = ConvertStringForCoreclr( aValue );
+        }
+
         void UIFloat64Column_SetData( UIFloat64Column *aSelf, double *aValue, int aLength )
         {
             aSelf->mData = std::vector( aValue, aValue + aLength );
@@ -601,7 +619,8 @@ namespace SE::Core::Interop
 
         void UITextInput_SetHintText( UITextInput *aSelf, wchar_t *aText ) { aSelf->SetHintText( ConvertStringForCoreclr( aText ) ); }
 
-        void *UITextInput_GetText( UITextInput *aSelf ) { return CopyCharactersForCoreClr( aSelf->GetText() ); }
+        void     UITextInput_SetText( UITextInput *aSelf, wchar_t *aText ) { aSelf->SetText( ConvertStringForCoreclr( aText ) ); }
+        wchar_t *UITextInput_GetText( UITextInput *aSelf ) { return CopyCharactersForCoreClr( aSelf->GetText() ); }
 
         void UITextInput_SetTextColor( UITextInput *aSelf, CLRVec4 aTextColor ) { aSelf->SetTextColor( vec( aTextColor ) ); }
 

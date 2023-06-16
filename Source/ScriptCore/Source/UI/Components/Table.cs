@@ -16,6 +16,17 @@ namespace SpockEngine
         public UITableColumn() { mInstance = IntPtr.Zero; }
         public UITableColumn(IntPtr aInstance) { mInstance = aInstance; }
 
+
+        public void SetHeader(string aHeader)
+        {
+            Interop.UITableColumn_SetHeader(mInstance, aHeader);
+        }
+
+        public void SetInitialSize(float aValue)
+        {
+            Interop.UITableColumn_SetInitialSize(mInstance, aValue);
+        }
+
         private UIComponent[] mToolTips;
         private void SetTooltip(IntPtr[] aTooltips)
         {
@@ -68,7 +79,7 @@ namespace SpockEngine
             SetHeader(aHeader);
             SetInitialSize(aInitialSize);
             SetFormat(aFormat);
-            SetNanFormat(aNanFormat);
+            SetNanFormat(aNaNFormat);
         }
 
         ~UIFloat64Column() { Interop.UIFloat64Column_Destroy(mInstance); }
@@ -76,6 +87,16 @@ namespace SpockEngine
         public void Clear()
         {
             Interop.UIFloat64Column_Clear(mInstance);
+        }
+
+        public void SetFormat(string aValue)
+        {
+            Interop.UIFloat64Column_SetFormat(mInstance, aValue);
+        }
+
+        public void SetNanFormat(string aValue)
+        {
+            Interop.UIFloat64Column_SetNanFormat(mInstance, aValue);
         }
 
         public void SetData(double[] aValue)

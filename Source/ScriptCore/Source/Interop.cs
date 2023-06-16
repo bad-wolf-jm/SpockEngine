@@ -516,7 +516,13 @@ namespace SpockEngine
         public extern static void UISlider_Destroy(IntPtr aSelf);
         #endregion
 
-        #region UITableColumn
+        #region UITableColumn  
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static void UITableColumn_SetHeader(IntPtr aSelf, string aValue);
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static void UITableColumn_SetInitialSize(IntPtr aSelf, float aValue);
+
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UITableColumn_SetTooltip(IntPtr aSelf, IntPtr[] aValue, int aLength);
 
@@ -531,8 +537,11 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIFloat64Column_Create();
 
-        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        // public extern static IntPtr UIFloat64Column_CreateFull(string aHeader, float aInitialSize, string aFormat, string aNaNFormat);
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static IntPtr UIFloat64Column_SetFormat(IntPtr aSelf, string aFormat);
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static IntPtr UIFloat64Column_SetNanFormat(IntPtr aSelf, string aFormat);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIFloat64Column_Destroy(IntPtr aSelf);
@@ -608,8 +617,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UITextInput_Create();
 
-        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        // public extern static IntPtr UITextInput_CreateWithText(string aText);
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static IntPtr UITextInput_SetText(IntPtr aSelf, string aText);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UITextInput_Destroy(IntPtr aSelf);

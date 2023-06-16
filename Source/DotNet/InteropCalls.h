@@ -246,6 +246,8 @@ namespace SE::Core::Interop
         void *UISlider_Create();
         void  UISlider_Destroy( UISlider *aSelf );
 
+        void UITableColumn_SetHeader( UITableColumn *aSelf, wchar_t* aHeader );
+        void UITableColumn_SetInitialSize( UITableColumn *aSelf, float aInitialSize );
         void UITableColumn_SetTooltip( UITableColumn *aSelf, UIComponent **aTooptip, int aLength );
         void UITableColumn_SetForegroundColor( UITableColumn *aSelf, CLRVec4 *aForegroundColor, int aLength );
         void UITableColumn_SetBackgroundColor( UITableColumn *aSelf, CLRVec4 *aBackroundColor , int aLength);
@@ -280,7 +282,7 @@ namespace SE::Core::Interop
         void *UITextInput_Create();
         void *UITextInput_CreateWithText( wchar_t *aText );
         void  UITextInput_Destroy( UITextInput *aSelf );
-        void *UITextInput_GetText( UITextInput *aSelf );
+        wchar_t *UITextInput_GetText( UITextInput *aSelf );
         void  UITextInput_SetHintText( UITextInput *aSelf, wchar_t *aText );
         void  UITextInput_SetTextColor( UITextInput *aSelf, CLRVec4  aTextColor );
         void  UITextInput_SetBufferSize( UITextInput *aSelf, uint32_t aNewSize );

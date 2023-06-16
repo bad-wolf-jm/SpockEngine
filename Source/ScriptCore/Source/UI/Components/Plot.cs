@@ -101,7 +101,11 @@ namespace SpockEngine
     public class UIAxisTag : UIPlotData
     {
         public UIAxisTag() : base(Interop.UIAxisTag_Create()) { }
-        public UIAxisTag(eUIPlotAxis aAxis, double aX, string aText, Math.vec4 aColor) : base(Interop.UIAxisTag_CreateWithTextAndColor(aAxis, aX, aText, aColor)) { }
+        public UIAxisTag(eUIPlotAxis aAxis, double aX, string aText, Math.vec4 aColor) : this()
+        {
+            Text = aText;
+            Color = aColor;
+        }
 
         public UIAxisTag(IntPtr aInstance) : base(aInstance) { }
 

@@ -22,8 +22,6 @@ namespace SE::Core
     bool UITextToggleButton::IsActive() { return mActivated; }
     void UITextToggleButton::SetActive( bool aValue ) { mActivated = aValue; }
 
-    // void UITextToggleButton::SetText( string_t const &aText ) { UILabel::SetText( aText ); }
-
     void UITextToggleButton::SetActiveColor( math::vec4 const &aColor )
     {
         mActiveColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w };
