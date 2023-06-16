@@ -58,5 +58,4 @@ namespace SE::Core
     ImVec2 UIBaseImage::RequiredSize() { return mSize; }
 
     void UIBaseImage::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
-
 } // namespace SE::Core

@@ -54,13 +54,6 @@ namespace SE::Core::Interop
 
 #pragma region UIBaseImage
         CONSTRUCT_WITHOUT_PARAMETERS( UIBaseImage )
-        void *UIBaseImage_CreateWithPath( wchar_t *aText, CLRVec2 aSize )
-        {
-            auto lNewImage = new UIBaseImage( ConvertStringForCoreclr( aText ), vec( aSize ) );
-
-            return CAST( void, lNewImage );
-        }
-
         DESTROY_INTERFACE( UIBaseImage )
 
         void UIBaseImage_SetImage( UIBaseImage *aSelf, wchar_t *aPath ) { aSelf->SetImage( ConvertStringForCoreclr( aPath ) ); }
@@ -85,8 +78,6 @@ namespace SE::Core::Interop
 #pragma region UIButton
         CONSTRUCT_WITHOUT_PARAMETERS( UIButton )
         DESTROY_INTERFACE( UIButton )
-
-        void *UIButton_CreateWithText( wchar_t *aText ) { return CAST( void, new UIButton( ConvertStringForCoreclr( aText ) ) ); }
 
         void UIButton_SetText( UIButton *aSelf, wchar_t *aText ) { aSelf->SetText( ConvertStringForCoreclr( aText ) ); }
 
@@ -126,16 +117,6 @@ namespace SE::Core::Interop
 #pragma region UIComboBox
         CONSTRUCT_WITHOUT_PARAMETERS( UIComboBox )
         DESTROY_INTERFACE( UIComboBox )
-
-        void *UIComboBox_CreateWithItems( wchar_t **aItems, int aLength )
-        {
-            std::vector<string_t> lItemVector;
-            for( int i = 0; i < aLength; i++ ) lItemVector.emplace_back( ConvertStringForCoreclr( aItems[i] ) );
-
-            auto lNewComboBox = new UIComboBox( lItemVector );
-
-            return CAST( void, lNewComboBox );
-        }
 
         int UIComboBox_GetCurrent( UIComboBox *aSelf ) { return aSelf->Current(); }
 
@@ -230,25 +211,11 @@ namespace SE::Core::Interop
 #pragma region UIImage
         CONSTRUCT_WITHOUT_PARAMETERS( UIImage )
         DESTROY_INTERFACE( UIImage )
-
-        void *UIImage_CreateWithPath( wchar_t *aText, CLRVec2 aSize )
-        {
-            auto lNewImage = new UIImage( ConvertStringForCoreclr( aText ), vec( aSize ) );
-
-            return CAST( void, lNewImage );
-        }
 #pragma endregion
 
 #pragma region UIImageButton
         CONSTRUCT_WITHOUT_PARAMETERS( UIImageButton )
         DESTROY_INTERFACE( UIImageButton )
-
-        void *UIImageButton_CreateWithPath( wchar_t *aText, CLRVec2 aSize )
-        {
-            auto lNewImage = new UIImageButton( ConvertStringForCoreclr( aText ), vec( aSize ) );
-
-            return CAST( void, lNewImage );
-        }
 
         void UIImageButton_OnClick( UIImageButton *aSelf, void *aDelegate )
         {
@@ -298,8 +265,6 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UILabel )
         DESTROY_INTERFACE( UILabel )
 
-        void *UILabel_CreateWithText( wchar_t *aText ) { return CAST( void, new UILabel( ConvertStringForCoreclr( aText ) ) ); }
-
         void UILabel_SetText( UILabel *aSelf, wchar_t *aText ) { aSelf->SetText( ConvertStringForCoreclr( aText ) ); }
 
         void UILabel_SetTextColor( UILabel *aSelf, CLRVec4 aTextColor ) { aSelf->SetTextColor( vec( aTextColor ) ); }
@@ -308,18 +273,6 @@ namespace SE::Core::Interop
 #pragma region UIMenuItem
         CONSTRUCT_WITHOUT_PARAMETERS( UIMenuItem )
         DESTROY_INTERFACE( UIMenuItem )
-
-        void *UIMenuItem_CreateWithText( wchar_t *aText )
-        {
-            auto lNewLabel = new UIMenuItem( ConvertStringForCoreclr( aText ) );
-
-            return CAST( void, lNewLabel );
-        }
-
-        void *UIMenuItem_CreateWithTextAndShortcut( wchar_t *aText, wchar_t *aShortcut )
-        {
-            return CAST( void, new UIMenuItem( ConvertStringForCoreclr( aText ), ConvertStringForCoreclr( aShortcut ) ) );
-        }
 
         void UIMenuItem_SetText( UIMenuItem *aSelf, wchar_t *aText ) { aSelf->SetText( ConvertStringForCoreclr( aText ) ); }
 
@@ -348,8 +301,6 @@ namespace SE::Core::Interop
 #pragma region UIMenu
         CONSTRUCT_WITHOUT_PARAMETERS( UIMenu )
         DESTROY_INTERFACE( UIMenu )
-
-        void *UIMenu_CreateWithText( wchar_t *aText ) { return CAST( void, new UIMenu( ConvertStringForCoreclr( aText ) ) ); }
 
         void *UIMenu_AddAction( UIMenu *aSelf, wchar_t *aText, wchar_t *aShortcut )
         {
@@ -465,11 +416,6 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIAxisTag )
         DESTROY_INTERFACE( UIAxisTag )
 
-        void *UIAxisTag_CreateWithTextAndColor( UIPlotAxis aAxis, double aX, wchar_t *aText, CLRVec4 aColor )
-        {
-            return CAST( void, new UIAxisTag( aAxis, aX, ConvertStringForCoreclr( aText ), vec( aColor ) ) );
-        }
-
         void UIAxisTag_SetX( UIAxisTag *aSelf, double aValue ) { aSelf->mX = aValue; }
 
         void UIAxisTag_SetText( UIAxisTag *aSelf, wchar_t *aText ) { aSelf->mText = ConvertStringForCoreclr( aText ); }
@@ -530,16 +476,6 @@ namespace SE::Core::Interop
 #pragma region UIPropertyValue
         CONSTRUCT_WITHOUT_PARAMETERS( UIPropertyValue )
         DESTROY_INTERFACE( UIPropertyValue )
-
-        void *UIPropertyValue_CreateWithText( wchar_t *aText )
-        {
-            return CAST( void, new UIPropertyValue( ConvertStringForCoreclr( aText ) ) );
-        }
-
-        void *UIPropertyValue_CreateWithTextAndOrientation( wchar_t *aText, eBoxLayoutOrientation aOrientation )
-        {
-            return CAST( void, new UIPropertyValue( ConvertStringForCoreclr( aText ), aOrientation ) );
-        }
 
         void UIPropertyValue_SetValue( UIPropertyValue *aSelf, wchar_t *aText )
         {
@@ -619,15 +555,6 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIFloat64Column )
         DESTROY_INTERFACE( UIFloat64Column )
 
-        void *UIFloat64Column_CreateFull( wchar_t *aHeader, float aInitialSize, wchar_t *aFormat, wchar_t *aNaNFormat )
-        {
-            auto lHeader    = ConvertStringForCoreclr( aHeader );
-            auto lFormat    = ConvertStringForCoreclr( aFormat );
-            auto lNaNFormat = ConvertStringForCoreclr( aNaNFormat );
-
-            return CAST( void, new UIFloat64Column( lHeader, aInitialSize, lFormat, lNaNFormat ) );
-        }
-
         void UIFloat64Column_Clear( UIFloat64Column *aSelf ) { aSelf->Clear(); }
 
         void UIFloat64Column_SetData( UIFloat64Column *aSelf, double *aValue, int aLength )
@@ -639,11 +566,6 @@ namespace SE::Core::Interop
 #pragma region UIUint32Column
         CONSTRUCT_WITHOUT_PARAMETERS( UIUint32Column )
         DESTROY_INTERFACE( UIUint32Column )
-
-        void *UIUint32Column_CreateFull( wchar_t *aHeader, float aInitialSize )
-        {
-            return CAST( void, new UIUint32Column( ConvertStringForCoreclr( aHeader ), aInitialSize ) );
-        }
 
         void UIUint32Column_Clear( UIUint32Column *aSelf ) { aSelf->Clear(); }
 
@@ -657,11 +579,6 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIStringColumn )
         DESTROY_INTERFACE( UIStringColumn )
 
-        void *UIStringColumn_CreateFull( wchar_t *aHeader, float aInitialSize )
-        {
-            return CAST( void, new UIStringColumn( ConvertStringForCoreclr( aHeader ), aInitialSize ) );
-        }
-
         void UIStringColumn_Clear( UIStringColumn *aSelf ) { aSelf->Clear(); }
 
         void UIStringColumn_SetData( UIStringColumn *aSelf, wchar_t **aValue, int aLength )
@@ -674,11 +591,6 @@ namespace SE::Core::Interop
 #pragma region UITextInput
         CONSTRUCT_WITHOUT_PARAMETERS( UITextInput )
         DESTROY_INTERFACE( UITextInput )
-
-        void *UITextInput_CreateWithText( wchar_t *aText )
-        {
-            return CAST( void, new UITextInput( ConvertStringForCoreclr( aText ) ) );
-        }
 
         void UITextInput_SetHintText( UITextInput *aSelf, wchar_t *aText ) { aSelf->SetHintText( ConvertStringForCoreclr( aText ) ); }
 
@@ -711,11 +623,6 @@ namespace SE::Core::Interop
 #pragma region UITextToggleButton
         CONSTRUCT_WITHOUT_PARAMETERS( UITextToggleButton )
         DESTROY_INTERFACE( UITextToggleButton )
-
-        void *UITextToggleButton_CreateWithText( wchar_t *aText )
-        {
-            return CAST( void, new UITextToggleButton( ConvertStringForCoreclr( aText ) ) );
-        }
 
         bool UITextToggleButton_IsActive( UITextToggleButton *aSelf ) { return aSelf->IsActive(); }
 
@@ -893,13 +800,7 @@ namespace SE::Core::Interop
 #pragma endregion
 
 #pragma region UIBoxLayout
-        void *UIBoxLayout_CreateWithOrientation( eBoxLayoutOrientation aOrientation )
-        {
-            auto lNewLayout = new UIBoxLayout( aOrientation );
-
-            return CAST( void, lNewLayout );
-        }
-
+        CONSTRUCT_WITHOUT_PARAMETERS( UIWorkspace )
         DESTROY_INTERFACE( UIBoxLayout )
 
         void UIBoxLayout_AddAlignedNonFixed( UIBoxLayout *aSelf, UIComponent *aChild, bool aExpand, bool aFill,
@@ -946,11 +847,6 @@ namespace SE::Core::Interop
 #pragma region UISplitter
         CONSTRUCT_WITHOUT_PARAMETERS( UISplitter )
         DESTROY_INTERFACE( UISplitter )
-
-        void *UISplitter_CreateWithOrientation( eBoxLayoutOrientation aOrientation )
-        {
-            return CAST( void, new UISplitter( aOrientation ) );
-        }
 
         void UISplitter_Add1( UISplitter *aSelf, UIComponent *aChild ) { aSelf->Add1( aChild ); }
 
@@ -1030,11 +926,6 @@ namespace SE::Core::Interop
 #pragma region UIDialog
         CONSTRUCT_WITHOUT_PARAMETERS( UIDialog )
         DESTROY_INTERFACE( UIDialog )
-
-        void *UIDialog_CreateWithTitleAndSize( wchar_t *aTitle, CLRVec2 aSize )
-        {
-            return CAST( void, new UIDialog( ConvertStringForCoreclr( aTitle ), vec( aSize ) ) );
-        }
 
         void UIDialog_SetTitle( UIDialog *aSelf, wchar_t *aTitle ) { aSelf->SetTitle( ConvertStringForCoreclr( aTitle ) ); }
 
