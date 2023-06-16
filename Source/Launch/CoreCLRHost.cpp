@@ -37,6 +37,8 @@ namespace SE::Core
         TryLoadCoreCLR();
 
         mFxrInitialize = (Internal::hostfxr_initialize_for_runtime_config_fn)TryGetExport( "hostfxr_initialize_for_runtime_config" );
+        mFxrSetRuntimePropertyValue =
+            (Internal::hostfxr_set_runtime_property_value_fn)TryGetExport( "hostfxr_set_runtime_property_value" );
         mFxrCreateDelegate = (Internal::hostfxr_get_runtime_delegate_fn)TryGetExport( "hostfxr_get_runtime_delegate" );
         mFxrShutdown       = (Internal::hostfxr_close_fn)TryGetExport( "hostfxr_close" );
     }
@@ -98,25 +100,25 @@ namespace SE::Core
         std::wstring lConfigureDelegate =
             make_ascii_string( fmt::format( "{}+{}, {}", lApplicationClassName, "ConfigureDelegate", aApplicationName ) );
         mGetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"Configure", lConfigureDelegate.c_str(), nullptr,
-                            (void **)&mConfigureDelegate );
+                             (void **)&mConfigureDelegate );
         if( mConfigureDelegate == nullptr ) mConfigureDelegate = ConfigureDelegateDefault;
         mGetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"Teardown", lConfigureDelegate.c_str(), nullptr,
-                            (void **)&mTeardownDelegate );
+                             (void **)&mTeardownDelegate );
         if( mTeardownDelegate == nullptr ) mTeardownDelegate = TeardownDelegateDefault;
 
         std::wstring lTickDelegate =
             make_ascii_string( fmt::format( "{}+{}, {}", lApplicationClassName, "TickDelegate", aApplicationName ) );
         mGetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"Update", lTickDelegate.c_str(), nullptr,
-                            (void **)&mUpdateDelegate );
+                             (void **)&mUpdateDelegate );
         if( mUpdateDelegate == nullptr ) mUpdateDelegate = UpdateDelegateDefault;
         mGetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"UpdateUI", lTickDelegate.c_str(), nullptr,
-                            (void **)&mUpdateUIDelegate );
+                             (void **)&mUpdateUIDelegate );
         if( mUpdateUIDelegate == nullptr ) mUpdateUIDelegate = UpdateUIDelegateDefault;
 
         std::wstring lUpdateMenuDelegate =
             make_ascii_string( fmt::format( "{}+{}, {}", lApplicationClassName, "UpdateDelegate", aApplicationName ) );
         mGetFunctionPointer( lAssemblyPath.c_str(), lApplicationClass.c_str(), L"UpdateMenu", lUpdateMenuDelegate.c_str(), nullptr,
-                            (void **)&mUpdateMenuDelegate );
+                             (void **)&mUpdateMenuDelegate );
         if( mUpdateMenuDelegate == nullptr ) mUpdateMenuDelegate = UpdateMenuDelegateDefault;
     }
 

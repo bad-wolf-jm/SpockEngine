@@ -9,6 +9,8 @@
                 "name": "Microsoft.WindowsDesktop.App",
                 "version": "7.0.5"
             }
-        ]
+        ],
+        "applyPatches": true,
+        "rollForwardOnNoCandidateFx": 1
     }
 }
