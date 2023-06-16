@@ -35,6 +35,8 @@ namespace SE::Core
         return ImVec2{ lWidth, lHeight };
     }
 
+    void UISplitter::SetOrientation( eBoxLayoutOrientation aValue ) { mOrientation = aValue; }
+
     void UISplitter::SetItemSpacing( float aItemSpacing ) { mItemSpacing = aItemSpacing; }
 
     void UISplitter::Add1( UIComponent *aChild ) { mChild1 = aChild; }
@@ -67,10 +69,10 @@ namespace SE::Core
 
     void UISplitter::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
-        auto lSize = aSize - GetContentPadding();
+        auto lSize     = aSize - GetContentPadding();
         auto lPosition = aPosition + GetContentOffset();
 
-        if (mSizeSet && ((lSize.x != mCurrentSize.x) || (lSize.y != mCurrentSize.y)))
+        if( mSizeSet && ( ( lSize.x != mCurrentSize.x ) || ( lSize.y != mCurrentSize.y ) ) )
         {
             if( mOrientation == eBoxLayoutOrientation::VERTICAL )
                 mSize2 = lSize.x - mSize1 - mItemSpacing;
@@ -91,7 +93,8 @@ namespace SE::Core
         }
 
         ImGui::SetCursorPos( lPosition );
-        Splitter( mOrientation, mItemSpacing, &mSize1, &mSize2, 50.0f, 50.0f, (mOrientation == eBoxLayoutOrientation::VERTICAL) ? lSize.y : lSize.x );
+        Splitter( mOrientation, mItemSpacing, &mSize1, &mSize2, 50.0f, 50.0f,
+                  ( mOrientation == eBoxLayoutOrientation::VERTICAL ) ? lSize.y : lSize.x );
 
         ImVec2 lTopLeft = ImGui::GetCursorScreenPos();
         if( mChild1 )
@@ -125,43 +128,4 @@ namespace SE::Core
             ImGui::PopID();
         }
     }
-
-    // void *UISplitter::UISplitter_Create()
-    // {
-    //     auto lNewLayout = new UISplitter();
-
-    //     return static_cast<void *>( lNewLayout );
-    // }
-
-    // void *UISplitter::UISplitter_CreateWithOrientation( eBoxLayoutOrientation aOrientation )
-    // {
-    //     auto lNewLayout = new UISplitter( aOrientation );
-
-    //     return static_cast<void *>( lNewLayout );
-    // }
-
-    // void UISplitter::UISplitter_Destroy( void *aInstance ) { delete static_cast<UISplitter *>( aInstance ); }
-
-    // void UISplitter::UISplitter_Add1( void *aInstance, void *aChild )
-    // {
-    //     auto lInstance = static_cast<UISplitter *>( aInstance );
-    //     auto lChild    = static_cast<UIComponent *>( aChild );
-
-    //     lInstance->Add1( lChild );
-    // }
-
-    // void UISplitter::UISplitter_Add2( void *aInstance, void *aChild )
-    // {
-    //     auto lInstance = static_cast<UISplitter *>( aInstance );
-    //     auto lChild    = static_cast<UIComponent *>( aChild );
-
-    //     lInstance->Add2( lChild );
-    // }
-
-    // void UISplitter::UISplitter_SetItemSpacing( void *aInstance, float aItemSpacing )
-    // {
-    //     auto lInstance = static_cast<UISplitter *>( aInstance );
-
-    //     lInstance->SetItemSpacing( aItemSpacing );
-    // }
 } // namespace SE::Core

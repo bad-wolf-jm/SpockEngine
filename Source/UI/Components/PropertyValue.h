@@ -16,6 +16,8 @@ namespace SE::Core
         UIPropertyValue( string_t aName );
         UIPropertyValue( string_t aName, eBoxLayoutOrientation aOrientation );
 
+        void SetText( string_t aValue );
+        void SetOrientation( eBoxLayoutOrientation aValue );
         void SetValue( string_t aValue );
         void SetValueFont( FontFamilyFlags aFont );
         void SetNameFont( FontFamilyFlags aFont );

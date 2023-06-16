@@ -31,11 +31,12 @@ namespace SE::Core
 
         ~UISplitter() = default;
 
+        void SetOrientation( eBoxLayoutOrientation aValue );
         void SetItemSpacing( float aItemSpacing );
 
         void Add1( UIComponent *aChild );
         void Add2( UIComponent *aChild );
-        
+
         ImVec2 RequiredSize();
 
       protected:
@@ -55,16 +56,6 @@ namespace SE::Core
         void PushStyles();
         void PopStyles();
 
-        void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-    //   public:
-    //     static void *UISplitter_Create();
-    //     static void *UISplitter_CreateWithOrientation( eBoxLayoutOrientation aOrientation );
-    //     static void  UISplitter_Destroy( void *aInstance );
-
-    //     static void UISplitter_Add1( void *aInstance, void *aChild );
-    //     static void UISplitter_Add2( void *aInstance, void *aChild );
-
-    //     static void UISplitter_SetItemSpacing( void *aInstance, float aItemSpacing );
+        void DrawContent( ImVec2 aPosition, ImVec2 aSize );
     };
 } // namespace SE::Core

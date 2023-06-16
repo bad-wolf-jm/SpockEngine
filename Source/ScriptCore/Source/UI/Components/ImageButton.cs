@@ -15,7 +15,6 @@ namespace SpockEngine
 
         ~UIImageButton() { Interop.UIImageButton_Destroy(mInstance); }
 
-
         public delegate void ClickDelegate();
         ClickDelegate onClick;
         public void OnClick(ClickDelegate aHandler)

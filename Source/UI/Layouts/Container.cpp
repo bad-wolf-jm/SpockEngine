@@ -29,21 +29,4 @@ namespace SE::Core
         ImGui::EndChild();
         ImGui::PopID();
     }
-
-    // void *UIContainer::UIContainer_Create()
-    // {
-    //     auto lNewLayout = new UIContainer();
-
-    //     return static_cast<void *>( lNewLayout );
-    // }
-
-    // void UIContainer::UIContainer_Destroy( void *aInstance ) { delete static_cast<UIContainer *>( aInstance ); }
-
-    // void UIContainer::UIContainer_SetContent( void *aInstance, void *aChild )
-    // {
-    //     auto lInstance = static_cast<UIContainer *>( aInstance );
-    //     auto lChild    = static_cast<UIComponent *>( aChild );
-
-    //     lInstance->SetContent( lChild );
-    // }
 } // namespace SE::Core

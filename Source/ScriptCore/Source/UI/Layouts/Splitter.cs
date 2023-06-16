@@ -17,6 +17,11 @@ namespace SpockEngine
 
         ~UISplitter() { if (!mDerived) Interop.UISplitter_Destroy(mInstance); }
 
+        public void SetOrientation(eBoxLayoutOrientation aOrientation)
+        {
+            Interop.UISplitter_SetOrientation(mInstance, aOrientation);
+        }
+
         public void SetItemSpacing(float aItemSpacing)
         {
             Interop.UISplitter_SetItemSpacing(mInstance, aItemSpacing);

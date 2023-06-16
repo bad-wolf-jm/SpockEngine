@@ -36,7 +36,7 @@ namespace SE::Core
         void SetCurrent( string_t const &aKey );
 
         ImVec2 RequiredSize();
-        
+
       protected:
         string_t mCurrent;
 
@@ -46,13 +46,6 @@ namespace SE::Core
         void PushStyles();
         void PopStyles();
 
-        void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-    //   public:
-    //     static void *UIStackLayout_Create();
-    //     static void  UIStackLayout_Destroy( void *aInstance );
-
-    //     static void UIStackLayout_Add( void *aInstance, void *aChild, void *aKey );
-    //     static void UIStackLayout_SetCurrent( void *aInstance, void *aKey );
+        void DrawContent( ImVec2 aPosition, ImVec2 aSize );
     };
 } // namespace SE::Core

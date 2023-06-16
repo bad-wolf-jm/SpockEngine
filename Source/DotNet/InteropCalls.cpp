@@ -477,6 +477,13 @@ namespace SE::Core::Interop
         CONSTRUCT_WITHOUT_PARAMETERS( UIPropertyValue )
         DESTROY_INTERFACE( UIPropertyValue )
 
+        void UIPropertyValue_SetText( UIPropertyValue *aSelf, wchar_t *aText ) { aSelf->SetText( ConvertStringForCoreclr( aText ) ); }
+
+        void UIPropertyValue_SetOrientation( UIPropertyValue *aSelf, eBoxLayoutOrientation aOrientation )
+        {
+            aSelf->SetOrientation( aOrientation );
+        }
+
         void UIPropertyValue_SetValue( UIPropertyValue *aSelf, wchar_t *aText )
         {
             aSelf->SetValue( ConvertStringForCoreclr( aText ) );
@@ -800,7 +807,7 @@ namespace SE::Core::Interop
 #pragma endregion
 
 #pragma region UIBoxLayout
-        CONSTRUCT_WITHOUT_PARAMETERS( UIWorkspace )
+        CONSTRUCT_WITHOUT_PARAMETERS( UIBoxLayout )
         DESTROY_INTERFACE( UIBoxLayout )
 
         void UIBoxLayout_AddAlignedNonFixed( UIBoxLayout *aSelf, UIComponent *aChild, bool aExpand, bool aFill,
@@ -827,12 +834,9 @@ namespace SE::Core::Interop
 
         void UIBoxLayout_AddSeparator( UIBoxLayout *aSelf ) { aSelf->AddSeparator(); }
 
-        void UIBoxLayout_SetItemSpacing( UIBoxLayout *aSelf, float aItemSpacing )
-        {
-            auto lInstance = aSelf;
+        void UIBoxLayout_SetItemSpacing( UIBoxLayout *aSelf, float aItemSpacing ) { aSelf->SetItemSpacing( aItemSpacing ); }
 
-            lInstance->SetItemSpacing( aItemSpacing );
-        }
+        void UIBoxLayout_SetOrientation( UIBoxLayout *aSelf, eBoxLayoutOrientation aValue ) { aSelf->SetOrientation( aValue ); }
 
         void UIBoxLayout_Clear( UIBoxLayout *aSelf ) { aSelf->Clear(); }
 #pragma endregion
@@ -851,6 +855,8 @@ namespace SE::Core::Interop
         void UISplitter_Add1( UISplitter *aSelf, UIComponent *aChild ) { aSelf->Add1( aChild ); }
 
         void UISplitter_Add2( UISplitter *aSelf, UIComponent *aChild ) { aSelf->Add2( aChild ); }
+
+        void UISplitter_SetOrientation( UISplitter *aSelf, eBoxLayoutOrientation aValue ) { aSelf->SetOrientation( aValue ); }
 
         void UISplitter_SetItemSpacing( UISplitter *aSelf, float aItemSpacing ) { aSelf->SetItemSpacing( aItemSpacing ); }
 #pragma endregion

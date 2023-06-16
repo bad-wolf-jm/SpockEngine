@@ -489,11 +489,11 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIPropertyValue_Create();
 
-        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        // public extern static IntPtr UIPropertyValue_CreateWithText(string aText);
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static IntPtr UIPropertyValue_SetText(IntPtr aSelf, string aText);
 
-        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        // public extern static IntPtr UIPropertyValue_CreateWithTextAndOrientation(string aText, eBoxLayoutOrientation aOrientation);
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static IntPtr UIPropertyValue_SetOrientation(IntPtr aSelf, eBoxLayoutOrientation aOrientation);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIPropertyValue_Destroy(IntPtr aSelf);
@@ -832,8 +832,9 @@ namespace SpockEngine
         #region UIBoxLayout
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIBoxLayout_Create();
-        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        // public extern static IntPtr UIBoxLayout_CreateWithOrientation(eBoxLayoutOrientation aOrientation);
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static IntPtr UIBoxLayout_SetOrientation(IntPtr aSelf, eBoxLayoutOrientation aOrientation);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIBoxLayout_AddAlignedNonFixed(IntPtr aSelf, IntPtr aChild, bool aExpand, bool aFill, eHorizontalAlignment aHAlignment, eVerticalAlignment aVAlignment);
@@ -860,7 +861,7 @@ namespace SpockEngine
         public extern static void UIBoxLayout_Clear(IntPtr aSelf);
         #endregion
 
-        #region UIOContainer
+        #region UIContainer
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UIContainer_Create();
 
@@ -875,8 +876,8 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static IntPtr UISplitter_Create();
 
-        // [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        // public extern static IntPtr UISplitter_CreateWithOrientation(eBoxLayoutOrientation aOrientation);
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static IntPtr UISplitter_SetOrientation(IntPtr aSelf, eBoxLayoutOrientation aOrientation);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UISplitter_Add1(IntPtr aSelf, IntPtr aChild);

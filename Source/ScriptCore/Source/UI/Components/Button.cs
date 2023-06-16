@@ -7,7 +7,10 @@ namespace SpockEngine
     public class UIButton : UIComponent
     {
         public UIButton() : base(Interop.UIButton_Create()) { }
-        public UIButton(string aText) : base(Interop.UIButton_CreateWithText(aText)) { }
+        public UIButton(string aText) : this()
+        {
+            SetText(aText);
+        }
 
         ~UIButton() { Interop.UIButton_Destroy(mInstance); }
 

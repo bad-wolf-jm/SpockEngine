@@ -25,6 +25,8 @@ namespace SE::Core
         }
     }
 
+    void UIPropertyValue::SetText( string_t aValue ) { mName->SetText( aValue ); }
+    void UIPropertyValue::SetOrientation( eBoxLayoutOrientation aValue ) { SetOrientation( aValue ); }
     void UIPropertyValue::SetValue( string_t aValue ) { mValue->SetText( aValue ); }
     void UIPropertyValue::SetValueFont( FontFamilyFlags aFont ) { mValue->mFont = aFont; }
     void UIPropertyValue::SetNameFont( FontFamilyFlags aFont ) { mName->mFont = aFont; }
