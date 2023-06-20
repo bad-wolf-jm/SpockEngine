@@ -7,7 +7,7 @@
 #include <sstream>
 #include <string>
 
-#include <nethost.h>
+#include <nethost/nethost.h>
 
 namespace SE::Core
 {

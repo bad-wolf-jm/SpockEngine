@@ -217,7 +217,7 @@ int main( int argc, char **argv )
     {
         lApplicationConfigPath = lLocalConfigFolder / "OtdrTool" / "Config" / fmt::format( "{}.yaml", lApplicationName );
         auto lApplicationAssembly =
-            path_t( "D:\\Build\\Lib" ) / "debug" / "develop" / lApplicationName / fmt::format( "{}.dll", lApplicationName );
+            path_t( "D:\\Build\\Lib" ) / "debug" / "develop" / "net7" / lApplicationName / fmt::format( "{}.dll", lApplicationName );
 
         if( !fs::exists( lApplicationConfigPath ) )
             SE::Logging::Info( "Project file '{}' does not exist", lApplicationConfigPath.string() );

@@ -107,24 +107,6 @@ include_directories(${sol2_SOURCE_DIR}/include)
 set(SE_EXTRA_INCLUDES ${sol2_SOURCE_DIR}/include ${SE_EXTRA_INCLUDES})
 
 FetchContent_Declare(
-  tinygltf
-  GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
-  GIT_TAG        release
-  GIT_PROGRESS   TRUE )
-FetchContent_MakeAvailable(tinygltf)
-include_directories(${tinygltf_SOURCE_DIR}/include)
-set(SE_EXTRA_INCLUDES ${tinygltf_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
-
-FetchContent_Declare(
-  tinyobjloader
-  GIT_REPOSITORY https://github.com/tinyobjloader/tinyobjloader.git
-  GIT_TAG        release
-  GIT_PROGRESS   TRUE )
-FetchContent_MakeAvailable(tinyobjloader)
-include_directories(${tinyobjloader_SOURCE_DIR})
-set(SE_EXTRA_INCLUDES ${tinyobjloader_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
-
-FetchContent_Declare(
   pugixml
   GIT_REPOSITORY https://github.com/zeux/pugixml.git
   GIT_TAG        v1.13
@@ -173,4 +155,4 @@ add_compile_definitions(ZEP_FEATURE_CPP_FILE_SYSTEM=1)
 
 add_subdirectory(ThirdParty)
 add_subdirectory(Source)
-add_subdirectory(Programs/TestCoreCLR)
+# add_subdirectory(Programs/TestCoreCLR)
