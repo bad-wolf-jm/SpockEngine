@@ -25,6 +25,7 @@ set(DOTNET_SYSTEM_ASSEMBLIES
 )
 
 add_executable(${LIBRARY_NAME} 
+    Source/Options.cs
     Source/Main.cs
 )
 

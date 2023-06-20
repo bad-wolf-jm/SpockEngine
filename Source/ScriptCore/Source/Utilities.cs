@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Reflection;
 using System.Runtime;
 using System.Collections.Generic;
@@ -8,6 +9,16 @@ namespace SpockEngine
 {
     public static class Utilities
     {
+
+        public static string CreateFolder(string[] aPathElements)
+        {
+            var lPath = Path.Combine(aPathElements);
+            
+            if (!Directory.Exists(lPath)) Directory.CreateDirectory(lPath);
+
+            return lPath;
+        }
+
         public static IEnumerable<Type> GetAllDerivedTypes<T>(bool aIncludeAllAssemblies = true)
         {
             var lType = typeof(T);
