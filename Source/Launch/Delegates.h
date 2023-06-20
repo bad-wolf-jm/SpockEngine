@@ -10,7 +10,7 @@
 
 #include "Engine/Engine.h"
 
-#include "CoreCLRHost.h"
+// #include "CoreCLRHost.h"
 #include "OtdrWindow.h"
 
 namespace SE::OtdrEditor
@@ -20,6 +20,10 @@ namespace SE::OtdrEditor
     using namespace SE::Core;
     using namespace SE::Graphics;
 
+    typedef bool(*RenderUIFn)(float aTs);
+    typedef void(*UpdateFn)(float aTs);
+    typedef void(*RenderSceneFn)();
+
     class Application
     {
       public:
@@ -28,16 +32,18 @@ namespace SE::OtdrEditor
         math::ivec2 WindowPosition = { 100, 100 };
 
       public:
-        Application( CoreCLRHost &aManaged )
-            : mManaged{ &aManaged } {};
+        Application( UpdateFn aUpdateDelegate, RenderSceneFn aRenderDelegate, RenderUIFn aRenderUIDelegate);
+
+        // Application( CoreCLRHost &aManaged )
+        //     : mManaged{ &aManaged } {};
 
         ~Application() = default;
 
-        void Init();
-        void Init( path_t aConfigurationPath );
-        void Shutdown( path_t aConfigurationPath );
+        // void Init();
+        // void Init( path_t aConfigurationPath );
+        // void Shutdown( path_t aConfigurationPath );
 
-        void RenderScene() {}
+        void RenderScene();
         void Update( Timestep ts );
         bool RenderUI( ImGuiIO &io );
 
@@ -46,7 +52,11 @@ namespace SE::OtdrEditor
         uint32_t mViewportWidth         = 1;
         bool     mShouldRebuildViewport = true;
 
-        CoreCLRHost *mManaged = nullptr;
+        // CoreCLRHost *mManaged = nullptr;
+
+        UpdateFn mUpdateDelegate; 
+        RenderSceneFn mRenderDelegate; 
+        RenderUIFn mRenderUIDelegate;
     };
 
 } // namespace SE::OtdrEditor

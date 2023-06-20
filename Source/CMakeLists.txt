@@ -11,6 +11,7 @@ add_library(LTSimulationEngineRuntime SHARED
     Core/String.cpp
 
     DotNet/InteropCalls.cpp
+    DotNet/InternalCalls.cpp
 
     Core/CUDA/Texture/ColorFormat.cpp
     Core/CUDA/Texture/TextureData.cpp
@@ -91,7 +92,7 @@ add_library(LTSimulationEngineRuntime SHARED
     Graphics/Interface/IDescriptorSet.cpp
     Graphics/Interface/IDescriptorSetLayout.cpp
 
-    Launch/CoreCLRHost.cpp
+    # Launch/CoreCLRHost.cpp
     Launch/Delegates.cpp
     Launch/OtdrWindow.cpp
 )
@@ -141,8 +142,8 @@ target_link_libraries(LTSimulationEngineRuntime PUBLIC
     ${MONO_PATH}/libmini-sgen.lib
     ${MONO_PATH}/libgcmonosgen.lib
     ${MONO_PATH}/eglib.lib
-    C:/GitLab/dotnet/artifacts/bin/win-x64.Debug/corehost/hostfxr.lib
-    C:/GitLab/dotnet/artifacts/bin/win-x64.Debug/corehost/nethost.lib
+    # C:/GitLab/dotnet/artifacts/bin/win-x64.Debug/corehost/hostfxr.lib
+    # C:/GitLab/dotnet/artifacts/bin/win-x64.Debug/corehost/nethost.lib
     wsock32
     ws2_32
     yaml-cpp
@@ -155,20 +156,20 @@ target_compile_options(LTSimulationEngineRuntime PRIVATE
     $<$<COMPILE_LANGUAGE:CUDA>: --expt-relaxed-constexpr -Xcudafe "--display_error_number --diag_suppress=\"20012,20044\"">
     $<$<COMPILE_LANGUAGE:CXX>:/bigobj /wd4068>)
 
-add_executable(OTDR_Run WIN32
-    Launch/OtdrMain.cpp     
-)
-target_include_directories(OTDR_Run PRIVATE 
-    Source 
-    ${SE_EXTRA_INCLUDES}
-    C:/GitLab/dotnet/src/native/corehost
-)
-target_compile_definitions(OTDR_Run PRIVATE VK_USE_PLATFORM_WIN32_KHR)
-target_link_libraries( OTDR_Run PRIVATE
-    LTSimulationEngineRuntime
-)
-set_target_properties( OTDR_Run PROPERTIES LINK_FLAGS /SUBSYSTEM:CONSOLE )
-add_custom_command(TARGET OTDR_Run POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy "C:/GitLab/dotnet/artifacts/bin/win-x64.Debug/corehost/hostfxr.dll" $<TARGET_FILE_DIR:OTDR_Run>
-  COMMAND ${CMAKE_COMMAND} -E copy "C:/GitLab/dotnet/artifacts/bin/win-x64.Debug/corehost/nethost.dll" $<TARGET_FILE_DIR:OTDR_Run>
-)
+# add_executable(OTDR_Run WIN32
+#     Launch/OtdrMain.cpp     
+# )
+# target_include_directories(OTDR_Run PRIVATE 
+#     Source 
+#     ${SE_EXTRA_INCLUDES}
+#     C:/GitLab/dotnet/src/native/corehost
+# )
+# target_compile_definitions(OTDR_Run PRIVATE VK_USE_PLATFORM_WIN32_KHR)
+# target_link_libraries( OTDR_Run PRIVATE
+#     LTSimulationEngineRuntime
+# )
+# set_target_properties( OTDR_Run PROPERTIES LINK_FLAGS /SUBSYSTEM:CONSOLE )
+# add_custom_command(TARGET OTDR_Run POST_BUILD
+#   COMMAND ${CMAKE_COMMAND} -E copy "C:/GitLab/dotnet/artifacts/bin/win-x64.Debug/corehost/hostfxr.dll" $<TARGET_FILE_DIR:OTDR_Run>
+#   COMMAND ${CMAKE_COMMAND} -E copy "C:/GitLab/dotnet/artifacts/bin/win-x64.Debug/corehost/nethost.dll" $<TARGET_FILE_DIR:OTDR_Run>
+# )

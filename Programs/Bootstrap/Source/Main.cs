@@ -34,67 +34,6 @@ class SEBootstrap
         public int Height { get; set; }
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-    public struct UIConfiguration
-    {
-        [MarshalAs(UnmanagedType.LPWStr)]
-        public string mIniFile;
-
-        public float mFontSize;
-
-        [MarshalAs(UnmanagedType.LPWStr)]
-        public string mMainFont;
-
-        [MarshalAs(UnmanagedType.LPWStr)]
-        public string mBoldFont;
-
-        [MarshalAs(UnmanagedType.LPWStr)]
-        public string mItalicFont;
-
-        [MarshalAs(UnmanagedType.LPWStr)]
-        public string mBoldItalicFont;
-
-        [MarshalAs(UnmanagedType.LPWStr)]
-        public string mMonoFont;
-
-        [MarshalAs(UnmanagedType.LPWStr)]
-        public string mIconFont;
-    }
-
-    private static Dictionary<(System.Windows.FontStyle, System.Windows.FontWeight), string> GetFilesForFont(string fontName)
-    {
-        var fontNameToFiles = new Dictionary<string, Dictionary<(System.Windows.FontStyle, System.Windows.FontWeight), string>>();
-
-        foreach (var fontFile in Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Fonts)))
-        {
-            var fc = new PrivateFontCollection();
-
-            if (File.Exists(fontFile))
-                fc.AddFontFile(fontFile);
-
-            if ((!fc.Families.Any()))
-                continue;
-
-            var name = fc.Families[0].Name;
-
-            var lTf = new GlyphTypeface(new Uri(fontFile));
-            var lFontStyle = lTf.Style;
-
-            if (!fontNameToFiles.TryGetValue(name, out var files))
-            {
-                files = new Dictionary<(System.Windows.FontStyle, System.Windows.FontWeight), string>();
-                fontNameToFiles[name] = files;
-            }
-
-            files[(lFontStyle, lTf.Weight)] = fontFile;
-        }
-
-        if (!fontNameToFiles.TryGetValue(fontName, out var result))
-            return null;
-
-        return result;
-    }
-
     static string CreateFolder(string[] aPathElements)
     {
         var lPath = Path.Combine(aPathElements);
@@ -104,6 +43,26 @@ class SEBootstrap
         return lPath;
     }
 
+
+    static void UpdateDelegate(float aTs)
+    {
+
+    }
+
+    static bool RenderUIDelegate(float aTs)
+    {
+        return false;
+    }
+
+    static void RenderDelegate()
+    {
+
+    }
+
+    delegate void UpdateDelegateType(float aTs);
+    delegate void RenderDelegateType();
+    delegate bool RenderUIDelegateType(float aTs);
+
     static void GuardedMain(Options aOpt)
     {
         var lExePath = Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName;
@@ -112,12 +71,12 @@ class SEBootstrap
 
         var lUIConfiguration = new UIConfiguration();
         lUIConfiguration.mFontSize = 15.0f;
-        lUIConfiguration.mMainFont = Path.Combine(new string[] {lExePath, "Fonts", "Roboto-Thin.ttf"});
-        lUIConfiguration.mBoldFont = Path.Combine(new string[] {lExePath, "Fonts", "Roboto-Bold.ttf"});
-        lUIConfiguration.mItalicFont = Path.Combine(new string[] {lExePath, "Fonts", "Roboto-Italic.ttf"});
-        lUIConfiguration.mBoldItalicFont = Path.Combine(new string[] {lExePath, "Fonts", "Roboto-BoldItalic.ttf"});
-        lUIConfiguration.mIconFont = Path.Combine(new string[] {lExePath, "Fonts", "fontawesome-webfont.ttf"});
-        lUIConfiguration.mMonoFont = Path.Combine(new string[] {lExePath, "Fonts", "DejaVuSansMono.ttf"});
+        lUIConfiguration.mMainFont = Path.Combine(new string[] { lExePath, "Fonts", "Roboto-Thin.ttf" });
+        lUIConfiguration.mBoldFont = Path.Combine(new string[] { lExePath, "Fonts", "Roboto-Bold.ttf" });
+        lUIConfiguration.mItalicFont = Path.Combine(new string[] { lExePath, "Fonts", "Roboto-Italic.ttf" });
+        lUIConfiguration.mBoldItalicFont = Path.Combine(new string[] { lExePath, "Fonts", "Roboto-BoldItalic.ttf" });
+        lUIConfiguration.mIconFont = Path.Combine(new string[] { lExePath, "Fonts", "fontawesome-webfont.ttf" });
+        lUIConfiguration.mMonoFont = Path.Combine(new string[] { lExePath, "Fonts", "DejaVuSansMono.ttf" });
 
         var lAppConfigRoot = Path.Combine(lUserConfig, aOpt.Application);
 
@@ -132,9 +91,16 @@ class SEBootstrap
         float lWidth = 1920.0f;
         float lHeight = 1000.0f;
 
-        // CppCall.Engine_Initialize(new Math.vec2(lX, lY), new Math.vec2(lWidth, lHeight), lUIConfiguration);
-        // CppCall.Engine_Main(lUpdateDelegate, lRenderSceneDelegate, lRenderUIDelegate);
-        // CppCall.Engine_Shutdown();
+        UpdateDelegateType lUpdateDelegatePtr = UpdateDelegate;
+        RenderDelegateType lRenderDelegateTypePtr = RenderDelegate;
+        RenderUIDelegateType lRenderUIDelegateTypePtr = RenderUIDelegate;
+
+        CppCall.Engine_Initialize(new Math.vec2(lX, lY), new Math.vec2(lWidth, lHeight), lUIConfiguration);
+        CppCall.Engine_Main(
+            Marshal.GetFunctionPointerForDelegate(lUpdateDelegatePtr),
+            Marshal.GetFunctionPointerForDelegate(lRenderDelegateTypePtr),
+            Marshal.GetFunctionPointerForDelegate(lRenderUIDelegateTypePtr));
+        CppCall.Engine_Shutdown();
     }
 
     static void Main(string[] args)

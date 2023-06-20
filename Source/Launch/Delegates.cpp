@@ -12,17 +12,28 @@
 #include "UI/UI.h"
 // #include "UI/Widgets.h"
 
-
-
 namespace SE::OtdrEditor
 {
 
     using namespace SE::Core;
 
+    Application::Application( UpdateFn aUpdateDelegate, RenderSceneFn aRenderDelegate, RenderUIFn aRenderUIDelegate )
+        : mUpdateDelegate{ aUpdateDelegate }
+        , mRenderDelegate{ aRenderDelegate }
+        , mRenderUIDelegate{ aRenderUIDelegate }
+    {
+    }
+
     void Application::Update( Timestep ts )
     {
         mEditorWindow.Update( ts );
-        if( mManaged ) mManaged->Update( ts.GetMilliseconds() );
+
+        if( mUpdateDelegate ) mUpdateDelegate( ts.GetMilliseconds() );
+    }
+
+    void Application::RenderScene()
+    {
+        if( mRenderDelegate ) mRenderDelegate();
     }
 
     bool Application::RenderUI( ImGuiIO &io )
@@ -39,35 +50,35 @@ namespace SE::OtdrEditor
             mShouldRebuildViewport = true;
         }
 
-        if( mManaged )
+        if( mRenderUIDelegate )
         {
             float lTs = 0.0f;
-            mManaged->UpdateUI( lTs );
+            lRequestQuit |= mRenderUIDelegate( lTs );
         }
 
         return lRequestQuit;
     }
 
-    void Application::Init()
-    {
-        mEditorWindow =
-            MainWindow( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
-        mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
-    }
+    // void Application::Init()
+    // {
+    //     mEditorWindow =
+    //         MainWindow( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
+    //     mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
+    // }
 
-    void Application::Init( path_t aConfigurationPath )
-    {
-        Init();
+    // void Application::Init( path_t aConfigurationPath )
+    // {
+    //     Init();
 
-        if( mManaged )
-        {
-            mManaged->Configure( aConfigurationPath.string() );
-            mEditorWindow.mManaged = mManaged;
-        }
-    }
+    //     if( mManaged )
+    //     {
+    //         mManaged->Configure( aConfigurationPath.string() );
+    //         mEditorWindow.mManaged = mManaged;
+    //     }
+    // }
 
-    void Application::Shutdown( path_t aConfigurationPath )
-    {
-        if( mManaged ) mManaged->Teardown( aConfigurationPath.string() );
-    }
+    // void Application::Shutdown( path_t aConfigurationPath )
+    // {
+    //     if( mManaged ) mManaged->Teardown( aConfigurationPath.string() );
+    // }
 } // namespace SE::OtdrEditor

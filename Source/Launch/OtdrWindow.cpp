@@ -60,7 +60,7 @@ namespace SE::OtdrEditor
             {
                 bool lDNRequestQuit = false;
 
-                lDNRequestQuit = mManaged->UpdateMenu();
+                // lDNRequestQuit = mManaged->UpdateMenu();
                 lRequestQuit   = lRequestQuit || lDNRequestQuit;
             }
 

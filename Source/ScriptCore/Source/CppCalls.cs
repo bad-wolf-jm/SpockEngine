@@ -10,6 +10,15 @@ namespace SpockEngine
         [return: MarshalAs(UnmanagedType.LPWStr)]
         public extern static string OpenFile(string aFilter);
 
+        [DllImport("LTSimulationEngineRuntime.dll", CharSet = CharSet.Unicode)]
+        public extern static void Engine_Initialize(SpockEngine.Math.vec2 aPosition, SpockEngine.Math.vec2 aSize, UIConfiguration aConfig);
+
+        [DllImport("LTSimulationEngineRuntime.dll", CharSet = CharSet.Unicode)]
+        public extern static void Engine_Main(IntPtr aUpdateDelegate, IntPtr aRenderDelegate, IntPtr aRenderUIDelegate);
+
+        [DllImport("LTSimulationEngineRuntime.dll", CharSet = CharSet.Unicode)]
+        public extern static void Engine_Shutdown();
+
         // [MethodImplAttribute(MethodImplOptions.InternalCall)]
         // internal extern static uint Entity_Create(ulong aRegistry, string aName, uint aParentEntityID);
 
