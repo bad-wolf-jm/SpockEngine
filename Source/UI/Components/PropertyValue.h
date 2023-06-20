@@ -5,7 +5,6 @@
 #include "UI/Components/Label.h"
 #include "UI/Layouts/BoxLayout.h"
 
-#include "DotNet/Instance.h"
 
 namespace SE::Core
 {

@@ -9,8 +9,6 @@
 #include "Core/Logging.h"
 #include "Core/String.h"
 
-#include "Runtime.h"
-
 namespace SE::Core
 {
     using namespace entt::literals;

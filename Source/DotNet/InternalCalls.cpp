@@ -1,5 +1,5 @@
 #include "InternalCalls.h"
-#include "EntityRegistry.h"
+// #include "EntityRegistry.h"
 #include "TypeReflection.h"
 #include <iostream>
 #include <list>
@@ -7,8 +7,8 @@
 
 #include "Core/Logging.h"
 
-#include "Runtime.h"
-#include "Utils.h"
+// #include "Runtime.h"
+// #include "Utils.h"
 
 namespace SE::Core::Interop
 {
