@@ -12,6 +12,8 @@
 
 // #include "CoreCLRHost.h"
 #include "OtdrWindow.h"
+#include "Functions.h"
+
 
 namespace SE::OtdrEditor
 {
@@ -19,10 +21,6 @@ namespace SE::OtdrEditor
 
     using namespace SE::Core;
     using namespace SE::Graphics;
-
-    typedef bool(*RenderUIFn)(float aTs);
-    typedef void(*UpdateFn)(float aTs);
-    typedef void(*RenderSceneFn)();
 
     class Application
     {
@@ -32,7 +30,7 @@ namespace SE::OtdrEditor
         math::ivec2 WindowPosition = { 100, 100 };
 
       public:
-        Application( UpdateFn aUpdateDelegate, RenderSceneFn aRenderDelegate, RenderUIFn aRenderUIDelegate);
+        Application( UpdateFn aUpdateDelegate, RenderSceneFn aRenderDelegate, RenderUIFn aRenderUIDelegate, RenderMenuFn aRenderMenuDelegate);
 
         // Application( CoreCLRHost &aManaged )
         //     : mManaged{ &aManaged } {};
@@ -57,6 +55,7 @@ namespace SE::OtdrEditor
         UpdateFn mUpdateDelegate; 
         RenderSceneFn mRenderDelegate; 
         RenderUIFn mRenderUIDelegate;
+        RenderMenuFn mRenderMenuDelegate;
     };
 
 } // namespace SE::OtdrEditor

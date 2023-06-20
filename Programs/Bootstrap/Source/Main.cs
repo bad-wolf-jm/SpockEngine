@@ -6,6 +6,7 @@ using System.Drawing.Text;
 using System.Windows.Media;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Reflection;
 
 using CommandLine;
 using SpockEngine;
@@ -43,25 +44,43 @@ class SEBootstrap
         return lPath;
     }
 
+    static Assembly mApplication;
+    static Type mApplicationStaticClass;
+
+    static MethodInfo mConfigure;
+    static MethodInfo mUpdateMenu;
+    static MethodInfo mUpdate;
+    static MethodInfo mUpdateUI;
+    static MethodInfo mTeardown;
+
 
     static void UpdateDelegate(float aTs)
     {
-
+        mUpdate?.Invoke(null, new object[] { aTs });
     }
 
     static bool RenderUIDelegate(float aTs)
     {
-        return false;
+        object lShouldQuit = mUpdateUI?.Invoke(null, new object[] { aTs });
+
+        return (lShouldQuit != null) ? (bool)lShouldQuit : false;
     }
 
     static void RenderDelegate()
     {
+    }
 
+    static bool RenderMenuDelegate()
+    {
+        object lShouldQuit = mUpdateMenu?.Invoke(null, new object[] {});
+
+        return (lShouldQuit != null) ? (bool)lShouldQuit : false;
     }
 
     delegate void UpdateDelegateType(float aTs);
     delegate void RenderDelegateType();
     delegate bool RenderUIDelegateType(float aTs);
+    delegate bool RenderMenuDelegateType();
 
     static void GuardedMain(Options aOpt)
     {
@@ -94,12 +113,31 @@ class SEBootstrap
         UpdateDelegateType lUpdateDelegatePtr = UpdateDelegate;
         RenderDelegateType lRenderDelegateTypePtr = RenderDelegate;
         RenderUIDelegateType lRenderUIDelegateTypePtr = RenderUIDelegate;
+        RenderMenuDelegateType lRenderMenuDelegateTypePtr = RenderMenuDelegate;
 
         CppCall.Engine_Initialize(new Math.vec2(lX, lY), new Math.vec2(lWidth, lHeight), lUIConfiguration);
+
+        // Load application assembly
+        var lApplicationPath = Path.Combine(new string[] { @"D:\Build\Lib", "Debug", "develop", "net462", aOpt.Application, $"{aOpt.Application}.dll" });
+        mApplication = Assembly.LoadFrom(lApplicationPath);
+        mApplicationStaticClass = mApplication.GetType($"{aOpt.Application}.{aOpt.Application}");
+
+        mUpdateMenu = mApplicationStaticClass.GetMethod("UpdateMenu");
+        mUpdate = mApplicationStaticClass.GetMethod("Update");
+        mUpdateUI = mApplicationStaticClass.GetMethod("UpdateUI");
+
+        mConfigure = mApplicationStaticClass.GetMethod("Configure");
+        mConfigure.Invoke(null, new object[] { lAppIniConfig });
+
         CppCall.Engine_Main(
             Marshal.GetFunctionPointerForDelegate(lUpdateDelegatePtr),
             Marshal.GetFunctionPointerForDelegate(lRenderDelegateTypePtr),
-            Marshal.GetFunctionPointerForDelegate(lRenderUIDelegateTypePtr));
+            Marshal.GetFunctionPointerForDelegate(lRenderUIDelegateTypePtr),
+            Marshal.GetFunctionPointerForDelegate(lRenderMenuDelegateTypePtr));
+
+        mTeardown = mApplicationStaticClass.GetMethod("Teardown");
+        mTeardown.Invoke(null, new object[] { lAppIniConfig });
+
         CppCall.Engine_Shutdown();
     }
 

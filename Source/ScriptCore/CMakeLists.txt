@@ -40,7 +40,6 @@ add_library(${LIBRARY_NAME} SHARED
     Source/Entity.cs
     Source/Component.cs
     Source/Utilities.cs
-    # Source/ScriptLoadContext.cs
 
     Source/UI/Components/Component.cs
     Source/UI/Components/Button.cs

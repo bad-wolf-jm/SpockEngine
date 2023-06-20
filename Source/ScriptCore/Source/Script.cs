@@ -17,33 +17,33 @@ namespace SpockEngine
         bool Tick(float aTs);
     }
 
-    public class RemoteScript : MarshalByRefObject, IScript
-    {
-        object mScriptObject;
+    // public class RemoteScript : MarshalByRefObject, IScript
+    // {
+    //     object mScriptObject;
 
-        public RemoteScript(object aScriptObject) { mScriptObject = aScriptObject; }
+    //     public RemoteScript(object aScriptObject) { mScriptObject = aScriptObject; }
 
-        public void Begin()
-        {
-            if (mScriptObject == null) return;
+    //     public void Begin()
+    //     {
+    //         if (mScriptObject == null) return;
 
-            mScriptObject.GetType().GetMethod("Begin").Invoke(mScriptObject, null);
-        }
+    //         mScriptObject.GetType().GetMethod("Begin").Invoke(mScriptObject, null);
+    //     }
 
-        public void End()
-        {
-            if (mScriptObject == null) return;
+    //     public void End()
+    //     {
+    //         if (mScriptObject == null) return;
 
-            mScriptObject.GetType().GetMethod("End").Invoke(mScriptObject, null);
-        }
+    //         mScriptObject.GetType().GetMethod("End").Invoke(mScriptObject, null);
+    //     }
 
-        public bool Tick(float aTs)
-        {
-            if (mScriptObject == null) return false;
+    //     public bool Tick(float aTs)
+    //     {
+    //         if (mScriptObject == null) return false;
 
-            return (bool)mScriptObject.GetType().GetMethod("Tick").Invoke(mScriptObject, new object[] { aTs });
-        }
-    }
+    //         return (bool)mScriptObject.GetType().GetMethod("Tick").Invoke(mScriptObject, new object[] { aTs });
+    //     }
+    // }
 
 
     public class Script : MarshalByRefObject, IScript

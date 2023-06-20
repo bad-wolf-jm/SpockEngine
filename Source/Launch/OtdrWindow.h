@@ -24,6 +24,8 @@
 #include "UI/Layouts/BoxLayout.h"
 #include "UI/UI.h"
 
+#include "Functions.h"
+
 // #include "CoreCLRHost.h"
 
 namespace SE::OtdrEditor
@@ -40,7 +42,7 @@ namespace SE::OtdrEditor
         Ref<Engine> mEngineLoop = nullptr;
 
         // Ref<DotNetInstance> mApplicationInstance = nullptr;
-        void *mManaged = nullptr;
+        RenderMenuFn mManaged = nullptr;
 
       public:
         float HeaderHeight       = 31.0f;

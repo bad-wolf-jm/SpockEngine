@@ -1,6 +1,6 @@
 #pragma once
 
-// #include "Core/Entity/Collection.h"
+#include "Core/Entity/Collection.h"
 #include "Core/String.h"
 #include "InteropCalls.h"
 #include "Launch/Delegates.h"
@@ -35,7 +35,7 @@ namespace SE::Core::Interop
     extern "C"
     {
         void Engine_Initialize( CLRVec2 aPosition, CLRVec2 aSize, sUIConfiguration aUIConfiguration );
-        void Engine_Main( UpdateFn aUpdateDelegate, RenderSceneFn aRenderDelegate, RenderUIFn aRrenderUIDelegate );
+        void Engine_Main( UpdateFn aUpdateDelegate, RenderSceneFn aRenderDelegate, RenderUIFn aRenderUIDelegate, RenderMenuFn aRenderMenuDelegate );
         void Engine_Shutdown();
     }
 

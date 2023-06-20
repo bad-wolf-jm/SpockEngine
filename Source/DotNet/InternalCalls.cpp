@@ -32,9 +32,9 @@ namespace SE::Core::Interop
                                           lUIConfig );
         }
 
-        void Engine_Main( UpdateFn aUpdateDelegate, RenderSceneFn aRenderDelegate, RenderUIFn aRrenderUIDelegate )
+        void Engine_Main( UpdateFn aUpdateDelegate, RenderSceneFn aRenderDelegate, RenderUIFn aRenderUIDelegate, RenderMenuFn aRenderMenuDelegate )
         {
-            SE::OtdrEditor::Application lEditorApplication( aUpdateDelegate, aRenderDelegate, aRrenderUIDelegate );
+            SE::OtdrEditor::Application lEditorApplication( aUpdateDelegate, aRenderDelegate, aRenderUIDelegate, aRenderMenuDelegate );
 
             SE::Core::Engine::GetInstance()->UpdateDelegate.connect<&SE::OtdrEditor::Application::Update>( lEditorApplication );
             SE::Core::Engine::GetInstance()->RenderDelegate.connect<&SE::OtdrEditor::Application::RenderScene>( lEditorApplication );

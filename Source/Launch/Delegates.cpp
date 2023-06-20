@@ -17,11 +17,14 @@ namespace SE::OtdrEditor
 
     using namespace SE::Core;
 
-    Application::Application( UpdateFn aUpdateDelegate, RenderSceneFn aRenderDelegate, RenderUIFn aRenderUIDelegate )
+    Application::Application( UpdateFn aUpdateDelegate, RenderSceneFn aRenderDelegate, RenderUIFn aRenderUIDelegate, RenderMenuFn aRenderMenuDelegate )
         : mUpdateDelegate{ aUpdateDelegate }
         , mRenderDelegate{ aRenderDelegate }
         , mRenderUIDelegate{ aRenderUIDelegate }
+        , mRenderMenuDelegate{ aRenderMenuDelegate }
     {
+        mEditorWindow.ApplicationIcon = ICON_FA_CODEPEN;
+        mEditorWindow.mManaged = mRenderMenuDelegate;
     }
 
     void Application::Update( Timestep ts )
