@@ -21,6 +21,7 @@ set(DOTNET_SYSTEM_ASSEMBLIES
     System.Reflection.dll
     System.Runtime.dll
     System.Runtime.Serialization.dll
+    PresentationCore.dll
 )
 
 add_executable(${LIBRARY_NAME} 
