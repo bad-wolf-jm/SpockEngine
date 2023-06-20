@@ -19,7 +19,6 @@ set(DOTNET_SYSTEM_ASSEMBLIES
     System.Management.dll
     System.Reflection.dll
     System.Runtime.dll
-    System.Runtime.Loader.dll
     System.Runtime.Serialization.dll
 )
 
