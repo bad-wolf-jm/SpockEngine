@@ -71,7 +71,7 @@ class SEBootstrap
 
         var lUIConfiguration = new UIConfiguration();
         lUIConfiguration.mFontSize = 15.0f;
-        lUIConfiguration.mMainFont = Path.Combine(new string[] { lExePath, "Fonts", "Roboto-Thin.ttf" });
+        lUIConfiguration.mMainFont = Path.Combine(new string[] { lExePath, "Fonts", "Roboto-Regular.ttf" });
         lUIConfiguration.mBoldFont = Path.Combine(new string[] { lExePath, "Fonts", "Roboto-Bold.ttf" });
         lUIConfiguration.mItalicFont = Path.Combine(new string[] { lExePath, "Fonts", "Roboto-Italic.ttf" });
         lUIConfiguration.mBoldItalicFont = Path.Combine(new string[] { lExePath, "Fonts", "Roboto-BoldItalic.ttf" });
