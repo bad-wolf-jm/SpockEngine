@@ -1,13 +1,18 @@
 using System;
 using System.IO;
 using System.Linq;
-// using System.Drawing;
+using System.Drawing;
 using System.Drawing.Text;
-// using System.Windows.Media;
+using System.Windows.Media;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 using CommandLine;
 using SpockEngine;
+using Math = SpockEngine.Math;
+
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 class SEBootstrap
 {
@@ -29,9 +34,36 @@ class SEBootstrap
         public int Height { get; set; }
     }
 
-    private static List<string> GetFilesForFont(string fontName)
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct UIConfiguration
     {
-        var fontNameToFiles = new Dictionary<string, List<string>>();
+        [MarshalAs(UnmanagedType.LPWStr)]
+        public string mIniFile;
+
+        public float mFontSize;
+
+        [MarshalAs(UnmanagedType.LPWStr)]
+        public string mMainFont;
+
+        [MarshalAs(UnmanagedType.LPWStr)]
+        public string mBoldFont;
+
+        [MarshalAs(UnmanagedType.LPWStr)]
+        public string mItalicFont;
+
+        [MarshalAs(UnmanagedType.LPWStr)]
+        public string mBoldItalicFont;
+
+        [MarshalAs(UnmanagedType.LPWStr)]
+        public string mMonoFont;
+
+        [MarshalAs(UnmanagedType.LPWStr)]
+        public string mIconFont;
+    }
+
+    private static Dictionary<(System.Windows.FontStyle, System.Windows.FontWeight), string> GetFilesForFont(string fontName)
+    {
+        var fontNameToFiles = new Dictionary<string, Dictionary<(System.Windows.FontStyle, System.Windows.FontWeight), string>>();
 
         foreach (var fontFile in Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Fonts)))
         {
@@ -45,14 +77,16 @@ class SEBootstrap
 
             var name = fc.Families[0].Name;
 
-            // If you care about bold, italic, etc, you can filter here.
+            var lTf = new GlyphTypeface(new Uri(fontFile));
+            var lFontStyle = lTf.Style;
+
             if (!fontNameToFiles.TryGetValue(name, out var files))
             {
-                files = new List<string>();
+                files = new Dictionary<(System.Windows.FontStyle, System.Windows.FontWeight), string>();
                 fontNameToFiles[name] = files;
             }
 
-            files.Add(fontFile);
+            files[(lFontStyle, lTf.Weight)] = fontFile;
         }
 
         if (!fontNameToFiles.TryGetValue(fontName, out var result))
@@ -61,40 +95,50 @@ class SEBootstrap
         return result;
     }
 
-    static void Main(string[] args)
+    static string CreateFolder(string[] aPathElements)
     {
-        var lExePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+        var lPath = Path.Combine(aPathElements);
+        if (!Directory.Exists(lPath))
+            Directory.CreateDirectory(lPath);
 
+        return lPath;
+    }
+
+    static void GuardedMain(Options aOpt)
+    {
+        var lExePath = Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName;
         var lUserHome = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         var lUserConfig = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
+        var lUIConfiguration = new UIConfiguration();
+        lUIConfiguration.mFontSize = 15.0f;
+        lUIConfiguration.mMainFont = Path.Combine(new string[] {lExePath, "Fonts", "Roboto-Thin.ttf"});
+        lUIConfiguration.mBoldFont = Path.Combine(new string[] {lExePath, "Fonts", "Roboto-Bold.ttf"});
+        lUIConfiguration.mItalicFont = Path.Combine(new string[] {lExePath, "Fonts", "Roboto-Italic.ttf"});
+        lUIConfiguration.mBoldItalicFont = Path.Combine(new string[] {lExePath, "Fonts", "Roboto-BoldItalic.ttf"});
+        lUIConfiguration.mIconFont = Path.Combine(new string[] {lExePath, "Fonts", "fontawesome-webfont.ttf"});
+        lUIConfiguration.mMonoFont = Path.Combine(new string[] {lExePath, "Fonts", "DejaVuSansMono.ttf"});
 
-        var lUIFont = GetFilesForFont("Segoe UI");
-        foreach( var x in lUIFont)
-            Console.WriteLine(x);
+        var lAppConfigRoot = Path.Combine(lUserConfig, aOpt.Application);
 
-        Console.WriteLine(lUserHome);
-        Console.WriteLine(lUserConfig);
-        Console.WriteLine(lExePath);
+        var lAppConfig = CreateFolder(new string[] { lAppConfigRoot, "Config" });
+        var lAppLogs = CreateFolder(new string[] { lAppConfigRoot, "Logs" });
 
-        Parser
-            .Default
-            .ParseArguments<Options>(args)
-            .WithParsed<Options>(o =>
-            {
-                var lAppConfigRoot = Path.Combine(lUserConfig, o.Application);
+        lUIConfiguration.mIniFile = Path.Combine(lAppConfig, "imgui.ini");
+        var lAppIniConfig = Path.Combine(lAppConfig, "Application.yaml");
 
-                var lAppConfig = Path.Combine(lAppConfigRoot, "Config");
-                if (!Directory.Exists(lAppConfig))
-                    Directory.CreateDirectory(lAppConfig);
+        float lX = 0.0f;
+        float lY = 0.0f;
+        float lWidth = 1920.0f;
+        float lHeight = 1000.0f;
 
-                var lAppLogs = Path.Combine(lAppConfigRoot, "Logs");
-                if (!Directory.Exists(lAppLogs))
-                    Directory.CreateDirectory(lAppLogs);
+        // CppCall.Engine_Initialize(new Math.vec2(lX, lY), new Math.vec2(lWidth, lHeight), lUIConfiguration);
+        // CppCall.Engine_Main(lUpdateDelegate, lRenderSceneDelegate, lRenderUIDelegate);
+        // CppCall.Engine_Shutdown();
+    }
 
-                var lAppUIConfig = Path.Combine(lAppConfig, "imgui.ini");
-                var lAppIniConfig = Path.Combine(lAppConfig, "Application.yaml");
-            });
-
+    static void Main(string[] args)
+    {
+        Parser.Default.ParseArguments<Options>(args).WithParsed<Options>(GuardedMain);
     }
 }
