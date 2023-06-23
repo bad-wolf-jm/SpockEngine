@@ -17,48 +17,6 @@ namespace SpockEngine
         IScript Instantiate(string aName);
     }
 
-    // public class RemoteScriptProxy : MarshalByRefObject, IScriptProxy
-    // {
-    //     object mScriptObject;
-
-    //     public RemoteScriptProxy(object aScriptObject)
-    //     {
-    //         mScriptObject = aScriptObject;
-    //     }
-
-    //     public void Initialize(StreamWriter aConsoleOut)
-    //     {
-    //         if (mScriptObject == null) return;
-
-    //         var lInitMethod = mScriptObject.GetType().GetMethod("Initialize");
-    //         lInitMethod.Invoke(mScriptObject, new object[] { aConsoleOut });
-    //     }
-
-    //     public void Shutdown()
-    //     {
-    //         if (mScriptObject == null) return;
-
-    //         var lInitMethod = mScriptObject.GetType().GetMethod("Shutdown");
-    //         lInitMethod.Invoke(mScriptObject, null);
-    //     }
-
-    //     public string[] GetScriptNames()
-    //     {
-    //         if (mScriptObject == null) return new string[0];
-
-    //         var lGetScriptNamesMethod = mScriptObject.GetType().GetMethod("GetScriptNames");
-    //         return lGetScriptNamesMethod.Invoke(mScriptObject, null) as string[];
-    //     }
-
-    //     public IScript Instantiate(string aName)
-    //     {
-    //         if (mScriptObject == null) return new RemoteScript(null);
-
-    //         var lInstantiateMethod = mScriptObject.GetType().GetMethod("Instantiate");
-    //         return new RemoteScript(lInstantiateMethod.Invoke(mScriptObject, new object[] { aName }));
-    //     }
-    // }
-
     public class ScriptProxy : MarshalByRefObject, IScriptProxy
     {
         Dictionary<string, Type> mScripts;
