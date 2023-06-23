@@ -61,7 +61,7 @@ namespace SpockEngine.Scripting
         {
             if (mAppDomain != null)
                 throw new Exception("Domain already created");
-                
+
             PermissionSet permSet;
             if (cap == DomainCapabilities.ALLOW_DYNAMIC)
             {
@@ -195,7 +195,7 @@ namespace SpockEngine.Scripting
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Plugin load failed: " + ex.Message);
+                Console.WriteLine("SetConsoleOut failed: " + ex.Message);
             }
         }
 
