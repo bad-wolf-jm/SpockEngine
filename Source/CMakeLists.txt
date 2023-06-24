@@ -43,6 +43,7 @@ add_library(LTSimulationEngineRuntime SHARED
     UI/Components/ColorButton.cpp
     UI/Components/Slider.cpp
     UI/Components/VectorEdit.cpp
+    UI/Components/CodeEditor/CodeEditor.cpp
 
     UI/Widgets/FileTree.cpp
 
