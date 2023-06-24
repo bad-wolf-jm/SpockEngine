@@ -25,6 +25,7 @@
 #include "UI/Components/TreeView.h"
 #include "UI/Components/VectorEdit.h"
 #include "UI/Components/Workspace.h"
+#include "UI/Components/CodeEditor/CodeEditor.h"
 
 #include "UI/Widgets/FileTree.h"
 

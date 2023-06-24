@@ -1043,5 +1043,14 @@ namespace SE::Core::Interop
 
         void UIForm_SetSize( UIForm *aSelf, float aWidth, float aHeight ) { aSelf->SetSize( aWidth, aHeight ); }
 #pragma endregion
+
+#pragma region UICodeEditor
+        CONSTRUCT_WITHOUT_PARAMETERS( UICodeEditor )
+        DESTROY_INTERFACE( UICodeEditor )
+
+        void     UICodeEditor_SetText( UICodeEditor *aSelf, wchar_t *aText ) { aSelf->SetText( ConvertStringForCoreclr( aText ) ); }
+        wchar_t *UICodeEditor_GetText( UICodeEditor *aSelf ) { return CopyCharactersForCoreClr( aSelf->GetText() ); }
+
+#pragma endregion
     }
 } // namespace SE::Core::Interop

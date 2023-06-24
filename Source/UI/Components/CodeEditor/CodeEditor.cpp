@@ -48,11 +48,18 @@ namespace SE::Core
               std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() ).count() )
     {
         SetPalette( GetDarkPalette() );
-        SetLanguageDefinition( LanguageDefinition::HLSL() );
+        SetLanguageDefinition( LanguageDefinition::CPlusPlus() );
         mLines.push_back( Line() );
     }
 
     UICodeEditor::~UICodeEditor() {}
+
+    void UICodeEditor::PushStyles() {}
+    void UICodeEditor::PopStyles() {}
+
+    ImVec2 UICodeEditor::RequiredSize() { return ImVec2{}; }
+
+    void UICodeEditor::DrawContent( ImVec2 aPosition, ImVec2 aSize ) { Render( "FOO", aSize ); }
 
     void UICodeEditor::SetLanguageDefinition( const LanguageDefinition &aLanguageDef )
     {
@@ -67,9 +74,9 @@ namespace SE::Core
 
     void UICodeEditor::SetPalette( const Palette &aValue ) { mPaletteBase = aValue; }
 
-    std::string UICodeEditor::GetText( const Coordinates &aStart, const Coordinates &aEnd ) const
+    string_t UICodeEditor::GetText( const Coordinates &aStart, const Coordinates &aEnd ) const
     {
-        std::string result;
+        string_t result;
 
         auto   lstart = aStart.mLine;
         auto   lend   = aEnd.mLine;
@@ -297,8 +304,8 @@ namespace SE::Core
         // printf("AddUndo: (@%d.%d) +\'%s' [%d.%d .. %d.%d], -\'%s', [%d.%d .. %d.%d] (@%d.%d)\n",
         //	aValue.mBefore.mCursorPosition.mLine, aValue.mBefore.mCursorPosition.mColumn,
         //	aValue.mAdded.c_str(), aValue.mAddedStart.mLine, aValue.mAddedStart.mColumn, aValue.mAddedEnd.mLine,
-        //aValue.mAddedEnd.mColumn, 	aValue.mRemoved.c_str(), aValue.mRemovedStart.mLine, aValue.mRemovedStart.mColumn,
-        //aValue.mRemovedEnd.mLine, aValue.mRemovedEnd.mColumn, 	aValue.mAfter.mCursorPosition.mLine,
+        // aValue.mAddedEnd.mColumn, 	aValue.mRemoved.c_str(), aValue.mRemovedStart.mLine, aValue.mRemovedStart.mColumn,
+        // aValue.mRemovedEnd.mLine, aValue.mRemovedEnd.mColumn, 	aValue.mAfter.mCursorPosition.mLine,
         // aValue.mAfter.mCursorPosition.mColumn
         //	);
 
@@ -611,18 +618,18 @@ namespace SE::Core
         return result;
     }
 
-    std::string UICodeEditor::GetWordUnderCursor() const
+    string_t UICodeEditor::GetWordUnderCursor() const
     {
         auto c = GetCursorPosition();
         return GetWordAt( c );
     }
 
-    std::string UICodeEditor::GetWordAt( const Coordinates &aCoords ) const
+    string_t UICodeEditor::GetWordAt( const Coordinates &aCoords ) const
     {
         auto start = FindWordStart( aCoords );
         auto end   = FindWordEnd( aCoords );
 
-        std::string r;
+        string_t r;
 
         auto istart = GetCharacterIndex( start );
         auto iend   = GetCharacterIndex( end );
@@ -1111,7 +1118,7 @@ namespace SE::Core
         mWithinRender = false;
     }
 
-    void UICodeEditor::SetText( const std::string &aText )
+    void UICodeEditor::SetText( const string_t &aText )
     {
         mLines.clear();
         mLines.emplace_back( Line() );
@@ -1138,7 +1145,7 @@ namespace SE::Core
         Colorize();
     }
 
-    void UICodeEditor::SetTextLines( const std::vector<std::string> &aLines )
+    void UICodeEditor::SetTextLines( const std::vector<string_t> &aLines )
     {
         mLines.clear();
 
@@ -1152,7 +1159,7 @@ namespace SE::Core
 
             for( size_t i = 0; i < aLines.size(); ++i )
             {
-                const std::string &aLine = aLines[i];
+                const string_t &aLine = aLines[i];
 
                 mLines[i].reserve( aLine.size() );
                 for( size_t j = 0; j < aLine.size(); ++j ) mLines[i].emplace_back( Glyph( aLine[j], PaletteIndex::Default ) );
@@ -1399,7 +1406,7 @@ namespace SE::Core
 
     void UICodeEditor::SetTabSize( int aValue ) { mTabSize = std::max( 0, std::min( 32, aValue ) ); }
 
-    void UICodeEditor::InsertText( const std::string &aValue ) { InsertText( aValue.c_str() ); }
+    void UICodeEditor::InsertText( const string_t &aValue ) { InsertText( aValue.c_str() ); }
 
     void UICodeEditor::InsertText( const char *aValue )
     {
@@ -1832,8 +1839,8 @@ namespace SE::Core
         {
             if( !mLines.empty() )
             {
-                std::string str;
-                auto       &line = mLines[GetActualCursorCoordinates().mLine];
+                string_t str;
+                auto    &line = mLines[GetActualCursorCoordinates().mLine];
                 for( auto &g : line ) str.push_back( g.mChar );
                 ImGui::SetClipboardText( str.c_str() );
             }
@@ -1992,17 +1999,17 @@ namespace SE::Core
         return p;
     }
 
-    std::string UICodeEditor::GetText() const { return GetText( Coordinates(), Coordinates( (int)mLines.size(), 0 ) ); }
+    string_t UICodeEditor::GetText() const { return GetText( Coordinates(), Coordinates( (int)mLines.size(), 0 ) ); }
 
-    std::vector<std::string> UICodeEditor::GetTextLines() const
+    std::vector<string_t> UICodeEditor::GetTextLines() const
     {
-        std::vector<std::string> result;
+        std::vector<string_t> result;
 
         result.reserve( mLines.size() );
 
         for( auto &line : mLines )
         {
-            std::string text;
+            string_t text;
 
             text.resize( line.size() );
 
@@ -2014,9 +2021,9 @@ namespace SE::Core
         return result;
     }
 
-    std::string UICodeEditor::GetSelectedText() const { return GetText( mState.mSelectionStart, mState.mSelectionEnd ); }
+    string_t UICodeEditor::GetSelectedText() const { return GetText( mState.mSelectionStart, mState.mSelectionEnd ); }
 
-    std::string UICodeEditor::GetCurrentLineText() const
+    string_t UICodeEditor::GetCurrentLineText() const
     {
         auto lineLength = GetLineMaxColumn( mState.mCursorPosition.mLine );
         return GetText( Coordinates( mState.mCursorPosition.mLine, 0 ), Coordinates( mState.mCursorPosition.mLine, lineLength ) );
@@ -2038,9 +2045,9 @@ namespace SE::Core
     {
         if( mLines.empty() || aFromLine >= aToLine ) return;
 
-        std::string buffer;
+        string_t    buffer;
         std::cmatch results;
-        std::string id;
+        string_t    id;
 
         int endLine = std::max( 0, std::min( (int)mLines.size(), aToLine ) );
         for( int i = aFromLine; i < endLine; ++i )
@@ -2337,8 +2344,8 @@ namespace SE::Core
         return (int)floor( height / mCharAdvance.y );
     }
 
-    UICodeEditor::UndoRecord::UndoRecord( const std::string &aAdded, const UICodeEditor::Coordinates aAddedStart,
-                                          const UICodeEditor::Coordinates aAddedEnd, const std::string &aRemoved,
+    UICodeEditor::UndoRecord::UndoRecord( const string_t &aAdded, const UICodeEditor::Coordinates aAddedStart,
+                                          const UICodeEditor::Coordinates aAddedEnd, const string_t &aRemoved,
                                           const UICodeEditor::Coordinates aRemovedStart, const UICodeEditor::Coordinates aRemovedEnd,
                                           UICodeEditor::EditorState &aBefore, UICodeEditor::EditorState &aAfter )
         : mAdded( aAdded )
@@ -2628,7 +2635,7 @@ namespace SE::Core
             {
                 Identifier id;
                 id.mDeclaration = "Built-in function";
-                langDef.mIdentifiers.insert( std::make_pair( std::string( k ), id ) );
+                langDef.mIdentifiers.insert( std::make_pair( string_t( k ), id ) );
             }
 
             langDef.mTokenize = []( const char *in_begin, const char *in_end, const char *&out_begin, const char *&out_end,
@@ -2720,26 +2727,26 @@ namespace SE::Core
             {
                 Identifier id;
                 id.mDeclaration = "Built-in function";
-                langDef.mIdentifiers.insert( std::make_pair( std::string( k ), id ) );
+                langDef.mIdentifiers.insert( std::make_pair( string_t( k ), id ) );
             }
 
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "[ \\t]*#[ \\t]*[a-zA-Z_]+", PaletteIndex::Preprocessor ) );
+                std::make_pair<string_t, PaletteIndex>( "[ \\t]*#[ \\t]*[a-zA-Z_]+", PaletteIndex::Preprocessor ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "L?\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String ) );
+                std::make_pair<string_t, PaletteIndex>( "L?\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "\\'\\\\?[^\\']\\'", PaletteIndex::CharLiteral ) );
-            langDef.mTokenRegexStrings.push_back( std::make_pair<std::string, PaletteIndex>(
+                std::make_pair<string_t, PaletteIndex>( "\\'\\\\?[^\\']\\'", PaletteIndex::CharLiteral ) );
+            langDef.mTokenRegexStrings.push_back( std::make_pair<string_t, PaletteIndex>(
                 "[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?[fF]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "[+-]?[0-9]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
+                std::make_pair<string_t, PaletteIndex>( "[+-]?[0-9]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "0[0-7]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
+                std::make_pair<string_t, PaletteIndex>( "0[0-7]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number ) );
+                std::make_pair<string_t, PaletteIndex>( "0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier ) );
-            langDef.mTokenRegexStrings.push_back( std::make_pair<std::string, PaletteIndex>(
+                std::make_pair<string_t, PaletteIndex>( "[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier ) );
+            langDef.mTokenRegexStrings.push_back( std::make_pair<string_t, PaletteIndex>(
                 "[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/\\;\\,\\.]", PaletteIndex::Punctuation ) );
 
             langDef.mCommentStart      = "/*";
@@ -2781,26 +2788,26 @@ namespace SE::Core
             {
                 Identifier id;
                 id.mDeclaration = "Built-in function";
-                langDef.mIdentifiers.insert( std::make_pair( std::string( k ), id ) );
+                langDef.mIdentifiers.insert( std::make_pair( string_t( k ), id ) );
             }
 
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "[ \\t]*#[ \\t]*[a-zA-Z_]+", PaletteIndex::Preprocessor ) );
+                std::make_pair<string_t, PaletteIndex>( "[ \\t]*#[ \\t]*[a-zA-Z_]+", PaletteIndex::Preprocessor ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "L?\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String ) );
+                std::make_pair<string_t, PaletteIndex>( "L?\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "\\'\\\\?[^\\']\\'", PaletteIndex::CharLiteral ) );
-            langDef.mTokenRegexStrings.push_back( std::make_pair<std::string, PaletteIndex>(
+                std::make_pair<string_t, PaletteIndex>( "\\'\\\\?[^\\']\\'", PaletteIndex::CharLiteral ) );
+            langDef.mTokenRegexStrings.push_back( std::make_pair<string_t, PaletteIndex>(
                 "[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?[fF]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "[+-]?[0-9]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
+                std::make_pair<string_t, PaletteIndex>( "[+-]?[0-9]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "0[0-7]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
+                std::make_pair<string_t, PaletteIndex>( "0[0-7]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number ) );
+                std::make_pair<string_t, PaletteIndex>( "0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier ) );
-            langDef.mTokenRegexStrings.push_back( std::make_pair<std::string, PaletteIndex>(
+                std::make_pair<string_t, PaletteIndex>( "[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier ) );
+            langDef.mTokenRegexStrings.push_back( std::make_pair<string_t, PaletteIndex>(
                 "[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/\\;\\,\\.]", PaletteIndex::Punctuation ) );
 
             langDef.mCommentStart      = "/*";
@@ -2842,7 +2849,7 @@ namespace SE::Core
             {
                 Identifier id;
                 id.mDeclaration = "Built-in function";
-                langDef.mIdentifiers.insert( std::make_pair( std::string( k ), id ) );
+                langDef.mIdentifiers.insert( std::make_pair( string_t( k ), id ) );
             }
 
             langDef.mTokenize = []( const char *in_begin, const char *in_end, const char *&out_begin, const char *&out_end,
@@ -2927,24 +2934,23 @@ namespace SE::Core
             {
                 Identifier id;
                 id.mDeclaration = "Built-in function";
-                langDef.mIdentifiers.insert( std::make_pair( std::string( k ), id ) );
+                langDef.mIdentifiers.insert( std::make_pair( string_t( k ), id ) );
             }
 
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "L?\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String ) );
-            langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "\\\'[^\\\']*\\\'", PaletteIndex::String ) );
-            langDef.mTokenRegexStrings.push_back( std::make_pair<std::string, PaletteIndex>(
+                std::make_pair<string_t, PaletteIndex>( "L?\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String ) );
+            langDef.mTokenRegexStrings.push_back( std::make_pair<string_t, PaletteIndex>( "\\\'[^\\\']*\\\'", PaletteIndex::String ) );
+            langDef.mTokenRegexStrings.push_back( std::make_pair<string_t, PaletteIndex>(
                 "[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?[fF]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "[+-]?[0-9]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
+                std::make_pair<string_t, PaletteIndex>( "[+-]?[0-9]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "0[0-7]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
+                std::make_pair<string_t, PaletteIndex>( "0[0-7]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number ) );
+                std::make_pair<string_t, PaletteIndex>( "0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier ) );
-            langDef.mTokenRegexStrings.push_back( std::make_pair<std::string, PaletteIndex>(
+                std::make_pair<string_t, PaletteIndex>( "[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier ) );
+            langDef.mTokenRegexStrings.push_back( std::make_pair<string_t, PaletteIndex>(
                 "[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/\\;\\,\\.]", PaletteIndex::Punctuation ) );
 
             langDef.mCommentStart      = "/*";
@@ -2988,24 +2994,24 @@ namespace SE::Core
             {
                 Identifier id;
                 id.mDeclaration = "Built-in function";
-                langDef.mIdentifiers.insert( std::make_pair( std::string( k ), id ) );
+                langDef.mIdentifiers.insert( std::make_pair( string_t( k ), id ) );
             }
 
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "L?\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String ) );
+                std::make_pair<string_t, PaletteIndex>( "L?\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "\\'\\\\?[^\\']\\'", PaletteIndex::String ) );
-            langDef.mTokenRegexStrings.push_back( std::make_pair<std::string, PaletteIndex>(
+                std::make_pair<string_t, PaletteIndex>( "\\'\\\\?[^\\']\\'", PaletteIndex::String ) );
+            langDef.mTokenRegexStrings.push_back( std::make_pair<string_t, PaletteIndex>(
                 "[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?[fF]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "[+-]?[0-9]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
+                std::make_pair<string_t, PaletteIndex>( "[+-]?[0-9]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "0[0-7]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
+                std::make_pair<string_t, PaletteIndex>( "0[0-7]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number ) );
+                std::make_pair<string_t, PaletteIndex>( "0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier ) );
-            langDef.mTokenRegexStrings.push_back( std::make_pair<std::string, PaletteIndex>(
+                std::make_pair<string_t, PaletteIndex>( "[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier ) );
+            langDef.mTokenRegexStrings.push_back( std::make_pair<string_t, PaletteIndex>(
                 "[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/\\;\\,\\.]", PaletteIndex::Punctuation ) );
 
             langDef.mCommentStart      = "/*";
@@ -3055,22 +3061,21 @@ namespace SE::Core
             {
                 Identifier id;
                 id.mDeclaration = "Built-in function";
-                langDef.mIdentifiers.insert( std::make_pair( std::string( k ), id ) );
+                langDef.mIdentifiers.insert( std::make_pair( string_t( k ), id ) );
             }
 
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "L?\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String ) );
+                std::make_pair<string_t, PaletteIndex>( "L?\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String ) );
+            langDef.mTokenRegexStrings.push_back( std::make_pair<string_t, PaletteIndex>( "\\\'[^\\\']*\\\'", PaletteIndex::String ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "\\\'[^\\\']*\\\'", PaletteIndex::String ) );
-            langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number ) );
-            langDef.mTokenRegexStrings.push_back( std::make_pair<std::string, PaletteIndex>(
+                std::make_pair<string_t, PaletteIndex>( "0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number ) );
+            langDef.mTokenRegexStrings.push_back( std::make_pair<string_t, PaletteIndex>(
                 "[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?[fF]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "[+-]?[0-9]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
+                std::make_pair<string_t, PaletteIndex>( "[+-]?[0-9]+[Uu]?[lL]?[lL]?", PaletteIndex::Number ) );
             langDef.mTokenRegexStrings.push_back(
-                std::make_pair<std::string, PaletteIndex>( "[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier ) );
-            langDef.mTokenRegexStrings.push_back( std::make_pair<std::string, PaletteIndex>(
+                std::make_pair<string_t, PaletteIndex>( "[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier ) );
+            langDef.mTokenRegexStrings.push_back( std::make_pair<string_t, PaletteIndex>(
                 "[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/\\;\\,\\.]", PaletteIndex::Punctuation ) );
 
             langDef.mCommentStart      = "--[[";
@@ -3086,4 +3091,4 @@ namespace SE::Core
         }
         return langDef;
     }
-} // namespace UI::Core
+} // namespace SE::Core

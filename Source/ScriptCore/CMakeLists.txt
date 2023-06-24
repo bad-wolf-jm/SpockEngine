@@ -63,6 +63,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/Components/ColorButton.cs
     Source/UI/Components/Slider.cs
     Source/UI/Components/VectorInput.cs
+    Source/UI/Components/CodeEditor.cs
 
     Source/UI/Widgets/FileTree.cs
     Source/UI/Widgets/CheckboxWithLabel.cs

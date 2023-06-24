@@ -51,9 +51,9 @@ namespace SE::Core
 
         struct Breakpoint
         {
-            int         mLine;
-            bool        mEnabled;
-            std::string mCondition;
+            int      mLine;
+            bool     mEnabled;
+            string_t mCondition;
 
             Breakpoint()
                 : mLine( -1 )
@@ -122,13 +122,13 @@ namespace SE::Core
         struct Identifier
         {
             Coordinates mLocation;
-            std::string mDeclaration;
+            string_t    mDeclaration;
         };
 
-        typedef std::string                                    String;
-        typedef std::unordered_map<std::string, Identifier>    Identifiers;
-        typedef std::unordered_set<std::string>                Keywords;
-        typedef std::map<int, std::string>                     ErrorMarkers;
+        typedef string_t                                       String;
+        typedef std::unordered_map<string_t, Identifier>       Identifiers;
+        typedef std::unordered_set<string_t>                   Keywords;
+        typedef std::map<int, string_t>                        ErrorMarkers;
         typedef std::unordered_set<int>                        Breakpoints;
         typedef std::array<ImU32, (unsigned)PaletteIndex::Max> Palette;
         typedef uint8_t                                        Char;
@@ -156,16 +156,16 @@ namespace SE::Core
 
         struct LanguageDefinition
         {
-            typedef std::pair<std::string, PaletteIndex> TokenRegexString;
-            typedef std::vector<TokenRegexString>        TokenRegexStrings;
+            typedef std::pair<string_t, PaletteIndex> TokenRegexString;
+            typedef std::vector<TokenRegexString>     TokenRegexStrings;
             typedef bool ( *TokenizeCallback )( const char *in_begin, const char *in_end, const char *&out_begin, const char *&out_end,
                                                 PaletteIndex &paletteIndex );
 
-            std::string mName;
+            string_t    mName;
             Keywords    mKeywords;
             Identifiers mIdentifiers;
             Identifiers mPreprocIdentifiers;
-            std::string mCommentStart, mCommentEnd, mSingleLineComment;
+            string_t    mCommentStart, mCommentEnd, mSingleLineComment;
             char        mPreprocChar;
             bool        mAutoIndentation;
 
@@ -195,6 +195,15 @@ namespace SE::Core
         UICodeEditor();
         ~UICodeEditor();
 
+        ImVec2 RequiredSize();
+
+      protected:
+        void PushStyles();
+        void PopStyles();
+
+        void DrawContent( ImVec2 aPosition, ImVec2 aSize );
+
+      public:
         void                      SetLanguageDefinition( const LanguageDefinition &aLanguageDef );
         const LanguageDefinition &GetLanguageDefinition() const { return mLanguageDefinition; }
 
@@ -204,15 +213,15 @@ namespace SE::Core
         void SetErrorMarkers( const ErrorMarkers &aMarkers ) { mErrorMarkers = aMarkers; }
         void SetBreakpoints( const Breakpoints &aMarkers ) { mBreakpoints = aMarkers; }
 
-        void        Render( const char *aTitle, const ImVec2 &aSize = ImVec2(), bool aBorder = false );
-        void        SetText( const std::string &aText );
-        std::string GetText() const;
+        void     Render( const char *aTitle, const ImVec2 &aSize = ImVec2(), bool aBorder = false );
+        void     SetText( const string_t &aText );
+        string_t GetText() const;
 
-        void                     SetTextLines( const std::vector<std::string> &aLines );
-        std::vector<std::string> GetTextLines() const;
+        void                  SetTextLines( const std::vector<string_t> &aLines );
+        std::vector<string_t> GetTextLines() const;
 
-        std::string GetSelectedText() const;
-        std::string GetCurrentLineText() const;
+        string_t GetSelectedText() const;
+        string_t GetCurrentLineText() const;
 
         int  GetTotalLines() const { return (int)mLines.size(); }
         bool IsOverwrite() const { return mOverwrite; }
@@ -243,7 +252,7 @@ namespace SE::Core
         void       SetTabSize( int aValue );
         inline int GetTabSize() const { return mTabSize; }
 
-        void InsertText( const std::string &aValue );
+        void InsertText( const string_t &aValue );
         void InsertText( const char *aValue );
 
         void MoveUp( int aAmount = 1, bool aSelect = false );
@@ -292,10 +301,9 @@ namespace SE::Core
             UndoRecord() {}
             ~UndoRecord() {}
 
-            UndoRecord( const std::string &aAdded, const UICodeEditor::Coordinates aAddedStart,
-                        const UICodeEditor::Coordinates aAddedEnd,
+            UndoRecord( const string_t &aAdded, const UICodeEditor::Coordinates aAddedStart, const UICodeEditor::Coordinates aAddedEnd,
 
-                        const std::string &aRemoved, const UICodeEditor::Coordinates aRemovedStart,
+                        const string_t &aRemoved, const UICodeEditor::Coordinates aRemovedStart,
                         const UICodeEditor::Coordinates aRemovedEnd,
 
                         UICodeEditor::EditorState &aBefore, UICodeEditor::EditorState &aAfter );
@@ -303,11 +311,11 @@ namespace SE::Core
             void Undo( UICodeEditor *aEditor );
             void Redo( UICodeEditor *aEditor );
 
-            std::string mAdded;
+            string_t    mAdded;
             Coordinates mAddedStart;
             Coordinates mAddedEnd;
 
-            std::string mRemoved;
+            string_t    mRemoved;
             Coordinates mRemovedStart;
             Coordinates mRemovedEnd;
 
@@ -324,7 +332,7 @@ namespace SE::Core
         float       TextDistanceToLineStart( const Coordinates &aFrom ) const;
         void        EnsureCursorVisible();
         int         GetPageSize() const;
-        std::string GetText( const Coordinates &aStart, const Coordinates &aEnd ) const;
+        string_t    GetText( const Coordinates &aStart, const Coordinates &aEnd ) const;
         Coordinates GetActualCursorCoordinates() const;
         Coordinates SanitizeCoordinates( const Coordinates &aValue ) const;
         void        Advance( Coordinates &aCoordinates ) const;
@@ -346,8 +354,8 @@ namespace SE::Core
         void        EnterCharacter( ImWchar aChar, bool aShift );
         void        Backspace();
         void        DeleteSelection();
-        std::string GetWordUnderCursor() const;
-        std::string GetWordAt( const Coordinates &aCoords ) const;
+        string_t    GetWordUnderCursor() const;
+        string_t    GetWordAt( const Coordinates &aCoords ) const;
         ImU32       GetGlyphColor( const Glyph &aGlyph ) const;
 
         void HandleKeyboardInputs();
@@ -388,9 +396,9 @@ namespace SE::Core
         ErrorMarkers mErrorMarkers;
         ImVec2       mCharAdvance;
         Coordinates  mInteractiveStart, mInteractiveEnd;
-        std::string  mLineBuffer;
+        string_t     mLineBuffer;
         uint64_t     mStartTime;
 
         float mLastClick;
     };
-} // namespace UI::Core
+} // namespace SE::Core

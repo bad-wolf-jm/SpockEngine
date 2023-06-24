@@ -980,5 +980,19 @@ namespace SpockEngine
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UIForm_SetSize(IntPtr aSelf, float aWidth, float aHeight);
         #endregion
+
+        #region UICodeEditor
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static IntPtr UICodeEditor_Create();
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static void UICodeEditor_Destroy(IntPtr aSelf);
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static void UICodeEditor_SetText(IntPtr aSelf, string aTitle);
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static string UICodeEditor_GetText(IntPtr aSelf);
+        #endregion
     }
 }
