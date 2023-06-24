@@ -34,23 +34,21 @@ namespace SpockEngine.Scripting
         /// concrete class that implements IPlugin, and instantiates it.
         /// </summary>
         /// <param name="dllPath">Absolute path to DLL.</param>
-        public IPlugin Load(string dllPath)
+        public T Load<T>(string dllPath) where T : class
         {
             Assembly asm = Assembly.LoadFile(dllPath);
+            var lPlugins = asm.GetExportedTypes()
+                .Where(t => (t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(T))));
 
-            foreach (Type type in asm.GetTypes())
-            {
-                if (type.IsClass && !type.IsAbstract && type.GetInterfaces().Contains(typeof(IPlugin)))
-                {
-                    ConstructorInfo ctor = type.GetConstructor(Type.EmptyTypes);
-                    IPlugin plugin = (IPlugin)ctor.Invoke(null);
-                    Console.WriteLine("Created instance: " + plugin);
+            if (lPlugins.Count() == 0)
+                throw new Exception("No IPlugin class found");
 
-                    return plugin;
-                }
-            }
+            ConstructorInfo ctor = lPlugins.ElementAt(0).GetConstructor(Type.EmptyTypes);
+            T iscript = (T)ctor.Invoke(null);
+            Console.WriteLine("Created instance: " + iscript);
 
-            throw new Exception("No IPlugin class found");
+            return iscript;
+
         }
 
         /// <summary>

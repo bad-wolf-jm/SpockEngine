@@ -22,6 +22,7 @@ namespace SpockEngine.Scripting
         /// Absolute path to the directory where plugin code lives.
         /// </summary>
         private string mPluginPath;
+        private string mReferencePath;
 
         /// <summary>
         /// AppDomain handle.
@@ -43,11 +44,12 @@ namespace SpockEngine.Scripting
         /// Constructor.  Just does some basic initialization.
         /// </summary>
         /// <param name="pluginPath">Absolute path to plugin directory.</param>
-        public DomainManager(string appDomainName, DomainCapabilities cap, string pluginPath)
+        public DomainManager(string pluginPath, string referencePath)
         {
             mPluginPath = pluginPath;
+            mReferencePath = referencePath;
 
-            CreateDomain(appDomainName, cap);
+            // CreateDomain(appDomainName, cap);
         }
 
         /// <summary>
@@ -89,7 +91,7 @@ namespace SpockEngine.Scripting
 
                 // Allow read-only file access, but only in the plugin directory.
                 // This is necessary to allow PluginLoader to load the assembly.
-                FileIOPermission fp = new FileIOPermission(FileIOPermissionAccess.Read | FileIOPermissionAccess.PathDiscovery, mPluginPath);
+                FileIOPermission fp = new FileIOPermission(FileIOPermissionAccess.Read | FileIOPermissionAccess.PathDiscovery, new string[] { mPluginPath, mReferencePath });
                 permSet.AddPermission(fp);
             }
 
@@ -98,6 +100,7 @@ namespace SpockEngine.Scripting
             // risk of certain exploits from untrusted plugin code.
             AppDomainSetup adSetup = new AppDomainSetup();
             adSetup.ApplicationBase = mPluginPath;
+            // adSetup.PrivateBinPath = mReferencePath;
 
             //string hostAppBase =
             //    AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
@@ -132,39 +135,20 @@ namespace SpockEngine.Scripting
 
             if (mAppDomain != null)
             {
-                // We can't simply invoke AppDomain.Unload() from a finalizer.
-                // The unload is handled by a thread that won't run at the
-                // same time as the finalizer thread, so if we got here
-                // through finalization we will deadlock.  Fortunately the
-                // runtime sees the situation and throws an exception out of
-                // Unload().
+                // We can't simply invoke AppDomain.Unload() from a finalizer. The unload is handled by a thread that won't run at the
+                // same time as the finalizer thread, so if we got here through finalization we will deadlock.  Fortunately the
+                // runtime sees the situation and throws an exception out of Unload().
                 //
-                // If we don't have a finalizer, and we forget to make an
-                // explicit cleanup call, the AppDomain will stick around.
+                // If we don't have a finalizer, and we forget to make an explicit cleanup call, the AppDomain will stick around.
                 //
-                // So we use a workaround from
-                // https://stackoverflow.com/q/4064749/294248 and invoke it
+                // So we use a workaround from https://stackoverflow.com/q/4064749/294248 and invoke it
                 // asynchronously.
                 if (disposing)
-                {
                     AppDomain.Unload(mAppDomain);
-                }
                 else
-                {
                     new Action<AppDomain>(AppDomain.Unload).BeginInvoke(mAppDomain, null, null);
-                }
                 mAppDomain = null;
             }
-        }
-
-        /// <summary>
-        /// Passes the "Ping()" method through to the plugin loader.
-        /// </summary>
-        /// <param name="val"></param>
-        /// <returns></returns>
-        public int Ping(int val)
-        {
-            return mPluginLoader.Instance.Ping(val);
         }
 
         /// <summary>
@@ -172,19 +156,18 @@ namespace SpockEngine.Scripting
         /// </summary>
         /// <param name="dllName"></param>
         /// <returns></returns>
-        public IPlugin Load(string dllName)
+        public T Load<T>(string dllName) where T : class
         {
-            IPlugin plugin = null;
             try
             {
-                plugin = mPluginLoader.Instance.Load(Path.Combine(mPluginPath, dllName));
+                return mPluginLoader.Instance.Load<T>(Path.Combine(mPluginPath, dllName));
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Plugin load failed: " + ex.Message);
-            }
 
-            return plugin;
+                return null;
+            }
         }
 
         public void SetConsoleOut(StreamWriter aConsoleOut)

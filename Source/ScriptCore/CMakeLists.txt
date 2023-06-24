@@ -22,7 +22,6 @@ set(DOTNET_SYSTEM_ASSEMBLIES
     System.Runtime.Serialization.dll
 )
 
-
 add_library(${LIBRARY_NAME} SHARED
     Source/Math/mat4.cs
     Source/Math/mat3.cs
@@ -32,13 +31,13 @@ add_library(${LIBRARY_NAME} SHARED
     Source/Math/quaternion.cs
     Source/Math/functions.cs
 
-    Source/Scripting/DomainManager.cs
-    Source/Scripting/Sponsor.cs
-    Source/Scripting/PluginLoader.cs
-    Source/Scripting/Interfaces.cs
+    # Source/Scripting/DomainManager.cs
+    # Source/Scripting/Sponsor.cs
+    # Source/Scripting/PluginLoader.cs
+    # Source/Scripting/Interfaces.cs
 
     Source/Colors.cs
-    Source/ScriptProxy.cs
+    # Source/ScriptProxy.cs
     Source/CppCalls.cs
     Source/Interop.cs
     Source/Entity.cs
@@ -84,7 +83,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/UI/Colors.cs
     Source/UI/Fonts.cs
     
-    Source/Script.cs
+    # Source/Script.cs
     Source/SEApplication.cs
 )
 
