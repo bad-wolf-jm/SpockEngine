@@ -243,9 +243,6 @@ namespace SE::Core
         inline void SetHandleKeyboardInputs( bool aValue ) { mHandleKeyboardInputs = aValue; }
         inline bool IsHandleKeyboardInputsEnabled() const { return mHandleKeyboardInputs; }
 
-        inline void SetImGuiChildIgnored( bool aValue ) { mIgnoreImGuiChild = aValue; }
-        inline bool IsImGuiChildIgnored() const { return mIgnoreImGuiChild; }
-
         inline void SetShowWhitespaces( bool aValue ) { mShowWhitespaces = aValue; }
         inline bool IsShowingWhitespaces() const { return mShowWhitespaces; }
 
@@ -278,7 +275,7 @@ namespace SE::Core
 
         bool CanUndo() const;
         bool CanRedo() const;
-        void Undo( int aSteps = 1 );
+        void Undo( int aSteps=  1 );
         void Redo( int aSteps = 1 );
 
         static const Palette &GetDarkPalette();
@@ -383,7 +380,6 @@ namespace SE::Core
         SelectionMode mSelectionMode;
         bool          mHandleKeyboardInputs;
         bool          mHandleMouseInputs;
-        bool          mIgnoreImGuiChild;
         bool          mShowWhitespaces;
 
         Palette            mPaletteBase;

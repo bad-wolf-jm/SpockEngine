@@ -42,13 +42,13 @@ namespace SE::Core
         , mLastClick( -1.0f )
         , mHandleKeyboardInputs( true )
         , mHandleMouseInputs( true )
-        , mIgnoreImGuiChild( false )
         , mShowWhitespaces( true )
         , mStartTime(
               std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::system_clock::now().time_since_epoch() ).count() )
     {
         SetPalette( GetDarkPalette() );
         SetLanguageDefinition( LanguageDefinition::CPlusPlus() );
+        SetFont( FontFamilyFlags::MONOSPACE );
         mLines.push_back( Line() );
     }
 
@@ -1092,10 +1092,9 @@ namespace SE::Core
 
         ImGui::PushStyleColor( ImGuiCol_ChildBg, ImGui::ColorConvertU32ToFloat4( mPalette[(int)PaletteIndex::Background] ) );
         ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, ImVec2( 0.0f, 0.0f ) );
-        if( !mIgnoreImGuiChild )
-            ImGui::BeginChild( aTitle, aSize, aBorder,
-                               ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar |
-                                   ImGuiWindowFlags_NoMove );
+        ImGui::BeginChild( aTitle, aSize, aBorder,
+                           ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar |
+                               ImGuiWindowFlags_NoMove );
 
         if( mHandleKeyboardInputs )
         {
@@ -1110,7 +1109,7 @@ namespace SE::Core
 
         if( mHandleKeyboardInputs ) ImGui::PopAllowKeyboardFocus();
 
-        if( !mIgnoreImGuiChild ) ImGui::EndChild();
+        ImGui::EndChild();
 
         ImGui::PopStyleVar();
         ImGui::PopStyleColor();
@@ -1915,30 +1914,32 @@ namespace SE::Core
         while( CanRedo() && aSteps-- > 0 ) mUndoBuffer[mUndoIndex++].Redo( this );
     }
 
+#define rgb( r, g, b ) IM_COL32( r, g, b, 255 )
+
     const UICodeEditor::Palette &UICodeEditor::GetDarkPalette()
     {
         const static Palette p = { {
-            0xff7f7f7f, // Default
-            0xffd69c56, // Keyword
-            0xff00ff00, // Number
-            0xff7070e0, // String
-            0xff70a0e0, // Char literal
-            0xffffffff, // Punctuation
-            0xff408080, // Preprocessor
-            0xffaaaaaa, // Identifier
-            0xff9bc64d, // Known identifier
-            0xffc040a0, // Preproc identifier
-            0xff206020, // Comment (single line)
-            0xff406020, // Comment (multi line)
-            0xff101010, // Background
-            0xffe0e0e0, // Cursor
-            0x80a06020, // Selection
-            0x800020ff, // ErrorMarker
-            0x40f08000, // Breakpoint
-            0xff707000, // Line number
-            0x40000000, // Current line fill
-            0x40808080, // Current line fill (inactive)
-            0x40a0a0a0, // Current line edge
+            IM_COL32( 212, 212, 212, 255 ),   // Default
+            IM_COL32( 30, 80, 179, 255 ),     // Keyword
+            IM_COL32( 181, 206, 168, 255 ),   // Number
+            IM_COL32( 206, 145, 120, 255 ),   // String
+            IM_COL32( 206, 145, 120, 255 ),   // Char literal
+            0xff9fc5d4,                       // Punctuation
+            0xff408080,                       // Preprocessor
+            IM_COL32( 220, 220, 170, 255 ),   // Identifier
+            0xff9bc64d,                       // Known identifier
+            0xffc040a0,                       // Preproc identifier
+            IM_COL32( 106, 153, 85, 255 ),    // Comment (single line)
+            IM_COL32( 106, 153, 85, 255 ),    // Comment (multi line)
+            IM_COL32( 3, 3, 3, 255 ),         // Background
+            0xffe0e0e0,                       // Cursor
+            IM_COL32( 38, 79, 120, 70, 255 ), // Selection
+            0x800020ff,                       // ErrorMarker
+            0x40f08000,                       // Breakpoint
+            IM_COL32( 133, 133, 133, 255 ),   // Line number
+            0x00000000,                       // Current line fill
+            0x00000000,                       // Current line fill (inactive)
+            0x40a0a0a0,                       // Current line edge
         } };
         return p;
     }
