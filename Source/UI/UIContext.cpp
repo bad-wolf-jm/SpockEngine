@@ -62,7 +62,7 @@ namespace SE::Core
         mFonts[FontFamilyFlags::NORMAL]    = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize );
         mFonts[FontFamilyFlags::SMALL]     = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * .75f );
         mFonts[FontFamilyFlags::TINY]      = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * .5f );
-        mFonts[FontFamilyFlags::MONOSPACE] = LoadFont( aConfig.mMonoFont, aConfig.mIconFont, aConfig.mFontSize * .75f );
+        mFonts[FontFamilyFlags::MONOSPACE] = LoadFont( aConfig.mMonoFont, aConfig.mIconFont, aConfig.mFontSize * 1.0f );
 
         mUIStyle = UIStyle{ true };
 

@@ -1051,6 +1051,78 @@ namespace SE::Core::Interop
         void     UICodeEditor_SetText( UICodeEditor *aSelf, wchar_t *aText ) { aSelf->SetText( ConvertStringForCoreclr( aText ) ); }
         wchar_t *UICodeEditor_GetText( UICodeEditor *aSelf ) { return CopyCharactersForCoreClr( aSelf->GetText() ); }
 
+        void UICodeEditor_MoveUp( UICodeEditor *aSelf, int aAmount, bool aSelect ) { aSelf->MoveUp( aAmount, aSelect ); }
+        void UICodeEditor_MoveDown( UICodeEditor *aSelf, int aAmount, bool aSelect ) { aSelf->MoveDown( aAmount, aSelect ); }
+        void UICodeEditor_MoveLeft( UICodeEditor *aSelf, int aAmount, bool aSelect, bool aWordMode )
+        {
+            aSelf->MoveLeft( aAmount, aSelect );
+        }
+        void UICodeEditor_MoveRight( UICodeEditor *aSelf, int aAmount, bool aSelect, bool aWordMode )
+        {
+            aSelf->MoveRight( aAmount, aSelect );
+        }
+        void UICodeEditor_MoveTop( UICodeEditor *aSelf, bool aSelect ) { aSelf->MoveTop( aSelect ); }
+        void UICodeEditor_MoveBottom( UICodeEditor *aSelf, bool aSelect ) { aSelf->MoveBottom( aSelect ); }
+        void UICodeEditor_MoveHome( UICodeEditor *aSelf, bool aSelect ) { aSelf->MoveHome( aSelect ); }
+        void UICodeEditor_MoveEnd( UICodeEditor *aSelf, bool aSelect ) { aSelf->MoveEnd( aSelect ); }
+
+        struct sCoords
+        {
+            int mLine;
+            int mColumn;
+        };
+
+        void UICodeEditor_SetSelectionStart( UICodeEditor *aSelf, sCoords aPosition )
+        {
+            aSelf->SetSelectionStart( UICodeEditor::Coordinates( aPosition.mLine, aPosition.mColumn ) );
+        }
+
+        void UICodeEditor_SetSelectionEnd( UICodeEditor *aSelf, sCoords aPosition )
+        {
+            aSelf->SetSelectionEnd( UICodeEditor::Coordinates( aPosition.mLine, aPosition.mColumn ) );
+        }
+
+        void UICodeEditor_SetSelection( UICodeEditor *aSelf, sCoords aStart, sCoords aEnd, int aMode )
+        {
+            aSelf->SetSelection( UICodeEditor::Coordinates( aStart.mLine, aStart.mColumn ),
+                                 UICodeEditor::Coordinates( aEnd.mLine, aEnd.mColumn ), (UICodeEditor::SelectionMode)aMode );
+        }
+
+        void UICodeEditor_SelectWordUnderCursor( UICodeEditor *aSelf ) { aSelf->SelectWordUnderCursor(); }
+        void UICodeEditor_SelectAll( UICodeEditor *aSelf ) { aSelf->SelectAll(); }
+        bool UICodeEditor_HasSelection( UICodeEditor *aSelf ) { return aSelf->HasSelection(); }
+        void UICodeEditor_Cut( UICodeEditor *aSelf ) { return aSelf->Copy(); }
+        void UICodeEditor_Copy( UICodeEditor *aSelf ) { return aSelf->Copy(); }
+        void UICodeEditor_Paste( UICodeEditor *aSelf ) { return aSelf->Paste(); }
+        void UICodeEditor_Delete( UICodeEditor *aSelf ) { return aSelf->Delete(); }
+        bool UICodeEditor_CanUndo( UICodeEditor *aSelf ) { return aSelf->CanUndo(); }
+        bool UICodeEditor_CanRedo( UICodeEditor *aSelf ) { return aSelf->CanRedo(); }
+        void UICodeEditor_Undo( UICodeEditor *aSelf ) { return aSelf->Undo(); }
+        void UICodeEditor_Redo( UICodeEditor *aSelf ) { return aSelf->Redo(); }
+
+        void UICodeEditor_InsertText( UICodeEditor *aSelf, wchar_t *aText ) { aSelf->InsertText( ConvertStringForCoreclr( aText ) ); }
+        wchar_t *UICodeEditor_GetSelectedText( UICodeEditor *aSelf ) { return CopyCharactersForCoreClr( aSelf->GetSelectedText() ); }
+        wchar_t *UICodeEditor_GetCurrentLineText( UICodeEditor *aSelf )
+        {
+            return CopyCharactersForCoreClr( aSelf->GetCurrentLineText() );
+        }
+        bool    UICodeEditor_GetReadOnly( UICodeEditor *aSelf ) { return aSelf->IsReadOnly(); }
+        void    UICodeEditor_SetReadOnly( UICodeEditor *aSelf, bool aValue ) { aSelf->SetReadOnly( aValue ); }
+        sCoords UICodeEditor_GetCursorPosition( UICodeEditor *aSelf )
+        {
+            auto const &x = aSelf->GetCursorPosition();
+
+            return sCoords{ x.mLine, x.mColumn };
+        }
+        void UICodeEditor_SetCursorPosition( UICodeEditor *aSelf, sCoords aValue )
+        {
+            aSelf->SetCursorPosition( UICodeEditor::Coordinates( aValue.mLine, aValue.mColumn ) );
+        }
+        bool UICodeEditor_GetShowWhitespace( UICodeEditor *aSelf ) { return aSelf->IsShowingWhitespaces(); }
+        void UICodeEditor_SetShowWhitespace( UICodeEditor *aSelf, bool aValue ) { aSelf->SetShowWhitespaces( aValue ); }
+        int  UICodeEditor_GetTabSize( UICodeEditor *aSelf ) { return aSelf->GetTabSize(); }
+        void UICodeEditor_SetTabSize( UICodeEditor *aSelf, int aValue ) { aSelf->SetTabSize( aValue ); }
+
 #pragma endregion
     }
 } // namespace SE::Core::Interop
