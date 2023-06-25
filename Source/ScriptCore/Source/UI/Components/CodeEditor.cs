@@ -20,7 +20,7 @@ namespace SpockEngine
 
         public void InsertText(string aText) { Interop.UICodeEditor_InsertText(mInstance, aText); }
 
-        public string GetText(string aText) { return Interop.UICodeEditor_GetText(mInstance); }
+        public string GetText() { return Interop.UICodeEditor_GetText(mInstance); }
 
         public string SelectedText { get { return Interop.UICodeEditor_GetSelectedText(mInstance); } }
 
