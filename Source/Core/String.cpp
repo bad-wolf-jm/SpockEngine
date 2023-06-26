@@ -1,7 +1,7 @@
 #include "Engine/Engine.h"
 
-#include "String.h"
 #include "File.h"
+#include "String.h"
 
 #include <codecvt>
 #include <locale>
@@ -29,20 +29,13 @@ namespace SE::Core
 
     wchar_t *CopyCharactersForCoreClr( string_t const &aString )
     {
-        auto    &lStr      = ConvertStringForCoreclr( aString );
-        wchar_t *pszReturn = (wchar_t *)::CoTaskMemAlloc( lStr.size() * sizeof( wchar_t ) + 1 );
-        memset( pszReturn, 0, lStr.size() * sizeof( wchar_t ) + 1 );
-        wcsncpy( pszReturn, lStr.c_str(), lStr.size() );
-
-        return pszReturn;
+        return CopyCharactersForCoreClr( ConvertStringForCoreclr( aString ) );
     }
 
     wchar_t *CopyCharactersForCoreClr( std::wstring const &aString )
     {
-        auto    &lStr      = aString;
-        wchar_t *pszReturn = (wchar_t *)::CoTaskMemAlloc( lStr.size() * sizeof( wchar_t ) + 1 );
-        memset( pszReturn, 0, lStr.size() * sizeof( wchar_t ) + 1 );
-        wcsncpy( pszReturn, lStr.c_str(), lStr.size() );
+        wchar_t *pszReturn = (wchar_t *)::CoTaskMemAlloc( ( aString.size() + 1 ) * sizeof( wchar_t ) );
+        wcscpy( pszReturn, aString.c_str() );
 
         return pszReturn;
     }

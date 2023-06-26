@@ -437,6 +437,7 @@ namespace SpockEngine
         public extern static void UIPlot_SetAxisLimits(IntPtr aSelf, eUIPlotAxis aAxis, double aMin, double aMax);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        [return: MarshalAs(UnmanagedType.LPWStr)]
         public extern static string UIPlot_GetAxisTitle(IntPtr aSelf, eUIPlotAxis aAxis);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
@@ -614,6 +615,7 @@ namespace SpockEngine
         public extern static void UITextInput_Destroy(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        [return: MarshalAs(UnmanagedType.LPWStr)]
         public extern static string UITextInput_GetText(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
@@ -992,6 +994,7 @@ namespace SpockEngine
         public extern static void UICodeEditor_SetText(IntPtr aSelf, string aTitle);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        [return: MarshalAs(UnmanagedType.LPWStr)]
         public extern static string UICodeEditor_GetText(IntPtr aSelf);
 
 
@@ -1068,9 +1071,11 @@ namespace SpockEngine
         public extern static void UICodeEditor_InsertText( IntPtr aSelf, string aText );
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        [return: MarshalAs(UnmanagedType.LPWStr)]
         public extern static string UICodeEditor_GetSelectedText( IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        [return: MarshalAs(UnmanagedType.LPWStr)]
         public extern static string UICodeEditor_GetCurrentLineText( IntPtr aSelf );
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
