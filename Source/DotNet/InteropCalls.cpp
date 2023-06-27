@@ -1124,5 +1124,16 @@ namespace SE::Core::Interop
         void UICodeEditor_SetTabSize( UICodeEditor *aSelf, int aValue ) { aSelf->SetTabSize( aValue ); }
 
 #pragma endregion
+
+#pragma region UIMarkdown
+        CONSTRUCT_WITHOUT_PARAMETERS( UIMarkdown )
+        DESTROY_INTERFACE( UIMarkdown )
+
+        void UIMarkdown_SetText( UIMarkdown *aSelf, wchar_t *aText ) { aSelf->SetText( ConvertStringForCoreclr( aText ) ); }
+
+        void UIMarkdown_SetTextColor( UIMarkdown *aSelf, CLRVec4 aTextColor ) { aSelf->SetTextColor( vec( aTextColor ) ); }
+#pragma endregion
+
+
     }
 } // namespace SE::Core::Interop

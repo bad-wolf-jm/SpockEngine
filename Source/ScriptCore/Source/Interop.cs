@@ -999,109 +999,125 @@ namespace SpockEngine
 
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_MoveUp( IntPtr aSelf, int aAmount, bool aSelect );
+        public extern static void UICodeEditor_MoveUp(IntPtr aSelf, int aAmount, bool aSelect);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_MoveDown( IntPtr aSelf, int aAmount, bool aSelect );
+        public extern static void UICodeEditor_MoveDown(IntPtr aSelf, int aAmount, bool aSelect);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_MoveLeft( IntPtr aSelf, int aAmount, bool aSelect, bool aWordMode );
+        public extern static void UICodeEditor_MoveLeft(IntPtr aSelf, int aAmount, bool aSelect, bool aWordMode);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_MoveRight( IntPtr aSelf, int aAmount, bool aSelect, bool aWordMode );
+        public extern static void UICodeEditor_MoveRight(IntPtr aSelf, int aAmount, bool aSelect, bool aWordMode);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_MoveTop( IntPtr aSelf, bool aSelect );
+        public extern static void UICodeEditor_MoveTop(IntPtr aSelf, bool aSelect);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_MoveBottom( IntPtr aSelf, bool aSelect );
+        public extern static void UICodeEditor_MoveBottom(IntPtr aSelf, bool aSelect);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_MoveHome( IntPtr aSelf, bool aSelect );
+        public extern static void UICodeEditor_MoveHome(IntPtr aSelf, bool aSelect);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_MoveEnd( IntPtr aSelf, bool aSelect );
+        public extern static void UICodeEditor_MoveEnd(IntPtr aSelf, bool aSelect);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_SetSelectionStart( IntPtr aSelf, UICodeEditor.Coordinates aPosition );
+        public extern static void UICodeEditor_SetSelectionStart(IntPtr aSelf, UICodeEditor.Coordinates aPosition);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_SetSelectionEnd( IntPtr aSelf, UICodeEditor.Coordinates aPosition );
+        public extern static void UICodeEditor_SetSelectionEnd(IntPtr aSelf, UICodeEditor.Coordinates aPosition);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_SetSelection( IntPtr aSelf, UICodeEditor.Coordinates aStart, UICodeEditor.Coordinates aEnd, int aMode );
+        public extern static void UICodeEditor_SetSelection(IntPtr aSelf, UICodeEditor.Coordinates aStart, UICodeEditor.Coordinates aEnd, int aMode);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_SelectWordUnderCursor( IntPtr aSelf );
+        public extern static void UICodeEditor_SelectWordUnderCursor(IntPtr aSelf);
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
 
-        public extern static void UICodeEditor_SelectAll( IntPtr aSelf );
+        public extern static void UICodeEditor_SelectAll(IntPtr aSelf);
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static bool UICodeEditor_HasSelection( IntPtr aSelf );
-
-
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_Cut( IntPtr aSelf );
-
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-
-        public extern static void UICodeEditor_Copy( IntPtr aSelf );
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        
-        public extern static void UICodeEditor_Paste( IntPtr aSelf );
-
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_Delete( IntPtr aSelf );
-
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static bool UICodeEditor_CanUndo( IntPtr aSelf );
-
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static bool UICodeEditor_CanRedo( IntPtr aSelf );
-
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_Undo( IntPtr aSelf, int aSteps );
-
-        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_Redo( IntPtr aSelf, int aSteps );
-
+        public extern static bool UICodeEditor_HasSelection(IntPtr aSelf);
 
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_InsertText( IntPtr aSelf, string aText );
+        public extern static void UICodeEditor_Cut(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        [return: MarshalAs(UnmanagedType.LPWStr)]
-        public extern static string UICodeEditor_GetSelectedText( IntPtr aSelf);
+
+        public extern static void UICodeEditor_Copy(IntPtr aSelf);
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+
+        public extern static void UICodeEditor_Paste(IntPtr aSelf);
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static void UICodeEditor_Delete(IntPtr aSelf);
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static bool UICodeEditor_CanUndo(IntPtr aSelf);
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static bool UICodeEditor_CanRedo(IntPtr aSelf);
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static void UICodeEditor_Undo(IntPtr aSelf, int aSteps);
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static void UICodeEditor_Redo(IntPtr aSelf, int aSteps);
+
+
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static void UICodeEditor_InsertText(IntPtr aSelf, string aText);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.LPWStr)]
-        public extern static string UICodeEditor_GetCurrentLineText( IntPtr aSelf );
+        public extern static string UICodeEditor_GetSelectedText(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static bool UICodeEditor_GetReadOnly( IntPtr aSelf );
+        [return: MarshalAs(UnmanagedType.LPWStr)]
+        public extern static string UICodeEditor_GetCurrentLineText(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_SetReadOnly( IntPtr aSelf, bool aValue );
+        public extern static bool UICodeEditor_GetReadOnly(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static UICodeEditor.Coordinates UICodeEditor_GetCursorPosition( IntPtr aSelf );
+        public extern static void UICodeEditor_SetReadOnly(IntPtr aSelf, bool aValue);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_SetCursorPosition( IntPtr aSelf, UICodeEditor.Coordinates aValue );
+        public extern static UICodeEditor.Coordinates UICodeEditor_GetCursorPosition(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static bool UICodeEditor_GetShowWhitespace( IntPtr aSelf );
+        public extern static void UICodeEditor_SetCursorPosition(IntPtr aSelf, UICodeEditor.Coordinates aValue);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_SetShowWhitespace( IntPtr aSelf, bool aValue );
+        public extern static bool UICodeEditor_GetShowWhitespace(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static int UICodeEditor_GetTabSize( IntPtr aSelf );
+        public extern static void UICodeEditor_SetShowWhitespace(IntPtr aSelf, bool aValue);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UICodeEditor_SetTabSize( IntPtr aSelf, int aValue );
+        public extern static int UICodeEditor_GetTabSize(IntPtr aSelf);
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static void UICodeEditor_SetTabSize(IntPtr aSelf, int aValue);
 
         #endregion
+
+        #region UIMarkdown
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static IntPtr UIMarkdown_Create();
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static void UIMarkdown_Destroy(IntPtr aSelf);
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static void UIMarkdown_SetText(IntPtr aSelf, string aText);
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static void UIMarkdown_SetTextColor(IntPtr aSelf, Math.vec4 aText);
+        #endregion
+
+
     }
 }

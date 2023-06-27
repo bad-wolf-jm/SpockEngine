@@ -44,8 +44,9 @@ add_library(LTSimulationEngineRuntime SHARED
     UI/Components/Slider.cpp
     UI/Components/VectorEdit.cpp
     UI/Components/CodeEditor/CodeEditor.cpp
-    UI/Components/Markdown/MarkdownRenderer.cpp
     UI/Components/Markdown/md4c.c
+    UI/Components/Markdown/MarkdownRenderer.cpp
+    UI/Components/Markdown/Markdown.cpp
 
     UI/Widgets/FileTree.cpp
 
