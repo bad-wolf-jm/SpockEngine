@@ -1,6 +1,5 @@
 #include "BaseImage.h"
 
-
 #include "Engine/Engine.h"
 
 namespace SE::Core
@@ -59,90 +58,5 @@ namespace SE::Core
     ImVec2 UIBaseImage::RequiredSize() { return mSize; }
 
     void UIBaseImage::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
-
-    // void *UIBaseImage::UIBaseImage_Create()
-    // {
-    //     auto lNewImage = new UIBaseImage();
-
-    //     return static_cast<void *>( lNewImage );
-    // }
-
-    // void *UIBaseImage::UIBaseImage_CreateWithPath( void *aText, math::vec2 aSize )
-    // {
-    //     auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-    //     auto lNewImage = new UIBaseImage( lString, aSize );
-
-    //     return static_cast<void *>( lNewImage );
-    // }
-
-    // void UIBaseImage::UIBaseImage_Destroy( void *aInstance ) { delete static_cast<UIBaseImage *>( aInstance ); }
-
-    // void UIBaseImage::UIBaseImage_SetImage( void *aInstance, void *aPath )
-    // {
-    //     auto lInstance = static_cast<UIBaseImage *>( aInstance );
-    //     auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aPath ) );
-
-    //     lInstance->SetImage( lString );
-    // }
-
-    // void UIBaseImage::UIBaseImage_SetSize( void *aInstance, math::vec2 aSize )
-    // {
-    //     auto lInstance = static_cast<UIBaseImage *>( aInstance );
-
-    //     lInstance->SetSize( aSize );
-    // }
-
-    // math::vec2 UIBaseImage::UIBaseImage_GetSize( void *aInstance )
-    // {
-    //     auto lInstance = static_cast<UIBaseImage *>( aInstance );
-    //     auto lV        = lInstance->Size();
-
-    //     return math::vec2{ lV.y, lV.y };
-    // }
-
-    // void UIBaseImage::UIBaseImage_SetTopLeft( void *aInstance, math::vec2 aTopLeft )
-    // {
-    //     auto lInstance = static_cast<UIBaseImage *>( aInstance );
-
-    //     lInstance->SetTopLeft( aTopLeft );
-    // }
-
-    // math::vec2 UIBaseImage::UIBaseImage_GetTopLeft( void *aInstance )
-    // {
-    //     auto lInstance = static_cast<UIBaseImage *>( aInstance );
-    //     auto lV        = lInstance->TopLeft();
-
-    //     return math::vec2{ lV.y, lV.y };
-    // }
-
-    // void UIBaseImage::UIBaseImage_SetBottomRight( void *aInstance, math::vec2 aBottomRight )
-    // {
-    //     auto lInstance = static_cast<UIBaseImage *>( aInstance );
-
-    //     lInstance->SetBottomRight( aBottomRight );
-    // }
-
-    // math::vec2 UIBaseImage::UIBaseImage_GetBottomRight( void *aInstance )
-    // {
-    //     auto lInstance = static_cast<UIBaseImage *>( aInstance );
-    //     auto lV        = lInstance->BottomRight();
-
-    //     return math::vec2{ lV.x, lV.y };
-    // }
-
-    // void UIBaseImage::UIBaseImage_SetTintColor( void *aInstance, math::vec4 aColor )
-    // {
-    //     auto lInstance = static_cast<UIBaseImage *>( aInstance );
-
-    //     lInstance->SetTintColor( aColor );
-    // }
-
-    // math::vec4 UIBaseImage::UIBaseImage_GetTintColor( void *aInstance )
-    // {
-    //     auto lInstance = static_cast<UIBaseImage *>( aInstance );
-    //     auto lV        = lInstance->TintColor();
-
-    //     return math::vec4{ lV.x, lV.y, lV.z, lV.w };
-    // }
 
 } // namespace SE::Core

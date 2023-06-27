@@ -50,20 +50,5 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-    //   public:
-    //     static void *UIBaseImage_Create();
-    //     static void *UIBaseImage_CreateWithPath( void *aText, math::vec2 aSize );
-    //     static void  UIBaseImage_Destroy( void *aInstance );
-    //     static void  UIBaseImage_SetImage( void *aInstance, void *aPath );
-
-    //     static void       UIBaseImage_SetSize( void *aInstance, math::vec2 aSize );
-    //     static math::vec2 UIBaseImage_GetSize( void *aInstance );
-    //     static void       UIBaseImage_SetTopLeft( void *aInstance, math::vec2 aTopLeft );
-    //     static math::vec2 UIBaseImage_GetTopLeft( void *aInstance );
-    //     static void       UIBaseImage_SetBottomRight( void *aInstance, math::vec2 aBottomRight );
-    //     static math::vec2 UIBaseImage_GetBottomRight( void *aInstance );
-    //     static void       UIBaseImage_SetTintColor( void *aInstance, math::vec4 aColor );
-    //     static math::vec4 UIBaseImage_GetTintColor( void *aInstance );
     };
 } // namespace SE::Core

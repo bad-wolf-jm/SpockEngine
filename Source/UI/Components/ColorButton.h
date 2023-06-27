@@ -19,9 +19,5 @@ namespace SE::Core
         void PopStyles();
 
         void DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-    //   public:
-    //     static void *UIColorButton_Create();
-    //     static void  UIColorButton_Destroy( void *aInstance );
     };
 } // namespace SE::Core

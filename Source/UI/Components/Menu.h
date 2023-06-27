@@ -25,7 +25,7 @@ namespace SE::Core
       protected:
         string_t mText;
         string_t mShortcut;
-        ImVec4      mTextColor;
+        ImVec4   mTextColor;
 
       protected:
         void PushStyles();
@@ -48,9 +48,9 @@ namespace SE::Core
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
-    //   public:
-    //     static void *UIMenuSeparator_Create();
-    //     static void  UIMenuSeparator_Destroy( void *aInstance );
+        //   public:
+        //     static void *UIMenuSeparator_Create();
+        //     static void  UIMenuSeparator_Destroy( void *aInstance );
     };
 
     class UIMenu : public UIMenuItem
@@ -80,14 +80,5 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-    //   public:
-    //     static void *UIMenu_Create();
-    //     static void *UIMenu_CreateWithText( void *aText );
-    //     static void  UIMenu_Destroy( void *aInstance );
-    //     static void *UIMenu_AddAction( void *aInstance, void *aText, void *aShortcut );
-    //     static void *UIMenu_AddMenu( void *aInstance, void *aText );
-    //     static void *UIMenu_AddSeparator( void *aInstance );
-    //     static void  UIMenu_Update( void *aInstance );
     };
 } // namespace SE::Core

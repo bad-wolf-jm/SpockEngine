@@ -46,16 +46,5 @@ namespace SE::Core
 
         void *mOnClickDelegate       = nullptr;
         int   mOnClickDelegateHandle = -1;
-
-    //   public:
-    //     static void *UITextToggleButton_Create();
-    //     static void *UITextToggleButton_CreateWithText( void *aText );
-    //     static void  UITextToggleButton_Destroy( void *aInstance );
-    //     static void  UITextToggleButton_OnClicked( void *aInstance, void *aHandler );
-    //     static void  UITextToggleButton_OnChanged( void *aInstance, void *aHandler );
-    //     static bool  UITextToggleButton_IsActive( void *aInstance );
-    //     static void  UITextToggleButton_SetActive( void *aInstance, bool aValue );
-    //     static void  UITextToggleButton_SetActiveColor( void *aInstance, math::vec4 *aColor );
-    //     static void  UITextToggleButton_SetInactiveColor( void *aInstance, math::vec4 *aColor );
     };
 } // namespace SE::Core

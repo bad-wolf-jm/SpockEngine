@@ -1,6 +1,5 @@
 #include "Workspace.h"
 
-
 #include <algorithm>
 #include <iterator>
 
@@ -20,97 +19,6 @@ namespace SE::Core
 
         if( mContent != nullptr ) mContent->Update( lContentPosition, lContentSize );
     }
-
-    // void *UIWorkspaceDocument::UIWorkspaceDocument_Create()
-    // {
-    //     auto lNewDocument = new UIWorkspaceDocument();
-
-    //     return static_cast<void *>( lNewDocument );
-    // }
-
-    // void UIWorkspaceDocument::UIWorkspaceDocument_Destroy( void *aInstance )
-    // {
-    //     delete static_cast<UIWorkspaceDocument *>( aInstance );
-    // }
-
-    // void UIWorkspaceDocument::UIWorkspaceDocument_SetContent( void *aInstance, void *aContent )
-    // {
-    //     auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
-    //     auto lContent  = static_cast<UIComponent *>( aContent );
-
-    //     lInstance->SetContent( lContent );
-    // }
-
-    // void UIWorkspaceDocument::UIWorkspaceDocument_Update( void *aInstance )
-    // {
-    //     auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
-
-    //     lInstance->Update();
-    // }
-
-    // void UIWorkspaceDocument::UIWorkspaceDocument_SetName( void *aInstance, void *aName )
-    // {
-    //     auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
-    //     auto lName     = DotNetRuntime::NewString( static_cast<MonoString *>( aName ) );
-
-    //     lInstance->mName = lName;
-    // }
-
-    // bool UIWorkspaceDocument::UIWorkspaceDocument_IsDirty( void *aInstance )
-    // {
-    //     auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
-
-    //     return lInstance->mDirty;
-    // }
-
-    // void UIWorkspaceDocument::UIWorkspaceDocument_MarkAsDirty( void *aInstance, bool aDirty )
-    // {
-    //     auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
-
-    //     lInstance->mDirty = aDirty;
-    // }
-
-    // void UIWorkspaceDocument::UIWorkspaceDocument_Open( void *aInstance )
-    // {
-    //     auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
-
-    //     lInstance->DoOpen();
-    // }
-
-    // void UIWorkspaceDocument::UIWorkspaceDocument_RequestClose( void *aInstance )
-    // {
-    //     auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
-
-    //     lInstance->DoQueueClose();
-    // }
-
-    // void UIWorkspaceDocument::UIWorkspaceDocument_ForceClose( void *aInstance )
-    // {
-    //     auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
-
-    //     lInstance->DoForceClose();
-    // }
-
-    // void UIWorkspaceDocument::UIWorkspaceDocument_RegisterSaveDelegate( void *aInstance, void *aDelegate )
-    // {
-    //     auto lInstance = static_cast<UIWorkspaceDocument *>( aInstance );
-    //     auto lDelegate = static_cast<MonoObject *>( aDelegate );
-
-    //     if( lInstance->mSaveDelegate != nullptr ) mono_gchandle_free( lInstance->mSaveDelegateHandle );
-
-    //     lInstance->mSaveDelegate       = aDelegate;
-    //     lInstance->mSaveDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
-
-    //     lInstance->mDoSave = [lInstance, lDelegate]()
-    //     {
-    //         auto lDelegateClass = mono_object_get_class( lDelegate );
-    //         auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-
-    //         auto lValue = mono_runtime_invoke( lInvokeMethod, lDelegate, nullptr, nullptr );
-
-    //         return *( (bool *)mono_object_unbox( lValue ) );
-    //     };
-    // }
 
     void UIWorkspace::PushStyles() {}
     void UIWorkspace::PopStyles() {}
@@ -243,44 +151,4 @@ namespace SE::Core
         if( mOnCloseDocuments ) mOnCloseDocuments( mCloseQueue );
         mCloseQueue.clear();
     }
-
-    // void *UIWorkspace::UIWorkspace_Create()
-    // {
-    //     auto lNewWorkspace = new UIWorkspace();
-
-    //     return static_cast<void *>( lNewWorkspace );
-    // }
-
-    // void UIWorkspace::UIWorkspace_Destroy( void *aSelf ) { delete static_cast<UIWorkspace *>( aSelf ); }
-
-    // void UIWorkspace::UIWorkspace_Add( void *aSelf, void *aDocument )
-    // {
-    //     auto lSelf     = static_cast<UIWorkspace *>( aSelf );
-    //     auto lDocument = static_cast<UIWorkspaceDocument *>( aDocument );
-
-    //     lSelf->Add( lDocument );
-    // }
-
-    // void UIWorkspace::UIWorkspace_RegisterCloseDocumentDelegate( void *aInstance, void *aDelegate )
-    // {
-    //     auto lInstance = static_cast<UIWorkspace *>( aInstance );
-    //     auto lDelegate = static_cast<MonoObject *>( aDelegate );
-
-    //     if( lInstance->mCloseDocumentDelegate != nullptr ) mono_gchandle_free( lInstance->mCloseDocumentDelegateHandle );
-
-    //     lInstance->mCloseDocumentDelegate       = aDelegate;
-    //     lInstance->mCloseDocumentDelegateHandle = mono_gchandle_new( static_cast<MonoObject *>( aDelegate ), true );
-
-    //     lInstance->mOnCloseDocuments = [lInstance, lDelegate]( std::vector<UIWorkspaceDocument *> aDocuments )
-    //     {
-    //         auto lDelegateClass = mono_object_get_class( lDelegate );
-    //         auto lInvokeMethod  = mono_get_delegate_invoke( lDelegateClass );
-
-    //         MonoArray *lNewArray = mono_array_new( mono_domain_get(), mono_get_uint64_class(), aDocuments.size() );
-    //         for( uint32_t i = 0; i < aDocuments.size(); i++ ) mono_array_set( lNewArray, uint64_t, i, (uint64_t)aDocuments[i] );
-    //         void* lParams[] = {(void*) lNewArray};
-    //         mono_runtime_invoke( lInvokeMethod, lDelegate, lParams, nullptr );
-    //     };
-    // }
-
 } // namespace SE::Core

@@ -1,7 +1,6 @@
 #include "TextOverlay.h"
 #include <sstream>
 
-
 #include "Engine/Engine.h"
 
 namespace SE::Core
@@ -136,29 +135,4 @@ namespace SE::Core
         ImGui::PopStyleColor();
         ImGui::PopID();
     }
-
-    // void *UITextOverlay::UITextOverlay_Create()
-    // {
-    //     auto lNewLabel = new UITextOverlay();
-
-    //     return static_cast<void *>( lNewLabel );
-    // }
-
-    // void UITextOverlay::UITextOverlay_Destroy( void *aInstance ) { delete static_cast<UITextOverlay *>( aInstance ); }
-
-    // void UITextOverlay::UITextOverlay_AddText( void *aInstance, void *aText )
-    // {
-    //     auto lInstance = static_cast<UITextOverlay *>( aInstance );
-    //     auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aText ) );
-
-    //     lInstance->AddText( lString );
-    // }
-
-    // void UITextOverlay::UITextOverlay_Clear( void *aInstance )
-    // {
-    //     auto lInstance = static_cast<UITextOverlay *>( aInstance );
-
-    //     lInstance->Clear();
-    // }
-
 } // namespace SE::Core

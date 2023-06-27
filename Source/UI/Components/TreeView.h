@@ -56,15 +56,6 @@ namespace SE::Core
         void RenderIcon( ImDrawList *aDrawList, ImVec2 aPosition );
         
         virtual bool IsLeaf();
-
-    //   public:
-    //     static void *UITreeViewNode_Create();
-    //     static void  UITreeViewNode_Destroy( void *aInstance );        
-    //     static void  UITreeViewNode_SetIcon( void *aInstance, void *aIcon );
-    //     static void  UITreeViewNode_SetIndicator( void *aInstance, void *aIndicator );
-    //     static void  UITreeViewNode_SetText( void *aInstance, void *aText );
-    //     static void  UITreeViewNode_SetTextColor( void *aInstance, math::vec4 aTextColor );
-    //     static void *UITreeViewNode_Add( void *aInstance );
     };
 
     class UITreeView : public UIComponent
@@ -87,13 +78,6 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
-    //   public:
-    //     static void *UITreeView_Create();
-    //     static void  UITreeView_Destroy( void *aInstance );
-    //     static void  UITreeView_SetIndent( void *aInstance, float aIndent );
-    //     static void  UITreeView_SetIconSpacing( void *aInstance, float aSpacing );
-    //     static void  *UITreeView_Add( void *aInstance );
 
         friend class UITreeViewNode;
     };
