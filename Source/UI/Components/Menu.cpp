@@ -1,6 +1,5 @@
 #include "Menu.h"
 
-
 namespace SE::Core
 {
     UIMenuItem::UIMenuItem( string_t const &aText )
@@ -41,16 +40,16 @@ namespace SE::Core
         bool lEnabled = mIsEnabled;
 
         bool lSelected = false;
-        ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, ImVec2( 30.0f, 10.0f ) );
+        ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, ImVec2( 20.0f, 0.0f ) );
+        ImGui::SetCursorPosX( ImGui::GetCursorPosX() + 30.0f );
         if( ImGui::MenuItem( mText.c_str(), lShortcut, &lSelected ) && mOnTrigger && lEnabled ) mOnTrigger();
         ImGui::PopStyleVar();
 
         if( lTextColorSet ) ImGui::PopStyleColor();
     }
 
-
-    void UIMenuSeparator::PushStyles() {}
-    void UIMenuSeparator::PopStyles() {}
+    void UIMenuSeparator::PushStyles() { ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2( 0.0f, 0.0f ) ); }
+    void UIMenuSeparator::PopStyles() { ImGui::PopStyleVar(); }
 
     ImVec2 UIMenuSeparator::RequiredSize()
     {
@@ -59,15 +58,37 @@ namespace SE::Core
         return lTextSize;
     }
 
-    void UIMenuSeparator::DrawContent( ImVec2 aPosition, ImVec2 aSize ) { ImGui::Separator(); }
+    void UIMenuSeparator::DrawContent( ImVec2 aPosition, ImVec2 aSize )
+    {
+        ImGuiWindow *window = ImGui::GetCurrentWindow();
+
+        float x1 = window->DC.CursorPos.x;
+        float x2 = window->DC.CursorPos.x + window->Size.x;
+
+        ImVec2 lLineStart = ImVec2{ x1, window->DC.CursorPos.y + 1.5f };
+        ImVec2 lLineEnd   = ImVec2{ x2, window->DC.CursorPos.y + 1.5f };
+
+        auto lPos = ImGui::GetCursorPos();
+        window->DrawList->AddLine( lLineStart, lLineEnd, ImGui::GetColorU32( ImGuiCol_Separator ) );
+
+        ImGui::SetCursorPos( lPos + ImVec2{ 0.0f, 4.0f } );
+    }
 
     UIMenu::UIMenu( string_t const &aText )
         : UIMenuItem( aText )
     {
     }
 
-    void UIMenu::PushStyles() {}
-    void UIMenu::PopStyles() {}
+    void UIMenu::PushStyles() 
+    {
+        ImGui::PushStyleVar(ImGuiStyleVar_PopupRounding, 5.0f);
+        ImGui::PushStyleColor(ImGuiCol_Border, ImGui::GetColorU32( ImGuiCol_Separator ) );
+    }
+    void UIMenu::PopStyles() 
+    {
+        ImGui::PopStyleVar();
+        ImGui::PopStyleColor();
+    }
 
     ImVec2 UIMenu::RequiredSize()
     {
@@ -84,8 +105,12 @@ namespace SE::Core
 
         if( ImGui::BeginMenu( mText.c_str(), &mIsEnabled ) )
         {
-            for( auto &lItem : mActions ) lItem->Update( ImGui::GetCursorPos(), ImVec2{} );
-
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
+            for( auto &lItem : mActions )
+            {
+                lItem->Update( ImGui::GetCursorPos(), ImVec2{} );
+                ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
+            }
             ImGui::EndMenu();
         }
 

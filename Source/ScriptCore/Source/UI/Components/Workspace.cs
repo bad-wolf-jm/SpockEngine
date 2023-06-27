@@ -32,7 +32,12 @@ namespace SpockEngine
         public void SetName(string aName) { Interop.UIWorkspaceDocument_SetName(mInstance, aName); }
         public void Update() { Interop.UIWorkspaceDocument_Update(mInstance); }
 
-        public void SetContent(UIComponent aContent) { Interop.UIWorkspaceDocument_SetContent(mInstance, aContent.Instance); }
+        UIComponent mContent;
+        public void SetContent(UIComponent aContent)
+        {
+            mContent = aContent;
+            Interop.UIWorkspaceDocument_SetContent(mInstance, mContent.Instance);
+        }
 
     }
 

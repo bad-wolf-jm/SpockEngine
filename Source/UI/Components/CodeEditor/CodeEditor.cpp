@@ -1933,7 +1933,7 @@ namespace SE::Core
             IM_COL32( 106, 153, 85, 255 ),    // Comment (multi line)
             IM_COL32( 3, 3, 3, 255 ),         // Background
             0xffe0e0e0,                       // Cursor
-            IM_COL32( 38, 79, 120, 70, 255 ), // Selection
+            IM_COL32( 38, 79, 120, 70 ), // Selection
             0x800020ff,                       // ErrorMarker
             0x40f08000,                       // Breakpoint
             IM_COL32( 133, 133, 133, 255 ),   // Line number
