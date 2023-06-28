@@ -10,5 +10,6 @@ namespace SpockEngine
         ~UIFileTree() { Interop.UIFileTree_Destroy(mInstance); }
 
         public void Add(string aText) { Interop.UIFileTree_Add(mInstance, aText); }
+        public void Remove(string aText) { Interop.UIFileTree_Remove(mInstance, aText); }
     }
 }

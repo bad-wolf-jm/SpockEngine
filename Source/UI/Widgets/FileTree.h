@@ -19,6 +19,7 @@ namespace SE::Core
         UIFileTreeNode( UIFileTree *aTreeView, UIFileTreeNode *aParent, path_t const &aPath, string_t const &aName );
 
         UIFileTreeNode *Add(path_t const& aPath);
+        void Remove(path_t const& aPath);
 
         std::vector<UITreeViewNode *> const &Children();
 
@@ -35,11 +36,7 @@ namespace SE::Core
         UIFileTree();
 
         UIFileTreeNode *Add(path_t const& aPath);
-
-    //   public:
-    //     static void *UIFileTree_Create();
-    //     static void  UIFileTree_Destroy( void *aInstance );
-    //     static void *UIFileTree_Add( void *aInstance, void* aPath );
+        void Remove(path_t const& aPath);
 
         friend class UIFileTreeNode;
     };

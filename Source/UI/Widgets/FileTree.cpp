@@ -2,8 +2,6 @@
 
 #include <filesystem>
 
-
-
 #include "imgui.h"
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui_internal.h"
@@ -73,6 +71,25 @@ namespace SE::Core
         return lNewChild;
     }
 
+    void UIFileTreeNode::Remove( path_t const &aPath )
+    {
+        UIFileTreeNode *lChild = nullptr;
+        for( auto const &lX : mChildren )
+        {
+            if( ((UIFileTreeNode*)lX)->mPath == aPath )
+            {
+                lChild = (UIFileTreeNode*)lX;
+                break;
+            }
+        }
+
+        std::vector<UITreeViewNode *> lRemainingChildren;
+        std::copy_if( mChildren.begin(), mChildren.end(), std::back_inserter( lRemainingChildren ),
+                      [&]( auto *x ) { return x == lChild; } );
+
+        mChildren = std::move( lRemainingChildren );
+    }
+
     UIFileTree::UIFileTree()
     {
         SetIndent( 9.0f );
@@ -84,21 +101,5 @@ namespace SE::Core
     }
 
     UIFileTreeNode *UIFileTree::Add( path_t const &aPath ) { return ( (UIFileTreeNode *)mRoot )->Add( aPath ); }
-
-    // void *UIFileTree::UIFileTree_Create()
-    // {
-    //     auto lNewLabel = new UIFileTree();
-
-    //     return static_cast<void *>( lNewLabel );
-    // }
-
-    // void UIFileTree::UIFileTree_Destroy( void *aInstance ) { delete static_cast<UIFileTree *>( aInstance ); }
-
-    // void *UIFileTree::UIFileTree_Add( void *aInstance, void *aPath )
-    // {
-    //     auto lInstance = static_cast<UIFileTree *>( aInstance );
-    //     auto lString   = DotNetRuntime::NewString( static_cast<MonoString *>( aPath ) );
-
-    //     return static_cast<void *>( lInstance->Add( lString ) );
-    // }
+    void            UIFileTree::Remove( path_t const &aPath ) { ( (UIFileTreeNode *)mRoot )->Remove( aPath ); }
 } // namespace SE::Core

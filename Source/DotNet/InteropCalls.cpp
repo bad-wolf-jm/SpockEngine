@@ -1007,6 +1007,8 @@ namespace SE::Core::Interop
         {
             return CAST( void, aSelf->Add( ConvertStringForCoreclr( aPath ) ) );
         }
+
+        void UIFileTree_Remove( UIFileTree *aSelf, wchar_t *aPath ) { return aSelf->Remove( ConvertStringForCoreclr( aPath ) ); }
 #pragma endregion
 
 #pragma region UIDialog
@@ -1133,7 +1135,5 @@ namespace SE::Core::Interop
 
         void UIMarkdown_SetTextColor( UIMarkdown *aSelf, CLRVec4 aTextColor ) { aSelf->SetTextColor( vec( aTextColor ) ); }
 #pragma endregion
-
-
     }
 } // namespace SE::Core::Interop

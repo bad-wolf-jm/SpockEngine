@@ -931,7 +931,10 @@ namespace SpockEngine
         public extern static void UIFileTree_Destroy(IntPtr aSelf);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
-        public extern static void UIFileTree_Add(IntPtr aSelf, string aText);
+        public extern static IntPtr UIFileTree_Add(IntPtr aSelf, string aText);
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static void UIFileTree_Remove(IntPtr aSelf, string aText);
         #endregion
 
         #region UIDialog
