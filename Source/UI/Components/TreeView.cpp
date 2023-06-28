@@ -307,18 +307,15 @@ namespace SE::Core
         if( !lNodeIsLeaf )
             RenderArrow(
                 lWindow->DrawList,
-
                 ImVec2( lTextPosition.x - lTextOffsetX + ( lTextOffsetX - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f,
-                        lTextPosition.y +
-                            ( lFrameHeight - style.FramePadding.y - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f ),
+                        lTextPosition.y + ( lFrameHeight - style.FramePadding.y - lWindow->DrawList->_Data->FontSize * 0.8f ) * 0.5f ),
                 lArrowColor, lNodeIsOpen ? ImGuiDir_Down : ImGuiDir_Right, 0.8f );
         else
             RenderIcon(
                 lWindow->DrawList,
-
                 ImVec2( lTextPosition.x - lTextOffsetX + ( lTextOffsetX - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f,
                         lTextPosition.y +
-                            ( lFrameHeight - style.FramePadding.y - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f ) );
+                            ( lFrameHeight - style.FramePadding.y - lWindow->DrawList->_Data->FontSize ) * 0.5f ) );
         ImVec2 lSize{ lWindow->WorkRect.Max.x - lWindow->WorkRect.Min.x, lFrameHeight };
 
         auto lNodePosition = ImGui::GetCursorPos() + ImVec2{ lTextOffsetX, -lFrameHeight };
@@ -360,7 +357,7 @@ namespace SE::Core
 
     void UITreeViewNode::RenderIcon( ImDrawList *aDrawList, ImVec2 aPosition )
     {
-        const float lHeight = aDrawList->_Data->FontSize * 0.75;
+        const float lHeight = aDrawList->_Data->FontSize;
 
         if( mImage != nullptr )
         {
