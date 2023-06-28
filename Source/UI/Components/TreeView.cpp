@@ -242,9 +242,13 @@ namespace SE::Core
         bool       lSelected    = ( mFlags & ImGuiTreeNodeFlags_Selected ) != 0;
         const bool lWasSelected = lSelected;
 
+        bool lDoubleClicked;
         bool lIsHovered, lIsHeld;
         bool lIsPressed =
             ImGui::ButtonBehavior( lInteractionBoundingBox, lWindow->GetID( (void *)this ), &lIsHovered, &lIsHeld, lButtonFlags );
+        
+        lDoubleClicked = lIsHovered && ImGui::IsMouseDoubleClicked(0);
+
         bool lIsToggled = false;
         if( !lNodeIsLeaf )
         {
@@ -325,7 +329,7 @@ namespace SE::Core
 
         if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) ) TreePushOverrideID();
 
-        if (lIsPressed && mOnSelected) mOnSelected(this);
+        if( lDoubleClicked && lNodeIsLeaf && mOnSelected ) mOnSelected( this );
 
         return lNodeIsOpen;
     }
