@@ -24,7 +24,7 @@
  */
 
 #include "MarkdownRenderer.h"
-
+#include "Engine/Engine.h"
 namespace SE::Core
 {
 
@@ -302,11 +302,25 @@ namespace SE::Core
     {
         if( e )
         {
-            ImGui::PushFont( get_font() );
+            if( m_is_table_header )
+            {
+                SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::EM );
+                return;
+            }
+
+            switch( m_hlevel )
+            {
+            case 0:
+                SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( m_is_strong ? FontFamilyFlags::EM
+                                                                                          : FontFamilyFlags::NORMAL );
+                break;
+            case 1: SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H1 ); break;
+            default: SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::NORMAL );
+            }
         }
         else
         {
-            ImGui::PopFont();
+            SE::Core::Engine::GetInstance()->UIContext()->PopFont();
         }
     }
 

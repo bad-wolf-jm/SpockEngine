@@ -18,10 +18,6 @@ namespace SE::Core
 
     ImVec2 UIMarkdown::RequiredSize()
     {
-        // SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( mFont );
-        // auto lTextSize = ImGui::CalcTextSize( mText.c_str() );
-        // SE::Core::Engine::GetInstance()->UIContext()->PopFont();
-
         return ImVec2{0,0};
     }
 
@@ -31,10 +27,7 @@ namespace SE::Core
             ( ( mTextColor.x != 0.0f ) || ( mTextColor.y != 0.0f ) || ( mTextColor.z != 0.0f ) || ( mTextColor.w != 0.0f ) );
         if( lTextColorSet ) ImGui::PushStyleColor( ImGuiCol_Text, mTextColor );
 
-        auto lTextSize     = ImGui::CalcTextSize( mText.c_str() );
-        auto lTextPosition = GetContentAlignedposition( mHAlign, mVAlign, aPosition, lTextSize, aSize );
-
-        ImGui::SetCursorPos( lTextPosition );
+        ImGui::SetCursorPos( aPosition );
         mRenderer.print(mText.c_str(), mText.c_str() + mText.size());
 
         if( lTextColorSet ) ImGui::PopStyleColor();
