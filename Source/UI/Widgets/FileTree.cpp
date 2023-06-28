@@ -19,6 +19,8 @@ namespace SE::Core
     {
         SetText( aName );
 
+        mFullPath = mPath / mName;
+
         if( !aName.substr( 0, 1 ).compare( "." ) || !aName.substr( 0, 2 ).compare( "__" ) )
             SetTextColor( math::vec4{ 0.15, 0.15, 0.15, 1.0 } );
 
@@ -66,6 +68,7 @@ namespace SE::Core
     UIFileTreeNode *UIFileTreeNode::Add( path_t const &aPath )
     {
         auto lNewChild = new UIFileTreeNode( (UIFileTree *)mTreeView, this, aPath.parent_path(), aPath.filename().string() );
+        lNewChild->OnSelected( [&]( UITreeViewNode *a ) { ( (UIFileTree *)mTreeView )->HandleOnSelected( (UIFileTreeNode *)a ); } );
         mChildren.push_back( lNewChild );
 
         return lNewChild;
@@ -76,9 +79,9 @@ namespace SE::Core
         UIFileTreeNode *lChild = nullptr;
         for( auto const &lX : mChildren )
         {
-            if( ((UIFileTreeNode*)lX)->mPath == aPath )
+            if( ( (UIFileTreeNode *)lX )->mPath == aPath )
             {
-                lChild = (UIFileTreeNode*)lX;
+                lChild = (UIFileTreeNode *)lX;
                 break;
             }
         }
@@ -100,6 +103,19 @@ namespace SE::Core
             mDefaultFile = New<UIImage>( "C:\\GitLab\\SpockEngine\\Saved\\Resources\\Icons\\File.png", math::vec2{ 20, 20 } );
     }
 
-    UIFileTreeNode *UIFileTree::Add( path_t const &aPath ) { return ( (UIFileTreeNode *)mRoot )->Add( aPath ); }
-    void            UIFileTree::Remove( path_t const &aPath ) { ( (UIFileTreeNode *)mRoot )->Remove( aPath ); }
+    UIFileTreeNode *UIFileTree::Add( path_t const &aPath )
+    {
+        UIFileTreeNode *lNewNode = ( (UIFileTreeNode *)mRoot )->Add( aPath );
+
+        return lNewNode;
+    }
+    void UIFileTree::Remove( path_t const &aPath ) { ( (UIFileTreeNode *)mRoot )->Remove( aPath ); }
+
+    void UIFileTree::OnSelected( std::function<void( path_t const &aPath )> aOnSelected ) { mOnSelected = aOnSelected; }
+
+    void UIFileTree::HandleOnSelected( UIFileTreeNode *a )
+    {
+        if( mOnSelected ) mOnSelected( a->GetPath() );
+    }
+
 } // namespace SE::Core

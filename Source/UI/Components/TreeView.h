@@ -26,6 +26,11 @@ namespace SE::Core
 
         UITreeViewNode* Add();
 
+        void OnSelected( std::function<void(UITreeViewNode*)> aOnSelected );
+
+      protected:
+        std::function<void(UITreeViewNode*)> mOnSelected;
+
       protected:
         ImGuiTreeNodeFlags mFlags;
 
@@ -67,10 +72,13 @@ namespace SE::Core
         void SetIconSpacing(float aSpacing);
         UITreeViewNode* Add();
 
+
         protected:
             float mIndent = 5.0f;
             float mIconSpacing = 12.0f;
             UITreeViewNode* mRoot; 
+
+
 
       protected:
         void PushStyles();

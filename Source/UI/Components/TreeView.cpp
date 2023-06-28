@@ -55,6 +55,8 @@ namespace SE::Core
         return lNewChild;
     }
 
+    void UITreeViewNode::OnSelected( std::function<void( UITreeViewNode * )> aOnSelected ) { mOnSelected = aOnSelected; }
+
     void UITreeViewNode::SetIcon( UIImage *aIcon ) { mIcon = aIcon; }
 
     void UITreeViewNode::SetIndicator( UIComponent *aIcon )
@@ -285,6 +287,7 @@ namespace SE::Core
                 lImGuiContext.LastItemData.StatusFlags |= ImGuiItemStatusFlags_ToggledOpen;
             }
         }
+
         if( mFlags & ImGuiTreeNodeFlags_AllowItemOverlap ) ImGui::SetItemAllowOverlap();
 
         // In this branch, TreeNodeBehavior() cannot toggle the selection so this will never trigger.
@@ -314,14 +317,15 @@ namespace SE::Core
             RenderIcon(
                 lWindow->DrawList,
                 ImVec2( lTextPosition.x - lTextOffsetX + ( lTextOffsetX - lWindow->DrawList->_Data->FontSize * .75f * 0.8f ) * 0.5f,
-                        lTextPosition.y +
-                            ( lFrameHeight - style.FramePadding.y - lWindow->DrawList->_Data->FontSize ) * 0.5f ) );
+                        lTextPosition.y + ( lFrameHeight - style.FramePadding.y - lWindow->DrawList->_Data->FontSize ) * 0.5f ) );
         ImVec2 lSize{ lWindow->WorkRect.Max.x - lWindow->WorkRect.Min.x, lFrameHeight };
 
         auto lNodePosition = ImGui::GetCursorPos() + ImVec2{ lTextOffsetX, -lFrameHeight };
         mLayout->Update( lNodePosition, lSize );
 
         if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) ) TreePushOverrideID();
+
+        if (lIsPressed && mOnSelected) mOnSelected(this);
 
         return lNodeIsOpen;
     }

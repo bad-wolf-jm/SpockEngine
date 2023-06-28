@@ -1009,6 +1009,22 @@ namespace SE::Core::Interop
         }
 
         void UIFileTree_Remove( UIFileTree *aSelf, wchar_t *aPath ) { return aSelf->Remove( ConvertStringForCoreclr( aPath ) ); }
+
+        void UIFileTree_OnSelected( UIFileTree *aSelf, void *aDelegate )
+        {
+            auto lInstance = aSelf;
+
+            typedef void ( *fptr )( wchar_t *aPath );
+            fptr lDelegate = (fptr)aDelegate;
+            lInstance->OnSelected(
+                [lInstance, lDelegate]( path_t const &aPath )
+                {
+                    auto *lStr = CopyCharactersForCoreClr( aPath.string() );
+
+                    lDelegate( lStr );
+                } );
+        }
+
 #pragma endregion
 
 #pragma region UIDialog
