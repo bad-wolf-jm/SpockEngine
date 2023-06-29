@@ -61,7 +61,7 @@ namespace SE::Core
 
       protected:
         std::vector<BoxLayoutItem> mChildren;
-        eBoxLayoutOrientation      mOrientation;
+        eBoxLayoutOrientation      mOrientation = eBoxLayoutOrientation::HORIZONTAL;
         float                      mItemSpacing = 0.0f;
         bool                       mSimple      = false;
 

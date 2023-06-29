@@ -7,6 +7,8 @@ namespace SE::Core
         , mName{ New<UILabel>( "" ) }
         , mValue{ New<UILabel>( "N/A" ) }
     {
+        Add( mName.get(), true, false, eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        Add( mValue.get(), true, false, eHorizontalAlignment::RIGHT, eVerticalAlignment::CENTER );
     }
 
     UIPropertyValue::UIPropertyValue( string_t aName )
@@ -17,8 +19,8 @@ namespace SE::Core
     UIPropertyValue::UIPropertyValue( string_t aName, eBoxLayoutOrientation aOrientation )
         : UIPropertyValue()
     {
-        SetText(aName);
-        SetOrientation(aOrientation);
+        SetText( aName );
+        SetOrientation( aOrientation );
     }
 
     void UIPropertyValue::SetText( string_t aValue )

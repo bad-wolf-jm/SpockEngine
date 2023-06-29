@@ -10,6 +10,7 @@ namespace SpockEngine
         public UIPropertyValue(string aText) : this()
         {
             SetText(aText);
+            SetOrientation(eBoxLayoutOrientation.HORIZONTAL);
         }
 
         public UIPropertyValue(string aText, eBoxLayoutOrientation aOrientation) : this()
