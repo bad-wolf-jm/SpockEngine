@@ -566,40 +566,40 @@ namespace SE::Core::Interop
         }
 #pragma endregion
 
-#pragma region UIFloat64Column
-        CONSTRUCT_WITHOUT_PARAMETERS( UIFloat64Column )
-        DESTROY_INTERFACE( UIFloat64Column )
+// #pragma region UIFloat64Column
+//         CONSTRUCT_WITHOUT_PARAMETERS( UIFloat64Column )
+//         DESTROY_INTERFACE( UIFloat64Column )
 
-        void UIFloat64Column_Clear( UIFloat64Column *aSelf ) { aSelf->Clear(); }
+//         void UIFloat64Column_Clear( UIFloat64Column *aSelf ) { aSelf->Clear(); }
 
-        void UIFloat64Column_SetFormat( UIFloat64Column *aSelf, wchar_t *aValue )
-        {
-            aSelf->mFormat = ConvertStringForCoreclr( aValue );
-        }
+//         void UIFloat64Column_SetFormat( UIFloat64Column *aSelf, wchar_t *aValue )
+//         {
+//             aSelf->mFormat = ConvertStringForCoreclr( aValue );
+//         }
 
-        void UIFloat64Column_SetNanFormat( UIFloat64Column *aSelf, wchar_t *aValue )
-        {
-            aSelf->mNaNFormat = ConvertStringForCoreclr( aValue );
-        }
+//         void UIFloat64Column_SetNanFormat( UIFloat64Column *aSelf, wchar_t *aValue )
+//         {
+//             aSelf->mNaNFormat = ConvertStringForCoreclr( aValue );
+//         }
 
-        void UIFloat64Column_SetData( UIFloat64Column *aSelf, double *aValue, int aLength )
-        {
-            aSelf->mData = std::vector( aValue, aValue + aLength );
-        }
-#pragma endregion
+//         void UIFloat64Column_SetData( UIFloat64Column *aSelf, double *aValue, int aLength )
+//         {
+//             aSelf->mData = std::vector( aValue, aValue + aLength );
+//         }
+// #pragma endregion
 
-#pragma region UIUint32Column
-        CONSTRUCT_WITHOUT_PARAMETERS( UIUint32Column )
-        DESTROY_INTERFACE( UIUint32Column )
+// #pragma region UIUint32Column
+//         CONSTRUCT_WITHOUT_PARAMETERS( UIUint32Column )
+//         DESTROY_INTERFACE( UIUint32Column )
 
-        void UIUint32Column_Clear( UIUint32Column *aSelf ) { aSelf->Clear(); }
+//         void UIUint32Column_Clear( UIUint32Column *aSelf ) { aSelf->Clear(); }
 
-        void UIUint32Column_SetData( UIUint32Column *aSelf, uint32_t *aValue, int aLength )
-        {
-            aSelf->mData = std::vector( aValue, aValue + aLength );
-        }
+//         void UIUint32Column_SetData( UIUint32Column *aSelf, uint32_t *aValue, int aLength )
+//         {
+//             aSelf->mData = std::vector( aValue, aValue + aLength );
+//         }
 
-#pragma endregion
+// #pragma endregion
 
 #pragma region UIStringColumn
         CONSTRUCT_WITHOUT_PARAMETERS( UIStringColumn )

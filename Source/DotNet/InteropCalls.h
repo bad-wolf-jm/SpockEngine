@@ -252,17 +252,17 @@ namespace SE::Core::Interop
         void UITableColumn_SetForegroundColor( UITableColumn *aSelf, CLRVec4 *aForegroundColor, int aLength );
         void UITableColumn_SetBackgroundColor( UITableColumn *aSelf, CLRVec4 *aBackroundColor , int aLength);
 
-        void *UIFloat64Column_Create();
-        void *UIFloat64Column_CreateFull( wchar_t *aHeader, float aInitialSize, wchar_t *aFormat, wchar_t *aNaNFormat );
-        void  UIFloat64Column_Destroy( UIFloat64Column *aSelf );
-        void  UIFloat64Column_Clear( UIFloat64Column *aSelf );
-        void  UIFloat64Column_SetData( UIFloat64Column *aSelf, double *aValue, int aLength );
+        // void *UIFloat64Column_Create();
+        // void *UIFloat64Column_CreateFull( wchar_t *aHeader, float aInitialSize, wchar_t *aFormat, wchar_t *aNaNFormat );
+        // void  UIFloat64Column_Destroy( UIFloat64Column *aSelf );
+        // void  UIFloat64Column_Clear( UIFloat64Column *aSelf );
+        // void  UIFloat64Column_SetData( UIFloat64Column *aSelf, double *aValue, int aLength );
 
-        void *UIUint32Column_Create();
-        void *UIUint32Column_CreateFull( wchar_t *aHeader, float aInitialSize );
-        void  UIUint32Column_Destroy( UIUint32Column *aSelf );
-        void  UIUint32Column_Clear( UIUint32Column *aSelf );
-        void  UIUint32Column_SetData( UIUint32Column *aSelf, uint32_t *aValue, int aLength );
+        // void *UIUint32Column_Create();
+        // void *UIUint32Column_CreateFull( wchar_t *aHeader, float aInitialSize );
+        // void  UIUint32Column_Destroy( UIUint32Column *aSelf );
+        // void  UIUint32Column_Clear( UIUint32Column *aSelf );
+        // void  UIUint32Column_SetData( UIUint32Column *aSelf, uint32_t *aValue, int aLength );
 
         void *UIStringColumn_Create();
         void *UIStringColumn_CreateFull( wchar_t *aHeader, float aInitialSize );

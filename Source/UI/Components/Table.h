@@ -27,41 +27,41 @@ namespace SE::Core
         void             Clear();
     };
 
-    struct UIFloat64Column : public UITableColumn
-    {
-        string_t mFormat;
-        string_t mNaNFormat;
+    // struct UIFloat64Column : public UITableColumn
+    // {
+    //     string_t mFormat;
+    //     string_t mNaNFormat;
 
-        std::vector<double> mData;
+    //     std::vector<double> mData;
 
-        UIFloat64Column() = default;
-        UIFloat64Column( string_t aHeader, float aInitialSize, string_t aFormat, string_t aNaNFormat );
+    //     UIFloat64Column() = default;
+    //     UIFloat64Column( string_t aHeader, float aInitialSize, string_t aFormat, string_t aNaNFormat );
 
-        ~UIFloat64Column() = default;
+    //     ~UIFloat64Column() = default;
 
-        ImVec2 RequiredSize();
-        void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+    //     ImVec2 RequiredSize();
+    //     void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
-        uint32_t Size();
-        void     Render( int aRow, ImVec2 aCellSize );
-        void     Clear();
-    };
+    //     uint32_t Size();
+    //     void     Render( int aRow, ImVec2 aCellSize );
+    //     void     Clear();
+    // };
 
-    struct UIUint32Column : public UITableColumn
-    {
-        std::vector<uint32_t> mData;
+    // struct UIUint32Column : public UITableColumn
+    // {
+    //     std::vector<uint32_t> mData;
 
-        UIUint32Column() = default;
-        UIUint32Column( string_t aHeader, float aInitialSize );
+    //     UIUint32Column() = default;
+    //     UIUint32Column( string_t aHeader, float aInitialSize );
 
-        ~UIUint32Column() = default;
-        ImVec2 RequiredSize();
-        void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+    //     ~UIUint32Column() = default;
+    //     ImVec2 RequiredSize();
+    //     void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
-        uint32_t Size();
-        void     Render( int aRow, ImVec2 aCellSize );
-        void     Clear();
-    };
+    //     uint32_t Size();
+    //     void     Render( int aRow, ImVec2 aCellSize );
+    //     void     Clear();
+    // };
 
     struct UIStringColumn : public UITableColumn
     {

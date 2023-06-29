@@ -115,80 +115,80 @@ namespace SE::Core
         }
     }
 
-    UIFloat64Column::UIFloat64Column( string_t aHeader, float aInitialSize, string_t aFormat, string_t aNaNFormat )
-        : UITableColumn{ aHeader, aInitialSize }
-        , mFormat{ aFormat }
-        , mNaNFormat{ aNaNFormat }
-    {
-    }
+    // UIFloat64Column::UIFloat64Column( string_t aHeader, float aInitialSize, string_t aFormat, string_t aNaNFormat )
+    //     : UITableColumn{ aHeader, aInitialSize }
+    //     , mFormat{ aFormat }
+    //     , mNaNFormat{ aNaNFormat }
+    // {
+    // }
 
-    uint32_t UIFloat64Column::Size() { return mData.size(); }
+    // uint32_t UIFloat64Column::Size() { return mData.size(); }
 
-    void UIFloat64Column::Render( int aRow, ImVec2 aSize )
-    {
-        string_t lText;
-        if( std::isnan( mData[aRow] ) )
-            lText = fmt::format( mNaNFormat, mData[aRow] );
-        else
-            lText = fmt::format( mFormat, mData[aRow] );
+    // void UIFloat64Column::Render( int aRow, ImVec2 aSize )
+    // {
+    //     string_t lText;
+    //     if( std::isnan( mData[aRow] ) )
+    //         lText = fmt::format( mNaNFormat, mData[aRow] );
+    //     else
+    //         lText = fmt::format( mFormat, mData[aRow] );
 
-        auto const &lTextSize = ImGui::CalcTextSize( lText.c_str() );
+    //     auto const &lTextSize = ImGui::CalcTextSize( lText.c_str() );
 
-        ImVec2 lPrevPos = ImGui::GetCursorPos();
-        ImVec2 lPos     = ImGui::GetCursorPos() + ImVec2{ aSize.x - lTextSize.x, ( aSize.y - lTextSize.y ) * 0.5f };
-        ImGui::SetCursorPos( lPos );
+    //     ImVec2 lPrevPos = ImGui::GetCursorPos();
+    //     ImVec2 lPos     = ImGui::GetCursorPos() + ImVec2{ aSize.x - lTextSize.x, ( aSize.y - lTextSize.y ) * 0.5f };
+    //     ImGui::SetCursorPos( lPos );
 
-        if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) )
-            ImGui::PushStyleColor( ImGuiCol_Text, mForegroundColor[aRow] );
-        ImGui::Text( lText.c_str() );
-        if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) ) ImGui::PopStyleColor();
+    //     if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) )
+    //         ImGui::PushStyleColor( ImGuiCol_Text, mForegroundColor[aRow] );
+    //     ImGui::Text( lText.c_str() );
+    //     if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) ) ImGui::PopStyleColor();
 
-        ImVec2 lNewPos = ImGui::GetCursorPos();
-        lNewPos.y      = lPrevPos.y + aSize.y;
-        ImGui::SetCursorPos( lNewPos );
-    }
+    //     ImVec2 lNewPos = ImGui::GetCursorPos();
+    //     lNewPos.y      = lPrevPos.y + aSize.y;
+    //     ImGui::SetCursorPos( lNewPos );
+    // }
 
-    void UIFloat64Column::Clear()
-    {
-        UITableColumn::Clear();
-        mData.clear();
-    }
+    // void UIFloat64Column::Clear()
+    // {
+    //     UITableColumn::Clear();
+    //     mData.clear();
+    // }
 
-    ImVec2 UIFloat64Column::RequiredSize() { return ImVec2{}; }
+    // ImVec2 UIFloat64Column::RequiredSize() { return ImVec2{}; }
 
-    UIUint32Column::UIUint32Column( string_t aHeader, float aInitialSize )
-        : UITableColumn{ aHeader, aInitialSize }
-    {
-    }
+    // UIUint32Column::UIUint32Column( string_t aHeader, float aInitialSize )
+    //     : UITableColumn{ aHeader, aInitialSize }
+    // {
+    // }
 
-    uint32_t UIUint32Column::Size() { return mData.size(); }
+    // uint32_t UIUint32Column::Size() { return mData.size(); }
 
-    void UIUint32Column::Render( int aRow, ImVec2 aSize )
-    {
-        string_t    lText     = fmt::format( "{}", mData[aRow] );
-        auto const &lTextSize = ImGui::CalcTextSize( lText.c_str() );
+    // void UIUint32Column::Render( int aRow, ImVec2 aSize )
+    // {
+    //     string_t    lText     = fmt::format( "{}", mData[aRow] );
+    //     auto const &lTextSize = ImGui::CalcTextSize( lText.c_str() );
 
-        ImVec2 lPrevPos = ImGui::GetCursorPos();
-        ImVec2 lPos     = ImGui::GetCursorPos() + ImVec2{ aSize.x - lTextSize.x, ( aSize.y - lTextSize.y ) * 0.5f };
-        ImGui::SetCursorPos( lPos );
+    //     ImVec2 lPrevPos = ImGui::GetCursorPos();
+    //     ImVec2 lPos     = ImGui::GetCursorPos() + ImVec2{ aSize.x - lTextSize.x, ( aSize.y - lTextSize.y ) * 0.5f };
+    //     ImGui::SetCursorPos( lPos );
 
-        if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) )
-            ImGui::PushStyleColor( ImGuiCol_Text, mForegroundColor[aRow] );
-        ImGui::Text( lText.c_str() );
-        if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) ) ImGui::PopStyleColor();
+    //     if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) )
+    //         ImGui::PushStyleColor( ImGuiCol_Text, mForegroundColor[aRow] );
+    //     ImGui::Text( lText.c_str() );
+    //     if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) ) ImGui::PopStyleColor();
 
-        ImVec2 lNewPos = ImGui::GetCursorPos();
-        lNewPos.y      = lPrevPos.y + aSize.y;
-        ImGui::SetCursorPos( lNewPos );
-    }
+    //     ImVec2 lNewPos = ImGui::GetCursorPos();
+    //     lNewPos.y      = lPrevPos.y + aSize.y;
+    //     ImGui::SetCursorPos( lNewPos );
+    // }
 
-    void UIUint32Column::Clear()
-    {
-        UITableColumn::Clear();
-        mData.clear();
-    }
+    // void UIUint32Column::Clear()
+    // {
+    //     UITableColumn::Clear();
+    //     mData.clear();
+    // }
 
-    ImVec2 UIUint32Column::RequiredSize() { return ImVec2{}; }
+    // ImVec2 UIUint32Column::RequiredSize() { return ImVec2{}; }
 
     UIStringColumn::UIStringColumn( string_t aHeader, float aInitialSize )
         : UITableColumn{ aHeader, aInitialSize }
@@ -224,8 +224,8 @@ namespace SE::Core
 
     ImVec2 UIStringColumn::RequiredSize() { return ImVec2{}; }
 
-    void UIFloat64Column::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
-    void UIUint32Column::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
+    // void UIFloat64Column::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
+    // void UIUint32Column::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
     void UIStringColumn::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
 
 } // namespace SE::Core

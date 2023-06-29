@@ -37,7 +37,7 @@ namespace SpockEngine
             SetTooltip(lElements);
         }
 
-        public void SetTooltip(List<UIComponent> aTooltips)
+        public void SetTooltip(IEnumerable<UIComponent> aTooltips)
         {
             mToolTips = aTooltips.ToArray();
 
@@ -50,7 +50,7 @@ namespace SpockEngine
             Interop.UITableColumn_SetBackgroundColor(mInstance, aBackgroundColor, aBackgroundColor.Length);
         }
 
-        public void SetBackgroundColor(List<Math.vec4> aBackroundColor)
+        public void SetBackgroundColor(IEnumerable<Math.vec4> aBackroundColor)
         {
             SetBackgroundColor(aBackroundColor.ToArray());
         }
@@ -60,130 +60,130 @@ namespace SpockEngine
             Interop.UITableColumn_SetForegroundColor(mInstance, aForegroundColor, aForegroundColor.Length);
         }
 
-        public void SetForegroundColor(List<Math.vec4> aForegroundColor)
+        public void SetForegroundColor(IEnumerable<Math.vec4> aForegroundColor)
         {
             SetForegroundColor(aForegroundColor.ToArray());
         }
     }
 
-    public class UIFloat64Column : UITableColumn
-    {
-        public UIFloat64Column() : base(Interop.UIFloat64Column_Create()) { }
-        public UIFloat64Column(string aHeader, float aInitialSize, string aFormat, string aNaNFormat)
-            : this()
-        {
-            SetHeader(aHeader);
-            SetInitialSize(aInitialSize);
-            SetFormat(aFormat);
-            SetNanFormat(aNaNFormat);
-        }
+    // public class UIFloat64Column : UITableColumn
+    // {
+    //     public UIFloat64Column() : base(Interop.UIFloat64Column_Create()) { }
+    //     public UIFloat64Column(string aHeader, float aInitialSize, string aFormat, string aNaNFormat)
+    //         : this()
+    //     {
+    //         SetHeader(aHeader);
+    //         SetInitialSize(aInitialSize);
+    //         SetFormat(aFormat);
+    //         SetNanFormat(aNaNFormat);
+    //     }
 
-        ~UIFloat64Column() { Interop.UIFloat64Column_Destroy(mInstance); }
+    //     ~UIFloat64Column() { Interop.UIFloat64Column_Destroy(mInstance); }
 
-        public void Clear()
-        {
-            Interop.UIFloat64Column_Clear(mInstance);
-        }
+    //     public void Clear()
+    //     {
+    //         Interop.UIFloat64Column_Clear(mInstance);
+    //     }
 
-        public void SetFormat(string aValue)
-        {
-            Interop.UIFloat64Column_SetFormat(mInstance, aValue);
-        }
+    //     public void SetFormat(string aValue)
+    //     {
+    //         Interop.UIFloat64Column_SetFormat(mInstance, aValue);
+    //     }
 
-        public void SetNanFormat(string aValue)
-        {
-            Interop.UIFloat64Column_SetNanFormat(mInstance, aValue);
-        }
+    //     public void SetNanFormat(string aValue)
+    //     {
+    //         Interop.UIFloat64Column_SetNanFormat(mInstance, aValue);
+    //     }
 
-        public void SetData(double[] aValue)
-        {
-            Interop.UIFloat64Column_SetData(mInstance, aValue, aValue.Length);
-        }
+    //     public void SetData(double[] aValue)
+    //     {
+    //         Interop.UIFloat64Column_SetData(mInstance, aValue, aValue.Length);
+    //     }
 
-        public void SetData(List<double> aValue)
-        {
-            SetData(aValue.ToArray());
-        }
+    //     public void SetData(List<double> aValue)
+    //     {
+    //         SetData(aValue.ToArray());
+    //     }
 
-        public void SetData(double[] aValue, Math.vec4[] aForegroundColor)
-        {
-            SetData(aValue);
-            SetForegroundColor(aForegroundColor);
-        }
+    //     public void SetData(double[] aValue, Math.vec4[] aForegroundColor)
+    //     {
+    //         SetData(aValue);
+    //         SetForegroundColor(aForegroundColor);
+    //     }
 
-        public void SetData(List<double> aValue, List<Math.vec4> aForegroundColor)
-        {
-            SetData(aValue);
-            SetForegroundColor(aForegroundColor);
-        }
+    //     public void SetData(List<double> aValue, List<Math.vec4> aForegroundColor)
+    //     {
+    //         SetData(aValue);
+    //         SetForegroundColor(aForegroundColor);
+    //     }
 
-        public void SetData(double[] aValue, Math.vec4[] aForegroundColor, Math.vec4[] aBackroundColor)
-        {
-            SetData(aValue);
-            SetForegroundColor(aForegroundColor);
-            SetBackgroundColor(aBackroundColor);
-        }
+    //     public void SetData(double[] aValue, Math.vec4[] aForegroundColor, Math.vec4[] aBackroundColor)
+    //     {
+    //         SetData(aValue);
+    //         SetForegroundColor(aForegroundColor);
+    //         SetBackgroundColor(aBackroundColor);
+    //     }
 
-        public void SetData(List<double> aValue, List<Math.vec4> aForegroundColor, List<Math.vec4> aBackroundColor)
-        {
-            SetData(aValue);
-            SetForegroundColor(aForegroundColor);
-            SetBackgroundColor(aBackroundColor);
-        }
+    //     public void SetData(List<double> aValue, List<Math.vec4> aForegroundColor, List<Math.vec4> aBackroundColor)
+    //     {
+    //         SetData(aValue);
+    //         SetForegroundColor(aForegroundColor);
+    //         SetBackgroundColor(aBackroundColor);
+    //     }
 
-    }
+    // }
 
-    public class UIUint32Column : UITableColumn
-    {
-        public UIUint32Column() : base(Interop.UIUint32Column_Create()) { }
-        public UIUint32Column(string aHeader, float aInitialSize) : this()
-        {
-            SetHeader(aHeader);
-            SetInitialSize(aInitialSize);
-        }
+    // public class UIUint32Column : UITableColumn
+    // {
+    //     public UIUint32Column() : base(Interop.UIUint32Column_Create()) { }
+    //     public UIUint32Column(string aHeader, float aInitialSize) : this()
+    //     {
+    //         SetHeader(aHeader);
+    //         SetInitialSize(aInitialSize);
+    //     }
 
-        ~UIUint32Column() { Interop.UIUint32Column_Destroy(mInstance); }
+    //     ~UIUint32Column() { Interop.UIUint32Column_Destroy(mInstance); }
 
-        public void Clear()
-        {
-            Interop.UIUint32Column_Clear(mInstance);
-        }
+    //     public void Clear()
+    //     {
+    //         Interop.UIUint32Column_Clear(mInstance);
+    //     }
 
-        public void SetData(uint[] aValue)
-        {
-            Interop.UIUint32Column_SetData(mInstance, aValue, aValue.Length);
-        }
-        public void SetData(List<uint> aValue)
-        {
-            SetData(aValue.ToArray());
-        }
+    //     public void SetData(uint[] aValue)
+    //     {
+    //         Interop.UIUint32Column_SetData(mInstance, aValue, aValue.Length);
+    //     }
+    //     public void SetData(List<uint> aValue)
+    //     {
+    //         SetData(aValue.ToArray());
+    //     }
 
-        public void SetData(uint[] aValue, Math.vec4[] aForegroundColor)
-        {
-            SetData(aValue);
-            SetForegroundColor(aForegroundColor);
-        }
-        public void SetData(List<uint> aValue, List<Math.vec4> aForegroundColor)
-        {
-            SetData(aValue);
-            SetForegroundColor(aForegroundColor);
-        }
+    //     public void SetData(uint[] aValue, Math.vec4[] aForegroundColor)
+    //     {
+    //         SetData(aValue);
+    //         SetForegroundColor(aForegroundColor);
+    //     }
+    //     public void SetData(List<uint> aValue, List<Math.vec4> aForegroundColor)
+    //     {
+    //         SetData(aValue);
+    //         SetForegroundColor(aForegroundColor);
+    //     }
 
-        public void SetData(uint[] aValue, Math.vec4[] aForegroundColor, Math.vec4[] aBackroundColor)
-        {
-            SetData(aValue);
-            SetForegroundColor(aForegroundColor);
-            SetBackgroundColor(aBackroundColor);
-        }
+    //     public void SetData(uint[] aValue, Math.vec4[] aForegroundColor, Math.vec4[] aBackroundColor)
+    //     {
+    //         SetData(aValue);
+    //         SetForegroundColor(aForegroundColor);
+    //         SetBackgroundColor(aBackroundColor);
+    //     }
 
-        public void SetData(List<uint> aValue, List<Math.vec4> aForegroundColor, List<Math.vec4> aBackroundColor)
-        {
-            SetData(aValue);
-            SetForegroundColor(aForegroundColor);
-            SetBackgroundColor(aBackroundColor);
-        }
+    //     public void SetData(List<uint> aValue, List<Math.vec4> aForegroundColor, List<Math.vec4> aBackroundColor)
+    //     {
+    //         SetData(aValue);
+    //         SetForegroundColor(aForegroundColor);
+    //         SetBackgroundColor(aBackroundColor);
+    //     }
 
-    }
+    // }
 
     public class UIStringColumn : UITableColumn
     {
@@ -207,7 +207,7 @@ namespace SpockEngine
             Interop.UIStringColumn_SetData(mInstance, aValue, aValue.Length);
         }
 
-        public void SetData(List<string> aValue)
+        public void SetData(IEnumerable<string> aValue)
         {
             SetData(aValue.ToArray());
         }
@@ -218,7 +218,7 @@ namespace SpockEngine
             SetForegroundColor(aForegroundColor);
         }
 
-        public void SetData(List<string> aValue, List<Math.vec4> aForegroundColor)
+        public void SetData(IEnumerable<string> aValue, IEnumerable<Math.vec4> aForegroundColor)
         {
             SetData(aValue);
             SetForegroundColor(aForegroundColor);
@@ -231,7 +231,7 @@ namespace SpockEngine
             SetBackgroundColor(aBackroundColor);
         }
 
-        public void SetData(List<string> aValue, List<Math.vec4> aForegroundColor, List<Math.vec4> aBackroundColor)
+        public void SetData(IEnumerable<string> aValue, IEnumerable<Math.vec4> aForegroundColor, IEnumerable<Math.vec4> aBackroundColor)
         {
             SetData(aValue);
             SetForegroundColor(aForegroundColor);
