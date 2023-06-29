@@ -8,14 +8,10 @@ using Math = SpockEngine.Math;
 
 namespace SpockEngine
 {
-    public class UITableColumn
+    public class UITableColumn : UIComponent
     {
-        protected IntPtr mInstance;
-        public IntPtr Instance { get { return mInstance; } }
-
         public UITableColumn() { mInstance = IntPtr.Zero; }
         public UITableColumn(IntPtr aInstance) { mInstance = aInstance; }
-
 
         public void SetHeader(string aHeader)
         {
@@ -196,6 +192,7 @@ namespace SpockEngine
         {
             SetHeader(aHeader);
             SetInitialSize(aInitialSize);
+            SetAlignment(eHorizontalAlignment.LEFT, eVerticalAlignment.CENTER);
         }
 
         ~UIStringColumn() { Interop.UIStringColumn_Destroy(mInstance); }

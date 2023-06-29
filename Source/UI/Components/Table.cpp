@@ -1,13 +1,13 @@
 #include "Table.h"
 
-
-
 namespace SE::Core
 {
     UITableColumn::UITableColumn( string_t aHeader, float aInitialSize )
         : mHeader{ aHeader }
         , mInitialSize{ aInitialSize }
     {
+        SetAlignment( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER );
+        SE::Logging::Info( "{}", (int)mHAlign );
     }
 
     void UITableColumn::Clear()
@@ -15,6 +15,9 @@ namespace SE::Core
         mForegroundColor.clear();
         mBackgroundColor.clear();
     }
+
+    // void UITableColumn::PushStyles() {}
+    // void UITableColumn::PopStyles() {}
 
     void UITable::PushStyles() {}
     void UITable::PopStyles() {}
@@ -151,6 +154,8 @@ namespace SE::Core
         mData.clear();
     }
 
+    ImVec2 UIFloat64Column::RequiredSize() { return ImVec2{}; }
+
     UIUint32Column::UIUint32Column( string_t aHeader, float aInitialSize )
         : UITableColumn{ aHeader, aInitialSize }
     {
@@ -160,7 +165,7 @@ namespace SE::Core
 
     void UIUint32Column::Render( int aRow, ImVec2 aSize )
     {
-        string_t lText     = fmt::format( "{}", mData[aRow] );
+        string_t    lText     = fmt::format( "{}", mData[aRow] );
         auto const &lTextSize = ImGui::CalcTextSize( lText.c_str() );
 
         ImVec2 lPrevPos = ImGui::GetCursorPos();
@@ -183,6 +188,8 @@ namespace SE::Core
         mData.clear();
     }
 
+    ImVec2 UIUint32Column::RequiredSize() { return ImVec2{}; }
+
     UIStringColumn::UIStringColumn( string_t aHeader, float aInitialSize )
         : UITableColumn{ aHeader, aInitialSize }
     {
@@ -192,14 +199,15 @@ namespace SE::Core
 
     void UIStringColumn::Render( int aRow, ImVec2 aSize )
     {
+        ImVec2      lPrevPos  = ImGui::GetCursorPos();
         auto const &lTextSize = ImGui::CalcTextSize( mData[aRow].c_str() );
+        auto        lPos      = GetContentAlignedposition( mHAlign, mVAlign, ImGui::GetCursorPos(), lTextSize, aSize );
 
-        ImVec2 lPrevPos = ImGui::GetCursorPos();
-        ImVec2 lPos     = ImGui::GetCursorPos() + ImVec2{ 0.0f, ( aSize.y - lTextSize.y ) * 0.5f };
         ImGui::SetCursorPos( lPos );
 
         if( ( mForegroundColor.size() > 0 ) && ( mForegroundColor[aRow] != 0u ) )
             ImGui::PushStyleColor( ImGuiCol_Text, mForegroundColor[aRow] );
+
         ImGui::Text( mData[aRow].c_str() );
         if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) ) ImGui::PopStyleColor();
 
@@ -213,4 +221,11 @@ namespace SE::Core
         UITableColumn::Clear();
         mData.clear();
     }
+
+    ImVec2 UIStringColumn::RequiredSize() { return ImVec2{}; }
+
+    void UIFloat64Column::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
+    void UIUint32Column::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
+    void UIStringColumn::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
+
 } // namespace SE::Core

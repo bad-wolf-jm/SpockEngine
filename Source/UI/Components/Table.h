@@ -5,14 +5,17 @@
 
 namespace SE::Core
 {
-    struct UITableColumn
+    struct UITableColumn : public UIComponent
     {
         string_t mHeader;
-        float       mInitialSize = 10.0f;
+        float    mInitialSize = 10.0f;
 
         std::vector<uint32_t>      mBackgroundColor;
         std::vector<uint32_t>      mForegroundColor;
         std::vector<UIComponent *> mToolTip;
+
+        void PushStyles() {}
+        void PopStyles() {}
 
         UITableColumn() = default;
         UITableColumn( string_t aHeader, float aInitialSize );
@@ -33,7 +36,11 @@ namespace SE::Core
 
         UIFloat64Column() = default;
         UIFloat64Column( string_t aHeader, float aInitialSize, string_t aFormat, string_t aNaNFormat );
+
         ~UIFloat64Column() = default;
+
+        ImVec2 RequiredSize();
+        void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
         uint32_t Size();
         void     Render( int aRow, ImVec2 aCellSize );
@@ -46,7 +53,10 @@ namespace SE::Core
 
         UIUint32Column() = default;
         UIUint32Column( string_t aHeader, float aInitialSize );
+
         ~UIUint32Column() = default;
+        ImVec2 RequiredSize();
+        void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
         uint32_t Size();
         void     Render( int aRow, ImVec2 aCellSize );
@@ -59,7 +69,10 @@ namespace SE::Core
 
         UIStringColumn() = default;
         UIStringColumn( string_t aHeader, float aInitialSize );
+
         ~UIStringColumn() = default;
+        ImVec2 RequiredSize();
+        void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
 
         uint32_t Size();
         void     Render( int aRow, ImVec2 aCellSize );
@@ -81,7 +94,7 @@ namespace SE::Core
         std::optional<std::vector<int>> mDisplayedRowIndices;
 
       protected:
-        std::vector<UITableColumn *>     mColumns;
+        std::vector<UITableColumn *>    mColumns;
         std::function<void( uint32_t )> mOnRowClicked;
 
       protected:

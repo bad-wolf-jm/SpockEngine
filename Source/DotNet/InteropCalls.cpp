@@ -598,6 +598,7 @@ namespace SE::Core::Interop
         {
             aSelf->mData = std::vector( aValue, aValue + aLength );
         }
+
 #pragma endregion
 
 #pragma region UIStringColumn
