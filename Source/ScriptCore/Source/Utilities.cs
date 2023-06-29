@@ -9,7 +9,6 @@ namespace SpockEngine
 {
     public static class Utilities
     {
-
         public static string CreateFolder(string[] aPathElements)
         {
             var lPath = Path.Combine(aPathElements);

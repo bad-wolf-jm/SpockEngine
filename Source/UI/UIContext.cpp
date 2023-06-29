@@ -56,9 +56,10 @@ namespace SE::Core
         mFonts[FontFamilyFlags::H1]        = LoadFont( aConfig.mBoldFont, aConfig.mIconFont, aConfig.mFontSize * 1.5f );
         mFonts[FontFamilyFlags::H2]        = LoadFont( aConfig.mBoldFont, aConfig.mIconFont, aConfig.mFontSize * 1.25f );
         mFonts[FontFamilyFlags::H3]        = LoadFont( aConfig.mItalicFont, aConfig.mIconFont, aConfig.mFontSize * 1.25f );
-        mFonts[FontFamilyFlags::EM]        = LoadFont( aConfig.mItalicFont, aConfig.mIconFont, aConfig.mFontSize * 1.0f );
         mFonts[FontFamilyFlags::HUGE]      = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * 1.5f );
         mFonts[FontFamilyFlags::LARGE]     = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * 1.25f );
+        mFonts[FontFamilyFlags::EM]        = LoadFont( aConfig.mItalicFont, aConfig.mIconFont, aConfig.mFontSize * 1.0f );
+        mFonts[FontFamilyFlags::BOLD  ]    = LoadFont( aConfig.mBoldFont, aConfig.mIconFont, aConfig.mFontSize );
         mFonts[FontFamilyFlags::NORMAL]    = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize );
         mFonts[FontFamilyFlags::SMALL]     = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * .75f );
         mFonts[FontFamilyFlags::TINY]      = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * .5f );

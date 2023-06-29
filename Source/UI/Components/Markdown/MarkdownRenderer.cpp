@@ -304,14 +304,14 @@ namespace SE::Core
         {
             if( m_is_table_header )
             {
-                SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::EM );
+                SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::BOLD );
                 return;
             }
 
             switch( m_hlevel )
             {
             case 0:
-                SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( m_is_strong ? FontFamilyFlags::EM
+                SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( m_is_strong ? FontFamilyFlags::BOLD
                                                                                           : FontFamilyFlags::NORMAL );
                 break;
             case 1: SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H1 ); break;
