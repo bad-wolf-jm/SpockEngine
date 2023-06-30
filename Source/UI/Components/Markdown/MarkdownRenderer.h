@@ -125,6 +125,10 @@ namespace SE::Core
         unsigned m_hlevel           = 0; // 0 - no heading
 
       private:
+        float mLeftMargin  = 10.0f;
+        float mRightMargin = 50.0f;
+        float mTextWidth   = 500.0f;
+
         int text( MD_TEXTTYPE type, const char *str, const char *str_end );
         int block( MD_BLOCKTYPE type, void *d, bool e );
         int span( MD_SPANTYPE type, void *d, bool e );

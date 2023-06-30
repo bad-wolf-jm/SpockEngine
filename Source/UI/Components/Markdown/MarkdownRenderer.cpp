@@ -77,6 +77,7 @@ namespace SE::Core
         else
         {
             m_list_stack.pop_back();
+
             if( m_list_stack.empty() ) ImGui::NewLine();
         }
     }
@@ -153,6 +154,7 @@ namespace SE::Core
     void UIMarkdownRendererInternal::BLOCK_DOC( bool ) {}
 
     void UIMarkdownRendererInternal::BLOCK_QUOTE( bool ) {}
+
     void UIMarkdownRendererInternal::BLOCK_CODE( const MD_BLOCK_CODE_DETAIL *, bool e ) { m_is_code = e; }
 
     void UIMarkdownRendererInternal::BLOCK_HTML( bool ) {}
@@ -160,6 +162,7 @@ namespace SE::Core
     void UIMarkdownRendererInternal::BLOCK_P( bool )
     {
         if( !m_list_stack.empty() ) return;
+
         ImGui::NewLine();
     }
 
@@ -228,6 +231,7 @@ namespace SE::Core
     void UIMarkdownRendererInternal::BLOCK_THEAD( bool e )
     {
         m_is_table_header = e;
+
         if( m_table_header_highlight ) set_font( e );
     }
 
@@ -273,6 +277,7 @@ namespace SE::Core
             ImGui::SetCursorPosX( p.x );
             if( p.y > m_table_last_pos.y ) m_table_last_pos.y = p.y;
         }
+
         ImGui::TextUnformatted( "" );
 
         if( !m_table_border && e && m_table_next_column == 1 )
@@ -314,8 +319,26 @@ namespace SE::Core
                 SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( m_is_strong ? FontFamilyFlags::BOLD
                                                                                           : FontFamilyFlags::NORMAL );
                 break;
-            case 1: SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H1 ); break;
-            default: SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::NORMAL );
+            case 1:
+            {
+                SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H1 );
+                break;
+            }
+            case 2:
+            {
+                SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H2 );
+                break;
+            }
+            case 3:
+            {
+                SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H3 );
+                break;
+            }
+            default:
+            {
+                SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::NORMAL );
+                break;
+            }
             }
         }
         else
@@ -377,11 +400,9 @@ namespace SE::Core
 
         if( e )
         {
-
             image_info nfo;
             if( get_image( nfo ) )
             {
-
                 const float scale = ImGui::GetIO().FontGlobalScale;
                 nfo.size.x *= scale;
                 nfo.size.y *= scale;
@@ -432,13 +453,11 @@ namespace SE::Core
 
         while( !m_is_image && str < str_end )
         {
-
             const char *te = str_end;
 
             if( !m_is_table_header )
             {
-
-                float wl = ImGui::GetContentRegionAvail().x;
+                float wl = ImGui::GetContentRegionAvail().x - ( mLeftMargin + mRightMargin );
 
                 if( m_is_table_body )
                 {
@@ -464,7 +483,6 @@ namespace SE::Core
                 ImVec4 c;
                 if( ImGui::IsItemHovered() )
                 {
-
                     ImGui::SetTooltip( "%s", m_href.c_str() );
 
                     c = s.Colors[ImGuiCol_ButtonHovered];
@@ -477,12 +495,15 @@ namespace SE::Core
                 {
                     c = s.Colors[ImGuiCol_Button];
                 }
+
                 line( c, true );
             }
+
             if( m_is_underline )
             {
                 line( s.Colors[ImGuiCol_Text], true );
             }
+
             if( m_is_strikethrough )
             {
                 line( s.Colors[ImGuiCol_Text], false );
@@ -620,44 +641,57 @@ namespace SE::Core
         return false;
     }
 
-    void UIMarkdownRendererInternal::html_div( const std::string &dclass, bool e )
-    {
-        // Example:
-#if 0 
-	if (dclass == "red") {
-		if (e) {
-			ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 0, 0, 255));
-		} else {
-			ImGui::PopStyleColor();
-		}
-	}
-#endif
-        dclass;
-        e;
-    }
+    void UIMarkdownRendererInternal::html_div( const std::string &dclass, bool e ) {}
 
     int UIMarkdownRendererInternal::text( MD_TEXTTYPE type, const char *str, const char *str_end )
     {
         switch( type )
         {
-        case MD_TEXT_NORMAL: render_text( str, str_end ); break;
-        case MD_TEXT_CODE: render_text( str, str_end ); break;
-        case MD_TEXT_NULLCHAR: break;
-        case MD_TEXT_BR: ImGui::NewLine(); break;
-        case MD_TEXT_SOFTBR: soft_break(); break;
+        case MD_TEXT_NORMAL:
+        {
+            render_text( str, str_end );
+            break;
+        }
+        case MD_TEXT_CODE:
+        {
+            render_text( str, str_end );
+            break;
+        }
+        case MD_TEXT_NULLCHAR:
+        {
+            break;
+        }
+        case MD_TEXT_BR:
+        {
+            ImGui::NewLine();
+            break;
+        }
+        case MD_TEXT_SOFTBR:
+        {
+            soft_break();
+            break;
+        }
         case MD_TEXT_ENTITY:
+        {
             if( !render_entity( str, str_end ) )
             {
                 render_text( str, str_end );
             };
             break;
+        }
         case MD_TEXT_HTML:
+        {
             if( !check_html( str, str_end ) )
             {
                 render_text( str, str_end );
             }
             break;
-        case MD_TEXT_LATEXMATH: render_text( str, str_end ); break;
+        }
+        case MD_TEXT_LATEXMATH:
+        {
+            render_text( str, str_end );
+            break;
+        }
         default: break;
         }
 
@@ -674,42 +708,146 @@ namespace SE::Core
     {
         switch( type )
         {
-        case MD_BLOCK_DOC: BLOCK_DOC( e ); break;
-        case MD_BLOCK_QUOTE: BLOCK_QUOTE( e ); break;
-        case MD_BLOCK_UL: BLOCK_UL( (MD_BLOCK_UL_DETAIL *)d, e ); break;
-        case MD_BLOCK_OL: BLOCK_OL( (MD_BLOCK_OL_DETAIL *)d, e ); break;
-        case MD_BLOCK_LI: BLOCK_LI( (MD_BLOCK_LI_DETAIL *)d, e ); break;
-        case MD_BLOCK_HR: BLOCK_HR( e ); break;
-        case MD_BLOCK_H: BLOCK_H( (MD_BLOCK_H_DETAIL *)d, e ); break;
-        case MD_BLOCK_CODE: BLOCK_CODE( (MD_BLOCK_CODE_DETAIL *)d, e ); break;
-        case MD_BLOCK_HTML: BLOCK_HTML( e ); break;
-        case MD_BLOCK_P: BLOCK_P( e ); break;
-        case MD_BLOCK_TABLE: BLOCK_TABLE( (MD_BLOCK_TABLE_DETAIL *)d, e ); break;
-        case MD_BLOCK_THEAD: BLOCK_THEAD( e ); break;
-        case MD_BLOCK_TBODY: BLOCK_TBODY( e ); break;
-        case MD_BLOCK_TR: BLOCK_TR( e ); break;
-        case MD_BLOCK_TH: BLOCK_TH( (MD_BLOCK_TD_DETAIL *)d, e ); break;
-        case MD_BLOCK_TD: BLOCK_TD( (MD_BLOCK_TD_DETAIL *)d, e ); break;
+        case MD_BLOCK_DOC:
+        {
+            BLOCK_DOC( e );
+            break;
+        }
+        case MD_BLOCK_QUOTE:
+        {
+            BLOCK_QUOTE( e );
+            break;
+        }
+        case MD_BLOCK_UL:
+        {
+            BLOCK_UL( (MD_BLOCK_UL_DETAIL *)d, e );
+            break;
+        }
+        case MD_BLOCK_OL:
+        {
+            BLOCK_OL( (MD_BLOCK_OL_DETAIL *)d, e );
+            break;
+        }
+        case MD_BLOCK_LI:
+        {
+            BLOCK_LI( (MD_BLOCK_LI_DETAIL *)d, e );
+            break;
+        }
+        case MD_BLOCK_HR:
+        {
+            BLOCK_HR( e );
+            break;
+        }
+        case MD_BLOCK_H:
+        {
+            BLOCK_H( (MD_BLOCK_H_DETAIL *)d, e );
+            break;
+        }
+        case MD_BLOCK_CODE:
+        {
+            BLOCK_CODE( (MD_BLOCK_CODE_DETAIL *)d, e );
+            break;
+        }
+        case MD_BLOCK_HTML:
+        {
+            BLOCK_HTML( e );
+            break;
+        }
+        case MD_BLOCK_P:
+        {
+            BLOCK_P( e );
+            break;
+        }
+        case MD_BLOCK_TABLE:
+        {
+            BLOCK_TABLE( (MD_BLOCK_TABLE_DETAIL *)d, e );
+            break;
+        }
+        case MD_BLOCK_THEAD:
+        {
+            BLOCK_THEAD( e );
+            break;
+        }
+        case MD_BLOCK_TBODY:
+        {
+            BLOCK_TBODY( e );
+            break;
+        }
+        case MD_BLOCK_TR:
+        {
+            BLOCK_TR( e );
+            break;
+        }
+        case MD_BLOCK_TH:
+        {
+            BLOCK_TH( (MD_BLOCK_TD_DETAIL *)d, e );
+            break;
+        }
+        case MD_BLOCK_TD:
+        {
+            BLOCK_TD( (MD_BLOCK_TD_DETAIL *)d, e );
+            break;
+        }
         default: assert( false ); break;
         }
 
         return 0;
-    }
+    } // namespace SE::Core
 
     int UIMarkdownRendererInternal::span( MD_SPANTYPE type, void *d, bool e )
     {
         switch( type )
         {
-        case MD_SPAN_EM: SPAN_EM( e ); break;
-        case MD_SPAN_STRONG: SPAN_STRONG( e ); break;
-        case MD_SPAN_A: SPAN_A( (MD_SPAN_A_DETAIL *)d, e ); break;
-        case MD_SPAN_IMG: SPAN_IMG( (MD_SPAN_IMG_DETAIL *)d, e ); break;
-        case MD_SPAN_CODE: SPAN_CODE( e ); break;
-        case MD_SPAN_DEL: SPAN_DEL( e ); break;
-        case MD_SPAN_LATEXMATH: SPAN_LATEXMATH( e ); break;
-        case MD_SPAN_LATEXMATH_DISPLAY: SPAN_LATEXMATH_DISPLAY( e ); break;
-        case MD_SPAN_WIKILINK: SPAN_WIKILINK( (MD_SPAN_WIKILINK_DETAIL *)d, e ); break;
-        case MD_SPAN_U: SPAN_U( e ); break;
+        case MD_SPAN_EM:
+        {
+            SPAN_EM( e );
+            break;
+        }
+        case MD_SPAN_STRONG:
+        {
+            SPAN_STRONG( e );
+            break;
+        }
+        case MD_SPAN_A:
+        {
+            SPAN_A( (MD_SPAN_A_DETAIL *)d, e );
+            break;
+        }
+        case MD_SPAN_IMG:
+        {
+            SPAN_IMG( (MD_SPAN_IMG_DETAIL *)d, e );
+            break;
+        }
+        case MD_SPAN_CODE:
+        {
+            SPAN_CODE( e );
+            break;
+        }
+        case MD_SPAN_DEL:
+        {
+            SPAN_DEL( e );
+            break;
+        }
+        case MD_SPAN_LATEXMATH:
+        {
+            SPAN_LATEXMATH( e );
+            break;
+        }
+        case MD_SPAN_LATEXMATH_DISPLAY:
+        {
+            SPAN_LATEXMATH_DISPLAY( e );
+            break;
+        }
+        case MD_SPAN_WIKILINK:
+        {
+            SPAN_WIKILINK( (MD_SPAN_WIKILINK_DETAIL *)d, e );
+            break;
+        }
+        case MD_SPAN_U:
+        {
+            SPAN_U( e );
+            break;
+        }
         default: assert( false ); break;
         }
 
@@ -727,23 +865,6 @@ namespace SE::Core
     ImFont *UIMarkdownRendererInternal::get_font() const
     {
         return nullptr; // default font
-
-                        // Example:
-#if 0
-	if (m_is_table_header) {
-		return g_font_bold;
-	}
-
-	switch (m_hlevel)
-	{
-	case 0:
-		return m_is_strong ? g_font_bold : g_font_regular;
-	case 1:
-		return g_font_bold_large;
-	default:
-		return g_font_bold;
-	}
-#endif
     };
 
     ImVec4 UIMarkdownRendererInternal::get_color() const
@@ -773,22 +894,11 @@ namespace SE::Core
     void UIMarkdownRendererInternal::open_url() const
     {
         // Example:
-
-#if 0	
-	if (!m_is_image) {
-		SDL_OpenURL(m_href.c_str());
-	} else {
-		//image clicked
-	}
-#endif
     }
 
     void UIMarkdownRendererInternal::soft_break()
     {
         // Example:
-#if 0
-	ImGui::NewLine();
-#endif
     }
 
 } // namespace SE::Core
