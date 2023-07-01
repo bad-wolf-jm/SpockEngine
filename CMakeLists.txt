@@ -115,6 +115,15 @@ FetchContent_MakeAvailable(pugixml)
 include_directories(${pugixml_SOURCE_DIR}/src)
 set(SE_EXTRA_INCLUDES ${pugixml_SOURCE_DIR}/src ${SE_EXTRA_INCLUDES})
 
+FetchContent_Declare(
+  oniguruma
+  GIT_REPOSITORY https://github.com/kkos/oniguruma.git
+  GIT_TAG        v6.9.8
+  GIT_PROGRESS   TRUE )
+FetchContent_MakeAvailable(oniguruma)
+include_directories(${oniguruma_SOURCE_DIR}/src)
+set(SE_EXTRA_INCLUDES ${oniguruma_SOURCE_DIR}/src ${SE_EXTRA_INCLUDES})
+
 
 set(SE_EXTRA_INCLUDES ${SE_EXTRA_INCLUDES} PARENT_SCOPE)
 set(EXTERNAL_LIBRARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty)
