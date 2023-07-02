@@ -24,16 +24,20 @@
  * IN THE SOFTWARE.
  */
 
+#include "UI/Components/Component.h"
 #include "imgui.h"
 #include "md4c.h"
 #include <string>
+#include <typeindex>
+#include <typeinfo>
 #include <vector>
 
 namespace SE::Core
 
 {
-    struct UIMarkdownRendererInternal
+    class UIMarkdownRendererInternal
     {
+      public:
         UIMarkdownRendererInternal();
         virtual ~UIMarkdownRendererInternal(){};
 
@@ -48,35 +52,243 @@ namespace SE::Core
         bool m_table_header_highlight = true;
 
       protected:
-        virtual void BLOCK_DOC( bool );
-        virtual void BLOCK_QUOTE( bool );
-        virtual void BLOCK_UL( const MD_BLOCK_UL_DETAIL *, bool );
-        virtual void BLOCK_OL( const MD_BLOCK_OL_DETAIL *, bool );
-        virtual void BLOCK_LI( const MD_BLOCK_LI_DETAIL *, bool );
-        virtual void BLOCK_HR( bool e );
-        virtual void BLOCK_H( const MD_BLOCK_H_DETAIL *d, bool e );
-        virtual void BLOCK_CODE( const MD_BLOCK_CODE_DETAIL *, bool );
-        virtual void BLOCK_HTML( bool );
-        virtual void BLOCK_P( bool );
-        virtual void BLOCK_TABLE( const MD_BLOCK_TABLE_DETAIL *, bool );
-        virtual void BLOCK_THEAD( bool );
-        virtual void BLOCK_TBODY( bool );
-        virtual void BLOCK_TR( bool );
-        virtual void BLOCK_TH( const MD_BLOCK_TD_DETAIL *, bool );
-        virtual void BLOCK_TD( const MD_BLOCK_TD_DETAIL *, bool );
+        void BLOCK_DOC( bool );
+        void BLOCK_QUOTE( bool );
+        void BLOCK_UL( const MD_BLOCK_UL_DETAIL *, bool );
+        void BLOCK_OL( const MD_BLOCK_OL_DETAIL *, bool );
+        void BLOCK_LI( const MD_BLOCK_LI_DETAIL *, bool );
+        void BLOCK_HR( bool e );
+        void BLOCK_H( const MD_BLOCK_H_DETAIL *d, bool e );
+        void BLOCK_CODE( const MD_BLOCK_CODE_DETAIL *, bool );
+        void BLOCK_HTML( bool );
+        void BLOCK_P( bool );
+        void BLOCK_TABLE( const MD_BLOCK_TABLE_DETAIL *, bool );
+        void BLOCK_THEAD( bool );
+        void BLOCK_TBODY( bool );
+        void BLOCK_TR( bool );
+        void BLOCK_TH( const MD_BLOCK_TD_DETAIL *, bool );
+        void BLOCK_TD( const MD_BLOCK_TD_DETAIL *, bool );
 
-        virtual void SPAN_EM( bool e );
-        virtual void SPAN_STRONG( bool e );
-        virtual void SPAN_A( const MD_SPAN_A_DETAIL *d, bool e );
-        virtual void SPAN_IMG( const MD_SPAN_IMG_DETAIL *, bool );
-        virtual void SPAN_CODE( bool );
-        virtual void SPAN_DEL( bool );
-        virtual void SPAN_LATEXMATH( bool );
-        virtual void SPAN_LATEXMATH_DISPLAY( bool );
-        virtual void SPAN_WIKILINK( const MD_SPAN_WIKILINK_DETAIL *, bool );
-        virtual void SPAN_U( bool );
+        void SPAN_EM( bool e );
+        void SPAN_STRONG( bool e );
+        void SPAN_A( const MD_SPAN_A_DETAIL *d, bool e );
+        void SPAN_IMG( const MD_SPAN_IMG_DETAIL *, bool );
+        void SPAN_CODE( bool );
+        void SPAN_DEL( bool );
+        void SPAN_LATEXMATH( bool );
+        void SPAN_LATEXMATH_DISPLAY( bool );
+        void SPAN_WIKILINK( const MD_SPAN_WIKILINK_DETAIL *, bool );
+        void SPAN_U( bool );
 
         ////////////////////////////////////////////////////////////////////////////
+
+        enum eBlockType
+        {
+            DOCUMENT,
+            QUOTE,
+            UORDERED_LIST,
+            ORDERED_LIST,
+            LIST_ITEM,
+            HRULE,
+            HEADING,
+            CODE,
+            HTML,
+            PARAGRAPH,
+            TABLE,
+            TABLE_HEADER,
+            TABLE_BODY,
+            TABLE_ROW,
+            TABLE_DATA
+        };
+
+        struct Block
+        {
+            eBlockType mType;
+            ImVec2     mPosition;
+            ImVec2     mSize;
+
+            Block( Ref<Block> aParent, eBlockType aType )
+                : mType{ aType }
+                , mParent{ aParent }
+            {
+            }
+
+            Ref<Block>              mParent;
+            std::vector<Ref<Block>> mChildren;
+        };
+
+        struct Document : public Block
+        {
+            Document( Ref<Block> aParent, eBlockType aType )
+                : Block( aParent, aType )
+            {
+            }
+        };
+
+        struct Quote : public Block
+        {
+            Quote( Ref<Block> aParent, eBlockType aType )
+                : Block( aParent, aType )
+            {
+            }
+        };
+
+        struct UnorderedList : public Block
+        {
+            char mMarker;
+
+            UnorderedList( Ref<Block> aParent, eBlockType aType, MD_BLOCK_UL_DETAIL *d )
+                : Block( aParent, aType )
+            {
+            }
+        };
+
+        struct OrderedList : public Block
+        {
+            uint32_t mStartIndex;
+            OrderedList( Ref<Block> aParent, eBlockType aType, MD_BLOCK_OL_DETAIL *d )
+                : Block( aParent, aType )
+            {
+            }
+        };
+
+        struct ListItem : public Block
+        {
+            bool     mIsTask;
+            bool     mIsChecked;
+            uint32_t mTTaskMarkOffset;
+
+            ListItem( Ref<Block> aParent, eBlockType aType, MD_BLOCK_LI_DETAIL *d )
+                : Block( aParent, aType )
+            {
+            }
+        };
+        
+        struct HRule : public Block
+        {
+            HRule( Ref<Block> aParent, eBlockType aType )
+                : Block( aParent, aType )
+            {
+            }
+        };
+
+        struct Heading : public Block
+        {
+            uint32_t mLevel;
+
+            Heading( Ref<Block> aParent, eBlockType aType, MD_BLOCK_H_DETAIL *d )
+                : Block( aParent, aType )
+            {
+            }
+        };
+
+        struct Code : public Block
+        {
+            char *mLanguage;
+            char  mFenceChar;
+
+            Code( Ref<Block> aParent, eBlockType aType, MD_BLOCK_CODE_DETAIL *d )
+                : Block( aParent, aType )
+            {
+            }
+        };
+
+        struct Html : public Block
+        {
+            Html( Ref<Block> aParent, eBlockType aType )
+                : Block( aParent, aType )
+            {
+            }
+        };
+
+        struct Paragraph : public Block
+        {
+            Paragraph( Ref<Block> aParent, eBlockType aType )
+                : Block( aParent, aType )
+            {
+            }
+        };
+
+        struct Table : public Block
+        {
+            uint32_t mColumns;
+            uint32_t mTableRows;
+
+            Table( Ref<Block> aParent, eBlockType aType, MD_BLOCK_TABLE_DETAIL *d )
+                : Block( aParent, aType )
+            {
+            }
+        };
+
+        struct TableHeader : public Block
+        {
+            TableHeader( Ref<Block> aParent, eBlockType aType )
+                : Block( aParent, aType )
+            {
+            }
+        };
+
+        struct TableBody : public Block
+        {
+            TableBody( Ref<Block> aParent, eBlockType aType )
+                : Block( aParent, aType )
+            {
+            }
+        };
+
+        struct TableRow : public Block
+        {
+            TableRow( Ref<Block> aParent, eBlockType aType )
+                : Block( aParent, aType )
+            {
+            }
+        };
+
+        struct TableData : public Block
+        {
+            eHorizontalAlignment mAlign;
+
+            TableData( Ref<Block> aParent, eBlockType aType, MD_BLOCK_TD_DETAIL *d )
+                : Block( aParent, aType )
+            {
+            }
+        };
+        
+        struct Text : public Block
+        {
+            char *mStart;
+            char *mEnd;
+
+            Text( Ref<Block> aParent, eBlockType aType, MD_BLOCK_TD_DETAIL *d )
+                : Block( aParent, aType )
+            {
+            }
+        };
+
+        Ref<Block> mCurrentBlock;
+
+        template <typename _Ty, typename... _Args>
+        void PushBlock( _Args... aArgs )
+        {
+            static std::unordered_map<std::type_index, eBlockType> mTypes = {
+                { std::type_index( typeid( Document ) ), DOCUMENT },
+                { std::type_index( typeid( Quote ) ), QUOTE },
+                { std::type_index( typeid( UnorderedList ) ), UORDERED_LIST },
+                { std::type_index( typeid( OrderedList ) ), ORDERED_LIST },
+                { std::type_index( typeid( ListItem ) ), LIST_ITEM },
+                { std::type_index( typeid( HRule ) ), HRULE },
+                { std::type_index( typeid( Heading ) ), HEADING },
+                { std::type_index( typeid( Code ) ), CODE },
+                { std::type_index( typeid( Html ) ), HTML },
+                { std::type_index( typeid( Paragraph ) ), PARAGRAPH },
+                { std::type_index( typeid( Table ) ), TABLE },
+                { std::type_index( typeid( TableHeader ) ), TABLE_HEADER },
+                { std::type_index( typeid( TableBody ) ), TABLE_BODY },
+                { std::type_index( typeid( TableRow ) ), TABLE_ROW },
+                { std::type_index( typeid( TableData ) ), TABLE_DATA } };
+
+            mCurrentBlock = New<_Ty>( mCurrentBlock, mTypes[std::type_index( typeid( _Ty ) )], std::forward<_Args>( aArgs )... );
+        }
 
         struct image_info
         {
@@ -123,6 +335,9 @@ namespace SE::Core
         bool     m_is_image         = false;
         bool     m_is_code          = false;
         unsigned m_hlevel           = 0; // 0 - no heading
+
+        uint32_t mBlockNestingLevel = 0;
+        void     LogBlockType( bool e, const char *str );
 
       private:
         float mLeftMargin  = 10.0f;

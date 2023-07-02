@@ -32,35 +32,19 @@ namespace SE::Core
     {
         m_md.abi_version = 0;
 
-        m_md.flags = MD_FLAG_COLLAPSEWHITESPACE | MD_FLAG_TABLES | MD_FLAG_UNDERLINE | MD_FLAG_STRIKETHROUGH | MD_FLAG_TASKLISTS |
-                     MD_FLAG_LATEXMATHSPANS | MD_FLAG_WIKILINKS;
+        m_md.flags = MD_FLAG_TABLES | MD_FLAG_UNDERLINE | MD_FLAG_STRIKETHROUGH;
 
-        // clang-format off
-        m_md.enter_block = []( MD_BLOCKTYPE t, void *d, void *u ) 
-        { 
-            return ( (UIMarkdownRendererInternal *)u )->block( t, d, true ); 
-        };
+        m_md.enter_block = []( MD_BLOCKTYPE t, void *d, void *u ) { return ( (UIMarkdownRendererInternal *)u )->block( t, d, true ); };
 
         m_md.leave_block = []( MD_BLOCKTYPE t, void *d, void *u )
-        { 
-            return ( (UIMarkdownRendererInternal *)u )->block( t, d, false ); 
-        };
+        { return ( (UIMarkdownRendererInternal *)u )->block( t, d, false ); };
 
-        m_md.enter_span = []( MD_SPANTYPE t, void *d, void *u ) 
-        { 
-            return ( (UIMarkdownRendererInternal *)u )->span( t, d, true ); 
-        };
+        m_md.enter_span = []( MD_SPANTYPE t, void *d, void *u ) { return ( (UIMarkdownRendererInternal *)u )->span( t, d, true ); };
 
-        m_md.leave_span = []( MD_SPANTYPE t, void *d, void *u ) 
-        { 
-            return ( (UIMarkdownRendererInternal *)u )->span( t, d, false ); 
-        };
+        m_md.leave_span = []( MD_SPANTYPE t, void *d, void *u ) { return ( (UIMarkdownRendererInternal *)u )->span( t, d, false ); };
 
         m_md.text = []( MD_TEXTTYPE t, const MD_CHAR *text, MD_SIZE size, void *u )
-        { 
-            return ( (UIMarkdownRendererInternal *)u )->text( t, text, text + size ); 
-        };
-        // clang-format on
+        { return ( (UIMarkdownRendererInternal *)u )->text( t, text, text + size ); };
 
         m_md.debug_log = nullptr;
         m_md.syntax    = nullptr;
@@ -70,44 +54,23 @@ namespace SE::Core
         m_table_last_pos = ImVec2( 0, 0 );
     }
 
-    void UIMarkdownRendererInternal::LogBlockType( bool e, const char *str )
-    {
-        if( e ) mBlockNestingLevel++;
-
-        ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 1.0f, 1.0f, 0.0f, 1.0f ) );
-        if( !e ) ImGui::NewLine();
-        ImGui::Text( fmt::format( "{}{} {}", mBlockNestingLevel, e ? ">>>" : "<<<", str ).c_str() );
-        if( !e )
-        {
-            mBlockNestingLevel--;
-        }
-
-        ImGui::PopStyleColor();
-    }
-
     void UIMarkdownRendererInternal::BLOCK_UL( const MD_BLOCK_UL_DETAIL *d, bool e )
     {
-
         if( e )
         {
-            LogBlockType( e, "BLOCK_UL" );
             m_list_stack.push_back( list_info{ 0, d->mark, false } );
         }
         else
         {
             m_list_stack.pop_back();
-
             if( m_list_stack.empty() ) ImGui::NewLine();
-            LogBlockType( e, "BLOCK_UL" );
         }
     }
 
     void UIMarkdownRendererInternal::BLOCK_OL( const MD_BLOCK_OL_DETAIL *d, bool e )
     {
-
         if( e )
         {
-            LogBlockType( e, "BLOCK_OL" );
             m_list_stack.push_back( list_info{ d->start, d->mark_delimiter, true } );
         }
         else
@@ -115,7 +78,6 @@ namespace SE::Core
             m_list_stack.pop_back();
 
             if( m_list_stack.empty() ) ImGui::NewLine();
-            LogBlockType( e, "BLOCK_OL" );
         }
     }
 
@@ -123,7 +85,6 @@ namespace SE::Core
     {
         if( e )
         {
-            LogBlockType( e, "BLOCK_LI" );
             ImGui::NewLine();
 
             list_info &nfo = m_list_stack.back();
@@ -153,21 +114,15 @@ namespace SE::Core
         else
         {
             ImGui::Unindent();
-            LogBlockType( e, "BLOCK_LI" );
         }
     }
 
     void UIMarkdownRendererInternal::BLOCK_HR( bool e )
     {
-        if( e )
-        {
-            LogBlockType( e, "HR" );
-        }
-        else
+        if( !e )
         {
             ImGui::NewLine();
             ImGui::Separator();
-            LogBlockType( e, "HR" );
         }
     }
 
@@ -175,7 +130,6 @@ namespace SE::Core
     {
         if( e )
         {
-            LogBlockType( e, "H" );
             m_hlevel = d->level;
             ImGui::NewLine();
         }
@@ -193,48 +147,19 @@ namespace SE::Core
                 ImGui::NewLine();
                 ImGui::Separator();
             }
-            LogBlockType( e, "H" );
         }
     }
 
-    // static void LogBlockType( const char *str )
-    // {
-    //     ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 1.0f, 1.0f, 0.0f, 1.0f ) );
-    //     ImGui::Text( "{} DOC", e ? ">>>>>>" : "<<<<<<" );
-    //     ImGui::PopStyleColor();
+    void UIMarkdownRendererInternal::BLOCK_DOC( bool ) {}
 
-    //     mBlockNestingLevel += e ? 1 : -1;
-    // }
+    void UIMarkdownRendererInternal::BLOCK_QUOTE( bool ) {}
 
-    void UIMarkdownRendererInternal::BLOCK_DOC( bool e )
+    void UIMarkdownRendererInternal::BLOCK_CODE( const MD_BLOCK_CODE_DETAIL *, bool e ) { m_is_code = e; }
+
+    void UIMarkdownRendererInternal::BLOCK_HTML( bool ) {}
+
+    void UIMarkdownRendererInternal::BLOCK_P( bool )
     {
-        //
-        LogBlockType( e, "BLOCK_DOC" );
-    }
-
-    void UIMarkdownRendererInternal::BLOCK_QUOTE( bool e )
-    {
-        //
-        LogBlockType( e, "BLOCK_QUOTE" );
-    }
-
-    void UIMarkdownRendererInternal::BLOCK_CODE( const MD_BLOCK_CODE_DETAIL *, bool e )
-    {
-        m_is_code = e;
-
-        LogBlockType( e, "BLOCK_CODE" );
-    }
-
-    void UIMarkdownRendererInternal::BLOCK_HTML( bool e )
-    {
-        //
-        LogBlockType( e, "BLOCK_HTML" );
-    }
-
-    void UIMarkdownRendererInternal::BLOCK_P( bool e )
-    {
-        LogBlockType( e, "BLOCK_P" );
-
         if( !m_list_stack.empty() ) return;
 
         ImGui::NewLine();
@@ -244,7 +169,6 @@ namespace SE::Core
     {
         if( e )
         {
-            LogBlockType( e, "BLOCK_TABLE" );
             m_table_row_pos.clear();
             m_table_col_pos.clear();
 
@@ -300,32 +224,22 @@ namespace SE::Core
                     dl->AddLine( ImVec2( p, ymin ), ImVec2( p, ymax ), c, 1.0f );
                 }
             }
-            LogBlockType( e, "BLOCK_TABLE" );
         }
     }
 
     void UIMarkdownRendererInternal::BLOCK_THEAD( bool e )
     {
-        LogBlockType( e, "BLOCK_THEAD" );
-
         m_is_table_header = e;
 
         if( m_table_header_highlight ) set_font( e );
     }
 
-    void UIMarkdownRendererInternal::BLOCK_TBODY( bool e )
-    {
-        LogBlockType( e, "BLOCK_TBODY" );
-
-        m_is_table_body = e;
-    }
+    void UIMarkdownRendererInternal::BLOCK_TBODY( bool e ) { m_is_table_body = e; }
 
     void UIMarkdownRendererInternal::BLOCK_TR( bool e )
     {
-
         ImGui::SetCursorPosY( m_table_last_pos.y );
 
-        LogBlockType( e, "BLOCK_TR" );
         if( e )
         {
             m_table_next_column = 0;
@@ -334,19 +248,13 @@ namespace SE::Core
         }
     }
 
-    void UIMarkdownRendererInternal::BLOCK_TH( const MD_BLOCK_TD_DETAIL *d, bool e )
-    {
-        LogBlockType( e, "BLOCK_TH" );
-
-        BLOCK_TD( d, e );
-    }
+    void UIMarkdownRendererInternal::BLOCK_TH( const MD_BLOCK_TD_DETAIL *d, bool e ) { BLOCK_TD( d, e ); }
 
     void UIMarkdownRendererInternal::BLOCK_TD( const MD_BLOCK_TD_DETAIL *, bool e )
     {
-
         if( e )
         {
-            LogBlockType( e, "BLOCK_TD" );
+
             if( m_table_next_column < m_table_col_pos.size() )
             {
                 ImGui::SetCursorPosX( m_table_col_pos[m_table_next_column] );
@@ -367,7 +275,6 @@ namespace SE::Core
             ImGui::Unindent( m_table_col_pos[m_table_next_column - 1] );
             ImGui::SetCursorPosX( p.x );
             if( p.y > m_table_last_pos.y ) m_table_last_pos.y = p.y;
-            LogBlockType( e, "BLOCK_TD" );
         }
 
         ImGui::TextUnformatted( "" );
@@ -468,28 +375,24 @@ namespace SE::Core
 
     void UIMarkdownRendererInternal::SPAN_A( const MD_SPAN_A_DETAIL *d, bool e )
     {
-        LogBlockType( e, "SPAN_A" );
         set_href( e, d->href );
         set_color( e );
     }
 
     void UIMarkdownRendererInternal::SPAN_EM( bool e )
     {
-        LogBlockType( e, "SPAN_EM" );
         m_is_em = e;
         set_font( e );
     }
 
     void UIMarkdownRendererInternal::SPAN_STRONG( bool e )
     {
-        LogBlockType( e, "SPAN_STRONG" );
         m_is_strong = e;
         set_font( e );
     }
 
     void UIMarkdownRendererInternal::SPAN_IMG( const MD_SPAN_IMG_DETAIL *d, bool e )
     {
-        LogBlockType( e, "SPAN_IMG" );
         m_is_image = e;
 
         set_href( e, d->src );
@@ -529,43 +432,17 @@ namespace SE::Core
         }
     }
 
-    void UIMarkdownRendererInternal::SPAN_CODE( bool e )
-    {
-        //
-        LogBlockType( e, "SPAN_CODE" );
-    }
+    void UIMarkdownRendererInternal::SPAN_CODE( bool ) {}
 
-    void UIMarkdownRendererInternal::SPAN_LATEXMATH( bool e )
-    {
-        //
-        LogBlockType( e, "SPAN_LATEXMATH" );
-    }
+    void UIMarkdownRendererInternal::SPAN_LATEXMATH( bool ) {}
 
-    void UIMarkdownRendererInternal::SPAN_LATEXMATH_DISPLAY( bool e )
-    {
-        //
-        LogBlockType( e, "SPAN_LATEXMATH_DISPLAY" );
-    }
+    void UIMarkdownRendererInternal::SPAN_LATEXMATH_DISPLAY( bool ) {}
 
-    void UIMarkdownRendererInternal::SPAN_WIKILINK( const MD_SPAN_WIKILINK_DETAIL *, bool e )
-    {
-        //
-        LogBlockType( e, "SPAN_WIKILINK" );
-    }
+    void UIMarkdownRendererInternal::SPAN_WIKILINK( const MD_SPAN_WIKILINK_DETAIL *, bool ) {}
 
-    void UIMarkdownRendererInternal::SPAN_U( bool e )
-    {
-        //
-        LogBlockType( e, "SPAN_U" );
-        m_is_underline = e;
-    }
+    void UIMarkdownRendererInternal::SPAN_U( bool e ) { m_is_underline = e; }
 
-    void UIMarkdownRendererInternal::SPAN_DEL( bool e )
-    {
-        //
-        LogBlockType( e, "SPAN_U" );
-        m_is_strikethrough = e;
-    }
+    void UIMarkdownRendererInternal::SPAN_DEL( bool e ) { m_is_strikethrough = e; }
 
     void UIMarkdownRendererInternal::render_text( const char *str, const char *str_end )
     {
@@ -832,97 +709,81 @@ namespace SE::Core
         {
         case MD_BLOCK_DOC:
         {
-            PushBlock<Document>();
             BLOCK_DOC( e );
             break;
         }
         case MD_BLOCK_QUOTE:
         {
-            PushBlock<Quote>();
             BLOCK_QUOTE( e );
             break;
         }
         case MD_BLOCK_UL:
         {
-            PushBlock<UnorderedList>((MD_BLOCK_UL_DETAIL *)d);
             BLOCK_UL( (MD_BLOCK_UL_DETAIL *)d, e );
             break;
         }
         case MD_BLOCK_OL:
         {
-            PushBlock<OrderedList>((MD_BLOCK_OL_DETAIL *)d);
             BLOCK_OL( (MD_BLOCK_OL_DETAIL *)d, e );
             break;
         }
         case MD_BLOCK_LI:
         {
-            PushBlock<ListItem>((MD_BLOCK_LI_DETAIL *)d);
             BLOCK_LI( (MD_BLOCK_LI_DETAIL *)d, e );
             break;
         }
         case MD_BLOCK_HR:
         {
-            PushBlock<HRule>();
             BLOCK_HR( e );
             break;
         }
         case MD_BLOCK_H:
         {
-            PushBlock<Heading>((MD_BLOCK_H_DETAIL *)d);
             BLOCK_H( (MD_BLOCK_H_DETAIL *)d, e );
             break;
         }
         case MD_BLOCK_CODE:
         {
-            PushBlock<Code>((MD_BLOCK_CODE_DETAIL *)d);
             BLOCK_CODE( (MD_BLOCK_CODE_DETAIL *)d, e );
             break;
         }
         case MD_BLOCK_HTML:
         {
-            PushBlock<Html>();
             BLOCK_HTML( e );
             break;
         }
         case MD_BLOCK_P:
         {
-            PushBlock<Paragraph>();
             BLOCK_P( e );
             break;
         }
         case MD_BLOCK_TABLE:
         {
-            PushBlock<Table>((MD_BLOCK_TABLE_DETAIL *)d);
             BLOCK_TABLE( (MD_BLOCK_TABLE_DETAIL *)d, e );
             break;
         }
         case MD_BLOCK_THEAD:
         {
-            PushBlock<TableHeader>();
             BLOCK_THEAD( e );
             break;
         }
         case MD_BLOCK_TBODY:
         {
-            PushBlock<TableBody>();
             BLOCK_TBODY( e );
             break;
         }
         case MD_BLOCK_TR:
         {
-            PushBlock<TableRow>();
             BLOCK_TR( e );
             break;
         }
         case MD_BLOCK_TH:
         {
-            PushBlock<TableData>((MD_BLOCK_TD_DETAIL *)d);
             BLOCK_TH( (MD_BLOCK_TD_DETAIL *)d, e );
             break;
         }
         case MD_BLOCK_TD:
         {
-            PushBlock<TableData>((MD_BLOCK_TD_DETAIL *)d);
             BLOCK_TD( (MD_BLOCK_TD_DETAIL *)d, e );
             break;
         }
