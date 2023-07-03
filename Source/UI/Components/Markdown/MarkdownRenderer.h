@@ -33,7 +33,6 @@
 #include <vector>
 
 namespace SE::Core
-
 {
     class UIMarkdownRendererInternal
     {
@@ -103,9 +102,14 @@ namespace SE::Core
 
         struct Block
         {
-            eBlockType mType;
-            ImVec2     mPosition;
-            ImVec2     mSize;
+            eBlockType              mType;
+            ImVec2                  mPosition;
+            ImVec2                  mSize;
+            Ref<Block>              mParent = nullptr;
+            std::vector<Ref<Block>> mChildren;
+            uint32_t                 mDepth = 0;
+
+            Block() = default;
 
             Block( Ref<Block> aParent, eBlockType aType )
                 : mType{ aType }
@@ -113,8 +117,10 @@ namespace SE::Core
             {
             }
 
-            Ref<Block>              mParent;
-            std::vector<Ref<Block>> mChildren;
+            virtual void Render()
+            {
+                for( auto const &c : mChildren ) c->Render();
+            }
         };
 
         struct Document : public Block
@@ -131,6 +137,8 @@ namespace SE::Core
                 : Block( aParent, aType )
             {
             }
+
+            void Render();
         };
 
         struct UnorderedList : public Block
@@ -141,6 +149,8 @@ namespace SE::Core
                 : Block( aParent, aType )
             {
             }
+
+            void Render() {}
         };
 
         struct OrderedList : public Block
@@ -150,6 +160,8 @@ namespace SE::Core
                 : Block( aParent, aType )
             {
             }
+
+            void Render() {}
         };
 
         struct ListItem : public Block
@@ -162,14 +174,18 @@ namespace SE::Core
                 : Block( aParent, aType )
             {
             }
+
+            void Render() {}
         };
-        
+
         struct HRule : public Block
         {
             HRule( Ref<Block> aParent, eBlockType aType )
                 : Block( aParent, aType )
             {
             }
+
+            void Render();
         };
 
         struct Heading : public Block
@@ -178,8 +194,11 @@ namespace SE::Core
 
             Heading( Ref<Block> aParent, eBlockType aType, MD_BLOCK_H_DETAIL *d )
                 : Block( aParent, aType )
+                , mLevel{ d->level }
             {
             }
+
+            void Render();
         };
 
         struct Code : public Block
@@ -191,6 +210,8 @@ namespace SE::Core
                 : Block( aParent, aType )
             {
             }
+
+            void Render();
         };
 
         struct Html : public Block
@@ -199,6 +220,8 @@ namespace SE::Core
                 : Block( aParent, aType )
             {
             }
+
+            void Render();
         };
 
         struct Paragraph : public Block
@@ -207,6 +230,8 @@ namespace SE::Core
                 : Block( aParent, aType )
             {
             }
+
+            void Render();
         };
 
         struct Table : public Block
@@ -218,6 +243,8 @@ namespace SE::Core
                 : Block( aParent, aType )
             {
             }
+
+            void Render() {}
         };
 
         struct TableHeader : public Block
@@ -226,6 +253,8 @@ namespace SE::Core
                 : Block( aParent, aType )
             {
             }
+
+            void Render() {}
         };
 
         struct TableBody : public Block
@@ -234,6 +263,8 @@ namespace SE::Core
                 : Block( aParent, aType )
             {
             }
+
+            void Render() {}
         };
 
         struct TableRow : public Block
@@ -242,6 +273,8 @@ namespace SE::Core
                 : Block( aParent, aType )
             {
             }
+
+            void Render() {}
         };
 
         struct TableData : public Block
@@ -252,42 +285,136 @@ namespace SE::Core
                 : Block( aParent, aType )
             {
             }
+
+            void Render() {}
         };
-        
+
         struct Text : public Block
         {
-            char *mStart;
-            char *mEnd;
+            MD_TEXTTYPE mTextType;
 
-            Text( Ref<Block> aParent, eBlockType aType, MD_BLOCK_TD_DETAIL *d )
+            const char *mStart;
+            const char *mEnd;
+
+            Text( Ref<Block> aParent, eBlockType aType, MD_TEXTTYPE d, const char *aStrBegin, const char *aStrEnd )
+                : Block( aParent, aType )
+                , mStart{ aStrBegin }
+                , mEnd{ aStrEnd }
+            {
+            }
+
+            void Render();
+        };
+        struct Emphasis : public Block
+        {
+            Emphasis( Ref<Block> aParent, eBlockType aType )
                 : Block( aParent, aType )
             {
             }
+
+            void Render();
         };
 
+        struct Strong : public Block
+        {
+            Strong( Ref<Block> aParent, eBlockType aType )
+                : Block( aParent, aType )
+            {
+            }
+
+            void Render();
+        };
+
+        struct Underline : public Block
+        {
+            Underline( Ref<Block> aParent, eBlockType aType )
+                : Block( aParent, aType )
+            {
+            }
+
+            void Render() {}
+        };
+
+        struct Link : public Block
+        {
+            Link( Ref<Block> aParent, eBlockType aType, MD_SPAN_A_DETAIL *d )
+                : Block( aParent, aType )
+            {
+            }
+
+            void Render() {}
+        };
+
+        struct Image : public Block
+        {
+            Image( Ref<Block> aParent, eBlockType aType, MD_SPAN_IMG_DETAIL *d )
+                : Block( aParent, aType )
+            {
+            }
+
+            void Render() {}
+        };
+
+        struct InlineCode : public Block
+        {
+            InlineCode( Ref<Block> aParent, eBlockType aType )
+                : Block( aParent, aType )
+            {
+            }
+
+            void Render() {}
+        };
+
+        struct StrikeThrough : public Block
+        {
+            StrikeThrough( Ref<Block> aParent, eBlockType aType )
+                : Block( aParent, aType )
+            {
+            }
+
+            void Render() {}
+        };
+
+        struct LaTeXMath : public Block
+        {
+            LaTeXMath( Ref<Block> aParent, eBlockType aType )
+                : Block( aParent, aType )
+            {
+            }
+
+            void Render() {}
+        };
+
+        struct WikiLink : public Block
+        {
+            WikiLink( Ref<Block> aParent, eBlockType aType, MD_SPAN_WIKILINK_DETAIL *d )
+                : Block( aParent, aType )
+            {
+            }
+
+            void Render() {}
+        };
+
+        Ref<Block> mRootBlock;
         Ref<Block> mCurrentBlock;
 
         template <typename _Ty, typename... _Args>
         void PushBlock( _Args... aArgs )
         {
-            static std::unordered_map<std::type_index, eBlockType> mTypes = {
-                { std::type_index( typeid( Document ) ), DOCUMENT },
-                { std::type_index( typeid( Quote ) ), QUOTE },
-                { std::type_index( typeid( UnorderedList ) ), UORDERED_LIST },
-                { std::type_index( typeid( OrderedList ) ), ORDERED_LIST },
-                { std::type_index( typeid( ListItem ) ), LIST_ITEM },
-                { std::type_index( typeid( HRule ) ), HRULE },
-                { std::type_index( typeid( Heading ) ), HEADING },
-                { std::type_index( typeid( Code ) ), CODE },
-                { std::type_index( typeid( Html ) ), HTML },
-                { std::type_index( typeid( Paragraph ) ), PARAGRAPH },
-                { std::type_index( typeid( Table ) ), TABLE },
-                { std::type_index( typeid( TableHeader ) ), TABLE_HEADER },
-                { std::type_index( typeid( TableBody ) ), TABLE_BODY },
-                { std::type_index( typeid( TableRow ) ), TABLE_ROW },
-                { std::type_index( typeid( TableData ) ), TABLE_DATA } };
+            uint32_t d = mCurrentBlock->mDepth;
+            mCurrentBlock->mChildren.push_back( New<_Ty>( mCurrentBlock, eBlockType::DOCUMENT, std::forward<_Args>( aArgs )... ) );
+            mCurrentBlock = mCurrentBlock->mChildren.back();
+            mCurrentBlock->mDepth = d + 1;
+            SE::Logging::Info("{} Created block {}", std::string(d+1, '>'), typeid(_Ty).name());
+        }
 
-            mCurrentBlock = New<_Ty>( mCurrentBlock, mTypes[std::type_index( typeid( _Ty ) )], std::forward<_Args>( aArgs )... );
+        template <typename _Ty, typename... _Args>
+        void AppendBlock( _Args... aArgs )
+        {
+            uint32_t d = mCurrentBlock->mDepth;
+            mCurrentBlock->mChildren.push_back( New<_Ty>( mCurrentBlock, eBlockType::DOCUMENT, std::forward<_Args>( aArgs )... ) );
+            mCurrentBlock->mChildren.back()->mDepth = d + 1;
+            SE::Logging::Info("{} Created block {}", std::string(d+1, '>'), typeid(_Ty).name());
         }
 
         struct image_info

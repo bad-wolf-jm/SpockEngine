@@ -157,6 +157,15 @@ namespace SE::Core
         }
     }
 
+    void UIMarkdownRendererInternal::HRule::Render()
+    {
+        // SE::Logging::Info( "HRule" );
+        ImGui::NewLine();
+        ImGui::Separator();
+
+        UIMarkdownRendererInternal::Block::Render();
+    }
+
     void UIMarkdownRendererInternal::BLOCK_HR( bool e )
     {
         if( e )
@@ -169,6 +178,21 @@ namespace SE::Core
             ImGui::Separator();
             LogBlockType( e, "HR" );
         }
+    }
+
+    void UIMarkdownRendererInternal::Heading::Render()
+    {
+        // SE::Logging::Info( "Heading" );
+        static FontFamilyFlags lLevelFonts[] = { FontFamilyFlags::H1, FontFamilyFlags::H2, FontFamilyFlags::H3 };
+
+        ImGui::NewLine();
+        if( mLevel <= 3 )
+            SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( lLevelFonts[mLevel - 1] );
+        else
+            SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::NORMAL );
+
+        UIMarkdownRendererInternal::Block::Render();
+        SE::Core::Engine::GetInstance()->UIContext()->PopFont();
     }
 
     void UIMarkdownRendererInternal::BLOCK_H( const MD_BLOCK_H_DETAIL *d, bool e )
@@ -212,10 +236,24 @@ namespace SE::Core
         LogBlockType( e, "BLOCK_DOC" );
     }
 
+    void UIMarkdownRendererInternal::Quote::Render()
+    {
+        // SE::Logging::Info( "Quote" );
+        ImGui::NewLine();
+        UIMarkdownRendererInternal::Block::Render();
+    }
+
     void UIMarkdownRendererInternal::BLOCK_QUOTE( bool e )
     {
         //
         LogBlockType( e, "BLOCK_QUOTE" );
+    }
+
+    void UIMarkdownRendererInternal::Code::Render()
+    {
+        // SE::Logging::Info( "Code" );
+        ImGui::NewLine();
+        UIMarkdownRendererInternal::Block::Render();
     }
 
     void UIMarkdownRendererInternal::BLOCK_CODE( const MD_BLOCK_CODE_DETAIL *, bool e )
@@ -225,10 +263,25 @@ namespace SE::Core
         LogBlockType( e, "BLOCK_CODE" );
     }
 
+    void UIMarkdownRendererInternal::Html::Render()
+    {
+        // SE::Logging::Info( "Html" );
+        ImGui::NewLine();
+        UIMarkdownRendererInternal::Block::Render();
+    }
+
     void UIMarkdownRendererInternal::BLOCK_HTML( bool e )
     {
         //
         LogBlockType( e, "BLOCK_HTML" );
+    }
+
+    void UIMarkdownRendererInternal::Paragraph::Render()
+    {
+        // SE::Logging::Info( "Paragraph; {}", mChildren.size() );
+
+        ImGui::NewLine();
+        UIMarkdownRendererInternal::Block::Render();
     }
 
     void UIMarkdownRendererInternal::BLOCK_P( bool e )
@@ -466,6 +519,34 @@ namespace SE::Core
         ImGui::GetWindowDrawList()->AddLine( mi, ma, c, 1.0f );
     }
 
+    void UIMarkdownRendererInternal::Text::Render()
+    {
+        // SE::Logging::Info( "Text; {}", mChildren.size() );
+
+        const float scale   = ImGui::GetIO().FontGlobalScale;
+        const char *str     = mStart;
+        const char *str_end = mEnd;
+        bool        is_lf   = false;
+
+        while( str < str_end )
+        {
+            const char *te = str_end;
+
+            te = ImGui::GetFont()->CalcWordWrapPositionA( scale, str, str_end, ImGui::GetContentRegionAvail().x );
+
+            if( te == str ) ++te;
+            if( te > str && *( te - 1 ) == '\n' ) is_lf = true;
+
+            ImGui::TextUnformatted( str, te );
+
+            str = te;
+
+            while( str < str_end && *str == ' ' ) ++str;
+        }
+
+        if( !is_lf ) ImGui::SameLine( 0.0f, 0.0f );
+    }
+
     void UIMarkdownRendererInternal::SPAN_A( const MD_SPAN_A_DETAIL *d, bool e )
     {
         LogBlockType( e, "SPAN_A" );
@@ -473,6 +554,14 @@ namespace SE::Core
         set_color( e );
     }
 
+    void UIMarkdownRendererInternal::Emphasis::Render()
+    {
+        // SE::Logging::Info( "Emphasis" );
+
+        SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::EM );
+        UIMarkdownRendererInternal::Block::Render();
+        SE::Core::Engine::GetInstance()->UIContext()->PopFont();
+    }
     void UIMarkdownRendererInternal::SPAN_EM( bool e )
     {
         LogBlockType( e, "SPAN_EM" );
@@ -480,6 +569,14 @@ namespace SE::Core
         set_font( e );
     }
 
+    void UIMarkdownRendererInternal::Strong::Render()
+    {
+        // SE::Logging::Info( "Strong" );
+
+        SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::BOLD );
+        UIMarkdownRendererInternal::Block::Render();
+        SE::Core::Engine::GetInstance()->UIContext()->PopFont();
+    }
     void UIMarkdownRendererInternal::SPAN_STRONG( bool e )
     {
         LogBlockType( e, "SPAN_STRONG" );
@@ -563,7 +660,7 @@ namespace SE::Core
     void UIMarkdownRendererInternal::SPAN_DEL( bool e )
     {
         //
-        LogBlockType( e, "SPAN_U" );
+        LogBlockType( e, "SPAN_DEL" );
         m_is_strikethrough = e;
     }
 
@@ -767,6 +864,8 @@ namespace SE::Core
 
     int UIMarkdownRendererInternal::text( MD_TEXTTYPE type, const char *str, const char *str_end )
     {
+        AppendBlock<Text>( type, str, str_end );
+
         switch( type )
         {
         case MD_TEXT_NORMAL:
@@ -828,104 +927,78 @@ namespace SE::Core
 
     int UIMarkdownRendererInternal::block( MD_BLOCKTYPE type, void *d, bool e )
     {
+        if( !e )
+        {
+            mCurrentBlock = mCurrentBlock->mParent;
+            return 0;
+        }
+
         switch( type )
         {
         case MD_BLOCK_DOC:
-        {
             PushBlock<Document>();
-            BLOCK_DOC( e );
+            // BLOCK_DOC( e );
             break;
-        }
         case MD_BLOCK_QUOTE:
-        {
             PushBlock<Quote>();
-            BLOCK_QUOTE( e );
+            // BLOCK_QUOTE( e );
             break;
-        }
         case MD_BLOCK_UL:
-        {
-            PushBlock<UnorderedList>((MD_BLOCK_UL_DETAIL *)d);
-            BLOCK_UL( (MD_BLOCK_UL_DETAIL *)d, e );
+            PushBlock<UnorderedList>( (MD_BLOCK_UL_DETAIL *)d );
+            // BLOCK_UL( (MD_BLOCK_UL_DETAIL *)d, e );
             break;
-        }
         case MD_BLOCK_OL:
-        {
-            PushBlock<OrderedList>((MD_BLOCK_OL_DETAIL *)d);
-            BLOCK_OL( (MD_BLOCK_OL_DETAIL *)d, e );
+            PushBlock<OrderedList>( (MD_BLOCK_OL_DETAIL *)d );
+            // BLOCK_OL( (MD_BLOCK_OL_DETAIL *)d, e );
             break;
-        }
         case MD_BLOCK_LI:
-        {
-            PushBlock<ListItem>((MD_BLOCK_LI_DETAIL *)d);
-            BLOCK_LI( (MD_BLOCK_LI_DETAIL *)d, e );
+            PushBlock<ListItem>( (MD_BLOCK_LI_DETAIL *)d );
+            // BLOCK_LI( (MD_BLOCK_LI_DETAIL *)d, e );
             break;
-        }
         case MD_BLOCK_HR:
-        {
             PushBlock<HRule>();
-            BLOCK_HR( e );
+            // BLOCK_HR( e );
             break;
-        }
         case MD_BLOCK_H:
-        {
-            PushBlock<Heading>((MD_BLOCK_H_DETAIL *)d);
-            BLOCK_H( (MD_BLOCK_H_DETAIL *)d, e );
+            PushBlock<Heading>( (MD_BLOCK_H_DETAIL *)d );
+            // BLOCK_H( (MD_BLOCK_H_DETAIL *)d, e );
             break;
-        }
         case MD_BLOCK_CODE:
-        {
-            PushBlock<Code>((MD_BLOCK_CODE_DETAIL *)d);
-            BLOCK_CODE( (MD_BLOCK_CODE_DETAIL *)d, e );
+            PushBlock<Code>( (MD_BLOCK_CODE_DETAIL *)d );
+            // BLOCK_CODE( (MD_BLOCK_CODE_DETAIL *)d, e );
             break;
-        }
         case MD_BLOCK_HTML:
-        {
             PushBlock<Html>();
-            BLOCK_HTML( e );
+            // BLOCK_HTML( e );
             break;
-        }
         case MD_BLOCK_P:
-        {
             PushBlock<Paragraph>();
-            BLOCK_P( e );
+            // BLOCK_P( e );
             break;
-        }
         case MD_BLOCK_TABLE:
-        {
-            PushBlock<Table>((MD_BLOCK_TABLE_DETAIL *)d);
-            BLOCK_TABLE( (MD_BLOCK_TABLE_DETAIL *)d, e );
+            PushBlock<Table>( (MD_BLOCK_TABLE_DETAIL *)d );
+            // BLOCK_TABLE( (MD_BLOCK_TABLE_DETAIL *)d, e );
             break;
-        }
         case MD_BLOCK_THEAD:
-        {
             PushBlock<TableHeader>();
-            BLOCK_THEAD( e );
+            // BLOCK_THEAD( e );
             break;
-        }
         case MD_BLOCK_TBODY:
-        {
             PushBlock<TableBody>();
-            BLOCK_TBODY( e );
+            // BLOCK_TBODY( e );
             break;
-        }
         case MD_BLOCK_TR:
-        {
             PushBlock<TableRow>();
-            BLOCK_TR( e );
+            // BLOCK_TR( e );
             break;
-        }
         case MD_BLOCK_TH:
-        {
-            PushBlock<TableData>((MD_BLOCK_TD_DETAIL *)d);
-            BLOCK_TH( (MD_BLOCK_TD_DETAIL *)d, e );
+            PushBlock<TableData>( (MD_BLOCK_TD_DETAIL *)d );
+            // BLOCK_TH( (MD_BLOCK_TD_DETAIL *)d, e );
             break;
-        }
         case MD_BLOCK_TD:
-        {
-            PushBlock<TableData>((MD_BLOCK_TD_DETAIL *)d);
-            BLOCK_TD( (MD_BLOCK_TD_DETAIL *)d, e );
+            PushBlock<TableData>( (MD_BLOCK_TD_DETAIL *)d );
+            // BLOCK_TD( (MD_BLOCK_TD_DETAIL *)d, e );
             break;
-        }
         default: assert( false ); break;
         }
 
@@ -934,58 +1007,54 @@ namespace SE::Core
 
     int UIMarkdownRendererInternal::span( MD_SPANTYPE type, void *d, bool e )
     {
+        if( !e )
+        {
+            mCurrentBlock = mCurrentBlock->mParent;
+            return 0;
+        }
+
         switch( type )
         {
         case MD_SPAN_EM:
-        {
-            SPAN_EM( e );
+            PushBlock<Emphasis>();
+            // SPAN_EM( e );
             break;
-        }
         case MD_SPAN_STRONG:
-        {
-            SPAN_STRONG( e );
+            PushBlock<Strong>();
+            // SPAN_STRONG( e );
             break;
-        }
         case MD_SPAN_A:
-        {
-            SPAN_A( (MD_SPAN_A_DETAIL *)d, e );
+            PushBlock<Link>( (MD_SPAN_A_DETAIL *)d );
+            // SPAN_A( (MD_SPAN_A_DETAIL *)d, e );
             break;
-        }
         case MD_SPAN_IMG:
-        {
-            SPAN_IMG( (MD_SPAN_IMG_DETAIL *)d, e );
+            PushBlock<Image>( (MD_SPAN_IMG_DETAIL *)d );
+            // SPAN_IMG( (MD_SPAN_IMG_DETAIL *)d, e );
             break;
-        }
         case MD_SPAN_CODE:
-        {
-            SPAN_CODE( e );
+            PushBlock<InlineCode>();
+            // SPAN_CODE( e );
             break;
-        }
         case MD_SPAN_DEL:
-        {
-            SPAN_DEL( e );
+            PushBlock<StrikeThrough>();
+            // SPAN_DEL( e );
             break;
-        }
         case MD_SPAN_LATEXMATH:
-        {
-            SPAN_LATEXMATH( e );
+            PushBlock<LaTeXMath>();
+            // SPAN_LATEXMATH( e );
             break;
-        }
         case MD_SPAN_LATEXMATH_DISPLAY:
-        {
-            SPAN_LATEXMATH_DISPLAY( e );
+            PushBlock<LaTeXMath>();
+            // SPAN_LATEXMATH_DISPLAY( e );
             break;
-        }
         case MD_SPAN_WIKILINK:
-        {
-            SPAN_WIKILINK( (MD_SPAN_WIKILINK_DETAIL *)d, e );
+            PushBlock<WikiLink>( (MD_SPAN_WIKILINK_DETAIL *)d );
+            // SPAN_WIKILINK( (MD_SPAN_WIKILINK_DETAIL *)d, e );
             break;
-        }
         case MD_SPAN_U:
-        {
-            SPAN_U( e );
+            PushBlock<Underline>();
+            // SPAN_U( e );
             break;
-        }
         default: assert( false ); break;
         }
 
@@ -995,7 +1064,23 @@ namespace SE::Core
     int UIMarkdownRendererInternal::print( const char *str, const char *str_end )
     {
         if( str >= str_end ) return 0;
-        return md_parse( str, (MD_SIZE)( str_end - str ), &m_md, this );
+
+        if( mRootBlock )
+        {
+            // SE::Logging::Info( "======================================" );
+            SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::NORMAL );
+            mRootBlock->Render();
+            SE::Core::Engine::GetInstance()->UIContext()->PopFont();
+            // SE::Logging::Info( "======================================" );
+
+            return 0;
+        }
+
+        mRootBlock    = New<Block>();
+        mCurrentBlock = mRootBlock;
+        md_parse( str, (MD_SIZE)( str_end - str ), &m_md, this );
+
+        return 0;
     }
 
     ////////////////////////////////////////////////////////////////////////////////
