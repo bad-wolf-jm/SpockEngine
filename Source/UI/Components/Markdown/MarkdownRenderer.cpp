@@ -293,6 +293,28 @@ namespace SE::Core
         ImGui::NewLine();
     }
 
+    void UIMarkdownRendererInternal::Table::Render()
+    {
+        ImGui::NewLine();
+
+        for( auto const &d : mHeader )
+        {
+            ImGui::TextUnformatted( d.c_str() );
+            ImGui::SameLine();
+        }
+        ImGui::NewLine();
+
+        for( auto const &r : mBody )
+        {
+            for( auto const &d : r )
+            {
+                ImGui::TextUnformatted( d.c_str() );
+                ImGui::SameLine();
+            }
+            ImGui::NewLine();
+        }
+    }
+
     void UIMarkdownRendererInternal::BLOCK_TABLE( const MD_BLOCK_TABLE_DETAIL *, bool e )
     {
         if( e )
@@ -375,7 +397,6 @@ namespace SE::Core
 
     void UIMarkdownRendererInternal::BLOCK_TR( bool e )
     {
-
         ImGui::SetCursorPosY( m_table_last_pos.y );
 
         LogBlockType( e, "BLOCK_TR" );
@@ -864,6 +885,25 @@ namespace SE::Core
 
     int UIMarkdownRendererInternal::text( MD_TEXTTYPE type, const char *str, const char *str_end )
     {
+        if( mCurrentTable != nullptr )
+        {
+            SE::Logging::Info( "TABLE DATA:  {}x{} ---> {}", mCurrentTable->mCurrentColumn, mCurrentTable->mCurrentRow,
+                               string_t( str, str_end - str ) );
+
+            if( mCurrentTable->mFillHeader )
+            {
+                mCurrentTable->mHeader[mCurrentTable->mCurrentColumn - 1] = string_t( str, str_end - str );
+            }
+
+            if( mCurrentTable->mFillBody )
+            {
+                mCurrentTable->mBody[mCurrentTable->mCurrentRow - 1][mCurrentTable->mCurrentColumn - 1] =
+                    string_t( str, str_end - str );
+            }
+
+            return 0;
+        }
+
         AppendBlock<Text>( type, str, str_end );
 
         switch( type )
@@ -930,6 +970,8 @@ namespace SE::Core
         if( !e )
         {
             mCurrentBlock = mCurrentBlock->mParent;
+
+            if( type == MD_BLOCK_TABLE ) mCurrentTable = nullptr;
             return 0;
         }
 
@@ -977,26 +1019,74 @@ namespace SE::Core
             break;
         case MD_BLOCK_TABLE:
             PushBlock<Table>( (MD_BLOCK_TABLE_DETAIL *)d );
-            // BLOCK_TABLE( (MD_BLOCK_TABLE_DETAIL *)d, e );
+            mCurrentTable = std::reinterpret_pointer_cast<Table>( mCurrentBlock );
+            SE::Logging::Info( "TABLE:  {}x{}", ( (MD_BLOCK_TABLE_DETAIL *)d )->body_row_count,
+                               ( (MD_BLOCK_TABLE_DETAIL *)d )->col_count );
+
+            for( uint32_t i = 0; i < mCurrentTable->mTableRows; i++ )
+            {
+                mCurrentTable->mBody.push_back( std::vector<string_t>() );
+                for( uint32_t i = 0; i < mCurrentTable->mColumns; i++ )
+                {
+                    mCurrentTable->mBody.back().push_back( string_t( "" ) );
+                }
+            }
+
+            for( uint32_t i = 0; i < mCurrentTable->mColumns; i++ )
+            {
+                mCurrentTable->mHeader.push_back( "" );
+            }
+
+            mCurrentTable->mCurrentRow    = 0;
+            mCurrentTable->mCurrentColumn = 0;
+
             break;
         case MD_BLOCK_THEAD:
             PushBlock<TableHeader>();
+            std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillHeader = true;
+            std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillBody   = false;
             // BLOCK_THEAD( e );
             break;
         case MD_BLOCK_TBODY:
             PushBlock<TableBody>();
+            std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillHeader = false;
+            std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillBody   = true;
             // BLOCK_TBODY( e );
             break;
         case MD_BLOCK_TR:
             PushBlock<TableRow>();
+
+            if( std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillBody )
+            {
+                mCurrentTable->mCurrentRow++;
+                mCurrentTable->mCurrentColumn = 0;
+                //     mCurrentTable->mBody.push_back( std::vector<string_t>() );
+
+                //     for( uint32_t i = 0; i < mCurrentTable->mColumns; i++ )
+                //     {
+                //         mCurrentTable->mBody.back().push_back( "" );
+                //     }
+            }
+
+            // if( std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillHeader )
+            // {
+            //     for( uint32_t i = 0; i < mCurrentTable->mColumns; i++ )
+            //     {
+            //         mCurrentTable->mHeader.push_back( "" );
+            //     }
+            // }
             // BLOCK_TR( e );
             break;
         case MD_BLOCK_TH:
             PushBlock<TableData>( (MD_BLOCK_TD_DETAIL *)d );
-            // BLOCK_TH( (MD_BLOCK_TD_DETAIL *)d, e );
+            SE::Logging::Info( "TABLE DATA:  {}x{}", mCurrentTable->mCurrentColumn, mCurrentTable->mCurrentRow );
+            mCurrentTable->mCurrentColumn++;
             break;
         case MD_BLOCK_TD:
             PushBlock<TableData>( (MD_BLOCK_TD_DETAIL *)d );
+            SE::Logging::Info( "TABLE DATA:  {}x{}", mCurrentTable->mCurrentColumn, mCurrentTable->mCurrentRow );
+            mCurrentTable->mCurrentColumn++;
+
             // BLOCK_TD( (MD_BLOCK_TD_DETAIL *)d, e );
             break;
         default: assert( false ); break;

@@ -239,12 +239,23 @@ namespace SE::Core
             uint32_t mColumns;
             uint32_t mTableRows;
 
+            bool mFillHeader = false;
+            bool mFillBody = false;
+
+            std::vector<string_t> mHeader;
+            std::vector<std::vector<string_t>> mBody;
+
+            int32_t mCurrentRow = -1;
+            int32_t mCurrentColumn = -1;
+
             Table( Ref<Block> aParent, eBlockType aType, MD_BLOCK_TABLE_DETAIL *d )
                 : Block( aParent, aType )
+                , mColumns{d->col_count}
+                , mTableRows{d->body_row_count}
             {
             }
 
-            void Render() {}
+            void Render();
         };
 
         struct TableHeader : public Block
@@ -397,6 +408,7 @@ namespace SE::Core
 
         Ref<Block> mRootBlock;
         Ref<Block> mCurrentBlock;
+        Ref<Table> mCurrentTable;
 
         template <typename _Ty, typename... _Args>
         void PushBlock( _Args... aArgs )
@@ -405,7 +417,7 @@ namespace SE::Core
             mCurrentBlock->mChildren.push_back( New<_Ty>( mCurrentBlock, eBlockType::DOCUMENT, std::forward<_Args>( aArgs )... ) );
             mCurrentBlock = mCurrentBlock->mChildren.back();
             mCurrentBlock->mDepth = d + 1;
-            SE::Logging::Info("{} Created block {}", std::string(d+1, '>'), typeid(_Ty).name());
+            // SE::Logging::Info("{} Created block {}", std::string(d+1, '>'), typeid(_Ty).name());
         }
 
         template <typename _Ty, typename... _Args>
@@ -414,7 +426,7 @@ namespace SE::Core
             uint32_t d = mCurrentBlock->mDepth;
             mCurrentBlock->mChildren.push_back( New<_Ty>( mCurrentBlock, eBlockType::DOCUMENT, std::forward<_Args>( aArgs )... ) );
             mCurrentBlock->mChildren.back()->mDepth = d + 1;
-            SE::Logging::Info("{} Created block {}", std::string(d+1, '>'), typeid(_Ty).name());
+            // SE::Logging::Info("{} Append block {}", std::string(d+1, '>'), typeid(_Ty).name());
         }
 
         struct image_info
