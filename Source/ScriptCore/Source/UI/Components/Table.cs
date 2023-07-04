@@ -255,7 +255,7 @@ namespace SpockEngine
             Interop.UITable_SetDisplayedRowIndices(mInstance, aIndices, aIndices.Length);
         }
 
-        public void SetDisplayedRowIndices(List<int> aIndices)
+        public void SetDisplayedRowIndices(IEnumerable<int> aIndices)
         {
             SetDisplayedRowIndices(aIndices.ToArray());
         }
@@ -265,7 +265,7 @@ namespace SpockEngine
             Interop.UITable_SetRowBackgroundColor(mInstance, aColors, aColors.Length);
         }
 
-        public void SetRowBackgroundColor(List<Math.vec4> aColors)
+        public void SetRowBackgroundColor(IEnumerable<Math.vec4> aColors)
         {
             SetRowBackgroundColor(aColors.ToArray());
         }
