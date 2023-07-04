@@ -297,21 +297,80 @@ namespace SE::Core
     {
         ImGui::NewLine();
 
-        for( auto const &d : mHeader )
-        {
-            ImGui::TextUnformatted( d.c_str() );
-            ImGui::SameLine();
-        }
-        ImGui::NewLine();
+        int x = 0;
+        float lCurrentX = 0.0f;
+        float lCurrentY = 0.0f;
 
-        for( auto const &r : mBody )
+        auto const& lTablePosition = ImGui::GetCursorPos();
+
+        for( uint32_t i = 0; i < mColumns; i++ )
         {
-            for( auto const &d : r )
+            for( uint32_t j = 0; j < mTableRows + 1; j++ )
             {
-                ImGui::TextUnformatted( d.c_str() );
-                ImGui::SameLine();
+                ImGui::SetCursorPos(lTablePosition + ImVec2{lCurrentX, lCurrentY});
+                ImGui::TextUnformatted( mCellData[i * (mTableRows + 1) + j] );
+                lCurrentY += mCells[i * (mTableRows + 1) + j].w;
             }
-            ImGui::NewLine();
+
+            lCurrentX += mCells[i * (mTableRows + 1)].z;
+            lCurrentY = 0.0f;
+        }
+    }
+
+    void UIMarkdownRendererInternal::Table::ComputeColumnSizes()
+    {
+        mCells    = std::vector<ImVec4>( ( mTableRows + 1 ) * mColumns );
+        mCellData = std::vector<const char *>( ( mTableRows + 1 ) * mColumns );
+
+        int x = 0;
+        for( uint32_t i = 0; i < mColumns; i++ )
+        {
+            auto const S = ImGui::CalcTextSize( mHeader[i].c_str() ) + ImVec2{10.0f, 10.0f};
+
+            mCells[x]    = ImVec4( 0.0f, 0.0f, S.x, S.y );
+            mCellData[x] = mHeader[i].c_str();
+            x++;
+
+            for( uint32_t j = 0; j < mBody[i].size(); j++ )
+            {
+                auto const S = ImGui::CalcTextSize( mBody[i][j].c_str() ) + ImVec2{10.0f, 10.0f};
+
+                mCells[x]    = ImVec4( 0.0f, 0.0f, S.x, S.y );
+                mCellData[x] = mBody[i][j].c_str();
+                x++;
+            }
+        }
+
+        x = 0;
+        for( uint32_t i = 0; i < mColumns; i++ )
+        {
+            int   lColStart = x;
+            float lWidth    = mCells[x++].z;
+            for( uint32_t j = 1; j < mTableRows + 1; j++ )
+            {
+                lWidth = std::max( lWidth, mCells[x++].z );
+            }
+
+            for( uint32_t j = 0; j < mTableRows + 1; j++ )
+            {
+                mCells[j + lColStart].z = lWidth;
+            }
+        }
+
+        for( uint32_t j = 0; j < mTableRows + 1; j++ )
+        {
+            float lHeight = mCells[j].w;
+            for( uint32_t i = 0; i < mColumns; i++ )
+            {
+                SE::Logging::Info( "X --> {} {}", i, j );
+                lHeight = std::max( lHeight, mCells[i * ( mTableRows + 1 ) + j].w );
+            }
+
+            for( uint32_t i = 0; i < mColumns; i++ )
+            {
+                SE::Logging::Info( "Y --> {} {}", i, j );
+                mCells[i * ( mTableRows + 1 ) + j].w = lHeight;
+            }
         }
     }
 
@@ -897,7 +956,7 @@ namespace SE::Core
 
             if( mCurrentTable->mFillBody )
             {
-                mCurrentTable->mBody[mCurrentTable->mCurrentRow - 1][mCurrentTable->mCurrentColumn - 1] =
+                mCurrentTable->mBody[mCurrentTable->mCurrentColumn - 1][mCurrentTable->mCurrentRow - 1] =
                     string_t( str, str_end - str );
             }
 
@@ -971,7 +1030,11 @@ namespace SE::Core
         {
             mCurrentBlock = mCurrentBlock->mParent;
 
-            if( type == MD_BLOCK_TABLE ) mCurrentTable = nullptr;
+            if( type == MD_BLOCK_TABLE )
+            {
+                mCurrentTable->ComputeColumnSizes();
+                mCurrentTable = nullptr;
+            }
             return 0;
         }
 
@@ -1023,10 +1086,11 @@ namespace SE::Core
             SE::Logging::Info( "TABLE:  {}x{}", ( (MD_BLOCK_TABLE_DETAIL *)d )->body_row_count,
                                ( (MD_BLOCK_TABLE_DETAIL *)d )->col_count );
 
-            for( uint32_t i = 0; i < mCurrentTable->mTableRows; i++ )
+            for( uint32_t j = 0; j < mCurrentTable->mColumns; j++ )
             {
                 mCurrentTable->mBody.push_back( std::vector<string_t>() );
-                for( uint32_t i = 0; i < mCurrentTable->mColumns; i++ )
+
+                for( uint32_t i = 0; i < mCurrentTable->mTableRows; i++ )
                 {
                     mCurrentTable->mBody.back().push_back( string_t( "" ) );
                 }

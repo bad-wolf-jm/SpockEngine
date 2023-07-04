@@ -245,6 +245,9 @@ namespace SE::Core
             std::vector<string_t> mHeader;
             std::vector<std::vector<string_t>> mBody;
 
+            std::vector<ImVec4> mCells;
+            std::vector<const char*> mCellData;
+
             int32_t mCurrentRow = -1;
             int32_t mCurrentColumn = -1;
 
@@ -256,6 +259,7 @@ namespace SE::Core
             }
 
             void Render();
+            void ComputeColumnSizes();
         };
 
         struct TableHeader : public Block
