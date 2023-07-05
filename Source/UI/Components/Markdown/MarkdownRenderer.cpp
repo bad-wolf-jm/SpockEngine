@@ -362,13 +362,11 @@ namespace SE::Core
             float lHeight = mCells[j].w;
             for( uint32_t i = 0; i < mColumns; i++ )
             {
-                SE::Logging::Info( "X --> {} {}", i, j );
                 lHeight = std::max( lHeight, mCells[i * ( mTableRows + 1 ) + j].w );
             }
 
             for( uint32_t i = 0; i < mColumns; i++ )
             {
-                SE::Logging::Info( "Y --> {} {}", i, j );
                 mCells[i * ( mTableRows + 1 ) + j].w = lHeight;
             }
         }
