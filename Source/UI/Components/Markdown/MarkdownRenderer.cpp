@@ -85,77 +85,77 @@ namespace SE::Core
         ImGui::PopStyleColor();
     }
 
-    void UIMarkdownRendererInternal::BLOCK_UL( const MD_BLOCK_UL_DETAIL *d, bool e )
-    {
+    // void UIMarkdownRendererInternal::BLOCK_UL( const MD_BLOCK_UL_DETAIL *d, bool e )
+    // {
 
-        if( e )
-        {
-            LogBlockType( e, "BLOCK_UL" );
-            m_list_stack.push_back( list_info{ 0, d->mark, false } );
-        }
-        else
-        {
-            m_list_stack.pop_back();
+    //     if( e )
+    //     {
+    //         LogBlockType( e, "BLOCK_UL" );
+    //         m_list_stack.push_back( list_info{ 0, d->mark, false } );
+    //     }
+    //     else
+    //     {
+    //         m_list_stack.pop_back();
 
-            if( m_list_stack.empty() ) ImGui::NewLine();
-            LogBlockType( e, "BLOCK_UL" );
-        }
-    }
+    //         if( m_list_stack.empty() ) ImGui::NewLine();
+    //         LogBlockType( e, "BLOCK_UL" );
+    //     }
+    // }
 
-    void UIMarkdownRendererInternal::BLOCK_OL( const MD_BLOCK_OL_DETAIL *d, bool e )
-    {
+    // void UIMarkdownRendererInternal::BLOCK_OL( const MD_BLOCK_OL_DETAIL *d, bool e )
+    // {
 
-        if( e )
-        {
-            LogBlockType( e, "BLOCK_OL" );
-            m_list_stack.push_back( list_info{ d->start, d->mark_delimiter, true } );
-        }
-        else
-        {
-            m_list_stack.pop_back();
+    //     if( e )
+    //     {
+    //         LogBlockType( e, "BLOCK_OL" );
+    //         m_list_stack.push_back( list_info{ d->start, d->mark_delimiter, true } );
+    //     }
+    //     else
+    //     {
+    //         m_list_stack.pop_back();
 
-            if( m_list_stack.empty() ) ImGui::NewLine();
-            LogBlockType( e, "BLOCK_OL" );
-        }
-    }
+    //         if( m_list_stack.empty() ) ImGui::NewLine();
+    //         LogBlockType( e, "BLOCK_OL" );
+    //     }
+    // }
 
-    void UIMarkdownRendererInternal::BLOCK_LI( const MD_BLOCK_LI_DETAIL *, bool e )
-    {
-        if( e )
-        {
-            LogBlockType( e, "BLOCK_LI" );
-            ImGui::NewLine();
+    // void UIMarkdownRendererInternal::BLOCK_LI( const MD_BLOCK_LI_DETAIL *, bool e )
+    // {
+    //     if( e )
+    //     {
+    //         LogBlockType( e, "BLOCK_LI" );
+    //         ImGui::NewLine();
 
-            list_info &nfo = m_list_stack.back();
-            if( nfo.is_ol )
-            {
-                ImGui::Text( "%d%c", nfo.cur_ol++, nfo.delim );
-                ImGui::SameLine();
-            }
-            else
-            {
-                if( nfo.delim == '*' )
-                {
-                    float cx = ImGui::GetCursorPosX();
-                    cx -= ImGui::GetStyle().FramePadding.x * 2;
-                    ImGui::SetCursorPosX( cx );
-                    ImGui::Bullet();
-                }
-                else
-                {
-                    ImGui::Text( "%c", nfo.delim );
-                    ImGui::SameLine();
-                }
-            }
+    //         list_info &nfo = m_list_stack.back();
+    //         if( nfo.is_ol )
+    //         {
+    //             ImGui::Text( "%d%c", nfo.cur_ol++, nfo.delim );
+    //             ImGui::SameLine();
+    //         }
+    //         else
+    //         {
+    //             if( nfo.delim == '*' )
+    //             {
+    //                 float cx = ImGui::GetCursorPosX();
+    //                 cx -= ImGui::GetStyle().FramePadding.x * 2;
+    //                 ImGui::SetCursorPosX( cx );
+    //                 ImGui::Bullet();
+    //             }
+    //             else
+    //             {
+    //                 ImGui::Text( "%c", nfo.delim );
+    //                 ImGui::SameLine();
+    //             }
+    //         }
 
-            ImGui::Indent();
-        }
-        else
-        {
-            ImGui::Unindent();
-            LogBlockType( e, "BLOCK_LI" );
-        }
-    }
+    //         ImGui::Indent();
+    //     }
+    //     else
+    //     {
+    //         ImGui::Unindent();
+    //         LogBlockType( e, "BLOCK_LI" );
+    //     }
+    // }
 
     void UIMarkdownRendererInternal::HRule::Render()
     {
@@ -166,23 +166,22 @@ namespace SE::Core
         UIMarkdownRendererInternal::Block::Render();
     }
 
-    void UIMarkdownRendererInternal::BLOCK_HR( bool e )
-    {
-        if( e )
-        {
-            LogBlockType( e, "HR" );
-        }
-        else
-        {
-            ImGui::NewLine();
-            ImGui::Separator();
-            LogBlockType( e, "HR" );
-        }
-    }
+    // void UIMarkdownRendererInternal::BLOCK_HR( bool e )
+    // {
+    //     if( e )
+    //     {
+    //         LogBlockType( e, "HR" );
+    //     }
+    //     else
+    //     {
+    //         ImGui::NewLine();
+    //         ImGui::Separator();
+    //         LogBlockType( e, "HR" );
+    //     }
+    // }
 
     void UIMarkdownRendererInternal::Heading::Render()
     {
-        // SE::Logging::Info( "Heading" );
         static FontFamilyFlags lLevelFonts[] = { FontFamilyFlags::H1, FontFamilyFlags::H2, FontFamilyFlags::H3 };
 
         ImGui::NewLine();
@@ -195,86 +194,74 @@ namespace SE::Core
         SE::Core::Engine::GetInstance()->UIContext()->PopFont();
     }
 
-    void UIMarkdownRendererInternal::BLOCK_H( const MD_BLOCK_H_DETAIL *d, bool e )
-    {
-        if( e )
-        {
-            LogBlockType( e, "H" );
-            m_hlevel = d->level;
-            ImGui::NewLine();
-        }
-        else
-        {
-            m_hlevel = 0;
-        }
-
-        set_font( e );
-
-        if( !e )
-        {
-            if( d->level <= 2 )
-            {
-                ImGui::NewLine();
-                ImGui::Separator();
-            }
-            LogBlockType( e, "H" );
-        }
-    }
-
-    // static void LogBlockType( const char *str )
+    // void UIMarkdownRendererInternal::BLOCK_H( const MD_BLOCK_H_DETAIL *d, bool e )
     // {
-    //     ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 1.0f, 1.0f, 0.0f, 1.0f ) );
-    //     ImGui::Text( "{} DOC", e ? ">>>>>>" : "<<<<<<" );
-    //     ImGui::PopStyleColor();
+    //     if( e )
+    //     {
+    //         LogBlockType( e, "H" );
+    //         m_hlevel = d->level;
+    //         ImGui::NewLine();
+    //     }
+    //     else
+    //     {
+    //         m_hlevel = 0;
+    //     }
 
-    //     mBlockNestingLevel += e ? 1 : -1;
+    //     set_font( e );
+
+    //     if( !e )
+    //     {
+    //         if( d->level <= 2 )
+    //         {
+    //             ImGui::NewLine();
+    //             ImGui::Separator();
+    //         }
+    //         LogBlockType( e, "H" );
+    //     }
     // }
 
-    void UIMarkdownRendererInternal::BLOCK_DOC( bool e )
-    {
-        //
-        LogBlockType( e, "BLOCK_DOC" );
-    }
+    // void UIMarkdownRendererInternal::BLOCK_DOC( bool e )
+    // {
+    //     //
+    //     LogBlockType( e, "BLOCK_DOC" );
+    // }
 
     void UIMarkdownRendererInternal::Quote::Render()
     {
-        // SE::Logging::Info( "Quote" );
         ImGui::NewLine();
         UIMarkdownRendererInternal::Block::Render();
     }
 
-    void UIMarkdownRendererInternal::BLOCK_QUOTE( bool e )
-    {
-        //
-        LogBlockType( e, "BLOCK_QUOTE" );
-    }
+    // void UIMarkdownRendererInternal::BLOCK_QUOTE( bool e )
+    // {
+    //     //
+    //     LogBlockType( e, "BLOCK_QUOTE" );
+    // }
 
     void UIMarkdownRendererInternal::Code::Render()
     {
-        // SE::Logging::Info( "Code" );
         ImGui::NewLine();
         UIMarkdownRendererInternal::Block::Render();
     }
 
-    void UIMarkdownRendererInternal::BLOCK_CODE( const MD_BLOCK_CODE_DETAIL *, bool e )
-    {
-        m_is_code = e;
+    // void UIMarkdownRendererInternal::BLOCK_CODE( const MD_BLOCK_CODE_DETAIL *, bool e )
+    // {
+    //     m_is_code = e;
 
-        LogBlockType( e, "BLOCK_CODE" );
-    }
+    //     LogBlockType( e, "BLOCK_CODE" );
+    // }
 
     void UIMarkdownRendererInternal::Html::Render()
     {
-        // SE::Logging::Info( "Html" );
         ImGui::NewLine();
         UIMarkdownRendererInternal::Block::Render();
     }
 
-    void UIMarkdownRendererInternal::BLOCK_HTML( bool e )
-    {
-        //
-        LogBlockType( e, "BLOCK_HTML" );
-    }
+    // void UIMarkdownRendererInternal::BLOCK_HTML( bool e )
+    // {
+    //     //
+    //     LogBlockType( e, "BLOCK_HTML" );
+    // }
 
     void UIMarkdownRendererInternal::Paragraph::Render()
     {
@@ -284,36 +271,53 @@ namespace SE::Core
         UIMarkdownRendererInternal::Block::Render();
     }
 
-    void UIMarkdownRendererInternal::BLOCK_P( bool e )
-    {
-        LogBlockType( e, "BLOCK_P" );
+    // void UIMarkdownRendererInternal::BLOCK_P( bool e )
+    // {
+    //     LogBlockType( e, "BLOCK_P" );
 
-        if( !m_list_stack.empty() ) return;
+    //     if( !m_list_stack.empty() ) return;
 
-        ImGui::NewLine();
-    }
+    //     ImGui::NewLine();
+    // }
 
     void UIMarkdownRendererInternal::Table::Render()
     {
         ImGui::NewLine();
+        ImDrawList *dl = ImGui::GetWindowDrawList();
 
-        int x = 0;
-        float lCurrentX = 0.0f;
-        float lCurrentY = 0.0f;
-
-        auto const& lTablePosition = ImGui::GetCursorPos();
+        int           x                 = 0;
+        float         lCurrentX         = 0.0f;
+        float         lCurrentY         = 0.0f;
+        const ImColor c                 = ImGui::GetStyle().Colors[ImGuiCol_TextDisabled];
+        auto const   &lTablePosition    = ImGui::GetCursorPos();
+        auto const   &lTableScrPosition = ImGui::GetCursorScreenPos();
 
         for( uint32_t i = 0; i < mColumns; i++ )
         {
             for( uint32_t j = 0; j < mTableRows + 1; j++ )
             {
-                ImGui::SetCursorPos(lTablePosition + ImVec2{lCurrentX, lCurrentY});
-                ImGui::TextUnformatted( mCellData[i * (mTableRows + 1) + j] );
-                lCurrentY += mCells[i * (mTableRows + 1) + j].w;
+                ImGui::SetCursorPos( lTablePosition + ImVec2{ lCurrentX, lCurrentY } );
+                ImGui::TextUnformatted( mCellData[i * ( mTableRows + 1 ) + j] );
+                lCurrentY += mCells[i * ( mTableRows + 1 ) + j].w;
             }
 
-            lCurrentX += mCells[i * (mTableRows + 1)].z;
+            lCurrentX += mCells[i * ( mTableRows + 1 )].z;
             lCurrentY = 0.0f;
+        }
+
+        lCurrentX = lTableScrPosition.x;
+        for( uint32_t i = 0; i <= mColumns; i++ )
+        {
+            dl->AddLine( ImVec2( lCurrentX, lTableScrPosition.y ), ImVec2( lCurrentX, lTableScrPosition.y + mHeight ), c, 1.0f );
+            lCurrentX += ( i < mColumns ) ? mCells[i * ( mTableRows + 1 )].z : 0.0f;
+        }
+
+        lCurrentY = lTableScrPosition.y;
+        for( uint32_t j = 0; j <= mTableRows + 1; j++ )
+        {
+            dl->AddLine( ImVec2( lTableScrPosition.x, lCurrentY ), ImVec2( lTableScrPosition.x + mWidth, lCurrentY ), c,
+                         j == 1 ? 2.0f : 1.0f );
+            lCurrentY += ( j <= mTableRows ) ? mCells[j].w : 0.0f;
         }
     }
 
@@ -321,11 +325,12 @@ namespace SE::Core
     {
         mCells    = std::vector<ImVec4>( ( mTableRows + 1 ) * mColumns );
         mCellData = std::vector<const char *>( ( mTableRows + 1 ) * mColumns );
+        mHeight   = 0.0f;
 
         int x = 0;
         for( uint32_t i = 0; i < mColumns; i++ )
         {
-            auto const S = ImGui::CalcTextSize( mHeader[i].c_str() ) + ImVec2{10.0f, 10.0f};
+            auto const S = ImGui::CalcTextSize( mHeader[i].c_str() ) + ImVec2{ 10.0f, 10.0f };
 
             mCells[x]    = ImVec4( 0.0f, 0.0f, S.x, S.y );
             mCellData[x] = mHeader[i].c_str();
@@ -333,7 +338,7 @@ namespace SE::Core
 
             for( uint32_t j = 0; j < mBody[i].size(); j++ )
             {
-                auto const S = ImGui::CalcTextSize( mBody[i][j].c_str() ) + ImVec2{10.0f, 10.0f};
+                auto const S = ImGui::CalcTextSize( mBody[i][j].c_str() ) + ImVec2{ 10.0f, 10.0f };
 
                 mCells[x]    = ImVec4( 0.0f, 0.0f, S.x, S.y );
                 mCellData[x] = mBody[i][j].c_str();
@@ -351,6 +356,7 @@ namespace SE::Core
                 lWidth = std::max( lWidth, mCells[x++].z );
             }
 
+            mWidth += lWidth;
             for( uint32_t j = 0; j < mTableRows + 1; j++ )
             {
                 mCells[j + lColStart].z = lWidth;
@@ -365,6 +371,7 @@ namespace SE::Core
                 lHeight = std::max( lHeight, mCells[i * ( mTableRows + 1 ) + j].w );
             }
 
+            mHeight += lHeight;
             for( uint32_t i = 0; i < mColumns; i++ )
             {
                 mCells[i * ( mTableRows + 1 ) + j].w = lHeight;
@@ -372,146 +379,146 @@ namespace SE::Core
         }
     }
 
-    void UIMarkdownRendererInternal::BLOCK_TABLE( const MD_BLOCK_TABLE_DETAIL *, bool e )
-    {
-        if( e )
-        {
-            LogBlockType( e, "BLOCK_TABLE" );
-            m_table_row_pos.clear();
-            m_table_col_pos.clear();
+    // void UIMarkdownRendererInternal::BLOCK_TABLE( const MD_BLOCK_TABLE_DETAIL *, bool e )
+    // {
+    //     if( e )
+    //     {
+    //         LogBlockType( e, "BLOCK_TABLE" );
+    //         m_table_row_pos.clear();
+    //         m_table_col_pos.clear();
 
-            m_table_last_pos = ImGui::GetCursorPos();
-        }
-        else
-        {
+    //         m_table_last_pos = ImGui::GetCursorPos();
+    //     }
+    //     else
+    //     {
 
-            ImGui::NewLine();
+    //         ImGui::NewLine();
 
-            if( m_table_border )
-            {
+    //         if( m_table_border )
+    //         {
 
-                m_table_last_pos.y = ImGui::GetCursorPos().y;
+    //             m_table_last_pos.y = ImGui::GetCursorPos().y;
 
-                m_table_col_pos.push_back( m_table_last_pos.x );
-                m_table_row_pos.push_back( m_table_last_pos.y );
+    //             m_table_col_pos.push_back( m_table_last_pos.x );
+    //             m_table_row_pos.push_back( m_table_last_pos.y );
 
-                const ImVec2 wp = ImGui::GetWindowPos();
-                const ImVec2 sp = ImGui::GetStyle().ItemSpacing;
-                const float  wx = wp.x + sp.x / 2;
-                const float  wy = wp.y - sp.y / 2 - ImGui::GetScrollY();
+    //             const ImVec2 wp = ImGui::GetWindowPos();
+    //             const ImVec2 sp = ImGui::GetStyle().ItemSpacing;
+    //             const float  wx = wp.x + sp.x / 2;
+    //             const float  wy = wp.y - sp.y / 2 - ImGui::GetScrollY();
 
-                for( int i = 0; i < m_table_col_pos.size(); ++i )
-                {
-                    m_table_col_pos[i] += wx;
-                }
+    //             for( int i = 0; i < m_table_col_pos.size(); ++i )
+    //             {
+    //                 m_table_col_pos[i] += wx;
+    //             }
 
-                for( int i = 0; i < m_table_row_pos.size(); ++i )
-                {
-                    m_table_row_pos[i] += wy;
-                }
+    //             for( int i = 0; i < m_table_row_pos.size(); ++i )
+    //             {
+    //                 m_table_row_pos[i] += wy;
+    //             }
 
-                ////////////////////////////////////////////////////////////////////
+    //             ////////////////////////////////////////////////////////////////////
 
-                const ImColor c = ImGui::GetStyle().Colors[ImGuiCol_TextDisabled];
+    //             const ImColor c = ImGui::GetStyle().Colors[ImGuiCol_TextDisabled];
 
-                ImDrawList *dl = ImGui::GetWindowDrawList();
+    //             ImDrawList *dl = ImGui::GetWindowDrawList();
 
-                const float xmin = m_table_col_pos.front();
-                const float xmax = m_table_col_pos.back();
-                for( int i = 0; i < m_table_row_pos.size(); ++i )
-                {
-                    const float p = m_table_row_pos[i];
-                    dl->AddLine( ImVec2( xmin, p ), ImVec2( xmax, p ), c, i == 1 && m_table_header_highlight ? 2.0f : 1.0f );
-                }
+    //             const float xmin = m_table_col_pos.front();
+    //             const float xmax = m_table_col_pos.back();
+    //             for( int i = 0; i < m_table_row_pos.size(); ++i )
+    //             {
+    //                 const float p = m_table_row_pos[i];
+    //                 dl->AddLine( ImVec2( xmin, p ), ImVec2( xmax, p ), c, i == 1 && m_table_header_highlight ? 2.0f : 1.0f );
+    //             }
 
-                const float ymin = m_table_row_pos.front();
-                const float ymax = m_table_row_pos.back();
-                for( int i = 0; i < m_table_col_pos.size(); ++i )
-                {
-                    const float p = m_table_col_pos[i];
-                    dl->AddLine( ImVec2( p, ymin ), ImVec2( p, ymax ), c, 1.0f );
-                }
-            }
-            LogBlockType( e, "BLOCK_TABLE" );
-        }
-    }
+    //             const float ymin = m_table_row_pos.front();
+    //             const float ymax = m_table_row_pos.back();
+    //             for( int i = 0; i < m_table_col_pos.size(); ++i )
+    //             {
+    //                 const float p = m_table_col_pos[i];
+    //                 dl->AddLine( ImVec2( p, ymin ), ImVec2( p, ymax ), c, 1.0f );
+    //             }
+    //         }
+    //         LogBlockType( e, "BLOCK_TABLE" );
+    //     }
+    // }
 
-    void UIMarkdownRendererInternal::BLOCK_THEAD( bool e )
-    {
-        LogBlockType( e, "BLOCK_THEAD" );
+    // void UIMarkdownRendererInternal::BLOCK_THEAD( bool e )
+    // {
+    //     LogBlockType( e, "BLOCK_THEAD" );
 
-        m_is_table_header = e;
+    //     m_is_table_header = e;
 
-        if( m_table_header_highlight ) set_font( e );
-    }
+    //     if( m_table_header_highlight ) set_font( e );
+    // }
 
-    void UIMarkdownRendererInternal::BLOCK_TBODY( bool e )
-    {
-        LogBlockType( e, "BLOCK_TBODY" );
+    // void UIMarkdownRendererInternal::BLOCK_TBODY( bool e )
+    // {
+    //     LogBlockType( e, "BLOCK_TBODY" );
 
-        m_is_table_body = e;
-    }
+    //     m_is_table_body = e;
+    // }
 
-    void UIMarkdownRendererInternal::BLOCK_TR( bool e )
-    {
-        ImGui::SetCursorPosY( m_table_last_pos.y );
+    // void UIMarkdownRendererInternal::BLOCK_TR( bool e )
+    // {
+    //     ImGui::SetCursorPosY( m_table_last_pos.y );
 
-        LogBlockType( e, "BLOCK_TR" );
-        if( e )
-        {
-            m_table_next_column = 0;
-            ImGui::NewLine();
-            m_table_row_pos.push_back( ImGui::GetCursorPosY() );
-        }
-    }
+    //     LogBlockType( e, "BLOCK_TR" );
+    //     if( e )
+    //     {
+    //         m_table_next_column = 0;
+    //         ImGui::NewLine();
+    //         m_table_row_pos.push_back( ImGui::GetCursorPosY() );
+    //     }
+    // }
 
-    void UIMarkdownRendererInternal::BLOCK_TH( const MD_BLOCK_TD_DETAIL *d, bool e )
-    {
-        LogBlockType( e, "BLOCK_TH" );
+    // void UIMarkdownRendererInternal::BLOCK_TH( const MD_BLOCK_TD_DETAIL *d, bool e )
+    // {
+    //     LogBlockType( e, "BLOCK_TH" );
 
-        BLOCK_TD( d, e );
-    }
+    //     BLOCK_TD( d, e );
+    // }
 
-    void UIMarkdownRendererInternal::BLOCK_TD( const MD_BLOCK_TD_DETAIL *, bool e )
-    {
+    // void UIMarkdownRendererInternal::BLOCK_TD( const MD_BLOCK_TD_DETAIL *, bool e )
+    // {
 
-        if( e )
-        {
-            LogBlockType( e, "BLOCK_TD" );
-            if( m_table_next_column < m_table_col_pos.size() )
-            {
-                ImGui::SetCursorPosX( m_table_col_pos[m_table_next_column] );
-            }
-            else
-            {
-                m_table_col_pos.push_back( m_table_last_pos.x );
-            }
+    //     if( e )
+    //     {
+    //         LogBlockType( e, "BLOCK_TD" );
+    //         if( m_table_next_column < m_table_col_pos.size() )
+    //         {
+    //             ImGui::SetCursorPosX( m_table_col_pos[m_table_next_column] );
+    //         }
+    //         else
+    //         {
+    //             m_table_col_pos.push_back( m_table_last_pos.x );
+    //         }
 
-            ++m_table_next_column;
+    //         ++m_table_next_column;
 
-            ImGui::Indent( m_table_col_pos[m_table_next_column - 1] );
-            ImGui::SetCursorPos( ImVec2( m_table_col_pos[m_table_next_column - 1], m_table_row_pos.back() ) );
-        }
-        else
-        {
-            const ImVec2 p = ImGui::GetCursorPos();
-            ImGui::Unindent( m_table_col_pos[m_table_next_column - 1] );
-            ImGui::SetCursorPosX( p.x );
-            if( p.y > m_table_last_pos.y ) m_table_last_pos.y = p.y;
-            LogBlockType( e, "BLOCK_TD" );
-        }
+    //         ImGui::Indent( m_table_col_pos[m_table_next_column - 1] );
+    //         ImGui::SetCursorPos( ImVec2( m_table_col_pos[m_table_next_column - 1], m_table_row_pos.back() ) );
+    //     }
+    //     else
+    //     {
+    //         const ImVec2 p = ImGui::GetCursorPos();
+    //         ImGui::Unindent( m_table_col_pos[m_table_next_column - 1] );
+    //         ImGui::SetCursorPosX( p.x );
+    //         if( p.y > m_table_last_pos.y ) m_table_last_pos.y = p.y;
+    //         LogBlockType( e, "BLOCK_TD" );
+    //     }
 
-        ImGui::TextUnformatted( "" );
+    //     ImGui::TextUnformatted( "" );
 
-        if( !m_table_border && e && m_table_next_column == 1 )
-        {
-            ImGui::SameLine( 0.0f, 0.0f );
-        }
-        else
-        {
-            ImGui::SameLine();
-        }
-    }
+    //     if( !m_table_border && e && m_table_next_column == 1 )
+    //     {
+    //         ImGui::SameLine( 0.0f, 0.0f );
+    //     }
+    //     else
+    //     {
+    //         ImGui::SameLine();
+    //     }
+    // }
 
     ////////////////////////////////////////////////////////////////////////////////
     void UIMarkdownRendererInternal::set_href( bool e, const MD_ATTRIBUTE &src )
@@ -1038,46 +1045,16 @@ namespace SE::Core
 
         switch( type )
         {
-        case MD_BLOCK_DOC:
-            PushBlock<Document>();
-            // BLOCK_DOC( e );
-            break;
-        case MD_BLOCK_QUOTE:
-            PushBlock<Quote>();
-            // BLOCK_QUOTE( e );
-            break;
-        case MD_BLOCK_UL:
-            PushBlock<UnorderedList>( (MD_BLOCK_UL_DETAIL *)d );
-            // BLOCK_UL( (MD_BLOCK_UL_DETAIL *)d, e );
-            break;
-        case MD_BLOCK_OL:
-            PushBlock<OrderedList>( (MD_BLOCK_OL_DETAIL *)d );
-            // BLOCK_OL( (MD_BLOCK_OL_DETAIL *)d, e );
-            break;
-        case MD_BLOCK_LI:
-            PushBlock<ListItem>( (MD_BLOCK_LI_DETAIL *)d );
-            // BLOCK_LI( (MD_BLOCK_LI_DETAIL *)d, e );
-            break;
-        case MD_BLOCK_HR:
-            PushBlock<HRule>();
-            // BLOCK_HR( e );
-            break;
-        case MD_BLOCK_H:
-            PushBlock<Heading>( (MD_BLOCK_H_DETAIL *)d );
-            // BLOCK_H( (MD_BLOCK_H_DETAIL *)d, e );
-            break;
-        case MD_BLOCK_CODE:
-            PushBlock<Code>( (MD_BLOCK_CODE_DETAIL *)d );
-            // BLOCK_CODE( (MD_BLOCK_CODE_DETAIL *)d, e );
-            break;
-        case MD_BLOCK_HTML:
-            PushBlock<Html>();
-            // BLOCK_HTML( e );
-            break;
-        case MD_BLOCK_P:
-            PushBlock<Paragraph>();
-            // BLOCK_P( e );
-            break;
+        case MD_BLOCK_DOC: PushBlock<Document>(); break;
+        case MD_BLOCK_QUOTE: PushBlock<Quote>(); break;
+        case MD_BLOCK_UL: PushBlock<UnorderedList>( (MD_BLOCK_UL_DETAIL *)d ); break;
+        case MD_BLOCK_OL: PushBlock<OrderedList>( (MD_BLOCK_OL_DETAIL *)d ); break;
+        case MD_BLOCK_LI: PushBlock<ListItem>( (MD_BLOCK_LI_DETAIL *)d ); break;
+        case MD_BLOCK_HR: PushBlock<HRule>(); break;
+        case MD_BLOCK_H: PushBlock<Heading>( (MD_BLOCK_H_DETAIL *)d ); break;
+        case MD_BLOCK_CODE: PushBlock<Code>( (MD_BLOCK_CODE_DETAIL *)d ); break;
+        case MD_BLOCK_HTML: PushBlock<Html>(); break;
+        case MD_BLOCK_P: PushBlock<Paragraph>(); break;
         case MD_BLOCK_TABLE:
             PushBlock<Table>( (MD_BLOCK_TABLE_DETAIL *)d );
             mCurrentTable = std::reinterpret_pointer_cast<Table>( mCurrentBlock );
@@ -1107,13 +1084,11 @@ namespace SE::Core
             PushBlock<TableHeader>();
             std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillHeader = true;
             std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillBody   = false;
-            // BLOCK_THEAD( e );
             break;
         case MD_BLOCK_TBODY:
             PushBlock<TableBody>();
             std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillHeader = false;
             std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillBody   = true;
-            // BLOCK_TBODY( e );
             break;
         case MD_BLOCK_TR:
             PushBlock<TableRow>();
@@ -1122,34 +1097,15 @@ namespace SE::Core
             {
                 mCurrentTable->mCurrentRow++;
                 mCurrentTable->mCurrentColumn = 0;
-                //     mCurrentTable->mBody.push_back( std::vector<string_t>() );
-
-                //     for( uint32_t i = 0; i < mCurrentTable->mColumns; i++ )
-                //     {
-                //         mCurrentTable->mBody.back().push_back( "" );
-                //     }
             }
-
-            // if( std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillHeader )
-            // {
-            //     for( uint32_t i = 0; i < mCurrentTable->mColumns; i++ )
-            //     {
-            //         mCurrentTable->mHeader.push_back( "" );
-            //     }
-            // }
-            // BLOCK_TR( e );
             break;
         case MD_BLOCK_TH:
             PushBlock<TableData>( (MD_BLOCK_TD_DETAIL *)d );
-            SE::Logging::Info( "TABLE DATA:  {}x{}", mCurrentTable->mCurrentColumn, mCurrentTable->mCurrentRow );
             mCurrentTable->mCurrentColumn++;
             break;
         case MD_BLOCK_TD:
             PushBlock<TableData>( (MD_BLOCK_TD_DETAIL *)d );
-            SE::Logging::Info( "TABLE DATA:  {}x{}", mCurrentTable->mCurrentColumn, mCurrentTable->mCurrentRow );
             mCurrentTable->mCurrentColumn++;
-
-            // BLOCK_TD( (MD_BLOCK_TD_DETAIL *)d, e );
             break;
         default: assert( false ); break;
         }

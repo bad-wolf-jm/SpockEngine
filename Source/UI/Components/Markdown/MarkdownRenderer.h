@@ -107,7 +107,7 @@ namespace SE::Core
             ImVec2                  mSize;
             Ref<Block>              mParent = nullptr;
             std::vector<Ref<Block>> mChildren;
-            uint32_t                 mDepth = 0;
+            uint32_t                mDepth = 0;
 
             Block() = default;
 
@@ -240,21 +240,23 @@ namespace SE::Core
             uint32_t mTableRows;
 
             bool mFillHeader = false;
-            bool mFillBody = false;
+            bool mFillBody   = false;
 
-            std::vector<string_t> mHeader;
+            std::vector<string_t>              mHeader;
             std::vector<std::vector<string_t>> mBody;
 
-            std::vector<ImVec4> mCells;
-            std::vector<const char*> mCellData;
+            float mWidth = 0.0f;
+            float mHeight = 0.0f;
+            std::vector<ImVec4>       mCells;
+            std::vector<const char *> mCellData;
 
-            int32_t mCurrentRow = -1;
+            int32_t mCurrentRow    = -1;
             int32_t mCurrentColumn = -1;
 
             Table( Ref<Block> aParent, eBlockType aType, MD_BLOCK_TABLE_DETAIL *d )
                 : Block( aParent, aType )
-                , mColumns{d->col_count}
-                , mTableRows{d->body_row_count}
+                , mColumns{ d->col_count }
+                , mTableRows{ d->body_row_count }
             {
             }
 
@@ -299,6 +301,14 @@ namespace SE::Core
             TableData( Ref<Block> aParent, eBlockType aType, MD_BLOCK_TD_DETAIL *d )
                 : Block( aParent, aType )
             {
+                switch( d->align )
+                {
+                case MD_ALIGN_LEFT: mAlign = eHorizontalAlignment::LEFT; break;
+                case MD_ALIGN_RIGHT: mAlign = eHorizontalAlignment::RIGHT; break;
+                case MD_ALIGN_CENTER:
+                case MD_ALIGN_DEFAULT:
+                default: mAlign = eHorizontalAlignment::CENTER; break;
+                }
             }
 
             void Render() {}
@@ -419,7 +429,7 @@ namespace SE::Core
         {
             uint32_t d = mCurrentBlock->mDepth;
             mCurrentBlock->mChildren.push_back( New<_Ty>( mCurrentBlock, eBlockType::DOCUMENT, std::forward<_Args>( aArgs )... ) );
-            mCurrentBlock = mCurrentBlock->mChildren.back();
+            mCurrentBlock         = mCurrentBlock->mChildren.back();
             mCurrentBlock->mDepth = d + 1;
             // SE::Logging::Info("{} Created block {}", std::string(d+1, '>'), typeid(_Ty).name());
         }
