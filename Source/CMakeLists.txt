@@ -253,31 +253,6 @@ embed_shader(LTSimulationEngineRuntime gDeferredGeometryPassVertexShader     "De
 embed_shader(LTSimulationEngineRuntime gDeferredGeometryPassFragmentShader   "Deferred/MRT.frag")
 
 
-function(add_shader TARGET SHADER)
-    find_program(GLSLC glslc)
-
-    set(CURRENT_SHADER_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Scene/Renderer/Shaders/${SHADER})
-    set(CURRENT_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../Resources/Shaders/${SHADER}.spv)
-
-    # Add a custom command to compile GLSL to SPIR-V.
-    get_filename_component(CURRENT_OUTPUT_DIR ${CURRENT_OUTPUT_PATH} DIRECTORY)
-    file(MAKE_DIRECTORY ${CURRENT_OUTPUT_DIR})
-    message(STATUS ${CURRENT_SHADER_PATH} " **************>> " ${CURRENT_OUTPUT_PATH})
-    add_custom_command(
-      OUTPUT ${CURRENT_OUTPUT_PATH}
-      COMMAND ${GLSLC} -o ${CURRENT_OUTPUT_PATH} ${CURRENT_SHADER_PATH}
-      DEPENDS ${CURRENT_SHADER_PATH}
-      IMPLICIT_DEPENDS CXX ${CURRENT_SHADER_PATH}
-      VERBATIM)
-
-    # Make sure our build depends on this output.
-    set_source_files_properties(${CURRENT_OUTPUT_PATH} PROPERTIES GENERATED TRUE)
-    target_sources(${TARGET} PRIVATE ${CURRENT_OUTPUT_PATH})
-endfunction(add_shader)
-
-# add_shader(LTSimulationEngineRuntime "ui_shader.vert")
-# add_shader(LTSimulationEngineRuntime "ui_shader.frag")
-
 set(MONO_PATH "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug")
 
 target_link_libraries(LTSimulationEngineRuntime PRIVATE
