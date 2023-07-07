@@ -89,7 +89,7 @@ namespace SE::Graphics
         }
 
         lInputDescription.client                            = GLSLANG_CLIENT_VULKAN;
-        lInputDescription.client_version                    = GLSLANG_TARGET_VULKAN_1_1;
+        lInputDescription.client_version                    = GLSLANG_TARGET_VULKAN_1_3;
         lInputDescription.target_language                   = GLSLANG_TARGET_SPV;
         lInputDescription.target_language_version           = GLSLANG_TARGET_SPV_1_3;
         lInputDescription.code                              = aCode.c_str();
@@ -97,7 +97,7 @@ namespace SE::Graphics
         lInputDescription.default_profile                   = GLSLANG_NO_PROFILE;
         lInputDescription.force_default_version_and_profile = false;
         lInputDescription.forward_compatible                = false;
-        lInputDescription.messages                          = GLSLANG_MSG_DEFAULT_BIT;
+        lInputDescription.messages                          = GLSLANG_MSG_VULKAN_RULES_BIT;
         lInputDescription.resource                          = glslang_default_resource();
 
         lInputDescription.callbacks.include_system      = IncludeSystemFile;
