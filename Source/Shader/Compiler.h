@@ -7,6 +7,7 @@
 
 namespace SE::Graphics
 {
+
     void SetShaderCacheFolder(std::string const &aPath);
     void AddShaderIncludePath(std::string const &aPath);
 
