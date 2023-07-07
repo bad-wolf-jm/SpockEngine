@@ -1,2 +1,2 @@
 echo off
-cmake --build ./Build && copy_resources.bat
+cmake --build ../../Build/Bootstrap && copy_resources.bat
