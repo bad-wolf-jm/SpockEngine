@@ -8,7 +8,7 @@
             "name": "SE_Run Debug",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/Build/Source/SE_Run.exe",
+            "program": "${workspaceFolder}/Build/CoreLibrary/Source/SE_Run.exe",
             "args": [ "--application", "SEEditor", "--project", "TestProject", "--res_x", "2900", "--res_y", "1350" ],
             "cwd": "E:/Work/Projects/TestProject",
             "stopAtEntry": false

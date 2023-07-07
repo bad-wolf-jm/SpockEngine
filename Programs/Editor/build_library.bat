@@ -1,2 +1,2 @@
 echo off
-cmake --build ../Build/SEEditor
+cmake --build ../../Build/SEEditor
