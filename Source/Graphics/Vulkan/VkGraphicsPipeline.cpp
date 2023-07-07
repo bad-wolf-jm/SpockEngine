@@ -65,7 +65,7 @@ namespace SE::Graphics
 
         for( auto const &lShader : mShaderStages )
         {
-            fs::path lShaderPath      = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
+            fs::path lShaderPath      = "E:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
             fs::path lShaderName      = lShader.mPath.filename();
             fs::path lCacheShaderName = lShaderPath / fmt::format( "{}.spv", lShaderName.string() );
 

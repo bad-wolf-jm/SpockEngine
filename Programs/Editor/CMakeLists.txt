@@ -9,7 +9,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/MaterialEditor.cs
 )
 
-set(NUGET_PACKAGE_ROOT "D:/.nuget/packages")
+set(NUGET_PACKAGE_ROOT "E:/Work/.nuget/packages")
 
 set(DOTNET_REFERENCE_PATH_TP
     ${NUGET_PACKAGE_ROOT}/system.diagnostics.performancecounter/7.0.0/lib/net462/System.Diagnostics.PerformanceCounter.dll

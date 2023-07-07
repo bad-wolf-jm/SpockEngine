@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/Build/Source/SE_Run.exe",
             "args": [ "--application", "SEEditor", "--project", "TestProject", "--res_x", "2900", "--res_y", "1350" ],
-            "cwd": "d:/TestProject",
+            "cwd": "E:/Work/Projects/TestProject",
             "stopAtEntry": false
         },
         {
