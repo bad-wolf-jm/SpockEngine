@@ -58,8 +58,8 @@ namespace SE::Core
         lFragmentShader->AddFile( GetResourcePath( "Shaders\\ui_shader_0.frag" ) );
         lFragmentShader->Compile();
 
-        mUIRenderPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\ui_shader.vert" ), "main" );
-        mUIRenderPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders\\ui_shader.frag" ), "main" );
+        mUIRenderPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
+        mUIRenderPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, lFragmentShader, "main" );
 
         mUIRenderPipeline->AddInput( "Position", eBufferDataType::VEC2, 0, 0 );
         mUIRenderPipeline->AddInput( "TextureCoords", eBufferDataType::VEC2, 0, 1 );

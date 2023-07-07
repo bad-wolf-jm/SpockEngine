@@ -1,8 +1,3 @@
-#version 450
-
-#extension GL_GOOGLE_include_directive : require
-
-#include "Common/VertexLayout.h"
 
 #define MAX_NUM_LIGHTS 64
 

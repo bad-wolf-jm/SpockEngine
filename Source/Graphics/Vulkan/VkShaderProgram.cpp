@@ -17,6 +17,7 @@ namespace SE::Graphics
     }
 
     void VkShaderProgram::DoCompile() { SE::Graphics::Compile( mShaderType, Program(), mCompiledByteCode ); }
+    
     void VkShaderProgram::BuildProgram()
     {
         auto const &lCachePath = ( mCacheRoot / mCacheFileName ).string();

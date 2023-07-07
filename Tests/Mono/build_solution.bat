@@ -1,2 +1,2 @@
 echo off
-cmake -B ./Build -G "Visual Studio 17 2022" .
+cmake -B ../../Build/MonoTestLibrary -G "Visual Studio 17 2022" .

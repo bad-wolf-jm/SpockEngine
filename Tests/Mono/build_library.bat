@@ -1,2 +1,2 @@
 echo off
-cmake --build ./Build
+cmake --build ../../Build/MonoTestLibrary

@@ -8,6 +8,9 @@
 #include "Core/Logging.h"
 #include "Core/Resource.h"
 
+#include "Shaders/Embedded/gDeferredLightingMSAAFragmentShader.h"
+#include "Shaders/Embedded/gDeferredLightingMSAAVertexShader.h"
+
 namespace SE::Core
 {
     using namespace math;
@@ -73,10 +76,22 @@ namespace SE::Core
 
         mPipeline->SetCulling( eFaceCulling::NONE );
         mPipeline->SetDepthParameters( false, false, eDepthCompareOperation::ALWAYS );
-        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders/Deferred/DeferredLightingMSAA.vert" ),
-                              "main" );
-        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders/Deferred/DeferredLightingMSAA.frag" ),
-                              "main" );
+
+        fs::path lShaderPath = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
+        auto     lVertexShader =
+            CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "defered_lighting_vertex_shader", lShaderPath );
+        lVertexShader->AddCode( SE::Private::Shaders::gDeferredLightingVertexShader_data );
+        lVertexShader->Compile();
+        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
+
+        auto lFragmentShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450,
+                                                    "defered_lighting_fragment_shader", lShaderPath );
+        lFragmentShader->AddCode( SE::Private::Shaders::gDeferredLightingFragmentShaderPreamble_data );
+        lFragmentShader->AddCode( SE::Private::Shaders::gToneMap_data );
+        lFragmentShader->AddCode( SE::Private::Shaders::gPbrFunctions_data );
+        lFragmentShader->AddCode( SE::Private::Shaders::gDeferredLightingFragmentShaderCalculation_data );
+        lFragmentShader->Compile();
+        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, lFragmentShader, "main" );
 
         CameraSetLayout            = GetCameraSetLayout( mGraphicContext );
         TextureSetLayout           = GetTextureSetLayout( mGraphicContext );

@@ -18,11 +18,11 @@ namespace SE::Core
 
     struct MeshRendererCreateInfo
     {
-        bool     Opaque         = false;
-        bool     IsTwoSided     = false;
-        float    LineWidth      = 1.0f;
-        fs::path VertexShader   = "";
-        fs::path FragmentShader = "";
+        bool                Opaque         = false;
+        bool                IsTwoSided     = false;
+        float               LineWidth      = 1.0f;
+        Ref<IShaderProgram> VertexShader   = nullptr;
+        Ref<IShaderProgram> FragmentShader = nullptr;
 
         Ref<IRenderContext> RenderPass = nullptr;
 

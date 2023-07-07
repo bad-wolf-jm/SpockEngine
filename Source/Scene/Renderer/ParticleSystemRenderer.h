@@ -27,9 +27,9 @@ namespace SE::Graphics
 
     struct ParticleRendererCreateInfo
     {
-        float    LineWidth      = 1.0f;
-        fs::path VertexShader   = "";
-        fs::path FragmentShader = "";
+        float               LineWidth      = 1.0f;
+        Ref<IShaderProgram> VertexShader   = nullptr;
+        Ref<IShaderProgram> FragmentShader = nullptr;
 
         Ref<IRenderContext> RenderPass = nullptr;
 

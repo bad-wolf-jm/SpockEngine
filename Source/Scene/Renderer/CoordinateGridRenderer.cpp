@@ -2,6 +2,9 @@
 #include "Core/Math/Types.h"
 #include "Core/Resource.h"
 
+#include "Shaders/Embedded/gCoordinateGridFragmentShader.h"
+#include "Shaders/Embedded/gCoordinateGridVertexShader.h"
+
 namespace SE::Core
 {
     using namespace SE::Graphics;
@@ -13,8 +16,22 @@ namespace SE::Core
 
         mPipeline->SetCulling( eFaceCulling::NONE );
         mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
-        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\coordinategrid.vert" ), "main" );
-        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders\\coordinategrid.frag" ), "main" );
+
+
+        fs::path lShaderPath = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
+        auto     lVertexShader =
+            CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "coordinate_grid_renderer_vertex_shader", lShaderPath );
+        lVertexShader->AddCode( SE::Private::Shaders::gCoordinateGridVertexShader_data );
+        lVertexShader->Compile();
+
+        auto lFragmentShader =
+            CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "coordinate_grid_renderer_fragment_shader", lShaderPath );
+        lFragmentShader->AddCode( SE::Private::Shaders::gCoordinateGridFragmentShader_data );
+        lFragmentShader->Compile();
+
+
+        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
+        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, lFragmentShader, "main" );
         mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 );
 
         PipelineLayout = CreateDescriptorSetLayout( aGraphicContext );

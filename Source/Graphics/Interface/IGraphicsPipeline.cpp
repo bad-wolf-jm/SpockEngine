@@ -27,9 +27,14 @@ namespace SE::Graphics
         mPushConstants.push_back( sPushConstantRange{ aShaderStage, aOffset, aSize } );
     }
 
-    void IGraphicsPipeline::SetShader( eShaderStageTypeFlags aShaderType, fs::path aPath, std::string aEntryPoint )
+    // void IGraphicsPipeline::SetShader( eShaderStageTypeFlags aShaderType, fs::path aPath, std::string aEntryPoint )
+    // {
+    //     mShaderStages.push_back( sShaderData{ aShaderType, aPath, aEntryPoint } );
+    // }
+
+    void IGraphicsPipeline::SetShader( eShaderStageTypeFlags aShaderType, Ref<IShaderProgram> aProgram, std::string aEntryPoint )
     {
-        mShaderStages.push_back( sShaderData{ aShaderType, aPath, aEntryPoint } );
+        mShaderStages.push_back( sShaderData{ aShaderType, aProgram, aEntryPoint } );
     }
 
     void IGraphicsPipeline::AddDescriptorSet( Ref<IDescriptorSetLayout> aDescriptorSet ) { mDescriptorSets.push_back( aDescriptorSet ); }

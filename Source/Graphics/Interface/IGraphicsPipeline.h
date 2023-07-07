@@ -8,8 +8,8 @@ namespace SE::Graphics
     {
         eShaderStageTypeFlags mShaderType;
 
-        fs::path    mPath;
-        std::string mEntryPoint;
+        Ref<IShaderProgram> mProgram;
+        std::string     mEntryPoint;
     };
 
     uint32_t BufferDataTypeSize( eBufferDataType aType );
@@ -66,7 +66,8 @@ namespace SE::Graphics
         virtual void Build() = 0;
 
       public:
-        void SetShader( eShaderStageTypeFlags aShaderType, fs::path aPath, std::string aEntryPoint );
+        // void SetShader( eShaderStageTypeFlags aShaderType, fs::path aPath, std::string aEntryPoint );
+        void SetShader( eShaderStageTypeFlags aShaderType, Ref<IShaderProgram> aProgram, std::string aEntryPoint );
         void SetCulling( eFaceCulling aCulling );
         void SetLineWidth( float aLineWidth );
         void SetDepthParameters( bool aDepthWriteEnable, bool aDepthTestEnable, eDepthCompareOperation aDepthComparison );

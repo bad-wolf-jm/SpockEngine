@@ -12,4 +12,4 @@ add_library(${LIBRARY_NAME} SHARED
 set_property(TARGET ${LIBRARY_NAME} PROPERTY DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1")
 set_property(TARGET ${LIBRARY_NAME} PROPERTY WIN32_EXECUTABLE FALSE)
 set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_CONFIGURATION_TYPE ClassLibrary)
-set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_DOTNET_REFERENCES "E:/Work/Git/SpockEngine/Source/ScriptCore/Build/Debug/SE_Core.dll")
+set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_DOTNET_REFERENCES "E:\\Work\\Git\\SpockEngine\\Build\\CoreScripting\\Debug\\SE_Core.dll")

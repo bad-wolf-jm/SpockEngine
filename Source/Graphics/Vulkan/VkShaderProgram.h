@@ -30,6 +30,8 @@ namespace SE::Graphics
         void DoCompile();
         void BuildProgram();
 
+        Ref<ShaderModule> GetShaderModule() { return mShaderModule; };
+
       private:
         Ref<ShaderModule> mShaderModule{};
     };

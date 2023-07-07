@@ -1,6 +1,9 @@
 #include "DeferredSceneRenderer.h"
 #include "Core/Profiling/BlockTimer.h"
 
+#include "Shaders/Embedded/gDeferredGeometryPassFragmentShader.h"
+#include "Shaders/Embedded/gDeferredGeometryPassVertexShader.h"
+
 namespace SE::Core
 {
     using namespace Graphics;
@@ -148,6 +151,31 @@ namespace SE::Core
         return mFxaaRenderTarget->GetAttachment( "OUTPUT" );
     }
 
+    static Ref<IShaderProgram> MRTVertexShader( Ref<IGraphicContext> gc )
+    {
+        fs::path lShaderPath = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
+        auto     lVertexShader =
+            CreateShaderProgram( gc, eShaderStageTypeFlags::VERTEX, 450, "geometry_vertex_shader", lShaderPath );
+        lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data );
+        lVertexShader->AddCode( SE::Private::Shaders::gDeferredGeometryPassVertexShader_data );
+        lVertexShader->Compile();
+
+        return lVertexShader;
+    }
+
+    static Ref<IShaderProgram> MRTFragmentShader( Ref<IGraphicContext> gc )
+    {
+        fs::path lShaderPath = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
+        auto     lVertexShader =
+            CreateShaderProgram( gc, eShaderStageTypeFlags::FRAGMENT, 450, "geometry_fragment_shader", lShaderPath );
+        lVertexShader->AddCode( SE::Private::Shaders::gDeferredGeometryPassFragmentShaderPreamble_data );
+        lVertexShader->AddCode( SE::Private::Shaders::gGetNormalFromMap_data );
+        lVertexShader->AddCode( SE::Private::Shaders::gDeferredGeometryPassFragmentShaderCalculation_data );
+        lVertexShader->Compile();
+
+        return lVertexShader;
+    }
+
     MeshRendererCreateInfo DeferredRenderer::GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification )
     {
         MeshRendererCreateInfo lCreateInfo;
@@ -155,8 +183,8 @@ namespace SE::Core
         lCreateInfo.Opaque         = ( aPipelineSpecification.Type == eMaterialType::Opaque );
         lCreateInfo.IsTwoSided     = aPipelineSpecification.IsTwoSided;
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
-        lCreateInfo.VertexShader   = "Shaders\\Deferred\\MRT.vert";
-        lCreateInfo.FragmentShader = "Shaders\\Deferred\\MRT.frag";
+        lCreateInfo.VertexShader   = MRTVertexShader( mGraphicContext );
+        lCreateInfo.FragmentShader = MRTFragmentShader( mGraphicContext );
         lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
@@ -169,19 +197,42 @@ namespace SE::Core
         lCreateInfo.Opaque         = aPipelineSpecification.mOpaque;
         lCreateInfo.IsTwoSided     = aPipelineSpecification.mIsTwoSided;
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
-        lCreateInfo.VertexShader   = "Shaders\\Deferred\\MRT.vert";
-        lCreateInfo.FragmentShader = "Shaders\\Deferred\\MRT.frag";
+        lCreateInfo.VertexShader   = MRTVertexShader( mGraphicContext );
+        lCreateInfo.FragmentShader = MRTFragmentShader( mGraphicContext );
         lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
     }
 
+    static Ref<IShaderProgram> ParticleVertexShader( Ref<IGraphicContext> gc )
+    {
+        fs::path lShaderPath = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
+        auto     lVertexShader =
+            CreateShaderProgram( gc, eShaderStageTypeFlags::VERTEX, 450, "particle_system_vertex_shader", lShaderPath );
+        lVertexShader->AddCode( SE::Private::Shaders::gParticleSystemVertexShader_data );
+        lVertexShader->Compile();
+
+        return lVertexShader;
+    }
+
+    static Ref<IShaderProgram> ParticleFragmentShader( Ref<IGraphicContext> gc )
+    {
+        fs::path lShaderPath = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
+        auto     lVertexShader =
+            CreateShaderProgram( gc, eShaderStageTypeFlags::FRAGMENT, 450, "particle_system_fragment_shader", lShaderPath );
+        lVertexShader->AddCode( SE::Private::Shaders::gParticleSystemFragmentShader_data );
+        lVertexShader->Compile();
+
+        return lVertexShader;
+    }
+
+
     ParticleRendererCreateInfo DeferredRenderer::GetRenderPipelineCreateInfo( sParticleShaderComponent &aPipelineSpecification )
     {
         ParticleRendererCreateInfo lCreateInfo;
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
-        lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert";
-        lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag";
+        lCreateInfo.VertexShader   = ParticleVertexShader(mGraphicContext);
+        lCreateInfo.FragmentShader = ParticleFragmentShader(mGraphicContext);
         lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
@@ -191,8 +242,8 @@ namespace SE::Core
     {
         ParticleRendererCreateInfo lCreateInfo;
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
-        lCreateInfo.VertexShader   = "Shaders\\ParticleSystem.vert";
-        lCreateInfo.FragmentShader = "Shaders\\ParticleSystem.frag";
+        lCreateInfo.VertexShader   = ParticleVertexShader(mGraphicContext);
+        lCreateInfo.FragmentShader = ParticleFragmentShader(mGraphicContext);
         lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
