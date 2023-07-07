@@ -220,6 +220,11 @@ namespace SE::Private::Shaders
     target_sources(${TARGET} PRIVATE ${shader_output_path}/${output_var}.cpp)
 endfunction(embed_shader)
 
+embed_shader(LTSimulationEngineRuntime gToneMap          "Common/ToneMap.glsl")
+embed_shader(LTSimulationEngineRuntime gPBRFunctions     "Common/PBRFunctions.glsl")
+embed_shader(LTSimulationEngineRuntime gGetNormalFromMap "Common/GetNormalFromMap.glsl")
+embed_shader(LTSimulationEngineRuntime gVertexLayout     "Common/VertexLayout.h")
+
 embed_shader(LTSimulationEngineRuntime gUIVertexShader                       "ui_shader.vert")
 embed_shader(LTSimulationEngineRuntime gUIFragmentShader                     "ui_shader.frag")
 embed_shader(LTSimulationEngineRuntime gCopyFragmentShader                   "copy.frag")
@@ -247,10 +252,12 @@ embed_shader(LTSimulationEngineRuntime gWireframeVertexShader                "Wi
 embed_shader(LTSimulationEngineRuntime gWirefrrameFragmentShader             "WireframeShader.frag")
 embed_shader(LTSimulationEngineRuntime gUnlitVertexShader                    "Unlit.vert")
 embed_shader(LTSimulationEngineRuntime gUnlitFragmentShader                  "Unlit.frag")
-embed_shader(LTSimulationEngineRuntime gDeferredLightingMSAAVertexShader     "Deferred/DeferredLightingMSAA.vert")
-embed_shader(LTSimulationEngineRuntime gDeferredLightingMSAAFragmentShader   "Deferred/DeferredLightingMSAA.frag")
-embed_shader(LTSimulationEngineRuntime gDeferredGeometryPassVertexShader     "Deferred/MRT.vert")
-embed_shader(LTSimulationEngineRuntime gDeferredGeometryPassFragmentShader   "Deferred/MRT.frag")
+embed_shader(LTSimulationEngineRuntime gDeferredLightingVertexShader              "Deferred/DeferredLighting.vert")
+embed_shader(LTSimulationEngineRuntime gDeferredLightingFragmentShaderPreamble    "Deferred/DeferredLighting.frag")
+embed_shader(LTSimulationEngineRuntime gDeferredLightingFragmentShaderCalculation "Deferred/DeferredLighting.frag")
+embed_shader(LTSimulationEngineRuntime gDeferredLightingVertexShader              "Deferred/MRT.vert")
+embed_shader(LTSimulationEngineRuntime gDeferredLightingFragmentShaderPreamble    "Deferred/MRT_preamble.frag")
+embed_shader(LTSimulationEngineRuntime gDeferredLightingFragmentShaderCalculation "Deferred/MRT_calculation.frag")
 
 
 set(MONO_PATH "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug")
