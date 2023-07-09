@@ -220,45 +220,240 @@ namespace SE::Private::Shaders
     target_sources(${TARGET} PRIVATE ${shader_output_path}/${output_var}.cpp)
 endfunction(embed_shader)
 
-embed_shader(LTSimulationEngineRuntime gToneMap          "Common/ToneMap.glsl")
-embed_shader(LTSimulationEngineRuntime gPBRFunctions     "Common/PBRFunctions.glsl")
-embed_shader(LTSimulationEngineRuntime gGetNormalFromMap "Common/GetNormalFromMap.glsl")
-embed_shader(LTSimulationEngineRuntime gVertexLayout     "Common/VertexLayout.h")
+embed_shader(
+    LTSimulationEngineRuntime 
+    gToneMap                                       
+    "Common/ToneMap.glsl"
+)
 
-embed_shader(LTSimulationEngineRuntime gUIVertexShader                       "ui_shader.vert")
-embed_shader(LTSimulationEngineRuntime gUIFragmentShader                     "ui_shader.frag")
-embed_shader(LTSimulationEngineRuntime gCopyFragmentShader                   "copy.frag")
-embed_shader(LTSimulationEngineRuntime gFXAAFragmentShader                   "fxaa.frag")
-embed_shader(LTSimulationEngineRuntime gFXAAVertexShader                     "fxaa.vert")
-embed_shader(LTSimulationEngineRuntime gDirectionalShadowVertexShader        "shadow.vert")
-embed_shader(LTSimulationEngineRuntime gOmniDirectionalShadowVertexShader    "OmniShadow.vert")
-embed_shader(LTSimulationEngineRuntime gOmniDirectionalShadowFragmentShader  "OmniShadow.frag")
-embed_shader(LTSimulationEngineRuntime gFiolterCubeVertexShader              "filtercube.vert")
-embed_shader(LTSimulationEngineRuntime gIrradianceCubeFragmentShader         "irradiancecube.frag")
-embed_shader(LTSimulationEngineRuntime gPrefilteredEnvironmentFragmentShader "prefilterenvmap.frag")
-embed_shader(LTSimulationEngineRuntime gSkyboxVertexShader                   "skybox.vert")
-embed_shader(LTSimulationEngineRuntime gSkyboxFragmentShader                 "skybox.frag")
-embed_shader(LTSimulationEngineRuntime gCoordinateGridVertexShader           "coordinategrid.vert")
-embed_shader(LTSimulationEngineRuntime gCoordinateGridFragmentShader         "coordinategrid.frag")
-embed_shader(LTSimulationEngineRuntime gGenerateBrdfVertexShader             "genbrdflut.vert")
-embed_shader(LTSimulationEngineRuntime gGenerateBrdfFragmentShader           "genbrdflut.frag")
-embed_shader(LTSimulationEngineRuntime gPBRMeshVertexShader                  "PBRMeshShader.vert")
-embed_shader(LTSimulationEngineRuntime gPBRMeshFragmentShaderPreamlbe        "PBRMeshShaderPreamble.frag")
-embed_shader(LTSimulationEngineRuntime gPBRMeshFragmentShaderCalculation     "PBRMeshShaderCalculation.frag")
-embed_shader(LTSimulationEngineRuntime gParticleSystemVerrtexShader          "ParticleSystem.vert")
-embed_shader(LTSimulationEngineRuntime gParticleSystemFragmentShader         "ParticleSystem.frag")
-embed_shader(LTSimulationEngineRuntime gSurfaceVertexShader                  "SurfaceShader.vert")
-embed_shader(LTSimulationEngineRuntime gSurfaceFragmentShader                "SurfaceShader.frag")
-embed_shader(LTSimulationEngineRuntime gWireframeVertexShader                "WireframeShader.vert")
-embed_shader(LTSimulationEngineRuntime gWirefrrameFragmentShader             "WireframeShader.frag")
-embed_shader(LTSimulationEngineRuntime gUnlitVertexShader                    "Unlit.vert")
-embed_shader(LTSimulationEngineRuntime gUnlitFragmentShader                  "Unlit.frag")
-embed_shader(LTSimulationEngineRuntime gDeferredLightingVertexShader              "Deferred/DeferredLighting.vert")
-embed_shader(LTSimulationEngineRuntime gDeferredLightingFragmentShaderPreamble    "Deferred/DeferredLighting_preamble.frag")
-embed_shader(LTSimulationEngineRuntime gDeferredLightingFragmentShaderCalculation "Deferred/DeferredLighting_calculation.frag")
-embed_shader(LTSimulationEngineRuntime gDeferredGeometryPassVertexShader              "Deferred/MRT.vert")
-embed_shader(LTSimulationEngineRuntime gDeferredGeometryPassFragmentShaderPreamble    "Deferred/MRT_preamble.frag")
-embed_shader(LTSimulationEngineRuntime gDeferredGeometryPassFragmentShaderCalculation "Deferred/MRT_calculation.frag")
+embed_shader(
+    LTSimulationEngineRuntime 
+    gPBRFunctions                                  
+    "Common/PBRFunctions.glsl"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gGetNormalFromMap                              
+    "Common/GetNormalFromMap.glsl"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gVertexLayout                                  
+    "Common/VertexLayout.h"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gUIVertexShader                                
+    "ui_shader.vert"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gUIFragmentShader                              
+    "ui_shader.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gCopyFragmentShader                            
+    "copy.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gFXAAFragmentShader                            
+    "fxaa.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gFXAACode                                      
+    "fxaa.h"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gFXAAVertexShader                              
+    "fxaa.vert"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gDirectionalShadowVertexShader                 
+    "shadow.vert"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gOmniDirectionalShadowVertexShader             
+    "OmniShadow.vert"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gOmniDirectionalShadowFragmentShader           
+    "OmniShadow.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gFilterCubeVertexShader                        
+    "filtercube.vert"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gIrradianceCubeFragmentShader                  
+    "irradiancecube.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gPrefilteredEnvironmentFragmentShader          
+    "prefilterenvmap.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gSkyboxVertexShader                            
+    "skybox.vert"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gSkyboxFragmentShader                          
+    "skybox.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gCoordinateGridVertexShader                    
+    "coordinategrid.vert"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gCoordinateGridFragmentShader                  
+    "coordinategrid.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gGenerateBrdfVertexShader                      
+    "genbrdflut.vert"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gGenerateBrdfFragmentShader                    
+    "genbrdflut.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gPBRMeshVertexShader                           
+    "PBRMeshShader.vert"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gPBRMeshFragmentShaderPreamble                 
+    "PBRMeshShaderPreamble.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gPBRMeshFragmentShaderCalculation              
+    "PBRMeshShaderCalculation.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gParticleSystemVertexShader                    
+    "ParticleSystem.vert"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gParticleSystemFragmentShader                  
+    "ParticleSystem.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gSurfaceVertexShader                           
+    "SurfaceShader.vert"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gSurfaceFragmentShader                         
+    "SurfaceShader.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gWireframeVertexShader                         
+    "WireframeShader.vert"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gWirefrrameFragmentShader                      
+    "WireframeShader.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gUnlitVertexShader                             
+    "Unlit.vert"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gUnlitFragmentShader                           
+    "Unlit.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gDeferredLightingVertexShader                  
+    "Deferred/DeferredLighting.vert"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gDeferredLightingFragmentShaderPreamble        
+    "Deferred/DeferredLighting_preamble.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gDeferredLightingFragmentShaderCalculation     
+    "Deferred/DeferredLighting_calculation.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gDeferredGeometryPassVertexShader              
+    "Deferred/MRT.vert"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gDeferredGeometryPassFragmentShaderPreamble    
+    "Deferred/MRT_preamble.frag"
+)
+
+embed_shader(
+    LTSimulationEngineRuntime 
+    gDeferredGeometryPassFragmentShaderCalculation 
+    "Deferred/MRT_calculation.frag"
+)
+
 
 
 set(MONO_PATH "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug")

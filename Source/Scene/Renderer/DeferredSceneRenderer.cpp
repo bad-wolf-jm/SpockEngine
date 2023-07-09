@@ -1,11 +1,18 @@
 #include "DeferredSceneRenderer.h"
 #include "Core/Profiling/BlockTimer.h"
 
+#include "Shaders/Embedded/gParticleSystemVertexShader.h"
+#include "Shaders/Embedded/gParticleSystemFragmentShader.h"
+
 #include "Shaders/Embedded/gDeferredGeometryPassFragmentShaderCalculation.h"
 #include "Shaders/Embedded/gDeferredGeometryPassFragmentShaderPreamble.h"
 #include "Shaders/Embedded/gDeferredGeometryPassVertexShader.h"
-#include "Shaders/Embedded/gVertexLayout.h"
 #include "Shaders/Embedded/gGetNormalFromMap.h"
+#include "Shaders/Embedded/gVertexLayout.h"
+#include "Shaders/Embedded/gFXAACode.h"
+#include "Shaders/Embedded/gFXAAFragmentShader.h"
+#include "Shaders/Embedded/gFXAAVertexShader.h"
+#include "Shaders/Embedded/gCopyFragmentShader.h"
 
 namespace SE::Core
 {
@@ -135,17 +142,53 @@ namespace SE::Core
         mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mLightingContext );
         mShadowSceneRenderer    = New<ShadowSceneRenderer>( mGraphicContext );
 
-        EffectProcessorCreateInfo lEffectProcessorCreateInfo{};
-        lEffectProcessorCreateInfo.mVertexShader   = "Shaders/fxaa.vert";
-        lEffectProcessorCreateInfo.mFragmentShader = "Shaders/fxaa.frag";
-        lEffectProcessorCreateInfo.RenderPass      = mFxaaContext;
-        mFxaaRenderer                              = New<EffectProcessor>( mGraphicContext, mFxaaContext, lEffectProcessorCreateInfo );
+        {
+            fs::path lShaderPath = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
+            auto     lVertexShader =
+                CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath );
 
-        EffectProcessorCreateInfo lCopyCreateInfo{};
-        lCopyCreateInfo.mVertexShader   = "Shaders/fxaa.vert";
-        lCopyCreateInfo.mFragmentShader = "Shaders/copy.frag";
-        lCopyCreateInfo.RenderPass      = mFxaaContext;
-        mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lCopyCreateInfo );
+            lVertexShader->AddCode( "layout( location = 0 ) in vec2 inUV;\n" );
+            lVertexShader->AddCode( "layout( location = 1 ) in vec4 inConsoleUV;\n" );
+            lVertexShader->AddCode( "layout( set = 0, binding = 0 ) uniform sampler2D sImage;\n" );
+            lVertexShader->AddCode( "layout( location = 0 ) out vec4 outFragcolor;\n" );
+            lVertexShader->AddCode( "#define FXAA_PC 1\n" );
+            lVertexShader->AddCode( "#define FXAA_GLSL_130 1\n" );
+            lVertexShader->AddCode( "#define FXAA_QUALITY__PRESET 23\n" );
+            lVertexShader->AddCode( SE::Private::Shaders::gFXAACode_data );
+            lVertexShader->AddCode( SE::Private::Shaders::gFXAAFragmentShader_data );
+            lVertexShader->Compile();
+            // mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
+
+            auto lFragmentShader =
+                CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "omni_shadow_fragment_shader", lShaderPath );
+            lFragmentShader->AddCode( SE::Private::Shaders::gCopyFragmentShader_data );
+            lFragmentShader->Compile();
+
+            EffectProcessorCreateInfo lEffectProcessorCreateInfo{};
+            lEffectProcessorCreateInfo.mVertexShader   = lVertexShader;
+            lEffectProcessorCreateInfo.mFragmentShader = lFragmentShader;
+            lEffectProcessorCreateInfo.RenderPass      = mFxaaContext;
+            mFxaaRenderer = New<EffectProcessor>( mGraphicContext, mFxaaContext, lEffectProcessorCreateInfo );
+        }
+        {
+            fs::path lShaderPath = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
+            auto     lVertexShader =
+                CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath );
+            lVertexShader->AddCode( SE::Private::Shaders::gFXAAVertexShader_data );
+            lVertexShader->Compile();
+            // mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
+
+            auto lFragmentShader =
+                CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "omni_shadow_fragment_shader", lShaderPath );
+            lFragmentShader->AddCode( SE::Private::Shaders::gCopyFragmentShader_data );
+            lFragmentShader->Compile();
+
+            EffectProcessorCreateInfo lCopyCreateInfo{};
+            lCopyCreateInfo.mVertexShader   = lVertexShader;
+            lCopyCreateInfo.mFragmentShader = lFragmentShader;
+            lCopyCreateInfo.RenderPass      = mFxaaContext;
+            mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lCopyCreateInfo );
+        }
     }
 
     Ref<ITexture2D> DeferredRenderer::GetOutputImage()

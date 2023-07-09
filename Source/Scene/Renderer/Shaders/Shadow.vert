@@ -1,7 +1,3 @@
-#version 450
-
-#extension GL_GOOGLE_include_directive : require
-
 #include "Common/VertexLayout.h"
 
 layout (binding = 0) uniform UBO 

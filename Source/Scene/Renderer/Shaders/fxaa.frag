@@ -1,20 +1,3 @@
-
-#version 450
-#extension GL_GOOGLE_include_directive : require
-
-layout( location = 0 ) in vec2 inUV;
-layout( location = 1 ) in vec4 inConsoleUV;
-
-layout( set = 0, binding = 0 ) uniform sampler2D sImage;
-
-layout( location = 0 ) out vec4 outFragcolor;
-
-#define FXAA_PC 1
-#define FXAA_GLSL_130 1
-#define FXAA_QUALITY__PRESET 23
-
-#include "fxaa.h"
-
 void main()
 {
     // Use noperspective interpolation here (turn off perspective interpolation).

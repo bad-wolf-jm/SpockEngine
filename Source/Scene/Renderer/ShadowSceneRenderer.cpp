@@ -17,6 +17,10 @@
 #include "MeshRenderer.h"
 #include "ParticleSystemRenderer.h"
 
+#include "Shaders/Embedded/gOmniDirectionalShadowFragmentShader.h"
+#include "Shaders/Embedded/gOmniDirectionalShadowVertexShader.h"
+#include "Shaders/Embedded/gDirectionalShadowVertexShader.h"
+#include "Shaders/Embedded/gVertexLayout.h"
 namespace SE::Core
 {
 
@@ -42,7 +46,14 @@ namespace SE::Core
 
         mPipeline->SetCulling( eFaceCulling::BACK );
         mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
-        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\Shadow.vert" ), "main" );
+
+        fs::path lShaderPath   = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
+        auto     lVertexShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "shadow_vertex_shader", lShaderPath );
+        lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data );
+        lVertexShader->AddCode( SE::Private::Shaders::gDirectionalShadowVertexShader_data );
+        lVertexShader->Compile();
+
+        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
         mPipeline->AddInput( "Position", eBufferDataType::VEC3, 0, 0 );
         mPipeline->AddInput( "Normal", eBufferDataType::VEC3, 0, 1 );
         mPipeline->AddInput( "TexCoord_0", eBufferDataType::VEC2, 0, 2 );
@@ -74,8 +85,20 @@ namespace SE::Core
 
         mPipeline->SetCulling( eFaceCulling::BACK );
         mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
-        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( "Shaders\\OmniShadow.vert" ), "main" );
-        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( "Shaders\\OmniShadow.frag" ), "main" );
+
+        fs::path lShaderPath = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
+        auto lVertexShader   = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath );
+        lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data );
+        lVertexShader->AddCode( SE::Private::Shaders::gOmniDirectionalShadowVertexShader_data );
+        lVertexShader->Compile();
+        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
+
+        auto lFragmentShader =
+            CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "omni_shadow_fragment_shader", lShaderPath );
+        lFragmentShader->AddCode( SE::Private::Shaders::gOmniDirectionalShadowFragmentShader_data );
+        lFragmentShader->Compile();
+
+        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, lFragmentShader, "main" );
         mPipeline->AddInput( "Position", eBufferDataType::VEC3, 0, 0 );
         mPipeline->AddInput( "Normal", eBufferDataType::VEC3, 0, 1 );
         mPipeline->AddInput( "TexCoord_0", eBufferDataType::VEC2, 0, 2 );
@@ -194,7 +217,7 @@ namespace SE::Core
         if( mSpotlights.size() != mSpotlightShadowMapRenderContext.size() )
         {
             mOmniRenderPipeline = nullptr;
-            
+
             mSpotlightShadowMapRenderContext.clear();
             mSpotlightShadowMapSamplers.clear();
 
@@ -284,7 +307,8 @@ namespace SE::Core
             }
         }
 
-        if( mRenderPipeline == nullptr && (( mDirectionalShadowMapRenderContext.size() > 0 ) || ( mSpotlightShadowMapRenderContext.size() > 0 )) )
+        if( mRenderPipeline == nullptr &&
+            ( ( mDirectionalShadowMapRenderContext.size() > 0 ) || ( mSpotlightShadowMapRenderContext.size() > 0 ) ) )
         {
             ShadowMeshRendererCreateInfo lCreateInfo{};
             lCreateInfo.RenderPass = mDirectionalShadowMapRenderContext.back();
