@@ -35,6 +35,7 @@ namespace SE::Graphics
         void SetVersion( int aVersion ) { mVersion = aVersion; }
 
         void AddCode( std::string const &aCode );
+        void AddCode( std::vector<uint8_t> const &aCode );
         void AddFile( fs::path const &aPath );
 
         template <typename _Ty>

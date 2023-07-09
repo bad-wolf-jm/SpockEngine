@@ -1,8 +1,11 @@
 #include "DeferredSceneRenderer.h"
 #include "Core/Profiling/BlockTimer.h"
 
-#include "Shaders/Embedded/gDeferredGeometryPassFragmentShader.h"
+#include "Shaders/Embedded/gDeferredGeometryPassFragmentShaderCalculation.h"
+#include "Shaders/Embedded/gDeferredGeometryPassFragmentShaderPreamble.h"
 #include "Shaders/Embedded/gDeferredGeometryPassVertexShader.h"
+#include "Shaders/Embedded/gVertexLayout.h"
+#include "Shaders/Embedded/gGetNormalFromMap.h"
 
 namespace SE::Core
 {
@@ -153,9 +156,8 @@ namespace SE::Core
 
     static Ref<IShaderProgram> MRTVertexShader( Ref<IGraphicContext> gc )
     {
-        fs::path lShaderPath = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
-        auto     lVertexShader =
-            CreateShaderProgram( gc, eShaderStageTypeFlags::VERTEX, 450, "geometry_vertex_shader", lShaderPath );
+        fs::path lShaderPath   = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
+        auto     lVertexShader = CreateShaderProgram( gc, eShaderStageTypeFlags::VERTEX, 450, "geometry_vertex_shader", lShaderPath );
         lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data );
         lVertexShader->AddCode( SE::Private::Shaders::gDeferredGeometryPassVertexShader_data );
         lVertexShader->Compile();
@@ -166,8 +168,7 @@ namespace SE::Core
     static Ref<IShaderProgram> MRTFragmentShader( Ref<IGraphicContext> gc )
     {
         fs::path lShaderPath = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
-        auto     lVertexShader =
-            CreateShaderProgram( gc, eShaderStageTypeFlags::FRAGMENT, 450, "geometry_fragment_shader", lShaderPath );
+        auto lVertexShader = CreateShaderProgram( gc, eShaderStageTypeFlags::FRAGMENT, 450, "geometry_fragment_shader", lShaderPath );
         lVertexShader->AddCode( SE::Private::Shaders::gDeferredGeometryPassFragmentShaderPreamble_data );
         lVertexShader->AddCode( SE::Private::Shaders::gGetNormalFromMap_data );
         lVertexShader->AddCode( SE::Private::Shaders::gDeferredGeometryPassFragmentShaderCalculation_data );
@@ -226,13 +227,12 @@ namespace SE::Core
         return lVertexShader;
     }
 
-
     ParticleRendererCreateInfo DeferredRenderer::GetRenderPipelineCreateInfo( sParticleShaderComponent &aPipelineSpecification )
     {
         ParticleRendererCreateInfo lCreateInfo;
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
-        lCreateInfo.VertexShader   = ParticleVertexShader(mGraphicContext);
-        lCreateInfo.FragmentShader = ParticleFragmentShader(mGraphicContext);
+        lCreateInfo.VertexShader   = ParticleVertexShader( mGraphicContext );
+        lCreateInfo.FragmentShader = ParticleFragmentShader( mGraphicContext );
         lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
@@ -242,8 +242,8 @@ namespace SE::Core
     {
         ParticleRendererCreateInfo lCreateInfo;
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
-        lCreateInfo.VertexShader   = ParticleVertexShader(mGraphicContext);
-        lCreateInfo.FragmentShader = ParticleFragmentShader(mGraphicContext);
+        lCreateInfo.VertexShader   = ParticleVertexShader( mGraphicContext );
+        lCreateInfo.FragmentShader = ParticleFragmentShader( mGraphicContext );
         lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;

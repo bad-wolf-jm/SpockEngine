@@ -19,8 +19,8 @@ namespace SE::Graphics
 
         mPipeline->SetCulling( eFaceCulling::NONE );
         mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
-        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( aCreateInfo.VertexShader ), "main" );
-        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( aCreateInfo.FragmentShader ), "main" );
+        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, aCreateInfo.VertexShader , "main" );
+        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, aCreateInfo.FragmentShader , "main" );
         mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 );
 
         auto lDescriptorSet = CreateDescriptorSetLayout( aGraphicContext );

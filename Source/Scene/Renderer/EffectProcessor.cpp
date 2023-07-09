@@ -15,8 +15,8 @@ namespace SE::Core
 
         mPipeline->SetCulling( eFaceCulling::NONE );
         mPipeline->SetLineWidth( 1.0f );
-        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, GetResourcePath( Spec.mVertexShader ), "main" );
-        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, GetResourcePath( Spec.mFragmentShader ), "main" );
+        mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, Spec.mVertexShader, "main" );
+        mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, Spec.mFragmentShader, "main" );
 
         PipelineLayout = CreateDescriptorSetLayout( mGraphicContext );
         PipelineLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );

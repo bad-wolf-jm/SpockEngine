@@ -1,10 +1,3 @@
-#version 460
-#extension GL_EXT_nonuniform_qualifier : enable
-
-#extension GL_GOOGLE_include_directive : require
-
-#include "Common/VertexLayout.h"
-
 #define MAX_NUM_LIGHTS 64
 
 struct DirectionalLightData

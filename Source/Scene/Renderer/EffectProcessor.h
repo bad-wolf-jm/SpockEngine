@@ -15,8 +15,8 @@ namespace SE::Core
 
     struct EffectProcessorCreateInfo
     {
-        Ref<IShaderProgram> mVertexShader   = "";
-        Ref<IShaderProgram> mFragmentShader = "";
+        Ref<IShaderProgram> mVertexShader   = nullptr;
+        Ref<IShaderProgram> mFragmentShader = nullptr;
 
         Ref<IRenderContext> RenderPass = nullptr;
     };

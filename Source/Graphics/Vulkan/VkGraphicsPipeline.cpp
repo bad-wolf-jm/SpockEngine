@@ -1,6 +1,7 @@
 #include "VkGraphicsPipeline.h"
 #include "VkDescriptorSetLayout.h"
 #include "VkRenderContext.h"
+#include "VkShaderProgram.h"
 
 #include "Core/Logging.h"
 #include "Core/Memory.h"

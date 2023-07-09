@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IDescriptorSetLayout.h"
+#include "IShaderProgram.h"
 
 namespace SE::Graphics
 {

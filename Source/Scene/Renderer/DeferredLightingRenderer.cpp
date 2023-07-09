@@ -8,8 +8,11 @@
 #include "Core/Logging.h"
 #include "Core/Resource.h"
 
-#include "Shaders/Embedded/gDeferredLightingMSAAFragmentShader.h"
-#include "Shaders/Embedded/gDeferredLightingMSAAVertexShader.h"
+#include "Shaders/Embedded/gToneMap.h"
+#include "Shaders/Embedded/gPBRFunctions.h"
+#include "Shaders/Embedded/gDeferredLightingFragmentShaderPreamble.h"
+#include "Shaders/Embedded/gDeferredLightingFragmentShaderCalculation.h"
+#include "Shaders/Embedded/gDeferredLightingVertexShader.h"
 
 namespace SE::Core
 {
@@ -88,7 +91,7 @@ namespace SE::Core
                                                     "defered_lighting_fragment_shader", lShaderPath );
         lFragmentShader->AddCode( SE::Private::Shaders::gDeferredLightingFragmentShaderPreamble_data );
         lFragmentShader->AddCode( SE::Private::Shaders::gToneMap_data );
-        lFragmentShader->AddCode( SE::Private::Shaders::gPbrFunctions_data );
+        lFragmentShader->AddCode( SE::Private::Shaders::gPBRFunctions_data );
         lFragmentShader->AddCode( SE::Private::Shaders::gDeferredLightingFragmentShaderCalculation_data );
         lFragmentShader->Compile();
         mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, lFragmentShader, "main" );

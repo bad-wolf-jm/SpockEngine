@@ -24,6 +24,7 @@ namespace SE::Graphics
     }
 
     void IShaderProgram::AddCode( std::string const &aCode ) { mCodeBlocks.push_back( aCode ); }
+    void IShaderProgram::AddCode( std::vector<uint8_t> const &aCode ) { mCodeBlocks.push_back( std::string(aCode.begin(), aCode.end()) ); }
 
     static std::vector<char> ReadFile( const fs::path &filename )
     {

@@ -44,8 +44,8 @@ namespace SE::Graphics
         size_t operator()( const ParticleRendererCreateInfo &node ) const
         {
             std::size_t h2 = std::hash<float>()( node.LineWidth );
-            std::size_t h3 = std::hash<std::string>()( node.VertexShader.string() );
-            std::size_t h4 = std::hash<std::string>()( node.FragmentShader.string() );
+            std::size_t h3 = std::hash<std::size_t>()( (size_t)node.VertexShader.get() );
+            std::size_t h4 = std::hash<std::size_t>()( (size_t)node.FragmentShader.get() );
 
             return h2 ^ h3 ^ h4;
         }
