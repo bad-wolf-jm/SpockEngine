@@ -129,6 +129,8 @@ namespace SE::Graphics
             SE::Logging::Info( "{}", glslang_program_get_info_debug_log( lNewProgram ) );
         }
 
+        // if (lNewProgram->spirv )
+
         glslang_program_SPIRV_generate( lNewProgram, lInputDescription.stage );
 
         if( glslang_program_SPIRV_get_messages( lNewProgram ) )

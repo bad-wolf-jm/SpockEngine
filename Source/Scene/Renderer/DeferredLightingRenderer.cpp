@@ -80,7 +80,7 @@ namespace SE::Core
         mPipeline->SetCulling( eFaceCulling::NONE );
         mPipeline->SetDepthParameters( false, false, eDepthCompareOperation::ALWAYS );
 
-        fs::path lShaderPath = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
+        fs::path lShaderPath = "E:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
         auto     lVertexShader =
             CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "defered_lighting_vertex_shader", lShaderPath );
         lVertexShader->AddCode( SE::Private::Shaders::gDeferredLightingVertexShader_data );

@@ -47,7 +47,7 @@ namespace SE::Core
 
         mUIRenderPipeline->SetCulling( eFaceCulling::NONE );
 
-        fs::path lShaderPath = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
+        fs::path lShaderPath = "E:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
         auto     lVertexShader =
             CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "ui_vertex_shader", lShaderPath );
         lVertexShader->AddFile( GetResourcePath( "Shaders\\ui_shader_0.vert" ) );

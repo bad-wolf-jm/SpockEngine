@@ -1,4 +1,3 @@
-
 #define MAX_NUM_LIGHTS 64
 
 struct DirectionalLightData

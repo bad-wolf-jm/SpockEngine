@@ -47,7 +47,7 @@ namespace SE::Core
         mPipeline->SetCulling( eFaceCulling::BACK );
         mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
 
-        fs::path lShaderPath   = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
+        fs::path lShaderPath   = "E:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
         auto     lVertexShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "shadow_vertex_shader", lShaderPath );
         lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data );
         lVertexShader->AddCode( SE::Private::Shaders::gDirectionalShadowVertexShader_data );
@@ -86,7 +86,7 @@ namespace SE::Core
         mPipeline->SetCulling( eFaceCulling::BACK );
         mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
 
-        fs::path lShaderPath = "C:\\GitLab\\SpockEngine\\Resources\\Shaders\\Cache";
+        fs::path lShaderPath = "E:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
         auto lVertexShader   = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath );
         lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data );
         lVertexShader->AddCode( SE::Private::Shaders::gOmniDirectionalShadowVertexShader_data );

@@ -53,7 +53,7 @@ namespace SE::Graphics
         std::ostringstream lOutput;
 
         lOutput << fmt::format( "#version {}\n", mVersion );
-        lOutput << "\n";
+        lOutput << "\r\n";
 
         for( auto const &lProgramFragment : mCodeBlocks )
         {
