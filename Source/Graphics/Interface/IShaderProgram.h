@@ -49,6 +49,7 @@ namespace SE::Graphics
         virtual void DoCompile()    = 0;
         virtual void BuildProgram() = 0;
         std::string  Hash();
+        size_t       HashNum();
 
       protected:
         Ref<IGraphicContext> mGraphicContext = nullptr;

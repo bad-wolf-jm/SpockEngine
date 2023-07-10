@@ -1,18 +1,20 @@
 #include "DeferredSceneRenderer.h"
 #include "Core/Profiling/BlockTimer.h"
 
-#include "Shaders/Embedded/gParticleSystemVertexShader.h"
 #include "Shaders/Embedded/gParticleSystemFragmentShader.h"
+#include "Shaders/Embedded/gParticleSystemVertexShader.h"
 
+#include "Shaders/Embedded/gCopyFragmentShader.h"
 #include "Shaders/Embedded/gDeferredGeometryPassFragmentShaderCalculation.h"
 #include "Shaders/Embedded/gDeferredGeometryPassFragmentShaderPreamble.h"
 #include "Shaders/Embedded/gDeferredGeometryPassVertexShader.h"
-#include "Shaders/Embedded/gGetNormalFromMap.h"
-#include "Shaders/Embedded/gVertexLayout.h"
 #include "Shaders/Embedded/gFXAACode.h"
 #include "Shaders/Embedded/gFXAAFragmentShader.h"
 #include "Shaders/Embedded/gFXAAVertexShader.h"
-#include "Shaders/Embedded/gCopyFragmentShader.h"
+#include "Shaders/Embedded/gGetNormalFromMap.h"
+#include "Shaders/Embedded/gVertexLayout.h"
+
+#include <fstream>
 
 namespace SE::Core
 {
@@ -159,8 +161,8 @@ namespace SE::Core
             lVertexShader->Compile();
             // mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
 
-            auto lFragmentShader =
-                CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "omni_shadow_fragment_shader", lShaderPath );
+            auto lFragmentShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450,
+                                                        "omni_shadow_fragment_shader", lShaderPath );
             lFragmentShader->AddCode( SE::Private::Shaders::gCopyFragmentShader_data );
             lFragmentShader->Compile();
 
@@ -178,8 +180,8 @@ namespace SE::Core
             lVertexShader->Compile();
             // mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
 
-            auto lFragmentShader =
-                CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "omni_shadow_fragment_shader", lShaderPath );
+            auto lFragmentShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450,
+                                                        "omni_shadow_fragment_shader", lShaderPath );
             lFragmentShader->AddCode( SE::Private::Shaders::gCopyFragmentShader_data );
             lFragmentShader->Compile();
 
@@ -212,11 +214,12 @@ namespace SE::Core
     {
         fs::path lShaderPath = "E:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
         auto lVertexShader = CreateShaderProgram( gc, eShaderStageTypeFlags::FRAGMENT, 450, "geometry_fragment_shader", lShaderPath );
+        lVertexShader->AddCode( "#extension GL_EXT_nonuniform_qualifier : enable" );
         lVertexShader->AddCode( SE::Private::Shaders::gDeferredGeometryPassFragmentShaderPreamble_data );
         lVertexShader->AddCode( SE::Private::Shaders::gGetNormalFromMap_data );
         lVertexShader->AddCode( SE::Private::Shaders::gDeferredGeometryPassFragmentShaderCalculation_data );
-        lVertexShader->Compile();
 
+        lVertexShader->Compile();
         return lVertexShader;
     }
 
@@ -229,6 +232,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
         lCreateInfo.VertexShader   = MRTVertexShader( mGraphicContext );
         lCreateInfo.FragmentShader = MRTFragmentShader( mGraphicContext );
+        lCreateInfo.CodeHash       = lCreateInfo.VertexShader->HashNum() ^ lCreateInfo.FragmentShader->HashNum();
         lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
@@ -243,6 +247,7 @@ namespace SE::Core
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
         lCreateInfo.VertexShader   = MRTVertexShader( mGraphicContext );
         lCreateInfo.FragmentShader = MRTFragmentShader( mGraphicContext );
+        lCreateInfo.CodeHash       = lCreateInfo.VertexShader->HashNum() ^ lCreateInfo.FragmentShader->HashNum();
         lCreateInfo.RenderPass     = mGeometryContext;
 
         return lCreateInfo;
@@ -277,6 +282,7 @@ namespace SE::Core
         lCreateInfo.VertexShader   = ParticleVertexShader( mGraphicContext );
         lCreateInfo.FragmentShader = ParticleFragmentShader( mGraphicContext );
         lCreateInfo.RenderPass     = mGeometryContext;
+        lCreateInfo.CodeHash       = lCreateInfo.VertexShader->HashNum() ^ lCreateInfo.FragmentShader->HashNum();
 
         return lCreateInfo;
     }
@@ -288,6 +294,7 @@ namespace SE::Core
         lCreateInfo.VertexShader   = ParticleVertexShader( mGraphicContext );
         lCreateInfo.FragmentShader = ParticleFragmentShader( mGraphicContext );
         lCreateInfo.RenderPass     = mGeometryContext;
+        lCreateInfo.CodeHash       = lCreateInfo.VertexShader->HashNum() ^ lCreateInfo.FragmentShader->HashNum();
 
         return lCreateInfo;
     }

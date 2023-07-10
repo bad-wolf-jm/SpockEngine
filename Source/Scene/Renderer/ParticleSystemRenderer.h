@@ -28,6 +28,7 @@ namespace SE::Graphics
     struct ParticleRendererCreateInfo
     {
         float               LineWidth      = 1.0f;
+        size_t              CodeHash       = 0;
         Ref<IShaderProgram> VertexShader   = nullptr;
         Ref<IShaderProgram> FragmentShader = nullptr;
 
@@ -44,10 +45,8 @@ namespace SE::Graphics
         size_t operator()( const ParticleRendererCreateInfo &node ) const
         {
             std::size_t h2 = std::hash<float>()( node.LineWidth );
-            std::size_t h3 = std::hash<std::size_t>()( (size_t)node.VertexShader.get() );
-            std::size_t h4 = std::hash<std::size_t>()( (size_t)node.FragmentShader.get() );
 
-            return h2 ^ h3 ^ h4;
+            return h2 ^ node.CodeHash;
         }
     };
 

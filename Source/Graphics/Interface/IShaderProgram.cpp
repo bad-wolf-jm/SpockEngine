@@ -24,7 +24,10 @@ namespace SE::Graphics
     }
 
     void IShaderProgram::AddCode( std::string const &aCode ) { mCodeBlocks.push_back( aCode ); }
-    void IShaderProgram::AddCode( std::vector<uint8_t> const &aCode ) { mCodeBlocks.push_back( std::string(aCode.begin(), aCode.end()) ); }
+    void IShaderProgram::AddCode( std::vector<uint8_t> const &aCode )
+    {
+        mCodeBlocks.push_back( std::string( aCode.begin(), aCode.end() ) );
+    }
 
     static std::vector<char> ReadFile( const fs::path &filename )
     {
@@ -52,8 +55,8 @@ namespace SE::Graphics
     {
         std::ostringstream lOutput;
 
-        lOutput << fmt::format( "#version {}\n", mVersion );
-        lOutput << "\r\n";
+        lOutput << fmt::format( "#version {}", mVersion ) << std::endl;
+        lOutput << "\r\n" << std::endl;
 
         for( auto const &lProgramFragment : mCodeBlocks )
         {
@@ -69,6 +72,12 @@ namespace SE::Graphics
         stream << std::hex << std::hash<std::string>{}( Program() );
 
         return stream.str();
+    }
+
+    size_t IShaderProgram::HashNum()
+    {
+        std::stringstream stream;
+        return std::hash<std::string>{}( Program() );
     }
 
     void IShaderProgram::Compile()

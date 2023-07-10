@@ -21,6 +21,7 @@ namespace SE::Core
         bool                Opaque         = false;
         bool                IsTwoSided     = false;
         float               LineWidth      = 1.0f;
+        size_t              CodeHash       = 0;
         Ref<IShaderProgram> VertexShader   = nullptr;
         Ref<IShaderProgram> FragmentShader = nullptr;
 
@@ -28,8 +29,7 @@ namespace SE::Core
 
         bool operator==( const MeshRendererCreateInfo &p ) const
         {
-            return ( IsTwoSided == p.IsTwoSided ) && ( LineWidth == p.LineWidth ) && ( VertexShader == p.VertexShader ) &&
-                   ( FragmentShader == p.FragmentShader );
+            return ( IsTwoSided == p.IsTwoSided ) && ( LineWidth == p.LineWidth ) && ( CodeHash == p.CodeHash );
         }
     };
 
@@ -39,9 +39,7 @@ namespace SE::Core
         {
             std::size_t h1 = std::hash<bool>()( node.IsTwoSided );
             std::size_t h2 = std::hash<float>()( node.LineWidth );
-            std::size_t h3 = std::hash<std::size_t>()( (size_t)node.VertexShader.get() );
-            std::size_t h4 = std::hash<std::size_t>()( (size_t)node.FragmentShader.get() );
-            return h1 ^ h2 ^ h3 ^ h4;
+            return h1 ^ h2 ^ node.CodeHash;
         }
     };
 
