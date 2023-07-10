@@ -74,7 +74,6 @@ namespace SE::Core
     DeferredLightingRenderer::DeferredLightingRenderer( Ref<IGraphicContext> aGraphicContext, Ref<IRenderContext> aRenderContext )
         : mGraphicContext( aGraphicContext )
     {
-
         mPipeline = CreateGraphicsPipeline( mGraphicContext, aRenderContext, ePrimitiveTopology::TRIANGLES );
 
         mPipeline->SetCulling( eFaceCulling::NONE );
