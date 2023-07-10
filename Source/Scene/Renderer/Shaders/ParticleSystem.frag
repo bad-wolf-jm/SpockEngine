@@ -1,5 +1,3 @@
-#version 450
-
 // Interpolated values from the vertex shaders
 layout( location = 0 ) in vec2 UV;
 layout( location = 1 ) in vec4 particlecolor;
