@@ -1,18 +1,18 @@
 #include "DeferredSceneRenderer.h"
 #include "Core/Profiling/BlockTimer.h"
 
-#include "Shaders/Embedded/gParticleSystemFragmentShader.h"
-#include "Shaders/Embedded/gParticleSystemVertexShader.h"
+#include "Shaders/gParticleSystemFragmentShader.h"
+#include "Shaders/gParticleSystemVertexShader.h"
 
-#include "Shaders/Embedded/gCopyFragmentShader.h"
-#include "Shaders/Embedded/gDeferredGeometryPassFragmentShaderCalculation.h"
-#include "Shaders/Embedded/gDeferredGeometryPassFragmentShaderPreamble.h"
-#include "Shaders/Embedded/gDeferredGeometryPassVertexShader.h"
-#include "Shaders/Embedded/gFXAACode.h"
-#include "Shaders/Embedded/gFXAAFragmentShader.h"
-#include "Shaders/Embedded/gFXAAVertexShader.h"
-#include "Shaders/Embedded/gGetNormalFromMap.h"
-#include "Shaders/Embedded/gVertexLayout.h"
+#include "Shaders/gCopyFragmentShader.h"
+#include "Shaders/gDeferredGeometryPassFragmentShaderCalculation.h"
+#include "Shaders/gDeferredGeometryPassFragmentShaderPreamble.h"
+#include "Shaders/gDeferredGeometryPassVertexShader.h"
+#include "Shaders/gFXAACode.h"
+#include "Shaders/gFXAAFragmentShader.h"
+#include "Shaders/gFXAAVertexShader.h"
+#include "Shaders/gGetNormalFromMap.h"
+#include "Shaders/gVertexLayout.h"
 
 #include <fstream>
 

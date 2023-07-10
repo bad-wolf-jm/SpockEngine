@@ -2,8 +2,8 @@
 #include "Core/Math/Types.h"
 #include "Core/Resource.h"
 
-#include "Shaders/Embedded/gCoordinateGridFragmentShader.h"
-#include "Shaders/Embedded/gCoordinateGridVertexShader.h"
+#include "Shaders/gCoordinateGridFragmentShader.h"
+#include "Shaders/gCoordinateGridVertexShader.h"
 
 namespace SE::Core
 {

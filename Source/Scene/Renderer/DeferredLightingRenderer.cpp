@@ -8,11 +8,11 @@
 #include "Core/Logging.h"
 #include "Core/Resource.h"
 
-#include "Shaders/Embedded/gToneMap.h"
-#include "Shaders/Embedded/gPBRFunctions.h"
-#include "Shaders/Embedded/gDeferredLightingFragmentShaderPreamble.h"
-#include "Shaders/Embedded/gDeferredLightingFragmentShaderCalculation.h"
-#include "Shaders/Embedded/gDeferredLightingVertexShader.h"
+#include "Shaders/gToneMap.h"
+#include "Shaders/gPBRFunctions.h"
+#include "Shaders/gDeferredLightingFragmentShaderPreamble.h"
+#include "Shaders/gDeferredLightingFragmentShaderCalculation.h"
+#include "Shaders/gDeferredLightingVertexShader.h"
 
 namespace SE::Core
 {

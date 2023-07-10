@@ -12,6 +12,9 @@
 #include "UI/UI.h"
 #include "UIContext.h"
 
+#include "Shaders/gUIVertexShader.h"
+#include "Shaders/gUIFragmentShader.h"
+
 namespace SE::Core
 {
     UIWindow::UIWindow( Ref<IGraphicContext> aGraphicContext, ImGuiViewport *aViewport )
@@ -50,15 +53,14 @@ namespace SE::Core
         fs::path lShaderPath = "E:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
         auto     lVertexShader =
             CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "ui_vertex_shader", lShaderPath );
-        lVertexShader->AddFile( GetResourcePath( "Shaders\\ui_shader_0.vert" ) );
+        lVertexShader->AddCode( SE::Private::Shaders::gUIVertexShader_data );
         lVertexShader->Compile();
+        mUIRenderPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
 
         auto lFragmentShader =
             CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "ui_fragment_shader", lShaderPath );
-        lFragmentShader->AddFile( GetResourcePath( "Shaders\\ui_shader_0.frag" ) );
+        lFragmentShader->AddCode( SE::Private::Shaders::gUIFragmentShader_data );
         lFragmentShader->Compile();
-
-        mUIRenderPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
         mUIRenderPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, lFragmentShader, "main" );
 
         mUIRenderPipeline->AddInput( "Position", eBufferDataType::VEC2, 0, 0 );

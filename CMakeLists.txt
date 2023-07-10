@@ -179,5 +179,8 @@ add_compile_definitions(NOMINMAX)
 add_compile_definitions(ZEP_FEATURE_CPP_FILE_SYSTEM=1)
 
 
+include_directories(Shaders/Embedded)
+
 add_subdirectory(ThirdParty)
+add_subdirectory(Shaders)
 add_subdirectory(Source)

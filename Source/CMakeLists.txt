@@ -5,6 +5,8 @@ project(LTSimulationEngine LANGUAGES CXX CUDA C)
 cuda_compile_and_embed(g_SensorModelEnvironmentSampler Scene/EnvironmentSampler/DevicePrograms.cu)
 cuda_compile_and_embed(embedded_ptx_code Scene/Renderer/RayTracing/DevicePrograms.cu)
 
+message(STATUS ${SHADER_EMBEDDED_FILES})
+
 add_library(LTSimulationEngineRuntime STATIC
     Core/File.cpp
     Core/Resource.cpp
@@ -159,297 +161,297 @@ add_library(LTSimulationEngineRuntime STATIC
 )
 
 
-function(embed_shader TARGET output_var shader_file)
-    set(shader_path ${CMAKE_CURRENT_SOURCE_DIR}/Scene/Renderer/Shaders/${shader_file})
-    set(shader_output_path ${CMAKE_CURRENT_SOURCE_DIR}/Scene/Renderer/Shaders/Embedded)
+# function(embed_shader TARGET output_var shader_file)
+#     set(shader_path ${CMAKE_CURRENT_SOURCE_DIR}/Scene/Renderer/Shaders/${shader_file})
+#     set(shader_output_path ${CMAKE_CURRENT_SOURCE_DIR}/Scene/Renderer/Shaders/Embedded)
 
-    if (NOT EXISTS ${shader_output_path})
-        file(MAKE_DIRECTORY ${shader_output_path})
-    endif ()
+#     if (NOT EXISTS ${shader_output_path})
+#         file(MAKE_DIRECTORY ${shader_output_path})
+#     endif ()
 
-    file(READ ${shader_path} content HEX)
+#     file(READ ${shader_path} content HEX)
 
-    string(REGEX MATCHALL "([A-Fa-f0-9][A-Fa-f0-9])" SEPARATED_HEX ${content})
+#     string(REGEX MATCHALL "([A-Fa-f0-9][A-Fa-f0-9])" SEPARATED_HEX ${content})
 
-    set(counter 0)
-    # Iterate through each of the bytes from the source file
-    foreach (hex IN LISTS SEPARATED_HEX)
-        # Write the hex string to the line with an 0x prefix and a , postfix to seperate the bytes of the file.
-        string(APPEND output_c "0x${hex},")
-        # Increment the element counter before the newline.
-        math(EXPR counter "${counter}+1")
-        if (counter GREATER 16)
-            # Write a newline so that all of the array initializer gets spread across multiple lines.
-            string(APPEND output_c "\n        ")
-            set(counter 0)
-        endif ()
-    endforeach ()
+#     set(counter 0)
+#     # Iterate through each of the bytes from the source file
+#     foreach (hex IN LISTS SEPARATED_HEX)
+#         # Write the hex string to the line with an 0x prefix and a , postfix to seperate the bytes of the file.
+#         string(APPEND output_c "0x${hex},")
+#         # Increment the element counter before the newline.
+#         math(EXPR counter "${counter}+1")
+#         if (counter GREATER 16)
+#             # Write a newline so that all of the array initializer gets spread across multiple lines.
+#             string(APPEND output_c "\n        ")
+#             set(counter 0)
+#         endif ()
+#     endforeach ()
 
-    set(output_c "
-#include \"${output_var}.h\"
+#     set(output_c "
+# #include \"${output_var}.h\"
 
-namespace SE::Private::Shaders
-{
-    const std::vector<uint8_t> ${output_var}_data = {
-        ${output_c}
-    }\;
-}")
+# namespace SE::Private::Shaders
+# {
+#     const std::vector<uint8_t> ${output_var}_data = {
+#         ${output_c}
+#     }\;
+# }")
     
-    # Generate the contents that will be contained in the header file.
-    set(output_h "
-#pragma once
+#     # Generate the contents that will be contained in the header file.
+#     set(output_h "
+# #pragma once
 
-#include \"stdint.h\"
-#include <vector>
+# #include \"stdint.h\"
+# #include <vector>
 
-namespace SE::Private::Shaders
-{
-    extern const std::vector<uint8_t> ${output_var}_data\;
-}")
+# namespace SE::Private::Shaders
+# {
+#     extern const std::vector<uint8_t> ${output_var}_data\;
+# }")
 
-    file(WRITE ${shader_output_path}/${output_var}.h ${output_h})
-    file(WRITE ${shader_output_path}/${output_var}.cpp ${output_c})
+#     file(WRITE ${shader_output_path}/${output_var}.h ${output_h})
+#     file(WRITE ${shader_output_path}/${output_var}.cpp ${output_c})
 
-    set_source_files_properties(${shader_output_path}/${output_var}.h PROPERTIES GENERATED TRUE)
-    set_source_files_properties(${shader_output_path}/${output_var}.cpp PROPERTIES GENERATED TRUE)
+#     set_source_files_properties(${shader_output_path}/${output_var}.h PROPERTIES GENERATED TRUE)
+#     set_source_files_properties(${shader_output_path}/${output_var}.cpp PROPERTIES GENERATED TRUE)
 
-    target_sources(${TARGET} PRIVATE ${shader_path})
-    target_sources(${TARGET} PRIVATE ${shader_output_path}/${output_var}.cpp)
-endfunction(embed_shader)
+#     target_sources(${TARGET} PRIVATE ${shader_path})
+#     target_sources(${TARGET} PRIVATE ${shader_output_path}/${output_var}.cpp)
+# endfunction(embed_shader)
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gToneMap                                       
-    "Common/ToneMap.glsl"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gToneMap                                       
+#     "Common/ToneMap.glsl"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gPBRFunctions                                  
-    "Common/PBRFunctions.glsl"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gPBRFunctions                                  
+#     "Common/PBRFunctions.glsl"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gGetNormalFromMap                              
-    "Common/GetNormalFromMap.glsl"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gGetNormalFromMap                              
+#     "Common/GetNormalFromMap.glsl"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gVertexLayout                                  
-    "Common/VertexLayout.h"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gVertexLayout                                  
+#     "Common/VertexLayout.h"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gUIVertexShader                                
-    "ui_shader.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gUIVertexShader                                
+#     "ui_shader.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gUIFragmentShader                              
-    "ui_shader.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gUIFragmentShader                              
+#     "ui_shader.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gCopyFragmentShader                            
-    "copy.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gCopyFragmentShader                            
+#     "copy.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gFXAAFragmentShader                            
-    "fxaa.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gFXAAFragmentShader                            
+#     "fxaa.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gFXAACode                                      
-    "fxaa.h"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gFXAACode                                      
+#     "fxaa.h"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gFXAAVertexShader                              
-    "fxaa.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gFXAAVertexShader                              
+#     "fxaa.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gDirectionalShadowVertexShader                 
-    "shadow.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gDirectionalShadowVertexShader                 
+#     "shadow.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gOmniDirectionalShadowVertexShader             
-    "OmniShadow.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gOmniDirectionalShadowVertexShader             
+#     "OmniShadow.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gOmniDirectionalShadowFragmentShader           
-    "OmniShadow.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gOmniDirectionalShadowFragmentShader           
+#     "OmniShadow.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gFilterCubeVertexShader                        
-    "filtercube.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gFilterCubeVertexShader                        
+#     "filtercube.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gIrradianceCubeFragmentShader                  
-    "irradiancecube.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gIrradianceCubeFragmentShader                  
+#     "irradiancecube.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gPrefilteredEnvironmentFragmentShader          
-    "prefilterenvmap.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gPrefilteredEnvironmentFragmentShader          
+#     "prefilterenvmap.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gSkyboxVertexShader                            
-    "skybox.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gSkyboxVertexShader                            
+#     "skybox.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gSkyboxFragmentShader                          
-    "skybox.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gSkyboxFragmentShader                          
+#     "skybox.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gCoordinateGridVertexShader                    
-    "coordinategrid.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gCoordinateGridVertexShader                    
+#     "coordinategrid.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gCoordinateGridFragmentShader                  
-    "coordinategrid.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gCoordinateGridFragmentShader                  
+#     "coordinategrid.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gGenerateBrdfVertexShader                      
-    "genbrdflut.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gGenerateBrdfVertexShader                      
+#     "genbrdflut.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gGenerateBrdfFragmentShader                    
-    "genbrdflut.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gGenerateBrdfFragmentShader                    
+#     "genbrdflut.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gPBRMeshVertexShader                           
-    "PBRMeshShader.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gPBRMeshVertexShader                           
+#     "PBRMeshShader.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gPBRMeshFragmentShaderPreamble                 
-    "PBRMeshShaderPreamble.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gPBRMeshFragmentShaderPreamble                 
+#     "PBRMeshShaderPreamble.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gPBRMeshFragmentShaderCalculation              
-    "PBRMeshShaderCalculation.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gPBRMeshFragmentShaderCalculation              
+#     "PBRMeshShaderCalculation.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gParticleSystemVertexShader                    
-    "ParticleSystem.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gParticleSystemVertexShader                    
+#     "ParticleSystem.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gParticleSystemFragmentShader                  
-    "ParticleSystem.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gParticleSystemFragmentShader                  
+#     "ParticleSystem.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gSurfaceVertexShader                           
-    "SurfaceShader.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gSurfaceVertexShader                           
+#     "SurfaceShader.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gSurfaceFragmentShader                         
-    "SurfaceShader.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gSurfaceFragmentShader                         
+#     "SurfaceShader.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gWireframeVertexShader                         
-    "WireframeShader.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gWireframeVertexShader                         
+#     "WireframeShader.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gWirefrrameFragmentShader                      
-    "WireframeShader.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gWirefrrameFragmentShader                      
+#     "WireframeShader.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gUnlitVertexShader                             
-    "Unlit.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gUnlitVertexShader                             
+#     "Unlit.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gUnlitFragmentShader                           
-    "Unlit.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gUnlitFragmentShader                           
+#     "Unlit.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gDeferredLightingVertexShader                  
-    "Deferred/DeferredLighting.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gDeferredLightingVertexShader                  
+#     "Deferred/DeferredLighting.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gDeferredLightingFragmentShaderPreamble        
-    "Deferred/DeferredLighting_preamble.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gDeferredLightingFragmentShaderPreamble        
+#     "Deferred/DeferredLighting_preamble.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gDeferredLightingFragmentShaderCalculation     
-    "Deferred/DeferredLighting_calculation.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gDeferredLightingFragmentShaderCalculation     
+#     "Deferred/DeferredLighting_calculation.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gDeferredGeometryPassVertexShader              
-    "Deferred/MRT.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gDeferredGeometryPassVertexShader              
+#     "Deferred/MRT.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gDeferredGeometryPassFragmentShaderPreamble    
-    "Deferred/MRT_preamble.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gDeferredGeometryPassFragmentShaderPreamble    
+#     "Deferred/MRT_preamble.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntime 
-    gDeferredGeometryPassFragmentShaderCalculation 
-    "Deferred/MRT_calculation.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntime 
+#     gDeferredGeometryPassFragmentShaderCalculation 
+#     "Deferred/MRT_calculation.frag"
+# )
 
 
 
@@ -486,7 +488,9 @@ target_link_libraries(LTSimulationEngineRuntime PRIVATE
     pugixml
     tinygltf
     tinyobjloader
-    glfw)
+    glfw
+    LTSimulationEngineRuntimeShaders
+)
 
 target_compile_definitions(LTSimulationEngineRuntime PRIVATE)
 target_compile_options(LTSimulationEngineRuntime PRIVATE

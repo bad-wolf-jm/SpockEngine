@@ -16,22 +16,22 @@
 #include "ParticleSystemRenderer.h"
 #include "DeferredLightingRenderer.h"
 
-#include "Shaders/Embedded/gParticleSystemVertexShader.h"
-#include "Shaders/Embedded/gParticleSystemFragmentShader.h"
+#include "Shaders/gParticleSystemVertexShader.h"
+#include "Shaders/gParticleSystemFragmentShader.h"
 
-#include "Shaders/Embedded/gToneMap.h"
-#include "Shaders/Embedded/gVertexLayout.h"
-#include "Shaders/Embedded/gPBRFunctions.h"
-#include "Shaders/Embedded/gPBRMeshFragmentShaderPreamble.h"
-#include "Shaders/Embedded/gPBRMeshFragmentShaderCalculation.h"
-#include "Shaders/Embedded/gPBRMeshVertexShader.h"
-#include "Shaders/Embedded/gParticleSystemVertexShader.h"
-#include "Shaders/Embedded/gParticleSystemFragmentShader.h"
+#include "Shaders/gToneMap.h"
+#include "Shaders/gVertexLayout.h"
+#include "Shaders/gPBRFunctions.h"
+#include "Shaders/gPBRMeshFragmentShaderPreamble.h"
+#include "Shaders/gPBRMeshFragmentShaderCalculation.h"
+#include "Shaders/gPBRMeshVertexShader.h"
+#include "Shaders/gParticleSystemVertexShader.h"
+#include "Shaders/gParticleSystemFragmentShader.h"
 
-#include "Shaders/Embedded/gFXAACode.h"
-#include "Shaders/Embedded/gCopyFragmentShader.h"
-#include "Shaders/Embedded/gFXAAFragmentShader.h"
-#include "Shaders/Embedded/gFXAAVertexShader.h"
+#include "Shaders/gFXAACode.h"
+#include "Shaders/gCopyFragmentShader.h"
+#include "Shaders/gFXAAFragmentShader.h"
+#include "Shaders/gFXAAVertexShader.h"
 
 namespace SE::Core
 {

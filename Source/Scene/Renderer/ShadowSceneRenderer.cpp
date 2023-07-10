@@ -17,10 +17,10 @@
 #include "MeshRenderer.h"
 #include "ParticleSystemRenderer.h"
 
-#include "Shaders/Embedded/gOmniDirectionalShadowFragmentShader.h"
-#include "Shaders/Embedded/gOmniDirectionalShadowVertexShader.h"
-#include "Shaders/Embedded/gDirectionalShadowVertexShader.h"
-#include "Shaders/Embedded/gVertexLayout.h"
+#include "Shaders/gOmniDirectionalShadowFragmentShader.h"
+#include "Shaders/gOmniDirectionalShadowVertexShader.h"
+#include "Shaders/gDirectionalShadowVertexShader.h"
+#include "Shaders/gVertexLayout.h"
 namespace SE::Core
 {
 
