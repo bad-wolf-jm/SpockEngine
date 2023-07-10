@@ -49,9 +49,15 @@ namespace SE::Core
         fs::path lShaderPath = "E:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
         auto     lVertexShader =
             CreateShaderProgram( gc, eShaderStageTypeFlags::VERTEX, 450, "particle_system_vertex_shader", lShaderPath );
+        lVertexShader->AddCode( "#extension GL_EXT_nonuniform_qualifier : enable" );
         lVertexShader->AddCode( SE::Private::Shaders::gParticleSystemVertexShader_data );
-        lVertexShader->Compile();
 
+        std::ofstream myfile;
+        myfile.open (std::string("E:\\Work\\Git\\SpockEngine\\") + std::string("example.vert"));
+        myfile << lVertexShader->Program();
+        myfile.close();
+
+        lVertexShader->Compile();
         return lVertexShader;
     }
 

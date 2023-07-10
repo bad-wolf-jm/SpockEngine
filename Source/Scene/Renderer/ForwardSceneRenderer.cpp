@@ -25,7 +25,7 @@
 #include "Shaders/Embedded/gPBRMeshFragmentShaderPreamble.h"
 #include "Shaders/Embedded/gPBRMeshFragmentShaderCalculation.h"
 #include "Shaders/Embedded/gPBRMeshVertexShader.h"
-#include "Shaders/Embedded/gParticleSystemVerrtexShader.h"
+#include "Shaders/Embedded/gParticleSystemVertexShader.h"
 #include "Shaders/Embedded/gParticleSystemFragmentShader.h"
 
 #include "Shaders/Embedded/gFXAACode.h"
