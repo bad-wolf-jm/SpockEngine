@@ -92,5 +92,11 @@ namespace SE::Core
         std::unordered_map<MeshRendererCreateInfo, Ref<MeshRenderer>, MeshRendererCreateInfoHash> mMeshRenderers = {};
         std::unordered_map<ParticleRendererCreateInfo, Ref<ParticleSystemRenderer>, ParticleSystemRendererCreateInfoHash>
             mParticleRenderers = {};
+
+
+        Ref<IShaderProgram> mGeometryVertexShader = nullptr;
+        Ref<IShaderProgram> mGeometryFragmentShader = nullptr;
+        Ref<IShaderProgram> mParticleVertexShader = nullptr;
+        Ref<IShaderProgram> mParticleFragmentShader = nullptr;
     };
 } // namespace SE::Core
