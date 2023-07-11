@@ -28,6 +28,11 @@ namespace SE::Core
 
         uint32_t mMaxLineCount = 100000;
 
+        uint32_t mCharWidth     = 0;
+        uint32_t mCharHeight    = 0;
+        uint32_t mConsoleWidth  = 0;
+        uint32_t mConsoleHeight = 0;
+
       protected:
         void PushStyles();
         void PopStyles();
