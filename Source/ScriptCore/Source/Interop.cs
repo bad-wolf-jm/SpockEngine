@@ -651,6 +651,9 @@ namespace SpockEngine
         public extern static void UITextOverlay_AddText(IntPtr aSelf, string aText);
 
         [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
+        public extern static void UITextOverlay_AddBytes(IntPtr aSelf, byte[] aText, int aOffset, int aCount);
+
+        [DllImport(SE_RUNTIME, CharSet = CharSet.Unicode)]
         public extern static void UITextOverlay_Clear(IntPtr aSelf);
         #endregion
 

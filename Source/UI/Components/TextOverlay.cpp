@@ -5,8 +5,14 @@
 
 namespace SE::Core
 {
+
     void UITextOverlay::PushStyles() {}
     void UITextOverlay::PopStyles() {}
+
+    void UITextOverlay::AddText( char *aBytes, int32_t aOffset, int32_t aCount )
+    {
+        SE::Logging::Info( "TEXT::: {} - {}", aOffset, aCount );
+    }
 
     void UITextOverlay::AddText( string_t const &aText )
     {
@@ -89,6 +95,27 @@ namespace SE::Core
 
     void UITextOverlay::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
+        if( mCharWidth == 0 )
+        {
+            SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONOSPACE );
+            auto lCharSize = ImGui::CalcTextSize( "M" );
+            SE::Core::Engine::GetInstance()->UIContext()->PopFont();
+
+            mCharWidth  = lCharSize.x;
+            mCharHeight = lCharSize.y;
+        }
+
+        auto lNewConsoleWidth  = static_cast<uint32_t>( aSize.x / mCharWidth );
+        auto lNewConsoleHeight = static_cast<uint32_t>( aSize.y / mCharHeight );
+
+        if( ( lNewConsoleWidth != mConsoleWidth ) || ( lNewConsoleHeight != mConsoleHeight ) )
+        {
+            mConsoleWidth  = lNewConsoleWidth;
+            mConsoleHeight = lNewConsoleHeight;
+
+            SE::Logging::Info( "CONSOLE_SIZE=({}, {})", mConsoleWidth, mConsoleHeight );
+        }
+
         if( !mIsVisible ) return;
 
         auto lDrawList = ImGui::GetWindowDrawList();
