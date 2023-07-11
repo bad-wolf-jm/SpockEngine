@@ -2,9 +2,9 @@
 
 #include "Engine/Engine.h"
 
-#include "Core/Profiling/BlockTimer.h"
 #include "Core/CUDA/Texture/ColorFormat.h"
 #include "Core/Logging.h"
+#include "Core/Profiling/BlockTimer.h"
 
 #include "Graphics/Interface/IWindow.h"
 
@@ -59,16 +59,17 @@ namespace SE::Core
         mFonts[FontFamilyFlags::HUGE]      = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * 1.5f );
         mFonts[FontFamilyFlags::LARGE]     = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * 1.25f );
         mFonts[FontFamilyFlags::EM]        = LoadFont( aConfig.mItalicFont, aConfig.mIconFont, aConfig.mFontSize * 1.0f );
-        mFonts[FontFamilyFlags::BOLD  ]    = LoadFont( aConfig.mBoldFont, aConfig.mIconFont, aConfig.mFontSize );
+        mFonts[FontFamilyFlags::BOLD]      = LoadFont( aConfig.mBoldFont, aConfig.mIconFont, aConfig.mFontSize );
         mFonts[FontFamilyFlags::NORMAL]    = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize );
         mFonts[FontFamilyFlags::SMALL]     = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * .75f );
         mFonts[FontFamilyFlags::TINY]      = LoadFont( aConfig.mMainFont, aConfig.mIconFont, aConfig.mFontSize * .5f );
-        mFonts[FontFamilyFlags::MONOSPACE] = LoadFont( aConfig.mMonoFont, aConfig.mIconFont, aConfig.mFontSize * 1.0f );
+        mFonts[FontFamilyFlags::MONOSPACE] = LoadFont( aConfig.mMonoFont, aConfig.mIconFont, aConfig.mFontSize * .9f );
 
         mUIStyle = UIStyle{ true };
 
         mUIDescriptorSetLayout = CreateDescriptorSetLayout( mGraphicContext, false, 1 );
-        mUIDescriptorSetLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { Graphics::eShaderStageTypeFlags::FRAGMENT } );
+        mUIDescriptorSetLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER,
+                                            { Graphics::eShaderStageTypeFlags::FRAGMENT } );
         mUIDescriptorSetLayout->Build();
 
         unsigned char *lFontPixelData;
@@ -231,7 +232,7 @@ namespace SE::Core
 
     Ref<IDescriptorSet> UIContext::AddTexture( Ref<ISampler2D> aTexture )
     {
-        Ref<IDescriptorSet> lDescriptorSet = mUIDescriptorSetLayout->Allocate(1);
+        Ref<IDescriptorSet> lDescriptorSet = mUIDescriptorSetLayout->Allocate( 1 );
         lDescriptorSet->Write( aTexture, 0 );
 
         return lDescriptorSet;

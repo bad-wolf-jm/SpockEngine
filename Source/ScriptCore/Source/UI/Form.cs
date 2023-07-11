@@ -15,7 +15,12 @@ namespace SpockEngine
         public void SetTitle(string aTitle) { Interop.UIForm_SetTitle(mInstance, aTitle); }
 
         UIComponent mContent;
-        public void SetContent(UIComponent aContent) { mContent = aContent; Interop.UIForm_SetContent(mInstance, aContent.Instance); }
+        public void SetContent(UIComponent aContent)
+        {
+            mContent = aContent;
+            Interop.UIForm_SetContent(mInstance, aContent.Instance);
+        }
+        
         public void SetSize(float aWidth, float aHeight) { Interop.UIForm_SetSize(mInstance, aWidth, aHeight); }
 
         public void Update() { Interop.UIForm_Update(mInstance); }
