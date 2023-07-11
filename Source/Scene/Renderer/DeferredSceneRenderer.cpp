@@ -53,7 +53,7 @@ namespace SE::Core
         lVertexShader->AddCode( SE::Private::Shaders::gParticleSystemVertexShader_data );
 
         std::ofstream myfile;
-        myfile.open (std::string("E:\\Work\\Git\\SpockEngine\\") + std::string("example.vert"));
+        myfile.open( std::string( "E:\\Work\\Git\\SpockEngine\\" ) + std::string( "example.vert" ) );
         myfile << lVertexShader->Program();
         myfile.close();
 
@@ -203,25 +203,25 @@ namespace SE::Core
 
         {
             fs::path lShaderPath = "E:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
-            auto     lVertexShader =
-                CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath );
 
-            lVertexShader->AddCode( "layout( location = 0 ) in vec2 inUV;\n" );
-            lVertexShader->AddCode( "layout( location = 1 ) in vec4 inConsoleUV;\n" );
-            lVertexShader->AddCode( "layout( set = 0, binding = 0 ) uniform sampler2D sImage;\n" );
-            lVertexShader->AddCode( "layout( location = 0 ) out vec4 outFragcolor;\n" );
-            lVertexShader->AddCode( "#define FXAA_PC 1\n" );
-            lVertexShader->AddCode( "#define FXAA_GLSL_130 1\n" );
-            lVertexShader->AddCode( "#define FXAA_QUALITY__PRESET 23\n" );
-            lVertexShader->AddCode( SE::Private::Shaders::gFXAACode_data );
-            lVertexShader->AddCode( SE::Private::Shaders::gFXAAFragmentShader_data );
+            auto lVertexShader =
+                CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "fxaa_fragment_shader", lShaderPath );
+            lVertexShader->AddCode( SE::Private::Shaders::gFXAAVertexShader_data );
             lVertexShader->Compile();
-            // mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
 
-            auto lFragmentShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450,
-                                                        "omni_shadow_fragment_shader", lShaderPath );
-            lFragmentShader->AddCode( SE::Private::Shaders::gCopyFragmentShader_data );
+            auto lFragmentShader =
+                CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "fxaa_fragment_shader", lShaderPath );
+            lFragmentShader->AddCode( "layout( location = 0 ) in vec2 inUV;\n" );
+            lFragmentShader->AddCode( "layout( location = 1 ) in vec4 inConsoleUV;\n" );
+            lFragmentShader->AddCode( "layout( set = 0, binding = 0 ) uniform sampler2D sImage;\n" );
+            lFragmentShader->AddCode( "layout( location = 0 ) out vec4 outFragcolor;\n" );
+            lFragmentShader->AddCode( "#define FXAA_PC 1\n" );
+            lFragmentShader->AddCode( "#define FXAA_GLSL_130 1\n" );
+            lFragmentShader->AddCode( "#define FXAA_QUALITY__PRESET 23\n" );
+            lFragmentShader->AddCode( SE::Private::Shaders::gFXAACode_data );
+            lFragmentShader->AddCode( SE::Private::Shaders::gFXAAFragmentShader_data );
             lFragmentShader->Compile();
+            // mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
 
             EffectProcessorCreateInfo lEffectProcessorCreateInfo{};
             lEffectProcessorCreateInfo.mVertexShader   = lVertexShader;
@@ -232,13 +232,12 @@ namespace SE::Core
         {
             fs::path lShaderPath = "E:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
             auto     lVertexShader =
-                CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath );
+                CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "copy_vertex_shader", lShaderPath );
             lVertexShader->AddCode( SE::Private::Shaders::gFXAAVertexShader_data );
             lVertexShader->Compile();
-            // mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
 
-            auto lFragmentShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450,
-                                                        "omni_shadow_fragment_shader", lShaderPath );
+            auto lFragmentShader =
+                CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "copy_fragment_shader", lShaderPath );
             lFragmentShader->AddCode( SE::Private::Shaders::gCopyFragmentShader_data );
             lFragmentShader->Compile();
 
