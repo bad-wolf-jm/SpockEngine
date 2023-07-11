@@ -1920,7 +1920,7 @@ namespace SE::Core
     {
         const static Palette p = { {
             IM_COL32( 212, 212, 212, 255 ),   // Default
-            IM_COL32( 30, 80, 179, 255 ),     // Keyword
+            IM_COL32(  30,  80, 179, 255 ),     // Keyword
             IM_COL32( 181, 206, 168, 255 ),   // Number
             IM_COL32( 206, 145, 120, 255 ),   // String
             IM_COL32( 206, 145, 120, 255 ),   // Char literal
