@@ -48,9 +48,9 @@ namespace SE::Graphics
             lBlending.mSourceColorFactor   = eBlendFactor::SRC_ALPHA;
             lBlending.mDestColorFactor     = eBlendFactor::ONE_MINUS_SRC_ALPHA;
             lBlending.mColorBlendOperation = eBlendOperation::ADD;
-            lBlending.mSourceAlphaFactor   = eBlendFactor::ZERO;
-            lBlending.mDestAlphaFactor     = eBlendFactor::ONE;
-            lBlending.mAlphaBlendOperation = eBlendOperation::MAX;
+            lBlending.mSourceAlphaFactor   = eBlendFactor::ONE_MINUS_SRC_ALPHA;
+            lBlending.mDestAlphaFactor     = eBlendFactor::ZERO;
+            lBlending.mAlphaBlendOperation = eBlendOperation::ADD;
         }
 
         mPipelineObject = SE::Core::New<sVkPipelineObject>(

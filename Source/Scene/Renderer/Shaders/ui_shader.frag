@@ -12,5 +12,7 @@ layout( location = 0 ) in struct
 
 void main() 
 { 
-    fColor = In.Color * texture( sTexture, In.UV.st ); 
+    fColor = In.Color.a * texture( sTexture, In.UV.st ); 
+    // fColor = vec4(pow(fColor.xyz, vec3(1. / 2.2)), fColor.a);
+    // fColor = vec4(pow(fColor.xyz, vec3(1. / 2.2)), 1.0);
 }
