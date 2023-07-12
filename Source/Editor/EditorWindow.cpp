@@ -218,6 +218,14 @@ namespace SE::Editor
         }
         ImGui::End();
 
+        static bool p_open_30 = true;
+        if( ImGui::Begin( "NEW 3D VIEW", &p_open_30, ImGuiWindowFlags_None ) )
+        {
+            auto lWorkspaceAreaSize = UI::GetAvailableContentSpace();
+            WorkspaceNew( lWorkspaceAreaSize.x, lWorkspaceAreaSize.y );
+        }
+        ImGui::End();
+
         if( ImGui::Begin( "LIGHT PANEL", NULL, ImGuiWindowFlags_None ) )
         {
             auto     lWorkspaceAreaSize = UI::GetAvailableContentSpace();
@@ -933,6 +941,307 @@ namespace SE::Editor
         //     lOut.EndMap();
         // }
         // lOut.EndMap();
+    }
+
+    void EditorWindow::WorkspaceNew( int32_t width, int32_t height )
+    {
+        // auto &lIO = ImGui::GetIO();
+
+        // math::vec2 l_WorkspacePosition = UI::GetCurrentCursorScreenPosition();
+        // math::vec2 l_CursorPosition    = UI::GetCurrentCursorPosition();
+
+        // ImGui::PushStyleColor( ImGuiCol_Button, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f } );
+        // ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4{ 1.0f, 1.0f, 1.0f, 0.01f } );
+        // ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4{ 1.0f, 1.0f, 1.0f, 0.02f } );
+
+        // float                   l_SliderSize0            = 150.0f;
+        // static ManipulationType lCurrentManipulationType = ManipulationType::ROTATION;
+        // ManipulationTypeChooser lManipulationTypeChooser( "##FOO_2" );
+        // ImGui::SetNextItemWidth( l_SliderSize0 );
+        // lManipulationTypeChooser.Dropdown.Labels = { "Rotation", "Translation", "Scale" };
+        // lManipulationTypeChooser.Dropdown.Values = { ManipulationType::ROTATION, ManipulationType::TRANSLATION,
+        //                                              ManipulationType::SCALE };
+        // lManipulationTypeChooser.Display( lCurrentManipulationType );
+        // if( lManipulationTypeChooser.Dropdown.Changed ) lCurrentManipulationType = lManipulationTypeChooser.Dropdown.GetValue();
+
+        // math::vec2  l3DViewPosition = UI::GetCurrentCursorScreenPosition();
+        // math::ivec2 l3DViewSize     = UI::GetAvailableContentSpace();
+        // m_WorkspaceAreaSize         = l3DViewSize;
+
+        // UI::SameLine();
+
+        // if( ActiveWorld->GetState() == Scene::eSceneState::EDITING )
+        // {
+
+        //     if( ImGui::ImageButton( (ImTextureID)m_PlayIconHandle.Handle->GetID(), ImVec2{ 22.0f, 22.0f }, ImVec2{ 0.0f, 0.0f },
+        //                             ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f }, ImVec4{ 0.0f, 1.0f, 0.0f, 0.8f } ) )
+        //     {
+        //         if( OnBeginScenario ) OnBeginScenario();
+
+        //         ActiveWorld = New<Scene>( World );
+        //         ActiveWorld->BeginScenario();
+        //     }
+        // }
+        // else
+        // {
+        //     if( ImGui::ImageButton( (ImTextureID)m_PauseIconHandle.Handle->GetID(), ImVec2{ 22.0f, 22.0f }, ImVec2{ 0.0f, 0.0f },
+        //                             ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f }, ImVec4{ 1.0f, .2f, 0.0f, 0.8f } ) )
+        //     {
+        //         if( OnEndScenario ) OnEndScenario();
+
+        //         ActiveWorld->EndScenario();
+        //         ActiveWorld  = World;
+        //         ActiveSensor = Sensor;
+        //     }
+        // }
+        // UI::SameLine();
+
+        // ImGui::PushStyleColor( ImGuiCol_Text,
+        //                        WorldRenderer->mRenderGizmos ? ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f } : ImVec4{ 1.0f, 1.0f, 1.0f, .2f } );
+        // if( UI::Button( "Gizmos", math::vec2{ 65.0f, 24.0f } ) )
+        // {
+        //     // WorldRenderer->mRenderGizmos = !WorldRenderer->mRenderGizmos;
+        // }
+        // ImGui::PopStyleColor();
+        // UI::SameLine();
+        // ImGui::PushStyleColor( ImGuiCol_Text, WorldRenderer->mRenderCoordinateGrid ? ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f }
+        //                                                                            : ImVec4{ 1.0f, 1.0f, 1.0f, .2f } );
+        // if( UI::Button( "Grid", math::vec2{ 65.0f, 24.0f } ) )
+        // {
+        //     // WorldRenderer->mRenderCoordinateGrid = !WorldRenderer->mRenderCoordinateGrid;
+        // }
+        // ImGui::PopStyleColor();
+        // UI::SameLine();
+
+        // ImGui::PushStyleColor( ImGuiCol_Text, WorldRenderer->mGrayscaleRendering ? ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f }
+        //                                                                          : ImVec4{ 1.0f, 1.0f, 1.0f, .2f } );
+        // if( UI::Button( "Grayscale", math::vec2{ 65.0f, 24.0f } ) )
+        // {
+        //     // WorldRenderer->mGrayscaleRendering = !WorldRenderer->mGrayscaleRendering;
+        // }
+        // UI::SameLine();
+
+        // ImGui::PushStyleColor( ImGuiCol_Text,
+        //                        WorldRenderer->mUseFXAA ? ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f } : ImVec4{ 1.0f, 1.0f, 1.0f, .2f } );
+        // if( UI::Button( "FXAA", math::vec2{ 65.0f, 24.0f } ) )
+        // {
+        //     // WorldRenderer->mUseFXAA = !WorldRenderer->mUseFXAA;
+        // }
+        // ImGui::PopStyleColor();
+        // ImGui::PopStyleColor();
+        // ImGui::PopStyleColor();
+        // ImGui::PopStyleColor();
+        // ImGui::PopStyleColor();
+
+        // ActiveWorld->SetViewport( l3DViewPosition,
+        //                           math::vec2{ static_cast<float>( l3DViewSize.x ), static_cast<float>( l3DViewSize.y ) } );
+
+        // if( m_SceneViewport.Handle )
+        // {
+        //     UI::Image( m_SceneViewport, l3DViewSize );
+        //     if( ImGui::BeginDragDropTarget() )
+        //     {
+        //         if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
+        //         {
+        //             const char *lPayloadData = (const char *)payload->Data;
+        //             size_t      lPayloadSize = static_cast<size_t>( payload->DataSize / 2 );
+        //             std::string lItemPath( lPayloadSize - 1, '\0' );
+        //             for( uint32_t i = 0; i < lPayloadSize - 1; i++ )
+        //             {
+        //                 lItemPath[i] = lPayloadData[2 * i];
+        //             }
+
+        //             LoadScenario( fs::path( lItemPath ) );
+        //         }
+        //         ImGui::EndDragDropTarget();
+        //     }
+
+        //     math::mat4 lCameraView     = math::Inverse( World->mEditorView );
+        //     math::vec3 lCameraPosition = math::Translation( lCameraView );
+        //     math::mat3 lRotationMatrix = math::Rotation( lCameraView );
+
+        //     float lRotationSpeed = 2.5_degf;
+        //     float lPanningSpeed  = 0.25f;
+
+        //     bool lViewLanipulate =
+        //         ViewManipulate( lCameraPosition, World->mEditorView, l3DViewPosition + math::vec2{ l3DViewSize.x - 125.0f, 35.0f }
+        //         );
+
+        //     WorldRenderer->SetView( World->mEditorView );
+
+        //     ManipulationConfig lManipulator{};
+        //     lManipulator.Type             = lCurrentManipulationType;
+        //     lManipulator.Projection       = WorldRenderer->mView.Projection;
+        //     lManipulator.WorldTransform   = World->mEditorView;
+        //     lManipulator.ViewportPosition = l3DViewPosition;
+        //     lManipulator.ViewportSize     = l3DViewSize;
+
+        //     if( m_SceneHierarchyPanel.SelectedElement && m_SceneHierarchyPanel.SelectedElement.Has<sNodeTransformComponent>() )
+        //     {
+        //         auto &lSensorTransform = m_SceneHierarchyPanel.SelectedElement.Get<sNodeTransformComponent>();
+        //         Manipulate( lManipulator, lSensorTransform.mMatrix );
+        //         m_SceneHierarchyPanel.SelectedElement.Replace<sNodeTransformComponent>( lSensorTransform );
+        //     }
+
+        //     if( !ImGui::GetDragDropPayload() && ImGui::IsItemHovered() && !ImGuizmo::IsUsing() && !lViewLanipulate )
+        //     {
+        //         if( ImGui::IsMouseDragging( ImGuiMouseButton_Left ) )
+        //         {
+        //             ImVec2 lDragDelta =
+        //                 ImGui::GetMouseDragDelta() / ImVec2{ static_cast<float>( width ), static_cast<float>( height ) };
+        //             if( lIO.KeyShift )
+        //             {
+        //                 math::mat3 lNewRotation =
+        //                     math::mat3( math::Rotation( -lDragDelta.x, lRotationMatrix * math::vec3{ 0.0f, 1.0f, 0.0f } ) ) *
+        //                     lRotationMatrix;
+        //                 World->mEditorView = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
+
+        //                 WorldRenderer->SetView( World->mEditorView );
+        //             }
+        //             else if( lIO.KeyAlt )
+        //             {
+        //                 math::mat3 lNewRotation =
+        //                     math::mat3( math::Rotation( -lDragDelta.y, lRotationMatrix * math::vec3{ 1.0f, 0.0f, 0.0f } ) ) *
+        //                     lRotationMatrix;
+        //                 World->mEditorView = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
+
+        //                 WorldRenderer->SetView( World->mEditorView );
+        //             }
+        //             else if( lIO.KeyCtrl )
+        //             {
+        //                 math::mat3 lNewRotation =
+        //                     math::mat3( math::Rotation( -lDragDelta.x, lRotationMatrix * math::vec3{ 0.0f, 0.0f, 1.0f } ) ) *
+        //                     lRotationMatrix;
+        //                 World->mEditorView = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
+
+        //                 WorldRenderer->SetView( World->mEditorView );
+        //             }
+        //             else
+        //             {
+        //                 math::mat3 lNewRotationX =
+        //                     math::mat3( math::Rotation( -lDragDelta.x, lRotationMatrix * math::vec3{ 0.0f, 1.0f, 0.0f } ) );
+        //                 math::mat3 lNewRotationY =
+        //                     math::mat3( math::Rotation( -lDragDelta.y, lRotationMatrix * math::vec3{ 1.0f, 0.0f, 0.0f } ) );
+        //                 World->mEditorView =
+        //                     math::Inverse( math::FromComponents( lNewRotationX * lNewRotationY * lRotationMatrix, lCameraPosition )
+        //                     );
+
+        //                 WorldRenderer->SetView( World->mEditorView );
+        //             }
+        //             ImGui::ResetMouseDragDelta( ImGuiMouseButton_Left );
+        //         }
+
+        //         if( ImGui::IsMouseDragging( ImGuiMouseButton_Right ) )
+        //         {
+
+        //             ImVec2     lDragDelta0 = ImGui::GetMouseDragDelta( ImGuiMouseButton_Right );
+        //             math::vec4 lDragDelta{ lDragDelta0.x, lDragDelta0.y, 0.0f, 1.0f };
+        //             lDragDelta = math::Inverse( WorldRenderer->mView.Projection ) * lDragDelta;
+        //             lDragDelta = lDragDelta / lDragDelta.w;
+
+        //             math::vec3 lPanAmount   = lRotationMatrix * math::vec3{ -lDragDelta.x, -lDragDelta.y, 0.0f };
+        //             math::vec3 lNewPosition = lCameraPosition + lPanAmount;
+        //             World->mEditorView      = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
+
+        //             WorldRenderer->SetView( World->mEditorView );
+
+        //             ImGui::ResetMouseDragDelta( ImGuiMouseButton_Right );
+        //         }
+        //     }
+
+        //     if( ImGui::IsItemHovered() )
+        //     {
+        //         if( ImGui::IsKeyPressed( ImGuiKey_UpArrow ) )
+        //         {
+        //             if( lIO.KeyShift )
+        //             {
+        //                 math::vec3 lPanAmount   = lRotationMatrix * math::vec3{ 0.0f, lPanningSpeed, 0.0f };
+        //                 math::vec3 lNewPosition = lCameraPosition + lPanAmount;
+        //                 World->mEditorView      = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
+
+        //                 WorldRenderer->SetView( World->mEditorView );
+        //             }
+        //             else
+        //             {
+        //                 math::vec3 lPanAmount   = lRotationMatrix * math::vec3{ 0.0f, 0.0f, -lPanningSpeed };
+        //                 math::vec3 lNewPosition = lCameraPosition + lPanAmount;
+        //                 World->mEditorView      = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
+
+        //                 WorldRenderer->SetView( World->mEditorView );
+        //             }
+        //         }
+        //         else if( ImGui::IsKeyPressed( ImGuiKey_DownArrow ) )
+        //         {
+        //             if( lIO.KeyShift )
+        //             {
+        //                 math::vec3 lPanAmount   = lRotationMatrix * math::vec3{ 0.0f, -lPanningSpeed, 0.0f };
+        //                 math::vec3 lNewPosition = lCameraPosition + lPanAmount;
+        //                 World->mEditorView      = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
+
+        //                 WorldRenderer->SetView( World->mEditorView );
+        //             }
+        //             else
+        //             {
+        //                 math::vec3 lPanAmount   = lRotationMatrix * math::vec3{ 0.0f, 0.0f, lPanningSpeed };
+        //                 math::vec3 lNewPosition = lCameraPosition + lPanAmount;
+        //                 World->mEditorView      = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
+
+        //                 WorldRenderer->SetView( World->mEditorView );
+        //             }
+        //         }
+        //         else if( ImGui::IsKeyPressed( ImGuiKey_LeftArrow ) )
+        //         {
+        //             math::vec3 lNewPosition = lCameraPosition + lRotationMatrix * math::vec3{ -lPanningSpeed, 0.0f, 0.0f };
+        //             World->mEditorView      = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
+
+        //             WorldRenderer->SetView( World->mEditorView );
+        //         }
+        //         else if( ImGui::IsKeyPressed( ImGuiKey_RightArrow ) )
+        //         {
+        //             math::vec3 lNewPosition = lCameraPosition + lRotationMatrix * math::vec3{ lPanningSpeed, 0.0f, 0.0f };
+        //             World->mEditorView      = math::Inverse( math::FromComponents( lRotationMatrix, lNewPosition ) );
+
+        //             WorldRenderer->SetView( World->mEditorView );
+        //         }
+
+        //         if( ImGui::IsKeyPressed( ImGuiKey_W ) )
+        //         {
+        //             math::mat3 lNewRotation =
+        //                 math::mat3( math::Rotation( -lRotationSpeed, lRotationMatrix * math::vec3{ 1.0f, 0.0f, 0.0f } ) ) *
+        //                 lRotationMatrix;
+        //             World->mEditorView = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
+
+        //             WorldRenderer->SetView( World->mEditorView );
+        //         }
+        //         else if( ImGui::IsKeyPressed( ImGuiKey_S ) )
+        //         {
+        //             math::mat3 lNewRotation =
+        //                 math::mat3( math::Rotation( lRotationSpeed, lRotationMatrix * math::vec3{ 1.0f, 0.0f, 0.0f } ) ) *
+        //                 lRotationMatrix;
+        //             World->mEditorView = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
+
+        //             WorldRenderer->SetView( World->mEditorView );
+        //         }
+        //         else if( ImGui::IsKeyPressed( ImGuiKey_A ) )
+        //         {
+        //             math::mat3 lNewRotation =
+        //                 math::mat3( math::Rotation( lRotationSpeed, lRotationMatrix * math::vec3{ 0.0f, 1.0f, 0.0f } ) ) *
+        //                 lRotationMatrix;
+        //             World->mEditorView = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
+
+        //             WorldRenderer->SetView( World->mEditorView );
+        //         }
+        //         else if( ImGui::IsKeyPressed( ImGuiKey_D ) )
+        //         {
+        //             math::mat3 lNewRotation =
+        //                 math::mat3( math::Rotation( -lRotationSpeed, lRotationMatrix * math::vec3{ 0.0f, 1.0f, 0.0f } ) ) *
+        //                 lRotationMatrix;
+        //             World->mEditorView = math::Inverse( math::FromComponents( lNewRotation, lCameraPosition ) );
+
+        //             WorldRenderer->SetView( World->mEditorView );
+        //         }
+        //     }
+        // }
     }
 
     void EditorWindow::Workspace( int32_t width, int32_t height )

@@ -105,6 +105,7 @@ namespace SE::Editor
         void ImportModel( fs::path aPath );
 
         void Workspace( int32_t width, int32_t height );
+        void WorkspaceNew( int32_t width, int32_t height );
         void Console( int32_t width, int32_t height );
         void UpdateFramerate( Timestep ts );
 
