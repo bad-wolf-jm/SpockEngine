@@ -10,3 +10,5 @@ Tests/Scripts/create_fpga_test/.fpga_work
 /mono/
 Assets/
 Source/Scene/Renderer/Shaders/Embedded
+Shaders/Embedded
+run_tool.bat

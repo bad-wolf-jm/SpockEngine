@@ -11,75 +11,27 @@ namespace SE::Core
 
     void UITextOverlay::AddText( char *aBytes, int32_t aOffset, int32_t aCount )
     {
-        SE::Logging::Info( "TEXT::: {} - {}", aOffset, aCount );
+        char *aCharArray = aBytes + aOffset;
+
+        int32_t i = 0;
+        while( i < aCount )
+        {
+            if( i % 2 == 1 )
+            {
+                i++;
+                continue;
+            }
+
+            mCharacters.emplace_back( aCharArray[i], 1 );
+            i++;
+        }
     }
 
     void UITextOverlay::AddText( string_t const &aText )
     {
-        string_t lText = mLeftOver + aText;
-        string_t lLine;
-        string_t lDelimiter = "\r\n";
-
-        size_t lLineBeginPos    = 0;
-        size_t lLineEndPosition = lText.find( lDelimiter, lLineBeginPos );
-        if( lLineEndPosition == string_t::npos )
-        {
-            if( mLines.empty() )
-            {
-                mLines.emplace_back( sTextLine{ 0, lLine, true } );
-                mLineCount++;
-            }
-            else
-            {
-                auto &lLastLine = mLines.back();
-                if( lLastLine.mIsPartial ) lLastLine.mLine += lText;
-            }
-        }
-        else
-        {
-            while( lLineEndPosition != string_t::npos )
-            {
-                string_t lLine = lText.substr( lLineBeginPos, lLineEndPosition - lLineBeginPos );
-
-                if( mLines.empty() )
-                {
-                    mLines.emplace_back( sTextLine{ 0, lLine, true } );
-                    mLineCount++;
-                }
-                else
-                {
-                    auto &lLastLine = mLines.back();
-                    if( lLastLine.mIsPartial )
-                    {
-                        lLastLine.mLine += lLine;
-                        lLastLine.mIsPartial = false;
-                    }
-                    else
-                    {
-                        if( lLastLine.mLine == lLine )
-                        {
-                            lLastLine.mRepetitions += 1;
-                        }
-                        else
-                        {
-                            mLines.emplace_back( sTextLine{ 0, lLine, false } );
-
-                            if( mLineCount >= mMaxLineCount )
-                                mLines.pop_front();
-                            else
-                                mLineCount++;
-                        }
-                    }
-                }
-                lLineBeginPos    = lLineEndPosition + lDelimiter.length();
-                lLineEndPosition = lText.find( lDelimiter, lLineBeginPos );
-            }
-
-            mLeftOver = lText.substr( lLineBeginPos );
-        }
     }
 
-    void UITextOverlay::Clear() { mLines.clear(); }
+    void UITextOverlay::Clear() { mCharacters.clear(); }
 
     ImVec2 UITextOverlay::RequiredSize()
     {
@@ -112,52 +64,53 @@ namespace SE::Core
         {
             mConsoleWidth  = lNewConsoleWidth;
             mConsoleHeight = lNewConsoleHeight;
-
-            SE::Logging::Info( "CONSOLE_SIZE=({}, {})", mConsoleWidth, mConsoleHeight );
         }
 
         if( !mIsVisible ) return;
-
-        auto lDrawList = ImGui::GetWindowDrawList();
-
-        ImGui::SetCursorPos( aPosition );
 
         ImGui::PushID( (void *)this );
         ImGui::PushStyleColor( ImGuiCol_ChildBg, ImVec4{ 0.01f, 0.01f, 0.01f, .9f } );
         ImGui::BeginChild( "##TextOverlay", aSize );
 
-        auto lScreenPosition = ImGui::GetCursorScreenPos();
+        auto *g = ImGui::GetCurrentContext();
+        auto  *lDrawlist       = ImGui::GetWindowDrawList();
+        ImVec2 lCursorPosition = ImGui::GetCursorScreenPos() + aPosition;
+        float  lTopPosition   = lCursorPosition.y;
+        float  lLeftPosition   = lCursorPosition.x;
 
+        int32_t lLineCursorPosition = 0;
         SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONOSPACE );
-        auto lHeight = ImGui::GetFontSize();
-        auto lRadius = lHeight * 0.5f;
-        SE::Core::Engine::GetInstance()->UIContext()->PopFont();
-        auto lTagTextSize = ImGui::CalcTextSize( "9999" );
-        auto lTagWidth    = lTagTextSize.x + lRadius * 2.0f;
-
-        for( auto const &lLine : mLines )
+        for( int32_t i = 0; i < mCharacters.size(); i++ )
         {
-            auto lScreenPosition = ImGui::GetCursorScreenPos();
-            lDrawList->AddRectFilled( lScreenPosition, lScreenPosition + ImVec2{ lTagWidth, lHeight }, ImColor( 32, 32, 32, 128 ),
-                                      lRadius );
+            if( mCharacters[i].mCharacter == '\n' )
+            {
+                lLineCursorPosition = 0;
 
-            auto   lTagText         = fmt::format( "{}", lLine.mRepetitions );
-            auto   lLinePosition    = ImGui::GetCursorPos();
-            auto   lTagTextRealSize = ImGui::CalcTextSize( lTagText.c_str() );
-            ImVec2 lTagTextposition = ( ImVec2{ lTagWidth, lHeight } - lTagTextRealSize ) * 0.5f;
+                lCursorPosition.x = lLeftPosition;
+                lCursorPosition.y += mCharHeight;
+                continue;
+            }
 
-            ImGui::PushStyleColor( ImGuiCol_Text, ImVec4{ 0.9f, 0.9f, 0.9f, .4f } );
-            ImGui::SetCursorPos( lLinePosition + lTagTextposition );
-            ImGui::Text( lTagText.c_str() );
-            ImGui::PopStyleColor();
+            lDrawlist->AddText( g->Font, g->FontSize, lCursorPosition, ImGui::GetColorU32( ImGuiCol_Text ), &mCharacters[i].mCharacter,
+                                &mCharacters[i].mCharacter + 1 );
 
-            ImGui::SetCursorPos( lLinePosition + ImVec2{ lTagWidth + 5.0f, 0.0f } );
+            if( lLineCursorPosition >= mConsoleWidth )
+            {
+                lLineCursorPosition = 0;
 
-            SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONOSPACE );
-            ImGui::Text( lLine.mLine.c_str() );
-            SE::Core::Engine::GetInstance()->UIContext()->PopFont();
+                lCursorPosition.x = lLeftPosition;
+                lCursorPosition.y += mCharHeight;
+            }
+            else
+            {
+                lLineCursorPosition++;
+
+                lCursorPosition.x += mCharWidth;
+            }
         }
+        SE::Core::Engine::GetInstance()->UIContext()->PopFont();
 
+        ImGui::ItemSize(ImVec2{aSize.x, (lCursorPosition.y + mCharHeight) - lTopPosition}, 0.0f);
         ImGui::EndChild();
         ImGui::PopStyleColor();
         ImGui::PopID();
