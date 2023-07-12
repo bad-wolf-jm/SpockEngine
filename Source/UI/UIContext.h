@@ -74,7 +74,7 @@ namespace SE::Core
 
         ImGuiContext  *mImGUIOverlay;
         ImPlotContext *mImPlotContext;
-        string_t    mImGuiConfigPath;
+        string_t       mImGuiConfigPath;
 
         UIStyle mUIStyle;
 
@@ -88,6 +88,7 @@ namespace SE::Core
         std::map<FontFamilyFlags, ImFont *> mFonts;
 
         ImFont *LoadFont( path_t aFontName, path_t aIconFontName, uint32_t aFontSize );
+        ImFont *GetFont( FontFamilyFlags aFont ) { return mFonts[aFont]; }
 
       private:
         Ref<UIWindow> mMainWindow;
