@@ -87,19 +87,20 @@ namespace SE::Core
         ImGui::PushStyleColor( ImGuiCol_ChildBg, ImVec4{ 0.01f, 0.01f, 0.01f, .9f } );
         ImGui::BeginChild( "##TextOverlay", aSize );
 
-        auto  *g               = ImGui::GetCurrentContext();
-        auto  *lDrawlist       = ImGui::GetWindowDrawList();
+        auto *g         = ImGui::GetCurrentContext();
+        auto *lDrawlist = ImGui::GetWindowDrawList();
+
         ImVec2 lCursorPosition = ImGui::GetCursorScreenPos() + aPosition;
         float  lTopPosition    = lCursorPosition.y;
         float  lLeftPosition   = lCursorPosition.x;
 
-        int32_t lLineCursorPosition = 0;
+        int32_t lCursorPositionInCurrentLine = 0;
         SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONOSPACE );
         for( int32_t i = 0; i < mCharacters.size(); i++ )
         {
             if( mCharacters[i].mCharacter[0] == '\n' )
             {
-                lLineCursorPosition = 0;
+                lCursorPositionInCurrentLine = 0;
 
                 lCursorPosition.x = lLeftPosition;
                 lCursorPosition.y += mCharHeight;
@@ -109,16 +110,16 @@ namespace SE::Core
             lDrawlist->AddText( g->Font, g->FontSize, lCursorPosition, ImGui::GetColorU32( ImGuiCol_Text ), mCharacters[i].mCharacter,
                                 mCharacters[i].mCharacter + 1 );
 
-            if( lLineCursorPosition >= mConsoleWidth )
+            if( lCursorPositionInCurrentLine >= mConsoleWidth )
             {
-                lLineCursorPosition = 0;
+                lCursorPositionInCurrentLine = 0;
 
                 lCursorPosition.x = lLeftPosition;
                 lCursorPosition.y += mCharHeight;
             }
             else
             {
-                lLineCursorPosition++;
+                lCursorPositionInCurrentLine++;
 
                 lCursorPosition.x += mCharWidth;
             }
