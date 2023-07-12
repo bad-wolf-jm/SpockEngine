@@ -22,9 +22,11 @@ namespace SE::Core
 
     struct sChar
     {
-        char mCharacter;
-        char mWidth;
+        char mCharacter[4] = { 0 };
+        char mByteCount    = { 0 };
+        char mWidth        = '\0';
 
+        sChar() = default;
         sChar( char aCharacter, char aWidth )
             : mCharacter{ aCharacter }
             , mWidth{ aWidth }

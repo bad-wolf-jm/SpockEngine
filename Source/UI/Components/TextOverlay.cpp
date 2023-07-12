@@ -1,4 +1,7 @@
 #include "TextOverlay.h"
+
+#include <codecvt>
+#include <locale>
 #include <sstream>
 
 #include "Engine/Engine.h"
@@ -16,20 +19,32 @@ namespace SE::Core
         int32_t i = 0;
         while( i < aCount )
         {
-            if( i % 2 == 1 )
+            switch( mEncoding )
             {
-                i++;
-                continue;
+            case eTextEncoding::UTF16:
+            {
+                int   lBytesNeeded = WideCharToMultiByte( CP_UTF8, 0, (wchar_t *)&aCharArray[i], 1, NULL, 0, NULL, NULL );
+                auto &lChar        = mCharacters.emplace_back();
+                lChar.mByteCount   = lBytesNeeded;
+                WideCharToMultiByte( CP_UTF8, 0, (wchar_t *)&aCharArray[i], 1, (LPSTR)&lChar.mCharacter, lBytesNeeded, NULL, NULL );
+                i += 2;
             }
-
-            mCharacters.emplace_back( aCharArray[i], 1 );
-            i++;
+            break;
+            case eTextEncoding::UTF8: break;
+            case eTextEncoding::ASCII:
+            {
+                auto &lChar         = mCharacters.emplace_back();
+                lChar.mByteCount    = 1;
+                lChar.mCharacter[0] = aCharArray[i];
+                i++;
+            }
+            break;
+            default: break;
+            }
         }
     }
 
-    void UITextOverlay::AddText( string_t const &aText )
-    {
-    }
+    void UITextOverlay::AddText( string_t const &aText ) {}
 
     void UITextOverlay::Clear() { mCharacters.clear(); }
 
@@ -72,17 +87,17 @@ namespace SE::Core
         ImGui::PushStyleColor( ImGuiCol_ChildBg, ImVec4{ 0.01f, 0.01f, 0.01f, .9f } );
         ImGui::BeginChild( "##TextOverlay", aSize );
 
-        auto *g = ImGui::GetCurrentContext();
+        auto  *g               = ImGui::GetCurrentContext();
         auto  *lDrawlist       = ImGui::GetWindowDrawList();
         ImVec2 lCursorPosition = ImGui::GetCursorScreenPos() + aPosition;
-        float  lTopPosition   = lCursorPosition.y;
+        float  lTopPosition    = lCursorPosition.y;
         float  lLeftPosition   = lCursorPosition.x;
 
         int32_t lLineCursorPosition = 0;
         SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONOSPACE );
         for( int32_t i = 0; i < mCharacters.size(); i++ )
         {
-            if( mCharacters[i].mCharacter == '\n' )
+            if( mCharacters[i].mCharacter[0] == '\n' )
             {
                 lLineCursorPosition = 0;
 
@@ -91,8 +106,8 @@ namespace SE::Core
                 continue;
             }
 
-            lDrawlist->AddText( g->Font, g->FontSize, lCursorPosition, ImGui::GetColorU32( ImGuiCol_Text ), &mCharacters[i].mCharacter,
-                                &mCharacters[i].mCharacter + 1 );
+            lDrawlist->AddText( g->Font, g->FontSize, lCursorPosition, ImGui::GetColorU32( ImGuiCol_Text ), mCharacters[i].mCharacter,
+                                mCharacters[i].mCharacter + 1 );
 
             if( lLineCursorPosition >= mConsoleWidth )
             {
@@ -110,7 +125,7 @@ namespace SE::Core
         }
         SE::Core::Engine::GetInstance()->UIContext()->PopFont();
 
-        ImGui::ItemSize(ImVec2{aSize.x, (lCursorPosition.y + mCharHeight) - lTopPosition}, 0.0f);
+        ImGui::ItemSize( ImVec2{ aSize.x, ( lCursorPosition.y + mCharHeight ) - lTopPosition }, 0.0f );
         ImGui::EndChild();
         ImGui::PopStyleColor();
         ImGui::PopID();
