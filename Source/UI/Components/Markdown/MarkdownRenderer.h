@@ -244,9 +244,10 @@ namespace SE::Core
 
             std::vector<string_t>              mHeader;
             std::vector<std::vector<string_t>> mBody;
+            std::vector<eHorizontalAlignment>  mColumnAlignments;
 
-            float mWidth = 0.0f;
-            float mHeight = 0.0f;
+            float                     mWidth  = 0.0f;
+            float                     mHeight = 0.0f;
             std::vector<ImVec4>       mCells;
             std::vector<const char *> mCellData;
 

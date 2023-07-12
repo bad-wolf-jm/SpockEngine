@@ -280,6 +280,23 @@ namespace SE::Core
     //     ImGui::NewLine();
     // }
 
+    static ImVec2 GetContentAlignedposition( eHorizontalAlignment const &aHAlignment, ImVec2 aPosition, ImVec2 aContentSize,
+                                             ImVec2 aSize )
+    {
+        ImVec2 lContentPosition{};
+        switch( aHAlignment )
+        {
+        case eHorizontalAlignment::LEFT: lContentPosition.x = aPosition.x; break;
+        case eHorizontalAlignment::RIGHT: lContentPosition.x = aPosition.x + ( aSize.x - aContentSize.x ); break;
+        case eHorizontalAlignment::CENTER:
+        default: lContentPosition.x = aPosition.x + ( aSize.x - aContentSize.x ) * 0.5f; break;
+        }
+
+        lContentPosition.y = aPosition.y + ( aSize.y - aContentSize.y ) * 0.5f;
+
+        return lContentPosition;
+    }
+
     void UIMarkdownRendererInternal::Table::Render()
     {
         ImGui::NewLine();
@@ -294,9 +311,22 @@ namespace SE::Core
 
         for( uint32_t i = 0; i < mColumns; i++ )
         {
-            for( uint32_t j = 0; j < mTableRows + 1; j++ )
+            ImVec2 lCellSize{ mCells[i * ( mTableRows + 1 )].z, mCells[i * ( mTableRows + 1 )].w };
+            auto   lTextPositionInCell =
+                GetContentAlignedposition( eHorizontalAlignment::CENTER, ImVec2{ lCurrentX, lCurrentY },
+                                           ImGui::CalcTextSize( mCellData[i * ( mTableRows + 1 )] ), lCellSize );
+            ImGui::SetCursorPos( lTablePosition + lTextPositionInCell );
+            ImGui::TextUnformatted( mCellData[i * ( mTableRows + 1 )] );
+            lCurrentY += mCells[i * ( mTableRows + 1 )].w;
+
+            for( uint32_t j = 1; j < mTableRows + 1; j++ )
             {
-                ImGui::SetCursorPos( lTablePosition + ImVec2{ lCurrentX, lCurrentY } );
+                // ImVec2 lContentSize{ mCells[i * ( mTableRows + 1 )].z, mCells[i * ( mTableRows + 1 ) + j].w };
+                ImVec2 lCellSize{ mCells[i * ( mTableRows + 1 )].z, mCells[i * ( mTableRows + 1 ) + j].w };
+                auto   lTextPositionInCell =
+                    GetContentAlignedposition( mColumnAlignments[i], ImVec2{ lCurrentX, lCurrentY },
+                                               ImGui::CalcTextSize( mCellData[i * ( mTableRows + 1 ) + j] ), lCellSize );
+                ImGui::SetCursorPos( lTablePosition + lTextPositionInCell );
                 ImGui::TextUnformatted( mCellData[i * ( mTableRows + 1 ) + j] );
                 lCurrentY += mCells[i * ( mTableRows + 1 ) + j].w;
             }
@@ -309,6 +339,7 @@ namespace SE::Core
         for( uint32_t i = 0; i <= mColumns; i++ )
         {
             dl->AddLine( ImVec2( lCurrentX, lTableScrPosition.y ), ImVec2( lCurrentX, lTableScrPosition.y + mHeight ), c, 1.0f );
+
             lCurrentX += ( i < mColumns ) ? mCells[i * ( mTableRows + 1 )].z : 0.0f;
         }
 
@@ -317,6 +348,7 @@ namespace SE::Core
         {
             dl->AddLine( ImVec2( lTableScrPosition.x, lCurrentY ), ImVec2( lTableScrPosition.x + mWidth, lCurrentY ), c,
                          j == 1 ? 2.0f : 1.0f );
+
             lCurrentY += ( j <= mTableRows ) ? mCells[j].w : 0.0f;
         }
     }
@@ -1081,16 +1113,19 @@ namespace SE::Core
 
             break;
         case MD_BLOCK_THEAD:
+            SE::Logging::Info( "MD_BLOCK_THEAD" );
             PushBlock<TableHeader>();
             std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillHeader = true;
             std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillBody   = false;
             break;
         case MD_BLOCK_TBODY:
+            SE::Logging::Info( "MD_BLOCK_TBODY" );
             PushBlock<TableBody>();
             std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillHeader = false;
             std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillBody   = true;
             break;
         case MD_BLOCK_TR:
+            SE::Logging::Info( "MD_BLOCK_TR" );
             PushBlock<TableRow>();
 
             if( std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillBody )
@@ -1100,10 +1135,20 @@ namespace SE::Core
             }
             break;
         case MD_BLOCK_TH:
+            SE::Logging::Info( "ALIGNMENT TH -> {}", ( (MD_BLOCK_TD_DETAIL *)d )->align );
             PushBlock<TableData>( (MD_BLOCK_TD_DETAIL *)d );
             mCurrentTable->mCurrentColumn++;
+            switch( ( (MD_BLOCK_TD_DETAIL *)d )->align )
+            {
+            case MD_ALIGN::MD_ALIGN_LEFT: mCurrentTable->mColumnAlignments.push_back( eHorizontalAlignment::LEFT ); break;
+            case MD_ALIGN::MD_ALIGN_RIGHT: mCurrentTable->mColumnAlignments.push_back( eHorizontalAlignment::RIGHT ); break;
+            case MD_ALIGN::MD_ALIGN_CENTER:
+            case MD_ALIGN::MD_ALIGN_DEFAULT:
+            default: mCurrentTable->mColumnAlignments.push_back( eHorizontalAlignment::CENTER ); break;
+            }
             break;
         case MD_BLOCK_TD:
+            SE::Logging::Info( "ALIGNMENT TD -> {}", ( (MD_BLOCK_TD_DETAIL *)d )->align );
             PushBlock<TableData>( (MD_BLOCK_TD_DETAIL *)d );
             mCurrentTable->mCurrentColumn++;
             break;
