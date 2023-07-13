@@ -12,7 +12,7 @@ namespace SpockEngine
         public static string CreateFolder(string[] aPathElements)
         {
             var lPath = Path.Combine(aPathElements);
-            
+
             if (!Directory.Exists(lPath)) Directory.CreateDirectory(lPath);
 
             return lPath;
@@ -69,16 +69,6 @@ namespace SpockEngine
                 return lBaseTypeInfo.IsInterface && aType.ImplementedInterfaces.Contains(lBaseTypeInfo.AsType());
 
             }).Select(aType => aType.AsType());
-        }
-
-        public static T GetProperty<T>(object aObject, string aName)
-        {
-            if (aObject == null) return default(T);
-
-            var lObjectType = aObject.GetType();
-            var lProperty = lObjectType.GetProperty(aName);
-
-            return (T)lProperty.GetValue(aObject);
         }
     }
 }
