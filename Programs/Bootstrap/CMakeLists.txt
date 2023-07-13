@@ -35,6 +35,6 @@ set_property(TARGET ${LIBRARY_NAME} PROPERTY WIN32_EXECUTABLE TRUE)
 set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_CONFIGURATION_TYPE ClassLibrary)
 set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_PACKAGE_REFERENCES Newtonsoft.Json_13.0.1 CommandLineParser_2.9.1 YamlDotNet_13.1.1)
 set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_DOTNET_REFERENCES 
-    "C:\\GitLab\\SpockEngine\\Source\\ScriptCore\\Build\\Debug\\SE_Core.dll"
+    "..\\..\\Build\\CoreScripting\\Debug\\SE_Core.dll"
     ${DOTNET_SYSTEM_ASSEMBLIES}
 )

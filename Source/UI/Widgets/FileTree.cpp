@@ -100,7 +100,7 @@ namespace SE::Core
         mRoot = new UIFileTreeNode( this, nullptr, "", "" );
 
         if( mDefaultFile == nullptr )
-            mDefaultFile = New<UIImage>( "E:\\Work\\Git\\SpockEngine\\Saved\\Resources\\Icons\\File.png", math::vec2{ 20, 20 } );
+            mDefaultFile = New<UIImage>( "D:\\Work\\Git\\SpockEngine\\Saved\\Resources\\Icons\\File.png", math::vec2{ 20, 20 } );
     }
 
     UIFileTreeNode *UIFileTree::Add( path_t const &aPath )
