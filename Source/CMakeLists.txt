@@ -126,7 +126,7 @@ endfunction(add_shader)
 add_shader(LTSimulationEngineRuntime "ui_shader.vert")
 add_shader(LTSimulationEngineRuntime "ui_shader.frag")
 
-set(MONO_PATH "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug")
+# set(MONO_PATH "D:/Work/Git/SpockEngine/ThirdParty/mono/lib/Debug")
 
 target_link_libraries(LTSimulationEngineRuntime PUBLIC
     Vulkan::Vulkan
@@ -138,18 +138,18 @@ target_link_libraries(LTSimulationEngineRuntime PUBLIC
     winmm
     version
     Bcrypt
-    ${MONO_PATH}/libmono-static-sgen.lib
-    ${MONO_PATH}/mono-2.0-sgen.lib
-    ${MONO_PATH}/MonoPosixHelper.lib
-    ${MONO_PATH}/libmonoruntime-sgen.lib
-    ${MONO_PATH}/libmonoutils.lib
-    ${MONO_PATH}/libmini-sgen.lib
-    ${MONO_PATH}/libgcmonosgen.lib
-    ${MONO_PATH}/eglib.lib
+    # ${MONO_PATH}/libmono-static-sgen.lib
+    # ${MONO_PATH}/mono-2.0-sgen.lib
+    # ${MONO_PATH}/MonoPosixHelper.lib
+    # ${MONO_PATH}/libmonoruntime-sgen.lib
+    # ${MONO_PATH}/libmonoutils.lib
+    # ${MONO_PATH}/libmini-sgen.lib
+    # ${MONO_PATH}/libgcmonosgen.lib
+    # ${MONO_PATH}/eglib.lib
     wsock32
     ws2_32
     yaml-cpp
-    pugixml
+    # pugixml
     glfw)
 
 target_include_directories(LTSimulationEngineRuntime PRIVATE C:/GitLab/dotnet/src/native/corehost)
