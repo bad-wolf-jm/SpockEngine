@@ -29,6 +29,8 @@ namespace SE::Core
 
     void UIBaseImage::SetImage( path_t const &aImagePath )
     {
+        SE::Logging::Info("Loading image: '{}'", aImagePath.string());
+
         SE::Core::sTextureCreateInfo lTextureCreateInfo{};
         TextureData2D                lTextureData( lTextureCreateInfo, aImagePath );
         sTextureSamplingInfo         lSamplingInfo{};
