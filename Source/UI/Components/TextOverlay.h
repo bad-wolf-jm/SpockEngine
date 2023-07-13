@@ -6,13 +6,6 @@
 
 namespace SE::Core
 {
-    struct sTextLine
-    {
-        uint32_t mRepetitions = 0;
-        string_t mLine        = "";
-        bool     mIsPartial   = true;
-    };
-
     enum class eTextEncoding : int32_t
     {
         UTF16 = 0,
@@ -44,10 +37,6 @@ namespace SE::Core
         void Clear();
 
       protected:
-        // uint32_t             mLineCount = 0;
-        // std::list<sTextLine> mLines;
-        // string_t             mLeftOver;
-
         uint32_t mMaxLineCount = 100000;
 
         uint32_t mCharWidth     = 0;

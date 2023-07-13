@@ -12,6 +12,52 @@ namespace SE::Core
     void UITextOverlay::PushStyles() {}
     void UITextOverlay::PopStyles() {}
 
+    static void FillUtf8Utf16( sChar &aOut, char *aIn )
+    {
+        aOut.mByteCount = WideCharToMultiByte( CP_UTF8, 0, (wchar_t *)&aIn[0], 1, NULL, 0, NULL, NULL );
+        WideCharToMultiByte( CP_UTF8, 0, (wchar_t *)&aIn[0], 1, (LPSTR)&aOut.mCharacter, aOut.mByteCount, NULL, NULL );
+    }
+
+    static void FillUtf8Utf8( sChar &aOut, char *aIn )
+    {
+        char aInByte = aIn[0];
+
+        if( aInByte < 0x80u )
+        {
+            aOut.mCharacter[0] = aIn[0];
+
+            aOut.mByteCount = 1;
+        }
+        else if( aInByte < 0xe0u )
+        {
+            aOut.mCharacter[0] = aIn[0];
+            aOut.mCharacter[1] = aIn[1];
+
+            aOut.mByteCount = 2;
+        }
+        else if( aInByte < 0xf0u )
+        {
+            aOut.mCharacter[0] = aIn[0];
+            aOut.mCharacter[1] = aIn[1];
+            aOut.mCharacter[2] = aIn[2];
+
+            aOut.mByteCount = 3;
+        }
+        else if( aInByte < 0xf8u )
+        {
+            aOut.mCharacter[0] = aIn[0];
+            aOut.mCharacter[1] = aIn[1];
+            aOut.mCharacter[2] = aIn[2];
+            aOut.mCharacter[3] = aIn[3];
+
+            aOut.mByteCount = 4;
+        }
+        else
+        {
+            aOut.mByteCount = 1;
+        }
+    }
+
     void UITextOverlay::AddText( char *aBytes, int32_t aOffset, int32_t aCount )
     {
         char *aCharArray = aBytes + aOffset;
@@ -23,14 +69,20 @@ namespace SE::Core
             {
             case eTextEncoding::UTF16:
             {
-                int   lBytesNeeded = WideCharToMultiByte( CP_UTF8, 0, (wchar_t *)&aCharArray[i], 1, NULL, 0, NULL, NULL );
-                auto &lChar        = mCharacters.emplace_back();
-                lChar.mByteCount   = lBytesNeeded;
-                WideCharToMultiByte( CP_UTF8, 0, (wchar_t *)&aCharArray[i], 1, (LPSTR)&lChar.mCharacter, lBytesNeeded, NULL, NULL );
+                auto &lChar = mCharacters.emplace_back();
+                FillUtf8Utf8( lChar, &aCharArray[i] );
+
                 i += 2;
             }
             break;
-            case eTextEncoding::UTF8: break;
+            case eTextEncoding::UTF8:
+            {
+                auto &lChar = mCharacters.emplace_back();
+
+                FillUtf8Utf8( lChar, &aCharArray[i] );
+                i += lChar.mByteCount;
+            }
+            break;
             case eTextEncoding::ASCII:
             {
                 auto &lChar         = mCharacters.emplace_back();
