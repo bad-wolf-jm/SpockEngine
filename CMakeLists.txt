@@ -90,30 +90,30 @@ FetchContent_MakeAvailable(argparse)
 include_directories(${argparse_SOURCE_DIR}/include)
 set(SE_EXTRA_INCLUDES ${argparse_SOURCE_DIR} ${SE_EXTRA_INCLUDES})
 
-FetchContent_Declare(
-  lua
-  GIT_REPOSITORY https://github.com/marovira/lua
-  GIT_TAG        master )
-FetchContent_MakeAvailable(lua)
-include_directories(${lua_SOURCE_DIR}/src)
-set(SE_EXTRA_INCLUDES ${lua_SOURCE_DIR}/src ${SE_EXTRA_INCLUDES})
+# FetchContent_Declare(
+#   lua
+#   GIT_REPOSITORY https://github.com/marovira/lua
+#   GIT_TAG        master )
+# FetchContent_MakeAvailable(lua)
+# include_directories(${lua_SOURCE_DIR}/src)
+# set(SE_EXTRA_INCLUDES ${lua_SOURCE_DIR}/src ${SE_EXTRA_INCLUDES})
 
-FetchContent_Declare(
-  sol2
-  GIT_REPOSITORY https://github.com/ThePhD/sol2.git
-  GIT_TAG        v4.0.0-alpha )
-FetchContent_MakeAvailable(sol2)
-include_directories(${sol2_SOURCE_DIR}/include)
-set(SE_EXTRA_INCLUDES ${sol2_SOURCE_DIR}/include ${SE_EXTRA_INCLUDES})
+# FetchContent_Declare(
+#   sol2
+#   GIT_REPOSITORY https://github.com/ThePhD/sol2.git
+#   GIT_TAG        v4.0.0-alpha )
+# FetchContent_MakeAvailable(sol2)
+# include_directories(${sol2_SOURCE_DIR}/include)
+# set(SE_EXTRA_INCLUDES ${sol2_SOURCE_DIR}/include ${SE_EXTRA_INCLUDES})
 
-FetchContent_Declare(
-  pugixml
-  GIT_REPOSITORY https://github.com/zeux/pugixml.git
-  GIT_TAG        v1.13
-  GIT_PROGRESS   TRUE )
-FetchContent_MakeAvailable(pugixml)
-include_directories(${pugixml_SOURCE_DIR}/src)
-set(SE_EXTRA_INCLUDES ${pugixml_SOURCE_DIR}/src ${SE_EXTRA_INCLUDES})
+# FetchContent_Declare(
+#   pugixml
+#   GIT_REPOSITORY https://github.com/zeux/pugixml.git
+#   GIT_TAG        v1.13
+#   GIT_PROGRESS   TRUE )
+# FetchContent_MakeAvailable(pugixml)
+# include_directories(${pugixml_SOURCE_DIR}/src)
+# set(SE_EXTRA_INCLUDES ${pugixml_SOURCE_DIR}/src ${SE_EXTRA_INCLUDES})
 
 FetchContent_Declare(
   oniguruma
@@ -123,7 +123,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(oniguruma)
 include_directories(${oniguruma_SOURCE_DIR}/src)
 set(SE_EXTRA_INCLUDES ${oniguruma_SOURCE_DIR}/src ${SE_EXTRA_INCLUDES})
-
 
 set(SE_EXTRA_INCLUDES ${SE_EXTRA_INCLUDES} PARENT_SCOPE)
 set(EXTERNAL_LIBRARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty)
