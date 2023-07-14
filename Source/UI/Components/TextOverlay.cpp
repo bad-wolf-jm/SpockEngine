@@ -156,8 +156,8 @@ namespace SE::Core
         int32_t lCursorPositionInCurrentLine = 0;
         SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONOSPACE );
 
-        
-        for( int32_t i = 0; i < mCharacters.size(); i++ )
+        size_t lCharacterCount = mCharacters.size();
+        for( int32_t i = 0; i < lCharacterCount; i++ )
         {
             if( mCharacters[i].mCharacter[0] == '\n' )
             {
