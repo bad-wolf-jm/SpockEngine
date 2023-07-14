@@ -45,6 +45,11 @@ namespace SE::Core
         uint32_t mConsoleWidth  = 0;
         uint32_t mConsoleHeight = 0;
 
+        float mLeftMargin   = 10.0f;
+        float mRightMargin  = 10.0f;
+        float mTopMargin    = 10.0f;
+        float mBottomMargin = 10.0f;
+
         std::vector<sCharacter> mCharacters;
         eTextEncoding           mEncoding = eTextEncoding::UTF16;
 

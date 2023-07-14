@@ -71,14 +71,14 @@ namespace SE::Core
             {
                 auto &lChar = mCharacters.emplace_back();
 
-                FillUtf8Utf6( lChar, &aCharArray[i] );
+                FillUtf8Utf16( lChar, &aCharArray[i] );
                 lChar.mCharWidth = mCharWidth;
                 i += 2;
             }
             break;
             case eTextEncoding::UTF8:
             {
-                auto &lChar = mCharacters.emplace_bacsk();
+                auto &lChar = mCharacters.emplace_back();
 
                 FillUtf8Utf8( lChar, &aCharArray[i] );
                 lChar.mCharWidth = mCharWidth;
@@ -128,8 +128,11 @@ namespace SE::Core
             mCharHeight = lCharSize.y;
         }
 
-        auto lNewConsoleWidth  = static_cast<uint32_t>( aSize.x / mCharWidth );
-        auto lNewConsoleHeight = static_cast<uint32_t>( aSize.y / mCharHeight );
+        float lEffectiveWidth  = aSize.x - ( mLeftMargin + mRightMargin );
+        float lEffectiveHeight = aSize.y - ( mTopMargin + mBottomMargin );
+
+        auto lNewConsoleWidth  = static_cast<uint32_t>( lEffectiveWidth / mCharWidth );
+        auto lNewConsoleHeight = static_cast<uint32_t>( lEffectiveHeight / mCharHeight );
 
         if( ( lNewConsoleWidth != mConsoleWidth ) || ( lNewConsoleHeight != mConsoleHeight ) )
         {
@@ -146,12 +149,14 @@ namespace SE::Core
         auto *g         = ImGui::GetCurrentContext();
         auto *lDrawlist = ImGui::GetWindowDrawList();
 
-        ImVec2 lCursorPosition = ImGui::GetCursorScreenPos() + aPosition;
+        ImVec2 lCursorPosition = ImGui::GetCursorScreenPos() + aPosition + ImVec2{ mLeftMargin, mTopMargin };
         float  lTopPosition    = lCursorPosition.y;
         float  lLeftPosition   = lCursorPosition.x;
 
         int32_t lCursorPositionInCurrentLine = 0;
         SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONOSPACE );
+
+        
         for( int32_t i = 0; i < mCharacters.size(); i++ )
         {
             if( mCharacters[i].mCharacter[0] == '\n' )
