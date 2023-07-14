@@ -12,13 +12,13 @@ namespace SE::Core
     void UITextOverlay::PushStyles() {}
     void UITextOverlay::PopStyles() {}
 
-    static void FillUtf8Utf16( sChar &aOut, char *aIn )
+    static void FillUtf8Utf16( sCharacter &aOut, char *aIn )
     {
         aOut.mByteCount = WideCharToMultiByte( CP_UTF8, 0, (wchar_t *)&aIn[0], 1, NULL, 0, NULL, NULL );
         WideCharToMultiByte( CP_UTF8, 0, (wchar_t *)&aIn[0], 1, (LPSTR)&aOut.mCharacter, aOut.mByteCount, NULL, NULL );
     }
 
-    static void FillUtf8Utf8( sChar &aOut, char *aIn )
+    static void FillUtf8Utf8( sCharacter &aOut, char *aIn )
     {
         char aInByte = aIn[0];
 
@@ -70,24 +70,28 @@ namespace SE::Core
             case eTextEncoding::UTF16:
             {
                 auto &lChar = mCharacters.emplace_back();
-                FillUtf8Utf8( lChar, &aCharArray[i] );
 
+                FillUtf8Utf6( lChar, &aCharArray[i] );
+                lChar.mCharWidth = mCharWidth;
                 i += 2;
             }
             break;
             case eTextEncoding::UTF8:
             {
-                auto &lChar = mCharacters.emplace_back();
+                auto &lChar = mCharacters.emplace_bacsk();
 
                 FillUtf8Utf8( lChar, &aCharArray[i] );
+                lChar.mCharWidth = mCharWidth;
                 i += lChar.mByteCount;
             }
             break;
             case eTextEncoding::ASCII:
             {
-                auto &lChar         = mCharacters.emplace_back();
+                auto &lChar = mCharacters.emplace_back();
+
                 lChar.mByteCount    = 1;
                 lChar.mCharacter[0] = aCharArray[i];
+                lChar.mCharWidth    = mCharWidth;
                 i++;
             }
             break;

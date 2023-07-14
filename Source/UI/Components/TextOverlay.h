@@ -13,14 +13,15 @@ namespace SE::Core
         ASCII = 2
     };
 
-    struct sChar
+    struct sCharacter
     {
-        char mCharacter[4] = { 0 };
-        char mByteCount    = { 0 };
-        char mWidth        = '\0';
+        char  mCharacter[4] = { 0 };
+        char  mByteCount    = { 0 };
+        char  mWidth        = '\0';
+        float mCharWidth    = 0.0;
 
-        sChar() = default;
-        sChar( char aCharacter, char aWidth )
+        sCharacter() = default;
+        sCharacter( char aCharacter, char aWidth )
             : mCharacter{ aCharacter }
             , mWidth{ aWidth }
         {
@@ -44,8 +45,8 @@ namespace SE::Core
         uint32_t mConsoleWidth  = 0;
         uint32_t mConsoleHeight = 0;
 
-        std::vector<sChar> mCharacters;
-        eTextEncoding      mEncoding = eTextEncoding::UTF16;
+        std::vector<sCharacter> mCharacters;
+        eTextEncoding           mEncoding = eTextEncoding::UTF16;
 
       protected:
         void PushStyles();
