@@ -19,6 +19,9 @@ namespace SE::Core
         char  mByteCount    = { 0 };
         char  mWidth        = '\0';
         float mCharWidth    = 0.0;
+        // TODO: backgound color
+        // TODO: foregound color
+
 
         sCharacter() = default;
         sCharacter( char aCharacter, char aWidth )
