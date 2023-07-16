@@ -94,11 +94,10 @@ struct sShaderMaterial
     float4 mEmissiveFactor;
 #if defined( MATERIAL_HAS_UV1 )
     int mBaseColorUVChannel;
+    int mEmissiveUVChannel;
+    int mNormalUVChannel;
     int mMetalnessUVChannel;
     int mOcclusionUVChannel;
-    int mNormalUVChannel;
-    int mEmissiveUVChannel;
-    int mAOUVChannel;
 #endif
 };
 
