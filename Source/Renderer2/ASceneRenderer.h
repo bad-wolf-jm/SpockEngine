@@ -2,13 +2,15 @@
 #include "Core/Memory.h"
 
 #include "Scene/Components.h"
-#include "Scene/Scene.h"
+// #include "Scene/Scene.h"
 
 #include "Renderer/SceneRenderData.h"
 
 namespace SE::Core
 {
     using namespace math;
+
+    class Scene;
 
     class BaseSceneRenderer
     {

@@ -35,7 +35,6 @@
 
 namespace SE::Core
 {
-
     namespace fs = std::filesystem;
     using namespace SE::Graphics;
     using namespace SE::Cuda;
@@ -504,38 +503,43 @@ namespace SE::Core
 
         std::mutex lMaterialSystemLock;
         uint32_t   lMaterialIndex = 0;
+        // clang-format off
         std::for_each( std::execution::seq, lMaterialLoadQueue.begin(), lMaterialLoadQueue.end(),
-                       [&]( auto const &aElement )
-                       {
-                           auto &[lMaterialID, lEntities] = aElement;
+            [&]( auto const &aElement )
+            {
+                auto &[lMaterialID, lEntities] = aElement;
 
-                           auto &lNewMaterial = mMaterialSystem->CreateMaterial( lScenarioRoot / lMaterialID );
+                auto &lNewMaterial = mMaterialSystem->CreateMaterial( lScenarioRoot / lMaterialID );
 
-                           for( auto &lEntity : lEntities )
-                               lReadContext.mEntities[lEntity].AddOrReplace<sMaterialComponent>( lNewMaterial.mID );
-                       } );
+                for( auto &lEntity : lEntities )
+                    lReadContext.mEntities[lEntity].AddOrReplace<sMaterialComponent>( lNewMaterial.mID );
+            } );
 
         std::mutex lBufferLock;
+        // clang-format on
+
+        // clang-format off
         std::for_each( std::execution::seq, lBufferLoadQueue.begin(), lBufferLoadQueue.end(),
-                       [&]( auto &aElement )
-                       {
-                           auto &[lEntityID, lComponent, lBufferID] = aElement;
+            [&]( auto &aElement )
+            {
+                auto &[lEntityID, lComponent, lBufferID] = aElement;
 
-                           BinaryAsset lBinaryDataFile( lScenarioRoot / lBufferID );
+                BinaryAsset lBinaryDataFile( lScenarioRoot / lBufferID );
 
-                           std::vector<VertexData> lVertexBuffer;
-                           std::vector<uint32_t>   lIndexBuffer;
-                           lBinaryDataFile.Retrieve( 0, lVertexBuffer, lIndexBuffer );
+                std::vector<VertexData> lVertexBuffer;
+                std::vector<uint32_t>   lIndexBuffer;
+                lBinaryDataFile.Retrieve( 0, lVertexBuffer, lIndexBuffer );
 
-                           lComponent.mVertexBuffer =
-                               CreateBuffer( mGraphicContext, lVertexBuffer, eBufferType::VERTEX_BUFFER, false, false, true, true );
-                           lComponent.mIndexBuffer =
-                               CreateBuffer( mGraphicContext, lIndexBuffer, eBufferType::INDEX_BUFFER, false, false, true, true );
-                           lComponent.mTransformedBuffer = CreateBuffer( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false,
-                                                                         true, true, lComponent.mVertexBuffer->SizeAs<uint8_t>() );
+                lComponent.mVertexBuffer =
+                    CreateBuffer( mGraphicContext, lVertexBuffer, eBufferType::VERTEX_BUFFER, false, false, true, true );
+                lComponent.mIndexBuffer =
+                    CreateBuffer( mGraphicContext, lIndexBuffer, eBufferType::INDEX_BUFFER, false, false, true, true );
+                lComponent.mTransformedBuffer = CreateBuffer( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false,
+                                                                true, true, lComponent.mVertexBuffer->SizeAs<uint8_t>() );
 
-                           lReadContext.mEntities[lEntityID].AddOrReplace<sStaticMeshComponent>( lComponent );
-                       } );
+                lReadContext.mEntities[lEntityID].AddOrReplace<sStaticMeshComponent>( lComponent );
+            } );
+        // clang-format on
 
         for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
         {
@@ -681,6 +685,8 @@ namespace SE::Core
 
             lMaterialCreateInfo.push_back( lMaterialShader );
         }
+
+        
 
         std::vector<Element>    lMeshes           = {};
         uint32_t                lVertexBufferSize = 0;

@@ -26,6 +26,8 @@
 
 #include "Components.h"
 
+// #include "Renderer2/SceneRenderer.h"
+
 using namespace math;
 using namespace literals;
 using namespace SE::Graphics;
@@ -115,6 +117,9 @@ namespace SE::Core
         Ref<MaterialSystem>           mMaterialSystem        = nullptr;
         Ref<OptixDeviceContextObject> mRayTracingContext     = nullptr;
         Ref<OptixScene>               mAccelerationStructure = nullptr;
+
+        // Handle to the new version of the renderer
+        // Ref<SceneRenderer> mRenderer = nullptr;
 
         std::vector<sActorComponent> mActorComponents;
 

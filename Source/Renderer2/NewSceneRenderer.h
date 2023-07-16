@@ -17,8 +17,53 @@
 
 namespace SE::Core
 {
+    using namespace math;
 
-    class SceneRenderer : public BaseSceneRenderer
+    enum class eShadingModel
+    {
+        STANDARD,
+        SUBSURFACE,
+        CLOTH,
+        UNLIT
+    }
+
+
+    struct sShaderMaterial
+    {
+        using Tex2D = Ref<ISampler2D>;
+        
+        std::string mName = "";
+
+        eMaterialType mType       = eMaterialType::Opaque;
+        float         mLineWidth  = 1.0f;
+        bool          mIsTwoSided = true;
+        bool          mHasUV1     = true;
+
+        vec4  mBaseColorFactor    = { 1.0f, 1.0f, 1.0f, 1.0f };
+        int   mBaseColorUVChannel = 0;
+        Tex2D mBaseColorTexture   = nullptr;
+
+        float mMetallicFactor     = 0.0f;
+        float mRoughnessFactor    = 1.0f;
+        int   mMetalnessUVChannel = 0;
+        Tex2D mMetaRoughTexture   = nullptr;
+
+        float mOcclusionStrength  = 0.0f;
+        int   mOcclusionUVChannel = 0;
+        Tex2D mOcclusionTexture   = nullptr;
+
+        vec4  mEmissiveFactor    = { 0.0f, 0.0f, 0.0f, 0.0f };
+        Tex2D mEmissiveTexture   = nullptr;
+        int   mEmissiveUVChannel = 0;
+
+        int   mNormalUVChannel = 0;
+        Tex2D mNormalTexture   = nullptr;
+
+        sShaderMaterial()                          = default;
+        sShaderMaterial( const sShaderMaterial & ) = default;
+    };
+
+    class NewSceneRenderer : public BaseSceneRenderer
     {
       public:
         WorldMatrices  mView;
@@ -29,10 +74,10 @@ namespace SE::Core
         bool           mUseFXAA              = false;
 
       public:
-        SceneRenderer() = default;
-        SceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
+        NewSceneRenderer() = default;
+        NewSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
 
-        ~SceneRenderer() = default;
+        ~NewSceneRenderer() = default;
 
         Ref<ITexture2D> GetOutputImage();
 
@@ -90,9 +135,9 @@ namespace SE::Core
 
         std::unordered_map<Entity, Ref<IDescriptorSet>> mMaterials = {};
 
-        void CreateRenderTarget(uint32_t aOutputWidth, uint32_t aOutputHeight);
-        void CreateMSAARenderTarget(uint32_t aOutputWidth, uint32_t aOutputHeight);
-        void CreateFXAARenderTarget(uint32_t aOutputWidth, uint32_t aOutputHeight);
+        void CreateRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight );
+        void CreateMSAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight );
+        void CreateFXAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight );
     };
 
 } // namespace SE::Core

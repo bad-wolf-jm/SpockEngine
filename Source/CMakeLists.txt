@@ -139,7 +139,7 @@ add_library(LTSimulationEngineRuntime STATIC
 
     Renderer2/ASceneRenderer.cpp
     Renderer2/SceneRenderer.cpp
-    # Renderer2/MeshRenderer.cpp
+    Renderer2/NewSceneRenderer.cpp
 
     Scene/Importer/glTFImporter.cpp
     Scene/Importer/ObjImporter.cpp

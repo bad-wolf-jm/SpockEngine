@@ -1,4 +1,4 @@
-#include "SceneRenderer.h"
+#include "NewSceneRenderer.h"
 
 #include <chrono>
 #include <gli/gli.hpp>
@@ -35,11 +35,10 @@
 
 namespace SE::Core
 {
-    using namespace math;
     using namespace SE::Core::EntityComponentSystem::Components;
     using namespace SE::Core::Primitives;
 
-    SceneRenderer::SceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
+    NewSceneRenderer::NewSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
         : BaseSceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {
         auto lLayout = MeshRenderer::GetCameraSetLayout( mGraphicContext );
@@ -86,7 +85,7 @@ namespace SE::Core
         return lFragmentShader;
     }
 
-    MeshRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification )
+    MeshRendererCreateInfo NewSceneRenderer::GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification )
     {
         MeshRendererCreateInfo lCreateInfo;
 
@@ -100,7 +99,7 @@ namespace SE::Core
         return lCreateInfo;
     }
 
-    MeshRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo( sMeshRenderData &aPipelineSpecification )
+    MeshRendererCreateInfo NewSceneRenderer::GetRenderPipelineCreateInfo( sMeshRenderData &aPipelineSpecification )
     {
         MeshRendererCreateInfo lCreateInfo;
 
@@ -114,7 +113,7 @@ namespace SE::Core
         return lCreateInfo;
     }
 
-    void SceneRenderer::CreateRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    void NewSceneRenderer::CreateRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
         sRenderTargetDescription lRenderTargetSpec{};
         lRenderTargetSpec.mWidth       = aOutputWidth;
@@ -141,7 +140,7 @@ namespace SE::Core
         mGeometryContext = CreateRenderContext( mGraphicContext, mGeometryRenderTarget );
     }
 
-    void SceneRenderer::CreateMSAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    void NewSceneRenderer::CreateMSAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
         sRenderTargetDescription lRenderTargetSpec{};
         lRenderTargetSpec.mWidth       = aOutputWidth;
@@ -173,7 +172,7 @@ namespace SE::Core
         mGeometryContext = CreateRenderContext( mGraphicContext, mGeometryRenderTarget );
     }
 
-    void SceneRenderer::CreateFXAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    void NewSceneRenderer::CreateFXAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
         sRenderTargetDescription lFxaaSpec{};
         lFxaaSpec.mWidth       = aOutputWidth;
@@ -198,7 +197,7 @@ namespace SE::Core
         mFxaaContext = CreateRenderContext( mGraphicContext, mFxaaRenderTarget );
     }
 
-    void SceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    void NewSceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
         // sRenderTargetDescription lRenderTargetSpec{};
         // lRenderTargetSpec.mWidth       = aOutputWidth;
@@ -280,7 +279,7 @@ namespace SE::Core
         }
     }
 
-    Ref<MeshRenderer> SceneRenderer::GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification )
+    Ref<MeshRenderer> NewSceneRenderer::GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification )
     {
         if( mMeshRenderers.find( aPipelineSpecification ) == mMeshRenderers.end() )
             mMeshRenderers[aPipelineSpecification] = New<MeshRenderer>( mGraphicContext, aPipelineSpecification );
@@ -288,21 +287,21 @@ namespace SE::Core
         return mMeshRenderers[aPipelineSpecification];
     }
 
-    Ref<MeshRenderer> SceneRenderer::GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification )
+    Ref<MeshRenderer> NewSceneRenderer::GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification )
     {
         MeshRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 
         return GetRenderPipeline( lCreateInfo );
     }
 
-    Ref<MeshRenderer> SceneRenderer::GetRenderPipeline( sMeshRenderData &aPipelineSpecification )
+    Ref<MeshRenderer> NewSceneRenderer::GetRenderPipeline( sMeshRenderData &aPipelineSpecification )
     {
         MeshRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 
         return GetRenderPipeline( lCreateInfo );
     }
 
-    Ref<ParticleSystemRenderer> SceneRenderer::GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification )
+    Ref<ParticleSystemRenderer> NewSceneRenderer::GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification )
     {
         if( mParticleRenderers.find( aPipelineSpecification ) == mParticleRenderers.end() )
             mParticleRenderers[aPipelineSpecification] =
@@ -311,14 +310,14 @@ namespace SE::Core
         return mParticleRenderers[aPipelineSpecification];
     }
 
-    Ref<ParticleSystemRenderer> SceneRenderer::GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification )
+    Ref<ParticleSystemRenderer> NewSceneRenderer::GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification )
     {
         ParticleRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 
         return GetRenderPipeline( lCreateInfo );
     }
 
-    Ref<ParticleSystemRenderer> SceneRenderer::GetRenderPipeline( sParticleRenderData &aPipelineSpecification )
+    Ref<ParticleSystemRenderer> NewSceneRenderer::GetRenderPipeline( sParticleRenderData &aPipelineSpecification )
     {
         ParticleRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 
@@ -347,7 +346,7 @@ namespace SE::Core
         return lVertexShader;
     }
 
-    ParticleRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo( sParticleShaderComponent &aPipelineSpecification )
+    ParticleRendererCreateInfo NewSceneRenderer::GetRenderPipelineCreateInfo( sParticleShaderComponent &aPipelineSpecification )
     {
         ParticleRendererCreateInfo lCreateInfo;
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
@@ -358,7 +357,7 @@ namespace SE::Core
         return lCreateInfo;
     }
 
-    ParticleRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo( sParticleRenderData &aPipelineSpecification )
+    ParticleRendererCreateInfo NewSceneRenderer::GetRenderPipelineCreateInfo( sParticleRenderData &aPipelineSpecification )
     {
         ParticleRendererCreateInfo lCreateInfo;
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
@@ -369,7 +368,7 @@ namespace SE::Core
         return lCreateInfo;
     }
 
-    void SceneRenderer::Update( Ref<Scene> aWorld )
+    void NewSceneRenderer::Update( Ref<Scene> aWorld )
     {
         BaseSceneRenderer::Update( aWorld );
         mShadowSceneRenderer->Update( aWorld );
@@ -399,7 +398,7 @@ namespace SE::Core
         // Update pipelines
     }
 
-    void SceneRenderer::Render()
+    void NewSceneRenderer::Render()
     {
         SE_PROFILE_FUNCTION();
 
@@ -489,7 +488,7 @@ namespace SE::Core
         mFxaaContext->EndRender();
     }
 
-    Ref<ITexture2D> SceneRenderer::GetOutputImage()
+    Ref<ITexture2D> NewSceneRenderer::GetOutputImage()
     {
         //
         return mGeometryRenderTarget->GetAttachment( "OUTPUT" );
