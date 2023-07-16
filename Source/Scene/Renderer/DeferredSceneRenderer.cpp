@@ -22,7 +22,7 @@ namespace SE::Core
 
     static Ref<IShaderProgram> MRTVertexShader( Ref<IGraphicContext> gc )
     {
-        fs::path lShaderPath   = "E:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
+        fs::path lShaderPath   = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
         auto     lVertexShader = CreateShaderProgram( gc, eShaderStageTypeFlags::VERTEX, 450, "geometry_vertex_shader", lShaderPath );
         lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data );
         lVertexShader->AddCode( SE::Private::Shaders::gDeferredGeometryPassVertexShader_data );
@@ -33,7 +33,7 @@ namespace SE::Core
 
     static Ref<IShaderProgram> MRTFragmentShader( Ref<IGraphicContext> gc )
     {
-        fs::path lShaderPath = "E:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
+        fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
         auto lVertexShader = CreateShaderProgram( gc, eShaderStageTypeFlags::FRAGMENT, 450, "geometry_fragment_shader", lShaderPath );
         lVertexShader->AddCode( "#extension GL_EXT_nonuniform_qualifier : enable" );
         lVertexShader->AddCode( SE::Private::Shaders::gDeferredGeometryPassFragmentShaderPreamble_data );
@@ -46,14 +46,14 @@ namespace SE::Core
 
     static Ref<IShaderProgram> ParticleVertexShader( Ref<IGraphicContext> gc )
     {
-        fs::path lShaderPath = "E:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
+        fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
         auto     lVertexShader =
             CreateShaderProgram( gc, eShaderStageTypeFlags::VERTEX, 450, "particle_system_vertex_shader", lShaderPath );
         lVertexShader->AddCode( "#extension GL_EXT_nonuniform_qualifier : enable" );
         lVertexShader->AddCode( SE::Private::Shaders::gParticleSystemVertexShader_data );
 
         std::ofstream myfile;
-        myfile.open( std::string( "E:\\Work\\Git\\SpockEngine\\" ) + std::string( "example.vert" ) );
+        myfile.open( std::string( "D:\\Work\\Git\\SpockEngine\\" ) + std::string( "example.vert" ) );
         myfile << lVertexShader->Program();
         myfile.close();
 
@@ -63,7 +63,7 @@ namespace SE::Core
 
     static Ref<IShaderProgram> ParticleFragmentShader( Ref<IGraphicContext> gc )
     {
-        fs::path lShaderPath = "E:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
+        fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
         auto     lVertexShader =
             CreateShaderProgram( gc, eShaderStageTypeFlags::FRAGMENT, 450, "particle_system_fragment_shader", lShaderPath );
         lVertexShader->AddCode( SE::Private::Shaders::gParticleSystemFragmentShader_data );
@@ -202,7 +202,7 @@ namespace SE::Core
         mShadowSceneRenderer    = New<ShadowSceneRenderer>( mGraphicContext );
 
         {
-            fs::path lShaderPath = "E:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
+            fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
 
             auto lVertexShader =
                 CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "fxaa_fragment_shader", lShaderPath );
@@ -230,7 +230,7 @@ namespace SE::Core
             mFxaaRenderer = New<EffectProcessor>( mGraphicContext, mFxaaContext, lEffectProcessorCreateInfo );
         }
         {
-            fs::path lShaderPath = "E:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
+            fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
             auto     lVertexShader =
                 CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "copy_vertex_shader", lShaderPath );
             lVertexShader->AddCode( SE::Private::Shaders::gFXAAVertexShader_data );

@@ -9,7 +9,7 @@ add_library(${LIBRARY_NAME} SHARED
     Source/MaterialEditor.cs
 )
 
-set(NUGET_PACKAGE_ROOT "E:/Work/.nuget/packages")
+set(NUGET_PACKAGE_ROOT "D:/Work/.nuget/packages")
 
 set(DOTNET_REFERENCE_PATH_TP
     ${NUGET_PACKAGE_ROOT}/system.diagnostics.performancecounter/7.0.0/lib/net462/System.Diagnostics.PerformanceCounter.dll
@@ -49,7 +49,7 @@ set_property(TARGET ${LIBRARY_NAME} PROPERTY DOTNET_TARGET_FRAMEWORK_VERSION "v4
 set_property(TARGET ${LIBRARY_NAME} PROPERTY WIN32_EXECUTABLE FALSE)
 set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_CONFIGURATION_TYPE ClassLibrary)
 set_property(TARGET ${LIBRARY_NAME} PROPERTY VS_DOTNET_REFERENCES 
-    "C:/GitLab/SpockEngine/Source/ScriptCore/Build/Debug/SE_Core.dll"
+    "D:\\Work\\Git\\SpockEngine\\Build\\CoreScripting\\Debug\\SE_Core.dll"
 
     ${DOTNET_REFERENCE_PATH}
 )

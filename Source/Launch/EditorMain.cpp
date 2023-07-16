@@ -256,7 +256,7 @@ int main( int argc, char **argv )
     }
 
     // Retrieve the Mono core assembly path
-    fs::path lCoreScriptingPath = "E:/Work/Git/SpockEngine/Build/CoreScripting/Debug/SE_Core.dll";
+    fs::path lCoreScriptingPath = "D:/Work/Git/SpockEngine/Build/CoreScripting/Debug/SE_Core.dll";
     if( auto lCoreScriptingPathOverride = lProgramArguments->present<std::string>( "--script_core" ) )
         if( fs ::exists( lCoreScriptingPathOverride.value() ) ) lCoreScriptingPath = lCoreScriptingPathOverride.value();
 
@@ -267,7 +267,7 @@ int main( int argc, char **argv )
     if( !lApplicationName.empty() )
     {
         lApplicationConfigurationPath = lLocalConfigFolder / "SpockEngine" / "Config" / fmt::format( "{}.yaml", lApplicationName );
-        auto lApplicationAssembly     = fs::path( "E:\\Work\\Git\\SpockEngine\\Build" ) / lApplicationName / "Debug" /
+        auto lApplicationAssembly     = fs::path( "D:\\Work\\Git\\SpockEngine\\Build" ) / lApplicationName / "Debug" /
                                     fmt::format( "{}.dll", lApplicationName );
         if( fs::exists( lApplicationAssembly ) ) DotNetRuntime::AddAppAssemblyPath( lApplicationAssembly.string(), "APPLICATION" );
 
@@ -277,7 +277,7 @@ int main( int argc, char **argv )
 
     DotNetRuntime::ReloadAssemblies();
 
-    SE::Graphics::AddShaderIncludePath( "E:\\Work\\Git\\SpockEngine\\Source\\Scene\\Renderer\\Shaders" );
+    SE::Graphics::AddShaderIncludePath( "D:\\Work\\Git\\SpockEngine\\Source\\Scene\\Renderer\\Shaders" );
 
     SE::Editor::BaseEditorApplication lEditorApplication;
 
