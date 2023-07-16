@@ -47,11 +47,11 @@ namespace SE::Core
     {
         mMaterialSystem = New<MaterialSystem>( mGraphicContext );
 
-        mEditorView = math::Translate( math::mat4( 1.0f ), -math::vec3( 0.0f, 1.0f, 7.5f ) );
+        mEditorView = Translate( mat4( 1.0f ), -vec3( 0.0f, 1.0f, 7.5f ) );
 
         DefaultCamera                = mRegistry.CreateEntity( "DefaultCamera" );
         auto &lCameraComponent       = DefaultCamera.Add<sCameraComponent>();
-        lCameraComponent.Position    = math::vec3{ 0.0f, 0.0f, 0.0f };
+        lCameraComponent.Position    = vec3{ 0.0f, 0.0f, 0.0f };
         lCameraComponent.Pitch       = 0.0f;
         lCameraComponent.Yaw         = 0.0f;
         lCameraComponent.Roll        = 0.0f;
@@ -206,7 +206,7 @@ namespace SE::Core
         mVertexCounts.Dispose();
     }
 
-    void Scene::SetViewport( math::vec2 aPosition, math::vec2 aSize )
+    void Scene::SetViewport( vec2 aPosition, vec2 aSize )
     {
         mViewportPosition = aPosition;
         mViewportSize     = aSize;
@@ -220,7 +220,7 @@ namespace SE::Core
 
         uint32_t lTransformCount = 0;
         ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
-        mTransforms = GPUMemory::Create<math::mat4>( lTransformCount );
+        mTransforms = GPUMemory::Create<mat4>( lTransformCount );
 
         uint32_t lStaticMeshCount = 0;
         ForEach<sStaticMeshComponent>( [&]( auto aEntity, auto &aUUID ) { lStaticMeshCount++; } );
@@ -237,43 +237,43 @@ namespace SE::Core
                 lJointMatrixCount += s.JointMatrices.size();
                 lJointOffsetCount += 1;
             } );
-        mJointTransforms = GPUMemory::Create<math::mat4>( lJointMatrixCount );
+        mJointTransforms = GPUMemory::Create<mat4>( lJointMatrixCount );
         mJointOffsets    = GPUMemory::Create<uint32_t>( lJointOffsetCount );
     }
 
-    math::mat4 Scene::GetView()
+    mat4 Scene::GetView()
     {
-        math::mat4 lCameraView( 1.0f );
+        mat4 lCameraView( 1.0f );
         if( CurrentCamera.Has<sCameraComponent>() )
         {
             auto &lComponent = CurrentCamera.Get<sCameraComponent>();
 
-            math::mat4 lRx = math::Rotation( lComponent.Pitch, math::vec3( 1.0f, 0.0f, 0.0f ) );
-            math::mat4 lRy = math::Rotation( lComponent.Yaw, math::vec3( 0.0f, 1.0f, 0.0f ) );
-            math::mat4 lRz = math::Rotation( -lComponent.Roll, math::vec3( 0.0f, 0.0f, 1.0f ) );
+            mat4 lRx = Rotation( lComponent.Pitch, vec3( 1.0f, 0.0f, 0.0f ) );
+            mat4 lRy = Rotation( lComponent.Yaw, vec3( 0.0f, 1.0f, 0.0f ) );
+            mat4 lRz = Rotation( -lComponent.Roll, vec3( 0.0f, 0.0f, 1.0f ) );
 
-            lCameraView = math::Inverse( math::Translate( lRx * lRy * lRz, lComponent.Position ) );
+            lCameraView = Inverse( Translate( lRx * lRy * lRz, lComponent.Position ) );
         }
 
         return lCameraView;
     }
 
-    math::mat4 Scene::GetProjection()
+    mat4 Scene::GetProjection()
     {
-        math::mat4 l_CameraProjection( 1.0f );
+        mat4 l_CameraProjection( 1.0f );
         if( CurrentCamera.Has<sCameraComponent>() )
         {
             auto &lComponent = CurrentCamera.Get<sCameraComponent>();
             l_CameraProjection =
-                math::Perspective( math::radians( lComponent.FieldOfView ), lComponent.AspectRatio, lComponent.Near, lComponent.Far );
+                Perspective( radians( lComponent.FieldOfView ), lComponent.AspectRatio, lComponent.Near, lComponent.Far );
             l_CameraProjection[1][1] *= -1.0f;
         }
         return l_CameraProjection;
     }
 
-    math::vec3 Scene::GetCameraPosition()
+    vec3 Scene::GetCameraPosition()
     {
-        math::vec3 l_CameraPosition( 0.0f );
+        vec3 l_CameraPosition( 0.0f );
         if( CurrentCamera.Has<sCameraComponent>() )
         {
             auto &lComponent = CurrentCamera.Get<sCameraComponent>();
@@ -282,11 +282,11 @@ namespace SE::Core
         return l_CameraPosition;
     }
 
-    math::mat4 Scene::GetFinalTransformMatrix( Element aElement )
+    mat4 Scene::GetFinalTransformMatrix( Element aElement )
     {
         auto &lUUID = aElement.Get<sUUID>().mValue;
         if( mTransformCache.find( lUUID ) != mTransformCache.end() ) return mTransformCache[lUUID];
-        return math::mat4( 1.0f );
+        return mat4( 1.0f );
     }
 
     Scene::Element Scene::Create( std::string a_Name, Element a_Parent ) { return mRegistry.CreateEntity( a_Parent, a_Name ); }
@@ -304,7 +304,7 @@ namespace SE::Core
 
         DefaultCamera                = mRegistry.CreateEntity( "DefaultCamera" );
         auto &lCameraComponent       = DefaultCamera.Add<sCameraComponent>();
-        lCameraComponent.Position    = math::vec3{ 0.0f, 0.0f, 0.0f };
+        lCameraComponent.Position    = vec3{ 0.0f, 0.0f, 0.0f };
         lCameraComponent.Pitch       = 0.0f;
         lCameraComponent.Yaw         = 0.0f;
         lCameraComponent.Roll        = 0.0f;
@@ -346,7 +346,7 @@ namespace SE::Core
         // clang-format on
     }
 
-    Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform )
+    Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, mat4 aTransform )
     {
         return LoadModel( aModelData, aTransform, "MODEL" );
     }
@@ -625,7 +625,7 @@ namespace SE::Core
         RebuildAccelerationStructure();
     }
 
-    Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name )
+    Scene::Element Scene::LoadModel( Ref<sImportedModel> aModelData, mat4 aTransform, std::string a_Name )
     {
         auto lAssetEntity = mRegistry.CreateEntity( Root, a_Name );
         lAssetEntity.Add<sNodeTransformComponent>( aTransform );
@@ -719,7 +719,7 @@ namespace SE::Core
             lMeshEntity.Add<sStaticMeshComponent>( lMeshComponent );
             lMeshEntity.Add<sMaterialComponent>( lMaterialIds[lMesh.mMaterialID] );
             lMeshEntity.Add<sMaterialShaderComponent>( lMaterialCreateInfo[lMesh.mMaterialID] );
-            lMeshEntity.Add<sNodeTransformComponent>( math::mat4( 1.0f ) );
+            lMeshEntity.Add<sNodeTransformComponent>( mat4( 1.0f ) );
 
             lMeshes.push_back( lMeshEntity );
         }
@@ -763,7 +763,7 @@ namespace SE::Core
                 {
                     lNodeSkeleton.Bones.push_back( lNodes[lSkin.mJointNodeID[i]] );
                     lNodeSkeleton.InverseBindMatrices.push_back( lSkin.mInverseBindMatrices[i] );
-                    lNodeSkeleton.JointMatrices.push_back( math::mat4( 0.0f ) );
+                    lNodeSkeleton.JointMatrices.push_back( mat4( 0.0f ) );
                 }
 
                 lNodeSkeleton.BoneCount = lNodeSkeleton.Bones.size();
@@ -918,15 +918,14 @@ namespace SE::Core
             case sImportedAnimationChannel::Channel::TRANSLATION:
             {
                 lAnimatedTransform.Translation =
-                    math::vec3( glm::mix( lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick],
-                                          lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1], dt ) );
+                    vec3( glm::mix( lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick],
+                                    lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1], dt ) );
                 break;
             }
             case sImportedAnimationChannel::Channel::SCALE:
             {
-                lAnimatedTransform.Scaling =
-                    math::vec3( glm::mix( lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick],
-                                          lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1], dt ) );
+                lAnimatedTransform.Scaling = vec3( glm::mix( lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick],
+                                                             lChannel.mInterpolation.mOutputsVec4[lAnimation.CurrentTick + 1], dt ) );
                 break;
             }
             }
@@ -954,9 +953,9 @@ namespace SE::Core
             ForEach<sAnimatedTransformComponent>(
                 [&]( auto aEntity, auto &aComponent )
                 {
-                    math::mat4 lRotation    = math::mat4( aComponent.Rotation );
-                    math::mat4 lTranslation = math::Translation( aComponent.Translation );
-                    math::mat4 lScale       = math::Scaling( aComponent.Scaling );
+                    mat4 lRotation    = mat4( aComponent.Rotation );
+                    mat4 lTranslation = Translation( aComponent.Translation );
+                    mat4 lScale       = Scaling( aComponent.Scaling );
 
                     aEntity.AddOrReplace<sNodeTransformComponent>( lTranslation * lRotation * lScale );
                 } );
@@ -1004,7 +1003,7 @@ namespace SE::Core
             {
                 if( mTransformCache.find( aUUID.mValue ) != mTransformCache.end() ) return;
 
-                math::mat4 lAccumulator = aTransformComponent.mMatrix;
+                mat4 lAccumulator = aTransformComponent.mMatrix;
 
                 auto lCurrentEntity = aEntity.Get<sRelationshipComponent>().mParent;
                 while( lCurrentEntity )
@@ -1020,14 +1019,14 @@ namespace SE::Core
             [&]( auto lElementToProcess, auto &aUUID, auto &aSkeleton )
             {
                 if( mTransformCache.find( aUUID.mValue ) == mTransformCache.end() ) return;
-                math::mat4 lInverseTransform = math::Inverse( mTransformCache[aUUID.mValue] );
+                mat4 lInverseTransform = Inverse( mTransformCache[aUUID.mValue] );
 
                 for( uint32_t lJointID = 0; lJointID < lElementToProcess.Get<sSkeletonComponent>().Bones.size(); lJointID++ )
                 {
-                    Element    lJoint             = lElementToProcess.Get<sSkeletonComponent>().Bones[lJointID];
-                    math::mat4 lInverseBindMatrix = lElementToProcess.Get<sSkeletonComponent>().InverseBindMatrices[lJointID];
-                    math::mat4 lJointMatrix       = mTransformCache[lJoint.Get<sUUID>().mValue];
-                    lJointMatrix                  = lInverseTransform * lJointMatrix * lInverseBindMatrix;
+                    Element lJoint             = lElementToProcess.Get<sSkeletonComponent>().Bones[lJointID];
+                    mat4    lInverseBindMatrix = lElementToProcess.Get<sSkeletonComponent>().InverseBindMatrices[lJointID];
+                    mat4    lJointMatrix       = mTransformCache[lJoint.Get<sUUID>().mValue];
+                    lJointMatrix               = lInverseTransform * lJointMatrix * lInverseBindMatrix;
 
                     lElementToProcess.Get<sSkeletonComponent>().JointMatrices[lJointID] = lJointMatrix;
                 }
@@ -1038,10 +1037,10 @@ namespace SE::Core
             std::vector<SE::Cuda::Internal::sGPUDevicePointerView> lVertexBuffers{};
             std::vector<SE::Cuda::Internal::sGPUDevicePointerView> lOutVertexBuffers{};
 
-            std::vector<uint32_t>   lVertexOffsets{};
-            std::vector<uint32_t>   lVertexCounts{};
-            std::vector<math::mat4> lObjectToWorldTransforms{};
-            uint32_t                lMaxVertexCount = 0;
+            std::vector<uint32_t> lVertexOffsets{};
+            std::vector<uint32_t> lVertexCounts{};
+            std::vector<mat4>     lObjectToWorldTransforms{};
+            uint32_t              lMaxVertexCount = 0;
             ForEach<sUUID, sStaticMeshComponent>(
                 [&]( auto aEntiy, auto &aUUID, auto &aMesh )
                 {
@@ -1063,9 +1062,9 @@ namespace SE::Core
             mTransformedBuffers.Upload( lOutVertexBuffers );
 
             StaticVertexTransform( mTransformedBuffers.DataAs<SE::Cuda::Internal::sGPUDevicePointerView>(),
-                                   mVertexBuffers.DataAs<SE::Cuda::Internal::sGPUDevicePointerView>(),
-                                   mTransforms.DataAs<math::mat4>(), lVertexOffsets.size(), mVertexOffsets.DataAs<uint32_t>(),
-                                   mVertexCounts.DataAs<uint32_t>(), lMaxVertexCount );
+                                   mVertexBuffers.DataAs<SE::Cuda::Internal::sGPUDevicePointerView>(), mTransforms.DataAs<mat4>(),
+                                   lVertexOffsets.size(), mVertexOffsets.DataAs<uint32_t>(), mVertexCounts.DataAs<uint32_t>(),
+                                   lMaxVertexCount );
         }
 
         // Update the transformed vertex buffer for animated meshies
@@ -1073,12 +1072,12 @@ namespace SE::Core
             std::vector<SE::Cuda::Internal::sGPUDevicePointerView> lVertexBuffers{};
             std::vector<SE::Cuda::Internal::sGPUDevicePointerView> lOutVertexBuffers{};
 
-            std::vector<uint32_t>   lVertexOffsets{};
-            std::vector<uint32_t>   lVertexCounts{};
-            std::vector<math::mat4> lObjectToWorldTransforms{};
-            std::vector<math::mat4> lJointTransforms{};
-            std::vector<uint32_t>   lJointOffsets{};
-            uint32_t                lMaxVertexCount = 0;
+            std::vector<uint32_t> lVertexOffsets{};
+            std::vector<uint32_t> lVertexCounts{};
+            std::vector<mat4>     lObjectToWorldTransforms{};
+            std::vector<mat4>     lJointTransforms{};
+            std::vector<uint32_t> lJointOffsets{};
+            uint32_t              lMaxVertexCount = 0;
             ForEach<sUUID, sStaticMeshComponent, sSkeletonComponent>(
                 [&]( auto aEntiy, auto &aUUID, auto &aMesh, auto &aSkeleton )
                 {
@@ -1104,10 +1103,9 @@ namespace SE::Core
             mJointTransforms.Upload( lJointTransforms );
 
             SkinnedVertexTransform( mTransformedBuffers.DataAs<SE::Cuda::Internal::sGPUDevicePointerView>(),
-                                    mVertexBuffers.DataAs<SE::Cuda::Internal::sGPUDevicePointerView>(),
-                                    mTransforms.DataAs<math::mat4>(), mJointTransforms.DataAs<math::mat4>(),
-                                    mJointOffsets.DataAs<uint32_t>(), lVertexOffsets.size(), mVertexOffsets.DataAs<uint32_t>(),
-                                    mVertexCounts.DataAs<uint32_t>(), lMaxVertexCount );
+                                    mVertexBuffers.DataAs<SE::Cuda::Internal::sGPUDevicePointerView>(), mTransforms.DataAs<mat4>(),
+                                    mJointTransforms.DataAs<mat4>(), mJointOffsets.DataAs<uint32_t>(), lVertexOffsets.size(),
+                                    mVertexOffsets.DataAs<uint32_t>(), mVertexCounts.DataAs<uint32_t>(), lMaxVertexCount );
         }
 
         SyncDevice();

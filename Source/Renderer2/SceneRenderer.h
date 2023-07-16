@@ -92,6 +92,7 @@ namespace SE::Core
 
         void CreateRenderTarget(uint32_t aOutputWidth, uint32_t aOutputHeight);
         void CreateMSAARenderTarget(uint32_t aOutputWidth, uint32_t aOutputHeight);
+        void CreateFXAARenderTarget(uint32_t aOutputWidth, uint32_t aOutputHeight);
     };
 
 } // namespace SE::Core

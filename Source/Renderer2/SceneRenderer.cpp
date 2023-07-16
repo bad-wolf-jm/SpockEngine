@@ -116,6 +116,18 @@ namespace SE::Core
 
     void SceneRenderer::CreateRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
+        sRenderTargetDescription lRenderTargetSpec{};
+        lRenderTargetSpec.mWidth       = aOutputWidth;
+        lRenderTargetSpec.mHeight      = aOutputHeight;
+        lRenderTargetSpec.mSampleCount = mOutputSampleCount;
+        mGeometryRenderTarget          = Graphics::CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
+
+        sAttachmentDescription lAttachmentCreateInfo{};
+        lAttachmentCreateInfo.mIsSampled   = true;
+        lAttachmentCreateInfo.mIsPresented = false;
+        lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
+        lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
+
         lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
         lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
         lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -131,6 +143,18 @@ namespace SE::Core
 
     void SceneRenderer::CreateMSAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
+        sRenderTargetDescription lRenderTargetSpec{};
+        lRenderTargetSpec.mWidth       = aOutputWidth;
+        lRenderTargetSpec.mHeight      = aOutputHeight;
+        lRenderTargetSpec.mSampleCount = mOutputSampleCount;
+        mGeometryRenderTarget          = Graphics::CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
+
+        sAttachmentDescription lAttachmentCreateInfo{};
+        lAttachmentCreateInfo.mIsSampled   = true;
+        lAttachmentCreateInfo.mIsPresented = false;
+        lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
+        lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
+
         lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
         lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
         lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -149,19 +173,38 @@ namespace SE::Core
         mGeometryContext = CreateRenderContext( mGraphicContext, mGeometryRenderTarget );
     }
 
-    void SceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    void SceneRenderer::CreateFXAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
-        sRenderTargetDescription lRenderTargetSpec{};
-        lRenderTargetSpec.mWidth       = aOutputWidth;
-        lRenderTargetSpec.mHeight      = aOutputHeight;
-        lRenderTargetSpec.mSampleCount = mOutputSampleCount;
-        mGeometryRenderTarget          = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
+        sRenderTargetDescription lFxaaSpec{};
+        lFxaaSpec.mWidth       = aOutputWidth;
+        lFxaaSpec.mHeight      = aOutputHeight;
+        lFxaaSpec.mSampleCount = mOutputSampleCount;
+        mFxaaRenderTarget      = Graphics::CreateRenderTarget( mGraphicContext, lFxaaSpec );
 
         sAttachmentDescription lAttachmentCreateInfo{};
         lAttachmentCreateInfo.mIsSampled   = true;
         lAttachmentCreateInfo.mIsPresented = false;
         lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
         lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
+        lAttachmentCreateInfo.mType        = eAttachmentType::COLOR;
+        lAttachmentCreateInfo.mFormat      = eColorFormat::RGBA16_FLOAT;
+        lAttachmentCreateInfo.mClearColor  = { 0.0f, 0.0f, 0.0f, 1.0f };
+        lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
+        lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
+
+        mFxaaRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
+        mFxaaRenderTarget->Finalize();
+
+        mFxaaContext = CreateRenderContext( mGraphicContext, mFxaaRenderTarget );
+    }
+
+    void SceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    {
+        // sRenderTargetDescription lRenderTargetSpec{};
+        // lRenderTargetSpec.mWidth       = aOutputWidth;
+        // lRenderTargetSpec.mHeight      = aOutputHeight;
+        // lRenderTargetSpec.mSampleCount = mOutputSampleCount;
+        // mGeometryRenderTarget          = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
 
         if( mOutputSampleCount == 1 )
             CreateRenderTarget( aOutputWidth, aOutputHeight );
@@ -169,19 +212,20 @@ namespace SE::Core
             CreateMSAARenderTarget( aOutputWidth, aOutputHeight );
 
         mFxaaSampler = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "OUTPUT" ) );
+        CreateFXAARenderTarget(aOutputWidth, aOutputHeight);
         sRenderTargetDescription lFxaaSpec{};
-        lFxaaSpec.mWidth                  = aOutputWidth;
-        lFxaaSpec.mHeight                 = aOutputHeight;
-        lFxaaSpec.mSampleCount            = mOutputSampleCount;
-        mFxaaRenderTarget                 = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
-        lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
-        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA16_FLOAT;
-        lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-        lAttachmentCreateInfo.mLoadOp     = eAttachmentLoadOp::CLEAR;
-        lAttachmentCreateInfo.mStoreOp    = eAttachmentStoreOp::STORE;
-        mFxaaRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
-        mFxaaRenderTarget->Finalize();
-        mFxaaContext = CreateRenderContext( mGraphicContext, mFxaaRenderTarget );
+        // lFxaaSpec.mWidth                  = aOutputWidth;
+        // lFxaaSpec.mHeight                 = aOutputHeight;
+        // lFxaaSpec.mSampleCount            = mOutputSampleCount;
+        // mFxaaRenderTarget                 = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
+        // lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
+        // lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA16_FLOAT;
+        // lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+        // lAttachmentCreateInfo.mLoadOp     = eAttachmentLoadOp::CLEAR;
+        // lAttachmentCreateInfo.mStoreOp    = eAttachmentStoreOp::STORE;
+        // mFxaaRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
+        // mFxaaRenderTarget->Finalize();
+        // mFxaaContext = CreateRenderContext( mGraphicContext, mFxaaRenderTarget );
 
         mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mGeometryContext );
         mShadowSceneRenderer    = New<ShadowSceneRenderer>( mGraphicContext );
@@ -335,11 +379,11 @@ namespace SE::Core
         mView.DirectionalLightCount = mDirectionalLights.size();
         for( uint32_t i = 0; i < mView.DirectionalLightCount; i++ ) mView.DirectionalLights[i] = mDirectionalLights[i];
 
-        mView.SpotlightCount = mSpotlights.size();
-        for( uint32_t i = 0; i < mView.SpotlightCount; i++ ) mView.Spotlights[i] = mSpotlights[i];
+        // mView.SpotlightCount = mSpotlights.size();
+        // for( uint32_t i = 0; i < mView.SpotlightCount; i++ ) mView.Spotlights[i] = mSpotlights[i];
 
         mSettings.AmbientLightIntensity = mAmbientLight.a;
-        mSettings.AmbientLightColor     = math::vec4( math::vec3( mAmbientLight ), 0.0 );
+        mSettings.AmbientLightColor     = vec4( vec3( mAmbientLight ), 0.0 );
         mSettings.Gamma                 = mGamma;
         mSettings.Exposure              = mExposure;
         mSettings.RenderGrayscale       = mGrayscaleRendering ? 1.0f : 0.0f;

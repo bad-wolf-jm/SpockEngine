@@ -27,14 +27,13 @@
 #include "Components.h"
 
 using namespace math;
-using namespace math::literals;
+using namespace literals;
 using namespace SE::Graphics;
 namespace fs = std::filesystem;
 using namespace SE::Core::EntityComponentSystem::Components;
 
 namespace SE::Core
 {
-
     class Scene
     {
       public:
@@ -58,8 +57,8 @@ namespace SE::Core
 
         void LoadScenario( fs::path aScenarioPath );
 
-        Element LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform );
-        Element LoadModel( Ref<sImportedModel> aModelData, math::mat4 aTransform, std::string a_Name );
+        Element LoadModel( Ref<sImportedModel> aModelData, mat4 aTransform );
+        Element LoadModel( Ref<sImportedModel> aModelData, mat4 aTransform, std::string a_Name );
 
         void SaveAs( fs::path aPath );
 
@@ -69,11 +68,10 @@ namespace SE::Core
         void MarkAsRayTracingTarget( Element a_Element );
         void AttachScript( Element aElement, std::string aScriptPath );
 
-        math::mat4 GetView();
-        math::mat4 GetProjection();
-        math::vec3 GetCameraPosition();
-
-        math::mat4 GetFinalTransformMatrix( Element aElement );
+        mat4 GetView();
+        mat4 GetProjection();
+        vec3 GetCameraPosition();
+        mat4 GetFinalTransformMatrix( Element aElement );
 
         void Update( Timestep ts );
         void UpdateAnimation( Entity &aAnimation, Timestep const &ts );
@@ -107,15 +105,14 @@ namespace SE::Core
 
         void ClearScene();
 
-        void SetViewport( math::vec2 aPosition, math::vec2 aSize );
+        void SetViewport( vec2 aPosition, vec2 aSize );
 
-        math::mat4 mEditorView;
+        mat4 mEditorView;
 
       private:
-        eSceneState          mState = eSceneState::EDITING;
-        Ref<IGraphicContext> mGraphicContext;
-        Ref<MaterialSystem>  mMaterialSystem;
-
+        eSceneState                   mState                 = eSceneState::EDITING;
+        Ref<IGraphicContext>          mGraphicContext        = nullptr;
+        Ref<MaterialSystem>           mMaterialSystem        = nullptr;
         Ref<OptixDeviceContextObject> mRayTracingContext     = nullptr;
         Ref<OptixScene>               mAccelerationStructure = nullptr;
 
@@ -141,13 +138,13 @@ namespace SE::Core
 
         bool mIsClone = false;
 
-        math::vec2 mViewportPosition{};
-        math::vec2 mViewportSize{};
+        vec2 mViewportPosition{};
+        vec2 mViewportSize{};
 
       private:
         friend class Element;
 
-        std::unordered_map<UUIDv4::UUID, math::mat4> mTransformCache{};
+        std::unordered_map<UUIDv4::UUID, mat4> mTransformCache{};
     };
 
 } // namespace SE::Core
