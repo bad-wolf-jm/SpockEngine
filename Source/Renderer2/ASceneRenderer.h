@@ -4,28 +4,30 @@
 #include "Scene/Components.h"
 #include "Scene/Scene.h"
 
-#include "SceneRenderData.h"
+#include "Renderer/SceneRenderData.h"
 
 namespace SE::Core
 {
-    class ASceneRenderer
+    using namespace math;
+
+    class BaseSceneRenderer
     {
       public:
-        ASceneRenderer() = default;
+        BaseSceneRenderer() = default;
 
-        ASceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
+        BaseSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
 
-        ~ASceneRenderer() = default;
+        ~BaseSceneRenderer() = default;
 
-        void SetProjection( math::mat4 aProjectionMatrix );
+        void SetProjection( mat4 aProjectionMatrix );
 
-        void SetView( math::mat4 aViewMatrix );
+        void SetView( mat4 aViewMatrix );
 
         void SetGamma( float aGamma );
 
         void SetExposure( float aExposure );
 
-        void SetAmbientLighting( math::vec4 aAmbientLight );
+        void SetAmbientLighting( vec4 aAmbientLight );
 
         virtual void Update( Ref<Scene> aWorld );
         virtual void Render();
@@ -47,15 +49,14 @@ namespace SE::Core
 
         std::vector<DirectionalLightData> mDirectionalLights = {};
         std::vector<PointLightData>       mPointLights       = {};
-        std::vector<SpotlightData>        mSpotlights        = {};
+        // std::vector<SpotlightData>        mSpotlights        = {};
 
-        math::mat4 mProjectionMatrix{};
-        math::mat4 mViewMatrix{};
-        math::vec3 mCameraPosition{};
-
-        float      mExposure     = 4.5f;
-        float      mGamma        = 2.2f;
-        math::vec4 mAmbientLight = { 1.0f, 1.0f, 1.0f, 0.0001f };
+        mat4  mProjectionMatrix{};
+        mat4  mViewMatrix{};
+        vec3  mCameraPosition{};
+        float mExposure     = 4.5f;
+        float mGamma        = 2.2f;
+        vec4  mAmbientLight = { 1.0f, 1.0f, 1.0f, 0.0001f };
 
       protected:
         // Helpers for light position and intensity
@@ -69,7 +70,7 @@ namespace SE::Core
         std::vector<sParticleRenderData> mParticleQueue{};
 
       private:
-        void AddLight( math::mat4 const &aTransform, sLightComponent &aLightComponent );
+        void AddLight( mat4 const &aTransform, sLightComponent &aLightComponent );
     };
 
 } // namespace SE::Core

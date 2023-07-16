@@ -6,12 +6,12 @@
 #include "Scene/Components.h"
 #include "Scene/Scene.h"
 
-#include "Renderer/ASceneRenderer.h"
-#include "Renderer/SceneRenderData.h"
+#include "ASceneRenderer.h"
+#include "SceneRenderData.h"
 
 #include "CoordinateGridRenderer.h"
-#include "MeshRenderer.h"
-#include "ParticleSystemRenderer.h"
+// #include "MeshRenderer.h"
+// #include "ParticleSystemRenderer.h"
 
 namespace SE::Core
 {
@@ -76,7 +76,7 @@ namespace SE::Core
         Ref<IGraphicsPipeline> mPipeline          = nullptr;
     };
 
-    class ShadowSceneRenderer : public ASceneRenderer
+    class ShadowSceneRenderer : public BaseSceneRenderer
     {
       public:
         ShadowMatrices     View;

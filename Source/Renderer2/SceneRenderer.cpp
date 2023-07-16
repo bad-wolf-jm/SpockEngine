@@ -1,4 +1,4 @@
-#include "ForwardSceneRenderer.h"
+#include "SceneRenderer.h"
 
 #include <chrono>
 #include <gli/gli.hpp>
@@ -12,24 +12,24 @@
 #include "Core/Logging.h"
 #include "Core/Resource.h"
 
-#include "MeshRenderer.h"
-#include "ParticleSystemRenderer.h"
-#include "DeferredLightingRenderer.h"
+#include "Scene/Renderer/DeferredLightingRenderer.h"
+#include "Scene/Renderer/MeshRenderer.h"
+#include "Scene/Renderer/ParticleSystemRenderer.h"
 
-#include "Shaders/gParticleSystemVertexShader.h"
 #include "Shaders/gParticleSystemFragmentShader.h"
+#include "Shaders/gParticleSystemVertexShader.h"
 
+#include "Shaders/gPBRFunctions.h"
+#include "Shaders/gPBRMeshFragmentShaderCalculation.h"
+#include "Shaders/gPBRMeshFragmentShaderPreamble.h"
+#include "Shaders/gPBRMeshVertexShader.h"
+#include "Shaders/gParticleSystemFragmentShader.h"
+#include "Shaders/gParticleSystemVertexShader.h"
 #include "Shaders/gToneMap.h"
 #include "Shaders/gVertexLayout.h"
-#include "Shaders/gPBRFunctions.h"
-#include "Shaders/gPBRMeshFragmentShaderPreamble.h"
-#include "Shaders/gPBRMeshFragmentShaderCalculation.h"
-#include "Shaders/gPBRMeshVertexShader.h"
-#include "Shaders/gParticleSystemVertexShader.h"
-#include "Shaders/gParticleSystemFragmentShader.h"
 
-#include "Shaders/gFXAACode.h"
 #include "Shaders/gCopyFragmentShader.h"
+#include "Shaders/gFXAACode.h"
 #include "Shaders/gFXAAFragmentShader.h"
 #include "Shaders/gFXAAVertexShader.h"
 
@@ -39,9 +39,8 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem::Components;
     using namespace SE::Core::Primitives;
 
-    ForwardSceneRenderer::ForwardSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat,
-                                                uint32_t aOutputSampleCount )
-        : ASceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
+    SceneRenderer::SceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
+        : BaseSceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {
         auto lLayout = MeshRenderer::GetCameraSetLayout( mGraphicContext );
 
@@ -56,12 +55,10 @@ namespace SE::Core
 
         mLightingDirectionalShadowLayout   = DeferredLightingRenderer::GetDirectionalShadowSetLayout( mGraphicContext );
         mLightingPassDirectionalShadowMaps = mLightingDirectionalShadowLayout->Allocate( 1024 );
-
-        mLightingSpotlightShadowLayout   = DeferredLightingRenderer::GetSpotlightShadowSetLayout( mGraphicContext );
-        mLightingPassSpotlightShadowMaps = mLightingSpotlightShadowLayout->Allocate( 1024 );
-
-        mLightingPointLightShadowLayout   = DeferredLightingRenderer::GetPointLightShadowSetLayout( mGraphicContext );
-        mLightingPassPointLightShadowMaps = mLightingPointLightShadowLayout->Allocate( 1024 );
+        mLightingSpotlightShadowLayout     = DeferredLightingRenderer::GetSpotlightShadowSetLayout( mGraphicContext );
+        mLightingPassSpotlightShadowMaps   = mLightingSpotlightShadowLayout->Allocate( 1024 );
+        mLightingPointLightShadowLayout    = DeferredLightingRenderer::GetPointLightShadowSetLayout( mGraphicContext );
+        mLightingPassPointLightShadowMaps  = mLightingPointLightShadowLayout->Allocate( 1024 );
     }
 
     static Ref<IShaderProgram> MRTVertexShader( Ref<IGraphicContext> gc )
@@ -78,7 +75,8 @@ namespace SE::Core
     static Ref<IShaderProgram> MRTFragmentShader( Ref<IGraphicContext> gc )
     {
         fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
-        auto lFragmentShader = CreateShaderProgram( gc, eShaderStageTypeFlags::FRAGMENT, 450, "geometry_fragment_shader", lShaderPath );
+        auto     lFragmentShader =
+            CreateShaderProgram( gc, eShaderStageTypeFlags::FRAGMENT, 450, "geometry_fragment_shader", lShaderPath );
         lFragmentShader->AddCode( SE::Private::Shaders::gPBRMeshFragmentShaderPreamble_data );
         lFragmentShader->AddCode( SE::Private::Shaders::gToneMap_data );
         lFragmentShader->AddCode( SE::Private::Shaders::gPBRFunctions_data );
@@ -88,7 +86,7 @@ namespace SE::Core
         return lFragmentShader;
     }
 
-    MeshRendererCreateInfo ForwardSceneRenderer::GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification )
+    MeshRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification )
     {
         MeshRendererCreateInfo lCreateInfo;
 
@@ -102,7 +100,7 @@ namespace SE::Core
         return lCreateInfo;
     }
 
-    MeshRendererCreateInfo ForwardSceneRenderer::GetRenderPipelineCreateInfo( sMeshRenderData &aPipelineSpecification )
+    MeshRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo( sMeshRenderData &aPipelineSpecification )
     {
         MeshRendererCreateInfo lCreateInfo;
 
@@ -116,7 +114,42 @@ namespace SE::Core
         return lCreateInfo;
     }
 
-    void ForwardSceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    void SceneRenderer::CreateRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    {
+        lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
+        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
+        lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+
+        mGeometryRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
+
+        lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
+        lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
+        mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
+        mGeometryRenderTarget->Finalize();
+        mGeometryContext = CreateRenderContext( mGraphicContext, mGeometryRenderTarget );
+    }
+
+    void SceneRenderer::CreateMSAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    {
+        lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
+        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
+        lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+        mGeometryRenderTarget->AddAttachment( "MSAA_OUTPUT", lAttachmentCreateInfo );
+
+        lAttachmentCreateInfo.mType       = eAttachmentType::MSAA_RESOLVE;
+        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
+        lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+        mGeometryRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
+
+        lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
+        lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
+        mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
+
+        mGeometryRenderTarget->Finalize();
+        mGeometryContext = CreateRenderContext( mGraphicContext, mGeometryRenderTarget );
+    }
+
+    void SceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
         sRenderTargetDescription lRenderTargetSpec{};
         lRenderTargetSpec.mWidth       = aOutputWidth;
@@ -131,36 +164,9 @@ namespace SE::Core
         lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
 
         if( mOutputSampleCount == 1 )
-        {
-            lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
-            lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
-            lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-
-            mGeometryRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
-
-            lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
-            lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
-            mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
-        }
+            CreateRenderTarget( aOutputWidth, aOutputHeight );
         else
-        {
-            lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
-            lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
-            lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-            mGeometryRenderTarget->AddAttachment( "MSAA_OUTPUT", lAttachmentCreateInfo );
-
-            lAttachmentCreateInfo.mType       = eAttachmentType::MSAA_RESOLVE;
-            lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
-            lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-            mGeometryRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
-
-            lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
-            lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
-            mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
-        }
-
-        mGeometryRenderTarget->Finalize();
-        mGeometryContext = CreateRenderContext( mGraphicContext, mGeometryRenderTarget );
+            CreateMSAARenderTarget( aOutputWidth, aOutputHeight );
 
         mFxaaSampler = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "OUTPUT" ) );
         sRenderTargetDescription lFxaaSpec{};
@@ -197,8 +203,8 @@ namespace SE::Core
             lVertexShader->Compile();
             // mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
 
-            auto lFragmentShader =
-                CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "omni_shadow_fragment_shader", lShaderPath );
+            auto lFragmentShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450,
+                                                        "omni_shadow_fragment_shader", lShaderPath );
             lFragmentShader->AddCode( SE::Private::Shaders::gCopyFragmentShader_data );
             lFragmentShader->Compile();
 
@@ -216,8 +222,8 @@ namespace SE::Core
             lVertexShader->Compile();
             // mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
 
-            auto lFragmentShader =
-                CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "omni_shadow_fragment_shader", lShaderPath );
+            auto lFragmentShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450,
+                                                        "omni_shadow_fragment_shader", lShaderPath );
             lFragmentShader->AddCode( SE::Private::Shaders::gCopyFragmentShader_data );
             lFragmentShader->Compile();
 
@@ -229,7 +235,7 @@ namespace SE::Core
         }
     }
 
-    Ref<MeshRenderer> ForwardSceneRenderer::GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification )
+    Ref<MeshRenderer> SceneRenderer::GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification )
     {
         if( mMeshRenderers.find( aPipelineSpecification ) == mMeshRenderers.end() )
             mMeshRenderers[aPipelineSpecification] = New<MeshRenderer>( mGraphicContext, aPipelineSpecification );
@@ -237,21 +243,21 @@ namespace SE::Core
         return mMeshRenderers[aPipelineSpecification];
     }
 
-    Ref<MeshRenderer> ForwardSceneRenderer::GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification )
+    Ref<MeshRenderer> SceneRenderer::GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification )
     {
         MeshRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 
         return GetRenderPipeline( lCreateInfo );
     }
 
-    Ref<MeshRenderer> ForwardSceneRenderer::GetRenderPipeline( sMeshRenderData &aPipelineSpecification )
+    Ref<MeshRenderer> SceneRenderer::GetRenderPipeline( sMeshRenderData &aPipelineSpecification )
     {
         MeshRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 
         return GetRenderPipeline( lCreateInfo );
     }
 
-    Ref<ParticleSystemRenderer> ForwardSceneRenderer::GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification )
+    Ref<ParticleSystemRenderer> SceneRenderer::GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification )
     {
         if( mParticleRenderers.find( aPipelineSpecification ) == mParticleRenderers.end() )
             mParticleRenderers[aPipelineSpecification] =
@@ -260,14 +266,14 @@ namespace SE::Core
         return mParticleRenderers[aPipelineSpecification];
     }
 
-    Ref<ParticleSystemRenderer> ForwardSceneRenderer::GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification )
+    Ref<ParticleSystemRenderer> SceneRenderer::GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification )
     {
         ParticleRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 
         return GetRenderPipeline( lCreateInfo );
     }
 
-    Ref<ParticleSystemRenderer> ForwardSceneRenderer::GetRenderPipeline( sParticleRenderData &aPipelineSpecification )
+    Ref<ParticleSystemRenderer> SceneRenderer::GetRenderPipeline( sParticleRenderData &aPipelineSpecification )
     {
         ParticleRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
 
@@ -296,7 +302,7 @@ namespace SE::Core
         return lVertexShader;
     }
 
-    ParticleRendererCreateInfo ForwardSceneRenderer::GetRenderPipelineCreateInfo( sParticleShaderComponent &aPipelineSpecification )
+    ParticleRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo( sParticleShaderComponent &aPipelineSpecification )
     {
         ParticleRendererCreateInfo lCreateInfo;
         lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
@@ -307,7 +313,7 @@ namespace SE::Core
         return lCreateInfo;
     }
 
-    ParticleRendererCreateInfo ForwardSceneRenderer::GetRenderPipelineCreateInfo( sParticleRenderData &aPipelineSpecification )
+    ParticleRendererCreateInfo SceneRenderer::GetRenderPipelineCreateInfo( sParticleRenderData &aPipelineSpecification )
     {
         ParticleRendererCreateInfo lCreateInfo;
         lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
@@ -318,9 +324,9 @@ namespace SE::Core
         return lCreateInfo;
     }
 
-    void ForwardSceneRenderer::Update( Ref<Scene> aWorld )
+    void SceneRenderer::Update( Ref<Scene> aWorld )
     {
-        ASceneRenderer::Update( aWorld );
+        BaseSceneRenderer::Update( aWorld );
         mShadowSceneRenderer->Update( aWorld );
 
         mView.PointLightCount = mPointLights.size();
@@ -348,7 +354,7 @@ namespace SE::Core
         // Update pipelines
     }
 
-    void ForwardSceneRenderer::Render()
+    void SceneRenderer::Render()
     {
         SE_PROFILE_FUNCTION();
 
@@ -438,7 +444,7 @@ namespace SE::Core
         mFxaaContext->EndRender();
     }
 
-    Ref<ITexture2D> ForwardSceneRenderer::GetOutputImage()
+    Ref<ITexture2D> SceneRenderer::GetOutputImage()
     {
         //
         return mGeometryRenderTarget->GetAttachment( "OUTPUT" );

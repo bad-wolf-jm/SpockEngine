@@ -6,19 +6,19 @@
 #include "Scene/Components.h"
 #include "Scene/Scene.h"
 
-#include "Renderer/ASceneRenderer.h"
+#include "ASceneRenderer.h"
 #include "Renderer/SceneRenderData.h"
 
-#include "EffectProcessor.h"
-#include "ShadowSceneRenderer.h"
-#include "CoordinateGridRenderer.h"
-#include "MeshRenderer.h"
-#include "ParticleSystemRenderer.h"
+#include "Scene/Renderer/EffectProcessor.h"
+#include "Scene/Renderer/ShadowSceneRenderer.h"
+// #include "CoordinateGridRenderer.h"
+// #include "MeshRenderer.h"
+// #include "ParticleSystemRenderer.h"
 
 namespace SE::Core
 {
 
-    class ForwardSceneRenderer : public ASceneRenderer
+    class SceneRenderer : public BaseSceneRenderer
     {
       public:
         WorldMatrices  mView;
@@ -29,10 +29,10 @@ namespace SE::Core
         bool           mUseFXAA              = false;
 
       public:
-        ForwardSceneRenderer() = default;
-        ForwardSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
+        SceneRenderer() = default;
+        SceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
 
-        ~ForwardSceneRenderer() = default;
+        ~SceneRenderer() = default;
 
         Ref<ITexture2D> GetOutputImage();
 
@@ -89,6 +89,9 @@ namespace SE::Core
             mParticleRenderers = {};
 
         std::unordered_map<Entity, Ref<IDescriptorSet>> mMaterials = {};
+
+        void CreateRenderTarget(uint32_t aOutputWidth, uint32_t aOutputHeight);
+        void CreateMSAARenderTarget(uint32_t aOutputWidth, uint32_t aOutputHeight);
     };
 
 } // namespace SE::Core

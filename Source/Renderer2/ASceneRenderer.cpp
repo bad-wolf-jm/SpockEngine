@@ -13,38 +13,38 @@ namespace SE::Core
     using namespace math;
     using namespace SE::Core::EntityComponentSystem::Components;
 
-    ASceneRenderer::ASceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
+    BaseSceneRenderer::BaseSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
         : mGraphicContext{ aGraphicContext }
         , mOutputFormat{ aOutputFormat }
         , mOutputSampleCount{ aOutputSampleCount }
     {
     }
 
-    void ASceneRenderer::SetProjection( mat4 aProjectionMatrix )
+    void BaseSceneRenderer::SetProjection( mat4 aProjectionMatrix )
     {
         mProjectionMatrix = aProjectionMatrix;
         mProjectionMatrix[1][1] *= -1.0f;
     }
 
-    void ASceneRenderer::SetView( mat4 aViewMatrix )
+    void BaseSceneRenderer::SetView( mat4 aViewMatrix )
     {
         mViewMatrix     = aViewMatrix;
         mCameraPosition = vec3( Inverse( mViewMatrix )[3] );
     }
 
-    void ASceneRenderer::SetGamma( float aGamma ) { mGamma = aGamma; }
+    void BaseSceneRenderer::SetGamma( float aGamma ) { mGamma = aGamma; }
 
-    void ASceneRenderer::SetExposure( float aExposure ) { mExposure = aExposure; }
+    void BaseSceneRenderer::SetExposure( float aExposure ) { mExposure = aExposure; }
 
-    void ASceneRenderer::SetAmbientLighting( vec4 aAmbientLight ) { mAmbientLight = aAmbientLight; }
+    void BaseSceneRenderer::SetAmbientLighting( vec4 aAmbientLight ) { mAmbientLight = aAmbientLight; }
 
-    void ASceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    void BaseSceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
         mOutputWidth  = aOutputWidth;
         mOutputHeight = aOutputHeight;
     }
 
-    void ASceneRenderer::AddLight( mat4 const &aTransform, sLightComponent &aLightComponent )
+    void BaseSceneRenderer::AddLight( mat4 const &aTransform, sLightComponent &aLightComponent )
     {
         switch( aLightComponent.mType )
         {
@@ -56,14 +56,14 @@ namespace SE::Core
             mPointLights.emplace_back( aLightComponent, aTransform );
             mLightGizmos.emplace_back( eLightType::POINT_LIGHT, mPointLights.size() - 1, aTransform );
             break;
-        case eLightType::SPOTLIGHT:
-            mSpotlights.emplace_back( aLightComponent, aTransform );
-            mLightGizmos.emplace_back( eLightType::SPOTLIGHT, mSpotlights.size() - 1, aTransform );
-            break;
+        // case eLightType::SPOTLIGHT:
+        //     mSpotlights.emplace_back( aLightComponent, aTransform );
+        //     mLightGizmos.emplace_back( eLightType::SPOTLIGHT, mSpotlights.size() - 1, aTransform );
+        //     break;
         }
     }
 
-    void ASceneRenderer::Update( Ref<Scene> aScene )
+    void BaseSceneRenderer::Update( Ref<Scene> aScene )
     {
         SE_PROFILE_SCOPE( "FOO" );
 
@@ -80,7 +80,7 @@ namespace SE::Core
         // clang-format off
         mDirectionalLights.clear();
         mPointLights.clear();
-        mSpotlights.clear();
+        // mSpotlights.clear();
         mLightGizmos.clear();
         mScene->ForEach<sLightComponent>( [&]( auto aEntity, auto &aComponent ) { 
             AddLight( mScene->GetFinalTransformMatrix( aEntity ), aComponent ); 
@@ -109,6 +109,6 @@ namespace SE::Core
 
     }
 
-    void ASceneRenderer::Render() {}
+    void BaseSceneRenderer::Render() {}
 
 } // namespace SE::Core
