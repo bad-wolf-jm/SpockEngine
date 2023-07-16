@@ -1,6 +1,7 @@
 
 #if defined( VULKAN_SEMANTICS )
 #    define LAYOUT_LOCATION( x ) layout( location = x )
+#    define LAYOUT_UNIFORM( s, b ) layout( set = s, binding = b )
 #else
 #    define LAYOUT_LOCATION( x )
 #endif

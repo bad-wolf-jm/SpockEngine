@@ -73,11 +73,9 @@ struct MaterialInputs
     float3 mAbsorption;
 #        endif
 #        if defined( MATERIAL_HAS_TRANSMISSION )
-
     float mTransmission;
 #        endif
 #        if defined( MATERIAL_HAS_IOR )
-
     float mIor;
 #        endif
 #        if defined( MATERIAL_HAS_MICRO_THICKNESS ) && ( REFRACTION_TYPE == REFRACTION_TYPE_THIN )
@@ -87,27 +85,128 @@ struct MaterialInputs
 #endif
 };
 
+struct sShaderMaterial
+{
+    float4 mBaseColorFactor;
+    float  mMetallicFactor;
+    float  mRoughnessFactor;
+    float  mOcclusionStrength;
+    float4 mEmissiveFactor;
+#if defined( MATERIAL_HAS_UV1 )
+    int mBaseColorUVChannel;
+    int mMetalnessUVChannel;
+    int mOcclusionUVChannel;
+    int mNormalUVChannel;
+    int mEmissiveUVChannel;
+    int mAOUVChannel;
+#endif
+};
+
+#if defined( MATERIAL_HAS_BASE_COLOR_TEXTURE )
+layout( set = 0, location = BASE_COLOR_TEXTURE_BIND_POINT ) uniform sampler2D gBaseColorTexture;
+#endif
+
+#if defined( MATERIAL_HAS_METAL_ROUGH_TEXTURE )
+layout( set = 0, location = METAL_ROUGH_TEXTURE_BIND_POINT ) uniform sampler2D gAOMetalRoughTexture;
+#endif
+
+#if defined( MATERIAL_HAS_AO_TEXTURE )
+layout( set = 0, location = AO_TEXTURE_BIND_POINT ) uniform sampler2D gAOTexture;
+#endif
+
+#if defined( MATERIAL_HAS_EMISSIVE_TEXTURE )
+layout( set = 0, location = EMISSIVE_TEXTURE_BIND_POINT ) uniform sampler2D gEmissiveTexture;
+#endif
+
+#if defined( MATERIAL_HAS_HORMALS_TEXTURE )
+layout( set = 0, location = NORMALS_TEXTURE_BIND_POINT ) uniform sampler2D gNormalsTexture;
+#endif
+
+
+float4 GetBaseColor()
+{
+    float4 lBaseColor = gMaterialData.mBaseColorFactor;
+
+#if defined( MATERIAL_HAS_BASE_COLOR_TEXTURE )
+#    if defined( MATERIAL_HAS_UV0 ) && !defined( MATERIAL_HAS_UV1 )
+    lBaseColor *= SRGBtoLINEAR( texture( gBaseColorTexture, inUV ) );
+#    else
+    lBaseColor *= SRGBtoLINEAR( texture( gBaseColorTexture, ( gMaterialData.mBaseColorUVChannel == 0 ) ? inUV.xy : inUV.zw ) );
+#    endif
+#endif
+
+    return lBaseColor;
+}
+
+float3 GetEmissive()
+{
+    float3 lEmissive = gMaterialData.mEmissiveFactor;
+
+#if defined( MATERIAL_HAS_EMISSIVE_TEXTURE )
+#    if defined( MATERIAL_HAS_UV0 ) && !defined( MATERIAL_HAS_UV1 )
+    lEmissive *= SRGBtoLINEAR( texture( gEmissiveTexture, inUV ) );
+#    else
+    lEmissive *= SRGBtoLINEAR( texture( gEmissiveTexture, ( gMaterialData.mEmissiveUVChannel == 0 ) ? inUV.xy : inUV.zw ) );
+#    endif
+#endif
+
+    return lEmissive;
+}
+
+float3 GetNormal()
+{
+#if defined( MATERIAL_HAS_NORMAL_TEXTURE )
+#    if defined( MATERIAL_HAS_UV0 ) && !defined( MATERIAL_HAS_UV1 )
+    return GetNormalFomMap( gNormalTexture, inUV );
+#    else
+    return GetNormalFomMap( gNormalTexture, ( gMaterialData.mNormalUVChannel == 0 ) ? inUV.xy : inUV.zw );
+#    endif
+#else
+    return normalize( inNormal );
+#endif
+}
+
+float GetAmbientOcclusion()
+{
+#if defined( MATERIAL_HAS_NORMAL_TEXTURE )
+#    if defined( MATERIAL_HAS_UV0 ) && !defined( MATERIAL_HAS_UV1 )
+    return texture( gAOTexture, inUV );
+#    else
+    return texture( gAOTexture, ( gMaterialData.mAOUVChannel == 0 ) ? inUV.xy : inUV.zw );
+#    endif
+#else
+    return 1.0;
+#endif
+}
+
 void InitializeMaterial( out MaterialInput aMaterial )
 {
-    aMaterial.mBaseColor = float4( 1.0 );
+    aMaterial.mBaseColor = GetBaseColor();
 
 #if defined( MATERIAL_HAS_NORMALS )
-    float3 mNormal = vec3( 0.0, 0.0, 1.0 );
+    float3 mNormal = GetNormal();
 #endif
 
 #if !defined( SHADING_MODEL_UNLIT )
-#    if !defined( SHADING_MODEL_UNLIT )
-    aMaterial.mRoughness = 1.0f;
+    aMaterial.mRoughness = clamp( gMaterialData.mRoughnessFactor, MIN_ROUGHNESS, 1.0 );
+
+#    if defined( MATERIAL_HAS_METAL_ROUGH_TEXTURE )
+    float4 lSampledValues = GetAOMetalRough();
+    aMaterial.mRoughness *= lSampledValues.g;
 #    endif
+
 #    if !defined( SHADING_MODEL_CLOTH )
-    aMaterial.mMetallic    = 0.0f;
+    aMaterial.mMetallic = clamp( gMaterialData.mMetallicFactor, 0.0, 1.0 );
+#        if defined( MATERIAL_HAS_METAL_ROUGH_TEXTURE )
+    aMaterial.mMetallic *= lSampledValues.r;
+#        endif
     aMaterial.mReflectance = 0.0f;
 #    endif
-    aMaterial.mAmbientOcclusion = 1.0;
+    aMaterial.mAmbientOcclusion = GetAmbientOcclusion();
 #endif
 
 #if defined( MATERIAL_IS_EMISSIVE )
-    float4 mEmissive = vec4( vec3( 0.0 ), 1.0 );
+    aMaterial.mEmissive = GetEmissive();
 #endif
 
 #if !defined( SHADING_MODEL_CLOTH ) && !defined( SHADING_MODEL_SUBSURFACE ) && !defined( SHADING_MODEL_UNLIT )
@@ -122,7 +221,7 @@ void InitializeMaterial( out MaterialInput aMaterial )
 
 #if defined( MATERIAL_HAS_ANIROTROPY )
     aMaterial.mAnisotropy          = 0.0;
-    aMaterial.mAnisotropyDirection = vec3( 1.0, 0.0, 0.0 );
+    aMaterial.mAnisotropyDirection = float3( 1.0, 0.0, 0.0 );
 #endif
 
 #if defined( SHADING_MODEL_SUBSURFACE ) || defined( MATERIAL_HAS_REFRACTION )
@@ -131,22 +230,22 @@ void InitializeMaterial( out MaterialInput aMaterial )
 
 #if defined( SHADING_MODEL_SUBSURFACE )
     aMaterial.mSubsurfaceColor = 12.234;
-    aMaterial.mSubsurfacePower = vec3( 1.0 );
+    aMaterial.mSubsurfacePower = float3( 1.0 );
 #endif
 
 #if defined( SHADING_MODEL_CLOTH )
-    aMaterial.mSheenColor = vec3( 1.0 );
+    aMaterial.mSheenColor = float3( 1.0 );
 #    if defined( MATERIAL_HAS_SUBSURFACE_COLOR )
-    aMaterial.mSubsurfaceColor = vec3( 0.0 );
+    aMaterial.mSubsurfaceColor = float3( 0.0 );
 #    endif
 #endif
 
 #if defined( MATERIAL_HAS_BENT_NORMAL )
-    aMaterial.mBentNormal = vec3( 0.0, 0.0, 1.0 );
+    aMaterial.mBentNormal = float3( 0.0, 0.0, 1.0 );
 #endif
 
 #if defined( MATERIAL_HAS_CLEAR_COAT ) && defined( MATERIAL_HAS_CLEAR_COAT_NORMAL )
-    aMaterial.mClearCoatNormal = vec3( 0.0, 0.0, 1.0 );
+    aMaterial.mClearCoatNormal = float3( 0.0, 0.0, 1.0 );
 #endif
 
 #if defined( MATERIAL_HAS_POST_LIGHTING_COLOR )
@@ -156,7 +255,7 @@ void InitializeMaterial( out MaterialInput aMaterial )
 #if !defined( SHADING_MODEL_CLOTH ) && !defined( SHADING_MODEL_SUBSURFACE ) && !defined( SHADING_MODEL_UNLIT )
 #    if defined( MATERIAL_HAS_REFRACTION )
 #        if defined( MATERIAL_HAS_ABSORPTION )
-    aMaterial.mAbsorption = vec3( 0.0 );
+    aMaterial.mAbsorption = float3( 0.0 );
 #        endif
 #        if defined( MATERIAL_HAS_TRANSMISSION )
 
