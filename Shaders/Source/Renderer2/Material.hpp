@@ -92,46 +92,53 @@ struct sShaderMaterial
     float  mRoughnessFactor;
     float  mOcclusionStrength;
     float4 mEmissiveFactor;
-#if defined( MATERIAL_HAS_UV1 )
-    int mBaseColorUVChannel;
-    int mEmissiveUVChannel;
-    int mNormalUVChannel;
-    int mMetalnessUVChannel;
-    int mOcclusionUVChannel;
-#endif
+    int    mBaseColorUVChannel;
+    int    mBaseColorTextureID;
+    int    mEmissiveUVChannel;
+    int    mEmissiveTextureID;
+    int    mNormalUVChannel;
+    int    mNormalTextureID;
+    int    mMetalnessUVChannel;
+    int    mMetalnessTextureID;
+    int    mOcclusionUVChannel;
+    int    mOcclusionTextureID;
 };
 
-#if defined( MATERIAL_HAS_BASE_COLOR_TEXTURE )
-layout( set = 0, location = BASE_COLOR_TEXTURE_BIND_POINT ) uniform sampler2D gBaseColorTexture;
-#endif
+// Try to be as bindless as possible and bind all available textures andd all materials
+// in one go as an array.
+// clang-format off
+LAYOUT_UNIFORM_BUFFER( 1, 0 ) __UNIFORM_BUFFER__ ShaderMaterials 
+{ 
+    sShaderMaterial mArray[]; 
+} gMaterials;
+// clang-format on
 
-#if defined( MATERIAL_HAS_METAL_ROUGH_TEXTURE )
-layout( set = 0, location = METAL_ROUGH_TEXTURE_BIND_POINT ) uniform sampler2D gAOMetalRoughTexture;
-#endif
+LAYOUT_UNIFORM( 1, 1 ) __UNIFORM__ sampler2D gTextures[];
 
-#if defined( MATERIAL_HAS_AO_TEXTURE )
-layout( set = 0, location = AO_TEXTURE_BIND_POINT ) uniform sampler2D gAOTexture;
+float ColorTextureFetch( int aTexID, int aUVChannel )
+{
+#if defined( MATERIAL_HAS_UV0 ) && !defined( MATERIAL_HAS_UV1 )
+    return SRGBtoLINEAR( texture( gTextures[aTexID], inUV ) );
+#else
+    return SRGBtoLINEAR( texture( gTextures[aTexID], ( aUVChannel == 0 ) ? inUV.xy : inUV.zw ) );
 #endif
+}
 
-#if defined( MATERIAL_HAS_EMISSIVE_TEXTURE )
-layout( set = 0, location = EMISSIVE_TEXTURE_BIND_POINT ) uniform sampler2D gEmissiveTexture;
+float TextureFetch( int aTexID, int aUVChannel )
+{
+#if defined( MATERIAL_HAS_UV0 ) && !defined( MATERIAL_HAS_UV1 )
+    return texture( gTextures[aTexID], inUV );
+#else
+    return texture( gTextures[aTexID], ( aUVChannel == 0 ) ? inUV.xy : inUV.zw );
 #endif
-
-#if defined( MATERIAL_HAS_HORMALS_TEXTURE )
-layout( set = 0, location = NORMALS_TEXTURE_BIND_POINT ) uniform sampler2D gNormalsTexture;
-#endif
-
+}
 
 float4 GetBaseColor()
 {
     float4 lBaseColor = gMaterialData.mBaseColorFactor;
 
 #if defined( MATERIAL_HAS_BASE_COLOR_TEXTURE )
-#    if defined( MATERIAL_HAS_UV0 ) && !defined( MATERIAL_HAS_UV1 )
-    lBaseColor *= SRGBtoLINEAR( texture( gBaseColorTexture, inUV ) );
-#    else
-    lBaseColor *= SRGBtoLINEAR( texture( gBaseColorTexture, ( gMaterialData.mBaseColorUVChannel == 0 ) ? inUV.xy : inUV.zw ) );
-#    endif
+    lBaseColor *= ColorTextureFetch( gMaterialData.mBaseColorTextureID, gMaterialData.mBaseColorUVChannel );
 #endif
 
     return lBaseColor;
@@ -142,11 +149,7 @@ float3 GetEmissive()
     float3 lEmissive = gMaterialData.mEmissiveFactor;
 
 #if defined( MATERIAL_HAS_EMISSIVE_TEXTURE )
-#    if defined( MATERIAL_HAS_UV0 ) && !defined( MATERIAL_HAS_UV1 )
-    lEmissive *= SRGBtoLINEAR( texture( gEmissiveTexture, inUV ) );
-#    else
-    lEmissive *= SRGBtoLINEAR( texture( gEmissiveTexture, ( gMaterialData.mEmissiveUVChannel == 0 ) ? inUV.xy : inUV.zw ) );
-#    endif
+    lBaseColor *= ColorTextureFetch( gMaterialData.mEmissiveTextureID, gMaterialData.mEmissiveUVChannel );
 #endif
 
     return lEmissive;
@@ -155,11 +158,7 @@ float3 GetEmissive()
 float3 GetNormal()
 {
 #if defined( MATERIAL_HAS_NORMAL_TEXTURE )
-#    if defined( MATERIAL_HAS_UV0 ) && !defined( MATERIAL_HAS_UV1 )
-    return GetNormalFomMap( gNormalTexture, inUV );
-#    else
-    return GetNormalFomMap( gNormalTexture, ( gMaterialData.mNormalUVChannel == 0 ) ? inUV.xy : inUV.zw );
-#    endif
+    return GetNormalFromMap( gMaterialData.mNormalTextureID, gMaterialData.mNormalUVChannel );
 #else
     return normalize( inNormal );
 #endif
@@ -167,12 +166,8 @@ float3 GetNormal()
 
 float GetAmbientOcclusion()
 {
-#if defined( MATERIAL_HAS_NORMAL_TEXTURE )
-#    if defined( MATERIAL_HAS_UV0 ) && !defined( MATERIAL_HAS_UV1 )
-    return texture( gAOTexture, inUV );
-#    else
-    return texture( gAOTexture, ( gMaterialData.mAOUVChannel == 0 ) ? inUV.xy : inUV.zw );
-#    endif
+#if defined( MATERIAL_HAS_OCCLUSION_TEXTURE )
+    return TextureFetch( gMaterialData.mOcclusionTextureID, gMaterialData.mOcclusionUVChannel );
 #else
     return 1.0;
 #endif
