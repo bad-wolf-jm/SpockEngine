@@ -46,8 +46,8 @@ namespace SE::Core
         bool lHasNormaTexture      = static_cast<bool>( mNormalTexture );
         bool lHasEmissiveTexture   = static_cast<bool>( mEmissiveTexture );
         bool lHasOcclusionTexture  = static_cast<bool>( mOcclusionTexture );
-        // clang-format off
 
+        // clang-format off
         return ( lHasBaseColorTexture  <<  0 ) | 
                ( lHasBaseColorTexture  <<  1 ) | 
                ( lHasMetalRoughTexture <<  2 ) |
