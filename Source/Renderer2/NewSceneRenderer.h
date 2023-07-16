@@ -19,9 +19,9 @@ namespace SE::Core
 {
     using namespace math;
 
-    enum class eShadingModel
+    enum class eShadingModel : uint8_t
     {
-        STANDARD,
+        STANDARD = 0,
         SUBSURFACE,
         CLOTH,
         UNLIT
@@ -31,13 +31,14 @@ namespace SE::Core
     struct sShaderMaterial
     {
         using Tex2D = Ref<ISampler2D>;
-        
+
         std::string mName = "";
 
-        eMaterialType mType       = eMaterialType::Opaque;
-        float         mLineWidth  = 1.0f;
-        bool          mIsTwoSided = true;
-        bool          mHasUV1     = true;
+        eMaterialType mType         = eMaterialType::Opaque;
+        eShadingModel mShadingModel = eShadingModel::UNLIT;
+        float         mLineWidth    = 1.0f;
+        bool          mIsTwoSided   = true;
+        bool          mHasUV1       = true;
 
         vec4  mBaseColorFactor    = { 1.0f, 1.0f, 1.0f, 1.0f };
         int   mBaseColorUVChannel = 0;
@@ -46,21 +47,23 @@ namespace SE::Core
         float mMetallicFactor     = 0.0f;
         float mRoughnessFactor    = 1.0f;
         int   mMetalnessUVChannel = 0;
-        Tex2D mMetaRoughTexture   = nullptr;
+        Tex2D mMetalRoughTexture  = nullptr;
 
         float mOcclusionStrength  = 0.0f;
         int   mOcclusionUVChannel = 0;
         Tex2D mOcclusionTexture   = nullptr;
 
         vec4  mEmissiveFactor    = { 0.0f, 0.0f, 0.0f, 0.0f };
-        Tex2D mEmissiveTexture   = nullptr;
         int   mEmissiveUVChannel = 0;
+        Tex2D mEmissiveTexture   = nullptr;
 
         int   mNormalUVChannel = 0;
         Tex2D mNormalTexture   = nullptr;
 
         sShaderMaterial()                          = default;
         sShaderMaterial( const sShaderMaterial & ) = default;
+
+        size_t Hash();
     };
 
     class NewSceneRenderer : public BaseSceneRenderer

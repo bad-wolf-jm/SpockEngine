@@ -38,6 +38,30 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem::Components;
     using namespace SE::Core::Primitives;
 
+    size_t sShaderMaterial::Hash()
+    {
+
+        bool lHasBaseColorTexture  = static_cast<bool>( mBaseColorTexture );
+        bool lHasMetalRoughTexture = static_cast<bool>( mMetalRoughTexture );
+        bool lHasNormaTexture      = static_cast<bool>( mNormalTexture );
+        bool lHasEmissiveTexture   = static_cast<bool>( mEmissiveTexture );
+        bool lHasOcclusionTexture  = static_cast<bool>( mOcclusionTexture );
+        // clang-format off
+
+        return ( lHasBaseColorTexture  <<  0 ) | 
+               ( lHasBaseColorTexture  <<  1 ) | 
+               ( lHasMetalRoughTexture <<  2 ) |
+               ( lHasNormaTexture      <<  3 ) | 
+               ( lHasEmissiveTexture   <<  4 ) |
+               ( lHasOcclusionTexture  <<  5 ) |
+               ( lHasOcclusionTexture  <<  6 ) |
+               ( mHasUV1               <<  7 ) |
+               ( mIsTwoSided           <<  8 ) |
+               ( mShadingModel         <<  9 )
+               ( mType                 << 11 )
+        // clang-format on
+    }
+
     NewSceneRenderer::NewSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
         : BaseSceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {
@@ -211,7 +235,7 @@ namespace SE::Core
             CreateMSAARenderTarget( aOutputWidth, aOutputHeight );
 
         mFxaaSampler = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "OUTPUT" ) );
-        CreateFXAARenderTarget(aOutputWidth, aOutputHeight);
+        CreateFXAARenderTarget( aOutputWidth, aOutputHeight );
         sRenderTargetDescription lFxaaSpec{};
         // lFxaaSpec.mWidth                  = aOutputWidth;
         // lFxaaSpec.mHeight                 = aOutputHeight;
