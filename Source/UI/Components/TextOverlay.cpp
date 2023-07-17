@@ -207,11 +207,11 @@ namespace SE::Core
 
         ImGui::SetScrollY( lFirstLine * mCharHeight );
 
-        ImGuiListClipper clipper;
-        clipper.Begin( mLines.size() );
-        while( clipper.Step() )
+        ImGuiListClipper lTextClipper;
+        lTextClipper.Begin( mLines.size() );
+        while( lTextClipper.Step() )
         {
-            for( int l = clipper.DisplayStart; l < clipper.DisplayEnd; l++ )
+            for( int l = lTextClipper.DisplayStart; l < lTextClipper.DisplayEnd; l++ )
             {
                 auto lLine = mLines[l];
 
@@ -237,7 +237,8 @@ namespace SE::Core
                 ImGui::SetCursorPosY( ImGui::GetCursorPosY() + mCharHeight );
             }
         }
-
+        ImGui::SetCursorPosY( ImGui::GetCursorPosY() + mCharHeight );
+        
         SE::Core::Engine::GetInstance()->UIContext()->PopFont();
         ImGui::EndChild();
         ImGui::PopStyleColor();
