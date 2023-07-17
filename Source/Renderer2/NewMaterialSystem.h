@@ -1,27 +1,19 @@
 #pragma once
+
+#include <unordered_map>
+
+#include "Core/Entity/Collection.h"
+#include "Core/Math/Types.h"
 #include "Core/Memory.h"
 
 #include "Graphics/API.h"
 
-#include "Scene/Components.h"
-// #include "Scene/Scene.h"
-
-#include "ASceneRenderer.h"
-#include "Core/Entity/Collection.h"
-// #include "Renderer/SceneRenderData.h"
-
-// #include "Scene/Renderer/EffectProcessor.h"
-// #include "Scene/Renderer/ShadowSceneRenderer.h"
-// #include "CoordinateGridRenderer.h"
-// #include "MeshRenderer.h"
-// #include "ParticleSystemRenderer.h"
-
 namespace SE::Core
 {
     using namespace math;
-    using Material = Entity;
+    using namespace SE::Graphics;
 
-    // class Scene;
+    using Material = Entity;
 
     enum class eShadingModel : uint8_t
     {
@@ -31,9 +23,16 @@ namespace SE::Core
         UNLIT
     };
 
+    enum class eBlendMode : uint8_t
+    {
+        Opaque,
+        Mask,
+        Blend
+    };
+
     struct sMaterialInfo
     {
-        eMaterialType mType         = eMaterialType::Opaque;
+        eBlendMode    mType         = eBlendMode::Opaque;
         eShadingModel mShadingModel = eShadingModel::UNLIT;
         float         mLineWidth    = 1.0f;
         bool          mIsTwoSided   = true;
@@ -145,7 +144,7 @@ namespace SE::Core
     //     size_t Hash();
     // };
 
-    class NewMaterialSystem : public BaseSceneRenderer
+    class NewMaterialSystem
     {
         //   public:
         // WorldMatrices  mView;
@@ -186,6 +185,8 @@ namespace SE::Core
         Ref<IGraphicContext> mGraphicContext;
 
         EntityCollection mMaterialRegistry;
+
+        std::unordered_map<size_t, Ref<IGraphicsPipeline>> mGraphicsPipelines;
 
         //   protected:
         //     Ref<IRenderTarget>  mGeometryRenderTarget = nullptr;

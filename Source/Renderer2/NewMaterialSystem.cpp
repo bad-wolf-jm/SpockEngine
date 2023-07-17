@@ -1,63 +1,14 @@
 #include "NewMaterialSystem.h"
 
-// #include <chrono>
-// #include <gli/gli.hpp>
-
-// #include "Scene/Components/VisualHelpers.h"
-// #include "Scene/Primitives/Primitives.h"
-// #include "Scene/VertexData.h"
-
 #include "Core/Logging.h"
 #include "Core/Profiling/BlockTimer.h"
 #include "Core/Resource.h"
 
-// #include "Scene/Renderer/DeferredLightingRenderer.h"
-// #include "Scene/Renderer/MeshRenderer.h"
-// #include "Scene/Renderer/ParticleSystemRenderer.h"
-
-// #include "Shaders/gParticleSystemFragmentShader.h"
-// #include "Shaders/gParticleSystemVertexShader.h"
-
-// #include "Shaders/gPBRFunctions.h"
-// #include "Shaders/gPBRMeshFragmentShaderCalculation.h"
-// #include "Shaders/gPBRMeshFragmentShaderPreamble.h"
-// #include "Shaders/gPBRMeshVertexShader.h"
-// #include "Shaders/gParticleSystemFragmentShader.h"
-// #include "Shaders/gParticleSystemVertexShader.h"
-// #include "Shaders/gToneMap.h"
-// #include "Shaders/gVertexLayout.h"
-
-// #include "Shaders/gCopyFragmentShader.h"
-// #include "Shaders/gFXAACode.h"
-// #include "Shaders/gFXAAFragmentShader.h"
-// #include "Shaders/gFXAAVertexShader.h"
-
 namespace SE::Core
 {
-    using namespace SE::Core::EntityComponentSystem::Components;
-    using namespace SE::Core::Primitives;
-
     NewMaterialSystem::NewMaterialSystem( Ref<IGraphicContext> aGraphicContext )
         : mGraphicContext{ aGraphicContext }
-    // : BaseSceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {
-        // auto lLayout = MeshRenderer::GetCameraSetLayout( mGraphicContext );
-
-        // mSceneDescriptors = lLayout->Allocate();
-
-        // mCameraUniformBuffer =
-        //     CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( WorldMatrices ) );
-        // mShaderParametersBuffer =
-        //     CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraSettings ) );
-        // mSceneDescriptors->Write( mCameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
-        // mSceneDescriptors->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
-
-        // mLightingDirectionalShadowLayout   = DeferredLightingRenderer::GetDirectionalShadowSetLayout( mGraphicContext );
-        // mLightingPassDirectionalShadowMaps = mLightingDirectionalShadowLayout->Allocate( 1024 );
-        // mLightingSpotlightShadowLayout     = DeferredLightingRenderer::GetSpotlightShadowSetLayout( mGraphicContext );
-        // mLightingPassSpotlightShadowMaps   = mLightingSpotlightShadowLayout->Allocate( 1024 );
-        // mLightingPointLightShadowLayout    = DeferredLightingRenderer::GetPointLightShadowSetLayout( mGraphicContext );
-        // mLightingPassPointLightShadowMaps  = mLightingPointLightShadowLayout->Allocate( 1024 );
     }
 
     Material NewMaterialSystem::CreateMaterial( std::string aName )
