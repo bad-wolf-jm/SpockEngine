@@ -98,11 +98,18 @@ namespace SE::Core
             default: break;
             }
         }
+
+        std::lock_guard<std::mutex> guard( mLinesMutex );
+        Layout();
     }
 
     void UITextOverlay::AddText( string_t const &aText ) {}
 
-    void UITextOverlay::Clear() { mCharacters.clear(); }
+    void UITextOverlay::Clear()
+    {
+        mCharacters.clear();
+        mLines.clear();
+    }
 
     ImVec2 UITextOverlay::RequiredSize()
     {
@@ -116,8 +123,48 @@ namespace SE::Core
         return ImVec2{ lTagWidth, lHeight };
     }
 
+    void UITextOverlay::Layout()
+    {
+        mLines.clear();
+
+        uint32_t lLineStart                   = 0;
+        int32_t  lCursorPositionInCurrentLine = 0;
+
+        size_t lCharacterCount = mCharacters.size();
+        for( int32_t i = 0; i < lCharacterCount; i++ )
+        {
+            if( mCharacters[i].mCharacter[0] == '\n' )
+            {
+                auto &lLineData  = mLines.emplace_back();
+                lLineData.mBegin = lLineStart;
+                lLineData.mEnd   = i - 1;
+                lLineStart       = i + 1;
+
+                lCursorPositionInCurrentLine = 0;
+
+                continue;
+            }
+
+            if( lCursorPositionInCurrentLine >= mConsoleWidth )
+            {
+                auto &lLineData  = mLines.emplace_back();
+                lLineData.mBegin = lLineStart;
+                lLineData.mEnd   = i - 1;
+                lLineStart       = i;
+
+                lCursorPositionInCurrentLine = 0;
+            }
+            else
+            {
+                lCursorPositionInCurrentLine++;
+            }
+        }
+    }
+
     void UITextOverlay::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
+        std::lock_guard<std::mutex> guard( mLinesMutex );
+
         if( mCharWidth == 0 )
         {
             SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONOSPACE );
@@ -138,6 +185,8 @@ namespace SE::Core
         {
             mConsoleWidth  = lNewConsoleWidth;
             mConsoleHeight = lNewConsoleHeight;
+
+            Layout();
         }
 
         if( !mIsVisible ) return;
@@ -153,41 +202,30 @@ namespace SE::Core
         float  lTopPosition    = lCursorPosition.y;
         float  lLeftPosition   = lCursorPosition.x;
 
-        int32_t lCursorPositionInCurrentLine = 0;
         SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONOSPACE );
 
-        size_t lCharacterCount = mCharacters.size();
-        for( int32_t i = 0; i < lCharacterCount; i++ )
+        uint32_t lFirstLine = 0;
+        if( mLines.size() >= mConsoleHeight ) lFirstLine = mLines.size() - mConsoleHeight - 1;
+
+        uint32_t lLineCount = std::min( (uint32_t)mLines.size(), mConsoleHeight );
+
+        for( uint32_t l = lFirstLine; l < lFirstLine + lLineCount; l++ )
         {
-            if( mCharacters[i].mCharacter[0] == '\n' )
+            auto lLine = mLines[l];
+
+            for( uint32_t i = lLine.mBegin; i < lLine.mEnd; i++ )
             {
-                lCursorPositionInCurrentLine = 0;
-
-                lCursorPosition.x = lLeftPosition;
-                lCursorPosition.y += mCharHeight;
-                continue;
-            }
-
-            lDrawlist->AddText( g->Font, g->FontSize, lCursorPosition, ImGui::GetColorU32( ImGuiCol_Text ), mCharacters[i].mCharacter,
-                                mCharacters[i].mCharacter + 1 );
-
-            if( lCursorPositionInCurrentLine >= mConsoleWidth )
-            {
-                lCursorPositionInCurrentLine = 0;
-
-                lCursorPosition.x = lLeftPosition;
-                lCursorPosition.y += mCharHeight;
-            }
-            else
-            {
-                lCursorPositionInCurrentLine++;
+                lDrawlist->AddText( g->Font, g->FontSize, lCursorPosition, ImGui::GetColorU32( ImGuiCol_Text ),
+                                    mCharacters[i].mCharacter, mCharacters[i].mCharacter + 1 );
 
                 lCursorPosition.x += mCharWidth;
             }
-        }
-        SE::Core::Engine::GetInstance()->UIContext()->PopFont();
 
-        ImGui::ItemSize( ImVec2{ aSize.x, ( lCursorPosition.y + mCharHeight ) - lTopPosition }, 0.0f );
+            lCursorPosition.x = lLeftPosition;
+            lCursorPosition.y += mCharHeight;
+        }
+
+        SE::Core::Engine::GetInstance()->UIContext()->PopFont();
         ImGui::EndChild();
         ImGui::PopStyleColor();
         ImGui::PopID();
