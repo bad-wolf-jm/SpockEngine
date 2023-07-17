@@ -8,8 +8,8 @@
 // #include "Scene/VertexData.h"
 
 #include "Core/Logging.h"
-#include "Core/Resource.h"
 #include "Core/Profiling/BlockTimer.h"
+#include "Core/Resource.h"
 
 // #include "Scene/Renderer/DeferredLightingRenderer.h"
 // #include "Scene/Renderer/MeshRenderer.h"
@@ -37,6 +37,7 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem::Components;
     using namespace SE::Core::Primitives;
 
+#if 0
     size_t sNewShaderMaterial::Hash()
     {
 
@@ -65,10 +66,11 @@ namespace SE::Core
 
         return lHashValue;
     }
+#endif
 
     NewMaterialSystem::NewMaterialSystem( Ref<IGraphicContext> aGraphicContext )
         : mGraphicContext{ aGraphicContext }
-        // : BaseSceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
+    // : BaseSceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {
         // auto lLayout = MeshRenderer::GetCameraSetLayout( mGraphicContext );
 
@@ -89,13 +91,18 @@ namespace SE::Core
         // mLightingPassPointLightShadowMaps  = mLightingPointLightShadowLayout->Allocate( 1024 );
     }
 
+    Material NewMaterialSystem::CreateMaterial( std::string aName )
+    {
+        //
+        return mMaterialRegistry.CreateEntity( aName );
+    }
+
     // static Ref<IShaderProgram> MRTVertexShader( Ref<IGraphicContext> gc )
     // {
     //     fs::path lShaderPath   = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
-    //     auto     lVertexShader = CreateShaderProgram( gc, eShaderStageTypeFlags::VERTEX, 450, "geometry_vertex_shader", lShaderPath );
-    //     lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data );
-    //     lVertexShader->AddCode( SE::Private::Shaders::gPBRMeshVertexShader_data );
-    //     lVertexShader->Compile();
+    //     auto     lVertexShader = CreateShaderProgram( gc, eShaderStageTypeFlags::VERTEX, 450, "geometry_vertex_shader", lShaderPath
+    //     ); lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data ); lVertexShader->AddCode(
+    //     SE::Private::Shaders::gPBRMeshVertexShader_data ); lVertexShader->Compile();
 
     //     return lVertexShader;
     // }
@@ -228,84 +235,84 @@ namespace SE::Core
 
     // void NewMaterialSystem::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
     // {
-        // sRenderTargetDescription lRenderTargetSpec{};
-        // lRenderTargetSpec.mWidth       = aOutputWidth;
-        // lRenderTargetSpec.mHeight      = aOutputHeight;
-        // lRenderTargetSpec.mSampleCount = mOutputSampleCount;
-        // mGeometryRenderTarget          = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
+    // sRenderTargetDescription lRenderTargetSpec{};
+    // lRenderTargetSpec.mWidth       = aOutputWidth;
+    // lRenderTargetSpec.mHeight      = aOutputHeight;
+    // lRenderTargetSpec.mSampleCount = mOutputSampleCount;
+    // mGeometryRenderTarget          = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
 
-        // if( mOutputSampleCount == 1 )
-        //     CreateRenderTarget( aOutputWidth, aOutputHeight );
-        // else
-        //     CreateMSAARenderTarget( aOutputWidth, aOutputHeight );
+    // if( mOutputSampleCount == 1 )
+    //     CreateRenderTarget( aOutputWidth, aOutputHeight );
+    // else
+    //     CreateMSAARenderTarget( aOutputWidth, aOutputHeight );
 
-        // mFxaaSampler = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "OUTPUT" ) );
-        // CreateFXAARenderTarget( aOutputWidth, aOutputHeight );
-        // sRenderTargetDescription lFxaaSpec{};
-        // lFxaaSpec.mWidth                  = aOutputWidth;
-        // lFxaaSpec.mHeight                 = aOutputHeight;
-        // lFxaaSpec.mSampleCount            = mOutputSampleCount;
-        // mFxaaRenderTarget                 = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
-        // lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
-        // lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA16_FLOAT;
-        // lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-        // lAttachmentCreateInfo.mLoadOp     = eAttachmentLoadOp::CLEAR;
-        // lAttachmentCreateInfo.mStoreOp    = eAttachmentStoreOp::STORE;
-        // mFxaaRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
-        // mFxaaRenderTarget->Finalize();
-        // mFxaaContext = CreateRenderContext( mGraphicContext, mFxaaRenderTarget );
+    // mFxaaSampler = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "OUTPUT" ) );
+    // CreateFXAARenderTarget( aOutputWidth, aOutputHeight );
+    // sRenderTargetDescription lFxaaSpec{};
+    // lFxaaSpec.mWidth                  = aOutputWidth;
+    // lFxaaSpec.mHeight                 = aOutputHeight;
+    // lFxaaSpec.mSampleCount            = mOutputSampleCount;
+    // mFxaaRenderTarget                 = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
+    // lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
+    // lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA16_FLOAT;
+    // lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+    // lAttachmentCreateInfo.mLoadOp     = eAttachmentLoadOp::CLEAR;
+    // lAttachmentCreateInfo.mStoreOp    = eAttachmentStoreOp::STORE;
+    // mFxaaRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
+    // mFxaaRenderTarget->Finalize();
+    // mFxaaContext = CreateRenderContext( mGraphicContext, mFxaaRenderTarget );
 
-        // mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mGeometryContext );
-        // mShadowSceneRenderer    = New<ShadowSceneRenderer>( mGraphicContext );
+    // mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mGeometryContext );
+    // mShadowSceneRenderer    = New<ShadowSceneRenderer>( mGraphicContext );
 
-        // {
-        //     fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
-        //     auto     lVertexShader =
-        //         CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath );
+    // {
+    //     fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
+    //     auto     lVertexShader =
+    //         CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath );
 
-        //     lVertexShader->AddCode( "layout( location = 0 ) in vec2 inUV;\n" );
-        //     lVertexShader->AddCode( "layout( location = 1 ) in vec4 inConsoleUV;\n" );
-        //     lVertexShader->AddCode( "layout( set = 0, binding = 0 ) uniform sampler2D sImage;\n" );
-        //     lVertexShader->AddCode( "layout( location = 0 ) out vec4 outFragcolor;\n" );
-        //     lVertexShader->AddCode( "#define FXAA_PC 1\n" );
-        //     lVertexShader->AddCode( "#define FXAA_GLSL_130 1\n" );
-        //     lVertexShader->AddCode( "#define FXAA_QUALITY__PRESET 23\n" );
-        //     lVertexShader->AddCode( SE::Private::Shaders::gFXAACode_data );
-        //     lVertexShader->AddCode( SE::Private::Shaders::gFXAAFragmentShader_data );
-        //     lVertexShader->Compile();
-        //     // mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
+    //     lVertexShader->AddCode( "layout( location = 0 ) in vec2 inUV;\n" );
+    //     lVertexShader->AddCode( "layout( location = 1 ) in vec4 inConsoleUV;\n" );
+    //     lVertexShader->AddCode( "layout( set = 0, binding = 0 ) uniform sampler2D sImage;\n" );
+    //     lVertexShader->AddCode( "layout( location = 0 ) out vec4 outFragcolor;\n" );
+    //     lVertexShader->AddCode( "#define FXAA_PC 1\n" );
+    //     lVertexShader->AddCode( "#define FXAA_GLSL_130 1\n" );
+    //     lVertexShader->AddCode( "#define FXAA_QUALITY__PRESET 23\n" );
+    //     lVertexShader->AddCode( SE::Private::Shaders::gFXAACode_data );
+    //     lVertexShader->AddCode( SE::Private::Shaders::gFXAAFragmentShader_data );
+    //     lVertexShader->Compile();
+    //     // mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
 
-        //     auto lFragmentShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450,
-        //                                                 "omni_shadow_fragment_shader", lShaderPath );
-        //     lFragmentShader->AddCode( SE::Private::Shaders::gCopyFragmentShader_data );
-        //     lFragmentShader->Compile();
+    //     auto lFragmentShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450,
+    //                                                 "omni_shadow_fragment_shader", lShaderPath );
+    //     lFragmentShader->AddCode( SE::Private::Shaders::gCopyFragmentShader_data );
+    //     lFragmentShader->Compile();
 
-        //     EffectProcessorCreateInfo lEffectProcessorCreateInfo{};
-        //     lEffectProcessorCreateInfo.mVertexShader   = lVertexShader;
-        //     lEffectProcessorCreateInfo.mFragmentShader = lFragmentShader;
-        //     lEffectProcessorCreateInfo.RenderPass      = mFxaaContext;
-        //     mFxaaRenderer = New<EffectProcessor>( mGraphicContext, mFxaaContext, lEffectProcessorCreateInfo );
-        // }
+    //     EffectProcessorCreateInfo lEffectProcessorCreateInfo{};
+    //     lEffectProcessorCreateInfo.mVertexShader   = lVertexShader;
+    //     lEffectProcessorCreateInfo.mFragmentShader = lFragmentShader;
+    //     lEffectProcessorCreateInfo.RenderPass      = mFxaaContext;
+    //     mFxaaRenderer = New<EffectProcessor>( mGraphicContext, mFxaaContext, lEffectProcessorCreateInfo );
+    // }
 
-        // {
-        //     fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
-        //     auto     lVertexShader =
-        //         CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath );
-        //     lVertexShader->AddCode( SE::Private::Shaders::gFXAAVertexShader_data );
-        //     lVertexShader->Compile();
-        //     // mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
+    // {
+    //     fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
+    //     auto     lVertexShader =
+    //         CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath );
+    //     lVertexShader->AddCode( SE::Private::Shaders::gFXAAVertexShader_data );
+    //     lVertexShader->Compile();
+    //     // mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
 
-        //     auto lFragmentShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450,
-        //                                                 "omni_shadow_fragment_shader", lShaderPath );
-        //     lFragmentShader->AddCode( SE::Private::Shaders::gCopyFragmentShader_data );
-        //     lFragmentShader->Compile();
+    //     auto lFragmentShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450,
+    //                                                 "omni_shadow_fragment_shader", lShaderPath );
+    //     lFragmentShader->AddCode( SE::Private::Shaders::gCopyFragmentShader_data );
+    //     lFragmentShader->Compile();
 
-        //     EffectProcessorCreateInfo lCopyCreateInfo{};
-        //     lCopyCreateInfo.mVertexShader   = lVertexShader;
-        //     lCopyCreateInfo.mFragmentShader = lFragmentShader;
-        //     lCopyCreateInfo.RenderPass      = mFxaaContext;
-        //     mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lCopyCreateInfo );
-        // }
+    //     EffectProcessorCreateInfo lCopyCreateInfo{};
+    //     lCopyCreateInfo.mVertexShader   = lVertexShader;
+    //     lCopyCreateInfo.mFragmentShader = lFragmentShader;
+    //     lCopyCreateInfo.RenderPass      = mFxaaContext;
+    //     mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lCopyCreateInfo );
+    // }
     // }
 
     // Ref<MeshRenderer> NewSceneRenderer::GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification )
@@ -400,31 +407,31 @@ namespace SE::Core
     // void NewMaterialSystem::Update( Ref<Scene> aWorld )
     // {
     //     BaseSceneRenderer::Update( aWorld );
-        // mShadowSceneRenderer->Update( aWorld );
+    // mShadowSceneRenderer->Update( aWorld );
 
-        // mView.PointLightCount = mPointLights.size();
-        // for( uint32_t i = 0; i < mView.PointLightCount; i++ ) mView.PointLights[i] = mPointLights[i];
+    // mView.PointLightCount = mPointLights.size();
+    // for( uint32_t i = 0; i < mView.PointLightCount; i++ ) mView.PointLights[i] = mPointLights[i];
 
-        // mView.DirectionalLightCount = mDirectionalLights.size();
-        // for( uint32_t i = 0; i < mView.DirectionalLightCount; i++ ) mView.DirectionalLights[i] = mDirectionalLights[i];
+    // mView.DirectionalLightCount = mDirectionalLights.size();
+    // for( uint32_t i = 0; i < mView.DirectionalLightCount; i++ ) mView.DirectionalLights[i] = mDirectionalLights[i];
 
-        // mView.SpotlightCount = mSpotlights.size();
-        // for( uint32_t i = 0; i < mView.SpotlightCount; i++ ) mView.Spotlights[i] = mSpotlights[i];
+    // mView.SpotlightCount = mSpotlights.size();
+    // for( uint32_t i = 0; i < mView.SpotlightCount; i++ ) mView.Spotlights[i] = mSpotlights[i];
 
-        // mSettings.AmbientLightIntensity = mAmbientLight.a;
-        // mSettings.AmbientLightColor     = vec4( vec3( mAmbientLight ), 0.0 );
-        // mSettings.Gamma                 = mGamma;
-        // mSettings.Exposure              = mExposure;
-        // mSettings.RenderGrayscale       = mGrayscaleRendering ? 1.0f : 0.0f;
+    // mSettings.AmbientLightIntensity = mAmbientLight.a;
+    // mSettings.AmbientLightColor     = vec4( vec3( mAmbientLight ), 0.0 );
+    // mSettings.Gamma                 = mGamma;
+    // mSettings.Exposure              = mExposure;
+    // mSettings.RenderGrayscale       = mGrayscaleRendering ? 1.0f : 0.0f;
 
-        // mView.Projection     = mProjectionMatrix;
-        // mView.CameraPosition = mCameraPosition;
-        // mView.View           = mViewMatrix;
+    // mView.Projection     = mProjectionMatrix;
+    // mView.CameraPosition = mCameraPosition;
+    // mView.View           = mViewMatrix;
 
-        // mCameraUniformBuffer->Write( mView );
-        // mShaderParametersBuffer->Write( mSettings );
+    // mCameraUniformBuffer->Write( mView );
+    // mShaderParametersBuffer->Write( mSettings );
 
-        // Update pipelines
+    // Update pipelines
     // }
 
     // void NewMaterialSystem::Render()
@@ -433,88 +440,88 @@ namespace SE::Core
 
     //     if( !mScene ) return;
 
-        // mScene->GetMaterialSystem()->UpdateDescriptors();
+    // mScene->GetMaterialSystem()->UpdateDescriptors();
 
-        // mShadowSceneRenderer->Render();
-        // if( mShadowSceneRenderer->GetDirectionalShadowMapSamplers().size() > 0 )
-        //     mLightingPassDirectionalShadowMaps->Write( mShadowSceneRenderer->GetDirectionalShadowMapSamplers(), 0 );
+    // mShadowSceneRenderer->Render();
+    // if( mShadowSceneRenderer->GetDirectionalShadowMapSamplers().size() > 0 )
+    //     mLightingPassDirectionalShadowMaps->Write( mShadowSceneRenderer->GetDirectionalShadowMapSamplers(), 0 );
 
-        // if( mShadowSceneRenderer->GetSpotlightShadowMapSamplers().size() > 0 )
-        //     mLightingPassSpotlightShadowMaps->Write( mShadowSceneRenderer->GetSpotlightShadowMapSamplers(), 0 );
+    // if( mShadowSceneRenderer->GetSpotlightShadowMapSamplers().size() > 0 )
+    //     mLightingPassSpotlightShadowMaps->Write( mShadowSceneRenderer->GetSpotlightShadowMapSamplers(), 0 );
 
-        // if( mShadowSceneRenderer->GetPointLightShadowMapSamplers().size() > 0 )
-        //     mLightingPassPointLightShadowMaps->Write( mShadowSceneRenderer->GetPointLightShadowMapSamplers(), 0 );
+    // if( mShadowSceneRenderer->GetPointLightShadowMapSamplers().size() > 0 )
+    //     mLightingPassPointLightShadowMaps->Write( mShadowSceneRenderer->GetPointLightShadowMapSamplers(), 0 );
 
-        // mGeometryContext->BeginRender();
-        // for( auto &lPipelineData : mOpaqueMeshQueue )
-        // {
-        //     auto lPipeline = GetRenderPipeline( lPipelineData );
-        //     if( lPipeline->Pipeline() )
-        //         mGeometryContext->Bind( lPipeline->Pipeline() );
-        //     else
-        //         continue;
-        //     mGeometryContext->Bind( mSceneDescriptors, 0, -1 );
-        //     mGeometryContext->Bind( mScene->GetMaterialSystem()->GetDescriptorSet(), 1, -1 );
+    // mGeometryContext->BeginRender();
+    // for( auto &lPipelineData : mOpaqueMeshQueue )
+    // {
+    //     auto lPipeline = GetRenderPipeline( lPipelineData );
+    //     if( lPipeline->Pipeline() )
+    //         mGeometryContext->Bind( lPipeline->Pipeline() );
+    //     else
+    //         continue;
+    //     mGeometryContext->Bind( mSceneDescriptors, 0, -1 );
+    //     mGeometryContext->Bind( mScene->GetMaterialSystem()->GetDescriptorSet(), 1, -1 );
 
-        //     if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
-        //     mGeometryContext->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
+    //     if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
+    //     mGeometryContext->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
 
-        //     MeshRenderer::MaterialPushConstants lMaterialPushConstants{};
-        //     lMaterialPushConstants.mMaterialID = lPipelineData.mMaterialID;
+    //     MeshRenderer::MaterialPushConstants lMaterialPushConstants{};
+    //     lMaterialPushConstants.mMaterialID = lPipelineData.mMaterialID;
 
-        //     mGeometryContext->PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
+    //     mGeometryContext->PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
 
-        //     mGeometryContext->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
-        // }
+    //     mGeometryContext->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
+    // }
 
-        // for( auto &lParticleSystem : mParticleQueue )
-        // {
-        //     auto &lPipeline = GetRenderPipeline( lParticleSystem );
+    // for( auto &lParticleSystem : mParticleQueue )
+    // {
+    //     auto &lPipeline = GetRenderPipeline( lParticleSystem );
 
-        //     ParticleSystemRenderer::ParticleData lParticleData{};
-        //     lParticleData.Model         = lParticleSystem.mModel;
-        //     lParticleData.ParticleCount = lParticleSystem.mParticleCount;
-        //     lParticleData.ParticleSize  = lParticleSystem.mParticleSize;
-        //     lParticleData.Particles     = lParticleSystem.mParticles;
+    //     ParticleSystemRenderer::ParticleData lParticleData{};
+    //     lParticleData.Model         = lParticleSystem.mModel;
+    //     lParticleData.ParticleCount = lParticleSystem.mParticleCount;
+    //     lParticleData.ParticleSize  = lParticleSystem.mParticleSize;
+    //     lParticleData.Particles     = lParticleSystem.mParticles;
 
-        //     lPipeline->Render( mView.Projection, mView.View, mGeometryContext, lParticleData );
-        // }
+    //     lPipeline->Render( mView.Projection, mView.View, mGeometryContext, lParticleData );
+    // }
 
-        // for( auto const &lLightGizmo : mLightGizmos )
-        // {
-        //     switch( lLightGizmo.mType )
-        //     {
-        //     case eLightType::DIRECTIONAL:
-        //     {
-        //         // mVisualHelperRenderer->Render( lLightGizmo.mMatrix, aDirectionalLightHelperComponent, mGeometryContext );
-        //         break;
-        //     }
-        //     case eLightType::POINT_LIGHT:
-        //     {
-        //         // mVisualHelperRenderer->Render( lLightGizmo.mMatrix, aPointLightHelperComponent, mGeometryContext );
-        //         break;
-        //     }
-        //     case eLightType::SPOTLIGHT:
-        //     {
-        //         // mVisualHelperRenderer->Render( lLightGizmo.mMatrix, aSpotlightHelperComponent, mGeometryContext );
-        //         break;
-        //     }
-        //     }
-        // }
+    // for( auto const &lLightGizmo : mLightGizmos )
+    // {
+    //     switch( lLightGizmo.mType )
+    //     {
+    //     case eLightType::DIRECTIONAL:
+    //     {
+    //         // mVisualHelperRenderer->Render( lLightGizmo.mMatrix, aDirectionalLightHelperComponent, mGeometryContext );
+    //         break;
+    //     }
+    //     case eLightType::POINT_LIGHT:
+    //     {
+    //         // mVisualHelperRenderer->Render( lLightGizmo.mMatrix, aPointLightHelperComponent, mGeometryContext );
+    //         break;
+    //     }
+    //     case eLightType::SPOTLIGHT:
+    //     {
+    //         // mVisualHelperRenderer->Render( lLightGizmo.mMatrix, aSpotlightHelperComponent, mGeometryContext );
+    //         break;
+    //     }
+    //     }
+    // }
 
-        // // if( mRenderCoordinateGrid ) mCoordinateGridRenderer->Render( mView.Projection, mView.View, mGeometryContext );
-        // mGeometryContext->EndRender();
+    // // if( mRenderCoordinateGrid ) mCoordinateGridRenderer->Render( mView.Projection, mView.View, mGeometryContext );
+    // mGeometryContext->EndRender();
 
-        // mFxaaContext->BeginRender();
-        // if( mUseFXAA )
-        // {
-        //     mFxaaRenderer->Render( mFxaaSampler, mFxaaContext );
-        // }
-        // else
-        // {
-        //     mCopyRenderer->Render( mFxaaSampler, mFxaaContext );
-        // }
-        // mFxaaContext->EndRender();
+    // mFxaaContext->BeginRender();
+    // if( mUseFXAA )
+    // {
+    //     mFxaaRenderer->Render( mFxaaSampler, mFxaaContext );
+    // }
+    // else
+    // {
+    //     mCopyRenderer->Render( mFxaaSampler, mFxaaContext );
+    // }
+    // mFxaaContext->EndRender();
     // }
 
     // Ref<ITexture2D> NewMaterialSystem::GetOutputImage()
