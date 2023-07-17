@@ -219,8 +219,14 @@ namespace SE::Core
                 float  lLeftPosition   = lCursorPosition.x;
                 for( uint32_t i = lLine.mBegin; i < lLine.mEnd; i++ )
                 {
-                    lDrawlist->AddText( g->Font, g->FontSize, lCursorPosition, ImGui::GetColorU32( ImGuiCol_Text ),
-                                        mCharacters[i].mCharacter, mCharacters[i].mCharacter + 1 );
+                    if( mCharacters[i].mBackground )
+                        lDrawlist->AddRectFilled( lCursorPosition, lCursorPosition + ImVec2{ (float)mCharWidth, (float)mCharHeight },
+                                                  mCharacters[i].mBackground, 0.0f, 0 );
+
+                    uint32_t lForegroundColor =
+                        mCharacters[i].mForeground == 0 ? ImGui::GetColorU32( ImGuiCol_Text ) : mCharacters[i].mForeground;
+                    lDrawlist->AddText( g->Font, g->FontSize, lCursorPosition, lForegroundColor, mCharacters[i].mCharacter,
+                                        mCharacters[i].mCharacter + 1 );
 
                     lCursorPosition.x += mCharWidth;
                 }

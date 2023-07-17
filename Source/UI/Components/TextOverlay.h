@@ -16,12 +16,12 @@ namespace SE::Core
 
     struct sCharacter
     {
-        char  mCharacter[4] = { 0 };
-        char  mByteCount    = { 0 };
-        char  mWidth        = '\0';
-        float mCharWidth    = 0.0;
-        // TODO: backgound color
-        // TODO: foregound color
+        char     mCharacter[4] = { 0 };
+        char     mByteCount    = { 0 };
+        char     mWidth        = '\0';
+        float    mCharWidth    = 0.0;
+        uint32_t mBackground   = IM_COL32( 0, 0, 0, 0 );
+        uint32_t mForeground   = IM_COL32( 0, 0, 0, 0 );
 
         sCharacter() = default;
         sCharacter( char aCharacter, char aWidth )
