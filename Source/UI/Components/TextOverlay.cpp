@@ -190,43 +190,49 @@ namespace SE::Core
         }
 
         if( !mIsVisible ) return;
+        if( mLines.size() == 0 ) return;
 
         ImGui::PushID( (void *)this );
         ImGui::PushStyleColor( ImGuiCol_ChildBg, ImVec4{ 0.01f, 0.01f, 0.01f, .9f } );
         ImGui::BeginChild( "##TextOverlay", aSize );
 
+        auto  lScrollY  = ImGui::GetScrollY();
         auto *g         = ImGui::GetCurrentContext();
         auto *lDrawlist = ImGui::GetWindowDrawList();
-
-        ImVec2 lCursorPosition = ImGui::GetCursorScreenPos() + aPosition + ImVec2{ mLeftMargin, mTopMargin };
-        float  lTopPosition    = lCursorPosition.y;
-        float  lLeftPosition   = lCursorPosition.x;
 
         SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONOSPACE );
 
         uint32_t lFirstLine = 0;
         if( mLines.size() >= mConsoleHeight ) lFirstLine = mLines.size() - mConsoleHeight - 1;
 
-        uint32_t lLineCount = std::min( (uint32_t)mLines.size(), mConsoleHeight );
+        ImGui::SetScrollY( lFirstLine * mCharHeight );
 
-        for( uint32_t l = lFirstLine; l < lFirstLine + lLineCount; l++ )
+        ImGuiListClipper clipper;
+        clipper.Begin( mLines.size() );
+        while( clipper.Step() )
         {
-            auto lLine = mLines[l];
-
-            for( uint32_t i = lLine.mBegin; i < lLine.mEnd; i++ )
+            for( int l = clipper.DisplayStart; l < clipper.DisplayEnd; l++ )
             {
-                lDrawlist->AddText( g->Font, g->FontSize, lCursorPosition, ImGui::GetColorU32( ImGuiCol_Text ),
-                                    mCharacters[i].mCharacter, mCharacters[i].mCharacter + 1 );
+                auto lLine = mLines[l];
 
-                lCursorPosition.x += mCharWidth;
+                ImVec2 lCursorPosition = ImGui::GetCursorScreenPos() + aPosition + ImVec2{ mLeftMargin, mTopMargin };
+                float  lLeftPosition   = lCursorPosition.x;
+                for( uint32_t i = lLine.mBegin; i < lLine.mEnd; i++ )
+                {
+                    lDrawlist->AddText( g->Font, g->FontSize, lCursorPosition, ImGui::GetColorU32( ImGuiCol_Text ),
+                                        mCharacters[i].mCharacter, mCharacters[i].mCharacter + 1 );
+
+                    lCursorPosition.x += mCharWidth;
+                }
+
+                lCursorPosition.x = lLeftPosition;
+                lCursorPosition.y += mCharHeight;
+
+                ImGui::SetCursorPosY( ImGui::GetCursorPosY() + mCharHeight );
             }
-
-            lCursorPosition.x = lLeftPosition;
-            lCursorPosition.y += mCharHeight;
         }
 
         SE::Core::Engine::GetInstance()->UIContext()->PopFont();
-        ImGui::ItemSize( ImVec2{ aSize.x, (float)mLines.size() * mCharHeight }, 0.0f );
         ImGui::EndChild();
         ImGui::PopStyleColor();
         ImGui::PopID();
