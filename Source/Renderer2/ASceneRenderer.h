@@ -4,7 +4,7 @@
 #include "Scene/Components.h"
 // #include "Scene/Scene.h"
 
-#include "Renderer/SceneRenderData.h"
+// #include "Renderer/SceneRenderData.h"
 
 namespace SE::Core
 {
@@ -49,8 +49,8 @@ namespace SE::Core
         eColorFormat mOutputFormat      = eColorFormat::RGBA8_UNORM;
         uint32_t     mOutputSampleCount = 1;
 
-        std::vector<DirectionalLightData> mDirectionalLights = {};
-        std::vector<PointLightData>       mPointLights       = {};
+        // std::vector<DirectionalLightData> mDirectionalLights = {};
+        // std::vector<PointLightData>       mPointLights       = {};
         // std::vector<SpotlightData>        mSpotlights        = {};
 
         mat4  mProjectionMatrix{};
@@ -62,17 +62,17 @@ namespace SE::Core
 
       protected:
         // Helpers for light position and intensity
-        std::vector<sLightGizmo> mLightGizmos{};
+        // std::vector<sLightGizmo> mLightGizmos{};
 
         // Mesh queues
-        std::vector<sMeshRenderData> mOpaqueMeshQueue{};
-        std::vector<sMeshRenderData> mTransparentMeshQueue{};
+        // std::vector<sMeshRenderData> mOpaqueMeshQueue{};
+        // std::vector<sMeshRenderData> mTransparentMeshQueue{};
 
         // Point cloud visualizer queue
-        std::vector<sParticleRenderData> mParticleQueue{};
+        // std::vector<sParticleRenderData> mParticleQueue{};
 
       private:
-        void AddLight( mat4 const &aTransform, sLightComponent &aLightComponent );
+        // void AddLight( mat4 const &aTransform, sLightComponent &aLightComponent );
     };
 
 } // namespace SE::Core

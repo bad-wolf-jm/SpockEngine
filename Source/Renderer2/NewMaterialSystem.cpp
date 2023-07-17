@@ -1,4 +1,4 @@
-#include "NewSceneRenderer.h"
+#include "NewMaterialSystem.h"
 
 // #include <chrono>
 // #include <gli/gli.hpp>
@@ -37,37 +37,38 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem::Components;
     using namespace SE::Core::Primitives;
 
-    // size_t sNewShaderMaterial::Hash()
-    // {
+    size_t sNewShaderMaterial::Hash()
+    {
 
-    //     bool lHasBaseColorTexture  = static_cast<bool>( mBaseColorTexture );
-    //     bool lHasMetalRoughTexture = static_cast<bool>( mMetalRoughTexture );
-    //     bool lHasNormaTexture      = static_cast<bool>( mNormalTexture );
-    //     bool lHasEmissiveTexture   = static_cast<bool>( mEmissiveTexture );
-    //     bool lHasOcclusionTexture  = static_cast<bool>( mOcclusionTexture );
+        bool lHasBaseColorTexture  = static_cast<bool>( mBaseColorTexture );
+        bool lHasMetalRoughTexture = static_cast<bool>( mMetalRoughTexture );
+        bool lHasNormaTexture      = static_cast<bool>( mNormalTexture );
+        bool lHasEmissiveTexture   = static_cast<bool>( mEmissiveTexture );
+        bool lHasOcclusionTexture  = static_cast<bool>( mOcclusionTexture );
 
-    //     uint8_t lBitOffset = 0;
-    //     size_t  lHashValue = 0;
+        uint8_t lBitOffset = 0;
+        size_t  lHashValue = 0;
 
-    //     // clang-format off
-    //     lHashValue |= lHasBaseColorTexture   << lBitOffset++;
-    //     lHashValue |= lHasBaseColorTexture   << lBitOffset++;
-    //     lHashValue |= lHasMetalRoughTexture  << lBitOffset++;
-    //     lHashValue |= lHasNormaTexture       << lBitOffset++;
-    //     lHashValue |= lHasEmissiveTexture    << lBitOffset++;
-    //     lHashValue |= lHasOcclusionTexture   << lBitOffset++;
-    //     lHashValue |= lHasOcclusionTexture   << lBitOffset++;
-    //     lHashValue |= mHasUV1                << lBitOffset++;
-    //     lHashValue |= mIsTwoSided            << lBitOffset++; lBitOffset++;
-    //     lHashValue |= (uint8_t)mShadingModel << lBitOffset++; lBitOffset++;
-    //     lHashValue |= (uint8_t)mType         << lBitOffset;
-    //     // clang-format on
+        // clang-format off
+        lHashValue |= lHasBaseColorTexture   << lBitOffset++;
+        lHashValue |= lHasBaseColorTexture   << lBitOffset++;
+        lHashValue |= lHasMetalRoughTexture  << lBitOffset++;
+        lHashValue |= lHasNormaTexture       << lBitOffset++;
+        lHashValue |= lHasEmissiveTexture    << lBitOffset++;
+        lHashValue |= lHasOcclusionTexture   << lBitOffset++;
+        lHashValue |= lHasOcclusionTexture   << lBitOffset++;
+        lHashValue |= mHasUV1                << lBitOffset++;
+        lHashValue |= mIsTwoSided            << lBitOffset++; lBitOffset++;
+        lHashValue |= (uint8_t)mShadingModel << lBitOffset++; lBitOffset++;
+        lHashValue |= (uint8_t)mType         << lBitOffset;
+        // clang-format on
 
-    //     return lHashValue;
-    // }
+        return lHashValue;
+    }
 
-    NewSceneRenderer::NewSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
-        : BaseSceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
+    NewMaterialSystem::NewMaterialSystem( Ref<IGraphicContext> aGraphicContext )
+        : mGraphicContext{ aGraphicContext }
+        // : BaseSceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {
         // auto lLayout = MeshRenderer::GetCameraSetLayout( mGraphicContext );
 
@@ -141,106 +142,106 @@ namespace SE::Core
     //     return lCreateInfo;
     // }
 
-    void NewSceneRenderer::CreateRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
-    {
-        sRenderTargetDescription lRenderTargetSpec{};
-        lRenderTargetSpec.mWidth       = aOutputWidth;
-        lRenderTargetSpec.mHeight      = aOutputHeight;
-        lRenderTargetSpec.mSampleCount = mOutputSampleCount;
-        mGeometryRenderTarget          = Graphics::CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
+    // void NewMaterialSystem::CreateRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    // {
+    //     sRenderTargetDescription lRenderTargetSpec{};
+    //     lRenderTargetSpec.mWidth       = aOutputWidth;
+    //     lRenderTargetSpec.mHeight      = aOutputHeight;
+    //     lRenderTargetSpec.mSampleCount = mOutputSampleCount;
+    //     mGeometryRenderTarget          = Graphics::CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
 
-        sAttachmentDescription lAttachmentCreateInfo{};
-        lAttachmentCreateInfo.mIsSampled   = true;
-        lAttachmentCreateInfo.mIsPresented = false;
-        lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
-        lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
+    //     sAttachmentDescription lAttachmentCreateInfo{};
+    //     lAttachmentCreateInfo.mIsSampled   = true;
+    //     lAttachmentCreateInfo.mIsPresented = false;
+    //     lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
+    //     lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
 
-        lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
-        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
-        lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+    //     lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
+    //     lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
+    //     lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-        mGeometryRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
+    //     mGeometryRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
 
-        lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
-        lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
-        mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
-        mGeometryRenderTarget->Finalize();
-        mGeometryContext = CreateRenderContext( mGraphicContext, mGeometryRenderTarget );
-    }
+    //     lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
+    //     lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
+    //     mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
+    //     mGeometryRenderTarget->Finalize();
+    //     mGeometryContext = CreateRenderContext( mGraphicContext, mGeometryRenderTarget );
+    // }
 
-    void NewSceneRenderer::CreateMSAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
-    {
-        sRenderTargetDescription lRenderTargetSpec{};
-        lRenderTargetSpec.mWidth       = aOutputWidth;
-        lRenderTargetSpec.mHeight      = aOutputHeight;
-        lRenderTargetSpec.mSampleCount = mOutputSampleCount;
-        mGeometryRenderTarget          = Graphics::CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
+    // void NewMaterialSystem::CreateMSAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    // {
+    //     sRenderTargetDescription lRenderTargetSpec{};
+    //     lRenderTargetSpec.mWidth       = aOutputWidth;
+    //     lRenderTargetSpec.mHeight      = aOutputHeight;
+    //     lRenderTargetSpec.mSampleCount = mOutputSampleCount;
+    //     mGeometryRenderTarget          = Graphics::CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
 
-        sAttachmentDescription lAttachmentCreateInfo{};
-        lAttachmentCreateInfo.mIsSampled   = true;
-        lAttachmentCreateInfo.mIsPresented = false;
-        lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
-        lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
+    //     sAttachmentDescription lAttachmentCreateInfo{};
+    //     lAttachmentCreateInfo.mIsSampled   = true;
+    //     lAttachmentCreateInfo.mIsPresented = false;
+    //     lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
+    //     lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
 
-        lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
-        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
-        lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-        mGeometryRenderTarget->AddAttachment( "MSAA_OUTPUT", lAttachmentCreateInfo );
+    //     lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
+    //     lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
+    //     lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+    //     mGeometryRenderTarget->AddAttachment( "MSAA_OUTPUT", lAttachmentCreateInfo );
 
-        lAttachmentCreateInfo.mType       = eAttachmentType::MSAA_RESOLVE;
-        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
-        lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-        mGeometryRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
+    //     lAttachmentCreateInfo.mType       = eAttachmentType::MSAA_RESOLVE;
+    //     lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
+    //     lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+    //     mGeometryRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
 
-        lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
-        lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
-        mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
+    //     lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
+    //     lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
+    //     mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
 
-        mGeometryRenderTarget->Finalize();
-        mGeometryContext = CreateRenderContext( mGraphicContext, mGeometryRenderTarget );
-    }
+    //     mGeometryRenderTarget->Finalize();
+    //     mGeometryContext = CreateRenderContext( mGraphicContext, mGeometryRenderTarget );
+    // }
 
-    void NewSceneRenderer::CreateFXAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
-    {
-        sRenderTargetDescription lFxaaSpec{};
-        lFxaaSpec.mWidth       = aOutputWidth;
-        lFxaaSpec.mHeight      = aOutputHeight;
-        lFxaaSpec.mSampleCount = mOutputSampleCount;
-        mFxaaRenderTarget      = Graphics::CreateRenderTarget( mGraphicContext, lFxaaSpec );
+    // void NewMaterialSystem::CreateFXAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    // {
+    //     sRenderTargetDescription lFxaaSpec{};
+    //     lFxaaSpec.mWidth       = aOutputWidth;
+    //     lFxaaSpec.mHeight      = aOutputHeight;
+    //     lFxaaSpec.mSampleCount = mOutputSampleCount;
+    //     mFxaaRenderTarget      = Graphics::CreateRenderTarget( mGraphicContext, lFxaaSpec );
 
-        sAttachmentDescription lAttachmentCreateInfo{};
-        lAttachmentCreateInfo.mIsSampled   = true;
-        lAttachmentCreateInfo.mIsPresented = false;
-        lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
-        lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
-        lAttachmentCreateInfo.mType        = eAttachmentType::COLOR;
-        lAttachmentCreateInfo.mFormat      = eColorFormat::RGBA16_FLOAT;
-        lAttachmentCreateInfo.mClearColor  = { 0.0f, 0.0f, 0.0f, 1.0f };
-        lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
-        lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
+    //     sAttachmentDescription lAttachmentCreateInfo{};
+    //     lAttachmentCreateInfo.mIsSampled   = true;
+    //     lAttachmentCreateInfo.mIsPresented = false;
+    //     lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
+    //     lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
+    //     lAttachmentCreateInfo.mType        = eAttachmentType::COLOR;
+    //     lAttachmentCreateInfo.mFormat      = eColorFormat::RGBA16_FLOAT;
+    //     lAttachmentCreateInfo.mClearColor  = { 0.0f, 0.0f, 0.0f, 1.0f };
+    //     lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
+    //     lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
 
-        mFxaaRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
-        mFxaaRenderTarget->Finalize();
+    //     mFxaaRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
+    //     mFxaaRenderTarget->Finalize();
 
-        mFxaaContext = CreateRenderContext( mGraphicContext, mFxaaRenderTarget );
-    }
+    //     mFxaaContext = CreateRenderContext( mGraphicContext, mFxaaRenderTarget );
+    // }
 
-    void NewSceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
-    {
+    // void NewMaterialSystem::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    // {
         // sRenderTargetDescription lRenderTargetSpec{};
         // lRenderTargetSpec.mWidth       = aOutputWidth;
         // lRenderTargetSpec.mHeight      = aOutputHeight;
         // lRenderTargetSpec.mSampleCount = mOutputSampleCount;
         // mGeometryRenderTarget          = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
 
-        if( mOutputSampleCount == 1 )
-            CreateRenderTarget( aOutputWidth, aOutputHeight );
-        else
-            CreateMSAARenderTarget( aOutputWidth, aOutputHeight );
+        // if( mOutputSampleCount == 1 )
+        //     CreateRenderTarget( aOutputWidth, aOutputHeight );
+        // else
+        //     CreateMSAARenderTarget( aOutputWidth, aOutputHeight );
 
-        mFxaaSampler = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "OUTPUT" ) );
-        CreateFXAARenderTarget( aOutputWidth, aOutputHeight );
-        sRenderTargetDescription lFxaaSpec{};
+        // mFxaaSampler = CreateSampler2D( mGraphicContext, mGeometryRenderTarget->GetAttachment( "OUTPUT" ) );
+        // CreateFXAARenderTarget( aOutputWidth, aOutputHeight );
+        // sRenderTargetDescription lFxaaSpec{};
         // lFxaaSpec.mWidth                  = aOutputWidth;
         // lFxaaSpec.mHeight                 = aOutputHeight;
         // lFxaaSpec.mSampleCount            = mOutputSampleCount;
@@ -305,7 +306,7 @@ namespace SE::Core
         //     lCopyCreateInfo.RenderPass      = mFxaaContext;
         //     mCopyRenderer                   = New<EffectProcessor>( mGraphicContext, mFxaaContext, lCopyCreateInfo );
         // }
-    }
+    // }
 
     // Ref<MeshRenderer> NewSceneRenderer::GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification )
     // {
@@ -396,9 +397,9 @@ namespace SE::Core
     //     return lCreateInfo;
     // }
 
-    void NewSceneRenderer::Update( Ref<Scene> aWorld )
-    {
-        BaseSceneRenderer::Update( aWorld );
+    // void NewMaterialSystem::Update( Ref<Scene> aWorld )
+    // {
+    //     BaseSceneRenderer::Update( aWorld );
         // mShadowSceneRenderer->Update( aWorld );
 
         // mView.PointLightCount = mPointLights.size();
@@ -424,13 +425,13 @@ namespace SE::Core
         // mShaderParametersBuffer->Write( mSettings );
 
         // Update pipelines
-    }
+    // }
 
-    void NewSceneRenderer::Render()
-    {
-        SE_PROFILE_FUNCTION();
+    // void NewMaterialSystem::Render()
+    // {
+    //     SE_PROFILE_FUNCTION();
 
-        if( !mScene ) return;
+    //     if( !mScene ) return;
 
         // mScene->GetMaterialSystem()->UpdateDescriptors();
 
@@ -514,11 +515,11 @@ namespace SE::Core
         //     mCopyRenderer->Render( mFxaaSampler, mFxaaContext );
         // }
         // mFxaaContext->EndRender();
-    }
+    // }
 
-    Ref<ITexture2D> NewSceneRenderer::GetOutputImage()
-    {
-        //
-        return mGeometryRenderTarget->GetAttachment( "OUTPUT" );
-    }
+    // Ref<ITexture2D> NewMaterialSystem::GetOutputImage()
+    // {
+    //     //
+    //     return mGeometryRenderTarget->GetAttachment( "OUTPUT" );
+    // }
 } // namespace SE::Core

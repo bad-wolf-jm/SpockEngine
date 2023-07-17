@@ -138,8 +138,8 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/Renderer/RayTracing/RayTracingRenderer.cpp
 
     Renderer2/ASceneRenderer.cpp
-    Renderer2/SceneRenderer.cpp
     Renderer2/NewSceneRenderer.cpp
+    Renderer2/NewMaterialSystem.cpp
 
     Scene/Importer/glTFImporter.cpp
     Scene/Importer/ObjImporter.cpp

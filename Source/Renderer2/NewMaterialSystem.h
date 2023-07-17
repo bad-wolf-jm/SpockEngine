@@ -29,46 +29,45 @@ namespace SE::Core
         UNLIT
     };
 
+    struct sNewShaderMaterial
+    {
+        using Tex2D = Ref<ISampler2D>;
 
-    // struct sNewShaderMaterial
-    // {
-    //     using Tex2D = Ref<ISampler2D>;
+        std::string mName = "";
 
-    //     std::string mName = "";
+        eMaterialType mType         = eMaterialType::Opaque;
+        eShadingModel mShadingModel = eShadingModel::UNLIT;
+        float         mLineWidth    = 1.0f;
+        bool          mIsTwoSided   = true;
+        bool          mHasUV1       = true;
 
-    //     eMaterialType mType         = eMaterialType::Opaque;
-    //     eShadingModel mShadingModel = eShadingModel::UNLIT;
-    //     float         mLineWidth    = 1.0f;
-    //     bool          mIsTwoSided   = true;
-    //     bool          mHasUV1       = true;
+        vec4  mBaseColorFactor    = { 1.0f, 1.0f, 1.0f, 1.0f };
+        int   mBaseColorUVChannel = 0;
+        Tex2D mBaseColorTexture   = nullptr;
 
-    //     vec4  mBaseColorFactor    = { 1.0f, 1.0f, 1.0f, 1.0f };
-    //     int   mBaseColorUVChannel = 0;
-    //     Tex2D mBaseColorTexture   = nullptr;
+        float mMetallicFactor     = 0.0f;
+        float mRoughnessFactor    = 1.0f;
+        int   mMetalnessUVChannel = 0;
+        Tex2D mMetalRoughTexture  = nullptr;
 
-    //     float mMetallicFactor     = 0.0f;
-    //     float mRoughnessFactor    = 1.0f;
-    //     int   mMetalnessUVChannel = 0;
-    //     Tex2D mMetalRoughTexture  = nullptr;
+        float mOcclusionStrength  = 0.0f;
+        int   mOcclusionUVChannel = 0;
+        Tex2D mOcclusionTexture   = nullptr;
 
-    //     float mOcclusionStrength  = 0.0f;
-    //     int   mOcclusionUVChannel = 0;
-    //     Tex2D mOcclusionTexture   = nullptr;
+        vec4  mEmissiveFactor    = { 0.0f, 0.0f, 0.0f, 0.0f };
+        int   mEmissiveUVChannel = 0;
+        Tex2D mEmissiveTexture   = nullptr;
 
-    //     vec4  mEmissiveFactor    = { 0.0f, 0.0f, 0.0f, 0.0f };
-    //     int   mEmissiveUVChannel = 0;
-    //     Tex2D mEmissiveTexture   = nullptr;
+        int   mNormalUVChannel = 0;
+        Tex2D mNormalTexture   = nullptr;
 
-    //     int   mNormalUVChannel = 0;
-    //     Tex2D mNormalTexture   = nullptr;
+        sNewShaderMaterial()                             = default;
+        sNewShaderMaterial( const sNewShaderMaterial & ) = default;
 
-    //     sNewShaderMaterial()                          = default;
-    //     sNewShaderMaterial( const sNewShaderMaterial & ) = default;
+        size_t Hash();
+    };
 
-    //     size_t Hash();
-    // };
-
-    class NewSceneRenderer : public BaseSceneRenderer
+    class NewMaterialSystem : public BaseSceneRenderer
     {
       public:
         // WorldMatrices  mView;
@@ -79,17 +78,17 @@ namespace SE::Core
         // bool           mUseFXAA              = false;
 
       public:
-        NewSceneRenderer() = default;
-        NewSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
+        NewMaterialSystem() = default;
+        NewMaterialSystem( Ref<IGraphicContext> aGraphicContext );
 
-        ~NewSceneRenderer() = default;
+        ~NewMaterialSystem() = default;
 
-        Ref<ITexture2D> GetOutputImage();
+        // Ref<ITexture2D> GetOutputImage();
 
-        void Update( Ref<Scene> aWorld );
-        void Render();
+        // void Update( Ref<Scene> aWorld );
+        // void Render();
 
-        void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
+        // void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
       protected:
         // MeshRendererCreateInfo     GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification );
@@ -103,19 +102,21 @@ namespace SE::Core
         // Ref<ParticleSystemRenderer> GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification );
         // Ref<ParticleSystemRenderer> GetRenderPipeline( sParticleRenderData &aPipelineSpecification );
         // Ref<ParticleSystemRenderer> GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification );
+      private:
+        Ref<IGraphicContext> mGraphicContext;
 
-      protected:
-        Ref<IRenderTarget>  mGeometryRenderTarget = nullptr;
-        Ref<IRenderContext> mGeometryContext{};
+    //   protected:
+    //     Ref<IRenderTarget>  mGeometryRenderTarget = nullptr;
+    //     Ref<IRenderContext> mGeometryContext{};
 
         // Ref<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;
         // Ref<ShadowSceneRenderer>    mShadowSceneRenderer    = nullptr;
 
         // Ref<EffectProcessor> mCopyRenderer     = nullptr;
         // Ref<EffectProcessor> mFxaaRenderer     = nullptr;
-        Ref<ISampler2D>      mFxaaSampler      = nullptr;
-        Ref<IRenderTarget>   mFxaaRenderTarget = nullptr;
-        Ref<IRenderContext>  mFxaaContext = nullptr;
+        // Ref<ISampler2D>     mFxaaSampler      = nullptr;
+        // Ref<IRenderTarget>  mFxaaRenderTarget = nullptr;
+        // Ref<IRenderContext> mFxaaContext      = nullptr;
 
         // Ref<IGraphicBuffer> mCameraUniformBuffer    = nullptr;
         // Ref<IGraphicBuffer> mShaderParametersBuffer = nullptr;
@@ -140,9 +141,9 @@ namespace SE::Core
 
         // std::unordered_map<Entity, Ref<IDescriptorSet>> mMaterials = {};
 
-        void CreateRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight );
-        void CreateMSAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight );
-        void CreateFXAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight );
+        // void CreateRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight );
+        // void CreateMSAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight );
+        // void CreateFXAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight );
     };
 
 } // namespace SE::Core

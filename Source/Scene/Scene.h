@@ -26,7 +26,7 @@
 
 #include "Components.h"
 
-// #include "Renderer2/SceneRenderer.h"
+#include "Renderer2/NewMaterialSystem.h"
 
 using namespace math;
 using namespace literals;

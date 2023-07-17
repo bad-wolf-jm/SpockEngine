@@ -44,24 +44,24 @@ namespace SE::Core
         mOutputHeight = aOutputHeight;
     }
 
-    void BaseSceneRenderer::AddLight( mat4 const &aTransform, sLightComponent &aLightComponent )
-    {
-        switch( aLightComponent.mType )
-        {
-        case eLightType::DIRECTIONAL:
-            mDirectionalLights.emplace_back( aLightComponent, aTransform );
-            mLightGizmos.emplace_back( eLightType::DIRECTIONAL, mDirectionalLights.size() - 1, aTransform );
-            break;
-        case eLightType::POINT_LIGHT:
-            mPointLights.emplace_back( aLightComponent, aTransform );
-            mLightGizmos.emplace_back( eLightType::POINT_LIGHT, mPointLights.size() - 1, aTransform );
-            break;
-        // case eLightType::SPOTLIGHT:
-        //     mSpotlights.emplace_back( aLightComponent, aTransform );
-        //     mLightGizmos.emplace_back( eLightType::SPOTLIGHT, mSpotlights.size() - 1, aTransform );
-        //     break;
-        }
-    }
+    // void BaseSceneRenderer::AddLight( mat4 const &aTransform, sLightComponent &aLightComponent )
+    // {
+    //     switch( aLightComponent.mType )
+    //     {
+    //     case eLightType::DIRECTIONAL:
+    //         mDirectionalLights.emplace_back( aLightComponent, aTransform );
+    //         mLightGizmos.emplace_back( eLightType::DIRECTIONAL, mDirectionalLights.size() - 1, aTransform );
+    //         break;
+    //     case eLightType::POINT_LIGHT:
+    //         mPointLights.emplace_back( aLightComponent, aTransform );
+    //         mLightGizmos.emplace_back( eLightType::POINT_LIGHT, mPointLights.size() - 1, aTransform );
+    //         break;
+    //     // case eLightType::SPOTLIGHT:
+    //     //     mSpotlights.emplace_back( aLightComponent, aTransform );
+    //     //     mLightGizmos.emplace_back( eLightType::SPOTLIGHT, mSpotlights.size() - 1, aTransform );
+    //     //     break;
+    //     }
+    // }
 
     void BaseSceneRenderer::Update( Ref<Scene> aScene )
     {
@@ -71,40 +71,40 @@ namespace SE::Core
 
         if( !mScene ) return;
 
-        if( mScene->Environment.Has<sAmbientLightingComponent>() )
-        {
-            auto &lAmbientLightComponent = mScene->Environment.Get<sAmbientLightingComponent>();
-            SetAmbientLighting( vec4( lAmbientLightComponent.Color, lAmbientLightComponent.Intensity ) );
-        }
+        // if( mScene->Environment.Has<sAmbientLightingComponent>() )
+        // {
+        //     auto &lAmbientLightComponent = mScene->Environment.Get<sAmbientLightingComponent>();
+        //     SetAmbientLighting( vec4( lAmbientLightComponent.Color, lAmbientLightComponent.Intensity ) );
+        // }
 
         // clang-format off
-        mDirectionalLights.clear();
-        mPointLights.clear();
+        // mDirectionalLights.clear();
+        // mPointLights.clear();
         // mSpotlights.clear();
-        mLightGizmos.clear();
-        mScene->ForEach<sLightComponent>( [&]( auto aEntity, auto &aComponent ) { 
-            AddLight( mScene->GetFinalTransformMatrix( aEntity ), aComponent ); 
-        } );
+        // mLightGizmos.clear();
+        // mScene->ForEach<sLightComponent>( [&]( auto aEntity, auto &aComponent ) { 
+        //     AddLight( mScene->GetFinalTransformMatrix( aEntity ), aComponent ); 
+        // } );
         // clang-format on
 
         // clang-format off
-        mOpaqueMeshQueue.clear();
-        mTransparentMeshQueue.clear();
-        mScene->ForEach<sStaticMeshComponent, sMaterialComponent, sMaterialShaderComponent>(
-            [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterial, auto &aMaterialData ) {
-                if( aMaterialData.Type == eMaterialType::Opaque )
-                    mOpaqueMeshQueue.emplace_back( aStaticMeshComponent, aMaterial, aMaterialData );
-                else
-                    mTransparentMeshQueue.emplace_back( aStaticMeshComponent, aMaterial, aMaterialData );
-            });
-        // clang-format on
+        // mOpaqueMeshQueue.clear();
+        // mTransparentMeshQueue.clear();
+        // mScene->ForEach<sStaticMeshComponent, sMaterialComponent, sMaterialShaderComponent>(
+        //     [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterial, auto &aMaterialData ) {
+        //         if( aMaterialData.Type == eMaterialType::Opaque )
+        //             mOpaqueMeshQueue.emplace_back( aStaticMeshComponent, aMaterial, aMaterialData );
+        //         else
+        //             mTransparentMeshQueue.emplace_back( aStaticMeshComponent, aMaterial, aMaterialData );
+        //     });
+        // // clang-format on
 
-        // clang-format off
-        mParticleQueue.clear();
-        mScene->ForEach<sParticleSystemComponent, sParticleShaderComponent>(
-            [&]( auto aEntity, auto &aParticleSystemComponent, auto &aParticleShaderComponent ) { 
-                mParticleQueue.emplace_back( aParticleSystemComponent, aParticleShaderComponent ); 
-            } );
+        // // clang-format off
+        // mParticleQueue.clear();
+        // mScene->ForEach<sParticleSystemComponent, sParticleShaderComponent>(
+        //     [&]( auto aEntity, auto &aParticleSystemComponent, auto &aParticleShaderComponent ) { 
+        //         mParticleQueue.emplace_back( aParticleSystemComponent, aParticleShaderComponent ); 
+        //     } );
         // clang-format on
 
     }
