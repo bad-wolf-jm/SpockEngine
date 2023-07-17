@@ -37,37 +37,6 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem::Components;
     using namespace SE::Core::Primitives;
 
-#if 0
-    size_t sNewShaderMaterial::Hash()
-    {
-
-        bool lHasBaseColorTexture  = static_cast<bool>( mBaseColorTexture );
-        bool lHasMetalRoughTexture = static_cast<bool>( mMetalRoughTexture );
-        bool lHasNormaTexture      = static_cast<bool>( mNormalTexture );
-        bool lHasEmissiveTexture   = static_cast<bool>( mEmissiveTexture );
-        bool lHasOcclusionTexture  = static_cast<bool>( mOcclusionTexture );
-
-        uint8_t lBitOffset = 0;
-        size_t  lHashValue = 0;
-
-        // clang-format off
-        lHashValue |= lHasBaseColorTexture   << lBitOffset++;
-        lHashValue |= lHasBaseColorTexture   << lBitOffset++;
-        lHashValue |= lHasMetalRoughTexture  << lBitOffset++;
-        lHashValue |= lHasNormaTexture       << lBitOffset++;
-        lHashValue |= lHasEmissiveTexture    << lBitOffset++;
-        lHashValue |= lHasOcclusionTexture   << lBitOffset++;
-        lHashValue |= lHasOcclusionTexture   << lBitOffset++;
-        lHashValue |= mHasUV1                << lBitOffset++;
-        lHashValue |= mIsTwoSided            << lBitOffset++; lBitOffset++;
-        lHashValue |= (uint8_t)mShadingModel << lBitOffset++; lBitOffset++;
-        lHashValue |= (uint8_t)mType         << lBitOffset;
-        // clang-format on
-
-        return lHashValue;
-    }
-#endif
-
     NewMaterialSystem::NewMaterialSystem( Ref<IGraphicContext> aGraphicContext )
         : mGraphicContext{ aGraphicContext }
     // : BaseSceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
@@ -95,6 +64,28 @@ namespace SE::Core
     {
         //
         return mMaterialRegistry.CreateEntity( aName );
+    }
+
+    size_t NewMaterialSystem::GetMaterialHash( Material aMaterial )
+    {
+        uint8_t lBitOffset = 0;
+        size_t  lHashValue = 0;
+
+        // clang-format off
+        lHashValue |= aMaterial.Has<sBaseColorTexture> () << lBitOffset++;
+        lHashValue |= aMaterial.Has<sEmissiveTexture>()   << lBitOffset++;
+        lHashValue |= aMaterial.Has<sMetalRoughTexture>() << lBitOffset++;
+        lHashValue |= aMaterial.Has<sNormalsTexture>()    << lBitOffset++;
+        lHashValue |= aMaterial.Has<sOcclusionTexture>()  << lBitOffset++;
+
+        auto const& lMaterialInfo = aMaterial.Get<sMaterialInfo>();
+        lHashValue |= lMaterialInfo.mHasUV1                << lBitOffset++;
+        lHashValue |= lMaterialInfo.mIsTwoSided            << lBitOffset++; lBitOffset++;
+        lHashValue |= (uint8_t)lMaterialInfo.mShadingModel << lBitOffset++; lBitOffset++;
+        lHashValue |= (uint8_t)lMaterialInfo.mType         << lBitOffset;
+        // clang-format on
+
+        return lHashValue;
     }
 
     // static Ref<IShaderProgram> MRTVertexShader( Ref<IGraphicContext> gc )

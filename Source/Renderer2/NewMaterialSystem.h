@@ -106,7 +106,6 @@ namespace SE::Core
         sFragmentShader( const sFragmentShader & ) = default;
     };
 
-
     // struct sNewShaderMaterial
     // {
 
@@ -162,6 +161,7 @@ namespace SE::Core
 
         ~NewMaterialSystem() = default;
         Material CreateMaterial( std::string a_Name );
+        size_t   GetMaterialHash( Material aMaterial );
 
         // Ref<ITexture2D> GetOutputImage();
 
