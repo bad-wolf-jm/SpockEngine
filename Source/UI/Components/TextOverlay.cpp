@@ -226,6 +226,7 @@ namespace SE::Core
         }
 
         SE::Core::Engine::GetInstance()->UIContext()->PopFont();
+        ImGui::ItemSize( ImVec2{ aSize.x, (float)mLines.size() * mCharHeight }, 0.0f );
         ImGui::EndChild();
         ImGui::PopStyleColor();
         ImGui::PopID();
