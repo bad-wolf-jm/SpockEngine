@@ -3,6 +3,7 @@
 #include "Component.h"
 
 #include <list>
+#include <mutex>
 
 namespace SE::Core
 {
@@ -22,13 +23,18 @@ namespace SE::Core
         // TODO: backgound color
         // TODO: foregound color
 
-
         sCharacter() = default;
         sCharacter( char aCharacter, char aWidth )
             : mCharacter{ aCharacter }
             , mWidth{ aWidth }
         {
         }
+    };
+
+    struct sLine
+    {
+        uint32_t mBegin;
+        uint32_t mEnd;
     };
 
     class UITextOverlay : public UIComponent
@@ -54,6 +60,8 @@ namespace SE::Core
         float mBottomMargin = 10.0f;
 
         std::vector<sCharacter> mCharacters;
+        std::vector<sLine>      mLines;
+        std::mutex              mLinesMutex;
         eTextEncoding           mEncoding = eTextEncoding::UTF16;
 
       protected:
@@ -62,5 +70,6 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+        void   Layout();
     };
 } // namespace SE::Core
