@@ -8,7 +8,10 @@
 #endif
 
 LAYOUT_LOCATION( 0 ) __SHADER_INPUT__ float3 inPos;
+
+#if defined( MATERIAL_HAS_NORMALS )
 LAYOUT_LOCATION( 1 ) __SHADER_INPUT__ float3 inNormal;
+#endif
 
 // Clever way of packing two UV channels into a single shader input
 #if defined( MATERIAL_HAS_UV0 ) && !defined( MATERIAL_HAS_UV1 )

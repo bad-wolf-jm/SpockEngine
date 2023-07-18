@@ -1,5 +1,6 @@
 #if defined( __cplusplus )
 #    include "Common/Definitions.h"
+#    include "Common/HelperFunctions.h"
 #endif
 
 struct MaterialInputs
@@ -157,7 +158,7 @@ float3 GetEmissive()
 
 float3 GetNormal()
 {
-#if defined( MATERIAL_HAS_NORMAL_TEXTURE )
+#if defined( MATERIAL_HAS_NORMALS_TEXTURE )
     return GetNormalFromMap( gMaterialData.mNormalTextureID, gMaterialData.mNormalUVChannel );
 #else
     return normalize( inNormal );
