@@ -32,12 +32,12 @@ namespace SE::Core
         return lNewMaterial;
     }
 
-    void NewMaterialSystem::EndMaterial( Material aMaterial )
+    void NewMaterialSystem::EndMaterial( Material const &aMaterial )
     {
         aMaterial.Remove<sMaterialNotReady>();
     }
 
-    size_t NewMaterialSystem::GetMaterialHash( Material aMaterial )
+    size_t NewMaterialSystem::GetMaterialHash( Material const &aMaterial )
     {
         uint8_t lBitOffset = 0;
         size_t  lHashValue = 0;
@@ -57,6 +57,90 @@ namespace SE::Core
         // clang-format on
 
         return lHashValue;
+    }
+
+    template <typename _Ty>
+    void DefineConstant( Ref<IShaderProgram> aShaderProgram, Material aMaterial, const char *aName )
+    {
+        if( aMaterial.Has<_Ty>() )
+            aShaderProgram->AddCode( fmt::format( "#define {}", aName ) );
+    }
+
+    static void AddDefinitions( Ref<IShaderProgram> aShaderProgram, Material aMaterial )
+    {
+        aShaderProgram->AddCode( "#define VULKAN_SEMANTICS" );
+
+        auto const &lMaterialInfo = aMaterial.Get<sMaterialInfo>();
+
+        switch( lMaterialInfo.mShadingModel )
+        {
+        case eShadingModel::STANDARD:
+            aShaderProgram->AddCode( "#define SHADING_MODEL_STANDARD" );
+            break;
+        case eShadingModel::SUBSURFACE:
+            aShaderProgram->AddCode( "#define SHADING_MODEL_SUBSURFACE" );
+            break;
+        case eShadingModel::CLOTH:
+            aShaderProgram->AddCode( "#define SHADING_MODEL_CLOTH" );
+            break;
+        case eShadingModel::UNLIT:
+            aShaderProgram->AddCode( "#define SHADING_MODEL_UNLIT" );
+            break;
+        }
+
+        if( lMaterialInfo.mHasUV1 )
+            aShaderProgram->AddCode( "#define MATERIAL_HAS_UV1" );
+
+        // clang-format off
+        DefineConstant<sBaseColorTexture>  ( aShaderProgram, aMaterial, "MATERIAL_HAS_BASE_COLOR_TEXTURE"  );
+        DefineConstant<sEmissiveTexture>   ( aShaderProgram, aMaterial, "MATERIAL_HAS_EMISSIVE_TEXTURE"    );
+        DefineConstant<sMetalRoughTexture> ( aShaderProgram, aMaterial, "MATERIAL_HAS_METAL_ROUGH_TEXTURE" );
+        DefineConstant<sNormalsTexture>    ( aShaderProgram, aMaterial, "MATERIAL_HAS_NORMALS_TEXTURE"     );
+        DefineConstant<sOcclusionTexture>  ( aShaderProgram, aMaterial, "MATERIAL_HAS_OCCLUSION_TEXTURE"   );
+        // clang-format on
+    }
+
+    static std::string CreateShaderName( Material aMaterial, const char *aPrefix )
+    {
+        std::string lMateriaName = aMaterial.TryGet<sTag>( sTag{} ).mValue;
+        if( !lMateriaName.empty() )
+            return fmt::format( "{}_{}_{}", aPrefix, lMateriaName, GetMaterialHash( aMaterial ) );
+        else
+            return fmt::format( "{}_UNNAMED_{}", aPrefix, lMateriaName, GetMaterialHash( aMaterial ) );
+    }
+
+    Ref<IShaderProgram> NewMaterialSystem::CreateVertexShader( Material aMaterial )
+    {
+        fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
+
+        std::string lShaderName = CreateShaderName( aMaterial, "vertex_shader" );
+        auto lShader      = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, lShaderName, lShaderPath );
+
+        AddDefinitions( lShader, aMaterial );
+
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\Definitions.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Varying.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\MainVertexShader.hpp" );
+
+        return lShader;
+    }
+
+    Ref<IShaderProgram> NewMaterialSystem::CreateFragmentShader( Material aMaterial )
+    {
+        fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
+
+        std::string lShaderName = CreateShaderName( aMaterial, "fragment_shader" );
+        auto lShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, lShaderName, lShaderPath );
+        
+        AddDefinitions( lShader, aMaterial );
+
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\Definitions.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Varying.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\HelperFunctions.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Material.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\MainFragmentShader.hpp" );
+
+        return lShader;
     }
 
     // static Ref<IShaderProgram> MRTVertexShader( Ref<IGraphicContext> gc )
