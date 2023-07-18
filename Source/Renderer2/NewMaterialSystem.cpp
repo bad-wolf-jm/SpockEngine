@@ -6,15 +6,35 @@
 
 namespace SE::Core
 {
+    struct sMaterialNotReady
+    {
+    };
+
+    struct sMaterialNeedsUpdate
+    {
+    };
+
     NewMaterialSystem::NewMaterialSystem( Ref<IGraphicContext> aGraphicContext )
         : mGraphicContext{ aGraphicContext }
     {
     }
 
-    Material NewMaterialSystem::CreateMaterial( std::string aName )
+    Material NewMaterialSystem::CreateMaterial( std::string const &aName )
     {
-        //
         return mMaterialRegistry.CreateEntity( aName );
+    }
+
+    Material NewMaterialSystem::BeginMaterial( std::string const &aName )
+    {
+        auto lNewMaterial = CreateMaterial( aName );
+        lNewMaterial.Add<sMaterialNotReady>();
+
+        return lNewMaterial;
+    }
+
+    void NewMaterialSystem::EndMaterial( Material aMaterial )
+    {
+        aMaterial.Remove<sMaterialNotReady>();
     }
 
     size_t NewMaterialSystem::GetMaterialHash( Material aMaterial )

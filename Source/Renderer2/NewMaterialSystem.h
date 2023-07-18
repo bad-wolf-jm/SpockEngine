@@ -159,7 +159,9 @@ namespace SE::Core
         NewMaterialSystem( Ref<IGraphicContext> aGraphicContext );
 
         ~NewMaterialSystem() = default;
-        Material CreateMaterial( std::string a_Name );
+        Material CreateMaterial( std::string aName );
+        Material BeginMaterial( std::string aName );
+        void     EndMaterial( Material aMaterial );
         size_t   GetMaterialHash( Material aMaterial );
 
         // Ref<ITexture2D> GetOutputImage();
