@@ -21,7 +21,10 @@ namespace SE::Core
 
     Material NewMaterialSystem::CreateMaterial( std::string const &aName )
     {
-        return mMaterialRegistry.CreateEntity( aName );
+        Material lNewMaterial =  mMaterialRegistry.CreateEntity( aName );
+        lNewMaterial.Add<sMaterialInfo>();
+
+        return lNewMaterial;
     }
 
     Material NewMaterialSystem::BeginMaterial( std::string const &aName )
@@ -59,15 +62,10 @@ namespace SE::Core
         return lHashValue;
     }
 
-    template <typename _Ty>
-    void DefineConstant( Ref<IShaderProgram> aShaderProgram, Material aMaterial, const char *aName )
-    {
-        if( aMaterial.Has<_Ty>() )
-            aShaderProgram->AddCode( fmt::format( "#define {}", aName ) );
-    }
 
-    static void AddDefinitions( Ref<IShaderProgram> aShaderProgram, Material aMaterial )
+    void NewMaterialSystem::AddDefinitions( Ref<IShaderProgram> aShaderProgram, Material aMaterial )
     {
+        aShaderProgram->AddCode( "#define __GLSL__" );
         aShaderProgram->AddCode( "#define VULKAN_SEMANTICS" );
 
         auto const &lMaterialInfo = aMaterial.Get<sMaterialInfo>();
@@ -100,7 +98,7 @@ namespace SE::Core
         // clang-format on
     }
 
-    static std::string CreateShaderName( Material aMaterial, const char *aPrefix )
+    std::string NewMaterialSystem::CreateShaderName( Material aMaterial, const char *aPrefix )
     {
         std::string lMateriaName = aMaterial.TryGet<sTag>( sTag{} ).mValue;
         if( !lMateriaName.empty() )
@@ -131,7 +129,7 @@ namespace SE::Core
 
         std::string lShaderName = CreateShaderName( aMaterial, "fragment_shader" );
         auto lShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, lShaderName, lShaderPath );
-        
+
         AddDefinitions( lShader, aMaterial );
 
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\Definitions.hpp" );

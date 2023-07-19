@@ -128,6 +128,17 @@ namespace SE::Core
       public:
         Ref<IShaderProgram> CreateVertexShader( Material aMaterial );
         Ref<IShaderProgram> CreateFragmentShader( Material aMaterial );
+
+      private:
+        template <typename _Ty>
+        void DefineConstant( Ref<IShaderProgram> aShaderProgram, Material aMaterial, const char *aName )
+        {
+            if( aMaterial.Has<_Ty>() )
+                aShaderProgram->AddCode( fmt::format( "#define {}", aName ) );
+        }
+
+        void        AddDefinitions( Ref<IShaderProgram> aShaderProgram, Material aMaterial );
+        std::string CreateShaderName( Material aMaterial, const char *aPrefix );
     };
 
 } // namespace SE::Core
