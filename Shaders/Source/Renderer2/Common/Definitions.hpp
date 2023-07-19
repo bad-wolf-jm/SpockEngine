@@ -4,7 +4,7 @@
 #    define LAYOUT_UNIFORM( s, b )        layout( set = s, binding = b )
 #    define LAYOUT_UNIFORM_BUFFER( s, b ) layout( set = s, binding = b ) readonly buffer
 #    define __UNIFORM__                   uniform
-#    define __UNIFORM_BUFFER__            readonly buffer
+#    define __UNIFORM_BUFFER__            
 #else
 #    define LAYOUT_LOCATION( x )
 #    define LAYOUT_UNIFORM( s, b )
