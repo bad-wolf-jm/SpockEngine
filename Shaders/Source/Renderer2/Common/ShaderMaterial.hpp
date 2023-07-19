@@ -13,7 +13,7 @@ struct sShaderMaterial
     float  mMetallicFactor;
     float  mRoughnessFactor;
     float  mOcclusionStrength;
-    float4 mEmissiveFactor;
+    float3 mEmissiveFactor;
     int    mBaseColorUVChannel;
     int    mBaseColorTextureID;
     int    mEmissiveUVChannel;

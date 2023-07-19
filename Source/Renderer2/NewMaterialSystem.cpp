@@ -128,10 +128,10 @@ namespace SE::Core
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\Definitions.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Varying.hpp" );
 
-        if (aMaterial.Has<sVertexShader>())
-            lShader->AddCode("//");
+        if( aMaterial.Has<sVertexShader>() )
+            lShader->AddCode( "//" );
         else
-            lShader->AddCode("//");
+            lShader->AddCode( "//" );
 
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\MainVertexShader.hpp" );
 
@@ -153,15 +153,71 @@ namespace SE::Core
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\HelperFunctions.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Material.hpp" );
 
-        if (aMaterial.Has<sFragmentShader>())
-            lShader->AddCode("//");
+        if( aMaterial.Has<sFragmentShader>() )
+            lShader->AddCode( "//" );
         else
-            lShader->AddCode("void material( out MaterialInput aMaterial ) {}");
-
+            lShader->AddCode( "void material( out MaterialInput aMaterial ) {}" );
 
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\MainFragmentShader.hpp" );
 
         return lShader;
+    }
+
+    std::vector<sShaderMaterial> NewMaterialSystem::GatherMateriaData()
+    {
+        std::vector<sShaderMaterial> lShaderMaterials;
+        mMaterialRegistry.ForEach<sMaterialInfo>(
+            [&]( auto aEntity, auto const &aMaterialInfo )
+            {
+                //
+                auto &lNew = lShaderMaterials.emplace_back();
+
+                if( aEntity.Has<sBaseColorTexture>() )
+                {
+                    auto &lData = aEntity.Get<sBaseColorTexture>();
+
+                    lNew.mBaseColorFactor    = lData.mFactor;
+                    lNew.mBaseColorUVChannel = lData.mUVChannel;
+                    lNew.mBaseColorTextureID = 0;
+                }
+
+                if( aEntity.Has<sMetalRoughTexture>() )
+                {
+                    auto &lData = aEntity.Get<sMetalRoughTexture>();
+
+                    lNew.mMetallicFactor     = lData.mMetallicFactor;
+                    lNew.mRoughnessFactor    = lData.mRoughnessFactor;
+                    lNew.mMetalnessUVChannel = lData.mUVChannel;
+                    lNew.mMetalnessTextureID = 0;
+                }
+
+                if( aEntity.Has<sNormalsTexture>() )
+                {
+                    auto &lData = aEntity.Get<sNormalsTexture>();
+
+                    lNew.mNormalUVChannel = lData.mUVChannel;
+                    lNew.mNormalTextureID = 0;
+                }
+
+                if( aEntity.Has<sOcclusionTexture>() )
+                {
+                    auto &lData = aEntity.Get<sOcclusionTexture>();
+
+                    lNew.mOcclusionStrength  = lData.mFactor;
+                    lNew.mOcclusionUVChannel = lData.mUVChannel;
+                    lNew.mOcclusionTextureID = 0;
+                }
+                if( aEntity.Has<sEmissiveTexture>() )
+                {
+                    auto &lData = aEntity.Get<sEmissiveTexture>();
+
+                    lNew.mEmissiveFactor    = lData.mFactor;
+                    lNew.mEmissiveUVChannel = lData.mUVChannel;
+                    lNew.mEmissiveTextureID = 0;
+                }
+            } );
+
+        return std::move( lShaderMaterials );
     }
 
     // static Ref<IShaderProgram> MRTVertexShader( Ref<IGraphicContext> gc )

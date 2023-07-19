@@ -122,6 +122,8 @@ namespace SE::Core
         void     EndMaterial( Material const &aMaterial );
         size_t   GetMaterialHash( Material const &aMaterial );
 
+        std::vector<sShaderMaterial> GatherMateriaData();
+
       private:
         Ref<IGraphicContext> mGraphicContext;
 
