@@ -1,6 +1,6 @@
 #if defined( __cplusplus )
-#    include "Common/Definitions.h"
-#    include "Common/HelperFunctions.h"
+#    include "Common/Definitions.hpp"
+#    include "Common/HelperFunctions.hpp"
 #endif
 
 struct MaterialInputs
@@ -86,25 +86,6 @@ struct MaterialInputs
 #endif
 };
 
-struct sShaderMaterial
-{
-    float4 mBaseColorFactor;
-    float  mMetallicFactor;
-    float  mRoughnessFactor;
-    float  mOcclusionStrength;
-    float4 mEmissiveFactor;
-    int    mBaseColorUVChannel;
-    int    mBaseColorTextureID;
-    int    mEmissiveUVChannel;
-    int    mEmissiveTextureID;
-    int    mNormalUVChannel;
-    int    mNormalTextureID;
-    int    mMetalnessUVChannel;
-    int    mMetalnessTextureID;
-    int    mOcclusionUVChannel;
-    int    mOcclusionTextureID;
-};
-
 // Try to be as bindless as possible and bind all available textures andd all materials
 // in one go as an array.
 // clang-format off
@@ -116,29 +97,33 @@ LAYOUT_UNIFORM_BUFFER( 1, 0 ) __UNIFORM_BUFFER__ ShaderMaterials
 
 LAYOUT_UNIFORM( 1, 1 ) __UNIFORM__ sampler2D gTextures[];
 
+#if defined( MATERIAL_HAS_UV0 )
 float ColorTextureFetch( int aTexID, int aUVChannel )
 {
-#if defined( MATERIAL_HAS_UV0 ) && !defined( MATERIAL_HAS_UV1 )
+#    if !defined( MATERIAL_HAS_UV1 )
     return SRGBtoLINEAR( texture( gTextures[aTexID], inUV ) );
-#else
+#    else
     return SRGBtoLINEAR( texture( gTextures[aTexID], ( aUVChannel == 0 ) ? inUV.xy : inUV.zw ) );
-#endif
+#    endif
 }
+#endif
 
+#if defined( MATERIAL_HAS_UV0 )
 float TextureFetch( int aTexID, int aUVChannel )
 {
-#if defined( MATERIAL_HAS_UV0 ) && !defined( MATERIAL_HAS_UV1 )
+#    if !defined( MATERIAL_HAS_UV1 )
     return texture( gTextures[aTexID], inUV );
-#else
+#    else
     return texture( gTextures[aTexID], ( aUVChannel == 0 ) ? inUV.xy : inUV.zw );
-#endif
+#    endif
 }
+#endif
 
 float4 GetBaseColor()
 {
     float4 lBaseColor = gMaterialData.mBaseColorFactor;
 
-#if defined( MATERIAL_HAS_BASE_COLOR_TEXTURE )
+#if defined( MATERIAL_HAS_BASE_COLOR_TEXTURE ) && defined( MATERIAL_HAS_UV0 )
     lBaseColor *= ColorTextureFetch( gMaterialData.mBaseColorTextureID, gMaterialData.mBaseColorUVChannel );
 #endif
 
@@ -149,7 +134,7 @@ float3 GetEmissive()
 {
     float3 lEmissive = gMaterialData.mEmissiveFactor;
 
-#if defined( MATERIAL_HAS_EMISSIVE_TEXTURE )
+#if defined( MATERIAL_HAS_EMISSIVE_TEXTURE ) && defined( MATERIAL_HAS_UV0 )
     lBaseColor *= ColorTextureFetch( gMaterialData.mEmissiveTextureID, gMaterialData.mEmissiveUVChannel );
 #endif
 
@@ -158,7 +143,7 @@ float3 GetEmissive()
 
 float3 GetNormal()
 {
-#if defined( MATERIAL_HAS_NORMALS_TEXTURE )
+#if defined( MATERIAL_HAS_NORMALS_TEXTURE ) && defined( MATERIAL_HAS_UV0 )
     return GetNormalFromMap( gMaterialData.mNormalTextureID, gMaterialData.mNormalUVChannel );
 #else
     return normalize( inNormal );
@@ -167,7 +152,7 @@ float3 GetNormal()
 
 float GetAmbientOcclusion()
 {
-#if defined( MATERIAL_HAS_OCCLUSION_TEXTURE )
+#if defined( MATERIAL_HAS_OCCLUSION_TEXTURE ) && defined( MATERIAL_HAS_UV0 )
     return TextureFetch( gMaterialData.mOcclusionTextureID, gMaterialData.mOcclusionUVChannel );
 #else
     return 1.0;

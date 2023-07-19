@@ -1,3 +1,5 @@
+#ifndef _DEFINITIONS_H_
+#define _DEFINITIONS_H_
 
 #if defined( VULKAN_SEMANTICS )
 #    define LAYOUT_LOCATION( x )          layout( location = x )
@@ -20,11 +22,12 @@
 #    define float3x3 mat3
 #    define float4x4 mat4
 #    if defined( __cplusplus )
-typedef struct sampler2D;
+typedef struct _sampler2D sampler2D;
 #    endif
 #endif
 
 #if defined( __cplusplus )
 #    include "Core/Math/Types.h"
-float4 gl_Position;
+inline float4 gl_Position;
+#endif
 #endif

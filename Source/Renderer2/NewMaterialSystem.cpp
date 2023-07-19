@@ -51,9 +51,13 @@ namespace SE::Core
         lHashValue |= aMaterial.Has<sMetalRoughTexture>() << lBitOffset++;
         lHashValue |= aMaterial.Has<sNormalsTexture>()    << lBitOffset++;
         lHashValue |= aMaterial.Has<sOcclusionTexture>()  << lBitOffset++;
+        lHashValue |= aMaterial.Has<sVertexShader>()      << lBitOffset++;
+        lHashValue |= aMaterial.Has<sFragmentShader>()    << lBitOffset++;
 
         auto const& lMaterialInfo = aMaterial.Get<sMaterialInfo>();
-        lHashValue |= lMaterialInfo.mHasUV1                << lBitOffset++;
+        lHashValue |= lMaterialInfo.mRequiresUV0           << lBitOffset++;
+        lHashValue |= lMaterialInfo.mRequiresUV1           << lBitOffset++;
+        lHashValue |= lMaterialInfo.mRequiresNormals       << lBitOffset++;
         lHashValue |= lMaterialInfo.mIsTwoSided            << lBitOffset++; lBitOffset++;
         lHashValue |= (uint8_t)lMaterialInfo.mShadingModel << lBitOffset++; lBitOffset++;
         lHashValue |= (uint8_t)lMaterialInfo.mType         << lBitOffset;
@@ -85,8 +89,14 @@ namespace SE::Core
             break;
         }
 
-        if( lMaterialInfo.mHasUV1 )
+        if( lMaterialInfo.mRequiresUV0 )
+            DefineConstant( aShaderProgram, "MATERIAL_HAS_UV0" );
+
+        if( lMaterialInfo.mRequiresUV1 )
             DefineConstant( aShaderProgram, "MATERIAL_HAS_UV1" );
+
+        if( lMaterialInfo.mRequiresNormals )
+            DefineConstant( aShaderProgram, "MATERIAL_HAS_NORMALS" );
 
         // clang-format off
         DefineConstant<sBaseColorTexture>  ( aShaderProgram, aMaterial, "MATERIAL_HAS_BASE_COLOR_TEXTURE"  );
@@ -117,6 +127,12 @@ namespace SE::Core
 
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\Definitions.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Varying.hpp" );
+
+        if (aMaterial.Has<sVertexShader>())
+            lShader->AddCode("//");
+        else
+            lShader->AddCode("//");
+
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\MainVertexShader.hpp" );
 
         return lShader;
@@ -133,8 +149,16 @@ namespace SE::Core
 
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\Definitions.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Varying.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\ShaderMaterial.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\HelperFunctions.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Material.hpp" );
+
+        if (aMaterial.Has<sFragmentShader>())
+            lShader->AddCode("//");
+        else
+            lShader->AddCode("void material( out MaterialInput aMaterial ) {}");
+
+
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\MainFragmentShader.hpp" );
 
         return lShader;

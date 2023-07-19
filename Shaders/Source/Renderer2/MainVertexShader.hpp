@@ -11,7 +11,7 @@ LAYOUT_LOCATION( 1 ) __SHADER_OUTPUT__ float3 outNormal;
 
 #if defined( MATERIAL_HAS_UV0 ) && !defined( MATERIAL_HAS_UV1 )
 LAYOUT_LOCATION( 2 ) __SHADER_OUTPUT__ float2 outUV;
-#else
+#elif defined( MATERIAL_HAS_UV1 )
 LAYOUT_LOCATION( 2 ) __SHADER_OUTPUT__ float4 outUV;
 #endif
 

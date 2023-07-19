@@ -8,6 +8,8 @@
 
 #include "Graphics/API.h"
 
+#include "Renderer2/Common/ShaderMaterial.hpp"
+
 namespace SE::Core
 {
     using namespace math;
@@ -32,11 +34,13 @@ namespace SE::Core
 
     struct sMaterialInfo
     {
-        eBlendMode    mType         = eBlendMode::Opaque;
-        eShadingModel mShadingModel = eShadingModel::UNLIT;
-        float         mLineWidth    = 1.0f;
-        bool          mIsTwoSided   = true;
-        bool          mHasUV1       = true;
+        eBlendMode    mType            = eBlendMode::Opaque;
+        eShadingModel mShadingModel    = eShadingModel::UNLIT;
+        float         mLineWidth       = 1.0f;
+        bool          mIsTwoSided      = false;
+        bool          mRequiresNormals = true;
+        bool          mRequiresUV0     = false;
+        bool          mRequiresUV1     = false;
 
         sMaterialInfo()                        = default;
         sMaterialInfo( const sMaterialInfo & ) = default;
