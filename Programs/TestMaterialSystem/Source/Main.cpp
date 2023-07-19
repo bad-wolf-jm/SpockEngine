@@ -106,6 +106,10 @@ int main( int argc, char **argv )
 
     lMaterialSystem->EndMaterial( lMaterial );
 
+    lMaterial.Get<sMaterialInfo>().mRequiresUV0 = false;
+    lMaterial.Get<sMaterialInfo>().mRequiresUV1 = false;
+    lMaterial.Get<sMaterialInfo>().mRequiresNormals = false;
+
     {
         auto lShader     = lMaterialSystem->CreateVertexShader( lMaterial );
         auto lShaderCode = lShader->Program();
@@ -114,7 +118,7 @@ int main( int argc, char **argv )
 
         std::ofstream lOutput( "D:\\Work\\Git\\SpockEngine\\test_vs.cpp" );
         lOutput << glslang_shader_get_preprocessed_code( lPreprocessed );
-    } // auto lFragmentShader = lMaterial->CreateVertexShader();
+    }
 
     {
         auto lShader     = lMaterialSystem->CreateFragmentShader( lMaterial );
@@ -123,7 +127,7 @@ int main( int argc, char **argv )
         glslang_shader_t *lPreprocessed = Compile( eShaderStageTypeFlags::FRAGMENT, lShaderCode );
         std::ofstream     lOutput( "D:\\Work\\Git\\SpockEngine\\test_fs.cpp" );
         lOutput << glslang_shader_get_preprocessed_code( lPreprocessed );
-    } // auto lFragmentShader = lMaterial->CreateVertexShader();
+    }
 
     return 0;
 }

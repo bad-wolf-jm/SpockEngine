@@ -180,6 +180,7 @@ add_compile_definitions(ZEP_FEATURE_CPP_FILE_SYSTEM=1)
 
 
 include_directories(Shaders/Embedded)
+include_directories(Shaders/Source)
 
 add_subdirectory(ThirdParty)
 add_subdirectory(Shaders)
