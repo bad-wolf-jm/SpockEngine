@@ -21,7 +21,7 @@ namespace SE::Core
 
     Material NewMaterialSystem::CreateMaterial( std::string const &aName )
     {
-        Material lNewMaterial =  mMaterialRegistry.CreateEntity( aName );
+        Material lNewMaterial = mMaterialRegistry.CreateEntity( aName );
         lNewMaterial.Add<sMaterialInfo>();
 
         return lNewMaterial;
@@ -62,32 +62,31 @@ namespace SE::Core
         return lHashValue;
     }
 
-
     void NewMaterialSystem::AddDefinitions( Ref<IShaderProgram> aShaderProgram, Material aMaterial )
     {
-        aShaderProgram->AddCode( "#define __GLSL__" );
-        aShaderProgram->AddCode( "#define VULKAN_SEMANTICS" );
+        DefineConstant( aShaderProgram, "__GLSL__" );
+        DefineConstant( aShaderProgram, "VULKAN_SEMANTICS" );
 
         auto const &lMaterialInfo = aMaterial.Get<sMaterialInfo>();
 
         switch( lMaterialInfo.mShadingModel )
         {
         case eShadingModel::STANDARD:
-            aShaderProgram->AddCode( "#define SHADING_MODEL_STANDARD" );
+            DefineConstant( aShaderProgram, "SHADING_MODEL_STANDARD" );
             break;
         case eShadingModel::SUBSURFACE:
-            aShaderProgram->AddCode( "#define SHADING_MODEL_SUBSURFACE" );
+            DefineConstant( aShaderProgram, "SHADING_MODEL_SUBSURFACE" );
             break;
         case eShadingModel::CLOTH:
-            aShaderProgram->AddCode( "#define SHADING_MODEL_CLOTH" );
+            DefineConstant( aShaderProgram, "SHADING_MODEL_CLOTH" );
             break;
         case eShadingModel::UNLIT:
-            aShaderProgram->AddCode( "#define SHADING_MODEL_UNLIT" );
+            DefineConstant( aShaderProgram, "SHADING_MODEL_UNLIT" );
             break;
         }
 
         if( lMaterialInfo.mHasUV1 )
-            aShaderProgram->AddCode( "#define MATERIAL_HAS_UV1" );
+            DefineConstant( aShaderProgram, "MATERIAL_HAS_UV1" );
 
         // clang-format off
         DefineConstant<sBaseColorTexture>  ( aShaderProgram, aMaterial, "MATERIAL_HAS_BASE_COLOR_TEXTURE"  );
@@ -112,7 +111,7 @@ namespace SE::Core
         fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
 
         std::string lShaderName = CreateShaderName( aMaterial, "vertex_shader" );
-        auto lShader      = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, lShaderName, lShaderPath );
+        auto        lShader     = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, lShaderName, lShaderPath );
 
         AddDefinitions( lShader, aMaterial );
 
@@ -128,7 +127,7 @@ namespace SE::Core
         fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
 
         std::string lShaderName = CreateShaderName( aMaterial, "fragment_shader" );
-        auto lShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, lShaderName, lShaderPath );
+        auto        lShader     = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, lShaderName, lShaderPath );
 
         AddDefinitions( lShader, aMaterial );
 

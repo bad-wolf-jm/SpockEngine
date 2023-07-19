@@ -137,6 +137,11 @@ namespace SE::Core
                 aShaderProgram->AddCode( fmt::format( "#define {}", aName ) );
         }
 
+        void DefineConstant( Ref<IShaderProgram> aShaderProgram, const char *aName )
+        {
+            aShaderProgram->AddCode( fmt::format( "#define {}", aName ) );
+        }
+
         void        AddDefinitions( Ref<IShaderProgram> aShaderProgram, Material aMaterial );
         std::string CreateShaderName( Material aMaterial, const char *aPrefix );
     };
