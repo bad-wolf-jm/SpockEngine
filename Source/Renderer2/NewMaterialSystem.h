@@ -122,8 +122,8 @@ namespace SE::Core
         void     EndMaterial( Material const &aMaterial );
         size_t   GetMaterialHash( Material const &aMaterial );
 
-        int32_t AppendTextureData( Ref<ISampler2D> aTexture);
-        void     UpdateMaterialData();
+        int32_t AppendTextureData( Ref<ISampler2D> aTexture );
+        void    UpdateMaterialData();
 
       private:
         Ref<IGraphicContext> mGraphicContext;
