@@ -141,41 +141,68 @@ namespace SE::Core
             void Render();
         };
 
-        struct UnorderedList : public Block
+        struct List : public Block
         {
-            char mMarker;
+            bool     mIsOrderedList = false;
+            char     mMarker        = '-';
+            uint32_t mStartIndex    = 1;
 
-            UnorderedList( Ref<Block> aParent, eBlockType aType, MD_BLOCK_UL_DETAIL *d )
+            List( Ref<Block> aParent, eBlockType aType, MD_BLOCK_UL_DETAIL *d )
                 : Block( aParent, aType )
+                , mMarker{ d->mark }
+                , mIsOrderedList{ false }
+                , mStartIndex{ 0xffffffff }
             {
             }
 
-            void Render() {}
-        };
-
-        struct OrderedList : public Block
-        {
-            uint32_t mStartIndex;
-            OrderedList( Ref<Block> aParent, eBlockType aType, MD_BLOCK_OL_DETAIL *d )
+            List( Ref<Block> aParent, eBlockType aType, MD_BLOCK_OL_DETAIL *d )
                 : Block( aParent, aType )
+                , mMarker{ d->mark_delimiter }
+                , mIsOrderedList{ true }
+                , mStartIndex{ d->start }
             {
             }
 
-            void Render() {}
+            void Render();
         };
+
+        // struct UnorderedList : public List
+        // {
+        //     char mMarker;
+
+        //     UnorderedList( Ref<Block> aParent, eBlockType aType, MD_BLOCK_UL_DETAIL *d )
+        //         : Block( aParent, aType )
+        //     {
+        //     }
+
+        //     void Render();
+        // };
+
+        // struct OrderedList : public List
+        // {
+        //     uint32_t mCurrentIndex = 1;
+
+        //     OrderedList( Ref<Block> aParent, eBlockType aType, MD_BLOCK_OL_DETAIL *d )
+        //         : Block( aParent, aType )
+        //     {
+        //     }
+
+        //     void Render();
+        // };
 
         struct ListItem : public Block
         {
+            uint32_t mIndex;
             bool     mIsTask;
             bool     mIsChecked;
-            uint32_t mTTaskMarkOffset;
+            uint32_t mTaskMarkOffset;
 
             ListItem( Ref<Block> aParent, eBlockType aType, MD_BLOCK_LI_DETAIL *d )
                 : Block( aParent, aType )
             {
             }
 
-            void Render() {}
+            void Render();
         };
 
         struct HRule : public Block
@@ -425,6 +452,8 @@ namespace SE::Core
         Ref<Block> mCurrentBlock;
         Ref<Table> mCurrentTable;
 
+        std::vector<Ref<List>> mListStack;
+
         template <typename _Ty, typename... _Args>
         void PushBlock( _Args... aArgs )
         {
@@ -432,7 +461,6 @@ namespace SE::Core
             mCurrentBlock->mChildren.push_back( New<_Ty>( mCurrentBlock, eBlockType::DOCUMENT, std::forward<_Args>( aArgs )... ) );
             mCurrentBlock         = mCurrentBlock->mChildren.back();
             mCurrentBlock->mDepth = d + 1;
-            // SE::Logging::Info("{} Created block {}", std::string(d+1, '>'), typeid(_Ty).name());
         }
 
         template <typename _Ty, typename... _Args>
@@ -441,7 +469,6 @@ namespace SE::Core
             uint32_t d = mCurrentBlock->mDepth;
             mCurrentBlock->mChildren.push_back( New<_Ty>( mCurrentBlock, eBlockType::DOCUMENT, std::forward<_Args>( aArgs )... ) );
             mCurrentBlock->mChildren.back()->mDepth = d + 1;
-            // SE::Logging::Info("{} Append block {}", std::string(d+1, '>'), typeid(_Ty).name());
         }
 
         struct image_info
@@ -491,7 +518,7 @@ namespace SE::Core
         unsigned m_hlevel           = 0; // 0 - no heading
 
         uint32_t mBlockNestingLevel = 0;
-        void     LogBlockType( bool e, const char *str );
+        // void     LogBlockType( bool e, const char *str );
 
       private:
         float mLeftMargin  = 10.0f;

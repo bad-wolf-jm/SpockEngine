@@ -70,20 +70,18 @@ namespace SE::Core
         m_table_last_pos = ImVec2( 0, 0 );
     }
 
-    void UIMarkdownRendererInternal::LogBlockType( bool e, const char *str )
-    {
-        if( e ) mBlockNestingLevel++;
-
-        ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 1.0f, 1.0f, 0.0f, 1.0f ) );
-        if( !e ) ImGui::NewLine();
-        ImGui::Text( fmt::format( "{}{} {}", mBlockNestingLevel, e ? ">>>" : "<<<", str ).c_str() );
-        if( !e )
-        {
-            mBlockNestingLevel--;
-        }
-
-        ImGui::PopStyleColor();
-    }
+    // void UIMarkdownRendererInternal::LogBlockType( bool e, const char *str )
+    // {
+    //     if( e ) mBlockNestingLevel++;
+    //     ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 1.0f, 1.0f, 0.0f, 1.0f ) );
+    //     if( !e ) ImGui::NewLine();
+    //     ImGui::Text( fmt::format( "{}{} {}", mBlockNestingLevel, e ? ">>>" : "<<<", str ).c_str() );
+    //     if( !e )
+    //     {
+    //         mBlockNestingLevel--;
+    //     }
+    //     ImGui::PopStyleColor();
+    // }
 
     // void UIMarkdownRendererInternal::BLOCK_UL( const MD_BLOCK_UL_DETAIL *d, bool e )
     // {
@@ -159,7 +157,6 @@ namespace SE::Core
 
     void UIMarkdownRendererInternal::HRule::Render()
     {
-        // SE::Logging::Info( "HRule" );
         ImGui::NewLine();
         ImGui::Separator();
 
@@ -265,11 +262,41 @@ namespace SE::Core
 
     void UIMarkdownRendererInternal::Paragraph::Render()
     {
-        // SE::Logging::Info( "Paragraph; {}", mChildren.size() );
-
         ImGui::NewLine();
         UIMarkdownRendererInternal::Block::Render();
     }
+
+    void UIMarkdownRendererInternal::List::Render()
+    {
+        ImGui::NewLine();
+        if( mIsOrderedList )
+        {
+            uint32_t lCurrentID = mStartIndex;
+            ImGui::Indent();
+            for( auto const &c : mChildren )
+            {
+                ImGui::Text(fmt::format("{}", lCurrentID++).c_str());
+                ImGui::SameLine();
+                c->Render();
+                ImGui::NewLine();
+            }
+            ImGui::Unindent();
+        }
+        else
+        {
+            ImGui::Indent();
+            for( auto const &c : mChildren )
+            {
+                ImGui::Bullet();
+                ImGui::SameLine();
+                c->Render();
+                ImGui::NewLine();
+            }
+            ImGui::Unindent();
+        }
+    }
+
+    void UIMarkdownRendererInternal::ListItem::Render() { UIMarkdownRendererInternal::Block::Render(); }
 
     // void UIMarkdownRendererInternal::BLOCK_P( bool e )
     // {
@@ -567,45 +594,29 @@ namespace SE::Core
 
     void UIMarkdownRendererInternal::set_font( bool e )
     {
-        if( e )
-        {
-            if( m_is_table_header )
-            {
-                SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::BOLD );
-                return;
-            }
 
-            switch( m_hlevel )
-            {
-            case 0:
-                SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( m_is_strong ? FontFamilyFlags::BOLD
-                                                                                          : FontFamilyFlags::NORMAL );
-                break;
-            case 1:
-            {
-                SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H1 );
-                break;
-            }
-            case 2:
-            {
-                SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H2 );
-                break;
-            }
-            case 3:
-            {
-                SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H3 );
-                break;
-            }
-            default:
-            {
-                SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::NORMAL );
-                break;
-            }
-            }
+        if( m_is_table_header )
+        {
+            SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::BOLD );
+            return;
         }
-        else
+
+        if( !e )
         {
             SE::Core::Engine::GetInstance()->UIContext()->PopFont();
+            return;
+        }
+
+        switch( m_hlevel )
+        {
+        case 0:
+            SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( m_is_strong ? FontFamilyFlags::BOLD
+                                                                                      : FontFamilyFlags::NORMAL );
+            break;
+        case 1: SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H1 ); break;
+        case 2: SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H2 ); break;
+        case 3: SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::H3 ); break;
+        default: SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::NORMAL ); break;
         }
     }
 
@@ -638,8 +649,6 @@ namespace SE::Core
 
     void UIMarkdownRendererInternal::Text::Render()
     {
-        // SE::Logging::Info( "Text; {}", mChildren.size() );
-
         const float scale   = ImGui::GetIO().FontGlobalScale;
         const char *str     = mStart;
         const char *str_end = mEnd;
@@ -664,122 +673,120 @@ namespace SE::Core
         if( !is_lf ) ImGui::SameLine( 0.0f, 0.0f );
     }
 
-    void UIMarkdownRendererInternal::SPAN_A( const MD_SPAN_A_DETAIL *d, bool e )
-    {
-        LogBlockType( e, "SPAN_A" );
-        set_href( e, d->href );
-        set_color( e );
-    }
+    // void UIMarkdownRendererInternal::SPAN_A( const MD_SPAN_A_DETAIL *d, bool e )
+    // {
+    //     LogBlockType( e, "SPAN_A" );
+    //     set_href( e, d->href );
+    //     set_color( e );
+    // }
 
     void UIMarkdownRendererInternal::Emphasis::Render()
     {
-        // SE::Logging::Info( "Emphasis" );
-
         SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::EM );
         UIMarkdownRendererInternal::Block::Render();
         SE::Core::Engine::GetInstance()->UIContext()->PopFont();
     }
-    void UIMarkdownRendererInternal::SPAN_EM( bool e )
-    {
-        LogBlockType( e, "SPAN_EM" );
-        m_is_em = e;
-        set_font( e );
-    }
+
+    // void UIMarkdownRendererInternal::SPAN_EM( bool e )
+    // {
+    //     LogBlockType( e, "SPAN_EM" );
+    //     m_is_em = e;
+    //     set_font( e );
+    // }
 
     void UIMarkdownRendererInternal::Strong::Render()
     {
-        // SE::Logging::Info( "Strong" );
-
         SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::BOLD );
         UIMarkdownRendererInternal::Block::Render();
         SE::Core::Engine::GetInstance()->UIContext()->PopFont();
     }
-    void UIMarkdownRendererInternal::SPAN_STRONG( bool e )
-    {
-        LogBlockType( e, "SPAN_STRONG" );
-        m_is_strong = e;
-        set_font( e );
-    }
 
-    void UIMarkdownRendererInternal::SPAN_IMG( const MD_SPAN_IMG_DETAIL *d, bool e )
-    {
-        LogBlockType( e, "SPAN_IMG" );
-        m_is_image = e;
+    // void UIMarkdownRendererInternal::SPAN_STRONG( bool e )
+    // {
+    //     LogBlockType( e, "SPAN_STRONG" );
+    //     m_is_strong = e;
+    //     set_font( e );
+    // }
 
-        set_href( e, d->src );
+    // void UIMarkdownRendererInternal::SPAN_IMG( const MD_SPAN_IMG_DETAIL *d, bool e )
+    // {
+    //     LogBlockType( e, "SPAN_IMG" );
+    //     m_is_image = e;
 
-        if( e )
-        {
-            image_info nfo;
-            if( get_image( nfo ) )
-            {
-                const float scale = ImGui::GetIO().FontGlobalScale;
-                nfo.size.x *= scale;
-                nfo.size.y *= scale;
+    //     set_href( e, d->src );
 
-                ImVec2 const csz = ImGui::GetContentRegionAvail();
-                if( nfo.size.x > csz.x )
-                {
-                    const float r = nfo.size.y / nfo.size.x;
-                    nfo.size.x    = csz.x;
-                    nfo.size.y    = csz.x * r;
-                }
+    //     if( e )
+    //     {
+    //         image_info nfo;
+    //         if( get_image( nfo ) )
+    //         {
+    //             const float scale = ImGui::GetIO().FontGlobalScale;
+    //             nfo.size.x *= scale;
+    //             nfo.size.y *= scale;
 
-                ImGui::Image( nfo.texture_id, nfo.size, nfo.uv0, nfo.uv1, nfo.col_tint, nfo.col_border );
+    //             ImVec2 const csz = ImGui::GetContentRegionAvail();
+    //             if( nfo.size.x > csz.x )
+    //             {
+    //                 const float r = nfo.size.y / nfo.size.x;
+    //                 nfo.size.x    = csz.x;
+    //                 nfo.size.y    = csz.x * r;
+    //             }
 
-                if( ImGui::IsItemHovered() )
-                {
+    //             ImGui::Image( nfo.texture_id, nfo.size, nfo.uv0, nfo.uv1, nfo.col_tint, nfo.col_border );
 
-                    // if (d->title.size) {
-                    //	ImGui::SetTooltip("%.*s", (int)d->title.size, d->title.text);
-                    // }
+    //             if( ImGui::IsItemHovered() )
+    //             {
 
-                    if( ImGui::IsMouseReleased( 0 ) )
-                    {
-                        open_url();
-                    }
-                }
-            }
-        }
-    }
+    //                 // if (d->title.size) {
+    //                 //	ImGui::SetTooltip("%.*s", (int)d->title.size, d->title.text);
+    //                 // }
 
-    void UIMarkdownRendererInternal::SPAN_CODE( bool e )
-    {
-        //
-        LogBlockType( e, "SPAN_CODE" );
-    }
+    //                 if( ImGui::IsMouseReleased( 0 ) )
+    //                 {
+    //                     open_url();
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
-    void UIMarkdownRendererInternal::SPAN_LATEXMATH( bool e )
-    {
-        //
-        LogBlockType( e, "SPAN_LATEXMATH" );
-    }
+    // void UIMarkdownRendererInternal::SPAN_CODE( bool e )
+    // {
+    //     //
+    //     LogBlockType( e, "SPAN_CODE" );
+    // }
 
-    void UIMarkdownRendererInternal::SPAN_LATEXMATH_DISPLAY( bool e )
-    {
-        //
-        LogBlockType( e, "SPAN_LATEXMATH_DISPLAY" );
-    }
+    // void UIMarkdownRendererInternal::SPAN_LATEXMATH( bool e )
+    // {
+    //     //
+    //     LogBlockType( e, "SPAN_LATEXMATH" );
+    // }
 
-    void UIMarkdownRendererInternal::SPAN_WIKILINK( const MD_SPAN_WIKILINK_DETAIL *, bool e )
-    {
-        //
-        LogBlockType( e, "SPAN_WIKILINK" );
-    }
+    // void UIMarkdownRendererInternal::SPAN_LATEXMATH_DISPLAY( bool e )
+    // {
+    //     //
+    //     LogBlockType( e, "SPAN_LATEXMATH_DISPLAY" );
+    // }
 
-    void UIMarkdownRendererInternal::SPAN_U( bool e )
-    {
-        //
-        LogBlockType( e, "SPAN_U" );
-        m_is_underline = e;
-    }
+    // void UIMarkdownRendererInternal::SPAN_WIKILINK( const MD_SPAN_WIKILINK_DETAIL *, bool e )
+    // {
+    //     //
+    //     LogBlockType( e, "SPAN_WIKILINK" );
+    // }
 
-    void UIMarkdownRendererInternal::SPAN_DEL( bool e )
-    {
-        //
-        LogBlockType( e, "SPAN_DEL" );
-        m_is_strikethrough = e;
-    }
+    // void UIMarkdownRendererInternal::SPAN_U( bool e )
+    // {
+    //     //
+    //     LogBlockType( e, "SPAN_U" );
+    //     m_is_underline = e;
+    // }
+
+    // void UIMarkdownRendererInternal::SPAN_DEL( bool e )
+    // {
+    //     //
+    //     LogBlockType( e, "SPAN_DEL" );
+    //     m_is_strikethrough = e;
+    // }
 
     void UIMarkdownRendererInternal::render_text( const char *str, const char *str_end )
     {
@@ -983,9 +990,6 @@ namespace SE::Core
     {
         if( mCurrentTable != nullptr )
         {
-            SE::Logging::Info( "TABLE DATA:  {}x{} ---> {}", mCurrentTable->mCurrentColumn, mCurrentTable->mCurrentRow,
-                               string_t( str, str_end - str ) );
-
             if( mCurrentTable->mFillHeader )
             {
                 mCurrentTable->mHeader[mCurrentTable->mCurrentColumn - 1] = string_t( str, str_end - str );
@@ -1072,6 +1076,9 @@ namespace SE::Core
                 mCurrentTable->ComputeColumnSizes();
                 mCurrentTable = nullptr;
             }
+
+            if( ( type == MD_BLOCK_OL ) || ( type == MD_BLOCK_UL ) ) mListStack.pop_back();
+
             return 0;
         }
 
@@ -1079,8 +1086,14 @@ namespace SE::Core
         {
         case MD_BLOCK_DOC: PushBlock<Document>(); break;
         case MD_BLOCK_QUOTE: PushBlock<Quote>(); break;
-        case MD_BLOCK_UL: PushBlock<UnorderedList>( (MD_BLOCK_UL_DETAIL *)d ); break;
-        case MD_BLOCK_OL: PushBlock<OrderedList>( (MD_BLOCK_OL_DETAIL *)d ); break;
+        case MD_BLOCK_UL:
+            PushBlock<List>( (MD_BLOCK_UL_DETAIL *)d );
+            mListStack.push_back( std::reinterpret_pointer_cast<List>( mCurrentBlock ) );
+            break;
+        case MD_BLOCK_OL:
+            PushBlock<List>( (MD_BLOCK_OL_DETAIL *)d );
+            mListStack.push_back( std::reinterpret_pointer_cast<List>( mCurrentBlock ) );
+            break;
         case MD_BLOCK_LI: PushBlock<ListItem>( (MD_BLOCK_LI_DETAIL *)d ); break;
         case MD_BLOCK_HR: PushBlock<HRule>(); break;
         case MD_BLOCK_H: PushBlock<Heading>( (MD_BLOCK_H_DETAIL *)d ); break;
@@ -1090,9 +1103,6 @@ namespace SE::Core
         case MD_BLOCK_TABLE:
             PushBlock<Table>( (MD_BLOCK_TABLE_DETAIL *)d );
             mCurrentTable = std::reinterpret_pointer_cast<Table>( mCurrentBlock );
-            SE::Logging::Info( "TABLE:  {}x{}", ( (MD_BLOCK_TABLE_DETAIL *)d )->body_row_count,
-                               ( (MD_BLOCK_TABLE_DETAIL *)d )->col_count );
-
             for( uint32_t j = 0; j < mCurrentTable->mColumns; j++ )
             {
                 mCurrentTable->mBody.push_back( std::vector<string_t>() );
@@ -1110,22 +1120,18 @@ namespace SE::Core
 
             mCurrentTable->mCurrentRow    = 0;
             mCurrentTable->mCurrentColumn = 0;
-
             break;
         case MD_BLOCK_THEAD:
-            SE::Logging::Info( "MD_BLOCK_THEAD" );
             PushBlock<TableHeader>();
             std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillHeader = true;
             std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillBody   = false;
             break;
         case MD_BLOCK_TBODY:
-            SE::Logging::Info( "MD_BLOCK_TBODY" );
             PushBlock<TableBody>();
             std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillHeader = false;
             std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillBody   = true;
             break;
         case MD_BLOCK_TR:
-            SE::Logging::Info( "MD_BLOCK_TR" );
             PushBlock<TableRow>();
 
             if( std::reinterpret_pointer_cast<Table>( mCurrentTable )->mFillBody )
@@ -1135,7 +1141,6 @@ namespace SE::Core
             }
             break;
         case MD_BLOCK_TH:
-            SE::Logging::Info( "ALIGNMENT TH -> {}", ( (MD_BLOCK_TD_DETAIL *)d )->align );
             PushBlock<TableData>( (MD_BLOCK_TD_DETAIL *)d );
             mCurrentTable->mCurrentColumn++;
             switch( ( (MD_BLOCK_TD_DETAIL *)d )->align )
@@ -1148,7 +1153,6 @@ namespace SE::Core
             }
             break;
         case MD_BLOCK_TD:
-            SE::Logging::Info( "ALIGNMENT TD -> {}", ( (MD_BLOCK_TD_DETAIL *)d )->align );
             PushBlock<TableData>( (MD_BLOCK_TD_DETAIL *)d );
             mCurrentTable->mCurrentColumn++;
             break;
@@ -1220,11 +1224,9 @@ namespace SE::Core
 
         if( mRootBlock )
         {
-            // SE::Logging::Info( "======================================" );
             SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::NORMAL );
             mRootBlock->Render();
             SE::Core::Engine::GetInstance()->UIContext()->PopFont();
-            // SE::Logging::Info( "======================================" );
 
             return 0;
         }
