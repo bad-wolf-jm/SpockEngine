@@ -51,7 +51,10 @@ namespace SE::Editor
         }
         ~Slider() = default;
 
-        void Display( _SliderType *mValue ) { Changed = UI::Slider( ID, Format.c_str(), MinValue, MaxValue, mValue ); }
+        void Display( _SliderType *mValue )
+        {
+            Changed = UI::Slider( ID, Format.c_str(), MinValue, MaxValue, mValue );
+        }
     };
 
     template <typename _ValueChooserType>
@@ -62,7 +65,10 @@ namespace SE::Editor
         float             LabelWidth;
         _ValueChooserType ValueChooser;
 
-        PropertyEditor( std::string ID ) { ValueChooser = _ValueChooserType( ID ); }
+        PropertyEditor( std::string ID )
+        {
+            ValueChooser = _ValueChooserType( ID );
+        }
 
         template <typename... _ArgTypes>
         void Display( _ArgTypes... a_ArgList )
@@ -81,7 +87,8 @@ namespace SE::Editor
     {
         size_t      lPayloadSize = static_cast<size_t>( aSize / 2 );
         std::string lItemPathStr( lPayloadSize - 1, '\0' );
-        for( uint32_t i = 0; i < lPayloadSize - 1; i++ ) lItemPathStr[i] = aPayloadData[2 * i];
+        for( uint32_t i = 0; i < lPayloadSize - 1; i++ )
+            lItemPathStr[i] = aPayloadData[2 * i];
 
         return lItemPathStr;
     }
@@ -163,7 +170,10 @@ namespace SE::Editor
         ConfigureUI();
     }
 
-    void EditorWindow::UpdateSceneViewport( ImageHandle a_SceneViewport ) { m_SceneViewport = a_SceneViewport; }
+    void EditorWindow::UpdateSceneViewport( ImageHandle a_SceneViewport )
+    {
+        m_SceneViewport = a_SceneViewport;
+    }
 
     EditorWindow &EditorWindow::AddMenuItem( std::string l_Icon, std::string l_Title, std::function<bool()> l_Action )
     {
@@ -628,7 +638,8 @@ namespace SE::Editor
             {
                 auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
                                                         "glTf Files (*.gltf)\0*.gltf\0All Files (*.*)\0*.*\0" );
-                if( lFilePath.has_value() ) LoadScenario( lFilePath.value() );
+                if( lFilePath.has_value() )
+                    LoadScenario( lFilePath.value() );
             }
             if( UI::MenuItem( fmt::format( "{} New material", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
             {
@@ -638,7 +649,8 @@ namespace SE::Editor
             {
                 auto lFilePath = FileDialogs::OpenFile( SE::Core::Engine::GetInstance()->GetMainApplicationWindow(),
                                                         "glTf Files (*.gltf)\0*.gltf\0All Files (*.*)\0*.*\0" );
-                if( lFilePath.has_value() ) ImportModel( lFilePath.value() );
+                if( lFilePath.has_value() )
+                    ImportModel( lFilePath.value() );
             }
             if( UI::MenuItem( fmt::format( "{} Save Scene", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
             {
@@ -659,7 +671,14 @@ namespace SE::Editor
         return l_RequestQuit;
     }
 
-    math::ivec2 EditorWindow::GetWorkspaceAreaSize() { return m_WorkspaceAreaSize; }
+    math::ivec2 EditorWindow::GetWorkspaceAreaSize()
+    {
+        return m_WorkspaceAreaSize;
+    }
+    math::ivec2 EditorWindow::GetNewWorkspaceAreaSize()
+    {
+        return m_NewWorkspaceAreaSize;
+    }
 
     class ManipulationTypeChooser
     {
@@ -678,13 +697,16 @@ namespace SE::Editor
         void Display( ManipulationType &Current )
         {
             auto it = std::find( Dropdown.Values.begin(), Dropdown.Values.end(), Current );
-            if( it != Dropdown.Values.end() ) Dropdown.CurrentItem = std::distance( Dropdown.Values.begin(), it );
+            if( it != Dropdown.Values.end() )
+                Dropdown.CurrentItem = std::distance( Dropdown.Values.begin(), it );
 
             Dropdown.Display();
         }
     };
 
-    void EditorWindow::ClearScene() {}
+    void EditorWindow::ClearScene()
+    {
+    }
 
     void EditorWindow::LoadScenario( fs::path aPath )
     {
@@ -964,9 +986,9 @@ namespace SE::Editor
         // lManipulationTypeChooser.Display( lCurrentManipulationType );
         // if( lManipulationTypeChooser.Dropdown.Changed ) lCurrentManipulationType = lManipulationTypeChooser.Dropdown.GetValue();
 
-        // math::vec2  l3DViewPosition = UI::GetCurrentCursorScreenPosition();
-        // math::ivec2 l3DViewSize     = UI::GetAvailableContentSpace();
-        // m_WorkspaceAreaSize         = l3DViewSize;
+        math::vec2  l3DViewPosition = UI::GetCurrentCursorScreenPosition();
+        math::ivec2 l3DViewSize     = UI::GetAvailableContentSpace();
+        m_NewWorkspaceAreaSize      = l3DViewSize;
 
         // UI::SameLine();
 
@@ -1263,7 +1285,8 @@ namespace SE::Editor
         lManipulationTypeChooser.Dropdown.Values = { ManipulationType::ROTATION, ManipulationType::TRANSLATION,
                                                      ManipulationType::SCALE };
         lManipulationTypeChooser.Display( lCurrentManipulationType );
-        if( lManipulationTypeChooser.Dropdown.Changed ) lCurrentManipulationType = lManipulationTypeChooser.Dropdown.GetValue();
+        if( lManipulationTypeChooser.Dropdown.Changed )
+            lCurrentManipulationType = lManipulationTypeChooser.Dropdown.GetValue();
 
         math::vec2  l3DViewPosition = UI::GetCurrentCursorScreenPosition();
         math::ivec2 l3DViewSize     = UI::GetAvailableContentSpace();
@@ -1277,7 +1300,8 @@ namespace SE::Editor
             if( ImGui::ImageButton( (ImTextureID)m_PlayIconHandle.Handle->GetID(), ImVec2{ 22.0f, 22.0f }, ImVec2{ 0.0f, 0.0f },
                                     ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f }, ImVec4{ 0.0f, 1.0f, 0.0f, 0.8f } ) )
             {
-                if( OnBeginScenario ) OnBeginScenario();
+                if( OnBeginScenario )
+                    OnBeginScenario();
 
                 ActiveWorld = New<Scene>( World );
                 ActiveWorld->BeginScenario();
@@ -1288,7 +1312,8 @@ namespace SE::Editor
             if( ImGui::ImageButton( (ImTextureID)m_PauseIconHandle.Handle->GetID(), ImVec2{ 22.0f, 22.0f }, ImVec2{ 0.0f, 0.0f },
                                     ImVec2{ 1.0f, 1.0f }, 0, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f }, ImVec4{ 1.0f, .2f, 0.0f, 0.8f } ) )
             {
-                if( OnEndScenario ) OnEndScenario();
+                if( OnEndScenario )
+                    OnEndScenario();
 
                 ActiveWorld->EndScenario();
                 ActiveWorld  = World;

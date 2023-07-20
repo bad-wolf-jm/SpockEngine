@@ -94,6 +94,14 @@ namespace SE::Editor
             mShouldRebuildViewport = true;
         }
 
+        auto lNewWorkspaceAreaSize = mEditorWindow.GetNewWorkspaceAreaSize();
+        if( ( mNewViewportWidth != lNewWorkspaceAreaSize.x ) || ( mNewViewportHeight != lNewWorkspaceAreaSize.y ) )
+        {
+            mNewViewportWidth         = lNewWorkspaceAreaSize.x;
+            mNewViewportHeight        = lNewWorkspaceAreaSize.y;
+            mShouldRebuildNewViewport = true;
+        }
+
         return lRequestQuit;
     }
 

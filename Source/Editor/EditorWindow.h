@@ -97,6 +97,7 @@ namespace SE::Editor
         bool        Display();
         bool        RenderMainMenu();
         math::ivec2 GetWorkspaceAreaSize();
+        math::ivec2 GetNewWorkspaceAreaSize();
 
         EditorWindow &AddMenuItem( std::string l_Icon, std::string l_Title, std::function<bool()> l_Action );
 
@@ -127,6 +128,7 @@ namespace SE::Editor
         uint32_t m_LastFPS      = 0;
 
         math::ivec2     m_WorkspaceAreaSize = { 0, 0 };
+        math::ivec2     m_NewWorkspaceAreaSize = { 0, 0 };
         Ref<ISampler2D> m_PlayIcon;
         ImageHandle     m_PlayIconHandle;
         Ref<ISampler2D> m_PauseIcon;

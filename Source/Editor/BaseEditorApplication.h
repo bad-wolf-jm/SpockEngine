@@ -61,6 +61,11 @@ namespace SE::Editor
         void RebuildOutputFramebuffer();
 
       protected:
+
+        uint32_t   mNewViewportHeight        = 1;
+        uint32_t   mNewViewportWidth         = 1;
+        bool       mShouldRebuildNewViewport = true;
+
         uint32_t   mViewportHeight        = 1;
         uint32_t   mViewportWidth         = 1;
         bool       mShouldRebuildViewport = true;
