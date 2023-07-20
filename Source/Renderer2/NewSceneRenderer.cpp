@@ -37,35 +37,6 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem::Components;
     using namespace SE::Core::Primitives;
 
-    // size_t sNewShaderMaterial::Hash()
-    // {
-
-    //     bool lHasBaseColorTexture  = static_cast<bool>( mBaseColorTexture );
-    //     bool lHasMetalRoughTexture = static_cast<bool>( mMetalRoughTexture );
-    //     bool lHasNormaTexture      = static_cast<bool>( mNormalTexture );
-    //     bool lHasEmissiveTexture   = static_cast<bool>( mEmissiveTexture );
-    //     bool lHasOcclusionTexture  = static_cast<bool>( mOcclusionTexture );
-
-    //     uint8_t lBitOffset = 0;
-    //     size_t  lHashValue = 0;
-
-    //     // clang-format off
-    //     lHashValue |= lHasBaseColorTexture   << lBitOffset++;
-    //     lHashValue |= lHasBaseColorTexture   << lBitOffset++;
-    //     lHashValue |= lHasMetalRoughTexture  << lBitOffset++;
-    //     lHashValue |= lHasNormaTexture       << lBitOffset++;
-    //     lHashValue |= lHasEmissiveTexture    << lBitOffset++;
-    //     lHashValue |= lHasOcclusionTexture   << lBitOffset++;
-    //     lHashValue |= lHasOcclusionTexture   << lBitOffset++;
-    //     lHashValue |= mHasUV1                << lBitOffset++;
-    //     lHashValue |= mIsTwoSided            << lBitOffset++; lBitOffset++;
-    //     lHashValue |= (uint8_t)mShadingModel << lBitOffset++; lBitOffset++;
-    //     lHashValue |= (uint8_t)mType         << lBitOffset;
-    //     // clang-format on
-
-    //     return lHashValue;
-    // }
-
     NewSceneRenderer::NewSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
         : BaseSceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {

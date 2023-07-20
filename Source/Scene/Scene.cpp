@@ -75,7 +75,8 @@ namespace SE::Core
     template <typename _Component>
     static void CopyComponent( Entity &aSource, Entity &aDestination )
     {
-        if( ( aSource.Has<_Component>() ) ) aDestination.AddOrReplace<_Component>( aSource.Get<_Component>() );
+        if( ( aSource.Has<_Component>() ) )
+            aDestination.AddOrReplace<_Component>( aSource.Get<_Component>() );
     }
 
     Scene::Scene( Ref<Scene> aSource )
@@ -215,7 +216,8 @@ namespace SE::Core
     {
         const std::array<GPUMemory *, 7> lBuffers = { &mTransforms,   &mVertexBuffers,   &mTransformedBuffers, &mVertexOffsets,
                                                       &mVertexCounts, &mJointTransforms, &mJointOffsets };
-        for( auto const &lP : lBuffers ) lP->Dispose();
+        for( auto const &lP : lBuffers )
+            lP->Dispose();
 
         uint32_t lTransformCount = 0;
         ForEach<sNodeTransformComponent>( [&]( auto aEntity, auto &aUUID ) { lTransformCount++; } );
@@ -284,15 +286,25 @@ namespace SE::Core
     mat4 Scene::GetFinalTransformMatrix( Element aElement )
     {
         auto &lUUID = aElement.Get<sUUID>().mValue;
-        if( mTransformCache.find( lUUID ) != mTransformCache.end() ) return mTransformCache[lUUID];
+        if( mTransformCache.find( lUUID ) != mTransformCache.end() )
+            return mTransformCache[lUUID];
         return mat4( 1.0f );
     }
 
-    Scene::Element Scene::Create( std::string a_Name, Element a_Parent ) { return mRegistry.CreateEntity( a_Parent, a_Name ); }
+    Scene::Element Scene::Create( std::string a_Name, Element a_Parent )
+    {
+        return mRegistry.CreateEntity( a_Parent, a_Name );
+    }
 
-    Scene::Element Scene::CreateEntity() { return mRegistry.CreateEntity(); }
+    Scene::Element Scene::CreateEntity()
+    {
+        return mRegistry.CreateEntity();
+    }
 
-    Scene::Element Scene::CreateEntity( std::string a_Name ) { return mRegistry.CreateEntity( a_Name ); }
+    Scene::Element Scene::CreateEntity( std::string a_Name )
+    {
+        return mRegistry.CreateEntity( a_Name );
+    }
 
     void Scene::ClearScene()
     {
@@ -504,41 +516,39 @@ namespace SE::Core
         std::mutex lMaterialSystemLock;
         uint32_t   lMaterialIndex = 0;
         // clang-format off
-        std::for_each( std::execution::seq, lMaterialLoadQueue.begin(), lMaterialLoadQueue.end(),
-            [&]( auto const &aElement )
-            {
-                auto &[lMaterialID, lEntities] = aElement;
+        std::for_each( std::execution::seq, lMaterialLoadQueue.begin(), lMaterialLoadQueue.end(), [&]( auto const &aElement )
+        {
+            auto &[lMaterialID, lEntities] = aElement;
 
-                auto &lNewMaterial = mMaterialSystem->CreateMaterial( lScenarioRoot / lMaterialID );
+            auto &lNewMaterial = mMaterialSystem->CreateMaterial( lScenarioRoot / lMaterialID );
 
-                for( auto &lEntity : lEntities )
-                    lReadContext.mEntities[lEntity].AddOrReplace<sMaterialComponent>( lNewMaterial.mID );
-            } );
+            for( auto &lEntity : lEntities )
+                lReadContext.mEntities[lEntity].AddOrReplace<sMaterialComponent>( lNewMaterial.mID );
+        } );
 
         std::mutex lBufferLock;
         // clang-format on
 
         // clang-format off
-        std::for_each( std::execution::seq, lBufferLoadQueue.begin(), lBufferLoadQueue.end(),
-            [&]( auto &aElement )
-            {
-                auto &[lEntityID, lComponent, lBufferID] = aElement;
+        std::for_each( std::execution::seq, lBufferLoadQueue.begin(), lBufferLoadQueue.end(), [&]( auto &aElement )
+        {
+            auto &[lEntityID, lComponent, lBufferID] = aElement;
 
-                BinaryAsset lBinaryDataFile( lScenarioRoot / lBufferID );
+            BinaryAsset lBinaryDataFile( lScenarioRoot / lBufferID );
 
-                std::vector<VertexData> lVertexBuffer;
-                std::vector<uint32_t>   lIndexBuffer;
-                lBinaryDataFile.Retrieve( 0, lVertexBuffer, lIndexBuffer );
+            std::vector<VertexData> lVertexBuffer;
+            std::vector<uint32_t>   lIndexBuffer;
+            lBinaryDataFile.Retrieve( 0, lVertexBuffer, lIndexBuffer );
 
-                lComponent.mVertexBuffer =
-                    CreateBuffer( mGraphicContext, lVertexBuffer, eBufferType::VERTEX_BUFFER, false, false, true, true );
-                lComponent.mIndexBuffer =
-                    CreateBuffer( mGraphicContext, lIndexBuffer, eBufferType::INDEX_BUFFER, false, false, true, true );
-                lComponent.mTransformedBuffer = CreateBuffer( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false,
-                                                                true, true, lComponent.mVertexBuffer->SizeAs<uint8_t>() );
+            lComponent.mVertexBuffer =
+                CreateBuffer( mGraphicContext, lVertexBuffer, eBufferType::VERTEX_BUFFER, false, false, true, true );
+            lComponent.mIndexBuffer =
+                CreateBuffer( mGraphicContext, lIndexBuffer, eBufferType::INDEX_BUFFER, false, false, true, true );
+            lComponent.mTransformedBuffer = CreateBuffer( mGraphicContext, eBufferType::VERTEX_BUFFER, false, false,
+                                                            true, true, lComponent.mVertexBuffer->SizeAs<uint8_t>() );
 
-                lReadContext.mEntities[lEntityID].AddOrReplace<sStaticMeshComponent>( lComponent );
-            } );
+            lReadContext.mEntities[lEntityID].AddOrReplace<sStaticMeshComponent>( lComponent );
+        } );
         // clang-format on
 
         for( YAML::iterator it = lNodesRoot.begin(); it != lNodesRoot.end(); ++it )
@@ -548,7 +558,8 @@ namespace SE::Core
 
             auto &lEntity = lReadContext.mEntities[lKey];
 
-            if( !lEntity ) return;
+            if( !lEntity )
+                return;
 
             if( lParentEntityLUT.find( lKey ) != lParentEntityLUT.end() )
                 mRegistry.SetParent( lEntity, lReadContext.mEntities[lParentEntityLUT[lKey]] );
@@ -561,7 +572,8 @@ namespace SE::Core
 
             auto &lEntity = lReadContext.mEntities[lKey];
 
-            if( !lEntity ) return;
+            if( !lEntity )
+                return;
 
             if( HasTypeTag<sSkeletonComponent>( lEntityConfiguration ) )
             {
@@ -578,7 +590,8 @@ namespace SE::Core
 
             auto &lEntity = lReadContext.mEntities[lKey];
 
-            if( !lEntity ) return;
+            if( !lEntity )
+                return;
 
             if( HasTypeTag<sAnimationComponent>( lEntityConfiguration ) )
             {
@@ -595,7 +608,8 @@ namespace SE::Core
 
             auto &lEntity = lReadContext.mEntities[lKey];
 
-            if( !lEntity ) return;
+            if( !lEntity )
+                return;
 
             if( HasTypeTag<sAnimationChooser>( lEntityConfiguration ) )
             {
@@ -686,8 +700,6 @@ namespace SE::Core
             lMaterialCreateInfo.push_back( lMaterialShader );
         }
 
-        
-
         std::vector<Element>    lMeshes           = {};
         uint32_t                lVertexBufferSize = 0;
         uint32_t                lIndexBufferSize  = 0;
@@ -753,7 +765,8 @@ namespace SE::Core
         {
             auto &lNode = aModelData->mNodes[lNodeID];
 
-            if( lNode.mMeshes.size() == 0 ) continue;
+            if( lNode.mMeshes.size() == 0 )
+                continue;
 
             for( uint32_t lNodeMeshID = 0; lNodeMeshID < lNode.mMeshes.size(); lNodeMeshID++ )
                 mRegistry.SetParent( lMeshes[lNodeMeshID], lNodes[lNodeID] );
@@ -781,7 +794,8 @@ namespace SE::Core
             }
         }
 
-        if( aModelData->mAnimations.size() > 0 ) lAssetEntity.Add<sAnimationChooser>();
+        if( aModelData->mAnimations.size() > 0 )
+            lAssetEntity.Add<sAnimationChooser>();
 
         for( auto &lAnimation : aModelData->mAnimations )
         {
@@ -814,9 +828,11 @@ namespace SE::Core
 
     void Scene::MarkAsRayTracingTarget( Scene::Element aElement )
     {
-        if( !aElement.Has<sStaticMeshComponent>() ) return;
+        if( !aElement.Has<sStaticMeshComponent>() )
+            return;
 
-        if( aElement.Has<sRayTracingTargetComponent>() ) return;
+        if( aElement.Has<sRayTracingTargetComponent>() )
+            return;
 
         auto &lRTComponent = aElement.Add<sRayTracingTargetComponent>();
     }
@@ -828,7 +844,8 @@ namespace SE::Core
 
     void Scene::BeginScenario()
     {
-        if( mState != eSceneState::EDITING ) return;
+        if( mState != eSceneState::EDITING )
+            return;
 
         ForEach<sAnimatedTransformComponent>(
             [=]( auto lEntity, auto &lComponent )
@@ -854,7 +871,8 @@ namespace SE::Core
 
     void Scene::EndScenario()
     {
-        if( mState != eSceneState::RUNNING ) return;
+        if( mState != eSceneState::RUNNING )
+            return;
 
         ForEach<sAnimatedTransformComponent>(
             [=]( auto lEntity, auto &lComponent )
@@ -891,7 +909,8 @@ namespace SE::Core
         for( auto &lChannel : lAnimation.mChannels )
         {
             auto &lAnimatedTransform = lChannel.mTargetNode.Get<sAnimatedTransformComponent>();
-            if( lAnimation.CurrentTick >= lChannel.mInterpolation.mInputs.size() ) continue;
+            if( lAnimation.CurrentTick >= lChannel.mInterpolation.mInputs.size() )
+                continue;
 
             float dt = lAnimation.CurrentTime - lChannel.mInterpolation.mInputs[lAnimation.CurrentTick];
             if( lAnimation.CurrentTime >
@@ -948,7 +967,8 @@ namespace SE::Core
             ForEach<sBehaviourComponent>(
                 [=]( auto aEntity, auto &aComponent )
                 {
-                    if( aComponent.ControllerInstance ) aComponent.ControllerInstance->OnTick( ts );
+                    if( aComponent.ControllerInstance )
+                        aComponent.ControllerInstance->OnTick( ts );
                 } );
 
             ForEach<sActorComponent>( [=]( auto lEntity, auto &lComponent ) { lComponent.OnTick( ts ); } );
@@ -970,7 +990,8 @@ namespace SE::Core
         ForEach<sUIComponent>(
             [=]( auto aEntity, auto &aComponent )
             {
-                if( ( mState != eSceneState::RUNNING ) && !aComponent.mDisplayInEditor ) return;
+                if( ( mState != eSceneState::RUNNING ) && !aComponent.mDisplayInEditor )
+                    return;
 
                 static ImGuiWindowFlags lFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 
@@ -1007,7 +1028,8 @@ namespace SE::Core
         ForEach<sUUID, sNodeTransformComponent>(
             [&]( auto aEntity, auto &aUUID, auto &aTransformComponent )
             {
-                if( mTransformCache.find( aUUID.mValue ) != mTransformCache.end() ) return;
+                if( mTransformCache.find( aUUID.mValue ) != mTransformCache.end() )
+                    return;
 
                 mat4 lAccumulator = aTransformComponent.mMatrix;
 
@@ -1024,7 +1046,8 @@ namespace SE::Core
         ForEach<sUUID, sSkeletonComponent>(
             [&]( auto lElementToProcess, auto &aUUID, auto &aSkeleton )
             {
-                if( mTransformCache.find( aUUID.mValue ) == mTransformCache.end() ) return;
+                if( mTransformCache.find( aUUID.mValue ) == mTransformCache.end() )
+                    return;
                 mat4 lInverseTransform = Inverse( mTransformCache[aUUID.mValue] );
 
                 for( uint32_t lJointID = 0; lJointID < lElementToProcess.Get<sSkeletonComponent>().Bones.size(); lJointID++ )
@@ -1050,8 +1073,10 @@ namespace SE::Core
             ForEach<sUUID, sStaticMeshComponent>(
                 [&]( auto aEntiy, auto &aUUID, auto &aMesh )
                 {
-                    if( aEntiy.Has<sSkeletonComponent>() ) return;
-                    if( mTransformCache.find( aUUID.mValue ) == mTransformCache.end() ) return;
+                    if( aEntiy.Has<sSkeletonComponent>() )
+                        return;
+                    if( mTransformCache.find( aUUID.mValue ) == mTransformCache.end() )
+                        return;
 
                     lObjectToWorldTransforms.push_back( mTransformCache[aUUID.mValue] );
                     lVertexBuffers.push_back( *aMesh.mVertexBuffer );
@@ -1087,7 +1112,8 @@ namespace SE::Core
             ForEach<sUUID, sStaticMeshComponent, sSkeletonComponent>(
                 [&]( auto aEntiy, auto &aUUID, auto &aMesh, auto &aSkeleton )
                 {
-                    if( mTransformCache.find( aUUID.mValue ) == mTransformCache.end() ) return;
+                    if( mTransformCache.find( aUUID.mValue ) == mTransformCache.end() )
+                        return;
 
                     lObjectToWorldTransforms.push_back( mTransformCache[aUUID.mValue] );
                     lVertexBuffers.push_back( *aMesh.mVertexBuffer );
@@ -1097,7 +1123,8 @@ namespace SE::Core
                     lMaxVertexCount = std::max( lMaxVertexCount, static_cast<uint32_t>( aMesh.mVertexCount ) );
 
                     lJointOffsets.push_back( lJointTransforms.size() );
-                    for( auto &lJoint : aSkeleton.JointMatrices ) lJointTransforms.push_back( lJoint );
+                    for( auto &lJoint : aSkeleton.JointMatrices )
+                        lJointTransforms.push_back( lJoint );
                 } );
 
             mTransforms.Upload( lObjectToWorldTransforms );
@@ -1127,7 +1154,8 @@ namespace SE::Core
         ForEach<sUUID, sStaticMeshComponent, sRayTracingTargetComponent>(
             [&]( auto aEntity, auto &aUUID, auto &aMeshComponent, auto &aRTComponent )
             {
-                if( mTransformCache.find( aUUID.mValue ) == mTransformCache.end() ) return;
+                if( mTransformCache.find( aUUID.mValue ) == mTransformCache.end() )
+                    return;
 
                 if( !glm::all( glm::equal( mTransformCache[aUUID.mValue], aRTComponent.Transform, 0.0001 ) ) )
                 {
@@ -1136,7 +1164,8 @@ namespace SE::Core
                 }
             } );
 
-        if( lRebuildAS ) RebuildAccelerationStructure();
+        if( lRebuildAS )
+            RebuildAccelerationStructure();
     }
 
     void Scene::RebuildAccelerationStructure()
@@ -1162,7 +1191,9 @@ namespace SE::Core
         mAccelerationStructure = SE::Core::New<OptixScene>( mRayTracingContext );
     }
 
-    void Scene::Render() {}
+    void Scene::Render()
+    {
+    }
 
     static void WriteNode( ConfigurationWriter &lOut, Entity const &aEntity, sUUID const &aUUID,
                            std::vector<sImportedAnimationSampler>       &lInterpolationData,
@@ -1176,10 +1207,14 @@ namespace SE::Core
             {
                 WriteComponent( lOut, aEntity.Get<sTag>() );
             }
-            if( aEntity.Has<sRelationshipComponent>() ) WriteComponent( lOut, aEntity.Get<sRelationshipComponent>() );
-            if( aEntity.Has<sCameraComponent>() ) WriteComponent( lOut, aEntity.Get<sCameraComponent>() );
-            if( aEntity.Has<sAnimationChooser>() ) WriteComponent( lOut, aEntity.Get<sAnimationChooser>() );
-            if( aEntity.Has<sActorComponent>() ) WriteComponent( lOut, aEntity.Get<sActorComponent>() );
+            if( aEntity.Has<sRelationshipComponent>() )
+                WriteComponent( lOut, aEntity.Get<sRelationshipComponent>() );
+            if( aEntity.Has<sCameraComponent>() )
+                WriteComponent( lOut, aEntity.Get<sCameraComponent>() );
+            if( aEntity.Has<sAnimationChooser>() )
+                WriteComponent( lOut, aEntity.Get<sAnimationChooser>() );
+            if( aEntity.Has<sActorComponent>() )
+                WriteComponent( lOut, aEntity.Get<sActorComponent>() );
 
             if( aEntity.Has<sAnimationComponent>() )
             {
@@ -1208,24 +1243,53 @@ namespace SE::Core
                 lOut.EndMap();
             }
 
-            if( aEntity.Has<sAnimatedTransformComponent>() ) WriteComponent( lOut, aEntity.Get<sAnimatedTransformComponent>() );
-            if( aEntity.Has<sNodeTransformComponent>() ) WriteComponent( lOut, aEntity.Get<sNodeTransformComponent>() );
+            if( aEntity.Has<sAnimatedTransformComponent>() )
+                WriteComponent( lOut, aEntity.Get<sAnimatedTransformComponent>() );
+
+            if( aEntity.Has<sNodeTransformComponent>() )
+                WriteComponent( lOut, aEntity.Get<sNodeTransformComponent>() );
+
             if( aEntity.Has<sStaticMeshComponent>() )
                 WriteComponent( lOut, aEntity.Get<sStaticMeshComponent>(), aMeshDataMap[aUUID.mValue.str()] );
-            if( aEntity.Has<sParticleSystemComponent>() ) WriteComponent( lOut, aEntity.Get<sParticleSystemComponent>() );
-            if( aEntity.Has<sParticleShaderComponent>() ) WriteComponent( lOut, aEntity.Get<sParticleShaderComponent>() );
-            if( aEntity.Has<sSkeletonComponent>() ) WriteComponent( lOut, aEntity.Get<sSkeletonComponent>() );
-            if( aEntity.Has<sWireframeComponent>() ) WriteComponent( lOut, aEntity.Get<sWireframeComponent>() );
-            if( aEntity.Has<sWireframeMeshComponent>() ) WriteComponent( lOut, aEntity.Get<sWireframeMeshComponent>() );
-            if( aEntity.Has<sBoundingBoxComponent>() ) WriteComponent( lOut, aEntity.Get<sBoundingBoxComponent>() );
-            if( aEntity.Has<sRayTracingTargetComponent>() ) WriteComponent( lOut, aEntity.Get<sRayTracingTargetComponent>() );
+
+            if( aEntity.Has<sParticleSystemComponent>() )
+                WriteComponent( lOut, aEntity.Get<sParticleSystemComponent>() );
+
+            if( aEntity.Has<sParticleShaderComponent>() )
+                WriteComponent( lOut, aEntity.Get<sParticleShaderComponent>() );
+
+            if( aEntity.Has<sSkeletonComponent>() )
+                WriteComponent( lOut, aEntity.Get<sSkeletonComponent>() );
+
+            if( aEntity.Has<sWireframeComponent>() )
+                WriteComponent( lOut, aEntity.Get<sWireframeComponent>() );
+
+            if( aEntity.Has<sWireframeMeshComponent>() )
+                WriteComponent( lOut, aEntity.Get<sWireframeMeshComponent>() );
+
+            if( aEntity.Has<sBoundingBoxComponent>() )
+                WriteComponent( lOut, aEntity.Get<sBoundingBoxComponent>() );
+
+            if( aEntity.Has<sRayTracingTargetComponent>() )
+                WriteComponent( lOut, aEntity.Get<sRayTracingTargetComponent>() );
+
             if( aEntity.Has<sMaterialComponent>() )
                 WriteComponent( lOut, aEntity.Get<sMaterialComponent>(), aMaterialMap[aUUID.mValue.str()] );
-            if( aEntity.Has<sMaterialShaderComponent>() ) WriteComponent( lOut, aEntity.Get<sMaterialShaderComponent>() );
-            if( aEntity.Has<sBackgroundComponent>() ) WriteComponent( lOut, aEntity.Get<sBackgroundComponent>() );
-            if( aEntity.Has<sAmbientLightingComponent>() ) WriteComponent( lOut, aEntity.Get<sAmbientLightingComponent>() );
-            if( aEntity.Has<sLightComponent>() ) WriteComponent( lOut, aEntity.Get<sLightComponent>() );
-            if( aEntity.Has<sUIComponent>() ) WriteComponent( lOut, aEntity.Get<sUIComponent>() );
+
+            if( aEntity.Has<sMaterialShaderComponent>() )
+                WriteComponent( lOut, aEntity.Get<sMaterialShaderComponent>() );
+
+            if( aEntity.Has<sBackgroundComponent>() )
+                WriteComponent( lOut, aEntity.Get<sBackgroundComponent>() );
+
+            if( aEntity.Has<sAmbientLightingComponent>() )
+                WriteComponent( lOut, aEntity.Get<sAmbientLightingComponent>() );
+
+            if( aEntity.Has<sLightComponent>() )
+                WriteComponent( lOut, aEntity.Get<sLightComponent>() );
+                
+            if( aEntity.Has<sUIComponent>() )
+                WriteComponent( lOut, aEntity.Get<sUIComponent>() );
         }
         lOut.EndMap();
     }
@@ -1233,12 +1297,17 @@ namespace SE::Core
     void Scene::SaveAs( fs::path aPath )
     {
         // Check that path does not exist, or exists and is a folder
-        if( !fs::exists( aPath ) ) fs::create_directories( aPath );
-        if( !fs::is_directory( aPath ) ) return;
+        if( !fs::exists( aPath ) )
+            fs::create_directories( aPath );
+        if( !fs::is_directory( aPath ) )
+            return;
 
-        if( !fs::exists( aPath / "Materials" ) ) fs::create_directories( aPath / "Materials" );
-        if( !fs::exists( aPath / "Meshes" ) ) fs::create_directories( aPath / "Meshes" );
-        if( !fs::exists( aPath / "Animations" ) ) fs::create_directories( aPath / "Animations" );
+        if( !fs::exists( aPath / "Materials" ) )
+            fs::create_directories( aPath / "Materials" );
+        if( !fs::exists( aPath / "Meshes" ) )
+            fs::create_directories( aPath / "Meshes" );
+        if( !fs::exists( aPath / "Animations" ) )
+            fs::create_directories( aPath / "Animations" );
 
         std::vector<std::string> lMaterialList{};
         {
@@ -1343,7 +1412,8 @@ namespace SE::Core
 
         fs::path    lOutput = aPath / "Animations" / "BinaryData.bin";
         BinaryAsset lBinaryDataFile;
-        for( auto &lInterpolation : lInterpolationData ) lBinaryDataFile.Package( lInterpolation );
+        for( auto &lInterpolation : lInterpolationData )
+            lBinaryDataFile.Package( lInterpolation );
         lBinaryDataFile.WriteTo( lOutput );
     }
 } // namespace SE::Core

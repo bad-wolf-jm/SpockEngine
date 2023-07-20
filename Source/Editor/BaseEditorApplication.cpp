@@ -31,6 +31,7 @@ namespace SE::Editor
     void BaseEditorApplication::RenderScene()
     {
         mDeferredRenderer->Render();
+        mNewSceneRenderer->Render();
     }
 
     void BaseEditorApplication::Update( Timestep ts )
@@ -38,6 +39,7 @@ namespace SE::Editor
         mEditorWindow.ActiveWorld->Update( ts );
         mEditorWindow.UpdateFramerate( ts );
         mDeferredRenderer->Update( mEditorWindow.ActiveWorld );
+        mNewSceneRenderer->Update( nullptr );
 
         if( mApplicationInstance )
         {
