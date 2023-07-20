@@ -163,14 +163,22 @@ namespace SE::Core
         return lShader;
     }
 
-    std::vector<sShaderMaterial> NewMaterialSystem::GatherMateriaData()
+    int32_t NewMaterialSystem::AppendTextureData( Ref<ISampler2D> aTexture )
     {
-        std::vector<sShaderMaterial> lShaderMaterials;
+        mTextureData.push_back( aTexture );
+
+        return mTextureData.size() - 1;
+    }
+
+    void NewMaterialSystem::UpdateMaterialData()
+    {
+        mMaterialData.clear();
+        mTextureData.clear();
+
         mMaterialRegistry.ForEach<sMaterialInfo>(
             [&]( auto aEntity, auto const &aMaterialInfo )
             {
-                //
-                auto &lNew = lShaderMaterials.emplace_back();
+                auto &lNew = mMaterialData.emplace_back();
 
                 if( aEntity.Has<sBaseColorTexture>() )
                 {
@@ -178,7 +186,7 @@ namespace SE::Core
 
                     lNew.mBaseColorFactor    = lData.mFactor;
                     lNew.mBaseColorUVChannel = lData.mUVChannel;
-                    lNew.mBaseColorTextureID = 0;
+                    lNew.mBaseColorTextureID = AppendTextureData( lData.mTexture );
                 }
 
                 if( aEntity.Has<sMetalRoughTexture>() )
@@ -188,7 +196,7 @@ namespace SE::Core
                     lNew.mMetallicFactor     = lData.mMetallicFactor;
                     lNew.mRoughnessFactor    = lData.mRoughnessFactor;
                     lNew.mMetalnessUVChannel = lData.mUVChannel;
-                    lNew.mMetalnessTextureID = 0;
+                    lNew.mMetalnessTextureID = AppendTextureData( lData.mTexture );
                 }
 
                 if( aEntity.Has<sNormalsTexture>() )
@@ -196,7 +204,7 @@ namespace SE::Core
                     auto &lData = aEntity.Get<sNormalsTexture>();
 
                     lNew.mNormalUVChannel = lData.mUVChannel;
-                    lNew.mNormalTextureID = 0;
+                    lNew.mNormalTextureID = AppendTextureData( lData.mTexture );
                 }
 
                 if( aEntity.Has<sOcclusionTexture>() )
@@ -205,7 +213,7 @@ namespace SE::Core
 
                     lNew.mOcclusionStrength  = lData.mFactor;
                     lNew.mOcclusionUVChannel = lData.mUVChannel;
-                    lNew.mOcclusionTextureID = 0;
+                    lNew.mOcclusionTextureID = AppendTextureData( lData.mTexture );
                 }
                 if( aEntity.Has<sEmissiveTexture>() )
                 {
@@ -213,11 +221,9 @@ namespace SE::Core
 
                     lNew.mEmissiveFactor    = lData.mFactor;
                     lNew.mEmissiveUVChannel = lData.mUVChannel;
-                    lNew.mEmissiveTextureID = 0;
+                    lNew.mEmissiveTextureID = AppendTextureData( lData.mTexture );
                 }
             } );
-
-        return std::move( lShaderMaterials );
     }
 
     // static Ref<IShaderProgram> MRTVertexShader( Ref<IGraphicContext> gc )

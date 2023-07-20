@@ -122,12 +122,16 @@ namespace SE::Core
         void     EndMaterial( Material const &aMaterial );
         size_t   GetMaterialHash( Material const &aMaterial );
 
-        std::vector<sShaderMaterial> GatherMateriaData();
+        int32_t AppendTextureData( Ref<ISampler2D> aTexture);
+        void     UpdateMaterialData();
 
       private:
         Ref<IGraphicContext> mGraphicContext;
 
         EntityCollection mMaterialRegistry;
+
+        std::vector<Ref<ISampler2D>> mTextureData;
+        std::vector<sShaderMaterial> mMaterialData;
 
         std::unordered_map<size_t, Ref<IGraphicsPipeline>> mGraphicsPipelines;
 
