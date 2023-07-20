@@ -84,7 +84,10 @@ namespace SE::Core
         Element CurrentCamera;
         Element DefaultCamera;
 
-        Ref<IGraphicContext> GetGraphicContext() { return mGraphicContext; }
+        Ref<IGraphicContext> GetGraphicContext()
+        {
+            return mGraphicContext;
+        }
 
         template <typename... Args>
         void ForEach( std::function<void( Element, Args &... )> a_ApplyFunction )
@@ -96,14 +99,24 @@ namespace SE::Core
 
         OptixTraversableHandle GetRayTracingRoot()
         {
-            if( mAccelerationStructure ) return mAccelerationStructure->mOptixObject;
+            if( mAccelerationStructure )
+                return mAccelerationStructure->mOptixObject;
             return 0;
         }
 
-        Ref<SE::Graphics::OptixDeviceContextObject> GetRayTracingContext() { return mRayTracingContext; }
+        Ref<SE::Graphics::OptixDeviceContextObject> GetRayTracingContext()
+        {
+            return mRayTracingContext;
+        }
 
-        eSceneState         GetState() { return mState; }
-        Ref<MaterialSystem> GetMaterialSystem() { return mMaterialSystem; }
+        eSceneState GetState()
+        {
+            return mState;
+        }
+        Ref<MaterialSystem> GetMaterialSystem()
+        {
+            return mMaterialSystem;
+        }
 
         void ClearScene();
 
@@ -118,8 +131,8 @@ namespace SE::Core
         Ref<OptixDeviceContextObject> mRayTracingContext     = nullptr;
         Ref<OptixScene>               mAccelerationStructure = nullptr;
 
-        // Handle to the new version of the renderer
-        // Ref<SceneRenderer> mRenderer = nullptr;
+        // Handle to the new version of the material system
+        Ref<NewMaterialSystem> mNewMaterialSystem = nullptr;
 
         std::vector<sActorComponent> mActorComponents;
 
