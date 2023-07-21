@@ -6,8 +6,8 @@
 #include "Graphics/Vulkan/DescriptorSet.h"
 #include "Graphics/Vulkan/VkGraphicsPipeline.h"
 
-#include "Scene/Components.h"
-#include "Scene/Scene.h"
+// #include "Scene/Components.h"
+// #include "Scene/Scene.h"
 
 // #include "CoordinateGridRenderer.h"
 // #include "MeshRenderer.h"
@@ -18,7 +18,27 @@ namespace SE::Core
 {
 
     using namespace SE::Graphics;
-    using namespace SE::Core::EntityComponentSystem::Components;
+    // using namespace SE::Core::EntityComponentSystem::Components;
+
+    enum class eNewLightType : uint8_t
+    {
+        DIRECTIONAL = 0,
+        SPOTLIGHT   = 1,
+        POINT_LIGHT = 2
+    };
+
+    struct sNewLightComponent
+    {
+        eNewLightType mType = eNewLightType::POINT_LIGHT;
+
+        bool       mIsOn      = true;
+        float      mIntensity = 100.0f;
+        math::vec3 mColor     = { 1.0f, 1.0f, 1.0f };
+        float      mCone      = 60.0f;
+
+        sNewLightComponent()                             = default;
+        sNewLightComponent( const sNewLightComponent & ) = default;
+    };
 
 #define MAX_NUM_LIGHTS 64
 
@@ -35,7 +55,7 @@ namespace SE::Core
         ~sDirectionalLightData() = default;
 
         sDirectionalLightData( const sDirectionalLightData & ) = default;
-        sDirectionalLightData( const sLightComponent &a_Spec, math::mat4 a_Transform );
+        sDirectionalLightData( const sNewLightComponent &a_Spec, math::mat4 a_Transform );
     };
 
     struct sPointLightData
@@ -50,9 +70,8 @@ namespace SE::Core
         ~sPointLightData() = default;
 
         sPointLightData( const sPointLightData & ) = default;
-        sPointLightData( const sLightComponent &a_Spec, math::mat4 a_Transform );
+        sPointLightData( const sNewLightComponent &a_Spec, math::mat4 a_Transform );
     };
-
 
     // struct WorldMatrices
     // {

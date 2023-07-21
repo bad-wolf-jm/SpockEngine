@@ -9,6 +9,7 @@
 #include "Graphics/API.h"
 
 #include "Renderer2/Common/ShaderMaterial.hpp"
+#include "SceneRenderData.h"
 
 namespace SE::Core
 {
@@ -130,14 +131,18 @@ namespace SE::Core
 
         EntityCollection mMaterialRegistry;
 
-        std::vector<Ref<ISampler2D>> mTextureData;
-        std::vector<sShaderMaterial> mMaterialData;
-
-        std::unordered_map<size_t, Ref<IGraphicsPipeline>> mGraphicsPipelines;
+        std::vector<Ref<ISampler2D>>       mTextureData;
+        std::vector<sShaderMaterial>       mMaterialData;
+        std::vector<sDirectionalLightData> mDirectionalLights;
+        std::vector<sPointLightData>       mPointLights;
 
       public:
-        Ref<IShaderProgram> CreateVertexShader( Material aMaterial );
-        Ref<IShaderProgram> CreateFragmentShader( Material aMaterial );
+        Ref<IShaderProgram>    CreateVertexShader( Material const &aMaterial );
+        Ref<IShaderProgram>    CreateFragmentShader( Material const &aMaterial );
+        Ref<IGraphicsPipeline> CreateGraphicsPipeline( Material const &aMaterial, Ref<IRenderContext> aRenderPass );
+
+        void                   SetLights( std::vector<sDirectionalLightData> const &aDirectionalLights );
+        void                   SetLights( std::vector<sPointLightData> const &aPointLights );
 
       private:
         template <typename _Ty>

@@ -19,6 +19,16 @@ namespace SE::Core
     {
     }
 
+    void NewMaterialSystem::SetLights( std::vector<sDirectionalLightData> const &aDirectionalLights )
+    {
+        mDirectionalLights = aDirectionalLights;
+    }
+
+    void NewMaterialSystem::SetLights( std::vector<sPointLightData> const &aPointLights )
+    {
+        mPointLights = aPointLights;
+    }
+
     Material NewMaterialSystem::CreateMaterial( std::string const &aName )
     {
         Material lNewMaterial = mMaterialRegistry.CreateEntity( aName );
@@ -116,7 +126,7 @@ namespace SE::Core
             return fmt::format( "{}_UNNAMED_{}", aPrefix, lMateriaName, GetMaterialHash( aMaterial ) );
     }
 
-    Ref<IShaderProgram> NewMaterialSystem::CreateVertexShader( Material aMaterial )
+    Ref<IShaderProgram> NewMaterialSystem::CreateVertexShader( Material const &aMaterial )
     {
         fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
 
@@ -138,7 +148,7 @@ namespace SE::Core
         return lShader;
     }
 
-    Ref<IShaderProgram> NewMaterialSystem::CreateFragmentShader( Material aMaterial )
+    Ref<IShaderProgram> NewMaterialSystem::CreateFragmentShader( Material const &aMaterial )
     {
         fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
 
@@ -161,6 +171,42 @@ namespace SE::Core
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\MainFragmentShader.hpp" );
 
         return lShader;
+    }
+
+    Ref<IGraphicsPipeline> NewMaterialSystem::CreateGraphicsPipeline( Material const &aMaterial, Ref<IRenderContext> aRenderPass )
+    {
+        auto lVertexShader   = CreateVertexShader( aMaterial );
+        auto lFragmentShader = CreateFragmentShader( aMaterial );
+        auto lNewPipeline    = SE::Graphics::CreateGraphicsPipeline( mGraphicContext, aRenderPass, ePrimitiveTopology::TRIANGLES );
+
+        lVertexShader->Compile();
+        lFragmentShader->Compile();
+        lNewPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
+        lNewPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, lFragmentShader, "main" );
+
+        auto lMaterialInfo = aMaterial.Get<sMaterialInfo>();
+
+        lNewPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
+
+        lNewPipeline->AddInput( "Position", eBufferDataType::VEC3, 0, 0 );
+
+        if( lMaterialInfo.mRequiresNormals )
+            lNewPipeline->AddInput( "Normal", eBufferDataType::VEC3, 0, 1 );
+
+        if( lMaterialInfo.mRequiresUV0 && !lMaterialInfo.mRequiresUV1 )
+            lNewPipeline->AddInput( "UV", eBufferDataType::VEC2, 0, 2 );
+        else if( lMaterialInfo.mRequiresUV1 )
+            lNewPipeline->AddInput( "UV", eBufferDataType::VEC4, 0, 2 );
+
+        if( lMaterialInfo.mIsTwoSided )
+            lNewPipeline->SetCulling( eFaceCulling::NONE );
+        else
+            lNewPipeline->SetCulling( eFaceCulling::BACK );
+
+        lNewPipeline->SetLineWidth( lMaterialInfo.mLineWidth );
+
+        lNewPipeline->Build();
+        return lNewPipeline;
     }
 
     int32_t NewMaterialSystem::AppendTextureData( Ref<ISampler2D> aTexture )

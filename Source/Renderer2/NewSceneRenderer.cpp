@@ -11,6 +11,8 @@
 #include "Core/Profiling/BlockTimer.h"
 #include "Core/Resource.h"
 
+#include "Scene/Scene.h"
+
 // #include "Scene/Renderer/DeferredLightingRenderer.h"
 // #include "Scene/Renderer/MeshRenderer.h"
 // #include "Scene/Renderer/ParticleSystemRenderer.h"
@@ -348,23 +350,26 @@ namespace SE::Core
 
         BaseSceneRenderer::Update( aWorld );
 
-        mDirectionalLights.clear();
-        mPointLights.clear();
+        std::vector<sDirectionalLightData> lDirectionalLights;
+        std::vector<sPointLightData>       lPointLights;
 
         // clang-format off
-        mScene->ForEach<sLightComponent>( [&]( auto aEntity, auto &aComponent ) 
+        mScene->ForEach<sNewLightComponent>( [&]( auto aEntity, auto &aComponent ) 
         { 
             switch( aComponent.mType )
             {
-            case eLightType::DIRECTIONAL:
-                mDirectionalLights.emplace_back(  aComponent, mScene->GetFinalTransformMatrix( aEntity ) );
+            case eNewLightType::DIRECTIONAL:
+                lDirectionalLights.emplace_back(  aComponent, mScene->GetFinalTransformMatrix( aEntity ) );
                 break;
-            case eLightType::POINT_LIGHT:
-                mPointLights.emplace_back( aComponent, mScene->GetFinalTransformMatrix( aEntity ) );
+            case eNewLightType::POINT_LIGHT:
+                lPointLights.emplace_back( aComponent, mScene->GetFinalTransformMatrix( aEntity ) );
                 break;
             }
         } );
         // clang-format on
+
+        mScene->GetNewMaterialSystem()->SetLights( lDirectionalLights );
+        mScene->GetNewMaterialSystem()->SetLights( lPointLights );
 
         // mShadowSceneRenderer->Update( aWorld );
         // mView.PointLightCount = mPointLights.size();

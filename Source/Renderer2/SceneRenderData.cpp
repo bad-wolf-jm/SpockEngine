@@ -18,10 +18,10 @@ namespace SE::Core
 {
 
     using namespace math;
-    using namespace SE::Core::EntityComponentSystem::Components;
+    // using namespace SE::Core::EntityComponentSystem::Components;
     using namespace SE::Core::Primitives;
 
-    sDirectionalLightData::sDirectionalLightData( const sLightComponent &aSpec, mat4 aTransform )
+    sDirectionalLightData::sDirectionalLightData( const sNewLightComponent &aSpec, mat4 aTransform )
     {
         mIsOn     = aSpec.mIsOn;
         Direction = mat3( aTransform ) * vec3{ 0.0f, 0.0f, 1.0f };
@@ -39,7 +39,7 @@ namespace SE::Core
         Transform        = lClip * lProjection * lView;
     }
 
-    sPointLightData::sPointLightData( const sLightComponent &aSpec, mat4 aTransform )
+    sPointLightData::sPointLightData( const sNewLightComponent &aSpec, mat4 aTransform )
     {
         mIsOn         = aSpec.mIsOn;
         WorldPosition = vec3( aTransform[3] );

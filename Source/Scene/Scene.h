@@ -117,6 +117,10 @@ namespace SE::Core
         {
             return mMaterialSystem;
         }
+        Ref<NewMaterialSystem> GetNewMaterialSystem()
+        {
+            return mNewMaterialSystem;
+        }
 
         void ClearScene();
 

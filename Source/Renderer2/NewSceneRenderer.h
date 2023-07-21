@@ -3,7 +3,7 @@
 
 #include "Graphics/API.h"
 
-#include "Scene/Components.h"
+// #include "Scene/Components.h"
 // #include "Scene/Scene.h"
 
 #include "ASceneRenderer.h"
@@ -93,8 +93,8 @@ namespace SE::Core
         // Ref<ParticleSystemRenderer> GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification );
         // Ref<ParticleSystemRenderer> GetRenderPipeline( sParticleRenderData &aPipelineSpecification );
         // Ref<ParticleSystemRenderer> GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification );
-        std::vector<sDirectionalLightData> mDirectionalLights = {};
-        std::vector<sPointLightData>       mPointLights       = {};
+        // std::vector<sDirectionalLightData> mDirectionalLights = {};
+        // std::vector<sPointLightData>       mPointLights       = {};
 
       protected:
         Ref<IRenderTarget>  mGeometryRenderTarget = nullptr;
