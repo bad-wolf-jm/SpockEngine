@@ -28,6 +28,7 @@
 #include "Core/Profiling/BlockTimer.h"
 
 #include "MaterialSystem/MaterialSystem.h"
+#include "Renderer2/NewMaterialSystem.h"
 
 namespace SE::Core::EntityComponentSystem::Components
 {
@@ -242,6 +243,14 @@ namespace SE::Core::EntityComponentSystem::Components
 
         sMaterialComponent()                             = default;
         sMaterialComponent( const sMaterialComponent & ) = default;
+    };
+
+    struct sNewMaterialComponent
+    {
+        Material mMaterialID;
+
+        sNewMaterialComponent()                             = default;
+        sNewMaterialComponent( const sNewMaterialComponent & ) = default;
     };
 
     struct sMaterialShaderComponent

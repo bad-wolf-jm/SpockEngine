@@ -350,6 +350,9 @@ namespace SE::Core
 
         BaseSceneRenderer::Update( aWorld );
 
+        if( mScene == nullptr )
+            return;
+
         std::vector<sDirectionalLightData> lDirectionalLights;
         std::vector<sPointLightData>       lPointLights;
 

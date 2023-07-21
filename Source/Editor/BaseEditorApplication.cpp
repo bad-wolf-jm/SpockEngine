@@ -21,6 +21,8 @@
 
 #include "DotNet/Runtime.h"
 
+#include "Scene/Importer/ObjImporter.h"
+
 namespace SE::Editor
 {
 
@@ -39,7 +41,7 @@ namespace SE::Editor
         mEditorWindow.ActiveWorld->Update( ts );
         mEditorWindow.UpdateFramerate( ts );
         mDeferredRenderer->Update( mEditorWindow.ActiveWorld );
-        mNewSceneRenderer->Update( nullptr );
+        mNewSceneRenderer->Update( mEditorWindow.ActiveWorld );
 
         if( mApplicationInstance )
         {
@@ -117,12 +119,14 @@ namespace SE::Editor
         mDeferredRenderer =
             New<DeferredRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
 
+        // mTestWorld  = New<Scene>( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
         mNewSceneRenderer =
             New<NewSceneRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 4 );
 
         RebuildOutputFramebuffer();
 
         mDeferredRenderer->Update( mWorld );
+        mNewSceneRenderer->Update( mTestWorld );
 
         mEditorWindow.World       = mWorld;
         mEditorWindow.ActiveWorld = mWorld;

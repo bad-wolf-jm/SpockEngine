@@ -51,7 +51,7 @@ namespace SE::Editor
         ~BaseEditorApplication() = default;
 
         void Init();
-        void Init(std::string aAppClass, fs::path aConfigurationPath);
+        void Init( std::string aAppClass, fs::path aConfigurationPath );
 
         void RenderScene();
         void Update( Timestep ts );
@@ -61,15 +61,15 @@ namespace SE::Editor
         void RebuildOutputFramebuffer();
 
       protected:
-
-        uint32_t   mNewViewportHeight        = 1;
-        uint32_t   mNewViewportWidth         = 1;
-        bool       mShouldRebuildNewViewport = true;
+        uint32_t mNewViewportHeight        = 1;
+        uint32_t mNewViewportWidth         = 1;
+        bool     mShouldRebuildNewViewport = true;
 
         uint32_t   mViewportHeight        = 1;
         uint32_t   mViewportWidth         = 1;
         bool       mShouldRebuildViewport = true;
         Ref<Scene> mWorld                 = nullptr;
+        Ref<Scene> mTestWorld             = nullptr;
 
         Ref<DeferredRenderer>     mDeferredRenderer   = nullptr;
         Ref<NewSceneRenderer>     mNewSceneRenderer   = nullptr;

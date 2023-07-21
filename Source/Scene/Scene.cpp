@@ -44,7 +44,8 @@ namespace SE::Core
     Scene::Scene( Ref<IGraphicContext> aGraphicContext, Ref<SE::Core::UIContext> aUI )
         : mGraphicContext{ aGraphicContext }
     {
-        mMaterialSystem = New<MaterialSystem>( mGraphicContext );
+        mMaterialSystem    = New<MaterialSystem>( mGraphicContext );
+        mNewMaterialSystem = New<NewMaterialSystem>( mGraphicContext );
 
         mEditorView = Translate( mat4( 1.0f ), -vec3( 0.0f, 1.0f, 7.5f ) );
 
@@ -521,6 +522,7 @@ namespace SE::Core
             auto &[lMaterialID, lEntities] = aElement;
 
             auto &lNewMaterial = mMaterialSystem->CreateMaterial( lScenarioRoot / lMaterialID );
+            auto &lNewMaterial1 = mNewMaterialSystem->CreateMaterial( lScenarioRoot / lMaterialID );
 
             for( auto &lEntity : lEntities )
                 lReadContext.mEntities[lEntity].AddOrReplace<sMaterialComponent>( lNewMaterial.mID );
@@ -1287,7 +1289,7 @@ namespace SE::Core
 
             if( aEntity.Has<sLightComponent>() )
                 WriteComponent( lOut, aEntity.Get<sLightComponent>() );
-                
+
             if( aEntity.Has<sUIComponent>() )
                 WriteComponent( lOut, aEntity.Get<sUIComponent>() );
         }

@@ -119,6 +119,7 @@ namespace SE::Core
         ~NewMaterialSystem() = default;
 
         Material CreateMaterial( std::string const &aName );
+        Material CreateMaterial( fs::path const &aMaterialPath );
         Material BeginMaterial( std::string const &aName );
         void     EndMaterial( Material const &aMaterial );
         size_t   GetMaterialHash( Material const &aMaterial );
@@ -141,8 +142,8 @@ namespace SE::Core
         Ref<IShaderProgram>    CreateFragmentShader( Material const &aMaterial );
         Ref<IGraphicsPipeline> CreateGraphicsPipeline( Material const &aMaterial, Ref<IRenderContext> aRenderPass );
 
-        void                   SetLights( std::vector<sDirectionalLightData> const &aDirectionalLights );
-        void                   SetLights( std::vector<sPointLightData> const &aPointLights );
+        void SetLights( std::vector<sDirectionalLightData> const &aDirectionalLights );
+        void SetLights( std::vector<sPointLightData> const &aPointLights );
 
       private:
         template <typename _Ty>

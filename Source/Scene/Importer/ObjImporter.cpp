@@ -82,7 +82,7 @@ namespace SE::Core
         bool        lReadOK      = tinyobj::LoadObj( &mAttributes, &lObjShapes, &lObjMaterials, &lErrorString, &lErrorString,
                                                      aObjFile.string().c_str(), mModelDir.string().c_str(), true );
         if( !lReadOK ) throw std::runtime_error( "Could not read OBJ model from " + aObjFile.string() + " : " + lErrorString );
-        if( lObjMaterials.empty() ) throw std::runtime_error( "Could not parse materials ..." );
+        // if( lObjMaterials.empty() ) throw std::runtime_error( "Could not parse materials ..." );
 
         for( uint32_t i = 0; i < mAttributes.vertices.size() / 3; i++ )
             mVertexData.push_back(
@@ -97,6 +97,8 @@ namespace SE::Core
 
         std::cout << "Done loading obj file - found " << lObjShapes.size() << " shapes with " << lObjMaterials.size() << " materials"
                   << std::endl;
+
+        if( lObjMaterials.empty() ) return;
 
         uint32_t lMaterialIndex = 0;
         for( auto const &lMaterial : lObjMaterials )

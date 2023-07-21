@@ -4,6 +4,9 @@
 #include "Core/Profiling/BlockTimer.h"
 #include "Core/Resource.h"
 
+#include "Scene/MaterialSystem/MaterialSystem.h"
+#include "Scene/Serialize/AssetFile.h"
+
 namespace SE::Core
 {
     struct sMaterialNotReady
@@ -12,6 +15,7 @@ namespace SE::Core
 
     struct sMaterialNeedsUpdate
     {
+        bool x = true;
     };
 
     NewMaterialSystem::NewMaterialSystem( Ref<IGraphicContext> aGraphicContext )
@@ -48,6 +52,7 @@ namespace SE::Core
     void NewMaterialSystem::EndMaterial( Material const &aMaterial )
     {
         aMaterial.Remove<sMaterialNotReady>();
+        aMaterial.Add<sMaterialNeedsUpdate>();
     }
 
     size_t NewMaterialSystem::GetMaterialHash( Material const &aMaterial )
@@ -222,7 +227,7 @@ namespace SE::Core
         mTextureData.clear();
 
         mMaterialRegistry.ForEach<sMaterialInfo>(
-            [&]( auto aEntity, auto const &aMaterialInfo )
+            [&]( auto aEntity, auto const &aMaterialInfo, auto const &_ )
             {
                 auto &lNew = mMaterialData.emplace_back();
 
@@ -271,4 +276,78 @@ namespace SE::Core
                 }
             } );
     }
+
+    Material NewMaterialSystem::CreateMaterial( fs::path const &aMaterialPath )
+    {
+        SE::Logging::Info( "NewMaterialSystem::CreateMaterial( {} )", aMaterialPath.string() );
+        BinaryAsset lBinaryDataFile( aMaterialPath );
+
+        uint32_t lTextureCount = lBinaryDataFile.CountAssets() - 1;
+
+        sMaterial lMaterialData;
+        lBinaryDataFile.Retrieve( 0, lMaterialData );
+
+        std::vector<Ref<ISampler2D>> lTextures{};
+        for( uint32_t i = 0; i < lTextureCount; i++ )
+        {
+            auto &[lTextureData, lTextureSampler] = lBinaryDataFile.Retrieve( i + 1 );
+
+            auto lNewInteropTexture = CreateTexture2D( mGraphicContext, lTextureData, 1, false, false, true );
+            auto lNewInteropSampler = CreateSampler2D( mGraphicContext, lNewInteropTexture, lTextureSampler.mSamplingSpec );
+
+            lTextures.push_back( lNewInteropSampler );
+        }
+
+        auto lNewMaterial = BeginMaterial( lMaterialData.mName );
+
+        auto &lMaterialInfo            = lNewMaterial.Get<sMaterialInfo>();
+        lMaterialInfo.mType            = eBlendMode::Opaque;
+        lMaterialInfo.mShadingModel    = eShadingModel::STANDARD;
+        lMaterialInfo.mLineWidth       = lMaterialData.mLineWidth;
+        lMaterialInfo.mIsTwoSided      = lMaterialData.mIsTwoSided;
+        lMaterialInfo.mRequiresNormals = true;
+        lMaterialInfo.mRequiresUV0     = true;
+        lMaterialInfo.mRequiresUV1     = false;
+
+        if( lMaterialData.mBaseColorTexture.mTextureID < std::numeric_limits<uint32_t>::max() && ( lTextureCount > 0 ) )
+        {
+            auto &lBaseColor    = lNewMaterial.Add<sBaseColorTexture>();
+            lBaseColor.mFactor  = lMaterialData.mBaseColorFactor;
+            lBaseColor.mTexture = lTextures[lMaterialData.mBaseColorTexture.mTextureID];
+        }
+
+        if( lMaterialData.mEmissiveTexture.mTextureID < std::numeric_limits<uint32_t>::max() && ( lTextureCount > 0 ) )
+        {
+            auto &lEmissive    = lNewMaterial.Add<sEmissiveTexture>();
+            lEmissive.mFactor  = lMaterialData.mEmissiveFactor;
+            lEmissive.mTexture = lTextures[lMaterialData.mEmissiveTexture.mTextureID];
+        }
+
+        if( lMaterialData.mMetalRoughTexture.mTextureID < std::numeric_limits<uint32_t>::max() && ( lTextureCount > 0 ) )
+        {
+            auto &lMetalRough            = lNewMaterial.Add<sMetalRoughTexture>();
+            lMetalRough.mMetallicFactor  = lMaterialData.mMetallicFactor;
+            lMetalRough.mRoughnessFactor = lMaterialData.mRoughnessFactor;
+            lMetalRough.mTexture         = lTextures[lMaterialData.mMetalRoughTexture.mTextureID];
+        }
+
+        if( lMaterialData.mOcclusionTexture.mTextureID < std::numeric_limits<uint32_t>::max() && ( lTextureCount > 0 ) )
+        {
+            auto &lOcclusion    = lNewMaterial.Add<sOcclusionTexture>();
+            lOcclusion.mFactor  = lMaterialData.mOcclusionStrength;
+            lOcclusion.mTexture = lTextures[lMaterialData.mOcclusionTexture.mTextureID];
+        }
+
+        if( lMaterialData.mNormalsTexture.mTextureID < std::numeric_limits<uint32_t>::max() && ( lTextureCount > 0 ) )
+        {
+            auto &lNormals    = lNewMaterial.Add<sNormalsTexture>();
+            lNormals.mFactor  = math::vec3( 1.0 );
+            lNormals.mTexture = lTextures[lMaterialData.mNormalsTexture.mTextureID];
+        }
+
+        EndMaterial( lNewMaterial );
+
+        return lNewMaterial;
+    }
+
 } // namespace SE::Core
