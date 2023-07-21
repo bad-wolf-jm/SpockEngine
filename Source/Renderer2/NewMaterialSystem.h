@@ -160,6 +160,8 @@ namespace SE::Core
 
         void        AddDefinitions( Ref<IShaderProgram> aShaderProgram, Material aMaterial );
         std::string CreateShaderName( Material aMaterial, const char *aPrefix );
+
+        void AppendMaterialData( Material aMaterial, sMaterialInfo const &aInfo );
     };
 
 } // namespace SE::Core

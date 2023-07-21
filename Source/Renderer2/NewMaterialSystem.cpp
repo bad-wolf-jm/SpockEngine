@@ -221,60 +221,66 @@ namespace SE::Core
         return mTextureData.size() - 1;
     }
 
+    void NewMaterialSystem::AppendMaterialData( Material aMaterial, sMaterialInfo const &aInfo )
+    {
+        auto &lNew = mMaterialData.emplace_back();
+
+        if( aMaterial.Has<sBaseColorTexture>() )
+        {
+            auto &lData = aMaterial.Get<sBaseColorTexture>();
+
+            lNew.mBaseColorFactor    = lData.mFactor;
+            lNew.mBaseColorUVChannel = lData.mUVChannel;
+            lNew.mBaseColorTextureID = AppendTextureData( lData.mTexture );
+        }
+
+        if( aMaterial.Has<sMetalRoughTexture>() )
+        {
+            auto &lData = aMaterial.Get<sMetalRoughTexture>();
+
+            lNew.mMetallicFactor     = lData.mMetallicFactor;
+            lNew.mRoughnessFactor    = lData.mRoughnessFactor;
+            lNew.mMetalnessUVChannel = lData.mUVChannel;
+            lNew.mMetalnessTextureID = AppendTextureData( lData.mTexture );
+        }
+
+        if( aMaterial.Has<sNormalsTexture>() )
+        {
+            auto &lData = aMaterial.Get<sNormalsTexture>();
+
+            lNew.mNormalUVChannel = lData.mUVChannel;
+            lNew.mNormalTextureID = AppendTextureData( lData.mTexture );
+        }
+
+        if( aMaterial.Has<sOcclusionTexture>() )
+        {
+            auto &lData = aMaterial.Get<sOcclusionTexture>();
+
+            lNew.mOcclusionStrength  = lData.mFactor;
+            lNew.mOcclusionUVChannel = lData.mUVChannel;
+            lNew.mOcclusionTextureID = AppendTextureData( lData.mTexture );
+        }
+        if( aMaterial.Has<sEmissiveTexture>() )
+        {
+            auto &lData = aMaterial.Get<sEmissiveTexture>();
+
+            lNew.mEmissiveFactor    = lData.mFactor;
+            lNew.mEmissiveUVChannel = lData.mUVChannel;
+            lNew.mEmissiveTextureID = AppendTextureData( lData.mTexture );
+        }
+    }
+
     void NewMaterialSystem::UpdateMaterialData()
     {
         mMaterialData.clear();
         mTextureData.clear();
 
-        mMaterialRegistry.ForEach<sMaterialInfo>(
-            [&]( auto aEntity, auto const &aMaterialInfo, auto const &_ )
-            {
-                auto &lNew = mMaterialData.emplace_back();
-
-                if( aEntity.Has<sBaseColorTexture>() )
-                {
-                    auto &lData = aEntity.Get<sBaseColorTexture>();
-
-                    lNew.mBaseColorFactor    = lData.mFactor;
-                    lNew.mBaseColorUVChannel = lData.mUVChannel;
-                    lNew.mBaseColorTextureID = AppendTextureData( lData.mTexture );
-                }
-
-                if( aEntity.Has<sMetalRoughTexture>() )
-                {
-                    auto &lData = aEntity.Get<sMetalRoughTexture>();
-
-                    lNew.mMetallicFactor     = lData.mMetallicFactor;
-                    lNew.mRoughnessFactor    = lData.mRoughnessFactor;
-                    lNew.mMetalnessUVChannel = lData.mUVChannel;
-                    lNew.mMetalnessTextureID = AppendTextureData( lData.mTexture );
-                }
-
-                if( aEntity.Has<sNormalsTexture>() )
-                {
-                    auto &lData = aEntity.Get<sNormalsTexture>();
-
-                    lNew.mNormalUVChannel = lData.mUVChannel;
-                    lNew.mNormalTextureID = AppendTextureData( lData.mTexture );
-                }
-
-                if( aEntity.Has<sOcclusionTexture>() )
-                {
-                    auto &lData = aEntity.Get<sOcclusionTexture>();
-
-                    lNew.mOcclusionStrength  = lData.mFactor;
-                    lNew.mOcclusionUVChannel = lData.mUVChannel;
-                    lNew.mOcclusionTextureID = AppendTextureData( lData.mTexture );
-                }
-                if( aEntity.Has<sEmissiveTexture>() )
-                {
-                    auto &lData = aEntity.Get<sEmissiveTexture>();
-
-                    lNew.mEmissiveFactor    = lData.mFactor;
-                    lNew.mEmissiveUVChannel = lData.mUVChannel;
-                    lNew.mEmissiveTextureID = AppendTextureData( lData.mTexture );
-                }
-            } );
+        // clang-format off
+        mMaterialRegistry.ForEach<sMaterialInfo>( [&]( auto aEntity, auto const &aMaterialInfo )
+        { 
+            AppendMaterialData( aEntity, aMaterialInfo ); 
+        });
+        // clang-format on
     }
 
     Material NewMaterialSystem::CreateMaterial( fs::path const &aMaterialPath )
