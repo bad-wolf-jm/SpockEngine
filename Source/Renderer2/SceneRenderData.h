@@ -22,7 +22,7 @@ namespace SE::Core
 
 #define MAX_NUM_LIGHTS 64
 
-    struct DirectionalLightData
+    struct sDirectionalLightData
     {
         alignas( 16 ) math::vec3 Direction = math::vec3( 0.0f );
         alignas( 16 ) math::vec3 Color     = math::vec3( 0.0f );
@@ -31,14 +31,14 @@ namespace SE::Core
 
         uint32_t mIsOn = 1u;
 
-        DirectionalLightData()  = default;
-        ~DirectionalLightData() = default;
+        sDirectionalLightData()  = default;
+        ~sDirectionalLightData() = default;
 
-        DirectionalLightData( const DirectionalLightData & ) = default;
-        DirectionalLightData( const sLightComponent &a_Spec, math::mat4 a_Transform );
+        sDirectionalLightData( const sDirectionalLightData & ) = default;
+        sDirectionalLightData( const sLightComponent &a_Spec, math::mat4 a_Transform );
     };
 
-    struct PointLightData
+    struct sPointLightData
     {
         alignas( 16 ) math::vec3 WorldPosition = math::vec3( 0.0f );
         alignas( 16 ) math::vec3 Color         = math::vec3( 0.0f );
@@ -46,126 +46,109 @@ namespace SE::Core
 
         uint32_t mIsOn = 1u;
 
-        PointLightData()  = default;
-        ~PointLightData() = default;
+        sPointLightData()  = default;
+        ~sPointLightData() = default;
 
-        PointLightData( const PointLightData & ) = default;
-        PointLightData( const sLightComponent &a_Spec, math::mat4 a_Transform );
+        sPointLightData( const sPointLightData & ) = default;
+        sPointLightData( const sLightComponent &a_Spec, math::mat4 a_Transform );
     };
 
-    struct SpotlightData
-    {
-        alignas( 16 ) math::vec3 WorldPosition   = math::vec3( 0.0f );
-        alignas( 16 ) math::vec3 LookAtDirection = math::vec3( 0.0f );
-        alignas( 16 ) math::vec3 Color           = math::vec3( 0.0f );
-        alignas( 4 ) float Intensity             = 0.0f;
-        alignas( 4 ) float Cone                  = 0.0f;
-        alignas( 16 ) math::mat4 Transform       = math::mat4( 0.0f );
 
-        uint32_t mIsOn = 1u;
+    // struct WorldMatrices
+    // {
+    //     alignas( 16 ) math::mat4 Projection;
+    //     alignas( 16 ) math::mat4 ModelFraming;
+    //     alignas( 16 ) math::mat4 View;
+    //     alignas( 16 ) math::vec3 CameraPosition;
 
-        SpotlightData()  = default;
-        ~SpotlightData() = default;
+    //     alignas( 4 ) int DirectionalLightCount = 0;
+    //     alignas( 16 ) DirectionalLightData DirectionalLights[MAX_NUM_LIGHTS];
 
-        SpotlightData( const SpotlightData & ) = default;
-        SpotlightData( const sLightComponent &a_Spec, math::mat4 a_Transform );
-    };
+    //     alignas( 4 ) int SpotlightCount = 0;
+    //     alignas( 16 ) SpotlightData Spotlights[MAX_NUM_LIGHTS];
 
-    struct WorldMatrices
-    {
-        alignas( 16 ) math::mat4 Projection;
-        alignas( 16 ) math::mat4 ModelFraming;
-        alignas( 16 ) math::mat4 View;
-        alignas( 16 ) math::vec3 CameraPosition;
+    //     alignas( 4 ) int PointLightCount = 0;
+    //     alignas( 16 ) PointLightData PointLights[MAX_NUM_LIGHTS];
 
-        alignas( 4 ) int DirectionalLightCount = 0;
-        alignas( 16 ) DirectionalLightData DirectionalLights[MAX_NUM_LIGHTS];
+    //     WorldMatrices()  = default;
+    //     ~WorldMatrices() = default;
 
-        alignas( 4 ) int SpotlightCount = 0;
-        alignas( 16 ) SpotlightData Spotlights[MAX_NUM_LIGHTS];
+    //     WorldMatrices( const WorldMatrices & ) = default;
+    // };
 
-        alignas( 4 ) int PointLightCount = 0;
-        alignas( 16 ) PointLightData PointLights[MAX_NUM_LIGHTS];
+    // struct ShadowMatrices
+    // {
+    //     math::mat4 mMVP;
 
-        WorldMatrices()  = default;
-        ~WorldMatrices() = default;
+    //     ShadowMatrices()  = default;
+    //     ~ShadowMatrices() = default;
 
-        WorldMatrices( const WorldMatrices & ) = default;
-    };
+    //     ShadowMatrices( const ShadowMatrices & ) = default;
+    // };
 
-    struct ShadowMatrices
-    {
-        math::mat4 mMVP;
+    // struct OmniShadowMatrices
+    // {
+    //     math::mat4 mMVP;
+    //     math::vec4 mLightPos;
 
-        ShadowMatrices()  = default;
-        ~ShadowMatrices() = default;
+    //     OmniShadowMatrices()  = default;
+    //     ~OmniShadowMatrices() = default;
 
-        ShadowMatrices( const ShadowMatrices & ) = default;
-    };
+    //     OmniShadowMatrices( const OmniShadowMatrices & ) = default;
+    // };
 
-    struct OmniShadowMatrices
-    {
-        math::mat4 mMVP;
-        math::vec4 mLightPos;
+    // struct CameraSettings
+    // {
+    //     float Exposure                             = 4.5f;
+    //     float Gamma                                = 2.2f;
+    //     float AmbientLightIntensity                = 0.0001;
+    //     alignas( 16 ) math::vec4 AmbientLightColor = math::vec4{ 1.0f, 1.0f, 1.0f, 0.0f };
+    //     float DebugViewInputs                      = 0.0f;
+    //     float DebugViewEquation                    = 0.0f;
+    //     float RenderGrayscale                      = 0.0f;
+    // };
 
-        OmniShadowMatrices()  = default;
-        ~OmniShadowMatrices() = default;
+    // struct sLightGizmo
+    // {
+    //     eLightType mType;
+    //     uint64_t   mLightDataIndex = 0;
+    //     math::mat4 mMatrix{};
 
-        OmniShadowMatrices( const OmniShadowMatrices & ) = default;
-    };
+    //     sLightGizmo()  = default;
+    //     ~sLightGizmo() = default;
 
-    struct CameraSettings
-    {
-        float Exposure                             = 4.5f;
-        float Gamma                                = 2.2f;
-        float AmbientLightIntensity                = 0.0001;
-        alignas( 16 ) math::vec4 AmbientLightColor = math::vec4{ 1.0f, 1.0f, 1.0f, 0.0f };
-        float DebugViewInputs                      = 0.0f;
-        float DebugViewEquation                    = 0.0f;
-        float RenderGrayscale                      = 0.0f;
-    };
+    //     sLightGizmo( eLightType aType, uint64_t aLightDataIndex, math::mat4 aMatrix );
+    // };
 
-    struct sLightGizmo
-    {
-        eLightType mType;
-        uint64_t   mLightDataIndex = 0;
-        math::mat4 mMatrix{};
+    // struct sMeshRenderData
+    // {
+    //     // Shader data
+    //     bool     mOpaque     = false;
+    //     bool     mIsTwoSided = false;
+    //     float    mLineWidth  = 1.0f;
+    //     uint32_t mMaterialID = 0;
 
-        sLightGizmo()  = default;
-        ~sLightGizmo() = default;
+    //     // Buffer data
+    //     Ref<IGraphicBuffer> mVertexBuffer = nullptr;
+    //     Ref<IGraphicBuffer> mIndexBuffer  = nullptr;
+    //     uint32_t            mVertexOffset = 0;
+    //     uint32_t            mVertexCount  = 0;
+    //     uint32_t            mIndexOffset  = 0;
+    //     uint32_t            mIndexCount   = 0;
 
-        sLightGizmo( eLightType aType, uint64_t aLightDataIndex, math::mat4 aMatrix );
-    };
+    //     sMeshRenderData( sStaticMeshComponent const &aMesh, sMaterialComponent const &aMaterialID,
+    //                      sMaterialShaderComponent const &aShader );
+    // };
 
-    struct sMeshRenderData
-    {
-        // Shader data
-        bool     mOpaque     = false;
-        bool     mIsTwoSided = false;
-        float    mLineWidth  = 1.0f;
-        uint32_t mMaterialID = 0;
+    // struct sParticleRenderData
+    // {
+    //     math::mat4          mModel         = math::mat4( 1.0f );
+    //     uint32_t            mParticleCount = 0;
+    //     float               mLineWidth     = 1.0f;
+    //     float               mParticleSize  = 1.0f;
+    //     Ref<IGraphicBuffer> mParticles     = nullptr;
 
-        // Buffer data
-        Ref<IGraphicBuffer> mVertexBuffer = nullptr;
-        Ref<IGraphicBuffer> mIndexBuffer  = nullptr;
-        uint32_t            mVertexOffset = 0;
-        uint32_t            mVertexCount  = 0;
-        uint32_t            mIndexOffset  = 0;
-        uint32_t            mIndexCount   = 0;
-
-        sMeshRenderData( sStaticMeshComponent const &aMesh, sMaterialComponent const &aMaterialID,
-                         sMaterialShaderComponent const &aShader );
-    };
-
-    struct sParticleRenderData
-    {
-        math::mat4          mModel         = math::mat4( 1.0f );
-        uint32_t            mParticleCount = 0;
-        float               mLineWidth     = 1.0f;
-        float               mParticleSize  = 1.0f;
-        Ref<IGraphicBuffer> mParticles     = nullptr;
-
-        sParticleRenderData( sParticleSystemComponent const &aParticles, sParticleShaderComponent const &aShader );
-    };
+    //     sParticleRenderData( sParticleSystemComponent const &aParticles, sParticleShaderComponent const &aShader );
+    // };
 
 } // namespace SE::Core

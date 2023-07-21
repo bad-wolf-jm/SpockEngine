@@ -7,7 +7,7 @@
 // #include "Scene/Scene.h"
 
 #include "ASceneRenderer.h"
-// #include "Renderer/SceneRenderData.h"
+#include "SceneRenderData.h"
 
 // #include "Scene/Renderer/EffectProcessor.h"
 // #include "Scene/Renderer/ShadowSceneRenderer.h"
@@ -93,6 +93,8 @@ namespace SE::Core
         // Ref<ParticleSystemRenderer> GetRenderPipeline( sParticleShaderComponent &aPipelineSpecification );
         // Ref<ParticleSystemRenderer> GetRenderPipeline( sParticleRenderData &aPipelineSpecification );
         // Ref<ParticleSystemRenderer> GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification );
+        std::vector<sDirectionalLightData> mDirectionalLights = {};
+        std::vector<sPointLightData>       mPointLights       = {};
 
       protected:
         Ref<IRenderTarget>  mGeometryRenderTarget = nullptr;
@@ -127,6 +129,9 @@ namespace SE::Core
         void CreateRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight );
         void CreateMSAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight );
         void CreateFXAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight );
+
+        // private:        // void AddLight( mat4 const &aTransform, sLightComponent &aLightComponent );
+
     };
 
 } // namespace SE::Core

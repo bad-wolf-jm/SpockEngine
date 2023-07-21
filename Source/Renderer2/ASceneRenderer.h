@@ -22,13 +22,9 @@ namespace SE::Core
         ~BaseSceneRenderer() = default;
 
         void SetProjection( mat4 aProjectionMatrix );
-
         void SetView( mat4 aViewMatrix );
-
         void SetGamma( float aGamma );
-
         void SetExposure( float aExposure );
-
         void SetAmbientLighting( vec4 aAmbientLight );
 
         virtual void Update( Ref<Scene> aWorld );

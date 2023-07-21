@@ -8,8 +8,8 @@
 // #include "Scene/VertexData.h"
 
 #include "Core/Logging.h"
-#include "Core/Resource.h"
 #include "Core/Profiling/BlockTimer.h"
+#include "Core/Resource.h"
 
 // #include "Scene/Renderer/DeferredLightingRenderer.h"
 // #include "Scene/Renderer/MeshRenderer.h"
@@ -59,11 +59,9 @@ namespace SE::Core
     // static Ref<IShaderProgram> MRTVertexShader( Ref<IGraphicContext> gc )
     // {
     //     fs::path lShaderPath   = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
-    //     auto     lVertexShader = CreateShaderProgram( gc, eShaderStageTypeFlags::VERTEX, 450, "geometry_vertex_shader", lShaderPath );
-    //     lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data );
-    //     lVertexShader->AddCode( SE::Private::Shaders::gPBRMeshVertexShader_data );
-    //     lVertexShader->Compile();
-    //     return lVertexShader;
+    //     auto     lVertexShader = CreateShaderProgram( gc, eShaderStageTypeFlags::VERTEX, 450, "geometry_vertex_shader", lShaderPath
+    //     ); lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data ); lVertexShader->AddCode(
+    //     SE::Private::Shaders::gPBRMeshVertexShader_data ); lVertexShader->Compile(); return lVertexShader;
     // }
 
     // static Ref<IShaderProgram> MRTFragmentShader( Ref<IGraphicContext> gc )
@@ -222,7 +220,8 @@ namespace SE::Core
         // {
         //     fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
         //     auto     lVertexShader =
-        //         CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath );
+        //         CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath
+        //         );
         //     lVertexShader->AddCode( "layout( location = 0 ) in vec2 inUV;\n" );
         //     lVertexShader->AddCode( "layout( location = 1 ) in vec4 inConsoleUV;\n" );
         //     lVertexShader->AddCode( "layout( set = 0, binding = 0 ) uniform sampler2D sImage;\n" );
@@ -247,7 +246,8 @@ namespace SE::Core
         // {
         //     fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
         //     auto     lVertexShader =
-        //         CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath );
+        //         CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath
+        //         );
         //     lVertexShader->AddCode( SE::Private::Shaders::gFXAAVertexShader_data );
         //     lVertexShader->Compile();
         //     // mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
@@ -344,7 +344,28 @@ namespace SE::Core
 
     void NewSceneRenderer::Update( Ref<Scene> aWorld )
     {
+        SE_PROFILE_FUNCTION();
+
         BaseSceneRenderer::Update( aWorld );
+
+        mDirectionalLights.clear();
+        mPointLights.clear();
+
+        // clang-format off
+        mScene->ForEach<sLightComponent>( [&]( auto aEntity, auto &aComponent ) 
+        { 
+            switch( aComponent.mType )
+            {
+            case eLightType::DIRECTIONAL:
+                mDirectionalLights.emplace_back(  aComponent, mScene->GetFinalTransformMatrix( aEntity ) );
+                break;
+            case eLightType::POINT_LIGHT:
+                mPointLights.emplace_back( aComponent, mScene->GetFinalTransformMatrix( aEntity ) );
+                break;
+            }
+        } );
+        // clang-format on
+
         // mShadowSceneRenderer->Update( aWorld );
         // mView.PointLightCount = mPointLights.size();
         // for( uint32_t i = 0; i < mView.PointLightCount; i++ ) mView.PointLights[i] = mPointLights[i];
@@ -369,7 +390,8 @@ namespace SE::Core
     {
         SE_PROFILE_FUNCTION();
 
-        if( !mScene ) return;
+        if( !mScene )
+            return;
 
         // mScene->GetMaterialSystem()->UpdateDescriptors();
         // mShadowSceneRenderer->Render();

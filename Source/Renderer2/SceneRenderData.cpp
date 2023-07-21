@@ -21,7 +21,7 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem::Components;
     using namespace SE::Core::Primitives;
 
-    DirectionalLightData::DirectionalLightData( const sLightComponent &aSpec, mat4 aTransform )
+    sDirectionalLightData::sDirectionalLightData( const sLightComponent &aSpec, mat4 aTransform )
     {
         mIsOn     = aSpec.mIsOn;
         Direction = mat3( aTransform ) * vec3{ 0.0f, 0.0f, 1.0f };
@@ -39,7 +39,7 @@ namespace SE::Core
         Transform        = lClip * lProjection * lView;
     }
 
-    PointLightData::PointLightData( const sLightComponent &aSpec, mat4 aTransform )
+    sPointLightData::sPointLightData( const sLightComponent &aSpec, mat4 aTransform )
     {
         mIsOn         = aSpec.mIsOn;
         WorldPosition = vec3( aTransform[3] );
@@ -47,55 +47,52 @@ namespace SE::Core
         Intensity     = aSpec.mIntensity;
     }
 
-    SpotlightData::SpotlightData( const sLightComponent &aSpec, mat4 aTransform )
-    {
-        mIsOn           = aSpec.mIsOn;
-        WorldPosition   = vec3( aTransform[3] );
-        LookAtDirection = mat3( aTransform ) * vec3{ 0.0f, 0.0f, 1.0f };
-        Color           = aSpec.mColor;
-        Intensity       = aSpec.mIntensity;
-        Cone            = math::cos( radians( aSpec.mCone * 0.5f) );
+    // SpotlightData::SpotlightData( const sLightComponent &aSpec, mat4 aTransform )
+    // {
+    //     mIsOn           = aSpec.mIsOn;
+    //     WorldPosition   = vec3( aTransform[3] );
+    //     LookAtDirection = mat3( aTransform ) * vec3{ 0.0f, 0.0f, 1.0f };
+    //     Color           = aSpec.mColor;
+    //     Intensity       = aSpec.mIntensity;
+    //     Cone            = math::cos( radians( aSpec.mCone * 0.5f) );
+    //     // clang-format off
+    //     const float aEntries[] = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f };
+    //     math::mat4  lClip = math::MakeMat4( aEntries );
+    //     // clang-format on
+    //     math::mat4 lProjection = math::Perspective( math::radians( aSpec.mCone ), 1.0f, .5001f, 100.0f );
+    //     math::mat4 lView       = math::LookAt( WorldPosition, WorldPosition + LookAtDirection, math::vec3{ 0.0f, 1.0f, 0.0f } );
+    //     Transform = lClip * lProjection * lView;
+    // }
 
-        // clang-format off
-        const float aEntries[] = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f };
-        math::mat4  lClip = math::MakeMat4( aEntries );
-        // clang-format on
+    // sLightGizmo::sLightGizmo( eLightType aType, uint64_t aLightDataIndex, mat4 aMatrix )
+    //     : mType{ aType }
+    //     , mLightDataIndex{ aLightDataIndex }
+    //     , mMatrix{ aMatrix }
+    // {
+    // }
 
-        math::mat4 lProjection = math::Perspective( math::radians( aSpec.mCone ), 1.0f, .5001f, 100.0f );
-        math::mat4 lView       = math::LookAt( WorldPosition, WorldPosition + LookAtDirection, math::vec3{ 0.0f, 1.0f, 0.0f } );
+    // sMeshRenderData::sMeshRenderData( sStaticMeshComponent const &aMesh, sMaterialComponent const &aMaterialID,
+    //                                   sMaterialShaderComponent const &aShader )
+    //     : mOpaque{ ( aShader.Type == eMaterialType::Opaque ) }
+    //     , mIsTwoSided{ aShader.IsTwoSided }
+    //     , mLineWidth{ aShader.LineWidth }
+    //     , mMaterialID{ aMaterialID.mMaterialID }
+    //     , mIndexBuffer{ aMesh.mIndexBuffer }
+    //     , mVertexBuffer{ aMesh.mTransformedBuffer }
+    //     , mVertexOffset{ aMesh.mVertexOffset }
+    //     , mVertexCount{ aMesh.mVertexCount }
+    //     , mIndexOffset{ aMesh.mIndexOffset }
+    //     , mIndexCount{ aMesh.mIndexCount }
+    // {
+    // }
 
-        Transform = lClip * lProjection * lView;
-    }
+    // sParticleRenderData::sParticleRenderData( sParticleSystemComponent const &aParticles, sParticleShaderComponent const &aShader )
+    //     : mModel{ mat4( 1.0f ) }
+    //     , mParticleCount{ aParticles.ParticleCount }
+    //     , mLineWidth{ aShader.LineWidth }
+    //     , mParticleSize{ aParticles.ParticleSize }
+    //     , mParticles{ aParticles.Particles }
 
-    sLightGizmo::sLightGizmo( eLightType aType, uint64_t aLightDataIndex, mat4 aMatrix )
-        : mType{ aType }
-        , mLightDataIndex{ aLightDataIndex }
-        , mMatrix{ aMatrix }
-    {
-    }
-
-    sMeshRenderData::sMeshRenderData( sStaticMeshComponent const &aMesh, sMaterialComponent const &aMaterialID,
-                                      sMaterialShaderComponent const &aShader )
-        : mOpaque{ ( aShader.Type == eMaterialType::Opaque ) }
-        , mIsTwoSided{ aShader.IsTwoSided }
-        , mLineWidth{ aShader.LineWidth }
-        , mMaterialID{ aMaterialID.mMaterialID }
-        , mIndexBuffer{ aMesh.mIndexBuffer }
-        , mVertexBuffer{ aMesh.mTransformedBuffer }
-        , mVertexOffset{ aMesh.mVertexOffset }
-        , mVertexCount{ aMesh.mVertexCount }
-        , mIndexOffset{ aMesh.mIndexOffset }
-        , mIndexCount{ aMesh.mIndexCount }
-    {
-    }
-
-    sParticleRenderData::sParticleRenderData( sParticleSystemComponent const &aParticles, sParticleShaderComponent const &aShader )
-        : mModel{ mat4( 1.0f ) }
-        , mParticleCount{ aParticles.ParticleCount }
-        , mLineWidth{ aShader.LineWidth }
-        , mParticleSize{ aParticles.ParticleSize }
-        , mParticles{ aParticles.Particles }
-
-    {
-    }
+    // {
+    // }
 } // namespace SE::Core

@@ -97,6 +97,20 @@ LAYOUT_UNIFORM_BUFFER( 1, 0 ) __UNIFORM_BUFFER__ ShaderMaterials
 
 LAYOUT_UNIFORM( 1, 1 ) __UNIFORM__ sampler2D gTextures[];
 
+#if !defined( SHADING_MODEL_UNLIT )
+// clang-format off
+LAYOUT_UNIFORM( 1, 2 ) __UNIFORM_BUFFER__ DirectionalLights
+{
+    sDirectionalLight mArray[];
+} gDirectionalLights;
+
+LAYOUT_UNIFORM( 1, 3 ) __UNIFORM_BUFFER__ PointLights
+{
+    sPointLight mArray[];
+} gPointLights;
+// clang-format on
+#endif
+
 #if defined( MATERIAL_HAS_UV0 )
 float ColorTextureFetch( int aTexID, int aUVChannel )
 {
