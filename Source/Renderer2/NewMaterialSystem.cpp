@@ -133,10 +133,14 @@ namespace SE::Core
 
     Ref<IShaderProgram> NewMaterialSystem::CreateVertexShader( Material const &aMaterial )
     {
+        if( mVertexShaders.find( GetMaterialHash( aMaterial ) ) != mVertexShaders.end() )
+            return mVertexShaders[GetMaterialHash( aMaterial )];
+
         fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
 
         std::string lShaderName = CreateShaderName( aMaterial, "vertex_shader" );
         auto        lShader     = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, lShaderName, lShaderPath );
+        mVertexShaders[GetMaterialHash( aMaterial )] = lShader;
 
         AddDefinitions( lShader, aMaterial );
 
@@ -155,10 +159,16 @@ namespace SE::Core
 
     Ref<IShaderProgram> NewMaterialSystem::CreateFragmentShader( Material const &aMaterial )
     {
+
+        if( mFragmentShaders.find( GetMaterialHash( aMaterial ) ) != mFragmentShaders.end() )
+            return mFragmentShaders[GetMaterialHash( aMaterial )];
+
+
         fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
 
         std::string lShaderName = CreateShaderName( aMaterial, "fragment_shader" );
-        auto        lShader     = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, lShaderName, lShaderPath );
+        auto        lShader     = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, lShaderName, lShaderPath );
+        mFragmentShaders[GetMaterialHash( aMaterial )] = lShader;
 
         AddDefinitions( lShader, aMaterial );
 
@@ -210,7 +220,35 @@ namespace SE::Core
 
         lNewPipeline->SetLineWidth( lMaterialInfo.mLineWidth );
 
+        // Descriptors layout for material data
+        auto lMaterialDataDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
+        lMaterialDataDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        lMaterialDataDescriptorLayout->Build();
+        lNewPipeline->AddDescriptorSet( lMaterialDataDescriptorLayout );
+
+        // Descriptors layout for texture array
+        auto lTextureDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
+        lTextureDescriptorLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        lTextureDescriptorLayout->Build();
+        lNewPipeline->AddDescriptorSet( lTextureDescriptorLayout );
+
+        if( lMaterialInfo.mShadingModel != eShadingModel::UNLIT )
+        {
+            // Descriptors layout for directional lights
+            auto lDirectionalLightDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
+            lDirectionalLightDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+            lDirectionalLightDescriptorLayout->Build();
+            lNewPipeline->AddDescriptorSet( lDirectionalLightDescriptorLayout );
+
+            // Descriptors layout for pubctual lights
+            auto lPunctualLightDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
+            lPunctualLightDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+            lPunctualLightDescriptorLayout->Build();
+            lNewPipeline->AddDescriptorSet( lPunctualLightDescriptorLayout );
+        }
+
         lNewPipeline->Build();
+
         return lNewPipeline;
     }
 

@@ -3,7 +3,7 @@
 
 #include "Graphics/API.h"
 
-// #include "Scene/Components.h"
+#include "Scene/Components.h"
 // #include "Scene/Scene.h"
 
 #include "ASceneRenderer.h"
@@ -18,6 +18,7 @@
 namespace SE::Core
 {
     using namespace math;
+    using namespace SE::Core::EntityComponentSystem::Components;
 
     class Scene;
 
@@ -28,7 +29,6 @@ namespace SE::Core
     //     CLOTH,
     //     UNLIT
     // };
-
 
     // struct sNewShaderMaterial
     // {
@@ -58,6 +58,37 @@ namespace SE::Core
     //     sNewShaderMaterial( const sNewShaderMaterial & ) = default;
     //     size_t Hash();
     // };
+
+    struct sNewMeshRenderData
+    {
+        // Shader data
+        Material mMaterialID = 0;
+
+        // Buffer data
+        Ref<IGraphicBuffer> mVertexBuffer = nullptr;
+        Ref<IGraphicBuffer> mIndexBuffer  = nullptr;
+        uint32_t            mVertexOffset = 0;
+        uint32_t            mVertexCount  = 0;
+        uint32_t            mIndexOffset  = 0;
+        uint32_t            mIndexCount   = 0;
+
+        sNewMeshRenderData( sStaticMeshComponent const &aMesh, sNewMaterialComponent const &aMaterialID )
+            : mMaterialID{ aMaterialID.mMaterialID }
+            , mIndexBuffer{ aMesh.mIndexBuffer }
+            , mVertexBuffer{ aMesh.mTransformedBuffer }
+            , mVertexOffset{ aMesh.mVertexOffset }
+            , mVertexCount{ aMesh.mVertexCount }
+            , mIndexOffset{ aMesh.mIndexOffset }
+            , mIndexCount{ aMesh.mIndexCount }
+        {
+        }
+    };
+
+    struct sRenderQueue
+    {
+        Ref<IGraphicsPipeline>          mPipeline;
+        std::vector<sNewMeshRenderData> mMeshes;
+    };
 
     class NewSceneRenderer : public BaseSceneRenderer
     {
@@ -104,9 +135,11 @@ namespace SE::Core
         // Ref<ShadowSceneRenderer>    mShadowSceneRenderer    = nullptr;
         // Ref<EffectProcessor> mCopyRenderer     = nullptr;
         // Ref<EffectProcessor> mFxaaRenderer     = nullptr;
-        Ref<ISampler2D>      mFxaaSampler      = nullptr;
-        Ref<IRenderTarget>   mFxaaRenderTarget = nullptr;
-        Ref<IRenderContext>  mFxaaContext = nullptr;
+        Ref<ISampler2D>     mFxaaSampler      = nullptr;
+        Ref<IRenderTarget>  mFxaaRenderTarget = nullptr;
+        Ref<IRenderContext> mFxaaContext      = nullptr;
+
+        std::map<size_t, sRenderQueue> mPipelines;
 
         // Ref<IGraphicBuffer> mCameraUniformBuffer    = nullptr;
         // Ref<IGraphicBuffer> mShaderParametersBuffer = nullptr;
@@ -131,7 +164,6 @@ namespace SE::Core
         void CreateFXAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
         // private:        // void AddLight( mat4 const &aTransform, sLightComponent &aLightComponent );
-
     };
 
 } // namespace SE::Core

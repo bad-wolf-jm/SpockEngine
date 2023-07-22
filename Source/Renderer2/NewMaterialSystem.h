@@ -1,6 +1,6 @@
 #pragma once
 
-#include <unordered_map>
+#include <map>
 
 #include "Core/Entity/Collection.h"
 #include "Core/Math/Types.h"
@@ -137,10 +137,15 @@ namespace SE::Core
         std::vector<sDirectionalLightData> mDirectionalLights;
         std::vector<sPointLightData>       mPointLights;
 
+        std::map<size_t, Ref<IShaderProgram>> mVertexShaders;
+        std::map<size_t, Ref<IShaderProgram>> mFragmentShaders;
+
       public:
         Ref<IShaderProgram>    CreateVertexShader( Material const &aMaterial );
         Ref<IShaderProgram>    CreateFragmentShader( Material const &aMaterial );
         Ref<IGraphicsPipeline> CreateGraphicsPipeline( Material const &aMaterial, Ref<IRenderContext> aRenderPass );
+
+        Ref<IGraphicsPipeline> GetGraphicsPipeline( Material const &aMaterial );
 
         void SetLights( std::vector<sDirectionalLightData> const &aDirectionalLights );
         void SetLights( std::vector<sPointLightData> const &aPointLights );

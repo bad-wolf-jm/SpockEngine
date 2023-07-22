@@ -374,6 +374,23 @@ namespace SE::Core
         mScene->GetNewMaterialSystem()->SetLights( lDirectionalLights );
         mScene->GetNewMaterialSystem()->SetLights( lPointLights );
 
+        for( auto &[lMaterialHash, lRenderQueue] : mPipelines )
+            lRenderQueue.mMeshes.clear();
+
+        mScene->ForEach<sStaticMeshComponent, sNewMaterialComponent>(
+            [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterial )
+            {
+                size_t lMaterialHash = mScene->GetNewMaterialSystem()->GetMaterialHash( aMaterial.mMaterialID );
+                if( mPipelines.find( lMaterialHash ) == mPipelines.end() )
+                {
+                    mPipelines.emplace( lMaterialHash, sRenderQueue{} );
+                    mPipelines[lMaterialHash].mPipeline =
+                        mScene->GetNewMaterialSystem()->CreateGraphicsPipeline( aMaterial.mMaterialID, mGeometryContext );
+                }
+                mPipelines[lMaterialHash].mMeshes.emplace_back( aStaticMeshComponent, aMaterial );
+            } );
+        // clang-format on
+
         // mShadowSceneRenderer->Update( aWorld );
         // mView.PointLightCount = mPointLights.size();
         // for( uint32_t i = 0; i < mView.PointLightCount; i++ ) mView.PointLights[i] = mPointLights[i];

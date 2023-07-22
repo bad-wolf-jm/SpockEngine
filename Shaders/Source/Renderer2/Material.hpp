@@ -89,22 +89,22 @@ struct MaterialInputs
 // Try to be as bindless as possible and bind all available textures andd all materials
 // in one go as an array.
 // clang-format off
-LAYOUT_UNIFORM_BUFFER( 1, 0 ) __UNIFORM_BUFFER__ ShaderMaterials 
+LAYOUT_UNIFORM_BUFFER( 0, 0 ) __UNIFORM_BUFFER__ ShaderMaterials 
 { 
     sShaderMaterial mArray[]; 
 } gMaterials;
 // clang-format on
 
-LAYOUT_UNIFORM( 1, 1 ) __UNIFORM__ sampler2D gTextures[];
+LAYOUT_UNIFORM( 1, 0 ) __UNIFORM__ sampler2D gTextures[];
 
 #if !defined( SHADING_MODEL_UNLIT )
 // clang-format off
-LAYOUT_UNIFORM( 1, 2 ) __UNIFORM_BUFFER__ DirectionalLights
+LAYOUT_UNIFORM_BUFFER( 2, 0 ) __UNIFORM_BUFFER__ DirectionalLights
 {
     sDirectionalLight mArray[];
 } gDirectionalLights;
 
-LAYOUT_UNIFORM( 1, 3 ) __UNIFORM_BUFFER__ PointLights
+LAYOUT_UNIFORM_BUFFER( 3, 0 ) __UNIFORM_BUFFER__ PointLights
 {
     sPointLight mArray[];
 } gPointLights;

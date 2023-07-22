@@ -71,11 +71,7 @@ namespace SE::Core
     // {
     // }
 
-    // sMeshRenderData::sMeshRenderData( sStaticMeshComponent const &aMesh, sMaterialComponent const &aMaterialID,
-    //                                   sMaterialShaderComponent const &aShader )
-    //     : mOpaque{ ( aShader.Type == eMaterialType::Opaque ) }
-    //     , mIsTwoSided{ aShader.IsTwoSided }
-    //     , mLineWidth{ aShader.LineWidth }
+    // sNewMeshRenderData::sNewMeshRenderData( sStaticMeshComponent const &aMesh, sNewMaterialComponent const &aMaterialID )
     //     , mMaterialID{ aMaterialID.mMaterialID }
     //     , mIndexBuffer{ aMesh.mIndexBuffer }
     //     , mVertexBuffer{ aMesh.mTransformedBuffer }

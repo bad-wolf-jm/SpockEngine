@@ -5,7 +5,6 @@
 
 #include "Graphics/Vulkan/DescriptorSet.h"
 #include "Graphics/Vulkan/VkGraphicsPipeline.h"
-
 // #include "Scene/Components.h"
 // #include "Scene/Scene.h"
 
@@ -139,25 +138,6 @@ namespace SE::Core
     //     sLightGizmo( eLightType aType, uint64_t aLightDataIndex, math::mat4 aMatrix );
     // };
 
-    // struct sMeshRenderData
-    // {
-    //     // Shader data
-    //     bool     mOpaque     = false;
-    //     bool     mIsTwoSided = false;
-    //     float    mLineWidth  = 1.0f;
-    //     uint32_t mMaterialID = 0;
-
-    //     // Buffer data
-    //     Ref<IGraphicBuffer> mVertexBuffer = nullptr;
-    //     Ref<IGraphicBuffer> mIndexBuffer  = nullptr;
-    //     uint32_t            mVertexOffset = 0;
-    //     uint32_t            mVertexCount  = 0;
-    //     uint32_t            mIndexOffset  = 0;
-    //     uint32_t            mIndexCount   = 0;
-
-    //     sMeshRenderData( sStaticMeshComponent const &aMesh, sMaterialComponent const &aMaterialID,
-    //                      sMaterialShaderComponent const &aShader );
-    // };
 
     // struct sParticleRenderData
     // {
