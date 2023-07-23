@@ -175,6 +175,11 @@ namespace SE::Editor
         m_SceneViewport = a_SceneViewport;
     }
 
+    void EditorWindow::UpdateNewSceneViewport( ImageHandle a_SceneViewport )
+    {
+        m_SceneViewport_new = a_SceneViewport;
+    }
+
     EditorWindow &EditorWindow::AddMenuItem( std::string l_Icon, std::string l_Title, std::function<bool()> l_Action )
     {
         m_MainMenuItems.push_back( { l_Icon, l_Title, l_Action } );
@@ -1058,9 +1063,11 @@ namespace SE::Editor
         // ActiveWorld->SetViewport( l3DViewPosition,
         //                           math::vec2{ static_cast<float>( l3DViewSize.x ), static_cast<float>( l3DViewSize.y ) } );
 
-        // if( m_SceneViewport.Handle )
-        // {
-        //     UI::Image( m_SceneViewport, l3DViewSize );
+        if( m_SceneViewport_new.Handle )
+        {
+            UI::Image( m_SceneViewport_new, l3DViewSize );
+        }
+
         //     if( ImGui::BeginDragDropTarget() )
         //     {
         //         if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )

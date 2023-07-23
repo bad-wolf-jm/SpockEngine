@@ -82,6 +82,9 @@ namespace SE::Editor
         Ref<ISampler2D> mDeferredRenderTargetTexture = nullptr;
         ImageHandle     mDeferredRenderTargetDisplayHandle{};
 
+        Ref<ISampler2D> mNewRenderTargetTexture = nullptr;
+        ImageHandle     mNewRenderTargetDisplayHandle{};
+
         Entity m_SensorEntity{};
 
         Ref<DotNetInstance> mApplicationInstance = nullptr;

@@ -111,6 +111,7 @@ namespace SE::Editor
         void UpdateFramerate( Timestep ts );
 
         void UpdateSceneViewport( ImageHandle a_SceneViewport );
+        void UpdateNewSceneViewport( ImageHandle a_SceneViewport );
         void UpdateSceneViewport_deferred( ImageHandle a_SceneViewport );
 
       private:
@@ -149,6 +150,7 @@ namespace SE::Editor
       private:
         ImageHandle m_SceneViewport{};
         ImageHandle m_SceneViewport_deferred{};
+        ImageHandle m_SceneViewport_new{};
 
         std::vector<uint8_t> mTestTile;
     };

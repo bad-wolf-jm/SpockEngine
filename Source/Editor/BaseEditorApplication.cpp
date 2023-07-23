@@ -65,6 +65,9 @@ namespace SE::Editor
         mOffscreenRenderTargetTexture = CreateSampler2D( SE::Core::Engine::GetInstance()->GetGraphicContext(),
                                                          mDeferredRenderer->GetOutputImage(), lSamplingInfo );
 
+        mNewRenderTargetTexture = CreateSampler2D( SE::Core::Engine::GetInstance()->GetGraphicContext(),
+                                                   mNewSceneRenderer->GetOutputImage(), lSamplingInfo );
+
         if( !mOffscreenRenderTargetDisplayHandle.Handle )
         {
             mOffscreenRenderTargetDisplayHandle =
@@ -74,6 +77,17 @@ namespace SE::Editor
         else
         {
             mOffscreenRenderTargetDisplayHandle.Handle->Write( mOffscreenRenderTargetTexture, 0 );
+        }
+
+        if( !mNewRenderTargetDisplayHandle.Handle )
+        {
+            mNewRenderTargetDisplayHandle =
+                SE::Core::Engine::GetInstance()->UIContext()->CreateTextureHandle( mNewRenderTargetTexture );
+            mEditorWindow.UpdateNewSceneViewport( mNewRenderTargetDisplayHandle );
+        }
+        else
+        {
+            mNewRenderTargetDisplayHandle.Handle->Write( mNewRenderTargetTexture, 0 );
         }
     }
 
@@ -119,7 +133,8 @@ namespace SE::Editor
         mDeferredRenderer =
             New<DeferredRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
 
-        // mTestWorld  = New<Scene>( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext() );
+        // mTestWorld  = New<Scene>( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext()
+        // );
         mNewSceneRenderer =
             New<NewSceneRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 4 );
 

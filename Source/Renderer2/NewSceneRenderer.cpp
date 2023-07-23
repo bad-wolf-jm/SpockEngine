@@ -58,53 +58,6 @@ namespace SE::Core
         // mLightingPassPointLightShadowMaps  = mLightingPointLightShadowLayout->Allocate( 1024 );
     }
 
-    // static Ref<IShaderProgram> MRTVertexShader( Ref<IGraphicContext> gc )
-    // {
-    //     fs::path lShaderPath   = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
-    //     auto     lVertexShader = CreateShaderProgram( gc, eShaderStageTypeFlags::VERTEX, 450, "geometry_vertex_shader", lShaderPath
-    //     ); lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data ); lVertexShader->AddCode(
-    //     SE::Private::Shaders::gPBRMeshVertexShader_data ); lVertexShader->Compile(); return lVertexShader;
-    // }
-
-    // static Ref<IShaderProgram> MRTFragmentShader( Ref<IGraphicContext> gc )
-    // {
-    //     fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
-    //     auto     lFragmentShader =
-    //         CreateShaderProgram( gc, eShaderStageTypeFlags::FRAGMENT, 450, "geometry_fragment_shader", lShaderPath );
-    //     lFragmentShader->AddCode( SE::Private::Shaders::gPBRMeshFragmentShaderPreamble_data );
-    //     lFragmentShader->AddCode( SE::Private::Shaders::gToneMap_data );
-    //     lFragmentShader->AddCode( SE::Private::Shaders::gPBRFunctions_data );
-    //     lFragmentShader->AddCode( SE::Private::Shaders::gPBRMeshFragmentShaderCalculation_data );
-    //     lFragmentShader->Compile();
-    //     return lFragmentShader;
-    // }
-
-    // MeshRendererCreateInfo NewSceneRenderer::GetRenderPipelineCreateInfo( sMaterialShaderComponent &aPipelineSpecification )
-    // {
-    //     MeshRendererCreateInfo lCreateInfo;
-
-    //     lCreateInfo.Opaque         = ( aPipelineSpecification.Type == eMaterialType::Opaque );
-    //     lCreateInfo.IsTwoSided     = aPipelineSpecification.IsTwoSided;
-    //     lCreateInfo.LineWidth      = aPipelineSpecification.LineWidth;
-    //     lCreateInfo.VertexShader   = MRTVertexShader( mGraphicContext );
-    //     lCreateInfo.FragmentShader = MRTFragmentShader( mGraphicContext );
-    //     lCreateInfo.RenderPass     = mGeometryContext;
-    //     return lCreateInfo;
-    // }
-
-    // MeshRendererCreateInfo NewSceneRenderer::GetRenderPipelineCreateInfo( sMeshRenderData &aPipelineSpecification )
-    // {
-    //     MeshRendererCreateInfo lCreateInfo;
-
-    //     lCreateInfo.Opaque         = aPipelineSpecification.mOpaque;
-    //     lCreateInfo.IsTwoSided     = aPipelineSpecification.mIsTwoSided;
-    //     lCreateInfo.LineWidth      = aPipelineSpecification.mLineWidth;
-    //     lCreateInfo.VertexShader   = MRTVertexShader( mGraphicContext );
-    //     lCreateInfo.FragmentShader = MRTFragmentShader( mGraphicContext );
-    //     lCreateInfo.RenderPass     = mGeometryContext;
-    //     return lCreateInfo;
-    // }
-
     void NewSceneRenderer::CreateRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
         sRenderTargetDescription lRenderTargetSpec{};
@@ -426,7 +379,18 @@ namespace SE::Core
         //     mLightingPassSpotlightShadowMaps->Write( mShadowSceneRenderer->GetSpotlightShadowMapSamplers(), 0 );
         // if( mShadowSceneRenderer->GetPointLightShadowMapSamplers().size() > 0 )
         //     mLightingPassPointLightShadowMaps->Write( mShadowSceneRenderer->GetPointLightShadowMapSamplers(), 0 );
-        // mGeometryContext->BeginRender();
+
+        mGeometryContext->BeginRender();
+        for( auto const &[_, lQueue] : mPipelines )
+        {
+            mGeometryContext->Bind( lQueue.mPipeline );
+
+            for( auto const &lMesh : lQueue.mMeshes )
+            {
+                mGeometryContext->Bind( lMesh.mVertexBuffer, lMesh.mIndexBuffer );
+                mGeometryContext->Draw( lMesh.mIndexCount, lMesh.mIndexOffset, lMesh.mVertexOffset, 1, 0 );
+            }
+        }
         // for( auto &lPipelineData : mOpaqueMeshQueue )
         // {
         //     auto lPipeline = GetRenderPipeline( lPipelineData );
@@ -475,7 +439,8 @@ namespace SE::Core
         //     }
         // }
         // // if( mRenderCoordinateGrid ) mCoordinateGridRenderer->Render( mView.Projection, mView.View, mGeometryContext );
-        // mGeometryContext->EndRender();
+        mGeometryContext->EndRender();
+
         // mFxaaContext->BeginRender();
         // if( mUseFXAA )
         // {
