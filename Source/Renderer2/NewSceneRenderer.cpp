@@ -380,13 +380,18 @@ namespace SE::Core
         // if( mShadowSceneRenderer->GetPointLightShadowMapSamplers().size() > 0 )
         //     mLightingPassPointLightShadowMaps->Write( mShadowSceneRenderer->GetPointLightShadowMapSamplers(), 0 );
 
+        auto lMaterialSystem = mScene->GetNewMaterialSystem();
+
         mGeometryContext->BeginRender();
         for( auto const &[_, lQueue] : mPipelines )
         {
             mGeometryContext->Bind( lQueue.mPipeline );
-
+            lMaterialSystem->ConfigureRenderContext( mGeometryContext );
+            
             for( auto const &lMesh : lQueue.mMeshes )
             {
+                lMaterialSystem->SelectMaterialInstance( mGeometryContext, lMesh.mMaterialID );
+
                 mGeometryContext->Bind( lMesh.mVertexBuffer, lMesh.mIndexBuffer );
                 mGeometryContext->Draw( lMesh.mIndexCount, lMesh.mIndexOffset, lMesh.mVertexOffset, 1, 0 );
             }

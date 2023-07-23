@@ -140,6 +140,14 @@ namespace SE::Core
         std::map<size_t, Ref<IShaderProgram>> mVertexShaders;
         std::map<size_t, Ref<IShaderProgram>> mFragmentShaders;
 
+        Ref<IGraphicBuffer>       mShaderMaterials                 = nullptr;
+        Ref<IDescriptorSet>       mShaderMaterialsDescriptor       = nullptr;
+        Ref<IDescriptorSetLayout> mShaderMaterialsDescriptorLayout = nullptr;
+
+        Cuda::GPUMemory           mMaterialTextures{};
+        Ref<IDescriptorSet>       mMaterialTexturesDescriptor       = nullptr;
+        Ref<IDescriptorSetLayout> mMaterialTexturesDescriptorLayout = nullptr;
+
       public:
         Ref<IShaderProgram>    CreateVertexShader( Material const &aMaterial );
         Ref<IShaderProgram>    CreateFragmentShader( Material const &aMaterial );
@@ -149,6 +157,9 @@ namespace SE::Core
 
         void SetLights( std::vector<sDirectionalLightData> const &aDirectionalLights );
         void SetLights( std::vector<sPointLightData> const &aPointLights );
+
+        void ConfigureRenderContext( Ref<IRenderContext> aRenderPass );
+        void SelectMaterialInstance( Ref<IRenderContext> aRenderPass, Material aMaterialID );
 
       private:
         template <typename _Ty>

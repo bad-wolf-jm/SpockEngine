@@ -163,11 +163,10 @@ namespace SE::Core
         if( mFragmentShaders.find( GetMaterialHash( aMaterial ) ) != mFragmentShaders.end() )
             return mFragmentShaders[GetMaterialHash( aMaterial )];
 
-
         fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
 
         std::string lShaderName = CreateShaderName( aMaterial, "fragment_shader" );
-        auto        lShader     = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, lShaderName, lShaderPath );
+        auto        lShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, lShaderName, lShaderPath );
         mFragmentShaders[GetMaterialHash( aMaterial )] = lShader;
 
         AddDefinitions( lShader, aMaterial );
@@ -221,10 +220,10 @@ namespace SE::Core
         lNewPipeline->SetLineWidth( lMaterialInfo.mLineWidth );
 
         // Descriptors layout for material data
-        auto lMaterialDataDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
-        lMaterialDataDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
-        lMaterialDataDescriptorLayout->Build();
-        lNewPipeline->AddDescriptorSet( lMaterialDataDescriptorLayout );
+        mShaderMaterialsDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
+        mShaderMaterialsDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        mShaderMaterialsDescriptorLayout->Build();
+        lNewPipeline->AddDescriptorSet( mShaderMaterialsDescriptorLayout );
 
         // Descriptors layout for texture array
         auto lTextureDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
@@ -319,6 +318,27 @@ namespace SE::Core
             AppendMaterialData( aEntity, aMaterialInfo ); 
         });
         // clang-format on
+
+        mShaderMaterialsDescriptor = mShaderMaterialsDescriptorLayout->Allocate( 1024 );
+        if( mShaderMaterials->SizeAs<sShaderMaterial>() < mMaterialData.size() )
+        {
+            auto lBufferSize = std::max( mMaterialData.size(), static_cast<size_t>( 1 ) ) * sizeof( sShaderMaterial );
+            mShaderMaterials = CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, false, true, true, lBufferSize );
+            mShaderMaterialsDescriptor->Write( mShaderMaterials, false, 0, lBufferSize, 0 );
+        }
+
+        mMaterialTexturesDescriptor = mMaterialTexturesDescriptorLayout->Allocate( 1024 );
+        mMaterialTexturesDescriptor->Write( mTextureData, 0 );
+
+        if( mMaterialTextures.SizeAs<Cuda::TextureSampler2D::DeviceData>() < mTextureData.size() )
+        {
+            mMaterialTextures.Dispose();
+            std::vector<Cuda::TextureSampler2D::DeviceData> lTextureDeviceData{};
+            for( auto const &lCudaTextureSampler : mTextureData )
+                lTextureDeviceData.push_back( lCudaTextureSampler->mDeviceData );
+
+            mMaterialTextures = Cuda::GPUMemory::Create( lTextureDeviceData );
+        }
     }
 
     Material NewMaterialSystem::CreateMaterial( fs::path const &aMaterialPath )
@@ -394,4 +414,11 @@ namespace SE::Core
         return lNewMaterial;
     }
 
+    void NewMaterialSystem::ConfigureRenderContext( Ref<IRenderContext> aRenderPass )
+    {
+    }
+
+    void NewMaterialSystem::SelectMaterialInstance( Ref<IRenderContext> aRenderPass, Material aMaterialID )
+    {
+    }
 } // namespace SE::Core
