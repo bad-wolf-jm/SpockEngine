@@ -133,8 +133,6 @@ namespace SE::Editor
         mDeferredRenderer =
             New<DeferredRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 1 );
 
-        // mTestWorld  = New<Scene>( SE::Core::Engine::GetInstance()->GetGraphicContext(), SE::Core::Engine::GetInstance()->UIContext()
-        // );
         mNewSceneRenderer =
             New<NewSceneRenderer>( SE::Core::Engine::GetInstance()->GetGraphicContext(), eColorFormat::RGBA8_UNORM, 4 );
 
