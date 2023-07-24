@@ -465,7 +465,6 @@ namespace SE::Core
         aRenderPass->Bind( mViewParametersDescriptor, VIEW_PARAMETERS_BIND_POINT );
         aRenderPass->Bind( mCameraParametersDescriptor, CAMERA_PARAMETERS_BIND_POINT );
         aRenderPass->Bind( mShaderMaterialsDescriptor, MATERIAL_DATA_BIND_POINT );
-        aRenderPass->Bind( mShaderMaterialsDescriptor, MATERIAL_DATA_BIND_POINT );
         aRenderPass->Bind( mMaterialTexturesDescriptor, MATERIAL_TEXTURES_BIND_POINT );
     }
 
