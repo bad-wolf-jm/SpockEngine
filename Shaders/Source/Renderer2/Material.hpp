@@ -120,23 +120,23 @@ struct MaterialInputs
 //     sPointLight mArray[];
 // } gPointLights;
 // // clang-format on
-#endif
+// #endif
 
-#if !defined( __cplusplus )
-layout( push_constant ) uniform Material
-{
-    int mMaterialID;
-}
-gMaterialID;
-#else
-struct Material
-{
-    int mMaterialID;
-} gMaterialID
-#endif
+// #if !defined( __cplusplus )
+// layout( push_constant ) uniform Material
+// {
+//     int mMaterialID;
+// }
+// gMaterialID;
+// #else
+// struct Material
+// {
+//     int mMaterialID;
+// } gMaterialID
+// #endif
 
 #if defined( MATERIAL_HAS_UV0 )
-float ColorTextureFetch( int aTexID, int aUVChannel )
+float4 ColorTextureFetch( int aTexID, int aUVChannel )
 {
 #    if !defined( MATERIAL_HAS_UV1 )
     return SRGBtoLINEAR( texture( gTextures[aTexID], inUV ) );
@@ -150,14 +150,14 @@ float ColorTextureFetch( int aTexID, int aUVChannel )
 float TextureFetch( int aTexID, int aUVChannel )
 {
 #    if !defined( MATERIAL_HAS_UV1 )
-    return texture( gTextures[aTexID], inUV );
+    return texture( gTextures[aTexID], inUV ).r;
 #    else
-    return texture( gTextures[aTexID], ( aUVChannel == 0 ) ? inUV.xy : inUV.zw );
+    return texture( gTextures[aTexID], ( aUVChannel == 0 ) ? inUV.xy : inUV.zw ).r;
 #    endif
 }
 #endif
 
-inline sShaderMaterial GetMaterialData()
+sShaderMaterial GetMaterialData()
 {
     if( gMaterialID.mMaterialID > -1 )
         return gMaterials.mArray[gMaterialID.mMaterialID];
@@ -197,6 +197,16 @@ float3 GetNormal()
 #endif
 }
 
+float4 GetAOMetalRough()
+{
+#if defined( MATERIAL_HAS_METAL_ROUGH_TEXTURE ) && defined( MATERIAL_HAS_UV0 )
+    return ColorTextureFetch( GetMaterialData().mMetalnessTextureID, GetMaterialData().mMetalnessUVChannel );
+#else
+    return vec4(1.0);
+#endif
+}
+
+
 float GetAmbientOcclusion()
 {
 #if defined( MATERIAL_HAS_OCCLUSION_TEXTURE ) && defined( MATERIAL_HAS_UV0 )
@@ -206,13 +216,15 @@ float GetAmbientOcclusion()
 #endif
 }
 
-void InitializeMaterial( out MaterialInput aMaterial )
+void InitializeMaterial( out MaterialInputs aMaterial )
 {
     aMaterial.mBaseColor = GetBaseColor();
 
 #if defined( MATERIAL_HAS_NORMALS )
     float3 mNormal = GetNormal();
 #endif
+
+#define MIN_ROUGHNESS 0.04
 
 #if !defined( SHADING_MODEL_UNLIT )
     aMaterial.mRoughness = clamp( GetMaterialData().mRoughnessFactor, MIN_ROUGHNESS, 1.0 );
@@ -238,7 +250,7 @@ void InitializeMaterial( out MaterialInput aMaterial )
 
 #if !defined( SHADING_MODEL_CLOTH ) && !defined( SHADING_MODEL_SUBSURFACE ) && !defined( SHADING_MODEL_UNLIT )
     aMaterial.mSheenColor     = float3( 0.0f );
-    aMaterial.mSheenRoughness = float3( 0.0f );
+    aMaterial.mSheenRoughness = 0.0f;
 #endif
 
 #if defined( MATERIAL_HAS_CLEARCOAT )

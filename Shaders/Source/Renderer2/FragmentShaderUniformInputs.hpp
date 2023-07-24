@@ -18,7 +18,7 @@ LAYOUT_UNIFORM_BUFFER( CAMERA_PARAMETERS_BIND_POINT, 0 ) __UNIFORM_BUFFER__ Came
 } gCamera;
 // clang-format on
 
-// Try to be as bindless as possible and bind all available textures andd all materials
+// Try to be as bindless as possible and bind all available textures and all materials
 // in one go as an array.
 // clang-format off
 LAYOUT_UNIFORM_BUFFER( MATERIAL_DATA_BIND_POINT, 0 ) __UNIFORM_BUFFER__ ShaderMaterials 

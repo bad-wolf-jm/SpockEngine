@@ -32,7 +32,7 @@ namespace SE::Editor
 
     void BaseEditorApplication::RenderScene()
     {
-        mDeferredRenderer->Render();
+        // mDeferredRenderer->Render();
         mNewSceneRenderer->Render();
     }
 

@@ -69,7 +69,8 @@ namespace SE::Core
 
         // Descriptors layout for texture array
         mMaterialTexturesDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
-        mMaterialTexturesDescriptorLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        mMaterialTexturesDescriptorLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER,
+                                                       { eShaderStageTypeFlags::FRAGMENT } );
         mMaterialTexturesDescriptorLayout->Build();
 
         // Descriptors layout for directional lights
@@ -243,7 +244,7 @@ namespace SE::Core
         if( aMaterial.Has<sFragmentShader>() )
             lShader->AddCode( "//" );
         else
-            lShader->AddCode( "void material( out MaterialInput aMaterial ) {}" );
+            lShader->AddCode( "void material( out MaterialInputs aMaterial ) {}" );
 
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\MainFragmentShader.hpp" );
 
@@ -256,12 +257,18 @@ namespace SE::Core
         auto lFragmentShader = CreateFragmentShader( aMaterial );
         auto lNewPipeline    = SE::Graphics::CreateGraphicsPipeline( mGraphicContext, aRenderPass, ePrimitiveTopology::TRIANGLES );
 
+        {
+            std::ofstream lOutput( "D:\\Work\\Git\\SpockEngine\\test_vs.cpp" );
+            lOutput << lVertexShader->Program();
+            lOutput.close();
+        }
         lVertexShader->Compile();
 
-        std::ofstream lOutput( "D:\\Work\\Git\\SpockEngine\\test_fs.cpp" );
-
-        lOutput << lFragmentShader->Program();
-        lOutput.close();
+        {
+            std::ofstream lOutput( "D:\\Work\\Git\\SpockEngine\\test_fs.cpp" );
+            lOutput << lFragmentShader->Program();
+            lOutput.close();
+        }
         lFragmentShader->Compile();
 
         lNewPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
