@@ -141,8 +141,8 @@ namespace SE::Editor
         RebuildOutputFramebuffer();
 
         mDeferredRenderer->Update( mWorld );
-        
-        mNewSceneRenderer->Update( mTestWorld );
+
+        mNewSceneRenderer->Update( mWorld );
         mNewSceneRenderer->SetProjection(math::Perspective( math::radians( 90.0f ), 1.0, 0.01f, 100000.0f ));
         mNewSceneRenderer->SetView( math::Inverse( math::Translate( math::mat4( 1.0f ), math::vec3( 0.0f, 1.0f, 7.5f ) ) ) );
 
