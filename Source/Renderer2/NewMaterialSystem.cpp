@@ -9,6 +9,29 @@
 
 namespace SE::Core
 {
+    struct ViewParameters
+    {
+        mat4 mProjection;
+        mat4 mView;
+        vec3 mCameraPosition;
+
+        ViewParameters()  = default;
+        ~ViewParameters() = default;
+
+        ViewParameters( const ViewParameters & ) = default;
+    };
+
+    struct CameraParameters
+    {
+        float mExposure = 4.5f;
+        float mGamma    = 2.2f;
+
+        CameraParameters()  = default;
+        ~CameraParameters() = default;
+
+        CameraParameters( const CameraParameters & ) = default;
+    };
+
     struct sMaterialNotReady
     {
     };
@@ -21,6 +44,10 @@ namespace SE::Core
     NewMaterialSystem::NewMaterialSystem( Ref<IGraphicContext> aGraphicContext )
         : mGraphicContext{ aGraphicContext }
     {
+        mViewParameters =
+            CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( ViewParameters ) );
+        mCameraParameters =
+            CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraParameters ) );
     }
 
     void NewMaterialSystem::SetLights( std::vector<sDirectionalLightData> const &aDirectionalLights )
@@ -219,6 +246,16 @@ namespace SE::Core
 
         lNewPipeline->SetLineWidth( lMaterialInfo.mLineWidth );
 
+        mViewParametersDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
+        mViewParametersDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::VERTEX } );
+        mViewParametersDescriptorLayout->Build();
+        lNewPipeline->AddDescriptorSet( mViewParametersDescriptorLayout );
+
+        mCameraParametersDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
+        mCameraParametersDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        mCameraParametersDescriptorLayout->Build();
+        lNewPipeline->AddDescriptorSet( mCameraParametersDescriptorLayout );
+
         // Descriptors layout for material data
         mShaderMaterialsDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
         mShaderMaterialsDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
@@ -262,7 +299,7 @@ namespace SE::Core
 
     void NewMaterialSystem::AppendMaterialData( Material aMaterial, sMaterialInfo const &aInfo )
     {
-        auto &lNew                       = mMaterialData.emplace_back();
+        auto &lNew                      = mMaterialData.emplace_back();
         mMaterialIndexLookup[aMaterial] = mMaterialData.size() - 1;
 
         if( aMaterial.Has<sBaseColorTexture>() )
@@ -314,6 +351,12 @@ namespace SE::Core
     {
         mMaterialData.clear();
         mTextureData.clear();
+
+        mViewParametersDescriptor = mViewParametersDescriptorLayout->Allocate();
+        mViewParametersDescriptor->Write( mViewParameters, false, 0, sizeof( ViewParameters ), 0 );
+
+        mCameraParametersDescriptor = mCameraParametersDescriptorLayout->Allocate();
+        mCameraParametersDescriptor->Write( mCameraParameters, false, 0, sizeof( CameraParameters ), 0 );
 
         // clang-format off
         mMaterialRegistry.ForEach<sMaterialInfo>( [&]( auto aEntity, auto const &aMaterialInfo )
@@ -419,8 +462,20 @@ namespace SE::Core
 
     void NewMaterialSystem::ConfigureRenderContext( Ref<IRenderContext> aRenderPass )
     {
-        aRenderPass->Bind( mShaderMaterialsDescriptor, 0 );
-        aRenderPass->Bind( mMaterialTexturesDescriptor, 1 );
+        aRenderPass->Bind( mShaderMaterialsDescriptor, MATERIAL_DATA_BIND_POINT );
+        aRenderPass->Bind( mMaterialTexturesDescriptor, MATERIAL_TEXTURES_BIND_POINT );
+    }
+
+    void NewMaterialSystem::SetViewParameters( mat4 aProjection, mat4 aView, vec3 aCameraPosition )
+    {
+        ViewParameters lView{ aProjection, aView, aCameraPosition };
+        mViewParameters->Write( lView );
+    }
+
+    void NewMaterialSystem::SetCameraParameters( float aGamma, float aExposure )
+    {
+        CameraParameters lCamera{ aGamma, aExposure };
+        mCameraParameters->Write( lCamera );
     }
 
     int32_t NewMaterialSystem::GetMaterialIndex( Material aMaterial )

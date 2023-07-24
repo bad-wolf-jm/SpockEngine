@@ -15,6 +15,17 @@ LAYOUT_LOCATION( 2 ) __SHADER_OUTPUT__ float2 outUV;
 LAYOUT_LOCATION( 2 ) __SHADER_OUTPUT__ float4 outUV;
 #endif
 
+
+// clang-format off
+LAYOUT_UNIFORM_BUFFER( VIEW_PARAMETERS_BIND_POINT, 0 ) __UNIFORM_BUFFER__ ViewParameters 
+{ 
+    float4x4 mProjection;
+    float4x4 mView;
+    float3   mCameraPosition;
+} gView;
+// clang-format on
+
+
 void main()
 {
     // Pass vertex-level data to the fragment shader
@@ -23,5 +34,5 @@ void main()
     outUV       = inUV;
 
     // Vertices are already transformed eiher using CUDA or a compute shader
-    gl_Position = ubo.projection * ubo.view * vec4( inPos.xyz, 1.0 );
+    gl_Position = gView.mProjection * gView.mView * vec4( inPos.xyz, 1.0 );
 }

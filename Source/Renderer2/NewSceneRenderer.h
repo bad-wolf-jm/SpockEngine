@@ -141,8 +141,7 @@ namespace SE::Core
 
         std::map<size_t, sRenderQueue> mPipelines;
 
-        // Ref<IGraphicBuffer> mCameraUniformBuffer    = nullptr;
-        // Ref<IGraphicBuffer> mShaderParametersBuffer = nullptr;
+
         // Ref<IDescriptorSetLayout> mCameraSetLayout  = nullptr;
         // Ref<IDescriptorSetLayout> mNodeSetLayout    = nullptr;
         // Ref<IDescriptorSetLayout> mTextureSetLayout = nullptr;

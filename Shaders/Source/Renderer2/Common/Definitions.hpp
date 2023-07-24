@@ -6,13 +6,13 @@
 #    define LAYOUT_UNIFORM( s, b )        layout( set = s, binding = b )
 #    define LAYOUT_UNIFORM_BUFFER( s, b ) layout( set = s, binding = b ) readonly buffer
 #    define __UNIFORM__                   uniform
-#    define __UNIFORM_BUFFER__            
+#    define __UNIFORM_BUFFER__
 #else
 #    define LAYOUT_LOCATION( x )
 #    define LAYOUT_UNIFORM( s, b )
 #    define LAYOUT_UNIFORM_BUFFER( s, b )
 #    define __UNIFORM__
-#    define __UNIFORM_BUFFER__            struct
+#    define __UNIFORM_BUFFER__ struct
 #endif
 
 #if defined( __GLSL__ ) || defined( __cplusplus )
@@ -30,4 +30,12 @@ typedef struct _sampler2D sampler2D;
 #    include "Core/Math/Types.h"
 inline float4 gl_Position;
 #endif
+
+#define VIEW_PARAMETERS_BIND_POINT    0
+#define CAMERA_PARAMETERS_BIND_POINT  0
+#define MATERIAL_DATA_BIND_POINT      1
+#define MATERIAL_TEXTURES_BIND_POINT  2
+#define DIRECTIONAL_LIGHTS_BIND_POINT 3
+#define PUNCTUAL_LIGHTS_BIND_POINT    4
+
 #endif

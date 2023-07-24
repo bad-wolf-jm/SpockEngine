@@ -38,16 +38,14 @@ namespace SE::Core
 {
     using namespace SE::Core::EntityComponentSystem::Components;
     using namespace SE::Core::Primitives;
+    using namespace math;
+
 
     NewSceneRenderer::NewSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
         : BaseSceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {
         // auto lLayout = MeshRenderer::GetCameraSetLayout( mGraphicContext );
         // mSceneDescriptors = lLayout->Allocate();
-        // mCameraUniformBuffer =
-        //     CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( WorldMatrices ) );
-        // mShaderParametersBuffer =
-        //     CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraSettings ) );
         // mSceneDescriptors->Write( mCameraUniformBuffer, false, 0, sizeof( WorldMatrices ), 0 );
         // mSceneDescriptors->Write( mShaderParametersBuffer, false, 0, sizeof( CameraSettings ), 1 );
         // mLightingDirectionalShadowLayout   = DeferredLightingRenderer::GetDirectionalShadowSetLayout( mGraphicContext );
@@ -387,7 +385,9 @@ namespace SE::Core
         {
             mGeometryContext->Bind( lQueue.mPipeline );
             lMaterialSystem->ConfigureRenderContext( mGeometryContext );
-            
+            lMaterialSystem->SetViewParameters( mProjectionMatrix, mViewMatrix, mCameraPosition );
+            lMaterialSystem->SetCameraParameters( mGamma, mExposure );
+
             for( auto const &lMesh : lQueue.mMeshes )
             {
                 lMaterialSystem->SelectMaterialInstance( mGeometryContext, lMesh.mMaterialID );
