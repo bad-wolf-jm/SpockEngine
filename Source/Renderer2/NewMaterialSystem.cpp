@@ -462,6 +462,9 @@ namespace SE::Core
 
     void NewMaterialSystem::ConfigureRenderContext( Ref<IRenderContext> aRenderPass )
     {
+        aRenderPass->Bind( mViewParametersDescriptor, VIEW_PARAMETERS_BIND_POINT );
+        aRenderPass->Bind( mCameraParametersDescriptor, CAMERA_PARAMETERS_BIND_POINT );
+        aRenderPass->Bind( mShaderMaterialsDescriptor, MATERIAL_DATA_BIND_POINT );
         aRenderPass->Bind( mShaderMaterialsDescriptor, MATERIAL_DATA_BIND_POINT );
         aRenderPass->Bind( mMaterialTexturesDescriptor, MATERIAL_TEXTURES_BIND_POINT );
     }
@@ -474,7 +477,7 @@ namespace SE::Core
 
     void NewMaterialSystem::SetCameraParameters( float aGamma, float aExposure )
     {
-        CameraParameters lCamera{ aGamma, aExposure };
+        CameraParameters lCamera{ aExposure, aGamma };
         mCameraParameters->Write( lCamera );
     }
 
