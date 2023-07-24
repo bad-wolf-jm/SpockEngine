@@ -62,8 +62,8 @@ namespace SE::Graphics
         {
             lOutput << lProgramFragment << std::endl;
         }
-
-        return lOutput.str();
+        auto x = lOutput.str();
+        return x;
     }
 
     std::string IShaderProgram::Hash()

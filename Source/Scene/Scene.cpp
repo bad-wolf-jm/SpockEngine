@@ -525,8 +525,13 @@ namespace SE::Core
             auto &lNewMaterial1 = mNewMaterialSystem->CreateMaterial( lScenarioRoot / lMaterialID );
 
             for( auto &lEntity : lEntities )
+            {
                 lReadContext.mEntities[lEntity].AddOrReplace<sMaterialComponent>( lNewMaterial.mID );
+                lReadContext.mEntities[lEntity].AddOrReplace<sNewMaterialComponent>( lNewMaterial1 );
+            }
         } );
+
+        mNewMaterialSystem->UpdateMaterialData();
 
         std::mutex lBufferLock;
         // clang-format on

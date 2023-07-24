@@ -7,6 +7,8 @@
 #include "Scene/MaterialSystem/MaterialSystem.h"
 #include "Scene/Serialize/AssetFile.h"
 
+#include <fstream>
+
 namespace SE::Core
 {
     struct ViewParameters
@@ -48,6 +50,37 @@ namespace SE::Core
             CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( ViewParameters ) );
         mCameraParameters =
             CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraParameters ) );
+
+        mViewParametersDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
+        mViewParametersDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::VERTEX } );
+        mViewParametersDescriptorLayout->Build();
+
+        mCameraParametersDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
+        mCameraParametersDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        mCameraParametersDescriptorLayout->Build();
+
+        mShaderMaterials =
+            CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, true, true, true, sizeof( sShaderMaterial ) );
+
+        // Descriptors layout for material data
+        mShaderMaterialsDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
+        mShaderMaterialsDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        mShaderMaterialsDescriptorLayout->Build();
+
+        // Descriptors layout for texture array
+        mMaterialTexturesDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
+        mMaterialTexturesDescriptorLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
+        mMaterialTexturesDescriptorLayout->Build();
+
+        // Descriptors layout for directional lights
+        mDirectionalLightsDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
+        mDirectionalLightsDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        mDirectionalLightsDescriptorLayout->Build();
+
+        // Descriptors layout for pubctual lights
+        mPunctualLightsDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
+        mPunctualLightsDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        mPunctualLightsDescriptorLayout->Build();
     }
 
     void NewMaterialSystem::SetLights( std::vector<sDirectionalLightData> const &aDirectionalLights )
@@ -196,11 +229,14 @@ namespace SE::Core
         auto        lShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, lShaderName, lShaderPath );
         mFragmentShaders[GetMaterialHash( aMaterial )] = lShader;
 
-        AddDefinitions( lShader, aMaterial );
+        lShader->AddCode( "#extension GL_EXT_nonuniform_qualifier : enable" );
 
+        AddDefinitions( lShader, aMaterial );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\Definitions.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Varying.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\LightData.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\ShaderMaterial.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\FragmentShaderUniformInputs.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\HelperFunctions.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Material.hpp" );
 
@@ -221,7 +257,13 @@ namespace SE::Core
         auto lNewPipeline    = SE::Graphics::CreateGraphicsPipeline( mGraphicContext, aRenderPass, ePrimitiveTopology::TRIANGLES );
 
         lVertexShader->Compile();
+
+        std::ofstream lOutput( "D:\\Work\\Git\\SpockEngine\\test_fs.cpp" );
+
+        lOutput << lFragmentShader->Program();
+        lOutput.close();
         lFragmentShader->Compile();
+
         lNewPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
         lNewPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, lFragmentShader, "main" );
 
@@ -246,41 +288,15 @@ namespace SE::Core
 
         lNewPipeline->SetLineWidth( lMaterialInfo.mLineWidth );
 
-        mViewParametersDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
-        mViewParametersDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::VERTEX } );
-        mViewParametersDescriptorLayout->Build();
         lNewPipeline->AddDescriptorSet( mViewParametersDescriptorLayout );
-
-        mCameraParametersDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
-        mCameraParametersDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
-        mCameraParametersDescriptorLayout->Build();
         lNewPipeline->AddDescriptorSet( mCameraParametersDescriptorLayout );
-
-        // Descriptors layout for material data
-        mShaderMaterialsDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
-        mShaderMaterialsDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
-        mShaderMaterialsDescriptorLayout->Build();
         lNewPipeline->AddDescriptorSet( mShaderMaterialsDescriptorLayout );
-
-        // Descriptors layout for texture array
-        auto lTextureDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
-        lTextureDescriptorLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER, { eShaderStageTypeFlags::FRAGMENT } );
-        lTextureDescriptorLayout->Build();
-        lNewPipeline->AddDescriptorSet( lTextureDescriptorLayout );
+        lNewPipeline->AddDescriptorSet( mMaterialTexturesDescriptorLayout );
 
         if( lMaterialInfo.mShadingModel != eShadingModel::UNLIT )
         {
-            // Descriptors layout for directional lights
-            auto lDirectionalLightDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
-            lDirectionalLightDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
-            lDirectionalLightDescriptorLayout->Build();
-            lNewPipeline->AddDescriptorSet( lDirectionalLightDescriptorLayout );
-
-            // Descriptors layout for pubctual lights
-            auto lPunctualLightDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
-            lPunctualLightDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
-            lPunctualLightDescriptorLayout->Build();
-            lNewPipeline->AddDescriptorSet( lPunctualLightDescriptorLayout );
+            lNewPipeline->AddDescriptorSet( mDirectionalLightsDescriptorLayout );
+            lNewPipeline->AddDescriptorSet( mPunctualLightsDescriptorLayout );
         }
 
         lNewPipeline->AddPushConstantRange( { eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( int32_t ) );

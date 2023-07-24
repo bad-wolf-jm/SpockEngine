@@ -152,6 +152,17 @@ namespace SE::Core
         Ref<IDescriptorSet>       mShaderMaterialsDescriptor       = nullptr;
         Ref<IDescriptorSetLayout> mShaderMaterialsDescriptorLayout = nullptr;
 
+        // Ref<IDescriptorSet>       mTextureDescriptor       = nullptr;
+        // Ref<IDescriptorSetLayout> mTextureDescriptorLayout = nullptr;
+
+        Ref<IGraphicBuffer>       mShaderDirectionalLights                 = nullptr;
+        Ref<IDescriptorSet>       mDirectionalLightsDescriptor       = nullptr;
+        Ref<IDescriptorSetLayout> mDirectionalLightsDescriptorLayout = nullptr;
+
+        Ref<IGraphicBuffer>       mShaderPunctualLights                 = nullptr;
+        Ref<IDescriptorSet>       mPunctualLightsDescriptor       = nullptr;
+        Ref<IDescriptorSetLayout> mPunctualLightsDescriptorLayout = nullptr;
+
         Cuda::GPUMemory           mMaterialCudaTextures{};
         Ref<IDescriptorSet>       mMaterialTexturesDescriptor       = nullptr;
         Ref<IDescriptorSetLayout> mMaterialTexturesDescriptorLayout = nullptr;
@@ -169,8 +180,8 @@ namespace SE::Core
         void SetLights( std::vector<sPointLightData> const &aPointLights );
 
         void ConfigureRenderContext( Ref<IRenderContext> aRenderPass );
-        void SetViewParameters(mat4 aProjection, mat4 aView, vec3 aCameraPosition);
-        void SetCameraParameters(float aGamma, float aExposure);
+        void SetViewParameters( mat4 aProjection, mat4 aView, vec3 aCameraPosition );
+        void SetCameraParameters( float aGamma, float aExposure );
         void SelectMaterialInstance( Ref<IRenderContext> aRenderPass, Material aMaterialID );
 
       private:
