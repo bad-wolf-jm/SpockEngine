@@ -111,6 +111,19 @@ LAYOUT_UNIFORM_BUFFER( 3, 0 ) __UNIFORM_BUFFER__ PointLights
 // clang-format on
 #endif
 
+#if !defined( __cplusplus )
+layout( push_constant ) uniform Material
+{
+    int mMaterialID;
+}
+gMaterialID;
+#else
+struct Material
+{
+    int mMaterialID;
+} gMaterialID
+#endif
+
 #if defined( MATERIAL_HAS_UV0 )
 float ColorTextureFetch( int aTexID, int aUVChannel )
 {
@@ -133,12 +146,21 @@ float TextureFetch( int aTexID, int aUVChannel )
 }
 #endif
 
+inline sShaderMaterial GetMaterialData()
+{
+    if (gMaterialID.mMaterialID > -1)
+        return gMaterials.mArray[gMaterialID.mMaterialID];
+
+    sShaderMaterial lDefault;
+    return lDefault;
+}
+
 float4 GetBaseColor()
 {
-    float4 lBaseColor = gMaterialData.mBaseColorFactor;
+    float4 lBaseColor = GetMaterialData().mBaseColorFactor;
 
 #if defined( MATERIAL_HAS_BASE_COLOR_TEXTURE ) && defined( MATERIAL_HAS_UV0 )
-    lBaseColor *= ColorTextureFetch( gMaterialData.mBaseColorTextureID, gMaterialData.mBaseColorUVChannel );
+    lBaseColor *= ColorTextureFetch( GetMaterialData().mBaseColorTextureID, GetMaterialData().mBaseColorUVChannel );
 #endif
 
     return lBaseColor;
@@ -146,10 +168,10 @@ float4 GetBaseColor()
 
 float3 GetEmissive()
 {
-    float3 lEmissive = gMaterialData.mEmissiveFactor;
+    float3 lEmissive = GetMaterialData().mEmissiveFactor;
 
 #if defined( MATERIAL_HAS_EMISSIVE_TEXTURE ) && defined( MATERIAL_HAS_UV0 )
-    lBaseColor *= ColorTextureFetch( gMaterialData.mEmissiveTextureID, gMaterialData.mEmissiveUVChannel );
+    lBaseColor *= ColorTextureFetch( GetMaterialData().mEmissiveTextureID, GetMaterialData().mEmissiveUVChannel );
 #endif
 
     return lEmissive;
@@ -158,7 +180,7 @@ float3 GetEmissive()
 float3 GetNormal()
 {
 #if defined( MATERIAL_HAS_NORMALS_TEXTURE ) && defined( MATERIAL_HAS_UV0 )
-    return GetNormalFromMap( gMaterialData.mNormalTextureID, gMaterialData.mNormalUVChannel );
+    return GetNormalFromMap( GetMaterialData().mNormalTextureID, GetMaterialData().mNormalUVChannel );
 #else
     return normalize( inNormal );
 #endif
@@ -167,7 +189,7 @@ float3 GetNormal()
 float GetAmbientOcclusion()
 {
 #if defined( MATERIAL_HAS_OCCLUSION_TEXTURE ) && defined( MATERIAL_HAS_UV0 )
-    return TextureFetch( gMaterialData.mOcclusionTextureID, gMaterialData.mOcclusionUVChannel );
+    return TextureFetch( GetMaterialData().mOcclusionTextureID, GetMaterialData().mOcclusionUVChannel );
 #else
     return 1.0;
 #endif
@@ -182,7 +204,7 @@ void InitializeMaterial( out MaterialInput aMaterial )
 #endif
 
 #if !defined( SHADING_MODEL_UNLIT )
-    aMaterial.mRoughness = clamp( gMaterialData.mRoughnessFactor, MIN_ROUGHNESS, 1.0 );
+    aMaterial.mRoughness = clamp( GetMaterialData().mRoughnessFactor, MIN_ROUGHNESS, 1.0 );
 
 #    if defined( MATERIAL_HAS_METAL_ROUGH_TEXTURE )
     float4 lSampledValues = GetAOMetalRough();
@@ -190,7 +212,7 @@ void InitializeMaterial( out MaterialInput aMaterial )
 #    endif
 
 #    if !defined( SHADING_MODEL_CLOTH )
-    aMaterial.mMetallic = clamp( gMaterialData.mMetallicFactor, 0.0, 1.0 );
+    aMaterial.mMetallic = clamp( GetMaterialData().mMetallicFactor, 0.0, 1.0 );
 #        if defined( MATERIAL_HAS_METAL_ROUGH_TEXTURE )
     aMaterial.mMetallic *= lSampledValues.r;
 #        endif

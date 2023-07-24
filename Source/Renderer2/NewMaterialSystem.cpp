@@ -246,6 +246,8 @@ namespace SE::Core
             lNewPipeline->AddDescriptorSet( lPunctualLightDescriptorLayout );
         }
 
+        lNewPipeline->AddPushConstantRange( { eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( int32_t ) );
+
         lNewPipeline->Build();
 
         return lNewPipeline;
@@ -260,7 +262,8 @@ namespace SE::Core
 
     void NewMaterialSystem::AppendMaterialData( Material aMaterial, sMaterialInfo const &aInfo )
     {
-        auto &lNew = mMaterialData.emplace_back();
+        auto &lNew                       = mMaterialData.emplace_back();
+        mMaterialIndexLookup[aMaterial] = mMaterialData.size() - 1;
 
         if( aMaterial.Has<sBaseColorTexture>() )
         {
@@ -330,14 +333,14 @@ namespace SE::Core
         mMaterialTexturesDescriptor = mMaterialTexturesDescriptorLayout->Allocate( 1024 );
         mMaterialTexturesDescriptor->Write( mTextureData, 0 );
 
-        if( mMaterialTextures.SizeAs<Cuda::TextureSampler2D::DeviceData>() < mTextureData.size() )
+        if( mMaterialCudaTextures.SizeAs<Cuda::TextureSampler2D::DeviceData>() < mTextureData.size() )
         {
-            mMaterialTextures.Dispose();
+            mMaterialCudaTextures.Dispose();
             std::vector<Cuda::TextureSampler2D::DeviceData> lTextureDeviceData{};
             for( auto const &lCudaTextureSampler : mTextureData )
                 lTextureDeviceData.push_back( lCudaTextureSampler->mDeviceData );
 
-            mMaterialTextures = Cuda::GPUMemory::Create( lTextureDeviceData );
+            mMaterialCudaTextures = Cuda::GPUMemory::Create( lTextureDeviceData );
         }
     }
 
@@ -416,9 +419,20 @@ namespace SE::Core
 
     void NewMaterialSystem::ConfigureRenderContext( Ref<IRenderContext> aRenderPass )
     {
+        aRenderPass->Bind( mShaderMaterialsDescriptor, 0 );
+        aRenderPass->Bind( mMaterialTexturesDescriptor, 1 );
+    }
+
+    int32_t NewMaterialSystem::GetMaterialIndex( Material aMaterial )
+    {
+        if( mMaterialIndexLookup.find( aMaterial ) == mMaterialIndexLookup.end() )
+            return -1;
+
+        return mMaterialIndexLookup[aMaterial];
     }
 
     void NewMaterialSystem::SelectMaterialInstance( Ref<IRenderContext> aRenderPass, Material aMaterialID )
     {
+        aRenderPass->PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, GetMaterialIndex( aMaterialID ) );
     }
 } // namespace SE::Core

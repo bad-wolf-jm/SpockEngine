@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 
 #include "Core/Entity/Collection.h"
 #include "Core/Math/Types.h"
@@ -143,10 +143,11 @@ namespace SE::Core
         Ref<IGraphicBuffer>       mShaderMaterials                 = nullptr;
         Ref<IDescriptorSet>       mShaderMaterialsDescriptor       = nullptr;
         Ref<IDescriptorSetLayout> mShaderMaterialsDescriptorLayout = nullptr;
-
-        Cuda::GPUMemory           mMaterialTextures{};
+        Cuda::GPUMemory           mMaterialCudaTextures{};
         Ref<IDescriptorSet>       mMaterialTexturesDescriptor       = nullptr;
         Ref<IDescriptorSetLayout> mMaterialTexturesDescriptorLayout = nullptr;
+
+        std::unordered_map<Material, int32_t> mMaterialIndexLookup;
 
       public:
         Ref<IShaderProgram>    CreateVertexShader( Material const &aMaterial );
@@ -177,7 +178,8 @@ namespace SE::Core
         void        AddDefinitions( Ref<IShaderProgram> aShaderProgram, Material aMaterial );
         std::string CreateShaderName( Material aMaterial, const char *aPrefix );
 
-        void AppendMaterialData( Material aMaterial, sMaterialInfo const &aInfo );
+        void    AppendMaterialData( Material aMaterial, sMaterialInfo const &aInfo );
+        int32_t GetMaterialIndex( Material aMaterial );
     };
 
 } // namespace SE::Core
