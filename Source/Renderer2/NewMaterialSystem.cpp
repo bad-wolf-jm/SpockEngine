@@ -294,10 +294,6 @@ namespace SE::Core
         lInputDescription.messages                          = GLSLANG_MSG_VULKAN_RULES_BIT;
         lInputDescription.resource                          = glslang_default_resource();
 
-        // lInputDescription.callbacks.include_system      = IncludeSystemFile;
-        // lInputDescription.callbacks.include_local       = IncludeLocalFile;
-        // lInputDescription.callbacks.free_include_result = FreeIncludeResult;
-
         glslang_initialize_process();
 
         glslang_shader_t *lNewShader = glslang_shader_create( &lInputDescription );
