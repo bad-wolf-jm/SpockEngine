@@ -89,52 +89,6 @@ struct MaterialInputs
 #endif
 };
 
-// // clang-format off
-// LAYOUT_UNIFORM_BUFFER( CAMERA_PARAMETERS_BIND_POINT, 0 ) __UNIFORM_BUFFER__ CameraParameters 
-// { 
-//     float mExposure;
-//     float mGamma;
-// } gCamera;
-// // clang-format on
-
-// // Try to be as bindless as possible and bind all available textures andd all materials
-// // in one go as an array.
-// // clang-format off
-// LAYOUT_UNIFORM_BUFFER( MATERIAL_DATA_BIND_POINT, 0 ) __UNIFORM_BUFFER__ ShaderMaterials 
-// { 
-//     sShaderMaterial mArray[]; 
-// } gMaterials;
-// // clang-format on
-
-// LAYOUT_UNIFORM( MATERIAL_TEXTURES_BIND_POINT, 0 ) __UNIFORM__ sampler2D gTextures[];
-
-// #if !defined( SHADING_MODEL_UNLIT )
-// // clang-format off
-// LAYOUT_UNIFORM_BUFFER( DIRECTIONAL_LIGHTS_BIND_POINT, 0 ) __UNIFORM_BUFFER__ DirectionalLights
-// {
-//     sDirectionalLight mArray[];
-// } gDirectionalLights;
-
-// LAYOUT_UNIFORM_BUFFER( PUNCTUAL_LIGHTS_BIND_POINT, 0 ) __UNIFORM_BUFFER__ PointLights
-// {
-//     sPointLight mArray[];
-// } gPointLights;
-// // clang-format on
-// #endif
-
-// #if !defined( __cplusplus )
-// layout( push_constant ) uniform Material
-// {
-//     int mMaterialID;
-// }
-// gMaterialID;
-// #else
-// struct Material
-// {
-//     int mMaterialID;
-// } gMaterialID
-// #endif
-
 #if defined( MATERIAL_HAS_UV0 )
 float4 ColorTextureFetch( int aTexID, int aUVChannel )
 {
@@ -182,7 +136,7 @@ float3 GetEmissive()
     float3 lEmissive = GetMaterialData().mEmissiveFactor.xyz;
 
 #if defined( MATERIAL_HAS_EMISSIVE_TEXTURE ) && defined( MATERIAL_HAS_UV0 )
-    lBaseColor *= ColorTextureFetch( GetMaterialData().mEmissiveTextureID, GetMaterialData().mEmissiveUVChannel );
+    lEmissive *= ColorTextureFetch( GetMaterialData().mEmissiveTextureID, GetMaterialData().mEmissiveUVChannel ).xyz;
 #endif
 
     return lEmissive;

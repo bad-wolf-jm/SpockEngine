@@ -341,7 +341,6 @@ namespace SE::Core
         if( lMaterialInfo.mRequiresNormals )
             lNewPipeline->AddInput( "Normal", eBufferDataType::VEC3, 0, 1 );
 
-
         if( lMaterialInfo.mRequiresUV0 && !lMaterialInfo.mRequiresUV1 )
             lNewPipeline->AddInput( "UV", eBufferDataType::VEC2, 0, 2 );
         else if( lMaterialInfo.mRequiresUV1 )
@@ -426,7 +425,7 @@ namespace SE::Core
         {
             auto &lData = aMaterial.Get<sEmissiveTexture>();
 
-            lNew.mEmissiveFactor    = math::vec4(lData.mFactor, 0.0f);
+            lNew.mEmissiveFactor    = math::vec4( lData.mFactor, 0.0f );
             lNew.mEmissiveUVChannel = lData.mUVChannel;
             lNew.mEmissiveTextureID = AppendTextureData( lData.mTexture );
         }
@@ -457,7 +456,7 @@ namespace SE::Core
             mShaderMaterials = CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, false, true, true, lBufferSize );
             mShaderMaterialsDescriptor->Write( mShaderMaterials, false, 0, lBufferSize, 0 );
         }
-        mShaderMaterials->Upload(mMaterialData);
+        mShaderMaterials->Upload( mMaterialData );
 
         mMaterialTexturesDescriptor = mMaterialTexturesDescriptorLayout->Allocate( 1024 );
         mMaterialTexturesDescriptor->Write( mTextureData, 0 );

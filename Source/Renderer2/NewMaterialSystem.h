@@ -152,14 +152,11 @@ namespace SE::Core
         Ref<IDescriptorSet>       mShaderMaterialsDescriptor       = nullptr;
         Ref<IDescriptorSetLayout> mShaderMaterialsDescriptorLayout = nullptr;
 
-        // Ref<IDescriptorSet>       mTextureDescriptor       = nullptr;
-        // Ref<IDescriptorSetLayout> mTextureDescriptorLayout = nullptr;
-
-        Ref<IGraphicBuffer>       mShaderDirectionalLights                 = nullptr;
+        Ref<IGraphicBuffer>       mShaderDirectionalLights           = nullptr;
         Ref<IDescriptorSet>       mDirectionalLightsDescriptor       = nullptr;
         Ref<IDescriptorSetLayout> mDirectionalLightsDescriptorLayout = nullptr;
 
-        Ref<IGraphicBuffer>       mShaderPunctualLights                 = nullptr;
+        Ref<IGraphicBuffer>       mShaderPunctualLights           = nullptr;
         Ref<IDescriptorSet>       mPunctualLightsDescriptor       = nullptr;
         Ref<IDescriptorSetLayout> mPunctualLightsDescriptorLayout = nullptr;
 
