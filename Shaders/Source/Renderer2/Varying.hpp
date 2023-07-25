@@ -19,3 +19,6 @@ LAYOUT_LOCATION( 2 ) __SHADER_INPUT__ float2 inUV;
 #elif defined( MATERIAL_HAS_UV1 )
 LAYOUT_LOCATION( 2 ) __SHADER_INPUT__ float4 inUV;
 #endif
+
+LAYOUT_LOCATION( 3) __SHADER_INPUT__ float4 inUnused0;
+LAYOUT_LOCATION( 4 ) __SHADER_INPUT__ float4 inUnused1;

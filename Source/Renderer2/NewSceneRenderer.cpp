@@ -383,9 +383,10 @@ namespace SE::Core
         mGeometryContext->BeginRender();
         for( auto const &[_, lQueue] : mPipelines )
         {
-            mGeometryContext->Bind( lQueue.mPipeline );
             lMaterialSystem->SetViewParameters( mProjectionMatrix, mViewMatrix, mCameraPosition );
             lMaterialSystem->SetCameraParameters( mGamma, mExposure );
+
+            mGeometryContext->Bind( lQueue.mPipeline );
             lMaterialSystem->ConfigureRenderContext( mGeometryContext );
 
             for( auto const &lMesh : lQueue.mMeshes )

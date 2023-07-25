@@ -17,7 +17,7 @@ LAYOUT_LOCATION( 2 ) __SHADER_OUTPUT__ float4 outUV;
 
 
 // clang-format off
-LAYOUT_UNIFORM_BUFFER( VIEW_PARAMETERS_BIND_POINT, 0 ) __UNIFORM_BUFFER__ ViewParameters 
+LAYOUT_UNIFORM( VIEW_PARAMETERS_BIND_POINT, 0 ) ViewParameters 
 { 
     float4x4 mProjection;
     float4x4 mView;

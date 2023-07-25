@@ -11,7 +11,7 @@
 
 
 // clang-format off
-LAYOUT_UNIFORM_BUFFER( CAMERA_PARAMETERS_BIND_POINT, 0 ) __UNIFORM_BUFFER__ CameraParameters 
+LAYOUT_UNIFORM( CAMERA_PARAMETERS_BIND_POINT, 0 ) CameraParameters 
 { 
     float mExposure;
     float mGamma;
@@ -27,7 +27,7 @@ LAYOUT_UNIFORM_BUFFER( MATERIAL_DATA_BIND_POINT, 0 ) __UNIFORM_BUFFER__ ShaderMa
 } gMaterials;
 // clang-format on
 
-LAYOUT_UNIFORM( MATERIAL_TEXTURES_BIND_POINT, 0 ) __UNIFORM__ sampler2D gTextures[];
+LAYOUT_UNIFORM( MATERIAL_TEXTURES_BIND_POINT, 0 ) sampler2D gTextures[];
 
 #if !defined( SHADING_MODEL_UNLIT )
 // clang-format off

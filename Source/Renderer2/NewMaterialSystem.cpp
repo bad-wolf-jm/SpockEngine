@@ -7,6 +7,9 @@
 #include "Scene/MaterialSystem/MaterialSystem.h"
 #include "Scene/Serialize/AssetFile.h"
 
+#include "glslang/Include/glslang_c_interface.h"
+#include "glslang/Include/glslang_c_shader_types.h"
+#include "glslang/Public/resource_limits_c.h"
 #include <fstream>
 
 namespace SE::Core
@@ -51,12 +54,12 @@ namespace SE::Core
         mCameraParameters =
             CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraParameters ) );
 
-        mViewParametersDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
-        mViewParametersDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::VERTEX } );
+        mViewParametersDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext );
+        mViewParametersDescriptorLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
         mViewParametersDescriptorLayout->Build();
 
-        mCameraParametersDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
-        mCameraParametersDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        mCameraParametersDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext );
+        mCameraParametersDescriptorLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
         mCameraParametersDescriptorLayout->Build();
 
         mShaderMaterials =
@@ -251,24 +254,79 @@ namespace SE::Core
         return lShader;
     }
 
+    static void DumpProgram( eShaderStageTypeFlags aShaderStage, std::string const &aCode, fs::path const &aFileName )
+    {
+        glslang_input_t lInputDescription{};
+        lInputDescription.language = GLSLANG_SOURCE_GLSL;
+
+        switch( aShaderStage )
+        {
+        case eShaderStageTypeFlags::GEOMETRY:
+            lInputDescription.stage = GLSLANG_STAGE_GEOMETRY;
+            break;
+        case eShaderStageTypeFlags::FRAGMENT:
+            lInputDescription.stage = GLSLANG_STAGE_FRAGMENT;
+            break;
+        case eShaderStageTypeFlags::TESSELATION_CONTROL:
+            lInputDescription.stage = GLSLANG_STAGE_TESSCONTROL;
+            break;
+        case eShaderStageTypeFlags::TESSELATION_EVALUATION:
+            lInputDescription.stage = GLSLANG_STAGE_TESSEVALUATION;
+            break;
+        case eShaderStageTypeFlags::COMPUTE:
+            lInputDescription.stage = GLSLANG_STAGE_COMPUTE;
+            break;
+        case eShaderStageTypeFlags::VERTEX:
+        default:
+            lInputDescription.stage = GLSLANG_STAGE_VERTEX;
+            break;
+        }
+
+        lInputDescription.client                            = GLSLANG_CLIENT_VULKAN;
+        lInputDescription.client_version                    = GLSLANG_TARGET_VULKAN_1_3;
+        lInputDescription.target_language                   = GLSLANG_TARGET_SPV;
+        lInputDescription.target_language_version           = GLSLANG_TARGET_SPV_1_3;
+        lInputDescription.code                              = aCode.c_str();
+        lInputDescription.default_version                   = 460;
+        lInputDescription.default_profile                   = GLSLANG_NO_PROFILE;
+        lInputDescription.force_default_version_and_profile = false;
+        lInputDescription.forward_compatible                = false;
+        lInputDescription.messages                          = GLSLANG_MSG_VULKAN_RULES_BIT;
+        lInputDescription.resource                          = glslang_default_resource();
+
+        // lInputDescription.callbacks.include_system      = IncludeSystemFile;
+        // lInputDescription.callbacks.include_local       = IncludeLocalFile;
+        // lInputDescription.callbacks.free_include_result = FreeIncludeResult;
+
+        glslang_initialize_process();
+
+        glslang_shader_t *lNewShader = glslang_shader_create( &lInputDescription );
+
+        if( !glslang_shader_preprocess( lNewShader, &lInputDescription ) )
+        {
+            SE::Logging::Info( "{}", glslang_shader_get_info_log( lNewShader ) );
+            SE::Logging::Info( "{}", glslang_shader_get_info_debug_log( lNewShader ) );
+        }
+
+        std::ofstream lOutput( aFileName );
+        lOutput << glslang_shader_get_preprocessed_code( lNewShader );
+        lOutput.close();
+    }
+
     Ref<IGraphicsPipeline> NewMaterialSystem::CreateGraphicsPipeline( Material const &aMaterial, Ref<IRenderContext> aRenderPass )
     {
         auto lVertexShader   = CreateVertexShader( aMaterial );
         auto lFragmentShader = CreateFragmentShader( aMaterial );
         auto lNewPipeline    = SE::Graphics::CreateGraphicsPipeline( mGraphicContext, aRenderPass, ePrimitiveTopology::TRIANGLES );
 
-        {
-            std::ofstream lOutput( "D:\\Work\\Git\\SpockEngine\\test_vs.cpp" );
-            lOutput << lVertexShader->Program();
-            lOutput.close();
-        }
-        lVertexShader->Compile();
+        auto lOut0 =
+            fmt::format( "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\debug_dump\\vertex_{}.hpp", GetMaterialHash( aMaterial ) );
+        auto lOut1 =
+            fmt::format( "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\debug_dump\\fragment_{}.hpp", GetMaterialHash( aMaterial ) );
+        DumpProgram( eShaderStageTypeFlags::VERTEX, lVertexShader->Program(), lOut0 );
+        DumpProgram( eShaderStageTypeFlags::FRAGMENT, lFragmentShader->Program(), lOut1 );
 
-        {
-            std::ofstream lOutput( "D:\\Work\\Git\\SpockEngine\\test_fs.cpp" );
-            lOutput << lFragmentShader->Program();
-            lOutput.close();
-        }
+        lVertexShader->Compile();
         lFragmentShader->Compile();
 
         lNewPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
@@ -283,10 +341,14 @@ namespace SE::Core
         if( lMaterialInfo.mRequiresNormals )
             lNewPipeline->AddInput( "Normal", eBufferDataType::VEC3, 0, 1 );
 
+
         if( lMaterialInfo.mRequiresUV0 && !lMaterialInfo.mRequiresUV1 )
             lNewPipeline->AddInput( "UV", eBufferDataType::VEC2, 0, 2 );
         else if( lMaterialInfo.mRequiresUV1 )
             lNewPipeline->AddInput( "UV", eBufferDataType::VEC4, 0, 2 );
+
+        lNewPipeline->AddInput( "Bones", eBufferDataType::VEC4, 0, 3 );
+        lNewPipeline->AddInput( "Weights", eBufferDataType::VEC4, 0, 4 );
 
         if( lMaterialInfo.mIsTwoSided )
             lNewPipeline->SetCulling( eFaceCulling::NONE );
@@ -395,6 +457,7 @@ namespace SE::Core
             mShaderMaterials = CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, false, true, true, lBufferSize );
             mShaderMaterialsDescriptor->Write( mShaderMaterials, false, 0, lBufferSize, 0 );
         }
+        mShaderMaterials->Upload(mMaterialData);
 
         mMaterialTexturesDescriptor = mMaterialTexturesDescriptorLayout->Allocate( 1024 );
         mMaterialTexturesDescriptor->Write( mTextureData, 0 );
