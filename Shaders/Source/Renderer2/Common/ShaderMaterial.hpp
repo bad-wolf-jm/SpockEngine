@@ -6,24 +6,31 @@
 #endif
 
 // Shared with engine renderer code
+#if defined( __cplusplus )
+#    define ALIGN( x ) alignas( x )
+#else
+#    define ALIGN( x )
+#endif
 
-struct sShaderMaterial
+struct ALIGN( 16 ) sShaderMaterial
 {
     float4 mBaseColorFactor;
     float  mMetallicFactor;
     float  mRoughnessFactor;
     float  mOcclusionStrength;
-    float3 mEmissiveFactor;
-    int    mBaseColorUVChannel;
-    int    mBaseColorTextureID;
-    int    mEmissiveUVChannel;
-    int    mEmissiveTextureID;
-    int    mNormalUVChannel;
-    int    mNormalTextureID;
-    int    mMetalnessUVChannel;
-    int    mMetalnessTextureID;
-    int    mOcclusionUVChannel;
-    int    mOcclusionTextureID;
+    ALIGN( 16 ) float4 mEmissiveFactor;
+    int mBaseColorUVChannel;
+    int mBaseColorTextureID;
+    int mEmissiveUVChannel;
+    int mEmissiveTextureID;
+
+    int mNormalUVChannel;
+    int mNormalTextureID;
+    int mMetalnessUVChannel;
+    int mMetalnessTextureID;
+
+    int mOcclusionUVChannel;
+    int mOcclusionTextureID;
 };
 
 #endif

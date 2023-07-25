@@ -179,7 +179,7 @@ float4 GetBaseColor()
 
 float3 GetEmissive()
 {
-    float3 lEmissive = GetMaterialData().mEmissiveFactor;
+    float3 lEmissive = GetMaterialData().mEmissiveFactor.xyz;
 
 #if defined( MATERIAL_HAS_EMISSIVE_TEXTURE ) && defined( MATERIAL_HAS_UV0 )
     lBaseColor *= ColorTextureFetch( GetMaterialData().mEmissiveTextureID, GetMaterialData().mEmissiveUVChannel );

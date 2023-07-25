@@ -426,7 +426,7 @@ namespace SE::Core
         {
             auto &lData = aMaterial.Get<sEmissiveTexture>();
 
-            lNew.mEmissiveFactor    = lData.mFactor;
+            lNew.mEmissiveFactor    = math::vec4(lData.mFactor, 0.0f);
             lNew.mEmissiveUVChannel = lData.mUVChannel;
             lNew.mEmissiveTextureID = AppendTextureData( lData.mTexture );
         }
