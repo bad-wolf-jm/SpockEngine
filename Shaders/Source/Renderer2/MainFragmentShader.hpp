@@ -17,7 +17,7 @@ void main()
     MaterialInputs lMaterial;
     InitializeMaterial( lMaterial );
 
-    material( lMaterial );
+    // material( lMaterial );
 
 #if defined( MATERIAL_HAS_EMISSIVE )
     outColor = tonemap( lMaterial.mBaseColor + lMaterial.mEmissive );

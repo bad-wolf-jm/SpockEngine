@@ -247,7 +247,7 @@ namespace SE::Core
         if( aMaterial.Has<sFragmentShader>() )
             lShader->AddCode( "//" );
         else
-            lShader->AddCode( "void material( out MaterialInputs aMaterial ) {}" );
+            lShader->AddCode( "void material( inout MaterialInputs aMaterial ) {}" );
 
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\MainFragmentShader.hpp" );
 

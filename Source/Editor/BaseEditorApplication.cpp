@@ -42,6 +42,7 @@ namespace SE::Editor
         mEditorWindow.UpdateFramerate( ts );
         mDeferredRenderer->Update( mEditorWindow.ActiveWorld );
         mNewSceneRenderer->Update( mEditorWindow.ActiveWorld );
+        mNewSceneRenderer->SetView( mEditorWindow.ActiveWorld->mEditorView );
 
         if( mApplicationInstance )
         {
