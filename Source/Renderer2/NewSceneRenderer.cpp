@@ -11,8 +11,8 @@
 #include "Core/Profiling/BlockTimer.h"
 #include "Core/Resource.h"
 
+#include "Renderer2/Common/LightInputData.hpp"
 #include "Scene/Scene.h"
-
 // #include "Scene/Renderer/DeferredLightingRenderer.h"
 // #include "Scene/Renderer/MeshRenderer.h"
 // #include "Scene/Renderer/ParticleSystemRenderer.h"
@@ -39,7 +39,6 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem::Components;
     using namespace SE::Core::Primitives;
     using namespace math;
-
 
     NewSceneRenderer::NewSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
         : BaseSceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
@@ -304,25 +303,36 @@ namespace SE::Core
         if( mScene == nullptr )
             return;
 
-        std::vector<sDirectionalLightData> lDirectionalLights;
-        std::vector<sPointLightData>       lPointLights;
+        bool                        lFoundDirectionalLight = false;
+        sDirectionalLight           lDirectionalLight;
+        std::vector<sPunctualLight> lPointLights;
 
         // clang-format off
-        mScene->ForEach<sNewLightComponent>( [&]( auto aEntity, auto &aComponent ) 
+        mScene->ForEach<sLightComponent>( [&]( auto aEntity, auto &aComponent ) 
         { 
             switch( aComponent.mType )
             {
-            case eNewLightType::DIRECTIONAL:
-                lDirectionalLights.emplace_back(  aComponent, mScene->GetFinalTransformMatrix( aEntity ) );
+            case eLightType::DIRECTIONAL:
+                if ((!aComponent.mIsOn) || lFoundDirectionalLight)
+                    return;
+                lDirectionalLight.mColorIntensity = math::vec4(aComponent.mColor, aComponent.mIntensity);
+                lDirectionalLight.mDirection = mat3(mScene->GetFinalTransformMatrix( aEntity ) )* vec3{ 0.0f, 0.0f, 1.0f };
+                lDirectionalLight.mCastsShadows = true;
+                lFoundDirectionalLight = true;
                 break;
-            case eNewLightType::POINT_LIGHT:
-                lPointLights.emplace_back( aComponent, mScene->GetFinalTransformMatrix( aEntity ) );
+            case eLightType::POINT_LIGHT:
+                if ((!aComponent.mIsOn))
+                    return;
+                auto &lNewPointLight = lPointLights.emplace_back();
+                lNewPointLight.mColorIntensity = math::vec4(aComponent.mColor, aComponent.mIntensity);
+                lNewPointLight.mPosition = vec3( mScene->GetFinalTransformMatrix( aEntity )[3]);
+                lNewPointLight.mCastsShadows = true;
                 break;
             }
         } );
         // clang-format on
 
-        mScene->GetNewMaterialSystem()->SetLights( lDirectionalLights );
+        mScene->GetNewMaterialSystem()->SetLights( lDirectionalLight );
         mScene->GetNewMaterialSystem()->SetLights( lPointLights );
 
         for( auto &[lMaterialHash, lRenderQueue] : mPipelines )

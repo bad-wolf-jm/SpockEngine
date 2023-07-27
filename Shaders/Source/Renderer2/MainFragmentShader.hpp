@@ -12,16 +12,22 @@ void material( out MaterialInput aMaterial )
 }
 #endif
 
+#if defined( __cplusplus )
+#    if !defined( SHADING_MODEL_UNLIT )
+#        include "ShadingModelLit.hpp"
+#    else
+#        include "ShadingModelUnlit.hpp"
+#    endif
+#endif
+
 void main()
 {
     MaterialInputs lMaterial;
     InitializeMaterial( lMaterial );
 
-    // material( lMaterial );
+    material( lMaterial );
 
-#if defined( MATERIAL_HAS_EMISSIVE )
-    outColor = tonemap( lMaterial.mBaseColor + lMaterial.mEmissive );
-#else
-    outColor = lMaterial.mBaseColor;
-#endif
+    float4 lColor = EvaluateMaterial( lMaterial );
+
+    outColor = lColor;
 }

@@ -31,6 +31,12 @@ typedef struct _sampler2D sampler2D;
 inline float4 gl_Position;
 #endif
 
+#if defined( __cplusplus )
+#    define ALIGN( x ) alignas( x )
+#else
+#    define ALIGN( x )
+#endif
+
 #define VIEW_PARAMETERS_BIND_POINT    0
 #define CAMERA_PARAMETERS_BIND_POINT  1
 #define MATERIAL_DATA_BIND_POINT      2

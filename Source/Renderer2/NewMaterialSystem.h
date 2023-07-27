@@ -8,9 +8,13 @@
 
 #include "Graphics/API.h"
 
+#include "Renderer2/Common/LightInputData.hpp"
 #include "Renderer2/Common/ShaderMaterial.hpp"
-#include "SceneRenderData.h"
 
+#include "Core/Memory.h"
+
+#include "Graphics/Vulkan/DescriptorSet.h"
+#include "Graphics/Vulkan/VkGraphicsPipeline.h"
 namespace SE::Core
 {
     using namespace math;
@@ -132,10 +136,10 @@ namespace SE::Core
 
         EntityCollection mMaterialRegistry;
 
-        std::vector<Ref<ISampler2D>>       mTextureData;
-        std::vector<sShaderMaterial>       mMaterialData;
-        std::vector<sDirectionalLightData> mDirectionalLights;
-        std::vector<sPointLightData>       mPointLights;
+        std::vector<Ref<ISampler2D>> mTextureData;
+        std::vector<sShaderMaterial> mMaterialData;
+        sDirectionalLight            mDirectionalLights;
+        std::vector<sPunctualLight>  mPointLights;
 
         std::map<size_t, Ref<IShaderProgram>> mVertexShaders;
         std::map<size_t, Ref<IShaderProgram>> mFragmentShaders;
@@ -173,8 +177,8 @@ namespace SE::Core
 
         Ref<IGraphicsPipeline> GetGraphicsPipeline( Material const &aMaterial );
 
-        void SetLights( std::vector<sDirectionalLightData> const &aDirectionalLights );
-        void SetLights( std::vector<sPointLightData> const &aPointLights );
+        void SetLights( sDirectionalLight const &aDirectionalLights );
+        void SetLights( std::vector<sPunctualLight> const &aPointLights );
 
         void ConfigureRenderContext( Ref<IRenderContext> aRenderPass );
         void SetViewParameters( mat4 aProjection, mat4 aView, vec3 aCameraPosition );

@@ -31,10 +31,10 @@ LAYOUT_UNIFORM( MATERIAL_TEXTURES_BIND_POINT, 0 ) sampler2D gTextures[];
 
 #if !defined( SHADING_MODEL_UNLIT )
 // clang-format off
-LAYOUT_UNIFORM_BUFFER( DIRECTIONAL_LIGHTS_BIND_POINT, 0 ) __UNIFORM_BUFFER__ DirectionalLights
+LAYOUT_UNIFORM( DIRECTIONAL_LIGHTS_BIND_POINT, 0 ) DirectionalLight
 {
-    sDirectionalLight mArray[];
-} gDirectionalLights;
+    sDirectionalLight mData;
+} gDirectionalLight;
 
 LAYOUT_UNIFORM_BUFFER( PUNCTUAL_LIGHTS_BIND_POINT, 0 ) __UNIFORM_BUFFER__ PointLights
 {

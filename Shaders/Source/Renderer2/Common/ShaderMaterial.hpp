@@ -5,12 +5,6 @@
 #    include "Definitions.hpp"
 #endif
 
-// Shared with engine renderer code
-#if defined( __cplusplus )
-#    define ALIGN( x ) alignas( x )
-#else
-#    define ALIGN( x )
-#endif
 
 struct ALIGN( 16 ) sShaderMaterial
 {

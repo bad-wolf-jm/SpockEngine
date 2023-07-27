@@ -87,12 +87,12 @@ namespace SE::Core
         mPunctualLightsDescriptorLayout->Build();
     }
 
-    void NewMaterialSystem::SetLights( std::vector<sDirectionalLightData> const &aDirectionalLights )
+    void NewMaterialSystem::SetLights( sDirectionalLight const &aDirectionalLights )
     {
         mDirectionalLights = aDirectionalLights;
     }
 
-    void NewMaterialSystem::SetLights( std::vector<sPointLightData> const &aPointLights )
+    void NewMaterialSystem::SetLights( std::vector<sPunctualLight> const &aPointLights )
     {
         mPointLights = aPointLights;
     }
@@ -238,11 +238,32 @@ namespace SE::Core
         AddDefinitions( lShader, aMaterial );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\Definitions.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Varying.hpp" );
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\LightData.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\LightInputData.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\ShaderMaterial.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\FragmentShaderUniformInputs.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Common\\HelperFunctions.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Material.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\ShadingData.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\LightData.hpp" );
+        
+        auto const &lMaterialInfo = aMaterial.Get<sMaterialInfo>();
+
+        switch( lMaterialInfo.mShadingModel )
+        {
+        case eShadingModel::STANDARD:
+            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\ShadingModelLit.hpp" );
+            break;
+        case eShadingModel::SUBSURFACE:
+            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\ShadingModelLit.hpp" );
+            break;
+        case eShadingModel::CLOTH:
+            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\ShadingModelLit.hpp" );
+            break;
+        case eShadingModel::UNLIT:
+        default:
+            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\ShadingModelUnlit.hpp" );
+            break;
+        }
 
         if( aMaterial.Has<sFragmentShader>() )
             lShader->AddCode( "//" );
