@@ -15,6 +15,8 @@ LAYOUT_LOCATION( 2 ) __SHADER_OUTPUT__ float2 outUV;
 LAYOUT_LOCATION( 2 ) __SHADER_OUTPUT__ float4 outUV;
 #endif
 
+LAYOUT_LOCATION( 3 ) __SHADER_OUTPUT__ float4 outUnused0;
+LAYOUT_LOCATION( 4 ) __SHADER_OUTPUT__ float4 outUnused1;
 
 // clang-format off
 LAYOUT_UNIFORM( VIEW_PARAMETERS_BIND_POINT, 0 ) ViewParameters 
@@ -25,13 +27,14 @@ LAYOUT_UNIFORM( VIEW_PARAMETERS_BIND_POINT, 0 ) ViewParameters
 } gView;
 // clang-format on
 
-
 void main()
 {
     // Pass vertex-level data to the fragment shader
     outWorldPos = inPos;
     outNormal   = inNormal;
     outUV       = inUV;
+    outUnused0  = inUnused0;
+    outUnused1  = inUnused1;
 
     // Vertices are already transformed eiher using CUDA or a compute shader
     gl_Position = gView.mProjection * gView.mView * vec4( inPos.xyz, 1.0 );

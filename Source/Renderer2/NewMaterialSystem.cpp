@@ -101,14 +101,14 @@ namespace SE::Core
     void NewMaterialSystem::SetLights( std::vector<sPunctualLight> const &aPointLights )
     {
         mPointLights = aPointLights;
-        auto x = mShaderPunctualLights->SizeAs<sPunctualLight>();
-        auto y = mPointLights.size();
+        auto x       = mShaderPunctualLights->SizeAs<sPunctualLight>();
+        auto y       = mPointLights.size();
         if( mShaderPunctualLights->SizeAs<sPunctualLight>() < mPointLights.size() )
         {
             auto lBufferSize      = std::max( mPointLights.size(), static_cast<size_t>( 1 ) ) * sizeof( sPunctualLight );
             mShaderPunctualLights = CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, false, true, true, lBufferSize );
             mPunctualLightsDescriptor = mPunctualLightsDescriptorLayout->Allocate( 1024 );
-            mPunctualLightsDescriptor->Write( mShaderPunctualLights, false, 0, mPointLights.size(), 0 );
+            mPunctualLightsDescriptor->Write( mShaderPunctualLights, false, 0, lBufferSize, 0 );
         }
         mShaderPunctualLights->Write( mPointLights );
     }
@@ -491,7 +491,7 @@ namespace SE::Core
         {
             auto lBufferSize = std::max( mMaterialData.size(), static_cast<size_t>( 1 ) ) * sizeof( sShaderMaterial );
             mShaderMaterials = CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, false, true, true, lBufferSize );
-            mShaderMaterialsDescriptor->Write( mShaderMaterials, false, 0, mMaterialData.size(), 0 );
+            mShaderMaterialsDescriptor->Write( mShaderMaterials, false, 0, lBufferSize, 0 );
         }
         mShaderMaterials->Upload( mMaterialData );
 
