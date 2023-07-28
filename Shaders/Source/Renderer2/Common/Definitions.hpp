@@ -5,11 +5,11 @@
 #    define LAYOUT_LOCATION( x )          layout( location = x )
 #    define LAYOUT_UNIFORM( s, b )        layout( set = s, binding = b ) uniform
 #    define LAYOUT_UNIFORM_BUFFER( s, b ) layout( set = s, binding = b ) readonly buffer
-#    define __UNIFORM__                   
+#    define __UNIFORM__
 #    define __UNIFORM_BUFFER__
 #else
 #    define LAYOUT_LOCATION( x )
-#    define LAYOUT_UNIFORM( s, b )
+#    define LAYOUT_UNIFORM( s, b ) struct
 #    define LAYOUT_UNIFORM_BUFFER( s, b )
 #    define __UNIFORM__
 #    define __UNIFORM_BUFFER__ struct

@@ -182,7 +182,7 @@ namespace SE::Core
 
         void ConfigureRenderContext( Ref<IRenderContext> aRenderPass );
         void SetViewParameters( mat4 aProjection, mat4 aView, vec3 aCameraPosition );
-        void SetCameraParameters( float aGamma, float aExposure );
+        void SetCameraParameters( float aGamma, float aExposure, vec3 aCameraPosition );
         void SelectMaterialInstance( Ref<IRenderContext> aRenderPass, Material aMaterialID );
 
       private:

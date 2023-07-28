@@ -394,7 +394,7 @@ namespace SE::Core
         for( auto const &[_, lQueue] : mPipelines )
         {
             lMaterialSystem->SetViewParameters( mProjectionMatrix, mViewMatrix, mCameraPosition );
-            lMaterialSystem->SetCameraParameters( mGamma, mExposure );
+            lMaterialSystem->SetCameraParameters( mGamma, mExposure, mCameraPosition );
 
             mGeometryContext->Bind( lQueue.mPipeline );
             lMaterialSystem->ConfigureRenderContext( mGeometryContext );

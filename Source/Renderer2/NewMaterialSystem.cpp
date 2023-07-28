@@ -30,6 +30,7 @@ namespace SE::Core
     {
         float mExposure = 4.5f;
         float mGamma    = 2.2f;
+        vec3  mPosition{};
 
         CameraParameters()  = default;
         ~CameraParameters() = default;
@@ -245,12 +246,13 @@ namespace SE::Core
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\Material.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\ShadingData.hpp" );
         lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\LightData.hpp" );
-        
+
         auto const &lMaterialInfo = aMaterial.Get<sMaterialInfo>();
 
         switch( lMaterialInfo.mShadingModel )
         {
         case eShadingModel::STANDARD:
+            lShader->AddFile("D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\SurfaceShadingStandard.hpp");
             lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\ShadingModelLit.hpp" );
             break;
         case eShadingModel::SUBSURFACE:
@@ -576,9 +578,9 @@ namespace SE::Core
         mViewParameters->Write( lView );
     }
 
-    void NewMaterialSystem::SetCameraParameters( float aGamma, float aExposure )
+    void NewMaterialSystem::SetCameraParameters( float aGamma, float aExposure, vec3 aCameraPosition )
     {
-        CameraParameters lCamera{ aExposure, aGamma };
+        CameraParameters lCamera{ aExposure, aGamma, aCameraPosition };
         mCameraParameters->Write( lCamera );
     }
 

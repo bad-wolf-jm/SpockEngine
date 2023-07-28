@@ -9,12 +9,12 @@
 #    include "Common/ShaderMaterial.hpp"
 #endif
 
-
 // clang-format off
 LAYOUT_UNIFORM( CAMERA_PARAMETERS_BIND_POINT, 0 ) CameraParameters 
 { 
     float mExposure;
     float mGamma;
+    float3 mPosition;
 } gCamera;
 // clang-format on
 

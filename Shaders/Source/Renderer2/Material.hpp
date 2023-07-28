@@ -178,10 +178,8 @@ void InitializeMaterial( out MaterialInputs aMaterial )
     float3 mNormal = GetNormal();
 #endif
 
-#define MIN_ROUGHNESS 0.04
-
 #if !defined( SHADING_MODEL_UNLIT )
-    aMaterial.mRoughness = clamp( GetMaterialData().mRoughnessFactor, MIN_ROUGHNESS, 1.0 );
+    aMaterial.mRoughness = clamp( GetMaterialData().mRoughnessFactor, 0.0, 1.0 );
 
 #    if defined( MATERIAL_HAS_METAL_ROUGH_TEXTURE )
     float4 lSampledValues = GetAOMetalRough();
