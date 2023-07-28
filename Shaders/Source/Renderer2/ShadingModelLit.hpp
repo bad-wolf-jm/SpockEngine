@@ -78,7 +78,7 @@ void EvaluateDirectionalLight( MaterialInputs aMaterial, ShadingData aShadingDat
 void ComputePointLightData( float3 inWorldPos, float3 aSurfaceNormal, float3 aEyeDirection, // samplerCube aShadowMap,
                             sPunctualLight aInData, out LightData aLightData )
 {
-    aLightData.mColorIntensity = aInData.mColorIntensity; //( aInData.Color, aInData.Intensity );
+    aLightData.mColorIntensity = aInData.mColorIntensity;
     aLightData.mL              = normalize( aInData.mPosition - inWorldPos );
     aLightData.mH              = normalize( aEyeDirection + aLightData.mL );
     aLightData.mNdotL          = clamp( dot( aSurfaceNormal, aLightData.mL ), 0.0, 1.0 );
