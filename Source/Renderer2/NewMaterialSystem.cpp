@@ -30,7 +30,7 @@ namespace SE::Core
     {
         float mExposure = 4.5f;
         float mGamma    = 2.2f;
-        vec3  mPosition{};
+        ALIGN( 16 ) vec3 mPosition{};
 
         CameraParameters()  = default;
         ~CameraParameters() = default;
@@ -52,21 +52,19 @@ namespace SE::Core
     {
         mViewParameters =
             CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( ViewParameters ) );
-        mCameraParameters =
-            CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraParameters ) );
-
         mViewParametersDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext );
         mViewParametersDescriptorLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
         mViewParametersDescriptorLayout->Build();
 
+        mCameraParameters =
+            CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraParameters ) );
         mCameraParametersDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext );
         mCameraParametersDescriptorLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
         mCameraParametersDescriptorLayout->Build();
 
+        // Descriptors layout for material data
         mShaderMaterials =
             CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, true, true, true, sizeof( sShaderMaterial ) );
-
-        // Descriptors layout for material data
         mShaderMaterialsDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
         mShaderMaterialsDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
         mShaderMaterialsDescriptorLayout->Build();
@@ -78,24 +76,41 @@ namespace SE::Core
         mMaterialTexturesDescriptorLayout->Build();
 
         // Descriptors layout for directional lights
+        mShaderDirectionalLights =
+            CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( sDirectionalLight ) );
         mDirectionalLightsDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
-        mDirectionalLightsDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
+        mDirectionalLightsDescriptorLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
         mDirectionalLightsDescriptorLayout->Build();
 
         // Descriptors layout for pubctual lights
+        mShaderPunctualLights =
+            CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, true, true, true, sizeof( sPunctualLight ) );
         mPunctualLightsDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
         mPunctualLightsDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
         mPunctualLightsDescriptorLayout->Build();
+        mPunctualLightsDescriptor = mPunctualLightsDescriptorLayout->Allocate( 1024 );
+        mPunctualLightsDescriptor->Write( mShaderPunctualLights, false, 0, 1, 0 );
     }
 
     void NewMaterialSystem::SetLights( sDirectionalLight const &aDirectionalLights )
     {
-        mDirectionalLights = aDirectionalLights;
+        mDirectionalLight = aDirectionalLights;
+        mShaderDirectionalLights->Write( mDirectionalLight );
     }
 
     void NewMaterialSystem::SetLights( std::vector<sPunctualLight> const &aPointLights )
     {
         mPointLights = aPointLights;
+        auto x = mShaderPunctualLights->SizeAs<sPunctualLight>();
+        auto y = mPointLights.size();
+        if( mShaderPunctualLights->SizeAs<sPunctualLight>() < mPointLights.size() )
+        {
+            auto lBufferSize      = std::max( mPointLights.size(), static_cast<size_t>( 1 ) ) * sizeof( sPunctualLight );
+            mShaderPunctualLights = CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, false, true, true, lBufferSize );
+            mPunctualLightsDescriptor = mPunctualLightsDescriptorLayout->Allocate( 1024 );
+            mPunctualLightsDescriptor->Write( mShaderPunctualLights, false, 0, mPointLights.size(), 0 );
+        }
+        mShaderPunctualLights->Write( mPointLights );
     }
 
     Material NewMaterialSystem::CreateMaterial( std::string const &aName )
@@ -252,7 +267,7 @@ namespace SE::Core
         switch( lMaterialInfo.mShadingModel )
         {
         case eShadingModel::STANDARD:
-            lShader->AddFile("D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\SurfaceShadingStandard.hpp");
+            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\SurfaceShadingStandard.hpp" );
             lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\ShadingModelLit.hpp" );
             break;
         case eShadingModel::SUBSURFACE:
@@ -461,6 +476,9 @@ namespace SE::Core
         mCameraParametersDescriptor = mCameraParametersDescriptorLayout->Allocate();
         mCameraParametersDescriptor->Write( mCameraParameters, false, 0, sizeof( CameraParameters ), 0 );
 
+        mDirectionalLightsDescriptor = mDirectionalLightsDescriptorLayout->Allocate();
+        mDirectionalLightsDescriptor->Write( mShaderDirectionalLights, false, 0, sizeof( sDirectionalLight ), 0 );
+
         // clang-format off
         mMaterialRegistry.ForEach<sMaterialInfo>( [&]( auto aEntity, auto const &aMaterialInfo )
         { 
@@ -473,7 +491,7 @@ namespace SE::Core
         {
             auto lBufferSize = std::max( mMaterialData.size(), static_cast<size_t>( 1 ) ) * sizeof( sShaderMaterial );
             mShaderMaterials = CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, false, true, true, lBufferSize );
-            mShaderMaterialsDescriptor->Write( mShaderMaterials, false, 0, lBufferSize, 0 );
+            mShaderMaterialsDescriptor->Write( mShaderMaterials, false, 0, mMaterialData.size(), 0 );
         }
         mShaderMaterials->Upload( mMaterialData );
 
@@ -570,6 +588,8 @@ namespace SE::Core
         aRenderPass->Bind( mCameraParametersDescriptor, CAMERA_PARAMETERS_BIND_POINT );
         aRenderPass->Bind( mShaderMaterialsDescriptor, MATERIAL_DATA_BIND_POINT );
         aRenderPass->Bind( mMaterialTexturesDescriptor, MATERIAL_TEXTURES_BIND_POINT );
+        aRenderPass->Bind( mDirectionalLightsDescriptor, DIRECTIONAL_LIGHTS_BIND_POINT );
+        aRenderPass->Bind( mPunctualLightsDescriptor, PUNCTUAL_LIGHTS_BIND_POINT );
     }
 
     void NewMaterialSystem::SetViewParameters( mat4 aProjection, mat4 aView, vec3 aCameraPosition )

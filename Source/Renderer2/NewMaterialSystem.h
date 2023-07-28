@@ -138,7 +138,7 @@ namespace SE::Core
 
         std::vector<Ref<ISampler2D>> mTextureData;
         std::vector<sShaderMaterial> mMaterialData;
-        sDirectionalLight            mDirectionalLights;
+        sDirectionalLight            mDirectionalLight;
         std::vector<sPunctualLight>  mPointLights;
 
         std::map<size_t, Ref<IShaderProgram>> mVertexShaders;
