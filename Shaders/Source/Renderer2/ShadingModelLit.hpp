@@ -45,7 +45,7 @@ const mat4 biasMat = mat4( 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 1.0
 void ComputeDirectionalLightData( float3 inWorldPos, float3 aSurfaceNormal, float3 aEyeDirection, // sampler2D aShadowMap,
                                   sDirectionalLight aInData, out LightData aLightData )
 {
-    aLightData.mColorIntensity = aInData.mColorIntensity; //( aInData.Color, aInData.Intensity );
+    aLightData.mColorIntensity = aInData.mColorIntensity;
     aLightData.mL              = normalize( aInData.mDirection );
     aLightData.mH              = normalize( aEyeDirection + aLightData.mL );
     aLightData.mNdotL          = clamp( dot( aSurfaceNormal, aLightData.mL ), 0.0, 1.0 );
