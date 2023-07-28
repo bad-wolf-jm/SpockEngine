@@ -40,7 +40,7 @@ void EvaluateIBL( MaterialInputs aMaterial, ShadingData aShadingData, float3 inW
 {
 }
 
-const mat4 biasMat = mat4( 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.5, 0.5, 0.0, 1.0 );
+const float4x4 biasMat = mat4( 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.5, 0.5, 0.0, 1.0 );
 
 void ComputeDirectionalLightData( float3 inWorldPos, float3 aSurfaceNormal, float3 aEyeDirection, // sampler2D aShadowMap,
                                   sDirectionalLight aInData, out LightData aLightData )
@@ -53,8 +53,8 @@ void ComputeDirectionalLightData( float3 inWorldPos, float3 aSurfaceNormal, floa
     aLightData.mAttenuation    = 1.0;
     aLightData.mVisibility     = 1.0f;
 
-    // float4 lShadowNormalizedCoordinates = biasMat * aInData.Transform * float4( inWorldPos, 1.0f );
-    // lShadowNormalizedCoordinates /= lShadowNormalizedCoordinates.w;
+    float4 lShadowNormalizedCoordinates = biasMat * aInData.mTransform * float4( inWorldPos, 1.0f );
+    lShadowNormalizedCoordinates /= lShadowNormalizedCoordinates.w;
 
     // if( enablePCF == 1 )
     //     aLightData.mVisibility = FilterPCF( aShadowMap, lShadowNormalizedCoordinates );

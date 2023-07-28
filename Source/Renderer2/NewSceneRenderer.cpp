@@ -215,25 +215,6 @@ namespace SE::Core
         // }
     }
 
-    // Ref<MeshRenderer> NewSceneRenderer::GetRenderPipeline( MeshRendererCreateInfo const &aPipelineSpecification )
-    // {
-    //     if( mMeshRenderers.find( aPipelineSpecification ) == mMeshRenderers.end() )
-    //         mMeshRenderers[aPipelineSpecification] = New<MeshRenderer>( mGraphicContext, aPipelineSpecification );
-    //     return mMeshRenderers[aPipelineSpecification];
-    // }
-
-    // Ref<MeshRenderer> NewSceneRenderer::GetRenderPipeline( sMaterialShaderComponent &aPipelineSpecification )
-    // {
-    //     MeshRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
-    //     return GetRenderPipeline( lCreateInfo );
-    // }
-
-    // Ref<MeshRenderer> NewSceneRenderer::GetRenderPipeline( sMeshRenderData &aPipelineSpecification )
-    // {
-    //     MeshRendererCreateInfo lCreateInfo = GetRenderPipelineCreateInfo( aPipelineSpecification );
-    //     return GetRenderPipeline( lCreateInfo );
-    // }
-
     // Ref<ParticleSystemRenderer> NewSceneRenderer::GetRenderPipeline( ParticleRendererCreateInfo &aPipelineSpecification )
     // {
     //     if( mParticleRenderers.find( aPipelineSpecification ) == mParticleRenderers.end() )
@@ -308,6 +289,7 @@ namespace SE::Core
         std::vector<sPunctualLight> lPointLights;
 
         // clang-format off
+        const float aEntries[] = { 1.0f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f };
         mScene->ForEach<sLightComponent>( [&]( auto aEntity, auto &aComponent ) 
         { 
             switch( aComponent.mType )
@@ -320,18 +302,26 @@ namespace SE::Core
                 lDirectionalLight.mColorIntensity = math::vec4(aComponent.mColor, aComponent.mIntensity);
                 lDirectionalLight.mDirection = mat3(mScene->GetFinalTransformMatrix( aEntity ) )* vec3{ 0.0f, 0.0f, 1.0f };
                 lDirectionalLight.mCastsShadows = 1;
+                
+                math::mat4  lClip = math::MakeMat4( aEntries );
+                math::mat4 lProjection =
+                    math::Orthogonal( math::vec2{ -10.0f, 10.0f }, math::vec2{ -10.0f, 10.0f }, math::vec2{ -10.0f, 10.0f } );
+                math::mat4 lView =
+                    math::LookAt( lDirectionalLight.mDirection * 5.0f, math::vec3{ 0.0f, 0.0f, 0.0f }, math::vec3{ 0.0f, 1.0f, 0.0f } );
+                lDirectionalLight.mTransform = lClip * lProjection * lView;
+
                 lFoundDirectionalLight = true;
                 break;
             case eLightType::POINT_LIGHT:
-                if ((!aComponent.mIsOn))
+                if( ( !aComponent.mIsOn ) )
                     return;
-                auto &lNewPointLight = lPointLights.emplace_back();
-                lNewPointLight.mColorIntensity = math::vec4(aComponent.mColor, aComponent.mIntensity);
-                lNewPointLight.mPosition = vec3( mScene->GetFinalTransformMatrix( aEntity )[3]);
-                lNewPointLight.mCastsShadows = 1;
+                auto &lNewPointLight           = lPointLights.emplace_back();
+                lNewPointLight.mColorIntensity = math::vec4( aComponent.mColor, aComponent.mIntensity );
+                lNewPointLight.mPosition       = vec3( mScene->GetFinalTransformMatrix( aEntity )[3] );
+                lNewPointLight.mCastsShadows   = 1;
                 break;
-            }
-        } );
+                }
+            } );
         // clang-format on
 
         mScene->GetNewMaterialSystem()->SetLights( lDirectionalLight );

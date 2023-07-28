@@ -9,16 +9,17 @@
 
 struct sDirectionalLight
 {
-    float4 mColorIntensity;
-    float3 mDirection;
-    int mCastsShadows;
+    float4   mColorIntensity;
+    float4x4 mTransform;
+    float3   mDirection;
+    int      mCastsShadows;
 };
 
 struct sPunctualLight
 {
     float4 mColorIntensity;
     float3 mPosition;
-    int mCastsShadows;
+    int    mCastsShadows;
 };
 
 #endif
