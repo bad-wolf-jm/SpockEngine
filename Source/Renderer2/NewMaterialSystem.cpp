@@ -76,19 +76,21 @@ namespace SE::Core
         mMaterialTexturesDescriptorLayout->Build();
 
         // Descriptors layout for directional lights
-        mShaderDirectionalLights =
+        mShaderDirectionalLights = mShaderPunctualLights =
             CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( sDirectionalLight ) );
-        mDirectionalLightsDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
+        mDirectionalLightsDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext );
         mDirectionalLightsDescriptorLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
         mDirectionalLightsDescriptorLayout->Build();
 
         // Descriptors layout for pubctual lights
-        mShaderPunctualLights =
-            CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, true, true, true, sizeof( sPunctualLight ) );
+
         mPunctualLightsDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
         mPunctualLightsDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
         mPunctualLightsDescriptorLayout->Build();
-        mPunctualLightsDescriptor = mPunctualLightsDescriptorLayout->Allocate( 1024 );
+
+        mShaderPunctualLights =
+            CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, true, true, true, sizeof( sPunctualLight ) );
+        mPunctualLightsDescriptor = mPunctualLightsDescriptorLayout->Allocate( 1 );
         mPunctualLightsDescriptor->Write( mShaderPunctualLights, false, 0, 1, 0 );
     }
 
@@ -101,16 +103,17 @@ namespace SE::Core
     void NewMaterialSystem::SetLights( std::vector<sPunctualLight> const &aPointLights )
     {
         mPointLights = aPointLights;
-        auto x       = mShaderPunctualLights->SizeAs<sPunctualLight>();
+        auto x       = sizeof( sPunctualLight );
         auto y       = mPointLights.size();
         if( mShaderPunctualLights->SizeAs<sPunctualLight>() < mPointLights.size() )
         {
             auto lBufferSize      = std::max( mPointLights.size(), static_cast<size_t>( 1 ) ) * sizeof( sPunctualLight );
             mShaderPunctualLights = CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, false, true, true, lBufferSize );
-            mPunctualLightsDescriptor = mPunctualLightsDescriptorLayout->Allocate( 1024 );
+            mPunctualLightsDescriptor = mPunctualLightsDescriptorLayout->Allocate( 1 );
             mPunctualLightsDescriptor->Write( mShaderPunctualLights, false, 0, lBufferSize, 0 );
         }
-        mShaderPunctualLights->Write( mPointLights );
+
+        mShaderPunctualLights->Upload( mPointLights );
     }
 
     Material NewMaterialSystem::CreateMaterial( std::string const &aName )
@@ -486,7 +489,7 @@ namespace SE::Core
         });
         // clang-format on
 
-        mShaderMaterialsDescriptor = mShaderMaterialsDescriptorLayout->Allocate( 1024 );
+        mShaderMaterialsDescriptor = mShaderMaterialsDescriptorLayout->Allocate( 1 );
         if( mShaderMaterials->SizeAs<sShaderMaterial>() < mMaterialData.size() )
         {
             auto lBufferSize = std::max( mMaterialData.size(), static_cast<size_t>( 1 ) ) * sizeof( sShaderMaterial );
@@ -495,7 +498,7 @@ namespace SE::Core
         }
         mShaderMaterials->Upload( mMaterialData );
 
-        mMaterialTexturesDescriptor = mMaterialTexturesDescriptorLayout->Allocate( 1024 );
+        mMaterialTexturesDescriptor = mMaterialTexturesDescriptorLayout->Allocate( mTextureData.size() );
         mMaterialTexturesDescriptor->Write( mTextureData, 0 );
 
         if( mMaterialCudaTextures.SizeAs<Cuda::TextureSampler2D::DeviceData>() < mTextureData.size() )

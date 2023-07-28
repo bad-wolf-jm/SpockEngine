@@ -5,7 +5,7 @@
 #if defined( __cplusplus )
 #    include "Common/Definitions.hpp"
 #    include "Common/HelperFunctions.hpp"
-#    include "Common/LightData.hpp"
+#    include "Common/LightInputData.hpp"
 #    include "Common/ShaderMaterial.hpp"
 #endif
 

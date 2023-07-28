@@ -7,18 +7,18 @@
 
 // Shared with engine renderer code
 
-struct ALIGN( 16 ) sDirectionalLight
+struct sDirectionalLight
 {
     float4 mColorIntensity;
     float3 mDirection;
-    ALIGN( 16 ) bool mCastsShadows;
+    int mCastsShadows;
 };
 
-struct ALIGN( 16 ) sPunctualLight
+struct sPunctualLight
 {
     float4 mColorIntensity;
     float3 mPosition;
-    ALIGN( 16 ) bool mCastsShadows;
+    int mCastsShadows;
 };
 
 #endif

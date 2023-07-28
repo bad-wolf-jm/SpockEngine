@@ -70,13 +70,14 @@ void EvaluatePunctualLights( MaterialInputs aMaterial, ShadingData aShadingData,
     for( int i = 0; i < gPunctualLights.mArray.length(); i++ )
     {
         LightData lLightData;
-
         ComputePointLightData( inWorldPos, aMaterial.mNormal, V, gPunctualLights.mArray[i], lLightData );
 
 #if defined( MATERIAL_HAS_CURTOM_SURFACE_SHADING )
         aColor.rgb += CurtomSurfaceShading( V, aMaterial.mNormal, aShadingData, lLightData )
 #else
         aColor.rgb += SurfaceShading( V, aMaterial.mNormal, aShadingData, lLightData );
+        // aColor.rgb += V;//SurfaceShading( V, aMaterial.mNormal, aShadingData, lLightData );
+
 #endif
     }
 }

@@ -175,7 +175,7 @@ void InitializeMaterial( out MaterialInputs aMaterial )
     aMaterial.mBaseColor = GetBaseColor();
 
 #if defined( MATERIAL_HAS_NORMALS )
-    float3 mNormal = GetNormal();
+    aMaterial.mNormal = GetNormal();
 #endif
 
 #if !defined( SHADING_MODEL_UNLIT )

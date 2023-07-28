@@ -317,7 +317,7 @@ namespace SE::Core
                     return;
                 lDirectionalLight.mColorIntensity = math::vec4(aComponent.mColor, aComponent.mIntensity);
                 lDirectionalLight.mDirection = mat3(mScene->GetFinalTransformMatrix( aEntity ) )* vec3{ 0.0f, 0.0f, 1.0f };
-                lDirectionalLight.mCastsShadows = true;
+                lDirectionalLight.mCastsShadows = 1;
                 lFoundDirectionalLight = true;
                 break;
             case eLightType::POINT_LIGHT:
@@ -326,7 +326,7 @@ namespace SE::Core
                 auto &lNewPointLight = lPointLights.emplace_back();
                 lNewPointLight.mColorIntensity = math::vec4(aComponent.mColor, aComponent.mIntensity);
                 lNewPointLight.mPosition = vec3( mScene->GetFinalTransformMatrix( aEntity )[3]);
-                lNewPointLight.mCastsShadows = true;
+                lNewPointLight.mCastsShadows = 1;
                 break;
             }
         } );
