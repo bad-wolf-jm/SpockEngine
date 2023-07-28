@@ -10,6 +10,9 @@
 #include "SceneRenderData.h"
 
 #include "CoordinateGridRenderer.h"
+
+#include "Renderer2/Common/LightInputData.hpp"
+
 // #include "MeshRenderer.h"
 // #include "ParticleSystemRenderer.h"
 
@@ -104,30 +107,27 @@ namespace SE::Core
 
         static Ref<IDescriptorSet> GetDirectionalShadowMapsLayout();
 
-        std::vector<Ref<ISampler2D>> &GetDirectionalShadowMapSamplers()
+        Ref<ISampler2D> &GetDirectionalShadowMapSampler()
         {
-            return mDirectionalShadowMapSamplers;
-        };
-        std::vector<Ref<ISampler2D>> &GetSpotlightShadowMapSamplers()
-        {
-            return mSpotlightShadowMapSamplers;
-        };
+            return mDirectionalShadowMapSampler;
+        }
+
         std::vector<Ref<ISamplerCubeMap>> &GetPointLightShadowMapSamplers()
         {
             return mPointLightShadowMapSamplers;
-        };
+        }
+
+        
+    void SetLights( sDirectionalLight const &aDirectionalLights );
+
+    void SetLights( std::vector<sPunctualLight> const &aPointLights );
 
       protected:
-        std::vector<Ref<IRenderContext>> mDirectionalShadowMapRenderContext    = {};
-        std::vector<Ref<ISampler2D>>     mDirectionalShadowMapSamplers         = {};
-        std::vector<Ref<IGraphicBuffer>> mDirectionalShadowCameraUniformBuffer = {};
-        std::vector<Ref<IDescriptorSet>> mDirectionalShadowSceneDescriptors    = {};
-        Ref<NewShadowMeshRenderer>       mRenderPipeline                       = nullptr;
-
-        std::vector<Ref<IRenderContext>> mSpotlightShadowMapRenderContext    = {};
-        std::vector<Ref<ISampler2D>>     mSpotlightShadowMapSamplers         = {};
-        std::vector<Ref<IGraphicBuffer>> mSpotlightShadowCameraUniformBuffer = {};
-        std::vector<Ref<IDescriptorSet>> mSpotlightShadowSceneDescriptors    = {};
+        Ref<IRenderContext>        mDirectionalShadowMapRenderContext    = nullptr;
+        Ref<ISampler2D>            mDirectionalShadowMapSampler          = nullptr;
+        Ref<IGraphicBuffer>        mDirectionalShadowCameraUniformBuffer = nullptr;
+        Ref<IDescriptorSet>        mDirectionalShadowSceneDescriptor     = nullptr;
+        Ref<NewShadowMeshRenderer> mRenderPipeline                       = nullptr;
 
         std::vector<std::array<Ref<IRenderContext>, 6>> mPointLightsShadowMapRenderContext    = {};
         std::vector<Ref<ISamplerCubeMap>>               mPointLightShadowMapSamplers          = {};
@@ -150,6 +150,9 @@ namespace SE::Core
 
         Ref<IDescriptorSetLayout> mShadowMapDescriptorLayout = nullptr;
         Ref<IDescriptorSet>       mShadowMapDescriptorSet    = nullptr;
+
+        sDirectionalLight           mDirectionalLight;
+        std::vector<sPunctualLight> mPointLights;
     };
 
 } // namespace SE::Core

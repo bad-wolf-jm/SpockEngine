@@ -94,26 +94,26 @@ namespace SE::Core
     //     WorldMatrices( const WorldMatrices & ) = default;
     // };
 
-    // struct ShadowMatrices
-    // {
-    //     math::mat4 mMVP;
+    struct ShadowMatrices
+    {
+        math::mat4 mMVP;
 
-    //     ShadowMatrices()  = default;
-    //     ~ShadowMatrices() = default;
+        ShadowMatrices()  = default;
+        ~ShadowMatrices() = default;
 
-    //     ShadowMatrices( const ShadowMatrices & ) = default;
-    // };
+        ShadowMatrices( const ShadowMatrices & ) = default;
+    };
 
-    // struct OmniShadowMatrices
-    // {
-    //     math::mat4 mMVP;
-    //     math::vec4 mLightPos;
+    struct OmniShadowMatrices
+    {
+        math::mat4 mMVP;
+        math::vec4 mLightPos;
 
-    //     OmniShadowMatrices()  = default;
-    //     ~OmniShadowMatrices() = default;
+        OmniShadowMatrices()  = default;
+        ~OmniShadowMatrices() = default;
 
-    //     OmniShadowMatrices( const OmniShadowMatrices & ) = default;
-    // };
+        OmniShadowMatrices( const OmniShadowMatrices & ) = default;
+    };
 
     // struct CameraSettings
     // {
@@ -137,7 +137,6 @@ namespace SE::Core
 
     //     sLightGizmo( eLightType aType, uint64_t aLightDataIndex, math::mat4 aMatrix );
     // };
-
 
     // struct sParticleRenderData
     // {
