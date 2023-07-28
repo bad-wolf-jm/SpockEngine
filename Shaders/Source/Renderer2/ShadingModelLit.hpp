@@ -40,8 +40,39 @@ void EvaluateIBL( MaterialInputs aMaterial, ShadingData aShadingData, float3 inW
 {
 }
 
+const mat4 biasMat = mat4( 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.5, 0.5, 0.0, 1.0 );
+
+void ComputeDirectionalLightData( float3 inWorldPos, float3 aSurfaceNormal, float3 aEyeDirection, // sampler2D aShadowMap,
+                                  sDirectionalLight aInData, out LightData aLightData )
+{
+    aLightData.mColorIntensity = aInData.mColorIntensity; //( aInData.Color, aInData.Intensity );
+    aLightData.mL              = normalize( aInData.mDirection );
+    aLightData.mH              = normalize( aEyeDirection + aLightData.mL );
+    aLightData.mNdotL          = clamp( dot( aSurfaceNormal, aLightData.mL ), 0.0, 1.0 );
+    aLightData.mWorldPosition  = float3( 0.0 );
+    aLightData.mAttenuation    = 1.0;
+    aLightData.mVisibility     = 1.0f;
+
+    // float4 lShadowNormalizedCoordinates = biasMat * aInData.Transform * float4( inWorldPos, 1.0f );
+    // lShadowNormalizedCoordinates /= lShadowNormalizedCoordinates.w;
+
+    // if( enablePCF == 1 )
+    //     aLightData.mVisibility = FilterPCF( aShadowMap, lShadowNormalizedCoordinates );
+    // else
+    //     aLightData.mVisibility = TextureProj( aShadowMap, lShadowNormalizedCoordinates, vec2( 0.0 ) );
+}
+
 void EvaluateDirectionalLight( MaterialInputs aMaterial, ShadingData aShadingData, float3 inWorldPos, inout float3 aColor )
 {
+    float3    V = normalize( gCamera.mPosition - inWorldPos );
+    LightData lLightData;
+    ComputeDirectionalLightData( inWorldPos, aMaterial.mNormal, V, gDirectionalLight.mData, lLightData );
+
+#if defined( MATERIAL_HAS_CURTOM_SURFACE_SHADING )
+    aColor.rgb += CurtomSurfaceShading( V, aMaterial.mNormal, aShadingData, lLightData )
+#else
+    aColor.rgb += SurfaceShading( V, aMaterial.mNormal, aShadingData, lLightData );
+#endif
 }
 
 void ComputePointLightData( float3 inWorldPos, float3 aSurfaceNormal, float3 aEyeDirection, // samplerCube aShadowMap,

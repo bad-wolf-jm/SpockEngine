@@ -304,7 +304,7 @@ namespace SE::Core
             return;
 
         bool                        lFoundDirectionalLight = false;
-        sDirectionalLight           lDirectionalLight;
+        sDirectionalLight           lDirectionalLight{};
         std::vector<sPunctualLight> lPointLights;
 
         // clang-format off
@@ -313,7 +313,9 @@ namespace SE::Core
             switch( aComponent.mType )
             {
             case eLightType::DIRECTIONAL:
-                if ((!aComponent.mIsOn) || lFoundDirectionalLight)
+                if (lFoundDirectionalLight)
+                    return;
+                if ((!aComponent.mIsOn))
                     return;
                 lDirectionalLight.mColorIntensity = math::vec4(aComponent.mColor, aComponent.mIntensity);
                 lDirectionalLight.mDirection = mat3(mScene->GetFinalTransformMatrix( aEntity ) )* vec3{ 0.0f, 0.0f, 1.0f };
@@ -407,22 +409,7 @@ namespace SE::Core
                 mGeometryContext->Draw( lMesh.mIndexCount, lMesh.mIndexOffset, lMesh.mVertexOffset, 1, 0 );
             }
         }
-        // for( auto &lPipelineData : mOpaqueMeshQueue )
-        // {
-        //     auto lPipeline = GetRenderPipeline( lPipelineData );
-        //     if( lPipeline->Pipeline() )
-        //         mGeometryContext->Bind( lPipeline->Pipeline() );
-        //     else
-        //         continue;
-        //     mGeometryContext->Bind( mSceneDescriptors, 0, -1 );
-        //     mGeometryContext->Bind( mScene->GetMaterialSystem()->GetDescriptorSet(), 1, -1 );
-        //     if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
-        //     mGeometryContext->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
-        //     MeshRenderer::MaterialPushConstants lMaterialPushConstants{};
-        //     lMaterialPushConstants.mMaterialID = lPipelineData.mMaterialID;
-        //     mGeometryContext->PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, lMaterialPushConstants );
-        //     mGeometryContext->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
-        // }
+
         // for( auto &lParticleSystem : mParticleQueue )
         // {
         //     auto &lPipeline = GetRenderPipeline( lParticleSystem );
