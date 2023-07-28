@@ -1,4 +1,4 @@
-#include "ShadowSceneRenderer.h"
+#include "NewShadowSceneRenderer.h"
 
 #include <chrono>
 #include <gli/gli.hpp>
@@ -17,9 +17,9 @@
 #include "MeshRenderer.h"
 #include "ParticleSystemRenderer.h"
 
+#include "Shaders/gDirectionalShadowVertexShader.h"
 #include "Shaders/gOmniDirectionalShadowFragmentShader.h"
 #include "Shaders/gOmniDirectionalShadowVertexShader.h"
-#include "Shaders/gDirectionalShadowVertexShader.h"
 #include "Shaders/gVertexLayout.h"
 namespace SE::Core
 {
@@ -28,7 +28,7 @@ namespace SE::Core
     using namespace SE::Core::EntityComponentSystem::Components;
     using namespace SE::Core::Primitives;
 
-    Ref<IDescriptorSetLayout> ShadowMeshRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
+    Ref<IDescriptorSetLayout> NewShadowMeshRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
         auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
         lNewLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
@@ -37,7 +37,8 @@ namespace SE::Core
         return lNewLayout;
     }
 
-    ShadowMeshRenderer::ShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo )
+    NewShadowMeshRenderer::NewShadowMeshRenderer( Ref<IGraphicContext>                aGraphicContext,
+                                                  ShadowMeshRendererCreateInfo const &aCreateInfo )
         : mGraphicContext( aGraphicContext )
         , Spec{ aCreateInfo }
     {
@@ -47,8 +48,9 @@ namespace SE::Core
         mPipeline->SetCulling( eFaceCulling::BACK );
         mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
 
-        fs::path lShaderPath   = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
-        auto     lVertexShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "shadow_vertex_shader", lShaderPath );
+        fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
+        auto     lVertexShader =
+            CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "shadow_vertex_shader", lShaderPath );
         lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data );
         lVertexShader->AddCode( SE::Private::Shaders::gDirectionalShadowVertexShader_data );
         lVertexShader->Compile();
@@ -67,7 +69,7 @@ namespace SE::Core
         mPipeline->Build();
     }
 
-    Ref<IDescriptorSetLayout> OmniShadowMeshRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
+    Ref<IDescriptorSetLayout> NewOmniShadowMeshRenderer::GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext )
     {
         auto lNewLayout = CreateDescriptorSetLayout( aGraphicContext );
         lNewLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
@@ -76,8 +78,8 @@ namespace SE::Core
         return lNewLayout;
     }
 
-    OmniShadowMeshRenderer::OmniShadowMeshRenderer( Ref<IGraphicContext>                aGraphicContext,
-                                                    ShadowMeshRendererCreateInfo const &aCreateInfo )
+    NewOmniShadowMeshRenderer::NewOmniShadowMeshRenderer( Ref<IGraphicContext>                aGraphicContext,
+                                                          ShadowMeshRendererCreateInfo const &aCreateInfo )
         : mGraphicContext( aGraphicContext )
         , Spec{ aCreateInfo }
     {
@@ -87,7 +89,8 @@ namespace SE::Core
         mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
 
         fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
-        auto lVertexShader   = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath );
+        auto     lVertexShader =
+            CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath );
         lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data );
         lVertexShader->AddCode( SE::Private::Shaders::gOmniDirectionalShadowVertexShader_data );
         lVertexShader->Compile();
@@ -147,22 +150,24 @@ namespace SE::Core
         return lViewMatrix;
     }
 
-    ShadowSceneRenderer::ShadowSceneRenderer( Ref<IGraphicContext> aGraphicContext )
+    NewShadowSceneRenderer::NewShadowSceneRenderer( Ref<IGraphicContext> aGraphicContext )
         : ASceneRenderer( aGraphicContext, eColorFormat::UNDEFINED, 1 )
     {
-        auto lLayout      = ShadowMeshRenderer::GetCameraSetLayout( mGraphicContext );
+        auto lLayout      = NewShadowMeshRenderer::GetCameraSetLayout( mGraphicContext );
         mSceneDescriptors = lLayout->Allocate();
 
-        mCameraSetLayout = ShadowMeshRenderer::GetCameraSetLayout( mGraphicContext );
+        mCameraSetLayout = NewShadowMeshRenderer::GetCameraSetLayout( mGraphicContext );
 
         mCameraUniformBuffer =
             CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( ShadowMatrices ) );
         mSceneDescriptors->Write( mCameraUniformBuffer, false, 0, sizeof( ShadowMatrices ), 0 );
     }
 
-    void ShadowSceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight ) {}
+    void NewShadowSceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    {
+    }
 
-    Ref<IRenderTarget> ShadowSceneRenderer::NewRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    Ref<IRenderTarget> NewShadowSceneRenderer::NewRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
         sRenderTargetDescription lRenderTargetSpec{};
         lRenderTargetSpec.mWidth       = aOutputWidth;
@@ -183,7 +188,7 @@ namespace SE::Core
         return lRenderTarget;
     }
 
-    void ShadowSceneRenderer::Update( Ref<Scene> aWorld )
+    void NewShadowSceneRenderer::Update( Ref<Scene> aWorld )
     {
         ASceneRenderer::Update( aWorld );
 
@@ -313,7 +318,7 @@ namespace SE::Core
             ShadowMeshRendererCreateInfo lCreateInfo{};
             lCreateInfo.RenderPass = mDirectionalShadowMapRenderContext.back();
 
-            mRenderPipeline = New<ShadowMeshRenderer>( mGraphicContext, lCreateInfo );
+            mRenderPipeline = New<NewShadowMeshRenderer>( mGraphicContext, lCreateInfo );
         }
 
         if( mOmniRenderPipeline == nullptr && mPointLightsShadowMapRenderContext.size() > 0 )
@@ -321,15 +326,16 @@ namespace SE::Core
             ShadowMeshRendererCreateInfo lCreateInfo{};
             lCreateInfo.RenderPass = mPointLightsShadowMapRenderContext.back()[0];
 
-            mOmniRenderPipeline = New<OmniShadowMeshRenderer>( mGraphicContext, lCreateInfo );
+            mOmniRenderPipeline = New<NewOmniShadowMeshRenderer>( mGraphicContext, lCreateInfo );
         }
     }
 
-    void ShadowSceneRenderer::Render()
+    void NewShadowSceneRenderer::Render()
     {
         SE_PROFILE_FUNCTION();
 
-        if( !mScene ) return;
+        if( !mScene )
+            return;
 
         if( mRenderPipeline->Pipeline() )
         {
@@ -345,7 +351,8 @@ namespace SE::Core
 
                 for( auto &lPipelineData : mOpaqueMeshQueue )
                 {
-                    if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
+                    if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer )
+                        continue;
 
                     lContext->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
                     lContext->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
@@ -367,7 +374,8 @@ namespace SE::Core
 
                 for( auto &lPipelineData : mOpaqueMeshQueue )
                 {
-                    if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
+                    if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer )
+                        continue;
 
                     lContext->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
                     lContext->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
@@ -395,7 +403,8 @@ namespace SE::Core
 
                     for( auto &lPipelineData : mOpaqueMeshQueue )
                     {
-                        if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer ) continue;
+                        if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer )
+                            continue;
 
                         lContext[f]->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
                         lContext[f]->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
@@ -409,7 +418,7 @@ namespace SE::Core
         }
     }
 
-    Ref<ITexture2D> ShadowSceneRenderer::GetOutputImage()
+    Ref<ITexture2D> NewShadowSceneRenderer::GetOutputImage()
     {
         //
         return mGeometryRenderTarget->GetAttachment( "OUTPUT" );
