@@ -3,19 +3,9 @@
 #include <chrono>
 #include <gli/gli.hpp>
 
-// #include "Graphics/Vulkan/VkPipeline.h"
-// #include "Graphics/Vulkan/VkTextureCubeMap.h"
-
-// #include "Scene/Components/VisualHelpers.h"
-// #include "Scene/Primitives/Primitives.h"
-// #include "Scene/VertexData.h"
-
 #include "Core/Logging.h"
 #include "Core/Profiling/BlockTimer.h"
 #include "Core/Resource.h"
-
-// #include "MeshRenderer.h"
-// #include "ParticleSystemRenderer.h"
 
 #include "Shaders/gDirectionalShadowVertexShader.h"
 #include "Shaders/gOmniDirectionalShadowFragmentShader.h"
@@ -203,55 +193,16 @@ namespace SE::Core
     void NewShadowSceneRenderer::SetLights( sDirectionalLight const &aDirectionalLights )
     {
         mDirectionalLight = aDirectionalLights;
-        // mShaderDirectionalLights->Write( mDirectionalLight );
     }
 
     void NewShadowSceneRenderer::SetLights( std::vector<sPunctualLight> const &aPointLights )
     {
         mPointLights = aPointLights;
-        // auto x       = sizeof( sPunctualLight );
-        // auto y       = mPointLights.size();
-        // if( mShaderPunctualLights->SizeAs<sPunctualLight>() < mPointLights.size() )
-        // {
-        // auto lBufferSize      = std::max( mPointLights.size(), static_cast<size_t>( 1 ) ) * sizeof( sPunctualLight );
-        // mShaderPunctualLights = CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, false, true, true, lBufferSize );
-        // mPunctualLightsDescriptor = mPunctualLightsDescriptorLayout->Allocate( 1 );
-        // mPunctualLightsDescriptor->Write( mShaderPunctualLights, false, 0, lBufferSize, 0 );
-        // }
-
-        // mShaderPunctualLights->Upload( mPointLights );
     }
 
     void NewShadowSceneRenderer::Update( Ref<Scene> aWorld )
     {
         BaseSceneRenderer::Update( aWorld );
-
-        // if( mDirectionalLights.size() != mDirectionalShadowMapRenderContext.size() )
-        // {
-        //     mRenderPipeline = nullptr;
-
-        //     mDirectionalShadowMapRenderContext.clear();
-        //     mDirectionalShadowMapSamplers.clear();
-        //     for( uint32_t i = 0; i < mDirectionalLights.size(); i++ )
-        //     {
-        //         auto lDirectionalShadowMaps = NewRenderTarget( 1024, 1024 );
-
-        //         mDirectionalShadowMapSamplers.emplace_back();
-        //         mDirectionalShadowMapSamplers.back() =
-        //             CreateSampler2D( mGraphicContext, lDirectionalShadowMaps->GetAttachment( "SHADOW_MAP" ) );
-
-        //         mDirectionalShadowMapRenderContext.push_back( CreateRenderContext( mGraphicContext, lDirectionalShadowMaps ) );
-
-        //         mDirectionalShadowSceneDescriptors.emplace_back();
-        //         mDirectionalShadowSceneDescriptors.back() = mCameraSetLayout->Allocate();
-
-        //         mDirectionalShadowCameraUniformBuffer.emplace_back();
-        //         mDirectionalShadowCameraUniformBuffer.back() =
-        //             CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( ShadowMatrices ) );
-        //         mDirectionalShadowSceneDescriptors.back()->Write( mDirectionalShadowCameraUniformBuffer.back(), false, 0,
-        //                                                           sizeof( ShadowMatrices ), 0 );
-        //     }
-        // }
 
         constexpr int32_t mOmniShadowResolution = 1024;
         if( mPointLights.size() != mPointLightsShadowMapRenderContext.size() )
@@ -316,15 +267,6 @@ namespace SE::Core
             }
         }
 
-        // if( mRenderPipeline == nullptr &&
-        //     ( ( mDirectionalShadowMapRenderContext.size() > 0 ) || ( mSpotlightShadowMapRenderContext.size() > 0 ) ) )
-        // {
-        //     NewShadowMeshRendererCreateInfo lCreateInfo{};
-        //     lCreateInfo.RenderPass = mDirectionalShadowMapRenderContext.back();
-
-        //     mRenderPipeline = New<NewShadowMeshRenderer>( mGraphicContext, lCreateInfo );
-        // }
-
         if( mOmniRenderPipeline == nullptr && mPointLightsShadowMapRenderContext.size() > 0 )
         {
             NewShadowMeshRendererCreateInfo lCreateInfo{};
@@ -343,8 +285,6 @@ namespace SE::Core
         if( mRenderPipeline->Pipeline() )
         {
             uint32_t lLightIndex = 0;
-            // for( auto &lContext : mDirectionalShadowMapRenderContext )
-            // {
             View.mMVP = mDirectionalLight.mTransform;
             mDirectionalShadowCameraUniformBuffer->Write( View );
 
@@ -358,24 +298,12 @@ namespace SE::Core
                     if( !aStaticMeshComponent.mVertexBuffer || !aStaticMeshComponent.mIndexBuffer )
                         return;
 
-                    mDirectionalShadowMapRenderContext->Bind( aStaticMeshComponent.mVertexBuffer, aStaticMeshComponent.mIndexBuffer );
+                    mDirectionalShadowMapRenderContext->Bind( aStaticMeshComponent.mTransformedBuffer, aStaticMeshComponent.mIndexBuffer );
                     mDirectionalShadowMapRenderContext->Draw( aStaticMeshComponent.mIndexCount, aStaticMeshComponent.mIndexOffset,
                                                               aStaticMeshComponent.mVertexOffset, 1, 0 );
                 } );
 
-            // for( auto &lPipelineData : mOpaqueMeshQueue )
-            // {
-            //     if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer )
-            //         continue;
-
-            //     mDirectionalShadowMapRenderContext->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
-            //     mDirectionalShadowMapRenderContext->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset,
-            //                                               lPipelineData.mVertexOffset, 1, 0 );
-            // }
-
             mDirectionalShadowMapRenderContext->EndRender();
-            // lLightIndex++;
-            // }
 
             lLightIndex = 0;
             for( auto &lContext : mPointLightsShadowMapRenderContext )
@@ -399,18 +327,10 @@ namespace SE::Core
                             if( !aStaticMeshComponent.mVertexBuffer || !aStaticMeshComponent.mIndexBuffer )
                                 return;
 
-                            lContext[f]->Bind( aStaticMeshComponent.mVertexBuffer, aStaticMeshComponent.mIndexBuffer );
+                            lContext[f]->Bind( aStaticMeshComponent.mTransformedBuffer, aStaticMeshComponent.mIndexBuffer );
                             lContext[f]->Draw( aStaticMeshComponent.mIndexCount, aStaticMeshComponent.mIndexOffset,
                                                aStaticMeshComponent.mVertexOffset, 1, 0 );
                         } );
-                    // for( auto &lPipelineData : mOpaqueMeshQueue )
-                    // {
-                    //     if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer )
-                    //         continue;
-
-                    //     lContext[f]->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
-                    //     lContext[f]->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
-                    // }
 
                     lContext[f]->EndRender();
                 }

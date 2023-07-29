@@ -49,30 +49,12 @@ namespace SE::Core
         eColorFormat mOutputFormat      = eColorFormat::RGBA8_UNORM;
         uint32_t     mOutputSampleCount = 1;
 
-        // std::vector<DirectionalLightData> mDirectionalLights = {};
-        // std::vector<PointLightData>       mPointLights       = {};
-        // std::vector<SpotlightData>        mSpotlights        = {};
-
         mat4  mProjectionMatrix{};
         mat4  mViewMatrix{};
         vec3  mCameraPosition{};
         float mExposure     = 4.5f;
         float mGamma        = 2.2f;
         vec4  mAmbientLight = { 1.0f, 1.0f, 1.0f, 0.0001f };
-
-      protected:
-        // Helpers for light position and intensity
-        // std::vector<sLightGizmo> mLightGizmos{};
-
-        // Mesh queues
-        // std::vector<sMeshRenderData> mOpaqueMeshQueue{};
-        // std::vector<sMeshRenderData> mTransparentMeshQueue{};
-
-        // Point cloud visualizer queue
-        // std::vector<sParticleRenderData> mParticleQueue{};
-
-      private:
-        // void AddLight( mat4 const &aTransform, sLightComponent &aLightComponent );
     };
 
 } // namespace SE::Core
