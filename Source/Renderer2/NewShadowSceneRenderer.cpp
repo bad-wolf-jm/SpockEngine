@@ -37,7 +37,7 @@ namespace SE::Core
     }
 
     NewShadowMeshRenderer::NewShadowMeshRenderer( Ref<IGraphicContext>                aGraphicContext,
-                                                  ShadowMeshRendererCreateInfo const &aCreateInfo )
+                                                  NewShadowMeshRendererCreateInfo const &aCreateInfo )
         : mGraphicContext( aGraphicContext )
         , Spec{ aCreateInfo }
     {
@@ -78,7 +78,7 @@ namespace SE::Core
     }
 
     NewOmniShadowMeshRenderer::NewOmniShadowMeshRenderer( Ref<IGraphicContext>                aGraphicContext,
-                                                          ShadowMeshRendererCreateInfo const &aCreateInfo )
+                                                          NewShadowMeshRendererCreateInfo const &aCreateInfo )
         : mGraphicContext( aGraphicContext )
         , Spec{ aCreateInfo }
     {
@@ -158,20 +158,21 @@ namespace SE::Core
         mCameraSetLayout = NewShadowMeshRenderer::GetCameraSetLayout( mGraphicContext );
 
         mCameraUniformBuffer =
-            CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( ShadowMatrices ) );
-        mSceneDescriptors->Write( mCameraUniformBuffer, false, 0, sizeof( ShadowMatrices ), 0 );
+            CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( NewShadowMatrices ) );
+        mSceneDescriptors->Write( mCameraUniformBuffer, false, 0, sizeof( NewShadowMatrices ), 0 );
 
-        ShadowMeshRendererCreateInfo lCreateInfo{};
+
+        auto lDirectionalShadowMaps        = NewRenderTarget( 1024, 1024 );
+        mDirectionalShadowMapRenderContext = CreateRenderContext( mGraphicContext, lDirectionalShadowMaps );
+        NewShadowMeshRendererCreateInfo lCreateInfo{};
         lCreateInfo.RenderPass = mDirectionalShadowMapRenderContext;
 
         mRenderPipeline                    = New<NewShadowMeshRenderer>( mGraphicContext, lCreateInfo );
-        auto lDirectionalShadowMaps        = NewRenderTarget( 1024, 1024 );
         mDirectionalShadowMapSampler       = CreateSampler2D( mGraphicContext, lDirectionalShadowMaps->GetAttachment( "SHADOW_MAP" ) );
-        mDirectionalShadowMapRenderContext = CreateRenderContext( mGraphicContext, lDirectionalShadowMaps );
         mDirectionalShadowSceneDescriptor  = mCameraSetLayout->Allocate();
         mDirectionalShadowCameraUniformBuffer =
-            CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( ShadowMatrices ) );
-        mDirectionalShadowSceneDescriptor->Write( mDirectionalShadowCameraUniformBuffer, false, 0, sizeof( ShadowMatrices ), 0 );
+            CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( NewShadowMatrices ) );
+        mDirectionalShadowSceneDescriptor->Write( mDirectionalShadowCameraUniformBuffer, false, 0, sizeof( NewShadowMatrices ), 0 );
     }
 
     void NewShadowSceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
@@ -308,9 +309,9 @@ namespace SE::Core
                     mPointLightsShadowMapRenderContext.back()[f]    = CreateRenderContext( mGraphicContext, lRenderTarget );
                     mPointLightsShadowSceneDescriptors.back()[f]    = mCameraSetLayout->Allocate();
                     mPointLightsShadowCameraUniformBuffer.back()[f] = CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true,
-                                                                                    true, true, true, sizeof( OmniShadowMatrices ) );
+                                                                                    true, true, true, sizeof( NewOmniShadowMatrices ) );
                     mPointLightsShadowSceneDescriptors.back()[f]->Write( mPointLightsShadowCameraUniformBuffer.back()[f], false, 0,
-                                                                         sizeof( OmniShadowMatrices ), 0 );
+                                                                         sizeof( NewOmniShadowMatrices ), 0 );
                 }
             }
         }
@@ -318,7 +319,7 @@ namespace SE::Core
         // if( mRenderPipeline == nullptr &&
         //     ( ( mDirectionalShadowMapRenderContext.size() > 0 ) || ( mSpotlightShadowMapRenderContext.size() > 0 ) ) )
         // {
-        //     ShadowMeshRendererCreateInfo lCreateInfo{};
+        //     NewShadowMeshRendererCreateInfo lCreateInfo{};
         //     lCreateInfo.RenderPass = mDirectionalShadowMapRenderContext.back();
 
         //     mRenderPipeline = New<NewShadowMeshRenderer>( mGraphicContext, lCreateInfo );
@@ -326,7 +327,7 @@ namespace SE::Core
 
         if( mOmniRenderPipeline == nullptr && mPointLightsShadowMapRenderContext.size() > 0 )
         {
-            ShadowMeshRendererCreateInfo lCreateInfo{};
+            NewShadowMeshRendererCreateInfo lCreateInfo{};
             lCreateInfo.RenderPass = mPointLightsShadowMapRenderContext.back()[0];
             mOmniRenderPipeline    = New<NewOmniShadowMeshRenderer>( mGraphicContext, lCreateInfo );
         }
@@ -344,22 +345,33 @@ namespace SE::Core
             uint32_t lLightIndex = 0;
             // for( auto &lContext : mDirectionalShadowMapRenderContext )
             // {
-            View.mMVP = mDirectionalLights[lLightIndex].Transform;
-            mDirectionalShadowCameraUniformBuffer[lLightIndex]->Write( View );
+            View.mMVP = mDirectionalLight.mTransform;
+            mDirectionalShadowCameraUniformBuffer->Write( View );
 
             mDirectionalShadowMapRenderContext->BeginRender();
             mDirectionalShadowMapRenderContext->Bind( mRenderPipeline->Pipeline() );
-            mDirectionalShadowMapRenderContext->Bind( mDirectionalShadowSceneDescriptors[lLightIndex], 0, -1 );
+            mDirectionalShadowMapRenderContext->Bind( mDirectionalShadowSceneDescriptor, 0, -1 );
 
-            for( auto &lPipelineData : mOpaqueMeshQueue )
-            {
-                if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer )
-                    continue;
+            mScene->ForEach<sStaticMeshComponent, sNewMaterialComponent>(
+                [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterial )
+                {
+                    if( !aStaticMeshComponent.mVertexBuffer || !aStaticMeshComponent.mIndexBuffer )
+                        return;
 
-                mDirectionalShadowMapRenderContext->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
-                mDirectionalShadowMapRenderContext->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset,
-                                                          lPipelineData.mVertexOffset, 1, 0 );
-            }
+                    mDirectionalShadowMapRenderContext->Bind( aStaticMeshComponent.mVertexBuffer, aStaticMeshComponent.mIndexBuffer );
+                    mDirectionalShadowMapRenderContext->Draw( aStaticMeshComponent.mIndexCount, aStaticMeshComponent.mIndexOffset,
+                                                              aStaticMeshComponent.mVertexOffset, 1, 0 );
+                } );
+
+            // for( auto &lPipelineData : mOpaqueMeshQueue )
+            // {
+            //     if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer )
+            //         continue;
+
+            //     mDirectionalShadowMapRenderContext->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
+            //     mDirectionalShadowMapRenderContext->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset,
+            //                                               lPipelineData.mVertexOffset, 1, 0 );
+            // }
 
             mDirectionalShadowMapRenderContext->EndRender();
             // lLightIndex++;
@@ -369,26 +381,36 @@ namespace SE::Core
             for( auto &lContext : mPointLightsShadowMapRenderContext )
             {
                 math::mat4 lProjection = math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 1000.0f );
-                mOmniView.mLightPos    = math::vec4( mPointLights[lLightIndex].WorldPosition, 0.0f );
+                mOmniView.mLightPos    = math::vec4( mPointLights[lLightIndex].mPosition, 0.0f );
 
                 for( uint32_t f = 0; f < 6; f++ )
                 {
                     glm::mat4 viewMatrix = CreateCubeFaceViewMatrix( f );
-                    mOmniView.mMVP       = lProjection * math::Translate( viewMatrix, -mPointLights[lLightIndex].WorldPosition );
+                    mOmniView.mMVP       = lProjection * math::Translate( viewMatrix, -mPointLights[lLightIndex].mPosition );
                     mPointLightsShadowCameraUniformBuffer[lLightIndex][f]->Write( mOmniView );
 
                     lContext[f]->BeginRender();
                     lContext[f]->Bind( mOmniRenderPipeline->Pipeline() );
                     lContext[f]->Bind( mPointLightsShadowSceneDescriptors[lLightIndex][f], 0, -1 );
 
-                    for( auto &lPipelineData : mOpaqueMeshQueue )
-                    {
-                        if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer )
-                            continue;
+                    mScene->ForEach<sStaticMeshComponent, sNewMaterialComponent>(
+                        [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterial )
+                        {
+                            if( !aStaticMeshComponent.mVertexBuffer || !aStaticMeshComponent.mIndexBuffer )
+                                return;
 
-                        lContext[f]->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
-                        lContext[f]->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
-                    }
+                            lContext[f]->Bind( aStaticMeshComponent.mVertexBuffer, aStaticMeshComponent.mIndexBuffer );
+                            lContext[f]->Draw( aStaticMeshComponent.mIndexCount, aStaticMeshComponent.mIndexOffset,
+                                               aStaticMeshComponent.mVertexOffset, 1, 0 );
+                        } );
+                    // for( auto &lPipelineData : mOpaqueMeshQueue )
+                    // {
+                    //     if( !lPipelineData.mVertexBuffer || !lPipelineData.mIndexBuffer )
+                    //         continue;
+
+                    //     lContext[f]->Bind( lPipelineData.mVertexBuffer, lPipelineData.mIndexBuffer );
+                    //     lContext[f]->Draw( lPipelineData.mIndexCount, lPipelineData.mIndexOffset, lPipelineData.mVertexOffset, 1, 0 );
+                    // }
 
                     lContext[f]->EndRender();
                 }

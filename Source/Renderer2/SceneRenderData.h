@@ -94,25 +94,25 @@ namespace SE::Core
     //     WorldMatrices( const WorldMatrices & ) = default;
     // };
 
-    struct ShadowMatrices
+    struct NewShadowMatrices
     {
         math::mat4 mMVP;
 
-        ShadowMatrices()  = default;
-        ~ShadowMatrices() = default;
+        NewShadowMatrices()  = default;
+        ~NewShadowMatrices() = default;
 
-        ShadowMatrices( const ShadowMatrices & ) = default;
+        NewShadowMatrices( const NewShadowMatrices & ) = default;
     };
 
-    struct OmniShadowMatrices
+    struct NewOmniShadowMatrices
     {
         math::mat4 mMVP;
         math::vec4 mLightPos;
 
-        OmniShadowMatrices()  = default;
-        ~OmniShadowMatrices() = default;
+        NewOmniShadowMatrices()  = default;
+        ~NewOmniShadowMatrices() = default;
 
-        OmniShadowMatrices( const OmniShadowMatrices & ) = default;
+        NewOmniShadowMatrices( const NewOmniShadowMatrices & ) = default;
     };
 
     // struct CameraSettings

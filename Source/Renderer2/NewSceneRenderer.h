@@ -10,7 +10,7 @@
 // #include "SceneRenderData.h"
 
 // #include "Scene/Renderer/EffectProcessor.h"
-// #include "Scene/Renderer/ShadowSceneRenderer.h"
+#include "NewShadowSceneRenderer.h"
 // #include "CoordinateGridRenderer.h"
 // #include "MeshRenderer.h"
 // #include "ParticleSystemRenderer.h"
@@ -132,7 +132,7 @@ namespace SE::Core
         Ref<IRenderContext> mGeometryContext{};
 
         // Ref<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;
-        // Ref<ShadowSceneRenderer>    mShadowSceneRenderer    = nullptr;
+        Ref<NewShadowSceneRenderer> mShadowSceneRenderer = nullptr;
         // Ref<EffectProcessor> mCopyRenderer     = nullptr;
         // Ref<EffectProcessor> mFxaaRenderer     = nullptr;
         Ref<ISampler2D>     mFxaaSampler      = nullptr;
@@ -140,7 +140,6 @@ namespace SE::Core
         Ref<IRenderContext> mFxaaContext      = nullptr;
 
         std::map<size_t, sRenderQueue> mPipelines;
-
 
         // Ref<IDescriptorSetLayout> mCameraSetLayout  = nullptr;
         // Ref<IDescriptorSetLayout> mNodeSetLayout    = nullptr;

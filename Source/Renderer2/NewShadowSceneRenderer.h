@@ -9,7 +9,7 @@
 #include "ASceneRenderer.h"
 #include "SceneRenderData.h"
 
-#include "CoordinateGridRenderer.h"
+// #include "CoordinateGridRenderer.h"
 
 #include "Renderer2/Common/LightInputData.hpp"
 
@@ -22,7 +22,7 @@ namespace SE::Core
     using namespace SE::Graphics;
     namespace fs = std::filesystem;
 
-    struct ShadowMeshRendererCreateInfo
+    struct NewShadowMeshRendererCreateInfo
     {
         Ref<IRenderContext> RenderPass = nullptr;
     };
@@ -31,14 +31,14 @@ namespace SE::Core
     {
 
       public:
-        ShadowMeshRendererCreateInfo Spec = {};
+        NewShadowMeshRendererCreateInfo Spec = {};
 
         Ref<IDescriptorSetLayout> CameraSetLayout = nullptr;
         Ref<IDescriptorSetLayout> NodeSetLayout   = nullptr;
 
       public:
         NewShadowMeshRenderer() = default;
-        NewShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo );
+        NewShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, NewShadowMeshRendererCreateInfo const &aCreateInfo );
 
         static Ref<IDescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
         Ref<IGraphicsPipeline>           Pipeline()
@@ -59,14 +59,14 @@ namespace SE::Core
     {
 
       public:
-        ShadowMeshRendererCreateInfo Spec = {};
+        NewShadowMeshRendererCreateInfo Spec = {};
 
         Ref<IDescriptorSetLayout> CameraSetLayout = nullptr;
         Ref<IDescriptorSetLayout> NodeSetLayout   = nullptr;
 
       public:
         NewOmniShadowMeshRenderer() = default;
-        NewOmniShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo );
+        NewOmniShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, NewShadowMeshRendererCreateInfo const &aCreateInfo );
 
         static Ref<IDescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
         static Ref<IDescriptorSetLayout> GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext );
@@ -88,8 +88,8 @@ namespace SE::Core
     class NewShadowSceneRenderer : public BaseSceneRenderer
     {
       public:
-        ShadowMatrices     View;
-        OmniShadowMatrices mOmniView;
+        NewShadowMatrices     View;
+        NewOmniShadowMatrices mOmniView;
 
       public:
         NewShadowSceneRenderer() = default;

@@ -168,7 +168,7 @@ namespace SE::Core
         // mFxaaRenderTarget->Finalize();
         // mFxaaContext = CreateRenderContext( mGraphicContext, mFxaaRenderTarget );
         // mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mGeometryContext );
-        // mShadowSceneRenderer    = New<ShadowSceneRenderer>( mGraphicContext );
+        mShadowSceneRenderer = New<NewShadowSceneRenderer>( mGraphicContext );
         // {
         //     fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
         //     auto     lVertexShader =
@@ -344,7 +344,7 @@ namespace SE::Core
             } );
         // clang-format on
 
-        // mShadowSceneRenderer->Update( aWorld );
+        mShadowSceneRenderer->Update( aWorld );
         // mView.PointLightCount = mPointLights.size();
         // for( uint32_t i = 0; i < mView.PointLightCount; i++ ) mView.PointLights[i] = mPointLights[i];
         // mView.DirectionalLightCount = mDirectionalLights.size();
@@ -372,7 +372,7 @@ namespace SE::Core
             return;
 
         // mScene->GetMaterialSystem()->UpdateDescriptors();
-        // mShadowSceneRenderer->Render();
+        mShadowSceneRenderer->Render();
         // if( mShadowSceneRenderer->GetDirectionalShadowMapSamplers().size() > 0 )
         //     mLightingPassDirectionalShadowMaps->Write( mShadowSceneRenderer->GetDirectionalShadowMapSamplers(), 0 );
         // if( mShadowSceneRenderer->GetSpotlightShadowMapSamplers().size() > 0 )
