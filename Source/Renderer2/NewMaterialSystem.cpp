@@ -82,7 +82,7 @@ namespace SE::Core
         mDirectionalLightsDescriptorLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
         mDirectionalLightsDescriptorLayout->Build();
 
-        // Descriptors layout for pubctual lights
+        // Descriptors layout for pun ctual lights
 
         mPunctualLightsDescriptorLayout = CreateDescriptorSetLayout( mGraphicContext, true );
         mPunctualLightsDescriptorLayout->AddBinding( 0, eDescriptorType::STORAGE_BUFFER, { eShaderStageTypeFlags::FRAGMENT } );
@@ -92,6 +92,18 @@ namespace SE::Core
             CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, true, true, true, sizeof( sPunctualLight ) );
         mPunctualLightsDescriptor = mPunctualLightsDescriptorLayout->Allocate( 1 );
         mPunctualLightsDescriptor->Write( mShaderPunctualLights, false, 0, 1, 0 );
+
+        // Shadow maps for directional and punctual lights
+        mDirectionalLightShadowMapDescriptorLayout = CreateDescriptorSetLayout( aGraphicContext );
+        mDirectionalLightShadowMapDescriptorLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER,
+                                                                { eShaderStageTypeFlags::FRAGMENT } );
+        mDirectionalLightShadowMapDescriptorLayout->Build();
+        mDirectionalLightShadowMapDescriptor = mDirectionalLightShadowMapDescriptorLayout->Allocate();
+
+        mPunctualLightShadowMapDescriptorLayout = CreateDescriptorSetLayout( aGraphicContext, true );
+        mPunctualLightShadowMapDescriptorLayout->AddBinding( 0, eDescriptorType::COMBINED_IMAGE_SAMPLER,
+                                                             { eShaderStageTypeFlags::FRAGMENT } );
+        mPunctualLightShadowMapDescriptorLayout->Build();
     }
 
     void NewMaterialSystem::SetLights( sDirectionalLight const &aDirectionalLights )
@@ -402,6 +414,8 @@ namespace SE::Core
         {
             lNewPipeline->AddDescriptorSet( mDirectionalLightsDescriptorLayout );
             lNewPipeline->AddDescriptorSet( mPunctualLightsDescriptorLayout );
+            lNewPipeline->AddDescriptorSet( mDirectionalLightShadowMapDescriptorLayout );
+            lNewPipeline->AddDescriptorSet( mPunctualLightShadowMapDescriptorLayout );
         }
 
         lNewPipeline->AddPushConstantRange( { eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( int32_t ) );
@@ -593,6 +607,8 @@ namespace SE::Core
         aRenderPass->Bind( mMaterialTexturesDescriptor, MATERIAL_TEXTURES_BIND_POINT );
         aRenderPass->Bind( mDirectionalLightsDescriptor, DIRECTIONAL_LIGHTS_BIND_POINT );
         aRenderPass->Bind( mPunctualLightsDescriptor, PUNCTUAL_LIGHTS_BIND_POINT );
+        aRenderPass->Bind( mDirectionalLightShadowMapDescriptor, DIRECTIONAL_LIGHTS_SHADOW_MAP_BIND_POINT );
+        aRenderPass->Bind( mPunctualLightShadowMapDescriptor, PUNCTUAL_LIGHTS_SHADOW_MAP_BIND_POINT );
     }
 
     void NewMaterialSystem::SetViewParameters( mat4 aProjection, mat4 aView, vec3 aCameraPosition )
@@ -619,4 +635,16 @@ namespace SE::Core
     {
         aRenderPass->PushConstants( { eShaderStageTypeFlags::FRAGMENT }, 0, GetMaterialIndex( aMaterialID ) );
     }
+
+    void NewMaterialSystem::SetShadowMap( Ref<ISampler2D> aDirectionalShadowMap )
+    {
+        mDirectionalLightShadowMapDescriptor->Write( aDirectionalShadowMap, 0 );
+    }
+
+    void NewMaterialSystem::SetShadowMap( std::vector<Ref<ISamplerCubeMap>> aPunctualLightShadowMaps )
+    {
+        mPunctualLightShadowMapDescriptor = mPunctualLightShadowMapDescriptorLayout->Allocate( aPunctualLightShadowMaps.size() );
+        mPunctualLightShadowMapDescriptor->Write( aPunctualLightShadowMaps, 0 );
+    }
+
 } // namespace SE::Core

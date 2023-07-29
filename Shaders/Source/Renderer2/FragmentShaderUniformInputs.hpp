@@ -44,6 +44,9 @@ LAYOUT_UNIFORM_BUFFER( PUNCTUAL_LIGHTS_BIND_POINT, 0 ) __UNIFORM_BUFFER__ PointL
 // clang-format on
 #endif
 
+LAYOUT_UNIFORM( DIRECTIONAL_LIGHTS_SHADOW_MAP_BIND_POINT, 0 ) sampler2D gDirectionalLightShadowMap;
+LAYOUT_UNIFORM( PUNCTUAL_LIGHTS_SHADOW_MAP_BIND_POINT, 0 ) samplerCube gPunctualLightShadowMaps[];
+
 #if !defined( __cplusplus )
 layout( push_constant ) uniform Material
 {

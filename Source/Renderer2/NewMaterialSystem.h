@@ -168,6 +168,14 @@ namespace SE::Core
         Ref<IDescriptorSet>       mMaterialTexturesDescriptor       = nullptr;
         Ref<IDescriptorSetLayout> mMaterialTexturesDescriptorLayout = nullptr;
 
+        Ref<ISampler2D>           mShaderDirectionalLightShadowMap           = nullptr;
+        Ref<IDescriptorSet>       mDirectionalLightShadowMapDescriptor       = nullptr;
+        Ref<IDescriptorSetLayout> mDirectionalLightShadowMapDescriptorLayout = nullptr;
+
+        std::vector<Ref<ISamplerCubeMap>> mPunctualLightShadowMaps                = {};
+        Ref<IDescriptorSet>               mPunctualLightShadowMapDescriptor       = nullptr;
+        Ref<IDescriptorSetLayout>         mPunctualLightShadowMapDescriptorLayout = nullptr;
+
         std::unordered_map<Material, int32_t> mMaterialIndexLookup;
 
       public:
@@ -179,6 +187,9 @@ namespace SE::Core
 
         void SetLights( sDirectionalLight const &aDirectionalLights );
         void SetLights( std::vector<sPunctualLight> const &aPointLights );
+
+        void SetShadowMap(Ref<ISampler2D> aDirectionalShadowMap);
+        void SetShadowMap(std::vector<Ref<ISamplerCubeMap>> aPunctualLightShadowMaps);
 
         void ConfigureRenderContext( Ref<IRenderContext> aRenderPass );
         void SetViewParameters( mat4 aProjection, mat4 aView, vec3 aCameraPosition );

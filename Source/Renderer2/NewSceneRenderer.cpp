@@ -327,6 +327,9 @@ namespace SE::Core
         mScene->GetNewMaterialSystem()->SetLights( lDirectionalLight );
         mScene->GetNewMaterialSystem()->SetLights( lPointLights );
 
+        mShadowSceneRenderer->SetLights( lDirectionalLight );
+        mShadowSceneRenderer->SetLights( lPointLights );
+
         for( auto &[lMaterialHash, lRenderQueue] : mPipelines )
             lRenderQueue.mMeshes.clear();
 
@@ -345,6 +348,8 @@ namespace SE::Core
         // clang-format on
 
         mShadowSceneRenderer->Update( aWorld );
+        mScene->GetNewMaterialSystem()->SetShadowMap( mShadowSceneRenderer->GetDirectionalShadowMapSampler() );
+        mScene->GetNewMaterialSystem()->SetShadowMap( mShadowSceneRenderer->GetPointLightShadowMapSamplers() );
         // mView.PointLightCount = mPointLights.size();
         // for( uint32_t i = 0; i < mView.PointLightCount; i++ ) mView.PointLights[i] = mPointLights[i];
         // mView.DirectionalLightCount = mDirectionalLights.size();

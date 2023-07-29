@@ -42,7 +42,43 @@ void EvaluateIBL( MaterialInputs aMaterial, ShadingData aShadingData, float3 inW
 
 const float4x4 biasMat = mat4( 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.5, 0.5, 0.0, 1.0 );
 
-void ComputeDirectionalLightData( float3 inWorldPos, float3 aSurfaceNormal, float3 aEyeDirection, // sampler2D aShadowMap,
+float TextureProj( sampler2D shadowMap, float4 shadowCoord, float2 off )
+{
+    float shadow = 1.0;
+    if( shadowCoord.z > -1.0 && shadowCoord.z < 1.0 )
+    {
+        float dist = texture( shadowMap, shadowCoord.st + off ).r;
+        if( shadowCoord.w > 0.0 && dist < shadowCoord.z )
+        {
+            shadow = 0.0;
+        }
+    }
+    return shadow;
+}
+
+float FilterPCF( sampler2D shadowMap, float4 sc )
+{
+    ivec2 texDim = textureSize( shadowMap, 0 );
+    float scale  = 1.5;
+    float dx     = scale * 1.0 / float( texDim.x );
+    float dy     = scale * 1.0 / float( texDim.y );
+
+    float shadowFactor = 0.0;
+    int   count        = 0;
+    int   range        = 1;
+
+    for( int x = -range; x <= range; x++ )
+    {
+        for( int y = -range; y <= range; y++ )
+        {
+            shadowFactor += TextureProj( shadowMap, sc, float2( dx * x, dy * y ) );
+            count++;
+        }
+    }
+    return shadowFactor / count;
+}
+
+void ComputeDirectionalLightData( float3 inWorldPos, float3 aSurfaceNormal, float3 aEyeDirection, sampler2D aShadowMap,
                                   sDirectionalLight aInData, out LightData aLightData )
 {
     aLightData.mColorIntensity = aInData.mColorIntensity;
@@ -55,18 +91,18 @@ void ComputeDirectionalLightData( float3 inWorldPos, float3 aSurfaceNormal, floa
 
     float4 lShadowNormalizedCoordinates = biasMat * aInData.mTransform * float4( inWorldPos, 1.0f );
     lShadowNormalizedCoordinates /= lShadowNormalizedCoordinates.w;
-
-    // if( enablePCF == 1 )
-    //     aLightData.mVisibility = FilterPCF( aShadowMap, lShadowNormalizedCoordinates );
-    // else
-    //     aLightData.mVisibility = TextureProj( aShadowMap, lShadowNormalizedCoordinates, vec2( 0.0 ) );
+    int enablePCF = 1;
+    if( enablePCF == 1 )
+        aLightData.mVisibility = FilterPCF( aShadowMap, lShadowNormalizedCoordinates );
+    else
+        aLightData.mVisibility = TextureProj( aShadowMap, lShadowNormalizedCoordinates, float2( 0.0 ) );
 }
 
 void EvaluateDirectionalLight( MaterialInputs aMaterial, ShadingData aShadingData, float3 inWorldPos, inout float3 aColor )
 {
     float3    V = normalize( gCamera.mPosition - inWorldPos );
     LightData lLightData;
-    ComputeDirectionalLightData( inWorldPos, aMaterial.mNormal, V, gDirectionalLight.mData, lLightData );
+    ComputeDirectionalLightData( inWorldPos, aMaterial.mNormal, V, gDirectionalLightShadowMap, gDirectionalLight.mData, lLightData );
 
 #if defined( MATERIAL_HAS_CURTOM_SURFACE_SHADING )
     aColor.rgb += CurtomSurfaceShading( V, aMaterial.mNormal, aShadingData, lLightData )
@@ -75,7 +111,9 @@ void EvaluateDirectionalLight( MaterialInputs aMaterial, ShadingData aShadingDat
 #endif
 }
 
-void ComputePointLightData( float3 inWorldPos, float3 aSurfaceNormal, float3 aEyeDirection, // samplerCube aShadowMap,
+
+#define EPSILON 0.15
+void ComputePointLightData( float3 inWorldPos, float3 aSurfaceNormal, float3 aEyeDirection, samplerCube aShadowMap,
                             sPunctualLight aInData, out LightData aLightData )
 {
     aLightData.mColorIntensity = aInData.mColorIntensity;
@@ -89,9 +127,9 @@ void ComputePointLightData( float3 inWorldPos, float3 aSurfaceNormal, float3 aEy
     float  lDistanceSqared  = dot( v, v );
     aLightData.mAttenuation = 1.0 / max( lDistanceSqared, 1e-4 );
 
-    // float3 coords = -aLightData.mL;
-    // float  lShadowDistanceSquared = texture( aShadowMap, coords ).r;
-    // aLightData.mVisibility = ( lDistanceSqared <= lShadowDistanceSquared + EPSILON ) ? 1.0 : 0.0;
+    float3 coords                 = -aLightData.mL;
+    float  lShadowDistanceSquared = texture( aShadowMap, coords ).r;
+    aLightData.mVisibility        = ( lDistanceSqared <= lShadowDistanceSquared + EPSILON ) ? 1.0 : 0.0;
 }
 
 void EvaluatePunctualLights( MaterialInputs aMaterial, ShadingData aShadingData, float3 inWorldPos, inout float3 aColor )
@@ -101,13 +139,12 @@ void EvaluatePunctualLights( MaterialInputs aMaterial, ShadingData aShadingData,
     for( int i = 0; i < gPunctualLights.mArray.length(); i++ )
     {
         LightData lLightData;
-        ComputePointLightData( inWorldPos, aMaterial.mNormal, V, gPunctualLights.mArray[i], lLightData );
+        ComputePointLightData( inWorldPos, aMaterial.mNormal, V, gPunctualLightShadowMaps[i], gPunctualLights.mArray[i], lLightData );
 
 #if defined( MATERIAL_HAS_CURTOM_SURFACE_SHADING )
         aColor.rgb += CurtomSurfaceShading( V, aMaterial.mNormal, aShadingData, lLightData )
 #else
         aColor.rgb += SurfaceShading( V, aMaterial.mNormal, aShadingData, lLightData );
-        // aColor.rgb += V;//SurfaceShading( V, aMaterial.mNormal, aShadingData, lLightData );
 
 #endif
     }
