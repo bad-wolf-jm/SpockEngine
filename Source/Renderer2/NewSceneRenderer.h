@@ -95,10 +95,10 @@ namespace SE::Core
       public:
         // WorldMatrices  mView;
         // CameraSettings mSettings;
-        // bool           mRenderCoordinateGrid = true;
-        // bool           mRenderGizmos         = false;
-        // bool           mGrayscaleRendering   = false;
-        // bool           mUseFXAA              = false;
+        bool mRenderCoordinateGrid = true;
+        bool mRenderGizmos         = false;
+        bool mGrayscaleRendering   = false;
+        bool mUseFXAA              = false;
 
       public:
         NewSceneRenderer() = default;

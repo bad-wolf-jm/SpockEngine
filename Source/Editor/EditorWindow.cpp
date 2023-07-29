@@ -233,13 +233,13 @@ namespace SE::Editor
         }
         ImGui::End();
 
-        static bool p_open_30 = true;
-        if( ImGui::Begin( "NEW 3D VIEW", &p_open_30, ImGuiWindowFlags_None ) )
-        {
-            auto lWorkspaceAreaSize = UI::GetAvailableContentSpace();
-            WorkspaceNew( lWorkspaceAreaSize.x, lWorkspaceAreaSize.y );
-        }
-        ImGui::End();
+        // static bool p_open_30 = true;
+        // if( ImGui::Begin( "NEW 3D VIEW", &p_open_30, ImGuiWindowFlags_None ) )
+        // {
+        //     auto lWorkspaceAreaSize = UI::GetAvailableContentSpace();
+        //     WorkspaceNew( lWorkspaceAreaSize.x, lWorkspaceAreaSize.y );
+        // }
+        // ImGui::End();
 
         if( ImGui::Begin( "LIGHT PANEL", NULL, ImGuiWindowFlags_None ) )
         {
@@ -1371,7 +1371,7 @@ namespace SE::Editor
 
         if( m_SceneViewport.Handle )
         {
-            UI::Image( m_SceneViewport, l3DViewSize );
+            UI::Image( m_SceneViewport_new, l3DViewSize );
             if( ImGui::BeginDragDropTarget() )
             {
                 if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )
@@ -1403,7 +1403,7 @@ namespace SE::Editor
 
             ManipulationConfig lManipulator{};
             lManipulator.Type             = lCurrentManipulationType;
-            lManipulator.Projection       = WorldRenderer->mView.Projection;
+            lManipulator.Projection       = WorldRenderer->Projection();
             lManipulator.WorldTransform   = World->mEditorView;
             lManipulator.ViewportPosition = l3DViewPosition;
             lManipulator.ViewportSize     = l3DViewSize;
@@ -1467,7 +1467,7 @@ namespace SE::Editor
 
                     ImVec2     lDragDelta0 = ImGui::GetMouseDragDelta( ImGuiMouseButton_Right );
                     math::vec4 lDragDelta{ lDragDelta0.x, lDragDelta0.y, 0.0f, 1.0f };
-                    lDragDelta = math::Inverse( WorldRenderer->mView.Projection ) * lDragDelta;
+                    lDragDelta = math::Inverse( WorldRenderer->Projection() ) * lDragDelta;
                     lDragDelta = lDragDelta / lDragDelta.w;
 
                     math::vec3 lPanAmount   = lRotationMatrix * math::vec3{ -lDragDelta.x, -lDragDelta.y, 0.0f };

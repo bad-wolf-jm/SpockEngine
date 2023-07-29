@@ -40,9 +40,9 @@ namespace SE::Editor
     {
         mEditorWindow.ActiveWorld->Update( ts );
         mEditorWindow.UpdateFramerate( ts );
-        mDeferredRenderer->Update( mEditorWindow.ActiveWorld );
+        // mDeferredRenderer->Update( mEditorWindow.ActiveWorld );
         mNewSceneRenderer->Update( mEditorWindow.ActiveWorld );
-        mNewSceneRenderer->SetView( mEditorWindow.ActiveWorld->mEditorView );
+        // mNewSceneRenderer->SetView( mEditorWindow.ActiveWorld->mEditorView );
 
         if( mApplicationInstance )
         {
@@ -101,7 +101,7 @@ namespace SE::Editor
             mShouldRebuildViewport = false;
         }
 
-        mEditorWindow.WorldRenderer = mDeferredRenderer;
+        mEditorWindow.WorldRenderer = mNewSceneRenderer;
 
         lRequestQuit = mEditorWindow.Display();
 

@@ -21,7 +21,11 @@ namespace SE::Core
 
         ~BaseSceneRenderer() = default;
 
-        void SetProjection( mat4 aProjectionMatrix );
+        void        SetProjection( mat4 aProjectionMatrix );
+        math::mat4 &Projection()
+        {
+            return mProjectionMatrix;
+        }
         void SetView( mat4 aViewMatrix );
         void SetGamma( float aGamma );
         void SetExposure( float aExposure );

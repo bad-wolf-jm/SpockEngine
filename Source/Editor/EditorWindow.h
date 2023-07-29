@@ -9,6 +9,8 @@
 
 #include "Graphics/API.h"
 
+#include "Renderer2/NewSceneRenderer.h"
+
 #include "Scene/Renderer/DeferredSceneRenderer.h"
 #include "Scene/Renderer/ForwardSceneRenderer.h"
 #include "Scene/Renderer/RayTracing/RayTracingRenderer.h"
@@ -70,7 +72,7 @@ namespace SE::Editor
         Ref<Engine>           mEngineLoop   = nullptr;
         Ref<Scene>            World         = nullptr;
         Ref<Scene>            ActiveWorld   = nullptr;
-        Ref<DeferredRenderer> WorldRenderer = nullptr;
+        Ref<NewSceneRenderer> WorldRenderer = nullptr;
 
         // Ref<ForwardSceneRenderer> WorldRenderer = nullptr;
         Entity Sensor{};
