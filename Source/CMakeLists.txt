@@ -111,9 +111,6 @@ add_library(LTSimulationEngineRuntime STATIC
     Graphics/Interface/IDescriptorSetLayout.cpp
     Graphics/Interface/IShaderProgram.cpp
 
-    # Renderer/ASceneRenderer.cpp
-    # Renderer/SceneRenderData.cpp
-
     Scene/Primitives/Primitives.cpp
     Scene/Primitives/Arrow.cpp
     Scene/Visualizers/Wall2D.cpp
@@ -121,27 +118,14 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/VertexTransform.cu
     Scene/MaterialSystem/MaterialSystem.cpp
     Scene/MaterialSystem/TextureManager.cpp
-    # Scene/Renderer/MeshRenderer.cpp
-    # Scene/Renderer/CoordinateGridRenderer.cpp
-    # Scene/Renderer/EffectProcessor.cpp
-    # Scene/Renderer/ParticleSystemRenderer.cpp
-    # Scene/Renderer/ForwardSceneRenderer.cpp
-    # Scene/Renderer/ShadowSceneRenderer.cpp
-    # Scene/Renderer/DeferredSceneRenderer.cpp
-    # Scene/Renderer/DeferredLightingRenderer.cpp
     Scene/Serialize/FileIO.cpp
     Scene/Serialize/AssetFile.cpp
     Scene/Serialize/SerializeComponents.cpp
-    ${embedded_ptx_code}
-    # Scene/Renderer/RayTracing/ToneMap.cu
-    # Scene/Renderer/RayTracing/RayTracingRenderer.h
-    # Scene/Renderer/RayTracing/RayTracingRenderer.cpp
-
-    Renderer2/ASceneRenderer.cpp
-    Renderer2/NewSceneRenderer.cpp
-    Renderer2/NewMaterialSystem.cpp
-    Renderer2/NewShadowSceneRenderer.cpp
-    # Renderer2/SceneRenderData.cpp
+    
+    Renderer/ASceneRenderer.cpp
+    Renderer/NewSceneRenderer.cpp
+    Renderer/NewMaterialSystem.cpp
+    Renderer/NewShadowSceneRenderer.cpp
 
     Scene/Importer/glTFImporter.cpp
     Scene/Importer/ObjImporter.cpp

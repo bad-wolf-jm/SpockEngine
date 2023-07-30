@@ -28,7 +28,7 @@
 #include "Core/Profiling/BlockTimer.h"
 
 #include "MaterialSystem/MaterialSystem.h"
-#include "Renderer2/NewMaterialSystem.h"
+#include "Renderer/NewMaterialSystem.h"
 
 namespace SE::Core::EntityComponentSystem::Components
 {

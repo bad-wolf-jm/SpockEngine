@@ -8,8 +8,8 @@
 
 #include "Graphics/API.h"
 
-#include "Renderer2/Common/LightInputData.hpp"
-#include "Renderer2/Common/ShaderMaterial.hpp"
+#include "Renderer/Common/LightInputData.hpp"
+#include "Renderer/Common/ShaderMaterial.hpp"
 
 #include "Core/Memory.h"
 

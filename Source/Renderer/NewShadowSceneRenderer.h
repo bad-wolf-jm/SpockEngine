@@ -11,7 +11,7 @@
 
 // #include "CoordinateGridRenderer.h"
 
-#include "Renderer2/Common/LightInputData.hpp"
+#include "Renderer/Common/LightInputData.hpp"
 
 // #include "MeshRenderer.h"
 // #include "ParticleSystemRenderer.h"

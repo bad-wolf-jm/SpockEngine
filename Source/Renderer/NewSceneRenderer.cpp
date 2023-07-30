@@ -4,7 +4,7 @@
 #include "Core/Profiling/BlockTimer.h"
 #include "Core/Resource.h"
 
-#include "Renderer2/Common/LightInputData.hpp"
+#include "Renderer/Common/LightInputData.hpp"
 #include "Scene/Scene.h"
 
 namespace SE::Core

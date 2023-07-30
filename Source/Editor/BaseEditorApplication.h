@@ -18,7 +18,7 @@
 // #include "Scene/Renderer/RayTracing/RayTracingRenderer.h"
 #include "Scene/Scene.h"
 
-#include "Renderer2/NewSceneRenderer.h"
+#include "Renderer/NewSceneRenderer.h"
 
 #include "TensorOps/Scope.h"
 
