@@ -11,10 +11,13 @@ namespace SE::Core
     {
         switch( aWrapMode )
         {
-        case 33071: return eSamplerWrapping::CLAMP_TO_EDGE;
-        case 33648: return eSamplerWrapping::MIRRORED_REPEAT;
+        case 33071:
+            return eSamplerWrapping::CLAMP_TO_EDGE;
+        case 33648:
+            return eSamplerWrapping::MIRRORED_REPEAT;
         case 10497:
-        default: return eSamplerWrapping::REPEAT;
+        default:
+            return eSamplerWrapping::REPEAT;
         }
     }
 
@@ -24,11 +27,13 @@ namespace SE::Core
         {
         case 9729:
         case 9986:
-        case 9987: return eSamplerFilter::LINEAR;
+        case 9987:
+            return eSamplerFilter::LINEAR;
         case 9728:
         case 9984:
         case 9985:
-        default: return eSamplerFilter::NEAREST;
+        default:
+            return eSamplerFilter::NEAREST;
         }
     }
 
@@ -140,7 +145,8 @@ namespace SE::Core
             tinygltf::Image      image = mGltfModel.images[tex.source];
             sTextureSamplingInfo lTextureSampler{};
 
-            if( tex.sampler != -1 ) lTextureSampler = mTextureSamplers[tex.sampler];
+            if( tex.sampler != -1 )
+                lTextureSampler = mTextureSamplers[tex.sampler];
 
             CreateTexture( lTextureIndex++, image.name, image, lTextureSampler );
         }
@@ -231,9 +237,11 @@ namespace SE::Core
             if( lMaterial.additionalValues.find( "alphaMode" ) != lMaterial.additionalValues.end() )
             {
                 tinygltf::Parameter param = lMaterial.additionalValues["alphaMode"];
-                if( param.string_value == "BLEND" ) lNewImportedMaterial.mAlpha.mMode = sImportedMaterial::AlphaMode::BLEND_MODE;
+                if( param.string_value == "BLEND" )
+                    lNewImportedMaterial.mAlpha.mMode = sImportedMaterial::AlphaMode::BLEND_MODE;
 
-                if( param.string_value == "MASK" ) lNewImportedMaterial.mAlpha.mMode = sImportedMaterial::AlphaMode::ALPHA_MASK_MODE;
+                if( param.string_value == "MASK" )
+                    lNewImportedMaterial.mAlpha.mMode = sImportedMaterial::AlphaMode::ALPHA_MASK_MODE;
             }
 
             mMaterials.push_back( lNewImportedMaterial );
@@ -272,7 +280,7 @@ namespace SE::Core
             if( aNode.rotation.size() == 4 )
             {
                 math::quat lQ = math::make_quat( aNode.rotation.data() );
-                lRotation    = math::mat4( lQ );
+                lRotation     = math::mat4( lQ );
             }
             if( aNode.scale.size() == 3 )
             {
@@ -286,7 +294,8 @@ namespace SE::Core
             for( size_t i = 0; i < aNode.children.size(); i++ )
                 LoadNode( lNodeID, mGltfModel.nodes[aNode.children[i]], aNode.children[i] );
 
-        if( aParentID != std::numeric_limits<uint32_t>::max() ) mNodes[aParentID].mChildren.push_back( lNodeID );
+        if( aParentID != std::numeric_limits<uint32_t>::max() )
+            mNodes[aParentID].mChildren.push_back( lNodeID );
 
         if( aNode.mesh > -1 )
         {
@@ -298,18 +307,25 @@ namespace SE::Core
 
                 mMeshes.emplace_back();
                 sImportedMesh &lNewImportedMesh = mMeshes.back();
-                lNewImportedMesh.mName = fmt::format( "MESH_{}", mMeshes.size() - 1 );
+                lNewImportedMesh.mName          = fmt::format( "MESH_{}", mMeshes.size() - 1 );
 
                 switch( lPrimitive.mode )
                 {
-                case 0: lNewImportedMesh.mPrimitive = Graphics::ePrimitiveTopology::POINTS; break;
-                case 1: lNewImportedMesh.mPrimitive = Graphics::ePrimitiveTopology::LINES; break;
-                case 4: lNewImportedMesh.mPrimitive = Graphics::ePrimitiveTopology::TRIANGLES; break;
+                case 0:
+                    lNewImportedMesh.mPrimitive = Graphics::ePrimitiveTopology::POINTS;
+                    break;
+                case 1:
+                    lNewImportedMesh.mPrimitive = Graphics::ePrimitiveTopology::LINES;
+                    break;
+                case 4:
+                    lNewImportedMesh.mPrimitive = Graphics::ePrimitiveTopology::TRIANGLES;
+                    break;
                 case 2:
                 case 3:
                 case 5:
                 case 6:
-                default: lNewImportedMesh.mPrimitive = Graphics::ePrimitiveTopology::POINTS;
+                default:
+                    lNewImportedMesh.mPrimitive = Graphics::ePrimitiveTopology::POINTS;
                 }
 
                 lNewImportedMesh.mMaterialID = ( lPrimitive.material > -1 ) ? mMaterialIDLookup[lPrimitive.material] : 0;
@@ -325,9 +341,9 @@ namespace SE::Core
                 if( lNewImportedMesh.mUV0.size() == 0 )
                     lNewImportedMesh.mUV0 = std::vector<math::vec2>( lNewImportedMesh.mPositions.size() );
 
-                // RetrievePrimitiveAttribute<math::vec2>( lPrimitive, "TEXCOORD_1", lNewImportedMesh.mUV1 );
-                // if( lNewImportedMesh.mUV1.size() == 0 )
-                //     lNewImportedMesh.mUV1 = std::vector<math::vec2>( lNewImportedMesh.mPositions.size() );
+                RetrievePrimitiveAttribute<math::vec2>( lPrimitive, "TEXCOORD_1", lNewImportedMesh.mUV1 );
+                if( lNewImportedMesh.mUV1.size() == 0 )
+                    lNewImportedMesh.mUV1 = std::vector<math::vec2>( lNewImportedMesh.mPositions.size() );
 
                 RetrievePrimitiveAttribute<math::vec4>( lPrimitive, "WEIGHTS_0", lNewImportedMesh.mWeights );
                 if( lNewImportedMesh.mWeights.size() == 0 )
@@ -423,7 +439,9 @@ namespace SE::Core
                         }
                         break;
                     }
-                    default: std::cerr << "Index component type " << accessor.componentType << " not supported!" << std::endl; return;
+                    default:
+                        std::cerr << "Index component type " << accessor.componentType << " not supported!" << std::endl;
+                        return;
                     }
                 }
 
@@ -452,9 +470,11 @@ namespace SE::Core
 
             lNewImportedSkin.mName = source.name.empty() ? fmt::format( "SKIN_{}", mSkins.size() - 1 ) : source.name;
 
-            if( source.skeleton > -1 ) lNewImportedSkin.mSkeletonRootNodeID = mNodeIDLookup[source.skeleton];
+            if( source.skeleton > -1 )
+                lNewImportedSkin.mSkeletonRootNodeID = mNodeIDLookup[source.skeleton];
 
-            for( int jointIndex : source.joints ) lNewImportedSkin.mJointNodeID.push_back( mNodeIDLookup[jointIndex] );
+            for( int jointIndex : source.joints )
+                lNewImportedSkin.mJointNodeID.push_back( mNodeIDLookup[jointIndex] );
 
             // Get inverse bind matrices from buffer
             if( source.inverseBindMatrices > -1 )
@@ -473,7 +493,8 @@ namespace SE::Core
         uint32_t lNodeID = 0;
         for( auto &lNode : mGltfModel.nodes )
         {
-            if( lNode.skin > -1 ) mNodes[mNodeIDLookup[lNodeID]].mSkinID = mSkinIDLookup[lNode.skin];
+            if( lNode.skin > -1 )
+                mNodes[mNodeIDLookup[lNodeID]].mSkinID = mSkinIDLookup[lNode.skin];
             lNodeID++;
         }
     }
@@ -494,9 +515,11 @@ namespace SE::Core
                 lNewImportedAnimation.mSamplers.emplace_back( sImportedAnimationSampler{} );
                 auto &lNewSampler = lNewImportedAnimation.mSamplers.back();
 
-                if( samp.interpolation == "LINEAR" ) lNewSampler.mInterpolation = sImportedAnimationSampler::Interpolation::LINEAR;
+                if( samp.interpolation == "LINEAR" )
+                    lNewSampler.mInterpolation = sImportedAnimationSampler::Interpolation::LINEAR;
 
-                if( samp.interpolation == "STEP" ) lNewSampler.mInterpolation = sImportedAnimationSampler::Interpolation::STEP;
+                if( samp.interpolation == "STEP" )
+                    lNewSampler.mInterpolation = sImportedAnimationSampler::Interpolation::STEP;
 
                 if( samp.interpolation == "CUBICSPLINE" )
                     lNewSampler.mInterpolation = sImportedAnimationSampler::Interpolation::CUBICSPLINE;
@@ -518,9 +541,11 @@ namespace SE::Core
 
                     for( auto input : lNewSampler.mInputs )
                     {
-                        if( input < lNewImportedAnimation.mStart ) lNewImportedAnimation.mStart = input;
+                        if( input < lNewImportedAnimation.mStart )
+                            lNewImportedAnimation.mStart = input;
 
-                        if( input > lNewImportedAnimation.mEnd ) lNewImportedAnimation.mEnd = input;
+                        if( input > lNewImportedAnimation.mEnd )
+                            lNewImportedAnimation.mEnd = input;
                     }
                 }
 
@@ -546,7 +571,8 @@ namespace SE::Core
                     case TINYGLTF_TYPE_VEC4:
                     {
                         const math::vec4 *buf = static_cast<const math::vec4 *>( dataPtr );
-                        for( size_t index = 0; index < accessor.count; index++ ) lNewSampler.mOutputsVec4.push_back( buf[index] );
+                        for( size_t index = 0; index < accessor.count; index++ )
+                            lNewSampler.mOutputsVec4.push_back( buf[index] );
                         break;
                     }
                     default:
@@ -567,13 +593,17 @@ namespace SE::Core
 
                 lNewChannels.mSamplerIndex = source.sampler;
                 lNewChannels.mNodeID       = mNodeIDLookup[source.target_node];
-                if( lNewChannels.mNodeID == std::numeric_limits<uint32_t>::max() ) continue;
+                if( lNewChannels.mNodeID == std::numeric_limits<uint32_t>::max() )
+                    continue;
 
-                if( source.target_path == "rotation" ) lNewChannels.mComponent = sImportedAnimationChannel::Channel::ROTATION;
+                if( source.target_path == "rotation" )
+                    lNewChannels.mComponent = sImportedAnimationChannel::Channel::ROTATION;
 
-                if( source.target_path == "translation" ) lNewChannels.mComponent = sImportedAnimationChannel::Channel::TRANSLATION;
+                if( source.target_path == "translation" )
+                    lNewChannels.mComponent = sImportedAnimationChannel::Channel::TRANSLATION;
 
-                if( source.target_path == "scale" ) lNewChannels.mComponent = sImportedAnimationChannel::Channel::SCALE;
+                if( source.target_path == "scale" )
+                    lNewChannels.mComponent = sImportedAnimationChannel::Channel::SCALE;
 
                 if( source.target_path == "weights" )
                 {
