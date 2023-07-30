@@ -13,9 +13,9 @@
 #include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Scene/EnvironmentSampler/EnvironmentSampler.h"
 #include "Scene/EnvironmentSampler/PointCloudVisualizer.h"
-#include "Scene/Renderer/DeferredSceneRenderer.h"
-#include "Scene/Renderer/ForwardSceneRenderer.h"
-#include "Scene/Renderer/RayTracing/RayTracingRenderer.h"
+// #include "Scene/Renderer/DeferredSceneRenderer.h"
+// #include "Scene/Renderer/ForwardSceneRenderer.h"
+// #include "Scene/Renderer/RayTracing/RayTracingRenderer.h"
 #include "Scene/Scene.h"
 
 #include "Renderer2/NewSceneRenderer.h"
@@ -71,10 +71,10 @@ namespace SE::Editor
         Ref<Scene> mWorld                 = nullptr;
         Ref<Scene> mTestWorld             = nullptr;
 
-        Ref<DeferredRenderer>     mDeferredRenderer   = nullptr;
+        // Ref<DeferredRenderer>     mDeferredRenderer   = nullptr;
         Ref<NewSceneRenderer>     mNewSceneRenderer   = nullptr;
-        Ref<ForwardSceneRenderer> mForwardRenderer    = nullptr;
-        Ref<RayTracingRenderer>   mRayTracingRenderer = nullptr;
+        // Ref<ForwardSceneRenderer> mForwardRenderer    = nullptr;
+        // Ref<RayTracingRenderer>   mRayTracingRenderer = nullptr;
 
         Ref<ISampler2D> mOffscreenRenderTargetTexture = nullptr;
         ImageHandle     mOffscreenRenderTargetDisplayHandle{};

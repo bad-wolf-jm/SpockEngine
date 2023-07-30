@@ -247,17 +247,17 @@ namespace SE::Editor
                 ElementToEdit.Add<sLightComponent>();
             }
             ImGui::Separator();
-            if( ImGui::MenuItem( "Particle system", NULL, false, !ElementToEdit.Has<sParticleSystemComponent>() ) )
-            {
-                ElementToEdit.Add<sParticleSystemComponent>();
+            // if( ImGui::MenuItem( "Particle system", NULL, false, !ElementToEdit.Has<sParticleSystemComponent>() ) )
+            // {
+            //     ElementToEdit.Add<sParticleSystemComponent>();
 
-                auto &l_ParticleShaderConfiguration     = ElementToEdit.Add<sParticleShaderComponent>();
-                l_ParticleShaderConfiguration.LineWidth = 1.0f;
+            //     auto &l_ParticleShaderConfiguration     = ElementToEdit.Add<sParticleShaderComponent>();
+            //     l_ParticleShaderConfiguration.LineWidth = 1.0f;
 
-                ParticleRendererCreateInfo l_RendererCreateInfo{};
-                l_RendererCreateInfo.LineWidth = l_ParticleShaderConfiguration.LineWidth;
-            }
-            ImGui::Separator();
+            //     ParticleRendererCreateInfo l_RendererCreateInfo{};
+            //     l_RendererCreateInfo.LineWidth = l_ParticleShaderConfiguration.LineWidth;
+            // }
+            // ImGui::Separator();
             if( ImGui::MenuItem( "HUD Component", NULL, false, !ElementToEdit.Has<sUIComponent>() ) )
             {
                 ElementToEdit.Add<sUIComponent>();

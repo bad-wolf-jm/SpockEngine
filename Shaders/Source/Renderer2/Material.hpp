@@ -1,6 +1,5 @@
 
 
-
 #if defined( __cplusplus )
 #    include "Common/Definitions.hpp"
 #    include "Common/HelperFunctions.hpp"
@@ -13,22 +12,18 @@ struct MaterialInputs
     float3 mNormal;
 #endif
 
-#if !defined( SHADING_MODEL_UNLIT )
-#    if !defined( SHADING_MODEL_UNLIT )
     float mRoughness;
-#    endif
-#    if !defined( SHADING_MODEL_CLOTH )
+#if !defined( SHADING_MODEL_CLOTH )
     float mMetallic;
     float mReflectance;
-#    endif
-    float mAmbientOcclusion;
 #endif
+    float mAmbientOcclusion;
 
 #if defined( MATERIAL_IS_EMISSIVE )
     float4 mEmissive;
 #endif
 
-#if !defined( SHADING_MODEL_CLOTH ) && !defined( SHADING_MODEL_SUBSURFACE ) && !defined( SHADING_MODEL_UNLIT )
+#if !defined( SHADING_MODEL_CLOTH ) && !defined( SHADING_MODEL_SUBSURFACE )
     float3 mSheenColor;
     float  mSheenRoughness;
 #endif
@@ -71,7 +66,7 @@ struct MaterialInputs
     float4 mPostLightingColor;
 #endif
 
-#if !defined( SHADING_MODEL_CLOTH ) && !defined( SHADING_MODEL_SUBSURFACE ) && !defined( SHADING_MODEL_UNLIT )
+#if !defined( SHADING_MODEL_CLOTH ) && !defined( SHADING_MODEL_SUBSURFACE )
 #    if defined( MATERIAL_HAS_REFRACTION )
 #        if defined( MATERIAL_HAS_ABSORPTION )
     float3 mAbsorption;
@@ -156,10 +151,9 @@ float4 GetAOMetalRough()
 #if defined( MATERIAL_HAS_METAL_ROUGH_TEXTURE ) && defined( MATERIAL_HAS_UV0 )
     return ColorTextureFetch( GetMaterialData().mMetalnessTextureID, GetMaterialData().mMetalnessUVChannel );
 #else
-    return vec4(1.0);
+    return vec4( 1.0 );
 #endif
 }
-
 
 float GetAmbientOcclusion()
 {
@@ -177,30 +171,27 @@ void InitializeMaterial( out MaterialInputs aMaterial )
 #if defined( MATERIAL_HAS_NORMALS )
     aMaterial.mNormal = GetNormal();
 #endif
-
-#if !defined( SHADING_MODEL_UNLIT )
     aMaterial.mRoughness = clamp( GetMaterialData().mRoughnessFactor, 0.0, 1.0 );
 
-#    if defined( MATERIAL_HAS_METAL_ROUGH_TEXTURE )
+#if defined( MATERIAL_HAS_METAL_ROUGH_TEXTURE )
     float4 lSampledValues = GetAOMetalRough();
     aMaterial.mRoughness *= lSampledValues.g;
-#    endif
-
-#    if !defined( SHADING_MODEL_CLOTH )
-    aMaterial.mMetallic = clamp( GetMaterialData().mMetallicFactor, 0.0, 1.0 );
-#        if defined( MATERIAL_HAS_METAL_ROUGH_TEXTURE )
-    aMaterial.mMetallic *= lSampledValues.r;
-#        endif
-    aMaterial.mReflectance = 0.0f;
-#    endif
-    aMaterial.mAmbientOcclusion = GetAmbientOcclusion();
 #endif
+
+#if !defined( SHADING_MODEL_CLOTH )
+    aMaterial.mMetallic = clamp( GetMaterialData().mMetallicFactor, 0.0, 1.0 );
+#    if defined( MATERIAL_HAS_METAL_ROUGH_TEXTURE )
+    aMaterial.mMetallic *= lSampledValues.r;
+#    endif
+    aMaterial.mReflectance = 0.0f;
+#endif
+    aMaterial.mAmbientOcclusion = GetAmbientOcclusion();
 
 #if defined( MATERIAL_IS_EMISSIVE )
     aMaterial.mEmissive = GetEmissive();
 #endif
 
-#if !defined( SHADING_MODEL_CLOTH ) && !defined( SHADING_MODEL_SUBSURFACE ) && !defined( SHADING_MODEL_UNLIT )
+#if !defined( SHADING_MODEL_CLOTH ) && !defined( SHADING_MODEL_SUBSURFACE )
     aMaterial.mSheenColor     = float3( 0.0f );
     aMaterial.mSheenRoughness = 0.0f;
 #endif
@@ -243,7 +234,7 @@ void InitializeMaterial( out MaterialInputs aMaterial )
     aMaterial.mPostLightingColor;
 #endif
 
-#if !defined( SHADING_MODEL_CLOTH ) && !defined( SHADING_MODEL_SUBSURFACE ) && !defined( SHADING_MODEL_UNLIT )
+#if !defined( SHADING_MODEL_CLOTH ) && !defined( SHADING_MODEL_SUBSURFACE )
 #    if defined( MATERIAL_HAS_REFRACTION )
 #        if defined( MATERIAL_HAS_ABSORPTION )
     aMaterial.mAbsorption = float3( 0.0 );

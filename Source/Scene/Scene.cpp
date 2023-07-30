@@ -26,7 +26,7 @@
 #include "Scene.h"
 #include "VertexTransform.h"
 
-#include "Renderer/MeshRenderer.h"
+// #include "Renderer/MeshRenderer.h"
 
 #include "Scene/Components/VisualHelpers.h"
 #include "Serialize/AssetFile.h"
@@ -84,6 +84,7 @@ namespace SE::Core
     {
         mGraphicContext = aSource->mGraphicContext;
         mMaterialSystem = aSource->mMaterialSystem;
+        mNewMaterialSystem = aSource->mNewMaterialSystem;
         mEditorView     = aSource->mEditorView;
 
         InitializeRayTracing();

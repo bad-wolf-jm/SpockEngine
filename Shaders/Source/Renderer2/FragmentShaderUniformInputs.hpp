@@ -30,7 +30,6 @@ LAYOUT_UNIFORM_BUFFER( MATERIAL_DATA_BIND_POINT, 0 ) __UNIFORM_BUFFER__ ShaderMa
 
 LAYOUT_UNIFORM( MATERIAL_TEXTURES_BIND_POINT, 0 ) sampler2D gTextures[];
 
-#if !defined( SHADING_MODEL_UNLIT )
 // clang-format off
 LAYOUT_UNIFORM( DIRECTIONAL_LIGHTS_BIND_POINT, 0 ) DirectionalLight
 {
@@ -42,7 +41,6 @@ LAYOUT_UNIFORM_BUFFER( PUNCTUAL_LIGHTS_BIND_POINT, 0 ) __UNIFORM_BUFFER__ PointL
     sPunctualLight mArray[];
 } gPunctualLights;
 // clang-format on
-#endif
 
 LAYOUT_UNIFORM( DIRECTIONAL_LIGHTS_SHADOW_MAP_BIND_POINT, 0 ) sampler2D gDirectionalLightShadowMap;
 LAYOUT_UNIFORM( PUNCTUAL_LIGHTS_SHADOW_MAP_BIND_POINT, 0 ) samplerCube gPunctualLightShadowMaps[];

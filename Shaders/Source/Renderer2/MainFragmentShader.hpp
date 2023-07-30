@@ -13,11 +13,7 @@ void material( out MaterialInput aMaterial )
 #endif
 
 #if defined( __cplusplus )
-#    if !defined( SHADING_MODEL_UNLIT )
-#        include "ShadingModelLit.hpp"
-#    else
-#        include "ShadingModelUnlit.hpp"
-#    endif
+#    include "ShadingModelLit.hpp"
 #endif
 
 void main()

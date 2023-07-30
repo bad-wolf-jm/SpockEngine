@@ -1371,7 +1371,7 @@ namespace SE::Editor
 
         if( m_SceneViewport.Handle )
         {
-            UI::Image( m_SceneViewport_new, l3DViewSize );
+            UI::Image( m_SceneViewport, l3DViewSize );
             if( ImGui::BeginDragDropTarget() )
             {
                 if( const ImGuiPayload *payload = ImGui::AcceptDragDropPayload( "CONTENT_BROWSER_ITEM" ) )

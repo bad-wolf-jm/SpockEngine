@@ -18,8 +18,8 @@
 
 #include "Core/Entity/Collection.h"
 
-#include "Renderer/MeshRenderer.h"
-#include "Renderer/ParticleSystemRenderer.h"
+// #include "Renderer/MeshRenderer.h"
+// #include "Renderer/ParticleSystemRenderer.h"
 
 #include "Primitives/Primitives.h"
 

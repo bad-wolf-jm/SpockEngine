@@ -11,9 +11,9 @@
 
 #include "Renderer2/NewSceneRenderer.h"
 
-#include "Scene/Renderer/DeferredSceneRenderer.h"
-#include "Scene/Renderer/ForwardSceneRenderer.h"
-#include "Scene/Renderer/RayTracing/RayTracingRenderer.h"
+// #include "Scene/Renderer/DeferredSceneRenderer.h"
+// #include "Scene/Renderer/ForwardSceneRenderer.h"
+// #include "Scene/Renderer/RayTracing/RayTracingRenderer.h"
 #include "Scene/Scene.h"
 
 #include "UI/UI.h"

@@ -281,10 +281,7 @@ namespace SE::Core
 
         switch( lMaterialInfo.mShadingModel )
         {
-        case eShadingModel::STANDARD:
-            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\SurfaceShadingStandard.hpp" );
-            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\ShadingModelLit.hpp" );
-            break;
+
         case eShadingModel::SUBSURFACE:
             lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\ShadingModelLit.hpp" );
             break;
@@ -292,8 +289,10 @@ namespace SE::Core
             lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\ShadingModelLit.hpp" );
             break;
         case eShadingModel::UNLIT:
+        case eShadingModel::STANDARD:
         default:
-            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\ShadingModelUnlit.hpp" );
+            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\SurfaceShadingStandard.hpp" );
+            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer2\\ShadingModelLit.hpp" );
             break;
         }
 
@@ -409,14 +408,10 @@ namespace SE::Core
         lNewPipeline->AddDescriptorSet( mCameraParametersDescriptorLayout );
         lNewPipeline->AddDescriptorSet( mShaderMaterialsDescriptorLayout );
         lNewPipeline->AddDescriptorSet( mMaterialTexturesDescriptorLayout );
-
-        if( lMaterialInfo.mShadingModel != eShadingModel::UNLIT )
-        {
-            lNewPipeline->AddDescriptorSet( mDirectionalLightsDescriptorLayout );
-            lNewPipeline->AddDescriptorSet( mPunctualLightsDescriptorLayout );
-            lNewPipeline->AddDescriptorSet( mDirectionalLightShadowMapDescriptorLayout );
-            lNewPipeline->AddDescriptorSet( mPunctualLightShadowMapDescriptorLayout );
-        }
+        lNewPipeline->AddDescriptorSet( mDirectionalLightsDescriptorLayout );
+        lNewPipeline->AddDescriptorSet( mPunctualLightsDescriptorLayout );
+        lNewPipeline->AddDescriptorSet( mDirectionalLightShadowMapDescriptorLayout );
+        lNewPipeline->AddDescriptorSet( mPunctualLightShadowMapDescriptorLayout );
 
         lNewPipeline->AddPushConstantRange( { eShaderStageTypeFlags::FRAGMENT }, 0, sizeof( int32_t ) );
 
