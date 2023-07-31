@@ -13,12 +13,12 @@ namespace SE::Core
     using namespace SE::Core::Primitives;
     using namespace math;
 
-    NewSceneRenderer::NewSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
+    SceneRenderer::SceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount )
         : BaseSceneRenderer( aGraphicContext, aOutputFormat, aOutputSampleCount )
     {
     }
 
-    void NewSceneRenderer::CreateRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    void SceneRenderer::CreateRenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
         sRenderTargetDescription lRenderTargetSpec{};
         lRenderTargetSpec.mWidth       = aOutputWidth;
@@ -45,7 +45,7 @@ namespace SE::Core
         mGeometryContext = CreateRenderContext( mGraphicContext, mGeometryRenderTarget );
     }
 
-    void NewSceneRenderer::CreateMSAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    void SceneRenderer::CreateMSAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
         sRenderTargetDescription lRenderTargetSpec{};
         lRenderTargetSpec.mWidth       = aOutputWidth;
@@ -77,7 +77,7 @@ namespace SE::Core
         mGeometryContext = CreateRenderContext( mGraphicContext, mGeometryRenderTarget );
     }
 
-    void NewSceneRenderer::CreateFXAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    void SceneRenderer::CreateFXAARenderTarget( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
         sRenderTargetDescription lFxaaSpec{};
         lFxaaSpec.mWidth       = aOutputWidth;
@@ -102,16 +102,16 @@ namespace SE::Core
         mFxaaContext = CreateRenderContext( mGraphicContext, mFxaaRenderTarget );
     }
 
-    void NewSceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
+    void SceneRenderer::ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight )
     {
         if( mOutputSampleCount == 1 )
             CreateRenderTarget( aOutputWidth, aOutputHeight );
         else
             CreateMSAARenderTarget( aOutputWidth, aOutputHeight );
-        mShadowSceneRenderer = New<NewShadowSceneRenderer>( mGraphicContext );
+        mShadowSceneRenderer = New<ShadowSceneRenderer>( mGraphicContext );
     }
 
-    void NewSceneRenderer::Update( Ref<Scene> aWorld )
+    void SceneRenderer::Update( Ref<Scene> aWorld )
     {
         SE_PROFILE_FUNCTION();
 
@@ -188,7 +188,7 @@ namespace SE::Core
         mScene->GetNewMaterialSystem()->SetShadowMap( mShadowSceneRenderer->GetPointLightShadowMapSamplers() );
     }
 
-    void NewSceneRenderer::Render()
+    void SceneRenderer::Render()
     {
         SE_PROFILE_FUNCTION();
 
@@ -219,7 +219,7 @@ namespace SE::Core
         mGeometryContext->EndRender();
     }
 
-    Ref<ITexture2D> NewSceneRenderer::GetOutputImage()
+    Ref<ITexture2D> SceneRenderer::GetOutputImage()
     {
         return mGeometryRenderTarget->GetAttachment( "OUTPUT" );
     }

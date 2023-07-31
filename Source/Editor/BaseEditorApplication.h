@@ -72,7 +72,7 @@ namespace SE::Editor
         Ref<Scene> mTestWorld             = nullptr;
 
         // Ref<DeferredRenderer>     mDeferredRenderer   = nullptr;
-        Ref<NewSceneRenderer>     mNewSceneRenderer   = nullptr;
+        Ref<SceneRenderer>     mNewSceneRenderer   = nullptr;
         // Ref<ForwardSceneRenderer> mForwardRenderer    = nullptr;
         // Ref<RayTracingRenderer>   mRayTracingRenderer = nullptr;
 

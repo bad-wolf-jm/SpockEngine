@@ -7,7 +7,7 @@
 #include "Scene/Scene.h"
 
 #include "ASceneRenderer.h"
-#include "SceneRenderData.h"
+// #include "SceneRenderData.h"
 
 // #include "CoordinateGridRenderer.h"
 
@@ -22,23 +22,43 @@ namespace SE::Core
     using namespace SE::Graphics;
     namespace fs = std::filesystem;
 
-    struct NewShadowMeshRendererCreateInfo
+    struct ShadowMatrices
+    {
+        math::mat4 mMVP;
+
+        ShadowMatrices()  = default;
+        ~ShadowMatrices() = default;
+
+        ShadowMatrices( const ShadowMatrices & ) = default;
+    };
+
+    struct OmniShadowMatrices
+    {
+        math::mat4 mMVP;
+        math::vec4 mLightPos;
+
+        OmniShadowMatrices()  = default;
+        ~OmniShadowMatrices() = default;
+
+        OmniShadowMatrices( const OmniShadowMatrices & ) = default;
+    };
+    struct ShadowMeshRendererCreateInfo
     {
         Ref<IRenderContext> RenderPass = nullptr;
     };
 
-    class NewShadowMeshRenderer
+    class ShadowMeshRenderer
     {
 
       public:
-        NewShadowMeshRendererCreateInfo Spec = {};
+        ShadowMeshRendererCreateInfo Spec = {};
 
         Ref<IDescriptorSetLayout> CameraSetLayout = nullptr;
         Ref<IDescriptorSetLayout> NodeSetLayout   = nullptr;
 
       public:
-        NewShadowMeshRenderer() = default;
-        NewShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, NewShadowMeshRendererCreateInfo const &aCreateInfo );
+        ShadowMeshRenderer() = default;
+        ShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo );
 
         static Ref<IDescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
         Ref<IGraphicsPipeline>           Pipeline()
@@ -46,7 +66,7 @@ namespace SE::Core
             return mPipeline;
         }
 
-        ~NewShadowMeshRenderer() = default;
+        ~ShadowMeshRenderer() = default;
 
       private:
         Ref<IGraphicContext>   mGraphicContext    = nullptr;
@@ -55,18 +75,18 @@ namespace SE::Core
         Ref<IGraphicsPipeline> mPipeline          = nullptr;
     };
 
-    class NewOmniShadowMeshRenderer
+    class OmniShadowMeshRenderer
     {
 
       public:
-        NewShadowMeshRendererCreateInfo Spec = {};
+        ShadowMeshRendererCreateInfo Spec = {};
 
         Ref<IDescriptorSetLayout> CameraSetLayout = nullptr;
         Ref<IDescriptorSetLayout> NodeSetLayout   = nullptr;
 
       public:
-        NewOmniShadowMeshRenderer() = default;
-        NewOmniShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, NewShadowMeshRendererCreateInfo const &aCreateInfo );
+        OmniShadowMeshRenderer() = default;
+        OmniShadowMeshRenderer( Ref<IGraphicContext> aGraphicContext, ShadowMeshRendererCreateInfo const &aCreateInfo );
 
         static Ref<IDescriptorSetLayout> GetCameraSetLayout( Ref<IGraphicContext> aGraphicContext );
         static Ref<IDescriptorSetLayout> GetNodeSetLayout( Ref<IGraphicContext> aGraphicContext );
@@ -76,7 +96,7 @@ namespace SE::Core
             return mPipeline;
         }
 
-        ~NewOmniShadowMeshRenderer() = default;
+        ~OmniShadowMeshRenderer() = default;
 
       private:
         Ref<IGraphicContext>   mGraphicContext    = nullptr;
@@ -85,17 +105,17 @@ namespace SE::Core
         Ref<IGraphicsPipeline> mPipeline          = nullptr;
     };
 
-    class NewShadowSceneRenderer : public BaseSceneRenderer
+    class ShadowSceneRenderer : public BaseSceneRenderer
     {
       public:
-        NewShadowMatrices     View;
-        NewOmniShadowMatrices mOmniView;
+        ShadowMatrices     View;
+        OmniShadowMatrices mOmniView;
 
       public:
-        NewShadowSceneRenderer() = default;
-        NewShadowSceneRenderer( Ref<IGraphicContext> aGraphicContext );
+        ShadowSceneRenderer() = default;
+        ShadowSceneRenderer( Ref<IGraphicContext> aGraphicContext );
 
-        ~NewShadowSceneRenderer() = default;
+        ~ShadowSceneRenderer() = default;
 
         Ref<ITexture2D> GetOutputImage();
 
@@ -117,23 +137,22 @@ namespace SE::Core
             return mPointLightShadowMapSamplers;
         }
 
-        
-    void SetLights( sDirectionalLight const &aDirectionalLights );
+        void SetLights( sDirectionalLight const &aDirectionalLights );
 
-    void SetLights( std::vector<sPunctualLight> const &aPointLights );
+        void SetLights( std::vector<sPunctualLight> const &aPointLights );
 
       protected:
-        Ref<IRenderContext>        mDirectionalShadowMapRenderContext    = nullptr;
-        Ref<ISampler2D>            mDirectionalShadowMapSampler          = nullptr;
-        Ref<IGraphicBuffer>        mDirectionalShadowCameraUniformBuffer = nullptr;
-        Ref<IDescriptorSet>        mDirectionalShadowSceneDescriptor     = nullptr;
-        Ref<NewShadowMeshRenderer> mRenderPipeline                       = nullptr;
+        Ref<IRenderContext>     mDirectionalShadowMapRenderContext    = nullptr;
+        Ref<ISampler2D>         mDirectionalShadowMapSampler          = nullptr;
+        Ref<IGraphicBuffer>     mDirectionalShadowCameraUniformBuffer = nullptr;
+        Ref<IDescriptorSet>     mDirectionalShadowSceneDescriptor     = nullptr;
+        Ref<ShadowMeshRenderer> mRenderPipeline                       = nullptr;
 
         std::vector<std::array<Ref<IRenderContext>, 6>> mPointLightsShadowMapRenderContext    = {};
         std::vector<Ref<ISamplerCubeMap>>               mPointLightShadowMapSamplers          = {};
         std::vector<std::array<Ref<IGraphicBuffer>, 6>> mPointLightsShadowCameraUniformBuffer = {};
         std::vector<std::array<Ref<IDescriptorSet>, 6>> mPointLightsShadowSceneDescriptors    = {};
-        Ref<NewOmniShadowMeshRenderer>                  mOmniRenderPipeline                   = nullptr;
+        Ref<OmniShadowMeshRenderer>                     mOmniRenderPipeline                   = nullptr;
 
         Ref<IRenderTarget>  mGeometryRenderTarget = nullptr;
         Ref<IRenderContext> mGeometryContext{};

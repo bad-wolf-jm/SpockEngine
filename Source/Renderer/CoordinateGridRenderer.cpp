@@ -17,18 +17,16 @@ namespace SE::Core
         mPipeline->SetCulling( eFaceCulling::NONE );
         mPipeline->SetDepthParameters( true, true, eDepthCompareOperation::LESS_OR_EQUAL );
 
-
-        fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
-        auto     lVertexShader =
-            CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "coordinate_grid_renderer_vertex_shader", lShaderPath );
+        fs::path lShaderPath   = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
+        auto     lVertexShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450,
+                                                      "coordinate_grid_renderer_vertex_shader", lShaderPath );
         lVertexShader->AddCode( SE::Private::Shaders::gCoordinateGridVertexShader_data );
         lVertexShader->Compile();
 
-        auto lFragmentShader =
-            CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "coordinate_grid_renderer_fragment_shader", lShaderPath );
+        auto lFragmentShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450,
+                                                    "coordinate_grid_renderer_fragment_shader", lShaderPath );
         lFragmentShader->AddCode( SE::Private::Shaders::gCoordinateGridFragmentShader_data );
         lFragmentShader->Compile();
-
 
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
         mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, lFragmentShader, "main" );

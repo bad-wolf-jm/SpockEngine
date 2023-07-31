@@ -115,9 +115,8 @@ namespace SE::Core
     void NewMaterialSystem::SetLights( std::vector<sPunctualLight> const &aPointLights )
     {
         mPointLights = aPointLights;
-        auto x       = sizeof( sPunctualLight );
-        auto y       = mPointLights.size();
-        if( mShaderPunctualLights->SizeAs<sPunctualLight>() < mPointLights.size() )
+
+        if( mShaderPunctualLights->SizeAs<sPunctualLight>() != mPointLights.size() )
         {
             auto lBufferSize      = std::max( mPointLights.size(), static_cast<size_t>( 1 ) ) * sizeof( sPunctualLight );
             mShaderPunctualLights = CreateBuffer( mGraphicContext, eBufferType::STORAGE_BUFFER, true, false, true, true, lBufferSize );

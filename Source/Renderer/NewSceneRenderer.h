@@ -14,7 +14,7 @@ namespace SE::Core
 
     class Scene;
 
-    struct sNewMeshRenderData
+    struct sMeshRenderData
     {
         // Shader data
         Material mMaterialID = 0;
@@ -27,7 +27,7 @@ namespace SE::Core
         uint32_t            mIndexOffset  = 0;
         uint32_t            mIndexCount   = 0;
 
-        sNewMeshRenderData( sStaticMeshComponent const &aMesh, sNewMaterialComponent const &aMaterialID )
+        sMeshRenderData( sStaticMeshComponent const &aMesh, sNewMaterialComponent const &aMaterialID )
             : mMaterialID{ aMaterialID.mMaterialID }
             , mIndexBuffer{ aMesh.mIndexBuffer }
             , mVertexBuffer{ aMesh.mTransformedBuffer }
@@ -41,11 +41,11 @@ namespace SE::Core
 
     struct sRenderQueue
     {
-        Ref<IGraphicsPipeline>          mPipeline;
-        std::vector<sNewMeshRenderData> mMeshes;
+        Ref<IGraphicsPipeline>       mPipeline;
+        std::vector<sMeshRenderData> mMeshes;
     };
 
-    class NewSceneRenderer : public BaseSceneRenderer
+    class SceneRenderer : public BaseSceneRenderer
     {
       public:
         bool mRenderCoordinateGrid = true;
@@ -54,10 +54,10 @@ namespace SE::Core
         bool mUseFXAA              = false;
 
       public:
-        NewSceneRenderer() = default;
-        NewSceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
+        SceneRenderer() = default;
+        SceneRenderer( Ref<IGraphicContext> aGraphicContext, eColorFormat aOutputFormat, uint32_t aOutputSampleCount );
 
-        ~NewSceneRenderer() = default;
+        ~SceneRenderer() = default;
 
         Ref<ITexture2D> GetOutputImage();
 
@@ -67,12 +67,12 @@ namespace SE::Core
         void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
       protected:
-        Ref<IRenderTarget>  mGeometryRenderTarget = nullptr;
-        Ref<IRenderContext> mGeometryContext{};
-        Ref<NewShadowSceneRenderer> mShadowSceneRenderer = nullptr;
-        Ref<ISampler2D>     mFxaaSampler      = nullptr;
-        Ref<IRenderTarget>  mFxaaRenderTarget = nullptr;
-        Ref<IRenderContext> mFxaaContext      = nullptr;
+        Ref<IRenderTarget>       mGeometryRenderTarget = nullptr;
+        Ref<IRenderContext>      mGeometryContext{};
+        Ref<ShadowSceneRenderer> mShadowSceneRenderer = nullptr;
+        Ref<ISampler2D>          mFxaaSampler         = nullptr;
+        Ref<IRenderTarget>       mFxaaRenderTarget    = nullptr;
+        Ref<IRenderContext>      mFxaaContext         = nullptr;
 
         std::map<size_t, sRenderQueue> mPipelines;
 

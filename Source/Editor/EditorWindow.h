@@ -69,10 +69,10 @@ namespace SE::Editor
         fs::path mMaterialsPath = "";
         fs::path mModelsPath    = "";
 
-        Ref<Engine>           mEngineLoop   = nullptr;
-        Ref<Scene>            World         = nullptr;
-        Ref<Scene>            ActiveWorld   = nullptr;
-        Ref<NewSceneRenderer> WorldRenderer = nullptr;
+        Ref<Engine>        mEngineLoop   = nullptr;
+        Ref<Scene>         World         = nullptr;
+        Ref<Scene>         ActiveWorld   = nullptr;
+        Ref<SceneRenderer> WorldRenderer = nullptr;
 
         // Ref<ForwardSceneRenderer> WorldRenderer = nullptr;
         Entity Sensor{};
@@ -130,7 +130,7 @@ namespace SE::Editor
         float    m_FpsTimer     = 0.0f;
         uint32_t m_LastFPS      = 0;
 
-        math::ivec2     m_WorkspaceAreaSize = { 0, 0 };
+        math::ivec2     m_WorkspaceAreaSize    = { 0, 0 };
         math::ivec2     m_NewWorkspaceAreaSize = { 0, 0 };
         Ref<ISampler2D> m_PlayIcon;
         ImageHandle     m_PlayIconHandle;
