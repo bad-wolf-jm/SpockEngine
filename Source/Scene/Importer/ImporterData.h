@@ -15,6 +15,8 @@ namespace fs = std::filesystem;
 
 namespace SE::Core
 {
+    using namespace math;
+
     // Changing this value here also requires changing it in the vertex shader
     constexpr uint32_t MAX_NUM_JOINTS = 128u;
 
@@ -57,11 +59,11 @@ namespace SE::Core
 
         struct
         {
-            bool       mIsTwoSided      = false;
-            float      mMetallicFactor  = 1.0f;
-            float      mRoughnessFactor = 1.0f;
-            math::vec4 mBaseColorFactor = math::vec4( 1.0f );
-            math::vec4 mEmissiveFactor  = math::vec4( 1.0f );
+            bool  mIsTwoSided      = false;
+            float mMetallicFactor  = 1.0f;
+            float mRoughnessFactor = 1.0f;
+            vec4  mBaseColorFactor = vec4( 1.0f );
+            vec4  mEmissiveFactor  = vec4( 1.0f );
         } mConstants;
 
         struct
@@ -113,10 +115,10 @@ namespace SE::Core
 
     struct sImportedSkin
     {
-        std::string             mName                = "";
-        uint32_t                mSkeletonRootNodeID  = 0;
-        std::vector<uint32_t>   mJointNodeID         = {};
-        std::vector<math::mat4> mInverseBindMatrices = {};
+        std::string           mName                = "";
+        uint32_t              mSkeletonRootNodeID  = 0;
+        std::vector<uint32_t> mJointNodeID         = {};
+        std::vector<mat4>     mInverseBindMatrices = {};
     };
 
     struct sImportedMesh
@@ -125,14 +127,14 @@ namespace SE::Core
 
         Graphics::ePrimitiveTopology mPrimitive = Graphics::ePrimitiveTopology::TRIANGLES;
 
-        uint32_t                 mMaterialID = 0;
-        std::vector<uint32_t>    mIndices    = {};
-        std::vector<math::vec3>  mPositions  = {};
-        std::vector<math::vec3>  mNormals    = {};
-        std::vector<math::vec2>  mUV0        = {};
-        std::vector<math::vec2>  mUV1        = {};
-        std::vector<math::uvec4> mJoints     = {};
-        std::vector<math::vec4>  mWeights    = {};
+        uint32_t              mMaterialID = 0;
+        std::vector<uint32_t> mIndices    = {};
+        std::vector<vec3>     mPositions  = {};
+        std::vector<vec3>     mNormals    = {};
+        std::vector<vec2>     mUV0        = {};
+        std::vector<vec2>     mUV1        = {};
+        std::vector<uvec4>    mJoints     = {};
+        std::vector<vec4>     mWeights    = {};
     };
 
     struct sImportedNode
@@ -140,7 +142,7 @@ namespace SE::Core
         std::string           mName      = "";
         uint32_t              mParentID  = std::numeric_limits<uint32_t>::max();
         uint32_t              mSkinID    = std::numeric_limits<uint32_t>::max();
-        math::mat4            mTransform = math::mat4( 1.0f );
+        mat4                  mTransform = mat4( 1.0f );
         std::vector<uint32_t> mChildren  = {};
         std::vector<uint32_t> mMeshes    = {};
     };

@@ -113,10 +113,12 @@ namespace SE::Core
         {
             return mState;
         }
-        Ref<MaterialSystem> GetMaterialSystem()
-        {
-            return mMaterialSystem;
-        }
+
+        // Ref<MaterialSystem> GetMaterialSystem()
+        // {
+        //     return mMaterialSystem;
+        // }
+
         Ref<NewMaterialSystem> GetNewMaterialSystem()
         {
             return mNewMaterialSystem;
@@ -131,7 +133,7 @@ namespace SE::Core
       private:
         eSceneState                   mState                 = eSceneState::EDITING;
         Ref<IGraphicContext>          mGraphicContext        = nullptr;
-        Ref<MaterialSystem>           mMaterialSystem        = nullptr;
+        // Ref<MaterialSystem>           mMaterialSystem        = nullptr;
         Ref<OptixDeviceContextObject> mRayTracingContext     = nullptr;
         Ref<OptixScene>               mAccelerationStructure = nullptr;
 
