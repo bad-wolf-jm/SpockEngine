@@ -660,7 +660,7 @@ namespace SE::Editor
             if( UI::MenuItem( fmt::format( "{} Save Scene", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )
             {
                 // m_NewMaterial.Visible = true;
-                World->SaveAs( fs::path( "C:\\GitLab\\SpockEngine\\Saved" ) / "TEST" / "SCENE" );
+                World->SaveAs( fs::path( "D:\\Work\\Git\\SpockEngine\\Saved\\" ) / "TEST" / "SCENE" );
             }
 
             if( UI::MenuItem( fmt::format( "{} Load Scenario Scene", ICON_FA_PLUS_CIRCLE ).c_str(), NULL ) )

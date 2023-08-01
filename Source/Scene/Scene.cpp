@@ -82,10 +82,10 @@ namespace SE::Core
 
     Scene::Scene( Ref<Scene> aSource )
     {
-        mGraphicContext = aSource->mGraphicContext;
-        mMaterialSystem = aSource->mMaterialSystem;
+        mGraphicContext    = aSource->mGraphicContext;
+        mMaterialSystem    = aSource->mMaterialSystem;
         mNewMaterialSystem = aSource->mNewMaterialSystem;
-        mEditorView     = aSource->mEditorView;
+        mEditorView        = aSource->mEditorView;
 
         InitializeRayTracing();
         ConnectSignalHandlers();
@@ -426,9 +426,9 @@ namespace SE::Core
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sStaticMeshComponent>()], lReadContext );
             }
 
-            if( HasTypeTag<sMaterialComponent>( lEntityConfiguration ) )
+            if( HasTypeTag<sNewMaterialComponent>( lEntityConfiguration ) )
             {
-                auto &lMaterialID = Get( lEntityConfiguration[TypeTag<sMaterialComponent>()]["mMaterialPath"], std::string{ "" } );
+                auto &lMaterialID = Get( lEntityConfiguration[TypeTag<sNewMaterialComponent>()]["mMaterialPath"], std::string{ "" } );
 
                 if( lMaterialLoadQueue.find( lMaterialID ) == lMaterialLoadQueue.end() )
                     lMaterialLoadQueue.emplace( lMaterialID, std::set<std::string>{ lKey } );
@@ -522,12 +522,12 @@ namespace SE::Core
         {
             auto &[lMaterialID, lEntities] = aElement;
 
-            auto &lNewMaterial = mMaterialSystem->CreateMaterial( lScenarioRoot / lMaterialID );
+            // auto &lNewMaterial = mMaterialSystem->CreateMaterial( lScenarioRoot / lMaterialID );
             auto &lNewMaterial1 = mNewMaterialSystem->CreateMaterial( lScenarioRoot / lMaterialID );
 
             for( auto &lEntity : lEntities )
             {
-                lReadContext.mEntities[lEntity].AddOrReplace<sMaterialComponent>( lNewMaterial.mID );
+                // lReadContext.mEntities[lEntity].AddOrReplace<sMaterialComponent>( lNewMaterial.mID );
                 lReadContext.mEntities[lEntity].AddOrReplace<sNewMaterialComponent>( lNewMaterial1 );
             }
         } );
@@ -1281,8 +1281,8 @@ namespace SE::Core
             if( aEntity.Has<sRayTracingTargetComponent>() )
                 WriteComponent( lOut, aEntity.Get<sRayTracingTargetComponent>() );
 
-            if( aEntity.Has<sMaterialComponent>() )
-                WriteComponent( lOut, aEntity.Get<sMaterialComponent>(), aMaterialMap[aUUID.mValue.str()] );
+            if( aEntity.Has<sNewMaterialComponent>() )
+                WriteComponent( lOut, aEntity.Get<sNewMaterialComponent>(), aMaterialMap[aUUID.mValue.str()] );
 
             if( aEntity.Has<sMaterialShaderComponent>() )
                 WriteComponent( lOut, aEntity.Get<sMaterialShaderComponent>() );
@@ -1312,71 +1312,118 @@ namespace SE::Core
 
         if( !fs::exists( aPath / "Materials" ) )
             fs::create_directories( aPath / "Materials" );
+
         if( !fs::exists( aPath / "Meshes" ) )
             fs::create_directories( aPath / "Meshes" );
+
         if( !fs::exists( aPath / "Animations" ) )
             fs::create_directories( aPath / "Animations" );
 
-        std::vector<std::string> lMaterialList{};
+        // std::vector<std::string> lMaterialList{};
+        std::unordered_map<std::string, std::string> lMaterialList{};
         {
-            auto &lMaterials = mMaterialSystem->GetMaterialData();
-            auto &lTextures  = mMaterialSystem->GetTextures();
+            auto &lMaterials = mNewMaterialSystem->GetMaterialData();
+            // auto &lTextures  = mMaterialSystem->GetTextures();
 
             for( auto &lMaterial : lMaterials )
             {
                 BinaryAsset lBinaryDataFile{};
-                std::string lMaterialFileName = fmt::format( "{}.material", lMaterial.mName );
+                std::string lMaterialFileName = fmt::format( "{}.material", lMaterial.Get<sTag>().mValue );
 
-                auto lRetrieveAndPackageTexture = [&]( sTextureReference aTexture )
+                auto lRetrieveAndPackageTexture = [&]( Ref<ISampler2D> aTexture )
                 {
-                    if( aTexture.mTextureID >= 2 )
-                    {
-                        sTextureSamplingInfo lSamplingInfo = lTextures[aTexture.mTextureID]->mSpec;
-                        TextureData2D        lTextureData;
-                        lTextures[aTexture.mTextureID]->GetTexture()->GetPixelData( lTextureData );
-                        lBinaryDataFile.Package( lTextureData, lSamplingInfo );
-                    }
+                    sTextureSamplingInfo lSamplingInfo = aTexture->mSpec;
+                    TextureData2D        lTextureData;
+                    aTexture->GetTexture()->GetPixelData( lTextureData );
+                    lBinaryDataFile.Package( lTextureData, lSamplingInfo );
                 };
 
-                uint32_t          lCurrentTextureID = 0;
-                sMaterial         lNewMaterial      = lMaterial;
+                uint32_t      lCurrentTextureID = 0;
+                sMaterial     lNewMaterial;
+                sMaterialInfo lMaterialInfo = lMaterial.Get<sMaterialInfo>();
+                lNewMaterial.mLineWidth     = lMaterialInfo.mLineWidth;
+                lNewMaterial.mIsTwoSided    = lMaterialInfo.mIsTwoSided;
+                lNewMaterial.mName          = lMaterial.Get<sTag>().mValue;
+                lNewMaterial.mType          = eMaterialType::Opaque;
+
                 sTextureReference lDefaultTexture{ 0, std::numeric_limits<uint32_t>::max() };
 
                 lNewMaterial.mBaseColorTexture = lDefaultTexture;
-                if( lMaterial.mBaseColorTexture.mTextureID >= 2 )
+                if( lMaterial.Has<sBaseColorTexture>() )
+                {
                     lNewMaterial.mBaseColorTexture = sTextureReference{ 0, lCurrentTextureID++ };
+                }
 
                 lNewMaterial.mNormalsTexture = lDefaultTexture;
-                if( lMaterial.mNormalsTexture.mTextureID >= 2 )
+
+                if( lMaterial.Has<sNormalsTexture>() )
+                {
                     lNewMaterial.mNormalsTexture = sTextureReference{ 0, lCurrentTextureID++ };
+                }
 
                 lNewMaterial.mMetalRoughTexture = lDefaultTexture;
-                if( lMaterial.mMetalRoughTexture.mTextureID >= 2 )
+                if( lMaterial.Has<sMetalRoughTexture>() )
+                {
                     lNewMaterial.mMetalRoughTexture = sTextureReference{ 0, lCurrentTextureID++ };
+                }
 
                 lNewMaterial.mOcclusionTexture = lDefaultTexture;
-                if( lMaterial.mOcclusionTexture.mTextureID >= 2 )
+                if( lMaterial.Has<sOcclusionTexture>() )
+                {
                     lNewMaterial.mOcclusionTexture = sTextureReference{ 0, lCurrentTextureID++ };
+                }
 
                 lNewMaterial.mEmissiveTexture = lDefaultTexture;
-                if( lMaterial.mEmissiveTexture.mTextureID >= 2 )
+                if( lMaterial.Has<sEmissiveTexture>() )
+                {
                     lNewMaterial.mEmissiveTexture = sTextureReference{ 0, lCurrentTextureID++ };
+                }
 
                 lBinaryDataFile.Package( lNewMaterial );
 
-                lRetrieveAndPackageTexture( lMaterial.mBaseColorTexture );
-                lRetrieveAndPackageTexture( lMaterial.mNormalsTexture );
-                lRetrieveAndPackageTexture( lMaterial.mMetalRoughTexture );
-                lRetrieveAndPackageTexture( lMaterial.mOcclusionTexture );
-                lRetrieveAndPackageTexture( lMaterial.mEmissiveTexture );
+                if( lMaterial.Has<sBaseColorTexture>() )
+                {
+                    lRetrieveAndPackageTexture( lMaterial.Get<sBaseColorTexture>().mTexture );
+                }
+
+                if( lMaterial.Has<sNormalsTexture>() )
+                {
+                    lRetrieveAndPackageTexture( lMaterial.Get<sNormalsTexture>().mTexture );
+                }
+
+                if( lMaterial.Has<sMetalRoughTexture>() )
+                {
+                    lRetrieveAndPackageTexture( lMaterial.Get<sMetalRoughTexture>().mTexture );
+                }
+
+                if( lMaterial.Has<sOcclusionTexture>() )
+                {
+                    lRetrieveAndPackageTexture( lMaterial.Get<sOcclusionTexture>().mTexture );
+                }
+
+                if( lMaterial.Has<sEmissiveTexture>() )
+                {
+                    lRetrieveAndPackageTexture( lMaterial.Get<sEmissiveTexture>().mTexture );
+                }
 
                 lBinaryDataFile.WriteTo( aPath / "Materials" / lMaterialFileName );
-                lMaterialList.push_back( fmt::format( "{}/{}", "Materials", lMaterialFileName ) );
+                // lRetrieveAndPackageTexture( lMaterial.mBaseColorTexture );
+                // lRetrieveAndPackageTexture( lMaterial.mNormalsTexture );
+                // lRetrieveAndPackageTexture( lMaterial.mMetalRoughTexture );
+                // lRetrieveAndPackageTexture( lMaterial.mOcclusionTexture );
+                // lRetrieveAndPackageTexture( lMaterial.mEmissiveTexture );
+                lMaterialList[lMaterial.Get<sUUID>().mValue.str()] = fmt::format( "{}/{}", "Materials", lMaterialFileName );
+                // lMaterialList.push_back( fmt::format( "{}/{}", "Materials", lMaterialFileName ) );
             }
         }
+
+        // clang-format off
         std::unordered_map<std::string, std::string> lMaterialMap{};
-        ForEach<sMaterialComponent>( [&]( auto aEntity, auto &aComponent )
-                                     { lMaterialMap[aEntity.Get<sUUID>().mValue.str()] = lMaterialList[aComponent.mMaterialID]; } );
+        ForEach<sNewMaterialComponent>( [&]( auto aEntity, auto &aComponent )
+        { 
+            lMaterialMap[aEntity.Get<sUUID>().mValue.str()] = lMaterialList[aComponent.mMaterialID.Get<sUUID>().mValue.str()]; 
+        } );
+        // clang-format on
 
         std::unordered_map<std::string, std::string> lMeshPathDB{};
         ForEach<sStaticMeshComponent>(

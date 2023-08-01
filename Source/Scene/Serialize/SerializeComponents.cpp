@@ -21,12 +21,12 @@ namespace SE::Core
         { typeid(sWireframeMeshComponent).name(),     "WIREFRAME_MESH" },
         { typeid(sBoundingBoxComponent).name(),       "BOUNDING_BOX" },
         { typeid(sRayTracingTargetComponent).name(),  "RAY_TRACING_TARGET" },
-        { typeid(sMaterialComponent).name(),          "MATERIAL_COMPONENT" },
+        { typeid(sNewMaterialComponent).name(),       "MATERIAL_COMPONENT" },
         { typeid(sMaterialShaderComponent).name(),    "MATERIAL_SHADER" },
         { typeid(sBackgroundComponent).name(),        "BACKGROUND" },
         { typeid(sAmbientLightingComponent).name(),   "AMBIENT_LIGHTING" },
         { typeid(sLightComponent).name(),             "LIGHT" },
-        { typeid(sUIComponent).name(),               "HUD" }
+        { typeid(sUIComponent).name(),                "HUD" }
     };
     // clang-format on
 
@@ -228,7 +228,7 @@ namespace SE::Core
         aComponent.Transform = ReadMatrix( aNode["Transform"] );
     }
 
-    void ReadComponent( sMaterialComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
+    void ReadComponent( sNewMaterialComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
         aComponent.mMaterialID = 0;
     }
@@ -464,9 +464,9 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void WriteComponent( ConfigurationWriter &aOut, sMaterialComponent const &aComponent, std::string const &aMaterialPath )
+    void WriteComponent( ConfigurationWriter &aOut, sNewMaterialComponent const &aComponent, std::string const &aMaterialPath )
     {
-        WriteTypeTag<sMaterialComponent>( aOut );
+        WriteTypeTag<sNewMaterialComponent>( aOut );
         aOut.BeginMap( true );
         {
             aOut.WriteKey( "mMaterialPath", aMaterialPath );

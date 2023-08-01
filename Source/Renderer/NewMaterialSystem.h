@@ -131,6 +131,8 @@ namespace SE::Core
         int32_t AppendTextureData( Ref<ISampler2D> aTexture );
         void    UpdateMaterialData();
 
+        std::vector<Material> GetMaterialData();
+
       private:
         Ref<IGraphicContext> mGraphicContext;
 

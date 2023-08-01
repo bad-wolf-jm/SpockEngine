@@ -106,6 +106,16 @@ namespace SE::Core
         mPunctualLightShadowMapDescriptorLayout->Build();
     }
 
+    std::vector<Material> NewMaterialSystem::GetMaterialData()
+    {
+        std::vector<Material> lMaterials;
+        mMaterialRegistry.ForEach<sMaterialInfo>([&](auto aMaterial, auto const& aInfo) {
+            lMaterials.push_back(aMaterial);
+        });
+
+        return lMaterials;
+    }
+
     void NewMaterialSystem::SetLights( sDirectionalLight const &aDirectionalLights )
     {
         mDirectionalLight = aDirectionalLights;
