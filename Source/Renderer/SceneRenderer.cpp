@@ -135,15 +135,15 @@ namespace SE::Core
                     return;
                 if ((!aComponent.mIsOn))
                     return;
-                lDirectionalLight.mColorIntensity = math::vec4(aComponent.mColor, aComponent.mIntensity);
+                lDirectionalLight.mColorIntensity = vec4(aComponent.mColor, aComponent.mIntensity);
                 lDirectionalLight.mDirection = mat3(mScene->GetFinalTransformMatrix( aEntity ) )* vec3{ 0.0f, 0.0f, 1.0f };
                 lDirectionalLight.mCastsShadows = 1;
                 
-                math::mat4  lClip = math::MakeMat4( aEntries );
-                math::mat4 lProjection =
-                    math::Orthogonal( math::vec2{ -10.0f, 10.0f }, math::vec2{ -10.0f, 10.0f }, math::vec2{ -10.0f, 10.0f } );
-                math::mat4 lView =
-                    math::LookAt( lDirectionalLight.mDirection * 5.0f, math::vec3{ 0.0f, 0.0f, 0.0f }, math::vec3{ 0.0f, 1.0f, 0.0f } );
+                mat4  lClip = MakeMat4( aEntries );
+                mat4 lProjection =
+                    Orthogonal( vec2{ -10.0f, 10.0f }, vec2{ -10.0f, 10.0f }, vec2{ -10.0f, 10.0f } );
+                mat4 lView =
+                    LookAt( lDirectionalLight.mDirection * 5.0f, vec3{ 0.0f, 0.0f, 0.0f }, vec3{ 0.0f, 1.0f, 0.0f } );
                 lDirectionalLight.mTransform = lClip * lProjection * lView;
 
                 lFoundDirectionalLight = true;
@@ -152,7 +152,7 @@ namespace SE::Core
                 if( ( !aComponent.mIsOn ) )
                     return;
                 auto &lNewPointLight           = lPointLights.emplace_back();
-                lNewPointLight.mColorIntensity = math::vec4( aComponent.mColor, aComponent.mIntensity );
+                lNewPointLight.mColorIntensity = vec4( aComponent.mColor, aComponent.mIntensity );
                 lNewPointLight.mPosition       = vec3( mScene->GetFinalTransformMatrix( aEntity )[3] );
                 lNewPointLight.mCastsShadows   = 1;
                 break;
