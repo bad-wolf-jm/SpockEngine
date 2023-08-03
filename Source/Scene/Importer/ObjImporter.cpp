@@ -19,7 +19,8 @@ namespace SE::Core
 
         aMesh.mPositions.push_back( mVertexData[aIdx.vertex_index] );
         if( aIdx.normal_index >= 0 )
-            while( aMesh.mNormals.size() < aMesh.mPositions.size() ) aMesh.mNormals.push_back( mNormalsData[aIdx.normal_index] );
+            while( aMesh.mNormals.size() < aMesh.mPositions.size() )
+                aMesh.mNormals.push_back( mNormalsData[aIdx.normal_index] );
 
         if( aIdx.texcoord_index >= 0 )
         {
@@ -46,7 +47,8 @@ namespace SE::Core
 
     sImportedMaterial::sTextureReference ObjImporter::RetrieveTextureData( std::string const &aTextureName )
     {
-        if( aTextureName.empty() ) return sImportedMaterial::sTextureReference{};
+        if( aTextureName.empty() )
+            return sImportedMaterial::sTextureReference{};
 
         SE::Logging::Info( "Loading texture: {}", aTextureName );
 
@@ -81,7 +83,8 @@ namespace SE::Core
         std::string lErrorString = "";
         bool        lReadOK      = tinyobj::LoadObj( &mAttributes, &lObjShapes, &lObjMaterials, &lErrorString, &lErrorString,
                                                      aObjFile.string().c_str(), mModelDir.string().c_str(), true );
-        if( !lReadOK ) throw std::runtime_error( "Could not read OBJ model from " + aObjFile.string() + " : " + lErrorString );
+        if( !lReadOK )
+            throw std::runtime_error( "Could not read OBJ model from " + aObjFile.string() + " : " + lErrorString );
         // if( lObjMaterials.empty() ) throw std::runtime_error( "Could not parse materials ..." );
 
         for( uint32_t i = 0; i < mAttributes.vertices.size() / 3; i++ )
@@ -98,7 +101,8 @@ namespace SE::Core
         std::cout << "Done loading obj file - found " << lObjShapes.size() << " shapes with " << lObjMaterials.size() << " materials"
                   << std::endl;
 
-        if( lObjMaterials.empty() ) return;
+        if( lObjMaterials.empty() )
+            return;
 
         uint32_t lMaterialIndex = 0;
         for( auto const &lMaterial : lObjMaterials )
@@ -144,13 +148,15 @@ namespace SE::Core
 
                 for( int lFaceID = 0; lFaceID < lShape.mesh.material_ids.size(); lFaceID++ )
                 {
-                    if( lShape.mesh.material_ids[lFaceID] != lMaterialID ) continue;
+                    if( lShape.mesh.material_ids[lFaceID] != lMaterialID )
+                        continue;
                     AddVertex( lMesh, lShape.mesh.indices[3 * lFaceID + 0] );
                     AddVertex( lMesh, lShape.mesh.indices[3 * lFaceID + 1] );
                     AddVertex( lMesh, lShape.mesh.indices[3 * lFaceID + 2] );
                 }
 
-                if( !lMesh.mPositions.empty() ) mMeshes.push_back( lMesh );
+                if( !lMesh.mPositions.empty() )
+                    mMeshes.push_back( lMesh );
             }
         }
     }

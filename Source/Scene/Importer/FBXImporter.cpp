@@ -58,7 +58,7 @@ namespace Lumix
 
     void FBXImporter::getImportMeshName( const ImportMesh &mesh, char ( &out )[256] )
     {
-        const char *name               = mesh.fbx->name;
+        const char           *name     = mesh.fbx->name;
         const ofbx::Material *material = mesh.fbx_mat;
 
         if( name[0] == '\0' && mesh.fbx->getParent() )
@@ -98,7 +98,10 @@ namespace Lumix
         return nullptr;
     }
 
-    static ofbx::Matrix makeOFBXIdentity() { return { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 }; }
+    static ofbx::Matrix makeOFBXIdentity()
+    {
+        return { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
+    }
 
     static ofbx::Matrix getBindPoseMatrix( const FBXImporter::ImportMesh *mesh, const ofbx::Object *node )
     {
@@ -129,9 +132,9 @@ namespace Lumix
             const ofbx::DataView embedded = scene.getEmbeddedData( i );
 
             ofbx::DataView filename = scene.getEmbeddedFilename( i );
-            char path[LUMIX_MAX_PATH];
+            char           path[LUMIX_MAX_PATH];
             filename.toString( path );
-            const PathInfo pi( path );
+            const PathInfo                     pi( path );
             const StaticString<LUMIX_MAX_PATH> fullpath( src_dir, pi.m_basename, ".", pi.m_extension );
 
             if( os::fileExists( fullpath ) )
@@ -375,12 +378,13 @@ namespace Lumix
         }
     }
 
-    static int findSubblobIndex( const OutputMemoryStream &haystack, const OutputMemoryStream &needle, const Array<int> &subblobs, int first_subblob )
+    static int findSubblobIndex( const OutputMemoryStream &haystack, const OutputMemoryStream &needle, const Array<int> &subblobs,
+                                 int first_subblob )
     {
         const u8 *data        = (const u8 *)haystack.data();
         const u8 *needle_data = (const u8 *)needle.data();
-        int step_size         = (int)needle.size();
-        int idx               = first_subblob;
+        int       step_size   = (int)needle.size();
+        int       idx         = first_subblob;
         while( idx != -1 )
         {
             if( memcmp( data + idx * step_size, needle_data, step_size ) == 0 )
@@ -390,7 +394,10 @@ namespace Lumix
         return -1;
     }
 
-    static Vec3 toLumixVec3( const ofbx::Vec3 &v ) { return { (float)v.x, (float)v.y, (float)v.z }; }
+    static Vec3 toLumixVec3( const ofbx::Vec3 &v )
+    {
+        return { (float)v.x, (float)v.y, (float)v.z };
+    }
 
     static Matrix toLumix( const ofbx::Matrix &mtx )
     {
@@ -412,7 +419,7 @@ namespace Lumix
         union
         {
             u32 ui32;
-            i8 arr[4];
+            i8  arr[4];
         } un;
 
         un.arr[0] = xx;
@@ -500,9 +507,15 @@ namespace Lumix
         center += p;
     }
 
-    static ofbx::Vec3 operator-( const ofbx::Vec3 &a, const ofbx::Vec3 &b ) { return { a.x - b.x, a.y - b.y, a.z - b.z }; }
+    static ofbx::Vec3 operator-( const ofbx::Vec3 &a, const ofbx::Vec3 &b )
+    {
+        return { a.x - b.x, a.y - b.y, a.z - b.z };
+    }
 
-    static ofbx::Vec2 operator-( const ofbx::Vec2 &a, const ofbx::Vec2 &b ) { return { a.x - b.x, a.y - b.y }; }
+    static ofbx::Vec2 operator-( const ofbx::Vec2 &a, const ofbx::Vec2 &b )
+    {
+        return { a.x - b.x, a.y - b.y };
+    }
 
     static void computeTangentsSimple( Array<ofbx::Vec3> &out, i32 vertex_count, const ofbx::Vec3 *vertices, const ofbx::Vec2 *uvs )
     {
@@ -523,7 +536,7 @@ namespace Lumix
             const ofbx::Vec2 duv20 = uv2 - uv0;
 
             const float dir = duv20.x * duv10.y - duv20.y * duv10.x < 0 ? -1.f : 1.f;
-            ofbx::Vec3 tangent;
+            ofbx::Vec3  tangent;
             tangent.x     = ( dv20.x * duv10.y - dv10.x * duv20.y ) * dir;
             tangent.y     = ( dv20.y * duv10.y - dv10.y * duv20.y ) * dir;
             tangent.z     = ( dv20.z * duv10.y - dv10.z * duv20.y ) * dir;
@@ -537,10 +550,11 @@ namespace Lumix
         }
     }
 
-    static void computeNormals( Array<ofbx::Vec3> &out, const ofbx::Vec3 *vertices, i32 vertex_count, const u32 *remap, IAllocator &allocator )
+    static void computeNormals( Array<ofbx::Vec3> &out, const ofbx::Vec3 *vertices, i32 vertex_count, const u32 *remap,
+                                IAllocator &allocator )
     {
         out.resize( vertex_count );
-        Array<u32> count( allocator );
+        Array<u32>  count( allocator );
         Array<Vec3> normals( allocator );
         normals.resize( vertex_count );
         count.resize( vertex_count );
@@ -549,7 +563,7 @@ namespace Lumix
 
         auto toLumix   = []( const ofbx::Vec3 &a ) { return Vec3{ (float)a.x, (float)a.y, (float)a.z }; };
         auto fromLumix = []( const Vec3 &a ) { return ofbx::Vec3{ a.x, a.y, a.z }; };
-        u32 m          = 0;
+        u32  m         = 0;
 
         for( int i = 0; i < vertex_count; i += 3 )
         {
@@ -581,17 +595,18 @@ namespace Lumix
         }
     }
 
-    static void computeTangents( Array<ofbx::Vec3> &out, i32 vertex_count, const ofbx::Vec3 *vertices, const ofbx::Vec3 *normals, const ofbx::Vec2 *uvs, const char *path )
+    static void computeTangents( Array<ofbx::Vec3> &out, i32 vertex_count, const ofbx::Vec3 *vertices, const ofbx::Vec3 *normals,
+                                 const ofbx::Vec2 *uvs, const char *path )
     {
         out.resize( vertex_count );
 
         struct
         {
             Array<ofbx::Vec3> *out;
-            i32 vertex_count;
-            const ofbx::Vec3 *vertices;
-            const ofbx::Vec3 *normals;
-            const ofbx::Vec2 *uvs;
+            i32                vertex_count;
+            const ofbx::Vec3  *vertices;
+            const ofbx::Vec3  *normals;
+            const ofbx::Vec2  *uvs;
         } data;
 
         data.out          = &out;
@@ -609,30 +624,31 @@ namespace Lumix
         iface.m_getNumVerticesOfFace = []( const SMikkTSpaceContext *pContext, const int face ) -> int { return 3; };
         iface.m_getPosition          = []( const SMikkTSpaceContext *pContext, float fvPosOut[], const int iFace, const int iVert )
         {
-            auto *ptr    = (decltype( data ) *)pContext->m_pUserData;
-            ofbx::Vec3 p = ptr->vertices[iFace * 3 + iVert];
-            fvPosOut[0]  = (float)p.x;
-            fvPosOut[1]  = (float)p.y;
-            fvPosOut[2]  = (float)p.z;
+            auto      *ptr = (decltype( data ) *)pContext->m_pUserData;
+            ofbx::Vec3 p   = ptr->vertices[iFace * 3 + iVert];
+            fvPosOut[0]    = (float)p.x;
+            fvPosOut[1]    = (float)p.y;
+            fvPosOut[2]    = (float)p.z;
         };
         iface.m_getNormal = []( const SMikkTSpaceContext *pContext, float fvNormOut[], const int iFace, const int iVert )
         {
-            auto *ptr    = (decltype( data ) *)pContext->m_pUserData;
-            ofbx::Vec3 p = ptr->normals[iFace * 3 + iVert];
-            fvNormOut[0] = (float)p.x;
-            fvNormOut[1] = (float)p.y;
-            fvNormOut[2] = (float)p.z;
+            auto      *ptr = (decltype( data ) *)pContext->m_pUserData;
+            ofbx::Vec3 p   = ptr->normals[iFace * 3 + iVert];
+            fvNormOut[0]   = (float)p.x;
+            fvNormOut[1]   = (float)p.y;
+            fvNormOut[2]   = (float)p.z;
         };
         iface.m_getTexCoord = []( const SMikkTSpaceContext *pContext, float fvTexcOut[], const int iFace, const int iVert )
         {
-            auto *ptr    = (decltype( data ) *)pContext->m_pUserData;
-            ofbx::Vec2 p = ptr->uvs[iFace * 3 + iVert];
-            fvTexcOut[0] = (float)p.x;
-            fvTexcOut[1] = (float)p.y;
+            auto      *ptr = (decltype( data ) *)pContext->m_pUserData;
+            ofbx::Vec2 p   = ptr->uvs[iFace * 3 + iVert];
+            fvTexcOut[0]   = (float)p.x;
+            fvTexcOut[1]   = (float)p.y;
         };
-        iface.m_setTSpaceBasic = []( const SMikkTSpaceContext *pContext, const float fvTangent[], const float fSign, const int iFace, const int iVert )
+        iface.m_setTSpaceBasic =
+            []( const SMikkTSpaceContext *pContext, const float fvTangent[], const float fSign, const int iFace, const int iVert )
         {
-            auto *ptr = (decltype( data ) *)pContext->m_pUserData;
+            auto      *ptr = (decltype( data ) *)pContext->m_pUserData;
             ofbx::Vec3 t;
             t.x                              = fvTangent[0];
             t.y                              = fvTangent[1];
@@ -676,19 +692,19 @@ namespace Lumix
         jobs::forEach( m_geometries.size(), 1,
                        [&]( i32 geom_idx, i32 )
                        {
-                           ImportGeometry &import_geom = m_geometries[geom_idx];
-                           const ofbx::Geometry *geom  = import_geom.fbx;
-                           const int vertex_count      = geom->getVertexCount();
-                           const ofbx::Vec3 *vertices  = geom->getVertices();
-                           const ofbx::Vec3 *normals   = geom->getNormals();
-                           const ofbx::Vec3 *tangents  = geom->getTangents();
-                           const ofbx::Vec4 *colors    = cfg.import_vertex_colors ? geom->getColors() : nullptr;
-                           const ofbx::Vec2 *uvs       = geom->getUVs();
+                           ImportGeometry       &import_geom  = m_geometries[geom_idx];
+                           const ofbx::Geometry *geom         = import_geom.fbx;
+                           const int             vertex_count = geom->getVertexCount();
+                           const ofbx::Vec3     *vertices     = geom->getVertices();
+                           const ofbx::Vec3     *normals      = geom->getNormals();
+                           const ofbx::Vec3     *tangents     = geom->getTangents();
+                           const ofbx::Vec4     *colors       = cfg.import_vertex_colors ? geom->getColors() : nullptr;
+                           const ofbx::Vec2     *uvs          = geom->getUVs();
 
                            import_geom.indices.resize( vertex_count );
                            meshopt_Stream streams[8];
-                           u32 stream_count        = 0;
-                           streams[stream_count++] = { vertices, sizeof( vertices[0] ), sizeof( vertices[0] ) };
+                           u32            stream_count = 0;
+                           streams[stream_count++]     = { vertices, sizeof( vertices[0] ), sizeof( vertices[0] ) };
                            if( normals )
                                streams[stream_count++] = { normals, sizeof( normals[0] ), sizeof( normals[0] ) };
                            if( tangents )
@@ -710,12 +726,13 @@ namespace Lumix
                                }
                            }
 
-                           import_geom.unique_vertex_count =
-                               (u32)meshopt_generateVertexRemapMulti( import_geom.indices.begin(), nullptr, vertex_count, vertex_count, streams, stream_count );
+                           import_geom.unique_vertex_count = (u32)meshopt_generateVertexRemapMulti(
+                               import_geom.indices.begin(), nullptr, vertex_count, vertex_count, streams, stream_count );
 
                            if( !normals )
                            {
-                               computeNormals( import_geom.computed_normals, vertices, vertex_count, import_geom.indices.begin(), m_allocator );
+                               computeNormals( import_geom.computed_normals, vertices, vertex_count, import_geom.indices.begin(),
+                                               m_allocator );
                                normals = import_geom.computed_normals.begin();
 
                                if( !tangents && uvs )
@@ -739,16 +756,16 @@ namespace Lumix
                            import_mesh.vertex_data.clear();
                            import_mesh.indices.clear();
 
-                           const ofbx::Mesh &mesh            = *import_mesh.fbx;
+                           const ofbx::Mesh     &mesh        = *import_mesh.fbx;
                            const ofbx::Geometry *geom        = import_mesh.fbx->getGeometry();
                            const ImportGeometry &import_geom = getImportGeometry( geom );
 
-                           int vertex_count           = geom->getVertexCount();
-                           const ofbx::Vec3 *vertices = geom->getVertices();
-                           const ofbx::Vec3 *normals  = geom->getNormals();
-                           const ofbx::Vec3 *tangents = geom->getTangents();
-                           const ofbx::Vec4 *colors   = cfg.import_vertex_colors ? geom->getColors() : nullptr;
-                           const ofbx::Vec2 *uvs      = geom->getUVs();
+                           int               vertex_count = geom->getVertexCount();
+                           const ofbx::Vec3 *vertices     = geom->getVertices();
+                           const ofbx::Vec3 *normals      = geom->getNormals();
+                           const ofbx::Vec3 *tangents     = geom->getTangents();
+                           const ofbx::Vec4 *colors       = cfg.import_vertex_colors ? geom->getColors() : nullptr;
+                           const ofbx::Vec2 *uvs          = geom->getUVs();
 
                            if( !normals )
                                normals = import_geom.computed_normals.begin();
@@ -768,7 +785,8 @@ namespace Lumix
                            const bool flip_handness = doesFlipHandness( transform_matrix );
                            if( flip_handness )
                            {
-                               logError( "Mesh ", mesh.name, " in ", path, " flips handness. This is not supported and the mesh will not display correctly." );
+                               logError( "Mesh ", mesh.name, " in ", path,
+                                         " flips handness. This is not supported and the mesh will not display correctly." );
                            }
 
                            const int vertex_size = getVertexSize( *geom, import_mesh.is_skinned, cfg );
@@ -778,7 +796,7 @@ namespace Lumix
                            if( import_mesh.is_skinned )
                                fillSkinInfo( skinning, import_mesh );
 
-                           AABB aabb                   = { { FLT_MAX, FLT_MAX, FLT_MAX }, { -FLT_MAX, -FLT_MAX, -FLT_MAX } };
+                           AABB  aabb                  = { { FLT_MAX, FLT_MAX, FLT_MAX }, { -FLT_MAX, -FLT_MAX, -FLT_MAX } };
                            float origin_radius_squared = 0;
 
                            int material_idx = getMaterialIndex( mesh, *import_mesh.fbx_mat );
@@ -863,9 +881,10 @@ namespace Lumix
 
                                import_mesh.autolod_indices[i].create( m_allocator );
                                import_mesh.autolod_indices[i]->resize( import_mesh.indices.size() );
-                               const size_t lod_index_count = meshopt_simplify( import_mesh.autolod_indices[i]->begin(), import_mesh.indices.begin(), import_mesh.indices.size(),
-                                                                                (const float *)import_mesh.vertex_data.data(), u32( import_mesh.vertex_data.size() / vertex_size ),
-                                                                                vertex_size, size_t( import_mesh.indices.size() * cfg.autolod_coefs[i] ), 9001.f // TODO
+                               const size_t lod_index_count = meshopt_simplify(
+                                   import_mesh.autolod_indices[i]->begin(), import_mesh.indices.begin(), import_mesh.indices.size(),
+                                   (const float *)import_mesh.vertex_data.data(), u32( import_mesh.vertex_data.size() / vertex_size ),
+                                   vertex_size, size_t( import_mesh.indices.size() * cfg.autolod_coefs[i] ), 9001.f // TODO
                                );
                                import_mesh.autolod_indices[i]->resize( (u32)lod_index_count );
                            }
@@ -880,7 +899,8 @@ namespace Lumix
                            {
                                Vec3 p;
                                memcpy( &p, mem, sizeof( p ) );
-                               import_mesh.center_radius_squared = maximum( import_mesh.center_radius_squared, squaredLength( p - center ) );
+                               import_mesh.center_radius_squared =
+                                   maximum( import_mesh.center_radius_squared, squaredLength( p - center ) );
                                mem += vertex_size;
                            }
                        } );
@@ -927,8 +947,8 @@ namespace Lumix
         int c = scene->getMeshCount();
         for( int i = 0; i < c; ++i )
         {
-            const ofbx::Mesh *fbx_mesh = (const ofbx::Mesh *)scene->getMesh( i );
-            const int mat_count        = fbx_mesh->getMaterialCount();
+            const ofbx::Mesh *fbx_mesh  = (const ofbx::Mesh *)scene->getMesh( i );
+            const int         mat_count = fbx_mesh->getMaterialCount();
             for( int j = 0; j < mat_count; ++j )
             {
                 ImportMesh &mesh = m_meshes.emplace( m_allocator );
@@ -988,7 +1008,10 @@ namespace Lumix
                        } );
     }
 
-    void FBXImporter::init() { m_impostor_shadow_shader = m_app.getEngine().getResourceManager().load<sShader>( Path( "pipelines/impostor_shadow.shd" ) ); }
+    void FBXImporter::init()
+    {
+        m_impostor_shadow_shader = m_app.getEngine().getResourceManager().load<sShader>( Path( "pipelines/impostor_shadow.shd" ) );
+    }
 
     bool FBXImporter::setSource( const char *filename, bool ignore_geometry, bool force_skinned )
     {
@@ -1058,7 +1081,10 @@ namespace Lumix
         return true;
     }
 
-    void FBXImporter::writeString( const char *str ) { out_file.write( str, stringLength( str ) ); }
+    void FBXImporter::writeString( const char *str )
+    {
+        out_file.write( str, stringLength( str ) );
+    }
 
     static Vec3 impostorToWorld( Vec2 uv )
     {
@@ -1075,7 +1101,7 @@ namespace Lumix
     static void getBBProjection( const AABB &aabb, Vec2 &out_min, Vec2 &out_max )
     {
         const float radius = length( aabb.max - aabb.min ) * 0.5f;
-        const Vec3 center  = ( aabb.min + aabb.max ) * 0.5f;
+        const Vec3  center = ( aabb.min + aabb.max ) * 0.5f;
 
         Matrix proj;
         proj.setOrtho( -1, 1, -1, 1, 0, radius * 2, true );
@@ -1085,12 +1111,13 @@ namespace Lumix
             for( u32 i = 0; i < IMPOSTOR_COLS; ++i )
             {
                 const Vec3 v = impostorToWorld( { i / (float)( IMPOSTOR_COLS - 1 ), j / (float)( IMPOSTOR_COLS - 1 ) } );
-                Matrix view;
+                Matrix     view;
                 view.lookAt( center + v, center, Vec3( 0, 1, 0 ) );
                 const Matrix vp = proj * view;
                 for( u32 k = 0; k < 8; ++k )
                 {
-                    const Vec3 p      = { k & 1 ? aabb.min.x : aabb.max.x, k & 2 ? aabb.min.y : aabb.max.y, k & 4 ? aabb.min.z : aabb.max.z };
+                    const Vec3 p = { k & 1 ? aabb.min.x : aabb.max.x, k & 2 ? aabb.min.y : aabb.max.y,
+                                     k & 4 ? aabb.min.z : aabb.max.z };
                     const Vec4 proj_p = vp * Vec4( p, 1 );
                     min.x             = minimum( min.x, proj_p.x / proj_p.w );
                     min.y             = minimum( min.y, proj_p.y / proj_p.w );
@@ -1106,7 +1133,8 @@ namespace Lumix
     struct CaptureImpostorJob : Renderer::RenderJob
     {
 
-        CaptureImpostorJob( Array<u32> &gb0, Array<u32> &gb1, Array<u16> &gb_depth, Array<u32> &shadow, IVec2 &size, IAllocator &allocator )
+        CaptureImpostorJob( Array<u32> &gb0, Array<u32> &gb1, Array<u16> &gb_depth, Array<u32> &shadow, IVec2 &size,
+                            IAllocator &allocator )
             : m_gb0( gb0 )
             , m_gb1( gb1 )
             , m_gb_depth( gb_depth )
@@ -1123,12 +1151,12 @@ namespace Lumix
             m_radius = m_model->getCenterBoundingRadius();
             for( u32 i = 0; i <= (u32)m_model->getLODIndices()[0].to; ++i )
             {
-                const Mesh &mesh = m_model->getMesh( i );
-                sShader *shader   = mesh.material->getShader();
-                Drawcall &dc     = m_drawcalls.emplace();
-                dc.program       = shader->getProgram( mesh.vertex_decl, m_capture_define | mesh.material->getDefineMask() );
-                dc.mesh          = mesh.render_data;
-                dc.material      = mesh.material->getRenderData();
+                const Mesh &mesh   = m_model->getMesh( i );
+                sShader    *shader = mesh.material->getShader();
+                Drawcall   &dc     = m_drawcalls.emplace();
+                dc.program         = shader->getProgram( mesh.vertex_decl, m_capture_define | mesh.material->getDefineMask() );
+                dc.mesh            = mesh.render_data;
+                dc.material        = mesh.material->getRenderData();
             }
         }
 
@@ -1145,7 +1173,7 @@ namespace Lumix
             gpu::bindUniformBuffer( UniformBuffer::DRAWCALL, ub, 0, 512 );
 
             const Vec3 center = Vec3( 0, ( m_aabb.min + m_aabb.max ).y * 0.5f, 0 );
-            Vec2 min, max;
+            Vec2       min, max;
             getBBProjection( m_aabb, min, max );
             if( max.x > m_radius && min.y < -m_radius && max.y > m_radius && min.y < m_radius )
             {
@@ -1161,11 +1189,12 @@ namespace Lumix
             m_tile_size.x            = ( m_tile_size.x + 3 ) & ~3;
             m_tile_size.y            = ( m_tile_size.y + 3 ) & ~3;
             const IVec2 texture_size = m_tile_size * IMPOSTOR_COLS;
-            gpu::createTexture( gbs[0], texture_size.x, texture_size.y, 1, gpu::TextureFormat::SRGBA, gpu::TextureFlags::NO_MIPS | gpu::TextureFlags::RENDER_TARGET,
-                                "impostor_gb0" );
-            gpu::createTexture( gbs[1], texture_size.x, texture_size.y, 1, gpu::TextureFormat::RGBA8, gpu::TextureFlags::NO_MIPS | gpu::TextureFlags::RENDER_TARGET,
-                                "impostor_gb1" );
-            gpu::createTexture( gbs[2], texture_size.x, texture_size.y, 1, gpu::TextureFormat::D32, gpu::TextureFlags::NO_MIPS | gpu::TextureFlags::RENDER_TARGET, "impostor_gbd" );
+            gpu::createTexture( gbs[0], texture_size.x, texture_size.y, 1, gpu::TextureFormat::SRGBA,
+                                gpu::TextureFlags::NO_MIPS | gpu::TextureFlags::RENDER_TARGET, "impostor_gb0" );
+            gpu::createTexture( gbs[1], texture_size.x, texture_size.y, 1, gpu::TextureFormat::RGBA8,
+                                gpu::TextureFlags::NO_MIPS | gpu::TextureFlags::RENDER_TARGET, "impostor_gb1" );
+            gpu::createTexture( gbs[2], texture_size.x, texture_size.y, 1, gpu::TextureFormat::D32,
+                                gpu::TextureFlags::NO_MIPS | gpu::TextureFlags::RENDER_TARGET, "impostor_gbd" );
 
             gpu::setFramebuffer( gbs, 2, gbs[2], gpu::FramebufferFlags::SRGB );
             const float color[] = { 0, 0, 0, 0 };
@@ -1183,10 +1212,11 @@ namespace Lumix
                     {
                         gpu::viewport( i * m_tile_size.x, ( IMPOSTOR_COLS - j - 1 ) * m_tile_size.y, m_tile_size.x, m_tile_size.y );
                     }
-                    const Vec3 v = normalize( impostorToWorld( { i / (float)( IMPOSTOR_COLS - 1 ), j / (float)( IMPOSTOR_COLS - 1 ) } ) );
+                    const Vec3 v =
+                        normalize( impostorToWorld( { i / (float)( IMPOSTOR_COLS - 1 ), j / (float)( IMPOSTOR_COLS - 1 ) } ) );
 
                     Matrix model_mtx;
-                    Vec3 up = Vec3( 0, 1, 0 );
+                    Vec3   up = Vec3( 0, 1, 0 );
                     if( i == IMPOSTOR_COLS >> 1 && j == IMPOSTOR_COLS >> 1 )
                         up = Vec3( 1, 0, 0 );
                     model_mtx.lookAt( center - v * 1.01f * m_radius, center, up );
@@ -1209,7 +1239,8 @@ namespace Lumix
                         gpu::update( pass_buf, &pass_state, sizeof( pass_state ) );
 
                         gpu::useProgram( dc.program );
-                        gpu::bindUniformBuffer( UniformBuffer::MATERIAL, m_material_ub, dc.material->material_constants * sizeof( MaterialConsts ), sizeof( MaterialConsts ) );
+                        gpu::bindUniformBuffer( UniformBuffer::MATERIAL, m_material_ub,
+                                                dc.material->material_constants * sizeof( MaterialConsts ), sizeof( MaterialConsts ) );
                         gpu::bindIndexBuffer( rd->index_buffer_handle );
                         gpu::bindVertexBuffer( 0, rd->vertex_buffer_handle, 0, rd->vb_stride );
                         gpu::bindVertexBuffer( 1, gpu::INVALID_BUFFER, 0, 0 );
@@ -1227,8 +1258,8 @@ namespace Lumix
             m_shadow.resize( m_gb0.size() );
 
             gpu::TextureHandle shadow = gpu::allocTextureHandle();
-            gpu::createTexture( shadow, texture_size.x, texture_size.y, 1, gpu::TextureFormat::RGBA8, gpu::TextureFlags::NO_MIPS | gpu::TextureFlags::COMPUTE_WRITE,
-                                "impostor_shadow" );
+            gpu::createTexture( shadow, texture_size.x, texture_size.y, 1, gpu::TextureFormat::RGBA8,
+                                gpu::TextureFlags::NO_MIPS | gpu::TextureFlags::COMPUTE_WRITE, "impostor_shadow" );
             gpu::useProgram( m_shadow_program );
             gpu::bindImageTexture( shadow, 0 );
             gpu::bindTextures( &gbs[1], 1, 2 );
@@ -1237,19 +1268,20 @@ namespace Lumix
                 Matrix projection;
                 Matrix proj_to_model;
                 Matrix inv_view;
-                Vec4 center;
-                IVec2 tile;
-                IVec2 tile_size;
-                int size;
-                float radius;
+                Vec4   center;
+                IVec2  tile;
+                IVec2  tile_size;
+                int    size;
+                float  radius;
             } data;
             for( u32 j = 0; j < IMPOSTOR_COLS; ++j )
             {
                 for( u32 i = 0; i < IMPOSTOR_COLS; ++i )
                 {
-                    Matrix view, projection;
-                    const Vec3 v = normalize( impostorToWorld( { i / (float)( IMPOSTOR_COLS - 1 ), j / (float)( IMPOSTOR_COLS - 1 ) } ) );
-                    Vec3 up      = Vec3( 0, 1, 0 );
+                    Matrix     view, projection;
+                    const Vec3 v =
+                        normalize( impostorToWorld( { i / (float)( IMPOSTOR_COLS - 1 ), j / (float)( IMPOSTOR_COLS - 1 ) } ) );
+                    Vec3 up = Vec3( 0, 1, 0 );
                     if( i == IMPOSTOR_COLS >> 1 && j == IMPOSTOR_COLS >> 1 )
                         up = Vec3( 1, 0, 0 );
                     view.lookAt( center - v * 1.01f * m_radius, center, up );
@@ -1267,8 +1299,8 @@ namespace Lumix
                 }
             }
 
-            gpu::TextureHandle staging    = gpu::allocTextureHandle();
-            const gpu::TextureFlags flags = gpu::TextureFlags::NO_MIPS | gpu::TextureFlags::READBACK;
+            gpu::TextureHandle      staging = gpu::allocTextureHandle();
+            const gpu::TextureFlags flags   = gpu::TextureFlags::NO_MIPS | gpu::TextureFlags::READBACK;
             gpu::createTexture( staging, texture_size.x, texture_size.y, 1, gpu::TextureFormat::RGBA8, flags, "staging_buffer" );
             gpu::copy( staging, gbs[0], 0, 0 );
             gpu::readTexture( staging, 0, Span( (u8 *)m_gb0.begin(), m_gb0.byte_size() ) );
@@ -1281,9 +1313,10 @@ namespace Lumix
             gpu::destroy( staging );
 
             {
-                gpu::TextureHandle staging_depth = gpu::allocTextureHandle();
-                const gpu::TextureFlags flags    = gpu::TextureFlags::NO_MIPS | gpu::TextureFlags::READBACK;
-                gpu::createTexture( staging_depth, texture_size.x, texture_size.y, 1, gpu::TextureFormat::D32, flags, "staging_buffer" );
+                gpu::TextureHandle      staging_depth = gpu::allocTextureHandle();
+                const gpu::TextureFlags flags         = gpu::TextureFlags::NO_MIPS | gpu::TextureFlags::READBACK;
+                gpu::createTexture( staging_depth, texture_size.x, texture_size.y, 1, gpu::TextureFormat::D32, flags,
+                                    "staging_buffer" );
                 gpu::copy( staging_depth, gbs[2], 0, 0 );
                 Array<u32> tmp( m_allocator );
                 tmp.resize( m_gb_depth.size() );
@@ -1304,49 +1337,50 @@ namespace Lumix
 
         struct Drawcall
         {
-            gpu::ProgramHandle program;
-            const Mesh::RenderData *mesh;
+            gpu::ProgramHandle          program;
+            const Mesh::RenderData     *mesh;
             const Material::RenderData *material;
         };
 
-        IAllocator &m_allocator;
-        Array<Drawcall> m_drawcalls;
+        IAllocator        &m_allocator;
+        Array<Drawcall>    m_drawcalls;
         gpu::ProgramHandle m_shadow_program;
-        AABB m_aabb;
-        float m_radius;
-        gpu::BufferHandle m_material_ub;
-        Array<u32> &m_gb0;
-        Array<u32> &m_gb1;
-        Array<u16> &m_gb_depth;
-        Array<u32> &m_shadow;
-        Model *m_model;
-        u32 m_capture_define;
-        IVec2 &m_tile_size;
+        AABB               m_aabb;
+        float              m_radius;
+        gpu::BufferHandle  m_material_ub;
+        Array<u32>        &m_gb0;
+        Array<u32>        &m_gb1;
+        Array<u16>        &m_gb_depth;
+        Array<u32>        &m_shadow;
+        Model             *m_model;
+        u32                m_capture_define;
+        IVec2             &m_tile_size;
     };
 
-    bool FBXImporter::createImpostorTextures( Model *model, Array<u32> &gb0_rgba, Array<u32> &gb1_rgba, Array<u16> &gb_depth, Array<u32> &shadow, IVec2 &size, bool bake_normals )
+    bool FBXImporter::createImpostorTextures( Model *model, Array<u32> &gb0_rgba, Array<u32> &gb1_rgba, Array<u16> &gb_depth,
+                                              Array<u32> &shadow, IVec2 &size, bool bake_normals )
     {
         ASSERT( model->isReady() );
         ASSERT( m_impostor_shadow_shader->isReady() );
 
-        Engine &engine     = m_app.getEngine();
+        Engine   &engine   = m_app.getEngine();
         Renderer *renderer = (Renderer *)engine.getPluginManager().getPlugin( "renderer" );
         ASSERT( renderer );
 
-        IAllocator &allocator         = renderer->getAllocator();
-        CaptureImpostorJob &job       = renderer->createJob<CaptureImpostorJob>( gb0_rgba, gb1_rgba, gb_depth, shadow, size, allocator );
-        const u32 bake_normals_define = 1 << renderer->getShaderDefineIdx( "BAKE_NORMALS" );
-        job.m_shadow_program          = m_impostor_shadow_shader->getProgram( gpu::VertexDecl(), bake_normals ? bake_normals_define : 0 );
-        job.m_model                   = model;
-        job.m_capture_define          = 1 << renderer->getShaderDefineIdx( "DEFERRED" );
-        job.m_material_ub             = renderer->getMaterialUniformBuffer();
+        IAllocator         &allocator = renderer->getAllocator();
+        CaptureImpostorJob &job = renderer->createJob<CaptureImpostorJob>( gb0_rgba, gb1_rgba, gb_depth, shadow, size, allocator );
+        const u32           bake_normals_define = 1 << renderer->getShaderDefineIdx( "BAKE_NORMALS" );
+        job.m_shadow_program = m_impostor_shadow_shader->getProgram( gpu::VertexDecl(), bake_normals ? bake_normals_define : 0 );
+        job.m_model          = model;
+        job.m_capture_define = 1 << renderer->getShaderDefineIdx( "DEFERRED" );
+        job.m_material_ub    = renderer->getMaterialUniformBuffer();
         renderer->queue( job, 0 );
         renderer->frame();
         renderer->waitForRender();
 
-        const PathInfo src_info( model->getPath().c_str() );
+        const PathInfo                     src_info( model->getPath().c_str() );
         const StaticString<LUMIX_MAX_PATH> mat_src( src_info.m_dir, src_info.m_basename, "_impostor.mat" );
-        os::OutputFile f;
+        os::OutputFile                     f;
         if( !m_filesystem.fileExists( mat_src ) )
         {
             if( !m_filesystem.open( mat_src, f ) )
@@ -1355,8 +1389,8 @@ namespace Lumix
             }
             else
             {
-                const AABB &aabb  = model->getAABB();
-                const Vec3 center = ( aabb.max + aabb.min ) * 0.5f;
+                const AABB &aabb   = model->getAABB();
+                const Vec3  center = ( aabb.max + aabb.min ) * 0.5f;
                 f << "shader \"/pipelines/impostor.shd\"\n";
                 f << "texture \"" << src_info.m_basename << "_impostor0.tga\"\n";
                 f << "texture \"\"\n";
@@ -1471,7 +1505,8 @@ namespace Lumix
         pos = m.getTranslation();
     }
 
-    template <typename T> static void fillTimes( const ofbx::AnimationCurve *curve, Array<T> &out, i64 from_time, i64 to_time )
+    template <typename T>
+    static void fillTimes( const ofbx::AnimationCurve *curve, Array<T> &out, i64 from_time, i64 to_time )
     {
         if( !curve )
             return;
@@ -1506,9 +1541,9 @@ namespace Lumix
 
     static float evalCurve( i64 time, const ofbx::AnimationCurve &curve )
     {
-        const i64 *times    = curve.getKeyTime();
+        const i64   *times  = curve.getKeyTime();
         const float *values = curve.getKeyValue();
-        const int count     = curve.getKeyCount();
+        const int    count  = curve.getKeyCount();
 
         ASSERT( count > 0 );
 
@@ -1538,7 +1573,7 @@ namespace Lumix
             return;
 
         const float ERROR = 0;
-        Vec3 dir          = out[1].pos - out[0].pos;
+        Vec3        dir   = out[1].pos - out[0].pos;
         dir *= float( 1 / ofbx::fbxTimeToSeconds( out[1].time - out[0].time ) );
         u32 prev = 0;
         for( u32 i = 2; i < (u32)out.size(); ++i )
@@ -1568,12 +1603,14 @@ namespace Lumix
             return;
 
         const float ERROR = 0;
-        u32 prev          = 0;
+        u32         prev  = 0;
         for( u32 i = 2; i < (u32)out.size(); ++i )
         {
-            const float t       = float( ofbx::fbxTimeToSeconds( out[prev + 1].time - out[prev].time ) / ofbx::fbxTimeToSeconds( out[i].time - out[prev].time ) );
-            const Quat estimate = nlerp( out[prev].rot, out[i].rot, t );
-            if( fabs( estimate.x - out[prev + 1].rot.x ) > ERROR || fabs( estimate.y - out[prev + 1].rot.y ) > ERROR || fabs( estimate.z - out[prev + 1].rot.z ) > ERROR )
+            const float t        = float( ofbx::fbxTimeToSeconds( out[prev + 1].time - out[prev].time ) /
+                                   ofbx::fbxTimeToSeconds( out[i].time - out[prev].time ) );
+            const Quat  estimate = nlerp( out[prev].rot, out[i].rot, t );
+            if( fabs( estimate.x - out[prev + 1].rot.x ) > ERROR || fabs( estimate.y - out[prev + 1].rot.y ) > ERROR ||
+                fabs( estimate.z - out[prev + 1].rot.z ) > ERROR )
             {
                 prev = i - 1;
             }
@@ -1591,7 +1628,8 @@ namespace Lumix
         return length( v );
     }
 
-    static void fill( const ofbx::Object &bone, const ofbx::AnimationLayer &layer, Array<FBXImporter::Key> &keys, i64 from_time, i64 to_time )
+    static void fill( const ofbx::Object &bone, const ofbx::AnimationLayer &layer, Array<FBXImporter::Key> &keys, i64 from_time,
+                      i64 to_time )
     {
         const ofbx::AnimationCurveNode *translation_node = layer.getCurveNode( bone, "Lcl Translation" );
         const ofbx::AnimationCurveNode *rotation_node    = layer.getCurveNode( bone, "Lcl Rotation" );
@@ -1711,7 +1749,8 @@ namespace Lumix
                 euler_angles.z = evalCurve( ofbx::secondsToFbxTime( t ), *z_curve );
         }
 
-        const ofbx::Matrix mtx = bone.evalLocal( { res.pos.x, res.pos.y, res.pos.z }, { euler_angles.x, euler_angles.y, euler_angles.z } );
+        const ofbx::Matrix mtx =
+            bone.evalLocal( { res.pos.x, res.pos.y, res.pos.z }, { euler_angles.x, euler_angles.y, euler_angles.z } );
         convert( mtx, res.pos, res.rot );
         return res;
     }
@@ -1762,7 +1801,7 @@ namespace Lumix
             const ofbx::AnimationStack *stack = anim.fbx;
             const ofbx::AnimationLayer *layer = stack->getLayer( 0 );
             ASSERT( anim.scene == scene );
-            const float fps                 = scene->getSceneFrameRate();
+            const float           fps       = scene->getSceneFrameRate();
             const ofbx::TakeInfo *take_info = scene->getTakeInfo( stack->name );
             if( !take_info && startsWith( stack->name, "AnimStack::" ) )
             {
@@ -1787,7 +1826,7 @@ namespace Lumix
             auto write_animation = [&]( const char *name, u32 from_frame, u32 to_frame )
             {
                 out_file.clear();
-                const double anim_len = double( to_frame - from_frame ) / fps;
+                const double      anim_len = double( to_frame - from_frame ) / fps;
                 Animation::Header header;
                 header.magic       = Animation::HEADER_MAGIC;
                 header.version     = Animation::Version::LAST;
@@ -1799,7 +1838,7 @@ namespace Lumix
                 const i64 to_fbx_time   = ofbx::secondsToFbxTime( (double)to_frame / fps );
 
                 Array<Array<Key>> all_keys( m_allocator );
-                auto fbx_to_anim_time = [anim_len]( i64 fbx_time )
+                auto              fbx_to_anim_time = [anim_len]( i64 fbx_time )
                 {
                     const double t = clamp( ofbx::fbxTimeToSeconds( fbx_time ) / anim_len, 0.0, 1.0 );
                     return u16( t * 0xffFF );
@@ -1814,21 +1853,21 @@ namespace Lumix
 
                 for( const ofbx::Object *&bone : m_bones )
                 {
-                    Array<Key> &keys         = all_keys[u32( &bone - m_bones.begin() )];
-                    ofbx::Object *parent     = bone->getParent();
-                    const float parent_scale = parent ? (float)getScaleX( parent->getGlobalTransform() ) : 1;
+                    Array<Key>   &keys         = all_keys[u32( &bone - m_bones.begin() )];
+                    ofbx::Object *parent       = bone->getParent();
+                    const float   parent_scale = parent ? (float)getScaleX( parent->getGlobalTransform() ) : 1;
                     // TODO skip curves which do not change anything
                     compressRotations( keys );
                     compressPositions( parent_scale, keys );
                 }
 
                 const u64 stream_translations_count_pos = out_file.size();
-                u32 translation_curves_count            = 0;
+                u32       translation_curves_count      = 0;
                 write( translation_curves_count );
                 for( const ofbx::Object *&bone : m_bones )
                 {
-                    Array<Key> &keys = all_keys[u32( &bone - m_bones.begin() )];
-                    u32 count        = 0;
+                    Array<Key> &keys  = all_keys[u32( &bone - m_bones.begin() )];
+                    u32         count = 0;
                     for( Key &key : keys )
                     {
                         if( ( key.flags & 1 ) == 0 )
@@ -1839,7 +1878,7 @@ namespace Lumix
                     const u32 idx = u32( &bone - m_bones.begin() );
 
                     ofbx::Object *parent = bone->getParent();
-                    Vec3 bind_pos;
+                    Vec3          bind_pos;
                     if( !parent )
                     {
                         bind_pos = m_bind_pose[idx].getTranslation();
@@ -1882,16 +1921,17 @@ namespace Lumix
                     }
                     ++translation_curves_count;
                 }
-                memcpy( out_file.getMutableData() + stream_translations_count_pos, &translation_curves_count, sizeof( translation_curves_count ) );
+                memcpy( out_file.getMutableData() + stream_translations_count_pos, &translation_curves_count,
+                        sizeof( translation_curves_count ) );
 
                 const u64 stream_rotations_count_pos = out_file.size();
-                u32 rotation_curves_count            = 0;
+                u32       rotation_curves_count      = 0;
                 write( rotation_curves_count );
 
                 for( const ofbx::Object *&bone : m_bones )
                 {
-                    Array<Key> &keys = all_keys[u32( &bone - m_bones.begin() )];
-                    u32 count        = 0;
+                    Array<Key> &keys  = all_keys[u32( &bone - m_bones.begin() )];
+                    u32         count = 0;
                     for( Key &key : keys )
                     {
                         if( ( key.flags & 2 ) == 0 )
@@ -1900,9 +1940,9 @@ namespace Lumix
                     if( count == 0 )
                         continue;
 
-                    Quat bind_rot;
-                    const u32 bone_idx   = u32( &bone - m_bones.begin() );
-                    ofbx::Object *parent = bone->getParent();
+                    Quat          bind_rot;
+                    const u32     bone_idx = u32( &bone - m_bones.begin() );
+                    ofbx::Object *parent   = bone->getParent();
                     if( !parent )
                     {
                         bind_rot = m_bind_pose[bone_idx].getRotation();
@@ -1957,7 +1997,8 @@ namespace Lumix
                     ++rotation_curves_count;
                 }
 
-                memcpy( out_file.getMutableData() + stream_rotations_count_pos, &rotation_curves_count, sizeof( rotation_curves_count ) );
+                memcpy( out_file.getMutableData() + stream_rotations_count_pos, &rotation_curves_count,
+                        sizeof( rotation_curves_count ) );
 
                 const StaticString<LUMIX_MAX_PATH> anim_path( name, ".ani:", src );
                 m_compiler.writeCompiledResource( anim_path, Span( out_file.data(), (i32)out_file.size() ) );
@@ -1985,7 +2026,7 @@ namespace Lumix
         static const int COLOR_SIZE                = sizeof( u8 ) * 4;
         static const int AO_SIZE                   = sizeof( u8 ) * 4;
         static const int BONE_INDICES_WEIGHTS_SIZE = sizeof( float ) * 4 + sizeof( u16 ) * 4;
-        int size                                   = POSITION_SIZE + NORMAL_SIZE;
+        int              size                      = POSITION_SIZE + NORMAL_SIZE;
 
         if( geom.getUVs() )
             size += UV_SIZE;
@@ -2001,7 +2042,7 @@ namespace Lumix
 
     void FBXImporter::fillSkinInfo( Array<Skin> &skinning, const ImportMesh &import_mesh ) const
     {
-        const ofbx::Mesh *mesh     = import_mesh.fbx;
+        const ofbx::Mesh     *mesh = import_mesh.fbx;
         const ofbx::Geometry *geom = mesh->getGeometry();
         skinning.resize( geom->getVertexCount() );
         memset( &skinning[0], 0, skinning.size() * sizeof( skinning[0] ) );
@@ -2028,11 +2069,11 @@ namespace Lumix
                 continue;
             int joint = m_bones.indexOf( cluster->getLink() );
             ASSERT( joint >= 0 );
-            const int *cp_indices = cluster->getIndices();
-            const double *weights = cluster->getWeights();
+            const int    *cp_indices = cluster->getIndices();
+            const double *weights    = cluster->getWeights();
             for( int j = 0; j < cluster->getIndicesCount(); ++j )
             {
-                int idx      = cp_indices[j];
+                int   idx    = cp_indices[j];
                 float weight = (float)weights[j];
                 Skin &s      = skinning[idx];
                 if( s.count < 4 )
@@ -2138,10 +2179,10 @@ namespace Lumix
 
     void FBXImporter::writeGeometry( int mesh_idx, const ImportConfig &cfg )
     {
-        float origin_radius_squared = 0;
-        float center_radius_squared = 0;
+        float              origin_radius_squared = 0;
+        float              center_radius_squared = 0;
         OutputMemoryStream vertices_blob( m_allocator );
-        const ImportMesh &import_mesh = m_meshes[mesh_idx];
+        const ImportMesh  &import_mesh = m_meshes[mesh_idx];
 
         bool are_indices_16_bit = areIndices16Bit( import_mesh, cfg );
         if( are_indices_16_bit )
@@ -2174,13 +2215,16 @@ namespace Lumix
         write( import_mesh.aabb );
     }
 
-    static bool hasAutoLOD( const FBXImporter::ImportConfig &cfg, u32 idx ) { return cfg.autolod_mask & ( 1 << idx ); }
+    static bool hasAutoLOD( const FBXImporter::ImportConfig &cfg, u32 idx )
+    {
+        return cfg.autolod_mask & ( 1 << idx );
+    }
 
     void FBXImporter::writeGeometry( const ImportConfig &cfg )
     {
-        AABB aabb                   = { { 0, 0, 0 }, { 0, 0, 0 } };
-        float origin_radius_squared = 0;
-        float center_radius_squared = 0;
+        AABB               aabb                  = { { 0, 0, 0 }, { 0, 0, 0 } };
+        float              origin_radius_squared = 0;
+        float              center_radius_squared = 0;
         OutputMemoryStream vertices_blob( m_allocator );
         for( const ImportMesh &import_mesh : m_meshes )
         {
@@ -2307,7 +2351,7 @@ namespace Lumix
         write( (u8)2 );
 
         const StaticString<LUMIX_MAX_PATH + 10> material_name( dir, model_name, "_impostor.mat" );
-        i32 length = stringLength( material_name );
+        i32                                     length = stringLength( material_name );
         write( length );
         write( material_name, length );
 
@@ -2320,7 +2364,7 @@ namespace Lumix
     void FBXImporter::writeMeshes( const char *src, int mesh_idx, const ImportConfig &cfg )
     {
         const PathInfo src_info( src );
-        i32 mesh_count = 0;
+        i32            mesh_count = 0;
         if( mesh_idx >= 0 )
         {
             mesh_count = 1;
@@ -2397,10 +2441,10 @@ namespace Lumix
                 write( (u8)4 );
             }
 
-            const ofbx::Material *material = import_mesh.fbx_mat;
-            const String &mat_name         = m_material_name_map[material];
+            const ofbx::Material              *material = import_mesh.fbx_mat;
+            const String                      &mat_name = m_material_name_map[material];
             StaticString<LUMIX_MAX_PATH + 128> mat_id( src_info.m_dir, mat_name.c_str(), ".mat" );
-            const i32 len = stringLength( mat_id.data );
+            const i32                          len = stringLength( mat_id.data );
             write( len );
             write( mat_id.data, len );
 
@@ -2444,7 +2488,7 @@ namespace Lumix
         for( const ofbx::Object *&node : m_bones )
         {
             const char *name = node->name;
-            int len          = (int)stringLength( name );
+            int         len  = (int)stringLength( name );
             write( len );
             writeString( name );
 
@@ -2460,7 +2504,7 @@ namespace Lumix
             }
 
             const ImportMesh *mesh = getAnyMeshFromBone( node, int( &node - m_bones.begin() ) );
-            Matrix tr              = toLumix( getBindPoseMatrix( mesh, node ) );
+            Matrix            tr   = toLumix( getBindPoseMatrix( mesh, node ) );
             tr.normalizeScale();
             m_bind_pose[idx] = tr;
 
@@ -2597,7 +2641,7 @@ namespace Lumix
         else
         {
             Array<u32> indices( m_allocator );
-            i32 count = 0;
+            i32        count = 0;
             for( auto &mesh : m_meshes )
             {
                 count += mesh.indices.size();
@@ -2629,11 +2673,11 @@ namespace Lumix
 
     void FBXImporter::writePrefab( const char *src, const ImportConfig &cfg )
     {
-        Engine &engine     = m_app.getEngine();
+        Engine   &engine   = m_app.getEngine();
         Universe &universe = engine.createUniverse( false );
 
-        os::OutputFile file;
-        PathInfo file_info( src );
+        os::OutputFile               file;
+        PathInfo                     file_info( src );
         StaticString<LUMIX_MAX_PATH> tmp( file_info.m_dir, "/", file_info.m_basename, ".fab" );
         if( !m_filesystem.open( tmp, file ) )
         {
@@ -2648,13 +2692,14 @@ namespace Lumix
         static const ComponentType MODEL_INSTANCE_TYPE = reflection::getComponentType( "model_instance" );
         for( int i = 0; i < m_meshes.size(); ++i )
         {
-            const EntityRef e = universe.createEntity( DVec3( fixOrientation( m_meshes[i].origin ) * cfg.mesh_scale * m_fbx_scale ), Quat::IDENTITY );
+            const EntityRef e =
+                universe.createEntity( DVec3( fixOrientation( m_meshes[i].origin ) * cfg.mesh_scale * m_fbx_scale ), Quat::IDENTITY );
             universe.createComponent( MODEL_INSTANCE_TYPE, e );
             universe.setParent( root, e );
             char mesh_name[256];
             getImportMeshName( m_meshes[i], mesh_name );
             StaticString<LUMIX_MAX_PATH> mesh_path( mesh_name, ".fbx:", src );
-            RenderScene *scene = (RenderScene *)universe.getScene( MODEL_INSTANCE_TYPE );
+            RenderScene                 *scene = (RenderScene *)universe.getScene( MODEL_INSTANCE_TYPE );
             scene->setModelInstancePath( e, Path( mesh_path ) );
         }
 
@@ -2694,9 +2739,9 @@ namespace Lumix
             }
 
             // lods
-            const i32 lod_count = 1;
-            const i32 to_mesh   = 0;
-            const float factor  = FLT_MAX;
+            const i32   lod_count = 1;
+            const i32   to_mesh   = 0;
+            const float factor    = FLT_MAX;
             write( lod_count );
             write( to_mesh );
             write( factor );

@@ -34,11 +34,12 @@ namespace SE::Core::EntityComponentSystem::Components
 {
 
     using namespace math;
+    using namespace literals;
+    
     using namespace SE::Graphics;
     using namespace SE::Core::EntityComponentSystem;
     using namespace SE::Core;
     using namespace SE::Cuda;
-    using namespace math::literals;
 
     template <typename _Ty>
     struct Dirty
@@ -47,10 +48,10 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct sCameraComponent
     {
-        math::vec3 Position = math::vec3{ 0.0f, 0.0f, 0.0f };
-        float      Pitch    = 0.0f;
-        float      Yaw      = 0.0f;
-        float      Roll     = 0.0f;
+        vec3  Position = vec3{ 0.0f, 0.0f, 0.0f };
+        float Pitch    = 0.0f;
+        float Yaw      = 0.0f;
+        float Roll     = 0.0f;
 
         float Near        = 0.001;
         float Far         = 1000.0f;
@@ -92,9 +93,9 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct sAnimatedTransformComponent
     {
-        math::vec3 Translation;
-        math::vec3 Scaling;
-        math::quat Rotation;
+        vec3 Translation;
+        vec3 Scaling;
+        quat Rotation;
 
         sAnimatedTransformComponent()                                      = default;
         sAnimatedTransformComponent( const sAnimatedTransformComponent & ) = default;
@@ -102,43 +103,47 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct sNodeTransformComponent
     {
-        math::mat4 mMatrix;
+        mat4 mMatrix;
 
         sNodeTransformComponent()
-            : mMatrix( math::mat4( 1.0f ) )
+            : mMatrix( mat4( 1.0f ) )
         {
         }
         sNodeTransformComponent( const sNodeTransformComponent & ) = default;
-        sNodeTransformComponent( math::mat4 a_Matrix )
+        sNodeTransformComponent( mat4 a_Matrix )
             : mMatrix{ a_Matrix }
         {
         }
 
-        math::vec3 GetScale() { return math::Scaling( mMatrix ); }
-        math::vec3 GetTranslation() const { return math::Translation( mMatrix ); }
-        math::vec3 GetEulerRotation() const
+        vec3 GetScale()
         {
-            math::mat3 lMatrix = math::Rotation( mMatrix );
-            return math::vec3{
-                math::degrees( atan2f( lMatrix[1][2], lMatrix[2][2] ) ),
-                math::degrees( atan2f( -lMatrix[0][2], sqrtf( lMatrix[1][2] * lMatrix[1][2] + lMatrix[2][2] * lMatrix[2][2] ) ) ),
-                math::degrees( atan2f( lMatrix[0][1], lMatrix[0][0] ) ) };
+            return Scaling( mMatrix );
+        }
+        vec3 GetTranslation() const
+        {
+            return Translation( mMatrix );
+        }
+        vec3 GetEulerRotation() const
+        {
+            mat3 lMatrix = Rotation( mMatrix );
+            return vec3{ degrees( atan2f( lMatrix[1][2], lMatrix[2][2] ) ),
+                         degrees( atan2f( -lMatrix[0][2], sqrtf( lMatrix[1][2] * lMatrix[1][2] + lMatrix[2][2] * lMatrix[2][2] ) ) ),
+                         degrees( atan2f( lMatrix[0][1], lMatrix[0][0] ) ) };
         }
 
-        sNodeTransformComponent( math::vec3 a_Position, math::vec3 a_Rotation, math::vec3 a_Scaling )
+        sNodeTransformComponent( vec3 a_Position, vec3 a_Rotation, vec3 a_Scaling )
         {
-            math::mat4 rot = math::Rotation( math::radians( a_Rotation.z ), math::z_axis() ) *
-                             math::Rotation( math::radians( a_Rotation.y ), math::y_axis() ) *
-                             math::Rotation( math::radians( a_Rotation.x ), math::x_axis() );
+            mat4 rot = Rotation( radians( a_Rotation.z ), z_axis() ) * Rotation( radians( a_Rotation.y ), y_axis() ) *
+                       Rotation( radians( a_Rotation.x ), x_axis() );
 
-            math::vec4 validScale;
+            vec4 validScale;
             validScale.x = ( fabsf( a_Scaling.x ) < FLT_EPSILON ) ? 0.001f : a_Scaling.x;
             validScale.y = ( fabsf( a_Scaling.y ) < FLT_EPSILON ) ? 0.001f : a_Scaling.y;
             validScale.z = ( fabsf( a_Scaling.z ) < FLT_EPSILON ) ? 0.001f : a_Scaling.z;
             validScale.w = 1.0f;
 
-            math::mat4 l_Scaling     = math::FromDiagonal( validScale );
-            math::mat4 l_Translation = math::Translation( a_Position );
+            mat4 l_Scaling     = FromDiagonal( validScale );
+            mat4 l_Translation = Translation( a_Position );
 
             mMatrix = l_Translation * rot * l_Scaling;
         }
@@ -146,11 +151,14 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct sStaticTransformComponent
     {
-        math::mat4 Matrix = math::mat4( 1.0f );
+        mat4 Matrix = mat4( 1.0f );
 
         sStaticTransformComponent()                                    = default;
         sStaticTransformComponent( const sStaticTransformComponent & ) = default;
-        sStaticTransformComponent( math::mat4 a_Matrix ) { Matrix = a_Matrix; };
+        sStaticTransformComponent( mat4 a_Matrix )
+        {
+            Matrix = a_Matrix;
+        };
     };
 
     struct sStaticMeshComponent
@@ -192,10 +200,10 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct sSkeletonComponent
     {
-        uint32_t                BoneCount;
-        std::vector<Entity>     Bones;
-        std::vector<math::mat4> InverseBindMatrices;
-        std::vector<math::mat4> JointMatrices;
+        uint32_t            BoneCount;
+        std::vector<Entity> Bones;
+        std::vector<mat4>   InverseBindMatrices;
+        std::vector<mat4>   JointMatrices;
 
         sSkeletonComponent()                             = default;
         sSkeletonComponent( const sSkeletonComponent & ) = default;
@@ -231,7 +239,7 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct sRayTracingTargetComponent
     {
-        math::mat4 Transform;
+        mat4 Transform;
 
         sRayTracingTargetComponent()                                     = default;
         sRayTracingTargetComponent( const sRayTracingTargetComponent & ) = default;

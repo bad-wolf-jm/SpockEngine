@@ -15,7 +15,7 @@
 
 namespace SE::SensorModel::Dev
 {
-
+    using namespace math;
     using namespace SE::Cuda;
 
     /**
@@ -23,11 +23,11 @@ namespace SE::SensorModel::Dev
      */
     struct sLidarCartesianSamplePoint
     {
-        uint32_t   mFlashID   = 0xffffffff;
-        int        mType      = -1;
-        math::vec3 mDirection = { 0.0f, 0.0f, 0.0f };
-        float      mDistance  = 0.0f;
-        float      mIntensity = 0.0f;
+        uint32_t mFlashID   = 0xffffffff;
+        int      mType      = -1;
+        vec3     mDirection = { 0.0f, 0.0f, 0.0f };
+        float    mDistance  = 0.0f;
+        float    mIntensity = 0.0f;
 
         sLidarCartesianSamplePoint()                                     = default;
         sLidarCartesianSamplePoint( const sLidarCartesianSamplePoint & ) = default;
@@ -35,11 +35,11 @@ namespace SE::SensorModel::Dev
 
     struct sFlashVisualizationData
     {
-        math::vec2 mFlashPosition = { 0.0f, 0.0f };
-        math::vec2 mFlashExtent   = { 0.0f, 0.0f };
-        math::vec3 mColor         = { 1.0f, 0.2f, 0.8f };
-        float      mMinValue      = 0.0f;
-        float      mMaxValue      = 1.0f;
+        vec2  mFlashPosition = { 0.0f, 0.0f };
+        vec2  mFlashExtent   = { 0.0f, 0.0f };
+        vec3  mColor         = { 1.0f, 0.2f, 0.8f };
+        float mMinValue      = 0.0f;
+        float mMaxValue      = 1.0f;
     };
 
     class sPointCloudVisualizer
@@ -56,7 +56,7 @@ namespace SE::SensorModel::Dev
         sPointCloudVisualizer()  = default;
         ~sPointCloudVisualizer() = default;
 
-        void Visualize( math::mat4 a_PointCloudTransform, MultiTensor &a_LidarReturnPoints, GPUMemory &a_Particles );
+        void Visualize( mat4 a_PointCloudTransform, MultiTensor &a_LidarReturnPoints, GPUMemory &a_Particles );
     };
 
 } // namespace SE::SensorModel::Dev

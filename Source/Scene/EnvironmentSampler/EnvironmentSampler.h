@@ -23,7 +23,7 @@
 
 namespace SE::SensorModel::Dev
 {
-
+    using namespace math;
     using namespace SE::Core;
     using namespace SE::Cuda;
     using namespace SE::Graphics;
@@ -65,7 +65,7 @@ namespace SE::SensorModel::Dev
         ~WorldSampler() = default;
 
         void Sample( math::mat4 a_SensorTransform, Ref<Scene> a_Scene, MultiTensor &a_Azimuths, MultiTensor &a_Elevations,
-            MultiTensor &a_Intensities, MultiTensor &a_SamplePoints );
+                     MultiTensor &a_Intensities, MultiTensor &a_SamplePoints );
 
       private:
         void BuildShaderBindingTable( Ref<Scene> a_Scene );

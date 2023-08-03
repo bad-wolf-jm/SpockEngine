@@ -11,12 +11,12 @@
 
 namespace SE::SensorModel::Dev
 {
-
+    using namespace math;
     static constexpr float PI      = 3.14159265359;
     static constexpr float RADIANS = PI / 180.0;
     static constexpr float HALF_PI = 1.57079632679;
 
-    __device__ math::vec3 hsv2rgb( math::vec3 c )
+    __device__ vec3 hsv2rgb( vec3 c )
     {
         float r, g, b;
         float h, s, v;
@@ -69,17 +69,17 @@ namespace SE::SensorModel::Dev
             b = q;
         }
 
-        return math::vec3( r, g, b );
+        return vec3( r, g, b );
     }
 
-    __device__ math::vec3 IntensityToRGB( float I, float a_Offset )
+    __device__ vec3 IntensityToRGB( float I, float a_Offset )
     {
         I = a_Offset - I * a_Offset;
-        return hsv2rgb( math::vec3( I, 1.0f, 1.0f ) );
+        return hsv2rgb( vec3( I, 1.0f, 1.0f ) );
     }
 
-    extern "C" __device__ sLidarCartesianSamplePoint LidarDataToCartesian( math::mat3 a_PointCloudRotation,
-                                                                           sHitRecord a_LidarReturnPoints, bool a_InvertZAxis )
+    extern "C" __device__ sLidarCartesianSamplePoint LidarDataToCartesian( mat3 a_PointCloudRotation, sHitRecord a_LidarReturnPoints,
+                                                                           bool a_InvertZAxis )
     {
         sLidarCartesianSamplePoint l_CartesianSample{};
 
@@ -109,13 +109,14 @@ namespace SE::SensorModel::Dev
         return l_CartesianSample;
     }
 
-    extern "C" __global__ void __kernel__FillParticleBuffer( math::mat3 a_PointCloudRotation, math::vec3 a_PointCloudOrigin,
+    extern "C" __global__ void __kernel__FillParticleBuffer( mat3 a_PointCloudRotation, vec3 a_PointCloudOrigin,
                                                              MultiTensor a_LidarReturnPoints, GPUMemory a_LidarParticle,
                                                              bool a_LogScale, bool a_HighlightFOV, bool a_InvertZAxis,
                                                              float aResolution )
     {
         int l_InputArrayIdx = blockIdx.x * blockDim.x + threadIdx.x;
-        if( l_InputArrayIdx >= a_LidarReturnPoints.SizeAs<sHitRecord>() ) return;
+        if( l_InputArrayIdx >= a_LidarReturnPoints.SizeAs<sHitRecord>() )
+            return;
 
         sHitRecord *lHitRecords    = a_LidarReturnPoints.DataAs<sHitRecord>();
         Particle   *lLidarParticle = a_LidarParticle.DataAs<Particle>();
@@ -137,15 +138,15 @@ namespace SE::SensorModel::Dev
             }
         }
 
-        math::vec3 l_Color = IntensityToRGB( I, 240.0f );
+        vec3 l_Color = IntensityToRGB( I, 240.0f );
 
         lLidarParticle[l_InputArrayIdx].PositionAndSize =
-            math::vec4( a_PointCloudOrigin + l_CartesianPoint.mDirection * l_CartesianPoint.mDistance,
-                        glm::tan( aResolution / 2.0f ) * l_CartesianPoint.mDistance * 2.0f );
-        lLidarParticle[l_InputArrayIdx].Color = math::vec4( l_Color, 0.95 );
+            vec4( a_PointCloudOrigin + l_CartesianPoint.mDirection * l_CartesianPoint.mDistance,
+                  glm::tan( aResolution / 2.0f ) * l_CartesianPoint.mDistance * 2.0f );
+        lLidarParticle[l_InputArrayIdx].Color = vec4( l_Color, 0.95 );
     }
 
-    void sPointCloudVisualizer::Visualize( math::mat4 a_PointCloudTransform, MultiTensor &a_LidarReturnPoints, GPUMemory &a_Particles )
+    void sPointCloudVisualizer::Visualize( mat4 a_PointCloudTransform, MultiTensor &a_LidarReturnPoints, GPUMemory &a_Particles )
     {
         int l_BlockCount = ( a_LidarReturnPoints.SizeAs<sHitRecord>() / THREADS_PER_BLOCK ) + 1;
 
@@ -154,8 +155,8 @@ namespace SE::SensorModel::Dev
 
         a_Particles.Zero();
         __kernel__FillParticleBuffer<<<l_GridDim, l_BlockDim>>>(
-            math::NormalMatrix( a_PointCloudTransform ), math::Translation( a_PointCloudTransform ), a_LidarReturnPoints, a_Particles,
-            mLogScale, mHighlightFlashFOV, mInvertZAxis, mResolution * RADIANS );
+            NormalMatrix( a_PointCloudTransform ), Translation( a_PointCloudTransform ), a_LidarReturnPoints, a_Particles, mLogScale,
+            mHighlightFlashFOV, mInvertZAxis, mResolution * RADIANS );
         cudaDeviceSynchronize();
     }
 

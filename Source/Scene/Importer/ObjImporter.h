@@ -5,9 +5,9 @@
 
 #include <filesystem>
 
-#include "Core/Math/Types.h"
 #include "Core/CUDA/Texture/TextureData.h"
 #include "Core/CUDA/Texture/TextureTypes.h"
+#include "Core/Math/Types.h"
 #include "ImporterData.h"
 
 namespace fs = std::filesystem;
@@ -17,14 +17,20 @@ struct std::less<tinyobj::index_t>
 {
     constexpr bool operator()( const tinyobj::index_t &a, const tinyobj::index_t &b ) const
     {
-        if( a.vertex_index < b.vertex_index ) return true;
-        if( a.vertex_index > b.vertex_index ) return false;
+        if( a.vertex_index < b.vertex_index )
+            return true;
+        if( a.vertex_index > b.vertex_index )
+            return false;
 
-        if( a.normal_index < b.normal_index ) return true;
-        if( a.normal_index > b.normal_index ) return false;
+        if( a.normal_index < b.normal_index )
+            return true;
+        if( a.normal_index > b.normal_index )
+            return false;
 
-        if( a.texcoord_index < b.texcoord_index ) return true;
-        if( a.texcoord_index > b.texcoord_index ) return false;
+        if( a.texcoord_index < b.texcoord_index )
+            return true;
+        if( a.texcoord_index > b.texcoord_index )
+            return false;
 
         return false;
     }

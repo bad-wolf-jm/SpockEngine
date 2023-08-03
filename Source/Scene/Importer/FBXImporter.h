@@ -19,8 +19,8 @@ namespace Lumix
             struct Clip
             {
                 StaticString<64> name;
-                u32 from_frame;
-                u32 to_frame;
+                u32              from_frame;
+                u32              to_frame;
             };
 
             enum class Origin : int
@@ -35,18 +35,18 @@ namespace Lumix
                 CONVEX,
                 TRIMESH
             };
-            float mesh_scale;
-            Origin origin             = Origin::SOURCE;
-            bool create_impostor      = false;
-            bool mikktspace_tangents  = false;
-            bool import_vertex_colors = true;
-            bool vertex_color_is_ao   = false;
-            Physics physics           = Physics::NONE;
-            u32 lod_count             = 1;
-            float lods_distances[4]   = { -10, -100, -1000, -10000 };
-            float autolod_coefs[4]    = { 0.75f, 0.5f, 0.25f, 0.125f };
-            u8 autolod_mask           = 0;
-            float bounding_scale      = 1.f;
+            float            mesh_scale;
+            Origin           origin               = Origin::SOURCE;
+            bool             create_impostor      = false;
+            bool             mikktspace_tangents  = false;
+            bool             import_vertex_colors = true;
+            bool             vertex_color_is_ao   = false;
+            Physics          physics              = Physics::NONE;
+            u32              lod_count            = 1;
+            float            lods_distances[4]    = { -10, -100, -1000, -10000 };
+            float            autolod_coefs[4]     = { 0.75f, 0.5f, 0.25f, 0.125f };
+            u8               autolod_mask         = 0;
+            float            bounding_scale       = 1.f;
             Span<const Clip> clips;
         };
 
@@ -63,23 +63,23 @@ namespace Lumix
         {
             Vec3 pos;
             Quat rot;
-            i64 time;
-            u8 flags = 0;
+            i64  time;
+            u8   flags = 0;
         };
 
         struct Skin
         {
             float weights[4];
-            i16 joints[4];
-            int count = 0;
+            i16   joints[4];
+            int   count = 0;
         };
 
         struct ImportAnimation
         {
-            const ofbx::AnimationStack *fbx = nullptr;
-            const ofbx::IScene *scene       = nullptr;
+            const ofbx::AnimationStack  *fbx   = nullptr;
+            const ofbx::IScene          *scene = nullptr;
             StaticString<LUMIX_MAX_PATH> name;
-            bool import = true;
+            bool                         import = true;
         };
 
         struct ImportTexture
@@ -92,21 +92,21 @@ namespace Lumix
                 COUNT
             };
 
-            const ofbx::Texture *fbx = nullptr;
-            bool import              = true;
-            bool to_dds              = true;
-            bool is_valid            = false;
+            const ofbx::Texture         *fbx      = nullptr;
+            bool                         import   = true;
+            bool                         to_dds   = true;
+            bool                         is_valid = false;
             StaticString<LUMIX_MAX_PATH> path;
             StaticString<LUMIX_MAX_PATH> src;
         };
 
         struct ImportMaterial
         {
-            const ofbx::Material *fbx = nullptr;
-            bool import               = true;
-            bool alpha_cutout         = false;
-            ImportTexture textures[ImportTexture::COUNT];
-            char shader[20];
+            const ofbx::Material *fbx          = nullptr;
+            bool                  import       = true;
+            bool                  alpha_cutout = false;
+            ImportTexture         textures[ImportTexture::COUNT];
+            char                  shader[20];
         };
 
         struct ImportGeometry
@@ -120,11 +120,11 @@ namespace Lumix
             }
 
             const ofbx::Geometry *fbx = nullptr;
-            Array<u32> indices;
-            OutputMemoryStream vertex_data;
-            Array<ofbx::Vec3> computed_tangents;
-            Array<ofbx::Vec3> computed_normals;
-            u32 unique_vertex_count;
+            Array<u32>            indices;
+            OutputMemoryStream    vertex_data;
+            Array<ofbx::Vec3>     computed_tangents;
+            Array<ofbx::Vec3>     computed_normals;
+            u32                   unique_vertex_count;
         };
 
         struct ImportMesh
@@ -135,21 +135,21 @@ namespace Lumix
             {
             }
 
-            const ofbx::Mesh *fbx         = nullptr;
-            const ofbx::Material *fbx_mat = nullptr;
-            bool is_skinned               = false;
-            int bone_idx                  = -1;
-            bool import                   = true;
-            u32 lod                       = 0;
-            int submesh                   = -1;
-            OutputMemoryStream vertex_data;
-            Array<u32> indices;
-            Local<Array<u32>> autolod_indices[4];
-            AABB aabb;
-            float origin_radius_squared;
-            float center_radius_squared;
-            Matrix transform_matrix = Matrix::IDENTITY;
-            Vec3 origin             = Vec3( 0 );
+            const ofbx::Mesh     *fbx        = nullptr;
+            const ofbx::Material *fbx_mat    = nullptr;
+            bool                  is_skinned = false;
+            int                   bone_idx   = -1;
+            bool                  import     = true;
+            u32                   lod        = 0;
+            int                   submesh    = -1;
+            OutputMemoryStream    vertex_data;
+            Array<u32>            indices;
+            Local<Array<u32>>     autolod_indices[4];
+            AABB                  aabb;
+            float                 origin_radius_squared;
+            float                 center_radius_squared;
+            Matrix                transform_matrix = Matrix::IDENTITY;
+            Vec3                  origin           = Vec3( 0 );
         };
 
         FBXImporter( struct StudioApp &app );
@@ -162,20 +162,30 @@ namespace Lumix
         void writePrefab( const char *src, const ImportConfig &cfg );
         void writeModel( const char *src, const ImportConfig &cfg );
         void writePhysics( const char *src, const ImportConfig &cfg );
-        bool createImpostorTextures( struct Model *model, Array<u32> &gb0_rgba, Array<u32> &gb1_rgba, Array<u16> &gb_depth, Array<u32> &shadow, IVec2 &size, bool bake_normals );
+        bool createImpostorTextures( struct Model *model, Array<u32> &gb0_rgba, Array<u32> &gb1_rgba, Array<u16> &gb_depth,
+                                     Array<u32> &shadow, IVec2 &size, bool bake_normals );
 
-        const Array<ImportMesh> &getMeshes() const { return m_meshes; }
-        const Array<ImportAnimation> &getAnimations() const { return m_animations; }
+        const Array<ImportMesh> &getMeshes() const
+        {
+            return m_meshes;
+        }
+        const Array<ImportAnimation> &getAnimations() const
+        {
+            return m_animations;
+        }
 
-        static void getImportMeshName( const ImportMesh &mesh, char ( &name )[256] );
-        ofbx::IScene *getOFBXScene() { return scene; }
+        static void   getImportMeshName( const ImportMesh &mesh, char ( &name )[256] );
+        ofbx::IScene *getOFBXScene()
+        {
+            return scene;
+        }
 
       private:
-        void createAutoLODs( const ImportConfig &cfg, ImportMesh &import_mesh );
-        bool findTexture( const char *src_dir, const char *ext, FBXImporter::ImportTexture &tex ) const;
+        void                  createAutoLODs( const ImportConfig &cfg, ImportMesh &import_mesh );
+        bool                  findTexture( const char *src_dir, const char *ext, FBXImporter::ImportTexture &tex ) const;
         const ImportGeometry &getImportGeometry( const ofbx::Geometry *geom ) const;
-        const ImportMesh *getAnyMeshFromBone( const ofbx::Object *node, int bone_idx ) const;
-        void gatherMaterials( const char *fbx_filename, const char *src_dir );
+        const ImportMesh     *getAnyMeshFromBone( const ofbx::Object *node, int bone_idx ) const;
+        void                  gatherMaterials( const char *fbx_filename, const char *src_dir );
 
         void sortBones( bool force_skinned );
         void gatherBones( const ofbx::IScene &scene, bool force_skinned );
@@ -186,10 +196,17 @@ namespace Lumix
         void gatherGeometries( ofbx::IScene *scene );
         void insertHierarchy( Array<const ofbx::Object *> &bones, const ofbx::Object *node );
 
-        template <typename T> void write( const T &obj ) { out_file.write( &obj, sizeof( obj ) ); }
-        void write( const void *ptr, size_t size ) { out_file.write( ptr, size ); }
+        template <typename T>
+        void write( const T &obj )
+        {
+            out_file.write( &obj, sizeof( obj ) );
+        }
+        void write( const void *ptr, size_t size )
+        {
+            out_file.write( ptr, size );
+        }
         void writeString( const char *str );
-        int getVertexSize( const ofbx::Geometry &geom, bool is_skinned, const ImportConfig &cfg ) const;
+        int  getVertexSize( const ofbx::Geometry &geom, bool is_skinned, const ImportConfig &cfg ) const;
         void fillSkinInfo( Array<Skin> &skinning, const ImportMesh &mesh ) const;
         Vec3 fixOrientation( const Vec3 &v ) const;
         Quat fixOrientation( const Quat &v ) const;
@@ -200,28 +217,28 @@ namespace Lumix
         void writeMeshes( const char *src, int mesh_idx, const ImportConfig &cfg );
         void writeSkeleton( const ImportConfig &cfg );
         void writeLODs( const ImportConfig &cfg );
-        int getAttributeCount( const ImportMesh &mesh, const ImportConfig &cfg ) const;
+        int  getAttributeCount( const ImportMesh &mesh, const ImportConfig &cfg ) const;
         bool areIndices16Bit( const ImportMesh &mesh, const ImportConfig &cfg ) const;
         void writeModelHeader();
 
-        IAllocator &m_allocator;
-        struct FileSystem &m_filesystem;
-        StudioApp &m_app;
-        struct Shader *m_impostor_shadow_shader = nullptr;
-        struct AssetCompiler &m_compiler;
-        Array<ImportMaterial> m_materials;
-        Array<ImportMesh> m_meshes;
+        IAllocator                             &m_allocator;
+        struct FileSystem                      &m_filesystem;
+        StudioApp                              &m_app;
+        struct Shader                          *m_impostor_shadow_shader = nullptr;
+        struct AssetCompiler                   &m_compiler;
+        Array<ImportMaterial>                   m_materials;
+        Array<ImportMesh>                       m_meshes;
         HashMap<const ofbx::Material *, String> m_material_name_map;
-        Array<ImportGeometry> m_geometries;
-        Array<ImportAnimation> m_animations;
-        Array<const ofbx::Object *> m_bones;
-        Array<Matrix> m_bind_pose;
-        ofbx::IScene *scene;
-        OutputMemoryStream out_file;
-        float m_time_scale          = 1.0f;
-        bool cancel_mesh_transforms = false;
-        float m_fbx_scale           = 1.f;
-        Orientation m_orientation   = Orientation::Y_UP;
+        Array<ImportGeometry>                   m_geometries;
+        Array<ImportAnimation>                  m_animations;
+        Array<const ofbx::Object *>             m_bones;
+        Array<Matrix>                           m_bind_pose;
+        ofbx::IScene                           *scene;
+        OutputMemoryStream                      out_file;
+        float                                   m_time_scale           = 1.0f;
+        bool                                    cancel_mesh_transforms = false;
+        float                                   m_fbx_scale            = 1.f;
+        Orientation                             m_orientation          = Orientation::Y_UP;
     };
 
 } // namespace Lumix

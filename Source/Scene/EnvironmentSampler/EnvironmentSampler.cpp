@@ -48,7 +48,7 @@ namespace SE::SensorModel::Dev
         mSBT->BindHitRecordTable<sHitgroupRecord>( mHitgroupRecordsBuffer.RawDevicePtr(), mHitgroupRecordsBuffer.Size() );
     }
 
-    void WorldSampler::Sample( math::mat4 a_SensorTransform, Ref<Scene> a_Scene, MultiTensor &a_Azimuths, MultiTensor &a_Elevations,
+    void WorldSampler::Sample( mat4 a_SensorTransform, Ref<Scene> a_Scene, MultiTensor &a_Azimuths, MultiTensor &a_Elevations,
                                MultiTensor &a_Intensities, MultiTensor &a_SamplePoints )
     {
         SE_PROFILE_FUNCTION();
@@ -58,19 +58,19 @@ namespace SE::SensorModel::Dev
         if( a_Scene->GetRayTracingRoot() )
         {
             mLaunchParams.mTraversable    = a_Scene->GetRayTracingRoot();
-            mLaunchParams.mSensorPosition = math::Translation( a_SensorTransform );
-            mLaunchParams.mSensorRotation = math::NormalMatrix( a_SensorTransform );
+            mLaunchParams.mSensorPosition = Translation( a_SensorTransform );
+            mLaunchParams.mSensorRotation = NormalMatrix( a_SensorTransform );
             mLaunchParams.mAzimuths       = a_Azimuths.DataAs<float>();
             mLaunchParams.mElevations     = a_Elevations.DataAs<float>();
             mLaunchParams.mIntensities    = a_Intensities.DataAs<float>();
             mLaunchParams.mSamplePoints   = a_SamplePoints.DataAs<sHitRecord>();
 
-            // mLaunchParams.mIndexBuffer  = a_Scene->mIndexBuffer->DataAs<math::uvec3>();
+            // mLaunchParams.mIndexBuffer  = a_Scene->mIndexBuffer->DataAs<uvec3>();
             // mLaunchParams.mVertexBuffer = a_Scene->mTransformedVertexBuffer->DataAs<VertexData>();
 
             mLaunchParamsBuffer.Upload( mLaunchParams );
             mRayTracingPipeline->Launch( 0, mLaunchParamsBuffer.RawDevicePtr(), mLaunchParamsBuffer.Size(), mSBT,
-                                         math::uvec3{ a_Azimuths.SizeAs<float>(), 1, 1 } );
+                                         uvec3{ a_Azimuths.SizeAs<float>(), 1, 1 } );
             SyncDevice();
         }
     }
