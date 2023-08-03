@@ -239,18 +239,10 @@ namespace SE::Core::EntityComponentSystem::Components
 
     struct sMaterialComponent
     {
-        uint32_t mMaterialID;
+        Material mMaterialID;
 
         sMaterialComponent()                             = default;
         sMaterialComponent( const sMaterialComponent & ) = default;
-    };
-
-    struct sNewMaterialComponent
-    {
-        Material mMaterialID;
-
-        sNewMaterialComponent()                             = default;
-        sNewMaterialComponent( const sNewMaterialComponent & ) = default;
     };
 
     struct sMaterialShaderComponent

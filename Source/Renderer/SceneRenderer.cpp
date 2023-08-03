@@ -169,7 +169,7 @@ namespace SE::Core
         for( auto &[lMaterialHash, lRenderQueue] : mPipelines )
             lRenderQueue.mMeshes.clear();
 
-        mScene->ForEach<sStaticMeshComponent, sNewMaterialComponent>(
+        mScene->ForEach<sStaticMeshComponent, sMaterialComponent>(
             [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterial )
             {
                 size_t lMaterialHash = mScene->GetNewMaterialSystem()->GetMaterialHash( aMaterial.mMaterialID );

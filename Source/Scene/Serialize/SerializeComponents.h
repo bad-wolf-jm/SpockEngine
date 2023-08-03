@@ -71,7 +71,7 @@ namespace SE::Core
     void ReadComponent( sBoundingBoxComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sSkeletonComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sRayTracingTargetComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
-    void ReadComponent( sNewMaterialComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
+    void ReadComponent( sMaterialComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sMaterialShaderComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sBackgroundComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
     void ReadComponent( sAmbientLightingComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext );
@@ -93,7 +93,7 @@ namespace SE::Core
     void WriteComponent( ConfigurationWriter &aOut, sWireframeMeshComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sBoundingBoxComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sRayTracingTargetComponent const &aComponent );
-    void WriteComponent( ConfigurationWriter &aOut, sNewMaterialComponent const &aComponent, std::string const &aMaterialPath );
+    void WriteComponent( ConfigurationWriter &aOut, sMaterialComponent const &aComponent, std::string const &aMaterialPath );
     void WriteComponent( ConfigurationWriter &aOut, sMaterialShaderComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sBackgroundComponent const &aComponent );
     void WriteComponent( ConfigurationWriter &aOut, sAmbientLightingComponent const &aComponent );

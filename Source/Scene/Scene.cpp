@@ -426,9 +426,9 @@ namespace SE::Core
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sStaticMeshComponent>()], lReadContext );
             }
 
-            if( HasTypeTag<sNewMaterialComponent>( lEntityConfiguration ) )
+            if( HasTypeTag<sMaterialComponent>( lEntityConfiguration ) )
             {
-                auto &lMaterialID = Get( lEntityConfiguration[TypeTag<sNewMaterialComponent>()]["mMaterialPath"], std::string{ "" } );
+                auto &lMaterialID = Get( lEntityConfiguration[TypeTag<sMaterialComponent>()]["mMaterialPath"], std::string{ "" } );
 
                 if( lMaterialLoadQueue.find( lMaterialID ) == lMaterialLoadQueue.end() )
                     lMaterialLoadQueue.emplace( lMaterialID, std::set<std::string>{ lKey } );
@@ -528,7 +528,7 @@ namespace SE::Core
             for( auto &lEntity : lEntities )
             {
                 // lReadContext.mEntities[lEntity].AddOrReplace<sMaterialComponent>( lNewMaterial.mID );
-                lReadContext.mEntities[lEntity].AddOrReplace<sNewMaterialComponent>( lNewMaterial1 );
+                lReadContext.mEntities[lEntity].AddOrReplace<sMaterialComponent>( lNewMaterial1 );
             }
         } );
 
@@ -1282,8 +1282,8 @@ namespace SE::Core
             if( aEntity.Has<sRayTracingTargetComponent>() )
                 WriteComponent( lOut, aEntity.Get<sRayTracingTargetComponent>() );
 
-            if( aEntity.Has<sNewMaterialComponent>() )
-                WriteComponent( lOut, aEntity.Get<sNewMaterialComponent>(), aMaterialMap[aUUID.mValue.str()] );
+            if( aEntity.Has<sMaterialComponent>() )
+                WriteComponent( lOut, aEntity.Get<sMaterialComponent>(), aMaterialMap[aUUID.mValue.str()] );
 
             if( aEntity.Has<sMaterialShaderComponent>() )
                 WriteComponent( lOut, aEntity.Get<sMaterialShaderComponent>() );
@@ -1420,7 +1420,7 @@ namespace SE::Core
 
         // clang-format off
         std::unordered_map<std::string, std::string> lMaterialMap{};
-        ForEach<sNewMaterialComponent>( [&]( auto aEntity, auto &aComponent )
+        ForEach<sMaterialComponent>( [&]( auto aEntity, auto &aComponent )
         { 
             lMaterialMap[aEntity.Get<sUUID>().mValue.str()] = lMaterialList[aComponent.mMaterialID.Get<sUUID>().mValue.str()]; 
         } );

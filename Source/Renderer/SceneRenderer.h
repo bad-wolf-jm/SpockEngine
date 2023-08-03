@@ -27,7 +27,7 @@ namespace SE::Core
         uint32_t            mIndexOffset  = 0;
         uint32_t            mIndexCount   = 0;
 
-        sMeshRenderData( sStaticMeshComponent const &aMesh, sNewMaterialComponent const &aMaterialID )
+        sMeshRenderData( sStaticMeshComponent const &aMesh, sMaterialComponent const &aMaterialID )
             : mMaterialID{ aMaterialID.mMaterialID }
             , mIndexBuffer{ aMesh.mIndexBuffer }
             , mVertexBuffer{ aMesh.mTransformedBuffer }

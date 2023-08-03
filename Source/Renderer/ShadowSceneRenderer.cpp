@@ -290,7 +290,7 @@ namespace SE::Core
             mDirectionalShadowMapRenderContext->Bind( mRenderPipeline->Pipeline() );
             mDirectionalShadowMapRenderContext->Bind( mDirectionalShadowSceneDescriptor, 0, -1 );
 
-            mScene->ForEach<sStaticMeshComponent, sNewMaterialComponent>(
+            mScene->ForEach<sStaticMeshComponent, sMaterialComponent>(
                 [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterial )
                 {
                     if( !aStaticMeshComponent.mVertexBuffer || !aStaticMeshComponent.mIndexBuffer )
@@ -320,7 +320,7 @@ namespace SE::Core
                     lContext[f]->Bind( mOmniRenderPipeline->Pipeline() );
                     lContext[f]->Bind( mPointLightsShadowSceneDescriptors[lLightIndex][f], 0, -1 );
 
-                    mScene->ForEach<sStaticMeshComponent, sNewMaterialComponent>(
+                    mScene->ForEach<sStaticMeshComponent, sMaterialComponent>(
                         [&]( auto aEntity, auto &aStaticMeshComponent, auto &aMaterial )
                         {
                             if( !aStaticMeshComponent.mVertexBuffer || !aStaticMeshComponent.mIndexBuffer )
