@@ -18,7 +18,7 @@
 // #include "Scene/Renderer/RayTracing/RayTracingRenderer.h"
 #include "Scene/Scene.h"
 
-#include "Renderer/NewSceneRenderer.h"
+#include "Renderer/SceneRenderer.h"
 
 #include "TensorOps/Scope.h"
 
@@ -72,7 +72,7 @@ namespace SE::Editor
         Ref<Scene> mTestWorld             = nullptr;
 
         // Ref<DeferredRenderer>     mDeferredRenderer   = nullptr;
-        Ref<SceneRenderer>     mNewSceneRenderer   = nullptr;
+        Ref<SceneRenderer> mNewSceneRenderer = nullptr;
         // Ref<ForwardSceneRenderer> mForwardRenderer    = nullptr;
         // Ref<RayTracingRenderer>   mRayTracingRenderer = nullptr;
 

@@ -116,16 +116,14 @@ add_library(LTSimulationEngineRuntime STATIC
     Scene/Visualizers/Wall2D.cpp
     Scene/Scene.cpp
     Scene/VertexTransform.cu
-    # Scene/MaterialSystem/MaterialSystem.cpp
-    # Scene/MaterialSystem/TextureManager.cpp
     Scene/Serialize/FileIO.cpp
     Scene/Serialize/AssetFile.cpp
     Scene/Serialize/SerializeComponents.cpp
     
     Renderer/ASceneRenderer.cpp
-    Renderer/NewSceneRenderer.cpp
-    Renderer/NewMaterialSystem.cpp
-    Renderer/NewShadowSceneRenderer.cpp
+    Renderer/SceneRenderer.cpp
+    Renderer/MaterialSystem.cpp
+    Renderer/ShadowSceneRenderer.cpp
 
     Scene/Importer/glTFImporter.cpp
     Scene/Importer/ObjImporter.cpp

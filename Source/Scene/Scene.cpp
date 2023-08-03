@@ -45,7 +45,7 @@ namespace SE::Core
         : mGraphicContext{ aGraphicContext }
     {
         // mMaterialSystem    = New<MaterialSystem>( mGraphicContext );
-        mNewMaterialSystem = New<NewMaterialSystem>( mGraphicContext );
+        mMaterialSystem = New<NewMaterialSystem>( mGraphicContext );
 
         mEditorView = Translate( mat4( 1.0f ), -vec3( 0.0f, 1.0f, 7.5f ) );
 
@@ -82,10 +82,10 @@ namespace SE::Core
 
     Scene::Scene( Ref<Scene> aSource )
     {
-        mGraphicContext    = aSource->mGraphicContext;
+        mGraphicContext = aSource->mGraphicContext;
         // mMaterialSystem    = aSource->mMaterialSystem;
-        mNewMaterialSystem = aSource->mNewMaterialSystem;
-        mEditorView        = aSource->mEditorView;
+        mMaterialSystem = aSource->mMaterialSystem;
+        mEditorView     = aSource->mEditorView;
 
         InitializeRayTracing();
         ConnectSignalHandlers();
@@ -523,7 +523,7 @@ namespace SE::Core
             auto &[lMaterialID, lEntities] = aElement;
 
             // auto &lNewMaterial = mMaterialSystem->CreateMaterial( lScenarioRoot / lMaterialID );
-            auto &lNewMaterial1 = mNewMaterialSystem->CreateMaterial( lScenarioRoot / lMaterialID );
+            auto &lNewMaterial1 = mMaterialSystem->CreateMaterial( lScenarioRoot / lMaterialID );
 
             for( auto &lEntity : lEntities )
             {
@@ -532,7 +532,7 @@ namespace SE::Core
             }
         } );
 
-        mNewMaterialSystem->UpdateMaterialData();
+        mMaterialSystem->UpdateMaterialData();
 
         std::mutex lBufferLock;
         // clang-format on
@@ -815,7 +815,8 @@ namespace SE::Core
         //     lAnimationChooser.Animations.push_back( l_AnimationEntity );
         //     lAnimationComponent.Duration = lAnimation.mEnd - lAnimation.mStart;
 
-        //     for( uint32_t lAnimationChannelIndex = 0; lAnimationChannelIndex < lAnimation.mChannels.size(); lAnimationChannelIndex++ )
+        //     for( uint32_t lAnimationChannelIndex = 0; lAnimationChannelIndex < lAnimation.mChannels.size(); lAnimationChannelIndex++
+        //     )
         //     {
         //         sAnimationChannel lAnimationChannel{};
         //         lAnimationChannel.mChannelID     = lAnimation.mChannels[lAnimationChannelIndex].mComponent;
@@ -1322,7 +1323,7 @@ namespace SE::Core
         // std::vector<std::string> lMaterialList{};
         std::unordered_map<std::string, std::string> lMaterialList{};
         {
-            auto &lMaterials = mNewMaterialSystem->GetMaterialData();
+            auto &lMaterials = mMaterialSystem->GetMaterialData();
             // auto &lTextures  = mMaterialSystem->GetTextures();
 
             for( auto &lMaterial : lMaterials )

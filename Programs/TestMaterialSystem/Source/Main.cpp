@@ -24,7 +24,7 @@
 #include "Graphics/API.h"
 
 // #include "Editor/BaseEditorApplication.h"
-#include "Renderer/NewMaterialSystem.h"
+#include "Renderer/MaterialSystem.h"
 #include "Shader/Compiler.h"
 
 #include "glslang/Include/glslang_c_interface.h"

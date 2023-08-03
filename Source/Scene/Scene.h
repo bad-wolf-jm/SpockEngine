@@ -26,7 +26,7 @@
 
 #include "Components.h"
 
-#include "Renderer/NewMaterialSystem.h"
+#include "Renderer/MaterialSystem.h"
 
 using namespace math;
 using namespace literals;
@@ -121,7 +121,7 @@ namespace SE::Core
 
         Ref<NewMaterialSystem> GetNewMaterialSystem()
         {
-            return mNewMaterialSystem;
+            return mMaterialSystem;
         }
 
         void ClearScene();
@@ -133,12 +133,11 @@ namespace SE::Core
       private:
         eSceneState                   mState                 = eSceneState::EDITING;
         Ref<IGraphicContext>          mGraphicContext        = nullptr;
-        // Ref<MaterialSystem>           mMaterialSystem        = nullptr;
         Ref<OptixDeviceContextObject> mRayTracingContext     = nullptr;
         Ref<OptixScene>               mAccelerationStructure = nullptr;
 
         // Handle to the new version of the material system
-        Ref<NewMaterialSystem> mNewMaterialSystem = nullptr;
+        Ref<NewMaterialSystem> mMaterialSystem = nullptr;
 
         std::vector<sActorComponent> mActorComponents;
 

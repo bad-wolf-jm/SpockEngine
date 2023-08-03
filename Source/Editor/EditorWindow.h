@@ -9,7 +9,7 @@
 
 #include "Graphics/API.h"
 
-#include "Renderer/NewSceneRenderer.h"
+#include "Renderer/SceneRenderer.h"
 
 // #include "Scene/Renderer/DeferredSceneRenderer.h"
 // #include "Scene/Renderer/ForwardSceneRenderer.h"
