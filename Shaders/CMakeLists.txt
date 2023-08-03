@@ -10,7 +10,6 @@ set(SHADER_FILES "")
 
 add_library(LTSimulationEngineRuntimeShaders STATIC)
 
-
 function(embed_shader TARGET output_var shader_file)
     set(shader_path ${CMAKE_CURRENT_SOURCE_DIR}/Source/${shader_file})
     set(shader_output_path ${CMAKE_CURRENT_SOURCE_DIR}/Embedded/Shaders)

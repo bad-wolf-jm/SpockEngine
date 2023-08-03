@@ -83,7 +83,6 @@ float computeLinearDepth( float3 pos )
 
     return linearDepth / gFar;
 }
-
 #endif
 
 void main()

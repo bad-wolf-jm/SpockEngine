@@ -39,8 +39,16 @@ namespace SE::Core
         fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
         auto     lVertexShader =
             CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "shadow_vertex_shader", lShaderPath );
-        lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data );
-        lVertexShader->AddCode( SE::Private::Shaders::gDirectionalShadowVertexShader_data );
+        lVertexShader->AddCode( "#define __GLSL__" );
+        lVertexShader->AddCode( "#define VULKAN_SEMANTICS" );
+        lVertexShader->AddCode( "#define DIRECTIONAL_LIGHT_SHADOW_VERTEX_SHADER" );
+        lVertexShader->AddCode( "#define MATERIAL_HAS_NORMALS" );
+        lVertexShader->AddCode( "#define MATERIAL_HAS_UV0" );
+        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\Definitions.hpp" );
+        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Varying.hpp" );
+        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Shadow.hpp" );
+        // lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data );
+        // lVertexShader->AddCode( SE::Private::Shaders::gDirectionalShadowVertexShader_data );
         lVertexShader->Compile();
 
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
@@ -79,14 +87,28 @@ namespace SE::Core
         fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
         auto     lVertexShader =
             CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "omni_shadow_vertex_shader", lShaderPath );
-        lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data );
-        lVertexShader->AddCode( SE::Private::Shaders::gOmniDirectionalShadowVertexShader_data );
+
+        lVertexShader->AddCode( "#define __GLSL__" );
+        lVertexShader->AddCode( "#define VULKAN_SEMANTICS" );
+        lVertexShader->AddCode( "#define PUNCTUAL_LIGHT_SHADOW_VERTEX_SHADER" );
+        lVertexShader->AddCode( "#define MATERIAL_HAS_NORMALS" );
+        lVertexShader->AddCode( "#define MATERIAL_HAS_UV0" );
+        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\Definitions.hpp" );
+        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Varying.hpp" );
+        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Shadow.hpp" );
+        // lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data );
+        // lVertexShader->AddCode( SE::Private::Shaders::gOmniDirectionalShadowVertexShader_data );
         lVertexShader->Compile();
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
 
         auto lFragmentShader =
             CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "omni_shadow_fragment_shader", lShaderPath );
-        lFragmentShader->AddCode( SE::Private::Shaders::gOmniDirectionalShadowFragmentShader_data );
+        lFragmentShader->AddCode( "#define __GLSL__" );
+        lFragmentShader->AddCode( "#define VULKAN_SEMANTICS" );
+        lFragmentShader->AddCode( "#define PUNCTUAL_LIGHT_SHADOW_FRAGMENT_SHADER" );
+        lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\Definitions.hpp" );
+        lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Shadow.hpp" );
+        // lFragmentShader->AddCode( SE::Private::Shaders::gOmniDirectionalShadowFragmentShader_data );
         lFragmentShader->Compile();
 
         mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, lFragmentShader, "main" );

@@ -25,7 +25,6 @@ namespace SE::Core
         lVertexShader->AddCode( "#define COORDINATE_GRID_VERTEX_SHADER" );
         lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\Definitions.hpp" );
         lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\CoordinateGrid.hpp" );
-
         lVertexShader->Compile();
 
         auto lFragmentShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450,
@@ -35,7 +34,6 @@ namespace SE::Core
         lFragmentShader->AddCode( "#define COORDINATE_GRID_FRAGMENT_SHADER" );
         lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\Definitions.hpp" );
         lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\CoordinateGrid.hpp" );
-
         lFragmentShader->Compile();
 
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
