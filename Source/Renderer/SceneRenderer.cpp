@@ -1,4 +1,4 @@
-#include "NewSceneRenderer.h"
+#include "SceneRenderer.h"
 
 #include "Core/Logging.h"
 #include "Core/Profiling/BlockTimer.h"

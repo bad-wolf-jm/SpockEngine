@@ -5,7 +5,7 @@
 #include "Scene/Components.h"
 
 #include "ASceneRenderer.h"
-#include "NewShadowSceneRenderer.h"
+#include "ShadowSceneRenderer.h"
 
 namespace SE::Core
 {

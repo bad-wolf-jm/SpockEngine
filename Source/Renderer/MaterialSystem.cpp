@@ -1,4 +1,4 @@
-#include "NewMaterialSystem.h"
+#include "MaterialSystem.h"
 
 #include "Core/Logging.h"
 #include "Core/Profiling/BlockTimer.h"
