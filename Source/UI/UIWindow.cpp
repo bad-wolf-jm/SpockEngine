@@ -12,8 +12,8 @@
 #include "UI/UI.h"
 #include "UIContext.h"
 
-#include "Shaders/gUIVertexShader.h"
 #include "Shaders/gUIFragmentShader.h"
+#include "Shaders/gUIVertexShader.h"
 
 namespace SE::Core
 {
@@ -53,13 +53,21 @@ namespace SE::Core
         fs::path lShaderPath = "D:\\Work\\Git\\SpockEngine\\Resources\\Shaders\\Cache";
         auto     lVertexShader =
             CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::VERTEX, 450, "ui_vertex_shader", lShaderPath );
-        lVertexShader->AddCode( SE::Private::Shaders::gUIVertexShader_data );
+        lVertexShader->AddCode( "#define __GLSL__" );
+        lVertexShader->AddCode( "#define VULKAN_SEMANTICS" );
+        lVertexShader->AddCode( "#define IMGUI_VERTEX_SHADER" );
+        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\Definitions.hpp" );
+        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\ImGui.hpp" );
         lVertexShader->Compile();
         mUIRenderPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
 
         auto lFragmentShader =
             CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450, "ui_fragment_shader", lShaderPath );
-        lFragmentShader->AddCode( SE::Private::Shaders::gUIFragmentShader_data );
+        lFragmentShader->AddCode( "#define __GLSL__" );
+        lFragmentShader->AddCode( "#define VULKAN_SEMANTICS" );
+        lFragmentShader->AddCode( "#define IMGUI_FRAGMENT_SHADER" );
+        lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\Definitions.hpp" );
+        lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\ImGui.hpp" );
         lFragmentShader->Compile();
         mUIRenderPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, lFragmentShader, "main" );
 
@@ -104,7 +112,8 @@ namespace SE::Core
 
         int lFramebufferWidth  = (int)( aDrawData->DisplaySize.x * aDrawData->FramebufferScale.x );
         int lFramebufferHeight = (int)( aDrawData->DisplaySize.y * aDrawData->FramebufferScale.y );
-        if( ( lFramebufferWidth <= 0 ) || ( lFramebufferHeight <= 0 ) ) return;
+        if( ( lFramebufferWidth <= 0 ) || ( lFramebufferHeight <= 0 ) )
+            return;
 
         if( aDrawData->TotalVtxCount > 0 )
         {
@@ -153,14 +162,17 @@ namespace SE::Core
         {
             const ImDrawCmd *lPcmd = &aDrawList->CmdBuffer[i];
 
-            if( !( (VkDescriptorSet)lPcmd->TextureId ) ) continue;
+            if( !( (VkDescriptorSet)lPcmd->TextureId ) )
+                continue;
 
             ImVec4 lClipRect = ( lPcmd->ClipRect - lOffset ) * lScale;
             if( !( ( lClipRect.x < aFbWidth ) && ( lClipRect.y < aFbHeight ) && ( lClipRect.z >= 0.0f ) && ( lClipRect.w >= 0.0f ) ) )
                 continue;
 
-            if( lClipRect.x < 0.0f ) lClipRect.x = 0.0f;
-            if( lClipRect.y < 0.0f ) lClipRect.y = 0.0f;
+            if( lClipRect.x < 0.0f )
+                lClipRect.x = 0.0f;
+            if( lClipRect.y < 0.0f )
+                lClipRect.y = 0.0f;
 
             aRenderContext->SetScissor( { (int32_t)( lClipRect.x ), (int32_t)( lClipRect.y ) },
                                         { (uint32_t)( lClipRect.z - lClipRect.x ), (uint32_t)( lClipRect.w - lClipRect.y ) } );
@@ -181,6 +193,8 @@ namespace SE::Core
         mRenderContext->Present();
     }
 
-    UIWindow::~UIWindow() {}
+    UIWindow::~UIWindow()
+    {
+    }
 
 } // namespace SE::Core

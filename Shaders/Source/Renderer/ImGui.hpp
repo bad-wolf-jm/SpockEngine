@@ -45,7 +45,9 @@ void main()
     Out.Color   = aColor;
     Out.UV      = aUV;
     gl_Position = float4( aPos * pc.uScale + pc.uTranslate, 0, 1 );
-#elif defined( IMGUI_FRAGMENT_SHADER )
-    fColor = In.Color * texture( sTexture, In.UV.st );
+#endif
+
+#if defined( IMGUI_FRAGMENT_SHADER )
+    fColor = Out.Color * texture( sTexture, Out.UV.st );
 #endif
 }

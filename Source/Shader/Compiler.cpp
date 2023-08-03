@@ -13,8 +13,14 @@ namespace SE::Graphics
     static fs::path              gShaderCache       = "";
     static std::vector<fs::path> gShaderIncludePath = {};
 
-    void SetShaderCacheFolder( std::string const &aPath ) { gShaderCache = aPath; }
-    void AddShaderIncludePath( std::string const &aPath ) { gShaderIncludePath.push_back( aPath ); }
+    void SetShaderCacheFolder( std::string const &aPath )
+    {
+        gShaderCache = aPath;
+    }
+    void AddShaderIncludePath( std::string const &aPath )
+    {
+        gShaderIncludePath.push_back( aPath );
+    }
 
     static std::tuple<char *, size_t> ReadFile( const char *header_name )
     {
@@ -29,11 +35,13 @@ namespace SE::Graphics
             }
         }
 
-        if( lHeaderPath.empty() ) return { nullptr, 0 };
+        if( lHeaderPath.empty() )
+            return { nullptr, 0 };
 
         std::ifstream lFileObject( lHeaderPath, std::ios::ate | std::ios::binary );
 
-        if( !lFileObject.is_open() ) throw std::runtime_error( "failed to open file!" );
+        if( !lFileObject.is_open() )
+            throw std::runtime_error( "failed to open file!" );
 
         size_t            lFileSize = (size_t)lFileObject.tellg();
         std::vector<char> lBuffer( lFileSize );
@@ -79,13 +87,25 @@ namespace SE::Graphics
 
         switch( aShaderStage )
         {
-        case eShaderStageTypeFlags::GEOMETRY: lInputDescription.stage = GLSLANG_STAGE_GEOMETRY; break;
-        case eShaderStageTypeFlags::FRAGMENT: lInputDescription.stage = GLSLANG_STAGE_FRAGMENT; break;
-        case eShaderStageTypeFlags::TESSELATION_CONTROL: lInputDescription.stage = GLSLANG_STAGE_TESSCONTROL; break;
-        case eShaderStageTypeFlags::TESSELATION_EVALUATION: lInputDescription.stage = GLSLANG_STAGE_TESSEVALUATION; break;
-        case eShaderStageTypeFlags::COMPUTE: lInputDescription.stage = GLSLANG_STAGE_COMPUTE; break;
+        case eShaderStageTypeFlags::GEOMETRY:
+            lInputDescription.stage = GLSLANG_STAGE_GEOMETRY;
+            break;
+        case eShaderStageTypeFlags::FRAGMENT:
+            lInputDescription.stage = GLSLANG_STAGE_FRAGMENT;
+            break;
+        case eShaderStageTypeFlags::TESSELATION_CONTROL:
+            lInputDescription.stage = GLSLANG_STAGE_TESSCONTROL;
+            break;
+        case eShaderStageTypeFlags::TESSELATION_EVALUATION:
+            lInputDescription.stage = GLSLANG_STAGE_TESSEVALUATION;
+            break;
+        case eShaderStageTypeFlags::COMPUTE:
+            lInputDescription.stage = GLSLANG_STAGE_COMPUTE;
+            break;
         case eShaderStageTypeFlags::VERTEX:
-        default: lInputDescription.stage = GLSLANG_STAGE_VERTEX; break;
+        default:
+            lInputDescription.stage = GLSLANG_STAGE_VERTEX;
+            break;
         }
 
         lInputDescription.client                            = GLSLANG_CLIENT_VULKAN;
@@ -110,14 +130,14 @@ namespace SE::Graphics
 
         if( !glslang_shader_preprocess( lNewShader, &lInputDescription ) )
         {
-            SE::Logging::Info( "{}", glslang_shader_get_info_log( lNewShader ) );
-            SE::Logging::Info( "{}", glslang_shader_get_info_debug_log( lNewShader ) );
+            SE::Logging::Info( "[PREPROCESS] {}", glslang_shader_get_info_log( lNewShader ) );
+            SE::Logging::Info( "[PREPROCESS_DEBUG] {}", glslang_shader_get_info_debug_log( lNewShader ) );
         }
 
         if( !glslang_shader_parse( lNewShader, &lInputDescription ) )
         {
-            SE::Logging::Info( "{}", glslang_shader_get_info_log( lNewShader ) );
-            SE::Logging::Info( "{}", glslang_shader_get_info_debug_log( lNewShader ) );
+            SE::Logging::Info( "[PARSE] {}", glslang_shader_get_info_log( lNewShader ) );
+            SE::Logging::Info( "[PARSE] {}", glslang_shader_get_info_debug_log( lNewShader ) );
         }
 
         glslang_program_t *lNewProgram = glslang_program_create();
@@ -125,8 +145,8 @@ namespace SE::Graphics
 
         if( !glslang_program_link( lNewProgram, GLSLANG_MSG_SPV_RULES_BIT | GLSLANG_MSG_VULKAN_RULES_BIT ) )
         {
-            SE::Logging::Info( "{}", glslang_program_get_info_log( lNewProgram ) );
-            SE::Logging::Info( "{}", glslang_program_get_info_debug_log( lNewProgram ) );
+            SE::Logging::Info( "[LINK] {}", glslang_program_get_info_log( lNewProgram ) );
+            SE::Logging::Info( "[LINK] {}", glslang_program_get_info_debug_log( lNewProgram ) );
         }
 
         glslang_program_SPIRV_generate( lNewProgram, lInputDescription.stage );
