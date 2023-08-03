@@ -108,7 +108,8 @@ namespace SE::Core
             CreateRenderTarget( aOutputWidth, aOutputHeight );
         else
             CreateMSAARenderTarget( aOutputWidth, aOutputHeight );
-        mShadowSceneRenderer = New<ShadowSceneRenderer>( mGraphicContext );
+        mShadowSceneRenderer    = New<ShadowSceneRenderer>( mGraphicContext );
+        mCoordinateGridRenderer = New<CoordinateGridRenderer>( mGraphicContext, mGeometryContext );
     }
 
     void SceneRenderer::Update( Ref<Scene> aWorld )
@@ -216,6 +217,10 @@ namespace SE::Core
                 mGeometryContext->Draw( lMesh.mIndexCount, lMesh.mIndexOffset, lMesh.mVertexOffset, 1, 0 );
             }
         }
+
+        if( mRenderCoordinateGrid )
+            mCoordinateGridRenderer->Render( mProjectionMatrix, mViewMatrix, mGeometryContext );
+
         mGeometryContext->EndRender();
     }
 

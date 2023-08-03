@@ -136,6 +136,9 @@ namespace SE::Graphics
 
         if( !glslang_shader_parse( lNewShader, &lInputDescription ) )
         {
+            // std::ofstream lOutput( "D:\\Work\\Git\\SpockEngine\\test_fs.cpp" );
+            // lOutput << glslang_shader_get_preprocessed_code( lNewShader );
+            // lOutput.close();
             SE::Logging::Info( "[PARSE] {}", glslang_shader_get_info_log( lNewShader ) );
             SE::Logging::Info( "[PARSE] {}", glslang_shader_get_info_debug_log( lNewShader ) );
         }

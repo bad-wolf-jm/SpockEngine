@@ -6,6 +6,7 @@
 
 #include "ASceneRenderer.h"
 #include "ShadowSceneRenderer.h"
+#include "CoordinateGridRenderer.h"
 
 namespace SE::Core
 {
@@ -67,12 +68,13 @@ namespace SE::Core
         void ResizeOutput( uint32_t aOutputWidth, uint32_t aOutputHeight );
 
       protected:
-        Ref<IRenderTarget>       mGeometryRenderTarget = nullptr;
-        Ref<IRenderContext>      mGeometryContext{};
-        Ref<ShadowSceneRenderer> mShadowSceneRenderer = nullptr;
-        Ref<ISampler2D>          mFxaaSampler         = nullptr;
-        Ref<IRenderTarget>       mFxaaRenderTarget    = nullptr;
-        Ref<IRenderContext>      mFxaaContext         = nullptr;
+        Ref<IRenderTarget>          mGeometryRenderTarget   = nullptr;
+        Ref<IRenderContext>         mGeometryContext        = nullptr;
+        Ref<ShadowSceneRenderer>    mShadowSceneRenderer    = nullptr;
+        Ref<CoordinateGridRenderer> mCoordinateGridRenderer = nullptr;
+        Ref<ISampler2D>             mFxaaSampler            = nullptr;
+        Ref<IRenderTarget>          mFxaaRenderTarget       = nullptr;
+        Ref<IRenderContext>         mFxaaContext            = nullptr;
 
         std::map<size_t, sRenderQueue> mPipelines;
 

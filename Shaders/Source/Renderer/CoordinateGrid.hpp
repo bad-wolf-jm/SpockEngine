@@ -2,13 +2,15 @@
 #    include "Common/Definitions.hpp"
 #endif
 
+#if defined( COORDINATE_GRID_VERTEX_SHADER )
 // clang-format off
-LAYOUT_UNIFORM( 0 ) ViewUniforms
+LAYOUT_UNIFORM( 0, 0 ) ViewUniforms
 {
     float4x4 mViewMatrix;
     float4x4 mProjectionMatrix;
 } gView;
 // clang-format on
+#endif
 
 #if defined( COORDINATE_GRID_VERTEX_SHADER )
 #    define INOUT __SHADER_OUTPUT__
@@ -24,6 +26,10 @@ LAYOUT_LOCATION( 2 ) INOUT float3 gNearPoint;
 LAYOUT_LOCATION( 3 ) INOUT float3 gFarPoint;
 LAYOUT_LOCATION( 4 ) INOUT float4x4 gFragView;
 LAYOUT_LOCATION( 8 ) INOUT float4x4 gFragProj;
+
+#if defined( COORDINATE_GRID_FRAGMENT_SHADER )
+LAYOUT_LOCATION( 0 ) __SHADER_OUTPUT__ float4 outColor;
+#endif
 
 // Grid position are in clipped space
 #if defined( COORDINATE_GRID_VERTEX_SHADER )

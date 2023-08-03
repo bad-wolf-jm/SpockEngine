@@ -124,6 +124,7 @@ add_library(LTSimulationEngineRuntime STATIC
     Renderer/SceneRenderer.cpp
     Renderer/MaterialSystem.cpp
     Renderer/ShadowSceneRenderer.cpp
+    Renderer/CoordinateGridRenderer.cpp
 
     Scene/Importer/glTFImporter.cpp
     Scene/Importer/ObjImporter.cpp
