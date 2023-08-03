@@ -15,13 +15,13 @@
 
 #include "Core/CUDA/Texture/TextureData.h"
 #include "Scene/Importer/ImporterData.h"
+#include "Scene/MaterialSystem/MaterialSystem.h"
 #include "Scene/VertexData.h"
 
 namespace fs = std::filesystem;
 
 namespace SE::Core
 {
-
     enum class eAssetType : uint32_t
     {
         UNKNOWN        = 0,
@@ -93,7 +93,10 @@ namespace SE::Core
 
         sAssetIndex const &GetIndex( uint32_t aIndex ) const;
 
-        uint32_t CountAssets() { return mAssetIndex.size(); }
+        uint32_t CountAssets()
+        {
+            return mAssetIndex.size();
+        }
 
         void WriteTo( fs::path aPath );
 

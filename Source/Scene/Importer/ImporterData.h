@@ -6,9 +6,9 @@
 #include "Core/CUDA/Texture/TextureData.h"
 #include "Core/Math/Types.h"
 #include "Core/Memory.h"
-
-#include "Graphics/Vulkan/VkGraphicsPipeline.h"
-#include "Scene/MaterialSystem/MaterialSystem.h"
+#include "Graphics/API.h"
+// #include "Graphics/Vulkan/VkGraphicsPipeline.h"
+// #include "Scene/MaterialSystem/MaterialSystem.h"
 #include "yaml-cpp/yaml.h"
 
 namespace fs = std::filesystem;
