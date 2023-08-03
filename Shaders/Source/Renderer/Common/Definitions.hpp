@@ -15,6 +15,14 @@
 #    define __UNIFORM_BUFFER__ struct
 #endif
 
+#if defined( __cplusplus )
+#    define __SHADER_INPUT__
+#    define __SHADER_OUTPUT__
+#else
+#    define __SHADER_INPUT__  in
+#    define __SHADER_OUTPUT__ out
+#endif
+
 #if defined( __GLSL__ ) || defined( __cplusplus )
 #    define float2   vec2
 #    define float3   vec3

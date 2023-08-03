@@ -1,10 +1,5 @@
 #if defined( __cplusplus )
 #    include "Common/Definitions.hpp"
-#    define __SHADER_INPUT__
-#    define __SHADER_OUTPUT__
-#else
-#    define __SHADER_INPUT__  in
-#    define __SHADER_OUTPUT__ out
 #endif
 
 LAYOUT_LOCATION( 0 ) __SHADER_INPUT__ float3 inPos;
