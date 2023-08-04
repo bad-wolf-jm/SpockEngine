@@ -10,8 +10,12 @@ namespace SE::Core
     {
     }
 
-    void UISplitter::PushStyles() {}
-    void UISplitter::PopStyles() {}
+    void UISplitter::PushStyles()
+    {
+    }
+    void UISplitter::PopStyles()
+    {
+    }
 
     ImVec2 UISplitter::RequiredSize()
     {
@@ -35,13 +39,25 @@ namespace SE::Core
         return ImVec2{ lWidth, lHeight };
     }
 
-    void UISplitter::SetOrientation( eBoxLayoutOrientation aValue ) { mOrientation = aValue; }
+    void UISplitter::SetOrientation( eBoxLayoutOrientation aValue )
+    {
+        mOrientation = aValue;
+    }
 
-    void UISplitter::SetItemSpacing( float aItemSpacing ) { mItemSpacing = aItemSpacing; }
+    void UISplitter::SetItemSpacing( float aItemSpacing )
+    {
+        mItemSpacing = aItemSpacing;
+    }
 
-    void UISplitter::Add1( UIComponent *aChild ) { mChild1 = aChild; }
+    void UISplitter::Add1( UIComponent *aChild )
+    {
+        mChild1 = aChild;
+    }
 
-    void UISplitter::Add2( UIComponent *aChild ) { mChild2 = aChild; }
+    void UISplitter::Add2( UIComponent *aChild )
+    {
+        mChild2 = aChild;
+    }
 
     static bool Splitter( eBoxLayoutOrientation aOrientation, float aThickness, float *aSize1, float *aSize2, float aMinSize1,
                           float aMinSize2, float aLength = -1.0f )

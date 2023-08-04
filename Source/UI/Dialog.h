@@ -25,7 +25,7 @@ namespace SE::Core
         void Update();
 
       protected:
-        string_t  mTitle;
+        string_t     mTitle;
         UIComponent *mContent = nullptr;
         math::vec2   mSize;
 

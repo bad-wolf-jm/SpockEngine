@@ -54,9 +54,15 @@ namespace SE::Core
         return lNewChild;
     }
 
-    void UITreeViewNode::OnSelected( std::function<void( UITreeViewNode * )> aOnSelected ) { mOnSelected = aOnSelected; }
+    void UITreeViewNode::OnSelected( std::function<void( UITreeViewNode * )> aOnSelected )
+    {
+        mOnSelected = aOnSelected;
+    }
 
-    void UITreeViewNode::SetIcon( UIImage *aIcon ) { mIcon = aIcon; }
+    void UITreeViewNode::SetIcon( UIImage *aIcon )
+    {
+        mIcon = aIcon;
+    }
 
     void UITreeViewNode::SetIndicator( UIComponent *aIcon )
     {
@@ -64,10 +70,19 @@ namespace SE::Core
         mIndicator->mIsVisible = !( aIcon == nullptr );
     }
 
-    void UITreeViewNode::SetText( string_t const &aText ) { mText->SetText( aText ); }
-    void UITreeViewNode::SetTextColor( math::vec4 aColor ) { mText->SetTextColor( aColor ); }
+    void UITreeViewNode::SetText( string_t const &aText )
+    {
+        mText->SetText( aText );
+    }
+    void UITreeViewNode::SetTextColor( math::vec4 aColor )
+    {
+        mText->SetTextColor( aColor );
+    }
 
-    ImVec2 UITreeViewNode::RequiredSize() { return mLayout->RequiredSize(); }
+    ImVec2 UITreeViewNode::RequiredSize()
+    {
+        return mLayout->RequiredSize();
+    }
 
     void UITreeViewNode::TreePushOverrideID()
     {
@@ -109,7 +124,8 @@ namespace SE::Core
 
     bool UITreeViewNode::IsOpen()
     {
-        if( mFlags & ImGuiTreeNodeFlags_Leaf ) return true;
+        if( mFlags & ImGuiTreeNodeFlags_Leaf )
+            return true;
 
         // We only write to the tree storage if the user clicks (or explicitly use the SetNextItemOpen function)
         ImGuiContext &lImGuiContext  = *GImGui;
@@ -148,12 +164,16 @@ namespace SE::Core
         return lNodeIsOpen;
     }
 
-    bool UITreeViewNode::IsLeaf() { return mChildren.size() == 0; }
+    bool UITreeViewNode::IsLeaf()
+    {
+        return mChildren.size() == 0;
+    }
 
     bool UITreeViewNode::RenderNode()
     {
         ImGuiWindow *lWindow = ImGui::GetCurrentWindow();
-        if( lWindow->SkipItems ) return false;
+        if( lWindow->SkipItems )
+            return false;
 
         ImGuiContext     &lImGuiContext = *GImGui;
         const ImGuiStyle &style         = lImGuiContext.Style;
@@ -208,8 +228,10 @@ namespace SE::Core
         }
 
         ImGuiButtonFlags lButtonFlags = ImGuiTreeNodeFlags_None;
-        if( mFlags & ImGuiTreeNodeFlags_AllowItemOverlap ) lButtonFlags |= ImGuiButtonFlags_AllowItemOverlap;
-        if( !lNodeIsLeaf ) lButtonFlags |= ImGuiButtonFlags_PressedOnDragDropHold;
+        if( mFlags & ImGuiTreeNodeFlags_AllowItemOverlap )
+            lButtonFlags |= ImGuiButtonFlags_AllowItemOverlap;
+        if( !lNodeIsLeaf )
+            lButtonFlags |= ImGuiButtonFlags_PressedOnDragDropHold;
 
         // We allow clicking on the arrow section with keyboard modifiers held, in order to easily
         // allow browsing a tree while preserving selection with code implementing multi-selection patterns.
@@ -218,7 +240,8 @@ namespace SE::Core
         const float lArrowHitX2 =
             ( lTextPosition.x - lTextOffsetX ) + ( lImGuiContext.FontSize + lPadding.x * 2.0f ) + style.TouchExtraPadding.x;
         const bool lIsMouseXOverArrow = ( lImGuiContext.IO.MousePos.x >= lArrowHitX1 && lImGuiContext.IO.MousePos.x < lArrowHitX2 );
-        if( lWindow != lImGuiContext.HoveredWindow || !lIsMouseXOverArrow ) lButtonFlags |= ImGuiButtonFlags_NoKeyModifiers;
+        if( lWindow != lImGuiContext.HoveredWindow || !lIsMouseXOverArrow )
+            lButtonFlags |= ImGuiButtonFlags_NoKeyModifiers;
 
         // Open behaviors can be altered with the _OpenOnArrow and _OnOnDoubleClick mFlags.
         // Some alteration have subtle effects (e.lImGuiContext. toggle on MouseUp vs MouseDown events) due to requirements for
@@ -291,7 +314,8 @@ namespace SE::Core
             }
         }
 
-        if( mFlags & ImGuiTreeNodeFlags_AllowItemOverlap ) ImGui::SetItemAllowOverlap();
+        if( mFlags & ImGuiTreeNodeFlags_AllowItemOverlap )
+            ImGui::SetItemAllowOverlap();
 
         // In this branch, TreeNodeBehavior() cannot toggle the selection so this will never trigger.
         if( lSelected != lWasSelected ) //-V547
@@ -326,9 +350,11 @@ namespace SE::Core
         auto lNodePosition = ImGui::GetCursorPos() + ImVec2{ lTextOffsetX, -lFrameHeight };
         mLayout->Update( lNodePosition, lSize );
 
-        if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) ) TreePushOverrideID();
+        if( lNodeIsOpen && !( mFlags & ImGuiTreeNodeFlags_NoTreePushOnOpen ) )
+            TreePushOverrideID();
 
-        if( lDoubleClicked && lNodeIsLeaf && mOnSelected ) mOnSelected( this );
+        if( lDoubleClicked && lNodeIsLeaf && mOnSelected )
+            mOnSelected( this );
 
         return lNodeIsOpen;
     }
@@ -344,20 +370,24 @@ namespace SE::Core
         {
         case ImGuiDir_Up:
         case ImGuiDir_Down:
-            if( aDirection == ImGuiDir_Up ) lRadius = -lRadius;
+            if( aDirection == ImGuiDir_Up )
+                lRadius = -lRadius;
             a = ImVec2( +0.000f, +0.750f ) * lRadius;
             b = ImVec2( -0.866f, -0.750f ) * lRadius;
             c = ImVec2( +0.866f, -0.750f ) * lRadius;
             break;
         case ImGuiDir_Left:
         case ImGuiDir_Right:
-            if( aDirection == ImGuiDir_Left ) lRadius = -lRadius;
+            if( aDirection == ImGuiDir_Left )
+                lRadius = -lRadius;
             a = ImVec2( +0.750f, +0.000f ) * lRadius;
             b = ImVec2( -0.750f, +0.866f ) * lRadius;
             c = ImVec2( -0.750f, -0.866f ) * lRadius;
             break;
         case ImGuiDir_None:
-        case ImGuiDir_COUNT: IM_ASSERT( 0 ); break;
+        case ImGuiDir_COUNT:
+            IM_ASSERT( 0 );
+            break;
         }
         aDrawList->AddTriangleFilled( lCenter + a, lCenter + b, lCenter + c, aColor );
     }
@@ -373,7 +403,10 @@ namespace SE::Core
         }
     }
 
-    std::vector<UITreeViewNode *> const &UITreeViewNode::Children() { return mChildren; }
+    std::vector<UITreeViewNode *> const &UITreeViewNode::Children()
+    {
+        return mChildren;
+    }
 
     void UITreeViewNode::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
@@ -414,13 +447,32 @@ namespace SE::Core
         mRoot = new UITreeViewNode( this, nullptr );
     }
 
-    void   UITreeView::PushStyles() {}
-    void   UITreeView::PopStyles() {}
-    ImVec2 UITreeView::RequiredSize() { return ImVec2{}; }
+    void UITreeView::PushStyles()
+    {
+    }
+    void UITreeView::PopStyles()
+    {
+    }
+    ImVec2 UITreeView::RequiredSize()
+    {
+        return ImVec2{};
+    }
 
-    void            UITreeView::SetIndent( float aIndent ) { mIndent = aIndent; }
-    void            UITreeView::SetIconSpacing( float aSpacing ) { mIconSpacing = aSpacing; }
-    UITreeViewNode *UITreeView::Add() { return mRoot->Add(); }
+    void UITreeView::SetIndent( float aIndent )
+    {
+        mIndent = aIndent;
+    }
+    void UITreeView::SetIconSpacing( float aSpacing )
+    {
+        mIconSpacing = aSpacing;
+    }
+    UITreeViewNode *UITreeView::Add()
+    {
+        return mRoot->Add();
+    }
 
-    void UITreeView::DrawContent( ImVec2 aPosition, ImVec2 aSize ) { mRoot->Update( aPosition, aSize ); }
+    void UITreeView::DrawContent( ImVec2 aPosition, ImVec2 aSize )
+    {
+        mRoot->Update( aPosition, aSize );
+    }
 } // namespace SE::Core

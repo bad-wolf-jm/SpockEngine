@@ -24,12 +24,22 @@ namespace SE::Core
     {
     }
 
-    void UIImageButton::PushStyles() {}
-    void UIImageButton::PopStyles() {}
+    void UIImageButton::PushStyles()
+    {
+    }
+    void UIImageButton::PopStyles()
+    {
+    }
 
-    void UIImageButton::OnClick( std::function<void()> aOnClick ) { mOnClick = aOnClick; }
+    void UIImageButton::OnClick( std::function<void()> aOnClick )
+    {
+        mOnClick = aOnClick;
+    }
 
-    ImVec2 UIImageButton::RequiredSize() { return mSize; }
+    ImVec2 UIImageButton::RequiredSize()
+    {
+        return mSize;
+    }
 
     void UIImageButton::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
@@ -39,6 +49,7 @@ namespace SE::Core
 
         bool lClicked = ImGui::ImageButton( TextureID(), mSize, mTopLeft, mBottomRight, 0, mBackgroundColor, mTintColor );
 
-        if( lClicked && mOnClick && lEnabled ) mOnClick();
+        if( lClicked && mOnClick && lEnabled )
+            mOnClick();
     }
 } // namespace SE::Core

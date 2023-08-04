@@ -44,7 +44,10 @@ namespace SE::Core
         void SetVerticalAlignment( eVerticalAlignment const &aAlignment );
 
         void   SetBackgroundColor( math::vec4 aColor );
-        ImVec4 BackgroundColor() { return mBackgroundColor; }
+        ImVec4 BackgroundColor()
+        {
+            return mBackgroundColor;
+        }
 
         void SetFont( FontFamilyFlags aFont );
 

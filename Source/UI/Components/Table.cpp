@@ -19,17 +19,36 @@ namespace SE::Core
     // void UITableColumn::PushStyles() {}
     // void UITableColumn::PopStyles() {}
 
-    void UITable::PushStyles() {}
-    void UITable::PopStyles() {}
+    void UITable::PushStyles()
+    {
+    }
+    void UITable::PopStyles()
+    {
+    }
 
-    void UITable::SetRowHeight( float aRowHeight ) { mRowHeight = aRowHeight; }
+    void UITable::SetRowHeight( float aRowHeight )
+    {
+        mRowHeight = aRowHeight;
+    }
 
-    void UITable::AddColumn( Ref<UITableColumn> aColumn ) { mColumns.push_back( aColumn.get() ); }
-    void UITable::AddColumn( UITableColumn *aColumn ) { mColumns.push_back( aColumn ); }
+    void UITable::AddColumn( Ref<UITableColumn> aColumn )
+    {
+        mColumns.push_back( aColumn.get() );
+    }
+    void UITable::AddColumn( UITableColumn *aColumn )
+    {
+        mColumns.push_back( aColumn );
+    }
 
-    ImVec2 UITable::RequiredSize() { return ImVec2{}; }
+    ImVec2 UITable::RequiredSize()
+    {
+        return ImVec2{};
+    }
 
-    void UITable::OnRowClicked( std::function<void( uint32_t )> const &aOnRowClicked ) { mOnRowClicked = aOnRowClicked; }
+    void UITable::OnRowClicked( std::function<void( uint32_t )> const &aOnRowClicked )
+    {
+        mOnRowClicked = aOnRowClicked;
+    }
 
     void UITable::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
@@ -50,10 +69,12 @@ namespace SE::Core
             ImGui::TableHeadersRow();
 
             auto lRowCount = std::numeric_limits<uint32_t>::max();
-            for( const auto &lColumn : mColumns ) lRowCount = std::min( lRowCount, lColumn->Size() );
+            for( const auto &lColumn : mColumns )
+                lRowCount = std::min( lRowCount, lColumn->Size() );
 
             int lDisplayedRowCount = lRowCount;
-            if( mDisplayedRowIndices.has_value() ) lDisplayedRowCount = mDisplayedRowIndices.value().size();
+            if( mDisplayedRowIndices.has_value() )
+                lDisplayedRowCount = mDisplayedRowIndices.value().size();
 
             ImGuiListClipper lRowClipping;
             lRowClipping.Begin( lDisplayedRowCount );
@@ -62,9 +83,11 @@ namespace SE::Core
                 for( int lRowID = lRowClipping.DisplayStart; lRowID < lRowClipping.DisplayEnd; lRowID++ )
                 {
                     int lRow = lRowID;
-                    if( mDisplayedRowIndices.has_value() ) lRow = mDisplayedRowIndices.value()[lRowID];
+                    if( mDisplayedRowIndices.has_value() )
+                        lRow = mDisplayedRowIndices.value()[lRowID];
 
-                    if( lRow > lRowCount ) continue;
+                    if( lRow > lRowCount )
+                        continue;
 
                     ImGui::TableNextRow();
                     if( mSelectedRow == lRow )
@@ -100,12 +123,15 @@ namespace SE::Core
                                 ImGui::EndTooltip();
                             }
                         }
-                        if( ImGui::IsItemClicked() ) mSelectedRow = lRow;
+                        if( ImGui::IsItemClicked() )
+                            mSelectedRow = lRow;
                         ImGui::SetCursorPos( lPos );
                         lColumnData->Render( lRow, ImVec2{ lWidth, mRowHeight } );
 
-                        if( mOnRowClicked && ImGui::IsItemClicked() ) mOnRowClicked( lRow );
-                        if( lColumnData->mBackgroundColor.size() > 0 ) ImGui::TableSetBgColor( ImGuiTableBgTarget_CellBg, lBgColor );
+                        if( mOnRowClicked && ImGui::IsItemClicked() )
+                            mOnRowClicked( lRow );
+                        if( lColumnData->mBackgroundColor.size() > 0 )
+                            ImGui::TableSetBgColor( ImGuiTableBgTarget_CellBg, lBgColor );
 
                         lColumn++;
                     }
@@ -195,7 +221,10 @@ namespace SE::Core
     {
     }
 
-    uint32_t UIStringColumn::Size() { return mData.size(); }
+    uint32_t UIStringColumn::Size()
+    {
+        return mData.size();
+    }
 
     void UIStringColumn::Render( int aRow, ImVec2 aSize )
     {
@@ -209,7 +238,8 @@ namespace SE::Core
             ImGui::PushStyleColor( ImGuiCol_Text, mForegroundColor[aRow] );
 
         ImGui::Text( mData[aRow].c_str() );
-        if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) ) ImGui::PopStyleColor();
+        if( mForegroundColor.size() > 0 && ( mForegroundColor[aRow] != 0u ) )
+            ImGui::PopStyleColor();
 
         ImVec2 lNewPos = ImGui::GetCursorPos();
         lNewPos.y      = lPrevPos.y + aSize.y;
@@ -222,10 +252,15 @@ namespace SE::Core
         mData.clear();
     }
 
-    ImVec2 UIStringColumn::RequiredSize() { return ImVec2{}; }
+    ImVec2 UIStringColumn::RequiredSize()
+    {
+        return ImVec2{};
+    }
 
     // void UIFloat64Column::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
     // void UIUint32Column::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
-    void UIStringColumn::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
+    void UIStringColumn::DrawContent( ImVec2 aPosition, ImVec2 aSize )
+    {
+    }
 
 } // namespace SE::Core

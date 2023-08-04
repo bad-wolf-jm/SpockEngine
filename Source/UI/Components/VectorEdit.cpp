@@ -82,7 +82,10 @@ namespace SE::Core
         ImGui::PopStyleVar( 2 );
     }
 
-    void UIVectorInputBase::OnChanged( std::function<void( math::vec4 )> aOnChanged ) { mOnChanged = aOnChanged; }
+    void UIVectorInputBase::OnChanged( std::function<void( math::vec4 )> aOnChanged )
+    {
+        mOnChanged = aOnChanged;
+    }
 
     ImVec2 UIVectorInputBase::RequiredSize()
     {

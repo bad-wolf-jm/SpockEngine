@@ -4,7 +4,10 @@
 
 namespace SE::Core
 {
-    void UIComponent::SetPadding( float aAll ) { return SetPadding( aAll, aAll, aAll, aAll ); }
+    void UIComponent::SetPadding( float aAll )
+    {
+        return SetPadding( aAll, aAll, aAll, aAll );
+    }
 
     void UIComponent::SetPadding( float aTopBottom, float aLeftRight )
     {
@@ -17,18 +20,33 @@ namespace SE::Core
         SetVerticalAlignment( aVAlignment );
     }
 
-    void UIComponent::SetHorizontalAlignment( eHorizontalAlignment const &aAlignment ) { mHAlign = aAlignment; }
-    void UIComponent::SetVerticalAlignment( eVerticalAlignment const &aAlignment ) { mVAlign = aAlignment; }
+    void UIComponent::SetHorizontalAlignment( eHorizontalAlignment const &aAlignment )
+    {
+        mHAlign = aAlignment;
+    }
+    void UIComponent::SetVerticalAlignment( eVerticalAlignment const &aAlignment )
+    {
+        mVAlign = aAlignment;
+    }
 
     void UIComponent::SetPadding( float aTop, float aBottom, float aLeft, float aRight )
     {
         mPadding = math::vec4{ aTop, aBottom, aLeft, aRight };
     }
 
-    void UIComponent::SetBackgroundColor( math::vec4 aColor ) { mBackgroundColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
+    void UIComponent::SetBackgroundColor( math::vec4 aColor )
+    {
+        mBackgroundColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w };
+    }
 
-    void UIComponent::SetFont( FontFamilyFlags aFont ) { mFont = aFont; }
-    void UIComponent::SetTooltip( UIComponent *aToolTip ) { mTooltip = aToolTip; }
+    void UIComponent::SetFont( FontFamilyFlags aFont )
+    {
+        mFont = aFont;
+    }
+    void UIComponent::SetTooltip( UIComponent *aToolTip )
+    {
+        mTooltip = aToolTip;
+    }
 
     ImVec2 UIComponent::RequiredSize()
     {
@@ -46,10 +64,19 @@ namespace SE::Core
         return ImVec2{ lWidth, lHeight };
     }
 
-    float UIComponent::GetContentOffsetX() { return mPadding.z; }
-    float UIComponent::GetContentOffsetY() { return mPadding.x; }
+    float UIComponent::GetContentOffsetX()
+    {
+        return mPadding.z;
+    }
+    float UIComponent::GetContentOffsetY()
+    {
+        return mPadding.x;
+    }
 
-    ImVec2 UIComponent::GetContentOffset() { return ImVec2{ GetContentOffsetX(), GetContentOffsetY() }; }
+    ImVec2 UIComponent::GetContentOffset()
+    {
+        return ImVec2{ GetContentOffsetX(), GetContentOffsetY() };
+    }
 
     ImVec2 UIComponent::GetContentAlignedposition( eHorizontalAlignment const &aHAlignment, eVerticalAlignment const &aVAlignment,
                                                    ImVec2 aPosition, ImVec2 aContentSize, ImVec2 aSize )
@@ -57,18 +84,30 @@ namespace SE::Core
         ImVec2 lContentPosition{};
         switch( aHAlignment )
         {
-        case eHorizontalAlignment::LEFT: lContentPosition.x = aPosition.x; break;
-        case eHorizontalAlignment::RIGHT: lContentPosition.x = aPosition.x + ( aSize.x - aContentSize.x ); break;
+        case eHorizontalAlignment::LEFT:
+            lContentPosition.x = aPosition.x;
+            break;
+        case eHorizontalAlignment::RIGHT:
+            lContentPosition.x = aPosition.x + ( aSize.x - aContentSize.x );
+            break;
         case eHorizontalAlignment::CENTER:
-        default: lContentPosition.x = aPosition.x + ( aSize.x - aContentSize.x ) * 0.5f; break;
+        default:
+            lContentPosition.x = aPosition.x + ( aSize.x - aContentSize.x ) * 0.5f;
+            break;
         }
 
         switch( aVAlignment )
         {
-        case eVerticalAlignment::TOP: lContentPosition.y = aPosition.y; break;
-        case eVerticalAlignment::BOTTOM: lContentPosition.y = aPosition.y + ( aSize.y - aContentSize.y ); break;
+        case eVerticalAlignment::TOP:
+            lContentPosition.y = aPosition.y;
+            break;
+        case eVerticalAlignment::BOTTOM:
+            lContentPosition.y = aPosition.y + ( aSize.y - aContentSize.y );
+            break;
         case eVerticalAlignment::CENTER:
-        default: lContentPosition.y = aPosition.y + ( aSize.y - aContentSize.y ) * 0.5f; break;
+        default:
+            lContentPosition.y = aPosition.y + ( aSize.y - aContentSize.y ) * 0.5f;
+            break;
         }
 
         return lContentPosition;
@@ -76,7 +115,8 @@ namespace SE::Core
 
     void UIComponent::Update( ImVec2 aPosition, ImVec2 aSize )
     {
-        if( !mIsVisible ) return;
+        if( !mIsVisible )
+            return;
 
         ImGui::PushID( (void *)this );
 
@@ -108,8 +148,12 @@ namespace SE::Core
 
         ImGui::PopID();
 
-        if( !mAllowDragDrop || !mIsEnabled ) return;
+        if( !mAllowDragDrop || !mIsEnabled )
+            return;
     }
 
-    bool IsHovered() { return ImGui::IsItemHovered(); }
+    bool IsHovered()
+    {
+        return ImGui::IsItemHovered();
+    }
 } // namespace SE::Core

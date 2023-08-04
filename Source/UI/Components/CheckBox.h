@@ -13,8 +13,14 @@ namespace SE::Core
 
         void OnClick( std::function<void()> aOnClick );
 
-        bool IsChecked() { return mIsChecked; }
-        void SetIsChecked( bool aValue ) { mIsChecked = aValue; }
+        bool IsChecked()
+        {
+            return mIsChecked;
+        }
+        void SetIsChecked( bool aValue )
+        {
+            mIsChecked = aValue;
+        }
 
       private:
         std::function<void()> mOnClick;

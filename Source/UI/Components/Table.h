@@ -14,8 +14,12 @@ namespace SE::Core
         std::vector<uint32_t>      mForegroundColor;
         std::vector<UIComponent *> mToolTip;
 
-        void PushStyles() {}
-        void PopStyles() {}
+        void PushStyles()
+        {
+        }
+        void PopStyles()
+        {
+        }
 
         UITableColumn() = default;
         UITableColumn( string_t aHeader, float aInitialSize );

@@ -2,8 +2,12 @@
 
 namespace SE::Core
 {
-    void UIZLayout::PushStyles() {}
-    void UIZLayout::PopStyles() {}
+    void UIZLayout::PushStyles()
+    {
+    }
+    void UIZLayout::PopStyles()
+    {
+    }
 
     ImVec2 UIZLayout::RequiredSize()
     {
@@ -20,7 +24,8 @@ namespace SE::Core
             else
             {
                 ImVec2 lRequiredSize{};
-                if( lItem.mItem ) lRequiredSize = lItem.mItem->RequiredSize();
+                if( lItem.mItem )
+                    lRequiredSize = lItem.mItem->RequiredSize();
                 lWidth  = math::max( lWidth, lRequiredSize.x );
                 lHeight = math::max( lHeight, lRequiredSize.y );
             }

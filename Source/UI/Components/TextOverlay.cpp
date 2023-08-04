@@ -9,8 +9,12 @@
 namespace SE::Core
 {
 
-    void UITextOverlay::PushStyles() {}
-    void UITextOverlay::PopStyles() {}
+    void UITextOverlay::PushStyles()
+    {
+    }
+    void UITextOverlay::PopStyles()
+    {
+    }
 
     static void FillUtf8Utf16( sCharacter &aOut, char *aIn )
     {
@@ -95,7 +99,8 @@ namespace SE::Core
                 i++;
             }
             break;
-            default: break;
+            default:
+                break;
             }
         }
 
@@ -103,7 +108,9 @@ namespace SE::Core
         Layout();
     }
 
-    void UITextOverlay::AddText( string_t const &aText ) {}
+    void UITextOverlay::AddText( string_t const &aText )
+    {
+    }
 
     void UITextOverlay::Clear()
     {
@@ -189,8 +196,10 @@ namespace SE::Core
             Layout();
         }
 
-        if( !mIsVisible ) return;
-        if( mLines.size() == 0 ) return;
+        if( !mIsVisible )
+            return;
+        if( mLines.size() == 0 )
+            return;
 
         ImGui::PushID( (void *)this );
         ImGui::PushStyleColor( ImGuiCol_ChildBg, ImVec4{ 0.01f, 0.01f, 0.01f, .9f } );
@@ -203,7 +212,8 @@ namespace SE::Core
         SE::Core::Engine::GetInstance()->UIContext()->PushFontFamily( FontFamilyFlags::MONOSPACE );
 
         uint32_t lFirstLine = 0;
-        if( mLines.size() >= mConsoleHeight ) lFirstLine = mLines.size() - mConsoleHeight - 1;
+        if( mLines.size() >= mConsoleHeight )
+            lFirstLine = mLines.size() - mConsoleHeight - 1;
 
         ImGui::SetScrollY( lFirstLine * mCharHeight );
 

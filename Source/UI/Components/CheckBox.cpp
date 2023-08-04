@@ -7,10 +7,17 @@ namespace SE::Core
     {
     }
 
-    void UICheckBox::PushStyles() {}
-    void UICheckBox::PopStyles() {}
+    void UICheckBox::PushStyles()
+    {
+    }
+    void UICheckBox::PopStyles()
+    {
+    }
 
-    void UICheckBox::OnClick( std::function<void()> aOnClick ) { mOnClick = aOnClick; }
+    void UICheckBox::OnClick( std::function<void()> aOnClick )
+    {
+        mOnClick = aOnClick;
+    }
 
     void UICheckBox::PushStyles( bool aEnabled )
     {
@@ -26,7 +33,8 @@ namespace SE::Core
 
     void UICheckBox::PopStyles( bool aEnabled )
     {
-        if( !aEnabled ) ImGui::PopStyleColor( 4 );
+        if( !aEnabled )
+            ImGui::PopStyleColor( 4 );
         ImGui::PopStyleVar();
     }
 

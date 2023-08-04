@@ -33,7 +33,7 @@ namespace SE::Core::UI
         colors[ImGuiCol_TabUnfocusedActive] = ImVec4( 0.03f, 0.03f, 0.03f, 1.0f );
 
         colors[ImGuiCol_TableBorderStrong] = ImVec4( .02f, 0.02f, 0.02f, 1.0f );
-        colors[ImGuiCol_TableBorderLight] = ImVec4( .045f, 0.045f, 0.045f, 1.0f );
+        colors[ImGuiCol_TableBorderLight]  = ImVec4( .045f, 0.045f, 0.045f, 1.0f );
         colors[ImGuiCol_TableHeaderBg]     = ImVec4( 0.02f, 0.02f, 0.02f, 0.0f );
         colors[ImGuiCol_TableRowBg]        = ImVec4( 0.0f, 0.0f, 0.0f, 0.0f );
         colors[ImGuiCol_TableRowBgAlt]     = ImVec4( 0.02f, 0.02f, 0.02f, 0.0f );

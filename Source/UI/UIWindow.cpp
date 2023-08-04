@@ -91,7 +91,8 @@ namespace SE::Core
 
         int lFramebufferWidth  = (int)( aDrawData->DisplaySize.x * aDrawData->FramebufferScale.x );
         int lFramebufferHeight = (int)( aDrawData->DisplaySize.y * aDrawData->FramebufferScale.y );
-        if( ( lFramebufferWidth <= 0 ) || ( lFramebufferHeight <= 0 ) ) return;
+        if( ( lFramebufferWidth <= 0 ) || ( lFramebufferHeight <= 0 ) )
+            return;
 
         if( aDrawData->TotalVtxCount > 0 )
         {
@@ -140,14 +141,17 @@ namespace SE::Core
         {
             const ImDrawCmd *lPcmd = &aDrawList->CmdBuffer[i];
 
-            if( !( (VkDescriptorSet)lPcmd->TextureId ) ) continue;
+            if( !( (VkDescriptorSet)lPcmd->TextureId ) )
+                continue;
 
             ImVec4 lClipRect = ( lPcmd->ClipRect - lOffset ) * lScale;
             if( !( ( lClipRect.x < aFbWidth ) && ( lClipRect.y < aFbHeight ) && ( lClipRect.z >= 0.0f ) && ( lClipRect.w >= 0.0f ) ) )
                 continue;
 
-            if( lClipRect.x < 0.0f ) lClipRect.x = 0.0f;
-            if( lClipRect.y < 0.0f ) lClipRect.y = 0.0f;
+            if( lClipRect.x < 0.0f )
+                lClipRect.x = 0.0f;
+            if( lClipRect.y < 0.0f )
+                lClipRect.y = 0.0f;
 
             aRenderContext->SetScissor( { (int32_t)( lClipRect.x ), (int32_t)( lClipRect.y ) },
                                         { (uint32_t)( lClipRect.z - lClipRect.x ), (uint32_t)( lClipRect.w - lClipRect.y ) } );
@@ -168,6 +172,8 @@ namespace SE::Core
         mRenderContext->Present();
     }
 
-    UIWindow::~UIWindow() {}
+    UIWindow::~UIWindow()
+    {
+    }
 
 } // namespace SE::Core

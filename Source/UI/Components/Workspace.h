@@ -17,9 +17,15 @@ namespace SE::Core
         UIWorkspaceDocument()                              = default;
         UIWorkspaceDocument( UIWorkspaceDocument const & ) = default;
 
-        void DoOpen() { mOpen = true; }
+        void DoOpen()
+        {
+            mOpen = true;
+        }
 
-        void DoQueueClose() { mWantClose = true; }
+        void DoQueueClose()
+        {
+            mWantClose = true;
+        }
 
         void DoForceClose()
         {
@@ -28,7 +34,10 @@ namespace SE::Core
         }
 
         std::function<bool()> mDoSave;
-        void                  DoSave() { mDirty = mDoSave ? mDoSave() : false; }
+        void                  DoSave()
+        {
+            mDirty = mDoSave ? mDoSave() : false;
+        }
 
         void   PushStyles();
         void   PopStyles();

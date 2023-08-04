@@ -9,18 +9,29 @@ namespace SE::Core
     {
         float lTextWidth = 0.0f;
 
-        for( auto const &lItem : mItems ) lTextWidth = math::max( ImGui::CalcTextSize( lItem.c_str() ).x, lTextWidth );
+        for( auto const &lItem : mItems )
+            lTextWidth = math::max( ImGui::CalcTextSize( lItem.c_str() ).x, lTextWidth );
 
         const float lArrowSize = ImGui::GetFrameHeight();
         return ImVec2{ lTextWidth + lArrowSize, ImGui::GetFrameHeight() };
     }
 
-    void UIComboBox::PushStyles() {}
-    void UIComboBox::PopStyles() {}
+    void UIComboBox::PushStyles()
+    {
+    }
+    void UIComboBox::PopStyles()
+    {
+    }
 
-    void UIComboBox::OnChange( std::function<void( int aIndex )> aOnChange ) { mOnChange = aOnChange; }
+    void UIComboBox::OnChange( std::function<void( int aIndex )> aOnChange )
+    {
+        mOnChange = aOnChange;
+    }
 
-    void UIComboBox::SetItemList( std::vector<string_t> aItems ) { mItems = aItems; }
+    void UIComboBox::SetItemList( std::vector<string_t> aItems )
+    {
+        mItems = aItems;
+    }
 
     void UIComboBox::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
@@ -31,14 +42,16 @@ namespace SE::Core
         ImGui::SetCursorPos(
             GetContentAlignedposition( eHorizontalAlignment::LEFT, eVerticalAlignment::CENTER, aPosition, lItemSize, aSize ) );
 
-        if( mCurrentItem >= mItems.size() ) mCurrentItem = mItems.size() - 1;
+        if( mCurrentItem >= mItems.size() )
+            mCurrentItem = mItems.size() - 1;
 
         bool lBeginCombo = false;
 
         ImGui::SetNextItemWidth( aSize.x );
         if( ( mItems.size() == 0 ) )
         {
-            if( ImGui::BeginCombo( "##", "No Items" ) ) ImGui::EndCombo();
+            if( ImGui::BeginCombo( "##", "No Items" ) )
+                ImGui::EndCombo();
         }
         else if( ImGui::BeginCombo( "##", mItems[mCurrentItem].c_str() ) )
         {
@@ -52,10 +65,12 @@ namespace SE::Core
                     mCurrentItem = n;
                     lChanged |= !lIsSelected;
                 }
-                if( lIsSelected ) ImGui::SetItemDefaultFocus();
+                if( lIsSelected )
+                    ImGui::SetItemDefaultFocus();
             }
 
-            if( lChanged && mOnChange && lEnabled ) mOnChange( mCurrentItem );
+            if( lChanged && mOnChange && lEnabled )
+                mOnChange( mCurrentItem );
 
             ImGui::EndCombo();
         }

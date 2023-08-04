@@ -24,12 +24,14 @@ namespace SE::Core
         if( !aName.substr( 0, 1 ).compare( "." ) || !aName.substr( 0, 2 ).compare( "__" ) )
             SetTextColor( math::vec4{ 0.15, 0.15, 0.15, 1.0 } );
 
-        if( IsLeaf() ) SetIcon( mDefaultFile.get() );
+        if( IsLeaf() )
+            SetIcon( mDefaultFile.get() );
     }
 
     bool UIFileTreeNode::IsLeaf()
     {
-        if( mParent == nullptr ) return false;
+        if( mParent == nullptr )
+            return false;
 
         return fs::is_regular_file( mPath / mName );
     }
@@ -57,9 +59,11 @@ namespace SE::Core
                        [&]( auto const &s1, auto const &s2 )
                        { return s1.filename().string().compare( s2.filename().string() ) <= 0; } );
 
-            for( auto const &F : lFolders ) Add( F );
+            for( auto const &F : lFolders )
+                Add( F );
 
-            for( auto const &F : lFiles ) Add( F );
+            for( auto const &F : lFiles )
+                Add( F );
         }
 
         return UITreeViewNode::Children();
@@ -109,13 +113,20 @@ namespace SE::Core
 
         return lNewNode;
     }
-    void UIFileTree::Remove( path_t const &aPath ) { ( (UIFileTreeNode *)mRoot )->Remove( aPath ); }
+    void UIFileTree::Remove( path_t const &aPath )
+    {
+        ( (UIFileTreeNode *)mRoot )->Remove( aPath );
+    }
 
-    void UIFileTree::OnSelected( std::function<void( path_t const &aPath )> aOnSelected ) { mOnSelected = aOnSelected; }
+    void UIFileTree::OnSelected( std::function<void( path_t const &aPath )> aOnSelected )
+    {
+        mOnSelected = aOnSelected;
+    }
 
     void UIFileTree::HandleOnSelected( UIFileTreeNode *a )
     {
-        if( mOnSelected ) mOnSelected( a->GetPath() );
+        if( mOnSelected )
+            mOnSelected( a->GetPath() );
     }
 
 } // namespace SE::Core

@@ -43,8 +43,14 @@ namespace SE::Core
 
         void SetOrientation( eBoxLayoutOrientation aValue );
         void SetItemSpacing( float aItemSpacing );
-        void SetSimple( bool aSimple ) { mSimple = aSimple; }
-        bool IsSimple( bool aSimple ) { return mSimple; }
+        void SetSimple( bool aSimple )
+        {
+            mSimple = aSimple;
+        }
+        bool IsSimple( bool aSimple )
+        {
+            return mSimple;
+        }
 
         void Add( UIComponent *aChild, bool aExpand, bool aFill, eHorizontalAlignment const &aHAlignment,
                   eVerticalAlignment const &aVAlignment );

@@ -17,12 +17,25 @@ namespace SE::Core
         mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mInUse = true;
     }
 
-    void UIPlot::PushStyles() {}
-    void UIPlot::PopStyles() {}
+    void UIPlot::PushStyles()
+    {
+    }
+    void UIPlot::PopStyles()
+    {
+    }
 
-    void UIPlot::Add( Ref<UIPlotData> aPlot ) { mElements.push_back( aPlot.get() ); };
-    void UIPlot::Add( UIPlotData *aPlot ) { mElements.push_back( aPlot ); };
-    void UIPlot::Clear() { mElements.clear(); };
+    void UIPlot::Add( Ref<UIPlotData> aPlot )
+    {
+        mElements.push_back( aPlot.get() );
+    };
+    void UIPlot::Add( UIPlotData *aPlot )
+    {
+        mElements.push_back( aPlot );
+    };
+    void UIPlot::Clear()
+    {
+        mElements.clear();
+    };
     void UIPlot::ConfigureLegend( math::vec2 aLegendPadding, math::vec2 aLegendInnerPadding, math::vec2 aLegendSpacing )
     {
         mLegendPadding      = ImVec2{ aLegendPadding.x, aLegendPadding.y };
@@ -30,7 +43,10 @@ namespace SE::Core
         mLegendSpacing      = ImVec2{ aLegendSpacing.x, aLegendSpacing.y };
     }
 
-    ImVec2 UIPlot::RequiredSize() { return ImVec2{ 150.0f, 150.0f }; }
+    ImVec2 UIPlot::RequiredSize()
+    {
+        return ImVec2{ 150.0f, 150.0f };
+    }
 
     void UIPlot::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
@@ -42,7 +58,8 @@ namespace SE::Core
         ImGui::SetCursorPos( aPosition );
         ImPlot::PushStyleVar( ImPlotStyleVar_PlotPadding, ImVec2( 0, 0 ) );
 
-        for( auto &lAxisConfig : mAxisConfiguration ) lAxisConfig.mInUse = false;
+        for( auto &lAxisConfig : mAxisConfiguration )
+            lAxisConfig.mInUse = false;
         mAxisConfiguration[static_cast<int>( UIPlotAxis::X1 )].mInUse = true;
         mAxisConfiguration[static_cast<int>( UIPlotAxis::Y1 )].mInUse = true;
 
@@ -75,7 +92,8 @@ namespace SE::Core
             uint32_t lIndex = 0;
             for( auto const &lPlotElement : mElements )
             {
-                if( lPlotElement != nullptr ) lPlotElement->Render( this );
+                if( lPlotElement != nullptr )
+                    lPlotElement->Render( this );
             }
             ImPlot::EndPlot();
         }
@@ -91,11 +109,13 @@ namespace SE::Core
 
         ImPlot::SetAxes( static_cast<ImAxis>( mXAxis ), static_cast<ImAxis>( mYAxis ) );
 
-        if( mThickness != -1.0f ) ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
+        if( mThickness != -1.0f )
+            ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
         ImPlot::PushStyleColor( ImPlotCol_Line, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w } );
         ImPlot::PlotLine( mLegend.c_str(), mX.data(), mY.data(), mX.size() / lDownSample, mOffset, sizeof( double ) * lDownSample );
         ImPlot::PopStyleColor();
-        if( mThickness != -1.0f ) ImPlot::PopStyleVar();
+        if( mThickness != -1.0f )
+            ImPlot::PopStyleVar();
     }
 
     void UIFloat64ScatterPlot::Render( UIPlot *aParentPlot )
@@ -108,11 +128,13 @@ namespace SE::Core
 
         ImPlot::SetAxes( static_cast<ImAxis>( mXAxis ), static_cast<ImAxis>( mYAxis ) );
 
-        if( mThickness != -1.0f ) ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
+        if( mThickness != -1.0f )
+            ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
         ImPlot::PushStyleColor( ImPlotCol_Line, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w } );
         ImPlot::PlotScatter( mLegend.c_str(), mX.data(), mY.data(), mX.size() / lDownSample, mOffset, sizeof( double ) * lDownSample );
         ImPlot::PopStyleColor();
-        if( mThickness != -1.0f ) ImPlot::PopStyleVar();
+        if( mThickness != -1.0f )
+            ImPlot::PopStyleVar();
     }
 
     void UIVLinePlot::Render( UIPlot *aParentPlot )
@@ -121,11 +143,13 @@ namespace SE::Core
 
         ImPlot::SetAxes( static_cast<ImAxis>( mXAxis ), static_cast<ImAxis>( mYAxis ) );
 
-        if( mThickness != -1.0f ) ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
+        if( mThickness != -1.0f )
+            ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
         ImPlot::PushStyleColor( ImPlotCol_Line, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w } );
         ImPlot::PlotVLines( lPlotName.c_str(), mX.data(), mX.size(), 0 );
         ImPlot::PopStyleColor();
-        if( mThickness != -1.0f ) ImPlot::PopStyleVar();
+        if( mThickness != -1.0f )
+            ImPlot::PopStyleVar();
     }
 
     void UIHLinePlot::Render( UIPlot *aParentPlot )
@@ -134,13 +158,15 @@ namespace SE::Core
 
         ImPlot::SetAxes( static_cast<ImAxis>( mXAxis ), static_cast<ImAxis>( mYAxis ) );
 
-        if( mThickness != -1.0f ) ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
+        if( mThickness != -1.0f )
+            ImPlot::PushStyleVar( ImPlotStyleVar_LineWeight, mThickness );
 
         ImPlot::PushStyleColor( ImPlotCol_Line, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w } );
         ImPlot::PlotHLines( lPlotName.c_str(), mY.data(), mY.size(), 0 );
         ImPlot::PopStyleColor();
 
-        if( mThickness != -1.0f ) ImPlot::PopStyleVar();
+        if( mThickness != -1.0f )
+            ImPlot::PopStyleVar();
     }
 
     void UIAxisTag::Render( UIPlot *aParentPlot )
@@ -152,11 +178,15 @@ namespace SE::Core
         {
         case UIPlotAxis::X1:
         case UIPlotAxis::X2:
-        case UIPlotAxis::X3: ImPlot::TagX( mX, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w }, mText.c_str(), true ); break;
+        case UIPlotAxis::X3:
+            ImPlot::TagX( mX, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w }, mText.c_str(), true );
+            break;
 
         case UIPlotAxis::Y1:
         case UIPlotAxis::Y2:
-        case UIPlotAxis::Y3: ImPlot::TagY( mX, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w }, mText.c_str(), true ); break;
+        case UIPlotAxis::Y3:
+            ImPlot::TagY( mX, ImVec4{ mColor.x, mColor.y, mColor.z, mColor.w }, mText.c_str(), true );
+            break;
         }
     }
 

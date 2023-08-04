@@ -12,7 +12,10 @@ namespace SE::Core
     {
     }
 
-    ImVec2 UIImage::RequiredSize() { return mSize; }
+    ImVec2 UIImage::RequiredSize()
+    {
+        return mSize;
+    }
 
     void UIImage::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {

@@ -13,14 +13,30 @@ namespace SE::Core
     {
     }
 
-    void UIMenuItem::PushStyles() {}
-    void UIMenuItem::PopStyles() {}
+    void UIMenuItem::PushStyles()
+    {
+    }
+    void UIMenuItem::PopStyles()
+    {
+    }
 
-    void UIMenuItem::SetText( string_t const &aText ) { mText = aText; }
-    void UIMenuItem::SetShortcut( string_t const &aShortcut ) { mShortcut = aShortcut; }
-    void UIMenuItem::SetTextColor( math::vec4 aColor ) { mTextColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
+    void UIMenuItem::SetText( string_t const &aText )
+    {
+        mText = aText;
+    }
+    void UIMenuItem::SetShortcut( string_t const &aShortcut )
+    {
+        mShortcut = aShortcut;
+    }
+    void UIMenuItem::SetTextColor( math::vec4 aColor )
+    {
+        mTextColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w };
+    }
 
-    void UIMenuItem::OnTrigger( std::function<void()> aOnTrigger ) { mOnTrigger = aOnTrigger; }
+    void UIMenuItem::OnTrigger( std::function<void()> aOnTrigger )
+    {
+        mOnTrigger = aOnTrigger;
+    }
 
     ImVec2 UIMenuItem::RequiredSize()
     {
@@ -33,7 +49,8 @@ namespace SE::Core
     {
         bool lTextColorSet =
             ( ( mTextColor.x != 0.0f ) || ( mTextColor.y != 0.0f ) || ( mTextColor.z != 0.0f ) || ( mTextColor.w != 0.0f ) );
-        if( lTextColorSet ) ImGui::PushStyleColor( ImGuiCol_Text, mTextColor );
+        if( lTextColorSet )
+            ImGui::PushStyleColor( ImGuiCol_Text, mTextColor );
 
         const char *lShortcut = mShortcut.empty() ? nullptr : mShortcut.c_str();
 
@@ -42,14 +59,22 @@ namespace SE::Core
         bool lSelected = false;
         ImGui::PushStyleVar( ImGuiStyleVar_ItemSpacing, ImVec2( 20.0f, 0.0f ) );
         ImGui::SetCursorPosX( ImGui::GetCursorPosX() + 30.0f );
-        if( ImGui::MenuItem( mText.c_str(), lShortcut, &lSelected ) && mOnTrigger && lEnabled ) mOnTrigger();
+        if( ImGui::MenuItem( mText.c_str(), lShortcut, &lSelected ) && mOnTrigger && lEnabled )
+            mOnTrigger();
         ImGui::PopStyleVar();
 
-        if( lTextColorSet ) ImGui::PopStyleColor();
+        if( lTextColorSet )
+            ImGui::PopStyleColor();
     }
 
-    void UIMenuSeparator::PushStyles() { ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2( 0.0f, 0.0f ) ); }
-    void UIMenuSeparator::PopStyles() { ImGui::PopStyleVar(); }
+    void UIMenuSeparator::PushStyles()
+    {
+        ImGui::PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2( 0.0f, 0.0f ) );
+    }
+    void UIMenuSeparator::PopStyles()
+    {
+        ImGui::PopStyleVar();
+    }
 
     ImVec2 UIMenuSeparator::RequiredSize()
     {
@@ -101,7 +126,8 @@ namespace SE::Core
     {
         bool lTextColorSet =
             ( ( mTextColor.x != 0.0f ) || ( mTextColor.y != 0.0f ) || ( mTextColor.z != 0.0f ) || ( mTextColor.w != 0.0f ) );
-        if( lTextColorSet ) ImGui::PushStyleColor( ImGuiCol_Text, mTextColor );
+        if( lTextColorSet )
+            ImGui::PushStyleColor( ImGuiCol_Text, mTextColor );
 
         if( ImGui::BeginMenu( mText.c_str(), &mIsEnabled ) )
         {
@@ -114,7 +140,8 @@ namespace SE::Core
             ImGui::EndMenu();
         }
 
-        if( lTextColorSet ) ImGui::PopStyleColor();
+        if( lTextColorSet )
+            ImGui::PopStyleColor();
     }
 
     UIMenuItem *UIMenu::AddActionRaw( string_t const &aText, string_t const &aShortcut )
@@ -162,5 +189,8 @@ namespace SE::Core
         return lNewItem;
     }
 
-    void UIMenu::Update() { UIComponent::Update( ImGui::GetCursorPos(), ImVec2{} ); }
+    void UIMenu::Update()
+    {
+        UIComponent::Update( ImGui::GetCursorPos(), ImVec2{} );
+    }
 } // namespace SE::Core

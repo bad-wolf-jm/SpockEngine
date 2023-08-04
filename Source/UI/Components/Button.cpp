@@ -13,12 +13,22 @@ namespace SE::Core
     {
     }
 
-    void UIButton::PushStyles() {}
-    void UIButton::PopStyles() {}
+    void UIButton::PushStyles()
+    {
+    }
+    void UIButton::PopStyles()
+    {
+    }
 
-    void UIButton::OnClick( std::function<void()> aOnClick ) { mOnClick = aOnClick; }
+    void UIButton::OnClick( std::function<void()> aOnClick )
+    {
+        mOnClick = aOnClick;
+    }
 
-    void UIButton::SetText( string_t const &aText ) { UILabel::SetText( aText ); }
+    void UIButton::SetText( string_t const &aText )
+    {
+        UILabel::SetText( aText );
+    }
 
     void UIButton::PushStyles( bool aEnabled )
     {
@@ -33,7 +43,8 @@ namespace SE::Core
 
     void UIButton::PopStyles( bool aEnabled )
     {
-        if( !aEnabled ) ImGui::PopStyleColor( 4 );
+        if( !aEnabled )
+            ImGui::PopStyleColor( 4 );
     }
 
     ImVec2 UIButton::RequiredSize()
@@ -55,7 +66,8 @@ namespace SE::Core
 
         ImGui::SetCursorPos( aPosition );
 
-        if( ImGui::Button( mText.c_str(), aSize ) && mOnClick && lEnabled ) mOnClick();
+        if( ImGui::Button( mText.c_str(), aSize ) && mOnClick && lEnabled )
+            mOnClick();
 
         PopStyles( lEnabled );
     }

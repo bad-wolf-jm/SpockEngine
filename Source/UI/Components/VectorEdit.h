@@ -17,7 +17,10 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   OnChanged( std::function<void( math::vec4 )> aOnChanged );
-        void   SetFormat( string_t const &aFormat ) { mFormat = aFormat; }
+        void   SetFormat( string_t const &aFormat )
+        {
+            mFormat = aFormat;
+        }
 
       protected:
         int        mDimension{};
@@ -46,9 +49,18 @@ namespace SE::Core
         {
         }
 
-        math::vec2 Value() { return math::vec2{ mValues.x, mValues.y }; }
-        void       SetValue( math::vec2 const &aValue ) { mValues = math::vec4{ aValue, 0.0f, 0.0f }; }
-        void       SetResetValues( math::vec2 const &aValue ) { mResetValues = math::vec4{ aValue, 0.0f, 0.0f }; }
+        math::vec2 Value()
+        {
+            return math::vec2{ mValues.x, mValues.y };
+        }
+        void SetValue( math::vec2 const &aValue )
+        {
+            mValues = math::vec4{ aValue, 0.0f, 0.0f };
+        }
+        void SetResetValues( math::vec2 const &aValue )
+        {
+            mResetValues = math::vec4{ aValue, 0.0f, 0.0f };
+        }
     };
 
     class UIVec3Input : public UIVectorInputBase
@@ -59,9 +71,18 @@ namespace SE::Core
         {
         }
 
-        math::vec3 Value() { return math::vec3{ mValues.x, mValues.y, mValues.z }; }
-        void       SetValue( math::vec3 const &aValue ) { mValues = math::vec4{ aValue, 0.0f }; }
-        void       SetResetValues( math::vec3 const &aValue ) { mResetValues = math::vec4{ aValue, 0.0f }; }
+        math::vec3 Value()
+        {
+            return math::vec3{ mValues.x, mValues.y, mValues.z };
+        }
+        void SetValue( math::vec3 const &aValue )
+        {
+            mValues = math::vec4{ aValue, 0.0f };
+        }
+        void SetResetValues( math::vec3 const &aValue )
+        {
+            mResetValues = math::vec4{ aValue, 0.0f };
+        }
     };
 
     class UIVec4Input : public UIVectorInputBase
@@ -72,9 +93,18 @@ namespace SE::Core
         {
         }
 
-        math::vec4 Value() { return mValues; }
-        void       SetValue( math::vec4 const &aValue ) { mValues = aValue; }
-        void       SetResetValues( math::vec4 const &aValue ) { mResetValues = aValue; }
+        math::vec4 Value()
+        {
+            return mValues;
+        }
+        void SetValue( math::vec4 const &aValue )
+        {
+            mValues = aValue;
+        }
+        void SetResetValues( math::vec4 const &aValue )
+        {
+            mResetValues = aValue;
+        }
     };
 
 } // namespace SE::Core

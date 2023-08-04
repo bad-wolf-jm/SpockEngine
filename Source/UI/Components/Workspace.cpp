@@ -6,22 +6,39 @@
 namespace SE::Core
 {
 
-    void   UIWorkspaceDocument::PushStyles() {}
-    void   UIWorkspaceDocument::PopStyles() {}
-    ImVec2 UIWorkspaceDocument::RequiredSize() { return ImVec2{}; }
-    void   UIWorkspaceDocument::DrawContent( ImVec2 aPosition, ImVec2 aSize ) {}
-    void   UIWorkspaceDocument::SetContent( UIComponent *aContent ) { mContent = aContent; }
+    void UIWorkspaceDocument::PushStyles()
+    {
+    }
+    void UIWorkspaceDocument::PopStyles()
+    {
+    }
+    ImVec2 UIWorkspaceDocument::RequiredSize()
+    {
+        return ImVec2{};
+    }
+    void UIWorkspaceDocument::DrawContent( ImVec2 aPosition, ImVec2 aSize )
+    {
+    }
+    void UIWorkspaceDocument::SetContent( UIComponent *aContent )
+    {
+        mContent = aContent;
+    }
 
     void UIWorkspaceDocument::Update()
     {
         ImVec2 lContentSize     = ImGui::GetContentRegionAvail();
         ImVec2 lContentPosition = ImGui::GetCursorPos();
 
-        if( mContent != nullptr ) mContent->Update( lContentPosition, lContentSize );
+        if( mContent != nullptr )
+            mContent->Update( lContentPosition, lContentSize );
     }
 
-    void UIWorkspace::PushStyles() {}
-    void UIWorkspace::PopStyles() {}
+    void UIWorkspace::PushStyles()
+    {
+    }
+    void UIWorkspace::PopStyles()
+    {
+    }
 
     ImVec2 UIWorkspace::RequiredSize()
     {
@@ -30,7 +47,10 @@ namespace SE::Core
         return lTextSize;
     }
 
-    void UIWorkspace::Add( UIWorkspaceDocument *aDocument ) { mDocuments.push_back( aDocument ); }
+    void UIWorkspace::Add( UIWorkspaceDocument *aDocument )
+    {
+        mDocuments.push_back( aDocument );
+    }
     void UIWorkspace::Add( Ref<UIWorkspaceDocument> aDocument )
     {
         Add( aDocument.get() );
@@ -46,7 +66,8 @@ namespace SE::Core
             for( int i = 0; i < mDocuments.size(); i++ )
             {
                 auto &lDocument = mDocuments[i];
-                if( !lDocument->mOpen && lDocument->mOpenPrev ) ImGui::SetTabItemClosed( lDocument->mName.c_str() );
+                if( !lDocument->mOpen && lDocument->mOpenPrev )
+                    ImGui::SetTabItemClosed( lDocument->mName.c_str() );
                 lDocument->mOpenPrev = lDocument->mOpen;
             }
 
@@ -54,7 +75,8 @@ namespace SE::Core
             for( int i = 0; i < mDocuments.size(); i++ )
             {
                 auto lDocument = mDocuments[i];
-                if( !lDocument->mOpen ) continue;
+                if( !lDocument->mOpen )
+                    continue;
 
                 ImGuiTabItemFlags lCurrentTabFlags = ( lDocument->mDirty ? ImGuiTabItemFlags_UnsavedDocument : 0 );
 
@@ -89,12 +111,14 @@ namespace SE::Core
             if( lUnsavedDocumentCount == 0 )
             {
                 // Close documents when all are unsaved
-                for( int n = 0; n < mCloseQueue.size(); n++ ) mCloseQueue[n]->DoForceClose();
+                for( int n = 0; n < mCloseQueue.size(); n++ )
+                    mCloseQueue[n]->DoForceClose();
                 UpdateDocumentList();
             }
             else
             {
-                if( !ImGui::IsPopupOpen( "Save?" ) ) ImGui::OpenPopup( "Save?" );
+                if( !ImGui::IsPopupOpen( "Save?" ) )
+                    ImGui::OpenPopup( "Save?" );
                 if( ImGui::BeginPopupModal( "Save?", NULL, ImGuiWindowFlags_AlwaysAutoResize ) )
                 {
                     ImGui::Text( "Save change to the following items?" );
@@ -102,7 +126,8 @@ namespace SE::Core
                     if( ImGui::BeginChildFrame( ImGui::GetID( "frame" ), ImVec2( -FLT_MIN, 6.25f * item_height ) ) )
                     {
                         for( int n = 0; n < mCloseQueue.size(); n++ )
-                            if( mCloseQueue[n]->mDirty ) ImGui::Text( "%s", mCloseQueue[n]->mName );
+                            if( mCloseQueue[n]->mDirty )
+                                ImGui::Text( "%s", mCloseQueue[n]->mName );
                         ImGui::EndChildFrame();
                     }
 
@@ -122,7 +147,8 @@ namespace SE::Core
                     ImGui::SameLine();
                     if( ImGui::Button( "No", button_size ) )
                     {
-                        for( int n = 0; n < mCloseQueue.size(); n++ ) mCloseQueue[n]->DoForceClose();
+                        for( int n = 0; n < mCloseQueue.size(); n++ )
+                            mCloseQueue[n]->DoForceClose();
                         UpdateDocumentList();
                         // mCloseQueue.clear();
                         ImGui::CloseCurrentPopup();
@@ -148,7 +174,8 @@ namespace SE::Core
 
         mDocuments = std::move( lOpenedDocuments );
 
-        if( mOnCloseDocuments ) mOnCloseDocuments( mCloseQueue );
+        if( mOnCloseDocuments )
+            mOnCloseDocuments( mCloseQueue );
         mCloseQueue.clear();
     }
 } // namespace SE::Core

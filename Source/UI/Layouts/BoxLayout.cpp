@@ -8,8 +8,12 @@ namespace SE::Core
     {
     }
 
-    void UIBoxLayout::PushStyles() {}
-    void UIBoxLayout::PopStyles() {}
+    void UIBoxLayout::PushStyles()
+    {
+    }
+    void UIBoxLayout::PopStyles()
+    {
+    }
 
     ImVec2 UIBoxLayout::RequiredSize()
     {
@@ -18,7 +22,8 @@ namespace SE::Core
 
         for( auto const &lItem : mChildren )
         {
-            if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) ) continue;
+            if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) )
+                continue;
 
             if( lItem.mIsSeparator )
             {
@@ -38,7 +43,8 @@ namespace SE::Core
             ImVec2 lRequiredSize{};
             if( lItem.mFixedSize > 0.0f )
             {
-                if( lItem.mItem ) lRequiredSize = lItem.mItem->RequiredSize();
+                if( lItem.mItem )
+                    lRequiredSize = lItem.mItem->RequiredSize();
 
                 if( mOrientation == eBoxLayoutOrientation::HORIZONTAL )
                 {
@@ -54,7 +60,8 @@ namespace SE::Core
             else
             {
 
-                if( lItem.mItem ) lRequiredSize = lItem.mItem->RequiredSize();
+                if( lItem.mItem )
+                    lRequiredSize = lItem.mItem->RequiredSize();
 
                 if( mOrientation == eBoxLayoutOrientation::HORIZONTAL )
                 {
@@ -72,9 +79,15 @@ namespace SE::Core
         return ImVec2{ lWidth, lHeight } + UIComponent::RequiredSize();
     }
 
-    void UIBoxLayout::SetOrientation( eBoxLayoutOrientation aValue ) { mOrientation = aValue; }
+    void UIBoxLayout::SetOrientation( eBoxLayoutOrientation aValue )
+    {
+        mOrientation = aValue;
+    }
 
-    void UIBoxLayout::SetItemSpacing( float aItemSpacing ) { mItemSpacing = aItemSpacing; }
+    void UIBoxLayout::SetItemSpacing( float aItemSpacing )
+    {
+        mItemSpacing = aItemSpacing;
+    }
 
     void UIBoxLayout::Add( UIComponent *aChild, bool aExpand, bool aFill )
     {
@@ -104,7 +117,10 @@ namespace SE::Core
                                             eVerticalAlignment::CENTER, ImVec4{ 1.0f, 0.0f, 0.0f, 1.0f } } );
     }
 
-    void UIBoxLayout::Clear() { mChildren.clear(); }
+    void UIBoxLayout::Clear()
+    {
+        mChildren.clear();
+    }
 
     void UIBoxLayout::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
@@ -119,7 +135,8 @@ namespace SE::Core
 
         for( auto const &lItem : lVisibleChildren )
         {
-            if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) ) continue;
+            if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) )
+                continue;
 
             if( lItem.mIsSeparator )
             {
@@ -155,7 +172,8 @@ namespace SE::Core
             ImVec2 lItemPosition{};
             float  lPositionStep = 0.0f;
 
-            if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) ) continue;
+            if( ( lItem.mItem != nullptr ) && ( !lItem.mItem->mIsVisible ) )
+                continue;
 
             if( lItem.mExpand && !( lItem.mFixedSize > 0.0f ) )
             {

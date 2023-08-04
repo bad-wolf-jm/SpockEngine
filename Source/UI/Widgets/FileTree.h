@@ -22,7 +22,10 @@ namespace SE::Core
         void            Remove( path_t const &aPath );
 
         std::vector<UITreeViewNode *> const &Children();
-        path_t const& GetPath() { return mFullPath; }
+        path_t const                        &GetPath()
+        {
+            return mFullPath;
+        }
 
       protected:
         path_t   mPath;

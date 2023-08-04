@@ -40,7 +40,7 @@ namespace SE::Core
                   eHorizontalAlignment const &aHAlignment, eVerticalAlignment const &aVAlignment );
 
         ImVec2 RequiredSize();
-        
+
       protected:
         std::vector<ZLayoutItem> mChildren;
 
@@ -48,6 +48,6 @@ namespace SE::Core
         void PushStyles();
         void PopStyles();
 
-        void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
+        void DrawContent( ImVec2 aPosition, ImVec2 aSize );
     };
 } // namespace SE::Core

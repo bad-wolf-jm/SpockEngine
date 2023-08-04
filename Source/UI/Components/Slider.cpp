@@ -10,9 +10,15 @@ namespace SE::Core
         ImGui::PushStyleColor( ImGuiCol_FrameBgHovered, ImVec4{ .04f, 0.04f, 0.04f, 1.0f } );
     }
 
-    void UISlider::PopStyles() { ImGui::PopStyleColor( 3 ); }
+    void UISlider::PopStyles()
+    {
+        ImGui::PopStyleColor( 3 );
+    }
 
-    ImVec2 UISlider::RequiredSize() { return ImVec2{ 30, 30 }; }
+    ImVec2 UISlider::RequiredSize()
+    {
+        return ImVec2{ 30, 30 };
+    }
 
     void UISlider::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {

@@ -3,10 +3,17 @@
 
 namespace SE::Core
 {
-    void UIColorButton::PushStyles() {}
-    void UIColorButton::PopStyles() {}
+    void UIColorButton::PushStyles()
+    {
+    }
+    void UIColorButton::PopStyles()
+    {
+    }
 
-    ImVec2 UIColorButton::RequiredSize() { return ImVec2{ 30, 30 }; }
+    ImVec2 UIColorButton::RequiredSize()
+    {
+        return ImVec2{ 30, 30 };
+    }
 
     void UIColorButton::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {

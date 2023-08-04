@@ -46,7 +46,16 @@ namespace SE::Core
             }
         }
     }
-    void UIPropertyValue::SetValue( string_t aValue ) { mValue->SetText( aValue ); }
-    void UIPropertyValue::SetValueFont( FontFamilyFlags aFont ) { mValue->mFont = aFont; }
-    void UIPropertyValue::SetNameFont( FontFamilyFlags aFont ) { mName->mFont = aFont; }
+    void UIPropertyValue::SetValue( string_t aValue )
+    {
+        mValue->SetText( aValue );
+    }
+    void UIPropertyValue::SetValueFont( FontFamilyFlags aFont )
+    {
+        mValue->mFont = aFont;
+    }
+    void UIPropertyValue::SetNameFont( FontFamilyFlags aFont )
+    {
+        mName->mFont = aFont;
+    }
 } // namespace SE::Core

@@ -19,7 +19,7 @@ namespace SE::Core
         void Update();
 
       protected:
-        string_t  mTitle;
+        string_t     mTitle;
         UIComponent *mContent = nullptr;
 
         float mWidth         = 0.0f;

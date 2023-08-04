@@ -7,18 +7,40 @@ namespace SE::Core
     {
     }
 
-    void UIImageToggleButton::PushStyles() {}
-    void UIImageToggleButton::PopStyles() {}
+    void UIImageToggleButton::PushStyles()
+    {
+    }
+    void UIImageToggleButton::PopStyles()
+    {
+    }
 
-    void UIImageToggleButton::OnClick( std::function<bool( bool )> aOnChange ) { mOnClicked = aOnChange; }
-    void UIImageToggleButton::OnChanged( std::function<void()> aOnChanged ) { mOnChanged = aOnChanged; }
+    void UIImageToggleButton::OnClick( std::function<bool( bool )> aOnChange )
+    {
+        mOnClicked = aOnChange;
+    }
+    void UIImageToggleButton::OnChanged( std::function<void()> aOnChanged )
+    {
+        mOnChanged = aOnChanged;
+    }
 
-    void UIImageToggleButton::SetActiveImage( UIBaseImage *aImage ) { mActiveImage = aImage; }
+    void UIImageToggleButton::SetActiveImage( UIBaseImage *aImage )
+    {
+        mActiveImage = aImage;
+    }
 
-    void UIImageToggleButton::SetInactiveImage( UIBaseImage *aImage ) { mInactiveImage = aImage; }
+    void UIImageToggleButton::SetInactiveImage( UIBaseImage *aImage )
+    {
+        mInactiveImage = aImage;
+    }
 
-    bool UIImageToggleButton::IsActive() { return mActivated; }
-    void UIImageToggleButton::SetActive( bool aValue ) { mActivated = aValue; }
+    bool UIImageToggleButton::IsActive()
+    {
+        return mActivated;
+    }
+    void UIImageToggleButton::SetActive( bool aValue )
+    {
+        mActivated = aValue;
+    }
 
     void UIImageToggleButton::PushStyles( bool aEnabled )
     {
