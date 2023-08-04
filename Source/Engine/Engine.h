@@ -17,9 +17,9 @@
 
 // #include "Core/Optix/OptixContext.h"
 #include "Graphics/Interface/IWindow.h"
-#include "Graphics/Vulkan/VkSwapChain.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Graphics/Vulkan/VkRenderContext.h"
+#include "Graphics/Vulkan/VkSwapChain.h"
 #include "Graphics/Vulkan/VkSwapChainRenderContext.h"
 // #include "Core/Optix/OptixContext.h"
 /** @brief */
@@ -91,13 +91,28 @@ namespace SE::Core
         /** @brief Retrieved the underlying application window. */
         GLFWwindow *GetMainApplicationWindow();
 
-        math::ivec2 GetViewportSize() { return mViewportClient->GetFramebufferSize(); }
+        math::ivec2 GetViewportSize()
+        {
+            return mViewportClient->GetFramebufferSize();
+        }
 
-        SE::Graphics::Ref<IGraphicContext> GetGraphicContext() { return mGraphicContext; }
-        Ref<SE::Core::UIContext> UIContext() { return mImGUIOverlay; };
+        SE::Graphics::Ref<IGraphicContext> GetGraphicContext()
+        {
+            return mGraphicContext;
+        }
+        Ref<SE::Core::UIContext> UIContext()
+        {
+            return mImGUIOverlay;
+        };
 
-        void        SetApplicationName( std::string a_Name ) { mApplicationName = a_Name; }
-        std::string GetApplicationName() { return mApplicationName; }
+        void SetApplicationName( std::string a_Name )
+        {
+            mApplicationName = a_Name;
+        }
+        std::string GetApplicationName()
+        {
+            return mApplicationName;
+        }
 
         void SetInitialWindowPosition( math::ivec2 a_Position );
         void SetInitialWindowSize( math::ivec2 a_Size );
@@ -111,7 +126,10 @@ namespace SE::Core
                                 UIConfiguration const &aUIConfiguration );
         static void Shutdown();
 
-        static std::unique_ptr<Engine> &GetInstance() { return mUniqueInstance; };
+        static std::unique_ptr<Engine> &GetInstance()
+        {
+            return mUniqueInstance;
+        };
 
         void SubmitToMainThread( const std::function<void()> &aThunk );
         void ExecuteMainThreadQueue();
@@ -125,12 +143,12 @@ namespace SE::Core
         std::vector<std::function<void()>> mMainThreadQueue;
         std::mutex                         mMainThreadQueueMutex;
 
-        Ref<SE::Core::IWindow>              mViewportClient;
+        Ref<SE::Core::IWindow>             mViewportClient;
         Ref<SE::Graphics::IGraphicContext> mGraphicContext = nullptr;
 
         Ref<SE::Core::UIContext> mImGUIOverlay;
 
-        Ref<SE::Graphics::ISwapChain>      mSwapChain;
+        Ref<SE::Graphics::ISwapChain>     mSwapChain;
         Ref<SE::Graphics::IRenderContext> mSwapChainRenderContext;
 
         double mEngineLoopStartTime;

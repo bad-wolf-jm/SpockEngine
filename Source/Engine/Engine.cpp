@@ -15,7 +15,10 @@
 
 namespace SE::Core
 {
-    GLFWwindow *Engine::GetMainApplicationWindow() { return mViewportClient->GetGLFWWindow(); }
+    GLFWwindow *Engine::GetMainApplicationWindow()
+    {
+        return mViewportClient->GetGLFWWindow();
+    }
 
     int64_t Engine::GetTime()
     {
@@ -24,9 +27,14 @@ namespace SE::Core
         return now_ms.time_since_epoch().count();
     }
 
-    int64_t Engine::GetElapsedTime() { return GetTime() - mEngineLoopStartTime; }
+    int64_t Engine::GetElapsedTime()
+    {
+        return GetTime() - mEngineLoopStartTime;
+    }
 
-    void Engine::PreInit( int argc, char **argv ) {}
+    void Engine::PreInit( int argc, char **argv )
+    {
+    }
 
     void Engine::Init()
     {
@@ -55,23 +63,28 @@ namespace SE::Core
 
         mLastFrameTime = time;
 
-        if( !mSwapChainRenderContext->BeginRender() ) return true;
+        if( !mSwapChainRenderContext->BeginRender() )
+            return true;
 
         bool lRequestQuit = false;
         mImGUIOverlay->BeginFrame();
 
         // First run the UI delegate so any state that needs updating for this frame
         // gets updated. If the delegate indicates that we should quit, we return immediately
-        if( UIDelegate ) lRequestQuit = UIDelegate( mImGUIOverlay->GetIO() );
+        if( UIDelegate )
+            lRequestQuit = UIDelegate( mImGUIOverlay->GetIO() );
 
-        if( lRequestQuit ) return false;
+        if( lRequestQuit )
+            return false;
 
         // Run the update delegate to update the state of the various elements
         // of the simulation.
-        if( UpdateDelegate ) UpdateDelegate( timestep );
+        if( UpdateDelegate )
+            UpdateDelegate( timestep );
 
         // Finally, render the main screen.
-        if( RenderDelegate ) RenderDelegate();
+        if( RenderDelegate )
+            RenderDelegate();
 
         // Render the UI on top of the background
         mImGUIOverlay->EndFrame( mSwapChainRenderContext );
@@ -87,20 +100,31 @@ namespace SE::Core
 
     void Engine::IOEvent( UserEvent &a_Event )
     {
-        if( IOEventDelegate ) IOEventDelegate( a_Event );
+        if( IOEventDelegate )
+            IOEventDelegate( a_Event );
     }
 
-    void Engine::SetInitialWindowPosition( math::ivec2 a_Position ) { mInitialMainWindowPosition = a_Position; }
+    void Engine::SetInitialWindowPosition( math::ivec2 a_Position )
+    {
+        mInitialMainWindowPosition = a_Position;
+    }
 
-    void Engine::SetInitialWindowSize( math::ivec2 a_Size ) { mInitialMainWindowSize = a_Size; }
+    void Engine::SetInitialWindowSize( math::ivec2 a_Size )
+    {
+        mInitialMainWindowSize = a_Size;
+    }
 
-    void Engine::SetImGuiConfigurationFile( std::string a_Path ) { mImGuiConfigPath = a_Path; }
+    void Engine::SetImGuiConfigurationFile( std::string a_Path )
+    {
+        mImGuiConfigPath = a_Path;
+    }
 
     void Engine::ExecuteMainThreadQueue()
     {
         std::scoped_lock<std::mutex> lock( mMainThreadQueueMutex );
 
-        for( auto &lThunk : mMainThreadQueue ) lThunk();
+        for( auto &lThunk : mMainThreadQueue )
+            lThunk();
 
         mMainThreadQueue.clear();
     }
@@ -126,7 +150,10 @@ namespace SE::Core
         return { w, h };
     }
 
-    std::string Engine::GetImGuiConfigurationFile() { return mImGuiConfigPath; }
+    std::string Engine::GetImGuiConfigurationFile()
+    {
+        return mImGuiConfigPath;
+    }
 
     std::unique_ptr<Engine> Engine::mUniqueInstance = nullptr;
 
@@ -135,7 +162,8 @@ namespace SE::Core
     {
         IWindow::InitializeWindowingBackend();
 
-        if( mUniqueInstance ) return;
+        if( mUniqueInstance )
+            return;
 
         mUniqueInstance = std::make_unique<Engine>();
 
@@ -146,6 +174,9 @@ namespace SE::Core
         mUniqueInstance->Init();
     }
 
-    void Engine::Shutdown() { IWindow::ShutdownWindowingBackend(); }
+    void Engine::Shutdown()
+    {
+        IWindow::ShutdownWindowingBackend();
+    }
 
 } // namespace SE::Core
