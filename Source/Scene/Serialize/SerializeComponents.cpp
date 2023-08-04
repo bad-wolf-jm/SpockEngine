@@ -14,15 +14,15 @@ namespace SE::Core
         { typeid(sAnimatedTransformComponent).name(), "ANIMATED_TRANSFORM" },
         { typeid(sNodeTransformComponent).name(),     "NODE_TRANSFORM" },
         { typeid(sStaticMeshComponent).name(),        "STATIC_MESH" },
-        { typeid(sParticleSystemComponent).name(),    "PARTICLE_SYSTEM" },
-        { typeid(sParticleShaderComponent).name(),    "PARTICLE_SHADER" },
+        // { typeid(sParticleSystemComponent).name(),    "PARTICLE_SYSTEM" },
+        // { typeid(sParticleShaderComponent).name(),    "PARTICLE_SHADER" },
         { typeid(sSkeletonComponent).name(),          "SKELETON" },
         { typeid(sWireframeComponent).name(),         "WIREFRAME" },
         { typeid(sWireframeMeshComponent).name(),     "WIREFRAME_MESH" },
         { typeid(sBoundingBoxComponent).name(),       "BOUNDING_BOX" },
         { typeid(sRayTracingTargetComponent).name(),  "RAY_TRACING_TARGET" },
         { typeid(sMaterialComponent).name(),       "MATERIAL_COMPONENT" },
-        { typeid(sMaterialShaderComponent).name(),    "MATERIAL_SHADER" },
+        // { typeid(sMaterialShaderComponent).name(),    "MATERIAL_SHADER" },
         { typeid(sBackgroundComponent).name(),        "BACKGROUND" },
         { typeid(sAmbientLightingComponent).name(),   "AMBIENT_LIGHTING" },
         { typeid(sLightComponent).name(),             "LIGHT" },
@@ -172,15 +172,15 @@ namespace SE::Core
         aComponent.mIndexCount   = Get( aNode["mIndexCount"], uint32_t{ 0 } );
     }
 
-    void ReadComponent( sParticleSystemComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
-    {
-        //
-    }
+    // void ReadComponent( sParticleSystemComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
+    // {
+        
+    // }
 
-    void ReadComponent( sParticleShaderComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
-    {
-        //
-    }
+    // void ReadComponent( sParticleShaderComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
+    // {
+        // 
+    // }
 
     void ReadComponent( sWireframeComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
@@ -233,14 +233,14 @@ namespace SE::Core
         aComponent.mMaterialID = 0;
     }
 
-    void ReadComponent( sMaterialShaderComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
-    {
-        aComponent.Type              = static_cast<eMaterialType>( Get( aNode["Type"], uint8_t{ 0 } ) );
-        aComponent.IsTwoSided        = Get( aNode["IsTwoSided"], true );
-        aComponent.UseAlphaMask      = Get( aNode["UseAlphaMask"], true );
-        aComponent.LineWidth         = Get( aNode["LineWidth"], 1.0f );
-        aComponent.AlphaMaskTheshold = Get( aNode["AlphaMaskTheshold"], 0.5f );
-    }
+    // void ReadComponent( sMaterialShaderComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
+    // {
+    //     aComponent.Type              = static_cast<eMaterialType>( Get( aNode["Type"], uint8_t{ 0 } ) );
+    //     aComponent.IsTwoSided        = Get( aNode["IsTwoSided"], true );
+    //     aComponent.UseAlphaMask      = Get( aNode["UseAlphaMask"], true );
+    //     aComponent.LineWidth         = Get( aNode["LineWidth"], 1.0f );
+    //     aComponent.AlphaMaskTheshold = Get( aNode["AlphaMaskTheshold"], 0.5f );
+    // }
 
     void ReadComponent( sBackgroundComponent &aComponent, YAML::Node const &aNode, sReadContext &aReadConext )
     {
@@ -395,17 +395,17 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void WriteComponent( ConfigurationWriter &aOut, sParticleSystemComponent const &aComponent )
-    {
-        WriteTypeTag<sParticleSystemComponent>( aOut );
-        aOut.WriteNull();
-    }
+    // void WriteComponent( ConfigurationWriter &aOut, sParticleSystemComponent const &aComponent )
+    // {
+    //     WriteTypeTag<sParticleSystemComponent>( aOut );
+    //     aOut.WriteNull();
+    // }
 
-    void WriteComponent( ConfigurationWriter &aOut, sParticleShaderComponent const &aComponent )
-    {
-        WriteTypeTag<sParticleShaderComponent>( aOut );
-        aOut.WriteNull();
-    }
+    // void WriteComponent( ConfigurationWriter &aOut, sParticleShaderComponent const &aComponent )
+    // {
+    //     WriteTypeTag<sParticleShaderComponent>( aOut );
+    //     aOut.WriteNull();
+    // }
 
     void WriteComponent( ConfigurationWriter &aOut, sSkeletonComponent const &aComponent )
     {
@@ -474,19 +474,19 @@ namespace SE::Core
         aOut.EndMap();
     }
 
-    void WriteComponent( ConfigurationWriter &aOut, sMaterialShaderComponent const &aComponent )
-    {
-        WriteTypeTag<sMaterialShaderComponent>( aOut );
-        aOut.BeginMap( true );
-        {
-            aOut.WriteKey( "Type", (uint32_t)aComponent.Type );
-            aOut.WriteKey( "IsTwoSided", aComponent.IsTwoSided );
-            aOut.WriteKey( "UseAlphaMask", aComponent.UseAlphaMask );
-            aOut.WriteKey( "LineWidth", aComponent.LineWidth );
-            aOut.WriteKey( "AlphaMaskTheshold", aComponent.AlphaMaskTheshold );
-        }
-        aOut.EndMap();
-    }
+    // void WriteComponent( ConfigurationWriter &aOut, sMaterialShaderComponent const &aComponent )
+    // {
+    //     WriteTypeTag<sMaterialShaderComponent>( aOut );
+    //     aOut.BeginMap( true );
+    //     {
+    //         aOut.WriteKey( "Type", (uint32_t)aComponent.Type );
+    //         aOut.WriteKey( "IsTwoSided", aComponent.IsTwoSided );
+    //         aOut.WriteKey( "UseAlphaMask", aComponent.UseAlphaMask );
+    //         aOut.WriteKey( "LineWidth", aComponent.LineWidth );
+    //         aOut.WriteKey( "AlphaMaskTheshold", aComponent.AlphaMaskTheshold );
+    //     }
+    //     aOut.EndMap();
+    // }
 
     void WriteComponent( ConfigurationWriter &aOut, sBackgroundComponent const &aComponent )
     {

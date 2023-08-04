@@ -118,13 +118,13 @@ namespace SE::Core
             CopyComponent<sWireframeMeshComponent>( lEntity, lClonedEntity );
             CopyComponent<sBoundingBoxComponent>( lEntity, lClonedEntity );
 
-            CopyComponent<sParticleSystemComponent>( lEntity, lClonedEntity );
-            CopyComponent<sParticleShaderComponent>( lEntity, lClonedEntity );
+            // CopyComponent<sParticleSystemComponent>( lEntity, lClonedEntity );
+            // CopyComponent<sParticleShaderComponent>( lEntity, lClonedEntity );
 
             CopyComponent<sRayTracingTargetComponent>( lEntity, lClonedEntity );
 
             CopyComponent<sMaterialComponent>( lEntity, lClonedEntity );
-            CopyComponent<sMaterialShaderComponent>( lEntity, lClonedEntity );
+            // CopyComponent<sMaterialShaderComponent>( lEntity, lClonedEntity );
 
             CopyComponent<sBackgroundComponent>( lEntity, lClonedEntity );
 
@@ -471,12 +471,12 @@ namespace SE::Core
                 ReadComponent( lComponent, lEntityConfiguration[TypeTag<sRayTracingTargetComponent>()], lReadContext );
             }
 
-            if( HasTypeTag<sMaterialShaderComponent>( lEntityConfiguration ) )
-            {
-                auto &lComponent = lEntity.Add<sMaterialShaderComponent>();
+            // if( HasTypeTag<sMaterialShaderComponent>( lEntityConfiguration ) )
+            // {
+                // auto &lComponent = lEntity.Add<sMaterialShaderComponent>();
 
-                ReadComponent( lComponent, lEntityConfiguration[TypeTag<sMaterialShaderComponent>()], lReadContext );
-            }
+                // ReadComponent( lComponent, lEntityConfiguration[TypeTag<sMaterialShaderComponent>()], lReadContext );
+            // }
 
             if( HasTypeTag<sBackgroundComponent>( lEntityConfiguration ) )
             {
@@ -1261,11 +1261,11 @@ namespace SE::Core
             if( aEntity.Has<sStaticMeshComponent>() )
                 WriteComponent( lOut, aEntity.Get<sStaticMeshComponent>(), aMeshDataMap[aUUID.mValue.str()] );
 
-            if( aEntity.Has<sParticleSystemComponent>() )
-                WriteComponent( lOut, aEntity.Get<sParticleSystemComponent>() );
+            // if( aEntity.Has<sParticleSystemComponent>() )
+                // WriteComponent( lOut, aEntity.Get<sParticleSystemComponent>() );
 
-            if( aEntity.Has<sParticleShaderComponent>() )
-                WriteComponent( lOut, aEntity.Get<sParticleShaderComponent>() );
+            // if( aEntity.Has<sParticleShaderComponent>() )
+                // WriteComponent( lOut, aEntity.Get<sParticleShaderComponent>() );
 
             if( aEntity.Has<sSkeletonComponent>() )
                 WriteComponent( lOut, aEntity.Get<sSkeletonComponent>() );
@@ -1285,8 +1285,8 @@ namespace SE::Core
             if( aEntity.Has<sMaterialComponent>() )
                 WriteComponent( lOut, aEntity.Get<sMaterialComponent>(), aMaterialMap[aUUID.mValue.str()] );
 
-            if( aEntity.Has<sMaterialShaderComponent>() )
-                WriteComponent( lOut, aEntity.Get<sMaterialShaderComponent>() );
+            // if( aEntity.Has<sMaterialShaderComponent>() )
+                // WriteComponent( lOut, aEntity.Get<sMaterialShaderComponent>() );
 
             if( aEntity.Has<sBackgroundComponent>() )
                 WriteComponent( lOut, aEntity.Get<sBackgroundComponent>() );

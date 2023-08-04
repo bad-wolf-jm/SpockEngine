@@ -42,15 +42,15 @@ namespace SE::Editor
             Dropdown.Values = { Entity{} };
 
             uint32_t n = 1;
-            World->ForEach<sMaterialShaderComponent>(
-                [&]( auto a_Entity, auto &aComponent )
-                {
-                    Dropdown.Labels.push_back( a_Entity.Get<sTag>().mValue );
-                    Dropdown.Values.push_back( a_Entity );
+            // World->ForEach<sMaterialShaderComponent>(
+            //     [&]( auto a_Entity, auto &aComponent )
+            //     {
+            //         Dropdown.Labels.push_back( a_Entity.Get<sTag>().mValue );
+            //         Dropdown.Values.push_back( a_Entity );
 
-                    if( (uint32_t)a_Entity == (uint32_t)a_TextureEntity ) Dropdown.CurrentItem = n;
-                    n++;
-                } );
+            //         if( (uint32_t)a_Entity == (uint32_t)a_TextureEntity ) Dropdown.CurrentItem = n;
+            //         n++;
+            //     } );
             Dropdown.Display();
 
             if( Dropdown.Changed )

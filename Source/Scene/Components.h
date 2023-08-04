@@ -18,9 +18,6 @@
 
 #include "Core/Entity/Collection.h"
 
-// #include "Renderer/MeshRenderer.h"
-// #include "Renderer/ParticleSystemRenderer.h"
-
 #include "Primitives/Primitives.h"
 
 #include "DotNet/Runtime.h"
@@ -178,25 +175,25 @@ namespace SE::Core::EntityComponentSystem::Components
         sStaticMeshComponent( const sStaticMeshComponent & ) = default;
     };
 
-    struct sParticleSystemComponent
-    {
-        std::string Name = "";
+    // struct sParticleSystemComponent
+    // {
+    //     std::string Name = "";
 
-        Ref<IGraphicBuffer> Particles     = nullptr;
-        uint32_t            ParticleCount = 0;
-        float               ParticleSize  = 0.0f;
+    //     Ref<IGraphicBuffer> Particles     = nullptr;
+    //     uint32_t            ParticleCount = 0;
+    //     float               ParticleSize  = 0.0f;
 
-        sParticleSystemComponent()                                   = default;
-        sParticleSystemComponent( const sParticleSystemComponent & ) = default;
-    };
+    //     sParticleSystemComponent()                                   = default;
+    //     sParticleSystemComponent( const sParticleSystemComponent & ) = default;
+    // };
 
-    struct sParticleShaderComponent
-    {
-        float LineWidth = 1.0f;
+    // struct sParticleShaderComponent
+    // {
+    //     float LineWidth = 1.0f;
 
-        sParticleShaderComponent()                                   = default;
-        sParticleShaderComponent( const sParticleShaderComponent & ) = default;
-    };
+    //     sParticleShaderComponent()                                   = default;
+    //     sParticleShaderComponent( const sParticleShaderComponent & ) = default;
+    // };
 
     struct sSkeletonComponent
     {
@@ -253,17 +250,16 @@ namespace SE::Core::EntityComponentSystem::Components
         sMaterialComponent( const sMaterialComponent & ) = default;
     };
 
-    struct sMaterialShaderComponent
-    {
-        eMaterialType Type              = eMaterialType::Opaque;
-        bool          IsTwoSided        = false;
-        bool          UseAlphaMask      = true;
-        float         LineWidth         = 1.0f;
-        float         AlphaMaskTheshold = 0.5;
-
-        sMaterialShaderComponent()                                   = default;
-        sMaterialShaderComponent( const sMaterialShaderComponent & ) = default;
-    };
+    // struct sMaterialShaderComponent
+    // {
+    //     eMaterialType Type              = eMaterialType::Opaque;
+    //     bool          IsTwoSided        = false;
+    //     bool          UseAlphaMask      = true;
+    //     float         LineWidth         = 1.0f;
+    //     float         AlphaMaskTheshold = 0.5;
+    //     sMaterialShaderComponent()                                   = default;
+    //     sMaterialShaderComponent( const sMaterialShaderComponent & ) = default;
+    // };
 
     struct sBackgroundComponent
     {

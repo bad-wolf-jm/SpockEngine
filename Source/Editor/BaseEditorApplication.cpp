@@ -148,20 +148,20 @@ namespace SE::Editor
         mEditorWindow.World       = mWorld;
         mEditorWindow.ActiveWorld = mWorld;
 
-        {
-            // Add sensor entity to the scene
-            mEditorWindow.Sensor = mWorld->Create( "Sensor", mWorld->Root );
-            mEditorWindow.Sensor.Add<sNodeTransformComponent>();
-            mEditorWindow.Sensor.Add<sBehaviourComponent>();
+        // {
+        //     // Add sensor entity to the scene
+        //     mEditorWindow.Sensor = mWorld->Create( "Sensor", mWorld->Root );
+        //     mEditorWindow.Sensor.Add<sNodeTransformComponent>();
+        //     mEditorWindow.Sensor.Add<sBehaviourComponent>();
 
-            // Add a particle system to the sensor to display the point cloud
-            auto &l_SensorPointCloud = mEditorWindow.Sensor.Add<sParticleSystemComponent>();
+        //     // Add a particle system to the sensor to display the point cloud
+        //     auto &l_SensorPointCloud = mEditorWindow.Sensor.Add<sParticleSystemComponent>();
 
-            // Create particle renderer for the point cloud
-            auto &l_SensorPointCloudRenderer = mEditorWindow.Sensor.Add<sParticleShaderComponent>();
+        //     // Create particle renderer for the point cloud
+        //     auto &l_SensorPointCloudRenderer = mEditorWindow.Sensor.Add<sParticleShaderComponent>();
 
-            mEditorWindow.ActiveSensor = mEditorWindow.Sensor;
-        }
+        //     mEditorWindow.ActiveSensor = mEditorWindow.Sensor;
+        // }
 
         // mDeferredRenderer->mRenderCoordinateGrid = true;
 
