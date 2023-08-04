@@ -225,6 +225,7 @@ namespace SE::Core
             mPointLightsShadowMapRenderContext.clear();
             mPointLightsShadowCameraUniformBuffer.clear();
             mPointLightsShadowSceneDescriptors.clear();
+            mPointLightShadowMapSamplers.clear();
 
             sTextureCreateInfo lCreateInfo{};
             lCreateInfo.mFormat = eColorFormat::RGBA32_FLOAT;
@@ -282,7 +283,7 @@ namespace SE::Core
             }
         }
 
-        if( mOmniRenderPipeline == nullptr && mPointLightsShadowMapRenderContext.size() > 0 )
+        if( ( mOmniRenderPipeline == nullptr ) && mPointLightsShadowMapRenderContext.size() > 0 )
         {
             ShadowMeshRendererCreateInfo lCreateInfo{};
             lCreateInfo.RenderPass = mPointLightsShadowMapRenderContext.back()[0];
@@ -320,8 +321,11 @@ namespace SE::Core
                 } );
 
             mDirectionalShadowMapRenderContext->EndRender();
+        }
 
-            lLightIndex = 0;
+        if( mOmniRenderPipeline->Pipeline() )
+        {
+            uint32_t lLightIndex = 0;
             for( auto &lContext : mPointLightsShadowMapRenderContext )
             {
                 math::mat4 lProjection = math::Perspective( math::radians( 90.0f ), 1.0f, .2f, 1000.0f );
