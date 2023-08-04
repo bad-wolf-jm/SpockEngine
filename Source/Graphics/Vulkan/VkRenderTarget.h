@@ -12,7 +12,6 @@
 #include "Graphics/Vulkan/VkCoreMacros.h"
 #include "Graphics/Vulkan/VkGraphicContext.h"
 #include "Graphics/Vulkan/VkTexture2D.h"
-// #include "Graphics/Vulkan/VkTextureCubeMap.h"
 
 namespace SE::Graphics
 {
