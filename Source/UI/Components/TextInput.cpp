@@ -12,10 +12,10 @@ namespace SE::Core
 
     void UITextInput::OnTextChanged( std::function<void( string_t )> aOnTextChanged ) { mOnTextChanged = aOnTextChanged; }
 
-    void      UITextInput::SetText(string_t const& aText) 
-    { 
-        memset(mBuffer.data(), 0, mBufferSize);
-        memcpy(mBuffer.data(), aText.data(), aText.size());
+    void UITextInput::SetText( string_t const &aText )
+    {
+        memset( mBuffer.data(), 0, mBufferSize );
+        memcpy( mBuffer.data(), aText.data(), aText.size() );
     }
     string_t &UITextInput::GetText() { return mBuffer; }
     void      UITextInput::SetHintText( string_t const &aHintText ) { mHintText = aHintText; }

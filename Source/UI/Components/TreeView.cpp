@@ -245,8 +245,8 @@ namespace SE::Core
         bool lIsHovered, lIsHeld;
         bool lIsPressed =
             ImGui::ButtonBehavior( lInteractionBoundingBox, lWindow->GetID( (void *)this ), &lIsHovered, &lIsHeld, lButtonFlags );
-        
-        lDoubleClicked = lIsHovered && ImGui::IsMouseDoubleClicked(0);
+
+        lDoubleClicked = lIsHovered && ImGui::IsMouseDoubleClicked( 0 );
 
         bool lIsToggled = false;
         if( !lNodeIsLeaf )
@@ -422,8 +422,5 @@ namespace SE::Core
     void            UITreeView::SetIconSpacing( float aSpacing ) { mIconSpacing = aSpacing; }
     UITreeViewNode *UITreeView::Add() { return mRoot->Add(); }
 
-    void UITreeView::DrawContent( ImVec2 aPosition, ImVec2 aSize )
-    {
-        mRoot->Update( aPosition, aSize );
-    }
+    void UITreeView::DrawContent( ImVec2 aPosition, ImVec2 aSize ) { mRoot->Update( aPosition, aSize ); }
 } // namespace SE::Core

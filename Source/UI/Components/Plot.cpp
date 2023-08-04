@@ -1,8 +1,6 @@
 #include "Plot.h"
 #include "implot_internal.h"
 
-
-
 namespace SE::Core
 {
     UIPlot::UIPlot()
@@ -170,7 +168,7 @@ namespace SE::Core
 
         auto  M   = plot->Axes[static_cast<ImAxis>( mXAxis )].LinM;
         auto  P0  = plot->Axes[static_cast<ImAxis>( mXAxis )].PixelMin;
-        auto  D  = plot->Axes[static_cast<ImAxis>( mXAxis )].Range.Min;
+        auto  D   = plot->Axes[static_cast<ImAxis>( mXAxis )].Range.Min;
         float lX0 = P0 + M * ( mX0 - D );
         float lX1 = P0 + M * ( mX1 - D );
 
@@ -193,7 +191,7 @@ namespace SE::Core
 
         auto  M   = plot->Axes[static_cast<ImAxis>( mXAxis )].LinM;
         auto  P0  = plot->Axes[static_cast<ImAxis>( mXAxis )].PixelMin;
-        auto  D  = plot->Axes[static_cast<ImAxis>( mXAxis )].Range.Min;
+        auto  D   = plot->Axes[static_cast<ImAxis>( mXAxis )].Range.Min;
         float lX0 = P0 + M * ( mY0 - D );
         float lX1 = P0 + M * ( mY1 - D );
 

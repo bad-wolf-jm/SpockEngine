@@ -275,7 +275,7 @@ namespace SE::Core
             ImGui::Indent();
             for( auto const &c : mChildren )
             {
-                ImGui::Text(fmt::format("{}", lCurrentID++).c_str());
+                ImGui::Text( fmt::format( "{}", lCurrentID++ ).c_str() );
                 ImGui::SameLine();
                 c->Render();
                 ImGui::NewLine();

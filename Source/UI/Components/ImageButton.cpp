@@ -1,6 +1,5 @@
 #include "ImageButton.h"
 
-
 namespace SE::Core
 {
     UIImageButton::UIImageButton( path_t const &aImagePath, math::vec2 aSize, std::function<void()> aOnClick )

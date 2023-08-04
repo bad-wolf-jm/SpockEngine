@@ -29,6 +29,5 @@ namespace SE::Core
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
     };
 } // namespace SE::Core

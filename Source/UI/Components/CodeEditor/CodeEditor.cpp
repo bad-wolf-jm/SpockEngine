@@ -1919,27 +1919,27 @@ namespace SE::Core
     const UICodeEditor::Palette &UICodeEditor::GetDarkPalette()
     {
         const static Palette p = { {
-            IM_COL32( 212, 212, 212, 255 ),   // Default
-            IM_COL32(  30,  80, 179, 255 ),     // Keyword
-            IM_COL32( 181, 206, 168, 255 ),   // Number
-            IM_COL32( 206, 145, 120, 255 ),   // String
-            IM_COL32( 206, 145, 120, 255 ),   // Char literal
-            0xff9fc5d4,                       // Punctuation
-            0xff408080,                       // Preprocessor
-            IM_COL32( 220, 220, 170, 255 ),   // Identifier
-            0xff9bc64d,                       // Known identifier
-            0xffc040a0,                       // Preproc identifier
-            IM_COL32( 106, 153, 85, 255 ),    // Comment (single line)
-            IM_COL32( 106, 153, 85, 255 ),    // Comment (multi line)
-            IM_COL32( 3, 3, 3, 255 ),         // Background
-            0xffe0e0e0,                       // Cursor
-            IM_COL32( 38, 79, 120, 70 ),      // Selection
-            0x800020ff,                       // ErrorMarker
-            0x40f08000,                       // Breakpoint
-            IM_COL32( 133, 133, 133, 255 ),   // Line number
-            0x00000000,                       // Current line fill
-            0x00000000,                       // Current line fill (inactive)
-            0x40a0a0a0,                       // Current line edge
+            IM_COL32( 212, 212, 212, 255 ), // Default
+            IM_COL32( 30, 80, 179, 255 ),   // Keyword
+            IM_COL32( 181, 206, 168, 255 ), // Number
+            IM_COL32( 206, 145, 120, 255 ), // String
+            IM_COL32( 206, 145, 120, 255 ), // Char literal
+            0xff9fc5d4,                     // Punctuation
+            0xff408080,                     // Preprocessor
+            IM_COL32( 220, 220, 170, 255 ), // Identifier
+            0xff9bc64d,                     // Known identifier
+            0xffc040a0,                     // Preproc identifier
+            IM_COL32( 106, 153, 85, 255 ),  // Comment (single line)
+            IM_COL32( 106, 153, 85, 255 ),  // Comment (multi line)
+            IM_COL32( 3, 3, 3, 255 ),       // Background
+            0xffe0e0e0,                     // Cursor
+            IM_COL32( 38, 79, 120, 70 ),    // Selection
+            0x800020ff,                     // ErrorMarker
+            0x40f08000,                     // Breakpoint
+            IM_COL32( 133, 133, 133, 255 ), // Line number
+            0x00000000,                     // Current line fill
+            0x00000000,                     // Current line fill (inactive)
+            0x40a0a0a0,                     // Current line edge
         } };
         return p;
     }

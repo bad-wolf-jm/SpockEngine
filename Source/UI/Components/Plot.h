@@ -20,8 +20,8 @@ namespace SE::Core
     struct UIPlotAxisConfiguration
     {
         string_t mTitle;
-        float       mMin = 0.0f;
-        float       mMax = 0.0f;
+        float    mMin = 0.0f;
+        float    mMax = 0.0f;
 
         UIPlotAxis mAxis            = UIPlotAxis::X1;
         bool       mInUse           = false;
@@ -32,9 +32,9 @@ namespace SE::Core
 
     struct UIPlotData
     {
-        string_t mLegend;
-        math::vec4  mColor     = { 0.0f, 0.0f, 0.0f, -1.0f };
-        float       mThickness = -1.0f;
+        string_t   mLegend;
+        math::vec4 mColor     = { 0.0f, 0.0f, 0.0f, -1.0f };
+        float      mThickness = -1.0f;
 
         UIPlotAxis mXAxis = UIPlotAxis::X1;
         UIPlotAxis mYAxis = UIPlotAxis::Y1;
@@ -123,10 +123,10 @@ namespace SE::Core
 
     struct UIAxisTag : public UIPlotData
     {
-        double      mX;
-        string_t mText;
-        math::vec4  mColor;
-        UIPlotAxis  mAxis = UIPlotAxis::X1;
+        double     mX;
+        string_t   mText;
+        math::vec4 mColor;
+        UIPlotAxis mAxis = UIPlotAxis::X1;
 
         UIAxisTag() = default;
 

@@ -223,7 +223,7 @@ namespace SE::Core
             {
                 ImGuiContext &g      = *GImGui;
                 ImGuiWindow  *window = g.CurrentWindow;
-                const ImU32 col = ImGui::GetColorU32(ImGuiCol_Separator);
+                const ImU32   col    = ImGui::GetColorU32( ImGuiCol_Separator );
 
                 if( mOrientation == eBoxLayoutOrientation::VERTICAL )
                 {

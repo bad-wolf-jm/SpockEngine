@@ -1,6 +1,5 @@
 #include "ComboBox.h"
 
-
 namespace SE::Core
 {
     UIComboBox::UIComboBox( std::vector<string_t> const &aItems )

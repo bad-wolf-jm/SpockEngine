@@ -275,7 +275,7 @@ namespace SE::Core
 
         bool CanUndo() const;
         bool CanRedo() const;
-        void Undo( int aSteps=  1 );
+        void Undo( int aSteps = 1 );
         void Redo( int aSteps = 1 );
 
         static const Palette &GetDarkPalette();

@@ -1,6 +1,5 @@
 #include "Button.h"
 
-
 namespace SE::Core
 {
     UIButton::UIButton( string_t const &aText )

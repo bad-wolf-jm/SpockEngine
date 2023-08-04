@@ -1,8 +1,6 @@
 #include "Markdown.h"
 #include "Engine/Engine.h"
 
-
-
 namespace SE::Core
 {
     UIMarkdown::UIMarkdown( string_t const &aText )
@@ -16,10 +14,7 @@ namespace SE::Core
     void UIMarkdown::SetText( string_t const &aText ) { mText = aText; }
     void UIMarkdown::SetTextColor( math::vec4 aColor ) { mTextColor = ImVec4{ aColor.x, aColor.y, aColor.z, aColor.w }; }
 
-    ImVec2 UIMarkdown::RequiredSize()
-    {
-        return ImVec2{0,0};
-    }
+    ImVec2 UIMarkdown::RequiredSize() { return ImVec2{ 0, 0 }; }
 
     void UIMarkdown::DrawContent( ImVec2 aPosition, ImVec2 aSize )
     {
@@ -28,7 +23,7 @@ namespace SE::Core
         if( lTextColorSet ) ImGui::PushStyleColor( ImGuiCol_Text, mTextColor );
 
         ImGui::SetCursorPos( aPosition );
-        mRenderer.print(mText.c_str(), mText.c_str() + mText.size());
+        mRenderer.print( mText.c_str(), mText.c_str() + mText.size() );
 
         if( lTextColorSet ) ImGui::PopStyleColor();
     }

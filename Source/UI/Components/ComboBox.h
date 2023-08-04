@@ -15,22 +15,21 @@ namespace SE::Core
 
         void OnChange( std::function<void( int aIndex )> aOnChange );
         int  Current() { return mCurrentItem; }
-        void SetCurrent(int aCurrent) { mCurrentItem = aCurrent; }
+        void SetCurrent( int aCurrent ) { mCurrentItem = aCurrent; }
 
       private:
         std::function<void( int aIndex )> mOnChange;
 
       protected:
-        uint32_t                 mCurrentItem = 0;
+        uint32_t              mCurrentItem = 0;
         std::vector<string_t> mItems       = {};
-        bool                     mChanged     = false;
+        bool                  mChanged     = false;
 
         void PushStyles();
         void PopStyles();
 
         ImVec2 RequiredSize();
         void   DrawContent( ImVec2 aPosition, ImVec2 aSize );
-
     };
 
 } // namespace SE::Core

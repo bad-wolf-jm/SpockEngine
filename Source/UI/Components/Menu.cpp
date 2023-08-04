@@ -79,12 +79,12 @@ namespace SE::Core
     {
     }
 
-    void UIMenu::PushStyles() 
+    void UIMenu::PushStyles()
     {
-        ImGui::PushStyleVar(ImGuiStyleVar_PopupRounding, 5.0f);
-        ImGui::PushStyleColor(ImGuiCol_Border, ImGui::GetColorU32( ImGuiCol_Separator ) );
+        ImGui::PushStyleVar( ImGuiStyleVar_PopupRounding, 5.0f );
+        ImGui::PushStyleColor( ImGuiCol_Border, ImGui::GetColorU32( ImGuiCol_Separator ) );
     }
-    void UIMenu::PopStyles() 
+    void UIMenu::PopStyles()
     {
         ImGui::PopStyleVar();
         ImGui::PopStyleColor();
@@ -105,11 +105,11 @@ namespace SE::Core
 
         if( ImGui::BeginMenu( mText.c_str(), &mIsEnabled ) )
         {
-            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
+            ImGui::SetCursorPosY( ImGui::GetCursorPosY() + 10 );
             for( auto &lItem : mActions )
             {
                 lItem->Update( ImGui::GetCursorPos(), ImVec2{} );
-                ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
+                ImGui::SetCursorPosY( ImGui::GetCursorPosY() + 10 );
             }
             ImGui::EndMenu();
         }

@@ -238,7 +238,7 @@ namespace SE::Core
             }
         }
         ImGui::SetCursorPosY( ImGui::GetCursorPosY() + mCharHeight );
-        
+
         SE::Core::Engine::GetInstance()->UIContext()->PopFont();
         ImGui::EndChild();
         ImGui::PopStyleColor();
