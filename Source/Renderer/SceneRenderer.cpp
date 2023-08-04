@@ -100,10 +100,12 @@ namespace SE::Core
             case eLightType::DIRECTIONAL:
                 if (lFoundDirectionalLight)
                     return;
+
                 if ((!aComponent.mIsOn))
                     return;
+
                 lDirectionalLight.mColorIntensity = vec4(aComponent.mColor, aComponent.mIntensity);
-                lDirectionalLight.mDirection = mat3(mScene->GetFinalTransformMatrix( aEntity ) )* vec3{ 0.0f, 0.0f, 1.0f };
+                lDirectionalLight.mDirection = mat3(mScene->GetFinalTransformMatrix( aEntity ) ) * vec3{ 0.0f, 0.0f, 1.0f };
                 lDirectionalLight.mCastsShadows = 1;
                 
                 mat4  lClip = make_mat4x4( aEntries );

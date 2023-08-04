@@ -1352,15 +1352,15 @@ namespace SE::Editor
         {
             WorldRenderer->mGrayscaleRendering = !WorldRenderer->mGrayscaleRendering;
         }
-        UI::SameLine();
+        // UI::SameLine();
 
-        ImGui::PushStyleColor( ImGuiCol_Text,
-                               WorldRenderer->mUseFXAA ? ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f } : ImVec4{ 1.0f, 1.0f, 1.0f, .2f } );
-        if( UI::Button( "FXAA", math::vec2{ 65.0f, 24.0f } ) )
-        {
-            WorldRenderer->mUseFXAA = !WorldRenderer->mUseFXAA;
-        }
-        ImGui::PopStyleColor();
+        // ImGui::PushStyleColor( ImGuiCol_Text,
+        //                        WorldRenderer->mUseFXAA ? ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f } : ImVec4{ 1.0f, 1.0f, 1.0f, .2f } );
+        // if( UI::Button( "FXAA", math::vec2{ 65.0f, 24.0f } ) )
+        // {
+        //     WorldRenderer->mUseFXAA = !WorldRenderer->mUseFXAA;
+        // }
+        // ImGui::PopStyleColor();
         ImGui::PopStyleColor();
         ImGui::PopStyleColor();
         ImGui::PopStyleColor();
