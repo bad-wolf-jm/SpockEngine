@@ -1,4 +1,4 @@
-#include "ShadowSceneRenderer.h"
+#include "ShadowRenderer.h"
 
 #include <chrono>
 #include <gli/gli.hpp>

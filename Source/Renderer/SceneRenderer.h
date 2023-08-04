@@ -5,8 +5,8 @@
 #include "Scene/Components.h"
 
 #include "ASceneRenderer.h"
-#include "ShadowSceneRenderer.h"
-#include "CoordinateGridRenderer.h"
+#include "ShadowRenderer.h"
+#include "GridRenderer.h"
 
 namespace SE::Core
 {

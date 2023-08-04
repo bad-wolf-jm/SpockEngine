@@ -1,4 +1,4 @@
-#include "CoordinateGridRenderer.h"
+#include "GridRenderer.h"
 #include "Core/Math/Types.h"
 #include "Core/Resource.h"
 
