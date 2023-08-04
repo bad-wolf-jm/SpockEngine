@@ -23,8 +23,8 @@ namespace SE::Core
         lVertexShader->AddCode( "#define __GLSL__" );
         lVertexShader->AddCode( "#define VULKAN_SEMANTICS" );
         lVertexShader->AddCode( "#define COORDINATE_GRID_VERTEX_SHADER" );
-        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\Definitions.hpp" );
-        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\CoordinateGrid.hpp" );
+        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
+        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\CoordinateGrid.hpp" );
         lVertexShader->Compile();
 
         auto lFragmentShader = CreateShaderProgram( mGraphicContext, eShaderStageTypeFlags::FRAGMENT, 450,
@@ -32,8 +32,8 @@ namespace SE::Core
         lFragmentShader->AddCode( "#define __GLSL__" );
         lFragmentShader->AddCode( "#define VULKAN_SEMANTICS" );
         lFragmentShader->AddCode( "#define COORDINATE_GRID_FRAGMENT_SHADER" );
-        lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\Definitions.hpp" );
-        lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\CoordinateGrid.hpp" );
+        lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
+        lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\CoordinateGrid.hpp" );
         lFragmentShader->Compile();
 
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );

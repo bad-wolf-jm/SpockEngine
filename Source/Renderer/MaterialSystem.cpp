@@ -248,15 +248,15 @@ namespace SE::Core
 
         AddDefinitions( lShader, aMaterial );
 
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\Definitions.hpp" );
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Varying.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Varying.hpp" );
 
         if( aMaterial.Has<sVertexShader>() )
             lShader->AddCode( "//" );
         else
             lShader->AddCode( "//" );
 
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\MainVertexShader.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\MainVertexShader.hpp" );
 
         return lShader;
     }
@@ -276,15 +276,15 @@ namespace SE::Core
         lShader->AddCode( "#extension GL_EXT_nonuniform_qualifier : enable" );
 
         AddDefinitions( lShader, aMaterial );
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\Definitions.hpp" );
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Varying.hpp" );
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\LightInputData.hpp" );
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\ShaderMaterial.hpp" );
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\FragmentShaderUniformInputs.hpp" );
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\HelperFunctions.hpp" );
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Material.hpp" );
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\ShadingData.hpp" );
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\LightData.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Varying.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\LightInputData.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\ShaderMaterial.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\FragmentShaderUniformInputs.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\HelperFunctions.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Material.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ShadingData.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\LightData.hpp" );
 
         auto const &lMaterialInfo = aMaterial.Get<sMaterialInfo>();
 
@@ -292,16 +292,16 @@ namespace SE::Core
         {
 
         case eShadingModel::SUBSURFACE:
-            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\ShadingModelLit.hpp" );
+            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ShadingModelLit.hpp" );
             break;
         case eShadingModel::CLOTH:
-            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\ShadingModelLit.hpp" );
+            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ShadingModelLit.hpp" );
             break;
         case eShadingModel::UNLIT:
         case eShadingModel::STANDARD:
         default:
-            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\SurfaceShadingStandard.hpp" );
-            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\ShadingModelLit.hpp" );
+            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\SurfaceShadingStandard.hpp" );
+            lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ShadingModelLit.hpp" );
             break;
         }
 
@@ -310,7 +310,7 @@ namespace SE::Core
         else
             lShader->AddCode( "void material( inout MaterialInputs aMaterial ) {}" );
 
-        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\MainFragmentShader.hpp" );
+        lShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\MainFragmentShader.hpp" );
 
         return lShader;
     }

@@ -56,8 +56,8 @@ namespace SE::Core
         lVertexShader->AddCode( "#define __GLSL__" );
         lVertexShader->AddCode( "#define VULKAN_SEMANTICS" );
         lVertexShader->AddCode( "#define IMGUI_VERTEX_SHADER" );
-        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\Definitions.hpp" );
-        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\ImGui.hpp" );
+        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
+        lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ImGui.hpp" );
         lVertexShader->Compile();
         mUIRenderPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
 
@@ -66,8 +66,8 @@ namespace SE::Core
         lFragmentShader->AddCode( "#define __GLSL__" );
         lFragmentShader->AddCode( "#define VULKAN_SEMANTICS" );
         lFragmentShader->AddCode( "#define IMGUI_FRAGMENT_SHADER" );
-        lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\Definitions.hpp" );
-        lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\ImGui.hpp" );
+        lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Common\\Definitions.hpp" );
+        lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\ImGui.hpp" );
         lFragmentShader->Compile();
         mUIRenderPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, lFragmentShader, "main" );
 
