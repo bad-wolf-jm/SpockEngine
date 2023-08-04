@@ -33,7 +33,7 @@ namespace SE::Core
         lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
 
         lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
-        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
+        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA16_FLOAT;
         lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 
         mGeometryRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
@@ -60,12 +60,12 @@ namespace SE::Core
         lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
 
         lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
-        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
+        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA16_FLOAT;
         lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
         mGeometryRenderTarget->AddAttachment( "MSAA_OUTPUT", lAttachmentCreateInfo );
 
         lAttachmentCreateInfo.mType       = eAttachmentType::MSAA_RESOLVE;
-        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA8_UNORM;
+        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA16_FLOAT;
         lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
         mGeometryRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
 
