@@ -25,13 +25,12 @@ namespace SE::Core
 
         void Render( math::mat4 aProjection, math::mat4 aView, Ref<IRenderContext> aRenderContext );
 
-        Ref<IDescriptorSetLayout> PipelineLayout;
-
       private:
-        Ref<IGraphicContext>   mGraphicContext    = nullptr;
-        Ref<IGraphicBuffer>    mCameraBuffer      = nullptr;
-        Ref<IDescriptorSet>    mCameraDescriptors = nullptr;
-        Ref<IGraphicsPipeline> mPipeline          = nullptr;
+        Ref<IDescriptorSetLayout> mPipelineLayout     = nullptr;
+        Ref<IGraphicContext>      mGraphicContext    = nullptr;
+        Ref<IGraphicBuffer>       mCameraBuffer      = nullptr;
+        Ref<IDescriptorSet>       mCameraDescriptors = nullptr;
+        Ref<IGraphicsPipeline>    mPipeline          = nullptr;
     };
 
 } // namespace SE::Core

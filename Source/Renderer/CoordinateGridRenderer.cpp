@@ -40,18 +40,18 @@ namespace SE::Core
         mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, lFragmentShader, "main" );
         mPipeline->AddPushConstantRange( { eShaderStageTypeFlags::VERTEX }, 0, sizeof( float ) * 4 );
 
-        PipelineLayout = CreateDescriptorSetLayout( aGraphicContext );
-        PipelineLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
-        PipelineLayout->Build();
+        mPipelineLayout = CreateDescriptorSetLayout( aGraphicContext );
+        mPipelineLayout->AddBinding( 0, eDescriptorType::UNIFORM_BUFFER, { eShaderStageTypeFlags::VERTEX } );
+        mPipelineLayout->Build();
 
-        mPipeline->AddDescriptorSet( PipelineLayout );
+        mPipeline->AddDescriptorSet( mPipelineLayout );
 
         mPipeline->Build();
 
         mCameraBuffer =
             CreateBuffer( mGraphicContext, eBufferType::UNIFORM_BUFFER, true, true, true, true, sizeof( CameraViewUniforms ) );
 
-        mCameraDescriptors = PipelineLayout->Allocate();
+        mCameraDescriptors = mPipelineLayout->Allocate();
         mCameraDescriptors->Write( mCameraBuffer, false, 0, sizeof( CameraViewUniforms ), 0 );
     }
 
