@@ -8,7 +8,7 @@ project(LTSimulationEngine LANGUAGES CXX CUDA C)
 set(SHADER_EMBEDDED_FILES "")
 set(SHADER_FILES "")
 
-add_library(LTSimulationEngineRuntimeShaders STATIC)
+# add_library(LTSimulationEngineRuntimeShaders STATIC)
 
 function(embed_shader TARGET output_var shader_file)
     set(shader_path ${CMAKE_CURRENT_SOURCE_DIR}/Source/${shader_file})
@@ -68,238 +68,238 @@ namespace SE::Private::Shaders
 endfunction(embed_shader)
 
  
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gToneMap                                       
-    "Common/ToneMap.glsl"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gToneMap                                       
+#     "Common/ToneMap.glsl"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gPBRFunctions                                  
-    "Common/PBRFunctions.glsl"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gPBRFunctions                                  
+#     "Common/PBRFunctions.glsl"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gGetNormalFromMap                              
-    "Common/GetNormalFromMap.glsl"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gGetNormalFromMap                              
+#     "Common/GetNormalFromMap.glsl"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gVertexLayout                                  
-    "Common/VertexLayout.h"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gVertexLayout                                  
+#     "Common/VertexLayout.h"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gUIVertexShader                                
-    "ui_shader.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gUIVertexShader                                
+#     "ui_shader.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gUIFragmentShader                              
-    "ui_shader.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gUIFragmentShader                              
+#     "ui_shader.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gCopyFragmentShader                            
-    "copy.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gCopyFragmentShader                            
+#     "copy.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gFXAAFragmentShader                            
-    "fxaa.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gFXAAFragmentShader                            
+#     "fxaa.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gFXAACode                                      
-    "fxaa.h"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gFXAACode                                      
+#     "fxaa.h"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gFXAAVertexShader                              
-    "fxaa.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gFXAAVertexShader                              
+#     "fxaa.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gDirectionalShadowVertexShader                 
-    "shadow.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gDirectionalShadowVertexShader                 
+#     "shadow.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gOmniDirectionalShadowVertexShader             
-    "OmniShadow.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gOmniDirectionalShadowVertexShader             
+#     "OmniShadow.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gOmniDirectionalShadowFragmentShader           
-    "OmniShadow.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gOmniDirectionalShadowFragmentShader           
+#     "OmniShadow.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gFilterCubeVertexShader                        
-    "filtercube.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gFilterCubeVertexShader                        
+#     "filtercube.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gIrradianceCubeFragmentShader                  
-    "irradiancecube.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gIrradianceCubeFragmentShader                  
+#     "irradiancecube.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gPrefilteredEnvironmentFragmentShader          
-    "prefilterenvmap.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gPrefilteredEnvironmentFragmentShader          
+#     "prefilterenvmap.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gSkyboxVertexShader                            
-    "skybox.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gSkyboxVertexShader                            
+#     "skybox.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gSkyboxFragmentShader                          
-    "skybox.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gSkyboxFragmentShader                          
+#     "skybox.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gCoordinateGridVertexShader                    
-    "coordinategrid.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gCoordinateGridVertexShader                    
+#     "coordinategrid.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gCoordinateGridFragmentShader                  
-    "coordinategrid.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gCoordinateGridFragmentShader                  
+#     "coordinategrid.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gGenerateBrdfVertexShader                      
-    "genbrdflut.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gGenerateBrdfVertexShader                      
+#     "genbrdflut.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gGenerateBrdfFragmentShader                    
-    "genbrdflut.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gGenerateBrdfFragmentShader                    
+#     "genbrdflut.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gPBRMeshVertexShader                           
-    "PBRMeshShader.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gPBRMeshVertexShader                           
+#     "PBRMeshShader.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gPBRMeshFragmentShaderPreamble                 
-    "PBRMeshShaderPreamble.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gPBRMeshFragmentShaderPreamble                 
+#     "PBRMeshShaderPreamble.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gPBRMeshFragmentShaderCalculation              
-    "PBRMeshShaderCalculation.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gPBRMeshFragmentShaderCalculation              
+#     "PBRMeshShaderCalculation.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gParticleSystemVertexShader                    
-    "ParticleSystem.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gParticleSystemVertexShader                    
+#     "ParticleSystem.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gParticleSystemFragmentShader                  
-    "ParticleSystem.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gParticleSystemFragmentShader                  
+#     "ParticleSystem.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gSurfaceVertexShader                           
-    "SurfaceShader.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gSurfaceVertexShader                           
+#     "SurfaceShader.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gSurfaceFragmentShader                         
-    "SurfaceShader.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gSurfaceFragmentShader                         
+#     "SurfaceShader.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gWireframeVertexShader                         
-    "WireframeShader.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gWireframeVertexShader                         
+#     "WireframeShader.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gWirefrrameFragmentShader                      
-    "WireframeShader.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gWirefrrameFragmentShader                      
+#     "WireframeShader.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gUnlitVertexShader                             
-    "Unlit.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gUnlitVertexShader                             
+#     "Unlit.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gUnlitFragmentShader                           
-    "Unlit.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gUnlitFragmentShader                           
+#     "Unlit.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gDeferredLightingVertexShader                  
-    "Deferred/DeferredLighting.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gDeferredLightingVertexShader                  
+#     "Deferred/DeferredLighting.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gDeferredLightingFragmentShaderPreamble        
-    "Deferred/DeferredLighting_preamble.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gDeferredLightingFragmentShaderPreamble        
+#     "Deferred/DeferredLighting_preamble.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gDeferredLightingFragmentShaderCalculation     
-    "Deferred/DeferredLighting_calculation.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gDeferredLightingFragmentShaderCalculation     
+#     "Deferred/DeferredLighting_calculation.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gDeferredGeometryPassVertexShader              
-    "Deferred/MRT.vert"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gDeferredGeometryPassVertexShader              
+#     "Deferred/MRT.vert"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gDeferredGeometryPassFragmentShaderPreamble    
-    "Deferred/MRT_preamble.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gDeferredGeometryPassFragmentShaderPreamble    
+#     "Deferred/MRT_preamble.frag"
+# )
 
-embed_shader(
-    LTSimulationEngineRuntimeShaders 
-    gDeferredGeometryPassFragmentShaderCalculation 
-    "Deferred/MRT_calculation.frag"
-)
+# embed_shader(
+#     LTSimulationEngineRuntimeShaders 
+#     gDeferredGeometryPassFragmentShaderCalculation 
+#     "Deferred/MRT_calculation.frag"
+# )
 
     

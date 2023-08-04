@@ -47,8 +47,6 @@ namespace SE::Core
         lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\Definitions.hpp" );
         lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Varying.hpp" );
         lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Shadow.hpp" );
-        // lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data );
-        // lVertexShader->AddCode( SE::Private::Shaders::gDirectionalShadowVertexShader_data );
         lVertexShader->Compile();
 
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
@@ -96,8 +94,6 @@ namespace SE::Core
         lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\Definitions.hpp" );
         lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Varying.hpp" );
         lVertexShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Shadow.hpp" );
-        // lVertexShader->AddCode( SE::Private::Shaders::gVertexLayout_data );
-        // lVertexShader->AddCode( SE::Private::Shaders::gOmniDirectionalShadowVertexShader_data );
         lVertexShader->Compile();
         mPipeline->SetShader( eShaderStageTypeFlags::VERTEX, lVertexShader, "main" );
 
@@ -108,7 +104,6 @@ namespace SE::Core
         lFragmentShader->AddCode( "#define PUNCTUAL_LIGHT_SHADOW_FRAGMENT_SHADER" );
         lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Common\\Definitions.hpp" );
         lFragmentShader->AddFile( "D:\\Work\\Git\\SpockEngine\\Shaders\\Source\\Renderer\\Shadow.hpp" );
-        // lFragmentShader->AddCode( SE::Private::Shaders::gOmniDirectionalShadowFragmentShader_data );
         lFragmentShader->Compile();
 
         mPipeline->SetShader( eShaderStageTypeFlags::FRAGMENT, lFragmentShader, "main" );

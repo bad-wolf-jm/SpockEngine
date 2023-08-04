@@ -153,7 +153,7 @@ add_library(LTSimulationEngineRuntime STATIC
 set(MONO_PATH "C:/GitLab/SpockEngine/ThirdParty/mono/lib/Debug")
 
 target_link_libraries(LTSimulationEngineRuntime PRIVATE
-    LTSimulationEngineRuntimeShaders
+    # LTSimulationEngineRuntimeShaders
     Vulkan::Vulkan
     imgui
     imguizmo
