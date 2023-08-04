@@ -190,16 +190,9 @@ namespace SE::Core
         lRenderTargetSpec.mWidth       = aOutputWidth;
         lRenderTargetSpec.mHeight      = aOutputHeight;
         lRenderTargetSpec.mSampleCount = 1;
-        auto lRenderTarget             = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
 
-        sAttachmentDescription lAttachmentCreateInfo{};
-        lAttachmentCreateInfo.mIsSampled   = true;
-        lAttachmentCreateInfo.mIsPresented = false;
-        lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
-        lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
-        lAttachmentCreateInfo.mType        = eAttachmentType::DEPTH;
-        lAttachmentCreateInfo.mClearColor  = { 1.0f, 0.0f, 0.0f, 0.0f };
-        lRenderTarget->AddAttachment( "SHADOW_MAP", lAttachmentCreateInfo );
+        auto lRenderTarget = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
+        lRenderTarget->AddAttachment( "SHADOW_MAP", sAttachmentDescription( eAttachmentType::DEPTH, eColorFormat::UNDEFINED ) );
         lRenderTarget->Finalize();
 
         return lRenderTarget;
@@ -250,26 +243,12 @@ namespace SE::Core
                     lRenderTargetSpec.mWidth       = mOmniShadowResolution;
                     lRenderTargetSpec.mHeight      = mOmniShadowResolution;
                     lRenderTargetSpec.mSampleCount = 1;
-                    auto lRenderTarget             = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
 
-                    sAttachmentDescription lAttachmentCreateInfo{};
-                    lAttachmentCreateInfo.mFormat      = eColorFormat::R32_FLOAT;
-                    lAttachmentCreateInfo.mIsSampled   = false;
-                    lAttachmentCreateInfo.mIsPresented = false;
-                    lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
-                    lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
-                    lAttachmentCreateInfo.mType        = eAttachmentType::COLOR;
-                    lAttachmentCreateInfo.mClearColor  = { .0f, .0f, .0f, 1.f };
-                    lRenderTarget->AddAttachment( "SHADOW_MAP", lAttachmentCreateInfo, lShadowMap, static_cast<eCubeFace>( f ) );
-
-                    lAttachmentCreateInfo              = sAttachmentDescription{};
-                    lAttachmentCreateInfo.mIsSampled   = false;
-                    lAttachmentCreateInfo.mIsPresented = false;
-                    lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
-                    lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
-                    lAttachmentCreateInfo.mType        = eAttachmentType::DEPTH;
-                    lAttachmentCreateInfo.mClearColor  = { 1.0f, 0.0f, 0.0f, 0.0f };
-                    lRenderTarget->AddAttachment( "DEPTH", lAttachmentCreateInfo );
+                    auto lRenderTarget = CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
+                    lRenderTarget->AddAttachment( "SHADOW_MAP",
+                                                  sAttachmentDescription( eAttachmentType::COLOR, eColorFormat::R32_FLOAT, true ),
+                                                  lShadowMap, static_cast<eCubeFace>( f ) );
+                    lRenderTarget->AddAttachment( "DEPTH", sAttachmentDescription( eAttachmentType::DEPTH, eColorFormat::UNDEFINED ) );
                     lRenderTarget->Finalize();
 
                     mPointLightsShadowMapRenderContext.back()[f]    = CreateRenderContext( mGraphicContext, lRenderTarget );

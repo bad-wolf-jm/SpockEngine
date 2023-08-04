@@ -4,13 +4,37 @@
 
 namespace SE::Graphics
 {
+
+    sAttachmentDescription::sAttachmentDescription( eAttachmentType aType, eColorFormat aFormat, bool aIsSampled )
+        : mType{ aType }
+        , mFormat{ aFormat }
+        , mIsSampled{ aIsSampled }
+        , mIsPresented{ false }
+        , mLoadOp{ eAttachmentLoadOp::CLEAR }
+        , mStoreOp{ eAttachmentStoreOp::STORE }
+    {
+        switch( mType )
+        {
+        case eAttachmentType::COLOR:
+        case eAttachmentType::MSAA_RESOLVE:
+            mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+            break;
+        case eAttachmentType::DEPTH:
+            mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
+            break;
+        }
+    }
+
     IRenderTarget::IRenderTarget( Ref<IGraphicContext> aGraphicContext, sRenderTargetDescription const &aRenderTargetDescription )
         : mGraphicContext{ aGraphicContext }
         , mSpec{ aRenderTargetDescription }
     {
     }
 
-    Ref<ITexture2D> IRenderTarget::GetAttachment( std::string const &aKey ) { return mAttachments[aKey].mTexture; }
+    Ref<ITexture2D> IRenderTarget::GetAttachment( std::string const &aKey )
+    {
+        return mAttachments[aKey].mTexture;
+    }
 
     void IRenderTarget::AddAttachment( std::string const &aAttachmentID, sAttachmentDescription const &aCreateInfo )
     {
@@ -39,7 +63,8 @@ namespace SE::Graphics
         mAttachmentInfo.push_back( aCreateInfo );
         mAttachmentIDs.push_back( aAttachmentID );
 
-        if( aCreateInfo.mType == eAttachmentType::DEPTH ) mAttachmentInfo.back().mFormat = mGraphicContext->GetDepthFormat();
+        if( aCreateInfo.mType == eAttachmentType::DEPTH )
+            mAttachmentInfo.back().mFormat = mGraphicContext->GetDepthFormat();
 
         mAttachments[aAttachmentID] = sAttachmentResource{ aFramebufferImage, aFace };
     }
@@ -60,12 +85,24 @@ namespace SE::Graphics
         AddAttachment( aAttachmentID, lCreateInfo, aFramebufferImage );
     }
 
-    bool IRenderTarget::BeginRender() { return true; }
+    bool IRenderTarget::BeginRender()
+    {
+        return true;
+    }
 
-    void IRenderTarget::EndRender() {}
+    void IRenderTarget::EndRender()
+    {
+    }
 
-    void IRenderTarget::Present() {}
+    void IRenderTarget::Present()
+    {
+    }
 
-    void             IRenderTarget::Finalize() {}
-    Ref<IRenderPass> IRenderTarget::GetRenderPass() { return nullptr; }
+    void IRenderTarget::Finalize()
+    {
+    }
+    Ref<IRenderPass> IRenderTarget::GetRenderPass()
+    {
+        return nullptr;
+    }
 } // namespace SE::Graphics

@@ -56,7 +56,9 @@ namespace SE::Graphics
         eAttachmentLoadOp  mLoadOp      = eAttachmentLoadOp::UNSPECIFIED;
         eAttachmentStoreOp mStoreOp     = eAttachmentStoreOp::UNSPECIFIED;
 
-        sAttachmentDescription()  = default;
+        sAttachmentDescription() = default;
+        sAttachmentDescription( eAttachmentType aType, eColorFormat aFormat, bool aIsSampled = false );
+
         ~sAttachmentDescription() = default;
 
         sAttachmentDescription( sAttachmentDescription const & ) = default;
@@ -99,7 +101,10 @@ namespace SE::Graphics
         virtual void Present();
 
         Ref<ITexture2D> GetAttachment( std::string const &aKey );
-        uint32_t        GetColorAttachmentCount() { return mColorAttachmentCount; }
+        uint32_t        GetColorAttachmentCount()
+        {
+            return mColorAttachmentCount;
+        }
 
         template <typename _GCSubtype>
         Ref<_GCSubtype> GraphicContext()
@@ -107,7 +112,10 @@ namespace SE::Graphics
             return std::reinterpret_pointer_cast<_GCSubtype>( mGraphicContext );
         }
 
-        uint32_t GetImageCount() { return mImageCount; }
+        uint32_t GetImageCount()
+        {
+            return mImageCount;
+        }
 
         virtual Ref<ICommandBuffer> GetCommandBuffer() = 0;
 

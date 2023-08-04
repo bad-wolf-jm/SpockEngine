@@ -24,23 +24,12 @@ namespace SE::Core
         lRenderTargetSpec.mWidth       = aOutputWidth;
         lRenderTargetSpec.mHeight      = aOutputHeight;
         lRenderTargetSpec.mSampleCount = mOutputSampleCount;
-        mGeometryRenderTarget          = Graphics::CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
 
-        sAttachmentDescription lAttachmentCreateInfo{};
-        lAttachmentCreateInfo.mIsSampled   = true;
-        lAttachmentCreateInfo.mIsPresented = false;
-        lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
-        lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
-
-        lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
-        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA16_FLOAT;
-        lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-
-        mGeometryRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
-
-        lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
-        lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
-        mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
+        mGeometryRenderTarget = Graphics::CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
+        mGeometryRenderTarget->AddAttachment( "OUTPUT",
+                                              sAttachmentDescription( eAttachmentType::COLOR, eColorFormat::RGBA16_FLOAT, true ) );
+        mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL",
+                                              sAttachmentDescription( eAttachmentType::DEPTH, eColorFormat::UNDEFINED ) );
         mGeometryRenderTarget->Finalize();
         mGeometryContext = CreateRenderContext( mGraphicContext, mGeometryRenderTarget );
     }
@@ -53,25 +42,12 @@ namespace SE::Core
         lRenderTargetSpec.mSampleCount = mOutputSampleCount;
         mGeometryRenderTarget          = Graphics::CreateRenderTarget( mGraphicContext, lRenderTargetSpec );
 
-        sAttachmentDescription lAttachmentCreateInfo{};
-        lAttachmentCreateInfo.mIsSampled   = true;
-        lAttachmentCreateInfo.mIsPresented = false;
-        lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
-        lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
-
-        lAttachmentCreateInfo.mType       = eAttachmentType::COLOR;
-        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA16_FLOAT;
-        lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-        mGeometryRenderTarget->AddAttachment( "MSAA_OUTPUT", lAttachmentCreateInfo );
-
-        lAttachmentCreateInfo.mType       = eAttachmentType::MSAA_RESOLVE;
-        lAttachmentCreateInfo.mFormat     = eColorFormat::RGBA16_FLOAT;
-        lAttachmentCreateInfo.mClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-        mGeometryRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
-
-        lAttachmentCreateInfo.mType       = eAttachmentType::DEPTH;
-        lAttachmentCreateInfo.mClearColor = { 1.0f, 0.0f, 0.0f, 0.0f };
-        mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL", lAttachmentCreateInfo );
+        mGeometryRenderTarget->AddAttachment( "MSAA_OUTPUT",
+                                              sAttachmentDescription( eAttachmentType::COLOR, eColorFormat::RGBA16_FLOAT ) );
+        mGeometryRenderTarget->AddAttachment(
+            "OUTPUT", sAttachmentDescription( eAttachmentType::MSAA_RESOLVE, eColorFormat::RGBA16_FLOAT, true ) );
+        mGeometryRenderTarget->AddAttachment( "DEPTH_STENCIL",
+                                              sAttachmentDescription( eAttachmentType::DEPTH, eColorFormat::UNDEFINED ) );
 
         mGeometryRenderTarget->Finalize();
         mGeometryContext = CreateRenderContext( mGraphicContext, mGeometryRenderTarget );
@@ -83,20 +59,10 @@ namespace SE::Core
         lFxaaSpec.mWidth       = aOutputWidth;
         lFxaaSpec.mHeight      = aOutputHeight;
         lFxaaSpec.mSampleCount = mOutputSampleCount;
-        mFxaaRenderTarget      = Graphics::CreateRenderTarget( mGraphicContext, lFxaaSpec );
 
-        sAttachmentDescription lAttachmentCreateInfo{};
-        lAttachmentCreateInfo.mIsSampled   = true;
-        lAttachmentCreateInfo.mIsPresented = false;
-        lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
-        lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
-        lAttachmentCreateInfo.mType        = eAttachmentType::COLOR;
-        lAttachmentCreateInfo.mFormat      = eColorFormat::RGBA16_FLOAT;
-        lAttachmentCreateInfo.mClearColor  = { 0.0f, 0.0f, 0.0f, 1.0f };
-        lAttachmentCreateInfo.mLoadOp      = eAttachmentLoadOp::CLEAR;
-        lAttachmentCreateInfo.mStoreOp     = eAttachmentStoreOp::STORE;
-
-        mFxaaRenderTarget->AddAttachment( "OUTPUT", lAttachmentCreateInfo );
+        mFxaaRenderTarget = Graphics::CreateRenderTarget( mGraphicContext, lFxaaSpec );
+        mFxaaRenderTarget->AddAttachment( "OUTPUT",
+                                          sAttachmentDescription( eAttachmentType::COLOR, eColorFormat::RGBA16_FLOAT, true ) );
         mFxaaRenderTarget->Finalize();
 
         mFxaaContext = CreateRenderContext( mGraphicContext, mFxaaRenderTarget );
@@ -140,7 +106,7 @@ namespace SE::Core
                 lDirectionalLight.mDirection = mat3(mScene->GetFinalTransformMatrix( aEntity ) )* vec3{ 0.0f, 0.0f, 1.0f };
                 lDirectionalLight.mCastsShadows = 1;
                 
-                mat4  lClip = MakeMat4( aEntries );
+                mat4  lClip = make_mat4x4( aEntries );
                 mat4 lProjection =
                     Orthogonal( vec2{ -10.0f, 10.0f }, vec2{ -10.0f, 10.0f }, vec2{ -10.0f, 10.0f } );
                 mat4 lView =
